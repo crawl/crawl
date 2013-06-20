@@ -1095,7 +1095,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
             int spread = (you.props.exists("spread_last")
                  && you.props["spread_last"].get_int() + 1 == you.num_turns) ?
                     you.props["spread_count"].get_int() : 1;
-            return new targetter_spread(&you, range, spread * 2 - 1);
+            return new targetter_spread(&you, range, spread + 1);
         }
     case SPELL_LRD:
         return new targetter_fragment(&you, pow, range);

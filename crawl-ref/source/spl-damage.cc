@@ -2842,7 +2842,7 @@ spret_type cast_iron_blast(actor *caster, int pow, coord_def aim, bool fail)
         prev = caster->props["spread_count"].get_int();
     }
     // Calculate spread and # of pellets to trace (3..(7+prev))
-    const int spread = 2 * prev - 1;
+    const int spread = prev + 1;
     const int pellets = random_range(3, 3 + prev + div_rand_round(pow, 50));
     targetter_spread hitfunc(caster, spell_range(SPELL_IRON_BLAST, pow),
                              spread, pellets);
