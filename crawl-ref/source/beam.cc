@@ -4834,9 +4834,6 @@ bool enchant_monster_invisible(monster* mon, const string &how)
 
     if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
     {
-        // A casting of invisibility erases corona.
-        mon->del_ench(ENCH_CORONA);
-
         if (mons_near(mon))
         {
             const bool is_visible = mon->visible_to(&you);
