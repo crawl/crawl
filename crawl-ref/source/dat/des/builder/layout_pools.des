@@ -249,7 +249,7 @@ ENDMAP
 #
 NAME:   layout_gehenna_pools_basic
 DEPTH:  Geh
-WEIGHT: 20
+WEIGHT: 100
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 TAGS:   layout_type_caves
@@ -363,7 +363,7 @@ validate {{
 #
 NAME:   layout_gehenna_pools_box
 DEPTH:  Geh
-WEIGHT: 10
+WEIGHT: 50
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 TAGS:   layout_type_caves
@@ -432,7 +432,7 @@ validate {{
 #
 NAME:   layout_gehenna_pools_triple
 DEPTH:  Geh
-WEIGHT: 5
+WEIGHT: 50
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 TAGS:   layout_type_caves
