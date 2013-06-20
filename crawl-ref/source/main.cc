@@ -1946,6 +1946,10 @@ void process_command(command_type cmd)
     case CMD_MOVE_NOWHERE:
     case CMD_WAIT:
         you.check_clinging(false);
+        // Crank a wielded rod now only if waiting a single turn, since
+        // it's handled differently while resting to allow switching.
+        if (cmd == CMD_WAIT)
+            you.crank_rods(false);
         you.turn_is_over = true;
         break;
 
@@ -3159,8 +3163,6 @@ static void _player_reacts()
     }
 
     _regenerate_hp_and_mp(capped_time);
-
-    recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.
     for (adjacent_iterator ai(you.pos(), false); ai; ++ai)

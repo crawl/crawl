@@ -44,6 +44,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "map_knowledge.h"
@@ -2585,7 +2586,6 @@ void update_level(int elapsedTime)
     _update_corpses(elapsedTime);
     shoals_apply_tides(turns, true, turns < 5);
     timeout_tombs(turns);
-    recharge_rods(turns, true);
 
     if (env.sanctuary_time)
     {
@@ -3110,66 +3110,138 @@ static void _update_corpses(int elapsedTime)
     }
 }
 
-static void _recharge_rod(item_def &rod, int aut, bool in_inv)
+static bool _rod_fully_charged(item_def &rod)
+{
+    ASSERT(rod.base_type == OBJ_RODS);
+    return !(rod.is_jammed() || rod.plus < rod.plus2);
+}
+
+static int _next_rod_to_recharge()
+{
+    for (int item = 0; item < ENDOFPACK; ++item)
+    {
+        if (you.inv[item].base_type == OBJ_RODS
+            && !_rod_fully_charged(you.inv[item]))
+        {
+            return item;
+        }
+    }
+    return -1;
+}
+
+static void _recharge_rod(item_def &rod, bool quiet)
 {
     if (rod.base_type != OBJ_RODS)
         return;
-    // Don't recharge when jammed
+    // Don't recharge while jammed
     if (rod.is_jammed())
     {
-        // Small chance of unjamming, only when carried
-        if (in_inv && try_unjam_rod(rod, 0.1f, true))
-            mprf("%s unjams itself.", rod.name(DESC_YOUR).c_str());
-        // Charge next turn anyway
+        // Normal chance of unjamming as with evoking
+        if (try_unjam_rod(rod, 1, quiet) && quiet)
+        {
+            mprf("You wrestle with %s and manage to unjam it!",
+                 rod.name(DESC_THE).c_str());
+        }
+        // Will charge next turn
         return;
     }
     if (rod.plus >= rod.plus2)
         return;
 
-    // Skill calculations with a massive scale would overflow, cap it.
-    // The worst case, a -3 rod, takes 17000 aut to fully charge.
-    // -4 rods don't recharge at all.
-    aut = min(aut, MAX_ROD_CHARGE * ROD_CHARGE_MULT * 10);
-
-    int rate = 4 + rod.special;
-
-    rate *= 10 * aut + skill_bump(SK_EVOCATIONS, aut);
-    rate = div_rand_round(rate, 100);
-
-    if (rate > rod.plus2 - rod.plus) // Prevent overflow
-        rate = rod.plus2 - rod.plus;
-
-    // With this, a +0 rod with no skill gets 1 mana per 25.0 turns
-
-    if (rod.plus / ROD_CHARGE_MULT != (rod.plus + rate) / ROD_CHARGE_MULT)
+    // Crank the rod. Dex becomes quite significant here.
+    int chance = you.skill(SK_EVOCATIONS) + you.dex() * 2 + rod.special;
+    if (x_chance_in_y(chance, 125))
     {
-        if (item_is_equipped(rod, true))
-            you.wield_change = true;
+        // TODO: Fuzz the amount of charges added at all?
+        if (rod.plus / ROD_CHARGE_MULT
+            != (rod.plus + ROD_CHARGE_MULT) / ROD_CHARGE_MULT)
+        {
+            if (item_is_equipped(rod, true))
+                you.wield_change = true;
+        }
+        rod.plus = min(rod.plus + ROD_CHARGE_MULT, (int)rod.plus2);
+        if (!quiet)
+            mprf("You crank %s and it gains a charge.",
+                 rod.name(DESC_THE).c_str());
     }
+    else if (!quiet)
+        mprf("You fail to crank %s.", rod.name(DESC_THE).c_str());
 
-    rod.plus += rate;
-
-    if (in_inv && rod.plus == rod.plus2)
+    if (rod.plus == rod.plus2 && !you.running.runmode)
     {
         msg::stream << "Your " << rod.name(DESC_QUALNAME) << " has recharged."
                     << endl;
-        if (is_resting())
-            stop_running();
     }
 
     return;
 }
 
-void recharge_rods(int aut, bool level_only)
+// Attempts to recharge a wielded rod. If none is wielded or it's fully
+// charged, switch to one that needs recharging *if* change_wield is true.
+// Returns true if switching weapon instead of recharging,
+// so delays can be handled correctly.
+bool recharge_rods(bool change_wield, bool quiet)
 {
-    if (!level_only)
+    // Can't do anything if weapon slot melded
+    if (you.melded[EQ_WEAPON])
+        return false;
+
+    item_def *wielded = you.slot_item(EQ_WEAPON, false);
+
+    if (wielded && wielded->base_type == OBJ_RODS
+        && !_rod_fully_charged(*wielded))
     {
-        for (int item = 0; item < ENDOFPACK; ++item)
-            _recharge_rod(you.inv[item], aut, true);
+        // Remember which rod to switch back to
+        // TODO: Handle switching back due to other interruptions
+        if (!you.attribute[ATTR_WIELDED_BEFORE_REST])
+            you.attribute[ATTR_WIELDED_BEFORE_REST] = (wielded->link + 1);
+
+        _recharge_rod(*wielded, quiet);
+        return false;
     }
 
-    for (int item = 0; item < MAX_ITEMS; ++item)
-        _recharge_rod(mitm[item], aut, false);
+    // No further action if we can't wield something else (also don't
+    // pester the player with prompts if wielding distortion etc.)
+    if (!change_wield || (wielded && needs_handle_warning(*wielded, OPER_WIELD)))
+        return false;
+
+    // Otherwise, scan inventory for a rod that needs charging
+    int next_rod = _next_rod_to_recharge();
+
+    // Remember which rod to switch back to
+    // TODO: Handle switching back due to other interruptions
+    if (next_rod >= 0 && !you.attribute[ATTR_WIELDED_BEFORE_REST])
+    {
+        you.attribute[ATTR_WIELDED_BEFORE_REST] =
+            wielded ? (wielded->link + 1) : -1;
+    }
+
+    // Charged all rods?
+    if (next_rod == -1)
+    {
+        if (!you.attribute[ATTR_WIELDED_BEFORE_REST])
+            return false;
+
+        // Stop resting only when all rods are charged
+        if (you.running.runmode)
+        {
+            msg::stream << "All your rods are fully charged."
+                        << endl;
+            stop_running();
+        }
+
+        next_rod = you.attribute[ATTR_WIELDED_BEFORE_REST] - 1;
+        you.attribute[ATTR_WIELDED_BEFORE_REST] = 0;
+
+        if (wielded && next_rod == wielded->link)
+            return false;
+
+        // Revert to unarmed
+        if (next_rod == -2)
+            return unwield_item();
+    }
+
+    return wield_weapon(true, next_rod, false, false, false, false);
 }
 
 void slime_wall_damage(actor* act, int delay)

@@ -1386,6 +1386,10 @@ static command_type _get_running_command()
         if (Options.rest_delay > 0)
             delay(Options.rest_delay);
 
+        // If crank_rods returns true then the player wielded a different rod
+        if (you.crank_rods(true, true))
+            return CMD_NO_CMD;
+
         return CMD_MOVE_NOWHERE;
     }
     else if (you.running.is_explore() && Options.explore_delay > -1)

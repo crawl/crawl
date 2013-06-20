@@ -741,13 +741,14 @@ public:
     int usable_tentacles() const;
     bool has_usable_tentacle() const;
 
+    bool crank_rods(bool change_wield, bool quiet = false);
+
 protected:
     void _removed_beholder();
     bool _possible_beholder(const monster* mon) const;
 
     void _removed_fearmonger();
     bool _possible_fearmonger(const monster* mon) const;
-
 };
 
 #ifdef DEBUG_GLOBALS

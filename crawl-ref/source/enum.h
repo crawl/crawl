@@ -295,6 +295,7 @@ enum attribute_type
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
+    ATTR_WIELDED_BEFORE_REST,  // An item wielded prior to rest / recharge rods
     NUM_ATTRIBUTES
 };
 

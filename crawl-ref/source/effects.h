@@ -72,7 +72,7 @@ void change_labyrinth(bool msg = false);
 bool vitrify_area(int radius);
 void update_level(int elapsedTime);
 void handle_time();
-void recharge_rods(int aut, bool floor_only);
+bool recharge_rods(bool change_wield, bool quiet = false);
 void recharge_elemental_evokers(int exp);
 void recharge_soul_evoker(monster* mons, bool quiet = false);
 
