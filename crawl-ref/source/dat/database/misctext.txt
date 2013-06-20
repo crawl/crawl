@@ -1,3 +1,129 @@
-﻿######################################################
+######################################################
 # misctext.txt: miscellaneous text strings
 ######################################################
+%%%%
+# 0 - You are unknown
+demigod lose piety 0
+
+Nobody seems to be interested in your [well-being|status].
+
+Nobody has ever heard of you.
+
+Not even [historians|librarians|erudites|savants|scholars] have [a clue|an idea] who you are.
+
+Your name has never appeared in [chronicles|church books|psalms].
+%%%%
+demigod gain piety 0
+# * - You are mostly unknown.
+
+Only [octogenarian|befuddled|weary] [fools|madmen] may mention your name in a prayer.
+
+One or two truly desperate [surface dwellers|peasants|peons] may have called on you for help.
+
+Your name is briefly mentioned in some [stories|songs|tales|fables].
+%%%%
+# ** - You have some followers.
+demigod piety 1
+
+You have a few [dedicated|selected|commited] followers.
+
+Your followers began building [altars|shrines] to you.
+
+There is a [secret society|underground cult] dedicated to you.
+%%%%
+demigod gain piety 1
+
+@demigod piety 1@
+%%%%
+demigod lose piety 1
+
+@demigod gain piety 0@
+%%%%
+# *** - There are several cults in your name.
+demigod piety 2
+
+Your followers have managed to install an altar to you in a major temple.
+
+Several [noble persons|patrons|aristocrats] have been seen worshiping you.
+
+Your worshipers are no longer derided.
+
+Longer treatises about your glorious [miracles|wonders|marvels] appear.
+%%%%
+demigod gain piety 2
+
+@demigod piety 2@
+%%%%
+demigod lose piety 2
+
+@demigod piety 1@
+%%%%
+# **** - You are considered the prophet of an already existing religion.
+demigod piety 3
+
+Many households have a shrine dedicated to you.
+
+The [scholars|wise men] consider you as [a prophet|a demigod|of divine patronage].
+%%%%
+demigod gain piety 3
+
+@demigod piety 3@
+%%%%
+demigod lose piety 3
+
+@demigod piety 2@
+%%%%
+# ***** - You are considered a minor god.
+demigod piety 4
+
+You are worshipped alongside other gods.
+
+People cannot remember a time without your divine guidance.
+
+You have a solid place in the standard pantheon.
+
+Some temples are dedicated to worshiping you exclusively.
+%%%%
+demigod gain piety 4
+
+@demigod piety 4@
+%%%%
+demigod lose piety 4
+
+@demigod piety 3@
+%%%%
+# ****** - You are worshiped as the god of a major monotheistic religion.
+demigod piety 5
+
+Your worshipers are legion.
+
+Worship of the old gods is only conducted in underground circles.
+
+Cathedrals are constructed in your name.
+
+Your followers have started a war in your name.
+
+Your worshipers are enthusiastic about soon seeing the [orb|golden fleece|holy grail].
+
+Your worshipers have declared that you are the only god.
+
+Your followers actively proselytise the heathens.
+%%%%
+# Fire magic leading
+demigod gain piety 5 fire magic
+
+Your followers began burning heretics at the stake.
+%%%%
+# Polearms leading
+demigod gain piety 5 polearms
+
+Your followers began impaling all the heretics.
+%%%%
+demigod gain piety 5
+
+@demigod piety 5@
+%%%%
+demigod lose piety 5
+
+@demigod piety 4@
+%%%%

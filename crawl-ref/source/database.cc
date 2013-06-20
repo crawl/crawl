@@ -909,12 +909,12 @@ string getFAQ_Answer(const string &question)
 // Miscellaneous DB specific functions.
 
 string getMiscString(const string &misc, const string &suffix)
-
 {
     int num_replacements = 0;
 
     string txt = _getRandomisedStr(MiscDB, misc, suffix, num_replacements);
     _execute_embedded_lua(txt);
+    txt = maybe_pick_random_substring(txt);
 
     return txt;
 }

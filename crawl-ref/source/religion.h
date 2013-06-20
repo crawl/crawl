@@ -32,6 +32,7 @@ god_type random_god(bool available = true);
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 string god_name(god_type which_god, bool long_name = false);
+string god_name_dbkey(god_type which_god);
 string god_name_jiyva(bool second_name = false);
 god_type str_to_god(const string &name, bool exact = true);
 

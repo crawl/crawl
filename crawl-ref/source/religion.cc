@@ -2418,13 +2418,13 @@ string god_name(god_type which_god, bool long_name)
 {
     if (which_god == GOD_JIYVA)
         return (god_name_jiyva(long_name) +
-                (long_name? " the Shapeless" : ""));
+                (long_name ? " the Shapeless" : ""));
 
     if (long_name && which_god != GOD_SELF)
     {
         const string shortname = god_name(which_god, false);
         const string longname = getMiscString(shortname + " lastname");
-        return (longname.empty()? shortname : longname);
+        return (longname.empty() ? shortname : longname);
     }
 
     switch (which_god)
@@ -2460,6 +2460,13 @@ string god_name(god_type which_god, bool long_name)
     case NUM_GODS: return "Buggy";
     }
     return "";
+}
+
+// A god name suitable formatted for use as a database string key
+string god_name_dbkey(god_type which_god)
+{
+    if (which_god == GOD_SELF) return "Demigod";
+    return god_name(which_god, false);
 }
 
 string god_name_jiyva(bool second_name)
@@ -2593,11 +2600,31 @@ string adjust_abil_message(const char *pmsg, bool allow_upgrades)
     return pm;
 }
 
-static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
-                              int breakpoint)
+static bool _abil_chg_message(int breakpoint, bool lose_piety)
 {
-    if (!*pmsg)
+    // Note: Some slightly hacky account for Demigod; if breakpoint
+    // is 5 then this is definitely a "fake" message so we'll wait for the
+    // DB string since the god_x_power_messages arrays don't contain a [5]
+    // element anyway.
+    ASSERT(breakpoint <= MAX_GOD_ABILITIES);
+    const char *pmsg = (breakpoint == MAX_GOD_ABILITIES) ? "" :
+        (lose_piety ? god_lose_power_messages[you.religion][breakpoint]
+         : god_gain_power_messages[you.religion][breakpoint]);
+
+    // Attempt to get DB text instead of from the hard-coded array
+    const string dbkey = make_stringf("%s %s piety %d",
+                                      god_name_dbkey(you.religion).c_str(),
+                                      lose_piety ? "lose" : "gain", breakpoint);
+    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+    const string dmsg = getMiscString(dbkey, make_stringf(" %s", skill_name(best)));
+
+    // If we didn't find a message, there is no special ability.
+    if (!pmsg && !dmsg.length())
         return false;
+
+    const char *youcanmsg = lose_piety ?
+        "You can no longer %s."
+        : "You can now %s.";
 
     // Set piety to the passed-in piety breakpoint value when getting
     // the ability message.  If we have an ability upgrade, which will
@@ -2607,13 +2634,13 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
     int old_piety = you.piety;
     you.piety = piety_breakpoint(breakpoint);
 
-    string pm = adjust_abil_message(pmsg);
+    string pm = adjust_abil_message(dmsg.length() ? dmsg.c_str() : pmsg);
     if (pm.empty())
         return false;
 
     you.piety = old_piety;
 
-    if (isupper(pmsg[0]))
+    if (isupper(pm[0]))
         god_speaks(you.religion, pm.c_str());
     else
     {
@@ -2788,8 +2815,7 @@ static void _gain_piety_point()
 
             gain_god_ability(i);
 
-            if (_abil_chg_message(god_gain_power_messages[you.religion][i],
-                                  "You can now %s.", i))
+            if (_abil_chg_message(i, false))
             {
 #ifdef USE_TILE_LOCAL
                 tiles.layout_statcol();
@@ -2846,6 +2872,9 @@ static void _gain_piety_point()
     {
         // In case the best skill is Invocations, redraw the god title.
         you.redraw_title = true;
+
+        if (you.religion == GOD_SELF)
+            _abil_chg_message(5, false);
 
         if (!you.one_time_ability_used[you.religion])
         {
@@ -2921,7 +2950,8 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety <= 160 && old_piety > 160
-            && !you.one_time_ability_used[you.religion])
+            && (!you.one_time_ability_used[you.religion] ||
+                you.religion == GOD_SELF))
         {
             // In case the best skill is Invocations, redraw the god
             // title.
@@ -2947,6 +2977,8 @@ void lose_piety(int pgn)
                 simple_god_message(
                     " is no longer ready to corrupt your weapon.");
             }
+            else if (you.religion == GOD_SELF)
+                _abil_chg_message(5, true);
         }
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
@@ -2959,8 +2991,7 @@ void lose_piety(int pgn)
                 you.redraw_title = true;
 
                 lose_god_ability(i);
-                _abil_chg_message(god_lose_power_messages[you.religion][i],
-                                  "You can no longer %s.", i);
+                _abil_chg_message(i, true);
 
                 if (_need_water_walking() && !beogh_water_walk())
                     fall_into_a_pool(you.pos(), true, grd(you.pos()));
