@@ -612,7 +612,8 @@ adventures, how they are displayed, and what commands there are to use them:
 /        wands          (use 'V' to evoke)
 =        rings          (use 'P'ut on and 'R'emove)
 "        amulets        (use 'P'ut on and 'R'emove)
-\\ or |  staves, rods   (use 'w'ield for staves; 'v' for evoking rods)
+\\ or |  staves, rods   (use 'w'ield for staves; 'v' for evoking rods,
+                        's' or '5' to recharge rods)
 \+ or :  spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
 }        miscellaneous  (use 'V' for evoking from the inventory)
 $        gold           (picking it up takes no turns)
@@ -892,9 +893,15 @@ magic school tend to have no combat powers at all.
 
 Rods ('|') hold one or more spells that you can evoke while wielding the rod,
 using the 'v' command. They have a pool of magical energy which regenerates
-according to the rod's enchantment (which can be increased using scrolls of
-recharging) and your Evocations skill. They're shorter than full-length staves
+by hand-cranking (with 's' or whilst resting with '5'). Your dexterity,
+Evocations, and the rod's enchantment level (which can be increased using scrolls
+of recharging and additionally increases the number of charges the rod holds)
+all improve your success at hand-cranking. They're shorter than full-length staves
 and thus use the Maces &amp; Flails skill instead of Staves when used as cudgels.
+Rods may fail to fire depending on your Evocations skill and dexterity, and can
+sometimes jam. They can be unjammed either with 'v' or by cranking; this may
+take several attempts but can be achieved quicker simply by hitting things with
+them.
 
 \+ Books
 ========================================
