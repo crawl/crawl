@@ -11,7 +11,6 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "losglobal.h"
-#include "random.h"
 #include "spl-damage.h"
 #include "terrain.h"
 
