@@ -1470,10 +1470,13 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_SOJOBO:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = one_chance_in(4) ? WPN_TRIPLE_SWORD
+        item.sub_type = one_chance_in(6) ? WPN_TRIPLE_SWORD
                                          : WPN_GREAT_SWORD;
         if (x_chance_in_y(2, 3))
+        {
+            force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+        }
         level = MAKE_GOOD_ITEM;
         break;
 

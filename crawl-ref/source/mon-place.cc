@@ -2559,7 +2559,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     case MONS_SOJOBO:
         natural_leader = true;
         band = BAND_SOJOBO;
-        band_size = 5 + random2(4);
+        band_size = 2;
         break;
 
     case MONS_SPRIGGAN_AIR_MAGE:
@@ -2950,13 +2950,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_TENGU;
 
     case BAND_SOJOBO:
-        if (which <= 2)
             return MONS_TENGU_REAVER;
-        else
-            return random_choose_weighted( 8, MONS_TENGU_WARRIOR,
-                                          16, MONS_TENGU_CONJURER,
-                                          24, MONS_TENGU,
-                                           0);
 
     case BAND_ENCHANTRESS:
         if (which <= 3)
