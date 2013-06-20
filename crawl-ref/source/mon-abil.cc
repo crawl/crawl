@@ -3958,6 +3958,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         actor *foe = mons->get_foe();
         if (foe && mons->can_see(foe) && one_chance_in(4))
         {
+            simple_monster_message(mons, " exhales a fierce blast of wind!");
             wind_blast(mons, 12 * mons->hit_dice, foe->pos());
             mon_enchant breath_timeout =
                 mon_enchant(ENCH_BREATH_WEAPON, 1, mons,

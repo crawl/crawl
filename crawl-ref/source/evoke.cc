@@ -1296,11 +1296,6 @@ void wind_blast(actor* agent, int pow, coord_def target)
         else
             mpr("A fierce wind blows from the fan.");
     }
-    else
-    {
-        simple_monster_message(agent->as_monster(),
-                            " exhales a fierce blast of wind!");
-    }
 
     noisy(8, agent->pos());
 

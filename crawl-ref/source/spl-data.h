@@ -3164,6 +3164,19 @@ struct spell_desc
 },
 
 {
+    SPELL_WIND_BLAST, "Wind Blast",
+     SPTYP_AIR,
+     SPFLAG_AREA,
+     3,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

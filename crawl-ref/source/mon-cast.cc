@@ -17,6 +17,7 @@
 #include "database.h"
 #include "effects.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
@@ -1153,6 +1154,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CONTROL_WINDS:
     case SPELL_WALL_OF_BRAMBLES:
     case SPELL_HASTE_PLANTS:
+    case SPELL_WIND_BLAST:
         return true;
     default:
         if (check_validity)
@@ -1696,6 +1698,26 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         return true;
 
+    // Don't use unless our foe is close to us and there are no allies already
+    // between the two of us
+    case SPELL_WIND_BLAST:
+        if (foe && foe->pos().distance_from(mon->pos()) < 4)
+        {
+            bolt tracer;
+            tracer.target = foe->pos();
+            tracer.range  = LOS_RADIUS;
+            tracer.hit    = AUTOMATIC_HIT;
+            fire_tracer(mon, tracer);
+
+            actor* act = actor_at(tracer.path_taken.back());
+            if (act && mons_aligned(mon, act))
+                return true;
+            else
+                return false;
+        }
+        else
+            return true;
+
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         if (mon->friendly() && mon->foe == MHITYOU)
@@ -1789,6 +1811,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_BERSERKER_RAGE:
     case SPELL_FRENZY:
     case SPELL_MIGHT:
+    case SPELL_WIND_BLAST:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -4705,6 +4728,17 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 simple_monster_message(*mi, " seems to speed up.");
                 --num;
             }
+        }
+        return;
+    }
+
+    case SPELL_WIND_BLAST:
+    {
+        actor *foe = mons->get_foe();
+        if (foe && mons->can_see(foe))
+        {
+            simple_monster_message(mons, " summons a great blast of wind!");
+            wind_blast(mons, 12 * mons->hit_dice, foe->pos());
         }
         return;
     }
