@@ -391,10 +391,6 @@ DEPTH:  Snake:2-
 WEIGHT: 50
 : place_unique(_G, "Lamia band")
 
-NAME:   uniq_pan
-DEPTH:  Forest:2-
-: place_unique(_G, "Pan band")
-
 NAME:   uniq_sojobo
 DEPTH:  Forest:2-
 : place_unique(_G, "Sojobo band")
