@@ -711,7 +711,7 @@ static bool _box_of_beasts(item_def &box)
 
     bool success = false;
     // Invoke mon-pick with our custom list
-    int pick_level = you.skill(SK_EVOCATIONS);
+    int pick_level = max(1, you.skill(SK_EVOCATIONS));
     monster_type mon = pick_monster_from(pop_beasts, pick_level,
                                          _box_of_beasts_veto_mon);
 
