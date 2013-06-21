@@ -1912,7 +1912,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
     level_id lid(branch, subdepth);
     vec.push_back(lid);
 
-    if (branch != BRANCH_MAIN_DUNGEON)
+    if (branch != root_branch)
     {
         branch_type pb;
         int pd;
@@ -2274,7 +2274,7 @@ level_id find_up_level(level_id curr, bool up_branch)
 
     if (curr.depth < 1)
     {
-        if (curr.branch != BRANCH_MAIN_DUNGEON)
+        if (curr.branch != BRANCH_MAIN_DUNGEON && curr.branch != root_branch)
         {
             level_id parent;
             _find_parent_branch(curr.branch, curr.depth,
