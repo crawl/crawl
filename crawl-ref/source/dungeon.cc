@@ -1974,7 +1974,7 @@ static void _build_overflow_temples()
 
             // First try to find a temple specialized for this combination of
             // gods.
-            if (coinflip())
+            if (num_gods > 1 || coinflip())
             {
                 vault_tag = make_stringf("temple_overflow_%d", num_gods);
 
