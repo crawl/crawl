@@ -3073,11 +3073,25 @@ static string _describe_chimera(const monster_info& mi)
 
     monster_type part2 = get_chimera_part(&mi,2);
     description += ", the head of ";
-    description += apply_description(DESC_A, get_monster_data(part2)->name);
+    if (part2 == mi.base_type)
+    {
+        description += "another ";
+        description += apply_description(DESC_PLAIN, get_monster_data(part2)->name);
+    }
+    else
+        description += apply_description(DESC_A, get_monster_data(part2)->name);
 
     monster_type part3 = get_chimera_part(&mi,3);
     description += ", and the head of ";
-    description += apply_description(DESC_A, get_monster_data(part3)->name);
+    if (part3 == mi.base_type || part3 == part2)
+    {
+        if (part2 == mi.base_type)
+            description += "yet ";
+        description += "another ";
+        description += apply_description(DESC_PLAIN, get_monster_data(part2)->name);
+    }
+    else
+        description += apply_description(DESC_A, get_monster_data(part3)->name);
 
     description += ". It has the body of ";
     description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
