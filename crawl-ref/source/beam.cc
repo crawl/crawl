@@ -3553,6 +3553,13 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
+    case BEAM_VULNERABILITY:
+        if (!you.duration[DUR_LOWERED_MR])
+            mpr("Your magical defenses are stripped away!");
+        you.increase_duration(DUR_LOWERED_MR, 12 + random2(18), 50);
+        obvious_effect = true;
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -4765,6 +4772,8 @@ bool bolt::has_saving_throw() const
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
         return false;
+    case BEAM_VULNERABILITY:
+        return !one_chance_in(3);  // Ignores MR 1/3 of the time
     default:
         return true;
     }
@@ -5196,6 +5205,19 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             if (simple_monster_message(mon, " is firmly anchored in space."))
                 obvious_effect = true;
+        }
+        return MON_AFFECTED;
+
+    case BEAM_VULNERABILITY:
+        if (!mon->has_ench(ENCH_LOWERED_MR)
+            && mon->add_ench(mon_enchant(ENCH_LOWERED_MR, 0, agent())))
+        {
+            if (you.can_see(mon))
+            {
+                mprf("%s magical defenses are stripped away.",
+                     mon->name(DESC_ITS).c_str());
+                obvious_effect = true;
+            }
         }
         return MON_AFFECTED;
 
@@ -6037,6 +6059,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_ENSNARE:               return "magic web";
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
+    case BEAM_VULNERABILITY:         return "vulnerability";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

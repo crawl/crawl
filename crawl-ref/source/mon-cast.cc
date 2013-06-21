@@ -946,6 +946,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MMISSILE;
         break;
 
+    case SPELL_STRIP_RESISTANCE:
+        beam.ench_power = mons->hit_dice * 6;
+        beam.flavour    = BEAM_VULNERABILITY;
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1717,6 +1723,18 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         else
             return true;
+
+    case SPELL_STRIP_RESISTANCE:
+        if (foe)
+        {
+            if (foe->is_monster() && foe->as_monster()->has_ench(ENCH_LOWERED_MR))
+                return true;
+            else if (foe->is_player() && you.duration[DUR_LOWERED_MR])
+                return true;
+            else
+                return false;
+        }
+        return true;
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
