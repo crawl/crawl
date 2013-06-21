@@ -73,6 +73,9 @@
 #include "viewchar.h"
 #include "xom.h"
 
+#include <vector>
+#include <algorithm>
+
 static bool _wounded_damaged(mon_holy_type holi);
 static int _calc_player_experience(const monster* mons);
 
@@ -2721,7 +2724,8 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
-        || new_mclass == mons_species(old_mclass)  // must be different
+        // XXX(bh): Work around this.
+        // || new_mclass == mons_species(old_mclass)  // must be different
         || new_mclass == MONS_PROGRAM_BUG
 
         // They act as separate polymorph classes on their own.
@@ -3066,14 +3070,35 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                                         target_power, relax)));
     }
 
-    if (!_valid_morph(mons, targetc))
-        return simple_monster_message(mons, " looks momentarily different.");
-
     bool could_see = you.can_see(mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
     string old_name_a = mons->full_name(DESC_A);
     string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
+
+    if (targetc == RANDOM_SAME_GENUS)
+    {
+        monster_type genus = mons_genus(mons->type);
+        std::vector<monster_type> target_types;
+        for (int mc = 0; mc < NUM_MONSTERS; ++mc)
+        {
+            const monsterentry *me = get_monster_data((monster_type) mc);
+            if (me->genus != genus)
+                continue;
+            if (_valid_morph(mons, (monster_type) me->mc))
+            {
+                target_types.push_back((monster_type) mc);
+            }
+        }
+        if (target_types.empty()) {
+            return false;
+        }
+        std::random_shuffle(target_types.begin(), target_types.end());
+        targetc = target_types[0];
+    }
+
+    if (!_valid_morph(mons, targetc))
+        return simple_monster_message(mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
 
