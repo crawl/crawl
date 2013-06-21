@@ -2178,7 +2178,12 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         case '>':
             return (allow_updown? ID_DOWN : ID_CANCEL);
         case CONTROL('P'):
-            return _find_parent_branch(curr.branch);
+            {
+                const branch_type parent = _find_parent_branch(curr.branch);
+                if (parent < NUM_BRANCHES)
+                    return parent;
+            }
+            break;
         case '.':
             return curr.branch;
         case '*':
