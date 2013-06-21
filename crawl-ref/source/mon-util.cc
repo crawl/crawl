@@ -3276,7 +3276,7 @@ static bool _mons_has_ranged_ability(const monster* mon)
     }
 }
 
-static bool _mons_has_ranged_weapon(const monster* mon)
+static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
     // Ugh.
     monster* mnc = const_cast<monster* >(mon);
@@ -3289,6 +3289,10 @@ static bool _mons_has_ranged_weapon(const monster* mon)
     {
         return true;
     }
+    // We don't have a usable ranged weapon if a different cursed weapon
+    // is presently equipped.
+    else if (weapon != primary && primary && primary->cursed())
+        return false;
 
     if (!missile)
         return false;
@@ -3299,7 +3303,7 @@ static bool _mons_has_ranged_weapon(const monster* mon)
 bool mons_has_ranged_attack(const monster* mon)
 {
     return mons_has_ranged_spell(mon, true) || _mons_has_ranged_ability(mon)
-           || _mons_has_ranged_weapon(mon);
+           || _mons_has_usable_ranged_weapon(mon);
 }
 
 static bool _mons_starts_with_ranged_weapon(monster_type mc)
