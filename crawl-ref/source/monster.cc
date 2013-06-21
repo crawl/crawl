@@ -4211,29 +4211,34 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
     // XXX: This makes a lot of messages, especially when the spectral weapon is hit by a monster with multiple attacks and is frozen, burned, etc.
     if (type == MONS_SPECTRAL_WEAPON && agent)
     {
-        // The damage should not exceed the weapon's current hp or be enough to kill the player directly
-        actor *owner = actor_by_mid(props["sw_mid"].get_int());
-        int owner_hp = owner->is_player() ? you.hp : owner->as_monster()->hit_points;
-        int shared_damage = min(min(amount,hit_points), owner_hp-1);
-
         // The owner should not be able to damage itself
-        if (owner && owner != agent && shared_damage > 0)
+        actor *owner = actor_by_mid(props["sw_mid"].get_int());
+        if (owner && owner != agent)
         {
-            if (owner->is_player())
+            // The damage should not exceed the weapon's current hp
+            // or be enough to kill the owner directly
+            int owner_hp = owner->is_player() ? you.hp
+                                              : owner->as_monster()->hit_points;
+            int shared_damage = min(min(amount,hit_points), owner_hp-1);
+            if (shared_damage > 0)
             {
-                mpr("Your spectral weapon shares its damage with you!");
-                you.hurt(agent, shared_damage, flavour, cleanup_dead);
-            }
-            else if (owner->alive())
-            {
-                if (you.can_see(owner))
+
+                if (owner->is_player())
                 {
-                    string buf = " shares ";
-                    buf += owner->pronoun(PRONOUN_POSSESSIVE);
-                    buf += " spectral weapon's damage!";
-                    simple_monster_message(owner->as_monster(), buf.c_str());
+                    mpr("Your spectral weapon shares its damage with you!");
+                    you.hurt(agent, shared_damage, flavour, cleanup_dead);
                 }
-                owner->hurt(agent, shared_damage, flavour, cleanup_dead);
+                else if (owner->alive())
+                {
+                    if (you.can_see(owner))
+                    {
+                        string buf = " shares ";
+                        buf += owner->pronoun(PRONOUN_POSSESSIVE);
+                        buf += " spectral weapon's damage!";
+                        simple_monster_message(owner->as_monster(), buf.c_str());
+                    }
+                    owner->hurt(agent, shared_damage, flavour, cleanup_dead);
+                }
             }
         }
     }
