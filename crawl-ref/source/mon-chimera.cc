@@ -106,6 +106,12 @@ monster_type get_chimera_part(const monster_info* mi, int partnum)
     return MONS_PROGRAM_BUG;
 }
 
+monster_type random_chimera_part(const monster* mon)
+{
+    ASSERT(mon->type == MONS_CHIMERA);
+    return get_chimera_part(mon, random2(3) + 1);
+}
+
 bool chimera_is_batty(const monster* mon)
 {
     return mon->props.exists("chimera_batty");
