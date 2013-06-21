@@ -3541,7 +3541,8 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_DIMENSION_ANCHOR:
-        mpr("You feel firmly anchored in space.");
+        mprf("You feel %sfirmly anchored in space.",
+             you.duration[DUR_DIMENSION_ANCHOR] ? "more " : "");
         you.increase_duration(DUR_DIMENSION_ANCHOR, 12 + random2(15), 50);
         if (you.duration[DUR_TELEPORT])
         {
