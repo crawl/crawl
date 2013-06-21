@@ -5714,11 +5714,16 @@ int melee_attack::calc_damage()
         if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
             damage = div_rand_round(damage * 9, 10);
 
+        bool half_ac = (as_mon->type == MONS_PHANTASMAL_WARRIOR);
+
         // If the defender is asleep, the attacker gets a stab.
         if (defender && (defender->asleep()
                          || (attk_flavour == AF_SHADOWSTAB
                              &&!defender->can_see(attacker))))
         {
+            if (mons_class_flag(as_mon->type, M_STABBER))
+                half_ac = true;
+
             damage = damage * 5 / 2;
             dprf(DIAG_COMBAT, "Stab damage vs %s: %d",
                  defender->name(DESC_PLAIN).c_str(),
@@ -5728,8 +5733,7 @@ int melee_attack::calc_damage()
         if (cleaving)
             damage = cleave_damage_mod(damage);
 
-        return apply_defender_ac(damage, damage_max,
-                                 as_mon->type == MONS_PHANTASMAL_WARRIOR);
+        return apply_defender_ac(damage, damage_max, half_ac);
     }
     else
     {
