@@ -3177,6 +3177,19 @@ struct spell_desc
 },
 
 {
+    SPELL_STRIP_RESISTANCE, "Strip Resistance",
+     SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
