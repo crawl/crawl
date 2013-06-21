@@ -1534,8 +1534,8 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
-        string prompt = make_stringf("Are you sure you want to leave the "
-                                     "Dungeon?%s",
+        string prompt = make_stringf("Are you sure you want to leave %s?%s",
+                                     branches[root_branch].longname,
                                      crawl_state.game_is_tutorial() ? "" :
                                      " This will make you lose the game!");
         if (!yesno(prompt.c_str(), false, 'n'))
