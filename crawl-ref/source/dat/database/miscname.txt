@@ -329,29 +329,29 @@ You feel lost and a long, long way from home...
 
 You shiver with fear.
 
-WARN:You feel a terrible foreboding...
+You feel a terrible foreboding...
 
-WARN:Something frightening happens.
+Something frightening happens.
 
-WARN:You sense an ancient evil watching you...
+You sense an ancient evil watching you...
 
-WARN:You suddenly feel all small and vulnerable.
+You suddenly feel all small and vulnerable.
 
-WARN:You sense a hostile presence.
+You sense a hostile presence.
 
-TALK:"You will not leave this place."
+"You will not leave this place."
 
-TALK:"Die, mortal!"
+"Die, mortal!"
 
-TALK:"We do not forgive those who trespass against us!"
+"We do not forgive those who trespass against us!"
 
-TALK:"Trespassers are not welcome here!"
+"Trespassers are not welcome here!"
 
-TALK:"You do not belong in this place!"
+"You do not belong in this place!"
 
-TALK:"Leave now, before it is too late!"
+"Leave now, before it is too late!"
 
-TALK:"We have you now!"
+"We have you now!"
 
 SOUND:A gut-wrenching scream fills the air!
 

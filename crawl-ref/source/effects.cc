@@ -1248,10 +1248,11 @@ static void _hell_effects()
     string msg = getMiscString("hell_effect");
     if (msg.empty())
         msg = "Something hellishly buggy happens.";
-    msg_channel_type chan = MSGCH_PLAIN;
-    strip_channel_prefix(msg, chan);
+    bool loud = starts_with(msg, "SOUND:");
+    if (loud)
+        msg.erase(0, 6);
     mpr(msg.c_str(), MSGCH_HELL_EFFECT);
-    if (chan == MSGCH_SOUND)
+    if (loud)
         noisy(15, you.pos());
 
     spschool_flag_type which_miscast = SPTYP_RANDOM;
