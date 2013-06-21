@@ -3105,7 +3105,18 @@ static string _describe_chimera(const monster_info& mi)
     else if (mi.props.exists("chimera_wings"))
     {
         monster_type wing_part = get_chimera_part(&mi, mi.props["chimera_wings"].get_int());
-        description += " and the wings of ";
+        switch (mons_class_flies(wing_part))
+        {
+        case FL_WINGED:
+            description += " and the wings of ";
+            break;
+        case FL_LEVITATE:
+            description += " and it hovers like ";
+            break;
+        case FL_NONE:
+            description += " and the bugginess of ";
+            break;
+        }
         description += apply_description(DESC_A, get_monster_data(wing_part)->name);
     }
     description += ".";
