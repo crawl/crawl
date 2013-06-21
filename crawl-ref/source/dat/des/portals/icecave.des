@@ -187,7 +187,7 @@ function ice_cave_caverns_undead_demon_monster_set(e)
   e.mons("freezing wraith / blue devil / white very ugly thing w:1")
   e.mons("patrolling ice fiend")
   e.kmons("8 = blizzard demon")
-  e.shuffle("7` / `8 / `8")
+  e.shuffle("7` / 7` / `8")
 end
 
 -- : ice_cave_caverns_natural_giant_monster_set(_G)
