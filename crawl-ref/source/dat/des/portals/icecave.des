@@ -201,7 +201,7 @@ function ice_cave_caverns_natural_giant_monster_set(e)
   e.mons("patrolling frost giant / patrolling white draconian w:1")
 end
 
-function ice_caven_item_attributes(e)
+function ice_cave_item_attributes(e)
   freezeweap = "ego:freezing ident:type"
   goodfreezeweap = "ego:freezing good_item ident:type"
   coldres = "ego:cold_resistance ident:type"
@@ -210,7 +210,7 @@ end
 
 -- : ice_cave_caverns_undead_demon_loot(_G)
 function ice_cave_caverns_undead_demon_loot(e)
-  ice_caven_item_attributes(e)
+  ice_cave_item_attributes(e)
   e.item("cloak " .. coldres .. " good_item w:8 / wizard hat good_item / \
           pair of gloves good_item / pair of boots good_item / nothing")
   e.item("book of ice / book of unlife / staff of cold / staff of death / \
@@ -222,7 +222,7 @@ end
 
 -- : ice_cave_caverns_natural_giant_loot(_G)
 function ice_cave_caverns_natural_giant_loot(e)
-  ice_caven_item_attributes(e)
+  ice_cave_item_attributes(e)
   e.item("animal skin " .. goodcoldres .. " / \
           battleaxe " .. goodfreezeweap .. " w:4 / \
           glaive " .. goodfreezeweap .. " w:4 / \
@@ -517,7 +517,7 @@ ITEM:    giant club / giant spiked club / great mace w:9 / \
          nothing w:58
 ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
          halberd good_item / great sword good_item / nothing w:50
-: ice_caven_item_attributes(_G)
+: ice_cave_item_attributes(_G)
 : item("battleaxe " .. freezeweap .. " / glaive " .. freezeweap ..
 :   " / halberd " .. freezeweap .. " / great sword " .. freezeweap ..
 :   " / battleaxe " .. goodfreezeweap .. " / glaive " .. goodfreezeweap ..
@@ -647,7 +647,7 @@ SUBST:   - = ........-
 KFEAT:   - = alarm trap
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
-: ice_caven_item_attributes(_G)
+: ice_cave_item_attributes(_G)
 MONS:    ice beast
 MONS:    white imp
 MONS:    freezing wraith
@@ -739,7 +739,7 @@ SUBST:   ! = w
 ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil")
-ice_caven_item_attributes(_G)
+ice_cave_item_attributes(_G)
 }}
 : if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
