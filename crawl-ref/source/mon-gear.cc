@@ -1573,30 +1573,30 @@ static void _give_ammo(monster* mon, int level,
             }
             else if (mon->type == MONS_SPRIGGAN_ASSASSIN)
             {
-                if (got_curare_roll(level))
+
+                special_missile_type brand = random_choose_weighted(5, SPMSL_SLEEP,
+                                                              3, SPMSL_CONFUSION,
+                                                              2, SPMSL_PARALYSIS,
+                                                              2, SPMSL_CURARE,
+                                                              1, SPMSL_RAGE,
+                                                              0);
+                switch (brand)
                 {
-                    set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                      SPMSL_CURARE);
-                    mitm[thing_created].quantity = random_range(2, 8);
+                    case SPMSL_CONFUSION:
+                    case SPMSL_PARALYSIS:
+                    case SPMSL_RAGE:
+                        mitm[thing_created].quantity = random_range(3, 7);
+                        break;
+                    case SPMSL_CURARE:
+                        mitm[thing_created].quantity = random_range(2, 5);
+                        break;
+                    case SPMSL_SLEEP: default:
+                        mitm[thing_created].quantity = random_range(4, 9);
+                        break;
                 }
-                else
-                {
-                    if (one_chance_in(3))
-                    {
-                        set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                          random_choose_weighted(
-                                              4, SPMSL_SLEEP,
-                                              3, SPMSL_CONFUSION,
-                                              2, SPMSL_PARALYSIS,
-                                              0));
-                    }
-                    else
-                    {
-                        set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                          SPMSL_POISONED);
-                    }
-                    mitm[thing_created].quantity = random_range(4, 10);
-                }
+                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                    brand);
+
             }
             else
             {
