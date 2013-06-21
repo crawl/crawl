@@ -599,7 +599,7 @@ void check_map_validity()
         if (!in_bounds(*ri))
             ASSERT(feat_is_solid(feat));
 
-        if (env.level_map_mask(*ri) && MMT_MIMIC)
+        if (env.level_map_mask(*ri) & MMT_MIMIC)
             continue;
         // no mimics below
 
