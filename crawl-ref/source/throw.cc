@@ -1622,21 +1622,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         baseHit, baseDam,
                         item_base_dam, lnch_base_dam);
 
-        // Check for matches; dwarven, elven, orcish.
-        if (!(get_equip_race(*you.weapon()) == 0))
+        // elves with elven bows
+        if (get_equip_race(*you.weapon()) == ISFLAG_ELVEN
+            && player_genus(GENPC_ELVEN))
         {
-            if (get_equip_race(*you.weapon()) == get_equip_race(item))
-            {
-                baseHit++;
-                baseDam++;
-
-                // elves with elven bows
-                if (get_equip_race(*you.weapon()) == ISFLAG_ELVEN
-                    && player_genus(GENPC_ELVEN))
-                {
-                    baseHit++;
-                }
-            }
+            baseHit++;
         }
 
         // Lower accuracy if held in a net.
@@ -2281,15 +2271,11 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
         if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
             beam.ench_power = AUTOMATIC_HIT;
 
-        // elven bow w/ elven arrow, also orcish
-        if (get_equip_race(mitm[weapon])
-                == get_equip_race(mitm[msl]))
+        // elf with elven launcher
+        if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN
+            && mons_genus(mons->type) == MONS_ELF)
         {
-            baseHit++;
-            baseDam++;
-
-            if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN)
-                beam.hit++;
+            beam.hit++;
         }
 
         // Vorpal brand increases damage dice size.
