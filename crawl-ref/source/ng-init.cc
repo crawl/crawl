@@ -100,7 +100,7 @@ void initialise_branch_depths()
 
 #define MAX_OVERFLOW_LEVEL 9
 
-static void _place_overflow_temple(vector<god_type> temple_gods)
+static void _use_overflow_temple(vector<god_type> temple_gods)
 {
     CrawlVector &overflow_temples
         = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
@@ -249,7 +249,7 @@ multi_overflow:
         if (find_maps_for_tag(tags).empty())
             continue;
 
-        _place_overflow_temple(this_temple_gods);
+        _use_overflow_temple(this_temple_gods);
 
         overflow_gods = new_overflow_gods;
 
@@ -288,7 +288,7 @@ multi_overflow:
                 this_temple_gods.push_back(overflow_gods[i + 1]);
         }
 
-        _place_overflow_temple(this_temple_gods);
+        _use_overflow_temple(this_temple_gods);
     }
 }
 
