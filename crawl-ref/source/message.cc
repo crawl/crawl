@@ -893,6 +893,7 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 
         case MSGCH_TALK:
         case MSGCH_TALK_VISUAL:
+        case MSGCH_HELL_EFFECT:
             ret = MSGCOL_WHITE;
             break;
 

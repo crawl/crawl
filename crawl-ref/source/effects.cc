@@ -1250,7 +1250,7 @@ static void _hell_effects()
         msg = "Something hellishly buggy happens.";
     msg_channel_type chan = MSGCH_PLAIN;
     strip_channel_prefix(msg, chan);
-    mpr(msg.c_str(), chan);
+    mpr(msg.c_str(), MSGCH_HELL_EFFECT);
     if (chan == MSGCH_SOUND)
         noisy(15, you.pos());
 
