@@ -1139,6 +1139,10 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     if (m1.type == MONS_BALLISTOMYCETE)
         return ((m1.number > 0) > (m2.number > 0));
 
+    // Shifters after real monsters of the same type.
+    if (m1.is(MB_SHAPESHIFTER) != m2.is(MB_SHAPESHIFTER))
+        return m2.is(MB_SHAPESHIFTER);
+
     if (zombified)
     {
         if (mons_class_is_zombified(m1.type))
