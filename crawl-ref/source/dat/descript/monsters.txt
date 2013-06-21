@@ -3765,9 +3765,11 @@ with other nearby globs...
 %%%%
 slime creature:quote
 
-“A lustreless protrusive eye
- Stares from the protozoic slime”
-    -T.S. Eliot, “Burbank with a Baedeker: Bleistein with a Cigar”. 1920.
+“The very deep did rot: O Christ!
+ That ever this should be!
+ Yea, slimy things did crawl with legs
+ Upon the slimy sea.”
+    -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
 %%%%
 small abomination
 
