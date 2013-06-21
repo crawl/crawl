@@ -1969,21 +1969,31 @@ static void _build_overflow_temples()
         }
         else
         {
-            string vault_tag;
+            string vault_tag = "";
+            string name = "";
 
-            // For a single-altar temple, first try to find a temple specialized
-            // for that god.
-            if (num_gods == 1 && coinflip())
+            // First try to find a temple specialized for this combination of
+            // gods.
+            if (coinflip())
             {
+                vault_tag = make_stringf("temple_overflow_%d", num_gods);
+
                 CrawlVector &god_vec = temple[TEMPLE_GODS_KEY];
-                god_type     god     = (god_type) god_vec[0].get_byte();
 
-                string name = god_name(god);
-                name = replace_all(name, " ", "_");
-                lowercase(name);
+                for (int j = 0; j < num_gods; j++)
+                {
+                    god_type god = (god_type) god_vec[j].get_byte();
 
-                if (you.uniq_map_tags.find("uniq_altar_" + name)
-                    != you.uniq_map_tags.end())
+                    name = god_name(god);
+                    name = replace_all(name, " ", "_");
+                    lowercase(name);
+
+                    vault_tag = vault_tag + " temple_overflow_" + name;
+                }
+
+                if (num_gods == 1
+                    && you.uniq_map_tags.find("uniq_altar_" + name)
+                       != you.uniq_map_tags.end())
                 {
                     // We've already placed a specialized temple for this
                     // god, so do nothing.
@@ -1994,19 +2004,18 @@ static void _build_overflow_temples()
                     continue;
                 }
 
-                vault_tag = make_stringf("temple_overflow_%s", name.c_str());
-
                 vault = random_map_for_tag(vault_tag, true);
 #ifdef DEBUG_TEMPLES
                 if (vault == NULL)
                     mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
-                         "for god %s", name.c_str());
+                         "for combination of tags %s", vault_tag.c_str());
 #endif
             }
 
             if (vault == NULL)
             {
-                vault_tag = make_stringf("temple_overflow_%d", num_gods);
+                vault_tag = make_stringf("temple_overflow_generic_%d",
+                                         num_gods);
 
                 vault = random_map_for_tag(vault_tag, true);
                 if (vault == NULL)

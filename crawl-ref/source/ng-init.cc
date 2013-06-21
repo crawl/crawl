@@ -222,7 +222,7 @@ void initialise_temples()
             int chance = 0;
             for (unsigned int j = 2; j <= size; j++)
             {
-                string mapname = make_stringf("temple_overflow_%d", j);
+                string mapname = make_stringf("temple_overflow_generic_%d", j);
                 if (!find_maps_for_tag(mapname).empty())
                     if (one_chance_in(++chance))
                         num_gods = j;
