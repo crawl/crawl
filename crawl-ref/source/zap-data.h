@@ -1080,6 +1080,7 @@ struct zap_info
     false,
     3
 },
+
 {
     ZAP_HAUNTING,
     "torrent of ghosts",
@@ -1095,5 +1096,3 @@ struct zap_info
     false,
     3
 },
-
-#endif
