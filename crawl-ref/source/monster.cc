@@ -4215,14 +4215,16 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         actor *owner = actor_by_mid(props["sw_mid"].get_int());
         int owner_hp = owner->is_player() ? you.hp : owner->as_monster()->hit_points;
         int shared_damage = min(min(amount,hit_points), owner_hp-1);
-        if (shared_damage>0)
+
+        // The owner should not be able to damage itself
+        if (owner && owner != agent && shared_damage > 0)
         {
-            if (owner->is_player() && agent->is_monster())
+            if (owner->is_player())
             {
                 mpr("Your spectral weapon shares its damage with you!");
                 you.hurt(agent, shared_damage, flavour, cleanup_dead);
             }
-            else if (owner && owner->alive())
+            else if (owner->alive())
             {
                 if (you.can_see(owner))
                 {
