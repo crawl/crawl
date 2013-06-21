@@ -2710,32 +2710,23 @@ string map_def::validate_temple_map()
         if (temple_tag.empty())
             return "Malformed temple_overflow_ tag";
 
-        int num = 0;
-        parse_int(temple_tag.c_str(), num);
-
-        if (num == 0)
+        if (starts_with(temple_tag, "generic_"))
         {
-            temple_tag = replace_all(temple_tag, "_", " ");
+            temple_tag = strip_tag_prefix(temple_tag, "generic_");
 
-            god_type god = str_to_god(temple_tag);
+            int num = 0;
+            parse_int(temple_tag.c_str(), num);
 
-            if (god == GOD_NO_GOD)
-            {
-                return make_stringf("Invalid god name '%s'",
-                                    temple_tag.c_str());
-            }
-
-            // Assume that specialized single-god temples are set up
-            // properly.
-            return "";
-        }
-        else
-        {
             if (((unsigned long) num) != altars.size())
             {
                 return make_stringf("Temple should contain %u altars, but "
                                     "has %d.", (unsigned int)altars.size(), num);
             }
+        }
+        else
+        {
+            // Assume specialised altar vaults are set up correctly.
+            return "";
         }
     }
 
@@ -3235,8 +3226,16 @@ void map_def::fixup()
 
 bool map_def::has_tag(const string &tagwanted) const
 {
-    return !tags.empty() && !tagwanted.empty()
-        && tags.find(" " + tagwanted + " ") != string::npos;
+    if (tags.empty() || tagwanted.empty())
+        return false;
+
+    vector<string> wanted_tags = split_string(" ", tagwanted);
+
+    for (unsigned int i = 0; i < wanted_tags.size(); i++)
+        if (tags.find(" " + wanted_tags[i] + " ") == string::npos)
+            return false;
+
+    return true;
 }
 
 bool map_def::has_tag_prefix(const string &prefix) const
