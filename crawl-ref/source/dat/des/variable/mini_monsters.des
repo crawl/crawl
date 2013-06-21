@@ -2019,6 +2019,51 @@ xdexx..xxx
 xxxx.@xxxx
 ENDMAP
 
+NAME:     grunt_tower_of_power
+TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
+DEPTH:    D:16-21, Vaults, !Vaults:$
+: if you.branch() == "Vaults" then
+SUBST:   c = vvb, @ = .
+: end
+# This spell set is Lich IV, picked for having IMB and IOOD.
+MONS:     lich spells:iskenderun's_mystic_blast;bolt_of_cold;invisibility;\
+                      animate_dead;orb_of_destruction;invisibility
+# The wizard spell set is Wizard II, picked for having IMB and venom bolt;
+# same logic for naga mages.
+# The tengu conjurer spellset is Tengu Conjurer II, picked for having
+# Bolt of Magma.
+MONS:     wizard spells:venom_bolt;iskenderun's_mystic_blast;invisibility;\
+                        confuse;slow;teleport_self / \
+          naga mage / \
+          tengu conjurer spells:throw_flame;bolt_of_magma;\
+                                iskenderun's_battlesphere;bolt_of_magma;\
+                                iskenderun's_battlesphere;blink
+# The tengu reaver spell set is Tengu Reaver III, picked for having Poisonous
+# Cloud.
+MONS:     tengu reaver spells:venom_bolt;.;iskenderun's_battlesphere;\
+                              poisonous_cloud;iskenderun's_battlesphere;blink
+ITEM:     book of Power, robe good_item, wizard hat good_item, robe, wizard hat
+KFEAT:    _ = altar_vehumet
+SHUFFLE: ef, gh, ij
+MAP
+      ccccc
+     ccedfcc
+     ceh_gfc
+     c..1..c
+cccccc.....cccccc
+c.fhccc...cccge.c
+ce2.cccc+cccc.2fc
+cg..cc.....cc..hc
+cccc+.......+cccc
+ ccc..2.U.2..ccc
+ cc...........cc
+ @....U.3.U....@
+ cc...........cc
+  cc....U....cc
+   cc.......cc
+    cc..@..cc
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead

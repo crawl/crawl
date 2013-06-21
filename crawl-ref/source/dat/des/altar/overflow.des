@@ -1956,6 +1956,149 @@ xx+++xx
  ""@""
 ENDMAP
 
+NAME:  grunt_temple_overflow_champion_of_chaos
+DEPTH: D:3-9
+TAGS:  temple_overflow_2 temple_overflow_makhleb temple_overflow_xom
+TAGS:  no_monster_gen
+MONS:  crimson imp ; dagger ego:chaos ident:type
+KFEAT: A = altar_makhleb
+KFEAT: B = altar_xom
+MAP
+xxxxx
+xA.Bx
+x.1.x
+x...x
+xx+xx
+ENDMAP
+
+NAME:  grunt_temple_overflow_growth_and_decay
+DEPTH: D:2-9
+TAGS:  temple_overflow_2 temple_overflow_fedhas temple_overflow_kikubaaqudgha
+TAGS:  transparent
+KFEAT: A = altar_fedhas
+KFEAT: B = altar_kikubaaqudgha
+MONS:  plant / nothing
+MONS:  plant col:lightgrey name:withered n_adj tile:mons_withered_plant / \
+       nothing
+MAP
+xxxxx
+x111xx@@
+x1A111..xxx
+x11.....22xxxx
+xxxx11.....22x
+   xxx..222B2x
+      @@xx222x
+         xxxxx
+ENDMAP
+
+NAME:   grunt_temple_overflow_holy_war
+DEPTH:  D:2-9
+TAGS:   temple_overflow_2 temple_overflow_the_shining_one
+TAGS:   temple_overflow_yredelemnul transparent
+MONS:   angel, profane servitor
+FTILE:  A+_Kn1 = floor_limestone
+FTILE:  B-;LN2 = floor_crypt
+TILE:   c = wall_church
+TILE:   C = wall_catacombs
+KFEAT:  A = altar_the_shining_one
+KFEAT:  B = altar_yredelemnul
+KFEAT:  C = stone_wall
+KFEAT:  KL = floor
+KFEAT:  - = closed_door
+KFEAT:  N = clear_stone_wall
+KMASK:  12 = opaque
+COLOUR: c = white
+COLOUR: C = magenta
+MARKER: K = lua:fog_machine {cloud_type = "blessed fire", \
+                             pow_min = 10, pow_max = 10, delay = 10, \
+                             size = 1, walk_dist = 0, spread_rate = 0, \
+                             excl_rad = 0 }
+MARKER: L = lua:fog_machine {cloud_type = "foul pestilence", \
+                             pow_min = 10, pow_max = 10, delay = 10, \
+                             size = 1, walk_dist = 0, spread_rate = 0, \
+                             excl_rad = 0 }
+MAP
+xxxxxxxxxxxx@xxxxxxxxxxxx
+xcccccccccc...CCCCCCCCCCx
+xcnnK_K_K_c...C;L;L;LNNCx
+xc1n_A____+...-;;;;B;N2Cx
+xcnnK_K_K_c...C;L;L;LNNCx
+xcccccccccc...CCCCCCCCCCx
+xxxxxxxxxxxx@xxxxxxxxxxxx
+ENDMAP
+
+NAME:  grunt_temple_overflow_lords_of_destruction
+TAGS:  temple_overflow_2 temple_overflow_makhleb temple_overflow_vehumet
+DEPTH: D:3-9
+KFEAT: A = altar_makhleb
+KFEAT: B = altar_vehumet
+MONS:  crimson imp ; wand of magic darts charges:1 | \
+                     wand of flame charges:1 | \
+                     wand of frost charges:1
+MAP
+ xxxxx
+xxA.Bxx
+x..1..x
+xx...xx
+ xx.xx
+  x+x
+ENDMAP
+
+NAME:  grunt_temple_overflow_order_and_chaos_1
+DEPTH: D:2-9
+TAGS:  temple_overflow_2 temple_overflow_xom temple_overflow_zin transparent
+KPROP: _1 = no_rtele_into
+KMASK: _1 = opaque
+KFEAT: A = altar_xom
+KFEAT: B = altar_zin
+FTILE: n_1 = floor_limestone
+MONS:  angel god:zin dbname:zin_angel perm_ench:confusion generate_awake / \
+       angel god:zin dbname:zin_angel perm_ench:mute generate_awake w:1 / \
+       angel god:zin dbname:zin_angel perm_ench:mad generate_awake w:1 / \
+       angel god:zin dbname:zin_angel perm_ench:dumb generate_awake w:1
+MAP
+ .......
+....A....
+..nnnnn..
+..n___n..
+@.n_1_n.@
+..n___n..
+..nnnnn..
+....B....
+ .......
+ENDMAP
+
+NAME:   grunt_temple_overflow_order_and_chaos_2
+DEPTH:  D:2-9
+TAGS:   temple_overflow_2 temple_overflow_makhleb temple_overflow_zin
+TAGS:   transparent
+KFEAT:  A = altar_makhleb
+KFEAT:  B = altar_zin
+MONS:   executioner / balrug / green death / cacodemon / blizzard demon
+MONS:   angel god:zin dbname:zin_angel
+SUBST:  ; = -_
+KPROP:  - = bloody / nothing
+KMASK:  12 = opaque
+SUBST:  - = _L
+KFEAT:  L_ = floor
+KFEAT:  C = stone_wall
+KFEAT:  N = clear_stone_wall
+SUBST:  X = CL
+FTILE:  _BN2 = floor_limestone
+TILE:   C = wall_church
+COLOUR: C = white
+MAP
+    x.@.x
+  xxx...xxx
+xxxXXX+CCCxxx
+xccc--;__CCCx
+xc1nA-;_BN2Cx
+xccc--;__CCCx
+xxxXXX+CCCxxx
+  xxx...xxx
+    x.@.x
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
