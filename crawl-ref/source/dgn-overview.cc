@@ -371,6 +371,9 @@ static string _get_unseen_branches()
         if (stair_level.find(branch) == stair_level.end())
         {
             const branch_type parent = parent_branch((branch_type)i);
+            // Root branches.
+            if (parent == NUM_BRANCHES)
+                continue;
             level_id lid(parent, 0);
             lid = find_deepest_explored(lid);
             if (lid.depth >= branches[branch].mindepth)
