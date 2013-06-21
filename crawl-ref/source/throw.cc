@@ -881,7 +881,7 @@ static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg)
         return false;
 
     int blowgun_power = _blowgun_power_roll(beam);
-    victim->paralyse(beam.agent(), 5 + random2(blowgun_power));
+    victim->paralyse(beam.agent(), min(2 + random2(blowgun_power), 7));
     return true;
 }
 
