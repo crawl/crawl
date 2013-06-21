@@ -1369,8 +1369,11 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         // deliberate fall-through
     case MONS_SPRIGGAN_ENCHANTER:
         item_race = MAKE_ITEM_NO_RACE;
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = one_chance_in(3) ? WPN_QUICK_BLADE : WPN_DAGGER;
+        item.sub_type  = one_chance_in(12) ? WPN_QUICK_BLADE : WPN_DAGGER;
         break;
 
     case MONS_SPRIGGAN_RIDER:
