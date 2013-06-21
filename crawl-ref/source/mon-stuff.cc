@@ -729,7 +729,6 @@ int exp_rate(int killer)
         && (&menv[killer])->props.exists("sw_mid")
         && actor_by_mid((&menv[killer])->props["sw_mid"].get_int())->is_player())
     {
-        dprf("Exp by SW attributed to player");
         return 2;
     }
 
@@ -1656,7 +1655,6 @@ int monster_die(monster* mons, killer_type killer,
         && (&menv[killer_index])->props.exists("sw_mid")
         && actor_by_mid((&menv[killer_index])->props["sw_mid"].get_int())->is_player())
     {
-        dprf("Kill by SW attributed to player");
         killer = KILL_YOU;
         killer_index = you.mindex();
     }
