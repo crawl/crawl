@@ -33,10 +33,8 @@ class random_picker
 {
 public:
     T pick(const random_pick_entry<T> *weights, int level, T none);
-    static int _rarity_at(const random_pick_entry<T> *pop,
-                                         int depth);
-
-protected:
+    int rarity_at(const random_pick_entry<T> *pop,
+                  int depth);
     virtual bool veto(T val) { return false; }
 };
 
@@ -56,7 +54,7 @@ T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
         if (veto(pop->value))
             continue;
 
-        int rar = _rarity_at(pop, level);
+        int rar = rarity_at(pop, level);
         ASSERT(rar > 0);
 
         valid[nvalid].value = pop->value;
@@ -78,7 +76,7 @@ T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
 }
 
 template <typename T, int max>
-int random_picker<T, max>::_rarity_at(const random_pick_entry<T> *pop, int depth)
+int random_picker<T, max>::rarity_at(const random_pick_entry<T> *pop, int depth)
 {
     int rar = pop->rarity;
     int len = pop->maxr - pop->minr;

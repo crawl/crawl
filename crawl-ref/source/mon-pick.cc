@@ -9,8 +9,11 @@
 
 #include "externs.h"
 #include "branch.h"
+#include "coord.h"
+#include "env.h"
 #include "errors.h"
 #include "libutil.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
 
@@ -101,27 +104,57 @@ monster_type pick_monster(level_id place, mon_pick_vetoer veto)
     return pick_monster_from(population[place.branch].pop, place.depth, veto);
 }
 
+monster_type pick_monster(level_id place, monster_picker &picker)
+{
+    ASSERT(place.is_valid());
+    return picker.pick(population[place.branch].pop, place.depth, MONS_0);
+}
+
 monster_type pick_monster_from(const pop_entry *fpop, int depth,
                                mon_pick_vetoer veto)
 {
     // XXX: If creating/destroying instances has performance issues, cache a
-    // static instance and pass in the veto each time instead
-    monster_picker picker(veto);
-    return picker.pick(fpop, depth, MONS_0);
+    // static instance
+    monster_picker picker = monster_picker();
+    return picker.pick_with_veto(fpop, depth, MONS_0, veto);
+}
+
+monster_type monster_picker::pick_with_veto(const pop_entry *weights,
+                                            int level, monster_type none,
+                                            mon_pick_vetoer vetoer)
+{
+    _veto = vetoer;
+    return pick(weights, level, none);
 }
 
 // Veto specialisation for the monster_picker class; this simply calls the
 // stored veto function. Can subclass further for more complex veto behaviour.
-bool monster_picker::veto(monster_type item)
+bool monster_picker::veto(monster_type mon)
 {
-    return _veto(item);
+    return _veto && _veto(mon);
+}
+
+bool positioned_monster_picker::veto(monster_type mon)
+{
+    // Actually pick a monster that is happy where we want to put it.
+    // Fish zombies on land are helpless and uncool.
+    if (!in_bounds(pos) || !monster_habitable_grid(mon, grd(pos)))
+        return true;
+    return monster_picker::veto(mon);
+}
+
+monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto)
+{
+    monster_picker picker = monster_picker();
+    return pick_monster_all_branches(absdepth0, picker, veto);
 }
 
 // Used for picking zombies when there's nothing native.
 // TODO: cache potential zombifiables for the given level/size, with a
 // second pass to select ones that have a skeleton/etc and can be placed in
 // a given spot.
-monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto)
+monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
+                                       mon_pick_vetoer veto)
 {
     monster_type valid[NUM_MONSTERS];
     int rarities[NUM_MONSTERS];
@@ -139,10 +172,11 @@ monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto)
             if (depth < pop->minr || depth > pop->maxr)
                 continue;
 
-            if (veto && (*veto)(pop->value))
+            if (veto && (*veto)(pop->value)
+                || !veto && picker.veto(pop->value))
                 continue;
 
-            int rar = monster_picker::_rarity_at(pop, depth);
+            int rar = picker.rarity_at(pop, depth);
             ASSERT(rar > 0);
 
             monster_type mons = pop->value;
