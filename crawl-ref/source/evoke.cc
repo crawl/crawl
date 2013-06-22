@@ -728,17 +728,17 @@ static bool _box_of_beasts(item_def &box)
     if (!one_chance_in(3))
     {
         mgen_data mg = mgen_data(MONS_CHIMERA,
-                      BEH_FRIENDLY, &you,
-                      3 + random2(3), 0,
-                      you.pos(),
-                      MHITYOU);
+                                 BEH_FRIENDLY, &you,
+                                 3 + random2(3), 0,
+                                 you.pos(),
+                                 MHITYOU);
         mg.base_type = mon;
+        mg.chimera_mons.push_back(mon);
+        mg.chimera_mons.push_back(mon2);
+        mg.chimera_mons.push_back(mon3);
         monster* mons = create_monster(mg);
         if (mons)
-        {
-            make_chimera(mons, mon, mon2, mon3);
             success = true;
-        }
     }
 
     if (success)
