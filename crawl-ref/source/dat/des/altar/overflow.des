@@ -2006,6 +2006,7 @@ KFEAT:  C = stone_wall
 KFEAT:  KL = floor
 KFEAT:  - = closed_door
 KFEAT:  N = clear_stone_wall
+KPROP:  12 = no_rtele_into
 KMASK:  12 = opaque
 COLOUR: c = white
 COLOUR: C = magenta
@@ -2078,6 +2079,7 @@ MONS:   executioner / balrug / green death / cacodemon / blizzard demon
 MONS:   angel god:zin dbname:zin_angel
 SUBST:  ; = -_
 KPROP:  - = bloody / nothing
+KPROP:  12 = no_rtele_into
 KMASK:  12 = opaque
 SUBST:  - = _L
 KFEAT:  L_ = floor
