@@ -31,6 +31,7 @@ void make_chimera(monster* mon, monster_type part1, monster_type part2, monster_
     define_monster(mon);
 
     mon->type         = MONS_CHIMERA;
+    mon->colour       = mons_class_colour(MONS_CHIMERA);
     mon->base_monster = part1;
     mon->props["chimera_part_2"] = part2;
     mon->props["chimera_part_3"] = part3;
