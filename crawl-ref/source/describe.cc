@@ -3088,7 +3088,7 @@ static string _describe_chimera(const monster_info& mi)
         if (part2 == mi.base_type)
             description += "yet ";
         description += "another ";
-        description += apply_description(DESC_PLAIN, get_monster_data(part2)->name);
+        description += apply_description(DESC_PLAIN, get_monster_data(part3)->name);
     }
     else
         description += apply_description(DESC_A, get_monster_data(part3)->name);
