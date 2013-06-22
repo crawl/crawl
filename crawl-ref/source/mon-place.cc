@@ -1787,11 +1787,8 @@ static bool _good_zombie(monster_type base, monster_type cs,
     return true;
 }
 
-// TODO: pass these in a clean way; this code is temporary though (famous last
-// words...).
-static monster_type zombie_kind;
-static coord_def zombie_pos;
-static bool _unfitting_zombie(monster_type mt)
+// Veto for the zombie picker class
+bool zombie_picker::veto(monster_type mt)
 {
     // Zombifiability in general.
     if (mons_species(mt) != mt)
@@ -1803,16 +1800,13 @@ static bool _unfitting_zombie(monster_type mt)
     if (mons_class_holiness(mt) != MH_NATURAL)
         return true;
 
-    return !_good_zombie(mt, zombie_kind, zombie_pos);
+    return !_good_zombie(mt, zombie_kind, pos);
 }
 
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos)
 {
-    zombie_kind = cs;
-    zombie_pos = pos;
-
     if (crawl_state.game_is_zotdef())
     {
         place = level_id(BRANCH_MAIN_DUNGEON,
@@ -1831,12 +1825,14 @@ monster_type pick_local_zombifiable_monster(level_id place,
         place.depth += 1 + div_rand_round(place.absdepth(), 5);
     }
 
+    zombie_picker picker = zombie_picker(pos, cs);
+
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
-    if (monster_type mt = pick_monster(place, _unfitting_zombie))
+    if (monster_type mt = pick_monster(place, picker))
         return mt;
 
-    return pick_monster_all_branches(place.absdepth(), _unfitting_zombie);
+    return pick_monster_all_branches(place.absdepth(), picker);
 }
 
 void roll_zombie_hp(monster* mon)

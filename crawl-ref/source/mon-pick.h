@@ -15,6 +15,7 @@
 #define pop_entry random_pick_entry<monster_type>
 
 typedef bool (*mon_pick_vetoer)(monster_type);
+typedef bool (*mon_pick_pos_vetoer)(monster_type, coord_def);
 
 int mons_rarity(monster_type mcls, branch_type branch);
 int mons_depth(monster_type mcls, branch_type branch);
@@ -37,13 +38,50 @@ void debug_monpick();
 class monster_picker : public random_picker<monster_type, NUM_MONSTERS>
 {
 public:
-    monster_picker(mon_pick_vetoer vetoer = nullptr) : _veto(vetoer) { };
+    monster_picker() : _veto(nullptr) { };
 
-protected:
+    monster_type pick_with_veto(const pop_entry *weights, int level,
+                                monster_type none,
+                                mon_pick_vetoer vetoer = nullptr);
+
     virtual bool veto(monster_type mon);
 
 private:
     mon_pick_vetoer _veto;
 };
+
+class positioned_monster_picker : public monster_picker
+{
+public:
+    positioned_monster_picker(const coord_def &_pos,
+                              mon_pick_pos_vetoer _posveto = nullptr)
+        : monster_picker(), pos(_pos), posveto(_posveto) { };
+
+    virtual bool veto(monster_type mon);
+
+protected:
+    const coord_def &pos;
+
+private:
+    mon_pick_pos_vetoer posveto;
+};
+
+class zombie_picker : public positioned_monster_picker
+{
+public:
+    zombie_picker(const coord_def &_pos, monster_type _ztype)
+        : positioned_monster_picker(_pos),
+          zombie_kind(_ztype)
+          { };
+
+    virtual bool veto(monster_type mon);
+
+private:
+    monster_type zombie_kind;
+};
+
+monster_type pick_monster(level_id place, monster_picker &picker);
+monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
+                                       mon_pick_vetoer veto = nullptr);
 
 #endif
