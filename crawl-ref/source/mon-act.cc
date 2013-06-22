@@ -3604,7 +3604,14 @@ static bool _may_cutdown(monster* mons, monster* targ)
     }
     // Outside of that case, can always cut mundane plants.
     if (mons_is_firewood(targ))
-        return true;
+    {
+        // Don't try to attack briars unless their damage will be insignificant
+        if (targ->type == MONS_BRIAR_PATCH && mons->type != MONS_THORN_HUNTER
+            && (mons->armour_class() * mons->hit_points) < 400)
+            return false;
+        else
+            return true;
+    }
 
     // In normal games, that's it.  Gotta keep those butterflies alive...
     if (!crawl_state.game_is_zotdef())
