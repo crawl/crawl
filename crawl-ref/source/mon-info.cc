@@ -1155,6 +1155,20 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
                 return false;
         }
 
+        if (m1.type == MONS_CHIMERA)
+        {
+            for (int part = 1; part <= 3; part++)
+            {
+                const monster_type p1 = get_chimera_part(&m1, part);
+                const monster_type p2 = get_chimera_part(&m2, part);
+
+                if (p1 < p2)
+                    return true;
+                else if (p1 > p2)
+                    return false;
+            }
+        }
+
         // Both monsters are hydras or hydra zombies, sort by number of heads.
         if (mons_genus(m1.type) == MONS_HYDRA || mons_genus(m1.base_type) == MONS_HYDRA)
         {
