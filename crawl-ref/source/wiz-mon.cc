@@ -612,7 +612,7 @@ void debug_stethoscope(int mon)
 
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
-         "firing_pos=(%d,%d) god=%s",
+         "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s",
          ((hab == HT_LAND)                       ? "land" :
           (hab == HT_AMPHIBIOUS)                 ? "amphibious" :
           (hab == HT_WATER)                      ? "water" :
@@ -638,6 +638,7 @@ void debug_stethoscope(int mon)
          mons.foe_memory,
          mons.target.x, mons.target.y,
          mons.firing_pos.x, mons.firing_pos.y,
+         mons.patrol_point.x, mons.patrol_point.y,
          god_name(mons.god).c_str());
 
     // Print resistances.
