@@ -2064,6 +2064,42 @@ cccc+.......+cccc
     cc..@..cc
 ENDMAP
 
+NAME:  grunt_absolute_annihilation
+DEPTH: D:23-
+# These spell sets are Lich III and Lich IV; they have LCS and IOOD
+# respectively.
+MONS:    ancient lich spells:bolt_of_draining;slow;invisibility;throw_icicle;\
+                             lehudib's_crystal_spear;invisibility \
+                      spells:iskenderun's_mystic_blast;bolt_of_cold;\
+                             invisibility;animate_dead;orb_of_destruction;\
+                             invisibility
+MONS:    deep elf annihilator / draconian annihilator w:5 / \
+         lich w:5 spells:bolt_of_draining;slow;invisibility;throw_icicle;\
+                         lehudib's_crystal_spear;invisibility \
+                  spells:iskenderun's_mystic_blast;bolt_of_cold;invisibility;\
+                         animate_dead;orb_of_destruction;invisibility
+MONS:    deep elf conjurer / tengu conjurer / wizard / orc sorcerer / \
+         naga mage / ogre mage
+ITEM:    book of annihilations, book of power, book of conjurations
+ITEM:    randbook disc:conjuration, staff of conjuration
+KFEAT:   _ = altar_vehumet
+SHUFFLE: efgh
+MAP
+   xxxxxxxxxxx
+  xxcccccccccxxxxxxxxx
+  xcc2ccccc2cccccccccxx
+  xc.c.ccc.c.ccbbbbbccx
+ @xc.c.ccc.c.cbbe.fbbcx
+.3.c.c.ccc.c.cb.2...bcx
+@U..3.3...3.3.=.._1dbcx
+.3.cccc.c.ccccb.2...bcx
+ @xcccc.c.ccccbbg.hbbcx
+  xcccc.c.cccccbbbbbccx
+  xccccc2ccccccccccccxx
+  xxcccccccccxxxxxxxxx
+   xxxxxxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead

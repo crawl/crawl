@@ -733,7 +733,7 @@ MAP
 ENDMAP
 
 NAME:  guppyfry_elf_castle
-DEPTH: Elf:2-4
+DEPTH: Elf:2-
 TAGS:  mini_float
 MONS:  deep elf soldier / deep elf mage / deep elf knight
 MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
@@ -756,7 +756,7 @@ MAP
 ENDMAP
 
 NAME:  guppyfry_elf_garden
-DEPTH: Elf:2-4
+DEPTH: Elf:2-
 TAGS:  mini_float
 MONS:  deep elf soldier / deep elf mage / deep elf priest
 MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
@@ -782,7 +782,7 @@ MAP
 ENDMAP
 
 NAME:  guppyfry_elf_altar
-DEPTH: Elf:2-4
+DEPTH: Elf:2-
 MONS:  deep elf knight / deep elf priest
 MONS:  deep elf high priest
 SUBST: F = G:6 F:1
@@ -804,7 +804,7 @@ xxxxx++xxxx
 ENDMAP
 
 NAME:  guppyfry_elf_lava
-DEPTH: Elf:2-4
+DEPTH: Elf:2-
 TAGS:  mini_float
 MONS:  deep elf conjurer / deep elf mage / deep elf summoner
 MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
@@ -836,9 +836,9 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 #
-# Elf:5 branch endings
+# Elf:$ branch endings
 #
-# Total weight: 140.
+# Total weight: 150.
 ##############################################################################
 ##############################################################################
 
@@ -1398,4 +1398,49 @@ xxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxc2cxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Before transform: 31x$, 26x*, 31x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
+NAME:   grunt_elf_hall_spiral
+PLACE:  Elf:$
+ORIENT: centre
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+          xxxxc@cxxxxx
+        xxxcccc.cccccxxx
+      xxxccc........cccxxx
+     xxccc............cccxx
+    xxcc.....3.....2....ccxx
+   xxcc....2.....5...3...ccxx
+  xxcc.......bbb..........ccxx
+  xcc....3..bbb4..1........ccx
+ xxc.......bb$+..U..4.2.....cxx
+ xcc....2.bb*|b57.......3...ccx
+xxc..2....b|$$bbbbbbbbb......cxx
+xcc.....4.b$|*bb|*$|$|bb..2..ccx
+xc..3.....b|*bbb+bb*|$*bb.....cx
+xc.....1..b$bb|*$|bb*$|$bb.3..cx
+xc...5..U.b*b*$|*$|bbbb+bb....cc
+cc.......6b|+$|*$|*bbb5.4b.....@
+@.....b4.5bbb|*$|*$+|b6.......cc
+cc....bb+bbbb*$|*|$b*b.U..5...cx
+xc..3.bb$|$*bb$*|$bb$b..1.....cx
+xc.....bb*$|*bb+bbb*|b.....3..cx
+xcc..2..bb|$|$*|bb*|$b.4.....ccx
+xxc......bbbbbbbbb$$|b....2..cxx
+ xcc...3.......75b|*bb.2....ccx
+ xxc.....2.4..U..+$bb.......cxx
+  xcc........1..4bbb..3....ccx
+  xxcc..........bbb.......ccxx
+   xxcc...3...5.....2....ccxx
+    xxcc....2.....3.....ccxx
+     xxccc............cccxx
+      xxxccc........cccxxx
+        xxxccccc.ccccxxx
+          xxxxxx@xxxxx
 ENDMAP
