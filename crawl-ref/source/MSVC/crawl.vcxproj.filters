@@ -612,5 +612,6 @@
     <ClInclude Include="..\zotdef.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
     <ClInclude Include="..\mon-chimera.h" />
+    <ClInclude Include="..\random-pick.h" />
   </ItemGroup>
 </Project>
