@@ -109,6 +109,9 @@ struct mgen_data
     // This simply stores the initial shape-shifter type.
     monster_type    initial_shifter;
 
+    // This simply stores chimera base monsters.
+    vector<monster_type> chimera_mons;
+
     // This can eventually be used to store relevant information.
     CrawlHashTable  props;
 

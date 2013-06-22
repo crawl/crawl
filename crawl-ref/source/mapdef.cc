@@ -4013,6 +4013,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
+            mspec.chimera_mons = nspec.chimera_mons;
             if (nspec.colour && !mspec.colour)
                 mspec.colour = nspec.colour;
         }
@@ -4329,6 +4330,26 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
+    mons_spec spec;
+    if (starts_with(name, "chimera:"))
+    {
+        const string::size_type colon = name.find(':');
+        const string chimera_spec = name.substr(colon + 1);
+        vector<string> components = split_string(",", chimera_spec);
+        if (components.size() != 3)
+            return MONS_PROGRAM_BUG;
+
+        spec = MONS_CHIMERA;
+        for (unsigned int i = 0; i < components.size(); i++)
+        {
+            monster_type monstype = get_monster_by_name(components[i]);
+            if (monstype == MONS_PROGRAM_BUG)
+                return MONS_PROGRAM_BUG;
+            spec.chimera_mons.push_back(monstype);
+        }
+        return spec;
+    }
+
     if (name.find(" ugly thing") != string::npos)
     {
         const string::size_type wordend = name.find(' ');
@@ -4337,13 +4358,12 @@ mons_spec mons_list::mons_by_name(string name) const
         const int colour = str_to_ugly_thing_colour(first_word);
         if (colour)
         {
-            mons_spec spec = mons_by_name(name.substr(wordend + 1));
+            spec = mons_by_name(name.substr(wordend + 1));
             spec.colour = colour;
             return spec;
         }
     }
 
-    mons_spec spec;
     get_zombie_type(name, spec);
     if (spec.type != MONS_PROGRAM_BUG)
         return spec;

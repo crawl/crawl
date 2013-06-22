@@ -30,6 +30,7 @@
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
+#include "mon-chimera.h"
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-iter.h"
@@ -1298,6 +1299,17 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             ztype = pick_local_zombifiable_monster(place, mg.cls, fpos);
 
         define_zombie(mon, ztype, mg.cls);
+    }
+    else if (mg.cls == MONS_CHIMERA)
+    {
+        if (mg.chimera_mons.size() != 3)
+        {
+            mon->reset();
+            return 0;
+        }
+
+        make_chimera(mon, mg.chimera_mons[0], mg.chimera_mons[1],
+                     mg.chimera_mons[2]);
     }
     else
         define_monster(mon);
