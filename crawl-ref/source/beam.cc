@@ -4733,9 +4733,10 @@ bool bolt::ignores_monster(const monster* mon) const
         return true;
     }
 
-    // Missiles go past bushes and briar patches.
+    // Missiles go past bushes and briar patches, unless aimed directly at them
     if ((mons_species(mon->type) == MONS_BUSH || mon->type == MONS_BRIAR_PATCH)
         && !is_beam && !is_explosion
+        && target != mon->pos()
         && name != "sticky flame"
         && name != "splash of liquid fire"
         && name != "lightning arc")
