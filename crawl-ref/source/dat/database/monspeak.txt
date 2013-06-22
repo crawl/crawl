@@ -7202,6 +7202,26 @@ Beogh
 
 Lugonu
 %%%%
+confused zin angel
+
+@The_monster@ rambles incoherently.
+
+@The_monster@ lectures the ground at length about @_important_subject_@
+
+@The_monster@ lectures @possessive@ feet at length about @_important_subject_@
+
+VISUAL:@The_monster@ stares off into space for a moment.
+%%%%
+silenced zin angel
+
+VISUAL:@The_monster@ gestures @at_foe@ frantically.
+
+VISUAL:@The_monster@ looks angrily to the heavens.
+
+VISUAL:@The_monster@ furiously gestures all around.
+
+VISUAL:@The_monster@ scowls with righteous anger.
+%%%%
 ###############################################################################
 # Speech keys used *specifically* in (portal) vaults.
 #
