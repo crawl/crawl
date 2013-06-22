@@ -224,7 +224,7 @@ multi_overflow:
         // TODO: possibly make this place single-god vaults too?
         // XXX: upper limit on num here because this code gets really
         // slow otherwise.
-        if (num <= 1 || num >= 3)
+        if (num <= 1 || num > 3)
             continue;
 
         vector<god_type> this_temple_gods;
