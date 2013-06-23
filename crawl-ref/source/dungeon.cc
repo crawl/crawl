@@ -56,6 +56,7 @@
 #include "misc.h"
 #include "mon-chimera.h"
 #include "mon-util.h"
+#include "mon-pick-data.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-pathfind.h"
@@ -3581,6 +3582,53 @@ static int _place_uniques()
     return num_placed;
 }
 
+static void _place_aquatic_monsters_weighted()
+{
+    const pop_entry* pop = (player_in_branch(BRANCH_FOREST) ? pop_water_forest
+                                                            : pop_water_d);
+    int level = level_id::current().depth;
+
+    vector<coord_def> water;
+    int water_count = 0;
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (feat_is_water(grd(*ri)))
+        {
+            if (!actor_at(*ri) && !(env.level_map_mask(*ri) & MMT_NO_MONS)
+                && !feat_is_solid(grd(*ri)) && grd(*ri) != DNGN_OPEN_SEA)
+            {
+                water.push_back(*ri);
+            }
+            ++water_count;
+        }
+    }
+
+    if (water.size() > 49)
+    {
+        int num = min(random2avg(9, 2) + (random2(water_count) / 10), 15);
+        random_shuffle(water.begin(), water.end());
+
+        for (int i = 0; i < num; i++)
+        {
+            monster_type mon = pick_monster_from(pop, level);
+
+            mgen_data mg;
+            mg.behaviour = BEH_SLEEP;
+            mg.flags    |= MG_PERMIT_BANDS | MG_FORCE_PLACE;
+            mg.map_mask |= MMT_NO_MONS;
+            mg.cls = mon;
+            mg.pos = water[i];
+
+            // Amphibious creatures placed with water should hang around it
+            if (mons_class_primary_habitat(mon) == HT_LAND)
+                mg.flags |= MG_PATROLLING;
+
+            place_monster(mg);
+        }
+    }
+}
+
 static int _place_monster_vector(vector<monster_type> montypes, int num_to_place)
 {
     int result = 0;
@@ -3660,7 +3708,9 @@ static void _place_aquatic_monsters()
                                        + (random2(lava_spaces) / 10), 15));
     }
 
-    if (water_spaces > 49)
+    if (player_in_branch(BRANCH_MAIN_DUNGEON) || player_in_branch(BRANCH_FOREST))
+        _place_aquatic_monsters_weighted();
+    else if (water_spaces > 49)
     {
         // This can probably be done in a better way with something
         // like water_monster_rarity().
