@@ -150,6 +150,13 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
     if (partnum == 1)
         return;
 
+    // Make sure resulting chimera can use spells
+    // TODO: Spell usage might still be a bit of a mess, especially with
+    // things like human/animal hybrids. Could perhaps do with some kind
+    // of ghost demon structure to manage and track everything better.
+    if (dummy.can_use_spells())
+        mon->flags |= MF_SPELLCASTER;
+
     // XXX: It'd be nice to flood fill all available spell slots with spells
     // from parts 2 and 3. But since this would conflict with special
     // slots (emergency, enchantment, etc.) some juggling is needed, until
