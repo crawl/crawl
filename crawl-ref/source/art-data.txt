@@ -90,6 +90,7 @@
 # * poison:   Grants poison resistance.
 # * randapp:  Generated with a random artefact's appearance (used by
 #             strictly-bad unrands).
+# * regen:    Provides regeneration.
 # * rmsl:     Passively repels missiles.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
@@ -1067,6 +1068,14 @@ COLOUR:   ETC_BLOOD
 TILE:     urand_axe_of_woe
 TILE_EQ:  axe_of_woe
 BOOL:     nogen
+
+NAME:     Moon Troll leather armour
+OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
+PLUS:     +4
+COLOUR:   ETC_SHIMMER_BLUE
+BRAND:    SPARM_SPIRIT_SHIELD
+MP:       +5
+BOOL:     regen
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are

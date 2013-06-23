@@ -1258,6 +1258,9 @@ static int _player_bonus_regen()
         // Rings.
         rr += 40 * you.wearing(EQ_RINGS, RING_REGENERATION);
 
+        // Artefacts
+        rr += 40 * you.scan_artefacts(ARTP_REGENERATION);
+
         // Troll leather (except for trolls).
         if ((you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
              || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
@@ -1406,11 +1409,12 @@ int player_hunger_rate(bool temp)
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
     {
-        // rings
+        // rings and artefacts
         if (you.hp < you.hp_max
             && player_mutation_level(MUT_SLOW_HEALING) < 3)
         {
             hunger += 3 * you.wearing(EQ_RINGS, RING_REGENERATION);
+            hunger += 3 * you.scan_artefacts(ARTP_REGENERATION);
         }
 
         hunger += 4 * you.wearing(EQ_RINGS, RING_HUNGER);
