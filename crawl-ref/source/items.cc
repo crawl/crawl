@@ -2116,7 +2116,8 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_FIVE]
      || item_dropped == you.equip[EQ_RING_SIX]
      || item_dropped == you.equip[EQ_RING_SEVEN]
-     || item_dropped == you.equip[EQ_RING_EIGHT])
+     || item_dropped == you.equip[EQ_RING_EIGHT]
+     || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
         {

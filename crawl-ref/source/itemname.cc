@@ -258,6 +258,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_RING_EIGHT:
                     buff << " (on tentacle)";
                     break;
+                case EQ_RING_AMULET:
+                    buff << " (on amulet)";
+                    break;
                 default:
                     die("Item in an invalid slot");
                 }
