@@ -252,7 +252,8 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
         { "Curse",  ARTP_CURSED,                2 },
         { "Clar",   ARTP_CLARITY,               2 },
-        { "RMsl",   ARTP_RMSL,                  2 }
+        { "RMsl",   ARTP_RMSL,                  2 },
+        { "Regen",  ARTP_REGENERATION,          2 },
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -434,6 +435,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_MUTAGENIC, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
         { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
+        { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)

@@ -466,6 +466,10 @@ As you hold this axe your mind does not feel fully your own. Your body begins
 to exhibit strength far beyond its capabilities, and your movements become
 guided by Makhleb.
 %%%%
+Moon Troll leather armour
+
+An enchanted hide from a now extinct species.
+%%%%
 milk chocolate
 
 This item is a debugging aid, granting a vast array of mostly beneficial
