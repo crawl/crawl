@@ -3792,11 +3792,9 @@ void adjust_level(int diff, bool just_xp)
 int check_stealth(void)
 {
     ASSERT(!crawl_state.game_is_arena());
-#ifdef WIZARD
     // Extreme stealthiness can be enforced by wizmode stealth setting.
-    if (you.skills[SK_STEALTH] > 27)
+    if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
-#endif
 
     if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX])
         return 0;

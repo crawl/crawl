@@ -463,12 +463,6 @@ void wizard_set_skill_level(skill_type skill)
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
-
-    if (skill == SK_STEALTH && amount == 27)
-    {
-        mpr("If you set the stealth skill to a value higher than 27, "
-            "hide mode is activated, and monsters won't notice you.");
-    }
 }
 #endif
 
