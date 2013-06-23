@@ -723,6 +723,11 @@ bool mons_is_boulder(const monster* mon)
     return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
 }
 
+bool mons_is_jumpy(const monster* mon)
+{
+    return (mons_class_is_jumpy(mon->type));
+}
+
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
@@ -1448,6 +1453,11 @@ bool mons_class_is_hybrid(monster_type mc)
 bool mons_class_is_chimeric(monster_type mc)
 {
     return mc == MONS_CHIMERA;
+}
+
+bool mons_class_is_jumpy(monster_type mc)
+{
+    return mc == MONS_JUMPING_SPIDER;
 }
 
 bool mons_class_has_base_type(monster_type mc)

@@ -6019,5 +6019,5 @@ bool monster::is_projectile() const
 
 bool monster::is_jumpy() const
 {
-    return (type == MONS_JUMPING_SPIDER);
+    return (mons_is_jumpy(this));
 }
