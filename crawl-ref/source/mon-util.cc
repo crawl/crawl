@@ -1445,6 +1445,17 @@ bool mons_class_is_hybrid(monster_type mc)
     return mons_class_flag(mc, M_HYBRID);
 }
 
+bool mons_class_is_chimeric(monster_type mc)
+{
+    return mc == MONS_CHIMERA;
+}
+
+bool mons_class_has_base_type(monster_type mc)
+{
+    return mons_class_is_zombified(mc)
+        || mons_class_is_chimeric(mc);
+}
+
 bool mons_is_zombified(const monster* mon)
 {
     return mons_class_is_zombified(mon->type);
@@ -1452,7 +1463,8 @@ bool mons_is_zombified(const monster* mon)
 
 monster_type mons_base_type(const monster* mon)
 {
-    return (mons_is_zombified(mon) ? mon->base_monster : mon->type);
+    return (mons_class_has_base_type(mon->type) ? mon->base_monster
+                                                : mon->type);
 }
 
 bool mons_class_can_leave_corpse(monster_type mc)
