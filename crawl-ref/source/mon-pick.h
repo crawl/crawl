@@ -3,7 +3,6 @@
  * @brief Functions used to help determine which monsters should appear.
 **/
 
-
 #ifndef MONPICK_H
 #define MONPICK_H
 
