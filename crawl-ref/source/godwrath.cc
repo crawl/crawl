@@ -1383,11 +1383,6 @@ static bool _tso_holy_revenge()
 // Killing apises may make Elyvilon sad.  She'll sulk and stuff.
 static bool _ely_holy_revenge(const monster *victim)
 {
-    // It's a mild effect, a relatively big chance is ok.  Keeping it small
-    // though -- we don't want gods to be omniscient.
-    if (!one_chance_in(3))
-        return false;
-
     god_acting gdact(GOD_ELYVILON, true);
 
     string msg = getSpeakString("Elyvilon holy");
@@ -1395,32 +1390,21 @@ static bool _ely_holy_revenge(const monster *victim)
         msg = "Elyvilon is displeased.";
     mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
 
-    vector<monster*> patients;
+    vector<monster*> targets;
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
-        // healer not necromancer
-        if (!mi->alive())
-            continue;
-        // hates undead -- would she heal demons out of spite for you?
-        if (mi->is_evil(false) || mi->is_unholy(false))
-            continue;
-        // your associates are presumed guilty
-        if (mi->wont_attack())
-            continue;
-        if (mi->hit_points >= mi->max_hit_points)
-            continue;
-        patients.push_back(*mi);
+        if (mi->friendly())
+            targets.push_back(*mi);
     }
-    if (patients.empty())
-        return false;
 
-    mpr("Elyvilon touches your foes with healing grace.");
-    for (vector<monster*>::const_iterator mi = patients.begin();
-         mi != patients.end(); ++mi)
+    mprf("You %sare rebuked by divine will.", targets.size() ? "and your allies "
+                                                             : "");
+    for (vector<monster*>::const_iterator mi = targets.begin();
+         mi != targets.end(); ++mi)
     {
-        simple_monster_message(*mi, " is healed.");
-        (*mi)->heal(10 + random2(10), false);
+        (*mi)->weaken(NULL, 25);
     }
+    you.weaken(NULL, 25);
 
     return true;
 }
