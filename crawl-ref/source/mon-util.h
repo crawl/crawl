@@ -271,6 +271,7 @@ bool mons_can_display_wounds(const monster* mon);
 int mons_zombie_size(monster_type mc);
 monster_type mons_zombie_base(const monster* mon);
 bool mons_class_is_zombified(monster_type mc);
+bool mons_class_is_hybrid(monster_type mc);
 monster_type mons_base_type(const monster* mon);
 bool mons_class_can_leave_corpse(monster_type mc);
 bool mons_is_zombified(const monster* mons);

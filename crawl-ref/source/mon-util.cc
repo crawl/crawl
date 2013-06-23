@@ -1440,6 +1440,11 @@ bool mons_class_is_zombified(monster_type mc)
         || mc == MONS_SPECTRAL_THING;
 }
 
+bool mons_class_is_hybrid(monster_type mc)
+{
+    return mons_class_flag(mc, M_HYBRID);
+}
+
 bool mons_is_zombified(const monster* mon)
 {
     return mons_class_is_zombified(mon->type);

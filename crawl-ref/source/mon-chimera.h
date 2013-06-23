@@ -6,7 +6,16 @@
 #ifndef MONCHIMERA_H
 #define MONCHIMERA_H
 
-void make_chimera(monster* mon, monster_type part1, monster_type part2, monster_type part3);
+#include "debug.h"
+
+#define ASSERTPART(partnum)                                       \
+    ASSERTM(is_valid_chimera_part(parts[partnum]),                \
+            "Invalid chimera part %d: %s",                        \
+            partnum, mons_class_name(parts[partnum]))
+
+void define_chimera(monster* mon, monster_type parts[]);
+bool define_chimera_for_place(monster *mon, level_id place, monster_type chimera_type, coord_def pos);
+
 monster_type get_chimera_part(const monster* mon, int partnum);
 monster_type get_chimera_part(const monster_info* mi, int partnum);
 monster_type random_chimera_part(const monster* mon);

@@ -8,37 +8,96 @@
 
 #include "externs.h"
 #include "enum.h"
+#include "mgen_data.h"
 #include "mon-info.h"
 #include "mon-util.h"
+#include "mon-pick.h"
 #include "monster.h"
 
 #include <sstream>
 
 static void apply_chimera_part(monster* mon, monster_type part, int partnum);
+static bool is_bad_chimera_part(monster_type part);
+static bool is_valid_chimera_part(monster_type part);
 
-void make_chimera(monster* mon, monster_type part1, monster_type part2, monster_type part3)
+void mgen_data::define_chimera(monster_type part1, monster_type part2,
+                               monster_type part3)
 {
-    ASSERT(part1 != MONS_NO_MONSTER);
-    ASSERT(!invalid_monster_type(part1));
-    ASSERT(part2 != MONS_NO_MONSTER);
-    ASSERT(!invalid_monster_type(part2));
-    ASSERT(part3 != MONS_NO_MONSTER);
-    ASSERT(!invalid_monster_type(part3));
+    // Set base_type; some things might still refer to that
+    base_type = part1;
+    chimera_mons.push_back(part1);
+    chimera_mons.push_back(part2);
+    chimera_mons.push_back(part3);
+}
+
+void define_chimera(monster* mon, monster_type parts[])
+{
+    ASSERTPART(0);
+    ASSERTPART(1);
+    ASSERTPART(2);
 
     // Set type to the original type to calculate appropriate stats.
-    mon->type = part1;
+    mon->type = parts[0];
     mon->base_monster = MONS_PROGRAM_BUG;
     define_monster(mon);
 
     mon->type         = MONS_CHIMERA;
     mon->colour       = mons_class_colour(MONS_CHIMERA);
-    mon->base_monster = part1;
-    mon->props["chimera_part_2"] = part2;
-    mon->props["chimera_part_3"] = part3;
+    mon->base_monster = parts[0];
+    mon->props["chimera_part_2"] = parts[1];
+    mon->props["chimera_part_3"] = parts[2];
 
-    apply_chimera_part(mon,part1,1);
-    apply_chimera_part(mon,part2,2);
-    apply_chimera_part(mon,part3,3);
+    apply_chimera_part(mon,parts[0],1);
+    apply_chimera_part(mon,parts[1],2);
+    apply_chimera_part(mon,parts[2],3);
+}
+
+// Randomly pick depth-appropriate chimera parts
+bool define_chimera_for_place(monster *mon, level_id place, monster_type chimera_type,
+                              coord_def pos)
+{
+    monster_type parts[3];
+    monster_picker picker = positioned_monster_picker(pos);
+    for (int n = 0; n < 3; n++)
+    {
+        monster_type part = pick_monster(place, picker, is_bad_chimera_part);
+        if (part == MONS_0)
+        {
+            part = pick_monster_all_branches(place.absdepth(), picker,
+                                             is_bad_chimera_part);
+        }
+        if (part != MONS_0)
+
+            parts[n] = part;
+        else
+            return false;
+    }
+    define_chimera(mon, parts);
+    return true;
+}
+
+static bool is_valid_chimera_part(monster_type part)
+{
+    return !(part == MONS_NO_MONSTER
+             || part == MONS_CHIMERA
+             || invalid_monster_type(part)
+             || mons_class_is_zombified(part)
+             || mons_class_flag(part, M_NO_GEN_DERIVED)); // TODO: Chimera zombie
+}
+
+// Indicates preferred chimera parts
+// TODO: Should maybe check any of:
+// mons_is_object / mons_is_conjured / some of mons_has_flesh
+// mons_is_stationary / mons_class_is_firewood / mons_is_mimic / mons_class_holiness
+static bool is_bad_chimera_part(monster_type part)
+{
+    return (!is_valid_chimera_part(part))
+           || mons_class_is_hybrid(part)
+           || mons_class_is_zombified(part)
+           || mons_species(part) != part
+           || mons_class_intel(part) > I_NORMAL
+           || mons_class_intel(part) < I_INSECT
+           || mons_is_unique(part);
 }
 
 static void apply_chimera_part(monster* mon, monster_type part, int partnum)

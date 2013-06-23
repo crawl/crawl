@@ -155,6 +155,9 @@ const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 // tries to maintain range unless target is incapacitated
 const uint64_t M_STABBER           = (uint64_t)1<<48;
 
+// hybridized monster composed of other monster parts
+const uint64_t M_HYBRID            = (uint64_t)1<<49;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing
