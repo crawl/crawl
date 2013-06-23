@@ -2425,7 +2425,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         else if (spell_cast == SPELL_BLINK_AWAY)
         {
-            blink_away(mons);
+            blink_away(mons, true);
             mons->lose_energy(EUT_SPELL);
         }
         else if (spell_cast == SPELL_BLINK_CLOSE)
