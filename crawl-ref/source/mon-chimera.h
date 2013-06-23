@@ -8,6 +8,8 @@
 
 #include "debug.h"
 
+#define NUM_CHIMERA_HEADS 3
+
 #define ASSERTPART(partnum)                                       \
     ASSERTM(is_valid_chimera_part(parts[partnum]),                \
             "Invalid chimera part %d: %s",                        \
@@ -15,6 +17,7 @@
 
 void define_chimera(monster* mon, monster_type parts[]);
 bool define_chimera_for_place(monster *mon, level_id place, monster_type chimera_type, coord_def pos);
+monster_type chimera_part_for_place(level_id place, monster_type chimera_type);
 
 monster_type get_chimera_part(const monster* mon, int partnum);
 monster_type get_chimera_part(const monster_info* mi, int partnum);
