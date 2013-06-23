@@ -104,10 +104,10 @@ monster_type pick_monster(level_id place, mon_pick_vetoer veto)
     return pick_monster_from(population[place.branch].pop, place.depth, veto);
 }
 
-monster_type pick_monster(level_id place, monster_picker &picker)
+monster_type pick_monster(level_id place, monster_picker &picker, mon_pick_vetoer veto)
 {
     ASSERT(place.is_valid());
-    return picker.pick(population[place.branch].pop, place.depth, MONS_0);
+    return picker.pick_with_veto(population[place.branch].pop, place.depth, MONS_0, veto);
 }
 
 monster_type pick_monster_from(const pop_entry *fpop, int depth,
