@@ -4331,11 +4331,10 @@ mons_spec mons_list::mons_by_name(string name) const
         return get_slime_spec(name);
 
     mons_spec spec;
-    if (starts_with(name, "chimera:"))
+    if (ends_with(name, " chimera"))
     {
-        const string::size_type colon = name.find(':');
-        const string chimera_spec = name.substr(colon + 1);
-        vector<string> components = split_string(",", chimera_spec);
+        const string chimera_spec = name.substr(0, name.length() - 8);
+        vector<string> components = split_string("-", chimera_spec);
         if (components.size() != 3)
             return MONS_PROGRAM_BUG;
 
