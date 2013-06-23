@@ -4280,16 +4280,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         summon_type = random_choose_weighted(
                             10, MONS_WOLF,
-                             3, MONS_GRIZZLY_BEAR,
-                             6, MONS_BLACK_BEAR,
+                             8, MONS_GRIZZLY_BEAR,
                              0); // no polar bears
 
         if (summon_type == MONS_WOLF)
-            sumcount2 = 1 + random2(mons->hit_dice / 4 + 1);
+            sumcount2 = 1 + random2(mons->hit_dice / 6 + 1);
         else
             sumcount2 = 1 + random2(2);
 
-        duration  = min(2 + mons->hit_dice / 5, 6);
+        if (summon_type == MONS_GRIZZLY_BEAR && mons->hit_dice < 9)
+            summon_type = MONS_BLACK_BEAR;
+
+        duration  = min(1 + mons->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
         {
             create_monster(mgen_data(summon_type, SAME_ATTITUDE(mons),
