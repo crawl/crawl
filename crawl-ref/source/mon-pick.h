@@ -80,7 +80,8 @@ private:
     monster_type zombie_kind;
 };
 
-monster_type pick_monster(level_id place, monster_picker &picker);
+monster_type pick_monster(level_id place, monster_picker &picker,
+                          mon_pick_vetoer veto = nullptr);
 monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
                                        mon_pick_vetoer veto = nullptr);
 
