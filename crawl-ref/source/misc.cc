@@ -1552,10 +1552,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
     bool is_safe = (_mons_is_always_safe(mon)
                     || check_dist
                        && (mon->pacified() && dist > 1
-#ifdef WIZARD
-                           // Wizmode skill setting enforces hiddenness.
-                           || you.skills[SK_STEALTH] > 27 && dist > 2
-#endif
+                           || crawl_state.disables[DIS_MON_SIGHT] && dist > 2
                            // Only seen through glass walls or within water?
                            // Assuming that there are no water-only/lava-only
                            // monsters capable of throwing or zapping wands.

@@ -3746,6 +3746,7 @@ enum disable_type
     DIS_DELAY,
     DIS_CONFIRMATIONS,
     DIS_AFFLICTIONS,
+    DIS_MON_SIGHT,
     NUM_DISABLEMENTS
 };
 
