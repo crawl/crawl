@@ -5668,9 +5668,7 @@ reach_type monster::reach_range() const
 
 bool monster::can_cling_to_walls() const
 {
-    return (mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
-            || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
-            || type == MONS_DEMONIC_CRAWLER);
+    return mons_can_cling_to_walls(this);
 }
 
 void monster::steal_item_from_player()
