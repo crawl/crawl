@@ -3977,14 +3977,19 @@ bool mon_special_ability(monster* mons, bolt & beem)
             && actor_at(mons->pos() + mons->props["mmov"].get_coord())->type == MONS_BRIAR_PATCH
             && !one_chance_in(3))
         {
-            setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
-
-            fire_tracer(mons, beem);
-            if (mons_should_fire(beem))
+            actor *foe = mons->get_foe();
+            if (foe && mons->can_see(foe))
             {
-                make_mons_stop_fleeing(mons);
-                _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
-                used = true;
+                beem.target = foe->pos();
+                setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
+
+                fire_tracer(mons, beem);
+                if (mons_should_fire(beem))
+                {
+                    make_mons_stop_fleeing(mons);
+                    _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
+                    used = true;
+                }
             }
         }
         // Otherwise, if our foe is approaching us, we might want to raise a
