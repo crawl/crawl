@@ -3108,15 +3108,12 @@ static string _describe_chimera(const monster_info& mi)
         description += apply_description(DESC_A, get_monster_data(leggy_part)->name);
     }
 
-    if (mi.props.exists("chimera_batty"))
+    if (has_wings)
     {
-        monster_type batty_part = get_chimera_part(&mi, mi.props["chimera_batty"].get_int());
-        description += ", and the wings of ";
-        description += apply_description(DESC_A, get_monster_data(batty_part)->name);
-    }
-    else if (mi.props.exists("chimera_wings"))
-    {
-        monster_type wing_part = get_chimera_part(&mi, mi.props["chimera_wings"].get_int());
+        monster_type wing_part = mi.props.exists("chimera_batty") ?
+            get_chimera_part(&mi, mi.props["chimera_batty"].get_int())
+            : get_chimera_part(&mi, mi.props["chimera_wings"].get_int());
+
         switch (mons_class_flies(wing_part))
         {
         case FL_WINGED:
@@ -3126,7 +3123,7 @@ static string _describe_chimera(const monster_info& mi)
             description += " and it hovers like ";
             break;
         case FL_NONE:
-            description += " and the bugginess of ";
+            description += " and it moves like "; // Unseen horrors
             break;
         }
         description += apply_description(DESC_A, get_monster_data(wing_part)->name);
