@@ -32,11 +32,17 @@ template <typename T, int max>
 class random_picker
 {
 public:
+    virtual ~random_picker();
     T pick(const random_pick_entry<T> *weights, int level, T none);
     int rarity_at(const random_pick_entry<T> *pop,
                   int depth);
     virtual bool veto(T val) { return false; }
 };
+
+template <typename T, int max>
+random_picker<T, max>::~random_picker()
+{
+}
 
 template <typename T, int max>
 T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
