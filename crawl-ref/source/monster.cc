@@ -3561,7 +3561,8 @@ bool monster::is_known_chaotic() const
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_WRETCHED_STAR
         || type == MONS_KILLER_KLOWN // For their random attacks.
-        || type == MONS_TIAMAT)      // For her colour-changing.
+        || type == MONS_TIAMAT       // For her colour-changing.
+        || mons_class_is_chimeric(type))
     {
         return true;
     }

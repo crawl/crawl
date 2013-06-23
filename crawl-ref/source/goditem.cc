@@ -274,6 +274,9 @@ bool is_chaotic_item(const item_def& item)
     case OBJ_RODS:
         retval = _is_bookrod_type(item, is_chaotic_spell);
         break;
+    case OBJ_MISCELLANY:
+        retval = (item.sub_type == MISC_BOX_OF_BEASTS);
+        break;
     default:
         break;
     }
