@@ -2212,11 +2212,11 @@ int monster_die(monster* mons, killer_type killer,
                         notice |= did_god_conduct(
                                       !confused ? DID_HOLY_KILLED_BY_UNDEAD_SLAVE :
                                                   DID_HOLY_KILLED_BY_SERVANT,
-                                      mons->hit_dice);
+                                      mons->hit_dice, true, mons);
                     }
                     else
                         notice |= did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                                                  mons->hit_dice, true, mons);
                 }
 
                 if (you.religion == GOD_SHINING_ONE
