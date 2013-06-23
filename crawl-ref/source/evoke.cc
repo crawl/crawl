@@ -743,6 +743,7 @@ static bool _box_of_beasts(item_def &box)
     {
         mpr("...and something leaps out!");
         xom_is_stimulated(10);
+        did_god_conduct(DID_CHAOS, random_range(5,10));
         // Decrease charges
         box.plus--;
     }
