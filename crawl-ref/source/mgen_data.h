@@ -161,6 +161,9 @@ struct mgen_data
 
     bool summoned() const { return (abjuration_duration > 0); }
 
+    void define_chimera(monster_type part1, monster_type part2,
+                        monster_type part3);
+
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,
                                 unsigned genflags = 0)

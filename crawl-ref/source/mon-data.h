@@ -3237,7 +3237,7 @@ static monsterentry mondata[] = {
 // hybrids ('H')
 {
     MONS_HIPPOGRIFF, 'H', BROWN, "hippogriff",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_HYBRID,
     MR_NO_FLAGS,
     1150, 8, MONS_HIPPOGRIFF, MONS_HIPPOGRIFF, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 10}, {AT_PECK, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
@@ -3250,7 +3250,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MANTICORE, 'H', RED, "manticore",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_HYBRID,
     MR_NO_FLAGS,
     1200, 10, MONS_MANTICORE, MONS_MANTICORE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 14}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
@@ -3263,7 +3263,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MINOTAUR, 'H', LIGHTRED, "minotaur",
-    M_FIGHTER | M_WARM_BLOOD | M_SPEAKS,
+    M_FIGHTER | M_WARM_BLOOD | M_SPEAKS | M_HYBRID,
     MR_NO_FLAGS,
     900, 10, MONS_MINOTAUR, MONS_MINOTAUR, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 35}, {AT_GORE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK },
@@ -3275,7 +3275,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GRIFFON, 'H', YELLOW, "griffon",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_HYBRID,
     MR_NO_FLAGS,
     1700, 5, MONS_GRIFFON, MONS_GRIFFON, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 18}, {AT_PECK, AF_PLAIN, 10},
@@ -3288,7 +3288,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_SPHINX, 'H', LIGHTGREY, "sphinx",
-    M_SEE_INVIS | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
+    M_SEE_INVIS | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS
+        | M_HYBRID,
     MR_NO_FLAGS,
     1800, 12, MONS_SPHINX, MONS_SPHINX, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 12}, {AT_HIT, AF_PLAIN, 12},
@@ -3301,7 +3302,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_HARPY, 'H', GREEN, "harpy",
-    M_WARM_BLOOD | M_BATTY,
+    M_WARM_BLOOD | M_BATTY | M_HYBRID,
     MR_RES_POISON,
     480, 9, MONS_HARPY, MONS_HARPY, MH_NATURAL, -3,
     { {AT_CLAW, AF_PLAIN, 19}, {AT_CLAW, AF_STEAL_FOOD, 14}, AT_NO_ATK,
@@ -3314,7 +3315,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_TENGU, 'H', LIGHTBLUE, "tengu",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_HYBRID,
     MR_NO_FLAGS,
     550, 10, MONS_TENGU, MONS_TENGU, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 10}, {AT_PECK, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
@@ -3327,7 +3328,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_TENGU_CONJURER, 'H', BLUE, "tengu conjurer",
-    M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
+    M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS
+        | M_HYBRID,
     MR_NO_FLAGS,
     550, 13, MONS_TENGU, MONS_TENGU, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 10}, {AT_PECK, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
@@ -3340,7 +3342,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_TENGU_WARRIOR, 'H', CYAN, "tengu warrior",
-    M_FIGHTER | M_WARM_BLOOD | M_SPEAKS,
+    M_FIGHTER | M_WARM_BLOOD | M_SPEAKS | M_HYBRID,
     MR_NO_FLAGS,
     550, 13, MONS_TENGU, MONS_TENGU, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 16}, {AT_PECK, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
@@ -3354,7 +3356,7 @@ static monsterentry mondata[] = {
 {
     MONS_TENGU_REAVER, 'H', LIGHTMAGENTA, "tengu reaver",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SENSE_INVIS | M_WARM_BLOOD
-        | M_SPEAKS | M_DEFLECT_MISSILES,
+        | M_SPEAKS | M_DEFLECT_MISSILES | M_HYBRID,
     MR_NO_FLAGS,
     550, 13, MONS_TENGU, MONS_TENGU, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 24}, {AT_PECK, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 12},
@@ -3367,7 +3369,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SHEDU, 'H', WHITE, "shedu",
-    M_WARM_BLOOD | M_ALWAYS_CORPSE | M_SPELLCASTER,
+    M_WARM_BLOOD | M_ALWAYS_CORPSE | M_SPELLCASTER | M_HYBRID,
     MR_RES_POISON,
     480, 12, MONS_SHEDU, MONS_SHEDU, MH_HOLY, -3,
     { {AT_KICK, AF_HOLY, 19}, {AT_KICK, AF_HOLY, 23}, AT_NO_ATK, AT_NO_ATK },
@@ -3380,7 +3382,7 @@ static monsterentry mondata[] = {
 // Chimera - composed of three other animals
 {
     MONS_CHIMERA, 'H', MAGENTA, "chimera",
-    M_NO_POLY_TO,
+    M_NO_POLY_TO | M_HYBRID,
     MR_NO_FLAGS,
     0, 11, MONS_CHIMERA, MONS_CHIMERA, MH_NATURAL, -3,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

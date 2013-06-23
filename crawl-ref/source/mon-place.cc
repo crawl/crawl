@@ -1302,14 +1302,24 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mg.cls == MONS_CHIMERA)
     {
+        // Requires 3 parts
         if (mg.chimera_mons.size() != 3)
         {
-            mon->reset();
-            return 0;
+            if (!define_chimera_for_place(mon, place, mg.cls, fpos))
+            {
+                mon->reset();
+                return 0;
+            }
         }
-
-        make_chimera(mon, mg.chimera_mons[0], mg.chimera_mons[1],
-                     mg.chimera_mons[2]);
+        else
+        {
+            monster_type parts[] = {
+                mg.chimera_mons[0],
+                mg.chimera_mons[1],
+                mg.chimera_mons[2],
+            };
+            define_chimera(mon, parts);
+        }
     }
     else
         define_monster(mon);
