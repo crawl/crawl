@@ -50,6 +50,13 @@ void define_chimera(monster* mon, monster_type parts[])
     apply_chimera_part(mon,parts[0],1);
     apply_chimera_part(mon,parts[1],2);
     apply_chimera_part(mon,parts[2],3);
+
+    // If one part has wings, take an average of base speed and the
+    // speed of the winged monster.
+    monster_type wings = get_chimera_wings(mon);
+    if (wings != MONS_NO_MONSTER && wings != parts[0])
+        mon->speed = (mons_class_base_speed(parts[0])
+                      + mons_class_base_speed(wings))/2;
 }
 
 // Randomly pick depth-appropriate chimera parts
