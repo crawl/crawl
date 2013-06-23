@@ -54,9 +54,16 @@ void define_chimera(monster* mon, monster_type parts[])
     // If one part has wings, take an average of base speed and the
     // speed of the winged monster.
     monster_type wings = get_chimera_wings(mon);
-    if (wings != MONS_NO_MONSTER && wings != parts[0])
-        mon->speed = (mons_class_base_speed(parts[0])
+    monster_type legs = get_chimera_legs(mon);
+    if (legs == MONS_NO_MONSTER)
+        legs = parts[0];
+    if (wings != MONS_NO_MONSTER && wings != legs)
+    {
+        mon->speed = (mons_class_base_speed(legs)
                       + mons_class_base_speed(wings))/2;
+    }
+    else if (legs != parts[0])
+        mon->speed = mons_class_base_speed(legs);
 }
 
 // Randomly pick depth-appropriate chimera parts
@@ -74,7 +81,6 @@ bool define_chimera_for_place(monster *mon, level_id place, monster_type chimera
                                              is_bad_chimera_part);
         }
         if (part != MONS_0)
-
             parts[n] = part;
         else
             return false;
@@ -130,6 +136,14 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
         mon->props["chimera_batty"].get_int() = partnum;
     else if (mons_flies(&dummy))
         mon->props["chimera_wings"].get_int() = partnum;
+
+    // Check for a legs part. Jumpy behaviour (jumping spiders) should
+    // override normal clinging.
+    if (dummy.is_jumpy()
+        || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
+    {
+        mon->props["chimera_legs"].get_int() = partnum;
+    }
 
     // Apply spells but only for 2nd and 3rd parts since 1st part is
     // already supported by the original define_monster call
@@ -198,6 +212,13 @@ monster_type get_chimera_wings(const monster* mon)
         return get_chimera_part(mon, mon->props["chimera_batty"].get_int());
     if (mon->props.exists("chimera_wings"))
         return get_chimera_part(mon, mon->props["chimera_wings"].get_int());
+    return MONS_NO_MONSTER;
+}
+
+monster_type get_chimera_legs(const monster* mon)
+{
+    if (mon->props.exists("chimera_legs"))
+        return get_chimera_part(mon, mon->props["chimera_legs"].get_int());
     return MONS_NO_MONSTER;
 }
 

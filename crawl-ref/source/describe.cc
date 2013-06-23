@@ -3096,10 +3096,22 @@ static string _describe_chimera(const monster_info& mi)
     description += ". It has the body of ";
     description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
 
+    bool has_wings = mi.props.exists("chimera_batty") || mi.props.exists("chimera_wings");
+    if (mi.props.exists("chimera_legs"))
+    {
+        monster_type leggy_part = get_chimera_part(&mi, mi.props["chimera_legs"].get_int());
+        if (has_wings)
+            description += ", ";
+        else
+            description += ", and ";
+        description += "the legs of ";
+        description += apply_description(DESC_A, get_monster_data(leggy_part)->name);
+    }
+
     if (mi.props.exists("chimera_batty"))
     {
         monster_type batty_part = get_chimera_part(&mi, mi.props["chimera_batty"].get_int());
-        description += " and the wings of ";
+        description += ", and the wings of ";
         description += apply_description(DESC_A, get_monster_data(batty_part)->name);
     }
     else if (mi.props.exists("chimera_wings"))

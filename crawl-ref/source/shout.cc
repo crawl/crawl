@@ -670,7 +670,8 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
             break;
 
         case SENSE_WEB_VIBRATION:
-            if (!mons_class_flag(mi->type, M_WEB_SENSE))
+            if (!mons_class_flag(mi->type, M_WEB_SENSE)
+                && !mons_class_flag(get_chimera_legs(*mi), M_WEB_SENSE))
                 break;
             if (!one_chance_in(4))
             {

@@ -725,7 +725,16 @@ bool mons_is_boulder(const monster* mon)
 
 bool mons_is_jumpy(const monster* mon)
 {
-    return (mons_class_is_jumpy(mon->type));
+    return mons_class_is_jumpy(mon->type)
+        || (mons_class_is_chimeric(mon->type)
+            && mons_class_is_jumpy(get_chimera_legs(mon)));
+}
+
+bool mons_can_cling_to_walls(const monster* mon)
+{
+    return mons_class_is_clingy(mon->type)
+        || mons_class_is_chimeric(mon->type)
+           && mons_class_is_clingy(get_chimera_legs(mon));
 }
 
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
@@ -1458,6 +1467,13 @@ bool mons_class_is_chimeric(monster_type mc)
 bool mons_class_is_jumpy(monster_type mc)
 {
     return mc == MONS_JUMPING_SPIDER;
+}
+
+bool mons_class_is_clingy(monster_type type)
+{
+    return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
+        || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
+        || type == MONS_DEMONIC_CRAWLER;
 }
 
 bool mons_class_has_base_type(monster_type mc)

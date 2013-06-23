@@ -23,6 +23,7 @@ monster_type get_chimera_part(const monster* mon, int partnum);
 monster_type get_chimera_part(const monster_info* mi, int partnum);
 monster_type random_chimera_part(const monster* mon);
 monster_type get_chimera_wings(const monster* mon);
+monster_type get_chimera_legs(const monster* mon);
 string chimera_part_names(monster_info mi);
 bool chimera_is_batty(const monster* mon);
 
