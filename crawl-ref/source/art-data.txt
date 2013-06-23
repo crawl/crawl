@@ -1085,6 +1085,14 @@ NAME:     macabre finger necklace
 OBJ:      OBJ_JEWELLERY/AMU_WARDING
 COLOUR:   ETC_BONE
 
+ENUM:     SUCTION
+NAME:     boots of Ultimate Suction
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+PLUS:     +5
+COLOUR:   LIGHTMAGENTA
+CURSED:   3
+STEALTH:  -50
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn
