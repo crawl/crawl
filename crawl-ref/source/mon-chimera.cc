@@ -83,6 +83,14 @@ bool define_chimera_for_place(monster *mon, level_id place, monster_type chimera
     return true;
 }
 
+monster_type chimera_part_for_place(level_id place, monster_type chimera_type)
+{
+    monster_type part = pick_monster(place, is_bad_chimera_part);
+    if (part == MONS_0)
+        part = pick_monster_all_branches(place.absdepth(), is_bad_chimera_part);
+    return part;
+}
+
 static bool is_valid_chimera_part(monster_type part)
 {
     return !(part == MONS_NO_MONSTER

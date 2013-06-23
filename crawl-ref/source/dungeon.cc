@@ -54,6 +54,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-chimera.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mgen_data.h"
@@ -4734,9 +4735,23 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_MONSTER)
     {
-        type = pick_random_monster(mspec.place, mspec.monbase);
-        if (!type)
-            type = RANDOM_MONSTER;
+        if (mons_class_is_chimeric(mspec.monbase))
+        {
+            type = mspec.monbase;
+            mspec.chimera_mons.clear();
+            for (int n = 0; n < NUM_CHIMERA_HEADS; n++)
+            {
+                monster_type part = chimera_part_for_place(mspec.place, mspec.monbase);
+                if (part != MONS_0)
+                    mspec.chimera_mons.push_back(part);
+            }
+        }
+        else
+        {
+            type = pick_random_monster(mspec.place, mspec.monbase);
+            if (!type)
+                type = RANDOM_MONSTER;
+        }
     }
 
     mgen_data mg(type);

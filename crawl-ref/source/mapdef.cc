@@ -3991,6 +3991,17 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                     mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
             }
+            // Now check for chimera
+            const mons_spec cspec = mons_by_name("rat-rat-rat " + mon_str);
+            if (cspec.type != MONS_PROGRAM_BUG)
+            {
+                // Is this a modified monster?
+                if (cspec.monbase != MONS_PROGRAM_BUG
+                    && mons_class_is_chimeric(static_cast<monster_type>(cspec.type)))
+                {
+                    mspec.monbase = static_cast<monster_type>(cspec.type);
+                }
+            }
         }
         else if (mon_str != "0")
         {

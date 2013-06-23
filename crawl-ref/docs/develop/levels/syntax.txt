@@ -689,6 +689,10 @@ MONS:     (list of monsters)
           an "n-headed hydra" (with a maximum of 20 heads):
               MONS: four-headed hydra
 
+          A chimera can be given parts from three specific monsters by
+          specifying them in a hyphen-separated list as follows:
+              MONS: yak-frog-bat chimera
+
           A slime creature's size can be set to other than normal using
           the prefixes "large", "very large", "enormous" or "titanic":
               MONS: very large slime creature
@@ -762,7 +766,7 @@ MONS:     (list of monsters)
               MONS: place:Vaults:5 spectre
 
           The available modifiers are "zombie", "skeleton",
-          "simulacrum" and "spectre".
+          "simulacrum", "spectre" and "chimera".
 
           If a monster is a member of a band, you can request that it
           be eligible for band members by adding the keyword "band" to
