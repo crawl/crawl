@@ -1081,6 +1081,11 @@ TILE_EQ:  moon_troll_leather_armour
 MP:       +5
 REGEN:    40
 
+ENUM:     FINGER_AMULET
+NAME:     Macabre Finger Necklace
+OBJ:      OBJ_JEWELLERY/AMU_WARDING
+COLOUR:   ETC_BONE
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn

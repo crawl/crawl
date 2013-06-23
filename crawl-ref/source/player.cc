@@ -671,6 +671,13 @@ bool you_can_wear(int eq, bool special_armour)
                     || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
     }
 
+    // Amulet provides another slot
+    if (player_equip_unrand(UNRAND_FINGER_AMULET))
+    {
+        if (eq == EQ_RING_AMULET)
+            return true;
+    }
+
     switch (eq)
     {
     case EQ_LEFT_RING:
@@ -865,7 +872,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // Everyone else can wear jewellery...
     if (eq == EQ_AMULET || eq == EQ_RINGS
         || eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
-        || eq == EQ_RING_ONE || eq == EQ_RING_TWO)
+        || eq == EQ_RING_ONE || eq == EQ_RING_TWO
+        || eq == EQ_RING_AMULET)
     {
         return true;
     }

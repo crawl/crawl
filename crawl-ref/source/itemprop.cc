@@ -14,6 +14,7 @@
 
 #include "externs.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "decks.h"
 #include "describe.h"
@@ -1744,6 +1745,15 @@ static bool _slot_blocked(const item_def &item)
         {
             if (you.equip[i] == -1
                 || _item_is_swappable(you.inv[you.equip[i]], false))
+            {
+                return false;
+            }
+        }
+
+        if (player_equip_unrand(UNRAND_FINGER_AMULET))
+        {
+            if (you.equip[EQ_RING_AMULET] == -1
+                || _item_is_swappable(you.inv[you.equip[EQ_RING_AMULET]], false))
             {
                 return false;
             }
