@@ -710,32 +710,30 @@ static bool _box_of_beasts(item_def &box)
     }
 
     bool success = false;
-    // Invoke mon-pick with our custom list
-    int pick_level = max(1, you.skill(SK_EVOCATIONS));
-    monster_type mon = pick_monster_from(pop_beasts, pick_level,
-                                         _box_of_beasts_veto_mon);
-
-    // Second monster might be only half as good
-    int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)), pick_level);
-    monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
-                                          _box_of_beasts_veto_mon);
-
-    // Third monster picked from anywhere up to max level
-    int pick_level_3 = random_range(1, pick_level);
-    monster_type mon3 = pick_monster_from(pop_beasts, pick_level_3,
-                                          _box_of_beasts_veto_mon);
 
     if (!one_chance_in(3))
     {
+        // Invoke mon-pick with the custom list
+        int pick_level = max(1, you.skill(SK_EVOCATIONS));
+        monster_type mon = pick_monster_from(pop_beasts, pick_level,
+                                             _box_of_beasts_veto_mon);
+
+        // Second monster might be only half as good
+        int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)), pick_level);
+        monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
+                                              _box_of_beasts_veto_mon);
+
+        // Third monster picked from anywhere up to max level
+        int pick_level_3 = random_range(1, pick_level);
+        monster_type mon3 = pick_monster_from(pop_beasts, pick_level_3,
+                                              _box_of_beasts_veto_mon);
+
         mgen_data mg = mgen_data(MONS_CHIMERA,
                                  BEH_FRIENDLY, &you,
                                  3 + random2(3), 0,
                                  you.pos(),
                                  MHITYOU);
-        mg.base_type = mon;
-        mg.chimera_mons.push_back(mon);
-        mg.chimera_mons.push_back(mon2);
-        mg.chimera_mons.push_back(mon3);
+        mg.define_chimera(mon, mon2, mon3);
         monster* mons = create_monster(mg);
         if (mons)
             success = true;
