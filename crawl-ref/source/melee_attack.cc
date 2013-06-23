@@ -4784,7 +4784,7 @@ void melee_attack::mons_apply_attack_flavour()
     }
 
     case AF_HOLY:
-        if (defender->is_evil() || defender->is_unholy())
+        if (defender->undead_or_demonic())
             special_damage = attk_damage * 0.75;
 
         if (needs_message && special_damage)
