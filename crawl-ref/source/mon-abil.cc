@@ -4010,7 +4010,11 @@ void mon_nearby_ability(monster* mons)
         return;
     }
 
-    switch (mons->type)
+    const monster_type mclass = mons->type == MONS_CHIMERA ?
+                                    get_chimera_part(mons, random2(3) + 1)
+                                    : mons->type;
+
+    switch (mclass)
     {
     case MONS_PANDEMONIUM_LORD:
         if (!mons->ghost->cycle_colours)
