@@ -1745,6 +1745,10 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         return true;
 
+    case SPELL_BROTHERS_IN_ARMS:
+        return (mon->props.exists("brothers_count")
+                && mon->props["brothers_count"].get_int() >= 2);
+
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         if (mon->friendly() && mon->foe == MHITYOU)
@@ -3756,7 +3760,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BERSERKER_RAGE:
-        mons->props["went_berserk"] = bool(true);
+        mons->props.erase("brothers_count");
         mons->go_berserk(true);
         return;
 
@@ -4183,6 +4187,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
 
         summon_berserker(power, mons, to_summon);
+        mons->props["brothers_count"].get_int()++;
         return;
     }
 
