@@ -18,6 +18,7 @@
 #include "maps.h"
 #include "player.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "state.h"
@@ -224,7 +225,7 @@ multi_overflow:
         // TODO: possibly make this place single-god vaults too?
         // XXX: upper limit on num here because this code gets really
         // slow otherwise.
-        if (num <= 1 || num > 3)
+        if (num <= 1 || num > 3 || !one_chance_in(num + 1))
             continue;
 
         vector<god_type> this_temple_gods;
@@ -268,23 +269,34 @@ multi_overflow:
         this_temple_gods.push_back(overflow_gods[i]);
 
         // Maybe place a larger overflow temple.
-        if (remaining_size > 1 && one_chance_in(10))
+        if (remaining_size > 1 && one_chance_in(remaining_size + 1))
         {
+            vector<pair<unsigned int, int> > num_weights;
             unsigned int num_gods = 1;
 
             // Randomly choose from the sizes which have maps.
-            // FIXME: it would be better to take weights into account.
-            int chance = 0;
             for (unsigned int j = 2; j <= remaining_size; j++)
             {
                 string mapname = make_stringf("temple_overflow_generic_%d", j);
-                if (!find_maps_for_tag(mapname).empty())
-                    if (one_chance_in(++chance))
-                        num_gods = j;
+                mapref_vector maps = find_maps_for_tag(mapname);
+                if (!maps.empty())
+                {
+                    int chance = 0;
+                    for (mapref_vector::iterator map = maps.begin();
+                         map != maps.end(); map++)
+                    {
+                        // XXX: this should handle level depth better
+                        chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
+                                                          MAX_OVERFLOW_LEVEL));
+                    }
+                    num_weights.push_back(pair<unsigned int, int>(j, chance));
+                }
             }
+            if (!num_weights.empty())
+                num_gods = *(random_choose_weighted(num_weights));
 
             // Add any extra gods (the first was added already).
-            for (; i < num_gods - 1; i++)
+            for (; num_gods > 1; i++, num_gods--)
                 this_temple_gods.push_back(overflow_gods[i + 1]);
         }
 
