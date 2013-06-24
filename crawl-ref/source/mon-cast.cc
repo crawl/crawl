@@ -1982,7 +1982,7 @@ static bool _valid_vine_spot(coord_def p)
     if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, grd(p)))
         return false;
 
-    int num_trees;
+    int num_trees = 0;
     bool valid_trees = false;
     for (adjacent_iterator ai(p); ai; ++ai)
     {
