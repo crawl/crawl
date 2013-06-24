@@ -7400,12 +7400,10 @@ bool player::visible_to(const actor *looker) const
             || (!mon->has_ench(ENCH_BLIND) && (!invisible() || mon->can_see_invisible()));
 }
 
-bool player::backlit(bool check_haloed, bool self_halo, bool check_corona) const
+bool player::backlit(bool check_haloed, bool self_halo) const
 {
-    if (get_contamination_level() > 1
-        || check_corona && duration[DUR_CORONA]
-        || duration[DUR_LIQUID_FLAMES]
-        || duration[DUR_QUAD_DAMAGE])
+    if (get_contamination_level() > 1 || duration[DUR_CORONA]
+        || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
     {
         return true;
     }
