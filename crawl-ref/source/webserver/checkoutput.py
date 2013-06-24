@@ -12,7 +12,9 @@ def _set_nonblocking(fd):
 """A non-blocking version of subprocess.check_output on the tornado ioloop."""
 def check_output(call, callback, ioloop):
     out_r, out_w = os.pipe()
-    p = subprocess.Popen(call, stdout=out_w)
+    nul_f = open(os.devnull, 'w')
+    p = subprocess.Popen(call, stdout=out_w, stderr=nul_f)
+    nul_f.close()
     os.close(out_w)
     _set_nonblocking(out_r)
     data = []
