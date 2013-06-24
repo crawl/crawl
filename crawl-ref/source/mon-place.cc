@@ -2978,7 +2978,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_TENGU;
 
     case BAND_SOJOBO:
-            return MONS_TENGU_REAVER;
+        return MONS_TENGU_REAVER;
 
     case BAND_ENCHANTRESS:
         if (which <= 3)
