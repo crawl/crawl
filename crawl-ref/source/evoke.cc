@@ -756,7 +756,7 @@ static bool _box_of_beasts(item_def &box)
 
 static bool _sack_of_spiders(item_def &sack)
 {
-    mpr("You tease open the bag...");
+    mpr("You reach into the bag...");
 
     if (!sack.plus)
     {
