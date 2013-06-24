@@ -26,7 +26,8 @@ function ($, comm) {
 
     function handle_options_message(data)
     {
-        options = data.options;
+        if (options == null || data.options["watcher"] == true)
+            options = data.options;
     }
 
     comm.register_handlers({
