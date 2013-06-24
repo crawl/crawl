@@ -612,8 +612,6 @@ ENDMAP
 ##############################################################
 NAME:   minmay_entry_loop
 TAGS:   entry no_monster_gen
-SUBST:  X : xxxX
-NSUBST: X = 1:> / *=..d
 ORIENT: float
 MAP
       xxxxxxx
@@ -623,12 +621,12 @@ MAP
   x.....xxx.....x
  xx.....xxx.....xx
  x.....xxxxx.....x
- x.....xXXXx.....x
- x.....xXXXx.....x
+ x.....xxxxx.....x
+ x.....xxxxx.....x
  x.....xxxxx.....x
  xx.....xxx.....xx
   x.....xxx.....x
-  xx....[x.....xx
+  xx.....x.....xx
    xx...{x....xx
     xxxxxx@.xxx
 ENDMAP
