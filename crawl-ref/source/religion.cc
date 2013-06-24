@@ -2932,7 +2932,9 @@ void lose_piety(int pgn)
 static bool _fedhas_protects_species(monster_type mc)
 {
     return (mons_class_is_plant(mc)
-            && mc != MONS_GIANT_SPORE);
+            && mc != MONS_GIANT_SPORE
+            && mc != MONS_SNAPLASHER_VINE
+            && mc != MONS_SNAPLASHER_VINE_SEGMENT);
 }
 
 bool fedhas_protects(const monster* target)
@@ -2943,7 +2945,9 @@ bool fedhas_protects(const monster* target)
 // Fedhas neutralises most plants and fungi
 bool fedhas_neutralises(const monster* target)
 {
-    return (target && mons_is_plant(target));
+    return (target && mons_is_plant(target)
+            && target->type != MONS_SNAPLASHER_VINE
+            && target->type != MONS_SNAPLASHER_VINE_SEGMENT);
 }
 
 static string _god_hates_your_god_reaction(god_type god, god_type your_god)
