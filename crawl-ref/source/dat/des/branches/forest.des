@@ -684,35 +684,35 @@ ENDMAP
 #XXXXXXXXXXXXT@TXXXXXXXXXXXXXXT@TXXXXXXXXXXXt
 #ENDMAP
 
-NAME:   grunt_forest_end_shrine
-PLACE:  Forest:$
-ORIENT: float
-MONS:   Sojobo band, tengu reaver, tengu warrior band / tengu conjurer band
-KFEAT:  _ = altar_vehumet
-KFEAT:  - = floor
-SUBST:  T = tx
-CLEAR:  x
-FTILE:  1|*$-+ = floor_dirt
-TILE:   c = wall_church
-veto {{
-  return you.uniques("Sojobo")
-}}
-MAP
-  TTTTTTTTTTTTT
- TTtttttttttttTT
-TTtt.........ttTT
-Ttt3.........3ttT
-Tt..ccccccccc..tTTTTTTTT
-Tt..c||c$$$$c..ttttttttt
-Tt..c|-c****c.2t..3....t
-Tt..cc+c----+....G.G.G..
-Tt2.c----1_-+..2.......@
-Tt..cc+c----+....G.G.G..
-Tt..c|-c****c.2t..3....t
-Tt..c||c$$$$c..ttttttttt
-Tt..ccccccccc..tTTTTTTTT
-Ttt3.........3ttT
-TTtt.........ttTT
- TTtttttttttttTT
-  TTTTTTTTTTTTT
-ENDMAP
+#NAME:   grunt_forest_end_shrine
+#PLACE:  Forest:$
+#ORIENT: float
+#MONS:   Sojobo band, tengu reaver, tengu warrior band / tengu conjurer band
+#KFEAT:  _ = altar_vehumet
+#KFEAT:  - = floor
+#SUBST:  T = tx
+#CLEAR:  x
+#FTILE:  1|*$-+ = floor_dirt
+#TILE:   c = wall_church
+#veto {{
+#  return you.uniques("Sojobo")
+#}}
+#MAP
+#  TTTTTTTTTTTTT
+# TTtttttttttttTT
+#TTtt.........ttTT
+#Ttt3.........3ttT
+#Tt..ccccccccc..tTTTTTTTT
+#Tt..c||c$$$$c..ttttttttt
+#Tt..c|-c****c.2t..3....t
+#Tt..cc+c----+....G.G.G..
+#Tt2.c----1_-+..2.......@
+#Tt..cc+c----+....G.G.G..
+#Tt..c|-c****c.2t..3....t
+#Tt..c||c$$$$c..ttttttttt
+#Tt..ccccccccc..tTTTTTTTT
+#Ttt3.........3ttT
+#TTtt.........ttTT
+# TTtttttttttttTT
+#  TTTTTTTTTTTTT
+#ENDMAP
