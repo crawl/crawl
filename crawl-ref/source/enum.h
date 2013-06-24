@@ -58,6 +58,7 @@ enum ability_type
     // Others
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
+    ABIL_STOP_SINGING, // From song of slaying
 
     // Species-specific abilities.
     // Demonspawn-only
@@ -423,6 +424,9 @@ enum book_type
     BOOK_CHANGES,
     BOOK_TRANSFIGURATIONS,
     BOOK_WAR_CHANTS,
+#if TAG_MAJOR_VERSION > 34
+    BOOK_BATTLE,
+#endif
     BOOK_CLOUDS,
     BOOK_NECROMANCY,
     BOOK_CALLINGS,
@@ -434,7 +438,7 @@ enum book_type
     BOOK_UNLIFE,
     BOOK_CONTROL,
 #if TAG_MAJOR_VERSION == 34
-    BOOK_MUTATIONS,
+    BOOK_BATTLE, // was BOOK_MUTATIONS,
 #endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
@@ -1510,6 +1514,9 @@ enum duration_type
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
     DUR_SPIRIT_HOWL,
+    DUR_INFUSION,
+    DUR_SONG_OF_SLAYING,
+    DUR_SPIRIT_SHIELD,
     NUM_DURATIONS
 };
 
@@ -2133,6 +2140,9 @@ enum monster_type                      // menv[].type
     MONS_GIANT_ORANGE_BRAIN,
 
     MONS_DANCING_WEAPON,
+#if TAG_MAJOR_VERSION > 34
+    MONS_SPECTRAL_WEAPON,
+#endif
     MONS_HARPY,
     MONS_RAVEN,
     MONS_FIRE_CRAB,
@@ -2676,6 +2686,9 @@ enum monster_type                      // menv[].type
     MONS_WATER_NYMPH,
     MONS_TREANT,
     MONS_THORN_LOTUS,
+#if TAG_MAJOR_VERSION == 34
+    MONS_SPECTRAL_WEAPON,
+#endif
 
     MONS_ELEMENTAL_WELLSPRING,
 
@@ -3515,6 +3528,10 @@ enum spell_type
     SPELL_HASTE_PLANTS,
     SPELL_WIND_BLAST,
     SPELL_STRIP_RESISTANCE,
+    SPELL_INFUSION,
+    SPELL_SONG_OF_SLAYING,
+    SPELL_SPECTRAL_WEAPON,
+    SPELL_SPIRIT_SHIELD,
     NUM_SPELLS
 };
 

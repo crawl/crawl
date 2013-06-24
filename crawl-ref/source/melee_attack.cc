@@ -559,6 +559,18 @@ bool melee_attack::handle_phase_hit()
     // messages, etc.
     damage_done = calc_damage();
 
+    if (attacker->is_player() && you.duration[DUR_INFUSION])
+    {
+        if (you.magic_points > 0
+            || you.species == SP_DJINNI && ((you.hp - 1)/DJ_MP_RATE) > 0)
+        {
+            // infusion_power is set when the infusion spell is cast
+            damage_done += 2 + div_rand_round(you.props["infusion_power"].get_int(), 25);
+            dec_mp(1);
+            defender->as_monster()->speed_increment += 10;
+        }
+    }
+
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.  We muse
     if (attacker->is_player())
@@ -3463,8 +3475,12 @@ bool melee_attack::chop_hydra_head(int dam,
 {
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
-    if (attacker->is_monster() && !one_chance_in(4))
+    // XXX: Tentatively making an exception for spectral weapons
+    if (attacker->is_monster() && attacker->type!= MONS_SPECTRAL_WEAPON
+        && !one_chance_in(4))
+    {
         return false;
+    }
 
     // Only cutting implements.
     if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
@@ -4349,7 +4365,7 @@ string melee_attack::mons_attack_desc()
         ret = " from afar";
     }
 
-    if (weapon && attacker->type != MONS_DANCING_WEAPON)
+    if (weapon && attacker->type != MONS_DANCING_WEAPON && attacker->type != MONS_SPECTRAL_WEAPON)
         ret += " with " + weapon->name(DESC_A);
 
     return ret;

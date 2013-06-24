@@ -722,6 +722,16 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
+    // Damage by the spectral weapon is considered to be the player's damage ---
+    // so the player does not lose any exp from dealing damage with a spectral weapon summon
+    if (!invalid_monster_index(killer)
+        && (&menv[killer])->type == MONS_SPECTRAL_WEAPON
+        && (&menv[killer])->props.exists("sw_mid")
+        && actor_by_mid((&menv[killer])->props["sw_mid"].get_int())->is_player())
+    {
+        return 2;
+    }
+
     if (killer == MHITYOU)
         return 2;
 
@@ -1639,6 +1649,16 @@ int monster_die(monster* mons, killer_type killer,
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
     }
 
+    // Kills by the spectral weapon are considered as kills by the player instead
+    if (killer == KILL_MON
+        && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON
+        && (&menv[killer_index])->props.exists("sw_mid")
+        && actor_by_mid((&menv[killer_index])->props["sw_mid"].get_int())->is_player())
+    {
+        killer = KILL_YOU;
+        killer_index = you.mindex();
+    }
+
     // Take notes and mark milestones.
     record_monster_defeat(mons, killer);
 
@@ -1804,6 +1824,11 @@ int monster_die(monster* mons, killer_type killer,
         if (timeout && !silent)
             simple_monster_message(mons, " crumbles away.");
     }
+    else if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        end_spectral_weapon(mons, true, killer == KILL_RESET);
+        silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
@@ -1823,6 +1848,23 @@ int monster_die(monster* mons, killer_type killer,
          || you.religion == GOD_KIKUBAAQUDGHA))
     {
         targ_holy = MH_DEMONIC;
+    }
+
+    // Adjust song of slaying bonus
+    // Kills by the spectral weapon should be adjusted by this point to be
+    // kills by the player --- so kills by the spectral weapon are considered here as well
+    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp)
+    {
+        int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
+        mon_threat_level_type threat = mons_threat_level(mons, true);
+        // Only certain kinds of threats at different sos levels will increase the bonus
+        if (threat == MTHRT_TRIVIAL && sos_bonus<2
+            || threat == MTHRT_EASY && sos_bonus<4
+            || threat == MTHRT_TOUGH && sos_bonus<6
+            || threat == MTHRT_NASTY)
+        {
+            you.props["song_of_slaying_bonus"] = sos_bonus + 1;
+        }
     }
 
     switch (killer)
@@ -3484,6 +3526,19 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
 {
     if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
         return true;
+
+    // Spectral weapons only attack their target
+    if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        // FIXME: find a way to use check_target_spectral_weapon
+        //        without potential info leaks about visibility.
+        if (mons->props.exists("target_mid"))
+        {
+            actor *target = actor_by_mid(mons->props["target_mid"].get_int());
+            return (target && target->pos() == p);
+        }
+        return false;
+    }
 
     if (!mons->friendly() || !mons->is_summoned())
         return true;
