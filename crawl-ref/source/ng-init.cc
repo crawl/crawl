@@ -214,6 +214,30 @@ void initialise_temples()
         = you.props[OVERFLOW_TEMPLES_KEY].new_vector(SV_VEC);
     overflow_temples.resize(MAX_OVERFLOW_LEVEL);
 
+    // Count god overflow temple weights.
+    int overflow_weights[NUM_GODS + 1];
+    overflow_weights[0] = 0;
+
+    for (unsigned int i = 1; i < NUM_GODS; i++)
+    {
+        string mapname = make_stringf("temple_overflow_generic_%d", i);
+        mapref_vector maps = find_maps_for_tag(mapname);
+        if (!maps.empty())
+        {
+            int chance = 0;
+            for (mapref_vector::iterator map = maps.begin();
+                 map != maps.end(); map++)
+            {
+                // XXX: this should handle level depth better
+                chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
+                                                  MAX_OVERFLOW_LEVEL));
+            }
+            overflow_weights[i] = chance;
+        }
+        else
+            overflow_weights[i] = 0;
+    }
+
     // Try to find combinations of overflow gods that have specialised
     // overflow vaults.
 multi_overflow:
@@ -225,7 +249,7 @@ multi_overflow:
         // TODO: possibly make this place single-god vaults too?
         // XXX: upper limit on num here because this code gets really
         // slow otherwise.
-        if (num <= 1 || num > 3 || !one_chance_in(num + 1))
+        if (num <= 1 || num > 3)
             continue;
 
         vector<god_type> this_temple_gods;
@@ -247,8 +271,22 @@ multi_overflow:
             }
         }
 
-        if (find_maps_for_tag(tags).empty())
+        mapref_vector maps = find_maps_for_tag(tags);
+        if (maps.empty())
             continue;
+
+        if (overflow_weights[num] > 0)
+        {
+            int chance = 0;
+            for (mapref_vector::iterator map = maps.begin(); map != maps.end();
+                 map++)
+            {
+                chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
+                                                  MAX_OVERFLOW_LEVEL));
+            }
+            if (!x_chance_in_y(chance, overflow_weights[num] + chance))
+                continue;
+        }
 
         _use_overflow_temple(this_temple_gods);
 
@@ -277,19 +315,10 @@ multi_overflow:
             // Randomly choose from the sizes which have maps.
             for (unsigned int j = 2; j <= remaining_size; j++)
             {
-                string mapname = make_stringf("temple_overflow_generic_%d", j);
-                mapref_vector maps = find_maps_for_tag(mapname);
-                if (!maps.empty())
+                if (overflow_weights[j] > 0)
                 {
-                    int chance = 0;
-                    for (mapref_vector::iterator map = maps.begin();
-                         map != maps.end(); map++)
-                    {
-                        // XXX: this should handle level depth better
-                        chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
-                                                          MAX_OVERFLOW_LEVEL));
-                    }
-                    num_weights.push_back(pair<unsigned int, int>(j, chance));
+                    num_weights.push_back(
+                        pair<unsigned int, int>(j, overflow_weights[j]));
                 }
             }
             if (!num_weights.empty())
