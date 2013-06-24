@@ -1382,8 +1382,25 @@ static bool _moth_polymorph(const monster* mon)
         if (mi->type == MONS_MOTH_OF_MADNESS)
             continue;
 
-        if (one_chance_in(3) && monster_polymorph(*mi, RANDOM_SAME_GENUS))
+        if (mon->friendly() || mi->friendly())
+        {
+            continue;
+        }
+
+        if (one_chance_in(3))
+        {
+           const string targ_name = (mi->visible_to(&you)) ? mi->name(DESC_THE)
+                                                          : "something";
+ 
+            if (you.can_see(*mi))
+            {
+                mprf("%s irradiates %s!",
+                    mon->name(DESC_THE).c_str(),
+                    targ_name.c_str());
+            }
+            monster_polymorph(*mi, RANDOM_SAME_GENUS);
             return true;
+        }
     }
 
     return false;

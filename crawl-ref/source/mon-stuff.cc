@@ -2689,7 +2689,7 @@ void alert_nearby_monsters(void)
              behaviour_event(*mi, ME_ALERT, &you);
 }
 
-static bool _valid_morph(monster* mons, monster_type new_mclass)
+static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type poly_source)
 {
     const dungeon_feature_type current_tile = grd(mons->pos());
 
@@ -2717,6 +2717,12 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         return false;
     }
 
+    if (poly_source != RANDOM_SAME_GENUS
+        && new_mclass == mons_species(old_mclass))
+    {
+        return false;
+    }
+
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
@@ -2724,8 +2730,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
-        // XXX(bh): Work around this.
-        // || new_mclass == mons_species(old_mclass)  // must be different
         || new_mclass == MONS_PROGRAM_BUG
 
         // They act as separate polymorph classes on their own.
@@ -2755,6 +2759,11 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 
     // Determine if the monster is happy on current tile.
     return monster_habitable_grid(new_mclass, current_tile);
+}
+
+static bool _valid_morph(monster* mons, monster_type new_mclass)
+{
+    return _valid_morph(mons, new_mclass, new_mclass);
 }
 
 static bool _is_poly_power_unsuitable(poly_power_type power,
@@ -3085,7 +3094,15 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             const monsterentry *me = get_monster_data((monster_type) mc);
             if (me->genus != genus)
                 continue;
-            if (_valid_morph(mons, (monster_type) me->mc))
+            if (mons->type == me->mc)
+		continue;
+            if ((int) me->hpdice[0] < mons->hit_dice)
+	    {
+                int chance = mons->hit_dice - (int) me->hpdice[0];
+                if (!one_chance_in(chance * chance))
+	            continue;
+            }
+            if (_valid_morph(mons, (monster_type) me->mc, RANDOM_SAME_GENUS))
             {
                 target_types.push_back((monster_type) mc);
             }
@@ -3093,13 +3110,12 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         if (target_types.empty()) {
             return false;
         }
-        std::random_shuffle(target_types.begin(), target_types.end());
+        std::random_shuffle(target_types.begin(), target_types.end(), random2);
         targetc = target_types[0];
-    }
-
-    if (!_valid_morph(mons, targetc))
+    } else if (!_valid_morph(mons, targetc))
+    {
         return simple_monster_message(mons, " looks momentarily different.");
-
+    }
     change_monster_type(mons, targetc);
 
     bool can_see = you.can_see(mons);
