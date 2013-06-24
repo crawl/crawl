@@ -4332,6 +4332,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+// spectral weapon, for skalds!
+{
+    MONS_SPECTRAL_WEAPON, '(', GREEN, "spectral weapon",
+    M_GLOWS_LIGHT | M_INSUBSTANTIAL | M_NO_REGEN,
+    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD |  MR_RES_ELEC,
+    0, 11, MONS_WRAITH, MONS_SPECTRAL_WEAPON, MH_NONLIVING, MAG_IMMUNE,
+    { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 3, 0, 0},
+    5, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_LAND, FL_LEVITATE, 25, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // large abominations ('X')
 {
     // See comment under MONS_ABOMINATION_SMALL regarding holiness.

@@ -434,6 +434,7 @@ public:
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
     bool nightvision() const;
+    reach_type reach_range() const;
 
     bool see_cell(const coord_def& p) const;
     const los_base* get_los();

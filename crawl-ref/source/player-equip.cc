@@ -24,6 +24,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -872,6 +873,16 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
         canned_msg(MSG_MANA_DECREASE);
     }
+
+    // Unwielding dismisses an active spectral weapon
+    monster *spectral_weapon = find_spectral_weapon(&you);
+    if (spectral_weapon)
+    {
+        mprf("Your spectral weapon disappears as %s.",
+             meld ? "your weapon melds" : "you unwield");
+        end_spectral_weapon(spectral_weapon, false, true);
+    }
+
 }
 
 static void _equip_armour_effect(item_def& arm, bool unmeld)
