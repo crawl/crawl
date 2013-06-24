@@ -3583,9 +3583,8 @@ bool _jump_player(int jump_range)
         return false;
     }
 
-    if (!check_moveto(jdirect.target, "jump")
-        || !fight_jump(&you, actor_at(jdirect.target), tgt.jump_is_blocked,
-                       tgt.landing_site, tgt.additional_sites))
+    if (!fight_jump(&you, actor_at(jdirect.target), tgt.jump_is_blocked,
+                    tgt.landing_site, tgt.additional_sites))
         return false;
     return true;
 }
