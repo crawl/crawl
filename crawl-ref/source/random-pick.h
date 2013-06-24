@@ -61,7 +61,7 @@ T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
             continue;
 
         int rar = rarity_at(pop, level);
-        ASSERT(rar > 0);
+        ASSERTM(rar > 0, "Rarity %d: %d at level %d", rar, pop->value, level);
 
         valid[nvalid].value = pop->value;
         valid[nvalid].rarity = rar;
