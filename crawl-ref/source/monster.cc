@@ -3218,14 +3218,10 @@ bool monster::asleep() const
     return (behaviour == BEH_SLEEP);
 }
 
-bool monster::backlit(bool check_haloed, bool self_halo, bool check_corona) const
+bool monster::backlit(bool check_haloed, bool self_halo) const
 {
-    if (check_corona && has_ench(ENCH_CORONA)
-        || has_ench(ENCH_SILVER_CORONA)
-        || has_ench(ENCH_STICKY_FLAME))
-    {
+    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
         return true;
-    }
     if (check_haloed)
         return (!umbraed() && haloed() &&
                 (self_halo || halo_radius2() == -1));
