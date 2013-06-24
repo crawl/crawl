@@ -997,9 +997,6 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SENTINEL_MARK,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
-        DUR_INFUSION,
-        DUR_SONG_OF_SLAYING,
-        DUR_SPIRIT_SHIELD,
         DUR_WATER_HOLD,
         DUR_FLAYED,
         DUR_RETCHING,
@@ -1007,6 +1004,9 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_DIMENSION_ANCHOR,
         STATUS_BEOGH,
         DUR_SPIRIT_HOWL,
+        DUR_INFUSION,
+        DUR_SONG_OF_SLAYING,
+        DUR_SPIRIT_SHIELD,
     };
 
     status_info inf;

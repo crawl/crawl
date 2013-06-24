@@ -2936,22 +2936,20 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
     }
 
     if (agent->is_player())
-    {
         mpr("You draw out your weapon's spirit!");
-    }
     else
     {
-                if (you.can_see(agent) && you.can_see(mons))
-                {
-                    string buf = " draws out ";
-                    buf += agent->pronoun(PRONOUN_POSSESSIVE);
-                    buf += " weapon's spirit!";
-                    simple_monster_message(agent->as_monster(), buf.c_str());
-                }
-                else if (you.can_see(mons))
-                    simple_monster_message(mons, " appears!");
+        if (you.can_see(agent) && you.can_see(mons))
+        {
+            string buf = " draws out ";
+            buf += agent->pronoun(PRONOUN_POSSESSIVE);
+            buf += " weapon's spirit!";
+            simple_monster_message(agent->as_monster(), buf.c_str());
+        }
+        else if (you.can_see(mons))
+            simple_monster_message(mons, " appears!");
 
-                mons->props["band_leader"].get_int() = agent->mid;
+        mons->props["band_leader"].get_int() = agent->mid;
     }
 
     mons->props["sw_mid"].get_int() = agent->mid;
@@ -2995,30 +2993,30 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
 
 bool trigger_spectral_weapon(actor* agent, const actor* target)
 {
-        monster *spectral_weapon = find_spectral_weapon(agent);
+    monster *spectral_weapon = find_spectral_weapon(agent);
 
-        // Don't try to attack with a nonexistant spectral weapon
-        if (!spectral_weapon || !spectral_weapon->alive())
-        {
-            agent->props.erase("spectral_weapon");
-            return false;
-        }
-
-        // Likewise if the target is the spectral weapon itself
-        if (target->as_monster() == spectral_weapon)
-            return false;
-
-        spectral_weapon->props["target_mid"].get_int() = target->mid;
-        spectral_weapon->props["ready"] = true;
-
-        return true;
+    // Don't try to attack with a nonexistant spectral weapon
+    if (!spectral_weapon || !spectral_weapon->alive())
+    {
+        agent->props.erase("spectral_weapon");
+        return false;
     }
+
+    // Likewise if the target is the spectral weapon itself
+    if (target->as_monster() == spectral_weapon)
+        return false;
+
+    spectral_weapon->props["target_mid"].get_int() = target->mid;
+    spectral_weapon->props["ready"] = true;
+
+    return true;
+}
 
 /* Checks if the spectral weapon is targetting the given position.
  *
  * Checks that the defender is our actual target.
  */
-bool check_target_spectral_weapon (const actor* mons, const actor *defender)
+bool check_target_spectral_weapon(const actor* mons, const actor *defender)
 {
     if (mons->props.exists("target_mid"))
     {
@@ -3027,6 +3025,7 @@ bool check_target_spectral_weapon (const actor* mons, const actor *defender)
     }
     return false;
 }
+
 /* Confirms the spectral weapon can and will attack the given defender.
  *
  * Checks the target, and that we haven't attacked yet.

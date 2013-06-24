@@ -328,13 +328,10 @@ spret_type cast_infusion(int pow, bool fail)
 {
     fail_check();
     if (!you.duration[DUR_INFUSION])
-    {
         mpr("Your attacks are magically infused.");
-    }
     else
-    {
         mpr("Your attacks are magically infused for longer.");
-    }
+
     you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
     you.props["infusion_power"] = pow;
 
@@ -346,14 +343,11 @@ spret_type cast_song_of_slaying(int pow, bool fail)
     fail_check();
 
     if (you.duration[DUR_SONG_OF_SLAYING])
-    {
         mpr("You start a new song!");
-    }
     else
-    {
         mpr("You start singing a song of slaying.");
-    }
-    you.increase_duration(DUR_SONG_OF_SLAYING, 20+pow/3, 20+pow/3);
+
+    you.increase_duration(DUR_SONG_OF_SLAYING, 20 + pow / 3, 20 + pow / 3);
 
     noisy(12, you.pos());
 
@@ -364,7 +358,7 @@ spret_type cast_song_of_slaying(int pow, bool fail)
 spret_type cast_spirit_shield(int pow, bool fail)
 {
     fail_check();
-    you.increase_duration(DUR_SPIRIT_SHIELD, 10 + random2(pow)/3, 40);
+    you.increase_duration(DUR_SPIRIT_SHIELD, 10 + random2(pow) / 3, 40);
     mpr("You are being protected by your magic.");
     return SPRET_SUCCESS;
 }

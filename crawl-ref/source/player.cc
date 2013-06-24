@@ -4332,15 +4332,15 @@ void display_char_status()
         DUR_SENTINEL_MARK,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
-        DUR_INFUSION,
-        DUR_SPIRIT_SHIELD,
-        DUR_SONG_OF_SLAYING,
         DUR_WATER_HOLD,
         DUR_FLAYED,
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
         DUR_SPIRIT_HOWL,
+        DUR_INFUSION,
+        DUR_SPIRIT_SHIELD,
+        DUR_SONG_OF_SLAYING,
     };
 
     status_info inf;

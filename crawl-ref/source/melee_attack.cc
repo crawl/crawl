@@ -561,7 +561,8 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player() && you.duration[DUR_INFUSION])
     {
-        if (you.magic_points>0 || you.species == SP_DJINNI && (you.hp - 1)/DJ_MP_RATE>0)
+        if (you.magic_points > 0
+            || you.species == SP_DJINNI && ((you.hp - 1)/DJ_MP_RATE) > 0)
         {
             // infusion_power is set when the infusion spell is cast
             damage_done += 2 + div_rand_round(you.props["infusion_power"].get_int(), 25);
@@ -3475,8 +3476,11 @@ bool melee_attack::chop_hydra_head(int dam,
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
     // XXX: Tentatively making an exception for spectral weapons
-    if (attacker->is_monster() && attacker->type!= MONS_SPECTRAL_WEAPON && !one_chance_in(4))
+    if (attacker->is_monster() && attacker->type!= MONS_SPECTRAL_WEAPON
+        && !one_chance_in(4))
+    {
         return false;
+    }
 
     // Only cutting implements.
     if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
