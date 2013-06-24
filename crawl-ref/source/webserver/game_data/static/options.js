@@ -1,6 +1,7 @@
 define(["jquery", "comm"],
 function ($, comm) {
     var options = null;
+    var listeners = $.Callbacks();
 
     function clear_options()
     {
@@ -26,8 +27,16 @@ function ($, comm) {
 
     function handle_options_message(data)
     {
-        if (options == null || data.options["watcher"] == true)
+        if (options == null || data["watcher"] == true)
+        {
             options = data.options;
+            listeners.fire();
+        }
+    }
+
+    function add_listener(callback)
+    {
+        listeners.add(callback);
     }
 
     comm.register_handlers({
@@ -37,6 +46,7 @@ function ($, comm) {
     return {
         get: get_option,
         clear: clear_options,
+        add_listener: add_listener,
     };
 });
 
