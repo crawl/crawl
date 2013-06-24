@@ -417,7 +417,7 @@ bool monster_pathfind::traversable(const coord_def& p)
     {
         // XXX: Ugly hack to make thorn hunters use their briars for defensive
         //      cover instead of just pathing around them.
-        if (mons->type == MONS_THORN_HUNTER
+        if (mons && mons->type == MONS_THORN_HUNTER
             && monster_at(p)
             && monster_at(p)->type == MONS_BRIAR_PATCH)
         {
