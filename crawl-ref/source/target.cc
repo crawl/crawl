@@ -1060,12 +1060,17 @@ bool targetter_jump::set_aim(coord_def a)
     return false;
 }
 
+// Determine the set of valid landing sites
 void targetter_jump::set_additional_sites(coord_def a)
 {
      get_additional_sites(a);
      additional_sites = temp_sites;
 }
 
+// Determine the set of valid landing sites for the target, putting the results
+// in the private set variable temp_sites.  This uses valid_aim(), so it looks
+// for uninhabited squares that are habitable by the player, but doesn't check
+// against e.g. harmful clouds
 void targetter_jump::get_additional_sites(coord_def a)
 {
     bool agent_adjacent = a.distance_from(agent->pos()) == 1;
@@ -1093,20 +1098,21 @@ void targetter_jump::get_additional_sites(coord_def a)
     }
 }
 
-// See if we can find at least one valid landing position for the
-// given monster.  Possibly we also care to exclude sites harmful to
-// the player.
+// See if we can find at least one valid landing position for the given monster.
+// Base on allow_harmful we might care to exclude sites harmful to the player.
 bool targetter_jump::has_additional_sites(coord_def a, bool allow_harmful)
 {
     set<coord_def>::const_iterator site;
+
     get_additional_sites(a);
+    if (allow_harmful || !agent->is_player())
+        return temp_sites.size();
     // Find a valid jump_attack position in the adjacent squares, chosing the
     // valid position closest to the player.
     for (site = temp_sites.begin();
          site != temp_sites.end(); site++)
     {
-        if (allow_harmful || (agent->is_player()
-                              && check_moveto(*site, "jump", "", false)))
+        if (check_moveto(*site, "jump", "", false))
             return true;
     }
     return false;
