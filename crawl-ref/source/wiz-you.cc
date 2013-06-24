@@ -811,7 +811,7 @@ static const char* dur_names[] =
     "spirit howl",
     "infused",
     "song of slaying",
-    "spirit shield",
+    "song of shielding",
 };
 
 void wizard_edit_durations(void)

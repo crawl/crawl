@@ -3216,7 +3216,7 @@ struct spell_desc
 },
 
 {
-    SPELL_SPIRIT_SHIELD,"Spirit Shield",
+    SPELL_SONG_OF_SHIELDING, "Song of Shielding",
     SPTYP_CHARMS,
     SPFLAG_BATTLE,
     5,

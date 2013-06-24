@@ -1006,7 +1006,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SPIRIT_HOWL,
         DUR_INFUSION,
         DUR_SONG_OF_SLAYING,
-        DUR_SPIRIT_SHIELD,
+        DUR_SONG_OF_SHIELDING,
     };
 
     status_info inf;
