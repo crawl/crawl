@@ -4035,12 +4035,15 @@ int get_expiration_threshold(duration_type dur)
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
     case DUR_SHROUD_OF_GOLUBRIA:
+    case DUR_INFUSION:
+    case DUR_SONG_OF_SLAYING:
         return (6 * BASELINE_DELAY);
 
     case DUR_FLIGHT:
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
+    case DUR_SPIRIT_SHIELD:
         return (10 * BASELINE_DELAY);
 
     // These get no messages when they "flicker".
@@ -4329,6 +4332,9 @@ void display_char_status()
         DUR_SENTINEL_MARK,
         STATUS_RECALL,
         STATUS_LIQUEFIED,
+        DUR_INFUSION,
+        DUR_SPIRIT_SHIELD,
+        DUR_SONG_OF_SLAYING,
         DUR_WATER_HOLD,
         DUR_FLAYED,
         DUR_RETCHING,
@@ -4495,6 +4501,9 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
 
     ret += min(you.duration[DUR_SLAYING] / (13 * BASELINE_DELAY), 6);
     ret += 4 * augmentation_amount();
+
+    if (you.duration[DUR_SONG_OF_SLAYING])
+        ret += you.props["song_of_slaying_bonus"].get_int();
 
     return ret;
 }
@@ -6930,6 +6939,14 @@ bool player::nightvision() const
 {
     return (is_undead
             || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2)));
+}
+
+reach_type player::reach_range() const
+{
+    const item_def *wpn = weapon();
+    if (wpn)
+        return weapon_reach(*wpn);
+    return REACH_NONE;
 }
 
 monster_type player::mons_species(bool zombie_base) const

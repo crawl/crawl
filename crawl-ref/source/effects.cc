@@ -924,6 +924,7 @@ static bool _follows_orders(monster* mon)
     return (mon->friendly()
             && mon->type != MONS_GIANT_SPORE
             && mon->type != MONS_BATTLESPHERE
+            && mon->type != MONS_SPECTRAL_WEAPON
             && !mon->berserk()
             && !mon->is_projectile()
             && !mon->has_ench(ENCH_HAUNTING));

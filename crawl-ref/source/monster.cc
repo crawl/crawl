@@ -46,6 +46,7 @@
 #include "shopping.h"
 #include "spl-damage.h"
 #include "spl-util.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -1081,6 +1082,10 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
         }
     }
+
+    monster *spectral_weapon = find_spectral_weapon(this);
+    if (spectral_weapon)
+        end_spectral_weapon(spectral_weapon, false);
 }
 
 void monster::unequip_armour(item_def &item, int near)
@@ -1428,7 +1433,7 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
     return (eslot == -1 ? false : pickup(launch, eslot, near));
 }
 
-static bool _is_signature_weapon(monster* mons, const item_def &weapon)
+static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
         return (weapon.base_type == OBJ_RODS);
@@ -4073,6 +4078,7 @@ int monster::skill(skill_type sk, int scale, bool real) const
         return 0;
 
     int hd = scale * hit_dice;
+    int ret;
     switch (sk)
     {
     case SK_EVOCATIONS:
@@ -4088,6 +4094,23 @@ int monster::skill(skill_type sk, int scale, bool real) const
     case SK_AIR_MAGIC:
     case SK_SUMMONINGS:
         return (is_actual_spellcaster() ? hd : hd / 3);
+
+    // Weapon skills for spectral weapon
+    case SK_SHORT_BLADES:
+    case SK_LONG_BLADES:
+    case SK_AXES:
+    case SK_MACES_FLAILS:
+    case SK_POLEARMS:
+    case SK_STAVES:
+        ret = is_fighter() ? hd : hd / 2;
+        if (weapon()
+            && sk == weapon_skill(*weapon())
+            && _is_signature_weapon(this, *weapon()))
+        {
+            // generally slightly skilled if it's a signature weapon
+            ret = ret * 5 / 4;
+        }
+        return ret;
 
     default:
         return 0;
@@ -4180,6 +4203,37 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         || type == MONS_DIAMOND_OBELISK)
     {
         return 0;
+    }
+
+    // XXX: tentative damage sharing with the spectral weapon monster
+    // The damage shared should not be directly lethal to the player
+    // XXX: It might be possible that the damage might be lethal if the player is at low health and is vulnerable?
+    // XXX: This makes a lot of messages, especially when the spectral weapon is hit by a monster with multiple attacks and is frozen, burned, etc.
+    if (type == MONS_SPECTRAL_WEAPON && agent)
+    {
+        // The damage should not exceed the weapon's current hp or be enough to kill the player directly
+        actor *owner = actor_by_mid(props["sw_mid"].get_int());
+        int owner_hp = owner->is_player() ? you.hp : owner->as_monster()->hit_points;
+        int shared_damage = min(min(amount,hit_points), owner_hp-1);
+        if (shared_damage>0)
+        {
+            if (owner->is_player() && agent->is_monster())
+            {
+                mpr("Your spectral weapon shares its damage with you!");
+                you.hurt(agent, shared_damage, flavour, cleanup_dead);
+            }
+            else if (owner && owner->alive())
+            {
+                if (you.can_see(owner))
+                {
+                    string buf = " shares ";
+                    buf += owner->pronoun(PRONOUN_POSSESSIVE);
+                    buf += " spectral weapon's damage!";
+                    simple_monster_message(owner->as_monster(), buf.c_str());
+                }
+                owner->hurt(agent, shared_damage, flavour, cleanup_dead);
+            }
+        }
     }
 
     if (alive())

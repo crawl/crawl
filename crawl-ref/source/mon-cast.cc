@@ -1151,6 +1151,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FRENZY:
     case SPELL_SUMMON_TWISTER:
     case SPELL_BATTLESPHERE:
+    case SPELL_SPECTRAL_WEAPON:
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
     case SPELL_CALL_LOST_SOUL:
@@ -1636,6 +1637,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_BATTLESPHERE:
         if (find_battlesphere(mon))
+            ret = true;
+        break;
+
+    case SPELL_SPECTRAL_WEAPON:
+        if (find_spectral_weapon(mon))
             ret = true;
         break;
 
@@ -2387,6 +2393,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 else if (_ms_waste_of_time(mons, hspell_pass[i])
                          || hspell_pass[i] == SPELL_DIG)
                 {
+                    if (hspell_pass[i] == SPELL_SPECTRAL_WEAPON)
+                    {
+                        // Instead of making a new one,
+                        // make the weapon attack
+                        hspell_pass[i] = SPELL_MELEE;
+                    }
                     // Should monster not have selected dig by now,
                     // it never will.
                     hspell_pass[i] = SPELL_NO_SPELL;
@@ -4313,6 +4325,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_BATTLESPHERE:
         cast_battlesphere(mons, min(6 * mons->hit_dice, 200), mons->god, false);
+        return;
+
+    case SPELL_SPECTRAL_WEAPON:
+        cast_spectral_weapon(mons, min(6 * mons->hit_dice, 200), mons->god, false);
         return;
 
     // TODO: Outsource the cantrip messages and allow specification of

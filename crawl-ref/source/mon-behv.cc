@@ -17,6 +17,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "itemprop.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "mon-act.h"
@@ -28,6 +29,7 @@
 #include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -62,6 +64,11 @@ static void _guess_invis_foe_pos(monster* mon)
 
 static void _mon_check_foe_invalid(monster* mon)
 {
+    // Assume a spectral weapon has a valid target
+    // Ideally this is not outside special cased like this
+    if(mon->type == MONS_SPECTRAL_WEAPON)
+        return;
+
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
         if (actor *foe = mon->get_foe())
@@ -77,6 +84,7 @@ static void _mon_check_foe_invalid(monster* mon)
 
         mon->foe = MHITNOT;
     }
+
 }
 
 static bool _mon_tries_regain_los(monster* mon)
@@ -257,6 +265,42 @@ void handle_behaviour(monster* mon)
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
+    // The target and foe set here for a spectral weapon should never change
+    if (mon->type == MONS_SPECTRAL_WEAPON)
+    {
+        // Do nothing if we're still being placed
+        if (!mon->props.exists("sw_mid"))
+            return;
+
+        actor *owner = actor_by_mid(mon->props["sw_mid"].get_int());
+
+        if (!owner || !owner->alive())
+        {
+            end_spectral_weapon(mon, false);
+            return;
+        }
+
+        mon->target = owner->pos();
+        mon->foe = MHITNOT;
+        // Try to move towards any monsters the owner is attacking
+        if (mon->props.exists("target_mid"))
+        {
+            actor *atarget = actor_by_mid(mon->props["target_mid"].get_int());
+
+            // Only go after the target if the owner can still reach
+            // FIXME: intervening features are currently ignored
+            //        because there's no good way to check if an actor
+            //        can make a reaching attack without actually doing so.
+            if (atarget && atarget->alive()
+                && (grid_distance(owner->pos(), atarget->pos())
+                    <= ((owner->reach_range() == REACH_TWO) ? 2 : 1)))
+            {
+                mon->target = atarget->pos();
+                mon->foe = atarget->mindex();
+            }
+        }
+    }
+
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
     if (proxPlayer && !you.visible_to(mon))
@@ -305,12 +349,14 @@ void handle_behaviour(monster* mon)
         && !mon->berserk()
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
-        && mon->type != MONS_BATTLESPHERE)
+        && mon->type != MONS_BATTLESPHERE
+        && mon->type != MONS_SPECTRAL_WEAPON)
     {
         if  (!crawl_state.game_is_zotdef())
         {
             if (you.pet_target != MHITNOT)
                 mon->foe = you.pet_target;
+
         }
         else    // Zotdef only
         {
@@ -357,7 +403,8 @@ void handle_behaviour(monster* mon)
     }
 
     // Friendly summons will come back to the player if they go out of sight.
-    if (!summon_can_attack(mon))
+    // Spectral weapon should keep its target even though it can't attack it
+    if (!summon_can_attack(mon) && mon->type!=MONS_SPECTRAL_WEAPON)
         mon->target = you.pos();
 
     // Monsters do not attack themselves. {dlb}
@@ -981,6 +1028,7 @@ static void _set_nearest_monster_foe(monster* mon)
     if (mon->good_neutral() || mon->strict_neutral()
             || mon->behaviour == BEH_WITHDRAW
             || mon->type == MONS_BATTLESPHERE
+            || mon->type == MONS_SPECTRAL_WEAPON
             || mon->has_ench(ENCH_HAUNTING))
         return;
 
@@ -1129,7 +1177,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
-            if (src == &you && mon->type != MONS_BATTLESPHERE)
+            if (src == &you && mon->type != MONS_BATTLESPHERE && mon->type != MONS_SPECTRAL_WEAPON)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
@@ -1313,7 +1361,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player() && mon->type != MONS_BATTLESPHERE)
+        if (src->is_player() && mon->type != MONS_BATTLESPHERE && mon->type != MONS_SPECTRAL_WEAPON)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;

@@ -96,7 +96,7 @@ start out with the Pain spell.
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
-the book of War Chants.
+the book of Battle.
 %%%%
 Summoner
 
