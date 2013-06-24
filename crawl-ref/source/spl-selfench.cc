@@ -355,10 +355,10 @@ spret_type cast_song_of_slaying(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_spirit_shield(int pow, bool fail)
+spret_type cast_song_of_shielding(int pow, bool fail)
 {
     fail_check();
-    you.increase_duration(DUR_SPIRIT_SHIELD, 10 + random2(pow) / 3, 40);
+    you.increase_duration(DUR_SONG_OF_SHIELDING, 10 + random2(pow) / 3, 40);
     mpr("You are being protected by your magic.");
     return SPRET_SUCCESS;
 }

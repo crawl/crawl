@@ -2851,7 +2851,7 @@ static void _decrement_durations()
             0,
             "Your song is almost over.");
 
-    _decrement_a_duration(DUR_SPIRIT_SHIELD, delay,
+    _decrement_a_duration(DUR_SONG_OF_SHIELDING, delay,
             "Your magic is no longer protecting you.",
             0,
             "You are feeling less protected by your magic.");

@@ -574,7 +574,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
          || spell == SPELL_OZOCUBUS_ARMOUR
          || spell == SPELL_DEATHS_DOOR
          || spell == SPELL_LEDAS_LIQUEFACTION
-         || spell == SPELL_SPIRIT_SHIELD))
+         || spell == SPELL_SONG_OF_SHIELDING))
     {
         rc = true, form = false;
     }
