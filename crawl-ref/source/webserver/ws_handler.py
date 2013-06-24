@@ -427,10 +427,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
             self.write_message('{"msg":"options","options":' + data + '}')
 
-        if not self.username: return None
-        if game_id not in config.games: return None
+        if not self.username: return
+        if game_id not in config.games: return
 
         game = config.games[game_id]
+        if "no_json_options" in game and game["no_json_options"]: return
+
         call = [game["crawl_binary"], "-rc", self.rcfile_path(game_id)]
         if "options" in game:
             call += game["options"]
