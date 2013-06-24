@@ -88,6 +88,10 @@ enum band_type
     BAND_SPRIGGANS,
     BAND_SPRIGGAN_ELITES,
     BAND_ENCHANTRESS,
+    BAND_AIR_ELEMENTALS,
+    BAND_SPRIGGAN_DRUID,
+    BAND_SPRIGGAN_RIDERS,
+    BAND_SPIRIT_WOLVES,
     NUM_BANDS                   // always last
 };
 
