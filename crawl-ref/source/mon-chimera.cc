@@ -142,7 +142,7 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
     if (dummy.is_jumpy()
         || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
     {
-        mon->ev == dummy.ev;
+        mon->ev = dummy.ev;
         mon->props["chimera_legs"].get_int() = partnum;
     }
 
@@ -151,8 +151,8 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
     if (partnum == 1)
     {
         // Always AC/EV on the first part
-        mon->ac == dummy.ac;
-        mon->ev == dummy.ev;
+        mon->ac = dummy.ac;
+        mon->ev = dummy.ev;
         return;
     }
     // Make sure resulting chimera can use spells
