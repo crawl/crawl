@@ -142,14 +142,19 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
     if (dummy.is_jumpy()
         || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
     {
+        mon->ev == dummy.ev;
         mon->props["chimera_legs"].get_int() = partnum;
     }
 
     // Apply spells but only for 2nd and 3rd parts since 1st part is
     // already supported by the original define_monster call
     if (partnum == 1)
+    {
+        // Always AC/EV on the first part
+        mon->ac == dummy.ac;
+        mon->ev == dummy.ev;
         return;
-
+    }
     // Make sure resulting chimera can use spells
     // TODO: Spell usage might still be a bit of a mess, especially with
     // things like human/animal hybrids. Could perhaps do with some kind
