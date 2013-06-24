@@ -3897,6 +3897,10 @@ spectral thing:quote
  My Spectre follows thee behind.”
     -William Blake, “Broken Love”. ca. 1800.
 %%%%
+spectral weapon
+
+A spirit drawn from a weapon --- it never strikes on its own.
+%%%%
 sphinx
 
 A large creature with a woman's head, a lion's body and the wings of a huge

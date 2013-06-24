@@ -58,6 +58,7 @@ enum ability_type
     // Others
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
+    ABIL_STOP_SINGING, // From song of slaying
 
     // Species-specific abilities.
     // Demonspawn-only
@@ -423,6 +424,9 @@ enum book_type
     BOOK_CHANGES,
     BOOK_TRANSFIGURATIONS,
     BOOK_WAR_CHANTS,
+#if TAG_MAJOR_VERSION > 34
+    BOOK_BATTLE,
+#endif
     BOOK_CLOUDS,
     BOOK_NECROMANCY,
     BOOK_CALLINGS,
@@ -434,7 +438,7 @@ enum book_type
     BOOK_UNLIFE,
     BOOK_CONTROL,
 #if TAG_MAJOR_VERSION == 34
-    BOOK_MUTATIONS,
+    BOOK_BATTLE, // was BOOK_MUTATIONS,
 #endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
@@ -1502,6 +1506,9 @@ enum duration_type
 #endif
     DUR_SENTINEL_MARK,
     DUR_SICKENING,
+    DUR_INFUSION,
+    DUR_SONG_OF_SLAYING,
+    DUR_SPIRIT_SHIELD,
     DUR_WATER_HOLD,
     DUR_WATER_HOLD_IMMUNITY,
     DUR_FLAYED,
@@ -2133,6 +2140,7 @@ enum monster_type                      // menv[].type
     MONS_GIANT_ORANGE_BRAIN,
 
     MONS_DANCING_WEAPON,
+    MONS_SPECTRAL_WEAPON,
     MONS_HARPY,
     MONS_RAVEN,
     MONS_FIRE_CRAB,
@@ -3502,6 +3510,10 @@ enum spell_type
     SPELL_SENTINEL_MARK,
     SPELL_WORD_OF_RECALL,
     SPELL_INJURY_BOND,
+    SPELL_INFUSION,
+    SPELL_SONG_OF_SLAYING,
+    SPELL_SPECTRAL_WEAPON,
+    SPELL_SPIRIT_SHIELD,
     SPELL_GHOSTLY_FLAMES,
     SPELL_GHOSTLY_FIREBALL,
     SPELL_CALL_LOST_SOUL,

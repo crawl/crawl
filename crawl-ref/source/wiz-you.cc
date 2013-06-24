@@ -807,6 +807,9 @@ static const char* dur_names[] =
 #endif
     "sentinel's mark",
     "sickening",
+    "infused",
+    "song of slaying",
+    "spirit shield",
     "drowning",
     "drowning immunity",
     "flayed",

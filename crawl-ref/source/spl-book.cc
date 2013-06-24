@@ -241,6 +241,7 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_YOUNG_POISONERS:
     case BOOK_WAR_CHANTS:
+    case BOOK_BATTLE:
     case BOOK_DEBILITATION:
         return 5;
 
@@ -293,7 +294,8 @@ int book_rarity(uint8_t which_book)
 
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:
-    case BOOK_MUTATIONS:
+    // enum replaced with BOOK_BATTLE
+    // case BOOK_MUTATIONS:
         return 100;
 #endif
 
@@ -563,7 +565,8 @@ bool you_cannot_memorise(spell_type spell, bool &form)
          || spell == SPELL_POISON_WEAPON
          || spell == SPELL_SURE_BLADE
          // could be useful if it didn't require wielding
-         || spell == SPELL_TUKIMAS_DANCE))
+         || spell == SPELL_TUKIMAS_DANCE
+         || spell == SPELL_SPECTRAL_WEAPON))
     {
         rc = true, form = false;
     }
@@ -572,7 +575,8 @@ bool you_cannot_memorise(spell_type spell, bool &form)
         && (spell == SPELL_ICE_FORM
          || spell == SPELL_OZOCUBUS_ARMOUR
          || spell == SPELL_DEATHS_DOOR
-         || spell == SPELL_LEDAS_LIQUEFACTION))
+         || spell == SPELL_LEDAS_LIQUEFACTION
+         || spell == SPELL_SPIRIT_SHIELD))
     {
         rc = true, form = false;
     }
