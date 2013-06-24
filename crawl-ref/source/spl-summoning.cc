@@ -2198,21 +2198,27 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         return false;
 
     if (num_lost)
+    {
         mprf("%s %s into %s!",
              _count_article(num_lost, num_crawlies + num_masses == 0),
              num_lost == 1 ? "corpse collapses" : "corpses collapse",
              num_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
+    }
 
     if (num_crawlies > 0)
+    {
         mprf("%s %s to drag %s along the ground!",
              _count_article(num_crawlies, num_lost + num_masses == 0),
              num_crawlies == 1 ? "corpse begins" : "corpses begin",
              num_crawlies == 1 ? "itself" : "themselves");
+    }
 
     if (num_masses > 0)
+    {
         mprf("%s corpses meld into %s of writhing flesh!",
              _count_article(2, num_crawlies + num_lost == 0),
              num_masses == 1 ? "an agglomeration" : "agglomerations");
+    }
 
     if (num_orcs > 0 && caster->is_player())
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
@@ -2438,14 +2444,15 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
     {
         ASSERT(!find_battlesphere(agent));
         mgen_data mg (MONS_BATTLESPHERE,
-                agent->is_player() ? BEH_FRIENDLY
-                                   : SAME_ATTITUDE(agent->as_monster()),
-                agent,
-                0, SPELL_BATTLESPHERE,
-                agent->pos(),
-                agent->mindex(),
-                0, god,
-                MONS_NO_MONSTER, 0, BLACK);
+                      agent->is_player() ? BEH_FRIENDLY
+                                         : SAME_ATTITUDE(agent->as_monster()),
+                      agent,
+                      0, SPELL_BATTLESPHERE,
+                      agent->pos(),
+                      agent->mindex(),
+                      0, god,
+                      MONS_NO_MONSTER, 0, BLACK);
+
         mg.hd = 1 + div_rand_round(pow, 11);
         battlesphere = create_monster(mg);
 
@@ -2463,7 +2470,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
                 if (you.can_see(agent) && you.can_see(battlesphere))
                 {
                     simple_monster_message(agent->as_monster(),
-                                       " conjures a globe of magical energy!");
+                                           " conjures a globe of magical energy!");
                 }
                 else if (you.can_see(battlesphere))
                     simple_monster_message(battlesphere, " appears!");
@@ -2495,8 +2502,10 @@ void end_battlesphere(monster* mons, bool killed)
             if (you.can_see(mons))
             {
                 if ((mons->number == 0))
+                {
                     mpr("Your battlesphere expends the last of its energy"
                         " and dissipates.");
+                }
                 else
                     mpr("Your battlesphere wavers and loses cohesion.");
             }
@@ -2822,7 +2831,7 @@ bool fire_battlesphere(monster* mons)
 spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
 {
     if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_FULMINANT_PRISM,
-                                                      pow)))
+                                                 pow)))
     {
         mpr("That's too far away.");
         return SPRET_ABORT;
@@ -2856,8 +2865,8 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
     int hd = div_rand_round(pow, 10);
 
     mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
-                                  3, SPELL_FULMINANT_PRISM,
-                                  where, MHITYOU, MG_FORCE_PLACE);
+                                     3, SPELL_FULMINANT_PRISM,
+                                     where, MHITYOU, MG_FORCE_PLACE);
     prism_data.hd = hd;
     monster *prism = create_monster(prism_data);
 
@@ -2893,8 +2902,8 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
             if (wpn)
             {
                 mprf("%s vibrate%s crazily for a second.",
-                        wpn->name(DESC_YOUR).c_str(),
-                        wpn->quantity > 1 ? "" : "s");
+                     wpn->name(DESC_YOUR).c_str(),
+                     wpn->quantity > 1 ? "" : "s");
             }
             else
                 mprf("Your %s twitch.", you.hand_name(true).c_str());
