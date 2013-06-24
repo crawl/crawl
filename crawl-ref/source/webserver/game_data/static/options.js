@@ -26,11 +26,6 @@ function ($, comm) {
 
     function handle_options_message(data)
     {
-        if (options != null)
-        {
-            console.error("Options already set");
-            return;
-        }
         options = data.options;
     }
 

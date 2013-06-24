@@ -316,6 +316,7 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     else if (msgtype == "spectator_joined")
     {
         flush_messages();
+        _send_options();
         _send_everything();
         flush_messages(true);
     }

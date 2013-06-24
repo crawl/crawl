@@ -418,14 +418,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return os.path.join(path, self.username + ".rc")
 
     def send_json_options(self, game_id):
+        if not self.username: return None
         if game_id not in config.games: return None
 
         game = config.games[game_id]
-        call = [game["crawl_binary"]]
-        if self.username:
-            call += ["-rc", self.rcfile_path(game_id)]
-        else:
-            call += ["-rc", "/dev/null"]
+        call = [game["crawl_binary"], "-rc", self.rcfile_path(game_id)]
         if "options" in game:
             call += game["options"]
         call.append("-print-webtiles-options")
