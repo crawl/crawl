@@ -227,7 +227,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
       0, 0, 0, 0, 0, ABFLAG_INSTANT},
-    { ABIL_STOP_SINGING, "Stop singing",
+    { ABIL_STOP_SINGING, "Stop Singing",
       0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
       1, 0, 0, 0, 0, ABFLAG_PERMANENT_MP},
@@ -3197,7 +3197,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
-
 
     // Evocations from items.
     if (!you.suppressed())

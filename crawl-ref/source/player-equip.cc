@@ -878,7 +878,8 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     monster *spectral_weapon = find_spectral_weapon(&you);
     if (spectral_weapon)
     {
-        mprf("Your spectral weapon disappears as %s.", meld ? "your weapon melds" : "you unwield");
+        mprf("Your spectral weapon disappears as %s.",
+             meld ? "your weapon melds" : "you unwield");
         end_spectral_weapon(spectral_weapon, false, true);
     }
 

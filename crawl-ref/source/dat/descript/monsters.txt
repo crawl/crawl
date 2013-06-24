@@ -3899,7 +3899,7 @@ spectral thing:quote
 %%%%
 spectral weapon
 
-A spirit drawn from a weapon --- it never strikes on its own.
+A spirit drawn from a weapon — it never strikes on its own.
 %%%%
 sphinx
 

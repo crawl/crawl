@@ -722,13 +722,14 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
-    // Damage by the spectral weapon is considered to be the player's damage --- so the player does not lose any exp from dealing damage with a spectral weapon summon
+    // Damage by the spectral weapon is considered to be the player's damage ---
+    // so the player does not lose any exp from dealing damage with a spectral weapon summon
     if (!invalid_monster_index(killer)
         && (&menv[killer])->type == MONS_SPECTRAL_WEAPON
         && (&menv[killer])->props.exists("sw_mid")
         && actor_by_mid((&menv[killer])->props["sw_mid"].get_int())->is_player())
     {
-        mpr("Exp by SW attributed to player");
+        dprf("Exp by SW attributed to player");
         return 2;
     }
 
@@ -1655,7 +1656,7 @@ int monster_die(monster* mons, killer_type killer,
         && (&menv[killer_index])->props.exists("sw_mid")
         && actor_by_mid((&menv[killer_index])->props["sw_mid"].get_int())->is_player())
     {
-        mpr("Kill by SW attributed to player");
+        dprf("Kill by SW attributed to player");
         killer = KILL_YOU;
         killer_index = you.mindex();
     }
@@ -1852,7 +1853,8 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Adjust song of slaying bonus
-    // Kills by the spectral weapon should be adjusted by this point to be kills by the player --- so kills by the spectral weapon are considered here as well
+    // Kills by the spectral weapon should be adjusted by this point to be
+    // kills by the player --- so kills by the spectral weapon are considered here as well
     if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp)
     {
         int sos_bonus = you.props["song_of_slaying_bonus"].get_int();

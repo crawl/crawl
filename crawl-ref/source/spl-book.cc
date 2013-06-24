@@ -294,8 +294,6 @@ int book_rarity(uint8_t which_book)
 
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:
-    // enum replaced with BOOK_BATTLE
-    // case BOOK_MUTATIONS:
         return 100;
 #endif
 

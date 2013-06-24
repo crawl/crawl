@@ -3120,7 +3120,7 @@ static void _player_reacts()
     {
         if (you.duration[DUR_SONG_OF_SLAYING])
         {
-            mpr("Your song ends as you are silenced.");
+            mpr("The silence causes your song to end.");
             _decrement_a_duration(DUR_SONG_OF_SLAYING, you.duration[DUR_SONG_OF_SLAYING]);
         }
     }

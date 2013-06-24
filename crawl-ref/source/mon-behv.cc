@@ -84,7 +84,6 @@ static void _mon_check_foe_invalid(monster* mon)
 
         mon->foe = MHITNOT;
     }
-
 }
 
 static bool _mon_tries_regain_los(monster* mon)
@@ -356,7 +355,6 @@ void handle_behaviour(monster* mon)
         {
             if (you.pet_target != MHITNOT)
                 mon->foe = you.pet_target;
-
         }
         else    // Zotdef only
         {
@@ -1030,7 +1028,9 @@ static void _set_nearest_monster_foe(monster* mon)
             || mon->type == MONS_BATTLESPHERE
             || mon->type == MONS_SPECTRAL_WEAPON
             || mon->has_ench(ENCH_HAUNTING))
+    {
         return;
+    }
 
     const bool friendly = mon->friendly();
     const bool neutral  = mon->neutral();
@@ -1177,7 +1177,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
-            if (src == &you && mon->type != MONS_BATTLESPHERE && mon->type != MONS_SPECTRAL_WEAPON)
+            if (src == &you
+                && mon->type != MONS_BATTLESPHERE
+                && mon->type != MONS_SPECTRAL_WEAPON)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
@@ -1361,7 +1363,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player() && mon->type != MONS_BATTLESPHERE && mon->type != MONS_SPECTRAL_WEAPON)
+        if (src->is_player()
+            && mon->type != MONS_BATTLESPHERE
+            && mon->type != MONS_SPECTRAL_WEAPON)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;

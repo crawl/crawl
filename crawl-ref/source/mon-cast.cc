@@ -2393,12 +2393,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 else if (_ms_waste_of_time(mons, hspell_pass[i])
                          || hspell_pass[i] == SPELL_DIG)
                 {
+                    // Instead of making a new one,
+                    // make the weapon attack
                     if (hspell_pass[i] == SPELL_SPECTRAL_WEAPON)
-                    {
-                        // Instead of making a new one,
-                        // make the weapon attack
                         hspell_pass[i] = SPELL_MELEE;
-                    }
+
                     // Should monster not have selected dig by now,
                     // it never will.
                     hspell_pass[i] = SPELL_NO_SPELL;

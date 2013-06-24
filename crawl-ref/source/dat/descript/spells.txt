@@ -368,7 +368,10 @@ creatures. The caster is not affected.
 %%%%
 Infusion spell
 
-This spell infuses the caster's melee attacks with magic, dealing additional guaranteed damage whenever an enemy is hit. It's most effective when it can draw on magical energy within the caster and works even when the weapon wielded has a brand.
+This spell infuses the caster's melee attacks with magic, dealing additional
+guaranteed damage whenever an enemy is hit. It is most effective when it can
+draw on magical energy within the caster and works even when the weapon wielded
+has a brand.
 %%%%
 Inner Flame spell
 
@@ -655,13 +658,19 @@ This spell slows the actions of a creature.
 %%%%
 Song of Slaying spell
 
-This spell conjures ancient verses of battle within your mind and makes you recite them --- quite loudly! Each non-summoned enemy you slay in combat during this recitation temporarily enhances your melee skills. Your effectiveness will only be enhanced for the duration of the song; casting this spell while already singing will start a new song, not extend an existing one.
+This spell conjures ancient verses of battle within your mind and makes you
+recite them — quite loudly! Each non-summoned enemy you slay in combat during
+this recitation temporarily enhances your melee skills. Your effectiveness
+will only be enhanced for the duration of the song; casting this spell while
+already singing will start a new song, not extend an existing one.
 %%%%
 Spectral Weapon spell
 
-This spell draws out the spirit within a wielded weapon to fight for you, with its power dependant on your skill with said weapon. Never striking on its own, it only attacks when you do. You can only ever have one spectral weapon at a time.
+This spell draws out the spirit within a wielded weapon to fight for you, with
+its power dependant on your skill with said weapon. Never striking on its own,
+it only attacks when you do. You can only ever have one spectral weapon at a time.
 
-Kills by a spectral weapon count as yours when singing a song of slaying.
+Kills by a spectral weapon count as your own when singing a Song of Slaying.
 %%%%
 Spider Form spell
 

@@ -113,7 +113,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         return true;
     }
 
-
     // If execution gets here, attacker != Player, so we can safely continue
     // with processing the number of attacks a monster has without worrying
     // about unpredictable or weird results from players.
