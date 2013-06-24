@@ -439,7 +439,7 @@ void wizard_set_skill_level(skill_type skill)
     mpr(skill_name(skill));
     double amount = prompt_for_float("To what level? ");
 
-    if (amount < 0)
+    if (amount < 0 || amount > 27)
     {
         canned_msg(MSG_OK);
         return;
