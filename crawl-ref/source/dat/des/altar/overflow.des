@@ -2311,6 +2311,46 @@ px_____xp
     @
 ENDMAP
 
+NAME:   grunt_temple_overflow_diamond
+TAGS:   temple_overflow_generic_3
+SUBST:  T = T G V:1 U:1 t:1
+MAP
+      c
+     ccc
+    ccBcc
+   cc...cc
+  cccc+cccc
+ cc.c...c.cc
+ccB.+.T.+.Bcc
+ cc.c...c.cc
+  cccc+cccc
+   cc...cc
+    cc.cc
+     c.c
+      @
+ENDMAP
+
+NAME:   grunt_temple_overflow_cloverleaf
+TAGS:   temple_overflow_generic_4 transparent
+SUBST:  T : T U:1 V:1
+MAP
+ ccccc.@.ccccc
+cc...cc.cc...cc
+c.G.G.c.c.G.G.c
+c..B..c.c..B..c
+c.G...c.c...G.c
+cc...+c.c+...cc
+.ccccc...ccccc.
+@......T......@
+.ccccc...ccccc.
+cc...+c.c+...cc
+c.G...c.c...G.c
+c..B..c.c..B..c
+c.G.G.c.c.G.G.c
+cc...cc.cc...cc
+ ccccc.@.ccccc
+ENDMAP
+
 NAME:   minmay_overflow_temple_star_hex
 TAGS:   temple_overflow_generic_5
 KMASK:  T = no_monster_gen
@@ -2357,4 +2397,31 @@ cc............cc
       ....
       ....
       .@@.
+ENDMAP
+
+NAME:  grunt_temple_overflow_octagram
+TAGS:  temple_overflow_generic_7
+SUBST: T : T G t V:1
+MAP
+          c
+         ccc
+        ccBcc
+   cccccc...cccccc
+   cB..ccc+ccc..Bc
+   c..cc.....cc..c
+   c.c+.......+c.c
+   ccc....T....ccc
+  ccc...T...T...ccc
+ cc.c...........c.cc
+ccB.+..T..T..T..+.Bcc
+ cc.c...........c.cc
+  ccc...T...T...ccc
+   ccc....T....ccc
+   c.c+.......+c.c
+   c..cc.....cc..c
+   cB..ccc+ccc..Bc
+   cccccc...cccccc
+        cc.cc
+         c.c
+          @
 ENDMAP
