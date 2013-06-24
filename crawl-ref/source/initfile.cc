@@ -4095,7 +4095,7 @@ static void _edit_save(int argc, char **argv)
 #undef FAIL
 
 #ifdef USE_TILE_WEB
-void _write_colour_list(const vector<pair<int, int> > variable,
+static void _write_colour_list(const vector<pair<int, int> > variable,
         const string &name)
 {
     tiles.json_open_array(name);
