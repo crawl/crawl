@@ -358,6 +358,9 @@ void wizard_list_branches()
 
     CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
 
+    vector<string> temple_strings;
+    vector<string> god_names;
+
     for (unsigned int i = 0; i < levels.size(); i++)
     {
         CrawlStoreValue &val = levels[i];
@@ -371,10 +374,11 @@ void wizard_list_branches()
         if (temples.empty())
             continue;
 
-        vector<string> god_names;
+        temple_strings.clear();
 
         for (unsigned int j = 0; j < temples.size(); j++)
         {
+            god_names.clear();
             CrawlHashTable &temple_hash = temples[j];
             CrawlVector    &gods        = temple_hash[TEMPLE_GODS_KEY];
 
@@ -384,12 +388,14 @@ void wizard_list_branches()
 
                 god_names.push_back(god_name(god));
             }
+            temple_strings.push_back(
+                comma_separated_line(god_names.begin(), god_names.end()));
         }
 
         mprf(MSGCH_DIAGNOSTICS, "%u on D:%u (%s)", temples.size(),
              i + 1,
-             comma_separated_line(god_names.begin(),
-                                   god_names.end()).c_str()
+             comma_separated_line(temple_strings.begin(),
+                                  temple_strings.end(), "; ", "; ").c_str()
           );
     }
 }
