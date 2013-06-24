@@ -2201,7 +2201,6 @@ SUBST:  g : t:10 T:10 .:5 w:5 U:1 l:1
 SUBST:  c : c:20 x:5 v:1 b:1
 SUBST:  + : +:10 .:10 A:5
 KMASK:  TUw = no_monster_gen
-ORIENT: float
 MAP
   ccc     ccc
  ccGcccccccGcc
@@ -2213,9 +2212,62 @@ cc...cc.cc...cc
        @
 ENDMAP
 
-NAME:   minmay_overflow_temple_star_quad
-TAGS:   temple_overflow_generic_3
-ORIENT: float
+NAME:   gammafunk_temple_overflow_statue
+TAGS:   temple_overflow_generic_2
+SUBST:  g : t:10 T:10 .:5 w:5 l:5 U:1
+KMASK:  wlTU = no_monster_gen
+MAP
+  ccc
+cccGccc
+c.B.B.c
+cc...cc
+ccg.gcc
+ cc+cc
+   @
+ENDMAP
+
+NAME:   gammafunk_temple_overflow_pools
+TAGS:   temple_overflow_generic_2
+SUBST:  G : G:20 T:10 U:1 .:1
+KMASK:  TU = no_monster_gen
+MAP
+ ccccc ccccc
+cc.B.ccc.B.cc
+c.....G.....c
+c..T.....T..c
+cc.........cc
+ ccc.....ccc
+   ccc+ccc
+      @
+ENDMAP
+
+NAME:    gammafunk_temple_overflow_elements
+TAGS:    temple_overflow_generic_2
+SHUFFLE: lw
+KMASK:   lw = no_monster_gen
+MAP
+ ccccccc
+ccB...Bcc
+cclc+cwcc
+ ccc@ccc
+ENDMAP
+
+NAME:    gammafunk_temple_overflow_wave
+TAGS:    temple_overflow_generic_2
+SUBST:   p = G:20 c:20 1 w:5 l:5
+MONS:    plant / bush
+KMASK:   Twl = no_monster_gen
+MAP
+   ccccc
+ cccpcc
+ccTB.+@
+ccTB.+@
+ cccpcc
+   ccccc
+ENDMAP
+
+NAME: minmay_overflow_temple_star_quad
+TAGS: temple_overflow_generic_3
 MAP
            c
            c
@@ -2241,9 +2293,26 @@ cccB.....GcccG.....Bccc
            @
 ENDMAP
 
+NAME:   gammafunk_temple_overflow_forgotten
+TAGS:   temple_overflow_generic_3
+SUBST:  p = x:50 . 1, T = V:30 T, + = +:20 .
+NSUBST: _ = 3:1 / *:_
+MONS:   plant / bush
+KMASK:  T = no_monster_gen
+TILE:   x = wall_brick_brown_vines
+FTILE:  _+T12B = floor_pebble_yellow
+MAP
+ ppppppp
+pxB_B_Bxp
+p_______p
+p___T___p
+px_____xp
+ xxx+xxx
+    @
+ENDMAP
+
 NAME:   minmay_overflow_temple_star_hex
 TAGS:   temple_overflow_generic_5
-ORIENT: float
 KMASK:  T = no_monster_gen
 MAP
           ccc
@@ -2269,7 +2338,6 @@ ENDMAP
 
 NAME:   minmay_overflow_temple_hex
 TAGS:   temple_overflow_generic_6
-ORIENT: float
 MAP
    cccccccccc
    cB......Bc
