@@ -116,7 +116,8 @@ void remove_auto_exclude(const monster* mon, bool sleepy)
 
 static opacity_type _feat_opacity(dungeon_feature_type feat)
 {
-    return feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR;
+    return feat_is_opaque(feat) ? OPC_OPAQUE
+         : feat_is_tree(feat)   ? OPC_HALF : OPC_CLEAR;
 }
 
 // A cell is considered clear unless the player knows it's

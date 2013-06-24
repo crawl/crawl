@@ -1752,7 +1752,7 @@ bool monster::wants_weapon(const item_def &weap) const
         return false;
     }
 
-    // Arcane spellcasters don't want -CAST.
+    // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(weap)
         && artefact_wpn_property(weap, ARTP_PREVENT_SPELLCASTING))
@@ -1796,7 +1796,7 @@ bool monster::wants_armour(const item_def &item) const
 
 bool monster::wants_jewellery(const item_def &item) const
 {
-    // Arcane spellcasters don't want -CAST.
+    // Arcane spellcasters don't want -Cast.
     if (is_actual_spellcaster()
         && is_artefact(item)
         && artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
@@ -3561,7 +3561,8 @@ bool monster::is_known_chaotic() const
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_WRETCHED_STAR
         || type == MONS_KILLER_KLOWN // For their random attacks.
-        || type == MONS_TIAMAT)      // For her colour-changing.
+        || type == MONS_TIAMAT       // For her colour-changing.
+        || mons_class_is_chimeric(type))
     {
         return true;
     }
@@ -4993,15 +4994,19 @@ bool monster::is_skeletal() const
     return _mons_is_skeletal(type);
 }
 
-static bool _mons_is_spiny(int mc)
+int monster::spiny_degree() const
 {
-    return (mc == MONS_PORCUPINE
-            || mc == MONS_HELL_SENTINEL);
-}
-
-bool monster::is_spiny() const
-{
-    return _mons_is_spiny(type);
+    switch(type)
+    {
+        case MONS_PORCUPINE:
+            return 3;
+        case MONS_HELL_SENTINEL:
+            return 5;
+        case MONS_BRIAR_PATCH:
+            return 4;
+        default:
+            return 0;
+    }
 }
 
 bool monster::has_action_energy() const
@@ -5048,7 +5053,11 @@ void monster::apply_location_effects(const coord_def &oldpos,
     if (alive() && mons_habitat(this) == HT_WATER
         && !feat_is_watery(grd(pos())) && !has_ench(ENCH_AQUATIC_LAND))
     {
-        add_ench(ENCH_AQUATIC_LAND);
+        // Elemental wellsprings always have water beneath them
+        if (type == MONS_ELEMENTAL_WELLSPRING)
+            temp_change_terrain(pos(), DNGN_SHALLOW_WATER, 100, TERRAIN_CHANGE_FLOOD);
+        else
+            add_ench(ENCH_AQUATIC_LAND);
     }
 
     if (alive() && has_ench(ENCH_AQUATIC_LAND))
@@ -5685,9 +5694,7 @@ reach_type monster::reach_range() const
 
 bool monster::can_cling_to_walls() const
 {
-    return (mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
-            || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
-            || type == MONS_DEMONIC_CRAWLER);
+    return mons_can_cling_to_walls(this);
 }
 
 void monster::steal_item_from_player()
@@ -6032,4 +6039,9 @@ bool monster::is_divine_companion() const
 bool monster::is_projectile() const
 {
     return (mons_is_projectile(this) || mons_is_boulder(this));
+}
+
+bool monster::is_jumpy() const
+{
+    return (mons_is_jumpy(this));
 }

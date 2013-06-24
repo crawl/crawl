@@ -934,23 +934,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_PAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        // Fauns:  2/7 chance each of bow, sling, some type of throwing weapon;
-        //         1/7 chance of longbow.
-        // Satyrs: 1/2 chance of longbow;
-        //         1/6 chance each of bow, sling, some type of throwing weapon.
-        // Pan:    guaranteed longbow.
-        if (!melee_only
-            && (mon->type == MONS_FAUN && x_chance_in_y(5, 7)
-                || mon->type == MONS_SATYR && !one_chance_in(6))
-                || mon->type == MONS_PAN)
+        if (!melee_only)
         {
             switch (mon->type)
             {
                 case MONS_FAUN:
-                    item.sub_type = random_choose_weighted(1, WPN_LONGBOW,
-                                                           2, WPN_BOW,
-                                                           2, WPN_SLING,
-                                                           0);
+                    item.sub_type = WPN_SLING;
                     break;
                 case MONS_SATYR:
                     item.sub_type = random_choose_weighted(3, WPN_LONGBOW,
@@ -1380,8 +1369,11 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         // deliberate fall-through
     case MONS_SPRIGGAN_ENCHANTER:
         item_race = MAKE_ITEM_NO_RACE;
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = one_chance_in(3) ? WPN_QUICK_BLADE : WPN_DAGGER;
+        item.sub_type  = one_chance_in(12) ? WPN_QUICK_BLADE : WPN_DAGGER;
         break;
 
     case MONS_SPRIGGAN_RIDER:
@@ -1404,6 +1396,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_MACE,
                                        WPN_SHORT_SWORD,
                                        -1);
+        if (one_chance_in(5))
+        {
+            force_item = true;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
+        }
+
         break;
 
     case MONS_SPRIGGAN_DRUID:
@@ -1414,7 +1412,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_SPRIGGAN_DEFENDER:
     case MONS_THE_ENCHANTRESS:
-        // High end gear, but alas, with an extra chance for distortion.
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LAJATANG,    // best spriggan weapon
@@ -1424,7 +1421,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_FLAIL,       // best ordinary 1-handed
                                        -1);
         level = MAKE_GOOD_ITEM;
-        if (one_chance_in(mon->type == MONS_THE_ENCHANTRESS ? 4 : 10))
+        if (mon->type == MONS_THE_ENCHANTRESS && one_chance_in(6))
         {
             force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
@@ -1476,11 +1473,48 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_SOJOBO:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = one_chance_in(4) ? WPN_TRIPLE_SWORD
+        item.sub_type = one_chance_in(6) ? WPN_TRIPLE_SWORD
                                          : WPN_GREAT_SWORD;
         if (x_chance_in_y(2, 3))
+        {
+            force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
+        }
         level = MAKE_GOOD_ITEM;
+        break;
+
+    case MONS_MINOTAUR:
+        // For now, let's only give starting gear to random minotaurs in Forest
+        // This is meant, to some extent, to simulate them picking up Labyrinth
+        // loot and using it against you - items from their horde, as it were
+        if (player_in_branch(BRANCH_FOREST))
+        {
+            // To avoid equipping minotaur mercs when drawn in just one branch
+            if (mon->flags & MF_NO_REWARD)
+                break;
+
+            if (one_chance_in(9))
+            {
+                item.base_type = OBJ_RODS;
+                item.sub_type  = random_choose(ROD_LIGHTNING,
+                                               ROD_SWARM,
+                                               ROD_FRIGID_DESTRUCTION,
+                                               ROD_DEMONOLOGY,
+                                               ROD_VENOM, -1);
+            }
+            else
+            {
+                item.base_type = OBJ_WEAPONS;
+                item.sub_type = random_choose_weighted( 8, WPN_GLAIVE,
+                                                        6, WPN_WAR_AXE,
+                                                        8, WPN_GREAT_MACE,
+                                                       12, WPN_BATTLEAXE,
+                                                        8, WPN_GREAT_SWORD,
+                                                        6, WPN_BROAD_AXE,
+                                                        0);
+                level = MAKE_GOOD_ITEM;
+            }
+        }
         break;
 
     default:
@@ -1576,30 +1610,30 @@ static void _give_ammo(monster* mon, int level,
             }
             else if (mon->type == MONS_SPRIGGAN_ASSASSIN)
             {
-                if (got_curare_roll(level))
+
+                special_missile_type brand = random_choose_weighted(5, SPMSL_SLEEP,
+                                                              3, SPMSL_CONFUSION,
+                                                              2, SPMSL_PARALYSIS,
+                                                              2, SPMSL_CURARE,
+                                                              1, SPMSL_RAGE,
+                                                              0);
+                switch (brand)
                 {
-                    set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                      SPMSL_CURARE);
-                    mitm[thing_created].quantity = random_range(2, 8);
+                    case SPMSL_CONFUSION:
+                    case SPMSL_PARALYSIS:
+                    case SPMSL_RAGE:
+                        mitm[thing_created].quantity = random_range(3, 7);
+                        break;
+                    case SPMSL_CURARE:
+                        mitm[thing_created].quantity = random_range(2, 5);
+                        break;
+                    case SPMSL_SLEEP: default:
+                        mitm[thing_created].quantity = random_range(4, 9);
+                        break;
                 }
-                else
-                {
-                    if (one_chance_in(3))
-                    {
-                        set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                          random_choose_weighted(
-                                              4, SPMSL_SLEEP,
-                                              3, SPMSL_CONFUSION,
-                                              2, SPMSL_PARALYSIS,
-                                              0));
-                    }
-                    else
-                    {
-                        set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                          SPMSL_POISONED);
-                    }
-                    mitm[thing_created].quantity = random_range(4, 10);
-                }
+                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                    brand);
+
             }
             else
             {
@@ -1752,21 +1786,6 @@ static void _give_ammo(monster* mon, int level,
             if (mon->type == MONS_HAROLD)
                 qty += random2(4);
 
-            break;
-
-        case MONS_FAUN:  // we only get this far if they have no launcher
-        case MONS_SATYR:
-            if (coinflip())
-            {
-                weap_class = OBJ_WEAPONS;
-                weap_type  = WPN_SPEAR;
-            }
-            else
-            {
-                weap_class = OBJ_MISSILES;
-                weap_type  = MI_JAVELIN;
-            }
-            qty = random_range(4, 8);
             break;
 
         default:

@@ -907,6 +907,16 @@ namespace arena
 
     static void global_setup(const string& arena_teams)
     {
+        // Clear some things that shouldn't persist across restart_after_game.
+        // parse_monster_spec and setup_fight will clear the rest.
+        total_trials = trials_done = team_a_wins = ties = 0;
+        contest_canceled = false;
+        is_respawning = false;
+        uniques_list.clear();
+        memset(banned_glyphs, 0, sizeof(banned_glyphs));
+        arena_type = "";
+        place = level_id(BRANCH_MAIN_DUNGEON, 20);
+
         // [ds] Turning off view_lock crashes arena.
         Options.view_lock_x = Options.view_lock_y = true;
 

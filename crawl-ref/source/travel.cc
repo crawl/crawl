@@ -1912,7 +1912,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
     level_id lid(branch, subdepth);
     vec.push_back(lid);
 
-    if (branch != BRANCH_MAIN_DUNGEON)
+    if (branch != root_branch)
     {
         branch_type pb;
         int pd;
@@ -2202,7 +2202,12 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         case '>':
             return (allow_updown? ID_DOWN : ID_CANCEL);
         case CONTROL('P'):
-            return _find_parent_branch(curr.branch);
+            {
+                const branch_type parent = _find_parent_branch(curr.branch);
+                if (parent < NUM_BRANCHES)
+                    return parent;
+            }
+            break;
         case '.':
             return curr.branch;
         case '*':
@@ -2269,7 +2274,7 @@ level_id find_up_level(level_id curr, bool up_branch)
 
     if (curr.depth < 1)
     {
-        if (curr.branch != BRANCH_MAIN_DUNGEON)
+        if (curr.branch != BRANCH_MAIN_DUNGEON && curr.branch != root_branch)
         {
             level_id parent;
             _find_parent_branch(curr.branch, curr.depth,

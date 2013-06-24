@@ -64,7 +64,6 @@ public:
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;
   FixedVector<int, NUM_STATS> stat_zero;
-  FixedVector<string, NUM_STATS> stat_zero_cause;
 
   int hunger;
   int disease;
@@ -988,6 +987,7 @@ void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player();
 bool is_hovering();
+bool djinni_floats();
 
 void dec_disease_player(int delay);
 

@@ -624,7 +624,7 @@ void direct_effect(monster* source, spell_type spell,
             simple_monster_message(def, " is struck by the twisting air!");
         else
         {
-            if (you.flight_mode())
+            if (you.flight_mode() || djinni_floats())
                 mpr("The air twists around and violently strikes you in flight!");
             else
                 mpr("The air twists around and strikes you!");
@@ -641,6 +641,35 @@ void direct_effect(monster* source, spell_type spell,
         // Previous method of damage calculation (in line with player
         // airstrike) had absurd variance.
         damage_taken = defender->apply_ac(random2avg(damage_taken, 3));
+        break;
+
+    case SPELL_WATERSTRIKE:
+        if (feat_is_water(grd(defender->pos())))
+        {
+            if (def && you.can_see(def))
+            {
+                if (def->flight_mode())
+                    mprf("The water rises up and strikes %s", def->name(DESC_THE).c_str());
+                else
+                    mprf("The water swirls and strikes %s", def->name(DESC_THE).c_str());
+            }
+            else
+            {
+                if (you.flight_mode())
+                    mpr("The water rises up and strikes you!");
+                else
+                    mpr("The water swirls around and strikes you!");
+            }
+
+            pbolt.name       = "waterstrike";
+            pbolt.flavour    = BEAM_WATER;
+            pbolt.aux_source = "by the raging water";
+
+            damage_taken     = roll_dice(3, 8 + source->hit_dice);
+
+            damage_taken = defender->beam_resists(pbolt, damage_taken, false);
+            damage_taken = defender->apply_ac(damage_taken);
+        }
         break;
 
     case SPELL_BRAIN_FEED:
@@ -1248,10 +1277,11 @@ static void _hell_effects()
     string msg = getMiscString("hell_effect");
     if (msg.empty())
         msg = "Something hellishly buggy happens.";
-    msg_channel_type chan = MSGCH_PLAIN;
-    strip_channel_prefix(msg, chan);
-    mpr(msg.c_str(), chan);
-    if (chan == MSGCH_SOUND)
+    bool loud = starts_with(msg, "SOUND:");
+    if (loud)
+        msg.erase(0, 6);
+    mpr(msg.c_str(), MSGCH_HELL_EFFECT);
+    if (loud)
         noisy(15, you.pos());
 
     spschool_flag_type which_miscast = SPTYP_RANDOM;

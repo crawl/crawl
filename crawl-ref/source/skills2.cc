@@ -546,9 +546,6 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
                           15750, 17700, 19800, 22050, 24450, // 21-25
                           27000, 29750 };
 
-    if (lev > 27 && you.wizard)
-        lev = 27;
-
     ASSERT_RANGE(lev, 0, 27 + 1);
 
     return exp[lev] * species_apt_factor(sk, sp);
@@ -724,7 +721,7 @@ void dump_skills(string &text)
     {
         int real = you.skill((skill_type)i, 10, true);
         int cur  = you.skill((skill_type)i, 10);
-        if (real > 0 || you.train[i] > 0)
+        if (real > 0 || (!you.auto_training && you.train[i] > 0))
         {
             text += make_stringf(" %c Level %.*f%s %s\n",
                                  real == 270       ? 'O' :

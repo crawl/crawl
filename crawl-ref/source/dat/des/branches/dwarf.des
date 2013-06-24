@@ -104,7 +104,7 @@ TAGS:    dwarf_entry no_monster_gen no_wall_fixup
 WEIGHT:  10
 CHANCE:  5%
 COLOUR:  1 = yellow, ' = yellow, x = white
-MONS:    dwarf w:30 / elf w:2 / war dog
+MONS:    dwarf w:30 / elf w:2 / wolf
 FTILE:   1'xO = floor_sandstone
 RTILE:   x = wall_tomb
 KFEAT:   O = enter_dwarven_hall
@@ -258,7 +258,7 @@ TAGS:   no_wall_fixup dhfh_arrival
 ORIENT: float
 WEIGHT: 5
 SUBST:  f = T:40 V:40 U:20
-KMONS:  1 = nothing / war dog / giant centipede / \
+KMONS:  1 = nothing / wolf / giant centipede / \
             deep dwarf w:5 / wight w:2 / troll w:1
 KMONS:  2 = nothing / wight / troll w:5 / necrophage w:2
 KMONS:  3 = nothing / orange rat / redback / wolf spider
@@ -318,7 +318,7 @@ ORIENT:  float
 MONS:    deep dwarf w:30 / elf w:3
 MONS:    deep dwarf w:20 / elf w:3
 MONS:    generate_awake giant centipede / generate_awake redback / \
-generate_awake wolf spider w:8 / generate_awake war dog w:8
+generate_awake wolf spider w:8 / generate_awake wolf w:8
 MONS:    generate_awake wight w:20 / generate_awake troll / \
 generate_awake orange rat
 MONS:    deep dwarf w:20 / elf w:3 / wight w:2
@@ -395,7 +395,7 @@ WEIGHT: 5
 MONS:   wight
 MONS:   necrophage
 MONS:   orange rat
-MONS:   war dog
+MONS:   wolf
 SUBST:  $ = $$d
 ITEM:   any weapon ego:draining / any armour ego:positive_energy / \
         staff of death / scroll of torment / necronomicon w:1

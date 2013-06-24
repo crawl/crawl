@@ -1348,7 +1348,7 @@ DEPTH:  D:7-21
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
-MONS:   hound / wolf / hog
+MONS:   hound / wolf w:5 / hog
 SUBST:  1 = 1:30 2 3 4 .
 MAP
 cccccccccc
@@ -5220,4 +5220,40 @@ x.3x..c.......x..x3..
 x.3x3.....G...x.3x3..
 ...x...  ...  ...x...
  ...x.   .@.   ...x.
+ENDMAP
+
+NAME:   grunt_double_whammy
+ORIENT: float
+DEPTH:  D:17-26
+{{
+  local ettin_weight = you.absdepth() - 16
+  local ogre_weight  = 5 - ettin_weight
+  if ogre_weight <= 0 then
+    local elf_weight = you.absdepth() - 21
+    ettin_weight = 6 - elf_weight
+    mons("ettin / nothing")
+    mons("ettin w:" .. ettin_weight ..
+         "/ deep elf blademaster w:" .. elf_weight)
+  else
+    mons("two-headed ogre w:" .. ogre_weight ..
+         " / ettin w:" .. ettin_weight .. " / nothing w:5")
+    mons("ettin")
+  end
+}}
+MAP
+   cccccccc     cccccccc
+  cc|*2...ccccccc......cc
+ cc|**..2.+......cccccc.c
+  cc|*2...cccccccc    c.c
+ccccccccccccccccccccccc.cc
+@...1...1........1...1...@
+..........................
+@.1.....1........1.....1.@
+..........................
+@...1...1........1...1...@
+cc.ccccccccccccccccccccccc
+ c.c    cccccccc...2*|cc
+ c.cccccc......+.2..**|cc
+ cc......ccccccc...2*|cc
+  cccccccc     cccccccc
 ENDMAP

@@ -465,7 +465,7 @@ static void _set_mons_move_dir(const monster* mons,
     }
 }
 
-static void _tweak_wall_mmov(const coord_def& monpos)
+static void _tweak_wall_mmov(const coord_def& monpos, bool move_trees = false)
 {
     // The rock worm will try to move along through rock for as long as
     // possible. If the player is walking through a corridor, for example,
@@ -483,8 +483,10 @@ static void _tweak_wall_mmov(const coord_def& monpos)
     {
         const int altdir = (dir + i + 8) % 8;
         const coord_def t = monpos + mon_compass[altdir];
-        const bool good = in_bounds(t) && feat_is_rock(grd(t))
-                          && !feat_is_permarock(grd(t));
+        const bool good = in_bounds(t)
+                          && (move_trees ? feat_is_tree(grd(t))
+                                         : feat_is_rock(grd(t))
+                                           && !feat_is_permarock(grd(t)));
         if (good && one_chance_in(++count))
             choice = altdir;
     }
@@ -618,7 +620,7 @@ static void _handle_movement(monster* mons)
 
     // Make rock worms prefer wall.
     if (mons_wall_shielded(mons) && mons->target != mons->pos() + mmov)
-        _tweak_wall_mmov(mons->pos());
+        _tweak_wall_mmov(mons->pos(), mons->type == MONS_DRYAD);
 
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check
@@ -1755,6 +1757,47 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
+    if (mons->type == MONS_SNAPLASHER_VINE
+        && mons->props.exists("vine_awakener"))
+    {
+        monster* awakener = monster_by_mid(mons->props["vine_awakener"].get_int());
+        if (awakener && !awakener->can_see(mons))
+        {
+            simple_monster_message(mons, " falls limply to the ground.");
+            monster_die(mons, KILL_RESET, NON_MONSTER);
+            return;
+        }
+    }
+
+    // Possibly replenish bees (1 per 10 turns, on average)
+    if (mons->type == MONS_TREANT && mons->number < 5
+        && x_chance_in_y(you.time_taken, 100))
+    {
+        mons->number++;
+    }
+
+    if (mons_stores_tracking_data(mons))
+    {
+        actor* foe = mons->get_foe();
+        if (foe)
+        {
+            if (!mons->props.exists("foe_pos"))
+                mons->props["foe_pos"].get_coord() = foe->pos();
+            else
+            {
+                if (mons->props["foe_pos"].get_coord().distance_from(mons->pos())
+                    > foe->pos().distance_from(mons->pos()))
+                    mons->props["foe_approaching"].get_bool() = true;
+                else
+                    mons->props["foe_approaching"].get_bool() = false;
+
+                mons->props["foe_pos"].get_coord() = foe->pos();
+            }
+        }
+        else
+            mons->props.erase("foe_pos");
+    }
+
     reset_battlesphere(mons);
 
     // This seems to need to go here to actually get monsters to slow down.
@@ -1864,7 +1907,7 @@ void handle_monster_move(monster* mons)
     if (!mons->has_action_energy())
         return;
 
-    move_demon_tentacle(mons);
+    move_solo_tentacle(mons);
 
     if (!mons->alive())
         return;
@@ -2104,6 +2147,11 @@ void handle_monster_move(monster* mons)
     }
     mon_nearby_ability(mons);
 
+    // XXX: A bit hacky, but stores where we WILL move, if we don't take
+    //      another action instead (used for decision-making)
+    if (mons_stores_tracking_data(mons))
+        mons->props["mmov"].get_coord() = mmov;
+
     if (!mons->asleep() && !mons_is_wandering(mons)
         && !mons->withdrawn()
         // Berserking monsters are limited to running up and
@@ -2117,6 +2165,17 @@ void handle_monster_move(monster* mons)
         beem.source      = mons->pos();
         beem.target      = mons->target;
         beem.beam_source = mons->mindex();
+
+        // XXX: Otherwise perma-confused monsters can almost never properly
+        // aim spells, since their target is constantly randomized.
+        // This does make them automatically aware of the player in several
+        // situations they otherwise would not, however.
+        if (mons_class_flag(mons->type, M_CONFUSED))
+        {
+            actor* foe = mons->get_foe();
+            if (foe && mons->can_see(foe))
+                beem.target = foe->pos();
+        }
 
         // Prevents unfriendlies from nuking you from offscreen.
         // How nice!
@@ -3545,7 +3604,14 @@ static bool _may_cutdown(monster* mons, monster* targ)
     }
     // Outside of that case, can always cut mundane plants.
     if (mons_is_firewood(targ))
-        return true;
+    {
+        // Don't try to attack briars unless their damage will be insignificant
+        if (targ->type == MONS_BRIAR_PATCH && mons->type != MONS_THORN_HUNTER
+            && (mons->armour_class() * mons->hit_points) < 400)
+            return false;
+        else
+            return true;
+    }
 
     // In normal games, that's it.  Gotta keep those butterflies alive...
     if (!crawl_state.game_is_zotdef())

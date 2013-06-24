@@ -413,17 +413,6 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
 ///////////////////////////////////////////////////////////////////////////
 
-bool is_melee_weapon(const item_def *weapon)
-{
-    if (weapon->base_type == OBJ_STAVES || weapon->base_type == OBJ_RODS)
-        return true;
-
-    if (weapon->base_type != OBJ_WEAPONS)
-        return false;
-
-    return !is_range_weapon(*weapon);
-}
-
 bool wielded_weapon_check(item_def *weapon, bool no_message)
 {
     bool weapon_warning  = false;
@@ -432,7 +421,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (weapon)
     {
         if (needs_handle_warning(*weapon, OPER_ATTACK)
-            || !is_melee_weapon(weapon))
+            || !is_melee_weapon(*weapon))
         {
             weapon_warning = true;
         }
@@ -442,7 +431,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     {
         const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
         const item_def &wpn = you.inv[weap];
-        if (is_melee_weapon(&wpn)
+        if (is_melee_weapon(wpn)
             && you.skill(weapon_skill(wpn)) > you.skill(SK_UNARMED_COMBAT))
         {
             unarmed_warning = true;

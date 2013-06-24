@@ -1534,8 +1534,8 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
-        string prompt = make_stringf("Are you sure you want to leave the "
-                                     "Dungeon?%s",
+        string prompt = make_stringf("Are you sure you want to leave %s?%s",
+                                     branches[root_branch].longname,
                                      crawl_state.game_is_tutorial() ? "" :
                                      " This will make you lose the game!");
         if (!yesno(prompt.c_str(), false, 'n'))
@@ -1661,23 +1661,6 @@ static void _print_friendly_pickup_setting(bool was_changed)
     }
     else
         mprf(MSGCH_ERROR, "Your allies%s are collecting bugs!", now.c_str());
-}
-
-static void _do_look_around()
-{
-    dist lmove;   // Will be initialised by direction().
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.just_looking = true;
-    args.needs_path = false;
-    args.target_prefix = "Here";
-    args.may_target_monster = "Move the cursor around to observe a square.";
-    direction(lmove, args);
-    if (lmove.isValid && lmove.isTarget && !lmove.isCancel
-        && !crawl_state.arena_suspended)
-    {
-        start_travel(lmove.target);
-    }
 }
 
 static void _do_remove_armour()
@@ -1962,7 +1945,7 @@ void process_command(command_type cmd)
     case CMD_EXAMINE_OBJECT:       examine_object();         break;
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
-    case CMD_LOOK_AROUND:          _do_look_around();        break;
+    case CMD_LOOK_AROUND:          do_look_around();         break;
     case CMD_PRAY:                 pray();                   break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read_scroll();            break;
@@ -2898,6 +2881,34 @@ static void _decrement_durations()
     }
 
     _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
+
+    if (you.duration[DUR_SPIRIT_HOWL])
+    {
+        if (you.props.exists("next_spirit_pack")
+            && you.elapsed_time >= you.props["next_spirit_pack"].get_int()
+            && you.duration[DUR_SPIRIT_HOWL] > 150)
+        {
+            int num = spawn_spirit_pack(&you);
+            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 50
+                                                      + random2(80)
+                                                      + (num * num) * 8;
+
+            // If we somehow couldn't spawn any, wait longer than normal
+            // (probably the player is in some place where spawning more isn't
+            // possibly, so let's waste lest time trying)
+            if (num == 0)
+                you.props["next_spirit_pack"].get_int() += 100;
+        }
+        if (_decrement_a_duration(DUR_SPIRIT_HOWL, delay))
+        {
+            mpr("The howling abruptly ceases.", MSGCH_DURATION);
+            for (monster_iterator mi; mi; ++mi)
+            {
+                if (mi->type == MONS_SPIRIT_WOLF && mi->has_ench(ENCH_HAUNTING))
+                    mi->del_ench(ENCH_ABJ);
+            }
+        }
+    }
 
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);

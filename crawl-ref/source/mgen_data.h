@@ -109,6 +109,9 @@ struct mgen_data
     // This simply stores the initial shape-shifter type.
     monster_type    initial_shifter;
 
+    // This simply stores chimera base monsters.
+    vector<monster_type> chimera_mons;
+
     // This can eventually be used to store relevant information.
     CrawlHashTable  props;
 
@@ -145,7 +148,8 @@ struct mgen_data
                || mt == MONS_BATTLESPHERE
                || summon_type == SPELL_STICKS_TO_SNAKES
                || summon_type == SPELL_DEATH_CHANNEL
-               || summon_type == SPELL_SIMULACRUM);
+               || summon_type == SPELL_SIMULACRUM
+               || summon_type == SPELL_AWAKEN_VINES);
     }
 
     bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }
@@ -157,6 +161,9 @@ struct mgen_data
     bool use_position() const { return in_bounds(pos); };
 
     bool summoned() const { return (abjuration_duration > 0); }
+
+    void define_chimera(monster_type part1, monster_type part2,
+                        monster_type part3);
 
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,

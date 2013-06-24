@@ -382,7 +382,8 @@ enum beam_type                  // bolt::flavour
     BEAM_INNER_FLAME,
     BEAM_SENTINEL_MARK,
     BEAM_DIMENSION_ANCHOR,
-    BEAM_LAST_ENCHANTMENT = BEAM_DIMENSION_ANCHOR,
+    BEAM_VULNERABILITY,
+    BEAM_LAST_ENCHANTMENT = BEAM_VULNERABILITY,
 
     BEAM_MEPHITIC,
     BEAM_GLOOM,
@@ -1509,6 +1510,7 @@ enum duration_type
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
+    DUR_SPIRIT_HOWL,
     NUM_DURATIONS
 };
 
@@ -1607,6 +1609,9 @@ enum enchant_type
     ENCH_RETCHING,
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
+    ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
+    ENCH_CONTROL_WINDS,
+    ENCH_WIND_AIDED,     // Ranged accuracy enhanced by nearby Control Winds
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2057,7 +2062,9 @@ enum monster_type                      // menv[].type
     MONS_PORCUPINE,
     MONS_JACKAL,
     MONS_HOUND,
+#if TAG_MAJOR_VERSION == 34
     MONS_WAR_DOG,
+#endif
     MONS_WOLF,
     MONS_WARG,
     MONS_HELL_HOUND,
@@ -2659,6 +2666,20 @@ enum monster_type                      // menv[].type
 
     MONS_SOJOBO,
 
+    MONS_CHIMERA,
+
+    MONS_SNAPLASHER_VINE,
+    MONS_SNAPLASHER_VINE_SEGMENT,
+    MONS_THORN_HUNTER,
+    MONS_BRIAR_PATCH,
+    MONS_SPIRIT_WOLF,
+    MONS_ANCIENT_BEAR,
+    MONS_WATER_NYMPH,
+    MONS_TREANT,
+    MONS_THORN_LOTUS,
+
+    MONS_ELEMENTAL_WELLSPRING,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3052,6 +3073,7 @@ enum shop_type
     SHOP_DISTILLERY,
     SHOP_SCROLL,
     SHOP_GENERAL,
+    SHOP_MISCELLANY,
     NUM_SHOPS, // must remain last 'regular' member {dlb}
     SHOP_UNASSIGNED = 100,
     SHOP_RANDOM,
@@ -3488,6 +3510,14 @@ enum spell_type
     SPELL_CALL_LOST_SOUL,
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
+    SPELL_AWAKEN_VINES,
+    SPELL_CONTROL_WINDS,
+    SPELL_THORN_VOLLEY,
+    SPELL_WALL_OF_BRAMBLES,
+    SPELL_WATERSTRIKE,
+    SPELL_HASTE_PLANTS,
+    SPELL_WIND_BLAST,
+    SPELL_STRIP_RESISTANCE,
     NUM_SPELLS
 };
 
@@ -3720,6 +3750,7 @@ enum disable_type
     DIS_DELAY,
     DIS_CONFIRMATIONS,
     DIS_AFFLICTIONS,
+    DIS_MON_SIGHT,
     NUM_DISABLEMENTS
 };
 

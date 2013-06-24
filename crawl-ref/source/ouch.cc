@@ -1089,15 +1089,6 @@ static void _wizard_restore_life()
         unrot_hp(9999);
     if (you.hp <= 0)
         set_hp(you.hp_max);
-    for (int i = 0; i < NUM_STATS; ++i)
-    {
-        if (you.stat(static_cast<stat_type>(i)) <= 0)
-        {
-            you.stat_loss[i] = 0;
-            you.stat_zero[i] = 0;
-            you.redraw_stats[i] = true;
-        }
-    }
 }
 #endif
 
@@ -1155,7 +1146,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
-    if (dam > 0)
+    if (dam > 0 && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 
     const bool non_death = death_type == KILLED_BY_QUITTING

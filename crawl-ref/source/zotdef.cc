@@ -287,7 +287,7 @@ static void _hound_wave(int power)
 {
     wave_name("HOUND WAVE");
     monster_type hounds[] = {MONS_JACKAL, MONS_HOUND, MONS_WARG,
-                MONS_WOLF, MONS_WAR_DOG, END};
+                MONS_WOLF, END};
     monster_type boss[] = {MONS_HELL_HOUND, END};
     _zotdef_fill_from_list(hounds, 0, power); // full
     _zotdef_choose_boss(boss, power);

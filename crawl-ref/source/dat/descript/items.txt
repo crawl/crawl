@@ -579,8 +579,9 @@ bow:quote
 %%%%
 box of beasts
 
-A magical box containing many wild beasts. One may allow them to escape by
-opening the box's lid.
+A box filled with the bizarre leftovers of a depraved wizard's magical
+experimentations. Opening it might set loose a friendly chimera: a mythical
+hybrid composed from the parts of three separate beasts.
 %%%%
 bread ration
 
@@ -2039,7 +2040,15 @@ this unsuspecting world.
 %%%%
 rod of destruction
 
-This rod contains spells of mayhem and destruction.
+This rod contains a varied set of spells of mayhem and destruction.
+%%%%
+rod of fiery destruction
+
+This rod contains spells that launch destructive fire against your enemies.
+%%%%
+rod of frigid destruction
+
+This rod contains spells that destroy your enemies with projected cold.
 %%%%
 rod of inaccuracy
 
@@ -2083,6 +2092,13 @@ sabre:quote
  Of rugged steel his savage soul was made...”
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
+%%%%
+sack of spiders
+
+A woven silk bag. Something appears to be moving inside...
+
+Opening this bag will release a number of spiders friendly to your cause.
+You might need to dust off the cobwebs after, however.
 %%%%
 sacred scourge
 

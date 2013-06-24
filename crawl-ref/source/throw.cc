@@ -797,17 +797,12 @@ static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
     return false;
 }
 
-static int _blowgun_power_roll(bolt &beam)
+static int _blowgun_duration_roll(bolt &beam, const actor* victim,
+                                  special_missile_type type)
 {
     actor* agent = beam.agent();
     if (!agent)
         return 0;
-
-    // Could check player shield skill here or something,
-    // but that won't work with potential other sources
-    // of reflection, and it doesn't matter anyway. [rob]
-    if (beam.reflections > 0)
-        return (agent->get_experience_level() / 3);
 
     int base_power;
     item_def* blowgun;
@@ -825,10 +820,31 @@ static int _blowgun_power_roll(bolt &beam)
     ASSERT(blowgun);
     ASSERT(blowgun->sub_type == WPN_BLOWGUN);
 
-    return (base_power + blowgun->plus);
+    // Scale down nastier needle effects against players.
+    // Fixed duration regardless of power, since power already affects success
+    // chance considerably, and this helps avoid effects being too nasty from
+    // high HD shooters and too ignorable from low ones.
+    if (victim->is_player())
+    {
+        switch (type)
+        {
+            case SPMSL_PARALYSIS:
+                return 3 + random2(4);
+            case SPMSL_SLEEP:
+                return 5 + random2(5);
+            case SPMSL_CONFUSION:
+                return 2 + random2(4);
+            case SPMSL_SLOW:
+                return 5 + random2(7);
+            default:
+                return 5 + random2(5);
+        }
+    }
+    else return (5 + random2(base_power + blowgun->plus));
 }
 
-static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
+static bool _blowgun_check(bolt &beam, actor* victim, special_missile_type type,
+                           bool message = true)
 {
     if (victim->holiness() == MH_UNDEAD || victim->holiness() == MH_NONLIVING)
     {
@@ -840,15 +856,30 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     }
 
     actor* agent = beam.agent();
+    if (!agent)
+        return false;
 
-    if (!agent || agent->is_monster() || beam.reflections > 0)
-        return true;
-
-    const int skill = you.skill_rdiv(SK_THROWING);
     const item_def* wp = agent->weapon();
     ASSERT(wp);
     ASSERT(wp->sub_type == WPN_BLOWGUN);
     const int enchantment = wp->plus;
+
+    if (agent->is_monster())
+    {
+        int chance = 85 - ((victim->get_experience_level()
+                            - agent->get_experience_level()) * 5 / 2);
+        chance += wp->plus * 4;
+        chance = min(95, chance);
+
+        if (type == SPMSL_RAGE)
+            chance = chance / 2;
+        else if (type == SPMSL_PARALYSIS || type == SPMSL_SLEEP)
+            chance = chance * 4 / 5;
+
+        return (x_chance_in_y(chance, 100));
+    }
+
+    const int skill = you.skill_rdiv(SK_THROWING);
 
     // You have a really minor chance of hitting with no skills or good
     // enchants.
@@ -877,11 +908,11 @@ static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim))
+    if (!_blowgun_check(beam, victim, SPMSL_PARALYSIS))
         return false;
 
-    int blowgun_power = _blowgun_power_roll(beam);
-    victim->paralyse(beam.agent(), 5 + random2(blowgun_power));
+    int dur = _blowgun_duration_roll(beam, victim, SPMSL_PARALYSIS);
+    victim->paralyse(beam.agent(), dur);
     return true;
 }
 
@@ -890,11 +921,11 @@ static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim))
+    if (!_blowgun_check(beam, victim, SPMSL_SLEEP))
         return false;
 
-    int blowgun_power = _blowgun_power_roll(beam);
-    victim->put_to_sleep(beam.agent(), 5 + random2(blowgun_power));
+    int dur = _blowgun_duration_roll(beam, victim, SPMSL_SLEEP);
+    victim->put_to_sleep(beam.agent(), dur);
     return true;
 }
 
@@ -903,11 +934,11 @@ static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim))
+    if (!_blowgun_check(beam, victim, SPMSL_CONFUSION))
         return false;
 
-    int blowgun_power = _blowgun_power_roll(beam);
-    victim->confuse(beam.agent(), 5 + random2(blowgun_power));
+    int dur = _blowgun_duration_roll(beam, victim, SPMSL_CONFUSION);
+    victim->confuse(beam.agent(), dur);
     return true;
 }
 
@@ -916,11 +947,11 @@ static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim))
+    if (!_blowgun_check(beam, victim, SPMSL_SLOW))
         return false;
 
-    int blowgun_power = _blowgun_power_roll(beam);
-    victim->slow_down(beam.agent(), 5 + random2(blowgun_power));
+    int dur = _blowgun_duration_roll(beam, victim, SPMSL_SLOW);
+    victim->slow_down(beam.agent(), dur);
     return true;
 }
 
@@ -930,11 +961,11 @@ static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim))
+    if (!_blowgun_check(beam, victim, SPMSL_SICKNESS))
         return false;
 
-    int blowgun_power = _blowgun_power_roll(beam);
-    victim->sicken(40 + random2(blowgun_power));
+    int dur = _blowgun_duration_roll(beam, victim, SPMSL_SICKNESS);
+    victim->sicken(40 + random2(dur));
     return true;
 }
 #endif
@@ -944,7 +975,7 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim))
+    if (!_blowgun_check(beam, victim, SPMSL_RAGE))
         return false;
 
     if (victim->is_monster())
@@ -1622,21 +1653,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         baseHit, baseDam,
                         item_base_dam, lnch_base_dam);
 
-        // Check for matches; dwarven, elven, orcish.
-        if (!(get_equip_race(*you.weapon()) == 0))
+        // elves with elven bows
+        if (get_equip_race(*you.weapon()) == ISFLAG_ELVEN
+            && player_genus(GENPC_ELVEN))
         {
-            if (get_equip_race(*you.weapon()) == get_equip_race(item))
-            {
-                baseHit++;
-                baseDam++;
-
-                // elves with elven bows
-                if (get_equip_race(*you.weapon()) == ISFLAG_ELVEN
-                    && player_genus(GENPC_ELVEN))
-                {
-                    baseHit++;
-                }
-            }
+            baseHit++;
         }
 
         // Lower accuracy if held in a net.
@@ -2281,15 +2302,11 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
         if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
             beam.ench_power = AUTOMATIC_HIT;
 
-        // elven bow w/ elven arrow, also orcish
-        if (get_equip_race(mitm[weapon])
-                == get_equip_race(mitm[msl]))
+        // elf with elven launcher
+        if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN
+            && mons_genus(mons->type) == MONS_ELF)
         {
-            baseHit++;
-            baseDam++;
-
-            if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN)
-                beam.hit++;
+            beam.hit++;
         }
 
         // Vorpal brand increases damage dice size.
@@ -2444,6 +2461,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
 
     if (mons->inaccuracy())
         beam.hit -= 5;
+
+    if (mons->has_ench(ENCH_WIND_AIDED))
+        beam.hit = beam.hit * 125 / 100;
 
     if (speed_brand)
         beam.damage.size = div_rand_round(beam.damage.size * 9, 10);

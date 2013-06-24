@@ -136,6 +136,8 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
 void monster_cleanup(monster* mons);
 
+void unawaken_vines(const monster* mons, bool quiet);
+
 int dismiss_monsters(string pattern);
 void zap_los_monsters(bool items_also);
 

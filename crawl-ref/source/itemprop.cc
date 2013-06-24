@@ -1946,6 +1946,11 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
     return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
 }
 
+bool is_melee_weapon(const item_def &weapon)
+{
+    return is_weapon(weapon) && !is_range_weapon(weapon);
+}
+
 //
 // Reaching functions:
 //
@@ -2561,6 +2566,7 @@ bool gives_ability(const item_def &item)
         if (item.sub_type == RING_TELEPORTATION
             || item.sub_type == RING_FLIGHT
             || item.sub_type == RING_INVISIBILITY
+            || item.sub_type == RING_TELEPORT_CONTROL
             || item.sub_type == AMU_RAGE)
         {
             return true;

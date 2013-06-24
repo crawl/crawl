@@ -54,7 +54,9 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-chimera.h"
 #include "mon-util.h"
+#include "mon-pick-data.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-pathfind.h"
@@ -1969,21 +1971,31 @@ static void _build_overflow_temples()
         }
         else
         {
-            string vault_tag;
+            string vault_tag = "";
+            string name = "";
 
-            // For a single-altar temple, first try to find a temple specialized
-            // for that god.
-            if (num_gods == 1 && coinflip())
+            // First try to find a temple specialized for this combination of
+            // gods.
+            if (num_gods > 1 || coinflip())
             {
+                vault_tag = make_stringf("temple_overflow_%d", num_gods);
+
                 CrawlVector &god_vec = temple[TEMPLE_GODS_KEY];
-                god_type     god     = (god_type) god_vec[0].get_byte();
 
-                string name = god_name(god);
-                name = replace_all(name, " ", "_");
-                lowercase(name);
+                for (int j = 0; j < num_gods; j++)
+                {
+                    god_type god = (god_type) god_vec[j].get_byte();
 
-                if (you.uniq_map_tags.find("uniq_altar_" + name)
-                    != you.uniq_map_tags.end())
+                    name = god_name(god);
+                    name = replace_all(name, " ", "_");
+                    lowercase(name);
+
+                    vault_tag = vault_tag + " temple_overflow_" + name;
+                }
+
+                if (num_gods == 1
+                    && you.uniq_map_tags.find("uniq_altar_" + name)
+                       != you.uniq_map_tags.end())
                 {
                     // We've already placed a specialized temple for this
                     // god, so do nothing.
@@ -1994,19 +2006,18 @@ static void _build_overflow_temples()
                     continue;
                 }
 
-                vault_tag = make_stringf("temple_overflow_%s", name.c_str());
-
                 vault = random_map_for_tag(vault_tag, true);
 #ifdef DEBUG_TEMPLES
                 if (vault == NULL)
                     mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
-                         "for god %s", name.c_str());
+                         "for combination of tags %s", vault_tag.c_str());
 #endif
             }
 
             if (vault == NULL)
             {
-                vault_tag = make_stringf("temple_overflow_%d", num_gods);
+                vault_tag = make_stringf("temple_overflow_generic_%d",
+                                         num_gods);
 
                 vault = random_map_for_tag(vault_tag, true);
                 if (vault == NULL)
@@ -2063,59 +2074,6 @@ struct coord_feat
                                | FPROP_NO_TIDE | FPROP_NO_SUBMERGE);
     }
 };
-
-static bool _forbidden_plant(const coord_def &p)
-{
-    // ....  Prevent this arrangement by never placing a plant in a way that
-    // #P##  locally disconnects two adjacent cells.  We scan clockwise around
-    // ##.#  p looking for maximal contiguous sequences of traversable cells.
-    // #?##  If we find more than one (and they don't join up cyclically),
-    //       reject the configuration so the plant doesn't disconnect floor.
-    //
-    // ...   We do reject many non-problematic cases, such as this one; dpeg
-    // #P#   suggests doing a connectivity check in ruination after placing
-    // ...   plants, and removing cut-point plants then.
-
-    // First traversable index, last consecutive traversable index, and
-    // the next traversable index after last+1.
-    int first = -1, last = -1, next = -1;
-    int passable = 0;
-    for (int i = 0; i < 8; i++)
-    {
-        coord_def q = p + Compass[i];
-
-        if (feat_is_traversable(grd(q), true))
-        {
-            ++passable;
-            if (first < 0)
-                first = i;
-            else if (last >= 0 && next < 0)
-            {
-                // Found a maybe-disconnected traversable cell.  This is only
-                // acceptible if it might connect up at the end.
-                if (first == 0)
-                    next = i;
-                else
-                    return true;
-            }
-        }
-        else
-        {
-            if (first >= 0 && last < 0)
-                last = i - 1;
-            else if (next >= 0)
-                return true;
-        }
-    }
-
-    // ?#.  Forbid this arrangement when the ? squares are walls.
-    // #P#  If multiple plants conspire to do something similar, that's
-    // ##?  fine: we just want to avoid the most common occurrences.
-    //      This would be an info leak (that at least one ? is not a wall)
-    //      were it not for the previous check.
-
-    return passable <= 1;
-}
 
 template <typename Iterator>
 static void _ruin_level(Iterator iter,
@@ -2238,7 +2196,7 @@ static void _ruin_level(Iterator iter,
         // replace some ruined walls with plants/fungi/bushes
         if (plant_density && one_chance_in(plant_density)
             && feat_has_solid_floor(grd(p))
-            && !_forbidden_plant(p))
+            && !plant_forbidden_at(p))
         {
             mgen_data mg;
             mg.cls = one_chance_in(20) ? MONS_BUSH  :
@@ -3624,6 +3582,53 @@ static int _place_uniques()
     return num_placed;
 }
 
+static void _place_aquatic_monsters_weighted()
+{
+    const pop_entry* pop = (player_in_branch(BRANCH_FOREST) ? pop_water_forest
+                                                            : pop_water_d);
+    int level = level_id::current().depth;
+
+    vector<coord_def> water;
+    int water_count = 0;
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (feat_is_water(grd(*ri)))
+        {
+            if (!actor_at(*ri) && !(env.level_map_mask(*ri) & MMT_NO_MONS)
+                && !feat_is_solid(grd(*ri)) && grd(*ri) != DNGN_OPEN_SEA)
+            {
+                water.push_back(*ri);
+            }
+            ++water_count;
+        }
+    }
+
+    if (water.size() > 49)
+    {
+        int num = min(random2avg(9, 2) + (random2(water_count) / 10), 15);
+        random_shuffle(water.begin(), water.end());
+
+        for (int i = 0; i < num; i++)
+        {
+            monster_type mon = pick_monster_from(pop, level);
+
+            mgen_data mg;
+            mg.behaviour = BEH_SLEEP;
+            mg.flags    |= MG_PERMIT_BANDS | MG_FORCE_PLACE;
+            mg.map_mask |= MMT_NO_MONS;
+            mg.cls = mon;
+            mg.pos = water[i];
+
+            // Amphibious creatures placed with water should hang around it
+            if (mons_class_primary_habitat(mon) == HT_LAND)
+                mg.flags |= MG_PATROLLING;
+
+            place_monster(mg);
+        }
+    }
+}
+
 static int _place_monster_vector(vector<monster_type> montypes, int num_to_place)
 {
     int result = 0;
@@ -3703,7 +3708,9 @@ static void _place_aquatic_monsters()
                                        + (random2(lava_spaces) / 10), 15));
     }
 
-    if (water_spaces > 49)
+    if (player_in_branch(BRANCH_MAIN_DUNGEON) || player_in_branch(BRANCH_FOREST))
+        _place_aquatic_monsters_weighted();
+    else if (water_spaces > 49)
     {
         // This can probably be done in a better way with something
         // like water_monster_rarity().
@@ -4725,9 +4732,23 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (type == RANDOM_MONSTER)
     {
-        type = pick_random_monster(mspec.place, mspec.monbase);
-        if (!type)
-            type = RANDOM_MONSTER;
+        if (mons_class_is_chimeric(mspec.monbase))
+        {
+            type = mspec.monbase;
+            mspec.chimera_mons.clear();
+            for (int n = 0; n < NUM_CHIMERA_HEADS; n++)
+            {
+                monster_type part = chimera_part_for_place(mspec.place, mspec.monbase);
+                if (part != MONS_0)
+                    mspec.chimera_mons.push_back(part);
+            }
+        }
+        else
+        {
+            type = pick_random_monster(mspec.place, mspec.monbase);
+            if (!type)
+                type = RANDOM_MONSTER;
+        }
     }
 
     mgen_data mg(type);
@@ -4762,6 +4783,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     mg.hp        = mspec.hp;
     mg.props     = mspec.props;
     mg.initial_shifter = mspec.initial_shifter;
+    mg.chimera_mons = mspec.chimera_mons;
 
     // Marking monsters as summoned
     mg.abjuration_duration = mspec.abjuration_duration;
@@ -5650,6 +5672,9 @@ static object_class_type _item_in_shop(shop_type shop_type)
     case SHOP_SCROLL:
         return OBJ_SCROLLS;
 
+    case SHOP_MISCELLANY:
+        return OBJ_MISCELLANY;
+
     default:
         die("unknown shop type");
     }
@@ -5847,7 +5872,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
         {
             if (*it == *ri)
                 continue;
-            if (_forbidden_plant(*it))
+            if (plant_forbidden_at(*it))
                 continue;
             mg.pos = *it;
             mons_place(mgen_data(mg));

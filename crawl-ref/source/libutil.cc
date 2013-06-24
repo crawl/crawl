@@ -438,8 +438,11 @@ string pluralise(const string &name, const char *qualifiers[],
 
     if (ends_with(name, "us"))
     {
-        // Fungus, ufetubus, for instance.
-        return name.substr(0, name.length() - 2) + "i";
+        if (ends_with(name, "lotus"))
+            return name + "es";
+        else
+            // Fungus, ufetubus, for instance.
+            return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(name, "larva") || ends_with(name, "amoeba")
           || ends_with(name, "antenna"))

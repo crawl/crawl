@@ -6,6 +6,8 @@
 #include "AppHdr.h"
 #include "mon-cast.h"
 
+#include <math.h>
+
 #include "act-iter.h"
 #include "beam.h"
 #include "cloud.h"
@@ -15,6 +17,7 @@
 #include "database.h"
 #include "effects.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
@@ -549,6 +552,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_HEAL_OTHER:
     case SPELL_MINOR_HEALING:
+        beam.damage   = dice_def(2, mons->hit_dice / 2);
         beam.flavour  = BEAM_HEALING;
         beam.hit      = 25 + (power / 5);
         break;
@@ -935,6 +939,20 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_THORN_VOLLEY:
+        beam.colour   = BROWN;
+        beam.name     = "volley of thorns";
+        beam.damage   = dice_def(3, 5 + (power / 11));
+        beam.hit      = 20 + power / 13;
+        beam.flavour  = BEAM_MMISSILE;
+        break;
+
+    case SPELL_STRIP_RESISTANCE:
+        beam.ench_power = mons->hit_dice * 6;
+        beam.flavour    = BEAM_VULNERABILITY;
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -999,6 +1017,7 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_HAUNT
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE
+        || spell_cast == SPELL_WATERSTRIKE
         || spell_cast == SPELL_MISLEAD
         || spell_cast == SPELL_HOLY_FLAMES
         || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
@@ -1038,6 +1057,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_MISLEAD:
         case SPELL_SMITING:
         case SPELL_AIRSTRIKE:
+        case SPELL_WATERSTRIKE:
         case SPELL_HOLY_FLAMES:
             return true;
         default:
@@ -1137,6 +1157,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLINK_ALLIES_ENCIRCLE:
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
+    case SPELL_AWAKEN_VINES:
+    case SPELL_CONTROL_WINDS:
+    case SPELL_WALL_OF_BRAMBLES:
+    case SPELL_HASTE_PLANTS:
+    case SPELL_WIND_BLAST:
         return true;
     default:
         if (check_validity)
@@ -1283,6 +1308,15 @@ static bool _ms_direct_nasty(spell_type monspell)
 {
     return (spell_needs_foe(monspell)
             && !spell_typematch(monspell, SPTYP_SUMMONING));
+}
+
+// Can be affected by the 'Haste Plants' spell
+static bool _is_hastable_plant(const monster* mons)
+{
+    return (mons->holiness() == MH_PLANT
+            && !mons_is_firewood(mons)
+            && mons->type != MONS_SNAPLASHER_VINE
+            && mons->type != MONS_SNAPLASHER_VINE_SEGMENT);
 }
 
 // Checks if the foe *appears* to be immune to negative energy.  We
@@ -1506,8 +1540,10 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_PARALYSE:
     case SPELL_SLEEP:
     case SPELL_HIBERNATION:
+    case SPELL_DIMENSION_ANCHOR:
     {
-        if (monspell == SPELL_HIBERNATION && (!foe || foe->asleep()))
+        if ((monspell == SPELL_HIBERNATION || monspell == SPELL_SLEEP)
+            && (!foe || foe->asleep()))
         {
             ret = true;
             break;
@@ -1633,7 +1669,77 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         return true;
     }
 
-    // No need to spam cantrips if we're just travelling around
+    case SPELL_AWAKEN_VINES:
+    if (!mon->get_foe() || (mon->has_ench(ENCH_AWAKEN_VINES)
+                            && mon->props["vines_awakened"].get_int() >= 3))
+    {
+        return true;
+    }
+    else // To account for multiple dryads in range of each other
+    {
+        int count = 0;
+        for (monster_iterator mi(mon); mi; ++mi)
+        {
+            if (mi->type == MONS_SNAPLASHER_VINE)
+                ++count;
+        }
+        if (count > 2)
+            return true;
+    }
+    break;
+
+    case SPELL_CONTROL_WINDS:
+        return (mon->has_ench(ENCH_CONTROL_WINDS));
+
+    case SPELL_WATERSTRIKE:
+        return (!feat_is_water(grd(foe->pos())));
+
+    case SPELL_HASTE_PLANTS:
+        for (monster_iterator mi(mon); mi; ++mi)
+        {
+            // Isn't useless if there's a single viable target for it
+            if (mons_aligned(*mi, mon)
+                && _is_hastable_plant(*mi)
+                && !mi->has_ench(ENCH_HASTE))
+            {
+                return false;
+            }
+        }
+        return true;
+
+    // Don't use unless our foe is close to us and there are no allies already
+    // between the two of us
+    case SPELL_WIND_BLAST:
+        if (foe && foe->pos().distance_from(mon->pos()) < 4)
+        {
+            bolt tracer;
+            tracer.target = foe->pos();
+            tracer.range  = LOS_RADIUS;
+            tracer.hit    = AUTOMATIC_HIT;
+            fire_tracer(mon, tracer);
+
+            actor* act = actor_at(tracer.path_taken.back());
+            if (act && mons_aligned(mon, act))
+                return true;
+            else
+                return false;
+        }
+        else
+            return true;
+
+    case SPELL_STRIP_RESISTANCE:
+        if (foe)
+        {
+            if (foe->is_monster() && foe->as_monster()->has_ench(ENCH_LOWERED_MR))
+                return true;
+            else if (foe->is_player() && you.duration[DUR_LOWERED_MR])
+                return true;
+            else
+                return false;
+        }
+        return true;
+
+     // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         if (mon->friendly() && mon->foe == MHITYOU)
             ret = true;
@@ -1726,6 +1832,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_BERSERKER_RAGE:
     case SPELL_FRENZY:
     case SPELL_MIGHT:
+    case SPELL_WIND_BLAST:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -1868,6 +1975,233 @@ void mons_word_of_recall(monster* mons)
         if (num_recalled == recall_target)
             break;
     }
+}
+
+static bool _valid_vine_spot(coord_def p)
+{
+    if (actor_at(p) || !monster_habitable_grid(MONS_PLANT, grd(p)))
+        return false;
+
+    int num_trees = 0;
+    bool valid_trees = false;
+    for (adjacent_iterator ai(p); ai; ++ai)
+    {
+        if (feat_is_tree(grd(*ai)))
+        {
+            // Make sure this spot is not on a diagonal to its only adjacent
+            // tree (so that the vines can pull back against the tree properly)
+            if (num_trees || !((*ai-p).sgn().x != 0 && (*ai-p).sgn().y != 0))
+            {
+                valid_trees = true;
+                break;
+            }
+            else
+                ++num_trees;
+        }
+    }
+
+    if (!valid_trees)
+        return false;
+
+    // Now the connectivity check
+    return (!plant_forbidden_at(p, true));
+}
+
+static bool _awaken_vines(monster* mon, bool test_only = false)
+{
+    vector<coord_def> spots;
+    for (radius_iterator ri(mon->get_los_no_trans()); ri; ++ri)
+    {
+        if (_valid_vine_spot(*ri))
+            spots.push_back(*ri);
+    }
+
+    random_shuffle(spots.begin(), spots.end());
+
+    actor* foe = mon->get_foe();
+
+    int num_vines = 1 + random2(3);
+    if (mon->props.exists("vines_awakened"))
+        num_vines = min(num_vines, 3 - mon->props["vines_awakened"].get_int());
+    bool seen = false;
+
+    for (unsigned int i = 0; i < spots.size(); ++i)
+    {
+        // Don't place vines where they can't see our target
+        if (!cell_see_cell(spots[i], foe->pos(), LOS_NO_TRANS))
+            continue;
+
+        // Don't place a vine too near to another existing one
+        bool too_close = false;
+        for (distance_iterator di(spots[i], false, true, 3); di; ++di)
+        {
+            monster* m = monster_at(*di);
+            if (m && m->type == MONS_SNAPLASHER_VINE)
+            {
+                too_close = true;
+                break;
+            }
+        }
+        if (too_close)
+            continue;
+
+        // We've found at least one valid spot, so the spell should be castable
+        if (test_only)
+            return true;
+
+        // Actually place the vine and update properties
+        if (monster* vine = create_monster(
+            mgen_data(MONS_SNAPLASHER_VINE, SAME_ATTITUDE(mon), mon,
+                        0, SPELL_AWAKEN_VINES, spots[i], mon->foe,
+                        MG_FORCE_PLACE, mon->god, MONS_NO_MONSTER)))
+        {
+            vine->props["vine_awakener"].get_int() = mon->mid;
+            mon->props["vines_awakened"].get_int()++;
+            mon->add_ench(mon_enchant(ENCH_AWAKEN_VINES, 1, NULL, 200));
+            --num_vines;
+            if (you.can_see(vine))
+                seen = true;
+        }
+
+        // We've finished placing all our vines
+        if (num_vines == 0)
+            break;
+    }
+
+    if (test_only)
+        return false;
+    else
+    {
+        if (seen)
+            mpr("Vines fly forth from the trees!");
+        return true;
+    }
+}
+
+static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
+{
+    double ang0 = atan2(p1.x - origin.x, p1.y - origin.y);
+    double ang  = atan2(p2.x - origin.x, p2.y - origin.y);
+    return min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
+}
+
+// Does there already appear to be a bramble wall in this direction?
+// We approximate this by seeing if there are at least two briar patches in
+// a ray between us and our target, which turns out to be a pretty decent
+// metric in practice.
+static bool _already_bramble_wall(const monster* mons, coord_def targ)
+{
+    bolt tracer;
+    tracer.source = mons->pos();
+    tracer.target = targ;
+    tracer.range = 12;
+    tracer.is_tracer = true;
+    tracer.is_beam = true;
+    tracer.fire();
+
+    int briar_count = 0;
+    bool targ_reached = false;
+    for (unsigned int i = 0; i < tracer.path_taken.size(); ++i)
+    {
+        coord_def p = tracer.path_taken[i];
+
+        if (!targ_reached && p == targ)
+            targ_reached = true;
+        else if (!targ_reached)
+            continue;
+
+        if (monster_at(p) && monster_at(p)->type == MONS_BRIAR_PATCH)
+            ++briar_count;
+    }
+
+    return (briar_count > 1);
+}
+
+static bool _wall_of_brambles(monster* mons)
+{
+    mgen_data briar_mg = mgen_data(MONS_BRIAR_PATCH, SAME_ATTITUDE(mons),
+                                   mons, 0, 0, coord_def(-1, -1), MHITNOT,
+                                   MG_FORCE_PLACE);
+
+    // We want to raise a defensive wall if we think our foe is moving to attack
+    // us, and otherwise raise a wall further away to block off their escape.
+    // (Each wall type uses different parameters)
+    bool defensive = mons->props["foe_approaching"].get_bool();
+
+    coord_def aim_pos = you.pos();
+    coord_def targ_pos = mons->pos();
+
+    // A defensive wall cannot provide any cover if our target is already
+    // adjacent, so don't bother creating one.
+    if (defensive && mons->pos().distance_from(aim_pos) == 1)
+        return false;
+
+    // Don't raise a non-defensive wall if it looks like there's an existing one
+    // in the same direction already (this looks rather silly to see walls
+    // springing up in the distance behind already-closed paths, and probably
+    // is more likely to aid the player than the monster)
+    if (!defensive)
+    {
+        if (_already_bramble_wall(mons, aim_pos))
+            return false;
+    }
+
+    // Select a random radius for the circle used draw an arc from (affects
+    // both shape and distance of the resulting wall)
+    int rad = (defensive ? random_range(3, 5)
+                         : min(11, mons->pos().distance_from(you.pos()) + 6));
+
+    // Adjust the center of the circle used to draw the arc of the wall if
+    // we're raising one defensively, based on both its radius and foe distance.
+    // (The idea is the ensure that our foe will end up on the other side of it
+    // without always raising the wall in exactly the same shape and position)
+    if (defensive)
+    {
+        coord_def adjust = (targ_pos - aim_pos).sgn();
+
+        targ_pos += adjust;
+        if (rad == 5)
+            targ_pos += adjust;
+        if (mons->pos().distance_from(aim_pos) == 2)
+            targ_pos += adjust;
+    }
+
+    // XXX: There is almost certainly a better way to calculate the points
+    //      along the desired arcs, though this code produces the proper look.
+    vector<coord_def> points;
+    for (distance_iterator di(targ_pos, false, false, rad); di; ++di)
+    {
+        if (di.radius() == rad || di.radius() == rad - 1)
+        {
+            if (!actor_at(*di) && !feat_is_solid(grd(*di)))
+            {
+                if (defensive && _angle_between(targ_pos, aim_pos, *di) <= PI/4.0
+                    || (!defensive
+                        && _angle_between(targ_pos, aim_pos, *di) <= PI/(4.2 + rad/6.0)))
+                {
+                    points.push_back(*di);
+                }
+            }
+        }
+    }
+
+    bool seen = false;
+    for (unsigned int i = 0; i < points.size(); ++i)
+    {
+        briar_mg.pos = points[i];
+        monster* briar = create_monster(briar_mg, false);
+        if (briar)
+        {
+            briar->add_ench(mon_enchant(ENCH_SHORT_LIVED, 1, NULL, 80 + random2(100)));
+            if (you.can_see(briar))
+                seen = true;
+        }
+    }
+
+    if (seen)
+        mpr("Thorny briars emerge from the ground!");
+
+    return true;
 }
 
 //---------------------------------------------------------------
@@ -2166,18 +2500,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     continue;
                 }
 
-                // Monsters shouldn't cast BiA before going berserk.
-                // Thematically, they are berserkers, they rush into
-                // battle without thinking. Stopping before berserk to
-                // ask your god for a few friends seems like too
-                // complicated a thought.
-                if (spell_cast == SPELL_BROTHERS_IN_ARMS
-                    && !mons->props.exists("went_berserk"))
-                {
-                    spell_cast = SPELL_NO_SPELL;
-                    continue;
-                }
-
                 // Don't torment your allies. Maybe we want to add other
                 // spells here? Mass confusion, tornado, etc.?
                 if (you.visible_to(mons) && mons_aligned(mons, &you))
@@ -2333,6 +2655,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!monster_simulacrum(mons, false))
                 return false;
         }
+        // Ditto for vines
+        else if (spell_cast == SPELL_AWAKEN_VINES)
+        {
+            if (!_awaken_vines(mons, true))
+                return false;
+        }
         // Try to cause fear: if nothing is scared, pretend we didn't cast it.
         else if (spell_cast == SPELL_CAUSE_FEAR)
         {
@@ -2425,7 +2753,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         else if (spell_cast == SPELL_BLINK_AWAY)
         {
-            blink_away(mons);
+            blink_away(mons, true);
             mons->lose_energy(EUT_SPELL);
         }
         else if (spell_cast == SPELL_BLINK_CLOSE)
@@ -2997,7 +3325,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(mons->hit_dice * 12, 200);
+    const int pow = min(mons->hit_dice * 8, 200);
 
     for (actor_iterator ai(mons->get_los()); ai; ++ai)
     {
@@ -3042,7 +3370,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         if (actual)
         {
             retval = 1;
-            ai->confuse(mons, pow);
+            ai->confuse(mons, 2 + random2(5));
         }
     }
 
@@ -3595,7 +3923,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         else
         {
-            sumcount2 = 1 + random2(mons->hit_dice / 5 + 1);
+            sumcount2 = 1 + (mons->hit_dice > 15) + random2(mons->hit_dice / 7 + 1);
             dur = 3;
         }
 
@@ -3832,8 +4160,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
         {
-            monster_type berserkers[3] = { MONS_BLACK_BEAR, MONS_GRIZZLY_BEAR,
-                                           MONS_POLAR_BEAR };
+            monster_type berserkers[2] = { MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
         else /* if (mons->type == MONS_DEEP_DWARF_BERSERKER) */
@@ -3953,16 +4280,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         summon_type = random_choose_weighted(
                             10, MONS_WOLF,
-                             3, MONS_GRIZZLY_BEAR,
-                             6, MONS_BLACK_BEAR,
+                             8, MONS_GRIZZLY_BEAR,
                              0); // no polar bears
 
         if (summon_type == MONS_WOLF)
-            sumcount2 = 1 + random2(mons->hit_dice / 4 + 1);
+            sumcount2 = 1 + random2(mons->hit_dice / 6 + 1);
         else
             sumcount2 = 1 + random2(2);
 
-        duration  = min(2 + mons->hit_dice / 5, 6);
+        if (summon_type == MONS_GRIZZLY_BEAR && mons->hit_dice < 9)
+            summon_type = MONS_BLACK_BEAR;
+
+        duration  = min(1 + mons->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
         {
             create_monster(mgen_data(summon_type, SAME_ATTITUDE(mons),
@@ -4386,6 +4715,55 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mpr("A wave of cold passes over you.");
         apply_area_visible(englaciate, min(12 * mons->hit_dice, 200), mons);
         return;
+
+    case SPELL_AWAKEN_VINES:
+        _awaken_vines(mons);
+        return;
+
+    case SPELL_CONTROL_WINDS:
+        if (you.can_see(mons))
+            mprf("The winds start to flow at %s will.", mons->name(DESC_ITS).c_str());
+        mons->add_ench(mon_enchant(ENCH_CONTROL_WINDS, 1, mons, 200 + random2(150)));
+        return;
+
+    case SPELL_WALL_OF_BRAMBLES:
+        // If we can't cast this for some reason (can be expensive to determine
+        // at every call to _ms_waste_of_time), refund the energy for it so that
+        // the caster can do something else
+        if (!_wall_of_brambles(mons))
+        {
+            mons->speed_increment +=
+                get_monster_data(mons->type)->energy_usage.spell;
+        }
+        return;
+
+    case SPELL_HASTE_PLANTS:
+    {
+        int num = 2 + random2(3);
+        for (monster_iterator mi(mons); mi && num > 0; ++mi)
+        {
+            if (mons_aligned(*mi, mons)
+                && _is_hastable_plant(*mi)
+                && !mi->has_ench(ENCH_HASTE))
+            {
+                mi->add_ench(ENCH_HASTE);
+                simple_monster_message(*mi, " seems to speed up.");
+                --num;
+            }
+        }
+        return;
+    }
+
+    case SPELL_WIND_BLAST:
+    {
+        actor *foe = mons->get_foe();
+        if (foe && mons->can_see(foe))
+        {
+            simple_monster_message(mons, " summons a great blast of wind!");
+            wind_blast(mons, 12 * mons->hit_dice, foe->pos());
+        }
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,

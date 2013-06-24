@@ -535,6 +535,11 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     {
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
+        if (you.stat_zero[which_stat] > 0)
+        {
+            mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
+            ouch(5 + random2(you.hp_max / 10), NON_MONSTER, _statloss_killtype(which_stat), cause);
+        }
         _handle_stat_change(which_stat, cause, see_source);
         return true;
     }
@@ -626,21 +631,14 @@ static void _normalize_stat(stat_type stat)
     you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
 }
 
-// Number of turns of stat at zero you start with.
-#define STAT_ZERO_START 10
-// Number of turns of stat at zero you can survive.
-#define STAT_DEATH_TURNS 100
-// Number of turns of stat at zero after which random paralysis starts.
-#define STAT_DEATH_START_PARA 50
-
 static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
 {
     ASSERT_RANGE(stat, 0, NUM_STATS);
 
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
-        you.stat_zero[stat] = STAT_ZERO_START;
-        you.stat_zero_cause[stat] = cause;
+        // Turns required for recovery once the stat is restored, randomised slightly.
+        you.stat_zero[stat] += 10 + random2(10);
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
@@ -680,8 +678,6 @@ static void _handle_stat_change(const char* aux, bool see_source)
 // Called once per turn.
 void update_stat_zero()
 {
-    stat_type para_stat = NUM_STATS;
-    int num_para = 0;
     for (int i = 0; i < NUM_STATS; ++i)
     {
         stat_type s = static_cast<stat_type>(i);
@@ -700,38 +696,5 @@ void update_stat_zero()
         }
         else // no stat penalty at all
             continue;
-
-        if (you.stat_zero[i] > STAT_DEATH_TURNS)
-        {
-            ouch(INSTANT_DEATH, NON_MONSTER,
-                 _statloss_killtype(s), you.stat_zero_cause[i].c_str());
-        }
-
-        int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
-        int paradiff = max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
-        if (x_chance_in_y(paradiff*paradiff, 2*paramax*paramax))
-        {
-            para_stat = s;
-            num_para++;
-        }
-    }
-
-    switch (num_para)
-    {
-    case 0:
-        break;
-    case 1:
-        if (you.duration[DUR_PARALYSIS])
-            break;
-        mprf(MSGCH_WARN, "You faint for lack of %s.",
-                         stat_desc(para_stat, SD_NAME));
-        you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(1,3));
-        break;
-    default:
-        if (you.duration[DUR_PARALYSIS])
-            break;
-        mpr("Your lost attributes cause you to faint.", MSGCH_WARN);
-        you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(num_para, 3));
-        break;
     }
 }

@@ -540,7 +540,9 @@ vault/master_elementalist MONS_MASTER_ELEMENTALIST
 %rim 1
 ## From an entry vault
 halfling MONS_HALFLING
+%rim 0
 demigod MONS_DEMIGOD
+%rim 1
 demonspawn MONS_DEMONSPAWN
 %sdir mon/holy
 paladin MONS_PALADIN
@@ -765,6 +767,7 @@ bush_burning MONS_BUSH_BURNING
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
 oklob_plant MONS_OKLOB_PLANT
+thorn_lotus MONS_THORN_LOTUS
 
 ## Trolls ('T')
 %sdir mon/unique

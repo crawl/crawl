@@ -166,6 +166,7 @@ static tileidx_t _tileidx_shop(coord_def where)
             return TILE_SHOP_POTIONS;
         case SHOP_GENERAL:
         case SHOP_GENERAL_ANTIQUE:
+        case SHOP_MISCELLANY:
             return TILE_SHOP_GENERAL;
         default:
             return TILE_DNGN_ERROR;
@@ -1102,7 +1103,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_WARG;
     case MONS_WOLF:
         return TILEP_MONS_WOLF;
-    case MONS_WAR_DOG:
+    case MONS_SPIRIT_WOLF:
         return TILEP_MONS_WAR_DOG;
     case MONS_HOG:
         return TILEP_MONS_HOG;
@@ -1186,6 +1187,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_SIREN;
     case MONS_DRYAD:
         return TILEP_MONS_DRYAD;
+    case MONS_THORN_HUNTER:
+        return TILEP_MONS_OKLOB_SAPLING;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
@@ -1613,6 +1616,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_OKLOB_SAPLING;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
+    case MONS_THORN_LOTUS:
+        return TILEP_MONS_THORN_LOTUS;
 
     // rakshasa ('R')
     case MONS_RAKSHASA:
@@ -2381,6 +2386,9 @@ static tentacle_type _get_tentacle_type(const int mtype)
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
             return TYPE_STARSPAWN;
+        case MONS_SNAPLASHER_VINE:
+        case MONS_SNAPLASHER_VINE_SEGMENT:
+            return TYPE_KRAKEN;
 
         default:
             ASSERT("Invalid tentacle type!");
@@ -2411,7 +2419,9 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     {
         if (no_head_connect)
         {
-            if (_mons_is_kraken_tentacle(mon.type))
+            if (_mons_is_kraken_tentacle(mon.type)
+                || mon.type == MONS_SNAPLASHER_VINE
+                || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
                 return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
             return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
         }
@@ -2677,6 +2687,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         int type = mon.type;
 
+        if (type == MONS_CHIMERA)
+            type = mon.base_type;
+
         switch (type)
         {
         case MONS_CENTAUR:
@@ -2749,13 +2762,19 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
         case MONS_STARSPAWN_TENTACLE:
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
+        case MONS_SNAPLASHER_VINE:
+        case MONS_SNAPLASHER_VINE_SEGMENT:
         {
             tileidx_t tile = _tileidx_tentacle(mon);
             _handle_tentacle_overlay(mon.pos, tile, _get_tentacle_type(mon.type));
 
-            if (!_mons_is_kraken_tentacle(mon.type) && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
+            if ((!_mons_is_kraken_tentacle(mon.type)
+                 && mon.type != MONS_SNAPLASHER_VINE
+                 && mon.type != MONS_SNAPLASHER_VINE_SEGMENT)
+                && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
                 && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
             {
+
                 tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
 
@@ -2810,7 +2829,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if (!mons.ground_level() && !_tentacle_tile_not_flying(ch))
+    if ((!mons.ground_level() && !_tentacle_tile_not_flying(ch))
+        || (ch == TILEP_MONS_THORN_LOTUS))
         ch |= TILE_FLAG_FLYING;
     if (mons.is(MB_CAUGHT))
         ch |= TILE_FLAG_NET;
@@ -3675,8 +3695,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_WARG;
     case MONS_WOLF:
         return TILE_CORPSE_WOLF;
-    case MONS_WAR_DOG:
-        return TILE_CORPSE_WAR_DOG;
     case MONS_HOG:
         return TILE_CORPSE_HOG;
     case MONS_HELL_HOUND:
@@ -4645,7 +4663,9 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         if (bolt.name == "crystal spear")
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
-            return TILE_BOLT_FROST; // TODO: vary by position
+            return TILE_BOLT_FROST;
+        else if (bolt.name == "shard of ice")
+            return TILE_BOLT_ICICLE + dir;
         break;
 
     case LIGHTCYAN:
@@ -4657,12 +4677,12 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
     case RED:
         if (bolt.name == "puff of flame")
-            return TILE_BOLT_FLAME; // TODO: vary by position
+            return TILE_BOLT_FLAME;
         break;
 
     case LIGHTMAGENTA:
         if (bolt.name == "magic dart")
-            return TILE_BOLT_MAGIC_DART; // TODO: vary by position
+            return TILE_BOLT_MAGIC_DART;
         break;
 
     case BROWN:
@@ -4670,18 +4690,28 @@ tileidx_t tileidx_bolt(const bolt &bolt)
             || bolt.name == "large rocky blast"
             || bolt.name == "blast of sand")
         {
-            return TILE_BOLT_SANDBLAST; // TODO: vary by position
+            return TILE_BOLT_SANDBLAST;
         }
         break;
 
     case GREEN:
         if (bolt.name == "sting")
-            return TILE_BOLT_STING; // TODO: vary by position
+            return TILE_BOLT_STING;
+        break;
+
+    case LIGHTGREEN:
+        if (bolt.name == "poison arrow")
+            return TILE_BOLT_POISON_ARROW + dir;
         break;
 
     case LIGHTGREY:
         if (bolt.name == "stone arrow")
             return TILE_BOLT_STONE_ARROW + dir;
+        break;
+
+    case DARKGREY:
+        if (bolt.name == "bolt of negative energy")
+            return TILE_BOLT_DRAIN;
         break;
     }
 

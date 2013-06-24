@@ -364,7 +364,7 @@ public:
     bool is_icy() const;
     bool is_fiery() const;
     bool is_skeletal() const;
-    bool is_spiny() const;
+    int spiny_degree() const;
     bool paralysed() const;
     bool cannot_move() const;
     bool cannot_act() const;
@@ -494,6 +494,8 @@ public:
 
     bool is_divine_companion() const;
     bool is_projectile() const;
+    // Jumping spiders (jump instead of blink)
+    bool is_jumpy() const;
 
 private:
     void init_with(const monster& mons);

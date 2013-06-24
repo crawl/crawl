@@ -1127,8 +1127,6 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.stat_loss[i]);
     for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.stat_zero[i]);
-    for (i = 0; i < NUM_STATS; ++i)
-        marshallString(th, you.stat_zero_cause[i]);
 
     marshallByte(th, you.hit_points_regeneration);
     marshallByte(th, you.magic_points_regeneration);
@@ -1964,8 +1962,13 @@ static void tag_read_you(reader &th)
         you.stat_loss[i] = unmarshallByte(th);
     for (i = 0; i < NUM_STATS; ++i)
         you.stat_zero[i] = unmarshallByte(th);
-    for (i = 0; i < NUM_STATS; ++i)
-        you.stat_zero_cause[i] = unmarshallString(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_STAT_ZERO)
+    {
+        for (i = 0; i < NUM_STATS; ++i)
+            unmarshallString(th);
+    }
+#endif
 
     you.hit_points_regeneration   = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
@@ -2918,12 +2921,10 @@ void unmarshallItem(reader &th, item_def &item)
             item.flags |= ISFLAG_KNOW_TYPE;
     }
 
-#if TAG_MAJOR_VERSION == 34
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
         item.sub_type = STAFF_ENERGY;
-#endif
 
     if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
     {
@@ -2937,6 +2938,15 @@ void unmarshallItem(reader &th, item_def &item)
     {
         --item.sub_type;
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_BOX_OF_BEASTS_CHARGES
+        && item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BOX_OF_BEASTS)
+    {
+        // Give charges to box of beasts. If the player used it
+        // already then, well, they got some freebies.
+        item.plus = random_range(5, 15, 2);
+    }
+
 #endif
 
     bind_item_tile(item);
@@ -3340,6 +3350,11 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         mi.type = MONS_SKELETON;
     if (mi.type == MONS_SIMULACRUM_SMALL || mi.type == MONS_SIMULACRUM_LARGE)
         mi.type = MONS_SIMULACRUM;
+    if (th.getMinorVersion() < TAG_MINOR_WAR_DOG_REMOVAL)
+    {
+        if (mi.type == MONS_WAR_DOG)
+            mi.type = MONS_WOLF;
+    }
 #endif
 
     if (mi.type != MONS_PROGRAM_BUG && mons_species(mi.type) == MONS_PROGRAM_BUG)
@@ -3740,6 +3755,12 @@ void unmarshallMonster(reader &th, monster& m)
         m.type = MONS_SKELETON;
     if (m.type == MONS_SIMULACRUM_SMALL || m.type == MONS_SIMULACRUM_LARGE)
         m.type = MONS_SIMULACRUM;
+
+    if (th.getMinorVersion() < TAG_MINOR_WAR_DOG_REMOVAL)
+    {
+        if (m.type == MONS_WAR_DOG)
+            m.type = MONS_WOLF;
+    }
 
     if (m.props.exists("mislead_as") && !you.misled())
         m.props.erase("mislead_as");

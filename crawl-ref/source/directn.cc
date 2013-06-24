@@ -497,7 +497,8 @@ direction_chooser::direction_chooser(dist& moves_,
     behaviour(args.behaviour),
     cancel_at_self(args.cancel_at_self),
     show_floor_desc(args.show_floor_desc),
-    hitfunc(args.hitfunc)
+    hitfunc(args.hitfunc),
+    default_place(args.default_place)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;
@@ -535,8 +536,6 @@ public:
     void print(const string &str) { cprintf("%s", str.c_str()); }
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
-
-static void _describe_monster(const monster_info& mon);
 
 // Lists all the monsters and items currently in view by the player.
 // TODO: Allow sorting of items lists.
@@ -585,36 +584,26 @@ void full_describe_view()
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
     string title = "";
-    string action = "";
     if (!list_mons.empty())
     {
         title  = "Monsters";
-        action = "view"; // toggle views monster description
     }
-    bool nonmons = false;
     if (!list_items.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Items";
-        nonmons = true;
     }
     if (!list_features.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Features";
-        nonmons = true;
     }
-    if (nonmons)
-    {
-        if (!action.empty())
-            action += "/";
-        action += "travel"; // toggle travels to items/features
-    }
+
     title = "Visible " + title;
-    string title1 = title + " (select to " + action + ", '!' to examine):";
-    title += " (select for more detail, '!' to " + action + "):";
+    string title1 = title + " (select to view/travel, '!' to examine):";
+    title += " (select for more detail, '!' to view/travel):";
 
     desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
     desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
@@ -720,7 +709,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             string desc = "";
 #ifndef USE_TILE_LOCAL
-            cglyph_t g = get_cell_glyph(c);
+            cglyph_t g = get_cell_glyph(c, true);
             const string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
@@ -729,7 +718,7 @@ void full_describe_view()
 
             desc += "</" + colour_str +">) ";
 #endif
-            desc += feature_description_at(c);
+            desc += feature_description_at(c, false, DESC_A, false);
             if (is_unknown_stair(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
@@ -779,10 +768,10 @@ void full_describe_view()
                 redraw_screen();
                 mesclr();
             }
-            else // ACT_EXECUTE, here used to display monster status.
+            else // ACT_EXECUTE -> view/travel
             {
-                _describe_monster(*m);
-                getchm();
+                do_look_around(m->pos);
+                break;
             }
         }
         else if (quant == 2)
@@ -791,9 +780,9 @@ void full_describe_view()
             item_def* i = static_cast<item_def*>(sel[0]->data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_item(*i);
-            else // ACT_EXECUTE -> travel to item
+            else // ACT_EXECUTE -> view/travel
             {
-                start_travel(i->pos);
+                do_look_around(i->pos);
                 break;
             }
         }
@@ -806,9 +795,9 @@ void full_describe_view()
 
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_feature_wide(c);
-            else // ACT_EXECUTE -> travel to feature
+            else // ACT_EXECUTE -> view/travel
             {
-                start_travel(c);
+                do_look_around(c);
                 break;
             }
         }
@@ -828,6 +817,24 @@ void full_describe_view()
     tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
+}
+
+void do_look_around(const coord_def &whence)
+{
+    dist lmove;   // Will be initialised by direction().
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.just_looking = true;
+    args.needs_path = false;
+    args.target_prefix = "Here";
+    args.may_target_monster = "Move the cursor around to observe a square.";
+    args.default_place = whence;
+    direction(lmove, args);
+    if (lmove.isValid && lmove.isTarget && !lmove.isCancel
+        && !crawl_state.arena_suspended)
+    {
+        start_travel(lmove.target);
+    }
 }
 
 
@@ -1051,14 +1058,10 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         // Have to increase search_range by one so monsters out of range but
         // with landing sites in-range are found.
         if (restricts == DIR_JUMP)
-        {
             find_targ = _find_jump_attack_mons;
-            search_range += 1;
-        }
         else
-        {
             find_targ = _find_monster;
-        }
+
         // The previous target is no good. Try to find one from scratch.
         success = _find_square_wrapper(result, 1, find_targ, needs_path, mode,
                                        search_range, hitfunc, true);
@@ -2095,7 +2098,9 @@ bool direction_chooser::choose_direction()
     moves.delta.reset();
 
     // Set a default target.
-    if (Options.default_target)
+    if (!default_place.origin())
+        set_target(default_place);
+    else if (Options.default_target)
         set_default_target();
     else
         set_target(you.pos());
@@ -2190,13 +2195,14 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             // If examine_mons is true (currently only for the Tiles
             // mouse-over information), set monster's
             // equipment/woundedness/enchantment description as title.
-            string desc         = get_monster_equipment_desc(mi) + ".\n";
+            string desc = uppercase_first(get_monster_equipment_desc(mi))
+                        + ".\n";
             const string wounds = mi.wounds_description_sentence();
             if (!wounds.empty())
-                desc += wounds + "\n";
+                desc += uppercase_first(wounds) + "\n";
             const string constrictions = mi.constriction_description();
             if (!constrictions.empty())
-                desc += constrictions + "\n";
+                desc += "It is " + constrictions + ".\n";
             desc += _get_monster_desc(mi);
 
             inf.title = desc;
@@ -3500,7 +3506,7 @@ static string _mon_enchantments_string(const monster_info& mi)
 
     if (!enchant_descriptors.empty())
     {
-        return string(mi.pronoun(PRONOUN_SUBJECTIVE))
+        return uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
             + " is "
             + comma_separated_line(enchant_descriptors.begin(),
                                    enchant_descriptors.end())
@@ -3541,8 +3547,11 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
         descs.push_back("friendly");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         descs.push_back("peaceful");
-    else if (mi.attitude != ATT_HOSTILE) // don't differentiate between permanent or not
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    {
+        // don't differentiate between permanent or not
         descs.push_back("indifferent");
+    }
 
     if (mi.is(MB_SUMMONED))
         descs.push_back("summoned");
@@ -3585,7 +3594,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 static string _get_monster_desc(const monster_info& mi)
 {
     string text    = "";
-    string pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
+    string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
     if (mi.is(MB_CLINGING))
         text += pronoun + " is clinging to the wall.\n";
@@ -3611,8 +3620,11 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is friendly.\n";
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         text += pronoun + " seems to be peaceful towards you.\n";
-    else if (mi.attitude != ATT_HOSTILE) // don't differentiate between permanent or not
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    {
+        // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
+    }
 
     if (mi.is(MB_SUMMONED))
         text += pronoun + " has been summoned.\n";
@@ -3667,13 +3679,15 @@ static string _get_monster_desc(const monster_info& mi)
 static void _describe_monster(const monster_info& mi)
 {
     // First print type and equipment.
-    string text = get_monster_equipment_desc(mi) + ".";
+    string text = uppercase_first(get_monster_equipment_desc(mi)) + ".";
     const string wounds_desc = mi.wounds_description_sentence();
     if (!wounds_desc.empty())
-        text += " " + wounds_desc;
+        text += " " + uppercase_first(wounds_desc);
     const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
-        text += " " + constriction_desc;
+    {
+        text += " It is" + constriction_desc + ".";
+    }
     mpr(text, MSGCH_EXAMINE);
 
     // Print the rest of the description.
@@ -3707,6 +3721,8 @@ string get_monster_equipment_desc(const monster_info& mi,
                 str = "friendly";
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
                 str = "peaceful";
+            else if (mi.is(MB_INSANE))
+                str = "insane";
             else if (mi.attitude != ATT_HOSTILE)
                 str = "neutral";
 

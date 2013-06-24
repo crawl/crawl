@@ -1340,6 +1340,14 @@ void TilesFramework::layout_statcol()
 
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
+        // Lava orc temperature bar and zot points.
+        if (you.species == SP_LAVA_ORC)
+            ++crawl_view.hudsz.y;
+        if (crawl_state.game_is_zotdef())
+            ++crawl_view.hudsz.y;
+        m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
+        m_statcol_top += m_region_stat->dy;
+
         for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
         {
             string str = Options.tile_layout_priority[i];

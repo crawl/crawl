@@ -375,9 +375,7 @@ Jory
 Once a simple village peasant, Jory found himself transformed in undeath into a
 powerful creature. Through the countless centuries unlived since then, he has
 honed his skills in combat and magic, amassed great wealth and many
-possessions, and now resides in an eerily dark Tower of Gloom. He's not
-about to let any puny adventurers ruin his hard work, so those who encounter
-him should beware!
+possessions.
 %%%%
 Joseph
 
@@ -877,6 +875,12 @@ anaconda
 A very large snake that moves with startling rapidity on both land and in the
 water. It kills not by poison but by constricting its prey.
 %%%%
+ancient bear
+
+A lumbering ursine figure, grown venerable beyond its natural years by the magic
+of its forest home. Centuries of basking in the enchanted sunlight has left its
+russet fur with a strange warm sheen and an unnatural resilience to heat.
+%%%%
 ancient lich
 
 A lich who, having existed for countless centuries, has grown almost
@@ -936,8 +940,8 @@ dank underground dungeon. {{
         return "Fedhas has suppressed its production of giant spores to " ..
                "protect you from explosions."
     else
-        return "It will occasionally produce giant spore balls, which in " ..
-               "turn will give rise to more ballistomycetes."
+        return "When active it will occasionally produce giant spore balls, " ..
+               "which in turn will give rise to more ballistomycetes."
     end
 }}
 %%%%
@@ -1069,6 +1073,12 @@ brain worm
 A slimy mauve worm with a greatly distended head, this creature feeds on the
 intellects of sentient beings.
 %%%%
+briar patch
+
+A tangled cluster of thorny briars, sharp enough to pierce thick hide and
+armour. Though the gaps in the copse are plentiful enough to fire missiles
+through, walking into it looks like a painful prospect.
+%%%%
 Brimstone Fiend
 
 A huge and powerful demon wreathed in hellfire, with great scaly wings. One of
@@ -1180,6 +1190,11 @@ of the brightness of Yahweh’s glory.
  The sound of the wings of the cherubim was heard even to the outer court, as
 the voice of God Almighty when he speaks.”
     -WEB Bible, Ezk10:4-5
+%%%%
+chimera
+
+A grotesque parody of nature, this fantastical creature consists of three
+individual beasts combined into one.
 %%%%
 clay golem
 
@@ -1541,6 +1556,12 @@ electric eel
 
 Despite its name, the electric eel is actually a variety of fish. This breed,
 however, generates far more voltage than its seagoing siblings.
+%%%%
+elemental wellspring
+
+A swirling conflux of elemental water streaming from the elemental plane into
+this one. Floods and the spirits who dwell within them seem to issue from it
+without limit.
 %%%%
 elephant
 
@@ -3762,9 +3783,11 @@ with other nearby globs...
 %%%%
 slime creature:quote
 
-“A lustreless protrusive eye
- Stares from the protozoic slime”
-    -T.S. Eliot, “Burbank with a Baedeker: Bleistein with a Cigar”. 1920.
+“The very deep did rot: O Christ!
+ That ever this should be!
+ Yea, slimy things did crawl with legs
+ Upon the slimy sea.”
+    -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
 %%%%
 small abomination
 
@@ -3791,6 +3814,18 @@ smoke demon:quote
  Cigarette between my fingers,
  Why does it trouble me?”
     -D.H. Lawrence, “Sorrow”. 1916.
+%%%%
+snaplasher vine
+
+A swift and sinuous vine brought alive by a dryad's magic. It can quickly
+bind and entangle even a troll, dragging them back to the forest from which
+it surges.
+%%%%
+snaplasher vine segment
+
+Part of a swift and sinuous vine brought alive by a dryad's magic. It can
+quickly bind and entangle even a troll, dragging them back to the forest from
+which it surges.
 %%%%
 snapping turtle
 
@@ -3905,6 +3940,14 @@ spirit:quote
  High expectation, high delights and deeds,
  Thy fluttering heart with hope and terror moved.”
     -Robert Louis Stevenson, “Et Tu In Arcadia Vixisti”, _Underwoods _. 1887.
+%%%%
+spirit wolf
+
+A pale wolf-like apparition rimmed in ethereal light. It is a cunning pack
+hunter, running freely with its kin between the realms of waking and dream. The
+sound of its howl is a dire portent, for it heralds the start of a wild
+hunt - one cry answered by another and another until voices beyond count seem to
+fill the air from all directions.
 %%%%
 spriggan
 
@@ -4124,6 +4167,20 @@ battle-cry.”
     -Hesiod, _Theogony_, 8th cent. B.C.
      trans. H.G. Evelyn-White, 1914.
 %%%%
+thorn hunter
+
+A predatory plant, possessed of motility and a rudimentary intelligence. It
+stalks its prey swiftly, creating sudden profusions of spiny brambles with which
+to ensnare them and then skewering the trapped creatures with accurate volleys
+of its own razor-sharp thorns.
+%%%%
+thorn lotus
+
+A large and vivid bloom drifting placidly upon the surface of the water. Beware,
+for its beauty is deceptive; cradled within its petals lies a stigma bristling
+with needle-like thorns, fully capable of impaling predators and unwitting
+adventurers alike before they can draw close enough to threaten it.
+%%%%
 toenail golem
 
 A huge animated statue made entirely from toenail clippings. Some people just
@@ -4179,6 +4236,15 @@ trapdoor spider
 A fast-moving arachnid that both surprises its prey and evades its enemies by
 concealing itself in crannies in the dungeon floor.
 %%%%
+treant
+
+At first glance, you might mistake this being for an ordinary tree, but its
+branches sway and creak purposefully, and within the knots and grooves of its
+ruddy bark can be seen the wizened features of an aged forest protector.
+Though it moves with slow deliberateness, its enormous gnarled limbs can match
+the strength of giants and its bark withstand the bite of battleaxes. A curious
+buzzing sound seems to follow it as it moves....
+%%%%
 troll
 
 The common troll is a huge and physically powerful humanoid creature. Short on
@@ -4225,8 +4291,8 @@ dwarven fashion.
 %%%%
 unseen horror
 
-A creature rarely seen by anyone, and those few who have seen one would rather
-that they hadn't.
+A creature rarely seen by anyone; those few who have seen one would rather
+they hadn't.
 %%%%
 unseen horror:quote
 
@@ -4327,11 +4393,6 @@ after her—to seek mushrooms!”
     -Adam Mickiewicz, _Pan Tadeusz_, II. 1834.
      trans. G.R. Noyes, 1917.
 %%%%
-war dog
-
-A huge and vicious dog, trained to kill. Its neck is protected by a massive
-spiked collar.
-%%%%
 warg
 
 A particularly large and evil-looking wolf, usually found in the company of
@@ -4347,6 +4408,14 @@ water moccasin
 
 A largish venomous brown snake. It usually lives near water, and is an able
 swimmer.
+%%%%
+water nymph
+
+A strikingly beautiful and capricious nature spirit, deeply bonded with the
+waters in which she lives. Wherever they flow, so may she, and ponds and
+rivers surge and leap at her whim. Beware, for many unwitting adventurers have
+found themselves drawn beneath her waters by a simple touch, only for it to
+become their final resting place.
 %%%%
 white draconian
 

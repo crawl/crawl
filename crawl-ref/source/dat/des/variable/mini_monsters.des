@@ -995,7 +995,7 @@ KMONS:   C = iguana / basilisk w:8
 KMONS:   D = brain worm w:5 / giant leech
 KMONS:   E = jelly
 KMONS:   F = worker ant / giant centipede w:8
-KMONS:   G = hound / wolf w:5
+KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
 KMONS:   I = orange rat
 KMONS:   J = unseen horror
@@ -2017,6 +2017,87 @@ xxx+xx..xx
 xed.xx..xx
 xdexx..xxx
 xxxx.@xxxx
+ENDMAP
+
+NAME:     grunt_tower_of_power
+TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
+DEPTH:    D:16-21, Vaults, !Vaults:$
+: if you.branch() == "Vaults" then
+SUBST:   c = vvb, @ = .
+: end
+# This spell set is Lich IV, picked for having IMB and IOOD.
+MONS:     lich spells:iskenderun's_mystic_blast;bolt_of_cold;invisibility;\
+                      animate_dead;orb_of_destruction;invisibility
+# The wizard spell set is Wizard II, picked for having IMB and venom bolt;
+# same logic for naga mages.
+# The tengu conjurer spellset is Tengu Conjurer II, picked for having
+# Bolt of Magma.
+MONS:     wizard spells:venom_bolt;iskenderun's_mystic_blast;invisibility;\
+                        confuse;slow;teleport_self / \
+          naga mage / \
+          tengu conjurer spells:throw_flame;bolt_of_magma;\
+                                iskenderun's_battlesphere;bolt_of_magma;\
+                                iskenderun's_battlesphere;blink
+# The tengu reaver spell set is Tengu Reaver III, picked for having Poisonous
+# Cloud.
+MONS:     tengu reaver spells:venom_bolt;.;iskenderun's_battlesphere;\
+                              poisonous_cloud;iskenderun's_battlesphere;blink
+ITEM:     book of Power, robe good_item, wizard hat good_item, robe, wizard hat
+KFEAT:    _ = altar_vehumet
+SHUFFLE: ef, gh, ij
+MAP
+      ccccc
+     ccedfcc
+     ceh_gfc
+     c..1..c
+cccccc.....cccccc
+c.fhccc...cccge.c
+ce2.cccc+cccc.2fc
+cg..cc.....cc..hc
+cccc+.......+cccc
+ ccc..2.U.2..ccc
+ cc...........cc
+ @....U.3.U....@
+ cc...........cc
+  cc....U....cc
+   cc.......cc
+    cc..@..cc
+ENDMAP
+
+NAME:  grunt_absolute_annihilation
+DEPTH: D:23-
+# These spell sets are Lich III and Lich IV; they have LCS and IOOD
+# respectively.
+MONS:    ancient lich spells:bolt_of_draining;slow;invisibility;throw_icicle;\
+                             lehudib's_crystal_spear;invisibility \
+                      spells:iskenderun's_mystic_blast;bolt_of_cold;\
+                             invisibility;animate_dead;orb_of_destruction;\
+                             invisibility
+MONS:    deep elf annihilator / draconian annihilator w:5 / \
+         lich w:5 spells:bolt_of_draining;slow;invisibility;throw_icicle;\
+                         lehudib's_crystal_spear;invisibility \
+                  spells:iskenderun's_mystic_blast;bolt_of_cold;invisibility;\
+                         animate_dead;orb_of_destruction;invisibility
+MONS:    deep elf conjurer / tengu conjurer / wizard / orc sorcerer / \
+         naga mage / ogre mage
+ITEM:    book of annihilations, book of power, book of conjurations
+ITEM:    randbook disc:conjuration, staff of conjuration
+KFEAT:   _ = altar_vehumet
+SHUFFLE: efgh
+MAP
+   xxxxxxxxxxx
+  xxcccccccccxxxxxxxxx
+  xcc2ccccc2cccccccccxx
+  xc.c.ccc.c.ccbbbbbccx
+ @xc.c.ccc.c.cbbe.fbbcx
+.3.c.c.ccc.c.cb.2...bcx
+@U..3.3...3.3.=.._1dbcx
+.3.cccc.c.ccccb.2...bcx
+ @xcccc.c.ccccbbg.hbbcx
+  xcccc.c.cccccbbbbbccx
+  xccccc2ccccccccccccxx
+  xxcccccccccxxxxxxxxx
+   xxxxxxxxxxx
 ENDMAP
 
 ################################################################################
@@ -5114,12 +5195,12 @@ TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  D:17-
 WEIGHT: 3
 # KMONS is used here to get the fallback to work properly.
-KMONS:  W = Wiglaf ; war axe unrand:arga . \
+KMONS:  W = Wiglaf ; broad axe unrand:arga . \
                      shield race:dwarven . \
                      chain mail w:8 race:dwarven | \
                      plate armour w:10 race:dwarven | \
                      crystal plate armour w:1 race:dwarven, \
-            deep dwarf berserker ; war axe unrand:arga . \
+            deep dwarf berserker ; broad axe unrand:arga . \
                                    chain mail w:7 race:dwarven | \
                                    plate armour w:1 race:dwarven
 KMONS:  J = Jorgrun, deep dwarf necromancer

@@ -7,6 +7,9 @@ Stone Soup 0.13 (up to 0.13-a0-1380-g03ef21a)
 * A new branch: the Enchanted Forest.
 * A thorough rework of the monster set in Crypt.
 * Improvements to many evokable items.
+* Box of Beasts now creates new chimeric allies.
+* A new item: Sack of Spiders.
+* Massively overhauled layout generators.
 
 Branches, environment
 ---------------------
@@ -14,7 +17,9 @@ Branches, environment
   long, and contains the entrance to Tomb where it exists.
 * Branches now have exactly one exit stair (except the Dungeon, which can,
   but is not guaranteed, to have more).
-* Several new layouts.
+* Many new layouts have been added to most branches, including unique layouts
+  for branches that didn't have them; and numerous tweaks and improvements
+  to existing layouts.
 * Vaults can now be placed at the centre of some layouts prepared to accept
   them there.
 * All portal vaults entrances that time out are now announced.
@@ -155,6 +160,17 @@ Items
 * The staff of power scales with your maximum magic power.
 * Splint mail has been removed; chain mail is now 8 AC to compensate.
 * Needles of sickness have been removed.
+* Box of Beasts has been reworked:
+    - Has a fixed, random number of charges between 5 and 15 inclusive
+    - 1/3 chance to fail on usage with no bad effects
+    - When successful, generates a chimera; a new monster with three heads.
+      Each head can be a different beast, picked from a list which provides
+      better/stronger beasts at higher Evocations skill. The heads determine
+      the attacks and abilities available to the monster.
+* New "Sack of Spiders" item:
+    - Fixed charges between 5 and 15 inclusive
+    - On evoking, creates webs around you and releases spiders
+    - Number of webs and type/number of spiders scales with Evo
 
 Gods
 ----

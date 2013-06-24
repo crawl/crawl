@@ -1840,44 +1840,6 @@ ENDMAP
 
 ##########################################################################
 
-NAME: nicolae_zot_lich_garden
-DEPTH: Zot
-TAGS: no_monster_gen no_item_gen no_trap_gen
-SUBST: P = P., ; = ;;.
-NSUBST: A = 1:A / *:.
-KITEM: f = apple / orange / apricot / nothing
-KMONS: L = lich
-KMONS: A = ancient lich
-KMONS: C = curse toe
-KMONS: P = plant
-KMONS: B = butterfly
-KMONS: k = giant goldfish
-COLOUR: .tPCALfB = green
-FTILE: .tPCALfB = floor_grass
-KFEAT: ; = .
-KFEAT: k = w
-MAP
-        ;@@@;
-      ;;;;;;;;;
-    tt;;;PBPB;;;tt
-   tttttPPPPPPPtttt;
-  ;ttAfPP.L..B.tAtt;;;
- ;PPttP..P.P.PP.ftP;;;
- ;P..B.PPP.B.PPP.PPB;@
-;;PP..PPPwwwC.P.BPPP;@
-;;;;B.L.wkwwww.L.ttP;@
-;@;PP.BPwwwwkw...fttt;
- @;;P..PP.wwwPPBttttt
-  @;PP.PPP..PPB.PPttt
-  ;;;Ptt.P.PPPPPP;;;;
-  ;;;ttfAttPP;B;;;;;
-    ;tttttt;;;;;;@
-     ;;tt;;;;;;;
-        ;;;;;
-ENDMAP
-
-##########################################################################
-
 NAME:    hangedman_zot_spectrum
 TAGS:    no_monster_gen
 DEPTH:   Zot:1-4

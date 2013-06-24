@@ -707,6 +707,8 @@ static int _acquirement_misc_subtype()
     // Note: items listed early are less likely due to chances of being
     // overwritten.
     int result = random_range(MISC_FIRST_DECK, MISC_LAST_DECK);
+    if (result == MISC_DECK_OF_SUMMONING && coinflip())
+        result = MISC_SACK_OF_SPIDERS;
     if (result == MISC_DECK_OF_PUNISHMENT)
         result = MISC_BOX_OF_BEASTS;
     if (one_chance_in(4))
@@ -1615,7 +1617,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_STAVES);
         bad_class.set(OBJ_RODS);
     }
-    bad_class.set(OBJ_FOOD, you_foodless());
+    bad_class.set(OBJ_FOOD, you_foodless() && you.religion != GOD_FEDHAS);
 
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {

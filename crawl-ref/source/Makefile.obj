@@ -135,6 +135,7 @@ mon-abil.o \
 mon-act.o \
 mon-behv.o \
 mon-cast.o \
+mon-chimera.o \
 mon-clone.o \
 mon-death.o \
 mon-ench.o \
@@ -196,6 +197,7 @@ spl-goditem.o \
 spl-miscast.o \
 spl-monench.o \
 spl-other.o \
+spl-pick.o \
 spl-selfench.o \
 spl-summoning.o \
 spl-tornado.o \

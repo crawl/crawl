@@ -3096,7 +3096,7 @@ void read_scroll(int slot)
         // XXX Because some checks in blink() are made before player get to
         // choose target location it is possible "abuse" scrolls' free
         // cancelling to get some normally hidden information (i.e. presence
-        // of (unidentified) -TELE gear).
+        // of (unidentified) -Tele gear).
         if (!alreadyknown)
         {
             mpr(pre_succ_msg.c_str());

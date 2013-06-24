@@ -35,7 +35,9 @@
 #include "mapmark.h"
 #include "melee_attack.h"
 #include "message.h"
+#include "mon-chimera.h"
 #include "mon-iter.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -643,56 +645,172 @@ string manual_skill_names(bool short_text)
         return skill_names(skills);
 }
 
+static const pop_entry pop_beasts[] =
+{ // Box of Beasts
+  {  1,  3,  10,  DOWN, MONS_BUTTERFLY },
+  {  1,  5,  100, DOWN, MONS_RAT   },
+  {  1,  5,  100, DOWN, MONS_BAT   },
+  {  2,  8,  100, PEAK, MONS_JACKAL },
+  {  2, 10,  100, PEAK, MONS_ADDER },
+  {  4, 13,  100, PEAK, MONS_HOUND },
+  {  5, 15,  100, PEAK, MONS_WATER_MOCCASIN },
+  {  5, 15,  100, PEAK, MONS_SKY_BEAST },
+  {  8, 18,  100, PEAK, MONS_WAR_DOG },
+  {  8, 18,  100, PEAK, MONS_CROCODILE },
+  {  8, 18,  100, PEAK, MONS_HOG },
+  { 10, 20,  100, PEAK, MONS_ICE_BEAST },
+  { 10, 20,  100, PEAK, MONS_YAK },
+  { 10, 20,  100, PEAK, MONS_POLAR_BEAR },
+  { 10, 20,  100, PEAK, MONS_WYVERN },
+  { 12, 22,  100, PEAK, MONS_ALLIGATOR },
+  { 12, 22,  100, PEAK, MONS_GRIZZLY_BEAR },
+  { 12, 22,  100, PEAK, MONS_WOLF },
+  { 15, 25,  100, PEAK, MONS_ELEPHANT },
+  { 15, 25,  100, PEAK, MONS_GRIFFON },
+  { 15, 25,  100, PEAK, MONS_BLACK_BEAR },
+  { 18, 27,   50, PEAK, MONS_CATOBLEPAS },
+  { 18, 27,  100, PEAK, MONS_DEATH_YAK },
+  { 18, 27,  100, PEAK, MONS_ANACONDA },
+  { 18, 27,   50, PEAK, MONS_RAVEN },
+  { 22, 27,   50, UP,   MONS_DIRE_ELEPHANT },
+  { 24, 27,   25, UP,   MONS_DRAGON },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry pop_spiders[] =
+{ // Sack of Spiders
+  {  0,  10,   10, DOWN, MONS_GIANT_MITE },
+  {  0,  15,   50, DOWN, MONS_SPIDER },
+  {  5,  20,  100, PEAK, MONS_TRAPDOOR_SPIDER },
+  {  8,  27,  100, PEAK, MONS_REDBACK },
+  { 12,  27,  100, PEAK, MONS_JUMPING_SPIDER },
+  { 15,  27,  100, PEAK, MONS_ORB_SPIDER },
+  { 18,  27,  100, PEAK, MONS_TARANTELLA },
+  { 20,  27,  100, PEAK, MONS_WOLF_SPIDER },
+  { 25,  27,    5,   UP, MONS_GHOST_MOTH },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static bool _box_of_beasts_veto_mon(monster_type mon)
+{
+    // Don't summon any beast that would anger your god.
+    return player_will_anger_monster(mon);
+}
+
 static bool _box_of_beasts(item_def &box)
 {
-    bool success = false;
-
     mpr("You open the lid...");
 
-    if (x_chance_in_y(60 + you.skill(SK_EVOCATIONS), 100))
+    if (!box.plus)
     {
-        const monster_type beasts[] = {
-            MONS_BAT,       MONS_HOUND,     MONS_JACKAL,
-            MONS_RAT,       MONS_ICE_BEAST, MONS_ADDER,
-            MONS_YAK,       MONS_BUTTERFLY, MONS_WATER_MOCCASIN,
-            MONS_CROCODILE, MONS_HELL_HOUND
-        };
+        mpr("...but the box appears empty, and falls apart.");
+        ASSERT(in_inventory(box));
+        dec_inv_item_quantity(box.link, 1);
+        return false;
+    }
 
-        monster_type mon = MONS_NO_MONSTER;
+    bool success = false;
 
-        // If you worship a good god, don't summon an unholy beast (in
-        // this case, the hell hound).
-        do
-            mon = RANDOM_ELEMENT(beasts);
-        while (player_will_anger_monster(mon));
+    if (!one_chance_in(3))
+    {
+        // Invoke mon-pick with the custom list
+        int pick_level = max(1, you.skill(SK_EVOCATIONS));
+        monster_type mon = pick_monster_from(pop_beasts, pick_level,
+                                             _box_of_beasts_veto_mon);
 
-        const bool friendly = !x_chance_in_y(100,
-                                   you.skill(SK_EVOCATIONS, 100) + 500);
+        // Second monster might be only half as good
+        int pick_level_2 = random_range(max(1,div_rand_round(pick_level,2)), pick_level);
+        monster_type mon2 = pick_monster_from(pop_beasts, pick_level_2,
+                                              _box_of_beasts_veto_mon);
 
-        if (create_monster(
-                mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                          2 + random2(4), 0,
-                          you.pos(),
-                          MHITYOU)))
-        {
+        // Third monster picked from anywhere up to max level
+        int pick_level_3 = random_range(1, pick_level);
+        monster_type mon3 = pick_monster_from(pop_beasts, pick_level_3,
+                                              _box_of_beasts_veto_mon);
+
+        mgen_data mg = mgen_data(MONS_CHIMERA,
+                                 BEH_FRIENDLY, &you,
+                                 3 + random2(3), 0,
+                                 you.pos(),
+                                 MHITYOU);
+        mg.define_chimera(mon, mon2, mon3);
+        monster* mons = create_monster(mg);
+        if (mons)
             success = true;
+    }
 
-            mpr("...and something leaps out!");
-            xom_is_stimulated(10);
-        }
+    if (success)
+    {
+        mpr("...and something leaps out!");
+        xom_is_stimulated(10);
+        did_god_conduct(DID_CHAOS, random_range(5,10));
+        // Decrease charges
+        box.plus--;
     }
     else
+        // Failed to create monster for some reason
+        mpr("...but nothing happens.");
+
+    return success;
+}
+
+static bool _sack_of_spiders(item_def &sack)
+{
+    mpr("You reach into the bag...");
+
+    if (!sack.plus)
     {
-        if (!one_chance_in(6))
-            mpr("...but nothing happens.");
-        else
+        mpr("...but the bag is empty, and unravels at your touch.");
+        ASSERT(in_inventory(sack));
+        dec_inv_item_quantity(sack.link, 1);
+        return false;
+    }
+
+    bool success = false;
+
+    if (!one_chance_in(5))
+    {
+        int count = 1 + random2(3)
+                    + random2(div_rand_round(you.skill(SK_EVOCATIONS,10),40));
+        for (int n = 0; n < count; n++)
         {
-            mpr("...but the box appears empty, and falls apart.");
-            ASSERT(in_inventory(box));
-            dec_inv_item_quantity(box.link, 1);
+            // Invoke mon-pick with our custom list
+            monster_type mon = pick_monster_from(pop_spiders,
+                                            max(1, you.skill(SK_EVOCATIONS)),
+                                            _box_of_beasts_veto_mon);
+            mgen_data mg = mgen_data(mon,
+                                     BEH_FRIENDLY, &you,
+                                     3 + random2(4), 0,
+                                     you.pos(),
+                                     MHITYOU);
+            if (create_monster(mg))
+                success = true;
         }
     }
+
+    if (success)
+    {
+        // Also generate webs
+        int rad = LOS_RADIUS / 2 + 2;
+        for (radius_iterator ri(you.pos(), rad, false, true, true); ri; ++ri)
+        {
+            if (grd(*ri) == DNGN_FLOOR)
+            {
+                int chance = 100 - (100 * (you.pos().range(*ri) - 1) / rad)
+                             - 2 * (27 - you.skill(SK_EVOCATIONS));
+                if (x_chance_in_y(chance,100) && place_specific_trap(*ri, TRAP_WEB))
+                    // Reveal the trap
+                    grd(*ri) = DNGN_TRAP_WEB;
+            }
+        }
+        mpr("...and things crawl out!");
+        xom_is_stimulated(10);
+        // Decrease charges
+        sack.plus--;
+    }
+    else
+        // Failed to create monster for some reason
+        mpr("...but nothing happens.");
 
     return success;
 }
@@ -1026,8 +1144,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
 
     for (actor_iterator ai(agent->get_los()); ai; ++ai)
     {
-        if (ai->res_wind() > 0
-            || (ai->is_monster() && mons_is_stationary(ai->as_monster()))
+        if ((ai->is_monster() && mons_is_stationary(ai->as_monster()))
             || (ai->is_player() && you.form == TRAN_TREE)
             || !cell_see_cell(you.pos(), ai->pos(), LOS_SOLID)
             || ai->pos().distance_from(you.pos()) > radius
@@ -1177,11 +1294,6 @@ void wind_blast(actor* agent, int pow, coord_def target)
             mpr("A mighty gale blasts forth from the fan!");
         else
             mpr("A fierce wind blows from the fan.");
-    }
-    else
-    {
-        simple_monster_message(agent->as_monster(),
-                            " exhales a fierce blast of wind!");
     }
 
     noisy(8, agent->pos());
@@ -1747,6 +1859,11 @@ bool evoke_item(int slot)
                 pract = 1;
             break;
 
+        case MISC_SACK_OF_SPIDERS:
+            if (_sack_of_spiders(item))
+                pract = 1;
+            break;
+
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             if (!_check_crystal_ball())
                 unevokable = true;
@@ -1772,7 +1889,7 @@ bool evoke_item(int slot)
             unevokable = true;
             break;
         }
-        if (did_work)
+        if (did_work && !unevokable)
             count_action(CACT_EVOKE, EVOC_MISC);
         break;
 

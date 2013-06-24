@@ -534,10 +534,16 @@ else
 endif
 
 ifdef LTO
-CFOPTIMIZE += -flto=jobserver -fwhole-program
-  # FIXME: this check is fragile, and should be done via a full compile test.
-  ifeq ($(shell $(GXX) -x c++ /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
-    CFOPTIMIZE += -fno-fat-lto-objects
+  ifeq ($(shell $(GXX) -v 2>&1|grep clang),)
+    CFOPTIMIZE += -flto=jobserver -fwhole-program
+    # FIXME: this check is fragile, and should be done via a full compile test.
+    ifeq ($(shell $(GXX) -x c++ /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
+      CFOPTIMIZE += -fno-fat-lto-objects
+    endif
+  else
+    # Clang uses a different syntax than gcc, using -O4 instead.  This means
+    # you can't select a different level of optimization to go with LTO.
+    CFOPTIMIZE := $(patsubst -O%,,$(CFOPTIMIZE)) -O4
   endif
 endif
 

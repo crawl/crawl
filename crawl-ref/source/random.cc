@@ -247,6 +247,31 @@ double random_real()
     return random_int() / 4294967296.0;
 }
 
+// range [0, 1.0]
+double random_real_inc()
+{
+    return random_int() / 4294967295.0;
+}
+
+// range [0, 1.0], weighted to middle with multiple rolls
+double random_real_avg(int rolls)
+{
+    ASSERT(rolls > 0);
+    double sum = 0;
+
+    for (int i = 0; i < rolls; i++)
+        sum += random_real_inc();
+
+    return (sum / (double)rolls);
+}
+
+// range [low, high], weighted to middle with multiple rolls
+double random_range_real(double low, double high, int nrolls)
+{
+    const int roll = random_real_avg(nrolls) * (high - low);
+    return low + roll;
+}
+
 // Roll n_trials, return true if at least one succeeded.  n_trials might be
 // not integer.
 // [0, 1]

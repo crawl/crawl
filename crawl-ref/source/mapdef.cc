@@ -2710,32 +2710,23 @@ string map_def::validate_temple_map()
         if (temple_tag.empty())
             return "Malformed temple_overflow_ tag";
 
-        int num = 0;
-        parse_int(temple_tag.c_str(), num);
-
-        if (num == 0)
+        if (starts_with(temple_tag, "generic_"))
         {
-            temple_tag = replace_all(temple_tag, "_", " ");
+            temple_tag = strip_tag_prefix(temple_tag, "generic_");
 
-            god_type god = str_to_god(temple_tag);
+            int num = 0;
+            parse_int(temple_tag.c_str(), num);
 
-            if (god == GOD_NO_GOD)
-            {
-                return make_stringf("Invalid god name '%s'",
-                                    temple_tag.c_str());
-            }
-
-            // Assume that specialized single-god temples are set up
-            // properly.
-            return "";
-        }
-        else
-        {
             if (((unsigned long) num) != altars.size())
             {
                 return make_stringf("Temple should contain %u altars, but "
                                     "has %d.", (unsigned int)altars.size(), num);
             }
+        }
+        else
+        {
+            // Assume specialised altar vaults are set up correctly.
+            return "";
         }
     }
 
@@ -3235,8 +3226,16 @@ void map_def::fixup()
 
 bool map_def::has_tag(const string &tagwanted) const
 {
-    return !tags.empty() && !tagwanted.empty()
-        && tags.find(" " + tagwanted + " ") != string::npos;
+    if (tags.empty() || tagwanted.empty())
+        return false;
+
+    vector<string> wanted_tags = split_string(" ", tagwanted);
+
+    for (unsigned int i = 0; i < wanted_tags.size(); i++)
+        if (tags.find(" " + wanted_tags[i] + " ") == string::npos)
+            return false;
+
+    return true;
 }
 
 bool map_def::has_tag_prefix(const string &prefix) const
@@ -3992,6 +3991,17 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
                     mspec.monbase = static_cast<monster_type>(nspec.type);
                 }
             }
+            // Now check for chimera
+            const mons_spec cspec = mons_by_name("rat-rat-rat " + mon_str);
+            if (cspec.type != MONS_PROGRAM_BUG)
+            {
+                // Is this a modified monster?
+                if (cspec.monbase != MONS_PROGRAM_BUG
+                    && mons_class_is_chimeric(static_cast<monster_type>(cspec.type)))
+                {
+                    mspec.monbase = static_cast<monster_type>(cspec.type);
+                }
+            }
         }
         else if (mon_str != "0")
         {
@@ -4014,6 +4024,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             mspec.type    = nspec.type;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
+            mspec.chimera_mons = nspec.chimera_mons;
             if (nspec.colour && !mspec.colour)
                 mspec.colour = nspec.colour;
         }
@@ -4330,6 +4341,25 @@ mons_spec mons_list::mons_by_name(string name) const
     if (ends_with(name, " slime creature"))
         return get_slime_spec(name);
 
+    mons_spec spec;
+    if (ends_with(name, " chimera"))
+    {
+        const string chimera_spec = name.substr(0, name.length() - 8);
+        vector<string> components = split_string("-", chimera_spec);
+        if (components.size() != 3)
+            return MONS_PROGRAM_BUG;
+
+        spec = MONS_CHIMERA;
+        for (unsigned int i = 0; i < components.size(); i++)
+        {
+            monster_type monstype = get_monster_by_name(components[i]);
+            if (monstype == MONS_PROGRAM_BUG)
+                return MONS_PROGRAM_BUG;
+            spec.chimera_mons.push_back(monstype);
+        }
+        return spec;
+    }
+
     if (name.find(" ugly thing") != string::npos)
     {
         const string::size_type wordend = name.find(' ');
@@ -4338,13 +4368,12 @@ mons_spec mons_list::mons_by_name(string name) const
         const int colour = str_to_ugly_thing_colour(first_word);
         if (colour)
         {
-            mons_spec spec = mons_by_name(name.substr(wordend + 1));
+            spec = mons_by_name(name.substr(wordend + 1));
             spec.colour = colour;
             return spec;
         }
     }
 
-    mons_spec spec;
     get_zombie_type(name, spec);
     if (spec.type != MONS_PROGRAM_BUG)
         return spec;

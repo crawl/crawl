@@ -142,7 +142,9 @@ static duration_def duration_data[] =
     { DUR_WEAK, false,
       RED, "Weak", "weakened", "Your attacks are enfeebled." },
     { DUR_DIMENSION_ANCHOR, false,
-      RED, "-TELE", "cannot translocate", "You are firmly anchored to this plane." },
+      RED, "-Tele", "cannot translocate", "You are firmly anchored to this plane." },
+    { DUR_SPIRIT_HOWL, false,
+      MAGENTA, "Howl", "spirit howling", "The howling of a spirit pack pursues you." },
 };
 
 static int duration_index[NUM_DURATIONS];

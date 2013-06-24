@@ -186,12 +186,10 @@ void handle_behaviour(monster* mon)
     // Whether the player position is in LOS of the monster.
     bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos());
 
-#ifdef WIZARD
-    // If stealth is greater than actually possible (wizmode level)
-    // pretend the player isn't there, but only for hostile monsters.
-    if (proxPlayer && you.skills[SK_STEALTH] > 27 && !mon->wont_attack())
+    // If set, pretend the player isn't there, but only for hostile monsters.
+    if (proxPlayer && crawl_state.disables[DIS_MON_SIGHT] && !mon->wont_attack())
         proxPlayer = false;
-#endif
+
     bool proxFoe;
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
     bool isSmart    = (mons_intel(mon) > I_ANIMAL);
@@ -281,7 +279,7 @@ void handle_behaviour(monster* mon)
 
         // Ash penance makes monsters very likely to target you through
         // invisibility, depending on their intelligence.
-        if (you.penance[GOD_ASHENZARI] && x_chance_in_y(intel, 6))
+        if (you.penance[GOD_ASHENZARI] && x_chance_in_y(intel, 7))
             proxPlayer = true;
     }
 

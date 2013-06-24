@@ -1870,7 +1870,9 @@ bool fedhas_passthrough_class(const monster_type mc)
 {
     return (you.religion == GOD_FEDHAS
             && mons_class_is_plant(mc)
-            && mons_class_is_stationary(mc));
+            && mons_class_is_stationary(mc)
+            && mc != MONS_SNAPLASHER_VINE
+            && mc != MONS_SNAPLASHER_VINE_SEGMENT);
 }
 
 // Fedhas allows worshipers to walk on top of stationary plants and

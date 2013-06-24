@@ -1799,6 +1799,11 @@ int monster_die(monster* mons, killer_type killer,
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
         end_battlesphere(mons, true);
     }
+    else if (mons->type == MONS_BRIAR_PATCH)
+    {
+        if (timeout && !silent)
+            simple_monster_message(mons, " crumbles away.");
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
@@ -2207,11 +2212,11 @@ int monster_die(monster* mons, killer_type killer,
                         notice |= did_god_conduct(
                                       !confused ? DID_HOLY_KILLED_BY_UNDEAD_SLAVE :
                                                   DID_HOLY_KILLED_BY_SERVANT,
-                                      mons->hit_dice);
+                                      mons->hit_dice, true, mons);
                     }
                     else
                         notice |= did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                                                  mons->hit_dice, true, mons);
                 }
 
                 if (you.religion == GOD_SHINING_ONE
@@ -2409,8 +2414,19 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons_is_tentacle_or_tentacle_segment(mons->type)
              && killer != KILL_MISC
-                 || mons->type == MONS_ELDRITCH_TENTACLE)
+                 || mons->type == MONS_ELDRITCH_TENTACLE
+                 || mons->type == MONS_SNAPLASHER_VINE)
     {
+        if (mons->type == MONS_SNAPLASHER_VINE)
+        {
+            if (mons->props.exists("vine_awakener"))
+            {
+                monster* awakener =
+                        monster_by_mid(mons->props["vine_awakener"].get_int());
+                if (awakener)
+                    awakener->props["vines_awakened"].get_int()--;
+            }
+        }
         _destroy_tentacle(mons);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
@@ -2618,6 +2634,28 @@ int monster_die(monster* mons, killer_type killer,
     return corpse;
 }
 
+void unawaken_vines(const monster* mons, bool quiet)
+{
+    int vines_seen = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_SNAPLASHER_VINE
+            && mi->props.exists("vine_awakener")
+            && monster_by_mid(mi->props["vine_awakener"].get_int()) == mons)
+        {
+            if (you.can_see(*mi))
+                ++vines_seen;
+            monster_die(*mi, KILL_RESET, NON_MONSTER);
+        }
+    }
+
+    if (!quiet && vines_seen)
+    {
+        mprf("The vine%s fall%s limply to the ground.",
+              (vines_seen > 1 ? "s" : ""), (vines_seen == 1 ? "s" : ""));
+    }
+}
+
 // Clean up after a dead monster.
 void monster_cleanup(monster* mons)
 {
@@ -2628,6 +2666,13 @@ void monster_cleanup(monster* mons)
         forest_message(mons->pos(), "The forest abruptly stops moving.");
         env.forest_awoken_until = 0;
     }
+
+    if (mons->has_ench(ENCH_AWAKEN_VINES))
+        unawaken_vines(mons, false);
+
+    // So that a message is printed for the effect ending
+    if (mons->has_ench(ENCH_CONTROL_WINDS))
+        mons->del_ench(ENCH_CONTROL_WINDS);
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is
@@ -2911,18 +2956,17 @@ void change_monster_type(monster* mons, monster_type targetc)
                && (!mons->can_use_spells() || mons->is_actual_spellcaster())
                && !degenerated && !slimified);
 
-    // deal with mons_sec
+    mons->number       = 0;
+
+    // Note: define_monster() will clear out all enchantments! - bwr
     if (mons_is_zombified(mons))
-        mons->base_monster = targetc;
+        define_zombie(mons, targetc, mons->type);
     else
     {
         mons->type         = targetc;
         mons->base_monster = MONS_NO_MONSTER;
+        define_monster(mons);
     }
-    mons->number       = 0;
-
-    // Note: define_monster() will clear out all enchantments! - bwr
-    define_monster(mons);
 
     mons->mname = name;
     mons->props["original_name"] = name;
@@ -3429,7 +3473,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 // Friendly summons can't attack out of the player's LOS, it's too abusable.
 bool summon_can_attack(const monster* mons)
 {
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
         return true;
 
     return !mons->friendly() || !mons->is_summoned()
@@ -3438,7 +3482,7 @@ bool summon_can_attack(const monster* mons)
 
 bool summon_can_attack(const monster* mons, const coord_def &p)
 {
-    if (crawl_state.game_is_arena())
+    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
         return true;
 
     if (!mons->friendly() || !mons->is_summoned())

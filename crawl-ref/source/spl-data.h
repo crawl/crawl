@@ -3086,6 +3086,110 @@ struct spell_desc
 },
 
 {
+    SPELL_AWAKEN_VINES, "Awaken Vines",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_MONSTER,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_CONTROL_WINDS, "Control Winds",
+     SPTYP_CHARMS | SPTYP_AIR,
+     SPFLAG_AREA | SPFLAG_MONSTER,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_THORN_VOLLEY, "Volley of Thorns",
+     SPTYP_CONJURATION | SPTYP_EARTH,
+     SPFLAG_DIR_OR_TARGET,
+     4,
+     100,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_WALL_OF_BRAMBLES, "Wall of Brambles",
+     SPTYP_CONJURATION | SPTYP_EARTH,
+     SPFLAG_AREA | SPFLAG_MONSTER,
+     5,
+     100,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_WATERSTRIKE, "Waterstrike",
+     SPTYP_ICE,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE | SPFLAG_MONSTER,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_HASTE_PLANTS, "Haste Plants",
+     SPTYP_CHARMS,
+     SPFLAG_AREA | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_WIND_BLAST, "Wind Blast",
+     SPTYP_AIR,
+     SPFLAG_AREA,
+     3,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_STRIP_RESISTANCE, "Strip Resistance",
+     SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

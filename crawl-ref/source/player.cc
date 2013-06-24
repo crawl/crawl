@@ -39,6 +39,7 @@
 #include "godwrath.h"
 #include "hints.h"
 #include "hiscores.h"
+#include "invent.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -972,15 +973,13 @@ bool player_weapon_wielded()
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {
-    if (!you.weapon())
-        return true;
-
-    const item_def weapon = *you.weapon();
-    if (weapon.defined() && (!is_weapon(weapon) || is_range_weapon(weapon))
+    const item_def * const wpn = you.weapon();
+    if (wpn && wpn->defined() && (!is_melee_weapon(*wpn)
+                                  || needs_handle_warning(*wpn, OPER_ATTACK))
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
         string prompt = "Do you really want to go berserk while wielding "
-                        + weapon.name(DESC_YOUR) + "?";
+                        + wpn->name(DESC_YOUR) + "?";
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
@@ -3832,11 +3831,9 @@ void adjust_level(int diff, bool just_xp)
 int check_stealth(void)
 {
     ASSERT(!crawl_state.game_is_arena());
-#ifdef WIZARD
     // Extreme stealthiness can be enforced by wizmode stealth setting.
-    if (you.skills[SK_STEALTH] > 27)
+    if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
-#endif
 
     if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX])
         return 0;
@@ -4374,6 +4371,7 @@ void display_char_status()
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
+        DUR_SPIRIT_HOWL,
     };
 
     status_info inf;
@@ -5594,6 +5592,13 @@ bool is_hovering()
            && !you.is_wall_clinging();
 }
 
+bool djinni_floats()
+{
+    return you.species == SP_DJINNI
+           && you.form != TRAN_TREE
+           && (you.form != TRAN_SPIDER || !you.is_wall_clinging());
+}
+
 static void _end_water_hold()
 {
     you.duration[DUR_WATER_HOLD] = 0;
@@ -5731,7 +5736,6 @@ void player::init()
     stat_loss.init(0);
     base_stats.init(0);
     stat_zero.init(0);
-    stat_zero_cause.init("");
 
     hunger          = HUNGER_DEFAULT;
     hunger_state    = HS_SATIATED;

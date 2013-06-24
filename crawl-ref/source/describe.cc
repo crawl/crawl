@@ -43,6 +43,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-chimera.h"
 #include "mon-stuff.h"
 #include "output.h"
 #include "player.h"
@@ -167,7 +168,7 @@ static const char* _jewellery_base_ability_string(int subtype)
     case RING_WIZARDRY:          return "Wiz";
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
-    case RING_TELEPORTATION:     return "+/*TELE";
+    case RING_TELEPORTATION:     return "+/*Tele";
     case RING_TELEPORT_CONTROL:  return "cTele";
     case AMU_CLARITY:            return "Clar";
     case AMU_WARDING:            return "Ward";
@@ -1742,7 +1743,7 @@ string get_item_description(const item_def &item, bool verbose,
     ostringstream description;
 
     if (!dump)
-        description << item.name(DESC_INVENTORY_EQUIP) << ".";
+        description << uppercase_first(item.name(DESC_INVENTORY_EQUIP)) << ".";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!dump)
@@ -2904,9 +2905,9 @@ static int _get_spell_description(const spell_type spell,
     if (!quote.empty())
         description += "\n" + quote;
 
-    bool undead = false;
-    if (you_cannot_memorise(spell, undead))
-        description += "\n" + desc_cannot_memorise_reason(undead) + "\n";
+    bool form = false;
+    if (you_cannot_memorise(spell, form))
+        description += "\n" + desc_cannot_memorise_reason(form) + "\n";
 
     if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
         && you.form != TRAN_WISP)
@@ -2919,7 +2920,7 @@ static int _get_spell_description(const spell_type spell,
             return BOOK_FORGET;
         }
         else if (player_can_memorise_from_spellbook(*item)
-                 && !you_cannot_memorise(spell, undead))
+                 && !you_cannot_memorise(spell, form))
         {
             description += "\n(M)emorise this spell.\n";
             return BOOK_MEM;
@@ -3067,6 +3068,73 @@ static string _describe_draconian(const monster_info& mi)
             description += " " + drac_role;
     }
 
+    return description;
+}
+
+static string _describe_chimera(const monster_info& mi)
+{
+    string description = "It has the head of ";
+
+    description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
+
+    monster_type part2 = get_chimera_part(&mi,2);
+    description += ", the head of ";
+    if (part2 == mi.base_type)
+    {
+        description += "another ";
+        description += apply_description(DESC_PLAIN, get_monster_data(part2)->name);
+    }
+    else
+        description += apply_description(DESC_A, get_monster_data(part2)->name);
+
+    monster_type part3 = get_chimera_part(&mi,3);
+    description += ", and the head of ";
+    if (part3 == mi.base_type || part3 == part2)
+    {
+        if (part2 == mi.base_type)
+            description += "yet ";
+        description += "another ";
+        description += apply_description(DESC_PLAIN, get_monster_data(part3)->name);
+    }
+    else
+        description += apply_description(DESC_A, get_monster_data(part3)->name);
+
+    description += ". It has the body of ";
+    description += apply_description(DESC_A, get_monster_data(mi.base_type)->name);
+
+    bool has_wings = mi.props.exists("chimera_batty") || mi.props.exists("chimera_wings");
+    if (mi.props.exists("chimera_legs"))
+    {
+        monster_type leggy_part = get_chimera_part(&mi, mi.props["chimera_legs"].get_int());
+        if (has_wings)
+            description += ", ";
+        else
+            description += ", and ";
+        description += "the legs of ";
+        description += apply_description(DESC_A, get_monster_data(leggy_part)->name);
+    }
+
+    if (has_wings)
+    {
+        monster_type wing_part = mi.props.exists("chimera_batty") ?
+            get_chimera_part(&mi, mi.props["chimera_batty"].get_int())
+            : get_chimera_part(&mi, mi.props["chimera_wings"].get_int());
+
+        switch (mons_class_flies(wing_part))
+        {
+        case FL_WINGED:
+            description += " and the wings of ";
+            break;
+        case FL_LEVITATE:
+            description += " and it hovers like ";
+            break;
+        case FL_NONE:
+            description += " and it moves like "; // Unseen horrors
+            break;
+        }
+        description += apply_description(DESC_A, get_monster_data(wing_part)->name);
+    }
+    description += ".";
     return description;
 }
 
@@ -3422,6 +3490,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     case MONS_PANDEMONIUM_LORD:
         inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
+        break;
+
+    case MONS_CHIMERA:
+        inf.body << "\n" << _describe_chimera(mi) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:

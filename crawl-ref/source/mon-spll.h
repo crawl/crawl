@@ -1487,9 +1487,9 @@
       {
        SPELL_SUNRAY,
        SPELL_AWAKEN_FOREST,
-       SPELL_NO_SPELL,
+       SPELL_HASTE_PLANTS,
        SPELL_SUMMON_CANIFORMS,
-       SPELL_NO_SPELL,
+       SPELL_HASTE_PLANTS,
        SPELL_MINOR_HEALING
       }
     },
@@ -1498,21 +1498,21 @@
       {
        SPELL_AIRSTRIKE,
        SPELL_LIGHTNING_BOLT,
-       SPELL_SWIFTNESS,
+       SPELL_CONTROL_WINDS,
        SPELL_SHOCK,
        SPELL_NO_SPELL,
-       SPELL_HASTE
+       SPELL_NO_SPELL
       }
     },
 
     { MST_THE_ENCHANTRESS,
       {
-       SPELL_CORONA,
-       SPELL_SLEEP,
+       SPELL_DIMENSION_ANCHOR,
+       SPELL_SLOW,
        SPELL_HASTE,
-       SPELL_BANISHMENT,
-       SPELL_INVISIBILITY,
-       SPELL_TELEPORT_SELF
+       SPELL_MASS_CONFUSION,
+       SPELL_STRIP_RESISTANCE,
+       SPELL_INVISIBILITY
       }
     },
 
@@ -1969,56 +1969,34 @@
 
     {  MST_DRYAD,
       {
+       SPELL_AWAKEN_VINES,
+       SPELL_AWAKEN_VINES,
+       SPELL_NO_SPELL,
        SPELL_AWAKEN_FOREST,
        SPELL_AWAKEN_FOREST,
-       SPELL_AWAKEN_FOREST,
-       SPELL_AWAKEN_FOREST,
-       SPELL_AWAKEN_FOREST,
-       SPELL_AWAKEN_FOREST
+       SPELL_MINOR_HEALING
       }
     },
 
-    {  MST_FAUN_I,
+    {  MST_FAUN,
       {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
        SPELL_CORONA,
        SPELL_SLOW,
-       SPELL_NO_SPELL,
-       SPELL_CAUSE_FEAR,
-       SPELL_SLOW,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_FAUN_II,
-      {
-       SPELL_CORONA,
        SPELL_CONFUSE,
-       SPELL_NO_SPELL,
-       SPELL_CAUSE_FEAR,
-       SPELL_CONFUSE,
-       SPELL_BLINK
-      }
-    },
-
-    {  MST_FAUN_III,
-      {
-       SPELL_CORONA,
-       SPELL_HIBERNATION,
-       SPELL_NO_SPELL,
-       SPELL_CAUSE_FEAR,
-       SPELL_CAUSE_FEAR,
-       SPELL_BLINK
+       SPELL_NO_SPELL
       }
     },
 
     {  MST_SATYR,
       {
-       SPELL_CORONA,
        SPELL_NO_SPELL,
-       SPELL_LEDAS_LIQUEFACTION,
+       SPELL_NO_SPELL,
        SPELL_CAUSE_FEAR,
-       SPELL_NO_SPELL,
-       SPELL_BLINK
+       SPELL_CAUSE_FEAR,
+       SPELL_SLEEP,
+       SPELL_NO_SPELL
       }
     },
 
@@ -2112,23 +2090,23 @@
 
     {  MST_SPRIGGAN_ENCHANTER,
       {
-       SPELL_CONFUSE,
+       SPELL_HIBERNATION,
        SPELL_HIBERNATION,
        SPELL_INVISIBILITY,
-       SPELL_HASTE,
        SPELL_NO_SPELL,
-       SPELL_HASTE
+       SPELL_STRIP_RESISTANCE,
+       SPELL_NO_SPELL
       }
     },
 
     {  MST_SOJOBO,
       {
-       SPELL_CHAIN_LIGHTNING,
-       SPELL_HASTE_OTHER,
-       SPELL_HASTE,
-       SPELL_BLINK_ALLIES_ENCIRCLE,
+       SPELL_LIGHTNING_BOLT,
        SPELL_NO_SPELL,
-       SPELL_BLINK
+       SPELL_WIND_BLAST,
+       SPELL_AIRSTRIKE,
+       SPELL_AIR_ELEMENTALS,
+       SPELL_WIND_BLAST
       }
     },
 
@@ -2141,6 +2119,61 @@
        SPELL_MELEE,
        SPELL_NO_SPELL
       }
-    }
+    },
+
+    {  MST_THORN_HUNTER,
+      {
+       SPELL_THORN_VOLLEY,
+       SPELL_THORN_VOLLEY,
+       SPELL_NO_SPELL,
+       SPELL_WALL_OF_BRAMBLES,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_WATER_NYMPH,
+      {
+       SPELL_WATERSTRIKE,
+       SPELL_WATERSTRIKE,
+       SPELL_NO_SPELL,
+       SPELL_WATERSTRIKE,
+       SPELL_WATERSTRIKE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_THORN_LOTUS,
+      {
+       SPELL_THORN_VOLLEY,
+       SPELL_THORN_VOLLEY,
+       SPELL_NO_SPELL,
+       SPELL_THORN_VOLLEY,
+       SPELL_THORN_VOLLEY,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_VAPOUR,
+      {
+       SPELL_LIGHTNING_BOLT,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_MELEE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_ELEMENTAL_WELLSPRING,
+      {
+       SPELL_PRIMAL_WAVE,
+       SPELL_PRIMAL_WAVE,
+       SPELL_NO_SPELL,
+       SPELL_WATER_ELEMENTALS,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 
 #endif

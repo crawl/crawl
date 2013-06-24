@@ -36,7 +36,6 @@ bool fight_jump(actor *attacker, actor *defender, bool jump_blocked,
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
-bool is_melee_weapon(const item_def *weapon);
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 int calc_heavy_armour_penalty(bool random_factor);
 

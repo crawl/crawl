@@ -88,6 +88,8 @@ branch_type parent_branch(branch_type branch)
 {
     if (branch == BRANCH_TOMB && startdepth[BRANCH_CRYPT] == -1)
         return BRANCH_FOREST;
+    else if (branch == root_branch)
+        return NUM_BRANCHES;
 
     return branches[branch].parent_branch;
 }
