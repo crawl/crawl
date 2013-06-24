@@ -579,9 +579,9 @@ bow:quote
 %%%%
 box of beasts
 
-A box filled with the bizarre products of a depraved wizard's magical
-experimentations. Opening it might set loose a friendly chimera: a terrible
-gestalt composed from the parts of other beasts.
+A box filled with the bizarre leftovers of a depraved wizard's magical
+experimentations. Opening it might set loose a friendly chimera: a mythical
+hybrid composed from the parts of three separate beasts.
 %%%%
 bread ration
 
