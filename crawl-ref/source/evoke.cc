@@ -776,13 +776,13 @@ static bool _sack_of_spiders(item_def &sack)
         {
             // Invoke mon-pick with our custom list
             monster_type mon = pick_monster_from(pop_spiders,
-                                            you.skill(SK_EVOCATIONS),
+                                            max(1, you.skill(SK_EVOCATIONS)),
                                             _box_of_beasts_veto_mon);
             mgen_data mg = mgen_data(mon,
-                                      BEH_FRIENDLY, &you,
-                                      3 + random2(4), 0,
-                                      you.pos(),
-                                      MHITYOU);
+                                     BEH_FRIENDLY, &you,
+                                     3 + random2(4), 0,
+                                     you.pos(),
+                                     MHITYOU);
             if (create_monster(mg))
                 success = true;
         }
