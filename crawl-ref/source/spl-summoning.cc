@@ -3043,7 +3043,6 @@ bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
 
     // Expend the weapon's energy, as it can't attack
     int energy = mons->action_energy(EUT_ATTACK);
-    dprf(DIAG_COMBAT, "Spectral Weapon fake attack %d", delay);
     ASSERT(energy > 0);
 
     mons->speed_increment -= energy;
