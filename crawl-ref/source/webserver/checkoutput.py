@@ -27,10 +27,7 @@ def check_output(call, callback, ioloop):
             ioloop.remove_handler(out_r)
             os.close(out_r)
 
-            if p.returncode == 0:
-                callback("".join(data))
-            else:
-                raise subprocess.CalledProcessError(p.returncode, call)
+            callback("".join(data), p.returncode)
 
     def _handle_read(fd, events):
         if events & ioloop.READ:
