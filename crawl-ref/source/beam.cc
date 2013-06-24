@@ -5065,14 +5065,14 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (thrower == KILL_YOU || thrower == KILL_YOU_MISSILE)
         {
             // No KILL_YOU_CONF, or we get "You heal ..."
-            if (cast_healing(5 + damage.roll(), 5 + damage.num * damage.size,
+            if (cast_healing(3 + damage.roll(), 3 + damage.num * damage.size,
                              false, mon->pos()) > 0)
             {
                 obvious_effect = true;
             }
             msg_generated = true; // to avoid duplicate "nothing happens"
         }
-        else if (mon->heal(5 + damage.roll()))
+        else if (mon->heal(3 + damage.roll()))
         {
             if (mon->hit_points == mon->max_hit_points)
             {

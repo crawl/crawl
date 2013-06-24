@@ -552,6 +552,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_HEAL_OTHER:
     case SPELL_MINOR_HEALING:
+        beam.damage   = dice_def(2, mons->hit_dice / 2);
         beam.flavour  = BEAM_HEALING;
         beam.hit      = 25 + (power / 5);
         break;
