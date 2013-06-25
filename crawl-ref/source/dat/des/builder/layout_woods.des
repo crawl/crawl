@@ -143,6 +143,6 @@ TAGS: overwritable layout allow_dup unrand layout_type_forest
   if you.in_branch("crypt") then
     tile("t = dngn_tree_dead")
   end
-
   theme.D.caves(_G)
+  kmask("1 = vault")
 }}
