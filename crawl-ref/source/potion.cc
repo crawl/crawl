@@ -439,9 +439,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         {
             mpr("You feel fantastic!");
             did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
-        } else {
-            mpr("You feel fantastic for a moment.");
         }
+        else
+            mpr("You feel fantastic for a moment.");
         learned_something_new(HINT_YOU_MUTATED);
         break;
 
