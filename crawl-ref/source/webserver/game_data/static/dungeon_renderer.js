@@ -311,7 +311,7 @@ function ($, cr, map_knowledge, settings, dngn) {
     });
 
     $(document).off("game_cleanup.dungeon_renderer")
-        .on("game_cleanup.dungoen_renderer", function () {
+        .on("game_cleanup.dungeon_renderer", function () {
             if (anim_interval)
             {
                 clearTimeout(anim_interval);
