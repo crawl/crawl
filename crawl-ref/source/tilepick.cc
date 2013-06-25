@@ -4849,7 +4849,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_INFUSION:                 return TILEG_INFUSION;
     case SPELL_SONG_OF_SLAYING:          return TILEG_SONG_OF_SLAYING;
     case SPELL_SPECTRAL_WEAPON:          return TILEG_SPECTRAL_WEAPON;
-    case SPELL_SONG_OF SHIELDING:        return TILEG_SONG_OF_SHIELDING;
+    case SPELL_SONG_OF_SHIELDING:        return TILEG_SONG_OF_SHIELDING;
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
@@ -5191,6 +5191,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;
+    case ABIL_STOP_SINGING:
+        return TILEG_ABILITY_STOP_SINGING;
 
     // Species-specific abilities.
     // Demonspawn-only
