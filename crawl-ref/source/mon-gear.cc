@@ -623,6 +623,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         // deliberate fall-through {dlb}
 
     case MONS_DANCING_WEAPON:   // give_level may have been adjusted above
+    case MONS_SPECTRAL_WEAPON:  // Necessary for placement by mons spec
     case MONS_FRANCES:
     case MONS_HAROLD:
     case MONS_LOUISE:
