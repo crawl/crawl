@@ -24,19 +24,21 @@
     <noscript>Please enable javascript!</noscript>
 
     <div id="lobby" style="display: none;">
-      <div id="login">
-        <span id="login_message"></span>
-        <form action="" id="login_form">
-          <label for="username">User:</label>
-          <input class="text" type="text" name="username" id="username"></input>
-          <label for="password">Pass:</label>
-          <input class="text" type="password" name="password" id="password"></input>
-          <input class="button" type="submit" name="submit" id="submit" value="Login"></input>
-        </form>
-        <input type="checkbox" name="remember_me" id="remember_me">Stay logged in</input>
-        |
-        <a id="reg_link" href="javascript:">Register</a>
-        <a id="logout_link" href="javascript:" style="display: none;">Logout</a>
+      <div class="login_placeholder">
+        <div id="login">
+          <span id="login_message"></span>
+          <form action="" id="login_form">
+            <label for="username">User:</label>
+            <input class="text" type="text" name="username" id="username"></input>
+            <label for="password">Pass:</label>
+            <input class="text" type="password" name="password" id="password"></input>
+            <input class="button" type="submit" name="submit" id="submit" value="Login"></input>
+          </form>
+          <input type="checkbox" name="remember_me" id="remember_me">Stay logged in</input>
+          <span class="extra_links">|
+          <a id="reg_link" href="javascript:">Register</a>
+          <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
+        </div>
       </div>
 
       <div id="register" class="floating_dialog" style="display: none;">
@@ -186,6 +188,16 @@
         <input class="text" type="text" name="chat_input"
                id="chat_input"></input>
       </div>
+    </div>
+
+    <div id="prompt" style="display: none;">
+      <div>
+          <div>Login required to play <span id="prompt_game"></span>:</div>
+
+          <div class="login_placeholder"></div>
+
+          <div><a href="#lobby">Back to lobby</a></div>
+       </div>
     </div>
   </body>
 </html>

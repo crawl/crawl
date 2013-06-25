@@ -255,16 +255,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
-        if config.dgl_mode:
-            if self.username == None:
-                self.go_lobby()
-                return
-
-        if self.process:
+        if config.dgl_mode and game_id not in config.games:
             self.go_lobby()
             return
 
-        if config.dgl_mode and game_id not in config.games:
+        if config.dgl_mode:
+            game_params = dict(config.games[game_id])
+            if self.username == None:
+                if self.watched_game:
+                    self.stop_watching()
+                self.send_message("login_required", game = game_params["name"])
+                return
+
+        if self.process:
             self.go_lobby()
             return
 
@@ -273,7 +276,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         import process_handler
 
         if config.dgl_mode:
-            game_params = dict(config.games[game_id])
             game_params["id"] = game_id
             args = (game_params, self.username, self.logger, self.ioloop)
             if (game_params.get("compat_mode") or
