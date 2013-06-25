@@ -677,6 +677,9 @@ its power dependant on your skill with said weapon. Never striking on its own,
 it only attacks when you do. You can only ever have one spectral weapon at a time.
 
 Kills by a spectral weapon count as your own when singing a Song of Slaying.
+
+Certain powerful named artifacts possess too strong a spirit for this spell
+to be able to draw them out.
 %%%%
 Spider Form spell
 
