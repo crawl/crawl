@@ -121,10 +121,11 @@ function (exports, $, key_conversion, chat, comm) {
 
     exports.delay = delay;
 
-    function show_prompt(game)
+    function show_prompt(title, footer)
     {
         $("#loader_text").hide();
-        $("#prompt_game").text(game);
+        $("#prompt_title").html(title);
+        $("#prompt_footer").html(footer);
         $("#prompt .login_placeholder").append($("#login"));
         $("#login_form").show();
         $("#login .extra_links").hide();
@@ -390,15 +391,21 @@ function (exports, $, key_conversion, chat, comm) {
         $("#reg_link").hide();
         $("#logout_link").show();
 
+        $("#chat_input").show();
+        $("#chat_login_text").hide();
+
         if ($("#remember_me").attr("checked"))
         {
             send_message("set_login_cookie");
         }
 
-        if (location.hash == "" || location.hash.match(/^#lobby$/i))
-            go_lobby();
-        else
-            hash_changed();
+        if (!watching)
+        {
+            if (location.hash == "" || location.hash.match(/^#lobby$/i))
+                go_lobby();
+            else
+                hash_changed();
+        }
     }
 
     function remember_me_click()
@@ -618,7 +625,18 @@ function (exports, $, key_conversion, chat, comm) {
     {
         cleanup();
         show_loading_screen();
-        show_prompt(data.game);
+        show_prompt("Login required to play <span id='prompt_game'>"
+                    + data.game + "</span>:",
+                    "<a href='#lobby'>Back to lobby</a>");
+    }
+
+    function chat_login(data)
+    {
+        if (!in_game() || !watching) return;
+
+        var a = $("<a href='javascript:'>Close</a>");
+        a.click(hide_prompt);
+        show_prompt("Login to chat:", a);
     }
 
     var new_list = null;
@@ -1027,6 +1045,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#login_form").bind("submit", login);
         $("#remember_me").bind("click", remember_me_click);
         $("#logout_link").bind("click", logout);
+        $("#chat_login_link").bind("click", chat_login);
 
         $("#reg_link").bind("click", start_register);
         $("#register_form").bind("submit", register);

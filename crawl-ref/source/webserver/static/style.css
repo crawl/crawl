@@ -21,6 +21,7 @@ body {
     top: 50%;
     left: 50%;
     position: absolute;
+    z-index: 4000;
 }
 
 #prompt > div {
@@ -177,6 +178,10 @@ body {
 
 #chat_caption:hover {
     background-color: #111111;
+}
+
+#chat_login_text {
+    border-top: 1px dashed #626262;
 }
 
 #message_count {

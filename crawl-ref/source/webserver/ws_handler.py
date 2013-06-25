@@ -370,7 +370,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
             return
         self.queue_message("login_success", username = username)
-        self.send_game_links()
+        if self.watched_game:
+            self.watched_game.update_watcher_description()
+        else:
+            self.send_game_links()
 
     def login(self, username, password):
         real_username = user_passwd_match(username, password)

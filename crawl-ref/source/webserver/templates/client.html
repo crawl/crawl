@@ -186,17 +186,20 @@
         </div>
 
         <input class="text" type="text" name="chat_input"
-               id="chat_input"></input>
+               id="chat_input" style="display: none"></input>
+        <div id="chat_login_text">
+          <a id="chat_login_link" href="javascript:">Login</a> to chat
+        </div>
       </div>
     </div>
 
     <div id="prompt" style="display: none;">
       <div>
-          <div>Login required to play <span id="prompt_game"></span>:</div>
+          <div id="prompt_title"></div>
 
           <div class="login_placeholder"></div>
 
-          <div><a href="#lobby">Back to lobby</a></div>
+          <div id="prompt_footer"></div>
        </div>
     </div>
   </body>
