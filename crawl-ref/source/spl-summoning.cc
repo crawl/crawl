@@ -3097,21 +3097,21 @@ spell_type summons_index::map(const summons_desc* val)
 static const summons_desc summonsdata[] =
 {
     // Beasts
-    { SPELL_SUMMON_BUTTERFLIES,         8, 2 },
+    { SPELL_SUMMON_BUTTERFLIES,         8, 5 },
     { SPELL_SUMMON_SMALL_MAMMAL,        3, 2 },
-    { SPELL_SUMMON_ICE_BEAST,           3, 2 },
-    { SPELL_SUMMON_SCORPIONS,           4, 2 },
+    { SPELL_SUMMON_ICE_BEAST,           3, 3 },
+    { SPELL_SUMMON_SCORPIONS,           4, 3 },
     // Demons
-    { SPELL_CALL_IMP,                   4, 2 },
+    { SPELL_CALL_IMP,                   3, 3 },
     { SPELL_SUMMON_DEMON,               3, 2 },
     { SPELL_DEMONIC_HORDE,              5, 2 },
-    { SPELL_SUMMON_GREATER_DEMON,       2, 2 },
+    { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
     // General monsters
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
     { SPELL_SUMMON_UGLY_THING,          3, 2 },
-    { SPELL_SUMMON_HORRIBLE_THINGS,     2, 2 },
+    { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
     { SPELL_SHADOW_CREATURES,           5, 2 },
-    { SPELL_SUMMON_DRAGON,              2, 2 },
+    { SPELL_SUMMON_DRAGON,              2, 5 },
     { SPELL_NO_SPELL,                   0, 0 }
 };
 
