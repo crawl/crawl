@@ -192,6 +192,7 @@ Interface
 Technical
 ---------
 * A port to OpenSolaris (Dyson/Illumos).
+* MSVC compilation once again possible (Visual Studio [Express] 2012)
 
 Stone Soup 0.12.2 (20130601)
 ----------------------------
