@@ -3180,12 +3180,12 @@ Stone Soup 0.2 (20070401)
 * Greedy explore now works in Pandemonium.
 * Stash tracker now also tracks item inscriptions.
 * Many item stacking bugs fixed.
-* Artifacts are described as such when (v)iewed.
+* Artefacts are described as such when (v)iewed.
 * The Hat of the Alchemist is now a real wizard hat, not a helmet.
 * Fixed identify not clearing empty inscription.
 * Fixed broken fear behaviour for monsters.
 * Shop purchase asks for confirmation.
-* Minor tweaks to some unrand artifacts.
+* Minor tweaks to some unrand artefacts.
 * Gourmand contaminated -> clean effect is also gradual now.
 * Searching is more effective.
 * New god: Lugonu, god of the Void.
@@ -3216,7 +3216,7 @@ Stone Soup 0.2 (20070401)
   capacity, not absolute maximum.
 * Flying monsters no longer avoid mechanical traps.
 * Items dropped onto an altar while praying will be sacrificed.
-* Jellies can no longer eat artifacts.
+* Jellies can no longer eat artefacts.
 * Enabling delay_message_clear uses a scrolling message window.
 * Fixed bug where statues could move around.
 * Added temporary pain-brand spell "Excruciating Wounds".

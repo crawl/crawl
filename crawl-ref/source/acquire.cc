@@ -1520,7 +1520,7 @@ int acquirement_create_item(object_class_type class_wanted,
             }
 
             // These can never get egos, and mundane versions are quite common, so
-            // guarantee artifact status.  Rarity is a bit low to compensate.
+            // guarantee artefact status.  Rarity is a bit low to compensate.
             if (is_giant_club_type(doodad.sub_type))
             {
                 if (!one_chance_in(25))

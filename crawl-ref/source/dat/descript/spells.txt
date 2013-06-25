@@ -678,7 +678,7 @@ it only attacks when you do. You can only ever have one spectral weapon at a tim
 
 Kills by a spectral weapon count as your own when singing a Song of Slaying.
 
-Certain powerful named artifacts possess too strong a spirit for this spell
+Certain powerful named artefacts possess too strong a spirit for this spell
 to be able to draw them out.
 %%%%
 Spider Form spell
