@@ -2641,7 +2641,11 @@ static bool _pan_level()
         {
             const map_def *layout = _pick_layout(vault);
 
-            _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
+            {
+                dgn_map_parameters mp(vault->orient == MAP_CENTRE
+                                      ? "central" : "layout");
+                _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
+            }
 
             dgn_check_connectivity = true;
             _build_secondary_vault(vault);
@@ -4257,7 +4261,11 @@ static void _build_postvault_level(vault_placement &place)
     {
         const map_def* layout = _pick_layout(&place.map);
         ASSERT(layout);
-        _build_secondary_vault(layout, false);
+        {
+            dgn_map_parameters mp(place.orient == MAP_CENTRE
+                                  ? "central" : "layout");
+            _build_secondary_vault(layout, false);
+        }
     }
 }
 
