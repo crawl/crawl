@@ -1343,6 +1343,13 @@ static bool _check_ability_possible(const ability_def& abil,
                                     bool hungerCheck = true,
                                     bool quiet = false)
 {
+    if (you.berserk())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
     if (silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH)
     {
         talent tal = get_talent(abil.ability, false);
@@ -1529,6 +1536,13 @@ bool check_ability_possible(const ability_type ability, bool hungerCheck,
 
 bool activate_talent(const talent& tal)
 {
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
     // Doing these would outright kill the player.
     if (tal.which == ABIL_STOP_FLYING)
     {
