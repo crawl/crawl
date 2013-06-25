@@ -29,6 +29,7 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "skills2.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "tagstring.h"
 #include "terrain.h"
@@ -467,8 +468,13 @@ monster_info::monster_info(const monster* m, int milev)
             number = m->number;
         colour = m->colour;
 
-        if (m->is_summoned())
+        int stype = 0;
+        if (m->is_summoned(0, &stype))
+        {
             mb.set(MB_SUMMONED);
+            if (summons_are_capped(static_cast<spell_type>(stype)))
+                mb.set(MB_SUMMONED_NO_STAIRS);
+        }
         else if (m->is_perm_summoned())
             mb.set(MB_PERM_SUMMON);
     }

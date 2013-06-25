@@ -3544,7 +3544,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.body << "\n" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "
                        "or items";
-        if (!stair_use)
+        if (!stair_use && mi.is(MB_SUMMONED_NO_STAIRS))
             inf.body << ", and it is incapable of using stairs";
         inf.body << ".\n";
     }

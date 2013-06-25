@@ -47,6 +47,7 @@
 #include "showsymb.h"
 #include "species.h"
 #include "spl-util.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -1530,10 +1531,19 @@ bool mons_can_use_stairs(const monster* mon)
 {
     if (!mons_class_can_use_stairs(mon->type)) return false;
 
-    // Only perm-summons can use stairs. I considered preventing only
-    // capped summons from using stairs instead but since most of them
-    // are undead anyway it'd make little difference.
-    return (mon->is_perm_summoned() || !mon->is_summoned());
+    // Check summon status
+    int stype = 0;
+    // Other permanent summons can always use stairs
+    if (mon->is_summoned(0, &stype) && !mon->is_perm_summoned())
+    {
+        // Allow uncapped summons to use stairs. This means creatures
+        // from misc evokables, temporary god summons, etc. These tend
+        // to be balanced by other means; however this could use a review
+        // and perhaps needs a whilelist (or long-duration vs. short-duration).
+        return (!summons_are_capped(static_cast<spell_type>(stype)));
+    }
+    // Everything else is fine
+    return true;
 }
 
 bool mons_enslaved_body_and_soul(const monster* mon)
