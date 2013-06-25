@@ -36,7 +36,7 @@ Character
       themselves to significantly reduce damage before becoming completely
       immobile.
 * Sludge elves are no more.
-* The Skald background gets a reworked spellback with three new spells:
+* The Skald background gets a reworked spellbook with three new spells:
     - Infusion grants additional melee damage costing MP with each strike;
     - Song of Slaying grants an incremental slaying bonus with every monster
       killed (of sufficient threat level);
