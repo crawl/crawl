@@ -1956,10 +1956,12 @@ static void _build_overflow_temples()
         const int num_gods = _setup_temple_altars(temple);
 
         const map_def *vault = NULL;
+        string vault_tag = "";
+        string name = "";
 
         if (temple.exists(TEMPLE_MAP_KEY))
         {
-            string name = temple[TEMPLE_MAP_KEY].get_string();
+            name = temple[TEMPLE_MAP_KEY].get_string();
 
             vault = find_map_by_name(name);
             if (vault == NULL)
@@ -1971,9 +1973,6 @@ static void _build_overflow_temples()
         }
         else
         {
-            string vault_tag = "";
-            string name = "";
-
             // First try to find a temple specialized for this combination of
             // gods.
             if (num_gods > 1 || coinflip())
@@ -2034,15 +2033,18 @@ static void _build_overflow_temples()
             // find the overflow temple map, so don't veto the level.
             return;
 
-        if (!_dgn_ensure_vault_placed(
-                _build_secondary_vault(vault),
-                false))
         {
+            dgn_map_parameters mp(vault_tag);
+            if (!_dgn_ensure_vault_placed(
+                    _build_secondary_vault(vault),
+                    false))
+            {
 #ifdef DEBUG_TEMPLES
-            mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
-                 "vetoing level.", vault->name.c_str());
+                mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
+                     "vetoing level.", vault->name.c_str());
 #endif
-            return;
+                return;
+            }
         }
 #ifdef DEBUG_TEMPLES
         mprf(MSGCH_DIAGNOSTICS, "Placed overflow temple %s",

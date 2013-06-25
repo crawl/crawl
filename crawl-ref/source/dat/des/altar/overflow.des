@@ -2425,3 +2425,97 @@ ccB.+..T..T..T..+.Bcc
          c.c
           @
 ENDMAP
+
+NAME:    grunt_temple_overflow_open
+TAGS:    temple_overflow_generic_8 temple_overflow_generic_7
+TAGS:    temple_overflow_generic_6 temple_overflow_generic_5
+TAGS:    temple_overflow_generic_4 temple_overflow_generic_3
+TAGS:    temple_overflow_generic_2
+SHUFFLE: defghijk / efghijkd
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 8
+  end
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_overflow_generic_ is 24 characters
+      altarcount = string.sub(tag, 25)
+    end
+  end
+  if altarcount == "1" then
+    subst("d = B")
+    subst("efghijk = .")
+  elseif altarcount == "2" then
+    subst("dh = B")
+    subst("efgijk = .")
+  elseif altarcount == "3" then
+    subst("dgi = B")
+    subst("efhjk = .")
+  elseif altarcount == "4" then
+    subst("dfhj = B")
+    subst("egik = .")
+  elseif altarcount == "5" then
+    subst("dfgij = B")
+    subst("ehk = .")
+  elseif altarcount == "6" then
+    subst("defhij = B")
+    subst("gk = .")
+  elseif altarcount == "7" then
+    subst("defghij = B")
+    subst("k = .")
+  else
+    subst("defghijk = B")
+  end
+}}
+SUBST: G = G T V:1 U:1 t:1
+MAP
+   ...
+ ...d...
+ .k...e.
+.........
+.j..G..f.
+.........
+ .i...g.
+ ...h...
+   ...
+ENDMAP
+
+# Formerly minivault_3; resurrected after being removed way back in late 2009.
+NAME:  minitemple
+TAGS:  temple_overflow_generic_14 temple_overflow_generic_13
+TAGS:  temple_overflow_generic_12 temple_overflow_generic_11
+TAGS:  temple_overflow_generic_10 temple_overflow_generic_9
+TAGS:  temple_overflow_generic_8 temple_overflow_generic_7
+TAGS:  temple_overflow_generic_6 temple_overflow_generic_5
+TAGS:  temple_overflow_generic_4 temple_overflow_generic_3
+TAGS:  temple_overflow_generic_2
+# The original vault had allow_dup; I think that's overkill.
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 14
+  end
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_overflow_generic_ is 24 characters
+      altarcount = string.sub(tag, 25)
+    end
+  end
+  nsubst("B : " .. altarcount .. ":B / *:x")
+}}
+SUBST: x = .:50 c:50 G T t:1 V:1 U:1
+MAP
+cccccccccccc
+cBcBcBcBcBcc
+G.c.c.c.c.Bc
+@.........Bc
+@.........Bc
+G.c.c.c.c.Bc
+cBcBcBcBcBcc
+cccccccccccc
+ENDMAP
