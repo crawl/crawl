@@ -96,6 +96,7 @@ enum monster_info_flags
     MB_DIMENSION_ANCHOR,
     MB_CONTROL_WINDS,
     MB_WIND_AIDED,
+    MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
     NUM_MB_FLAGS
 };
 
