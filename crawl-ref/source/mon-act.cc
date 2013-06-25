@@ -1799,6 +1799,7 @@ static void _pre_monster_move(monster* mons)
     }
 
     reset_battlesphere(mons);
+    reset_spectral_weapon(mons);
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.

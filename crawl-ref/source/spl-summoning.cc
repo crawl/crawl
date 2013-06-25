@@ -3089,6 +3089,26 @@ bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
     return false;
 }
 
+// Called at the start of each round. Cancels attack order given in the
+// previous round, if the weapon was not able to execute them fully
+// before the next player action
+void reset_spectral_weapon(monster* mons)
+{
+    if (!mons || mons->type != MONS_SPECTRAL_WEAPON)
+        return;
+
+    if (mons->props.exists("ready"))
+    {
+        mons->props.erase("ready");
+        if (mons->props.exists("sw_mid"))
+        {
+            actor *owner = actor_by_mid(mons->props["sw_mid"].get_int());
+            mons->target = owner->pos();
+        }
+        mons->foe = MHITNOT;
+    }
+}
+
 spell_type summons_index::map(const summons_desc* val)
 {
     return val->which;
