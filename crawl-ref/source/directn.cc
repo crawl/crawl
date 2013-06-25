@@ -3468,6 +3468,9 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_PERM_SUMMON))
         descs.push_back("durably summoned");
 
+    if (mi.is(MB_SUMMONED_CAPPED))
+        descs.push_back("expiring");
+
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
@@ -3535,11 +3538,15 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is indifferent to you.\n";
     }
 
-    if (mi.is(MB_SUMMONED))
-        text += pronoun + " has been summoned.\n";
-
-    if (mi.is(MB_PERM_SUMMON))
-        text += pronoun + " has been summoned but will not time out.\n";
+    if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
+    {
+        text += pronoun + " has been summoned";
+        if (mi.is(MB_SUMMONED_CAPPED))
+            text += ", and is expiring";
+        else if (mi.is(MB_PERM_SUMMON))
+            text += " but will not time out";
+        text += ".\n";
+    }
 
     if (mi.is(MB_HALOED))
         text += pronoun + " is illuminated by a divine halo.\n";
