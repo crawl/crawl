@@ -101,6 +101,7 @@ bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
 
 bool summoned_monster(monster* mons, actor* caster, spell_type spell);
 bool summons_are_capped(spell_type spell);
+int summons_limit(spell_type spell);
 
 struct summons_desc // : public data_index_entry<spell_type>
 {
