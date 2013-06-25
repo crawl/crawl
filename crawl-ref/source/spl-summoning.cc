@@ -3113,7 +3113,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_UGLY_THING,          3, 2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
     { SPELL_SHADOW_CREATURES,           5, 2 },
-    { SPELL_SUMMON_DRAGON,              2, 5 },
+    { SPELL_SUMMON_DRAGON,              2, 8 },
     { SPELL_NO_SPELL,                   0, 0 }
 };
 
