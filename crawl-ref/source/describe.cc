@@ -54,6 +54,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
@@ -2867,6 +2868,13 @@ static int _get_spell_description(const spell_type spell,
 #else
                        "Please file a bug report.";
 #endif
+    }
+
+    // Report summon cap
+    if (const int limit = summons_limit(spell))
+    {
+        description += "You can sustain at most " + number_in_words(limit)
+                       + " creatures summoned by this spell.";
     }
 
     if (god_hates_spell(spell, you.religion))
