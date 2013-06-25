@@ -709,6 +709,33 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     damage = max(1, damage * power / 100);
 }
 
+void ghost_demon::init_spectral_weapon(const item_def& weapon,
+                                       int power, int wpn_skill)
+{
+    int damg  = property(weapon, PWPN_DAMAGE);
+
+    if (power > 100)
+        power = 100;
+
+    if (wpn_skill > 27)
+        wpn_skill = 27;
+
+    colour = weapon.colour;
+    fly = FL_LEVITATE;
+
+    // Offense scales with weapon skill.
+    // Defenses scale with spell power.
+    // Appropriate investment is rewarded with a stronger spectral weapon.
+
+    xl = wpn_skill;
+
+    speed   = 30;
+    ev      = 2 + div_rand_round(power,12);
+    ac      = 2 + div_rand_round(power,12);
+    damage  = damg;
+    max_hp  = 10 + div_rand_round(power,3);
+}
+
 static bool _know_spell(spell_type spell)
 {
     return (you.has_spell(spell) && spell_fail(spell) < 50);

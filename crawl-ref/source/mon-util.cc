@@ -1344,6 +1344,7 @@ bool mons_is_ghost_demon(monster_type mc)
             || mc == MONS_PLAYER_GHOST
             || mc == MONS_PLAYER_ILLUSION
             || mc == MONS_DANCING_WEAPON
+            || mc == MONS_SPECTRAL_WEAPON
             || mc == MONS_PANDEMONIUM_LORD;
 }
 
