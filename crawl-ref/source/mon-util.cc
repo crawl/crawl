@@ -655,7 +655,8 @@ bool mons_has_body(const monster* mon)
     if (mon->type == MONS_FLYING_SKULL
         || mon->type == MONS_CURSE_SKULL
         || mon->type == MONS_CURSE_TOE
-        || mon->type == MONS_DANCING_WEAPON)
+        || mon->type == MONS_DANCING_WEAPON
+        || mon->type == MONS_SPECTRAL_WEAPON)
     {
         return false;
     }
@@ -2496,6 +2497,7 @@ void define_monster(monster* mons)
     // Load with dummy values so certain monster properties can be queried
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
+    case MONS_SPECTRAL_WEAPON:
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
