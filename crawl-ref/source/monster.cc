@@ -3716,7 +3716,7 @@ int monster::res_elec() const
         u += scan_artefacts(ARTP_ELECTRICITY);
 
         // No ego armour, but storm dragon.
-        // Also no non-artifact rings at present,
+        // Also no non-artefact rings at present,
         // but it doesn't hurt to be thorough.
         const int armour    = inv[MSLOT_ARMOUR];
         const int jewellery = inv[MSLOT_JEWELLERY];

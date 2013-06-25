@@ -54,7 +54,7 @@
             patterns.
 
    This implementation is tuned for speed in a way that any order > 5
-   will likely have discontinuous artifacts in its computation of F5+.
+   will likely have discontinuous artefacts in its computation of F5+.
    This can be fixed by increasing the internal points-per-cube
    density in the source code, at the expense of slower
    computation. The book lists the details of this tuning.  */
