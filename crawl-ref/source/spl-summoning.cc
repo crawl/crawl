@@ -1298,10 +1298,10 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 
     int count = 0;
 
-    while (how_many_big-- > 0)
+    while (how_many_small-- > 0)
     {
         if (monster *mons = create_monster(
-               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
+               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH, god)))
@@ -1312,10 +1312,10 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
         }
     }
 
-    while (how_many_small-- > 0)
+    while (how_many_big-- > 0)
     {
         if (monster *mons = create_monster(
-               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
+               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH, god)))
