@@ -2895,7 +2895,8 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     // If the wielded weapon should not be cloned, abort
     // Unlike tukima you are allowed to clone artefacts
-    if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn))
+    if (!wpn || !is_weapon(*wpn) || is_range_weapon(*wpn)
+        || is_special_unrandom_artefact(*wpn))
     {
         if (agent->is_player())
         {
