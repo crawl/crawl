@@ -3102,6 +3102,7 @@ static const summons_desc summonsdata[] =
     { SPELL_CALL_CANINE_FAMILIAR,       3, 3 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
     { SPELL_SUMMON_SCORPIONS,           4, 3 },
+    { SPELL_SUMMON_HYDRA,               3, 2 },
     // Demons
     { SPELL_CALL_IMP,                   3, 3 },
     { SPELL_SUMMON_DEMON,               3, 2 },
