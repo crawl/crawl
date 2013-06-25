@@ -567,7 +567,6 @@ bool melee_attack::handle_phase_hit()
             // infusion_power is set when the infusion spell is cast
             damage_done += 2 + div_rand_round(you.props["infusion_power"].get_int(), 25);
             dec_mp(1);
-            defender->as_monster()->speed_increment += 10;
         }
     }
 
