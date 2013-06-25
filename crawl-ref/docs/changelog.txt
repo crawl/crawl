@@ -40,6 +40,8 @@ Character
     - Infusion grants additional melee damage costing MP with each strike;
     - Song of Slaying grants an incremental slaying bonus with every monster
       killed (of sufficient threat level);
+    - Spectral Weapon creates an allied spectral clone of your weapon
+      which strikes enemies in melee when you do.
     - Song of Shielding has a similar effect to Spirit Shield, trading HP
       loss for MP loss.
 * Priests are no more.
