@@ -4846,6 +4846,10 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
     case SPELL_DARKNESS:                 return TILEG_DARKNESS;
+    case SPELL_INFUSION:                 return TILEG_INFUSION;
+    case SPELL_SONG_OF_SLAYING:          return TILEG_SONG_OF_SLAYING;
+    case SPELL_SPECTRAL_WEAPON:          return TILEG_SPECTRAL_WEAPON;
+    case SPELL_SONG_OF SHIELDING:        return TILEG_SONG_OF_SHIELDING;
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
