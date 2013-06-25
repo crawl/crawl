@@ -1354,6 +1354,13 @@ static bool _check_ability_possible(const ability_def& abil,
         return false;
     }
 
+    if (you.confused() && !testbits(abil.flags, ABFLAG_CONF_OK))
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
     if (silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH)
     {
         talent tal = get_talent(abil.ability, false);
