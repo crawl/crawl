@@ -121,11 +121,37 @@ function (exports, $, key_conversion, chat, comm) {
 
     exports.delay = delay;
 
+    function show_prompt(game)
+    {
+        $("#loader_text").hide();
+        $("#prompt_game").text(game);
+        $("#prompt .login_placeholder").append($("#login"));
+        $("#login_form").show();
+        $("#login .extra_links").hide();
+        $("#username").focus();
+        $("#prompt").show();
+    }
+
+    function hide_prompt(game)
+    {
+        $("#prompt").hide();
+        $("#lobby .login_placeholder").append($("#login"));
+        $("#login .extra_links").show();
+        $("#loader_text").show();
+    }
+
     var layers = ["crt", "normal", "lobby", "loader"]
+
+    function in_game()
+    {
+        return current_layer != "lobby" && current_layer != "loader";
+    }
 
     function set_layer(layer)
     {
         if (showing_close_message) return;
+
+        hide_prompt();
 
         $.each(layers, function (i, l) {
             if (l == layer)
@@ -135,7 +161,7 @@ function (exports, $, key_conversion, chat, comm) {
         });
         current_layer = layer;
 
-        lobby(layer == "lobby");
+        $("#chat").toggle(in_game());
     }
 
     function register_layer(name)
@@ -156,7 +182,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function handle_keypress(e)
     {
-        if (current_layer == "lobby") return;
+        if (!in_game()) return;
         if ($(document.activeElement).hasClass("text")) return;
 
         if (e.ctrlKey || e.altKey)
@@ -234,7 +260,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function handle_keydown(e)
     {
-        if (current_layer == "lobby")
+        if (!in_game())
         {
             if (e.which == 27)
             {
@@ -356,6 +382,7 @@ function (exports, $, key_conversion, chat, comm) {
     function logged_in(data)
     {
         var username = data.username;
+        hide_prompt();
         $("#login_message").html("Logged in as " + username);
         current_user = username;
         hide_dialog();
@@ -367,6 +394,11 @@ function (exports, $, key_conversion, chat, comm) {
         {
             send_message("set_login_cookie");
         }
+
+        if (location.hash == "" || location.hash.match(/^#lobby$/i))
+            go_lobby();
+        else
+            hash_changed();
     }
 
     function remember_me_click()
@@ -551,6 +583,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function show_loading_screen()
     {
+        if (current_layer == "loader") return;
         var imgs = $("#loader img");
         imgs.hide();
         var count = imgs.length;
@@ -559,28 +592,33 @@ function (exports, $, key_conversion, chat, comm) {
         set_layer("loader");
     }
 
-    function go_lobby()
+    function cleanup()
     {
         document.title = "WebTiles - Dungeon Crawl Stone Soup";
-        location.hash = "#lobby";
-
-        set_layer("lobby");
 
         hide_dialog();
 
         $(document).trigger("game_cleanup");
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
-        $("#username").focus();
-
         chat.clear();
 
         watching = false;
     }
 
-    function lobby(enable)
+    function go_lobby()
     {
-        $("#chat").toggle(!enable);
+        cleanup();
+        location.hash = "#lobby";
+        set_layer("lobby");
+        $("#username").focus();
+    }
+
+    function login_required(data)
+    {
+        cleanup();
+        show_loading_screen();
+        show_prompt(data.game);
     }
 
     var new_list = null;
@@ -951,6 +989,7 @@ function (exports, $, key_conversion, chat, comm) {
         "lobby_complete": lobby_complete,
 
         "go_lobby": go_lobby,
+        "login_required": login_required,
         "game_started": crawl_started,
         "game_ended": crawl_ended,
 
