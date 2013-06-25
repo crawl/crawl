@@ -3522,10 +3522,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         has_stat_desc = true;
     }
 
+    bool stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
         inf.body << "\n" << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is incapable of using stairs.\n";
+        stair_use = true;
     }
 
     if (mi.intel() <= I_INSECT)
@@ -3541,7 +3543,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     {
         inf.body << "\n" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "
-                       "or items.\n";
+                       "or items";
+        if (!stair_use)
+            inf.body << ", and it is incapable of using stairs";
+        inf.body << ".\n";
     }
 
     if (mi.is(MB_PERM_SUMMON))
