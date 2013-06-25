@@ -21,6 +21,9 @@ function (exports, $, key_conversion, chat, comm) {
 
     var send_message = comm.send_message;
 
+    var game_version = null;
+    var loaded_modules = null;
+
     window.log = function (text)
     {
         if (window.console && window.console.log)
@@ -851,8 +854,22 @@ function (exports, $, key_conversion, chat, comm) {
         $("#" + data.id).html(data.content);
     }
 
+    requirejs.onResourceLoad = function (context, map, depArray) {
+        if (loaded_modules != null)
+            loaded_modules.push(map.id);
+    }
+
     function receive_game_client(data)
     {
+        if (game_version == null || data["version"] != game_version)
+        {
+            $(document).unbind("game_preinit game_init game_cleanup");
+            for (var i in loaded_modules)
+                requirejs.undef(loaded_modules[i]);
+            loaded_modules = [];
+        }
+        game_version = data["version"];
+
         inhibit_messages();
         show_loading_screen();
         $("#game").html(data.content);
