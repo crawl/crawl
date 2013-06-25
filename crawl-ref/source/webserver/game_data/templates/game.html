@@ -3,11 +3,10 @@
     paths: { "game-{{ version }}": "/gamedata/{{ version }}" }
   });
   require(['jquery', 'client'], function ($, client) {
-    client.inhibit_messages();
     require(['game-{{ version }}/game'], function (game) {
       $(document).trigger("game_preinit");
       $(document).trigger("game_init");
-      client.uninhibit_messages();
+      client.uninhibit_messages(); // set in receive_game_client()
     });
   });
 </script>
