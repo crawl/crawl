@@ -1955,6 +1955,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SHADOW;
     case MONS_DEATH_COB:
         return TILEP_MONS_DEATH_COB;
+    case MONS_SPECTRAL_WEAPON:
+        return TILEP_MONS_SPECTRAL_SBL;
 
     // -------------------------------------
     // non-human uniques, sorted by glyph, then difficulty
@@ -2754,6 +2756,32 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // Use item tile.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
             return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
+        }
+
+        case MONS_SPECTRAL_WEAPON:
+        {
+            // Tiles exist for each class of weapon.
+            const item_def& item = *mon.inv[MSLOT_WEAPON];
+            switch (weapon_skill(item))
+            {
+            case SK_LONG_BLADES:
+                return TILEP_MONS_SPECTRAL_LBL;
+            case SK_AXES:
+                return TILEP_MONS_SPECTRAL_AXE;
+            case SK_POLEARMS:
+                return TILEP_MONS_SPECTRAL_SPEAR;
+            case SK_STAVES:
+                return TILEP_MONS_SPECTRAL_STAFF;
+            case SK_MACES_FLAILS:
+                {
+                    const weapon_type wt = (weapon_type)item.sub_type;
+                    return (wt == WPN_WHIP || wt == WPN_FLAIL
+                            || wt == WPN_DIRE_FLAIL || wt == WPN_DEMON_WHIP) ?
+                        TILEP_MONS_SPECTRAL_WHIP : TILEP_MONS_SPECTRAL_MACE;
+                }
+            default:
+                return TILEP_MONS_SPECTRAL_SBL;
+            }
         }
 
         case MONS_KRAKEN_TENTACLE:

@@ -66,8 +66,8 @@ sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE
 infusion INFUSION
 song_of_slaying SONG_OF_SLAYING
-spectral_weapon SPECTRAL_WEAPON
 song_of_shielding SONG_OF_SHIELDING
+spectral_weapon SPECTRAL_WEAPON
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
