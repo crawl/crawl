@@ -755,19 +755,19 @@ LUAFN(dgn_make_box_doors)
         int position = random2(position_count);
         int side;
         int x, y;
-        if(position < size_x)
+        if (position < size_x)
         {
             side = 0;
             x = x1 + thickness + position;
             y = y1;
         }
-        else if(position < size_x * 2)
+        else if (position < size_x * 2)
         {
             side = 1;
             x = x1 + thickness + (position - size_x);
             y = y2;
         }
-        else if(position < size_x * 2 + size_y)
+        else if (position < size_x * 2 + size_y)
         {
             side = 2;
             x = x1;
@@ -785,30 +785,30 @@ LUAFN(dgn_make_box_doors)
         //  -> The cell (however far) inside the box is not passible
         //  -> There is a door to the left or right and we are vetoing gates
         bool good = true;
-        if(side < 2)
+        if (side < 2)
         {
-            if(!strchr(passable, lines(x, y - (side == 0 ? 1 : thickness))))
+            if (!strchr(passable, lines(x, y - (side == 0 ? 1 : thickness))))
                 good = false;
-            if(!strchr(passable, lines(x, y + (side == 1 ? 1 : thickness))))
+            if (!strchr(passable, lines(x, y + (side == 1 ? 1 : thickness))))
                 good = false;
-            if(veto_gates && (lines(x-1, y) == door || lines(x+1, y) == door))
+            if (veto_gates && (lines(x-1, y) == door || lines(x+1, y) == door))
                 good = false;
         }
         else
         {
-            if(!strchr(passable, lines(x - (side == 2 ? 1 : thickness), y)))
+            if (!strchr(passable, lines(x - (side == 2 ? 1 : thickness), y)))
                 good = false;
-            if(!strchr(passable, lines(x + (side == 3 ? 1 : thickness), y)))
+            if (!strchr(passable, lines(x + (side == 3 ? 1 : thickness), y)))
                 good = false;
-            if(veto_gates && (lines(x, y-1) == door || lines(x, y+1) == door))
+            if (veto_gates && (lines(x, y-1) == door || lines(x, y+1) == door))
                 good = false;
         }
 
-        if(good)
+        if (good)
         {
             door_count++;
             lines(x, y) = door;
-            for(int i = 1; i < thickness; i++)
+            for (int i = 1; i < thickness; i++)
             {
                 switch(side)
                 {
@@ -819,13 +819,13 @@ LUAFN(dgn_make_box_doors)
                 }
                 lines(x, y) = between_doors;
             }
-            if(thickness > 1)
+            if (thickness > 1)
                 lines(x, y) = inner_door;
         }
         else
         {
             sanity++;
-            if(sanity >= max_sanity)
+            if (sanity >= max_sanity)
                 break;
         }
     }
@@ -1040,7 +1040,7 @@ LUAFN(dgn_make_round_box)
     }
 
     //  6. Add tower to map (if not vetoed)
-    if(doors_placed > 0 || !veto_if_no_doors)
+    if (doors_placed > 0 || !veto_if_no_doors)
     {
         for (int x = 0; x < size_x; x++)
             for (int y = 0; y < size_y; y++)
@@ -1057,9 +1057,7 @@ LUAFN(dgn_make_round_box)
         lua_pushboolean(ls, true);
     }
     else
-    {
         lua_pushboolean(ls, false);
-    }
 
     return 1;
 }

@@ -66,7 +66,7 @@ static void _mon_check_foe_invalid(monster* mon)
 {
     // Assume a spectral weapon has a valid target
     // Ideally this is not outside special cased like this
-    if(mon->type == MONS_SPECTRAL_WEAPON)
+    if (mon->type == MONS_SPECTRAL_WEAPON)
         return;
 
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
