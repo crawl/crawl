@@ -4421,6 +4421,12 @@ rivers surge and leap at her whim. Beware, for many unwitting adventurers have
 found themselves drawn beneath her waters by a simple touch, only for it to
 become their final resting place.
 %%%%
+water nymph:quote
+
+“Oh, but you can't expect to wield supreme executive power just because some
+watery tart threw a sword at you.”
+    -Monty Python and the Holy Grail, 1975.
+%%%%
 white draconian
 
 A scale-covered humanoid with a reptilian tail and small wings.
