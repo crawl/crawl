@@ -97,6 +97,7 @@ enum monster_info_flags
     MB_CONTROL_WINDS,
     MB_WIND_AIDED,
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
+    MB_SUMMONED_CAPPED,    // Expiring due to summons cap
     NUM_MB_FLAGS
 };
 

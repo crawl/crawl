@@ -3647,6 +3647,13 @@ string get_monster_equipment_desc(const monster_info& mi,
                 str += "durably summoned";
             }
 
+            if (mi.is(MB_SUMMONED_CAPPED))
+            {
+                if (!str.empty())
+                    str += ", ";
+                str += "expiring";
+            }
+
             if (mi.type == MONS_DANCING_WEAPON
                 || mi.type == MONS_PANDEMONIUM_LORD
                 || mi.type == MONS_PLAYER_GHOST)

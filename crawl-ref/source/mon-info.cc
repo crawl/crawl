@@ -477,6 +477,9 @@ monster_info::monster_info(const monster* m, int milev)
         }
         else if (m->is_perm_summoned())
             mb.set(MB_PERM_SUMMON);
+
+        if (m->has_ench(ENCH_SUMMON_CAPPED))
+            mb.set(MB_SUMMONED_CAPPED);
     }
     else
     {
