@@ -615,5 +615,6 @@
     <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
+    <ClInclude Include="..\data-index.h" />
   </ItemGroup>
 </Project>
