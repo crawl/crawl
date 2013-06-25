@@ -579,9 +579,7 @@ void full_describe_view()
 
     string title = "";
     if (!list_mons.empty())
-    {
         title  = "Monsters";
-    }
     if (!list_items.empty())
     {
         if (!title.empty())
@@ -3596,9 +3594,7 @@ static void _describe_monster(const monster_info& mi)
         text += " " + uppercase_first(wounds_desc);
     const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
-    {
         text += " It is" + constriction_desc + ".";
-    }
     mpr(text, MSGCH_EXAMINE);
 
     // Print the rest of the description.

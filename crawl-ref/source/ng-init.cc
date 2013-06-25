@@ -266,9 +266,7 @@ multi_overflow:
                 this_temple_gods.push_back(overflow_gods[j]);
             }
             else
-            {
                 new_overflow_gods.push_back(overflow_gods[j]);
-            }
         }
 
         mapref_vector maps = find_maps_for_tag(tags);
