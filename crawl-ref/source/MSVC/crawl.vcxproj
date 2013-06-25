@@ -635,6 +635,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\crash.h" />
     <ClInclude Include="..\ctest.h" />
     <ClInclude Include="..\dactions.h" />
+    <ClInclude Include="..\data-index.h" />
     <ClInclude Include="..\database.h" />
     <ClInclude Include="..\dbg-crsh.h" />
     <ClInclude Include="..\dbg-maps.h" />
