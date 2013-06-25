@@ -468,6 +468,15 @@ gargoyle MONS_GARGOYLE
 metal_gargoyle MONS_METAL_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
 
+## Weaponry ('(')
+spectral_sbl MONS_SPECTRAL_SBL
+spectral_lbl MONS_SPECTRAL_LBL
+spectral_staff MONS_SPECTRAL_STAFF
+spectral_axe MONS_SPECTRAL_AXE
+spectral_mace MONS_SPECTRAL_MACE
+spectral_whip MONS_SPECTRAL_WHIP
+spectral_SPEAR MONS_SPECTRAL_SPEAR
+
 ## Humans ('@')
 %sdir mon/unique
 # Unique humans, in alphabetical order
