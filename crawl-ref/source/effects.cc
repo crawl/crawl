@@ -2409,6 +2409,21 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (!mon->alive())
         return;
 
+    // Expire friendly summons
+    if (mon->friendly() && mon->is_summoned() && !mon->is_perm_summoned())
+    {
+        // You might still see them disappear if you were quick
+        if (turns > 2)
+            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        else
+        {
+            mon_enchant abj  = mon->get_ench(ENCH_ABJ);
+            abj.duration = 0;
+            mon->update_ench(abj);
+        }
+        return;
+    }
+
     // Don't move non-land or stationary monsters around.
     if (mons_primary_habitat(mon) != HT_LAND
         || mons_is_zombified(mon)
