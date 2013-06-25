@@ -1934,7 +1934,7 @@ static const char *enchant_names[] =
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
-    "awaken vines", "control_winds", "wind_aided",
+    "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "buggy",
 };
 

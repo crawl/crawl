@@ -3,6 +3,7 @@
 
 #include "beam.h"
 #include "enum.h"
+#include "data-index.h"
 #include "itemprop-enum.h"
 #include "spl-cast.h"
 
@@ -97,4 +98,29 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 bool trigger_spectral_weapon(actor* agent, const actor* target);
 bool check_target_spectral_weapon(const actor* mons, const actor *defender);
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
+
+bool summoned_monster(monster* mons, actor* caster, spell_type spell);
+bool summons_are_capped(spell_type spell);
+
+struct summons_desc // : public data_index_entry<spell_type>
+{
+    // XXX: Assumes that all summons types from each spell are equal,
+    // this is probably fine for now, but will need thought if a spell
+    // needs to have two separate caps
+    spell_type which;
+    int type_cap;               // Maximum number for this type
+    int timeout;                // Timeout length for replaced summons
+};
+
+class summons_index : public data_index<spell_type, summons_desc, NUM_SPELLS>
+{
+public:
+    summons_index(const summons_desc* _pop)
+        : data_index<spell_type, summons_desc, NUM_SPELLS>(_pop)
+    {};
+
+protected:
+    spell_type map(const summons_desc* val);
+};
+
 #endif

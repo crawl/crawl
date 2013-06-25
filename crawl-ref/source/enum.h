@@ -1618,6 +1618,7 @@ enum enchant_type
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
     ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,     // Ranged accuracy enhanced by nearby Control Winds
+    ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
