@@ -1259,6 +1259,7 @@ bool activate_ability()
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
+        crawl_state.zero_turns_taken();
         return false;
     }
 
@@ -1285,6 +1286,7 @@ bool activate_ability()
     if (selected == -1)
     {
         canned_msg(MSG_OK);
+        crawl_state.zero_turns_taken();
         return false;
     }
 #else
@@ -1302,6 +1304,7 @@ bool activate_ability()
             if (selected == -1)
             {
                 canned_msg(MSG_OK);
+                crawl_state.zero_turns_taken();
                 return false;
             }
         }
@@ -1309,6 +1312,7 @@ bool activate_ability()
                  || keyin == '\n')
         {
             canned_msg(MSG_OK);
+            crawl_state.zero_turns_taken();
             return false;
         }
         else if (isaalpha(keyin))
