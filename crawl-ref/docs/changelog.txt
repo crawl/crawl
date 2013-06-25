@@ -11,6 +11,7 @@ Stone Soup 0.13 (up to 0.13-a0-1380-g03ef21a)
 * Box of Beasts now creates new chimeric allies.
 * A new item: Sack of Spiders.
 * Massively overhauled layout generators.
+* Temporary summons nerfs: per-spell limits and no stair following.
 
 Branches, environment
 ---------------------
@@ -143,6 +144,13 @@ Spells
     - Summons now fixate on their target.
     - Flayed ghosts are no longer summoned.
     - Friendlies are no longer targettable.
+* Summons caps are introduced. This acts on a per-spell basis, each spell
+  has a fixed numerical limit for the number of summons active at any time.
+  Going over this limit means your oldest summons will expire in a very
+  short number of turns. Applies only to non-necromantic non-permanent
+  summons.
+* Temporary summons will no longer follow the player down stairs.
+* Temporary summons expire when the player moves to a different level.
 
 Items
 -----
