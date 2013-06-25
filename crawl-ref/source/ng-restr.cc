@@ -200,6 +200,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_GHOUL:
         case SP_FELID:
         case SP_OCTOPODE:
+        case SP_DJINNI:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
