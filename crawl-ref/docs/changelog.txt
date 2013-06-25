@@ -5,6 +5,7 @@ Stone Soup 0.13 (up to 0.13-a0-1380-g03ef21a)
 ---------------
 * Three new races: Lava Orcs, Djinni, and Gargoyles.
 * A new branch: the Enchanted Forest.
+* A reimagined Skald background.
 * A thorough rework of the monster set in Crypt.
 * Improvements to many evokable items.
 * Box of Beasts now creates new chimeric allies.
@@ -35,6 +36,12 @@ Character
       themselves to significantly reduce damage before becoming completely
       immobile.
 * Sludge elves are no more.
+* The Skald background gets a reworked spellback with three new spells:
+    - Infusion grants additional melee damage costing MP with each strike;
+    - Song of Slaying grants an incremental slaying bonus with every monster
+      killed (of sufficient threat level);
+    - Song of Shielding has a similar effect to Spirit Shield, trading HP
+      loss for MP loss.
 * Priests are no more.
 * The nausea status from eating contaminated chunks has been removed;
   contaminated chunks now give less nutrition for characters that can't
