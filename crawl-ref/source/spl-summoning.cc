@@ -3140,7 +3140,11 @@ bool summoned_monster(monster* mons, actor* caster, spell_type spell)
         int duration = 0;
         int stype    = 0;
         const bool summoned = mi->is_summoned(&duration, &stype);
-        if (summoned && (stype == spell))
+        // XXX: This friendly check only works for player summons; if we
+        // wanted the summons cap to apply to monsters we'd need a way
+        // here to check who actually summoned the monster; there's no
+        // easy way to do that right now
+        if (summoned && stype == spell && mi->friendly())
         {
             count++;
 
@@ -3158,9 +3162,8 @@ bool summoned_monster(monster* mons, actor* caster, spell_type spell)
     {
         // Timeout the oldest summon
         mon_enchant abj = oldest_summon->get_ench(ENCH_ABJ);
-        mon_enchant newabj = mon_enchant(abj);
-        newabj.duration = desc->timeout * 5;
-        oldest_summon->update_ench(newabj);
+        abj.duration = desc->timeout * 5;
+        oldest_summon->update_ench(abj);
         // Mark our cap abjuration so we don't keep abduring the same
         // one if creating multiple summons (also, should show a status light).
         oldest_summon->add_ench(ENCH_SUMMON_CAPPED);
