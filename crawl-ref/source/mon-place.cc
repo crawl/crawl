@@ -1719,6 +1719,23 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
+    else if (mon->type == MONS_SPECTRAL_WEAPON)
+    {
+        ghost_demon ghost;
+        // We can't use monster::weapon here because it wants to look
+        // at attack types, which are in the ghost structure we're
+        // building.
+        ASSERT(mon->mslot_item(MSLOT_WEAPON));
+        // Spectral weapons are placed at pretty high power.
+        // They shouldn't ever be placed in a normal game.
+        ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                   mg.props.exists(TUKIMA_POWER) ?
+                                       mg.props[TUKIMA_POWER].get_int() : 100,
+                                   mg.props.exists(TUKIMA_SKILL) ?
+                                       mg.props[TUKIMA_SKILL].get_int() : 27);
+        mon->set_ghost(ghost);
+        mon->ghost_demon_init();
+    }
 
     tile_init_props(mon);
 

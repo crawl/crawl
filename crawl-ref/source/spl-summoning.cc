@@ -2964,6 +2964,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     mg.props[TUKIMA_WEAPON] = cp;
     mg.props[TUKIMA_POWER] = pow;
+    mg.props[TUKIMA_SKILL] = skill_with_weapon;
 
     monster *mons = create_monster(mg);
     if (!mons)
@@ -2993,13 +2994,6 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     mons->props["sw_mid"].get_int() = agent->mid;
     agent->props["spectral_weapon"].get_int() = mons->mid;
-
-    mons->hit_dice = skill_with_weapon;
-    int hp = 10 + div_rand_round(pow,3);
-    mons->hit_points = hp;
-    mons->max_hit_points = hp;
-    mons->ac = 2 + div_rand_round(pow,12);
-    mons->ev = 2 + div_rand_round(pow,12);
 
     return SPRET_SUCCESS;
 }

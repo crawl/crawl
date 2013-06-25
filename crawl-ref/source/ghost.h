@@ -44,6 +44,7 @@ public:
     void init_ugly_thing(bool very_ugly, bool only_mutate = false,
                          colour_t force_colour = BLACK);
     void init_dancing_weapon(const item_def& weapon, int power);
+    void init_spectral_weapon(const item_def& weapon, int power, int wpn_skill);
     void ugly_thing_to_very_ugly_thing();
 
 public:

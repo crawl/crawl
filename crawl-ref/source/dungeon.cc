@@ -4891,6 +4891,13 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mons->ghost->init_dancing_weapon(*wpn, 100);
         mons->ghost_demon_init();
     }
+    else if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
+        ASSERT(wpn);
+        mons->ghost->init_spectral_weapon(*wpn, 100, 27);
+        mons->ghost_demon_init();
+    }
 
     for (unsigned int i = 0; i < mspec.ench.size(); i++)
         mons->add_ench(mspec.ench[i]);
