@@ -800,7 +800,7 @@ static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
 static int _blowgun_duration_roll(bolt &beam, const actor* victim,
                                   special_missile_type type)
 {
-    actor* agent = beam.agent();
+    actor* agent = beam.agent(true);
     if (!agent)
         return 0;
 
@@ -855,7 +855,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, special_missile_type type,
         return false;
     }
 
-    actor* agent = beam.agent();
+    actor* agent = beam.agent(true);
     if (!agent)
         return false;
 
