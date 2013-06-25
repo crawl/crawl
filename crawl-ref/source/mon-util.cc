@@ -1528,7 +1528,12 @@ bool mons_class_can_use_stairs(monster_type mc)
 
 bool mons_can_use_stairs(const monster* mon)
 {
-    return mons_class_can_use_stairs(mon->type);
+    if (!mons_class_can_use_stairs(mon->type)) return false;
+
+    // Only perm-summons can use stairs. I considered preventing only
+    // capped summons from using stairs instead but since most of them
+    // are undead anyway it'd make little difference.
+    return (mon->is_perm_summoned() || !mon->is_summoned());
 }
 
 bool mons_enslaved_body_and_soul(const monster* mon)
