@@ -475,7 +475,7 @@ spectral_staff MONS_SPECTRAL_STAFF
 spectral_axe MONS_SPECTRAL_AXE
 spectral_mace MONS_SPECTRAL_MACE
 spectral_whip MONS_SPECTRAL_WHIP
-spectral_SPEAR MONS_SPECTRAL_SPEAR
+spectral_spear MONS_SPECTRAL_SPEAR
 
 ## Humans ('@')
 %sdir mon/unique
