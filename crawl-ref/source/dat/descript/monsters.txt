@@ -3241,6 +3241,15 @@ and have sometimes been with much difficulty repelled.”
     -George Shaw, _General Zoology, or, Systematic Natural History_, vol. I,
      p. 2. 1800.
 %%%%
+polymoth
+
+A brilliant little moth. A hateful mutagenic dust rolls off its wings.
+%%%%
+polymoth:quote
+
+“All those moments will be lost in time, like tears in the rain.”
+    -Roy Batty, “Blade Runner”
+%%%%
 porcupine
 
 A vicious rodent with a coat of sharp quills and a painful bite.
