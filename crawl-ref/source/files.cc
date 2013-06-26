@@ -988,6 +988,8 @@ static void _grab_followers()
     const bool can_follow = branch_allows_followers(you.where_are_you);
 
     int non_stair_using_allies = 0;
+    int non_stair_using_summons = 0;
+
     monster* dowan = NULL;
     monster* duvessa = NULL;
 
@@ -1005,7 +1007,13 @@ static void _grab_followers()
             dowan = fol;
 
         if (fol->wont_attack() && !mons_can_use_stairs(fol))
+        {
             non_stair_using_allies++;
+            // If the class can normally use stairs it
+            // must have been a summon
+            if (mons_class_can_use_stairs(fol->type))
+                non_stair_using_summons++;
+        }
 
         if (fol->type == MONS_PLAYER_GHOST
             && fol->hit_points < fol->max_hit_points / 2)
@@ -1041,11 +1049,20 @@ static void _grab_followers()
     {
         if (non_stair_using_allies > 0)
         {
-            // XXX: This assumes that the only monsters that are
-            // incapable of using stairs are zombified.
-            mprf("Your mindless thrall%s stay%s behind.",
-                 non_stair_using_allies > 1 ? "s" : "",
-                 non_stair_using_allies > 1 ? ""  : "s");
+            // Summons won't follow and will time out.
+            if (non_stair_using_summons > 0)
+            {
+                mprf("Your summon%s %s left behind.",
+                     non_stair_using_allies > 1 ? "s" : "",
+                     non_stair_using_allies > 1 ? "are"  : "is");
+            }
+            else
+            {
+                // Permanent undead are left behind but stay.
+                mprf("Your mindless thrall%s stay%s behind.",
+                     non_stair_using_allies > 1 ? "s" : "",
+                     non_stair_using_allies > 1 ? ""  : "s");
+            }
         }
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
         vector<coord_def> places[2];
