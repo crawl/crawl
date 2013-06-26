@@ -1167,7 +1167,7 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 {
                     if (player_will_anger_monster(*mi))
                         monster_die(*mi, KILL_RESET, NON_MONSTER);
-                    else
+                    else if (!scroll) // Only track cap for non-scroll casting
                         summoned_monster(*mi, &you, SPELL_SHADOW_CREATURES);
                 }
             }
