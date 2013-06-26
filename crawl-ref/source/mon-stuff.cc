@@ -3572,9 +3572,9 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
     {
         // FIXME: find a way to use check_target_spectral_weapon
         //        without potential info leaks about visibility.
-        if (mons->props.exists("target_mid"))
+        if (mons->props.exists(SW_TARGET_MID))
         {
-            actor *target = actor_by_mid(mons->props["target_mid"].get_int());
+            actor *target = actor_by_mid(mons->props[SW_TARGET_MID].get_int());
             return (target && target->pos() == p);
         }
         return false;
