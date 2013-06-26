@@ -870,7 +870,6 @@ function (exports, $, key_conversion, chat, comm) {
         }
         game_version = data["version"];
 
-        inhibit_messages(); // should be removed by data.content
         inhibit_messages();
         show_loading_screen();
         $("#game").html(data.content);
