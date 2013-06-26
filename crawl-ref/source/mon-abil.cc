@@ -1990,7 +1990,8 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
     }
 
     return (count <= -1 || target->hit_dice > 9
-            || x_chance_in_y(pow(target->hit_dice, 3), 1200));
+            || x_chance_in_y(target->hit_dice * target->hit_dice * target->hit_dice,
+                             1200));
 }
 
 bool lost_soul_revive(monster* mons)
