@@ -1842,7 +1842,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
     else if (place.branch == BRANCH_ZIGGURAT)
     {
         // Get Zigs something reasonable to work with, if there's no place
-        // explicitely defined.
+        // explicitly defined.
         place = level_id(BRANCH_MAIN_DUNGEON, 31 - (27 - place.depth) / 3);
     }
     else
