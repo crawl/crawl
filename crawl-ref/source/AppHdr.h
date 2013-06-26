@@ -47,7 +47,7 @@ static inline T move(T x) { return x; } // good enough for our purposes
 
 #ifdef __sun
 // Solaris libc has ambiguous overloads for float, double, long float, so
-// we need to upgrade ints explicitely:
+// we need to upgrade ints explicitly:
 #include <math.h>
 static inline double sqrt(int x) { return sqrt((double)x); }
 static inline double atan2(int x, int y) { return atan2((double)x, (double)y); }
