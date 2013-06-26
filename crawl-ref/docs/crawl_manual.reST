@@ -240,9 +240,9 @@ Dexterity
 They grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or using appropriate artefacts or abilities.
 
-If any one of these drops to zero for some reason, you will not die immediately.
-But you will experience very unpleasant effects, including death if the
-attribute remains at zero or below for very long.
+If any one of these drops to zero for some reason, you will experience very
+unpleasant side-effects, which will persist for a short while even after the
+attribute is restored.
 
 Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
 species gain additional attributes at some levels, with the frequency and the
