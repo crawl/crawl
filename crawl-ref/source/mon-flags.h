@@ -158,6 +158,9 @@ const uint64_t M_STABBER           = (uint64_t)1<<48;
 // hybridized monster composed of other monster parts
 const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
+// monster is always alerted to hostiles, and does not forget them over time
+const uint64_t M_VIGILANT          = (uint64_t)1<<50;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing
