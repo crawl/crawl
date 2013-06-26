@@ -653,7 +653,7 @@ void direct_effect(monster* source, spell_type spell,
                 else
                     mprf("The water swirls and strikes %s", def->name(DESC_THE).c_str());
             }
-            else
+            else if (!def)
             {
                 if (you.flight_mode())
                     mpr("The water rises up and strikes you!");
