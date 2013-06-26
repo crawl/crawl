@@ -658,7 +658,7 @@ const string make_cost_description(ability_type ability)
 
     if (abil.hp_cost || ep)
     {
-        ret += make_stringf(", %d %s%s", ep + (int)abil.hp_cost,
+        ret += make_stringf(", %d %s%s", ep + abil.hp_cost.cost(you.hp_max),
             abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
             you.species == SP_DJINNI ? "EP" : "HP");
     }
