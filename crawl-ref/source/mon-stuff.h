@@ -239,6 +239,6 @@ void temperature_decay();
 bool temperature_tier(int which);
 bool temperature_effect(int which);
 int temperature_colour(int temp);
-std::string temperature_string(int temp);
-std::string temperature_text(int temp);
+string temperature_string(int temp);
+string temperature_text(int temp);
 #endif
