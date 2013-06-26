@@ -1052,8 +1052,8 @@ static void _grab_followers()
             // Summons won't follow and will time out.
             if (non_stair_using_summons > 0)
             {
-                mprf("Your summon%s %s left behind.",
-                     non_stair_using_allies > 1 ? "s" : "",
+                mprf("Your summoned %s %s left behind.",
+                     non_stair_using_allies > 1 ? "allies" : "ally",
                      non_stair_using_allies > 1 ? "are"  : "is");
             }
             else
