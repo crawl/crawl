@@ -1527,7 +1527,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     const bool summoned = mg.abjuration_duration >= 1
                        && mg.abjuration_duration <= 6;
 
-    if (mg.cls == MONS_DANCING_WEAPON || mg.cls == MONS_SPECTRAL_WEAPON)
+    if (mons_class_is_animated_weapon(mg.cls))
     {
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
@@ -1703,36 +1703,32 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mon->type == MONS_LABORATORY_RAT)
         mon->type = MONS_RAT;
 #endif
-    else if (mon->type == MONS_DANCING_WEAPON)
+    else if (mons_class_is_animated_weapon(mon->type))
     {
         ghost_demon ghost;
         // We can't use monster::weapon here because it wants to look
         // at attack types, which are in the ghost structure we're
         // building.
         ASSERT(mon->mslot_item(MSLOT_WEAPON));
-        // Dancing weapons are placed at pretty high power.  Remember, the
-        // player is fighting them one-on-one, while he will often summon
-        // several.
-        ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                  mg.props.exists(TUKIMA_POWER) ?
-                                      mg.props[TUKIMA_POWER].get_int() : 100);
-        mon->set_ghost(ghost);
-        mon->ghost_demon_init();
-    }
-    else if (mon->type == MONS_SPECTRAL_WEAPON)
-    {
-        ghost_demon ghost;
-        // We can't use monster::weapon here because it wants to look
-        // at attack types, which are in the ghost structure we're
-        // building.
-        ASSERT(mon->mslot_item(MSLOT_WEAPON));
-        // Spectral weapons are placed at pretty high power.
-        // They shouldn't ever be placed in a normal game.
-        ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                   mg.props.exists(TUKIMA_POWER) ?
-                                       mg.props[TUKIMA_POWER].get_int() : 100,
-                                   mg.props.exists(TUKIMA_SKILL) ?
-                                       mg.props[TUKIMA_SKILL].get_int() : 27);
+        if (mon->type == MONS_DANCING_WEAPON)
+        {
+            // Dancing weapons are placed at pretty high power.  Remember, the
+            // player is fighting them one-on-one, while he will often summon
+            // several.
+            ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                      mg.props.exists(TUKIMA_POWER) ?
+                                          mg.props[TUKIMA_POWER].get_int() : 100);
+        }
+        else
+        {
+            // Spectral weapons are placed at pretty high power.
+            // They shouldn't ever be placed in a normal game.
+            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                       mg.props.exists(TUKIMA_POWER) ?
+                                           mg.props[TUKIMA_POWER].get_int() : 100,
+                                       mg.props.exists(TUKIMA_SKILL) ?
+                                           mg.props[TUKIMA_SKILL].get_int() : 27);
+        }
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }

@@ -4884,18 +4884,14 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mons->is_priest() && mons->god == GOD_NO_GOD)
         mons->god = GOD_NAMELESS;
 
-    if (mons->type == MONS_DANCING_WEAPON)
+    if (mons_class_is_animated_weapon(mons->type))
     {
         item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
         ASSERT(wpn);
-        mons->ghost->init_dancing_weapon(*wpn, 100);
-        mons->ghost_demon_init();
-    }
-    else if (mons->type == MONS_SPECTRAL_WEAPON)
-    {
-        item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
-        ASSERT(wpn);
-        mons->ghost->init_spectral_weapon(*wpn, 100, 27);
+        if (mons->type == MONS_DANCING_WEAPON)
+            mons->ghost->init_dancing_weapon(*wpn, 100);
+        else if (mons->type == MONS_SPECTRAL_WEAPON)
+            mons->ghost->init_spectral_weapon(*wpn, 100, 27);
         mons->ghost_demon_init();
     }
 
