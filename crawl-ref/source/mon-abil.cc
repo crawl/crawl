@@ -1348,7 +1348,8 @@ static bool _moth_polymorph(const monster* mon)
         if (mi->type == MONS_POLYMOTH)
             continue;
 
-        if (mon->friendly() || mi->friendly())
+        // Polymorphing plants or scumming allies is bad.
+        if (mon->friendly() || mi->friendly() || mi->neutral())
             continue;
 
         if (one_chance_in(3))
