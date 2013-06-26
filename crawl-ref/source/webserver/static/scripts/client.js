@@ -798,6 +798,7 @@ function (exports, $, key_conversion, chat, comm) {
     function watching_started()
     {
         watching = true;
+        playing = false;
     }
     exports.is_watching = function ()
     {
@@ -808,11 +809,10 @@ function (exports, $, key_conversion, chat, comm) {
     function crawl_started()
     {
         playing = true;
+        watching = false;
     }
     function crawl_ended()
     {
-        go_lobby();
-        current_layout = undefined;
         playing = false;
     }
 
