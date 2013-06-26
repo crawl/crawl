@@ -13,14 +13,16 @@ public:
     data_index(const TVal* _pop) : pop(_pop), index_created(false)
     { }
 
-    const TVal* operator[](int i)
+    const TVal* operator[](TKey key)
     {
+        ASSERT_RANGE(key, 0, NMax);
         check_index();
-        return (&pop[index[i]]);
+        return (&pop[index[key]]);
     }
 
     bool contains(TKey key)
     {
+        ASSERT_RANGE(key, 0, NMax);
         check_index();
         return (index[key] >= 0);
     }
