@@ -92,6 +92,7 @@ enum band_type
     BAND_SPRIGGAN_DRUID,
     BAND_SPRIGGAN_RIDERS,
     BAND_SPIRIT_WOLVES,
+    BAND_PHANTASMAL_WARRIORS,
     NUM_BANDS                   // always last
 };
 
