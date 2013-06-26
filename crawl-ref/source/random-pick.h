@@ -60,9 +60,7 @@ T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
         if (veto(pop->value))
             continue;
 
-        // 2520 is divisible by any number 1..10, and provides enough scale
-        // to make round-off errors even for degenerate distributions ok.
-        int rar = rarity_at(pop, level) * 2520;
+        int rar = rarity_at(pop, level);
         ASSERTM(rar > 0, "Rarity %d: %d at level %d", rar, pop->value, level);
 
         valid[nvalid].value = pop->value;
@@ -86,7 +84,9 @@ T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
 template <typename T, int max>
 int random_picker<T, max>::rarity_at(const random_pick_entry<T> *pop, int depth)
 {
-    int rar = pop->rarity;
+    // 2520 is divisible by any number 1..10, and provides enough scale
+    // to make round-off errors even for degenerate distributions ok.
+    int rar = pop->rarity * 2520;
     int len = pop->maxr - pop->minr;
     switch (pop->distrib)
     {
