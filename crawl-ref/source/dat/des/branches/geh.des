@@ -483,9 +483,7 @@ SUBST:   - = .
 KFEAT:   RV = lava
 KFEAT:   L = endless_lava
 KFEAT:   m = iron_grate
-# This is needed to make it so the entire border is lava.
-# There might be a better way of doing this.
-: dgn.seen_replace_feat("rock_wall", "endless_lava")
+: set_border_fill_type("endless_lava")
 : geh_setup(_G)
 MAP
 LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
@@ -573,7 +571,7 @@ SUBST:   - = ll.
 SUBST:   _ = ..l
 KFEAT:   L = endless_lava
 : serpent_of_hell_setup(_G)
-: dgn.seen_replace_feat("rock_wall", "endless_lava")
+: set_border_fill_type("endless_lava")
 : geh_setup(_G)
 MAP
 LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
