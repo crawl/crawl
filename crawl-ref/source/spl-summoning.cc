@@ -8,6 +8,7 @@
 #include "spl-summoning.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include "areas.h"
 #include "artefact.h"
@@ -31,6 +32,7 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
@@ -2681,6 +2683,17 @@ bool trigger_battlesphere(actor* agent, bolt& beam)
 
         battlesphere->props.erase("ready");
         battlesphere->props["firing"] = true;
+
+        // Since monsters may be acting out of sequence, give the battlesphere
+        // enough energy to attempt to fire this round, and requeue if it's
+        // already passed its turn
+        if (agent->is_monster())
+        {
+            battlesphere->speed_increment = 100;
+            queue_monster_for_action(battlesphere);
+        }
+
+
         return true;
     }
 

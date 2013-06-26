@@ -2400,6 +2400,18 @@ static void _post_monster_move(monster* mons)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }
 
+priority_queue<pair<monster *, int>,
+               vector<pair<monster *, int> >,
+               MonsterActionQueueCompare> monster_queue;
+
+// Inserts a monster into the monster queue (needed to ensure that any monsters
+// given energy or an action by a effect can actually make use of that energy
+// this round)
+void queue_monster_for_action(monster* mons)
+{
+    monster_queue.push(pair<monster *, int>(mons, mons->speed_increment));
+}
+
 //---------------------------------------------------------------
 //
 // handle_monsters
@@ -2409,10 +2421,6 @@ static void _post_monster_move(monster* mons)
 //---------------------------------------------------------------
 void handle_monsters(bool with_noise)
 {
-    priority_queue<pair<monster *, int>,
-                   vector<pair<monster *, int> >,
-                   MonsterActionQueueCompare> monster_queue;
-
     for (monster_iterator mi; mi; ++mi)
     {
         _pre_monster_move(*mi);
