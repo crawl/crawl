@@ -1349,15 +1349,13 @@ static bool _moth_polymorph(const monster* mon)
             continue;
 
         if (mon->friendly() || mi->friendly())
-        {
             continue;
-        }
 
         if (one_chance_in(3))
         {
-           const string targ_name = (mi->visible_to(&you)) ? mi->name(DESC_THE)
-                                                          : "something";
- 
+            const string targ_name = (mi->visible_to(&you)) ? mi->name(DESC_THE)
+                                                            : "something";
+
             if (you.can_see(*mi))
             {
                 mprf("%s irradiates %s!",
