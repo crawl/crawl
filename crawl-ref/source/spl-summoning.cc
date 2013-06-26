@@ -3052,10 +3052,35 @@ bool trigger_spectral_weapon(actor* agent, const actor* target)
     if (target->as_monster() == spectral_weapon)
         return false;
 
+    // Clear out any old orders.
+    reset_spectral_weapon(spectral_weapon);
+
     spectral_weapon->props["target_mid"].get_int() = target->mid;
-    spectral_weapon->props["ready"] = true;
+    spectral_weapon->props["readied"] = true;
 
     return true;
+}
+
+// Called at the start of each round. Cancels attack order given in the
+// previous round, if the weapon was not able to execute them fully
+// before the next player action
+void reset_spectral_weapon(monster* mons)
+{
+    if (!mons || mons->type != MONS_SPECTRAL_WEAPON)
+        return;
+
+    if (mons->props.exists("tracking"))
+    {
+        mons->props.erase("tracking");
+        mons->props.erase("readied");
+        mons->props.erase("target_mid");
+
+        return;
+    }
+
+    // If an attack has been readied, begin tracking.
+    if (mons->props.exists("readied"))
+        mons->props["tracking"] = true;
 }
 
 /* Checks if the spectral weapon is targetting the given position.
@@ -3079,11 +3104,14 @@ bool check_target_spectral_weapon(const actor* mons, const actor *defender)
  */
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
 {
+    // No longer tracking towards the target.
+    mons->props.erase("tracking");
+
     if (check_target_spectral_weapon(mons, defender)
-        && mons->props.exists("ready"))
+        && mons->props.exists("readied"))
     {
         // Consume our ready state and attack
-        mons->props.erase("ready");
+        mons->props.erase("readied");
         return true;
     }
 
