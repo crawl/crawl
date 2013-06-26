@@ -3182,27 +3182,25 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             if (me->genus != genus)
                 continue;
             if (mons->type == me->mc)
-		continue;
+                continue;
             if ((int) me->hpdice[0] < mons->hit_dice)
-	    {
+            {
                 int chance = mons->hit_dice - (int) me->hpdice[0];
                 if (!one_chance_in(chance * chance))
-	            continue;
+                    continue;
             }
-            if (_valid_morph(mons, (monster_type) me->mc, RANDOM_SAME_GENUS))
-            {
+            if (_valid_morph(mons, (monster_type) mc, RANDOM_SAME_GENUS))
                 target_types.push_back((monster_type) mc);
-            }
         }
-        if (target_types.empty()) {
+        if (target_types.empty())
             return false;
-        }
+
         std::random_shuffle(target_types.begin(), target_types.end(), random2);
         targetc = target_types[0];
-    } else if (!_valid_morph(mons, targetc))
-    {
-        return simple_monster_message(mons, " looks momentarily different.");
     }
+    else if (!_valid_morph(mons, targetc))
+        return simple_monster_message(mons, " looks momentarily different.");
+
     change_monster_type(mons, targetc);
 
     bool can_see = you.can_see(mons);
