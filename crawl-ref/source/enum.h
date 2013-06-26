@@ -2658,7 +2658,7 @@ enum monster_type                      // menv[].type
 
     MONS_SOJOBO,
 
-    MONS_MOTH_OF_MADNESS,
+    MONS_POLYMOTH,
 
     NUM_MONSTERS,               // used for polymorph
 
