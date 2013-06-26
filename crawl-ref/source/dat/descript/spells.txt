@@ -368,10 +368,9 @@ creatures. The caster is not affected.
 %%%%
 Infusion spell
 
-This spell infuses the caster's melee attacks with magic, dealing additional
-guaranteed damage whenever an enemy is hit. It is most effective when it can
-draw on magical energy within the caster and works even when the weapon wielded
-has a brand.
+This spell infuses the caster's melee attacks with magic, drawing from their
+reserves of magical energy to deal additional damage whenever an enemy is hit.
+It has no effect when the caster's magic is depleted.
 %%%%
 Inner Flame spell
 
