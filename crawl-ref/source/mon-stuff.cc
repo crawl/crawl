@@ -3102,7 +3102,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 if (!one_chance_in(chance * chance))
                     continue;
             }
-            if (_valid_morph(mons, (monster_type) me->mc, RANDOM_SAME_GENUS))
+            if (_valid_morph(mons, (monster_type) mc, RANDOM_SAME_GENUS))
                 target_types.push_back((monster_type) mc);
         }
         if (target_types.empty())
