@@ -698,27 +698,28 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_TENGU_REAVER:
+    case MONS_VAULT_WARDEN:
         item_race = MAKE_ITEM_NO_RACE;
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
-    case MONS_VAULT_WARDEN:
         // being at the top has its privileges
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         // deliberate fall-through
 
     case MONS_ORC_KNIGHT:
-        item_race = MAKE_ITEM_ORCISH;
+        if (item_race == MAKE_ITEM_RANDOM_RACE)
+            item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through
 
     case MONS_TENGU_WARRIOR:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         // Occasionally get crossbows, or a longbow for tengu.
-        if (!melee_only && one_chance_in(9))
+        if (!melee_only && mon->type != MONS_TENGU_REAVER && one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = (item_race == MAKE_ITEM_NO_RACE && coinflip())
+            item.sub_type  = (mon->type == MONS_TENGU_WARRIOR && coinflip())
                              ? WPN_LONGBOW : WPN_CROSSBOW;
             break;
         }
