@@ -3080,7 +3080,13 @@ void reset_spectral_weapon(monster* mons)
 
     // If an attack has been readied, begin tracking.
     if (mons->props.exists(SW_READIED))
+    {
         mons->props[SW_TRACKING] = true;
+    }
+    else
+    {
+        mons->props.erase(SW_TARGET_MID);
+    }
 }
 
 /* Checks if the spectral weapon is targetting the given position.
