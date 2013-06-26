@@ -2815,7 +2815,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
-        || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
+        || mons_class_flag(old_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
         || new_mclass == MONS_PROGRAM_BUG
 
