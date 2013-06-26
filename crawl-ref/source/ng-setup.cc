@@ -924,6 +924,17 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
 
+        // This is meant to match the En/As start change-up, but Trolls have
+        // claws, so they don't get a starting melee weapon (see above).
+        // The +1 is meant to make this less sucky; it could be a better
+        // base type, but whips don't seem very hunter-ish and hammers are
+        // used almost nowhere.
+        if (you.species == SP_OGRE)
+        {
+            you.inv[0].sub_type = WPN_CLUB;
+            you.inv[0].plus = you.inv[0].plus2 = 1;
+        }
+
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING]  = 2;
@@ -953,6 +964,13 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                            ARM_LEATHER_ARMOUR, ARM_ROBE);
+
+        // See Hunter notes above.
+        if (you.species == SP_OGRE)
+        {
+            you.inv[0].sub_type = WPN_CLUB;
+            you.inv[0].plus = you.inv[0].plus2 = 1;
+        }
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
