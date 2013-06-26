@@ -45,15 +45,10 @@ static inline T move(T x) { return x; } // good enough for our purposes
 #define ENUM_INT64
 #endif
 
-#if defined(__sun) || defined(__GNUC__) \
-                      && __GNUC__ * 100 + __GNUC_MINOR__ <= 401
-// Solaris libc and older GNU libstdc++ have ambiguous overloads for
-// float, double, long float, so we need to upgrade ints explicitely.
-# ifndef __sun
-#  include <cmath>
-# else
-#  include <math.h> // XXX: Does Solaris really need this and not <cmath>?
-# endif
+#ifdef __sun
+// Solaris libc has ambiguous overloads for float, double, long float, so
+// we need to upgrade ints explicitely:
+#include <math.h>
 static inline double sqrt(int x) { return sqrt((double)x); }
 static inline double atan2(int x, int y) { return atan2((double)x, (double)y); }
 static inline double pow(int x, int y) { return std::pow((double)x, y); }
