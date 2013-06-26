@@ -1017,7 +1017,8 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                _monster_greeting(demon, "_friendly_imp_greeting");
             }
 
-            summoned_monster(demon, &you, static_cast<spell_type>(spell));
+            if (spell && spell < NUM_SPELLS)
+                summoned_monster(demon, &you, static_cast<spell_type>(spell));
         }
     }
 
@@ -3121,6 +3122,7 @@ static summons_index summonsindex(summonsdata);
 
 bool summons_are_capped(spell_type spell)
 {
+    ASSERT_RANGE(spell, 0, NUM_SPELLS);
     return summonsindex.contains(spell);
 }
 
