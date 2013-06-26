@@ -387,9 +387,9 @@ void handle_behaviour(monster* mon)
         mon->target = owner->pos();
         mon->foe = MHITNOT;
         // Try to move towards any monsters the owner is attacking
-        if (mon->props.exists("target_mid"))
+        if (mon->props.exists(SW_TARGET_MID))
         {
-            actor *atarget = actor_by_mid(mon->props["target_mid"].get_int());
+            actor *atarget = actor_by_mid(mon->props[SW_TARGET_MID].get_int());
 
             // Only go after the target if the owner can still reach
             // FIXME: intervening features are currently ignored

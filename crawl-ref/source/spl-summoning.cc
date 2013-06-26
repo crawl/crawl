@@ -3055,8 +3055,8 @@ bool trigger_spectral_weapon(actor* agent, const actor* target)
     // Clear out any old orders.
     reset_spectral_weapon(spectral_weapon);
 
-    spectral_weapon->props["target_mid"].get_int() = target->mid;
-    spectral_weapon->props["readied"] = true;
+    spectral_weapon->props[SW_TARGET_MID].get_int() = target->mid;
+    spectral_weapon->props[SW_READIED] = true;
 
     return true;
 }
@@ -3069,18 +3069,18 @@ void reset_spectral_weapon(monster* mons)
     if (!mons || mons->type != MONS_SPECTRAL_WEAPON)
         return;
 
-    if (mons->props.exists("tracking"))
+    if (mons->props.exists(SW_TRACKING))
     {
-        mons->props.erase("tracking");
-        mons->props.erase("readied");
-        mons->props.erase("target_mid");
+        mons->props.erase(SW_TRACKING);
+        mons->props.erase(SW_READIED);
+        mons->props.erase(SW_TARGET_MID);
 
         return;
     }
 
     // If an attack has been readied, begin tracking.
-    if (mons->props.exists("readied"))
-        mons->props["tracking"] = true;
+    if (mons->props.exists(SW_READIED))
+        mons->props[SW_TRACKING] = true;
 }
 
 /* Checks if the spectral weapon is targetting the given position.
@@ -3089,9 +3089,9 @@ void reset_spectral_weapon(monster* mons)
  */
 bool check_target_spectral_weapon(const actor* mons, const actor *defender)
 {
-    if (mons->props.exists("target_mid"))
+    if (mons->props.exists(SW_TARGET_MID))
     {
-        mid_t target_mid = mons->props["target_mid"].get_int();
+        mid_t target_mid = mons->props[SW_TARGET_MID].get_int();
         return (target_mid == defender->mid);
     }
     return false;
@@ -3105,13 +3105,13 @@ bool check_target_spectral_weapon(const actor* mons, const actor *defender)
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
 {
     // No longer tracking towards the target.
-    mons->props.erase("tracking");
+    mons->props.erase(SW_TRACKING);
 
     if (check_target_spectral_weapon(mons, defender)
-        && mons->props.exists("readied"))
+        && mons->props.exists(SW_READIED))
     {
         // Consume our ready state and attack
-        mons->props.erase("readied");
+        mons->props.erase(SW_READIED);
         return true;
     }
 
