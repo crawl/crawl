@@ -34,17 +34,17 @@ struct mon_attack_def
 #define DEFAULT_ENERGY {10, 10, 10, 10, 10, 10, 10, 100}
 struct mon_energy_usage
 {
-    int8_t move;
-    int8_t swim;
-    int8_t attack;
-    int8_t missile; // Arrows/crossbows/etc
-    int8_t spell;
-    int8_t special;
-    int8_t item;    // Using an item (i.e., drinking a potion)
+    uint8_t move;
+    uint8_t swim;
+    uint8_t attack;
+    uint8_t missile; // Arrows/crossbows/etc
+    uint8_t spell;
+    uint8_t special;
+    uint8_t item;    // Using an item (i.e., drinking a potion)
 
     // Percent of mons->speed used when picking up an item; defaults
     // to 100%
-    int8_t pickup_percent;
+    uint8_t pickup_percent;
 
     static mon_energy_usage attack_cost(int cost, int sw = 10)
     {
@@ -90,7 +90,7 @@ struct mon_energy_usage
         return me;
     }
 private:
-    static int8_t combine(int8_t a, int8_t b, int8_t def = 10)
+    static uint8_t combine(uint8_t a, uint8_t b, uint8_t def = 10)
     {
         return (b != def? b : a);
     }
