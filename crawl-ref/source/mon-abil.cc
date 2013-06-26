@@ -1379,7 +1379,7 @@ static bool _moth_polymorph(const monster* mon)
         if (is_sanctuary(mi->pos()))
             continue;
 
-        if (mi->type == MONS_MOTH_OF_MADNESS)
+        if (mi->type == MONS_POLYMOTH)
             continue;
 
         if (mon->friendly() || mi->friendly())
@@ -3347,7 +3347,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             used = _moth_incite_monsters(mons);
         break;
 
-    case MONS_MOTH_OF_MADNESS:
+    case MONS_POLYMOTH:
         if (one_chance_in(4))
             used = _moth_polymorph(mons);
         break;
