@@ -98,7 +98,6 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 bool trigger_spectral_weapon(actor* agent, const actor* target);
 bool check_target_spectral_weapon(const actor* mons, const actor *defender);
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
-void reset_spectral_weapon(monster* mons);
 
 bool summoned_monster(monster* mons, actor* caster, spell_type spell);
 bool summons_are_capped(spell_type spell);
