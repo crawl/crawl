@@ -4162,6 +4162,16 @@ _build_vault_impl(const map_def *vault,
     if (placed_vault_orientation == MAP_NONE)
         return NULL;
 
+    const bool is_layout = place.map.is_overwritable_layout();
+
+    if (!build_only
+        && (placed_vault_orientation == MAP_ENCOMPASS || is_layout)
+        && vault->border_fill_type != DNGN_ROCK_WALL)
+    {
+       dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
+                        vault->border_fill_type);
+    }
+
     // XXX: Moved this out of dgn_register_place so that vault-set monsters can
     // be accessed with the '9' and '8' glyphs. (due)
     if (!place.map.random_mons.empty())
@@ -4192,8 +4202,6 @@ _build_vault_impl(const map_def *vault,
     if (crawl_state.map_stat_gen)
         mapgen_report_map_use(place.map);
 #endif
-
-    const bool is_layout = place.map.is_overwritable_layout();
 
     if (is_layout && place.map.has_tag_prefix("layout_type_"))
     {

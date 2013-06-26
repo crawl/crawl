@@ -345,7 +345,7 @@ KITEM:   d = superb_item
 KITEM:   e = gold
 KMONS:   de = Ice Fiend
 SHUFFLE: |d / $e
-: dgn.seen_replace_feat("rock_wall", "open_sea")
+: set_border_fill_type("open_sea")
 : coc_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccccccccccc
