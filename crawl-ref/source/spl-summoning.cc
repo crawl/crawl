@@ -1017,7 +1017,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                _monster_greeting(demon, "_friendly_imp_greeting");
             }
 
-            if (spell > 0 && spell < NUM_SPELLS)
+            if (spell > 0 && spell < NUM_SPELLS && god == GOD_NO_GOD)
                 summoned_monster(demon, &you, static_cast<spell_type>(spell));
         }
     }
