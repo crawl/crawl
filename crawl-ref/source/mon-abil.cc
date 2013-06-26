@@ -1873,29 +1873,41 @@ static bool _lost_soul_affectable(const monster* mons)
             && !mons_class_flag(mons->type, M_NO_EXP_GAIN));
 }
 
+struct hd_sorter
+{
+    bool operator()(const pair<monster* ,int> &a, const pair<monster* ,int> &b)
+    {
+        return a.second > b.second;
+    }
+};
+
 static bool _lost_soul_teleport(monster* mons)
 {
     bool seen = you.can_see(mons);
 
-    vector<coord_def> targets;
+   vector<pair<monster*, int> > candidates;
 
     // Assemble candidate list and randomize
     for (monster_iterator mi; mi; ++mi)
     {
         if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
-            targets.push_back(mi->pos());
+        {
+            pair<monster* , int> m = make_pair(*mi, mi->hit_dice + random2(7));
+            candidates.push_back(m);
+        }
     }
-    random_shuffle(targets.begin(), targets.end());
+    sort(candidates.begin(), candidates.end(), hd_sorter());
 
-    for (unsigned int i = 0; i < targets.size(); ++i)
+    for (unsigned int i = 0; i < candidates.size(); ++i)
     {
         coord_def empty;
-        if (find_habitable_spot_near(targets[i], mons_base_type(mons), 3, false, empty)
+        if (find_habitable_spot_near(candidates[i].first->pos(), mons_base_type(mons), 3, false, empty)
             && mons->move_to_pos(empty))
         {
             mons->add_ench(ENCH_SUBMERGED);
             mons->behaviour = BEH_WANDER;
             mons->foe = MHITNOT;
+            mons->props["band_leader"].get_int() = candidates[i].first->mid;
             if (seen)
             {
                 mprf("%s flickers out of the living world.",
