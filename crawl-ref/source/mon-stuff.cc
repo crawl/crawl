@@ -1528,7 +1528,7 @@ static bool _reaping(monster *mons)
     return false;
 }
 
-int monster_die(monster* mons, actor *killer, bool silent,
+int monster_die(monster* mons, const actor *killer, bool silent,
                 bool wizard, bool fake)
 {
     killer_type ktype = KILL_YOU;
