@@ -320,7 +320,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # Go back to lobby
                 self.send_message("game_ended")
                 if config.dgl_mode:
-                    self.send_lobby()
+                    if not self.watched_game:
+                        self.send_message("go_lobby")
+                        self.send_lobby()
                 else:
                     self.start_crawl(None)
 
