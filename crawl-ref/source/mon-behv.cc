@@ -391,16 +391,22 @@ void handle_behaviour(monster* mon)
         {
             actor *atarget = actor_by_mid(mon->props[SW_TARGET_MID].get_int());
 
-            // Only go after the target if the owner can still reach
-            // FIXME: intervening features are currently ignored
-            //        because there's no good way to check if an actor
-            //        can make a reaching attack without actually doing so.
+            // Only go after the target if it's still near the owner,
+            // and so are we.
+            // The weapon is restricted to a leash range of 2,
+            // and things reachable within that leash range [qoala]
+            const int leash = 2;
             if (atarget && atarget->alive()
                 && (grid_distance(owner->pos(), atarget->pos())
-                    <= ((owner->reach_range() == REACH_TWO) ? 2 : 1)))
+                    <= ((mon->reach_range() == REACH_TWO) ? leash + 2 : leash + 1))
+                && (grid_distance(owner->pos(), mon->pos()) <= leash))
             {
                 mon->target = atarget->pos();
                 mon->foe = atarget->mindex();
+            }
+            else
+            {
+                reset_spectral_weapon(mon);
             }
         }
     }
