@@ -834,7 +834,7 @@ function (exports, $, key_conversion, chat, comm) {
                 game_id: game_id
             });
         }
-        else if (location.hash.match(/^#lobby$/i))
+        else
         {
             send_message("go_lobby");
         }
