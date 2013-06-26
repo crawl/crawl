@@ -2693,6 +2693,8 @@ enum monster_type                      // menv[].type
 
     MONS_ELEMENTAL_WELLSPRING,
 
+    MONS_POLYMOTH,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -2700,6 +2702,7 @@ enum monster_type                      // menv[].type
     MONS_NO_MONSTER = 1000,
 
     RANDOM_MONSTER = 2000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
+    RANDOM_SAME_GENUS, // used for poly upgrading monsters.
     RANDOM_MOBILE_MONSTER, // used for monster generation (shadow creatures)
     RANDOM_COMPATIBLE_MONSTER, // used for player shadow creatures (prevents repulsing summons)
 

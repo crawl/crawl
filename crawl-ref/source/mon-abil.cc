@@ -1334,6 +1334,44 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     return true;
 }
 
+static bool _moth_polymorph(const monster* mon)
+{
+    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        return false;
+
+    circle_def c(mon->pos(), 4, C_ROUND);
+    for (monster_iterator mi(&c); mi; ++mi)
+    {
+        if (is_sanctuary(mi->pos()))
+            continue;
+
+        if (mi->type == MONS_POLYMOTH)
+            continue;
+
+        if (mon->friendly() || mi->friendly())
+        {
+            continue;
+        }
+
+        if (one_chance_in(3))
+        {
+           const string targ_name = (mi->visible_to(&you)) ? mi->name(DESC_THE)
+                                                          : "something";
+ 
+            if (you.can_see(*mi))
+            {
+                mprf("%s irradiates %s!",
+                    mon->name(DESC_THE).c_str(),
+                    targ_name.c_str());
+            }
+            monster_polymorph(*mi, RANDOM_SAME_GENUS);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static bool _moth_incite_monsters(const monster* mon)
 {
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
@@ -3377,6 +3415,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MOTH_OF_WRATH:
         if (one_chance_in(3))
             used = _moth_incite_monsters(mons);
+        break;
+
+    case MONS_POLYMOTH:
+        if (one_chance_in(4))
+            used = _moth_polymorph(mons);
         break;
 
     case MONS_QUEEN_BEE:
