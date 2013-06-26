@@ -65,6 +65,7 @@
 #include <queue>
 #include <map>
 #include <set>
+#include <cmath>
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
@@ -1933,6 +1934,25 @@ static bool _lost_soul_teleport(monster* mons)
     return false;
 }
 
+// Is it worth sacrificing ourselves to revive this monster? This is based
+// on monster HD, with a lower chance for weaker monsters so long as other
+// monsters are present, but always true if there are only as many valid
+// targets as nearby lost souls.
+static bool _worthy_sacrifice(monster* soul, const monster* target)
+{
+    int count = 0;
+    for (monster_iterator mi(soul->get_los_no_trans()); mi; ++mi)
+    {
+        if (_lost_soul_affectable(*mi))
+            ++count;
+        else if (mi->type == MONS_LOST_SOUL)
+            --count;
+    }
+
+    return (count <= -1 || target->hit_dice > 9
+            || x_chance_in_y(pow(target->hit_dice, 3), 1200));
+}
+
 bool lost_soul_revive(monster* mons)
 {
     if (!_lost_soul_affectable(mons))
@@ -1942,6 +1962,9 @@ bool lost_soul_revive(monster* mons)
     {
         if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
         {
+            if (!_worthy_sacrifice(*mi, mons))
+                continue;
+
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(GREEN, 200, &hitfunc);
 
@@ -1977,6 +2000,9 @@ bool lost_soul_spectralize(monster* mons)
     {
         if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
         {
+            if (!_worthy_sacrifice(*mi, mons))
+                continue;
+
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(GREEN, 200, &hitfunc);
 
