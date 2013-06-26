@@ -5104,8 +5104,7 @@ void melee_attack::tendril_disarm()
 
     if (you.mutation[MUT_TENDRILS]
         && attacker->alive()
-        && mon->type != MONS_DANCING_WEAPON
-        && mon->type != MONS_SPECTRAL_WEAPON
+        && (!mons_class_is_animated_weapon(mon->type))
         && adjacent(you.pos(), mon->pos())
         && you.can_see(mon)
         && one_chance_in(5)

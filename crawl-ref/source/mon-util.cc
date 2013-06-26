@@ -655,8 +655,7 @@ bool mons_has_body(const monster* mon)
     if (mon->type == MONS_FLYING_SKULL
         || mon->type == MONS_CURSE_SKULL
         || mon->type == MONS_CURSE_TOE
-        || mon->type == MONS_DANCING_WEAPON
-        || mon->type == MONS_SPECTRAL_WEAPON)
+        || mons_class_is_animated_weapon(mon->type))
     {
         return false;
     }
@@ -1344,8 +1343,7 @@ bool mons_is_ghost_demon(monster_type mc)
             || mc == MONS_VERY_UGLY_THING
             || mc == MONS_PLAYER_GHOST
             || mc == MONS_PLAYER_ILLUSION
-            || mc == MONS_DANCING_WEAPON
-            || mc == MONS_SPECTRAL_WEAPON
+            || mons_class_is_animated_weapon(mc)
             || mc == MONS_PANDEMONIUM_LORD;
 }
 
@@ -1478,6 +1476,11 @@ bool mons_class_is_clingy(monster_type type)
     return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
         || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
         || type == MONS_DEMONIC_CRAWLER;
+}
+
+bool mons_class_is_animated_weapon(monster_type type)
+{
+    return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
 }
 
 bool mons_class_has_base_type(monster_type mc)

@@ -548,7 +548,7 @@ bool monster::can_wield(const item_def& item, bool ignore_curse,
 
     // These *are* weapons, so they can't wield another weapon or
     // unwield themselves.
-    if (type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON)
+    if (mons_class_is_animated_weapon(type))
         return false;
 
     // MF_HARD_RESET means that all items the monster is carrying will
@@ -619,7 +619,7 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
     ASSERT(item.defined());
 
     // These *are* weapons, so they can't wield another weapon.
-    if (type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON)
+    if (mons_class_is_animated_weapon(type))
         return false;
 
     // Monsters can't use unrandarts with special effects.
