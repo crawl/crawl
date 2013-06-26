@@ -472,7 +472,7 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->is_summoned(0, &stype))
         {
             mb.set(MB_SUMMONED);
-            if (stype && stype < NUM_SPELLS
+            if (stype > 0 && stype < NUM_SPELLS
                 && summons_are_capped(static_cast<spell_type>(stype)))
             {
                 mb.set(MB_SUMMONED_NO_STAIRS);
