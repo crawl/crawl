@@ -3175,7 +3175,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (targetc == RANDOM_SAME_GENUS)
     {
         monster_type genus = mons_genus(mons->type);
-        std::vector<monster_type> target_types;
+        vector<monster_type> target_types;
         for (int mc = 0; mc < NUM_MONSTERS; ++mc)
         {
             const monsterentry *me = get_monster_data((monster_type) mc);
@@ -3195,7 +3195,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         if (target_types.empty())
             return false;
 
-        std::random_shuffle(target_types.begin(), target_types.end(), random2);
+        random_shuffle(target_types.begin(), target_types.end(), random2);
         targetc = target_types[0];
     }
 
@@ -5154,7 +5154,7 @@ int temperature_colour(int temp)
            (temp > TEMP_COLD) ? LIGHTBLUE : BLUE;
 }
 
-std::string temperature_string(int temp)
+string temperature_string(int temp)
 {
     return (temp > TEMP_FIRE) ? "lightred"  :
            (temp > TEMP_HOT)  ? "red"       :
@@ -5164,7 +5164,7 @@ std::string temperature_string(int temp)
            (temp > TEMP_COLD) ? "lightblue" : "blue";
 }
 
-std::string temperature_text(int temp)
+string temperature_text(int temp)
 {
     switch (temp)
     {

@@ -4034,8 +4034,8 @@ static void _heated_area(monster* mons)
     const int base_damage = random2(11);
 
     // Timescale, like with clouds:
-    const int speed = mons->speed > 0? mons->speed : 10;
-    const int timescaled = (std::max(0, base_damage) * 10 / speed);
+    const int speed = mons->speed > 0 ? mons->speed : 10;
+    const int timescaled = max(0, base_damage) * 10 / speed;
 
     // rF protects:
     const int resist = mons->res_fire();
@@ -4043,8 +4043,8 @@ static void _heated_area(monster* mons)
                                 BEAM_FIRE, resist,
                                 timescaled, true);
     // So does AC:
-    const int final_damage = std::max(0, adjusted_damage
-                                      - random2(mons->armour_class()));
+    const int final_damage = max(0, adjusted_damage
+                                 - random2(mons->armour_class()));
 
     if (final_damage > 0)
     {
