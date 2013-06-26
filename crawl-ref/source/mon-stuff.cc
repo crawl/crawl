@@ -3198,7 +3198,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         std::random_shuffle(target_types.begin(), target_types.end(), random2);
         targetc = target_types[0];
     }
-    else if (!_valid_morph(mons, targetc))
+
+    if (!_valid_morph(mons, targetc))
         return simple_monster_message(mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
