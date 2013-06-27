@@ -2780,8 +2780,12 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
 {
     const dungeon_feature_type current_tile = grd(mons->pos());
 
-    // 'morph targets are _always_ "base" classes, not derived ones.
-    new_mclass = mons_species(new_mclass);
+    // 'morph targets are _always_ "base" classes, not derived ones,
+    // unless we're dealing with polymoths.
+    if (new_mclass != mons_species(new_mclass)
+        && poly_source != RANDOM_SAME_GENUS)
+        return false;
+
     monster_type old_mclass = mons_base_type(mons);
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
@@ -3122,6 +3126,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         return false;
     ASSERT(!(mons->flags & MF_BANISHED) || player_in_branch(BRANCH_ABYSS));
 
+    monster_type original_targetc = targetc;
+
     int source_power, target_power, relax;
     int source_tier, target_tier;
     int tries = 1000;
@@ -3199,7 +3205,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         targetc = target_types[0];
     }
 
-    if (!_valid_morph(mons, targetc))
+    if (!_valid_morph(mons, targetc, original_targetc))
         return simple_monster_message(mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
