@@ -3230,7 +3230,7 @@ struct spell_desc
 
 {
     SPELL_SPECTRAL_WEAPON, "Spectral Weapon",
-    SPTYP_CHARMS | SPTYP_CONJURATION,
+    SPTYP_HEXES | SPTYP_CHARMS,
     SPFLAG_BATTLE,
     3,
     100,
