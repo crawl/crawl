@@ -3203,9 +3203,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             int weight = weights[delta - 1];
             // I could write a weighted sampler {bh}
             for (int i = 0; i < weight; ++i)
-            {
                 target_types.push_back((monster_type) mc);
-            }
         }
         if (target_types.empty())
             return false;
