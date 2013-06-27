@@ -405,9 +405,7 @@ void handle_behaviour(monster* mon)
                 mon->foe = atarget->mindex();
             }
             else
-            {
                 reset_spectral_weapon(mon);
-            }
         }
     }
 
