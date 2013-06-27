@@ -3191,14 +3191,19 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 continue;
             if (mons->type == me->mc)
                 continue;
-            if ((int) me->hpdice[0] < mons->hit_dice)
+            if (!_valid_morph(mons, (monster_type) mc, RANDOM_SAME_GENUS))
+                continue;
+            int delta = mons->hit_dice - (int) me->hpdice[0];
+            if (delta < -2 || delta > 6)
+                continue;
+            // Sample from some progression
+            static const int weights[] = { 1, 2, 5, 13, 34, 21, 8, 3, 1 };
+            int weight = weights[delta + 2];
+            // I could write a weighted sampler {bh}
+            for (int i = 0; i < weight; ++i)
             {
-                int chance = mons->hit_dice - (int) me->hpdice[0];
-                if (!one_chance_in(chance * chance))
-                    continue;
-            }
-            if (_valid_morph(mons, (monster_type) mc, RANDOM_SAME_GENUS))
                 target_types.push_back((monster_type) mc);
+            }
         }
         if (target_types.empty())
             return false;

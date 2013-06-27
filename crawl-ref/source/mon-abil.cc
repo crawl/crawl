@@ -1345,12 +1345,19 @@ static bool _moth_polymorph(const monster* mon)
         if (is_sanctuary(mi->pos()))
             continue;
 
+	if (!you.see_cell(mi->pos()))
+            continue;
+
+        if (!mon->can_see(*mi))
+            continue;
+
         if (mi->type == MONS_POLYMOTH)
             continue;
 
         if (mi->flags & MF_POLYMORPHED)
 	    continue;
 
+        // No ally scumming.
         if (mon->friendly() || mi->friendly() || mi->neutral())
             continue;
 
@@ -1358,7 +1365,7 @@ static bool _moth_polymorph(const monster* mon)
         if (mons_is_firewood(*mi))
             continue;
 
-        if (one_chance_in(3))
+        if (one_chance_in(2))
         {
             const string targ_name = (mi->visible_to(&you)) ? mi->name(DESC_THE)
                                                             : "something";
@@ -3424,7 +3431,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_POLYMOTH:
-        if (one_chance_in(4))
+        if (one_chance_in(3))
             used = _moth_polymorph(mons);
         break;
 
