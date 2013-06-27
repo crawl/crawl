@@ -1345,7 +1345,7 @@ static bool _moth_polymorph(const monster* mon)
         if (is_sanctuary(mi->pos()))
             continue;
 
-	if (!you.see_cell(mi->pos()))
+        if (!you.see_cell(mi->pos()))
             continue;
 
         if (!mon->can_see(*mi))
@@ -1355,7 +1355,7 @@ static bool _moth_polymorph(const monster* mon)
             continue;
 
         if (mi->flags & MF_POLYMORPHED)
-	    continue;
+            continue;
 
         // No ally scumming.
         if (mon->friendly() || mi->friendly() || mi->neutral())

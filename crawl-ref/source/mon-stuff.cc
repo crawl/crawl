@@ -2813,7 +2813,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
     {
         return false;
     }
- 
+
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
@@ -2840,7 +2840,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
         || mons_is_projectile(new_mclass)
         || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
-	// Don't polymorph things without Gods into priests.
+        // Don't polymorph things without Gods into priests.
         || (mons_class_flag(new_mclass, MF_PRIEST) && mons->god == GOD_NO_GOD)
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
@@ -3193,12 +3193,12 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 continue;
             if (!_valid_morph(mons, (monster_type) mc, RANDOM_SAME_GENUS))
                 continue;
-            int delta = mons->hit_dice - (int) me->hpdice[0];
-            if (delta < -2 || delta > 6)
+            int delta = (int) me->hpdice[0] - mons->hit_dice;
+            if (delta <= 0 || delta > 7)
                 continue;
             // Sample from some progression
-            static const int weights[] = { 1, 2, 5, 13, 34, 21, 8, 3, 1 };
-            int weight = weights[delta + 2];
+            static const int weights[] = { 1, 2, 5, 13, 8, 3, 1 };
+            int weight = weights[delta - 1];
             // I could write a weighted sampler {bh}
             for (int i = 0; i < weight; ++i)
             {
