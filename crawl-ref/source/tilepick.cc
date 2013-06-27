@@ -2775,8 +2775,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             case SK_MACES_FLAILS:
                 {
                     const weapon_type wt = (weapon_type)item.sub_type;
-                    return (wt == WPN_WHIP || wt == WPN_FLAIL || wt == WPN_SACRED_SCOURGE
-                            || wt == WPN_DIRE_FLAIL || wt == WPN_DEMON_WHIP) ?
+                    return (wt == WPN_WHIP || wt == WPN_FLAIL
+                            || wt == WPN_DIRE_FLAIL || wt == WPN_DEMON_WHIP
+                            || wt == WPN_SACRED_SCOURGE) ?
                         TILEP_MONS_SPECTRAL_WHIP : TILEP_MONS_SPECTRAL_MACE;
                 }
             default:
