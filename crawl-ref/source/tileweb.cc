@@ -1206,6 +1206,12 @@ void TilesFramework::_send_map(bool force_full)
     if (force_full)
         json_write_bool("clear", true);
 
+    if (force_full || you.on_current_level != m_player_on_level)
+    {
+        json_write_bool("player_on_level", you.on_current_level);
+        m_player_on_level = you.on_current_level;
+    }
+
     if (force_full || m_current_gc != m_next_gc)
     {
         if (m_origin.equals(-1, -1))
