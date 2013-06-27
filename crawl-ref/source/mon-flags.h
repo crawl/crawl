@@ -233,4 +233,5 @@ const uint64_t MF_SENSED             = BIT(33); // Player has been warned
 const uint64_t MF_NAME_NOCORPSE      = BIT(34); // mname should not be used for corpses
 const uint64_t MF_SEEN_RANGED        = BIT(35); // known to have a ranged attack
 
+const uint64_t MF_POLYMORPHED        = BIT(36); // this monster has been polymorphed.
 #endif

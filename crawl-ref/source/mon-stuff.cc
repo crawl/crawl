@@ -2813,7 +2813,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
     {
         return false;
     }
-
+ 
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
@@ -2840,6 +2840,8 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
         || mons_is_projectile(new_mclass)
         || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
+	// Don't polymorph things without Gods into priests.
+        || (mons_class_flag(new_mclass, MF_PRIEST) && mons->god == GOD_NO_GOD)
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
             && (mons->type == MONS_PRINCE_RIBBIT
@@ -2924,7 +2926,7 @@ void change_monster_type(monster* mons, monster_type targetc)
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_MELEE_MASK | MF_SPELL_MASK);
-
+    flags |= MF_POLYMORPHED;
     string name;
 
     // Preserve the names of uniques and named monsters.
