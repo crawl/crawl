@@ -1348,6 +1348,9 @@ static bool _moth_polymorph(const monster* mon)
         if (mi->type == MONS_POLYMOTH)
             continue;
 
+        if (mi->flags & MF_POLYMORPHED)
+	    continue;
+
         if (mon->friendly() || mi->friendly() || mi->neutral())
             continue;
 
