@@ -2784,7 +2784,9 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
     // unless we're dealing with polymoths.
     if (new_mclass != mons_species(new_mclass)
         && poly_source != RANDOM_SAME_GENUS)
+    {
         return false;
+    }
 
     monster_type old_mclass = mons_base_type(mons);
 
