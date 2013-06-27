@@ -320,6 +320,7 @@ static const pop_entry pop_lair[] =
   {  8,  8,    1, FLAT, MONS_FIRE_CRAB },
   {  3, 13,  180, PEAK, MONS_BORING_BEETLE },
   {  4, 12,   89, PEAK, MONS_BOULDER_BEETLE },
+  {  6, 13,   21, PEAK, MONS_POLYMOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
