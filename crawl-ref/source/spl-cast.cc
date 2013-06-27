@@ -861,13 +861,16 @@ static bool _vampire_cannot_cast(spell_type spell)
     {
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
-    case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
     case SPELL_STONESKIN:
         return true;
+    case SPELL_CURE_POISON:
+        // You can become poisoned at any state but bloodless; allow curing
+        // it under the same conditions.
+        return you.hunger_state <= HS_STARVING;
     default:
         return false;
     }
