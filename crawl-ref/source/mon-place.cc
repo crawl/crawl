@@ -1727,7 +1727,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                        mg.props.exists(TUKIMA_POWER) ?
                                            mg.props[TUKIMA_POWER].get_int() : 100,
                                        mg.props.exists(TUKIMA_SKILL) ?
-                                           mg.props[TUKIMA_SKILL].get_int() : 27);
+                                           mg.props[TUKIMA_SKILL].get_int() : 270);
         }
         mon->set_ghost(ghost);
         mon->ghost_demon_init();

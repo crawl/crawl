@@ -9,6 +9,7 @@
 #define TUKIMA_WEAPON "tukima-weapon"
 #define TUKIMA_POWER "tukima-power"
 // Technically only used for spectral weapon, not dancing weapons
+// Equal to weapon skill with a scale of 10
 #define TUKIMA_SKILL "tukima-skill"
 
 // A structure with all the data needed to whip up a new monster.
