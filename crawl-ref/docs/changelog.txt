@@ -11,7 +11,7 @@ Stone Soup 0.13 (up to 0.13-a0-1380-g03ef21a)
 * Box of Beasts now creates new chimeric allies.
 * A new item: Sack of Spiders.
 * Massively overhauled layout generators.
-* Temporary summons nerfs: per-spell limits and no stair following.
+* Summoning school: per-spell limits and no stair following or pulling.
 
 Branches, environment
 ---------------------
