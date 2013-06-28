@@ -982,6 +982,12 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
     if (!foreground_only)
         env.tile_bk_bg(gc) = _get_floor_bg(gc);
 
+    if (you.see_cell(gc))
+    {
+        env.tile_fg(grid2show(gc)) = 0;
+        env.tile_cloud(grid2show(gc)) = 0;
+    }
+
     const map_cell& cell = env.map_knowledge(gc);
 
     if (cell.invisible_monster())
