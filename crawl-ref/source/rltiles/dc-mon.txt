@@ -55,8 +55,10 @@ cbutterfly5
 jackal MONS_JACKAL
 hound MONS_HOUND
 warg MONS_WARG
-war_dog MONS_WAR_DOG
 wolf MONS_WOLF
+%rim 0
+spirit_wolf MONS_SPIRIT_WOLF
+%rim 1
 hell_hound MONS_HELL_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
