@@ -438,7 +438,7 @@ enum book_type
     BOOK_UNLIFE,
     BOOK_CONTROL,
 #if TAG_MAJOR_VERSION == 34
-    BOOK_BATTLE, // was BOOK_MUTATIONS,
+    BOOK_BATTLE, // was BOOK_MUTATIONS
 #endif
     BOOK_GEOMANCY,
     BOOK_EARTH,
