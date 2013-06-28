@@ -7545,13 +7545,15 @@ bool player::polymorph(int pow)
     if (!can_polymorph())
         return false;
 
+    transformation_type f = TRAN_NONE;
+
     // Be unreliable over lava.  This is not that important as usually when
     // it matters you'll have temp flight and thus that pig will fly (and
     // when flight times out, we'll have roasted bacon).
     for (int tries = 0; tries < 3; tries++)
     {
         // Whole-body transformations only; mere appendage doesn't seem fitting.
-        transformation_type f = random_choose_weighted(
+        f = random_choose_weighted(
             100, TRAN_BAT,
             100, TRAN_FUNGUS,
             100, TRAN_PIG,
@@ -7563,13 +7565,17 @@ bool player::polymorph(int pow)
               5, TRAN_STATUE,
               1, TRAN_DRAGON,
               0);
-        if (transform(pow, f))
-        {
-            you.transform_uncancellable = true;
-            return true;
-        }
+        // need to do a dry run first, as Zin's protection has a random factor
+        if (transform(pow, f, false, true))
+            break;
+        f = TRAN_NONE;
     }
 
+    if (f && transform(pow, f))
+    {
+        you.transform_uncancellable = true;
+        return true;
+    }
     return false;
 }
 
