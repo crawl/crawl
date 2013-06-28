@@ -729,7 +729,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
     // Defenses scale with spell power alone.
     // Appropriate investment is rewarded with a stronger spectral weapon.
 
-    xl = wpn_skill / 10;
+    xl = max(wpn_skill / 10, 1);
 
     // At 0 power, weapon skill is 1/3 as effective as on the player
     // At max power, weapon skill is as effective as on the player.
@@ -759,8 +759,8 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
     damage /= scale;
 
     speed   = 30;
-    ev      = 2 + div_rand_round(power,12);
-    ac      = 2 + div_rand_round(power,12);
+    ev      = 10 + div_rand_round(power,10);
+    ac      = 2 + div_rand_round(power,10);
     max_hp  = 10 + div_rand_round(power,3);
 }
 
