@@ -8,16 +8,20 @@ tie %descriptions, 'DB_File', "../dat/descriptions.db";
 my $state = 0;
 my $title = "";
 my $entry = "";
-while(<TEXT>) {
+while (<TEXT>)
+{
     $thisLine = $_;
-    if ($thisLine =~ /^#/) {
+    if ($thisLine =~ /^#/)
+    {
        # It's a comment.  continue.
        next;
     }
-    if ($thisLine =~ /^%%%%/) {
+    if ($thisLine =~ /^%%%%/)
+    {
         $state=1;
         # Push existing entry, if any, to the database.
-        if ($title ne "") {
+        if ($title ne "")
+        {
             $descriptions{"$title"} = "$entry";
             # Clear and set up for next run.
             $title = "";
@@ -25,7 +29,8 @@ while(<TEXT>) {
         }
         next;
     }
-    if (1 == $state) {
+    if (1 == $state)
+    {
         # Lowercase the title, to canonicalize the key.
         $title = lc($thisLine);
         chomp($title);
@@ -33,7 +38,8 @@ while(<TEXT>) {
         $state++;
         next;
     }
-    if (2 == $state) {
+    if (2 == $state)
+    {
         $entry .= $thisLine;
         next;
     };

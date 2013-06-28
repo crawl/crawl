@@ -2,7 +2,7 @@
 
 use strict;
 
-unless(@ARGV == 1)
+unless (@ARGV == 1)
 {
     die("usage: grep-mon.pl <pattern>\n");
 }
@@ -29,7 +29,7 @@ unless (open(FILE, "<$data_file"))
 
 my $line;
 
-while(<FILE>)
+while (<FILE>)
 {
     $line = $_;
     last if ($line =~ /static monsterentry mondata/);

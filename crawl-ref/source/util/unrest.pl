@@ -29,7 +29,7 @@ s/\\(.)/$1/g;
 
 # Table of contents.
 my $contents = "Contents\n--------\n";
-for(/\*{9,}\n(.\. .+)\n\*{9,}/g)
+for (/\*{9,}\n(.\. .+)\n\*{9,}/g)
 {
     /(.)\. (.+)/;
     $contents .= "\nAppendices\n" if $1 eq "1";
@@ -55,7 +55,7 @@ s/\ca[^\cb]?\cb//g;
 # Rewrap overlong lines.
 my $ls = "";
 my $rem = "";
-for(/^.*$/mg)
+for (/^.*$/mg)
 {
     s/\s*$//;
     /^( *)(.*)/;
