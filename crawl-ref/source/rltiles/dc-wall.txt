@@ -1273,6 +1273,7 @@ transparent_stone DNGN_TRANSPARENT_STONE DNGN_TRANSPARENT_STONE_CYAN DNGN_FIRST_
 
 # Coloured metal walls
 mirrored_wall DNGN_MIRROR_WALL
+silver_wall DNGN_SILVER_WALL
 
 metal_wall DNGN_METAL_WALL
 
