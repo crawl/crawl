@@ -980,12 +980,12 @@ my %valid_func = (
 
 sub read_funcs
 {
-    unless(open(INPUT, "<art-func.h"))
+    unless (open(INPUT, "<art-func.h"))
     {
         die "Couldn't open art-func.h for reading: $!\n";
     }
 
-    while(<INPUT>)
+    while (<INPUT>)
     {
         if (/^static .* _([A-Z_]+)_(\S+)\s*\(/)
         {
@@ -1011,7 +1011,7 @@ sub read_funcs
 
 sub read_data
 {
-    unless(open(INPUT, "<art-data.txt"))
+    unless (open(INPUT, "<art-data.txt"))
     {
         die "Couldn't open art-data.txt for reading: $!\n";
     }

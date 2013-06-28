@@ -14,7 +14,8 @@ elsif (-e "../enum.h")
     $infile = "../enum.h";
     $outfile = "../cmd-name.h";
 }
-else {
+else
+{
     die "Can't find 'enum.h'";
 }
 
