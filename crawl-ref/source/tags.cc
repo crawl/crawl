@@ -945,6 +945,12 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
 }
 #endif
 
+#define CANARY     marshallUByte(th, 171)
+#define EAT_CANARY do if (th.getMinorVersion() >= TAG_MINOR_CANARIES    \
+                          && unmarshallUByte(th) != 171)                \
+                   {                                                    \
+                       die("save corrupted: canary gone");              \
+                   } while(0)
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
@@ -959,16 +965,24 @@ void tag_write(tag_type tagID, writer &outf)
         break;
     case TAG_YOU:
         tag_construct_you(th);
+        CANARY;
         tag_construct_you_items(th);
+        CANARY;
         tag_construct_you_dungeon(th);
+        CANARY;
         tag_construct_lost_monsters(th);
+        CANARY;
         tag_construct_lost_items(th);
+        CANARY;
         tag_construct_companions(th);
         break;
     case TAG_LEVEL:
         tag_construct_level(th);
+        CANARY;
         tag_construct_level_items(th);
+        CANARY;
         tag_construct_level_monsters(th);
+        CANARY;
         tag_construct_level_tiles(th);
         break;
     case TAG_GHOST:
@@ -1010,14 +1024,19 @@ void tag_read(reader &inf, tag_type tag_id)
     {
     case TAG_YOU:
         tag_read_you(th);
+        EAT_CANARY;
         tag_read_you_items(th);
+        EAT_CANARY;
         tag_read_you_dungeon(th);
+        EAT_CANARY;
         tag_read_lost_monsters(th);
+        EAT_CANARY;
         tag_read_lost_items(th);
+        EAT_CANARY;
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() >= TAG_MINOR_COMPANION_LIST)
 #endif
-            tag_read_companions(th);
+        tag_read_companions(th);
 
         // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
         // Doing this here rather in tag_read_you() because you.can_train()
@@ -1027,8 +1046,11 @@ void tag_read(reader &inf, tag_type tag_id)
         break;
     case TAG_LEVEL:
         tag_read_level(th);
+        EAT_CANARY;
         tag_read_level_items(th);
+        EAT_CANARY;
         tag_read_level_monsters(th);
+        EAT_CANARY;
         tag_read_level_tiles(th);
         break;
     case TAG_GHOST:
@@ -1100,6 +1122,7 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.hunger);
     marshallBoolean(th, you.fishtail);
     marshallInt(th, you.form);
+    CANARY;
 
     j = min<int>(you.sage_skills.size(), 32767);
     marshallShort(th, j);
@@ -1127,6 +1150,8 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.stat_loss[i]);
     for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.stat_zero[i]);
+
+    CANARY;
 
     marshallByte(th, you.hit_points_regeneration);
     marshallByte(th, you.magic_points_regeneration);
@@ -1183,6 +1208,8 @@ static void tag_construct_you(writer &th)
         marshallUByte(th, *it);
     }
 
+    CANARY;
+
     // how many skills?
     marshallByte(th, NUM_SKILLS);
     for (j = 0; j < NUM_SKILLS; ++j)
@@ -1218,6 +1245,8 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.transfer_to_skill);
     marshallInt(th, you.transfer_skill_points);
     marshallInt(th, you.transfer_total_skill_points);
+
+    CANARY;
 
     // how many durations?
     marshallByte(th, NUM_DURATIONS);
@@ -1256,6 +1285,8 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.demonic_traits[j].level_gained);
         marshallShort(th, you.demonic_traits[j].mutation);
     }
+
+    CANARY;
 
     // how many penances?
     marshallByte(th, NUM_GODS);
@@ -1316,6 +1347,8 @@ static void tag_construct_you(writer &th)
     marshallFloat(th, you.temperature);
     marshallFloat(th, you.temperature_last);
 
+    CANARY;
+
     marshallInt(th, you.dactions.size());
     for (unsigned int k = 0; k < you.dactions.size(); k++)
         marshallByte(th, you.dactions[k]);
@@ -1340,6 +1373,8 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.friendly_pickup);
 
     marshallString(th, you.zotdef_wave_name);
+
+    CANARY;
 
     // Action counts.
     j = 0;
@@ -1382,8 +1417,12 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < (int)you.recall_list.size(); i++)
         _marshall_as_int<mid_t>(th, you.recall_list[i]);
 
+    CANARY;
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
+
+    CANARY;
 
     // Write a human-readable string out on the off chance that
     // we fail to be able to read this file back in using some later version.
@@ -1426,6 +1465,8 @@ static void tag_construct_you_items(writer &th)
 
     // Additional identification info
     you.type_id_props.write(th);
+
+    CANARY;
 
     // how many unique items?
     marshallByte(th, MAX_UNRANDARTS);
@@ -1919,6 +1960,7 @@ static void tag_read_you(reader &th)
 #endif
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
     ASSERT_RANGE(you.form, TRAN_NONE, LAST_FORM + 1);
+    EAT_CANARY;
 
     count = unmarshallShort(th);
     ASSERT_RANGE(count, 0, 32768);
@@ -1969,6 +2011,7 @@ static void tag_read_you(reader &th)
             unmarshallString(th);
     }
 #endif
+    EAT_CANARY;
 
     you.hit_points_regeneration   = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
@@ -2075,6 +2118,7 @@ static void tag_read_you(reader &th)
         }
     }
 #endif
+    EAT_CANARY;
 
     // how many skills?
     count = unmarshallUByte(th);
@@ -2114,6 +2158,8 @@ static void tag_read_you(reader &th)
     // Set up you.skill_cost_level.
     you.skill_cost_level = 0;
     check_skill_cost_change();
+
+    EAT_CANARY;
 
     // how many durations?
     count = unmarshallUByte(th);
@@ -2184,6 +2230,8 @@ static void tag_read_you(reader &th)
         ASSERT_RANGE(dt.mutation, 0, NUM_MUTATIONS);
         you.demonic_traits.push_back(dt);
     }
+
+    EAT_CANARY;
 
     // how many penances?
     count = unmarshallUByte(th);
@@ -2266,6 +2314,8 @@ static void tag_read_you(reader &th)
 
     you.dead = !you.hp;
 
+    EAT_CANARY;
+
     int n_dact = unmarshallInt(th);
     ASSERT_RANGE(n_dact, 0, 100000); // arbitrary, sanity check
     you.dactions.resize(n_dact, NUM_DACTIONS);
@@ -2304,6 +2354,8 @@ static void tag_read_you(reader &th)
     you.friendly_pickup = unmarshallByte(th);
 
     you.zotdef_wave_name = unmarshallString(th);
+
+    EAT_CANARY;
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() == TAG_MINOR_0_11)
@@ -2406,11 +2458,15 @@ static void tag_read_you(reader &th)
     }
 #endif
 
+    EAT_CANARY;
+
     if (!dlua.callfn("dgn_load_data", "u", &th))
     {
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
              dlua.error.c_str());
     }
+
+    EAT_CANARY;
 
     unmarshallString(th);
 
@@ -2465,6 +2521,8 @@ static void tag_read_you_items(reader &th)
 
     // Additional identification info
     you.type_id_props.read(th);
+
+    EAT_CANARY;
 
     // how many unique items?
     count = unmarshallUByte(th);
@@ -2716,6 +2774,8 @@ static void tag_construct_level(writer &th)
 
     marshallInt(th, env.turns_on_level);
 
+    CANARY;
+
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
@@ -2725,6 +2785,8 @@ static void tag_construct_level(writer &th)
         }
 
     _run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
+
+    CANARY;
 
     // how many clouds?
     const int nc = _last_used_index(env.cloud, MAX_CLOUDS);
@@ -2748,6 +2810,8 @@ static void tag_construct_level(writer &th)
         marshallInt(th, env.cloud[i].excl_rad);
     }
 
+    CANARY;
+
     // how many shops?
     const int ns = _last_used_index(env.shop, MAX_SHOPS);
     marshallShort(th, ns);
@@ -2768,6 +2832,8 @@ static void tag_construct_level(writer &th)
         marshallString(th, env.shop[i].shop_suffix_name);
     }
 
+    CANARY;
+
     marshallCoord(th, env.sanctuary_pos);
     marshallByte(th, env.sanctuary_time);
 
@@ -2786,6 +2852,8 @@ static void tag_construct_level(writer &th)
         for (rectangle_iterator ri(0); ri; ++ri)
             marshallShort(th, heightmap(*ri));
     }
+
+    CANARY;
 
     marshallInt(th, env.forest_awoken_until);
     marshall_level_vault_data(th);
@@ -3467,6 +3535,8 @@ static void tag_read_level(reader &th)
 
     env.turns_on_level = unmarshallInt(th);
 
+    EAT_CANARY;
+
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
@@ -3497,6 +3567,8 @@ static void tag_read_level(reader &th)
 
     env.grid_colours.init(BLACK);
     _run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
+
+    EAT_CANARY;
 
     env.cloud_no = 0;
 
@@ -3535,6 +3607,8 @@ static void tag_read_level(reader &th)
     for (int i = num_clouds; i < MAX_CLOUDS; i++)
         env.cloud[i].type = CLOUD_NONE;
 
+    EAT_CANARY;
+
     // how many shops?
     const int num_shops = unmarshallShort(th);
     ASSERT_RANGE(num_shops, 0, MAX_SHOPS + 1);
@@ -3557,6 +3631,8 @@ static void tag_read_level(reader &th)
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
         env.shop[i].type = SHOP_UNASSIGNED;
+
+    EAT_CANARY;
 
     env.sanctuary_pos  = unmarshallCoord(th);
     env.sanctuary_time = unmarshallByte(th);
@@ -3581,11 +3657,14 @@ static void tag_read_level(reader &th)
             heightmap(*ri) = unmarshallShort(th);
     }
 
+    EAT_CANARY;
+
     env.forest_awoken_until = unmarshallInt(th);
     unmarshall_level_vault_data(th);
     env.density = unmarshallInt(th);
 
     int num_lights = unmarshallShort(th);
+    ASSERT(num_lights >= 0);
     env.sunlight.clear();
     while (num_lights-- > 0)
     {
