@@ -4201,44 +4201,6 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         return 0;
     }
 
-    // XXX: tentative damage sharing with the spectral weapon monster
-    // The damage shared should not be directly lethal to the player
-    // XXX: It might be possible that the damage might be lethal if the player is at low health and is vulnerable?
-    // XXX: This makes a lot of messages, especially when the spectral weapon is hit by a monster with multiple attacks and is frozen, burned, etc.
-    if (type == MONS_SPECTRAL_WEAPON && agent)
-    {
-        // The owner should not be able to damage itself
-        actor *owner = actor_by_mid(props["sw_mid"].get_int());
-        if (owner && owner != agent)
-        {
-            // The damage should not exceed the weapon's current hp
-            // or be enough to kill the owner directly
-            int owner_hp = owner->is_player() ? you.hp
-                                              : owner->as_monster()->hit_points;
-            int shared_damage = min(min(amount,hit_points), owner_hp-1);
-            if (shared_damage > 0)
-            {
-
-                if (owner->is_player())
-                {
-                    mpr("Your spectral weapon shares its damage with you!");
-                    you.hurt(agent, shared_damage, flavour, cleanup_dead);
-                }
-                else if (owner->alive())
-                {
-                    if (you.can_see(owner))
-                    {
-                        string buf = " shares ";
-                        buf += owner->pronoun(PRONOUN_POSSESSIVE);
-                        buf += " spectral weapon's damage!";
-                        simple_monster_message(owner->as_monster(), buf.c_str());
-                    }
-                    owner->hurt(agent, shared_damage, flavour, cleanup_dead);
-                }
-            }
-        }
-    }
-
     if (alive())
     {
         if (amount != INSTANT_DEATH && agent && agent->is_monster()
@@ -5626,6 +5588,45 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // The royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY)
         (new trj_spawn_fineff(oppressor, this, pos(), damage))->schedule();
+
+    // Damage sharing from the spectral weapon to its owner
+    // The damage shared should not be directly lethal, though like the
+    // pain spell, it can leave the player at a very dangerous 1hp.
+    // XXX: This makes a lot of messages, especially when the spectral weapon
+    //      is hit by a monster with multiple attacks and is frozen, burned, etc.
+    if (type == MONS_SPECTRAL_WEAPON && oppressor)
+    {
+        // The owner should not be able to damage itself
+        actor *owner = actor_by_mid(props["sw_mid"].get_int());
+        if (owner && owner != oppressor)
+        {
+            // The damage should not exceed the weapon's current hp
+            // or be enough to kill the owner directly
+            int owner_hp = owner->is_player() ? you.hp
+                                              : owner->as_monster()->hit_points;
+            int shared_damage = min(damage, owner_hp-1);
+            if (shared_damage > 0)
+            {
+
+                if (owner->is_player())
+                {
+                    mpr("Your spectral weapon shares its damage with you!");
+                    you.hurt(oppressor, shared_damage);
+                }
+                else if (owner->alive())
+                {
+                    if (you.can_see(owner))
+                    {
+                        string buf = " shares ";
+                        buf += owner->pronoun(PRONOUN_POSSESSIVE);
+                        buf += " spectral weapon's damage!";
+                        simple_monster_message(owner->as_monster(), buf.c_str());
+                    }
+                    owner->hurt(oppressor, shared_damage);
+                }
+            }
+        }
+    }
 
     if (!alive())
         return;
