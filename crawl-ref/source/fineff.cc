@@ -84,7 +84,8 @@ bool blood_fineff::mergeable(const final_effect &fe) const
 bool deferred_damage_fineff::mergeable(const final_effect &fe) const
 {
     const deferred_damage_fineff *o = dynamic_cast<const deferred_damage_fineff *>(&fe);
-    return o && att == o->att && def == o->def;
+    return o && att == o->att && def == o->def
+           && attacker_effects == o->attacker_effects;
 }
 
 bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
