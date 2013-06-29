@@ -5607,7 +5607,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             // or be enough to kill the owner directly
             int owner_hp = owner->is_player() ? you.hp
                                               : owner->as_monster()->hit_points;
-            int shared_damage = min(damage, owner_hp-1);
+            int shared_damage = min(damage / 2, owner_hp-1);
             if (shared_damage > 0)
             {
 
