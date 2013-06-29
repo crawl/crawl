@@ -600,7 +600,8 @@ public:
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
-             bool cleanup_dead = true);
+             bool cleanup_dead = true,
+             bool attacker_effects = true);
 
     bool wont_attack() const { return true; };
     mon_attitude_type temp_attitude() const { return ATT_FRIENDLY; };

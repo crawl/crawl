@@ -1101,7 +1101,8 @@ void reset_damage_counters()
 
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
-          const char *aux, bool see_source, const char *death_source_name)
+          const char *aux, bool see_source, const char *death_source_name,
+          bool attacker_effects)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1110,7 +1111,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (you.dead) // ... but eligible for revival
         return;
 
-    if (dam != INSTANT_DEATH && !invalid_monster_index(death_source)
+    if (attacker_effects && dam != INSTANT_DEATH
+        && !invalid_monster_index(death_source)
         && menv[death_source].has_ench(ENCH_WRETCHED))
     {
         // An abstract boring simulation of reduced stats/etc due to bad muts

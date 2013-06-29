@@ -426,7 +426,8 @@ public:
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
-             bool cleanup_dead = true);
+             bool cleanup_dead = true,
+             bool attacker_effects = true);
     bool heal(int amount, bool max_too = false);
     void blame_damage(const actor *attacker, int amount);
     void blink(bool allow_partial_control = true);

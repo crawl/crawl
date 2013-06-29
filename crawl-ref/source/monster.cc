@@ -4193,7 +4193,7 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
-                   bool cleanup_dead)
+                   bool cleanup_dead, bool attacker_effects)
 {
     if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
         || type == MONS_DIAMOND_OBELISK)
@@ -4203,7 +4203,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
     if (alive())
     {
-        if (amount != INSTANT_DEATH && agent && agent->is_monster()
+        if (attacker_effects && amount != INSTANT_DEATH
+            && agent && agent->is_monster()
             && agent->as_monster()->has_ench(ENCH_WRETCHED))
         {
             int degree = agent->as_monster()->get_ench(ENCH_WRETCHED).degree;
@@ -4237,7 +4238,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 int split = amount / 2;
                 if (split > 0)
                 {
-                    (new deferred_damage_fineff(agent, guardian, split))->schedule();
+                    (new deferred_damage_fineff(agent, guardian,
+                                                split, false))->schedule();
                     amount -= split;
                 }
             }
@@ -4250,7 +4252,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        if (agent && agent->is_player() && you.duration[DUR_QUAD_DAMAGE]
+        if (attacker_effects && agent && agent->is_player()
+            && you.duration[DUR_QUAD_DAMAGE]
             && flavour != BEAM_TORMENT_DAMAGE)
         {
             amount *= 4;
@@ -5611,7 +5614,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 if (owner->is_player())
                 {
                     mpr("Your spectral weapon shares its damage with you!");
-                    you.hurt(oppressor, shared_damage);
+
+                    // Don't apply attacker effects again
+                    you.hurt(oppressor, shared_damage,
+                             BEAM_MISSILE, true, false);
                 }
                 else if (owner->alive())
                 {
@@ -5622,7 +5628,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                         buf += " spectral weapon's damage!";
                         simple_monster_message(owner->as_monster(), buf.c_str());
                     }
-                    owner->hurt(oppressor, shared_damage);
+
+                    // Don't apply attacker effects again
+                    owner->hurt(oppressor, shared_damage,
+                                BEAM_MISSILE, true, false);
                 }
             }
         }
@@ -5646,7 +5655,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             && !invalid_monster_index(number)
             && menv[number].is_parent_monster_of(this))
     {
-        (new deferred_damage_fineff(oppressor, &menv[number], damage))->schedule();
+        (new deferred_damage_fineff(oppressor, &menv[number],
+                                    damage, false))->schedule();
     }
     else if (mons_species(type) == MONS_BUSH
              && res_fire() < 0

@@ -282,7 +282,7 @@ void blood_fineff::fire()
 void deferred_damage_fineff::fire()
 {
     if (actor *df = defender())
-        df->hurt(attacker(), damage);
+        df->hurt(attacker(), damage, BEAM_MISSILE, true, attacker_effects);
 }
 
 void starcursed_merge_fineff::fire()
