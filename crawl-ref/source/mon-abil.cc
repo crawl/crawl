@@ -1354,8 +1354,13 @@ static bool _moth_polymorph(const monster* mon)
         if (mi->type == MONS_POLYMOTH)
             continue;
 
+        // Decrease the chances of repeatedly polymorphing high HD monsters.
         if (mi->flags & MF_POLYMORPHED)
-            continue;
+        {
+          int skip_chance = 1 + pow(mi->hit_dice, 0.5);
+          if (!one_chance_in(skip_chance))
+              continue;
+        }
 
         // No ally scumming.
         if (mon->friendly() || mi->friendly() || mi->neutral())
@@ -1376,7 +1381,7 @@ static bool _moth_polymorph(const monster* mon)
                     mon->name(DESC_THE).c_str(),
                     targ_name.c_str());
             }
-            monster_polymorph(*mi, RANDOM_SAME_GENUS);
+            monster_polymorph(*mi, RANDOM_TOUGHER_MONSTER);
             return true;
         }
     }
