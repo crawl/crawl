@@ -6981,14 +6981,15 @@ void player::teleport(bool now, bool abyss_shift, bool wizard_tele)
 }
 
 int player::hurt(const actor *agent, int amount, beam_type flavour,
-                 bool cleanup_dead)
+                 bool cleanup_dead, bool attacker_effects)
 {
     // We ignore cleanup_dead here.
     if (agent->is_monster())
     {
         const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
-             KILLED_BY_MONSTER, "", mon->visible_to(&you));
+             KILLED_BY_MONSTER, "", mon->visible_to(&you), NULL,
+             attacker_effects);
     }
     else
     {

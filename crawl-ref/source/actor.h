@@ -206,7 +206,8 @@ public:
                      bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
                       beam_type flavour = BEAM_MISSILE,
-                      bool cleanup_dead = true) = 0;
+                      bool cleanup_dead = true,
+                      bool attacker_effects = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
     virtual void banish(actor *agent, const string &who = "") = 0;
     virtual void blink(bool allow_partial_control = true) = 0;
