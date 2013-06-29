@@ -3114,8 +3114,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         return false;
     ASSERT(!(mons->flags & MF_BANISHED) || player_in_branch(BRANCH_ABYSS));
 
-    monster_type original_targetc = targetc;
-
     int source_power, target_power, relax;
     int source_tier, target_tier;
     int tries = 1000;
