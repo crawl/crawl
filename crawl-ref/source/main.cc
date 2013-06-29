@@ -2345,6 +2345,9 @@ static void _decrement_durations()
         remove_regen(you.attribute[ATTR_DIVINE_REGENERATION]);
     }
 
+    _decrement_a_duration(DUR_SMOLDERING, delay, "You stop smoldering.");
+    _decrement_a_duration(DUR_FREEZING, delay, "You're not longer freezing.");
+
     _decrement_a_duration(DUR_VEHUMET_GIFT, delay);
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");

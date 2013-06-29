@@ -528,21 +528,6 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 continue;
             }
 
-            // These stack with conservation; they're supposed to be good.
-            if (target_class == OBJ_SCROLLS
-                && you.mutation[MUT_CONSERVE_SCROLLS]
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            if (target_class == OBJ_POTIONS
-                && you.mutation[MUT_CONSERVE_POTIONS]
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
             if (you.religion == GOD_JIYVA && !player_under_penance()
                 && x_chance_in_y(you.piety, MAX_PIETY))
             {
@@ -578,21 +563,6 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             {
                 switch (target_class)
                 {
-                case OBJ_SCROLLS:
-                    mprf("%s %s catch%s fire!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "es" : "");
-                    break;
-
-                case OBJ_POTIONS:
-                    mprf("%s %s freeze%s and shatter%s!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "s" : "",
-                         (num_dest == 1) ? "s" : "");
-                    break;
-
                 case OBJ_FOOD:
                     mprf("%s %s %s %s!",
                          part_stack_string(num_dest, quantity).c_str(),
@@ -733,7 +703,25 @@ bool expose_player_to_element(beam_type flavour, int strength,
     if (strength <= 0 || !damage_inventory)
         return false;
 
-    return _expose_invent_to_element(flavour, strength);
+    const int target_class = _get_target_class(flavour);
+
+    switch (target_class)
+    {
+        case OBJ_SCROLLS:
+        case OBJ_POTIONS:
+        {
+            duration_type dt = target_class == OBJ_SCROLLS
+                ? DUR_SMOLDERING : DUR_FREEZING;
+            string type_name = dt == DUR_SMOLDERING ? "smolder" : "freeze";
+            you.duration[dt] = max(
+                    you.duration[dt] + strength * 5,
+                    strength * 15);
+            mprf("You %s!", type_name.c_str());
+            return true;
+        }
+        default:
+            return _expose_invent_to_element(flavour, strength);
+    }
 }
 
 static void _lose_level_abilities()

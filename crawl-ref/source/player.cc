@@ -4311,6 +4311,8 @@ void display_char_status()
         DUR_POISONING,
         STATUS_SICK,
         STATUS_ROT,
+        DUR_SMOLDERING,
+        DUR_FREEZING,
         STATUS_CONTAMINATION,
         DUR_CONFUSING_TOUCH,
         DUR_SURE_BLADE,

@@ -812,6 +812,8 @@ static const char* dur_names[] =
     "infused",
     "song of slaying",
     "song of shielding",
+    "smoldering",
+    "freezing",
 };
 
 void wizard_edit_durations(void)

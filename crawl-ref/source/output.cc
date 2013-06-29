@@ -961,6 +961,8 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_SICK,
         STATUS_ROT,
         STATUS_NET,
+        DUR_SMOLDERING,
+        DUR_FREEZING,
         STATUS_CONTAMINATION,
         DUR_SWIFTNESS,
         STATUS_SPEED,
