@@ -2776,17 +2776,9 @@ void alert_nearby_monsters(void)
              behaviour_event(*mi, ME_ALERT, &you);
 }
 
-static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type poly_source)
+static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
     const dungeon_feature_type current_tile = grd(mons->pos());
-
-    // 'morph targets are _always_ "base" classes, not derived ones,
-    // unless we're dealing with polymoths.
-    if (new_mclass != mons_species(new_mclass)
-        && poly_source != RANDOM_SAME_GENUS)
-    {
-        return false;
-    }
 
     monster_type old_mclass = mons_base_type(mons);
 
@@ -2810,12 +2802,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
         return false;
     }
 
-    if (poly_source != RANDOM_SAME_GENUS
-        && new_mclass == mons_species(old_mclass))
-    {
-        return false;
-    }
-
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
@@ -2825,6 +2811,9 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
         || new_mclass == MONS_PROGRAM_BUG
 
+        // 'morph targets are _always_ "base" classes, not derived ones.
+        || new_mclass != mons_species(new_mclass)
+        || new_mclass == mons_species(old_mclass)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
         || mons_is_zombified(mons) && !mons_zombie_size(new_mclass)
@@ -2854,11 +2843,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass, monster_type po
 
     // Determine if the monster is happy on current tile.
     return monster_habitable_grid(new_mclass, current_tile);
-}
-
-static bool _valid_morph(monster* mons, monster_type new_mclass)
-{
-    return _valid_morph(mons, new_mclass, new_mclass);
 }
 
 static bool _is_poly_power_unsuitable(poly_power_type power,
@@ -3182,28 +3166,18 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
 
-    if (targetc == RANDOM_SAME_GENUS)
+    if (targetc == RANDOM_TOUGHER_MONSTER)
     {
-        monster_type genus = mons_genus(mons->type);
         vector<monster_type> target_types;
         for (int mc = 0; mc < NUM_MONSTERS; ++mc)
         {
             const monsterentry *me = get_monster_data((monster_type) mc);
-            if (me->genus != genus)
-                continue;
-            if (mons->type == me->mc)
-                continue;
-            if (!_valid_morph(mons, (monster_type) mc, RANDOM_SAME_GENUS))
-                continue;
             int delta = (int) me->hpdice[0] - mons->hit_dice;
-            if (delta <= 0 || delta > 7)
+            if (delta != 1)
                 continue;
-            // Sample from some progression
-            static const int weights[] = { 1, 2, 5, 13, 8, 3, 1 };
-            int weight = weights[delta - 1];
-            // I could write a weighted sampler {bh}
-            for (int i = 0; i < weight; ++i)
-                target_types.push_back((monster_type) mc);
+            if (!_valid_morph(mons, (monster_type) mc))
+                continue;
+            target_types.push_back((monster_type) mc);
         }
         if (target_types.empty())
             return false;
@@ -3212,7 +3186,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         targetc = target_types[0];
     }
 
-    if (!_valid_morph(mons, targetc, original_targetc))
+    if (!_valid_morph(mons, targetc))
         return simple_monster_message(mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
