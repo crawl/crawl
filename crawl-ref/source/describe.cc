@@ -2802,7 +2802,7 @@ static void _adjust_item(item_def &item)
     formatted_string::parse_string(prompt).display();
     int keyin = getch_ck();
 
-    if (isalpha(keyin))
+    if (isaalpha(keyin))
     {
         int a = letter_to_index(item.slot);
         int b = letter_to_index(keyin);
