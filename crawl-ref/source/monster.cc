@@ -5603,36 +5603,24 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         actor *owner = actor_by_mid(props["sw_mid"].get_int());
         if (owner && owner != oppressor)
         {
-            // The damage should not exceed the weapon's current hp
-            // or be enough to kill the owner directly
-            int owner_hp = owner->is_player() ? you.hp
-                                              : owner->as_monster()->hit_points;
-            int shared_damage = min(damage / 2, owner_hp-1);
+            int shared_damage = damage / 2;
             if (shared_damage > 0)
             {
 
                 if (owner->is_player())
-                {
                     mpr("Your spectral weapon shares its damage with you!");
-
-                    // Don't apply attacker effects again
-                    you.hurt(oppressor, shared_damage,
-                             BEAM_MISSILE, true, false);
-                }
-                else if (owner->alive())
+                else if (owner->alive() && you.can_see(owner))
                 {
-                    if (you.can_see(owner))
-                    {
-                        string buf = " shares ";
-                        buf += owner->pronoun(PRONOUN_POSSESSIVE);
-                        buf += " spectral weapon's damage!";
-                        simple_monster_message(owner->as_monster(), buf.c_str());
-                    }
-
-                    // Don't apply attacker effects again
-                    owner->hurt(oppressor, shared_damage,
-                                BEAM_MISSILE, true, false);
+                    string buf = " shares ";
+                    buf += owner->pronoun(PRONOUN_POSSESSIVE);
+                    buf += " spectral weapon's damage!";
+                    simple_monster_message(owner->as_monster(), buf.c_str());
                 }
+
+                // Share damage using a fineff, so that it's non-fatal
+                // regardless of processing order in an AoE attack.
+                (new deferred_damage_fineff(oppressor, &menv[number],
+                                           shared_damage, false, false))->schedule();
             }
         }
     }

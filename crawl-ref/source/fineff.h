@@ -125,9 +125,9 @@ class deferred_damage_fineff : public final_effect
 {
 public:
     deferred_damage_fineff(const actor *attack, const actor *defend,
-                           int dam, bool _attacker_effects)
+                           int dam, bool _attacker_effects, bool _fatal = true)
         : final_effect(attack, defend, coord_def()),
-          damage(dam), attacker_effects(_attacker_effects)
+          damage(dam), attacker_effects(_attacker_effects), fatal(_fatal)
     {
     }
     bool mergeable(const final_effect &a) const;
@@ -136,6 +136,7 @@ public:
 protected:
     int damage;
     bool attacker_effects;
+    bool fatal;
 };
 
 class starcursed_merge_fineff : public final_effect
