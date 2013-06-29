@@ -466,13 +466,14 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     int newhd = orighd + addhd;
     monster_type new_type;
     int hp, mhp;
+    const monster_type old_type = merge_to->type;
 
     if (newhd < 6)
     {
         // Not big enough for an abomination yet.
         new_type = MONS_MACABRE_MASS;
         mhp = merge_to->max_hit_points + crawlie->max_hit_points;
-        hp = merge_to->hit_points += crawlie->hit_points;
+        hp = merge_to->hit_points += div_rand_round(crawlie->hit_points, 2);
     }
     else
     {
@@ -490,6 +491,14 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
             newhd = min(newhd, 30);
         }
 
+        // Cap total number of aboms
+        // XXX: Adapt for monster summons when summoner mid is implemented
+        if (new_type != old_type && crawlie->friendly()
+            && twisted_resurrection_max_aboms(&you) <= 0)
+        {
+            return false;
+        }
+
         // Recompute in case we limited newhd.
         addhd = newhd - orighd;
 
@@ -499,17 +508,12 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
             const int hp_gain = hit_points(addhd, 2, 5);
             mhp = merge_to->max_hit_points + hp_gain;
             hp = merge_to->hit_points + hp_gain;
-            hp += hp/10;
         }
         else if (merge_to->type == MONS_ABOMINATION_LARGE)
         {
             // Healing an existing abomination.
             mhp = merge_to->max_hit_points;
-            hp = merge_to->hit_points;
-            if (mhp <= hp + mhp/10)
-                hp = mhp;
-            else
-                hp += mhp/10;
+            hp = max(mhp, merge_to->hit_points + crawlie->hit_points);
         }
         else
         {
@@ -518,7 +522,6 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         }
     }
 
-    const monster_type old_type = merge_to->type;
     const string old_name = merge_to->name(DESC_A);
 
     // Change the monster's type if we need to.
@@ -766,7 +769,6 @@ static bool _crawling_corpse_merge(monster *crawlie)
     // No adjacent crawlies.
     return false;
 }
-
 
 static bool _slime_can_spawn(const coord_def target)
 {

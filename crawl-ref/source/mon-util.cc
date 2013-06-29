@@ -1539,9 +1539,8 @@ bool mons_can_use_stairs(const monster* mon)
 
     // Check summon status
     int stype = 0;
-    // Other permanent summons can always use stairs
-    if (mon->is_summoned(0, &stype) && !mon->is_perm_summoned()
-        && stype > 0 && stype < NUM_SPELLS)
+    // Temporary summons conditionally use stairs
+    if (mon->is_summoned(0, &stype) && stype > 0 && stype < NUM_SPELLS)
     {
         // Allow uncapped summons to use stairs. This means creatures
         // from misc evokables, temporary god summons, etc. These tend

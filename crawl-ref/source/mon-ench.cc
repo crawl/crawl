@@ -1880,6 +1880,16 @@ bool monster::is_perm_summoned() const
     return testbits(flags, MF_HARD_RESET | MF_NO_REWARD);
 }
 
+int monster::get_summon_type() const
+{
+    const mon_enchant summ = get_ench(ENCH_SUMMON);
+
+    if (summ.ench == ENCH_NONE)
+        return 0;
+
+    return summ.degree;
+}
+
 void monster::apply_enchantments()
 {
     if (enchantments.empty())

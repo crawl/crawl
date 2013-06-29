@@ -1622,7 +1622,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     // Perm summons shouldn't leave gear either.
     if (mg.extra_flags & MF_HARD_RESET && mg.extra_flags & MF_NO_REWARD)
-        mon->mark_summoned(0, true, 0, false);
+        mon->mark_summoned(0, true, mg.summon_type, false);
 
     ASSERT(!invalid_monster_index(mg.foe)
            || mg.foe == MHITYOU || mg.foe == MHITNOT);

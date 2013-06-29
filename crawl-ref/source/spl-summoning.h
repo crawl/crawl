@@ -81,6 +81,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail);
 bool monster_simulacrum(monster *caster, bool actual);
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail);
+int twisted_resurrection_max_aboms(actor* caster);
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual = true);
 
@@ -107,9 +108,12 @@ bool check_target_spectral_weapon(const actor* mons, const actor *defender);
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
 void reset_spectral_weapon(monster* mons);
 
+typedef bool (*summons_limit_filter)(monster*);
 bool summoned_monster(monster* mons, actor* caster, spell_type spell);
 bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell);
+int summons_to_limit(actor* caster, spell_type spell,
+                     summons_limit_filter filter = nullptr);
 
 struct summons_desc // : public data_index_entry<spell_type>
 {

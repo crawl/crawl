@@ -2126,6 +2126,18 @@ static const char *_count_article(int number, bool definite)
         return "Some";
 }
 
+static bool _twisted_res_summons_filter(monster* target)
+{
+    return target->type == MONS_ABOMINATION_SMALL
+        || target->type == MONS_ABOMINATION_LARGE;
+}
+
+int twisted_resurrection_max_aboms(actor* caster)
+{
+    return summons_to_limit(caster, SPELL_TWISTED_RESURRECTION,
+                            _twisted_res_summons_filter);
+}
+
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual)
 {
@@ -2135,6 +2147,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     int num_masses = 0;
     int num_lost = 0;
     int num_lost_piles = 0;
+
+    // XXX: This means monster summoners can also only make 3 in one
+    // casting; however nothing is yet stopping them from merging more
+    // afterwards
+    int max_new_aboms = twisted_resurrection_max_aboms(caster);
 
     radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
                        caster->get_los_no_trans());
@@ -2193,16 +2210,36 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
         monster_type montype;
 
+        bool is_abom = false;
         if (hd >= 11 && num_corpses > 2)
+        {
             montype = MONS_ABOMINATION_LARGE;
+            is_abom = true;
+        }
         else if (hd >= 6 && num_corpses > 1)
+        {
             montype = MONS_ABOMINATION_SMALL;
+            is_abom = true;
+        }
         else if (num_corpses > 1)
             montype = MONS_MACABRE_MASS;
         else
             montype = MONS_CRAWLING_CORPSE;
 
-        mgen_data mg(montype, beha, caster, 0, 0, *ri, foe, MG_FORCE_BEH, god);
+        if ((montype == MONS_ABOMINATION_LARGE
+            || montype == MONS_ABOMINATION_SMALL) && !max_new_aboms)
+        {
+            montype = MONS_MACABRE_MASS;
+            is_abom = false;
+        }
+
+        mgen_data mg(montype, beha, caster, 0, SPELL_TWISTED_RESURRECTION,
+                     *ri, foe, MG_FORCE_BEH, god);
+        // XXX: This marks the monster as perma-summoned. Really we need
+        // to refactor perma vs temp summons and avoid this awkward invocation
+        // (it is used in many many places).
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET | MF_NO_REGEN);
+
         if (monster *mons = create_monster(mg))
         {
             // Set hit dice, AC, and HP.
@@ -2214,6 +2251,9 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                 ++num_masses;
             else
                 ++num_crawlies;
+
+            if (is_abom)
+                --max_new_aboms;
         }
         else
         {
@@ -3152,6 +3192,8 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
     { SPELL_SHADOW_CREATURES,           5, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
+    // Perma summons
+    { SPELL_TWISTED_RESURRECTION,       3, 0 },
     { SPELL_NO_SPELL,                   0, 0 }
 };
 
@@ -3218,4 +3260,30 @@ bool summoned_monster(monster* mons, actor* caster, spell_type spell)
         return true;
     }
     return false; // Nothing needed capping
+}
+
+// Number of summons available before limit is hit
+int summons_to_limit(actor* caster, spell_type spell,
+                     summons_limit_filter filter)
+{
+    ASSERT(summons_are_capped(spell));
+    int count = 0;
+    int stype = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        const bool summoned = mi->is_summoned(0, &stype)
+            || (mi->is_perm_summoned()
+                && (stype = mi->get_summon_type())); // Intentional assignment
+
+        // XXX: This friendly check only works for player summons; if we
+        // wanted the summons cap to apply to monsters we'd need a way
+        // here to check who actually summoned the monster; there's no
+        // easy way to do that right now
+        if (summoned && stype == spell && mi->friendly()
+            && (!filter || filter(*mi)))
+        {
+            count++;
+        }
+    }
+    return (summons_limit(spell) - count);
 }
