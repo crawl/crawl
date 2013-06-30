@@ -1969,7 +1969,14 @@ static void tag_read_you(reader &th)
 #endif
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
     ASSERT_RANGE(you.form, TRAN_NONE, LAST_FORM + 1);
+#if TAG_MAJOR_VERSION == 34
+    if (you.form == TRAN_NONE)
+        you.transform_uncancellable = false;
+#else
+    ASSERT(you.form != TRAN_NONE || !you.transform_uncancellable);
+#endif
     EAT_CANARY;
+
 
     count = unmarshallShort(th);
     ASSERT_RANGE(count, 0, 32768);
