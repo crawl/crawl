@@ -691,7 +691,7 @@ If you ever wanted to escape out of the pan into the fire, this is your chance.
 This gateway allows you to return from this place via a nice scenic path
 through infinite madness.
 %%%%
-# shown if the player is a Hill Orc
+# shown if the player is an orc
 An idol of Beogh
 
 {{

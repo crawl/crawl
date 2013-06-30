@@ -6640,7 +6640,7 @@ friendly orc
 w:5
 @_generic_orc_speech_@
 %%%%
-# charmed orcs, for hill orcs (not counting Beogh)
+# charmed orcs, for orcs (not counting Beogh)
 friendly related orc
 
 @default friendly related humanoid@
