@@ -1978,7 +1978,7 @@ string get_item_description(const item_def &item, bool verbose,
             }
 
             if ((god_hates_cannibalism(you.religion)
-                   && is_player_same_species(item.mon_type))
+                   && is_player_same_genus(item.mon_type))
                 || (you.religion == GOD_ZIN
                    && mons_class_intel(item.mon_type) >= I_NORMAL)
                 || (is_good_god(you.religion)
