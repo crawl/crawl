@@ -504,7 +504,7 @@ bool mons_speaks(monster* mons)
                                            : you.religion;
 
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
-    // worship Beogh. (This assumes your being a Hill Orc, so might have odd
+    // worship Beogh. (This assumes your being an orc, so might have odd
     // results in wizard mode.) Don't count charmed or summoned orcs.
     if (you.religion == GOD_BEOGH && mons_genus(mons->type) == MONS_ORC)
     {
