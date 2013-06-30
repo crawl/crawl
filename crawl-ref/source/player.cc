@@ -534,7 +534,7 @@ bool player_genus(genus_type which_genus, species_type species)
 // If transform is true, compare with current transformation instead
 // of (or in addition to) underlying species.
 // (See mon-data.h for species/genus use.)
-bool is_player_same_species(const monster_type mon, bool transform)
+bool is_player_same_genus(const monster_type mon, bool transform)
 {
     if (transform)
     {
@@ -584,6 +584,7 @@ bool is_player_same_species(const monster_type mon, bool transform)
     // * halflings and humans
     // * dwarves and deep dwarves
     // * all elf races
+    // * all orc races
     return (mons_genus(mon) == mons_genus(player_mons(false)));
 }
 
