@@ -135,6 +135,15 @@ bool reader::valid() const
             (_pbuf && _read_offset < _pbuf->size()));
 }
 
+static NORETURN void _short_read()
+{
+    if (!crawl_state.need_save)
+        throw short_read_exception();
+    // Would be nice to name the save chunk here, but in interesting cases
+    // we're reading a copy from memory (why?).
+    die_noline("short read while reading save");
+}
+
 // Reads input in network byte order, from a file or buffer.
 unsigned char reader::readByte()
 {
@@ -142,20 +151,20 @@ unsigned char reader::readByte()
     {
         int b = fgetc(_file);
         if (b == EOF)
-            throw short_read_exception();
+            _short_read();
         return b;
     }
     else if (_chunk)
     {
         unsigned char buf;
         if (_chunk->read(&buf, 1) != 1)
-            throw short_read_exception();
+            _short_read();
         return buf;
     }
     else
     {
         if (_read_offset >= _pbuf->size())
-            throw short_read_exception();
+            _short_read();
         return (*_pbuf)[_read_offset++];
     }
 }
@@ -167,7 +176,7 @@ void reader::read(void *data, size_t size)
         if (data)
         {
             if (fread(data, 1, size, _file) != size)
-                throw short_read_exception();
+                _short_read();
         }
         else
             fseek(_file, (long)size, SEEK_CUR);
@@ -175,12 +184,12 @@ void reader::read(void *data, size_t size)
     else if (_chunk)
     {
         if (_chunk->read(data, size) != size)
-            throw short_read_exception();
+            _short_read();
     }
     else
     {
         if (_read_offset+size > _pbuf->size())
-            throw short_read_exception();
+            _short_read();
         if (data && size)
             memcpy(data, &(*_pbuf)[_read_offset], size);
 
