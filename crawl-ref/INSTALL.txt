@@ -294,6 +294,12 @@ Building on Windows (MSVC)
   must be executed any time you update to a new version of the source (or
   if you have modified tile data or unrandarts).
 
+* The first time you compile, you need to build the Contribs solution. This
+  compiles various libraries which crawl itself needs to build. This only
+  needs to be performed the first time you build, or if the contribs are
+  ever updated (extremely rare). To do this open and compile Contribs.sln
+  in source/contrib.
+
 * Open crawl-ref.sln in Visual Studio, this is in source/MSVC/.
 
 * You can now select Debug or Release from the drop-down build configurations
