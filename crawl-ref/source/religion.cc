@@ -3416,7 +3416,7 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_YREDELEMNUL && you.is_artificial())
         return false;
 
-    if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
+    if (which_god == GOD_BEOGH && !player_genus(GENPC_ORCISH))
         return false;
 
     // Fedhas hates undead, but will accept demonspawn.
@@ -3504,12 +3504,6 @@ void god_pitch(god_type which_god)
         if (which_god == GOD_SIF_MUNA)
         {
             simple_god_message(" does not accept worship from the ignorant!",
-                               which_god);
-        }
-        else if (which_god == GOD_BEOGH && you.species == SP_LAVA_ORC)
-        {
-            simple_god_message(" booms: Go away, foul mockery of the chosen"
-                               " race!",
                                which_god);
         }
         else if (!_transformed_player_can_join_god(which_god))
