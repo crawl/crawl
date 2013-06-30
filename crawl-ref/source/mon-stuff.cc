@@ -5121,6 +5121,9 @@ bool temperature_effect(int which)
         case LORC_PASSIVE_HEAT:
             return (temperature() >= TEMP_FIRE); // 13-15
         case LORC_HEAT_AURA:
+            if (you.religion == GOD_BEOGH)
+                return false;
+            // Deliberate fall-through.
         case LORC_NO_SCROLLS:
             return (temperature() >= TEMP_MAX); // 15
 
