@@ -2434,8 +2434,7 @@ bool is_orckind(const actor *act)
             return true;
         }
         if (mons_is_ghost_demon(mon->type)
-            && (mon->ghost->species == SP_HILL_ORC
-                || mon->ghost->species == SP_LAVA_ORC))
+            && (player_genus(GENPC_ORCISH, mon->ghost->species)))
         {
             return true;
         }

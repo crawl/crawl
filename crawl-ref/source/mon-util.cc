@@ -768,7 +768,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster* mon)
 {
-    if (you.species != SP_HILL_ORC || you.religion == GOD_BEOGH)
+    if (!player_genus(GENPC_ORCISH) || you.religion == GOD_BEOGH)
         return false; // no one else gives a damn
 
     return mons_genus(mon->type) == MONS_ORC
