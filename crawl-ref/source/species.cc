@@ -200,9 +200,6 @@ string species_name(species_type speci, bool genus, bool adj)
         case SP_TENGU:      res = "Tengu";                             break;
         case SP_GARGOYLE:   res = "Gargoyle";                          break;
 
-        case SP_HILL_ORC:
-            res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
-            break;
         case SP_DEEP_DWARF:
             res = (adj ? "Dwarven" : genus ? "Dwarf" : "Deep Dwarf");
             break;
