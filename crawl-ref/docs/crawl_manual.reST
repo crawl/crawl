@@ -1504,8 +1504,8 @@ Hill Orcs
   passable users of most types of magic and are particularly skilled with Fire.
 
   Many Orcs feel superior to all other species and beings, and they have formed
-  a religion around that idea. Only Hill Orcs can worship Beogh, the Orc god.
-  They can join Beogh whenever an orc priest is in sight.
+  a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
+  can join Beogh whenever an orc priest is in sight.
 
 Merfolk
   The Merfolk are a hybrid species of half-human, half-fish that typically live
@@ -1777,6 +1777,10 @@ Lava Orcs
 
   Lava Orcs make good melee fighters, preferring axes. They're pretty bad
   spellcasters, except for transmutations, fire and earth magic.
+
+  Many Orcs feel superior to all other species and beings, and they have formed
+  a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
+  can join Beogh whenever an orc priest is in sight.
 
 Gargoyles
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
