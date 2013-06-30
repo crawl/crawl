@@ -1737,7 +1737,7 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
         return true;
 
-    if (you.form == TRAN_JELLY || you.form == TRAN_WISP)
+    if (form == TRAN_JELLY || form == TRAN_WISP)
         return 1;
 
     if (items && !suppressed())
@@ -1750,8 +1750,8 @@ bool player::res_corr(bool calc_unid, bool items) const
         }
     }
 
-    if ((form_keeps_mutations() || you.form == TRAN_DRAGON)
-        && you.species == SP_YELLOW_DRACONIAN)
+    if ((form_keeps_mutations() || form == TRAN_DRAGON)
+        && species == SP_YELLOW_DRACONIAN)
     {
         return true;
     }
@@ -4562,20 +4562,20 @@ int player::scan_artefacts(artefact_prop_type which_property,
 
     for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
     {
-        if (you.melded[i] || you.equip[i] == -1)
+        if (melded[i] || equip[i] == -1)
             continue;
 
-        const int eq = you.equip[i];
+        const int eq = equip[i];
 
         // Only weapons give their effects when in our hands.
-        if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
+        if (i == EQ_WEAPON && inv[ eq ].base_type != OBJ_WEAPONS)
             continue;
 
-        if (!is_artefact(you.inv[ eq ]))
+        if (!is_artefact(inv[ eq ]))
             continue;
 
         bool known;
-        int val = artefact_wpn_property(you.inv[eq], which_property, known);
+        int val = artefact_wpn_property(inv[eq], which_property, known);
         if (calc_unid || known)
             retval += val;
     }
@@ -6018,7 +6018,7 @@ player::~player()
 flight_type player::flight_mode() const
 {
     if (duration[DUR_FLIGHT]
-        || you.attribute[ATTR_PERM_FLIGHT]
+        || attribute[ATTR_PERM_FLIGHT]
         || form == TRAN_WISP
         // dragon and bat should be FL_WINGED, but we don't want paralysis
         // instakills over lava
@@ -6096,7 +6096,7 @@ bool player::cannot_speak() const
 
 string player::shout_verb() const
 {
-    switch (you.form)
+    switch (form)
     {
     case TRAN_DRAGON:
         return "roar";
@@ -6119,7 +6119,7 @@ string player::shout_verb() const
         return "whoosh"; // any wonder why?
 
     default:
-        if (you.species == SP_FELID)
+        if (species == SP_FELID)
             return coinflip() ? "meow" : "yowl";
         // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
@@ -6143,7 +6143,7 @@ void player::banish(actor *agent, const string &who)
     if (brdepth[BRANCH_ABYSS] == -1)
         return;
 
-    if (you.elapsed_time <= you.attribute[ATTR_BANISHMENT_IMMUNITY])
+    if (elapsed_time <= attribute[ATTR_BANISHMENT_IMMUNITY])
     {
         mpr("You resist the pull of the Abyss.");
         return;
@@ -6232,11 +6232,11 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::missile_deflection() const
 {
-    if (you.duration[DUR_DEFLECT_MISSILES])
+    if (duration[DUR_DEFLECT_MISSILES])
         return 2;
-    if (you.duration[DUR_REPEL_MISSILES]
+    if (duration[DUR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
-        || (!you.suppressed() && you.scan_artefacts(ARTP_RMSL, true)))
+        || (!suppressed() && scan_artefacts(ARTP_RMSL, true)))
     {
         return 1;
     }
@@ -6262,7 +6262,7 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
 
     if (use_size)
     {
-        const int size = you.body_size(PSIZE_BODY);
+        const int size = body_size(PSIZE_BODY);
 
         const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
 
@@ -6281,12 +6281,12 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
 // The EV penalty to the player for wearing their current shield.
 int player::adjusted_shield_penalty(int scale) const
 {
-    const item_def *shield_l = you.slot_item(EQ_SHIELD, false);
+    const item_def *shield_l = slot_item(EQ_SHIELD, false);
     if (!shield_l)
         return 0;
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
-    return max(0, (base_shield_penalty * scale - you.skill(SK_SHIELDS, scale)
+    return max(0, (base_shield_penalty * scale - skill(SK_SHIELDS, scale)
                   / max(1, 5 + _player_evasion_size_factor())));
 }
 
@@ -6309,14 +6309,17 @@ int player::skill(skill_type sk, int scale, bool real) const
     int level = skills[sk] * scale + get_skill_progress(sk, scale);
     if (real)
         return level;
-    if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
+    if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
-    if (you.penance[GOD_ASHENZARI])
+    if (penance[GOD_ASHENZARI])
         level = max(level - min(4 * scale, level / 2), 0);
-    else if (you.religion == GOD_ASHENZARI && you.skill_boost[sk]
-             && piety_rank() > 2)
+    else if (religion == GOD_ASHENZARI && piety_rank() > 2)
     {
-        level = ash_skill_boost(sk, scale);
+        if (skill_boost.find(sk) != skill_boost.end()
+            && skill_boost.find(sk)->second)
+        {
+            level = ash_skill_boost(sk, scale);
+        }
     }
 
     return level;
@@ -6401,17 +6404,17 @@ int player::armour_class() const
     }
 
     // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
+    if (!suppressed())
     {
-        AC += you.wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
+        AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
 
-        if (you.wearing_ego(EQ_WEAPON, SPWPN_PROTECTION))
+        if (wearing_ego(EQ_WEAPON, SPWPN_PROTECTION))
             AC += 500;
 
-        if (you.wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
+        if (wearing_ego(EQ_SHIELD, SPARM_PROTECTION))
             AC += 300;
 
-        AC += you.scan_artefacts(ARTP_AC) * 100;
+        AC += scan_artefacts(ARTP_AC) * 100;
     }
 
     if (duration[DUR_ICY_ARMOUR])
@@ -6434,7 +6437,7 @@ int player::armour_class() const
 
         if (player_genus(GENPC_DRACONIAN))
         {
-            AC += 400 + 100 * (you.experience_level / 3);  // max 13
+            AC += 400 + 100 * (experience_level / 3);  // max 13
             if (species == SP_GREY_DRACONIAN) // no breath
                 AC += 500;
             if (form == TRAN_DRAGON)
@@ -6482,7 +6485,7 @@ int player::armour_class() const
             break;
 
         case TRAN_WISP:
-            AC += 500 + 50 * you.experience_level;
+            AC += 500 + 50 * experience_level;
             break;
         case TRAN_FUNGUS:
             AC += 1200;
@@ -6497,7 +6500,7 @@ int player::armour_class() const
             break;
 
         case TRAN_TREE: // extreme bonus, no EV
-            AC += 2000 + 50 * you.experience_level;
+            AC += 2000 + 50 * experience_level;
             break;
         }
     }
@@ -6544,7 +6547,7 @@ int player::armour_class() const
   **/
 int player::gdr_perc() const
 {
-    switch (you.form)
+    switch (form)
     {
     case TRAN_DRAGON:
         return 34; // base AC 8
@@ -6601,7 +6604,7 @@ mon_holy_type player::holiness() const
 bool player::undead_or_demonic() const
 {
     // This is only for TSO-related stuff, so demonspawn are included.
-    return you.is_undead || you.species == SP_DEMONSPAWN;
+    return is_undead || species == SP_DEMONSPAWN;
 }
 
 bool player::is_holy(bool check_spells) const
@@ -6614,7 +6617,7 @@ bool player::is_holy(bool check_spells) const
 
 bool player::is_unholy(bool check_spells) const
 {
-    return you.species == SP_DEMONSPAWN;
+    return species == SP_DEMONSPAWN;
 }
 
 bool player::is_evil(bool check_spells) const
@@ -6643,7 +6646,7 @@ bool player::is_artificial() const
 
 bool player::is_unbreathing() const
 {
-    switch (you.form)
+    switch (form)
     {
     case TRAN_LICH:
     case TRAN_STATUE:
@@ -6664,7 +6667,7 @@ bool player::is_unbreathing() const
 
 bool player::is_insubstantial() const
 {
-    return you.form == TRAN_WISP;
+    return form == TRAN_WISP;
 }
 
 int player::res_acid(bool calc_unid) const
@@ -6679,7 +6682,7 @@ int player::res_fire() const
 
 int player::res_holy_fire() const
 {
-    if (you.species == SP_DJINNI)
+    if (species == SP_DJINNI)
         return 3;
     return actor::res_holy_fire();
 }
@@ -6704,16 +6707,16 @@ int player::res_water_drowning() const
     int rw = 0;
 
     if (is_unbreathing()
-        || you.species == SP_MERFOLK && !form_changed_physiology()
-        || you.species == SP_OCTOPODE && !form_changed_physiology()
-        || you.form == TRAN_ICE_BEAST)
+        || species == SP_MERFOLK && !form_changed_physiology()
+        || species == SP_OCTOPODE && !form_changed_physiology()
+        || form == TRAN_ICE_BEAST)
     {
         rw++;
     }
 
     // A fiery lich/hot statue suffers from quenching but not drowning, so
     // neutral resistance sounds ok.
-    if (you.species == SP_DJINNI)
+    if (species == SP_DJINNI)
         rw--;
 
     return rw;
@@ -6738,7 +6741,7 @@ int player::res_rotting(bool temp) const
     if (temp && (petrified() || form == TRAN_STATUE || form == TRAN_WISP))
         return 3;
 
-    if (you.mutation[MUT_FOUL_STENCH])
+    if (mutation[MUT_FOUL_STENCH])
         return 1;
 
     switch (is_undead)
@@ -6751,12 +6754,12 @@ int player::res_rotting(bool temp) const
         return 1; // rottable by Zin, not by necromancy
 
     case US_SEMI_UNDEAD:
-        if (temp && you.hunger_state < HS_SATIATED)
+        if (temp && hunger_state < HS_SATIATED)
             return 1;
         return 0; // no permanent resistance
 
     case US_UNDEAD:
-        if (!temp && you.form == TRAN_LICH)
+        if (!temp && form == TRAN_LICH)
             return 0;
         return 3; // full immunity
     }
@@ -6794,7 +6797,7 @@ int player::res_torment() const
 int player::res_wind() const
 {
     // Full control of the winds around you can negate a hostile tornado.
-    return you.duration[DUR_TORNADO] ? 1 : 0;
+    return duration[DUR_TORNADO] ? 1 : 0;
 }
 
 int player::res_petrify(bool temp) const
@@ -6802,15 +6805,15 @@ int player::res_petrify(bool temp) const
     if (player_mutation_level(MUT_PETRIFICATION_RESISTANCE))
         return 1;
 
-    if (temp && (you.form == TRAN_STATUE || you.form == TRAN_WISP))
+    if (temp && (form == TRAN_STATUE || form == TRAN_WISP))
         return 1;
     return 0;
 }
 
 int player::res_constrict() const
 {
-    if (you.form == TRAN_JELLY || you.form == TRAN_PORCUPINE
-        || you.form == TRAN_WISP)
+    if (form == TRAN_JELLY || form == TRAN_PORCUPINE
+        || form == TRAN_WISP)
     {
         return 3;
     }
@@ -6890,42 +6893,42 @@ int player_res_magic(bool calc_unid, bool temp)
 
 bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
-    if (you.duration[DUR_DIMENSION_ANCHOR])
+    if (duration[DUR_DIMENSION_ANCHOR])
         return true;
 
     if (crawl_state.game_is_sprint() && !blinking)
         return true;
 
-    if (you.form == TRAN_TREE)
+    if (form == TRAN_TREE)
         return true;
 
-    return (you.has_notele_item(calc_unid)
+    return (has_notele_item(calc_unid)
             || stasis_blocks_effect(calc_unid, permit_id, NULL)
-            || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
+            || crawl_state.game_is_zotdef() && orb_haloed(pos()));
 }
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)
 {
-    return (you.burden_state == BS_UNENCUMBERED
-            && x_chance_in_y(you.skill(SK_UNARMED_COMBAT, 10), 200)
+    return (burden_state == BS_UNENCUMBERED
+            && x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200)
             && x_chance_in_y(2, 1 + heavy_armour_penalty));
 }
 
 bool player::cancellable_flight() const
 {
-    return you.duration[DUR_FLIGHT] && !you.permanent_flight()
-           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE];
+    return duration[DUR_FLIGHT] && !permanent_flight()
+           && !attribute[ATTR_FLIGHT_UNCANCELLABLE];
 }
 
 bool player::permanent_flight() const
 {
-    return you.attribute[ATTR_PERM_FLIGHT];
+    return attribute[ATTR_PERM_FLIGHT];
 }
 
 bool player::racial_permanent_flight() const
 {
-    return (you.species == SP_TENGU && you.experience_level >= 15
-            || you.species == SP_BLACK_DRACONIAN && you.experience_level >= 14);
+    return (species == SP_TENGU && experience_level >= 15
+            || species == SP_BLACK_DRACONIAN && experience_level >= 14);
 }
 
 bool player::tengu_flight() const
@@ -6950,7 +6953,7 @@ reach_type player::reach_range() const
 
 monster_type player::mons_species(bool zombie_base) const
 {
-    return player_species_to_mons_species(you.species);
+    return player_species_to_mons_species(species);
 }
 
 bool player::poison(actor *agent, int amount, bool force)
@@ -6989,7 +6992,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     {
         const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
-             KILLED_BY_MONSTER, "", mon->visible_to(&you), NULL,
+             KILLED_BY_MONSTER, "", mon->visible_to(this), NULL,
              attacker_effects);
     }
     else
@@ -7023,13 +7026,13 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (amount <= 0 && immediate <= 0)
         return false;
 
-    if (res_rotting() || you.duration[DUR_DEATHS_DOOR])
+    if (res_rotting() || duration[DUR_DEATHS_DOOR])
     {
         mpr("You feel terrible.");
         return false;
     }
 
-    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+    if (duration[DUR_DIVINE_STAMINA] > 0)
     {
         mpr("Your divine stamina protects you from decay!");
         return false;
@@ -7098,7 +7101,7 @@ void player::paralyse(actor *who, int str, string source)
     if (!paralysis && !source.empty())
     {
         take_note(Note(NOTE_PARALYSIS, str, 0, source.c_str()));
-        you.props["paralysed_by"] = source;
+        props["paralysed_by"] = source;
     }
 
 
@@ -7119,39 +7122,39 @@ void player::petrify(actor *who, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.res_petrify() && !force)
+    if (res_petrify() && !force)
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
     }
 
-    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+    if (duration[DUR_DIVINE_STAMINA] > 0)
     {
         mpr("Your divine stamina protects you from petrification!");
         return;
     }
 
-    if (you.petrifying())
+    if (petrifying())
     {
         mpr("Your limbs have turned to stone.");
-        you.duration[DUR_PETRIFYING] = 1;
+        duration[DUR_PETRIFYING] = 1;
         return;
     }
 
-    if (you.petrified())
+    if (petrified())
         return;
 
-    you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
+    duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
-    you.redraw_evasion = true;
+    redraw_evasion = true;
     mpr("You are slowing down.", MSGCH_WARN);
 }
 
 bool player::fully_petrify(actor *foe, bool quiet)
 {
-    you.duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
+    duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
                         + random2(4 * BASELINE_DELAY);
-    you.redraw_evasion = true;
+    redraw_evasion = true;
     mpr("You have turned to stone.");
     return true;
 }
@@ -7178,7 +7181,7 @@ int player::has_claws(bool allow_tran) const
             return 0;
     }
 
-    if (const int c = species_has_claws(you.species))
+    if (const int c = species_has_claws(species))
         return c;
 
     return player_mutation_level(MUT_CLAWS, allow_tran);
@@ -7192,7 +7195,7 @@ bool player::has_usable_claws(bool allow_tran) const
 int player::has_talons(bool allow_tran) const
 {
     // XXX: Do merfolk in water belong under allow_tran?
-    if (you.fishtail)
+    if (fishtail)
         return 0;
 
     return player_mutation_level(MUT_TALONS, allow_tran);
@@ -7235,7 +7238,7 @@ int player::has_tail(bool allow_tran) const
 
     // XXX: Do merfolk in water belong under allow_tran?
     if (player_genus(GENPC_DRACONIAN)
-        || you.fishtail
+        || fishtail
         || player_mutation_level(MUT_STINGER, allow_tran))
     {
         return 1;
@@ -7248,7 +7251,7 @@ int player::has_usable_tail(bool allow_tran) const
 {
     // TSO worshippers don't use their stinger in order
     // to avoid poisoning.
-    if (you.religion == GOD_SHINING_ONE
+    if (religion == GOD_SHINING_ONE
         && player_mutation_level(MUT_STINGER, allow_tran) > 0)
     {
         return 0;
@@ -7282,7 +7285,7 @@ int player::usable_tentacles() const
 
     int free_tentacles = numtentacle - num_constricting();
 
-    if (you.shield())
+    if (shield())
         free_tentacles -= 2;
 
     const item_def* wp = slot_item(EQ_WEAPON);
@@ -7314,7 +7317,7 @@ int player::has_tentacles(bool allow_tran) const
             return 0;
     }
 
-    if (you.species == SP_OCTOPODE)
+    if (species == SP_OCTOPODE)
         return 8;
 
     return 0;
@@ -7332,7 +7335,7 @@ bool player::sicken(int amount, bool allow_hint, bool quiet)
     if (res_rotting() || amount <= 0)
         return false;
 
-    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+    if (duration[DUR_DIVINE_STAMINA] > 0)
     {
         mpr("Your divine stamina protects you from disease!");
         return false;
@@ -7356,13 +7359,13 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
         return true;
 
     // All effects negated by magical suppression should go in here.
-    if (items && !you.suppressed())
+    if (items && !suppressed())
     {
-        if (you.wearing(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
+        if (wearing(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
             // armour: (checks head armour only)
-            || you.wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
+            || wearing_ego(EQ_HELMET, SPARM_SEE_INVISIBLE)
             // randart gear
-            || you.scan_artefacts(ARTP_EYESIGHT, calc_unid) > 0)
+            || scan_artefacts(ARTP_EYESIGHT, calc_unid) > 0)
         {
             return true;
         }
@@ -7382,7 +7385,7 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     if (player_mutation_level(MUT_EYEBALLS) == 3)
         return true;
 
-    if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
+    if (religion == GOD_ASHENZARI && piety >= piety_breakpoint(2)
         && !player_under_penance())
     {
         return true;
@@ -7453,18 +7456,18 @@ void player::backlight()
 {
     if (!duration[DUR_INVIS])
     {
-        if (duration[DUR_CORONA] || you.glows_naturally())
+        if (duration[DUR_CORONA] || glows_naturally())
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");
 
-        you.increase_duration(DUR_CORONA, random_range(15, 35), 250);
+        increase_duration(DUR_CORONA, random_range(15, 35), 250);
     }
     else
     {
         mpr("You feel strangely conspicuous.");
 
-        you.increase_duration(DUR_CORONA, random_range(3, 5), 250);
+        increase_duration(DUR_CORONA, random_range(3, 5), 250);
     }
 }
 
@@ -7492,9 +7495,9 @@ bool player::can_safely_mutate() const
 
 bool player::can_polymorph() const
 {
-    if (you.transform_uncancellable)
+    if (transform_uncancellable)
         return false;
-    if (you.is_undead)
+    if (is_undead)
         return is_undead == US_SEMI_UNDEAD && hunger_state > HS_SATIATED;
     return true;
 }
@@ -7504,9 +7507,9 @@ bool player::can_bleed(bool allow_tran) const
     if (allow_tran)
     {
         // These transformations don't bleed. Lichform is handled as undead.
-        if (you.form == TRAN_STATUE || you.form == TRAN_ICE_BEAST
-            || you.form == TRAN_SPIDER || you.form == TRAN_TREE
-            || you.form == TRAN_FUNGUS || you.form == TRAN_PORCUPINE)
+        if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
+            || form == TRAN_SPIDER || form == TRAN_TREE
+            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE)
         {
             return false;
         }
@@ -7575,7 +7578,7 @@ bool player::polymorph(int pow)
 
     if (f && transform(pow, f))
     {
-        you.transform_uncancellable = true;
+        transform_uncancellable = true;
         return true;
     }
     return false;
@@ -7795,15 +7798,15 @@ void player::increase_duration(duration_type dur, int turns, int cap,
         mpr(msg);
     cap *= BASELINE_DELAY;
 
-    you.duration[dur] += turns * BASELINE_DELAY;
-    if (cap && you.duration[dur] > cap)
-        you.duration[dur] = cap;
+    duration[dur] += turns * BASELINE_DELAY;
+    if (cap && duration[dur] > cap)
+        duration[dur] = cap;
 }
 
 void player::set_duration(duration_type dur, int turns,
                           int cap, const char * msg)
 {
-    you.duration[dur] = 0;
+    duration[dur] = 0;
     increase_duration(dur, turns, cap, msg);
 }
 
@@ -7811,7 +7814,7 @@ void player::goto_place(const level_id &lid)
 {
     where_are_you = static_cast<branch_type>(lid.branch);
     depth = lid.depth;
-    ASSERT_RANGE(depth, 1, brdepth[you.where_are_you] + 1);
+    ASSERT_RANGE(depth, 1, brdepth[where_are_you] + 1);
 }
 
 bool player::attempt_escape(int attempts)
@@ -7844,7 +7847,7 @@ bool player::attempt_escape(int attempts)
         emsg += themonst->name(DESC_THE, true);
         emsg += " fails, but you feel that another attempt might succeed.";
         mpr(emsg);
-        you.turn_is_over = true;
+        turn_is_over = true;
         return false;
     }
 }
@@ -7854,12 +7857,12 @@ void player::sentinel_mark(bool trap)
     if (duration[DUR_SENTINEL_MARK])
     {
         mpr("The mark upon you grows brighter.");
-        you.increase_duration(DUR_SENTINEL_MARK, random_range(30, 50), 250);
+        increase_duration(DUR_SENTINEL_MARK, random_range(30, 50), 250);
     }
     else
     {
         mpr("A sentinel's mark forms upon you.", MSGCH_WARN);
-        you.increase_duration(DUR_SENTINEL_MARK, (trap ? random_range(35, 55)
+        increase_duration(DUR_SENTINEL_MARK, (trap ? random_range(35, 55)
                                                        : random_range(50, 80)),
                               250);
     }
@@ -7867,18 +7870,18 @@ void player::sentinel_mark(bool trap)
 
 bool player::made_nervous_by(const coord_def &p)
 {
-    if (you.form != TRAN_FUNGUS)
+    if (form != TRAN_FUNGUS)
         return false;
     monster* mons = monster_at(p);
     if (mons && !mons_is_firewood(mons))
         return false;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_iterator mi(get_los()); mi; ++mi)
     {
             if (!(mons_is_wandering(*mi)
                         || mi->asleep()
                         || mi->confused()
                         || mi->cannot_act())
-                && you.see_cell(mi->pos())
+                && see_cell(mi->pos())
                 && !mons_is_firewood(*mi)
                 && !mi->neutral())
                 return true;
@@ -7893,7 +7896,7 @@ void player::weaken(actor *attacker, int pow)
     else
         mpr("You feel as though you will be weak longer.", MSGCH_WARN);
 
-    you.increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
+    increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
 /*

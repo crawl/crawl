@@ -238,7 +238,7 @@ public:
     item_def *weapon(int which_attack = -1) const;
     item_def *launcher();
     item_def *missiles();
-    item_def *shield();
+    item_def *shield() const;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,

@@ -28,7 +28,7 @@ bool player::see_cell(const coord_def &p) const
     if (crawl_state.game_is_arena() && is_player())
         return true;
     if (xray_vision)
-        return ((pos() - p).abs() <= dist_range(you.current_vision));
+        return ((pos() - p).abs() <= dist_range(current_vision));
     return actor::see_cell(p);
 }
 
@@ -65,7 +65,7 @@ const los_base* player::get_los()
     else if (xray_vision)
     {
         los = los_glob(pos(), LOS_ARENA,
-                       circle_def(you.current_vision, C_ROUND));
+                       circle_def(current_vision, C_ROUND));
         return &los;
     }
     else

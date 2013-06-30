@@ -2460,7 +2460,7 @@ item_def *monster::mslot_item(mon_inv_type mslot) const
     return (mi == NON_ITEM ? NULL : &mitm[mi]);
 }
 
-item_def *monster::shield()
+item_def *monster::shield() const
 {
     return mslot_item(MSLOT_SHIELD);
 }
