@@ -3165,7 +3165,8 @@ bool summons_are_capped(spell_type spell)
 
 int summons_limit(spell_type spell)
 {
-    if (!summons_are_capped(spell)) return 0;
+    if (!summons_are_capped(spell))
+        return 0;
     const summons_desc *desc = summonsindex[spell];
     return desc->type_cap;
 }
@@ -3173,7 +3174,8 @@ int summons_limit(spell_type spell)
 // Call when a monster has been summoned to manager this summoner's caps
 bool summoned_monster(monster* mons, actor* caster, spell_type spell)
 {
-    if (!summons_are_capped(spell)) return false;
+    if (!summons_are_capped(spell))
+        return false;
 
     const summons_desc *desc = summonsindex[spell];
 
