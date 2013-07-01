@@ -680,7 +680,7 @@ function (exports, $, key_conversion, chat, comm) {
         entry.find(".idle_time")
             .data("sort", "" + data.idle_time)
             .attr("data-sort", "" + data.idle_time);
-        set("spectator_count", data.spectator_count);
+        set("spectator_count", data.spectator_count > 0 ? data.spectator_count : "");
         if (entry.find(".milestone").text() !== data.milestone)
         {
             if (single)
