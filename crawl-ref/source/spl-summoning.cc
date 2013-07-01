@@ -311,13 +311,14 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
             mon = RANDOM_ELEMENT(swarmers);
         while (player_will_anger_monster(mon));
 
-        if (create_monster(
+        if (monster *mons = create_monster(
                 mgen_data(mon, BEH_FRIENDLY, &you,
                           dur, SPELL_SUMMON_SWARM,
                           you.pos(),
                           MHITYOU,
                           0, god)))
         {
+            summoned_monster(mons, &you, SPELL_SUMMON_SWARM);
             success = true;
         }
     }
@@ -3152,6 +3153,8 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
     { SPELL_SHADOW_CREATURES,           5, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
+    // Rod specials
+    { SPELL_SUMMON_SWARM,              99, 2 },
     { SPELL_NO_SPELL,                   0, 0 }
 };
 
