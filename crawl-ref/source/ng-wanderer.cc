@@ -37,55 +37,51 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         autopickup_starting_ammo(MI_NEEDLE);
     }
 
-    newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-
-    // We'll also re-fill the template, all for later possible safe
-    // reuse of code in the future.
-    you.inv[slot].quantity  = 1;
-    you.inv[slot].plus      = 0;
-    you.inv[slot].plus2     = 0;
-    you.inv[slot].special   = 0;
+    int sub_type = WPN_DAGGER;
 
     // Now fill in the type according to the random wpn_skill.
     switch (wpn_skill)
     {
     case SK_SHORT_BLADES:
-        you.inv[slot].sub_type = WPN_SHORT_SWORD;
+        sub_type = WPN_SHORT_SWORD;
         break;
 
     case SK_LONG_BLADES:
-        you.inv[slot].sub_type = WPN_FALCHION;
+        sub_type = WPN_FALCHION;
         break;
 
     case SK_MACES_FLAILS:
-        you.inv[slot].sub_type = WPN_MACE;
+        sub_type = WPN_MACE;
         break;
 
     case SK_AXES:
-        you.inv[slot].sub_type = WPN_HAND_AXE;
+        sub_type = WPN_HAND_AXE;
         break;
 
     case SK_POLEARMS:
-        you.inv[slot].sub_type = WPN_SPEAR;
+        sub_type = WPN_SPEAR;
         break;
 
     case SK_STAVES:
-        you.inv[slot].sub_type = WPN_QUARTERSTAFF;
+        sub_type = WPN_QUARTERSTAFF;
         break;
 
     case SK_THROWING:
-        you.inv[slot].sub_type = WPN_BLOWGUN;
+        sub_type = WPN_BLOWGUN;
         break;
 
     case SK_BOWS:
-        you.inv[slot].sub_type = WPN_BOW;
+        sub_type = WPN_BOW;
         break;
 
     case SK_CROSSBOWS:
-        you.inv[slot].sub_type = WPN_CROSSBOW;
+        sub_type = WPN_CROSSBOW;
         break;
     }
 
+    newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, sub_type);
+    you.inv[slot].quantity  = 1;
+    you.inv[slot].special   = 0;
     int offset = plus ? 1 : 0;
     you.inv[slot].plus  = random2(plus) + offset;
     you.inv[slot].plus2 = random2(plus) + offset;
