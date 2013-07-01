@@ -751,9 +751,12 @@ float unmarshallFloat(reader &th)
 void marshallString(writer &th, const string &data, int maxSize)
 {
     // allow for very long strings (well, up to 32K).
-    int len = data.length();
-    if (maxSize > 0 && len > maxSize)
+    size_t len = data.length();
+    if (maxSize > 0 && len > (size_t) maxSize)
         len = maxSize;
+    // If it is still too long to marshall, truncate it to 32K.
+    if (len > SHRT_MAX)
+        len = SHRT_MAX;
     marshallShort(th, len);
 
     // put in the actual string -- we'll null terminate on
@@ -774,6 +777,7 @@ static int unmarshallCString(reader &th, char *data, int maxSize)
 
     // Get length.
     short len = unmarshallShort(th);
+    ASSERT(len >= 0);
     int copylen = len;
 
     if (len >= maxSize)
