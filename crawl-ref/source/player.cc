@@ -4472,7 +4472,7 @@ unsigned int exp_needed(int lev, int exp_apt)
         else
         {
             lev -= 12;
-            level = 15500 + 10500 * lev + 3000 * lev * lev;
+            level = 16675 + 5985 * lev + 4235 * lev * lev;
         }
         break;
     }
