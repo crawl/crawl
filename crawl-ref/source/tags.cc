@@ -3899,33 +3899,41 @@ void unmarshallMonster(reader &th, monster& m)
     }
     else
 #endif
-    if (mons_is_ghost_demon(m.type))
-    {
+
+    if (mons_is_ghost_demon(m.type)
 #if TAG_MAJOR_VERSION == 34
-        // Construct a new chimera ghost demon from the old parts
-        if (mons_class_is_chimeric(m.type)
-            && th.getMinorVersion() < TAG_MINOR_CHIMERA_GHOST_DEMON)
-        {
-            ghost_demon ghost;
-            monster_type parts[] =
-            {
-                get_chimera_part(&m, 1),
-                get_chimera_part(&m, 2),
-                get_chimera_part(&m, 3)
-            };
-            ghost.init_chimera(&m, parts);
-            m.set_ghost(ghost);
-            m.ghost_demon_init();
-        }
-        else
+        // Don't unmarshall the ghost demon if this is an invalid chimera
+        && (!mons_class_is_chimeric(m.type)
+            || th.getMinorVersion() >= TAG_MINOR_CHIMERA_GHOST_DEMON)
 #endif
-            m.set_ghost(unmarshallGhost(th));
-    }
+        )
+        m.set_ghost(unmarshallGhost(th));
 
     _unmarshall_constriction(th, &m);
 
     m.props.clear();
     m.props.read(th);
+
+#if TAG_MAJOR_VERSION == 34
+    // Now we've got props, can construct a missing ghost demon for
+    // chimera that need upgrading
+    if (th.getMinorVersion() < TAG_MINOR_CHIMERA_GHOST_DEMON
+        && mons_is_ghost_demon(m.type)
+        && mons_class_is_chimeric(m.type))
+    {
+        // Construct a new chimera ghost demon from the old parts
+        ghost_demon ghost;
+        monster_type parts[] =
+        {
+            get_chimera_part(&m, 1),
+            get_chimera_part(&m, 2),
+            get_chimera_part(&m, 3)
+        };
+        ghost.init_chimera(&m, parts);
+        m.set_ghost(ghost);
+        m.ghost_demon_init();
+    }
+#endif
 
     if (m.props.exists("monster_tile_name"))
     {
