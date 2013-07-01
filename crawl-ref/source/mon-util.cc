@@ -1810,9 +1810,6 @@ flight_type mons_flies(const monster* mon, bool temp)
     if (mons_is_zombified(mon))
         ret = max(ret, mons_class_flies(mon->type));
 
-    if (mon->type == MONS_CHIMERA && mon->props.exists("chimera_wings"))
-        ret = mons_class_flies(get_chimera_wings(mon));
-
     if (temp && ret < FL_LEVITATE)
     {
         if (mon->scan_artefacts(ARTP_FLY) > 0)
