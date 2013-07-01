@@ -1344,7 +1344,8 @@ bool mons_is_ghost_demon(monster_type mc)
             || mc == MONS_PLAYER_GHOST
             || mc == MONS_PLAYER_ILLUSION
             || mons_class_is_animated_weapon(mc)
-            || mc == MONS_PANDEMONIUM_LORD;
+            || mc == MONS_PANDEMONIUM_LORD
+            || mons_class_is_chimeric(mc);
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -1663,25 +1664,10 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS || mon->has_hydra_multi_attack())
         attk_number = 0;
 
-    if (mons_is_ghost_demon(mc))
+    if (mons_class_is_chimeric(mc))
     {
-        if (attk_number == 0)
-        {
-            return (mon_attack_def::attk(mon->ghost->damage,
-                                         mon->ghost->att_type,
-                                         mon->ghost->att_flav));
-        }
-
-        return mon_attack_def::attk(0, AT_NONE);
-    }
-
-    if (zombified && mc != MONS_KRAKEN_TENTACLE)
-        mc = mons_zombie_base(mon);
-
-    // Chimera get attacks 0, 1 and 2 from their base components. Attack 3 is
-    // the secondary attack of the main base type.
-    if (mc == MONS_CHIMERA)
-    {
+        // Chimera get attacks 0, 1 and 2 from their base components. Attack 3 is
+        // the secondary attack of the main base type.
         switch (attk_number)
         {
         case 0:
@@ -1707,6 +1693,20 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
             break;
         }
     }
+    else if (mons_is_ghost_demon(mc))
+    {
+        if (attk_number == 0)
+        {
+            return (mon_attack_def::attk(mon->ghost->damage,
+                                         mon->ghost->att_type,
+                                         mon->ghost->att_flav));
+        }
+
+        return mon_attack_def::attk(0, AT_NONE);
+    }
+
+    if (zombified && mc != MONS_KRAKEN_TENTACLE)
+        mc = mons_zombie_base(mon);
 
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];

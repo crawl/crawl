@@ -1304,27 +1304,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         define_zombie(mon, ztype, mg.cls);
     }
-    else if (mg.cls == MONS_CHIMERA)
-    {
-        // Requires 3 parts
-        if (mg.chimera_mons.size() != 3)
-        {
-            if (!define_chimera_for_place(mon, place, mg.cls, fpos))
-            {
-                mon->reset();
-                return 0;
-            }
-        }
-        else
-        {
-            monster_type parts[] = {
-                mg.chimera_mons[0],
-                mg.chimera_mons[1],
-                mg.chimera_mons[2],
-            };
-            define_chimera(mon, parts);
-        }
-    }
     else
         define_monster(mon);
 
@@ -1728,6 +1707,32 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                            mg.props[TUKIMA_POWER].get_int() : 100,
                                        mg.props.exists(TUKIMA_SKILL) ?
                                            mg.props[TUKIMA_SKILL].get_int() : 270);
+        }
+        mon->set_ghost(ghost);
+        mon->ghost_demon_init();
+    }
+    else if (mons_class_is_chimeric(mon->type))
+    {
+        ghost_demon ghost;
+
+        // Requires 3 parts
+        if (mg.chimera_mons.size() != 3)
+        {
+            if (!ghost.init_chimera_for_place(mon, place, mg.cls, fpos))
+            {
+                mon->reset();
+                return 0;
+            }
+        }
+        else
+        {
+            monster_type parts[] =
+            {
+                mg.chimera_mons[0],
+                mg.chimera_mons[1],
+                mg.chimera_mons[2],
+            };
+            ghost.init_chimera(mon, parts);
         }
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
