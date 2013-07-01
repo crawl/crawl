@@ -2147,10 +2147,7 @@ void drink(int slot)
 
     const bool alreadyknown = item_type_known(potion);
 
-    if (you.duration[DUR_FREEZING]
-        && coinflip()
-        && !(you.conservation() && !one_chance_in(10))
-        && !(you.mutation[MUT_CONSERVE_POTIONS] && !one_chance_in(10)))
+    if (you.duration[DUR_FREEZING] && coinflip())
     {
         const string item_name = quant_name(you.inv[slot], 1, DESC_THE);
         mprf("%s freezes and shatters!",
@@ -2968,10 +2965,7 @@ void read_scroll(int slot)
         return mpr("You'd burn any scroll you tried to read!");
     }
 
-    if (you.duration[DUR_SMOLDERING]
-            && coinflip()
-            && !(you.conservation() && !one_chance_in(10))
-            && !(you.mutation[MUT_CONSERVE_SCROLLS] && !one_chance_in(10)))
+    if (you.duration[DUR_SMOLDERING] && coinflip())
     {
         const string item_name = quant_name(you.inv[item_slot], 1, DESC_THE);
         mprf("%s burns to ash!",

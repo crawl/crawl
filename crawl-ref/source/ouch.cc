@@ -710,8 +710,17 @@ bool expose_player_to_element(beam_type flavour, int strength,
         case OBJ_SCROLLS:
         case OBJ_POTIONS:
         {
+            if (you.conservation() && !one_chance_in(10))
+                return false;
             duration_type dt = target_class == OBJ_SCROLLS
                 ? DUR_SMOLDERING : DUR_FREEZING;
+            if (dt == DUR_SMOLDERING) {
+                if (you.mutation[MUT_CONSERVE_SCROLLS] && !one_chance_in(10))
+                  return false;
+            } else {
+              if (you.mutation[MUT_CONSERVE_POTIONS] && !one_chance_in(10))
+                  return false;
+            }
             string type_name = dt == DUR_SMOLDERING ? "smolder" : "freeze";
             you.duration[dt] = max(
                     you.duration[dt] + strength * 5,
