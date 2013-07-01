@@ -3926,8 +3926,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                               MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
                               -1);
 
-        if (_mons_abjured(mons, monsterNearby))
+        if (mons->type != MONS_ELEMENTAL_WELLSPRING
+            && _mons_abjured(mons, monsterNearby))
+        {
             return;
+        }
 
         int dur;
 
