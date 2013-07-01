@@ -3399,6 +3399,34 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 34
+    // See comment in unmarshallMonster(): this could be an elemental
+    // wellspring masquerading as a spectral weapon, or a polymoth
+    // masquerading as a wellspring.
+    if (th.getMinorVersion() < TAG_MINOR_CANARIES
+        && th.getMinorVersion() >= TAG_MINOR_WAR_DOG_REMOVAL
+        && mi.type >= MONS_SPECTRAL_WEAPON
+        && mi.type <= MONS_POLYMOTH)
+    {
+        switch (mi.base_speed())
+        {
+        case 10:
+            mi.type = MONS_ELEMENTAL_WELLSPRING;
+            break;
+        case 12:
+            mi.type = MONS_POLYMOTH;
+            break;
+        case 25:
+        case 30:
+            mi.type = MONS_SPECTRAL_WEAPON;
+            break;
+        default:
+            die("Unexpected monster_info with type %d and speed %d",
+                mi.type, mi.base_speed());
+        }
+    }
+#endif
+
     // Some TAG_MAJOR_VERSION == 34 saves suffered data loss here, beware.
     // Should be harmless, hopefully.
     unmarshallUnsigned(th, mi.fly);
@@ -3807,12 +3835,65 @@ void unmarshallMonster(reader &th, monster& m)
     m.damage_friendly = unmarshallShort(th);
     m.damage_total = unmarshallShort(th);
 
-    if (mons_is_ghost_demon(m.type))
-        m.set_ghost(unmarshallGhost(th));
 #if TAG_MAJOR_VERSION == 34
     if (m.type == MONS_LABORATORY_RAT)
         unmarshallGhost(th), m.type = MONS_RAT;
+
+    // MONS_SPECTRAL_WEAPON was inserted into the wrong place
+    // (0.13-a0-1964-g2fab1c1, merged into trunk in 0.13-a0-1981-g9e80fb2),
+    // and then had a ghost_demon structure added (0.13-a0-2055-g6cfaa00).
+    // Neither event had an associated tag, but both were between the
+    // same two adjacent tags.
+    if (th.getMinorVersion() < TAG_MINOR_CANARIES
+        && th.getMinorVersion() >= TAG_MINOR_WAR_DOG_REMOVAL
+        && m.type >= MONS_SPECTRAL_WEAPON
+        && m.type <= MONS_POLYMOTH)
+    {
+        // But fortunately the three monsters it could be all have different
+        // speeds, and none of those speeds are 3/2 or 2/3 any others. We will
+        // We will assume that none of these had the wretched enchantment. Ugh.
+        switch (m.speed)
+        {
+        case 6: case 7: // slowed
+        case 10:
+        case 15: // hasted/berserked
+            m.type = MONS_ELEMENTAL_WELLSPRING;
+            break;
+        case 8: // slowed
+        case 12:
+        case 18: // hasted/berserked
+            m.type = MONS_POLYMOTH;
+            break;
+        case 16: case 17: case 20: // slowed
+        case 25:
+        case 30:
+        case 37: case 38: case 45: // hasted/berserked
+            m.type = MONS_SPECTRAL_WEAPON;
+            break;
+        default:
+            die("Unexpected monster with type %d and speed %d",
+                m.type, m.speed);
+        }
+    }
+
+    // Spectral weapons became speed 30 in the commit immediately preceding
+    // the one that added the ghost_demon. Since the commits were in the
+    // same batch, no one should have saves where the speed is 30 and the
+    // spectral weapon didn't have a ghost_demon, or where the speed is
+    // 25 and it did.
+    if (th.getMinorVersion() < TAG_MINOR_CANARIES
+        && m.type == MONS_SPECTRAL_WEAPON
+        // normal, slowed, and hasted, respectively.
+        && m.speed != 30 && m.speed != 20 && m.speed != 45)
+    {
+        // Don't bother trying to fix it up.
+        m.type = MONS_WOOD_GOLEM; // anything removed
+        m.mid = ++you.last_mid;   // sabotage the bond
+    }
+    else
 #endif
+    if (mons_is_ghost_demon(m.type))
+        m.set_ghost(unmarshallGhost(th));
 
     _unmarshall_constriction(th, &m);
 
