@@ -393,7 +393,7 @@ stone_golem MONS_STONE_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
-# For the Erinya WizLab
+# For the Eringya WizLab
 vine-covered_golem MONS_VINE_GOLEM
 
 ## Statues and statue-like things (also '8')
