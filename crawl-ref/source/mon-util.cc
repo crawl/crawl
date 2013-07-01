@@ -2065,11 +2065,15 @@ int exper_value(const monster* mon, bool real)
     if (mon->type == MONS_STARCURSED_MASS)
         x_val = (x_val * mon->number) / 12;
 
+    // Further reduce xp from zombies
+    if (mons_is_zombified(mon))
+        x_val /= 2;
+
     // Reductions for big values. - bwr
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
-    if (x_val > 1000)
-        x_val = 1000 + (x_val - 1000) / 2;
+    if (x_val > 750)
+        x_val = 750 + (x_val - 750) / 3;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)
