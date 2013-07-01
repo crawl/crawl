@@ -426,6 +426,8 @@ void hints_new_turn()
 /**
  * Look up and display a hint message from the database. Is usable from dlua,
  * so wizard mode in-game Lua interpreter can be used to test the messages.
+ * @param arg1 A string that can be inserted into the hint message.
+ * @param arg2 Another string that can be inserted into the hint message.
  */
 void print_hint(string key, const string arg1, const string arg2)
 {
