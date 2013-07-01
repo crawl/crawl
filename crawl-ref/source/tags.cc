@@ -3897,16 +3897,14 @@ void unmarshallMonster(reader &th, monster& m)
         m.type = MONS_WOOD_GOLEM; // anything removed
         m.mid = ++you.last_mid;   // sabotage the bond
     }
+    else if (mons_class_is_chimeric(m.type)
+             && th.getMinorVersion() < TAG_MINOR_CHIMERA_GHOST_DEMON)
+    {
+        // Don't unmarshall the ghost demon if this is an invalid chimera
+    }
     else
 #endif
-
-    if (mons_is_ghost_demon(m.type)
-#if TAG_MAJOR_VERSION == 34
-        // Don't unmarshall the ghost demon if this is an invalid chimera
-        && (!mons_class_is_chimeric(m.type)
-            || th.getMinorVersion() >= TAG_MINOR_CHIMERA_GHOST_DEMON)
-#endif
-        )
+    if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
 
     _unmarshall_constriction(th, &m);
