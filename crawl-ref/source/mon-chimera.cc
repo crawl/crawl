@@ -41,7 +41,7 @@ void ghost_demon::init_chimera(monster* mon, monster_type parts[])
     mon->base_monster = MONS_PROGRAM_BUG;
     define_monster(mon);
     mon->type         = MONS_CHIMERA;
-    mon->colour       = mons_class_colour(MONS_CHIMERA);
+    colour = mons_class_colour(MONS_CHIMERA);
     mon->base_monster = parts[0];
     mon->props["chimera_part_2"] = parts[1];
     mon->props["chimera_part_3"] = parts[2];
@@ -54,16 +54,14 @@ void ghost_demon::init_chimera(monster* mon, monster_type parts[])
     // If one part has wings, take an average of base speed and the
     // speed of the winged monster.
     monster_type wings = get_chimera_wings(mon);
+    if (wings != MONS_NO_MONSTER)
+        fly = mons_class_flies(wings);
     monster_type legs = get_chimera_legs(mon);
     if (legs == MONS_NO_MONSTER)
         legs = parts[0];
+    speed = mons_class_base_speed(legs);
     if (wings != MONS_NO_MONSTER && wings != legs)
-    {
-        speed = (mons_class_base_speed(legs)
-                      + mons_class_base_speed(wings))/2;
-    }
-    else if (legs != parts[0])
-        speed = mons_class_base_speed(legs);
+        speed = (speed + mons_class_base_speed(wings)) / 2;
 }
 
 // Randomly pick depth-appropriate chimera parts
@@ -261,7 +259,7 @@ monster_type get_chimera_legs(const monster* mon)
 {
     if (mon->props.exists("chimera_legs"))
         return get_chimera_part(mon, mon->props["chimera_legs"].get_int());
-    return MONS_NO_MONSTER;
+    return get_chimera_part(mon, 1);
 }
 
 string monster_info::chimera_part_names() const
