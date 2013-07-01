@@ -26,6 +26,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "food.h"
+#include "ghost.h"
 #include "invent.h"
 #include "items.h"
 #include "item_use.h"
@@ -715,6 +716,7 @@ static bool _box_of_beasts(item_def &box)
     }
 
     bool success = false;
+    monster* mons = NULL;
 
     if (!one_chance_in(3))
     {
@@ -739,7 +741,7 @@ static bool _box_of_beasts(item_def &box)
                                  you.pos(),
                                  MHITYOU);
         mg.define_chimera(mon, mon2, mon3);
-        monster* mons = create_monster(mg);
+        mons = create_monster(mg);
         if (mons)
             success = true;
     }
@@ -751,6 +753,13 @@ static bool _box_of_beasts(item_def &box)
         did_god_conduct(DID_CHAOS, random_range(5,10));
         // Decrease charges
         box.plus--;
+        // Let each part announce itself
+        for (int n = 0; n < NUM_CHIMERA_HEADS; n++)
+        {
+            mons->ghost->acting_part = get_chimera_part(mons, n + 1);
+            handle_monster_shouts(mons, true);
+        }
+        mons->ghost->acting_part = MONS_NO_MONSTER;
     }
     else
         // Failed to create monster for some reason
