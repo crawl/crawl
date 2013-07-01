@@ -423,8 +423,11 @@ void hints_new_turn()
     }
 }
 
-static void _print_hint(string key, const string arg1 = "",
-                        const string arg2 = "")
+/**
+ * Look up and display a hint message from the database. Is usable from dlua,
+ * so wizard mode in-game Lua interpreter can be used to test the messages.
+ */
+void print_hint(string key, const string arg1, const string arg2)
 {
     string text = getHintString(key);
     if (text.empty())
@@ -449,23 +452,23 @@ void hints_death_screen()
 {
     string text;
 
-    _print_hint("death");
+    print_hint("death");
     more();
 
     if (Hints.hints_type == HINT_MAGIC_CHAR
         && Hints.hints_spell_counter < Hints.hints_melee_counter)
     {
-        _print_hint("death conjurer melee");
+        print_hint("death conjurer melee");
     }
     else if (you.religion == GOD_TROG && Hints.hints_berserk_counter <= 3
              && !you.berserk() && !you.duration[DUR_EXHAUSTED])
     {
-        _print_hint("death berserker unberserked");
+        print_hint("death berserker unberserked");
     }
     else if (Hints.hints_type == HINT_RANGER_CHAR
              && 2*Hints.hints_throw_counter < Hints.hints_melee_counter)
     {
-        _print_hint("death ranger melee");
+        print_hint("death ranger melee");
     }
     else
     {
@@ -500,7 +503,7 @@ void hints_death_screen()
             }
         }
 
-        _print_hint(make_stringf("death random %d", hint));
+        print_hint(make_stringf("death random %d", hint));
     }
     mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
     more();
@@ -519,17 +522,17 @@ void hints_finished()
 
     crawl_state.type = GAME_TYPE_NORMAL;
 
-    _print_hint("finished");
+    print_hint("finished");
     more();
 
     if (Hints.hints_explored)
-        _print_hint("finished explored");
+        print_hint("finished explored");
     else if (Hints.hints_travel)
-        _print_hint("finished travel");
+        print_hint("finished travel");
     else if (Hints.hints_stashes)
-        _print_hint("finished stashes");
+        print_hint("finished stashes");
     else
-        _print_hint(make_stringf("finished random %d", random2(4)));
+        print_hint(make_stringf("finished random %d", random2(4)));
     more();
 
     Hints.hints_events.init(false);
@@ -564,7 +567,7 @@ void hints_dissection_reminder(bool healthy)
     {
         Hints.hints_just_triggered = true;
 
-        _print_hint("dissection reminder");
+        print_hint("dissection reminder");
     }
 }
 
@@ -1012,8 +1015,8 @@ void hints_first_item(const item_def &item)
     tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_A), gc);
 #endif
 
-    _print_hint("HINT_SEEN_FIRST_OBJECT",
-                glyph_to_tagstr(get_item_glyph(&item)));
+    print_hint("HINT_SEEN_FIRST_OBJECT",
+               glyph_to_tagstr(get_item_glyph(&item)));
 }
 
 // If the player is wielding a cursed non-slicing weapon then butchery
@@ -2459,9 +2462,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CONVERT:
         if (you.religion == GOD_XOM)
-            return _print_hint("HINT_CONVERT Xom");
+            return print_hint("HINT_CONVERT Xom");
 
-        _print_hint("HINT_CONVERT");
+        print_hint("HINT_CONVERT");
         break;
 
     case HINT_GOD_DISPLEASED:
