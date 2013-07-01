@@ -3855,7 +3855,7 @@ void unmarshallMonster(reader &th, monster& m)
     {
         // But fortunately the three monsters it could be all have different
         // speeds, and none of those speeds are 3/2 or 2/3 any others. We will
-        // We will assume that none of these had the wretched enchantment. Ugh.
+        // assume that none of these had the wretched enchantment. Ugh.
         switch (m.speed)
         {
         case 6: case 7: // slowed
