@@ -580,8 +580,11 @@ bool is_player_same_genus(const monster_type mon, bool transform)
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return true;
 
-    // Note that these are currently considered to be the same species:
-    // * halflings and humans
+    // Note that these are currently considered to be the same genus:
+    // * humans, demigods, and demonspawn
+    // * ogres and two-headed ogres
+    // * trolls, iron trolls, and deep trolls
+    // * kobolds and big kobolds
     // * dwarves and deep dwarves
     // * all elf races
     // * all orc races
