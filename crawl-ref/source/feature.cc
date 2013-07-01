@@ -735,6 +735,10 @@ static void _init_item(feature_def &f, show_item_type item)
             f.dchar   = DCHAR_ITEM_ORB;
             break;
 
+        case SHOW_ITEM_RUNE:
+            f.dchar   = DCHAR_ITEM_RUNE;
+            break;
+
         case SHOW_ITEM_WEAPON:
             f.dchar   = DCHAR_ITEM_WEAPON;
             break;

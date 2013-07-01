@@ -1142,7 +1142,7 @@ enum level_state_type
 };
 
 // NOTE: The order of these is very important to their usage!
-// [dshaligram] If adding/removing from this list, also update view.cc!
+// [dshaligram] If adding/removing from this list, also update viewchar.cc!
 enum dungeon_char_type
 {
     DCHAR_WALL,
@@ -1163,6 +1163,7 @@ enum dungeon_char_type
     DCHAR_INVIS_EXPOSED,
     DCHAR_ITEM_DETECTED,
     DCHAR_ITEM_ORB,
+    DCHAR_ITEM_RUNE,
     DCHAR_ITEM_WEAPON,
     DCHAR_ITEM_ARMOUR,
     DCHAR_ITEM_WAND,
