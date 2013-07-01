@@ -181,7 +181,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         }
 
         melee_attack melee_attk(attacker, defender, attack_number,
-                          effective_attack_number);
+                                effective_attack_number);
 
         if (simu)
             melee_attk.simu = true;
