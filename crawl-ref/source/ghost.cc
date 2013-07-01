@@ -164,6 +164,7 @@ void ghost_demon::reset()
     cycle_colours    = false;
     colour           = BLACK;
     fly              = FL_NONE;
+    acting_part      = MONS_0;
 }
 
 void ghost_demon::init_random_demon()

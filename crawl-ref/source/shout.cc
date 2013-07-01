@@ -70,7 +70,7 @@ void handle_monster_shouts(monster* mons, bool force)
     // three components
     if (mons->type == MONS_CHIMERA)
     {
-        monster_type acting = mons->ghost->acting_part != MONS_NO_MONSTER
+        monster_type acting = mons->ghost->acting_part != MONS_0
             ? mons->ghost->acting_part : random_chimera_part(mons);
         s_type = mons_shouts(acting, false);
     }
