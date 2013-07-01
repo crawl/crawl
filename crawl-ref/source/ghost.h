@@ -35,6 +35,9 @@ public:
 
     monster_spells spells;
 
+    // For some chimera actions, lets us choose as specific part
+    monster_type acting_part;
+
 public:
     ghost_demon();
     bool has_spells() const;
