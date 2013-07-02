@@ -3245,6 +3245,11 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     return me;
 }
 
+enum mon_part_t
+{
+    MP_GHOST_DEMON      = BIT(0),
+};
+
 void marshallMonster(writer &th, const monster& m)
 {
     if (!m.alive())
@@ -3253,7 +3258,12 @@ void marshallMonster(writer &th, const monster& m)
         return;
     }
 
+    uint32_t parts = 0;
+    if (mons_is_ghost_demon(m.type))
+        parts |= MP_GHOST_DEMON;
+
     marshallShort(th, m.type);
+    marshallUnsigned(th, parts);
     ASSERT(m.mid > 0);
     marshallInt(th, m.mid);
     marshallString(th, m.mname);
@@ -3304,7 +3314,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, m.damage_friendly);
     marshallShort(th, m.damage_total);
 
-    if (mons_is_ghost_demon(m.type))
+    if (parts & MP_GHOST_DEMON)
     {
         // *Must* have ghost field set.
         ASSERT(m.ghost.get());
@@ -3784,6 +3794,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     ASSERT(!invalid_monster_type(m.type));
 
+    uint32_t parts    = unmarshallUnsigned(th);
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th, 100);
@@ -3904,7 +3915,7 @@ void unmarshallMonster(reader &th, monster& m)
     }
     else
 #endif
-    if (mons_is_ghost_demon(m.type))
+    if (parts & MP_GHOST_DEMON)
         m.set_ghost(unmarshallGhost(th));
 
     _unmarshall_constriction(th, &m);
@@ -3921,15 +3932,16 @@ void unmarshallMonster(reader &th, monster& m)
     {
         // Construct a new chimera ghost demon from the old parts
         ghost_demon ghost;
-        monster_type parts[] =
+        monster_type cparts[] =
         {
             get_chimera_part(&m, 1),
             get_chimera_part(&m, 2),
             get_chimera_part(&m, 3)
         };
-        ghost.init_chimera(&m, parts);
+        ghost.init_chimera(&m, cparts);
         m.set_ghost(ghost);
         m.ghost_demon_init();
+        parts |= MP_GHOST_DEMON;
     }
 #endif
 
@@ -3980,6 +3992,9 @@ void unmarshallMonster(reader &th, monster& m)
         m.type = MONS_GHOST;
         m.props.clear();
     }
+
+    // If an upgrade synthesizes ghost_demon, please mark it in "parts" above.
+    ASSERT(parts & MP_GHOST_DEMON || !mons_is_ghost_demon(m.type));
 
     m.check_speed();
 }
