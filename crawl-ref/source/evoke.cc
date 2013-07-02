@@ -23,6 +23,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "evoke-cup.h"
 #include "exercise.h"
 #include "fight.h"
 #include "food.h"
@@ -1876,6 +1877,12 @@ bool evoke_item(int slot)
         case MISC_SACK_OF_SPIDERS:
             if (_sack_of_spiders(item))
                 pract = 1;
+            break;
+
+        case MISC_CUP_OF_CHARITY:
+            if (!cup_of_charity(&you, item))
+                return false;
+            pract = 1;
             break;
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:

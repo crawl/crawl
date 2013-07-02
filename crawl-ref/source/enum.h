@@ -1518,6 +1518,7 @@ enum duration_type
     DUR_INFUSION,
     DUR_SONG_OF_SLAYING,
     DUR_SONG_OF_SHIELDING,
+    DUR_CHARITY,
     NUM_DURATIONS
 };
 

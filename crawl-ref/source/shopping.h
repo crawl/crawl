@@ -33,6 +33,9 @@ bool shoptype_identifies_stock(shop_type type);
 bool is_shop_item(const item_def &item);
 bool shop_item_unknown(const item_def &item);
 
+// Adjust price for bargain card
+int bargain_cost(int value);
+
 /////////////////////////////////////////////////////////////////////
 
 struct level_pos;

@@ -713,6 +713,11 @@ static int _acquirement_misc_subtype()
         result = MISC_BOX_OF_BEASTS;
     if (one_chance_in(4))
         result = MISC_BOTTLED_EFREET;
+    if (one_chance_in(4) && !you.seen_misc[MISC_CUP_OF_CHARITY]
+        && you_can_drink_normally())
+    {
+        result = MISC_CUP_OF_CHARITY;
+    }
     if (one_chance_in(4) && !you.seen_misc[MISC_DISC_OF_STORMS])
         result = MISC_DISC_OF_STORMS;
     if (one_chance_in(4) && !you.seen_misc[MISC_LAMP_OF_FIRE])

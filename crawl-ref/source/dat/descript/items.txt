@@ -746,6 +746,13 @@ crystal plate armour
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
+cup of charity
+
+A surprisingly heavy wooden chalice, covered in ornate inscriptions. Upon
+receiving an appropriately-sized charitable donation, the cup will fill itself
+with a miraculous tincture which the bearer may drink for highly beneficial
+effects.
+%%%%
 dagger
 
 A double-edged fighting knife with a sharp point that can be thrown from afar.

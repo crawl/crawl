@@ -34,6 +34,7 @@
 #include "effects.h"
 #include "env.h"
 #include "evoke.h"
+#include "evoke-cup.h"
 #include "food.h"
 #include "godpassive.h"
 #include "godprayer.h"
@@ -3663,6 +3664,8 @@ bool get_item_by_name(item_def *item, char* specs,
         {
             item->plus = 50;
         }
+        else if (item->sub_type == MISC_CUP_OF_CHARITY)
+            cup_of_charity_init(*item);
         else if (!item_is_rune(*item) && !is_deck(*item) && !is_elemental_evoker(*item))
             item->plus2 = 50;
         break;

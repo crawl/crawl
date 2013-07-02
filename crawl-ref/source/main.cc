@@ -59,6 +59,7 @@
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
+#include "evoke-cup.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -2855,6 +2856,14 @@ static void _decrement_durations()
             "Your magic is no longer protecting you.",
             0,
             "You are feeling less protected by your magic.");
+
+    if (_decrement_a_duration(DUR_CHARITY, delay,
+            "You are no longer feeling charitable.",
+            0,
+            "You are starting to feel less charitable."))
+    {
+        cup_of_charity_ended(you);
+    }
 
     _decrement_a_duration(DUR_SENTINEL_MARK, delay,
                           "The sentinel's mark upon you fades away.");

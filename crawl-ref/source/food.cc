@@ -161,6 +161,19 @@ bool you_foodless_normally()
         || you.species == SP_DJINNI;
 }
 
+bool you_can_drink()
+{
+    return you.is_undead != US_UNDEAD
+        && you.form != TRAN_FUNGUS
+        && you.form != TRAN_TREE
+        && you.form != TRAN_WISP;
+}
+
+bool you_can_drink_normally()
+{
+    return you.is_undead != US_UNDEAD || you.form == TRAN_LICH;
+}
+
 /**
  * More of a "weapon_switch back from butchering" function, switching
  * to a weapon is done using the wield_weapon() code.

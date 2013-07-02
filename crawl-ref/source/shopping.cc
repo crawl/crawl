@@ -427,7 +427,7 @@ static vector<int> _shop_get_stock(int shopidx)
     return result;
 }
 
-static int _bargain_cost(int value)
+int bargain_cost(int value)
 {
     // 20% discount
     value *= 8;
@@ -442,7 +442,7 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id,
     int result = (greed * item_value(item, id) / 10);
 
     if (you.duration[DUR_BARGAIN] && !ignore_bargain)
-        result = _bargain_cost(result);
+        result = bargain_cost(result);
 
     return max(result, 1);
 }
@@ -2172,6 +2172,10 @@ unsigned int item_value(item_def item, bool ident)
             valued += 400;
             break;
 
+        case MISC_CUP_OF_CHARITY:
+            valued += 800;
+            break;
+
         case MISC_FAN_OF_GALES:
         case MISC_STONE_OF_TREMORS:
         case MISC_PHIAL_OF_FLOODS:
@@ -2996,7 +3000,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             unknown = shop_item_unknown(get_thing_item(thing));
 
         if (you.duration[DUR_BARGAIN])
-            cost = _bargain_cost(cost);
+            cost = bargain_cost(cost);
 
         string etitle =
             make_stringf("[%s] %s%s (%d gp)", short_place_name(pos.id).c_str(),
@@ -3075,7 +3079,7 @@ void ShoppingList::display()
         {
             int cost = thing_cost(*thing);
             if (you.duration[DUR_BARGAIN])
-                cost = _bargain_cost(cost);
+                cost = bargain_cost(cost);
 
             if (cost > you.gold)
             {

@@ -947,6 +947,7 @@ static const char* misc_type_name(int type, bool known)
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";
     case MISC_SACK_OF_SPIDERS:           return "sack of spiders";
+    case MISC_CUP_OF_CHARITY:            return "cup of charity";
 
     case MISC_RUNE_OF_ZOT:
     default:
@@ -3431,6 +3432,8 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
         case MISC_HORN_OF_GERYON:
             return item.plus2;
+        case MISC_CUP_OF_CHARITY:
+            return !you_can_drink_normally();
         default:
             return false;
         }

@@ -294,6 +294,7 @@
     <ClCompile Include="..\json.cc" />
     <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\spl-pick.cc" />
+    <ClCompile Include="..\evoke-cup.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\abl-show.h" />
@@ -616,5 +617,6 @@
     <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\data-index.h" />
+    <ClInclude Include="..\evoke-cup.h" />
   </ItemGroup>
 </Project>

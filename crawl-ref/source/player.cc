@@ -4039,6 +4039,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_SHROUD_OF_GOLUBRIA:
     case DUR_INFUSION:
     case DUR_SONG_OF_SLAYING:
+    case DUR_CHARITY:
         return (6 * BASELINE_DELAY);
 
     case DUR_FLIGHT:

@@ -151,6 +151,8 @@ static duration_def duration_data[] =
       RED, "-Tele", "cannot translocate", "You are firmly anchored to this plane." },
     { DUR_SPIRIT_HOWL, false,
       MAGENTA, "Howl", "spirit howling", "The howling of a spirit pack pursues you." },
+    { DUR_CHARITY, true,
+      LIGHTBLUE, "Char", "charitable", "You feel charitable." },
 };
 
 static int duration_index[NUM_DURATIONS];

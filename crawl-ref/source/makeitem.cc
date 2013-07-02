@@ -19,6 +19,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "env.h"
+#include "evoke-cup.h"
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -625,6 +626,10 @@ void item_colour(item_def &item)
 
         case MISC_SACK_OF_SPIDERS:
             item.colour = WHITE;
+            break;
+
+        case MISC_CUP_OF_CHARITY:
+            item.colour = LIGHTBLUE;
             break;
 
         case MISC_RUNE_OF_ZOT:
@@ -3104,6 +3109,9 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     // Spider sack charges
     if (item.sub_type == MISC_SACK_OF_SPIDERS)
         item.plus = random_range(5, 15, 2);
+
+    if (item.sub_type == MISC_CUP_OF_CHARITY)
+        cup_of_charity_init(item);
 
     if (is_deck(item))
     {

@@ -27,6 +27,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "directn.h"
+#include "evoke-cup.h"
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
@@ -2072,6 +2073,8 @@ string get_item_description(const item_def &item, bool verbose,
             if (!evoker_is_charged(item))
                 description << "\n\nThe device is presently inert.";
         }
+        if (item.sub_type == MISC_CUP_OF_CHARITY)
+            description << cup_of_charity_description(item);
         break;
 
     case OBJ_POTIONS:

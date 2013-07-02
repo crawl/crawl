@@ -2863,6 +2863,8 @@ void bolt::internal_ouch(int dam)
 
     if (YOU_KILL(thrower) && you.duration[DUR_QUAD_DAMAGE])
         dam *= 4;
+    else if (YOU_KILL(thrower) && you.props.exists("damage_mul"))
+        dam = (double)dam * (double)you.props["damage_mul"].get_float();
 
     // The order of this is important.
     if (monst && (monst->type == MONS_GIANT_SPORE

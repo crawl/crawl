@@ -53,6 +53,7 @@ dungeon.o \
 effects.o \
 errors.o \
 evoke.o \
+evoke-cup.o \
 exclude.o \
 exercise.o \
 fearmonger.o \

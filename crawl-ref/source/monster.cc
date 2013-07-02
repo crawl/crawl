@@ -4260,6 +4260,12 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             if (amount > hit_points + 50)
                 flags |= MF_EXPLODE_KILL;
         }
+        else if (attacker_effects && agent && agent->props.exists("damage_mul")
+            && flavour != BEAM_TORMENT_DAMAGE)
+        {
+            float mul = agent->props["damage_mul"].get_float();
+            amount = ((double)amount) * (double)mul;
+        }
 
         amount = min(amount, hit_points);
         hit_points -= amount;

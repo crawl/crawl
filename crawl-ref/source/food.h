@@ -71,6 +71,8 @@ int you_min_hunger();
 bool you_foodless(bool can_eat = false);
 // Is the player always foodless or just because of a temporary change?
 bool you_foodless_normally();
+bool you_can_drink();
+bool you_can_drink_normally();
 
 void handle_starvation();
 string hunger_cost_string(const int hunger);
