@@ -295,6 +295,119 @@ MAP
 .....................................................
 ENDMAP
 
+###############################################################################
+NAME:    nicolae_dis_hell_towers
+DEPTH:   Dis, !Dis:$
+TAGS:    transparent
+SHUFFLE: }])
+NSUBST:  a = + / v, b = + / v, c = + / v, d = + / v
+SUBST:   2 = 2., 0 = 0.
+KMONS:   12 = hell sentinel / executioner
+MAP
+  v v v v   v v v v
+  vvvavvv   vvvdvvv
+vvvv...vv v vv...vvvv
+ vv..0..vvvvv..0..vv
+vv.......vvv.......vv
+ a.0.2.0.+.+.0.2.0.d
+vv.......vvv.......vv
+ vv..0..vvvvv..0..vv
+vvvv...vvlllvv...vvvv
+   vv+vvlllllvv+vv
+  vvv.+..1}llvv.vvv
+   vv+vvlllllvv+vv
+vvvv...vvlllvv...vvvv
+ vv..0..vvvvv..0..vv
+vv.......vvv.......vv
+ b.0.2.0.+.+.0.2.0.c
+vv.......vvv.......vv
+ vv..0..vvvvv..0..vv
+vvvv...vv v vv...vvvv
+  vvvbvvv   vvvcvvv
+  v v v v   v v v v
+ENDMAP
+
+NAME:   nicolae_dis_strange_trophy_room
+DEPTH:  Dis
+TAGS:   transparent extra decor
+NSUBST: a = 2:+ / v, b = 2:+ / v, c = 2:+ / v, d = 2:+ / v, e = 2:+ / v
+NSUBST: f = + / v
+SUBST:  G = GG., V = .v
+: dis_statues(_G)
+MAP
+vvvavvv
+vG....a      vvdvvv
+a.....vvvv   v..G.d
+vvvv.....a   d....v
+   a..G..vvdvv...vv
+   vv....e.......v  vdv
+    a..Vvv....vvfvvvv.v
+ vvvv...e...vfv...G...d
+ a....vvv.G...V.......v
+ vvv..e..........V..vvv
+   b..v...vvcvv..v..c
+ vvv..V..Gv   c..v+vv
+ v......vvv   vv.V.c
+ b..vV..b      v...vv
+ v..+...vvvv   c.G..c
+ vvbvv..G..b   vvvvvv
+     b.....v
+     v.....v
+     vvvbvvv
+ENDMAP
+
+NAME:    nicolae_dis_lava_storage_tank
+DEPTH:   Dis
+TAGS:    transparent extra decor layout_city
+SHUFFLE: ABCD/EFGH, IJK/LMN, OPQR/STUV
+SUBST:   ABHIRS = g, CDKP = ., EGJLNOQT = v, FMUV = l
+KPROP:   l = no_rtele_into
+KPROP:   l = no_cloud_gen
+NSUBST:  g = 5:g / *:v
+KFEAT:   g = iron_grate
+MAP
+...........
+.....POgv..
+.vggOPRlAC.
+.gllQRQlBD.
+.gllllllBD.
+.vIJllllAC.
+..KIllvgv..
+...vggv....
+...........
+ENDMAP
+
+NAME:    nicolae_dis_iron_filings
+DEPTH:   Dis, !Dis:$
+TAGS:    transparent extra decor layout_city
+SUBST:   } = }}}{
+SHUFFLE: abcdefghijkl, mnopqrstu, }]), {[(
+SUBST:   abcmno = v, d : .v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v, \
+         k : .v, l : .v, p : .v, q : .v, r : .v, s : .v, t : .v, u : .v
+MAP
+         ...
+       lkj.jkl
+    ...ihg.ghi...
+   ut...fe.ef...tu
+  .tsr..dc.cd..rst.
+  ..rqp..b.b..pqr..
+  ...pon.a.a.nop...
+ li...nm.v+v.mn...il
+ khfd...+v.v+...dfhk
+.jgecbavv...vvabcegj.
+.......+..}..+.......
+.jgecbavv...vvabcegj.
+ khfd...+v.v+...dfhk
+ li...nm.v+v.mn...il
+  ...pon.a.a.nop...
+  ..rqp..b.b..pqr..
+  .tsr..dc.cd..rst.
+   ut...fe.ef...tu
+    ...ihg.ghi...
+       lkj.jkl
+         ...
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions
