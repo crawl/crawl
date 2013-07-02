@@ -81,7 +81,6 @@ MAP
 ............
 ENDMAP
 
-
 ##############################################################################
 # II   General altars (containing a single C)
 ##############################################################################
@@ -101,50 +100,6 @@ MAP
 ..C..
 .....
 .....
-ENDMAP
-
-NAME:    old_standard_altar
-TAGS:    transparent mini_float allow_dup decor
-SHUFFLE: cvxxxx
-: interest_check(_G)
-MAP
-...........
-.xxxx.xxxx.
-.xx.....xx.
-.x.......x.
-.x.......x.
-.....C.....
-.x.......x.
-.x.......x.
-.xx.....xx.
-.xxxx.xxxx.
-...........
-ENDMAP
-
-NAME:    lemuel_round_altar
-TAGS:    allow_dup decor
-SHUFFLE: cvxx
-SUBST:   X:x.
-: interest_check(_G)
-MAP
-   xxXxx
-  xx...xx
- xx.....xx
- x.......x
- X...C...@
- x.......x
- xx.....xx
-  xx...xx
-   xxXxx
-ENDMAP
-
-NAME: lemuel_crystal_altar
-TAGS: transparent allow_dup decor
-: interest_check(_G)
-MAP
-b.b
-.C.
-b.b
 ENDMAP
 
 NAME:   lemuel_altar_in_water
@@ -195,25 +150,6 @@ MAP
  2
 2C1
  2
-ENDMAP
-
-NAME:    lemuel_doored_altar
-TAGS:    transparent mini_float decor
-DEPTH:   D:1-18, Vaults, Lair, Elf, Crypt
-SHUFFLE: XY
-SUBST:   X = .
-SUBST:   Y = +
-: interest_check(_G)
-MAP
-.........
-.xxxmxxx.
-.xxxmxxx.
-.xxxmxxx.
-.X.YCY.X.
-.xxxYxxx.
-.xxx.xxx.
-.xxxXxxx.
-.........
 ENDMAP
 
 NAME:   lemuel_sealed_altar_a
@@ -282,21 +218,6 @@ MAP
 .F...>Cc.
 .ccccccc.
 .........
-ENDMAP
-
-NAME:   lemuel_coloured_pillars_altar
-TAGS:   no_rotate decor
-DEPTH:  D:2-18, Vaults, Elf
-COLOUR: c = blue / yellow / red / cyan
-: interest_check(_G)
-MAP
-xxxxxxxxxxxxxxxxxxxx
-...................x
-c...c...c...c...c..x
-@.................Cx
-c...c...c...c...c..x
-...................x
-xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   lemuel_upstairs_altar
@@ -372,24 +293,6 @@ MAP
  ..xx>xx..
   ..xmx..
    .....
-ENDMAP
-
-NAME: lightli_temple_of_fire
-DEPTH: D:2-9
-KPROP: Y = no_rtele_into
-KFEAT: _ = altar_trog / altar_makhleb
-MAP
-llcccccc
-lccYcYccc
-lclllllcc
-lcl...lcc
-lcl...lYc
-@+.._.lcc
-lcl...lYc
-lcl...lcc
-lclllllcc
-lccYcYccc
-llcccccc
 ENDMAP
 
 ##############################################################################
