@@ -3248,6 +3248,9 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
 enum mon_part_t
 {
     MP_GHOST_DEMON      = BIT(0),
+    MP_CONSTRICTION     = BIT(1),
+    MP_ITEMS            = BIT(2),
+    MP_SPELLS           = BIT(3),
 };
 
 void marshallMonster(writer &th, const monster& m)
@@ -3261,6 +3264,14 @@ void marshallMonster(writer &th, const monster& m)
     uint32_t parts = 0;
     if (mons_is_ghost_demon(m.type))
         parts |= MP_GHOST_DEMON;
+    if (m.held)
+        parts |= MP_CONSTRICTION;
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+        if (m.inv[i] != NON_ITEM)
+            parts |= MP_ITEMS;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+        if (m.spells[i])
+            parts |= MP_SPELLS;
 
     marshallShort(th, m.type);
     marshallUnsigned(th, parts);
@@ -3303,10 +3314,11 @@ void marshallMonster(writer &th, const monster& m)
     marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);
 
-    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-        marshallShort(th, m.inv[j]);
-
-    marshallSpells(th, m.spells);
+    if (parts & MP_ITEMS)
+        for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+            marshallShort(th, m.inv[j]);
+    if (parts & MP_SPELLS)
+        marshallSpells(th, m.spells);
     marshallByte(th, m.god);
     marshallByte(th, m.attitude);
     marshallShort(th, m.foe);
@@ -3321,7 +3333,8 @@ void marshallMonster(writer &th, const monster& m)
         marshallGhost(th, *m.ghost);
     }
 
-    _marshall_constriction(th, &m);
+    if (parts & MP_CONSTRICTION)
+        _marshall_constriction(th, &m);
 
     m.props.write(th);
 }
@@ -3803,6 +3816,8 @@ void unmarshallMonster(reader &th, monster& m)
     }
     else
         parts         = unmarshallUnsigned(th);
+    if (th.getMinorVersion() < TAG_MINOR_OPTIONAL_PARTS)
+        parts |= MP_CONSTRICTION | MP_ITEMS | MP_SPELLS;
 #else
     uint32_t parts    = unmarshallUnsigned(th);
 #endif
@@ -3851,10 +3866,12 @@ void unmarshallMonster(reader &th, monster& m)
     m.base_monster   = unmarshallMonType(th);
     m.colour         = unmarshallShort(th);
 
-    for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
-        m.inv[j] = unmarshallShort(th);
+    if (parts & MP_ITEMS)
+        for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
+            m.inv[j] = unmarshallShort(th);
 
-    unmarshallSpells(th, m.spells);
+    if (parts & MP_SPELLS)
+        unmarshallSpells(th, m.spells);
 
     m.god      = static_cast<god_type>(unmarshallByte(th));
     m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
@@ -3929,8 +3946,8 @@ void unmarshallMonster(reader &th, monster& m)
 #endif
     if (parts & MP_GHOST_DEMON)
         m.set_ghost(unmarshallGhost(th));
-
-    _unmarshall_constriction(th, &m);
+    if (parts & MP_CONSTRICTION)
+        _unmarshall_constriction(th, &m);
 
     m.props.clear();
     m.props.read(th);
