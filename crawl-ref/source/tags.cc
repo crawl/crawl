@@ -3794,7 +3794,18 @@ void unmarshallMonster(reader &th, monster& m)
 
     ASSERT(!invalid_monster_type(m.type));
 
+#if TAG_MAJOR_VERSION == 34
+    uint32_t parts    = 0;
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_PARTS)
+    {
+        if (mons_is_ghost_demon(m.type))
+            parts |= MP_GHOST_DEMON;
+    }
+    else
+        parts         = unmarshallUnsigned(th);
+#else
     uint32_t parts    = unmarshallUnsigned(th);
+#endif
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
     m.mname           = unmarshallString(th, 100);
@@ -3907,6 +3918,7 @@ void unmarshallMonster(reader &th, monster& m)
         // Don't bother trying to fix it up.
         m.type = MONS_WOOD_GOLEM; // anything removed
         m.mid = ++you.last_mid;   // sabotage the bond
+        parts &= MP_GHOST_DEMON;
     }
     else if (mons_class_is_chimeric(m.type)
              && th.getMinorVersion() < TAG_MINOR_CHIMERA_GHOST_DEMON)
