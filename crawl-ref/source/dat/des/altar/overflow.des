@@ -2274,6 +2274,7 @@ MAP
 ENDMAP
 
 NAME:    lemuel_round_altar
+DEPTH:   D
 TAGS:    allow_dup decor temple_overflow_generic_1
 SHUFFLE: cvxx
 SUBST:   X:x.
