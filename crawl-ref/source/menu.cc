@@ -1611,7 +1611,7 @@ void Menu::webtiles_update_section_boundaries()
     {
         _webtiles_section_start = first_entry;
         while (_webtiles_section_start > 0
-               && items[_webtiles_section_start]->level != MEL_TITLE)
+               && items[_webtiles_section_start - 1]->level != MEL_TITLE)
         {
             _webtiles_section_start--;
         }
@@ -1870,13 +1870,10 @@ string get_linebreak_string(const string& s, int maxcol)
 
 bool formatted_scroller::jump_to(int i)
 {
-    if (i == first_entry + 1)
+    if (i == first_entry)
         return false;
 
-    if (i == 0)
-        first_entry = 0;
-    else
-        first_entry = i - 1;
+    first_entry = i;
 
 #ifdef USE_TILE_WEB
     webtiles_update_section_boundaries();
