@@ -11,16 +11,16 @@
 function lair_wad_woods_monsters(e)
     e.mons("plant")
     if you.branch() == "Forest" then
-        if crawl.coinflip() then
-            e.mons("spriggan / w:2 spriggan rider / w:2 spriggan druid"
-                   .. " / w:2 spriggan air mage / w:2 spriggan berserker")
-        else
-            e.mons("tengu / tengu conjurer w:4 / tengu warrior w:4")
-        end
-        e.mons("wind drake")
+        e.mons("spriggan / w:3 spriggan rider / w:2 spriggan druid"
+                .. " / w:3 spriggan air mage / w:3 spriggan berserker")
+        e.mons("wind drake / w:5 dryad / w:2 ancient bear / w:1 treant")
     else
         e.mons("gnoll")
-        e.mons("porcupine")
+        if you.absdepth() >= 8 then
+            e.mons("porcupine")
+        else
+            e.mons("green rat")
+        end
     end
 end
 
