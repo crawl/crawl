@@ -5628,7 +5628,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
                 // Share damage using a fineff, so that it's non-fatal
                 // regardless of processing order in an AoE attack.
-                (new deferred_damage_fineff(oppressor, &menv[number],
+                (new deferred_damage_fineff(oppressor, owner,
                                            shared_damage, false, false))->schedule();
             }
         }
