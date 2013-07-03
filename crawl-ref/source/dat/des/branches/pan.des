@@ -2242,6 +2242,7 @@ RTILE:  x = wall_zot_blue
 FTILE:  D.-0123456789 = floor_pebble
 SUBST:  - = 0:1 / .:10
 KFEAT:  D = granite_statue
+TILE:   D = dngn_disco_ball
 : set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
