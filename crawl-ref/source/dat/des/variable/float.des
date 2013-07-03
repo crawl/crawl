@@ -5260,7 +5260,6 @@ ENDMAP
 
 NAME: lightli_tower_of_babel
 ORIENT: float
-WEIGHT: 99999
 # Random interlopers look badly out of place here.
 TAGS: no_monster_gen no_item_gen
 DEPTH: Dis:1-6, D:24-26
