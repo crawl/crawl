@@ -195,6 +195,9 @@ public:
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
 
+    bool        prompt_smoldering; // Prompt on scroll use while smoldering.
+    bool        prompt_freezing;   // Prompt on potion use while freezing.
+
     int         colour[16];      // macro fg colours to other colours
     int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring

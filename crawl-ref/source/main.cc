@@ -2346,7 +2346,7 @@ static void _decrement_durations()
     }
 
     _decrement_a_duration(DUR_SMOLDERING, delay, "You stop smoldering.");
-    _decrement_a_duration(DUR_FREEZING, delay, "You're not longer freezing.");
+    _decrement_a_duration(DUR_FREEZING, delay, "You're no longer freezing.");
 
     _decrement_a_duration(DUR_VEHUMET_GIFT, delay);
 

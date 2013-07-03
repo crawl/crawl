@@ -2147,15 +2147,23 @@ void drink(int slot)
 
     const bool alreadyknown = item_type_known(potion);
 
-    if (you.duration[DUR_FREEZING] && coinflip())
+    if (you.duration[DUR_FREEZING])
     {
-        const string item_name = quant_name(you.inv[slot], 1, DESC_THE);
-        mprf("%s freezes and shatters!",
-            item_name.c_str());
-        dec_inv_item_quantity(slot, 1);
-        count_action(CACT_USE, OBJ_POTIONS);
-        you.turn_is_over = true;
-        return;
+        if (Options.prompt_freezing
+            && !yesno("Are you sure you want to drink that while freezing?"))
+        {
+            return;
+        }
+        if (coinflip())
+        {
+            const string item_name = quant_name(you.inv[slot], 1, DESC_THE);
+            mprf("%s freezes and shatters!",
+                item_name.c_str());
+            dec_inv_item_quantity(slot, 1);
+            count_action(CACT_USE, OBJ_POTIONS);
+            you.turn_is_over = true;
+            return;
+        }
     }
 
     if (alreadyknown && you.hunger_state == HS_ENGORGED
@@ -2965,15 +2973,24 @@ void read_scroll(int slot)
         return mpr("You'd burn any scroll you tried to read!");
     }
 
-    if (you.duration[DUR_SMOLDERING] && coinflip())
+    if (you.duration[DUR_SMOLDERING])
     {
-        const string item_name = quant_name(you.inv[item_slot], 1, DESC_THE);
-        mprf("%s burns to ash!",
-            item_name.c_str());
-        dec_inv_item_quantity(item_slot, 1);
-        count_action(CACT_USE, OBJ_POTIONS);
-        you.turn_is_over = true;
-        return;
+        if (Options.prompt_smoldering
+            && !yesno("Are you sure you want to read that while smoldering?"))
+        {
+           return;
+        }
+
+        if (coinflip())
+        {
+            const string item_name = quant_name(you.inv[item_slot], 1, DESC_THE);
+            mprf("%s burns to ash!",
+                item_name.c_str());
+            dec_inv_item_quantity(item_slot, 1);
+            count_action(CACT_USE, OBJ_POTIONS);
+            you.turn_is_over = true;
+            return;
+        }
     }
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
