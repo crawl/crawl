@@ -41,8 +41,8 @@ ENDMAP
 NAME:   grunt_forest_entry_clearing
 TAGS:   forest_entry vaults_entry_forest
 KFEAT:  O = enter_forest
-MONS:   spriggan / tengu
-MONS:   centaur warrior / tengu warrior / faun
+MONS:   spriggan
+MONS:   faun / spriggan rider
 MONS:   wolf, black bear, grizzly bear
 SUBST:  t = t.
 KMONS:  P = plant / bush
@@ -65,8 +65,8 @@ ENDMAP
 NAME:   forest_entry_grove
 TAGS:   forest_entry vaults_entry_forest vaults_orient_s
 KFEAT:  O = enter_forest
-MONS:   spriggan / tengu
-MONS:   centaur warrior / tengu warrior / faun
+MONS:   spriggan
+MONS:   faun / spriggan rider
 MONS:   wolf, black bear, grizzly bear
 KMONS:  P = plant / bush
 NSUBST: Q = 3:1 / 1:2
@@ -141,11 +141,7 @@ SUBST: t = t..
 SUBST: . = O.........
 FTILE: . = floor_grass / floor_dirt
 KMONS: O = plant / bush
-: if crawl.coinflip() then
-MONS: tengu
-: else
 MONS: spriggan
-: end
 MAP
  tt...tt
 t.......t
@@ -186,14 +182,8 @@ SUBST: t = t..
 SUBST: . = O.........
 FTILE: . = floor_grass / floor_dirt
 KMONS: O = plant / bush
-: if crawl.one_chance_in(3) then
-MONS: tengu, tengu warrior / tengu conjurer
-: elseif crawl.coinflip() then
-MONS: faun, faun
-: else
-MONS: centaur, centaur warrior
-: end
-NSUBST: 7 = 3:1, 1:2
+MONS: faun, faun / satyr w:3
+NSUBST: 7 = 3:1 / 1:2
 MAP
  tt...tt
 t.......t
@@ -243,12 +233,8 @@ DEPTH: Forest
 SUBST: t = t..
 SUBST: . = O.........
 KMONS: O = plant / bush
-: if crawl.coinflip() then
-MONS: spriggan, centaur, centaur warrior
-: else
-MONS: tengu, tengu, tengu warrior / tengu conjurer
-: end
-NSUBST: P = 4:1, 3:2, 1:3
+MONS: spriggan, spriggan rider, spriggan air mage / spriggan berserker
+NSUBST: P = 4:1 / 3:2 / 1:3
 MAP
       tt...tt
     ttt.....ttt
@@ -277,7 +263,7 @@ DEPTH: Forest
 SUBST: t = t..
 SUBST: . = O.........
 KMONS: O = plant / bush
-KMONS: * = faun / tengu warrior
+KMONS: * = faun / spriggan berserker
 KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
            / w:1 apple / w:1 pear / w:1 orange / w:90 nothing
 MAP
@@ -961,8 +947,7 @@ KMONS:  1 = spriggan defender
 MONS:   spriggan defender, spriggan berserker / spriggan
 MONS:   spriggan druid / spriggan, spriggan rider / spriggan
 MONS:   spriggan air mage / spriggan, spriggan / nothing w:30
-MONS:   faun / satyr w:5 / tengu warrior / tengu conjurer w:5 / \
-        tengu reaver w:2
+MONS:   faun / satyr w:5
 TILE:   c = wall_marble
 COLOUR: .|*%OT123456+ = lightgray
 FTILE:  .|*%OT123456+ = floor_normal
