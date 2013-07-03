@@ -359,6 +359,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     fire_blocker = DNGN_UNSEEN;
 
+    u.ghost.acting_part = MONS_0;
     if (mons_is_pghost(type))
     {
         u.ghost.species = SP_HUMAN;
@@ -537,7 +538,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_NO_NAME_TAG);
 
     // Chimera acting head needed for name
-    if (mons_class_is_chimeric(type))
+    u.ghost.acting_part = MONS_0;
+    if (type_known && mons_class_is_chimeric(type))
     {
         ASSERT(m->ghost.get());
         ghost_demon& ghost = *m->ghost;
@@ -970,9 +972,13 @@ string monster_info::common_name(description_level_type desc) const
     if (mons_class_is_chimeric(type))
     {
         ss << "chimera";
-        if (u.ghost.acting_part != MONS_0)
+        monsterentry *me = NULL;
+        if (u.ghost.acting_part != MONS_0
+            && (me = get_monster_data(u.ghost.acting_part)))
+        {
             // Specify an acting head
-            ss << "'s " << get_monster_data(u.ghost.acting_part)->name << " head";
+            ss << "'s " << me->name << " head";
+        }
         else
             // Suffix parts in brackets
             // XXX: Should have a desc level that disables this
