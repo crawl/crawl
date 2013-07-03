@@ -4233,7 +4233,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (amount != INSTANT_DEATH && has_ench(ENCH_INJURY_BOND))
         {
             actor* guardian = get_ench(ENCH_INJURY_BOND).agent();
-            if (guardian && guardian->alive())
+            if (guardian && guardian->alive() && mons_aligned(guardian, this))
             {
                 int split = amount / 2;
                 if (split > 0)
