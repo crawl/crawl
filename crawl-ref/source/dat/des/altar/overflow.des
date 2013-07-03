@@ -1213,7 +1213,7 @@ ENDMAP
 
 NAME:   trog_ov_bears_minmay
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
-DEPTH:  D:4-18
+DEPTH:  D:6-18
 : if you.absdepth() < 10 then
 MONS:   black bear
 : else
