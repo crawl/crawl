@@ -423,7 +423,8 @@ bool monster_pathfind::traversable(const coord_def& p)
         {
             return true;
         }
-        else
+        // Give wall-walkers a chance to see if this grid is compatible with them
+        else if (!mons || !mons_wall_shielded(mons) || actor_at(p))
             return false;
     }
 
