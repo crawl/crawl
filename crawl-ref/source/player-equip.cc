@@ -971,7 +971,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             if (!unmeld && you.spirit_shield() < 2)
             {
                 dec_mp(you.magic_points);
-                mpr("You feel your power drawn to a protective spirit.");
+                if (you.species == SP_DJINNI)
+                    mpr("You feel the presence of a powerless spirit.");
+                else
+                    mpr("You feel your power drawn to a protective spirit.");
                 if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
             }
@@ -1361,7 +1364,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (you.spirit_shield() < 2 && !unmeld)
         {
             dec_mp(you.magic_points);
-            mpr("You feel your power drawn to a protective spirit.");
+            if (you.species == SP_DJINNI)
+                mpr("You feel the presence of a powerless spirit.");
+            else
+                mpr("You feel your power drawn to a protective spirit.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Now linked to your health, your magic stops regenerating.");
         }
