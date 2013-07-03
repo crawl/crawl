@@ -2532,6 +2532,9 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 if (ur_chunkslover)
                     return true;
 
+                if (you_min_hunger() == you_max_hunger())
+                    return true;
+
                 if (!suppress_msg)
                     mpr("You aren't quite hungry enough to eat that!");
 
