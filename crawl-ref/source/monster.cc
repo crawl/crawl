@@ -109,6 +109,7 @@ void monster::reset()
     ench_cache.reset();
     ench_countdown = 0;
     inv.init(NON_ITEM);
+    spells.init(SPELL_NO_SPELL);
 
     flags           = 0;
     experience      = 0;
