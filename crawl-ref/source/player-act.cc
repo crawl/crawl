@@ -727,11 +727,8 @@ bool player::berserk() const
 
 bool player::can_cling_to_walls() const
 {
-    return(species == SP_GARGOYLE
-            && (you.form == TRAN_NONE
-            || you.form == TRAN_APPENDAGE
-            || you.form == TRAN_BLADE_HANDS))
-        || form == TRAN_SPIDER;
+    return (player_mutation_level(MUT_CLING)
+        || form == TRAN_SPIDER);
 }
 
 bool player::is_web_immune() const
