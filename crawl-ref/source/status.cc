@@ -507,7 +507,8 @@ bool fill_status_info(int status, status_info* inf)
                 inf->light_colour = GREEN;
             else
                 inf->light_colour = DARKGREY;
-            _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
+            if (you.form == TRAN_SPIDER)
+                _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
         }
         break;
 
