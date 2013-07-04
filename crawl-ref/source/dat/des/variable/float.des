@@ -5266,7 +5266,7 @@ DEPTH: Dis:1-6, D:24-26
 : if you.branch() == "D" then
 # A more worthy adversary badly wanted.
 # What about an obvious up-HD rename of hell knight? *duck*
-MONS: stone giant
+MONS: fire giant
 : else
 MONS: Hell Sentinel
 : end
