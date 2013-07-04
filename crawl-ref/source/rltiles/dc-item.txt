@@ -1081,6 +1081,7 @@ misc_box MISC_EMPTY_EBONY_CASKET
 misc_box MISC_BOX_OF_BEASTS
 misc_disc MISC_DISC_OF_STORMS
 %rim 0
+misc_sack MISC_SACK_OF_SPIDERS
 misc_deck MISC_DECK
 %start
 %compose misc_deck
