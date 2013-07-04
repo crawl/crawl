@@ -727,13 +727,17 @@ bool player::berserk() const
 
 bool player::can_cling_to_walls() const
 {
-    return form == TRAN_SPIDER;
+    return(species == SP_GARGOYLE
+            && (you.form == TRAN_NONE
+            || you.form == TRAN_APPENDAGE
+            || you.form == TRAN_BLADE_HANDS))
+        || form == TRAN_SPIDER;
 }
 
 bool player::is_web_immune() const
 {
     // Spider form
-    return can_cling_to_walls();
+    return form == TRAN_SPIDER;
 }
 
 bool player::shove(const char* feat_name)

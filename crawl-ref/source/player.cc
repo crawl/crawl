@@ -3835,6 +3835,12 @@ int check_stealth(void)
             else
                 race_mod = 18;
             break;
+        case SP_GARGOYLE:
+            if (you.is_wall_clinging() && you.form != TRAN_SPIDER)
+              race_mod = 19;
+            else
+              race_mod = 15;
+            break;
         case SP_HALFLING:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
