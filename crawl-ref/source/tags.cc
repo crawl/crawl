@@ -759,7 +759,7 @@ void marshallString(writer &th, const string &data, int maxSize)
         len = maxSize;
     // A limit of 32K.
     if (len > SHRT_MAX)
-        die("trying to marshall too long a string (len=%ld)", len);
+        die("trying to marshall too long a string (len=%ld)", (long int)len);
     marshallShort(th, len);
 
     // put in the actual string -- we'll null terminate on
