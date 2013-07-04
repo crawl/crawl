@@ -4205,6 +4205,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_DISC_OF_STORMS:
         return TILE_MISC_DISC_OF_STORMS;
 
+    case MISC_SACK_OF_SPIDERS:
+        return TILE_MISC_SACK_OF_SPIDERS;
+
     case MISC_DECK_OF_ESCAPE:
     case MISC_DECK_OF_DESTRUCTION:
     case MISC_DECK_OF_DUNGEONS:
