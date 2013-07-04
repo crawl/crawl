@@ -1293,6 +1293,8 @@ static void tag_construct_you(writer &th)
         you.mutation[MUT_TELEPORT_CONTROL] = 0;
     if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
         you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
+    if (you.species == SP_GARGOYLE)
+        you.mutation[MUT_CLING] = 1;
 #endif
 
     marshallByte(th, you.demonic_traits.size());
