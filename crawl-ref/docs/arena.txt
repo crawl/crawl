@@ -116,8 +116,8 @@ string which specifies the monsters:
 The parameters include:
 
 * "arena:name" lets you pick the name of the arena to place the monsters
-      in (defaults to "arena:default"). See source/dat/arena.des for
-      a list.
+      in (defaults to "arena:default"). See source/dat/des/builder/arena.des
+      for a list.
 
 * no_force_ai: The monsters in the arena are somewhat smarter than they are
       than when they're facing the player. This parameter removes that
