@@ -4903,7 +4903,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DRAIN_SPEED:
-        if (coinflip() && !defender->res_negative_energy())
+        if (x_chance_in_y(3, 5) && !defender->res_negative_energy())
         {
             if (needs_message)
             {
@@ -4914,7 +4914,7 @@ void melee_attack::mons_apply_attack_flavour()
             }
 
             special_damage = 1 + random2(damage_done) / 2;
-            defender->slow_down(attacker, 3 + random2(5));
+            defender->slow_down(attacker, 5 + random2(7));
         }
         break;
 
