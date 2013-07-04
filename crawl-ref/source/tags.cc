@@ -907,13 +907,19 @@ static monster_type unmarshallMonType_Info(reader &th)
 }
 #endif
 
-static spell_type unmarshallSpellType(reader &th)
-{
+static spell_type unmarshallSpellType(reader &th
 #if TAG_MAJOR_VERSION == 34
-    spell_type x = static_cast<spell_type>(unmarshallUByte(th));
-#else
-    spell_type x = static_cast<spell_type>(unmarshallShort(th));
+                                      , bool mons = false
 #endif
+                                      )
+{
+    spell_type x = SPELL_NO_SPELL;
+#if TAG_MAJOR_VERSION == 34
+    if (!mons && th.getMinorVersion() < TAG_MINOR_SHORT_SPELL_TYPE)
+        x = static_cast<spell_type>(unmarshallUByte(th));
+    else
+#endif
+        x = static_cast<spell_type>(unmarshallShort(th));
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() == TAG_MINOR_0_11)
@@ -1203,11 +1209,7 @@ static void tag_construct_you(writer &th)
     // how many spells?
     marshallUByte(th, MAX_KNOWN_SPELLS);
     for (i = 0; i < MAX_KNOWN_SPELLS; ++i)
-#if TAG_MAJOR_VERSION == 34
-        marshallByte(th, you.spells[i]);
-#else
         marshallShort(th, you.spells[i]);
-#endif
 
     marshallByte(th, 52);
     for (i = 0; i < 52; i++)
@@ -1221,14 +1223,14 @@ static void tag_construct_you(writer &th)
     for (set<spell_type>::iterator it = you.old_vehumet_gifts.begin();
          it != you.old_vehumet_gifts.end(); ++it)
     {
-        marshallUByte(th, *it);
+        marshallShort(th, *it);
     }
 
     marshallUByte(th, you.vehumet_gifts.size());
     for (set<spell_type>::iterator it = you.vehumet_gifts.begin();
          it != you.vehumet_gifts.end(); ++it)
     {
-        marshallUByte(th, *it);
+        marshallShort(th, *it);
     }
 
     CANARY;
@@ -2072,7 +2074,14 @@ static void tag_read_you(reader &th)
             you.spell_no++;
     }
     for (; i < count; ++i)
-        unmarshallUByte(th);
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_SHORT_SPELL_TYPE)
+            unmarshallUByte(th);
+        else
+#endif
+            unmarshallShort(th);
+    }
 
     count = unmarshallByte(th);
     ASSERT(count == (int)you.spell_letter_table.size());
@@ -2126,17 +2135,17 @@ static void tag_read_you(reader &th)
 #endif
         count = unmarshallUByte(th);
         for (i = 0; i < count; ++i)
-            you.old_vehumet_gifts.insert(static_cast<spell_type>(unmarshallUByte(th)));
+            you.old_vehumet_gifts.insert(unmarshallSpellType(th));
 
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_VEHUMET_MULTI_GIFTS)
-            you.vehumet_gifts.insert(static_cast<spell_type>(unmarshallUByte(th)));
+            you.vehumet_gifts.insert(unmarshallSpellType(th));
         else
         {
 #endif
             count = unmarshallUByte(th);
             for (i = 0; i < count; ++i)
-                you.vehumet_gifts.insert(static_cast<spell_type>(unmarshallUByte(th)));
+                you.vehumet_gifts.insert(unmarshallSpellType(th));
 #if TAG_MAJOR_VERSION == 34
         }
     }
@@ -4291,10 +4300,11 @@ static void unmarshallSpells(reader &th, monster_spells &spells)
 {
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
     {
+        spells[j] = unmarshallSpellType(th
 #if TAG_MAJOR_VERSION == 34
-        unmarshallUByte(th);
+            , true
 #endif
-        spells[j] = unmarshallSpellType(th);
+            );
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_MALMUTATE && spells[j] == SPELL_POLYMORPH)
             spells[j] = SPELL_MALMUTATE;
