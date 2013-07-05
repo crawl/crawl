@@ -268,7 +268,10 @@ Księga czarów.
 %%%%
 book of the sky
 
-Księga czarów, wyraźnie naelektryzowana.
+Księga zawierająca potężniejsze czary Magii Powietrza. Przyjęte jest,
+aby skrybowie tworzący jej kopie robili to z wyższych komnat wysokich
+wież na otwartym terenie, aby lepiej przyjąć siłę wiatrów. Błyszczące
+runy którymi księga ta jest napisana to w istocie zaklęte pioruny.
 %%%%
 book of the tempests
 
