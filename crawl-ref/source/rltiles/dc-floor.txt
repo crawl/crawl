@@ -752,10 +752,12 @@ infernal_blank FLOOR_INFERNAL_BLANK
 
 %weight 10
 labyrinth0 FLOOR_LABYRINTH
+%weight 3
 labyrinth1
 labyrinth2
 labyrinth3
 
+%weight 10
 crypt0 FLOOR_CRYPT
 crypt1
 crypt2
