@@ -1187,8 +1187,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_SIREN;
     case MONS_DRYAD:
         return TILEP_MONS_DRYAD;
-    case MONS_THORN_HUNTER:
-        return TILEP_MONS_OKLOB_SAPLING;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
@@ -1618,6 +1616,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_OKLOB_PLANT;
     case MONS_THORN_LOTUS:
         return TILEP_MONS_THORN_LOTUS;
+    case MONS_THORN_HUNTER:
+        return TILEP_MONS_THORN_HUNTER;
+    case MONS_TREANT:
+        return TILEP_MONS_TREANT;
 
     // rakshasa ('R')
     case MONS_RAKSHASA:
