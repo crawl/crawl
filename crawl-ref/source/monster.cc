@@ -69,7 +69,7 @@ monster::monster()
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
-      number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
+      number(0), colour(BLACK), foe_memory(0),
       god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
 
 {
@@ -78,6 +78,7 @@ monster::monster()
     props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
+    shield_blocks = 0;
 
     constricting = 0;
 
@@ -127,6 +128,7 @@ void monster::reset()
     number          = 0;
     damage_friendly = 0;
     damage_total    = 0;
+    shield_blocks   = 0;
 
     mons_remove_from_grid(this);
     position.reset();
