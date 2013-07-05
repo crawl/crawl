@@ -349,8 +349,6 @@ public:
 
   int time_taken;
 
-  int shield_blocks;         // number of shield blocks since last action
-
   int old_hunger;            // used for hunger delta-meter (see output.cc)
 
   // Set when the character is going to a new level, to guard against levgen

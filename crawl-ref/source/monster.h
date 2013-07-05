@@ -58,8 +58,6 @@ public:
     int foe_memory;                    // how long to 'remember' foe x,y
                                        // once they go out of sight.
 
-    int shield_blocks;                 // Count of shield blocks this round.
-
     god_type god;                      // What god the monster worships, if
                                        // any.
 

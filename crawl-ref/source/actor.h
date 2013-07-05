@@ -400,6 +400,8 @@ public:
 
     CrawlHashTable props;
 
+    int shield_blocks;                 // Count of shield blocks this round.
+
     // Constriction stuff:
 
     // What is holding us?  Not necessarily a monster.
