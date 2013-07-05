@@ -90,6 +90,7 @@ function volcano_portal (e)
     e.kfeat("S = .")
     e.colour("XOS = red")
     e.rtile("X = wall_volcanic")
+    e.kfeat("X = rock_wall")
     e.ftile("OS = floor_rough_red")
 end
 
