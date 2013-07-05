@@ -4,7 +4,7 @@ use warnings;
 
 my @tags=("TAG_MINOR_RESET");
 open IN, "<tag-version.h" or die "Can't open tag-version.h\n";
-while(<IN>)
+while (<IN>)
 {
     push @tags, $1 if /^\s*((?:NUM_)?TAG_MINOR[A-Z_0-9]+),/;
 }

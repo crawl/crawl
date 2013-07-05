@@ -69,8 +69,11 @@ void handle_monster_shouts(monster* mons, bool force)
     // Chimera can take a random shout type from any of their
     // three components
     if (mons->type == MONS_CHIMERA)
-        s_type = mons_shouts(random_chimera_part(mons), false);
-
+    {
+        monster_type acting = mons->ghost->acting_part != MONS_0
+            ? mons->ghost->acting_part : random_chimera_part(mons);
+        s_type = mons_shouts(acting, false);
+    }
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
     // Muted monsters can't shout at all.
@@ -295,6 +298,10 @@ bool check_awaken(monster* mons)
 
     // Berserkers aren't really concerned about stealth.
     if (you.berserk())
+        return true;
+
+    // Vigilant monsters are always alerted
+    if (mons_class_flag(mons->type, M_VIGILANT))
         return true;
 
     // I assume that creatures who can sense invisible are very perceptive.

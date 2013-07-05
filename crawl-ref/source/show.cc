@@ -218,7 +218,11 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
     case OBJ_STAVES:     return SHOW_ITEM_STAVE;
     case OBJ_RODS:       return SHOW_ITEM_STAVE;
-    case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
+    case OBJ_MISCELLANY:
+        if (item.sub_type == MISC_RUNE_OF_ZOT)
+            return SHOW_ITEM_RUNE;
+        else
+            return SHOW_ITEM_MISCELLANY;
     case OBJ_CORPSES:    return SHOW_ITEM_CORPSE;
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;

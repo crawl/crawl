@@ -3,6 +3,7 @@
 
 #include "beam.h"
 #include "enum.h"
+#include "data-index.h"
 #include "itemprop-enum.h"
 #include "spl-cast.h"
 
@@ -12,6 +13,13 @@
 #define DEAD_ARE_FLYING 4
 #define DEAD_ARE_SLITHERING 8
 #define DEAD_ARE_HOPPING 16
+
+
+// Properties set for active summons
+#define SW_TARGET_MID "sw_target_mid"
+#define SW_READIED "sw_readied"
+#define SW_TRACKING "sw_tracking"
+
 
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);
@@ -90,4 +98,38 @@ bool fire_battlesphere(monster* mons);
 void reset_battlesphere(monster* mons);
 
 spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail);
+
+monster* find_spectral_weapon(const actor* agent);
+spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail);
+void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
+bool trigger_spectral_weapon(actor* agent, const actor* target);
+bool check_target_spectral_weapon(const actor* mons, const actor *defender);
+bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
+void reset_spectral_weapon(monster* mons);
+
+bool summoned_monster(monster* mons, actor* caster, spell_type spell);
+bool summons_are_capped(spell_type spell);
+int summons_limit(spell_type spell);
+
+struct summons_desc // : public data_index_entry<spell_type>
+{
+    // XXX: Assumes that all summons types from each spell are equal,
+    // this is probably fine for now, but will need thought if a spell
+    // needs to have two separate caps
+    spell_type which;
+    int type_cap;               // Maximum number for this type
+    int timeout;                // Timeout length for replaced summons
+};
+
+class summons_index : public data_index<spell_type, summons_desc, NUM_SPELLS>
+{
+public:
+    summons_index(const summons_desc* _pop)
+        : data_index<spell_type, summons_desc, NUM_SPELLS>(_pop)
+    {};
+
+protected:
+    spell_type map(const summons_desc* val);
+};
+
 #endif

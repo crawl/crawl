@@ -29,6 +29,7 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "skills2.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "tagstring.h"
 #include "terrain.h"
@@ -358,6 +359,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     fire_blocker = DNGN_UNSEEN;
 
+    u.ghost.acting_part = MONS_0;
     if (mons_is_pghost(type))
     {
         u.ghost.species = SP_HUMAN;
@@ -467,10 +469,21 @@ monster_info::monster_info(const monster* m, int milev)
             number = m->number;
         colour = m->colour;
 
-        if (m->is_summoned())
+        int stype = 0;
+        if (m->is_summoned(0, &stype))
+        {
             mb.set(MB_SUMMONED);
+            if (stype > 0 && stype < NUM_SPELLS
+                && summons_are_capped(static_cast<spell_type>(stype)))
+            {
+                mb.set(MB_SUMMONED_NO_STAIRS);
+            }
+        }
         else if (m->is_perm_summoned())
             mb.set(MB_PERM_SUMMON);
+
+        if (m->has_ench(ENCH_SUMMON_CAPPED))
+            mb.set(MB_SUMMONED_CAPPED);
     }
     else
     {
@@ -523,6 +536,15 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_NAME_ZOMBIE);
     if (m->flags & MF_NAME_SPECIES)
         mb.set(MB_NO_NAME_TAG);
+
+    // Chimera acting head needed for name
+    u.ghost.acting_part = MONS_0;
+    if (type_known && mons_class_is_chimeric(type))
+    {
+        ASSERT(m->ghost.get());
+        ghost_demon& ghost = *m->ghost;
+        u.ghost.acting_part = ghost.acting_part;
+    }
 
     if (milev <= MILEV_NAME)
     {
@@ -861,13 +883,15 @@ string monster_info::_core_name() const
             break;
 
         case MONS_DANCING_WEAPON:
+        case MONS_SPECTRAL_WEAPON:
             if (inv[MSLOT_WEAPON].get())
             {
                 iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
                 bool     use_inscrip  = true;
                 const item_def& item = *inv[MSLOT_WEAPON];
-                s = (item.name(DESC_PLAIN, false, false, use_inscrip, false,
-                                  ignore_flags));
+                s = type==MONS_SPECTRAL_WEAPON ? "spectral " : "";
+                s += (item.name(DESC_PLAIN, false, false, use_inscrip, false,
+                                ignore_flags));
             }
             break;
 
@@ -913,7 +937,8 @@ string monster_info::common_name(description_level_type desc) const
     const string core = _core_name();
     const bool nocore = mons_class_is_zombified(type)
                         && mons_is_unique(base_type)
-                        && base_type == mons_species(base_type);
+                        && base_type == mons_species(base_type)
+                        || mons_class_is_chimeric(type);
 
     ostringstream ss;
 
@@ -942,6 +967,22 @@ string monster_info::common_name(description_level_type desc) const
             ss << make_stringf("%d", number);
 
         ss << "-headed ";
+    }
+
+    if (mons_class_is_chimeric(type))
+    {
+        ss << "chimera";
+        monsterentry *me = NULL;
+        if (u.ghost.acting_part != MONS_0
+            && (me = get_monster_data(u.ghost.acting_part)))
+        {
+            // Specify an acting head
+            ss << "'s " << me->name << " head";
+        }
+        else
+            // Suffix parts in brackets
+            // XXX: Should have a desc level that disables this
+            ss << " (" << core << chimera_part_names() << ")";
     }
 
     if (!nocore)
@@ -980,9 +1021,6 @@ string monster_info::common_name(description_level_type desc) const
         break;
     case MONS_PILLAR_OF_SALT:
         ss << (nocore ? "" : " ") << "shaped pillar of salt";
-        break;
-    case MONS_CHIMERA:
-        ss << chimera_part_names() << " chimera";
         break;
     default:
         break;

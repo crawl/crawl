@@ -502,8 +502,12 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   end
 
   -- If this is being placed to benefit a central vault, do the polar layout.
-  if dgn.map_by_tag("central") then
-    polarise = true
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local mode = unpack(params)
+    if mode == "central" then
+      polarise = true
+    end
   end
 
   local scale = 80/reps

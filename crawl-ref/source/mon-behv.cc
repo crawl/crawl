@@ -17,6 +17,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "itemprop.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "mon-act.h"
@@ -28,6 +29,7 @@
 #include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -62,6 +64,11 @@ static void _guess_invis_foe_pos(monster* mon)
 
 static void _mon_check_foe_invalid(monster* mon)
 {
+    // Assume a spectral weapon has a valid target
+    // Ideally this is not outside special cased like this
+    if (mon->type == MONS_SPECTRAL_WEAPON)
+        return;
+
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
         if (actor *foe = mon->get_foe())
@@ -144,6 +151,113 @@ static void _set_firing_pos(monster* mon, coord_def target)
     }
 
     mon->firing_pos = best_pos;
+}
+
+struct dist2_sorter
+{
+    coord_def pos;
+    bool operator()(const coord_def a, const coord_def b)
+    {
+        return distance2(a, pos) < distance2(b, pos);
+    }
+};
+
+static bool _can_traverse_unseen(const monster* mon, const coord_def& target)
+{
+    if (mon->pos() == target)
+        return true;
+
+    ray_def ray;
+    if (!find_ray(mon->pos(), target, ray, opc_immob))
+        return false;
+
+    while (ray.pos() != target && ray.advance())
+        if (!mon_can_move_to_pos(mon, ray.pos() - mon->pos()))
+            return false;
+
+    return true;
+}
+
+// Attempt to find the furthest position from a given target which still has
+// line of sight to it, and which the monster can move to (without pathfinding)
+static coord_def _furthest_aim_spot(monster* mon, coord_def target)
+{
+    int best_distance = 0;
+    coord_def best_pos(0, 0);
+
+    const los_base *los = mon->get_los();
+    for (distance_iterator di(mon->pos(), false, false, LOS_RADIUS);
+         di; ++di)
+    {
+        const coord_def p(*di);
+        const int range = p.distance_from(target);
+
+        if (!los->see_cell(*di))
+            continue;
+
+        if (!in_bounds(p) || range > LOS_RADIUS - 1
+            || !cell_see_cell(p, target, LOS_NO_TRANS)
+            || !mon_can_move_to_pos(mon, p - mon->pos(), true))
+        {
+            continue;
+        }
+
+        const int distance = p.distance_from(target);
+        if (distance > best_distance)
+        {
+            if (_can_traverse_unseen(mon, p))
+            {
+                best_pos = p;
+                best_distance = distance;
+            }
+        }
+    }
+
+    return best_pos;
+}
+
+// Tries to find and set an optimal spot for the curse skull to lurk, just
+// outside player's line of sight. We consider this to be the spot the furthest
+// from the player which still has line of sight to where the player will move
+// if they are approaching us. (This keeps it from lurking immediately around
+// corners, where the player can enter melee range of it the first turn it comes
+// into sight)
+//
+// The answer given is not always strictly optimal, since no actual pathfinding
+// is done, and sometimes the best lurking position crosses spots visible to
+// the player unless a more circuitous route is taken, but generally it is
+// pretty good, and eliminates the most obvious cases of players luring them
+// into easy kill.
+static void _set_curse_skull_lurk_pos(monster* mon)
+{
+    // If we're already moving somewhere that we can actually reach, don't
+    // search for a new spot.
+    if (!mon->firing_pos.origin() && _can_traverse_unseen(mon, mon->firing_pos))
+        return;
+
+    // Examine spots adjacent to our target, starting with those closest to us
+    vector<coord_def> spots;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (!feat_is_solid(grd(*ai)) || feat_is_door(grd(*ai)))
+            spots.push_back(*ai);
+    }
+
+    dist2_sorter sorter = {mon->pos()};
+    sort(spots.begin(), spots.end(), sorter);
+
+    coord_def lurk_pos(0, 0);
+    for (unsigned int i = 0; i < spots.size(); ++i)
+    {
+        lurk_pos = _furthest_aim_spot(mon, spots[i]);
+
+        // Consider the first position found to be good enough
+        if (!lurk_pos.origin())
+        {
+            mon->firing_pos = lurk_pos;
+            return;
+        }
+    }
 }
 
 //---------------------------------------------------------------
@@ -255,6 +369,46 @@ void handle_behaviour(monster* mon)
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
+    // The target and foe set here for a spectral weapon should never change
+    if (mon->type == MONS_SPECTRAL_WEAPON)
+    {
+        // Do nothing if we're still being placed
+        if (!mon->props.exists("sw_mid"))
+            return;
+
+        actor *owner = actor_by_mid(mon->props["sw_mid"].get_int());
+
+        if (!owner || !owner->alive())
+        {
+            end_spectral_weapon(mon, false);
+            return;
+        }
+
+        mon->target = owner->pos();
+        mon->foe = MHITNOT;
+        // Try to move towards any monsters the owner is attacking
+        if (mon->props.exists(SW_TARGET_MID))
+        {
+            actor *atarget = actor_by_mid(mon->props[SW_TARGET_MID].get_int());
+
+            // Only go after the target if it's still near the owner,
+            // and so are we.
+            // The weapon is restricted to a leash range of 2,
+            // and things reachable within that leash range [qoala]
+            const int leash = 2;
+            if (atarget && atarget->alive()
+                && (grid_distance(owner->pos(), atarget->pos())
+                    <= ((mon->reach_range() == REACH_TWO) ? leash + 2 : leash + 1))
+                && (grid_distance(owner->pos(), mon->pos()) <= leash))
+            {
+                mon->target = atarget->pos();
+                mon->foe = atarget->mindex();
+            }
+            else
+                reset_spectral_weapon(mon);
+        }
+    }
+
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
     if (proxPlayer && !you.visible_to(mon))
@@ -303,7 +457,8 @@ void handle_behaviour(monster* mon)
         && !mon->berserk()
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
-        && mon->type != MONS_BATTLESPHERE)
+        && mon->type != MONS_BATTLESPHERE
+        && mon->type != MONS_SPECTRAL_WEAPON)
     {
         if  (!crawl_state.game_is_zotdef())
         {
@@ -355,7 +510,8 @@ void handle_behaviour(monster* mon)
     }
 
     // Friendly summons will come back to the player if they go out of sight.
-    if (!summon_can_attack(mon))
+    // Spectral weapon should keep its target even though it can't attack it
+    if (!summon_can_attack(mon) && mon->type!=MONS_SPECTRAL_WEAPON)
         mon->target = you.pos();
 
     // Monsters do not attack themselves. {dlb}
@@ -566,6 +722,12 @@ void handle_behaviour(monster* mon)
                     && !(mon->friendly() && mon->foe == MHITYOU))
                 {
                     new_beh = BEH_WANDER;
+                }
+                else if ((mon->type == MONS_CURSE_SKULL
+                          && mon->foe == MHITYOU
+                          && grid_distance(mon->pos(), you.pos()) <= LOS_RADIUS))
+                {
+                    _set_curse_skull_lurk_pos(mon);
                 }
                 // If the player walk out of the LOS of a monster with a ranged
                 // attack, we assume it sees in which direction the player went
@@ -979,8 +1141,11 @@ static void _set_nearest_monster_foe(monster* mon)
     if (mon->good_neutral() || mon->strict_neutral()
             || mon->behaviour == BEH_WITHDRAW
             || mon->type == MONS_BATTLESPHERE
+            || mon->type == MONS_SPECTRAL_WEAPON
             || mon->has_ench(ENCH_HAUNTING))
+    {
         return;
+    }
 
     const bool friendly = mon->friendly();
     const bool neutral  = mon->neutral();
@@ -1127,7 +1292,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             else if (mon->asleep())
                 mon->behaviour = BEH_SEEK;
 
-            if (src == &you && mon->type != MONS_BATTLESPHERE)
+            if (src == &you
+                && mon->type != MONS_BATTLESPHERE
+                && mon->type != MONS_SPECTRAL_WEAPON)
             {
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
@@ -1311,7 +1478,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (setTarget && src)
     {
         mon->target = src_pos;
-        if (src->is_player() && mon->type != MONS_BATTLESPHERE)
+        if (src->is_player()
+            && mon->type != MONS_BATTLESPHERE
+            && mon->type != MONS_SPECTRAL_WEAPON)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;

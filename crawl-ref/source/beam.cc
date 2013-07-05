@@ -4728,7 +4728,8 @@ bool bolt::ignores_monster(const monster* mon) const
     // battlespheres. We don't check mon->is_projectile() because that
     // check includes boulder beetles which should be hit.
     if (mons_is_projectile(mon)
-        || mon->type == MONS_BATTLESPHERE && mons_aligned(agent(), mon))
+        || (mon->type == MONS_BATTLESPHERE || mon->type == MONS_SPECTRAL_WEAPON)
+            && mons_aligned(agent(), mon))
     {
         return true;
     }
@@ -5936,13 +5937,13 @@ void bolt::set_agent(actor *actor)
     }
 }
 
-actor* bolt::agent() const
+actor* bolt::agent(bool ignore_reflection) const
 {
     killer_type nominal_ktype = thrower;
     int nominal_source = beam_source;
 
     // If the beam was reflected report a different point of origin
-    if (reflections > 0)
+    if (reflections > 0 && !ignore_reflection)
     {
         if (reflector == NON_MONSTER)
             nominal_ktype = KILL_YOU_MISSILE;

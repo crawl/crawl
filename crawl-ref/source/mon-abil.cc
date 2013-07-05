@@ -65,6 +65,7 @@
 #include <queue>
 #include <map>
 #include <set>
+#include <cmath>
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
@@ -1333,6 +1334,61 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     return true;
 }
 
+static bool _moth_polymorph(const monster* mon)
+{
+    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        return false;
+
+    circle_def c(mon->pos(), 4, C_ROUND);
+    for (monster_iterator mi(&c); mi; ++mi)
+    {
+        if (is_sanctuary(mi->pos()))
+            continue;
+
+        if (!you.see_cell(mi->pos()))
+            continue;
+
+        if (!mon->can_see(*mi))
+            continue;
+
+        if (mi->type == MONS_POLYMOTH)
+            continue;
+
+        // Decrease the chances of repeatedly polymorphing high HD monsters.
+        if (mi->flags & MF_POLYMORPHED)
+        {
+          int skip_chance = 1 + pow(mi->hit_dice, 0.5);
+          if (!one_chance_in(skip_chance))
+              continue;
+        }
+
+        // No ally scumming.
+        if (mon->friendly() || mi->friendly() || mi->neutral())
+            continue;
+
+        // Polymorphing firewood is very, very bad.
+        if (mons_is_firewood(*mi))
+            continue;
+
+        if (one_chance_in(2))
+        {
+            const string targ_name = (mi->visible_to(&you)) ? mi->name(DESC_THE)
+                                                            : "something";
+
+            if (you.can_see(*mi))
+            {
+                mprf("%s irradiates %s!",
+                    mon->name(DESC_THE).c_str(),
+                    targ_name.c_str());
+            }
+            monster_polymorph(*mi, RANDOM_TOUGHER_MONSTER);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static bool _moth_incite_monsters(const monster* mon)
 {
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
@@ -1873,29 +1929,41 @@ static bool _lost_soul_affectable(const monster* mons)
             && !mons_class_flag(mons->type, M_NO_EXP_GAIN));
 }
 
+struct hd_sorter
+{
+    bool operator()(const pair<monster* ,int> &a, const pair<monster* ,int> &b)
+    {
+        return a.second > b.second;
+    }
+};
+
 static bool _lost_soul_teleport(monster* mons)
 {
     bool seen = you.can_see(mons);
 
-    vector<coord_def> targets;
+   vector<pair<monster*, int> > candidates;
 
     // Assemble candidate list and randomize
     for (monster_iterator mi; mi; ++mi)
     {
         if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
-            targets.push_back(mi->pos());
+        {
+            pair<monster* , int> m = make_pair(*mi, mi->hit_dice + random2(7));
+            candidates.push_back(m);
+        }
     }
-    random_shuffle(targets.begin(), targets.end());
+    sort(candidates.begin(), candidates.end(), hd_sorter());
 
-    for (unsigned int i = 0; i < targets.size(); ++i)
+    for (unsigned int i = 0; i < candidates.size(); ++i)
     {
         coord_def empty;
-        if (find_habitable_spot_near(targets[i], mons_base_type(mons), 3, false, empty)
+        if (find_habitable_spot_near(candidates[i].first->pos(), mons_base_type(mons), 3, false, empty)
             && mons->move_to_pos(empty))
         {
             mons->add_ench(ENCH_SUBMERGED);
             mons->behaviour = BEH_WANDER;
             mons->foe = MHITNOT;
+            mons->props["band_leader"].get_int() = candidates[i].first->mid;
             if (seen)
             {
                 mprf("%s flickers out of the living world.",
@@ -1921,6 +1989,26 @@ static bool _lost_soul_teleport(monster* mons)
     return false;
 }
 
+// Is it worth sacrificing ourselves to revive this monster? This is based
+// on monster HD, with a lower chance for weaker monsters so long as other
+// monsters are present, but always true if there are only as many valid
+// targets as nearby lost souls.
+static bool _worthy_sacrifice(monster* soul, const monster* target)
+{
+    int count = 0;
+    for (monster_iterator mi(soul->get_los_no_trans()); mi; ++mi)
+    {
+        if (_lost_soul_affectable(*mi))
+            ++count;
+        else if (mi->type == MONS_LOST_SOUL)
+            --count;
+    }
+
+    return (count <= -1 || target->hit_dice > 9
+            || x_chance_in_y(target->hit_dice * target->hit_dice * target->hit_dice,
+                             1200));
+}
+
 bool lost_soul_revive(monster* mons)
 {
     if (!_lost_soul_affectable(mons))
@@ -1930,6 +2018,9 @@ bool lost_soul_revive(monster* mons)
     {
         if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
         {
+            if (!_worthy_sacrifice(*mi, mons))
+                continue;
+
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(GREEN, 200, &hitfunc);
 
@@ -1965,6 +2056,9 @@ bool lost_soul_spectralize(monster* mons)
     {
         if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
         {
+            if (!_worthy_sacrifice(*mi, mons))
+                continue;
+
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(GREEN, 200, &hitfunc);
 
@@ -2744,20 +2838,35 @@ void move_solo_tentacle(monster* tentacle)
         }
         else if (tentacle->type == MONS_SNAPLASHER_VINE)
         {
-            for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
+            // Don't shift our victim if they're already next to a tree
+            // (To avoid shaking players back and forth constantly)
+            bool near_tree = false;
+            for (adjacent_iterator ai(constrictee->pos()); ai; ++ai)
             {
-                if (adjacent(*ai, constrictee->pos())
-                    && constrictee->is_habitable(*ai)
-                    && !actor_at(*ai))
+                if (feat_is_tree(grd(*ai)))
                 {
-                    for (adjacent_iterator ai2(*ai); ai2; ++ai2)
+                    near_tree = true;
+                    break;
+                }
+            }
+
+            if (!near_tree)
+            {
+                for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
+                {
+                    if (adjacent(*ai, constrictee->pos())
+                        && constrictee->is_habitable(*ai)
+                        && !actor_at(*ai))
                     {
-                        if (feat_is_tree(grd(*ai2)))
+                        for (adjacent_iterator ai2(*ai); ai2; ++ai2)
                         {
-                            pull_constrictee = true;
-                            shift_constrictee = true;
-                            shift_pos = *ai;
-                            break;
+                            if (feat_is_tree(grd(*ai2)))
+                            {
+                                pull_constrictee = true;
+                                shift_constrictee = true;
+                                shift_pos = *ai;
+                                break;
+                            }
                         }
                     }
                 }
@@ -3339,6 +3448,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MOTH_OF_WRATH:
         if (one_chance_in(3))
             used = _moth_incite_monsters(mons);
+        break;
+
+    case MONS_POLYMOTH:
+        if (one_chance_in(3))
+            used = _moth_polymorph(mons);
         break;
 
     case MONS_QUEEN_BEE:
@@ -4091,6 +4205,21 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
     }
     break;
+
+    case MONS_THORN_LOTUS:
+        if (x_chance_in_y(2, 5))
+        {
+            setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
+
+            fire_tracer(mons, beem);
+            if (mons_should_fire(beem))
+            {
+                make_mons_stop_fleeing(mons);
+                _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
+                used = true;
+            }
+        }
+        break;
 
     default:
         break;

@@ -312,6 +312,10 @@ sorcerers, for it allows the gifted and resourceful to command destruction with
 ease. Feeble wizards, however, may well meet their doom when trying to read
 this opus.
 %%%%
+book of battle
+
+A book of spells used by skalds, whose battle songs grant them magical help.
+%%%%
 book of beasts
 
 A book of spells focused on the magical production of beasts, with pages made
@@ -2371,7 +2375,7 @@ by some kind of permanent branding is not advised. On the other hand, the
 scroll can make permanent the temporary branding of weapons obtained from some
 spells.
 
-Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha,
+Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
 the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
 let such an opportunity for fun go to waste.
 %%%%

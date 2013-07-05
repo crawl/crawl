@@ -1956,10 +1956,12 @@ static void _build_overflow_temples()
         const int num_gods = _setup_temple_altars(temple);
 
         const map_def *vault = NULL;
+        string vault_tag = "";
+        string name = "";
 
         if (temple.exists(TEMPLE_MAP_KEY))
         {
-            string name = temple[TEMPLE_MAP_KEY].get_string();
+            name = temple[TEMPLE_MAP_KEY].get_string();
 
             vault = find_map_by_name(name);
             if (vault == NULL)
@@ -1971,9 +1973,6 @@ static void _build_overflow_temples()
         }
         else
         {
-            string vault_tag = "";
-            string name = "";
-
             // First try to find a temple specialized for this combination of
             // gods.
             if (num_gods > 1 || coinflip())
@@ -2034,15 +2033,18 @@ static void _build_overflow_temples()
             // find the overflow temple map, so don't veto the level.
             return;
 
-        if (!_dgn_ensure_vault_placed(
-                _build_secondary_vault(vault),
-                false))
         {
+            dgn_map_parameters mp(vault_tag);
+            if (!_dgn_ensure_vault_placed(
+                    _build_secondary_vault(vault),
+                    false))
+            {
 #ifdef DEBUG_TEMPLES
-            mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
-                 "vetoing level.", vault->name.c_str());
+                mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
+                     "vetoing level.", vault->name.c_str());
 #endif
-            return;
+                return;
+            }
         }
 #ifdef DEBUG_TEMPLES
         mprf(MSGCH_DIAGNOSTICS, "Placed overflow temple %s",
@@ -2641,7 +2643,11 @@ static bool _pan_level()
         {
             const map_def *layout = _pick_layout(vault);
 
-            _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
+            {
+                dgn_map_parameters mp(vault->orient == MAP_CENTRE
+                                      ? "central" : "layout");
+                _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
+            }
 
             dgn_check_connectivity = true;
             _build_secondary_vault(vault);
@@ -4156,6 +4162,16 @@ _build_vault_impl(const map_def *vault,
     if (placed_vault_orientation == MAP_NONE)
         return NULL;
 
+    const bool is_layout = place.map.is_overwritable_layout();
+
+    if (!build_only
+        && (placed_vault_orientation == MAP_ENCOMPASS || is_layout)
+        && vault->border_fill_type != DNGN_ROCK_WALL)
+    {
+       dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
+                        vault->border_fill_type);
+    }
+
     // XXX: Moved this out of dgn_register_place so that vault-set monsters can
     // be accessed with the '9' and '8' glyphs. (due)
     if (!place.map.random_mons.empty())
@@ -4186,8 +4202,6 @@ _build_vault_impl(const map_def *vault,
     if (crawl_state.map_stat_gen)
         mapgen_report_map_use(place.map);
 #endif
-
-    const bool is_layout = place.map.is_overwritable_layout();
 
     if (is_layout && place.map.has_tag_prefix("layout_type_"))
     {
@@ -4257,7 +4271,11 @@ static void _build_postvault_level(vault_placement &place)
     {
         const map_def* layout = _pick_layout(&place.map);
         ASSERT(layout);
-        _build_secondary_vault(layout, false);
+        {
+            dgn_map_parameters mp(place.orient == MAP_CENTRE
+                                  ? "central" : "layout");
+            _build_secondary_vault(layout, false);
+        }
     }
 }
 
@@ -4866,11 +4884,14 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mons->is_priest() && mons->god == GOD_NO_GOD)
         mons->god = GOD_NAMELESS;
 
-    if (mons->type == MONS_DANCING_WEAPON)
+    if (mons_class_is_animated_weapon(mons->type))
     {
         item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
         ASSERT(wpn);
-        mons->ghost->init_dancing_weapon(*wpn, 100);
+        if (mons->type == MONS_DANCING_WEAPON)
+            mons->ghost->init_dancing_weapon(*wpn, 100);
+        else if (mons->type == MONS_SPECTRAL_WEAPON)
+            mons->ghost->init_spectral_weapon(*wpn, 100, 270);
         mons->ghost_demon_init();
     }
 

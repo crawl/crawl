@@ -17,7 +17,7 @@ function castle_lemuel_subvault_setup(e)
          e.tags("no_monster_gen");
          e.tags("no_rotate");
          e.colour("? = brown")
-         e.ftile("? = floor_orc")
+         e.ftile("? = floor_mud")
          e.kfeat("? = floor")
          e.subst("X = c +:1")
          e.subst("~ = ~:2 .")

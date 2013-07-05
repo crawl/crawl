@@ -163,7 +163,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_BERSERKER:         s =  9; i = -1; d =  4; hp = 15; mp = 0; break;
     case JOB_GLADIATOR:         s =  7; i =  0; d =  5; hp = 14; mp = 0; break;
 
-    case JOB_SKALD:             s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
+    case JOB_SKALD:             s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 2; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
@@ -309,6 +309,7 @@ void give_basic_mutations(species_type speci)
     case SP_GARGOYLE:
         you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
         you.mutation[MUT_TRAMPLE_RESISTANCE]         = 1;
+        you.mutation[MUT_CLING]                      = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_FANGS]                      = 1;
@@ -692,13 +693,12 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_SKALD:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 1, 1);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1, 0, 0);
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
-        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_BERSERK_RAGE);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_BATTLE);
 
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
@@ -926,6 +926,17 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
 
+        // This is meant to match the En/As start change-up, but Trolls have
+        // claws, so they don't get a starting melee weapon (see above).
+        // The +1 is meant to make this less sucky; it could be a better
+        // base type, but whips don't seem very hunter-ish and hammers are
+        // used almost nowhere.
+        if (you.species == SP_OGRE)
+        {
+            you.inv[0].sub_type = WPN_CLUB;
+            you.inv[0].plus = you.inv[0].plus2 = 1;
+        }
+
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING]  = 2;
@@ -955,6 +966,13 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                            ARM_LEATHER_ARMOUR, ARM_ROBE);
+
+        // See Hunter notes above.
+        if (you.species == SP_OGRE)
+        {
+            you.inv[0].sub_type = WPN_CLUB;
+            you.inv[0].plus = you.inv[0].plus2 = 1;
+        }
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
@@ -1164,6 +1182,9 @@ static void _give_basic_spells(job_type which_job)
         break;
     case JOB_EARTH_ELEMENTALIST:
         which_spell = SPELL_SANDBLAST;
+        break;
+    case JOB_SKALD:
+        which_spell = SPELL_INFUSION;
         break;
     case JOB_TRANSMUTER:
         which_spell = SPELL_BEASTLY_APPENDAGE;

@@ -585,9 +585,7 @@ void full_describe_view()
 
     string title = "";
     if (!list_mons.empty())
-    {
         title  = "Monsters";
-    }
     if (!list_items.empty())
     {
         if (!title.empty())
@@ -3559,6 +3557,9 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_PERM_SUMMON))
         descs.push_back("durably summoned");
 
+    if (mi.is(MB_SUMMONED_CAPPED))
+        descs.push_back("expiring");
+
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
@@ -3626,11 +3627,15 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is indifferent to you.\n";
     }
 
-    if (mi.is(MB_SUMMONED))
-        text += pronoun + " has been summoned.\n";
-
-    if (mi.is(MB_PERM_SUMMON))
-        text += pronoun + " has been summoned but will not time out.\n";
+    if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
+    {
+        text += pronoun + " has been summoned";
+        if (mi.is(MB_SUMMONED_CAPPED))
+            text += ", and is expiring";
+        else if (mi.is(MB_PERM_SUMMON))
+            text += " but will not time out";
+        text += ".\n";
+    }
 
     if (mi.is(MB_HALOED))
         text += pronoun + " is illuminated by a divine halo.\n";
@@ -3685,9 +3690,7 @@ static void _describe_monster(const monster_info& mi)
         text += " " + uppercase_first(wounds_desc);
     const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
-    {
         text += " It is" + constriction_desc + ".";
-    }
     mpr(text, MSGCH_EXAMINE);
 
     // Print the rest of the description.
@@ -3740,6 +3743,13 @@ string get_monster_equipment_desc(const monster_info& mi,
                 str += "durably summoned";
             }
 
+            if (mi.is(MB_SUMMONED_CAPPED))
+            {
+                if (!str.empty())
+                    str += ", ";
+                str += "expiring";
+            }
+
             if (mi.type == MONS_DANCING_WEAPON
                 || mi.type == MONS_PANDEMONIUM_LORD
                 || mi.type == MONS_PLAYER_GHOST)
@@ -3767,7 +3777,7 @@ string get_monster_equipment_desc(const monster_info& mi,
     // true rakshasa when it summons. But Mara is fine, because his weapons
     // and armour are cloned with him.
 
-    if (mi.type != MONS_DANCING_WEAPON)
+    if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
         weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
     else if (level == DESC_IDENTIFIED)
         return " " + mi.full_name(DESC_A);

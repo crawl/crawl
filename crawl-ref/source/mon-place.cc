@@ -1304,27 +1304,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         define_zombie(mon, ztype, mg.cls);
     }
-    else if (mg.cls == MONS_CHIMERA)
-    {
-        // Requires 3 parts
-        if (mg.chimera_mons.size() != 3)
-        {
-            if (!define_chimera_for_place(mon, place, mg.cls, fpos))
-            {
-                mon->reset();
-                return 0;
-            }
-        }
-        else
-        {
-            monster_type parts[] = {
-                mg.chimera_mons[0],
-                mg.chimera_mons[1],
-                mg.chimera_mons[2],
-            };
-            define_chimera(mon, parts);
-        }
-    }
     else
         define_monster(mon);
 
@@ -1527,7 +1506,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     const bool summoned = mg.abjuration_duration >= 1
                        && mg.abjuration_duration <= 6;
 
-    if (mg.cls == MONS_DANCING_WEAPON)
+    if (mons_class_is_animated_weapon(mg.cls))
     {
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
@@ -1703,19 +1682,58 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mon->type == MONS_LABORATORY_RAT)
         mon->type = MONS_RAT;
 #endif
-    else if (mon->type == MONS_DANCING_WEAPON)
+    else if (mons_class_is_animated_weapon(mon->type))
     {
         ghost_demon ghost;
         // We can't use monster::weapon here because it wants to look
         // at attack types, which are in the ghost structure we're
         // building.
         ASSERT(mon->mslot_item(MSLOT_WEAPON));
-        // Dancing weapons are placed at pretty high power.  Remember, the
-        // player is fighting them one-on-one, while he will often summon
-        // several.
-        ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                  mg.props.exists(TUKIMA_POWER) ?
-                                      mg.props[TUKIMA_POWER].get_int() : 100);
+        if (mon->type == MONS_DANCING_WEAPON)
+        {
+            // Dancing weapons are placed at pretty high power.  Remember, the
+            // player is fighting them one-on-one, while he will often summon
+            // several.
+            ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                      mg.props.exists(TUKIMA_POWER) ?
+                                          mg.props[TUKIMA_POWER].get_int() : 100);
+        }
+        else
+        {
+            // Spectral weapons are placed at pretty high power.
+            // They shouldn't ever be placed in a normal game.
+            ghost.init_spectral_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
+                                       mg.props.exists(TUKIMA_POWER) ?
+                                           mg.props[TUKIMA_POWER].get_int() : 100,
+                                       mg.props.exists(TUKIMA_SKILL) ?
+                                           mg.props[TUKIMA_SKILL].get_int() : 270);
+        }
+        mon->set_ghost(ghost);
+        mon->ghost_demon_init();
+    }
+    else if (mons_class_is_chimeric(mon->type))
+    {
+        ghost_demon ghost;
+
+        // Requires 3 parts
+        if (mg.chimera_mons.size() != 3)
+        {
+            if (!ghost.init_chimera_for_place(mon, place, mg.cls, fpos))
+            {
+                mon->reset();
+                return 0;
+            }
+        }
+        else
+        {
+            monster_type parts[] =
+            {
+                mg.chimera_mons[0],
+                mg.chimera_mons[1],
+                mg.chimera_mons[2],
+            };
+            ghost.init_chimera(mon, parts);
+        }
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
@@ -1829,7 +1847,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
     else if (place.branch == BRANCH_ZIGGURAT)
     {
         // Get Zigs something reasonable to work with, if there's no place
-        // explicitely defined.
+        // explicitly defined.
         place = level_id(BRANCH_MAIN_DUNGEON, 31 - (27 - place.depth) / 3);
     }
     else
@@ -2117,11 +2135,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
     case MONS_JIANGSHI:
-        if (coinflip())
-        {
             band = BAND_JIANGSHI;
-            band_size = random2(2) + 1;
-        }
+            band_size = random2(3);
         break;
     case MONS_GNOLL:
         if (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)
@@ -2612,6 +2627,14 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = random_range(0, 2);
         break;
 
+    case MONS_VAMPIRE_KNIGHT:
+        if (one_chance_in(4))
+        {
+            band = BAND_PHANTASMAL_WARRIORS;
+            band_size = 2;
+            break;
+        }
+
     default: ;
     }
 
@@ -2954,8 +2977,8 @@ static monster_type _band_member(band_type band, int which)
             return MONS_VAULT_GUARD;
 
     case BAND_DEATH_KNIGHT:
-        if (which == 1 && coinflip())
-            return (coinflip() ? MONS_GHOUL : MONS_FLAYED_GHOST);
+        if (which == 1 && x_chance_in_y(2, 3))
+            return (one_chance_in(3) ? MONS_GHOUL : MONS_FLAYED_GHOST);
         else
             return random_choose_weighted(5, MONS_WRAITH,
                                           6, MONS_FREEZING_WRAITH,
@@ -3019,6 +3042,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_SPIRIT_WOLVES:
         return MONS_SPIRIT_WOLF;
+
+    case BAND_PHANTASMAL_WARRIORS:
+        return MONS_PHANTASMAL_WARRIOR;
 
     default:
         die("unhandled band type %d", band);

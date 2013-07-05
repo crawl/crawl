@@ -8,6 +8,7 @@
 
 #include "externs.h"
 #include "enum.h"
+#include "ghost.h"
 #include "mgen_data.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -16,7 +17,6 @@
 
 #include <sstream>
 
-static void apply_chimera_part(monster* mon, monster_type part, int partnum);
 static bool is_bad_chimera_part(monster_type part);
 static bool is_valid_chimera_part(monster_type part);
 
@@ -30,7 +30,7 @@ void mgen_data::define_chimera(monster_type part1, monster_type part2,
     chimera_mons.push_back(part3);
 }
 
-void define_chimera(monster* mon, monster_type parts[])
+void ghost_demon::init_chimera(monster* mon, monster_type parts[])
 {
     ASSERTPART(0);
     ASSERTPART(1);
@@ -40,35 +40,35 @@ void define_chimera(monster* mon, monster_type parts[])
     mon->type = parts[0];
     mon->base_monster = MONS_PROGRAM_BUG;
     define_monster(mon);
-
     mon->type         = MONS_CHIMERA;
-    mon->colour       = mons_class_colour(MONS_CHIMERA);
+    colour = mons_class_colour(MONS_CHIMERA);
     mon->base_monster = parts[0];
     mon->props["chimera_part_2"] = parts[1];
     mon->props["chimera_part_3"] = parts[2];
 
-    apply_chimera_part(mon,parts[0],1);
-    apply_chimera_part(mon,parts[1],2);
-    apply_chimera_part(mon,parts[2],3);
+    resists = 0;
+    _apply_chimera_part(mon, parts[0], 1);
+    _apply_chimera_part(mon, parts[1], 2);
+    _apply_chimera_part(mon, parts[2], 3);
 
     // If one part has wings, take an average of base speed and the
     // speed of the winged monster.
     monster_type wings = get_chimera_wings(mon);
+    if (wings != MONS_NO_MONSTER)
+        fly = mons_class_flies(wings);
     monster_type legs = get_chimera_legs(mon);
     if (legs == MONS_NO_MONSTER)
         legs = parts[0];
+    speed = mons_class_base_speed(legs);
     if (wings != MONS_NO_MONSTER && wings != legs)
-    {
-        mon->speed = (mons_class_base_speed(legs)
-                      + mons_class_base_speed(wings))/2;
-    }
-    else if (legs != parts[0])
-        mon->speed = mons_class_base_speed(legs);
+        speed = (speed + mons_class_base_speed(wings)) / 2;
 }
 
 // Randomly pick depth-appropriate chimera parts
-bool define_chimera_for_place(monster *mon, level_id place, monster_type chimera_type,
-                              coord_def pos)
+bool ghost_demon::init_chimera_for_place(monster* mon,
+                                         level_id place,
+                                         monster_type chimera_type,
+                                         coord_def pos)
 {
     monster_type parts[3];
     monster_picker picker = positioned_monster_picker(pos);
@@ -85,7 +85,7 @@ bool define_chimera_for_place(monster *mon, level_id place, monster_type chimera
         else
             return false;
     }
-    define_chimera(mon, parts);
+    init_chimera(mon, parts);
     return true;
 }
 
@@ -121,7 +121,8 @@ static bool is_bad_chimera_part(monster_type part)
            || mons_is_unique(part);
 }
 
-static void apply_chimera_part(monster* mon, monster_type part, int partnum)
+void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
+                                      int partnum)
 {
     // TODO: Enforce more rules about the Chimera parts so things
     // can't get broken
@@ -142,20 +143,52 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
     if (dummy.is_jumpy()
         || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
     {
+        ev = dummy.ev;
         mon->props["chimera_legs"].get_int() = partnum;
+    }
+
+    if (dummy.can_see_invisible())
+        see_invis = true;
+
+    // Transfer all resists in this list
+    const static mon_resist_flags resist_list[] =
+        { MR_RES_FIRE, MR_RES_COLD, MR_RES_ELEC, MR_RES_POISON, MR_RES_NEG,
+          MR_RES_ACID, MR_RES_STEAM, MR_RES_STICKY_FLAME, MR_RES_ASPHYX,
+          MR_RES_ROTTING };
+
+    for (unsigned int n = 0; n < ARRAYSZ(resist_list); ++n)
+    {
+        const mon_resist_flags res_flag = resist_list[n];
+        const int part_resist = get_mons_resist(&dummy, res_flag);
+        const int cur_resist = get_resist(resists, res_flag);
+        const int new_resist = res_flag > MR_LAST_MULTI
+            ? (part_resist | cur_resist) // Boolean resists
+            : (part == 1 ? part_resist
+                         : min(4, max(-3, part_resist + cur_resist))); // Additive resists
+
+        set_resist(resists, res_flag, new_resist);
     }
 
     // Apply spells but only for 2nd and 3rd parts since 1st part is
     // already supported by the original define_monster call
     if (partnum == 1)
+    {
+        // Always AC/EV on the first part
+        ac = dummy.ac;
+        ev = dummy.ev;
+        max_hp = dummy.max_hit_points;
+        xl = dummy.hit_dice;
+        // Copy all spells from first part
+        for (int n = 0; n < NUM_MONSTER_SPELL_SLOTS; ++n)
+            spells[n] = dummy.spells[n];
         return;
-
+    }
     // Make sure resulting chimera can use spells
     // TODO: Spell usage might still be a bit of a mess, especially with
     // things like human/animal hybrids. Could perhaps do with some kind
     // of ghost demon structure to manage and track everything better.
     if (dummy.can_use_spells())
-        mon->flags |= MF_SPELLCASTER;
+        spellcaster = true;
 
     // XXX: It'd be nice to flood fill all available spell slots with spells
     // from parts 2 and 3. But since this would conflict with special
@@ -166,18 +199,18 @@ static void apply_chimera_part(monster* mon, monster_type part, int partnum)
     const int boltslot = partnum + 1;
     // Overwrite the base monster's misc spells if they had any
     if (dummy.spells[0] != SPELL_NO_SPELL)
-        mon->spells[boltslot] = dummy.spells[0];
+        spells[boltslot] = dummy.spells[0];
 
     // Other spell slots overwrite if the base monster(s) didn't have one
     // Enchantment
-    if (mon->spells[1] == SPELL_NO_SPELL && dummy.spells[1] != SPELL_NO_SPELL)
-        mon->spells[1] = dummy.spells[1];
+    if (spells[1] == SPELL_NO_SPELL && dummy.spells[1] != SPELL_NO_SPELL)
+        spells[1] = dummy.spells[1];
     // Self-enchantment
-    if (mon->spells[2] == SPELL_NO_SPELL && dummy.spells[2] != SPELL_NO_SPELL)
-        mon->spells[2] = dummy.spells[2];
+    if (spells[2] == SPELL_NO_SPELL && dummy.spells[2] != SPELL_NO_SPELL)
+        spells[2] = dummy.spells[2];
     // Emergency
-    if (mon->spells[5] == SPELL_NO_SPELL && dummy.spells[5] != SPELL_NO_SPELL)
-        mon->spells[5] = dummy.spells[5];
+    if (spells[5] == SPELL_NO_SPELL && dummy.spells[5] != SPELL_NO_SPELL)
+        spells[5] = dummy.spells[5];
 }
 
 monster_type get_chimera_part(const monster* mon, int partnum)
@@ -226,7 +259,7 @@ monster_type get_chimera_legs(const monster* mon)
 {
     if (mon->props.exists("chimera_legs"))
         return get_chimera_part(mon, mon->props["chimera_legs"].get_int());
-    return MONS_NO_MONSTER;
+    return get_chimera_part(mon, 1);
 }
 
 string monster_info::chimera_part_names() const

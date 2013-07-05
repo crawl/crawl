@@ -810,6 +810,9 @@ static const char* dur_names[] =
     "dimension anchor",
     "antimagic",
     "spirit howl",
+    "infused",
+    "song of slaying",
+    "song of shielding",
 };
 
 void wizard_edit_durations(void)

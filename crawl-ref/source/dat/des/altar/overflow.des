@@ -37,6 +37,28 @@ function interest_check(e)
     e.tags('extra')
   end
 end
+
+function altar_check(e)
+  if e.is_validating() then
+    e.subst('C = B')
+    return
+  end
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      if string.find(tag, "temple_overflow_generic_") ~= nil then
+        e.subst('C = B')
+      else
+        e.tags('extra')
+      end
+    else
+      e.tags('extra')
+    end
+  else
+    e.tags('extra')
+  end
+end
 }}
 
 default-depth: D
@@ -1191,7 +1213,7 @@ ENDMAP
 
 NAME:   trog_ov_bears_minmay
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
-DEPTH:  D:4-18
+DEPTH:  D:6-18
 : if you.absdepth() < 10 then
 MONS:   black bear
 : else
@@ -2157,6 +2179,45 @@ MAP
   xxx  @  xxx
 ENDMAP
 
+# This doesn't place multiple gods, but it can place one of two distinct
+# gods.
+NAME:  lightli_temple_of_fire
+TAGS:  temple_overflow_1 temple_overflow_trog temple_overflow_makhleb
+DEPTH: D:2-9
+KPROP: Y = no_rtele_into
+{{
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      if string.find(tag, "trog") ~= nil then
+        kfeat('_ = altar_trog')
+      elseif string.find(tag, "makhleb") ~= nil then
+        kfeat('_ = altar_makhleb')
+      else
+        kfeat('_ = altar_trog / altar_makhleb')
+      end
+    else
+      kfeat('_ = altar_trog / altar_makhleb')
+    end
+  else
+    kfeat('_ = altar_trog / altar_makhleb')
+  end
+}}
+MAP
+llcccccc
+lccYcYccc
+lclllllcc
+lcl...lcc
+lcl...lYc
+@+.._.lcc
+lcl...lYc
+lcl...lcc
+lclllllcc
+lccYcYccc
+llcccccc
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
@@ -2191,6 +2252,87 @@ MAP
 .xwwwwx.
 .xxxxxx.
 ........
+ENDMAP
+
+NAME:    old_standard_altar
+DEPTH:   D
+TAGS:    transparent mini_float allow_dup decor temple_overflow_generic_1
+SHUFFLE: cvxxxx
+: altar_check(_G)
+MAP
+...........
+.xxxx.xxxx.
+.xx.....xx.
+.x.......x.
+.x.......x.
+.....C.....
+.x.......x.
+.x.......x.
+.xx.....xx.
+.xxxx.xxxx.
+...........
+ENDMAP
+
+NAME:    lemuel_round_altar
+DEPTH:   D
+TAGS:    allow_dup decor temple_overflow_generic_1
+SHUFFLE: cvxx
+SUBST:   X:x.
+: altar_check(_G)
+MAP
+   xxXxx
+  xx...xx
+ xx.....xx
+ x.......x
+ X...C...@
+ x.......x
+ xx.....xx
+  xx...xx
+   xxXxx
+ENDMAP
+
+NAME:  lemuel_crystal_altar
+DEPTH: D
+TAGS:  transparent allow_dup decor temple_overflow_generic_1
+: altar_check(_G)
+MAP
+b.b
+.C.
+b.b
+ENDMAP
+
+NAME:    lemuel_doored_altar
+TAGS:    transparent mini_float decor temple_overflow_generic_1
+DEPTH:   D:1-18, Vaults, Lair, Elf, Crypt
+SHUFFLE: XY
+SUBST:   X = .
+SUBST:   Y = +
+: altar_check(_G)
+MAP
+.........
+.xxxmxxx.
+.xxxmxxx.
+.xxxmxxx.
+.X.YCY.X.
+.xxxYxxx.
+.xxx.xxx.
+.xxxXxxx.
+.........
+ENDMAP
+
+NAME:   lemuel_coloured_pillars_altar
+TAGS:   no_rotate decor temple_overflow_generic_1
+DEPTH:  D:2-18, Vaults, Elf
+COLOUR: c = blue / yellow / red / cyan
+: altar_check(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxx
+...................x
+c...c...c...c...c..x
+@.................Cx
+c...c...c...c...c..x
+...................x
+xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   amethyst_overflow_temple_binary
@@ -2424,4 +2566,98 @@ ccB.+..T..T..T..+.Bcc
         cc.cc
          c.c
           @
+ENDMAP
+
+NAME:    grunt_temple_overflow_open
+TAGS:    temple_overflow_generic_8 temple_overflow_generic_7
+TAGS:    temple_overflow_generic_6 temple_overflow_generic_5
+TAGS:    temple_overflow_generic_4 temple_overflow_generic_3
+TAGS:    temple_overflow_generic_2
+SHUFFLE: defghijk / efghijkd
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 8
+  end
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_overflow_generic_ is 24 characters
+      altarcount = string.sub(tag, 25)
+    end
+  end
+  if altarcount == "1" then
+    subst("d = B")
+    subst("efghijk = .")
+  elseif altarcount == "2" then
+    subst("dh = B")
+    subst("efgijk = .")
+  elseif altarcount == "3" then
+    subst("dgi = B")
+    subst("efhjk = .")
+  elseif altarcount == "4" then
+    subst("dfhj = B")
+    subst("egik = .")
+  elseif altarcount == "5" then
+    subst("dfgij = B")
+    subst("ehk = .")
+  elseif altarcount == "6" then
+    subst("defhij = B")
+    subst("gk = .")
+  elseif altarcount == "7" then
+    subst("defghij = B")
+    subst("k = .")
+  else
+    subst("defghijk = B")
+  end
+}}
+SUBST: G = G T V:1 U:1 t:1
+MAP
+   ...
+ ...d...
+ .k...e.
+.........
+.j..G..f.
+.........
+ .i...g.
+ ...h...
+   ...
+ENDMAP
+
+# Formerly minivault_3; resurrected after being removed way back in late 2009.
+NAME:  minitemple
+TAGS:  temple_overflow_generic_14 temple_overflow_generic_13
+TAGS:  temple_overflow_generic_12 temple_overflow_generic_11
+TAGS:  temple_overflow_generic_10 temple_overflow_generic_9
+TAGS:  temple_overflow_generic_8 temple_overflow_generic_7
+TAGS:  temple_overflow_generic_6 temple_overflow_generic_5
+TAGS:  temple_overflow_generic_4 temple_overflow_generic_3
+TAGS:  temple_overflow_generic_2
+# The original vault had allow_dup; I think that's overkill.
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 14
+  end
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_overflow_generic_ is 24 characters
+      altarcount = string.sub(tag, 25)
+    end
+  end
+  nsubst("B : " .. altarcount .. ":B / *:x")
+}}
+SUBST: x = .:50 c:50 G T t:1 V:1 U:1
+MAP
+cccccccccccc
+cBcBcBcBcBcc
+G.c.c.c.c.Bc
+@.........Bc
+@.........Bc
+G.c.c.c.c.Bc
+cBcBcBcBcBcc
+cccccccccccc
 ENDMAP

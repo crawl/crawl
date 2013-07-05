@@ -17,6 +17,32 @@ body {
     text-align: center;
 }
 
+#prompt {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    z-index: 4000;
+}
+
+#prompt > div {
+    background-color: black;
+    width: 34em;
+    margin-left: -17em;
+    margin-top: -10ex;
+    padding: 1em 2ex;
+    border: 1px solid white;
+}
+
+#prompt #login {
+    float: none;
+    text-align: left;
+    margin: 2ex 0;
+}
+
+#prompt_game {
+    font-weight: bold;
+}
+
 #player_list {
     width: 100%;
     text-align: left;
@@ -152,6 +178,10 @@ body {
 
 #chat_caption:hover {
     background-color: #111111;
+}
+
+#chat_login_text {
+    border-top: 1px dashed #626262;
 }
 
 #message_count {

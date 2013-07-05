@@ -255,16 +255,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
-        if config.dgl_mode:
-            if self.username == None:
-                self.go_lobby()
-                return
-
-        if self.process:
+        if config.dgl_mode and game_id not in config.games:
             self.go_lobby()
             return
 
-        if config.dgl_mode and game_id not in config.games:
+        if config.dgl_mode:
+            game_params = dict(config.games[game_id])
+            if self.username == None:
+                if self.watched_game:
+                    self.stop_watching()
+                self.send_message("login_required", game = game_params["name"])
+                return
+
+        if self.process:
             self.go_lobby()
             return
 
@@ -273,7 +276,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         import process_handler
 
         if config.dgl_mode:
-            game_params = dict(config.games[game_id])
             game_params["id"] = game_id
             args = (game_params, self.username, self.logger, self.ioloop)
             if (game_params.get("compat_mode") or
@@ -320,7 +322,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # Go back to lobby
                 self.send_message("game_ended")
                 if config.dgl_mode:
-                    self.send_lobby()
+                    if not self.watched_game:
+                        self.send_message("go_lobby")
+                        self.send_lobby()
                 else:
                     self.start_crawl(None)
 
@@ -366,7 +370,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
             return
         self.queue_message("login_success", username = username)
-        self.send_game_links()
+        if self.watched_game:
+            self.watched_game.update_watcher_description()
+        else:
+            self.send_game_links()
 
     def login(self, username, password):
         real_username = user_passwd_match(username, password)

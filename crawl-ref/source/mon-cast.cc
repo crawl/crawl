@@ -624,6 +624,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_AGONY:
         beam.flavour    = BEAM_PAIN;
+        beam.ench_power = mons->hit_dice * 6;
         beam.is_beam    = true;
         break;
 
@@ -927,7 +928,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_GHOSTLY_FIREBALL:
         beam.colour   = CYAN;
         beam.name     = "ghostly fireball";
-        beam.damage   = dice_def(3, 7 + power / 15);
+        beam.damage   = dice_def(3, 7 + power / 13);
         beam.hit      = 40;
         beam.flavour  = BEAM_GHOSTLY_FLAME;
         beam.is_explosion = true;
@@ -1151,6 +1152,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FRENZY:
     case SPELL_SUMMON_TWISTER:
     case SPELL_BATTLESPHERE:
+    case SPELL_SPECTRAL_WEAPON:
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
     case SPELL_CALL_LOST_SOUL:
@@ -1639,6 +1641,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    case SPELL_SPECTRAL_WEAPON:
+        if (find_spectral_weapon(mon))
+            ret = true;
+        break;
+
     case SPELL_INJURY_BOND:
         for (monster_iterator mi; mi; ++mi)
         {
@@ -1738,6 +1745,10 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
                 return false;
         }
         return true;
+
+    case SPELL_BROTHERS_IN_ARMS:
+        return (mon->props.exists("brothers_count")
+                && mon->props["brothers_count"].get_int() >= 2);
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -2387,6 +2398,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 else if (_ms_waste_of_time(mons, hspell_pass[i])
                          || hspell_pass[i] == SPELL_DIG)
                 {
+                    // Instead of making a new one,
+                    // make the weapon attack
+                    if (hspell_pass[i] == SPELL_SPECTRAL_WEAPON)
+                        hspell_pass[i] = SPELL_MELEE;
+
                     // Should monster not have selected dig by now,
                     // it never will.
                     hspell_pass[i] = SPELL_NO_SPELL;
@@ -3745,7 +3761,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BERSERKER_RAGE:
-        mons->props["went_berserk"] = bool(true);
+        mons->props.erase("brothers_count");
         mons->go_berserk(true);
         return;
 
@@ -3911,8 +3927,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                               MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
                               -1);
 
-        if (_mons_abjured(mons, monsterNearby))
+        if (mons->type != MONS_ELEMENTAL_WELLSPRING
+            && _mons_abjured(mons, monsterNearby))
+        {
             return;
+        }
 
         int dur;
 
@@ -4172,6 +4191,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
 
         summon_berserker(power, mons, to_summon);
+        mons->props["brothers_count"].get_int()++;
         return;
     }
 
@@ -4313,6 +4333,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_BATTLESPHERE:
         cast_battlesphere(mons, min(6 * mons->hit_dice, 200), mons->god, false);
+        return;
+
+    case SPELL_SPECTRAL_WEAPON:
+        cast_spectral_weapon(mons, min(6 * mons->hit_dice, 200), mons->god, false);
         return;
 
     // TODO: Outsource the cantrip messages and allow specification of

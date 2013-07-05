@@ -71,6 +71,7 @@
     Bill Beher
     Alexander Beisig
     Stu Black
+    blackcustard
     Peter 'xFleury' Blain
     Terje Bø
     Erik Inge Bolsø
@@ -87,12 +88,14 @@
     Lothar Dierkes
     Mike Drinen
     Kieron Dunbar
+    elliott
     Micha Elsner
     Carl-Oscar Erneholm
     Christopher Evenstar
     Brett Foster
     Chris Galardi
     Ben Goetter
+    Ed Gonzalez
     Rob Grant
     John Greenberg
     GreyKnight
@@ -119,6 +122,7 @@
     Daniel Klein
     Jon Knapp
     Ilkka Koskela
+    infiniplex
     Vambola Kotkas
     Ryan Kusnery
     Jukka Kuusisto
@@ -126,6 +130,7 @@
     Maciej Lapinski
     Jordan Lewis
     Sami Liedes
+    Lain I. W. Madreisz
     Markus Maier
     Arien Malec
     Paul Maloney

@@ -1304,8 +1304,8 @@ static bool _beogh_idol_revenge()
 
         if (you.religion == GOD_BEOGH)
             revenge = _get_beogh_speech("idol follower").c_str();
-        else if (you.species == SP_HILL_ORC)
-            revenge = _get_beogh_speech("idol hill orc").c_str();
+        else if (player_genus(GENPC_ORCISH))
+            revenge = _get_beogh_speech("idol orc").c_str();
         else
             revenge = _get_beogh_speech("idol other").c_str();
 

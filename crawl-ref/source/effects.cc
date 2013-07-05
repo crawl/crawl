@@ -653,7 +653,7 @@ void direct_effect(monster* source, spell_type spell,
                 else
                     mprf("The water swirls and strikes %s", def->name(DESC_THE).c_str());
             }
-            else
+            else if (!def)
             {
                 if (you.flight_mode())
                     mpr("The water rises up and strikes you!");
@@ -924,6 +924,7 @@ static bool _follows_orders(monster* mon)
     return (mon->friendly()
             && mon->type != MONS_GIANT_SPORE
             && mon->type != MONS_BATTLESPHERE
+            && mon->type != MONS_SPECTRAL_WEAPON
             && !mon->berserk()
             && !mon->is_projectile()
             && !mon->has_ench(ENCH_HAUNTING));
@@ -2407,6 +2408,21 @@ static void _catchup_monster_moves(monster* mon, int turns)
     // Summoned monsters might have disappeared.
     if (!mon->alive())
         return;
+
+    // Expire friendly summons
+    if (mon->friendly() && mon->is_summoned() && !mon->is_perm_summoned())
+    {
+        // You might still see them disappear if you were quick
+        if (turns > 2)
+            monster_die(mon, KILL_DISMISSED, NON_MONSTER);
+        else
+        {
+            mon_enchant abj  = mon->get_ench(ENCH_ABJ);
+            abj.duration = 0;
+            mon->update_ench(abj);
+        }
+        return;
+    }
 
     // Don't move non-land or stationary monsters around.
     if (mons_primary_habitat(mon) != HT_LAND

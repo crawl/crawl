@@ -184,10 +184,10 @@ mesh1
 mesh2
 mesh3
 
-orc0 FLOOR_ORC
-orc1
-orc2
-orc3
+mud0 FLOOR_MUD
+mud1
+mud2
+mud3
 
 ice0 FLOOR_ICE
 ice1
@@ -216,6 +216,17 @@ lair6b
 lair7
 %weight 1
 lair7b
+
+%weight 10
+orc0 FLOOR_ORC
+orc1
+orc2
+orc3
+%weight 2
+orc4
+orc5
+orc6
+orc7
 
 moss0 FLOOR_MOSS
 moss1

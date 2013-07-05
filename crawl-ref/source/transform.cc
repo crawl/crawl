@@ -726,8 +726,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return false;
     }
 
-    if (!_transformation_is_safe(which_trans, env.grid(you.pos()), force))
+    if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
+        force || just_check))
+    {
         return false;
+    }
 
     // This must occur before the untransform() and the is_undead check.
     if (previous_trans == which_trans)
@@ -871,7 +874,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_PIG:
         tran_name = "pig";
         msg       = "You have been turned into a pig!";
-        you.transform_uncancellable = true;
+        if (!just_check)
+            you.transform_uncancellable = true;
         break;
 
     case TRAN_APPENDAGE:

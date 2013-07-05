@@ -73,6 +73,9 @@
 #include "viewchar.h"
 #include "xom.h"
 
+#include <vector>
+#include <algorithm>
+
 static bool _wounded_damaged(mon_holy_type holi);
 static int _calc_player_experience(const monster* mons);
 
@@ -722,6 +725,16 @@ static bool _is_pet_kill(killer_type killer, int i)
 
 int exp_rate(int killer)
 {
+    // Damage by the spectral weapon is considered to be the player's damage ---
+    // so the player does not lose any exp from dealing damage with a spectral weapon summon
+    if (!invalid_monster_index(killer)
+        && (&menv[killer])->type == MONS_SPECTRAL_WEAPON
+        && (&menv[killer])->props.exists("sw_mid")
+        && actor_by_mid((&menv[killer])->props["sw_mid"].get_int())->is_player())
+    {
+        return 2;
+    }
+
     if (killer == MHITYOU)
         return 2;
 
@@ -1515,7 +1528,7 @@ static bool _reaping(monster *mons)
     return false;
 }
 
-int monster_die(monster* mons, actor *killer, bool silent,
+int monster_die(monster* mons, const actor *killer, bool silent,
                 bool wizard, bool fake)
 {
     killer_type ktype = KILL_YOU;
@@ -1637,6 +1650,16 @@ int monster_die(monster* mons, killer_type killer,
     {
         ASSERT(!crawl_state.game_is_arena());
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
+    }
+
+    // Kills by the spectral weapon are considered as kills by the player instead
+    if (killer == KILL_MON
+        && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON
+        && (&menv[killer_index])->props.exists("sw_mid")
+        && actor_by_mid((&menv[killer_index])->props["sw_mid"].get_int())->is_player())
+    {
+        killer = KILL_YOU;
+        killer_index = you.mindex();
     }
 
     // Take notes and mark milestones.
@@ -1804,6 +1827,11 @@ int monster_die(monster* mons, killer_type killer,
         if (timeout && !silent)
             simple_monster_message(mons, " crumbles away.");
     }
+    else if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        end_spectral_weapon(mons, true, killer == KILL_RESET);
+        silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
@@ -1823,6 +1851,23 @@ int monster_die(monster* mons, killer_type killer,
          || you.religion == GOD_KIKUBAAQUDGHA))
     {
         targ_holy = MH_DEMONIC;
+    }
+
+    // Adjust song of slaying bonus
+    // Kills by the spectral weapon should be adjusted by this point to be
+    // kills by the player --- so kills by the spectral weapon are considered here as well
+    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp)
+    {
+        int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
+        mon_threat_level_type threat = mons_threat_level(mons, true);
+        // Only certain kinds of threats at different sos levels will increase the bonus
+        if (threat == MTHRT_TRIVIAL && sos_bonus<2
+            || threat == MTHRT_EASY && sos_bonus<4
+            || threat == MTHRT_TOUGH && sos_bonus<6
+            || threat == MTHRT_NASTY)
+        {
+            you.props["song_of_slaying_bonus"] = sos_bonus + 1;
+        }
     }
 
     switch (killer)
@@ -2735,8 +2780,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
     const dungeon_feature_type current_tile = grd(mons->pos());
 
-    // 'morph targets are _always_ "base" classes, not derived ones.
-    new_mclass = mons_species(new_mclass);
     monster_type old_mclass = mons_base_type(mons);
 
     // Shapeshifters cannot polymorph into glowing shapeshifters or
@@ -2766,9 +2809,11 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
-        || new_mclass == mons_species(old_mclass)  // must be different
         || new_mclass == MONS_PROGRAM_BUG
 
+        // 'morph targets are _always_ "base" classes, not derived ones.
+        || new_mclass != mons_species(new_mclass)
+        || new_mclass == mons_species(old_mclass)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
         || mons_is_zombified(mons) && !mons_zombie_size(new_mclass)
@@ -2786,6 +2831,8 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         || mons_is_projectile(new_mclass)
         || mons_is_tentacle_or_tentacle_segment(new_mclass)
 
+        // Don't polymorph things without Gods into priests.
+        || (mons_class_flag(new_mclass, MF_PRIEST) && mons->god == GOD_NO_GOD)
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
             && (mons->type == MONS_PRINCE_RIBBIT
@@ -2865,7 +2912,7 @@ void change_monster_type(monster* mons, monster_type targetc)
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_MELEE_MASK | MF_SPELL_MASK);
-
+    flags |= MF_POLYMORPHED;
     string name;
 
     // Preserve the names of uniques and named monsters.
@@ -3111,14 +3158,34 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                                         target_power, relax)));
     }
 
-    if (!_valid_morph(mons, targetc))
-        return simple_monster_message(mons, " looks momentarily different.");
-
     bool could_see = you.can_see(mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
     string old_name_a = mons->full_name(DESC_A);
     string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
+
+    if (targetc == RANDOM_TOUGHER_MONSTER)
+    {
+        vector<monster_type> target_types;
+        for (int mc = 0; mc < NUM_MONSTERS; ++mc)
+        {
+            const monsterentry *me = get_monster_data((monster_type) mc);
+            int delta = (int) me->hpdice[0] - mons->hit_dice;
+            if (delta != 1)
+                continue;
+            if (!_valid_morph(mons, (monster_type) mc))
+                continue;
+            target_types.push_back((monster_type) mc);
+        }
+        if (target_types.empty())
+            return false;
+
+        random_shuffle(target_types.begin(), target_types.end(), random2);
+        targetc = target_types[0];
+    }
+
+    if (!_valid_morph(mons, targetc))
+        return simple_monster_message(mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
 
@@ -3484,6 +3551,19 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
 {
     if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
         return true;
+
+    // Spectral weapons only attack their target
+    if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        // FIXME: find a way to use check_target_spectral_weapon
+        //        without potential info leaks about visibility.
+        if (mons->props.exists(SW_TARGET_MID))
+        {
+            actor *target = actor_by_mid(mons->props[SW_TARGET_MID].get_int());
+            return (target && target->pos() == p);
+        }
+        return false;
+    }
 
     if (!mons->friendly() || !mons->is_summoned())
         return true;
@@ -5041,6 +5121,9 @@ bool temperature_effect(int which)
         case LORC_PASSIVE_HEAT:
             return (temperature() >= TEMP_FIRE); // 13-15
         case LORC_HEAT_AURA:
+            if (you.religion == GOD_BEOGH)
+                return false;
+            // Deliberate fall-through.
         case LORC_NO_SCROLLS:
             return (temperature() >= TEMP_MAX); // 15
 
@@ -5059,7 +5142,7 @@ int temperature_colour(int temp)
            (temp > TEMP_COLD) ? LIGHTBLUE : BLUE;
 }
 
-std::string temperature_string(int temp)
+string temperature_string(int temp)
 {
     return (temp > TEMP_FIRE) ? "lightred"  :
            (temp > TEMP_HOT)  ? "red"       :
@@ -5069,7 +5152,7 @@ std::string temperature_string(int temp)
            (temp > TEMP_COLD) ? "lightblue" : "blue";
 }
 
-std::string temperature_text(int temp)
+string temperature_text(int temp)
 {
     switch (temp)
     {

@@ -1104,7 +1104,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_WOLF:
         return TILEP_MONS_WOLF;
     case MONS_SPIRIT_WOLF:
-        return TILEP_MONS_WAR_DOG;
+        return TILEP_MONS_SPIRIT_WOLF;
     case MONS_HOG:
         return TILEP_MONS_HOG;
     case MONS_HELL_HOUND:
@@ -1187,8 +1187,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_SIREN;
     case MONS_DRYAD:
         return TILEP_MONS_DRYAD;
-    case MONS_THORN_HUNTER:
-        return TILEP_MONS_OKLOB_SAPLING;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
@@ -1618,6 +1616,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_OKLOB_PLANT;
     case MONS_THORN_LOTUS:
         return TILEP_MONS_THORN_LOTUS;
+    case MONS_THORN_HUNTER:
+        return TILEP_MONS_THORN_HUNTER;
+    case MONS_TREANT:
+        return TILEP_MONS_TREANT;
 
     // rakshasa ('R')
     case MONS_RAKSHASA:
@@ -1955,6 +1957,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SHADOW;
     case MONS_DEATH_COB:
         return TILEP_MONS_DEATH_COB;
+    case MONS_SPECTRAL_WEAPON:
+        return TILEP_MONS_SPECTRAL_SBL;
 
     // -------------------------------------
     // non-human uniques, sorted by glyph, then difficulty
@@ -2754,6 +2758,33 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             // Use item tile.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
             return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
+        }
+
+        case MONS_SPECTRAL_WEAPON:
+        {
+            // Tiles exist for each class of weapon.
+            const item_def& item = *mon.inv[MSLOT_WEAPON];
+            switch (weapon_skill(item))
+            {
+            case SK_LONG_BLADES:
+                return TILEP_MONS_SPECTRAL_LBL;
+            case SK_AXES:
+                return TILEP_MONS_SPECTRAL_AXE;
+            case SK_POLEARMS:
+                return TILEP_MONS_SPECTRAL_SPEAR;
+            case SK_STAVES:
+                return TILEP_MONS_SPECTRAL_STAFF;
+            case SK_MACES_FLAILS:
+                {
+                    const weapon_type wt = (weapon_type)item.sub_type;
+                    return (wt == WPN_WHIP || wt == WPN_FLAIL
+                            || wt == WPN_DIRE_FLAIL || wt == WPN_DEMON_WHIP
+                            || wt == WPN_SACRED_SCOURGE) ?
+                        TILEP_MONS_SPECTRAL_WHIP : TILEP_MONS_SPECTRAL_MACE;
+                }
+            default:
+                return TILEP_MONS_SPECTRAL_SBL;
+            }
         }
 
         case MONS_KRAKEN_TENTACLE:
@@ -4176,6 +4207,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_DISC_OF_STORMS:
         return TILE_MISC_DISC_OF_STORMS;
 
+    case MISC_SACK_OF_SPIDERS:
+        return TILE_MISC_SACK_OF_SPIDERS;
+
     case MISC_DECK_OF_ESCAPE:
     case MISC_DECK_OF_DESTRUCTION:
     case MISC_DECK_OF_DUNGEONS:
@@ -4846,6 +4880,10 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_INVISIBILITY:             return TILEG_INVISIBILITY;
     case SPELL_MASS_CONFUSION:           return TILEG_MASS_CONFUSION;
     case SPELL_DARKNESS:                 return TILEG_DARKNESS;
+    case SPELL_INFUSION:                 return TILEG_INFUSION;
+    case SPELL_SONG_OF_SLAYING:          return TILEG_SONG_OF_SLAYING;
+    case SPELL_SPECTRAL_WEAPON:          return TILEG_SPECTRAL_WEAPON;
+    case SPELL_SONG_OF_SHIELDING:        return TILEG_SONG_OF_SHIELDING;
 
     // Translocation
     case SPELL_APPORTATION:              return TILEG_APPORTATION;
@@ -5189,6 +5227,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_END_TRANSFORMATION;
     case ABIL_STOP_RECALL:
         return TILEG_ABILITY_STOP_RECALL;
+    case ABIL_STOP_SINGING:
+        return TILEG_ABILITY_STOP_SINGING;
 
     // Species-specific abilities.
     // Demonspawn-only
@@ -5216,6 +5256,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_BERSERK;
     case ABIL_EVOKE_TELEPORTATION:
         return TILEG_ABILITY_EVOKE_TELEPORT;
+    case ABIL_EVOKE_TELEPORT_CONTROL:
+        return TILEG_ABILITY_EVOKE_TELEPORT_CONTROL;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_EVOKE_BLINK;
     case ABIL_EVOKE_TURN_INVISIBLE:

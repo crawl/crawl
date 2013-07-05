@@ -1522,7 +1522,7 @@
   "petrification resistance"
 },
 
-{ MUT_TRAMPLE_RESISTANCE,                  0,  1, false, false, false,
+{ MUT_TRAMPLE_RESISTANCE,                  1,  1, false, false, false,
   "trample resistance",
 
   {"You are resistant to trampling.", "", ""},
@@ -1531,3 +1531,11 @@
 
   "trample resistance"
 },
+
+{ MUT_CLING,                               1,  1, false, false, true,
+  "cling",
+
+  {"You can cling to walls.", "", ""},
+  {"You feel sticky.", "", ""},
+  {"You feel slippery.", "", ""},
+}

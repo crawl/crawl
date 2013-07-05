@@ -47,6 +47,7 @@
 #include "showsymb.h"
 #include "species.h"
 #include "spl-util.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -654,7 +655,7 @@ bool mons_has_body(const monster* mon)
     if (mon->type == MONS_FLYING_SKULL
         || mon->type == MONS_CURSE_SKULL
         || mon->type == MONS_CURSE_TOE
-        || mon->type == MONS_DANCING_WEAPON)
+        || mons_class_is_animated_weapon(mon->type))
     {
         return false;
     }
@@ -767,7 +768,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster* mon)
 {
-    if (you.species != SP_HILL_ORC || you.religion == GOD_BEOGH)
+    if (!player_genus(GENPC_ORCISH) || you.religion == GOD_BEOGH)
         return false; // no one else gives a damn
 
     return mons_genus(mon->type) == MONS_ORC
@@ -1196,6 +1197,7 @@ bool mons_is_conjured(monster_type mc)
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_BALL_LIGHTNING
            || mc == MONS_BATTLESPHERE
+           || mc == MONS_SPECTRAL_WEAPON
            || mc == MONS_FULMINANT_PRISM;
 }
 
@@ -1341,8 +1343,9 @@ bool mons_is_ghost_demon(monster_type mc)
             || mc == MONS_VERY_UGLY_THING
             || mc == MONS_PLAYER_GHOST
             || mc == MONS_PLAYER_ILLUSION
-            || mc == MONS_DANCING_WEAPON
-            || mc == MONS_PANDEMONIUM_LORD;
+            || mons_class_is_animated_weapon(mc)
+            || mc == MONS_PANDEMONIUM_LORD
+            || mons_class_is_chimeric(mc);
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -1476,6 +1479,11 @@ bool mons_class_is_clingy(monster_type type)
         || type == MONS_DEMONIC_CRAWLER;
 }
 
+bool mons_class_is_animated_weapon(monster_type type)
+{
+    return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
+}
+
 bool mons_class_has_base_type(monster_type mc)
 {
     return mons_class_is_zombified(mc)
@@ -1522,12 +1530,28 @@ bool mons_class_can_use_stairs(monster_type mc)
             && mc != MONS_PLAYER_GHOST
             && mc != MONS_GERYON
             && mc != MONS_ROYAL_JELLY
-            && mc != MONS_MOTH_OF_SUPPRESSION);
+            && mc != MONS_MOTH_OF_SUPPRESSION
+            && mc != MONS_POLYMOTH);
 }
 
 bool mons_can_use_stairs(const monster* mon)
 {
-    return mons_class_can_use_stairs(mon->type);
+    if (!mons_class_can_use_stairs(mon->type)) return false;
+
+    // Check summon status
+    int stype = 0;
+    // Other permanent summons can always use stairs
+    if (mon->is_summoned(0, &stype) && !mon->is_perm_summoned()
+        && stype > 0 && stype < NUM_SPELLS)
+    {
+        // Allow uncapped summons to use stairs. This means creatures
+        // from misc evokables, temporary god summons, etc. These tend
+        // to be balanced by other means; however this could use a review
+        // and perhaps needs a whilelist (or long-duration vs. short-duration).
+        return (!summons_are_capped(static_cast<spell_type>(stype)));
+    }
+    // Everything else is fine
+    return true;
 }
 
 bool mons_enslaved_body_and_soul(const monster* mon)
@@ -1640,25 +1664,10 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS || mon->has_hydra_multi_attack())
         attk_number = 0;
 
-    if (mons_is_ghost_demon(mc))
+    if (mons_class_is_chimeric(mc))
     {
-        if (attk_number == 0)
-        {
-            return (mon_attack_def::attk(mon->ghost->damage,
-                                         mon->ghost->att_type,
-                                         mon->ghost->att_flav));
-        }
-
-        return mon_attack_def::attk(0, AT_NONE);
-    }
-
-    if (zombified && mc != MONS_KRAKEN_TENTACLE)
-        mc = mons_zombie_base(mon);
-
-    // Chimera get attacks 0, 1 and 2 from their base components. Attack 3 is
-    // the secondary attack of the main base type.
-    if (mc == MONS_CHIMERA)
-    {
+        // Chimera get attacks 0, 1 and 2 from their base components. Attack 3 is
+        // the secondary attack of the main base type.
         switch (attk_number)
         {
         case 0:
@@ -1684,6 +1693,20 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
             break;
         }
     }
+    else if (mons_is_ghost_demon(mc))
+    {
+        if (attk_number == 0)
+        {
+            return (mon_attack_def::attk(mon->ghost->damage,
+                                         mon->ghost->att_type,
+                                         mon->ghost->att_flav));
+        }
+
+        return mon_attack_def::attk(0, AT_NONE);
+    }
+
+    if (zombified && mc != MONS_KRAKEN_TENTACLE)
+        mc = mons_zombie_base(mon);
 
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
@@ -1786,9 +1809,6 @@ flight_type mons_flies(const monster* mon, bool temp)
     // the zombified monster can (e.g. spectral things).
     if (mons_is_zombified(mon))
         ret = max(ret, mons_class_flies(mon->type));
-
-    if (mon->type == MONS_CHIMERA && mon->props.exists("chimera_wings"))
-        ret = mons_class_flies(get_chimera_wings(mon));
 
     if (temp && ret < FL_LEVITATE)
     {
@@ -2478,6 +2498,7 @@ void define_monster(monster* mons)
     // Load with dummy values so certain monster properties can be queried
     // before placement without crashing (proper setup is done later here)
     case MONS_DANCING_WEAPON:
+    case MONS_SPECTRAL_WEAPON:
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);

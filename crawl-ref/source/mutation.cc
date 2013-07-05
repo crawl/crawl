@@ -539,7 +539,7 @@ string describe_mutations(bool center_title)
     case SP_LAVA_ORC:
     {
         have_any = true;
-        std::string col = "darkgrey";
+        string col = "darkgrey";
 
         col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
         result += "<" + col + ">You have stony skin.</" + col + ">\n";
@@ -717,7 +717,7 @@ static const string _vampire_Ascreen_footer = (
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
 
-static const std::string _lava_orc_Ascreen_footer = (
+static const string _lava_orc_Ascreen_footer = (
 #ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
 #else
@@ -830,29 +830,29 @@ static void _display_temperature()
     clrscr();
     cgotoxy(1,1);
 
-    std::string result;
+    string result;
 
-    std::string title = "Temperature Effects";
+    string title = "Temperature Effects";
 
     // center title
     int offset = 39 - strwidth(title) / 2;
     if (offset < 0) offset = 0;
 
-    result += std::string(offset, ' ');
+    result += string(offset, ' ');
 
     result += "<white>";
     result += title;
     result += "</white>\n\n";
 
     const int lines = TEMP_MAX + 1; // 15 lines plus one for off-by-one.
-    std::string column[lines];
+    string column[lines];
 
     for (int t = 1; t <= TEMP_MAX; t++)  // lines
     {
-        std::string text;
-        std::ostringstream ostr;
+        string text;
+        ostringstream ostr;
 
-        std::string colourname = temperature_string(t);
+        string colourname = temperature_string(t);
 #define F(x) stringize_glyph(dchar_glyph(DCHAR_FRAME_##x))
         if (t == TEMP_MAX)
             text = "  " + F(TL) + F(HORIZ) + "MAX" + F(HORIZ) + F(HORIZ) + F(TR);

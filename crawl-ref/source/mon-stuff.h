@@ -105,7 +105,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
                        bool force_beh = false);
 
-int monster_die(monster* mons, actor *killer, bool silent = false,
+int monster_die(monster* mons, const actor *killer, bool silent = false,
                 bool wizard = false, bool fake = false);
 
 int monster_die(monster* mons, killer_type killer,
@@ -239,6 +239,6 @@ void temperature_decay();
 bool temperature_tier(int which);
 bool temperature_effect(int which);
 int temperature_colour(int temp);
-std::string temperature_string(int temp);
-std::string temperature_text(int temp);
+string temperature_string(int temp);
+string temperature_text(int temp);
 #endif

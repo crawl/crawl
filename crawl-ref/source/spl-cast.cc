@@ -861,13 +861,16 @@ static bool _vampire_cannot_cast(spell_type spell)
     {
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
-    case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
     case SPELL_ICE_FORM:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
     case SPELL_STONESKIN:
         return true;
+    case SPELL_CURE_POISON:
+        // You can become poisoned at any state but bloodless; allow curing
+        // it under the same conditions.
+        return you.hunger_state <= HS_STARVING;
     default:
         return false;
     }
@@ -1565,6 +1568,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_DEATH_CHANNEL:
         return cast_death_channel(powc, god, fail);
 
+    case SPELL_SPECTRAL_WEAPON:
+        return cast_spectral_weapon(&you, powc, god, fail);
+
     case SPELL_BATTLESPHERE:
         return cast_battlesphere(&you, powc, god, fail);
 
@@ -1694,6 +1700,15 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SILENCE:
         return cast_silence(powc, fail);
+
+    case SPELL_INFUSION:
+        return cast_infusion(powc, fail);
+
+    case SPELL_SONG_OF_SLAYING:
+        return cast_song_of_slaying(powc, fail);
+
+    case SPELL_SONG_OF_SHIELDING:
+        return cast_song_of_shielding(powc, fail);
 
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:

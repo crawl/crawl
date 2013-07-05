@@ -3190,6 +3190,58 @@ struct spell_desc
 },
 
 {
+    SPELL_INFUSION, "Infusion",
+     SPTYP_CHARMS,
+     SPFLAG_BATTLE,
+     1,
+     50,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SONG_OF_SLAYING, "Song of Slaying",
+     SPTYP_CHARMS,
+     SPFLAG_BATTLE,
+     2,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SONG_OF_SHIELDING, "Song of Shielding",
+     SPTYP_CHARMS,
+     SPFLAG_BATTLE,
+     5,
+     100,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SPECTRAL_WEAPON, "Spectral Weapon",
+     SPTYP_HEXES | SPTYP_CHARMS,
+     SPFLAG_BATTLE,
+     3,
+     100,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

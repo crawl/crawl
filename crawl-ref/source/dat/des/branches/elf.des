@@ -833,6 +833,234 @@ MAP
 ..............
 ENDMAP
 
+NAME:    nicolae_elf_glass_and_crystal_pillar_1
+DEPTH:   Elf
+TAGS:    transparent extra allow_dup
+SHUFFLE: ab, bc
+SUBST:   a = m, b : mb, c = b, _ : .._
+CLEAR:   _
+MAP
+________
+_......_
+_.abba._
+_.bccb._
+_.bccb._
+_.abba._
+_......_
+________
+ENDMAP
+
+NAME:    nicolae_elf_glass_and_crystal_pillar_2
+DEPTH:   Elf
+TAGS:    transparent extra allow_dup
+SHUFFLE: ab, bc
+SUBST:   a = m, b : mb, c = b, _ : .._
+CLEAR:   _
+MAP
+_______
+_....._
+_.aba._
+_.bcb._
+_.aba._
+_....._
+_______
+ENDMAP
+
+NAME:    nicolae_elf_stair_hall
+DEPTH:   Elf:2-
+TAGS:    extra
+SUBST:   v : vb
+SHUFFLE: {[(
+MAP
+    xxxxxxxxxxxxxxx
+  xxxcccccccccccccx
+ xxccc...........cx
+ xcc....vv..vv..ccx
+xxc....vv..vv..cccx
+xcc...vv..vv..ccccx
+xc...vv..vv.......@
+xc.{..............@
+xc...vv..vv.......@
+xcc...vv..vv..ccccx
+xxc....vv..vv..cccx
+ xcc....vv..vv..ccx
+ xxccc...........cx
+  xxxcccccccccccccx
+    xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_elf_stone_circles
+DEPTH:   Elf
+TAGS:    transparent extra decor allow_dup luniq mini_float
+SHUFFLE: za, bd
+SUBST:   a = A, b = B, zd = c
+SHUFFLE: AB, DEFG
+SUBST:   AD : +, BEFG = c, Z : GT. U:3, c : cx
+MAP
+      ccFcc
+    Ecc...ccG
+   cc.......cc
+  Dc.....cczacc
+ cc.....cc...ccc
+ cdbc..cc.....cc
+ccc.cccc.......cc
+cc...cc.........c
+A..Z..+....Z....B
+cc...cc.........c
+ccc.cccc.......cc
+ cdbc..cc.....cc
+ cc.....cc...ccc
+  Dc.....cczacc
+   cc.......cc
+    Ecc...ccG
+      ccFcc
+ENDMAP
+
+NAME:   nicolae_elf_v_pinch
+DEPTH:  Elf
+TAGS:   transparent extra allow_dup luniq_pinch
+SUBST:  b : bc
+NSUBST: L = @ / ., R = @ / .
+MAP
+xxxxxxxxx
+bbxxxxxbb
+LbbxxxbbR
+L.bbxbb.R
+L..bbb..R
+L...b...R
+L.......R
+L.......R
+L.......R
+L...b...R
+L..bbb..R
+L.bbxbb.R
+LbbxxxbbR
+bbxxxxxbb
+xxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_elf_w_pinch
+DEPTH:  Elf
+TAGS:   transparent extra allow_dup luniq_pinch
+SUBST:  b : bc
+NSUBST: L = @ / ., R = @ / .
+MAP
+xxxxxxxxxxxxxxxxx
+bbxxxxxbbbxxxxxbb
+Lbbxxxbb.bbxxxbbR
+L.bbxbb...bbxbb.R
+L..bbb.....bbb..R
+L...b.......b...R
+L...............R
+L...............R
+L...............R
+L...b.......b...R
+L..bbb.....bbb..R
+L.bbxbb...bbxbb.R
+Lbbxxxbb.bbxxxbbR
+bbxxxxxbbbxxxxxbb
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_elf_m_pinch
+DEPTH:  Elf
+TAGS:   transparent extra allow_dup luniq_pinch
+SUBST:  b : bc
+NSUBST: L = @ / ., R = @ / .
+MAP
+xxxxxxxxxxxxxxxxx
+xxxbbbxxxxxbbbxxx
+xxbb.bbxxxbb.bbxx
+xbb...bbxbb...bbx
+bb.....bbb.....bb
+b.......b.......b
+L...............R
+L...............R
+L...............R
+b.......b.......b
+bb.....bbb.....bb
+xbb...bbxbb...bbx
+xxbb.bbxxxbb.bbxx
+xxxbbbxxxxxbbbxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    nicolae_elf_big_sculpture_1
+DEPTH:   Elf
+TAGS:    transparent decor extra allow_dup
+SHUFFLE: abcdf
+SUBST:   a : .
+SHUFFLE: bcdef
+SUBST:   bcd : v, e : .v, f : .v, v : vbcx
+MAP
+.........
+.fda.adf.
+.deb.bed.
+.abc.cba.
+.........
+.abc.cba.
+.deb.bed.
+.fda.adf.
+.........
+ENDMAP
+
+NAME:    nicolae_elf_big_sculpture_2
+DEPTH:   Elf
+TAGS:    transparent decor extra allow_dup luniq
+SHUFFLE: mlk/mkl/nnn, abcdefghij
+SUBST:   ka = ., nbcd = v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v
+SUBST:   l : .v, m : .v, v : vbcx
+MAP
+  ...........
+  .abcd.dcba.
+....efg.gfe....
+.a...hi.ih...a.
+.be...j.j...eb.
+.cfh.......hfc.
+.dgij.klk.jigd.
+......lml......
+.dgij.klk.jigd.
+.cfh.......hfc.
+.be...j.j...eb.
+.a...hi.ih...a.
+....efg.gfe....
+  .abcd.dcba.
+  ...........
+ENDMAP
+
+NAME:    nicolae_elf_big_sculpture_3
+DEPTH:   Elf
+TAGS:    transparent extra decor allow_dup luniq
+: if crawl.coinflip() then
+SHUFFLE: bcegh
+SUBST:   b = .
+SHUFFLE: acdefghi
+: else
+SUBST:   f = v
+SHUFFLE: abcdeghi
+: end
+SUBST:   acd = v, b : .v, e : .v, f : .v, g : .v, h : .v, i : .v
+SUBST:   j : .v, v : vbcx
+MAP
+        .
+       ...
+      ..a..
+     ..bcb..
+    ..defed..
+   ....ghg....
+  ..d...i...d..
+ ..beg.....geb..
+..acfhi.j.ihfca..
+ ..beg.....geb..
+  ..d...i...d..
+   ....ghg....
+    ..defed..
+     ..bcb..
+      ..a..
+       ...
+        .
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

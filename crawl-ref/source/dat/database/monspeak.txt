@@ -2566,8 +2566,6 @@ w:50
 
 @The_monster@ says, "I don't get the difference between high elves and deep elves."
 
-@The_monster@ says, "What sort of sludge, anyway?"
-
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
 Swamp Donald
@@ -2940,7 +2938,7 @@ w:50
 
 @The_monster@ says, "I asked some spriggans for directions; they got kind of evasive about it."
 
-@The_monster@ says, "I asked some tengu for directions; it got kind of shocking."
+@The_monster@ says, "I ran into some vines; they wouldn't let me leave."
 
 @The_monster@ says, "I was going to ask a faun for directions, but it got too confusing."
 
@@ -5729,7 +5727,7 @@ _Rupert_rare_
 ## END Rupert ##
 %%%%
 ############ SAINT ROKA ### orc warlord
-# Only used if the player is not a Hill Orc.
+# Only used if the player is not an orc.
 Saint Roka
 
 w:7
@@ -5771,7 +5769,7 @@ Saint Roka rival
 
 @The_monster@ despairs, @at_foe@, "False prophets abound here!"
 
-@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!"
+@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere {{ return you.race() }}!"
 %%%%
 # need different speech if you also worship Beogh
 related beogh Saint Roka
@@ -6642,7 +6640,7 @@ friendly orc
 w:5
 @_generic_orc_speech_@
 %%%%
-# charmed orcs, for hill orcs (not counting Beogh)
+# charmed orcs, for orcs (not counting Beogh)
 friendly related orc
 
 @default friendly related humanoid@
@@ -6752,11 +6750,19 @@ _hostile_orc_beogh_believer_speech_common_
 
 @The_monster@ grunts @at_foe@, "You, the messiah? You don't even look the part!"
 
-@The_monster@ @_orc_says_to_foe_@, "The messiah will not be a Hill Orc!"
+@The_monster@ @_orc_says_to_foe_@, "The messiah will not be a {{ return you.race() }}!"
 
 @The_monster@ @_orc_says_to_foe_@, "The messiah will be a true Orc!"
 
-@The_monster@ @_orc_says_to_foe_@, "Turn back to the hills, deceiver!"
+@The_monster@ @_orc_says_to_foe_@, "{{
+    if you.race() == "Hill Orc" then
+        return "Turn back to the hills"
+    elseif you.race() == "Lava Orc" then
+        return "Go swim in a volcano"
+    else -- shouldn't happen
+        return "Go to hell"
+    end
+}}, deceiver!"
 
 @The_monster@ @_shouts_@ @at_foe@, "Die, @_orc_heathen_@!"
 

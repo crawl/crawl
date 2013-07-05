@@ -230,6 +230,8 @@ static const ability_def Ability_List[] =
 
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
       0, 0, 0, 0, 0, ABFLAG_INSTANT},
+    { ABIL_STOP_SINGING, "Stop Singing",
+      0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
       1, 0, 0, 0, 0, ABFLAG_PERMANENT_MP},
 
@@ -660,7 +662,7 @@ const string make_cost_description(ability_type ability)
 
     if (abil.hp_cost || ep)
     {
-        ret += make_stringf(", %d %s%s", ep + (int)abil.hp_cost,
+        ret += make_stringf(", %d %s%s", ep + abil.hp_cost.cost(you.hp_max),
             abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
             you.species == SP_DJINNI ? "EP" : "HP");
     }
@@ -874,6 +876,7 @@ talent get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
+    case ABIL_STOP_SINGING:
         failure = 0;
         break;
 
@@ -1266,6 +1269,7 @@ bool activate_ability()
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
+        crawl_state.zero_turns_taken();
         return false;
     }
 
@@ -1292,6 +1296,7 @@ bool activate_ability()
     if (selected == -1)
     {
         canned_msg(MSG_OK);
+        crawl_state.zero_turns_taken();
         return false;
     }
 #else
@@ -1309,6 +1314,7 @@ bool activate_ability()
             if (selected == -1)
             {
                 canned_msg(MSG_OK);
+                crawl_state.zero_turns_taken();
                 return false;
             }
         }
@@ -1316,6 +1322,7 @@ bool activate_ability()
                  || keyin == '\n')
         {
             canned_msg(MSG_OK);
+            crawl_state.zero_turns_taken();
             return false;
         }
         else if (isaalpha(keyin))
@@ -1350,6 +1357,19 @@ static bool _check_ability_possible(const ability_def& abil,
                                     bool hungerCheck = true,
                                     bool quiet = false)
 {
+    if (you.berserk())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
+    if (you.confused() && !testbits(abil.flags, ABFLAG_CONF_OK))
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
 
     if (silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH)
     {
@@ -1537,6 +1557,13 @@ bool check_ability_possible(const ability_type ability, bool hungerCheck,
 
 bool activate_talent(const talent& tal)
 {
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
     // Doing these would outright kill the player.
     if (tal.which == ABIL_STOP_FLYING)
     {
@@ -1609,6 +1636,7 @@ bool activate_talent(const talent& tal)
         case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_END_TRANSFORMATION:
         case ABIL_DELAYED_FIREBALL:
+        case ABIL_STOP_SINGING:
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
         case ABIL_BOTTLE_BLOOD:
@@ -2178,6 +2206,11 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_TELEPORT_CONTROL:
         cast_teleport_control(30 + you.skill(SK_EVOCATIONS, 2), false);
+        break;
+
+    case ABIL_STOP_SINGING:
+        you.duration[DUR_SONG_OF_SLAYING] = 0;
+        mpr("You stop singing.");
         break;
 
     case ABIL_STOP_FLYING:
@@ -3217,6 +3250,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // Checking for unreleased Delayed Fireball.
     if (you.attribute[ ATTR_DELAYED_FIREBALL ])
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
+
+    if (you.duration[DUR_SONG_OF_SLAYING])
+        _add_talent(talents, ABIL_STOP_SINGING, check_confused);
 
     // Evocations from items.
     if (!you.suppressed())

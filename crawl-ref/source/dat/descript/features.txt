@@ -691,7 +691,7 @@ If you ever wanted to escape out of the pan into the fire, this is your chance.
 This gateway allows you to return from this place via a nice scenic path
 through infinite madness.
 %%%%
-# shown if the player is a Hill Orc
+# shown if the player is an orc
 An idol of Beogh
 
 {{
@@ -716,11 +716,6 @@ An iron grate
 
 This iron grate looks rusted, as if it could be disrupted with a spell or a
 wand quite easily. It's too strong to be breakable by hand, though.
-%%%%
-An iron tree
-
-A striking representation of nature in springtime, made completely of iron. It
-looks very delicate – almost alive.
 %%%%
 An open door
 

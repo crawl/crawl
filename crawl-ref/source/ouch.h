@@ -74,7 +74,7 @@ string morgue_name(string char_name, time_t when_crawl_got_even);
 void reset_damage_counters();
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux = NULL, bool see_source = true,
-          const char *death_source_name = NULL);
+          const char *death_source_name = NULL, bool attacker_effects = true);
 
 void lose_level(int death_source, const char* aux);
 bool drain_exp(bool announce_full = true, int death_source = NON_MONSTER,

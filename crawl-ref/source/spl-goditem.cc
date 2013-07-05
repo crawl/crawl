@@ -185,7 +185,7 @@ static int _can_pacify_monster(const monster* mon, const int healed,
         return 0;
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
-                       (is_player_same_species(mon->type)) ? 2   // same species
+                       (is_player_same_genus(mon->type))   ? 2   // same genus
                                                            : 1;  // other
 
     int divisor = 3;
@@ -916,14 +916,14 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 // Make the walls silver.
                 env.grid_colours(*ai) = WHITE;
                 env.tile_flv(*ai).feat_idx =
-                        store_tilename_get_index("dngn_mirror_wall");
-                env.tile_flv(*ai).feat = TILE_DNGN_MIRROR_WALL;
+                        store_tilename_get_index("dngn_silver_wall");
+                env.tile_flv(*ai).feat = TILE_DNGN_SILVER_WALL;
                 if (env.map_knowledge(*ai).seen())
                 {
                     env.map_knowledge(*ai).set_feature(DNGN_METAL_WALL);
                     env.map_knowledge(*ai).clear_item();
 #ifdef USE_TILE
-                    env.tile_bk_bg(*ai) = TILE_DNGN_MIRROR_WALL;
+                    env.tile_bk_bg(*ai) = TILE_DNGN_SILVER_WALL;
                     env.tile_bk_fg(*ai) = 0;
 #endif
                 }

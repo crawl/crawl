@@ -727,7 +727,7 @@ static void _BRILLIANCE_unequip(item_def *item, bool *show_msgs)
 ///////////////////////////////////////////////////
 static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "Time to introduce the shillelagh law.");
+    _equip_mpr(show_msgs, "Time to lay down the shillelagh law.");
 }
 
 

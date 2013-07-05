@@ -1520,7 +1520,7 @@ int acquirement_create_item(object_class_type class_wanted,
             }
 
             // These can never get egos, and mundane versions are quite common, so
-            // guarantee artifact status.  Rarity is a bit low to compensate.
+            // guarantee artefact status.  Rarity is a bit low to compensate.
             if (is_giant_club_type(doodad.sub_type))
             {
                 if (!one_chance_in(25))
@@ -1617,7 +1617,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_STAVES);
         bad_class.set(OBJ_RODS);
     }
-    bad_class.set(OBJ_FOOD, you_foodless() && you.religion != GOD_FEDHAS);
+    bad_class.set(OBJ_FOOD, you_foodless_normally() && you.religion != GOD_FEDHAS);
 
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {

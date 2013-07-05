@@ -366,6 +366,12 @@ This spell attempts to convert all nearby poison into liquid flame, burning
 poisoned creatures from within. It is very effective against innately poisonous
 creatures. The caster is not affected.
 %%%%
+Infusion spell
+
+This spell infuses the caster's melee attacks with magic, drawing from their
+reserves of magical energy to deal additional damage whenever an enemy is hit.
+It has no effect when the caster's magic is depleted.
+%%%%
 Inner Flame spell
 
 This spell fills an enemy with an intense fire, to be explosively released upon
@@ -648,6 +654,31 @@ they were created on.
 Slow spell
 
 This spell slows the actions of a creature.
+%%%%
+Song of Shielding spell
+
+This spell draws from your magical essence to create a temporary protective
+barrier. Incoming damage will be absorbed by the shield, decreasing the
+caster's available magic in the process.
+%%%%
+Song of Slaying spell
+
+This spell conjures ancient verses of battle within your mind and makes you
+recite them — quite loudly! Each non-summoned enemy you slay in combat during
+this recitation temporarily enhances your melee skills. Your effectiveness
+will only be enhanced for the duration of the song; casting this spell while
+already singing will start a new song, not extend an existing one.
+%%%%
+Spectral Weapon spell
+
+This spell draws out the spirit within a wielded weapon to fight for you, with
+its power dependant on your skill with said weapon. Never striking on its own,
+it only attacks when you do. You can only ever have one spectral weapon at a time.
+
+Kills by a spectral weapon count as your own when singing a Song of Slaying.
+
+Certain powerful named artefacts possess too strong a spirit for this spell
+to be able to draw them out.
 %%%%
 Spider Form spell
 

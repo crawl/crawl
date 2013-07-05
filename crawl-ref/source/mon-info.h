@@ -96,6 +96,8 @@ enum monster_info_flags
     MB_DIMENSION_ANCHOR,
     MB_CONTROL_WINDS,
     MB_WIND_AIDED,
+    MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
+    MB_SUMMONED_CAPPED,    // Expiring due to summons cap
     NUM_MB_FLAGS
 };
 
@@ -185,6 +187,7 @@ struct monster_info : public monster_info_base
             short xl_rank;
             short damage;
             short ac;
+            monster_type acting_part;
         } ghost;
     } u;
 

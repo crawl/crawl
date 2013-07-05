@@ -465,7 +465,7 @@ static void _set_mons_move_dir(const monster* mons,
     }
 }
 
-static void _tweak_wall_mmov(const coord_def& monpos, bool move_trees = false)
+static void _tweak_wall_mmov(const monster* mons, bool move_trees = false)
 {
     // The rock worm will try to move along through rock for as long as
     // possible. If the player is walking through a corridor, for example,
@@ -474,15 +474,36 @@ static void _tweak_wall_mmov(const coord_def& monpos, bool move_trees = false)
     // This might cause the rock worm to take detours but it still
     // comes off as smarter than otherwise.
 
+    // If we're already moving into a shielded spot, don't adjust move
+    // (this leads to zig-zagging)
+    if (feat_is_solid(grd(mons->pos() + mmov)))
+        return;
+
     int dir = _compass_idx(mmov);
     ASSERT(dir != -1);
 
+
+    // If we're already adjacent to our target and shielded, don't shift position.
+    // If we're adjacent and unshielded, widen our search angle to include any
+    // spot adjacent to both us and our target
+    int range = 1;
+    if (mons->target == mons->pos() + mmov)
+    {
+        if (feat_is_solid(grd(mons->pos())))
+            return;
+        else
+        {
+            if (dir % 2 == 1)
+                range = 2;
+        }
+    }
+
     int count = 0;
     int choice = dir; // stick with mmov if none are good
-    for (int i = -1; i <= 1; ++i)
+    for (int i = -range; i <= range; ++i)
     {
         const int altdir = (dir + i + 8) % 8;
-        const coord_def t = monpos + mon_compass[altdir];
+        const coord_def t = mons->pos() + mon_compass[altdir];
         const bool good = in_bounds(t)
                           && (move_trees ? feat_is_tree(grd(t))
                                          : feat_is_rock(grd(t))
@@ -618,9 +639,9 @@ static void _handle_movement(monster* mons)
     move_array good_move;
     _fill_good_move(mons, &good_move);
 
-    // Make rock worms prefer wall.
-    if (mons_wall_shielded(mons) && mons->target != mons->pos() + mmov)
-        _tweak_wall_mmov(mons->pos(), mons->type == MONS_DRYAD);
+    // Make rock worms and dryads prefer shielded terrain.
+    if (mons_wall_shielded(mons))
+        _tweak_wall_mmov(mons, mons->type == MONS_DRYAD);
 
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check
@@ -1799,6 +1820,7 @@ static void _pre_monster_move(monster* mons)
     }
 
     reset_battlesphere(mons);
+    reset_spectral_weapon(mons);
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
@@ -1864,8 +1886,11 @@ static void _pre_monster_move(monster* mons)
 
     // Memory is decremented here for a reason -- we only want it
     // decrementing once per monster "move".
-    if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI])
+    if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI]
+        && !mons_class_flag(mons->type, M_VIGILANT))
+    {
         mons->foe_memory -= you.time_taken;
+    }
 
     // Otherwise there are potential problems with summonings.
     if (mons->type == MONS_GLOWING_SHAPESHIFTER)
@@ -2399,6 +2424,18 @@ static void _post_monster_move(monster* mons)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }
 
+priority_queue<pair<monster *, int>,
+               vector<pair<monster *, int> >,
+               MonsterActionQueueCompare> monster_queue;
+
+// Inserts a monster into the monster queue (needed to ensure that any monsters
+// given energy or an action by a effect can actually make use of that energy
+// this round)
+void queue_monster_for_action(monster* mons)
+{
+    monster_queue.push(pair<monster *, int>(mons, mons->speed_increment));
+}
+
 //---------------------------------------------------------------
 //
 // handle_monsters
@@ -2408,10 +2445,6 @@ static void _post_monster_move(monster* mons)
 //---------------------------------------------------------------
 void handle_monsters(bool with_noise)
 {
-    priority_queue<pair<monster *, int>,
-                   vector<pair<monster *, int> >,
-                   MonsterActionQueueCompare> monster_queue;
-
     for (monster_iterator mi; mi; ++mi)
     {
         _pre_monster_move(*mi);
@@ -3210,6 +3243,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Wandering mushrooms usually don't move while you are looking.
     if (mons->type == MONS_WANDERING_MUSHROOM
+        || mons->type == MONS_CURSE_SKULL
         || (mons->type == MONS_LURKING_HORROR
             && mons->foe_distance() > random2(LOS_RADIUS + 1)))
     {
@@ -4022,8 +4056,8 @@ static void _heated_area(monster* mons)
     const int base_damage = random2(11);
 
     // Timescale, like with clouds:
-    const int speed = mons->speed > 0? mons->speed : 10;
-    const int timescaled = (std::max(0, base_damage) * 10 / speed);
+    const int speed = mons->speed > 0 ? mons->speed : 10;
+    const int timescaled = max(0, base_damage) * 10 / speed;
 
     // rF protects:
     const int resist = mons->res_fire();
@@ -4031,8 +4065,8 @@ static void _heated_area(monster* mons)
                                 BEAM_FIRE, resist,
                                 timescaled, true);
     // So does AC:
-    const int final_damage = std::max(0, adjusted_damage
-                                      - random2(mons->armour_class()));
+    const int final_damage = max(0, adjusted_damage
+                                 - random2(mons->armour_class()));
 
     if (final_damage > 0)
     {

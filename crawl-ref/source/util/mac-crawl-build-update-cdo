@@ -33,7 +33,8 @@ GetOptions("skip-build" => \$SKIP_BUILD,
            "scp" => \$SCP)
   or die "Bad command line\n";
 
-sub main() {
+sub main()
+{
   $CRAWLDIR = discover_crawl_dir();
   goto_dir($CRAWLDIR);
 
@@ -46,11 +47,16 @@ sub main() {
 
   my $did_build;
   my $did_scp;
-  if ($need_build) {
-    if (!$SKIP_BUILD) {
-      if ($last_build_version) {
+  if ($need_build)
+  {
+    if (!$SKIP_BUILD)
+    {
+      if ($last_build_version)
+      {
         say("[INFO] Last build: $last_build_version; current: $CURRENTVERSION");
-      } else {
+      }
+      else
+      {
         say("[INFO] Current version: $CURRENTVERSION");
       }
       build_crawl();
@@ -60,35 +66,44 @@ sub main() {
     }
   }
 
-  if ($need_build || $SCP) {
+  if ($need_build || $SCP)
+  {
     my @binaries = find_uploadable_binaries();
     print("Zips: @binaries\n");
     upload_binaries(@binaries);
     $did_scp = 1;
   }
 
-  if (!$did_build && !$did_scp) {
-    if (!$need_build) {
+  if (!$did_build && !$did_scp)
+  {
+    if (!$need_build)
+    {
       say("[INFO] $CURRENTVERSION already built, nothing to do");
-    } else {
+    }
+    else
+    {
       say("[INFO] Nothing to do");
     }
   }
 }
 
-sub directory_has_paths(@) {
+sub directory_has_paths(@)
+{
   my @paths = @_;
-  for my $path (@paths) {
+  for my $path (@paths)
+  {
     my $dir = $path =~ s{/$}{};
     return undef unless ($dir? -d($path) : -r($path));
   }
   1
 }
 
-sub find_parent_directory_containing($@) {
+sub find_parent_directory_containing($@)
+{
   my ($failmsg, @paths) = @_;
   my $current_dir = getcwd();
-  while (1) {
+  while (1)
+  {
     return $current_dir if directory_has_paths(@paths);
 
     chdir("..") or die "$failmsg\n";
@@ -98,77 +113,88 @@ sub find_parent_directory_containing($@) {
   }
 }
 
-sub discover_crawl_dir() {
+sub discover_crawl_dir()
+{
   find_parent_directory_containing(
     "[ERR] Couldn't find crawl-ref repository top-level directory",
     ".git/", "crawl-ref/git-hooks/",
     "crawl-ref/source/", "crawl-ref/source/rltiles/")
 }
 
-sub last_build_version() {
+sub last_build_version()
+{
   open my $inf, '<', $LASTVERFILE or return;
   chomp(my $lastver = <$inf>);
   close $inf;
   $lastver
 }
 
-sub save_build_version($) {
+sub save_build_version($)
+{
   my $version = shift;
   open my $outf, '>', $LASTVERFILE or die "Can't write $LASTVERFILE: $!\n";
   print $outf "$version\n";
   close $outf;
 }
 
-sub say($) {
+sub say($)
+{
   my $msg = shift;
   warn("$msg\n") if -t STDIN;
 }
 
-sub clean_crawl() {
+sub clean_crawl()
+{
   sys_check("git clean -dfx");
 }
 
-sub in_dir($$) {
+sub in_dir($$)
+{
   my ($dir, $task) = @_;
   my $start_dir = getcwd();
   goto_dir($dir);
-  eval {
-    $task->();
-  };
+  eval { $task->(); };
   my $err = $@;
   goto_dir($start_dir);
   die $err if $err;
 }
 
-sub build_crawl() {
+sub build_crawl()
+{
   clean_crawl();
   in_dir($COMPILEDIR,
-         sub {
+         sub
+         {
            sys_check("./mac/mac-release-build");
          });
 }
 
-sub app_zips() {
+sub app_zips()
+{
   my $zipglob = "$ZIPDIR/stone_soup-$CURRENTVERSION*.zip";
   return glob($zipglob);
 }
 
-sub assert_app_zips_exist() {
+sub assert_app_zips_exist()
+{
   my @zips = app_zips();
   @zips == 2 or die "[ERR] Zip files not built as expected\n";
 }
 
-sub zip_name_for_app($) {
+sub zip_name_for_app($)
+{
   my $app = shift;
   my $tiles = $app !~ /ASCII/;
   my $qualifier = $tiles ? "tiles_" : "";
   sprintf($ZIPNAMEFMT, $qualifier, $CURRENTVERSION)
 }
 
-sub create_app_zips() {
+sub create_app_zips()
+{
   my @zips = app_zips();
   my @out_zips = ();
-  for my $zip (@zips) {
+  for my $zip (@zips)
+  {
     my $target =
       "$ZIPDIR/" . zip_name_for_app($zip =~ /tiles/? 'TILES' : 'ASCII');
     rename($zip, $target);
@@ -177,80 +203,95 @@ sub create_app_zips() {
   @out_zips
 }
 
-sub package_build() {
+sub package_build()
+{
   assert_app_zips_exist();
   return create_app_zips();
 }
 
-sub find_uploadable_binaries() {
+sub find_uploadable_binaries()
+{
   my $zipglob = sprintf("$ZIPDIR/$ZIPNAMEFMT", "*", "*");
   my @zips = glob($zipglob);
   @zips == 2 or die "[ERR] Can't find zips to upload: $zipglob\n";
   @zips
 }
 
-sub scp($$) {
+sub scp($$)
+{
   my ($src, $targ) = @_;
   sys_check("scp $src $targ");
 }
 
-sub upload_binary($) {
+sub upload_binary($)
+{
   my $zip = shift;
   scp($zip, $SCP_PATH);
 }
 
-sub update_trunk_page() {
+sub update_trunk_page()
+{
   sys_check("ssh $REMOTE_HOST bin/update-trunk-indices.py");
 }
 
-sub upload_binaries(@) {
+sub upload_binaries(@)
+{
   my @zips = @_;
-  for my $zip (@zips) {
+  for my $zip (@zips)
+  {
     die "[ERR] Zip $zip does not exist\n" unless -f $zip;
     upload_binary($zip);
   }
   update_trunk_page();
 }
 
-sub current_version() {
+sub current_version()
+{
   chomp(my $ver = qx/git describe --long/);
   die "[ERR] git describe failed\n" if ($? >> 8) || !$ver;
   $ver
 }
 
-sub goto_dir($) {
+sub goto_dir($)
+{
   my $dir = shift;
   say("[CD] $dir");
   chdir($dir) or die "Can't chdir to $dir: $!\n";
 }
 
-sub retry_until_success($$$) {
+sub retry_until_success($$$)
+{
   my ($tries, $desc, $task) = @_;
 
-  while ($tries-- > 0) {
+  while ($tries-- > 0)
+  {
     last if $task->();
   }
   die "ERR: $desc failed\n" if $tries < 0;
 }
 
-sub sys_retry_until_success($$) {
+sub sys_retry_until_success($$)
+{
   my ($tries, $command) = @_;
   my $task = sub { !sys_do($command) };
   retry_until_success($tries, $command, $task);
 }
 
-sub sys_do($) {
+sub sys_do($)
+{
   my $command = shift;
   say("[SYSTEM] $command");
   system($command)
 }
 
-sub sys_check($) {
+sub sys_check($)
+{
   my $command = shift;
   !sys_do($command) or die "[ERR] $command failed\n";
 }
 
-sub update_git() {
+sub update_git()
+{
   sys_retry_until_success(200, "git pull");
   sys_retry_until_success(200, "git submodule update --init");
 }

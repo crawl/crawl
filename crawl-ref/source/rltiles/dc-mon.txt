@@ -55,8 +55,10 @@ cbutterfly5
 jackal MONS_JACKAL
 hound MONS_HOUND
 warg MONS_WARG
-war_dog MONS_WAR_DOG
 wolf MONS_WOLF
+%rim 0
+spirit_wolf MONS_SPIRIT_WOLF
+%rim 1
 hell_hound MONS_HELL_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
@@ -391,7 +393,7 @@ stone_golem MONS_STONE_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
-# For the Erinya WizLab
+# For the Eringya WizLab
 vine-covered_golem MONS_VINE_GOLEM
 
 ## Statues and statue-like things (also '8')
@@ -467,6 +469,15 @@ lightning_spire MONS_LIGHTNING_SPIRE
 gargoyle MONS_GARGOYLE
 metal_gargoyle MONS_METAL_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
+
+## Weaponry ('(')
+spectral_sbl MONS_SPECTRAL_SBL
+spectral_lbl MONS_SPECTRAL_LBL
+spectral_staff MONS_SPECTRAL_STAFF
+spectral_axe MONS_SPECTRAL_AXE
+spectral_mace MONS_SPECTRAL_MACE
+spectral_whip MONS_SPECTRAL_WHIP
+spectral_spear MONS_SPECTRAL_SPEAR
 
 ## Humans ('@')
 %sdir mon/unique
@@ -630,8 +641,8 @@ giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
 mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
-shining_eye MONS_SHINING_EYE
 %rim 0
+shining_eye MONS_SHINING_EYE
 eye_of_devastation MONS_EYE_OF_DEVASTATION
 %rim 1
 golden_eye MONS_GOLDEN_EYE
@@ -767,7 +778,11 @@ bush_burning MONS_BUSH_BURNING
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
 oklob_plant MONS_OKLOB_PLANT
+%rim 0
 thorn_lotus MONS_THORN_LOTUS
+thorn_hunter MONS_THORN_HUNTER
+treant MONS_TREANT
+%rim 1
 
 ## Trolls ('T')
 %sdir mon/unique

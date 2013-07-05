@@ -54,6 +54,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
@@ -1983,7 +1984,7 @@ string get_item_description(const item_def &item, bool verbose,
             }
 
             if ((god_hates_cannibalism(you.religion)
-                   && is_player_same_species(item.mon_type))
+                   && is_player_same_genus(item.mon_type))
                 || (you.religion == GOD_ZIN
                    && mons_class_intel(item.mon_type) >= I_NORMAL)
                 || (is_good_god(you.religion)
@@ -2807,7 +2808,7 @@ static void _adjust_item(item_def &item)
     formatted_string::parse_string(prompt).display();
     int keyin = getch_ck();
 
-    if (isalpha(keyin))
+    if (isaalpha(keyin))
     {
         int a = letter_to_index(item.slot);
         int b = letter_to_index(keyin);
@@ -2873,6 +2874,13 @@ static int _get_spell_description(const spell_type spell,
 #else
                        "Please file a bug report.";
 #endif
+    }
+
+    // Report summon cap
+    if (const int limit = summons_limit(spell))
+    {
+        description += "You can sustain at most " + number_in_words(limit)
+                       + " creatures summoned by this spell.";
     }
 
     if (god_hates_spell(spell, you.religion))
@@ -3528,10 +3536,12 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         has_stat_desc = true;
     }
 
+    bool stair_use = false;
     if (!mons_class_can_use_stairs(mi.type))
     {
         inf.body << "\n" << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
                  << " is incapable of using stairs.\n";
+        stair_use = true;
     }
 
     if (mi.intel() <= I_INSECT)
@@ -3547,7 +3557,10 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     {
         inf.body << "\n" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "
-                       "or items.\n";
+                       "or items";
+        if (!stair_use && mi.is(MB_SUMMONED_NO_STAIRS))
+            inf.body << ", and it is incapable of using stairs";
+        inf.body << ".\n";
     }
 
     if (mi.is(MB_PERM_SUMMON))
@@ -3556,6 +3569,13 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                        "way, and only partially exists. Killing it yields no "
                        "experience, nutrition or items. You cannot easily "
                        "abjure it, though.\n";
+    }
+
+    if (mi.is(MB_SUMMONED_CAPPED))
+    {
+        inf.body << "\n" << "You have summoned too many monsters of this kind "
+                            "to sustain them all, and thus this one will "
+                            "shortly expire.\n";
     }
 
     if (!inf.quote.empty())

@@ -270,7 +270,7 @@ void DungeonRegion::draw_minibars()
 
         ShapeBuffer buff;
 
-        if (!on_screen(you.pos()))
+        if (!you.on_current_level || !on_screen(you.pos()))
             return;
 
         // FIXME: to_screen_coords could be made into two versions: one

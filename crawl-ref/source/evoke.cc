@@ -26,6 +26,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "food.h"
+#include "ghost.h"
 #include "invent.h"
 #include "items.h"
 #include "item_use.h"
@@ -655,25 +656,30 @@ static const pop_entry pop_beasts[] =
   {  4, 13,  100, PEAK, MONS_HOUND },
   {  5, 15,  100, PEAK, MONS_WATER_MOCCASIN },
   {  5, 15,  100, PEAK, MONS_SKY_BEAST },
-  {  8, 18,  100, PEAK, MONS_WAR_DOG },
   {  8, 18,  100, PEAK, MONS_CROCODILE },
   {  8, 18,  100, PEAK, MONS_HOG },
   { 10, 20,  100, PEAK, MONS_ICE_BEAST },
   { 10, 20,  100, PEAK, MONS_YAK },
   { 10, 20,  100, PEAK, MONS_POLAR_BEAR },
   { 10, 20,  100, PEAK, MONS_WYVERN },
-  { 12, 22,  100, PEAK, MONS_ALLIGATOR },
-  { 12, 22,  100, PEAK, MONS_GRIZZLY_BEAR },
-  { 12, 22,  100, PEAK, MONS_WOLF },
-  { 15, 25,  100, PEAK, MONS_ELEPHANT },
-  { 15, 25,  100, PEAK, MONS_GRIFFON },
-  { 15, 25,  100, PEAK, MONS_BLACK_BEAR },
-  { 18, 27,   50, PEAK, MONS_CATOBLEPAS },
-  { 18, 27,  100, PEAK, MONS_DEATH_YAK },
-  { 18, 27,  100, PEAK, MONS_ANACONDA },
-  { 18, 27,   50, PEAK, MONS_RAVEN },
-  { 22, 27,   50, UP,   MONS_DIRE_ELEPHANT },
-  { 24, 27,   25, UP,   MONS_DRAGON },
+  { 10, 20,  100, PEAK, MONS_WOLF },
+  { 11, 22,  100, PEAK, MONS_ALLIGATOR },
+  { 11, 22,  100, PEAK, MONS_GRIZZLY_BEAR },
+  { 11, 22,  100, PEAK, MONS_WARG },
+  { 13, 25,  100, PEAK, MONS_ELEPHANT },
+  { 13, 25,  100, PEAK, MONS_GRIFFON },
+  { 13, 25,  100, PEAK, MONS_BLACK_BEAR },
+  { 15, 27,   50, PEAK, MONS_CATOBLEPAS },
+  { 15, 27,  100, PEAK, MONS_DEATH_YAK },
+  { 16, 27,  100, PEAK, MONS_ANACONDA },
+  { 16, 27,  100, PEAK, MONS_SPIRIT_WOLF },
+  { 16, 27,   50, PEAK, MONS_RAVEN },
+  { 18, 27,   50, UP,   MONS_DIRE_ELEPHANT },
+  { 20, 27,   25, UP,   MONS_DRAGON },
+  { 20, 27,   25, UP,   MONS_ANCIENT_BEAR },
+  { 23, 27,   10, UP,   MONS_APIS },
+  { 23, 27,   10, UP,   MONS_HELLEPHANT },
+  { 23, 27,   10, UP,   MONS_GOLDEN_DRAGON },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -710,6 +716,7 @@ static bool _box_of_beasts(item_def &box)
     }
 
     bool success = false;
+    monster* mons = NULL;
 
     if (!one_chance_in(3))
     {
@@ -734,7 +741,7 @@ static bool _box_of_beasts(item_def &box)
                                  you.pos(),
                                  MHITYOU);
         mg.define_chimera(mon, mon2, mon3);
-        monster* mons = create_monster(mg);
+        mons = create_monster(mg);
         if (mons)
             success = true;
     }
@@ -746,6 +753,13 @@ static bool _box_of_beasts(item_def &box)
         did_god_conduct(DID_CHAOS, random_range(5,10));
         // Decrease charges
         box.plus--;
+        // Let each part announce itself
+        for (int n = 0; n < NUM_CHIMERA_HEADS; ++n)
+        {
+            mons->ghost->acting_part = get_chimera_part(mons, n + 1);
+            handle_monster_shouts(mons, true);
+        }
+        mons->ghost->acting_part = MONS_0;
     }
     else
         // Failed to create monster for some reason
