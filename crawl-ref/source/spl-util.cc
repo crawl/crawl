@@ -1189,6 +1189,9 @@ bool spell_is_useless(spell_type spell, bool transient)
         }
         break;
 
+    case SPELL_DELAYED_FIREBALL:
+        return transient && you.attribute[ATTR_DELAYED_FIREBALL];
+
     default:
         break; // quash unhandled constants warnings
     }
