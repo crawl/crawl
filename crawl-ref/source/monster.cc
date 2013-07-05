@@ -112,6 +112,7 @@ void monster::reset()
     inv.init(NON_ITEM);
     spells.init(SPELL_NO_SPELL);
 
+    mid             = 0;
     flags           = 0;
     experience      = 0;
     type            = MONS_NO_MONSTER;
@@ -129,8 +130,11 @@ void monster::reset()
     damage_friendly = 0;
     damage_total    = 0;
     shield_blocks   = 0;
+    foe_memory      = 0;
+    god             = GOD_NO_GOD;
 
     mons_remove_from_grid(this);
+    target.reset();
     position.reset();
     firing_pos.reset();
     patrol_point.reset();
@@ -143,7 +147,11 @@ void monster::reset()
     // no actual in-game monster should be reset while still constricting
     ASSERT(!constricting);
 
-    client_id = 0;
+    client_id = last_client_id = 0;
+
+    // Just for completeness.
+    speed           = 0;
+    colour          = 0;
 }
 
 void monster::init_with(const monster& mon)
