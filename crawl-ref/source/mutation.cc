@@ -1691,11 +1691,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
         break;
 
-    case MUT_ACUTE_VISION:
-        // We might have to turn autopickup back on again.
-        autotoggle_autopickup(false);
-        break;
-
     case MUT_NIGHTSTALKER:
         update_vision_range();
         break;
@@ -1710,6 +1705,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     default:
         break;
+    }
+
+    // We might have to turn autopickup back on again.
+    if (mutat == MUT_ACUTE_VISION
+        || (mutat == MUT_ANTENNAE && you.mutation[mutat] >= 3))
+    {
+        autotoggle_autopickup(false);
     }
 
     // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
