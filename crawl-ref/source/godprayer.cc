@@ -333,7 +333,7 @@ void pray()
 
         mprf(MSGCH_PRAY,
              "You spend a moment contemplating the meaning of %s.",
-             holi == MH_NONLIVING || holi == MH_UNDEAD ? "existence" : "life");
+             holi == MH_NONLIVING ? "existence" : holi == MH_UNDEAD ? "unlife" : "life");
 
         // Zen meditation is timeless.
         return;
