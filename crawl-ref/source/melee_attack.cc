@@ -565,8 +565,16 @@ bool melee_attack::handle_phase_hit()
             || you.species == SP_DJINNI && ((you.hp - 1)/DJ_MP_RATE) > 0)
         {
             // infusion_power is set when the infusion spell is cast
-            damage_done += 2 + div_rand_round(you.props["infusion_power"].get_int(), 25);
-            dec_mp(1);
+            int dmg = 2 + div_rand_round(you.props["infusion_power"].get_int(), 25);
+            int hurt = defender->apply_ac(dmg);
+
+            dprf(DIAG_COMBAT, "Infusion: dmg = %d hurt = %d", dmg, hurt);
+
+            if (hurt > 0)
+            {
+                damage_done += hurt;
+                dec_mp(1);
+            }
         }
     }
 
