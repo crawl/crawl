@@ -1374,7 +1374,7 @@ struct spell_desc
 
 {
     SPELL_DRAGON_FORM, "Dragon Form",
-     SPTYP_FIRE | SPTYP_TRANSMUTATION,
+     SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      7,
      200,
