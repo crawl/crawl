@@ -1976,13 +1976,13 @@ int exper_value(const monster* mon, bool real)
             case SPELL_SYMBOL_OF_TORMENT:
             case SPELL_ICE_STORM:
             case SPELL_FIRE_STORM:
+            case SPELL_SHATTER:
+            case SPELL_CHAIN_LIGHTNING:
+            case SPELL_TORNADO:
                 diff += 25;
                 break;
 
             case SPELL_LIGHTNING_BOLT:
-            case SPELL_CHAIN_LIGHTNING:
-            case SPELL_BOLT_OF_DRAINING:
-            case SPELL_VENOM_BOLT:
             case SPELL_STICKY_FLAME_RANGE:
             case SPELL_DISINTEGRATE:
             case SPELL_HAUNT:
@@ -1992,9 +1992,10 @@ int exper_value(const monster* mon, bool real)
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_IRON_SHOT:
             case SPELL_IOOD:
-            case SPELL_TELEPORT_SELF:
-            case SPELL_TELEPORT_OTHER:
-            case SPELL_PORKALATOR:
+            case SPELL_FIREBALL:
+            case SPELL_HASTE:
+            case SPELL_AGONY:
+            case SPELL_LRD:
                 diff += 10;
                 break;
 
