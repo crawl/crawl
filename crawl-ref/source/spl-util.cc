@@ -486,11 +486,7 @@ bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 //jmf: next two for simple bit handling
 unsigned int get_spell_disciplines(spell_type spell)
 {
-    unsigned int dis = _seekspell(spell)->disciplines;
-    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
-        dis &= (~SPTYP_FIRE);
-
-    return dis;
+    return (_seekspell(spell)->disciplines);
 }
 
 int count_bits(unsigned int bits)
