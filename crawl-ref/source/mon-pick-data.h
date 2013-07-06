@@ -829,7 +829,7 @@ static const pop_entry pop_zot[] =
   { -4,  5,  334, UP,   MONS_BONE_DRAGON },
   {  1,  5,  192, UP,   MONS_GHOST_MOTH },
   {  2,  8,   52, SEMI, MONS_KILLER_KLOWN },
-  {  1,  5,   89, UP,   MONS_CURSE_TOE },
+  {  1,  5,  150, UP,   MONS_CURSE_TOE },
   {  1, 11,  367, SEMI, MONS_GOLDEN_DRAGON },
   {  2,  5,   75, UP,   MONS_GUARDIAN_MUMMY },
   { 0,0,0,FLAT,MONS_0 }
