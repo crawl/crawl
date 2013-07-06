@@ -1738,7 +1738,12 @@ string get_item_description(const item_def &item, bool verbose,
     ostringstream description;
 
     if (!dump)
-        description << uppercase_first(item.name(DESC_INVENTORY_EQUIP)) << ".";
+    {
+        string name = item.name(DESC_INVENTORY_EQUIP);
+        if (!in_inventory(item))
+            name = uppercase_first(name);
+        description << name << ".";
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!dump)
