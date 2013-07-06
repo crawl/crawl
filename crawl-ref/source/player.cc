@@ -4405,15 +4405,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.
     // Section 2: levels  6-13, second derivative is exponential/doubling.
-    // Section 3: levels 14-27, second derivative is constant at 6000.
-    //
-    // Section three is constant so we end up with high levels at about
-    // their old values (level 27 at 850k), without delta2 ever decreasing.
-    // The values that are considerably different (ie level 13 is now 29000,
-    // down from 41040 are because the second derivative goes from 9040 to
-    // 1430 at that point in the original, and then slowly builds back
-    // up again).  This function smoothes out the old level 10-15 area
-    // considerably.
+    // Section 3: levels 14-27, second derivative is constant at 8470.
 
     // Here's a table:
     //
@@ -4431,21 +4423,21 @@ unsigned int exp_needed(int lev, int exp_apt)
     //  10        3910     1930     960
     //  11        7760     3850    1920
     //  12       15450     7690    3840
-    //  13       29000    13550    5860
-    //  14       48500    19500    5950
-    //  15       74000    25500    6000
-    //  16      105500    31500    6000
-    //  17      143000    37500    6000
-    //  18      186500    43500    6000
-    //  19      236000    49500    6000
-    //  20      291500    55500    6000
-    //  21      353000    61500    6000
-    //  22      420500    67500    6000
-    //  23      494000    73500    6000
-    //  24      573500    79500    6000
-    //  25      659000    85500    6000
-    //  26      750500    91500    6000
-    //  27      848000    97500    6000
+    //  13       26895    11445    5860
+    //  14       45585    18690    7245
+    //  15       72745    27160    8470
+    //  16      108375    35630    8470
+    //  17      152475    44100    8470
+    //  18      205045    52570    8470
+    //  19      266085    61040    8470
+    //  20      335595    69510    8470
+    //  21      413575    77980    8470
+    //  22      500025    86450    8470
+    //  23      594945    94920    8470
+    //  24      698335    103390   8470
+    //  25      810195    111860   8470
+    //  26      930525    120330   8470
+    //  27     1059325    128800   8470
 
 
     switch (lev)
