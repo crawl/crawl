@@ -831,7 +831,6 @@ static const pop_entry pop_zot[] =
   {  2,  8,   52, SEMI, MONS_KILLER_KLOWN },
   {  1,  5,  150, UP,   MONS_CURSE_TOE },
   {  1, 11,  367, SEMI, MONS_GOLDEN_DRAGON },
-  {  2,  5,   75, UP,   MONS_GUARDIAN_MUMMY },
   { 0,0,0,FLAT,MONS_0 }
 };
 
