@@ -1,0 +1,79 @@
+# keymap with working vi keys for colemak keyboards
+
+bindkey = [h] CMD_MOVE_LEFT
+bindkey = [n] CMD_MOVE_DOWN
+bindkey = [e] CMD_MOVE_UP
+bindkey = [i] CMD_MOVE_RIGHT
+bindkey = [j] CMD_MOVE_UP_LEFT
+bindkey = [l] CMD_MOVE_UP_RIGHT
+bindkey = [b] CMD_MOVE_DOWN_LEFT
+bindkey = [k] CMD_MOVE_DOWN_RIGHT
+
+bindkey = [H] CMD_RUN_LEFT
+bindkey = [N] CMD_RUN_DOWN
+bindkey = [E] CMD_RUN_UP
+bindkey = [I] CMD_RUN_RIGHT
+bindkey = [J] CMD_RUN_UP_LEFT
+bindkey = [L] CMD_RUN_UP_RIGHT
+bindkey = [B] CMD_RUN_DOWN_LEFT
+bindkey = [K] CMD_RUN_DOWN_RIGHT
+
+bindkey = [h] CMD_TARGET_LEFT
+bindkey = [n] CMD_TARGET_DOWN
+bindkey = [e] CMD_TARGET_UP
+bindkey = [i] CMD_TARGET_RIGHT
+bindkey = [j] CMD_TARGET_UP_LEFT
+bindkey = [l] CMD_TARGET_UP_RIGHT
+bindkey = [b] CMD_TARGET_DOWN_LEFT
+bindkey = [k] CMD_TARGET_DOWN_RIGHT
+
+bindkey = [H] CMD_TARGET_DIR_LEFT
+bindkey = [N] CMD_TARGET_DIR_DOWN
+bindkey = [E] CMD_TARGET_DIR_UP
+bindkey = [I] CMD_TARGET_DIR_RIGHT
+bindkey = [J] CMD_TARGET_DIR_UP_LEFT
+bindkey = [L] CMD_TARGET_DIR_UP_RIGHT
+bindkey = [B] CMD_TARGET_DIR_DOWN_LEFT
+bindkey = [K] CMD_TARGET_DIR_DOWN_RIGHT
+
+bindkey = [h] CMD_MAP_MOVE_LEFT
+bindkey = [n] CMD_MAP_MOVE_DOWN
+bindkey = [e] CMD_MAP_MOVE_UP
+bindkey = [i] CMD_MAP_MOVE_RIGHT
+bindkey = [j] CMD_MAP_MOVE_UP_LEFT
+bindkey = [l] CMD_MAP_MOVE_UP_RIGHT
+bindkey = [b] CMD_MAP_MOVE_DOWN_LEFT
+bindkey = [k] CMD_MAP_MOVE_DOWN_RIGHT
+
+bindkey = [H] CMD_MAP_JUMP_LEFT
+bindkey = [N] CMD_MAP_JUMP_DOWN
+bindkey = [E] CMD_MAP_JUMP_UP
+bindkey = [I] CMD_MAP_JUMP_RIGHT
+bindkey = [J] CMD_MAP_JUMP_UP_LEFT
+bindkey = [L] CMD_MAP_JUMP_UP_RIGHT
+bindkey = [B] CMD_MAP_JUMP_DOWN_LEFT
+bindkey = [K] CMD_MAP_JUMP_DOWN_RIGHT
+
+bindkey = [^H] CMD_OPEN_DOOR_LEFT
+bindkey = [^N] CMD_OPEN_DOOR_DOWN
+bindkey = [^E] CMD_OPEN_DOOR_UP
+bindkey = [^I] CMD_OPEN_DOOR_RIGHT
+bindkey = [^J] CMD_OPEN_DOOR_UP_LEFT
+bindkey = [^L] CMD_OPEN_DOOR_UP_RIGHT
+bindkey = [^B] CMD_OPEN_DOOR_DOWN_LEFT
+bindkey = [^K] CMD_OPEN_DOOR_DOWN_RIGHT
+
+# replace (e) with (u)
+bindkey = [u] CMD_EAT
+bindkey = [u] CMD_TARGET_EXCLUDE
+bindkey = [u] CMD_MAP_EXCLUDE_AREA
+bindkey = [U] CMD_EXPERIENCE_CHECK
+bindkey = [U] CMD_MAP_FIND_EXCLUDED
+bindkey = [^U] CMD_TOGGLE_TRAVEL_SPEED
+bindkey = [^U] CMD_MAP_CLEAR_EXCLUDES
+
+# replace (i) with (y)
+bindkey = [y] CMD_DISPLAY_INVENTORY
+bindkey = [Y] CMD_DISPLAY_SPELLS
+bindkey = [Y] CMD_MAP_FIND_STASH
+bindkey = [^Y] CMD_AUTOFIGHT
