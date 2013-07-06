@@ -1520,4 +1520,6 @@
   {"You can cling to walls.", "", ""},
   {"You feel sticky.", "", ""},
   {"You feel slippery.", "", ""},
+
+  "cling"
 }
