@@ -2313,7 +2313,7 @@ int player_movement_speed(bool ignore_burden)
 
     // armour
     if (you.run())
-        mv -= 2;
+        mv -= 1;
     if (!you.suppressed())
         mv += 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
