@@ -5609,7 +5609,7 @@ void handle_player_drowning(int delay)
                 div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
                                 * delay,
                                 BASELINE_DELAY * 10);
-            ouch(dam, NON_MONSTER, KILLED_BY_WATER);
+            ouch(dam, mons->mindex(), KILLED_BY_WATER);
             mpr("Your lungs strain for air!", MSGCH_WARN);
         }
     }

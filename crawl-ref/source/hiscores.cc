@@ -1175,7 +1175,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_ROLLING
-            || death_type == KILLED_BY_SPINES)
+            || death_type == KILLED_BY_SPINES
+            || death_type == KILLED_BY_WATER)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != MONS_NO_MONSTER)
     {
@@ -2064,7 +2065,15 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (race == SP_MUMMY)
             desc += terse? "fell apart" : "Soaked and fell apart";
         else
-            desc += terse? "drowned" : "Drowned";
+        {
+            if (!death_source_name.empty())
+            {
+                desc += terse? "drowned by " : "Drowned by ";
+                desc += death_source_name;
+            }
+            else
+                desc += terse? "drowned" : "Drowned";
+        }
         break;
 
     case KILLED_BY_STUPIDITY:
