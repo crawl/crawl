@@ -549,33 +549,35 @@ ENDMAP
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
 DEPTH:  D:8-18, Lair:2-
+KPROP:  '*|1 = no_rtele_into
 KMONS:  1 = lindwurm
 KITEM:  1 = *
-SUBST:  ' : ..'l
-SUBST:  ' = ..l
+SUBST:  L : ..Ll
+SUBST:  L = ..l
+SUBST:  ' = .
 MAP
-     .....''.....
-   ....'''ll'''....
-  ...''llllllll''...
- ...'llllllllllll'...
- ..'llllllllllllll'..
-..'llllllllllllllll'..
-..'llllll....llllll'..
-.'lllll...xx...lllll'.
-.'lllll..xxxx..lllll'.
-.'llll..x.1*.x..llll'.
-'lllll.xx*||1xx.lllll'
-'lllll.xx1||*xx.lllll'
-.'llll..x.*1.x..llll'.
-.'lllll..xxxx..lllll'.
-.'lllll...xx...lllll'.
-..'llllll....llllll'..
-..'llllllllllllllll'..
- ..'llllllllllllll'..
- ...'llllllllllll'...
-  ...''llllllll''...
-   ....'''ll'''....
-     .....''.....
+     .....LL.....
+   ....LLLllLLL....
+  ...LLllllllllLL...
+ ...LllllllllllllL...
+ ..LllllllllllllllL..
+..LllllllllllllllllL..
+..Lllllll''''llllllL..
+.Llllll'''xx'''lllllL.
+.Llllll''xxxx''lllllL.
+.Lllll''x'1*'x''llllL.
+Llllll'xx*||1xx'lllllL
+Llllll'xx1||*xx'lllllL
+.Lllll''x'*1'x''llllL.
+.Llllll''xxxx''lllllL.
+.Llllll'''xx'''lllllL.
+..Lllllll''''llllllL..
+..LllllllllllllllllL..
+ ..LllllllllllllllL..
+ ...LllllllllllllL...
+  ...LLllllllllLL...
+   ....LLLllLLL....
+     .....LL.....
 ENDMAP
 
 NAME:  pond
