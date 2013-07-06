@@ -1280,6 +1280,12 @@ dancing weapon
 
 A weapon enchanted to dance through the air and attack under its own power.
 %%%%
+deathcap
+
+A noxious and deadly fungus suffused with negative energy. While parasitic in
+life, undeath has granted it the ability to absorb its nutrients directly from
+the life force of others.
+%%%%
 death cob
 
 A dreadful undead cob of maize. Look, this one was probably a mistake. We're
