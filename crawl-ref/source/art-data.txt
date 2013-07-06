@@ -986,7 +986,7 @@ BOOL:     evil, seeinv, fly, special
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
-PLUS:     +3
+PLUS:     +4
 TILE:     urand_lightning_scales
 TILE_EQ:  lightning_scales
 COLOUR:   ETC_ELECTRICITY
