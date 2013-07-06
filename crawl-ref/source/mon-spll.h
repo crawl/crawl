@@ -1036,12 +1036,12 @@
     // too much time crawling around.
     {  MST_CURSE_TOE,
       {
-       SPELL_SUMMON_UNDEAD,
+       SPELL_SYMBOL_OF_TORMENT,
        SPELL_SUMMON_MUSHROOMS, // fungal theme
        SPELL_SUMMON_MUSHROOMS,
        SPELL_SYMBOL_OF_TORMENT,
-       SPELL_SUMMON_UNDEAD,
-       SPELL_SYMBOL_OF_TORMENT
+       SPELL_SUMMON_MUSHROOMS,
+       SPELL_NO_SPELL
       }
     },
 
