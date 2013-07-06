@@ -3219,7 +3219,7 @@ struct spell_desc
     SPELL_SONG_OF_SHIELDING, "Song of Shielding",
      SPTYP_CHARMS,
      SPFLAG_BATTLE,
-     5,
+     4,
      100,
      -1, -1,
      0,
