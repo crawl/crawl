@@ -1750,6 +1750,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         return (mon->props.exists("brothers_count")
                 && mon->props["brothers_count"].get_int() >= 2);
 
+    case SPELL_SUMMON_MUSHROOMS:
+        return (mon->get_foe() == NULL);
+
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         if (mon->friendly() && mon->foe == MHITYOU)
@@ -4122,19 +4125,34 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
+    case SPELL_SUMMON_MUSHROOMS:   // Summon a ring of icky crawling fungi.
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(2) + random2(mons->hit_dice / 4 + 1);
-
+        sumcount2 = 2 + random2(mons->hit_dice / 4 + 1);
         duration  = min(2 + mons->hit_dice / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
         {
+            // Attempt to place adjacent to target first, and only at a wider
+            // radius if no adjacent spots can be found
+            coord_def empty;
+            find_habitable_spot_near(mons->get_foe()->pos(),
+                                     MONS_WANDERING_MUSHROOM, 1, false, empty);
+            if (empty.origin())
+            {
+                find_habitable_spot_near(mons->get_foe()->pos(),
+                                         MONS_WANDERING_MUSHROOM, 2, false, empty);
+            }
+
+            // Can't find any room, so stop trying
+            if (empty.origin())
+                return;
+
             create_monster(
-                mgen_data(MONS_WANDERING_MUSHROOM, SAME_ATTITUDE(mons),
-                          mons, duration, spell_cast, mons->pos(),
-                          mons->foe, 0, god));
+                mgen_data(one_chance_in(3) ? MONS_DEATHCAP
+                                           : MONS_WANDERING_MUSHROOM,
+                          SAME_ATTITUDE(mons), mons, duration, spell_cast,
+                          empty, mons->foe, MG_FORCE_PLACE, god));
         }
         return;
 

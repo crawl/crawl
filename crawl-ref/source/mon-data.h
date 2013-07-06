@@ -2679,16 +2679,15 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
-// Curse toes move at half the speed with which they attack.
 {
     MONS_CURSE_TOE, 'z', YELLOW, "curse toe",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
     mrd(MR_RES_ELEC, 2) | MR_RES_HELLFIRE | MR_RES_COLD,
     0, 60, MONS_LICH, MONS_CURSE_TOE, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 0, 0, 77 },
-    50, 1, MST_CURSE_TOE, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN,
-    I_HIGH, HT_LAND, FL_LEVITATE, 12, MOVE_ENERGY(20),
+    { 14, 0, 0, 100 },
+    25, 1, MST_CURSE_TOE, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN,
+    I_HIGH, HT_LAND, FL_LEVITATE, 7, ACTION_ENERGY(7),
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
