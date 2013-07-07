@@ -591,7 +591,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_BOLT_OF_DRAINING:      // negative energy
         beam.name     = "bolt of negative energy";
-        beam.damage   = dice_def(3, 6 + power / 13);
+        beam.damage   = dice_def(3, 9 + power / 13);
         beam.colour   = DARKGREY;
         beam.flavour  = BEAM_NEG;
         beam.hit      = 16 + power / 35;
