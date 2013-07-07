@@ -311,15 +311,7 @@ int cast_selective_amnesia(string *pre_msg)
     if (pre_msg)
         mpr(pre_msg->c_str());
 
-    const int ep_gain = spell_mana(spell);
     del_spell_from_memory_by_slot(slot);
-
-    if (ep_gain > 0)
-    {
-        inc_mp(ep_gain);
-        mpr("The spell releases its latent energy back to you as "
-            "it unravels.");
-    }
 
     return 1;
 }
