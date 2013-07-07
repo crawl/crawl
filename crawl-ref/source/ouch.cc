@@ -234,15 +234,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         hurted = resist_adjust_damage(&you, flavour, player_prot_life(),
                                       hurted, true);
 
-        // TSO's protection.
-        if (you.religion == GOD_SHINING_ONE)
-        {
-            int unhurted = min(hurted, (you.piety * hurted) / 150);
-
-            if (unhurted > original - hurted)
-                hurted = original - unhurted;
-        }
-
         if (doEffects)
             drain_exp(true, min(75, 25 + original * 3 / 4));
         break;
@@ -799,21 +790,7 @@ bool drain_exp(bool announce_full, int power)
         return false;
     }
 
-    // TSO's protection.
-    if (you.religion == GOD_SHINING_ONE && you.piety > (protection == 1 ? 75
-                                                       : protection == 2 ? 112
-                                                                         : 0))
-    {
-        unsigned int undrained = min(power, (you.piety * power) / 150);
-
-        if (undrained > 0)
-        {
-            simple_god_message(" protects your life force!");
-            if (undrained > 0)
-                power -= undrained;
-        }
-    }
-    else if (protection > 0)
+    if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
