@@ -580,7 +580,7 @@ bool melee_attack::handle_phase_hit()
     }
 
     bool stop_hit = false;
-    // Check if some hit-effect killed the monster.  We muse
+    // Check if some hit-effect killed the monster.
     if (attacker->is_player())
         stop_hit = !player_monattk_hit_effects();
 
