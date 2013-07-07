@@ -1027,11 +1027,6 @@ ring of flight
 
 这个戒指能让佩戴者飞行。
 %%%%
-ring of life protection
-
-这个神圣戒指保护其佩戴者的生命能量不受负能量攻击的影响
-，从而强化佩戴者对不死生物的吸能攻击以及吸能法术的抗性。
-%%%%
 ring of magical power
 
 佩戴这个戒指会增加佩戴者的魔力储量。
@@ -1039,6 +1034,11 @@ ring of magical power
 ring of poison resistance
 
 这个戒指保护佩戴者不受毒药和毒液攻击的影响。
+%%%%
+ring of positive energy
+
+这个神圣戒指保护其佩戴者的生命能量不受负能量攻击的影响
+，从而强化佩戴者对不死生物的吸能攻击以及吸能法术的抗性。
 %%%%
 ring of protection
 

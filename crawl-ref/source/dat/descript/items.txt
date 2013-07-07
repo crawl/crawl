@@ -1880,16 +1880,6 @@ ring of flight:quote
 
 <ring:quote>
 %%%%
-ring of life protection
-
-This blessed ring protects the life-force of its wearer from negative energy,
-making them partially immune to the draining effects of undead and necromantic
-magic.
-%%%%
-ring of life protection:quote
-
-<ring:quote>
-%%%%
 ring of magical power
 
 This ring increases its wearer's reserves of magical power.
@@ -1903,6 +1893,16 @@ ring of poison resistance
 This ring provides protection from the effects of poisons and venom.
 %%%%
 ring of poison resistance:quote
+
+<ring:quote>
+%%%%
+ring of positive energy
+
+This blessed ring protects the life-force of its wearer from negative energy,
+making them partially immune to the draining effects of undead and necromantic
+magic.
+%%%%
+ring of positive energy:quote
 
 <ring:quote>
 %%%%

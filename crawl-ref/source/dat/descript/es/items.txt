@@ -1014,12 +1014,6 @@ Este poderoso anillo puede ser activado para ocultar a su portador de la vista
 de los demás, pero incrementa la velocidad de su metabolismo en gran medida
 mientras lo hace.
 %%%%
-ring of life protection
-
-Este anillo bendito protege la fuerza vital de su portador de energías
-negativas, haciéndole parcialmente inmune a los efectos de absorción de vida de
-los no-muertos y de la necromancia.
-%%%%
 ring of magical power
 
 Este anillo incrementa las reservas mágicas de su portador.
@@ -1027,6 +1021,12 @@ Este anillo incrementa las reservas mágicas de su portador.
 ring of poison resistance
 
 Este anillo proporciona protección ante los efectos de los venenos.
+%%%%
+ring of positive energy
+
+Este anillo bendito protege la fuerza vital de su portador de energías
+negativas, haciéndole parcialmente inmune a los efectos de absorción de vida de
+los no-muertos y de la necromancia.
 %%%%
 ring of protection
 

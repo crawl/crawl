@@ -216,7 +216,7 @@ function ice_cave_caverns_undead_demon_loot(e)
   e.item("book of ice / book of unlife / staff of cold / staff of death / \
           randbook disc:ice disc2:necromancy numspells:6 w:2 / nothing w:30")
   e.item("ring of ice / ring of protection from cold / \
-          ring of life protection / wand of cold / wand of draining / \
+          ring of positive energy / wand of cold / wand of draining / \
           any ring w:1 / any wand w:1 / nothing")
 end
 
