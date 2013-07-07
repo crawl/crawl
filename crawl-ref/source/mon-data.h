@@ -265,7 +265,7 @@ static monsterentry mondata[] = {
 },
 
 { // one vault + player transform (Vp ability)
-    MONS_VAMPIRE_BAT, 'b', DARKGREY, "vampire bat",
+    MONS_VAMPIRE_BAT, 'b', MAGENTA, "vampire bat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 8, MONS_BAT, MONS_VAMPIRE_BAT, MH_UNDEAD, -1,
