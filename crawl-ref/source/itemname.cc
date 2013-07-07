@@ -730,7 +730,7 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_WIZARDRY:              return "ring of wizardry";
     case RING_MAGICAL_POWER:         return "ring of magical power";
     case RING_FLIGHT:                return "ring of flight";
-    case RING_LIFE_PROTECTION:       return "ring of life protection";
+    case RING_LIFE_PROTECTION:       return "ring of positive energy";
     case RING_PROTECTION_FROM_MAGIC: return "ring of protection from magic";
     case RING_FIRE:                  return "ring of fire";
     case RING_ICE:                   return "ring of ice";

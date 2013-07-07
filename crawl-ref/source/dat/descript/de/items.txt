@@ -1556,12 +1556,6 @@ ring of flight
 
 Dieser Ring erlaubt seinem Träger zu fliegen.
 %%%%
-ring of life protection
-
-Dieser selige Ring schützt die Lebenskraft seines Trägers von der negativen
-Energie, sie teilweise geschützt zu den abfließenden Effekten der untoten und
-necromantic Magie machend.
-%%%%
 ring of magical power
 
 Dieser Ring erhöht die Magiereserven seines Trägers.
@@ -1569,6 +1563,12 @@ Dieser Ring erhöht die Magiereserven seines Trägers.
 ring of poison resistance
 
 Dieser Ring liefert Schutz vor den Effekten von Vergiftung und Gift.
+%%%%
+ring of positive energy
+
+Dieser selige Ring schützt die Lebenskraft seines Trägers von der negativen
+Energie, sie teilweise geschützt zu den abfließenden Effekten der untoten und
+necromantic Magie machend.
 %%%%
 ring of protection
 
