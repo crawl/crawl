@@ -2472,6 +2472,26 @@ ccB.+.T.+.Bcc
       @
 ENDMAP
 
+NAME:   gammafunk_temple_overflow_claw
+TAGS:   temple_overflow_generic_3
+SUBST:  l : lw
+KMASK:  lw = no_monster_gen
+MAP
+  ...........
+ ..cc..c..cc..
+..cc..ccc..cc..
+.ccc..ccc..ccc.
+.ccc.ccccc.ccc.
+.ccccccGcccccc.
+.ccGB..B..BGcc.
+..ccl.....lcc..
+..ccll...llcc..
+ ..ccll.llcc..
+  ..ccl.lcc..
+   ..cc+cc..
+    ...@...
+ENDMAP
+
 NAME:   grunt_temple_overflow_cloverleaf
 TAGS:   temple_overflow_generic_4 transparent
 SUBST:  T : T U:1 V:1
