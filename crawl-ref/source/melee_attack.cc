@@ -2360,11 +2360,7 @@ void melee_attack::drain_defender()
     special_damage = 1 + random2(damage_done)
                          / (2 + defender->res_negative_energy());
 
-    if (defender->drain_exp(attacker,
-                            weapon
-                              ? weapon->name(DESC_PLAIN, false, true).c_str()
-                              : NULL,
-                            true))
+    if (defender->drain_exp(attacker, true, 15 + min(35, damage_done)))
     {
         if (defender->is_player())
             obvious_effect = true;

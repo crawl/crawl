@@ -592,8 +592,7 @@ public:
     void confuse(actor *, int strength);
     void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
-    bool drain_exp(actor *, const char *aux = NULL, bool quiet = false,
-                   int pow = 3);
+    bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,

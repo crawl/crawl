@@ -1767,15 +1767,11 @@ void MiscastEffect::_necromancy(int severity)
             you_msg      = "You are engulfed in negative energy!";
             mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
 
-            if (lethality_margin == 0 || you.experience > 0
-                || !avoid_lethal(you.hp))
+            if (one_chance_in(3))
             {
-                if (one_chance_in(3))
-                {
-                    do_msg();
-                    target->drain_exp(act_source, cause.c_str());
-                    break;
-                }
+                do_msg();
+                target->drain_exp(act_source, false, 100);
+                break;
             }
 
             // If we didn't do anything, just flow through...
@@ -1846,13 +1842,9 @@ void MiscastEffect::_necromancy(int severity)
             you_msg      = "You are engulfed in negative energy!";
             mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
 
-            if (lethality_margin == 0 || you.experience > 0
-                || !avoid_lethal(you.hp))
-            {
-                do_msg();
-                target->drain_exp(act_source, cause.c_str());
-                break;
-            }
+            do_msg();
+            target->drain_exp(act_source, false, 100);
+            break;
 
             // If we didn't do anything, just flow through if it's the player.
             if (target->is_monster() || did_msg)
