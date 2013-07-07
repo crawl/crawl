@@ -6345,7 +6345,7 @@ int player::skill(skill_type sk, int scale, bool real) const
     if (you.attribute[ATTR_XP_DRAIN])
     {
         level = (int) max(0.0, level - you.attribute[ATTR_XP_DRAIN] / 100.0
-                               * (scale + level/30.0));
+                                       * (scale + level/30.0));
     }
 
     return level;
