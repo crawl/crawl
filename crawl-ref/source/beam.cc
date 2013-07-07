@@ -1630,9 +1630,16 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         else
         {
+            hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                          mons->res_negative_energy(),
+                                          hurted);
+
             // Early out if no side effects.
             if (!doFlavouredEffects)
                 return hurted;
+
+            if (original > hurted)
+                simple_monster_message(mons, " resists.");
 
             if (mons->observable())
                 pbolt.obvious_effect = true;
