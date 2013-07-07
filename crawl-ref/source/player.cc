@@ -7014,7 +7014,16 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
                  bool cleanup_dead, bool attacker_effects)
 {
     // We ignore cleanup_dead here.
-    if (agent->is_monster())
+    if (!agent)
+    {
+        // FIXME: This can happen if a deferred_damage_fineff does damage
+        // to a player from a dead monster.  We should probably not do that,
+        // but it could be tricky to fix, so for now let's at least avoid
+        // a crash even if it does mean funny death messages.
+        ouch(amount, NON_MONSTER, KILLED_BY_MONSTER, "",
+             false, "posthumous revenge", attacker_effects);
+    }
+    else if (agent->is_monster())
     {
         const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
