@@ -306,6 +306,12 @@ void init_monster_symbols()
         }
     }
 
+    // Let those follow the feature settings, unless specifically overridden.
+    monster_symbols[MONS_ANIMATED_TREE].glyph = get_feat_symbol(DNGN_TREE);
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+        if (mons_genus(mc) == MONS_STATUE)
+            monster_symbols[mc].glyph = get_feat_symbol(DNGN_GRANITE_STATUE);
+
     for (map<monster_type, cglyph_t>::iterator it = Options.mon_glyph_overrides.begin();
          it != Options.mon_glyph_overrides.end(); ++it)
     {
