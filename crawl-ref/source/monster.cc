@@ -4144,10 +4144,8 @@ god_type monster::deity() const
     return god;
 }
 
-bool monster::drain_exp(actor *agent, const char *aux, bool quiet, int pow)
+bool monster::drain_exp(actor *agent, bool quiet, int pow)
 {
-    UNUSED(aux);
-
     if (x_chance_in_y(res_negative_energy(), 3))
         return false;
 
@@ -4155,17 +4153,17 @@ bool monster::drain_exp(actor *agent, const char *aux, bool quiet, int pow)
         mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
-    hurt(agent, 2 + random2(pow), BEAM_NEG, !quiet);
+    hurt(agent, 2 + random2(3), BEAM_NEG, !quiet);
 
     if (alive())
     {
-        if (x_chance_in_y(pow, 15))
+        if (x_chance_in_y(1, 5))
         {
             hit_dice--;
             experience = 0;
         }
 
-        max_hit_points -= 2 + random2(pow);
+        max_hit_points -= 2 + random2(3);
         hit_points = min(max_hit_points, hit_points);
     }
 

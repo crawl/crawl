@@ -3106,6 +3106,25 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     }
 
     recharge_elemental_evokers(exp_gained);
+
+    if (you.attribute[ATTR_XP_DRAIN])
+    {
+        int loss = div_rand_round(exp_gained * 3,
+                                  calc_skill_cost(you.skill_cost_level));
+
+        // Make it easier to recover from very heavy levels of draining
+        // (they're nasty enough as it is)
+        loss = loss * (1 + (you.attribute[ATTR_XP_DRAIN] / 250.0f));
+
+        dprf("Lost %d of %d draining points", loss, you.attribute[ATTR_XP_DRAIN]);
+
+        you.attribute[ATTR_XP_DRAIN] -= loss;
+        if (you.attribute[ATTR_XP_DRAIN] <= 0)
+        {
+            you.attribute[ATTR_XP_DRAIN] = 0;
+            mpr("Your life force feels restored.", MSGCH_RECOVERY);
+        }
+    }
 }
 
 static void _draconian_scale_colour_message()
@@ -6322,6 +6341,12 @@ int player::skill(skill_type sk, int scale, bool real) const
             level = ash_skill_boost(sk, scale);
         }
     }
+    if (you.attribute[ATTR_XP_DRAIN])
+    {
+        level = max(0, ((level * 100) - (you.attribute[ATTR_XP_DRAIN] * scale)
+                         - (you.attribute[ATTR_XP_DRAIN] * scale * level / 300))
+                         / 100);
+    }
 
     return level;
 }
@@ -7060,9 +7085,9 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return true;
 }
 
-bool player::drain_exp(actor *who, const char *aux, bool quiet, int pow)
+bool player::drain_exp(actor *who, bool quiet, int pow)
 {
-    return ::drain_exp(!quiet, who->mindex(), aux);
+    return ::drain_exp(!quiet, pow);
 }
 
 void player::confuse(actor *who, int str)

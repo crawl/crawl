@@ -3284,17 +3284,17 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     else if (coinflip())
     {
         // XP drain effect (25%).
-        if (player_prot_life() < 3 && (nasty || you.experience > 0))
+        if (player_prot_life() < 3)
         {
             if (debug)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, NON_MONSTER, aux.c_str());
-            if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp(true, NON_MONSTER, aux.c_str());
-            if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp(true, NON_MONSTER, aux.c_str());
+            drain_exp(true, 75);
+            if (random2(sever) > 3)
+                drain_exp(true, 75);
+            if (random2(sever) > 3)
+                drain_exp(true, 75);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
