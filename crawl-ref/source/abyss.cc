@@ -996,7 +996,7 @@ const static ProceduralLayout* regularLayouts[] =
     &diamond30, &diamond21, &column2, &column26,
 };
 const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
-    regularLayouts + 4);
+    regularLayouts + ARRAYSZ(regularLayouts));
 const static WorleyLayout worleyL(123456, layout_vec);
 const static RoilingChaosLayout chaosA(8675309, 450);
 const static RoilingChaosLayout chaosB(7654321, 400);
