@@ -1514,6 +1514,7 @@
   "trample resistance"
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_CLING,                               0,  1, false, false, true,
   "cling",
 
@@ -1523,3 +1524,4 @@
 
   "cling"
 }
+#endif
