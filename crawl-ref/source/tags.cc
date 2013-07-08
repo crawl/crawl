@@ -1288,15 +1288,6 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.temp_mutations[j]);
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
-        you.mutation[MUT_TELEPORT_CONTROL] = 0;
-    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
-        you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
-    if (you.species == SP_GARGOYLE)
-        you.mutation[MUT_CLING] = 1;
-#endif
-
     marshallByte(th, you.demonic_traits.size());
     for (j = 0; j < int(you.demonic_traits.size()); ++j)
     {
@@ -2243,6 +2234,15 @@ static void tag_read_you(reader &th)
     }
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;
+
+#if TAG_MAJOR_VERSION == 34
+    if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
+        you.mutation[MUT_TELEPORT_CONTROL] = 0;
+    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
+        you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
+    if (you.species == SP_GARGOYLE)
+        you.mutation[MUT_CLING] = 1;
+#endif
 
     count = unmarshallUByte(th);
     you.demonic_traits.clear();
