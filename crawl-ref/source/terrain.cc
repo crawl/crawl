@@ -1324,7 +1324,6 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                       dungeon_feature_type terrain)
 {
     bool escape = false;
-    bool clinging = false;
     coord_def empty;
 
     if (terrain == DNGN_DEEP_WATER)
@@ -1389,11 +1388,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     if (scramble())
     {
         if (allow_shift)
-        {
-            escape = find_habitable_spot_near(you.pos(), MONS_HUMAN, 1, false, empty)
-                     || you.check_clinging(false);
-            clinging = you.is_wall_clinging();
-        }
+            escape = find_habitable_spot_near(you.pos(), MONS_HUMAN, 1, false, empty);
         else
         {
             // Back out the way we came in, if possible.
@@ -1417,11 +1412,10 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)) || clinging)
+        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)))
         {
             mpr("You manage to scramble free!");
-            if (!clinging)
-                move_player_to_grid(empty, false, false);
+            move_player_to_grid(empty, false, false);
 
             if (terrain == DNGN_LAVA)
                 expose_player_to_element(BEAM_LAVA, 14);

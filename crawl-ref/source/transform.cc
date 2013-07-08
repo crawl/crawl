@@ -570,10 +570,6 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     if (you.species == SP_DJINNI)
         return false;
 
-    // We can only cling for safety if we're already doing so.
-    if (which_trans == TRAN_SPIDER && you.is_wall_clinging())
-        return false;
-
     if (feat == DNGN_LAVA)
         return !form_likes_lava(which_trans);
 
@@ -1125,7 +1121,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             you.stop_being_constricted();
     }
 
-    you.check_clinging(false);
 
     // If we are no longer living, end an effect that afflicts only the living
     if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
@@ -1189,8 +1184,6 @@ void untransform(bool skip_wielding, bool skip_move)
         mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, -5, true,
                      "losing the spider transformation");
-        if (!skip_move)
-            you.check_clinging(false);
         break;
 
     case TRAN_BAT:

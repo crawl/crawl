@@ -204,12 +204,10 @@ static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
     return true;
 }
 
-static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
-                                    bool cling = true)
+static bool _check_moveto_dangerous(const coord_def& p, const string& msg)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
-        || you.airborne() || cling && you.can_cling_to(p)
-        || !is_feat_dangerous(env.grid(p)))
+        || you.airborne() || !is_feat_dangerous(env.grid(p)))
     {
         return true;
     }
@@ -232,12 +230,6 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
 static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
                                   const string &msg)
 {
-    if (you.is_wall_clinging()
-        && (move_verb == "blink" || move_verb == "passwall"))
-    {
-        return _check_moveto_dangerous(p, msg, false);
-    }
-
     if (!need_expiration_warning() && need_expiration_warning(p)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
@@ -315,7 +307,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (is_feat_dangerous(new_grid) && !you.is_wall_clinging())
+    if (is_feat_dangerous(new_grid))
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
@@ -379,28 +371,18 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 you.time_taken *= 13 + random2(8);
                 you.time_taken /= 10;
             }
-            const bool will_cling = you.can_cling_to_walls()
-                                    && cell_is_clingable(you.pos());
 
             if (!feat_is_water(old_feat))
             {
-                if (stepped && will_cling)
-                {
-                    mpr("You slowly cross the shallow water and cling to the "
-                        "wall.");
-                }
-                else
-                {
-                    mprf("You %s the %s water.",
-                         stepped ? "enter" : "fall into",
-                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
-                }
+                mprf("You %s the %s water.",
+                     stepped ? "enter" : "fall into",
+                     new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
             }
 
             if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
                 mpr("You sink to the bottom.");
 
-            if (!feat_is_water(old_feat) && !will_cling)
+            if (!feat_is_water(old_feat))
             {
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
@@ -413,12 +395,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     {
         mprf("You heave yourself high above the %s.", feat_type_name(new_grid));
     }
-
-    const bool was_clinging = you.is_wall_clinging();
-    const bool is_clinging = stepped && you.check_clinging(stepped);
-
-    if (feat_is_water(new_grid) && was_clinging && !is_clinging)
-        _splash();
 
     // Traps go off.
     if (trap_def* ptrap = find_trap(you.pos()))
@@ -439,10 +415,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT_IN_BOUNDS(p);
 
     if (!stepped)
-    {
-        you.clear_clinging();
         tornado_move(p);
-    }
 
     // assuming that entering the same square means coming from above (flight)
     const coord_def old_pos = you.pos();
@@ -3854,12 +3827,6 @@ int check_stealth(void)
             else
                 race_mod = 18;
             break;
-        case SP_GARGOYLE:
-            if (you.is_wall_clinging() && you.form != TRAN_SPIDER)
-              race_mod = 19;
-            else
-              race_mod = 15;
-            break;
         case SP_HALFLING:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
@@ -4346,7 +4313,6 @@ void display_char_status()
         DUR_AFRAID,
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
-        STATUS_CLINGING,
         STATUS_HOVER,
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
@@ -5538,10 +5504,6 @@ void float_player()
 
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
-
-    // The player hasn't actually taken a step, but in this case, we want
-    // neither the message, nor the location effect.
-    you.check_clinging(true);
 }
 
 void fly_player(int pow, bool already_flying)
@@ -5578,15 +5540,12 @@ bool is_hovering()
 {
     return you.species == SP_DJINNI
            && !feat_has_dry_floor(grd(you.pos()))
-           && !you.airborne()
-           && !you.is_wall_clinging();
+           && !you.airborne();
 }
 
 bool djinni_floats()
 {
-    return you.species == SP_DJINNI
-           && you.form != TRAN_TREE
-           && (you.form != TRAN_SPIDER || !you.is_wall_clinging());
+    return you.species == SP_DJINNI && you.form != TRAN_TREE;
 }
 
 static void _end_water_hold()
