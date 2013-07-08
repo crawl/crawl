@@ -954,6 +954,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    // XXX: This seems needed to give proper spellcasting messages, even though
+    //      damage is done via another means
+    case SPELL_FREEZE:
+        beam.flavour    = BEAM_COLD;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1752,6 +1758,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_SUMMON_MUSHROOMS:
         return (mon->get_foe() == NULL);
+
+    case SPELL_FREEZE:
+        return (!foe || !adjacent(mon->pos(), foe->pos()));
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -3154,6 +3163,53 @@ static bool _mons_vampiric_drain(monster *mons)
         }
         if (mtarget->alive())
             print_wounds(mtarget);
+    }
+
+    return true;
+}
+
+static bool _mons_cast_freeze(monster* mons)
+{
+    actor *target = mons->get_foe();
+    if (!target)
+        return false;
+    if (grid_distance(mons->pos(), target->pos()) > 1)
+        return false;
+
+    const int pow = mons->hit_dice * 6;
+
+    const int base_damage = roll_dice(1, 3 + pow / 3);
+    int damage = 0;
+
+    if (target->is_player())
+    {
+        damage = resist_adjust_damage(&you, BEAM_COLD, player_res_cold(),
+                                      base_damage, true);
+    }
+    else
+    {
+        bolt beam;
+        beam.flavour = BEAM_COLD;
+        damage = mons_adjust_flavoured(mons, beam, base_damage);
+    }
+
+    if (you.can_see(target))
+    {
+        mprf("%s %s frozen.", target->name(DESC_THE).c_str(),
+                              target->conj_verb("are").c_str());
+    }
+
+    target->hurt(mons, damage);
+
+    if (target->alive())
+    {
+        target->expose_to_element(BEAM_COLD, damage);
+
+        if (target->is_monster() && target->res_cold() <= 0)
+        {
+            const int stun = (1 - target->res_cold()) * random2(min(7, 2 + pow/12));
+            target->as_monster()->speed_increment -= stun;
+        }
     }
 
     return true;
@@ -4806,6 +4862,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
+
+    case SPELL_FREEZE:
+        _mons_cast_freeze(mons);
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,
