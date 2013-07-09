@@ -1007,10 +1007,12 @@ const static ProceduralLayout* mixedLayouts[] =
 {
     &chaosA, &worleyL, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
 };
-const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
+const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts,
+    mixedLayouts + ARRAYSZ(mixedLayouts));
 const static WorleyLayout layout(4321, mixed_vec);
 const static ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
-const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
+const static vector<const ProceduralLayout*> base_vec(baseLayouts,
+    baseLayouts + ARRAYSZ(baseLayouts));
 const static WorleyLayout baseLayout(314159, base_vec, 5.0);
 const static RiverLayout rivers(1800, baseLayout);
 // This one is not fixed: [0] is a level pulled from the current game
