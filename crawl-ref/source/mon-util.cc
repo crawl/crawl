@@ -1482,7 +1482,7 @@ bool mons_class_is_clingy(monster_type type)
 {
     return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
         || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
-        || type == MONS_DEMONIC_CRAWLER;
+        || type == MONS_DEMONIC_CRAWLER || mons_genus(type) == MONS_GARGOYLE;
 }
 
 bool mons_class_is_animated_weapon(monster_type type)
