@@ -1757,8 +1757,7 @@ A lumpy grey fungus, growing well in the dank underground dungeon.
 %%%%
 gargoyle
 
-A granite statue of a hideous winged and clawed monster, somehow brought
-horribly to life.
+A granite statue of a hideous clawed monster, somehow brought horribly to life.
 %%%%
 ghost moth
 
