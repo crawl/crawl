@@ -5315,6 +5315,9 @@ bool melee_attack::do_knockback(bool trample)
         if (def_monster && mons_is_stationary(def_monster))
             return false; // don't even print a message
 
+        if (mons_genus(def_monster->type) == MONS_GARGOYLE)
+            break;
+
         int size_diff =
             attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
         if (!x_chance_in_y(size_diff + 3, 6))
