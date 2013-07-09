@@ -2111,10 +2111,19 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 {
     int num_orcs = 0;
     int num_holy = 0;
+
+    // In a tracer (actual == false), num_crawlies counts the number of
+    // affected corpses. When actual == true, these count the number of
+    // crawling corpses, macabre masses, and lost corpses, respectively.
     int num_crawlies = 0;
     int num_masses = 0;
     int num_lost = 0;
-    int num_lost_piles = 0;
+
+    // ...and the number of each that were seen by the player.
+    int seen_crawlies = 0;
+    int seen_masses = 0;
+    int seen_lost = 0;
+    int seen_lost_piles = 0;
 
     radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
                        caster->get_los_no_trans());
@@ -2123,6 +2132,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     {
         int num_corpses = 0;
         int total_mass = 0;
+        const bool visible = you.see_cell(*ri);
 
         // Count up number/size of corpses at this location.
         for (stack_iterator si(*ri); si; ++si)
@@ -2161,7 +2171,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (hd <= 0)
         {
             num_lost += num_corpses;
-            num_lost_piles++;
+            if (visible)
+            {
+                seen_lost += num_corpses;
+                seen_lost_piles++;
+            }
             continue;
         }
 
@@ -2191,14 +2205,26 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
             mons->god = god;
 
             if (num_corpses > 1)
+            {
                 ++num_masses;
+                if (visible)
+                    ++seen_masses;
+            }
             else
+            {
                 ++num_crawlies;
+                if (visible)
+                    ++seen_crawlies;
+            }
         }
         else
         {
             num_lost += num_corpses;
-            num_lost_piles++;
+            if (visible)
+            {
+                seen_lost += num_corpses;
+                seen_lost_piles++;
+            }
         }
     }
 
@@ -2209,22 +2235,28 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     if (num_lost + num_crawlies + num_masses == 0)
         return false;
 
-    if (num_lost)
+    if (seen_lost)
+    {
         mprf("%s %s into %s!",
-             _count_article(num_lost, num_crawlies + num_masses == 0),
-             num_lost == 1 ? "corpse collapses" : "corpses collapse",
-             num_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
+             _count_article(seen_lost, seen_crawlies + seen_masses == 0),
+             seen_lost == 1 ? "corpse collapses" : "corpses collapse",
+             seen_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
+    }
 
-    if (num_crawlies > 0)
+    if (seen_crawlies > 0)
+    {
         mprf("%s %s to drag %s along the ground!",
-             _count_article(num_crawlies, num_lost + num_masses == 0),
-             num_crawlies == 1 ? "corpse begins" : "corpses begin",
-             num_crawlies == 1 ? "itself" : "themselves");
+             _count_article(seen_crawlies, seen_lost + seen_masses == 0),
+             seen_crawlies == 1 ? "corpse begins" : "corpses begin",
+             seen_crawlies == 1 ? "itself" : "themselves");
+    }
 
-    if (num_masses > 0)
+    if (seen_masses > 0)
+    {
         mprf("%s corpses meld into %s of writhing flesh!",
-             _count_article(2, num_crawlies + num_lost == 0),
-             num_masses == 1 ? "an agglomeration" : "agglomerations");
+             _count_article(2, seen_crawlies + seen_lost == 0),
+             seen_masses == 1 ? "an agglomeration" : "agglomerations");
+    }
 
     if (num_orcs > 0 && caster->is_player())
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
