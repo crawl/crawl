@@ -6405,7 +6405,8 @@ int player::armour_class() const
         AC += 100 * player_icemail_armour_class();
 
     if (!player_is_shapechanged()
-        || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN)))
+        || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN))
+        || (form == TRAN_STATUE && species == SP_GARGOYLE))
     {
         // Being a lich doesn't preclude the benefits of hide/scales -- bwr
         //
@@ -6432,6 +6433,8 @@ int player::armour_class() const
 
             case SP_GARGOYLE:
                 AC += 400 + 100 * experience_level * 3 / 5;    // max 20
+                if (form == TRAN_STATUE)
+                    AC += 500 + skill(SK_EARTH_MAGIC, 50);
                 break;
 
             default:
