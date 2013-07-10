@@ -216,7 +216,9 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
         case DNGN_EXIT_DUNGEON:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
@@ -245,7 +247,9 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_III:
         // Not a > glyph, but it goes deeper into the abyss.
         case DNGN_ABYSSAL_STAIR:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_DWARVEN_HALL:
+#endif
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:

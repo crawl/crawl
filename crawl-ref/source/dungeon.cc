@@ -783,7 +783,9 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_EXIT_HELL:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -827,7 +829,9 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -5384,13 +5388,6 @@ static dungeon_feature_type _pick_an_altar()
         case BRANCH_CRYPT:
             god = (coinflip() ? GOD_KIKUBAAQUDGHA
                               : GOD_YREDELEMNUL);
-            break;
-
-        case BRANCH_DWARVEN_HALL:
-            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL,
-                                GOD_MAKHLEB,       GOD_TROG,
-                                GOD_CHEIBRIADOS,   GOD_ELYVILON,
-                                GOD_OKAWARU,       -1);
             break;
 
         case BRANCH_ORCISH_MINES: // violent gods (50% chance of Beogh)

@@ -3066,8 +3066,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "gate leading out of Pandemonium";
     case DNGN_TRANSIT_PANDEMONIUM:
         return "gate leading to another region of Pandemonium";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARVEN_HALL:
         return "staircase to the Dwarven Hall";
+#endif
     case DNGN_ENTER_ORCISH_MINES:
         return "staircase to the Orcish Mines";
     case DNGN_ENTER_LAIR:
@@ -3109,7 +3111,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_EXPIRED_PORTAL:
         // should be set whenever used
         return "collapsed entrance";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:

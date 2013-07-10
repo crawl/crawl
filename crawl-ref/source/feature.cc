@@ -443,7 +443,9 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_DWARVEN_HALL:
+#endif
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
@@ -483,7 +485,9 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
