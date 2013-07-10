@@ -6733,6 +6733,9 @@ int player::res_rotting(bool temp) const
     if (temp && (petrified() || form == TRAN_STATUE || form == TRAN_WISP))
         return 3;
 
+    if (species == SP_GARGOYLE)
+        return 3;
+
     if (mutation[MUT_FOUL_STENCH])
         return 1;
 
