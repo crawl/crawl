@@ -299,7 +299,6 @@ ENDMAP
 
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
-TAGS:    dwarf_entry
 MONS:    deep dwarf necromancer / deep dwarf death knight / unborn deep dwarf
 MONS:    shadow wraith / wraith / wight w:5
 FTILE:   12O.+ = floor_sandstone
