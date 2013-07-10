@@ -599,6 +599,23 @@ string describe_mutations(bool center_title)
         break;
     }
 
+    case SP_GARGOYLE:
+    {
+        result += "You are resistant to torment.\n";
+        if (you.experience_level >= 14)
+            result += "You can fly continuously.\n";
+
+        ostringstream num;
+        num << 4 + you.experience_level * 3 / 5;
+        const string acstr = "Your stone body is very resilient (AC +"
+                                 + num.str() + ").";
+
+        result += _annotate_form_based(acstr, player_is_shapechanged()
+                                              && you.form != TRAN_STATUE);
+        break;
+    }
+
+
     default:
         break;
     }
