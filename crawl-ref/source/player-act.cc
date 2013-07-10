@@ -665,13 +665,11 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    if (!can_bleed(false))
+    if (holiness() == MH_UNDEAD)
     {
-        // XXX: This message assumes that you're undead.
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
 
-        // or else you won't notice -- no message here
         return false;
     }
 
