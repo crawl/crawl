@@ -2646,6 +2646,10 @@ static string _status_mut_abilities(int sw)
         mutations.push_back(_dragon_abil("breathe steam"));
         break;
 
+    case SP_GARGOYLE:
+        AC_change += 4 + you.experience_level * 3 / 5;
+        break;
+
     default:
         break;
     }                           //end switch - innate abilities
