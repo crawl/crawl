@@ -592,12 +592,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         mpr("You see sparks fly.");
                     break;
 
-                case SPWPN_ORC_SLAYING:
-                    mpr(player_genus(GENPC_ORCISH)
-                            ? "You feel a sudden desire to commit suicide."
-                            : "You feel a sudden desire to kill orcs!");
-                    break;
-
                 case SPWPN_DRAGON_SLAYING:
                     mpr(player_genus(GENPC_DRACONIAN)
                         || you.form == TRAN_DRAGON

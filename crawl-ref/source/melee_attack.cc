@@ -3149,9 +3149,9 @@ bool melee_attack::apply_damage_brand()
 
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
-            || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ORC_SLAYING
-            || brand == SPWPN_DRAGON_SLAYING || brand == SPWPN_VORPAL
-            || brand == SPWPN_VAMPIRICISM || brand == SPWPN_ANTIMAGIC))
+            || brand == SPWPN_HOLY_WRATH || brand == SPWPN_DRAGON_SLAYING
+            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRICISM
+            || brand == SPWPN_ANTIMAGIC))
     {
         // These brands require some regular damage to function.
         return false;
@@ -3209,22 +3209,6 @@ bool melee_attack::apply_damage_brand()
                 (new lightning_fineff(attacker, pos))->schedule();
         }
 
-        break;
-
-    case SPWPN_ORC_SLAYING:
-        if (is_orckind(defender))
-        {
-            special_damage = 1 + random2(3 * damage_done / 2);
-            if (defender_visible)
-            {
-                special_damage_message =
-                    make_stringf(
-                        "%s %s%s",
-                        defender->name(DESC_THE).c_str(),
-                        defender->conj_verb("convulse").c_str(),
-                        special_attack_punctuation().c_str());
-            }
-        }
         break;
 
     case SPWPN_DRAGON_SLAYING:

@@ -216,7 +216,9 @@ void ghost_demon::init_random_demon()
             // some brands inappropriate (e.g. holy wrath)
         }
         while (brand == SPWPN_HOLY_WRATH
+#if TAG_MAJOR_VERSION == 34
                || brand == SPWPN_ORC_SLAYING
+#endif
                || brand == SPWPN_DRAGON_SLAYING
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_EVASION
