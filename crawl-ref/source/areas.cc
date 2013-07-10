@@ -641,9 +641,6 @@ int monster::halo_radius2() const
         return 64; // highest rank among sentient ones
     case MONS_SHEDU:
         return 10;
-    case MONS_PALADIN: // If a paladin finds the mace of brilliance
-                       // it needs a larger halo
-        return max(4, size);  // mere humans
     case MONS_SILVER_STAR:
         return 40; // dumb but with an immense power
     case MONS_HOLY_SWINE:

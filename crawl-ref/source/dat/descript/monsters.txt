@@ -3105,22 +3105,6 @@ pale draconian
 
 A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
-paladin
-
-A pious armoured warrior fighting in the service of the Shining One.
-%%%%
-paladin:quote
-
-“Now shame to knighthood, brothers!
- Must Summer plead in vain?
- And shall I wait till others
- My crown of sunshine gain?
- Alone this day I ’ll dare the fray,
- Alone the victory win;
- In me my queen shall find, I ween,
- A sturdy paladin.”
-    -Katharine Lee Bates, “The Little Knight in Green”. ca. 1890.
-%%%%
 pandemonium lord
 
 A formidable demon lord inhabiting the endless halls of Pandemonium. Each one

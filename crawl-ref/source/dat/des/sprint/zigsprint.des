@@ -419,7 +419,7 @@ function choose_mset_3(e)
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
-                 apis / paladin / phoenix / shedu band / nothing w:78")
+                 apis / phoenix / shedu band / nothing w:78")
   end
 end
 
@@ -561,7 +561,7 @@ local rnd = crawl.random2(149)
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
-                 apis / paladin / phoenix")
+                 apis / phoenix")
   end
 end
 

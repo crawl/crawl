@@ -2511,8 +2511,8 @@ enum monster_type                      // menv[].type
     MONS_OPHAN,
 #if TAG_MAJOR_VERSION == 34
     MONS_SPIRIT,
-#endif
     MONS_PALADIN,
+#endif
     MONS_APIS,
 
     // Fixed uniques:

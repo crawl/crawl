@@ -1049,7 +1049,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
-    case MONS_PALADIN:
     case MONS_DAEVA:
     case MONS_MENNAS:
         force_item     = true;
@@ -1858,7 +1857,6 @@ static void _give_shield(monster* mon, int level)
 
     switch (mon->type)
     {
-    case MONS_PALADIN:
     case MONS_DAEVA:
     case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
@@ -2173,7 +2171,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
 
-    case MONS_PALADIN:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
     case MONS_DONALD:

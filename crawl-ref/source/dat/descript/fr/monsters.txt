@@ -2014,10 +2014,6 @@ pale draconian
 Un humanoïde recouvert d'écailles avec une queue reptilienne et de petites
 ailes.
 %%%%
-paladin
-
-Un guerrier pieu, en armure, combattant au service du Rayonnant.
-%%%%
 pandemonium lord
 
 Un formidable seigneur démon habitant les halls sans fin du Pandémonium. Chacun

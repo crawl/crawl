@@ -555,10 +555,9 @@ halfling MONS_HALFLING
 demigod MONS_DEMIGOD
 %rim 1
 demonspawn MONS_DEMONSPAWN
-%sdir mon/holy
-paladin MONS_PALADIN
 
 ## Angels ('A')
+%sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
