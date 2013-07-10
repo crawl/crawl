@@ -1504,6 +1504,7 @@
   "petrification resistance"
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_TRAMPLE_RESISTANCE,                  0,  1, false, false, false,
   "trample resistance",
 
@@ -1514,7 +1515,6 @@
   "trample resistance"
 },
 
-#if TAG_MAJOR_VERSION == 34
 { MUT_CLING,                               0,  1, false, false, true,
   "cling",
 

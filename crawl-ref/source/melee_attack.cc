@@ -5290,15 +5290,9 @@ bool melee_attack::do_knockback(bool trample)
 {
     do
     {
-        if (defender->is_player() && you.mutation[MUT_TRAMPLE_RESISTANCE])
-            break;
-
         monster* def_monster = defender->as_monster();
         if (def_monster && mons_is_stationary(def_monster))
             return false; // don't even print a message
-
-        if (def_monster && mons_genus(def_monster->type) == MONS_GARGOYLE)
-            break;
 
         int size_diff =
             attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
