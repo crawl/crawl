@@ -7526,6 +7526,9 @@ bool player::can_bleed(bool allow_tran) const
         return false;
     }
 
+    if (holiness() == MH_NONLIVING)
+        return false;
+
     return true;
 }
 
