@@ -5748,11 +5748,6 @@ reach_type monster::reach_range() const
     return REACH_NONE;
 }
 
-bool monster::can_cling_to_walls() const
-{
-    return mons_can_cling_to_walls(this);
-}
-
 void monster::steal_item_from_player()
 {
     if (confused())

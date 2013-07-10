@@ -56,9 +56,7 @@ int mons_tracking_range(const monster* mon)
 
     if (range)
     {
-        if (mon->can_cling_to_walls())
-            range += 4;
-        else if (mons_is_native_in_branch(mon))
+        if (mons_is_native_in_branch(mon))
             range += 3;
         else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
             range++;
@@ -438,9 +436,7 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    return mons_can_traverse(mons, p) || mons->can_cling_to_walls()
-                                         && cell_is_clingable(pos)
-                                         && cell_can_cling_to(pos, p);
+    return mons_can_traverse(mons, p);
 }
 
 int monster_pathfind::travel_cost(coord_def npos)
@@ -475,9 +471,6 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
         return 2;
 
     const monster_type mt = mons_base_type(mons);
-    const bool ground_level = !mons_airborne(mt, -1, false)
-                              && !(mons->can_cling_to_walls()
-                                   && cell_is_clingable(npos));
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
@@ -505,7 +498,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
 
         // Mechanical traps can be avoided by flying, as can shafts, and
         // tele traps are never traversable anyway.
-        if (knows_trap && ground_level)
+        if (knows_trap && !mons_airborne(mt, -1, false))
             return 2;
     }
 

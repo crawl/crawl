@@ -1362,8 +1362,6 @@ void mons_relocated(monster* mons)
         }
 
     }
-
-    mons->clear_clinging();
 }
 
 // When given either a tentacle end or segment, kills the end and all segments
@@ -3097,8 +3095,6 @@ void change_monster_type(monster* mons, monster_type targetc)
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all(false);
     mons->stop_being_constricted();
-
-    mons->check_clinging(false);
 }
 
 // If targetc == RANDOM_MONSTER, then relpower indicates the desired
@@ -3457,7 +3453,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     }
 
     // Don't move onto dangerous terrain.
-    if (is_feat_dangerous(grd(mons->pos())) && !you.can_cling_to(mons->pos()))
+    if (is_feat_dangerous(grd(mons->pos())))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return false;
@@ -3706,13 +3702,9 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
     if (!monster_habitable_grid(mon, grd(p)))
         return false;
 
-    // Stupid monsters don't pathfind around shallow water
-    // except the clinging ones.
-    if (mon->floundering_at(p)
-        && (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls()))
-    {
+    // Stupid monsters don't pathfind around shallow water.
+    if (mon->floundering_at(p) && mons_intel(mon) >= I_NORMAL)
         return false;
-    }
 
     return true;
 }
@@ -4134,7 +4126,7 @@ int mons_natural_regen_rate(monster* mons)
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
-    // Flying/clinging monsters don't make contact with the terrain.
+    // Flying monsters don't make contact with the terrain.
     if (!mons->ground_level())
         return;
 

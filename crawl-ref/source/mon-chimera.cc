@@ -138,10 +138,7 @@ void ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     else if (mons_flies(&dummy))
         mon->props["chimera_wings"].get_int() = partnum;
 
-    // Check for a legs part. Jumpy behaviour (jumping spiders) should
-    // override normal clinging.
-    if (dummy.is_jumpy()
-        || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
+    if (dummy.is_jumpy() && !mon->props.exists("chimera_legs"))
     {
         ev = dummy.ev;
         mon->props["chimera_legs"].get_int() = partnum;
