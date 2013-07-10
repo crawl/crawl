@@ -380,7 +380,7 @@ vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (can_go_straight(mons, pos, path[i]) && mons_traversable(path[i]))
+        if (can_go_straight(mons, pos, path[i]) && mons_can_traverse(mons, path[i]))
             continue;
         else
         {
@@ -427,16 +427,9 @@ bool monster_pathfind::traversable(const coord_def& p)
     }
 
     if (mons)
-        return mons_traversable(p);
+        return mons_can_traverse(mons, p);
 
     return feat_has_solid_floor(grd(p));
-}
-
-// Checks whether a given monster can pass over a certain position, respecting
-// its preferred habit and capability of flight or opening doors.
-bool monster_pathfind::mons_traversable(const coord_def& p)
-{
-    return mons_can_traverse(mons, p);
 }
 
 int monster_pathfind::travel_cost(coord_def npos)
