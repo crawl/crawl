@@ -64,7 +64,7 @@ function base_monster_setup(e)
            vampire knight / vampire mage / large abomination /\
            spriggan druid / spriggan rider / death cob /\
            hell hound band w:5 / neqoxec / simulacrum / sixfirhy /\
-           chaos spawn / ice devil / sun demon / iron devil / paladin /\
+           chaos spawn / ice devil / sun demon / iron devil /\
            hell hog band w:5 / alligator band w:5 / minotaur")
   e.kmons("D = dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
            very ugly thing band w:5 / sphinx / iron troll /\
@@ -2124,7 +2124,7 @@ KMONS:  c = dragon / ice dragon / shadow dragon / iron dragon w:5 /\
         quicksilver dragon w:5 / golden dragon / swamp dragon /\
         hydra
 KMONS:  C = quicksilver dragon
-KMONS:  d = angel / daeva / cherub / paladin
+KMONS:  d = angel / daeva / cherub
 KMONS:  D = silver star
 NSUBST: + = 1:& / *:v
 SUBST:  1 : a, 2 : A

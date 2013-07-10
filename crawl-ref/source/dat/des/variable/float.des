@@ -3313,7 +3313,7 @@ KMONS:   K = catoblepas / iron golem w:5 / boulder beetle
 KMONS:   L = iron dragon / crystal golem
 KMONS:   M = orc warrior ; long sword ego:holy_wrath / holy swine / \
              merfolk ; trident ego:holy_wrath
-KMONS:   N = paladin / apis / phoenix w:5
+KMONS:   N = apis / phoenix w:5
 KMONS:   O = angel / cherub
 KMONS:   P = hellwing / red devil / hell hound
 KMONS:   Q = hell beast / smoke demon / ynoxinul
