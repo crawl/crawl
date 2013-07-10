@@ -298,6 +298,28 @@ MAP
 ENDMAP
 
 ##############################################################################
+NAME:    blue_anna_dwarven_crypt
+TAGS:    dwarf_entry
+MONS:    deep dwarf necromancer / deep dwarf death knight / unborn deep dwarf
+MONS:    shadow wraith / wraith / wight w:5
+FTILE:   12O.+ = floor_sandstone
+FTILE:   +12O. = floor_limestone
+FTILE:   @ = floor_sandstone
+COLOUR:  12 = yellow
+: crypt_entry(_G)
+MAP
+cccc@cccc
+c1.....1c
+c.ccccc.c
+c.c.2.c.c
+@.c.O.c.@
+c.c...c.c
+c.cc+cc.c
+c1.....1c
+cccc@cccc
+ENDMAP
+
+##############################################################################
 # Crypt arrival vaults
 ##############################################################################
 
