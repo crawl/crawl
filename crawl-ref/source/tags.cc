@@ -2245,8 +2245,8 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
         you.mutation[MUT_TELEPORT_CONTROL] = 0;
-    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
-        you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
+    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0)
+        you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
     if (you.mutation[MUT_CLING] == 1)
         you.mutation[MUT_CLING] = 0;
 #endif
