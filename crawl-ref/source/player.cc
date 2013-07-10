@@ -6430,6 +6430,10 @@ int player::armour_class() const
                 AC += 100 * experience_level / 3;              // max 9
                 break;
 
+            case SP_GARGOYLE:
+                AC += 400 + 100 * experience_level * 3 / 5;    // max 20
+                break;
+
             default:
                 break;
             }
