@@ -836,6 +836,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
         dex       = -2;
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
+        else if (you.species == SP_GARGOYLE)
+            msg = "Your body stiffens and grows ponderous.";
         else
             msg += "a living statue of rough stone.";
         break;
@@ -1202,8 +1204,11 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_STATUE:
         // This only handles lava orcs going statue -> stoneskin.
-        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN))
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+            || you.species == SP_GARGOYLE)
+        {
             mpr("You revert to a slightly less stony form.", MSGCH_DURATION);
+        }
         else if (you.species != SP_LAVA_ORC)
             mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, 2, true,
