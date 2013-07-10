@@ -3946,19 +3946,6 @@ seen anything of the sort before...”
     -Benvenuto Cellini, _Autobiography_. 1563.
      trans. John Addington Symonds, 1187.
 %%%%
-spirit
-
-The soul of a holy creature, reft from its body. It is a slow and timid
-creature, but as something divine it is sure to be under celestial protection.
-%%%%
-spirit:quote
-
-“In ancient tales, O friend, thy spirit dwelt;
- There, from of old, thy childhood passed; and there
- High expectation, high delights and deeds,
- Thy fluttering heart with hope and terror moved.”
-    -Robert Louis Stevenson, “Et Tu In Arcadia Vixisti”, _Underwoods _. 1887.
-%%%%
 spirit wolf
 
 A pale wolf-like apparition rimmed in ethereal light. It is a cunning pack
