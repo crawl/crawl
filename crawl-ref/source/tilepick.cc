@@ -1232,8 +1232,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SILENT_SPECTRE;
     case MONS_LOST_SOUL:
         return TILEP_MONS_LOST_SOUL;
-    case MONS_SPIRIT:
-        return TILEP_MONS_SPIRIT;
 
     // rodents ('r')
     case MONS_RAT:

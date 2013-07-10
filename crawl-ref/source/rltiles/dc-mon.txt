@@ -972,8 +972,6 @@ hungry_ghost MONS_HUNGRY_GHOST
 %sdir mon/unique
 %sdir mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
-%sdir mon/holy
-spirit MONS_SPIRIT
 
 ## Dwarves ('q')
 %sdir mon

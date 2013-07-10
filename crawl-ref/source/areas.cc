@@ -629,8 +629,6 @@ int monster::halo_radius2() const
     // small ones.
     switch (type)
     {
-    case MONS_SPIRIT:
-        return 5;
     case MONS_ANGEL:
         return 26;
     case MONS_CHERUB:

@@ -2429,12 +2429,6 @@ spiny worm
 Un énorme ver noir, son corps segmenté est couvert de plaques hérissées de
 pointes d'une armure chitineuse. Du venin acide coule de sa machoire dentée.
 %%%%
-spirit
-
-L'âme d'une créature sainte, délaissé de son corps. C'est une créature lente et
-timide, mais étant quelque chose de divin, elle doit probablement être sous
-protection céleste.
-%%%%
 spriggan
 
 Un petit humanoïde, ressemblant à un humain ou un elfe en dehors de sa taille.

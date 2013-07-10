@@ -1465,9 +1465,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (montype == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    if (mg.cls == MONS_SPIRIT)
-        mon->add_ench(ENCH_FADING_AWAY);
-
     if (mg.cls == MONS_TOADSTOOL || mg.cls == MONS_PILLAR_OF_SALT)
     {
         // This enchantment is a timer that counts down until death.
