@@ -3171,9 +3171,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
-        // Black draconians get permaflight at XL 14, but they don't get
-        // the tengu movement/evasion bonuses and they don't get temporary
-        // flight before then.
+        // Black draconians and gargoyles get permaflight at XL 14, but they
+        // don't get the tengu movement/evasion bonuses and they don't get
+        // temporary flight before then.
         // Other dracs can mutate big wings whenever for temporary flight.
         _add_talent(talents, ABIL_FLY, check_confused);
     }

@@ -3612,6 +3612,13 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                                             : STAT_INT), 1, false,
                                 "level gain");
                 }
+
+                if (you.experience_level == 14)
+                {
+                    perma_mutate(MUT_BIG_WINGS, 1, "gargoyle growth");
+                    mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
+                }
+
                 break;
 
             default:
@@ -6913,7 +6920,8 @@ bool player::permanent_flight() const
 bool player::racial_permanent_flight() const
 {
     return (species == SP_TENGU && experience_level >= 15
-            || species == SP_BLACK_DRACONIAN && experience_level >= 14);
+            || species == SP_BLACK_DRACONIAN && experience_level >= 14
+            || species == SP_GARGOYLE && experience_level >= 14);
 }
 
 bool player::tengu_flight() const

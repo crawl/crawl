@@ -1314,9 +1314,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
         return true;
 
-    // Only Draconians can get wings.
-    if (!player_genus(GENPC_DRACONIAN) && mutat == MUT_BIG_WINGS)
+    // Only Draconians (and gargoyles) can get wings.
+    if (!player_genus(GENPC_DRACONIAN) && you.species != SP_GARGOYLE
+        && mutat == MUT_BIG_WINGS)
+    {
         return true;
+    }
 
     // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
