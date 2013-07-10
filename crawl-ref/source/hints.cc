@@ -1652,8 +1652,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
 #ifdef USE_TILE
-        text << "A small question mark on a stair tile signifies that there "
-                "are items in that position that you may want to check out.";
+        text << "A small symbol on a stair tile signifies that there are "
+                "items in that position that you may want to check out.";
 #else
         text << "If any items are covering stairs or an escape hatch, then "
                 "that will be indicated by highlighting the <w><<</w> or "
@@ -1668,9 +1668,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
 #ifdef USE_TILE
-        text << "A small question mark on an item tile signifies that there "
-                "is at least one other item in the same heap that you may want "
-                "to check out.";
+        text << "A small symbol on an item tile signifies that there is at "
+                "least one other item in the same heap that you may want to "
+                "check out.";
         break;
 #else
         text << "If two or more items are on a single square, then the square "
