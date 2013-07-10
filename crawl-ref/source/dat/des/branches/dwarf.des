@@ -139,29 +139,6 @@ MAP
    ...
 ENDMAP
 
-NAME:    enter_dwarf_6
-TAGS:    dwarf_entry
-MONS:    elf / w:5 deep dwarf / deep dwarf necromancer / \
-         deep dwarf artificer
-MONS:    shadow wraith / wraith / wight w:5 / troll / deep troll w:5 / \
-         deep dwarf necromancer w:2 / deep dwarf artificer w:1
-FTILE:   12O.+ = floor_sandstone
-FTILE:   +12O. = floor_limestone
-FTILE:   @ = floor_sandstone
-COLOUR:  12 = yellow
-KFEAT:   O = enter_dwarven_hall
-MAP
-cccc@cccc
-c1.....1c
-c.ccccc.c
-c.c.2.c.c
-@.c.O.c.@
-c.c...c.c
-c.cc+cc.c
-c1.....1c
-cccc@cccc
-ENDMAP
-
 default-depth:
 
 ## Arrival maps
