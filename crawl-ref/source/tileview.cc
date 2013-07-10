@@ -96,10 +96,12 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_VINES;
         return;
 
+#if TAG_MAJOR_VERSION == 34
     case BRANCH_DWARVEN_HALL:
         flv.wall  = TILE_WALL_HALL;
         flv.floor = TILE_FLOOR_LIMESTONE;
         return;
+#endif
 
     case BRANCH_ELVEN_HALLS:
     case BRANCH_HALL_OF_BLADES:
