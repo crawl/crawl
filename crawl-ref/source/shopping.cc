@@ -1368,10 +1368,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued *= 23;
                 break;
 
-            case SPWPN_ORC_SLAYING:
-                valued *= 21;
-                break;
-
             case SPWPN_VORPAL:
             case SPWPN_PROTECTION:
             case SPWPN_EVASION:

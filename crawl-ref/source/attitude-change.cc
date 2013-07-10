@@ -97,16 +97,6 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
             && random2(you.piety / 15) + random2(4 + you.experience_level / 3)
                  > random2(hd) + hd + random2(5))
         {
-            if (you.weapon()
-                && you.weapon()->base_type == OBJ_WEAPONS
-                && get_weapon_brand(*you.weapon()) == SPWPN_ORC_SLAYING
-                && coinflip()) // 50% chance of conversion failing
-            {
-                msg::stream << mons->name(DESC_THE)
-                            << " flinches from your weapon."
-                            << endl;
-                return;
-            }
             beogh_convert_orc(mons, orc_hit);
             stop_running();
         }

@@ -1541,7 +1541,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     // Melee-only brands.
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
-    case SPWPN_ORC_SLAYING:
     case SPWPN_DRAGON_SLAYING:
     case SPWPN_DRAINING:
     case SPWPN_VAMPIRICISM:
@@ -1734,13 +1733,10 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     if (get_equip_race(item) == ISFLAG_ORCISH
         && !(item_race == MAKE_ITEM_ORCISH && forced_ego))
     {
-        // No orc slaying, and no ego at all half the time.
+        // No ego at all half the time.
         const int brand = get_weapon_brand(item);
-        if (brand == SPWPN_ORC_SLAYING
-            || (brand != SPWPN_NORMAL && !forced_ego && coinflip()))
-        {
+        if (brand != SPWPN_NORMAL && !forced_ego && coinflip())
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
-        }
     }
 }
 
