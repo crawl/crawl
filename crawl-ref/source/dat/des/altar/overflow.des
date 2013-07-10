@@ -1102,6 +1102,28 @@ MAP
    .....
 ENDMAP
 
+NAME:    okawaru_dwarf
+TAGS:    uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
+TAGS:    no_monster_gen no_wall_fixup
+DEPTH:   7-12
+COLOUR:  1 = yellow, ' = yellow, x = white
+MONS:    dwarf
+FTILE:   1'xO = floor_sandstone
+RTILE:   x = wall_tomb
+KFEAT:   _ = altar_okawaru
+: interest_check(_G)
+MAP
+.........
+.xxxxxxx.
+.x1'_'1x.
+.x'''''x.
+.x'x'x'x.
+.xGx'xGx.
+.xxx'xxx.
+....'....
+ENDMAP
+
+
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
