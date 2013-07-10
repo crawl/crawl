@@ -675,13 +675,6 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    if (species == SP_GARGOYLE && petrifying())
-    {
-        if (verbose)
-            mpr("You cannot rage while you turn to stone.");
-        return false;
-    }
-
     // Stasis, but only for identified amulets; unided amulets will
     // trigger when the player attempts to activate berserk,
     // auto-iding at that point, but also killing the berserk and
