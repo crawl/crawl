@@ -1902,9 +1902,8 @@ giant frog:quote
 %%%%
 giant gecko
 
-A lizard with pads on its toes allowing it to cling to walls and ceilings, and
-huge, sharp teeth. It is many times larger than a normal gecko, yet its size
-belies its agility.
+A lizard with huge, sharp teeth. It is many times larger than a normal
+gecko, yet its size belies its agility.
 %%%%
 giant goldfish
 
