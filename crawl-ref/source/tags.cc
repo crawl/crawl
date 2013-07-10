@@ -962,11 +962,18 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
 #endif
 
 #define CANARY     marshallUByte(th, 171)
+#if TAG_MAJOR_VERSION == 34
 #define EAT_CANARY do if (th.getMinorVersion() >= TAG_MINOR_CANARIES    \
                           && unmarshallUByte(th) != 171)                \
                    {                                                    \
                        die("save corrupted: canary gone");              \
                    } while(0)
+#else
+#define EAT_CANARY do if ( unmarshallUByte(th) != 171)                  \
+                   {                                                    \
+                       die("save corrupted: canary gone");              \
+                   } while(0)
+#endif
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.

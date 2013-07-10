@@ -238,6 +238,7 @@ static const pop_entry pop_elf[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+#if TAG_MAJOR_VERSION == 34
 static const pop_entry pop_dwarf[] =
 { // Dwarven Hall
   {  1,  1, 1000, FLAT, MONS_DEEP_DWARF },
@@ -260,6 +261,7 @@ static const pop_entry pop_dwarf[] =
   {  1,  1,    8, FLAT, MONS_PHANTASMAL_WARRIOR },
   { 0,0,0,FLAT,MONS_0 }
 };
+#endif
 
 static const pop_entry pop_lair[] =
 { // Lair
@@ -1161,7 +1163,9 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(temple),
     POP(orc),
     POP(elf),
+#if TAG_MAJOR_VERSION == 34
     POP(dwarf),
+#endif
     POP(lair),
     POP(swamp),
     POP(shoals),
