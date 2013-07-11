@@ -2887,7 +2887,7 @@ wand of confusion:quote
 %%%%
 wand of digging
 
-A magical device which forms tunnels through unworked rock by liquefying it.
+A magical device which drills tunnels through unworked rock.
 %%%%
 wand of digging:quote
 
