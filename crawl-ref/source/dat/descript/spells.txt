@@ -231,7 +231,7 @@ caster's foes (and sometimes with each other!).
 %%%%
 Dig spell
 
-This spell forms tunnels through unworked rock by liquefying it.
+This spell digs a tunnel through unworked rock.
 %%%%
 Disjunction spell
 
