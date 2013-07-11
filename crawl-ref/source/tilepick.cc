@@ -1665,6 +1665,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_POLAR_BEAR;
     case MONS_BLACK_BEAR:
         return TILEP_MONS_BLACK_BEAR;
+    case MONS_ANCIENT_BEAR:
+        return TILEP_MONS_ANCIENT_BEAR;
 
     // vampires ('V')
     case MONS_VAMPIRE:
@@ -4076,6 +4078,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_POLAR_BEAR;
     case MONS_BLACK_BEAR:
         return TILE_CORPSE_BLACK_BEAR;
+    case MONS_ANCIENT_BEAR:
+        return TILE_CORPSE_ANCIENT_BEAR;
 
     // seafood ('X')
     case MONS_OCTOPODE:

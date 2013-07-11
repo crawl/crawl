@@ -196,6 +196,7 @@ sea_snake MONS_SEA_SNAKE
 black_bear MONS_BLACK_BEAR
 grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
+ancient_bear MONS_ANCIENT_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
