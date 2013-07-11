@@ -1449,14 +1449,14 @@ static bool _undead_rot(bool is_beneficial_mutation)
     return you.is_undead;
 }
 
-bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
+int mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool beneficial,
             bool demonspawn, bool no_rot, bool temporary)
 {
     if (which_mutation == RANDOM_BAD_MUTATION
         && crawl_state.disables[DIS_AFFLICTIONS])
     {
-        return true; // no fallbacks
+        return 1; // no fallbacks
     }
 
     if (!god_gift)
@@ -1491,7 +1491,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 if (failMsg)
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
                 maybe_id_resist(BEAM_MALMUTATE);
-                return false;
+                return 0;
             }
         }
 
@@ -1501,7 +1501,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
             simple_god_message(" protects your body from mutation!");
-            return false;
+            return 0;
         }
     }
 
@@ -1510,7 +1510,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     if (_undead_rot(beneficial) && !demonspawn)
     {
         if (no_rot)
-            return false;
+            return 0;
 
         if (temporary)
             lose_stat(STAT_RANDOM, 1, false, reason);
@@ -1529,7 +1529,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             xom_is_stimulated(50);
         }
 
-        return true;
+        return 2;
     }
 
     if (which_mutation == RANDOM_MUTATION
@@ -1542,7 +1542,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             // God gifts override mutation loss due to being heavily
             // mutated.
             if (!one_chance_in(3) && !god_gift && !force_mutation)
-                return false;
+                return 0;
             else
                 return (delete_mutation(RANDOM_MUTATION, reason, failMsg,
                                         force_mutation, false));
@@ -1567,11 +1567,11 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     if (!is_valid_mutation(mutat))
-        return false;
+        return 0;
 
     // [Cha] don't allow teleportitis in sprint
     if (mutat == MUT_TELEPORT && crawl_state.game_is_sprint())
-        return false;
+        return 0;
 
     if (you.species == SP_NAGA)
     {
@@ -1579,7 +1579,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (mutat == MUT_SPIT_POISON)
         {
             if (coinflip())
-                return false;
+                return 0;
 
             mutat = MUT_BREATHE_POISON;
 
@@ -1591,7 +1591,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     if (physiology_mutation_conflict(mutat))
-        return false;
+        return 0;
 
     const mutation_def& mdef = get_mutation_def(mutat);
 
@@ -1609,15 +1609,15 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     break;
                 }
         if (!found)
-            return false;
+            return 0;
     }
 
     // God gifts and forced mutations clear away conflicting mutations.
     int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation, reason, temporary);
     if (rc == 1)
-        return true;
+        return 1;
     if (rc == -1)
-        return false;
+        return 0;
 
     ASSERT(rc == 0);
 
@@ -1759,7 +1759,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     {
         learned_something_new(HINT_NEW_ABILITY_MUT);
     }
-    return true;
+    return 1;
 }
 
 static bool _delete_single_mutation_level(mutation_type mutat,
