@@ -19,6 +19,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "branch.h"
@@ -2359,6 +2360,27 @@ static void _imb_explosion(bolt *parent, coord_def center)
     }
 }
 
+static void _malign_offering_effect(actor* victim, const actor* agent, int damage)
+{
+    if (!agent || damage < 1)
+        return;
+
+    mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
+    damage = victim->hurt(agent, damage, BEAM_NEG);
+
+    for (actor_iterator ai(victim); ai; ++ai)
+    {
+        if (mons_aligned(agent, *ai) && ai->holiness() != MH_NONLIVING)
+        {
+            if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(*ai))
+            {
+                mprf("%s %s healed.", ai->name(DESC_THE).c_str(),
+                                      ai->conj_verb("are").c_str());
+            }
+        }
+    }
+}
+
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
     if (real_flavour == BEAM_CHAOS && feat_is_solid(feat))
@@ -3567,6 +3589,20 @@ void bolt::affect_player_enchantment()
         you.increase_duration(DUR_LOWERED_MR, 12 + random2(18), 50);
         obvious_effect = true;
         break;
+
+    case BEAM_MALIGN_OFFERING:
+    {
+        int dam = resist_adjust_damage(&you, BEAM_NEG, you.res_negative_energy(),
+                                       damage.roll());
+        if (dam)
+        {
+            _malign_offering_effect(&you, agent(), dam);
+            obvious_effect = true;
+        }
+        else
+            canned_msg(MSG_YOU_UNAFFECTED);
+        break;
+    }
 
     default:
         // _All_ enchantments should be enumerated here!
@@ -4781,6 +4817,7 @@ bool bolt::has_saving_throw() const
     case BEAM_ENSLAVE_SOUL:     // has a different saving throw
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
+    case BEAM_MALIGN_OFFERING:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -4827,6 +4864,11 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_SENTINEL_MARK:
         rc = false;
+        break;
+
+    case BEAM_MALIGN_OFFERING:
+        rc = (mon->res_negative_energy(intrinsic_only) < 3);
+        break;
 
     default:
         break;
@@ -5230,6 +5272,19 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
+
+    case BEAM_MALIGN_OFFERING:
+    {
+        int dam = resist_adjust_damage(mon, BEAM_NEG, mon->res_negative_energy(),
+                                       damage.roll());
+        if (dam)
+        {
+            _malign_offering_effect(mon, agent(), dam);
+            obvious_effect = true;
+        }
+        else
+            simple_monster_message(mon, " is unaffected.");
+    }
 
     default:
         break;
@@ -6070,6 +6125,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
     case BEAM_VULNERABILITY:         return "vulnerability";
+    case BEAM_MALIGN_OFFERING:       return "malign offering";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
