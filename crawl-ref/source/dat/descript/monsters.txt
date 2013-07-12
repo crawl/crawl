@@ -1373,7 +1373,7 @@ arcane abilities of destruction, summoning and banishment.
 %%%%
 deep elf summoner
 
-This deep elf is skilled in the summoning of small demons and creatures.
+A deep elf skilled at summoning plagues of insidious vermin.
 %%%%
 deep dwarf
 

@@ -1170,6 +1170,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WALL_OF_BRAMBLES:
     case SPELL_HASTE_PLANTS:
     case SPELL_WIND_BLAST:
+    case SPELL_SUMMON_VERMIN:
         return true;
     default:
         if (check_validity)
@@ -2989,6 +2990,18 @@ static monster_type _pick_undead_summon()
     };
 
     return RANDOM_ELEMENT(undead);
+}
+
+static monster_type _pick_vermin()
+{
+    return random_choose_weighted(8, MONS_ORANGE_RAT,
+                                  3, MONS_SPIDER,
+                                  3, MONS_REDBACK,
+                                  2, MONS_TARANTELLA,
+                                  1, MONS_JUMPING_SPIDER,
+                                  3, MONS_DEMONIC_CRAWLER,
+                                  1, MONS_ROCK_WORM,
+                                  0);
 }
 
 static void _do_high_level_summon(monster* mons, bool monsterNearby,
@@ -4865,6 +4878,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_FREEZE:
         _mons_cast_freeze(mons);
+        return;
+
+    case SPELL_SUMMON_VERMIN:
+        _do_high_level_summon(mons, monsterNearby, spell_cast,
+                              _pick_vermin, random_range(2, 3), god);
         return;
     }
 
