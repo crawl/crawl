@@ -3894,23 +3894,20 @@ int check_stealth(void)
     const item_def *cloak = you.slot_item(EQ_CLOAK, false);
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
 
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
+    if (arm)
     {
-        if (arm)
-        {
-            // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
-            // Now 2 * EP^2 / 3 after EP rescaling.
-            const int ep = -property(*arm, PARM_EVASION);
-            const int penalty = 2 * ep * ep / 3;
-    #if 0
-            dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
-    #endif
-            stealth -= penalty;
-        }
-
-        stealth += you.scan_artefacts(ARTP_STEALTH);
+        // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
+        // Now 2 * EP^2 / 3 after EP rescaling.
+        const int ep = -property(*arm, PARM_EVASION);
+        const int penalty = 2 * ep * ep / 3;
+#if 0
+        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
+#endif
+        stealth -= penalty;
     }
+
+    if (!you.suppressed())
+        stealth += you.scan_artefacts(ARTP_STEALTH);
 
     // Not exactly magical, so not suppressed.
     if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
