@@ -960,6 +960,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_COLD;
         break;
 
+    case SPELL_MALIGN_OFFERING:
+        beam.flavour    = BEAM_MALIGN_OFFERING;
+        beam.damage     = dice_def(2, 7 + (power / 13));
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1416,6 +1422,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_MALIGN_OFFERING:
         if (!foe || _foe_should_res_negative_energy(foe))
             ret = true;
         break;

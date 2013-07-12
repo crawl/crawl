@@ -3255,6 +3255,19 @@ struct spell_desc
 },
 
 {
+    SPELL_MALIGN_OFFERING, "Malign Offering",
+     SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
