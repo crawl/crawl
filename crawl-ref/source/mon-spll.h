@@ -2165,4 +2165,15 @@
       }
     },
 
+    {  MST_DRACONIAN_ZEALOT,
+      {
+       SPELL_SUMMON_DEMON,
+       SPELL_HELLFIRE_BURST,
+       SPELL_MINOR_HEALING,
+       SPELL_SMITING,
+       SPELL_ANIMATE_DEAD,
+       SPELL_MINOR_HEALING
+      }
+    },
+
 #endif
