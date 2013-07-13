@@ -74,7 +74,7 @@ w:20
 ######################################################
 # Library of keywords used for all randart types.
 ######################################################
-# used for god gifts
+# Used for god gifts from C++ side, as "of $GOD's @divine_esteem@".
 divine_esteem
 
 # good
