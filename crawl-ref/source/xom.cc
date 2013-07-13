@@ -1884,7 +1884,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
         {
             if (mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
                        good ? "Xom's grace" : "Xom's mischief",
-                       failMsg, false, true, false, false) != 0)
+                       failMsg, false, true, false, false))
             {
                 rc = true;
             }

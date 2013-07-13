@@ -579,7 +579,7 @@ bool wizard_add_mutation()
     {
         int old_resist = player_mutation_level(MUT_MUTATION_RESISTANCE);
 
-        success = (mutate(mutat, "wizard power", true, force, god_gift) != 0);
+        success = mutate(mutat, "wizard power", true, force, god_gift);
 
         if (old_resist < player_mutation_level(MUT_MUTATION_RESISTANCE)
             && !force)
@@ -655,7 +655,7 @@ bool wizard_add_mutation()
         else if (levels > 0)
         {
             for (int i = 0; i < levels; ++i)
-                if (mutate(mutat, "wizard power", true, force, god_gift) != 0)
+                if (mutate(mutat, "wizard power", true, force, god_gift))
                     success = true;
         }
         else
