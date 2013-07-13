@@ -2994,6 +2994,7 @@ bool is_bad_item(const item_def &item, bool temp)
             return (player_res_poison(false) <= 0
                     || !temp && you.species == SP_VAMPIRE);
         case POT_MUTATION:
+        case POT_BENEFICIAL_MUTATION:
             return (you.is_undead
                     && (temp || you.species != SP_VAMPIRE
                         || you.hunger_state < HS_SATIATED));
@@ -3233,10 +3234,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
-        case POT_BENEFICIAL_MUTATION:
-            return (you.is_undead
-                        && (you.species != SP_VAMPIRE
-                            || temp && you.hunger_state < HS_SATIATED));
 
         case POT_FLIGHT:
             return you.permanent_flight();
