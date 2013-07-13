@@ -7880,7 +7880,7 @@ bool player::made_nervous_by(const coord_def &p)
                         || mi->asleep()
                         || mi->confused()
                         || mi->cannot_act())
-                && see_cell(mi->pos())
+                && you.can_see(*mi)
                 && !mons_is_firewood(*mi)
                 && !mi->neutral())
                 return true;
