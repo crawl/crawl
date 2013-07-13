@@ -1191,6 +1191,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_SIREN;
     case MONS_DRYAD:
         return TILEP_MONS_DRYAD;
+    case MONS_WATER_NYMPH:
+        return TILEP_MONS_WATER_NYMPH;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
@@ -3792,6 +3794,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SIREN;
     case MONS_DRYAD:
         return TILE_CORPSE_DRYAD;
+    case MONS_WATER_NYMPH:
+        return TILE_CORPSE_WATER_NYMPH;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
