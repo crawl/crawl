@@ -932,6 +932,7 @@ mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN
 siren_water MONS_SIREN_WATER
 dryad MONS_DRYAD
+water_nymph MONS_WATER_NYMPH
 %rim 1
 
 ## Rotting monsters ('n')

@@ -190,6 +190,7 @@ merfolk_water CORPSE_MERFOLK
 mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 dryad CORPSE_DRYAD
+water_nymph CORPSE_WATER_NYMPH
 
 ## Rotting monsters ('n')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
