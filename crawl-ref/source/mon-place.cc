@@ -2510,12 +2510,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
-    case MONS_LAMIA:
-        natural_leader = true;
-        band = BAND_LAMIA;
-        band_size = 5 + random2(4);
-        break;
-
     case MONS_VAULT_WARDEN:
         natural_leader = true;
         if (coinflip())
@@ -2954,15 +2948,6 @@ static monster_type _band_member(band_type band, int which)
                                       10, MONS_SPIDER,
                                        2, MONS_DEMONIC_CRAWLER,
                                        0);
-
-    case BAND_LAMIA:
-        if (which <= 2)
-            return MONS_GREATER_NAGA;
-        else
-            return random_choose_weighted( 8, MONS_NAGA_WARRIOR,
-                                          16, MONS_NAGA_MAGE,
-                                          24, MONS_NAGA,
-                                           0);
 
     case BAND_VAULT_WARDEN:
         if (which == 1 || which == 2 && coinflip())
