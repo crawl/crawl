@@ -2995,7 +2995,7 @@ bool is_bad_item(const item_def &item, bool temp)
                     || !temp && you.species == SP_VAMPIRE);
         case POT_MUTATION:
         case POT_BENEFICIAL_MUTATION:
-            return (you.is_undead
+            return (you.is_undead && (temp || you.form != TRAN_LICH)
                     && (temp || you.species != SP_VAMPIRE
                         || you.hunger_state < HS_SATIATED));
         default:
