@@ -645,6 +645,8 @@ int monster::halo_radius2() const
         return 40; // dumb but with an immense power
     case MONS_HOLY_SWINE:
         return 1;  // only notionally holy
+    case MONS_MENNAS:
+        return 4;  // ???  Low on grace or what?
     default:
         return -1;
     }
