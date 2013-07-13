@@ -2131,7 +2131,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         break;
 
     case MONS_ORC_WIZARD:
-    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_KNIGHT:
         book[0] = MST_ORC_WIZARD_I;

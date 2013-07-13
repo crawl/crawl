@@ -1362,10 +1362,6 @@ deep elf priest
 This deep elf is a servant of the ancient dark god of the deep elves, and has
 been granted command of torturous energies by its enigmatic lord.
 %%%%
-deep elf soldier
-
-A common soldier of the deep elves, who knows spells useful in combat.
-%%%%
 deep elf sorcerer
 
 A mighty spellcaster who draws power from the very Hells, and possesses lethal

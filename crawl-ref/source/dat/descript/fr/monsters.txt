@@ -889,11 +889,6 @@ deep elf priest
 Cet elfe profond est un serviteur de l'ancien dieu sombre des elfes profond, et
 a été mis au commandement des énergies tortueuse de son seigneur énigmatique.
 %%%%
-deep elf soldier
-
-Un soldat commun des elfes profonds qui connait quelques sorts utiles en
-combat.
-%%%%
 deep elf sorcerer
 
 Un lanceur de sorts puissant qui tient ses pouvoirs des Enfers, et qui possède

@@ -548,7 +548,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_PRIEST:
-    case MONS_DEEP_ELF_SOLDIER:
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(
@@ -1873,7 +1872,6 @@ static void _give_shield(monster* mon, int level)
         }
         break;
 
-    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
         if (one_chance_in(6))
         {
@@ -2045,7 +2043,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_MAGE:
     case MONS_DEEP_ELF_PRIEST:
-    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_SUMMONER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
