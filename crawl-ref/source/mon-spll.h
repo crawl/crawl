@@ -2176,4 +2176,59 @@
       }
     },
 
+    {  MST_DEEP_ELF_MAGE_I,
+      {
+       SPELL_FREEZE,
+       SPELL_THROW_ICICLE,
+       SPELL_FREEZE,
+       SPELL_SUMMON_ICE_BEAST,
+       SPELL_THROW_ICICLE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_II,
+      {
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_STONE_ARROW,
+       SPELL_NO_SPELL,
+       SPELL_PETRIFY,
+       SPELL_STONE_ARROW,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_III,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_SLOW,
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_BLINK,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_IV,
+      {
+       SPELL_FLAME_TONGUE,
+       SPELL_STICKY_FLAME_RANGE,
+       SPELL_FIREBALL,
+       SPELL_FIREBALL,
+       SPELL_THROW_FLAME,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_V,
+      {
+       SPELL_MAGIC_DART,
+       SPELL_FORCE_LANCE,
+       SPELL_BATTLESPHERE,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BATTLESPHERE,
+       SPELL_NO_SPELL
+      }
+    },
+
 #endif
