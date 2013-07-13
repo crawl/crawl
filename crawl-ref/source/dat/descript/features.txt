@@ -527,11 +527,6 @@ A staircase to the Orcish Mines
 An entrance to the mines of the orcs, filled with their gold, but treacherous
 and easy to get trapped in.
 %%%%
-A staircase to the Dwarven Hall
-
-An entrance to the well-worked hall of the dwarves. You think you can smell
-ale.
-%%%%
 A staircase to the Enchanted Forest
 
 On the other end of these stairs lies the wooded home of spriggans, tengu,
@@ -1092,12 +1087,6 @@ of the water flowing inside.
 A glass window
 
 A pockmarked, ultra-hard glass window.
-%%%%
-# Dwarf
-A granite statue of a fallen hero
-
-A life-size granite statue of a dwarf standing guard in this hall. You can't
-help but feel as though it's watching you.
 %%%%
 # due_jungle_book (Lair:8)
 An elephant-shaped statue
