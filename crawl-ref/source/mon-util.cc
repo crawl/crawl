@@ -2142,7 +2142,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     case MONS_WIZARD:
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
-    case MONS_DEEP_ELF_MAGE:
         book[0] = MST_WIZARD_I;
         book[1] = MST_WIZARD_II;
         book[2] = MST_WIZARD_III;
@@ -2177,6 +2176,14 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[0] = MST_TENGU_REAVER_I;
         book[1] = MST_TENGU_REAVER_II;
         book[2] = MST_TENGU_REAVER_III;
+        break;
+
+    case MONS_DEEP_ELF_MAGE:
+        book[0] = MST_DEEP_ELF_MAGE_I;
+        book[1] = MST_DEEP_ELF_MAGE_II;
+        book[2] = MST_DEEP_ELF_MAGE_III;
+        book[3] = MST_DEEP_ELF_MAGE_IV;
+        book[4] = MST_DEEP_ELF_MAGE_V;
         break;
 
     default:
