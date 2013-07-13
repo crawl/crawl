@@ -2107,11 +2107,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
 
     switch (mon_type)
     {
-    case MONS_DEEP_ELF_CONJURER:
-        book[0] = MST_DEEP_ELF_CONJURER_I;
-        book[1] = MST_DEEP_ELF_CONJURER_II;
-        break;
-
     case MONS_HELL_KNIGHT:
         book[0] = MST_HELL_KNIGHT_I;
         book[1] = MST_HELL_KNIGHT_II;
@@ -2149,12 +2144,11 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         break;
 
     case MONS_DRACONIAN_KNIGHT:
-        book[0] = MST_DEEP_ELF_CONJURER_I;
-        book[1] = MST_DEEP_ELF_CONJURER_II;
-        book[2] = MST_HELL_KNIGHT_I;
-        book[3] = MST_HELL_KNIGHT_II;
-        book[4] = MST_NECROMANCER_I;
-        book[5] = MST_NECROMANCER_II;
+        book[0] = MST_DEEP_ELF_CONJURER;
+        book[1] = MST_HELL_KNIGHT_I;
+        book[2] = MST_HELL_KNIGHT_II;
+        book[3] = MST_NECROMANCER_I;
+        book[4] = MST_NECROMANCER_II;
         break;
 
     case MONS_ANCIENT_CHAMPION:
