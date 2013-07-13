@@ -1428,7 +1428,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
-static bool _undead_rot(bool is_beneficial_mutation)
+bool undead_mutation_rot(bool is_beneficial_mutation)
 {
     if (you.is_undead == US_SEMI_UNDEAD)
     {
@@ -1507,7 +1507,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (_undead_rot(beneficial) && !demonspawn)
+    if (undead_mutation_rot(beneficial) && !demonspawn)
     {
         if (no_rot)
             return false;
@@ -1864,7 +1864,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
         }
 
-        if (_undead_rot(false))
+        if (undead_mutation_rot(false))
             return false;
     }
 
