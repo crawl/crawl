@@ -358,7 +358,7 @@ ORIENT: float
 TAGS:   lair_entry transparent
 MONS:   plant / fungus / nothing
 MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / yak / w:20 nothing
-MONS:   patrolling deep elf soldier
+MONS:   patrolling deep elf fighter
 KFEAT:  O = enter_lair
 SUBST:  D = 1:5 2:2 .
 SUBST:  . = 1:2 2:2 .

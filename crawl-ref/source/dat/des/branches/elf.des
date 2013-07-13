@@ -96,14 +96,14 @@ TAGS:    patrolling
 SHUFFLE: asd/x$+
 SHUFFLE: fgh/x$+
 SUBST:   a = x, s = x, d = x, f = x, g = x, h = x
-MONS:    deep elf soldier
+MONS:    deep elf fighter
 MONS:    deep elf mage / deep elf priest / deep elf summoner w:5
 MAP
 xxxxxxxxxxxxxxxaaa
 xxxxxxxxxxxxxxxasa
 xxxxxxxxxxxxxxxxdx
 x...xxxxx..1.....@
-x.{........G1.G2.x
+x.{........G..G2.x
 x...xxxxx..1.....@
 xxxxxxxxxxxxxxxxhx
 xxxxxxxxxxxxxxxfgf
@@ -116,7 +116,7 @@ NAME:    elf_arrival_002
 PLACE:   Elf:1
 ORIENT:  south
 TAGS:    patrolling
-MONS:    deep elf soldier, deep elf mage
+MONS:    deep elf fighter, deep elf mage
 MAP
 xxxxx@xxx@xxx@xxxxx
 xxxx...........xxxx
@@ -138,7 +138,7 @@ NAME:    eino_elf_arrival_customs
 ORIENT:  southwest
 PLACE:   Elf:1
 TAGS:    patrolling
-MONS:    deep elf soldier / deep elf mage w:5
+MONS:    deep elf fighter / deep elf mage w:5
 MONS:    deep elf summoner / nothing
 MAP
 xxxxxxxxx
@@ -160,7 +160,7 @@ NAME:    eino_elf_arrival_shootout
 PLACE:   Elf:1
 ORIENT:  float
 TAGS:    patrolling
-MONS:    deep elf soldier / deep elf mage w:3 / nothing w:6
+MONS:    deep elf fighter / deep elf mage w:3 / nothing w:6
 MONS:    deep elf mage / deep elf priest w:3 / nothing w:6
 MAP
 xxxxxxxx@@@xxxxxxxx
@@ -185,7 +185,7 @@ PLACE:  Elf:1
 ORIENT: south
 TAGS:   patrolling
 TAGS:   no_monster_gen
-KMONS:  Z = deep elf soldier / nothing w:7
+KMONS:  Z = deep elf fighter / nothing w:7
 KFEAT:  Z = W
 MAP
  .........
@@ -207,7 +207,7 @@ NAME:   eino_elf_arrival_the_gate
 PLACE:  Elf:1
 ORIENT: south
 TAGS:   patrolling
-MONS:   deep elf soldier / deep elf mage w:5
+MONS:   deep elf fighter / deep elf mage w:5
 MONS:   deep elf mage / deep elf priest w:3
 MAP
 x.........x
@@ -234,7 +234,7 @@ PLACE:   Elf:1
 TAGS:    patrolling
 SHUFFLE: 1/2
 KFEAT:   C = altar_vehumet
-MONS:    deep elf soldier, deep elf mage
+MONS:    deep elf fighter, deep elf mage
 MONS:    deep elf priest
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
@@ -299,7 +299,7 @@ NAME:   minmay_elf_arrival_circle
 ORIENT: float
 PLACE:  Elf:1
 TAGS:   patrolling
-MONS:   deep elf soldier / deep elf fighter, deep elf mage / deep elf summoner
+MONS:   deep elf fighter, deep elf mage / deep elf conjurer w:3
 SUBST:  B : b.
 MAP
        xx+xx
@@ -327,7 +327,7 @@ NAME:   minmay_elf_arrival_plus
 ORIENT: float
 PLACE:  Elf:1
 TAGS:   patrolling
-MONS:   deep elf soldier / deep elf fighter / deep elf mage / \
+MONS:   deep elf fighter w:15 / deep elf mage / \
         deep elf summoner / deep elf priest / deep elf conjurer / nothing w:40
 MAP
      x@...@x
@@ -612,8 +612,7 @@ ENDMAP
 NAME:   minmay_elf_archery
 DEPTH:  Elf:2-
 ORIENT: float
-MONS:   deep elf soldier; bow | longbow . arrow / \
-        deep elf fighter; bow | longbow . arrow / nothing
+MONS:   deep elf fighter; bow | longbow . arrow / nothing w:15
 MONS:   deep elf master archer
 MONS:   training dummy tile:mons_training_dummy
 MAP
@@ -631,8 +630,7 @@ ENDMAP
 NAME:    minmay_elf_blademastery
 DEPTH:   Elf:3-
 ORIENT:  float
-MONS:    deep elf soldier; falchion | long sword | scimitar | sabre / \
-         deep elf fighter; falchion | long sword | scimitar | sabre / nothing
+MONS:    deep elf fighter; falchion | long sword | scimitar | sabre / nothing w:15
 MONS:    deep elf blademaster
 MONS:    training dummy tile:mons_training_dummy
 KITEM:   d = long sword race:elven, long sword race:elven / nothing, \
@@ -735,7 +733,7 @@ ENDMAP
 NAME:  guppyfry_elf_castle
 DEPTH: Elf:2-
 TAGS:  mini_float
-MONS:  deep elf soldier / deep elf mage / deep elf knight
+MONS:  deep elf fighter / deep elf mage / deep elf knight
 MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
 MONS:  plant
 SUBST: - = .%*3$
@@ -758,7 +756,7 @@ ENDMAP
 NAME:  guppyfry_elf_garden
 DEPTH: Elf:2-
 TAGS:  mini_float
-MONS:  deep elf soldier / deep elf mage / deep elf priest
+MONS:  deep elf fighter / deep elf mage / deep elf priest
 MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
 MONS:  plant
 SUBST: - = wwWW333ttt..%

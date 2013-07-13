@@ -294,7 +294,7 @@ NAME:   minmay_elf_outpost
 TAGS:   no_rotate
 ORIENT: northwest
 DEPTH:  D:12-20
-MONS:   deep elf soldier / deep elf fighter w:2 / nothing w:5, deep elf knight
+MONS:   deep elf fighter / nothing, deep elf knight
 MONS:   deep elf conjurer / deep elf mage / deep elf summoner / nothing
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -1130,7 +1130,7 @@ KFEAT:  _ = altar_okawaru
 SUBST:  = = nv
 FTILE:  '+Gvc12345_defghijk = floor_hall
 : if you.absdepth() < 16 then
-MONS:   w:5 deep elf soldier / deep elf fighter / orc warrior
+MONS:   deep elf fighter / orc warrior
 MONS:   w:20 orc warrior / centaur warrior
 MONS:   orc warrior
 MONS:   w:8 patrolling orc knight / w:2 patrolling orc warlord
