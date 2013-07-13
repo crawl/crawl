@@ -47,6 +47,9 @@ Lady Luck
 Temptation
 
 False Pretenses
+
+# FIXME: should appear on amulets only
+Yendor
 %%%%
 _suspicion_name_
 
