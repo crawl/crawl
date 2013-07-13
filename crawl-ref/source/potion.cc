@@ -434,6 +434,14 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
 
     case POT_BENEFICIAL_MUTATION:
+        if (undead_mutation_rot(true))
+        {
+            mpr("You feel dead inside.");
+            mutate(RANDOM_GOOD_MUTATION, "potion of beneficial mutation",
+                true, false, false, true);
+            break;
+        }
+
         if (mutate(RANDOM_GOOD_MUTATION, "potion of beneficial mutation",
                true, false, false, true))
         {
