@@ -1952,11 +1952,11 @@ static bool _jiyva_mutate()
     else if (rand < 30)
         return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 55)
-        return (mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true) != 0);
+        return mutate(RANDOM_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 75)
-        return (mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true) != 0);
+        return mutate(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else
-        return (mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true) != 0);
+        return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
 }
 
 bool vehumet_is_offering(spell_type spell)

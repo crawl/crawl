@@ -7532,14 +7532,14 @@ bool player::malmutate(const string &reason)
 
     if (one_chance_in(5))
     {
-        if ((mutate(RANDOM_MUTATION, reason)) != 0)
+        if (mutate(RANDOM_MUTATION, reason))
         {
             learned_something_new(HINT_YOU_MUTATED);
             return true;
         }
     }
 
-    return (mutate(RANDOM_BAD_MUTATION, reason) != 0);
+    return mutate(RANDOM_BAD_MUTATION, reason);
 }
 
 bool player::polymorph(int pow)
