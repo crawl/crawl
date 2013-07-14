@@ -2988,8 +2988,9 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_DECAY:
         case POT_PARALYSIS:
             return true;
-        case POT_POISON:
         case POT_STRONG_POISON:
+            return player_res_poison(false, temp) < 3;
+        case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return (player_res_poison(false) <= 0
                     || !temp && you.species == SP_VAMPIRE);
@@ -3243,11 +3244,12 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_BLOOD_COAGULATED:
             return !can_ingest(item, true, false) || you.species == SP_DJINNI;
         case POT_POISON:
-        case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
             // Spriggans could argue, but it's too small of a gain for
             // possible player confusion.
-            return (player_res_poison(false) > 0);
+            return player_res_poison(false, temp) > 0;
+        case POT_STRONG_POISON:
+            return player_res_poison(false, temp) >= 3;
 
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
