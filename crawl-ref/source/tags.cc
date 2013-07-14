@@ -3441,7 +3441,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.mintel);
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
-    if (mi.mresists && MR_OLD_RES_ACID)
+    if (mi.mresists & MR_OLD_RES_ACID)
         set_resist(mi.mresists, MR_RES_ACID, 3);
 #endif
     unmarshallUnsigned(th, mi.mitemuse);
@@ -4362,7 +4362,7 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.att_flav = static_cast<attack_flavour>(unmarshallShort(th));
     ghost.resists          = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
-    if (ghost.resists && MR_OLD_RES_ACID)
+    if (ghost.resists & MR_OLD_RES_ACID)
         set_resist(ghost.resists, MR_RES_ACID, 3);
 #endif
     ghost.spellcaster      = unmarshallByte(th);
