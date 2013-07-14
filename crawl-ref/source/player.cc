@@ -2911,6 +2911,8 @@ void forget_map(bool rot)
         }
 
         env.map_knowledge(p).clear();
+        if (env.map_forgotten.get())
+            (*env.map_forgotten.get())(p).clear();
         StashTrack.update_stash(p);
 #ifdef USE_TILE
         tile_forget_map(p);

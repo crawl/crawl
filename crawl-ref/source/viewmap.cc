@@ -698,6 +698,21 @@ static level_pos _stair_dest(const coord_def& p, command_type dir)
     return sinf->destination;
 }
 
+static void _unforget_map()
+{
+    ASSERT(env.map_forgotten.get());
+    MapKnowledge &old(*env.map_forgotten.get());
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (!env.map_knowledge(*ri).known()
+            && (!env.map_knowledge(*ri).mapped() || old(*ri).known()))
+        {
+            // Don't overwrite known squares, nor magic-mapped with
+            // magic-mapped data -- what was forgotten is less up to date.
+            env.map_knowledge(*ri) = old(*ri);
+        }
+}
+
 // show_map() now centers the known map along x or y.  This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
@@ -955,13 +970,26 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_FORGET:
-                if (yesno("Really forget level map?", true, 'n'))
                 {
+                    // Merge it with already forgotten data first.
+                    if (env.map_forgotten.get())
+                        _unforget_map();
+                    MapKnowledge *old = new MapKnowledge(env.map_knowledge);
                     forget_map();
+                    env.map_forgotten.reset(old);
                     mpr("Level map cleared.");
                 }
+                break;
+
+            case CMD_MAP_UNFORGET:
+                if (env.map_forgotten.get())
+                {
+                    _unforget_map();
+                    env.map_forgotten.reset();
+                    mpr("Remembered map restored.");
+                }
                 else
-                    canned_msg(MSG_OK);
+                    mpr("No remembered map.");
                 break;
 
             case CMD_MAP_ADD_WAYPOINT:

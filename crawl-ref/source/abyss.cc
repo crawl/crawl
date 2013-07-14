@@ -654,6 +654,8 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     remove_markers_and_listeners_at(p);
 
     env.map_knowledge(p).clear();
+    if (env.map_forgotten.get())
+        (*env.map_forgotten.get())(p).clear();
     StashTrack.update_stash(p);
 }
 
