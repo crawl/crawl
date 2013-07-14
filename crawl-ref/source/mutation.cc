@@ -602,6 +602,7 @@ string describe_mutations(bool center_title)
     case SP_GARGOYLE:
     {
         result += "You are resistant to torment.\n";
+        result += "You are immune to poison.\n";
         if (you.experience_level >= 14)
             result += "You can fly continuously.\n";
 
