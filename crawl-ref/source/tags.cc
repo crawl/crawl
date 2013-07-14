@@ -2825,6 +2825,12 @@ static void tag_construct_level(writer &th)
             marshallInt(th, env.pgrid[count_x][count_y]);
         }
 
+    marshallBoolean(th, !!env.map_forgotten.get());
+    if (env.map_forgotten.get())
+        for (int x = 0; x < GXM; x++)
+            for (int y = 0; y < GYM; y++)
+                marshallMapCell(th, (*env.map_forgotten)[x][y]);
+
     _run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
 
     CANARY;
@@ -3657,7 +3663,22 @@ static void tag_read_level(reader &th)
             env.tgrid[i][j] = NON_ENTITY;
         }
 
-    env.map_forgotten.reset(); // FIXME
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FORGOTTEN_MAP)
+        env.map_forgotten.reset();
+    else
+#endif
+    if (unmarshallBoolean(th))
+    {
+        MapKnowledge *f = new MapKnowledge();
+        for (int x = 0; x < GXM; x++)
+            for (int y = 0; y < GYM; y++)
+                unmarshallMapCell(th, (*f)[x][y]);
+        env.map_forgotten.reset(f);
+    }
+    else
+        env.map_forgotten.reset();
+
     env.grid_colours.init(BLACK);
     _run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
 
