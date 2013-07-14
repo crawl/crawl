@@ -408,6 +408,16 @@ A sealed door
 A door sealed tightly by arcane runes. It refuses to open for any creature not
 recognised by its magic.
 %%%%
+A sealed passage leading down
+
+A descending passage sealed tightly by a magical barricade. Forcing your way
+through it looks impossible, so long as the magic holds.
+%%%%
+A sealed passage leading up
+
+An ascending passage sealed tightly by a magical barricade. Forcing your way
+through it looks impossible, so long as the magic holds.
+%%%%
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?

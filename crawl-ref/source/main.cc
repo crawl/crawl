@@ -1430,6 +1430,11 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                 mpr("There is nothing on the other side of the stone arch.");
             else if (ftype == DNGN_ABANDONED_SHOP)
                 mpr("This shop appears to be closed.");
+            else if (ftype == DNGN_SEALED_STAIRS_UP
+                     || ftype == DNGN_SEALED_STAIRS_DOWN )
+            {
+                mpr("A magical barricade bars your way!");
+            }
             else if (down)
                 mpr("You can't go down here!");
             else

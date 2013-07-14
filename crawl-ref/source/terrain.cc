@@ -1632,6 +1632,9 @@ static const char *dngn_feature_names[] =
 "abyssal_stair",
 "badly_sealed_door",
 #endif
+
+"sealed_stair_down",
+"sealed_stair_up",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)
