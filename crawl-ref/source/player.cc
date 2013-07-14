@@ -1832,7 +1832,8 @@ int player_kiku_res_torment()
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     if (you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
-            : you.is_undead && (temp || you.form != TRAN_LICH))
+            : you.is_undead && (temp || you.form != TRAN_LICH)
+              || you.is_artificial())
     {
         return 3;
     }
