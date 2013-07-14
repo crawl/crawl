@@ -1059,13 +1059,13 @@ static void _update_level_state()
 
     vector<coord_def> golub = find_golubria_on_level();
     if (!golub.empty())
-        env.level_state += LSTATE_GOLUBRIA;
+        env.level_state |= LSTATE_GOLUBRIA;
 
     if (_any_glowing_mold())
-        env.level_state += LSTATE_GLOW_MOLD;
+        env.level_state |= LSTATE_GLOW_MOLD;
     for (monster_iterator mon_it; mon_it; ++mon_it)
         if (mons_allows_beogh(*mon_it))
-            env.level_state += LSTATE_BEOGH;
+            env.level_state |= LSTATE_BEOGH;
 
     env.orb_pos = orb_position();
     if (player_has_orb())
