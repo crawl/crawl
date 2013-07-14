@@ -172,7 +172,8 @@ level-map
 <h>Other</h>
 <w>!</w>      : Annotate level.
 <w>Ctrl-C</w> : Clear item and monster memory.
-<w>Ctrl-F</w> : Forget level map.{{
+<w>Ctrl-F</w> : Forget level map.
+<w>Ctrl-U</w> : Restore forgotten level map.{{
 if you.wizard() then
     return "\n\n"
           .. "<h>Wizard commands</h>\n"

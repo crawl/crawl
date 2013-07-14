@@ -3657,6 +3657,7 @@ static void tag_read_level(reader &th)
             env.tgrid[i][j] = NON_ENTITY;
         }
 
+    env.map_forgotten.reset(); // FIXME
     env.grid_colours.init(BLACK);
     _run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
 

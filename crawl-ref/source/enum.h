@@ -832,6 +832,7 @@ enum command_type
 
     CMD_MAP_HELP,
     CMD_MAP_FORGET,
+    CMD_MAP_UNFORGET,
 
     CMD_MAP_EXIT_MAP,
 
