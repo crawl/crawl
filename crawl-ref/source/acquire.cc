@@ -823,6 +823,11 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         switch (class_wanted)
         {
         case OBJ_FOOD:
+            // Clobber class_wanted for vampires.
+            if (you.species == SP_VAMPIRE)
+                class_wanted = OBJ_POTIONS;
+            // Deliberate fall-through
+        case OBJ_POTIONS: // Should only happen for vampires.
             // set type_wanted and quantity
             _acquirement_determine_food(type_wanted, quantity, already_has);
             break;
@@ -1211,12 +1216,9 @@ int acquirement_create_item(object_class_type class_wanted,
 #define MAX_ACQ_TRIES 40
     for (int item_tries = 0; item_tries < MAX_ACQ_TRIES; item_tries++)
     {
+        // This may clobber class_wanted (e.g. staves/rods, or vampire food)
         int type_wanted = _find_acquirement_subtype(class_wanted, quant,
                                                     divine, agent);
-
-        // Clobber class_wanted for vampires.
-        if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
-            class_wanted = OBJ_POTIONS;
 
         // Don't generate randart books in items(), we do that
         // ourselves.
