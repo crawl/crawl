@@ -1719,7 +1719,7 @@ static bool _seal_doors(const monster* warden)
         }
 
         // Try to seal the door
-        if (grd(*ri) == DNGN_CLOSED_DOOR)
+        if (grd(*ri) == DNGN_CLOSED_DOOR || grd(*ri) == DNGN_RUNED_DOOR)
         {
             set<coord_def> all_door;
             find_connected_identical(*ri, grd(*ri), all_door);
