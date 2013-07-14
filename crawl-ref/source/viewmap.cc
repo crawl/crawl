@@ -704,13 +704,23 @@ static void _unforget_map()
     MapKnowledge &old(*env.map_forgotten.get());
 
     for (rectangle_iterator ri(0); ri; ++ri)
-        if (!env.map_knowledge(*ri).known()
-            && (!env.map_knowledge(*ri).mapped() || old(*ri).known()))
+        if (!env.map_knowledge(*ri).seen() && old(*ri).seen())
         {
             // Don't overwrite known squares, nor magic-mapped with
             // magic-mapped data -- what was forgotten is less up to date.
             env.map_knowledge(*ri) = old(*ri);
         }
+}
+
+static void _forget_map()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (env.map_knowledge(*ri).flags & MAP_VISIBLE_FLAG)
+            continue;
+        env.map_knowledge(*ri).flags &= ~MAP_SEEN_FLAG;
+        env.map_knowledge(*ri).flags |= MAP_MAGIC_MAPPED_FLAG;
+    }
 }
 
 // show_map() now centers the known map along x or y.  This prevents
@@ -975,7 +985,7 @@ bool show_map(level_pos &lpos,
                     if (env.map_forgotten.get())
                         _unforget_map();
                     MapKnowledge *old = new MapKnowledge(env.map_knowledge);
-                    forget_map();
+                    _forget_map();
                     env.map_forgotten.reset(old);
                     mpr("Level map cleared.");
                 }
