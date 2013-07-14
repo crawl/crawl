@@ -1,3 +1,15 @@
+Stone Soup 0.12.3 (not released)
+----------------------------
+* Silver stars deal full damage to unclean monsters, not un-unclean ones.
+* Don't leak unidentified cold resistance on the draconian 'A' screen.
+* Fixed a crash with LRD at the map edge.
+* Arena mode works better with restart_after_game.
+* G ctrl-P (parent branch) doesn't crash in the Dungeon.
+* Local tiles ability icons check for berserk like the 'a' menu always has.
+* The down arrow key works correctly in the webtiles help browser.
+* Player ghosts no longer incorrectly get acid resistance when saved and
+  restored.
+
 Stone Soup 0.12.2 (20130601)
 ----------------------------
 * Fixed multiple issues on big-endian systems.
