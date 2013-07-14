@@ -333,6 +333,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap        = MF_STAIR_DOWN;
             break;
 
+        case DNGN_SEALED_STAIRS_DOWN:
+            f.dchar          = DCHAR_STAIRS_DOWN;
+            f.colour         = LIGHTGREEN;
+            f.map_colour     = LIGHTGREEN;
+            f.minimap        = MF_STAIR_DOWN;
+            break;
+
         case DNGN_ESCAPE_HATCH_UP:
             f.dchar      = DCHAR_STAIRS_UP;
             f.colour     = BROWN;
@@ -348,6 +355,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.map_colour     = GREEN;
             f.em_colour      = WHITE;
             f.seen_em_colour = WHITE;
+            f.minimap        = MF_STAIR_UP;
+            break;
+
+        case DNGN_SEALED_STAIRS_UP:
+            f.dchar          = DCHAR_STAIRS_UP;
+            f.colour         = LIGHTGREEN;
+            f.map_colour     = LIGHTGREEN;
             f.minimap        = MF_STAIR_UP;
             break;
 

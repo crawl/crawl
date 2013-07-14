@@ -3020,6 +3020,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return "stone staircase leading up";
+    case DNGN_SEALED_STAIRS_DOWN:
+        return "sealed passage leading down";
+    case DNGN_SEALED_STAIRS_UP:
+        return "sealed passage leading up";
     case DNGN_EXIT_DUNGEON:
         return "staircase leading out of the dungeon";
     case DNGN_ENTER_HELL:

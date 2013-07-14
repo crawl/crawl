@@ -1411,6 +1411,9 @@ enum dungeon_feature_type
     DNGN_BADLY_SEALED_DOOR,
 #endif
 
+    DNGN_SEALED_STAIRS_UP,
+    DNGN_SEALED_STAIRS_DOWN,
+
     NUM_FEATURES
 };
 
