@@ -3235,6 +3235,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
+            if (you.species == SP_VAMPIRE)
+                return temp && you.hunger_state < HS_SATIATED;
+            if (you.form == TRAN_LICH)
+                return temp;
+            return you.is_undead;
 
         case POT_FLIGHT:
             return you.permanent_flight();
