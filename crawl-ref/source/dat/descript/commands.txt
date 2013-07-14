@@ -310,7 +310,7 @@ Find altars
 %%%%
 CMD_MAP_FIND_ALTAR verbose
 
-Cycle through alters on the current level.
+Cycle through altars on the current level.
 %%%%
 CMD_MAP_FIND_EXCLUDED
 
