@@ -549,12 +549,15 @@ ENDMAP
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
 DEPTH:  D:8-18, Lair:2-
-KPROP:  '*|1 = no_rtele_into
+KPROP:  '*|1> = no_rtele_into
 KMONS:  1 = lindwurm
 KITEM:  1 = *
 SUBST:  L : ..Ll
 SUBST:  L = ..l
 SUBST:  ' = .
+NSUBST: | = 1:> / *:|
+KITEM:  > = |
+KFEAT:  > = escape_hatch_down
 MAP
      .....LL.....
    ....LLLllLLL....
