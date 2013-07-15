@@ -1068,9 +1068,9 @@ struct zap_info
 {
     ZAP_FORCE_LANCE,
     "lance of force",
-    50,
-    new dicedef_calculator<2, 3, 1, 12>,
-    new tohit_calculator<10, 1, 10>,
+    100,
+    new dicedef_calculator<2, 6, 1, 6>,
+    new tohit_calculator<10, 1, 9>,
     CYAN,
     false,
     BEAM_MMISSILE,
@@ -1078,7 +1078,7 @@ struct zap_info
     true,
     false,
     false,
-    3
+    5
 },
 
 {
