@@ -324,7 +324,6 @@ mon_attitude_type mons_attitude(const monster* m);
 
 bool mons_foe_is_mons(const monster* mons);
 
-bool mons_behaviour_perceptible(const monster* mon);
 bool mons_is_native_in_branch(const monster* mons,
                               const branch_type branch = you.where_are_you);
 bool mons_is_poisoner(const monster* mon);
