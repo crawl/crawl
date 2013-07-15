@@ -1317,19 +1317,20 @@ void game_options::add_feature_override(const string &text)
     {
         if (feats[i] >= NUM_FEATURES)
             continue; // TODO: handle other object types.
-        feature_override fov;
-        fov.object.cls = SH_FEATURE;
-        fov.object.feat = feats[i];
-
-        fov.override.symbol         = read_symbol(iprops[0]);
-        fov.override.magic_symbol   = read_symbol(iprops[1]);
-        fov.override.colour         = str_to_colour(iprops[2], BLACK);
-        fov.override.map_colour     = str_to_colour(iprops[3], BLACK);
-        fov.override.seen_colour    = str_to_colour(iprops[4], BLACK);
-        fov.override.em_colour      = str_to_colour(iprops[5], BLACK);
-        fov.override.seen_em_colour = str_to_colour(iprops[6], BLACK);
-
-        feature_overrides.push_back(fov);
+        feature_def &fov(feature_overrides[feats[i]]);
+#define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
+                          fov.field = s;
+#define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
+                          fov.field = c;
+        SYM(0, symbol);
+        SYM(1, magic_symbol);
+        COL(2, colour);
+        COL(3, map_colour);
+        COL(4, seen_colour);
+        COL(5, em_colour);
+        COL(6, seen_em_colour);
+#undef SYM
+#undef COL
     }
 }
 
