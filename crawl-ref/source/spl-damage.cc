@@ -11,6 +11,7 @@
 
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -2807,8 +2808,12 @@ void toxic_radiance_effect(actor* agent, int mult)
                         "by Olgreb's Toxic Radiance", true,
                         agent->as_monster()->name(DESC_A).c_str());
                 }
-                poison_player(agent->is_player() ? 2 : 1, agent->name(DESC_A),
-                              "toxic radiance", agent->is_player());
+                // Wielding the Staff of Olgreb grants immunity to our own OTR
+                if (!agent->is_player() || !player_equip_unrand_effect(UNRAND_OLGREB))
+                {
+                    poison_player(1, agent->name(DESC_A),
+                                  "toxic radiance", agent->is_player());
+                }
             }
             else
             {
