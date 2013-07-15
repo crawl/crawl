@@ -135,12 +135,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     switch (which_god)
     {
-    case GOD_BEOGH:
-        // Orc god: no orc slaying.
-        if (brand == SPWPN_ORC_SLAYING)
-            return false;
-        break;
-
     case GOD_ELYVILON:
         // Peaceful healer god: no berserking.
         if (artefact_wpn_property(item, ARTP_ANGRY)
@@ -708,19 +702,29 @@ static void _get_randart_properties(const item_def &item,
 
     if (aclass == OBJ_WEAPONS) // Only weapons get brands, of course.
     {
+#if TAG_MAJOR_VERSION == 34
         proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(16);        // brand
+#else
+        proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(15);        // brand
+#endif
 
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(2);
 
         if (one_chance_in(6))
-            proprt[ARTP_BRAND] = SPWPN_ORC_SLAYING + random2(5);
+            proprt[ARTP_BRAND] = SPWPN_DRAGON_SLAYING + random2(4);
 
         if (one_chance_in(6))
             proprt[ARTP_BRAND] = SPWPN_VORPAL;
 
         if (proprt[ARTP_BRAND] == SPWPN_PROTECTION || proprt[ARTP_BRAND] == SPWPN_EVASION)
             proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection or evasion
+
+#if TAG_MAJOR_VERSION == 34
+        // orc slaying removed
+        if (proprt[ARTP_BRAND] == SPWPN_ORC_SLAYING)
+            proprt[ARTP_BRAND] = SPWPN_NORMAL;
+#endif
 
         if (is_range_weapon(item))
         {

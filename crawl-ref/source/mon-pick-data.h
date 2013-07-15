@@ -44,7 +44,6 @@ static const pop_entry pop_d[] =
   {  6, 16,  514, SEMI, MONS_GOLIATH_BEETLE },
   {  6, 16,  334, SEMI, MONS_GIANT_SPORE },
   {  6, 16,  826, SEMI, MONS_ORC_WARRIOR },
-  {  8, 14,   25, PEAK, MONS_DEEP_ELF_SOLDIER },
   {  6, 13,  220, SEMI, MONS_BLACK_BEAR },
   {  6, 16,  192, PEAK, MONS_MUMMY },
   {  6, 16,  334, SEMI, MONS_WIGHT },
@@ -212,32 +211,27 @@ static const pop_entry pop_orc[] =
 static const pop_entry pop_elf[] =
 { // Elven Halls (OOD cap: 7)
   {  1,  7, 1000, FLAT, MONS_FUNGUS },
-  {  1,  6,   89, FLAT, MONS_ORC },
-  {  1,  5,   30, FLAT, MONS_ORC_WARRIOR },
-  {  1,  5,   40, FLAT, MONS_ORC_WIZARD },
-  {  1,  4,    8, FLAT, MONS_ORC_KNIGHT },
-  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_SOLDIER },
   {  1,  7, 1000, FLAT, MONS_DEEP_ELF_FIGHTER },
-  {  1,  7, 1000, FLAT, MONS_DEEP_ELF_MAGE },
-  {  1,  7,  849, FLAT, MONS_DEEP_ELF_SUMMONER },
-  {  1,  7,  735, FLAT, MONS_DEEP_ELF_CONJURER },
-  {  1,  6,  136, FLAT, MONS_SHAPESHIFTER },
-  {  1,  5,    8, PEAK, MONS_ORC_PRIEST },
-  {  1,  5,    8, PEAK, MONS_ORC_HIGH_PRIEST },
-  {  1,  6,   25, SEMI, MONS_ORC_SORCERER },
-  {  1,  7,  923, FLAT, MONS_DEEP_ELF_KNIGHT },
-  {  1,  7,  402, FLAT, MONS_DEEP_ELF_PRIEST },
-  {  1,  6,   25, SEMI, MONS_GLOWING_SHAPESHIFTER },
-  {  1,  7,   25, PEAK, MONS_DEEP_ELF_HIGH_PRIEST },
-  {  0,  8,   66, PEAK, MONS_DEEP_ELF_DEMONOLOGIST },
-  {  1,  7,   40, PEAK, MONS_DEEP_ELF_ANNIHILATOR },
-  {  0,  8,   66, PEAK, MONS_DEEP_ELF_SORCERER },
-  {  1,  7,   40, PEAK, MONS_DEEP_ELF_DEATH_MAGE },
-  {  6,  7,    4, UP,   MONS_DEEP_ELF_BLADEMASTER },
-  {  6,  7,    4, UP,   MONS_DEEP_ELF_MASTER_ARCHER },
+  {  1,  7, 1200, FLAT, MONS_DEEP_ELF_MAGE },
+  {  1,  7,  650, FLAT, MONS_DEEP_ELF_SUMMONER },
+  {  1,  7,  780, FLAT, MONS_DEEP_ELF_CONJURER },
+  {  1,  6,  150, FLAT, MONS_SHAPESHIFTER },
+  {  1,  5,   50, FLAT, MONS_ORC_HIGH_PRIEST },
+  {  1,  6,   50, FLAT, MONS_ORC_SORCERER },
+  {  1,  7,  925, FLAT, MONS_DEEP_ELF_KNIGHT },
+  {  1,  7,  350, FLAT, MONS_DEEP_ELF_PRIEST },
+  {  1,  6,   65, SEMI, MONS_GLOWING_SHAPESHIFTER },
+  {  1,  7,   40, SEMI, MONS_DEEP_ELF_HIGH_PRIEST },
+  {  1,  8,   65, SEMI, MONS_DEEP_ELF_DEMONOLOGIST },
+  {  1,  7,   40, SEMI, MONS_DEEP_ELF_ANNIHILATOR },
+  {  1,  8,   65, SEMI, MONS_DEEP_ELF_SORCERER },
+  {  0,  7,   45, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
+  {  6,  7,   10, UP,   MONS_DEEP_ELF_BLADEMASTER },
+  {  6,  7,   10, UP,   MONS_DEEP_ELF_MASTER_ARCHER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
+#if TAG_MAJOR_VERSION == 34
 static const pop_entry pop_dwarf[] =
 { // Dwarven Hall
   {  1,  1, 1000, FLAT, MONS_DEEP_DWARF },
@@ -260,6 +254,7 @@ static const pop_entry pop_dwarf[] =
   {  1,  1,    8, FLAT, MONS_PHANTASMAL_WARRIOR },
   { 0,0,0,FLAT,MONS_0 }
 };
+#endif
 
 static const pop_entry pop_lair[] =
 { // Lair
@@ -829,9 +824,8 @@ static const pop_entry pop_zot[] =
   { -4,  5,  334, UP,   MONS_BONE_DRAGON },
   {  1,  5,  192, UP,   MONS_GHOST_MOTH },
   {  2,  8,   52, SEMI, MONS_KILLER_KLOWN },
-  {  1,  5,   89, UP,   MONS_CURSE_TOE },
+  {  1,  5,  150, UP,   MONS_CURSE_TOE },
   {  1, 11,  367, SEMI, MONS_GOLDEN_DRAGON },
-  {  2,  5,   75, UP,   MONS_GUARDIAN_MUMMY },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1162,7 +1156,9 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(temple),
     POP(orc),
     POP(elf),
+#if TAG_MAJOR_VERSION == 34
     POP(dwarf),
+#endif
     POP(lair),
     POP(swamp),
     POP(shoals),

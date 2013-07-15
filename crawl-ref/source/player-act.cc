@@ -665,20 +665,11 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    if (!can_bleed(false))
+    if (holiness() == MH_UNDEAD)
     {
-        // XXX: This message assumes that you're undead.
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
 
-        // or else you won't notice -- no message here
-        return false;
-    }
-
-    if (species == SP_GARGOYLE && petrifying())
-    {
-        if (verbose)
-            mpr("You cannot rage while you turn to stone.");
         return false;
     }
 
@@ -765,12 +756,6 @@ bool player::can_jump() const
 bool player::berserk() const
 {
     return (duration[DUR_BERSERK]);
-}
-
-bool player::can_cling_to_walls() const
-{
-    return (player_mutation_level(MUT_CLING)
-        || form == TRAN_SPIDER);
 }
 
 bool player::is_web_immune() const

@@ -244,7 +244,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 psyche / w:1 joseph",
                 "w:30 place:Orc / orc wizard / orc warrior / w:3 orc knight /\
                     orc priest / orc high priest w:1 / blork the orc w:3 / urug w:1",
-                "w:2 place:Elf / deep elf fighter / deep elf soldier / deep elf priest /\
+                "w:2 place:Elf / deep elf fighter / deep elf priest /\
                     w:2 deep elf conjurer / w:2 deep elf summoner",
                 "place:Lair / sheep / w:5 yak / w:5 crocodile / w:3 basilisk /\
                     w:1 death yak / green rat / orange rat / porcupine",
@@ -441,7 +441,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "wraith / wight / phantasmal warrior / plague shambler / skeletal warrior /\
                     vampire / ghoul / mummy / flayed ghost / bone dragon / death cob /\
                     profane servitor",
-                "paladin / vault guard / necromancer / hell knight / wizard /\
+                "vault guard / necromancer / hell knight / wizard /\
                     killer klown",
                 "base draconian / w:1 nonbase draconian",
                 "golden eye / shining eye / giant eyeball / eye of devastation /\
@@ -497,7 +497,7 @@ function arena_sprint_get_monster_set(round, boss)
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
                     unborn deep dwarf w:5 / place:Tar:7 w:40",
                 "daeva / angel / cherub / w:5 pearl dragon / ophan / \
-                    w:5 silver star / apis / w:20 paladin",
+                    w:5 silver star / apis",
                 -- Misc
                 "centaur warrior",
                 "yaktaur / yaktaur captain",
@@ -508,7 +508,7 @@ function arena_sprint_get_monster_set(round, boss)
                     golden dragon / quicksilver dragon / iron dragon / w:1 xtahua",
                 "glowing shapeshifter",
                 "hell knight w:20 / w:1 margery",
-                "paladin / vault guard / necromancer / hell knight / wizard /\
+                "vault guard / necromancer / hell knight / wizard /\
                     killer klown",
                 "base draconian / w:5 nonbase draconian",
                 "golden eye / shining eye / giant eyeball / eye of devastation /\
@@ -574,7 +574,7 @@ function arena_sprint_get_monster_set(round, boss)
                     deep elf death mage / ancient lich /\
                     unborn deep dwarf w:5 / place:Tar:7 w:40",
                 "daeva / angel / cherub / pearl dragon / ophan / \
-                    silver star / apis / paladin",
+                    silver star / apis",
                 -- Misc
                 "yaktaur captain",
                 "lich / ancient lich",
@@ -650,7 +650,7 @@ function arena_sprint_get_monster_set(round, boss)
                     deep elf death mage / ancient lich /\
                     unborn deep dwarf w:5",
                 "daeva / angel / cherub / pearl dragon w:20 / ophan /\
-                    silver star w:20 / apis / paladin",
+                    silver star w:20 / apis",
                 -- Misc
                 "deep elf master archer",
                 "ancient lich",

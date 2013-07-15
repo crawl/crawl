@@ -654,6 +654,8 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     remove_markers_and_listeners_at(p);
 
     env.map_knowledge(p).clear();
+    if (env.map_forgotten.get())
+        (*env.map_forgotten.get())(p).clear();
     StashTrack.update_stash(p);
 }
 
@@ -996,7 +998,7 @@ const static ProceduralLayout* regularLayouts[] =
     &diamond30, &diamond21, &column2, &column26,
 };
 const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
-    regularLayouts + 5);
+    regularLayouts + ARRAYSZ(regularLayouts));
 const static WorleyLayout worleyL(123456, layout_vec);
 const static RoilingChaosLayout chaosA(8675309, 450);
 const static RoilingChaosLayout chaosB(7654321, 400);
@@ -1007,10 +1009,12 @@ const static ProceduralLayout* mixedLayouts[] =
 {
     &chaosA, &worleyL, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
 };
-const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
+const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts,
+    mixedLayouts + ARRAYSZ(mixedLayouts));
 const static WorleyLayout layout(4321, mixed_vec);
 const static ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
-const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
+const static vector<const ProceduralLayout*> base_vec(baseLayouts,
+    baseLayouts + ARRAYSZ(baseLayouts));
 const static WorleyLayout baseLayout(314159, base_vec, 5.0);
 const static RiverLayout rivers(1800, baseLayout);
 // This one is not fixed: [0] is a level pulled from the current game

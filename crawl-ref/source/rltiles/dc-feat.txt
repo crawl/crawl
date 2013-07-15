@@ -258,6 +258,8 @@ enter DNGN_ENTER
 %rim 1
 return DNGN_RETURN
 %rim 0
+sealed_stairs_up DNGN_SEALED_STAIRS_UP
+sealed_stairs_down DNGN_SEALED_STAIRS_DOWN
 
 %sdir dngn/shops
 ##enter_shop DNGN_ENTER_SHOP

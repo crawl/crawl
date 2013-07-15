@@ -532,6 +532,10 @@ Might Other priest cast
 
 @The_monster@ calls upon @possessive_God@ to strengthen @target@.
 %%%%
+Malign Offering priest cast
+
+@The_monster@ utters a dark prayer and points at @target@.
+%%%%
 priest cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.

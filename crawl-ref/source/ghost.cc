@@ -63,6 +63,7 @@ static spell_type search_order_conj[] = {
     SPELL_FORCE_LANCE,
     SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
+    SPELL_FREEZE,
     SPELL_PAIN,
     SPELL_STING,
     SPELL_SHOCK,
@@ -216,7 +217,9 @@ void ghost_demon::init_random_demon()
             // some brands inappropriate (e.g. holy wrath)
         }
         while (brand == SPWPN_HOLY_WRATH
+#if TAG_MAJOR_VERSION == 34
                || brand == SPWPN_ORC_SLAYING
+#endif
                || brand == SPWPN_DRAGON_SLAYING
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_EVASION

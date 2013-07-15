@@ -57,8 +57,10 @@ enum monster_info_flags
     MB_NAME_REPLACE, // [art] foo does
     MB_NAME_UNQUALIFIED, // Foo does...
     MB_NAME_THE, // The foo does....
+#if TAG_MAJOR_VERSION == 34
     MB_FADING_AWAY,
     MB_MOSTLY_FADED,
+#endif
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
     MB_ATTACHED,
@@ -67,7 +69,9 @@ enum monster_info_flags
     MB_BLIND,
     MB_DUMB,
     MB_MAD,
+#if TAG_MAJOR_VERSION == 34
     MB_CLINGING,
+#endif
     MB_NAME_ZOMBIE,
     MB_PERM_SUMMON,
     MB_INNER_FLAME,

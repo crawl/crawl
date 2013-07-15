@@ -196,6 +196,7 @@ sea_snake MONS_SEA_SNAKE
 black_bear MONS_BLACK_BEAR
 grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
+ancient_bear MONS_ANCIENT_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
@@ -212,12 +213,13 @@ apis MONS_APIS
 
 ### Elemental monsters
 %sdir mon/nonliving
-earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
-fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
-water_elemental MONS_WATER_ELEMENTAL /*'#'*/
-air_elemental MONS_AIR_ELEMENTAL /*'#'*/
+earth_elemental MONS_EARTH_ELEMENTAL
+fire_elemental MONS_FIRE_ELEMENTAL
+water_elemental MONS_WATER_ELEMENTAL
+air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
 %rim 0
+wellspring MONS_ELEMENTAL_WELLSPRING
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
 fire_vortex3
@@ -555,10 +557,9 @@ halfling MONS_HALFLING
 demigod MONS_DEMIGOD
 %rim 1
 demonspawn MONS_DEMONSPAWN
-%sdir mon/holy
-paladin MONS_PALADIN
 
 ## Angels ('A')
+%sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
@@ -847,7 +848,6 @@ fannar MONS_FANNAR
 %sdir mon
 elf MONS_ELF
 deep_elf_fighter MONS_DEEP_ELF_FIGHTER
-deep_elf_soldier MONS_DEEP_ELF_SOLDIER
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
 deep_elf_mage MONS_DEEP_ELF_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
@@ -932,6 +932,7 @@ mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN
 siren_water MONS_SIREN_WATER
 dryad MONS_DRYAD
+water_nymph MONS_WATER_NYMPH
 %rim 1
 
 ## Rotting monsters ('n')
@@ -972,8 +973,6 @@ hungry_ghost MONS_HUNGRY_GHOST
 %sdir mon/unique
 %sdir mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
-%sdir mon/holy
-spirit MONS_SPIRIT
 
 ## Dwarves ('q')
 %sdir mon

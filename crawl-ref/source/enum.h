@@ -297,6 +297,7 @@ enum attribute_type
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
+    ATTR_XP_DRAIN,             // Severity of current skill drain
     NUM_ATTRIBUTES
 };
 
@@ -384,7 +385,8 @@ enum beam_type                  // bolt::flavour
     BEAM_SENTINEL_MARK,
     BEAM_DIMENSION_ANCHOR,
     BEAM_VULNERABILITY,
-    BEAM_LAST_ENCHANTMENT = BEAM_VULNERABILITY,
+    BEAM_MALIGN_OFFERING,
+    BEAM_LAST_ENCHANTMENT = BEAM_MALIGN_OFFERING,
 
     BEAM_MEPHITIC,
     BEAM_GLOOM,
@@ -484,7 +486,9 @@ enum branch_type                // you.where_are_you
     BRANCH_FIRST_NON_DUNGEON = BRANCH_ECUMENICAL_TEMPLE,
     BRANCH_ORCISH_MINES,
     BRANCH_ELVEN_HALLS,
+#if TAG_MAJOR_VERSION == 34
     BRANCH_DWARVEN_HALL,
+#endif
     BRANCH_LAIR,
     BRANCH_SWAMP,
     BRANCH_SHOALS,
@@ -829,6 +833,7 @@ enum command_type
 
     CMD_MAP_HELP,
     CMD_MAP_FORGET,
+    CMD_MAP_UNFORGET,
 
     CMD_MAP_EXIT_MAP,
 
@@ -1319,9 +1324,11 @@ enum dungeon_feature_type
     DNGN_EXPIRED_PORTAL,
 
     // Entrances to various branches
+#if TAG_MAJOR_VERSION == 34
     DNGN_ENTER_DWARVEN_HALL,
-        DNGN_ENTER_FIRST_BRANCH = DNGN_ENTER_DWARVEN_HALL,
+#endif
     DNGN_ENTER_ORCISH_MINES,
+        DNGN_ENTER_FIRST_BRANCH = DNGN_ENTER_ORCISH_MINES,
     DNGN_ENTER_LAIR,
     DNGN_ENTER_SLIME_PITS,
     DNGN_ENTER_VAULTS,
@@ -1341,9 +1348,11 @@ enum dungeon_feature_type
 
     // Exits from various branches
     // Order must be the same as above
+#if TAG_MAJOR_VERSION == 34
     DNGN_RETURN_FROM_DWARVEN_HALL,
-        DNGN_RETURN_FROM_FIRST_BRANCH = DNGN_RETURN_FROM_DWARVEN_HALL,
+#endif
     DNGN_RETURN_FROM_ORCISH_MINES,
+        DNGN_RETURN_FROM_FIRST_BRANCH = DNGN_RETURN_FROM_ORCISH_MINES,
     DNGN_RETURN_FROM_LAIR,
     DNGN_RETURN_FROM_SLIME_PITS,
     DNGN_RETURN_FROM_VAULTS,
@@ -1403,6 +1412,9 @@ enum dungeon_feature_type
     DNGN_ABYSSAL_STAIR,
     DNGN_BADLY_SEALED_DOOR,
 #endif
+
+    DNGN_SEALED_STAIRS_UP,
+    DNGN_SEALED_STAIRS_DOWN,
 
     NUM_FEATURES
 };
@@ -1579,7 +1591,9 @@ enum enchant_type
     ENCH_PORTAL_TIMER,
     ENCH_SEVERED,
     ENCH_ANTIMAGIC,
+#if TAG_MAJOR_VERSION == 34
     ENCH_FADING_AWAY,
+#endif
     ENCH_PREPARING_RESURRECT,
     ENCH_REGENERATION,
     ENCH_RAISED_MR,
@@ -2279,7 +2293,9 @@ enum monster_type                      // menv[].type
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_UNBORN_DEEP_DWARF,
     MONS_ELF,
+#if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SOLDIER,
+#endif
     MONS_DEEP_ELF_FIGHTER,
     MONS_DEEP_ELF_KNIGHT,
     MONS_DEEP_ELF_MAGE,
@@ -2507,8 +2523,10 @@ enum monster_type                      // menv[].type
 #endif
     MONS_SHEDU,
     MONS_OPHAN,
+#if TAG_MAJOR_VERSION == 34
     MONS_SPIRIT,
     MONS_PALADIN,
+#endif
     MONS_APIS,
 
     // Fixed uniques:
@@ -2696,6 +2714,8 @@ enum monster_type                      // menv[].type
     MONS_ELEMENTAL_WELLSPRING,
 
     MONS_POLYMOTH,
+
+    MONS_DEATHCAP,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -2891,7 +2911,9 @@ enum mutation_type
     MUT_MANA_LINK,
     MUT_PETRIFICATION_RESISTANCE,
     MUT_TRAMPLE_RESISTANCE,
+#if TAG_MAJOR_VERSION == 34
     MUT_CLING,
+#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3541,6 +3563,8 @@ enum spell_type
     SPELL_SONG_OF_SLAYING,
     SPELL_SPECTRAL_WEAPON,
     SPELL_SONG_OF_SHIELDING,
+    SPELL_SUMMON_VERMIN,
+    SPELL_MALIGN_OFFERING,
     NUM_SPELLS
 };
 

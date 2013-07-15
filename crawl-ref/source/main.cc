@@ -1430,6 +1430,11 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                 mpr("There is nothing on the other side of the stone arch.");
             else if (ftype == DNGN_ABANDONED_SHOP)
                 mpr("This shop appears to be closed.");
+            else if (ftype == DNGN_SEALED_STAIRS_UP
+                     || ftype == DNGN_SEALED_STAIRS_DOWN )
+            {
+                mpr("A magical barricade bars your way!");
+            }
             else if (down)
                 mpr("You can't go down here!");
             else
@@ -1566,7 +1571,6 @@ static void _take_stairs(bool down)
     if (!_prompt_stairs(ygrd, down))
         return;
 
-    you.clear_clinging();
     you.stop_constricting_all(true);
     you.stop_being_constricted();
 
@@ -1928,7 +1932,6 @@ void process_command(command_type cmd)
 
     case CMD_MOVE_NOWHERE:
     case CMD_WAIT:
-        you.check_clinging(false);
         you.turn_is_over = true;
         break;
 
@@ -3127,7 +3130,7 @@ static void _player_reacts()
 
     // Singing makes a continous noise
     if (you.duration[DUR_SONG_OF_SLAYING])
-        noisy(12,you.pos());
+        noisy(10, you.pos());
 
     if (one_chance_in(10))
     {
@@ -4233,7 +4236,7 @@ static void _move_player(coord_def move)
         string bad_suff, bad_adj;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
-            if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
+            if (is_feat_dangerous(grd(*ai))
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
@@ -4382,8 +4385,6 @@ static void _move_player(coord_def move)
     string verb;
     if (you.flight_mode())
         verb = "fly";
-    else if (you.is_wall_clinging())
-        verb = "cling";
     else if (you.species == SP_NAGA && !form_changed_physiology())
         verb = "slither";
     else

@@ -51,12 +51,12 @@ function castle_lemuel_subvault_setup(e)
          elseif you.absdepth() < 25 then
             e.subst("*:*$")
             e.subst("|=|.")
-            e.mons("deep elf soldier / deep elf fighter")
+            e.mons("deep elf fighter / deep elf mage w:4")
             e.mons("deep elf knight / deep elf mage / deep elf summoner / deep elf priest")
             e.mons("deep elf annihilator / deep elf sorcerer / deep elf demonologist /\
                     deep elf blademaster / deep elf master archer")
             e.mons("nothing")
-            e.mons("deep elf soldier")
+            e.mons("deep elf fighter")
             e.mons("nothing")
          else
             e.subst("*:*$")

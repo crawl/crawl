@@ -439,7 +439,9 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_FREEZING: return terse ? " (freeze)" : " of freezing";
     case SPWPN_HOLY_WRATH: return terse ? " (holy)" : " of holy wrath";
     case SPWPN_ELECTROCUTION: return terse ? " (elec)":" of electrocution";
+#if TAG_MAJOR_VERSION == 34
     case SPWPN_ORC_SLAYING: return terse ? " (slay orc)":" of orc slaying";
+#endif
     case SPWPN_DRAGON_SLAYING: return terse ? " (slay drac)":" of dragon slaying";
     case SPWPN_VENOM: return terse ? " (venom)" : " of venom";
     case SPWPN_PROTECTION: return terse ? " (protect)" : " of protection";
@@ -732,7 +734,7 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_WIZARDRY:              return "ring of wizardry";
     case RING_MAGICAL_POWER:         return "ring of magical power";
     case RING_FLIGHT:                return "ring of flight";
-    case RING_LIFE_PROTECTION:       return "ring of life protection";
+    case RING_LIFE_PROTECTION:       return "ring of positive energy";
     case RING_PROTECTION_FROM_MAGIC: return "ring of protection from magic";
     case RING_FIRE:                  return "ring of fire";
     case RING_ICE:                   return "ring of ice";
@@ -2988,13 +2990,15 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_DECAY:
         case POT_PARALYSIS:
             return true;
-        case POT_POISON:
         case POT_STRONG_POISON:
+            return player_res_poison(false, temp) < 3;
+        case POT_POISON:
             // Poison is not that bad if you're poison resistant.
             return (player_res_poison(false) <= 0
                     || !temp && you.species == SP_VAMPIRE);
         case POT_MUTATION:
-            return (you.is_undead
+        case POT_BENEFICIAL_MUTATION:
+            return (you.is_undead && (temp || you.form != TRAN_LICH)
                     && (temp || you.species != SP_VAMPIRE
                         || you.hunger_state < HS_SATIATED));
         default:
@@ -3233,10 +3237,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
-        case POT_BENEFICIAL_MUTATION:
-            return (you.is_undead
-                        && (you.species != SP_VAMPIRE
-                            || temp && you.hunger_state < HS_SATIATED));
+            if (you.species == SP_VAMPIRE)
+                return temp && you.hunger_state < HS_SATIATED;
+            if (you.form == TRAN_LICH)
+                return temp;
+            return you.is_undead;
 
         case POT_FLIGHT:
             return you.permanent_flight();
@@ -3246,11 +3251,12 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_BLOOD_COAGULATED:
             return !can_ingest(item, true, false) || you.species == SP_DJINNI;
         case POT_POISON:
-        case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
             // Spriggans could argue, but it's too small of a gain for
             // possible player confusion.
-            return (player_res_poison(false) > 0);
+            return player_res_poison(false, temp) > 0;
+        case POT_STRONG_POISON:
+            return player_res_poison(false, temp) >= 3;
 
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);

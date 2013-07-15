@@ -268,7 +268,10 @@ Księga czarów.
 %%%%
 book of the sky
 
-Księga czarów, wyraźnie naelektryzowana.
+Księga zawierająca potężniejsze czary Magii Powietrza. Przyjęte jest,
+aby skrybowie tworzący jej kopie robili to z wyższych komnat wysokich
+wież na otwartym terenie, aby lepiej przyjąć siłę wiatrów. Błyszczące
+runy którymi księga ta jest napisana to w istocie zaklęte pioruny.
 %%%%
 book of the tempests
 
@@ -991,10 +994,6 @@ Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
 Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania. To
 może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
 %%%%
-ring of life protection
-
-Ten pierścień zapewnia częściową odporność na zagrożenia ze strony nekromancji.
-%%%%
 ring of magical power
 
 Ten pierścień zwiększa dostępną pulę magicznej mocy, a także powoduje jej
@@ -1003,6 +1002,10 @@ szybszą regenerację.
 ring of poison resistance
 
 Ten pierścień zapewnia znaczną odporność na trucizny i jady.
+%%%%
+ring of positive energy
+
+Ten pierścień zapewnia częściową odporność na zagrożenia ze strony nekromancji.
 %%%%
 ring of protection
 

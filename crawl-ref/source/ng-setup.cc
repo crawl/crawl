@@ -163,7 +163,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_BERSERKER:         s =  9; i = -1; d =  4; hp = 15; mp = 0; break;
     case JOB_GLADIATOR:         s =  7; i =  0; d =  5; hp = 14; mp = 0; break;
 
-    case JOB_SKALD:             s =  4; i =  4; d =  4; hp = 13; mp = 2; break;
+    case JOB_SKALD:             s =  4; i =  4; d =  4; hp = 12; mp = 3; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 2; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
@@ -308,13 +308,12 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_GARGOYLE:
         you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
-        you.mutation[MUT_TRAMPLE_RESISTANCE]         = 1;
-        you.mutation[MUT_CLING]                      = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
-        you.mutation[MUT_COLD_RESISTANCE]            = 1;
+        you.mutation[MUT_SHOCK_RESISTANCE]           = 1;
         you.mutation[MUT_FANGS]                      = 1;
         you.mutation[MUT_TALONS]                     = 2;
         you.mutation[MUT_SLOW_METABOLISM]            = 1;
+        you.mutation[MUT_UNBREATHING]                = 1;
         break;
     case SP_TENGU:
         you.mutation[MUT_BEAK]   = 1;

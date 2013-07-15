@@ -907,13 +907,19 @@ static monster_type unmarshallMonType_Info(reader &th)
 }
 #endif
 
-static spell_type unmarshallSpellType(reader &th)
-{
+static spell_type unmarshallSpellType(reader &th
 #if TAG_MAJOR_VERSION == 34
-    spell_type x = static_cast<spell_type>(unmarshallUByte(th));
-#else
-    spell_type x = static_cast<spell_type>(unmarshallShort(th));
+                                      , bool mons = false
 #endif
+                                      )
+{
+    spell_type x = SPELL_NO_SPELL;
+#if TAG_MAJOR_VERSION == 34
+    if (!mons && th.getMinorVersion() < TAG_MINOR_SHORT_SPELL_TYPE)
+        x = static_cast<spell_type>(unmarshallUByte(th));
+    else
+#endif
+        x = static_cast<spell_type>(unmarshallShort(th));
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() == TAG_MINOR_0_11)
@@ -962,11 +968,18 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
 #endif
 
 #define CANARY     marshallUByte(th, 171)
+#if TAG_MAJOR_VERSION == 34
 #define EAT_CANARY do if (th.getMinorVersion() >= TAG_MINOR_CANARIES    \
                           && unmarshallUByte(th) != 171)                \
                    {                                                    \
                        die("save corrupted: canary gone");              \
                    } while(0)
+#else
+#define EAT_CANARY do if ( unmarshallUByte(th) != 171)                  \
+                   {                                                    \
+                       die("save corrupted: canary gone");              \
+                   } while(0)
+#endif
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
@@ -1196,11 +1209,7 @@ static void tag_construct_you(writer &th)
     // how many spells?
     marshallUByte(th, MAX_KNOWN_SPELLS);
     for (i = 0; i < MAX_KNOWN_SPELLS; ++i)
-#if TAG_MAJOR_VERSION == 34
-        marshallByte(th, you.spells[i]);
-#else
         marshallShort(th, you.spells[i]);
-#endif
 
     marshallByte(th, 52);
     for (i = 0; i < 52; i++)
@@ -1214,14 +1223,14 @@ static void tag_construct_you(writer &th)
     for (set<spell_type>::iterator it = you.old_vehumet_gifts.begin();
          it != you.old_vehumet_gifts.end(); ++it)
     {
-        marshallUByte(th, *it);
+        marshallShort(th, *it);
     }
 
     marshallUByte(th, you.vehumet_gifts.size());
     for (set<spell_type>::iterator it = you.vehumet_gifts.begin();
          it != you.vehumet_gifts.end(); ++it)
     {
-        marshallUByte(th, *it);
+        marshallShort(th, *it);
     }
 
     CANARY;
@@ -1287,15 +1296,6 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.innate_mutations[j]);
         marshallByte(th, you.temp_mutations[j]);
     }
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
-        you.mutation[MUT_TELEPORT_CONTROL] = 0;
-    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 1)
-        you.mutation[MUT_TRAMPLE_RESISTANCE] = 1;
-    if (you.species == SP_GARGOYLE)
-        you.mutation[MUT_CLING] = 1;
-#endif
 
     marshallByte(th, you.demonic_traits.size());
     for (j = 0; j < int(you.demonic_traits.size()); ++j)
@@ -2074,7 +2074,14 @@ static void tag_read_you(reader &th)
             you.spell_no++;
     }
     for (; i < count; ++i)
-        unmarshallUByte(th);
+    {
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_SHORT_SPELL_TYPE)
+            unmarshallUByte(th);
+        else
+#endif
+            unmarshallShort(th);
+    }
 
     count = unmarshallByte(th);
     ASSERT(count == (int)you.spell_letter_table.size());
@@ -2128,17 +2135,17 @@ static void tag_read_you(reader &th)
 #endif
         count = unmarshallUByte(th);
         for (i = 0; i < count; ++i)
-            you.old_vehumet_gifts.insert(static_cast<spell_type>(unmarshallUByte(th)));
+            you.old_vehumet_gifts.insert(unmarshallSpellType(th));
 
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_VEHUMET_MULTI_GIFTS)
-            you.vehumet_gifts.insert(static_cast<spell_type>(unmarshallUByte(th)));
+            you.vehumet_gifts.insert(unmarshallSpellType(th));
         else
         {
 #endif
             count = unmarshallUByte(th);
             for (i = 0; i < count; ++i)
-                you.vehumet_gifts.insert(static_cast<spell_type>(unmarshallUByte(th)));
+                you.vehumet_gifts.insert(unmarshallSpellType(th));
 #if TAG_MAJOR_VERSION == 34
         }
     }
@@ -2243,6 +2250,15 @@ static void tag_read_you(reader &th)
     }
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;
+
+#if TAG_MAJOR_VERSION == 34
+    if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
+        you.mutation[MUT_TELEPORT_CONTROL] = 0;
+    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0)
+        you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
+    if (you.mutation[MUT_CLING] == 1)
+        you.mutation[MUT_CLING] = 0;
+#endif
 
     count = unmarshallUByte(th);
     you.demonic_traits.clear();
@@ -2808,6 +2824,12 @@ static void tag_construct_level(writer &th)
             marshallMapCell(th, env.map_knowledge[count_x][count_y]);
             marshallInt(th, env.pgrid[count_x][count_y]);
         }
+
+    marshallBoolean(th, !!env.map_forgotten.get());
+    if (env.map_forgotten.get())
+        for (int x = 0; x < GXM; x++)
+            for (int y = 0; y < GYM; y++)
+                marshallMapCell(th, (*env.map_forgotten)[x][y]);
 
     _run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
 
@@ -3425,7 +3447,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.mintel);
     mi.mresists = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
-    if (mi.mresists && MR_OLD_RES_ACID)
+    if (mi.mresists & MR_OLD_RES_ACID)
         set_resist(mi.mresists, MR_RES_ACID, 3);
 #endif
     unmarshallUnsigned(th, mi.mitemuse);
@@ -3640,6 +3662,22 @@ static void tag_read_level(reader &th)
             env.cgrid[i][j] = EMPTY_CLOUD;
             env.tgrid[i][j] = NON_ENTITY;
         }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FORGOTTEN_MAP)
+        env.map_forgotten.reset();
+    else
+#endif
+    if (unmarshallBoolean(th))
+    {
+        MapKnowledge *f = new MapKnowledge();
+        for (int x = 0; x < GXM; x++)
+            for (int y = 0; y < GYM; y++)
+                unmarshallMapCell(th, (*f)[x][y]);
+        env.map_forgotten.reset(f);
+    }
+    else
+        env.map_forgotten.reset();
 
     env.grid_colours.init(BLACK);
     _run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
@@ -4284,10 +4322,11 @@ static void unmarshallSpells(reader &th, monster_spells &spells)
 {
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
     {
+        spells[j] = unmarshallSpellType(th
 #if TAG_MAJOR_VERSION == 34
-        unmarshallUByte(th);
+            , true
 #endif
-        spells[j] = unmarshallSpellType(th);
+            );
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() < TAG_MINOR_MALMUTATE && spells[j] == SPELL_POLYMORPH)
             spells[j] = SPELL_MALMUTATE;
@@ -4345,7 +4384,7 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.att_flav = static_cast<attack_flavour>(unmarshallShort(th));
     ghost.resists          = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
-    if (ghost.resists && MR_OLD_RES_ACID)
+    if (ghost.resists & MR_OLD_RES_ACID)
         set_resist(ghost.resists, MR_RES_ACID, 3);
 #endif
     ghost.spellcaster      = unmarshallByte(th);

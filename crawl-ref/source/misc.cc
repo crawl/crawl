@@ -2003,9 +2003,9 @@ void timeout_terrain_changes(int duration, bool force)
     }
 
     if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
-        mpr("The seals upon the doors fade away.");
+        mpr("The runic seals fade away.");
     else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
-        mpr("The seal upon the door fades away.");
+        mpr("The runic seal fades away.");
 }
 
 void bring_to_safety()

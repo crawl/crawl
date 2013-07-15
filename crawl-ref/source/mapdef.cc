@@ -4612,7 +4612,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "freezing",
         "holy_wrath",
         "electrocution",
+#if TAG_MAJOR_VERSION == 34
         "orc_slaying",
+#endif
         "dragon_slaying",
         "venom",
         "protection",

@@ -58,8 +58,6 @@ public:
     int foe_memory;                    // how long to 'remember' foe x,y
                                        // once they go out of sight.
 
-    int shield_blocks;                 // Count of shield blocks this round.
-
     god_type god;                      // What god the monster worships, if
                                        // any.
 
@@ -351,7 +349,6 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const;
 
     flight_type flight_mode() const;
-    bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
     bool invisible() const;
@@ -422,8 +419,7 @@ public:
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
-    bool drain_exp(actor *, const char* aux = NULL, bool quiet = false,
-                   int pow = 3);
+    bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,

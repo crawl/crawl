@@ -1374,7 +1374,7 @@ struct spell_desc
 
 {
     SPELL_DRAGON_FORM, "Dragon Form",
-     SPTYP_FIRE | SPTYP_TRANSMUTATION,
+     SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      7,
      200,
@@ -3219,7 +3219,7 @@ struct spell_desc
     SPELL_SONG_OF_SHIELDING, "Song of Shielding",
      SPTYP_CHARMS,
      SPFLAG_BATTLE,
-     5,
+     4,
      100,
      -1, -1,
      0,
@@ -3239,6 +3239,32 @@ struct spell_desc
      NULL,
      false,
      true
+},
+
+{
+    SPELL_SUMMON_VERMIN, "Summon Vermin",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MALIGN_OFFERING, "Malign Offering",
+     SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
 },
 
 {

@@ -16,7 +16,7 @@ function base_monster_setup(e)
            giant eyeball / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
-           necrophage / quasit / zombie / sky beast / deep elf soldier /\
+           necrophage / quasit / zombie / sky beast / deep elf fighter /\
            giant frog / mummy / orc warrior band / wight band /\
            hungry ghost / big kobold band / giant centipede /\
            brain worm / warg / wolf / porcupine / black bear /\
@@ -64,7 +64,7 @@ function base_monster_setup(e)
            vampire knight / vampire mage / large abomination /\
            spriggan druid / spriggan rider / death cob /\
            hell hound band w:5 / neqoxec / simulacrum / sixfirhy /\
-           chaos spawn / ice devil / sun demon / iron devil / paladin /\
+           chaos spawn / ice devil / sun demon / iron devil /\
            hell hog band w:5 / alligator band w:5 / minotaur")
   e.kmons("D = dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
            very ugly thing band w:5 / sphinx / iron troll /\
@@ -379,7 +379,7 @@ function metal_vault_setup(e)
   e.tile("v = dngn_metal_iron")
   e.kitem("a = ring of protection from fire ident:all not_cursed /\
           ring of protection from cold ident:all not_cursed /\
-          ring of life protection ident:all not_cursed /\
+          ring of positive energy ident:all not_cursed /\
           ring of protection from magic ident:all not_cursed /\
           ring of fire ident:all not_cursed /\
           ring of ice ident:all not_cursed /\
@@ -530,7 +530,7 @@ function coven_setup(e)
           any jewellery randart level:27 not_cursed ident:all w:40")
   e.kitem("c = ring of protection from fire randart ident:all not_cursed /\
           ring of protection from cold randart ident:all not_cursed /\
-          ring of life protection randart ident:all not_cursed /\
+          ring of positive energy randart ident:all not_cursed /\
           ring of protection from magic randart ident:all not_cursed /\
           ring of fire randart ident:all not_cursed /\
           ring of ice randart ident:all not_cursed /\
@@ -787,7 +787,7 @@ KITEM: c = mace ego:vorpal ident:all not_cursed /\
        flail ego:vorpal ident:all not_cursed /\
        flail ego:protection ident:all not_cursed
 KITEM: d = trident ego:vorpal ident:all not_cursed /\
-       trident ego:orc_slaying ident:all not_cursed
+       trident ego:dragon_slaying ident:all not_cursed
 KITEM: e = quarterstaff ego:protection ident:all not_cursed /\
        quarterstaff ego:speed ident:all not_cursed
 KITEM: f = long sword ego:holy_wrath ident:all not_cursed /\
@@ -2124,7 +2124,7 @@ KMONS:  c = dragon / ice dragon / shadow dragon / iron dragon w:5 /\
         quicksilver dragon w:5 / golden dragon / swamp dragon /\
         hydra
 KMONS:  C = quicksilver dragon
-KMONS:  d = angel / daeva / cherub / paladin
+KMONS:  d = angel / daeva / cherub
 KMONS:  D = silver star
 NSUBST: + = 1:& / *:v
 SUBST:  1 : a, 2 : A

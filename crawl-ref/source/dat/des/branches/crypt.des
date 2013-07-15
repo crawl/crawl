@@ -254,7 +254,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    minmay_crypt_entry_nasty_monster
-MONS:    bone dragon w:25 / lich / shadow dragon w:5, curse skull
+MONS:    bone dragon w:25 / lich / shadow dragon w:5, patrolling curse skull
 SHUFFLE: 1X/2Y
 SUBST:   X=., Y=x
 : crypt_entry(_G)
@@ -295,6 +295,27 @@ MAP
 .x...xx..xx.....
 .xxxxx....xxx...
 ................
+ENDMAP
+
+##############################################################################
+NAME:    blue_anna_dwarven_crypt
+MONS:    deep dwarf necromancer / deep dwarf death knight / unborn deep dwarf
+MONS:    shadow wraith / wraith / wight w:5
+FTILE:   12O.+ = floor_sandstone
+FTILE:   +12O. = floor_limestone
+FTILE:   @ = floor_sandstone
+COLOUR:  12 = yellow
+: crypt_entry(_G)
+MAP
+cccc@cccc
+c1.....1c
+c.ccccc.c
+c.c.2.c.c
+@.c.O.c.@
+c.c...c.c
+c.cc+cc.c
+c1.....1c
+cccc@cccc
 ENDMAP
 
 ##############################################################################
@@ -676,7 +697,7 @@ ENDMAP
 NAME:   st_shrine_of_skulls
 DEPTH:  Crypt
 MONS:   flying skull band, lich
-KMONS:  3 = curse skull
+KMONS:  3 = patrolling curse skull
 KMONS:  4 = lich / ancient lich
 KMONS:  P = w:2 col:darkgrey plant name:withered name_adjective             \
           tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
@@ -1248,12 +1269,12 @@ KMONS:  P = skeleton / mummy
 : end
 ####### SE monsters (catacombs). Either corporeal or incorporeal undead.
 : if crawl.coinflip() then
-KMONS:  Z = curse skull
+KMONS:  Z = patrolling curse skull
 KMONS:  Q = bone dragon
 KMONS:  R = skeletal warrior
 KMONS:  S = zombie / skeleton
 : else
-KMONS:  Z = curse skull
+KMONS:  Z = patrolling curse skull
 KMONS:  Q = eidolon
 KMONS:  R = phantasmal warrior / flayed ghost w:8
 KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
@@ -1373,7 +1394,7 @@ MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 no
 MONS:   raven skeleton / w:30 nothing
 MONS:   w:3 guardian mummy / w:1 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
-KMONS:  z = curse skull
+KMONS:  z = patrolling curse skull
 SHUFFLE: 9H
 : if crawl.coinflip() then
 # Temple of yred

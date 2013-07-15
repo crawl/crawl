@@ -1465,9 +1465,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (montype == MONS_GLOWING_SHAPESHIFTER)
         mon->add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    if (mg.cls == MONS_SPIRIT)
-        mon->add_ench(ENCH_FADING_AWAY);
-
     if (mg.cls == MONS_TOADSTOOL || mg.cls == MONS_PILLAR_OF_SALT)
     {
         // This enchantment is a timer that counts down until death.
@@ -2242,7 +2239,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         if (coinflip())
         {
             band = BAND_DEEP_ELF_FIGHTER;
-            band_size = 3 + random2(4);
+            band_size = 2 + random2(3);
         }
         break;
 
@@ -2250,7 +2247,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         if (coinflip())
         {
             band = BAND_DEEP_ELF_KNIGHT;
-            band_size = 3 + random2(4);
+            band_size = 3 + random2(2);
         }
         break;
 
@@ -2511,12 +2508,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
             band = BAND_TARANTELLA;
             band_size = 1 + random2(4);
         }
-        break;
-
-    case MONS_LAMIA:
-        natural_leader = true;
-        band = BAND_LAMIA;
-        band_size = 5 + random2(4);
         break;
 
     case MONS_VAULT_WARDEN:
@@ -2780,33 +2771,29 @@ static monster_type _band_member(band_type band, int which)
         return coinflip() ? MONS_HELLWING : MONS_SMOKE_DEMON;
 
     case BAND_DEEP_ELF_FIGHTER:
-        return random_choose_weighted(6, MONS_DEEP_ELF_SOLDIER,
-                                      1, MONS_DEEP_ELF_FIGHTER,
-                                      1, MONS_DEEP_ELF_KNIGHT,
+        return random_choose_weighted(3, MONS_DEEP_ELF_FIGHTER,
+                                      3, MONS_DEEP_ELF_MAGE,
+                                      2, MONS_DEEP_ELF_PRIEST,
                                       1, MONS_DEEP_ELF_CONJURER,
-                                      1, MONS_DEEP_ELF_MAGE,
-                                      1, MONS_DEEP_ELF_PRIEST,
                                       0);
 
     case BAND_DEEP_ELF_KNIGHT:
-        return random_choose_weighted(48, MONS_DEEP_ELF_SOLDIER,
-                                      48, MONS_DEEP_ELF_FIGHTER,
-                                      32, MONS_DEEP_ELF_KNIGHT,
-                                      28, MONS_DEEP_ELF_MAGE,
+        return random_choose_weighted(66, MONS_DEEP_ELF_FIGHTER,
+                                      52, MONS_DEEP_ELF_MAGE,
+                                      28, MONS_DEEP_ELF_KNIGHT,
+                                      20, MONS_DEEP_ELF_CONJURER,
                                       16, MONS_DEEP_ELF_PRIEST,
-                                      16, MONS_DEEP_ELF_CONJURER,
-                                      16, MONS_DEEP_ELF_SUMMONER,
-                                       1, MONS_DEEP_ELF_DEMONOLOGIST,
-                                       1, MONS_DEEP_ELF_ANNIHILATOR,
-                                       1, MONS_DEEP_ELF_SORCERER,
-                                       1, MONS_DEEP_ELF_DEATH_MAGE,
+                                      12, MONS_DEEP_ELF_SUMMONER,
+                                       3, MONS_DEEP_ELF_DEATH_MAGE,
+                                       2, MONS_DEEP_ELF_DEMONOLOGIST,
+                                       2, MONS_DEEP_ELF_ANNIHILATOR,
+                                       2, MONS_DEEP_ELF_SORCERER,
                                        0);
 
     case BAND_DEEP_ELF_HIGH_PRIEST:
-        return random_choose_weighted(3, MONS_DEEP_ELF_SOLDIER,
-                                      3, MONS_DEEP_ELF_FIGHTER,
-                                      3, MONS_DEEP_ELF_PRIEST,
-                                      1, MONS_DEEP_ELF_MAGE,
+        return random_choose_weighted(5, MONS_DEEP_ELF_FIGHTER,
+                                      2, MONS_DEEP_ELF_PRIEST,
+                                      2, MONS_DEEP_ELF_MAGE,
                                       1, MONS_DEEP_ELF_SUMMONER,
                                       1, MONS_DEEP_ELF_CONJURER,
                                       1, MONS_DEEP_ELF_DEMONOLOGIST,
@@ -2957,15 +2944,6 @@ static monster_type _band_member(band_type band, int which)
                                       10, MONS_SPIDER,
                                        2, MONS_DEMONIC_CRAWLER,
                                        0);
-
-    case BAND_LAMIA:
-        if (which <= 2)
-            return MONS_GREATER_NAGA;
-        else
-            return random_choose_weighted( 8, MONS_NAGA_WARRIOR,
-                                          16, MONS_NAGA_MAGE,
-                                          24, MONS_NAGA,
-                                           0);
 
     case BAND_VAULT_WARDEN:
         if (which == 1 || which == 2 && coinflip())

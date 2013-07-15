@@ -349,8 +349,6 @@ public:
 
   int time_taken;
 
-  int shield_blocks;         // number of shield blocks since last action
-
   int old_hunger;            // used for hunger delta-meter (see output.cc)
 
   // Set when the character is going to a new level, to guard against levgen
@@ -423,7 +421,6 @@ public:
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
-    bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
     bool cannot_speak() const;
@@ -596,8 +593,7 @@ public:
     void confuse(actor *, int strength);
     void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
-    bool drain_exp(actor *, const char *aux = NULL, bool quiet = false,
-                   int pow = 3);
+    bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,

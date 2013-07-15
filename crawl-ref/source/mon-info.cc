@@ -116,11 +116,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_POSSESSABLE;
     case ENCH_PREPARING_RESURRECT:
         return MB_PREP_RESURRECT;
-    case ENCH_FADING_AWAY:
-        if ((mons.get_ench(ENCH_FADING_AWAY)).duration < 400) // min dur is 180*20, max dur 230*10
-            return MB_MOSTLY_FADED;
-
-        return MB_FADING_AWAY;
     case ENCH_REGENERATION:
         return MB_REGENERATION;
     case ENCH_RAISED_MR:
@@ -618,8 +613,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOWED);
-    if (m->is_wall_clinging())
-        mb.set(MB_CLINGING);
 
     dam = mons_get_damage_level(m);
 
@@ -1491,10 +1484,6 @@ vector<string> monster_info::attributes() const
         v.push_back("deflecting missiles");
     if (is(MB_PREP_RESURRECT))
         v.push_back("quietly preparing");
-    if (is(MB_FADING_AWAY))
-        v.push_back("slowly fading away");
-    if (is(MB_MOSTLY_FADED))
-        v.push_back("mostly faded away");
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
     if (is(MB_BREATH_WEAPON))
@@ -1751,7 +1740,7 @@ bool monster_info::airborne() const
 
 bool monster_info::ground_level() const
 {
-    return (!airborne() && !is(MB_CLINGING));
+    return !airborne();
 }
 
 void get_monster_info(vector<monster_info>& mons)

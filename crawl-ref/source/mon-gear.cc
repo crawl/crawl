@@ -548,7 +548,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_DEEP_ELF_HIGH_PRIEST:
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_PRIEST:
-    case MONS_DEEP_ELF_SOLDIER:
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(
@@ -1049,7 +1048,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
-    case MONS_PALADIN:
     case MONS_DAEVA:
     case MONS_MENNAS:
         force_item     = true;
@@ -1858,7 +1856,6 @@ static void _give_shield(monster* mon, int level)
 
     switch (mon->type)
     {
-    case MONS_PALADIN:
     case MONS_DAEVA:
     case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
@@ -1875,7 +1872,6 @@ static void _give_shield(monster* mon, int level)
         }
         break;
 
-    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
         if (one_chance_in(6))
         {
@@ -2047,7 +2043,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_MAGE:
     case MONS_DEEP_ELF_PRIEST:
-    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_SORCERER:
     case MONS_DEEP_ELF_SUMMONER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
@@ -2173,7 +2168,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
 
-    case MONS_PALADIN:
     case MONS_HELL_KNIGHT:
     case MONS_LOUISE:
     case MONS_DONALD:

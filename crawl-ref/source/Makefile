@@ -1655,9 +1655,14 @@ android:
 TESTS=test woken_rest unwoken_rest fireworks cerebov pan_lords miscasts kraken
 test: $(foreach i, $(TESTS), test-$(i))
 
-test-%: $(GAME) util/fake_pty
+test-%: $(GAME) util/fake_pty builddb
 	util/fake_pty test/stress/run $*
 	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c
 	$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil
+
+# Should be not needed, but the race condition in bug #6509 is hard to fix.
+builddb: $(GAME)
+	./$(GAME) --builddb
+.PHONY: builddb

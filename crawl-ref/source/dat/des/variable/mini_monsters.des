@@ -549,33 +549,38 @@ ENDMAP
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
 DEPTH:  D:8-18, Lair:2-
+KPROP:  '*|1> = no_rtele_into
 KMONS:  1 = lindwurm
 KITEM:  1 = *
-SUBST:  ' : ..'l
-SUBST:  ' = ..l
+SUBST:  L : ..Ll
+SUBST:  L = ..l
+SUBST:  ' = .
+NSUBST: | = 1:> / *:|
+KITEM:  > = |
+KFEAT:  > = escape_hatch_down
 MAP
-     .....''.....
-   ....'''ll'''....
-  ...''llllllll''...
- ...'llllllllllll'...
- ..'llllllllllllll'..
-..'llllllllllllllll'..
-..'llllll....llllll'..
-.'lllll...xx...lllll'.
-.'lllll..xxxx..lllll'.
-.'llll..x.1*.x..llll'.
-'lllll.xx*||1xx.lllll'
-'lllll.xx1||*xx.lllll'
-.'llll..x.*1.x..llll'.
-.'lllll..xxxx..lllll'.
-.'lllll...xx...lllll'.
-..'llllll....llllll'..
-..'llllllllllllllll'..
- ..'llllllllllllll'..
- ...'llllllllllll'...
-  ...''llllllll''...
-   ....'''ll'''....
-     .....''.....
+     .....LL.....
+   ....LLLllLLL....
+  ...LLllllllllLL...
+ ...LllllllllllllL...
+ ..LllllllllllllllL..
+..LllllllllllllllllL..
+..Lllllll''''llllllL..
+.Llllll'''xx'''lllllL.
+.Llllll''xxxx''lllllL.
+.Lllll''x'1*'x''llllL.
+Llllll'xx*||1xx'lllllL
+Llllll'xx1||*xx'lllllL
+.Lllll''x'*1'x''llllL.
+.Llllll''xxxx''lllllL.
+.Llllll'''xx'''lllllL.
+..Lllllll''''llllllL..
+..LllllllllllllllllL..
+ ..LllllllllllllllL..
+ ...LllllllllllllL...
+  ...LLllllllllLL...
+   ....LLLllLLL....
+     .....LL.....
 ENDMAP
 
 NAME:  pond
@@ -1227,7 +1232,7 @@ ENDMAP
 #   No loot but the elves' gear, but at the depth this appears that may be good
 NAME:    elves_outpost_lemuel
 DEPTH:   D:14-20, Orc:3-, Elf
-MONS:    deep elf soldier / w:4 deep elf fighter
+MONS:    deep elf fighter
 MONS:    w:20 deep elf mage / deep elf conjurer / deep elf summoner
 SHUFFLE: ?:/bb, :;/ww
 SUBST:   ?=., :=., ;=.
@@ -1419,7 +1424,7 @@ WEIGHT: 7
 TAGS:   no_monster_gen no_item_gen allow_dup extra
 NSUBST: 1 = 2:1 / *:.
 : if you.branch() == "Elf" then
-MONS:   deep elf soldier
+MONS:   deep elf fighter
 : else
 MONS:   goblin / hobgoblin / kobold / orc
 : end
@@ -1440,7 +1445,7 @@ SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
 : if you.branch() == "Elf" then
-MONS:    deep elf soldier
+MONS:    deep elf fighter
 : else
 MONS:    goblin / hobgoblin / kobold / orc
 : end
@@ -1862,9 +1867,9 @@ xx+xxx
 ENDMAP
 
 NAME:  guppyfry_early_elven_hall
-DEPTH: D:3-6
+DEPTH: D:6-9
 TAGS:  patrolling no_monster_gen mini_float transparent
-MONS:  deep elf soldier, plant
+MONS:  deep elf fighter, plant
 ITEM:  any scroll / any food / any book
 SUBST: - = 2.....GTd$
 MARKER: H = lua:props_marker { stop_explore = "statue" }
@@ -1919,7 +1924,7 @@ SUBST:   ? = 123d
 : if you.branch() == "Snake" then
 MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
 : elseif you.branch() == "Elf" then
-MONS:    deep elf soldier, deep elf mage, deep elf conjurer / deep elf summoner
+MONS:    deep elf fighter, deep elf mage, deep elf conjurer / deep elf summoner
 : elseif you.branch() == "Orc" then
 MONS:  Orc, orc warrior, orc wizard w:9 / orc sorcerer w:1
 : else

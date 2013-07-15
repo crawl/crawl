@@ -306,6 +306,12 @@ void init_monster_symbols()
         }
     }
 
+    // Let those follow the feature settings, unless specifically overridden.
+    monster_symbols[MONS_ANIMATED_TREE].glyph = get_feat_symbol(DNGN_TREE);
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
+        if (mons_genus(mc) == MONS_STATUE)
+            monster_symbols[mc].glyph = get_feat_symbol(DNGN_GRANITE_STATUE);
+
     for (map<monster_type, cglyph_t>::iterator it = Options.mon_glyph_overrides.begin();
          it != Options.mon_glyph_overrides.end(); ++it)
     {
@@ -731,13 +737,6 @@ bool mons_is_jumpy(const monster* mon)
             && mons_class_is_jumpy(get_chimera_legs(mon)));
 }
 
-bool mons_can_cling_to_walls(const monster* mon)
-{
-    return mons_class_is_clingy(mon->type)
-        || mons_class_is_chimeric(mon->type)
-           && mons_class_is_clingy(get_chimera_legs(mon));
-}
-
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
@@ -806,9 +805,6 @@ bool mons_is_native_in_branch(const monster* mons,
 
     case BRANCH_ORCISH_MINES:
         return (mons_genus(mons->type) == MONS_ORC);
-
-    case BRANCH_DWARVEN_HALL:
-        return (mons_genus(mons->type) == MONS_DWARF);
 
     case BRANCH_SHOALS:
         return (mons_species(mons->type) == MONS_CYCLOPS
@@ -1472,13 +1468,6 @@ bool mons_class_is_jumpy(monster_type mc)
     return mc == MONS_JUMPING_SPIDER;
 }
 
-bool mons_class_is_clingy(monster_type type)
-{
-    return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
-        || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
-        || type == MONS_DEMONIC_CRAWLER;
-}
-
 bool mons_class_is_animated_weapon(monster_type type)
 {
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
@@ -1976,13 +1965,13 @@ int exper_value(const monster* mon, bool real)
             case SPELL_SYMBOL_OF_TORMENT:
             case SPELL_ICE_STORM:
             case SPELL_FIRE_STORM:
+            case SPELL_SHATTER:
+            case SPELL_CHAIN_LIGHTNING:
+            case SPELL_TORNADO:
                 diff += 25;
                 break;
 
             case SPELL_LIGHTNING_BOLT:
-            case SPELL_CHAIN_LIGHTNING:
-            case SPELL_BOLT_OF_DRAINING:
-            case SPELL_VENOM_BOLT:
             case SPELL_STICKY_FLAME_RANGE:
             case SPELL_DISINTEGRATE:
             case SPELL_HAUNT:
@@ -1992,9 +1981,10 @@ int exper_value(const monster* mon, bool real)
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_IRON_SHOT:
             case SPELL_IOOD:
-            case SPELL_TELEPORT_SELF:
-            case SPELL_TELEPORT_OTHER:
-            case SPELL_PORKALATOR:
+            case SPELL_FIREBALL:
+            case SPELL_HASTE:
+            case SPELL_AGONY:
+            case SPELL_LRD:
                 diff += 10;
                 break;
 
@@ -2065,11 +2055,15 @@ int exper_value(const monster* mon, bool real)
     if (mon->type == MONS_STARCURSED_MASS)
         x_val = (x_val * mon->number) / 12;
 
+    // Further reduce xp from zombies
+    if (mons_is_zombified(mon))
+        x_val /= 2;
+
     // Reductions for big values. - bwr
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
-    if (x_val > 1000)
-        x_val = 1000 + (x_val - 1000) / 2;
+    if (x_val > 750)
+        x_val = 750 + (x_val - 750) / 3;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)
@@ -2113,11 +2107,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
 
     switch (mon_type)
     {
-    case MONS_DEEP_ELF_CONJURER:
-        book[0] = MST_DEEP_ELF_CONJURER_I;
-        book[1] = MST_DEEP_ELF_CONJURER_II;
-        break;
-
     case MONS_HELL_KNIGHT:
         book[0] = MST_HELL_KNIGHT_I;
         book[1] = MST_HELL_KNIGHT_II;
@@ -2137,7 +2126,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         break;
 
     case MONS_ORC_WIZARD:
-    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_KNIGHT:
         book[0] = MST_ORC_WIZARD_I;
@@ -2148,7 +2136,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     case MONS_WIZARD:
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
-    case MONS_DEEP_ELF_MAGE:
         book[0] = MST_WIZARD_I;
         book[1] = MST_WIZARD_II;
         book[2] = MST_WIZARD_III;
@@ -2157,12 +2144,11 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         break;
 
     case MONS_DRACONIAN_KNIGHT:
-        book[0] = MST_DEEP_ELF_CONJURER_I;
-        book[1] = MST_DEEP_ELF_CONJURER_II;
-        book[2] = MST_HELL_KNIGHT_I;
-        book[3] = MST_HELL_KNIGHT_II;
-        book[4] = MST_NECROMANCER_I;
-        book[5] = MST_NECROMANCER_II;
+        book[0] = MST_DEEP_ELF_CONJURER;
+        book[1] = MST_HELL_KNIGHT_I;
+        book[2] = MST_HELL_KNIGHT_II;
+        book[3] = MST_NECROMANCER_I;
+        book[4] = MST_NECROMANCER_II;
         break;
 
     case MONS_ANCIENT_CHAMPION:
@@ -2183,6 +2169,14 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[0] = MST_TENGU_REAVER_I;
         book[1] = MST_TENGU_REAVER_II;
         book[2] = MST_TENGU_REAVER_III;
+        break;
+
+    case MONS_DEEP_ELF_MAGE:
+        book[0] = MST_DEEP_ELF_MAGE_I;
+        book[1] = MST_DEEP_ELF_MAGE_II;
+        book[2] = MST_DEEP_ELF_MAGE_III;
+        book[3] = MST_DEEP_ELF_MAGE_IV;
+        book[4] = MST_DEEP_ELF_MAGE_V;
         break;
 
     default:
@@ -3032,6 +3026,10 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
                          mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         monster_drop_things(mon, false, item_is_horn_of_geryon);
     }
+
+    // End constriction.
+    mon->stop_constricting_all(false);
+    mon->stop_being_constricted();
 
     // Cancel fleeing and such.
     mon->behaviour = BEH_WANDER;

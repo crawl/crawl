@@ -870,10 +870,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "harm.";
             }
             break;
+#if TAG_MAJOR_VERSION == 34
         case SPWPN_ORC_SLAYING:
-            description += "It is especially effective against all of "
+            description += "It is not especially effective against all of "
                 "orcish descent.";
             break;
+#endif
         case SPWPN_DRAGON_SLAYING:
             description += "This legendary weapon is deadly to all "
                 "dragonkind. It also provides some protection from the "
@@ -1744,7 +1746,12 @@ string get_item_description(const item_def &item, bool verbose,
     ostringstream description;
 
     if (!dump)
-        description << uppercase_first(item.name(DESC_INVENTORY_EQUIP)) << ".";
+    {
+        string name = item.name(DESC_INVENTORY_EQUIP);
+        if (!in_inventory(item))
+            name = uppercase_first(name);
+        description << name << ".";
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!dump)

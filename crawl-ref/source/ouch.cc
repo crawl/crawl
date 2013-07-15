@@ -231,24 +231,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_NEG:
-        resist = player_prot_life();
-
-        // TSO's protection.
-        if (you.religion == GOD_SHINING_ONE && you.piety > resist * 50)
-        {
-            int unhurted = min(hurted, (you.piety * hurted) / 150);
-
-            if (unhurted > 0)
-                hurted -= unhurted;
-        }
-        else if (resist > 0)
-            hurted -= (resist * hurted) / 3;
+        hurted = resist_adjust_damage(&you, flavour, player_prot_life(),
+                                      hurted, true);
 
         if (doEffects)
-        {
-            drain_exp(true, beam ? beam->beam_source : NON_MONSTER,
-                      !kaux.empty() ? kaux.c_str() : NULL);
-        }
+            drain_exp(true, min(75, 25 + original * 2 / 3));
         break;
 
     case BEAM_ICE:
@@ -791,7 +778,7 @@ void lose_level(int death_source, const char *aux)
     ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full, int death_source, const char *aux)
+bool drain_exp(bool announce_full, int power)
 {
     const int protection = player_prot_life();
 
@@ -803,55 +790,20 @@ bool drain_exp(bool announce_full, int death_source, const char *aux)
         return false;
     }
 
-    if (you.experience == 0)
-    {
-        mpr("You are drained of all life!");
-        ouch(INSTANT_DEATH, death_source, KILLED_BY_DRAINING, aux);
-
-        // Return in case death was escaped via wizard mode.
-        return true;
-    }
-
-    if (you.experience_level == 1)
-    {
-        mpr("You feel drained.");
-        you.experience = 0;
-
-        return true;
-    }
-
-    unsigned int total_exp = exp_needed(you.experience_level + 1)
-                                  - exp_needed(you.experience_level);
-    unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
-
-    // TSO's protection.
-    if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
-    {
-        unsigned int undrained = min(exp_drained,
-                                     (you.piety * exp_drained) / 150);
-
-        if (undrained > 0)
-        {
-            simple_god_message(" protects your life force!");
-            if (undrained > 0)
-                exp_drained -= undrained;
-        }
-    }
-    else if (protection > 0)
+    if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
-        exp_drained -= (protection * exp_drained) / 3;
+        power /= (protection * 2);
     }
 
-    if (exp_drained > 0)
+    if (power > 0)
     {
         mpr("You feel drained.");
         xom_is_stimulated(15);
-        you.experience -= exp_drained;
 
-        dprf("You lose %d experience points.", exp_drained);
+        you.attribute[ATTR_XP_DRAIN] += power;
 
-        level_change(death_source, aux);
+        dprf("Drained by %d points (%d total)", power, you.attribute[ATTR_XP_DRAIN]);
 
         return true;
     }

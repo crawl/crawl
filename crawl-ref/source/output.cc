@@ -974,7 +974,6 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_AFRAID,
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
-        STATUS_CLINGING,
         STATUS_HOVER,
         DUR_TORNADO,
         DUR_LIQUEFYING,
@@ -1007,6 +1006,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_INFUSION,
         DUR_SONG_OF_SLAYING,
         DUR_SONG_OF_SHIELDING,
+        STATUS_DRAINED
     };
 
     status_info inf;
@@ -2485,6 +2485,7 @@ static string _status_mut_abilities(int sw)
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
         DUR_SPIRIT_HOWL,
+        STATUS_DRAINED
     };
 
     status_info inf;
@@ -2643,6 +2644,10 @@ static string _status_mut_abilities(int sw)
 
     case SP_PALE_DRACONIAN:
         mutations.push_back(_dragon_abil("breathe steam"));
+        break;
+
+    case SP_GARGOYLE:
+        AC_change += 4 + you.experience_level * 3 / 5;
         break;
 
     default:

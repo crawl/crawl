@@ -3109,6 +3109,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return "stone staircase leading up";
+    case DNGN_SEALED_STAIRS_DOWN:
+        return "sealed passage leading down";
+    case DNGN_SEALED_STAIRS_UP:
+        return "sealed passage leading up";
     case DNGN_EXIT_DUNGEON:
         return "staircase leading out of the dungeon";
     case DNGN_ENTER_HELL:
@@ -3155,8 +3159,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "gate leading out of Pandemonium";
     case DNGN_TRANSIT_PANDEMONIUM:
         return "gate leading to another region of Pandemonium";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARVEN_HALL:
         return "staircase to the Dwarven Hall";
+#endif
     case DNGN_ENTER_ORCISH_MINES:
         return "staircase to the Orcish Mines";
     case DNGN_ENTER_LAIR:
@@ -3198,7 +3204,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_EXPIRED_PORTAL:
         // should be set whenever used
         return "collapsed entrance";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
@@ -3533,9 +3541,6 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 {
     vector<string> descs;
 
-    if (mi.is(MB_CLINGING))
-        descs.push_back("clinging");
-
     if (mi.is(MB_MESMERIZING))
         descs.push_back("mesmerising");
 
@@ -3596,9 +3601,6 @@ static string _get_monster_desc(const monster_info& mi)
 {
     string text    = "";
     string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
-
-    if (mi.is(MB_CLINGING))
-        text += pronoun + " is clinging to the wall.\n";
 
     if (mi.is(MB_MESMERIZING))
         text += "You are mesmerised by her song.\n";

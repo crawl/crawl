@@ -889,11 +889,6 @@ deep elf priest
 Cet elfe profond est un serviteur de l'ancien dieu sombre des elfes profond, et
 a été mis au commandement des énergies tortueuse de son seigneur énigmatique.
 %%%%
-deep elf soldier
-
-Un soldat commun des elfes profonds qui connait quelques sorts utiles en
-combat.
-%%%%
 deep elf sorcerer
 
 Un lanceur de sorts puissant qui tient ses pouvoirs des Enfers, et qui possède
@@ -2014,10 +2009,6 @@ pale draconian
 Un humanoïde recouvert d'écailles avec une queue reptilienne et de petites
 ailes.
 %%%%
-paladin
-
-Un guerrier pieu, en armure, combattant au service du Rayonnant.
-%%%%
 pandemonium lord
 
 Un formidable seigneur démon habitant les halls sans fin du Pandémonium. Chacun
@@ -2428,12 +2419,6 @@ spiny worm
 
 Un énorme ver noir, son corps segmenté est couvert de plaques hérissées de
 pointes d'une armure chitineuse. Du venin acide coule de sa machoire dentée.
-%%%%
-spirit
-
-L'âme d'une créature sainte, délaissé de son corps. C'est une créature lente et
-timide, mais étant quelque chose de divin, elle doit probablement être sous
-protection céleste.
 %%%%
 spriggan
 

@@ -408,6 +408,16 @@ A sealed door
 A door sealed tightly by arcane runes. It refuses to open for any creature not
 recognised by its magic.
 %%%%
+A sealed passage leading down
+
+A descending passage sealed tightly by a magical barricade. Forcing your way
+through it looks impossible, so long as the magic holds.
+%%%%
+A sealed passage leading up
+
+An ascending passage sealed tightly by a magical barricade. Forcing your way
+through it looks impossible, so long as the magic holds.
+%%%%
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
@@ -526,11 +536,6 @@ A staircase to the Orcish Mines
 
 An entrance to the mines of the orcs, filled with their gold, but treacherous
 and easy to get trapped in.
-%%%%
-A staircase to the Dwarven Hall
-
-An entrance to the well-worked hall of the dwarves. You think you can smell
-ale.
 %%%%
 A staircase to the Enchanted Forest
 
@@ -1092,12 +1097,6 @@ of the water flowing inside.
 A glass window
 
 A pockmarked, ultra-hard glass window.
-%%%%
-# Dwarf
-A granite statue of a fallen hero
-
-A life-size granite statue of a dwarf standing guard in this hall. You can't
-help but feel as though it's watching you.
 %%%%
 # due_jungle_book (Lair:8)
 An elephant-shaped statue

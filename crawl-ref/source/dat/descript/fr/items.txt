@@ -1096,12 +1096,6 @@ Cet anneau permet son porteur de voler. Le pouvoir de l'anneau ne peut pas être
 utilisé en vol, donc c'est peu conseillé pour les longs trajets au-dessus d'un
 liquide mortel.
 %%%%
-ring of life protection
-
-Cet anneau bénit protège la force vitale de son porteur contre l'énergie
-négative, le rendant partiellement à l'abri des effets drainant de la magie des
-morts-vivants et de la nécromancie.
-%%%%
 ring of magical power
 
 Cet anneau augmente les réserves de pouvoir magique de son porteur.
@@ -1109,6 +1103,12 @@ Cet anneau augmente les réserves de pouvoir magique de son porteur.
 ring of poison resistance
 
 Cet anneau donne une protection contre les poisons et venins.
+%%%%
+ring of positive energy
+
+Cet anneau bénit protège la force vitale de son porteur contre l'énergie
+négative, le rendant partiellement à l'abri des effets drainant de la magie des
+morts-vivants et de la nécromancie.
 %%%%
 ring of protection
 

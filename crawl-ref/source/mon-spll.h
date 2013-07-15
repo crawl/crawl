@@ -606,44 +606,33 @@
     {  MST_DEEP_ELF_SUMMONER,
       {
        SPELL_BLINK,
-       SPELL_SUMMON_MINOR_DEMON,
-       SPELL_SUMMON_UFETUBUS,
-       SPELL_SUMMON_DEMON,
-       SPELL_SUMMON_DEMON,
+       SPELL_SUMMON_VERMIN,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_VERMIN,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
     },
 
-    {  MST_DEEP_ELF_CONJURER_I,
+    {  MST_DEEP_ELF_CONJURER,
       {
        SPELL_BOLT_OF_FIRE,
        SPELL_BOLT_OF_COLD,
-       SPELL_CANTRIP,
+       SPELL_NO_SPELL,
        SPELL_LIGHTNING_BOLT,
        SPELL_BOLT_OF_DRAINING,
        SPELL_NO_SPELL
       }
     },
 
-    {  MST_DEEP_ELF_CONJURER_II,
-      {
-       SPELL_STICKY_FLAME_RANGE,
-       SPELL_ISKENDERUNS_MYSTIC_BLAST,
-       SPELL_INVISIBILITY,
-       SPELL_STONE_ARROW,
-       SPELL_BOLT_OF_DRAINING,
-       SPELL_INVISIBILITY
-      }
-    },
-
     {  MST_DEEP_ELF_PRIEST,
       {
        SPELL_PAIN,
-       SPELL_CANTRIP,
-       SPELL_MINOR_HEALING,
+       SPELL_MALIGN_OFFERING,
+       SPELL_NO_SPELL,
        SPELL_SMITING,
        SPELL_TWISTED_RESURRECTION,
-       SPELL_MINOR_HEALING
+       SPELL_NO_SPELL
       }
     },
 
@@ -651,10 +640,10 @@
       {
        SPELL_SUMMON_DEMON,
        SPELL_HELLFIRE_BURST,
-       SPELL_MINOR_HEALING,
+       SPELL_MALIGN_OFFERING,
        SPELL_SMITING,
        SPELL_TWISTED_RESURRECTION,
-       SPELL_MINOR_HEALING
+       SPELL_NO_SPELL
       }
     },
 
@@ -1036,12 +1025,12 @@
     // too much time crawling around.
     {  MST_CURSE_TOE,
       {
-       SPELL_SUMMON_UNDEAD,
+       SPELL_SYMBOL_OF_TORMENT,
        SPELL_SUMMON_MUSHROOMS, // fungal theme
        SPELL_SUMMON_MUSHROOMS,
        SPELL_SYMBOL_OF_TORMENT,
-       SPELL_SUMMON_UNDEAD,
-       SPELL_SYMBOL_OF_TORMENT
+       SPELL_SUMMON_MUSHROOMS,
+       SPELL_NO_SPELL
       }
     },
 
@@ -1615,17 +1604,6 @@
       }
     },
 
-    {  MST_SPIRIT,
-      {
-       SPELL_BLINK_AWAY,
-       SPELL_BLINK_AWAY,
-       SPELL_BLINK_AWAY,
-       SPELL_BLINK_AWAY,
-       SPELL_BLINK_AWAY,
-       SPELL_BLINK_AWAY
-      }
-    },
-
     {  MST_OPHAN,
       {
        SPELL_BOLT_OF_FIRE,
@@ -2172,6 +2150,72 @@
        SPELL_NO_SPELL,
        SPELL_WATER_ELEMENTALS,
        SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DRACONIAN_ZEALOT,
+      {
+       SPELL_SUMMON_DEMON,
+       SPELL_HELLFIRE_BURST,
+       SPELL_MINOR_HEALING,
+       SPELL_SMITING,
+       SPELL_ANIMATE_DEAD,
+       SPELL_MINOR_HEALING
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_I,
+      {
+       SPELL_FREEZE,
+       SPELL_THROW_ICICLE,
+       SPELL_FREEZE,
+       SPELL_SUMMON_ICE_BEAST,
+       SPELL_THROW_ICICLE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_II,
+      {
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_STONE_ARROW,
+       SPELL_NO_SPELL,
+       SPELL_PETRIFY,
+       SPELL_STONE_ARROW,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_III,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_SLOW,
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_BLINK,
+       SPELL_BLINK
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_IV,
+      {
+       SPELL_FLAME_TONGUE,
+       SPELL_STICKY_FLAME_RANGE,
+       SPELL_FIREBALL,
+       SPELL_FIREBALL,
+       SPELL_THROW_FLAME,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DEEP_ELF_MAGE_V,
+      {
+       SPELL_MAGIC_DART,
+       SPELL_FORCE_LANCE,
+       SPELL_BATTLESPHERE,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BATTLESPHERE,
        SPELL_NO_SPELL
       }
     },

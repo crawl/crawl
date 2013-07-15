@@ -69,7 +69,7 @@ monster::monster()
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
-      number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
+      number(0), colour(BLACK), foe_memory(0),
       god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
 
 {
@@ -78,6 +78,7 @@ monster::monster()
     props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
+    shield_blocks = 0;
 
     constricting = 0;
 
@@ -111,6 +112,7 @@ void monster::reset()
     inv.init(NON_ITEM);
     spells.init(SPELL_NO_SPELL);
 
+    mid             = 0;
     flags           = 0;
     experience      = 0;
     type            = MONS_NO_MONSTER;
@@ -127,8 +129,12 @@ void monster::reset()
     number          = 0;
     damage_friendly = 0;
     damage_total    = 0;
+    shield_blocks   = 0;
+    foe_memory      = 0;
+    god             = GOD_NO_GOD;
 
     mons_remove_from_grid(this);
+    target.reset();
     position.reset();
     firing_pos.reset();
     patrol_point.reset();
@@ -141,7 +147,11 @@ void monster::reset()
     // no actual in-game monster should be reset while still constricting
     ASSERT(!constricting);
 
-    client_id = 0;
+    client_id = last_client_id = 0;
+
+    // Just for completeness.
+    speed           = 0;
+    colour          = 0;
 }
 
 void monster::init_with(const monster& mon)
@@ -637,10 +647,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 
         // Draconians won't use dragon slaying weapons.
         if (brand == SPWPN_DRAGON_SLAYING && is_dragonkind(this))
-            return false;
-
-        // Orcs won't use orc slaying weapons.
-        if (brand == SPWPN_ORC_SLAYING && is_orckind(this))
             return false;
 
         // Undead and demonic monsters and monsters that are
@@ -4134,10 +4140,8 @@ god_type monster::deity() const
     return god;
 }
 
-bool monster::drain_exp(actor *agent, const char *aux, bool quiet, int pow)
+bool monster::drain_exp(actor *agent, bool quiet, int pow)
 {
-    UNUSED(aux);
-
     if (x_chance_in_y(res_negative_energy(), 3))
         return false;
 
@@ -4145,17 +4149,17 @@ bool monster::drain_exp(actor *agent, const char *aux, bool quiet, int pow)
         mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
-    hurt(agent, 2 + random2(pow), BEAM_NEG, !quiet);
+    hurt(agent, 2 + random2(3), BEAM_NEG, !quiet);
 
     if (alive())
     {
-        if (x_chance_in_y(pow, 15))
+        if (x_chance_in_y(1, 5))
         {
             hit_dice--;
             experience = 0;
         }
 
-        max_hit_points -= 2 + random2(pow);
+        max_hit_points -= 2 + random2(3);
         hit_points = min(max_hit_points, hit_points);
     }
 
@@ -5756,11 +5760,6 @@ reach_type monster::reach_range() const
     if (wpn)
         return weapon_reach(*wpn);
     return REACH_NONE;
-}
-
-bool monster::can_cling_to_walls() const
-{
-    return mons_can_cling_to_walls(this);
 }
 
 void monster::steal_item_from_player()

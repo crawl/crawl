@@ -184,11 +184,6 @@ deep elf knight
 
 Ein kampferfahrener Tiefen-Elf Kämpfer.
 %%%%
-deep elf soldier
-
-Ein normaler Soldat der Tiefen-Elfen welcher sinnvolle Zaubersprüche für den
-Kampf kennt.
-%%%%
 deep elf sorcerer
 
 Ein mächtiger Zauberkundiger welcher Kräfte aus der Hölle verwendet, und im

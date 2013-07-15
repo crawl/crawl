@@ -389,7 +389,7 @@ ENDMAP
 NAME:   uniq_lamia
 DEPTH:  Snake:2-
 WEIGHT: 50
-: place_unique(_G, "Lamia band")
+: place_unique(_G, "Lamia")
 
 NAME:   uniq_sojobo
 DEPTH:  D:20-27, Swamp:5, Snake:5, Shoals:5, Spider:5, Vaults:2-, Crypt, Forest, Blade, Tomb

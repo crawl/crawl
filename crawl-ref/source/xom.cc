@@ -1063,7 +1063,7 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 static bool _player_is_dead(bool soon = true)
 {
     return you.hp <= 0
-        || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
+        || is_feat_dangerous(grd(you.pos()))
         || you.did_escape_death()
         || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
 }
@@ -2931,8 +2931,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     {
         // Don't confuse the player if standing next to lava or deep water.
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (in_bounds(*ai) && is_feat_dangerous(grd(*ai))
-                && !you.can_cling_to(*ai))
+            if (in_bounds(*ai) && is_feat_dangerous(grd(*ai)))
                 return XOM_DID_NOTHING;
     }
 
@@ -3284,17 +3283,17 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     else if (coinflip())
     {
         // XP drain effect (25%).
-        if (player_prot_life() < 3 && (nasty || you.experience > 0))
+        if (player_prot_life() < 3)
         {
             if (debug)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, NON_MONSTER, aux.c_str());
-            if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp(true, NON_MONSTER, aux.c_str());
-            if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp(true, NON_MONSTER, aux.c_str());
+            drain_exp(true, 75);
+            if (random2(sever) > 3)
+                drain_exp(true, 75);
+            if (random2(sever) > 3)
+                drain_exp(true, 75);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;

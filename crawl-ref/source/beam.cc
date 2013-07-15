@@ -19,6 +19,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "branch.h"
@@ -1630,14 +1631,21 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         else
         {
+            hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                          mons->res_negative_energy(),
+                                          hurted);
+
             // Early out if no side effects.
             if (!doFlavouredEffects)
                 return hurted;
 
+            if (original > hurted)
+                simple_monster_message(mons, " resists.");
+
             if (mons->observable())
                 pbolt.obvious_effect = true;
 
-            mons->drain_exp(pbolt.agent(), pbolt.aux_source.c_str());
+            mons->drain_exp(pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_NECROMANCY, 2, pbolt.effect_known);
@@ -2347,6 +2355,27 @@ static void _imb_explosion(bolt *parent, coord_def center)
                     parent->beam_cancelled = true;
                     return;
                 }
+            }
+        }
+    }
+}
+
+static void _malign_offering_effect(actor* victim, const actor* agent, int damage)
+{
+    if (!agent || damage < 1)
+        return;
+
+    mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
+    damage = victim->hurt(agent, damage, BEAM_NEG);
+
+    for (actor_iterator ai(victim); ai; ++ai)
+    {
+        if (mons_aligned(agent, *ai) && ai->holiness() != MH_NONLIVING)
+        {
+            if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(*ai))
+            {
+                mprf("%s %s healed.", ai->name(DESC_THE).c_str(),
+                                      ai->conj_verb("are").c_str());
             }
         }
     }
@@ -3561,6 +3590,20 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
+    case BEAM_MALIGN_OFFERING:
+    {
+        int dam = resist_adjust_damage(&you, BEAM_NEG, you.res_negative_energy(),
+                                       damage.roll());
+        if (dam)
+        {
+            _malign_offering_effect(&you, agent(), dam);
+            obvious_effect = true;
+        }
+        else
+            canned_msg(MSG_YOU_UNAFFECTED);
+        break;
+    }
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -4774,6 +4817,7 @@ bool bolt::has_saving_throw() const
     case BEAM_ENSLAVE_SOUL:     // has a different saving throw
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
+    case BEAM_MALIGN_OFFERING:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -4820,6 +4864,11 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_SENTINEL_MARK:
         rc = false;
+        break;
+
+    case BEAM_MALIGN_OFFERING:
+        rc = (mon->res_negative_energy(intrinsic_only) < 3);
+        break;
 
     default:
         break;
@@ -5223,6 +5272,19 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
+
+    case BEAM_MALIGN_OFFERING:
+    {
+        int dam = resist_adjust_damage(mon, BEAM_NEG, mon->res_negative_energy(),
+                                       damage.roll());
+        if (dam)
+        {
+            _malign_offering_effect(mon, agent(), dam);
+            obvious_effect = true;
+        }
+        else
+            simple_monster_message(mon, " is unaffected.");
+    }
 
     default:
         break;
@@ -6063,6 +6125,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
     case BEAM_VULNERABILITY:         return "vulnerability";
+    case BEAM_MALIGN_OFFERING:       return "malign offering";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

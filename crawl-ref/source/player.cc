@@ -224,12 +224,10 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb,
     return true;
 }
 
-static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
-                                    bool cling = true, bool interactive = true)
+static bool _check_moveto_dangerous(const coord_def& p, const string& msg, bool interactive = true)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
-        || you.airborne() || cling && you.can_cling_to(p)
-        || !is_feat_dangerous(env.grid(p)))
+        || you.airborne() || !is_feat_dangerous(env.grid(p)))
     {
         return true;
     }
@@ -254,12 +252,6 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
 static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
                                   const string &msg, bool interactive = true)
 {
-    if (you.is_wall_clinging()
-        && (move_verb == "blink" || move_verb == "passwall"))
-    {
-        return _check_moveto_dangerous(p, msg, false, interactive);
-    }
-
     if (!need_expiration_warning() && need_expiration_warning(p)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
@@ -346,7 +338,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (is_feat_dangerous(new_grid) && !you.is_wall_clinging())
+    if (is_feat_dangerous(new_grid))
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
@@ -410,28 +402,18 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 you.time_taken *= 13 + random2(8);
                 you.time_taken /= 10;
             }
-            const bool will_cling = you.can_cling_to_walls()
-                                    && cell_is_clingable(you.pos());
 
             if (!feat_is_water(old_feat))
             {
-                if (stepped && will_cling)
-                {
-                    mpr("You slowly cross the shallow water and cling to the "
-                        "wall.");
-                }
-                else
-                {
-                    mprf("You %s the %s water.",
-                         stepped ? "enter" : "fall into",
-                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
-                }
+                mprf("You %s the %s water.",
+                     stepped ? "enter" : "fall into",
+                     new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
             }
 
             if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
                 mpr("You sink to the bottom.");
 
-            if (!feat_is_water(old_feat) && !will_cling)
+            if (!feat_is_water(old_feat))
             {
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
@@ -444,12 +426,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     {
         mprf("You heave yourself high above the %s.", feat_type_name(new_grid));
     }
-
-    const bool was_clinging = you.is_wall_clinging();
-    const bool is_clinging = stepped && you.check_clinging(stepped);
-
-    if (feat_is_water(new_grid) && was_clinging && !is_clinging)
-        _splash();
 
     // Traps go off.
     if (trap_def* ptrap = find_trap(you.pos()))
@@ -470,10 +446,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT_IN_BOUNDS(p);
 
     if (!stepped)
-    {
-        you.clear_clinging();
         tornado_move(p);
-    }
 
     // assuming that entering the same square means coming from above (flight)
     const coord_def old_pos = you.pos();
@@ -1352,15 +1325,6 @@ int player_regen()
             rr += 10; // Bonus regeneration for full vampires.
     }
 
-    // Healing boost based on petrification status.
-    if (you.species == SP_GARGOYLE)
-    {
-        if (you.duration[DUR_PETRIFYING])
-            rr += 30;
-        if (you.duration[DUR_PETRIFIED])
-            rr += 60;
-    }
-
     // Compared to other races, a starting djinni would have regen of 4 (hp)
     // plus 17 (mp).  So let's compensate them early; they can stand getting
     // shafted on the total regen rates later on.
@@ -1905,7 +1869,8 @@ int player_kiku_res_torment()
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     if (you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
-            : you.is_undead && (temp || you.form != TRAN_LICH))
+            : you.is_undead && (temp || you.form != TRAN_LICH)
+              || you.is_artificial())
     {
         return 3;
     }
@@ -2345,12 +2310,9 @@ int player_movement_speed(bool ignore_burden)
     if (you.liquefied_ground())
         mv += 3;
 
-    if (you.species == SP_GARGOYLE && you.petrifying())
-        mv += 3;
-
     // armour
     if (you.run())
-        mv -= 2;
+        mv -= 1;
     if (!you.suppressed())
         mv += 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
@@ -2429,8 +2391,7 @@ int player_speed(void)
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE
-            || (you.duration[DUR_PETRIFYING] && you.species != SP_GARGOYLE))
+    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
         ps /= 10;
@@ -2987,6 +2948,8 @@ void forget_map(bool rot)
         }
 
         env.map_knowledge(p).clear();
+        if (env.map_forgotten.get())
+            (*env.map_forgotten.get())(p).clear();
         StashTrack.update_stash(p);
 #ifdef USE_TILE
         tile_forget_map(p);
@@ -3121,8 +3084,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     you.exp_available += exp_gained;
 
     train_skills();
-    while (you.exp_available >= calc_skill_cost(you.skill_cost_level)
-           && check_selected_skills())
+    while (check_selected_skills()
+           && you.exp_available >= calc_skill_cost(you.skill_cost_level))
     {
         train_skills();
     }
@@ -3143,6 +3106,25 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     }
 
     recharge_elemental_evokers(exp_gained);
+
+    if (you.attribute[ATTR_XP_DRAIN])
+    {
+        int loss = div_rand_round(exp_gained * 3,
+                                  calc_skill_cost(you.skill_cost_level));
+
+        // Make it easier to recover from very heavy levels of draining
+        // (they're nasty enough as it is)
+        loss = loss * (1 + (you.attribute[ATTR_XP_DRAIN] / 250.0f));
+
+        dprf("Lost %d of %d draining points", loss, you.attribute[ATTR_XP_DRAIN]);
+
+        you.attribute[ATTR_XP_DRAIN] -= loss;
+        if (you.attribute[ATTR_XP_DRAIN] <= 0)
+        {
+            you.attribute[ATTR_XP_DRAIN] = 0;
+            mpr("Your life force feels restored.", MSGCH_RECOVERY);
+        }
+    }
 }
 
 static void _draconian_scale_colour_message()
@@ -3659,6 +3641,13 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                                             : STAT_INT), 1, false,
                                 "level gain");
                 }
+
+                if (you.experience_level == 14)
+                {
+                    perma_mutate(MUT_BIG_WINGS, 1, "gargoyle growth");
+                    mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
+                }
+
                 break;
 
             default:
@@ -3874,12 +3863,6 @@ int check_stealth(void)
             else
                 race_mod = 18;
             break;
-        case SP_GARGOYLE:
-            if (you.is_wall_clinging() && you.form != TRAN_SPIDER)
-              race_mod = 19;
-            else
-              race_mod = 15;
-            break;
         case SP_HALFLING:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
@@ -3953,23 +3936,20 @@ int check_stealth(void)
     const item_def *cloak = you.slot_item(EQ_CLOAK, false);
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
 
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
+    if (arm)
     {
-        if (arm)
-        {
-            // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
-            // Now 2 * EP^2 / 3 after EP rescaling.
-            const int ep = -property(*arm, PARM_EVASION);
-            const int penalty = 2 * ep * ep / 3;
-    #if 0
-            dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
-    #endif
-            stealth -= penalty;
-        }
-
-        stealth += you.scan_artefacts(ARTP_STEALTH);
+        // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
+        // Now 2 * EP^2 / 3 after EP rescaling.
+        const int ep = -property(*arm, PARM_EVASION);
+        const int penalty = 2 * ep * ep / 3;
+#if 0
+        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
+#endif
+        stealth -= penalty;
     }
+
+    if (!you.suppressed())
+        stealth += you.scan_artefacts(ARTP_STEALTH);
 
     // Not exactly magical, so not suppressed.
     if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
@@ -4366,7 +4346,6 @@ void display_char_status()
         DUR_AFRAID,
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
-        STATUS_CLINGING,
         STATUS_HOVER,
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
@@ -4388,6 +4367,7 @@ void display_char_status()
         DUR_INFUSION,
         DUR_SONG_OF_SHIELDING,
         DUR_SONG_OF_SLAYING,
+        STATUS_DRAINED
     };
 
     status_info inf;
@@ -4444,15 +4424,7 @@ unsigned int exp_needed(int lev, int exp_apt)
     // Basic plan:
     // Section 1: levels  1- 5, second derivative goes 10-10-20-30.
     // Section 2: levels  6-13, second derivative is exponential/doubling.
-    // Section 3: levels 14-27, second derivative is constant at 6000.
-    //
-    // Section three is constant so we end up with high levels at about
-    // their old values (level 27 at 850k), without delta2 ever decreasing.
-    // The values that are considerably different (ie level 13 is now 29000,
-    // down from 41040 are because the second derivative goes from 9040 to
-    // 1430 at that point in the original, and then slowly builds back
-    // up again).  This function smoothes out the old level 10-15 area
-    // considerably.
+    // Section 3: levels 14-27, second derivative is constant at 8470.
 
     // Here's a table:
     //
@@ -4470,21 +4442,21 @@ unsigned int exp_needed(int lev, int exp_apt)
     //  10        3910     1930     960
     //  11        7760     3850    1920
     //  12       15450     7690    3840
-    //  13       29000    13550    5860
-    //  14       48500    19500    5950
-    //  15       74000    25500    6000
-    //  16      105500    31500    6000
-    //  17      143000    37500    6000
-    //  18      186500    43500    6000
-    //  19      236000    49500    6000
-    //  20      291500    55500    6000
-    //  21      353000    61500    6000
-    //  22      420500    67500    6000
-    //  23      494000    73500    6000
-    //  24      573500    79500    6000
-    //  25      659000    85500    6000
-    //  26      750500    91500    6000
-    //  27      848000    97500    6000
+    //  13       26895    11445    3755
+    //  14       45585    18690    7245
+    //  15       72745    27160    8470
+    //  16      108375    35630    8470
+    //  17      152475    44100    8470
+    //  18      205045    52570    8470
+    //  19      266085    61040    8470
+    //  20      335595    69510    8470
+    //  21      413575    77980    8470
+    //  22      500025    86450    8470
+    //  23      594945    94920    8470
+    //  24      698335    103390   8470
+    //  25      810195    111860   8470
+    //  26      930525    120330   8470
+    //  27     1059325    128800   8470
 
 
     switch (lev)
@@ -4511,7 +4483,7 @@ unsigned int exp_needed(int lev, int exp_apt)
         else
         {
             lev -= 12;
-            level = 15500 + 10500 * lev + 3000 * lev * lev;
+            level = 16675 + 5985 * lev + 4235 * lev * lev;
         }
         break;
     }
@@ -5567,10 +5539,6 @@ void float_player()
 
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
-
-    // The player hasn't actually taken a step, but in this case, we want
-    // neither the message, nor the location effect.
-    you.check_clinging(true);
 }
 
 void fly_player(int pow, bool already_flying)
@@ -5607,15 +5575,12 @@ bool is_hovering()
 {
     return you.species == SP_DJINNI
            && !feat_has_dry_floor(grd(you.pos()))
-           && !you.airborne()
-           && !you.is_wall_clinging();
+           && !you.airborne();
 }
 
 bool djinni_floats()
 {
-    return you.species == SP_DJINNI
-           && you.form != TRAN_TREE
-           && (you.form != TRAN_SPIDER || !you.is_wall_clinging());
+    return you.species == SP_DJINNI && you.form != TRAN_TREE;
 }
 
 static void _end_water_hold()
@@ -5658,7 +5623,7 @@ void handle_player_drowning(int delay)
                 div_rand_round((28 + stepdown((float)you.duration[DUR_WATER_HOLD], 28.0))
                                 * delay,
                                 BASELINE_DELAY * 10);
-            ouch(dam, NON_MONSTER, KILLED_BY_WATER);
+            ouch(dam, mons->mindex(), KILLED_BY_WATER);
             mpr("Your lungs strain for air!", MSGCH_WARN);
         }
     }
@@ -6371,6 +6336,11 @@ int player::skill(skill_type sk, int scale, bool real) const
             level = ash_skill_boost(sk, scale);
         }
     }
+    if (you.attribute[ATTR_XP_DRAIN])
+    {
+        level = (int) max(0.0, level - you.attribute[ATTR_XP_DRAIN] / 100.0
+                                       * (scale + level/30.0));
+    }
 
     return level;
 }
@@ -6476,7 +6446,8 @@ int player::armour_class() const
         AC += 100 * player_icemail_armour_class();
 
     if (!player_is_shapechanged()
-        || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN)))
+        || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN))
+        || (form == TRAN_STATUE && species == SP_GARGOYLE))
     {
         // Being a lich doesn't preclude the benefits of hide/scales -- bwr
         //
@@ -6499,6 +6470,12 @@ int player::armour_class() const
             {
             case SP_NAGA:
                 AC += 100 * experience_level / 3;              // max 9
+                break;
+
+            case SP_GARGOYLE:
+                AC += 400 + 100 * experience_level * 3 / 5;    // max 20
+                if (form == TRAN_STATUE)
+                    AC += 500 + skill(SK_EARTH_MAGIC, 50);
                 break;
 
             default:
@@ -6791,6 +6768,9 @@ int player::res_rotting(bool temp) const
     if (temp && (petrified() || form == TRAN_STATUE || form == TRAN_WISP))
         return 3;
 
+    if (species == SP_GARGOYLE)
+        return 3;
+
     if (mutation[MUT_FOUL_STENCH])
         return 1;
 
@@ -6978,7 +6958,8 @@ bool player::permanent_flight() const
 bool player::racial_permanent_flight() const
 {
     return (species == SP_TENGU && experience_level >= 15
-            || species == SP_BLACK_DRACONIAN && experience_level >= 14);
+            || species == SP_BLACK_DRACONIAN && experience_level >= 14
+            || species == SP_GARGOYLE && experience_level >= 14);
 }
 
 bool player::tengu_flight() const
@@ -7038,7 +7019,16 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
                  bool cleanup_dead, bool attacker_effects)
 {
     // We ignore cleanup_dead here.
-    if (agent->is_monster())
+    if (!agent)
+    {
+        // FIXME: This can happen if a deferred_damage_fineff does damage
+        // to a player from a dead monster.  We should probably not do that,
+        // but it could be tricky to fix, so for now let's at least avoid
+        // a crash even if it does mean funny death messages.
+        ouch(amount, NON_MONSTER, KILLED_BY_MONSTER, "",
+             false, "posthumous revenge", attacker_effects);
+    }
+    else if (agent->is_monster())
     {
         const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
@@ -7109,9 +7099,9 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     return true;
 }
 
-bool player::drain_exp(actor *who, const char *aux, bool quiet, int pow)
+bool player::drain_exp(actor *who, bool quiet, int pow)
 {
-    return ::drain_exp(!quiet, who->mindex(), aux);
+    return ::drain_exp(!quiet, pow);
 }
 
 void player::confuse(actor *who, int str)
@@ -7571,6 +7561,9 @@ bool player::can_bleed(bool allow_tran) const
         return false;
     }
 
+    if (holiness() == MH_NONLIVING)
+        return false;
+
     return true;
 }
 
@@ -7931,7 +7924,7 @@ bool player::made_nervous_by(const coord_def &p)
                         || mi->asleep()
                         || mi->confused()
                         || mi->cannot_act())
-                && see_cell(mi->pos())
+                && you.can_see(*mi)
                 && !mons_is_firewood(*mi)
                 && !mi->neutral())
                 return true;

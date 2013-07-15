@@ -1002,7 +1002,7 @@ static bool _siren_movement_effect(const monster* mons)
         const coord_def newpos = you.pos() + dir;
 
         if (!in_bounds(newpos)
-            || (is_feat_dangerous(grd(newpos)) && !you.can_cling_to(newpos))
+            || is_feat_dangerous(grd(newpos))
             || !you.can_pass_through_feat(grd(newpos)))
         {
             do_resist = true;
@@ -1633,7 +1633,7 @@ static bool _should_force_door_shut(const coord_def& door)
     return (((cur_tension - new_tension) * 3) <= cur_tension);
 }
 
-static bool _seal_doors(const monster* warden)
+static bool _seal_doors_and_stairs(const monster* warden)
 {
     ASSERT(warden);
     ASSERT(warden->type == MONS_VAULT_WARDEN);
@@ -1719,7 +1719,7 @@ static bool _seal_doors(const monster* warden)
         }
 
         // Try to seal the door
-        if (grd(*ri) == DNGN_CLOSED_DOOR)
+        if (grd(*ri) == DNGN_CLOSED_DOOR || grd(*ri) == DNGN_RUNED_DOOR)
         {
             set<coord_def> all_door;
             find_connected_identical(*ri, grd(*ri), all_door);
@@ -1730,6 +1730,18 @@ static bool _seal_doors(const monster* warden)
                                     TERRAIN_CHANGE_DOOR_SEAL, warden);
                 had_effect = true;
             }
+        }
+        else if (feat_is_travelable_stair(grd(*ri)))
+        {
+            dungeon_feature_type stype;
+            if (feat_stair_direction(grd(*ri)) == CMD_GO_UPSTAIRS)
+                stype = DNGN_SEALED_STAIRS_UP;
+            else
+                stype = DNGN_SEALED_STAIRS_DOWN;
+
+            temp_change_terrain(*ri, stype, seal_duration,
+                                TERRAIN_CHANGE_DOOR_SEAL, warden);
+            had_effect = true;
         }
     }
 
@@ -3938,7 +3950,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (one_chance_in(4))
         {
-            if (_seal_doors(mons))
+            if (_seal_doors_and_stairs(mons))
                 used = true;
         }
         break;
