@@ -38,7 +38,8 @@ enum status_type
     STATUS_RECALL,
     STATUS_LIQUEFIED,
     STATUS_DRAINED,
-    STATUS_LAST_STATUS = STATUS_DRAINED
+    STATUS_RAY,
+    STATUS_LAST_STATUS = STATUS_RAY
 };
 
 struct status_info

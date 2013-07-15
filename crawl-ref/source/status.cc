@@ -624,6 +624,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_RAY:
+        if (you.attribute[ATTR_SEARING_RAY])
+        {
+            inf->light_colour = WHITE;
+            inf->light_text   = "Ray";
+        }
+        break;
+
     default:
         if (!found)
         {

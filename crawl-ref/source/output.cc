@@ -1007,7 +1007,8 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SONG_OF_SLAYING,
         DUR_SONG_OF_SHIELDING,
         STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE
+        DUR_TOXIC_RADIANCE,
+        STATUS_RAY
     };
 
     status_info inf;

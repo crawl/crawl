@@ -55,4 +55,8 @@ spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim,
 spret_type cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool mon_tracer = false);
 void toxic_radiance_effect(actor* agent, int mult);
+
+spret_type cast_searing_ray(int pow, bolt &beam, bool fail);
+void handle_searing_ray();
+void end_searing_ray();
 #endif

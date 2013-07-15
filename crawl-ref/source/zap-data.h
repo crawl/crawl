@@ -1080,3 +1080,51 @@ struct zap_info
     false,
     3
 },
+
+{
+    ZAP_SEARING_RAY_I,
+    "searing ray",
+    50,
+    new dicedef_calculator<2, 3, 1, 13>,
+    new tohit_calculator<10, 1, 9>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    2
+},
+
+{
+    ZAP_SEARING_RAY_II,
+    "searing ray",
+    50,
+    new dicedef_calculator<3, 3, 1, 12>,
+    new tohit_calculator<11, 1, 8>,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    2
+},
+
+{
+    ZAP_SEARING_RAY_III,
+    "searing ray",
+    50,
+    new dicedef_calculator<4, 3, 1, 12>,
+    new tohit_calculator<12, 1, 7>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    2
+},

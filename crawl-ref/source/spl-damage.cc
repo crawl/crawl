@@ -2830,3 +2830,64 @@ void toxic_radiance_effect(actor* agent, int mult)
     if (break_sanctuary)
         remove_sanctuary(true);
 }
+
+spret_type cast_searing_ray(int pow, bolt &beam, bool fail)
+{
+    const spret_type ret = zapping(ZAP_SEARING_RAY_I, pow, beam, true, NULL, fail);
+
+    if (ret == SPRET_SUCCESS)
+    {
+        // Special value, used to avoid terminating ray immediately, since we
+        // took a non-wait action on this turn (ie: casting it)
+        you.attribute[ATTR_SEARING_RAY] = -1;
+        you.props["searing_ray_target"].get_coord() = beam.target;
+        you.props["searing_ray_aimed_at_spot"].get_bool() = beam.aimed_at_spot;
+    }
+
+    return ret;
+}
+
+void handle_searing_ray()
+{
+    ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
+
+    if (!enough_mp(1, true))
+    {
+        mpr("Without enough magic to sustain it, your searing ray dissipates.");
+        end_searing_ray();
+        return;
+    }
+
+    const zap_type zap = zap_type(ZAP_SEARING_RAY_I + (you.attribute[ATTR_SEARING_RAY]-1));
+    const int pow = calc_spell_power(SPELL_SEARING_RAY, true);
+
+    bolt beam;
+    beam.thrower = KILL_YOU_MISSILE;
+    beam.range   = calc_spell_range(SPELL_SEARING_RAY, pow);
+    beam.source  = you.pos();
+    beam.target  = you.props["searing_ray_target"].get_coord();
+    beam.aimed_at_spot = you.props["searing_ray_aimed_at_spot"].get_bool();
+
+    // If friendlies have moved into the beam path, give a chance to abort
+    if (!player_tracer(zap, pow, beam))
+    {
+        mpr("You stop channeling your searing ray.");
+        end_searing_ray();
+        return;
+    }
+
+    zappy(zap, pow, beam);
+    beam.fire();
+
+    dec_mp(1);
+
+    if (++you.attribute[ATTR_SEARING_RAY] > 3)
+        end_searing_ray();
+}
+
+void end_searing_ray()
+{
+    you.attribute[ATTR_SEARING_RAY] = 0;
+    you.props.erase("searing_ray_target");
+    you.props.erase("searing_ray_aimed_at_spot");
+}
