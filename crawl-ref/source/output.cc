@@ -1006,7 +1006,8 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_INFUSION,
         DUR_SONG_OF_SLAYING,
         DUR_SONG_OF_SHIELDING,
-        STATUS_DRAINED
+        STATUS_DRAINED,
+        DUR_TOXIC_RADIANCE
     };
 
     status_info inf;
@@ -2485,7 +2486,8 @@ static string _status_mut_abilities(int sw)
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
         DUR_SPIRIT_HOWL,
-        STATUS_DRAINED
+        STATUS_DRAINED,
+        DUR_TOXIC_RADIANCE
     };
 
     status_info inf;
