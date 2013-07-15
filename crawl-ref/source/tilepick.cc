@@ -251,12 +251,16 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_STONE_STAIRS_DOWN;
     case DNGN_ESCAPE_HATCH_DOWN:
         return TILE_DNGN_ESCAPE_HATCH_DOWN;
+    case DNGN_SEALED_STAIRS_DOWN:
+        return TILE_DNGN_SEALED_STAIRS_DOWN;
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return TILE_DNGN_STONE_STAIRS_UP;
     case DNGN_ESCAPE_HATCH_UP:
         return TILE_DNGN_ESCAPE_HATCH_UP;
+    case DNGN_SEALED_STAIRS_UP:
+        return TILE_DNGN_SEALED_STAIRS_UP;
     case DNGN_EXIT_DUNGEON:
         return TILE_DNGN_EXIT_DUNGEON;
     case DNGN_ENTER_DIS:
