@@ -1159,7 +1159,8 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 mon_enchant me = mon_enchant(ENCH_ABJ, d);
                 me.set_duration(mons, &me);
                 mons->update_ench(me);
-                summoned_monster(mons, &you, SPELL_SHADOW_CREATURES);
+                if (!scroll) // Only track cap for non-scroll casting
+                    summoned_monster(mons, &you, SPELL_SHADOW_CREATURES);
             }
 
             // Remove any band members that would turn hostile
