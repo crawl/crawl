@@ -29,11 +29,13 @@ const feature_def &get_feature_def(dungeon_feature_type feat)
 
 static void _apply_feature_overrides()
 {
-    for (int i = 0, size = Options.feature_overrides.size(); i < size; ++i)
+    for (map<dungeon_feature_type, feature_def>::const_iterator fo
+         = Options.feature_overrides.begin();
+         fo != Options.feature_overrides.end();
+         ++fo)
     {
-        const feature_override      &fov    = Options.feature_overrides[i];
-        const feature_def           &ofeat  = fov.override;
-        feature_def                 &feat   = Features[fov.object];
+        const feature_def           &ofeat  = fo->second;
+        feature_def                 &feat   = Features[fo->first];
         ucs_t c;
 
         if (ofeat.symbol && (c = get_glyph_override(ofeat.symbol)))
