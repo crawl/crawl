@@ -1530,6 +1530,7 @@ enum duration_type
     DUR_INFUSION,
     DUR_SONG_OF_SLAYING,
     DUR_SONG_OF_SHIELDING,
+    DUR_TOXIC_RADIANCE,
     NUM_DURATIONS
 };
 
@@ -1634,6 +1635,7 @@ enum enchant_type
     ENCH_CONTROL_WINDS,
     ENCH_WIND_AIDED,     // Ranged accuracy enhanced by nearby Control Winds
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
+    ENCH_TOXIC_RADIANCE,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

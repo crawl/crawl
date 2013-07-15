@@ -2928,6 +2928,15 @@ static void _decrement_durations()
         }
     }
 
+    if (you.duration[DUR_TOXIC_RADIANCE])
+    {
+        int ticks = (you.duration[DUR_TOXIC_RADIANCE] / 10)
+                     - ((you.duration[DUR_TOXIC_RADIANCE] - delay) / 10);
+        toxic_radiance_effect(&you, ticks);
+        _decrement_a_duration(DUR_TOXIC_RADIANCE, delay,
+                              "Your toxic aura wanes.");
+    }
+
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 

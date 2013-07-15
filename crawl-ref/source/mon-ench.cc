@@ -822,6 +822,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_CONTROL_WINDS:
         if (!quiet && you.can_see(this))
             mprf("The winds cease moving at %s will.", name(DESC_ITS).c_str());
+        break;
+
+    case ENCH_TOXIC_RADIANCE:
+        if (!quiet && you.can_see(this))
+            mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
+        break;
 
     default:
         break;
@@ -1784,6 +1790,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
+    case ENCH_TOXIC_RADIANCE:
+        toxic_radiance_effect(this, 1);
+        decay_enchantment(me);
+        break;
+
     default:
         break;
     }
@@ -1925,6 +1936,7 @@ static const char *enchant_names[] =
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
+    "toxic_radiance",
     "buggy",
 };
 

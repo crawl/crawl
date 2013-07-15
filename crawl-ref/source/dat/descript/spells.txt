@@ -484,9 +484,10 @@ foul necromantic tissue serves as an analogue for bones remains a mystery.
 %%%%
 Olgreb's Toxic Radiance spell
 
-This spell bathes the caster's surroundings in a sickly green light, inflicting
-poison on everything nearby (including the caster). It can be blocked by
-translucent walls, however, and invisible creatures are completely unaffected.
+This spell causes the caster to radiate a sickly green light, continuously
+inflicting poison on everything nearby for as long as the spell lasts. Be warned
+that this magic is baleful for its user, as the epicenter of the aura is toxic
+enough to afflict even those otherwise resistant to poison.
 %%%%
 Orb of Destruction spell
 

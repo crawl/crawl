@@ -2705,11 +2705,15 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         // Check use of LOS attack spells.
         else if (spell_cast == SPELL_DRAIN_LIFE
-                 || spell_cast == SPELL_OZOCUBUS_REFRIGERATION
-                 || spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
+                 || spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
         {
             if (cast_los_attack_spell(spell_cast, mons->hit_dice, mons,
                                       false) != SPRET_SUCCESS)
+                return false;
+        }
+        else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
+        {
+            if (cast_toxic_radiance(mons, 100, false, true) != SPRET_SUCCESS)
                 return false;
         }
         // See if we have a good spot to cast LRD at.
@@ -4303,8 +4307,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DRAIN_LIFE:
     case SPELL_OZOCUBUS_REFRIGERATION:
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
         cast_los_attack_spell(spell_cast, mons->hit_dice, mons, true);
+        return;
+
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        cast_toxic_radiance(mons, mons->hit_dice * 8);
         return;
 
     case SPELL_LRD:

@@ -4328,7 +4328,8 @@ void display_char_status()
         DUR_INFUSION,
         DUR_SONG_OF_SHIELDING,
         DUR_SONG_OF_SLAYING,
-        STATUS_DRAINED
+        STATUS_DRAINED,
+        DUR_TOXIC_RADIANCE
     };
 
     status_info inf;

@@ -19,6 +19,7 @@
 #include "directn.h"
 #include "env.h"
 #include "feature.h"
+#include "fight.h"
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
@@ -359,7 +360,7 @@ static bool _toxic_radianceable_hitfunc(const actor *act)
 
 static int _toxic_levels(int pow)
 {
-    return 1 + random2(pow / 20);
+    return 1 + random2(div_rand_round(pow, 30));
 }
 
 static int _toxic_irradiate_player(actor* agent, int pow, int avg,
@@ -2827,4 +2828,128 @@ spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim, bool fail)
     }
 
     return SPRET_SUCCESS;
+}
+
+static bool _toxic_can_affect(const actor *act)
+{
+    if (act->is_monster() && act->as_monster()->submerged())
+        return false;
+
+    // currently monsters are still immune at rPois 1
+    return (act->res_poison() < (act->is_player() ? 3 : 1));
+}
+
+spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
+{
+    if (agent->is_player())
+    {
+        targetter_los hitfunc(&you, LOS_NO_TRANS);
+        {
+            if (stop_attack_prompt(hitfunc, "poison", _toxic_can_affect))
+                return SPRET_ABORT;
+        }
+        fail_check();
+
+        if(!you.duration[DUR_TOXIC_RADIANCE])
+            mpr("You begin to radiate a sickly green light.");
+        else
+            mpr("Your toxic radiance grows in intensity.");
+
+        you.increase_duration(DUR_TOXIC_RADIANCE, 3 + random2(pow/20), 15);
+
+        flash_view_delay(GREEN, 300, &hitfunc);
+
+        return SPRET_SUCCESS;
+    }
+    else if (mon_tracer)
+    {
+        bolt tracer;
+        tracer.foe_ratio = 60;
+        for (actor_iterator ai(agent); ai; ++ai)
+        {
+            if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
+                && _toxic_can_affect(*ai))
+            {
+                if (mons_aligned(agent, *ai))
+                {
+                    tracer.friend_info.count++;
+                    tracer.friend_info.power +=
+                            ai->is_player() ? you.experience_level
+                                            : ai->as_monster()->hit_dice;
+                }
+                else
+                {
+                    tracer.foe_info.count++;
+                    tracer.foe_info.power +=
+                            ai->is_player() ? you.experience_level
+                                            : ai->as_monster()->hit_dice;
+                }
+            }
+        }
+
+        return mons_should_fire(tracer) ? SPRET_SUCCESS : SPRET_ABORT;
+    }
+    else
+    {
+        monster* mon_agent = agent->as_monster();
+        if (!mon_agent->has_ench(ENCH_TOXIC_RADIANCE))
+        {
+            simple_monster_message(mon_agent,
+                                   " begins to radiate a sickly green light.");
+        }
+        else if (you.can_see(mon_agent))
+        {
+            mprf("%s toxic radiance grows in intensity.",
+                 mon_agent->name(DESC_ITS).c_str());
+        }
+
+        mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
+                                        (3 + random2(pow/20)) * BASELINE_DELAY));
+
+        targetter_los hitfunc(mon_agent, LOS_NO_TRANS);
+        flash_view_delay(GREEN, 300, &hitfunc);
+
+        return SPRET_SUCCESS;
+    }
+}
+
+void toxic_radiance_effect(actor* agent, int mult)
+{
+    int pow;
+    if (agent->is_player())
+        pow = calc_spell_power(SPELL_OLGREBS_TOXIC_RADIANCE, true);
+    else
+        pow = agent->as_monster()->hit_dice * 8;
+
+    for (actor_iterator ai(agent); ai; ++ai)
+    {
+        if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
+            && _toxic_can_affect(*ai))
+        {
+            int dam = roll_dice(1, 3 + pow / 25) * mult
+                      * 3 / (2 + ai->pos().distance_from(agent->pos()));
+            dam = resist_adjust_damage(*ai, BEAM_POISON, ai->res_poison(),
+                                       dam, true);
+
+            if (ai->is_player())
+            {
+                // We take direct damage only if we're not the agent, but we
+                // still get poisoned
+                if (!agent->is_player())
+                {
+                    ouch(dam, agent->as_monster()->mindex(), KILLED_BY_BEAM,
+                        "by Olgreb's Toxic Radiance", true,
+                        agent->as_monster()->name(DESC_A).c_str());
+                }
+                poison_player(agent->is_player() ? 2 : 1, agent->name(DESC_A),
+                              "toxic radiance", agent->is_player());
+            }
+            else
+            {
+                ai->hurt(agent, dam, BEAM_POISON);
+                if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
+                    poison_monster(ai->as_monster(), agent, 1);
+            }
+        }
+    }
 }

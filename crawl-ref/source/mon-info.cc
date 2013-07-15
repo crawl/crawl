@@ -177,6 +177,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_CONTROL_WINDS;
     case ENCH_WIND_AIDED:
         return MB_WIND_AIDED;
+    case ENCH_TOXIC_RADIANCE:
+        return MB_TOXIC_RADIANCE;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1544,6 +1546,8 @@ vector<string> monster_info::attributes() const
         v.push_back("controlling the winds");
     if (is(MB_WIND_AIDED))
         v.push_back("aim guided by the winds");
+    if (is(MB_TOXIC_RADIANCE))
+        v.push_back("radiating toxic energy");
     return v;
 }
 
