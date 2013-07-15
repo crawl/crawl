@@ -2785,6 +2785,8 @@ void toxic_radiance_effect(actor* agent, int mult)
     else
         pow = agent->as_monster()->hit_dice * 8;
 
+    bool break_sanctuary = (agent->is_player() && is_sanctuary(you.pos()));
+
     for (actor_iterator ai(agent); ai; ++ai)
     {
         if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
@@ -2813,7 +2815,13 @@ void toxic_radiance_effect(actor* agent, int mult)
                 ai->hurt(agent, dam, BEAM_POISON);
                 if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
                     poison_monster(ai->as_monster(), agent, 1);
+
+                if (agent->is_player() && is_sanctuary(ai->pos()))
+                    break_sanctuary = true;
             }
         }
     }
+
+    if (break_sanctuary)
+        remove_sanctuary(true);
 }
