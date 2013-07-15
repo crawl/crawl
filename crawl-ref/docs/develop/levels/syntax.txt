@@ -605,18 +605,18 @@ ITEM:     (list of items, separated by comma)
           freshness (210). They can be created already-rotting (freshness
           99) with the "rotting" property:
 
-          ITEM: griffon corpse rotting
+          ITEM: rotting griffon corpse
           
           Corpses may still rot away before the player finds your vault.
           To prevent corpses from decaying, you can define them using a
           "never_decay" property as:
 
-          ITEM: griffon corpse never_decay
+          ITEM: never_decay griffon corpse
 
           Or combining the two, for a corpse that starts out rotten but
           never rots away:
 
-          ITEM: griffon corpse rotting never_decay
+          ITEM: rotting never_decay griffon corpse 
 
           However, direct use of "never_decay" is not recommended,
           since such items will not behave as the player expects.
