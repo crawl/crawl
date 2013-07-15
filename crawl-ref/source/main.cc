@@ -198,6 +198,7 @@ static void _launch_game_loop();
 NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty(void);
+static void _do_searing_ray(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
@@ -1366,6 +1367,8 @@ static void _input()
     {
         if (apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
+
+        _do_searing_ray();
 
         update_can_train();
         world_reacts();
@@ -4214,6 +4217,29 @@ static void _do_berserk_no_combat_penalty(void)
             you.duration[DUR_BERSERK] = 1;
     }
     return;
+}
+
+// Fire the next searing ray stage if we have taken no other action this turn,
+// otherwise cancel
+static void _do_searing_ray()
+{
+    if (you.attribute[ATTR_SEARING_RAY] != 0)
+    {
+        // Convert prepping value into stage one value (so it can fire next turn)
+        if (you.attribute[ATTR_SEARING_RAY] == -1)
+        {
+            you.attribute[ATTR_SEARING_RAY] = 1;
+            return;
+        }
+
+        if (crawl_state.prev_cmd == CMD_WAIT
+            || crawl_state.prev_cmd == CMD_MOVE_NOWHERE)
+        {
+            handle_searing_ray();
+        }
+        else
+            end_searing_ray();
+    }
 }
 
 // Called when the player moves by walking/running. Also calls attack

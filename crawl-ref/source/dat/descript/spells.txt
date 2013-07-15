@@ -604,6 +604,13 @@ This spell creates a short blast of high-velocity particles. It works best when
 the caster provides some source (by wielding a stone), but will do what it can
 with whatever ambient grit is available.
 %%%%
+Searing Ray spell
+
+This spell fires a continuous ray of arcane energy from the caster's hands.
+Though initially mild, so long as the caster maintains focus upon the spell and
+supplies it with magical power, the ray will grow in strength until it becomes
+a surging beam able to tear clean through the ranks of the caster's foes.
+%%%%
 Shadow Creatures spell
 
 This spell weaves a creature from shadows and threads of ethereal matter. The

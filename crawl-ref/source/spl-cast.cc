@@ -1771,6 +1771,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(powc, beam.target, fail);
 
+    case SPELL_SEARING_RAY:
+        return cast_searing_ray(powc, beam, fail);
+
     default:
         return SPRET_NONE;
     }

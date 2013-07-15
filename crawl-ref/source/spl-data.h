@@ -3268,6 +3268,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SEARING_RAY, "Searing Ray",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     2,
+     50,
+     4, 4,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

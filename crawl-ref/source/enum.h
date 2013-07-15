@@ -297,6 +297,7 @@ enum attribute_type
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
     ATTR_XP_DRAIN,             // Severity of current skill drain
+    ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
     NUM_ATTRIBUTES
 };
 
@@ -3564,6 +3565,7 @@ enum spell_type
     SPELL_SONG_OF_SHIELDING,
     SPELL_SUMMON_VERMIN,
     SPELL_MALIGN_OFFERING,
+    SPELL_SEARING_RAY,
     NUM_SPELLS
 };
 
@@ -3720,6 +3722,9 @@ enum zap_type
     ZAP_INNER_FLAME,
     ZAP_DAZZLING_SPRAY,
     ZAP_FORCE_LANCE,
+    ZAP_SEARING_RAY_I,
+    ZAP_SEARING_RAY_II,
+    ZAP_SEARING_RAY_III,
 
     NUM_ZAPS
 };
