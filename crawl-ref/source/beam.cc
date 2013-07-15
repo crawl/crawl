@@ -2365,10 +2365,20 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     if (!agent || damage < 1)
         return;
 
+    // The position might be trashed if the damage kills the victim,
+    // so obtain the LOS now.  The LOS is stored in the monster for
+    // memory management reasons, but is not cleared by monster_cleanup,
+    // so is still safe to use until invalidated by the next call to
+    // get_los_no_trans on that monster.
+    const los_base * const victim_los = victim->get_los_no_trans();
+
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
     damage = victim->hurt(agent, damage, BEAM_NEG);
 
-    for (actor_iterator ai(victim); ai; ++ai)
+    // Actors that had LOS to the victim (blocked by glass, clouds, etc),
+    // even if they couldn't actually see each another because of blindness
+    // or invisibility.
+    for (actor_iterator ai(victim_los); ai; ++ai)
     {
         if (mons_aligned(agent, *ai) && ai->holiness() != MH_NONLIVING)
         {
