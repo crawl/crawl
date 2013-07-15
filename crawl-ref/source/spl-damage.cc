@@ -338,84 +338,6 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
     return SPRET_SUCCESS;
 }
 
-// Poisonous light passes right through invisible players
-// and monsters, and so, they are unaffected by this spell --
-// assumes only you can cast this spell (or would want to).
-static bool _toxic_radianceable(const actor *agent, const actor *act)
-{
-    if (act->is_monster() && act->as_monster()->submerged())
-        return false;
-
-    // currently monsters are still immune at rPois 1
-    return (act->res_poison() < (act->is_player() ? 3 : 1));
-}
-
-static bool _toxic_radianceable_hitfunc(const actor *act)
-{
-    if (act->invisible())
-        return false;
-
-    return _toxic_radianceable(&you, act);
-}
-
-static int _toxic_levels(int pow)
-{
-    return 1 + random2(div_rand_round(pow, 30));
-}
-
-static int _toxic_irradiate_player(actor* agent, int pow, int avg,
-                                   bool actual, bool added_effects)
-{
-    int levels = (actual) ? _toxic_levels(pow) : avg;
-
-    if (!agent || agent->is_player())
-        levels = 2; // XXX: preserve original behaviour
-    // Determine whether the player is hit by the radiance. {dlb}
-    if (you.duration[DUR_INVIS])
-    {
-        if (actual)
-            mpr("The light passes straight through your body.");
-        levels = 0;
-    }
-    else if (actual)
-    {
-        levels = poison_player(levels,
-                               agent ? agent->name(DESC_A) : "",
-                               "toxic radiance");
-        if (levels)
-            mpr("You feel rather sick.");
-    }
-
-    return levels;
-}
-
-static int _toxic_irradiate_monster(actor* agent, monster* target, int pow,
-                                    int avg, bool actual, bool added_effects)
-{
-    int levels = (actual) ? _toxic_levels(pow) : avg;
-
-    // Monsters affected by corona are still invisible in that
-    // radiation passes through them without affecting them. Therefore,
-    // this check should not be !mons->invisible().
-    if (!target->has_ench(ENCH_INVIS))
-    {
-        if (actual && !poison_monster(target, agent, levels, false, false))
-            levels = 0;
-    }
-    else if (you.can_see_invisible())
-    {
-        if (actual)
-        {
-            // message player re:"miss" where appropriate {dlb}
-            mprf("The light passes through %s.",
-                 target->name(DESC_THE).c_str());
-        }
-        levels = 0;
-    }
-
-    return levels;
-}
-
 static counted_monster_list _counted_monster_list_from_vector(
     vector<monster *> affected_monsters)
 {
@@ -427,49 +349,6 @@ static counted_monster_list _counted_monster_list_from_vector(
     }
 
     return mons;
-}
-
-static void _post_toxic_radiate(actor* agent, bool player,
-                                vector<monster *> affected_monsters,
-                                int pow, int total_damage)
-{
-    if (!affected_monsters.empty())
-    {
-        counted_monster_list mons_list =
-            _counted_monster_list_from_vector(affected_monsters);
-        const string message =
-            make_stringf("%s %s poisoned.",
-                         mons_list.describe().c_str(),
-                         mons_list.count() == 1? "is" : "are");
-        if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message.c_str());
-        else
-        {
-            // Exclamation mark to suggest that a lot of creatures were
-            // affected.
-            if (!agent)
-                mpr("Nearby monsters are poisoned!");
-            else
-                mprf("The monsters around %s are poisoned!",
-                     agent->is_monster() && you.can_see(agent)
-                     ? agent->as_monster()->name(DESC_THE).c_str()
-                     : "you");
-        }
-
-        if (agent && agent->is_player())
-        {
-            // Sanctuary is violated if either you or any victims are in it.
-            bool sanct = is_sanctuary(you.pos());
-            for (vector<monster *>::iterator it = affected_monsters.begin();
-                 it != affected_monsters.end() && !sanct; it++)
-            {
-                if (is_sanctuary((*it)->pos()))
-                    sanct = true;
-            }
-            if (sanct)
-                remove_sanctuary(true);
-        }
-    }
 }
 
 static bool _refrigerateable(const actor *agent, const actor *act)
@@ -710,21 +589,6 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
             damage_monster = &_drain_monster;
             post_hook = &_post_drain_life;
             hurted = 3 + random2(7) + random2(pow);
-            break;
-
-        case SPELL_OLGREBS_TOXIC_RADIANCE:
-            player_msg = "You radiate a sickly green light!";
-            global_msg = mons_invis_msg =
-                "The air is filled with a sickly green light!";
-            mons_vis_msg = " radiates a sickly green light!";
-            flash_colour = GREEN;
-            vulnerable = &_toxic_radianceable;
-            vul_hitfunc = &_toxic_radianceable_hitfunc;
-            damage_player = &_toxic_irradiate_player;
-            damage_monster = &_toxic_irradiate_monster;
-            harm_msg = "poison";
-            post_hook = &_post_toxic_radiate;
-            hurted = 1 + (pow / 10); // average
             break;
 
         default: return SPRET_ABORT;
