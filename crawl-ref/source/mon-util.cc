@@ -782,16 +782,6 @@ bool mons_allows_beogh_now(const monster* mon)
                && you.visible_to(mon) && you.can_see(mon);
 }
 
-bool mons_behaviour_perceptible(const monster* mon)
-{
-    return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && !mons_is_mimic(mon->type)
-            && !mons_is_statue(mon->type)
-            && mons_species(mon->type) != MONS_OKLOB_PLANT
-            && mon->type != MONS_BALLISTOMYCETE
-            && mon->type != MONS_BURNING_BUSH);
-}
-
 // Returns true for monsters that obviously (to the player) feel
 // "thematically at home" in a branch.  Currently used for native
 // monsters recognising traps and patrolling branch entrances.
@@ -2963,16 +2953,14 @@ bool mons_is_batty(const monster* m)
 bool mons_looks_stabbable(const monster* m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
-    return (mons_behaviour_perceptible(m)
-            && !m->friendly()
+    return (!m->friendly()
             && (uat == UCAT_PARALYSED || uat == UCAT_SLEEPING));
 }
 
 bool mons_looks_distracted(const monster* m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
-    return (mons_behaviour_perceptible(m)
-            && !m->friendly()
+    return (!m->friendly()
             && uat != UCAT_NO_ATTACK
             && uat != UCAT_PARALYSED
             && uat != UCAT_SLEEPING);
