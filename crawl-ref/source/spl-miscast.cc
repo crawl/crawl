@@ -17,9 +17,11 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "itemprop.h"
 #include "kills.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-place.h"
 #include "mgen_data.h"
@@ -3061,6 +3063,30 @@ void MiscastEffect::_zot()
             }
             break;
         case 11:
+        {
+            vector<string> wands;
+            for (int i = 0; i < ENDOFPACK; ++i)
+            {
+                if (!you.inv[i].defined())
+                    continue;
+
+                if (you.inv[i].base_type == OBJ_WANDS)
+                {
+                    const int charges = you.inv[i].plus;
+                    if (charges > 0 && coinflip())
+                    {
+                        you.inv[i].plus -= min(1 + random2(wand_charge_value(you.inv[i].sub_type)), charges);
+                        // Display new number of charges when messaging.
+                        wands.push_back(you.inv[i].name(DESC_PLAIN));
+                    }
+                }
+            }
+            if (!wands.empty())
+                mpr_comma_separated_list("Magical energy is drained from your ", wands);
+            else
+                do_msg(); // For canned_msg(MSG_NOTHING_HAPPENS)
+            break;
+        }
         case 12:
             _lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
             break;
