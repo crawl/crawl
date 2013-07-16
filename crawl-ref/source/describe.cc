@@ -1165,7 +1165,7 @@ static string _describe_ammo(const item_def &item)
             description += "It has been contaminated by something likely to cause disease.";
             break;
 #endif
-        case SPMSL_RAGE:
+        case SPMSL_FRENZY:
             description += "It is tipped with a substance that causes a mindless, "
                 "berserk rage, making people attack friend and foe alike.";
             break;

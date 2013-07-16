@@ -411,7 +411,7 @@ static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
     case SPMSL_SICKNESS:
         return (t == MBN_TERSE ? "sick" : "sickness");
 #endif
-    case SPMSL_RAGE:
+    case SPMSL_FRENZY:
         return "frenzy";
     case SPMSL_RETURNING:
         return (t == MBN_TERSE ? "return" : "returning");

@@ -1774,7 +1774,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     20, SPMSL_SLOW,
                                     20, SPMSL_CONFUSION,
                                     10, SPMSL_PARALYSIS,
-                                    10, SPMSL_RAGE,
+                                    10, SPMSL_FRENZY,
                                     nw, SPMSL_POISONED,
                                     0);
         break;
@@ -1878,7 +1878,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_SICKNESS:
 #endif
-    case SPMSL_RAGE:
+    case SPMSL_FRENZY:
         return (type == MI_NEEDLE);
 
     case SPMSL_BLINDING:
