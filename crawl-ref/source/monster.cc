@@ -2989,7 +2989,7 @@ void monster::attacking(actor * /* other */)
 // Sends a monster into a frenzy.
 void monster::go_frenzy(actor *source)
 {
-    if (!can_go_berserk())
+    if (!can_go_frenzy())
         return;
 
     if (has_ench(ENCH_SLOW))
@@ -3009,8 +3009,11 @@ void monster::go_frenzy(actor *source)
 
     attitude = ATT_NEUTRAL;
     add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * 10));
-    add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * 10));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * 10));
+    if (holiness() == MH_NATURAL)
+    {
+        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * 10));
+        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * 10));
+    }
     mons_att_changed(this);
 
     if (simple_monster_message(this, " flies into a frenzy!"))
@@ -4734,7 +4737,7 @@ void monster::calc_speed()
         speed--;
 
     // Going berserk on liquid ground doesn't speed you up any.
-    if (!liquefied_ground() && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
+    if (!liquefied_ground() && (has_ench(ENCH_BERSERK)))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
@@ -4790,9 +4793,9 @@ int monster::foe_distance() const
                  : INFINITE_DISTANCE);
 }
 
-bool monster::can_go_berserk() const
+bool monster::can_go_frenzy() const
 {
-    if (holiness() != MH_NATURAL || mons_is_tentacle_or_tentacle_segment(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
     if (mons_intel(this) == I_PLANT)
@@ -4801,7 +4804,7 @@ bool monster::can_go_berserk() const
     if (paralysed() || petrified() || petrifying() || asleep())
         return false;
 
-    if (berserk() || has_ench(ENCH_FATIGUE))
+    if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
         return false;
 
     // If we have no melee attack, going berserk is pointless.
@@ -4812,9 +4815,20 @@ bool monster::can_go_berserk() const
     return true;
 }
 
+bool monster::can_go_berserk() const
+{
+    return (holiness() == MH_NATURAL) && can_go_frenzy();
+}
+
 bool monster::berserk() const
 {
-    return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
+    return has_ench(ENCH_BERSERK);
+}
+
+// XXX: this function could use a better name
+bool monster::berserk_or_insane() const
+{
+    return berserk() || has_ench(ENCH_INSANE);
 }
 
 bool monster::needs_berserk(bool check_spells) const

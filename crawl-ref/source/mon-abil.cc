@@ -1202,7 +1202,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
                 && _is_battlecry_compatible(*mi, type)
                 && mons_aligned(chief, *mi)
                 && mi->hit_dice < chief->hit_dice
-                && !mi->berserk()
+                && !mi->berserk_or_insane()
                 && !mi->has_ench(ENCH_MIGHT)
                 && !mi->cannot_move()
                 && !mi->confused())

@@ -454,7 +454,7 @@ void handle_behaviour(monster* mon)
     // Berserking allies ignore your commands!
     if (isFriendly
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
-        && !mon->berserk()
+        && !mon->berserk_or_insane()
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
         && mon->type != MONS_BATTLESPHERE
@@ -485,10 +485,10 @@ void handle_behaviour(monster* mon)
 
     // Instead, berserkers attack nearest monsters.
     if (mon->behaviour != BEH_SLEEP
-        && (mon->berserk() || mon->type == MONS_GIANT_SPORE)
-        && (mon->foe == MHITNOT
-            || isFriendly && mon->foe == MHITYOU
-            || mon->has_ench(ENCH_INSANE)))
+        && (mon->has_ench(ENCH_INSANE)
+            || ((mon->berserk() || mon->type == MONS_GIANT_SPORE)
+                && (mon->foe == MHITNOT
+                    || isFriendly && mon->foe == MHITYOU))))
     {
         // Intelligent monsters prefer to attack the player,
         // even when berserking.
@@ -547,7 +547,8 @@ void handle_behaviour(monster* mon)
     // Zotdef: 2/3 chance of retargetting changed to 1/4
     if (!isFriendly && !isNeutral
         && mon->foe != MHITYOU && mon->foe != MHITNOT
-        && proxPlayer && !mon->berserk() && isHealthy
+        && proxPlayer && !mon->berserk_or_insane()
+        && isHealthy
         && (crawl_state.game_is_zotdef() ? one_chance_in(4)
                                          : !one_chance_in(3)))
     {
@@ -789,7 +790,7 @@ void handle_behaviour(monster* mon)
                          && you.can_see(mon)
                          && !you.incapacitated()
                          && !adjacent(mon->pos(), you.pos())))
-                    && !mon->berserk())
+                    && !mon->berserk_or_insane())
                 {
                     if (mon->attitude != ATT_FRIENDLY)
                         // Get to firing range even if we are close.
@@ -841,7 +842,7 @@ void handle_behaviour(monster* mon)
                          && target->can_see(mon)
                          && !target->incapacitated()
                          && !adjacent(mon->pos(), target->pos())))
-                    && !mon->berserk())
+                    && !mon->berserk_or_insane())
                 {
                     _set_firing_pos(mon, mon->target);
                 }
@@ -1397,7 +1398,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     case ME_SCARE:
         // Stationary monsters can't flee, and berserking monsters
         // are too enraged.
-        if (mons_is_stationary(mon) || mon->berserk())
+        if (mons_is_stationary(mon) || mon->berserk_or_insane())
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;
@@ -1483,7 +1484,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         //   (chance increases by 5% for every hp lost.)
         if (mons_class_flag(mon->type, M_FLEES)
             && !mons_is_cornered(mon)
-            && !mon->berserk()
+            && !mon->berserk_or_insane()
             && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
         {
             mon->behaviour = BEH_FLEE;

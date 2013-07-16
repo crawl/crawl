@@ -4332,7 +4332,7 @@ int get_monster_tension(const monster* mons, god_type god)
         exper /= 4;
     }
 
-    if (mons->berserk())
+    if (mons->berserk_or_insane())
     {
         // in addition to haste and might bonuses above
         exper *= 3;

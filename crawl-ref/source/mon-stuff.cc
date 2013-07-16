@@ -3855,7 +3855,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
     // Berserk monsters are less careful and will blindly plow through any
     // dangerous cloud, just to kill you. {due}
-    if (!extra_careful && mons->berserk())
+    if (!extra_careful && mons->berserk_or_insane())
         return false;
 
     if (you.religion == GOD_FEDHAS && fedhas_protects(mons)
