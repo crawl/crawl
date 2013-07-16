@@ -1372,6 +1372,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
+    // Already immune.
+    if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
+        return true;
+
     equipment_type eq_type = EQ_NONE;
 
     // Mutations of the same slot conflict
