@@ -24,6 +24,7 @@
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
+#include "spl-damage.h"
 #include "state.h"
 #include "terrain.h"
 #include "transform.h"
@@ -71,6 +72,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     set_position(c);
 
     clear_far_constrictions();
+    end_searing_ray();
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)

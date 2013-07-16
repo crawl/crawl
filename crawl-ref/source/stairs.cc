@@ -774,6 +774,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
     // Magical level changes (Portal, Banishment) need this.
     clear_trapping_net();
+    end_searing_ray();
 
     // Markers might be deleted when removing portals.
     const string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");

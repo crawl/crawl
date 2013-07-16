@@ -2851,6 +2851,14 @@ void handle_searing_ray()
 {
     ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
 
+    // All of these effects interrupt a channeled ray
+    if (you.paralysed() || you.confused() || you.asleep() || you.petrified()
+        || you.berserk())
+    {
+        end_searing_ray();
+        return;
+    }
+
     if (!enough_mp(1, true))
     {
         mpr("Without enough magic to sustain it, your searing ray dissipates.");
