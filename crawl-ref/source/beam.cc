@@ -4282,7 +4282,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             m_brand = get_ammo_brand(*item);
 
         // Don't immediately turn insane monsters hostile.
-        if (m_brand != SPMSL_RAGE)
+        if (m_brand != SPMSL_FRENZY)
             behaviour_event(mon, ME_ANNOY, beam_source_as_target());
 
         // Don't allow needles of sleeping to awaken monsters.

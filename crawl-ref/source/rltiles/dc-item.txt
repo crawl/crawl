@@ -319,7 +319,7 @@ i-electrocution BRAND_ELECTRIC
 i-sickness BRAND_SICKNESS
 i-slowing BRAND_SLOWING
 i-paralysis BRAND_PARALYSIS
-i-berserk-rage BRAND_RAGE
+i-frenzy BRAND_FRENZY
 i-sleep BRAND_SLEEP
 %rim 1
 %sdir item/weapon/ranged

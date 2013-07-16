@@ -384,7 +384,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
 #if TAG_MAJOR_VERSION == 34
     SPMSL_SICKNESS,                    // sickness/disease
 #endif
-    SPMSL_RAGE,                        // berserk rage
+    SPMSL_FRENZY,                      // uhm, frenzy
     NUM_REAL_SPECIAL_MISSILES,
     SPMSL_BLINDING,                    // blinding
     NUM_SPECIAL_MISSILES,

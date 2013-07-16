@@ -1609,13 +1609,13 @@ static void _give_ammo(monster* mon, int level,
                                                               3, SPMSL_CONFUSION,
                                                               2, SPMSL_PARALYSIS,
                                                               2, SPMSL_CURARE,
-                                                              1, SPMSL_RAGE,
+                                                              1, SPMSL_FRENZY,
                                                               0);
                 switch (brand)
                 {
                     case SPMSL_CONFUSION:
                     case SPMSL_PARALYSIS:
-                    case SPMSL_RAGE:
+                    case SPMSL_FRENZY:
                         mitm[thing_created].quantity = random_range(3, 7);
                         break;
                     case SPMSL_CURARE:
