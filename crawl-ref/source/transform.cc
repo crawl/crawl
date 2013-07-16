@@ -837,7 +837,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else if (you.species == SP_GARGOYLE)
-            msg = "Your body stiffens and grows ponderous.";
+            msg = "Your body stiffens and grows slower.";
         else
             msg += "a living statue of rough stone.";
         break;
