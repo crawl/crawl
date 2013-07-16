@@ -1290,7 +1290,6 @@ MONS:   reaper / soul eater, reaper, shadow fiend
 MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
             size = 1, walk_dist = 1, spread_rate= 33 }
-MARKER: V = lua:props_marker { feature_description = "foul fountain" }
 SUBST:  % = %*|$
 SUBST:  A = 1.
 MAP
