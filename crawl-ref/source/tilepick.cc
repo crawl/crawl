@@ -4980,7 +4980,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Rod-only spells
     case SPELL_PARALYSE:      // we could reuse Petrify for this
-    case SPELL_STRIKING:
     case SPELL_BOLT_OF_INACCURACY:
     case SPELL_SUMMON_SWARM:
         return TILEG_TODO;

@@ -99,19 +99,6 @@ struct spell_desc
 },
 
 {
-    SPELL_STRIKING, "Striking",
-     0,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE, // rod of striking
-     1,
-     50,
-     5, 5,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_CONJURE_FLAME, "Conjure Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_GRID | SPFLAG_NOT_SELF,
@@ -2788,7 +2775,7 @@ struct spell_desc
 {
     SPELL_MELEE, "melee",
      0,
-     SPFLAG_TESTING,
+     SPFLAG_BATTLE,
      1,
      0,
      -1, -1,

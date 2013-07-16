@@ -575,15 +575,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = 22 + power / 20;
         break;
 
-    case SPELL_STRIKING:
-        beam.name      = "concussive force",
-        beam.damage    = dice_def(1, 8),
-        beam.colour    = BLACK,
-        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
-        beam.flavour  = BEAM_MMISSILE;
-        beam.hit      = 8 + power / 10;
-        break;
-
     case SPELL_DIG:
         beam.flavour  = BEAM_DIGGING;
         beam.is_beam  = true;

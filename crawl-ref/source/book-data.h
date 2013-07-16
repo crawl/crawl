@@ -579,7 +579,7 @@
 },
 
 {   // Rod of striking
-    SPELL_STRIKING,
+    SPELL_MELEE,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,

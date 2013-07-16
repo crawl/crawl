@@ -1089,7 +1089,14 @@ skutki są dość brutalne.
 %%%%
 rod of striking
 
-Ten pręt pozwala uderzać wrogów surową magią, niestety niezbyt efektywnie.
+Tym prętem spuszcza się lanie osobiście. Przełożenie kogoś wpierw przez
+kolano nie jest obowiązkowe, jednak należy do dobrego tonu.
+%%%%
+rod of striking:quote
+
+„Kto zawściąga rózgi swej, ma w nienawiści syna swego; ale kto go miłuje,
+ wczas go karze.̈́”
+    -Biblia Gdańska, Księga przysłów 13:24
 %%%%
 rod of the swarm
 
