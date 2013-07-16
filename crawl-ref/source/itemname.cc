@@ -669,7 +669,6 @@ static const char* potion_type_name(int potiontype)
     case POT_BLOOD:             return "blood";
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
-    case POT_FIZZING:           return "fizzing liquid";
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
     default:                    return "bugginess";
     }
@@ -2287,16 +2286,11 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            // Potions of fizzing liquid are not something that
-            // need to be identified, because they never randomly
-            // generate! [due]
-            if (i == OBJ_POTIONS && j == POT_FIZZING)
-                continue;
-
 #if TAG_MAJOR_VERSION == 34
             // Water is never interesting either. [1KB]
             if (i == OBJ_POTIONS
                 && (j == POT_WATER
+                 || j == POT_FIZZING
                  || j == POT_GAIN_STRENGTH
                  || j == POT_GAIN_DEXTERITY
                  || j == POT_GAIN_INTELLIGENCE))

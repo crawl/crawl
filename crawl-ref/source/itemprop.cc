@@ -2072,14 +2072,6 @@ bool is_blood_potion(const item_def &item)
             || item.sub_type == POT_BLOOD_COAGULATED);
 }
 
-bool is_fizzing_potion(const item_def &item)
-{
-    if (item.base_type != OBJ_POTIONS)
-        return false;
-
-    return (item.sub_type == POT_FIZZING);
-}
-
 bool food_is_meaty(int food_type)
 {
     ASSERTM(food_type >= 0 && food_type < NUM_FOODS,
