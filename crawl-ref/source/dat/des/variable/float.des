@@ -5298,3 +5298,93 @@ MAP
 ..cc....2...c...2....cc..
 ..........2...2..........
 ENDMAP
+
+NAME:   grunt_crosshair
+DEPTH:  D:16-
+PLACE:  D:27
+ORIENT: centre
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
+           / dragon / ice dragon
+KMONS:  9 = nonbase draconian
+KMONS:  0 = base draconian
+KFEAT:  O = enter_zot
+COLOUR: c = lightmagenta
+COLOUR: -+8|O = magenta
+FTILE:  -+8|O = floor_hall
+KITEM:  | = nothing
+: else
+KMONS:  8 = 8 band
+KMONS:  9 = 9 band
+KMONS:  0 = 0 band
+KITEM:  O = superb_item
+KITEM:  9 = any good_item
+: end
+MAP
+      x@x
+      x.x
+   xxxx.xxxx
+  xx0.0.0.0xx
+  x0xxx9xxx0x
+  x.xcc+ccx.x
+xxx0xc|8|cx0xxx
+@...9+8O8+9...@
+xxx0xc|8|cx0xxx
+  x.xcc+ccx.x
+  x0xxx9xxx0x
+  xx0.0.0.0xx
+   xxxx.xxxx
+      x.x
+      x@x
+ENDMAP
+
+NAME:   grunt_x_marks_the_spot
+DEPTH:  D:16-
+PLACE:  D:27
+ORIENT: centre
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
+           / dragon / ice dragon
+KMONS:  9 = nonbase draconian
+KMONS:  0 = base draconian
+KFEAT:  O = enter_zot
+COLOUR: c = lightmagenta
+COLOUR: -+8|O = magenta
+FTILE:  -+8|O = floor_hall
+KITEM:  | = nothing
+: else
+KMONS:  8 = 8 band
+KMONS:  9 = 9 band
+KMONS:  0 = 0 band
+KITEM:  O = superb_item
+KITEM:  9 = any good_item
+: end
+MAP
+        xxxxx@xxxxx
+      xxx.........xxx
+    xxx......0......xxx
+   xx..0..xxxxxxx..0..xx
+  xx....xxxxxxxxxxx....xx
+  x..9.xxxxxxxxxxxxx.9..x
+ xx.....xxxxxxxxxxx.....xx
+ x.0.x...xxxxxxxxx...x.0.x
+xx..xxx...xxxxxxx...xxx..xx
+x...xxxx...xxxxx...xxxx...x
+x..xxxxxx...ccc...xxxxxx..x
+x..xxxxxxx.++c++.xxxxxxx..x
+x..xxxxxxxc+|8|+cxxxxxxx..x
+@.0xxxxxxxcc8O8ccxxxxxxx0.@
+x..xxxxxxxc+|8|+cxxxxxxx..x
+x..xxxxxxx.++c++.xxxxxxx..x
+x..xxxxxx...ccc...xxxxxx..x
+x...xxxx...xxxxx...xxxx...x
+xx..xxx...xxxxxxx...xxx..xx
+ x.0.x...xxxxxxxxx...x.0.x
+ xx.....xxxxxxxxxxx.....xx
+  x..9.xxxxxxxxxxxxx.9..x
+  xx....xxxxxxxxxxx....xx
+   xx..0..xxxxxxx..0..xx
+    xxx......0......xxx
+      xxx.........xxx
+        xxxxx@xxxxx
+ENDMAP

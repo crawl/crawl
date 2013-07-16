@@ -1253,3 +1253,42 @@ cc.9.c...+cc
   cc*c*cc
    ccccc
 ENDMAP
+
+NAME:   grunt_twisty_corner
+ORIENT: southwest
+DEPTH:  D:16-
+KMONS:  0 = 0 band
+KMONS:  9 = 9 band
+KMONS:  8 = 8 band
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx@
+xxxxxx........xxxxxxxxxxxx.@
+xxxxx.0........xxxxxxxxxx...@
+xxxx.0.xxxxxxx9.xxxxxxxx..G..@
+xxxx..xxxxxxxxx.xxxxxxx.....xx
+xxxx..xx.+.9*xx.xxxxxx.....xxx
+xxxx..xx.x98|xx.xxxxx.....xxxx
+xxxx..xx.x*||xx.xxxx.....xxxxx
+xxxx..xx.xxxxx..xxx.....xxxxxx
+xxxx..xx.9xxx.9xxx.....xxxxxxx
+xxxx..xxx.....xxx.....xxxxxxxx
+xxxx.0.xxxxxxxxx.....xxxxxxxxx
+xxxxx.0.xxxxxxx.....xxxxxxxxxx
+xxxxxx.......x.....xxxxxxxxxxx
+xxxxxxxx....0.....xxx......xxx
+xxxxxxxxxxxx..9..xxx9.xxxx9.xx
+xxxx$......x+...xxx..xxxxxx..x
+xxx*0.....0.++.0.xx.xx||*xx..x
+xx*9.......9.xx..xx.xx|89xx..x
+x$0..ccccc..0.x..xx.xx*9.xx..x
+x...cc*||cc...x..xx.9xxx+xx..x
+x...c.8*||c...x..xxx.....xx..x
+x...c9.8*|c...xx..xxxxxxxxx..x
+x...c.9.8*c...xx.0.xxxxxxx.0.x
+x...++.9.cc...xxx.0.......0.xx
+x$0..+cccc..0$xxxx.........xxx
+xx*9.......9*xxxxxxxxxxxxxxxxx
+xxx*0.....0*xxxxxxxxxxxxxxxxxx
+xxxx$.....$xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
