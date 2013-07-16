@@ -11,8 +11,6 @@ zap_type spell_to_zap(spell_type spell)
     {
     case SPELL_MAGIC_DART:
         return ZAP_MAGIC_DART;
-    case SPELL_STRIKING:
-        return ZAP_STRIKING;
     case SPELL_FORCE_LANCE:
         return ZAP_FORCE_LANCE;
     case SPELL_THROW_FLAME:

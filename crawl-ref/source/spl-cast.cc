@@ -1777,6 +1777,10 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SEARING_RAY:
         return cast_searing_ray(powc, beam, fail);
 
+    case SPELL_MELEE:
+        mpr("To evoke this rod, please apply it to someone's body part of your choice.");
+        return SPRET_ABORT;
+
     default:
         return SPRET_NONE;
     }

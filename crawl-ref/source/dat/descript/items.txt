@@ -2061,7 +2061,13 @@ power.
 %%%%
 rod of striking
 
-This rod allows its wielder to strike foes from afar with force bolts.
+This rod is intended to be used up close and personal to clobber 'em good.
+%%%%
+rod of striking:quote
+
+“He that spares his rod hates his son: but he that loves him chastens him
+ early.”
+    -King James 2000 Bible, Proverbs 13:24
 %%%%
 rod of the swarm
 

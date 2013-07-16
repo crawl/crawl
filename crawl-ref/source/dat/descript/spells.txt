@@ -467,6 +467,12 @@ Mephitic Cloud spell
 
 This spell conjures up a large but short-lived cloud of vile fumes.
 %%%%
+Melee spell
+
+A wise wizard knows when to grab a stick and use it in a less sorcerous way.
+A higher skill in Evocations will channel the rod's energy better, but you
+need to know Maces to let it connect in the first place.
+%%%%
 Metabolic Englaciation spell
 
 This spell tries to lower the metabolic rate of every creature in the caster's
@@ -743,10 +749,6 @@ This spell hardens one's skin to a degree determined by one's skill in Earth
 Magic. It only works on relatively normal flesh, and will aid neither the
 undead nor the bodily transformed. However, there is one exception: the effects
 of this spell will be boosted for casters in Statue Form.
-%%%%
-Striking spell
-
-This spell hurls a small bolt of force.
 %%%%
 Sublimation of Blood spell
 

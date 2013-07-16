@@ -519,22 +519,6 @@ struct zap_info
 },
 
 {
-    ZAP_STRIKING,
-    "concussive force",
-    50,
-    new dicedef_calculator<1, 8, 1, 5>,
-    new tohit_calculator<8, 1, 10>,
-    BLACK,
-    false,
-    BEAM_MMISSILE,
-    NUM_DCHAR_TYPES,
-    true,
-    false,
-    false,
-    4 // XXX: this is just a guess.
-},
-
-{
     ZAP_STONE_ARROW,
     "stone arrow",
     50,
