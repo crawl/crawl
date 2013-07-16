@@ -3336,7 +3336,6 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_URUG:
     case MONS_FAUN:
     case MONS_SATYR:
-    case MONS_PAN:
         return true;
     default:
         return false;
@@ -4231,7 +4230,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
         else
             return MON_SHAPE_BAT;
     case 'c': // centaurs
-        if (mc == MONS_FAUN || mc == MONS_SATYR || mc == MONS_PAN)
+        if (mc == MONS_FAUN || mc == MONS_SATYR)
             return MON_SHAPE_HUMANOID_TAILED;
         return MON_SHAPE_CENTAUR;
     case 'd': // draconions and drakes

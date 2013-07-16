@@ -932,7 +932,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_FAUN:
     case MONS_SATYR:
-    case MONS_PAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
@@ -940,6 +939,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             switch (mon->type)
             {
                 case MONS_FAUN:
+                default:
                     item.sub_type = WPN_SLING;
                     break;
                 case MONS_SATYR:
@@ -947,10 +947,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                            1, WPN_BOW,
                                                            1, WPN_SLING,
                                                            0);
-                    break;
-                case MONS_PAN:
-                default:
-                    item.sub_type = WPN_LONGBOW;
                     break;
             }
         }
@@ -961,8 +957,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                           WPN_QUARTERSTAFF,
                                           -1);
         }
-        if (mon->type == MONS_PAN)
-            level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_NESSOS:
@@ -1660,9 +1654,7 @@ static void _give_ammo(monster* mon, int level,
         switch (mon->type)
         {
             case MONS_DEEP_ELF_MASTER_ARCHER:
-            case MONS_PAN:
                 // Master archers get double ammo - archery is their only attack
-                // Ditto for Pan.
                 mitm[thing_created].quantity *= 2;
                 break;
 

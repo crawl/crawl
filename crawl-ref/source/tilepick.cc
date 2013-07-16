@@ -1975,8 +1975,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // centaur ('c')
     case MONS_NESSOS:
         return TILEP_MONS_NESSOS;
-    case MONS_PAN:
-        return TILEP_MONS_PAN;
 
     // draconian ('d')
     case MONS_TIAMAT:
