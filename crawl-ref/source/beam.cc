@@ -4297,19 +4297,24 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         napalm_monster(mon, agent(), levels);
 
         if (name == "splash of liquid fire")
-        {
-            // the breath weapon can splash to adjacent monsters
-            for (monster_iterator mi(you.get_los()); mi; ++mi)
+            for (adjacent_iterator ai(source); ai; ++ai)
             {
-                if (grid_distance(you.pos(), mi->pos()) == 1 &&
-                    grid_distance(mon->pos(), mi->pos()) == 1)
+                // the breath weapon can splash to adjacent people
+                if (grid_distance(*ai, target) != 1)
+                    continue;
+                if (actor *victim = actor_at(*ai))
                 {
-                    mprf("The sticky flame splashes onto %s!",
-                         mi->name(DESC_THE).c_str());
-                    napalm_monster(*mi, agent(), levels);
+                    if (you.see_cell(*ai))
+                    {
+                        mprf("The sticky flame splashes onto %s!",
+                             victim->name(DESC_THE).c_str());
+                    }
+                    if (victim->is_player())
+                        napalm_player(levels, get_source_name(), aux_source);
+                    else
+                        napalm_monster(victim->as_monster(), agent(), levels);
                 }
             }
-        }
     }
 
     // Handle missile effects.
