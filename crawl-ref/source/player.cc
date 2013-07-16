@@ -3874,11 +3874,9 @@ int check_stealth(void)
         if (you.species == SP_FELID && !you.airborne())
             stealth -= 50; // a constant penalty
         break;
-    case TRAN_LICH:
-        race_mod++; // intentionally tiny, lich form is already overpowered
-        break;
     case TRAN_NONE:
     case TRAN_APPENDAGE:
+    case TRAN_LICH:
         break;
     }
 

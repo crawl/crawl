@@ -855,7 +855,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_LICH:
         tran_name = "lich";
-        str       = 3;
         msg       = "Your body is suffused with negative energy!";
         break;
 
@@ -1242,8 +1241,6 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_LICH:
         mpr("You feel yourself come back to life.", MSGCH_DURATION);
-        notify_stat_change(STAT_STR, -3, true,
-                    "losing the lich transformation");
         you.is_undead = US_ALIVE;
         break;
 
