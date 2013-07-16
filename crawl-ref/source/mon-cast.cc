@@ -636,6 +636,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
             beam.hit      = 18 + power / 15;
         beam.colour   = RED;
         beam.name     = "sticky flame";
+        // FIXME: splash needs to be "splash of liquid fire"
         beam.damage   = dice_def(3, 3 + power / 50);
         beam.flavour  = BEAM_FIRE;
         break;
