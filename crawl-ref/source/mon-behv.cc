@@ -1313,6 +1313,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                 mon->behaviour = BEH_SEEK;
 
             if (src == &you
+                && !mon->has_ench(ENCH_INSANE)
                 && mon->type != MONS_BATTLESPHERE
                 && mon->type != MONS_SPECTRAL_WEAPON)
             {
@@ -1499,6 +1500,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     {
         mon->target = src_pos;
         if (src->is_player()
+            && !mon->has_ench(ENCH_INSANE)
             && mon->type != MONS_BATTLESPHERE
             && mon->type != MONS_SPECTRAL_WEAPON)
         {
