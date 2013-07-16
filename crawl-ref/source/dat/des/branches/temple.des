@@ -302,8 +302,6 @@ MARKER:  e = lua:fog_machine { cloud_type = "flame", \
 MARKER:  f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 5, delay = 47, start_clouds = 1, \
              size = 2, walk_dist = 1, spread_rate= 0 }
-MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "scorch-marked granite statue" }
 KFEAT:  O = enter_temple
 MAP
 xxxxxxxG@Gxxxxxxx
@@ -347,8 +345,6 @@ MARKER:  f = lua:fog_machine { cloud_type = "flame", \
               size = 2, walk_dist = 2, spread_rate= 0 }
 COLOUR:  g = yellow
 FTILE:   g = floor_pebble_darkgray
-MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "scorch-marked granite statue" }
 KFEAT:  O = enter_temple
 MAP
 xxxxxxxG@Gxxxxxxx
