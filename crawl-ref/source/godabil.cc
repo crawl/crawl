@@ -2166,7 +2166,6 @@ bool fedhas_sunlight()
     }
 
     {
-        // Remove gloom.
         unwind_var<int> no_time(you.time_taken, 0);
         process_sunlights(false);
     }
@@ -2192,7 +2191,6 @@ void process_sunlights(bool future)
     int time_cap = future ? INT_MAX - SUNLIGHT_DURATION : you.elapsed_time;
 
     int evap_count = 0;
-    int cloud_count = 0;
 
     for (int i = env.sunlight.size() - 1; i >= 0; --i)
     {
@@ -2201,20 +2199,6 @@ void process_sunlights(bool future)
 
         if (until <= time_cap)
             erase_any(env.sunlight, i);
-
-        // Remove gloom, even far away from the spot.
-        for (radius_iterator ai(c, 6); ai; ++ai)
-        {
-            if (env.cgrid(*ai) != EMPTY_CLOUD)
-            {
-                const int cloudidx = env.cgrid(*ai);
-                if (env.cloud[cloudidx].type == CLOUD_GLOOM)
-                {
-                    cloud_count++;
-                    delete_cloud(cloudidx);
-                }
-            }
-        }
 
         until = min(until, time_cap);
         int from = you.elapsed_time - you.time_taken;
@@ -2277,9 +2261,6 @@ void process_sunlights(bool future)
 
     if (evap_count)
         mpr("Some water evaporates in the bright sunlight.");
-
-    if (cloud_count)
-        mpr("Sunlight penetrates the thick gloom.");
 
     invalidate_agrid(true);
 }
