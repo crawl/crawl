@@ -1915,7 +1915,7 @@ struct spell_desc
      SPTYP_CONJURATION | SPTYP_HEXES,
      SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
      5,
-     100,
+     200,
      5, 5,
      0,
      NULL,
