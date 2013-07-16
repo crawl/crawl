@@ -17,6 +17,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
@@ -217,10 +218,11 @@ static void _update_agrid()
     {
         const int r = 5;
         _agrid_centres.push_back(area_centre(AREA_QUAD, you.pos(), r));
-        for (radius_iterator ri(you.pos(), r, C_CIRCLE, you.get_los());
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE);
              ri; ++ri)
         {
-            _set_agrid_flag(*ri, APROP_QUAD);
+            if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
+                _set_agrid_flag(*ri, APROP_QUAD);
         }
         no_areas = false;
     }
@@ -229,10 +231,11 @@ static void _update_agrid()
     {
         const int r = 27;
         _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, you.pos(), r));
-        for (radius_iterator ri(you.pos(), r, C_CIRCLE, you.get_los());
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE);
              ri; ++ri)
         {
-            _set_agrid_flag(*ri, APROP_DISJUNCTION);
+            if (cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
+                _set_agrid_flag(*ri, APROP_DISJUNCTION);
         }
         no_areas = false;
     }
