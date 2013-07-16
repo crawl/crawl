@@ -469,9 +469,9 @@ This spell conjures up a large but short-lived cloud of vile fumes.
 %%%%
 Melee spell
 
-A wise wizard knows when to grab a stick and use it in a less sorcerous way.
-A higher skill in Evocations will channel the rod's energy better, but you
-need to know Maces to let it connect in the first place.
+The rod of striking is designed for melee combat, releasing its charges to deal
+additional damage dependent on evocations skill when it strikes a foe. Maces &
+Flails skill will help improve accuracy with the weapon.
 %%%%
 Metabolic Englaciation spell
 
