@@ -276,6 +276,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
         inc_max_hp(10);
+        you.attribute[ATTR_XP_DRAIN] = 0;
     }
 
     // Clear most status ailments.
