@@ -1261,6 +1261,7 @@ static void _input()
 
     if (you_are_delayed() && current_delay_action() != DELAY_MACRO_PROCESS_KEY)
     {
+        end_searing_ray();
         handle_delay();
 
         // Some delays reset you.time_taken.
