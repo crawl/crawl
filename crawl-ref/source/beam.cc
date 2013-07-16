@@ -5112,7 +5112,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BERSERK:
-        if (!mon->berserk())
+        if (!mon->berserk_or_insane())
         {
             // currently from potion, hence voluntary
             mon->go_berserk(true);

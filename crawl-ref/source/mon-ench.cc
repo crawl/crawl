@@ -117,7 +117,7 @@ bool monster::add_ench(const mon_enchant &ench)
         return false;
 
     if (ench.ench == ENCH_FEAR
-        && (holiness() == MH_NONLIVING || berserk()))
+        && (holiness() == MH_NONLIVING || berserk_or_insane()))
     {
         return false;
     }
@@ -159,10 +159,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     // Check for slow/haste.
     switch (ench.ench)
     {
-    case ENCH_INSANE:
     case ENCH_BERSERK:
         // Inflate hp.
         scale_hp(3, 2);
+        // deliberate fall-through
+
+    case ENCH_INSANE:
 
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
@@ -410,7 +412,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_INSANE:
         attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
         mons_att_changed(this);
-        // deliberate fall through
+        break;
 
     case ENCH_BERSERK:
         scale_hp(2, 3);
@@ -494,7 +496,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FEAR:
-        if (holiness() == MH_NONLIVING || berserk())
+        if (holiness() == MH_NONLIVING || berserk_or_insane())
         {
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
@@ -1217,7 +1219,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         // Smaller monsters can escape more quickly.
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
-            && !berserk() && type != MONS_DANCING_WEAPON)
+            && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
         {
             if (mons_near(this) && !visible_to(&you))
                 mpr("Something wriggles in the net.");

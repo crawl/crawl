@@ -1239,6 +1239,8 @@ static string _verbose_info0(const monster_info& mi)
 {
     if (mi.is(MB_BERSERK))
         return "berserk";
+    if (mi.is(MB_INSANE))
+        return "insane";
     if (mi.is(MB_FRENZIED))
         return "frenzied";
     if (mi.is(MB_ROUSED))

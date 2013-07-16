@@ -2267,7 +2267,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     // slot spells {blue}
     if (mons->asleep()
         || mons->submerged()
-        || mons->berserk()
+        || mons->berserk_or_insane()
         || (!mons->can_use_spells()
             && !spellcasting_poly
             && draco_breath == SPELL_NO_SPELL))

@@ -583,6 +583,7 @@ static void _handle_movement(monster* mons)
         // scared.
         if (mons->holiness() == MH_NONLIVING
             || mons->berserk()
+            || mons->has_ench(ENCH_INSANE)
             || x_chance_in_y(2, 5))
         {
             mons_stop_fleeing_from_sanctuary(mons);
@@ -653,7 +654,7 @@ static void _handle_movement(monster* mons)
         && mons_intel(mons) >= I_ANIMAL
         && coinflip()
         && !mons_is_confused(mons) && !mons->caught()
-        && !mons->berserk())
+        && !mons->berserk_or_insane())
     {
         // If the monster is moving parallel to the x or y axis, check
         // whether
@@ -2178,9 +2179,9 @@ void handle_monster_move(monster* mons)
         && !mons->withdrawn()
         // Berserking monsters are limited to running up and
         // hitting their foes.
-        && !mons->berserk()
-            // Slime creatures can split while wandering or resting.
-            || mons->type == MONS_SLIME_CREATURE)
+        && !(mons->berserk_or_insane()
+             // Slime creatures can split while wandering or resting.
+             || mons->type == MONS_SLIME_CREATURE))
     {
         bolt beem;
 
@@ -3668,7 +3669,7 @@ static bool _monster_move(monster* mons)
         if (monster_can_submerge(mons, grd(mons->pos()))
             && !can_see && !mons_is_confused(mons)
             && !mons->caught()
-            && !mons->berserk()
+            && !mons->berserk_or_insane()
             && one_chance_in(5))
         {
             mons->add_ench(ENCH_SUBMERGED);
@@ -3678,12 +3679,12 @@ static bool _monster_move(monster* mons)
     }
 
     // Berserking monsters make a lot of racket.
-    if (mons->berserk())
+    if (mons->berserk_or_insane())
     {
         int noise_level = get_shout_noise_level(mons_shouts(mons->type));
         if (noise_level > 0)
         {
-            if (you.can_see(mons))
+            if (you.can_see(mons) && mons->berserk())
             {
                 if (one_chance_in(10))
                 {

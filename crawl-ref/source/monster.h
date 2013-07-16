@@ -296,10 +296,12 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false) const;
 
     void attacking(actor *other);
+    bool can_go_frenzy() const;
     bool can_go_berserk() const;
     void go_berserk(bool intentional, bool potion = false);
     void go_frenzy(actor *source);
     bool berserk() const;
+    bool berserk_or_insane() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
