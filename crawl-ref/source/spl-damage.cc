@@ -2716,7 +2716,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         fail_check();
 
         if(!you.duration[DUR_TOXIC_RADIANCE])
-            mpr("You begin to radiate a sickly green light.");
+            mpr("You begin to radiate toxic energy.");
         else
             mpr("Your toxic radiance grows in intensity.");
 
@@ -2760,7 +2760,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         if (!mon_agent->has_ench(ENCH_TOXIC_RADIANCE))
         {
             simple_monster_message(mon_agent,
-                                   " begins to radiate a sickly green light.");
+                                   " begins to radiate toxic energy.");
         }
         else if (you.can_see(mon_agent))
         {
