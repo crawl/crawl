@@ -761,7 +761,9 @@ static bool _has_hair(actor* target)
 
     return (!form_changed_physiology() && you.species != SP_GHOUL
             && you.species != SP_OCTOPODE
-            && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN));
+            && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN)
+            && you.species != SP_DJINNI && you.species != SP_GARGOYLE
+            && you.species != SP_LAVA_ORC);
 }
 
 static string _hair_str(actor* target, bool &plural)
