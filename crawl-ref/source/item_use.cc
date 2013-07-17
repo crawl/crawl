@@ -21,6 +21,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "food.h"
+#include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
@@ -3041,6 +3042,9 @@ void read_scroll(int slot)
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
+
+    if (you.duration[DUR_RECITE])
+        zin_recite_interrupt();
 
     // ... but some scrolls may still be cancelled afterwards.
     bool cancel_scroll = false;

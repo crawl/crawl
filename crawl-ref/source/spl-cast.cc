@@ -770,6 +770,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
+    // XXX: the message order here might not be the best
+    if (you.duration[DUR_RECITE])
+        zin_recite_interrupt();
+
     if (cast_result == SPRET_SUCCESS)
     {
         practise(EX_DID_CAST, spell);

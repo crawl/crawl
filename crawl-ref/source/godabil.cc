@@ -68,7 +68,7 @@
 
 static void _zin_saltify(monster* mon);
 
-string zin_recite_text(int* trits, size_t len, int prayertype, int step)
+string zin_recite_text(const int seed, const int prayertype, int step)
 {
     // 'prayertype':
     // This is in enum.h; there are currently five prayers.
@@ -84,14 +84,17 @@ string zin_recite_text(int* trits, size_t len, int prayertype, int step)
 
     // We change it to turn 1, turn 2, turn 3.
 
-    // 'trits' && 'len':
+    // 'trits':
     // To have deterministic passages we need to store a random seed.
     // Ours consists of an array of trinary bits.
 
     // Yes, really.
 
-    int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
-    int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
+    const int trits[7] = { seed % 3, (seed / 3) % 3, (seed / 9) % 3,
+                           (seed / 27) % 3, (seed / 81) % 3, (seed / 243) % 3,
+                           (seed / 729) % 3};
+    const int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
+    const int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
 
     string sinner_text[12] =
     {
@@ -685,8 +688,6 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
             if (count[i] > 0)
                 *prayertype = (recite_type)i;
 
-        // If we got this far, we're actually reciting:
-        you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
         return 1;
     }
 
@@ -1256,6 +1257,15 @@ static void _zin_saltify(monster* mon)
         mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
         pillar->update_ench(temp_en);
     }
+}
+
+void zin_recite_interrupt()
+{
+    mpr("Your recitation is interrupted.", MSGCH_DURATION);
+    mpr("You feel short of breath.");
+    you.duration[DUR_RECITE] = 0;
+
+    you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
 }
 
 bool zin_vitalisation()

@@ -298,6 +298,9 @@ enum attribute_type
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
     ATTR_XP_DRAIN,             // Severity of current skill drain
     ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
+    ATTR_RECITE_TYPE,          // Recitation type.
+    ATTR_RECITE_SEED,          // Recite text seed.
+    ATTR_RECITE_HP,            // HP on start of recitation.
     NUM_ATTRIBUTES
 };
 
@@ -1062,7 +1065,9 @@ enum delay_type
     DELAY_MULTIDROP,
     DELAY_ASCENDING_STAIRS,
     DELAY_DESCENDING_STAIRS,
-    DELAY_RECITE,  // Zin's Recite invocation
+#if TAG_MAJOR_VERSION == 34
+    DELAY_UNUSED, // was DELAY_RECITE
+#endif
 
     // [dshaligram] Shift-running, resting, travel and macros are now
     // also handled as delays.
@@ -1536,6 +1541,7 @@ enum duration_type
     DUR_SONG_OF_SLAYING,
     DUR_SONG_OF_SHIELDING,
     DUR_TOXIC_RADIANCE,
+    DUR_RECITE,
     NUM_DURATIONS
 };
 

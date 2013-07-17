@@ -291,7 +291,6 @@ public:
   // A list of allies awaiting an active recall
   vector<mid_t> recall_list;
 
-
   // -------------------
   // Non-saved UI state:
   // -------------------

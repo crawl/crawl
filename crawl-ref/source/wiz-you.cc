@@ -814,6 +814,7 @@ static const char* dur_names[] =
     "song of slaying",
     "song of shielding",
     "toxic radiance",
+    "reciting",
 };
 
 void wizard_edit_durations(void)

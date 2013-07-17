@@ -1513,8 +1513,7 @@ void scorefile_entry::init(time_t dt)
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.short_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
         {
             if (!status_effects.empty())
                 status_effects += ",";

@@ -83,7 +83,7 @@ enum ability_flag_type
 {
     ABFLAG_NONE           = 0x00000000,
     ABFLAG_BREATH         = 0x00000001, // ability uses DUR_BREATH_WEAPON
-    ABFLAG_DELAY          = 0x00000002, // ability has its own delay (ie recite)
+    ABFLAG_UNUSED_1       = 0x00000002, // was ABFLAG_DELAY
     ABFLAG_PAIN           = 0x00000004, // ability must hurt player (ie torment)
     ABFLAG_PIETY          = 0x00000008, // ability has its own piety cost
     ABFLAG_EXHAUSTION     = 0x00000010, // fails if you.exhausted
@@ -258,7 +258,7 @@ static const ability_def Ability_List[] =
 
     // INVOCATIONS:
     // Zin
-    { ABIL_ZIN_RECITE, "Recite", 0, 0, 0, 0, 0, ABFLAG_BREATH | ABFLAG_DELAY},
+    { ABIL_ZIN_RECITE, "Recite", 0, 0, 0, 0, 0, ABFLAG_BREATH},
     { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 0, 1, 0, ABFLAG_CONF_OK},
     { ABIL_ZIN_IMPRISON, "Imprison", 5, 0, 125, 4, 0, ABFLAG_NONE},
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, 0, ABFLAG_NONE},
@@ -681,9 +681,6 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & ABFLAG_BREATH)
         ret += ", Breath";
 
-    if (abil.flags & ABFLAG_DELAY)
-        ret += ", Delay";
-
     if (abil.flags & ABFLAG_PAIN)
         ret += ", Pain";
 
@@ -780,9 +777,6 @@ static const string _detailed_cost_description(ability_type ability)
 
     if (abil.flags & ABFLAG_BREATH)
         ret << "\nYou must catch your breath between uses of this ability.";
-
-    if (abil.flags & ABFLAG_DELAY)
-        ret << "\nIt takes some time before being effective.";
 
     if (abil.flags & ABFLAG_PAIN)
         ret << "\nUsing this ability will hurt you.";
@@ -2198,7 +2192,15 @@ static bool _do_ability(const ability_def& abil)
     {
         recite_type prayertype;
         if (zin_check_recite_to_monsters(&prayertype))
-            start_delay(DELAY_RECITE, 3, prayertype, you.hp);
+        {
+            you.attribute[ATTR_RECITE_TYPE] = prayertype;
+            you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
+            you.attribute[ATTR_RECITE_HP]   = you.hp;
+            you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
+            mprf(MSGCH_PLAIN, "You clear your throat and prepare to recite %s.",
+                 zin_recite_text(you.attribute[ATTR_RECITE_SEED],
+                                 prayertype, -1).c_str());
+        }
         else
         {
             mpr("That recitation seems somehow inappropriate.");
