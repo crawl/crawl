@@ -421,6 +421,8 @@ void item_noise(const item_def &item, string msg, int loudness)
     msg = replace_all(msg, "@player_god@",
                       you.religion == GOD_NO_GOD ? "atheism"
                       : god_name(you.religion, coinflip()));
+    msg = replace_all(msg, "@a_player_genus@",
+                          article_a(species_name(you.species, true)));
 
     mpr(msg.c_str(), channel);
 
