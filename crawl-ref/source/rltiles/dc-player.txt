@@ -594,8 +594,6 @@ hammer_two HAMMER2
 flail_stick FLAIL_STICK
 flail_ball FLAIL
 flail_ball2
-flail_spike SPIKED_FLAIL
-flail_spike2
 flail_great GREAT_FLAIL
 flail_great2
 flail_stick_slant FLAIL_STICK_SLANT

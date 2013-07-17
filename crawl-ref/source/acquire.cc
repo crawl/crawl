@@ -508,7 +508,7 @@ static int _acquirement_weapon_subtype(bool divine)
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
 #if TAG_MAJOR_VERSION == 34
-        if (i == WPN_SPIKED_FLAIL)
+        if (i == WPN_BUGGY_FLAIL)
             continue;
 #endif
         int wskill = range_skill(OBJ_WEAPONS, i);

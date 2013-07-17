@@ -721,7 +721,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         else if (dam > 25)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_MACE;
         else if (dam > 20)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SPIKED_FLAIL;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_EVENINGSTAR;
         else if (dam > 15)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_MORNINGSTAR;
         else if (dam > 10)

@@ -3069,6 +3069,15 @@ void unmarshallItem(reader &th, item_def &item)
         item.plus = random_range(5, 15, 2);
     }
 
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BUGGY_EBONY_CASKET)
+    {
+        item.sub_type = MISC_BOX_OF_BEASTS;
+        item.plus = 1;
+    }
+
+    if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_BUGGY_FLAIL)
+        item.sub_type = WPN_FLAIL;
+
 #endif
 
     bind_item_tile(item);
