@@ -306,7 +306,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     fdata.max_dam = 0;
 
     const int weapon = you.equip[EQ_WEAPON];
-    item_def *iweap = weapon != -1 ? &you.inv[weapon] : NULL;
+    const item_def *iweap = weapon != -1 ? &you.inv[weapon] : NULL;
     const int missile = you.m_quiver->get_fire_item();
 
     // now make sure the player is ready
