@@ -46,7 +46,7 @@ TAGS:   transparent extra uniq_lab
 # should be changed about labyrinths to address percieved tedium.
 # For now, trimming spawning depths to keep the minotaur more dangerous.
 CHANCE: 5%
-DEPTH:  D:11-18, Orc:4, Dwarf, Lair
+DEPTH:  D:11-18, Orc:4, Lair
 : lab_portal(_G)
 MAP
 O

@@ -1594,7 +1594,7 @@ ENDMAP
 
 NAME:  abandoned_shop
 TAGS:  transparent extra allow_dup decor
-DEPTH: D:4-27, Orc, Elf, Shoals, Snake, Forest, Dwarf
+DEPTH: D:4-27, Orc, Elf, Shoals, Snake, Forest
 KFEAT: O = abandoned_shop
 MAP
 O
@@ -2505,7 +2505,7 @@ xxxx
 ENDMAP
 
 NAME:   library_closet
-DEPTH:  D:9-27, Elf, Crypt, Snake, Dwarf, Orc
+DEPTH:  D:9-27, Elf, Crypt, Snake, Orc
 TAGS:   extra
 WEIGHT: 5
 ITEM:   any book w:20 / any scroll / nothing
