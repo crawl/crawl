@@ -5041,7 +5041,9 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_STABBING:       ch = TILEG_STABBING_ON; break;
 #endif
     case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
+#if TAG_MAJOR_VERSION == 34
     case SK_TRAPS:          ch = TILEG_TRAPS_ON; break;
+#endif
     case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
     case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;

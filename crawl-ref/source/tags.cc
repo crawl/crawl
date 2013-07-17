@@ -1996,7 +1996,7 @@ static void tag_read_you(reader &th)
     {
         you.sage_skills[i] = static_cast<skill_type>(unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34
-        if (you.sage_skills[i] == SK_STABBING)
+        if (you.sage_skills[i] == SK_STABBING || you.sage_skills[i] == SK_TRAPS)
             you.sage_skills[i] = SK_STEALTH;
 #endif
         ASSERT(!is_invalid_skill(you.sage_skills[i]));

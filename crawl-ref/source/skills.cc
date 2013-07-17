@@ -457,7 +457,6 @@ bool training_restricted(skill_type sk)
     case SK_ARMOUR:
     case SK_DODGING:
     case SK_STEALTH:
-    case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
         return false;

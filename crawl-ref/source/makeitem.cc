@@ -2851,6 +2851,8 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
             item.plus = random2(SK_UNARMED_COMBAT);
             if (item.plus == SK_STABBING)
                 item.plus = SK_UNARMED_COMBAT;
+            if (item.plus == SK_TRAPS)
+                item.plus = SK_STEALTH;
         }
 #else
             item.plus = random2(SK_UNARMED_COMBAT + 1);
