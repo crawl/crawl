@@ -49,7 +49,7 @@ default-depth:
 #
 # A general initalization function called for everything.  The
 #  size/shape and creature style cannot be set randomly here
-#  because this is run seperately for each subvault.
+#  because this is run separately for each subvault.
 #
 
 {{
@@ -664,7 +664,7 @@ qqqqqq.....u.yyyyyy
 ENDMAP
 
 
-NAME:    aquarium_bridge_long_seperate
+NAME:    aquarium_bridge_long_separate
 WEIGHT:  10
 TAGS:    serial_aquarium_bridge luniq_aquarium_bridge_long
 # One of path on each side is guarenteed to be a bridge.
@@ -1065,7 +1065,7 @@ ENDMAP
 # views (8 vaults, total weight 100)
 #
 # These have water with 2 or more windows to (theoretically)
-#  seperate rooms.  Crawl likes making passages around the edge
+#  separate rooms.  Crawl likes making passages around the edge
 #  of vaults, so they be directly connected in practice.
 #
 
