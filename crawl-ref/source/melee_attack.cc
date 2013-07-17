@@ -3627,7 +3627,7 @@ int melee_attack::staff_damage(skill_type skill)
 
 void melee_attack::apply_staff_damage()
 {
-    if (!weapon)
+    if (!weapon || attacker->suppressed())
         return;
 
     if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_STRIKING)
