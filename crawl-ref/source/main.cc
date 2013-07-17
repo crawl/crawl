@@ -2347,6 +2347,7 @@ static void _handle_recitation(int step)
         }
         mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
         mpr("You feel short of breath.");
+        you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
     }
 }
 

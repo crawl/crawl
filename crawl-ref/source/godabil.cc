@@ -721,8 +721,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
         else
             return 0;
     }
-    // If we got this far, we're actually reciting and are out of breath from it:
-    you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
+
     return 1;
 }
 
