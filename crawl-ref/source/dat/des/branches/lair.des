@@ -468,7 +468,7 @@ ENDMAP
 # Pointless little "vaults" by Lemuel
 #
 
-# Three seperate decorative bubbles mixed into one vault.
+# Three separate decorative bubbles mixed into one vault.
 NAME:   lemuel_strawberry_fields
 TAGS:   allow_dup extra transparent
 DEPTH:  Lair
@@ -514,7 +514,7 @@ ENDMAP
 # Plantage
 #
 
-# Two seperate small decorative vaults mixed into one:
+# Two separate small decorative vaults mixed into one:
 NAME:   lemuel_fruit_tree
 TAGS:   extra transparent
 DEPTH:  Lair, Snake

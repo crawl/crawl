@@ -1424,14 +1424,14 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
     local ROOMS_ACROSS = 4
     local ROOM_SIZE = 11
-    local ROOM_SEPERATION = 2
+    local ROOM_SEPARATION = 2
     local EDGE_IN = 5
     local ROOM_IN = 4
 
-    local ROOM_SPACING = ROOM_SIZE + ROOM_SEPERATION
-    local MAP_SIZE = ROOM_SPACING * ROOMS_ACROSS + ROOM_SEPERATION
+    local ROOM_SPACING = ROOM_SIZE + ROOM_SEPARATION
+    local MAP_SIZE = ROOM_SPACING * ROOMS_ACROSS + ROOM_SEPARATION
                      + EDGE_IN * 2
-    local FIRST_ROOM = EDGE_IN + ROOM_SEPERATION
+    local FIRST_ROOM = EDGE_IN + ROOM_SEPARATION
     local DOOR_OFFSET_MIN = FIRST_ROOM + ROOM_IN - 1
     local DOOR_OFFSET_MAX = FIRST_ROOM + ROOM_SIZE - ROOM_IN
 
@@ -1464,7 +1464,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
     for i = 0, ROOMS_ACROSS do
         for j = 0, ROOMS_ACROSS - 1 do
             local x = EDGE_IN + i * ROOM_SPACING
-                      + crawl.random_range(0, ROOM_SEPERATION - 1)
+                      + crawl.random_range(0, ROOM_SEPARATION - 1)
             local y = crawl.random_range(DOOR_OFFSET_MIN, DOOR_OFFSET_MAX)
                       + j * ROOM_SPACING
 
@@ -1495,7 +1495,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
             local x = crawl.random_range(DOOR_OFFSET_MIN, DOOR_OFFSET_MAX)
                       + i * ROOM_SPACING
             local y = EDGE_IN + j * ROOM_SPACING
-                      + crawl.random_range(0, ROOM_SEPERATION - 1)
+                      + crawl.random_range(0, ROOM_SEPARATION - 1)
 
             -- add door
             mapgrd[x][y] = '+'
