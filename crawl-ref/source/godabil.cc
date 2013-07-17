@@ -80,7 +80,11 @@ string zin_recite_text(const int seed, const int prayertype, int step)
     // That's too confusing, so:
 
     if (step > -1)
+    {
         step = abs(step-3);
+        if (step > 3)
+            step = 0;
+    }
 
     // We change it to turn 1, turn 2, turn 3.
 
