@@ -2259,8 +2259,10 @@ static void tag_read_you(reader &th)
     if (you.mutation[MUT_CLING] == 1)
         you.mutation[MUT_CLING] = 0;
     if (you.species == SP_GARGOYLE)
+    {
         you.mutation[MUT_POISON_RESISTANCE] =
         you.innate_mutations[MUT_POISON_RESISTANCE] = 0;
+    }
 #endif
 
     count = unmarshallUByte(th);
