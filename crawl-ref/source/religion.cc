@@ -2993,6 +2993,7 @@ void excommunication(god_type new_god)
     }
 
     you.duration[DUR_PIETY_POOL] = 0; // your loss
+    you.duration[DUR_RECITE] = 0;
     you.piety = 0;
     you.piety_hysteresis = 0;
     if (old_god == GOD_ASHENZARI)
