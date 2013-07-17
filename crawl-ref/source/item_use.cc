@@ -2168,6 +2168,8 @@ void drink(int slot)
         return;
     }
 
+    zin_recite_interrupt();
+
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
@@ -3043,8 +3045,7 @@ void read_scroll(int slot)
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
-    if (you.duration[DUR_RECITE])
-        zin_recite_interrupt();
+    zin_recite_interrupt();
 
     // ... but some scrolls may still be cancelled afterwards.
     bool cancel_scroll = false;

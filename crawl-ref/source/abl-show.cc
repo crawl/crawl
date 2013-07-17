@@ -1950,8 +1950,7 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             zapping(ZAP_SPIT_POISON, power, beam);
-            if (you.duration[DUR_RECITE])
-                zin_recite_interrupt();
+            zin_recite_interrupt();
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
@@ -1979,8 +1978,7 @@ static bool _do_ability(const ability_def& abil)
                 2 * you.experience_level : you.experience_level,
             beam, false, "You spit a glob of burning liquid.");
 
-        if (you.duration[DUR_RECITE])
-            zin_recite_interrupt();
+        zin_recite_interrupt();
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
         break;
@@ -2097,8 +2095,7 @@ static bool _do_ability(const ability_def& abil)
             break;
         }
 
-        if (you.duration[DUR_RECITE])
-            zin_recite_interrupt();
+        zin_recite_interrupt();
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
 
@@ -2215,6 +2212,7 @@ static bool _do_ability(const ability_def& abil)
         break;
     }
     case ABIL_ZIN_VITALISATION:
+        zin_recite_interrupt();
         zin_vitalisation();
         break;
 
@@ -2250,6 +2248,7 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
 
+        zin_recite_interrupt();
         power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
 
         if (!cast_imprison(power, mons, -GOD_ZIN))
@@ -2258,11 +2257,13 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_ZIN_SANCTUARY:
+        zin_recite_interrupt();
         if (!zin_sanctuary())
             return false;
         break;
 
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
+        zin_recite_interrupt();
         zin_remove_all_mutations();
         break;
 

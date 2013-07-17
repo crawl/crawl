@@ -1271,6 +1271,8 @@ static void _zin_saltify(monster* mon)
 
 void zin_recite_interrupt()
 {
+    if (!you.duration[DUR_RECITE])
+        return;
     mpr("Your recitation is interrupted.", MSGCH_DURATION);
     mpr("You feel short of breath.");
     you.duration[DUR_RECITE] = 0;
