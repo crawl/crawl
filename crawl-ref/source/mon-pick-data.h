@@ -310,12 +310,12 @@ static const pop_entry pop_lair[] =
   {  5,  9,   11, PEAK, MONS_WOLF_SPIDER },
   {  5,  9,   17, SEMI, MONS_REDBACK },
   {  5,  9,   17, SEMI, MONS_WANDERING_MUSHROOM },
-  {  3, 13,  192, PEAK, MONS_DEATH_YAK },
+  {  3,  8,  192, UP  , MONS_DEATH_YAK },
   {  6, 10,   21, SEMI, MONS_SPINY_WORM },
   {  8,  8,    1, FLAT, MONS_FIRE_CRAB },
-  {  3, 13,  180, PEAK, MONS_BORING_BEETLE },
-  {  4, 12,   89, PEAK, MONS_BOULDER_BEETLE },
-  {  6, 13,   21, PEAK, MONS_POLYMOTH },
+  {  3,  8,  180, UP  , MONS_BORING_BEETLE },
+  {  4,  8,   89, UP  , MONS_BOULDER_BEETLE },
+  {  6,  8,   12, UP  , MONS_POLYMOTH },
   { 0,0,0,FLAT,MONS_0 }
 };
 
