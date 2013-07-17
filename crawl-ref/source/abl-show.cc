@@ -1950,6 +1950,8 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             zapping(ZAP_SPIT_POISON, power, beam);
+            if (you.duration[DUR_RECITE])
+                zin_recite_interrupt();
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
@@ -1977,6 +1979,8 @@ static bool _do_ability(const ability_def& abil)
                 2 * you.experience_level : you.experience_level,
             beam, false, "You spit a glob of burning liquid.");
 
+        if (you.duration[DUR_RECITE])
+            zin_recite_interrupt();
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
         break;
@@ -2093,6 +2097,8 @@ static bool _do_ability(const ability_def& abil)
             break;
         }
 
+        if (you.duration[DUR_RECITE])
+            zin_recite_interrupt();
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
 
