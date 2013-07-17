@@ -611,11 +611,6 @@ Norris:quote
 negative.”
     -Georges Poulet
 %%%%
-Pan
-
-The lord of all satyrs. With his flute, he produces music said to cloud the
-mind beyond all hope of return.
-%%%%
 Pikel
 
 While kobolds are normally slaves, Pikel's rough life, selfish ambition and
