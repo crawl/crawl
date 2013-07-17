@@ -36,6 +36,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
@@ -1046,7 +1047,10 @@ void yell(bool force)
 
     if (force)
     {
-        mprf("A %s rips itself from your throat!", shout_verb.c_str());
+        if (you.duration[DUR_RECITE])
+            mpr("You feel yourself shouting your recitation.");
+        else
+            mprf("A %s rips itself from your throat!", shout_verb.c_str());
         noisy(noise_level, you.pos());
         return;
     }
@@ -1085,6 +1089,7 @@ void yell(bool force)
              shout_verb.c_str(),
              you.berserk() ? " wildly" : " for attention");
         noisy(noise_level, you.pos());
+        zin_recite_interrupt();
         you.turn_is_over = true;
         return;
 
@@ -1219,6 +1224,7 @@ void yell(bool force)
         return;
     }
 
+    zin_recite_interrupt();
     you.turn_is_over = true;
     you.pet_target = mons_targd;
     // Allow patrolling for "Stop fighting!" and "Wait here!"
