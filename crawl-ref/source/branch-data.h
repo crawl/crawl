@@ -45,7 +45,7 @@ const Branch branches[NUM_BRANCHES] =
       'E', true, 0 },
 
 #if TAG_MAJOR_VERSION == 34
-    { BRANCH_DWARVEN_HALL, BRANCH_ELVEN_HALLS, 2, 2, 1, 17,
+    { BRANCH_DWARVEN_HALL, BRANCH_ELVEN_HALLS, -1, -1, 0, 17,
       0, 0,
       DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
