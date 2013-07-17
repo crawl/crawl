@@ -927,10 +927,6 @@ eggplant
 A rotten eggplant which you can throw at the Crawl developers. (It's a bug if
 you ever see this message.)
 %%%%
-empty ebony casket
-
-A magical box after its power is spent.
-%%%%
 eudemon blade
 
 A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
