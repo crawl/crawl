@@ -153,6 +153,8 @@ static duration_def duration_data[] =
       MAGENTA, "Howl", "spirit howling", "The howling of a spirit pack pursues you." },
     { DUR_TOXIC_RADIANCE, false,
       MAGENTA, "Toxic", "radiating poison", "You are radiating toxic energy."},
+    { DUR_RECITE, false,
+      WHITE, "Recite", "reciting", "You are reciting Zin's Axioms of Law." },
 };
 
 static int duration_index[NUM_DURATIONS];

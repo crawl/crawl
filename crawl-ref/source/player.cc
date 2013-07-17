@@ -4327,14 +4327,14 @@ void display_char_status()
         DUR_SONG_OF_SHIELDING,
         DUR_SONG_OF_SLAYING,
         STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE
+        DUR_TOXIC_RADIANCE,
+        DUR_RECITE
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.long_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.long_text.empty())
             mpr(inf.long_text);
     }
     string cinfo = _constriction_description();
@@ -6561,7 +6561,6 @@ int player::melee_evasion(const actor *act, ev_ignore_type evit) const
                 || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
             - (you_are_delayed()
                && !(evit & EV_IGNORE_HELPLESS)
-               && current_delay_action() != DELAY_RECITE
                && !delay_is_run(current_delay_action())? 5 : 0));
 }
 

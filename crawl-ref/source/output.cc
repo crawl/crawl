@@ -1008,14 +1008,14 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_SONG_OF_SHIELDING,
         STATUS_DRAINED,
         DUR_TOXIC_RADIANCE,
-        STATUS_RAY
+        STATUS_RAY,
+        DUR_RECITE
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.light_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.light_text.empty())
         {
             status_light sl(inf.light_colour, inf.light_text);
             out.push_back(sl);
@@ -2488,14 +2488,14 @@ static string _status_mut_abilities(int sw)
         DUR_DIMENSION_ANCHOR,
         DUR_SPIRIT_HOWL,
         STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE
+        DUR_TOXIC_RADIANCE,
+        DUR_RECITE
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.short_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
             status.push_back(inf.short_text);
     }
 

@@ -59,6 +59,7 @@
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
+#include "exercise.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -2272,6 +2273,83 @@ static void _decrement_petrification(int delay)
     }
 }
 
+static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
+{
+    ASSERT_RANGE(prayertype, 0, NUM_RECITE_TYPES);
+    return zin_recite_to_single_monster(where, (recite_type)prayertype);
+}
+
+static bool _check_recite()
+{
+    if (you.hp*2 < you.attribute[ATTR_RECITE_HP]
+        || silenced(you.pos())
+        || you.paralysed()
+        || you.confused()
+        || you.asleep()
+        || you.petrified()
+        || you.berserk())
+    {
+        zin_recite_interrupt();
+        return false;
+    }
+    return true;
+}
+
+static void _handle_recitation(int step)
+{
+    mprf(MSGCH_MULTITURN_ACTION, "\"%s\"",
+         zin_recite_text(you.attribute[ATTR_RECITE_SEED],
+                         you.attribute[ATTR_RECITE_TYPE], step).c_str());
+
+    if (apply_area_visible(_zin_recite_to_monsters,
+                           you.attribute[ATTR_RECITE_TYPE], &you))
+        viewwindow();
+
+    // Recite trains more than once per use, because it has a
+    // long timer in between uses and actually takes up multiple
+    // turns.
+    practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
+
+    const string shout_verb = you.shout_verb();
+
+    int noise_level = 12; // "shout"
+
+    // Tweak volume for different kinds of vocalisation.
+    if (shout_verb == "roar")
+        noise_level = 18;
+
+    else if (shout_verb == "hiss")
+        noise_level = 8;
+    else if (shout_verb == "squeak")
+        noise_level = 4;
+    else if (shout_verb == "__NONE")
+        noise_level = 0;
+    else if (shout_verb == "yell")
+        noise_level = 14;
+    else if (shout_verb == "scream")
+        noise_level = 16;
+
+    noisy(noise_level, you.pos());
+
+    if (step == 0)
+    {
+        string speech = zin_recite_text(you.attribute[ATTR_RECITE_SEED],
+                                        you.attribute[ATTR_RECITE_TYPE], -1);
+        speech += ".";
+        if (one_chance_in(9))
+        {
+            const string closure = getSpeakString("recite_closure");
+            if (!closure.empty() && one_chance_in(3))
+            {
+                speech += " ";
+                speech += closure;
+            }
+        }
+        mprf(MSGCH_DURATION, "You finish reciting %s", speech.c_str());
+        mpr("You feel short of breath.");
+    }
+}
+
 //  Perhaps we should write functions like: update_liquid_flames(), etc.
 //  Even better, we could have a vector of callback functions (or
 //  objects) which get installed at some point.
@@ -2939,6 +3017,17 @@ static void _decrement_durations()
         toxic_radiance_effect(&you, ticks);
         _decrement_a_duration(DUR_TOXIC_RADIANCE, delay,
                               "Your toxic aura wanes.");
+    }
+
+    if (you.duration[DUR_RECITE] && _check_recite())
+    {
+        const int old_recite =
+            (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
+        _decrement_a_duration(DUR_RECITE, delay);
+        const int new_recite =
+            (you.duration[DUR_RECITE] + BASELINE_DELAY - 1) / BASELINE_DELAY;
+        if (old_recite != new_recite)
+            _handle_recitation(new_recite);
     }
 
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)

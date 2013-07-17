@@ -11,11 +11,12 @@
 
 struct bolt;
 
-string zin_recite_text(int* trits, size_t len, int prayertype, int step);
+string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
 int zin_check_recite_to_monsters(recite_type *prayertype);
 bool zin_recite_to_single_monster(const coord_def& where,
                                   recite_type prayertype);
+void zin_recite_interrupt();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 bool zin_remove_all_mutations();
