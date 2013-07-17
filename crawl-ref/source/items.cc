@@ -4134,13 +4134,6 @@ void corrode_item(item_def &item, actor *holder)
         return;
     }
 
-    how_rusty--;
-
-    if (item.base_type == OBJ_WEAPONS)
-        item.plus2 = how_rusty;
-    else
-        item.plus  = how_rusty;
-
     if (holder && holder->is_player())
     {
         mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
@@ -4166,4 +4159,11 @@ void corrode_item(item_def &item, actor *holder)
                  item.name(DESC_PLAIN).c_str());
         }
     }
+
+    how_rusty--;
+
+    if (item.base_type == OBJ_WEAPONS)
+        item.plus2 = how_rusty;
+    else
+        item.plus  = how_rusty;
 }
