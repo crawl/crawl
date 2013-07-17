@@ -1006,14 +1006,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     }
 
     if (you_trigger)
-    {
         learned_something_new(HINT_SEEN_TRAP, p);
-
-        // Exercise T&D if the trap revealed itself, but not if it ran
-        // out of ammo.
-        if (!you_know && type != TRAP_UNASSIGNED && is_known())
-            practise(EX_TRAP_TRIGGER);
-    }
 
     if (trap_destroyed)
         destroy(know_trap_destroyed);
@@ -1191,9 +1184,7 @@ void disarm_trap(const coord_def& where)
     if (random2(div_rand_round(you.experience_level, 3) + 2) <= random2(trap.difficulty() + 5))
     {
         mpr("You failed to disarm the trap.");
-        if (random2(you.dex()) > 5 + random2(5 + trap.difficulty()))
-            practise(EX_TRAP_DISARM_FAIL, trap.difficulty());
-        else
+        if (random2(you.dex()) <= 5 + random2(5 + trap.difficulty()))
         {
             if ((trap.type == TRAP_NET || trap.type==TRAP_WEB)
                 && trap.pos != you.pos())
@@ -1206,15 +1197,12 @@ void disarm_trap(const coord_def& where)
             }
             else
                 trap.trigger(you, true);
-
-            practise(EX_TRAP_DISARM_TRIGGER);
         }
     }
     else
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        practise(EX_TRAP_DISARM, trap.difficulty());
     }
 }
 

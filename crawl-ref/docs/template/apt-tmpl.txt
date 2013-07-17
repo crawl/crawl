@@ -45,10 +45,10 @@ Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
 Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
 Sth - Stealth                LBl - Long Blades           Hex - Hexes
 Shd - Shields                M&F - Maces & Flails        Cha - Charms
-Trp - Traps                  Axs - Axes                  Sum - Summonings
-                             Pla - Polearms              Nec - Necromancy
-Inv - Invocations            Stv - Staves                Trl - Translocations
-Evo - Evocations             UC  - Unarmed Combat        Trm - Transmutations
+                             Axs - Axes                  Sum - Summonings
+Inv - Invocations            Pla - Polearms              Nec - Necromancy
+Evo - Evocations             Stv - Staves                Trl - Translocations
+                             UC  - Unarmed Combat        Trm - Transmutations
 
                              Thr - Throwing              Fir - Fire Magic
 HP  - hit points             Slg - Slings                Ice - Ice Magic
@@ -57,7 +57,7 @@ Exp - experience             Crb - Crossbows             Ear - Earth Magic
                                                          Poi - Poison Magic
 
 
-                 Arm Ddg Sth Shd Trp   Inv Evo            HP  MP  Exp
+                 Arm Ddg Sth Shd   Inv Evo            HP  MP  Exp
 ----------------------------------------------------------------------
 
 

@@ -3177,7 +3177,9 @@ enum skill_type
     SK_STABBING,
 #endif
     SK_SHIELDS,
+#if TAG_MAJOR_VERSION == 34
     SK_TRAPS,
+#endif
     SK_UNARMED_COMBAT,
     SK_LAST_MUNDANE = SK_UNARMED_COMBAT,
     SK_SPELLCASTING,
