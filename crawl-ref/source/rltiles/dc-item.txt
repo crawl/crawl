@@ -41,9 +41,6 @@ orcish_flail2
 dwarven_flail1 WPN_FLAIL_DWARF
 dwarven_flail2
 %rim 1
-spiked_flail1 WPN_SPIKED_FLAIL
-spiked_flail2
-spiked_flail3
 dire_flail1 WPN_DIRE_FLAIL
 dire_flail2
 dire_flail3
@@ -1079,7 +1076,6 @@ misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
 misc_phial MISC_PHIAL_OF_FLOODS
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
-misc_box MISC_EMPTY_EBONY_CASKET
 misc_box MISC_BOX_OF_BEASTS
 misc_disc MISC_DISC_OF_STORMS
 %rim 0

@@ -2513,11 +2513,6 @@ can take the initiative; the halberd is defensive. In the hands of one of two
 men of equal ability, the spear gives a little extra strength.”
     -Miyamoto Musashi, _The Book of Five Rings_. 1645.
 %%%%
-spiked flail
-
-A flail improved by a longer chain and the addition of spikes on the striking
-head.
-%%%%
 staff of air
 
 This staff increases the power of air spells cast by its wielder, and insulates

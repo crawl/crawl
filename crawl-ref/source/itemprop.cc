@@ -200,7 +200,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_SLASHING, 0 },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
+    { WPN_BUGGY_FLAIL,      "buggy flail",       12, -2, 16, 190,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
 #endif
@@ -1401,7 +1401,7 @@ int weapon_rarity(int w_type)
     case WPN_TRISHULA:
     case WPN_STAFF:
 #if TAG_MAJOR_VERSION == 34
-    case WPN_SPIKED_FLAIL:
+    case WPN_BUGGY_FLAIL:
 #endif
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return 0;
