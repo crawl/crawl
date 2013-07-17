@@ -2063,7 +2063,7 @@ rod of striking
 
 This rod is designed for melee combat, releasing its charges to deal additional
 damage dependent on evocations skill when it strikes a foe. Maces & Flails
-skill will help improve accuracy with the weapon.
+skill will help improve your basic effectiveness with the weapon.
 %%%%
 rod of striking:quote
 
