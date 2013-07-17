@@ -2175,7 +2175,7 @@ enum monster_type                      // menv[].type
     MONS_HARPY,
     MONS_RAVEN,
     MONS_FIRE_CRAB,
-#if TAG_MAJOR_VERSION > 34
+#if TAG_MAJOR_VERSION == 34
     MONS_HOMUNCULUS,
     MONS_SOUPLING,
 #endif
