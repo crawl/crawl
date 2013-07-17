@@ -1247,7 +1247,7 @@ void search_around()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int base_skill = you.skill(SK_TRAPS, 100);
+    int base_skill = you.experience_level * 100 / 3;
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
                 + (base_skill/200.0) + 15;
 
