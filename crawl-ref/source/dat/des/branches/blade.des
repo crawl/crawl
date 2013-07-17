@@ -158,7 +158,7 @@ NAME: nicolae_vaults_blade_armed_guards
 TAGS: vaults_entry_blade allow_dup no_monster_gen
 KMONS: 1 = vault guard ; battleaxe | broad axe | flail | glaive | great mace | \
    halberd | hand axe | long sword | morningstar | scimitar | short sword | \
-   spiked flail | trident | war axe . chain mail | plate armour . \
+   trident | war axe . chain mail | plate armour . \
    large shield | shield w:20 | nothing w:60
 KFEAT: O = enter_hall_of_blades
 MAP

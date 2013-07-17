@@ -91,7 +91,9 @@ static const char *skills[NUM_SKILLS][6] =
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
 #endif
     {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
+#if TAG_MAJOR_VERSION == 34
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
+#endif
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
