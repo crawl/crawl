@@ -2855,47 +2855,35 @@ void MiscastEffect::_zot()
         beam.damage = dice_def(3, 20);
         beam.ex_size = coinflip() ? 1 : 2;
         beam.glyph   = dchar_glyph(DCHAR_FIRED_BURST);
-        switch (random2(10))
+        switch (random2(7))
         {
         case 0:
         case 1:
-            all_msg = "There is a sudden explosion of magical energy!";
-            beam.flavour = BEAM_MISSILE;
-            beam.colour  = random_colour();
-            _explosion();
-            break;
-        case 2:
-        case 3:
             all_msg = "There is a sudden explosion of flames!";
             beam.flavour = BEAM_FIRE;
             beam.colour  = RED;
             _explosion();
             break;
-        case 4:
-        case 5:
+        case 2:
+        case 3:
             all_msg = "There is a sudden explosion of frost!";
             beam.flavour = BEAM_COLD;
             beam.colour  = WHITE;
             _explosion();
             break;
-        case 6:
-            all_msg = "There is a sudden explosion of flying shrapnel!";
-            beam.flavour = BEAM_FRAG;
-            beam.colour  = CYAN;
+        case 4:
+            all_msg = "There is a sudden blast of acid!";
+            beam.name    = "acid blast";
+            beam.flavour = BEAM_ACID;
+            beam.colour  = YELLOW;
             _explosion();
             break;
-        case 7:
-            all_msg = "There is a sudden explosion of electrical discharges!";
-            beam.flavour = BEAM_ELECTRICITY;
-            beam.colour  = LIGHTBLUE;
-            _explosion();
-            break;
-        case 8:
+        case 5:
             if (_create_monster(MONS_BALL_LIGHTNING, 3))
                 all_msg = "A ball of electricity appears!";
             do_msg();
             break;
-        case 9:
+        case 6:
             if (_create_monster(MONS_TWISTER, 1))
                 all_msg = "A huge vortex of air appears!";
             do_msg();
@@ -3048,6 +3036,11 @@ void MiscastEffect::_zot()
             }
             break;
         case 8:
+            you_msg      = "You are engulfed in negative energy!";
+            mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
+            do_msg();
+            target->drain_exp(act_source, false, 100);
+            break;
         case 9:
             if (target->is_player())
                 contaminate_player(2 + random2avg(14, 2), false);
