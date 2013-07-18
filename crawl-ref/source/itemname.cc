@@ -936,7 +936,7 @@ static const char* misc_type_name(int type, bool known)
     case MISC_CRYSTAL_BALL_OF_ENERGY:    return "crystal ball of energy";
     case MISC_BOX_OF_BEASTS:             return "box of beasts";
 #if TAG_MAJOR_VERSION == 34
-    case MISC_BUGGY_EBONY_CASKET:        return "buggy ebony casket";
+    case MISC_BUGGY_EBONY_CASKET:        return "removed ebony casket";
 #endif
     case MISC_FAN_OF_GALES:              return "fan of gales";
     case MISC_LAMP_OF_FIRE:              return "lamp of fire";
