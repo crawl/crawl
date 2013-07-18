@@ -200,7 +200,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_SLASHING, 0 },
 #if TAG_MAJOR_VERSION == 34
-    { WPN_BUGGY_FLAIL,      "buggy flail",       12, -2, 16, 190,  8,
+    { WPN_BUGGY_FLAIL,     "removed spiked flail", 12, -2, 16, 190,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
 #endif
