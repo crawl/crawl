@@ -536,10 +536,6 @@ A staircase to the Orcish Mines
 Ein Eingang zu den Minen der Orks, gefüllt mit ihrem Gold, aber heimtückisch
 und voller Fallen.
 %%%%
-A staircase to the Dwarven Hall
-
-Ein Eingang zur gut gemachten Halle der Zwerge. Du glaubst, Ale zu riechen.
-%%%%
 A staircase to the Shoals
 
 Hier sind die Sandbänke: exotische Untergrundstrände, salzige Gischt und
@@ -725,11 +721,6 @@ An iron grate
 Dieses Eisengitter sieht verrostet aus, als ob es recht leicht mit einem
 Zauberspruch oder einem Zauberstab zerstört werden könnte. Es ist aber zu
 stabil, um von Hand zerbrochen zu werden.
-%%%%
-An iron tree
-
-Eine bemerkenswerte Darstellung der Natur im Frühjahr, gemacht völlig aus
-Eisen. Es sieht sehr fein – fast lebendig aus.
 %%%%
 An open door
 
@@ -1052,11 +1043,6 @@ man das Wasser fließen.
 A glass window
 
 Ein pockiges Fenster aus extrem hartem Glas.
-%%%%
-A granite statue of a fallen hero
-
-Die lebensgroße Granitstatue eines Zwergen, der diese Halle bewacht. Du fühlst
-dich von ihr beobachtet.
 %%%%
 An elephant-shaped statue
 

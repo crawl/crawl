@@ -32,14 +32,6 @@ magiques légendaires de ce peuple.
 
 Les Halls Elfiques sont profonds de trois niveaux.
 %%%%
-Dwarven Hall
-
-Ces halls de pierre finement gravées sont la demeure des Nains des Profondeurs.
-Leurs compétences inégalées en métallurgie leur permettent de forger
-suffisamment d'armes contre les gens comme vous.
-
-Il n'est composé que d'un unique niveau.
-%%%%
 Lair
 
 La plupart des aventuriers considère le Repaire des Bêtes comme un excitant

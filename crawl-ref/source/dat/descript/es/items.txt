@@ -515,10 +515,6 @@ eggplant
 Una berenjena podrida que puedes arrojar a los desarrolladores de Crawl. (Si
 ves este mensaje, se trata de un error del programa.)
 %%%%
-empty ebony casket
-
-Una caja mágica cuyo poder se ha agotado.
-%%%%
 eudemon blade
 
 Una gloriosa cuchilla creada en los forjas del Cielo, y poseída por un espíritu
@@ -1262,10 +1258,6 @@ Un vegetal repulsivo en forma de pepino.
 spear
 
 Un palo largo con una punta de metal en un extremo, para ser asido o lanzado.
-%%%%
-spiked flail
-
-Un flagelo con largos pinchos en su cabeza de metal.
 %%%%
 staff of air
 
