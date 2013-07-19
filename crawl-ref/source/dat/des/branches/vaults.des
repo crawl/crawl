@@ -2405,6 +2405,41 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################
+# 16 *, 10 |, 16 monsters
+NAME:    vaults_end_nooodl_tilted_maze
+TAGS:    vaults_end_quadrant_prize
+SUBST:   9 = 8 9 .:10
+NSUBST:  O = 1:O / *:|
+SUBST:   * = * $:4
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xO***$...9...xx..xx.......
+x*||*$...xx..xx...9....9..x
+x****xx..xx...x.......xxxxx
+xxx$$xx.......x.9.xx..xx..x
+xxx.......9...xx..xx......x
+x.9.......xxxxxx...x.9....x
+x.....xx..xx.9.....x...xx.x
+x.xx..xx...........xxxxxx.x
+xxxx...x.9.....xx..xx.9...x
+x....9.x...xxxxxx.........x
+x......xxxxxx...x.......xxx
+x..xxxxxx....9..x...xx..xxx
+x9.xx....9......xxxxxx...9x
+x...9.......xx..xx..9.....x
+x.......xxxxxx...x.......xx
+x...xx..xx...9...x...xx$$xx
+xx..xx..9x.......xx..xx***x
+x*$......x...xxxxxx...$*|*x
+x|*$.....xx..xx..9....$*|*x
+x$|*$xx..xx...........xx|*x
+xO$|*xx9..x9......xx..xx*Ox
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################
 # Vaults:8 - Rooms Quadrant
 #
 # This quadrant uses a subvault for each room. Any subvault tagged

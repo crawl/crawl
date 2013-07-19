@@ -197,6 +197,24 @@ MAP
 ...............
 ENDMAP
 
+NAME:   vaults_nooodl_blade_preview
+TAGS:   vaults_entry_blade allow_dup no_item_gen no_monster_gen
+SUBST:  C : cc.
+NSUBST: 1 = 2:1 / *:.
+MONS:   place:Blade:1
+KFEAT:  O = enter_hall_of_blades
+MAP
+ccccccccccccccc
+cCCCCCCCCCCCCCc
+c.............c
+c.c1.c1.1c.1c.c
++......O......+
+c.c1.c1.1c.1c.c
+c.............c
+cCCCCCCCCCCCCCc
+ccccccccccccccc
+ENDMAP
+
 ######################################
 # Main layout
 
