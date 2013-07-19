@@ -4665,8 +4665,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         cast_chain_lightning(4 * mons->hit_dice, mons);
         return;
     case SPELL_SUMMON_EYEBALLS:
-        if (_mons_abjured(mons, monsterNearby))
+        if (mons->type != MONS_DISSOLUTION
+            && _mons_abjured(mons, monsterNearby))
+        {
             return;
+        }
 
         sumcount2 = 1 + random2(mons->hit_dice / 7 + 1);
 
