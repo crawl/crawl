@@ -38,6 +38,7 @@
 #include "ouch.h"
 #include "player-equip.h"
 #include "shout.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "target.h"
@@ -2885,7 +2886,10 @@ void handle_searing_ray()
     }
 
     zappy(zap, pow, beam);
+
+    aim_battlesphere(&you, SPELL_SEARING_RAY, pow, beam);
     beam.fire();
+    trigger_battlesphere(&you, beam);
 
     dec_mp(1);
 
