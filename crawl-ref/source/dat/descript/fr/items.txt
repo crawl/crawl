@@ -552,10 +552,6 @@ eggplant
 Une aubergine pourrie que vous pouvez jeter aux développeurs de Crawl. (Il
 s'agit d'un bug si jamais vous voyez ce message.)
 %%%%
-empty ebony casket
-
-Une boite magique dont les pouvoirs ont été consommés.
-%%%%
 eudemon blade
 
 Une lame sacrée tout droit sortie des forges du Ciel, et habitée par une
@@ -1459,11 +1455,6 @@ Une arme de chasse comprenant un arbre équilibrée en bois avec une tête
 métallique pointue fixé sur une extrémité. Plus court que d'autres armes
 d'hast, elle peut être manié avec une ou deux mains et est également assez
 léger pour être jeté.
-%%%%
-spiked flail
-
-Un fléau amélioré par l'addition de pointes sur la tête de frappe, et une
-chaîne plus longue.
 %%%%
 staff of air
 

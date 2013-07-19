@@ -441,10 +441,6 @@ eggplant
 En rådden aubergine, som du kan kaste efter Crawl-udviklerne. (Det er en fejl,
 hvis du nogensinde ser denne besked.)
 %%%%
-empty ebony casket
-
-En magisk æske, som er tømt for kraft.
-%%%%
 eudemon blade
 
 En hellig klinge, som er frembragt af Himmelens smedjer og beboet af en god

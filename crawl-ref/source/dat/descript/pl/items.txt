@@ -492,10 +492,6 @@ eggplant
 Zgniły bakłażan którym możesz rzucić w autorów Crawla. (To błąd jeśli
 kiedykolwiek zobaczysz ten tekst.)
 %%%%
-empty ebony casket
-
-Magiczne (niegdyś) pudełko, którego moc została zużyta.
-%%%%
 eudemon blade
 
 Wspaniałe ostrze wykute w kuźniach Niebios, opętane przez dobrego ducha. Jest
@@ -1330,10 +1326,6 @@ spear
 
 Długi patyk, z zaostrzonym grotem na końcu. Nadaje się do walki wręcz jak i do
 rzucania.
-%%%%
-spiked flail
-
-Broń podobna do cepa, z kolczastą kulą zamiast bijaka.
 %%%%
 staff of air
 

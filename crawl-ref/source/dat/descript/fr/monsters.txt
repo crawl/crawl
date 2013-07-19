@@ -1025,13 +1025,6 @@ Un membre de la famille des petits habitants de la montagne. Plus robuste que
 leur cousins de nains profonds, mais moins entrainés dans les connaissances
 magiques, les nains excellent dans le combat au corps-à-corps.
 %%%%
-dwarf mountain bat
-
-Une espèce de chauve-souris qui vit dans les cavernes montagneuses. Ce qu'elle
-fait dans ce donjon est un mystère — probablement en rapport avec la
-disparition soudaine des nains en ces terres. Mais ne vous inquiétez pas, une
-équipe d'éradication est en route.
-%%%%
 earth elemental
 
 Un esprit venant du plan élémentaire de la terre, qui existe dans ce monde sous
@@ -1169,10 +1162,6 @@ frost giant
 Un géant bleuâtre avec des cheveux gelés. Ses yeux sont aussi morne qu'un ciel
 d'hiver. Il s'avance farouchement dans la bataille avec son énorme hache glacée
 et ses rafales hurlantes de froid.
-%%%%
-fruity bat
-
-Une stupide chauve-souris moche. Elle scintille.
 %%%%
 fungus
 
@@ -1688,11 +1677,6 @@ Un monstre des mers gargantuesque, capable d'avaler des vaisseaux entiers. Il
 les enlace avec ses tentacules et les plonge dans les profondeurs.
 Heureusement, ces tentacules sont trop grosses pour attraper de petites
 créatures comme vous. Attendez, est-ce que je viens de dire "Heureusement" ?
-%%%%
-laboratory rat
-
-Un rat qui a été sujet de terribles expérimentations d'un magicien. Qui sait ce
-dont il est capable ?
 %%%%
 large abomination
 
@@ -2643,11 +2627,6 @@ Un gros champignon charnu qui vagabonde lentement dans le donjon. Il est à la
 fois naturellement curieux et incroyablement timide, poursuivant l'objet de sa
 curiosité dès qu'il est hors de vue. Des spores nocifs s'accumulent sur son
 chapeau.
-%%%%
-war dog
-
-Un énorme chien vicieux, entraîné à tuer. Son cou est protégé par un collier à
-pointe massif.
 %%%%
 warg
 

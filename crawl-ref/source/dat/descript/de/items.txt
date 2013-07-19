@@ -934,10 +934,6 @@ eggplant
 Eine verfaulte Aubergine, die du auf Crawlentwickler werfen kannst. (Wenn du
 diese Nachricht jemals siehst ist es ein Fehler.)
 %%%%
-empty ebony casket
-
-Eine magische Box, ihre Macht wurde verbraucht.
-%%%%
 eudemon blade
 
 Eine heilige Klinge von den Schmieden des Himmels, der durch einen guten Geist
@@ -1920,11 +1916,6 @@ Eine Jagdwaffe, die aus einer erwogenen Holzwelle mit einem spitzen einem Ende
 befestigten Metallkopf besteht. Kürzer als anderer polearms kann es mit einer
 oder zwei Händen ausgeübt werden und ist auch leicht genug, um geworfen zu
 werden.
-%%%%
-spiked flail
-
-Ein Flegel, der durch eine längere Kette und den Zusatz von Stacheln auf dem
-Schlagkopf verbessert wurde.
 %%%%
 staff of air
 
