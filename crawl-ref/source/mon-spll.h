@@ -4,9 +4,13 @@
 
 /* *********************************************************************
 
+    This file determines which spells are contained in monster spellbooks.
+    It is used by /util/gen-mst.pl to generate spellbook enums, which are
+    listed in mon-mst.h.
 
     Template Format:
 
+    {    mon_spellbook_type type
         {
              bolt spell,
              enchantment,
@@ -15,6 +19,7 @@
              misc(2) spell,             // SPELL_DIG must be here to work!
              emergency spell            // only when fleeing
         }
+    }
 
 ********************************************************************* */
 

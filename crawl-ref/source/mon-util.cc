@@ -77,19 +77,6 @@ static bool initialised_randmons = false;
 static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
-#include "mon-mst.h"
-
-struct mon_spellbook
-{
-    mon_spellbook_type type;
-    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
-};
-
-static const mon_spellbook mspell_list[] =
-{
-#include "mon-spll.h"
-};
-
 #include "mon-data.h"
 
 #define MONDATASIZE ARRAYSZ(mondata)
@@ -2097,103 +2084,98 @@ monster_type random_draconian_monster_species()
 // contains the unholy and chaotic Banishment spell, but the other
 // MST_WIZARD-type spellbooks contain no unholy, evil, unclean or
 // chaotic spells.
-static bool _get_spellbook_list(mon_spellbook_type book[6],
-                                monster* mon)
+//
+// If a monster has only one spellbook, it is specified in mon-data.h.
+// If it has multiple books, mon-data.h sets the book to MST_NO_SPELLS,
+// and the books are accounted for here.
+vector<mon_spellbook_type> _get_spellbook_list(monster* mon)
 {
-    bool retval = true;
+    vector<mon_spellbook_type> books;
+    const monsterentry *m = get_monster_data(mon->type);
+    mon_spellbook_type book = (m->sec);
+
     int mon_type = mon->type;
-
-    book[0] = MST_NO_SPELLS;
-    book[1] = MST_NO_SPELLS;
-    book[2] = MST_NO_SPELLS;
-    book[3] = MST_NO_SPELLS;
-    book[4] = MST_NO_SPELLS;
-    book[5] = MST_NO_SPELLS;
-
     switch (mon_type)
     {
     case MONS_HELL_KNIGHT:
-        book[0] = MST_HELL_KNIGHT_I;
-        book[1] = MST_HELL_KNIGHT_II;
+        books.push_back(MST_HELL_KNIGHT_I);
+        books.push_back(MST_HELL_KNIGHT_II);
         break;
 
     case MONS_LICH:
     case MONS_ANCIENT_LICH:
-        book[0] = MST_LICH_I;
-        book[1] = MST_LICH_II;
-        book[2] = MST_LICH_III;
-        book[3] = MST_LICH_IV;
+        books.push_back(MST_LICH_I);
+        books.push_back(MST_LICH_II);
+        books.push_back(MST_LICH_III);
+        books.push_back(MST_LICH_IV);
         break;
 
     case MONS_NECROMANCER:
-        book[0] = MST_NECROMANCER_I;
-        book[1] = MST_NECROMANCER_II;
+        books.push_back(MST_NECROMANCER_I);
+        books.push_back(MST_NECROMANCER_II);
         break;
 
     case MONS_ORC_WIZARD:
+    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_KNIGHT:
-        book[0] = MST_ORC_WIZARD_I;
-        book[1] = MST_ORC_WIZARD_II;
-        book[2] = MST_ORC_WIZARD_III;
+        books.push_back(MST_ORC_WIZARD_I);
+        books.push_back(MST_ORC_WIZARD_II);
+        books.push_back(MST_ORC_WIZARD_III);
         break;
 
     case MONS_WIZARD:
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
-        book[0] = MST_WIZARD_I;
-        book[1] = MST_WIZARD_II;
-        book[2] = MST_WIZARD_III;
-        book[3] = MST_WIZARD_IV;
-        book[4] = MST_WIZARD_V;
+    case MONS_DEEP_ELF_MAGE:
+        books.push_back(MST_WIZARD_I);
+        books.push_back(MST_WIZARD_II);
+        books.push_back(MST_WIZARD_III);
+        books.push_back(MST_WIZARD_IV);
+        books.push_back(MST_WIZARD_V);
         break;
 
     case MONS_DRACONIAN_KNIGHT:
-        book[0] = MST_DEEP_ELF_CONJURER;
-        book[1] = MST_HELL_KNIGHT_I;
-        book[2] = MST_HELL_KNIGHT_II;
-        book[3] = MST_NECROMANCER_I;
-        book[4] = MST_NECROMANCER_II;
+        books.push_back(MST_DEEP_ELF_CONJURER);
+        books.push_back(MST_HELL_KNIGHT_I);
+        books.push_back(MST_HELL_KNIGHT_II);
+        books.push_back(MST_NECROMANCER_I);
+        books.push_back(MST_NECROMANCER_II);
         break;
 
     case MONS_ANCIENT_CHAMPION:
-        book[0] = MST_ANCIENT_CHAMPION_I;
-        book[1] = MST_ANCIENT_CHAMPION_II;
-        book[2] = MST_ANCIENT_CHAMPION_III;
-        book[3] = MST_ANCIENT_CHAMPION_IV;
+        books.push_back(MST_ANCIENT_CHAMPION_I);
+        books.push_back(MST_ANCIENT_CHAMPION_II);
+        books.push_back(MST_ANCIENT_CHAMPION_III);
+        books.push_back(MST_ANCIENT_CHAMPION_IV);
         break;
 
     case MONS_TENGU_CONJURER:
-        book[0] = MST_TENGU_CONJURER_I;
-        book[1] = MST_TENGU_CONJURER_II;
-        book[2] = MST_TENGU_CONJURER_III;
-        book[3] = MST_TENGU_CONJURER_IV;
+        books.push_back(MST_TENGU_CONJURER_I);
+        books.push_back(MST_TENGU_CONJURER_II);
+        books.push_back(MST_TENGU_CONJURER_III);
+        books.push_back(MST_TENGU_CONJURER_IV);
         break;
 
     case MONS_TENGU_REAVER:
-        book[0] = MST_TENGU_REAVER_I;
-        book[1] = MST_TENGU_REAVER_II;
-        book[2] = MST_TENGU_REAVER_III;
-        break;
-
-    case MONS_DEEP_ELF_MAGE:
-        book[0] = MST_DEEP_ELF_MAGE_I;
-        book[1] = MST_DEEP_ELF_MAGE_II;
-        book[2] = MST_DEEP_ELF_MAGE_III;
-        book[3] = MST_DEEP_ELF_MAGE_IV;
-        book[4] = MST_DEEP_ELF_MAGE_V;
+        books.push_back(MST_TENGU_REAVER_I);
+        books.push_back(MST_TENGU_REAVER_II);
+        books.push_back(MST_TENGU_REAVER_III);
         break;
 
     default:
-        retval = false;
+        books.push_back(book);
         break;
     }
 
-    return retval;
+    return books;
 }
 
-static void _mons_load_spells(monster* mon, mon_spellbook_type book)
+static void _mons_load_spells(monster* mon)
 {
+    vector<mon_spellbook_type> books = _get_spellbook_list(mon);
+    mon_spellbook_type book = books[random2(books.size())];
+
     if (book == MST_GHOST)
         return mon->load_ghost_spells();
 
@@ -2213,22 +2195,6 @@ static void _mons_load_spells(monster* mon, mon_spellbook_type book)
             break;
         }
     }
-}
-
-static void _get_spells(mon_spellbook_type book, monster* mon)
-{
-    if (book == MST_NO_SPELLS && mons_class_flag(mon->type, M_SPELLCASTER))
-    {
-        mon_spellbook_type multi_book[6];
-        if (_get_spellbook_list(multi_book, mon))
-        {
-            do
-                book = multi_book[random2(6)];
-            while (book == MST_NO_SPELLS);
-        }
-    }
-
-    _mons_load_spells(mon, book);
 
     // (Dumb) special casing to give ogre mages Haste Other. -cao
     if (mon->type == MONS_OGRE_MAGE)
@@ -2442,7 +2408,7 @@ void define_monster(monster* mons)
 
     mons->bind_melee_flags();
 
-    _get_spells((mon_spellbook_type)m->sec, mons);
+    _mons_load_spells(mons);
     mons->bind_spell_flags();
 
     // Reset monster enchantments.

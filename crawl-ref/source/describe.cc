@@ -45,6 +45,7 @@
 #include "message.h"
 #include "mon-chimera.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "output.h"
 #include "player.h"
 #include "quiver.h"
@@ -3260,6 +3261,68 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " can see invisible.\n";
     else if (mons_class_flag(mi.type, M_SENSE_INVIS))
         result << uppercase_first(pronoun) << " can sense the presence of invisible creatures.\n";
+
+    // Show monster spells and spell-like abilities.
+    if (mons_class_flag(mi.type, M_SPELLCASTER))
+    {
+        monster* mon = monster_at(mi.pos);
+        const monsterentry *m = get_monster_data(mon->type);
+        mon_spellbook_type book = (m->sec);
+        result << uppercase_first(pronoun);
+        // The combination of M_ACTUAL_SPELLS with MST_NO_SPELLS means multiple spellbooks
+        if (mons_class_flag(mi.type, M_ACTUAL_SPELLS) && book == MST_NO_SPELLS)
+            result << " has mastered one of the following spellbooks:\n";
+        // cjo: the division here gets really arbitrary. For example, wretched stars
+        // cast mystic blast, but are not flagged with M_ACTUAL_SPELLS. Possibly
+        // these should be combined.
+        else if (mons_class_flag(mi.type, M_ACTUAL_SPELLS) && book != MST_NO_SPELLS)
+            result << " has mastered the following spells: ";
+        else if (mons_class_flag(mi.type, M_SPELLCASTER) && book != MST_NO_SPELLS)
+            result << " possesses the following magical abilities: ";
+
+        vector<mon_spellbook_type> books = _get_spellbook_list(mon);
+
+        // Loop through books and display spells/abilities for each of them
+        int num_books = books.size();
+        for (int i = 0; i < num_books; ++i)
+        {
+           // Create spell list containing no duplicate or irrelevant entries
+           book = books[i];
+           vector<spell_type> book_spells;
+           for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+           {
+               const spell_type &spell = mspell_list[book].spells[j];
+               bool match = false;
+               for (unsigned int k = 0; k < book_spells.size(); ++k)
+               {
+                   if(book_spells[k] == spell)
+                       match = true;
+               }
+               if(!match && spell != SPELL_NO_SPELL && spell != SPELL_MELEE
+                         && spell != SPELL_CANTRIP)
+               {
+                   book_spells.push_back(spell);
+               }
+           }
+
+           // Special casing for Ogre Mages (they always get their first spell
+           // changed to Haste Other).
+           if (mi.type == MONS_OGRE_MAGE)
+               book_spells[0] = SPELL_HASTE_OTHER;
+
+           // Display spells for this book
+            if (num_books > 1)
+               result << "Book " << i+1 << ": ";
+           for (unsigned int j = 0; j < book_spells.size(); ++j)
+           {
+               const spell_type spell = book_spells[j];
+               if(j > 0)
+                   result << ", ";
+               result << spell_title(spell);
+           }
+           result << "\n";
+        }
+    } // end if(mons_class_flag(mi.type, M_SPELLCASTER))
 
     // Unusual monster speed.
     const int speed = mi.base_speed();
