@@ -2716,7 +2716,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
         }
         fail_check();
 
-        if(!you.duration[DUR_TOXIC_RADIANCE])
+        if (!you.duration[DUR_TOXIC_RADIANCE])
             mpr("You begin to radiate toxic energy.");
         else
             mpr("Your toxic radiance grows in intensity.");

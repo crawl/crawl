@@ -973,12 +973,12 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
                           && unmarshallUByte(th) != 171)                \
                    {                                                    \
                        die("save corrupted: canary gone");              \
-                   } while(0)
+                   } while (0)
 #else
 #define EAT_CANARY do if ( unmarshallUByte(th) != 171)                  \
                    {                                                    \
                        die("save corrupted: canary gone");              \
-                   } while(0)
+                   } while (0)
 #endif
 
 // Write a tagged chunk of data to the FILE*.
