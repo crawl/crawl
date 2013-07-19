@@ -451,11 +451,8 @@ local rnd = crawl.random2(149)
                  necrophage w:5 / vampire w:5 / vampire mage w:5 /\
                  vampire knight / lich w:5 / ancient lich w:2 / shadow /\
                  wight / necromancer")
--- Dwarf
-  elseif rnd < 41 then
-    e.kmons("1 = place:Dwarf:$")
 -- Abyss
-  elseif rnd < 49 then
+  elseif rnd < 44 then
     e.kmons("1 = pandemonium lord / place:Abyss w:500")
 -- Forest
   elseif rnd < 54 then
