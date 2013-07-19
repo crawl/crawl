@@ -2586,8 +2586,10 @@ static bool _battlesphere_can_mirror(spell_type spell)
 {
     return ((spell_typematch(spell, SPTYP_CONJURATION)
             && spell_to_zap(spell) != NUM_ZAPS)
-            || spell == SPELL_MEPHITIC_CLOUD
-            || spell == SPELL_IOOD
+            || spell == SPELL_FREEZE
+            || spell == SPELL_STICKY_FLAME
+            || spell == SPELL_SANDBLAST
+            || spell == SPELL_AIRSTRIKE
             || spell == SPELL_DAZZLING_SPRAY
             || spell == SPELL_SEARING_RAY);
 }
