@@ -171,6 +171,45 @@ MAP
       .............
 ENDMAP
 
+NAME:    nooodl_cocytus_jagged_cave
+ORIENT:  northwest
+DEPTH:   Coc, !Coc:$
+TAGS:    extra
+SUBST:   < : AB
+NSUBST:  A = 1:{ / 1:} / *:.
+NSUBST:  B = 1:[] / *:.
+SUBST:   . : ...W, ' : .W, _ : .W, " : .W, ; : .W
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<x
+xxxxxxxxxx<xxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx.xx
+xxxxxxxxxx..xxxxxxx<xxxxx<xxxxxxxxxxxx..xx
+xxxxxxxxxxx.xxxxxx.xxxxxx.xxxxxxxxxxxx.xxx
+xxxxxxxxxxx..xxxx..xxxxx..xxxxxxxxxxx..xxx
+xxxxxxxxxxx..xxxx.xxxxx...xxxxxxxxxxx..xxx
+xxxxxx<xxxxx..xx..xxxxx...xxx.xxxxxx..xxxx
+xx'xxx.xxxxx..x..xxxxx...xxxx.xxxxxx..xxxx
+xx'xxx.xxxxx.....xxxxx...xxx...xxxx..xxxxx
+xx''xx.xxxxx....xxx"xx"".xxx;;.xxxx..xxxxx
+x''''...xxxx....xxx"xx""xxx;;;;xx....xxxxx
+x''''''''''x.__xxxx"xx""xx;;;;;;x;..xxxxxx
+x''''''''''x___xxx""xx"x""";;;;;;;;.xxxxxx
+x''''x'''''____xxx"""""""""";;;;;;;xxxxxxx
+xx'''x''''____x___"""""""""";;;;;;;.xxxxxx
+xx'''xx''_________"""""""""xx;;;;;;.xxxxxx
+xx''xxx'__________"xx""x""""xxx;;;...xxxxx
+xxxxxxxx__________xxx"""x"""..xxx;....xxxx
+xxxxxxxxxx___x___xxx""""xx"....xxxxx..xxxx
+xxxxxxxxxxx..xx_xxxx.....xx......xxxxx<xxx
+xxxxxxxxxxxx.xxxxxx......xxx......xxxxxxxx
+xxxxxxxxxxxxx<xxxxx..xx...xxx...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxx..xxxx..xxxx<xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx<xxxxx...xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx@@xxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Antaeus; bottom of Cocytus.
 ##############################################################################
