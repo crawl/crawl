@@ -2588,7 +2588,8 @@ static bool _battlesphere_can_mirror(spell_type spell)
             && spell_to_zap(spell) != NUM_ZAPS)
             || spell == SPELL_MEPHITIC_CLOUD
             || spell == SPELL_IOOD
-            || spell == SPELL_DAZZLING_SPRAY);
+            || spell == SPELL_DAZZLING_SPRAY
+            || spell == SPELL_SEARING_RAY);
 }
 
 bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
