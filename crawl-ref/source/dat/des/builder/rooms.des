@@ -298,9 +298,9 @@ MAP
 ENDMAP
 
 NAME:   special_room_jelly
-DEPTH:  D:18-, Lair:8, Slime
+DEPTH:  D:18-, Lair:$, Slime
 TAGS:   special_room allow_dup unrand
-WEIGHT: 9 (Lair:8), 13 (D:18-20), 40
+WEIGHT: 9 (Lair:$), 13 (D:18-20), 40
 : sroom_jelly_pit(_G)
 MAP
 ENDMAP

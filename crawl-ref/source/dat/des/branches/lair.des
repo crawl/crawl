@@ -2224,7 +2224,7 @@ ENDMAP
 NAME:    hangedman_lair_in_review
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  float
-PLACE:   Lair:8
+PLACE:   Lair:$
 MONS:    basilisk, fire drake, komodo dragon, hydra
 MONS:    manticore, hippogriff, griffon
 KMONS:   8 = catoblepas
