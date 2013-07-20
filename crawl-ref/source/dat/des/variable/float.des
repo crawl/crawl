@@ -7,7 +7,7 @@
 #            are stored in the files listed in mini.des.
 #            Vaults using global lua functions go into individual .des files.
 #
-#            All maps dealing with the Vaults branch system, including Vaults:8
+#            All maps dealing with the Vaults branch system, including Vaults:$
 #            reside in vaults.des.
 ###############################################################################
 
@@ -1437,7 +1437,7 @@ ENDMAP
 # Oklob shooting range
 #
 # Disallowing this vault on branch starts, as brown stairs can't help there.
-# Chance for a plant to turn oklob based on dungeon level. Elf:5 is hard, but
+# Chance for a plant to turn oklob based on dungeon level. Elf:$ is hard, but
 # considered okay. Has between 1 and 3 oklob plants.
 # Single oklob at absolute depth 10, expect 2 oklobs at depth 20.
 # Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,

@@ -6,7 +6,7 @@
 ##############################################################################
 
 #############################################################
-# Lua functions to simplify Elf:5
+# Lua functions to simplify Elf:$
 {{
 function elf_setup(e)
   e.lflags("no_tele_control")

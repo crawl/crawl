@@ -7,7 +7,7 @@
 #                     patterns). Use large_themed.des for vaults with a clear
 #                     theme to them.
 #
-# Note that all maps for the Vaults branch system (including Vaults:8) reside in
+# Note that all maps for the Vaults branch system (including Vaults:$) reside in
 # vaults.des.
 ###############################################################################
 

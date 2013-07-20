@@ -470,7 +470,7 @@ ENDMAP
 
 
 ############################################################
-# Vaults:8 - the subvault used to place the rune.
+# Vaults:$ - the subvault used to place the rune.
 #
 # Used by the 'vaults_end_rune()' function in the prelude.
 #
@@ -483,7 +483,7 @@ O
 ENDMAP
 
 ############################################################
-# Vaults:8 - the subvault used for potential rune locations that do not
+# Vaults:$ - the subvault used for potential rune locations that do not
 # contain the real rune.
 #
 # Used by the 'vaults_end_rune()' function in the prelude.
@@ -501,7 +501,7 @@ o
 ENDMAP
 
 ############################################################
-# Vaults:8 - the subvault used for potential rune locations that do not
+# Vaults:$ - the subvault used for potential rune locations that do not
 # contain the rune, but rather a mimic of it!
 #
 # Used by the 'vaults_end_rune()' function in the prelude.
@@ -515,7 +515,7 @@ o
 ENDMAP
 
 ###############################################################################
-# Vaults:8 quadrants
+# Vaults:$ quadrants
 ###############################################################################
 
 ############################################################
@@ -1802,7 +1802,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################
-# Vaults:8 prize quadrants
+# Vaults:$ prize quadrants
 ###############################################################################
 
 ############################################################
@@ -2609,7 +2609,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################
-# Vaults:8 - Rooms Quadrant
+# Vaults:$ - Rooms Quadrant
 #
 # This quadrant uses a subvault for each room. Any subvault tagged
 # vaults_end_room_rune should be guaranteed to provide a rune. Any subvault
@@ -2655,7 +2655,7 @@ x...........H..B..........
 xxxxxxxxxxxxxxxxxxxxxxxxa
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Traps and Loot Subvault
+# Vaults:$ - Rooms Quadrant - Traps and Loot Subvault
 #            Replace each square with traps or loot, but mostly floor.
 NAME: vaults_end_room_traps_and_loot
 TAGS: vaults_end_room
@@ -2665,7 +2665,7 @@ SUBST: . = ?
 MAP
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Border Subvault
+# Vaults:$ - Rooms Quadrant - Border Subvault
 #            Fill the room with loot, but leave an empty border.
 NAME: vaults_end_room_border
 TAGS: vaults_end_room
@@ -2688,7 +2688,7 @@ TAGS: vaults_end_room
 MAP
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Diamond Subvault
+# Vaults:$ - Rooms Quadrant - Diamond Subvault
 #            Fill the room with money in a diamond pattern.
 NAME: vaults_end_room_diamond
 TAGS: vaults_end_room
@@ -2709,7 +2709,7 @@ TAGS: vaults_end_room
 MAP
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Rune Subvault
+# Vaults:$ - Rooms Quadrant - Rune Subvault
 #            Potentially contains the rune.
 NAME: vaults_end_room_rune
 TAGS: vaults_end_room_rune
