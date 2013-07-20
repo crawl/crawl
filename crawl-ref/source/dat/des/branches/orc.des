@@ -653,7 +653,7 @@ ENDMAP
 # Some deep elves on a diplomatic mission (Shiori)
 # They have brought some of their enchanted armaments as gifts
 NAME:    elf_legates
-DEPTH:   Orc:3-4
+DEPTH:   Orc:3-
 SHUFFLE: 23
 SUBST:   6 : 6 .
 NSUBST:  0 = 3=9. / *=0.

@@ -125,7 +125,7 @@ DEPTH:  D:20-27, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest,
 
 NAME:   uniq_donald
 TAGS:   lab
-DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults:1-4, Crypt:1-4, Forest:1-4, Blade, Elf, Orc:3-4, Lab
+DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults:1-4, Crypt:1-4, Forest:1-4, Blade, Elf, Orc:3-, Lab
 : place_unique(_G, "Donald")
 
 NAME:   uniq_duvessa
@@ -218,7 +218,7 @@ DEPTH:  D:14-16, Lair:3-5, Swamp:1, Snake:1, Shoals:1, Spider:1, Elf:1
 : place_unique(_G, "Maud")
 
 NAME:   uniq_mara
-DEPTH:  D:18-25, Elf:3-, Swamp:3-5, Snake:3-5, Shoals:3-5, Spider:3-5, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:18-25, Elf:3-, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Mara")
 
 NAME:   uniq_maurice
@@ -327,7 +327,7 @@ DEPTH:  D:20-27, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest,
 ################################################################################
 
 NAME:   uniq_dissolution
-DEPTH:  Slime:2-6
+DEPTH:  Slime:2-
 WEIGHT: 100
 : place_unique(_G, "Dissolution")
 
