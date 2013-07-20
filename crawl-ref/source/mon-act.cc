@@ -2178,9 +2178,9 @@ void handle_monster_move(monster* mons)
         && !mons->withdrawn()
         // Berserking monsters are limited to running up and
         // hitting their foes.
-        && !(mons->berserk_or_insane()
-             // Slime creatures can split while wandering or resting.
-             || mons->type == MONS_SLIME_CREATURE))
+        && !mons->berserk_or_insane()
+            // Slime creatures can split while wandering or resting.
+            || mons->type == MONS_SLIME_CREATURE)
     {
         bolt beem;
 
