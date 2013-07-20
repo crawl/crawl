@@ -53,7 +53,7 @@ end
 
 NAME:   trap_god_beogh
 TAGS:   no_monster_gen
-DEPTH:  Orc:2-4
+DEPTH:  Orc:2-
 ORIENT: float
 
 # t gives you a warning not to come closer

@@ -693,7 +693,7 @@ wwwwwww
 ENDMAP
 
 NAME: nicolae_shoals_hunting_party
-DEPTH: Shoals:2-5
+DEPTH: Shoals:2-
 TAGS: no_item_gen no_monster_gen
 KMONS: i = merfolk impaler band / merfolk javelineer band
 SUBST: : = .:3 h:1, W = .W
@@ -709,7 +709,7 @@ WWWWWWW
 ENDMAP
 
 NAME: nicolae_shoals_isolated_beach
-DEPTH: Shoals:2-5
+DEPTH: Shoals:2-
 TAGS: water_ok no_pool_fixup
 NSUBST: { = 1:{ / *:.
 SUBST: b = .wW, r = ..Wxx

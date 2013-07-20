@@ -747,7 +747,7 @@ ENDMAP
 
 NAME:   lemuel_zot_upstairs
 TAGS:   allow_dup extra luniq
-DEPTH:  Zot:2-5
+DEPTH:  Zot:2-
 ORIENT: float
 SUBST:  . = .^
 KFEAT:  ^ = zot trap

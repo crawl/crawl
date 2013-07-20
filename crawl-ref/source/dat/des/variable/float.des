@@ -1444,7 +1444,7 @@ ENDMAP
 # and the walls are always diggable then.
 #
 NAME:    dpeg_oklob_shooting_range
-DEPTH:   D:18-26, Lair:2-, Elf:2-5
+DEPTH:   D:18-26, Lair:2-, Elf:2-
 WEIGHT:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'

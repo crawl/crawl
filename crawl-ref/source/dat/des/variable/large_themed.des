@@ -207,7 +207,7 @@ ENDMAP
 # Steading of the Giant Chief
 #
 NAME:    giant_chief_lemuel
-DEPTH:   D:11-22, Orc:3-4
+DEPTH:   D:11-22, Orc:3-
 ORIENT:  north
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    hill giant, cyclops
@@ -458,7 +458,7 @@ ENDMAP
 NAME:   orc_temple
 ORIENT: southwest
 TAGS:   no_rotate
-DEPTH:  D:14-26, Orc:2-4
+DEPTH:  D:14-26, Orc:2-
 MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
 MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
 KFEAT:  C = altar_beogh
