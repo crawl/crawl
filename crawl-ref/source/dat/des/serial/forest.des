@@ -77,7 +77,7 @@ end
 NAME:   serial_forest
 TAGS:   allow_dup extra luniq_serial
 DEPTH:  D:1-4, Lair
-CHANCE: 3% (D:1), 2% (D:2), 1% (D:3-4), 1% (Lair:*)
+CHANCE: 3% (D:1), 2% (D:2), 1% (D:3-4), 1% (Lair)
 {{
   -- between 5 and 11 forests
   local c = 4 + crawl.random2(4) + crawl.random2(4)

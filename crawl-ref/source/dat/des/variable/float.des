@@ -949,7 +949,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pool_2
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase no_monster_gen decor
-DEPTH:   D:2-26, Lair:*, Swamp:*
+DEPTH:   D:2-26, Lair, Swamp
 WEIGHT:  3 (D), 10 (Swamp)
 # Water
 SUBST:   D = WW.
@@ -979,7 +979,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pool
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-20, Lair:*, Swamp:*
+DEPTH:   D:2-20, Lair, Swamp
 WEIGHT:  2 (D), 20 (Swamp)
 SUBST:   D = ww.
 SUBST:   E = w..

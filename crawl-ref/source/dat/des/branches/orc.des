@@ -528,7 +528,7 @@ ENDMAP
 # (Mini)vaults specific to the Orcish Mines
 ############################################################################
 
-default-depth: Orc:*
+default-depth: Orc
 
 ##################################
 # Dummy Orc minivault balancer.
