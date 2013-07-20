@@ -243,8 +243,6 @@ static void _give_bonus_items()
 
 void give_basic_mutations(species_type speci)
 {
-    // We should switch over to a size-based system
-    // for the fast/slow metabolism when we get around to it.
     switch (speci)
     {
     case SP_LAVA_ORC:
