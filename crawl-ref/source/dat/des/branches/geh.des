@@ -64,7 +64,7 @@ end
 # Fire storm
 NAME:   gehenna_fire_generator
 TAGS:   extra allow_dup
-DEPTH:  Geh:*
+DEPTH:  Geh
 MARKER: . = lua:fog_machine { \
             pow_max = 15, delay_min = 100, delay_max = 150, size = 1,  \
             size_buildup_amnt = 29, size_buildup_time = 1000, \
@@ -77,7 +77,7 @@ ENDMAP
 ##############################################################################
 
 NAME:  lemuel_hellion_isle
-DEPTH: Geh:*
+DEPTH: Geh
 MONS:  hellion, brimstone fiend
 SUBST: L = l.
 SUBST: 1 = l:2 1

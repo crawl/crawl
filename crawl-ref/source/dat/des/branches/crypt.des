@@ -436,8 +436,8 @@ ENDMAP
 ##############################################################################
 # Dead fish
 NAME: lemuel_dead_fish_pool
-DEPTH: Crypt:*
-# Lemuel also had Cocytus:*
+DEPTH: Crypt
+# Lemuel also had Cocytus
 TAGS: no_pool_fixup extra
 SUBST: . : .W
 SUBST: 1 = w:50 1

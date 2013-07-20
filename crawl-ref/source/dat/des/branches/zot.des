@@ -724,7 +724,7 @@ ENDMAP
 
 NAME:   lemuel_baited_zot_trap
 TAGS:   allow_dup extra luniq
-DEPTH:  Zot:*
+DEPTH:  Zot
 WEIGHT: 20
 KFEAT:  * = Zot trap
 KITEM:  * = any good_item
@@ -831,7 +831,7 @@ ENDMAP
 # Lake of fire
 #
 NAME:  lemuel_lake_of_fire
-DEPTH: Zot:*
+DEPTH: Zot
 SUBST: * =*l
 KMONS: * = orb of fire
 KFEAT: * = l
@@ -851,7 +851,7 @@ ENDMAP
 # Globe of electric golems
 #
 NAME:  lemuel_golem_globe
-DEPTH: Zot:*
+DEPTH: Zot
 TAGS:  no_rotate
 KFEAT: T = teleport trap
 KFEAT: m = iron_grate
