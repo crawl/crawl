@@ -300,6 +300,9 @@ A mangrove
 
 This tree is specially adapted for growing in swampy conditions. Its vines are
 too thick to see through.
+
+While too large to be felled with an axe, it is susceptible to bolts of
+lightning and to sufficiently intense sources of fire.
 %%%%
 A magical trap
 
@@ -605,6 +608,9 @@ While the dungeon is filled with dim magic light, in most places it is not
 bright enough to sustain any larger plants. It is uneven, though, and there are
 spots where, with the grace of Fedhas, trees as big as those on the surface can
 grow underground.
+
+While too large to be felled with an axe, it is susceptible to bolts of
+lightning and to sufficiently intense sources of fire.
 %%%%
 A tree:quote
 
