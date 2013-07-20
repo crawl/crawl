@@ -503,6 +503,8 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         eligibility[RECITE_IMPURE]++;
     if (mon->has_attack_flavour(AF_STEAL_FOOD))
         eligibility[RECITE_IMPURE]++;
+    if (mon->has_attack_flavour(AF_PLAGUE))
+        eligibility[RECITE_IMPURE]++;
 
     // Being naturally mutagenic isn't good either.
     corpse_effect_type ce = mons_corpse_effect(mon->type);
