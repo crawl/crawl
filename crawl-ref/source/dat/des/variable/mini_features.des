@@ -6,7 +6,7 @@
 #
 #           Vaults with ORIENT lines are stored in float.des or large.des.
 #           Minivaults with monsters go to mini_monsters.des.
-#           Maps for the Vaults branch, including Vaults:8 are in vaults.des.
+#           Maps for the Vaults branch, including Vaults:$ are in vaults.des.
 #
 # <<1>> Flavour vaults           (no items, no monsters)
 # <<2>> Inaccessible items

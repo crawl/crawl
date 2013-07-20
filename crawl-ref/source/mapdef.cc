@@ -3762,7 +3762,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             }
         }
 
-        // place:Elf:7 to choose monsters appropriate for that level,
+        // place:Elf:$ to choose monsters appropriate for that level,
         // for example.
         const string place = strip_tag_prefix(mon_str, "place:");
         if (!place.empty())

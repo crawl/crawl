@@ -5,7 +5,7 @@
 #                   define a set of monsters. Use large_abstract.des for vaults
 #                   which don't have a special theme.
 #
-# Note that all maps for the Vaults branch system (including Vaults:8) reside in
+# Note that all maps for the Vaults branch system (including Vaults:$) reside in
 # vaults.des.
 ###############################################################################
 

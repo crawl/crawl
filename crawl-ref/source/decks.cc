@@ -2059,7 +2059,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
     skill_menu(SKMF_EXPERIENCE_CARD, min(200 + power * 50, HIGH_EXP_POOL));
 
     // After level 27, boosts you get don't get increased (matters for
-    // charging V:8 with no rN+++ and for felids).
+    // charging V:$ with no rN+++ and for felids).
     const int xp_cap = exp_needed(1 + you.experience_level)
                      - exp_needed(you.experience_level);
 
