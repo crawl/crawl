@@ -5158,7 +5158,7 @@ ENDMAP
 NAME:   grunt_twist_and_shout
 ORIENT: centre
 DEPTH:  D:16-27, Zot, !Zot:$
-PLACE:  D:27
+PLACE:  D:$
 {{
   if you.branch() == "Zot" then
      kmons("1 = draconian annihilator band")
@@ -5301,7 +5301,7 @@ ENDMAP
 
 NAME:   grunt_crosshair
 DEPTH:  D:16-
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
@@ -5340,7 +5340,7 @@ ENDMAP
 
 NAME:   grunt_x_marks_the_spot
 DEPTH:  D:16-
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
