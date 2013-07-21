@@ -527,9 +527,12 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     // Anti-unholy prayer
 
-    // Hits monsters that are undead or demonic.
-    if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+    // Hits demons and incorporeal undead.
+    if (holiness == MH_UNDEAD && mon->is_insubstantial()
+        || holiness == MH_DEMONIC)
+    {
         eligibility[RECITE_UNHOLY]++;
+    }
 
     // Anti-heretic prayer
     // Pro-ally prayer
@@ -643,9 +646,9 @@ bool zin_check_able_to_recite(bool quiet)
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
 {
     "Abominations (harms the forces of chaos and mutation)",
-    "Ablutions (harms the unclean and walking corpses)",
+    "Ablutions (harms the unclean and corporeal undead)",
     "Apostates (harms the faithless and heretics)",
-    "Anathema (harms all types of demons and undead)",
+    "Anathema (harms demons and incorporeal undead)",
     "Alliances (blesses intelligent allies)",
 };
 
