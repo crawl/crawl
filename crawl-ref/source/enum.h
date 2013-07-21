@@ -1792,10 +1792,9 @@ enum held_type
 
 enum holy_word_source_type
 {
-    HOLY_WORD_GENERIC     = -1,
-    HOLY_WORD_SCROLL      = -2,
-    HOLY_WORD_ZIN         = -4,  // Zin effect
-    HOLY_WORD_TSO         = -5,  // TSO effect
+    HOLY_WORD_SCROLL,
+    HOLY_WORD_ZIN,     // sanctuary
+    HOLY_WORD_TSO,     // weapon blessing
 };
 
 enum hunger_state_t                    // you.hunger_state

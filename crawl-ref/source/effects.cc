@@ -86,7 +86,7 @@
 
 static void _update_corpses(int elapsedTime);
 
-static void _holy_word_player(int pow, int caster, actor *attacker)
+static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
 {
     if (!you.undead_or_demonic())
         return;
@@ -106,42 +106,38 @@ static void _holy_word_player(int pow, int caster, actor *attacker)
 
     const char *aux = "holy word";
 
-    kill_method_type type = KILLED_BY_MONSTER;
-    if (invalid_monster_index(caster))
+    kill_method_type type = KILLED_BY_SOMETHING;
+    if (crawl_state.is_god_acting())
+        type = KILLED_BY_DIVINE_WRATH;
+
+    switch (source)
     {
-        type = KILLED_BY_SOMETHING;
-        if (crawl_state.is_god_acting())
-            type = KILLED_BY_DIVINE_WRATH;
+    case HOLY_WORD_SCROLL:
+        aux = "scroll of holy word";
+        break;
 
-        switch (caster)
-        {
-        case HOLY_WORD_SCROLL:
-            aux = "scroll of holy word";
-            break;
+    case HOLY_WORD_ZIN:
+        aux = "Zin's holy word";
+        break;
 
-        case HOLY_WORD_ZIN:
-            aux = "Zin's holy word";
-            break;
-
-        case HOLY_WORD_TSO:
-            aux = "the Shining One's holy word";
-            break;
-        }
+    case HOLY_WORD_TSO:
+        aux = "the Shining One's holy word";
+        break;
     }
 
-    ouch(hploss, caster, type, aux);
+    ouch(hploss, NON_MONSTER, type, aux);
 
     return;
 }
 
-void holy_word_monsters(coord_def where, int pow, int caster,
+void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
                         actor *attacker)
 {
     pow = min(300, pow);
 
     // Is the player in this cell?
     if (where == you.pos())
-        _holy_word_player(pow, caster, attacker);
+        _holy_word_player(pow, source, attacker);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
@@ -156,11 +152,11 @@ void holy_word_monsters(coord_def where, int pow, int caster,
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 10);
 
-    if (hploss && caster != HOLY_WORD_ZIN)
-        simple_monster_message(mons, " convulses!");
-    if (hploss && caster == HOLY_WORD_ZIN)
-        simple_monster_message(mons, " is blasted by Zin's holy word!");
-
+    if (hploss)
+        if (source == HOLY_WORD_ZIN)
+            simple_monster_message(mons, " is blasted by Zin's holy word!");
+        else
+            simple_monster_message(mons, " convulses!");
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
     if (!hploss || !mons->alive())
@@ -181,8 +177,8 @@ void holy_word_monsters(coord_def where, int pow, int caster,
     }
 }
 
-void holy_word(int pow, int caster, const coord_def& where, bool silent,
-               actor *attacker)
+void holy_word(int pow, holy_word_source_type source, const coord_def& where,
+               bool silent, actor *attacker)
 {
     if (!silent && attacker)
     {
@@ -195,7 +191,7 @@ void holy_word(int pow, int caster, const coord_def& where, bool silent,
     los_def los(where);
     los.update();
     for (radius_iterator ri(&los); ri; ++ri)
-        holy_word_monsters(*ri, pow, caster, attacker);
+        holy_word_monsters(*ri, pow, source, attacker);
 }
 
 int torment_player(actor *attacker, int taux)
