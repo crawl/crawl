@@ -1614,29 +1614,29 @@ enum enchant_type
     ENCH_PORTAL_PACIFIED,
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
-    ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
+    ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
     ENCH_TORNADO,
     ENCH_FAKE_ABJURATION,
-    ENCH_DAZED,         // Dazed - less chance of acting each turn.
-    ENCH_MUTE,          // Silenced.
-    ENCH_BLIND,         // Blind (everything is invisible).
-    ENCH_DUMB,          // Stupefied (paralysis by a different name).
-    ENCH_MAD,           // Confusion by another name.
-    ENCH_SILVER_CORONA, // Zin's silver light.
-    ENCH_RECITE_TIMER,  // Was recited against.
+    ENCH_DAZED,          // Dazed - less chance of acting each turn.
+    ENCH_MUTE,           // Silenced.
+    ENCH_BLIND,          // Blind (everything is invisible).
+    ENCH_DUMB,           // Stupefied (paralysis by a different name).
+    ENCH_MAD,            // Confusion by another name.
+    ENCH_SILVER_CORONA,  // Zin's silver light.
+    ENCH_RECITE_TIMER,   // Was recited against.
     ENCH_INNER_FLAME,
-    ENCH_ROUSED,        // Monster has been roused to greatness
-    ENCH_BREATH_WEAPON, // just a simple timer for dragon breathweapon spam
+    ENCH_ROUSED,         // Monster has been roused to greatness
+    ENCH_BREATH_WEAPON,  // just a simple timer for dragon breathweapon spam
     ENCH_DEATHS_DOOR,
-    ENCH_ROLLING,       // Boulder Beetle in ball form
+    ENCH_ROLLING,        // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,
-    ENCH_WRETCHED,      // An abstract placeholder for monster mutations
-    ENCH_SCREAMED,      // Starcursed scream timer
-    ENCH_WORD_OF_RECALL,// Chanting word of recall
+    ENCH_WRETCHED,       // An abstract placeholder for monster mutations
+    ENCH_SCREAMED,       // Starcursed scream timer
+    ENCH_WORD_OF_RECALL, // Chanting word of recall
     ENCH_INJURY_BOND,
-    ENCH_WATER_HOLD,      // Silence and asphyxiation damage
+    ENCH_WATER_HOLD,     // Silence and asphyxiation damage
     ENCH_FLAYED,
     ENCH_HAUNTING,
     ENCH_RETCHING,
