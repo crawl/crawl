@@ -4337,7 +4337,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
           (name == "freezing breath" && mon->flight_mode()) ||
           (name == "lance of force" && dmg > 0) ||
           (name == "flood of elemental water"))
+    {
         beam_hits_actor(mon);
+    }
 
     if (name == "spray of energy")
         _dazzle_monster(mon, agent());
