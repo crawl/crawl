@@ -1665,6 +1665,142 @@ xxxO*............xO*......x
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 18 *, 12 monsters
+NAME:    vaults_end_grunt_door_to_door
+TAGS:    vaults_end_quadrant
+SHUFFLE: 456
+NSUBST:  1 = 1:9 / *:*
+NSUBST:  2 = 1:9 / *:*
+NSUBST:  3 = 1:9 / *:*
+NSUBST:  4 = 1:9 / *:*
+NSUBST:  5 = 1:9 / *:*
+NSUBST:  6 = 1:O / *:*
+SUBST:   9 = 8 9 .:30
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx+
+xx..........xxx..........xx
+x.9..+xx+..9.+.9..+xx+..9.x
+x....x11x....x....x22x....x
+x....x11x....x....x22x....x
+x.9..+xx+..9.+.9..+xx+..9.x
+xx..........xxx..........xx
+xx+xx+xx+xx+xxx+xx+xx+xx+xx
+xx..........xxx..........xx
+x.9..+xx+..9.x.9..+xx+..9.x
+x....x44x....x....x33x....x
+x....x44x....x....x33x....x
+x.9..+xx+..9.+.9..+xx+..9.x
+xx..........xxx..........xx
+xx+xx+xx+xx+xxx+xx+xx+xx+xx
+xx..........xxx..........xx
+x.9..+xx+..9.+.9..+xx+..9.x
+x....x55x....x....x66x....x
+x....x55x....x....x66x....x
+x.9..+xx+..9.+.9..+xx+..9.x
+xx..........xxx..........xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 17 *, 12 monsters
+NAME:   vaults_end_grunt_cloverleaf
+TAGS:   vaults_end_quadrant
+NSUBST: O = 1:O / *:*
+SUBST:  9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx+...
+xxxxx**..xxxxxxxxx....xxx.x
+xxxO*..9...xxxxx...9....x+x
+xx*..9.....xxxxx.....9...xx
+xx*.........xxx..........xx
+xx.9........xxx........9.xx
+xx........9..x..9........xx
+xxx..........+..........xxx
+xxxxx....9.+xxx+.9....xxxxx
+xxxxxxxx...x.9.x...xxxxxxxx
+xxxxxxxxx+xx9.9xx+xxxxxxxxx
+xxxxxxxx...x.9.x...xxxxxxxx
+xxxxx....9.+xxx+.9....xxxxx
+xxx..........+..........xxx
+xx........9..x..9........xx
+xx.9........xxx........9.xx
+xx*.........xxx.........*xx
+xx*..9......xxx......9..*xx
+xxxO*..9...xxxxx...9..*Oxxx
+xxxxx**..xxxxxxxxx..**xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 20 *, 14 monsters
+NAME:   vaults_end_grunt_tight_spiral
+TAGS:   vaults_end_quadrant
+SUBST:  9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx........9............
+xxxx....xxxxxxxxxxxxx.....x
+xxx...9xx....9......9.....x
+xxx.x9.x..xxxxxxxxxx.9....x
+xx..x.xx.xx..9.....xxx....x
+xx..x.x..x..xxxxxx...xx...x
+xx..x.x.xx.xx9...xxx..x...x
+xx..x.x.x..xx*xx...xx.x...x
+x...x.x.x.xx***xxx..x.x...x
+x...x.x.x.x*9*9*xxx.x.x...x
+x..9x9x9x9***O***9x9x9x9..x
+x...x.x.xxx*9*9*x.x.x.x...x
+x...x.x..xxx***xx.x.x.x...x
+xx..x.xx...xx*xx..x.x.x..xx
+xx..x..xxx...9xx.xx.x.x..xx
+xx..xx...xxxxxx..x..x.x..xx
+xx...xxx.....9..xx.xx.x..xx
+xxx..9.xxxxxxxxxx..x.9x.xxx
+xxx...9......9....xx9...xxx
+xxxx..xxxxxxxxxxxxx....xxxx
+xxxxx........9........xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 18 *, 12 monsters
+NAME:   vaults_end_grunt_simple_division
+TAGS:   vaults_end_quadrant
+SUBST:  9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x*.9.........+.........9..
+x...........xxx...........x
+x9.........xxOxx.........9x
+x....9....xx***xx.....9...x
+x.......xxx.9.9.xxx.......x
+x......+x.........x+......x
+x.....x+...........+x.....x
+x...xxx.............xxx...x
+x..xx........9........xx..x
+x.xx*9...............9*xx.x
+x+xO*......9...9......*Ox+x
+x.xx*9...............9*xx.x
+x..xx........9........xx..x
+x...xxx.............xxx...x
+x.....x+...........+x.....x
+x......+x.........x+......x
+x.......xxx.9.9.xxx.......x
+x....9....xx***xx.....9...x
+x9.........xxOxx.........9x
+x...........xxx...........x
+xO.9.........+.........9.*x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # Vaults:8 prize quadrants
 ###############################################################################
@@ -2436,6 +2572,39 @@ x*$......x...xxxxxx...$*|*x
 x|*$.....xx..xx..9....$*|*x
 x$|*$xx..xx...........xx|*x
 xO$|*xx9..x9......xx..xx*Ox
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 21 |, 20 monsters
+NAME:    vaults_end_grunt_nonplussed
+TAGS:    vaults_end_quadrant_prize
+NSUBST:  9 = 10:8 / 10:9 / *:.
+NSUBST:  O = 1:O / *:|
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxOxxx|xxx|xxx|xxx|xxx|x..
+xO9.x.9.x.9.x.9.x.9.x.9.x.x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+x|9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+x|9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+x|9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xO9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9Ox
+xxxxOxxx|xxx|xxx|xxx|xxxOxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
