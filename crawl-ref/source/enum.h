@@ -1811,10 +1811,9 @@ enum hunger_state_t                    // you.hunger_state
 
 enum immolation_source_type
 {
-    IMMOLATION_GENERIC = -1,
-    IMMOLATION_SCROLL  = -2,
-    IMMOLATION_AFFIX   = -3, // effect when fixing fire brand
-    IMMOLATION_TOME    = -4, // exploding Tome of Destruction
+    IMMOLATION_SCROLL,
+    IMMOLATION_AFFIX,  // effect when fixing fire brand
+    IMMOLATION_TOME,   // a Tome of Destruction effect
 };
 
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status

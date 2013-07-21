@@ -342,8 +342,7 @@ int torment(actor *attacker, int taux, const coord_def& where)
     return r;
 }
 
-void immolation(int pow, int caster, coord_def where, bool known,
-                actor *attacker)
+void immolation(int pow, immolation_source_type source, bool known)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -351,7 +350,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
 
     bolt beam;
 
-    switch (caster)
+    switch (source)
     {
     case IMMOLATION_SCROLL:
         aux = "a scroll of immolation";
@@ -371,35 +370,16 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.flavour       = BEAM_FIRE;
     beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage        = dice_def(3, pow);
-    beam.target        = where;
+    beam.target        = you.pos();
     beam.name          = "fiery explosion";
     beam.colour        = RED;
     beam.aux_source    = aux;
     beam.ex_size       = 2;
     beam.is_explosion  = true;
     beam.effect_known  = known;
-    beam.affects_items = caster != IMMOLATION_SCROLL
-                         && caster != IMMOLATION_AFFIX;
-
-    if (caster == IMMOLATION_GENERIC)
-    {
-        beam.thrower     = KILL_MISC;
-        beam.beam_source = NON_MONSTER;
-    }
-    else if (attacker && attacker->is_player())
-    {
-        beam.thrower     = KILL_YOU;
-        beam.beam_source = NON_MONSTER;
-    }
-    else
-    {
-        // If there was no attacker, caster should have been IMMOLATION_GENERIC
-        // which we handled above.
-        ASSERT(attacker);
-
-        beam.thrower     = KILL_MON;
-        beam.beam_source = attacker->mindex();
-    }
+    beam.affects_items = source == IMMOLATION_TOME;
+    beam.thrower       = KILL_YOU;
+    beam.beam_source   = NON_MONSTER;
 
     beam.explode();
 }
