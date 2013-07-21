@@ -49,10 +49,10 @@ void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 
 void yell(bool force = false);
 
-void holy_word(int pow, int caster, const coord_def& where, bool silent = false,
-               actor *attacker = NULL);
+void holy_word(int pow, holy_word_source_type source, const coord_def& where,
+               bool silent = false, actor *attacker = NULL);
 
-void holy_word_monsters(coord_def where, int pow, int caster,
+void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
                         actor *attacker = NULL);
 
 int torment(actor *attacker, int taux, const coord_def& where);
