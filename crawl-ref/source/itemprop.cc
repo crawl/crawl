@@ -178,6 +178,9 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
         DAMV_CRUSHING, 0 },
+    { WPN_ROD,               "rod",                 5,  3, 13,  50,  7,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
+        DAMV_CRUSHING, 0 },
     { WPN_WHIP,              "whip",                6,  2, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_SLASHING, 0 },
@@ -199,11 +202,6 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_SLASHING, 0 },
-#if TAG_MAJOR_VERSION == 34
-    { WPN_BUGGY_FLAIL,     "removed spiked flail", 12, -2, 16, 190,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
-        DAMV_CRUSHING | DAM_PIERCE, 10 },
-#endif
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
@@ -1400,9 +1398,7 @@ int weapon_rarity(int w_type)
     case WPN_SACRED_SCOURGE:
     case WPN_TRISHULA:
     case WPN_STAFF:
-#if TAG_MAJOR_VERSION == 34
-    case WPN_BUGGY_FLAIL:
-#endif
+    case WPN_ROD:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return 0;
 
@@ -1633,7 +1629,7 @@ int weapon_str_weight(const item_def &wpn)
         return Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight;
 
     if (wpn.base_type == OBJ_RODS)
-        return Weapon_prop[ Weapon_index[WPN_CLUB] ].str_weight;
+        return Weapon_prop[ Weapon_index[WPN_ROD] ].str_weight;
 
     return Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight;
 }
@@ -2527,7 +2523,7 @@ int property(const item_def &item, int prop_type)
 
     case OBJ_STAVES:
     case OBJ_RODS:
-        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_CLUB : WPN_STAFF;
+        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_ROD : WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
             return Weapon_prop[ Weapon_index[weapon_sub] ].dam;
