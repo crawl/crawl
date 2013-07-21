@@ -2393,7 +2393,7 @@ static bool _vorpalise_weapon(bool already_known)
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        immolation(10, IMMOLATION_AFFIX, you.pos(), already_known, &you);
+        immolation(10, IMMOLATION_AFFIX, already_known);
         break;
 
     case SPWPN_FROST:
@@ -3167,7 +3167,7 @@ void read_scroll(int slot)
         mprf("The scroll explodes in your %s!", you.hand_name(true).c_str());
 
         // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
-        immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);
+        immolation(10, IMMOLATION_SCROLL, alreadyknown);
         bad_effect = true;
         more();
         break;

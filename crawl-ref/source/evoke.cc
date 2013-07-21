@@ -506,7 +506,7 @@ void tome_of_power(int slot)
             dec_inv_item_quantity(slot, 1);
         }
 
-        immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
+        immolation(15, IMMOLATION_TOME, false);
 
         xom_is_stimulated(200);
     }
