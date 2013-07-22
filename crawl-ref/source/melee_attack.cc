@@ -3325,7 +3325,7 @@ bool melee_attack::apply_damage_brand()
     {
         // This was originally for confusing touch and it doesn't really
         // work on the player, but a monster with a chaos weapon will
-        // occassionally come up with this brand. -cao
+        // occasionally come up with this brand. -cao
         if (defender->is_player())
             break;
 

@@ -2,9 +2,9 @@
 # layout_pools.des
 #
 # These layouts are based on the add_pools function.  They
-#  divide the map into a bunch of irregular areas jammed aginst
-#  each other.  The layout may use either the areas themsleves
-#  are the paths between them.  These are not true vaults, in
+#  divide the map into a bunch of irregular areas jammed against
+#  each other.  The layout may use either the areas themselves
+#  or the paths between them.  These are not true vaults, in
 #  that the dungeon builder can add other vaults on top of them.
 #
 
@@ -19,7 +19,7 @@
 #  vaults because they are each used in more than one.
 #
 # These maps have a small chance of placing the up stairs.
-#  This is handlied by always generating the layout as if
+#  This is handled by always generating the layout as if
 #  the stairs were to be placed, but only sometimes adding
 #  them.
 #

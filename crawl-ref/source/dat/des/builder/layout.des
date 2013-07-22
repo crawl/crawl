@@ -1128,7 +1128,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 # layout_cocytus
 #
 # An ice cave approximation for Cocytus.  There is one main
-#  delved path that is guarenteed to contain at least one up and
+#  delved path that is guaranteed to contain at least one up and
 #  down stairs.  There are also other delved paths and
 #  diamond-shaped rooms, but these might be behind pools of
 #  water.  To avoid trapping the player, all random teleports go
@@ -1191,7 +1191,7 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
     local top = 10
 
     -- Delve the main path and add two sets of stairs.  This
-    --  guarentees the map is connected without crossing water.
+    --  guarantees the map is connected without crossing water.
     --  Keep the '@' glyph for connectivity checking later.
     delve(ngb_min, ngb_max, connchance, total_count, top)
     nsubst('. = 1:@ / *:.')

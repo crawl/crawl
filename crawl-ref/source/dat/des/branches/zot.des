@@ -1560,8 +1560,8 @@ xxxxxxxxxxxxxxxxxxxx.xxx@xx.xxxx
 ENDMAP
 
 # A mighty hoard indeed...
-# Intented to be an extreme visual spectacle.
-# Obviously lowering the amount of gold in stacks in necessary.
+# Intended to be an extreme visual spectacle.
+# Obviously lowering the amount of gold in stacks is necessary.
 # There's about 800 gold.
 NAME:   st_grand_hoard_of_tiamat
 TAGS:   no_monster_gen

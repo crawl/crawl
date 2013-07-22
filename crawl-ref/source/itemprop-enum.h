@@ -377,7 +377,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,
     SPMSL_STEEL,
     SPMSL_SILVER,
-    SPMSL_PARALYSIS,                   // needle only from here in
+    SPMSL_PARALYSIS,                   // needle only from here on
     SPMSL_SLOW,
     SPMSL_SLEEP,
     SPMSL_CONFUSION,

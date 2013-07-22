@@ -30,7 +30,7 @@ function init_protected_by_tso(e)
 end
 }}
 
-# Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
+# Set the default depth for vaults. Be sure to adapt the DEPTH of particularly
 # easy or tough vaults. Also, exclude unthemely branches with !Lair etc.
 default-depth: D:12-26
 
@@ -955,7 +955,7 @@ WEIGHT:  3 (D), 10 (Swamp)
 SUBST:   D = WW.
 SUBST:   E = W..
 SUBST:   Z = wwW
-# Guarentee a path
+# Guarantee a path
 NSUBST:  S = 1:W / *:w
 # Place @(s)
 NSUBST:  ! = 1:@ / *:!

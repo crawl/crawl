@@ -1674,7 +1674,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             check_item_knowledge(), redraw_screen();
         else
         {
-            // Lets wizards escape out of accidently choosing acquirement.
+            // Lets wizards escape out of accidentally choosing acquirement.
             if (agent == AQ_WIZMODE)
             {
                 canned_msg(MSG_OK);

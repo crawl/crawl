@@ -201,7 +201,7 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   end
 
   -- TODO: Package the func(s) into room generators. Then place them using hyper (with a
-  -- symetrically padded placement strategy). Then optionally outline with transparent
+  -- symmetrically padded placement strategy). Then optionally outline with transparent
   -- stone and surround in lava like old crosses layout
 
   procedural.render_map(_G, func, function(v) return (v < 1 and '.' or 'x') end)

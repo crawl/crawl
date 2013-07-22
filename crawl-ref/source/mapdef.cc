@@ -4699,7 +4699,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
             return (i + 1);
     }
 
-    // Incompatible or non-existant ego type
+    // Incompatible or non-existent ego type
     for (int i = 1; i <= 2; i++)
     {
         const char** list = name_lists[order[i]];
@@ -4710,7 +4710,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
                 return -1;
     }
 
-    // Non-existant ego
+    // Non-existent ego
     return 0;
 }
 

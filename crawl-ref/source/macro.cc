@@ -389,7 +389,7 @@ static string vtostr(const keyseq &seq)
 }
 
 /*
- * Add a macro (suprise, suprise).
+ * Add a macro (surprise, surprise).
  */
 static void macro_add(macromap &mapref, keyseq key, keyseq action)
 {

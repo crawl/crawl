@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Includes may depend on a generated header, let's not unnecesarily require
+# Includes may depend on a generated header, let's not unnecessarily require
 # compilation just to gather strings.
 #
 # Use a future version tag, we remove descs immediately even though the item/

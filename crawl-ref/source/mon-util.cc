@@ -1172,10 +1172,10 @@ bool mons_is_draconian(monster_type mc)
     return (mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN);
 }
 
-// Conjured (as opposed to summoned) monsters are actually here, eventhough
-// they're typically volatile (like, made of real fire).  As such, they
-// should be immune to Abjuration or Recall.  Also, they count as things
-// rather than beings.
+// Conjured (as opposed to summoned) monsters are actually here, even
+// though they're typically volatile (like, made of real fire). As such,
+// they should be immune to Abjuration or Recall. Also, they count as
+// things rather than beings.
 bool mons_is_conjured(monster_type mc)
 {
     return mons_is_projectile(mc)

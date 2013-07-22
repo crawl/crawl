@@ -573,7 +573,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (in_sight)
         reveal();
 
-    // Store the position now in case it gets cleared inbetween.
+    // Store the position now in case it gets cleared in between.
     const coord_def p(pos);
 
     if (type_has_ammo())

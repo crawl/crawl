@@ -89,7 +89,7 @@ ENDMAP
 ################################################################################
 # Omnibox
 #
-# This will generate anything from chaotic city to maze (thru "square ring
+# This will generate anything from chaotic city to maze (through "square ring
 # huge center" / "square ring chaotic city") and more!
 #
 # Apologies if this is just too little code.
@@ -217,8 +217,8 @@ TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_cross layout_type_vaults
 MAP
 ENDMAP
 
-# The following couple have somewhat low weights because they're not doing anything any differnt than omnibox can produce,
-# although it would take a fairly specific and relativly unlikely omnibox to produce exactly the sme effect so they
+# The following couple have somewhat low weights because they're not doing anything any different than omnibox can produce,
+# although it would take a fairly specific and relatively unlikely omnibox to produce exactly the same effect so they
 # should stay in on their own right. However the basic maze is fairly pointless because omnibox quite regularly does
 # something very similar.
 NAME: layout_vaults_big_room

@@ -244,7 +244,7 @@ Pick up this bow and wield it with
 %%%%
 tutorial2 firing
 
-# FIXME: Lenghty because of the hint for choosing target.
+# FIXME: Lengthy because of the hint for choosing target.
 Firing arrows from your wielded bow works exactly the same as throwing darts:
 via <input>$cmd[CMD_FIRE]</input><localtiles> or <input>mouseclick</input>. You
 can change the targeted monster by pressing
