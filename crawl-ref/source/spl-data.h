@@ -3270,7 +3270,7 @@ struct spell_desc
 {
     SPELL_DISCORD, "Discord",
      SPTYP_HEXES,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_HASTY,
      8,
      200,
      -1, -1,
