@@ -15,7 +15,7 @@ local function test_cellseecell_symmetry()
     for x = -9, 9 do
       local px, py = x + you_x, y + you_y
       if (x ~= 0 or y ~= 0) and dgn.in_bounds(px, py) then
-        local foreward = los.cell_see_cell(you_x, you_y, px, py)
+        local forward = los.cell_see_cell(you_x, you_y, px, py)
         local backward = los.cell_see_cell(px, py, you_x, you_y)
         this_p = dgn.point(you_x, you_y)
         other_p = dgn.point(px, py)
