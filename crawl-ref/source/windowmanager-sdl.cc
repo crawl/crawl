@@ -316,7 +316,9 @@ int SDLWrapper::init(coord_def *m_windowsz)
     _desktop_width = video_info->current_w;
     _desktop_height = video_info->current_h;
 
+#if !SDL_VERSION_ATLEAST(2,0,0)
     SDL_EnableUNICODE(true);
+#endif
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     glDebug("SDL_GL_DOUBLEBUFFER");
