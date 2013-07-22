@@ -2096,7 +2096,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << "\n\nYou can easily find items you've left on the floor "
                     "with the <w>%</w> command, which will let you "
-                    "seach for all known items in the dungeon. For example, "
+                    "search for all known items in the dungeon. For example, "
                     "<w>% \"dagger\"</w> will list all daggers. You can "
                     "can then travel to one of the spots.";
             Hints.hints_stashes = false;
