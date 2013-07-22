@@ -2008,6 +2008,9 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
     if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
 
+    if (wh_enchant == ENCH_INSANE)
+        did_god_conduct(DID_HASTY, 8, true);
+
     return SPRET_SUCCESS;
 }
 
