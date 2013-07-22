@@ -298,7 +298,7 @@ static void _check_inventory_skills()
 {
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        // Exit early if ther's no more skill to check.
+        // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
@@ -321,7 +321,7 @@ static void _check_spell_skills()
 {
     for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
-        // Exit early if ther's no more skill to check.
+        // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 

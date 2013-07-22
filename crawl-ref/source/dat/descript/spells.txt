@@ -691,7 +691,7 @@ already singing will start a new song, not extend an existing one.
 Spectral Weapon spell
 
 This spell draws out the spirit within a wielded weapon to fight for you, with
-its power dependant on your skill with said weapon. Never striking on its own,
+its power dependent on your skill with said weapon. Never striking on its own,
 it only attacks when you do. You can only ever have one spectral weapon at a time.
 
 Kills by a spectral weapon count as your own when singing a Song of Slaying.

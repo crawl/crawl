@@ -634,7 +634,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         //
         // 2) Assume the distribution is uniform at n = m+k.
         //    (ie. the probablity that any of the found elements
-        //     was chosen = m / (m+k) (the slots are symetric,
+        //     was chosen = m / (m+k) (the slots are symmetric,
         //     so it's the sum of the probabilities of being in
         //     any of them)).
         //
@@ -665,8 +665,8 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         // just don't care about the non-chosen slots enough
         // to store them, so it might look like the item
         // automatically takes the new slot when not chosen
-        // (although, by symetry all the non-chosen slots are
-        // the same... and similarly, by symetry, all chosen
+        // (although, by symmetry all the non-chosen slots are
+        // the same... and similarly, by symmetry, all chosen
         // slots are the same).
         //
         // Yes, that's a long comment for a short piece of

@@ -27,11 +27,11 @@
 -- on each triggering only a single, randomly chosen slave will have
 -- on_trigger() called.
 --
--- Ordinarily, a master marker which listens to position-dependant events will
+-- Ordinarily, a master marker which listens to position-dependent events will
 -- only be triggered by events which happen at the master's position.  To make
 -- the master marker also listen to events which happen at the locations of the
 -- slave markers, set the property "listen_to_slaves" to anything but the empty
--- strign true.  This will cause all of the slave markers to be triggered
+-- string true.  This will cause all of the slave markers to be triggered
 -- whenever any of the slave markers are triggered.  To only trigger the slave
 -- where the event happened, also set the property "only_at_slave" to anything
 -- but the empty string.

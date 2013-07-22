@@ -669,7 +669,7 @@ void bolt::initialise_fire()
 
     message_cache.clear();
 
-    // seen might be set by caller to supress this.
+    // seen might be set by caller to suppress this.
     if (!seen && you.see_cell(source) && range > 0 && visible())
     {
         seen = true;

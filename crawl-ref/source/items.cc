@@ -1514,7 +1514,7 @@ int find_free_slot(const item_def &i)
     }
 
     // Either searchforward is true, or search backwards failed and
-    // we re-try searching the oposite direction.
+    // we re-try searching the opposite direction.
 
     int badslot = -1;
     // Return first free slot
@@ -2080,7 +2080,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_MOVED, pos, 0, item, -1, dest), pos);
 
-    // Now move the item to its new possition...
+    // Now move the item to its new position...
     move_item_to_grid(&item, dest);
 
     return true;

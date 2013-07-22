@@ -365,7 +365,7 @@ static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
 //  the specified glyphs.  Only glyphs of the specified value
 //  are replaced.
 //
-// The outside is not guarenteed to be conected we fill each
+// The outside is not guaranteed to be connected we fill each
 //  point on each edge inwards in a straight line until it hits
 //  something other than the glyph to replace (or the outside
 //  glyph from before).  We made the irregularities by moving

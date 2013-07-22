@@ -1917,7 +1917,7 @@ bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
             else if (last >= 0 && next < 0)
             {
                 // Found a maybe-disconnected traversable cell.  This is only
-                // acceptible if it might connect up at the end.
+                // acceptable if it might connect up at the end.
                 if (first == 0)
                     next = i;
                 else

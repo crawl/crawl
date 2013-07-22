@@ -630,7 +630,7 @@ function portal_next(e, next)
   end
 end
 
--- Turn persistant data into a human readable string.
+-- Turn persistent data into a human readable string.
 function persist_to_string()
     return table_to_string(dgn.persist)
 end

@@ -1470,7 +1470,7 @@ void debug_miscast(int target_index)
         return;
     }
 
-    // Supress "nothing happens" message for monster miscasts which are
+    // Suppress "nothing happens" message for monster miscasts which are
     // only harmless messages, since a large number of those are missing
     // monster messages.
     nothing_happens_when_type nothing = NH_DEFAULT;

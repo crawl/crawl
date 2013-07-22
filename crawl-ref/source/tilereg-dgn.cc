@@ -450,7 +450,7 @@ static bool _is_appropriate_evokable(const item_def& item,
     if (!item_type_known(item))
         return true;
 
-    // Random effects are always (in)apropriate for all targets.
+    // Random effects are always (in)appropriate for all targets.
     if (item.sub_type == WAND_RANDOM_EFFECTS)
         return true;
 
