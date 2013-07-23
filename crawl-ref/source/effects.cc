@@ -3000,7 +3000,8 @@ int spawn_corpse_mushrooms(item_def& corpse,
                 placed_targets++;
                 if (current == you.pos())
                 {
-                    mprf("A toadstool grows at your feet.");
+                    mprf("A toadstool grows %s.",
+                         player_has_feet() ? "at your feet" : "before you");
                     current = mushroom->pos();
                 }
                 else if (you.see_cell(current))
