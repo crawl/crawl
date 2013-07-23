@@ -354,7 +354,7 @@ description screens.
 %%%%
 tutorial3 battle
 
-Once you've succesfully managed to poison a monster, it is sometimes best to
+Once you've successfully managed to poison a monster, it is sometimes best to
 retreat and let the poison do the work. Also retreat to heal, if necessary.
 %%%%
 tutorial3 downstairs
