@@ -428,7 +428,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 bool is_door_tile(tileidx_t tile)
 {
-    return tile >= TILE_DNGN_RUNED_DOOR &&
+    return tile >= TILE_DNGN_CLOSED_DOOR &&
         tile < TILE_DNGN_ORCISH_IDOL;
 }
 
