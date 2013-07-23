@@ -1085,6 +1085,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return _mon_mod(TILEP_MONS_FUNGUS, tile_num_prop);
     case MONS_WANDERING_MUSHROOM:
         return TILEP_MONS_WANDERING_MUSHROOM;
+    case MONS_DEATHCAP:
+        return TILEP_MONS_DEATHCAP;
 
     // goblins ('g')
     case MONS_GOBLIN:
