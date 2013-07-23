@@ -1571,6 +1571,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 int player_res_steam(bool calc_unid, bool temp, bool items)
 {
     int res = 0;
+    const int rf = player_res_fire(calc_unid, temp, items);
 
     if (you.species == SP_PALE_DRACONIAN)
         res += 2;
@@ -1585,7 +1586,8 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
             res += 2;
     }
 
-    res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
+    res += (rf < 0) ? rf
+                    : (rf + 1) / 2;
 
     if (res > 3)
         res = 3;
