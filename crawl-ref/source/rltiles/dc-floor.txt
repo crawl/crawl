@@ -766,10 +766,16 @@ crypt0 FLOOR_CRYPT
 crypt1
 crypt2
 crypt3
+%weight 3
 crypt4
 crypt5
 crypt6
 crypt7
+%weight 2
+crypt8
+crypt9
+crypt10
+crypt11
 
 iron0 FLOOR_IRON
 %weight 1
