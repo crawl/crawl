@@ -59,7 +59,7 @@ function grunt_ministairs_setup(e, hatches)
 end
 }}
 
-default-depth: D:9-27, Elf
+default-depth: D:9-, Elf
 
 ###############################################################################
 #
@@ -171,7 +171,7 @@ ENDMAP
 NAME:   not_door_vault_mu
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:15-27, Elf
+DEPTH:  D:15-, Elf
 MONS:   butterfly
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -614,7 +614,7 @@ ENDMAP
 NAME:   not_door_vault_due
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:20-27, Elf:3-
+DEPTH:  D:20-, Elf:3-
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -1370,7 +1370,7 @@ ENDMAP
 # evil one here?
 NAME:   mikee_hates_you
 TAGS:   no_monster_gen
-DEPTH:  D:13-27
+DEPTH:  D:13-
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake siren ; trident ego:distortion w:5 | trident ego:venom
 KITEM:  1 = acquire any
@@ -1947,7 +1947,7 @@ MAP
 ENDMAP
 
 NAME:   lightli_giant_bouncers
-DEPTH:  D:20-27
+DEPTH:  D:20-
 MONS:   fire giant
 MONS:   frost giant
 MONS:   titan
@@ -2337,7 +2337,7 @@ ENDMAP
 #
 NAME:   nrook_kobold_shadow_demons
 TAGS:   patrolling
-DEPTH:  D:14-27
+DEPTH:  D:14-
 KMONS:  1 = kobold demonologist
 KMONS:  2 = w:5 shadow demon / lorocyproca
 KITEM:  1 = | / *, * / %
@@ -2423,7 +2423,7 @@ ENDMAP
 
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen
-DEPTH:   D:17-27
+DEPTH:   D:17-
 : if you.absdepth() > 21 then
 MONS:    pearl dragon
 : else
@@ -2650,7 +2650,7 @@ ENDMAP
 
 # Oklob assault; statistically, three oklobs
 NAME:    dpeg oklob_1
-DEPTH:   D:16-27, Lair:4-
+DEPTH:   D:16-, Lair:4-
 TAGS:    allow_dup
 MONS:    plant, oklob plant
 SUBST:   ? = 1 2:5 '
@@ -2837,7 +2837,7 @@ MONS:   jelly generate_awake
 TAGS:   uniq_jelly_drop
 WEIGHT: 5
 KFEAT:  a = teleport trap
-DEPTH:  D:8-27
+DEPTH:  D:8-
 MAP
 ..............
 ...vvvvvvvv...
@@ -3406,7 +3406,7 @@ ENDMAP
 # Small chamber for a nice item (Eino)
 NAME:   small_chamber_with_monster
 TAGS:   mini_float extra
-DEPTH:  D:8-27, Elf, Crypt
+DEPTH:  D:8-, Elf, Crypt
 MAP
 xxxxxxx
 xxG.Gxx
@@ -3532,7 +3532,7 @@ ENDMAP
 
 NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
-DEPTH:  D:9-27
+DEPTH:  D:9-
 : if you.absdepth() > 24 then
 MONS:   ancient lich w:50 / greater mummy
 ITEM:   any scroll w:6 / any book
@@ -3682,7 +3682,7 @@ vvvvv0....vvvvv
 ENDMAP
 
 NAME:   evilmike_bad_box
-DEPTH:  D:13-27
+DEPTH:  D:13-
 TAGS:   mini_float no_wall_fixup
 MONS:   boring beetle
 NSUBST: 9 = 1:1 / 1:19 / *:9
@@ -4104,7 +4104,7 @@ xx+xxx
 ENDMAP
 
 NAME:   lightli_gold_pyramid
-DEPTH:  D:15-27
+DEPTH:  D:15-
 TAGS:   no_vmirror no_rotate
 COLOUR: .089+*|c = yellow
 FTILE:  .089+*|c = floor_sandstone
@@ -4129,7 +4129,7 @@ cccccccc=cccccccc
 ENDMAP
 
 NAME: lightli_airlock
-DEPTH: D:11-27, Snake, Shoals
+DEPTH: D:11-, Snake, Shoals
 KPROP: W = no_rtele_into
 MAP
  WccccWWWccccWW
@@ -4473,7 +4473,7 @@ ENDMAP
 
 NAME:  grunt_potential
 TAGS:  no_pool_fixup
-DEPTH: D:6-27
+DEPTH: D:6-
 : init_hm_decor_walldepth(_G, 'x')
 SHUFFLE: wlvbn
 : if you.absdepth() > 20 then
@@ -5319,7 +5319,7 @@ ENDMAP
 NAME:   door_vault
 TAGS:   allow_dup
 WEIGHT: 1 (Vaults), 10
-DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
+DEPTH:  D:15-, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
                                 stop_explore="strange structure made of doors" }
@@ -5367,7 +5367,7 @@ ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
-DEPTH:  D:15-27
+DEPTH:  D:15-
 WEIGHT: 4
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \

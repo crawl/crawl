@@ -344,7 +344,7 @@ ENDMAP
 # Note: This altar is too deep to be of use as a Xom overflow altar.
 #
 NAME:       due_chaos_kobolds
-DEPTH:      D:13-27, Vaults, Elf, Crypt
+DEPTH:      D:13-, Vaults, Elf, Crypt
 TAGS:       no_rotate
 ORIENT:     float
 SUBST:      y  = c.

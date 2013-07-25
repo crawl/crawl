@@ -34,7 +34,7 @@ end
 
 NAME:    dungeon_decor
 TAGS:    no_dump extra allow_dup luniq
-DEPTH:   D:13-27
+DEPTH:   D:13-
 CHANCE:  80%
 {{
   local c = 1
@@ -1594,7 +1594,7 @@ ENDMAP
 
 NAME:  abandoned_shop
 TAGS:  transparent extra allow_dup decor
-DEPTH: D:4-27, Orc, Elf, Shoals, Snake, Forest
+DEPTH: D:4-, Orc, Elf, Shoals, Snake, Forest
 KFEAT: O = abandoned_shop
 MAP
 O
@@ -2244,7 +2244,7 @@ ENDMAP
 NAME:   unseen_surprise_small
 WEIGHT: 1
 TAGS:   serial_glass_rare allow_dup no_wall_fixup
-DEPTH:  D:8-27, Elf, Crypt
+DEPTH:  D:8-, Elf, Crypt
 KPROP:  a = no_rtele_into
 KMONS:  a = generate_awake unseen_horror
 KITEM:  a = | / *
@@ -2350,7 +2350,7 @@ MAP
 ENDMAP
 
 NAME:    treasure_zot_lemuel
-DEPTH:   D:10-27, Elf, Crypt
+DEPTH:   D:10-, Elf, Crypt
 TAGS:    allow_dup
 NSUBST:  Z = 4=. / z
 KFEAT:   z = zot trap
@@ -2368,7 +2368,7 @@ NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
 WEIGHT: 5
 ITEM:   ring of teleportation / scroll of teleportation q:3
-DEPTH:  D:5-27
+DEPTH:  D:5-
 MAP
    wwwwwwwww
   wwcccccccww
@@ -2390,7 +2390,7 @@ ENDMAP
 NAME:   water_boxes_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
 WEIGHT: 5
-DEPTH:  D:5-27, Swamp
+DEPTH:  D:5-, Swamp
 KMONS:  * = fungus
 KFEAT:  * = *
 NSUBST: a = 1:+ / *:x
@@ -2488,7 +2488,7 @@ ENDMAP
 
 NAME:    minmay_variable_closet
 TAGS:    extra
-DEPTH:   D:9-27
+DEPTH:   D:9-
 ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
 SUBST:   $ : $ZYXW
@@ -2505,7 +2505,7 @@ xxxx
 ENDMAP
 
 NAME:   library_closet
-DEPTH:  D:9-27, Elf, Crypt, Snake, Orc
+DEPTH:  D:9-, Elf, Crypt, Snake, Orc
 TAGS:   extra
 WEIGHT: 5
 ITEM:   any book w:20 / any scroll / nothing
@@ -2518,7 +2518,7 @@ ENDMAP
 
 NAME:   eino_small_chamber_without_monster
 TAGS:   mini_float allow_dup extra ruin_lair abyss ruin_abyss
-DEPTH:  D:4-27, Lair
+DEPTH:  D:4-, Lair
 MAP
  xxxxx
 xx...xx
@@ -2530,7 +2530,7 @@ ENDMAP
 
 NAME:   eino_tiny_chamber
 TAGS:   allow_dup extra
-DEPTH:  D:2-27, Elf, Crypt
+DEPTH:  D:2-, Elf, Crypt
 MAP
 xxxxx
 x...x
@@ -2563,7 +2563,7 @@ MAP
 ENDMAP
 
 NAME:   corexii_mini_fake_secret_closet
-DEPTH:  D:4-27
+DEPTH:  D:4-
 WEIGHT: 1
 TAGS:   no_monster_gen no_item_gen allow_dup extra
 NSUBST: + = 1:+ / *:x, = = 1:+ / *:x
@@ -2689,7 +2689,7 @@ ENDMAP
 ##########################################################################
 
 NAME:   lemuel_flamethrower_3
-DEPTH:  D:12-27, Elf, Geh
+DEPTH:  D:12-, Elf, Geh
 TAGS:   allow_dup abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
@@ -2710,7 +2710,7 @@ cc.cc
 ENDMAP
 
 NAME:   lemuel_flamethrower_2
-DEPTH:  D:5-27, Elf, Geh
+DEPTH:  D:5-, Elf, Geh
 TAGS:   abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
@@ -2735,7 +2735,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_flamethrower_1
-DEPTH:  D:5-27, Elf, Geh
+DEPTH:  D:5-, Elf, Geh
 TAGS:   layout_rooms layout_city
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
@@ -2829,7 +2829,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:  lemuel_nasty_fountain
-DEPTH: D:11-27, Crypt, Tar
+DEPTH: D:11-, Crypt, Tar
 TAGS:  allow_dup
 MARKER: Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
@@ -2872,7 +2872,7 @@ ccccc.@.ccccc
 ENDMAP
 
 NAME:    lemuel_freeze_loot_1
-DEPTH:   D:12-27, Crypt
+DEPTH:   D:12-, Crypt
 SUBST:   * : **$
 SUBST:   * = **|
 NSUBST:  N = 1:+ / *:n
@@ -2908,7 +2908,7 @@ ENDMAP
 
 # No safe path in this one -- just got to take your chances!
 NAME:   lemuel_flames_and_gold
-DEPTH:  D:16-27
+DEPTH:  D:16-
 WEIGHT: 2
 TAGS:   no_item_gen
 ITEM:   nothing, nothing, nothing
@@ -2977,7 +2977,7 @@ ENDMAP
 
 # No item generation for the sake of autoexplore.
 NAME:   lemuel_flamethrower_hall
-DEPTH:  D:9-27, Elf, Geh
+DEPTH:  D:9-, Elf, Geh
 TAGS:   layout_rooms layout_city no_item_gen abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 25, pow_max = 50, delay = 150, \
@@ -3044,7 +3044,7 @@ ENDMAP
 
 NAME:  kilobyte_tornado_obelisk
 TAGS:  no_monster_gen
-DEPTH: D:15-27, Elf
+DEPTH: D:15-, Elf
 ITEM:  acquire any
 MONS:  diamond obelisk
 KPROP: .d1 = no_tele_into

@@ -1197,7 +1197,7 @@ ENDMAP
 # An old-fashioned vault, by Lemuel
 #
 NAME:  lemuel_traditional_vault
-DEPTH: D:12-27
+DEPTH: D:12-
 ORIENT: float
 SUBST: 9 = 9 0 8:2
 SUBST: 0 = 0 .
@@ -1676,7 +1676,7 @@ NAME:    abrahamwl_protected_by_tso_1
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 ORIENT:  float
 WEIGHT:  4
-DEPTH:   D:23-27
+DEPTH:   D:23-
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 : init_protected_by_tso(_G)
 MAP
@@ -1709,7 +1709,7 @@ NAME:    abrahamwl_protected_by_tso_2
 ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  4
-DEPTH:   D:18-27
+DEPTH:   D:18-
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1754,7 +1754,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 TAGS:    uniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:18-27
+DEPTH:   D:18-
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1937,7 +1937,7 @@ ENDMAP
 #
 NAME:    nrook_guardian_serpent_snake_passage
 ORIENT:  float
-DEPTH:   D:9-27
+DEPTH:   D:9-
 TAGS:    no_monster_gen no_rotate
 MONS:    patrolling guardian serpent
 SHUFFLE: yY/zZ
@@ -2090,7 +2090,7 @@ ENDMAP
 #
 NAME:    lemuel_ice_spiral_2
 ORIENT:  float
-DEPTH:   D:5-27
+DEPTH:   D:5-
 TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
@@ -2117,7 +2117,7 @@ ENDMAP
 # Flame loot (Lemuel)
 #
 NAME:   lemuel_Flame_loot_2
-DEPTH:  D:9-27
+DEPTH:  D:9-
 ORIENT: float
 ITEM:   nothing
 SUBST:  * = |**...
@@ -2154,7 +2154,7 @@ ENDMAP
 # Firewalk (Lemuel)
 #
 NAME:    lemuel_firewalk_3
-DEPTH:   D:16-27
+DEPTH:   D:16-
 TAGS:    uniq_firewalk abyss ruin_abyss
 WEIGHT:  2
 ORIENT:  float
@@ -3371,7 +3371,7 @@ ENDMAP
 
 NAME:   evilmike_silver_temple
 TAGS:   no_monster_gen
-DEPTH:  D:20-27
+DEPTH:  D:20-
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
 : if you.absdepth() > 24 then
@@ -3421,7 +3421,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   evilmike_horseshoe
-DEPTH:  D:12-27
+DEPTH:  D:12-
 ORIENT: float
 MAP
    xxxxxxxxxxxxxxxxxxxxx
@@ -4745,7 +4745,7 @@ ENDMAP
 
 NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
-DEPTH:   D:15-27
+DEPTH:   D:15-
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
          deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
@@ -4994,7 +4994,7 @@ ENDMAP
 
 NAME: lightli_eight_chambers
 ORIENT: float
-DEPTH: D:20-27
+DEPTH: D:20-
 TAGS: no_monster_gen no_ctele_into
 SHUFFLE: PFIEMONLSAKRVCTHD
 KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
@@ -5157,7 +5157,7 @@ ENDMAP
 # (Arguably doesn't work as well in Zot / entering Zot, but moths of wrath...)
 NAME:   grunt_twist_and_shout
 ORIENT: centre
-DEPTH:  D:16-27, Zot, !Zot:$
+DEPTH:  D:16-, Zot, !Zot:$
 PLACE:  D:$
 {{
   if you.branch() == "Zot" then

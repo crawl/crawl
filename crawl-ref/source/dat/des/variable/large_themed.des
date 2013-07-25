@@ -856,7 +856,7 @@ ENDMAP
 NAME:   due_jory_tower
 ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
-DEPTH:  D:19-27
+DEPTH:  D:19-
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / phantom / shadow / shadow wraith
 MONS:   ghost moth, Jory, vampire knight
 MONS:   raven
@@ -923,7 +923,7 @@ ENDMAP
 #
 NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
-DEPTH:  D:17-27, Crypt:1-4
+DEPTH:  D:17-, Crypt:1-4
 ORIENT: southeast
 SUBST:  ~ = ~:2 .:3
 SUBST:  . = ~:1 .:9
@@ -1125,7 +1125,7 @@ ENDMAP
 NAME:   evilmike_iron_armoury
 ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-27
+DEPTH:  D:11-
 KFEAT:  _ = altar_okawaru
 SUBST:  = = nv
 FTILE:  '+Gvc12345_defghijk = floor_hall
@@ -1374,7 +1374,7 @@ ENDMAP
 # Tagged "extra" because I find it too small to take the full vault slot.
 #
 NAME: lightli_too_deep
-DEPTH: D:17-27
+DEPTH: D:17-
 TAGS: no_monster_gen extra
 ORIENT: northeast
 MONS: balrug
