@@ -93,7 +93,7 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     int weight = strip_number_tag(s, "weight:");
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
-    return (weight == TAG_UNFOUND? defweight : weight);
+    return (weight == TAG_UNFOUND ? defweight : weight);
 }
 
 void clear_subvault_stack(void)
@@ -263,7 +263,7 @@ string level_range::describe() const
 {
     return make_stringf("%s%s%s",
                         deny? "!" : "",
-                        branch == NUM_BRANCHES? "Any" :
+                        branch == NUM_BRANCHES ? "Any" :
                         branches[branch].abbrevname,
                         str_depth_range().c_str());
 }

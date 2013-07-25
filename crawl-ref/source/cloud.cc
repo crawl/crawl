@@ -997,7 +997,7 @@ static int _actor_cloud_base_damage(actor *act,
 
     const int cloud_raw_base_damage =
         _cloud_base_damage(act, cloud, maximum_damage);
-    const int cloud_base_damage = (resist == MAG_IMMUNE?
+    const int cloud_base_damage = (resist == MAG_IMMUNE ?
                                    0 : cloud_raw_base_damage);
     return cloud_base_damage;
 }

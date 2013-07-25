@@ -638,7 +638,7 @@ static map_section_type _apply_vault_definition(
         return MAP_NONE;
 
     const map_section_type orient = def.orient;
-    return (orient == MAP_NONE? MAP_NORTH : orient);
+    return (orient == MAP_NONE ? MAP_NORTH : orient);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -869,13 +869,13 @@ void map_selector::announce(const map_def *vault) const
         else
         {
             const char *format =
-                sel == PLACE? "[PLACE] Found map %s for %s" :
-                sel == DEPTH? "[DEPTH] Found random map %s for %s" :
+                sel == PLACE ? "[PLACE] Found map %s for %s" :
+                sel == DEPTH ? "[DEPTH] Found random map %s for %s" :
                 "[TAG] Found map %s tagged '%s'";
 
             mprf(MSGCH_DIAGNOSTICS, format,
                  vault->name.c_str(),
-                 sel == TAG? tag.c_str() : place.describe().c_str());
+                 sel == TAG ? tag.c_str() : place.describe().c_str());
         }
     }
 #endif

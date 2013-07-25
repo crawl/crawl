@@ -432,8 +432,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
 static const char *shield_base_name(const item_def *shield)
 {
-    return (shield->sub_type == ARM_BUCKLER? "buckler"
-                                           : "shield");
+    return (shield->sub_type == ARM_BUCKLER ? "buckler"
+                                            : "shield");
 }
 
 static const char *shield_impact_degree(int impact)

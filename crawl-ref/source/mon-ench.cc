@@ -1990,8 +1990,8 @@ mon_enchant::operator string () const
 
 const char *mon_enchant::kill_category_desc(kill_category k) const
 {
-    return (k == KC_YOU?      " you" :
-            k == KC_FRIENDLY? " pet" : "");
+    return (k == KC_YOU ?      " you" :
+            k == KC_FRIENDLY ? " pet" : "");
 }
 
 void mon_enchant::merge_killer(kill_category k, mid_t m)
@@ -2043,7 +2043,7 @@ killer_type mon_enchant::killer() const
 
 int mon_enchant::kill_agent() const
 {
-    return (who == KC_FRIENDLY? ANON_FRIENDLY_MONSTER : 0);
+    return (who == KC_FRIENDLY ? ANON_FRIENDLY_MONSTER : 0);
 }
 
 actor* mon_enchant::agent() const

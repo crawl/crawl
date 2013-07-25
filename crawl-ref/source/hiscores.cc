@@ -1011,7 +1011,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("ev", "%d", ev);
     fields->add_field("sh", "%d", sh);
 
-    fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
+    fields->add_field("god", "%s", god == GOD_NO_GOD ? "" :
                       god_name(god).c_str());
 
     if (wiz_mode)

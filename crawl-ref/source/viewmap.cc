@@ -57,8 +57,8 @@ static unsigned _get_travel_colour(const coord_def& p)
         return Options.tc_excluded;
     short dist = travel_point_distance[p.x][p.y];
     return dist > 0?                    Options.tc_reachable        :
-           dist == PD_EXCLUDED?         Options.tc_excluded         :
-           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
+           dist == PD_EXCLUDED ?        Options.tc_excluded         :
+           dist == PD_EXCLUDED_RADIUS ? Options.tc_exclude_circle   :
            dist < 0?                    Options.tc_dangerous        :
                                         Options.tc_disconnected;
 }
