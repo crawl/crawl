@@ -1489,7 +1489,7 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
 {
     if (ygrd != DNGN_TRANSIT_PANDEMONIUM
         && ygrd != DNGN_EXIT_PANDEMONIUM
-        && ygrd != DNGN_ENTER_ABYSS)
+        && ygrd != DNGN_EXIT_THROUGH_ABYSS)
     {
         return true;
     }
