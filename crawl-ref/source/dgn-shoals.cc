@@ -83,9 +83,9 @@ static int shoals_plant_quota = 0;
 static dungeon_feature_type _shoals_feature_by_height(int height)
 {
     return height >= SHT_STONE ? DNGN_STONE_WALL :
-        height >= SHT_ROCK? DNGN_ROCK_WALL :
-        height >= SHT_FLOOR? DNGN_FLOOR :
-        height >= SHT_SHALLOW_WATER? DNGN_SHALLOW_WATER
+        height >= SHT_ROCK ? DNGN_ROCK_WALL :
+        height >= SHT_FLOOR ? DNGN_FLOOR :
+        height >= SHT_SHALLOW_WATER ? DNGN_SHALLOW_WATER
         : DNGN_DEEP_WATER;
 }
 

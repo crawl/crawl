@@ -4082,7 +4082,7 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
 vault_placement *dgn_vault_at(coord_def p)
 {
     const int map_index = env.level_map_ids(p);
-    return (map_index == INVALID_MAP_INDEX? NULL : env.level_vaults[map_index]);
+    return (map_index == INVALID_MAP_INDEX ? NULL : env.level_vaults[map_index]);
 }
 
 void dgn_seen_vault_at(coord_def p)
@@ -4170,7 +4170,7 @@ _build_vault_impl(const map_def *vault,
 
     dprf("Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
          vault->name.c_str(),
-         placed_vault_orientation != MAP_NONE? "yes" : "no",
+         placed_vault_orientation != MAP_NONE ? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
     if (placed_vault_orientation == MAP_NONE)
@@ -5538,7 +5538,7 @@ static void _place_spec_shop(const coord_def& where,
 
     int plojy = 5 + random2avg(12, 3);
     if (representative)
-        plojy = env.shop[i].type == SHOP_WAND? NUM_WANDS : 16;
+        plojy = env.shop[i].type == SHOP_WAND ? NUM_WANDS : 16;
 
     if (spec->use_all && !spec->items.empty())
     {

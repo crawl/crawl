@@ -291,8 +291,8 @@ void xom_tick()
     {
         // Xom semi-randomly drifts your piety.
         const string old_xom_favour = describe_xom_favour();
-        const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
-                                                      : you.piety > HALF_MAX_PIETY);
+        const bool good = (you.piety == HALF_MAX_PIETY ? coinflip()
+                                                       : you.piety > HALF_MAX_PIETY);
         int size = abs(you.piety - HALF_MAX_PIETY);
 
         // Piety slowly drifts towards the extremes.

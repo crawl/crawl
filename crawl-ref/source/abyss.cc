@@ -1181,7 +1181,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                             : 7500 - 1250 * (you.depth - 1);
 
     // Except for the altar on the starting position, don't place any altars.
-    const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;
+    const int altar_chance = you.char_direction != GDT_GAME_START ? 10000 : 0;
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
