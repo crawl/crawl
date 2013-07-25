@@ -614,7 +614,7 @@ ENDMAP
 NAME:   not_door_vault_due
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:20-, Elf:3-
+DEPTH:  D:20-, Elf:$
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
