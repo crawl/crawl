@@ -166,7 +166,7 @@ end
 # 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
 TAGS: extra allow_dup can_overwrite replace_portal transparent
-DEPTH: D:21-27
+DEPTH: D:21-
 CHANCE: 100% (D:24), 25%
 : if you.where() == 'D:24' then
 KFEAT: O = enter_pandemonium no_mimic
@@ -182,7 +182,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_1
 TAGS:   patrolling no_monster_gen transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -201,7 +201,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_3
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -222,7 +222,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_4
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -242,7 +242,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_5
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -263,7 +263,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_7
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -285,7 +285,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_8
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -306,7 +306,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_9
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium

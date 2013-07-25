@@ -490,7 +490,7 @@ ENDMAP
 #
 NAME:   mludivico_vault
 ORIENT: southwest
-DEPTH:  D:18-27
+DEPTH:  D:18-
 MONS:   hell hound, necromancer, wizard, orange demon, rotting devil
 MONS:   hell knight, great orb of eyes
 MAP

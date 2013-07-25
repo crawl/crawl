@@ -760,7 +760,7 @@ ENDMAP
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
-DEPTH: D:5-27
+DEPTH: D:5-
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_delve
