@@ -898,3 +898,10 @@ cage3
 %weight 5
 cage4
 cage5
+
+etched0 FLOOR_ETCHED
+etched1
+etched2
+etched3
+etched4
+etched5
