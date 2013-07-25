@@ -905,3 +905,22 @@ etched2
 etched3
 etched4
 etched5
+
+%weight 10
+mosaic0 FLOOR_MOSAIC
+mosaic1
+mosaic2
+mosaic3
+%weight 4
+mosaic4
+mosaic5
+mosaic6
+mosaic7
+mosaic8
+mosaic9
+mosaic10
+mosaic11
+mosaic12
+mosaic13
+mosaic14
+mosaic15
