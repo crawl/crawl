@@ -218,7 +218,7 @@ DEPTH:  D:14-16, Lair:3-5, Swamp:1, Snake:1, Shoals:1, Spider:1, Elf:1
 : place_unique(_G, "Maud")
 
 NAME:   uniq_mara
-DEPTH:  D:18-25, Elf:3-, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:18-25, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Mara")
 
 NAME:   uniq_maurice

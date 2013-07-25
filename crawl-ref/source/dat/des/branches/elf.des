@@ -628,7 +628,7 @@ x+xxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    minmay_elf_blademastery
-DEPTH:   Elf:3-
+DEPTH:   Elf:$
 ORIENT:  float
 MONS:    deep elf fighter; falchion | long sword | scimitar | sabre / nothing w:15
 MONS:    deep elf blademaster
