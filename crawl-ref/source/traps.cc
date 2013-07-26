@@ -996,7 +996,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
+        if (in_sight && you_know)
+            mpr("The gas trap seems to be inoperative.");
+        trap_destroyed = true;
+        break;
+#endif
+
     case TRAP_PLATE:
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
@@ -1066,8 +1073,10 @@ int trap_def::difficulty()
         return 15;
     case TRAP_WEB:
         return 12;
+#if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
         return 15;
+#endif
     // Irrelevant:
     default:
         return 0;
@@ -1619,7 +1628,9 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_BOLT:
     case TRAP_NEEDLE:
     case TRAP_NET:
+#if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
+#endif
     case TRAP_PLATE:
         return DNGN_TRAP_MECHANICAL;
 

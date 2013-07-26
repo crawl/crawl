@@ -2929,8 +2929,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
             return "blade trap";
         case TRAP_NET:
             return "net trap";
+#if TAG_MAJOR_VERSION == 34
         case TRAP_GAS:
             return "gas trap";
+#endif
         case TRAP_ALARM:
             return "alarm trap";
         case TRAP_SHAFT:
