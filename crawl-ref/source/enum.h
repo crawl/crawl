@@ -3641,7 +3641,9 @@ enum trap_type
     TRAP_GOLUBRIA,
     TRAP_PLATE,
     TRAP_WEB,
+#if TAG_MAJOR_VERSION == 34
     TRAP_GAS,
+#endif
     NUM_TRAPS,
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
