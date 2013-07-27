@@ -147,7 +147,7 @@ void monster::reset()
     // no actual in-game monster should be reset while still constricting
     ASSERT(!constricting);
 
-    client_id = last_client_id = 0;
+    client_id = 0;
 
     // Just for completeness.
     speed           = 0;
