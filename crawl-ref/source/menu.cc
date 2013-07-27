@@ -2393,7 +2393,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
         // tiles saves entry coordinates in pixels, yet console saves them
         // in characters
         // basically, we want the AABB to be large enough to extend to the
-	// bottom of the screen in every possible resolution
+        // bottom of the screen in every possible resolution
         aabb_end.y = 32767;
         break;
     case LEFT:
@@ -3651,7 +3651,7 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         // tiles saves entry coordinates in pixels, yet console saves them
         // in characters
         // basically, we want the AABB to be large enough to extend to the
-	// bottom of the screen in every possible resolution
+        // bottom of the screen in every possible resolution
         aabb_end.y = 32767;
         break;
     case LEFT:

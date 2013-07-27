@@ -473,9 +473,7 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     {
         tileidx_t shadow_tile = TILE_DNGN_WALL_SHADOW;
         if (player_in_branch(BRANCH_CRYPT))
-        {
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
-        }
         _pack_wall_shadows(gc, cell, shadow_tile);
     }
 }
