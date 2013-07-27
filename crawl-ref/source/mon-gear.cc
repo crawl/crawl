@@ -504,10 +504,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = random_choose_weighted(
-                30, WPN_DAGGER,      30, WPN_CLUB,
-                27, WPN_FLAIL,       24, WPN_HAND_AXE,
-                20, WPN_HAMMER,      20, WPN_SHORT_SWORD,
-                20, WPN_MACE,        10, WPN_WHIP,
+                35, WPN_CLUB,        30, WPN_DAGGER,
+                30, WPN_FLAIL,       30, WPN_HAND_AXE,
+                20, WPN_SHORT_SWORD,
+                20, WPN_MACE,        15, WPN_WHIP,
                 10, WPN_TRIDENT,     10, WPN_FALCHION,
                 6, WPN_WAR_AXE,      3, WPN_MORNINGSTAR,
                 0);
