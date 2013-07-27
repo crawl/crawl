@@ -4507,7 +4507,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             // Messages about the monster influencing itself.
             const char* buff_msgs[] = { " glows brightly for a moment.",
-                                        " looks stronger.",
+                                        " looks braver.",
                                         " becomes somewhat translucent.",
                                         "'s eyes start to glow." };
 
