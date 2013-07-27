@@ -14,6 +14,7 @@ class ghost_demon
 {
 public:
     string name;
+    string last_words;
 
     species_type species;
     job_type job;

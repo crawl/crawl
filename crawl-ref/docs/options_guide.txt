@@ -2253,6 +2253,11 @@ show_player_species = false
         you're a Hill Orc, you will be shown as an 'o' rather than '@'. Has
         no effect in Tiles.
 
+last_words = false
+        If true, the player will have an opportunity to record "last words"
+        immediately before dying, and player ghosts will whisper their last
+        words immediately before being destroyed.
+
 5-b     DOS and Windows.
 ------------------------
 

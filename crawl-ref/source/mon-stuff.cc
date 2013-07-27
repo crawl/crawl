@@ -29,6 +29,7 @@
 #include "fprop.h"
 #include "files.h"
 #include "food.h"
+#include "ghost.h"
 #include "godabil.h"
 #include "godcompanions.h"
 #include "godconduct.h"

@@ -1392,6 +1392,24 @@ void _end_game(scorefile_entry &se)
 
     _delete_files();
 
+    if (Options.last_words) {
+        char last_words[1024];
+        int ret = msgwin_get_line("Any last words? ", last_words, sizeof(last_words));
+        if (!ret) {
+            // Strip spaces from the end.
+            for (int i = strlen(last_words) - 1; i >= 0; --i) {
+                if (isspace(last_words[i])) {
+                    last_words[i] = 0;
+                } else {
+                    break;
+                }
+            }
+        }
+        if (strlen(last_words)) {
+            you.last_words = string(last_words);
+        }
+    }
+
     // death message
     if (se.get_death_type() != KILLED_BY_LEAVING
         && se.get_death_type() != KILLED_BY_QUITTING

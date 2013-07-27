@@ -1559,6 +1559,12 @@ Zin player ghost
 
 @The_monster@ says @to_foe@, "For all the tithing, I expected a more glorious afterlife than this."
 %%%%
+player ghost killed
+
+w:100
+@The_monster@ whispers @to_foe@, @last_words@
+
+%%%%
 _generic_ranged_
 
 @The_monster@ takes aim @at_foe@.

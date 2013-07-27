@@ -4069,6 +4069,9 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     msg = replace_all(msg, "@feet@", part_str);
     msg = replace_all(msg, "@Feet@", uppercase_first(part_str));
 
+    // Ghost last words
+    msg = replace_all(msg, "@last_words@", mons->ghost->last_words);
+
     if (foe != NULL)
     {
         const god_type god = foe->deity();

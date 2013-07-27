@@ -372,6 +372,7 @@ static int _player_ghost_base_movement_speed()
 void ghost_demon::init_player_ghost()
 {
     name   = you.your_name;
+    last_words = you.last_words;
     max_hp = ((get_real_hp(false) >= MAX_GHOST_HP)
              ? MAX_GHOST_HP
              : get_real_hp(false));

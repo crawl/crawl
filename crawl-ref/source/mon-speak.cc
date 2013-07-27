@@ -20,6 +20,7 @@
 #include "database.h"
 #include "dlua.h"
 #include "ghost.h"
+#include "options.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
@@ -577,7 +578,7 @@ bool mons_speaks(monster* mons)
                                     no_player, no_foe, no_foe_name, no_god,
                                     unseen);
         }
-        if (msg.empty())
+        if (msg.empty() && (mons->hit_points > 0 || (Options.last_words && mons->ghost->last_words.length() > 0)))
         {
             msg = _get_speak_string(prefixes, "player ghost", mons,
                                     no_player, no_foe, no_foe_name, no_god,

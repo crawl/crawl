@@ -457,6 +457,10 @@ public:
     vector<string> tile_layout_priority;
 #endif
 
+    // Deteremines whether or not player records last words and whether or not
+    // dying ghosts tell player their last words.
+    bool        last_words;
+
     typedef map<string, string> opt_map;
     opt_map     named_options;          // All options not caught above are
                                         // recorded here.

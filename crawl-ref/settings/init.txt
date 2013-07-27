@@ -422,6 +422,8 @@
 # colour.yellow    = brown
 #
 # show_player_species = true
+#
+# last_words = true
 
 # See options_guide.txt for the options
 # cset, feature, mon_glyph, item_glyph

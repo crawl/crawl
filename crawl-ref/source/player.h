@@ -34,6 +34,7 @@ public:
   // Permanent data:
   // ---------------
   string your_name;
+  string last_words;
   species_type species;
   string species_name;
   job_type char_class;

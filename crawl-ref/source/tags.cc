@@ -4353,6 +4353,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells)
 static void marshallGhost(writer &th, const ghost_demon &ghost)
 {
     marshallString(th, ghost.name.c_str(), 20);
+    marshallString(th, ghost.last_words.c_str(), 1024);
 
     marshallShort(th, ghost.species);
     marshallShort(th, ghost.job);
@@ -4383,6 +4384,7 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost_demon ghost;
 
     ghost.name             = unmarshallString(th, 20);
+    ghost.last_words       = unmarshallString(th, 1024);
     ghost.species          = static_cast<species_type>(unmarshallShort(th));
     ghost.job              = static_cast<job_type>(unmarshallShort(th));
     ghost.religion         = static_cast<god_type>(unmarshallByte(th));

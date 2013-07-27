@@ -1126,6 +1126,8 @@ void game_options::reset_options()
 
     rest_wait_both = false;
 
+    last_words = false;
+
     // Map each category to itself. The user can override in init.txt
     kill_map[KC_YOU] = KC_YOU;
     kill_map[KC_FRIENDLY] = KC_FRIENDLY;
@@ -3578,6 +3580,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(arena_dump_msgs);
     else BOOL_OPTION(arena_dump_msgs_all);
     else BOOL_OPTION(arena_list_eq);
+    else BOOL_OPTION(last_words);
 
     // Catch-all else, copies option into map
     else if (runscript)
