@@ -990,27 +990,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     if (spell_cast == SPELL_DRACONIAN_BREATH)
         _scale_draconian_breath(beam, drac_type);
 
-    // Accuracy is lowered by one quarter if the dragon is attacking
-    // a target that is wielding a weapon of dragon slaying (which
-    // makes the dragon/draconian avoid looking at the foe).
-    // FIXME: This effect is not yet implemented for player draconians
-    // or characters in dragon form breathing at monsters wielding a
-    // weapon with this brand.
-    if (is_dragonkind(mons))
-    {
-        if (actor *foe = mons->get_foe())
-        {
-            if (const item_def *weapon = foe->weapon())
-            {
-                if (get_weapon_brand(*weapon) == SPWPN_DRAGON_SLAYING)
-                {
-                    beam.hit *= 3;
-                    beam.hit /= 4;
-                }
-            }
-        }
-    }
-
     return beam;
 }
 

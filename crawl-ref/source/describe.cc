@@ -876,8 +876,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
 #endif
         case SPWPN_DRAGON_SLAYING:
             description += "This legendary weapon is deadly to all "
-                "dragonkind. It also provides some protection from the "
-                "breath attacks of dragons and other creatures.";
+                "dragonkind.";
             break;
         case SPWPN_VENOM:
             if (is_range_weapon(item))
