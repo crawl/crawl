@@ -2873,7 +2873,7 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case WAND_HASTING:
-            if (you.religion == GOD_CHEIBRIADOS)
+            if (you_worship(GOD_CHEIBRIADOS))
                 return false;
         case WAND_HEAL_WOUNDS:
         case WAND_TELEPORTATION:
@@ -2902,7 +2902,7 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_SPEED:
-            if (you.religion == GOD_CHEIBRIADOS)
+            if (you_worship(GOD_CHEIBRIADOS))
                 return false;
         case POT_CURING:
         case POT_HEAL_WOUNDS:
@@ -2965,7 +2965,7 @@ bool is_bad_item(const item_def &item, bool temp)
             if (you.species == SP_FELID)
                 return false;
         case SCR_CURSE_JEWELLERY:
-            return (you.religion != GOD_ASHENZARI);
+            return (!you_worship(GOD_ASHENZARI));
         default:
             return false;
         }
@@ -3083,7 +3083,7 @@ static bool _invisibility_is_useless(const bool temp)
 {
     // If you're Corona'd or a TSO-ite, this is always useless.
     return (temp ? you.backlit(true)
-                 : you.haloed() && you.religion == GOD_SHINING_ONE);
+                 : you.haloed() && you_worship(GOD_SHINING_ONE));
 
 }
 
@@ -3175,7 +3175,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_TELEPORTATION:
             return crawl_state.game_is_sprint();
         case SCR_AMNESIA:
-            return (you.religion == GOD_TROG);
+            return (you_worship(GOD_TROG));
         case SCR_RECHARGING:
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
@@ -3330,7 +3330,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
 
         case RING_WIZARDRY:
-            return (you.religion == GOD_TROG);
+            return (you_worship(GOD_TROG));
 
         case RING_TELEPORT_CONTROL:
             return crawl_state.game_is_zotdef();
@@ -3356,7 +3356,7 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_STAVES:
         if (you.species == SP_FELID)
             return true;
-        if (you.religion == GOD_TROG)
+        if (you_worship(GOD_TROG))
             return true;
         if (!item_type_known(item))
             return false;
@@ -3390,7 +3390,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (food_is_meaty(item) && you.has_spell(SPELL_SIMULACRUM))
             return false;
 
-        if (is_fruit(item) && you.religion == GOD_FEDHAS)
+        if (is_fruit(item) && you_worship(GOD_FEDHAS))
             return false;
 
         return true;
@@ -3408,7 +3408,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
-            || you.religion == GOD_YREDELEMNUL && !you.penance[GOD_YREDELEMNUL]
+            || you_worship(GOD_YREDELEMNUL) && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))
         {
             return false;

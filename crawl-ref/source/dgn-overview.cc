@@ -481,7 +481,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         // Indicate good gods that you've abandoned, though.
         else if (you.penance[god])
             colour = "magenta";
-        else if (you.religion == god)
+        else if (you_worship(god))
             colour = "yellow";
         else if (god_likes_your_god(god) && has_altar_been_seen)
             colour = "brown";

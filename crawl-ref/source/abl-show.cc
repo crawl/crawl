@@ -1237,7 +1237,7 @@ void no_ability_msg()
         if (you.flight_mode())
             mpr("You're already flying!");
     }
-    else if (silenced(you.pos()) && you.religion != GOD_NO_GOD)
+    else if (silenced(you.pos()) && !you_worship(GOD_NO_GOD))
     {
         // At the very least the player has "Renounce Religion", but
         // cannot use it in silence.
@@ -1355,7 +1355,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return false;
     }
 
-    if (silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH)
+    if (silenced(you.pos()) && !you_worship(GOD_NEMELEX_XOBEH))
     {
         talent tal = get_talent(abil.ability, false);
         if (tal.is_invocation)
@@ -2749,7 +2749,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_CONVERT_TO_BEOGH:
         god_pitch(GOD_BEOGH);
-        if (you.religion == GOD_BEOGH)
+        if (you_worship(GOD_BEOGH))
         {
             spare_beogh_convert();
             break;
@@ -3208,7 +3208,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, abilities[i], check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (you.religion != GOD_NO_GOD
+    if (!you_worship(GOD_NO_GOD)
         && (include_unusable || !silenced(you.pos())))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
@@ -3364,7 +3364,7 @@ static int _is_god_ability(ability_type abil)
 
 void set_god_ability_slots()
 {
-    ASSERT(you.religion != GOD_NO_GOD);
+    ASSERT(!you_worship(GOD_NO_GOD));
 
     _set_god_ability_helper(ABIL_RENOUNCE_RELIGION, 'X');
 
@@ -3378,7 +3378,7 @@ void set_god_ability_slots()
 
     // Finally, add in current god's invocations in traditional slots.
     int num = 0;
-    if (you.religion == GOD_ELYVILON)
+    if (you_worship(GOD_ELYVILON))
     {
         _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_OTHERS,
                                 'a' + num++);
@@ -3391,7 +3391,7 @@ void set_god_ability_slots()
             _set_god_ability_helper(god_abilities[you.religion][i],
                                     'a' + num++);
 
-            if (you.religion == GOD_ELYVILON)
+            if (you_worship(GOD_ELYVILON))
             {
                 if (god_abilities[you.religion][i]
                         == ABIL_ELYVILON_LESSER_HEALING_SELF)
@@ -3405,7 +3405,7 @@ void set_god_ability_slots()
                                             'a' + num++);
                 }
             }
-            else if (you.religion == GOD_YREDELEMNUL)
+            else if (you_worship(GOD_YREDELEMNUL))
             {
                 if (god_abilities[you.religion][i]
                         == ABIL_YRED_RECALL_UNDEAD_SLAVES)
@@ -3435,7 +3435,7 @@ static int _find_ability_slot(const ability_def &abil)
 
     // Skip over a-e (invocations), a-g for Elyvilon, a-E for ZotDef
     int first_slot = 5;
-    if (you.religion == GOD_ELYVILON)
+    if (you_worship(GOD_ELYVILON))
         first_slot = 7;
     if (abil.flags & ABFLAG_ZOTDEF)
         first_slot = 5 + 26; // capital F, for *some* memory compat.
@@ -3471,9 +3471,9 @@ static int _find_ability_slot(const ability_def &abil)
 vector<ability_type> get_god_abilities(bool include_unusable)
 {
     vector<ability_type> abilities;
-    if (you.religion == GOD_TROG && (include_unusable || !silenced(you.pos())))
+    if (you_worship(GOD_TROG) && (include_unusable || !silenced(you.pos())))
         abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
-    else if (you.religion == GOD_ELYVILON && (include_unusable || !silenced(you.pos())))
+    else if (you_worship(GOD_ELYVILON) && (include_unusable || !silenced(you.pos())))
         abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_OTHERS);
     else if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
@@ -3481,7 +3481,7 @@ vector<ability_type> get_god_abilities(bool include_unusable)
     // Remaining abilities are unusable if under penance, or if silenced if not
     // Nemelex abilities.
     if (!include_unusable && (player_under_penance()
-                              || silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH))
+                              || silenced(you.pos()) && !you_worship(GOD_NEMELEX_XOBEH)))
     {
         return abilities;
     }
@@ -3507,13 +3507,13 @@ vector<ability_type> get_god_abilities(bool include_unusable)
         else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
             abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
         else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES
-                 || abil == ABIL_STOP_RECALL && you.religion == GOD_YREDELEMNUL)
+                 || abil == ABIL_STOP_RECALL && you_worship(GOD_YREDELEMNUL))
         {
             abilities.push_back(ABIL_YRED_INJURY_MIRROR);
         }
     }
 
-    if (you.religion == GOD_ZIN && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)
+    if (you_worship(GOD_ZIN) && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)
         abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
 
     return abilities;

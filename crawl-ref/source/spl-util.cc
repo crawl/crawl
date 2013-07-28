@@ -951,7 +951,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
 
     if (player_spell
         && vehumet_supports_spell(spell)
-        && you.religion == GOD_VEHUMET
+        && you_worship(GOD_VEHUMET)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && !player_under_penance()
@@ -1154,7 +1154,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())
             return true;
-        if (you.religion == GOD_SHINING_ONE && !player_under_penance())
+        if (you_worship(GOD_SHINING_ONE) && !player_under_penance())
             return true;
         break;
 #if TAG_MAJOR_VERSION == 34

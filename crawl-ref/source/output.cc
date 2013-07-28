@@ -1178,10 +1178,10 @@ static void _redraw_title(const string &your_name, const string &job_name)
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
     {
         string god = " of ";
-        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
+        god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                          : god_name(you.religion);
         NOWRAP_EOL_CPRINTF("%s", god.c_str());
 
@@ -1922,7 +1922,7 @@ static string _wiz_god_powers()
 static string _god_powers(bool simple)
 {
     string godpowers = simple ? "" : god_name(you.religion) ;
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         if (!you.gift_timeout)
             godpowers += simple ? "- BORED" : " - BORED";
@@ -1931,7 +1931,7 @@ static string _god_powers(bool simple)
         return (simple ? godpowers
                        : colour_string(godpowers, god_colour(you.religion)));
     }
-    else if (you.religion != GOD_NO_GOD)
+    else if (!you_worship(GOD_NO_GOD))
     {
         if (player_under_penance())
             return (simple ? "*" : colour_string("*" + godpowers, RED));
@@ -1939,7 +1939,7 @@ static string _god_powers(bool simple)
         {
             // piety rankings
             int prank = piety_rank() - 1;
-            if (prank < 0 || you.religion == GOD_XOM)
+            if (prank < 0 || you_worship(GOD_XOM))
                 prank = 0;
 
             // Careful about overflow. We erase some of the god's name
@@ -2166,7 +2166,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (you.rmut_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                       || you.religion == GOD_ZIN && you.piety >= 150);
+                       || you_worship(GOD_ZIN) && you.piety >= 150);
     const int rrott = you.res_rotting();
 
     snprintf(buf, sizeof buf,

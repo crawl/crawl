@@ -346,9 +346,9 @@ void follower::restore_mons_items(monster& m)
 
 static bool _is_religious_follower(const monster* mon)
 {
-    return ((you.religion == GOD_YREDELEMNUL
-             || you.religion == GOD_BEOGH
-             || you.religion == GOD_FEDHAS)
+    return ((you_worship(GOD_YREDELEMNUL)
+             || you_worship(GOD_BEOGH)
+             || you_worship(GOD_FEDHAS))
                  && is_follower(mon));
 }
 

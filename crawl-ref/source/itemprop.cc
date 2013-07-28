@@ -563,7 +563,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         return;
     }
 
-    if (no_ash && you.religion == GOD_ASHENZARI)
+    if (no_ash && you_worship(GOD_ASHENZARI))
     {
         simple_god_message(" preserves the curse.");
         return;
@@ -1311,7 +1311,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return (uncurse && arm.cursed() && you.religion != GOD_ASHENZARI);
+        return (uncurse && arm.cursed() && !you_worship(GOD_ASHENZARI));
 
     return true;
 }
@@ -1703,7 +1703,7 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
 
     if (item.base_type == OBJ_JEWELLERY)
     {
-        if (item.sub_type == AMU_FAITH && you.religion != GOD_NO_GOD)
+        if (item.sub_type == AMU_FAITH && !you_worship(GOD_NO_GOD))
             return false;
         return !((item.sub_type == AMU_THE_GOURMAND && !swap_in)
                 || item.sub_type == AMU_GUARDIAN_SPIRIT
@@ -2877,10 +2877,10 @@ void seen_item(const item_def &item)
     }
 
     // major hack.  Deconstify should be safe here, but it's still repulsive.
-    if (you.religion == GOD_ASHENZARI)
+    if (you_worship(GOD_ASHENZARI))
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
-        ((item_def*)&item)->plus = (you.religion == GOD_ZIN) ? 2 : 1;
+        ((item_def*)&item)->plus = (you_worship(GOD_ZIN)) ? 2 : 1;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)

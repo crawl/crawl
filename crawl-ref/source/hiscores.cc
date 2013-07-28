@@ -1540,7 +1540,7 @@ void scorefile_entry::init(time_t dt)
     sh    = player_shield_class();
 
     god = you.religion;
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
     {
         piety   = you.piety;
         penance = you.penance[you.religion];

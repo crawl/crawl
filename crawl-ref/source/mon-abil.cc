@@ -4531,7 +4531,7 @@ void activate_ballistomycetes(monster* mons, const coord_def& origin,
     set<position_node> visited;
     vector<set<position_node>::iterator > candidates;
 
-    if (you.religion == GOD_FEDHAS)
+    if (you_worship(GOD_FEDHAS))
     {
         if (non_activable_count == 0
             && ballisto_count == 0

@@ -29,6 +29,7 @@
 #include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
+#include "religion.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "terrain.h"
@@ -890,7 +891,7 @@ void handle_behaviour(monster* mon)
             }
 
             if (mon->strict_neutral() && mons_is_slime(mon)
-                && you.religion == GOD_JIYVA)
+                && you_worship(GOD_JIYVA))
             {
                 set_random_slime_target(mon);
             }

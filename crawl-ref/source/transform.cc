@@ -702,7 +702,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     const flight_type was_flying = you.flight_mode();
 
     // Zin's protection.
-    if (!just_check && you.religion == GOD_ZIN
+    if (!just_check && you_worship(GOD_ZIN)
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
@@ -1038,7 +1038,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_TREE:
-        if (you.religion == GOD_FEDHAS && !player_under_penance())
+        if (you_worship(GOD_FEDHAS) && !player_under_penance())
             simple_god_message(" makes you hardy against extreme temperatures.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;

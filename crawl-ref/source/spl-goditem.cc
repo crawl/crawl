@@ -136,7 +136,7 @@ static bool _mons_hostile(const monster* mon)
 // Returns 0, if it's possible to pacify this monster.
 int is_pacifiable(const monster* mon)
 {
-    if (you.religion != GOD_ELYVILON)
+    if (!you_worship(GOD_ELYVILON))
         return -1;
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
@@ -241,7 +241,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
     {
         spd.isValid = spell_direction(spd, beam, DIR_TARGET,
                                       mode != TARG_NUM_MODES ? mode :
-                                      you.religion == GOD_ELYVILON ?
+                                      you_worship(GOD_ELYVILON) ?
                                             TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS, false, true, true, "Heal",
                                       NULL, false, NULL, _desc_mindless);
@@ -282,7 +282,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
 
     // Don't divinely heal a monster you can't pacify.
     if (divine_ability && is_hostile
-        && you.religion == GOD_ELYVILON
+        && you_worship(GOD_ELYVILON)
         && can_pacify <= 0)
     {
         if (can_pacify == 0)
@@ -318,7 +318,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
 
     bool did_something = false;
 
-    if (you.religion == GOD_ELYVILON
+    if (you_worship(GOD_ELYVILON)
         && can_pacify == 1
         && is_hostile)
     {
@@ -484,7 +484,7 @@ int detect_items(int pow)
         map_radius = 8 + random2(8) + pow;
     else
     {
-        if (you.religion == GOD_ASHENZARI)
+        if (you_worship(GOD_ASHENZARI))
         {
             map_radius = min(you.piety / 20, LOS_RADIUS);
             if (map_radius <= 0)
@@ -650,7 +650,7 @@ static bool _selectively_remove_curse(string *pre_msg)
 
 bool remove_curse(bool alreadyknown, string *pre_msg)
 {
-    if (you.religion == GOD_ASHENZARI && alreadyknown)
+    if (you_worship(GOD_ASHENZARI) && alreadyknown)
     {
         if (_selectively_remove_curse(pre_msg))
         {
@@ -757,7 +757,7 @@ bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
 
     if (affected == EQ_WEAPON)
     {
-        if (you.religion == GOD_ASHENZARI && alreadyknown)
+        if (you_worship(GOD_ASHENZARI) && alreadyknown)
         {
             mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
                  armour ? "armour" : "jewellery");
@@ -772,7 +772,7 @@ bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
         return false;
     }
 
-    if (you.religion == GOD_ASHENZARI && alreadyknown)
+    if (you_worship(GOD_ASHENZARI) && alreadyknown)
         return _selectively_curse_item(armour, pre_msg);
 
     if (pre_msg)

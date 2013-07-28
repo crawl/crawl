@@ -186,9 +186,9 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
     case CMD_INTERLEVEL_TRAVEL:
         return (!safe);
     case CMD_DISPLAY_RELIGION:
-        return (you.religion == GOD_NO_GOD);
+        return (you_worship(GOD_NO_GOD));
     case CMD_PRAY:
-        return (you.religion == GOD_NO_GOD
+        return (you_worship(GOD_NO_GOD)
                 && !feat_is_altar(grd(you.pos())));
     case CMD_USE_ABILITY:
         return (your_talents(false).empty());

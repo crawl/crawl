@@ -763,7 +763,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     const bool player = act->is_player();
 
     if (!player
-        && you.religion == GOD_FEDHAS
+        && you_worship(GOD_FEDHAS)
         && fedhas_protects(act->as_monster())
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act->as_monster()->friendly() || act->as_monster()->neutral()))
@@ -964,7 +964,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
             }
             else if (mons->malmutate("mutagenic cloud"))
             {
-                if (you.religion == GOD_ZIN && cloud.whose == KC_YOU)
+                if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
                     did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
                 return true;
             }

@@ -149,7 +149,7 @@ static const char *describe_xom_mood()
 const string describe_xom_favour()
 {
     string favour;
-    if (you.religion != GOD_XOM)
+    if (!you_worship(GOD_XOM))
         favour = "a very buggy toy of Xom.";
     else if (you.gift_timeout < 1)
         favour = "a BORING thing.";
@@ -174,7 +174,7 @@ static string _get_xom_speech(const string key)
 
 static bool _xom_is_bored()
 {
-    return (you.religion == GOD_XOM && !you.gift_timeout);
+    return (you_worship(GOD_XOM) && !you.gift_timeout);
 }
 
 static bool _xom_feels_nasty()
@@ -189,7 +189,7 @@ bool xom_is_nice(int tension)
     if (you.penance[GOD_XOM])
         return false;
 
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         // If you.gift_timeout is 0, then Xom is BORED.  He HATES that.
         if (!you.gift_timeout)
@@ -225,7 +225,7 @@ static void _xom_is_stimulated(int maxinterestingness,
                                const char *message_array[],
                                bool force_message)
 {
-    if (you.religion != GOD_XOM || maxinterestingness <= 0)
+    if (!you_worship(GOD_XOM) || maxinterestingness <= 0)
         return;
 
     // Xom is not directly stimulated by his own acts.
@@ -273,7 +273,7 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
 void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message)
 {
-    if (you.religion != GOD_XOM)
+    if (!you_worship(GOD_XOM))
         return;
 
     const char *message_array[6];
@@ -3956,7 +3956,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 
     _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
 
-    if (you.religion == GOD_XOM && one_chance_in(5))
+    if (you_worship(GOD_XOM) && one_chance_in(5))
     {
         const string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY + 1);
@@ -4043,7 +4043,7 @@ static bool _death_is_funny(const kill_method_type killed_by)
 
 void xom_death_message(const kill_method_type killed_by)
 {
-    if (you.religion != GOD_XOM && (!you.worshipped[GOD_XOM] || coinflip()))
+    if (!you_worship(GOD_XOM) && (!you.worshipped[GOD_XOM] || coinflip()))
         return;
 
     const int death_tension = get_tension(GOD_XOM);
@@ -4124,7 +4124,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
                          const kill_method_type death_type, const char *aux,
                          bool see_source)
 {
-    if (you.religion != GOD_XOM || _xom_feels_nasty())
+    if (!you_worship(GOD_XOM) || _xom_feels_nasty())
         return false;
 
     // If this happens, don't bother.

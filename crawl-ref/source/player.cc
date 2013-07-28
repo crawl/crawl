@@ -489,7 +489,7 @@ bool player_can_open_doors()
 
 bool player_under_penance(void)
 {
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
         return (you.penance[you.religion]);
     else
         return false;
@@ -584,7 +584,7 @@ monster_type player_mons(bool transform)
 
     if (mons == MONS_ORC)
     {
-        if (you.religion == GOD_BEOGH)
+        if (you_worship(GOD_BEOGH))
             mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
                                                       : MONS_ORC_PRIEST;
     }
@@ -1330,7 +1330,7 @@ int player_hunger_rate(bool temp)
         hunger += 4;
 
     // If Cheibriados has slowed your life processes, you will hunger less.
-    if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0))
+    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
         hunger--;
 
     // Moved here from main.cc... maintaining the >= 40 behaviour.
@@ -1537,7 +1537,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_TREE:
-            if (you.religion == GOD_FEDHAS && !player_under_penance())
+            if (you_worship(GOD_FEDHAS) && !player_under_penance())
                 rf++;
             break;
         case TRAN_ICE_BEAST:
@@ -1611,7 +1611,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_TREE:
-            if (you.religion == GOD_FEDHAS && !player_under_penance())
+            if (you_worship(GOD_FEDHAS) && !player_under_penance())
                 rc++;
             break;
         case TRAN_ICE_BEAST:
@@ -1824,7 +1824,7 @@ int player_res_torment(bool, bool temp)
 // Kiku protects you from torment to a degree.
 int player_kiku_res_torment()
 {
-    return (you.religion == GOD_KIKUBAAQUDGHA
+    return (you_worship(GOD_KIKUBAAQUDGHA)
             && !player_under_penance()
             && you.piety >= piety_breakpoint(3)
             && !you.gift_timeout); // no protection during pain branding weapon
@@ -2181,7 +2181,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
     // Same here.  Your piety status, and, hence, TSO's protection, is
     // something you can more or less control.
-    if (you.religion == GOD_SHINING_ONE && you.piety > pl * 50)
+    if (you_worship(GOD_SHINING_ONE) && you.piety > pl * 50)
         pl = you.piety / 50;
 
     if (temp)
@@ -2282,7 +2282,7 @@ int player_movement_speed(bool ignore_burden)
         mv += 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     // Cheibriados
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you_worship(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
 
     // Tengu can move slightly faster when flying.
@@ -2351,7 +2351,7 @@ int player_speed(void)
     if (you.duration[DUR_SLOW])
         ps = haste_mul(ps);
 
-    if (you.duration[DUR_BERSERK] && you.religion != GOD_CHEIBRIADOS)
+    if (you.duration[DUR_BERSERK] && !you_worship(GOD_CHEIBRIADOS))
         ps = berserk_div(ps);
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
@@ -2437,7 +2437,7 @@ static int _player_armour_racial_bonus(const item_def& item)
             racial_bonus += 4;
 
         // an additional bonus for Beogh worshippers
-        if (you.religion == GOD_BEOGH && !player_under_penance())
+        if (you_worship(GOD_BEOGH) && !player_under_penance())
         {
             if (you.piety >= 185)
                 racial_bonus += racial_bonus * 9 / 4;
@@ -2892,7 +2892,7 @@ void forget_map(bool rot)
     const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
                                 && you.species == SP_MINOTAUR
                             || player_in_branch(BRANCH_ABYSS)
-                                && you.religion == GOD_LUGONU;
+                                && you_worship(GOD_LUGONU);
     const double geometric_chance = 0.99;
     const int radius = (rot_resist ? 200 : 100);
 
@@ -5014,7 +5014,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         learned_something_new(HINT_GLOWING);
 
     // Zin doesn't like mutations or mutagenic radiation.
-    if (you.religion == GOD_ZIN)
+    if (you_worship(GOD_ZIN))
     {
         // Whenever the glow status is first reached, give a warning message.
         if (old_level < 2 && new_level >= 2)

@@ -325,7 +325,7 @@ void wizard_set_hunger_state()
 
 void wizard_set_piety()
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you_worship(GOD_NO_GOD))
     {
         mpr("You are not religious!");
         return;
@@ -347,7 +347,7 @@ void wizard_set_piety()
         return;
     }
 
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         you.piety = newpiety;
 
@@ -994,7 +994,7 @@ void set_xl(const int newxl, const bool train)
 
 void wizard_get_god_gift(void)
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you_worship(GOD_NO_GOD))
     {
         mpr("You are not religious!");
         return;
@@ -1012,7 +1012,7 @@ void wizard_toggle_xray_vision()
 
 void wizard_god_wrath()
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you_worship(GOD_NO_GOD))
     {
         mpr("You suffer the terrible wrath of No God.");
         return;

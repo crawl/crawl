@@ -2837,7 +2837,7 @@ static int _monster_abjure_square(const coord_def &pos,
 
     // TSO and Trog's abjuration protection.
     bool shielded = false;
-    if (you.religion == GOD_SHINING_ONE)
+    if (you_worship(GOD_SHINING_ONE))
     {
         pow = pow * (30 - target->hit_dice) / 30;
         if (pow < duration)
@@ -2847,7 +2847,7 @@ static int _monster_abjure_square(const coord_def &pos,
             shielded = true;
         }
     }
-    else if (you.religion == GOD_TROG)
+    else if (you_worship(GOD_TROG))
     {
         pow = pow * 4 / 5;
         if (pow < duration)

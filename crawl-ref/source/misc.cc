@@ -1251,7 +1251,7 @@ void search_around()
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
                 + (base_skill/200.0) + 15;
 
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         skill += you.piety * 2;
 
      if (you.duration[DUR_SWIFTNESS])
@@ -1411,7 +1411,7 @@ bool go_berserk(bool intentional, bool potion)
         mpr("Finesse? Hah! Time to rip out guts!");
     }
 
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you_worship(GOD_CHEIBRIADOS))
     {
         // Che makes berserk not speed you up.
         // Unintentional would be forgiven "just this once" every time.
@@ -2271,7 +2271,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
 
     if (mon->friendly())
     {
-        if (you.religion == GOD_OKAWARU)
+        if (you_worship(GOD_OKAWARU))
         {
             adj = "your ally ";
 
@@ -2285,7 +2285,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     }
 
     if (is_unchivalric_attack(&you, mon)
-        && you.religion == GOD_SHINING_ONE
+        && you_worship(GOD_SHINING_ONE)
         && !tso_unchivalric_attack_safe_monster(mon))
     {
         adj += "helpless ";
@@ -2295,7 +2295,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     else if (mon->wont_attack())
         adj += "non-hostile ";
 
-    if (you.religion == GOD_JIYVA && mons_is_slime(mon)
+    if (you_worship(GOD_JIYVA) && mons_is_slime(mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
     {
         return true;

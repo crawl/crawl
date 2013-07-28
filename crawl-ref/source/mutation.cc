@@ -1501,7 +1501,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         // Zin's protection.
-        if (you.religion == GOD_ZIN
+        if (you_worship(GOD_ZIN)
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
@@ -1721,7 +1721,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
 
     case MUT_DEMONIC_GUARDIAN:
-        if (you.religion == GOD_OKAWARU)
+        if (you_worship(GOD_OKAWARU))
         {
             mpr("Your demonic guardian will not assist you as long as you "
                 "worship Okawaru.", MSGCH_MUTATION);
@@ -2502,7 +2502,7 @@ static bool _balance_demonic_guardian()
 void check_demonic_guardian()
 {
     // Don't spawn guardians with Oka, they're a huge pain.
-    if (you.religion == GOD_OKAWARU)
+    if (you_worship(GOD_OKAWARU))
         return;
 
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
@@ -2550,7 +2550,7 @@ void check_demonic_guardian()
 void check_antennae_detect()
 {
     int radius = player_mutation_level(MUT_ANTENNAE) * 2;
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         radius = max(radius, you.piety / 20);
     if (radius <= 0)
         return;
@@ -2583,7 +2583,7 @@ void check_antennae_detect()
 
                 if (mon->friendly())
                     mc = MONS_SENSED_FRIENDLY;
-                else if (you.religion == GOD_ASHENZARI
+                else if (you_worship(GOD_ASHENZARI)
                          && !player_under_penance())
                 {
                     mc = ash_monster_tier(mon);

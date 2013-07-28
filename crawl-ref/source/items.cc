@@ -1543,7 +1543,7 @@ static void _got_gold(item_def& item, int quant, bool quiet)
 {
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
-    if (you.religion == GOD_ZIN && !(item.flags & ISFLAG_THROWN))
+    if (you_worship(GOD_ZIN) && !(item.flags & ISFLAG_THROWN))
         quant -= zin_tithe(item, quant, quiet);
     if (quant <= 0)
         return;
@@ -1761,7 +1761,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
 
-        if (you.religion == GOD_CHEIBRIADOS)
+        if (you_worship(GOD_CHEIBRIADOS))
             simple_god_message(" tells them not to hurry.");
 
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
@@ -2773,7 +2773,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return _item_different_than_inv(item, _similar_jewellery);
 
     case OBJ_FOOD:
-        if (you.religion == GOD_FEDHAS && is_fruit(item))
+        if (you_worship(GOD_FEDHAS) && is_fruit(item))
             return true;
 
         if (is_inedible(item))
@@ -3222,7 +3222,7 @@ bool item_def::is_greedy_sacrificeable() const
     if (!god_likes_items(you.religion, true))
         return false;
 
-    if (you.religion == GOD_NEMELEX_XOBEH
+    if (you_worship(GOD_NEMELEX_XOBEH)
         && !check_nemelex_sacrificing_item_type(*this)
         || flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
         || item_is_stationary(*this))
