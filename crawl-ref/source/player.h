@@ -809,7 +809,7 @@ bool player_is_shapechanged(void);
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
-bool player_under_penance(void);
+int player_under_penance(god_type which_god = you.religion);
 
 int burden_change(void);
 
