@@ -2369,7 +2369,7 @@ static void _rebrand_weapon(item_def& wpn)
     }
 
     // now try and find an appropriate brand
-    while (old_brand == new_brand)
+    while (old_brand == new_brand || god_hates_item(wpn))
     {
         if (is_range_weapon(wpn))
         {
@@ -2397,9 +2397,8 @@ static void _rebrand_weapon(item_def& wpn)
                                     3, SPWPN_CHAOS,
                                     0);
         }
+        set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
     }
-    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
-
 
     if (old_brand == SPWPN_DISTORTION)
     {
