@@ -105,7 +105,7 @@ void jiyva_eat_offlevel_items()
 
 void jiyva_slurp_bonus(int item_value, int *js)
 {
-    if (you.penance[GOD_JIYVA])
+    if (player_under_penance(GOD_JIYVA))
         return;
 
     if (you.piety >= piety_breakpoint(1)

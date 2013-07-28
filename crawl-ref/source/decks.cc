@@ -1344,7 +1344,7 @@ void evoke_deck(item_def& deck)
 
     // Passive Nemelex retribution: sometimes a card gets swapped out.
     // More likely to happen with marked decks.
-    if (you.penance[GOD_NEMELEX_XOBEH])
+    if (player_under_penance(GOD_NEMELEX_XOBEH))
     {
         int c = 1;
         if ((flags & (CFLAG_MARKED | CFLAG_SEEN))
@@ -2908,7 +2908,7 @@ static int _card_power(deck_rarity_type rarity)
 {
     int result = 0;
 
-    if (you.penance[GOD_NEMELEX_XOBEH])
+    if (player_under_penance(GOD_NEMELEX_XOBEH))
         result -= you.penance[GOD_NEMELEX_XOBEH];
     else if (you_worship(GOD_NEMELEX_XOBEH))
     {
@@ -2965,7 +2965,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             god_speaks(GOD_XOM, "Xom roars with laughter!");
             you.gift_timeout = 200;
         }
-        else if (you.penance[GOD_XOM])
+        else if (player_under_penance(GOD_XOM))
             god_speaks(GOD_XOM, "Xom laughs nastily.");
     }
 

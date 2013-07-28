@@ -4130,7 +4130,7 @@ static int _piety_level(int piety)
 string god_title(god_type which_god, species_type which_species, int piety)
 {
     string title;
-    if (you.penance[which_god])
+    if (player_under_penance(which_god))
         title = divine_title[which_god][0];
     else
         title = divine_title[which_god][_piety_level(piety)];

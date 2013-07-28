@@ -487,12 +487,9 @@ bool player_can_open_doors()
     return (you.form != TRAN_BAT && you.form != TRAN_JELLY);
 }
 
-bool player_under_penance(void)
+int player_under_penance(god_type which_god)
 {
-    if (!you_worship(GOD_NO_GOD))
-        return (you.penance[you.religion]);
-    else
-        return false;
+    return (you.penance[which_god]);
 }
 
 // TODO: get rid of this.
@@ -2973,7 +2970,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         exp_gained *= 2;
     }
 
-    if (you.penance[GOD_ASHENZARI])
+    if (player_under_penance(GOD_ASHENZARI))
         ash_reduce_penance(exp_gained);
 
     const unsigned int old_exp = you.experience;

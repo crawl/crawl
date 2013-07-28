@@ -186,7 +186,7 @@ static bool _xom_feels_nasty()
 
 bool xom_is_nice(int tension)
 {
-    if (you.penance[GOD_XOM])
+    if (player_under_penance(GOD_XOM))
         return false;
 
     if (you_worship(GOD_XOM))
@@ -3416,7 +3416,7 @@ static bool _will_not_banish()
 static bool _allow_xom_banishment()
 {
     // Always allowed if under penance.
-    if (you.penance[GOD_XOM])
+    if (player_under_penance(GOD_XOM))
         return true;
 
     // If Xom is bored, banishment becomes viable earlier.
@@ -4287,7 +4287,7 @@ void debug_xom_effects()
     fprintf(ostat, "%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 
-    if (you.penance[GOD_XOM])
+    if (player_under_penance(GOD_XOM))
         fprintf(ostat, "You are under Xom's penance!\n");
     else if (_xom_is_bored())
         fprintf(ostat, "Xom is BORED.\n");

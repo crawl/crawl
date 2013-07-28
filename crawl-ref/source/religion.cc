@@ -1072,7 +1072,7 @@ static void _inc_penance(god_type god, int val)
     if (val <= 0)
         return;
 
-    if (you.penance[god] == 0)
+    if (!player_under_penance(god))
     {
         god_acting gdact(god, true);
 
@@ -2646,7 +2646,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
 static void _gain_piety_point()
 {
     // check to see if we owe anything first
-    if (you.penance[you.religion] > 0)
+    if (player_under_penance(you.religion))
     {
         dec_penance(1);
         return;
@@ -3983,7 +3983,7 @@ void handle_god_time()
     {
         // Nemelex penance is special: it's only "active"
         // when penance > 100, else it's passive.
-        if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
+        if (player_under_penance((god_type) i) && (i != GOD_NEMELEX_XOBEH
                                || you.penance[i] > 100))
         {
             penance_count++;
@@ -3996,7 +3996,7 @@ void handle_god_time()
         unsigned int count = 0;
         for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
         {
-            if (you.penance[i] && (i != GOD_NEMELEX_XOBEH
+            if (player_under_penance((god_type) i) && (i != GOD_NEMELEX_XOBEH
                                    || you.penance[i] > 100))
             {
                 if (count == which_penance)

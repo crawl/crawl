@@ -945,7 +945,7 @@ bool melee_attack::attack()
     {
         set_attack_conducts(conducts, defender->as_monster());
 
-        if (you.penance[GOD_ELYVILON]
+        if (player_under_penance(GOD_ELYVILON)
             && god_hates_your_god(GOD_ELYVILON)
             && ev_margin >= 0
             && one_chance_in(20))
@@ -1419,7 +1419,7 @@ bool melee_attack::player_aux_test_hit()
 
     const int evasion = defender->melee_evasion(attacker);
 
-    if (you.penance[GOD_ELYVILON]
+    if (player_under_penance(GOD_ELYVILON)
         && god_hates_your_god(GOD_ELYVILON)
         && to_hit >= evasion
         && one_chance_in(20))

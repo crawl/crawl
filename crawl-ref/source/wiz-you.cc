@@ -401,7 +401,7 @@ void wizard_set_piety()
     while (diff != 0);
 
     // Automatically reduce penance to 0.
-    if (you.penance[you.religion] > 0)
+    if (player_under_penance())
         dec_penance(you.penance[you.religion]);
 }
 
@@ -1027,8 +1027,10 @@ void wizard_god_mollify()
 {
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
-        if (you.penance[i])
+        if (player_under_penance((god_type) i))
+        {
             dec_penance((god_type) i, you.penance[i]);
+        }
     }
 }
 

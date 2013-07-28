@@ -542,7 +542,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
         {
             god_type god = static_cast<god_type>(-source);
 
-            if (god == GOD_XOM && you.penance[GOD_XOM] == 0)
+            if (god == GOD_XOM && !player_under_penance(GOD_XOM))
                 method = KILLED_BY_XOM;
             else
                 method = KILLED_BY_DIVINE_WRATH;
@@ -713,7 +713,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     // hostile_at() assumes the monster is hostile to the player,
     // but should be hostile to the target monster unless the miscast
     // is a result of either divine wrath or a Zot trap.
-    if (target->is_monster() && you.penance[god] == 0
+    if (target->is_monster() && !player_under_penance(god)
         && source != ZOT_TRAP_MISCAST)
     {
         monster* mon_target = target_as_monster();
@@ -743,7 +743,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     {
         if (what == RANDOM_MOBILE_MONSTER)
             data.summon_type = SPELL_SHADOW_CREATURES;
-        else if (you.penance[god] > 0)
+        else if (player_under_penance(god))
             data.summon_type = MON_SUMM_WRATH;
         else if (source == ZOT_TRAP_MISCAST)
             data.summon_type = MON_SUMM_ZOT;
