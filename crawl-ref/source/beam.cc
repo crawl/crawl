@@ -3733,10 +3733,7 @@ void bolt::affect_player()
     // Roll the damage.
     hurted += damage.roll();
 
-#ifdef DEBUG_DIAGNOSTICS
     int roll = hurted;
-#endif
-
 
     vector<string> messages;
     apply_dmg_funcs(&you, hurted, messages);
@@ -3834,6 +3831,11 @@ void bolt::affect_player()
 
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
+
+    // Last resort for characters mainly focusing on AC:
+    // Chance of not affecting items if not much damage went through
+    if (!x_chance_in_y(hurted, random2avg(roll, 2)))
+        affects_items = false;
 
     if (affects_items)
     {
