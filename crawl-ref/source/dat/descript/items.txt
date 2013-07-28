@@ -2374,10 +2374,9 @@ scroll of torment:quote
 scroll of vorpalise weapon
 
 This scroll enchants the wielded weapon so as to make it far more effective at
-inflicting harm on its wielder's enemies. Using it on a weapon already affected
-by some kind of permanent branding is not advised. On the other hand, the
-scroll can make permanent the temporary branding of weapons obtained from some
-spells.
+inflicting harm on its wielder's enemies. The scroll can make permanent the
+temporary branding of weapons obtained from some spells, or can be used on a
+weapon that is already permanently branded to randomly select a new brand.
 
 Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
 the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
