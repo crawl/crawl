@@ -42,6 +42,7 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
@@ -2345,6 +2346,71 @@ static void _explosion(coord_def where, actor *agent, beam_type flavour,
     beam.explode(true, false);
 }
 
+static void _rebrand_weapon(item_def& wpn)
+{
+    const int old_brand = get_weapon_brand(wpn);
+    int new_brand = old_brand;
+    const string itname = wpn.name(DESC_YOUR);
+
+    // you can't rebrand blessed weapons but trying will get you some cleansing flame
+    switch (wpn.sub_type)
+    {
+        case WPN_BLESSED_FALCHION:
+        case WPN_BLESSED_LONG_SWORD:
+        case WPN_BLESSED_SCIMITAR:
+        case WPN_EUDEMON_BLADE:
+        case WPN_BLESSED_DOUBLE_SWORD:
+        case WPN_BLESSED_GREAT_SWORD:
+        case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_SACRED_SCOURGE:
+        case WPN_TRISHULA:
+            return;
+    }
+
+    // now try and find an appropriate brand
+    while (old_brand == new_brand)
+    {
+        if (is_range_weapon(wpn))
+        {
+            new_brand = random_choose_weighted(
+                                    30, SPWPN_FLAME,
+                                    30, SPWPN_FROST,
+                                    20, SPWPN_VENOM,
+                                    20, SPWPN_VORPAL,
+                                    12, SPWPN_EVASION,
+                                    5, SPWPN_ELECTROCUTION,
+                                    3, SPWPN_CHAOS,
+                                    0);
+        }
+        else
+        {
+            new_brand = random_choose_weighted(
+                                    30, SPWPN_FLAMING,
+                                    30, SPWPN_FREEZING,
+                                    20, SPWPN_VENOM,
+                                    15, SPWPN_DRAINING,
+                                    15, SPWPN_VORPAL,
+                                    15, SPWPN_ELECTROCUTION,
+                                    12, SPWPN_PROTECTION,
+                                    8, SPWPN_VAMPIRICISM,
+                                    3, SPWPN_CHAOS,
+                                    0);
+        }
+    }
+    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
+
+
+    if (old_brand == SPWPN_DISTORTION)
+    {
+        // you can't get rid of distortion this easily
+        mprf("%s twongs alarmingly.", itname.c_str());
+
+        // from unwield_item
+        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
+                      "distortion unbrand");
+    }
+}
+
 // Returns true if a message has already been printed (which will identify
 // the scroll).
 static bool _vorpalise_weapon(bool already_known)
@@ -2372,11 +2438,19 @@ static bool _vorpalise_weapon(bool already_known)
         return true;
     }
 
-    // If there's a permanent brand, fail.
+    // If there's a permanent brand, try to rebrand it
+    bool rebranded = false;
     if (you.duration[DUR_WEAPON_BRAND] == 0)
-        return false;
+    {
+        rebranded = true;
+        _rebrand_weapon(wpn);
+    }
 
-    // There's a temporary brand, attempt to make it permanent.
+    // Might be rebranding to/from protection or evasion.
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
+
+    // There's a temporary or new brand, attempt to make it permanent
     const string itname = wpn.name(DESC_YOUR);
     bool success = true;
     bool msg = true;
@@ -2384,15 +2458,25 @@ static bool _vorpalise_weapon(bool already_known)
     switch (get_weapon_brand(wpn))
     {
     case SPWPN_VORPAL:
-        if (get_vorpal_type(wpn) != DVORP_CRUSHING)
-            mprf("%s's sharpness seems more permanent.", itname.c_str());
-        else
-            mprf("%s's heaviness feels very stable.", itname.c_str());
+    case SPWPN_PROTECTION:
+    case SPWPN_EVASION:
+        if (rebranded)
+        {
+            alert_nearby_monsters();
+            mprf("%s emits a brilliant flash of light!",itname.c_str());
+        }
+        else // should be VORPAL only
+        {
+            if (get_vorpal_type(wpn) != DVORP_CRUSHING)
+                mprf("%s's sharpness seems more permanent.", itname.c_str());
+            else
+                mprf("%s's heaviness feels very stable.", itname.c_str());
+        }
         break;
 
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
-        mprf("%s is engulfed in an explosion of flames!", itname.c_str());
+        mprf("%s is engulfed in an explosion of fire!", itname.c_str());
         immolation(10, IMMOLATION_AFFIX, already_known);
         break;
 
@@ -2406,24 +2490,21 @@ static bool _vorpalise_weapon(bool already_known)
             success = false;
         }
         else
-            mprf("%s is covered with a thick layer of frost!", itname.c_str());
+            mprf("%s is covered with a thin layer of ice!", itname.c_str());
         break;
 
     case SPWPN_DRAINING:
+    case SPWPN_VAMPIRICISM:
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
         drain_exp(true, 100);
         break;
 
     case SPWPN_VENOM:
-        if (cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE, 60,
-                                  (already_known) ? &you : NULL, true)
-            != SPRET_SUCCESS)
-        {
-            canned_msg(MSG_OK);
-            success = false;
-        }
+        if (rebranded)
+            mprf("%s drips with poison.", itname.c_str());
         else
             mprf("%s seems more permanently poisoned.", itname.c_str());
+        toxic_radiance_effect(&you, 1);
         break;
 
     case SPWPN_ELECTROCUTION:
