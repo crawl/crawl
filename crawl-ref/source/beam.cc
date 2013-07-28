@@ -2144,7 +2144,7 @@ bool miasma_monster(monster* mons, const actor* who)
 
     if (who && who->is_player()
         && is_good_god(you.religion)
-        && !(success && you.religion == GOD_SHINING_ONE)) // already penalized
+        && !(success && you_worship(GOD_SHINING_ONE))) // already penalized
     {
         did_god_conduct(DID_NECROMANCY, 5 + random2(3));
     }
@@ -4197,7 +4197,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             set_attack_conducts(conducts, mon, you.can_see(mon));
 
-            if (you.religion == GOD_BEOGH
+            if (you_worship(GOD_BEOGH)
                 && mons_genus(mon->type) == MONS_ORC
                 && mon->asleep() && !player_under_penance()
                 && you.piety >= piety_breakpoint(2) && mons_near(mon))
@@ -4671,7 +4671,7 @@ void bolt::affect_monster(monster* mon)
     // goes out of scope.
     //
     // Also exempting miscast explosions from this conduct -cao
-    if (you.religion == GOD_FEDHAS
+    if (you_worship(GOD_FEDHAS)
         && (flavour == BEAM_SPORE
             || beam_source == NON_MONSTER
                && aux_source.find("your miscasting") != string::npos))
@@ -4766,7 +4766,7 @@ void bolt::affect_monster(monster* mon)
         //
         // FIXME: Should be a better way of doing this.  For now, we are
         // just falsifying the death report... -cao
-        if (you.religion == GOD_FEDHAS && flavour == BEAM_SPORE
+        if (you_worship(GOD_FEDHAS) && flavour == BEAM_SPORE
             && fedhas_protects(mon))
         {
             if (mon->attitude == ATT_FRIENDLY)

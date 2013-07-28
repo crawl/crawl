@@ -488,7 +488,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     // Fedhas worshipers are exempt from the food destruction effect
     // of spores.
     if (flavour == BEAM_SPORE
-        && you.religion == GOD_FEDHAS)
+        && you_worship(GOD_FEDHAS))
     {
         simple_god_message(" protects your food from the spores.",
                            GOD_FEDHAS);
@@ -530,7 +530,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 continue;
             }
 
-            if (you.religion == GOD_JIYVA && !player_under_penance()
+            if (you_worship(GOD_JIYVA) && !player_under_penance()
                 && x_chance_in_y(you.piety, MAX_PIETY))
             {
                 ++jiyva_block;
@@ -814,7 +814,7 @@ bool drain_exp(bool announce_full, int power)
 static void _xom_checks_damage(kill_method_type death_type,
                                int dam, int death_source)
 {
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         if (death_type == KILLED_BY_TARGETTING
             || death_type == KILLED_BY_BOUNCE
@@ -924,7 +924,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
 
     // Exclude torment damage.
     const bool torment = aux && strstr(aux, "torment");
-    if (you.religion == GOD_JIYVA && you.piety > 160 && !torment)
+    if (you_worship(GOD_JIYVA) && you.piety > 160 && !torment)
     {
         int how_many = 0;
         if (dam >= you.hp_max * 3 / 4)
@@ -1211,7 +1211,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
         // Xom should only kill his worshippers if they're under penance
         // or Xom is bored.
-        if (you.religion == GOD_XOM && !you.penance[GOD_XOM]
+        if (you_worship(GOD_XOM) && !you.penance[GOD_XOM]
             && you.gift_timeout > 0)
         {
             return;
@@ -1220,7 +1220,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         // Also don't kill wizards testing Xom acts.
         if ((crawl_state.repeat_cmd == CMD_WIZARD
                 || crawl_state.prev_cmd == CMD_WIZARD)
-            && you.religion != GOD_XOM)
+            && !you_worship(GOD_XOM))
         {
             return;
         }

@@ -1873,7 +1873,7 @@ void zap_wand(int slot)
             break;
 
         case WAND_HEAL_WOUNDS:
-            if (you.religion == GOD_ELYVILON)
+            if (you_worship(GOD_ELYVILON))
             {
                 targ_mode = TARG_ANY;
                 break;
@@ -3022,7 +3022,7 @@ void read_scroll(int slot)
             break;
 
         case SCR_CURSE_ARMOUR:
-            if (you.religion == GOD_ASHENZARI
+            if (you_worship(GOD_ASHENZARI)
                 && !any_items_to_select(OSEL_UNCURSED_WORN_ARMOUR, true))
             {
                 return;
@@ -3030,7 +3030,7 @@ void read_scroll(int slot)
             break;
 
         case SCR_CURSE_JEWELLERY:
-            if (you.religion == GOD_ASHENZARI
+            if (you_worship(GOD_ASHENZARI)
                 && !any_items_to_select(OSEL_UNCURSED_WORN_JEWELLERY, true))
             {
                 return;
@@ -3273,7 +3273,7 @@ void read_scroll(int slot)
             bad_effect = true;
         }
         else
-            cancel_scroll = you.religion == GOD_ASHENZARI;
+            cancel_scroll = you_worship(GOD_ASHENZARI);
 
         break;
 
@@ -3283,7 +3283,7 @@ void read_scroll(int slot)
 
         if (is_good_god(you.religion))
         {
-            pow += (you.religion == GOD_SHINING_ONE) ? you.piety :
+            pow += (you_worship(GOD_SHINING_ONE)) ? you.piety :
                                                        you.piety / 2;
         }
 

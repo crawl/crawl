@@ -170,7 +170,7 @@ static int _abyssal_rune_roll()
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
     const bool lugonu_favoured =
-        (you.religion == GOD_LUGONU && !player_under_penance()
+        (you_worship(GOD_LUGONU) && !player_under_penance()
          && you.piety >= piety_breakpoint(4));
 
     const double depth = you.depth + lugonu_favoured;
@@ -1517,7 +1517,7 @@ retry:
 static void _increase_depth()
 {
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
-    if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
+    if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
         delta *= 2;
     if (you.duration[DUR_TELEPORT])
         delta *= 5;

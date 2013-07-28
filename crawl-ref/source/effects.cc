@@ -530,7 +530,7 @@ void banished(const string &who)
     down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 
     // Xom just might decide to interfere.
-    if (you.religion == GOD_XOM && who != "Xom" && who != "wizard command"
+    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
         && who != "a distortion unwield")
     {
         xom_maybe_reverts_banishment(false, false);
@@ -1250,7 +1250,7 @@ bool vitrify_area(int radius)
 
 static void _hell_effects()
 {
-    if ((you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
+    if ((you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY))
         || is_sanctuary(you.pos()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
@@ -2164,7 +2164,7 @@ void handle_time()
         // If Cheibriados has slowed your biology, disease might
         // not actually do anything.
         if (one_chance_in(30)
-            && !(you.religion == GOD_CHEIBRIADOS
+            && !(you_worship(GOD_CHEIBRIADOS)
                  && you.piety >= piety_breakpoint(0)
                  && coinflip()))
         {
@@ -2296,7 +2296,7 @@ void handle_time()
     {
         // Update the abyss speed. This place is unstable and the speed can
         // fluctuate. It's not a constant increase.
-        if (you.religion == GOD_CHEIBRIADOS && coinflip())
+        if (you_worship(GOD_CHEIBRIADOS) && coinflip())
             ; // Speed change less often for Chei.
         else if (coinflip() && you.abyss_speed < 100)
             ++you.abyss_speed;
@@ -2304,7 +2304,7 @@ void handle_time()
             --you.abyss_speed;
     }
 
-    if (you.religion == GOD_JIYVA && one_chance_in(10))
+    if (you_worship(GOD_JIYVA) && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -2347,13 +2347,13 @@ void handle_time()
         }
     }
 
-    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety / 4, MAX_PIETY)
+    if (you_worship(GOD_JIYVA) && x_chance_in_y(you.piety / 4, MAX_PIETY)
         && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }
 
-    if (you.religion == GOD_JIYVA && one_chance_in(25))
+    if (you_worship(GOD_JIYVA) && one_chance_in(25))
         jiyva_eat_offlevel_items();
 
     if (int lev = player_mutation_level(MUT_EVOLUTION))
@@ -2952,7 +2952,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
 
         // Is this square occupied by a non mushroom?
         if (mons && mons->mons_species() != MONS_TOADSTOOL
-            || player_occupant && you.religion != GOD_FEDHAS
+            || player_occupant && !you_worship(GOD_FEDHAS)
             || !can_spawn_mushrooms(current))
         {
             continue;
@@ -3203,7 +3203,7 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
+        if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
         {
             splash_with_acid(strength, NON_MONSTER, false,
                              (walls > 1) ? "The walls burn you!"

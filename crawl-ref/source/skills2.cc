@@ -23,6 +23,7 @@
 #include "godabil.h"
 #include "libutil.h"
 #include "player.h"
+#include "religion.h"
 #include "species.h"
 #include "skills.h"
 #include "skill_menu.h"
@@ -506,7 +507,7 @@ bool is_useless_skill(skill_type skill)
 
 bool is_harmful_skill(skill_type skill)
 {
-    return is_magic_skill(skill) && you.religion == GOD_TROG;
+    return is_magic_skill(skill) && you_worship(GOD_TROG);
 }
 
 bool all_skills_maxed(bool inc_harmful)

@@ -389,7 +389,7 @@ bool player_can_memorise_from_spellbook(const item_def &book)
             && (you.skill(SK_SUMMONINGS) < 10
                 || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_NECRONOMICON
-            && you.religion != GOD_KIKUBAAQUDGHA
+            && !you_worship(GOD_KIKUBAAQUDGHA)
             && (you.skill(SK_NECROMANCY) < 10
                 || you.skill(SK_SPELLCASTING) < 6)))
     {

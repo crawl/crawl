@@ -2417,7 +2417,7 @@ bool is_forbidden_food(const item_def &food)
     }
 
     // Zin doesn't like it if you eat beings with a soul.
-    if (you.religion == GOD_ZIN && mons_class_intel(food.mon_type) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && mons_class_intel(food.mon_type) >= I_NORMAL)
         return true;
 
     // Everything else is allowed.
@@ -2768,7 +2768,7 @@ void handle_starvation()
             stop_running();
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
-            if (you.religion == GOD_XOM)
+            if (you_worship(GOD_XOM))
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
@@ -2814,7 +2814,7 @@ static int _chunks_needed()
     int appetite = player_hunger_rate(false);
     hunger += appetite * FRESHEST_CORPSE * 2;
 
-    bool channeling = you.religion == GOD_SIF_MUNA;
+    bool channeling = you_worship(GOD_SIF_MUNA);
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].defined()

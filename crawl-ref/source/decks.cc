@@ -1503,7 +1503,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 
 static void _velocity_card(int power, deck_rarity_type rarity)
 {
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you_worship(GOD_CHEIBRIADOS))
         return simple_god_message(" protects you from inadvertent hurry.");
 
     const int power_level = _get_power_level(power, rarity);
@@ -1529,7 +1529,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     // Calculate how many extra banishments you get.
     const int power_level = _get_power_level(power, rarity);
     int nemelex_bonus = 0;
-    if (you.religion == GOD_NEMELEX_XOBEH && !player_under_penance())
+    if (you_worship(GOD_NEMELEX_XOBEH) && !player_under_penance())
         nemelex_bonus = you.piety;
 
     int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS, 20)
@@ -1602,7 +1602,7 @@ static void _flight_card(int power, deck_rarity_type rarity)
     else if (power_level >= 1)
     {
         cast_fly(random2(power/4));
-        if (you.religion != GOD_CHEIBRIADOS)
+        if (!you_worship(GOD_CHEIBRIADOS))
             cast_swiftness(random2(power/4));
         else
             simple_god_message(" protects you from inadvertent hurry.");
@@ -1963,7 +1963,7 @@ static void _potion_card(int power, deck_rarity_type rarity)
     if (power_level >= 2 && coinflip())
         pot = (coinflip() ? POT_SPEED : POT_RESISTANCE);
 
-    if (you.religion == GOD_CHEIBRIADOS && pot == POT_SPEED)
+    if (you_worship(GOD_CHEIBRIADOS) && pot == POT_SPEED)
     {
         simple_god_message(" protects you from inadvertent hurry.");
         return;
@@ -2910,7 +2910,7 @@ static int _card_power(deck_rarity_type rarity)
 
     if (you.penance[GOD_NEMELEX_XOBEH])
         result -= you.penance[GOD_NEMELEX_XOBEH];
-    else if (you.religion == GOD_NEMELEX_XOBEH)
+    else if (you_worship(GOD_NEMELEX_XOBEH))
     {
         result = you.piety;
         result *= (you.skill(SK_EVOCATIONS, 100) + 2500);
@@ -2958,7 +2958,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     if (which_card == CARD_XOM && !crawl_state.is_god_acting())
     {
-        if (you.religion == GOD_XOM)
+        if (you_worship(GOD_XOM))
         {
             // Being a self-centered deity, Xom *always* finds this
             // maximally hilarious.

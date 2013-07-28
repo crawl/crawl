@@ -574,16 +574,16 @@ static void _announce_goal_message()
 
 static void _god_greeting_message(bool game_start)
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you_worship(GOD_NO_GOD))
         return;
 
     string msg = god_name(you.religion);
 
-    if (brdepth[BRANCH_ABYSS] == -1 && you.religion == GOD_LUGONU)
+    if (brdepth[BRANCH_ABYSS] == -1 && you_worship(GOD_LUGONU))
         msg += " welcome";
     else if (game_start)
         msg += " newgame";
-    else if (you.religion == GOD_XOM)
+    else if (you_worship(GOD_XOM))
     {
         if (you.gift_timeout <= 1)
             msg += " bored";
@@ -791,7 +791,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         int result = 0;
         do
         {
-            if (you.religion == GOD_XOM)
+            if (you_worship(GOD_XOM))
                 result = xom_acts(abs(you.piety - HALF_MAX_PIETY));
             else
                 result = xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
@@ -935,7 +935,7 @@ static void _start_running(int dir, int mode)
     for (adjacent_iterator ai(next_pos); ai; ++ai)
     {
         if (env.grid(*ai) == DNGN_SLIMY_WALL
-            && (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA]))
+            && (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA]))
         {
             mpr("You're about to run into the slime covered wall!",
                 MSGCH_WARN);
@@ -2165,7 +2165,7 @@ static void _prep_input()
 
     if (you.seen_portals)
     {
-        ASSERT(you.religion == GOD_ASHENZARI);
+        ASSERT(you_worship(GOD_ASHENZARI));
         if (you.seen_portals == 1)
             mpr("You have a vision of a gate.", MSGCH_GOD);
         else
@@ -2717,7 +2717,7 @@ static void _decrement_durations()
         {
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if (you.religion == GOD_TROG && x_chance_in_y(you.piety, 150)
+            if (you_worship(GOD_TROG) && x_chance_in_y(you.piety, 150)
                 && !player_under_penance())
             {
                 mpr("Trog's vigour flows through your veins.");
@@ -2856,7 +2856,7 @@ static void _decrement_durations()
     {
         int resilience = 400;
 
-        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0))
+        if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
             resilience = resilience * 3 / 2;
 
         // Faster rotting when hungry.
@@ -3317,7 +3317,7 @@ static void _player_reacts()
     update_stat_zero();
 
     // XOM now ticks from here, to increase his reaction time to tension.
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
         xom_tick();
 }
 
@@ -3332,10 +3332,10 @@ static void _player_reacts_to_monsters()
         manage_fire_shield(you.time_taken);
 
     // penance checked there (as you can have antennae too)
-    if (player_mutation_level(MUT_ANTENNAE) || you.religion == GOD_ASHENZARI)
+    if (player_mutation_level(MUT_ANTENNAE) || you_worship(GOD_ASHENZARI))
         check_antennae_detect();
 
-    if ((you.religion == GOD_ASHENZARI && !player_under_penance())
+    if ((you_worship(GOD_ASHENZARI) && !player_under_penance())
         || you.mutation[MUT_JELLY_GROWTH])
     {
         detect_items(-1);
@@ -3532,7 +3532,7 @@ void world_reacts()
     }
 
 #if defined(DEBUG_TENSION) || defined(DEBUG_RELIGION)
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
         mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
 #endif
 
@@ -4702,7 +4702,7 @@ static void _move_player(coord_def move)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");
         else if (grd(targ) == DNGN_LAVA_SEA)
             mpr("The endless sea of lava is not a nice place.");
-        else if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
+        else if (feat_is_tree(grd(targ)) && you_worship(GOD_FEDHAS))
             mpr("You cannot walk through the dense trees.");
 
         stop_running();
@@ -4734,7 +4734,7 @@ static void _move_player(coord_def move)
 
     apply_berserk_penalty = !attacking;
 
-    if (!attacking && you.religion == GOD_CHEIBRIADOS && one_chance_in(10)
+    if (!attacking && you_worship(GOD_CHEIBRIADOS) && one_chance_in(10)
         && you.run())
     {
         did_god_conduct(DID_HASTY, 1, true);

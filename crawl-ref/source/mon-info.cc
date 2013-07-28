@@ -672,7 +672,7 @@ monster_info::monster_info(const monster* m, int milev)
     {
     case ATT_NEUTRAL:
     case ATT_HOSTILE:
-        if (you.religion == GOD_SHINING_ONE
+        if (you_worship(GOD_SHINING_ONE)
             && !tso_unchivalric_attack_safe_monster(m)
             && is_unchivalric_attack(&you, m))
         {

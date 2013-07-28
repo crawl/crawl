@@ -12,6 +12,7 @@
 #include "mon-util.h"
 #include "notes.h"
 #include "options.h"
+#include "religion.h"
 #include "show.h"
 #include "terrain.h"
 #ifdef USE_TILE
@@ -89,8 +90,8 @@ static void _automap_from(int x, int y, int mutated)
     if (mutated)
     {
         magic_mapping(8 * mutated,
-                      you.religion == GOD_ASHENZARI ? 25 + you.piety / 8 : 25,
-                      true, you.religion == GOD_ASHENZARI,
+                      you_worship(GOD_ASHENZARI) ? 25 + you.piety / 8 : 25,
+                      true, you_worship(GOD_ASHENZARI),
                       true, coord_def(x,y));
     }
 }
@@ -100,7 +101,7 @@ static int _map_quality()
     int passive = player_mutation_level(MUT_PASSIVE_MAPPING);
     // the explanation of this 51 vs max_piety of 200 is left as
     // an exercise to the reader
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         passive = max(passive, you.piety / 51);
     return passive;
 }

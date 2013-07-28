@@ -1127,7 +1127,7 @@ static void _finish_delay(const delay_queue_item &delay)
                     simple_god_message(" expects more respect for holy"
                                        " creatures!");
                 }
-                else if (you.religion == GOD_ZIN
+                else if (you_worship(GOD_ZIN)
                          && mons_class_intel(item.mon_type) >= I_NORMAL)
                 {
                     simple_god_message(" expects more respect for this"

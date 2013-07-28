@@ -384,7 +384,7 @@ void spawn_random_monsters()
 
     rate = (you.char_direction == GDT_DESCENDING) ?
             _scale_spawn_parameter(rate, 6 * rate, 0)
-            : (you.religion == GOD_CHEIBRIADOS) ? 16 : 8;
+            : (you_worship(GOD_CHEIBRIADOS)) ? 16 : 8;
 
     if (rate == 0)
     {
@@ -400,7 +400,7 @@ void spawn_random_monsters()
         // the player is unlikely to meet all of them and notice this.
         if (you.char_direction != GDT_GAME_START)
             rate = 5;
-        if (you.religion == GOD_CHEIBRIADOS)
+        if (you_worship(GOD_CHEIBRIADOS))
             rate *= 2;
     }
 
@@ -3033,7 +3033,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
     // Jellies are never interesting to Jiyva.
-    else if (mons->type == MONS_JELLY && you.religion == GOD_JIYVA)
+    else if (mons->type == MONS_JELLY && you_worship(GOD_JIYVA))
         interesting = false;
     else if (mons_threat_level(mons) == MTHRT_NASTY)
         interesting = true;
@@ -3303,7 +3303,7 @@ bool can_spawn_mushrooms(coord_def where)
         return true;
 
     cloud_struct &cloud = env.cloud[env.cgrid(where)];
-    if (you.religion == GOD_FEDHAS
+    if (you_worship(GOD_FEDHAS)
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
     {
         return true;
@@ -3330,7 +3330,7 @@ conduct_type player_will_anger_monster(monster* mon)
         return DID_UNHOLY;
     if (is_good_god(you.religion) && mon->is_evil())
         return DID_NECROMANCY;
-    if (you.religion == GOD_FEDHAS
+    if (you_worship(GOD_FEDHAS)
         && ((mon->holiness() == MH_UNDEAD && !mon->is_insubstantial())
             || mon->has_corpse_violating_spell()))
     {
@@ -3338,14 +3338,14 @@ conduct_type player_will_anger_monster(monster* mon)
     }
     if (is_evil_god(you.religion) && mon->is_holy())
         return DID_HOLY;
-    if (you.religion == GOD_ZIN)
+    if (you_worship(GOD_ZIN))
     {
         if (mon->is_unclean())
             return DID_UNCLEAN;
         if (mon->is_chaotic())
             return DID_CHAOS;
     }
-    if (you.religion == GOD_TROG && mon->is_actual_spellcaster())
+    if (you_worship(GOD_TROG) && mon->is_actual_spellcaster())
         return DID_SPELL_CASTING;
 
     return DID_NOTHING;

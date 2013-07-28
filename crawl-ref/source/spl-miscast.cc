@@ -672,7 +672,7 @@ bool MiscastEffect::avoid_lethal(int dam)
     if (recursion_depth == MAX_RECURSE)
     {
         // Any possible miscast would kill you, now that's interesting.
-        if (you.religion == GOD_XOM)
+        if (you_worship(GOD_XOM))
             simple_god_message(" watches you with interest.");
         return true;
     }
@@ -1608,7 +1608,7 @@ void MiscastEffect::_divination_mon(int severity)
 
 void MiscastEffect::_necromancy(int severity)
 {
-    if (target->is_player() && you.religion == GOD_KIKUBAAQUDGHA
+    if (target->is_player() && you_worship(GOD_KIKUBAAQUDGHA)
         && !player_under_penance() && you.piety >= piety_breakpoint(1))
     {
         const bool death_curse = (cause.find("death curse") != string::npos);

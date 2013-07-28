@@ -1986,7 +1986,7 @@ string get_item_description(const item_def &item, bool verbose,
 
             if ((god_hates_cannibalism(you.religion)
                    && is_player_same_genus(item.mon_type))
-                || (you.religion == GOD_ZIN
+                || (you_worship(GOD_ZIN)
                    && mons_class_intel(item.mon_type) >= I_NORMAL)
                 || (is_good_god(you.religion)
                    && mons_class_holiness(item.mon_type) == MH_HOLY))
@@ -2924,7 +2924,7 @@ static int _get_spell_description(const spell_type spell,
         if (you.has_spell(spell))
         {
             description += "\n(F)orget this spell by destroying the book.\n";
-            if (you.religion == GOD_SIF_MUNA)
+            if (you_worship(GOD_SIF_MUNA))
                 description +="Sif Muna frowns upon the destroying of books.\n";
             return BOOK_FORGET;
         }
@@ -4358,7 +4358,7 @@ static void _detailed_god_description(god_type which_god)
     mouse_control mc(MOUSE_MODE_MORE);
 
     const int keyin = getchm();
-    if (you.religion == GOD_NEMELEX_XOBEH
+    if (you_worship(GOD_NEMELEX_XOBEH)
         && keyin >= 'a' && keyin < 'a' + (char) NUM_NEMELEX_GIFT_TYPES)
     {
         const int num = keyin - 'a';
@@ -4404,7 +4404,7 @@ void describe_god(god_type which_god, bool give_title)
     cprintf("%s", get_linebreak_string(god_desc.c_str(), numcols).c_str());
 
     // Title only shown for our own god.
-    if (you.religion == which_god)
+    if (you_worship(which_god))
     {
         // Print title based on piety.
         cprintf("\nTitle - ");
@@ -4425,7 +4425,7 @@ void describe_god(god_type which_god, bool give_title)
     //mv: Player is praying at altar without appropriate religion.
     // It means player isn't checking his own religion and so we only
     // display favour and go out.
-    if (you.religion != which_god)
+    if (!you_worship(which_god))
     {
         textcolor(colour);
         int which_god_penance = you.penance[which_god];
@@ -4696,13 +4696,13 @@ string get_skill_description(skill_type skill, bool need_title)
             result += "\n";
             result += "How on earth did you manage to pick this up?";
         }
-        else if (you.religion == GOD_TROG)
+        else if (you_worship(GOD_TROG))
         {
             result += "\n";
             result += "Note that Trog doesn't use Invocations, due to its "
                       "close connection to magic.";
         }
-        else if (you.religion == GOD_NEMELEX_XOBEH)
+        else if (you_worship(GOD_NEMELEX_XOBEH))
         {
             result += "\n";
             result += "Note that Nemelex uses Evocations rather than "
@@ -4711,7 +4711,7 @@ string get_skill_description(skill_type skill, bool need_title)
         break;
 
     case SK_EVOCATIONS:
-        if (you.religion == GOD_NEMELEX_XOBEH)
+        if (you_worship(GOD_NEMELEX_XOBEH))
         {
             result += "\n";
             result += "This is the skill all of Nemelex's abilities rely on.";
@@ -4719,7 +4719,7 @@ string get_skill_description(skill_type skill, bool need_title)
         break;
 
     case SK_SPELLCASTING:
-        if (you.religion == GOD_TROG)
+        if (you_worship(GOD_TROG))
         {
             result += "\n";
             result += "Keep in mind, though, that Trog will greatly disapprove "

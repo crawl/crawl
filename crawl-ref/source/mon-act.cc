@@ -2077,7 +2077,7 @@ void handle_monster_move(monster* mons)
         // Keep neutral, charmed, summoned monsters from picking up stuff.
         // Same for friendlies if friendly_pickup is set to "none".
         if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
-             || (you.religion == GOD_JIYVA && mons_is_slime(mons)))
+             || (you_worship(GOD_JIYVA) && mons_is_slime(mons)))
             && !mons->is_summoned() && !mons->is_perm_summoned()
             && (!mons->friendly()
                 || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
@@ -2581,7 +2581,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         return false;
 
     // Friendly jellies won't eat (unless worshipping Jiyva).
-    if (mons->friendly() && you.religion != GOD_JIYVA)
+    if (mons->friendly() && !you_worship(GOD_JIYVA))
         return false;
 
     // Off-limit squares are off-limit.
@@ -2657,7 +2657,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             shown_msg = true;
         }
 
-        if (you.religion == GOD_JIYVA)
+        if (you_worship(GOD_JIYVA))
         {
             gain = sacrifice_item_stack(*si, &js, quant);
             if (gain > PIETY_NONE)
@@ -4038,7 +4038,7 @@ static void _heated_area(monster* mons)
         return;
 
     // HACK: Currently this prevents even auras not caused by lava orcs...
-    if (you.religion == GOD_BEOGH && mons->friendly() && mons->god == GOD_BEOGH)
+    if (you_worship(GOD_BEOGH) && mons->friendly() && mons->god == GOD_BEOGH)
         return;
 
     const int base_damage = random2(11);

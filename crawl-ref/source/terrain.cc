@@ -415,7 +415,7 @@ bool feat_is_altar(dungeon_feature_type grid)
 bool feat_is_player_altar(dungeon_feature_type grid)
 {
     // An ugly hack, but that's what religion.cc does.
-    return (you.religion != GOD_NO_GOD
+    return (!you_worship(GOD_NO_GOD)
             && feat_altar_god(grid) == you.religion);
 }
 

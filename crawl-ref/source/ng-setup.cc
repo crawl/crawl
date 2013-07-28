@@ -1009,11 +1009,11 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SHIELDS] = 0;
     }
 
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
     {
         you.worshipped[you.religion] = 1;
         set_god_ability_slots();
-        if (you.religion != GOD_XOM)
+        if (!you_worship(GOD_XOM))
             you.piety_max[you.religion] = you.piety;
     }
 }

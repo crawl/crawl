@@ -530,7 +530,7 @@ bool melee_attack::handle_phase_hit()
             Hints.hints_melee_counter++;
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (you.religion == GOD_BEOGH
+        if (you_worship(GOD_BEOGH)
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
@@ -1789,7 +1789,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
             && player_genus(GENPC_ORCISH))
         {
-            if (you.religion == GOD_BEOGH && !player_under_penance())
+            if (you_worship(GOD_BEOGH) && !player_under_penance())
             {
 #ifdef DEBUG_DIAGNOSTICS
                 const int orig_damage = damage;
@@ -3846,7 +3846,7 @@ int melee_attack::calc_to_hit(bool random)
                     mhit += (random && coinflip() ? 2 : 1);
                 }
                 else if (get_equip_race(*weapon) == ISFLAG_ORCISH
-                         && you.religion == GOD_BEOGH && !player_under_penance())
+                         && you_worship(GOD_BEOGH) && !player_under_penance())
                 {
                     mhit++;
                 }

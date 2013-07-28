@@ -767,7 +767,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                                   recite_type prayertype)
 {
     // That's a pretty good sanity check, I guess.
-    if (you.religion != GOD_ZIN)
+    if (!you_worship(GOD_ZIN))
         return false;
 
     monster* mon = monster_at(where);
@@ -1493,7 +1493,7 @@ bool vehumet_supports_spell(spell_type spell)
 // Returns false if the invocation fails (no spellbooks in sight, etc.).
 bool trog_burn_spellbooks()
 {
-    if (you.religion != GOD_TROG)
+    if (!you_worship(GOD_TROG))
         return false;
 
     god_acting gdact;
@@ -1610,7 +1610,7 @@ bool trog_burn_spellbooks()
 
 bool beogh_water_walk()
 {
-    return (you.religion == GOD_BEOGH && !player_under_penance()
+    return (you_worship(GOD_BEOGH) && !player_under_penance()
             && you.piety >= piety_breakpoint(4));
 }
 
@@ -1667,14 +1667,14 @@ bool jiyva_remove_bad_mutation()
 
 bool yred_injury_mirror()
 {
-    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+    return (you_worship(GOD_YREDELEMNUL) && !player_under_penance()
             && you.piety >= piety_breakpoint(1)
             && you.duration[DUR_MIRROR_DAMAGE]);
 }
 
 bool yred_can_animate_dead()
 {
-    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+    return (you_worship(GOD_YREDELEMNUL) && !player_under_penance()
             && you.piety >= piety_breakpoint(2));
 }
 
@@ -1855,7 +1855,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
 
     if (corpses_created)
     {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
+        if (you_worship(GOD_KIKUBAAQUDGHA))
         {
             simple_god_message(corpses_created > 1 ? " delivers you corpses!"
                                                    : " delivers you a corpse!");
@@ -1865,7 +1865,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
     }
     else
     {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
+        if (you_worship(GOD_KIKUBAAQUDGHA))
             simple_god_message(" can find no cadavers for you!");
         return false;
     }
@@ -1895,7 +1895,7 @@ bool kiku_take_corpse()
 
 bool fedhas_passthrough_class(const monster_type mc)
 {
-    return (you.religion == GOD_FEDHAS
+    return (you_worship(GOD_FEDHAS)
             && mons_class_is_plant(mc)
             && mons_class_is_stationary(mc)
             && mc != MONS_SNAPLASHER_VINE
@@ -1932,7 +1932,7 @@ bool fedhas_shoot_through(const bolt& beam, const monster* victim)
     mon_attitude_type origin_attitude;
     if (originator->is_player())
     {
-        origin_worships_fedhas = you.religion == GOD_FEDHAS;
+        origin_worships_fedhas = you_worship(GOD_FEDHAS);
         origin_attitude = ATT_FRIENDLY;
     }
     else
