@@ -2328,7 +2328,7 @@ static bool _drink_fountain()
 }
 
 static void _explosion(coord_def where, actor *agent, beam_type flavour,
-                       string name, string cause)
+                       int colour, string name, string cause)
 {
     bolt beam;
     beam.is_explosion = true;
@@ -2340,6 +2340,7 @@ static void _explosion(coord_def where, actor *agent, beam_type flavour,
     beam.damage = dice_def(5, 8);
     beam.ex_size = 5;
     beam.flavour = flavour;
+    beam.colour = colour;
     beam.hit = AUTOMATIC_HIT;
     beam.name = name;
     beam.loudness = 10;
@@ -2509,7 +2510,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_ELECTROCUTION:
         mprf("%s releases a massive orb of lightning.", itname.c_str());
-        _explosion(you.pos(), &you, BEAM_ELECTRICITY, "electricity",
+        _explosion(you.pos(), &you, BEAM_ELECTRICITY, LIGHTCYAN, "electricity",
                    "electrocution affixation");
         break;
 
@@ -2518,8 +2519,7 @@ static bool _vorpalise_weapon(bool already_known)
         // need to affix it immediately, otherwise transformation will break it
         you.duration[DUR_WEAPON_BRAND] = 0;
         xom_is_stimulated(200);
-        // but the eruption _is_ guaranteed.  What it will do is not.
-        _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
+        _explosion(you.pos(), &you, BEAM_CHAOS, BLACK, "chaos eruption", "chaos affixation");
         switch (random2(coinflip() ? 2 : 4))
         {
         case 3:
@@ -2579,8 +2579,8 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_HOLY_WRATH:
         mprf("%s emits a blast of cleansing flame.", itname.c_str());
-        _explosion(you.pos(), &you, BEAM_HOLY, "cleansing flame",
-                   "holy wrath affixation");
+        _explosion(you.pos(), &you, BEAM_HOLY, YELLOW, "cleansing flame",
+                   rebranded ? "holy wrath rebrand" : "holy wrath affixation");
         success = false;
         break;
 
