@@ -152,13 +152,13 @@ void set_terrain_visible(const coord_def &c)
         cell->flags |= MAP_VISIBLE_FLAG;
         env.visible.insert(c);
     }
-    cell->flags &=~ (MAP_DETECTED_MONSTER | MAP_DETECTED_ITEM);
+    cell->flags &= ~(MAP_DETECTED_MONSTER | MAP_DETECTED_ITEM);
 }
 
 void clear_terrain_visibility()
 {
     for (set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
-        env.map_knowledge(*i).flags &=~ MAP_VISIBLE_FLAG;
+        env.map_knowledge(*i).flags &= ~MAP_VISIBLE_FLAG;
     env.visible.clear();
 }
 

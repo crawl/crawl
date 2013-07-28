@@ -3675,7 +3675,7 @@ static void tag_read_level(reader &th)
             if (env.map_knowledge[i][j].cloudinfo())
                 env.map_knowledge[i][j].cloudinfo()->pos = coord_def(i, j);
 
-            env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;
+            env.map_knowledge[i][j].flags &= ~MAP_VISIBLE_FLAG;
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;
