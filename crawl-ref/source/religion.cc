@@ -3784,11 +3784,6 @@ void god_pitch(god_type which_god)
     learned_something_new(HINT_CONVERT);
 }
 
-bool you_worship(const god_type god)
-{
-  return you.religion == god;
-}
-
 int had_gods()
 {
     int count = 0;
