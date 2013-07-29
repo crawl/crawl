@@ -1866,8 +1866,8 @@ giant eyeball:quote
 giant firefly
 
 Unlike its mundane counterparts that are merely half an inch big, this enormous
-flying bug is large enough to be ridden by some spriggans. Its glow, though, is
-faint enough to be hardly visible.
+flying bug is large enough to be ridden by some spriggans. When threatened, it
+can flash warning signals to its kin (and anyone else close enough to observe).
 %%%%
 giant frog
 
