@@ -1452,6 +1452,9 @@ string read_init_file(bool runscript)
 
     for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
         Options.include(datafile_path(config_defaults[i]), false, runscript);
+#else
+    UNUSED(lua_builtins);
+    UNUSED(config_defaults);
 #endif
 
     Options.filename     = "extra opts first";

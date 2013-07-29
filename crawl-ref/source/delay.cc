@@ -1448,6 +1448,7 @@ void run_macro(const char *macroname)
         }
     }
 #else
+    UNUSED(_decrement_delay);
     stop_delay();
 #endif
 }
@@ -1496,7 +1497,8 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     {
         return MB_TRUE;
     }
-
+#else
+    UNUSED(_activity_interrupt_name);
 #endif
     return MB_MAYBE;
 }
