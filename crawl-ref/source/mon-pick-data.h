@@ -31,7 +31,7 @@ static const pop_entry pop_d[] =
   {  4, 14,  334, SEMI, MONS_PHANTOM },
   {  4, 14,  999, FLAT, MONS_SKELETON },
   {  5, 15,  192, PEAK, MONS_WATER_MOCCASIN },
-  {  5, 15,  690, SEMI, MONS_JELLY },
+  {  5, 15,  514, SEMI, MONS_JELLY },
   {  5, 15,  514, SEMI, MONS_ICE_BEAST },
   {  5, 15,  514, SEMI, MONS_SKY_BEAST },
   {  5, 15,  826, SEMI, MONS_CENTAUR },
