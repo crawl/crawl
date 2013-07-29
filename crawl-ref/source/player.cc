@@ -487,11 +487,6 @@ bool player_can_open_doors()
     return (you.form != TRAN_BAT && you.form != TRAN_JELLY);
 }
 
-int player_under_penance(god_type which_god)
-{
-    return (you.penance[which_god]);
-}
-
 // TODO: get rid of this.
 bool player_genus(genus_type which_genus, species_type species)
 {
