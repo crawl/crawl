@@ -1028,9 +1028,7 @@ void wizard_god_mollify()
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
         if (player_under_penance((god_type) i))
-        {
             dec_penance((god_type) i, you.penance[i]);
-        }
     }
 }
 
