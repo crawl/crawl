@@ -94,9 +94,7 @@ public:
     {
         data.reset();
         if (value)
-        {
-          data.flip();
-        }
+            data.flip();
     }
 };
 
@@ -114,9 +112,7 @@ public:
     {
         data.reset();
         if (def)
-        {
             data.flip();
-        }
     }
 
     FixedBitArray()
