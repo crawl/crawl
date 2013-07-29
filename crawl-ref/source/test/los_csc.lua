@@ -25,7 +25,7 @@ local function test_cellseecell_symmetry()
           this_p = other_p
           other_p = temp
         end
-        if (forward and backward) or (not forward and not backward) then
+        if (forward and not backward) or (not forward and backward) then
           dgn.fprop_changed(other_p.x, other_p.y, "highlight")
           debug.dump_map(FAILMAP)
           assert(false,
