@@ -47,6 +47,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "crash.h"
+#include "dactions.h"
 #include "database.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
@@ -2992,12 +2993,12 @@ static void _decrement_durations()
     {
         if (you.props.exists("next_spirit_pack")
             && you.elapsed_time >= you.props["next_spirit_pack"].get_int()
-            && you.duration[DUR_SPIRIT_HOWL] > 150)
+            && you.duration[DUR_SPIRIT_HOWL] > 185)
         {
             int num = spawn_spirit_pack(&you);
-            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 50
-                                                      + random2(80)
-                                                      + (num * num) * 8;
+            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 35
+                                                      + random2(60)
+                                                      + (num * num) * 7;
 
             // If we somehow couldn't spawn any, wait longer than normal
             // (probably the player is in some place where spawning more isn't
@@ -3008,11 +3009,9 @@ static void _decrement_durations()
         if (_decrement_a_duration(DUR_SPIRIT_HOWL, delay))
         {
             mpr("The howling abruptly ceases.", MSGCH_DURATION);
-            for (monster_iterator mi; mi; ++mi)
-            {
-                if (mi->type == MONS_SPIRIT_WOLF && mi->has_ench(ENCH_HAUNTING))
-                    mi->del_ench(ENCH_ABJ);
-            }
+            add_daction(DACT_END_SPIRIT_HOWL);
+            you.props["spirit_howl_cooldown"].get_int() =
+                you.elapsed_time + random_range(1500, 3000);
         }
     }
 
