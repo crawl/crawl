@@ -784,10 +784,7 @@ void you_teleport_now(bool allow_control, bool new_abyss_area,
         && (player_in_branch(BRANCH_LABYRINTH)
             || !player_in_branch(BRANCH_ABYSS) && player_in_a_dangerous_place()))
     {
-        if (player_in_branch(BRANCH_LABYRINTH) && you.species == SP_MINOTAUR)
-            xom_is_stimulated(100);
-        else
-            xom_is_stimulated(200);
+        xom_is_stimulated(200);
     }
 }
 
