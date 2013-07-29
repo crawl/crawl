@@ -3808,6 +3808,7 @@ enum daction_type
     DACT_SLIME_NEW_ATTEMPT,
 #endif
     DACT_KIRKE_HOGS,
+    DACT_END_SPIRIT_HOWL,
     NUM_DACTIONS,
 };
 
