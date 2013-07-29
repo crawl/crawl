@@ -2347,6 +2347,27 @@ static void _explosion(coord_def where, actor *agent, beam_type flavour,
     beam.explode(true, false);
 }
 
+// XXX: Only checks brands that can be rebranded to,
+// there's probably a nicer way of doing this.
+static bool _god_hates_brand(const int brand)
+{
+    if (is_good_god(you.religion)
+        && (brand == SPWPN_DRAINING
+            || brand == SPWPN_VAMPIRICISM
+            || brand == SPWPN_CHAOS))
+    {
+        return true;
+    }
+
+    if (you_worship(GOD_SHINING_ONE) && brand == SPWPN_VENOM)
+        return true;
+
+    if (you_worship(GOD_CHEIBRIADOS) && brand == SPWPN_CHAOS)
+        return true;
+
+    return false;
+}
+
 static void _rebrand_weapon(item_def& wpn)
 {
     const int old_brand = get_weapon_brand(wpn);
@@ -2369,7 +2390,7 @@ static void _rebrand_weapon(item_def& wpn)
     }
 
     // now try and find an appropriate brand
-    while (old_brand == new_brand || god_hates_item(wpn))
+    while (old_brand == new_brand || _god_hates_brand(new_brand))
     {
         if (is_range_weapon(wpn))
         {
@@ -2397,8 +2418,9 @@ static void _rebrand_weapon(item_def& wpn)
                                     3, SPWPN_CHAOS,
                                     0);
         }
-        set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
     }
+
+    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
 
     if (old_brand == SPWPN_DISTORTION)
     {
