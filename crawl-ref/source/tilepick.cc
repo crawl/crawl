@@ -4580,9 +4580,12 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch = TILE_CLOUD_COLD_0 + dur;
                 break;
 
-            case CLOUD_MEPHITIC:
             case CLOUD_POISON:
                 ch = TILE_CLOUD_POISON_0 + dur;
+                break;
+
+            case CLOUD_MEPHITIC:
+                ch = TILE_CLOUD_MEPHITIC_0 + dur;
                 break;
 
             case CLOUD_BLUE_SMOKE:
