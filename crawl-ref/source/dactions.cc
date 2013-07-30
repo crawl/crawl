@@ -24,7 +24,7 @@
 #include "travel.h"
 #include "view.h"
 
-static void _daction_hog_to_human(monster *mon);
+static void _daction_hog_to_human(monster *mon, bool in_transit);
 
 #ifdef DEBUG_DIAGNOSTICS
 static const char *daction_names[] =
@@ -158,8 +158,13 @@ void add_daction(daction_type act)
 
 }
 
-void apply_daction_to_mons(monster* mon, daction_type act, bool local)
+void apply_daction_to_mons(monster* mon, daction_type act, bool local,
+        bool in_transit)
 {
+    // Transiting monsters exist outside the normal monster list (env.mons or
+    // menv for short). Be careful not to write them into the monster grid, by,
+    // for example, calling monster::move_to_pos on them.
+    // See _daction_hog_to_human for an example.
     switch (act)
     {
         case DACT_ALLY_HOLY:
@@ -218,7 +223,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local)
             break;
 
         case DACT_KIRKE_HOGS:
-            _daction_hog_to_human(mon);
+            _daction_hog_to_human(mon, in_transit);
             break;
 
         // The other dactions do not affect monsters directly.
@@ -252,7 +257,7 @@ static void _apply_daction(daction_type act)
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))
-                apply_daction_to_mons(*mi, act, true);
+                apply_daction_to_mons(*mi, act, true, false);
         }
         break;
 
@@ -295,7 +300,7 @@ unsigned int query_da_counter(daction_type c)
     return travel_cache.query_da_counter(c) + count_daction_in_transit(c);
 }
 
-static void _daction_hog_to_human(monster *mon)
+static void _daction_hog_to_human(monster *mon, bool in_transit)
 {
     // Hogs to humans
     monster orig;
@@ -304,19 +309,21 @@ static void _daction_hog_to_human(monster *mon)
     // Was it a converted monster or original band member?
     if (mon->props.exists(ORIG_MONSTER_KEY))
     {
-        // Copy it, since the instance in props will get deleted
-        // as soon a **mi is assigned to.
+        // It was transformed into a pig. Copy it, since the instance in props
+        // will get deleted as soon a **mi is assigned to.
         orig = mon->props[ORIG_MONSTER_KEY].get_monster();
         orig.mid = mon->mid;
     }
     else
     {
+        // It started life as a pig in Kirke's band.
         orig.type     = MONS_HUMAN;
         orig.attitude = mon->attitude;
         orig.mid = mon->mid;
         define_monster(&orig);
     }
-    // Keep at same spot.
+    // Keep at same spot. This position is irrelevant if the hog is in transit.
+    // See below.
     const coord_def pos = mon->pos();
     // Preserve relative HP.
     const float hp
@@ -330,7 +337,16 @@ static void _daction_hog_to_human(monster *mon)
     // Restore original monster.
     *mon = orig;
 
-    mon->move_to_pos(pos);
+    // If the hog is in transit, then it is NOT stored in the normal
+    // monster list (env.mons or menv for short). We cannot call move_to_pos
+    // on such a hog, because move_to_pos will attempt to update the
+    // monster grid (env.mgrid or mgrd for short). Since the hog is not
+    // stored in the monster list, this will corrupt the grid. The transit code
+    // will update the grid properly once the transiting hog has been placed.
+    if (!in_transit)
+        mon->move_to_pos(pos);
+    // "else {mon->position = pos}" is unnecessary because the transit code will
+    // ignore the old position anyway.
     mon->enchantments = enchantments;
     mon->hit_points   = max(1, (int) (mon->max_hit_points * hp));
     mon->flags        = mon->flags | preserve_flags;
