@@ -323,7 +323,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     if (mon->props.exists(ORIG_MONSTER_KEY))
     {
         // It was transformed into a pig. Copy it, since the instance in props
-        // will get deleted as soon a **mi is assigned to.
+        // will get deleted as soon as **mi is assigned to.
         orig = mon->props[ORIG_MONSTER_KEY].get_monster();
         orig.mid = mon->mid;
     }
