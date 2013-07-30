@@ -3016,15 +3016,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
 
     case CARD_VENOM:
-        if (coinflip())
-        {
-            mprf("You have %s %s.", participle, card_name(which_card));
-            your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4), false);
-        }
-        else
-            _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
-        break;
-
     case CARD_VITRIOL:
     case CARD_FLAME:
     case CARD_FROST:
