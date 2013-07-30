@@ -370,22 +370,33 @@ static void _pre_refrigerate(actor* agent, bool player,
 {
     if (!affected_monsters.empty())
     {
-        counted_monster_list mons_list =
-            _counted_monster_list_from_vector(affected_monsters);
-        const string message =
-            make_stringf("%s %s frozen.",
-                         mons_list.describe().c_str(),
-                         mons_list.count() == 1? "is" : "are");
-        if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message.c_str());
-        else
+        // Filter out affected monsters that we don't know for sure are there
+        vector<monster*> seen_monsters;
+        for (unsigned int i = 0; i < affected_monsters.size(); ++i)
         {
-            // Exclamation mark to suggest that a lot of creatures were
-            // affected.
-            mprf("The monsters around %s are frozen!",
-                 agent && agent->is_monster() && you.can_see(agent)
-                 ? agent->as_monster()->name(DESC_THE).c_str()
-                 : "you");
+            if (you.can_see(affected_monsters[i]))
+                seen_monsters.push_back(affected_monsters[i]);
+        }
+
+        if (!seen_monsters.empty())
+        {
+            counted_monster_list mons_list =
+                _counted_monster_list_from_vector(seen_monsters);
+            const string message =
+                make_stringf("%s %s frozen.",
+                            mons_list.describe().c_str(),
+                            mons_list.count() == 1? "is" : "are");
+            if (strwidth(message) < get_number_of_cols() - 2)
+                mpr(message.c_str());
+            else
+            {
+                // Exclamation mark to suggest that a lot of creatures were
+                // affected.
+                mprf("The monsters around %s are frozen!",
+                    agent && agent->is_monster() && you.can_see(agent)
+                    ? agent->as_monster()->name(DESC_THE).c_str()
+                    : "you");
+            }
         }
     }
 }
@@ -599,7 +610,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     if (agent && agent->is_player())
     {
         ASSERT(actual);
-        targetter_los hitfunc(&you, LOS_SOLID);
+        targetter_los hitfunc(&you, LOS_NO_TRANS);
         {
             if (stop_attack_prompt(hitfunc, harm_msg, vul_hitfunc))
                 return SPRET_ABORT;
@@ -627,10 +638,10 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     bool affects_you = false;
     vector<monster *> affected_monsters;
 
-    for (actor_iterator ai(agent ? agent : &you); ai; ++ai)
+    for (actor_iterator ai(agent ? agent->get_los_no_trans()
+                                 : you.get_los_no_trans()); ai; ++ai)
     {
-        if (cell_see_cell(start_pos, ai->pos(), LOS_SOLID)
-            && (*vulnerable)(agent, *ai))
+        if ((*vulnerable)(agent, *ai))
         {
             if (ai->is_player())
                 affects_you = true;
@@ -2789,10 +2800,9 @@ void toxic_radiance_effect(actor* agent, int mult)
 
     bool break_sanctuary = (agent->is_player() && is_sanctuary(you.pos()));
 
-    for (actor_iterator ai(agent); ai; ++ai)
+    for (actor_iterator ai(agent->get_los_no_trans()); ai; ++ai)
     {
-        if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
-            && _toxic_can_affect(*ai))
+        if (_toxic_can_affect(*ai))
         {
             int dam = roll_dice(1, 3 + pow / 25) * mult
                       * 3 / (2 + ai->pos().distance_from(agent->pos()));
