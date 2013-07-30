@@ -607,7 +607,8 @@ string describe_mutations(bool center_title)
             result += "You can fly continuously.\n";
 
         ostringstream num;
-        num << 4 + you.experience_level * 3 / 5;
+        num << 2 + you.experience_level * 2 / 5
+                 + max(0, you.experience_level - 7) * 2 / 5;
         const string acstr = "Your stone body is very resilient (AC +"
                                  + num.str() + ").";
 
