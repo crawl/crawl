@@ -782,8 +782,6 @@ static void _get_randart_properties(const item_def &item,
             }
             power_level += 2;
         }
-        else if (one_chance_in(3))
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;
         else
             power_level++;
 
