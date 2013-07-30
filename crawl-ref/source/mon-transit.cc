@@ -115,7 +115,7 @@ m_transit_list *get_transit_list(const level_id &lid)
 void add_monster_to_transit(const level_id &lid, const monster& m)
 {
     m_transit_list &mlist = the_lost_ones[lid];
-    mlist.push_back(m);
+    mlist.push_back(follower(m));
 
     dprf("Monster in transit to %s: %s", lid.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());
@@ -255,7 +255,7 @@ void apply_daction_to_transit(daction_type act)
         {
             monster* mon = &j->mons;
             if (mons_matches_daction(mon, act))
-                apply_daction_to_mons(mon, act, false);
+                apply_daction_to_mons(mon, act, false, true);
         }
     }
 }
