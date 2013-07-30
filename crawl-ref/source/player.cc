@@ -6433,7 +6433,7 @@ int player::armour_class() const
                 AC += 200 + 100 * experience_level * 2 / 5     // max 20
                           + 100 * (max(0, experience_level - 7) * 2 / 5);
                 if (form == TRAN_STATUE)
-                    AC += 500 + skill(SK_EARTH_MAGIC, 50);
+                    AC += 1300 + skill(SK_EARTH_MAGIC, 50);
                 break;
 
             default:
@@ -6537,7 +6537,8 @@ int player::gdr_perc() const
     case TRAN_DRAGON:
         return 34; // base AC 8
     case TRAN_STATUE:
-        return 39; // like plate (AC 10)
+        return species == SP_GARGOYLE ? 62
+                                      : 39; // like plate (AC 10)
     case TRAN_TREE:
         return 48;
     default:
