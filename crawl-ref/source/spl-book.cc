@@ -549,6 +549,9 @@ bool you_cannot_memorise(spell_type spell, bool &form)
             form = true;
     }
 
+    if (you.species == SP_GARGOYLE && spell == SPELL_CURE_POISON)
+        rc = true, form = false;
+
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true, form = false;
 
