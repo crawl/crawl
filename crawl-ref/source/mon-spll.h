@@ -2147,9 +2147,9 @@
       {
        SPELL_PRIMAL_WAVE,
        SPELL_PRIMAL_WAVE,
-       SPELL_NO_SPELL,
        SPELL_WATER_ELEMENTALS,
-       SPELL_NO_SPELL,
+       SPELL_PRIMAL_WAVE,
+       SPELL_PRIMAL_WAVE,
        SPELL_NO_SPELL
       }
     },
