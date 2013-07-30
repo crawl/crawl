@@ -2650,7 +2650,8 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_GARGOYLE:
-        AC_change += 4 + you.experience_level * 3 / 5;
+        AC_change += 2 + you.experience_level * 2 / 5
+                       + max(0, you.experience_level - 7) * 2 / 5;
         break;
 
     default:

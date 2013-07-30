@@ -6430,7 +6430,8 @@ int player::armour_class() const
                 break;
 
             case SP_GARGOYLE:
-                AC += 400 + 100 * experience_level * 3 / 5;    // max 20
+                AC += 200 + 100 * experience_level * 2 / 5     // max 20
+                          + 100 * (max(0, experience_level - 7) * 2 / 5);
                 if (form == TRAN_STATUE)
                     AC += 500 + skill(SK_EARTH_MAGIC, 50);
                 break;
@@ -6549,7 +6550,12 @@ int player::gdr_perc() const
         return 0;
 
     const int body_base_AC = property(*body_armour, PARM_AC);
-    return 14 * sqrt(max(body_base_AC - 2, 0));
+    int gdr = 14 * sqrt(max(body_base_AC - 2, 0));
+
+    if (species == SP_GARGOYLE)
+        gdr += 24 - (gdr/6);
+
+    return gdr;
 }
 
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
