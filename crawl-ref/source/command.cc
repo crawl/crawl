@@ -1799,7 +1799,7 @@ help_highlighter::help_highlighter(string highlight_string) :
 
 int help_highlighter::entry_colour(const MenuEntry *entry) const
 {
-    return !pattern.empty() && pattern.matches(entry->text)? WHITE : -1;
+    return !pattern.empty() && pattern.matches(entry->text) ? WHITE : -1;
 }
 
 // To highlight species in aptitudes list. ('?%')
