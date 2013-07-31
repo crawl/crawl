@@ -33,6 +33,7 @@ zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE
 %rim 0
+zombie_ugly_thing MONS_ZOMBIE_UGLY_THING
 zombie_turtle MONS_ZOMBIE_TURTLE
 zombie_crab MONS_ZOMBIE_CRAB
 %rim 1
@@ -59,6 +60,7 @@ skeleton_hydra2
 skeleton_hydra3
 skeleton_hydra4
 skeleton_hydra5
+skeleton_ugly_thing MONS_SKELETON_UGLY_THING
 
 ## Simulacra
 %sdir mon/undead/simulacra
