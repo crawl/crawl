@@ -3873,9 +3873,12 @@ bool god_likes_spell(spell_type spell, god_type god)
     }
 }
 
-bool god_hates_spell(spell_type spell, god_type god)
+bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
 {
     if (is_good_god(god) && (is_unholy_spell(spell) || is_evil_spell(spell)))
+        return true;
+
+    if (god == GOD_TROG && !rod_spell)
         return true;
 
     unsigned int disciplines = get_spell_disciplines(spell);

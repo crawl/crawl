@@ -1203,7 +1203,7 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
 {
     // If your god hates the spell, that
     // overrides all other concerns
-    if (god_hates_spell(spell, you.religion))
+    if (god_hates_spell(spell, you.religion, rod_spell))
         return COL_FORBIDDEN;
 
     if (_spell_is_empowered(spell) && !rod_spell)
