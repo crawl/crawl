@@ -754,6 +754,8 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
         return TILEP_MONS_SKELETON_DRAGON;
     case TILEP_MONS_ZOMBIE_DRAKE:
         return TILEP_MONS_SKELETON_DRAKE;
+    case TILEP_MONS_ZOMBIE_UGLY_THING:
+        return TILEP_MONS_SKELETON_UGLY_THING;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -904,6 +906,11 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         else if (mons_genus(subtype) == MONS_OCTOPODE)
         {
             z_tile = TILEP_MONS_ZOMBIE_OCTOPODE;
+            break;
+        }
+        else if (mons_genus(subtype) == MONS_UGLY_THING)
+        {
+            z_tile = TILEP_MONS_ZOMBIE_UGLY_THING;
             break;
         }
     default:
