@@ -56,6 +56,7 @@ static const char *daction_names[] =
     "slimes allow another conversion attempt",
 #endif
     "hogs to humans",
+    "end spirit howl",
 };
 #endif
 
