@@ -516,8 +516,8 @@ bool noisy(int original_loudness, const coord_def& where,
                 noise_msg,
                 (scaled_loudness + 1) * 1000,
                 who,
-                0 | (mermaid? NF_MERMAID : 0)
-                | (message_if_unseen? NF_MESSAGE_IF_UNSEEN : 0)));
+                0 | (mermaid ? NF_MERMAID : 0)
+                | (message_if_unseen ? NF_MESSAGE_IF_UNSEEN : 0)));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means

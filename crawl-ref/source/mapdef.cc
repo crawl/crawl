@@ -4772,8 +4772,8 @@ item_spec item_list::parse_corpse_spec(item_spec &result, string s)
     const bool skeleton = !corpse && strip_suffix(s, "skeleton");
     const bool chunk = !corpse && !skeleton && strip_suffix(s, "chunk");
 
-    result.base_type = chunk? OBJ_FOOD : OBJ_CORPSES;
-    result.sub_type  = (chunk  ? static_cast<int>(FOOD_CHUNK) :
+    result.base_type = chunk ? OBJ_FOOD : OBJ_CORPSES;
+    result.sub_type  = (chunk ? static_cast<int>(FOOD_CHUNK) :
                         static_cast<int>(corpse ? CORPSE_BODY :
                                          CORPSE_SKELETON));
 

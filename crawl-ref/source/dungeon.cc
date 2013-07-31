@@ -3848,7 +3848,7 @@ static void _builder_monsters()
     // letting all the merfolk be generated in the middle of the
     // water.
     const dungeon_feature_type preferred_grid_feature =
-        in_shoals? DNGN_FLOOR : DNGN_UNSEEN;
+        in_shoals ? DNGN_FLOOR : DNGN_UNSEEN;
 
     dprf("_builder_monsters: Generating %d monsters", mon_wanted);
     for (int i = 0; i < mon_wanted; i++)
@@ -5615,7 +5615,7 @@ static void _place_spec_shop(const coord_def& where,
             else
             {
                 orb = items(1, _item_in_shop(env.shop[i].type), subtype, true,
-                             one_chance_in(4)? MAKE_GOOD_ITEM : item_level,
+                             one_chance_in(4) ? MAKE_GOOD_ITEM : item_level,
                              MAKE_ITEM_RANDOM_RACE);
             }
 

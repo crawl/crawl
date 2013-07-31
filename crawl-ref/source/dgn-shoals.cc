@@ -108,7 +108,7 @@ static int _shoals_feature_height(dungeon_feature_type feat)
     case DNGN_DEEP_WATER:
         return SHT_SHALLOW_WATER - 1;
     default:
-        return feat_is_solid(feat)? SHT_ROCK : SHT_FLOOR;
+        return feat_is_solid(feat) ? SHT_ROCK : SHT_FLOOR;
     }
 }
 
@@ -1008,7 +1008,7 @@ static tide_direction _shoals_feature_tide_height_change(
         _shoals_feature_height(newfeat) - _shoals_feature_height(oldfeat);
     // If the apparent height of the new feature is greater (floor vs water),
     // the tide is receding.
-    return height_delta < 0? TIDE_RISING : TIDE_FALLING;
+    return height_delta < 0 ? TIDE_RISING : TIDE_FALLING;
 }
 
 static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)

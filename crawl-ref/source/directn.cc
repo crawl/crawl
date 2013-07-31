@@ -2539,7 +2539,7 @@ static int _next_los(int dir, int los, bool wrap)
         //    so we can go back to the first item in LOS. Unless we set
         //    fliphv, we can't flip from hidden to visible.
         //
-        los = flipvh? LS_FLIPHV : LS_FLIPVH;
+        los = flipvh ? LS_FLIPHV : LS_FLIPVH;
     }
     else
     {
@@ -2553,7 +2553,7 @@ static int _next_los(int dir, int los, bool wrap)
             return LS_NONE;
     }
 
-    los = (los & ~LS_VISMASK) | (vis? LS_HIDDEN : LS_VISIBLE);
+    los = (los & ~LS_VISMASK) | (vis ? LS_HIDDEN : LS_VISIBLE);
     return los;
 }
 

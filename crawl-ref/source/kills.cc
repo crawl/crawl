@@ -102,9 +102,9 @@ void KillMaster::load(reader& inf)
 void KillMaster::record_kill(const monster* mon, int killer, bool ispet)
 {
     const kill_category kc =
-        YOU_KILL(killer)? KC_YOU :
-        ispet?            KC_FRIENDLY :
-                          KC_OTHER;
+        YOU_KILL(killer) ? KC_YOU :
+        ispet            ? KC_FRIENDLY :
+                           KC_OTHER;
     categorized_kills[kc].record_kill(mon);
 }
 

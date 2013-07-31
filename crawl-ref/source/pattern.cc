@@ -23,7 +23,7 @@ static void *_compile_pattern(const char *pattern, bool icase)
 {
     const char *error;
     int erroffset;
-    int flags = icase? PCRE_CASELESS : 0;
+    int flags = icase ? PCRE_CASELESS : 0;
     return pcre_compile(pattern,
                         flags,
                         &error,
