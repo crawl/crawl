@@ -552,7 +552,6 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
                                  bool actual, bool added_effects, bool fail)
 {
     monster* mons = agent ? agent->as_monster() : NULL;
-    coord_def start_pos = agent ? agent->pos() : you.pos();
 
     colour_t flash_colour = BLACK;
     string player_msg, global_msg, mons_vis_msg, mons_invis_msg,
