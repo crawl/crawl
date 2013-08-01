@@ -406,10 +406,6 @@ A staircase to the Orcish Mines
 Une entrée pour les mines des orcs, remplies de leur or mais, traitresses où on
 peut se faire piéger facilement.
 %%%%
-A staircase to the Dwarven Hall
-
-Un entrée au magnifique hall des nains. Vous sentez une odeur de bière.
-%%%%
 A staircase to the Enchanted Forest
 
 De l'autre coté de ces escaliers se trouve les bois qui abritent les spriggans,
@@ -914,11 +910,6 @@ qui coule à l'intérieur.
 A glass window
 
 Une indicible fenêtre d'un verre ultra-résistant.
-%%%%
-A granite statue of a fallen hero
-
-Un statue de nain, à taille réelle, garde ce hall. Je ne pouvais vous empêcher
-de penser qu'elle vous regarde.
 %%%%
 An elephant-shaped statue
 

@@ -553,8 +553,8 @@ default-depth:
 
 NAME: grunt_profane_halls
 TAGS: no_monster_gen
-PLACE: D:27
-DEPTH: D:21-27
+PLACE: D:$
+DEPTH: D:21-
 ORIENT: encompass
 SHUFFLE: {[(<
 : if you.absdepth() == 27 then
@@ -1320,8 +1320,8 @@ default-depth:
 
 NAME: grunt_runaround
 TAGS: no_monster_gen
-PLACE: D:27
-DEPTH: D:16-27
+PLACE: D:$
+DEPTH: D:16-
 ORIENT: encompass
 SUBVAULT: B : grunt_runaround_doors_1
 SUBVAULT: C : grunt_runaround_doors_2
@@ -1653,8 +1653,8 @@ ENDMAP
 NAME:    hangedman_pleasuredromes
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  encompass
-PLACE:   D:27
-DEPTH:   D:16-27
+PLACE:   D:$
+DEPTH:   D:16-
 MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
          mottled dragon / swamp drake w:3 / boulder beetle w:5 / \
          red wasp / tarantella w:2 / redback w:3 / wolf spider / \

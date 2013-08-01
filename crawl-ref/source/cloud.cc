@@ -49,8 +49,10 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
 
     switch (type)
     {
+#if TAG_MAJOR_VERSION == 34
     case CLOUD_GLOOM:
         return 50;
+#endif
     case CLOUD_STEAM:
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLACK_SMOKE:
@@ -77,7 +79,9 @@ static beam_type _cloud2beam(cloud_type flavour)
     case CLOUD_STEAM:        return BEAM_STEAM;
     case CLOUD_MIASMA:       return BEAM_MIASMA;
     case CLOUD_CHAOS:        return BEAM_CHAOS;
+#if TAG_MAJOR_VERSION == 34
     case CLOUD_GLOOM:        return BEAM_GLOOM;
+#endif
     case CLOUD_INK:          return BEAM_INK;
     case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
     case CLOUD_PETRIFY:      return BEAM_PETRIFYING_CLOUD;
@@ -351,29 +355,6 @@ void manage_clouds()
         // Ink cloud doesn't appear outside of water.
         else if (cloud.type == CLOUD_INK && !feat_is_watery(grd(cloud.pos)))
             dissipate *= 40;
-        else if (cloud.type == CLOUD_GLOOM)
-        {
-            int count = 0;
-            for (adjacent_iterator ai(cloud.pos); ai; ++ai)
-            {
-                if (env.cgrid(*ai) != EMPTY_CLOUD
-                    && env.cloud[env.cgrid(*ai)].type == CLOUD_GLOOM)
-                {
-                        count++;
-                }
-            }
-
-            if (!umbraed(cloud.pos) && haloed(cloud.pos)
-                && !silenced(cloud.pos))
-            {
-                count = 0;
-            }
-
-            if (count < 4)
-                dissipate *= 50;
-            else
-                dissipate /= 20;
-        }
         else if (cloud.type == CLOUD_GHOSTLY_FLAME)
             _handle_ghostly_flame(cloud);
 
@@ -782,7 +763,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     const bool player = act->is_player();
 
     if (!player
-        && you.religion == GOD_FEDHAS
+        && you_worship(GOD_FEDHAS)
         && fedhas_protects(act->as_monster())
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act->as_monster()->friendly() || act->as_monster()->neutral()))
@@ -983,7 +964,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
             }
             else if (mons->malmutate("mutagenic cloud"))
             {
-                if (you.religion == GOD_ZIN && cloud.whose == KC_YOU)
+                if (you_worship(GOD_ZIN) && cloud.whose == KC_YOU)
                     did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
                 return true;
             }
@@ -1016,7 +997,7 @@ static int _actor_cloud_base_damage(actor *act,
 
     const int cloud_raw_base_damage =
         _cloud_base_damage(act, cloud, maximum_damage);
-    const int cloud_base_damage = (resist == MAG_IMMUNE?
+    const int cloud_base_damage = (resist == MAG_IMMUNE ?
                                    0 : cloud_raw_base_damage);
     return cloud_base_damage;
 }
@@ -1191,7 +1172,9 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_TLOC_ENERGY:
     case CLOUD_MAGIC_TRAIL:
     case CLOUD_DUST_TRAIL:
+#if TAG_MAJOR_VERSION == 34
     case CLOUD_GLOOM:
+#endif
     case CLOUD_INK:
     case CLOUD_DEBUGGING:
         return true;
@@ -1230,7 +1213,11 @@ static const char *_terse_cloud_names[] =
     "flame", "noxious fumes", "freezing vapour", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
-    "steam", "gloom", "ink",
+    "steam",
+#if TAG_MAJOR_VERSION == 34
+    "gloom",
+#endif
+    "ink",
     "calcifying dust",
     "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
@@ -1244,7 +1231,11 @@ static const char *_verbose_cloud_names[] =
     "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
-    "a cloud of scalding steam", "thick gloom", "ink",
+    "a cloud of scalding steam",
+#if TAG_MAJOR_VERSION == 34
+    "thick gloom",
+#endif
+    "ink",
     "calcifying dust",
     "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
     "mutagenic fog", "magical condensation", "raging winds",
@@ -1411,7 +1402,9 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_TLOC_ENERGY:
+#if TAG_MAJOR_VERSION == 34
     case CLOUD_GLOOM:
+#endif
         which_colour = MAGENTA;
         break;
 

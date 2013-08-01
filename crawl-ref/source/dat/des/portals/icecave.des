@@ -216,7 +216,7 @@ function ice_cave_caverns_undead_demon_loot(e)
   e.item("book of ice / book of unlife / staff of cold / staff of death / \
           randbook disc:ice disc2:necromancy numspells:6 w:2 / nothing w:30")
   e.item("ring of ice / ring of protection from cold / \
-          ring of life protection / wand of cold / wand of draining / \
+          ring of positive energy / wand of cold / wand of draining / \
           any ring w:1 / any wand w:1 / nothing")
 end
 
@@ -309,7 +309,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-19, Lair:6-8, Orc:4, Elf
+DEPTH:  D:14-19, Lair:6-, Orc:$, Elf
 : ice_cave_portal(_G)
 MONS:   wolf / yak / nothing w:1
 MONS:   yak / polar bear w:5 / nothing w:1

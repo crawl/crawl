@@ -36,14 +36,6 @@ passers-by should be aware of the legendary magical prowess of this species.
 
 The Elven Halls are three levels deep.
 %%%%
-Dwarven Hall
-
-These halls of finely worked stone are the dwelling of the Deep Dwarves. Their
-fine metalworking skills allowed them to forge plenty weapons for use against
-the likes of you.
-
-It is but a single level.
-%%%%
 Lair
 
 Most adventurers find the Lair of Beasts to be an exciting change of climate.

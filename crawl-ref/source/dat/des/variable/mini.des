@@ -4,7 +4,7 @@
 #           vaults without any ORIENT line. General vaults with ORIENT lines
 #           are stored in either float.des or large.des. For specific branch
 #           vaults or altars, there are separate files. In particular, maps
-#           maps dealing with the Vaults branch system, including Vaults:8,
+#           maps dealing with the Vaults branch system, including Vaults:$,
 #           reside in vaults.des.
 #
 # mini.des:          this file: general notes for minivault makers

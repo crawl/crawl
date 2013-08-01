@@ -170,7 +170,7 @@ static int _abyssal_rune_roll()
     if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
     const bool lugonu_favoured =
-        (you.religion == GOD_LUGONU && !player_under_penance()
+        (you_worship(GOD_LUGONU) && !player_under_penance()
          && you.piety >= piety_breakpoint(4));
 
     const double depth = you.depth + lugonu_favoured;
@@ -654,6 +654,8 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     remove_markers_and_listeners_at(p);
 
     env.map_knowledge(p).clear();
+    if (env.map_forgotten.get())
+        (*env.map_forgotten.get())(p).clear();
     StashTrack.update_stash(p);
 }
 
@@ -996,7 +998,7 @@ const static ProceduralLayout* regularLayouts[] =
     &diamond30, &diamond21, &column2, &column26,
 };
 const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
-    regularLayouts + 5);
+    regularLayouts + ARRAYSZ(regularLayouts));
 const static WorleyLayout worleyL(123456, layout_vec);
 const static RoilingChaosLayout chaosA(8675309, 450);
 const static RoilingChaosLayout chaosB(7654321, 400);
@@ -1007,10 +1009,12 @@ const static ProceduralLayout* mixedLayouts[] =
 {
     &chaosA, &worleyL, &chaosB, &chaosC, &chaosD, &newAbyssLayout,
 };
-const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
+const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts,
+    mixedLayouts + ARRAYSZ(mixedLayouts));
 const static WorleyLayout layout(4321, mixed_vec);
 const static ProceduralLayout* baseLayouts[] = { &newAbyssLayout, &layout };
-const static vector<const ProceduralLayout*> base_vec(baseLayouts, baseLayouts + 2);
+const static vector<const ProceduralLayout*> base_vec(baseLayouts,
+    baseLayouts + ARRAYSZ(baseLayouts));
 const static WorleyLayout baseLayout(314159, base_vec, 5.0);
 const static RiverLayout rivers(1800, baseLayout);
 // This one is not fixed: [0] is a level pulled from the current game
@@ -1156,7 +1160,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
 static int _abyssal_stair_chance()
 {
-    return (you.char_direction == GDT_GAME_START ? 0 : 3500 - (200 * you.depth / 3));
+    return (you.char_direction == GDT_GAME_START ? 0 : 2800 - (200 * you.depth / 3));
 }
 
 static void _nuke_all_terrain(bool vaults)
@@ -1177,7 +1181,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                             : 7500 - 1250 * (you.depth - 1);
 
     // Except for the altar on the starting position, don't place any altars.
-    const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;
+    const int altar_chance = you.char_direction != GDT_GAME_START ? 10000 : 0;
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
@@ -1513,7 +1517,7 @@ retry:
 static void _increase_depth()
 {
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
-    if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
+    if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
         delta *= 2;
     if (you.duration[DUR_TELEPORT])
         delta *= 5;

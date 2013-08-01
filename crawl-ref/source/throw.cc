@@ -708,7 +708,6 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         return false;
 
     const coord_def oldpos = victim->pos();
-    victim->clear_clinging();
 
     if (victim->is_player())
     {
@@ -871,7 +870,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, special_missile_type type,
         chance += wp->plus * 4;
         chance = min(95, chance);
 
-        if (type == SPMSL_RAGE)
+        if (type == SPMSL_FRENZY)
             chance = chance / 2;
         else if (type == SPMSL_PARALYSIS || type == SPMSL_SLEEP)
             chance = chance * 4 / 5;
@@ -975,11 +974,11 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim, SPMSL_RAGE))
+    if (!_blowgun_check(beam, victim, SPMSL_FRENZY))
         return false;
 
     if (victim->is_monster())
-        victim->as_monster()->go_frenzy();
+        victim->as_monster()->go_frenzy(beam.agent());
     else
         victim->go_berserk(false);
 
@@ -1139,7 +1138,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 #if TAG_MAJOR_VERSION == 34
     const bool sickness     = ammo_brand == SPMSL_SICKNESS;
 #endif
-    const bool rage         = ammo_brand == SPMSL_RAGE;
+    const bool rage         = ammo_brand == SPMSL_FRENZY;
     const bool blinding     = ammo_brand == SPMSL_BLINDING;
 
     ASSERT(!exploding || !is_artefact(item));
@@ -1878,7 +1877,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             if (get_equip_race(item) == ISFLAG_DWARVEN
                    && you.species == SP_DEEP_DWARF
                 || get_equip_race(item) == ISFLAG_ORCISH
-                   && you.species == SP_HILL_ORC)
+                   && player_genus(GENPC_ORCISH))
             {
                 baseDam++;
             }
@@ -2071,7 +2070,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (bow_brand == SPWPN_SPEED)
         did_god_conduct(DID_HASTY, 1, true);
 
-    if (ammo_brand == SPMSL_RAGE)
+    if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
 
     if (did_return)

@@ -119,7 +119,7 @@ function hyper.paint.map_to_unit(x,y,item)
   local sx,sy = item.corner2.x - item.corner1.x,item.corner2.y - item.corner1.y
 
   -- Slightly scale down the input grid to add 0.5 squares padding on all sides. This should solve accuracy errors
-  -- we otherwise get at the edges of shapes from attempting to draw a continous geometric shape onto a discrete grid.
+  -- we otherwise get at the edges of shapes from attempting to draw a continuous geometric shape onto a discrete grid.
   local rx,ry = (x - item.corner1.x) * (sx-1)/sx + 0.5,(y - item.corner1.y) * (sy-1)/sy + 0.5
 
   -- Finally map onto the unit square
@@ -136,7 +136,7 @@ function hyper.paint.inside_oval(x,y,item)
   return (math.pow(ax * 2 - 1,2) + math.pow(ay * 2 - 1,2)) <= 1
 end
 
--- Determine if a point is inside a simple trapese
+-- Determine if a point is inside a simple trapeze
 -- TODO: Handle rotation and allow offsetting the top and bottom on the x axis for more complex shapes
 function hyper.paint.inside_trapese(x,y,item)
 

@@ -667,7 +667,7 @@ static void _sdump_location(dump_params &par)
 static void _sdump_religion(dump_params &par)
 {
     string &text(par.text);
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
     {
         if (par.se)
             text += "You worshipped ";
@@ -676,7 +676,7 @@ static void _sdump_religion(dump_params &par)
         text += god_name(you.religion);
         text += ".\n";
 
-        if (you.religion != GOD_XOM)
+        if (!you_worship(GOD_XOM))
         {
             if (!player_under_penance())
             {

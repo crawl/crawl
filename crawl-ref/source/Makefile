@@ -1082,7 +1082,7 @@ GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/cr
 GENERATED_HEADERS := art-enum.h config.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
-                   cmd-name.h $(INI_OBJECTS)
+                   cmd-name.h
 
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
@@ -1655,9 +1655,14 @@ android:
 TESTS=test woken_rest unwoken_rest fireworks cerebov pan_lords miscasts kraken
 test: $(foreach i, $(TESTS), test-$(i))
 
-test-%: $(GAME) util/fake_pty
+test-%: $(GAME) util/fake_pty builddb
 	util/fake_pty test/stress/run $*
 	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c
 	$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil
+
+# Should be not needed, but the race condition in bug #6509 is hard to fix.
+builddb: $(GAME)
+	./$(GAME) --builddb
+.PHONY: builddb

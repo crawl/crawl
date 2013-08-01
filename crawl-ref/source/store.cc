@@ -1440,7 +1440,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 {
 #ifdef ASSERTS
     if (!hash_map)
-        die("trying to read non-existant property \"%s\"", key.c_str());
+        die("trying to read non-existent property \"%s\"", key.c_str());
 #endif
     ASSERT_VALIDITY();
 
@@ -1449,7 +1449,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 
 #ifdef ASSERTS
     if (i == hash_map->end())
-        die("trying to read non-existant property \"%s\"", key.c_str());
+        die("trying to read non-existent property \"%s\"", key.c_str());
 #endif
     ASSERT(i->second.type != SV_NONE);
     ASSERT(!(i->second.flags & SFLAG_UNSET));

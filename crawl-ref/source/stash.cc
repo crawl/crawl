@@ -2116,7 +2116,7 @@ void StashTracker::update_corpses()
 
 void StashTracker::update_identification()
 {
-    if (you.religion != GOD_ASHENZARI)
+    if (!you_worship(GOD_ASHENZARI))
         return;
 
     for (stash_levels_t::iterator iter = levels.begin();

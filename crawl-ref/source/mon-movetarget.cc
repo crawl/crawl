@@ -61,10 +61,6 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         if (mons_primary_habitat(m) != habit)
             continue;
 
-        // Wall clinging monsters use different pathfinding.
-        if (mon->can_cling_to_walls() != m->can_cling_to_walls())
-            continue;
-
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
         if (!flies && mons_flies(m)
@@ -175,13 +171,9 @@ bool try_pathfind(monster* mon)
 
     // If the target is "unreachable" (the monster already tried,
     // and failed, to find a path), there's a chance of trying again.
-    // The chance is higher for wall clinging monsters to help them avoid
-    // shallow water. Retreating monsters retry every turn.
-    if (target_is_unreachable(mon) && !one_chance_in(12)
-        && !(mon->can_cling_to_walls() && one_chance_in(4)))
-    {
+    // Retreating monsters retry every turn.
+    if (target_is_unreachable(mon) && !one_chance_in(12))
         return false;
-    }
 
 #ifdef DEBUG_PATHFIND
     mprf("%s: Player out of reach! What now?",

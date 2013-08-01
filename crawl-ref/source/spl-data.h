@@ -99,19 +99,6 @@ struct spell_desc
 },
 
 {
-    SPELL_STRIKING, "Striking",
-     0,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE, // rod of striking
-     1,
-     50,
-     5, 5,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_CONJURE_FLAME, "Conjure Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_GRID | SPFLAG_NOT_SELF,
@@ -1374,7 +1361,7 @@ struct spell_desc
 
 {
     SPELL_DRAGON_FORM, "Dragon Form",
-     SPTYP_FIRE | SPTYP_TRANSMUTATION,
+     SPTYP_TRANSMUTATION,
      SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
      7,
      200,
@@ -1915,7 +1902,7 @@ struct spell_desc
      SPTYP_CONJURATION | SPTYP_HEXES,
      SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
      5,
-     100,
+     200,
      5, 5,
      0,
      NULL,
@@ -2788,7 +2775,7 @@ struct spell_desc
 {
     SPELL_MELEE, "melee",
      0,
-     SPFLAG_TESTING,
+     SPFLAG_BATTLE,
      1,
      0,
      -1, -1,
@@ -2971,9 +2958,9 @@ struct spell_desc
     SPELL_FORCE_LANCE, "Force Lance",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
-     2,
-     50,
-     3, 3,
+     5,
+     100,
+     4, 4,
      0,
      NULL,
      true,
@@ -3219,7 +3206,7 @@ struct spell_desc
     SPELL_SONG_OF_SHIELDING, "Song of Shielding",
      SPTYP_CHARMS,
      SPFLAG_BATTLE,
-     5,
+     4,
      100,
      -1, -1,
      0,
@@ -3239,6 +3226,58 @@ struct spell_desc
      NULL,
      false,
      true
+},
+
+{
+    SPELL_SUMMON_VERMIN, "Summon Vermin",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MALIGN_OFFERING, "Malign Offering",
+     SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_SEARING_RAY, "Searing Ray",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     2,
+     50,
+     4, 4,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_DISCORD, "Discord",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_HASTY,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
 },
 
 {

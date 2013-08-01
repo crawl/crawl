@@ -274,7 +274,6 @@ bool mons_class_is_zombified(monster_type mc);
 bool mons_class_is_hybrid(monster_type mc);
 bool mons_class_is_chimeric(monster_type mc);
 bool mons_class_is_jumpy(monster_type mc);
-bool mons_class_is_clingy(monster_type mc);
 bool mons_class_is_animated_weapon(monster_type type);
 bool mons_class_has_base_type(monster_type mc);
 monster_type mons_base_type(const monster* mon);
@@ -325,7 +324,6 @@ mon_attitude_type mons_attitude(const monster* m);
 
 bool mons_foe_is_mons(const monster* mons);
 
-bool mons_behaviour_perceptible(const monster* mon);
 bool mons_is_native_in_branch(const monster* mons,
                               const branch_type branch = you.where_are_you);
 bool mons_is_poisoner(const monster* mon);
@@ -381,7 +379,6 @@ bool mons_is_projectile(monster_type mc);
 bool mons_is_projectile(const monster* mon);
 bool mons_is_boulder(const monster* mon);
 bool mons_is_jumpy(const monster* mon);
-bool mons_can_cling_to_walls(const monster* mon);
 bool mons_is_object(monster_type mc);
 bool mons_has_blood(monster_type mc);
 bool mons_is_sensed(monster_type mc);
@@ -446,7 +443,6 @@ monster* mons_get_parent_monster(monster* mons);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
-void check_clinging();
 monster_type mons_tentacle_parent_type(const monster* mons);
 monster_type mons_tentacle_child_type(const monster* mons);
 bool mons_tentacle_adjacent(const monster* parent, const monster* child);

@@ -1891,7 +1891,7 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
 // through food::_determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(item_def& food)
 {
-    const bool cannibal  = is_player_same_species(food.mon_type);
+    const bool cannibal  = is_player_same_genus(food.mon_type);
     const int intel      = mons_class_intel(food.mon_type) - I_ANIMAL;
     const bool rotten    = food_is_rotten(food);
     const bool orc       = (mons_genus(food.mon_type) == MONS_ORC);
@@ -2404,7 +2404,7 @@ bool is_forbidden_food(const item_def &food)
 
     // Some gods frown upon cannibalistic behaviour.
     if (god_hates_cannibalism(you.religion)
-        && is_player_same_species(food.mon_type))
+        && is_player_same_genus(food.mon_type))
     {
         return true;
     }
@@ -2417,7 +2417,7 @@ bool is_forbidden_food(const item_def &food)
     }
 
     // Zin doesn't like it if you eat beings with a soul.
-    if (you.religion == GOD_ZIN && mons_class_intel(food.mon_type) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && mons_class_intel(food.mon_type) >= I_NORMAL)
         return true;
 
     // Everything else is allowed.
@@ -2530,6 +2530,9 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                     return false;
 
                 if (ur_chunkslover)
+                    return true;
+
+                if (you_min_hunger() == you_max_hunger())
                     return true;
 
                 if (!suppress_msg)
@@ -2765,7 +2768,7 @@ void handle_starvation()
             stop_running();
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
-            if (you.religion == GOD_XOM)
+            if (you_worship(GOD_XOM))
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
@@ -2811,7 +2814,7 @@ static int _chunks_needed()
     int appetite = player_hunger_rate(false);
     hunger += appetite * FRESHEST_CORPSE * 2;
 
-    bool channeling = you.religion == GOD_SIF_MUNA;
+    bool channeling = you_worship(GOD_SIF_MUNA);
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].defined()

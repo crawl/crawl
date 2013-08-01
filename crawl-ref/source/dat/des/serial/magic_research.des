@@ -16,7 +16,7 @@
 # Schools not covered: Charms, Conjurations. Too little to work with right now.
 # Other magic concepts might be interesting; additions are always welcome!
 
-default-depth: D:18-27, Vaults:1-4, Elf:1-2
+default-depth: D:18-, Vaults:1-4, Elf:1-2
 
 {{
 function init_research(e)

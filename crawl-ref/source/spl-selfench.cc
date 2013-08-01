@@ -16,6 +16,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "religion.h"
 #include "shout.h"
 #include "spl-cast.h"
 #include "spl-transloc.h"
@@ -28,7 +29,7 @@ int allowed_deaths_door_hp(void)
 {
     int hp = you.skill(SK_NECROMANCY) / 2;
 
-    if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
+    if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance())
         hp += you.piety / 15;
 
     return max(hp, 1);
@@ -311,15 +312,7 @@ int cast_selective_amnesia(string *pre_msg)
     if (pre_msg)
         mpr(pre_msg->c_str());
 
-    const int ep_gain = spell_mana(spell);
     del_spell_from_memory_by_slot(slot);
-
-    if (ep_gain > 0)
-    {
-        inc_mp(ep_gain);
-        mpr("The spell releases its latent energy back to you as "
-            "it unravels.");
-    }
 
     return 1;
 }

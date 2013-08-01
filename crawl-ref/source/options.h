@@ -99,7 +99,7 @@ public:
     int         line_num;     // Current line number being processed.
 
     // View options
-    vector<feature_override> feature_overrides;
+    map<dungeon_feature_type, feature_def> feature_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
     vector<pair<string, cglyph_t> > item_glyph_overrides;

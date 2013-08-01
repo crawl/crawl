@@ -599,6 +599,25 @@ string describe_mutations(bool center_title)
         break;
     }
 
+    case SP_GARGOYLE:
+    {
+        result += "You are resistant to torment.\n";
+        result += "You are immune to poison.\n";
+        if (you.experience_level >= 14)
+            result += "You can fly continuously.\n";
+
+        ostringstream num;
+        num << 2 + you.experience_level * 2 / 5
+                 + max(0, you.experience_level - 7) * 2 / 5;
+        const string acstr = "Your stone body is very resilient (AC +"
+                                 + num.str() + ").";
+
+        result += _annotate_form_based(acstr, player_is_shapechanged()
+                                              && you.form != TRAN_STATUE);
+        break;
+    }
+
+
     default:
         break;
     }
@@ -1314,9 +1333,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
         return true;
 
-    // Only Draconians can get wings.
-    if (!player_genus(GENPC_DRACONIAN) && mutat == MUT_BIG_WINGS)
+    // Only Draconians (and gargoyles) can get wings.
+    if (!player_genus(GENPC_DRACONIAN) && you.species != SP_GARGOYLE
+        && mutat == MUT_BIG_WINGS)
+    {
         return true;
+    }
 
     // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
@@ -1350,6 +1372,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     {
         return true;
     }
+
+    // Already immune.
+    if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
+        return true;
 
     equipment_type eq_type = EQ_NONE;
 
@@ -1408,7 +1434,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
-static bool _undead_rot(bool is_beneficial_mutation)
+bool undead_mutation_rot(bool is_beneficial_mutation)
 {
     if (you.is_undead == US_SEMI_UNDEAD)
     {
@@ -1476,7 +1502,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         // Zin's protection.
-        if (you.religion == GOD_ZIN
+        if (you_worship(GOD_ZIN)
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
@@ -1487,7 +1513,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (_undead_rot(beneficial) && !demonspawn)
+    if (undead_mutation_rot(beneficial) && !demonspawn)
     {
         if (no_rot)
             return false;
@@ -1691,17 +1717,12 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
         break;
 
-    case MUT_ACUTE_VISION:
-        // We might have to turn autopickup back on again.
-        autotoggle_autopickup(false);
-        break;
-
     case MUT_NIGHTSTALKER:
         update_vision_range();
         break;
 
     case MUT_DEMONIC_GUARDIAN:
-        if (you.religion == GOD_OKAWARU)
+        if (you_worship(GOD_OKAWARU))
         {
             mpr("Your demonic guardian will not assist you as long as you "
                 "worship Okawaru.", MSGCH_MUTATION);
@@ -1710,6 +1731,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     default:
         break;
+    }
+
+    // We might have to turn autopickup back on again.
+    if (mutat == MUT_ACUTE_VISION
+        || (mutat == MUT_ANTENNAE && you.mutation[mutat] >= 3))
+    {
+        autotoggle_autopickup(false);
     }
 
     // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
@@ -1842,7 +1870,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
         }
 
-        if (_undead_rot(false))
+        if (undead_mutation_rot(false))
             return false;
     }
 
@@ -2475,7 +2503,7 @@ static bool _balance_demonic_guardian()
 void check_demonic_guardian()
 {
     // Don't spawn guardians with Oka, they're a huge pain.
-    if (you.religion == GOD_OKAWARU)
+    if (you_worship(GOD_OKAWARU))
         return;
 
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
@@ -2523,7 +2551,7 @@ void check_demonic_guardian()
 void check_antennae_detect()
 {
     int radius = player_mutation_level(MUT_ANTENNAE) * 2;
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         radius = max(radius, you.piety / 20);
     if (radius <= 0)
         return;
@@ -2556,7 +2584,7 @@ void check_antennae_detect()
 
                 if (mon->friendly())
                     mc = MONS_SENSED_FRIENDLY;
-                else if (you.religion == GOD_ASHENZARI
+                else if (you_worship(GOD_ASHENZARI)
                          && !player_under_penance())
                 {
                     mc = ash_monster_tier(mon);

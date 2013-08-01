@@ -428,7 +428,7 @@ bool mons_speaks(monster* mons)
         }
 
         // Berserk monsters just want your hide.
-        if (mons->berserk())
+        if (mons->berserk_or_insane())
             return false;
 
         // Rolling beetles shouldn't twitch antennae
@@ -484,8 +484,8 @@ bool mons_speaks(monster* mons)
     {
         // Animals only look at the current player form, smart monsters at the
         // actual player genus.
-        if (is_player_same_species(mons->type,
-                                   mons_intel(mons) <= I_ANIMAL))
+        if (is_player_same_genus(mons->type,
+                                 mons_intel(mons) <= I_ANIMAL))
         {
             prefixes.push_back("related"); // maybe overkill for Beogh?
         }
@@ -504,9 +504,9 @@ bool mons_speaks(monster* mons)
                                            : you.religion;
 
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
-    // worship Beogh. (This assumes your being a Hill Orc, so might have odd
+    // worship Beogh. (This assumes your being an orc, so might have odd
     // results in wizard mode.) Don't count charmed or summoned orcs.
-    if (you.religion == GOD_BEOGH && mons_genus(mons->type) == MONS_ORC)
+    if (you_worship(GOD_BEOGH) && mons_genus(mons->type) == MONS_ORC)
     {
         if (!mons->has_ench(ENCH_CHARM) && !mons->is_summoned())
         {

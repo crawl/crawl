@@ -69,7 +69,7 @@ monster::monster()
       patrol_point(), travel_target(MTRAV_NONE), inv(NON_ITEM), spells(),
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
-      number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
+      number(0), colour(BLACK), foe_memory(0),
       god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
 
 {
@@ -78,6 +78,7 @@ monster::monster()
     props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
+    shield_blocks = 0;
 
     constricting = 0;
 
@@ -109,7 +110,9 @@ void monster::reset()
     ench_cache.reset();
     ench_countdown = 0;
     inv.init(NON_ITEM);
+    spells.init(SPELL_NO_SPELL);
 
+    mid             = 0;
     flags           = 0;
     experience      = 0;
     type            = MONS_NO_MONSTER;
@@ -126,8 +129,12 @@ void monster::reset()
     number          = 0;
     damage_friendly = 0;
     damage_total    = 0;
+    shield_blocks   = 0;
+    foe_memory      = 0;
+    god             = GOD_NO_GOD;
 
     mons_remove_from_grid(this);
+    target.reset();
     position.reset();
     firing_pos.reset();
     patrol_point.reset();
@@ -141,6 +148,10 @@ void monster::reset()
     ASSERT(!constricting);
 
     client_id = 0;
+
+    // Just for completeness.
+    speed           = 0;
+    colour          = 0;
 }
 
 void monster::init_with(const monster& mon)
@@ -636,10 +647,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 
         // Draconians won't use dragon slaying weapons.
         if (brand == SPWPN_DRAGON_SLAYING && is_dragonkind(this))
-            return false;
-
-        // Orcs won't use orc slaying weapons.
-        if (brand == SPWPN_ORC_SLAYING && is_orckind(this))
             return false;
 
         // Undead and demonic monsters and monsters that are
@@ -2460,7 +2467,7 @@ item_def *monster::mslot_item(mon_inv_type mslot) const
     return (mi == NON_ITEM ? NULL : &mitm[mi]);
 }
 
-item_def *monster::shield()
+item_def *monster::shield() const
 {
     return mslot_item(MSLOT_SHIELD);
 }
@@ -2980,10 +2987,10 @@ void monster::attacking(actor * /* other */)
 }
 
 // Sends a monster into a frenzy.
-void monster::go_frenzy()
+bool monster::go_frenzy(actor *source)
 {
-    if (!can_go_berserk())
-        return;
+    if (!can_go_frenzy())
+        return false;
 
     if (has_ench(ENCH_SLOW))
     {
@@ -3001,14 +3008,19 @@ void monster::go_frenzy()
     props["old_attitude"] = short(attitude);
 
     attitude = ATT_NEUTRAL;
-    add_ench(mon_enchant(ENCH_INSANE, 0, 0, duration * 10));
-    add_ench(mon_enchant(ENCH_HASTE, 0, 0, duration * 10));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, 0, duration * 10));
+    add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * 10));
+    if (holiness() == MH_NATURAL)
+    {
+        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * 10));
+        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * 10));
+    }
     mons_att_changed(this);
 
     if (simple_monster_message(this, " flies into a frenzy!"))
         // Xom likes monsters going insane.
         xom_is_stimulated(friendly() ? 25 : 100);
+
+    return true;
 }
 
 void monster::go_berserk(bool /* intentional */, bool /* potion */)
@@ -3519,7 +3531,8 @@ bool monster::is_unclean(bool check_spells) const
         || has_attack_flavour(AF_HUNGER)
         || has_attack_flavour(AF_ROT)
         || has_attack_flavour(AF_STEAL)
-        || has_attack_flavour(AF_STEAL_FOOD))
+        || has_attack_flavour(AF_STEAL_FOOD)
+        || has_attack_flavour(AF_PLAGUE))
     {
         return true;
     }
@@ -4133,10 +4146,8 @@ god_type monster::deity() const
     return god;
 }
 
-bool monster::drain_exp(actor *agent, const char *aux, bool quiet, int pow)
+bool monster::drain_exp(actor *agent, bool quiet, int pow)
 {
-    UNUSED(aux);
-
     if (x_chance_in_y(res_negative_energy(), 3))
         return false;
 
@@ -4144,17 +4155,17 @@ bool monster::drain_exp(actor *agent, const char *aux, bool quiet, int pow)
         mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
-    hurt(agent, 2 + random2(pow), BEAM_NEG, !quiet);
+    hurt(agent, 2 + random2(3), BEAM_NEG, !quiet);
 
     if (alive())
     {
-        if (x_chance_in_y(pow, 15))
+        if (x_chance_in_y(1, 5))
         {
             hit_dice--;
             experience = 0;
         }
 
-        max_hit_points -= 2 + random2(pow);
+        max_hit_points -= 2 + random2(3);
         hit_points = min(max_hit_points, hit_points);
     }
 
@@ -4233,7 +4244,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (amount != INSTANT_DEATH && has_ench(ENCH_INJURY_BOND))
         {
             actor* guardian = get_ench(ENCH_INJURY_BOND).agent();
-            if (guardian && guardian->alive())
+            if (guardian && guardian->alive() && mons_aligned(guardian, this))
             {
                 int split = amount / 2;
                 if (split > 0)
@@ -4354,9 +4365,9 @@ void monster::set_new_monster_id()
 
 void monster::ghost_init(bool need_pos)
 {
+    type = MONS_PLAYER_GHOST;
     ghost_demon_init();
 
-    type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
@@ -4402,6 +4413,11 @@ void monster::uglything_init(bool only_mutate)
 
 void monster::ghost_demon_init()
 {
+    // Unequip weapon before setting stats, in case of protection/evasion.
+    item_def *wpn = weapon();
+    if (wpn)
+        unequip_weapon(*wpn, false, false);
+
     hit_dice        = ghost->xl;
     max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
@@ -4410,6 +4426,10 @@ void monster::ghost_demon_init()
     speed           = ghost->speed;
     speed_increment = 70;
     colour          = ghost->colour;
+
+    // And re-equip it.
+    if (wpn)
+        equip_weapon(*wpn, false, false);
 
     load_ghost_spells();
 }
@@ -4720,7 +4740,7 @@ void monster::calc_speed()
         speed--;
 
     // Going berserk on liquid ground doesn't speed you up any.
-    if (!liquefied_ground() && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
+    if (!liquefied_ground() && (has_ench(ENCH_BERSERK)))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
@@ -4776,9 +4796,9 @@ int monster::foe_distance() const
                  : INFINITE_DISTANCE);
 }
 
-bool monster::can_go_berserk() const
+bool monster::can_go_frenzy() const
 {
-    if (holiness() != MH_NATURAL || mons_is_tentacle_or_tentacle_segment(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
     if (mons_intel(this) == I_PLANT)
@@ -4787,7 +4807,7 @@ bool monster::can_go_berserk() const
     if (paralysed() || petrified() || petrifying() || asleep())
         return false;
 
-    if (berserk() || has_ench(ENCH_FATIGUE))
+    if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
         return false;
 
     // If we have no melee attack, going berserk is pointless.
@@ -4798,9 +4818,20 @@ bool monster::can_go_berserk() const
     return true;
 }
 
+bool monster::can_go_berserk() const
+{
+    return (holiness() == MH_NATURAL) && can_go_frenzy();
+}
+
 bool monster::berserk() const
 {
-    return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
+    return has_ench(ENCH_BERSERK);
+}
+
+// XXX: this function could use a better name
+bool monster::berserk_or_insane() const
+{
+    return berserk() || has_ench(ENCH_INSANE);
 }
 
 bool monster::needs_berserk(bool check_spells) const
@@ -5619,7 +5650,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
                 // Share damage using a fineff, so that it's non-fatal
                 // regardless of processing order in an AoE attack.
-                (new deferred_damage_fineff(oppressor, &menv[number],
+                (new deferred_damage_fineff(oppressor, owner,
                                            shared_damage, false, false))->schedule();
             }
         }
@@ -5728,11 +5759,6 @@ reach_type monster::reach_range() const
     if (wpn)
         return weapon_reach(*wpn);
     return REACH_NONE;
-}
-
-bool monster::can_cling_to_walls() const
-{
-    return mons_can_cling_to_walls(this);
 }
 
 void monster::steal_item_from_player()

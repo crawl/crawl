@@ -51,4 +51,12 @@ void forest_damage(const actor *mon);
 vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int max_rays);
 spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim,
                                bool fail = false);
+
+spret_type cast_toxic_radiance(actor *caster, int pow, bool fail = false,
+                               bool mon_tracer = false);
+void toxic_radiance_effect(actor* agent, int mult);
+
+spret_type cast_searing_ray(int pow, bolt &beam, bool fail);
+void handle_searing_ray();
+void end_searing_ray();
 #endif

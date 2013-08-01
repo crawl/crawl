@@ -231,24 +231,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_NEG:
-        resist = player_prot_life();
-
-        // TSO's protection.
-        if (you.religion == GOD_SHINING_ONE && you.piety > resist * 50)
-        {
-            int unhurted = min(hurted, (you.piety * hurted) / 150);
-
-            if (unhurted > 0)
-                hurted -= unhurted;
-        }
-        else if (resist > 0)
-            hurted -= (resist * hurted) / 3;
+        hurted = resist_adjust_damage(&you, flavour, player_prot_life(),
+                                      hurted, true);
 
         if (doEffects)
-        {
-            drain_exp(true, beam ? beam->beam_source : NON_MONSTER,
-                      !kaux.empty() ? kaux.c_str() : NULL);
-        }
+            drain_exp(true, min(75, 25 + original * 2 / 3));
         break;
 
     case BEAM_ICE:
@@ -501,7 +488,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     // Fedhas worshipers are exempt from the food destruction effect
     // of spores.
     if (flavour == BEAM_SPORE
-        && you.religion == GOD_FEDHAS)
+        && you_worship(GOD_FEDHAS))
     {
         simple_god_message(" protects your food from the spores.",
                            GOD_FEDHAS);
@@ -528,7 +515,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 continue;
             }
 
-            if (you.religion == GOD_JIYVA && !player_under_penance()
+            if (you_worship(GOD_JIYVA) && !player_under_penance()
                 && x_chance_in_y(you.piety, MAX_PIETY))
             {
                 ++jiyva_block;
@@ -788,7 +775,7 @@ void lose_level(int death_source, const char *aux)
     ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full, int death_source, const char *aux)
+bool drain_exp(bool announce_full, int power)
 {
     const int protection = player_prot_life();
 
@@ -800,55 +787,20 @@ bool drain_exp(bool announce_full, int death_source, const char *aux)
         return false;
     }
 
-    if (you.experience == 0)
-    {
-        mpr("You are drained of all life!");
-        ouch(INSTANT_DEATH, death_source, KILLED_BY_DRAINING, aux);
-
-        // Return in case death was escaped via wizard mode.
-        return true;
-    }
-
-    if (you.experience_level == 1)
-    {
-        mpr("You feel drained.");
-        you.experience = 0;
-
-        return true;
-    }
-
-    unsigned int total_exp = exp_needed(you.experience_level + 1)
-                                  - exp_needed(you.experience_level);
-    unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
-
-    // TSO's protection.
-    if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
-    {
-        unsigned int undrained = min(exp_drained,
-                                     (you.piety * exp_drained) / 150);
-
-        if (undrained > 0)
-        {
-            simple_god_message(" protects your life force!");
-            if (undrained > 0)
-                exp_drained -= undrained;
-        }
-    }
-    else if (protection > 0)
+    if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
-        exp_drained -= (protection * exp_drained) / 3;
+        power /= (protection * 2);
     }
 
-    if (exp_drained > 0)
+    if (power > 0)
     {
         mpr("You feel drained.");
         xom_is_stimulated(15);
-        you.experience -= exp_drained;
 
-        dprf("You lose %d experience points.", exp_drained);
+        you.attribute[ATTR_XP_DRAIN] += power;
 
-        level_change(death_source, aux);
+        dprf("Drained by %d points (%d total)", power, you.attribute[ATTR_XP_DRAIN]);
 
         return true;
     }
@@ -859,7 +811,7 @@ bool drain_exp(bool announce_full, int death_source, const char *aux)
 static void _xom_checks_damage(kill_method_type death_type,
                                int dam, int death_source)
 {
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         if (death_type == KILLED_BY_TARGETTING
             || death_type == KILLED_BY_BOUNCE
@@ -969,7 +921,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
 
     // Exclude torment damage.
     const bool torment = aux && strstr(aux, "torment");
-    if (you.religion == GOD_JIYVA && you.piety > 160 && !torment)
+    if (you_worship(GOD_JIYVA) && you.piety > 160 && !torment)
     {
         int how_many = 0;
         if (dam >= you.hp_max * 3 / 4)
@@ -1256,7 +1208,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
         // Xom should only kill his worshippers if they're under penance
         // or Xom is bored.
-        if (you.religion == GOD_XOM && !you.penance[GOD_XOM]
+        if (you_worship(GOD_XOM) && !you.penance[GOD_XOM]
             && you.gift_timeout > 0)
         {
             return;
@@ -1265,7 +1217,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         // Also don't kill wizards testing Xom acts.
         if ((crawl_state.repeat_cmd == CMD_WIZARD
                 || crawl_state.prev_cmd == CMD_WIZARD)
-            && you.religion != GOD_XOM)
+            && !you_worship(GOD_XOM))
         {
             return;
         }

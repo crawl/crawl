@@ -12,16 +12,20 @@
 # approach the altar, and does not open the bridge.
 
 {{
+function bt_you_are_orcish()
+  return you.race() == "Hill Orc" or you.race() == "Lava Orc"
+end
+
 function callback.beogh_warn_stepped(data, triggerable, triggerer, marker, ev)
   local x, y = marker:pos()
 
 -- This checks to see if you worship Beogh or are a godless orc. If you do/are then
 -- you get a positive message but if you don't, Beogh warns you that you should not
 -- continue towards his altar.
-  if you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
+  if you.god() == "Beogh" or (bt_you_are_orcish() and you.god() == "No God") then
      crawl.god_speaks("Beogh" , "Your presence is welcomed at the altar of Beogh.")
      dgn.grid(x, y, "floor")
-  elseif you.race() == "Hill Orc" then
+  elseif bt_you_are_orcish() then
      crawl.god_speaks("Beogh" , "The orc god booms: Stay away, heretic!")
   else
      crawl.god_speaks("Beogh" , "The orc god booms: Stay away, mortal!")
@@ -35,7 +39,7 @@ function callback.beogh_trap_stepped(data, triggerable, triggerer, marker, ev)
 -- these things nothing happens. Otherwise the trap is sprung.
   if monster_step == true then
     return
-  elseif you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
+  elseif you.god() == "Beogh" or (bt_you_are_orcish() and you.god() == "No God") then
     dgn.grid(x, y, "floor")
   else
     crawl.god_speaks("Beogh", "Beogh's servants are called upon to defend the altar!")
@@ -49,7 +53,7 @@ end
 
 NAME:   trap_god_beogh
 TAGS:   no_monster_gen
-DEPTH:  Orc:2-4
+DEPTH:  Orc:2-
 ORIENT: float
 
 # t gives you a warning not to come closer

@@ -192,8 +192,8 @@ Items
 Gods
 ----
 * Yredelemnul no longer gifts rotting hulks / plague shamblers.
-* Hill orcs encountering an orc priest for the first time are offered the
-  chance to convert to Beogh on the spot.
+* Orcs encountering an orc priest for the first time are offered the chance
+  to convert to Beogh on the spot.
 
 Interface
 ---------

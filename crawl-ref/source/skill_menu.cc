@@ -394,7 +394,7 @@ void SkillMenuEntry::set_level()
     else
         level = you.skill(m_sk, 10, real);
 
-    if (mastered())
+    if (mastered() && !you.attribute[ATTR_XP_DRAIN])
         m_level->set_text(make_stringf("%d", level / 10));
     else
         m_level->set_text(make_stringf("%4.1f", level / 10.0));
@@ -559,8 +559,14 @@ string SkillMenuSwitch::get_help()
         }
         else
         {
-            return "Skills reduced by the power of Ashenzari are in "
-                   "<magenta>magenta</magenta>. ";
+            vector<string> causes;
+            if (you.attribute[ATTR_XP_DRAIN])
+                causes.push_back("draining");
+            if (player_under_penance(GOD_ASHENZARI))
+                causes.push_back("the power of Ashenzari");
+            return "Skills reduced by "
+                   + comma_separated_line(causes.begin(), causes.end())
+                   + " are in <magenta>magenta</magenta>. ";
         }
     case SKM_VIEW_TRAINING:
         if (skm.is_set(SKMF_SIMPLE))

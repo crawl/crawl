@@ -11,6 +11,8 @@
 
 #include "defines.h"
 
+#include <bitset>
+
 class bit_vector
 {
 public:
@@ -41,17 +43,15 @@ protected:
 template <unsigned int SIZE> class FixedBitVector
 {
 protected:
-    unsigned long data[(SIZE + LONGSIZE - 1) / LONGSIZE];
+    bitset<SIZE> data;
 public:
     void reset()
     {
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] = 0;
+        data.reset();
     }
 
     FixedBitVector()
     {
-        reset();
     }
 
     inline bool get(unsigned int i) const
@@ -61,7 +61,7 @@ public:
         if (i >= SIZE)
             die("bit vector range error: %d / %u", (int)i, SIZE);
 #endif
-        return data[i / LONGSIZE] & 1UL << i % LONGSIZE;
+        return data[i];
     }
 
     inline bool operator[](unsigned int i) const
@@ -75,49 +75,44 @@ public:
         if (i >= SIZE)
             die("bit vector range error: %d / %u", (int)i, SIZE);
 #endif
-        if (value)
-            data[i / LONGSIZE] |= 1UL << i % LONGSIZE;
-        else
-            data[i / LONGSIZE] &= ~(1UL << i % LONGSIZE);
+        data[i] = value;
     }
 
     inline FixedBitVector<SIZE>& operator|=(const FixedBitVector<SIZE>&x)
     {
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] |= x.data[i];
+        data |= x.data;
         return *this;
     }
 
     inline FixedBitVector<SIZE>& operator&=(const FixedBitVector<SIZE>&x)
     {
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] &= x.data[i];
+        data &= x.data;
         return *this;
     }
 
     void init(bool value)
     {
-        long fill = value ? ~(long)0 : 0;
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] = fill;
+        data.reset();
+        if (value)
+            data.flip();
     }
 };
 
 template <unsigned int SIZEX, unsigned int SIZEY> class FixedBitArray
 {
 protected:
-    unsigned long data[(SIZEX*SIZEY + LONGSIZE - 1) / LONGSIZE];
+    std::bitset<SIZEX*SIZEY> data;
 public:
     void reset()
     {
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] = 0;
+        data.reset();
     }
 
     void init(bool def)
     {
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] = def ? ULONG_MAX : 0;
+        data.reset();
+        if (def)
+            data.flip();
     }
 
     FixedBitArray()
@@ -138,7 +133,7 @@ public:
             die("bit array range error: %d,%d / %u,%u", x, y, SIZEX, SIZEY);
 #endif
         unsigned int i = y * SIZEX + x;
-        return data[i / LONGSIZE] & 1UL << i % LONGSIZE;
+        return data[i];
     }
 
     template<class Indexer> inline bool get(const Indexer &i) const
@@ -163,10 +158,7 @@ public:
             die("bit array range error: %d,%d / %u,%u", x, y, SIZEX, SIZEY);
 #endif
         unsigned int i = y * SIZEX + x;
-        if (value)
-            data[i / LONGSIZE] |= 1UL << i % LONGSIZE;
-        else
-            data[i / LONGSIZE] &= ~(1UL << i % LONGSIZE);
+        data[i] = value;
     }
 
     template<class Indexer> inline void set(const Indexer &i, bool value = true)
@@ -176,15 +168,13 @@ public:
 
     inline FixedBitArray<SIZEX, SIZEY>& operator|=(const FixedBitArray<SIZEX, SIZEY>&x)
     {
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] |= x.data[i];
+        data |= x.data;
         return *this;
     }
 
     inline FixedBitArray<SIZEX, SIZEY>& operator&=(const FixedBitArray<SIZEX, SIZEY>&x)
     {
-        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
-            data[i] &= x.data[i];
+        data &= x.data;
         return *this;
     }
 };

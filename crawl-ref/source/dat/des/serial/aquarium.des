@@ -49,7 +49,7 @@ default-depth:
 #
 # A general initalization function called for everything.  The
 #  size/shape and creature style cannot be set randomly here
-#  because this is run seperately for each subvault.
+#  because this is run separately for each subvault.
 #
 
 {{
@@ -199,8 +199,8 @@ end
 
 #
 # This function replaces the specified glyphs with a random
-#  non-bridge subvault.  Using this functions guarentees that
-#  the weights remain consistant.
+#  non-bridge subvault.  Using this functions guarantees that
+#  the weights remain consistent.
 #
 
 {{
@@ -214,7 +214,7 @@ end
 #
 # This function is used to initialize the bridges in the
 #  aquarium_bridge_island_??? vaults.  There is a longer
-#  explanation under "bridges" below".
+#  explanation under "bridges" below.
 #
 {{
 function aquarium_setup_subvaults_island(e)
@@ -310,7 +310,7 @@ CHANCE:  1%
 #  does.  Otherwise, when there is exactly one bridge, the 'm'
 #  glyph is used.  A position that depends only on one bridge is
 #  set with that bridge.  The tests required for this are just
-#  differant enough to make collecting them into a function
+#  different enough to make collecting them into a function
 #  impractical.  The aquarium_bridge_island_??? vaults are
 #  similar enough and simple enough that they were collected
 #  into a function (above).
@@ -445,7 +445,7 @@ ENDMAP
 NAME:    aquarium_bridge_square
 WEIGHT:  40
 TAGS:    serial_aquarium_bridge
-# One of 4 paths is guarenteed to be a bridge.
+# One of 4 paths is guaranteed to be a bridge.
 : local forced_bridge = math.floor(crawl.random2(4))
 : local bridge_p = false
 : local bridge_q = false
@@ -557,7 +557,7 @@ ENDMAP
 NAME:    aquarium_bridge_long_joined
 WEIGHT:  10
 TAGS:    serial_aquarium_bridge luniq_aquarium_bridge_long
-# One of 6 paths is guarenteed to be a bridge.
+# One of 6 paths is guaranteed to be a bridge.
 : local forced_bridge = math.floor(crawl.random2(6))
 : local bridge_p = false
 : local bridge_q = false
@@ -664,10 +664,10 @@ qqqqqq.....u.yyyyyy
 ENDMAP
 
 
-NAME:    aquarium_bridge_long_seperate
+NAME:    aquarium_bridge_long_separate
 WEIGHT:  10
 TAGS:    serial_aquarium_bridge luniq_aquarium_bridge_long
-# One of path on each side is guarenteed to be a bridge.
+# One of path on each side is guaranteed to be a bridge.
 : local forced_bridge_1 = math.floor(crawl.random2(3))
 : local forced_bridge_2 = math.floor(crawl.random2(3))
 : local bridge_p = false
@@ -1065,7 +1065,7 @@ ENDMAP
 # views (8 vaults, total weight 100)
 #
 # These have water with 2 or more windows to (theoretically)
-#  seperate rooms.  Crawl likes making passages around the edge
+#  separate rooms.  Crawl likes making passages around the edge
 #  of vaults, so they be directly connected in practice.
 #
 

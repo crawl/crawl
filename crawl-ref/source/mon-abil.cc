@@ -34,6 +34,7 @@
 #include "mon-cast.h"
 #include "mon-chimera.h"
 #include "mon-iter.h"
+#include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mon-util.h"
@@ -1002,7 +1003,7 @@ static bool _siren_movement_effect(const monster* mons)
         const coord_def newpos = you.pos() + dir;
 
         if (!in_bounds(newpos)
-            || (is_feat_dangerous(grd(newpos)) && !you.can_cling_to(newpos))
+            || is_feat_dangerous(grd(newpos))
             || !you.can_pass_through_feat(grd(newpos)))
         {
             do_resist = true;
@@ -1202,7 +1203,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
                 && _is_battlecry_compatible(*mi, type)
                 && mons_aligned(chief, *mi)
                 && mi->hit_dice < chief->hit_dice
-                && !mi->berserk()
+                && !mi->berserk_or_insane()
                 && !mi->has_ench(ENCH_MIGHT)
                 && !mi->cannot_move()
                 && !mi->confused())
@@ -1633,7 +1634,7 @@ static bool _should_force_door_shut(const coord_def& door)
     return (((cur_tension - new_tension) * 3) <= cur_tension);
 }
 
-static bool _seal_doors(const monster* warden)
+static bool _seal_doors_and_stairs(const monster* warden)
 {
     ASSERT(warden);
     ASSERT(warden->type == MONS_VAULT_WARDEN);
@@ -1719,7 +1720,7 @@ static bool _seal_doors(const monster* warden)
         }
 
         // Try to seal the door
-        if (grd(*ri) == DNGN_CLOSED_DOOR)
+        if (grd(*ri) == DNGN_CLOSED_DOOR || grd(*ri) == DNGN_RUNED_DOOR)
         {
             set<coord_def> all_door;
             find_connected_identical(*ri, grd(*ri), all_door);
@@ -1730,6 +1731,18 @@ static bool _seal_doors(const monster* warden)
                                     TERRAIN_CHANGE_DOOR_SEAL, warden);
                 had_effect = true;
             }
+        }
+        else if (feat_is_travelable_stair(grd(*ri)))
+        {
+            dungeon_feature_type stype;
+            if (feat_stair_direction(grd(*ri)) == CMD_GO_UPSTAIRS)
+                stype = DNGN_SEALED_STAIRS_UP;
+            else
+                stype = DNGN_SEALED_STAIRS_DOWN;
+
+            temp_change_terrain(*ri, stype, seal_duration,
+                                TERRAIN_CHANGE_DOOR_SEAL, warden);
+            had_effect = true;
         }
     }
 
@@ -2838,20 +2851,35 @@ void move_solo_tentacle(monster* tentacle)
         }
         else if (tentacle->type == MONS_SNAPLASHER_VINE)
         {
-            for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
+            // Don't shift our victim if they're already next to a tree
+            // (To avoid shaking players back and forth constantly)
+            bool near_tree = false;
+            for (adjacent_iterator ai(constrictee->pos()); ai; ++ai)
             {
-                if (adjacent(*ai, constrictee->pos())
-                    && constrictee->is_habitable(*ai)
-                    && !actor_at(*ai))
+                if (feat_is_tree(grd(*ai)))
                 {
-                    for (adjacent_iterator ai2(*ai); ai2; ++ai2)
+                    near_tree = true;
+                    break;
+                }
+            }
+
+            if (!near_tree)
+            {
+                for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
+                {
+                    if (adjacent(*ai, constrictee->pos())
+                        && constrictee->is_habitable(*ai)
+                        && !actor_at(*ai))
                     {
-                        if (feat_is_tree(grd(*ai2)))
+                        for (adjacent_iterator ai2(*ai); ai2; ++ai2)
                         {
-                            pull_constrictee = true;
-                            shift_constrictee = true;
-                            shift_pos = *ai;
-                            break;
+                            if (feat_is_tree(grd(*ai2)))
+                            {
+                                pull_constrictee = true;
+                                shift_constrictee = true;
+                                shift_pos = *ai;
+                                break;
+                            }
                         }
                     }
                 }
@@ -3923,7 +3951,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (one_chance_in(4))
         {
-            if (_seal_doors(mons))
+            if (_seal_doors_and_stairs(mons))
                 used = true;
         }
         break;
@@ -4115,14 +4143,30 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     case MONS_SPIRIT_WOLF:
     {
-        if (!you.duration[DUR_SPIRIT_HOWL] && !mons->is_summoned()
-            && (one_chance_in(45)
-                || (mons->hit_points < mons->max_hit_points / 3 && one_chance_in(9))))
+        if (!you.duration[DUR_SPIRIT_HOWL] && !mons->is_summoned() && !mons->wont_attack()
+            && (one_chance_in(35)
+                || (mons->hit_points < mons->max_hit_points / 3 && one_chance_in(7))))
         {
+            // Take a little breather between howl effects
+            if (you.props.exists("spirit_howl_cooldown")
+                && you.props["spirit_howl_cooldown"].get_int() > you.elapsed_time)
+            {
+                break;
+            }
+
+            // Set total number of wolves in the pack, if we haven't already
+            if (!you.props.exists("spirit_wolf_total"))
+                you.props["spirit_wolf_total"].get_int() = random_range(12, 20);
+
+            // Too few wolves to bother summoning
+            if (you.props["spirit_wolf_total"].get_int() < 3)
+                break;
+
             simple_monster_message(mons, " howls for its pack!", MSGCH_MONSTER_SPELL);
-            you.duration[DUR_SPIRIT_HOWL] = 600 + random2(350);
+            you.duration[DUR_SPIRIT_HOWL] = 450 + random2(350);
             spawn_spirit_pack(&you);
-            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 50 + random2(100);
+            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 40 + random2(85);
+            used = true;
         }
     }
     break;
@@ -4190,6 +4234,75 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
     }
     break;
+
+    case MONS_THORN_LOTUS:
+        if (x_chance_in_y(2, 5))
+        {
+            setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
+
+            fire_tracer(mons, beem);
+            if (mons_should_fire(beem))
+            {
+                make_mons_stop_fleeing(mons);
+                _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
+                used = true;
+            }
+        }
+        break;
+
+    case MONS_FIREFLY:
+        if (one_chance_in(7) && !mons->friendly() && !mons->confused())
+        {
+            // In the odd case we're invisible somehow
+            mons->del_ench(ENCH_INVIS);
+            simple_monster_message(mons, " flashes a warning beacon!",
+                                   MSGCH_MONSTER_SPELL);
+
+            circle_def range(mons->pos(), 13, C_ROUND);
+            for (monster_iterator mi(&range); mi; ++mi)
+            {
+                // Fireflies (and their riders) are attuned enough to the light
+                // to wake in response, while other creatures sleep through it
+                if (mi->asleep() && (mi->type == MONS_FIREFLY
+                                     || mi->type == MONS_SPRIGGAN_RIDER))
+                {
+                    behaviour_event(*mi, ME_DISTURB, mons->get_foe(), mons->pos());
+
+                    // Give riders a chance to shout and alert their companions
+                    // (this won't otherwise happen if the player is still out
+                    // of their sight)
+                    if (mi->behaviour == BEH_WANDER && coinflip())
+                        handle_monster_shouts(*mi);
+                }
+
+                if (!mi->asleep())
+                {
+                    // We consider the firefly's foe to be the 'source' of the
+                    // light here so that monsters wandering around for the player
+                    // will be alerted by fireflies signaling in response to the
+                    // player, but ignore signals in response to other monsters
+                    // if they're already in pursuit of the player.
+                    behaviour_event(*mi, ME_ALERT, mons->get_foe(), mons->pos());
+                    if (mi->target == mons->pos())
+                    {
+                        monster_pathfind mp;
+                        if (mp.init_pathfind(*mi, mons->pos()))
+                        {
+                            mi->travel_path = mp.calc_waypoints();
+                            if (!mi->travel_path.empty())
+                            {
+                                mi->target = mi->travel_path[0];
+                                mi->travel_target = MTRAV_PATROL;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!you.see_cell(mons->pos()) && range.contains(you.pos()))
+                mpr("You see a distant pulse of light.");
+        }
+        break;
 
     default:
         break;
@@ -4489,7 +4602,7 @@ void activate_ballistomycetes(monster* mons, const coord_def& origin,
     set<position_node> visited;
     vector<set<position_node>::iterator > candidates;
 
-    if (you.religion == GOD_FEDHAS)
+    if (you_worship(GOD_FEDHAS))
     {
         if (non_activable_count == 0
             && ballisto_count == 0
@@ -4720,27 +4833,30 @@ int spawn_spirit_pack(const actor* target)
 
         coord_def base_spot;
         int tries = 0;
-        while (tries < 10 && base_spot.origin()
-               && !cell_see_cell(target->pos(), base_spot, LOS_DEFAULT))
+        while (tries < 10 && base_spot.origin())
         {
             find_habitable_spot_near(area, MONS_SPIRIT_WOLF, 6, false, base_spot);
+            if (cell_see_cell(target->pos(), base_spot, LOS_DEFAULT))
+                base_spot.reset();
             ++tries;
         }
         if (base_spot.origin())
             continue;
 
-        int wolves = 1 + random2(3);
+        int wolves = min(1 + random2(3), you.props["spirit_wolf_total"].get_int());
         int created = 0;
         for (int i = 0; i < wolves; ++i)
         {
             if (monster *mons = create_monster(
-                                  mgen_data(MONS_SPIRIT_WOLF,BEH_HOSTILE, NULL,
-                                            5, SPELL_NO_SPELL, area,
+                                  mgen_data(MONS_SPIRIT_WOLF, BEH_HOSTILE, NULL,
+                                            0, SPELL_NO_SPELL, base_spot,
                                             target->mindex(), MG_FORCE_BEH)))
             {
                 mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target, INFINITE_DURATION));
-                mons->foe = target->mindex();
+                mons->props["howl_called"].get_bool() = true;
+                mons->behaviour = BEH_SEEK;
                 ++created;
+                you.props["spirit_wolf_total"].get_int()--;
             }
         }
 

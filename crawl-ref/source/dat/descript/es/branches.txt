@@ -34,14 +34,6 @@ alerta ante las legendarias proezas mágicas de esta especie.
 
 Las Salas Élficas tienen tres niveles.
 %%%%
-Dwarven Hall
-
-Estas salas de piedra finamente labrada es donde moran los enanos de las
-profundidades. Su gran destreza en la metalurgia les permite forjar suficientes
-armas contra aquellos como tú.
-
-Es solamente un nivel.
-%%%%
 Lair
 
 Muchos aventureros encuentran que la Guarida de las Bestias es un excitante

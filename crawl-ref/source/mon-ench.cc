@@ -117,7 +117,7 @@ bool monster::add_ench(const mon_enchant &ench)
         return false;
 
     if (ench.ench == ENCH_FEAR
-        && (holiness() == MH_NONLIVING || berserk()))
+        && (holiness() == MH_NONLIVING || berserk_or_insane()))
     {
         return false;
     }
@@ -159,10 +159,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     // Check for slow/haste.
     switch (ench.ench)
     {
-    case ENCH_INSANE:
     case ENCH_BERSERK:
         // Inflate hp.
         scale_hp(3, 2);
+        // deliberate fall-through
+
+    case ENCH_INSANE:
 
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
@@ -410,7 +412,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_INSANE:
         attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
         mons_att_changed(this);
-        // deliberate fall through
+        break;
 
     case ENCH_BERSERK:
         scale_hp(2, 3);
@@ -494,7 +496,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FEAR:
-        if (holiness() == MH_NONLIVING || berserk())
+        if (holiness() == MH_NONLIVING || berserk_or_insane())
         {
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
@@ -822,6 +824,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_CONTROL_WINDS:
         if (!quiet && you.can_see(this))
             mprf("The winds cease moving at %s will.", name(DESC_ITS).c_str());
+        break;
+
+    case ENCH_TOXIC_RADIANCE:
+        if (!quiet && you.can_see(this))
+            mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
+        break;
 
     default:
         break;
@@ -979,14 +987,6 @@ void monster::timeout_enchantments(int levels)
             const int actdur = speed_to_duration(speed) * levels;
             if (lose_ench_duration(i->first, actdur))
                 monster_die(this, KILL_MISC, NON_MONSTER, true);
-            break;
-        }
-
-        case ENCH_FADING_AWAY:
-        {
-            const int actdur = speed_to_duration(speed) * levels;
-            if (lose_ench_duration(i->first, actdur))
-                spirit_fades(this);
             break;
         }
 
@@ -1219,7 +1219,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         // Smaller monsters can escape more quickly.
         if (mon_size < random2(SIZE_BIG)  // BIG = 5
-            && !berserk() && type != MONS_DANCING_WEAPON)
+            && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
         {
             if (mons_near(this) && !visible_to(&you))
                 mpr("Something wriggles in the net.");
@@ -1466,12 +1466,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);
         }
-        break;
-
-    case ENCH_FADING_AWAY:
-        // Summon a nasty!
-        if (decay_enchantment(me))
-            spirit_fades(this);
         break;
 
     case ENCH_PREPARING_RESURRECT:
@@ -1798,6 +1792,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
+    case ENCH_TOXIC_RADIANCE:
+        toxic_radiance_effect(this, 1);
+        decay_enchantment(me);
+        break;
+
     default:
         break;
     }
@@ -1926,7 +1925,11 @@ static const char *enchant_names[] =
 #endif
     "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
-    "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
+    "tethered", "severed", "antimagic",
+#if TAG_MAJOR_VERSION == 34
+    "fading_away",
+#endif
+    "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "flight",
     "liquefying", "tornado", "fake_abjuration",
@@ -1935,6 +1938,7 @@ static const char *enchant_names[] =
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
+    "toxic_radiance",
     "buggy",
 };
 
@@ -1986,8 +1990,8 @@ mon_enchant::operator string () const
 
 const char *mon_enchant::kill_category_desc(kill_category k) const
 {
-    return (k == KC_YOU?      " you" :
-            k == KC_FRIENDLY? " pet" : "");
+    return (k == KC_YOU ?      " you" :
+            k == KC_FRIENDLY ? " pet" : "");
 }
 
 void mon_enchant::merge_killer(kill_category k, mid_t m)
@@ -2039,7 +2043,7 @@ killer_type mon_enchant::killer() const
 
 int mon_enchant::kill_agent() const
 {
-    return (who == KC_FRIENDLY? ANON_FRIENDLY_MONSTER : 0);
+    return (who == KC_FRIENDLY ? ANON_FRIENDLY_MONSTER : 0);
 }
 
 actor* mon_enchant::agent() const
@@ -2138,11 +2142,6 @@ int mon_enchant::calc_duration(const monster* mons,
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
         return (random_range(475, 525) * 10);
-
-    case ENCH_FADING_AWAY:
-        // Also used as a simple timer. When it runs out, it will summon a
-        // greater holy being.
-        return (random_range(180, 230) * 10);
 
     case ENCH_PREPARING_RESURRECT:
         // A timer. When it runs out, the creature will cast resurrect.

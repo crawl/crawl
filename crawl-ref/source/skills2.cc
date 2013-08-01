@@ -23,6 +23,7 @@
 #include "godabil.h"
 #include "libutil.h"
 #include "player.h"
+#include "religion.h"
 #include "species.h"
 #include "skills.h"
 #include "skill_menu.h"
@@ -91,7 +92,9 @@ static const char *skills[NUM_SKILLS][6] =
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
 #endif
     {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
+#if TAG_MAJOR_VERSION == 34
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
+#endif
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
@@ -496,7 +499,7 @@ void calc_mp()
 bool is_useless_skill(skill_type skill)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (skill == SK_STABBING)
+    if (skill == SK_STABBING || skill == SK_TRAPS)
         return true;
 #endif
     return species_apt(skill) == -99;
@@ -504,7 +507,7 @@ bool is_useless_skill(skill_type skill)
 
 bool is_harmful_skill(skill_type skill)
 {
-    return is_magic_skill(skill) && you.religion == GOD_TROG;
+    return is_magic_skill(skill) && you_worship(GOD_TROG);
 }
 
 bool all_skills_maxed(bool inc_harmful)

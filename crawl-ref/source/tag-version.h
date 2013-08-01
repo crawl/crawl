@@ -51,6 +51,11 @@ enum tag_minor_version
     TAG_MINOR_BOX_OF_BEASTS_CHARGES, // Box of Beasts counts its charges.
     TAG_MINOR_WAR_DOG_REMOVAL,     // War dogs become wolves, then disappear
     TAG_MINOR_CANARIES,            // Canaries in save files.
+    TAG_MINOR_CHIMERA_GHOST_DEMON, // Use ghost demon
+    TAG_MINOR_MONSTER_PARTS,       // Flag the presence of ghost_demon (and more)
+    TAG_MINOR_OPTIONAL_PARTS,      // Make three big monster structs optional.
+    TAG_MINOR_SHORT_SPELL_TYPE,    // Spell types changed to short instead of byte
+    TAG_MINOR_FORGOTTEN_MAP,       // X^F can be undone.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

@@ -44,13 +44,15 @@ const Branch branches[NUM_BRANCHES] =
       true, WHITE, ETC_ELVEN_BRICK,
       'E', true, 0 },
 
-    { BRANCH_DWARVEN_HALL, BRANCH_ELVEN_HALLS, 2, 2, 1, 17,
+#if TAG_MAJOR_VERSION == 34
+    { BRANCH_DWARVEN_HALL, BRANCH_ELVEN_HALLS, -1, -1, 0, 17,
       0, 0,
       DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       NULL,
       true, BROWN, BROWN,
       'K', false, 0 },
+#endif
 
     { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 8, 13, 8, 10,
       0, 0,

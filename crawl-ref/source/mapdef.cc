@@ -93,7 +93,7 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     int weight = strip_number_tag(s, "weight:");
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
-    return (weight == TAG_UNFOUND? defweight : weight);
+    return (weight == TAG_UNFOUND ? defweight : weight);
 }
 
 void clear_subvault_stack(void)
@@ -263,7 +263,7 @@ string level_range::describe() const
 {
     return make_stringf("%s%s%s",
                         deny? "!" : "",
-                        branch == NUM_BRANCHES? "Any" :
+                        branch == NUM_BRANCHES ? "Any" :
                         branches[branch].abbrevname,
                         str_depth_range().c_str());
 }
@@ -3762,7 +3762,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
             }
         }
 
-        // place:Elf:7 to choose monsters appropriate for that level,
+        // place:Elf:$ to choose monsters appropriate for that level,
         // for example.
         const string place = strip_tag_prefix(mon_str, "place:");
         if (!place.empty())
@@ -4611,7 +4611,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "freezing",
         "holy_wrath",
         "electrocution",
+#if TAG_MAJOR_VERSION == 34
         "orc_slaying",
+#endif
         "dragon_slaying",
         "venom",
         "protection",
@@ -4697,7 +4699,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
             return (i + 1);
     }
 
-    // Incompatible or non-existant ego type
+    // Incompatible or non-existent ego type
     for (int i = 1; i <= 2; i++)
     {
         const char** list = name_lists[order[i]];
@@ -4708,7 +4710,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
                 return -1;
     }
 
-    // Non-existant ego
+    // Non-existent ego
     return 0;
 }
 
@@ -4759,9 +4761,12 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
 item_spec item_list::parse_corpse_spec(item_spec &result, string s)
 {
     const bool never_decay = strip_tag(s, "never_decay");
+    const bool rotting = strip_tag(s, "rotting");
 
     if (never_decay)
         result.props[CORPSE_NEVER_DECAYS].get_bool() = true;
+    if (rotting)
+        result.item_special = ROTTING_CORPSE;
 
     const bool corpse = strip_suffix(s, "corpse");
     const bool skeleton = !corpse && strip_suffix(s, "skeleton");

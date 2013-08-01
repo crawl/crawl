@@ -291,7 +291,6 @@ public:
   // A list of allies awaiting an active recall
   vector<mid_t> recall_list;
 
-
   // -------------------
   // Non-saved UI state:
   // -------------------
@@ -348,8 +347,6 @@ public:
   targetter *flash_where;
 
   int time_taken;
-
-  int shield_blocks;         // number of shield blocks since last action
 
   int old_hunger;            // used for hunger delta-meter (see output.cc)
 
@@ -423,7 +420,6 @@ public:
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
-    bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
     bool cannot_speak() const;
@@ -535,7 +531,7 @@ public:
                        bool calc_unid = true) const;
 
     item_def *weapon(int which_attack = -1) const;
-    item_def *shield();
+    item_def *shield() const;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,
@@ -594,8 +590,7 @@ public:
     void confuse(actor *, int strength);
     void weaken(actor *attacker, int pow);
     bool heal(int amount, bool max_too = false);
-    bool drain_exp(actor *, const char *aux = NULL, bool quiet = false,
-                   int pow = 3);
+    bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
     void sentinel_mark(bool trap = false);
     int hurt(const actor *attacker, int amount,
@@ -801,7 +796,9 @@ bool player_in_connected_branch(void);
 bool player_in_hell(void);
 
 static inline bool player_in_branch(int branch)
-{ return you.where_are_you == branch; };
+{
+    return you.where_are_you == branch;
+};
 
 bool berserk_check_wielded_weapon(void);
 bool player_equip_unrand_effect(int unrand_index);
@@ -814,7 +811,10 @@ bool player_is_shapechanged(void);
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
-bool player_under_penance(void);
+static inline int player_under_penance(god_type god = you.religion)
+{
+    return you.penance[god];
+}
 
 int burden_change(void);
 
@@ -920,7 +920,7 @@ void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
                    species_type species = SP_UNKNOWN);
-bool is_player_same_species(const monster_type mon, bool = false);
+bool is_player_same_genus(const monster_type mon, bool = false);
 monster_type player_mons(bool transform = true);
 void update_player_symbol();
 void update_vision_range();

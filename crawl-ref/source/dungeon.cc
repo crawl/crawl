@@ -783,7 +783,9 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_EXIT_HELL:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -827,7 +829,9 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -1212,6 +1216,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.pgrid.init(0);
     env.grid_colours.init(BLACK);
     env.map_knowledge.init(map_cell());
+    env.map_forgotten.reset();
 
     // Delete all traps.
     for (int i = 0; i < MAX_TRAPS; i++)
@@ -3216,6 +3221,15 @@ static void _place_traps()
             }
         }
 
+        // Only teleport, shaft, alarm and Zot traps are interesting enough to
+        // be placed randomly.  Until the formula is overhauled, let's just
+        // skip creation if the old code would pick a boring one.
+        if (trap_category(ts.type) == DNGN_TRAP_MECHANICAL)
+        {
+            ts.type = TRAP_UNASSIGNED;
+            continue;
+        }
+
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         env.tgrid(ts.pos) = i;
         if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
@@ -4068,7 +4082,7 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
 vault_placement *dgn_vault_at(coord_def p)
 {
     const int map_index = env.level_map_ids(p);
-    return (map_index == INVALID_MAP_INDEX? NULL : env.level_vaults[map_index]);
+    return (map_index == INVALID_MAP_INDEX ? NULL : env.level_vaults[map_index]);
 }
 
 void dgn_seen_vault_at(coord_def p)
@@ -4156,7 +4170,7 @@ _build_vault_impl(const map_def *vault,
 
     dprf("Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
          vault->name.c_str(),
-         placed_vault_orientation != MAP_NONE? "yes" : "no",
+         placed_vault_orientation != MAP_NONE ? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
     if (placed_vault_orientation == MAP_NONE)
@@ -5386,13 +5400,6 @@ static dungeon_feature_type _pick_an_altar()
                               : GOD_YREDELEMNUL);
             break;
 
-        case BRANCH_DWARVEN_HALL:
-            god = random_choose(GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL,
-                                GOD_MAKHLEB,       GOD_TROG,
-                                GOD_CHEIBRIADOS,   GOD_ELYVILON,
-                                GOD_OKAWARU,       -1);
-            break;
-
         case BRANCH_ORCISH_MINES: // violent gods (50% chance of Beogh)
             if (coinflip())
                 god = GOD_BEOGH;
@@ -5531,7 +5538,7 @@ static void _place_spec_shop(const coord_def& where,
 
     int plojy = 5 + random2avg(12, 3);
     if (representative)
-        plojy = env.shop[i].type == SHOP_WAND? NUM_WANDS : 16;
+        plojy = env.shop[i].type == SHOP_WAND ? NUM_WANDS : 16;
 
     if (spec->use_all && !spec->items.empty())
     {

@@ -200,9 +200,6 @@ string species_name(species_type speci, bool genus, bool adj)
         case SP_TENGU:      res = "Tengu";                             break;
         case SP_GARGOYLE:   res = "Gargoyle";                          break;
 
-        case SP_HILL_ORC:
-            res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
-            break;
         case SP_DEEP_DWARF:
             res = (adj ? "Dwarven" : genus ? "Dwarf" : "Deep Dwarf");
             break;
@@ -466,6 +463,7 @@ int species_hp_modifier(species_type species)
     case SP_DEEP_ELF:
     case SP_TENGU:
     case SP_KOBOLD:
+    case SP_GARGOYLE:
         return -2;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
@@ -487,7 +485,6 @@ int species_hp_modifier(species_type species)
     case SP_PURPLE_DRACONIAN:
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
-    case SP_GARGOYLE:
     case SP_GHOUL:
     case SP_HILL_ORC:
     case SP_LAVA_ORC:

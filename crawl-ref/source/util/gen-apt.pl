@@ -223,6 +223,7 @@ sub load_aptitudes
                 my $apt = $3;
                 my $skill = skill_name($2);
                 next if $skill eq "Stabbing";
+                next if $skill eq "Traps";
                 die "$skillfile:$.: Unknown skill: $skill\n"
                     unless $SKILL_ABBR{$skill};
                 die "$skillfile:$.: Repeated skill def $1 for $species.\n"

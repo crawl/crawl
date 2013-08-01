@@ -95,8 +95,6 @@
 #include "view.h"
 #include "viewgeom.h"
 
-#include <dirent.h>
-
 #ifdef __ANDROID__
 #include <android/log.h>
 #endif
@@ -940,6 +938,7 @@ static void _close_level_gates()
 static void _clear_env_map()
 {
     env.map_knowledge.init(map_cell());
+    env.map_forgotten.reset();
 }
 
 static void _clear_clouds()

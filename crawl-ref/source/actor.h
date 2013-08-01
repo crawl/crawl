@@ -111,7 +111,7 @@ public:
         return weapon(0);
     }
     virtual int has_claws(bool allow_tran = true) const = 0;
-    virtual item_def *shield() = 0;
+    virtual item_def *shield() const = 0;
     virtual item_def *slot_item(equipment_type eq,
                                 bool include_melded=false) const = 0;
     virtual int wearing(equipment_type slot, int sub_type,
@@ -200,8 +200,7 @@ public:
     virtual bool can_bleed(bool allow_tran = true) const = 0;
     virtual bool malmutate(const string &reason) = 0;
     virtual bool polymorph(int pow) = 0;
-    virtual bool drain_exp(actor *agent, const char *aux = NULL,
-                           bool quiet = false, int pow = 3) = 0;
+    virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 15) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,
                      bool quiet = false) = 0;
     virtual int  hurt(const actor *attacker, int amount,
@@ -321,12 +320,7 @@ public:
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
     virtual flight_type flight_mode() const = 0;
-    virtual bool is_wall_clinging() const;
     virtual bool is_banished() const = 0;
-    virtual bool can_cling_to_walls() const = 0;
-    virtual bool can_cling_to(const coord_def& p) const;
-    virtual bool check_clinging(bool stepped, bool door = false);
-    virtual void clear_clinging();
     virtual bool is_web_immune() const = 0;
     virtual bool airborne() const;
     virtual bool ground_level() const;
@@ -399,6 +393,8 @@ public:
     coord_def position;
 
     CrawlHashTable props;
+
+    int shield_blocks;                 // Count of shield blocks this round.
 
     // Constriction stuff:
 

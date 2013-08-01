@@ -24,11 +24,13 @@ bool actor::see_cell(const coord_def &p) const
 bool player::see_cell(const coord_def &p) const
 {
     if (!map_bounds(p))
-        return false;
+        return false; // Players can't see (-1,-1) but maybe can see (0,0).
     if (crawl_state.game_is_arena() && is_player())
         return true;
+    if (!in_bounds(pos()))
+        return false; // A non-arena player at (0,0) can't see anything.
     if (xray_vision)
-        return ((pos() - p).abs() <= dist_range(you.current_vision));
+        return ((pos() - p).abs() <= dist_range(current_vision));
     return actor::see_cell(p);
 }
 
@@ -65,7 +67,7 @@ const los_base* player::get_los()
     else if (xray_vision)
     {
         los = los_glob(pos(), LOS_ARENA,
-                       circle_def(you.current_vision, C_ROUND));
+                       circle_def(current_vision, C_ROUND));
         return &los;
     }
     else

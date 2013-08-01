@@ -1247,11 +1247,11 @@ void search_around()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int base_skill = you.skill(SK_TRAPS, 100);
+    int base_skill = you.experience_level * 100 / 3;
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
                 + (base_skill/200.0) + 15;
 
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         skill += you.piety * 2;
 
      if (you.duration[DUR_SWIFTNESS])
@@ -1297,7 +1297,6 @@ void search_around()
             mprf("You found %s trap!",
                  ptrap->name(DESC_A).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
-            practise(EX_TRAP_FOUND);
         }
     }
 }
@@ -1412,7 +1411,7 @@ bool go_berserk(bool intentional, bool potion)
         mpr("Finesse? Hah! Time to rip out guts!");
     }
 
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you_worship(GOD_CHEIBRIADOS))
     {
         // Che makes berserk not speed you up.
         // Unintentional would be forgiven "just this once" every time.
@@ -2003,9 +2002,9 @@ void timeout_terrain_changes(int duration, bool force)
     }
 
     if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 1)
-        mpr("The seals upon the doors fade away.");
+        mpr("The runic seals fade away.");
     else if (num_seen[TERRAIN_CHANGE_DOOR_SEAL] > 0)
-        mpr("The seal upon the door fades away.");
+        mpr("The runic seal fades away.");
 }
 
 void bring_to_safety()
@@ -2272,7 +2271,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
 
     if (mon->friendly())
     {
-        if (you.religion == GOD_OKAWARU)
+        if (you_worship(GOD_OKAWARU))
         {
             adj = "your ally ";
 
@@ -2286,7 +2285,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     }
 
     if (is_unchivalric_attack(&you, mon)
-        && you.religion == GOD_SHINING_ONE
+        && you_worship(GOD_SHINING_ONE)
         && !tso_unchivalric_attack_safe_monster(mon))
     {
         adj += "helpless ";
@@ -2296,7 +2295,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     else if (mon->wont_attack())
         adj += "non-hostile ";
 
-    if (you.religion == GOD_JIYVA && mons_is_slime(mon)
+    if (you_worship(GOD_JIYVA) && mons_is_slime(mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
     {
         return true;
@@ -2434,8 +2433,7 @@ bool is_orckind(const actor *act)
             return true;
         }
         if (mons_is_ghost_demon(mon->type)
-            && (mon->ghost->species == SP_HILL_ORC
-                || mon->ghost->species == SP_LAVA_ORC))
+            && (player_genus(GENPC_ORCISH, mon->ghost->species)))
         {
             return true;
         }

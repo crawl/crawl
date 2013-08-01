@@ -1238,7 +1238,7 @@ void arena_monster_died(monster* mons, killer_type killer,
         }
     }
 
-    // Only respawn those monsers which were initally placed in the
+    // Only respawn those monsters which were initially placed in the
     // arena.
     const int midx = mons->mindex();
     if (arena::respawn && arena::to_respawn[midx] != -1

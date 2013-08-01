@@ -26,7 +26,7 @@ function boulder_generate(x, y, targetx, targety)
 
 end
 
--- TODO: Avoid enemies triggering it (altho allow summons)
+-- TODO: Avoid enemies triggering it (although allow summons)
 function callback.boulder_grate_trap_stepped(data, triggerable, triggerer, marker, ev)
   if data.triggered == true then
     return
@@ -107,7 +107,7 @@ ENDMAP
 # Two boulders at either end of the corridor
 #
 NAME:   boulder_dual_corridor_run
-DEPTH:  Lair:3-8
+DEPTH:  Lair:3-
 TAGS:   luniq_boulder_trap no_monster_gen ruin_lair
 ORIENT: float
 KFEAT: ^ = pressure plate trap
@@ -135,7 +135,7 @@ ENDMAP
 # Four boulders all go for you in the center of the room
 # -- TODO: Make all the boulders slightly miss each other
 NAME:   boulder_quad_collide
-DEPTH:  Lair:4-8
+DEPTH:  Lair:4-
 TAGS:   luniq_boulder_trap no_monster_gen
 ORIENT: float
 KFEAT:  ^ = pressure plate trap

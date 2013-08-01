@@ -375,9 +375,7 @@ TAGS:    entry
 ORIENT:  float
 NSUBST:  A = 1:+ / 1=c+ / *:c
 NSUBST:  B = 1:+ / *:c
-SHUFFLE: ^B~>TVGl
-KFEAT:   ^ = teleport trap
-KFEAT:   ~ = shaft trap
+SHUFFLE: >TVGl
 KMASK:   Tl = no_monster_gen
 MAP
 ...........
@@ -385,7 +383,7 @@ MAP
 ..cAAAAAc..
 ..Ac...cA..
 ..A.BBB.A..
-..A.B^B.A..
+..A.B>B.A..
 ..A.BBB.A..
 ..Ac...cA..
 ..cAAAAAc..
@@ -731,7 +729,7 @@ NAME:    elethiomel_entry_shortcut
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: XY/AB
-KFEAT:   X = teleport trap
+KFEAT:   X = known teleport trap
 SUBST:   Y=x, A=., B=+
 MAP
    xxxx@xxxxxxx.@.x
@@ -744,29 +742,6 @@ x].XY........xxxxxxxxx
 xxxxx.{..............@
 xxxxx.........xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################
-# Indiana Jones and the Raiders of the Lost Ark
-NAME:   elethiomel_entry_indiana_jones
-TAGS:   entry
-ORIENT: float
-SUBST:  ~ = ~ .:5
-# Too bad there isn't a "rolling boulder" trap.
-MAP
-xxxxxxxxxx.xxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxx.....xxx
-xxxxxxx.......xx...~~~..xx
-..........{....+.G.~%~...x
-xxxxxxx.......xx...~~~..xx
-xxxxxxxxxx.xxxxxxx.....xxx
-xxxxxxxxxx.xxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxx
-xxxxxxxxxx.xxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################
@@ -2290,7 +2265,6 @@ NAME:    onia_entry_handbag
 TAGS:    entry
 ORIENT:  float
 MONS:    w:30 rat / ooze / ball python
-SUBST:   ? = ..~
 SHUFFLE: {[, [<(
 SUBST:   (=.,[=.
 MAP
@@ -2710,29 +2684,6 @@ MAP
 'wwwUUUwwwwwwwwwwx
 'wwwwWwwwwwwwwwwwx
 xxxxxxxxxxxxxxxxxx
-ENDMAP
-
-##############################################################
-# Net traps aren't going to kill you.
-NAME:   minmay_entry_trapped
-TAGS:   entry no_monster_gen
-ORIENT: float
-NSUBST: ~ = 3:~ / *=~.....
-SUBST:  ~ : ~^..
-KFEAT:  ~ = net trap
-KFEAT:  ^ = net trap / dart trap
-MAP
-    x+x
-    x~x
-    x~x
-   xx~xx
-xxxx...xxxx
-+~~~.{.~~~+
-xxxx...xxxx
-   xx~xx
-    x~x
-    x~x
-    x+x
 ENDMAP
 
 ##############################################################

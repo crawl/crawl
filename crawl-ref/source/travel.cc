@@ -593,6 +593,8 @@ static void _userdef_run_stoprunning_hook(void)
 #ifdef CLUA_BINDINGS
     if (you.running)
         clua.callfn("ch_stop_running", "s", _run_mode_name(you.running));
+#else
+    UNUSED(_run_mode_name);
 #endif
 }
 
@@ -3224,7 +3226,7 @@ string stair_info::describe() const
         return make_stringf(" (-> %s@(%d,%d)%s%s)", lp.id.describe().c_str(),
                              lp.pos.x, lp.pos.y,
                              guessed_pos? " guess" : "",
-                             type == PLACEHOLDER? " placeholder" : "");
+                             type == PLACEHOLDER ? " placeholder" : "");
     }
     else if (destination.id.is_valid())
         return make_stringf(" (->%s (?))", destination.id.describe().c_str());

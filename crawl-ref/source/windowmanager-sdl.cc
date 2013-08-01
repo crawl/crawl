@@ -316,7 +316,9 @@ int SDLWrapper::init(coord_def *m_windowsz)
     _desktop_width = video_info->current_w;
     _desktop_height = video_info->current_h;
 
+#if !SDL_VERSION_ATLEAST(2,0,0)
     SDL_EnableUNICODE(true);
+#endif
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     glDebug("SDL_GL_DOUBLEBUFFER");
@@ -331,6 +333,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     glDebug("SDL_GL_ALPHA_SIZE 8");
 
+#if !SDL_VERSION_ATLEAST(2,0,0)
     if (Options.tile_key_repeat_delay > 0)
     {
         const int repdelay    = Options.tile_key_repeat_delay;
@@ -344,6 +347,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
 #endif
     }
+#endif
 
 #ifdef USE_GLES
 #ifdef __ANDROID__

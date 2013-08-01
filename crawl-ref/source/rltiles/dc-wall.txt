@@ -351,10 +351,25 @@ beehives7
 beehives8
 beehives9
 
-lair0 WALL_LAIR WALL_ORC WALL_SWAMP
+lair0 WALL_LAIR
 lair1
 lair2
 lair3
+
+%weight 10
+orc0 WALL_ORC
+orc1
+orc2
+orc3
+%weight 2
+orc4
+orc5
+orc6
+orc7
+orc8
+orc9
+orc10
+orc11
 
 %weight 10
 slime0 WALL_SLIME
@@ -1010,7 +1025,7 @@ icy_stone1
 icy_stone2
 icy_stone3
 
-lab-rock0 WALL_LAB_ROCK
+lab-rock0 WALL_LAB_ROCK WALL_SWAMP
 lab-rock1
 lab-rock2
 lab-rock3
@@ -1457,11 +1472,19 @@ bars_red08
 %repeat WALL_BARS WALL_BARS_DARKGRAY
 %resetcol
 
-shadow_w DNGN_WALL_SHADOW_W
-shadow_nw DNGN_WALL_SHADOW_NW
-shadow_n DNGN_WALL_SHADOW_N
-shadow_ne DNGN_WALL_SHADOW_NE
-shadow_e DNGN_WALL_SHADOW_E
+%rim 0
+%shrink 0
+shadow_w DNGN_WALL_SHADOW
+shadow_nw
+shadow_n
+shadow_ne
+shadow_e
+
+shadow_w_darker DNGN_WALL_SHADOW_DARK
+shadow_nw_darker
+shadow_n_darker
+shadow_ne_darker
+shadow_e_darker
 
 %sdir dngn/vaults
 brick_dark_leak WALL_BRICK_DARK_LEAK

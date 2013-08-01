@@ -515,10 +515,6 @@ eggplant
 Una berenjena podrida que puedes arrojar a los desarrolladores de Crawl. (Si
 ves este mensaje, se trata de un error del programa.)
 %%%%
-empty ebony casket
-
-Una caja mágica cuyo poder se ha agotado.
-%%%%
 eudemon blade
 
 Una gloriosa cuchilla creada en los forjas del Cielo, y poseída por un espíritu
@@ -1014,12 +1010,6 @@ Este poderoso anillo puede ser activado para ocultar a su portador de la vista
 de los demás, pero incrementa la velocidad de su metabolismo en gran medida
 mientras lo hace.
 %%%%
-ring of life protection
-
-Este anillo bendito protege la fuerza vital de su portador de energías
-negativas, haciéndole parcialmente inmune a los efectos de absorción de vida de
-los no-muertos y de la necromancia.
-%%%%
 ring of magical power
 
 Este anillo incrementa las reservas mágicas de su portador.
@@ -1027,6 +1017,12 @@ Este anillo incrementa las reservas mágicas de su portador.
 ring of poison resistance
 
 Este anillo proporciona protección ante los efectos de los venenos.
+%%%%
+ring of positive energy
+
+Este anillo bendito protege la fuerza vital de su portador de energías
+negativas, haciéndole parcialmente inmune a los efectos de absorción de vida de
+los no-muertos y de la necromancia.
 %%%%
 ring of protection
 
@@ -1262,10 +1258,6 @@ Un vegetal repulsivo en forma de pepino.
 spear
 
 Un palo largo con una punta de metal en un extremo, para ser asido o lanzado.
-%%%%
-spiked flail
-
-Un flagelo con largos pinchos en su cabeza de metal.
 %%%%
 staff of air
 

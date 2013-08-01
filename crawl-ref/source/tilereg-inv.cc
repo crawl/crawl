@@ -233,7 +233,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 {
 #if TAG_MAJOR_VERSION == 34
     // There's nothing you can do with an empty box if you can't unwield it.
-    if (!equipped && item.sub_type == MISC_EMPTY_EBONY_CASKET)
+    if (!equipped && item.sub_type == MISC_BUGGY_EBONY_CASKET)
         return false;
 #endif
 

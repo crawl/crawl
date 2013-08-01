@@ -19,6 +19,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "attitude-change.h"
 #include "branch.h"
@@ -668,7 +669,7 @@ void bolt::initialise_fire()
 
     message_cache.clear();
 
-    // seen might be set by caller to supress this.
+    // seen might be set by caller to suppress this.
     if (!seen && you.see_cell(source) && range > 0 && visible())
     {
         seen = true;
@@ -1630,14 +1631,21 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         }
         else
         {
+            hurted = resist_adjust_damage(mons, pbolt.flavour,
+                                          mons->res_negative_energy(),
+                                          hurted);
+
             // Early out if no side effects.
             if (!doFlavouredEffects)
                 return hurted;
 
+            if (original > hurted)
+                simple_monster_message(mons, " resists.");
+
             if (mons->observable())
                 pbolt.obvious_effect = true;
 
-            mons->drain_exp(pbolt.agent(), pbolt.aux_source.c_str());
+            mons->drain_exp(pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
                 did_god_conduct(DID_NECROMANCY, 2, pbolt.effect_known);
@@ -1898,6 +1906,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
         return true;
     }
     else if (wh_enchant == ENCH_CONFUSION
+             || wh_enchant == ENCH_INSANE
              || mons->holiness() == MH_NATURAL)
     {
         if (wh_enchant == ENCH_CONFUSION
@@ -1908,6 +1917,12 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 
         if (wh_enchant == ENCH_FEAR
             && mons->friendly())
+        {
+            return true;
+        }
+
+        if (wh_enchant == ENCH_INSANE
+            && !mons->can_go_frenzy())
         {
             return true;
         }
@@ -1968,7 +1983,9 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
         if (resisted)
             continue;
 
-        if (mi->add_ench(mon_enchant(wh_enchant, 0, &you)))
+        if ((wh_enchant == ENCH_INSANE && mi->go_frenzy(&you))
+            || (wh_enchant != ENCH_INSANE
+                && mi->add_ench(mon_enchant(wh_enchant, 0, &you))))
         {
             // Do messaging.
             const char* msg;
@@ -1990,6 +2007,9 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
     if (!did_msg)
         canned_msg(MSG_NOTHING_HAPPENS);
+
+    if (wh_enchant == ENCH_INSANE)
+        did_god_conduct(DID_HASTY, 8, true);
 
     return SPRET_SUCCESS;
 }
@@ -2124,7 +2144,7 @@ bool miasma_monster(monster* mons, const actor* who)
 
     if (who && who->is_player()
         && is_good_god(you.religion)
-        && !(success && you.religion == GOD_SHINING_ONE)) // already penalized
+        && !(success && you_worship(GOD_SHINING_ONE))) // already penalized
     {
         did_god_conduct(DID_NECROMANCY, 5 + random2(3));
     }
@@ -2347,6 +2367,37 @@ static void _imb_explosion(bolt *parent, coord_def center)
                     parent->beam_cancelled = true;
                     return;
                 }
+            }
+        }
+    }
+}
+
+static void _malign_offering_effect(actor* victim, const actor* agent, int damage)
+{
+    if (!agent || damage < 1)
+        return;
+
+    // The position might be trashed if the damage kills the victim,
+    // so obtain the LOS now.  The LOS is stored in the monster for
+    // memory management reasons, but is not cleared by monster_cleanup,
+    // so is still safe to use until invalidated by the next call to
+    // get_los_no_trans on that monster.
+    const los_base * const victim_los = victim->get_los_no_trans();
+
+    mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
+    damage = victim->hurt(agent, damage, BEAM_NEG);
+
+    // Actors that had LOS to the victim (blocked by glass, clouds, etc),
+    // even if they couldn't actually see each another because of blindness
+    // or invisibility.
+    for (actor_iterator ai(victim_los); ai; ++ai)
+    {
+        if (mons_aligned(agent, *ai) && ai->holiness() != MH_NONLIVING)
+        {
+            if (ai->heal(max(1, damage * 2 / 3)) && you.can_see(*ai))
+            {
+                mprf("%s %s healed.", ai->name(DESC_THE).c_str(),
+                                      ai->conj_verb("are").c_str());
             }
         }
     }
@@ -3561,6 +3612,20 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
+    case BEAM_MALIGN_OFFERING:
+    {
+        int dam = resist_adjust_damage(&you, BEAM_NEG, you.res_negative_energy(),
+                                       damage.roll());
+        if (dam)
+        {
+            _malign_offering_effect(&you, agent(), dam);
+            obvious_effect = true;
+        }
+        else
+            canned_msg(MSG_YOU_UNAFFECTED);
+        break;
+    }
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -4132,7 +4197,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
             set_attack_conducts(conducts, mon, you.can_see(mon));
 
-            if (you.religion == GOD_BEOGH
+            if (you_worship(GOD_BEOGH)
                 && mons_genus(mon->type) == MONS_ORC
                 && mon->asleep() && !player_under_penance()
                 && you.piety >= piety_breakpoint(2) && mons_near(mon))
@@ -4220,7 +4285,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             m_brand = get_ammo_brand(*item);
 
         // Don't immediately turn insane monsters hostile.
-        if (m_brand != SPMSL_RAGE)
+        if (m_brand != SPMSL_FRENZY)
             behaviour_event(mon, ME_ANNOY, beam_source_as_target());
 
         // Don't allow needles of sleeping to awaken monsters.
@@ -4235,19 +4300,24 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         napalm_monster(mon, agent(), levels);
 
         if (name == "splash of liquid fire")
-        {
-            // the breath weapon can splash to adjacent monsters
-            for (monster_iterator mi(you.get_los()); mi; ++mi)
+            for (adjacent_iterator ai(source); ai; ++ai)
             {
-                if (grid_distance(you.pos(), mi->pos()) == 1 &&
-                    grid_distance(mon->pos(), mi->pos()) == 1)
+                // the breath weapon can splash to adjacent people
+                if (grid_distance(*ai, target) != 1)
+                    continue;
+                if (actor *victim = actor_at(*ai))
                 {
-                    mprf("The sticky flame splashes onto %s!",
-                         mi->name(DESC_THE).c_str());
-                    napalm_monster(*mi, agent(), levels);
+                    if (you.see_cell(*ai))
+                    {
+                        mprf("The sticky flame splashes onto %s!",
+                             victim->name(DESC_THE).c_str());
+                    }
+                    if (victim->is_player())
+                        napalm_player(levels, get_source_name(), aux_source);
+                    else
+                        napalm_monster(victim->as_monster(), agent(), levels);
                 }
             }
-        }
     }
 
     // Handle missile effects.
@@ -4270,7 +4340,9 @@ void bolt::monster_post_hit(monster* mon, int dmg)
           (name == "freezing breath" && mon->flight_mode()) ||
           (name == "lance of force" && dmg > 0) ||
           (name == "flood of elemental water"))
+    {
         beam_hits_actor(mon);
+    }
 
     if (name == "spray of energy")
         _dazzle_monster(mon, agent());
@@ -4599,7 +4671,7 @@ void bolt::affect_monster(monster* mon)
     // goes out of scope.
     //
     // Also exempting miscast explosions from this conduct -cao
-    if (you.religion == GOD_FEDHAS
+    if (you_worship(GOD_FEDHAS)
         && (flavour == BEAM_SPORE
             || beam_source == NON_MONSTER
                && aux_source.find("your miscasting") != string::npos))
@@ -4694,7 +4766,7 @@ void bolt::affect_monster(monster* mon)
         //
         // FIXME: Should be a better way of doing this.  For now, we are
         // just falsifying the death report... -cao
-        if (you.religion == GOD_FEDHAS && flavour == BEAM_SPORE
+        if (you_worship(GOD_FEDHAS) && flavour == BEAM_SPORE
             && fedhas_protects(mon))
         {
             if (mon->attitude == ATT_FRIENDLY)
@@ -4774,6 +4846,7 @@ bool bolt::has_saving_throw() const
     case BEAM_ENSLAVE_SOUL:     // has a different saving throw
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
+    case BEAM_MALIGN_OFFERING:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -4820,6 +4893,11 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_SENTINEL_MARK:
         rc = false;
+        break;
+
+    case BEAM_MALIGN_OFFERING:
+        rc = (mon->res_negative_energy(intrinsic_only) < 3);
+        break;
 
     default:
         break;
@@ -5053,7 +5131,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BERSERK:
-        if (!mon->berserk())
+        if (!mon->berserk_or_insane())
         {
             // currently from potion, hence voluntary
             mon->go_berserk(true);
@@ -5223,6 +5301,19 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         return MON_AFFECTED;
+
+    case BEAM_MALIGN_OFFERING:
+    {
+        int dam = resist_adjust_damage(mon, BEAM_NEG, mon->res_negative_energy(),
+                                       damage.roll());
+        if (dam)
+        {
+            _malign_offering_effect(mon, agent(), dam);
+            obvious_effect = true;
+        }
+        else
+            simple_monster_message(mon, " is unaffected.");
+    }
 
     default:
         break;
@@ -6051,7 +6142,9 @@ static string _beam_type_name(beam_type type)
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
     case BEAM_DEVOUR_FOOD:           return "devour food";
+#if TAG_MAJOR_VERSION == 34
     case BEAM_GLOOM:                 return "gloom";
+#endif
     case BEAM_INK:                   return "ink";
     case BEAM_HOLY_FLAME:            return "cleansing flame";
     case BEAM_HOLY_LIGHT:            return "holy light";
@@ -6063,6 +6156,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
     case BEAM_VULNERABILITY:         return "vulnerability";
+    case BEAM_MALIGN_OFFERING:       return "malign offering";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

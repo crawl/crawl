@@ -570,10 +570,6 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     if (you.species == SP_DJINNI)
         return false;
 
-    // We can only cling for safety if we're already doing so.
-    if (which_trans == TRAN_SPIDER && you.is_wall_clinging())
-        return false;
-
     if (feat == DNGN_LAVA)
         return !form_likes_lava(which_trans);
 
@@ -706,7 +702,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     const flight_type was_flying = you.flight_mode();
 
     // Zin's protection.
-    if (!just_check && you.religion == GOD_ZIN
+    if (!just_check && you_worship(GOD_ZIN)
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
@@ -840,6 +836,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
         dex       = -2;
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
+        else if (you.species == SP_GARGOYLE)
+            msg = "Your body stiffens and grows slower.";
         else
             msg += "a living statue of rough stone.";
         break;
@@ -857,7 +855,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_LICH:
         tran_name = "lich";
-        str       = 3;
         msg       = "Your body is suffused with negative energy!";
         break;
 
@@ -874,7 +871,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_PIG:
         tran_name = "pig";
         msg       = "You have been turned into a pig!";
-        you.transform_uncancellable = true;
+        if (!just_check)
+            you.transform_uncancellable = true;
         break;
 
     case TRAN_APPENDAGE:
@@ -1040,7 +1038,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_TREE:
-        if (you.religion == GOD_FEDHAS && !player_under_penance())
+        if (you_worship(GOD_FEDHAS) && !player_under_penance())
             simple_god_message(" makes you hardy against extreme temperatures.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
@@ -1124,7 +1122,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
             you.stop_being_constricted();
     }
 
-    you.check_clinging(false);
 
     // If we are no longer living, end an effect that afflicts only the living
     if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
@@ -1188,8 +1185,6 @@ void untransform(bool skip_wielding, bool skip_move)
         mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, -5, true,
                      "losing the spider transformation");
-        if (!skip_move)
-            you.check_clinging(false);
         break;
 
     case TRAN_BAT:
@@ -1208,8 +1203,11 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_STATUE:
         // This only handles lava orcs going statue -> stoneskin.
-        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN))
+        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+            || you.species == SP_GARGOYLE)
+        {
             mpr("You revert to a slightly less stony form.", MSGCH_DURATION);
+        }
         else if (you.species != SP_LAVA_ORC)
             mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, 2, true,
@@ -1243,8 +1241,6 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_LICH:
         mpr("You feel yourself come back to life.", MSGCH_DURATION);
-        notify_stat_change(STAT_STR, -3, true,
-                    "losing the lich transformation");
         you.is_undead = US_ALIVE;
         break;
 

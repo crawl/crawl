@@ -195,23 +195,11 @@ Wizard player ghost
 
 @player ghost@
 %%%%
-Priest player ghost
-
-@player ghost@
-%%%%
-Thief player ghost
-
-@player ghost@
-%%%%
 Gladiator player ghost
 
 @player ghost@
 %%%%
 Necromancer player ghost
-
-@player ghost@
-%%%%
-Paladin player ghost
 
 @player ghost@
 %%%%
@@ -276,14 +264,6 @@ Transmuter player ghost
 @player ghost@
 %%%%
 Healer player ghost
-
-@player ghost@
-%%%%
-Reaver player ghost
-
-@player ghost@
-%%%%
-Stalker player ghost
 
 @player ghost@
 %%%%

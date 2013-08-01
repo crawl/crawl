@@ -235,10 +235,6 @@ disc of storms
 この極めて強力なアイテムは、破壊的な雷電の嵐を解き放つ。
 この魔法道具の熟練者に扱われると非常に効果的だ。
 %%%%
-empty ebony casket
-
-力を使い果たした魔法の匣だ。
-%%%%
 eveningstar
 
 モーニングスターの対極となる武器だ。
@@ -512,11 +508,6 @@ ring of invisibility
 この指輪は発動することで装着者を一時的に透明にするが、
 その状態の間は装着者の代謝の速さを非常に増加させる。
 %%%%
-ring of life protection
-
-この祝福された指輪は負のエネルギーから装着者を保護し、
-アンデッドと死霊術による生命力の衰弱に対してある程度の免疫を授ける。
-%%%%
 ring of magical power
 
 この指輪は装着者に追加の魔力をもたらす。
@@ -524,6 +515,11 @@ ring of magical power
 ring of poison resistance
 
 この指輪は毒からの保護をもたらす。
+%%%%
+ring of positive energy
+
+この祝福された指輪は負のエネルギーから装着者を保護し、
+アンデッドと死霊術による生命力の衰弱に対してある程度の免疫を授ける。
 %%%%
 ring of protection
 

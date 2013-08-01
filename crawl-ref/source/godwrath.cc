@@ -498,7 +498,7 @@ static bool _yredelemnul_retribution()
 
     if (random2(you.experience_level) > 4)
     {
-        if (you.religion == god && coinflip() && yred_slaves_abandon_you())
+        if (you_worship(god) && coinflip() && yred_slaves_abandon_you())
             ;
         else
         {
@@ -642,10 +642,6 @@ static bool _beogh_retribution()
         int num_created = 0;
         int num_to_create = (coinflip()) ? 1 : 2;
 
-        // Need a species check, in case this retribution is a result of
-        // drawing the Wrath card.
-        const bool am_orc = player_genus(GENPC_ORCISH);
-
         for (int i = 0; i < num_to_create; ++i)
         {
             const int wpn_type =
@@ -665,19 +661,8 @@ static bool _beogh_retribution()
                 ASSERT(mon->weapon() != NULL);
                 item_def& wpn(*mon->weapon());
 
-                if (am_orc)
-                {
-                    set_equip_race(wpn, ISFLAG_NO_RACE);
-                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ORC_SLAYING);
-                }
-                else
-                {
-                    set_equip_race(wpn, ISFLAG_ORCISH);
-                    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
-                }
-
-                if (coinflip())
-                    wpn.flags |= ISFLAG_CURSED;
+                set_equip_race(wpn, ISFLAG_ORCISH);
+                set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
 
                 wpn.plus  = random2(3);
                 wpn.plus2 = random2(3);
@@ -705,15 +690,14 @@ static bool _beogh_retribution()
             ostringstream msg;
             msg << " throws "
                 << (num_created == 1 ? "an implement" : "implements")
-                << " of " << (am_orc ? "orc slaying" : "electrocution")
-                << " at you.";
+                << " of electrocution at you.";
             simple_god_message(msg.str().c_str(), god);
             break;
         } // else fall through
     }
     case 3: // 25%, relatively harmless
     case 4: // in effect, only for penance
-        if (you.religion == god && beogh_followers_abandon_you())
+        if (you_worship(god) && beogh_followers_abandon_you())
             break;
         // else fall through
     default: // send orcs after you (3/8 to 5/8)
@@ -1029,7 +1013,7 @@ static bool _fedhas_retribution()
 
     // We have 3 forms of retribution, but players under penance will be
     // spared the 'you are now surrounded by oklob plants, please die' one.
-    const int retribution_options = you.religion == GOD_FEDHAS ? 2 : 3;
+    const int retribution_options = you_worship(GOD_FEDHAS) ? 2 : 3;
 
     switch (random2(retribution_options))
     {
@@ -1296,16 +1280,16 @@ static bool _beogh_idol_revenge()
 
     // Beogh watches his charges closely, but for others doesn't always
     // notice.
-    if (you.religion == GOD_BEOGH
+    if (you_worship(GOD_BEOGH)
         || (player_genus(GENPC_ORCISH) && coinflip())
         || one_chance_in(3))
     {
         const char *revenge;
 
-        if (you.religion == GOD_BEOGH)
+        if (you_worship(GOD_BEOGH))
             revenge = _get_beogh_speech("idol follower").c_str();
-        else if (you.species == SP_HILL_ORC)
-            revenge = _get_beogh_speech("idol hill orc").c_str();
+        else if (player_genus(GENPC_ORCISH))
+            revenge = _get_beogh_speech("idol orc").c_str();
         else
             revenge = _get_beogh_speech("idol other").c_str();
 
@@ -1321,7 +1305,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
 {
     // TSO won't protect you from his own cleansing flame, and Xom is too
     // capricious to protect you from it.
-    if (you.religion != GOD_SHINING_ONE && you.religion != GOD_XOM
+    if (!you_worship(GOD_SHINING_ONE) && !you_worship(GOD_XOM)
         && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
     {
         god_speaks(you.religion,
@@ -1416,7 +1400,7 @@ static void _god_smites_you(god_type god, const char *message,
 
     // Your god won't protect you from his own smiting, and Xom is too
     // capricious to protect you from any god's smiting.
-    if (you.religion != god && you.religion != GOD_XOM
+    if (!you_worship(god) && !you_worship(GOD_XOM)
         && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
     {
         god_speaks(you.religion,

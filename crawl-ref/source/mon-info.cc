@@ -116,11 +116,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_POSSESSABLE;
     case ENCH_PREPARING_RESURRECT:
         return MB_PREP_RESURRECT;
-    case ENCH_FADING_AWAY:
-        if ((mons.get_ench(ENCH_FADING_AWAY)).duration < 400) // min dur is 180*20, max dur 230*10
-            return MB_MOSTLY_FADED;
-
-        return MB_FADING_AWAY;
     case ENCH_REGENERATION:
         return MB_REGENERATION;
     case ENCH_RAISED_MR:
@@ -182,6 +177,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_CONTROL_WINDS;
     case ENCH_WIND_AIDED:
         return MB_WIND_AIDED;
+    case ENCH_TOXIC_RADIANCE:
+        return MB_TOXIC_RADIANCE;
     default:
         return NUM_MB_FLAGS;
     }
@@ -359,6 +356,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     fire_blocker = DNGN_UNSEEN;
 
+    u.ghost.acting_part = MONS_0;
     if (mons_is_pghost(type))
     {
         u.ghost.species = SP_HUMAN;
@@ -536,6 +534,15 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->flags & MF_NAME_SPECIES)
         mb.set(MB_NO_NAME_TAG);
 
+    // Chimera acting head needed for name
+    u.ghost.acting_part = MONS_0;
+    if (type_known && mons_class_is_chimeric(type))
+    {
+        ASSERT(m->ghost.get());
+        ghost_demon& ghost = *m->ghost;
+        u.ghost.acting_part = ghost.acting_part;
+    }
+
     if (milev <= MILEV_NAME)
     {
         if (type_known && type == MONS_DANCING_WEAPON
@@ -608,8 +615,6 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOWED);
-    if (m->is_wall_clinging())
-        mb.set(MB_CLINGING);
 
     dam = mons_get_damage_level(m);
 
@@ -617,7 +622,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (nomsg_wounds)
         dam = MDAM_OKAY;
 
-    if (mons_behaviour_perceptible(m))
+    if (!mons_class_flag(m->type, M_NO_EXP_GAIN)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {
@@ -667,7 +672,7 @@ monster_info::monster_info(const monster* m, int milev)
     {
     case ATT_NEUTRAL:
     case ATT_HOSTILE:
-        if (you.religion == GOD_SHINING_ONE
+        if (you_worship(GOD_SHINING_ONE)
             && !tso_unchivalric_attack_safe_monster(m)
             && is_unchivalric_attack(&you, m))
         {
@@ -927,7 +932,8 @@ string monster_info::common_name(description_level_type desc) const
     const string core = _core_name();
     const bool nocore = mons_class_is_zombified(type)
                         && mons_is_unique(base_type)
-                        && base_type == mons_species(base_type);
+                        && base_type == mons_species(base_type)
+                        || mons_class_is_chimeric(type);
 
     ostringstream ss;
 
@@ -956,6 +962,22 @@ string monster_info::common_name(description_level_type desc) const
             ss << make_stringf("%d", number);
 
         ss << "-headed ";
+    }
+
+    if (mons_class_is_chimeric(type))
+    {
+        ss << "chimera";
+        monsterentry *me = NULL;
+        if (u.ghost.acting_part != MONS_0
+            && (me = get_monster_data(u.ghost.acting_part)))
+        {
+            // Specify an acting head
+            ss << "'s " << me->name << " head";
+        }
+        else
+            // Suffix parts in brackets
+            // XXX: Should have a desc level that disables this
+            ss << " (" << core << chimera_part_names() << ")";
     }
 
     if (!nocore)
@@ -994,9 +1016,6 @@ string monster_info::common_name(description_level_type desc) const
         break;
     case MONS_PILLAR_OF_SALT:
         ss << (nocore ? "" : " ") << "shaped pillar of salt";
-        break;
-    case MONS_CHIMERA:
-        ss << chimera_part_names() << " chimera";
         break;
     default:
         break;
@@ -1220,6 +1239,8 @@ static string _verbose_info0(const monster_info& mi)
 {
     if (mi.is(MB_BERSERK))
         return "berserk";
+    if (mi.is(MB_INSANE))
+        return "insane";
     if (mi.is(MB_FRENZIED))
         return "frenzied";
     if (mi.is(MB_ROUSED))
@@ -1467,10 +1488,6 @@ vector<string> monster_info::attributes() const
         v.push_back("deflecting missiles");
     if (is(MB_PREP_RESURRECT))
         v.push_back("quietly preparing");
-    if (is(MB_FADING_AWAY))
-        v.push_back("slowly fading away");
-    if (is(MB_MOSTLY_FADED))
-        v.push_back("mostly faded away");
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
     if (is(MB_BREATH_WEAPON))
@@ -1531,6 +1548,8 @@ vector<string> monster_info::attributes() const
         v.push_back("controlling the winds");
     if (is(MB_WIND_AIDED))
         v.push_back("aim guided by the winds");
+    if (is(MB_TOXIC_RADIANCE))
+        v.push_back("radiating toxic energy");
     return v;
 }
 
@@ -1727,7 +1746,7 @@ bool monster_info::airborne() const
 
 bool monster_info::ground_level() const
 {
-    return (!airborne() && !is(MB_CLINGING));
+    return !airborne();
 }
 
 void get_monster_info(vector<monster_info>& mons)

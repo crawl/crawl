@@ -118,8 +118,6 @@ static tileidx_t _tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_BOLT;
     case TRAP_NET:
         return TILE_DNGN_TRAP_NET;
-    case TRAP_GAS:
-        return TILE_DNGN_TRAP_GAS;
     case TRAP_ZOT:
         return TILE_DNGN_TRAP_ZOT;
     case TRAP_NEEDLE:
@@ -251,12 +249,16 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_STONE_STAIRS_DOWN;
     case DNGN_ESCAPE_HATCH_DOWN:
         return TILE_DNGN_ESCAPE_HATCH_DOWN;
+    case DNGN_SEALED_STAIRS_DOWN:
+        return TILE_DNGN_SEALED_STAIRS_DOWN;
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return TILE_DNGN_STONE_STAIRS_UP;
     case DNGN_ESCAPE_HATCH_UP:
         return TILE_DNGN_ESCAPE_HATCH_UP;
+    case DNGN_SEALED_STAIRS_UP:
+        return TILE_DNGN_SEALED_STAIRS_UP;
     case DNGN_EXIT_DUNGEON:
         return TILE_DNGN_EXIT_DUNGEON;
     case DNGN_ENTER_DIS:
@@ -288,7 +290,9 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_EXIT_PANDEMONIUM;
 
     // branch entry stairs
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARVEN_HALL:
+#endif
     case DNGN_ENTER_HALL_OF_BLADES:
     case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
@@ -322,7 +326,9 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_ZOT_CLOSED;
 
     // branch exit stairs
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
     case DNGN_RETURN_FROM_FOREST:
         return TILE_DNGN_RETURN;
@@ -420,7 +426,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 bool is_door_tile(tileidx_t tile)
 {
-    return tile >= TILE_DNGN_RUNED_DOOR &&
+    return tile >= TILE_DNGN_CLOSED_DOOR &&
         tile < TILE_DNGN_ORCISH_IDOL;
 }
 
@@ -1041,8 +1047,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // elves ('e')
     case MONS_ELF:
         return TILEP_MONS_ELF;
-    case MONS_DEEP_ELF_SOLDIER:
-        return TILEP_MONS_DEEP_ELF_SOLDIER;
     case MONS_DEEP_ELF_FIGHTER:
         return TILEP_MONS_DEEP_ELF_FIGHTER;
     case MONS_DEEP_ELF_KNIGHT:
@@ -1079,6 +1083,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return _mon_mod(TILEP_MONS_FUNGUS, tile_num_prop);
     case MONS_WANDERING_MUSHROOM:
         return TILEP_MONS_WANDERING_MUSHROOM;
+    case MONS_DEATHCAP:
+        return TILEP_MONS_DEATHCAP;
 
     // goblins ('g')
     case MONS_GOBLIN:
@@ -1187,8 +1193,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
             return TILEP_MONS_SIREN;
     case MONS_DRYAD:
         return TILEP_MONS_DRYAD;
-    case MONS_THORN_HUNTER:
-        return TILEP_MONS_OKLOB_SAPLING;
+    case MONS_WATER_NYMPH:
+        return TILEP_MONS_WATER_NYMPH;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
@@ -1234,8 +1240,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SILENT_SPECTRE;
     case MONS_LOST_SOUL:
         return TILEP_MONS_LOST_SOUL;
-    case MONS_SPIRIT:
-        return TILEP_MONS_SPIRIT;
 
     // rodents ('r')
     case MONS_RAT:
@@ -1318,6 +1322,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_WATER_ELEMENTAL;
     case MONS_IRON_ELEMENTAL:
         return TILEP_MONS_IRON_ELEMENTAL;
+    case MONS_ELEMENTAL_WELLSPRING:
+        return TILEP_MONS_ELEMENTAL_WELLSPRING;
 
     // worms ('w')
     case MONS_WORM:
@@ -1618,6 +1624,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_OKLOB_PLANT;
     case MONS_THORN_LOTUS:
         return TILEP_MONS_THORN_LOTUS;
+    case MONS_THORN_HUNTER:
+        return TILEP_MONS_THORN_HUNTER;
+    case MONS_TREANT:
+        return TILEP_MONS_TREANT;
 
     // rakshasa ('R')
     case MONS_RAKSHASA:
@@ -1661,6 +1671,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_POLAR_BEAR;
     case MONS_BLACK_BEAR:
         return TILEP_MONS_BLACK_BEAR;
+    case MONS_ANCIENT_BEAR:
+        return TILEP_MONS_ANCIENT_BEAR;
 
     // vampires ('V')
     case MONS_VAMPIRE:
@@ -1791,8 +1803,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_DEMIGOD;
     case MONS_HALFLING:
         return TILEP_MONS_HALFLING;
-    case MONS_PALADIN:
-        return TILEP_MONS_PALADIN;
 
     // mimics
     case MONS_ITEM_MIMIC:
@@ -1965,8 +1975,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // centaur ('c')
     case MONS_NESSOS:
         return TILEP_MONS_NESSOS;
-    case MONS_PAN:
-        return TILEP_MONS_PAN;
 
     // draconian ('d')
     case MONS_TIAMAT:
@@ -3181,10 +3189,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_FLAIL_DWARF;
         return TILE_WPN_FLAIL;
 
-#if TAG_MAJOR_VERSION == 34
-    case WPN_SPIKED_FLAIL:
-        return TILE_WPN_SPIKED_FLAIL;
-#endif
     case WPN_GREAT_MACE:
         return TILE_WPN_GREAT_MACE;
 
@@ -3689,7 +3693,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
 
     // elves ('e')
     case MONS_ELF:
-    case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_BLADEMASTER:
@@ -3788,6 +3791,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SIREN;
     case MONS_DRYAD:
         return TILE_CORPSE_DRYAD;
+    case MONS_WATER_NYMPH:
+        return TILE_CORPSE_WATER_NYMPH;
 
     // rotting monsters ('n')
     case MONS_BOG_BODY:
@@ -4074,6 +4079,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_POLAR_BEAR;
     case MONS_BLACK_BEAR:
         return TILE_CORPSE_BLACK_BEAR;
+    case MONS_ANCIENT_BEAR:
+        return TILE_CORPSE_ANCIENT_BEAR;
 
     // seafood ('X')
     case MONS_OCTOPODE:
@@ -4197,13 +4204,11 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_CRYSTAL_BALL_OF_ENERGY:
         return TILE_MISC_CRYSTAL_BALL_OF_ENERGY;
 
-#if TAG_MAJOR_VERSION == 34
-    case MISC_EMPTY_EBONY_CASKET:
-        return TILE_MISC_EMPTY_EBONY_CASKET;
-#endif
-
     case MISC_DISC_OF_STORMS:
         return TILE_MISC_DISC_OF_STORMS;
+
+    case MISC_SACK_OF_SPIDERS:
+        return TILE_MISC_SACK_OF_SPIDERS;
 
     case MISC_DECK_OF_ESCAPE:
     case MISC_DECK_OF_DESTRUCTION:
@@ -4575,9 +4580,12 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch = TILE_CLOUD_COLD_0 + dur;
                 break;
 
-            case CLOUD_MEPHITIC:
             case CLOUD_POISON:
                 ch = TILE_CLOUD_POISON_0 + dur;
+                break;
+
+            case CLOUD_MEPHITIC:
+                ch = TILE_CLOUD_MEPHITIC_0 + dur;
                 break;
 
             case CLOUD_BLUE_SMOKE:
@@ -4940,7 +4948,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_STICKS_TO_SNAKES:         return TILEG_STICKS_TO_SNAKES;
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;
-    case SPELL_HOMUNCULUS:               return TILEG_HOMUNCULUS;
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
     case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
@@ -4967,7 +4974,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Rod-only spells
     case SPELL_PARALYSE:      // we could reuse Petrify for this
-    case SPELL_STRIKING:
     case SPELL_BOLT_OF_INACCURACY:
     case SPELL_SUMMON_SWARM:
         return TILEG_TODO;
@@ -5029,7 +5035,9 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_STABBING:       ch = TILEG_STABBING_ON; break;
 #endif
     case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
+#if TAG_MAJOR_VERSION == 34
     case SK_TRAPS:          ch = TILEG_TRAPS_ON; break;
+#endif
     case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
     case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
@@ -5249,6 +5257,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_BERSERK;
     case ABIL_EVOKE_TELEPORTATION:
         return TILEG_ABILITY_EVOKE_TELEPORT;
+    case ABIL_EVOKE_TELEPORT_CONTROL:
+        return TILEG_ABILITY_EVOKE_TELEPORT_CONTROL;
     case ABIL_EVOKE_BLINK:
         return TILEG_ABILITY_EVOKE_BLINK;
     case ABIL_EVOKE_TURN_INVISIBLE:
@@ -5527,8 +5537,8 @@ tileidx_t tileidx_known_brand(const item_def &item)
         case SPMSL_SICKNESS:
             return TILE_BRAND_SICKNESS;
 #endif
-        case SPMSL_RAGE:
-            return TILE_BRAND_RAGE;
+        case SPMSL_FRENZY:
+            return TILE_BRAND_FRENZY;
         case SPMSL_SLEEP:
             return TILE_BRAND_SLEEP;
         default:

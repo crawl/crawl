@@ -69,8 +69,11 @@ void handle_monster_shouts(monster* mons, bool force)
     // Chimera can take a random shout type from any of their
     // three components
     if (mons->type == MONS_CHIMERA)
-        s_type = mons_shouts(random_chimera_part(mons), false);
-
+    {
+        monster_type acting = mons->ghost->acting_part != MONS_0
+            ? mons->ghost->acting_part : random_chimera_part(mons);
+        s_type = mons_shouts(acting, false);
+    }
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
     // Muted monsters can't shout at all.
@@ -416,8 +419,10 @@ void item_noise(const item_def &item, string msg, int loudness)
     // replace references to player name and god
     msg = replace_all(msg, "@player_name@", you.your_name);
     msg = replace_all(msg, "@player_god@",
-                      you.religion == GOD_NO_GOD ? "atheism"
+                      you_worship(GOD_NO_GOD) ? "atheism"
                       : god_name(you.religion, coinflip()));
+    msg = replace_all(msg, "@a_player_genus@",
+                          article_a(species_name(you.species, true)));
 
     mpr(msg.c_str(), channel);
 
@@ -592,8 +597,7 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
             break;
 
         case SENSE_WEB_VIBRATION:
-            // Spider form
-            if (you.can_cling_to_walls())
+            if (you.form == TRAN_SPIDER)
             {
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.

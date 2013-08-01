@@ -96,10 +96,12 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_VINES;
         return;
 
+#if TAG_MAJOR_VERSION == 34
     case BRANCH_DWARVEN_HALL:
         flv.wall  = TILE_WALL_HALL;
         flv.floor = TILE_FLOOR_LIMESTONE;
         return;
+#endif
 
     case BRANCH_ELVEN_HALLS:
     case BRANCH_HALL_OF_BLADES:
@@ -1155,6 +1157,10 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_WALL_CRYPT;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_CRYPT_METAL;
+        else if (orig == TILE_DNGN_OPEN_DOOR)
+            orig = TILE_DNGN_OPEN_DOOR_CRYPT;
+        else if (orig == TILE_DNGN_CLOSED_DOOR)
+            orig = TILE_DNGN_CLOSED_DOOR_CRYPT;
     }
     else if (player_in_branch(BRANCH_TOMB))
     {
@@ -1217,10 +1223,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                                                         env.grid_colours(gc)),
                                      flv.special);
     }
-    else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR
-              || orig == TILE_DNGN_RUNED_DOOR
-              || orig == TILE_DNGN_SEALED_DOOR)
-             && !mimic)
+    else if (is_door_tile(orig) && !mimic)
     {
         tileidx_t override = flv.feat;
         /*

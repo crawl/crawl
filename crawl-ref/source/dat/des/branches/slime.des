@@ -230,7 +230,6 @@ TAGS: slime_entry transparent
 SHUFFLE: ABCD
 SUBST: A = x, BCD = .
 KFEAT: O = enter_slime_pits
-KFEAT: x = slimy_wall
 KMONS: 1 = ooze / jelly / nothing
 MAP
   .......

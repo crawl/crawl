@@ -450,7 +450,7 @@ static bool _is_appropriate_evokable(const item_def& item,
     if (!item_type_known(item))
         return true;
 
-    // Random effects are always (in)apropriate for all targets.
+    // Random effects are always (in)appropriate for all targets.
     if (item.sub_type == WAND_RANDOM_EFFECTS)
         return true;
 
@@ -905,7 +905,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         case MouseEvent::RIGHT:
             if (!(event.mod & MOD_SHIFT))
                 return command_to_key(CMD_RESISTS_SCREEN); // Character overview.
-            if (you.religion != GOD_NO_GOD)
+            if (!you_worship(GOD_NO_GOD))
                 return command_to_key(CMD_DISPLAY_RELIGION); // Religion screen.
 
             // fall through...
@@ -1257,7 +1257,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
         cmd.push_back(CMD_RESISTS_SCREEN);
 
         // Religion.
-        if (you.religion != GOD_NO_GOD)
+        if (!you_worship(GOD_NO_GOD))
         {
             _add_tip(tip, "[Shift + R-Click] Religion (%)");
             cmd.push_back(CMD_DISPLAY_RELIGION);

@@ -282,7 +282,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     int fail_reduce = 100;
     int wiz_factor = 87;
 
-    if (you.religion == GOD_VEHUMET
+    if (you_worship(GOD_VEHUMET)
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
         && vehumet_supports_spell(spell))
     {
@@ -770,6 +770,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
+    // XXX: the message order here might not be the best
+    zin_recite_interrupt();
+
     if (cast_result == SPRET_SUCCESS)
     {
         practise(EX_DID_CAST, spell);
@@ -835,7 +838,7 @@ static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
         if (spell == SPELL_NECROMUTATION && is_good_god(you.religion))
             excommunication();
     }
-    if (spell == SPELL_STATUE_FORM && you.religion == GOD_YREDELEMNUL
+    if (spell == SPELL_STATUE_FORM && you_worship(GOD_YREDELEMNUL)
         && !crawl_state.is_god_acting())
     {
         excommunication();
@@ -1236,7 +1239,7 @@ spret_type your_spells(spell_type spell, int powc,
     {
         int spfl = random2avg(100, 3);
 
-        if (you.religion != GOD_SIF_MUNA
+        if (!you_worship(GOD_SIF_MUNA)
             && you.penance[GOD_SIF_MUNA] && one_chance_in(20))
         {
             god_speaks(GOD_SIF_MUNA, "You feel a surge of divine spite.");
@@ -1245,7 +1248,7 @@ spret_type your_spells(spell_type spell, int powc,
             spfl = -you.penance[GOD_SIF_MUNA];
         }
         else if (spell_typematch(spell, SPTYP_NECROMANCY)
-                 && you.religion != GOD_KIKUBAAQUDGHA
+                 && !you_worship(GOD_KIKUBAAQUDGHA)
                  && you.penance[GOD_KIKUBAAQUDGHA]
                  && one_chance_in(20))
         {
@@ -1259,7 +1262,7 @@ spret_type your_spells(spell_type spell, int powc,
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
         else if (vehumet_supports_spell(spell)
-                 && you.religion != GOD_VEHUMET
+                 && !you_worship(GOD_VEHUMET)
                  && you.penance[GOD_VEHUMET]
                  && one_chance_in(20))
         {
@@ -1305,7 +1308,7 @@ spret_type your_spells(spell_type spell, int powc,
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
-        if (you.religion == GOD_SIF_MUNA
+        if (you_worship(GOD_SIF_MUNA)
             && !player_under_penance()
             && you.piety >= 100 && x_chance_in_y(you.piety + 1, 150))
         {
@@ -1471,8 +1474,10 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_liquefaction(powc, fail);
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
         return cast_los_attack_spell(spell, powc, &you, true, true, fail);
+
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        return cast_toxic_radiance(&you, powc, fail);
 
     case SPELL_IGNITE_POISON:
         return cast_ignite_poison(powc, fail);
@@ -1586,6 +1591,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_MASS_CONFUSION:
         return mass_enchantment(ENCH_CONFUSION, powc, fail);
+
+    case SPELL_DISCORD:
+        return mass_enchantment(ENCH_INSANE, powc, fail);
 
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
@@ -1768,6 +1776,13 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_FULMINANT_PRISM:
         return cast_fulminating_prism(powc, beam.target, fail);
+
+    case SPELL_SEARING_RAY:
+        return cast_searing_ray(powc, beam, fail);
+
+    case SPELL_MELEE: // Rod of striking
+        mpr("This rod is automatically evoked when it strikes in combat.");
+        return SPRET_ABORT;
 
     default:
         return SPRET_NONE;

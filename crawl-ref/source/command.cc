@@ -932,8 +932,8 @@ static vector<string> _get_branch_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    int mon_num = get_monster_by_name(key.c_str());
-    return (mon_num == MONS_PROGRAM_BUG);
+    monster_type mon_num = get_monster_by_name(key.c_str());
+    return mons_class_flag(mon_num, M_CANT_SPAWN);
 }
 
 static bool _spell_filter(string key, string body)

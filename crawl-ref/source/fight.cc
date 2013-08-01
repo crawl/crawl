@@ -181,7 +181,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         }
 
         melee_attack melee_attk(attacker, defender, attack_number,
-                          effective_attack_number);
+                                effective_attack_number);
 
         if (simu)
             melee_attk.simu = true;
@@ -324,7 +324,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     if (res > 0)
     {
-        if ((mons && res >= 3) || res > 3)
+        if (((mons || flavour == BEAM_NEG) && res >= 3) || res > 3)
             resistible = 0;
         else
         {
@@ -338,6 +338,8 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
             // effective one for monsters.
             if (mons)
                 resistible /= 1 + bonus_res + res * res;
+            else if (flavour == BEAM_NEG)
+                resistible /= res * 2;
             else
                 resistible /= resist_fraction(res, bonus_res);
         }
