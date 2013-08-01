@@ -7491,7 +7491,7 @@ bool player::can_safely_mutate() const
                && hunger_state == HS_ENGORGED);
 }
 
-// Is the player too undead to bleed and polymorph?
+// Is the player too undead to bleed, rage, and polymorph?
 bool player::is_lifeless_undead() const
 {
     if (is_undead == US_SEMI_UNDEAD)
