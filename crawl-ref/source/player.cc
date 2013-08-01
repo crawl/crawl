@@ -7491,13 +7491,18 @@ bool player::can_safely_mutate() const
                && hunger_state == HS_ENGORGED);
 }
 
+// Is the player too undead to bleed and polymorph?
+bool player::is_lifeless_undead() const
+{
+    if (is_undead == US_SEMI_UNDEAD)
+        return hunger_state <= HS_SATIATED;
+    else
+        return is_undead != US_ALIVE;
+}
+
 bool player::can_polymorph() const
 {
-    if (transform_uncancellable)
-        return false;
-    if (is_undead)
-        return is_undead == US_SEMI_UNDEAD && hunger_state > HS_SATIATED;
-    return true;
+    return !(transform_uncancellable || is_lifeless_undead());
 }
 
 bool player::can_bleed(bool allow_tran) const
@@ -7513,13 +7518,7 @@ bool player::can_bleed(bool allow_tran) const
         }
     }
 
-    if ((is_undead && is_undead != US_SEMI_UNDEAD)
-        || (is_undead == US_SEMI_UNDEAD && hunger_state <= HS_SATIATED))
-    {
-        return false;
-    }
-
-    if (holiness() == MH_NONLIVING)
+    if (is_lifeless_undead() || holiness() == MH_NONLIVING)
         return false;
 
     return true;
