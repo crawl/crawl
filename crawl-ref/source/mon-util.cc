@@ -3022,6 +3022,9 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
     // Cancel fleeing and such.
     mon->behaviour = BEH_WANDER;
 
+    // Remove haunting, which would otherwise cause monster to continue attacking
+    mon->del_ench(ENCH_HAUNTING, true, true);
+
     // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
 
