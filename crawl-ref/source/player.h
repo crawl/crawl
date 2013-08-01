@@ -563,6 +563,7 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool is_lifeless_undead() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool malmutate(const string &reason);
