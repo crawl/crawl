@@ -4995,7 +4995,7 @@ ENDMAP
 NAME: lightli_eight_chambers
 ORIENT: float
 DEPTH: D:20-
-TAGS: no_monster_gen no_ctele_into
+TAGS: no_monster_gen
 SHUFFLE: PFIEMONLSAKRVCTHD
 KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
            redback
@@ -5028,22 +5028,22 @@ MAP
 xxvvvvvvvvvvvvvxx
 xvv..vvvvvvv..vvx
 vv.II.vvvvv....vv
-v..II.+...=.EEE.v
-v..II.+...=.EEE.v
+v..II.+...+.EEE.v
+v..II.+...+.EEE.v
 vv....vvvvv....vv
-xvv==vv|||vv++vvx
+xvv++vv|||vv++vvx
 xxv..v*****v..vxx
 xxv..v%%%%%v..vxx
-xvv++vv%%%vv==vvx
-vv.FF.vv=vv....vv
+xvv++vv%%%vv++vvx
+vv.FF.vv+vv....vv
 v..FF..v.v..MM..v
 v..FF..v.v..MM..v
 vv....vv+vv.MM.vv
-xvv==vv...vv++vvx
+xvv++vv...vv++vvx
 xxv..v.NNN.v..vxx
 xxv..v.NNN.v..vxx
-xvv++vv...vv==vvx
-vv.PP.vv=vv....vv
+xvv++vv...vv++vvx
+vv.PP.vv+vv....vv
 v..PP..v.v..OO..v
 v..PP..v.+..OO..v
 vv....vvvvv.OO.vv
