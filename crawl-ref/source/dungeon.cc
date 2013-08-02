@@ -1036,6 +1036,20 @@ dgn_register_place(const vault_placement &place, bool register_vault)
             _mask_vault(place, MMT_OPAQUE);
     }
 
+    // Find tags matching properties.
+    vector<string> tags = place.map.get_tags();
+
+    for (vector<string>::const_iterator i = tags.begin(); i != tags.end(); ++i)
+    {
+        const feature_property_type prop = str_to_fprop(*i);
+        if (prop == FPROP_NONE)
+            continue;
+
+        for (vault_place_iterator vi(place); vi; ++vi)
+            env.pgrid(*vi) |= prop;
+
+    }
+
     if (place.map.has_tag("no_monster_gen"))
         _mask_vault(place, MMT_NO_MONS);
 

@@ -337,6 +337,8 @@ PLACE:    Used to specify certain special levels. Existing special levels
 
 TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           TAGS: lines, or use \ for very long ones. Valid tags are:
+          * Any KPROP name ("no_rtele_into", "no_tide", etc.): applies the
+             property to every square of the vault. See KPROP: below.
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
              the dungeon builder that the vault can be reused.
@@ -1432,6 +1434,9 @@ KPROP:    x = bloody
              get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
+
+          Properties can also be used as tags to apply to the entire vault:
+            TAGS: no_rtele_into no_tide
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the
