@@ -1552,7 +1552,7 @@ bool activate_talent(const talent& tal)
     if (tal.which == ABIL_STOP_FLYING)
     {
         if (grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
-            || grd(you.pos()) == DNGN_LAVA)
+            || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
         {
             mpr("Stopping flight right now would be fatal!");
             crawl_state.zero_turns_taken();
