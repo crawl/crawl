@@ -61,6 +61,7 @@ syn keyword desOrientation encompass north south east west northeast northwest s
 syn keyword desOrientation no_hmirror no_vmirror no_rotate
 syn keyword desOrientation entry pan lab bazaar allow_dup dummy mini_float minotaur luniq extra
 syn keyword desOrientation no_pool_fixup no_wall_fixup no_monster_gen generate_awake no_item_gen no_tele_control not_mappable no_magic_map generate_loot no_dump patrolling
+syn keyword desOrientation bloody no_cloud_gen no_rtele_into no_ctele_into no_tele_into no_tide no_jiyva
 syn keyword desOrientation Temple Orc Elf Lair Swamp Shoals Slime Snake Vaults Blade Crypt Tomb Hell Dis Geh Coc Tar
 syn keyword desOrientation D: contained
 
