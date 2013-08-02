@@ -46,6 +46,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -2468,10 +2469,6 @@ static bool _vorpalise_weapon(bool already_known)
         _rebrand_weapon(wpn);
     }
 
-    // Might be rebranding to/from protection or evasion.
-    you.redraw_armour_class = true;
-    you.redraw_evasion = true;
-
     // There's a temporary or new brand, attempt to make it permanent
     const string itname = wpn.name(DESC_YOUR);
     bool success = true;
@@ -2615,6 +2612,11 @@ static bool _vorpalise_weapon(bool already_known)
     {
         you.duration[DUR_WEAPON_BRAND] = 0;
         item_set_appearance(wpn);
+        // Might be rebranding to/from protection or evasion.
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+        // Might be removing antimagic
+        calc_mp();
     }
     return msg;
 }
