@@ -848,10 +848,12 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     item_def& item = mitm[item_idx];
 
-    // Can't apport the Orb in zotdef
-    if (crawl_state.game_is_zotdef() && item_is_orb(item))
+    // Can't apport the Orb in zotdef or sprint
+    if (item_is_orb(item)
+        && (crawl_state.game_is_zotdef()
+            || crawl_state.game_is_sprint()))
     {
-        mpr("You cannot apport the sacred Orb!");
+        mpr("You cannot apport the Orb!");
         return SPRET_ABORT;
     }
 
