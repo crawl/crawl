@@ -342,7 +342,7 @@ spret_type cast_song_of_slaying(int pow, bool fail)
 
     you.increase_duration(DUR_SONG_OF_SLAYING, 20 + pow / 3, 20 + pow / 3);
 
-    noisy(12, you.pos());
+    noisy(10, you.pos());
 
     you.props["song_of_slaying_bonus"] = 0;
     return SPRET_SUCCESS;
