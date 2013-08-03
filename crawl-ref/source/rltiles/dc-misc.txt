@@ -86,6 +86,13 @@ drain0 BOLT_DRAIN
 drain1
 drain2
 
+searing_ray0 BOLT_SEARING_RAY_I
+searing_ray1
+searing_ray2 BOLT_SEARING_RAY_II
+searing_ray3
+searing_ray4 BOLT_SEARING_RAY_III
+searing_ray5
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2
