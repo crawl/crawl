@@ -73,10 +73,10 @@ bullwhip2
 %rim 0
 sacred_scourge WPN_SACRED_SCOURGE
 trishula WPN_TRISHULA
-%rim 1
 demon_whip WPN_DEMON_WHIP
 giant_club WPN_GIANT_CLUB
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
+%rim 1
 
 ##Edged
 dagger WPN_DAGGER
