@@ -227,7 +227,6 @@ glaive2
 glaive3
 orcish_glaive1 WPN_GLAIVE_ORC
 orcish_glaive2
-%rim 1
 bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
@@ -235,7 +234,6 @@ orcish_bardiche WPN_BARDICHE_ORC
 orcish_bardiche2
 
 ##Staff
-%rim 0
 staff WPN_STAFF
 %rim 1
 quarterstaff WPN_QUARTERSTAFF
