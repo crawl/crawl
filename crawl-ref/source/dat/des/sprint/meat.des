@@ -315,7 +315,7 @@ end
 }}
 NAME:      meatsprint
 TAGS:      sprint no_rotate no_hmirror no_vmirror
-TAGS:      no_monster_gen no_item_gen no_trap_gen no_pool_fixup
+TAGS:      no_item_gen no_trap_gen no_pool_fixup
 ORIENT:    encompass
 DESC:      Sprint VIII: "Arena of Blood"
 KFEAT:     { = {

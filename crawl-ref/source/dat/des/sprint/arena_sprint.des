@@ -954,7 +954,7 @@ end
 }}
 
 NAME:       arena_sprint
-TAGS:       sprint no_item_gen no_trap_gen no_monster_gen no_rotate no_hmirror no_vmirror
+TAGS:       sprint no_item_gen no_trap_gen no_rotate no_hmirror no_vmirror
 DESC:       Sprint VI: "Thunderdome"
 ORIENT:     encompass
 LROCKTILE:  wall_hall

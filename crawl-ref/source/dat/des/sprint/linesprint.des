@@ -2,7 +2,7 @@
 {{
 
 function line_setup(e)
-  e.tags("no rotate no_hmirror no_vmirror no_trap_gen no_monster_gen")
+  e.tags("no_rotate no_hmirror no_vmirror no_trap_gen")
   e.tags("no_pool_fixup")
 -- TODO make these doors immune to disint
   e.kfeat("& = closed_door")
