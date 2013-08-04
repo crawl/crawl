@@ -48,7 +48,6 @@ function setup_room(e, id)
   -- Tags
   e.tags("no_item_gen")
   e.tags("no_trap_gen")
-  e.tags("no_monster_gen")
   e.tags("no_rotate")
   e.tags("no_hmirror")
   e.tags("no_vmirror")
@@ -565,7 +564,7 @@ end
 }}
 
 NAME:   sprint_v
-TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 DESC:   Sprint V: "Ziggurat Sprint"
 ORIENT: encompass
 LFLAGS: no_tele_control
@@ -690,7 +689,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:  room_start
-TAGS:  no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+TAGS:  no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 : setup_room(_G, 1)
 KFEAT:  a = altar_zin
 KFEAT:  b = altar_the_shining_one
