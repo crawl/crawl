@@ -4384,8 +4384,8 @@ static void _vanish_orig_eq(monster* mons)
         if (item.orig_place != 0 || item.orig_monnum != 0
             || !item.inscription.empty()
             || is_unrandom_artefact(item)
-            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN | ISFLAG_NOTED_GET
-                              | ISFLAG_BEEN_IN_INV)))
+            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+                              | ISFLAG_NOTED_GET)))
         {
             continue;
         }
