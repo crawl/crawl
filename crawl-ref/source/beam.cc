@@ -4497,7 +4497,7 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL && !is_tracer)
     {
         if (you.see_cell(mon->pos()))
-            mprf("The %s passes through %s", name.c_str(), mon->name(DESC_THE).c_str());
+            mprf("The %s passes through %s.", name.c_str(), mon->name(DESC_THE).c_str());
     }
 
     if (ignores_monster(mon))
