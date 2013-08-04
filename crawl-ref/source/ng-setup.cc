@@ -459,14 +459,23 @@ static void _update_weapon(const newgame_def& ng)
     case WPN_ROCKS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 4 + plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_LARGE_ROCK] = 1;
         break;
     case WPN_JAVELINS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 5 + plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_JAVELIN] = 1;
         break;
     case WPN_DARTS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20 + 10 * plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_DART] = 1;
         break;
     case WPN_BOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, -1, 1, plus, plus);
