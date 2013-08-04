@@ -118,11 +118,11 @@ vgate_open_down_crypt DNGN_VGATE_OPEN_DOWN_CRYPT
 fleshy_orifice_closed DNGN_FLESHY_ORIFICE
 fleshy_orifice_open
 
-%sdir dngn/gateways
-stone_arch DNGN_STONE_ARCH
-
 # Place new door tiles before this point, otherwise they can't be used as
 # door overrides.
+
+%sdir dngn/gateways
+stone_arch DNGN_STONE_ARCH
 
 %sdir dngn/statues
 orcish_idol DNGN_ORCISH_IDOL
