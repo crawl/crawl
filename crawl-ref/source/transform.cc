@@ -1012,6 +1012,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
             mpr("Your new body merges with your stone armour.");
         else if (you.species == SP_LAVA_ORC)
             mpr("Your new body is particularly stony.");
+        if (you.duration[DUR_ICY_ARMOUR])
+        {
+            mpr("Your new body cracks your icy armour.", MSGCH_DURATION);
+            you.duration[DUR_ICY_ARMOUR] = 0;
+        }
         break;
 
     case TRAN_ICE_BEAST:
@@ -1335,7 +1340,7 @@ void untransform(bool skip_wielding, bool skip_move)
     if (you.duration[DUR_ICY_ARMOUR]
         && !player_effectively_in_light_armour())
     {
-        you.duration[DUR_ICY_ARMOUR] = 1;
+        you.duration[DUR_ICY_ARMOUR] = 0;
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",
