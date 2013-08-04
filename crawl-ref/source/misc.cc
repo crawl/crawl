@@ -308,7 +308,7 @@ static void _compare_blood_quantity(item_def &stack, int timer_size)
     }
 }
 
-static void _init_coagulated_blood(item_def &stack, int count,
+static void _init_coagulated_blood(item_def &stack, int count, item_def &old,
                                    vector<int> &age_timer)
 {
     stack.base_type = OBJ_POTIONS;
@@ -317,7 +317,10 @@ static void _init_coagulated_blood(item_def &stack, int count,
     stack.plus      = 0;
     stack.plus2     = 0;
     stack.special   = 0;
-    stack.flags     = 0;
+    stack.flags     = old.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+                                   | ISFLAG_NO_PICKUP | ISFLAG_SUMMONED
+                                   | ISFLAG_DROPPED_BY_ALLY);
+    stack.inscription = old.inscription;
     item_colour(stack);
 
     CrawlHashTable &props_new = stack.props;
@@ -471,7 +474,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
         return;
 
     item_def &item = mitm[o];
-    _init_coagulated_blood(item, coag_count, age_timer);
+    _init_coagulated_blood(item, coag_count, blood, age_timer);
 
     if (blood.held_by_monster())
         move_item_to_grid(&o, blood.holding_monster()->pos());
@@ -691,7 +694,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         item.link        = freeslot;
         item.slot        = index_to_letter(item.link);
         item.pos.set(-1, -1);
-        _init_coagulated_blood(item, coag_count, age_timer);
+        _init_coagulated_blood(item, coag_count, blood, age_timer);
 
         blood.quantity -= coag_count + rot_count;
         _compare_blood_quantity(blood, timer.size());
@@ -749,7 +752,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     o = get_mitm_slot();
     if (o == NON_ITEM)
         return false;
-    _init_coagulated_blood(mitm[o], coag_count, age_timer);
+    _init_coagulated_blood(mitm[o], coag_count, blood, age_timer);
 
     move_item_to_grid(&o, you.pos());
 
