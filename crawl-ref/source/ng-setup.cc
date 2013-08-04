@@ -1349,9 +1349,6 @@ static void _setup_generic(const newgame_def& ng)
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
         {
-            // XXX: Why is this here? Elsewhere it's only ever used for runes.
-            you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
-
             // Identify all items in pack.
             set_ident_type(you.inv[i], ID_KNOWN_TYPE);
             set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
