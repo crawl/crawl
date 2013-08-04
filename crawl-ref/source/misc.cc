@@ -691,7 +691,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         item.plus        = 0;
         item.plus2       = 0;
         item.special     = 0;
-        item.flags       = (ISFLAG_KNOW_TYPE & ISFLAG_BEEN_IN_INV);
+        item.flags       = 0;
         item.pos.set(-1, -1);
         item_colour(item);
 
@@ -774,7 +774,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     mitm[o].plus      = 0;
     mitm[o].plus2     = 0;
     mitm[o].special   = 0;
-    mitm[o].flags     = (ISFLAG_KNOW_TYPE & ISFLAG_BEEN_IN_INV);
+    mitm[o].flags     = 0;
     item_colour(mitm[o]);
 
     CrawlHashTable &props_new = mitm[o].props;
