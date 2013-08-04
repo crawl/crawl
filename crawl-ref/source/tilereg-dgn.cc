@@ -1064,7 +1064,10 @@ bool DungeonRegion::update_tip_text(string &tip)
             tip += tile_debug_string(cell.tile.fg, cell.tile.bg, cell.tile.cloud, 'V');
         }
 
-        tip += make_stringf("\nFLV: floor: %d (%s) (%d)\n     wall:  %d (%s) (%d)\n     feat:  %d (%s) (%d)\n",
+        tip += make_stringf("\nFLV: floor: %d (%s) (%d)"
+                            "\n     wall:  %d (%s) (%d)"
+                            "\n     feat:  %d (%s) (%d)"
+                            "\n  special:  %d\n",
                             env.tile_flv(gc).floor,
                             tile_dngn_name(env.tile_flv(gc).floor),
                             env.tile_flv(gc).floor_idx,
@@ -1073,7 +1076,8 @@ bool DungeonRegion::update_tip_text(string &tip)
                             env.tile_flv(gc).wall_idx,
                             env.tile_flv(gc).feat,
                             tile_dngn_name(env.tile_flv(gc).feat),
-                            env.tile_flv(gc).feat_idx);
+                            env.tile_flv(gc).feat_idx,
+                            env.tile_flv(gc).special);
 
         ret = true;
     }
