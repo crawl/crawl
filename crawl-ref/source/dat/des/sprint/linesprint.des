@@ -89,14 +89,14 @@ KFEAT:     & = closed_door
 KMONS:     a = Erica / Erolcha / Eustachio / Gastronok / Grum band /\
                Harold / Joseph / Josephine band / Maurice / Psyche /\
                Sonja / Urug
-NSUBST:    a = 1:a. / 1:a.. / 1:a... / 1:a.... / * = .:70 a:1 
+NSUBST:    a = 1:a. / 1:a.. / 1:a... / 1:a.... / * = .:70 a:1
 KMONS:     b = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
                Maud / Nergalle / Nessos / Rupert / Saint Roka band / Snorg /\
                Wiglaf
-NSUBST:    b = 1:b. / 1:b.. / 1:ba.. / 1:baa.. / * = .:70 b:1 
+NSUBST:    b = 1:b. / 1:b.. / 1:ba.. / 1:baa.. / * = .:70 b:1
 KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
                Xtahua / Jory / Mennas / Mara
-NSUBST:    b = 1:c. / 1:cb. / 1:cb.. / 1:cbb.. / * = .:70 c:1 
+NSUBST:    b = 1:c. / 1:cb. / 1:cb.. / 1:cbb.. / * = .:70 c:1
 MAP
 xxxxxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
 x{.......AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
@@ -192,14 +192,14 @@ NAME:     items_1
 TAGS:     items_1
 KITEM:    a = potion of curing q:4 ident:all, \
               potion of heal wounds q:2 ident:all, \
-	      potion of invisibility q:1 ident:all, \
-	      potion of magic q:2 ident:all
+              potion of invisibility q:1 ident:all, \
+              potion of magic q:2 ident:all
 KITEM:    b = scroll of blinking q:1 ident:all, \
               scroll of amnesia q:2 ident:all, \
-	      scroll of remove curse q:3 ident:all
+              scroll of remove curse q:3 ident:all
 KITEM:    d = wand of fire charges:7 ident:all /\
               wand of cold charges:7 ident:all /\
-	      wand of draining charges:7 ident:all, \
+              wand of draining charges:7 ident:all, \
               staff of energy not_cursed ident:all
 KITEM:    e = sabre plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
            sabre plus:2 plus2:2 ego:draining ident:all not_cursed /\
@@ -220,7 +220,7 @@ KITEM:    e = sabre plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
            morningstar plus:2 plus2:2 good_item ident:all not_cursed w:5, \
            halberd plus:2 plus2:2 ego:protection ident:all not_cursed /\
            halberd plus:2 plus2:2 ego:venom ident:all not_cursed /\
-           halberd plus:2 plus2:2 good_item ident:all not_cursed w:5, \ 
+           halberd plus:2 plus2:2 good_item ident:all not_cursed w:5, \
            lajatang plus:0 plus2:0 ident:all not_cursed /\
            quarterstaff plus:4 plus2:4 ego:speed ident:all not_cursed w:15 /\
            quarterstaff plus:4 plus2:4 good_item ident:all not_cursed w:5, \
@@ -327,14 +327,14 @@ KITEM:    b = pair of gloves mundane ident:all not_cursed /\
 MAP
 xxxxxxxxx
 &a.bbbb..
-xxxxxxxxx 
+xxxxxxxxx
 ENDMAP
 
 
 NAME:     orc_1
 TAGS:     orc_1
 KMONS:    1 = orc w:80 / orc wizard w:40 / orc priest w:40 /\
-              stone giant w:1 / ettin w:1 
+              stone giant w:1 / ettin w:1
 KMONS:    2 = orc warrior
 KMONS:    3 = orc knight
 KMONS:    4 = orc sorcerer
@@ -718,7 +718,7 @@ TAGS:     vaults_end
 ORIENT:   encompass
 KMONS:    1 = vault guard
 KMONS:    2 = place:Vaults:$
-KMONS:    3 = shadow dragon w:15 / quicksilver dragon / golden dragon /\ 
+KMONS:    3 = shadow dragon w:15 / quicksilver dragon / golden dragon /\
               titan / tentacled monstrosity / stone giant / lich w:5 /\
               ancient lich / place:Vaults:$ w:40
 KMONS:    4 = shadow dragon
@@ -1066,7 +1066,7 @@ KMONS:    3 = Asmodeus
 KITEM:    3 = obsidian rune of zot
 KMONS:    4 = Antaeus
 KITEM:    4 = icy rune of zot
-KMONS:    5 = Cerebov 
+KMONS:    5 = Cerebov
 KITEM:    5 = fiery rune of zot
 KMONS:    6 = Gloorx Vloq
 KITEM:    6 = dark rune of zot
