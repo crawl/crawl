@@ -245,7 +245,7 @@ It is possible to reset, add items to, or remove items from such an option.
    Empty the list:
       drop_filter =
 
-The "listopt = value" syntax first clears the list, then adds values.  In
+The "listopt = value" syntax first clears the list, then adds values. In
 previous versions of Crawl it was a synonym for +=, and only bare
 "listopt =" cleared the list.
 
