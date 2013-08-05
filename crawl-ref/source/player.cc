@@ -2143,9 +2143,6 @@ int player_energy()
 // counted.
 int player_prot_life(bool calc_unid, bool temp, bool items)
 {
-    if (you.species == SP_DJINNI)
-        return 3;
-
     int pl = 0;
 
     // Hunger is temporary, true, but that's something you can control,
