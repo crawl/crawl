@@ -33,6 +33,9 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
             set_item_ego_type(you.inv[slot], OBJ_MISSILES, SPMSL_POISONED);
             slot++;
         }
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_NEEDLE] = 1;
     }
 
     newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
@@ -808,6 +811,9 @@ static void _wanderer_cover_equip_holes(int & slot)
         newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
                            15 + random2avg(21, 5));
         slot++;
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_BOLT] = 1;
     }
 
     // And the player needs arrows if they have a bow.
@@ -828,6 +834,9 @@ static void _wanderer_cover_equip_holes(int & slot)
         newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
                            15 + random2avg(21, 5));
         slot++;
+
+        // Autopickup ammo
+        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
     }
 }
 
