@@ -2654,6 +2654,11 @@ static string _status_mut_abilities(int sw)
                        + max(0, you.experience_level - 7) * 2 / 5;
         break;
 
+    case SP_DJINNI:
+        mutations.push_back("fire immunity");
+        mutations.push_back("cold vulnerability");
+        break;
+
     default:
         break;
     }                           //end switch - innate abilities
