@@ -770,6 +770,7 @@ void game_options::reset_options()
     scroll_margin_y  = 2;
 
     autopickup_on    = 1;
+    autopickup_starting_ammo = true;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     default_manual_training = false;
 
@@ -2415,6 +2416,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autopickup_on = 0;
     }
+    else BOOL_OPTION(autopickup_starting_ammo);
     else if (key == "default_friendly_pickup")
     {
         if (field == "none")

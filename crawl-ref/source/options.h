@@ -153,6 +153,7 @@ public:
     int         scroll_margin_y;
 
     int         autopickup_on;
+    bool        autopickup_starting_ammo;
     int         default_friendly_pickup;
     bool        default_manual_training;
 

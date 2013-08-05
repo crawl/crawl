@@ -441,6 +441,13 @@ default_autopickup = true
         When set to false, the game starts with autopickup turned off.
         You can still toggle autopickup in-game with Ctrl-A.
 
+autopickup_starting_ammo = true
+        When set, at game start, autopickup is forced on (as per the \
+        menu) for the player's starting ammunition type (including stones
+        for Earth Elementalists and arrows for Transmuters). Even when this
+        option is set, autopickup of those items can be disabled from the
+        \ menu once the game has begun.
+
 autopickup_no_burden = true
         When set, autopickup will not pick up items which would increase
         your burden status (from unencumbered to burdened, or from

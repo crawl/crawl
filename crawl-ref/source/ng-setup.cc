@@ -243,7 +243,8 @@ static void _give_bonus_items()
 
 void autopickup_starting_ammo(missile_type missile)
 {
-    you.force_autopickup[OBJ_MISSILES][missile] = 1;
+    if (Options.autopickup_starting_ammo)
+        you.force_autopickup[OBJ_MISSILES][missile] = 1;
 }
 
 void give_basic_mutations(species_type speci)
