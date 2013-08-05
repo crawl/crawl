@@ -17,7 +17,7 @@ The contents of this text are:
 1-  Starting Screen.
                 name, remember_name, weapon, species, background,
                 random_pick, good_random, restart_after_game,
-                default_manual_training
+                default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Interface.
@@ -341,6 +341,13 @@ default_manual_training = false
         When set to true, new characters will start with skill training
         set to manual mode instead of automatic mode.
 
+autopickup_starting_ammo = true
+        When set, at game start, autopickup is forced on (as per the \
+        menu) for the player's starting ammunition type (including stones
+        for Earth Elementalists). Even when this option is set, autopickup
+        of those items can be disabled from the \ menu once the game has
+        begun.
+
 2-  File System.
 ================
 
@@ -440,13 +447,6 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
 default_autopickup = true
         When set to false, the game starts with autopickup turned off.
         You can still toggle autopickup in-game with Ctrl-A.
-
-autopickup_starting_ammo = true
-        When set, at game start, autopickup is forced on (as per the \
-        menu) for the player's starting ammunition type (including stones
-        for Earth Elementalists). Even when this option is set, autopickup
-        of those items can be disabled from the \ menu once the game has
-        begun.
 
 autopickup_no_burden = true
         When set, autopickup will not pick up items which would increase
