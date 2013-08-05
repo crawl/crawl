@@ -702,6 +702,8 @@ static void _get_randart_properties(const item_def &item,
 
     if (aclass == OBJ_WEAPONS) // Only weapons get brands, of course.
     {
+        power_level++; // at least a brand
+
         if (is_range_weapon(item))
         {
             proprt[ARTP_BRAND] = random_choose_weighted(
@@ -723,8 +725,6 @@ static void _get_randart_properties(const item_def &item,
                 else if (one_chance_in(5))
                     proprt[ARTP_BRAND] = SPWPN_PENETRATION;
             }
-
-            power_level++;
         }
         else if (is_demonic(item) && x_chance_in_y(7, 9))
         {
@@ -737,7 +737,7 @@ static void _get_randart_properties(const item_def &item,
                 SPWPN_PAIN,
                 SPWPN_VENOM,
                 -1);
-            power_level += 2;
+            power_level++; // Demon weapons get an extra penalty -- why?
             // fall back to regular melee brands 2/9 of the time
         }
         else
@@ -757,10 +757,6 @@ static void _get_randart_properties(const item_def &item,
                 13, SPWPN_ANTIMAGIC,
                  3, SPWPN_DISTORTION,
                  0);
-
-            // What's the point in this logic?
-            if (!is_demonic(item) && proprt[ARTP_BRAND] != SPWPN_DISTORTION)
-                power_level++;
         }
 
         // no brand = magic flag to reject and retry
@@ -987,7 +983,7 @@ static void _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    // Armours get fewer powers, and are also less likely to be cursed
+    // Armours get fewer powers, and are also more likely to be cursed
     // than weapons.
     if (aclass == OBJ_ARMOUR)
         power_level -= 4;
