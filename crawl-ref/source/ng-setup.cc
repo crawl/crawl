@@ -241,6 +241,11 @@ static void _give_bonus_items()
     _newgame_give_item(OBJ_SCROLLS, SCR_BLINKING);
 }
 
+void autopickup_starting_ammo(missile_type missile)
+{
+    you.force_autopickup[OBJ_MISSILES][missile] = 1;
+}
+
 void give_basic_mutations(species_type speci)
 {
     switch (speci)
@@ -459,30 +464,22 @@ static void _update_weapon(const newgame_def& ng)
     case WPN_ROCKS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 4 + plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-
-        // Autopickup ammo
-        you.force_autopickup[OBJ_MISSILES][MI_LARGE_ROCK] = 1;
+        autopickup_starting_ammo(MI_LARGE_ROCK);
         break;
     case WPN_JAVELINS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 5 + plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-
-        // Autopickup ammo
-        you.force_autopickup[OBJ_MISSILES][MI_JAVELIN] = 1;
+        autopickup_starting_ammo(MI_JAVELIN);
         break;
     case WPN_DARTS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20 + 10 * plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-
-        // Autopickup ammo
-        you.force_autopickup[OBJ_MISSILES][MI_DART] = 1;
+        autopickup_starting_ammo(MI_DART);
         break;
     case WPN_BOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
-
-        // Autopickup ammo
-        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
+        autopickup_starting_ammo(MI_ARROW);
 
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
@@ -490,9 +487,7 @@ static void _update_weapon(const newgame_def& ng)
     case WPN_CROSSBOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 20);
-
-        // Autopickup ammo
-        you.force_autopickup[OBJ_MISSILES][MI_BOLT] = 1;
+        autopickup_starting_ammo(MI_BOLT);
 
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
@@ -500,9 +495,7 @@ static void _update_weapon(const newgame_def& ng)
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 20);
-
-        // Autopickup ammo
-        you.force_autopickup[OBJ_MISSILES][MI_SLING_BULLET] = 1;
+        autopickup_starting_ammo(MI_SLING_BULLET);
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -825,7 +818,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
         // keep picking up sticks
-        you.force_autopickup[OBJ_MISSILES][MI_ARROW] = 1;
+        autopickup_starting_ammo(MI_ARROW);
 
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
@@ -874,7 +867,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
 
         // sandblast goes through a lot of stones
-        you.force_autopickup[OBJ_MISSILES][MI_STONE] = 1;
+        autopickup_starting_ammo(MI_STONE);
 
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
@@ -906,9 +899,7 @@ static void _give_items_skills(const newgame_def& ng)
         set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1, 2);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
-
-        // Autopickup ammo
-        you.force_autopickup[OBJ_MISSILES][MI_NEEDLE] = 1;
+        autopickup_starting_ammo(MI_NEEDLE);
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
