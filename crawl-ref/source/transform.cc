@@ -946,10 +946,12 @@ bool transform(int pow, transformation_type which_trans, bool force,
         msg += "something buggy!";
     }
 
-    if (!force && just_check && (str + you.strength() <= 0 || dex + you.dex() <= 0))
+    bool bad_str = str < 0 && you.strength() > 0 && str + you.strength() <= 0;
+    if (!force && just_check && (bad_str
+            || dex < 0 && you.dex() > 0 && dex + you.dex() <= 0))
     {
         string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
-                                     str + you.strength() <= 0 ? "strength" : "dexterity");
+                                     bad_str ? "strength" : "dexterity");
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
