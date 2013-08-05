@@ -399,7 +399,7 @@ static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
 {
     const dungeon_feature_type door = grd(gc);
-    return feat_is_closed_door(door) && feat == DNGN_SEALED_DOOR 
+    return feat_is_closed_door(door) && feat == DNGN_SEALED_DOOR
            || door == DNGN_SEALED_DOOR && feat_is_closed_door(feat)
            || door == feat
            || map_masked(gc, MMT_WAS_DOOR_MIMIC);
