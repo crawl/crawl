@@ -1047,12 +1047,14 @@ lab-metal4
 lab-metal5
 lab-metal6
 
+%weight 15
 crypt0 WALL_CRYPT
+%weight 2
 crypt1
 crypt2
 crypt3
 crypt4
-%weight 2
+%weight 1
 crypt5
 crypt6
 crypt7
@@ -1061,10 +1063,12 @@ crypt9
 %weight 10
 
 crypt-metal0 WALL_CRYPT_METAL
+%weight 2
 crypt-metal1
 crypt-metal2
 crypt-metal3
 crypt-metal4
+%weight 10
 
 cobalt_rock1 WALL_COBALT_ROCK
 cobalt_rock2
@@ -1084,20 +1088,22 @@ cobalt_stone10
 cobalt_stone11
 cobalt_stone12
 
+%weight 30
 catacombs0 WALL_CATACOMBS
 catacombs1
+%weight 10
 catacombs2
 catacombs3
 catacombs4
 catacombs5
-%weight 6
+%weight 5
 catacombs6
 catacombs7
 catacombs8
 catacombs9
 catacombs10
 catacombs11
-%weight 3
+%weight 2
 catacombs12
 catacombs13
 catacombs14
