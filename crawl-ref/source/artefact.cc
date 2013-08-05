@@ -702,30 +702,6 @@ static void _get_randart_properties(const item_def &item,
 
     if (aclass == OBJ_WEAPONS) // Only weapons get brands, of course.
     {
-#if TAG_MAJOR_VERSION == 34
-        proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(16);        // brand
-#else
-        proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(15);        // brand
-#endif
-
-        if (one_chance_in(6))
-            proprt[ARTP_BRAND] = SPWPN_FLAMING + random2(2);
-
-        if (one_chance_in(6))
-            proprt[ARTP_BRAND] = SPWPN_DRAGON_SLAYING + random2(4);
-
-        if (one_chance_in(6))
-            proprt[ARTP_BRAND] = SPWPN_VORPAL;
-
-        if (proprt[ARTP_BRAND] == SPWPN_PROTECTION || proprt[ARTP_BRAND] == SPWPN_EVASION)
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;      // no protection or evasion
-
-#if TAG_MAJOR_VERSION == 34
-        // orc slaying removed
-        if (proprt[ARTP_BRAND] == SPWPN_ORC_SLAYING)
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;
-#endif
-
         if (is_range_weapon(item))
         {
             proprt[ARTP_BRAND] = random_choose_weighted(
@@ -747,49 +723,49 @@ static void _get_randart_properties(const item_def &item,
                 else if (one_chance_in(5))
                     proprt[ARTP_BRAND] = SPWPN_PENETRATION;
             }
-        }
 
-        // Quarter of the chance of distortion elsewhere.
-        if (!is_range_weapon(item) && one_chance_in(100))
-            proprt[ARTP_BRAND] = SPWPN_DISTORTION;
-        else if (is_demonic(item))
+            power_level++;
+        }
+        else if (is_demonic(item) && x_chance_in_y(7, 9))
         {
-            switch (random2(9))
-            {
-            case 0:
-                proprt[ARTP_BRAND] = SPWPN_DRAINING;
-                break;
-            case 1:
-                proprt[ARTP_BRAND] = SPWPN_FLAMING;
-                break;
-            case 2:
-                proprt[ARTP_BRAND] = SPWPN_FREEZING;
-                break;
-            case 3:
-                proprt[ARTP_BRAND] = SPWPN_ELECTROCUTION;
-                break;
-            case 4:
-                proprt[ARTP_BRAND] = SPWPN_VAMPIRICISM;
-                break;
-            case 5:
-                proprt[ARTP_BRAND] = SPWPN_PAIN;
-                break;
-            case 6:
-                proprt[ARTP_BRAND] = SPWPN_VENOM;
-                break;
-            default:
-                power_level -= 2;
-            }
+            proprt[ARTP_BRAND] = random_choose(
+                SPWPN_DRAINING,
+                SPWPN_FLAMING,
+                SPWPN_FREEZING,
+                SPWPN_ELECTROCUTION,
+                SPWPN_VAMPIRICISM,
+                SPWPN_PAIN,
+                SPWPN_VENOM,
+                -1);
             power_level += 2;
+            // fall back to regular melee brands 2/9 of the time
         }
         else
-            power_level++;
-
-        if (!is_weapon_brand_ok(atype, proprt[ARTP_BRAND], true))
         {
-            proprt[ARTP_BRAND] = SPWPN_NORMAL;
-            power_level--;
+            proprt[ARTP_BRAND] = random_choose_weighted(
+                34, SPWPN_FLAMING,
+                34, SPWPN_FREEZING,
+                13, SPWPN_HOLY_WRATH,
+                13, SPWPN_ELECTROCUTION,
+                26, SPWPN_DRAGON_SLAYING,
+                26, SPWPN_VENOM,
+                26, SPWPN_DRAINING,
+                13, SPWPN_SPEED,
+                73, SPWPN_VORPAL,
+                13, SPWPN_VAMPIRICISM,
+                13, SPWPN_PAIN,
+                13, SPWPN_ANTIMAGIC,
+                 3, SPWPN_DISTORTION,
+                 0);
+
+            // What's the point in this logic?
+            if (!is_demonic(item) && proprt[ARTP_BRAND] != SPWPN_DISTORTION)
+                power_level++;
         }
+
+        // no brand = magic flag to reject and retry
+        if (!is_weapon_brand_ok(atype, proprt[ARTP_BRAND], true))
+            proprt[ARTP_BRAND] = SPWPN_NORMAL;
     }
 
     if (!one_chance_in(5))
