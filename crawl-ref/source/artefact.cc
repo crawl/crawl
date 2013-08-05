@@ -743,15 +743,15 @@ static void _get_randart_properties(const item_def &item,
         else
         {
             proprt[ARTP_BRAND] = random_choose_weighted(
+                73, SPWPN_VORPAL,
                 34, SPWPN_FLAMING,
                 34, SPWPN_FREEZING,
-                13, SPWPN_HOLY_WRATH,
-                13, SPWPN_ELECTROCUTION,
                 26, SPWPN_DRAGON_SLAYING,
                 26, SPWPN_VENOM,
                 26, SPWPN_DRAINING,
+                13, SPWPN_HOLY_WRATH,
+                13, SPWPN_ELECTROCUTION,
                 13, SPWPN_SPEED,
-                73, SPWPN_VORPAL,
                 13, SPWPN_VAMPIRICISM,
                 13, SPWPN_PAIN,
                 13, SPWPN_ANTIMAGIC,
