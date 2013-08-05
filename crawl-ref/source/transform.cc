@@ -946,9 +946,9 @@ bool transform(int pow, transformation_type which_trans, bool force,
         msg += "something buggy!";
     }
 
-    bool bad_str = str < 0 && you.strength() > 0 && str + you.strength() <= 0;
+    const bool bad_str = you.strength() > 0 && str + you.strength() <= 0;
     if (!force && just_check && (bad_str
-            || dex < 0 && you.dex() > 0 && dex + you.dex() <= 0))
+            || you.dex() > 0 && dex + you.dex() <= 0))
     {
         string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
                                      bad_str ? "strength" : "dexterity");
