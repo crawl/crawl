@@ -2382,29 +2382,6 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
     }
 }
 
-bool is_orckind(const actor *act)
-{
-    if (mons_genus(act->mons_species()) == MONS_ORC)
-        return true;
-
-    if (act->is_monster())
-    {
-        const monster* mon = act->as_monster();
-        if (mons_is_zombified(mon)
-            && mons_genus(mon->base_monster) == MONS_ORC)
-        {
-            return true;
-        }
-        if (mons_is_ghost_demon(mon->type)
-            && (player_genus(GENPC_ORCISH, mon->ghost->species)))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool is_dragonkind(const actor *act)
 {
     if (mons_genus(act->mons_species()) == MONS_DRAGON
