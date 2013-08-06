@@ -2579,6 +2579,10 @@ void maybe_id_resist(beam_type flavour)
         _maybe_id_jewel(NUM_JEWELLERY, NUM_JEWELLERY, ARTP_ELECTRICITY);
         break;
 
+    case BEAM_ACID:
+        _maybe_id_jewel(NUM_JEWELLERY, AMU_RESIST_CORROSION);
+        break;
+
     case BEAM_POISON:
     case BEAM_POISON_ARROW:
     case BEAM_MEPHITIC:
