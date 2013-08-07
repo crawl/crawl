@@ -249,8 +249,7 @@ ENDMAP
 ##############################################################################
 # 29x23
 # Morbid curiosity
-# Monsters are easier. Made it harder for them to get out. The single orc
-# can pack a punch, though.
+# Monsters are easier. Made it harder for them to get out.
 NAME:    dpeg_entry_morbid_curiosity
 TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
