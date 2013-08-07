@@ -120,9 +120,6 @@ static map_section_type _write_vault(map_def &mdef,
                                      vault_placement &place,
                                      bool check_place)
 {
-    // We're a regular vault, so clear the subvault stack.
-    clear_subvault_stack();
-
     mdef.load();
 
     // Copy the map so we can monkey with it.
@@ -136,6 +133,9 @@ static map_section_type _write_vault(map_def &mdef,
 
     while (tries-- > 0)
     {
+        // We're a regular vault, so clear the subvault stack.
+        clear_subvault_stack();
+
         if (place.map.test_lua_veto())
             break;
 
@@ -191,7 +191,10 @@ static bool _resolve_map_lua(map_def &map)
     }
 
     if (!map.test_lua_validate(false))
+    {
+        dprf("Lua validation for map %s failed.", map.name.c_str());
         return false;
+    }
 
     return true;
 }
