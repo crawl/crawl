@@ -372,7 +372,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_CHARMS:
-        book_type = BOOK_WAR_CHANTS;
+        book_type = BOOK_BATTLE;
         break;
     }
 
