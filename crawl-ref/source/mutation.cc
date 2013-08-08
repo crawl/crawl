@@ -2621,8 +2621,10 @@ int handle_pbd_corpses(bool do_rot)
     {
         for (stack_iterator j(*ri); j; ++j)
         {
-            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY
-                && j->special > 50)
+            if (j->base_type == OBJ_CORPSES
+                && j->sub_type == CORPSE_BODY
+                && j->special > 50
+                && !j->props.exists("never_hide"))
             {
                 ++corpse_count;
 
