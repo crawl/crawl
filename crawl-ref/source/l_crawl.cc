@@ -15,6 +15,7 @@ module "crawl"
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "branch.h"
 #include "chardump.h"
 #include "cio.h"
 #include "command.h"
@@ -1210,6 +1211,39 @@ LUAFN(crawl_hints_type)
     return 1;
 }
 
+LUAFN(crawl_sprint_depth)
+{
+    if (!crawl_state.game_is_sprint())
+    {
+        string err = "sprint_depth called outside of Sprint";
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    if (lua_gettop(ls) < 2
+        || !lua_isstring(ls, 1)
+        || !lua_isnumber(ls, 2))
+    {
+        string err = "sprint_depth takes two arguments: branch and depth";
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    const char *branch = luaL_checkstring(ls, 1);
+    branch_type br = NUM_BRANCHES;
+    if (!branch || (br = str_to_branch(branch)) == NUM_BRANCHES)
+    {
+        string err = make_stringf("'%s' matches no branch.", branch);
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    int depth = luaL_checknumber(ls, 2);
+    if (depth < 1 || depth > MAX_BRANCH_DEPTH)
+    {
+        string err = make_stringf("Invalid branch depth %d (must be [1, %d]",
+                                  depth, MAX_BRANCH_DEPTH);
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+
+    brdepth[br] = depth;
+    return 0;
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -1226,6 +1260,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "print_hint", crawl_print_hint },
 { "mark_game_won", _crawl_mark_game_won },
 { "hints_type", crawl_hints_type },
+{ "sprint_depth", crawl_sprint_depth },
 
 { NULL, NULL }
 };

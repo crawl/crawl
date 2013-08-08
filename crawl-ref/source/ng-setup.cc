@@ -1363,7 +1363,8 @@ static void _setup_generic(const newgame_def& ng)
     set_mp(you.max_magic_points);
 
     initialise_branch_depths();
-    initialise_temples();
+    if (!crawl_state.game_is_sprint())
+        initialise_temples();
     init_level_connectivity();
 
     // Generate the second name of Jiyva

@@ -851,6 +851,18 @@ bool map_selector::accept(const map_def &mapdef) const
         {
             return false;
         }
+
+        // XXX: This check could probably be simpler.
+        if (crawl_state.game_is_sprint()
+            && !(mapdef.has_tag("sprint")
+                 || mapdef.has_tag("sprint_level")
+                    && mapdef.has_tag(crawl_state.map))
+            || !crawl_state.game_is_sprint()
+               && mapdef.has_tag_prefix("sprint"))
+        {
+            return false;
+        }
+
         return mapdef.is_minivault() == mini
                && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && mapdef.place.is_usable_in(place)
