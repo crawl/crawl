@@ -5406,6 +5406,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_BEOGH_SMITE;
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         return TILEG_ABILITY_BEOGH_RECALL;
+    case ABIL_CONVERT_TO_BEOGH:
+        return TILEG_ABILITY_CONVERT_TO_BEOGH;
     // Jiyva
     case ABIL_JIYVA_CALL_JELLY:
         return TILEG_ABILITY_JIYVA_REQUEST_JELLY;
