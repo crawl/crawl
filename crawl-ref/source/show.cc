@@ -398,7 +398,7 @@ static void _update_monster(monster* mons)
             env.map_knowledge(gp).set_invisible_monster();
         }
 
-        // Being submerged isnot the same as invisibility.
+        // Being submerged is not the same as invisibility.
         if (mons->submerged())
             return;
 

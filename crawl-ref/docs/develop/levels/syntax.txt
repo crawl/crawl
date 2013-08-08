@@ -69,7 +69,7 @@ Features
  A - Stone arch.
  B - Altar. These are assigned specific types (e.g. of Zin etc) in dungeon.cc,
      in order.
- C - Random Altar.
+ C - Random altar.
 
  G - Granite statue (does nothing) - you can see through but not walk through.
      Also, sight-based effects like smiting work past granite statues, as does
@@ -145,7 +145,7 @@ DESC:     readable name
           Map descriptions are also written to scores and logfile
           entries.
 
-ORIENT:   (float |encompass | north | northwest | ... | southeast)
+ORIENT:   (float | encompass | north | northwest | ... | southeast)
 
           Some kind of ORIENT: line is mandatory for vaults; skipping
           ORIENT: makes your map a minivault. As a rule of thumb, if
@@ -550,7 +550,7 @@ ITEM:     (list of items, separated by comma)
             chosen item isn't compatible with the desired race. If race is not
             explicitly set, this can result in boots being replaced by a
             barding.
-          * "ego:ego_name", where "ego_name" is something like  "running" or
+          * "ego:ego_name", where "ego_name" is something like "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego. The item must be fully specified, so
             trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
@@ -808,7 +808,7 @@ MONS:     (list of monsters)
           or elven unless the item's race type is explicitly set otherwise.
 
           Limitations: If an item in the item list has alternatives,
-          there's no way to force all monsters dervied from that monster
+          there's no way to force all monsters derived from that monster
           spec to choose the same alternative. If a monster is given
           a random launcher, there is no way to force the ammo type to
           match the launcher type.

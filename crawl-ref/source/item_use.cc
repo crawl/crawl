@@ -3202,8 +3202,8 @@ void read_scroll(int slot)
         break;
 
     case SCR_BLINKING:
-        // XXX Because some checks in blink() are made before player get to
-        // choose target location it is possible "abuse" scrolls' free
+        // XXX Because some checks in blink() are made before players get to
+        // choose target location it is possible to "abuse" scrolls' free
         // cancelling to get some normally hidden information (i.e. presence
         // of (unidentified) -Tele gear).
         if (!alreadyknown)

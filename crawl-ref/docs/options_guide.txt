@@ -860,8 +860,7 @@ explore_stop_pickup_ignore += <regex>, <regex>, ...
         then picking up any items matching any of the regexes in the list
         will *not* stop auto-explore.
 
-        This options has no affect on items which were thrown by the
-        player.
+        This option has no effect on items which were thrown by the player.
 
 explore_wall_bias = 0
         Adjusts how much autoexplore favours attempting to discover room
