@@ -985,6 +985,13 @@ static int crawl_call_dlua(lua_State *ls)
 }
 #endif
 
+static int crawl_is_sprint(lua_State *ls)
+{
+    lua_pushboolean(ls, crawl_state.game_is_sprint());
+
+    return 1;
+}
+
 static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",            crawl_mpr },
@@ -1051,6 +1058,8 @@ static const struct luaL_reg crawl_clib[] =
 #ifdef WIZARD
     { "call_dlua",      crawl_call_dlua },
 #endif
+
+    { "is_sprint",      crawl_is_sprint },
 
     { NULL, NULL },
 };

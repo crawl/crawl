@@ -1,0 +1,1280 @@
+###############################################################################
+# Zig Sprint
+#
+# General comments:
+# - Obsidian axe, Gong and Maxwells are guaranteed in the equipment room, this
+#   is because of a ##crawl joke/challenge involving beating a zig wearing
+#   these items. Despite it being rather fun to use them in the map it may be
+#   slightly imbalanced to hand them out.
+#
+# - Alternatively to the way this map is done, it would be better I think to
+#   make the map a single room that regenerates and becomes bigger each time
+#   you step on the down-stairs equivalent. Possibly in two different versions,
+#   one like current Ziggurat (small levels, fight everything at once) and one
+#   similar to Hell's Arena in DoomRL (much larger and battles spread out).
+#   However this is beyond my capabilities.
+#
+# - Balance is intended to be similar to Zig, therefore Pan/Holy levels are as
+#   brutal as they should be. Orbs of fire, electric golems and fiends are all
+#   thrown about as they should be in their respective monster sets.
+#
+# - The starting loot/equipment is probably the thing which may need to most
+#   looking at, I have tried to make it reasonable enough for casters/stabbers
+#   to progress through the early rooms which melee has no concern with
+#   generally.
+#
+# - Some gods are rather strong due to regaining more piety than you use up to
+#   kill things. In my testing Makhleb's greater demons and Chei's slouch are
+#   two offenders for this.
+#
+#       -Also, Ashenzari lets you peek at some rooms but not all [evilmike]
+#
+###############################################################################
+
+{{
+function callback.zig_tele(data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                data.teleport_spot)
+  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
+  crawl.mpr("Your surroundings seem different!")
+  if data.teleport_spot < 28 then
+    crawl.mpr("Welcome to arena " .. data.teleport_spot .. ".")
+    crawl.take_note("Entered arena " .. data.teleport_spot .. ".")
+--  crawl.mark_milestone("sprint", "entered arena " .. data.teleport_spot ..
+--                       " of Ziggurat Sprint.", "")
+  end
+end
+
+function callback.make_hatch(data, triggerable, triggerer, marker, ev)
+    for slave in iter.slave_iterator("hatch", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "exit_dungeon", false, false, false)
+        dgn.apply_area_cloud(slave.x, slave.y, 1, 10, 1, 9, "purple smoke", "other", -1)
+    end
+    crawl.mpr("<magenta>An exit appears before you!</magenta>")
+end
+
+function setup_room(e, id)
+  -- Tags
+  e.tags("no_item_gen")
+  e.tags("no_trap_gen")
+  e.tags("no_rotate")
+  e.tags("no_hmirror")
+  e.tags("no_vmirror")
+  -- Subvault tag
+  e.tags(e.name())
+
+  -- Place the teleporter entrance
+  local m_marker = TriggerableFunction:new {
+    func="callback.zig_tele",
+    data = {teleport_spot=id},
+    repeated=true }
+  m_marker:add_triggerer(DgnTriggerer:new { type="player_move" })
+  e.lua_marker('A', m_marker)
+  e.colour("A = lightmagenta")
+  e.kfeat("A = teleporter")
+
+  if id > 1 then
+    -- Place the teleporter exit
+    e.lua_marker('a', portal_desc { teleport_spot = id-1})
+    e.subst("a = .")
+
+    -- Transform pillars
+    e.subst("Z : XXX.")
+    e.subst("z : XX.")
+    e.colour("X = white")
+    e.tile("X = wall_stone_white")
+
+    -- Create items
+    e.kitem("1 = superb_item ident:all w:590 / potion of porridge ident:all w:2 /\
+            wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
+            potion of heal wounds ident:all q:2 w:2 / scroll of recharging ident:all w:1 /\
+            scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
+            potion of might ident:all w:2 / potion of agility w:2 ident:all /\
+            potion of haste q:2 ident:all w:2 / scroll of acquirement w:1 ident:all /\
+            scroll of enchant weapon iii ident:all q:2 w:2 /\
+            scroll of enchant armour ident:all q:4 w:2 /\
+            scroll of brand weapon ident:all")
+
+    -- Place monsters
+    if id < 7 then
+      choose_mset_1(e)
+    elseif id < 12 then
+      choose_mset_2(e)
+    elseif id < 21 then
+      choose_mset_3(e)
+    else
+      choose_mset_4(e)
+    end
+
+  end
+end
+
+-- Monster sets. Rooms 1-5.
+function choose_mset_1(e)
+  local rnd = crawl.random2(132)
+-- Slime
+  if rnd < 9 then
+    e.kmons("1 = jelly w:15 / ooze / slime creature w:5 / giant eyeball w:5 / golden eye w:5 /\
+               eye of draining w:5")
+-- Snake
+  elseif rnd < 19 then
+    e.kmons("1 = ball python / adder / water moccasin w:5 / naga w:2")
+-- Lair
+  elseif rnd < 29 then
+    e.kmons("1 = green rat / sheep / iguana / porcupine / yak w:5 /\
+               jackal / wolf w:5 / giant frog w:5")
+-- Spider
+  elseif rnd < 39 then
+    e.kmons("1 = giant mite w:15 / scorpion w:15 / jumping spider w:5 /\
+               tarantella w:5")
+-- Crypt
+  elseif rnd < 49 then
+    e.kmons("1 = zombie / skeleton / wight w:5 / necrophage / phantom")
+-- Abyss
+  elseif rnd < 59 then
+    e.kmons("1 = lesser demon / place:Abyss w:3")
+-- Forest
+  elseif rnd < 64 then
+    e.kmons("1 = spriggan / wolf / black bear")
+-- Shoals
+  elseif rnd < 69 then
+    e.kmons("1 = merfolk")
+-- Hell
+  elseif rnd < 79 then
+    e.kmons("1 = zombie w:5 / skeleton w:5 / lesser demon w:15 / hell hound w:5")
+-- Giant
+  elseif rnd < 81 then
+    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:3")
+-- Fire
+  elseif rnd < 83 then
+    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental")
+-- Ice
+  elseif rnd < 85 then
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum")
+-- Air
+  elseif rnd < 87 then
+    e.kmons("1 = insubstantial wisp / air elemental w:5")
+-- Earth
+  elseif rnd < 89 then
+    e.kmons("1 = toenail golem")
+-- Dragon
+  elseif rnd < 91 then
+    e.kmons("1 = swamp drake / fire drake / steam dragon")
+-- Ranged
+  elseif rnd < 93 then
+    e.kmons("1 = centaur / yaktaur")
+-- Vaults
+  elseif rnd < 95 then
+    e.kmons("1 = place:Vaults:1")
+-- Pan
+  elseif rnd < 97 then
+    e.kmons("1 = lesser demon / common demon w:2 / pandemonium lord w:1")
+-- Tomb
+  elseif rnd < 101 then
+    e.kmons("1 = place:Tomb:$ / mummy w:15 / zombie")
+-- Elf
+  elseif rnd < 111 then
+    e.kmons("1 = place:Elf:1")
+-- Orc
+  elseif rnd < 121 then
+    e.kmons("1 = orc / orc wizard / orc priest")
+-- Drac
+  elseif rnd < 124 then
+    e.kmons("1 = draconian / base draconian w:1")
+-- Zot
+  elseif rnd < 126 then
+    e.kmons("1 = draconian / base draconian w:1 / death cob w:1")
+-- Chaos
+  elseif rnd < 130 then
+    e.kmons("1 = shapeshifter hd:5 / ugly thing w:5")
+-- Uniques
+  else
+    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+               Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
+               Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Purgy, Sonja, Terence, Urug, human")
+  end
+end
+
+-- Monster sets. Rooms 6-10.
+function choose_mset_2(e)
+  local rnd = crawl.random2(141)
+-- Slime
+  if rnd < 9 then
+    e.kmons("1 = jelly w:15 / ooze / brown ooze / slime creature /\
+               giant eyeball w:5 / golden eye w:5 / eye of draining w:5 /\
+               eye of devastation w:5 / shining eye w:5")
+-- Snake
+  elseif rnd < 19 then
+    e.kmons("1 = ball python / adder / water moccasin / naga /\
+               black mamba w:5 / naga mage w:5")
+-- Lair
+  elseif rnd < 29 then
+    e.kmons("1 =  green rat / sheep / iguana / porcupine / yak /\
+               jackal / wolf / giant frog / spiny frog w:5 /\
+               komodo dragon w:5 / basilisk w:5 / place:Lair:1 w:30")
+-- Spider
+  elseif rnd < 34 then
+    e.kmons("1 = giant mite w:15 / scorpion w:15 / jumping spider w:5 /\
+               tarantella w:5 / wolf spider w:5 / redback w:5")
+-- Crypt
+  elseif rnd < 44 then
+    e.kmons("1 = zombie w:20 / skeleton w:20 / wight / necrophage / phantom")
+-- Abyss
+  elseif rnd < 54 then
+    e.kmons("1 = lesser demon / place:Abyss w:6")
+-- Forest
+  elseif rnd < 64 then
+    e.kmons("1 = spriggan / wolf / black bear / spriggan rider w:5 /\
+               spriggan druid w:2")
+-- Shoals
+  elseif rnd < 74 then
+    e.kmons("1 = merfolk w:20 / hippogriff / centaur / sheep / cyclops w:3")
+-- Hell
+  elseif rnd < 80 then
+    e.kmons("1 =  zombie / skeleton / lesser demon / hell hound")
+-- Giant
+  elseif rnd < 82 then
+    e.kmons("1 = ogre / two-headed ogre / troll w:5 / cyclops w:5 / hill giant w:5")
+-- Fire
+  elseif rnd < 84 then
+    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
+               fire drake / efreet")
+-- Ice
+  elseif rnd < 86 then
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
+               freezing wraith / blue devil")
+-- Air
+  elseif rnd < 88 then
+    e.kmons("1 = insubstantial wisp / air elemental / wind drake w:5")
+-- Earth
+  elseif rnd < 90 then
+    e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")
+-- Dragon
+  elseif rnd < 92 then
+    e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon / wyvern")
+-- Ranged
+  elseif rnd < 94 then
+    e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior w:3 /\
+               yaktaur captain w:3")
+-- Vaults
+  elseif rnd < 99 then
+    e.kmons("1 = place:Vaults:3 / yaktaur w:2 / vault guard w:5")
+-- Pan
+  elseif rnd < 104 then
+    e.kmons("1 = lesser demon / common demon w:5 / pandemonium lord w:2")
+-- Tomb
+  elseif rnd < 109 then
+    e.kmons("1 = place:Tomb:$ w:250 / greater mummy")
+-- Elf
+  elseif rnd < 119 then
+    e.kmons("1 = place:Elf:$")
+-- Orc
+  elseif rnd < 129 then
+    e.kmons("1 = orc / orc wizard / orc priest / orc warrior")
+-- Drac
+  elseif rnd < 132 then
+    e.kmons("1 = draconian / base draconian w:5")
+-- Zot
+  elseif rnd < 134 then
+    e.kmons("1 = draconian / base draconian w:5 / death cob w:1")
+-- Chaos
+  elseif rnd < 139 then
+    e.kmons("1 = shapeshifter / ugly thing w:5 / neqoxec w:5 / shining eye w:2")
+-- Uniques
+  else
+    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+               Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
+               Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
+               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Purgy, Sonja, Terence, Urug, human")
+  end
+end
+
+-- Monster sets. Rooms 10-19.
+function choose_mset_3(e)
+  local rnd = crawl.random2(116)
+-- Slime
+  if rnd < 9 then
+    e.kmons("1 = jelly w:15 / ooze / brown ooze w:15 / slime creature w:15 /\
+               giant eyeball w:2 / golden eye w:5 / eye of draining w:2 /\
+               eye of devastation w:5 / shining eye w:5 / acid blob w:5 /\
+               death ooze / azure jelly w:5 / great orb of eyes w:5 /\
+               giant orange brain w:2")
+-- Snake
+  elseif rnd < 14 then
+    e.kmons("1 = ball python / adder / water moccasin / naga /\
+               black mamba / naga mage / naga warrior / greater naga w:5 /\
+               anaconda w:5 / guardian serpent")
+-- Lair
+  elseif rnd < 19 then
+    e.kmons("1 =  place:Lair:2 / place:Lair:5 / place:Lair:8 w:5")
+-- Spider
+  elseif rnd < 24 then
+    e.kmons("1 = place:Spider:$ w:70 / yellow wasp / red wasp")
+-- Crypt
+  elseif rnd < 34 then
+    e.kmons("1 = zombie / skeleton / skeletal warrior w:5 / ghoul w:2 /\
+                 necrophage w:5 / vampire w:5 / vampire mage w:5 /\
+                 vampire knight w:5 / lich w:2 / ancient lich w:1 / shadow /\
+                 wight / necromancer")
+-- Abyss
+  elseif rnd < 39 then
+    e.kmons("1 = lesser demon w:5 / place:Abyss")
+-- Forest
+  elseif rnd < 44 then
+    e.kmons("1 = place:Forest:$ w:50 /\
+               spriggan druid w:2 / spriggan air mage w:5 / spriggan berserker w:5")
+-- Shoals
+  elseif rnd < 49 then
+    e.kmons("1 = place:Shoals:3 / place:Shoals:$ w:45 / merfolk javelineer /\
+                 merfolk impaler / merfolk aquamancer")
+    e.subst(". = W.., 1 = W")
+-- Cocytus
+  elseif rnd < 54 then
+    e.kmons("1 = place:Coc:1")
+-- Gehenna
+  elseif rnd < 59 then
+    e.kmons("1 = place:Geh:1")
+-- Tartarus
+  elseif rnd < 64 then
+    e.kmons("1 = zombie / skeleton / soul eater / shadow dragon w:3 /\
+                 spectral thing / ghoul w:2")
+-- Dis
+  elseif rnd < 69 then
+    e.kmons("1 = place:Dis:1")
+-- Giant
+  elseif rnd < 71 then
+    e.kmons("1 = ogre w:5 / two-headed ogre / troll / cyclops / hill giant w:5 /\
+               stone giant w:5 / fire giant w:2 / frost giant w:2")
+-- Fire
+  elseif rnd < 73 then
+    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
+               fire drake / efreet / fire dragon / fire giant")
+-- Ice
+  elseif rnd < 75 then
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
+               freezing wraith / ice devil / ice dragon / frost giant /\
+               blizzard demon")
+-- Air
+  elseif rnd < 77 then
+    e.kmons("1 = insubstantial wisp / air elemental / wind drake / spriggan air mage /\
+               storm dragon / titan w:2")
+-- Earth
+  elseif rnd < 79 then
+    e.kmons("1 = earth elemental w:15 / gargoyle w:5 / iron golem w:20 /\
+               crystal guardian / stone giant w:5 / iron dragon w:5 /\
+               quicksilver dragon w:5")
+-- Dragon
+  elseif rnd < 81 then
+    e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\
+               death drake / swamp dragon / fire dragon / ice dragon / wyvern /\
+               hydra")
+-- Ranged
+  elseif rnd < 83 then
+    e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior w:6 /\
+               yaktaur captain w:6 / stone giant w:5 / merfolk javelineer w:5 /\
+               deep elf master archer w:5")
+-- Vaults
+  elseif rnd < 87 then
+    e.kmons("1 = vault guard w:60 / lich w:5 / yaktaur / yaktaur captain w:3 /\
+                 stone giant / shadow dragon w:5")
+-- Pan
+  elseif rnd < 90 then
+    e.kmons("1 = common demon / place:Pan / pandemonium lord w:5")
+-- Tomb
+  elseif rnd < 93 then
+    e.kmons("1 = place:Tomb:3 w:100 / greater mummy")
+-- Elf
+  elseif rnd < 98 then
+    e.kmons("1 = place:Elf:$ w:100 / deep elf sorcerer / deep elf blademaster /\
+               deep elf master archer / deep elf annihilator / deep elf high priest")
+-- Orc
+  elseif rnd < 103 then
+    e.kmons("1 = place:Orc:$ w:100 / orc knight / orc high priest w:5 / orc sorcerer w:5 /\
+               stone giant w:2 / orc warlord w:5 / moth of wrath w:1")
+-- Drac
+  elseif rnd < 105 then
+    e.kmons("1 = base draconian w:60 / nonbase draconian")
+-- Zot
+  elseif rnd < 107 then
+    e.kmons("1 = base draconian w:15 / place:Zot:1 w:5 / orb guardian w:2")
+-- Chaos
+  elseif rnd < 111 then
+    e.kmons("1 = shapeshifter / ugly thing w:5 / very ugly thing w:5 / neqoxec w:5 /\
+               shining eye w:2 / glowing shapeshifter w:20")
+-- Uniques
+  elseif rnd < 114 then
+    e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
+               Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
+               Joseph / Josephine / Maurice / Menkaure / Pikel /\
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
+               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
+               Rupert / Saint Roka / Snorg / Wiglaf")
+-- Holy
+  else
+    e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
+                 apis / shedu band / nothing w:78")
+  end
+end
+
+-- Monster sets. Rooms 19-27.
+function choose_mset_4(e)
+local rnd = crawl.random2(142)
+-- Slime
+  if rnd < 9 then
+    e.kmons("1 = jelly w:5 / brown ooze w:15 / slime creature w:15 /\
+               giant eyeball w:2 / golden eye w:4 / eye of draining w:2 /\
+               eye of devastation w:5 / shining eye w:4 / acid blob /\
+               death ooze / azure jelly / great orb of eyes w:4 /\
+               giant orange brain w:2")
+-- Snake
+  elseif rnd < 14 then
+    e.kmons("1 = ball python w:5 / adder w:5 / water moccasin / naga /\
+               black mamba / naga mage / naga warrior / greater naga /\
+               anaconda / guardian serpent")
+-- Lair
+  elseif rnd < 19 then
+    e.kmons("1 = place:Lair:$ w:300 / hydra / catoblepas / dire elephant")
+-- Spider
+  elseif rnd < 26 then
+    e.kmons("1 = place:Spider:$ w:70 / ghost moth w:5 / yellow wasp / red wasp /\
+                 moth of wrath w:5")
+-- Crypt
+  elseif rnd < 34 then
+    e.kmons("1 = zombie / skeleton / skeletal warrior / ghoul w:7 /\
+                 necrophage w:5 / vampire w:5 / vampire mage w:5 /\
+                 vampire knight / lich w:5 / ancient lich w:2 / shadow /\
+                 wight / necromancer")
+-- Abyss
+  elseif rnd < 42 then
+    e.kmons("1 = pandemonium lord / place:Abyss w:500")
+-- Forest
+  elseif rnd < 47 then
+    e.kmons("1 = place:Forest:$ w:50 / spriggan defender /\
+               spriggan air mage / spriggan druid w:3 / spriggan berserker")
+-- Shoals
+  elseif rnd < 52 then
+    e.kmons("1 = place:Shoals:$ w:55 / merfolk javelineer / merfolk impaler /\
+                 merfolk aquamancer")
+    e.kmons("2 = kraken")
+    e.subst("1 = 1:15 2:1")
+    e.subst(". = W.")
+    e.kfeat("2 = deep_water")
+    e.kfeat("1 = shallow_water")
+-- Cocytus
+  elseif rnd < 57 then
+    e.kmons("1 = place:Coc:$ w:500 / ice fiend")
+-- Gehenna
+  elseif rnd < 62 then
+    e.kmons("1 = place:Geh:$")
+-- Tartarus
+  elseif rnd < 67 then
+    e.kmons("1 = zombie / skeleton / soul eater / shadow dragon w:5 /\
+                 shadow fiend w:1 / spectral thing place:Tar:$ / ghoul w:5")
+-- Dis
+  elseif rnd < 72 then
+    e.kmons("1 = place:Dis:$ w:500 / hell sentinel")
+-- Giant
+  elseif rnd < 75 then
+    e.kmons("1 = hill giant / cyclops / stone giant / fire giant /\
+               frost giant / ettin / titan")
+-- Fire
+  elseif rnd < 78 then
+    e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
+               fire drake / efreet / fire dragon / fire giant / orb of fire w:5 /\
+               balrug")
+-- Ice
+  elseif rnd < 81 then
+    e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
+               freezing wraith / ice devil / ice dragon / frost giant /\
+               ice fiend w:5 / blizzard demon")
+-- Air
+  elseif rnd < 84 then
+    e.kmons("1 = insubstantial wisp / air elemental / wind drake / spriggan air mage /\
+               storm dragon / titan / electric golem")
+-- Earth
+  elseif rnd < 87 then
+    e.kmons("1 = earth elemental w:15 / gargoyle w:5 / iron golem /\
+               crystal guardian / stone giant / iron dragon /\
+               quicksilver dragon")
+-- Dragon
+  elseif rnd < 90 then
+    e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\
+               death drake / swamp dragon / fire dragon / ice dragon /\
+               shadow dragon / iron dragon / quicksilver dragon /\
+               golden dragon / wyvern / hydra")
+-- Ranged
+  elseif rnd < 93 then
+    e.kmons("1 = centaur / yaktaur / cyclops / centaur warrior /\
+               yaktaur captain / stone giant / merfolk javelineer /\
+               deep elf master archer")
+-- Vaults
+  elseif rnd < 96 then
+    e.kmons("1 = vault guard w:50 / ancient lich w:5 / lich / yaktaur /\
+                 yaktaur captain w:3 / stone giant / shadow dragon /\
+                 titan w:1")
+-- Pan
+  elseif rnd < 100 then
+    e.kmons("1 = place:Pan w:5 / pandemonium lord")
+-- Tomb
+  elseif rnd < 104 then
+    e.kmons("1 = place:Tomb:$ w:100 / greater mummy")
+-- Elf
+  elseif rnd < 114 then
+    e.kmons("1 = place:Elf:$ w:50 / deep elf sorcerer / deep elf blademaster /\
+               deep elf master archer / deep elf annihilator / deep elf high priest")
+-- Orc
+  elseif rnd < 119 then
+    e.kmons("1 = place:Orc:$ w:70 / orc knight / orc high priest w:5 / orc sorcerer w:5 /\
+               stone giant / orc warlord / moth of wrath w:3")
+-- Drac
+  elseif rnd < 125 then
+    e.kmons("1 = base draconian w:30 / nonbase draconian")
+-- Zot
+  elseif rnd < 128 then
+    e.kmons("1 = base draconian / place:Zot:$ / orb guardian w:7")
+-- Chaos
+  elseif rnd < 136 then
+    e.kmons("1 = shapeshifter w:5 / glowing shapeshifter w:15 / glowing shapeshifter hd:27")
+-- Uniques
+  elseif rnd < 140 then
+    e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
+               Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
+               Joseph / Josephine / Maurice / Menkaure / Pikel /\
+               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
+               Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
+               Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
+               Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus /\
+               Boris / Cerebov / Dispater / Dissolution / Ereshkigal /\
+               Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory /\
+               Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray /\
+               the Enchantress / the Lernaean hydra / the Serpent of Hell /\
+               the royal jelly / Tiamat / Xtahua / Nellie / Chuck / the iron giant")
+-- Holy
+  else
+    e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
+                 apis")
+  end
+end
+
+}}
+
+NAME:   sprint_v
+TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+DESC:   Sprint V: "Ziggurat Sprint"
+ORDER:  5
+ORIENT: encompass
+LFLAGS: no_tele_control
+: lfloorcol(util.random_from(
+:   {"red", "blue", "green", "magenta", "brown", "lightgrey", "darkgrey"} ))
+COLOUR:    x : lightred / lightblue / lightgreen / lightmagenta / yellow / darkgrey
+TILE:      x : wall_zot_red / wall_zot_blue / wall_zot_green / wall_zot_magenta
+SUBST:     x = X
+SUBVAULT:  A : room_start
+SUBVAULT:  B : room_1
+SUBVAULT:  C : room_2
+SUBVAULT:  D : room_3
+SUBVAULT:  E : room_4
+SUBVAULT:  F : room_5
+SUBVAULT:  G : room_6
+SUBVAULT:  H : room_7
+SUBVAULT:  I : room_8
+SUBVAULT:  J : room_9
+SUBVAULT:  K : room_10
+SUBVAULT:  L : room_11
+SUBVAULT:  M : room_12
+SUBVAULT:  N : room_13
+SUBVAULT:  O : room_14
+SUBVAULT:  P : room_15
+SUBVAULT:  R : room_16
+SUBVAULT:  S : room_17
+SUBVAULT:  T : room_18
+SUBVAULT:  U : room_19
+SUBVAULT:  V : room_20
+SUBVAULT:  W : room_21
+SUBVAULT:  Y : room_22
+SUBVAULT:  Z : room_23
+SUBVAULT:  * : room_24
+SUBVAULT:  % : room_25
+SUBVAULT:  | : room_26
+SUBVAULT:  $ : room_27
+: lua_marker('a', portal_desc { teleport_spot=28})
+KFEAT: ^ = granite_statue
+COLOUR: .a^{ = magenta
+FTILE:  .a^{< = floor_rough_magenta
+KITEM: { = orb of zot
+{{
+    -- This is so you can't exploit the Abyss.
+    local exit = TriggerableFunction:new{func="callback.make_hatch"}
+    exit:add_triggerer(DgnTriggerer:new{type="player_move"})
+    lua_marker('a', exit)
+    lua_marker('<', props_marker {hatch=1})
+    subst("< = .")
+    subst("a = .")
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxBBBBBx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxBBBBBx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxBBBBBx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxBBBBBx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxBBBBBx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxBBBBBx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxDDDDDxCCCCCxxxxxxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxxxxxxxxxxxxxxxxxxxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
+xxAAAAAAAAAAAAAAAxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxPPPPPPPPPPPxEEEEEEEExFFFFFFFFxx
+xxxxxxxxxxxxxxxxxxxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxxxxxxxxxxxxxEEEEEEEExFFFFFFFFxx
+xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxRRRRRRRRRRRRRxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxxxxxxxxxxxxxxxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xYYYYYYYYYYYYYYYYYxUUUUUUUUUUUUUUUxSSSSSSSSSSSSSxOOOOOOOOOOOxEEEEEEEExFFFFFFFFxx
+xYYYYYYYYYYYYYYYYYxxxxxxxxxxxxxxxxxSSSSSSSSSSSSSxOOOOOOOOOOOxxxxxxxxxxxxxxxxxxxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxOOOOOOOOOOOxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxxxxxxxxxxxxxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxNNNNNNNNNNNxIIIIIIIIIxGGGGGGGxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxNNNNNNNNNNNxxxxxxxxxxxxxxxxxxxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxSSSSSSSSSSSSSxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxxxxxxxxxxxxxxxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xYYYYYYYYYYYYYYYYYxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xxxxxxxxxxxxxxxxxxxVVVVVVVVVVVVVVVxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xZZZZZZZZZZZZZZZZZxxxxxxxxxxxxxxxxxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxNNNNNNNNNNNxJJJJJJJJJxHHHHHHHxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxTTTTTTTTTTTTTxMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWxxxxxxxxxxxxxxxMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWx^^^^^^^^^^^^^xMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWx^...........^xMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWx^..<..{..a..^xMMMMMMMMMxLLLLLLLLLxKKKKKKKKKxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWx^...........^xMMMMMMMMMxLLLLLLLLLxxxxxxxxxxxx
+xZZZZZZZZZZZZZZZZZxWWWWWWWWWWWWWWWx^^^^^^^^^^^^^xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xZZZZZZZZZZZZZZZZZxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx$$$$$$$$$$$$$$$$$$$$x
+xZZZZZZZZZZZZZZZZZx%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+xxxxxxxxxxxxxxxxxxx%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+x*****************x%%%%%%%%%%%%%%%%%%%x|||||||||||||||||||x$$$$$$$$$$$$$$$$$$$$x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:  room_start
+TAGS:  no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+: setup_room(_G, 1)
+KFEAT:  a = altar_zin
+KFEAT:  b = altar_the_shining_one
+KFEAT:  c = altar_ashenzari
+KFEAT:  d = altar_kikubaaqudgha
+KFEAT:  e = altar_yredelemnul
+KFEAT:  f = altar_xom
+KFEAT:  g = altar_vehumet
+KFEAT:  h = altar_okawaru
+KFEAT:  i = altar_makhleb
+KFEAT:  j = altar_sif_muna
+KFEAT:  k = altar_trog
+KFEAT:  l = altar_nemelex_xobeh
+KFEAT:  m = altar_elyvilon
+KFEAT:  n = altar_lugonu
+KFEAT:  o = altar_beogh
+KFEAT:  p = altar_jiyva
+KFEAT:  q = altar_fedhas
+KFEAT:  r = altar_cheibriados
+KFEAT:  s = altar_dithmenos
+KFEAT:  t = altar_gozag
+KFEAT:  u = altar_qazlal
+KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
+              fire dragon armour mundane not_cursed ident:all plus:5, \
+              ice dragon armour mundane not_cursed ident:all plus:5, \
+              storm dragon armour mundane not_cursed ident:all plus:5, \
+              gold dragon armour mundane not_cursed ident:all plus:5, \
+              crystal plate armour mundane not_cursed ident:all plus:5
+KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
+              shield mundane not_cursed ident:all plus:3, \
+              large shield mundane not_cursed ident:all plus:3
+KITEM:    D = broad axe mundane not_cursed ident:all plus:5 plus2:5, \
+              battleaxe mundane not_cursed ident:all plus:5 plus2:5, \
+              executioner's axe mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    E = demon trident mundane not_cursed ident:all plus:5 plus2:5, \
+              bardiche mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    F = demon whip mundane not_cursed ident:all plus:5 plus2:5, \
+              great mace mundane not_cursed ident:all plus:5 plus2:5, \
+              giant club mundane not_cursed ident:all plus:5 plus2:5, \
+              giant spiked club mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    G = dagger mundane not_cursed ident:all plus:5 plus2:5, \
+              cutlass mundane not_cursed ident:all plus:5 plus2:5, \
+              quick blade mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    H = demon blade mundane not_cursed ident:all plus:5 plus2:5, \
+              bastard sword mundane not_cursed ident:all plus:5 plus2:5, \
+              great sword mundane not_cursed ident:all plus:5 plus2:5, \
+              claymore mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    I = lajatang mundane not_cursed ident:all plus:5 plus2:5
+KITEM:    J = crossbow mundane not_cursed ident:all plus:5 plus2:5, \
+              bolt q:1000 mundane ident:all, \
+              shortbow mundane not_cursed ident:all plus:5 plus2:5, \
+              arrow q:1000 mundane ident:all, \
+              longbow mundane not_cursed ident:all plus:5 plus2:5, \
+              sling mundane not_cursed ident:all plus:5 plus2:5, \
+              sling bullet q:1000 mundane ident:all
+KITEM:    K = potion of curing q:9 ident:all, \
+              potion of heal wounds q:9 ident:all, \
+              potion of berserk rage q:2 ident:all, \
+              potion of might q:5 ident:all, \
+              potion of agility q:5 ident:all, \
+              potion of magic q:5 ident:all, \
+              potion of experience q:1 ident:all, \
+              potion of resistance q:4 ident:all, \
+              potion of haste q:5 ident:all, \
+              potion of restore abilities q:2 ident:all, \
+              potion of invisibility q:2 ident:all, \
+              potion of brilliance q:2 ident:all
+KITEM:    L = scroll of blinking q:3 ident:all, \
+              scroll of fear q:2 ident:all, \
+              scroll of remove curse q:5 ident:all, \
+              scroll of identify q:5 ident:all, \
+              scroll of holy word q:1 ident:all, \
+              scroll of fog q:7 ident:all, \
+              scroll of recharging q:3 ident:all, \
+          scroll of amnesia q:4 ident:all
+KITEM:    M = meat ration q:4, bread ration q:4, strawberry q:42
+KITEM:    N = wand of draining ident:all charges:5, \
+              wand of cold ident:all charges:5, \
+              wand of fire ident:all charges:5, \
+          wand of disintegration ident:all charges:7
+KITEM:    O = crystal ball of energy ident:all, staff of energy not_cursed ident:all
+KITEM:    P = ring of strength not_cursed ident:all plus:6, \
+              ring of strength not_cursed ident:all plus:6, \
+              ring of intelligence not_cursed ident:all plus:6, \
+              ring of intelligence not_cursed ident:all plus:6, \
+              ring of dexterity not_cursed ident:all plus:6, \
+              ring of dexterity not_cursed ident:all plus:6, \
+          ring of flight not_cursed ident:all
+KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
+              shield unrand:shield_of_the_gong ident:all, \
+              plate armour unrand:maxwells_patent_armour ident:all, \
+              great mace unrand:dark_maul ident:all
+KITEM:    T = longbow unrand:piercer ident:all, \
+              long sword unrand:singing_sword ident:all, \
+              great mace unrand:mace_of_variability ident:all, \
+              great sword unrand:sword_of_power ident:all, \
+              scythe unrand:scythe_of_curses ident:all, \
+              bastard sword unrand:sword_of_zonguldrok ident:all, \
+              spear unrand:wyrmbane ident:all, \
+              claymore unrand:plutonium_sword ident:all, \
+              club unrand:devastator ident:all
+KITEM:    S = disc of storms ident:all, \
+              tome of destruction ident:all, tome of destruction ident:all
+KFEAT:    ^ = granite_statue
+KFEAT:    & = granite_statue
+COLOUR:   & = magenta
+MAP
+f^g^h^&A&^i^j^k
+^.........RT..^
+e..HG.........l
+^..IF.........^
+d..JE.....S...m
+^...D..M..P...^
+c......L..O...n
+^...C..K..N...^
+b...B.........o
+^.............^
+a^r^t^{^u^s^q^p
+ENDMAP
+
+NAME:  room_1
+: setup_room(_G, 2)
+MAP
+.GAG.
+.....
+.1.1.
+.....
+.....
+..a..
+ENDMAP
+
+NAME:  room_2
+: setup_room(_G, 3)
+MAP
+.GAG.
+.111.
+.....
+.....
+.....
+.....
+..a..
+ENDMAP
+
+NAME:  room_3
+: setup_room(_G, 4)
+MAP
+.GAG.
+.111.
+..1..
+.....
+.....
+.....
+..a..
+ENDMAP
+
+NAME:  room_4
+: setup_room(_G, 5)
+MAP
+..GAG...
+..111...
+...1....
+........
+........
+.Z....Z.
+...a....
+ENDMAP
+
+NAME:  room_5
+: setup_room(_G, 6)
+MAP
+..GAG...
+..111...
+..1.1...
+........
+........
+.Z....Z.
+...a....
+ENDMAP
+
+NAME:  room_6
+: setup_room(_G, 7)
+MAP
+..GAG..
+..111..
+..111..
+.......
+.......
+.......
+.......
+.Z...Z.
+...a...
+ENDMAP
+
+NAME:  room_7
+: setup_room(_G, 8)
+MAP
+..GAG..
+..111..
+..111..
+.......
+.......
+.......
+.......
+.Z...Z.
+...a...
+ENDMAP
+
+
+NAME:  room_8
+: setup_room(_G, 9)
+MAP
+...GAG...
+..1111...
+...111...
+.........
+.........
+.........
+.........
+.Z.....Z.
+....a....
+ENDMAP
+
+NAME:  room_9
+: setup_room(_G, 10)
+MAP
+...GAG...
+..11111..
+...111...
+.........
+.........
+.........
+.........
+.Z.....Z.
+....a....
+ENDMAP
+
+NAME:  room_10
+: setup_room(_G, 11)
+MAP
+...GAG...
+..11111..
+...1111..
+.........
+.........
+.........
+.........
+.Z.....Z.
+....a....
+ENDMAP
+
+NAME:  room_11
+: setup_room(_G, 12)
+MAP
+...GAG...
+..11111..
+..11111..
+.........
+.........
+.........
+.........
+.........
+.Z.....Z.
+....a....
+ENDMAP
+
+NAME:  room_12
+: setup_room(_G, 13)
+MAP
+...GAG...
+..111111.
+..11111..
+.........
+.........
+.........
+.........
+..z...z..
+.Z.....Z.
+....a....
+ENDMAP
+
+NAME:  room_13
+: setup_room(_G, 14)
+MAP
+....GAG....
+..1111111..
+...11111...
+...........
+...........
+...........
+...........
+..z.....z..
+.zZz...zZz.
+..z.....z..
+.....a.....
+ENDMAP
+
+NAME:  room_14
+: setup_room(_G, 15)
+MAP
+....GAG....
+..1111111..
+...111111..
+...........
+...........
+...........
+...........
+..z.....z..
+.zZz...zZz.
+..z.....z..
+.....a.....
+ENDMAP
+
+NAME:  room_15
+: setup_room(_G, 16)
+MAP
+....GAG....
+..1111111..
+..1111111..
+...........
+...........
+...........
+...........
+..z.....z..
+.zZz...zZz.
+..z.....z..
+.....a.....
+ENDMAP
+
+NAME:  room_16
+: setup_room(_G, 17)
+MAP
+.....GAG.....
+..11111111...
+...1111111...
+.............
+.............
+.............
+.............
+.............
+..z.......z..
+.zZz.....zZz.
+..z.......z..
+.............
+......a......
+ENDMAP
+
+NAME:  room_17
+: setup_room(_G, 18)
+MAP
+.....GAG.....
+..111111111..
+..111111111..
+.............
+.............
+.............
+.............
+.............
+..z.......z..
+.zZz.....zZz.
+..z.......z..
+.............
+......a......
+ENDMAP
+
+NAME:  room_18
+: setup_room(_G, 19)
+MAP
+.....GAG.....
+.11111111111.
+..111111111..
+.............
+.............
+.............
+.............
+.............
+..z.......z..
+.zZz.....zZz.
+..z.......z..
+.............
+......a......
+ENDMAP
+
+NAME:  room_19
+: setup_room(_G, 20)
+MAP
+......GAG......
+..11111111111..
+..11111111111..
+...............
+...............
+...............
+...............
+...............
+...............
+...............
+...z.......z...
+..zZz.....zZz..
+...z.......z...
+...............
+.......a.......
+ENDMAP
+
+NAME:  room_20
+: setup_room(_G, 21)
+MAP
+......GAG......
+..11111111111..
+..11111111111..
+......111......
+...............
+...............
+...............
+...............
+...............
+...............
+...z.......z...
+..zZz.....zZz..
+...z.......z...
+...............
+.......a.......
+ENDMAP
+
+NAME:  room_21
+: setup_room(_G, 22)
+MAP
+......GAG......
+..11111111111..
+..11111111111..
+....1111111....
+...............
+...............
+...............
+...............
+...............
+...............
+...z.......z...
+..zZz.....zZz..
+...z.......z...
+...............
+.......a.......
+ENDMAP
+
+NAME:  room_22
+: setup_room(_G, 23)
+MAP
+.......GAG.......
+...11111111111...
+...11111111111...
+...11111111111...
+.................
+.................
+.................
+.................
+.................
+.................
+.................
+.................
+.................
+...z.........z...
+..zZz.......zZz..
+...z.........z...
+.................
+........a........
+ENDMAP
+
+NAME:  room_23
+: setup_room(_G, 24)
+MAP
+.......GAG.......
+..1111111111111..
+..1111111111111..
+..1111111111111..
+.................
+.................
+.................
+.................
+.................
+.................
+.................
+.................
+....z.......z....
+...zZz.....zZz...
+....z.......z....
+.................
+.................
+........a........
+ENDMAP
+
+NAME:  room_24
+: setup_room(_G, 25)
+MAP
+.......GAG.......
+.111111111111111.
+.111111111111111.
+.111111111111111.
+.................
+.................
+.................
+.................
+.................
+.................
+.................
+.................
+....z.......z....
+...zZz.....zZz...
+....z.......z....
+.................
+.................
+........a........
+ENDMAP
+
+NAME:  room_25
+: setup_room(_G, 26)
+MAP
+........GAG........
+.11111111111111111.
+.11111111111111111.
+.11111111111111111.
+...................
+...................
+...................
+...................
+...................
+...................
+...................
+...................
+...................
+...................
+....z.........z....
+...zZz.......zZz...
+....z.........z....
+...................
+...................
+.........a.........
+ENDMAP
+
+NAME:  room_26
+: setup_room(_G, 27)
+MAP
+........GAG........
+.11111111111111111.
+.11111111111111111.
+.11111111111111111.
+.......11111.......
+...................
+...................
+...................
+...................
+...................
+...................
+...................
+...................
+...................
+....z.........z....
+...zZz.......zZz...
+....z.........z....
+...................
+...................
+.........a.........
+ENDMAP
+
+NAME:  room_27
+: setup_room(_G, 28)
+: choose_mset_4(_G)
+MAP
+........GAG.........
+.11111111.111111111.
+.111111111111111111.
+.111111111111111111.
+......1111111.......
+.........1..........
+....................
+....................
+....................
+....z..........z....
+...zZz........zZz...
+....z..........z....
+....................
+....................
+....................
+....z..........z....
+...zZz........zZz...
+....z..........z....
+....................
+....................
+.........a..........
+ENDMAP

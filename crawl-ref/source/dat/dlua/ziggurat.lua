@@ -46,13 +46,13 @@ function callback.ziggurat_initialiser(portal)
 end
 
 -- Common setup for ziggurat levels.
-function ziggurat_level(e)
+function ziggurat_level(e, sprint)
   e.tags("allow_dup")
   e.tags("no_dump")
   e.orient("encompass")
 
   if crawl.game_started() then
-    ziggurat_build_level(e)
+    ziggurat_build_level(e, sprint)
   end
 end
 
@@ -65,7 +65,7 @@ function ziggurat_awaken_all(mons)
   mons.beh = beh_wander
 end
 
-function ziggurat_build_level(e)
+function ziggurat_build_level(e, sprint)
   local builder = zig().builder
 
   -- Deeper levels can have all monsters awake.
@@ -80,7 +80,7 @@ function ziggurat_build_level(e)
   end
 
   if builder then
-    return ziggurat_builder_map[builder](e)
+    return ziggurat_builder_map[builder](e, sprint)
   end
 end
 
@@ -189,18 +189,20 @@ local function monster_creator_fn(arg)
 end
 
 local mons_populations = { }
+local mons_sprint_populations = { }
 
-local function mset(...)
+local function mset(pop, ...)
   util.foreach({ ... }, function (spec)
-                          table.insert(mons_populations, spec)
+                          table.insert(pop, spec)
                         end)
 end
 
-local function mset_if(condition, ...)
-  mset(unpack(util.map(util.curry(spec_if, condition), { ... })))
+local function mset_if(pop, condition, ...)
+  mset(pop, unpack(util.map(util.curry(spec_if, condition), { ... })))
 end
 
-mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
+mset(mons_populations,
+     with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "catoblepas w:12 / hellephant w:6 / spriggan druid w:1 / " ..
                 "guardian serpent w:1 / deep troll shaman w:1 / " ..
                 "raiju w:1 / hell beast w:1", { weight = 5 }),
@@ -257,7 +259,8 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
 -- spec_fn can be used to wrap a function that returns a monster spec.
 -- This is useful if you want to adjust monster weights in the spec
 -- wrt to depth in the ziggurat.
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = 290 - 10 * you.depth()
                local e = math.max(0, you.depth() - 20)
                return "place:Orc:$ w:" .. d .. " / orc warlord / " ..
@@ -265,21 +268,24 @@ mset(spec_fn(function ()
                  "iron troll w:5 / moth of wrath w:" .. e
              end))
 
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = 300 - 10 * you.depth()
                return "place:Elf:$ w:" .. d .. " / deep elf high priest / " ..
                  "deep elf blademaster / deep elf master archer / " ..
                  "deep elf annihilator / deep elf demonologist"
              end))
 
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = math.max(3, you.depth() - 1)
                local e = math.max(1, you.depth() - 20)
                return "place:Snake:$ w:65 / guardian serpent w:5 / " ..
                  "greater naga w:" .. d .. " / quicksilver dragon w:" .. e
              end))
 
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = math.max(120, 280 - 10 * you.depth())
                local e = math.max(1, you.depth() - 9)
                return "place:Swamp:$ w:" .. d .. " / hydra / " ..
@@ -287,19 +293,22 @@ mset(spec_fn(function ()
                  "golden dragon w:1 / tentacled monstrosity w:" .. e
              end))
 
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = math.max(1, you.depth() - 11)
                return "place:Vaults:$ 9 w:30 / place:Vaults:$ w:60 / " ..
                  "titan w:" .. d .. " / golden dragon w:" .. d ..
                  " / ancient lich w:" .. d
              end))
 
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = you.depth() + 5
                return "place:Tomb:$ w:200 / greater mummy w:" .. d
              end))
 
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = math.max(2, math.floor((32 - you.depth()) / 5))
                local e = math.min(8, math.floor((you.depth()) / 5) + 4)
                local f = math.max(1, you.depth() - 5)
@@ -309,7 +318,8 @@ mset(spec_fn(function ()
                  " / killer klown w:8 / chaos champion w:2 / pandemonium lord w:" .. f
              end))
 
-mset(spec_fn(function ()
+mset(mons_populations,
+     spec_fn(function ()
                local d = 41 - you.depth()
                return "base draconian w:" .. d .. " / nonbase draconian w:40"
              end))
@@ -327,8 +337,9 @@ local function mons_panlord_gen(x, y, nth)
   end
 end
 
-mset_if(depth_ge(8), mons_panlord_gen)
-mset_if(depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
+mset_if(mons_populations, depth_ge(8), mons_panlord_gen)
+mset_if(mons_populations,
+        depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
                       "place:Shoals:$ w:14 / place:Spider:$ w:14 / " ..
                       "greater naga w:12 / guardian serpent w:8 / hydra w:5 / " ..
                       "swamp dragon w:5 / tentacled monstrosity / " ..
@@ -336,8 +347,639 @@ mset_if(depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
                       "alligator snapping turtle w:6 / ghost moth w:8 / " ..
                       "emperor scorpion w:8 / moth of wrath w:4", { weight = 5 }))
 
+-- Sprint monster sets, levels 1-5.
+-- Slime
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "jelly w:15 / ooze / slime creature w:5 / giant eyeball w:5 / " ..
+        "golden eye w:5 / eye of draining w:5",
+        { weight = 9 }))
+-- Snake
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "ball python / adder / water moccasin w:5 / naga w:2",
+        { weight = 10 }))
+-- Lair
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "green rat / sheep / iguana / porcupine / yak w:5 / " ..
+        "jackal / wolf w:5 / giant frog w:5",
+        { weight = 10 }))
+-- Spider
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "giant mite w:15 / scorpion w:15 / jumping spider w:5 / " ..
+        "tarantella w:5",
+        { weight = 10 }))
+-- Crypt
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "zombie / skeleton / wight w:5 / necrophage / phantom",
+        { weight = 10 }))
+-- Abyss
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "lesser demon / place:Abyss w:3",
+        { weight = 10 }))
+-- Shoals
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "merfolk",
+        { weight = 5 }))
+-- Hell
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "zombie w:5 / skeleton w:5 / lesser demon w:15 / hell hound w:5",
+        { weight = 10 }))
+-- Giant
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "ogre / two-headed ogre / troll w:5 / cyclops w:3",
+        { weight = 2 }))
+-- Fire
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "fire vortex / hell hound / hell hog / fire elemental",
+        { weight = 2 }))
+-- Ice
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "ice beast / polar bear / white imp / simulacrum",
+        { weight = 2 }))
+-- Air
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "insubstantial wisp / air elemental w:5",
+        { weight = 2 }))
+-- Earth
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "toenail golem",
+        { weight = 2 }))
+-- Dragon
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "swamp drake / fire drake / steam dragon",
+        { weight = 2 }))
+-- Ranged
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "centaur / yaktaur",
+        { weight = 2 }))
+-- Vaults
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "place:Vaults:1",
+        { weight = 2 }))
+-- Pan
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "lesser demon / common demon w:2 / pandemonium lord w:1",
+        { weight = 2 }))
+-- Tomb
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "place:Tomb:$ / mummy w:15 / zombie",
+        { weight = 4 }))
+-- Elf
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "place:Elf:1",
+        { weight = 10 }))
+-- Orc
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "orc / orc wizard / orc priest",
+        { weight = 10 }))
+-- Drac
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "draconian / base draconian w:1",
+        { weight = 3 }))
+-- Zot
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "draconian / base draconian w:1 / death cob w:1",
+        { weight = 2 }))
+-- Chaos
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "shapeshifter hd:5 / ugly thing w:5",
+        { weight = 4 }))
+-- Uniques
+mset_if(mons_sprint_populations,
+        depth_lt(6), with_props(
+        "Sigmund / Jessica / Blork the orc / Crazy Yiuf / Dowan / " ..
+        "Duvessa / Edmund / Erica / Erolcha / Eustachio / Fannar / " ..
+        "Gastronok / Grum / Grinder / Harold / Ijyb / Joseph / Josephine / " ..
+        "Maurice / Menkaure / Natasha / Pikel / Prince Ribbit / Psyche / " ..
+        "Purgy / Sonja / Terence / Urug / human",
+        { weight = 1 }))
+
+-- Sprint monster sets, rooms 6-11.
+-- Slime
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "jelly w:15 / ooze / brown ooze / slime creature / " ..
+        "giant eyeball w:5 / golden eye w:5 / eye of draining w:5 / " ..
+        "eye of devastation w:5 / shining eye w:5",
+        { weight = 9 }))
+-- Snake
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "ball python / adder / water moccasin / naga / " ..
+        "black mamba w:5 / naga mage w:5",
+        { weight = 10 }))
+-- Lair
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "green rat / sheep / iguana / porcupine / yak / " ..
+        "jackal / wolf / giant frog / spiny frog w:5 / " ..
+        "komodo dragon w:5 / basilisk w:5 / place:Lair:1 w:30",
+        { weight = 10 }))
+-- Spider
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "giant mite w:15 / scorpion w:15 / jumping spider w:5 / " ..
+        "tarantella w:5 / wolf spider w:5 / redback w:5",
+        { weight = 5 }))
+-- Crypt
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "zombie w:20 / skeleton w:20 / wight / necrophage / phantom",
+        { weight = 10 }))
+-- Abyss
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "lesser demon / place:Abyss w:6",
+        { weight = 10 }))
+-- Shoals
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "merfolk w:20 / hippogriff / centaur / sheep / cyclops w:3",
+        { weight = 10 }))
+-- Hell
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "zombie / skeleton / lesser demon / hell hound",
+        { weight = 6 }))
+-- Giant
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "ogre / two-headed ogre / troll w:5 / cyclops w:5 / hill giant w:5",
+        { weight = 2 }))
+-- Fire
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "fire vortex / hell hound / hell hog / fire elemental / " ..
+        "fire drake / efreet",
+        { weight = 2 }))
+-- Ice
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "ice beast / polar bear / white imp / simulacrum / " ..
+        "freezing wraith / blue devil",
+        { weight = 2 }))
+-- Air
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "insubstantial wisp / air elemental / wind drake w:5",
+        { weight = 2 }))
+-- Earth
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "toenail golem / earth elemental / gargoyle w:2",
+        { weight = 2 }))
+-- Dragon
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "swamp drake / fire drake / mottled dragon / steam dragon / wyvern",
+        { weight = 2 }))
+-- Ranged
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "centaur / yaktaur / cyclops / centaur warrior w:3 / " ..
+        "yaktaur captain w:3",
+        { weight = 2 }))
+-- Vaults
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "place:Vaults:3 / yaktaur w:2 / vault guard w:5",
+        { weight = 5 }))
+-- Pan
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "lesser demon / common demon w:5 / pandemonium lord w:2",
+        { weight = 5 }))
+-- Tomb
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "place:Tomb:$ w:250 / greater mummy",
+        { weight = 5 }))
+-- Elf
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "place:Elf:$",
+        { weight = 10 }))
+-- Orc
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "orc / orc wizard / orc priest / orc warrior",
+        { weight = 10 }))
+-- Drac
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "draconian / base draconian w:5",
+        { weight = 3 }))
+-- Zot
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "draconian / base draconian w:5 / death cob w:1",
+        { weight = 2 }))
+-- Chaos
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "shapeshifter / ugly thing w:5 / neqoxec w:5 / shining eye w:2",
+        { weight = 5 }))
+-- Uniques
+mset_if(mons_sprint_populations,
+        depth_range(6, 11), with_props(
+        "Sigmund / Jessica / Blork the orc / Crazy Yiuf / Dowan / " ..
+        "Duvessa / Edmund / Erica / Erolcha / Eustachio / Fannar / " ..
+        "Gastronok / Grum / Grinder / Harold / Ijyb / Joseph / Josephine / " ..
+        "Maurice / Menkaure / Natasha / Pikel / Prince Ribbit / Psyche / " ..
+        "Purgy / Sonja / Terence / Urug / human",
+        { weight = 0 }))
+
+-- Sprint monster sets, rooms 12-19.
+-- Slime
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "jelly w:15 / ooze / brown ooze w:15 / slime creature w:15 / " ..
+        "giant eyeball w:2 / golden eye w:5 / eye of draining w:2 / " ..
+        "eye of devastation w:5 / shining eye w:5 / acid blob w:5 / " ..
+        "death ooze / azure jelly w:5 / great orb of eyes w:5 / " ..
+        "giant orange brain w:2",
+        { weight = 9 }))
+-- Snake
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "ball python / adder / water moccasin / naga / " ..
+        "black mamba / naga mage / naga warrior / greater naga w:5 / " ..
+        "anaconda w:5 / guardian serpent",
+        { weight = 5 }))
+-- Lair
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Lair:2 / place:Lair:5 / place:Lair:8 w:5",
+        { weight = 5 }))
+-- Spider
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Spider:$ w:70 / yellow wasp / red wasp",
+        { weight = 5 }))
+-- Crypt
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "zombie / skeleton / skeletal warrior w:5 / ghoul w:2 / " ..
+        "necrophage w:5 / vampire w:5 / vampire mage w:5 / " ..
+        "vampire knight w:5 / lich w:2 / ancient lich w:1 / shadow / " ..
+        "wight / necromancer",
+        { weight = 10 }))
+-- Abyss
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "lesser demon w:5 / place:Abyss",
+        { weight = 5 }))
+-- Shoals
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Shoals:3 / place:Shoals:$ w:45 / merfolk javelineer / " ..
+        "merfolk impaler / merfolk aquamancer",
+        { weight = 5 }))
+-- Cocytus
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Coc:1",
+        { weight = 5 }))
+-- Gehenna
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Geh:1",
+        { weight = 5 }))
+-- Tartarus
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "zombie / skeleton / soul eater / shadow dragon w:3 / " ..
+        "spectral thing / ghoul w:2",
+        { weight = 5 }))
+-- Dis
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Dis:1",
+        { weight = 5 }))
+-- Giant
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "ogre w:5 / two-headed ogre / troll / cyclops / hill giant w:5 / " ..
+        "stone giant w:5 / fire giant w:2 / frost giant w:2",
+        { weight = 2 }))
+-- Fire
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "fire vortex / hell hound / hell hog / fire elemental / " ..
+        "fire drake / efreet / fire dragon / fire giant",
+        { weight = 2 }))
+-- Ice
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "ice beast / polar bear / white imp / simulacrum / " ..
+        "freezing wraith / ice devil / ice dragon / frost giant / " ..
+        "blizzard demon",
+        { weight = 2 }))
+-- Air
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "insubstantial wisp / air elemental / wind drake / " ..
+        "spriggan air mage / storm dragon / titan w:2",
+        { weight = 2 }))
+-- Earth
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "earth elemental w:15 / gargoyle w:5 / iron golem w:20 / " ..
+        "crystal guardian / stone giant w:5 / iron dragon w:5 / " ..
+        "quicksilver dragon w:5",
+        { weight = 2 }))
+-- Dragon
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "swamp drake / fire drake / mottled dragon / steam dragon / " ..
+        "death drake / swamp dragon / fire dragon / ice dragon / wyvern / " ..
+        "hydra",
+        { weight = 2 }))
+-- Ranged
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "centaur / yaktaur / cyclops / centaur warrior w:6 / " ..
+        "yaktaur captain w:6 / stone giant w:5 / merfolk javelineer w:5 / " ..
+        "deep elf master archer w:5",
+        { weight = 2 }))
+-- Vaults
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "vault guard w:60 / lich w:5 / yaktaur / yaktaur captain w:3 / " ..
+        "stone giant / shadow dragon w:5",
+        { weight = 4 }))
+-- Pan
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "common demon / place:Pan / pandemonium lord w:5",
+        { weight = 3 }))
+-- Tomb
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Tomb:3 w:100 / greater mummy",
+        { weight = 3 }))
+-- Elf
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Elf:$ w:100 / deep elf sorcerer / deep elf blademaster / " ..
+        "deep elf master archer / deep elf annihilator / deep elf high priest",
+        { weight = 5 }))
+-- Orc
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "place:Orc:$ w:100 / orc knight / orc high priest w:5 / " ..
+        "orc sorcerer w:5 / stone giant w:2 / orc warlord w:5 / " ..
+        "moth of wrath w:1",
+        { weight = 5 }))
+-- Drac
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "base draconian w:60 / nonbase draconian",
+        { weight = 2 }))
+-- Zot
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "base draconian w:15 / place:Zot:1 w:5 / orb guardian w:2",
+        { weight = 2 }))
+-- Chaos
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "shapeshifter / ugly thing w:5 / very ugly thing w:5 / " ..
+        "neqoxec w:5 / shining eye w:2 / glowing shapeshifter w:20",
+        { weight = 4 }))
+-- Uniques
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / " ..
+        "Erolcha / Eustachio / Fannar / Gastronok / Grum / Grinder / " ..
+        "Harold / Ijyb / Jessica / Joseph / Josephine / Maurice / " ..
+        "Menkaure / Natasha / Pikel / Prince Ribbit / Psyche / Purgy / " ..
+        "Sigmund / Sonja / Terence / Urug /  Agnes / Aizul / Asterion / " ..
+        "Azrael / Donald / Frances / Jorgrun / Kirke / Louise / Maud / " ..
+        "Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne / " ..
+        "Rupert / Saint Roka / Snorg / Wiglaf / human",
+        { weight = 3 }))
+-- Holy
+mset_if(mons_sprint_populations,
+        depth_range(12, 19), with_props(
+        "daeva / angel / cherub / pearl dragon / ophan / " ..
+        "apis / nothing w:67",
+        { weight = 2 }))
+
+-- Sprint monster sets, rooms 19-27.
+-- Slime
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "jelly w:5 / brown ooze w:15 / slime creature w:15 / " ..
+        "giant eyeball w:2 / golden eye w:4 / eye of draining w:2 / " ..
+        "eye of devastation w:5 / shining eye w:4 / acid blob / " ..
+        "death ooze / azure jelly / great orb of eyes w:4 / " ..
+        "giant orange brain w:2",
+        { weight = 9 }))
+-- Snake
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "ball python w:5 / adder w:5 / water moccasin / naga / " ..
+        "black mamba / naga mage / naga warrior / greater naga / " ..
+        "anaconda / guardian serpent",
+        { weight = 5 }))
+-- Lair
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Lair:$ w:300 / hydra / catoblepas / dire elephant",
+        { weight = 5 }))
+-- Spider
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Spider:$ w:70 / ghost moth w:5 / yellow wasp / red wasp / " ..
+        "moth of wrath w:5",
+        { weight = 7 }))
+-- Crypt
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "zombie / skeleton / skeletal warrior / ghoul w:7 / " ..
+        "necrophage w:5 / vampire w:5 / vampire mage w:5 / " ..
+        "vampire knight / lich w:5 / ancient lich w:2 / shadow / " ..
+        "wight / necromancer",
+        { weight = 8 }))
+-- Abyss
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "pandemonium lord / place:Abyss w:500",
+        { weight = 8 }))
+-- Shoals
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Shoals:$ w:55 / merfolk javelineer / merfolk impaler / " ..
+        "merfolk aquamancer",
+        { weight = 5 }))
+-- Cocytus
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Coc:$ w:500 / ice fiend",
+        { weight = 5 }))
+-- Gehenna
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Geh:$",
+        { weight = 5 }))
+-- Tartarus
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "zombie / skeleton / soul eater / shadow dragon w:5 / " ..
+        "shadow fiend w:1 / spectral thing place:Tar:$ / ghoul w:5",
+        { weight = 5 }))
+-- Dis
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Dis:$ w:500 / hell sentinel",
+        { weight = 5 }))
+-- Giant
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "hill giant / cyclops / stone giant / fire giant / " ..
+        "frost giant / ettin / titan",
+        { weight = 3 }))
+-- Fire
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "fire vortex / hell hound / hell hog / fire elemental / " ..
+        "fire drake / efreet / fire dragon / fire giant / orb of fire w:5 / " ..
+        "balrug",
+        { weight = 3 }))
+-- Ice
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "ice beast / polar bear / white imp / simulacrum / " ..
+        "freezing wraith / ice devil / ice dragon / frost giant / " ..
+        "ice fiend w:5 / blizzard demon",
+        { weight = 3 }))
+-- Air
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "insubstantial wisp / air elemental / wind drake / " ..
+        "spriggan air mage / storm dragon / titan / electric golem",
+        { weight = 3 }))
+-- Earth
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "earth elemental w:15 / gargoyle w:5 / iron golem / " ..
+        "crystal guardian / stone giant / iron dragon / " ..
+        "quicksilver dragon",
+        { weight = 3 }))
+-- Dragon
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "swamp drake / fire drake / mottled dragon / steam dragon / " ..
+        "death drake / swamp dragon / fire dragon / ice dragon / " ..
+        "shadow dragon / iron dragon / quicksilver dragon / " ..
+        "golden dragon / wyvern / hydra",
+        { weight = 3 }))
+-- Ranged
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "centaur / yaktaur / cyclops / centaur warrior / " ..
+        "yaktaur captain / stone giant / merfolk javelineer / " ..
+        "deep elf master archer",
+        { weight = 3 }))
+-- Vaults
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "vault guard w:50 / ancient lich w:5 / lich / yaktaur / " ..
+        "yaktaur captain w:3 / stone giant / shadow dragon / " ..
+        "titan w:1",
+        { weight = 3 }))
+-- Pan
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Pan w:5 / pandemonium lord",
+        { weight = 4 }))
+-- Tomb
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Tomb:$ w:100 / greater mummy",
+        { weight = 4 }))
+-- Elf
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Elf:$ w:50 / deep elf sorcerer / deep elf blademaster / " ..
+        "deep elf master archer / deep elf annihilator / deep elf high priest",
+        { weight = 10 }))
+-- Orc
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "place:Orc:$ w:70 / orc knight / orc high priest w:5 / " ..
+        "orc sorcerer w:5 / stone giant / orc warlord / moth of wrath w:3",
+        { weight = 5 }))
+-- Drac
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "base draconian w:30 / nonbase draconian",
+        { weight = 8 }))
+-- Zot
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "base draconian / place:Zot:$ / orb guardian w:7",
+        { weight = 3 }))
+-- Chaos
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "shapeshifter w:5 / glowing shapeshifter w:15 / " ..
+        "glowing shapeshifter hd:27",
+        { weight = 8 }))
+-- Uniques
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / " ..
+        "Erolcha / Eustachio / Fannar / Gastronok / Grum / Grinder / " ..
+        "Harold / Ijyb / Jessica / Joseph / Josephine / Maurice / " ..
+        "Menkaure / Natasha / Pikel / Prince Ribbit / Psyche / Purgy / " ..
+        "Sigmund / Sonja / Terence / Urug /  Agnes / Aizul / Asterion / " ..
+        "Azrael / Donald / Frances / Jorgrun / Kirke / Louise / Maud / " ..
+        "Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne / " ..
+        "Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus / " ..
+        "Boris / Cerebov / Dispater / Dissolution / Ereshkigal / " ..
+        "Frederick / Geryon / Gloorx Vloq / Ignacio / Ilsuiw / Jory / " ..
+        "Khufu / Lom Lobon / Mara / Margery / Mennas / Mnoleg / Murray / " ..
+        "the Enchantress / the Lernaean hydra / the Serpent of Hell / " ..
+        "the royal jelly / Sojobo / Tiamat / Vashnia / Xtahua / Nellie / " ..
+        "Chuck / the iron giant",
+        { weight = 4 }))
+-- Holy
+mset_if(mons_sprint_populations,
+        depth_ge(20), with_props(
+        "daeva / angel / cherub / pearl dragon / ophan / apis",
+        { weight = 2 }))
+
+
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn, mons_populations)
+end
+
+function zigsprint_monster_creators()
+  return util.map(monster_creator_fn, mons_sprint_populations)
 end
 
 local function ziggurat_vet_monster(fmap)
@@ -365,7 +1007,13 @@ local function ziggurat_vet_monster(fmap)
   return fmap
 end
 
-local function choose_monster_set()
+local function choose_monster_set(sprint)
+  if sprint then
+      return ziggurat_vet_monster(
+               util.random_weighted_from(
+                 'weight',
+                 zigsprint_monster_creators()))
+  end
   return ziggurat_vet_monster(
            util.random_weighted_from(
              'weight',
@@ -430,14 +1078,34 @@ local function ziggurat_create_loot_at(c)
   end
 
   -- dgn.good_scrolls is a list of items with total weight 1000
-  local good_loot = dgn.item_spec("* no_pickup no_mimic w:7000 / " .. dgn.good_scrolls)
-  local super_loot = dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
-                                   "potion of experience no_pickup no_mimic w:200 /" ..
-                                   "potion of cure mutation no_pickup no_mimic w:200 /" ..
-                                   "potion of porridge no_pickup no_mimic w:100 /" ..
-                                   "wand of heal wounds no_pickup no_mimic w:10 / " ..
-                                   "wand of hasting no_pickup no_mimic w:10 / " ..
-                                   dgn.good_scrolls)
+  local good_loot =
+      dgn.item_spec("* no_pickup no_mimic w:7000 / " .. dgn.good_scrolls)
+  local super_loot =
+      dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
+                    "potion of experience no_pickup no_mimic w:200 /" ..
+                    "potion of cure mutation no_pickup no_mimic w:200 /" ..
+                    "potion of porridge no_pickup no_mimic w:100 /" ..
+                    "wand of heal wounds no_pickup no_mimic w:10 / " ..
+                    "wand of hasting no_pickup no_mimic w:10 / " ..
+                    dgn.good_scrolls)
+  local sprint_loot =
+      dgn.item_spec(
+            "superb_item ident:all no_pickup no_mimic w:590 / " ..
+            "potion of porridge ident:all no_pickup no_mimic w:2 / " ..
+            "wand of heal wounds w:1 ident:all no_pickup no_mimic / " ..
+            "wand of hasting ident:all no_pickup no_mimic w:1 / " ..
+            "potion of heal wounds ident:all no_pickup no_mimic q:2 w:2 / " ..
+            "scroll of recharging ident:all no_pickup no_mimic w:1 / " ..
+            "scroll of fog w:1 ident:all no_pickup no_mimic / " ..
+            "scroll of holy word w:1 ident:all no_pickup no_mimic / " ..
+            "potion of might ident:all no_pickup no_mimic w:2 / " ..
+            "potion of agility w:2 ident:all no_pickup no_mimic / " ..
+            "potion of haste q:2 ident:all no_pickup no_mimic w:2 / " ..
+            "scroll of acquirement w:1 ident:all no_pickup no_mimic / " ..
+            "scroll of enchant weapon iii ident:all no_pickup no_mimic q:2 w:2 / " ..
+            "scroll of enchant armour ident:all no_pickup no_mimic q:4 w:2 / " ..
+            "scroll of brand weapon ident:all no_pickup no_mimic")
+
 
   local loot_spots = find_free_space(nloot * 4)
 
@@ -460,7 +1128,9 @@ local function ziggurat_create_loot_at(c)
   end
 
   for i = 1, nloot do
-    if crawl.one_chance_in(depth) then
+    if crawl.is_sprint() then
+      place_loot(sprint_loot)
+    elseif crawl.one_chance_in(depth) then
       for j = 1, 4 do
         place_loot(good_loot)
       end
@@ -617,15 +1287,16 @@ local function ziggurat_stairs(entry, exit)
 
   if you.depth() < dgn.br_depth(you.branch()) then
     zigstair(exit.x, exit.y, "stone_stairs_down_i")
+  elseif crawl.is_sprint() then
+    dgn.create_item(exit.x, exit.y, "Orb of Zot")
   end
-
   zigstair(exit.x, exit.y + 1, "exit_ziggurat")
   zigstair(exit.x, exit.y - 1, "exit_ziggurat")
 end
 
-local function ziggurat_furnish(centre, entry, exit)
+local function ziggurat_furnish(centre, entry, exit, sprint)
   has_loot_chamber = false
-  local monster_generation = choose_monster_set()
+  local monster_generation = choose_monster_set(sprint)
 
   if type(monster_generation.spec) == "string" then
     dgn.set_random_mon_list(monster_generation.spec)
@@ -641,7 +1312,13 @@ local function ziggurat_furnish(centre, entry, exit)
     ziggurat_place_pillars(centre)
   end
 
-  ziggurat_create_loot_at(lootspot)
+  -- The Orb belongs between the exits in zigsprint.
+  if not crawl.is_sprint()
+     or you.depth() < dgn.br_depth(you.branch())
+     or lootspot.x ~= exit.x
+     or lootspot.y ~= exit.y then
+    ziggurat_create_loot_at(lootspot)
+  end
 
   ziggurat_create_monsters(exit, monster_generation.fn)
 
@@ -655,7 +1332,7 @@ local function ziggurat_furnish(centre, entry, exit)
 end
 
 -- builds ziggurat maps consisting of two overimposed rectangles
-local function ziggurat_rectangle_builder(e)
+local function ziggurat_rectangle_builder(e, sprint)
   local grid = dgn.grid
   dgn.fill_grd_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
@@ -696,7 +1373,7 @@ local function ziggurat_rectangle_builder(e)
   end
 
   ziggurat_stairs(entry, exit)
-  ziggurat_furnish(dgn.point(cx, cy), entry, exit)
+  ziggurat_furnish(dgn.point(cx, cy), entry, exit, sprint)
 end
 
 -- builds elliptic ziggurat maps
@@ -704,7 +1381,7 @@ end
 -- pi*a*b=area,
 -- a=b for zig_exc=0,
 -- a=b*3/2 for zig_exc=100
-local function ziggurat_ellipse_builder(e)
+local function ziggurat_ellipse_builder(e, sprint)
   local grid = dgn.grid
   dgn.fill_grd_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
@@ -733,12 +1410,12 @@ local function ziggurat_ellipse_builder(e)
   end
 
   ziggurat_stairs(entry, exit)
-  ziggurat_furnish(dgn.point(cx, cy), entry, exit)
+  ziggurat_furnish(dgn.point(cx, cy), entry, exit, sprint)
 end
 
 
 -- builds hexagonal ziggurat maps
-local function ziggurat_hexagon_builder(e)
+local function ziggurat_hexagon_builder(e, sprint)
   local grid = dgn.grid
   dgn.fill_grd_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
@@ -779,7 +1456,7 @@ local function ziggurat_hexagon_builder(e)
   end
 
   ziggurat_stairs(entry, exit)
-  ziggurat_furnish(c, entry, exit)
+  ziggurat_furnish(c, entry, exit, sprint)
 end
 
 ----------------------------------------------------------------------
