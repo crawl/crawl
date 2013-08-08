@@ -73,6 +73,7 @@ public:
   uint8_t magic_points_regeneration;
   unsigned int experience;
   unsigned int total_experience; // Unaffected by draining. Used for skill cost.
+  unsigned int exp_mul, exp_div; // Exp scaling for Sprint
   int experience_level;
   int gold;
   int zigs_completed, zig_max;
@@ -180,6 +181,7 @@ public:
   string jiyva_second_name;       // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
+  unsigned int piety_mul, piety_div;   // Piety scaling for Sprint
   uint8_t gift_timeout;
   FixedVector<uint8_t, NUM_GODS>  penance;
   FixedVector<uint8_t, NUM_GODS>  worshipped;

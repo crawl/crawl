@@ -1253,6 +1253,44 @@ LUAFN(crawl_sprint_depth)
     return 0;
 }
 
+LUAFN(crawl_sprint_skill_exp_scale)
+{
+    if (!crawl_state.game_is_sprint())
+    {
+        string err = "sprint_skill_exp_scale called outside of Sprint";
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    if (lua_gettop(ls) < 1)
+    {
+        string err = "sprint_skill_exp_scale needs at least a multiplier";
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    you.exp_mul = luaL_checknumber(ls, 1);
+    if (lua_gettop(ls) >= 2)
+        you.exp_div = luaL_checknumber(ls, 2);
+
+    return 0;
+}
+
+LUAFN(crawl_sprint_piety_scale)
+{
+    if (!crawl_state.game_is_sprint())
+    {
+        string err = "sprint_piety_scale called outside of Sprint";
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    if (lua_gettop(ls) < 1)
+    {
+        string err = "sprint_piety_scale needs at least a multiplier";
+        return luaL_argerror(ls, 1, err.c_str());
+    }
+    you.piety_mul = luaL_checknumber(ls, 1);
+    if (lua_gettop(ls) >= 2)
+        you.piety_div = luaL_checknumber(ls, 2);
+
+    return 0;
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -1270,6 +1308,8 @@ static const struct luaL_reg crawl_dlib[] =
 { "mark_game_won", _crawl_mark_game_won },
 { "hints_type", crawl_hints_type },
 { "sprint_depth", crawl_sprint_depth },
+{ "sprint_skill_exp_scale", crawl_sprint_skill_exp_scale },
+{ "sprint_piety_scale", crawl_sprint_piety_scale },
 
 { NULL, NULL }
 };

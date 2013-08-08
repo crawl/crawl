@@ -1585,6 +1585,13 @@ static void tag_construct_you(writer &th)
 
     CANARY;
 
+    marshallInt(th, you.exp_mul);
+    marshallInt(th, you.exp_div);
+    marshallInt(th, you.piety_mul);
+    marshallInt(th, you.piety_div);
+
+    CANARY;
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2936,6 +2943,20 @@ static void tag_read_you(reader &th)
 #endif
 
     EAT_CANARY;
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_SPRINT_SCALING)
+    {
+#endif
+    you.exp_mul   = unmarshallInt(th);
+    you.exp_div   = unmarshallInt(th);
+    you.piety_mul = unmarshallInt(th);
+    you.piety_div = unmarshallInt(th);
+
+    EAT_CANARY;
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
     {

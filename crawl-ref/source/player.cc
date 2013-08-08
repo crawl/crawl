@@ -6042,6 +6042,11 @@ void player::init()
     clear_constricted();
     constricting = 0;
 
+    exp_mul   = crawl_state.game_is_sprint() ? 9 : 1;
+    exp_div   = 1;
+    piety_mul = crawl_state.game_is_sprint() ? 9 : 1;
+    piety_div = 1;
+
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
