@@ -202,9 +202,9 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           (Anywhere in the dungeon between depths 7-20, but never in the Orcish
           Mines.)
 
-            DEPTH: Lair:*
+            DEPTH: Lair
 
-          (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair".)
+          (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair:*".)
 
           Maps that do not specify a DEPTH: attribute will inherit their depth
           constraints from the closest preceding default-depth: line. If there
