@@ -288,10 +288,10 @@ bool monster::extra_balanced() const
 /*
  * Monster floundering conditions.
  *
- * Floundering reduce the movement speed and can cause the monster to fumble
+ * Floundering reduces movement speed and can cause the monster to fumble
  * its attacks. It can be caused by water or by Leda's liquefaction.
  *
- * @param pos Coordinates of position to check.
+ * @param p Coordinates of position to check.
  * @return Whether the monster would be floundering at p.
  */
 bool monster::floundering_at(const coord_def p) const
