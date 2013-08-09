@@ -68,8 +68,6 @@ static const monster_level_up mon_grow[] =
     // power jump, -> druid or -> air mage would require magic training,
     // -> berserker an altar.
 
-    monster_level_up(MONS_DEEP_DWARF, MONS_DEEP_DWARF_SCION),
-
     monster_level_up(MONS_FAUN, MONS_SATYR),
     monster_level_up(MONS_TENGU, MONS_TENGU_CONJURER, 500),
     monster_level_up(MONS_TENGU, MONS_TENGU_WARRIOR),

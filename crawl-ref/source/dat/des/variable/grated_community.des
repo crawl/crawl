@@ -16,7 +16,7 @@ NAME:   grated_community_mu
 TAGS:   no_rotate no_monster_gen no_item_gen
 ORIENT: north
 MONS:   patrolling vault guard, patrolling wolf, patrolling centaur warrior
-MONS:   generate_awake slave, deep dwarf artificer
+MONS:   generate_awake slave, deep dwarf
   : if you.absdepth() < 23 then
 KMONS:  a = patrolling two-headed ogre
   : else

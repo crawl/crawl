@@ -78,7 +78,7 @@ SUBVAULT: W : fruiting_plant
 KITEM:    p = potion of curing / potion of heal wounds / \
               potion of restore abilities w:1 / potion of poison w:3 / \
               potion of strong poison w:1 / potion of confusion w:1 / nothing
-KMONS:    1 = deep dwarf artificer
+KMONS:    1 = deep dwarf
 MAP
 ZZZZZ..YYYYY
 ZZZZZ..YYYYY

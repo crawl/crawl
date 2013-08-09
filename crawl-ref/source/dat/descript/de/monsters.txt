@@ -195,15 +195,6 @@ deep elf summoner
 Dieser Tiefen-Elf ist in der Beschwörung von kleinen Dämonen und Kreaturen
 ausgebildet.
 %%%%
-deep dwarf necromancer
-
-Ein böser Tiefen-Zwerg welcher seine sterbliche Seele im Austausch für die
-Kontrolle über die okkulte Kunst des Todes und der Schmerzen verkauft hat.
-%%%%
-deep dwarf scion
-
-Ein gepanzerter Tiefen-Zwerg, beeindruckend im Nahkampf.
-%%%%
 deep troll
 
 Ein alters gebeugter Troll mit dunkler Haut, diese in Höhlen lebenden

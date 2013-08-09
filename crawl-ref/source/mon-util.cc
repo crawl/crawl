@@ -3328,7 +3328,6 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
     case MONS_CHERUB:
-    case MONS_DEEP_DWARF_ARTIFICER:
     case MONS_SONJA:
     case MONS_HAROLD:
     case MONS_POLYPHEMUS:

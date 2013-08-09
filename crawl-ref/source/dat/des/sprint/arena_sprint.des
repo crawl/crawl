@@ -259,7 +259,6 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 naga mage / w:1 naga warrior",
                 "jelly / w:5 ooze / w:3 brown ooze / giant eyeball / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
-                "deep dwarf scion / deep dwarf artificer / deep dwarf",
                 "zombie / skeleton / wight / necrophage /\
                     phantom w:5 / w:1 josephine",
                 "w:7 blue devil / iron devil w:5 / orange demon / red devil w:5 / rotting devil /\
@@ -302,8 +301,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "jelly / w:5 brown ooze / giant eyeball / w:2 shining eye /\
                     w:2 golden eye / w:2 eye of draining / w:1 slime creature",
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
-                "deep dwarf scion / deep dwarf artificer / w:3 deep dwarf death knight /\
-                    w:5 deep dwarf berserker",
                 "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
                     skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
                     shadow w:3 / silent spectre / w:4 josephine",
@@ -351,8 +348,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Snake:$ w:20 / w:5 naga mage / w:5 naga warrior / w:5 greater naga",
                 "place:Slime",
                 "killer bee / queen bee / w:1 oklob plant",
-                "deep dwarf scion / deep dwarf artificer / deep dwarf death knight /\
-                    w:5 deep dwarf berserker / w:2 unborn deep dwarf",
                 "place:Crypt / w:2 josephine",
                 "common demon w:30 / kobold demonologist w:5 / frances w:3",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:1 sphinx",
@@ -405,8 +400,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Slime:$",
                 "dancing weapon",
                 "place:Forest",
-                "deep dwarf artificer / deep dwarf death knight / wiglaf w:2 /\
-                    deep dwarf berserker / w:5 unborn deep dwarf",
                 "place:Crypt:$",
                 "common demon w:30 / greater demon w:5",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:5 sphinx",
@@ -478,8 +471,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "dancing weapon",
                 "place:Forest:$ w:20 / spriggan defender / spriggan rider /\
                     spriggan air mage / spriggan druid w:3 / spriggan berserker",
-                "w:5 deep dwarf artificer / deep dwarf death knight / wiglaf w:2 /\
-                    deep dwarf berserker / unborn deep dwarf",
                 "place:Crypt:$ w:25 / w:3 lich / w:5 vampire knight /\
                     w:2 boris / w:2 curse skull",
                 "any demon w:30 / pandemonium lord",
@@ -556,7 +547,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "dancing weapon ; bardiche",
                 "spriggan defender / spriggan air mage / spriggan druid /\
                     spriggan berserker / spriggan rider",
-                "deep dwarf death knight / w:20 deep dwarf berserker / unborn deep dwarf",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
                 "place:Tomb:$ w:30 / sphinx w:20 / greater mummy",
@@ -633,7 +623,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:30 acid blob / azure jelly / giant eyeball / eye of draining",
                 "dancing weapon ; bardiche ego:speed",
                 "spriggan air mage",
-                "deep dwarf death knight / deep dwarf berserker / unborn deep dwarf",
                 "w:15 ancient lich / w:6 curse toe",
                 "greater demon / pandemonium lord",
                 "sphinx w:20 / greater mummy",

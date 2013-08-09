@@ -42,7 +42,7 @@ function base_monster_setup(e)
            tarantella / jumping spider / demonic crawler / plague shambler /\
            flaming corpse / small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
-           red devil / centaur band / deep dwarf artificer")
+           red devil / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
@@ -55,10 +55,9 @@ function base_monster_setup(e)
            necromancer band w:5 / orc knight band w:5 / spiny worm /\
            harpy band w:5 / fire crab / redback band /\
            vapour / deep elf priest band w:3 / shapeshifter / zombie /\
-           skeleton / deep dwarf necromancer / deep dwarf death knight /\
-           eidolon / elephant band w:5 / death yak band w:5 /\
-           insubstantial wisp band w:5 / swamp dragon / siren /\
-           alligator snapping turtle / anaconda / greater naga /\
+           skeleton / deep dwarf death knight / eidolon / elephant band w:5 /\
+           death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
+           siren / alligator snapping turtle / anaconda / greater naga /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\
