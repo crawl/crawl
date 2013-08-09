@@ -2786,8 +2786,8 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     const monster_type merctypes[] = {
-        MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_TENGU,
-        MONS_DEEP_DWARF_SCION, MONS_ORC_KNIGHT, MONS_CENTAUR_WARRIOR,
+        MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_NAGA,
+        MONS_TENGU, MONS_ORC_KNIGHT, MONS_CENTAUR_WARRIOR,
         MONS_SPRIGGAN_RIDER, MONS_OGRE_MAGE, MONS_MINOTAUR,
         RANDOM_BASE_DRACONIAN, MONS_DEEP_ELF_BLADEMASTER,
     };

@@ -2568,8 +2568,8 @@ KMONS:   4 = Boris / lich / unborn deep dwarf
 KMONS:   5 = lich / unborn deep dwarf
 : elseif you.absdepth() > 13 then
 MONS:    skeletal warrior / plague shambler / eidolon
-KMONS:   4 = Frances / vampire mage / deep dwarf necromancer
-KMONS:   5 = vampire mage / deep dwarf necromancer
+KMONS:   4 = Frances / vampire mage / necromancer
+KMONS:   5 = vampire mage / necromancer
 : else
 MONS:    wight / necrophage / shadow w:5
 KMONS:   4 = Josephine / skeletal warrior / necromancer
@@ -3324,7 +3324,7 @@ KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
 KMONS:   d = deep elf mage / wizard / boggart
 KMONS:   e = deep elf conjurer / ogre mage / great orb of eyes
 KMONS:   f = deep elf annihilator / sphinx w:5 / lich w:5
-KMONS:   g = centaur / yaktaur / deep dwarf artificer w:5
+KMONS:   g = centaur / yaktaur
 KMONS:   h = centaur warrior / yaktaur captain / cyclops
 KMONS:   i = stone giant / merfolk javelineer w:5
 KFEAT:   ! = granite_statue
@@ -5112,7 +5112,7 @@ ORIENT:  float
 DEPTH:   Elf, Crypt
 : if you.branch() == "Crypt" then
 TAGS:    patrolling
-MONS:    skeletal warrior / eidolon, necromancer / deep dwarf necromancer w:6
+MONS:    skeletal warrior / eidolon, necromancer
 MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e

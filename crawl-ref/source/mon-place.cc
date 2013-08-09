@@ -2147,14 +2147,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band = BAND_GNOLLS;
         band_size = 3 + random2(4);
         break;
-    case MONS_DEEP_DWARF_SCION:
-        band = BAND_DEEP_DWARF;
-        band_size = (one_chance_in(5) ? 2 : 1) + random2(3);
-        break;
-    case MONS_DEEP_DWARF_ARTIFICER:
-        band = BAND_DEEP_DWARF;
-        band_size = 3 + random2(4);
-        break;
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
         if (x_chance_in_y(2, 3))
         {
@@ -2697,13 +2689,6 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_GNOLLS:
         return MONS_GNOLL;
-
-    case BAND_DEEP_DWARF:
-        return random_choose_weighted(31, MONS_DEEP_DWARF,
-                                       6, MONS_DEEP_DWARF_NECROMANCER,
-                                       2, MONS_DEEP_DWARF_BERSERKER,
-                                       1, MONS_DEEP_DWARF_DEATH_KNIGHT,
-                                       0);
 
     case BAND_CENTAURS:
         return MONS_CENTAUR;

@@ -250,7 +250,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_PROFANE_SERVITOR:
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_SPRIGGAN_ASSASSIN:
-    case TILEP_MONS_DEEP_DWARF_ARTIFICER:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
@@ -356,7 +355,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_NAGA_MAGE:
     case TILEP_MONS_THE_ENCHANTRESS:
     case TILEP_MONS_DEEP_DWARF:
-    case TILEP_MONS_DEEP_DWARF_SCION:
     case TILEP_MONS_DEEP_DWARF_BERSERKER:
         *ofs_x = 0;
         *ofs_y = 1;
@@ -370,7 +368,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_BOGGART:
     case TILEP_MONS_DEEP_ELF_FIGHTER:
-    case TILEP_MONS_DEEP_DWARF_NECROMANCER:
     case TILEP_MONS_UNBORN_DEEP_DWARF:
     case TILEP_MONS_JORGRUN:
     case TILEP_MONS_MERMAID:

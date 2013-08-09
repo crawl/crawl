@@ -906,11 +906,6 @@ Pâles et ayant la peau anormalement dure, les nains profonds résident loin sou
 la terre et n’émergent quasiment jamais a la surface. Ils sont plus enclins aux
 arts occultes que leurs cousins montagnards.
 %%%%
-deep dwarf artificer
-
-Un nain des profondeurs qui a dédié sa vie à l'étude et à l'utilisation des
-instruments arcaniques.
-%%%%
 deep dwarf berserker
 
 Un nain des profondeurs féroce et assoiffé de sang qui exalte dans la fureur
@@ -920,15 +915,6 @@ deep dwarf death knight
 
 Un guerrier-prêtre nain des profondeurs de Yredelemnul, qui chante des hommages
 impies à la gloire du dieu sombre et évoque la mort.
-%%%%
-deep dwarf necromancer
-
-Un vile nain de profondeurs qui a vendu son âme en échange de la maitrise des
-arts occultes de la mort et de la douleur.
-%%%%
-deep dwarf scion
-
-Un nain des profondeurs en armure, formidable combattant au corps-à-corps.
 %%%%
 deep troll
 

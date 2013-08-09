@@ -1683,8 +1683,8 @@ MONS:    centaur warrior / yaktaur w:5 / orc knight / \
          deep elf conjurer / deep troll / boggart w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
          vampire / octopode w:2 ; trident good_item / mermaid w:2 / \
-         vault sentinel w:2 / deep dwarf necromancer w:2 / cyclops w:5 / \
-         kobold demonologist w:3 / skeletal warrior w:5 / phantasmal warrior w:5
+         vault sentinel w:2 / cyclops w:5 / kobold demonologist w:3 / \
+         skeletal warrior w:5 / phantasmal warrior w:5
 KMONS:   8 = orc high priest / orc sorcerer / naga warrior / naga mage / \
          yaktaur captain w:5 / ogre mage / deep elf knight w:15 / \
          hell knight / efreet w:3 / smoke demon w:2 / guardian mummy w:5 / \

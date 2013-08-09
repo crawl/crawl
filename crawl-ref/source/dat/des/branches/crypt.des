@@ -299,7 +299,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
-MONS:    deep dwarf necromancer / deep dwarf death knight / unborn deep dwarf
+MONS:    deep dwarf death knight / unborn deep dwarf w:5
 MONS:    shadow wraith / wraith / wight w:5
 FTILE:   12O.+ = floor_sandstone
 FTILE:   +12O. = floor_limestone
@@ -308,7 +308,7 @@ COLOUR:  12 = yellow
 : crypt_entry(_G)
 MAP
 cccc@cccc
-c1.....1c
+c.......c
 c.ccccc.c
 c.c.2.c.c
 @.c.O.c.@
@@ -1415,7 +1415,7 @@ KMONS:  9 = patrolling ancient lich
 KMONS:  H = w:20 patrolling lich / patrolling ancient lich
 KMONS:  0 = patrolling reaper w:5 / patrolling soul eater
 KMONS:  A = patrolling deep elf death mage
-KMONS:  B = w:4 necromancer / w:1 deep dwarf necromancer
+KMONS:  B = necromancer
 KMONS:  C = rotting devil
 KMONS:  E = skeleton w:13 / nothing
 KMONS:  F = patrolling reaper
@@ -1642,7 +1642,7 @@ KMONS:   de = freezing wraith / shadow wraith / wraith
 KMONS:   F = deep elf death mage
 KMONS:   f = lost soul / small abomination / large abomination w:2
 KMONS:   I = unborn deep dwarf
-KMONS:   i = deep dwarf necromancer w:2 / deep dwarf scion w:5 / deep dwarf
+KMONS:   i = deep dwarf death knight w:5 / nothing
 KMONS:   J = profane servitor
 KMONS:   K = bone dragon
 KMONS:   jk = nothing

@@ -1372,10 +1372,6 @@ Pale and unnaturally tough-skinned, deep dwarves dwell far below ground and
 almost never emerge into the sunlit upper world. They are more inclined towards
 the occult arts than their mountainous cousins.
 %%%%
-deep dwarf artificer
-
-A deep dwarf that has devoted its life to the study and use of arcane devices.
-%%%%
 deep dwarf berserker
 
 A ferocious and blood-thirsty deep dwarf that revels in the frenzy of combat.
@@ -1384,15 +1380,6 @@ deep dwarf death knight
 
 A deep dwarf warrior-priest of Yredelemnul that chants unholy homages to the
 dark god and calls forth the dead.
-%%%%
-deep dwarf necromancer
-
-An evil deep dwarf that has sold its mortal soul in exchange for mastery of the
-occult arts of death and pain.
-%%%%
-deep dwarf scion
-
-An armoured deep dwarf, formidable in melee combat.
 %%%%
 deep troll
 

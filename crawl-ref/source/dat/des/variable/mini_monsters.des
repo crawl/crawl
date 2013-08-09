@@ -1809,12 +1809,12 @@ ENDMAP
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling
 DEPTH:   D:13-
-MONS:    deep dwarf artificer ; wand of cold | wand of frost w:5 . \
+MONS:    deep dwarf ; wand of cold | wand of frost w:5 . \
          staff of fire w:15 | quarterstaff ego:flaming w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
-MONS:    deep dwarf artificer ; wand of fire | wand of flame w:5 . \
+MONS:    deep dwarf ; wand of fire | wand of flame w:5 . \
          staff of cold w:15 | quarterstaff ego:freezing w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
@@ -5208,9 +5208,9 @@ KMONS:  W = Wiglaf ; broad axe unrand:arga . \
             deep dwarf berserker ; broad axe unrand:arga . \
                                    chain mail w:7 race:dwarven | \
                                    plate armour w:1 race:dwarven
-KMONS:  J = Jorgrun, deep dwarf necromancer
+KMONS:  J = Jorgrun, deep dwarf death knight
 MONS:   deep dwarf berserker
-MONS:   deep dwarf scion / deep dwarf death knight w:2
+MONS:   deep dwarf death knight w:5 / nothing
 MONS:   deep dwarf
 SUBST:  X = x.
 KITEM:  . = gold w:5 / stone / large rock q:1 w:1 / nothing w:40

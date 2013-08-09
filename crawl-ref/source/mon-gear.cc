@@ -183,9 +183,7 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if ((mons_species(mon->type) == MONS_DEEP_DWARF
-              || mon->type == MONS_GNOLL_SERGEANT)
-                  && one_chance_in(3))
+    else if (mon->type == MONS_GNOLL_SERGEANT && one_chance_in(3))
     {
         const int thing_created =
             items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
@@ -377,7 +375,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             break;
         }
         // deliberate fall through
-    case MONS_DEEP_DWARF_SCION:
     case MONS_DEEP_DWARF_BERSERKER:
         item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_WEAPONS;
@@ -396,18 +393,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                    15, WPN_HAND_AXE, 0);
         }
 
-        if (coinflip() || mon->type == MONS_DEEP_DWARF_BERSERKER
-                       || mon->type == MONS_DEEP_DWARF_SCION)
+        if (coinflip() || mon->type == MONS_DEEP_DWARF_BERSERKER)
         {
             force_item  = true;
             item.plus  += 1 + random2(4);
             item.plus2 += 1 + random2(4);
 
-            if (one_chance_in(30) && (mon->type == MONS_DEEP_DWARF_BERSERKER
-                                      || mon->type == MONS_DEEP_DWARF_SCION))
-            {
+            if (one_chance_in(30) && mon->type == MONS_DEEP_DWARF_BERSERKER)
                 level = MAKE_GOOD_ITEM;
-            }
         }
         break;
 
@@ -1171,32 +1164,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_UNBORN_DEEP_DWARF:
         if (one_chance_in(6))
             level = MAKE_GOOD_ITEM;
-        // deliberate fallthrough
-
-    case MONS_DEEP_DWARF_NECROMANCER:
         item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_HAND_AXE;
-        break;
-
-    case MONS_DEEP_DWARF_ARTIFICER:
-        if (one_chance_in(25))
-        {
-            dprf(DIAG_MONPLACE, "generating a rare rod");
-            item.base_type = OBJ_RODS;
-            item.sub_type  = random2(NUM_RODS);
-        }
-        else
-        {
-            item.base_type = OBJ_WANDS;
-            item.sub_type  = random_choose_weighted(10, WAND_FROST,
-                                                    10, WAND_FLAME,
-                                                    8, WAND_MAGIC_DARTS,
-                                                    4, WAND_LIGHTNING,
-                                                    4, WAND_FIRE,
-                                                    4, WAND_COLD,
-                                                    0);
-        }
         break;
 
     case MONS_DOWAN:
@@ -2196,9 +2166,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_UNBORN_DEEP_DWARF:
         if (one_chance_in(6))
             level = MAKE_GOOD_ITEM;
-
-    case MONS_DEEP_DWARF_NECROMANCER:
-    case MONS_DEEP_DWARF_ARTIFICER:
+    // deliberate fall through
     case MONS_HELLBINDER:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
@@ -2207,7 +2175,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
-    case MONS_DEEP_DWARF_SCION:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_DEEP_DWARF_BERSERKER:
         item_race      = MAKE_ITEM_DWARVEN;
