@@ -38,12 +38,16 @@ define(["jquery", "comm"], function ($, comm) {
     {
         if (e.which == 13)
         {
+            var content = $("#chat_input").val();
             e.preventDefault();
             e.stopPropagation();
-            comm.send_message("chat_msg", {
-                text: $("#chat_input").val()
-            });
-            $("#chat_input").val("");
+            if (content != "")
+            {
+                comm.send_message("chat_msg", {
+                    text: content
+                });
+                $("#chat_input").val("");
+            }
             return false;
         }
         else if (e.which == 27)
