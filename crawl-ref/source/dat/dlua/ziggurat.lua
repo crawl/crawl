@@ -255,7 +255,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      "place:Spider:$ w:110 / ghost moth w:15 / red wasp / " ..
                 "orb spider / moth of suppression w:5",
      "place:Crypt:$ w:180 / vampire knight w:14 / lich w:3 / " ..
-                "unborn deep dwarf w:2 / curse toe w:1",
+                "unborn w:2 / curse toe w:1",
      "place:Forest:$ w:180 / satyr / tengu reaver w:5 / " ..
                 "spriggan defender w:5",
      "place:Abyss",

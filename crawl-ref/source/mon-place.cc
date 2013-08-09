@@ -1351,9 +1351,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
         }
     }
-    // XXX: Unborn deep dwarf death knights belong to Yredelemnul, but
-    // only so they'll get the right message when casting Injury Mirror.
-    else if (mg.cls == MONS_UNBORN_DEEP_DWARF)
+    // XXX: Unborn belong to Yredelemnul, but only so they'll get the right
+    // message when casting Injury Mirror.
+    else if (mg.cls == MONS_UNBORN)
         mon->god = GOD_YREDELEMNUL;
     // The royal jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)

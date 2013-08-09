@@ -1161,10 +1161,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_DAGGER;
         break;
 
-    case MONS_UNBORN_DEEP_DWARF:
+    case MONS_UNBORN:
         if (one_chance_in(6))
             level = MAKE_GOOD_ITEM;
-        item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_HAND_AXE;
         break;
@@ -2163,7 +2162,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                0);
         break;
 
-    case MONS_UNBORN_DEEP_DWARF:
+    case MONS_UNBORN:
         if (one_chance_in(6))
             level = MAKE_GOOD_ITEM;
     // deliberate fall through

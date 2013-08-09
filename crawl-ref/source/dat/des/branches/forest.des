@@ -943,7 +943,7 @@ MONS:    flaming corpse / flayed ghost / phantasmal warrior
 MONS:    skeletal warrior / deep dwarf death knight
 MONS:    jiangshi / eidolon / revenant
 MONS:    ancient champion / w:20 ghoul
-MONS:    w:20 unborn deep dwarf / w:20 bone dragon / revenant
+MONS:    w:20 unborn / w:20 bone dragon / revenant
 MONS:    profane servitor
 KFEAT:   7 = altar_yredelemnul
 TILE:    c = dngn_stone_dark
