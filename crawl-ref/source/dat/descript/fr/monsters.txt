@@ -2551,7 +2551,7 @@ ugly thing
 Une chose hideuse. D'après la légende, cette créature mutante est le fruit
 surnaturel d'une expérimentation d'un magicien sur la reproduction. Beurk.
 %%%%
-unborn deep dwarf
+unborn
 
 Un nain profond qui a aiguisé son empathie avec les pouvoirs de la terre et de
 la mort au prix de sa force vitale naturelle, dépassant sa mortalité d'une

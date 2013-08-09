@@ -713,6 +713,7 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
+unborn MONS_UNBORN
 %rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
@@ -980,9 +981,6 @@ dwarf MONS_DWARF
 deep_dwarf MONS_DEEP_DWARF
 deep_dwarf_berserker MONS_DEEP_DWARF_BERSERKER
 deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
-%rim 0
-undead/unborn_deep_dwarf MONS_UNBORN_DEEP_DWARF
-%rim 1
 %sdir mon/unique
 jorgrun MONS_JORGRUN
 # an entry vault

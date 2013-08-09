@@ -486,14 +486,14 @@ function arena_sprint_get_monster_set(round, boss)
                     air elemental / ball lightning / storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
-                    unborn deep dwarf w:5 / place:Tar:$ w:40",
+                    unborn w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / w:5 pearl dragon / ophan / \
                     w:5 silver star / apis",
                 -- Misc
                 "centaur warrior",
                 "yaktaur / yaktaur captain",
                 "very ugly thing",
-                "lich / w:5 ancient lich / w:5 unborn deep dwarf / w:2 boris",
+                "lich / w:5 ancient lich / w:5 unborn / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
                 "dragon / ice dragon / storm dragon / shadow dragon /\
                     golden dragon / quicksilver dragon / iron dragon / w:1 xtahua",
@@ -562,7 +562,7 @@ function arena_sprint_get_monster_set(round, boss)
                     ball lightning / storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
-                    unborn deep dwarf w:5 / place:Tar:$ w:40",
+                    unborn w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / pearl dragon / ophan / \
                     silver star / apis",
                 -- Misc
@@ -637,7 +637,7 @@ function arena_sprint_get_monster_set(round, boss)
                     storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
-                    unborn deep dwarf w:5",
+                    unborn w:5",
                 "daeva / angel / cherub / pearl dragon w:20 / ophan /\
                     silver star w:20 / apis",
                 -- Misc

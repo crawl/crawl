@@ -299,7 +299,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
-MONS:    deep dwarf death knight / unborn deep dwarf w:5
+MONS:    deep dwarf death knight / unborn w:5
 MONS:    shadow wraith / wraith / wight w:5
 FTILE:   12O.+ = floor_sandstone
 FTILE:   +12O. = floor_limestone
@@ -1005,7 +1005,7 @@ KMONS:  7 = vampire / skeletal warrior / w:15 zombie / wraith / w:5 nothing
 # ghost layout
 : elseif brnd > 0 then
 MONS:   curse skull
-MONS:   revenant / unborn deep dwarf w:1
+MONS:   revenant / unborn w:1
 MONS:   lich
 MONS:   eidolon / flayed ghost
 MONS:   phantasmal warrior / shadow wraith w:6
@@ -1400,13 +1400,13 @@ SHUFFLE: 9H
 # Temple of yred
 KFEAT: _ = altar_yredelemnul
 KMONS:  9 = patrolling profane servitor
-KMONS:  H = w:20 patrolling unborn deep dwarf / patrolling profane servitor
+KMONS:  H = w:20 patrolling unborn / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling deep dwarf death knight
 KMONS:  B = skeletal warrior
 KMONS:  C = necrophage / plague shambler
 KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
-KMONS:  F = patrolling bone dragon / patrolling unborn deep dwarf
+KMONS:  F = patrolling bone dragon / patrolling unborn
 : else
 # Temple of kiku - more necromancers, more demonic (kiku's description refers to
 # him/her/it being demonic). Not as much undead in this set.
@@ -1550,7 +1550,7 @@ KMONS:  6 = generate_awake vampire mage
 : elseif brnd > 2 then
 MONS:   patrolling freezing wraith / patrolling spectral thing w:8
 MONS:   revenant
-MONS:   eidolon / unborn deep dwarf w:6
+MONS:   eidolon / unborn w:6
 MONS:   flayed ghost / phantasmal warrior
 MONS:   spectral thing / simulacrum / shadow w:5 / wraith w:5 / shadow wraith / \
         spectral storm dragon w:5 / spectral ice dragon w:5 / \
@@ -1641,7 +1641,7 @@ KMONS:   E = revenant
 KMONS:   de = freezing wraith / shadow wraith / wraith
 KMONS:   F = deep elf death mage
 KMONS:   f = lost soul / small abomination / large abomination w:2
-KMONS:   I = unborn deep dwarf
+KMONS:   I = unborn
 KMONS:   i = deep dwarf death knight w:5 / nothing
 KMONS:   J = profane servitor
 KMONS:   K = bone dragon
