@@ -57,7 +57,7 @@ The contents of this text are:
                 easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
-                autofight_throw, autofight_throw_nomove
+                autofight_throw, autofight_throw_nomove, autofight_fire_stop
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -1262,6 +1262,12 @@ autofight_throw = false
 autofight_throw_nomove = true
         This works same as above, except that only for ===hit_adjacent
         rather than ===hit_closest; this is usually bound to shift-Tab.
+
+autofight_fire_stop = false
+        When firing missiles or throwing objects using autofight, if this
+        option is true, shots will stop at the target (like "f.") rather than
+        continuing past. Note that this setting may be decidedly suboptimal
+        for missiles of penetration.
 
 
 3-i     Messages and Display Enhancements.
