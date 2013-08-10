@@ -257,13 +257,12 @@ static bool _valid_weapon_swap(const item_def &item)
     }
 
     if (item.base_type == OBJ_FOOD)
-        return (item.sub_type == FOOD_CHUNK);
+        return food_is_meaty(item);
 
     if (item.base_type == OBJ_POTIONS && item_type_known(item)
         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
     {
-        return (item.sub_type == POT_BLOOD
-                || item.sub_type == POT_BLOOD_COAGULATED);
+        return is_blood_potion(item);
     }
 
     return false;
