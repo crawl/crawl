@@ -250,13 +250,17 @@ static bool _valid_weapon_swap(const item_def &item)
         return true;
 
     // Sublimation of Blood.
-    if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD) && !you.has_spell(SPELL_SIMULACRUM))
+    if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+        && !you.has_spell(SPELL_SIMULACRUM))
+    {
         return false;
+    }
 
     if (item.base_type == OBJ_FOOD)
         return (item.sub_type == FOOD_CHUNK);
 
-    if (item.base_type == OBJ_POTIONS && item_type_known(item) && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
+    if (item.base_type == OBJ_POTIONS && item_type_known(item)
+        && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
     {
         return (item.sub_type == POT_BLOOD
                 || item.sub_type == POT_BLOOD_COAGULATED);

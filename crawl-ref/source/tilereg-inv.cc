@@ -536,7 +536,7 @@ bool InventoryRegion::update_tip_text(string& tip)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 else if (item.sub_type == FOOD_CHUNK
                          && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-						 || you.has_spell(SPELL_SIMULACRUM)))
+                             || you.has_spell(SPELL_SIMULACRUM)))
                 {
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
                 }
