@@ -16,6 +16,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "options.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-cast.h"
@@ -278,7 +279,7 @@ int cast_selective_amnesia(string *pre_msg)
 
     // Pick a spell to forget.
     mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
-    keyin = list_spells(false, false, false);
+    keyin = Options.auto_list ? list_spells(false, false, false) : get_ch();
     redraw_screen();
 
     while (true)
