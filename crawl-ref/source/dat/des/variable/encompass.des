@@ -33,9 +33,6 @@ default-depth: D:12-26
 ###############################################################################
 # The River Lethe
 #
-# Should be turned into a timed, non-announced portal vault
-# using the maprot (or unmappable) flag.
-#
 # The two orange statues are placed for maximum pain -- one you're likely to
 # first see while flying, the other is hard to target with disintegration
 # through its protective plants.
@@ -104,10 +101,10 @@ xxwwwwx;;;;;;;;cccccc;;;;;;c6.6.6.6c.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;cccc;;;;;;;ccccccccc.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;;;;;;;;;;;;c$$+....+.c....www.c;;;;;;;ccccccccxxxxxwwx
 xxxwwxx;;cccc;;;;;;;;;;;;;;c$$cccccc.c.....wwwc;;;;;;;c.....$$Dddxxwwx
-xxxwwwx;cccccc;;;;;;xx;;;;;c$$c....c+cccccccwww;;;;;;;c.....$$xdd+wwwx
-xxxwwwxcc*4.+;;;;;;xxxx;;;;cccc....c.....c...www;;ccccc.......xxxxxwwx
-xxxwwwxxcccccc;;;;xxxxx;;;;;;;c....c.....+...www;;c...c.......xeexxwwx
-xxxwwwxx;cccc;;;;xxxxxx;;;;;;;c....c.....c...www;cc.66c.......Eee+wwwx
+xxxwwwx;cccccc;;;;;;xx;;;;;c$$cccccc+cccccccwww;;;;;;;c.....$$xdd+wwwx
+xxxwwwxcc*4.+;;;;;;xxxx;;;;ccccccccc.....c...www;;ccccc.......xxxxxwwx
+xxxwwwxxcccccc;;;;xxxxx;;;;;;;cccccc.....+...www;;c...c.......xeexxwwx
+xxxwwwxx;cccc;;;;xxxxxx;;;;;;;cccccc.....c...www;cc.66c.......Eee+wwwx
 xxxwwwxx;;;;;;;;xxx5..c;;;;;;;cccccc.....cccwww;;;+.66+.......xxxxxwwx
 xxxwwwxx;;;;;;;;;xx5..c;;;;;;;;;;;;c.....c;wwww;;cc.66c.......Fffxxwwx
 xxxwwwxx;;;;;;;;;;x5..+;;;;;;;;;;;;cccccccwwww;;;;c...c.......xff+wwwx
