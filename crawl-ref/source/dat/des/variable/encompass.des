@@ -908,6 +908,8 @@ KITEM: J = acquire any
 KFEAT: IK = stone_arch
 MARKER: I = lua:props_marker { portal=1 }
 MARKER: K = lua:props_marker { portal=1 }
+NSUBST: O = 1:O / *:%
+KITEM:  O = wand of digging
 KMONS: 8 = 8 band
 KMONS: 9 = 9 band
 KMONS: 0 = 0 band
@@ -920,8 +922,8 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccdeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
 ccccddeeeeeeeeeeeeeeeeecffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
-ccccdd.....eeee........ecff%%.................................%%ik......{.kkcccc
-ccccdd.9....eee.0.......ecf%%..0...........................0...%ik.......[kkcccc
+ccccdd.....eeee........ecff%%.................................%Oxx......{.kkcccc
+ccccdd.9....eee.0.......ecf%%..0...........................0...%xx.......[kkcccc
 ccccdd..ce...eee....ee...ecf....ffffffffffffffffffffffffff......ik..kk....kkcccc
 ccccdd..dce...eee...eee...ecf...ffffffffffffffffffffffffff..8...ik..kkk...kkcccc
 ccccdd...dce...eee...eee...ecf...ffff..............%*ffff.....0.ik...kkk..kkcccc
@@ -968,8 +970,8 @@ ccccdddddd...ddg........hhh%%.........89...hhh...hcj...jjj...jjj...jck...kkkcccc
 ccccdd..ddd...dg.0.....hhhh*%..............hhhh...hcj...jjj...jjj...jck...kkcccc
 ccccdd...ddd..dg...8..hhhhhhhhhhhhhhhhhhhhhhhhhh...hcj...jjj...jjj...jck..kkcccc
 ccccdd....dd..dg......hhhhhhhhhhhhhhhhhhhhhhhhhh....hcj...jj....jjj...jc..kkcccc
-ccccdd(.......dg%...0...........................0..%%hcj.......0.jjj....9.kkcccc
-ccccdd.<......dg%%.................................%%hhcj........jjjj.....kkcccc
+ccccdd(.......xx%...0...........................0..%%hcj.......0.jjj....9.kkcccc
+ccccdd.<......xxO%.................................%%hhcj........jjjj.....kkcccc
 ccccdddddddddddchhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhcjjjjjjjjjjjjjjjjjkkcccc
 ccccdddddddddddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjkcccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -1469,7 +1471,7 @@ TAGS: grunt_runaround_doors_1 allow_dup
 : map("            FF                EE")
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
 
 NAME: grunt_runaround_doors_2
 TAGS: grunt_runaround_doors_2 allow_dup
@@ -1513,7 +1515,7 @@ TAGS: grunt_runaround_doors_2 allow_dup
 : map("                  EE")
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
 
 NAME: grunt_runaround_doors_3
 TAGS: grunt_runaround_doors_3 allow_dup
@@ -1545,7 +1547,7 @@ TAGS: grunt_runaround_doors_3 allow_dup
 : map("       FF        EE")
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
 
 NAME: grunt_runaround_doors_4
 TAGS: grunt_runaround_doors_4 allow_dup
