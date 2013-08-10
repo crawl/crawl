@@ -1958,8 +1958,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 else
                     count_action(CACT_THROW, item.sub_type | (OBJ_WEAPONS << 16));
         }
-		
-		if (you.duration[DUR_FINESSE])
+
+        if (you.duration[DUR_FINESSE])
         {
             ASSERT(!you.duration[DUR_BERSERK]);
             // Need to undo haste by hand.
