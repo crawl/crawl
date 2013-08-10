@@ -279,7 +279,7 @@ int cast_selective_amnesia(string *pre_msg)
     // Pick a spell to forget.
     mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
     keyin = list_spells(false, false, false);
-	redraw_screen();
+    redraw_screen();
 
     while (true)
     {
