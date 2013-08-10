@@ -47,4 +47,6 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0);
 
+int finesse_adjust_delay(int delay);
+
 #endif

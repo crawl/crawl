@@ -19,6 +19,7 @@
 #include "describe.h"
 #include "env.h"
 #include "exercise.h"
+#include "fight.h"
 #include "fineff.h"
 #include "godconduct.h"
 #include "hints.h"
@@ -553,14 +554,8 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield, bool 
         speed = 2 * speed / 3;
     }
 
-    if (scaled && you.duration[DUR_FINESSE])
-    {
-        ASSERT(!you.duration[DUR_BERSERK]);
-        // Need to undo haste by hand.
-        if (you.duration[DUR_HASTE])
-            speed = haste_mul(speed);
-        speed /= 2;
-    }
+    if (scaled)
+        speed = finesse_adjust_delay(speed);
 
     return speed;
 }
@@ -1959,14 +1954,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                     count_action(CACT_THROW, item.sub_type | (OBJ_WEAPONS << 16));
         }
 
-        if (you.duration[DUR_FINESSE])
-        {
-            ASSERT(!you.duration[DUR_BERSERK]);
-            // Need to undo haste by hand.
-            if (you.duration[DUR_HASTE])
-                you.time_taken = haste_mul(you.time_taken);
-            you.time_taken = div_rand_round(you.time_taken, 2);
-        }
+        you.time_taken = finesse_adjust_delay(you.time_taken);
     }
 
     // Dexterity bonus, and possible skill increase for silly throwing.
