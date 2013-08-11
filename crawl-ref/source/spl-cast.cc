@@ -149,7 +149,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                spell_selector selector)
+                string title, spell_selector selector)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
@@ -163,14 +163,15 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                               text_only);
+    string titlestring = make_stringf("%-25.25s", title.c_str());
 #ifdef USE_TILE_LOCAL
     {
         // [enne] - Hack.  Make title an item so that it's aligned.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
-                " Your Spells                       Type          "
+                " " + titlestring + "         Type          "
                 "                Failure   Level",
-                " Your Spells                       Power         "
+                " " + titlestring + "         Power         "
                 "Range           Hunger    Level",
                 MEL_ITEM);
         me->colour = BLUE;
@@ -179,9 +180,9 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 #else
     spell_menu.set_title(
         new ToggleableMenuEntry(
-            " Your Spells                       Type          "
+            " " + titlestring + "         Type          "
             "                Failure   Level",
-            " Your Spells                       Power         "
+            " " + titlestring + "         Power         "
             "Range           Hunger    Level",
             MEL_TITLE));
 #endif

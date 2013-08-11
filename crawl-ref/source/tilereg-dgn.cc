@@ -593,7 +593,8 @@ static bool _cast_spell_on_target(actor* target)
             // Prevent the spell letter from being recorded twice.
             pause_all_key_recorders pause;
 
-            letter = list_spells(true, false, true, _spell_selector);
+            letter = list_spells(true, false, true, "Your Spells",
+                                 _spell_selector);
         }
 
         _spell_target = NULL;
