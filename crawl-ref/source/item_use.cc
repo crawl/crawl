@@ -249,7 +249,7 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
         return true;
 
-    // Sublimation of Blood and Simulacrum.
+    // What follows pertains only to Sublimation of Blood and/or Simulacrum.
     if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
         && !you.has_spell(SPELL_SIMULACRUM))
     {
