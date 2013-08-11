@@ -268,7 +268,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
         if self.process:
-            self.go_lobby()
+            # ignore multiple requests for the same game, can happen when
+            # logging in with cookies
+            if self.game_id != game_id:
+                self.go_lobby()
             return
 
         self.game_id = game_id
@@ -419,14 +422,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def watch(self, username):
         if self.is_running():
             self.process.stop()
-        elif self.watched_game:
-            self.stop_watching()
 
         from process_handler import processes
         procs = [process for process in processes.values()
                  if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
+            if self.watched_game:
+                if self.watched_game == process:
+                    return
+                self.stop_watching()
             self.logger.info("Started watching %s (P%s).", process.username,
                              process.id)
             self.watched_game = process
@@ -434,6 +439,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             process.add_watcher(self)
             self.send_message("watching_started")
         else:
+            if self.watched_game:
+                self.stop_watching()
             self.go_lobby()
 
     def post_chat_message(self, text):
