@@ -334,12 +334,12 @@ static void _adjust_spell(void)
 
     int keyin = 0;
     if (Options.auto_list)
-        keyin = list_spells(false, false, false);
+        keyin = list_spells(false, false, false, "Adjust which spell?");
     else
     {
         keyin = get_ch();
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(false, false, false);
+            keyin = list_spells(false, false, false, "Adjust which spell?");
     }
 
     if (!isaalpha(keyin))
@@ -372,8 +372,10 @@ static void _adjust_spell(void)
             canned_msg(MSG_OK);
             return;
         }
+        // FIXME: It would be nice if the user really could select letters
+        // without spells from this menu.
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(true, false, false);
+            keyin = list_spells(true, false, false, "Adjust to which letter?");
     }
 
     const int input_2 = keyin;

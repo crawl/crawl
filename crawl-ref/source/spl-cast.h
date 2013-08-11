@@ -56,6 +56,7 @@ typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
+                string title = "Your Spells",
                 spell_selector selector = NULL);
 int spell_fail(spell_type spell);
 int calc_spell_power(spell_type spell, bool apply_intel,
