@@ -640,7 +640,9 @@ giant_spore MONS_GIANT_SPORE
 %sdir mon/eyes
 giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
+%rim 0
 mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
+%rim 1
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 %rim 0
 shining_eye MONS_SHINING_EYE
