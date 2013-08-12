@@ -722,7 +722,7 @@ bool player::berserk() const
 
 bool player::can_cling_to_walls() const
 {
-    return false;
+    return form == TRAN_SPIDER;
 }
 
 bool player::is_web_immune() const

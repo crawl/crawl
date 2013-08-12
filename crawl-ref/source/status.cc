@@ -498,6 +498,24 @@ bool fill_status_info(int status, status_info* inf)
         _describe_transform(inf);
         break;
 
+    case STATUS_CLINGING:
+        if (you.is_wall_clinging())
+        {
+            inf->light_text   = "Cling";
+            inf->short_text   = "clinging";
+            inf->long_text    = "You cling to the nearby walls.";
+            const dungeon_feature_type feat = grd(you.pos());
+            if (is_feat_dangerous(feat))
+                inf->light_colour = LIGHTGREEN;
+            else if (feat == DNGN_LAVA || feat_is_water(feat))
+                inf->light_colour = GREEN;
+            else
+                inf->light_colour = DARKGREY;
+            if (you.form == TRAN_SPIDER)
+                _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
+        }
+        break;
+
     case STATUS_HOVER:
         if (is_hovering())
         {
