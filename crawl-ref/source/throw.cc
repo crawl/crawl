@@ -709,6 +709,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         return false;
 
     const coord_def oldpos = victim->pos();
+    victim->clear_clinging();
 
     if (victim->is_player())
     {

@@ -30,6 +30,10 @@ void set_terrain_changed(int x, int y)
     dungeon_events.fire_position_event(DET_FEAT_CHANGE, p);
 
     los_terrain_changed(p);
+
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+        if (actor *act = actor_at(*ai))
+            act->check_clinging(false, feat_is_door(grd(p)));
 }
 
 void set_terrain_mapped(int x, int y)
