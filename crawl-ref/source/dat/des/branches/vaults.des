@@ -1773,6 +1773,7 @@ ENDMAP
 NAME:   vaults_end_grunt_simple_division
 TAGS:   vaults_end_quadrant
 SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:*
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
 MAP
