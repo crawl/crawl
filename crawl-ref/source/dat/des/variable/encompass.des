@@ -552,6 +552,7 @@ NAME: grunt_profane_halls
 TAGS: no_monster_gen
 PLACE: D:$
 DEPTH: D:21-
+WEIGHT: 2 (D:$), 10
 ORIENT: encompass
 SHUFFLE: {[(<
 : if you.absdepth() == 27 then
@@ -1321,6 +1322,7 @@ NAME: grunt_runaround
 TAGS: no_monster_gen
 PLACE: D:$
 DEPTH: D:16-
+WEIGHT: 2 (D:$), 10
 ORIENT: encompass
 SUBVAULT: B : grunt_runaround_doors_1
 SUBVAULT: C : grunt_runaround_doors_2
@@ -1654,6 +1656,7 @@ TAGS:    no_monster_gen no_item_gen
 ORIENT:  encompass
 PLACE:   D:$
 DEPTH:   D:16-
+WEIGHT:  2 (D:$), 10
 MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
          mottled dragon / swamp drake w:3 / boulder beetle w:5 / \
          red wasp / tarantella w:2 / redback w:3 / wolf spider / \
