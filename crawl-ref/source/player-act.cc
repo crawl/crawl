@@ -720,6 +720,11 @@ bool player::berserk() const
     return (duration[DUR_BERSERK]);
 }
 
+bool player::can_cling_to_walls() const
+{
+    return false;
+}
+
 bool player::is_web_immune() const
 {
     // Spider form

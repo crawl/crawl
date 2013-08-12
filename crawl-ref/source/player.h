@@ -420,6 +420,7 @@ public:
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
+    bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
     bool cannot_speak() const;

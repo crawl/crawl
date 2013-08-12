@@ -3478,6 +3478,7 @@ void god_pitch(god_type which_god)
          you.form == TRAN_WISP   ? "swirl around" :
          you.form == TRAN_BAT    ? "perch on" :
          you.flight_mode()       ? "hover solemnly before" :
+         you.form == TRAN_SPIDER ? "cling to" :
          you.form == TRAN_STATUE ? "place yourself before" :
          you.form == TRAN_ICE_BEAST
              || you.form == TRAN_DRAGON

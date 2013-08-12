@@ -28,6 +28,7 @@ protected:
     bool calc_path_to_neighbours(void);
     bool traversable(const coord_def& p);
     int  travel_cost(coord_def npos);
+    bool mons_traversable(const coord_def& p);
     int  mons_travel_cost(coord_def npos);
     int  estimated_cost(coord_def npos);
     void add_new_pos(coord_def pos, int total);

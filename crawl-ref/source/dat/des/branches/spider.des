@@ -151,7 +151,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME: nicolae_spider_entry_tight_spaces
-TAGS: spider_entry no_monster_gen no_trap_gen
+TAGS: spider_entry no_pool_fixup no_monster_gen no_trap_gen
 KFEAT: O = enter_spider_nest
 NSUBST: A = 2:x / '
 SUBST: X = xxx', ' = .....^^1
@@ -163,9 +163,9 @@ xxXxXxXxXxx
 xXx'x'x'xXx
 xx'x'xAx'xxx
 x'xXxXxXx'xx
-@..x'xAx.1.x
-@..'x'x'1O1x
-@..x'xAx.1.x
+@..x'xAx.1.w@
+@..'x'x'1O1w@
+@..x'xAx.1.w@
 x'xXxXxXx'xx
 xx'x'xAx'xxx
 xXx'x'x'xXx
@@ -223,7 +223,7 @@ ENDMAP
 ##############################################################################
 
 NAME:    spiders_nest_a
-TAGS:    no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 DEPTH:   Spider:1-4
 WEIGHT:  5
 ORIENT:  southeast
@@ -233,43 +233,42 @@ MONS:    trapdoor spider generate_awake / nothing w:20
 MONS:    redback / wolf spider
 MONS:    jumping spider / tarantella w:20
 MONS:    emperor scorpion / demonic crawler / nothing
-SUBST:   - = ...^
-KFEAT:   ^ = web
 MAP
 @@@x
 @..xxx
 @...xxx       xxxxxxxx
-xx...xxxxx   xx----xxxxx
- xx...xxxxx xxx--.-xxxxxxxx
-  xx...xxxxxxxx-.3.xxxxxxxxxxxxxxx
+xx...xxxxx   xxWWWWxxxxx
+ xx...xxxxx xxxWW.Wxxxxxxxx
+  xx...xxxxxxxxW.3.xxxxxxxxxxxxxxx
    xx....xxxxx......xxxxxxxxxxxxxxxxxx
    xxx...xxxx...xx...xxxxxxxxxxxxxxxxx
-   xxx....xx...xxxx...xxxxx-4**xxxxxxxx
-    xxxx.1111.xxxxxx..---xx--4*xxxxxxxxx
-     xxxx1111xxxxxxxx..--xx---4xxxxxxxxxxx
-      xxx1111xxxxxxxx...-xx----xxxxxxxxxxx
-     xxx.1111.xxxxxx..3.-xxx--xxxxxxxxxxxx
-    xxx...xx...xxxx.....xxxx--xxxxxxxxxxxx
-  xxxx...xxxx...xx...x..xxxx--xxxxxxxxxxxx
-  x-....xxxxxx.2222.xx..xxx----xxxxxxxxxxx
- xx....xxxxxxxx2222xxx..xxx----xxxxxxxxxxx
- xx..3.xxxxxxxx2222xxx..xxx-..-xxxxxx.**xx
-xxx-....xxxxxx.2222.xx..xx.....-xxxxx..*xx
-xxxxxx...xxxx...xx...x..x...xx..-xxx....xx
- xxxxxx...xx...xxxx........xxxx..-x...xxxx
+   xxx....xx...xxxx...xxxxxW4**xxxxxxxx
+    xxxx.1111.xxxxxx..WWWxxWW4*xxxxxxxxx
+     xxxx1111xxxxxxxx..WWxxWWW4xxxxxxxxxxx
+      xxx1111xxxxxxxx...WxxWWWWxxxxxxxxxxx
+     xxx.1111.xxxxxx..3.WxxxWWxxxxxxxxxxxx
+    xxx...xx...xxxx.....xxxxWWxxxxxxxxxxxx
+  xxxx...xxxx...xx...x..xxxxWWxxxxxxxxxxxx
+  xW....xxxxxx.2222.xx..xxxWWWWxxxxxxxxxxx
+ xx....xxxxxxxx2222xxx..xxxWWWWxxxxxxxxxxx
+ xx..3.xxxxxxxx2222xxx..xxxW..Wxxxxxx.**xx
+xxxW....xxxxxx.2222.xx..xx.....Wxxxxx..*xx
+xxxxxx...xxxx...xx...x..x...xx..Wxxx....xx
+ xxxxxx...xx...xxxx........xxxx..Wx...xxxx
   xxxxxx......xxxxxx..44..xxxxxx.55..xxxxx
   xxxxxxx............4554.......5665xxxxxx
-  xxxxxxx-..3........4554.......5665xxxxxx
- xxxxxxxx--..xxxxxxx-.44.-xxxxxx.55.xxxxxx
- xxxxxxxxxxxxxxxxxxx--..--xxxxxxxxxxxxxxxx
+  xxxxxxxW..3........4554.......5665xxxxxx
+ xxxxxxxxWW..xxxxxxxW.44.Wxxxxxx.55.xxxxxx
+ xxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxxx
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Scorpion Pit Map by 7hm
-# Two corridors leading into a scorpion pit.
+# Two corridors leading into a scorpion pit.  Deep water pools showcase spider
+# clinging.
 NAME:   spiders_nest_scorpion_pit
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: southeast
 DEPTH:  Spider:1-4
 KMONS:  1 = spider
@@ -279,33 +278,32 @@ KMONS:  74 = redback / wolf spider / nothing w:15
 KMONS:  5 = jumping spider / tarantella w:20
 KMONS:  6 = emperor scorpion / scorpion
 KMONS:  M = fungus
-SUBST:  * = %%**.M , X = xx.
-SUBST:  ~ = .^
-KFEAT:  ^ = web
+KFEAT:  14 = W
+SUBST:  W = WW. , * = %%**WM , X = xxW
 SUBST:  _ : __x     , - : --x     , ' : ''x     , " : ""x
 NSUBST: _ = 2:x/*:. , - = 1:x/*:. , ' = 1:x/*:. , " = 2:x/*:.
 MAP
                           xxxxxxxxxxxx
           xxxxxxxxxxxxxxxxxxxxx''xxxxx
-         xxxxxXXX.........x~~~4x'xxxxx
-        xxxX.......2......~~~~~''xxxxx
-    xxxxxxx......XXXxxxx...~xxxxxxxxxx
-   xxxxxxxX...2XXxxxx**xx..xxxxxxxxxxx
-   x1~xxxX..XXxxxxxx7**xx++xxxxxxxxxxx
-  xx~~~xx..xxxx~~xxx+xxxx...xxxxxx""xx
-xxxxx~~xx++x~~~~~~4x6xxx5..*.~~~~4""xx
-@..xxx.......~~~~~1x.3+...65*.~~~~4xxx
-@............~~~~~1x6xxx6..*.~~~~4""xx
-@..xxx.......~~~~xxx+xxxx...xxxxxx""xx
-xxxxxxxxx++x~~~~1xx**xxxx++xxxxxxxxxxx
-   xxxxxx..xx~~~xx7**xxxxx..xxxxxxxxxx
-      xxX..xxx1xxxxxxxxxx...xxxxxxxxxx
-     xxxX..xxxxxxX3...XXX..xxxxxxxxxxx
-   xxxxxX..xxxxxxX..........xxxxxxxxxx
-  xxxxxxX...XxxxxX..........~xxxxxxxxx
-  x__xxx~.....xxXXX..XXxx...~~xxxxxxxx
-  x__x~~~~x........3.Xxxxxx~~~~--xxxxx
-  x__4~~~xxxxx.....xxxxxxxxxx~4x-xxxxx
+         xxxxxXXX...WWWWWWxwww4x'xxxxx
+        xxxXWWWW...2WW....wwwww''xxxxx
+    xxxxxxxW...WWXXXxxxxWW.wxxxxxxxxxx
+   xxxxxxxX.WW2XXxxxx**xxWWxxxxxxxxxxx
+   x1wxxxXWWXXxxxxxx7**xx++xxxxxxxxxxx
+  xxwwwxxWWxxxxwwxxx+xxxx..Wxxxxxx""xx
+xxxxxwwxx++xwwwwww4x6xxx5..*Wwwww4""xx
+@..xxx.WW.WWWwwwww1x.3+...65*Wwwww4xxx
+@..WWWWW.WWWWwwwww1x6xxx6..*Wwwww4""xx
+@..xxx.WWWWWWwwwwxxx+xxxx..Wxxxxxx""xx
+xxxxxxxxx++xwwww1xx**xxxx++xxxxxxxxxxx
+   xxxxxx..xxwwwxx7**xxxxxWWxxxxxxxxxx
+      xxXWWxxx1xxxxxxxxxxWWWxxxxxxxxxx
+     xxxXWWxxxxxxX3WWWXXXWWxxxxxxxxxxx
+   xxxxxXWWxxxxxxXWWWWW.WW.Wxxxxxxxxxx
+  xxxxxxXWWWXxxxxXWWWWWW..WWwxxxxxxxxx
+  x__xxxwW.WWWxxXXX..XXxxWWWwwxxxxxxxx
+  x__xwwwwxW.WW.WW.3.Xxxxxxwwww--xxxxx
+  x__4wwwxxxxx.WWWWxxxxxxxxxxw4x-xxxxx
   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx--xxxxx
    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -315,7 +313,7 @@ ENDMAP
 # Small winding map leading to a treasure room.  In the room is a
 # basket of spiders trap.
 NAME:   spiders_nest_spider_trap
-TAGS:   no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Spider
 NSUBST: * = 1:z / *:*
 KMONS:  M = fungus
@@ -327,24 +325,23 @@ KMONS:  M = fungus
  lua_marker('z', tm)
  lua_marker('Z', wm)
 }}
-SUBST:  - = ...^ , z : * , * = %%$*..M
-KFEAT:  ^ = web
+SUBST:  W = Ww , z : * , * = %%$*..M , . = WW.
 MONS:   spider w:20 / wolf spider / trapdoor spider generate_awake / \
         redback / tarantella w:2
 MAP
   xxxxx    xxxx
  xxxxxxx xxxxxxx
-xx1....xxx----xxx
-xx-.1x-.x......1xx
-xx-.xxx-..xxxx-.xx
- xx-.xx1xxx--xx.xx
- xxx-.xxxx-....-x
-  xx1..xxx-.xx11xx
-   xxxx.-x1.-xxxxx
-    xxx.-xxx.-xxx
-  xxxx-.xxxxx.-1xx
-   xx1..x***xx.-xx
- xxxx.-xx****xx.xx
+xx1....xxxWWWWxxx
+xxW.1xW.x......1xx
+xxW.xxxW..xxxxW.xx
+ xxW.xx1xxxWWxx.xx
+ xxxW.xxxxW....Wx
+  xx1..xxxW.xx11xx
+   xxxx.Wx1.Wxxxxx
+    xxx.Wxxx.Wxxx
+  xxxxW.xxxxx.W1xx
+   xx1..x***xx.Wxx
+ xxxx.Wxx****xx.xx
 .....xxx******Z.xx
 ..xxxx xxxxxxxxxx
 @..xx   xxxxxxxx
@@ -418,10 +415,12 @@ lua_marker('v', vm)
 }}
 SUBST:   y = .
 SUBST:   v = .
-SUBST:   w = W:5 w:50 .:2
-SUBST:   X = -x
-SUBST:   - = ...^
-KFEAT:   ^ = web
+# Water etc.
+SUBST:   w = z
+SUBST:   W = W w:15 x:4
+SUBST:   . = .:6 W
+SUBST:   z = W:5 w:50 .:2
+SUBST:   X = w x
 # Monster sets, and some items
 NSUBST:  1 = 2:t / *:w
 SUBST:   2 = 2 *:4
@@ -436,35 +435,35 @@ KMONS:   7 = trapdoor spider
 KITEM:   t = piece of ambrosia
 MAP
      ..........   ......  ........
-     .x.xxxxxx3....xxxx....xxxx.x..
-     .xx.xx66xx..xxx--xxxxxx66.xxx.
-     .x6x...xxxxxx--.7.--xxxxx.66x.
-     .xxxxxx.x--.7..---.7.---xx.xx.
-     ..xxxx.-7..---Xxxx---...7.xx3.
-     ...xxx-.-.xxxxxxxxxxxXX-..-xx..
-   ...xxxx-.-xx..x4xxxxxxxxxx.-.-xx..
-  .3xxxxx-.2xxxxx..xxxxxxxxx.xx-.-xx...
-  .xxxxx7.-xxxxxxxx..xxxxxx.xxxx-7-xxx.
-  .x4xx.--xxxxxxx2.....22..xxxxxx-.....
-  .xx..-Xxxxxxx2..2|x2.....xxxx...-.-x.
- ..xx7-Xxxxxx2..2.x2www....2...xxx-7-x.
-..xx-.-xxxxx2.x...ww11wwx...2xxxxxX-.x.
-.xx-.-xxxxxxx..wwwww11www...2xxxxxX-.x.
-3x-.-xxxxx4....x..www.x.....2xxxxX-7x.
-.x-.--xxx..xxxx....x.........xxxxX-.xx.
-...-..--.xxxxxxxxx......xxxxx.4xx-.-x..
-.xx---.7.---xxxxxxxxxx-.----x.xx-7-xx.
-..xxxx---.7.--Xxxxxxxxx-7.v.--.--.-x..
- ....xxxx---.---XXxxx---xx--.....-xx3
-    ....xxxx-.7------xxxx...-----xx..
-       ..3.xxxx...---.7..----xxx.x..
-          ...xxxx.......----xx.....
+     .xwxxxxxx3....xxxx....xxxxwx..
+     .xxwxx66xx..xxxWWxxxxxx66wxxx.
+     .x6xwwwxxxxxxWW.7.WWxxxxxw66x.
+     .xxxxxxwxWW.7..WWW.7.WWWxxwxx.
+     ..xxxxwW7..WWWXxxxWWW...7wxx3.
+     ...xxxW.WwxxxxxxxxxxxXXWw.Wxx..
+   ...xxxxW.Wxxwwx4xxxxxxxxxxwW.Wxx..
+  .3xxxxxW.2xxxxxwwxxxxxxxxxwxxW.Wxx...
+  .xxxxx7.WxxxxxxxxwwxxxxxxwxxxxW7Wxxx.
+  .x4xx.WWxxxxxxx2...w.22.wxxxxxxW.www.
+  .xxw.WXxxxxxx2..2|x2w..w.xxxxwwwW.Wx.
+ ..xx7WXxxxxx2..2.x2www.w..2wwwxxxW7Wx.
+..xxW.Wxxxxx2.x...ww11wwxwww2xxxxxXW.x.
+.xxW.Wxxxxxxx..wwwww11www...2xxxxxXW.x.
+3xW.Wxxxxx4wwww.x..www.x.www.2xxxxXW7x.
+.xW.WWxxxwwxxxx....x........wxxxxXW.xx.
+.wwW..WWwxxxxxxxxx......xxxxxw4xxW.Wx..
+.xxWWW.7.WWWxxxxxxxxxxW.WWWWxwxxW7Wxx.
+..xxxxWWW.7.WWXxxxxxxxxW7.v.WWwWW.Wx..
+ ....xxxxWWW.WWWXXxxxWWWxxWW.....Wxx3
+    ....xxxxW.7WWWWWWxxxx...WWWWWxx..
+       ..3.xxxx...WWW.7..WWWWxxxwx..
+          ...xxxx.......WWWWxx.....
             ....xxxxxxxxxxxxxx.
                ........3.......
 ENDMAP
 
 NAME:   hangedman_spider_trapstep
-TAGS:   no_monster_gen patrolling mini_float allow_dup
+TAGS:   no_monster_gen no_pool_fixup patrolling mini_float allow_dup
 DEPTH:  Spider:1-3, Zot:1-4
 KMONS:  0 = patrolling spider
 KMONS:  1 = tarantella
@@ -484,10 +483,11 @@ KITEM:  | = superb_item / any good_item w:5
 KFEAT:  ` = known shaft trap
 KFEAT:  ^ = web w:9 / known web trap w:1 / . w:6
 KFEAT:  ~ = shaft trap w:15 / web / . w:5
-NSUBST: 4 = 1:2 / *:.
+NSUBST: 4 = 1:2 / *:W
 SUBST:  X = x
 : end
 KITEM:  * = star_item / superb_item w:5
+KFEAT:  123*| = shallow_water
 KMASK:  . = !no_monster_gen
 SUBST:  ' = ..^
 MAP
@@ -497,15 +497,15 @@ MAP
  ..XX~'''''~XX..
 ..XX~''^^^''~XX..
 .XX~''^xxx^''~XX.
-.X~''^'x1x'^''~X.
+.X~''^Wx1xW^''~X.
 .X~'^xxwxwxx^'~X.
 .X~'^x4xwx4x^'~X.
-.X~'^x'wxw'x^'~X.
-.X~''^x'2'x^''~X.
+.X~'^xWwxwWx^'~X.
+.X~''^xW2Wx^''~X.
 .XX^''^xxx^^'^XX.
-..XX'''^^^'''XX..
+..XXW''^^^''WXX..
  ..XX3'''''3XX..
-  ..XX'*|*'XX..
+  ..XXW*|*WXX..
    ..XXXXXXX..
     .........
 ENDMAP
@@ -527,7 +527,7 @@ KMONS:   X = rock worm w:19 / rock worm zombie w:1
 KITEM:   fF = star_item w:8 / superb_item w:2
 KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
 KFEAT:   X = rock_wall
-KFEAT:   12345abcdefABCDEF% = web / . w:40
+KFEAT:   12345abcdefABCDEF% = web / shallow_water / . w:30
 KFEAT:   . = . w:39 / web w:1
 KMASK:   ' = !no_monster_gen
 KPROP:   ` = no_rtele_into
@@ -752,7 +752,7 @@ xxxxXXXXXXXXXXXxxxxxxxx
 ENDMAP
 
 # Misc minivaults
-NAME:   guppyfry_spider_mini_1
+NAME:   Guppyfry_Spider_Mini_1
 DEPTH:  Spider
 MONS:   spider / jumping spider, trapdoor spider / redback
 MAP
@@ -770,7 +770,7 @@ xxxx..xxxxx.
 xxx.@xxxxxxx
 ENDMAP
 
-NAME:   guppyfry_spider_mini_2
+NAME:   Guppyfry_Spider_Mini_2
 DEPTH:  Spider
 MONS:   spider / jumping spider / trapdoor spider / redback
 MAP
@@ -787,7 +787,7 @@ x....xx....x
 xx..xxxx..xx
 ENDMAP
 
-NAME:   guppyfry_spider_mini_3
+NAME:   Guppyfry_Spider_Mini_3
 DEPTH:  Spider
 MONS:   spider / jumping spider / trapdoor spider / redback
 MAP
@@ -1205,7 +1205,7 @@ ENDMAP
 # Rune vaults
 ##############################################################################
 
-NAME:   spider_rune_cavern
+NAME:   spider_rune_water
 PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
@@ -1224,35 +1224,39 @@ NSUBST: ' = 3:3 / 4:2 / 4=32'' / *:'
 TILE:   c = wall_vines
 SUBST:  x : cccx
 SUBST:  X = x
-SUBST:  - = .......^
-SUBST:  " = .^
-KFEAT:  ^ = web
+: if crawl.coinflip() then
+SUBST:  W = WW.
+: else
+SUBST:  W = W..
+: end
+KFEAT:  Ww = shallow_water
+SUBST:  = : .+
 SUBST:  9 : 7.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxX
-xxxxxxxxxxxxxxxxxxxxxx---xxxxxxxxxxxxxxxxxxxxxX
-xxxxxxxxxxx""xxxxxxx..5.-xxxxxxxxxxxxxxxxxxxxxX
-xxxxxxxxx644"""x--7.-..-.----xxxxxxxxxxxxxxxxxX
-xxxxxxxxxx44"""-..-xx-.xx.57.--xxxxxxxxxxxxxxxX
-xxxxxxxxxxx4xx-..-xxx.-xx--x-..-x"""xxxxxxxxxxX
-xxxxxxxxxxxxx-.5-xxxx-..xxxxx-..-"""""46xxxxxxX
-xxxxxxxxxxxxx-..-xcccc..ccccx-.5.-xx"444xxxxxxX
-xxxxxxxxxxxxx-.-xxc1'c++c'8cxx--..-xxxx4xxxxxxX
-xxxxxxxxxxxx-.-xxxc'''cc'''cxxxx-.-xxxxxxxxxxxX
-xxxxxxxxxxx-5-xxxxc''''''''ccccxx-.--xxxxxxxxxX
-xxxxxxxxxxx-.-x44xc''''''''+'Ocxx--5.-xxxxxxxxX
-xxxxxxxxxxx.-"""4xcccccccccccccxxx"-..-xxxxxxxX
-xxxxxxxxx--.-"""4xxxxxxxxxxxxxx44"""-.-xxxxxxxX
-xxxxxxxx-..-xx46xxx----xx---xxx444xxx-.--xxxxxX
-xxxxxxxx-5.-xxxxx--...4--4..--xx6xxxxx-..-xxxxX
-xxxxxxxxx-.-xxxxx-.-x-44444-..-xxxxxxx-5.-xxxxX
-xxxxxxxx-..-xxx-.5-xx-.4.-xx-5-xxxxx-...-xxxxxX
-xxxxxxxxx-..-x-..-xxxx-..-xx-..-xx-..---xxxxxxX
-xxxxxxxxxx-.5.-..-xxxxx-...-xx-..-..--xxxxxxXXX
-xxxxxxxxxxx--...-xxxxxxx...xxxx--5--xxxxxXXXX
-xxxxxxxxxxxxx---xxxxxxxx...xxxxxx-xxxxxXXX
-xxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxXX
+xxxxxxxxxxxxxxxxxxxxxxWWWxxxxxxxxxxxxxxxxxxxxxX
+xxxxxxxxxxxwwxxxxxxx..5.WxxxxxxxxxxxxxxxxxxxxxX
+xxxxxxxxx644wwwxWW7.W..W.WWWWxxxxxxxxxxxxxxxxxX
+xxxxxxxxxx44wwwW..WxxW.xx.57.WWxxxxxxxxxxxxxxxX
+xxxxxxxxxxx4xxW..Wxxx.WxxWWxW..WxwwwxxxxxxxxxxX
+xxxxxxxxxxxxxW.5WxxxxW..xxxxxW..Wwwwww46xxxxxxX
+xxxxxxxxxxxxxW..Wxcccc..ccccxW.5.Wxxw444xxxxxxX
+xxxxxxxxxxxxxW.Wxxc1'c++c'8cxxWW..Wxxxx4xxxxxxX
+xxxxxxxxxxxxW.Wxxxc'''cc'''cxxxxW.WxxxxxxxxxxxX
+xxxxxxxxxxxW5Wxxxxc''''''''ccccxxW.WWxxxxxxxxxX
+xxxxxxxxxxxW.Wx44xc''''''''+'OcxxWW5.WxxxxxxxxX
+xxxxxxxxxxx.Wwww4xcccccccccccccxxxwW..WxxxxxxxX
+xxxxxxxxxWW.Wwww4xxxxxxxxxxxxxx44wwwW.WxxxxxxxX
+xxxxxxxxW..Wxx46xxxWWWWxxWWWxxx444xxxW.WWxxxxxX
+xxxxxxxxW5.WxxxxxWW...4WW4..WWxx6xxxxxW..WxxxxX
+xxxxxxxxxW.WxxxxxW.WxW44444W..WxxxxxxxW5.WxxxxX
+xxxxxxxxW..WxxxW.5WxxW.4.WxxW5WxxxxxW...WxxxxxX
+xxxxxxxxxW..WxW..WxxxxW..WxxW..WxxW..WWWxxxxxxX
+xxxxxxxxxxW.5.W..WxxxxxW...WxxW..W..WWxxxxxxXXX
+xxxxxxxxxxxWW...Wxxxxxxx...xxxxWW5WWxxxxxXXXX
+xxxxxxxxxxxxxWWWxxxxxxxx===xxxxxxWxxxxxXXX
+xxxxxxxxxxxxxxxxxxxxxxxx+++xxxxxxxxxxxXX
 XXXXXXXXXXXXXXXXXXXXX99.....99XXXXXXXXX
 XXXXXXXXXXXXXXXXXX@@@@@@@@@@@@@@@XXXXXX
 ENDMAP
@@ -1268,34 +1272,35 @@ MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   orb spider / nothing, trapdoor spider / nothing
 NSUBST: 7 = 3:1 / 1:2
-SUBST:  - = .....^
+SUBST:  W = W..
+SUBST:  - = ....WWW^
 KFEAT:  ^ = web
 TILE:   c = wall_vines
 MAP
 cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcx
-cxxxxxxxxxxx..x.xxxxxxxx..xxxxxx.xxx.xxxxxxxxxxxxcx
-cxxxxxxxxx....4..x..x........x..4.--.-.xxxxxxxxxxcx
-cxxxxxxx..4....x......4.xx....5.x..4..xxxxxxxxxxxcx
-cxxxxxxx..4.xcxxx.xxxxxxxxxxx.xxx.xx....xxxxxxxxxcx
-cxxxxxx.4..4.cccxxxccxxxccccxxxcxxxxx...--xxxxxxxcx
-cxxxxxx...4.6.6cccc..cccc..cccccccccxxxx4.-xxxxxxcx
-cxxxxx.54.x6.6.c....4..........444.ccccxx...xxxxxcx
-cxxxxx...xccc.666.....5.............cccxx...xxxxxcx
-cxxxxxx4.xcc66......cccccccc..444....cccxx....xxxcx
-cxxxxx..xxc.-....cccc--575dccccc..-.-.cccxx..-xxxcx
-cxxxxx..xxc.-4..cc-.575dwww4.--ccc.-..cccxx.4-xxxcx
-cxxxxx.4.xc.-..5cd4wwwww3Oww474-3c...5cccxxx..xxxcx
-cxxxx...xxcc..4.c-74.wwwwwww4..ccc6-..cccxx...xxxcx
-cxxxxx.4.xxcc.4.cccc...4...4---6-6-6ccccxx..-xxxxcx
-cxxxxxx...xxc.45..-cccc-3cc-66-6-ccccxxxx4..xxxxxcx
-cxxxxxxx...xccc.-...44cccc6-6-6-ccxxxxxx...xxxxxxcx
-cxxxxxxx..4xxxcccccc4.....-6-ccccxx..xx..xxxxxxxxcx
-cxxxxxxxxx-..xxxxxxccc-----cccxxxx..4...xxxxxxxxxcx
-cxxxxxxxxxx-....--xxxcccccccxxx6x4.xx..xxxxxxxxxxcx
+cxxxxxxxxxxxwwxWxxxxxxxxwwxxxxxxwxxxwxxxxxxxxxxxxcx
+cxxxxxxxxx.W..4..x..x........x..4.--.-wxxxxxxxxxxcx
+cxxxxxxxw.4....x......4.xx....5WxW.4..xxxxxxxxxxxcx
+cxxxxxxx..4.xcxxx.xxxxxxxxxxxwxxxwxx...Wxxxxxxxxxcx
+cxxxxxxW4W.4WcccxxxccxxxccccxxxcxxxxxW..--xxxxxxxcx
+cxxxxxx...4W6W6ccccWWccccWWcccccccccxxxx4.-xxxxxxcx
+cxxxxxW54.x6W6WcWWW.4..........444.ccccxx..Wxxxxxcx
+cxxxxxwW.xcccW666....W5.W....WWWWW..cccxx.W.xxxxxcx
+cxxxxxx4Wxcc66..wwwwcccccccc..444....cccxx...Wxxxcx
+cxxxxx.WxxcW-..wwcccc--575dccccc..-.-.cccxx..-xxxcx
+cxxxxx..xxcW-4.wcc-.575dwww4.--ccc.-..cccxx.4-xxxcx
+cxxxxx.4WxcW-..5cd4wwwww3Oww474-3c..W5cccxxxW.xxxcx
+cxxxxw..xxccW.4.c-74.wwwwwww4..ccc6-.Wcccxx..Wxxxcx
+cxxxxx.4.xxccW4Wcccc...4...4---6-6-6ccccxx..-xxxxcx
+cxxxxxx...xxcW45..-cccc-3cc-66-6-ccccxxxx4.Wxxxxxcx
+cxxxxxxxW..xcccW-...44cccc6-6-6-ccxxxxxx..Wxxxxxxcx
+cxxxxxxxwW4xxxcccccc4.....-6-ccccxxWWxx.Wxxxxxxxxcx
+cxxxxxxxxx-..xxxxxxccc-----cccxxxx..4..Wxxxxxxxxxcx
+cxxxxxxxxxx-.W..--xxxcccccccxxx6x4.xxwwxxxxxxxxxxcx
 cxxxxxxxxxxxx-.4..--xxxxxxxxx-6-66xxxxxxxxxxxxxxxcx
-cxxxxxxxxxxxxxxx-.4...x..xxx-6-.-xxxxxxxxxxxxxxxxcx
+cxxxxxxxxxxxxxxx-.4.W.x..xxx-6-w-xxxxxxxxxxxxxxxxcx
 cxxxxxxxxxxxxxxxxxxx-...4....xx-4.xxxxxxxxxxxxxxxcx
-cxxxxxxxxxxxxxxxxxxxx--xx-.-xxxx.4xxxxxxxxxxxxxxxcx
+cxxxxxxxxxxxxxxxxxxxx--xx-W-xxxx.4xxxxxxxxxxxxxxxcx
 cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4xxxxxxxxxxxxxxcx
 cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4.xxxxxxxxxxxxxxcx
 ccccccccccccccccccccccccccccccxx4.4.xxccccccccccccx
@@ -1306,6 +1311,7 @@ ENDMAP
 
 NAME:   guppyfry_spider_rune
 PLACE:  Spider:$
+TAGS:   no_pool_fixup
 ORIENT: southwest
 KITEM:  O = gossamer rune of zot
 KMONS:  O = ghost moth
@@ -1321,34 +1327,35 @@ MONS:   trapdoor spider / nothing
 MONS:   orb spider
 KMONS:  8 = orb spider
 NSUBST: 8 = 2:c / *:8
-SUBST:  - = .......^
+SUBST:  - = .....WWW^
 KFEAT:  ^ = web
+SUBST:  = = +.
 SHUFFLE: O12*
 MAP
 xxxxxxxxxxxxxxxxxxx@@@@@@@@@@xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx......xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxx
-xxxxxxxxxxccccccccccccc..cccccccccccccxxxxxx
+xxxxxxxxxxccccccccccccc==cccccccccccccxxxxxx
 xxxxxxxxxxcccccccccccc-.--ccccccccccccxxxxxxx
-xxxxxxxxxxc6.ccccccccc.x.-ccccccccc.6cxxxxxxxx
+xxxxxxxxxxc6Wccccccccc.x.-cccccccccW6cxxxxxxxx
 xxxxxxxxxxc6......ccccx.-xccccc.....6cxxxxxxxx
-xxxxxxxxxxc.--..cc45Oc6--6c154.c..--.cxxxxxxxx
+xxxxxxxxxxcW--..cc45Oc6--6c154.c..--Wcxxxxxxxx
 xxxxxxxxxxcc.--ccc55ccx.-xcc55ccc--.ccxxxxxxxx
-xxxxxxxxxxccc.--cccccc.---cccccc--.cccxxxxxxxx
+xxxxxxxxxxcccW--cccccc.---cccccc--Wcccxxxxxxxx
 xxxxxxxxxxcccc.--cccccx.-xccccc--.ccccxxxxxxxx
-xxxxxxxxxxccccx.--c8cc--.-cc8c--.xccccxxxxxxxx
+xxxxxxxxxxccccxW--c8cc--.-cc8c--Wxccccxxxxxxxx
 xxxxxxxxxxcccc-.-xx--x-xx.x--xx-.-ccccxxxxxxxx
 xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
 xxxxxxxxxxccc.333.-.-.5445.-.-.333.cccxxxxxxxx
 xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
 xxxxxxxxxxcccc-.-xx^-x.xx-x--xx-.-ccccxxxxxxxx
-xxxxxxxxxxccccx.--c8cc-.--cc8c--.xccccxxxxxxxx
+xxxxxxxxxxccccxW--c8cc-.--cc8c--Wxccccxxxxxxxx
 xxxxxxxxxxcccc.--cccccx-.xccccc--.ccccxxxxxxxx
-xxxxxxxxxxccc.--cccccc---.cccccc--.cccxxxxxxxx
+xxxxxxxxxxcccW--cccccc---.cccccc--Wcccxxxxxxxx
 xxxxxxxxxxcc.--ccc55ccx-.xcc55ccc--.ccxxxxxxxx
-xxxxxxxxxxc.--..c.45*c7--7c254.c..--.cxxxxxxxx
+xxxxxxxxxxcW--..c.45*c7--7c254.c..--Wcxxxxxxxx
 xxxxxxxxxxc6.....ccccccddcccccc.....6cxxxxxxxx
-xxxxxxxxxxc6.cccccccccccccccccccccc.6cxxxxxxxx
+xxxxxxxxxxc6WccccccccccccccccccccccW6cxxxxxxxx
 xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1363,7 +1370,8 @@ MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:30 nothing
 MONS:   orb spider / nothing, trapdoor spider / nothing
 SUBST:  " = ^.6
-SUBST:  - = .....^^^
+SUBST:  - = ...WW^^^
+SUBST:  . = ...W
 KFEAT:  ^ = web
 SUBST:  c : cx
 SUBST:  C : c
@@ -1413,7 +1421,7 @@ MONS:   orb spider / w:5 nothing, trapdoor spider / nothing
 NSUBST: 7 = 3:1 / 1:2
 SUBST:  + = ...+
 SUBST:  " = ....^
-SUBST:  - = .....^^^
+SUBST:  - = ...WW^^^
 SUBST:  . = ...W
 KFEAT:  ^ = web
 SUBST:  c : cx

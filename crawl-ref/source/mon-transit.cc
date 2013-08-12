@@ -418,6 +418,8 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     fol->travel_path.clear();
     fol->travel_target = MTRAV_NONE;
 
+    fol->clear_clinging();
+
     dprf("%s is marked for following.",
          fol->name(DESC_THE, true).c_str());
 

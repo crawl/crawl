@@ -69,9 +69,7 @@ enum monster_info_flags
     MB_BLIND,
     MB_DUMB,
     MB_MAD,
-#if TAG_MAJOR_VERSION == 34
     MB_CLINGING,
-#endif
     MB_NAME_ZOMBIE,
     MB_PERM_SUMMON,
     MB_INNER_FLAME,

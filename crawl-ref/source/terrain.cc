@@ -1704,6 +1704,68 @@ void nuke_wall(const coord_def& p)
     env.level_map_mask(p) |= MMT_NUKED;
 }
 
+/*
+ * Check if an actor can cling to a cell.
+ *
+ * Wall clinging is done only on orthogonal walls.
+ *
+ * @param pos The coordinates of the cell.
+ *
+ * @return Whether the cell is clingable.
+ */
+bool cell_is_clingable(const coord_def pos)
+{
+    for (orth_adjacent_iterator ai(pos); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)) || feat_is_closed_door(env.grid(*ai)))
+            return true;
+
+    return false;
+}
+
+/*
+ * Check if an actor can cling from a cell to another.
+ *
+ * "clinging" to a wall means being orthogonally (left, right, up, down) next
+ * to it. A spider can cling to several squares. A move is allowed if the
+ * spider clings to an adjacent wall square or the same wall square before and
+ * after moving. Being over floor or shallow water and next to a wall counts as
+ * clinging to that wall (no further action needed).
+ *
+ * Example:
+ * ~ = deep water
+ * * = deep water the spider can reach
+ *
+ *  #####
+ *  ~~#~~
+ *  ~~~*~
+ *  **s#*
+ *  #####
+ *
+ * Look at Mantis #2704 for more examples.
+ *
+ * @param from The coordinates of the starting position.
+ * @param to The coordinates of the destination.
+ *
+ * @return Whether it is possible to cling from one cell to another.
+ */
+bool cell_can_cling_to(const coord_def& from, const coord_def to)
+{
+    if (!in_bounds(to))
+        return false;
+
+    for (orth_adjacent_iterator ai(from); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)))
+        {
+            for (orth_adjacent_iterator ai2(to, false); ai2; ++ai2)
+                if (feat_is_wall(env.grid(*ai2)) && distance2(*ai, *ai2) <= 1)
+                    return true;
+        }
+    }
+
+        return false;
+}
+
 const char* feat_type_name(dungeon_feature_type feat)
 {
     if (feat_is_door(feat))
