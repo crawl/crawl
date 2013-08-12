@@ -597,7 +597,8 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
             break;
 
         case SENSE_WEB_VIBRATION:
-            if (you.form == TRAN_SPIDER)
+            // Spider form
+            if (you.can_cling_to_walls())
             {
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.

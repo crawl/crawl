@@ -1582,6 +1582,7 @@ static void _take_stairs(bool down)
     if (!_prompt_stairs(ygrd, down))
         return;
 
+    you.clear_clinging();
     you.stop_constricting_all(true);
     you.stop_being_constricted();
 
@@ -1943,6 +1944,7 @@ void process_command(command_type cmd)
 
     case CMD_MOVE_NOWHERE:
     case CMD_WAIT:
+        you.check_clinging(false);
         you.turn_is_over = true;
         break;
 
@@ -4367,7 +4369,7 @@ static void _move_player(coord_def move)
         string bad_suff, bad_adj;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
-            if (is_feat_dangerous(grd(*ai))
+            if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);
@@ -4516,6 +4518,8 @@ static void _move_player(coord_def move)
     string verb;
     if (you.flight_mode())
         verb = "fly";
+    else if (you.is_wall_clinging())
+        verb = "cling";
     else if (you.species == SP_NAGA && !form_changed_physiology())
         verb = "slither";
     else
