@@ -23,6 +23,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "misc.h"
 #include "mon-abil.h"
 #include "mutation.h"
 #include "output.h"
@@ -977,7 +978,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     you.redraw_armour_class = true;
     you.wield_change        = true;
     if (form_changed_physiology(which_trans))
-        you.fishtail = false;
+        merfolk_stop_swimming();
 
     // Most transformations conflict with stone skin.
     if (form_changed_physiology(which_trans) && which_trans != TRAN_STATUE)
