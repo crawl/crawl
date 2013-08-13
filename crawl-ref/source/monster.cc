@@ -5652,6 +5652,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
         }
     }
+    else if (mons_is_tentacle_or_tentacle_segment(type)
+            && type != MONS_ELDRITCH_TENTACLE
+            && flavour != BEAM_TORMENT_DAMAGE
+            && !invalid_monster_index(number)
+            && menv[number].is_parent_monster_of(this))
+    {
+        (new deferred_damage_fineff(oppressor, &menv[number],
+                                    damage, false))->schedule();
+    }
 
     if (!alive())
         return;
@@ -5663,16 +5672,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
                            damage * BASELINE_DELAY);
-    }
-
-    if (mons_is_tentacle_or_tentacle_segment(type)
-            && type != MONS_ELDRITCH_TENTACLE
-            && flavour != BEAM_TORMENT_DAMAGE
-            && !invalid_monster_index(number)
-            && menv[number].is_parent_monster_of(this))
-    {
-        (new deferred_damage_fineff(oppressor, &menv[number],
-                                    damage, false))->schedule();
     }
     else if (mons_species(type) == MONS_BUSH
              && res_fire() < 0
