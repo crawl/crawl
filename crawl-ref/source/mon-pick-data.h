@@ -505,7 +505,6 @@ static const pop_entry pop_vaults[] =
   {  2,  4,    3, SEMI, MONS_PULSATING_LUMP },
   { -2,  8,  244, PEAK, MONS_BOULDER_BEETLE },
   {  0,  6,   35, PEAK, MONS_ORC_HIGH_PRIEST },
-  {  0,  8,   66, PEAK, MONS_BORING_BEETLE },
   {  0,  8,   89, PEAK, MONS_REDBACK },
   {  0,  8,   89, PEAK, MONS_SPHINX },
   {  2,  6,    8, PEAK, MONS_CRYSTAL_GOLEM },
