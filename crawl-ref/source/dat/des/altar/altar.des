@@ -404,10 +404,19 @@ ENDMAP
 
 ### Altars to Jiyva ##########################################################
 
-NAME:  jiyva_altar_1
-DEPTH: D:2-20
-KFEAT: _ = altar_jiyva
-MONS:  jelly
+NAME:   jiyva_altar_1
+DEPTH:  D:2-20
+KFEAT:  _ = altar_jiyva
+: if you.depth() < 5 then
+SUBST:  1 = 2
+: elseif you.depth() < 7 then
+NSUBST: 1 = 1:1 / *:2
+: elseif you.depth() < 10 then
+NSUBST: 1 = 2:1 / *:2
+: elseif you.depth() < 13 then
+NSUBST: 1 = 3:1 / *:2
+: end
+MONS:  jelly, ooze
 MAP
 .....
 ..1..
