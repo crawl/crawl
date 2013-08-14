@@ -2437,19 +2437,28 @@ static void _rebrand_weapon(item_def& wpn)
     }
 }
 
-// Returns true if a message has already been printed (which will identify
-// the scroll).
-static bool _vorpalise_weapon(bool already_known)
+static void _vorpalise_weapon(bool already_known)
 {
+    mpr("Vorpalise which weapon?", MSGCH_PROMPT);
+    // Prompt before showing the weapon list.
+    if (Options.auto_list)
+        more();
+
+    wield_weapon(false);
+
     if (!you.weapon())
-        return false;
+    {
+        mpr("You are not wielding a weapon.");
+        return;
+    }
 
     // Check if you're wielding a brandable weapon.
     item_def& wpn = *you.weapon();
     if (wpn.base_type != OBJ_WEAPONS || wpn.sub_type == WPN_BLOWGUN
         || is_artefact(wpn))
     {
-        return false;
+        mpr("You can't vorpalise that.");
+        return;
     }
 
     you.wield_change = true;
@@ -2461,10 +2470,10 @@ static bool _vorpalise_weapon(bool already_known)
         mprf("%s emits a brilliant flash of light!",
              wpn.name(DESC_YOUR).c_str());
         set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
-        return true;
+        return;
     }
 
-    // If there's a permanent brand, try to rebrand it
+    // If there's a permanent brand, try to rebrand it.
     bool rebranded = false;
     if (you.duration[DUR_WEAPON_BRAND] == 0)
     {
@@ -2472,10 +2481,9 @@ static bool _vorpalise_weapon(bool already_known)
         _rebrand_weapon(wpn);
     }
 
-    // There's a temporary or new brand, attempt to make it permanent
+    // There's a temporary or new brand, attempt to make it permanent.
     const string itname = wpn.name(DESC_YOUR);
     bool success = true;
-    bool msg = true;
 
     switch (get_weapon_brand(wpn))
     {
@@ -2607,7 +2615,6 @@ static bool _vorpalise_weapon(bool already_known)
 
     default:
         success = false;
-        msg = false;
         break;
     }
 
@@ -2618,10 +2625,10 @@ static bool _vorpalise_weapon(bool already_known)
         // Might be rebranding to/from protection or evasion.
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
-        // Might be removing antimagic
+        // Might be removing antimagic.
         calc_mp();
     }
-    return msg;
+    return;
 }
 
 bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
@@ -2987,8 +2994,7 @@ bool _is_cancellable_scroll(scroll_type scroll)
             || scroll == SCR_AMNESIA
             || scroll == SCR_REMOVE_CURSE
             || scroll == SCR_CURSE_ARMOUR
-            || scroll == SCR_CURSE_JEWELLERY
-            || scroll == SCR_VORPALISE_WEAPON);
+            || scroll == SCR_CURSE_JEWELLERY);
 }
 
 void read_scroll(int slot)
@@ -3096,9 +3102,7 @@ void read_scroll(int slot)
                 mpr("This weapon cannot be enchanted.");
                 return;
             }
-        // Fall-through.
-        case SCR_VORPALISE_WEAPON:
-            if (!you.weapon() || !is_weapon(*you.weapon()))
+            else if (!you.weapon() || !is_weapon(*you.weapon()))
             {
                 mpr("You are not wielding a weapon.");
                 return;
@@ -3310,22 +3314,8 @@ void read_scroll(int slot)
 
     case SCR_VORPALISE_WEAPON:
         if (!alreadyknown)
-            mpr(pre_succ_msg);
-        id_the_scroll = _vorpalise_weapon(alreadyknown);
-        if (!id_the_scroll)
-        {
-            if (alreadyknown)
-            {
-                mpr("This will not work.");
-                cancel_scroll = true;
-                break;
-            }
-            else
-            {
-                mpr("You feel like taking on a jabberwock.");
-                id_the_scroll = true;
-            }
-        }
+            mpr("It is a scroll of vorpalise weapon.");
+        _vorpalise_weapon(alreadyknown);
         break;
 
     case SCR_IDENTIFY:
@@ -3445,7 +3435,10 @@ void read_scroll(int slot)
         count_action(CACT_USE, OBJ_SCROLLS);
     }
 
-    if (id_the_scroll && !alreadyknown && which_scroll != SCR_ACQUIREMENT)
+    if (id_the_scroll
+        && !alreadyknown
+        && which_scroll != SCR_ACQUIREMENT
+        && which_scroll != SCR_VORPALISE_WEAPON)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
