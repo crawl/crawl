@@ -15,7 +15,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail = false)
 
 spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
                                  bool actual, bool added_effects = true,
-                                 bool fail = false);
+                                 bool fail = false, bool allow_cancel = true);
 void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);

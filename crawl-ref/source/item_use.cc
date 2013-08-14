@@ -2512,15 +2512,10 @@ static void _vorpalise_weapon(bool already_known)
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
-                                  (already_known) ? &you : NULL, true)
-            != SPRET_SUCCESS)
-        {
-            canned_msg(MSG_OK);
-            success = false;
-        }
-        else
-            mprf("%s is covered with a thin layer of ice!", itname.c_str());
+        mprf("%s is covered with a thin layer of ice!", itname.c_str());
+        cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
+                              (already_known) ? &you : NULL,
+                              true, false, false, false);
         break;
 
     case SPWPN_DRAINING:
