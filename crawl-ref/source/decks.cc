@@ -1893,7 +1893,10 @@ static void _blade_card(int power, deck_rarity_type rarity)
     if (Options.auto_list)
         more();
 
+    // Don't take less time if we're swapping weapons.
+    int old_time = you.time_taken;
     wield_weapon(false);
+    you.time_taken = old_time;
 
     const int power_level = _get_power_level(power, rarity);
     brand_type brand;

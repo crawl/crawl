@@ -2444,7 +2444,10 @@ static void _vorpalise_weapon(bool already_known)
     if (Options.auto_list)
         more();
 
+    // Don't take less time if we're swapping weapons.
+    int time = you.time_taken;
     wield_weapon(false);
+    you.time_taken = time;
 
     if (!you.weapon())
     {
