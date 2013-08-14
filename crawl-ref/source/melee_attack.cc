@@ -850,13 +850,10 @@ bool melee_attack::handle_phase_killed()
                                                true, special_damage);
     }
 
-    if (defender->is_player())
-        return true;
+    monster * const mon = defender->as_monster();
+    if (!invalid_monster(mon))
+        monster_die(mon, attacker);
 
-    if (invalid_monster(defender->as_monster()))
-        return true;
-
-    monster_die(defender->as_monster(), attacker);
     return true;
 }
 
