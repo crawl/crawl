@@ -694,7 +694,8 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
         weapon->plus2++, boosted = true;
     if (boosted)
     {
-        mpr("<green>The lance glows as it skewers the body.</green>");
+        mprf("<green>The lance glows as it skewers %s.</green>",
+              defender->name(DESC_THE).c_str());
         you.wield_change = true;
     }
 }
