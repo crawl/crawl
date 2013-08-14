@@ -3733,15 +3733,20 @@ void bolt::affect_player()
     // Roll the damage.
     hurted += damage.roll();
 
+#ifdef DEBUG_DIAGNOSTICS
     int roll = hurted;
+#endif
 
     vector<string> messages;
     apply_dmg_funcs(&you, hurted, messages);
 
+    const int preac = hurted;
     hurted = apply_AC(&you, hurted);
+    const int postac = hurted;
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf(DIAG_BEAM, "Player damage: rolled=%d; after AC=%d", roll, hurted);
+    dprf(DIAG_BEAM, "Player damage: rolled=%d; before AC=%d; after AC=%d",
+                    roll, preac, postac);
 #endif
 
     practise(EX_BEAM_WILL_HIT);
@@ -3834,7 +3839,7 @@ void bolt::affect_player()
 
     // Last resort for characters mainly focusing on AC:
     // Chance of not affecting items if not much damage went through
-    if (!x_chance_in_y(hurted, random2avg(roll, 2)))
+    if (!x_chance_in_y(postac, random2avg(preac, 2)))
         affects_items = false;
 
     if (affects_items)
