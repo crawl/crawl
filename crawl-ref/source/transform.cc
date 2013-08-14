@@ -917,8 +917,13 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_FUNGUS:
         tran_name = "fungus";
         msg      += "a fleshy mushroom.";
-        you.set_duration(DUR_CONFUSING_TOUCH,
-            you.duration[DUR_TRANSFORMATION] ? you.duration[DUR_TRANSFORMATION] : INFINITE_DURATION);
+        if (!just_check)
+        {
+            you.set_duration(DUR_CONFUSING_TOUCH,
+                             you.duration[DUR_TRANSFORMATION]
+                                 ? you.duration[DUR_TRANSFORMATION]
+                                 : INFINITE_DURATION);
+        }
         break;
 
     case TRAN_JELLY:
