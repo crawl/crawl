@@ -4861,7 +4861,13 @@ bool monster::can_see_invisible() const
         return ghost->see_invis;
     else if (mons_class_flag(type, M_SEE_INVIS))
         return true;
+    else if (suppressed())
+        return false;
     else if (scan_artefacts(ARTP_EYESIGHT) > 0)
+        return true;
+    else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
+        return true;
+    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_SEE_INVISIBLE))
         return true;
     return false;
 }
