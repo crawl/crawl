@@ -549,7 +549,8 @@ static void _post_drain_life(actor* agent, bool player,
 }
 
 spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
-                                 bool actual, bool added_effects, bool fail)
+                                 bool actual, bool added_effects, bool fail,
+                                 bool allow_cancel)
 {
     monster* mons = agent ? agent->as_monster() : NULL;
 
@@ -611,7 +612,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         ASSERT(actual);
         targetter_los hitfunc(&you, LOS_NO_TRANS);
         {
-            if (stop_attack_prompt(hitfunc, harm_msg, vul_hitfunc))
+            if (allow_cancel && stop_attack_prompt(hitfunc, harm_msg, vul_hitfunc))
                 return SPRET_ABORT;
         }
         fail_check();
