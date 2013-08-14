@@ -850,7 +850,13 @@ bool melee_attack::handle_phase_killed()
                                                true, special_damage);
     }
 
-    _defender_die();
+    if (defender->is_player())
+        return true;
+
+    if (invalid_monster(defender->as_monster()))
+        return true;
+
+    monster_die(defender->as_monster(), attacker);
     return true;
 }
 
@@ -1630,7 +1636,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     if (defender->as_monster()->hit_points < 1)
     {
-        _defender_die();
+        handle_phase_killed();
         return true;
     }
 
@@ -2329,17 +2335,6 @@ bool melee_attack::player_monattk_hit_effects()
     }
 
     return true;
-}
-
-void melee_attack::_defender_die()
-{
-    if (defender->is_player())
-        return;
-
-    if (invalid_monster(defender->as_monster()))
-        return;
-
-    monster_die(defender->as_monster(), attacker);
 }
 
 int melee_attack::fire_res_apply_cerebov_downgrade(int res)
