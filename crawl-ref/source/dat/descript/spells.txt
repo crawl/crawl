@@ -619,8 +619,9 @@ Searing Ray spell
 
 This spell fires a continuous ray of arcane energy from the caster's hands.
 Though initially mild, so long as the caster maintains focus upon the spell and
-supplies it with magical power, the ray will grow in strength until it becomes
-a surging beam able to tear clean through the ranks of the caster's foes.
+supplies it with magical power (by waiting in place and not taking any other
+actions), the ray will grow in strength until it becomes a surging beam able to
+tear clean through the ranks of the caster's foes.
 %%%%
 Shadow Creatures spell
 
