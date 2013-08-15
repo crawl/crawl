@@ -1338,7 +1338,10 @@ bool direction_chooser::pickup_item()
         item->flags |= ISFLAG_THROWN;
 
     if (!just_looking) // firing/casting prompt
+    {
+        mpr("Marked for pickup.", MSGCH_EXAMINE_FILTER);
         return false;
+    }
 
     moves.isValid  = true;
     moves.isTarget = true;
