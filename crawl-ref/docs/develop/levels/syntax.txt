@@ -514,7 +514,8 @@ ITEM:     (list of items, separated by comma)
           * "plus:N" and "plus2:N" set the item pluses for weapons, armour,
             jewellery (such as rings of intelligence or slaying), and
             throwing nets.
-          * "no_uniq" prevents the item from being turned into an artefact.
+          * "no_uniq" prevents the item from being turned into an artefact,
+            unless cancelled by an "allow_uniq" modifier.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality). This is independent of the level's depth,
             in contrast to placing items with * or | which just add a bonus
@@ -1445,8 +1446,17 @@ KPROP:    x = bloody
              in one flag, and disallows both random and controlled teleports.
              Use this for vaults with loot where the player is not supposed to
              get it by teleporting alone.
+          * "no_submerge": Monsters will not submerge in this square.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
+
+          Two additional named properties exist, but should be avoided:
+
+          * "highlight": The square will be highlighted in the X map in wizard
+            mode, and will appear in dumps as "?". For debugging use only; this
+            property should be removed before submitting vaults.
+          * "mold": The square is covered with mold. This property is reserved
+            for use by ballistomycetes and should in general not be set by vaults.
 
           Properties can also be used as tags to apply to the entire vault:
             TAGS: no_rtele_into no_tide
