@@ -4933,7 +4933,7 @@ bool melee_attack::do_knockback(bool trample)
 
         // need a valid tile
         if (grd(new_pos) < DNGN_SHALLOW_WATER
-            && !defender->is_habitable(new_pos))
+            && !defender->is_habitable_feat(grd(new_pos)))
         {
             break;
         }
