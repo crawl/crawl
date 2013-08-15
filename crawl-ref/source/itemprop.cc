@@ -1654,6 +1654,27 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return range_skill(wpn);
 }
 
+//True if item is a staff that deals extra damage based on Evocations skill.
+static bool _staff_uses_evocations(const item_def &item)
+{
+    if (!item_type_known(item) || item.base_type != OBJ_STAVES)
+        return false;
+
+    switch (item.sub_type)
+    {
+    case STAFF_FIRE:
+    case STAFF_COLD:
+    case STAFF_POISON:
+    case STAFF_DEATH:
+    case STAFF_SUMMONING:
+    case STAFF_AIR:
+    case STAFF_EARTH:
+        return true;
+    default:
+        return false;
+    }
+}
+
 // Check whether an item can be easily and quickly equipped. This needs to
 // know which slot we're considering for cases like where we're already
 // wielding a cursed non-weapon.
@@ -1753,8 +1774,11 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     }
 
     // Evokables that don't need to be equipped.
-    if (item_is_evokable(item, false, false, false, false, true))
+    if (item_is_evokable(item, false, false, false, false, true)
+        || _staff_uses_evocations(item))
+    {
         skills.insert(SK_EVOCATIONS);
+    }
 
     // Item doesn't have to be equipped, but if it isn't, it needs to be easy
     // and quick to equip. This means:

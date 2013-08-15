@@ -2133,7 +2133,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         return true;
 
     case OBJ_STAVES:
-        if (!known && !item_type_known(item)
+        if (known && !item_type_known(item)
             || item.sub_type == STAFF_ENERGY
                && item_type_known(item))
         {
