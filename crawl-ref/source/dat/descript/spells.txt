@@ -848,9 +848,9 @@ This spell creates an arc of electricity.
 Tornado spell
 
 This spell turns the air around the caster in a mighty vortex, doing tremendous
-damage to everyone caught in it. Only the eye of the storm is a safe place, and
-it follows the caster. Everything not firmly nailed down will be lifted and
-tossed around.
+damage to everyone caught in it. Those affected will also be swept up into the
+air and tossed around. Only the eye of the storm is a safe place, and it
+follows the caster.
 
 The spell's effectiveness is greatly diminished in closed areas.
 
