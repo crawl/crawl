@@ -1246,7 +1246,9 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     if (ii)
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
     dungeon_feature_type feat = grd(you.pos());
-    if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
+    if (!you.can_pass_through_feat(feat)
+        || is_feat_dangerous(feat) && !(you.is_wall_clinging()
+                                        && cell_is_clingable(you.pos())))
     {
         bool shoved = you.shove();
         ASSERT(shoved);
