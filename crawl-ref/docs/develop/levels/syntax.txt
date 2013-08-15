@@ -385,7 +385,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
-             the vaults with this tag can be used in a game.
+             the vaults with this tag can be used in a game. In particular,
+             late-Dungeon encompass vaults have the tag uniq_d_encompass, so
+             that only one will occur per game.
           * "luniq": specifies that this vault can be used only once on a
              given level. "luniq" is only relevant when used with "allow_dup".
           * "luniq_BAR": (luniq_ with any suffix) specifies that only one
