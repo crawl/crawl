@@ -346,6 +346,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "chance_FOO": Maps can be tagged chance_ with any unique suffix
              to indicate that if the map's CHANCE roll is made, one of the maps
              tagged chance_FOO should be picked.
+          * "decor": this tag indicates that the vault is purely decorative, and
+             has neither threats nor items. Levels of the main Dungeon deeper than
+             D:12 have an 80% chance to place an extra vault with this tag; see
+             dungeon_decor in builder/decor.des .
           * "dummy": this tag indicates that the vault is a stub; if the dungeon
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
