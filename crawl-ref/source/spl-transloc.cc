@@ -672,15 +672,22 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             need_distance_check = success;
         }
 
+        int tries = 500;
         do
             newpos = random_in_bounds();
-        while (_cell_vetoes_teleport(newpos)
-               || (newpos - old_pos).abs() > dist_range(range)
-               || need_distance_check && (newpos - centre).abs()
-                                          <= dist_range(min(range - 1, 34))
-               || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO));
-
-        if (newpos == old_pos)
+        while (--tries > 0
+               && (_cell_vetoes_teleport(newpos)
+                   || (newpos - old_pos).abs() > dist_range(range)
+                   || need_distance_check && (newpos - centre).abs()
+                                              <= dist_range(min(range - 1, 34))
+                   || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO)));
+        
+        // Running out of tries should only happen for limited-range teleports,
+        // which are all involuntary; no message.  Return false so it doesn't
+        // count as a random teleport for Xom purposes.
+        if (tries == 0)
+            return false;
+        else if (newpos == old_pos)
             mpr("Your surroundings flicker for a moment.");
         else if (you.see_cell(newpos))
             mpr("Your surroundings seem slightly different.");
