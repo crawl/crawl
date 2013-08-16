@@ -5,7 +5,7 @@
 #                   define a set of monsters. Use large_abstract.des for vaults
 #                   which don't have a special theme.
 #
-# Note that all maps for the Vaults branch system (including Vaults:8) reside in
+# Note that all maps for the Vaults branch system (including Vaults:$) reside in
 # vaults.des.
 ###############################################################################
 
@@ -207,7 +207,7 @@ ENDMAP
 # Steading of the Giant Chief
 #
 NAME:    giant_chief_lemuel
-DEPTH:   D:11-22, Orc:3-4
+DEPTH:   D:11-22, Orc:3-
 ORIENT:  north
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    hill giant, cyclops
@@ -458,7 +458,7 @@ ENDMAP
 NAME:   orc_temple
 ORIENT: southwest
 TAGS:   no_rotate
-DEPTH:  D:14-26, Orc:2-4
+DEPTH:  D:14-26, Orc:2-
 MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
 MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
 KFEAT:  C = altar_beogh
@@ -853,10 +853,10 @@ xwwwww..................................wwwww...
 ................................................
 ENDMAP
 
-NAME:   due_tower_of_gloom
+NAME:   due_jory_tower
 ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
-DEPTH:  D:19-27
+DEPTH:  D:19-
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / phantom / shadow / shadow wraith
 MONS:   ghost moth, Jory, vampire knight
 MONS:   raven
@@ -871,7 +871,7 @@ SUBST:  I = G
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
                 size = 30, size_buildup_amnt = 1, \
-                size_buildup_time = 10, cloud_type = "gloom" \
+                size_buildup_time = 10, cloud_type = "purple smoke" \
             }
 # Final subst
 SUBST:  MV = .
@@ -887,7 +887,7 @@ veto {{
 MAP
   @@@@@@ @@@@@@@@@@@@@@@@@@@ @@@@@@
 xx......v...................v.......xxxxxxxxxxxxxxxxx
-xx......v..G......V......G..v.......xxxxxxxxxxxxxxxxx
+xx......v..G.............G..v.......xxxxxxxxxxxxxxxxx
 xx......v...................v.......xxxxxxxxxxxxxxxxx
 xxxxxxxxvvvvvv.........vvvvvvxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxvvvvvvvvvvvvv===vvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxxx
@@ -923,7 +923,7 @@ ENDMAP
 #
 NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
-DEPTH:  D:17-27, Crypt:1-4
+DEPTH:  D:17-, Crypt:1-4
 ORIENT: southeast
 SUBST:  ~ = ~:2 .:3
 SUBST:  . = ~:1 .:9
@@ -943,9 +943,8 @@ MONS:   patrolling silent spectre
 MONS:   curse skull, soul eater
 # Inmates are monsters capable of blinking, summoning or airstriking.
 MONS:   ogre mage / deep elf mage / wizard / necromancer / \
-        merfolk aquamancer / spriggan air mage / deep dwarf necromancer / \
-        orc sorcerer / deep elf sorcerer / kobold demonologist / \
-        deep elf summoner
+        merfolk aquamancer / spriggan air mage / orc sorcerer / \
+        deep elf sorcerer / kobold demonologist / deep elf summoner
 MONS:   draconian shifter / draconian annihilator / lich  / \
         deep elf annihilator / deep elf demonologist
 NSUBST: 4 = 6:5 / *:4
@@ -1125,7 +1124,7 @@ ENDMAP
 NAME:   evilmike_iron_armoury
 ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-27
+DEPTH:  D:11-
 KFEAT:  _ = altar_okawaru
 SUBST:  = = nv
 FTILE:  '+Gvc12345_defghijk = floor_hall
@@ -1273,12 +1272,12 @@ SUBST:  b = c
 KFEAT:  _ = altar_kikubaaqudgha
 : if you.absdepth() < 19 then
 MONS:   zombie / skeleton / w:5 simulacrum
-MONS:   w:2 necromancer / w:1 deep dwarf necromancer, deep elf death mage, \
+MONS:   necromancer, deep elf death mage, \
         w:5 deep elf death mage / nothing
 MONS:   w:4 soul eater / w:1 reaper, reaper, reaper / nothing
 : elseif you.absdepth() < 24 then
 MONS:   zombie / skeleton / w:5 simulacrum
-MONS:   necromancer / w:5 deep dwarf necromancer / w:5 deep elf death mage, lich, \
+MONS:   necromancer w:15 / w:5 deep elf death mage, lich, \
         lich / deep elf death mage / nothing
 MONS:   soul eater / w:5 reaper, reaper, shadow fiend / w:5 reaper
 : else
@@ -1290,7 +1289,6 @@ MONS:   reaper / soul eater, reaper, shadow fiend
 MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
             size = 1, walk_dist = 1, spread_rate= 33 }
-MARKER: V = lua:props_marker { feature_description = "foul fountain" }
 SUBST:  % = %*|$
 SUBST:  A = 1.
 MAP
@@ -1375,7 +1373,7 @@ ENDMAP
 # Tagged "extra" because I find it too small to take the full vault slot.
 #
 NAME: lightli_too_deep
-DEPTH: D:17-27
+DEPTH: D:17-
 TAGS: no_monster_gen extra
 ORIENT: northeast
 MONS: balrug

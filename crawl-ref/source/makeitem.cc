@@ -712,7 +712,7 @@ void item_colour(item_def &item)
             break;
 
 #if TAG_MAJOR_VERSION == 34
-        case MISC_EMPTY_EBONY_CASKET:
+        case MISC_BUGGY_EBONY_CASKET:
             item.colour = DARKGREY;
             break;
 #endif
@@ -1325,9 +1325,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(30))
                 rc = SPWPN_HOLY_WRATH;
 
-            if (item.sub_type == WPN_SCYTHE && one_chance_in(6))
-                rc = SPWPN_REAPING;
-
             if (one_chance_in(4))
                 rc = SPWPN_PROTECTION;
             // **** intentional fall through here ****
@@ -1774,7 +1771,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     20, SPMSL_SLOW,
                                     20, SPMSL_CONFUSION,
                                     10, SPMSL_PARALYSIS,
-                                    10, SPMSL_RAGE,
+                                    10, SPMSL_FRENZY,
                                     nw, SPMSL_POISONED,
                                     0);
         break;
@@ -1878,7 +1875,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_SICKNESS:
 #endif
-    case SPMSL_RAGE:
+    case SPMSL_FRENZY:
         return (type == MI_NEEDLE);
 
     case SPMSL_BLINDING:
@@ -2852,6 +2849,8 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
             item.plus = random2(SK_UNARMED_COMBAT);
             if (item.plus == SK_STABBING)
                 item.plus = SK_UNARMED_COMBAT;
+            if (item.plus == SK_TRAPS)
+                item.plus = SK_STEALTH;
         }
 #else
             item.plus = random2(SK_UNARMED_COMBAT + 1);
@@ -3086,7 +3085,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
              || item.sub_type == MISC_DECK_OF_PUNISHMENT
              || item.sub_type == MISC_QUAD_DAMAGE
 #if TAG_MAJOR_VERSION == 34
-             || item.sub_type == MISC_EMPTY_EBONY_CASKET
+             || item.sub_type == MISC_BUGGY_EBONY_CASKET
 #endif
              // Pure decks are rare in the dungeon.
              || (item.sub_type == MISC_DECK_OF_ESCAPE

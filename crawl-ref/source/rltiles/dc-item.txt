@@ -41,9 +41,6 @@ orcish_flail2
 dwarven_flail1 WPN_FLAIL_DWARF
 dwarven_flail2
 %rim 1
-spiked_flail1 WPN_SPIKED_FLAIL
-spiked_flail2
-spiked_flail3
 dire_flail1 WPN_DIRE_FLAIL
 dire_flail2
 dire_flail3
@@ -76,10 +73,10 @@ bullwhip2
 %rim 0
 sacred_scourge WPN_SACRED_SCOURGE
 trishula WPN_TRISHULA
-%rim 1
 demon_whip WPN_DEMON_WHIP
 giant_club WPN_GIANT_CLUB
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
+%rim 1
 
 ##Edged
 dagger WPN_DAGGER
@@ -230,7 +227,6 @@ glaive2
 glaive3
 orcish_glaive1 WPN_GLAIVE_ORC
 orcish_glaive2
-%rim 1
 bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
@@ -238,7 +234,6 @@ orcish_bardiche WPN_BARDICHE_ORC
 orcish_bardiche2
 
 ##Staff
-%rim 0
 staff WPN_STAFF
 %rim 1
 quarterstaff WPN_QUARTERSTAFF
@@ -319,7 +314,7 @@ i-electrocution BRAND_ELECTRIC
 i-sickness BRAND_SICKNESS
 i-slowing BRAND_SLOWING
 i-paralysis BRAND_PARALYSIS
-i-berserk-rage BRAND_RAGE
+i-frenzy BRAND_FRENZY
 i-sleep BRAND_SLEEP
 %rim 1
 %sdir item/weapon/ranged
@@ -943,7 +938,7 @@ i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
 i-decay POT_DECAY
 # please remove when TAG_MAJOR_VERSION is bumped
-i-fizzing POT_REMOVE_ME
+i-confusion POT_REMOVE_ME
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
 i-restore-abilities POT_RESTORE_ABILITIES
@@ -954,7 +949,8 @@ i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
-i-fizzing POT_FIZZING
+# please remove when TAG_MAJOR_VERSION is bumped
+i-confusion POT_REMOVE_ME2
 i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
 %back none
 %rim 1
@@ -1079,7 +1075,6 @@ misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
 misc_phial MISC_PHIAL_OF_FLOODS
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
-misc_box MISC_EMPTY_EBONY_CASKET
 misc_box MISC_BOX_OF_BEASTS
 misc_disc MISC_DISC_OF_STORMS
 %rim 0

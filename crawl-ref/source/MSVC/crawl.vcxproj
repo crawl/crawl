@@ -97,7 +97,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h
@@ -126,7 +126,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h
@@ -157,7 +157,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h
@@ -186,7 +186,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h

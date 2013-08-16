@@ -43,10 +43,10 @@ TAGS:   transparent extra uniq_lab
 # (1-500/10^4)^24 = ~29% chance of NOT placing a Labyrinth, ~71% chance
 # of getting a Labyrinth every game, skewed towards earlier depths.
 # (Mar 2013) A long while later, there is general agreement that something
-# should be changed about labyrinths to address percieved tedium.
+# should be changed about labyrinths to address perceived tedium.
 # For now, trimming spawning depths to keep the minotaur more dangerous.
 CHANCE: 5%
-DEPTH:  D:11-18, Orc:4, Dwarf, Lair
+DEPTH:  D:11-18, Orc:$, Lair
 : lab_portal(_G)
 MAP
 O

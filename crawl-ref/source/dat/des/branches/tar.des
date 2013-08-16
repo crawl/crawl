@@ -65,7 +65,7 @@ end
 ##############################################################################
 
 NAME:   lemuel_nasty_pond
-DEPTH:  Tar:*
+DEPTH:  Tar
 TAGS:   no_pool_fixup no_rotate
 MONS:   w:2 col:darkgrey plant name:withered name_adjective               \
         tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
@@ -125,7 +125,7 @@ KPROP: "H-}]) = no_rtele_into
 KPROP: "H-}]) = no_ctele_into
 MARKER: H = lua:fog_machine { \
                 pow_min = 10, pow_max = 10, delay = 10, \
-                size = 3, walk_dist = 1, cloud_type = "gloom" }
+                size = 3, walk_dist = 1, cloud_type = "purple smoke" }
 MAP
 cccccccccccccccccccccc.......
 c...2...............cG.5.....

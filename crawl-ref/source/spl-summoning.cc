@@ -2374,7 +2374,7 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     }
 
     //jmf: Kiku sometimes deflects this
-    if (you.religion != GOD_KIKUBAAQUDGHA
+    if (!you_worship(GOD_KIKUBAAQUDGHA)
         || player_under_penance() || you.piety < piety_breakpoint(3)
         || !x_chance_in_y(you.piety, MAX_PIETY))
     {
@@ -2586,9 +2586,12 @@ static bool _battlesphere_can_mirror(spell_type spell)
 {
     return ((spell_typematch(spell, SPTYP_CONJURATION)
             && spell_to_zap(spell) != NUM_ZAPS)
-            || spell == SPELL_MEPHITIC_CLOUD
-            || spell == SPELL_IOOD
-            || spell == SPELL_DAZZLING_SPRAY);
+            || spell == SPELL_FREEZE
+            || spell == SPELL_STICKY_FLAME
+            || spell == SPELL_SANDBLAST
+            || spell == SPELL_AIRSTRIKE
+            || spell == SPELL_DAZZLING_SPRAY
+            || spell == SPELL_SEARING_RAY);
 }
 
 bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)

@@ -69,9 +69,7 @@ enum monster_info_flags
     MB_BLIND,
     MB_DUMB,
     MB_MAD,
-#if TAG_MAJOR_VERSION == 34
     MB_CLINGING,
-#endif
     MB_NAME_ZOMBIE,
     MB_PERM_SUMMON,
     MB_INNER_FLAME,
@@ -102,6 +100,7 @@ enum monster_info_flags
     MB_WIND_AIDED,
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
     MB_SUMMONED_CAPPED,    // Expiring due to summons cap
+    MB_TOXIC_RADIANCE,
     NUM_MB_FLAGS
 };
 

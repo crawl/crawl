@@ -308,6 +308,36 @@ static void _compare_blood_quantity(item_def &stack, int timer_size)
     }
 }
 
+static void _init_coagulated_blood(item_def &stack, int count, item_def &old,
+                                   vector<int> &age_timer)
+{
+    stack.base_type = OBJ_POTIONS;
+    stack.sub_type  = POT_BLOOD_COAGULATED;
+    stack.quantity  = count;
+    stack.plus      = 0;
+    stack.plus2     = 0;
+    stack.special   = 0;
+    stack.flags     = old.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+                                   | ISFLAG_NO_PICKUP | ISFLAG_SUMMONED
+                                   | ISFLAG_DROPPED_BY_ALLY);
+    stack.inscription = old.inscription;
+    item_colour(stack);
+
+    CrawlHashTable &props_new = stack.props;
+    props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
+    CrawlVector &timer_new = props_new["timer"].get_vector();
+
+    int val;
+    while (!age_timer.empty())
+    {
+        val = age_timer[age_timer.size() - 1];
+        age_timer.pop_back();
+        timer_new.push_back(val);
+    }
+    ASSERT(timer_new.size() == count);
+    props_new.assert_validity();
+}
+
 void maybe_coagulate_blood_potions_floor(int obj)
 {
     item_def &blood = mitm[obj];
@@ -444,28 +474,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
         return;
 
     item_def &item = mitm[o];
-    item.base_type = OBJ_POTIONS;
-    item.sub_type  = POT_BLOOD_COAGULATED;
-    item.quantity  = coag_count;
-    item.plus      = 0;
-    item.plus2     = 0;
-    item.special   = 0;
-    item.flags     = 0;
-    item_colour(item);
-
-    CrawlHashTable &props_new = item.props;
-    props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
-    CrawlVector &timer_new = props_new["timer"].get_vector();
-
-    int val;
-    while (!age_timer.empty())
-    {
-        val = age_timer[age_timer.size() - 1];
-        age_timer.pop_back();
-        timer_new.push_back(val);
-    }
-    ASSERT(timer_new.size() == coag_count);
-    props_new.assert_validity();
+    _init_coagulated_blood(item, coag_count, blood, age_timer);
 
     if (blood.held_by_monster())
         move_item_to_grid(&o, blood.holding_monster()->pos());
@@ -682,33 +691,10 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     {
         item_def &item   = you.inv[freeslot];
         item.clear();
-
         item.link        = freeslot;
         item.slot        = index_to_letter(item.link);
-        item.base_type   = OBJ_POTIONS;
-        item.sub_type    = POT_BLOOD_COAGULATED;
-        item.quantity    = coag_count;
-        item.plus        = 0;
-        item.plus2       = 0;
-        item.special     = 0;
-        item.flags       = (ISFLAG_KNOW_TYPE & ISFLAG_BEEN_IN_INV);
         item.pos.set(-1, -1);
-        item_colour(item);
-
-        CrawlHashTable &props_new = item.props;
-        props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
-        CrawlVector &timer_new = props_new["timer"].get_vector();
-
-        int val;
-        while (!age_timer.empty())
-        {
-            val = age_timer[age_timer.size() - 1];
-            age_timer.pop_back();
-            timer_new.push_back(val);
-        }
-
-        ASSERT(timer_new.size() == coag_count);
-        props_new.assert_validity();
+        _init_coagulated_blood(item, coag_count, blood, age_timer);
 
         blood.quantity -= coag_count + rot_count;
         _compare_blood_quantity(blood, timer.size());
@@ -766,31 +752,8 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     o = get_mitm_slot();
     if (o == NON_ITEM)
         return false;
+    _init_coagulated_blood(mitm[o], coag_count, blood, age_timer);
 
-    // These values are common to all: {dlb}
-    mitm[o].base_type = OBJ_POTIONS;
-    mitm[o].sub_type  = POT_BLOOD_COAGULATED;
-    mitm[o].quantity  = coag_count;
-    mitm[o].plus      = 0;
-    mitm[o].plus2     = 0;
-    mitm[o].special   = 0;
-    mitm[o].flags     = (ISFLAG_KNOW_TYPE & ISFLAG_BEEN_IN_INV);
-    item_colour(mitm[o]);
-
-    CrawlHashTable &props_new = mitm[o].props;
-    props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
-    CrawlVector &timer_new = props_new["timer"].get_vector();
-
-    int val;
-    while (!age_timer.empty())
-    {
-        val = age_timer[age_timer.size() - 1];
-        age_timer.pop_back();
-        timer_new.push_back(val);
-    }
-
-    ASSERT(timer_new.size() == coag_count);
-    props_new.assert_validity();
     move_item_to_grid(&o, you.pos());
 
     if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
@@ -1247,11 +1210,11 @@ void search_around()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    int base_skill = you.skill(SK_TRAPS, 100);
+    int base_skill = you.experience_level * 100 / 3;
     int skill = (2/(1+exp(-(base_skill+120)/325.0))-1) * 225
                 + (base_skill/200.0) + 15;
 
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         skill += you.piety * 2;
 
      if (you.duration[DUR_SWIFTNESS])
@@ -1297,7 +1260,6 @@ void search_around()
             mprf("You found %s trap!",
                  ptrap->name(DESC_A).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
-            practise(EX_TRAP_FOUND);
         }
     }
 }
@@ -1412,7 +1374,7 @@ bool go_berserk(bool intentional, bool potion)
         mpr("Finesse? Hah! Time to rip out guts!");
     }
 
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you_worship(GOD_CHEIBRIADOS))
     {
         // Che makes berserk not speed you up.
         // Unintentional would be forgiven "just this once" every time.
@@ -2288,7 +2250,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     }
     if (mon->friendly())
     {
-        if (you.religion == GOD_OKAWARU)
+        if (you_worship(GOD_OKAWARU))
         {
             adj = "your ally ";
 
@@ -2302,7 +2264,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     }
 
     if (is_unchivalric_attack(&you, mon)
-        && you.religion == GOD_SHINING_ONE
+        && you_worship(GOD_SHINING_ONE)
         && !tso_unchivalric_attack_safe_monster(mon))
     {
         adj += "helpless ";
@@ -2312,7 +2274,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     else if (mon->wont_attack())
         adj += "non-hostile ";
 
-    if (you.religion == GOD_JIYVA && mons_is_slime(mon)
+    if (you_worship(GOD_JIYVA) && mons_is_slime(mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
     {
         return true;
@@ -2436,29 +2398,6 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
         canned_msg(MSG_OK);
         return true;
     }
-}
-
-bool is_orckind(const actor *act)
-{
-    if (mons_genus(act->mons_species()) == MONS_ORC)
-        return true;
-
-    if (act->is_monster())
-    {
-        const monster* mon = act->as_monster();
-        if (mons_is_zombified(mon)
-            && mons_genus(mon->base_monster) == MONS_ORC)
-        {
-            return true;
-        }
-        if (mons_is_ghost_demon(mon->type)
-            && (player_genus(GENPC_ORCISH, mon->ghost->species)))
-        {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 bool is_dragonkind(const actor *act)
@@ -2633,6 +2572,10 @@ void maybe_id_resist(beam_type flavour)
 
     case BEAM_ELECTRICITY:
         _maybe_id_jewel(NUM_JEWELLERY, NUM_JEWELLERY, ARTP_ELECTRICITY);
+        break;
+
+    case BEAM_ACID:
+        _maybe_id_jewel(NUM_JEWELLERY, AMU_RESIST_CORROSION);
         break;
 
     case BEAM_POISON:

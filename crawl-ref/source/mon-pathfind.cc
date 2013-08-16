@@ -56,13 +56,15 @@ int mons_tracking_range(const monster* mon)
 
     if (range)
     {
-        if (mons_is_native_in_branch(mon))
+        if (mon->can_cling_to_walls())
+            range += 4;
+        else if (mons_is_native_in_branch(mon))
             range += 3;
         else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
             range++;
     }
 
-    if (you.penance[GOD_ASHENZARI])
+    if (player_under_penance(GOD_ASHENZARI))
         range *= 5;
 
     if (mons_foe_is_marked(mon) || mon->has_ench(ENCH_HAUNTING))
@@ -380,7 +382,7 @@ vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (can_go_straight(mons, pos, path[i]) && mons_can_traverse(mons, path[i]))
+        if (can_go_straight(mons, pos, path[i]) && mons_traversable(path[i]))
             continue;
         else
         {
@@ -427,9 +429,18 @@ bool monster_pathfind::traversable(const coord_def& p)
     }
 
     if (mons)
-        return mons_can_traverse(mons, p);
+        return mons_traversable(p);
 
     return feat_has_solid_floor(grd(p));
+}
+
+// Checks whether a given monster can pass over a certain position, respecting
+// its preferred habit and capability of flight or opening doors.
+bool monster_pathfind::mons_traversable(const coord_def& p)
+{
+    return mons_can_traverse(mons, p) || mons->can_cling_to_walls()
+                                         && cell_is_clingable(pos)
+                                         && cell_can_cling_to(pos, p);
 }
 
 int monster_pathfind::travel_cost(coord_def npos)
@@ -464,6 +475,9 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
         return 2;
 
     const monster_type mt = mons_base_type(mons);
+    const bool ground_level = !mons_airborne(mt, -1, false)
+                              && !(mons->can_cling_to_walls()
+                                   && cell_is_clingable(npos));
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
@@ -491,7 +505,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
 
         // Mechanical traps can be avoided by flying, as can shafts, and
         // tele traps are never traversable anyway.
-        if (knows_trap && !mons_airborne(mt, -1, false))
+        if (knows_trap && ground_level)
             return 2;
     }
 

@@ -170,8 +170,8 @@ ENDMAP
 ############################################################################
 NAME:     lemuel_castle_with_subvaults
 TAGS:     layout_city
-DEPTH:    D:3-27
-PLACE:    D:27
+DEPTH:    D:3-
+PLACE:    D:$
 ORIENT:   northwest
 : castle_lemuel_subvault_setup(_G)
 SUBVAULT: A : lemuel_castle_interior

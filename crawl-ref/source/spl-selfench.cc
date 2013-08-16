@@ -16,6 +16,8 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "options.h"
+#include "religion.h"
 #include "shout.h"
 #include "spl-cast.h"
 #include "spl-transloc.h"
@@ -28,7 +30,7 @@ int allowed_deaths_door_hp(void)
 {
     int hp = you.skill(SK_NECROMANCY) / 2;
 
-    if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
+    if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance())
         hp += you.piety / 15;
 
     return max(hp, 1);
@@ -276,11 +278,14 @@ int cast_selective_amnesia(string *pre_msg)
     int slot;
 
     // Pick a spell to forget.
+    mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+    keyin = Options.auto_list
+            ? list_spells(false, false, false, "Forget which spell?")
+            : get_ch();
+    redraw_screen();
+
     while (true)
     {
-        mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
-        keyin = get_ch();
-
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
@@ -289,13 +294,14 @@ int cast_selective_amnesia(string *pre_msg)
 
         if (keyin == '?' || keyin == '*')
         {
-            keyin = list_spells(false, false, false);
+            keyin = list_spells(false, false, false, "Forget which spell?");
             redraw_screen();
         }
 
         if (!isaalpha(keyin))
         {
             mesclr();
+            keyin = get_ch();
             continue;
         }
 
@@ -303,7 +309,11 @@ int cast_selective_amnesia(string *pre_msg)
         slot = get_spell_slot_by_letter(keyin);
 
         if (spell == SPELL_NO_SPELL)
+        {
             mpr("You don't know that spell.");
+            mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+            keyin = get_ch();
+        }
         else
             break;
     }
@@ -341,7 +351,7 @@ spret_type cast_song_of_slaying(int pow, bool fail)
 
     you.increase_duration(DUR_SONG_OF_SLAYING, 20 + pow / 3, 20 + pow / 3);
 
-    noisy(12, you.pos());
+    noisy(10, you.pos());
 
     you.props["song_of_slaying_bonus"] = 0;
     return SPRET_SUCCESS;

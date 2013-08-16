@@ -593,6 +593,8 @@ static void _userdef_run_stoprunning_hook(void)
 #ifdef CLUA_BINDINGS
     if (you.running)
         clua.callfn("ch_stop_running", "s", _run_mode_name(you.running));
+#else
+    UNUSED(_run_mode_name);
 #endif
 }
 
@@ -2198,9 +2200,9 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         case '\n': case '\r':
             return ID_REPEAT;
         case '<':
-            return (allow_updown? ID_UP : ID_CANCEL);
+            return (allow_updown ? ID_UP : ID_CANCEL);
         case '>':
-            return (allow_updown? ID_DOWN : ID_CANCEL);
+            return (allow_updown ? ID_DOWN : ID_CANCEL);
         case CONTROL('P'):
             {
                 const branch_type parent = _find_parent_branch(curr.branch);
@@ -3005,7 +3007,7 @@ void start_explore(bool grab_items)
     // Forget interrupted butchering.
     maybe_clear_weapon_swap();
 
-    you.running = (grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
+    you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 
     if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
     {
@@ -3224,7 +3226,7 @@ string stair_info::describe() const
         return make_stringf(" (-> %s@(%d,%d)%s%s)", lp.id.describe().c_str(),
                              lp.pos.x, lp.pos.y,
                              guessed_pos? " guess" : "",
-                             type == PLACEHOLDER? " placeholder" : "");
+                             type == PLACEHOLDER ? " placeholder" : "");
     }
     else if (destination.id.is_valid())
         return make_stringf(" (->%s (?))", destination.id.describe().c_str());

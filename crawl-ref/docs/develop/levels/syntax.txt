@@ -69,7 +69,7 @@ Features
  A - Stone arch.
  B - Altar. These are assigned specific types (e.g. of Zin etc) in dungeon.cc,
      in order.
- C - Random Altar.
+ C - Random altar.
 
  G - Granite statue (does nothing) - you can see through but not walk through.
      Also, sight-based effects like smiting work past granite statues, as does
@@ -145,7 +145,7 @@ DESC:     readable name
           Map descriptions are also written to scores and logfile
           entries.
 
-ORIENT:   (float |encompass | north | northwest | ... | southeast)
+ORIENT:   (float | encompass | north | northwest | ... | southeast)
 
           Some kind of ORIENT: line is mandatory for vaults; skipping
           ORIENT: makes your map a minivault. As a rule of thumb, if
@@ -202,9 +202,9 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           (Anywhere in the dungeon between depths 7-20, but never in the Orcish
           Mines.)
 
-            DEPTH: Lair:*
+            DEPTH: Lair
 
-          (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair".)
+          (Anywhere in the Lair. Can also be expressed as "DEPTH: Lair:*".)
 
           Maps that do not specify a DEPTH: attribute will inherit their depth
           constraints from the closest preceding default-depth: line. If there
@@ -338,12 +338,18 @@ PLACE:    Used to specify certain special levels. Existing special levels
 
 TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           TAGS: lines, or use \ for very long ones. Valid tags are:
+          * Any KPROP name ("no_rtele_into", "no_tide", etc.): applies the
+             property to every square of the vault. See KPROP: below.
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
              the dungeon builder that the vault can be reused.
           * "chance_FOO": Maps can be tagged chance_ with any unique suffix
              to indicate that if the map's CHANCE roll is made, one of the maps
              tagged chance_FOO should be picked.
+          * "decor": this tag indicates that the vault is purely decorative, and
+             has neither threats nor items. Levels of the main Dungeon deeper than
+             D:12 have an 80% chance to place an extra vault with this tag; see
+             dungeon_decor in builder/decor.des .
           * "dummy": this tag indicates that the vault is a stub; if the dungeon
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
@@ -383,7 +389,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
-             the vaults with this tag can be used in a game.
+             the vaults with this tag can be used in a game. In particular,
+             late-Dungeon encompass vaults have the tag uniq_d_encompass, so
+             that only one will occur per game.
           * "luniq": specifies that this vault can be used only once on a
              given level. "luniq" is only relevant when used with "allow_dup".
           * "luniq_BAR": (luniq_ with any suffix) specifies that only one
@@ -510,7 +518,8 @@ ITEM:     (list of items, separated by comma)
           * "plus:N" and "plus2:N" set the item pluses for weapons, armour,
             jewellery (such as rings of intelligence or slaying), and
             throwing nets.
-          * "no_uniq" prevents the item from being turned into an artefact.
+          * "no_uniq" prevents the item from being turned into an artefact,
+            unless cancelled by an "allow_uniq" modifier.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality). This is independent of the level's depth,
             in contrast to placing items with * or | which just add a bonus
@@ -548,7 +557,7 @@ ITEM:     (list of items, separated by comma)
             chosen item isn't compatible with the desired race. If race is not
             explicitly set, this can result in boots being replaced by a
             barding.
-          * "ego:ego_name", where "ego_name" is something like  "running" or
+          * "ego:ego_name", where "ego_name" is something like "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego. The item must be fully specified, so
             trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
@@ -601,12 +610,22 @@ ITEM:     (list of items, separated by comma)
           For instance: "rat corpse", "18-headed hydra skeleton",
           "griffon chunk".
 
-          Corpses, skeletons and chunks are created with maximum
-          freshness (210), but may still rot away before the player
-          finds your vault. To prevent corpses from decaying, you
-          can define them using a "never_decay" property as:
+          Corpses, skeletons and chunks are by default created with maximum
+          freshness (210). They can be created already-rotting (freshness
+          99) with the "rotting" property:
 
-          ITEM: griffon corpse never_decay
+          ITEM: rotting griffon corpse
+          
+          Corpses may still rot away before the player finds your vault.
+          To prevent corpses from decaying, you can define them using a
+          "never_decay" property as:
+
+          ITEM: never_decay griffon corpse
+
+          Or combining the two, for a corpse that starts out rotten but
+          never rots away:
+
+          ITEM: rotting never_decay griffon corpse 
 
           However, direct use of "never_decay" is not recommended,
           since such items will not behave as the player expects.
@@ -796,7 +815,7 @@ MONS:     (list of monsters)
           or elven unless the item's race type is explicitly set otherwise.
 
           Limitations: If an item in the item list has alternatives,
-          there's no way to force all monsters dervied from that monster
+          there's no way to force all monsters derived from that monster
           spec to choose the same alternative. If a monster is given
           a random launcher, there is no way to force the ammo type to
           match the launcher type.
@@ -1431,8 +1450,20 @@ KPROP:    x = bloody
              in one flag, and disallows both random and controlled teleports.
              Use this for vaults with loot where the player is not supposed to
              get it by teleporting alone.
+          * "no_submerge": Monsters will not submerge in this square.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
+
+          Two additional named properties exist, but should be avoided:
+
+          * "highlight": The square will be highlighted in the X map in wizard
+            mode, and will appear in dumps as "?". For debugging use only; this
+            property should be removed before submitting vaults.
+          * "mold": The square is covered with mold. This property is reserved
+            for use by ballistomycetes and should in general not be set by vaults.
+
+          Properties can also be used as tags to apply to the entire vault:
+            TAGS: no_rtele_into no_tide
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the

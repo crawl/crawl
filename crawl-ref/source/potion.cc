@@ -355,7 +355,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
             xom_is_stimulated(50 / xom_factor);
         break;
 
+#if TAG_MAJOR_VERSION == 34
+    case POT_WATER:
     case POT_FIZZING:
+#endif
     case NUM_POTIONS:
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
@@ -458,11 +461,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         mpr("You feel protected.", MSGCH_DURATION);
         you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
         break;
-
-#if TAG_MAJOR_VERSION == 34
-    case POT_WATER:
-        break;
-#endif
     }
 
     return (!was_known && effect);

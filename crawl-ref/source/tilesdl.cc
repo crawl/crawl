@@ -1188,7 +1188,7 @@ void TilesFramework::place_minimap()
 
 int TilesFramework::calc_tab_lines(const int num_elements)
 {
-    // Integer divison rounded up
+    // Integer division rounded up
     return (num_elements - 1) / m_region_tab->mx + 1;
 }
 

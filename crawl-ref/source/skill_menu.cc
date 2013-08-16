@@ -562,7 +562,7 @@ string SkillMenuSwitch::get_help()
             vector<string> causes;
             if (you.attribute[ATTR_XP_DRAIN])
                 causes.push_back("draining");
-            if (you.penance[GOD_ASHENZARI])
+            if (player_under_penance(GOD_ASHENZARI))
                 causes.push_back("the power of Ashenzari");
             return "Skills reduced by "
                    + comma_separated_line(causes.begin(), causes.end())

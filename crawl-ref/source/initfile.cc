@@ -581,7 +581,6 @@ void game_options::set_default_activity_interrupts()
         // trash all queued delays, including travel.
         "interrupt_ascending_stairs = teleport",
         "interrupt_descending_stairs = teleport",
-        "interrupt_recite = teleport",
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
 
@@ -771,6 +770,7 @@ void game_options::reset_options()
     scroll_margin_y  = 2;
 
     autopickup_on    = 1;
+    autopickup_starting_ammo = true;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     default_manual_training = false;
 
@@ -1317,19 +1317,20 @@ void game_options::add_feature_override(const string &text)
     {
         if (feats[i] >= NUM_FEATURES)
             continue; // TODO: handle other object types.
-        feature_override fov;
-        fov.object.cls = SH_FEATURE;
-        fov.object.feat = feats[i];
-
-        fov.override.symbol         = read_symbol(iprops[0]);
-        fov.override.magic_symbol   = read_symbol(iprops[1]);
-        fov.override.colour         = str_to_colour(iprops[2], BLACK);
-        fov.override.map_colour     = str_to_colour(iprops[3], BLACK);
-        fov.override.seen_colour    = str_to_colour(iprops[4], BLACK);
-        fov.override.em_colour      = str_to_colour(iprops[5], BLACK);
-        fov.override.seen_em_colour = str_to_colour(iprops[6], BLACK);
-
-        feature_overrides.push_back(fov);
+        feature_def &fov(feature_overrides[feats[i]]);
+#define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
+                          fov.field = s;
+#define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
+                          fov.field = c;
+        SYM(0, symbol);
+        SYM(1, magic_symbol);
+        COL(2, colour);
+        COL(3, map_colour);
+        COL(4, seen_colour);
+        COL(5, em_colour);
+        COL(6, seen_em_colour);
+#undef SYM
+#undef COL
     }
 }
 
@@ -1452,6 +1453,9 @@ string read_init_file(bool runscript)
 
     for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
         Options.include(datafile_path(config_defaults[i]), false, runscript);
+#else
+    UNUSED(lua_builtins);
+    UNUSED(config_defaults);
 #endif
 
     Options.filename     = "extra opts first";
@@ -2412,6 +2416,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autopickup_on = 0;
     }
+    else BOOL_OPTION(autopickup_starting_ammo);
     else if (key == "default_friendly_pickup")
     {
         if (field == "none")

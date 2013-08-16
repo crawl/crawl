@@ -99,19 +99,6 @@ struct spell_desc
 },
 
 {
-    SPELL_STRIKING, "Striking",
-     0,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE, // rod of striking
-     1,
-     50,
-     5, 5,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_CONJURE_FLAME, "Conjure Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_GRID | SPFLAG_NOT_SELF,
@@ -1915,7 +1902,7 @@ struct spell_desc
      SPTYP_CONJURATION | SPTYP_HEXES,
      SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
      5,
-     100,
+     200,
      5, 5,
      0,
      NULL,
@@ -2788,7 +2775,7 @@ struct spell_desc
 {
     SPELL_MELEE, "melee",
      0,
-     SPFLAG_TESTING,
+     SPFLAG_BATTLE,
      1,
      0,
      -1, -1,
@@ -2971,9 +2958,9 @@ struct spell_desc
     SPELL_FORCE_LANCE, "Force Lance",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET,
-     2,
-     50,
-     3, 3,
+     5,
+     100,
+     4, 4,
      0,
      NULL,
      true,
@@ -3264,6 +3251,32 @@ struct spell_desc
      0,
      NULL,
      true,
+     false
+},
+
+{
+    SPELL_SEARING_RAY, "Searing Ray",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     2,
+     50,
+     4, 4,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_DISCORD, "Discord",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_HASTY,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
      false
 },
 

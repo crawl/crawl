@@ -373,6 +373,10 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
 
+// Option to allow all characters to enter wizmode on turn zero, regardless
+// of WIZ_NEVER status, or dgl permissioning.
+// #define TURN_ZERO_WIZARD
+
 #define SAVE_SUFFIX ".cs"
 
 // If you are installing Crawl for multiple users, define SAVE_DIR

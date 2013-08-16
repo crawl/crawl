@@ -58,7 +58,7 @@ ENDMAP
 # Regular vaults for non-dungeon branches.
 #
 NAME: dummy_balancer_other
-DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider, Dwarf
+DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider
 # Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
 # by depth.
 TAGS: dummy
@@ -72,7 +72,7 @@ ENDMAP
 # Minivaults
 #
 NAME: mini_dummy
-DEPTH: 1-50, !D:1-27
+DEPTH: 1-50, !D
 TAGS: dummy
 WEIGHT: 90
 MAP

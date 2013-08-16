@@ -588,8 +588,7 @@ void destroy_item(int dest, bool never_created)
 static void _handle_gone_item(const item_def &item)
 {
     if (player_in_branch(BRANCH_ABYSS)
-        && place_branch(item.orig_place) == BRANCH_ABYSS
-        && !(item.flags & ISFLAG_BEEN_IN_INV))
+        && place_branch(item.orig_place) == BRANCH_ABYSS)
     {
         if (is_unrandom_artefact(item))
             set_unique_item_status(item, UNIQ_LOST_IN_ABYSS);
@@ -1514,7 +1513,7 @@ int find_free_slot(const item_def &i)
     }
 
     // Either searchforward is true, or search backwards failed and
-    // we re-try searching the oposite direction.
+    // we re-try searching the opposite direction.
 
     int badslot = -1;
     // Return first free slot
@@ -1543,7 +1542,7 @@ static void _got_gold(item_def& item, int quant, bool quiet)
 {
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
-    if (you.religion == GOD_ZIN && !(item.flags & ISFLAG_THROWN))
+    if (you_worship(GOD_ZIN) && !(item.flags & ISFLAG_THROWN))
         quant -= zin_tithe(item, quant, quiet);
     if (quant <= 0)
         return;
@@ -1761,7 +1760,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
 
-        if (you.religion == GOD_CHEIBRIADOS)
+        if (you_worship(GOD_CHEIBRIADOS))
             simple_god_message(" tells them not to hurry.");
 
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
@@ -2080,7 +2079,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_MOVED, pos, 0, item, -1, dest), pos);
 
-    // Now move the item to its new possition...
+    // Now move the item to its new position...
     move_item_to_grid(&item, dest);
 
     return true;
@@ -2773,7 +2772,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return _item_different_than_inv(item, _similar_jewellery);
 
     case OBJ_FOOD:
-        if (you.religion == GOD_FEDHAS && is_fruit(item))
+        if (you_worship(GOD_FEDHAS) && is_fruit(item))
             return true;
 
         if (is_inedible(item))
@@ -3222,7 +3221,7 @@ bool item_def::is_greedy_sacrificeable() const
     if (!god_likes_items(you.religion, true))
         return false;
 
-    if (you.religion == GOD_NEMELEX_XOBEH
+    if (you_worship(GOD_NEMELEX_XOBEH)
         && !check_nemelex_sacrificing_item_type(*this)
         || flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
         || item_is_stationary(*this))
@@ -4134,13 +4133,6 @@ void corrode_item(item_def &item, actor *holder)
         return;
     }
 
-    how_rusty--;
-
-    if (item.base_type == OBJ_WEAPONS)
-        item.plus2 = how_rusty;
-    else
-        item.plus  = how_rusty;
-
     if (holder && holder->is_player())
     {
         mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
@@ -4166,4 +4158,11 @@ void corrode_item(item_def &item, actor *holder)
                  item.name(DESC_PLAIN).c_str());
         }
     }
+
+    how_rusty--;
+
+    if (item.base_type == OBJ_WEAPONS)
+        item.plus2 = how_rusty;
+    else
+        item.plus  = how_rusty;
 }

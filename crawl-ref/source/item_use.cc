@@ -21,6 +21,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "food.h"
+#include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
@@ -41,9 +42,11 @@
 #include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "random.h"
 #include "religion.h"
 #include "shout.h"
 #include "skills.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -246,17 +249,20 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
         return true;
 
-    // Sublimation of Blood.
-    if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-        return false;
-
-    if (item.base_type == OBJ_FOOD)
-        return (item.sub_type == FOOD_CHUNK);
-
-    if (item.base_type == OBJ_POTIONS && item_type_known(item))
+    // What follows pertains only to Sublimation of Blood and/or Simulacrum.
+    if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+        && !you.has_spell(SPELL_SIMULACRUM))
     {
-        return (item.sub_type == POT_BLOOD
-                || item.sub_type == POT_BLOOD_COAGULATED);
+        return false;
+    }
+
+    if (item.base_type == OBJ_FOOD && food_is_meaty(item))
+        return item.sub_type == FOOD_CHUNK || you.has_spell(SPELL_SIMULACRUM);
+
+    if (item.base_type == OBJ_POTIONS && item_type_known(item)
+        && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
+    {
+        return is_blood_potion(item);
     }
 
     return false;
@@ -431,8 +437,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
 static const char *shield_base_name(const item_def *shield)
 {
-    return (shield->sub_type == ARM_BUCKLER? "buckler"
-                                           : "shield");
+    return (shield->sub_type == ARM_BUCKLER ? "buckler"
+                                            : "shield");
 }
 
 static const char *shield_impact_degree(int impact)
@@ -1872,7 +1878,7 @@ void zap_wand(int slot)
             break;
 
         case WAND_HEAL_WOUNDS:
-            if (you.religion == GOD_ELYVILON)
+            if (you_worship(GOD_ELYVILON))
             {
                 targ_mode = TARG_ANY;
                 break;
@@ -2167,6 +2173,8 @@ void drink(int slot)
         return;
     }
 
+    zin_recite_interrupt();
+
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
@@ -2324,7 +2332,7 @@ static bool _drink_fountain()
 }
 
 static void _explosion(coord_def where, actor *agent, beam_type flavour,
-                       string name, string cause)
+                       int colour, string name, string cause)
 {
     bolt beam;
     beam.is_explosion = true;
@@ -2336,25 +2344,124 @@ static void _explosion(coord_def where, actor *agent, beam_type flavour,
     beam.damage = dice_def(5, 8);
     beam.ex_size = 5;
     beam.flavour = flavour;
+    beam.colour = colour;
     beam.hit = AUTOMATIC_HIT;
     beam.name = name;
     beam.loudness = 10;
     beam.explode(true, false);
 }
 
-// Returns true if a message has already been printed (which will identify
-// the scroll).
-static bool _vorpalise_weapon(bool already_known)
+// XXX: Only checks brands that can be rebranded to,
+// there's probably a nicer way of doing this.
+static bool _god_hates_brand(const int brand)
 {
+    if (is_good_god(you.religion)
+        && (brand == SPWPN_DRAINING
+            || brand == SPWPN_VAMPIRICISM
+            || brand == SPWPN_CHAOS))
+    {
+        return true;
+    }
+
+    if (you_worship(GOD_SHINING_ONE) && brand == SPWPN_VENOM)
+        return true;
+
+    if (you_worship(GOD_CHEIBRIADOS) && brand == SPWPN_CHAOS)
+        return true;
+
+    return false;
+}
+
+static void _rebrand_weapon(item_def& wpn)
+{
+    const int old_brand = get_weapon_brand(wpn);
+    int new_brand = old_brand;
+    const string itname = wpn.name(DESC_YOUR);
+
+    // you can't rebrand blessed weapons but trying will get you some cleansing flame
+    switch (wpn.sub_type)
+    {
+        case WPN_BLESSED_FALCHION:
+        case WPN_BLESSED_LONG_SWORD:
+        case WPN_BLESSED_SCIMITAR:
+        case WPN_EUDEMON_BLADE:
+        case WPN_BLESSED_DOUBLE_SWORD:
+        case WPN_BLESSED_GREAT_SWORD:
+        case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_SACRED_SCOURGE:
+        case WPN_TRISHULA:
+            return;
+    }
+
+    // now try and find an appropriate brand
+    while (old_brand == new_brand || _god_hates_brand(new_brand))
+    {
+        if (is_range_weapon(wpn))
+        {
+            new_brand = random_choose_weighted(
+                                    30, SPWPN_FLAME,
+                                    30, SPWPN_FROST,
+                                    20, SPWPN_VENOM,
+                                    20, SPWPN_VORPAL,
+                                    12, SPWPN_EVASION,
+                                    5, SPWPN_ELECTROCUTION,
+                                    3, SPWPN_CHAOS,
+                                    0);
+        }
+        else
+        {
+            new_brand = random_choose_weighted(
+                                    30, SPWPN_FLAMING,
+                                    30, SPWPN_FREEZING,
+                                    20, SPWPN_VENOM,
+                                    15, SPWPN_DRAINING,
+                                    15, SPWPN_VORPAL,
+                                    15, SPWPN_ELECTROCUTION,
+                                    12, SPWPN_PROTECTION,
+                                    8, SPWPN_VAMPIRICISM,
+                                    3, SPWPN_CHAOS,
+                                    0);
+        }
+    }
+
+    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
+
+    if (old_brand == SPWPN_DISTORTION)
+    {
+        // you can't get rid of distortion this easily
+        mprf("%s twongs alarmingly.", itname.c_str());
+
+        // from unwield_item
+        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
+                      "distortion unbrand");
+    }
+}
+
+static void _vorpalise_weapon(bool already_known)
+{
+    mpr("Vorpalise which weapon?", MSGCH_PROMPT);
+    // Prompt before showing the weapon list.
+    if (Options.auto_list)
+        more();
+
+    // Don't take less time if we're swapping weapons.
+    int time = you.time_taken;
+    wield_weapon(false);
+    you.time_taken = time;
+
     if (!you.weapon())
-        return false;
+    {
+        mpr("You are not wielding a weapon.");
+        return;
+    }
 
     // Check if you're wielding a brandable weapon.
     item_def& wpn = *you.weapon();
     if (wpn.base_type != OBJ_WEAPONS || wpn.sub_type == WPN_BLOWGUN
         || is_artefact(wpn))
     {
-        return false;
+        mpr("You can't vorpalise that.");
+        return;
     }
 
     you.wield_change = true;
@@ -2366,66 +2473,71 @@ static bool _vorpalise_weapon(bool already_known)
         mprf("%s emits a brilliant flash of light!",
              wpn.name(DESC_YOUR).c_str());
         set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
-        return true;
+        return;
     }
 
-    // If there's a permanent brand, fail.
+    // If there's a permanent brand, try to rebrand it.
+    bool rebranded = false;
     if (you.duration[DUR_WEAPON_BRAND] == 0)
-        return false;
+    {
+        rebranded = true;
+        _rebrand_weapon(wpn);
+    }
 
-    // There's a temporary brand, attempt to make it permanent.
+    // There's a temporary or new brand, attempt to make it permanent.
     const string itname = wpn.name(DESC_YOUR);
     bool success = true;
-    bool msg = true;
 
     switch (get_weapon_brand(wpn))
     {
     case SPWPN_VORPAL:
-        if (get_vorpal_type(wpn) != DVORP_CRUSHING)
-            mprf("%s's sharpness seems more permanent.", itname.c_str());
-        else
-            mprf("%s's heaviness feels very stable.", itname.c_str());
+    case SPWPN_PROTECTION:
+    case SPWPN_EVASION:
+        if (rebranded)
+        {
+            alert_nearby_monsters();
+            mprf("%s emits a brilliant flash of light!",itname.c_str());
+        }
+        else // should be VORPAL only
+        {
+            if (get_vorpal_type(wpn) != DVORP_CRUSHING)
+                mprf("%s's sharpness seems more permanent.", itname.c_str());
+            else
+                mprf("%s's heaviness feels very stable.", itname.c_str());
+        }
         break;
 
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
-        mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        immolation(10, IMMOLATION_AFFIX, you.pos(), already_known, &you);
+        mprf("%s is engulfed in an explosion of fire!", itname.c_str());
+        immolation(10, IMMOLATION_AFFIX, already_known);
         break;
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
-                                  (already_known) ? &you : NULL, true)
-            != SPRET_SUCCESS)
-        {
-            canned_msg(MSG_OK);
-            success = false;
-        }
-        else
-            mprf("%s is covered with a thick layer of frost!", itname.c_str());
+        mprf("%s is covered with a thin layer of ice!", itname.c_str());
+        cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
+                              (already_known) ? &you : NULL,
+                              true, false, false, false);
         break;
 
     case SPWPN_DRAINING:
+    case SPWPN_VAMPIRICISM:
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
         drain_exp(true, 100);
         break;
 
     case SPWPN_VENOM:
-        if (cast_los_attack_spell(SPELL_OLGREBS_TOXIC_RADIANCE, 60,
-                                  (already_known) ? &you : NULL, true)
-            != SPRET_SUCCESS)
-        {
-            canned_msg(MSG_OK);
-            success = false;
-        }
+        if (rebranded)
+            mprf("%s drips with poison.", itname.c_str());
         else
             mprf("%s seems more permanently poisoned.", itname.c_str());
+        toxic_radiance_effect(&you, 1);
         break;
 
     case SPWPN_ELECTROCUTION:
         mprf("%s releases a massive orb of lightning.", itname.c_str());
-        _explosion(you.pos(), &you, BEAM_ELECTRICITY, "electricity",
+        _explosion(you.pos(), &you, BEAM_ELECTRICITY, LIGHTCYAN, "electricity",
                    "electrocution affixation");
         break;
 
@@ -2434,8 +2546,7 @@ static bool _vorpalise_weapon(bool already_known)
         // need to affix it immediately, otherwise transformation will break it
         you.duration[DUR_WEAPON_BRAND] = 0;
         xom_is_stimulated(200);
-        // but the eruption _is_ guaranteed.  What it will do is not.
-        _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
+        _explosion(you.pos(), &you, BEAM_CHAOS, BLACK, "chaos eruption", "chaos affixation");
         switch (random2(coinflip() ? 2 : 4))
         {
         case 3:
@@ -2495,14 +2606,13 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_HOLY_WRATH:
         mprf("%s emits a blast of cleansing flame.", itname.c_str());
-        _explosion(you.pos(), &you, BEAM_HOLY, "cleansing flame",
-                   "holy wrath affixation");
+        _explosion(you.pos(), &you, BEAM_HOLY, YELLOW, "cleansing flame",
+                   rebranded ? "holy wrath rebrand" : "holy wrath affixation");
         success = false;
         break;
 
     default:
         success = false;
-        msg = false;
         break;
     }
 
@@ -2510,8 +2620,13 @@ static bool _vorpalise_weapon(bool already_known)
     {
         you.duration[DUR_WEAPON_BRAND] = 0;
         item_set_appearance(wpn);
+        // Might be rebranding to/from protection or evasion.
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+        // Might be removing antimagic.
+        calc_mp();
     }
-    return msg;
+    return;
 }
 
 bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
@@ -2877,8 +2992,7 @@ bool _is_cancellable_scroll(scroll_type scroll)
             || scroll == SCR_AMNESIA
             || scroll == SCR_REMOVE_CURSE
             || scroll == SCR_CURSE_ARMOUR
-            || scroll == SCR_CURSE_JEWELLERY
-            || scroll == SCR_VORPALISE_WEAPON);
+            || scroll == SCR_CURSE_JEWELLERY);
 }
 
 void read_scroll(int slot)
@@ -2986,9 +3100,7 @@ void read_scroll(int slot)
                 mpr("This weapon cannot be enchanted.");
                 return;
             }
-        // Fall-through.
-        case SCR_VORPALISE_WEAPON:
-            if (!you.weapon() || !is_weapon(*you.weapon()))
+            else if (!you.weapon() || !is_weapon(*you.weapon()))
             {
                 mpr("You are not wielding a weapon.");
                 return;
@@ -3019,7 +3131,7 @@ void read_scroll(int slot)
             break;
 
         case SCR_CURSE_ARMOUR:
-            if (you.religion == GOD_ASHENZARI
+            if (you_worship(GOD_ASHENZARI)
                 && !any_items_to_select(OSEL_UNCURSED_WORN_ARMOUR, true))
             {
                 return;
@@ -3027,7 +3139,7 @@ void read_scroll(int slot)
             break;
 
         case SCR_CURSE_JEWELLERY:
-            if (you.religion == GOD_ASHENZARI
+            if (you_worship(GOD_ASHENZARI)
                 && !any_items_to_select(OSEL_UNCURSED_WORN_JEWELLERY, true))
             {
                 return;
@@ -3041,6 +3153,8 @@ void read_scroll(int slot)
 
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
+
+    zin_recite_interrupt();
 
     // ... but some scrolls may still be cancelled afterwards.
     bool cancel_scroll = false;
@@ -3093,8 +3207,8 @@ void read_scroll(int slot)
         break;
 
     case SCR_BLINKING:
-        // XXX Because some checks in blink() are made before player get to
-        // choose target location it is possible "abuse" scrolls' free
+        // XXX Because some checks in blink() are made before players get to
+        // choose target location it is possible to "abuse" scrolls' free
         // cancelling to get some normally hidden information (i.e. presence
         // of (unidentified) -Tele gear).
         if (!alreadyknown)
@@ -3162,7 +3276,7 @@ void read_scroll(int slot)
         mprf("The scroll explodes in your %s!", you.hand_name(true).c_str());
 
         // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
-        immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);
+        immolation(10, IMMOLATION_SCROLL, alreadyknown);
         bad_effect = true;
         more();
         break;
@@ -3198,22 +3312,8 @@ void read_scroll(int slot)
 
     case SCR_VORPALISE_WEAPON:
         if (!alreadyknown)
-            mpr(pre_succ_msg);
-        id_the_scroll = _vorpalise_weapon(alreadyknown);
-        if (!id_the_scroll)
-        {
-            if (alreadyknown)
-            {
-                mpr("This will not work.");
-                cancel_scroll = true;
-                break;
-            }
-            else
-            {
-                mpr("You feel like taking on a jabberwock.");
-                id_the_scroll = true;
-            }
-        }
+            mpr("It is a scroll of vorpalise weapon.");
+        _vorpalise_weapon(alreadyknown);
         break;
 
     case SCR_IDENTIFY:
@@ -3268,7 +3368,7 @@ void read_scroll(int slot)
             bad_effect = true;
         }
         else
-            cancel_scroll = you.religion == GOD_ASHENZARI;
+            cancel_scroll = you_worship(GOD_ASHENZARI);
 
         break;
 
@@ -3278,7 +3378,7 @@ void read_scroll(int slot)
 
         if (is_good_god(you.religion))
         {
-            pow += (you.religion == GOD_SHINING_ONE) ? you.piety :
+            pow += (you_worship(GOD_SHINING_ONE)) ? you.piety :
                                                        you.piety / 2;
         }
 
@@ -3299,16 +3399,12 @@ void read_scroll(int slot)
         break;
 
     case SCR_AMNESIA:
-        if (you.spell_no == 0)
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-        }
-        else if (!alreadyknown)
-        {
+        if (!alreadyknown)
             mpr(pre_succ_msg.c_str());
+        if (you.spell_no == 0)
+            mpr("You feel forgetful for a moment.");
+        else if (!alreadyknown)
             cast_selective_amnesia();
-        }
         else
             cancel_scroll = (cast_selective_amnesia(&pre_succ_msg) == -1);
         break;
@@ -3337,7 +3433,10 @@ void read_scroll(int slot)
         count_action(CACT_USE, OBJ_SCROLLS);
     }
 
-    if (id_the_scroll && !alreadyknown && which_scroll != SCR_ACQUIREMENT)
+    if (id_the_scroll
+        && !alreadyknown
+        && which_scroll != SCR_ACQUIREMENT
+        && which_scroll != SCR_VORPALISE_WEAPON)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",

@@ -108,7 +108,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_forest
     elseif tv >= size then
       return outer_feature
     else
-      -- Gradiate plants over a slightly larger boundry
+      -- Graduate plants over a slightly larger boundary
       local pv = procedural.minmax_map(tv, size - 0.1, size + 0.6)
       if rand3 > 180 and pv > fjitter1(x,y) then
         return plant_feature

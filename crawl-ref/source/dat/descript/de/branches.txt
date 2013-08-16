@@ -40,15 +40,6 @@ legendären magischen Fähigkeiten dieses Volkes bewusst sein.
 
 Die Elfenhallen sind drei Ebenen tief.
 %%%%
-Dwarven Hall
-
-Diese meisterhaft bearbeiteten Steinhallen sind die Behausungen der
-Tiefenzwerge. Ihre außergewöhnlichen Fähigkeiten der Metallbearbeitung
-erlaubten ihnen Unmengen an Waffen zu schmieden um sie gegen Leute wie dich
-einzusetzen.
-
-Doch es ist nur eine einzelne Ebene.
-%%%%
 Lair
 
 Die meisten Abenteurer finden die Höhle der Bestien als eine spannende

@@ -114,7 +114,7 @@ end
 
 -- TODO: The 'paint' parameter should disappear. Instead the options will contain a setup array. This could contain paint instructions,
 -- but alternately should be able to wire room generators to create initial terrain. Since rooms can now be created from paint arrays _anyway_,
--- it seems that pre-painting the layout is completely unneccesary and room generation can do anything ...
+-- it seems that pre-painting the layout is completely unnecessary and room generation can do anything ...
 function hypervaults.build_layout(e, name, paint, options)
   if e.is_validating() then return; end
 

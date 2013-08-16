@@ -291,7 +291,6 @@ public:
   // A list of allies awaiting an active recall
   vector<mid_t> recall_list;
 
-
   // -------------------
   // Non-saved UI state:
   // -------------------
@@ -421,6 +420,7 @@ public:
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
+    bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
     bool cannot_speak() const;
@@ -566,6 +566,7 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
+    bool is_lifeless_undead() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
     bool malmutate(const string &reason);
@@ -799,7 +800,9 @@ bool player_in_connected_branch(void);
 bool player_in_hell(void);
 
 static inline bool player_in_branch(int branch)
-{ return you.where_are_you == branch; };
+{
+    return you.where_are_you == branch;
+};
 
 bool berserk_check_wielded_weapon(void);
 bool player_equip_unrand_effect(int unrand_index);
@@ -812,7 +815,11 @@ bool player_is_shapechanged(void);
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
-bool player_under_penance(void);
+static inline int player_under_penance(god_type god = you.religion)
+{
+    return you.penance[god];
+}
+
 int player_evoke_jump_range();
 
 int burden_change(void);

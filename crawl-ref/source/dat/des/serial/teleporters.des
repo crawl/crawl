@@ -10,11 +10,11 @@
 #  reused between vaults without them getting crossed.  Also,
 #  all vaults with teleporters and allow_dup need luniq.
 #  Several of these vaults use LUA hooks to place the two ends
-#  of a teleporter in seperate vaults.  This works because of
+#  of a teleporter in separate vaults.  This works because of
 #  the shared teleporter ids.
 #
 # These do not place on bottom floors of branches or in
-#  Pandemonium becuase of the danger of teleporting the player
+#  Pandemonium because of the danger of teleporting the player
 #  into a rune vault (or Pan Lord vault).
 #
 # The "simple" teleporter vaults can appear randomly.

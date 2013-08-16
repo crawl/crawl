@@ -334,12 +334,12 @@ static void _adjust_spell(void)
 
     int keyin = 0;
     if (Options.auto_list)
-        keyin = list_spells(false, false, false);
+        keyin = list_spells(false, false, false, "Adjust which spell?");
     else
     {
         keyin = get_ch();
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(false, false, false);
+            keyin = list_spells(false, false, false, "Adjust which spell?");
     }
 
     if (!isaalpha(keyin))
@@ -372,8 +372,10 @@ static void _adjust_spell(void)
             canned_msg(MSG_OK);
             return;
         }
+        // FIXME: It would be nice if the user really could select letters
+        // without spells from this menu.
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(true, false, false);
+            keyin = list_spells(true, false, false, "Adjust to which letter?");
     }
 
     const int input_2 = keyin;
@@ -932,8 +934,8 @@ static vector<string> _get_branch_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    int mon_num = get_monster_by_name(key.c_str());
-    return (mon_num == MONS_PROGRAM_BUG);
+    monster_type mon_num = get_monster_by_name(key.c_str());
+    return mons_class_flag(mon_num, M_CANT_SPAWN);
 }
 
 static bool _spell_filter(string key, string body)
@@ -1799,7 +1801,7 @@ help_highlighter::help_highlighter(string highlight_string) :
 
 int help_highlighter::entry_colour(const MenuEntry *entry) const
 {
-    return !pattern.empty() && pattern.matches(entry->text)? WHITE : -1;
+    return !pattern.empty() && pattern.matches(entry->text) ? WHITE : -1;
 }
 
 // To highlight species in aptitudes list. ('?%')

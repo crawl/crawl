@@ -963,6 +963,10 @@ CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
 endif
 
+ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-ld=gold 2>&1))
+  LDFLAGS += -fuse-ld=gold
+endif
+
 LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
 
 ifdef REPORT

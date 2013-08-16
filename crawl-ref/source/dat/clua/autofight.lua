@@ -17,6 +17,7 @@ local ATT_NEUTRAL = 1
 AUTOFIGHT_STOP = 30
 AUTOFIGHT_THROW = false
 AUTOFIGHT_THROW_NOMOVE = true
+AUTOFIGHT_FIRE_STOP = false
 
 local function delta_to_vi(dx, dy)
   local d2v = {
@@ -210,6 +211,11 @@ local function attack_fire(x,y)
   crawl.process_keys(move)
 end
 
+local function attack_fire_stop(x,y)
+  move = 'fr' .. vector_move(x, y) .. '.'
+  crawl.process_keys(move)
+end
+
 local function attack_reach(x,y)
   move = 'vr' .. vector_move(x, y) .. '.'
   crawl.process_keys(move)
@@ -232,6 +238,10 @@ local function set_af_throw_nomove(key, value, mode)
   AUTOFIGHT_THROW_NOMOVE = string.lower(value) ~= "false"
 end
 
+local function set_af_fire_stop(key, value, mode)
+  AUTOFIGHT_FIRE_STOP = string.lower(value) ~= "false"
+end
+
 local function hp_is_low()
   local hp, mhp = you.hp()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
@@ -249,7 +259,11 @@ function attack(allow_movement)
   elseif info == nil then
     crawl.mpr("No target in view!")
   elseif info.attack_type == 3 then
-    attack_fire(x,y)
+    if AUTOFIGHT_FIRE_STOP then
+      attack_fire_stop(x,y)
+    else
+      attack_fire(x,y)
+    end
   elseif info.attack_type == 2 then
     attack_melee(x,y)
   elseif info.attack_type == 1 then
@@ -277,3 +291,4 @@ end
 chk_lua_option.autofight_stop = set_stop_level
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
+chk_lua_option.autofight_fire_stop = set_af_fire_stop

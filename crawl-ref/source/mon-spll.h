@@ -52,6 +52,7 @@
       }
     },
 
+#if TAG_MAJOR_VERSION == 34
     {  MST_DEEP_DWARF_NECROMANCER,
       {
        SPELL_PAIN,
@@ -62,8 +63,9 @@
        SPELL_VAMPIRIC_DRAINING
       }
     },
+#endif
 
-    {  MST_UNBORN_DEEP_DWARF,
+    {  MST_UNBORN,
       {
        SPELL_AGONY,
        SPELL_DISPEL_UNDEAD,
@@ -1336,7 +1338,7 @@
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_BOLT_OF_DRAINING,
        SPELL_DISPEL_UNDEAD,
-       SPELL_INVISIBILITY
+       SPELL_NO_SPELL
       }
     },
 
@@ -2147,9 +2149,9 @@
       {
        SPELL_PRIMAL_WAVE,
        SPELL_PRIMAL_WAVE,
-       SPELL_NO_SPELL,
        SPELL_WATER_ELEMENTALS,
-       SPELL_NO_SPELL,
+       SPELL_PRIMAL_WAVE,
+       SPELL_PRIMAL_WAVE,
        SPELL_NO_SPELL
       }
     },

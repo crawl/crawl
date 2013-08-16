@@ -611,11 +611,6 @@ Norris:quote
 negative.”
     -Georges Poulet
 %%%%
-Pan
-
-The lord of all satyrs. With his flute, he produces music said to cloud the
-mind beyond all hope of return.
-%%%%
 Pikel
 
 While kobolds are normally slaves, Pikel's rough life, selfish ambition and
@@ -1377,10 +1372,6 @@ Pale and unnaturally tough-skinned, deep dwarves dwell far below ground and
 almost never emerge into the sunlit upper world. They are more inclined towards
 the occult arts than their mountainous cousins.
 %%%%
-deep dwarf artificer
-
-A deep dwarf that has devoted its life to the study and use of arcane devices.
-%%%%
 deep dwarf berserker
 
 A ferocious and blood-thirsty deep dwarf that revels in the frenzy of combat.
@@ -1389,15 +1380,6 @@ deep dwarf death knight
 
 A deep dwarf warrior-priest of Yredelemnul that chants unholy homages to the
 dark god and calls forth the dead.
-%%%%
-deep dwarf necromancer
-
-An evil deep dwarf that has sold its mortal soul in exchange for mastery of the
-occult arts of death and pain.
-%%%%
-deep dwarf scion
-
-An armoured deep dwarf, formidable in melee combat.
 %%%%
 deep troll
 
@@ -1871,8 +1853,8 @@ giant eyeball:quote
 giant firefly
 
 Unlike its mundane counterparts that are merely half an inch big, this enormous
-flying bug is large enough to be ridden by some spriggans. Its glow, though, is
-faint enough to be hardly visible.
+flying bug is large enough to be ridden by some spriggans. When threatened, it
+can flash warning signals to its kin (and anyone else close enough to observe).
 %%%%
 giant frog
 
@@ -1898,8 +1880,9 @@ giant frog:quote
 %%%%
 giant gecko
 
-A lizard with huge, sharp teeth. It is many times larger than a normal
-gecko, yet its size belies its agility.
+A lizard with pads on its toes allowing it to cling to walls and ceilings, and
+huge, sharp teeth. It is many times larger than a normal gecko, yet its size
+belies its agility.
 %%%%
 giant goldfish
 
@@ -4268,11 +4251,10 @@ individual ought to acquiesce in his own sentiment, without pretending to
 regulate those of others.”
     -David Hume
 %%%%
-unborn deep dwarf
+unborn
 
-A deep dwarf that has honed its empathy with the powers of earth and death at
-the cost of its natural life force, transcending mortality in a peculiar
-dwarven fashion.
+A devotee of Yredelemnul that has committed to eternal worship and servitude -
+even beyond death.
 %%%%
 unseen horror
 

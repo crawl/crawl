@@ -492,10 +492,6 @@ eggplant
 Zgniły bakłażan którym możesz rzucić w autorów Crawla. (To błąd jeśli
 kiedykolwiek zobaczysz ten tekst.)
 %%%%
-empty ebony casket
-
-Magiczne (niegdyś) pudełko, którego moc została zużyta.
-%%%%
 eudemon blade
 
 Wspaniałe ostrze wykute w kuźniach Niebios, opętane przez dobrego ducha. Jest
@@ -1089,7 +1085,14 @@ skutki są dość brutalne.
 %%%%
 rod of striking
 
-Ten pręt pozwala uderzać wrogów surową magią, niestety niezbyt efektywnie.
+Tym prętem spuszcza się lanie osobiście. Przełożenie kogoś wpierw przez
+kolano nie jest obowiązkowe, jednak należy do dobrego tonu.
+%%%%
+rod of striking:quote
+
+„Kto zawściąga rózgi swej, ma w nienawiści syna swego; ale kto go miłuje,
+ wczas go karze.̈́”
+    -Biblia Gdańska, Księga przysłów 13:24
 %%%%
 rod of the swarm
 
@@ -1323,10 +1326,6 @@ spear
 
 Długi patyk, z zaostrzonym grotem na końcu. Nadaje się do walki wręcz jak i do
 rzucania.
-%%%%
-spiked flail
-
-Broń podobna do cepa, z kolczastą kulą zamiast bijaka.
 %%%%
 staff of air
 

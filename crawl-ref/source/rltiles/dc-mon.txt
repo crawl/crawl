@@ -640,7 +640,9 @@ giant_spore MONS_GIANT_SPORE
 %sdir mon/eyes
 giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
+%rim 0
 mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
+%rim 1
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 %rim 0
 shining_eye MONS_SHINING_EYE
@@ -713,6 +715,7 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
+unborn MONS_UNBORN
 %rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
@@ -825,7 +828,6 @@ orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 ## Centaurs ('c')
 %sdir mon/unique
 nessos MONS_NESSOS
-pan MONS_PAN
 %sdir mon
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
@@ -883,6 +885,7 @@ ballistomycete MONS_BALLISTOMYCETE_INACTIVE
 active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
 hyperactive_ballistomycete MONS_HYPERACTIVE_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
+deathcap MONS_DEATHCAP
 %rim 1
 
 ## Goblins ('g')
@@ -978,14 +981,8 @@ insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir mon
 dwarf MONS_DWARF
 deep_dwarf MONS_DEEP_DWARF
-deep_dwarf_scion MONS_DEEP_DWARF_SCION
-deep_dwarf_artificer MONS_DEEP_DWARF_ARTIFICER
 deep_dwarf_berserker MONS_DEEP_DWARF_BERSERKER
-deep_dwarf_necromancer MONS_DEEP_DWARF_NECROMANCER
 deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
-%rim 0
-undead/unborn_deep_dwarf MONS_UNBORN_DEEP_DWARF
-%rim 1
 %sdir mon/unique
 jorgrun MONS_JORGRUN
 # an entry vault

@@ -547,3 +547,16 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
         targets.pop_front();
     }
 }
+
+int finesse_adjust_delay(int delay)
+{
+    if (you.duration[DUR_FINESSE])
+    {
+        ASSERT(!you.duration[DUR_BERSERK]);
+        // Need to undo haste by hand.
+        if (you.duration[DUR_HASTE])
+            delay = haste_mul(delay);
+        delay = div_rand_round(delay, 2);
+    }
+    return delay;
+}

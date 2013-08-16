@@ -1137,7 +1137,7 @@ Stash *LevelStashes::find_stash(coord_def c)
 
     const int abspos = (GXM * c.y) + c.x;
     stashes_t::iterator st = m_stashes.find(abspos);
-    return (st == m_stashes.end()? NULL : &st->second);
+    return (st == m_stashes.end() ? NULL : &st->second);
 }
 
 const Stash *LevelStashes::find_stash(coord_def c) const
@@ -1148,7 +1148,7 @@ const Stash *LevelStashes::find_stash(coord_def c) const
 
     const int abspos = (GXM * c.y) + c.x;
     stashes_t::const_iterator st = m_stashes.find(abspos);
-    return (st == m_stashes.end()? NULL : &st->second);
+    return (st == m_stashes.end() ? NULL : &st->second);
 }
 
 const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
@@ -2116,7 +2116,7 @@ void StashTracker::update_corpses()
 
 void StashTracker::update_identification()
 {
-    if (you.religion != GOD_ASHENZARI)
+    if (!you_worship(GOD_ASHENZARI))
         return;
 
     for (stash_levels_t::iterator iter = levels.begin();

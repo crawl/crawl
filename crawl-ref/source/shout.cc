@@ -419,8 +419,10 @@ void item_noise(const item_def &item, string msg, int loudness)
     // replace references to player name and god
     msg = replace_all(msg, "@player_name@", you.your_name);
     msg = replace_all(msg, "@player_god@",
-                      you.religion == GOD_NO_GOD ? "atheism"
+                      you_worship(GOD_NO_GOD) ? "atheism"
                       : god_name(you.religion, coinflip()));
+    msg = replace_all(msg, "@a_player_genus@",
+                          article_a(species_name(you.species, true)));
 
     mpr(msg.c_str(), channel);
 
@@ -514,8 +516,8 @@ bool noisy(int original_loudness, const coord_def& where,
                 noise_msg,
                 (scaled_loudness + 1) * 1000,
                 who,
-                0 | (mermaid? NF_MERMAID : 0)
-                | (message_if_unseen? NF_MESSAGE_IF_UNSEEN : 0)));
+                0 | (mermaid ? NF_MERMAID : 0)
+                | (message_if_unseen ? NF_MESSAGE_IF_UNSEEN : 0)));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means
@@ -595,7 +597,8 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
             break;
 
         case SENSE_WEB_VIBRATION:
-            if (you.form == TRAN_SPIDER)
+            // Spider form
+            if (you.can_cling_to_walls())
             {
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.

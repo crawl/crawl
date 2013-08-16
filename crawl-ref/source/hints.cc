@@ -462,7 +462,7 @@ void hints_death_screen()
     {
         print_hint("death conjurer melee");
     }
-    else if (you.religion == GOD_TROG && Hints.hints_berserk_counter <= 3
+    else if (you_worship(GOD_TROG) && Hints.hints_berserk_counter <= 3
              && !you.berserk() && !you.duration[DUR_EXHAUSTED])
     {
         print_hint("death berserker unberserked");
@@ -649,7 +649,7 @@ static void _hints_healing_reminder()
                     "<tiles>, or <w>click on the stat area</w> with your mouse</tiles>"
                     ".";
 
-            if (you.hp < you.hp_max && you.religion == GOD_TROG
+            if (you.hp < you.hp_max && you_worship(GOD_TROG)
                 && you.can_go_berserk())
             {
               text += "\nAlso, berserking might help you not to lose so many "
@@ -733,7 +733,6 @@ void hints_gained_new_skill(skill_type skill)
     case SK_FIGHTING:
     case SK_ARMOUR:
     case SK_STEALTH:
-    case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
@@ -885,7 +884,7 @@ void hints_monster_seen(const monster& mon)
         if (mon.friendly())
             learned_something_new(HINT_MONSTER_FRIENDLY, mon.pos());
 
-        if (you.religion == GOD_TROG && you.can_go_berserk()
+        if (you_worship(GOD_TROG) && you.can_go_berserk()
             && one_chance_in(4))
         {
             learned_something_new(HINT_CAN_BERSERK);
@@ -1254,7 +1253,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_MEMORISE_SPELL);
         cmd.push_back(CMD_CAST_SPELL);
 
-        if (you.religion == GOD_TROG)
+        if (you_worship(GOD_TROG))
         {
             text << "\nAs a worshipper of "
                  << god_name(GOD_TROG)
@@ -1751,7 +1750,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "confirmation.";
         cmd.push_back(CMD_PRAY);
 
-        if (you.religion == GOD_NO_GOD
+        if (you_worship(GOD_NO_GOD)
             && Hints.hints_type == HINT_MAGIC_CHAR)
         {
             text << "\n\nThe best god for an unexperienced conjurer is "
@@ -1849,7 +1848,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         // A more detailed description of skills is given when you go past an
         // integer point.
 
-        if (you.religion == GOD_TROG)
+        if (you_worship(GOD_TROG))
         {
             text << " Also, kills of demons and living creatures grant you "
                     "favour in the eyes of Trog.";
@@ -2097,7 +2096,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << "\n\nYou can easily find items you've left on the floor "
                     "with the <w>%</w> command, which will let you "
-                    "seach for all known items in the dungeon. For example, "
+                    "search for all known items in the dungeon. For example, "
                     "<w>% \"dagger\"</w> will list all daggers. You can "
                     "can then travel to one of the spots.";
             Hints.hints_stashes = false;
@@ -2338,7 +2337,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "you come back, so you might want to use a different set of "
                 "stairs when you return.";
 
-        if (you.religion == GOD_TROG && you.can_go_berserk())
+        if (you_worship(GOD_TROG) && you.can_go_berserk())
         {
             text << "\nAlso, with "
                  << apostrophise(god_name(you.religion))
@@ -2463,7 +2462,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_CONVERT:
-        if (you.religion == GOD_XOM)
+        if (you_worship(GOD_XOM))
             return print_hint("HINT_CONVERT Xom");
 
         print_hint("HINT_CONVERT");
@@ -2981,7 +2980,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             listed.push_back("your set of mutations (<w>%</w>)");
             cmd.push_back(CMD_DISPLAY_MUTATIONS);
         }
-        if (you.religion != GOD_NO_GOD)
+        if (!you_worship(GOD_NO_GOD))
         {
             listed.push_back("your religious standing (<w>%</w>)");
             cmd.push_back(CMD_DISPLAY_RELIGION);
@@ -3673,7 +3672,7 @@ void hints_describe_item(const item_def &item)
             }
             else // It's a spellbook!
             {
-                if (you.religion == GOD_TROG
+                if (you_worship(GOD_TROG)
                     && (item.sub_type != BOOK_DESTRUCTION
                         || !item_ident(item, ISFLAG_KNOW_TYPE)))
                 {
@@ -3872,7 +3871,7 @@ void hints_describe_item(const item_def &item)
 
                 cmd.push_back(CMD_RESISTS_SCREEN);
             }
-            else if (you.religion == GOD_TROG)
+            else if (you_worship(GOD_TROG))
             {
                 ostr << "\n\nSeeing how "
                      << god_name(GOD_TROG, false)
@@ -4176,7 +4175,7 @@ static void _hints_describe_feature(int x, int y)
                             "For other gods, you'll be able to join the faith "
                             "by <w>p</w>raying at their altar.";
                 }
-                else if (you.religion == GOD_NO_GOD)
+                else if (you_worship(GOD_NO_GOD))
                 {
                     ostr << "This is your chance to join a religion! In "
                             "general, the gods will help their followers, "
@@ -4189,7 +4188,7 @@ static void _hints_describe_feature(int x, int y)
                             "altar. Before taking up the responding faith "
                             "you'll be asked for confirmation.";
                 }
-                else if (you.religion == altar_god)
+                else if (you_worship(altar_god))
                 {
                     // If we don't have anything to say, return early.
                     return;
@@ -4453,7 +4452,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
         {
             ostr << "This might be a good time to run away";
 
-            if (you.religion == GOD_TROG && you.can_go_berserk())
+            if (you_worship(GOD_TROG) && you.can_go_berserk())
                 ostr << " or apply your Berserk <w>a</w>bility";
             ostr << ".";
         }

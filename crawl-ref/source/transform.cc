@@ -23,6 +23,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "misc.h"
 #include "mon-abil.h"
 #include "mutation.h"
 #include "output.h"
@@ -570,6 +571,10 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     if (you.species == SP_DJINNI)
         return false;
 
+    // We can only cling for safety if we're already doing so.
+    if (which_trans == TRAN_SPIDER && you.is_wall_clinging())
+        return false;
+
     if (feat == DNGN_LAVA)
         return !form_likes_lava(which_trans);
 
@@ -702,7 +707,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     const flight_type was_flying = you.flight_mode();
 
     // Zin's protection.
-    if (!just_check && you.religion == GOD_ZIN
+    if (!just_check && you_worship(GOD_ZIN)
         && x_chance_in_y(you.piety, MAX_PIETY) && which_trans != TRAN_NONE)
     {
         simple_god_message(" protects your body from unnatural transformation!");
@@ -837,7 +842,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else if (you.species == SP_GARGOYLE)
-            msg = "Your body stiffens and grows ponderous.";
+            msg = "Your body stiffens and grows slower.";
         else
             msg += "a living statue of rough stone.";
         break;
@@ -855,7 +860,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_LICH:
         tran_name = "lich";
-        str       = 3;
         msg       = "Your body is suffused with negative energy!";
         break;
 
@@ -913,8 +917,13 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_FUNGUS:
         tran_name = "fungus";
         msg      += "a fleshy mushroom.";
-        you.set_duration(DUR_CONFUSING_TOUCH,
-            you.duration[DUR_TRANSFORMATION] ? you.duration[DUR_TRANSFORMATION] : INFINITE_DURATION);
+        if (!just_check)
+        {
+            you.set_duration(DUR_CONFUSING_TOUCH,
+                             you.duration[DUR_TRANSFORMATION]
+                                 ? you.duration[DUR_TRANSFORMATION]
+                                 : INFINITE_DURATION);
+        }
         break;
 
     case TRAN_JELLY:
@@ -947,10 +956,12 @@ bool transform(int pow, transformation_type which_trans, bool force,
         msg += "something buggy!";
     }
 
-    if (!force && just_check && (str + you.strength() <= 0 || dex + you.dex() <= 0))
+    const bool bad_str = you.strength() > 0 && str + you.strength() <= 0;
+    if (!force && just_check && (bad_str
+            || you.dex() > 0 && dex + you.dex() <= 0))
     {
         string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
-                                     str + you.strength() <= 0 ? "strength" : "dexterity");
+                                     bad_str ? "strength" : "dexterity");
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -972,7 +983,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     you.redraw_armour_class = true;
     you.wield_change        = true;
     if (form_changed_physiology(which_trans))
-        you.fishtail = false;
+        merfolk_stop_swimming();
 
     // Most transformations conflict with stone skin.
     if (form_changed_physiology(which_trans) && which_trans != TRAN_STATUE)
@@ -1013,6 +1024,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
             mpr("Your new body merges with your stone armour.");
         else if (you.species == SP_LAVA_ORC)
             mpr("Your new body is particularly stony.");
+        if (you.duration[DUR_ICY_ARMOUR])
+        {
+            mpr("Your new body cracks your icy armour.", MSGCH_DURATION);
+            you.duration[DUR_ICY_ARMOUR] = 0;
+        }
         break;
 
     case TRAN_ICE_BEAST:
@@ -1039,7 +1055,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_TREE:
-        if (you.religion == GOD_FEDHAS && !player_under_penance())
+        if (you_worship(GOD_FEDHAS) && !player_under_penance())
             simple_god_message(" makes you hardy against extreme temperatures.");
         // ignore hunger_state (but don't reset hunger)
         you.hunger_state = HS_SATIATED;
@@ -1123,6 +1139,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
             you.stop_being_constricted();
     }
 
+    you.check_clinging(false);
 
     // If we are no longer living, end an effect that afflicts only the living
     if (you.duration[DUR_FLAYED] && you.holiness() != MH_NATURAL)
@@ -1186,6 +1203,8 @@ void untransform(bool skip_wielding, bool skip_move)
         mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_DEX, -5, true,
                      "losing the spider transformation");
+        if (!skip_move)
+            you.check_clinging(false);
         break;
 
     case TRAN_BAT:
@@ -1242,8 +1261,6 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_LICH:
         mpr("You feel yourself come back to life.", MSGCH_DURATION);
-        notify_stat_change(STAT_STR, -3, true,
-                    "losing the lich transformation");
         you.is_undead = US_ALIVE;
         break;
 
@@ -1338,7 +1355,7 @@ void untransform(bool skip_wielding, bool skip_move)
     if (you.duration[DUR_ICY_ARMOUR]
         && !player_effectively_in_light_armour())
     {
-        you.duration[DUR_ICY_ARMOUR] = 1;
+        you.duration[DUR_ICY_ARMOUR] = 0;
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         mprf(MSGCH_DURATION, "%s cracks your icy armour.",

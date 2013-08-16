@@ -35,14 +35,6 @@ zdatnosti tohoto druhu.
 
 Elfí sály jsou tří úrovňové.
 %%%%
-Dwarven Hall
-
-Tyto sály z jemně opracovaného kamene jsou obydlím hlubinných trpaslíků. Jejich
-schopnost jemného obrábění kovů jim umožnila vytvořit spoustu zbraní pro
-použití proti bytostem, jako jsi ty.
-
-Pouze jedna úroveň.
-%%%%
 Lair
 
 Většina dobrodruhů shledává Doupě šelem vzrušující změnou prostředí. Na tom, že

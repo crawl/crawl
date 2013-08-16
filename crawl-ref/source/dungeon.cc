@@ -1038,6 +1038,20 @@ dgn_register_place(const vault_placement &place, bool register_vault)
             _mask_vault(place, MMT_OPAQUE);
     }
 
+    // Find tags matching properties.
+    vector<string> tags = place.map.get_tags();
+
+    for (vector<string>::const_iterator i = tags.begin(); i != tags.end(); ++i)
+    {
+        const feature_property_type prop = str_to_fprop(*i);
+        if (prop == FPROP_NONE)
+            continue;
+
+        for (vault_place_iterator vi(place); vi; ++vi)
+            env.pgrid(*vi) |= prop;
+
+    }
+
     if (place.map.has_tag("no_monster_gen"))
         _mask_vault(place, MMT_NO_MONS);
 
@@ -3221,6 +3235,15 @@ static void _place_traps()
             }
         }
 
+        // Only teleport, shaft, alarm and Zot traps are interesting enough to
+        // be placed randomly.  Until the formula is overhauled, let's just
+        // skip creation if the old code would pick a boring one.
+        if (trap_category(ts.type) == DNGN_TRAP_MECHANICAL)
+        {
+            ts.type = TRAP_UNASSIGNED;
+            continue;
+        }
+
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         env.tgrid(ts.pos) = i;
         if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
@@ -3825,7 +3848,7 @@ static void _builder_monsters()
     // letting all the merfolk be generated in the middle of the
     // water.
     const dungeon_feature_type preferred_grid_feature =
-        in_shoals? DNGN_FLOOR : DNGN_UNSEEN;
+        in_shoals ? DNGN_FLOOR : DNGN_UNSEEN;
 
     dprf("_builder_monsters: Generating %d monsters", mon_wanted);
     for (int i = 0; i < mon_wanted; i++)
@@ -4073,7 +4096,7 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
 vault_placement *dgn_vault_at(coord_def p)
 {
     const int map_index = env.level_map_ids(p);
-    return (map_index == INVALID_MAP_INDEX? NULL : env.level_vaults[map_index]);
+    return (map_index == INVALID_MAP_INDEX ? NULL : env.level_vaults[map_index]);
 }
 
 void dgn_seen_vault_at(coord_def p)
@@ -4161,7 +4184,7 @@ _build_vault_impl(const map_def *vault,
 
     dprf("Map: %s; placed: %s; place: (%d,%d), size: (%d,%d)",
          vault->name.c_str(),
-         placed_vault_orientation != MAP_NONE? "yes" : "no",
+         placed_vault_orientation != MAP_NONE ? "yes" : "no",
          place.pos.x, place.pos.y, place.size.x, place.size.y);
 
     if (placed_vault_orientation == MAP_NONE)
@@ -5529,7 +5552,7 @@ static void _place_spec_shop(const coord_def& where,
 
     int plojy = 5 + random2avg(12, 3);
     if (representative)
-        plojy = env.shop[i].type == SHOP_WAND? NUM_WANDS : 16;
+        plojy = env.shop[i].type == SHOP_WAND ? NUM_WANDS : 16;
 
     if (spec->use_all && !spec->items.empty())
     {
@@ -5592,7 +5615,7 @@ static void _place_spec_shop(const coord_def& where,
             else
             {
                 orb = items(1, _item_in_shop(env.shop[i].type), subtype, true,
-                             one_chance_in(4)? MAKE_GOOD_ITEM : item_level,
+                             one_chance_in(4) ? MAKE_GOOD_ITEM : item_level,
                              MAKE_ITEM_RANDOM_RACE);
             }
 

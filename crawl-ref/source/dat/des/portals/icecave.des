@@ -309,7 +309,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-19, Lair:6-8, Orc:4, Elf
+DEPTH:  D:14-19, Lair:6-, Orc:$, Elf
 : ice_cave_portal(_G)
 MONS:   wolf / yak / nothing w:1
 MONS:   yak / polar bear w:5 / nothing w:1

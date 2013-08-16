@@ -224,7 +224,7 @@ enum misc_item_type
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
 #if TAG_MAJOR_VERSION == 34
-    MISC_EMPTY_EBONY_CASKET,
+    MISC_BUGGY_EBONY_CASKET,
 #endif
     MISC_DISC_OF_STORMS,
 
@@ -377,16 +377,16 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,
     SPMSL_STEEL,
     SPMSL_SILVER,
-    SPMSL_PARALYSIS,                   // paralysis, needle only from here in
-    SPMSL_SLOW,                        // makes slow
-    SPMSL_SLEEP,                       // sleep
-    SPMSL_CONFUSION,                   // confusing
+    SPMSL_PARALYSIS,                   // needle only from here on
+    SPMSL_SLOW,
+    SPMSL_SLEEP,
+    SPMSL_CONFUSION,
 #if TAG_MAJOR_VERSION == 34
-    SPMSL_SICKNESS,                    // sickness/disease
+    SPMSL_SICKNESS,
 #endif
-    SPMSL_RAGE,                        // berserk rage
+    SPMSL_FRENZY,
     NUM_REAL_SPECIAL_MISSILES,
-    SPMSL_BLINDING,                    // blinding
+    SPMSL_BLINDING,
     NUM_SPECIAL_MISSILES,
 };
 
@@ -441,9 +441,7 @@ enum weapon_type
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
-#if TAG_MAJOR_VERSION == 34
-    WPN_SPIKED_FLAIL,
-#endif
+    WPN_ROD, // base item for magical rods only
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,

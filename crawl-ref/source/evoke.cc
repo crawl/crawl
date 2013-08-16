@@ -506,7 +506,7 @@ void tome_of_power(int slot)
             dec_inv_item_quantity(slot, 1);
         }
 
-        immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
+        immolation(15, IMMOLATION_TOME, false);
 
         xom_is_stimulated(200);
     }
@@ -672,7 +672,6 @@ static const pop_entry pop_beasts[] =
   { 15, 27,   50, PEAK, MONS_CATOBLEPAS },
   { 15, 27,  100, PEAK, MONS_DEATH_YAK },
   { 16, 27,  100, PEAK, MONS_ANACONDA },
-  { 16, 27,  100, PEAK, MONS_SPIRIT_WOLF },
   { 16, 27,   50, PEAK, MONS_RAVEN },
   { 18, 27,   50, UP,   MONS_DIRE_ELEPHANT },
   { 20, 27,   25, UP,   MONS_DRAGON },

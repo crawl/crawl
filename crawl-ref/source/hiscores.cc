@@ -1011,7 +1011,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("ev", "%d", ev);
     fields->add_field("sh", "%d", sh);
 
-    fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
+    fields->add_field("god", "%s", god == GOD_NO_GOD ? "" :
                       god_name(god).c_str());
 
     if (wiz_mode)
@@ -1507,14 +1507,13 @@ void scorefile_entry::init(time_t dt)
         DUR_INVIS, DUR_POISONING, STATUS_MISSILES, DUR_SURE_BLADE,
         DUR_TRANSFORMATION, STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
         DUR_WEAK, DUR_DIMENSION_ANCHOR, DUR_ANTIMAGIC, DUR_SPIRIT_HOWL,
-        DUR_FLAYED, DUR_WATER_HOLD, STATUS_DRAINED
+        DUR_FLAYED, DUR_WATER_HOLD, STATUS_DRAINED, DUR_TOXIC_RADIANCE
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.short_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
         {
             if (!status_effects.empty())
                 status_effects += ",";
@@ -1541,7 +1540,7 @@ void scorefile_entry::init(time_t dt)
     sh    = player_shield_class();
 
     god = you.religion;
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
     {
         piety   = you.piety;
         penance = you.penance[you.religion];

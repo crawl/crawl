@@ -253,25 +253,25 @@ static const char* _prop_name[] = {
     "Str",
     "Int",
     "Dex",
-    "Fire",
-    "Cold",
-    "Elec",
-    "Pois",
-    "Neg",
-    "Mag",
+    "rFire",
+    "rCold",
+    "rElec",
+    "rPois",
+    "rNeg",
+    "MR",
     "SInv",
-    "Inv",
-    "Fly",
-    "Jump",
-    "Blnk",
-    "Bers",
-    "Nois",
-    "NoSpl",
-    "RndTl",
-    "NoTel",
-    "Anger",
-    "Metab",
-    "Mut",
+    "+Inv",
+    "+Fly",
+    "+Jump",
+    "+Blnk",
+    "+Rage",
+    "Noisy",
+    "-Cast",
+    "*Tele",
+    "-Tele",
+    "*Rage",
+    "Hungr",
+    "Contm",
     "Acc",
     "Dam",
     "Curse",
@@ -705,7 +705,7 @@ void wizard_make_object_randart()
     }
 
     // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you.religion == GOD_ASHENZARI)
+    if (you_worship(GOD_ASHENZARI))
         do_curse_item(item, true);
     else
         do_uncurse_item(item, false);
@@ -998,7 +998,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     // Print player species/profession.
     string godname = "";
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
         godname += " of " + god_name(you.religion);
 
     fprintf(ostat, "%s the %s, Level %d %s %s%s\n\n",

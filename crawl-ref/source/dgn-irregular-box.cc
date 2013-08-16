@@ -80,12 +80,12 @@ static void _randomly_force_sum_below(int& a, int& b, int sum)
 // Calculates a vector of up to a random number of values
 //  between the specified minimum and maximum values.  The
 //  minimum and maximum values are always inserted.  All
-//  other values inserted will be seperated by at least the
-//  specified seperation.  The values returned are sorted in
+//  other values inserted will be separated by at least the
+//  specified separation.  The values returned are sorted in
 //  ascending order.
 static vector<int> _calculate_random_values(int min_value, int max_value,
                                             int max_count,
-                                            int min_seperation)
+                                            int min_separation)
 {
     vector<int> values;
 
@@ -98,8 +98,8 @@ static vector<int> _calculate_random_values(int min_value, int max_value,
         // modified insertion sort
         for (unsigned int j = 0; j < values.size(); j++)
         {
-            int permitted_below = values[j] - min_seperation;
-            int permitted_above = values[j] + min_seperation;
+            int permitted_below = values[j] - min_separation;
+            int permitted_above = values[j] + min_separation;
             if (chosen < permitted_above)
             {
                 if (chosen > permitted_below)
@@ -365,7 +365,7 @@ static void _flood_fill(vector<vector<char> >& map, int start_x, int start_y,
 //  the specified glyphs.  Only glyphs of the specified value
 //  are replaced.
 //
-// The outside is not guarenteed to be conected we fill each
+// The outside is not guaranteed to be connected we fill each
 //  point on each edge inwards in a straight line until it hits
 //  something other than the glyph to replace (or the outside
 //  glyph from before).  We made the irregularities by moving
@@ -424,8 +424,8 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
                         char floor_glyph, char wall_glyph,
                         char door_glyph, int door_count)
 {
-    const int MIN_SEPERATION = 2; // < 2 can block off part of box (bad!)
-    const int MIN_IRREGULAR_SIZE = MIN_SEPERATION * 2 + 1;
+    const int MIN_SEPARATION = 2; // < 2 can block off part of box (bad!)
+    const int MIN_IRREGULAR_SIZE = MIN_SEPARATION * 2 + 1;
 
     const char UNSET_GLYPH = '\0';
     const char OUTSIDE_GLYPH = '\a';
@@ -506,18 +506,18 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         // Place divisions along edges
         //  -> at the ends, we have the corners
         //  -> insert random divisions between
-        //  -> no division may be less than MIN_SEPERATION from another
+        //  -> no division may be less than MIN_SEPARATION from another
         //  -> we keep the lists sorted
         //
 
         vector<int> di_t = _calculate_random_values(in_tl.x, size_x - 1 - in_tr.x,
-                                                     di_x, MIN_SEPERATION);
+                                                     di_x, MIN_SEPARATION);
         vector<int> di_b = _calculate_random_values(in_bl.x, size_x - 1 - in_br.x,
-                                                     di_x, MIN_SEPERATION);
+                                                     di_x, MIN_SEPARATION);
         vector<int> di_l = _calculate_random_values(in_tl.y, size_y - 1 - in_bl.y,
-                                                     di_y, MIN_SEPERATION);
+                                                     di_y, MIN_SEPARATION);
         vector<int> di_r = _calculate_random_values(in_tr.y, size_y - 1 - in_br.y,
-                                                     di_y, MIN_SEPERATION);
+                                                     di_y, MIN_SEPARATION);
 
         //
         // Calculate wall distance from maximal box bounds

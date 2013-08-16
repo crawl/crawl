@@ -327,7 +327,7 @@ bool melee_attack::handle_phase_attempted()
                 else
                     count_action(CACT_MELEE, weapon->sub_type);
             else if (weapon->base_type == OBJ_RODS)
-                count_action(CACT_MELEE, WPN_CLUB);
+                count_action(CACT_MELEE, WPN_ROD);
             else if (weapon->base_type == OBJ_STAVES)
                 count_action(CACT_MELEE, WPN_STAFF);
         }
@@ -564,7 +564,7 @@ bool melee_attack::handle_phase_hit()
             Hints.hints_melee_counter++;
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
-        if (you.religion == GOD_BEOGH
+        if (you_worship(GOD_BEOGH)
             && mons_genus(defender->mons_species()) == MONS_ORC
             && !defender->is_summoned()
             && !defender->as_monster()->is_shapeshifter()
@@ -884,7 +884,10 @@ bool melee_attack::handle_phase_killed()
                                                true, special_damage);
     }
 
-    _defender_die();
+    monster * const mon = defender->as_monster();
+    if (!invalid_monster(mon))
+        monster_die(mon, attacker);
+
     return true;
 }
 
@@ -981,7 +984,7 @@ bool melee_attack::attack()
     {
         set_attack_conducts(conducts, defender->as_monster());
 
-        if (you.penance[GOD_ELYVILON]
+        if (player_under_penance(GOD_ELYVILON)
             && god_hates_your_god(GOD_ELYVILON)
             && ev_margin >= 0
             && one_chance_in(20))
@@ -1455,7 +1458,7 @@ bool melee_attack::player_aux_test_hit()
 
     const int evasion = defender->melee_evasion(attacker);
 
-    if (you.penance[GOD_ELYVILON]
+    if (player_under_penance(GOD_ELYVILON)
         && god_hates_your_god(GOD_ELYVILON)
         && to_hit >= evasion
         && one_chance_in(20))
@@ -1666,7 +1669,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     if (defender->as_monster()->hit_points < 1)
     {
-        _defender_die();
+        handle_phase_killed();
         return true;
     }
 
@@ -1825,7 +1828,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
             && player_genus(GENPC_ORCISH))
         {
-            if (you.religion == GOD_BEOGH && !player_under_penance())
+            if (you_worship(GOD_BEOGH) && !player_under_penance())
             {
 #ifdef DEBUG_DIAGNOSTICS
                 const int orig_damage = damage;
@@ -1962,7 +1965,7 @@ void melee_attack::set_attack_verb()
     else if (weapon->base_type == OBJ_STAVES)
         weap_type = WPN_STAFF;
     else if (weapon->base_type == OBJ_RODS)
-        weap_type = WPN_CLUB;
+        weap_type = WPN_ROD;
     else if (weapon->base_type == OBJ_WEAPONS
              && !is_range_weapon(*weapon))
     {
@@ -2366,17 +2369,6 @@ bool melee_attack::player_monattk_hit_effects()
     }
 
     return true;
-}
-
-void melee_attack::_defender_die()
-{
-    if (defender->is_player())
-        return;
-
-    if (invalid_monster(defender->as_monster()))
-        return;
-
-    monster_die(defender->as_monster(), attacker);
 }
 
 int melee_attack::fire_res_apply_cerebov_downgrade(int res)
@@ -3298,7 +3290,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_VORPAL:
-        special_damage = 1 + random2(damage_done) / 4;
+        special_damage = 1 + random2(damage_done) / 3;
         // Note: Leaving special_damage_message empty because there isn't one.
         break;
 
@@ -3362,7 +3354,7 @@ bool melee_attack::apply_damage_brand()
     {
         // This was originally for confusing touch and it doesn't really
         // work on the player, but a monster with a chaos weapon will
-        // occassionally come up with this brand. -cao
+        // occasionally come up with this brand. -cao
         if (defender->is_player())
             break;
 
@@ -3377,7 +3369,7 @@ bool melee_attack::apply_damage_brand()
             // Declaring these just to pass to the enchant function.
             bolt beam_temp;
             beam_temp.thrower =
-                attacker->is_player()? KILL_YOU : KILL_MON;
+                attacker->is_player() ? KILL_YOU : KILL_MON;
             beam_temp.flavour = BEAM_CONFUSION;
             beam_temp.beam_source = attacker->mindex();
             beam_temp.apply_enchantment_to_monster(defender->as_monster());
@@ -3664,7 +3656,24 @@ int melee_attack::staff_damage(skill_type skill)
 
 void melee_attack::apply_staff_damage()
 {
-    if (!weapon || weapon->base_type != OBJ_STAVES)
+    if (!weapon || attacker->suppressed())
+        return;
+
+    if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_STRIKING)
+    {
+        if (weapon->plus < ROD_CHARGE_MULT)
+            return;
+
+        weapon->plus -= ROD_CHARGE_MULT;
+        if (attacker->is_player())
+            you.wield_change = true;
+
+        special_damage = 1 + random2(attacker->skill(SK_EVOCATIONS, 150)) / 100;
+        special_damage = apply_defender_ac(special_damage);
+        return;
+    }
+
+    if (weapon->base_type != OBJ_STAVES)
         return;
 
     switch (weapon->sub_type)
@@ -3866,7 +3875,7 @@ int melee_attack::calc_to_hit(bool random)
                     mhit += (random && coinflip() ? 2 : 1);
                 }
                 else if (get_equip_race(*weapon) == ISFLAG_ORCISH
-                         && you.religion == GOD_BEOGH && !player_under_penance())
+                         && you_worship(GOD_BEOGH) && !player_under_penance())
                 {
                     mhit++;
                 }
@@ -4053,17 +4062,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
         if (!scaled)
             return final_delay;
 
-        int scaling = you.time_taken;
-
-        if (you.duration[DUR_FINESSE])
-        {
-            ASSERT(!you.duration[DUR_BERSERK]);
-            // Need to undo haste by hand.
-            if (you.duration[DUR_HASTE])
-                scaling = haste_mul(scaling);
-            scaling = div_rand_round(scaling, 2);
-        }
-
+        const int scaling = finesse_adjust_delay(you.time_taken);
         return max(2, div_rand_round(scaling * final_delay, 10));
     }
     else
@@ -5344,7 +5343,7 @@ bool melee_attack::do_knockback(bool trample)
 
         // need a valid tile
         if (grd(new_pos) < DNGN_SHALLOW_WATER
-            && !defender->is_habitable(new_pos))
+            && !defender->is_habitable_feat(grd(new_pos)))
         {
             break;
         }
@@ -5739,10 +5738,9 @@ int melee_attack::calc_damage()
         damage     += 1 + random2(attk_damage);
         int frenzy_degree = -1;
 
-        // Berserk/mighted/frenzied monsters get bonus damage.
+        // Berserk/mighted monsters get bonus damage.
         if (as_mon->has_ench(ENCH_MIGHT)
-            || as_mon->has_ench(ENCH_BERSERK)
-            || as_mon->has_ench(ENCH_INSANE))
+            || as_mon->has_ench(ENCH_BERSERK))
         {
             damage = damage * 3 / 2;
         }

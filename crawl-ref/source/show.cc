@@ -213,7 +213,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_FOOD:       return SHOW_ITEM_FOOD;
     case OBJ_SCROLLS:    return SHOW_ITEM_SCROLL;
     case OBJ_JEWELLERY:
-        return (jewellery_is_amulet(item)? SHOW_ITEM_AMULET : SHOW_ITEM_RING);
+        return (jewellery_is_amulet(item) ? SHOW_ITEM_AMULET : SHOW_ITEM_RING);
     case OBJ_POTIONS:    return SHOW_ITEM_POTION;
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
     case OBJ_STAVES:     return SHOW_ITEM_STAVE;
@@ -398,7 +398,7 @@ static void _update_monster(monster* mons)
             env.map_knowledge(gp).set_invisible_monster();
         }
 
-        // Being submerged isnot the same as invisibility.
+        // Being submerged is not the same as invisibility.
         if (mons->submerged())
             return;
 

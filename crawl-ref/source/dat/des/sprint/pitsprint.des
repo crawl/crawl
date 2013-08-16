@@ -42,7 +42,7 @@ function base_monster_setup(e)
            tarantella / jumping spider / demonic crawler / plague shambler /\
            flaming corpse / small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
-           red devil / centaur band / deep dwarf artificer")
+           red devil / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
@@ -55,10 +55,9 @@ function base_monster_setup(e)
            necromancer band w:5 / orc knight band w:5 / spiny worm /\
            harpy band w:5 / fire crab / redback band /\
            vapour / deep elf priest band w:3 / shapeshifter / zombie /\
-           skeleton / deep dwarf necromancer / deep dwarf death knight /\
-           eidolon / elephant band w:5 / death yak band w:5 /\
-           insubstantial wisp band w:5 / swamp dragon / siren /\
-           alligator snapping turtle / anaconda / greater naga /\
+           skeleton / deep dwarf death knight / eidolon / elephant band w:5 /\
+           death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
+           siren / alligator snapping turtle / anaconda / greater naga /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\
@@ -74,7 +73,7 @@ function base_monster_setup(e)
            bone dragon / stone giant / deep elf annihilator /\
            deep elf death mage / deep elf high priest /\
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
-           titan w:5 / deep dwarf berserker / unborn deep dwarf / ettin /\
+           titan w:5 / deep dwarf berserker / unborn / ettin /\
            greater naga / dancing weapon / dire elephant band /\
            eye of draining / giant eyeball / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
@@ -118,7 +117,7 @@ function base_monster_setup(e)
            the Serpent of Hell")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
-           Ereshkigal / Ignacio / Geryon")
+           Ereshkigal / Ignacio / Geryon / the royal jelly")
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
@@ -350,7 +349,7 @@ end
 
 function general_setup(e)
   e.tags("no_rotate no_hmirror no_vmirror")
-  e.tags("no_monster_gen no_item_gen no_trap_gen no_pool_fixup")
+  e.tags("no_item_gen no_trap_gen no_pool_fixup")
   e.kfeat("& = closed_door")
   e.marker("& = lua:restrict_door()")
   e.colour("& = lightgrey")

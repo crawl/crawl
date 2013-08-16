@@ -18,6 +18,7 @@ enum status_type
     STATUS_ROT,
     STATUS_SICK,
     STATUS_SPEED,
+    STATUS_CLINGING,
     STATUS_HOVER,
     STATUS_SAGE,
     STATUS_STR_ZERO,
@@ -38,7 +39,8 @@ enum status_type
     STATUS_RECALL,
     STATUS_LIQUEFIED,
     STATUS_DRAINED,
-    STATUS_LAST_STATUS = STATUS_DRAINED
+    STATUS_RAY,
+    STATUS_LAST_STATUS = STATUS_RAY
 };
 
 struct status_info

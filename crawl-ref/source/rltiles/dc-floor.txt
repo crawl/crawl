@@ -536,21 +536,24 @@ floor_nerves6
 %resetcol
 
 %variation FLOOR_NERVES lightgray
+%lum 0 5
 %desat 0
+%lum 15 10
 %desat 15
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTGRAY
 %resetcol
 
 %variation FLOOR_NERVES darkgray
-%desat 0
-%desat 15
 %lum 0 -10
+%desat 0
+%lum 15 -5
+%desat 15
 %repeat FLOOR_NERVES FLOOR_NERVES_DARKGRAY
 %resetcol
 
 %variation FLOOR_NERVES lightblue
 %hue 0 210
-%hue 15 225
+%hue 15 200
 %lum 0 5
 %lum 15 5
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTBLUE
@@ -559,7 +562,7 @@ floor_nerves6
 %variation FLOOR_NERVES lightgreen
 %hue 0 110
 %hue 15 125
-%lum 0 5
+%lum 0 3
 %lum 15 5
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTGREEN
 %resetcol
@@ -567,14 +570,14 @@ floor_nerves6
 %variation FLOOR_NERVES lightcyan
 %hue 0 180
 %hue 15 195
-%lum 0 7
+%lum 0 4
 %lum 15 7
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTCYAN
 %resetcol
 
 %variation FLOOR_NERVES lightred
-%lum 0 7
-%lum 15 22
+%lum 0 4
+%lum 15 7
 %repeat FLOOR_NERVES FLOOR_NERVES_LIGHTRED
 %resetcol
 
@@ -587,17 +590,18 @@ floor_nerves6
 %resetcol
 
 %variation FLOOR_NERVES yellow
-%hue 0 50
-%hue 15 65
+%hue 0 40
+%hue 15 55
 %lum 0 5
 %lum 15 5
 %repeat FLOOR_NERVES FLOOR_NERVES_YELLOW
 %resetcol
 
 %variation FLOOR_NERVES white
+%lum 0 15
 %desat 0
+%lum 15 25
 %desat 15
-%lum 0 20
 %repeat FLOOR_NERVES FLOOR_NERVES_WHITE
 %resetcol
 
@@ -762,10 +766,16 @@ crypt0 FLOOR_CRYPT
 crypt1
 crypt2
 crypt3
+%weight 3
 crypt4
 crypt5
 crypt6
 crypt7
+%weight 2
+crypt8
+crypt9
+crypt10
+crypt11
 
 iron0 FLOOR_IRON
 %weight 1
@@ -888,3 +898,29 @@ cage3
 %weight 5
 cage4
 cage5
+
+etched0 FLOOR_ETCHED
+etched1
+etched2
+etched3
+etched4
+etched5
+
+%weight 10
+mosaic0 FLOOR_MOSAIC
+mosaic1
+mosaic2
+mosaic3
+%weight 4
+mosaic4
+mosaic5
+mosaic6
+mosaic7
+mosaic8
+mosaic9
+mosaic10
+mosaic11
+mosaic12
+mosaic13
+mosaic14
+mosaic15

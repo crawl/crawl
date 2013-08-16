@@ -147,7 +147,7 @@ void monster::reset()
     // no actual in-game monster should be reset while still constricting
     ASSERT(!constricting);
 
-    client_id = last_client_id = 0;
+    client_id = 0;
 
     // Just for completeness.
     speed           = 0;
@@ -288,10 +288,10 @@ bool monster::extra_balanced() const
 /*
  * Monster floundering conditions.
  *
- * Floundering reduce the movement speed and can cause the monster to fumble
+ * Floundering reduces movement speed and can cause the monster to fumble
  * its attacks. It can be caused by water or by Leda's liquefaction.
  *
- * @param pos Coordinates of position to check.
+ * @param p Coordinates of position to check.
  * @return Whether the monster would be floundering at p.
  */
 bool monster::floundering_at(const coord_def p) const
@@ -1442,9 +1442,6 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
 
 static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
-    if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
-        return (weapon.base_type == OBJ_RODS);
-
     // Don't pick up items that would interfere with our special ability
     if (mons->type == MONS_RED_DEVIL)
         return (weapon_skill(weapon) == SK_POLEARMS);
@@ -2987,10 +2984,10 @@ void monster::attacking(actor * /* other */)
 }
 
 // Sends a monster into a frenzy.
-void monster::go_frenzy()
+bool monster::go_frenzy(actor *source)
 {
-    if (!can_go_berserk())
-        return;
+    if (!can_go_frenzy())
+        return false;
 
     if (has_ench(ENCH_SLOW))
     {
@@ -3008,14 +3005,19 @@ void monster::go_frenzy()
     props["old_attitude"] = short(attitude);
 
     attitude = ATT_NEUTRAL;
-    add_ench(mon_enchant(ENCH_INSANE, 0, 0, duration * 10));
-    add_ench(mon_enchant(ENCH_HASTE, 0, 0, duration * 10));
-    add_ench(mon_enchant(ENCH_MIGHT, 0, 0, duration * 10));
+    add_ench(mon_enchant(ENCH_INSANE, 0, source, duration * 10));
+    if (holiness() == MH_NATURAL)
+    {
+        add_ench(mon_enchant(ENCH_HASTE, 0, source, duration * 10));
+        add_ench(mon_enchant(ENCH_MIGHT, 0, source, duration * 10));
+    }
     mons_att_changed(this);
 
     if (simple_monster_message(this, " flies into a frenzy!"))
         // Xom likes monsters going insane.
         xom_is_stimulated(friendly() ? 25 : 100);
+
+    return true;
 }
 
 void monster::go_berserk(bool /* intentional */, bool /* potion */)
@@ -3526,7 +3528,8 @@ bool monster::is_unclean(bool check_spells) const
         || has_attack_flavour(AF_HUNGER)
         || has_attack_flavour(AF_ROT)
         || has_attack_flavour(AF_STEAL)
-        || has_attack_flavour(AF_STEAL_FOOD))
+        || has_attack_flavour(AF_STEAL_FOOD)
+        || has_attack_flavour(AF_PLAGUE))
     {
         return true;
     }
@@ -4085,7 +4088,7 @@ int monster::skill(skill_type sk, int scale, bool real) const
     switch (sk)
     {
     case SK_EVOCATIONS:
-        return (type == MONS_DEEP_DWARF_ARTIFICER ? hd * 2 : hd);
+        return hd;
 
     case SK_NECROMANCY:
         return ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hd : hd/2);
@@ -4734,7 +4737,7 @@ void monster::calc_speed()
         speed--;
 
     // Going berserk on liquid ground doesn't speed you up any.
-    if (!liquefied_ground() && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
+    if (!liquefied_ground() && (has_ench(ENCH_BERSERK)))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
@@ -4790,9 +4793,9 @@ int monster::foe_distance() const
                  : INFINITE_DISTANCE);
 }
 
-bool monster::can_go_berserk() const
+bool monster::can_go_frenzy() const
 {
-    if (holiness() != MH_NATURAL || mons_is_tentacle_or_tentacle_segment(type))
+    if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
     if (mons_intel(this) == I_PLANT)
@@ -4801,7 +4804,7 @@ bool monster::can_go_berserk() const
     if (paralysed() || petrified() || petrifying() || asleep())
         return false;
 
-    if (berserk() || has_ench(ENCH_FATIGUE))
+    if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
         return false;
 
     // If we have no melee attack, going berserk is pointless.
@@ -4826,13 +4829,23 @@ bool monster::can_jump() const
     if (has_ench(ENCH_FATIGUE))
         return false;
 
-
     return true;
+}
+
+bool monster::can_go_berserk() const
+{
+    return (holiness() == MH_NATURAL) && can_go_frenzy();
 }
 
 bool monster::berserk() const
 {
-    return (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE));
+    return has_ench(ENCH_BERSERK);
+}
+
+// XXX: this function could use a better name
+bool monster::berserk_or_insane() const
+{
+    return berserk() || has_ench(ENCH_INSANE);
 }
 
 bool monster::needs_berserk(bool check_spells) const
@@ -4865,7 +4878,13 @@ bool monster::can_see_invisible() const
         return ghost->see_invis;
     else if (mons_class_flag(type, M_SEE_INVIS))
         return true;
+    else if (suppressed())
+        return false;
     else if (scan_artefacts(ARTP_EYESIGHT) > 0)
+        return true;
+    else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
+        return true;
+    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_SEE_INVISIBLE))
         return true;
     return false;
 }
@@ -5656,6 +5675,15 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
         }
     }
+    else if (mons_is_tentacle_or_tentacle_segment(type)
+            && type != MONS_ELDRITCH_TENTACLE
+            && flavour != BEAM_TORMENT_DAMAGE
+            && !invalid_monster_index(number)
+            && menv[number].is_parent_monster_of(this))
+    {
+        (new deferred_damage_fineff(oppressor, &menv[number],
+                                    damage, false))->schedule();
+    }
 
     if (!alive())
         return;
@@ -5667,16 +5695,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
                            damage * BASELINE_DELAY);
-    }
-
-    if (mons_is_tentacle_or_tentacle_segment(type)
-            && type != MONS_ELDRITCH_TENTACLE
-            && flavour != BEAM_TORMENT_DAMAGE
-            && !invalid_monster_index(number)
-            && menv[number].is_parent_monster_of(this))
-    {
-        (new deferred_damage_fineff(oppressor, &menv[number],
-                                    damage, false))->schedule();
     }
     else if (mons_species(type) == MONS_BUSH
              && res_fire() < 0
@@ -5760,6 +5778,11 @@ reach_type monster::reach_range() const
     if (wpn)
         return weapon_reach(*wpn);
     return REACH_NONE;
+}
+
+bool monster::can_cling_to_walls() const
+{
+    return mons_can_cling_to_walls(this);
 }
 
 void monster::steal_item_from_player()

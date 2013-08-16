@@ -1264,9 +1264,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 45;
             break;
 
-#if TAG_MAJOR_VERSION == 34
-        case WPN_SPIKED_FLAIL:
-#endif
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
             valued += 50;
@@ -1515,7 +1512,7 @@ unsigned int item_value(item_def item, bool ident)
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_SICKNESS:
 #endif
-            case SPMSL_RAGE:
+            case SPMSL_FRENZY:
                 valued *= 23;
                 break;
             }
@@ -2182,12 +2179,6 @@ unsigned int item_value(item_def item, bool ident)
         case MISC_BOX_OF_BEASTS:
             valued += 500;
             break;
-
-#if TAG_MAJOR_VERSION == 34
-        case MISC_EMPTY_EBONY_CASKET:
-            valued += 20;
-            break;
-#endif
 
         default:
             if (is_deck(item))

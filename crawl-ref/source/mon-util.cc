@@ -737,6 +737,13 @@ bool mons_is_jumpy(const monster* mon)
             && mons_class_is_jumpy(get_chimera_legs(mon)));
 }
 
+bool mons_can_cling_to_walls(const monster* mon)
+{
+    return mons_class_is_clingy(mon->type)
+        || mons_class_is_chimeric(mon->type)
+           && mons_class_is_clingy(get_chimera_legs(mon));
+}
+
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
@@ -767,7 +774,7 @@ bool mons_is_sensed(monster_type mc)
 
 bool mons_allows_beogh(const monster* mon)
 {
-    if (!player_genus(GENPC_ORCISH) || you.religion == GOD_BEOGH)
+    if (!player_genus(GENPC_ORCISH) || you_worship(GOD_BEOGH))
         return false; // no one else gives a damn
 
     return mons_genus(mon->type) == MONS_ORC
@@ -780,16 +787,6 @@ bool mons_allows_beogh_now(const monster* mon)
     return mon && mons_allows_beogh(mon) && !silenced(mon->pos())
                && !mons_is_confused(mon) && !mons_is_immotile(mon)
                && you.visible_to(mon) && you.can_see(mon);
-}
-
-bool mons_behaviour_perceptible(const monster* mon)
-{
-    return (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && !mons_is_mimic(mon->type)
-            && !mons_is_statue(mon->type)
-            && mons_species(mon->type) != MONS_OKLOB_PLANT
-            && mon->type != MONS_BALLISTOMYCETE
-            && mon->type != MONS_BURNING_BUSH);
 }
 
 // Returns true for monsters that obviously (to the player) feel
@@ -1182,10 +1179,10 @@ bool mons_is_draconian(monster_type mc)
     return (mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN);
 }
 
-// Conjured (as opposed to summoned) monsters are actually here, eventhough
-// they're typically volatile (like, made of real fire).  As such, they
-// should be immune to Abjuration or Recall.  Also, they count as things
-// rather than beings.
+// Conjured (as opposed to summoned) monsters are actually here, even
+// though they're typically volatile (like, made of real fire). As such,
+// they should be immune to Abjuration or Recall. Also, they count as
+// things rather than beings.
 bool mons_is_conjured(monster_type mc)
 {
     return mons_is_projectile(mc)
@@ -1466,6 +1463,13 @@ bool mons_class_is_chimeric(monster_type mc)
 bool mons_class_is_jumpy(monster_type mc)
 {
     return mc == MONS_JUMPING_SPIDER;
+}
+
+bool mons_class_is_clingy(monster_type type)
+{
+    return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
+        || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
+        || type == MONS_DEMONIC_CRAWLER;
 }
 
 bool mons_class_is_animated_weapon(monster_type type)
@@ -2963,16 +2967,14 @@ bool mons_is_batty(const monster* m)
 bool mons_looks_stabbable(const monster* m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
-    return (mons_behaviour_perceptible(m)
-            && !m->friendly()
+    return (!m->friendly()
             && (uat == UCAT_PARALYSED || uat == UCAT_SLEEPING));
 }
 
 bool mons_looks_distracted(const monster* m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
-    return (mons_behaviour_perceptible(m)
-            && !m->friendly()
+    return (!m->friendly()
             && uat != UCAT_NO_ATTACK
             && uat != UCAT_PARALYSED
             && uat != UCAT_SLEEPING);
@@ -3033,6 +3035,9 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
 
     // Cancel fleeing and such.
     mon->behaviour = BEH_WANDER;
+
+    // Remove haunting, which would otherwise cause monster to continue attacking
+    mon->del_ench(ENCH_HAUNTING, true, true);
 
     // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
@@ -3337,7 +3342,6 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_YAKTAUR:
     case MONS_YAKTAUR_CAPTAIN:
     case MONS_CHERUB:
-    case MONS_DEEP_DWARF_ARTIFICER:
     case MONS_SONJA:
     case MONS_HAROLD:
     case MONS_POLYPHEMUS:
@@ -3348,7 +3352,6 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_URUG:
     case MONS_FAUN:
     case MONS_SATYR:
-    case MONS_PAN:
         return true;
     default:
         return false;
@@ -4243,7 +4246,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
         else
             return MON_SHAPE_BAT;
     case 'c': // centaurs
-        if (mc == MONS_FAUN || mc == MONS_SATYR || mc == MONS_PAN)
+        if (mc == MONS_FAUN || mc == MONS_SATYR)
             return MON_SHAPE_HUMANOID_TAILED;
         return MON_SHAPE_CENTAUR;
     case 'd': // draconions and drakes

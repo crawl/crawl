@@ -80,7 +80,7 @@ end
 
 
 NAME:   tgw_lugonu_bribe
-DEPTH:  D:12-27
+DEPTH:  D:12-
 KFEAT:  _ = altar_lugonu
 MARKER: _ = lua:portal_desc {slave_name="altar"}
 

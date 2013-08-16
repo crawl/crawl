@@ -250,7 +250,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_PROFANE_SERVITOR:
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_SPRIGGAN_ASSASSIN:
-    case TILEP_MONS_DEEP_DWARF_ARTIFICER:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
@@ -356,7 +355,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_NAGA_MAGE:
     case TILEP_MONS_THE_ENCHANTRESS:
     case TILEP_MONS_DEEP_DWARF:
-    case TILEP_MONS_DEEP_DWARF_SCION:
     case TILEP_MONS_DEEP_DWARF_BERSERKER:
         *ofs_x = 0;
         *ofs_y = 1;
@@ -370,8 +368,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ORC_WARLORD:
     case TILEP_MONS_BOGGART:
     case TILEP_MONS_DEEP_ELF_FIGHTER:
-    case TILEP_MONS_DEEP_DWARF_NECROMANCER:
-    case TILEP_MONS_UNBORN_DEEP_DWARF:
+    case TILEP_MONS_UNBORN:
     case TILEP_MONS_JORGRUN:
     case TILEP_MONS_MERMAID:
     case TILEP_MONS_MERMAID_WATER:
@@ -448,7 +445,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_LOUISE:
     case TILEP_MONS_SATYR:
-    case TILEP_MONS_PAN:
         *ofs_x = 1;
         *ofs_y = -4;
         break;
@@ -722,7 +718,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
         else if (dam > 25)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_GREAT_MACE;
         else if (dam > 20)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SPIKED_FLAIL;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_EVENINGSTAR;
         else if (dam > 15)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_MORNINGSTAR;
         else if (dam > 10)

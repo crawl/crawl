@@ -485,11 +485,6 @@ A staircase to the Orcish Mines
 오크 광산으로 갈 수 있는 계단이다. 금으로 가득한 곳이지만, 보기보다 위험하며
 또한 갇히기도 쉬운 곳이다.
 %%%%
-A staircase to the Dwarven Hall
-
-잘 만들어진 계단으로, 드워프의 광장으로 갈 수 있는 계단이다. 저 멀리서 맥주
-냄새가 나는 것 같다.
-%%%%
 A staircase to the Enchanted Forest
 
 이 계단을 걸어 내려가면, 온갖 종류의 무서운 저주가 산재한 스프리건족과 텐구족,
@@ -669,11 +664,6 @@ An iron grate
 
 녹이 슨 철창으로, 주문이나 마법봉이 있다면 쉽게 철창을 부숴버릴 수 있을 것
 같다. 물론, 맨손으로 어떻게 해본다고 부서질 철창은 아니다.
-%%%%
-An iron tree
-
-봄날의 자연을 두더러지게 보여주고 있지만, 이건 완전히 쇳덩이로 만들어졌다. 거의
-살아있는 나무에 흡사하게 보이는 걸 보니, 만드는 데 고생 꽤나 했을 듯 하다.
 %%%%
 An open door
 
@@ -994,11 +984,6 @@ A large window
 A glass window
 
 엄청나게 단단한 유리로 만들어진 창문이다. 창문에 오목한 자국들이 있다.
-%%%%
-A granite statue of a fallen hero
-
-이 광장을 수호하고 있는, 실물 크기의 화강암 드워프 석상이다. 왠지 모르게 석상이
-당신을 감시하고 있는 것 같다.
 %%%%
 An elephant-shaped statue
 

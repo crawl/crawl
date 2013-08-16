@@ -114,7 +114,7 @@ end
 #  or high values.
 #
 # Parameters:
-#  <1> e: The global enviroment
+#  <1> e: The global environment
 #  <2> corners: The array of corners to update
 #  <3> start_x
 #  <4> start_y: The corrdinates of the start point
@@ -326,7 +326,7 @@ end
 #  lie within the minimum and maximum bounds given.
 #
 # Parameters:
-#  <1> e: The global enviroment
+#  <1> e: The global environment
 #  <2> corners: The array of corners to update
 #  <3> center_x
 #  <4> center_y: The corrdinates of the center point
@@ -437,7 +437,7 @@ end
 #  positions.  The positions are chosen randomly.
 #
 # Parameters:
-#  <1> e: The global enviroment
+#  <1> e: The global environment
 #  <2> corners: The array of corners to update
 #  <3> positions: The possible positions for loops
 #  <4> count: How many loops
@@ -526,7 +526,7 @@ end
 #  rooms with increasing frequency at larger radius values.
 #
 # Room shape:
-#  -> box: A simple sqaure
+#  -> box: A simple square
 #  -> diamond: A square, rotated 45 degrees
 #  -> octagon: A diamond minus the corners
 #  -> plus: A 3-wide X-junction
@@ -534,14 +534,14 @@ end
 # Room styles:
 #  -> open: Just open space
 #  -> solid: All but the outer ring of the room is filled with
-#            the specifed glyph
+#            the specified glyph
 #  -> outline: The outer ring of the room is cut; the rest is
-#              left with whatever gpyphs it had
+#              left with whatever glyphs it had
 #
 # Parameters:
-#  <1> e: The global enviroment
+#  <1> e: The global environment
 #  <3> center_x
-#  <4> center_y: The corrdinates of the center of the room
+#  <4> center_y: The coordinates of the center of the room
 #  <5> radius: The radius of the room
 #  <6> wall_glyph: The glyph to fill the center of the room
 #                  with, if applicable
@@ -892,7 +892,7 @@ end
 # Has a chance at drawing a room at each unused corner.
 #
 # Parameters:
-#  <1> e: The global enviroment
+#  <1> e: The global environment
 #  <2> corners: The array of corners to draw rooms at
 #  <3> percent: The chance (out of 100) of drawing a room
 #  <4> radius_min: The minimum radius of a room
@@ -958,7 +958,7 @@ end
 #  bias.
 #
 # Parameters:
-#  <1> e: The global enviroment
+#  <1> e: The global environment
 #  <2> percent: The chance (out of 100) of drawing a room
 #  <3> radius_min: The minimum radius of a room
 #  <4> radius_max: The maximum radius of a room
@@ -1017,7 +1017,7 @@ end
 # Builds one quarter of the layout_loops_corners map
 #
 # Parameters:
-#  <1> e: The global enviroment
+#  <1> e: The global environment
 #  <2> center_x
 #  <3> center_y: The center of the corner
 #  <4> wall_glyph: The glyph to fill the center of the rooms
@@ -1081,7 +1081,7 @@ end
 #  can be difficult to see in the final map.
 #
 NAME:    layout_loops_misc
-DEPTH:   D:1-, Lair, Snake, Elf, Dwarf, Crypt, Zot
+DEPTH:   D:1-, Lair, Snake, Elf, Crypt, Zot
 WEIGHT:  5 (Pan), 10 (Zot), 20
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_misc
@@ -1189,16 +1189,16 @@ ENDMAP
 #  connected but there is one that is not.
 #
 # There is always a (open) plus-shaped room placed at the
-#  center of this map where the four arms are guarenteed to be
+#  center of this map where the four arms are guaranteed to be
 #  connected.
 #
-# There is a chance that this layout places all 6 staircase.
+# There is a chance that this layout places all 6 staircases.
 #  If so, the three up stairs will be placed around one arm of
 #  the cross and the three down stairs will be placed around
 #  another (random) arm of the cross.
 #
 NAME:    layout_loops_cross
-DEPTH:   D:1-, Lair, Snake, Elf, Dwarf, Crypt, Pan
+DEPTH:   D:1-, Lair, Snake, Elf, Crypt, Pan
 WEIGHT:  5 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
@@ -1452,7 +1452,7 @@ ENDMAP
 #  generated around the central rooms.
 #
 NAME:    layout_loops_corners
-DEPTH:   D:1-, Lair, Snake, Elf, Dwarf, Crypt
+DEPTH:   D:1-, Lair, Snake, Elf, Crypt
 WEIGHT:  5
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_misc

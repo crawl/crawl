@@ -296,11 +296,13 @@ public:
     int  skill(skill_type skill, int scale = 1, bool real = false) const;
 
     void attacking(actor *other);
+    bool can_go_frenzy() const;
     bool can_go_berserk() const;
     bool can_jump() const;
     void go_berserk(bool intentional, bool potion = false);
-    void go_frenzy();
+    bool go_frenzy(actor *source);
     bool berserk() const;
+    bool berserk_or_insane() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
@@ -349,6 +351,7 @@ public:
     bool res_corr(bool calc_unid = true, bool items = true) const;
 
     flight_type flight_mode() const;
+    bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
     bool invisible() const;

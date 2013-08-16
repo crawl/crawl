@@ -31,6 +31,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "player.h"
+#include "religion.h"
 #include "shopping.h"
 #include "showsymb.h"
 #include "stuff.h"
@@ -1695,7 +1696,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
     if (oper == OPER_REMOVE
         && item.base_type == OBJ_JEWELLERY
         && item.sub_type == AMU_FAITH
-        && you.religion != GOD_NO_GOD)
+        && !you_worship(GOD_NO_GOD))
     {
         return true;
     }
@@ -2146,7 +2147,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 
         if (item.sub_type != MISC_LANTERN_OF_SHADOWS
 #if TAG_MAJOR_VERSION == 34
-            && item.sub_type != MISC_EMPTY_EBONY_CASKET
+            && item.sub_type != MISC_BUGGY_EBONY_CASKET
 #endif
             && item.sub_type != MISC_RUNE_OF_ZOT)
         {

@@ -39,7 +39,7 @@ end
 #
 NAME:   dungeon_sprint_mu
 DESC:   Sprint III: "The Ten Rune Challenge"
-TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 ORIENT: encompass
 SHUFFLE:  hnw
 SHUFFLE:  NI
@@ -1420,7 +1420,7 @@ SUBST: . = ..........2233445
 MARKER: ! = lua:fog_machine { \
                 pow_max = 1000, delay_min = 1, delay_max = 1, \
                 size = 1000, size_buildup_amnt = 111, \
-                size_buildup_time = 1, cloud_type = "gloom" }
+                size_buildup_time = 1, cloud_type = "purple smoke" }
 MAP
 ccccccc#cccccc
 c!..c....c..!c

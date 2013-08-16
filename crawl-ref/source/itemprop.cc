@@ -178,6 +178,9 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
         DAMV_CRUSHING, 0 },
+    { WPN_ROD,               "rod",                 5,  3, 13,  50,  7,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
+        DAMV_CRUSHING, 0 },
     { WPN_WHIP,              "whip",                6,  2, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_SLASHING, 0 },
@@ -199,11 +202,6 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
         DAMV_SLASHING, 0 },
-#if TAG_MAJOR_VERSION == 34
-    { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
-        DAMV_CRUSHING | DAM_PIERCE, 10 },
-#endif
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
@@ -565,7 +563,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         return;
     }
 
-    if (no_ash && you.religion == GOD_ASHENZARI)
+    if (no_ash && you_worship(GOD_ASHENZARI))
     {
         simple_god_message(" preserves the curse.");
         return;
@@ -1313,7 +1311,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return (uncurse && arm.cursed() && you.religion != GOD_ASHENZARI);
+        return (uncurse && arm.cursed() && !you_worship(GOD_ASHENZARI));
 
     return true;
 }
@@ -1338,7 +1336,6 @@ int weapon_rarity(int w_type)
 
     case WPN_BOW:
     case WPN_FLAIL:
-    case WPN_HAMMER:
     case WPN_SABRE:
     case WPN_SHORT_SWORD:
     case WPN_SLING:
@@ -1400,9 +1397,8 @@ int weapon_rarity(int w_type)
     case WPN_SACRED_SCOURGE:
     case WPN_TRISHULA:
     case WPN_STAFF:
-#if TAG_MAJOR_VERSION == 34
-    case WPN_SPIKED_FLAIL:
-#endif
+    case WPN_ROD:
+    case WPN_HAMMER:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return 0;
 
@@ -1633,7 +1629,7 @@ int weapon_str_weight(const item_def &wpn)
         return Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight;
 
     if (wpn.base_type == OBJ_RODS)
-        return Weapon_prop[ Weapon_index[WPN_CLUB] ].str_weight;
+        return Weapon_prop[ Weapon_index[WPN_ROD] ].str_weight;
 
     return Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight;
 }
@@ -1707,7 +1703,7 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
 
     if (item.base_type == OBJ_JEWELLERY)
     {
-        if (item.sub_type == AMU_FAITH && you.religion != GOD_NO_GOD)
+        if (item.sub_type == AMU_FAITH && !you_worship(GOD_NO_GOD))
             return false;
         return !((item.sub_type == AMU_THE_GOURMAND && !swap_in)
                 || item.sub_type == AMU_GUARDIAN_SPIRIT
@@ -2070,14 +2066,6 @@ bool is_blood_potion(const item_def &item)
 
     return (item.sub_type == POT_BLOOD
             || item.sub_type == POT_BLOOD_COAGULATED);
-}
-
-bool is_fizzing_potion(const item_def &item)
-{
-    if (item.base_type != OBJ_POTIONS)
-        return false;
-
-    return (item.sub_type == POT_FIZZING);
 }
 
 bool food_is_meaty(int food_type)
@@ -2535,7 +2523,7 @@ int property(const item_def &item, int prop_type)
 
     case OBJ_STAVES:
     case OBJ_RODS:
-        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_CLUB : WPN_STAFF;
+        weapon_sub = (item.base_type == OBJ_RODS) ? WPN_ROD : WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
             return Weapon_prop[ Weapon_index[weapon_sub] ].dam;
@@ -2890,10 +2878,10 @@ void seen_item(const item_def &item)
     }
 
     // major hack.  Deconstify should be safe here, but it's still repulsive.
-    if (you.religion == GOD_ASHENZARI)
+    if (you_worship(GOD_ASHENZARI))
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
-        ((item_def*)&item)->plus = (you.religion == GOD_ZIN) ? 2 : 1;
+        ((item_def*)&item)->plus = (you_worship(GOD_ZIN)) ? 2 : 1;
 
     if (item_type_has_ids(item.base_type) && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_TYPE)

@@ -259,9 +259,10 @@ How fast you train a skill is governed by the following factors:
       The aptitude penalty is indicated in <red>red</red>.
 
 On top of that, there are some effects which directly modify a skill, for
-example god powers. These skill modifiers are shown in <blue>blue</blue>.
-The training percentage (in <brown>brown</brown>) shows the relative amount of experience
-which will be used to train this skill.
+example draining or some god powers. Reduced skills are shown in <magenta>magenta</magenta>, and
+enhanced skills in <blue>blue</blue>.
+The training percentage (in <brown>brown</brown>) shows the relative
+amount of experience which will be used to train this skill.
 
 Apart from (de)selecting skills, you also have the following toggles:
 <w>/</w> :   Switch between automatic and manual training.

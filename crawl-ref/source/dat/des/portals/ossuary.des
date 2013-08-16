@@ -7,7 +7,7 @@
 # monsters, making the player choose between pressing on towards the loot or
 # leaving the vault.
 #
-# Flavour: Mini versions of Tomb:* and otherwise crypt like.
+# Flavour: Mini versions of Tomb and otherwise crypt like.
 #
 ##############################################################################
 
@@ -24,7 +24,7 @@ function ossuary_portal(e)
       finalmsg = "The hiss of flowing sand is almost imperceptible now.",
 
       verb = 'hiss',
-      -- This is always preceeded by an article, so...
+      -- This is always preceded by an article, so...
       noisemaker = 'avalanche of sand',
       ranges = {
         { 5000, 'rapid ' },  { 4000, '' },

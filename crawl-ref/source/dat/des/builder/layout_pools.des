@@ -2,9 +2,9 @@
 # layout_pools.des
 #
 # These layouts are based on the add_pools function.  They
-#  divide the map into a bunch of irregular areas jammed aginst
-#  each other.  The layout may use either the areas themsleves
-#  are the paths between them.  These are not true vaults, in
+#  divide the map into a bunch of irregular areas jammed against
+#  each other.  The layout may use either the areas themselves
+#  or the paths between them.  These are not true vaults, in
 #  that the dungeon builder can add other vaults on top of them.
 #
 
@@ -19,7 +19,7 @@
 #  vaults because they are each used in more than one.
 #
 # These maps have a small chance of placing the up stairs.
-#  This is handlied by always generating the layout as if
+#  This is handled by always generating the layout as if
 #  the stairs were to be placed, but only sometimes adding
 #  them.
 #
@@ -74,7 +74,7 @@
         local right  = gxm - 1 - border
         local bottom = gym - 1 - border
         local size_max = 6 + 4 * depth_fraction
-        local seperation_min = crawl.random_range(1, border - depth_fraction*2)
+        local separation_min = crawl.random_range(1, border - depth_fraction*2)
 
         local room_count_min = ( 50 + depth_fraction *  950) / size_max
         local room_count_max = (150 + depth_fraction * 1850) / size_max
@@ -89,10 +89,10 @@
             local wall_count = e.count_feature_in_box {x1 = min_x, x2 = max_x,
                                                        y1 = min_y, y2 = max_y,
                                                        feat = "xv" }
-            local blocked = e.find_in_area {x1 = min_x - seperation_min,
-                                            x2 = max_x + seperation_min,
-                                            y1 = min_y - seperation_min,
-                                            y2 = max_y + seperation_min,
+            local blocked = e.find_in_area {x1 = min_x - separation_min,
+                                            x2 = max_x + separation_min,
+                                            y1 = min_y - separation_min,
+                                            y2 = max_y + separation_min,
                                             find = "c", find_vault = true }
             if not blocked and wall_count < cell_count
                and wall_count >= cell_count * 0.5 then
@@ -431,7 +431,7 @@ validate {{
 
 #
 # This layout builds three parallel horizontal paths.  The paths
-#  may continue the whole length of the map seperately, or may
+#  may continue the whole length of the map separately, or may
 #  join up at one end.  If the paths do not join up,
 #  connections are added so that all three paths are connected.
 #

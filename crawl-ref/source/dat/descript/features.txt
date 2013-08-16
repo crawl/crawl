@@ -132,22 +132,6 @@ experienced characters can die there. On the other hand, these halls contain
 several runes and lots of valuable items. It is much easier to get in than to
 get out.
 %%%%
-A gas trap
-
-You're lucky to have noticed this trap, for it would have released a cloud of
-deadly gas at you. Exactly what gas it holds, you cannot tell — perhaps it is
-plain poison, perhaps mutagenic fumes, perhaps flammable vapour, or perhaps
-something yet nastier.
-%%%%
-A gas trap:quote
-
-“Good your grace, an’ I had room for such a thundergust within mine ancient
-bowels, ’tis not in reason I coulde discharge ye same and live to thank God for
-yt. He did choose handmaid so humble whereby to shew his power. Nay, ’tis not I
-yt have broughte forth this rich o’ermastering fog, this fragrant gloom, so
-pray you seeke ye further.”
-    -Mark Twain, “1601”, 1880.
-%%%%
 A gate to the Realm of Zot
 
 This gate leads to the Realm of Zot, the final stage of your quest as its
@@ -300,6 +284,9 @@ A mangrove
 
 This tree is specially adapted for growing in swampy conditions. Its vines are
 too thick to see through.
+
+While too large to be felled with an axe, it is susceptible to bolts of
+lightning and to sufficiently intense sources of fire.
 %%%%
 A magical trap
 
@@ -506,18 +493,6 @@ A staircase to the Ecumenical Temple
 An entrance to a temple of Gods, a place of peace and refuge from the insanity
 of the dungeon.
 %%%%
-A staircase to the Ecumenical Temple:quote
-
-„W mieście, którego nazwiska nie powiem,
- Nic to albowiem do rzeczy nie przyda,
- W mieście, ponieważ zbiór pustek tak zowiem,
- W godnem siedlisku i chłopa, i Żyda,
- W mieście (gród, ziemstwo trzymało albowiem
- Stare zamczysko, pustoty ohyda)
- Były trzy karczmy, bram cztery ułomki,
- Klasztorów dziewięć i gdzieniegdzie domki.”
-    -Ignacy Krasicki, “Monachomachia”, 1778
-%%%%
 A staircase to the Elven Halls
 
 A wide stair down to the murky depths of the halls of the deep elves, skilled
@@ -617,6 +592,9 @@ While the dungeon is filled with dim magic light, in most places it is not
 bright enough to sustain any larger plants. It is uneven, though, and there are
 spots where, with the grace of Fedhas, trees as big as those on the surface can
 grow underground.
+
+While too large to be felled with an axe, it is susceptible to bolts of
+lightning and to sufficiently intense sources of fire.
 %%%%
 A tree:quote
 

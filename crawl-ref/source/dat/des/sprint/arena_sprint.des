@@ -210,7 +210,7 @@ end
 function arena_sprint_get_monster_set(round, boss)
     if not boss then
         if round == 27 then
-            return {"place:Zot:5 / orb guardian w:70 / tiamat /\
+            return {"place:Zot:$ / orb guardian w:70 / tiamat /\
                         orb of fire / electric golem / killer klown /\
                         ancient lich / moth of wrath"}
         end
@@ -259,7 +259,6 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 naga mage / w:1 naga warrior",
                 "jelly / w:5 ooze / w:3 brown ooze / giant eyeball / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
-                "deep dwarf scion / deep dwarf artificer / deep dwarf",
                 "zombie / skeleton / wight / necrophage /\
                     phantom w:5 / w:1 josephine",
                 "w:7 blue devil / iron devil w:5 / orange demon / red devil w:5 / rotting devil /\
@@ -290,7 +289,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Hive, Dwarf, Crypt, Pan, Tomb
                 "place:D:11 w:15 / place:D:14 w:15 / w:2 erica / w:2 harold /\
                     w:1 rupert",
-                "w:20 place:Orc:4 / orc wizard / orc warrior / orc knight /\
+                "w:20 place:Orc:$ / orc wizard / orc warrior / orc knight /\
                     orc priest / orc high priest w:3 / orc sorcerer w:2 /\
                     orc warlord w:1 / urug w:2",
                 "place:Elf",
@@ -302,8 +301,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "jelly / w:5 brown ooze / giant eyeball / w:2 shining eye /\
                     w:2 golden eye / w:2 eye of draining / w:1 slime creature",
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
-                "deep dwarf scion / deep dwarf artificer / w:3 deep dwarf death knight /\
-                    w:5 deep dwarf berserker",
                 "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
                     skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
                     shadow w:3 / silent spectre / w:4 josephine",
@@ -341,18 +338,16 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Hive, Dwarf, Crypt, Pan, Tomb
                 "place:D:16 w:12 / place:D:19 w:12 / w:1 louise / w:1 norris /\
                     w:1 donald / w:1 maud",
-                "w:20 place:Orc:4 / orc wizard / orc sorcerer w:3 / orc warrior / orc knight /\
+                "w:20 place:Orc:$ / orc wizard / orc sorcerer w:3 / orc warrior / orc knight /\
                     orc warlord w:3 / orc priest / orc high priest w:4 / urug w:3",
-                "place:Elf:3",
-                "place:Lair:8 w:100 / hydra / catoblepas / dire elephant / w:5 gastronok",
-                "place:Shoals:5 w:20 / w:6 siren / w:5 harpy",
-                "place:Swamp:5 w:20 / w:6 hydra / w:5 swamp dragon",
-                "place:Spider:5 w:20 / w:5 wolf spider / w:5 orb spider / w:2 emperor scorpion",
-                "place:Snake:5 w:20 / w:5 naga mage / w:5 naga warrior / w:5 greater naga",
+                "place:Elf:$",
+                "place:Lair:$ w:100 / hydra / catoblepas / dire elephant / w:5 gastronok",
+                "place:Shoals:$ w:20 / w:6 siren / w:5 harpy",
+                "place:Swamp:$ w:20 / w:6 hydra / w:5 swamp dragon",
+                "place:Spider:$ w:20 / w:5 wolf spider / w:5 orb spider / w:2 emperor scorpion",
+                "place:Snake:$ w:20 / w:5 naga mage / w:5 naga warrior / w:5 greater naga",
                 "place:Slime",
                 "killer bee / queen bee / w:1 oklob plant",
-                "deep dwarf scion / deep dwarf artificer / deep dwarf death knight /\
-                    w:5 deep dwarf berserker / w:2 unborn deep dwarf",
                 "place:Crypt / w:2 josephine",
                 "common demon w:30 / kobold demonologist w:5 / frances w:3",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:1 sphinx",
@@ -389,25 +384,23 @@ function arena_sprint_get_monster_set(round, boss)
             mon_set = {
                 -- Branches: D, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
                 -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
-                "place:D:27 w:30 / w:1 nikola / w:1 frederick",
-                "place:Orc:4 / orc sorcerer w:3 / orc knight / orc warlord w:3 /\
+                "place:D:$ w:30 / w:1 nikola / w:1 frederick",
+                "place:Orc:$ / orc sorcerer w:3 / orc knight / orc warlord w:3 /\
                     iron troll w:5 / stone giant w:5 / orc high priest w:4",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
                     deep elf sorcerer / deep elf death mage / deep elf blademaster /\
-                    deep elf master archer / place:Elf:3 w:200",
-                "place:Shoals:5 w:30 / merfolk javelineer / merfolk impaler /\
+                    deep elf master archer / place:Elf:$ w:200",
+                "place:Shoals:$ w:30 / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
-                "place:Swamp:5 / hydra / swamp dragon / w:5 green death",
-                "place:Spider:5 / wolf spider / orb spider / w:5 emperor scorpion /\
+                "place:Swamp:$ / hydra / swamp dragon / w:5 green death",
+                "place:Spider:$ / wolf spider / orb spider / w:5 emperor scorpion /\
                     w:5 ghost moth / w:3 moth of suppression",
-                "place:Snake:5 / naga mage / naga warrior / greater naga /\
+                "place:Snake:$ / naga mage / naga warrior / greater naga /\
                     guardian serpent / anaconda",
-                "place:Slime:6",
+                "place:Slime:$",
                 "dancing weapon",
                 "place:Forest",
-                "deep dwarf artificer / deep dwarf death knight / wiglaf w:2 /\
-                    deep dwarf berserker / w:5 unborn deep dwarf",
-                "place:Crypt:5",
+                "place:Crypt:$",
                 "common demon w:30 / greater demon w:5",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:5 sphinx",
                 "place:Hell w:30 / geryon w:1",
@@ -461,48 +454,46 @@ function arena_sprint_get_monster_set(round, boss)
                 "vault guard w:50 / ancient lich w:5 / lich / yaktaur /\
                     yaktaur captain w:3 / stone giant / shadow dragon /\
                     titan w:5",
-                "w:20 place:Orc:4 / orc sorcerer w:3 / orc knight / orc warlord w:5 /\
+                "w:20 place:Orc:$ / orc sorcerer w:3 / orc knight / orc warlord w:5 /\
                     iron troll w:5 / stone giant w:5 / orc high priest w:4 /\
                     moth of wrath",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
                     deep elf sorcerer / deep elf death mage / deep elf blademaster /\
-                    deep elf master archer / place:Elf:3 w:70",
-                "place:Shoals:5 / merfolk javelineer / merfolk impaler /\
+                    deep elf master archer / place:Elf:$ w:70",
+                "place:Shoals:$ / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
                 "hydra / swamp dragon / green death / death drake",
-                "place:Spider:5 w:5 / wolf spider / orb spider / emperor scorpion /\
+                "place:Spider:$ w:5 / wolf spider / orb spider / emperor scorpion /\
                     ghost moth / moth of wrath / w:5 moth of suppression",
-                "place:Snake:5 w:5 / naga mage / naga warrior / w:20 greater naga /\
+                "place:Snake:$ w:5 / naga mage / naga warrior / w:20 greater naga /\
                     guardian serpent / w:5 anaconda",
-                "place:Slime:6 / acid blob / azure jelly / great orb of eyes",
+                "place:Slime:$ / acid blob / azure jelly / great orb of eyes",
                 "dancing weapon",
-                "place:Forest:5 w:20 / spriggan defender / spriggan rider /\
+                "place:Forest:$ w:20 / spriggan defender / spriggan rider /\
                     spriggan air mage / spriggan druid w:3 / spriggan berserker",
-                "w:5 deep dwarf artificer / deep dwarf death knight / wiglaf w:2 /\
-                    deep dwarf berserker / unborn deep dwarf",
-                "place:Crypt:5 w:25 / w:3 lich / w:5 vampire knight /\
+                "place:Crypt:$ w:25 / w:3 lich / w:5 vampire knight /\
                     w:2 boris / w:2 curse skull",
                 "any demon w:30 / pandemonium lord",
-                "place:Tomb:3 w:70 / sphinx w:20 / greater mummy",
+                "place:Tomb:$ w:70 / sphinx w:20 / greater mummy",
                 "place:Hell w:25 / geryon w:2 / nellie w:2",
                 -- Elements/hells, Holy
-                "place:Dis:7 w:20 / hell sentinel / iron dragon / quicksilver dragon /\
+                "place:Dis:$ w:20 / hell sentinel / iron dragon / quicksilver dragon /\
                     iron elemental / stone giant / the iron giant",
                 "w:5 orb of fire / brimstone fiend / balrug / hellion /\
                     fire giant / sun demon / fire vortex",
-                "place:Coc:7 w:20 / ice fiend / blizzard demon / ice devil",
+                "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil",
                 "spriggan air mage / w:5 titan / w:5 electric golem / vapour /\
                     air elemental / ball lightning / storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
-                    unborn deep dwarf w:5 / place:Tar:7 w:40",
+                    unborn w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / w:5 pearl dragon / ophan / \
                     w:5 silver star / apis",
                 -- Misc
                 "centaur warrior",
                 "yaktaur / yaktaur captain",
                 "very ugly thing",
-                "lich / w:5 ancient lich / w:5 unborn deep dwarf / w:2 boris",
+                "lich / w:5 ancient lich / w:5 unborn / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
                 "dragon / ice dragon / storm dragon / shadow dragon /\
                     golden dragon / quicksilver dragon / iron dragon / w:1 xtahua",
@@ -544,35 +535,34 @@ function arena_sprint_get_monster_set(round, boss)
                     moth of wrath",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
                     deep elf sorcerer / deep elf death mage / deep elf blademaster /\
-                    deep elf master archer / place:Elf:3 w:20",
-                "place:Shoals:5 / merfolk javelineer / merfolk impaler /\
+                    deep elf master archer / place:Elf:$ w:20",
+                "place:Shoals:$ / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
                 "green death / death drake",
-                "place:Spider:5 w:5 / orb spider w:5 / emperor scorpion /\
+                "place:Spider:$ w:5 / orb spider w:5 / emperor scorpion /\
                     ghost moth / moth of wrath / w:5 moth of suppression",
-                "place:Snake:5 w:2 / w:40 greater naga / guardian serpent / w:5 anaconda",
-                "place:Slime:6 / w:30 acid blob / azure jelly / giant eyeball /\
+                "place:Snake:$ w:2 / w:40 greater naga / guardian serpent / w:5 anaconda",
+                "place:Slime:$ / w:30 acid blob / azure jelly / giant eyeball /\
                     eye of draining",
                 "dancing weapon ; bardiche",
                 "spriggan defender / spriggan air mage / spriggan druid /\
                     spriggan berserker / spriggan rider",
-                "deep dwarf death knight / w:20 deep dwarf berserker / unborn deep dwarf",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
-                "place:Tomb:3 w:30 / sphinx w:20 / greater mummy",
+                "place:Tomb:$ w:30 / sphinx w:20 / greater mummy",
                 "hellephant w:15 / w:1 nellie",
                 -- Elements/hells, Holy
                 "hell sentinel / iron dragon / quicksilver dragon /\
                     iron elemental / stone giant / cacodemon",
                 "orb of fire / brimstone fiend / balrug / hellion /\
                     fire giant / sun demon",
-                "place:Coc:7 w:20 / ice fiend / blizzard demon / ice devil /\
+                "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil /\
                     white draconian",
                 "spriggan air mage / titan / electric golem / vapour /\
                     ball lightning / storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
-                    unborn deep dwarf w:5 / place:Tar:7 w:40",
+                    unborn w:5 / place:Tar:$ w:40",
                 "daeva / angel / cherub / pearl dragon / ophan / \
                     silver star / apis",
                 -- Misc
@@ -607,7 +597,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "elephant slug col:magenta name:orb_slug n_rpl n_des n_spe spells:orb_of_destruction",
                 "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
-                "sphinx / place:Tomb:3",
+                "sphinx / place:Tomb:$",
                 "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue tile:mons_orb_of_ice /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity /\
                   w:5 silver star",
@@ -633,7 +623,6 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:30 acid blob / azure jelly / giant eyeball / eye of draining",
                 "dancing weapon ; bardiche ego:speed",
                 "spriggan air mage",
-                "deep dwarf death knight / deep dwarf berserker / unborn deep dwarf",
                 "w:15 ancient lich / w:6 curse toe",
                 "greater demon / pandemonium lord",
                 "sphinx w:20 / greater mummy",
@@ -648,7 +637,7 @@ function arena_sprint_get_monster_set(round, boss)
                     storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
-                    unborn deep dwarf w:5",
+                    unborn w:5",
                 "daeva / angel / cherub / pearl dragon w:20 / ophan /\
                     silver star w:20 / apis",
                 -- Misc
@@ -763,7 +752,7 @@ function arena_sprint_init_boss_table()
                      dagger ego:flaming race:elven | dagger ego:electrocution race:elven",
                  "elven rune of zot"}
     else
-        bs[3] = {"place:Forest:5 w:50 / spriggan druid w:2 / spriggan air mage w:5 /\
+        bs[3] = {"place:Forest:$ w:50 / spriggan druid w:2 / spriggan air mage w:5 /\
                  spriggan berserker w:5", "agnes hp:335",
                  "mossy rune of zot"}
     end
@@ -779,10 +768,10 @@ function arena_sprint_init_boss_table()
         bs[5], bs[4] = bs[4], bs[5]
     end
 
-    bs[6] = {"place:Dis:7", "dispater", "iron rune of zot"}
-    bs[7] = {"place:Tar:7", "ereshkigal", "bone rune of zot"}
-    bs[8] = {"place:Geh:7", "asmodeus", "obsidian rune of zot"}
-    bs[9] = {"place:Coc:7", "antaeus", "icy rune of zot"}
+    bs[6] = {"place:Dis:$", "dispater", "iron rune of zot"}
+    bs[7] = {"place:Tar:$", "ereshkigal", "bone rune of zot"}
+    bs[8] = {"place:Geh:$", "asmodeus", "obsidian rune of zot"}
+    bs[9] = {"place:Coc:$", "antaeus", "icy rune of zot"}
     -- Pan sets are taken directly from pan.des
     bs[10] = {"small abomination / small abomination / large abomination /\
               large abomination / neqoxec / neqoxec / cacodemon /\
@@ -954,7 +943,7 @@ end
 }}
 
 NAME:       arena_sprint
-TAGS:       sprint no_item_gen no_trap_gen no_monster_gen no_rotate no_hmirror no_vmirror
+TAGS:       sprint no_item_gen no_trap_gen no_rotate no_hmirror no_vmirror
 DESC:       Sprint VI: "Thunderdome"
 ORIENT:     encompass
 LROCKTILE:  wall_hall

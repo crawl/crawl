@@ -398,7 +398,11 @@ static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int 
 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
 {
-    return (grd(gc) == feat) || map_masked(gc, MMT_WAS_DOOR_MIMIC);
+    const dungeon_feature_type door = grd(gc);
+    return feat_is_closed_door(door) && feat == DNGN_SEALED_DOOR
+           || door == DNGN_SEALED_DOOR && feat_is_closed_door(feat)
+           || door == feat
+           || map_masked(gc, MMT_WAS_DOOR_MIMIC);
 }
 
 void tile_init_flavour(const coord_def &gc)
@@ -1163,6 +1167,10 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_WALL_CRYPT;
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_CRYPT_METAL;
+        else if (orig == TILE_DNGN_OPEN_DOOR)
+            orig = TILE_DNGN_OPEN_DOOR_CRYPT;
+        else if (orig == TILE_DNGN_CLOSED_DOOR)
+            orig = TILE_DNGN_CLOSED_DOOR_CRYPT;
     }
     else if (player_in_branch(BRANCH_TOMB))
     {
@@ -1225,10 +1233,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
                                                         env.grid_colours(gc)),
                                      flv.special);
     }
-    else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR
-              || orig == TILE_DNGN_RUNED_DOOR
-              || orig == TILE_DNGN_SEALED_DOOR)
-             && !mimic)
+    else if (is_door_tile(orig) && !mimic)
     {
         tileidx_t override = flv.feat;
         /*

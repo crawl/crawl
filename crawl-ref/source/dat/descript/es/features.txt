@@ -258,11 +258,6 @@ A glass window
 
 Un ventana picada y con cristales extremadamente duros.
 %%%%
-A granite statue of a fallen hero
-
-Un estatua a tamaño real de un enano presidiendo esta sala. No puedes evitar
-tener la sensación de que te está observando.
-%%%%
 A flagged portal
 
 Este portal lleva al calabozo prohibido del caballero demente. Lo sabrás por el

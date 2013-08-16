@@ -415,7 +415,7 @@ bool feat_is_altar(dungeon_feature_type grid)
 bool feat_is_player_altar(dungeon_feature_type grid)
 {
     // An ugly hack, but that's what religion.cc does.
-    return (you.religion != GOD_NO_GOD
+    return (!you_worship(GOD_NO_GOD)
             && feat_altar_god(grid) == you.religion);
 }
 
@@ -1332,6 +1332,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                       dungeon_feature_type terrain)
 {
     bool escape = false;
+    bool clinging = false;
     coord_def empty;
 
     if (terrain == DNGN_DEEP_WATER)
@@ -1396,7 +1397,11 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     if (scramble())
     {
         if (allow_shift)
-            escape = find_habitable_spot_near(you.pos(), MONS_HUMAN, 1, false, empty);
+        {
+            escape = find_habitable_spot_near(you.pos(), MONS_HUMAN, 1, false, empty)
+                     || you.check_clinging(false);
+            clinging = you.is_wall_clinging();
+        }
         else
         {
             // Back out the way we came in, if possible.
@@ -1420,10 +1425,11 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)))
+        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)) || clinging)
         {
             mpr("You manage to scramble free!");
-            move_player_to_grid(empty, false, false);
+            if (!clinging)
+                move_player_to_grid(empty, false, false);
 
             if (terrain == DNGN_LAVA)
                 expose_player_to_element(BEAM_LAVA, 14);
@@ -1704,6 +1710,68 @@ void nuke_wall(const coord_def& p)
     env.level_map_mask(p) |= MMT_NUKED;
 }
 
+/*
+ * Check if an actor can cling to a cell.
+ *
+ * Wall clinging is done only on orthogonal walls.
+ *
+ * @param pos The coordinates of the cell.
+ *
+ * @return Whether the cell is clingable.
+ */
+bool cell_is_clingable(const coord_def pos)
+{
+    for (orth_adjacent_iterator ai(pos); ai; ++ai)
+        if (feat_is_wall(env.grid(*ai)) || feat_is_closed_door(env.grid(*ai)))
+            return true;
+
+    return false;
+}
+
+/*
+ * Check if an actor can cling from a cell to another.
+ *
+ * "clinging" to a wall means being orthogonally (left, right, up, down) next
+ * to it. A spider can cling to several squares. A move is allowed if the
+ * spider clings to an adjacent wall square or the same wall square before and
+ * after moving. Being over floor or shallow water and next to a wall counts as
+ * clinging to that wall (no further action needed).
+ *
+ * Example:
+ * ~ = deep water
+ * * = deep water the spider can reach
+ *
+ *  #####
+ *  ~~#~~
+ *  ~~~*~
+ *  **s#*
+ *  #####
+ *
+ * Look at Mantis #2704 for more examples.
+ *
+ * @param from The coordinates of the starting position.
+ * @param to The coordinates of the destination.
+ *
+ * @return Whether it is possible to cling from one cell to another.
+ */
+bool cell_can_cling_to(const coord_def& from, const coord_def to)
+{
+    if (!in_bounds(to))
+        return false;
+
+    for (orth_adjacent_iterator ai(from); ai; ++ai)
+    {
+        if (feat_is_wall(env.grid(*ai)))
+        {
+            for (orth_adjacent_iterator ai2(to, false); ai2; ++ai2)
+                if (feat_is_wall(env.grid(*ai2)) && distance2(*ai, *ai2) <= 1)
+                    return true;
+        }
+    }
+
+        return false;
+}
+
 const char* feat_type_name(dungeon_feature_type feat)
 {
     if (feat_is_door(feat))
@@ -1917,7 +1985,7 @@ bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
             else if (last >= 0 && next < 0)
             {
                 // Found a maybe-disconnected traversable cell.  This is only
-                // acceptible if it might connect up at the end.
+                // acceptable if it might connect up at the end.
                 if (first == 0)
                     next = i;
                 else

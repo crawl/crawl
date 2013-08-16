@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Auxilary functions to make savefile versioning simpler.
+ * @brief Auxiliary functions to make savefile versioning simpler.
 **/
 
 /*
@@ -973,12 +973,12 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
                           && unmarshallUByte(th) != 171)                \
                    {                                                    \
                        die("save corrupted: canary gone");              \
-                   } while(0)
+                   } while (0)
 #else
 #define EAT_CANARY do if ( unmarshallUByte(th) != 171)                  \
                    {                                                    \
                        die("save corrupted: canary gone");              \
-                   } while(0)
+                   } while (0)
 #endif
 
 // Write a tagged chunk of data to the FILE*.
@@ -1996,7 +1996,7 @@ static void tag_read_you(reader &th)
     {
         you.sage_skills[i] = static_cast<skill_type>(unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34
-        if (you.sage_skills[i] == SK_STABBING)
+        if (you.sage_skills[i] == SK_STABBING || you.sage_skills[i] == SK_TRAPS)
             you.sage_skills[i] = SK_STEALTH;
 #endif
         ASSERT(!is_invalid_skill(you.sage_skills[i]));
@@ -2258,6 +2258,16 @@ static void tag_read_you(reader &th)
         you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
     if (you.mutation[MUT_CLING] == 1)
         you.mutation[MUT_CLING] = 0;
+    if (you.species == SP_GARGOYLE)
+    {
+        you.mutation[MUT_POISON_RESISTANCE] =
+        you.innate_mutations[MUT_POISON_RESISTANCE] = 0;
+    }
+    if (you.species == SP_DJINNI)
+    {
+        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] =
+        you.innate_mutations[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
+    }
 #endif
 
     count = unmarshallUByte(th);
@@ -3038,6 +3048,8 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
+    if (item.base_type == OBJ_POTIONS && item.sub_type == POT_FIZZING)
+        item.sub_type = POT_CONFUSION;
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
         item.sub_type = STAFF_ENERGY;
 
@@ -3060,6 +3072,19 @@ void unmarshallItem(reader &th, item_def &item)
         // Give charges to box of beasts. If the player used it
         // already then, well, they got some freebies.
         item.plus = random_range(5, 15, 2);
+    }
+
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_BUGGY_EBONY_CASKET)
+    {
+        item.sub_type = MISC_BOX_OF_BEASTS;
+        item.plus = 1;
+    }
+
+    // was spiked flail; rods can't spawn
+    if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_ROD
+        && th.getMinorVersion() <= TAG_MINOR_FORGOTTEN_MAP)
+    {
+        item.sub_type = WPN_FLAIL;
     }
 
 #endif
@@ -3655,7 +3680,7 @@ static void tag_read_level(reader &th)
             if (env.map_knowledge[i][j].cloudinfo())
                 env.map_knowledge[i][j].cloudinfo()->pos = coord_def(i, j);
 
-            env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;
+            env.map_knowledge[i][j].flags &= ~MAP_VISIBLE_FLAG;
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;

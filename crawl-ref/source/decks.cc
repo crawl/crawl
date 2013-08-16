@@ -1344,7 +1344,7 @@ void evoke_deck(item_def& deck)
 
     // Passive Nemelex retribution: sometimes a card gets swapped out.
     // More likely to happen with marked decks.
-    if (you.penance[GOD_NEMELEX_XOBEH])
+    if (player_under_penance(GOD_NEMELEX_XOBEH))
     {
         int c = 1;
         if ((flags & (CFLAG_MARKED | CFLAG_SEEN))
@@ -1503,7 +1503,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 
 static void _velocity_card(int power, deck_rarity_type rarity)
 {
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you_worship(GOD_CHEIBRIADOS))
         return simple_god_message(" protects you from inadvertent hurry.");
 
     const int power_level = _get_power_level(power, rarity);
@@ -1529,7 +1529,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     // Calculate how many extra banishments you get.
     const int power_level = _get_power_level(power, rarity);
     int nemelex_bonus = 0;
-    if (you.religion == GOD_NEMELEX_XOBEH && !player_under_penance())
+    if (you_worship(GOD_NEMELEX_XOBEH) && !player_under_penance())
         nemelex_bonus = you.piety;
 
     int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS, 20)
@@ -1602,7 +1602,7 @@ static void _flight_card(int power, deck_rarity_type rarity)
     else if (power_level >= 1)
     {
         cast_fly(random2(power/4));
-        if (you.religion != GOD_CHEIBRIADOS)
+        if (!you_worship(GOD_CHEIBRIADOS))
             cast_swiftness(random2(power/4));
         else
             simple_god_message(" protects you from inadvertent hurry.");
@@ -1893,7 +1893,10 @@ static void _blade_card(int power, deck_rarity_type rarity)
     if (Options.auto_list)
         more();
 
+    // Don't take less time if we're swapping weapons.
+    int old_time = you.time_taken;
     wield_weapon(false);
+    you.time_taken = old_time;
 
     const int power_level = _get_power_level(power, rarity);
     brand_type brand;
@@ -1963,7 +1966,7 @@ static void _potion_card(int power, deck_rarity_type rarity)
     if (power_level >= 2 && coinflip())
         pot = (coinflip() ? POT_SPEED : POT_RESISTANCE);
 
-    if (you.religion == GOD_CHEIBRIADOS && pot == POT_SPEED)
+    if (you_worship(GOD_CHEIBRIADOS) && pot == POT_SPEED)
     {
         simple_god_message(" protects you from inadvertent hurry.");
         return;
@@ -2059,7 +2062,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
     skill_menu(SKMF_EXPERIENCE_CARD, min(200 + power * 50, HIGH_EXP_POOL));
 
     // After level 27, boosts you get don't get increased (matters for
-    // charging V:8 with no rN+++ and for felids).
+    // charging V:$ with no rN+++ and for felids).
     const int xp_cap = exp_needed(1 + you.experience_level)
                      - exp_needed(you.experience_level);
 
@@ -2786,8 +2789,8 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     const monster_type merctypes[] = {
-        MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_TENGU,
-        MONS_DEEP_DWARF_SCION, MONS_ORC_KNIGHT, MONS_CENTAUR_WARRIOR,
+        MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_NAGA,
+        MONS_TENGU, MONS_ORC_KNIGHT, MONS_CENTAUR_WARRIOR,
         MONS_SPRIGGAN_RIDER, MONS_OGRE_MAGE, MONS_MINOTAUR,
         RANDOM_BASE_DRACONIAN, MONS_DEEP_ELF_BLADEMASTER,
     };
@@ -2908,9 +2911,9 @@ static int _card_power(deck_rarity_type rarity)
 {
     int result = 0;
 
-    if (you.penance[GOD_NEMELEX_XOBEH])
+    if (player_under_penance(GOD_NEMELEX_XOBEH))
         result -= you.penance[GOD_NEMELEX_XOBEH];
-    else if (you.religion == GOD_NEMELEX_XOBEH)
+    else if (you_worship(GOD_NEMELEX_XOBEH))
     {
         result = you.piety;
         result *= (you.skill(SK_EVOCATIONS, 100) + 2500);
@@ -2958,14 +2961,14 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     if (which_card == CARD_XOM && !crawl_state.is_god_acting())
     {
-        if (you.religion == GOD_XOM)
+        if (you_worship(GOD_XOM))
         {
             // Being a self-centered deity, Xom *always* finds this
             // maximally hilarious.
             god_speaks(GOD_XOM, "Xom roars with laughter!");
             you.gift_timeout = 200;
         }
-        else if (you.penance[GOD_XOM])
+        else if (player_under_penance(GOD_XOM))
             god_speaks(GOD_XOM, "Xom laughs nastily.");
     }
 
@@ -3016,15 +3019,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
 
     case CARD_VENOM:
-        if (coinflip())
-        {
-            mprf("You have %s %s.", participle, card_name(which_card));
-            your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4), false);
-        }
-        else
-            _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
-        break;
-
     case CARD_VITRIOL:
     case CARD_FLAME:
     case CARD_FROST:

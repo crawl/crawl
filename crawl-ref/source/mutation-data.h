@@ -657,7 +657,7 @@
   "torment resistance"
 },
 
-{ MUT_NEGATIVE_ENERGY_RESISTANCE,     0,  3, false, false,  true,
+{ MUT_NEGATIVE_ENERGY_RESISTANCE,     0,  3, false, false, false,
   "life protection",
 
   {"You resist negative energy.",

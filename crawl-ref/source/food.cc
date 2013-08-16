@@ -61,8 +61,7 @@ static void _eat_chunk(item_def& food);
 static void _eating(item_def &food);
 static void _describe_food_change(int hunger_increment);
 static bool _vampire_consume_corpse(int slot, bool invent);
-static void _heal_from_food(int hp_amt, bool unrot = false,
-                            bool restore_str = false);
+static void _heal_from_food(int hp_amt, bool unrot = false);
 
 /*
  *  BEGIN PUBLIC FUNCTIONS
@@ -1946,8 +1945,7 @@ static void _eat_chunk(item_def& food)
                 int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
                 if (!x_chance_in_y(contam + 4000, 5000))
                     hp_amt = 0;
-                _heal_from_food(hp_amt, !one_chance_in(4),
-                                x_chance_in_y(contam, 5000));
+                _heal_from_food(hp_amt, !one_chance_in(4));
             }
         }
         else
@@ -2417,7 +2415,7 @@ bool is_forbidden_food(const item_def &food)
     }
 
     // Zin doesn't like it if you eat beings with a soul.
-    if (you.religion == GOD_ZIN && mons_class_intel(food.mon_type) >= I_NORMAL)
+    if (you_worship(GOD_ZIN) && mons_class_intel(food.mon_type) >= I_NORMAL)
         return true;
 
     // Everything else is allowed.
@@ -2715,7 +2713,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     return true;
 }
 
-static void _heal_from_food(int hp_amt, bool unrot, bool restore_str)
+static void _heal_from_food(int hp_amt, bool unrot)
 {
     if (hp_amt > 0)
         inc_hp(hp_amt);
@@ -2725,9 +2723,6 @@ static void _heal_from_food(int hp_amt, bool unrot, bool restore_str)
         mpr("You feel more resilient.");
         unrot_hp(1);
     }
-
-    if (restore_str && you.strength(false) < you.max_strength())
-        restore_stat(STAT_STR, 1, false);
 
     calc_hp();
     calc_mp();
@@ -2768,7 +2763,7 @@ void handle_starvation()
             stop_running();
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
-            if (you.religion == GOD_XOM)
+            if (you_worship(GOD_XOM))
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
@@ -2814,7 +2809,7 @@ static int _chunks_needed()
     int appetite = player_hunger_rate(false);
     hunger += appetite * FRESHEST_CORPSE * 2;
 
-    bool channeling = you.religion == GOD_SIF_MUNA;
+    bool channeling = you_worship(GOD_SIF_MUNA);
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].defined()

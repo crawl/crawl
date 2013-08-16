@@ -79,7 +79,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
         return;
 
     // For followers of Beogh, decide whether orcs will join you.
-    if (you.religion == GOD_BEOGH
+    if (you_worship(GOD_BEOGH)
         && mons->foe == MHITYOU
         && mons_genus(mons->type) == MONS_ORC
         && !mons->is_summoned()
@@ -105,7 +105,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
 
 void slime_convert(monster* mons)
 {
-    if (you.religion == GOD_JIYVA && mons_is_slime(mons)
+    if (you_worship(GOD_JIYVA) && mons_is_slime(mons)
         && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
@@ -124,7 +124,7 @@ void slime_convert(monster* mons)
 
 void fedhas_neutralise(monster* mons)
 {
-    if (you.religion == GOD_FEDHAS
+    if (you_worship(GOD_FEDHAS)
         && mons->attitude == ATT_HOSTILE
         && fedhas_neutralises(mons)
         && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)

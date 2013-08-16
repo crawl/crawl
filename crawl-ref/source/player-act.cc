@@ -24,6 +24,7 @@
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
+#include "spl-damage.h"
 #include "state.h"
 #include "terrain.h"
 #include "transform.h"
@@ -71,6 +72,7 @@ void player::moveto(const coord_def &c, bool clear_net)
     set_position(c);
 
     clear_far_constrictions();
+    end_searing_ray();
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)
@@ -466,6 +468,8 @@ string player::foot_name(bool plural, bool *can_plural) const
             str         = "underbelly";
             *can_plural = false;
         }
+        else if (species == SP_FELID)
+            str = "paw";
         else if (fishtail)
         {
             str         = "tail";
@@ -665,7 +669,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    if (holiness() == MH_UNDEAD)
+    if (is_lifeless_undead())
     {
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
@@ -756,6 +760,11 @@ bool player::can_jump() const
 bool player::berserk() const
 {
     return (duration[DUR_BERSERK]);
+}
+
+bool player::can_cling_to_walls() const
+{
+    return form == TRAN_SPIDER;
 }
 
 bool player::is_web_immune() const

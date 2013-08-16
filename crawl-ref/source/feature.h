@@ -32,12 +32,6 @@ struct feature_def
     bool is_notable() const { return (flags & FFT_NOTABLE); }
 };
 
-struct feature_override
-{
-    show_type    object;
-    feature_def  override;
-};
-
 const feature_def &get_feature_def(show_type object);
 const feature_def &get_feature_def(dungeon_feature_type feat);
 

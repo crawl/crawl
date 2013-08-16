@@ -927,10 +927,6 @@ eggplant
 A rotten eggplant which you can throw at the Crawl developers. (It's a bug if
 you ever see this message.)
 %%%%
-empty ebony casket
-
-A magical box after its power is spent.
-%%%%
 eudemon blade
 
 A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
@@ -2061,7 +2057,15 @@ power.
 %%%%
 rod of striking
 
-This rod allows its wielder to strike foes from afar with force bolts.
+This rod is designed for melee combat, releasing its charges to deal additional
+damage dependent on evocations skill when it strikes a foe. Maces & Flails
+skill will help improve your basic effectiveness with the weapon.
+%%%%
+rod of striking:quote
+
+“He that spares his rod hates his son: but he that loves him chastens him
+ early.”
+    -King James 2000 Bible, Proverbs 13:24
 %%%%
 rod of the swarm
 
@@ -2342,7 +2346,7 @@ scroll of remove curse:quote
 scroll of summoning
 
 This scroll calls forth several creatures woven from shadow into the shapes of
-those beings found within the reader's immediate vacinity.
+those beings found within the reader's immediate vicinity.
 %%%%
 scroll of summoning:quote
 
@@ -2369,11 +2373,10 @@ scroll of torment:quote
 %%%%
 scroll of vorpalise weapon
 
-This scroll enchants the wielded weapon so as to make it far more effective at
-inflicting harm on its wielder's enemies. Using it on a weapon already affected
-by some kind of permanent branding is not advised. On the other hand, the
-scroll can make permanent the temporary branding of weapons obtained from some
-spells.
+This scroll enchants a chosen weapon so as to make it far more effective at
+inflicting harm on its wielder's enemies. The scroll can make permanent the
+temporary branding of weapons obtained from some spells, or can be used on a
+weapon that is already permanently branded to randomly select a new brand.
 
 Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
 the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
@@ -2504,11 +2507,6 @@ spear:quote
 can take the initiative; the halberd is defensive. In the hands of one of two
 men of equal ability, the spear gives a little extra strength.”
     -Miyamoto Musashi, _The Book of Five Rings_. 1645.
-%%%%
-spiked flail
-
-A flail improved by a longer chain and the addition of spikes on the striking
-head.
 %%%%
 staff of air
 

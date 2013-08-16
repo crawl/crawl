@@ -34,6 +34,7 @@ battlesphere BATTLESPHERE
 dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
+searing_ray SEARING_RAY
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -174,7 +175,6 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
 polymorph POLYMORPH
-homunculus HOMUNCULUS
 beastly_appendage BEASTLY_APPENDAGE
 
 %sdir gui/spells

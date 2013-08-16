@@ -59,7 +59,7 @@ function grunt_ministairs_setup(e, hatches)
 end
 }}
 
-default-depth: D:9-27, Elf
+default-depth: D:9-, Elf
 
 ###############################################################################
 #
@@ -171,7 +171,7 @@ ENDMAP
 NAME:   not_door_vault_mu
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:15-27, Elf
+DEPTH:  D:15-, Elf
 MONS:   butterfly
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -614,7 +614,7 @@ ENDMAP
 NAME:   not_door_vault_due
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:20-27, Elf:3-5
+DEPTH:  D:20-, Elf:$
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -1370,7 +1370,7 @@ ENDMAP
 # evil one here?
 NAME:   mikee_hates_you
 TAGS:   no_monster_gen
-DEPTH:  D:13-27
+DEPTH:  D:13-
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake siren ; trident ego:distortion w:5 | trident ego:venom
 KITEM:  1 = acquire any
@@ -1510,7 +1510,7 @@ MAP
 ENDMAP
 
 NAME:   kilobyte_rumbling_trees
-DEPTH:  D:14-20, Elf, Lair:4-8
+DEPTH:  D:14-20, Elf, Lair:4-
 MONS:   patrolling spriggan druid
 MONS:   black bear / grizzly bear w:20 / bat w:20
 FTILE:  .t12@ = floor_moss
@@ -1809,12 +1809,12 @@ ENDMAP
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling
 DEPTH:   D:13-
-MONS:    deep dwarf artificer ; wand of cold | wand of frost w:5 . \
+MONS:    deep dwarf ; wand of cold | wand of frost w:5 . \
          staff of fire w:15 | quarterstaff ego:flaming w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
-MONS:    deep dwarf artificer ; wand of fire | wand of flame w:5 . \
+MONS:    deep dwarf ; wand of fire | wand of flame w:5 . \
          staff of cold w:15 | quarterstaff ego:freezing w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
@@ -1947,7 +1947,7 @@ MAP
 ENDMAP
 
 NAME:   lightli_giant_bouncers
-DEPTH:  D:20-27
+DEPTH:  D:20-
 MONS:   fire giant
 MONS:   frost giant
 MONS:   titan
@@ -2337,7 +2337,7 @@ ENDMAP
 #
 NAME:   nrook_kobold_shadow_demons
 TAGS:   patrolling
-DEPTH:  D:14-27
+DEPTH:  D:14-
 KMONS:  1 = kobold demonologist
 KMONS:  2 = w:5 shadow demon / lorocyproca
 KITEM:  1 = | / *, * / %
@@ -2423,7 +2423,7 @@ ENDMAP
 
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen
-DEPTH:   D:17-27
+DEPTH:   D:17-
 : if you.absdepth() > 21 then
 MONS:    pearl dragon
 : else
@@ -2650,7 +2650,7 @@ ENDMAP
 
 # Oklob assault; statistically, three oklobs
 NAME:    dpeg oklob_1
-DEPTH:   D:16-27, Lair:4-
+DEPTH:   D:16-, Lair:4-
 TAGS:    allow_dup
 MONS:    plant, oklob plant
 SUBST:   ? = 1 2:5 '
@@ -2837,7 +2837,7 @@ MONS:   jelly generate_awake
 TAGS:   uniq_jelly_drop
 WEIGHT: 5
 KFEAT:  a = teleport trap
-DEPTH:  D:8-27
+DEPTH:  D:8-
 MAP
 ..............
 ...vvvvvvvv...
@@ -3149,7 +3149,12 @@ ENDMAP
 NAME:    lasty_cornered_adventurer
 TAGS:    no_monster_gen patrolling
 DEPTH:   D:2-6
+WEIGHT:  4
+: if you.depth() < 5 then
+MONS:    ooze, jelly, ooze
+: else
 MONS:    jelly, jelly, ooze
+: end
 {{
 dgn.delayed_decay(_G, 'A', 'human corpse, damaged shield / nothing, '
                         .. 'damaged helmet / nothing, % / nothing, '
@@ -3159,7 +3164,7 @@ dgn.delayed_decay(_G, 'A', 'human corpse, damaged shield / nothing, '
 KMONS:   A = toadstool
 KFEAT:   B = altar_jiyva
 NSUBST:  C = 2:2 / *:.
-NSUBST:  D = 5:1 / *:W
+NSUBST:  D = 4:1 / *:W
 SUBST:   1 = 13
 MAP
 xxxxxxxxxxxxxx
@@ -3406,7 +3411,7 @@ ENDMAP
 # Small chamber for a nice item (Eino)
 NAME:   small_chamber_with_monster
 TAGS:   mini_float extra
-DEPTH:  D:8-27, Elf, Crypt
+DEPTH:  D:8-, Elf, Crypt
 MAP
 xxxxxxx
 xxG.Gxx
@@ -3532,7 +3537,7 @@ ENDMAP
 
 NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
-DEPTH:  D:9-27
+DEPTH:  D:9-
 : if you.absdepth() > 24 then
 MONS:   ancient lich w:50 / greater mummy
 ITEM:   any scroll w:6 / any book
@@ -3682,7 +3687,7 @@ vvvvv0....vvvvv
 ENDMAP
 
 NAME:   evilmike_bad_box
-DEPTH:  D:13-27
+DEPTH:  D:13-
 TAGS:   mini_float no_wall_fixup
 MONS:   boring beetle
 NSUBST: 9 = 1:1 / 1:19 / *:9
@@ -4104,7 +4109,7 @@ xx+xxx
 ENDMAP
 
 NAME:   lightli_gold_pyramid
-DEPTH:  D:15-27
+DEPTH:  D:15-
 TAGS:   no_vmirror no_rotate
 COLOUR: .089+*|c = yellow
 FTILE:  .089+*|c = floor_sandstone
@@ -4129,7 +4134,7 @@ cccccccc=cccccccc
 ENDMAP
 
 NAME: lightli_airlock
-DEPTH: D:11-27, Snake, Shoals
+DEPTH: D:11-, Snake, Shoals
 KPROP: W = no_rtele_into
 MAP
  WccccWWWccccWW
@@ -4473,7 +4478,7 @@ ENDMAP
 
 NAME:  grunt_potential
 TAGS:  no_pool_fixup
-DEPTH: D:6-27
+DEPTH: D:6-
 : init_hm_decor_walldepth(_G, 'x')
 SHUFFLE: wlvbn
 : if you.absdepth() > 20 then
@@ -4924,7 +4929,7 @@ TAGS:   no_monster_gen no_item_gen
 WEIGHT: 3
 # Is there a better way to do this?
 : if you.absdepth() > 16 then
-MONS:   place:D:27 zombie / place:D:27 skeleton, bone dragon
+MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
 : else
 MONS:   place:D:18 zombie / place:D:18 skeleton, bone dragon
 : end
@@ -5208,9 +5213,9 @@ KMONS:  W = Wiglaf ; broad axe unrand:arga . \
             deep dwarf berserker ; broad axe unrand:arga . \
                                    chain mail w:7 race:dwarven | \
                                    plate armour w:1 race:dwarven
-KMONS:  J = Jorgrun, deep dwarf necromancer
+KMONS:  J = Jorgrun, deep dwarf death knight
 MONS:   deep dwarf berserker
-MONS:   deep dwarf scion / deep dwarf death knight w:2
+MONS:   deep dwarf death knight w:5 / nothing
 MONS:   deep dwarf
 SUBST:  X = x.
 KITEM:  . = gold w:5 / stone / large rock q:1 w:1 / nothing w:40
@@ -5319,7 +5324,7 @@ ENDMAP
 NAME:   door_vault
 TAGS:   allow_dup
 WEIGHT: 1 (Vaults), 10
-DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
+DEPTH:  D:15-, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
                                 stop_explore="strange structure made of doors" }
@@ -5367,7 +5372,7 @@ ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
-DEPTH:  D:15-27
+DEPTH:  D:15-
 WEIGHT: 4
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \

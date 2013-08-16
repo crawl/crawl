@@ -383,7 +383,6 @@ static int _strength_modifier()
     {
     case TRAN_STATUE:          result +=  2; break;
     case TRAN_DRAGON:          result += 10; break;
-    case TRAN_LICH:            result +=  3; break;
     case TRAN_BAT:             result -=  5; break;
     default:                                 break;
     }

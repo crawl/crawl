@@ -448,21 +448,21 @@ static void _unequip_artefact_effect(item_def &item,
 
 static void _equip_use_warning(const item_def& item)
 {
-    if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
+    if (is_holy_item(item) && you_worship(GOD_YREDELEMNUL))
         mpr("You really shouldn't be using a holy item like this.");
     else if (is_unholy_item(item) && is_good_god(you.religion))
         mpr("You really shouldn't be using an unholy item like this.");
-    else if (is_corpse_violating_item(item) && you.religion == GOD_FEDHAS)
+    else if (is_corpse_violating_item(item) && you_worship(GOD_FEDHAS))
         mpr("You really shouldn't be using a corpse-violating item like this.");
     else if (is_evil_item(item) && is_good_god(you.religion))
         mpr("You really shouldn't be using an evil item like this.");
-    else if (is_unclean_item(item) && you.religion == GOD_ZIN)
+    else if (is_unclean_item(item) && you_worship(GOD_ZIN))
         mpr("You really shouldn't be using an unclean item like this.");
-    else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
+    else if (is_chaotic_item(item) && you_worship(GOD_ZIN))
         mpr("You really shouldn't be using a chaotic item like this.");
-    else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
+    else if (is_hasty_item(item) && you_worship(GOD_CHEIBRIADOS))
         mpr("You really shouldn't be using a hasty item like this.");
-    else if (is_poisoned_item(item) && you.religion == GOD_SHINING_ONE)
+    else if (is_poisoned_item(item) && you_worship(GOD_SHINING_ONE))
         mpr("You really shouldn't be using a poisoned item like this.");
 }
 
@@ -1170,8 +1170,8 @@ static void _unequip_armour_effect(item_def& item, bool meld)
 
 static void _remove_amulet_of_faith(item_def &item)
 {
-    if (you.religion != GOD_NO_GOD
-        && you.religion != GOD_XOM)
+    if (!you_worship(GOD_NO_GOD)
+        && !you_worship(GOD_XOM))
     {
         simple_god_message(" seems less interested in you.");
 
@@ -1352,7 +1352,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case AMU_FAITH:
-        if (you.religion != GOD_NO_GOD)
+        if (!you_worship(GOD_NO_GOD))
         {
             mpr("You feel a surge of divine interest.", MSGCH_GOD);
             ident = ID_KNOWN_TYPE;

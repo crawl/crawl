@@ -151,6 +151,10 @@ static duration_def duration_data[] =
       RED, "-Tele", "cannot translocate", "You are firmly anchored to this plane." },
     { DUR_SPIRIT_HOWL, false,
       MAGENTA, "Howl", "spirit howling", "The howling of a spirit pack pursues you." },
+    { DUR_TOXIC_RADIANCE, false,
+      MAGENTA, "Toxic", "radiating poison", "You are radiating toxic energy."},
+    { DUR_RECITE, false,
+      WHITE, "Recite", "reciting", "You are reciting Zin's Axioms of Law." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -494,6 +498,24 @@ bool fill_status_info(int status, status_info* inf)
         _describe_transform(inf);
         break;
 
+    case STATUS_CLINGING:
+        if (you.is_wall_clinging())
+        {
+            inf->light_text   = "Cling";
+            inf->short_text   = "clinging";
+            inf->long_text    = "You cling to the nearby walls.";
+            const dungeon_feature_type feat = grd(you.pos());
+            if (is_feat_dangerous(feat))
+                inf->light_colour = LIGHTGREEN;
+            else if (feat == DNGN_LAVA || feat_is_water(feat))
+                inf->light_colour = GREEN;
+            else
+                inf->light_colour = DARKGREY;
+            if (you.form == TRAN_SPIDER)
+                _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
+        }
+        break;
+
     case STATUS_HOVER:
         if (is_hovering())
         {
@@ -619,6 +641,14 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_text   = "Drain";
             inf->short_text   = "drained";
             inf->long_text    = "Your life force is drained.";
+        }
+        break;
+
+    case STATUS_RAY:
+        if (you.attribute[ATTR_SEARING_RAY])
+        {
+            inf->light_colour = WHITE;
+            inf->light_text   = "Ray";
         }
         break;
 

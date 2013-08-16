@@ -78,7 +78,7 @@ SUBVAULT: W : fruiting_plant
 KITEM:    p = potion of curing / potion of heal wounds / \
               potion of restore abilities w:1 / potion of poison w:3 / \
               potion of strong poison w:1 / potion of confusion w:1 / nothing
-KMONS:    1 = deep dwarf artificer
+KMONS:    1 = deep dwarf
 MAP
 ZZZZZ..YYYYY
 ZZZZZ..YYYYY
@@ -123,7 +123,7 @@ NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   spider / giant firefly / brain worm w:5 / goliath beetle / giant centipede
+MONS:   spider / brain worm w:5 / goliath beetle / giant centipede
 MONS:   yellow wasp w:7 / rock worm w:5 / boring beetle / soldier ant w:13 / giant slug
 ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge, honeycomb q:6
 MAP

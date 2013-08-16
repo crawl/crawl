@@ -503,6 +503,19 @@ A staircase to the Ecumenical Temple
 Ein Eingang zum Tempel der Götter, einem Ort der Ruhe und Erholung vom Wahnsinn
 des Verlieses.
 %%%%
+A staircase to the Ecumenical Temple:quote
+
+„In einer Stadt — den Namen nenn' ich nicht,
+  Ihr braucht's wahrhaftig auch nicht zu bedauern,
+ In einer Stadt — wer so von Trümmern spricht,
+  Die Residenz von Juden und von Bauern,
+ In einer Stadt — ein Schloß, Burg und Gericht,
+  Des Leichtsinns Denkmal mit verfall'nen Mauern:
+ Dort Standen Schänken ... drei, Thortrümmer ... vier,
+  Neun Klöster und ... auch Häuschen dort und hier.”
+    -Ignacy Krasicki, “Der Mönche-Krieg(Monachomachia)”, 1778
+     übersetzt von Dr. Alexander Winklewski
+%%%%
 A staircase to the Elven Halls
 
 Eine breite Treppe führt nach unten zu den Hallen der Tiefelfen, geschickten
@@ -522,10 +535,6 @@ A staircase to the Orcish Mines
 
 Ein Eingang zu den Minen der Orks, gefüllt mit ihrem Gold, aber heimtückisch
 und voller Fallen.
-%%%%
-A staircase to the Dwarven Hall
-
-Ein Eingang zur gut gemachten Halle der Zwerge. Du glaubst, Ale zu riechen.
 %%%%
 A staircase to the Shoals
 
@@ -712,11 +721,6 @@ An iron grate
 Dieses Eisengitter sieht verrostet aus, als ob es recht leicht mit einem
 Zauberspruch oder einem Zauberstab zerstört werden könnte. Es ist aber zu
 stabil, um von Hand zerbrochen zu werden.
-%%%%
-An iron tree
-
-Eine bemerkenswerte Darstellung der Natur im Frühjahr, gemacht völlig aus
-Eisen. Es sieht sehr fein – fast lebendig aus.
 %%%%
 An open door
 
@@ -1039,11 +1043,6 @@ man das Wasser fließen.
 A glass window
 
 Ein pockiges Fenster aus extrem hartem Glas.
-%%%%
-A granite statue of a fallen hero
-
-Die lebensgroße Granitstatue eines Zwergen, der diese Halle bewacht. Du fühlst
-dich von ihr beobachtet.
 %%%%
 An elephant-shaped statue
 

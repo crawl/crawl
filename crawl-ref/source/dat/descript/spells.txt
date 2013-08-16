@@ -233,6 +233,11 @@ Dig spell
 
 This spell digs a tunnel through unworked rock.
 %%%%
+Discord spell
+
+This spell drives nearby creatures into an insane frenzy, mercilessly
+attacking anything and everything nearby with great strength and speed.
+%%%%
 Disjunction spell
 
 This spell destabilizes the space in a sphere around you for a while, causing
@@ -462,6 +467,12 @@ Mephitic Cloud spell
 
 This spell conjures up a large but short-lived cloud of vile fumes.
 %%%%
+Melee spell
+
+The rod of striking is designed for melee combat, releasing its charges to deal
+additional damage dependent on evocations skill when it strikes a foe. Maces &
+Flails skill will help improve your basic effectiveness with the weapon.
+%%%%
 Metabolic Englaciation spell
 
 This spell tries to lower the metabolic rate of every creature in the caster's
@@ -484,9 +495,10 @@ foul necromantic tissue serves as an analogue for bones remains a mystery.
 %%%%
 Olgreb's Toxic Radiance spell
 
-This spell bathes the caster's surroundings in a sickly green light, inflicting
-poison on everything nearby (including the caster). It can be blocked by
-translucent walls, however, and invisible creatures are completely unaffected.
+This spell causes the caster to radiate toxic energy, continuously inflicting
+poison on everything nearby for as long as the spell lasts. Be warned that this
+magic is baleful for its user, as the epicenter of the aura is potent enough to
+afflict even those otherwise resistant to poison.
 %%%%
 Orb of Destruction spell
 
@@ -603,6 +615,14 @@ This spell creates a short blast of high-velocity particles. It works best when
 the caster provides some source (by wielding a stone), but will do what it can
 with whatever ambient grit is available.
 %%%%
+Searing Ray spell
+
+This spell fires a continuous ray of arcane energy from the caster's hands.
+Though initially mild, so long as the caster maintains focus upon the spell and
+supplies it with magical power (by waiting in place and not taking any other
+actions), the ray will grow in strength until it becomes a surging beam able to
+tear clean through the ranks of the caster's foes.
+%%%%
 Shadow Creatures spell
 
 This spell weaves a creature from shadows and threads of ethereal matter. The
@@ -672,7 +692,7 @@ already singing will start a new song, not extend an existing one.
 Spectral Weapon spell
 
 This spell draws out the spirit within a wielded weapon to fight for you, with
-its power dependant on your skill with said weapon. Never striking on its own,
+its power dependent on your skill with said weapon. Never striking on its own,
 it only attacks when you do. You can only ever have one spectral weapon at a time.
 
 Kills by a spectral weapon count as your own when singing a Song of Slaying.
@@ -684,7 +704,7 @@ Spider Form spell
 
 This spell temporarily transforms the caster into a swift, venomous (but
 poison-susceptible), spider-like creature. Spellcasting is slightly more
-difficult in this form.
+difficult in this form. While in this form, you can cling to walls.
 %%%%
 Static Discharge spell
 
@@ -730,10 +750,6 @@ This spell hardens one's skin to a degree determined by one's skill in Earth
 Magic. It only works on relatively normal flesh, and will aid neither the
 undead nor the bodily transformed. However, there is one exception: the effects
 of this spell will be boosted for casters in Statue Form.
-%%%%
-Striking spell
-
-This spell hurls a small bolt of force.
 %%%%
 Sublimation of Blood spell
 
@@ -832,9 +848,9 @@ This spell creates an arc of electricity.
 Tornado spell
 
 This spell turns the air around the caster in a mighty vortex, doing tremendous
-damage to everyone caught in it. Only the eye of the storm is a safe place, and
-it follows the caster. Everything not firmly nailed down will be lifted and
-tossed around.
+damage to everyone caught in it. Those affected will also be swept up into the
+air and tossed around. Only the eye of the storm is a safe place, and it
+follows the caster.
 
 The spell's effectiveness is greatly diminished in closed areas.
 

@@ -224,10 +224,12 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb,
     return true;
 }
 
-static bool _check_moveto_dangerous(const coord_def& p, const string& msg, bool interactive = true)
+static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
+                                    bool cling = true, bool interactive = true)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
-        || you.airborne() || !is_feat_dangerous(env.grid(p)))
+        || you.airborne() || cling && you.can_cling_to(p)
+        || !is_feat_dangerous(env.grid(p)))
     {
         return true;
     }
@@ -252,6 +254,12 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg, bool 
 static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
                                   const string &msg, bool interactive = true)
 {
+    if (you.is_wall_clinging()
+        && (move_verb == "blink" || move_verb == "passwall"))
+    {
+        return _check_moveto_dangerous(p, msg, false);
+    }
+
     if (!need_expiration_warning() && need_expiration_warning(p)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
@@ -338,7 +346,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
     // Terrain effects.
-    if (is_feat_dangerous(new_grid))
+    if (is_feat_dangerous(new_grid) && (!you.is_wall_clinging()
+                                        || !cell_is_clingable(you.pos())))
     {
         // Lava and dangerous deep water (ie not merfolk).
         const coord_def& entry = (stepped) ? old_pos : you.pos();
@@ -402,18 +411,28 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 you.time_taken *= 13 + random2(8);
                 you.time_taken /= 10;
             }
+            const bool will_cling = you.can_cling_to_walls()
+                                    && cell_is_clingable(you.pos());
 
             if (!feat_is_water(old_feat))
             {
-                mprf("You %s the %s water.",
-                     stepped ? "enter" : "fall into",
-                     new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                if (stepped && will_cling)
+                {
+                    mpr("You slowly cross the shallow water and cling to the "
+                        "wall.");
+                }
+                else
+                {
+                    mprf("You %s the %s water.",
+                         stepped ? "enter" : "fall into",
+                         new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+                }
             }
 
             if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
                 mpr("You sink to the bottom.");
 
-            if (!feat_is_water(old_feat))
+            if (!feat_is_water(old_feat) && !will_cling)
             {
                 mpr("Moving in this stuff is going to be slow.");
                 if (you.invisible())
@@ -426,6 +445,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     {
         mprf("You heave yourself high above the %s.", feat_type_name(new_grid));
     }
+
+    const bool was_clinging = you.is_wall_clinging();
+    const bool is_clinging = stepped && you.check_clinging(stepped);
+
+    if (feat_is_water(new_grid) && was_clinging && !is_clinging)
+        _splash();
 
     // Traps go off.
     if (trap_def* ptrap = find_trap(you.pos()))
@@ -446,7 +471,10 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT_IN_BOUNDS(p);
 
     if (!stepped)
+    {
+        you.clear_clinging();
         tornado_move(p);
+    }
 
     // assuming that entering the same square means coming from above (flight)
     const coord_def old_pos = you.pos();
@@ -516,14 +544,6 @@ bool player_likes_lava(bool permanently)
 bool player_can_open_doors()
 {
     return (you.form != TRAN_BAT && you.form != TRAN_JELLY);
-}
-
-bool player_under_penance(void)
-{
-    if (you.religion != GOD_NO_GOD)
-        return (you.penance[you.religion]);
-    else
-        return false;
 }
 
 // TODO: get rid of this.
@@ -621,7 +641,7 @@ monster_type player_mons(bool transform)
 
     if (mons == MONS_ORC)
     {
-        if (you.religion == GOD_BEOGH)
+        if (you_worship(GOD_BEOGH))
             mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
                                                       : MONS_ORC_PRIEST;
     }
@@ -951,9 +971,9 @@ bool player_weapon_wielded()
 bool berserk_check_wielded_weapon()
 {
     const item_def * const wpn = you.weapon();
-    if (wpn && wpn->defined() && (!is_melee_weapon(*wpn)
-                                  || needs_handle_warning(*wpn, OPER_ATTACK))
-        || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
+    if (wpn && (wpn->defined() && (!is_melee_weapon(*wpn)
+                                   || needs_handle_warning(*wpn, OPER_ATTACK))
+                || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]))
     {
         string prompt = "Do you really want to go berserk while wielding "
                         + wpn->name(DESC_YOUR) + "?";
@@ -1367,7 +1387,7 @@ int player_hunger_rate(bool temp)
         hunger += 4;
 
     // If Cheibriados has slowed your life processes, you will hunger less.
-    if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0))
+    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
         hunger--;
 
     // Moved here from main.cc... maintaining the >= 40 behaviour.
@@ -1574,7 +1594,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_TREE:
-            if (you.religion == GOD_FEDHAS && !player_under_penance())
+            if (you_worship(GOD_FEDHAS) && !player_under_penance())
                 rf++;
             break;
         case TRAN_ICE_BEAST:
@@ -1608,6 +1628,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 int player_res_steam(bool calc_unid, bool temp, bool items)
 {
     int res = 0;
+    const int rf = player_res_fire(calc_unid, temp, items);
 
     if (you.species == SP_PALE_DRACONIAN)
         res += 2;
@@ -1622,7 +1643,8 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
             res += 2;
     }
 
-    res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
+    res += (rf < 0) ? rf
+                    : (rf + 1) / 2;
 
     if (res > 3)
         res = 3;
@@ -1646,7 +1668,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_TREE:
-            if (you.religion == GOD_FEDHAS && !player_under_penance())
+            if (you_worship(GOD_FEDHAS) && !player_under_penance())
                 rc++;
             break;
         case TRAN_ICE_BEAST:
@@ -1859,7 +1881,7 @@ int player_res_torment(bool, bool temp)
 // Kiku protects you from torment to a degree.
 int player_kiku_res_torment()
 {
-    return (you.religion == GOD_KIKUBAAQUDGHA
+    return (you_worship(GOD_KIKUBAAQUDGHA)
             && !player_under_penance()
             && you.piety >= piety_breakpoint(3)
             && !you.gift_timeout); // no protection during pain branding weapon
@@ -2186,9 +2208,6 @@ int player_energy()
 // counted.
 int player_prot_life(bool calc_unid, bool temp, bool items)
 {
-    if (you.species == SP_DJINNI)
-        return 3;
-
     int pl = 0;
 
     // Hunger is temporary, true, but that's something you can control,
@@ -2216,7 +2235,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
     // Same here.  Your piety status, and, hence, TSO's protection, is
     // something you can more or less control.
-    if (you.religion == GOD_SHINING_ONE && you.piety > pl * 50)
+    if (you_worship(GOD_SHINING_ONE) && you.piety > pl * 50)
         pl = you.piety / 50;
 
     if (temp)
@@ -2317,7 +2336,7 @@ int player_movement_speed(bool ignore_burden)
         mv += 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     // Cheibriados
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you_worship(GOD_CHEIBRIADOS))
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
 
     // Tengu can move slightly faster when flying.
@@ -2386,7 +2405,7 @@ int player_speed(void)
     if (you.duration[DUR_SLOW])
         ps = haste_mul(ps);
 
-    if (you.duration[DUR_BERSERK] && you.religion != GOD_CHEIBRIADOS)
+    if (you.duration[DUR_BERSERK] && !you_worship(GOD_CHEIBRIADOS))
         ps = berserk_div(ps);
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
@@ -2472,7 +2491,7 @@ static int _player_armour_racial_bonus(const item_def& item)
             racial_bonus += 4;
 
         // an additional bonus for Beogh worshippers
-        if (you.religion == GOD_BEOGH && !player_under_penance())
+        if (you_worship(GOD_BEOGH) && !player_under_penance())
         {
             if (you.piety >= 185)
                 racial_bonus += racial_bonus * 9 / 4;
@@ -2927,7 +2946,7 @@ void forget_map(bool rot)
     const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
                                 && you.species == SP_MINOTAUR
                             || player_in_branch(BRANCH_ABYSS)
-                                && you.religion == GOD_LUGONU;
+                                && you_worship(GOD_LUGONU);
     const double geometric_chance = 0.99;
     const int radius = (rot_resist ? 200 : 100);
 
@@ -3008,7 +3027,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         exp_gained *= 2;
     }
 
-    if (you.penance[GOD_ASHENZARI])
+    if (player_under_penance(GOD_ASHENZARI))
         ash_reduce_penance(exp_gained);
 
     const unsigned int old_exp = you.experience;
@@ -3913,11 +3932,9 @@ int check_stealth(void)
         if (you.species == SP_FELID && !you.airborne())
             stealth -= 50; // a constant penalty
         break;
-    case TRAN_LICH:
-        race_mod++; // intentionally tiny, lich form is already overpowered
-        break;
     case TRAN_NONE:
     case TRAN_APPENDAGE:
+    case TRAN_LICH:
         break;
     }
 
@@ -4346,6 +4363,7 @@ void display_char_status()
         DUR_AFRAID,
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
+        STATUS_CLINGING,
         STATUS_HOVER,
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
@@ -4367,14 +4385,15 @@ void display_char_status()
         DUR_INFUSION,
         DUR_SONG_OF_SHIELDING,
         DUR_SONG_OF_SLAYING,
-        STATUS_DRAINED
+        STATUS_DRAINED,
+        DUR_TOXIC_RADIANCE,
+        DUR_RECITE
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.long_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.long_text.empty())
             mpr(inf.long_text);
     }
     string cinfo = _constriction_description();
@@ -5054,7 +5073,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         learned_something_new(HINT_GLOWING);
 
     // Zin doesn't like mutations or mutagenic radiation.
-    if (you.religion == GOD_ZIN)
+    if (you_worship(GOD_ZIN))
     {
         // Whenever the glow status is first reached, give a warning message.
         if (old_level < 2 && new_level >= 2)
@@ -5152,6 +5171,9 @@ void paralyse_player(string source, int amount, int factor)
 bool poison_player(int amount, string source, string source_aux, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    if (player_res_poison() > 0)
+        maybe_id_resist(BEAM_POISON);
 
     if (player_res_poison() >= 3)
     {
@@ -5539,6 +5561,10 @@ void float_player()
 
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
+
+    // The player hasn't actually taken a step, but in this case, we want
+    // neither the message, nor the location effect.
+    you.check_clinging(true);
 }
 
 void fly_player(int pow, bool already_flying)
@@ -5575,12 +5601,15 @@ bool is_hovering()
 {
     return you.species == SP_DJINNI
            && !feat_has_dry_floor(grd(you.pos()))
-           && !you.airborne();
+           && !you.airborne()
+           && !you.is_wall_clinging();
 }
 
 bool djinni_floats()
 {
-    return you.species == SP_DJINNI && you.form != TRAN_TREE;
+    return you.species == SP_DJINNI
+           && you.form != TRAN_TREE
+           && (you.form != TRAN_SPIDER || !you.is_wall_clinging());
 }
 
 static void _end_water_hold()
@@ -6473,9 +6502,10 @@ int player::armour_class() const
                 break;
 
             case SP_GARGOYLE:
-                AC += 400 + 100 * experience_level * 3 / 5;    // max 20
+                AC += 200 + 100 * experience_level * 2 / 5     // max 20
+                          + 100 * (max(0, experience_level - 7) * 2 / 5);
                 if (form == TRAN_STATUE)
-                    AC += 500 + skill(SK_EARTH_MAGIC, 50);
+                    AC += 1300 + skill(SK_EARTH_MAGIC, 50);
                 break;
 
             default:
@@ -6579,7 +6609,8 @@ int player::gdr_perc() const
     case TRAN_DRAGON:
         return 34; // base AC 8
     case TRAN_STATUE:
-        return 39; // like plate (AC 10)
+        return species == SP_GARGOYLE ? 62
+                                      : 39; // like plate (AC 10)
     case TRAN_TREE:
         return 48;
     default:
@@ -6592,7 +6623,12 @@ int player::gdr_perc() const
         return 0;
 
     const int body_base_AC = property(*body_armour, PARM_AC);
-    return 14 * sqrt(max(body_base_AC - 2, 0));
+    int gdr = 14 * sqrt(max(body_base_AC - 2, 0));
+
+    if (species == SP_GARGOYLE)
+        gdr += 24 - (gdr/6);
+
+    return gdr;
 }
 
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
@@ -6603,7 +6639,6 @@ int player::melee_evasion(const actor *act, ev_ignore_type evit) const
                 || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
             - (you_are_delayed()
                && !(evit & EV_IGNORE_HELPLESS)
-               && current_delay_action() != DELAY_RECITE
                && !delay_is_run(current_delay_action())? 5 : 0));
 }
 
@@ -7533,13 +7568,18 @@ bool player::can_safely_mutate() const
                && hunger_state == HS_ENGORGED);
 }
 
+// Is the player too undead to bleed, rage, and polymorph?
+bool player::is_lifeless_undead() const
+{
+    if (is_undead == US_SEMI_UNDEAD)
+        return hunger_state <= HS_SATIATED;
+    else
+        return is_undead != US_ALIVE;
+}
+
 bool player::can_polymorph() const
 {
-    if (transform_uncancellable)
-        return false;
-    if (is_undead)
-        return is_undead == US_SEMI_UNDEAD && hunger_state > HS_SATIATED;
-    return true;
+    return !(transform_uncancellable || is_lifeless_undead());
 }
 
 bool player::can_bleed(bool allow_tran) const
@@ -7555,13 +7595,7 @@ bool player::can_bleed(bool allow_tran) const
         }
     }
 
-    if ((is_undead && is_undead != US_SEMI_UNDEAD)
-        || (is_undead == US_SEMI_UNDEAD && hunger_state <= HS_SATIATED))
-    {
-        return false;
-    }
-
-    if (holiness() == MH_NONLIVING)
+    if (is_lifeless_undead() || holiness() == MH_NONLIVING)
         return false;
 
     return true;

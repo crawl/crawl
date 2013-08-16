@@ -187,7 +187,7 @@ static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
 static vector<coord_def> _get_pool_seed_positions(
                                                 vector<vector<int> > pool_index,
                                                 int pool_size,
-                                                int min_seperation)
+                                                int min_separation)
 {
     const int NO_POOL   = 999997; // must match dgn_add_pools
 
@@ -207,7 +207,7 @@ static vector<coord_def> _get_pool_seed_positions(
 
     // 2. Choose the pool seed positions
 
-    int min_seperation_squared = min_seperation * min_seperation;
+    int min_separation_squared = min_separation * min_separation;
     int pool_count_goal = (floor_positions.size() + random2(pool_size))
                           / pool_size;
 
@@ -235,7 +235,7 @@ static vector<coord_def> _get_pool_seed_positions(
             int diff_y = chosen_coord.y - seeds[j].y;
             int distance_squared = diff_x * diff_x + diff_y * diff_y;
 
-            if (distance_squared < min_seperation_squared)
+            if (distance_squared < min_separation_squared)
             {
                 too_close = true;
                 break;
@@ -888,7 +888,7 @@ LUAFN(dgn_make_round_box)
     //
     //  We do not know for sure whether we want to actually draw
     //    anything until the end, so we will draw out tower onto
-    //    our own seperate array (actually a vector of vectors
+    //    our own separate array (actually a vector of vectors
     //    so we can set the size at runtime).  Then, if
     //    everything goes well, we will copy it to the world with
     //    the appropriate glyphs.
@@ -1560,7 +1560,7 @@ LUAFN(dgn_add_pools)
     TABLE_STR(ls, replace, ".");
     TABLE_CHAR(ls, border, '.');
     TABLE_INT(ls, pool_size, 100);
-    TABLE_INT(ls, seed_seperation, 2);
+    TABLE_INT(ls, seed_separation, 2);
 
     vector<char> fill_glyphs = _pool_fill_glyphs_from_table(ls, "contents");
 
@@ -1617,7 +1617,7 @@ LUAFN(dgn_add_pools)
 
     vector<coord_def> pool_seeds = _get_pool_seed_positions(pool_index,
                                                             pool_size,
-                                                            seed_seperation);
+                                                            seed_separation);
     vector<coord_def> open_list;
 
     for (unsigned int pool = 0; pool < pool_seeds.size(); pool++)

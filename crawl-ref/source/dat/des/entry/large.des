@@ -184,8 +184,7 @@ TAGS:    entry no_monster_gen no_rotate
 ORIENT:  west
 WEIGHT:  2
 MONS:    rat, goblin, bat, kobold
-ITEM:    sausage / beef jerky, nothing, nothing
-SHUFFLE: {[(, 234, ef~
+SHUFFLE: {[(, 234
 SUBST:   [( = .
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@x
@@ -198,11 +197,11 @@ xxxxx.+....{....xxx....2....xx
 xxxxx+xx.......xxxxx.......xxxx
 xxxxx.xxx.....xxx.xxx.....xxx.xx
 xxxx...xxx...xxx...xxx...xxx...xx
-xxx.....xxx.xxx.....xxxexxx.....xx
+xxx.....xxx.xxx.....xxx.xxx.....xx
 xx.......xx+xx..1.1..xx+xx.......xx
-x....[....+.+...1d....+.+~...3....+@
+x....[....+.+...1d....+.+....3....+@
 xx.......xx+xx...1...xx+xx.......xx
-xxx.....xxx.xxx.....xxxfxxx.....xx
+xxx.....xxx.xxx.....xxx.xxx.....xx
 xxxx...xxx...xxx...xxx...xxx...xx
 xxxxx.xxx.....xxx.xxx.....xxx.xx
 xxxxx+xx.......xxxxx.......xxxx
@@ -250,8 +249,7 @@ ENDMAP
 ##############################################################################
 # 29x23
 # Morbid curiosity
-# Monsters are easier. Made it harder for them to get out. The single orc
-# can pack a punch, though.
+# Monsters are easier. Made it harder for them to get out.
 NAME:    dpeg_entry_morbid_curiosity
 TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float

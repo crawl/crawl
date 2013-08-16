@@ -177,6 +177,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_CONTROL_WINDS;
     case ENCH_WIND_AIDED:
         return MB_WIND_AIDED;
+    case ENCH_TOXIC_RADIANCE:
+        return MB_TOXIC_RADIANCE;
     default:
         return NUM_MB_FLAGS;
     }
@@ -613,6 +615,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
         mb.set(MB_SLOWED);
+    if (m->is_wall_clinging())
+        mb.set(MB_CLINGING);
 
     dam = mons_get_damage_level(m);
 
@@ -620,7 +624,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (nomsg_wounds)
         dam = MDAM_OKAY;
 
-    if (mons_behaviour_perceptible(m))
+    if (!mons_class_flag(m->type, M_NO_EXP_GAIN)) // Firewood, butterflies, etc.
     {
         if (m->asleep())
         {
@@ -670,7 +674,7 @@ monster_info::monster_info(const monster* m, int milev)
     {
     case ATT_NEUTRAL:
     case ATT_HOSTILE:
-        if (you.religion == GOD_SHINING_ONE
+        if (you_worship(GOD_SHINING_ONE)
             && !tso_unchivalric_attack_safe_monster(m)
             && is_unchivalric_attack(&you, m))
         {
@@ -1237,6 +1241,8 @@ static string _verbose_info0(const monster_info& mi)
 {
     if (mi.is(MB_BERSERK))
         return "berserk";
+    if (mi.is(MB_INSANE))
+        return "insane";
     if (mi.is(MB_FRENZIED))
         return "frenzied";
     if (mi.is(MB_ROUSED))
@@ -1544,6 +1550,8 @@ vector<string> monster_info::attributes() const
         v.push_back("controlling the winds");
     if (is(MB_WIND_AIDED))
         v.push_back("aim guided by the winds");
+    if (is(MB_TOXIC_RADIANCE))
+        v.push_back("radiating toxic energy");
     return v;
 }
 
@@ -1740,7 +1748,7 @@ bool monster_info::airborne() const
 
 bool monster_info::ground_level() const
 {
-    return !airborne();
+    return (!airborne() && !is(MB_CLINGING));
 }
 
 void get_monster_info(vector<monster_info>& mons)

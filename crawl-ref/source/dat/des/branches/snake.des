@@ -442,7 +442,7 @@ xx.xxxx.x.x
 ENDMAP
 
 NAME:   nicolae_coiled_stairwell_up
-DEPTH:  Snake:2-5
+DEPTH:  Snake:2-
 TAGS:   uniq_coiled_stairwell
 SUBST:  { = {[(<
 MAP

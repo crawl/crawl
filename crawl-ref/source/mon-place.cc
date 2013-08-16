@@ -384,7 +384,7 @@ void spawn_random_monsters()
 
     rate = (you.char_direction == GDT_DESCENDING) ?
             _scale_spawn_parameter(rate, 6 * rate, 0)
-            : (you.religion == GOD_CHEIBRIADOS) ? 16 : 8;
+            : (you_worship(GOD_CHEIBRIADOS)) ? 16 : 8;
 
     if (rate == 0)
     {
@@ -400,7 +400,7 @@ void spawn_random_monsters()
         // the player is unlikely to meet all of them and notice this.
         if (you.char_direction != GDT_GAME_START)
             rate = 5;
-        if (you.religion == GOD_CHEIBRIADOS)
+        if (you_worship(GOD_CHEIBRIADOS))
             rate *= 2;
     }
 
@@ -1351,9 +1351,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             }
         }
     }
-    // XXX: Unborn deep dwarf death knights belong to Yredelemnul, but
-    // only so they'll get the right message when casting Injury Mirror.
-    else if (mg.cls == MONS_UNBORN_DEEP_DWARF)
+    // XXX: Unborn belong to Yredelemnul, but only so they'll get the right
+    // message when casting Injury Mirror.
+    else if (mg.cls == MONS_UNBORN)
         mon->god = GOD_YREDELEMNUL;
     // The royal jelly belongs to Jiyva.
     else if (mg.cls == MONS_ROYAL_JELLY)
@@ -2147,14 +2147,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band = BAND_GNOLLS;
         band_size = 3 + random2(4);
         break;
-    case MONS_DEEP_DWARF_SCION:
-        band = BAND_DEEP_DWARF;
-        band_size = (one_chance_in(5) ? 2 : 1) + random2(3);
-        break;
-    case MONS_DEEP_DWARF_ARTIFICER:
-        band = BAND_DEEP_DWARF;
-        band_size = 3 + random2(4);
-        break;
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
         if (x_chance_in_y(2, 3))
         {
@@ -2550,12 +2542,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(3);
         break;
 
-    case MONS_PAN:
-        natural_leader = true;
-        band = BAND_PAN;
-        band_size = 4 + random2(4);
-        break;
-
     case MONS_TENGU_CONJURER:
     case MONS_TENGU_WARRIOR:
         natural_leader = true;
@@ -2606,7 +2592,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_TREANT:
-        if (one_chance_in(4))
+        if (one_chance_in(3))
         {
             band = BAND_SPRIGGAN_DRUID;
             band_size = 1;
@@ -2703,13 +2689,6 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_GNOLLS:
         return MONS_GNOLL;
-
-    case BAND_DEEP_DWARF:
-        return random_choose_weighted(31, MONS_DEEP_DWARF,
-                                       6, MONS_DEEP_DWARF_NECROMANCER,
-                                       2, MONS_DEEP_DWARF_BERSERKER,
-                                       1, MONS_DEEP_DWARF_DEATH_KNIGHT,
-                                       0);
 
     case BAND_CENTAURS:
         return MONS_CENTAUR;
@@ -2968,10 +2947,6 @@ static monster_type _band_member(band_type band, int which)
     case BAND_JIANGSHI:
         return MONS_JIANGSHI;
 
-    case BAND_PAN:
-        if (which <= 2 || coinflip())
-            return MONS_SATYR;
-        // deliberate fall-through
     case BAND_FAUNS:
         return MONS_FAUN;
 
@@ -3043,7 +3018,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
     // Jellies are never interesting to Jiyva.
-    else if (mons->type == MONS_JELLY && you.religion == GOD_JIYVA)
+    else if (mons->type == MONS_JELLY && you_worship(GOD_JIYVA))
         interesting = false;
     else if (mons_threat_level(mons) == MTHRT_NASTY)
         interesting = true;
@@ -3313,7 +3288,7 @@ bool can_spawn_mushrooms(coord_def where)
         return true;
 
     cloud_struct &cloud = env.cloud[env.cgrid(where)];
-    if (you.religion == GOD_FEDHAS
+    if (you_worship(GOD_FEDHAS)
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY))
     {
         return true;
@@ -3340,7 +3315,7 @@ conduct_type player_will_anger_monster(monster* mon)
         return DID_UNHOLY;
     if (is_good_god(you.religion) && mon->is_evil())
         return DID_NECROMANCY;
-    if (you.religion == GOD_FEDHAS
+    if (you_worship(GOD_FEDHAS)
         && ((mon->holiness() == MH_UNDEAD && !mon->is_insubstantial())
             || mon->has_corpse_violating_spell()))
     {
@@ -3348,14 +3323,14 @@ conduct_type player_will_anger_monster(monster* mon)
     }
     if (is_evil_god(you.religion) && mon->is_holy())
         return DID_HOLY;
-    if (you.religion == GOD_ZIN)
+    if (you_worship(GOD_ZIN))
     {
         if (mon->is_unclean())
             return DID_UNCLEAN;
         if (mon->is_chaotic())
             return DID_CHAOS;
     }
-    if (you.religion == GOD_TROG && mon->is_actual_spellcaster())
+    if (you_worship(GOD_TROG) && mon->is_actual_spellcaster())
         return DID_SPELL_CASTING;
 
     return DID_NOTHING;

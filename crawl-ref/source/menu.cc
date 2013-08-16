@@ -2389,11 +2389,11 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
         aabb_start.x = start->get_min_coord().x;
         aabb_end.x = start->get_max_coord().x;
         aabb_start.y = start->get_max_coord().y;
-        // we choose an arbitarily large number here, because
+        // we choose an arbitrarily large number here, because
         // tiles saves entry coordinates in pixels, yet console saves them
         // in characters
-        // basicly, we want the AABB to be large enough to extend to the bottom
-        // of the screen in every possible resolution
+        // basically, we want the AABB to be large enough to extend to the
+        // bottom of the screen in every possible resolution
         aabb_end.y = 32767;
         break;
     case LEFT:
@@ -2864,7 +2864,7 @@ void TextItem::_wrap_text()
     if (num_linebreaks > max_lines)
     {
         size_t pos = 0;
-        // find the max_line'th occurence of '\n'
+        // find the max_line'th occurrence of '\n'
         for (int i = 0; i < max_lines; ++i)
             pos = m_render_text.find('\n', pos);
 
@@ -3647,11 +3647,11 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         aabb_start.x = start->get_min_coord().x;
         aabb_end.x = start->get_max_coord().x;
         aabb_start.y = start->get_max_coord().y;
-        // we choose an arbitarily large number here, because
+        // we choose an arbitrarily large number here, because
         // tiles saves entry coordinates in pixels, yet console saves them
         // in characters
-        // basicly, we want the AABB to be large enough to extend to the bottom
-        // of the screen in every possible resolution
+        // basically, we want the AABB to be large enough to extend to the
+        // bottom of the screen in every possible resolution
         aabb_end.y = 32767;
         break;
     case LEFT:

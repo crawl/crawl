@@ -12,7 +12,7 @@
 # This replaces the hardcoded placement of a hell entrance on D:21-27.
 NAME:   hell_entry
 TAGS:   extra allow_dup luniq can_overwrite replace_portal transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 CHANCE: 100%
 : if you.where() == 'D:21' then
 KFEAT: O = enter_hell no_mimic

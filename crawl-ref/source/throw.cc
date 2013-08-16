@@ -19,6 +19,7 @@
 #include "describe.h"
 #include "env.h"
 #include "exercise.h"
+#include "fight.h"
 #include "fineff.h"
 #include "godconduct.h"
 #include "hints.h"
@@ -553,14 +554,8 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield, bool 
         speed = 2 * speed / 3;
     }
 
-    if (scaled && you.duration[DUR_FINESSE])
-    {
-        ASSERT(!you.duration[DUR_BERSERK]);
-        // Need to undo haste by hand.
-        if (you.duration[DUR_HASTE])
-            speed = haste_mul(speed);
-        speed /= 2;
-    }
+    if (scaled)
+        speed = finesse_adjust_delay(speed);
 
     return speed;
 }
@@ -584,6 +579,12 @@ static bool _elemental_missile_beam(int launcher_brand, int ammo_brand)
 
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
 {
+    if (victim->is_player() && victim->res_poison() > 0)
+    {
+        maybe_id_resist(BEAM_POISON);
+        return false;
+    }
+
     if (!victim->alive() || victim->res_poison() > 0)
         return false;
 
@@ -708,6 +709,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         return false;
 
     const coord_def oldpos = victim->pos();
+    victim->clear_clinging();
 
     if (victim->is_player())
     {
@@ -870,7 +872,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, special_missile_type type,
         chance += wp->plus * 4;
         chance = min(95, chance);
 
-        if (type == SPMSL_RAGE)
+        if (type == SPMSL_FRENZY)
             chance = chance / 2;
         else if (type == SPMSL_PARALYSIS || type == SPMSL_SLEEP)
             chance = chance * 4 / 5;
@@ -974,11 +976,11 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
     if (beam.is_tracer)
         return false;
 
-    if (!_blowgun_check(beam, victim, SPMSL_RAGE))
+    if (!_blowgun_check(beam, victim, SPMSL_FRENZY))
         return false;
 
     if (victim->is_monster())
-        victim->as_monster()->go_frenzy();
+        victim->as_monster()->go_frenzy(beam.agent());
     else
         victim->go_berserk(false);
 
@@ -1138,7 +1140,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 #if TAG_MAJOR_VERSION == 34
     const bool sickness     = ammo_brand == SPMSL_SICKNESS;
 #endif
-    const bool rage         = ammo_brand == SPMSL_RAGE;
+    const bool rage         = ammo_brand == SPMSL_FRENZY;
     const bool blinding     = ammo_brand == SPMSL_BLINDING;
 
     ASSERT(!exploding || !is_artefact(item));
@@ -1952,6 +1954,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 else
                     count_action(CACT_THROW, item.sub_type | (OBJ_WEAPONS << 16));
         }
+
+        you.time_taken = finesse_adjust_delay(you.time_taken);
     }
 
     // Dexterity bonus, and possible skill increase for silly throwing.
@@ -2070,7 +2074,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (bow_brand == SPWPN_SPEED)
         did_god_conduct(DID_HASTY, 1, true);
 
-    if (ammo_brand == SPMSL_RAGE)
+    if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
 
     if (did_return)

@@ -906,11 +906,6 @@ Pâles et ayant la peau anormalement dure, les nains profonds résident loin sou
 la terre et n’émergent quasiment jamais a la surface. Ils sont plus enclins aux
 arts occultes que leurs cousins montagnards.
 %%%%
-deep dwarf artificer
-
-Un nain des profondeurs qui a dédié sa vie à l'étude et à l'utilisation des
-instruments arcaniques.
-%%%%
 deep dwarf berserker
 
 Un nain des profondeurs féroce et assoiffé de sang qui exalte dans la fureur
@@ -920,15 +915,6 @@ deep dwarf death knight
 
 Un guerrier-prêtre nain des profondeurs de Yredelemnul, qui chante des hommages
 impies à la gloire du dieu sombre et évoque la mort.
-%%%%
-deep dwarf necromancer
-
-Un vile nain de profondeurs qui a vendu son âme en échange de la maitrise des
-arts occultes de la mort et de la douleur.
-%%%%
-deep dwarf scion
-
-Un nain des profondeurs en armure, formidable combattant au corps-à-corps.
 %%%%
 deep troll
 
@@ -1024,13 +1010,6 @@ dwarf
 Un membre de la famille des petits habitants de la montagne. Plus robuste que
 leur cousins de nains profonds, mais moins entrainés dans les connaissances
 magiques, les nains excellent dans le combat au corps-à-corps.
-%%%%
-dwarf mountain bat
-
-Une espèce de chauve-souris qui vit dans les cavernes montagneuses. Ce qu'elle
-fait dans ce donjon est un mystère — probablement en rapport avec la
-disparition soudaine des nains en ces terres. Mais ne vous inquiétez pas, une
-équipe d'éradication est en route.
 %%%%
 earth elemental
 
@@ -1169,10 +1148,6 @@ frost giant
 Un géant bleuâtre avec des cheveux gelés. Ses yeux sont aussi morne qu'un ciel
 d'hiver. Il s'avance farouchement dans la bataille avec son énorme hache glacée
 et ses rafales hurlantes de froid.
-%%%%
-fruity bat
-
-Une stupide chauve-souris moche. Elle scintille.
 %%%%
 fungus
 
@@ -1688,11 +1663,6 @@ Un monstre des mers gargantuesque, capable d'avaler des vaisseaux entiers. Il
 les enlace avec ses tentacules et les plonge dans les profondeurs.
 Heureusement, ces tentacules sont trop grosses pour attraper de petites
 créatures comme vous. Attendez, est-ce que je viens de dire "Heureusement" ?
-%%%%
-laboratory rat
-
-Un rat qui a été sujet de terribles expérimentations d'un magicien. Qui sait ce
-dont il est capable ?
 %%%%
 large abomination
 
@@ -2581,7 +2551,7 @@ ugly thing
 Une chose hideuse. D'après la légende, cette créature mutante est le fruit
 surnaturel d'une expérimentation d'un magicien sur la reproduction. Beurk.
 %%%%
-unborn deep dwarf
+unborn
 
 Un nain profond qui a aiguisé son empathie avec les pouvoirs de la terre et de
 la mort au prix de sa force vitale naturelle, dépassant sa mortalité d'une
@@ -2643,11 +2613,6 @@ Un gros champignon charnu qui vagabonde lentement dans le donjon. Il est à la
 fois naturellement curieux et incroyablement timide, poursuivant l'objet de sa
 curiosité dès qu'il est hors de vue. Des spores nocifs s'accumulent sur son
 chapeau.
-%%%%
-war dog
-
-Un énorme chien vicieux, entraîné à tuer. Son cou est protégé par un collier à
-pointe massif.
 %%%%
 warg
 

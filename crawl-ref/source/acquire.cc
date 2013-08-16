@@ -420,7 +420,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity,
         // class type is set elsewhere
         type_wanted = POT_BLOOD;
     }
-    else if (you.religion == GOD_FEDHAS)
+    else if (you_worship(GOD_FEDHAS))
     {
         // Fedhas worshippers get fruit to use for growth and evolution
         type_wanted = one_chance_in(3) ? FOOD_BANANA : FOOD_ORANGE;
@@ -507,10 +507,6 @@ static int _acquirement_weapon_subtype(bool divine)
     // 0% or 100% in the above formula.  At skill 25 that's *3.5 .
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
-#if TAG_MAJOR_VERSION == 34
-        if (i == WPN_SPIKED_FLAIL)
-            continue;
-#endif
         int wskill = range_skill(OBJ_WEAPONS, i);
         if (wskill == SK_THROWING)
             wskill = weapon_skill(OBJ_WEAPONS, i);
@@ -986,7 +982,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 other_weights += weight;
         }
 
-        if (you.religion == GOD_TROG)
+        if (you_worship(GOD_TROG))
             magic_weights = 0;
 
         // If someone has 25% or more magic skills, never give manuals.
@@ -1402,7 +1398,7 @@ int acquirement_create_item(object_class_type class_wanted,
             init_stack_blood_potions(doodad);
 
         // Remove curse flag from item, unless worshipping Ashenzari.
-        if (you.religion == GOD_ASHENZARI)
+        if (you_worship(GOD_ASHENZARI))
             do_curse_item(doodad, true);
         else
             do_uncurse_item(doodad, false);
@@ -1619,7 +1615,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_STAVES);
         bad_class.set(OBJ_RODS);
     }
-    bad_class.set(OBJ_FOOD, you_foodless_normally() && you.religion != GOD_FEDHAS);
+    bad_class.set(OBJ_FOOD, you_foodless_normally() && !you_worship(GOD_FEDHAS));
 
     static struct { object_class_type type; const char* name; } acq_classes[] =
     {
@@ -1635,7 +1631,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         { OBJ_MISSILES,   "Ammunition" },
     };
     ASSERT(acq_classes[7].type == OBJ_FOOD);
-    acq_classes[7].name = you.religion == GOD_FEDHAS ? "Fruit":
+    acq_classes[7].name = you_worship(GOD_FEDHAS) ? "Fruit":
                           you.species == SP_VAMPIRE  ? "Blood":
                                                        "Food";
 
@@ -1678,7 +1674,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             check_item_knowledge(), redraw_screen();
         else
         {
-            // Lets wizards escape out of accidently choosing acquirement.
+            // Lets wizards escape out of accidentally choosing acquirement.
             if (agent == AQ_WIZMODE)
             {
                 canned_msg(MSG_OK);

@@ -1390,7 +1390,10 @@ bool direction_chooser::pickup_item()
         item->flags |= ISFLAG_THROWN;
 
     if (!just_looking) // firing/casting prompt
+    {
+        mpr("Marked for pickup.", MSGCH_EXAMINE_FILTER);
         return false;
+    }
 
     moves.isValid  = true;
     moves.isTarget = true;
@@ -2628,7 +2631,7 @@ static int _next_los(int dir, int los, bool wrap)
         //    so we can go back to the first item in LOS. Unless we set
         //    fliphv, we can't flip from hidden to visible.
         //
-        los = flipvh? LS_FLIPHV : LS_FLIPVH;
+        los = flipvh ? LS_FLIPHV : LS_FLIPVH;
     }
     else
     {
@@ -2642,7 +2645,7 @@ static int _next_los(int dir, int los, bool wrap)
             return LS_NONE;
     }
 
-    los = (los & ~LS_VISMASK) | (vis? LS_HIDDEN : LS_VISIBLE);
+    los = (los & ~LS_VISMASK) | (vis ? LS_HIDDEN : LS_VISIBLE);
     return los;
 }
 
@@ -3018,8 +3021,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
             return "blade trap";
         case TRAP_NET:
             return "net trap";
+#if TAG_MAJOR_VERSION == 34
         case TRAP_GAS:
             return "gas trap";
+#endif
         case TRAP_ALARM:
             return "alarm trap";
         case TRAP_SHAFT:
@@ -3541,6 +3546,9 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 {
     vector<string> descs;
 
+    if (mi.is(MB_CLINGING))
+        descs.push_back("clinging");
+
     if (mi.is(MB_MESMERIZING))
         descs.push_back("mesmerising");
 
@@ -3601,6 +3609,9 @@ static string _get_monster_desc(const monster_info& mi)
 {
     string text    = "";
     string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+
+    if (mi.is(MB_CLINGING))
+        text += pronoun + " is clinging to the wall.\n";
 
     if (mi.is(MB_MESMERIZING))
         text += "You are mesmerised by her song.\n";

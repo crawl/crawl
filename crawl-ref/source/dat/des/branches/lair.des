@@ -468,7 +468,7 @@ ENDMAP
 # Pointless little "vaults" by Lemuel
 #
 
-# Three seperate decorative bubbles mixed into one vault.
+# Three separate decorative bubbles mixed into one vault.
 NAME:   lemuel_strawberry_fields
 TAGS:   allow_dup extra transparent
 DEPTH:  Lair
@@ -514,7 +514,7 @@ ENDMAP
 # Plantage
 #
 
-# Two seperate small decorative vaults mixed into one:
+# Two separate small decorative vaults mixed into one:
 NAME:   lemuel_fruit_tree
 TAGS:   extra transparent
 DEPTH:  Lair, Snake
@@ -791,7 +791,7 @@ ENDMAP
 # Ice dragon lair with assorted imp pets
 #
 NAME:   bobbens_ice_dragon_lair
-DEPTH:  Lair:4-8
+DEPTH:  Lair:4-
 TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
@@ -826,7 +826,7 @@ ENDMAP
 # Dragon lair embedded in wall
 #
 NAME:   bobbens_dragon_lair_wall
-DEPTH:  Lair:4-8
+DEPTH:  Lair:4-
 TAGS:   no_monster_gen mini_float
 : if you.absdepth() >= 18 then
 MONS:   dragon
@@ -917,7 +917,7 @@ ENDMAP
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
-DEPTH:  Lair:4-8
+DEPTH:  Lair:4-
 TAGS:   allow_dup no_monster_gen no_item_gen mini_float
 MONS:   w:5 death drake / ice dragon / dragon / swamp dragon
 MONS:   swamp dragon / hydra / anaconda
@@ -1113,7 +1113,7 @@ ENDMAP
 ###############################################################################
 # Catoblepas lookout (blackcustard)
 NAME: lookout_lair_type
-DEPTH: Lair:6-8
+DEPTH: Lair:6-
 TAGS: extra no_pool_fixup
 MONS: w:1 generate_awake catoblepas / w:4 nothing
 SUBST: a = w W .
@@ -1944,8 +1944,8 @@ MAP
  @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  ..PP.XX..Px..xxxxxxxxxxxxxxxxxX4x9xxxxx
  ..PP.XX..PPxxxxxxxxXX88Xxxxxx4%..xxxxxx
- ...x.....PPP.xxxxxP...88XxxxX44..Xxxxxx
- ..XxX..X.....xxxxxX....88xxx244..xxxxxx
+ ...x.....PPP.xxxxxP....8XxxxX44..Xxxxxx
+ ..XxX..X.....xxxxxX.....8xxx244..xxxxxx
  .Pxxxxx.x...xxxxxxx....%XxxxxX41.4xxxxx
  xxccccxx..XPPxxxxxP11.XPxxxxxxxXP.xxxxx
 Xxcc$$ccxxXxx..xxxxxX1..xXxxxxXxx.1xxxxx
@@ -2224,7 +2224,7 @@ ENDMAP
 NAME:    hangedman_lair_in_review
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  float
-PLACE:   Lair:8
+PLACE:   Lair:$
 MONS:    basilisk, fire drake, komodo dragon, hydra
 MONS:    manticore, hippogriff, griffon
 KMONS:   8 = catoblepas

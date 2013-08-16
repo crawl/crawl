@@ -36,6 +36,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "godpassive.h"
 #include "hints.h"
 #include "hiscores.h"
@@ -85,7 +86,7 @@
 
 static void _update_corpses(int elapsedTime);
 
-static void _holy_word_player(int pow, int caster, actor *attacker)
+static void _holy_word_player(int pow, holy_word_source_type source, actor *attacker)
 {
     if (!you.undead_or_demonic())
         return;
@@ -105,42 +106,38 @@ static void _holy_word_player(int pow, int caster, actor *attacker)
 
     const char *aux = "holy word";
 
-    kill_method_type type = KILLED_BY_MONSTER;
-    if (invalid_monster_index(caster))
+    kill_method_type type = KILLED_BY_SOMETHING;
+    if (crawl_state.is_god_acting())
+        type = KILLED_BY_DIVINE_WRATH;
+
+    switch (source)
     {
-        type = KILLED_BY_SOMETHING;
-        if (crawl_state.is_god_acting())
-            type = KILLED_BY_DIVINE_WRATH;
+    case HOLY_WORD_SCROLL:
+        aux = "scroll of holy word";
+        break;
 
-        switch (caster)
-        {
-        case HOLY_WORD_SCROLL:
-            aux = "scroll of holy word";
-            break;
+    case HOLY_WORD_ZIN:
+        aux = "Zin's holy word";
+        break;
 
-        case HOLY_WORD_ZIN:
-            aux = "Zin's holy word";
-            break;
-
-        case HOLY_WORD_TSO:
-            aux = "the Shining One's holy word";
-            break;
-        }
+    case HOLY_WORD_TSO:
+        aux = "the Shining One's holy word";
+        break;
     }
 
-    ouch(hploss, caster, type, aux);
+    ouch(hploss, NON_MONSTER, type, aux);
 
     return;
 }
 
-void holy_word_monsters(coord_def where, int pow, int caster,
+void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
                         actor *attacker)
 {
     pow = min(300, pow);
 
     // Is the player in this cell?
     if (where == you.pos())
-        _holy_word_player(pow, caster, attacker);
+        _holy_word_player(pow, source, attacker);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
@@ -155,11 +152,11 @@ void holy_word_monsters(coord_def where, int pow, int caster,
     else
         hploss = roll_dice(3, 15) + (random2(pow) / 10);
 
-    if (hploss && caster != HOLY_WORD_ZIN)
-        simple_monster_message(mons, " convulses!");
-    if (hploss && caster == HOLY_WORD_ZIN)
-        simple_monster_message(mons, " is blasted by Zin's holy word!");
-
+    if (hploss)
+        if (source == HOLY_WORD_ZIN)
+            simple_monster_message(mons, " is blasted by Zin's holy word!");
+        else
+            simple_monster_message(mons, " convulses!");
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
     if (!hploss || !mons->alive())
@@ -180,8 +177,8 @@ void holy_word_monsters(coord_def where, int pow, int caster,
     }
 }
 
-void holy_word(int pow, int caster, const coord_def& where, bool silent,
-               actor *attacker)
+void holy_word(int pow, holy_word_source_type source, const coord_def& where,
+               bool silent, actor *attacker)
 {
     if (!silent && attacker)
     {
@@ -194,7 +191,7 @@ void holy_word(int pow, int caster, const coord_def& where, bool silent,
     los_def los(where);
     los.update();
     for (radius_iterator ri(&los); ri; ++ri)
-        holy_word_monsters(*ri, pow, caster, attacker);
+        holy_word_monsters(*ri, pow, source, attacker);
 }
 
 int torment_player(actor *attacker, int taux)
@@ -345,8 +342,7 @@ int torment(actor *attacker, int taux, const coord_def& where)
     return r;
 }
 
-void immolation(int pow, int caster, coord_def where, bool known,
-                actor *attacker)
+void immolation(int pow, immolation_source_type source, bool known)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -354,7 +350,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
 
     bolt beam;
 
-    switch (caster)
+    switch (source)
     {
     case IMMOLATION_SCROLL:
         aux = "a scroll of immolation";
@@ -374,35 +370,16 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.flavour       = BEAM_FIRE;
     beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage        = dice_def(3, pow);
-    beam.target        = where;
+    beam.target        = you.pos();
     beam.name          = "fiery explosion";
     beam.colour        = RED;
     beam.aux_source    = aux;
     beam.ex_size       = 2;
     beam.is_explosion  = true;
     beam.effect_known  = known;
-    beam.affects_items = caster != IMMOLATION_SCROLL
-                         && caster != IMMOLATION_AFFIX;
-
-    if (caster == IMMOLATION_GENERIC)
-    {
-        beam.thrower     = KILL_MISC;
-        beam.beam_source = NON_MONSTER;
-    }
-    else if (attacker && attacker->is_player())
-    {
-        beam.thrower     = KILL_YOU;
-        beam.beam_source = NON_MONSTER;
-    }
-    else
-    {
-        // If there was no attacker, caster should have been IMMOLATION_GENERIC
-        // which we handled above.
-        ASSERT(attacker);
-
-        beam.thrower     = KILL_MON;
-        beam.beam_source = attacker->mindex();
-    }
+    beam.affects_items = source == IMMOLATION_TOME;
+    beam.thrower       = KILL_YOU;
+    beam.beam_source   = NON_MONSTER;
 
     beam.explode();
 }
@@ -553,7 +530,7 @@ void banished(const string &who)
     down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 
     // Xom just might decide to interfere.
-    if (you.religion == GOD_XOM && who != "Xom" && who != "wizard command"
+    if (you_worship(GOD_XOM) && who != "Xom" && who != "wizard command"
         && who != "a distortion unwield")
     {
         xom_maybe_reverts_banishment(false, false);
@@ -925,7 +902,7 @@ static bool _follows_orders(monster* mon)
             && mon->type != MONS_GIANT_SPORE
             && mon->type != MONS_BATTLESPHERE
             && mon->type != MONS_SPECTRAL_WEAPON
-            && !mon->berserk()
+            && !mon->berserk_or_insane()
             && !mon->is_projectile()
             && !mon->has_ench(ENCH_HAUNTING));
 }
@@ -1046,7 +1023,10 @@ void yell(bool force)
 
     if (force)
     {
-        mprf("A %s rips itself from your throat!", shout_verb.c_str());
+        if (you.duration[DUR_RECITE])
+            mpr("You feel yourself shouting your recitation.");
+        else
+            mprf("A %s rips itself from your throat!", shout_verb.c_str());
         noisy(noise_level, you.pos());
         return;
     }
@@ -1085,6 +1065,7 @@ void yell(bool force)
              shout_verb.c_str(),
              you.berserk() ? " wildly" : " for attention");
         noisy(noise_level, you.pos());
+        zin_recite_interrupt();
         you.turn_is_over = true;
         return;
 
@@ -1219,6 +1200,7 @@ void yell(bool force)
         return;
     }
 
+    zin_recite_interrupt();
     you.turn_is_over = true;
     you.pet_target = mons_targd;
     // Allow patrolling for "Stop fighting!" and "Wait here!"
@@ -1268,7 +1250,7 @@ bool vitrify_area(int radius)
 
 static void _hell_effects()
 {
-    if ((you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
+    if ((you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY))
         || is_sanctuary(you.pos()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
@@ -2182,7 +2164,7 @@ void handle_time()
         // If Cheibriados has slowed your biology, disease might
         // not actually do anything.
         if (one_chance_in(30)
-            && !(you.religion == GOD_CHEIBRIADOS
+            && !(you_worship(GOD_CHEIBRIADOS)
                  && you.piety >= piety_breakpoint(0)
                  && coinflip()))
         {
@@ -2314,7 +2296,7 @@ void handle_time()
     {
         // Update the abyss speed. This place is unstable and the speed can
         // fluctuate. It's not a constant increase.
-        if (you.religion == GOD_CHEIBRIADOS && coinflip())
+        if (you_worship(GOD_CHEIBRIADOS) && coinflip())
             ; // Speed change less often for Chei.
         else if (coinflip() && you.abyss_speed < 100)
             ++you.abyss_speed;
@@ -2322,7 +2304,7 @@ void handle_time()
             --you.abyss_speed;
     }
 
-    if (you.religion == GOD_JIYVA && one_chance_in(10))
+    if (you_worship(GOD_JIYVA) && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -2365,13 +2347,13 @@ void handle_time()
         }
     }
 
-    if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety / 4, MAX_PIETY)
+    if (you_worship(GOD_JIYVA) && x_chance_in_y(you.piety / 4, MAX_PIETY)
         && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }
 
-    if (you.religion == GOD_JIYVA && one_chance_in(25))
+    if (you_worship(GOD_JIYVA) && one_chance_in(25))
         jiyva_eat_offlevel_items();
 
     if (int lev = player_mutation_level(MUT_EVOLUTION))
@@ -2970,7 +2952,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
 
         // Is this square occupied by a non mushroom?
         if (mons && mons->mons_species() != MONS_TOADSTOOL
-            || player_occupant && you.religion != GOD_FEDHAS
+            || player_occupant && !you_worship(GOD_FEDHAS)
             || !can_spawn_mushrooms(current))
         {
             continue;
@@ -3018,7 +3000,8 @@ int spawn_corpse_mushrooms(item_def& corpse,
                 placed_targets++;
                 if (current == you.pos())
                 {
-                    mprf("A toadstool grows at your feet.");
+                    mprf("A toadstool grows %s.",
+                         player_has_feet() ? "at your feet" : "before you");
                     current = mushroom->pos();
                 }
                 else if (you.see_cell(current))
@@ -3220,7 +3203,7 @@ void slime_wall_damage(actor* act, int delay)
 
     if (act->is_player())
     {
-        if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
+        if (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA])
         {
             splash_with_acid(strength, NON_MONSTER, false,
                              (walls > 1) ? "The walls burn you!"

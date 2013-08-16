@@ -6,7 +6,7 @@
 ##############################################################################
 
 #############################################################
-# Lua functions to simplify Elf:5
+# Lua functions to simplify Elf:$
 {{
 function elf_setup(e)
   e.lflags("no_tele_control")
@@ -628,7 +628,7 @@ x+xxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    minmay_elf_blademastery
-DEPTH:   Elf:3-
+DEPTH:   Elf:$
 ORIENT:  float
 MONS:    deep elf fighter; falchion | long sword | scimitar | sabre / nothing w:15
 MONS:    deep elf blademaster
@@ -1064,7 +1064,7 @@ ENDMAP
 #
 # Elf:$ branch endings
 #
-# Total weight: 150.
+# Total weight: 160.
 ##############################################################################
 ##############################################################################
 
@@ -1669,4 +1669,71 @@ xxc......bbbbbbbbb$$|b....2..cxx
       xxxccc........cccxxx
         xxxccccc.ccccxxx
           xxxxxx@xxxxx
+ENDMAP
+
+# Before transforms: 26x|, 31x*, 28x$, 7x1, 6x2, 9x3, 8x4, 8x5, 7x6, 7x7
+NAME:    nooodl_elf_gasket
+PLACE:   Elf:$
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+# Shuffle pillars
+SHUFFLE: APp / BQq / CRr
+NSUBST:  P = 1:+ / *:A
+# Fill pillars
+SUBST:   p = 1 2 3 4 5 6 7 $:35 *:25 |:10
+SUBST:   q = B, r = C, Q = B, R = C
+SUBST:   A : cvb, B : cvb, C : cvb
+# Shuffle inter-circle doors
+SHUFFLE: st
+SUBST:   s = +, t = c
+SUBST:   U = +c
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcccccccccccccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccccc$|$|$ccccccxxxxxxxxxxx
+xxxxxxxxxxxcccccccc.|$|$|.ccccccccxxxxxxxx
+xxxxxxxxxccccccccc+.$|*|$.+cccccccccxxxxxx
+xxxxxxxxcc.......7c.|$|$|.c7.......ccxxxxx
+xxxxxxccc.........cc$|$|$cc.........cccxxx
+xxxxxxc.....3.3....ccccccc....1.1.....cxxx
+xxxxxcc..............cxc..............ccxx
+xxxxcc...............ccc...............ccx
+xxxxc...7...BQB...4...c...5...CRC...2...cx
+xxxxc......BBqBB......U......CCrCC......cx
+xxxcc..7..BBqqqBB..4..U..5..CCrrrCC..2..cc
+xxxcc.....QqqqqqQ.....U.....RrrrrrR.....cc
+xxxcc.....BBqqqBB.....U.....CCrrrCC.....cc
+xxxcc.1....BBqBB....2.U.6....CCrCC....7.cc
+xxxcc.......BQB.......c.......CRC.......cc
+xxxccc...6.......5...ccc...4.......3...ccc
+xxxc$c+....6...5....ccxcc....4...3....+c$c
+xxxc$$c.............cxxxc.............c$$c
+xxxc*$ccc...........cxxxc...........ccc$*c
+xxxc*$$$cc.......cscccccccsc.......cc$$$*c
+xxxc**$ccc+ccccccc.6.....6.ccccccc+ccc$**c
+xxxc**cc..3ccxxc.............cxxcc5..cc**c
+xxxc*cc.....ccxc......3......cxcc.....cc*c
+xxxc*c...2...ccc..3.......3..ccc...4...c*c
+xxxccc..5.1..cc.4...........4.cc..3.7..ccc
+xxxxcc...4...t.......APA.......t...6...ccx
+xxxxccc.....cc......AApAA......cc.....cccx
+xxxxxccc...ccc...5.AApppAA.5...ccc...cccxx
+xxxxxcccc+cc.c.....PpppppP.....c.cc+ccccxx
+xxxxxxcc.....c.....AApppAA.....c.....ccxxx
+xxxxxxxc.*|*.c..1...AApAA...1..c.*|*.cxxxx
+xxxxxxxcc|*|*c....2..APA..2....c*|*|ccxxxx
+xxxxxxxxcc|*|cc...............cc|*|ccxxxxx
+xxxxxxxxxccc*|cc.............cc|*cccxxxxxx
+xxxxxxxxxxxcc*|c......1......c|*ccxxxxxxxx
+xxxxxxxxxxxxcccccc..6...7..ccccccxxxxxxxxx
+xxxxxxxxxxxxxxccccc.......cccccxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcccccc@ccccccxxxxxxxxxxxxx
 ENDMAP

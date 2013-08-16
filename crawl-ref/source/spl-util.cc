@@ -634,7 +634,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         //
         // 2) Assume the distribution is uniform at n = m+k.
         //    (ie. the probablity that any of the found elements
-        //     was chosen = m / (m+k) (the slots are symetric,
+        //     was chosen = m / (m+k) (the slots are symmetric,
         //     so it's the sum of the probabilities of being in
         //     any of them)).
         //
@@ -665,8 +665,8 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         // just don't care about the non-chosen slots enough
         // to store them, so it might look like the item
         // automatically takes the new slot when not chosen
-        // (although, by symetry all the non-chosen slots are
-        // the same... and similarly, by symetry, all chosen
+        // (although, by symmetry all the non-chosen slots are
+        // the same... and similarly, by symmetry, all chosen
         // slots are the same).
         //
         // Yes, that's a long comment for a short piece of
@@ -951,7 +951,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
 
     if (player_spell
         && vehumet_supports_spell(spell)
-        && you.religion == GOD_VEHUMET
+        && you_worship(GOD_VEHUMET)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && !player_under_penance()
@@ -1154,7 +1154,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())
             return true;
-        if (you.religion == GOD_SHINING_ONE && !player_under_penance())
+        if (you_worship(GOD_SHINING_ONE) && !player_under_penance())
             return true;
         break;
 #if TAG_MAJOR_VERSION == 34
@@ -1203,7 +1203,7 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
 {
     // If your god hates the spell, that
     // overrides all other concerns
-    if (god_hates_spell(spell, you.religion))
+    if (god_hates_spell(spell, you.religion, rod_spell))
         return COL_FORBIDDEN;
 
     if (_spell_is_empowered(spell) && !rod_spell)

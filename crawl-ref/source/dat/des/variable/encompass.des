@@ -33,9 +33,6 @@ default-depth: D:12-26
 ###############################################################################
 # The River Lethe
 #
-# Should be turned into a timed, non-announced portal vault
-# using the maprot (or unmappable) flag.
-#
 # The two orange statues are placed for maximum pain -- one you're likely to
 # first see while flying, the other is hard to target with disintegration
 # through its protective plants.
@@ -44,7 +41,7 @@ default-depth: D:12-26
 #
 NAME:    lemuel_river_lethe
 ORIENT:  encompass
-TAGS:    no_rotate
+TAGS:    no_rotate uniq_d_encompass
 DEPTH:   D:16-26
 SUBST:   . = .:100 !:1 6:4
 SUBST:   ; = .:200 !:1 1:3
@@ -104,10 +101,10 @@ xxwwwwx;;;;;;;;cccccc;;;;;;c6.6.6.6c.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;cccc;;;;;;;ccccccccc.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;;;;;;;;;;;;c$$+....+.c....www.c;;;;;;;ccccccccxxxxxwwx
 xxxwwxx;;cccc;;;;;;;;;;;;;;c$$cccccc.c.....wwwc;;;;;;;c.....$$Dddxxwwx
-xxxwwwx;cccccc;;;;;;xx;;;;;c$$c....c+cccccccwww;;;;;;;c.....$$xdd+wwwx
-xxxwwwxcc*4.+;;;;;;xxxx;;;;cccc....c.....c...www;;ccccc.......xxxxxwwx
-xxxwwwxxcccccc;;;;xxxxx;;;;;;;c....c.....+...www;;c...c.......xeexxwwx
-xxxwwwxx;cccc;;;;xxxxxx;;;;;;;c....c.....c...www;cc.66c.......Eee+wwwx
+xxxwwwx;cccccc;;;;;;xx;;;;;c$$cccccc+cccccccwww;;;;;;;c.....$$xdd+wwwx
+xxxwwwxcc*4.+;;;;;;xxxx;;;;ccccccccc.....c...www;;ccccc.......xxxxxwwx
+xxxwwwxxcccccc;;;;xxxxx;;;;;;;cccccc.....+...www;;c...c.......xeexxwwx
+xxxwwwxx;cccc;;;;xxxxxx;;;;;;;cccccc.....c...www;cc.66c.......Eee+wwwx
 xxxwwwxx;;;;;;;;xxx5..c;;;;;;;cccccc.....cccwww;;;+.66+.......xxxxxwwx
 xxxwwwxx;;;;;;;;;xx5..c;;;;;;;;;;;;c.....c;wwww;;cc.66c.......Fffxxwwx
 xxxwwwxx;;;;;;;;;;x5..+;;;;;;;;;;;;cccccccwwww;;;;c...c.......xff+wwwx
@@ -146,7 +143,7 @@ ENDMAP
 # some loot.  For the main fight, you have to fly or teleport.
 # The opposition is nasty, but this map is deep enough.
 NAME:    minmay_sea_of_fire
-TAGS:    no_rotate
+TAGS:    no_rotate uniq_d_encompass
 ORIENT:  encompass
 DEPTH:   D:16-24
 MONS:    hell hound / nothing
@@ -246,7 +243,7 @@ ENDMAP
 NAME:    box_level_dp
 DEPTH:   D:21-26
 ORIENT:  encompass
-TAGS:    no_pool_fixup no_rotate
+TAGS:    no_pool_fixup no_rotate uniq_d_encompass
 NSUBST:  A = 1:+ / *:b
 NSUBST:  B = 1:+ / *:b
 NSUBST:  C = 1:+ / *:b
@@ -350,7 +347,7 @@ ENDMAP
 NAME:    spriggan_forest
 DEPTH:   D:19-26
 ORIENT:  encompass
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup uniq_d_encompass
 MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
 MONS:    spriggan air mage, spriggan defender, the Enchantress
 SUBST:   . = .:300 / 1:2 / 2:1 / 3:1 / 4:1 / 5:1
@@ -452,7 +449,7 @@ ENDMAP
 # Zero! Nine! Eight!
 #
 NAME:    hangedman_slaughterboxes
-TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling uniq_d_encompass
 ORIENT:  encompass
 DEPTH:   D:16-26
 MONS:    butterfly, plant
@@ -552,9 +549,10 @@ ENDMAP
 default-depth:
 
 NAME: grunt_profane_halls
-TAGS: no_monster_gen
-PLACE: D:27
-DEPTH: D:21-27
+TAGS: no_monster_gen uniq_d_encompass
+PLACE: D:$
+DEPTH: D:21-
+WEIGHT: 2 (D:$), 10
 ORIENT: encompass
 SHUFFLE: {[(<
 : if you.absdepth() == 27 then
@@ -885,7 +883,7 @@ ENDMAP
 # You are in a maze of twisty little passages, all alike.
 #
 NAME: grunt_twisty_little_passages
-TAGS: no_monster_gen
+TAGS: no_monster_gen uniq_d_encompass
 DEPTH: D:16-26
 ORIENT: encompass
 SHUFFLE: defghijk
@@ -908,6 +906,8 @@ KITEM: J = acquire any
 KFEAT: IK = stone_arch
 MARKER: I = lua:props_marker { portal=1 }
 MARKER: K = lua:props_marker { portal=1 }
+NSUBST: O = 1:O / *:%
+KITEM:  O = wand of digging
 KMONS: 8 = 8 band
 KMONS: 9 = 9 band
 KMONS: 0 = 0 band
@@ -920,8 +920,8 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccdeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
 ccccddeeeeeeeeeeeeeeeeecffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
-ccccdd.....eeee........ecff%%.................................%%ik......{.kkcccc
-ccccdd.9....eee.0.......ecf%%..0...........................0...%ik.......[kkcccc
+ccccdd.....eeee........ecff%%.................................%Oxx......{.kkcccc
+ccccdd.9....eee.0.......ecf%%..0...........................0...%xx.......[kkcccc
 ccccdd..ce...eee....ee...ecf....ffffffffffffffffffffffffff......ik..kk....kkcccc
 ccccdd..dce...eee...eee...ecf...ffffffffffffffffffffffffff..8...ik..kkk...kkcccc
 ccccdd...dce...eee...eee...ecf...ffff..............%*ffff.....0.ik...kkk..kkcccc
@@ -968,8 +968,8 @@ ccccdddddd...ddg........hhh%%.........89...hhh...hcj...jjj...jjj...jck...kkkcccc
 ccccdd..ddd...dg.0.....hhhh*%..............hhhh...hcj...jjj...jjj...jck...kkcccc
 ccccdd...ddd..dg...8..hhhhhhhhhhhhhhhhhhhhhhhhhh...hcj...jjj...jjj...jck..kkcccc
 ccccdd....dd..dg......hhhhhhhhhhhhhhhhhhhhhhhhhh....hcj...jj....jjj...jc..kkcccc
-ccccdd(.......dg%...0...........................0..%%hcj.......0.jjj....9.kkcccc
-ccccdd.<......dg%%.................................%%hhcj........jjjj.....kkcccc
+ccccdd(.......xx%...0...........................0..%%hcj.......0.jjj....9.kkcccc
+ccccdd.<......xxO%.................................%%hhcj........jjjj.....kkcccc
 ccccdddddddddddchhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhcjjjjjjjjjjjjjjjjjkkcccc
 ccccdddddddddddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjkcccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -985,7 +985,7 @@ ENDMAP
 #  Many thanks to elliott for writing the band placement lua!
 #
 NAME:    hangedman_spin_cycle
-TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
+TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling uniq_d_encompass
 DEPTH:   D:16-26
 ORIENT:  encompass
 KMONS:   - = plant
@@ -1147,7 +1147,7 @@ ENDMAP
 # anticipating dangers and skipping through the level may be quite difficult.
 #
 NAME:    hangedman_crystal_crosses_colossus
-TAGS:    no_monster_gen no_item_gen no_pool_fixup
+TAGS:    no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 DEPTH:   D:16-26
 ORIENT:  encompass
 MONS:    deep elf conjurer / deep elf knight w:5 / wizard / ogre mage / \
@@ -1319,9 +1319,10 @@ ENDMAP
 default-depth:
 
 NAME: grunt_runaround
-TAGS: no_monster_gen
-PLACE: D:27
-DEPTH: D:16-27
+TAGS: no_monster_gen uniq_d_encompass
+PLACE: D:$
+DEPTH: D:16-
+WEIGHT: 2 (D:$), 10
 ORIENT: encompass
 SUBVAULT: B : grunt_runaround_doors_1
 SUBVAULT: C : grunt_runaround_doors_2
@@ -1469,7 +1470,7 @@ TAGS: grunt_runaround_doors_1 allow_dup
 : map("            FF                EE")
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
 
 NAME: grunt_runaround_doors_2
 TAGS: grunt_runaround_doors_2 allow_dup
@@ -1513,7 +1514,7 @@ TAGS: grunt_runaround_doors_2 allow_dup
 : map("                  EE")
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
 
 NAME: grunt_runaround_doors_3
 TAGS: grunt_runaround_doors_3 allow_dup
@@ -1545,7 +1546,7 @@ TAGS: grunt_runaround_doors_3 allow_dup
 : map("       FF        EE")
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOPQRSTUVWX
-SUBST: ABCDEFGI : +, HJKLMNOPQRSTUVWX : c
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
 
 NAME: grunt_runaround_doors_4
 TAGS: grunt_runaround_doors_4 allow_dup
@@ -1651,10 +1652,11 @@ ENDMAP
 # LIE DOWN. FORGET YOUR TROUBLES.
 # SMILE.
 NAME:    hangedman_pleasuredromes
-TAGS:    no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
-PLACE:   D:27
-DEPTH:   D:16-27
+PLACE:   D:$
+DEPTH:   D:16-
+WEIGHT:  2 (D:$), 10
 MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
          mottled dragon / swamp drake w:3 / boulder beetle w:5 / \
          red wasp / tarantella w:2 / redback w:3 / wolf spider / \
@@ -1683,8 +1685,8 @@ MONS:    centaur warrior / yaktaur w:5 / orc knight / \
          deep elf conjurer / deep troll / boggart w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
          vampire / octopode w:2 ; trident good_item / mermaid w:2 / \
-         vault sentinel w:2 / deep dwarf necromancer w:2 / cyclops w:5 / \
-         kobold demonologist w:3 / skeletal warrior w:5 / phantasmal warrior w:5
+         vault sentinel w:2 / cyclops w:5 / kobold demonologist w:3 / \
+         skeletal warrior w:5 / phantasmal warrior w:5
 KMONS:   8 = orc high priest / orc sorcerer / naga warrior / naga mage / \
          yaktaur captain w:5 / ogre mage / deep elf knight w:15 / \
          hell knight / efreet w:3 / smoke demon w:2 / guardian mummy w:5 / \

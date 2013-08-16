@@ -50,5 +50,7 @@ void get_all_cleave_targets(const actor* attacker, const coord_def& def,
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0);
-bool dont_harm(const actor* attacker, const actor* defender);
+
+int finesse_adjust_delay(int delay);
+
 #endif
