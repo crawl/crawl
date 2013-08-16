@@ -1460,7 +1460,8 @@ KPROP:    x = bloody
             mode, and will appear in dumps as "?". For debugging use only; this
             property should be removed before submitting vaults.
           * "mold": The square is covered with mold. This property is reserved
-            for use by ballistomycetes and should in general not be set by vaults.
+            for use by ballistomycetes and should in general not be set by
+            vaults.
 
           Properties can also be used as tags to apply to the entire vault:
             TAGS: no_rtele_into no_tide
