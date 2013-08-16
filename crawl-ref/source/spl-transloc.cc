@@ -72,7 +72,7 @@ spret_type cast_disjunction(int pow, bool fail)
     you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
         max(you.duration[DUR_DISJUNCTION] + rand,
         30 + rand));
-    contaminate_player(1, true);
+    contaminate_player(1000, true);
     disjunction();
     return SPRET_SUCCESS;
 }
@@ -288,7 +288,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
 
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
-                contaminate_player(1, true);
+                contaminate_player(1000, true);
         }
     }
 
@@ -533,7 +533,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 mpr("Controlled teleport interrupted by HUP signal, "
                     "cancelling teleport.", MSGCH_ERROR);
                 if (!wizard_tele)
-                    contaminate_player(1, true);
+                    contaminate_player(1000, true);
                 return false;
             }
 
@@ -550,7 +550,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                     }
                 }
                 if (!wizard_tele)
-                    contaminate_player(1, true);
+                    contaminate_player(1000, true);
                 return false;
             }
 
@@ -630,7 +630,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
 
                 // Controlling teleport contaminates the player. - bwr
                 if (!wizard_tele)
-                    contaminate_player(1, true);
+                    contaminate_player(1000, true);
             }
             // End teleport control.
             if (you.duration[DUR_CONTROL_TELEPORT])
@@ -1076,7 +1076,7 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool end_ctele
     if (you.attempt_escape(2) && _quadrant_blink(bmove.delta, pow))
     {
         // Controlled blink causes glowing.
-        contaminate_player(1, true);
+        contaminate_player(1000, true);
         // End teleport control if this was a random blink upgraded by cTele.
         if (end_ctele && you.duration[DUR_CONTROL_TELEPORT])
         {

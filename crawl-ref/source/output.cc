@@ -580,7 +580,7 @@ static void _print_stats_contam(int x, int y)
     if (you.species != SP_DJINNI)
         return;
 
-    const int max_contam = 16;
+    const int max_contam = 16000;
     int contam = min(you.magic_contamination, max_contam);
 
     // Calculate colour

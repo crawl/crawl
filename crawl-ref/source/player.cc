@@ -4949,15 +4949,15 @@ int get_contamination_level()
 {
     const int glow = you.magic_contamination;
 
-    if (glow > 60)
-        return (glow / 20 + 3);
-    if (glow > 40)
+    if (glow > 60000)
+        return (glow / 20000 + 3);
+    if (glow > 40000)
         return 5;
-    if (glow > 25)
+    if (glow > 25000)
         return 4;
-    if (glow > 15)
+    if (glow > 15000)
         return 3;
-    if (glow > 5)
+    if (glow > 5000)
         return 2;
     if (glow > 0)
         return 1;
@@ -4997,7 +4997,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     int old_level  = get_contamination_level();
     int new_level  = 0;
 
-    you.magic_contamination = max(0, min(250, you.magic_contamination + change));
+    you.magic_contamination = max(0, min(250000, you.magic_contamination + change));
 
     new_level = get_contamination_level();
 
@@ -5437,7 +5437,7 @@ bool haste_player(int turns, bool rageext)
     else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
-        contaminate_player(1, true); // always deliberate
+        contaminate_player(1000, true); // always deliberate
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);

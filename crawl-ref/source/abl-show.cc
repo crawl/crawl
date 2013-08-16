@@ -2141,7 +2141,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
         potion_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
-        contaminate_player(1 + random2(3), true);
+        contaminate_player(1000 + random2(2000), true);
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:

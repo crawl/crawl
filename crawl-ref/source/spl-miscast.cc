@@ -1053,7 +1053,7 @@ void MiscastEffect::_enchantment(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 2:
-            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
+            contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
             break;
         case 3:
             do
@@ -1236,7 +1236,7 @@ void MiscastEffect::_translocation(int severity)
                 goto reroll_3;
             break;
         case 3:
-            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
+            contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
             break;
         }
         break;
@@ -1961,7 +1961,7 @@ void MiscastEffect::_transmutation(int severity)
             _potion_effect(POT_CONFUSION, 10);
             break;
         case 4:
-            contaminate_player(random2avg(19, 3), spell != SPELL_NO_SPELL);
+            contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
             break;
         }
         break;
@@ -1979,7 +1979,7 @@ void MiscastEffect::_transmutation(int severity)
             if (_ouch(3 + random2avg(18, 2)) && target->alive())
                 if (target->is_player())
                 {
-                    contaminate_player(random2avg(35, 3),
+                    contaminate_player(random2avg(34000, 3),
                                        spell != SPELL_NO_SPELL, false);
                 }
                 else
@@ -3043,7 +3043,7 @@ void MiscastEffect::_zot()
             break;
         case 9:
             if (target->is_player())
-                contaminate_player(2 + random2avg(14, 2), false);
+                contaminate_player(2000 + random2avg(13000, 2), false);
             else
                 target->polymorph(0);
             break;
