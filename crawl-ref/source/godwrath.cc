@@ -949,7 +949,7 @@ static bool _jiyva_retribution()
     else if (!one_chance_in(3))
     {
             god_speaks(god, "Mutagenic energy floods into your body!");
-            contaminate_player(random2(you.penance[GOD_JIYVA]) / 2);
+            contaminate_player(random2(you.penance[GOD_JIYVA] * 500));
 
             if (coinflip())
             {

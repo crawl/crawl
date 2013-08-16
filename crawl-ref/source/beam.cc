@@ -3417,7 +3417,7 @@ void bolt::affect_player_enchantment()
 
     case BEAM_HASTE:
         potion_effect(POT_SPEED, ench_power, false, blame_player);
-        contaminate_player(1, effect_known);
+        contaminate_player(1000, effect_known);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3440,7 +3440,7 @@ void bolt::affect_player_enchantment()
     case BEAM_INVISIBILITY:
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
         potion_effect(POT_INVISIBILITY, ench_power, false, blame_player);
-        contaminate_player(1 + random2(2), effect_known);
+        contaminate_player(1000 + random2(1000), effect_known);
         obvious_effect = true;
         nasty = false;
         nice  = true;

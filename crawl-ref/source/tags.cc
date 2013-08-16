@@ -1350,7 +1350,7 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.num_turns);
     marshallInt(th, you.exploration);
 
-    marshallShort(th, you.magic_contamination);
+    marshallInt(th, you.magic_contamination);
 
 #if TAG_MAJOR_VERSION == 34
     marshallUByte(th, 0);
@@ -2329,7 +2329,12 @@ static void tag_read_you(reader &th)
     you.num_turns  = unmarshallInt(th);
     you.exploration = unmarshallInt(th);
 
-    you.magic_contamination = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CONTAM_SCALE)
+        you.magic_contamination = unmarshallShort(th) * 1000;
+    else
+#endif
+        you.magic_contamination = unmarshallInt(th);
 
 #if TAG_MAJOR_VERSION == 34
     unmarshallUByte(th);

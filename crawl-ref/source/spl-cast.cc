@@ -1324,7 +1324,7 @@ spret_type your_spells(spell_type spell, int powc,
         // contamination!
         int nastiness = spell_difficulty(spell) * spell_difficulty(spell) * fail + 250;
 
-        const int cont_points = div_rand_round(nastiness, 500);
+        const int cont_points = 2 * nastiness;
 
         // miscasts are uncontrolled
         contaminate_player(cont_points, true);
