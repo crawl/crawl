@@ -43,22 +43,25 @@ syn region desVet start=/^\s*veto\?\s*{{/ end=/}}\s*$/ contains=@desLuagroup,@de
 setlocal iskeyword+=:
 setlocal iskeyword+=-
 
-syn keyword desSubstDec SUBST: contained
-syn keyword desNsubstDec NSUBST: contained
-syn keyword desShuffleDec SHUFFLE: contained
-syn keyword desClearDec CLEAR: contained
+" These have extra matching going on, so not in desDeclarator (global)
+syn keyword desDec NAME: COLOUR: SUBST: NSUBST: SHUFFLE: CLEAR: LROCKCOL: LFLOORCOL: contained
 
-syn region desSubst start=/^SUBST:\s*/ end=/$/ contains=desSubstDec,desSubstArg,desSubstSep,@desMapElements keepend
-syn region desNsubst start=/^NSUBST:\s*/ end=/$/ contains=desNsubstDec,desSubstArg,desSubstSep,@desMapElements keepend
-syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desShuffleDec,desMapFrag keepend
-syn region desClear start=/^CLEAR:\s*/ end=/$/ contains=desClearDec,desSubstArg keepend
+syn region desSubst start=/^SUBST:\s*/ end=/$/ contains=desDec,desSubstArg,desSubstSep,@desMapElements keepend
+syn region desNsubst start=/^NSUBST:\s*/ end=/$/ contains=desDec,desSubstArg,desSubstSep,@desMapElements keepend
+syn region desShuffle start=/^SHUFFLE:\s*/ end=/$/ contains=desDec,desMapFrag keepend
+syn region desClear start=/^CLEAR:\s*/ end=/$/ contains=desDec,desSubstArg keepend
+syn region desColourline start=/^\(COLOUR\|L[A-Z]*COL\):/ end=/$/ contains=desDec,desColour keepend
 
-syn match desGod /ashenzari\|beogh\|cheibriados\|elyvilon\|fedhas\|jiyva\|kikubaaqudgha\|lugonu\|makhleb/ contained
-syn match desGod /nemelex_xobeh\|okawaru\|sif_muna\|trog\|vehumet\|xom\|yredelemnul\|zin\|the_shining_one/ contained
+" Absolutely always highlight the vault name as just that
+syn region desNameline start=/^NAME:/ end=/$/ contains=desDec,desVaultname keepend
+syn match desVaultname /\w*/ contained
 
-syn keyword desDeclarator NAME: ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
-syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: COLOUR: KMASK: KPROP: MARKER: WELCOME: LFLAGS: BFLAGS:
-syn keyword desDeclarator LROCKCOL: LFLOORCOL: LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT: DESC:
+syn match desGod contained /ashenzari\|beogh\|cheibriados\|elyvilon\|fedhas\|jiyva\|kikubaaqudgha\|lugonu\|makhleb/
+syn match desGod contained /nemelex_xobeh\|okawaru\|sif_muna\|trog\|vehumet\|xom\|yredelemnul\|zin\|the_shining_one/
+
+syn keyword desDeclarator ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
+syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME: LFLAGS: BFLAGS:
+syn keyword desDeclarator LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT: DESC:
 
 " keywords
 " ORIENT
@@ -66,14 +69,26 @@ syn keyword desOrientation north south east west northwest northeast southwest s
 
 " DEPTH | PLACE
 syn keyword desOrientation Temple Orc Elf Lair Swamp Shoals Snake Spider Slime Vaults Blade Crypt Tomb
+"Note: `Zot` totally highlights in e.g. the items `rune of Zot` and `Orb of Zot`. Not worth fixing.
 syn keyword desOrientation Hell Dis Geh Coc Tar Zot Forest Abyss Pan Zig Lab Bazaar Trove Sewer Ossuary
 syn keyword desOrientation Bailey IceCv Volcano WizLab
-syn keyword desOrientation D: contained
+
+"Note: This is the list above, but lower-cased
+syn match desBranch contained /d\|temple\|orc\|elf\|lair\|swamp\|shoals\|snake\|spider\|slime\|vaults\|blade\|crypt\|tomb/
+syn match desBranch contained /hell\|dis\|geh\|coc\|tar\|zot\|forest\|abyss\|pan\|zig\|lab\|bazaar\|trove\|sewer\|ossuary/
+syn match desBranch contained /bailey\|icecv\|volcano\|wizlab/
+
+syn match desBranchname contained /dungeon\|temple\|orcish_mines\|elven_halls\|lair\|swamp\|shoals/
+syn match desBranchname contained /snake_pit\|spider_nest\|slime_pits\|vaults\|hall_of_blades\|crypt\|tomb/
+syn match desBranchname contained /hell\|dis\|gehenna\|cocytus\|tartarus\|zot\|forest\|abyss\|pandemonium/
+"Note: zig and bazaar--wizlab all use the generic `portal_vault` name - lab does not!
+syn match desBranchname contained /labyrinth\|portal_vault/
 
 " TAGS
 " in decks.cc and dgn-labyrinth.cc (without `minotaur` because monster)
 syn keyword desOrientation trowel_portal lab generate_loot
 " map building in dungeon.cc (`transparent` is handled later)
+"Note: `dummy` mis-catches `training dummy` about half as often as actually used as tag
 syn keyword desOrientation dummy entry mini_float extra ruin layout pan decor
 syn keyword desOrientation allow_dup uniq luniq
 syn keyword desOrientation no_hmirror no_vmirror no_rotate
@@ -89,12 +104,14 @@ syn keyword desOrientation no_tele_control not_mappable no_magic_map
 syn keyword desOrientation randbook any good_item star_item superb_item gold nothing
 syn keyword desOrientation acquire mundane damaged cursed randart not_cursed useful unobtainable
 syn keyword desOrientation mimic no_mimic no_pickup no_uniq allow_uniq
-syn keyword desOrientation corpse chunk skeleton never_decay rotting
+"Note: `rotting` removed here which often caught `rotting devil` but was unused as item tag
+syn keyword desOrientation corpse chunk skeleton never_decay
 
 " MONS | KMONS (in mapdef.cc)
 syn keyword desOrientation fix_slot priest_spells actual_spells god_gift
 syn keyword desOrientation generate_awake patrolling band
 syn keyword desOrientation hostile friendly good_neutral fellow_slime strict_neutral neutral
+"Note: `spectre` mis-catches `silent spectre` about as often as actually used as monster modifier
 syn keyword desOrientation zombie skeleton simulacrum spectre chimera
 syn keyword desOrientation seen always_corpse never_corpse
 syn keyword desOrientation base nonbase
@@ -102,6 +119,16 @@ syn keyword desOrientation n_suf        n_adj           n_rpl         n_the
 syn keyword desOrientation name_suffix  name_adjective  name_replace  name_definite
 syn keyword desOrientation n_des            n_spe         n_zom        n_noc
 syn keyword desOrientation name_descriptor  name_species  name_zombie  name_nocorpse
+
+" COLOUR
+" Base
+syn keyword desColour contained blue      green      cyan      red      magenta      brown  darkgrey
+syn keyword desColour contained lightblue lightgreen lightcyan lightred lightmagenta yellow lightgrey white
+" Elemental
+syn keyword desColour contained fire ice earth electricity air poison water magic mutagenic warp enchant heal
+syn keyword desColour contained holy dark death necro unholy vehumet beogh crystal blood smoke slime jewel
+syn keyword desColour contained elven dwarven orcish gila kraken floor rock stone mist shimmer_blue decay
+syn keyword desColour contained silver gold iron bone elven_brick waves tree random
 
 " TILE
 syn keyword desOrientation no_random
@@ -116,29 +143,36 @@ syn keyword desOrientation overwritable
 syn keyword desOrientation vault no_item_gen no_monster_gen no_pool_fixup no_wall_fixup opaque no_trap_gen
 
 " KPROP
-syn keyword desOrientation bloody highlight mold no_cloud_gen no_rtele_into no_ctele_into no_tele_into no_tide no_submerge no_jiyva
+syn keyword desOrientation bloody highlight mold no_cloud_gen no_rtele_into no_ctele_into no_tele_into no_submerge no_tide no_jiyva
 
 syn match desComment "^\s*#.*$"
 
-syn match desEntry "\<\w*_entry\>"
+"Note: `;` and `|` are necessary due to monster/randbook `spells:`,
+" `-` and `$` are used in depth definitions (but `,` should not match there).
+syn match desProperty /\w*:[[:alnum:]-_;|\$]\+/ contains=desAttribute
+" Without `oneline` this wraps around and matches e.g. some SUBST: on the next line
+syn region desAttribute start=/\</ end=/:/ contained oneline
+
+syn match desEntry "\<\w*_entry\>" contains=desBranch
 syn match desEntry "\<serial_\w*\>"
 syn match desEntry "\<layout_\w*\>"
-syn match desEntry "\<uniq_\w*\>"
+syn match desEntry "\<l\=uniq_\w*\>"
 syn match desEntry "\<chance_\w*\>"
 syn match desEntry "\<altar_\w*\>"           contains=desGod
-syn match desEntry "\<uniq_altar_\w*\w*\>"   contains=desGod
+syn match desEntry "\<uniq_altar_\w*\>"      contains=desGod
 syn match desEntry "\<temple_overflow_\w*\>" contains=desGod
 syn match desEntry "\<overflow_altar_\w*\>"  contains=desGod
-syn match desEntry "\<enter_\c\w*\>"
-syn match desEntry "\<exit_\c\w*\>"
-syn match desEntry "\<ruin_\c\w*\>"
-syn match desEntry "\<return_from_\c\w*\>"
-"
+syn match desEntry "\<enter_\w*\>"       contains=desBranchname
+syn match desEntry "\<exit_\w*\>"        contains=desBranchname
+syn match desEntry "\<ruin_\w*\>"        contains=desBranchname
+syn match desEntry "\<return_from_\w*\>" contains=desBranchname
+
 " 'transparent' is a Vim syntax keyword
-syn match desTransparent "transparent"
+syn match desTransparent "\<transparent\>"
 syn match desRange "\d*-\d*"
 syn match desNumber "\s\d*"
 syn match desWeight "w\(eight\)\=:\d*"
+syn match desWeight "q:\d*\(-\d*\)\="
 syn match desSlash "/"
 
 syn keyword desMapBookend MAP ENDMAP contained
@@ -176,15 +210,14 @@ syn cluster desMapElements add=desMapMons
 
 syn match desSubstArg /\S/ contained nextgroup=desSubstSep skipwhite
 syn match desSubstSep /[:=]/ contained nextgroup=desMapFrag skipwhite
+syn match desColourSep /[:=]/ contained nextgroup=desColour skipwhite
 syn region desMapFrag start=/./ end=/$/ contains=@desMapElements contained
 
 syn region desMap start=/^\s*\<MAP\>\s*$/ end=/^\s*\<ENDMAP\>\s*$/ contains=@desMapElements keepend
 
+hi link desDec        Statement
 hi link desDeclarator Statement
-hi link desSubstDec   Statement
-hi link desNsubstDec  Statement
-hi link desShuffleDec Statement
-hi link desClearDec   Statement
+hi link desVaultname  Identifier
 hi link desMapBookend Statement
 hi link desLuaBlock   Statement
 hi link desOtherLuaBlock Statement
@@ -201,7 +234,12 @@ hi link desSlash      Comment
 
 hi link desSubstSep    Type
 hi link desOrientation Type
+hi link desAttribute   Type
+hi link desProperty    Special
 hi link desGod         Special
+hi link desBranch      Special
+hi link desBranchname  Special
+hi link desColour      Type
 hi link desTransparent Type
 
 " It would be really nice if this worked for people who switch bg
