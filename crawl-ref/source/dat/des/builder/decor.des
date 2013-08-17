@@ -10,5 +10,3 @@ CHANCE:  80%
     dgn.place_maps{tag="decor", count=c}
   end)
 }}
-
-
