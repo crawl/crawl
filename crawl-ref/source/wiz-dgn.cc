@@ -312,6 +312,9 @@ bool wizard_create_feature(const coord_def& pos)
     if (feat == DNGN_ENTER_PORTAL_VAULT)
         return wizard_create_portal(pos);
 
+    if (feat_is_trap(feat, true))
+        return debug_make_trap(pos);
+
     env.tile_flv(pos).feat = 0;
     env.tile_flv(pos).special = 0;
     env.grid_colours(pos) = 0;
@@ -431,33 +434,37 @@ static int find_trap_slot()
     return -1;
 }
 
-void debug_make_trap()
+bool debug_make_trap(const coord_def& pos)
 {
     char requested_trap[80];
     int trap_slot  = find_trap_slot();
     trap_type trap = TRAP_UNASSIGNED;
-    int gridch     = grd(you.pos());
+    int gridch     = grd(pos);
 
     if (trap_slot == -1)
     {
         mpr("Sorry, this level can't take any more traps.");
-        return;
+        return false;
     }
 
     if (gridch != DNGN_FLOOR)
     {
         mpr("You need to be on a floor square to make a trap.");
-        return;
+        return false;
     }
 
     msgwin_get_line("What kind of trap? ",
                     requested_trap, sizeof(requested_trap));
     if (!*requested_trap)
-        return;
+        return false;
 
     string spec = lowercase_string(requested_trap);
     vector<trap_type> matches;
     vector<string>    match_names;
+
+    if (spec == "random" || spec == "any")
+        trap = TRAP_RANDOM;
+
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
         const trap_type tr = static_cast<trap_type>(t);
@@ -479,7 +486,7 @@ void debug_make_trap()
         if (matches.empty())
         {
             mprf("I know no traps named \"%s\".", spec.c_str());
-            return;
+            return false;
         }
         // Only one match, use that
         else if (matches.size() == 1)
@@ -490,21 +497,24 @@ void debug_make_trap()
             prefix += spec;
             prefix += "', possible matches are: ";
             mpr_comma_separated_list(prefix, match_names);
-
-            return;
+            return false;
         }
     }
 
-    if (place_specific_trap(you.pos(), trap))
+    bool success = place_specific_trap(you.pos(), trap);
+    if (success)
     {
         mprf("Created a %s trap, marked it undiscovered.",
-             trap_name(trap).c_str());
+             (trap == TRAP_RANDOM) ? "random"
+                                   : trap_name(trap).c_str());
     }
     else
         mpr("Could not create trap - too many traps on level.");
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
         mpr("NOTE: Shaft traps aren't valid on this level.");
+
+    return success;
 }
 
 bool debug_make_shop(const coord_def& pos)
