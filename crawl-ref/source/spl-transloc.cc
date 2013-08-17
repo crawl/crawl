@@ -681,7 +681,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                    || need_distance_check && (newpos - centre).abs()
                                               <= dist_range(min(range - 1, 34))
                    || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO)));
-        
+
         // Running out of tries should only happen for limited-range teleports,
         // which are all involuntary; no message.  Return false so it doesn't
         // count as a random teleport for Xom purposes.
