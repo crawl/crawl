@@ -5659,10 +5659,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
     else if (mons_is_tentacle_or_tentacle_segment(type)
-            && type != MONS_ELDRITCH_TENTACLE
-            && flavour != BEAM_TORMENT_DAMAGE
-            && !invalid_monster_index(number)
-            && menv[number].is_parent_monster_of(this))
+             && type != MONS_ELDRITCH_TENTACLE
+             && flavour != BEAM_TORMENT_DAMAGE
+             && !invalid_monster_index(number)
+             && menv[number].is_parent_monster_of(this))
     {
         (new deferred_damage_fineff(oppressor, &menv[number],
                                     damage, false))->schedule();
