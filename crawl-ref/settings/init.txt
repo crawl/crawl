@@ -184,10 +184,7 @@
 # easy_confirm  = (none | safe | all)
 # allow_self_target      = (yes | no | prompt)
 # confirm_butcher        = (auto | always | never)
-# prefer_safe_chunks     = false
 # easy_eat_chunks        = true
-# easy_eat_gourmand      = true
-# easy_eat_contaminated  = true
 # auto_eat_chunks        = true
 # auto_drop_chunks       = (never | rotten | yes)
 # prompt_for_swap        = false

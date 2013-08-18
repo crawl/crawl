@@ -53,8 +53,7 @@ The contents of this text are:
 3-h     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
-                confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
-                easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
+                confirm_butcher, easy_eat_chunks, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop
@@ -1041,34 +1040,12 @@ confirm_butcher = (always | never | auto)
         even if there are multiple corpses on the square. If always, you will
         be prompted before butchering any number of corpses.
 
-prefer_safe_chunks = true
-        The (e)at command will prompt for all chunks on the floor and in your
-        inventory, sorted by age. If this option is set to true, clean chunks
-        will be offered before contaminated ones even if the latter are older.
-        Rotten chunks will be offered after clean or contaminated ones.
-        Poisonous, mutagenic, rot-inducing, and chunks forbidden by
-        your religion will always be offered last.
-
 easy_eat_chunks = false
         If this is set to true then when using the (e)at command, the
         game will automatically determine the oldest chunk that is safe
         to eat, and eat it without prompting.
-        If prefer_safe_chunks is set to false you will be prompted if
-        the oldest chunk happens to be contaminated, and you will always
-        be prompted for harmful chunks.
+        You will always be prompted to eat harmful chunks.
         Note that this option is ignored for each of the undead species.
-
-easy_eat_gourmand = false
-        If both this and easy_eat_chunks are true, and you're wearing an
-        amulet of the Gourmand, then religion-safe contaminated chunks will
-        be eaten without prompting. If prefer_safe_chunks is true then this
-        will only be done if you have no safe chunks to eat, but if it's
-        false then you'll auto-eat older contaminated chunks before fresher
-        safe chunks.
-
-easy_eat_contaminated = false
-        Like easy_eat_gourmand, but always in effect, not just when you're
-        wearing an amulet of the Gourmand.
 
 auto_eat_chunks = false
         Setting this option to true will allow you to automatically eat a chunk

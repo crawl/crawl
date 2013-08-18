@@ -174,13 +174,7 @@ public:
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
     chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
-    bool        prefer_safe_chunks; // prefer clean chunks to contaminated ones
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
-    bool        easy_eat_gourmand; // with easy_eat_chunks, and wearing a
-                                   // "OfGourmand, auto-eat contaminated
-                                   // chunks if no safe ones are present
-    bool        easy_eat_contaminated; // like easy_eat_gourmand, but
-                                       // always active.
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     bool        default_target;  // start targetting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
