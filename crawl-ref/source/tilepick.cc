@@ -1640,9 +1640,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // rakshasa ('R')
     case MONS_RAKSHASA:
-        return TILEP_MONS_RAKSHASA;
     case MONS_RAKSHASA_FAKE:
-        return TILEP_MONS_RAKSHASA_FAKE;
+        return TILEP_MONS_RAKSHASA;
 
     // snakes ('S')
     case MONS_BALL_PYTHON:
@@ -2149,9 +2148,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // rakshasas ('R')
     case MONS_MARA:
-        return TILEP_MONS_MARA;
     case MONS_MARA_FAKE:
-        return TILEP_MONS_MARA_FAKE;
+        return TILEP_MONS_MARA;
 
     // trolls ('T')
     case MONS_PURGY:
