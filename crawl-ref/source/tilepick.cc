@@ -733,8 +733,9 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_TURTLE:
         return TILEP_MONS_SKELETON_TURTLE;
     case TILEP_MONS_ZOMBIE_QUADRUPED_LARGE:
-    case TILEP_MONS_ZOMBIE_TOAD:
         return TILEP_MONS_SKELETON_QUADRUPED_LARGE;
+    case TILEP_MONS_ZOMBIE_TOAD:
+        return TILEP_MONS_SKELETON_TOAD;
     case TILEP_MONS_ZOMBIE_GRIFFON:
     case TILEP_MONS_ZOMBIE_QUADRUPED_WINGED:
         return TILEP_MONS_SKELETON_QUADRUPED_WINGED;
