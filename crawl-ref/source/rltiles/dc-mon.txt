@@ -423,28 +423,6 @@ overlay_sword MONS_STATUE_SWORD
 overlay_whip MONS_STATUE_WHIP
 %back none
 
-%back light_vine_statue_base
-overlay_axe MONS_LIGHT_VINE_STATUE_AXE
-overlay_bow MONS_LIGHT_VINE_STATUE_ARCHER
-overlay_crossbow MONS_LIGHT_VINE_STATUE_CROSSBOW
-overlay_mace MONS_LIGHT_VINE_STATUE_MACE
-overlay_mage MONS_LIGHT_VINE_STATUE_MAGE
-overlay_scythe MONS_LIGHT_VINE_STATUE_SCYTHE
-overlay_sword MONS_LIGHT_VINE_STATUE_SWORD
-overlay_whip MONS_LIGHT_VINE_STATUE_WHIP
-%back none
-
-%back dark_vine_statue_base
-overlay_axe MONS_DARK_VINE_STATUE_AXE
-overlay_bow MONS_DARK_VINE_STATUE_ARCHER
-overlay_crossbow MONS_DARK_VINE_STATUE_CROSSBOW
-overlay_mace MONS_DARK_VINE_STATUE_MACE
-overlay_mage MONS_DARK_VINE_STATUE_MAGE
-overlay_scythe MONS_DARK_VINE_STATUE_SCYTHE
-overlay_sword MONS_DARK_VINE_STATUE_SWORD
-overlay_whip MONS_DARK_VINE_STATUE_WHIP
-%back none
-
 %rim 0
 guardian-eyeopen-flame1 MONS_STATUE_GUARDIAN
 guardian-eyeopen-flame2
