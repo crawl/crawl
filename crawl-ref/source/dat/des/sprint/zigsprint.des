@@ -2,23 +2,33 @@
 # Zig Sprint
 #
 # General comments:
-# - Obsidian axe, Gong and Maxwells are guaranteed in the equipment room,
-#   this is because of a ##crawl joke/challenge involving beating a zig wearing these items.
-#   Despite it being rather fun to use them in the map it may be slighty imbalanced to hand them out.
-# - Alternatively to the way this map is done, it would be better I think to make the map a single room
-#   that regenerates and becomes bigger each time you step on the down-stairs equivalent.
-#   Possibly in two different versions, one like current Ziggurat (small levels, fight everything at once)
-#   and one similar to Hell's Arena in DoomRL (much larger and battles spread out)
+# - Obsidian axe, Gong and Maxwells are guaranteed in the equipment room, this
+#   is because of a ##crawl joke/challenge involving beating a zig wearing
+#   these items. Despite it being rather fun to use them in the map it may be
+#   slighty imbalanced to hand them out.
+#
+# - Alternatively to the way this map is done, it would be better I think to
+#   make the map a single room that regenerates and becomes bigger each time
+#   you step on the down-stairs equivalent. Possibly in two different versions,
+#   one like current Ziggurat (small levels, fight everything at once) and one
+#   similar to Hell's Arena in DoomRL (much larger and battles spread out).
 #   However this is beyond my capabilities.
-# - Balance is intended to be similar to Zig, therefore Pan/Holy levels are as brutal as they should be.
-#   Orbs of fire, electric golems and fiends are all thrown about as they should be in their
-#   respective monster sets.
-# - The starting loot/equipment is probably the thing which may need to most looking at, I have tried to
-#   make it reasonable enough for casters/stabbers to progress through the early rooms
-#   which melee has no concern with generally.
-# - Some gods are rather strong due to regaining more piety than you use up to kill things.
-#   In my testing Makhleb's greater demons and Chei's slouch are two offenders for this.
+#
+# - Balance is intended to be similar to Zig, therefore Pan/Holy levels are as
+#   brutal as they should be. Orbs of fire, electric golems and fiends are all
+#   thrown about as they should be in their respective monster sets.
+#
+# - The starting loot/equipment is probably the thing which may need to most
+#   looking at, I have tried to make it reasonable enough for casters/stabbers
+#   to progress through the early rooms which melee has no concern with
+#   generally.
+#
+# - Some gods are rather strong due to regaining more piety than you use up to
+#   kill things. In my testing Makhleb's greater demons and Chei's slouch are
+#   two offenders for this.
+#
 #       -Also, Ashenzari lets you peek at some rooms but not all [evilmike]
+#
 ###############################################################################
 
 {{
