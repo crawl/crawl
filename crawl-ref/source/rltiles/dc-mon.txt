@@ -37,8 +37,6 @@ microbat MONS_MICROBAT
 %rim 1
 megabat MONS_MEGABAT
 gigabat MONS_GIGABAT
-fruity_bat MONS_FRUITY_BAT
-ice_bat MONS_ICE_BAT
 phase_bat MONS_PHASE_BAT
 %sdir mon/abyss
 %rim 0
