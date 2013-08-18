@@ -348,10 +348,8 @@ efreet MONS_EFREET
 ## Rakshasa ('R')
 %sdir mon/unique
 mara MONS_MARA
-mara MONS_MARA_FAKE
 %sdir mon/demons
 rakshasa MONS_RAKSHASA
-rakshasa MONS_RAKSHASA_FAKE
 
 ## Abominations ('X')
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
