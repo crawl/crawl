@@ -1220,7 +1220,7 @@ void bolt::affect_cell()
         {
             if (can_affect_wall_actor(act))
                 affect_actor(act);
-            else if (!is_tracer)
+            else if (!is_tracer && you.can_see(act))
             {
                 mprf("The %s protects %s from harm.",
                      raw_feature_description(act->pos()).c_str(),
