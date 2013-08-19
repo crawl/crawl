@@ -17,7 +17,8 @@ Contents:  I. Conditionalising levels
            R. Map generation
 
 This document describes the advanced features of vault making. This includes
-usage of lua and how to create portal vaults. Triggerables are covered in a separate document: triggerables.txt.
+usage of lua and how to create portal vaults. Triggerables are covered in a
+separate document: triggerables.txt.
 
 
 I.    Conditionalising levels
@@ -819,8 +820,8 @@ dungeon cell which they are on:
 
 * door_airborne_verb_open: Replaces "reach down and open", also requires "%s%s".
 
-* door_open_verb: Replaces "You open". Also requires "%s%s". All of the above "open"
-      have "close" counterparts which are used when closing a door.
+* door_open_verb: Replaces "You open". Also requires "%s%s". All of the above
+      "open" have "close" counterparts which are used when closing a door.
 
 * feature_description: What to use as the short description of the
       cell's feature.
