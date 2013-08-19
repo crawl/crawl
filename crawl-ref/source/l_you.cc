@@ -241,6 +241,27 @@ static int l_you_spell_letters(lua_State *ls)
     return 1;
 }
 
+static int l_you_spell_table(lua_State *ls)
+{
+    lua_newtable(ls);
+
+    char buf[2];
+    buf[1] = 0;
+
+    for (int i = 0; i < 52; ++i)
+    {
+        buf[0] = index_to_letter(i);
+        const spell_type spell = get_spell_by_letter(buf[0]);
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        lua_pushstring(ls, buf);
+        lua_pushstring(ls, spell_title(spell));
+        lua_rawset(ls, -3);
+    }
+    return 1;
+}
+
 static int l_you_abils(lua_State *ls)
 {
     lua_newtable(ls);
@@ -267,6 +288,24 @@ static int l_you_abil_letters(lua_State *ls)
         buf[0] = talents[i].hotkey;
         lua_pushstring(ls, buf);
         lua_rawseti(ls, -2, i + 1);
+    }
+    return 1;
+}
+
+static int l_you_abil_table(lua_State *ls)
+{
+    lua_newtable(ls);
+
+    char buf[2];
+    buf[1] = 0;
+
+    vector<talent> talents = your_talents(false);
+    for (int i = 0, size = talents.size(); i < size; ++i)
+    {
+        buf[0] = talents[i].hotkey;
+        lua_pushstring(ls, buf);
+        lua_pushstring(ls, ability_name(talents[i].which));
+        lua_rawset(ls, -3);
     }
     return 1;
 }
@@ -374,8 +413,10 @@ static const struct luaL_reg you_clib[] =
     { "time"        , you_time },
     { "spells"      , l_you_spells },
     { "spell_letters", l_you_spell_letters },
+    { "spell_table" , l_you_spell_table },
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
+    { "ability_table", l_you_abil_table },
     { "name"        , you_name },
     { "race"        , you_race },
     { "class"       , you_class },
