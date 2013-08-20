@@ -2211,7 +2211,8 @@ void handle_time()
         forget_map(true);
 
     // Magic contamination from spells and Orb.
-    _handle_magic_contamination();
+    if (!crawl_state.game_is_arena())
+        _handle_magic_contamination();
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))
