@@ -916,6 +916,8 @@ Air owner
 
 Nikola
 
+Sojobo
+
 __NONE
 %%%%
 highlevel Conjuration owner
@@ -974,6 +976,8 @@ __NONE
 %%%%
 Charms owner
 
+Nessos
+
 Gastronok
 
 Maurice
@@ -1017,8 +1021,11 @@ __NONE
 %%%%
 Ice owner
 
-w:5
 Ozocubu
+
+Fannar
+
+Ilsuiw
 
 __NONE
 %%%%
@@ -1038,8 +1045,6 @@ Borgnjor
 Cigotuvi
 
 Boris
-
-Frances
 
 Murray
 
