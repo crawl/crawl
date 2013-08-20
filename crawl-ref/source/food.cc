@@ -532,6 +532,8 @@ bool butchery(int which_corpse, bool bottle_blood)
             int badness = _corpse_badness(ce, *si, wants_any);
             if (ce == CE_POISONOUS)
                 badness += 500;
+            else if (ce == CE_MUTAGEN)
+                badness += 1000;
 
             if (badness < best_badness)
                 corpse_id = si->index(), best_badness = badness;
