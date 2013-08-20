@@ -1694,7 +1694,14 @@ static m_transit_list unmarshall_follower_list(reader &th)
     for (int i = 0; i < size; ++i)
     {
         follower f = unmarshall_follower(th);
-        mlist.push_back(f);
+        if (!f.mons.alive())
+        {
+            mprf(MSGCH_ERROR,
+                 "Dead monster %s in transit list in saved game, ignoring.",
+                 f.mons.name(DESC_PLAIN, true).c_str());
+        }
+        else
+            mlist.push_back(f);
     }
 
     return mlist;

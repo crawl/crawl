@@ -114,6 +114,8 @@ m_transit_list *get_transit_list(const level_id &lid)
 
 void add_monster_to_transit(const level_id &lid, const monster& m)
 {
+    ASSERT(m.alive());
+
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(follower(m));
 
@@ -289,6 +291,7 @@ int count_daction_in_transit(daction_type act)
 
 follower::follower(const monster& m) : mons(m), items()
 {
+    ASSERT(m.alive());
     load_mons_items();
 }
 
@@ -303,6 +306,8 @@ void follower::load_mons_items()
 
 bool follower::place(bool near_player)
 {
+    ASSERT(mons.alive());
+
     monster *m = get_free_monster();
     if (!m)
         return false;

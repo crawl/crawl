@@ -630,6 +630,8 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
     // Nuke monster.
     if (monster* mon = monster_at(p))
     {
+        ASSERT(mon->alive());
+
         if (saveMonsters)
             _push_displaced_monster(mon);
         else
