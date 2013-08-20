@@ -972,23 +972,29 @@ Roxanne
 
 __NONE
 %%%%
-rare Enchantment owner
+Charms owner
+
+Gastronok
+
+Maurice
+
+__NONE
+%%%%
+rare Hexes owner
 
 Sigmund
 
 w:2
 Gastronok
 %%%%
-Enchantment owner
-
-Rupert
+Hexes owner
 
 Norris
 
 Kirke
 
 w:2
-@rare Enchantment owner@
+@rare Hexes owner@
 
 __NONE
 %%%%
