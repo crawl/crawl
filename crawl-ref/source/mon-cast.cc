@@ -2976,9 +2976,8 @@ static monster_type _pick_undead_summon()
 
 static monster_type _pick_vermin()
 {
-    return random_choose_weighted(8, MONS_ORANGE_RAT,
-                                  3, MONS_SPIDER,
-                                  3, MONS_REDBACK,
+    return random_choose_weighted(9, MONS_ORANGE_RAT,
+                                  5, MONS_REDBACK,
                                   2, MONS_TARANTELLA,
                                   1, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER,
@@ -4870,7 +4869,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_VERMIN:
         _do_high_level_summon(mons, monsterNearby, spell_cast,
-                              _pick_vermin, random_range(2, 3), god);
+                              _pick_vermin, one_chance_in(4) ? 3 : 2 , god);
         return;
     }
 
