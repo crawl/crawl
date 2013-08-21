@@ -179,6 +179,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_WIND_AIDED;
     case ENCH_TOXIC_RADIANCE:
         return MB_TOXIC_RADIANCE;
+    case ENCH_GRASPING_ROOTS:
+        return MB_GRASPING_ROOTS;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1552,6 +1554,8 @@ vector<string> monster_info::attributes() const
         v.push_back("aim guided by the winds");
     if (is(MB_TOXIC_RADIANCE))
         v.push_back("radiating toxic energy");
+    if (is(MB_GRASPING_ROOTS))
+        v.push_back("movement impaired by roots");
     return v;
 }
 

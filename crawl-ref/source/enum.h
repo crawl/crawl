@@ -1542,6 +1542,7 @@ enum duration_type
     DUR_SONG_OF_SHIELDING,
     DUR_TOXIC_RADIANCE,
     DUR_RECITE,
+    DUR_GRASPING_ROOTS,
     NUM_DURATIONS
 };
 
@@ -1647,6 +1648,8 @@ enum enchant_type
     ENCH_WIND_AIDED,     // Ranged accuracy enhanced by nearby Control Winds
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
     ENCH_TOXIC_RADIANCE,
+    ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
+    ENCH_GRASPING_ROOTS,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

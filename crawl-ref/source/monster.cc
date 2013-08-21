@@ -3386,7 +3386,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
         evasion = 0;
     else if (caught() || is_constricted())
         evasion /= (body_size(PSIZE_BODY) + 2);
-    else if (confused())
+    else if (confused() || has_ench(ENCH_GRASPING_ROOTS))
         evasion /= 2;
     return max(evasion, 0);
 }
@@ -5363,6 +5363,9 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
         energy_loss *= 3;
         energy_loss /= 2;
     }
+
+    if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_GRASPING_ROOTS))
+        energy_loss += 5;
 
     // Randomize movement cost slightly, to make it less predictable,
     // and make pillar-dancing not entirely safe.

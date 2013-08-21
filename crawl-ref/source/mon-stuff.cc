@@ -2731,6 +2731,10 @@ void monster_cleanup(monster* mons)
     if (mons->has_ench(ENCH_CONTROL_WINDS))
         mons->del_ench(ENCH_CONTROL_WINDS);
 
+    // So proper messages are printed
+    if (mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
+        mons->del_ench(ENCH_GRASPING_ROOTS_SOURCE);
+
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is
     // cleaned up first, we wouldn't get a message anyway.
