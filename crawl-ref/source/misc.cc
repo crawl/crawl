@@ -504,8 +504,7 @@ static string _get_desc_quantity(const int quant, const int total)
         return "Some of your";
 }
 
-// Prints messages for blood potions coagulating in inventory (coagulate = true)
-// or whenever potions are cursed into potions of decay (coagulate = false).
+// Prints messages for blood potions coagulating or rotting in inventory.
 static void _potion_stack_changed_message(item_def &potion, int num_changed,
                                           string verb)
 {
