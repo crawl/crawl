@@ -1,4 +1,4 @@
-{   // Minor Magic
+{   // Book of Minor Magic
     SPELL_MAGIC_DART,
     SPELL_BLINK,
     SPELL_CALL_IMP,
@@ -400,7 +400,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Tome of the Dragon
+{   // Book of the Dragon
     SPELL_FLY,
     SPELL_CAUSE_FEAR,
     SPELL_BOLT_OF_FIRE,
@@ -477,7 +477,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Necronomicon - Kikubaaqudgha special
+{   // Necronomicon
     SPELL_BORGNJORS_REVIVIFICATION,
     SPELL_HAUNT,
     SPELL_DEATHS_DOOR,
