@@ -2437,33 +2437,8 @@ static void _rebrand_weapon(item_def& wpn)
     }
 }
 
-static void _vorpalise_weapon(bool already_known)
+static void _vorpalise_weapon(bool alreadyknown, item_def &wpn)
 {
-    mpr("Vorpalise which weapon?", MSGCH_PROMPT);
-    // Prompt before showing the weapon list.
-    if (Options.auto_list)
-        more();
-
-    // Don't take less time if we're swapping weapons.
-    int time = you.time_taken;
-    wield_weapon(false);
-    you.time_taken = time;
-
-    if (!you.weapon())
-    {
-        mpr("You are not wielding a weapon.");
-        return;
-    }
-
-    // Check if you're wielding a brandable weapon.
-    item_def& wpn = *you.weapon();
-    if (wpn.base_type != OBJ_WEAPONS || wpn.sub_type == WPN_BLOWGUN
-        || is_artefact(wpn))
-    {
-        mpr("You can't vorpalise that.");
-        return;
-    }
-
     you.wield_change = true;
 
     // If there's no brand, make it vorpal.
@@ -2510,14 +2485,14 @@ static void _vorpalise_weapon(bool already_known)
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of fire!", itname.c_str());
-        immolation(10, IMMOLATION_AFFIX, already_known);
+        immolation(10, IMMOLATION_AFFIX, alreadyknown);
         break;
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
         mprf("%s is covered with a thin layer of ice!", itname.c_str());
         cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
-                              (already_known) ? &you : NULL,
+                              (alreadyknown) ? &you : NULL,
                               true, false, false, false);
         break;
 
@@ -2627,6 +2602,59 @@ static void _vorpalise_weapon(bool already_known)
         calc_mp();
     }
     return;
+}
+
+// Returns false if we're cancelling the scroll.
+static bool _handle_vorpalise_weapon(bool alreadyknown, string *pre_msg)
+{
+    int item_slot;
+
+    while (true)
+    {
+        item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
+                                       OSEL_BRANDABLE_WEAPON, true, true, false);
+
+        // The scroll is used up if we didn't know what it was originally.
+        if (item_slot == PROMPT_NOTHING)
+            return !alreadyknown;
+
+        if (item_slot == PROMPT_ABORT)
+        {
+            if (alreadyknown
+                || yesno("Really abort (and waste the scroll)?"))
+            {
+                canned_msg(MSG_OK);
+                return !alreadyknown;
+            }
+            else
+            {
+                item_slot = -1;
+                continue;
+            }
+        }
+
+        item_def& wpn(you.inv[item_slot]);
+
+        if (!is_brandable_weapon(wpn, true))
+        {
+            mpr("Choose a weapon to brand, or Esc to abort.");
+            if (Options.auto_list)
+                more();
+
+            item_slot = -1;
+            continue;
+        }
+
+        // Now we're definitely using up the scroll.
+        if (pre_msg && alreadyknown)
+            mpr(pre_msg->c_str());
+
+        _vorpalise_weapon(alreadyknown, wpn);
+
+        return true;
+    }
+
+    return true;
 }
 
 bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
@@ -2992,7 +3020,8 @@ bool _is_cancellable_scroll(scroll_type scroll)
             || scroll == SCR_AMNESIA
             || scroll == SCR_REMOVE_CURSE
             || scroll == SCR_CURSE_ARMOUR
-            || scroll == SCR_CURSE_JEWELLERY);
+            || scroll == SCR_CURSE_JEWELLERY
+            || scroll == SCR_VORPALISE_WEAPON);
 }
 
 void read_scroll(int slot)
@@ -3312,8 +3341,14 @@ void read_scroll(int slot)
 
     case SCR_VORPALISE_WEAPON:
         if (!alreadyknown)
+        {
+            mpr(pre_succ_msg.c_str());
             mpr("It is a scroll of vorpalise weapon.");
-        _vorpalise_weapon(alreadyknown);
+            // Pause to display the message before jumping to the weapon list.
+            if (Options.auto_list)
+                more();
+        }
+        cancel_scroll = !_handle_vorpalise_weapon(alreadyknown, &pre_succ_msg);
         break;
 
     case SCR_IDENTIFY:
