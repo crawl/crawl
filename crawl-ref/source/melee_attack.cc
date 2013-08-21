@@ -2621,13 +2621,13 @@ void melee_attack::chaos_affects_defender()
         miscast_chance, // CHAOS_MISCAST
         rage_chance,    // CHAOS_RAGE
 
-        10, // CHAOS_HEAL
+        10,             // CHAOS_HEAL
         slowpara_chance,// CHAOS_HASTE
-        10, // CHAOS_INVIS
+        10,             // CHAOS_INVIS
 
         slowpara_chance,// CHAOS_SLOW
         slowpara_chance,// CHAOS_PARALYSIS
-        petrify_chance,// CHAOS_PETRIFY
+        petrify_chance, // CHAOS_PETRIFY
     };
 
     bolt beam;
@@ -3821,7 +3821,7 @@ int melee_attack::calc_to_hit(bool random)
             mhit += species_has_claws(you.species) ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(SK_UNARMED_COMBAT, 100), 100,
-                                         random);
+                                     random);
         }
 
         // weapon bonus contribution
