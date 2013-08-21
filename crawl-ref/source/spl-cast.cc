@@ -190,16 +190,16 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');
 
-    string more_str = "Press '!' ";
+    string more_str = "Press '<w>!</w>' ";
     if (toggle_with_I)
     {
         spell_menu.add_toggle_key('I');
-        more_str += "or 'I' ";
+        more_str += "or '<w>I</w>' ";
     }
     if (!viewing)
         spell_menu.menu_action = Menu::ACT_EXECUTE;
     more_str += "to toggle spell view.";
-    spell_menu.set_more(formatted_string(more_str));
+    spell_menu.set_more(formatted_string::parse_string(more_str));
 
     // If there's only a single spell in the offered spell list,
     // taking the selector function into account, preselect that one.
