@@ -166,12 +166,7 @@ const mutation_def& get_mutation_def(mutation_type mut)
 mutation_activity_type mutation_activity_level(mutation_type mut)
 {
     // First make sure the player's form permits the mutation.
-    if (mut == MUT_BREATHE_POISON)
-    {
-        if (form_changed_physiology() && you.form != TRAN_SPIDER)
-            return MUTACT_INACTIVE;
-    }
-    else if (!form_keeps_mutations())
+    if (!form_keeps_mutations())
     {
         if (you.form == TRAN_DRAGON)
         {

@@ -3124,17 +3124,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
 
-    // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
-    // Transformed nagas, or non-nagas, can only get Spit Poison.
-    if (you.species == SP_NAGA
-        && (!form_changed_physiology()
-            || you.form == TRAN_SPIDER))
+    // Spit Poison. Nagas can upgrade to Breathe Poison.
+    if (you.species == SP_NAGA)
     {
         _add_talent(talents, player_mutation_level(MUT_BREATHE_POISON) ?
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
-    else if (player_mutation_level(MUT_SPIT_POISON)
-             || you.species == SP_NAGA)
+    else if (player_mutation_level(MUT_SPIT_POISON))
     {
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
     }
