@@ -2240,7 +2240,7 @@ void melee_attack::player_exercise_combat_skills()
 /*
  * Applies god conduct for weapon ego
  *
- * Using haste as a chei worshiper, or holy/unholy weapons
+ * Using speed brand as a chei worshipper, or holy/unholy weapons
  */
 void melee_attack::player_weapon_upsets_god()
 {
@@ -3816,8 +3816,8 @@ int melee_attack::calc_to_hit(bool random)
         {                       // ...you must be unarmed
             // Members of clawed species have presumably been using the claws,
             // making them more practiced and thus more accurate in unarmed
-            // combat.  They keep this benefit even the claws are covered (or
-            // missing because of a change in form).
+            // combat. They keep this benefit even when the claws are covered
+            // (or missing because of a change in form).
             mhit += species_has_claws(you.species) ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(SK_UNARMED_COMBAT, 100), 100,
@@ -5474,7 +5474,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
 }
 
 // TODO: Potentially move this, may or may not belong here (may not
-// even blong as its own function, could be integrated with the general
+// even belong as its own function, could be integrated with the general
 // to-hit method
 // Returns the to-hit for your extra unarmed attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
@@ -5551,7 +5551,7 @@ int melee_attack::test_hit(int to_land, int ev, bool randomise_ev)
  *
  * Because of the complex nature between player and monster base damage,
  * a simple atype() check forks the logic for now. At the moment this is
- * only is called within the context of ACT_PLAYER. Eventually, we should
+ * only called within the context of ACT_PLAYER. Eventually, we should
  * aim for a unified code for calculating all / most combat related figures
  * and let the actor classes handle monster or player-specific scaling.
  *

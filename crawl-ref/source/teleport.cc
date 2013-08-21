@@ -117,7 +117,7 @@ typedef pair<coord_def, int> coord_weight;
 // keep_los indicates that the destination should be in view of the target.
 //
 // XXX: Check the result against in_bounds(), not coord_def::origin(),
-// beceause of a memory problem described below. (isn't this fixed now? -rob)
+// because of a memory problem described below. (isn't this fixed now? -rob)
 static coord_def random_space_weighted(actor* moved, actor* target,
                                        bool close, bool keep_los = true,
                                        bool allow_sanct = true,
