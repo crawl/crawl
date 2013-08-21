@@ -1619,6 +1619,23 @@ bool convert2bad(item_def &item)
     return true;
 }
 
+bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
+{
+    if (wpn.base_type != OBJ_WEAPONS)
+        return false;
+
+    if (is_artefact(wpn))
+        return false;
+
+    if (!allow_ranged && is_range_weapon(wpn)
+        || wpn.sub_type == WPN_BLOWGUN)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 int weapon_str_weight(const item_def &wpn)
 {
     if (!is_weapon(wpn))

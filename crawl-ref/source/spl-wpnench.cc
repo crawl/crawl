@@ -78,16 +78,12 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     bool temp_brand = you.duration[DUR_WEAPON_BRAND];
     item_def& weapon = *you.weapon();
 
-    // Can't brand non-weapons, but can brand some launchers (see later).
-    if (weapon.base_type != OBJ_WEAPONS)
+    if (!is_brandable_weapon(weapon, true))
     {
-        mpr("This isn't a weapon.");
-        return SPRET_ABORT;
-    }
-
-    if (weapon.sub_type == WPN_BLOWGUN || is_artefact(weapon))
-    {
-        mpr("You cannot enchant this weapon.");
+        if (weapon.base_type != OBJ_WEAPONS)
+            mpr("This isn't a weapon.");
+        else
+            mpr("You cannot enchant this weapon.");
         return SPRET_ABORT;
     }
 

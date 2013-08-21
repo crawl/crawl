@@ -31,6 +31,7 @@ enum object_selector
     OSEL_UNCURSED_WORN_ARMOUR    = -15,
     OSEL_UNCURSED_WORN_JEWELLERY = -16,
     OSEL_SCROLL_TARGET           = -17,
+    OSEL_BRANDABLE_WEAPON        = -18,
 };
 
 #define SLOT_BARE_HANDS      -2

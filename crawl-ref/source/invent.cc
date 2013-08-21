@@ -500,6 +500,8 @@ static string _no_selectables_message(int item_selector)
         return "You aren't wearing any piece of uncursed armour.";
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return "You aren't wearing any piece of uncursed jewellery.";
+    case OSEL_BRANDABLE_WEAPON:
+        return "You aren't carrying any weapons that can be branded.";
     }
 
     return "You aren't carrying any such object.";
@@ -1221,6 +1223,9 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return (!i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY);
+
+    case OSEL_BRANDABLE_WEAPON:
+        return (is_brandable_weapon(i, true));
 
     default:
         return false;
