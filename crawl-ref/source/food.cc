@@ -1657,7 +1657,7 @@ int prompt_eat_chunks(bool only_auto)
             item_def *item = chunks[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
-            const bool bad    = is_bad_food(*item);
+            const bool bad = is_bad_food(*item);
 
             if (easy_eat && !bad)
             {

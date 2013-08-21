@@ -3413,8 +3413,8 @@ void read_scroll(int slot)
 
         if (is_good_god(you.religion))
         {
-            pow += (you_worship(GOD_SHINING_ONE)) ? you.piety :
-                                                       you.piety / 2;
+            pow += (you_worship(GOD_SHINING_ONE)) ? you.piety
+                                                  : you.piety / 2;
         }
 
         holy_word(pow, HOLY_WORD_SCROLL, you.pos(), false, &you);
