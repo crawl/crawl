@@ -30,9 +30,9 @@ NAME:    tutorial_lesson4
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 4: Magic and Spellcasting"
 ORIENT:  encompass
-KFEAT:   ABCDE = .
-COLOUR:  ABCDdefgh = lightblue
-FTILE:   ABCDdefgh = tutorial_pad
+KFEAT:   ABCDEF = .
+COLOUR:  ABCDEFdefg = lightblue
+FTILE:   ABCDEFdefg = tutorial_pad
 ITEM:    randbook numspells:2 spells:magic_dart|mephitic_cloud title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 ITEM:    staff of wizardry not_cursed
@@ -47,8 +47,9 @@ MARKER:  e = lua:tutorial4.msg("ring_power")
 MARKER:  C = lua:tutorial4.msg("undead")
 MARKER:  f = lua:tutorial4.msg("spell_success")
 MARKER:  D = lua:tutorial4.msg("mephitic_cloud")
-MARKER:  E = lua:tutorial4.msg("aiming_clouds")
-MARKER:  h = lua:tutorial4.msg("spell_hunger")
+MARKER:  E = lua:tutorial4.msg("meph_reminder")
+MARKER:  F = lua:tutorial4.msg("aiming_clouds")
+MARKER:  g = lua:tutorial4.msg("spell_hunger")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  onclimb = "tutorial4.exit" }
 epilogue{{
@@ -79,11 +80,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.8.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.8.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxExxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxExxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxFxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5g...4...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx]xxxxxx..4...xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
