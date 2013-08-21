@@ -42,5 +42,6 @@ bool lost_soul_spectralize(monster* mons);
 
 int spawn_spirit_pack(const actor* target);
 void waterport_touch(monster* nymph, actor* target);
+void treant_release_wasps(monster* mons);
 
 #endif

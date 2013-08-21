@@ -2525,6 +2525,13 @@ int monster_die(monster* mons, killer_type killer,
         env.markers.add(marker);
         env.markers.clear_need_activate();
     }
+    // Give the treant a last chance to release its wasps if it is killed in a
+    // single blow from above half health
+    else if (mons->type == MONS_TREANT && !was_banished
+             && !mons->pacified() && (!summoned || duration > 0) && !wizard)
+    {
+        treant_release_wasps(mons);
+    }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())

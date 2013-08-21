@@ -2125,6 +2125,36 @@ bool lost_soul_spectralize(monster* mons)
     return false;
 }
 
+void treant_release_wasps(monster* mons)
+{
+    int count = mons->number;
+    bool created = false;
+    for (int i = 0; i < count; ++i)
+    {
+        monster_type wasp_t = (one_chance_in(3) ? MONS_RED_WASP
+                                                : MONS_YELLOW_WASP);
+
+        mgen_data wasp_data(wasp_t, SAME_ATTITUDE(mons),
+                            mons, 0, SPELL_NO_SPELL, mons->pos(),
+                            mons->foe);
+        wasp_data.extra_flags |= MF_WAS_IN_VIEW;
+        monster* wasp = create_monster(wasp_data);
+
+        if (wasp)
+        {
+            wasp->props["band_leader"].get_int() = mons->mid;
+            created = true;
+            mons->number--;
+        }
+    }
+
+    if (created && you.can_see(mons))
+    {
+        mprf("Angry insects surge out from beneath %s foliage!",
+            mons->name(DESC_ITS).c_str());
+    }
+}
+
 static bool _swoop_attack(monster* mons, actor* defender)
 {
     coord_def target = defender->pos();
@@ -4196,39 +4226,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     case MONS_TREANT:
     {
-        if (one_chance_in(4)
-            || one_chance_in(2) && mons->hit_points * 2 < mons->max_hit_points)
+        if (mons->hit_points * 2 < mons->max_hit_points && mons->number > 0)
         {
-            int count = min(2 + random2(3), (int)mons->number);
-            bool created = false;
-            for (int i = 0; i < count; ++i)
-            {
-                monster_type bee_t = random_choose_weighted(13, MONS_KILLER_BEE,
-                                                             2, MONS_QUEEN_BEE,
-                                                             3, MONS_YELLOW_WASP,
-                                                             1, MONS_RED_WASP,
-                                                             0);
-
-                mgen_data bee_data(bee_t, SAME_ATTITUDE(mons),
-                                   mons, 0, SPELL_NO_SPELL, mons->pos(),
-                                   mons->foe);
-                bee_data.extra_flags |= MF_WAS_IN_VIEW;
-                monster* bee = create_monster(bee_data);
-
-                if (bee)
-                {
-                    bee->flags |= MF_NO_REWARD | MF_HARD_RESET;
-                    bee->props["band_leader"].get_int() = mons->mid;
-                    created = true;
-                    mons->number--;
-                }
-            }
-
-            if (created && you.can_see(mons))
-            {
-                mprf("Angry insects surge out from beneath %s foliage!",
-                    mons->name(DESC_ITS).c_str());
-            }
+            treant_release_wasps(mons);
             // Intentionally takes no energy; the insects are flying free
             // on their own time.
         }

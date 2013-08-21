@@ -2406,7 +2406,7 @@ void define_monster(monster* mons)
         break;
 
     case MONS_TREANT:
-        monnumber = 6 + random2(7);
+        monnumber = coinflip() ? random_range(2, 4) : 0;
         break;
 
     default:
