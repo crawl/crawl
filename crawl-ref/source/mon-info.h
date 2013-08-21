@@ -101,6 +101,7 @@ enum monster_info_flags
     MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
     MB_SUMMONED_CAPPED,    // Expiring due to summons cap
     MB_TOXIC_RADIANCE,
+    MB_GRASPING_ROOTS,
     NUM_MB_FLAGS
 };
 

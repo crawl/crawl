@@ -2155,6 +2155,117 @@ void treant_release_wasps(monster* mons)
     }
 }
 
+static void _entangle_actor(actor* act)
+{
+    if (act->is_player())
+    {
+        you.duration[DUR_GRASPING_ROOTS] = 10;
+        you.redraw_evasion = true;
+        you.duration[DUR_FLIGHT] = 0;
+        you.attribute[ATTR_PERM_FLIGHT] = 0;
+        land_player(true);
+    }
+    else
+    {
+        monster* mact = act->as_monster();
+        mact->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 1, NULL, INFINITE_DURATION));
+    }
+}
+
+// Returns true if there are any affectable hostiles are in range of the effect
+// (whether they were affected or not this round)
+bool apply_grasping_roots(monster* mons)
+{
+    if (you.see_cell(mons->pos()) && one_chance_in(12))
+    {
+        mpr(random_choose(
+                "Tangled roots snake along the ground.",
+                "The ground creaks as gnarled roots bulge its surface.",
+                "A root reaches out and grasps at passing movement.",
+                0), MSGCH_TALK_VISUAL);
+    }
+
+    bool found_hostile = false;
+    for (actor_iterator ai(mons); ai; ++ai)
+    {
+        if (!mons_aligned(mons, *ai))
+        {
+            // Cannot grasp insubstancial creatures
+            if (ai->is_monster() && ai->as_monster()->is_insubstantial()
+                || ai->is_player() && you.form == TRAN_WISP)
+            {
+                continue;
+            }
+
+            found_hostile = true;
+
+            // Only applies over land, not water or lava.
+            if (!feat_has_dry_floor(grd(ai->pos())))
+                continue;
+
+            // (Some messages are suppressed for monsters, to reduce message spam)
+            if (ai->flight_mode() && x_chance_in_y(2, 5))
+            {
+                if (x_chance_in_y(10, 50 - ai->melee_evasion(NULL)))
+                {
+                    if (ai->is_player())
+                        mpr("Roots rise up to grasp you, but you nimbly evade.");
+                }
+                else
+                {
+                    if (you.can_see(*ai))
+                    {
+                        mprf("Roots rise up from beneath %s and drag %s%s"
+                                "to the ground.", ai->name(DESC_THE).c_str(),
+                                ai->is_monster() ? "it" : "you",
+                                ai->is_monster() ? " " : " back");
+                    }
+                    _entangle_actor(*ai);
+                }
+            }
+            else if (!ai->flight_mode())
+            {
+                if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
+                {
+                    mprf("Roots grasp at your %s, making movement difficult.",
+                        you.foot_name(true).c_str());
+                }
+                _entangle_actor(*ai);
+            }
+        }
+    }
+
+    return (found_hostile);
+}
+
+void check_grasping_roots(actor* act, bool quiet)
+{
+    bool source = false;
+    for (monster_iterator mi(act->get_los()) ; mi; ++mi)
+    {
+        if (!mons_aligned(act, *mi) && mi->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
+        {
+            source = true;
+            break;
+        }
+    }
+
+    if (!source || !feat_has_dry_floor(grd(act->pos())))
+    {
+        if (act->is_player())
+        {
+            if (!quiet)
+                mpr("You escape the reach of the grasping roots.");
+            you.duration[DUR_GRASPING_ROOTS] = 0;
+            you.redraw_evasion = true;
+        }
+        else
+        {
+            act->as_monster()->del_ench(ENCH_GRASPING_ROOTS);
+        }
+    }
+}
+
 static bool _swoop_attack(monster* mons, actor* defender)
 {
     coord_def target = defender->pos();
@@ -4231,6 +4342,24 @@ bool mon_special_ability(monster* mons, bolt & beem)
             treant_release_wasps(mons);
             // Intentionally takes no energy; the insects are flying free
             // on their own time.
+        }
+
+        if (!mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE) && x_chance_in_y(2, 3))
+        {
+            // Duration does not decay while there are hostiles around
+            mons->add_ench(mon_enchant(ENCH_GRASPING_ROOTS_SOURCE, 1, mons,
+                                       random_range(3, 7) * BASELINE_DELAY));
+            if (you.can_see(mons))
+            {
+                mprf(MSGCH_MONSTER_SPELL, "%s reaches out with a gnarled limb.",
+                     mons->name(DESC_THE).c_str());
+                mprf("Grasping roots rise from the ground around %s!",
+                     mons->name(DESC_THE).c_str());
+            }
+            else if (you.see_cell(mons->pos()))
+                mpr("Grasping roots begin to rise from the ground!");
+
+            used = true;
         }
     }
     break;

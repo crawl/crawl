@@ -2314,6 +2314,9 @@ int player_movement_speed(bool ignore_burden)
         mv -= 2;
     }
 
+    if (you.duration[DUR_GRASPING_ROOTS])
+        mv += 5;
+
     // Lava orc heat-based speed. -2 when cold; 0 when normal; +2 when hot.
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_SLOW_MOVE))
         mv += 2;
@@ -2588,8 +2591,11 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
 // Player EV scaling for being flying tengu or swimming merfolk.
 static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
-    if (you.duration[DUR_PETRIFYING] || you.caught())
+    if (you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
+        || you.caught())
+    {
         prescaled_ev /= 2;
+    }
 
     switch (you.species)
     {
@@ -4348,7 +4354,8 @@ void display_char_status()
         DUR_SONG_OF_SLAYING,
         STATUS_DRAINED,
         DUR_TOXIC_RADIANCE,
-        DUR_RECITE
+        DUR_RECITE,
+        DUR_GRASPING_ROOTS,
     };
 
     status_info inf;
@@ -5531,6 +5538,12 @@ void fly_player(int pow, bool already_flying)
     if (you.form == TRAN_TREE)
         return mpr("Your roots keep you in place.");
 
+    if (you.duration[DUR_GRASPING_ROOTS])
+    {
+        mpr("The grasping roots prevent you from becoming airborne.");
+        return;
+    }
+
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)
         mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
@@ -5541,13 +5554,14 @@ void fly_player(int pow, bool already_flying)
         float_player();
 }
 
-bool land_player()
+bool land_player(bool quiet)
 {
     // there was another source keeping you aloft
     if (you.airborne())
         return false;
 
-    mpr("You float gracefully downwards.");
+    if (!quiet)
+        mpr("You float gracefully downwards.");
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
@@ -6020,6 +6034,10 @@ player::~player()
 
 flight_type player::flight_mode() const
 {
+    // Might otherwise be airborne, but currently stuck to the ground
+    if (you.duration[DUR_GRASPING_ROOTS])
+        return FL_NONE;
+
     if (duration[DUR_FLIGHT]
         || attribute[ATTR_PERM_FLIGHT]
         || form == TRAN_WISP

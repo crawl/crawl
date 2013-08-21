@@ -3037,6 +3037,9 @@ static void _decrement_durations()
             _handle_recitation(new_recite);
     }
 
+    if (you.duration[DUR_GRASPING_ROOTS])
+        check_grasping_roots(&you);
+
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
