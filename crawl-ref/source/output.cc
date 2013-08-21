@@ -756,7 +756,9 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
-    textcolor(you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
+    textcolor(you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
+              || you.cannot_move() ? RED :
+              you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", player_evasion());
 }
