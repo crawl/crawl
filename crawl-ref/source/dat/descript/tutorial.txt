@@ -553,12 +553,13 @@ before and after wielding this staff.
 %%%%
 tutorial4 mephitic_cloud
 
-Mephitic Cloud is a level 3 spell, so you can't memorise it yet. Quaff this
-potion of experience (with <input>$cmd[CMD_QUAFF]</input><localtiles> or
-<input>mouseclick</input></localtiles>) to level up, and then memorise it!
+Mephitic Cloud is a level 3 spell, so you can't memorise it yet. To level up
+quickly, here are more training dummies - without stones to throw this time.
 
 At experience level 3, you'll be able to increase one of your stats - choosing
 <input>I</input>ntelligence will help your spellcasting even further.
+
+After doing that, remember to memorise your new spell!
 %%%%
 tutorial4 aiming_clouds
 
