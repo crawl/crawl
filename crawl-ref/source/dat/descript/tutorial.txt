@@ -558,8 +558,13 @@ quickly, here are more training dummies - without stones to throw this time.
 
 At experience level 3, you'll be able to increase one of your stats - choosing
 <input>I</input>ntelligence will help your spellcasting even further.
+%%%%
+tutorial4 meph_reminder
 
-After doing that, remember to memorise your new spell!
+Don't forget to memorise your newly-available spell, by pressing
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
+<input>clicking</input> on the memorisation tab and selecting the spell
+tile</localtiles>!
 %%%%
 tutorial4 aiming_clouds
 
