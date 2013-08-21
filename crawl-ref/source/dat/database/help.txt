@@ -275,7 +275,7 @@ Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
 can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
 * Shields requires that you either be wearing a shield, or have the capacity
-      to obtain one through magical or divine means.
+      to obtain one through divine means.
 * Evocations requires carrying an evocable item, or having a Nemelex ability.
 * Spell schools require knowing a spell of the school.
 * Necromancy can also be trained when having a Kikubaaqudgha ability.
