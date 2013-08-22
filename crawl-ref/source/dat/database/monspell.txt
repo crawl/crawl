@@ -184,6 +184,10 @@ Call Lost Soul cast
 Haste Plants cast
 
 @The_monster@ empowers the plants around itself!
+%%%%
+Druid's Call cast
+
+@The_monster@ calls out to the beasts of the land!
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################

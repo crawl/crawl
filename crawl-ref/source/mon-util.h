@@ -237,6 +237,7 @@ bool mons_is_statue(monster_type mc, bool allow_disintegrate = false);
 bool mons_is_demon(monster_type mc);
 bool mons_is_draconian(monster_type mc);
 bool mons_is_conjured(monster_type mc);
+bool mons_is_beast(monster_type mc);
 int mons_demon_tier(monster_type mc);
 
 bool mons_class_wields_two_weapons(monster_type mc);

@@ -4818,3 +4818,25 @@ bool mons_stores_tracking_data(const monster* mons)
 {
     return (mons->type == MONS_THORN_HUNTER);
 }
+
+bool mons_is_beast(monster_type mc)
+{
+    if (mons_class_holiness(mc) != MH_NATURAL
+          && mc != MONS_APIS
+        || mons_class_intel(mc) < I_INSECT
+        || mons_class_intel(mc) > I_ANIMAL)
+    {
+        return false;
+    }
+    else if (mons_genus(mc) == MONS_DRAGON
+             || mons_genus(mc) == MONS_UGLY_THING
+             || mc == MONS_ICE_BEAST
+             || mc == MONS_SKY_BEAST
+             || mc == MONS_SPIRIT_WOLF
+             || mc == MONS_BUTTERFLY)
+    {
+        return false;
+    }
+    else
+        return true;
+}
