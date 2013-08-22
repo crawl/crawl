@@ -1511,7 +1511,11 @@ ENDMAP
 
 NAME:   kilobyte_rumbling_trees
 DEPTH:  D:14-20, Elf, Lair:4-
+: if you.branch()=="Lair" then
+MONS:   patrolling spriggan druid n_adj n_noc name:young hd:8
+: else
 MONS:   patrolling spriggan druid
+: end
 MONS:   black bear / grizzly bear w:20 / bat w:20
 FTILE:  .t12@ = floor_moss
 MAP
