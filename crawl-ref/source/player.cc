@@ -3097,7 +3097,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     if (you.attribute[ATTR_XP_DRAIN])
     {
-        int loss = div_rand_round(exp_gained * 3,
+        int loss = div_rand_round(exp_gained * 3 / 2,
                                   calc_skill_cost(you.skill_cost_level));
 
         // Make it easier to recover from very heavy levels of draining
