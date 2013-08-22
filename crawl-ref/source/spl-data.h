@@ -2591,8 +2591,8 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_CANIFORMS, "Summon Caniforms",
-     SPTYP_SUMMONING,
+    SPELL_DRUIDS_CALL, "Druid's Call",
+     SPTYP_CHARMS,
      SPFLAG_MONSTER,
      6,
      0,
