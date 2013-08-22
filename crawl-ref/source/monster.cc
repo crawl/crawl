@@ -5795,7 +5795,8 @@ void monster::steal_item_from_player()
     new_item = you.inv[steal_what];
 
     // Set quantity, and set the item as unlinked.
-    new_item.quantity -= random2(new_item.quantity);
+    const int orig_qty = new_item.quantity;
+    new_item.quantity -= random2(orig_qty);
     new_item.pos.reset();
     new_item.link = NON_ITEM;
 
@@ -5812,6 +5813,18 @@ void monster::steal_item_from_player()
 
     // Item is gone from player's inventory.
     dec_inv_item_quantity(steal_what, new_item.quantity);
+
+    // Fix up blood timers.
+    if (is_blood_potion(new_item))
+    {
+        // Somehow they always steal the freshest blood.
+        for (int i = new_item.quantity; i < orig_qty; ++i)
+            remove_oldest_blood_potion(new_item);
+
+        // If the whole stack is gone, it doesn't need to be cleaned up.
+        if (you.inv[steal_what].defined())
+            remove_newest_blood_potion(you.inv[steal_what]);
+    }
 }
 
 bool monster::is_web_immune() const
