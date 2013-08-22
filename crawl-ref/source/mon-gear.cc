@@ -1446,40 +1446,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         level = MAKE_GOOD_ITEM;
         break;
 
-    case MONS_MINOTAUR:
-        // For now, let's only give starting gear to random minotaurs in Forest
-        // This is meant, to some extent, to simulate them picking up Labyrinth
-        // loot and using it against you - items from their horde, as it were
-        if (player_in_branch(BRANCH_FOREST))
-        {
-            // To avoid equipping minotaur mercs when drawn in just one branch
-            if (mon->flags & MF_NO_REWARD)
-                break;
-
-            if (one_chance_in(9))
-            {
-                item.base_type = OBJ_RODS;
-                item.sub_type  = random_choose(ROD_LIGHTNING,
-                                               ROD_SWARM,
-                                               ROD_FRIGID_DESTRUCTION,
-                                               ROD_DEMONOLOGY,
-                                               ROD_VENOM, -1);
-            }
-            else
-            {
-                item.base_type = OBJ_WEAPONS;
-                item.sub_type = random_choose_weighted( 8, WPN_GLAIVE,
-                                                        6, WPN_WAR_AXE,
-                                                        8, WPN_GREAT_MACE,
-                                                       12, WPN_BATTLEAXE,
-                                                        8, WPN_GREAT_SWORD,
-                                                        6, WPN_BROAD_AXE,
-                                                        0);
-                level = MAKE_GOOD_ITEM;
-            }
-        }
-        break;
-
     default:
         break;
     }
