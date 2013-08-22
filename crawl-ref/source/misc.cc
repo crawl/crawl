@@ -518,7 +518,8 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
          verb.c_str());
 }
 
-// Returns true if "equipment weighs less" message needed.
+// Returns true if the total number of potions in inventory decreased,
+// in which case burden_change() will need to be called.
 // Also handles coagulation messages.
 bool maybe_coagulate_blood_potions_inv(item_def &blood)
 {
