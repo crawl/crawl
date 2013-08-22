@@ -2128,8 +2128,8 @@ static void _cast_druids_call(const monster* mon)
             simple_monster_message(mon_list[i], " answers the druid's call!");
 
             // If this is a low-HD monster, try to summon a second. Otherwise,
-            // we're done.
-            if (!second && mon_list[i]->hit_dice <= 10)
+            // we're done. (Only normal druids can ever summon two monsters)
+            if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10)
                 second = true;
             else
                 return;
