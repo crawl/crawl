@@ -507,9 +507,9 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
                     break;
             case 2: disp += string(18 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 3: disp += string(13 - strwidth(god_name(god, false)), ' ');
+            case 3: disp += string(16 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 4: disp += string(16 - strwidth(god_name(god, false)), ' ');
+            case 4: disp += string(13 - strwidth(god_name(god, false)), ' ');
             }
     }
 
