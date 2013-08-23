@@ -785,7 +785,8 @@ bool mons_allows_beogh_now(const monster* mon)
 {
     // Do the expensive LOS check last.
     return mon && mons_allows_beogh(mon) && !silenced(mon->pos())
-               && !mons_is_confused(mon) && !mons_is_immotile(mon)
+               && !mons_is_confused(mon) && mons_is_seeking(mon)
+               && mon->foe == MHITYOU && !mons_is_immotile(mon)
                && you.visible_to(mon) && you.can_see(mon);
 }
 
