@@ -135,20 +135,20 @@ static string shoptype_to_string(shop_type s)
 {
     switch (s)
     {
-    case SHOP_WEAPON:          return "(";
+    case SHOP_WEAPON:          return "<w>(</w>";
     case SHOP_WEAPON_ANTIQUE:  return "<yellow>(</yellow>";
-    case SHOP_ARMOUR:          return "[";
+    case SHOP_ARMOUR:          return "<w>[</w>";
     case SHOP_ARMOUR_ANTIQUE:  return "<yellow>[</yellow>";
-    case SHOP_GENERAL:         return "*";
+    case SHOP_GENERAL:         return "<w>*</w>";
     case SHOP_GENERAL_ANTIQUE: return "<yellow>*</yellow>";
-    case SHOP_JEWELLERY:       return "=";
-    case SHOP_WAND:            return "/";
-    case SHOP_BOOK:            return "+";
-    case SHOP_FOOD:            return "%";
-    case SHOP_DISTILLERY:      return "!";
-    case SHOP_SCROLL:          return "?";
-    case SHOP_MISCELLANY:            return "}";
-    default:                   return "x";
+    case SHOP_JEWELLERY:       return "<w>=</w>";
+    case SHOP_WAND:            return "<w>/</w>";
+    case SHOP_BOOK:            return "<w>+</w>";
+    case SHOP_FOOD:            return "<w>%</w>";
+    case SHOP_DISTILLERY:      return "<w>!</w>";
+    case SHOP_SCROLL:          return "<w>?</w>";
+    case SHOP_MISCELLANY:      return "<w>}</w>";
+    default:                   return "<w>x</w>";
     }
 }
 
@@ -511,9 +511,11 @@ static string _get_shops(bool display)
     last_id.depth = 10000;
     map<level_pos, shop_type>::const_iterator ci_shops;
 
-    // There are at most 5 shops per level, plus 7 chars for the level
-    // name, plus 4 for the spacing; that makes a total of 17
-    // characters per shop.
+    // There are at most 5 shops per level, plus up to 8 chars for the
+    // level name, plus 4 for the spacing (3 as padding + 1 separating
+    // items from level). That makes a total of 17 characters per shop:
+    //       1...5....0....5..
+    // "D:8 *   Vaults:2 **([+   D:24 +";
     const int maxcolumn = get_number_of_cols() - 17;
     int column_count = 0;
 
@@ -529,19 +531,18 @@ static string _get_shops(bool display)
             }
             else if (column_count != 0)
             {
-                disp += "  ";
-                column_count += 2;
+                disp += "   ";
+                column_count += 3;
             }
-            disp += "<brown>";
+            disp += "<lightgrey>";
 
             const string loc = ci_shops->first.id.describe(false, true);
             disp += loc;
             column_count += strwidth(loc);
 
-            disp += ": ";
-            disp += "</brown>";
-
-            column_count += 2;
+            disp += " ";
+            disp += "</lightgrey>";
+            column_count += 1;
 
             last_id = ci_shops->first.id;
         }
