@@ -128,30 +128,7 @@ static string coloured_branch(branch_type br)
     if (br < 0 || br >= NUM_BRANCHES)
         return "<lightred>Buggy buglands</lightred>";
 
-    colour_t col;
-    switch (br)
-    {
-    // These make little sense: old code used the first colour of elemental
-    // colour used for the entrance portal.
-    case BRANCH_VESTIBULE_OF_HELL: col = RED; break;
-    case BRANCH_ABYSS:             col = MAGENTA; break; // ETC_RANDOM
-    case BRANCH_PANDEMONIUM:       col = BLUE; break;
-    case BRANCH_LABYRINTH:         col = CYAN; break;
-    case BRANCH_BAILEY:            col = LIGHTRED; break;
-    case BRANCH_BAZAAR:
-    case BRANCH_WIZLAB:
-    case BRANCH_ZIGGURAT:          col = BLUE; break; // ETC_SHIMMER_BLUE
-    case BRANCH_ICE_CAVE:          col = WHITE; break;
-    case BRANCH_OSSUARY:           col = BROWN; break;
-    case BRANCH_SEWER:             col = LIGHTGREEN; break;
-    case BRANCH_TROVE:             col = BLUE; break;
-    case BRANCH_VOLCANO:           col = RED; break;
-    default:                       col = YELLOW; // shouldn't happen
-    }
-
-    const string colname = colour_to_str(col);
-    return make_stringf("<%s>%s</%s>", colname.c_str(), branches[br].shortname,
-                        colname.c_str());
+    return make_stringf("<yellow>%s</yellow>", branches[br].shortname);
 }
 
 static string shoptype_to_string(shop_type s)
@@ -277,7 +254,7 @@ static string _get_seen_branches(bool display)
     char buffer[100];
     string disp;
 
-    disp += "\n<green>Branches:</green>";
+    disp += "\n<lightblue>Branches:</lightblue>";
     if (display)
     {
         disp += " (use <white>G</white> to reach them and "
@@ -426,7 +403,7 @@ static string _get_altars(bool display)
 
     string disp;
 
-    disp += "\n<green>Altars:</green>";
+    disp += "\n<lightblue>Altars:</lightblue>";
     if (display)
     {
         disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
@@ -526,7 +503,7 @@ static string _get_shops(bool display)
 
     if (!shops_present.empty())
     {
-        disp +="\n<green>Shops:</green>";
+        disp +="\n<lightblue>Shops:</lightblue>";
         if (display)
             disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
         disp += "\n";
@@ -584,7 +561,7 @@ static string _get_portals()
     string disp;
 
     if (!portals_present.empty())
-        disp += "\n<green>Portals:</green>\n";
+        disp += "\n<lightblue>Portals:</lightblue>\n";
     disp += _portals_description_string();
 
     return disp;
@@ -605,7 +582,7 @@ static string _get_notes()
 
     if (disp.empty())
         return disp;
-    return "\n<green>Annotations</green>\n" + disp;
+    return "\n<lightblue>Annotations:</lightblue>\n" + disp;
 }
 
 template <typename Z, typename Key>
@@ -879,11 +856,8 @@ string get_level_annotation(level_id li, bool skip_excl, bool skip_uniq,
 
 static const string _get_coloured_level_annotation(level_id li)
 {
-    string place = "<yellow>" + li.describe();
-    place = replace_all(place, ":", "</yellow>:");
-    if (place.find("</yellow>") == string::npos)
-        place += "</yellow>";
-    int col = level_annotation_has("!", li) ? LIGHTRED : MAGENTA;
+    string place = "<yellow>" + li.describe() + "</yellow>";
+    int col = level_annotation_has("!", li) ? LIGHTRED : WHITE;
     return place + " " + get_level_annotation(li, false, false, true, col);
 }
 
