@@ -2327,8 +2327,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         return false;
     }
-    else if (random2(200) > mons->hit_dice + 50)
+    else if (random2(200) > mons->hit_dice + 50
+                            + ((mons_class_flag(mons->type, M_STABBER)
+                                && mons->pos() == mons->firing_pos) ? 75 : 0))
+    {
         return false;
+    }
     else if (spellcasting_poly && coinflip()) // 50% chance of not casting
         return false;
     else
