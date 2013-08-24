@@ -10,7 +10,7 @@
 
     Template Format:
 
-    {    mon_spellbook_type type
+    {    mon_spellbook_type,
         {
              bolt spell,
              enchantment,

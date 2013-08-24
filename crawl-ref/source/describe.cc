@@ -3135,6 +3135,13 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     }
 }
 
+// Is the spell worth listing for a monster?
+static bool _interesting_mons_spell(spell_type spell)
+{
+    return spell != SPELL_NO_SPELL && spell != SPELL_MELEE
+           && spell != SPELL_CANTRIP;
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
@@ -3265,20 +3272,32 @@ static string _monster_stat_description(const monster_info& mi)
     // Show monster spells and spell-like abilities.
     if (mons_class_flag(mi.type, M_SPELLCASTER))
     {
+        const bool caster = mons_class_flag(mi.type, M_ACTUAL_SPELLS);
+        const bool priest = mons_class_flag(mi.type, M_PRIEST);
         monster* mon = monster_at(mi.pos);
         const monsterentry *m = get_monster_data(mon->type);
         mon_spellbook_type book = (m->sec);
         result << uppercase_first(pronoun);
-        // The combination of M_ACTUAL_SPELLS with MST_NO_SPELLS means multiple spellbooks
-        if (mons_class_flag(mi.type, M_ACTUAL_SPELLS) && book == MST_NO_SPELLS)
+
+        // The combination of M_ACTUAL_SPELLS with MST_NO_SPELLS means multiple
+        // spellbooks.  cjo: the division here gets really arbitrary. For
+        // example, wretched stars cast mystic blast, but are not flagged with
+        // M_ACTUAL_SPELLS.  Possibly these should be combined.
+        //
+        if (caster && book == MST_NO_SPELLS)
             result << " has mastered one of the following spellbooks:\n";
-        // cjo: the division here gets really arbitrary. For example, wretched stars
-        // cast mystic blast, but are not flagged with M_ACTUAL_SPELLS. Possibly
-        // these should be combined.
-        else if (mons_class_flag(mi.type, M_ACTUAL_SPELLS) && book != MST_NO_SPELLS)
+        else if (caster)
             result << " has mastered the following spells: ";
-        else if (mons_class_flag(mi.type, M_SPELLCASTER) && book != MST_NO_SPELLS)
-            result << " possesses the following magical abilities: ";
+        else if (book != MST_NO_SPELLS)
+        {
+            result << " possesses the following "
+                   << (priest ? "divine" : "magical") << " abilities: ";
+        }
+        else
+        {
+            result << " possesses one of the following sets of "
+                   << (priest ? "divine" : "magical") << " abilities: \n";
+        }
 
         vector<mon_spellbook_type> books = mons_spellbook_list(mon);
 
@@ -3291,18 +3310,14 @@ static string _monster_stat_description(const monster_info& mi)
            vector<spell_type> book_spells;
            for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
            {
-               const spell_type &spell = mspell_list[book].spells[j];
+               const spell_type spell = mspell_list[book].spells[j];
                bool match = false;
                for (unsigned int k = 0; k < book_spells.size(); ++k)
-               {
                    if(book_spells[k] == spell)
                        match = true;
-               }
-               if(!match && spell != SPELL_NO_SPELL && spell != SPELL_MELEE
-                         && spell != SPELL_CANTRIP)
-               {
+
+               if(!match && _interesting_mons_spell(spell))
                    book_spells.push_back(spell);
-               }
            }
 
            // Special casing for Ogre Mages (they always get their first spell
@@ -3311,8 +3326,9 @@ static string _monster_stat_description(const monster_info& mi)
                book_spells[0] = SPELL_HASTE_OTHER;
 
            // Display spells for this book
-            if (num_books > 1)
-               result << "Book " << i+1 << ": ";
+           if (num_books > 1)
+               result << (caster ? " Book " : " Set ") << i+1 << ": ";
+
            for (unsigned int j = 0; j < book_spells.size(); ++j)
            {
                const spell_type spell = book_spells[j];
