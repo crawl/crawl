@@ -3131,9 +3131,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
     else if (player_mutation_level(MUT_SPIT_POISON))
-    {
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
-    }
 
     if (player_genus(GENPC_DRACONIAN))
     {

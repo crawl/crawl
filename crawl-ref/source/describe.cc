@@ -3313,10 +3313,10 @@ static string _monster_stat_description(const monster_info& mi)
                const spell_type spell = mspell_list[book].spells[j];
                bool match = false;
                for (unsigned int k = 0; k < book_spells.size(); ++k)
-                   if(book_spells[k] == spell)
+                   if (book_spells[k] == spell)
                        match = true;
 
-               if(!match && _interesting_mons_spell(spell))
+               if (!match && _interesting_mons_spell(spell))
                    book_spells.push_back(spell);
            }
 
@@ -3332,13 +3332,13 @@ static string _monster_stat_description(const monster_info& mi)
            for (unsigned int j = 0; j < book_spells.size(); ++j)
            {
                const spell_type spell = book_spells[j];
-               if(j > 0)
+               if (j > 0)
                    result << ", ";
                result << spell_title(spell);
            }
            result << "\n";
         }
-    } // end if(mons_class_flag(mi.type, M_SPELLCASTER))
+    } // end if (mons_class_flag(mi.type, M_SPELLCASTER))
 
     // Unusual monster speed.
     const int speed = mi.base_speed();
