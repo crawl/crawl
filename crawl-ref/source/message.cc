@@ -1285,12 +1285,12 @@ void msgwin_got_input()
 }
 
 int msgwin_get_line(string prompt, char *buf, int len,
-                    input_history *mh, int (*keyproc)(int& c))
+                    input_history *mh, const string &fill)
 {
     if (prompt != "")
         msgwin_prompt(prompt);
 
-    int ret = cancelable_get_line(buf, len, mh, keyproc);
+    int ret = cancelable_get_line(buf, len, mh, NULL, fill);
     msgwin_reply(buf);
     return ret;
 }

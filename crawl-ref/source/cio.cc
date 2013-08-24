@@ -157,7 +157,7 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
 }
 
 int cancelable_get_line(char *buf, int len, input_history *mh,
-                        int (*keyproc)(int &ch))
+                        int (*keyproc)(int &ch), const string &fill)
 {
     flush_prev_message();
 
@@ -166,7 +166,7 @@ int cancelable_get_line(char *buf, int len, input_history *mh,
     reader.set_input_history(mh);
     reader.set_keyproc(keyproc);
 
-    return reader.read_line();
+    return reader.read_line(fill);
 }
 
 
@@ -289,6 +289,14 @@ static void _webtiles_abort_get_line()
     tiles.finish_message();
 }
 #endif
+
+int line_reader::read_line(const string &prefill)
+{
+    strncpy(buffer, prefill.c_str(), bufsz);
+    // Just in case it was too long.
+    buffer[bufsz - 1] = '\0';
+    return read_line(false);
+}
 
 int line_reader::read_line(bool clear_previous)
 {
