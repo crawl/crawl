@@ -1462,7 +1462,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // Items that get a temporary brand from a player spell lose the
     // brand as soon as the player lets go of the item.  Can't call
-    // unwield_item() yet since the beam might get canceled.
+    // unwield_item() yet since the beam might get cancelled.
     if (you.duration[DUR_WEAPON_BRAND] && projected != LRET_LAUNCHED
         && throw_2 == you.equip[EQ_WEAPON])
     {

@@ -481,7 +481,7 @@ bool Menu::process_key(int keyin)
         textcolor(WHITE);
         cprintf("Select what? (regex) ");
         textcolor(LIGHTGREY);
-        bool validline = !cancelable_get_line(linebuf, sizeof linebuf);
+        bool validline = !cancellable_get_line(linebuf, sizeof linebuf);
         if (validline && linebuf[0])
         {
             text_pattern tpat(linebuf, true);

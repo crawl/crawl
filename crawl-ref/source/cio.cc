@@ -156,7 +156,7 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
     }
 }
 
-int cancelable_get_line(char *buf, int len, input_history *mh,
+int cancellable_get_line(char *buf, int len, input_history *mh,
                         int (*keyproc)(int &ch), const string &fill)
 {
     flush_prev_message();

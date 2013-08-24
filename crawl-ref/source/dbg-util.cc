@@ -29,7 +29,7 @@ monster_type debug_prompt_for_monster(void)
     char specs[1024];
 
     mpr("Which monster by name? ", MSGCH_PROMPT);
-    if (!cancelable_get_line_autohist(specs, sizeof specs))
+    if (!cancellable_get_line_autohist(specs, sizeof specs))
     {
         if (specs[0] == '\0')
             return MONS_NO_MONSTER;

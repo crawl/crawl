@@ -1290,7 +1290,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
     if (prompt != "")
         msgwin_prompt(prompt);
 
-    int ret = cancelable_get_line(buf, len, mh, NULL, fill);
+    int ret = cancellable_get_line(buf, len, mh, NULL, fill);
     msgwin_reply(buf);
     return ret;
 }

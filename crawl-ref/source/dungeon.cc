@@ -85,7 +85,7 @@
 #endif
 
 #ifdef WIZARD
-#include "cio.h" // for cancelable_get_line()
+#include "cio.h" // for cancellable_get_line()
 #endif
 
 // DUNGEON BUILDERS

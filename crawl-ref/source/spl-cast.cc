@@ -1122,7 +1122,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
 }
 
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
-// exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
+// exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
 // the casting.
 // Not all of these are actually real spells; invocations, decks, rods or misc.
 // effects might also land us here.

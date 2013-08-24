@@ -2554,7 +2554,7 @@ bool fedhas_plant_ring_from_fruit()
     if (!_prompt_amount(max_use, target_count,
                         "How many plants will you create?"))
     {
-        // User canceled at the prompt.
+        // User cancelled at the prompt.
         return false;
     }
 
