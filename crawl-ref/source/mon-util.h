@@ -97,8 +97,6 @@ private:
     }
 };
 
-vector<mon_spellbook_type> _get_spellbook_list(monster* mon);
-
 struct mon_spellbook
 {
     mon_spellbook_type type;
@@ -329,6 +327,8 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
 bool mons_has_ranged_attack(const monster* mon);
 bool mons_has_known_ranged_attack(const monster* mon);
 bool mons_can_attack(const monster* mon);
+
+vector<mon_spellbook_type> mons_spellbook_list(monster* mon);
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);

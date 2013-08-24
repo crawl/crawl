@@ -69,7 +69,7 @@
 
    sec: if the monster has only one possible spellbook, sec is set to that book.
      If a monster has multiple possible books, sec is set to MST_NO_SPELLS. Then
-     the function _get_spellbook_list in mon-util.cc checks for the flag
+     the function mons_spellbook_list in mon-util.cc checks for the flag
      M_SPELLCASTER, and handles the books.
 
    corpse_thingy
