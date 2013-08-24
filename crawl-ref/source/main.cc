@@ -3043,6 +3043,8 @@ static void _decrement_durations()
     if (you.attribute[ATTR_NEXT_RECALL_INDEX] > 0)
         do_recall(delay);
 
+    _decrement_a_duration(DUR_SLEEP_IMMUNITY, delay);
+
     if (!env.sunlight.empty())
         process_sunlights();
 }
