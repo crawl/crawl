@@ -1538,7 +1538,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_DIMENSION_ANCHOR:
     {
         if ((monspell == SPELL_HIBERNATION || monspell == SPELL_SLEEP)
-            && (!foe || foe->asleep()))
+            && (!foe || foe->asleep()) || !foe->can_sleep())
         {
             ret = true;
             break;
