@@ -1543,6 +1543,7 @@ enum duration_type
     DUR_TOXIC_RADIANCE,
     DUR_RECITE,
     DUR_GRASPING_ROOTS,
+    DUR_SLEEP_IMMUNITY,
     NUM_DURATIONS
 };
 

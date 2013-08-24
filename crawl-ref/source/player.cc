@@ -7689,7 +7689,7 @@ void player::hibernate(int)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!can_hibernate())
+    if (!can_hibernate() || duration[DUR_SLEEP_IMMUNITY])
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
@@ -7709,7 +7709,7 @@ void player::put_to_sleep(actor*, int power)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!can_sleep())
+    if (!can_sleep() || duration[DUR_SLEEP_IMMUNITY])
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
@@ -7730,6 +7730,7 @@ void player::awake()
     ASSERT(!crawl_state.game_is_arena());
 
     duration[DUR_SLEEP] = 0;
+    duration[DUR_SLEEP_IMMUNITY] = 1;
     mpr("You wake up.");
     flash_view(BLACK);
 }
