@@ -3280,7 +3280,7 @@ static string _monster_stat_description(const monster_info& mi)
         else if (mons_class_flag(mi.type, M_SPELLCASTER) && book != MST_NO_SPELLS)
             result << " possesses the following magical abilities: ";
 
-        vector<mon_spellbook_type> books = _get_spellbook_list(mon);
+        vector<mon_spellbook_type> books = mons_spellbook_list(mon);
 
         // Loop through books and display spells/abilities for each of them
         int num_books = books.size();
