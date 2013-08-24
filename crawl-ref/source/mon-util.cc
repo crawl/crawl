@@ -2088,13 +2088,12 @@ monster_type random_draconian_monster_species()
 // If a monster has only one spellbook, it is specified in mon-data.h.
 // If it has multiple books, mon-data.h sets the book to MST_NO_SPELLS,
 // and the books are accounted for here.
-vector<mon_spellbook_type> mons_spellbook_list(monster* mon)
+vector<mon_spellbook_type> mons_spellbook_list(monster_type mon_type)
 {
     vector<mon_spellbook_type> books;
-    const monsterentry *m = get_monster_data(mon->type);
+    const monsterentry *m = get_monster_data(mon_type);
     mon_spellbook_type book = (m->sec);
 
-    int mon_type = mon->type;
     switch (mon_type)
     {
     case MONS_HELL_KNIGHT:
@@ -2179,7 +2178,7 @@ vector<mon_spellbook_type> mons_spellbook_list(monster* mon)
 
 static void _mons_load_spells(monster* mon)
 {
-    vector<mon_spellbook_type> books = mons_spellbook_list(mon);
+    vector<mon_spellbook_type> books = mons_spellbook_list(mon->type);
     mon_spellbook_type book = books[random2(books.size())];
 
     if (book == MST_GHOST)

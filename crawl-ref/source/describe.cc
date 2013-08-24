@@ -3274,8 +3274,8 @@ static string _monster_stat_description(const monster_info& mi)
     {
         const bool caster = mons_class_flag(mi.type, M_ACTUAL_SPELLS);
         const bool priest = mons_class_flag(mi.type, M_PRIEST);
-        monster* mon = monster_at(mi.pos);
-        const monsterentry *m = get_monster_data(mon->type);
+
+        const monsterentry *m = get_monster_data(mi.type);
         mon_spellbook_type book = (m->sec);
         result << uppercase_first(pronoun);
 
@@ -3299,7 +3299,7 @@ static string _monster_stat_description(const monster_info& mi)
                    << (priest ? "divine" : "magical") << " abilities: \n";
         }
 
-        vector<mon_spellbook_type> books = mons_spellbook_list(mon);
+        vector<mon_spellbook_type> books = mons_spellbook_list(mi.type);
 
         // Loop through books and display spells/abilities for each of them
         int num_books = books.size();
