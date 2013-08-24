@@ -327,6 +327,8 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
 bool mons_has_ranged_attack(const monster* mon);
 bool mons_has_known_ranged_attack(const monster* mon);
 bool mons_can_attack(const monster* mon);
+bool mons_has_incapacitating_spell(const monster* mon, const actor* foe);
+bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe);
 
 vector<mon_spellbook_type> mons_spellbook_list(monster_type mon);
 
