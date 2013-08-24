@@ -424,6 +424,12 @@ bool melee_attack::handle_phase_attempted()
         to_hit = AUTOMATIC_HIT;
         needs_message = false;
     }
+    else if (attacker->is_monster()
+             && mons_class_flag(attacker->as_monster()->type, M_STABBER)
+             && defender && defender->asleep())
+    {
+        to_hit = AUTOMATIC_HIT;
+    }
 
     attack_occurred = true;
 
@@ -5729,7 +5735,11 @@ int melee_attack::calc_damage()
                              &&!defender->can_see(attacker))))
         {
             if (mons_class_flag(as_mon->type, M_STABBER))
+            {
                 half_ac = true;
+                if (damage * 2 < damage_max)
+                    damage = damage_max / 2;
+            }
 
             damage = damage * 5 / 2;
             dprf(DIAG_COMBAT, "Stab damage vs %s: %d",
