@@ -117,6 +117,8 @@ function ($, comm, client, util, settings) {
         var input = $("<input class='text' type='text'>");
         prompt.append(input);
 
+        if ("prefill" in msg)
+            input.val(msg.prefill)
         input.focus();
 
         function restore()
@@ -136,6 +138,8 @@ function ($, comm, client, util, settings) {
             {
                 var enter = String.fromCharCode(13);
                 var text = input.val() + enter;
+                // ctrl-u to wipe any pre-fill
+                comm.send_message("key", { keycode: 21 });
                 comm.send_message("input", { text: text});
                 ev.preventDefault();
                 return false;
