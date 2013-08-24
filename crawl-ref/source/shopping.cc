@@ -2964,7 +2964,7 @@ void ShoppingListMenu::draw_title()
                            menu_action == ACT_EXAMINE ? "examine" :
                                                         "delete";
         draw_title_suffix(formatted_string::parse_string(make_stringf(
-            "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
+            "<lightgrey>  [<w>a-z</w>: %-8s <w>?</w>/<w>!</w>: change action]",
             verb)), false);
     }
 }
