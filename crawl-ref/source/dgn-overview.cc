@@ -893,32 +893,72 @@ void annotate_level()
 
 void do_annotate(level_id& li)
 {
-    if (!get_level_annotation(li).empty())
+    int keyin = 'r';
+    string prompt;
+
+    // Only look for player-written annotations, do not consider ones
+    // caused by uniques, player ghost or things in travel exclusions
+    string cur_annotation = get_level_annotation(li, true, true);
+
+    if (!cur_annotation.empty())
     {
-        mpr("Current level annotation: " +
-            colour_string(get_level_annotation(li, true, true), LIGHTGREY),
+        mpr("Current level annotation for " + li.describe() + ": "
+            + colour_string(cur_annotation, LIGHTGREY),
             MSGCH_PROMPT);
+        mpr("You can (<w>a</w>)dd to, (<w>r</w>)eplace or (<w>c</w>)lear"
+            " the annotation.", MSGCH_PROMPT);
+        keyin = toalower(getch_ck());
     }
 
-    const string prompt = "New annotation for " + li.describe()
-                          + " (include '!' for warning): ";
+    switch (keyin)
+    {
+    case 'c':
+        mpr("Cleared annotation.");
+        level_annotations.erase(li);
+        return;
+    case 'a':
+        prompt = "Add to annotation for " + li.describe() + ": ";
+        break;
+    case 'r':
+        prompt = "New annotation for " + li.describe()
+                 + " (include '<lightred>!</lightred>' for warning): ";
+        break;
+    default:
+        canned_msg(MSG_OK);
+        return;
+    }
 
     char buf[77];
     if (msgwin_get_line_autohist(prompt, buf, sizeof(buf)))
         return;
 
-    if (*buf)
-        level_annotations[li] = buf;
-    else if (get_level_annotation(li, true).empty())
-        canned_msg(MSG_OK);
-    else
+    switch (keyin)
+    {
+    case 'a':
+        if (*buf)
+            level_annotations[li] += ", " + string(buf);
+        else
+            canned_msg(MSG_OK);
+        break;
+    case 'r':
+        if (*buf)
+        {
+            level_annotations[li] = buf;
+            break;
+        }
+        // The old way of clearing annotations: replace them with nothing
         if (yesno("Really clear the annotation?", true, 'n'))
         {
-            mpr("Cleared.");
+            mpr("Cleared annotation.");
             level_annotations.erase(li);
         }
         else
             canned_msg(MSG_OK);
+        break;
+    default:
+        canned_msg(MSG_OK);
+        break;
+    }
 }
 
 void clear_level_annotations(level_id li)
