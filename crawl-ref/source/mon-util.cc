@@ -3245,6 +3245,50 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
     return false;
 }
 
+// Returns whether the monster has a spell which is theoretically capable of
+// causing an incapacitation state in the target foe (ie: it can cast sleep
+// and the foe is not immune to being put to sleep)
+//
+// Note that this only current checks for inherent obvious immunity (ie: sleep
+// immunity from being undead) and not immunity that might be granted by gear
+// (such as an amulet of clarity or stasis)
+bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
+{
+    if (mon->can_use_spells())
+    {
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
+            switch(mon->spells[i])
+            {
+                case SPELL_SLEEP:
+                    if (foe->can_sleep())
+                        return true;
+                    break;
+
+                case SPELL_HIBERNATION:
+                    if (foe->can_hibernate(false, true))
+                        return true;
+                    break;
+
+                case SPELL_CONFUSE:
+                case SPELL_MASS_CONFUSION:
+                case SPELL_PARALYSE:
+                    return true;
+
+                case SPELL_PETRIFY:
+                    if (foe->res_petrify())
+                        return true;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    return false;
+}
+
 static bool _mons_has_ranged_ability(const monster* mon)
 {
     // [ds] FIXME: Get rid of special abilities and remove this.
@@ -3300,6 +3344,43 @@ bool mons_has_ranged_attack(const monster* mon)
 {
     return mons_has_ranged_spell(mon, true) || _mons_has_ranged_ability(mon)
            || _mons_has_usable_ranged_weapon(mon);
+}
+
+bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe)
+{
+    if (_mons_has_usable_ranged_weapon(mon))
+    {
+        monster* mnc = const_cast<monster* >(mon);
+        const item_def *missile = mnc->missiles();
+
+        if (missile && missile->sub_type == MI_THROWING_NET)
+            return true;
+        else if (missile && missile->sub_type == MI_NEEDLE)
+        {
+            switch (get_ammo_brand(*missile))
+            {
+                // Not actually incapacitating, but marked as such so that
+                // assassins will prefer using it while ammo remains
+                case SPMSL_CURARE:
+                    if (!foe->res_poison())
+                        return true;
+
+                case SPMSL_SLEEP:
+                    if (foe->can_sleep())
+                        return true;
+                    break;
+
+                case SPMSL_CONFUSION:
+                case SPMSL_PARALYSIS:
+                    return true;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    return false;
 }
 
 static bool _mons_starts_with_ranged_weapon(monster_type mc)
