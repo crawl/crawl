@@ -893,71 +893,28 @@ void annotate_level()
 
 void do_annotate(level_id& li)
 {
-    ucs_t keyin = 'r';
-    string prompt;
-
-    // Only look for player-written annotations, do not consider ones
-    // caused by uniques, player ghost or things in travel exclusions
-    string cur_annotation = get_level_annotation(li, true, true);
-
-    if (!cur_annotation.empty())
+    string old = get_level_annotation(li, true, true);
+    if (!old.empty())
     {
-        mpr("Current level annotation for " + li.describe() + ": "
-            + colour_string(cur_annotation, LIGHTGREY),
+        mpr("Current level annotation: " +
+            colour_string(old, LIGHTGREY),
             MSGCH_PROMPT);
-        mpr("You can (<w>a</w>)dd to, (<w>r</w>)eplace or (<w>c</w>)lear"
-            " the annotation.", MSGCH_PROMPT);
-        keyin = toalower(getch_ck());
     }
 
-    switch (keyin)
-    {
-    case 'c':
-        mpr("Cleared annotation.");
-        level_annotations.erase(li);
-        return;
-    case 'a':
-        prompt = "Add to annotation for " + li.describe() + ": ";
-        break;
-    case 'r':
-        prompt = "New annotation for " + li.describe()
-                 + " (include '<lightred>!</lightred>' for warning): ";
-        break;
-    default:
-        canned_msg(MSG_OK);
-        return;
-    }
+    const string prompt = "New annotation for " + li.describe()
+                          + " (include '!' for warning): ";
 
     char buf[77];
-    if (msgwin_get_line_autohist(prompt, buf, sizeof(buf)))
-        return;
-
-    switch (keyin)
-    {
-    case 'a':
-        if (*buf)
-            level_annotations[li] += ", " + string(buf);
-        else
-            canned_msg(MSG_OK);
-        break;
-    case 'r':
-        if (*buf)
-        {
-            level_annotations[li] = buf;
-            break;
-        }
-        // The old way of clearing annotations: replace them with nothing
-        if (yesno("Really clear the annotation?", true, 'n'))
-        {
-            mpr("Cleared annotation.");
-            level_annotations.erase(li);
-        }
-        else
-            canned_msg(MSG_OK);
-        break;
-    default:
+    if (msgwin_get_line_autohist(prompt, buf, sizeof(buf), old))
         canned_msg(MSG_OK);
-        break;
+    else if (old == buf)
+        canned_msg(MSG_OK);
+    else if (*buf)
+        level_annotations[li] = buf;
+    else
+    {
+        mpr("Cleared annotation.");
+        level_annotations.erase(li);
     }
 }
 
