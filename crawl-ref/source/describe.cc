@@ -2715,7 +2715,7 @@ void inscribe_item(item_def &item, bool msgwin)
         _safe_newline();
         prompt = "<cyan>" + prompt + "</cyan>";
         formatted_string::parse_string(prompt).display();
-        ret = cancelable_get_line(buf, sizeof buf, NULL, NULL,
+        ret = cancellable_get_line(buf, sizeof buf, NULL, NULL,
                                   item.inscription);
     }
 

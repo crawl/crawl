@@ -1284,7 +1284,7 @@ void wizard_mod_tide()
              TIDE_MULTIPLIER);
         mpr("");
         const int res =
-            cancelable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
+            cancellable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
         mesclr(true);
         if (key_is_escape(res))
             break;

@@ -177,7 +177,7 @@ void wizard_create_spec_monster_name()
 {
     char specs[1024];
     mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
+    if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
         return;
@@ -478,7 +478,7 @@ void wizard_spawn_control()
         mprf(MSGCH_PROMPT, "Set monster spawn rate to what? (now %d, lower value = higher rate) ",
              env.spawn_random_rate);
 
-        if (!cancelable_get_line(specs, sizeof(specs)))
+        if (!cancellable_get_line(specs, sizeof(specs)))
         {
             const int rate = atoi(specs);
             if (rate || specs[0] == '0')
@@ -506,7 +506,7 @@ void wizard_spawn_control()
         mprf(MSGCH_PROMPT, "Spawn how many random monsters (max %d)? ",
              max_spawn);
 
-        if (!cancelable_get_line(specs, sizeof(specs)))
+        if (!cancellable_get_line(specs, sizeof(specs)))
         {
             const int num = min(atoi(specs), max_spawn);
             if (num > 0)
@@ -737,7 +737,7 @@ void wizard_dismiss_all_monsters(bool force_all)
     {
         mpr("What monsters to dismiss (ENTER for all, \"harmful\", \"mobile\" or a regex)? ",
             MSGCH_PROMPT);
-        bool validline = !cancelable_get_line_autohist(buf, sizeof buf);
+        bool validline = !cancellable_get_line_autohist(buf, sizeof buf);
 
         if (!validline)
         {
@@ -1365,7 +1365,7 @@ void debug_miscast(int target_index)
 
     char specs[100];
     mpr("Miscast which school or spell, by name? ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
+    if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
         return;
@@ -1420,7 +1420,7 @@ void debug_miscast(int target_index)
              MSGCH_PROMPT);
     }
 
-    if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
+    if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
         return;

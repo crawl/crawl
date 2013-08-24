@@ -3490,7 +3490,7 @@ bool get_item_by_name(item_def *item, char* specs,
 
         if (item->base_type == OBJ_UNASSIGNED)
         {
-            // Rune or deck creation canceled, clean up item->
+            // Rune or deck creation cancelled, clean up item->
             return false;
         }
     }

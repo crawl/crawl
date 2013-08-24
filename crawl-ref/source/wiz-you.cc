@@ -211,7 +211,7 @@ void wizard_cast_spec_spell(void)
     int spell;
 
     mpr("Cast which spell? ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist(specs, sizeof(specs))
+    if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
         canned_msg(MSG_OK);
@@ -241,7 +241,7 @@ void wizard_memorise_spec_spell(void)
     int spell;
 
     mpr("Memorise which spell? ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist(specs, sizeof(specs))
+    if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
         canned_msg(MSG_OK);
@@ -334,7 +334,7 @@ void wizard_set_piety()
     mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
          you.piety);
     char buf[30];
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
     {
         canned_msg(MSG_OK);
         return;
@@ -355,7 +355,7 @@ void wizard_set_piety()
         mprf(MSGCH_PROMPT, "Enter new interest (current = %d, Enter for 0): ",
              you.gift_timeout);
 
-        if (cancelable_get_line_autohist(buf, sizeof buf))
+        if (cancellable_get_line_autohist(buf, sizeof buf))
         {
             canned_msg(MSG_OK);
             return;
@@ -675,7 +675,7 @@ void wizard_set_abyss()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
-    if (!cancelable_get_line_autohist(buf, sizeof buf))
+    if (!cancellable_get_line_autohist(buf, sizeof buf))
         abyss_teleport(true);
 
     uint32_t x = 0, y = 0, z = 0;
@@ -687,7 +687,7 @@ void wizard_set_stats()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
         return;
 
     int sstr = you.strength(false),
@@ -849,7 +849,7 @@ void wizard_edit_durations(void)
 
     char buf[80];
 
-    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
+    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;
@@ -967,7 +967,7 @@ void wizard_set_xl()
 {
     mprf(MSGCH_PROMPT, "Enter new experience level: ");
     char buf[30];
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
     {
         canned_msg(MSG_OK);
         return;

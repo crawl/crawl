@@ -239,7 +239,7 @@ static monster* _init_fsim()
         {
             char specs[100];
             mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
-            if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
+            if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
             {
                 canned_msg(MSG_OK);
                 return NULL;

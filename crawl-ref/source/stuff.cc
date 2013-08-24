@@ -545,7 +545,7 @@ bool yes_or_no(const char* fmt, ...)
 
     mprf(MSGCH_PROMPT, "%s? (Confirm with \"yes\".) ", buf);
 
-    if (cancelable_get_line(buf, sizeof buf))
+    if (cancellable_get_line(buf, sizeof buf))
         return false;
     if (strcasecmp(buf, "yes") != 0)
         return false;

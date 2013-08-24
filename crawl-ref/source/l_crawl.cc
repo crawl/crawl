@@ -190,16 +190,16 @@ static int crawl_enable_more(lua_State *ls)
 }
 
 /*
---- Wrapper for <code>cancelable_get_line()</code>.  Since that takes
+--- Wrapper for <code>cancellable_get_line()</code>.  Since that takes
 -- a pre-allocated buffer, an arbitrary 500-character limit is
 -- currently imposed.
--- @return Either a string if one is input, or nil if input is canceled
+-- @return Either a string if one is input, or nil if input is cancelled
 function c_input_line() */
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
 
-    bool valid = !cancelable_get_line(linebuf, sizeof linebuf);
+    bool valid = !cancellable_get_line(linebuf, sizeof linebuf);
     if (valid)
         lua_pushstring(ls, linebuf);
     else

@@ -244,7 +244,7 @@ bool wizard_create_feature(const coord_def& pos)
     else
         mpr("Create which feature? ", MSGCH_PROMPT);
 
-    if (cancelable_get_line(specs, sizeof(specs)) || specs[0] == 0)
+    if (cancellable_get_line(specs, sizeof(specs)) || specs[0] == 0)
     {
         canned_msg(MSG_OK);
         return false;
@@ -696,7 +696,7 @@ void debug_place_map(bool primary)
     mesclr();
     mprf(MSGCH_PROMPT, primary ? "Enter map name: " :
          "Enter map name (prefix it with * for local placement): ");
-    if (cancelable_get_line(what_to_make, sizeof what_to_make,
+    if (cancellable_get_line(what_to_make, sizeof what_to_make,
                             primary ? &primary_hist : &mini_hist))
     {
         canned_msg(MSG_OK);
@@ -882,7 +882,7 @@ void wizard_abyss_speed()
     mprf(MSGCH_PROMPT, "Set abyss speed to what? (now %d, higher value = "
                        "higher speed) ", you.abyss_speed);
 
-    if (!cancelable_get_line(specs, sizeof(specs)))
+    if (!cancellable_get_line(specs, sizeof(specs)))
     {
         const int speed = atoi(specs);
         if (speed || specs[0] == '0')
