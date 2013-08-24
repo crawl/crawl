@@ -1212,7 +1212,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
                     for (distance_iterator di(newpos, false, true, 1 ); di; ++di)
                     {
                         if (di->distance_from(agent->pos())
-                            == newpos.distance_from(agent->pos())
+                                == newpos.distance_from(agent->pos())
                             && !actor_at(*di) && !feat_is_solid(grd(*di))
                             && act_list[i]->can_pass_through(*di)
                             && act_list[i]->is_habitable(*di))
