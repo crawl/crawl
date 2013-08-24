@@ -893,7 +893,7 @@ void annotate_level()
 
 void do_annotate(level_id& li)
 {
-    int keyin = 'r';
+    ucs_t keyin = 'r';
     string prompt;
 
     // Only look for player-written annotations, do not consider ones
