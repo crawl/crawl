@@ -358,15 +358,8 @@ static void _show_morgue(scorefile_entry& se)
 
     morgue_file.set_flags(flags, false);
     morgue_file.set_tag("morgue");
+    morgue_file.set_more();
 
-    morgue_file.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                            "<cyan>[ +/L-click : Page down.   - : Page up."
-                            "           Esc/R-click exits.]"));
-#else
-                            "<cyan>[ + : Page down.   - : Page up."
-                            "                           Esc exits.]"));
-#endif
     string morgue_base = morgue_name(se.get_name(), se.get_death_time());
     string morgue_path = morgue_directory()
                          + strip_filename_unsafe_chars(morgue_base) + ".txt";

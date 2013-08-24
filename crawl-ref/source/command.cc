@@ -208,17 +208,7 @@ static void _print_version(void)
     int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP | MF_EASY_EXIT;
     cmd_version.set_flags(flags, false);
     cmd_version.set_tag("version");
-
-    // FIXME: Allow for hiding Page down when at the end of the listing, ditto
-    // for page up at start of listing.
-    cmd_version.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                              "<cyan>[ +/L-click : Page down.   - : Page up."
-                              "           Esc/R-click exits.]"));
-#else
-                              "<cyan>[ + : Page down.   - : Page up."
-                              "                           Esc exits.]"));
-#endif
+    cmd_version.set_more();
 
     cmd_version.add_text(_get_version_information(), true);
     cmd_version.add_text(_get_version_features(), true);
@@ -1864,17 +1854,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
         flags |= MF_EASY_EXIT;
     cmd_help.set_flags(flags, false);
     cmd_help.set_tag("help");
-
-    // FIXME: Allow for hiding Page down when at the end of the listing, ditto
-    // for page up at start of listing.
-    cmd_help.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                            "<cyan>[ +/L-click : Page down.   - : Page up."
-                            "           Esc/R-click exits.]"));
-#else
-                            "<cyan>[ + : Page down.   - : Page up."
-                            "                           Esc exits.]"));
-#endif
+    cmd_help.set_more();
 
     if (with_manual)
     {
