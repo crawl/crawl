@@ -2702,96 +2702,46 @@ void inscribe_item(item_def &item, bool msgwin)
         mpr_nocap(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
     const bool is_inscribed = !item.inscription.empty();
+    string prompt = is_inscribed ? "Replace inscription with what? "
+                                 : "Inscribe with what? ";
 
-    string prompt;
-    int keyin;
-
-    if (is_inscribed)
+    char buf[79];
+    int ret;
+    if (msgwin)
+        ret = msgwin_get_line(prompt, buf, sizeof buf, NULL, item.inscription);
+    else
     {
-        prompt = "You can (a)dd to, (r)eplace or (c)lear the inscription.";
-
-        if (msgwin)
-            mpr(prompt.c_str(), MSGCH_PROMPT);
-        else
-        {
-            _safe_newline();
-            prompt = "<cyan>" + prompt + "</cyan>";
-            formatted_string::parse_string(prompt).display();
-
-            if (crawl_state.game_is_hints()
-                && wherey() <= get_number_of_lines() - 5)
-            {
-                hints_inscription_info(prompt);
-            }
-        }
+        _safe_newline();
+        prompt = "<cyan>" + prompt + "</cyan>";
+        formatted_string::parse_string(prompt).display();
+        ret = cancelable_get_line(buf, sizeof buf, NULL, NULL,
+                                  item.inscription);
     }
 
-    keyin = (is_inscribed ? getch_ck() : 'i');
-    keyin = toalower(keyin);
-    switch (keyin)
+    if (ret)
     {
-    case 'c':
-        item.inscription.clear();
-        break;
-    case 'a':
-    case 'i':
-    case 'r':
-    {
-        if (!is_inscribed)
-            prompt = "Inscribe with what? ";
-        else if (keyin == 'r')
-            prompt = "Replace inscription with what? ";
-        else
-            prompt = "Add what to inscription? ";
-
-        char buf[79];
-        int ret;
-        if (msgwin)
-            ret = msgwin_get_line(prompt, buf, sizeof buf);
-        else
-        {
-            _safe_newline();
-            prompt = "<cyan>" + prompt + "</cyan>";
-            formatted_string::parse_string(prompt).display();
-            ret = cancelable_get_line(buf, sizeof buf);
-        }
-
-        if (!ret)
-        {
-            // Strip spaces from the end.
-            for (int i = strlen(buf) - 1; i >= 0; --i)
-            {
-                if (isspace(buf[i]))
-                    buf[i] = 0;
-                else
-                    break;
-            }
-
-            if (strlen(buf) > 0)
-            {
-                if (is_inscribed && keyin == 'r')
-                    item.inscription = string(buf);
-                else
-                {
-                    if (is_inscribed)
-                        item.inscription += ", ";
-
-                    item.inscription += string(buf);
-                }
-            }
-        }
-        else if (msgwin)
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        break;
-    }
-    default:
         if (msgwin)
             canned_msg(MSG_OK);
         return;
     }
+
+    // Strip spaces from the end.
+    for (int i = strlen(buf) - 1; i >= 0; --i)
+    {
+        if (isspace(buf[i]))
+            buf[i] = 0;
+        else
+            break;
+    }
+
+    if (item.inscription == buf)
+    {
+        if (msgwin)
+            canned_msg(MSG_OK);
+        return;
+    }
+
+    item.inscription = buf;
 
     if (msgwin)
     {
