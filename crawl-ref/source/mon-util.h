@@ -328,7 +328,7 @@ bool mons_has_ranged_attack(const monster* mon);
 bool mons_has_known_ranged_attack(const monster* mon);
 bool mons_can_attack(const monster* mon);
 
-vector<mon_spellbook_type> mons_spellbook_list(monster* mon);
+vector<mon_spellbook_type> mons_spellbook_list(monster_type mon);
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
