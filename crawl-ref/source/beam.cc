@@ -2691,12 +2691,10 @@ void bolt::affect_ground()
         }
     }
 
-    if (affects_items)
-    {
-        if (is_explosion)
-            expose_items_to_element(flavour, pos(), 5);
-        affect_place_clouds();
-    }
+    if (affects_items && is_explosion)
+        expose_items_to_element(flavour, pos(), 5);
+
+    affect_place_clouds();
 }
 
 bool bolt::is_fiery() const
