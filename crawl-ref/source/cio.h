@@ -56,7 +56,8 @@ void nowrap_eol_cprintf(PRINTF(0, ));
 int cancelable_get_line(char *buf,
                          int len,
                          input_history *mh = NULL,
-                         int (*keyproc)(int &c) = NULL);
+                         int (*keyproc)(int &c) = NULL,
+                         const string &fill = "");
 
 // Do not use this templated function directly.  Use the macro below instead.
 template<int> static int cancelable_get_line_autohist_temp(char *buf, int len)
@@ -232,6 +233,7 @@ public:
     typedef int (*keyproc)(int &key);
 
     int read_line(bool clear_previous = true);
+    int read_line(const string &prefill);
 
     string get_text() const;
 
