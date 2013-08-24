@@ -2260,9 +2260,7 @@ void check_grasping_roots(actor* act, bool quiet)
             you.redraw_evasion = true;
         }
         else
-        {
             act->as_monster()->del_ench(ENCH_GRASPING_ROOTS);
-        }
     }
 }
 
