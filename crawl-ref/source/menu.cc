@@ -248,6 +248,21 @@ void Menu::set_more(const formatted_string &fs)
     more = fs;
 }
 
+void Menu::set_more()
+{
+    set_more(formatted_string::parse_string(
+#ifdef USE_TILE_LOCAL
+        "<cyan>[ <w>+</w>, <w>></w>, <w>Space</w> or <w>L-click</w>: Page down."
+        "   <w>-</w> or <w><<</w>: Page up."
+        "   <w>Esc</w> or <w>R-click</w> exits.]"
+#else
+        "<cyan>[ <w>+</w>, <w>></w> or <w>Space</w>: Page down."
+        "   <w>-</w> or <w><<</w>: Page up."
+        "                       <w>Esc</w> exits.]"
+#endif
+    ));
+}
+
 void Menu::set_highlighter(MenuHighlighter *mh)
 {
     if (highlighter != mh)

@@ -2273,15 +2273,9 @@ static char _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
+
     overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
-    overview.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                        "<cyan>[ +/L-click : Page down.   - : Page up."
-                        "           Esc/R-click exits.]"));
-#else
-                        "<cyan>[ + : Page down.   - : Page up."
-                        "                           Esc exits.]"));
-#endif
+    overview.set_more();
     overview.set_tag("resists");
 
     overview.add_text(_overview_screen_title(get_number_of_cols()));
@@ -2292,7 +2286,6 @@ static char _get_overview_screen_results()
             overview.add_item_formatted_string(blines[i]);
         overview.add_text(" ");
     }
-
 
     {
         vector<char> equip_chars;
