@@ -202,7 +202,7 @@ MONS:    stone golem, insubstantial wisp, jelly
 KMONS:   8 = spider
 KMONS:   9 = porcupine
 # no monster trees, liches are sentient spellcasters
-KMONS:   D = dragon
+KMONS:   D = fire dragon
 KITEM:   D = randbook disc:transmutation numspells:5 / \
              randbook disc:transmutation numspells:6, star_item
 COLOUR:  .01234567D = lightmagenta

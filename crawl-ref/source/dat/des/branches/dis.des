@@ -222,7 +222,7 @@ KMONS:   E = orb of fire
 KMONS:   F = ancient lich
 KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
              battleaxe good_item | bardiche good_item | great mace good_item / \
-             dragon / ice dragon / storm dragon / bone dragon w:5
+             fire dragon / ice dragon / storm dragon / bone dragon w:5
 KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
 KITEM:   % = % / * w:2
 : end

@@ -580,7 +580,7 @@ serpent_of_hell-dis MONS_SERPENT_OF_HELL_DIS
 serpent_of_hell-tar MONS_SERPENT_OF_HELL_TARTARUS
 %sdir mon/dragons
 wyvern MONS_WYVERN
-dragon MONS_DRAGON
+dragon MONS_FIRE_DRAGON
 hydra1 MONS_HYDRA
 hydra2
 hydra3

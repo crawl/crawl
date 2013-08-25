@@ -245,7 +245,7 @@ wind_drake CORPSE_WIND_DRAKE
 
 ## Dragons ('D')
 wyvern CORPSE_WYVERN
-dragon CORPSE_DRAGON
+dragon CORPSE_FIRE_DRAGON
 hydra5 CORPSE_HYDRA
 steam_dragon CORPSE_STEAM_DRAGON
 ice_dragon CORPSE_ICE_DRAGON

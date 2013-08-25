@@ -5979,7 +5979,7 @@ w:5
 @The_monster@ says @to_foe@, "Have ye nae fought a dwarf yet?"
 ## END Wiglaf ##
 %%%%
-############ XTAHUA ### An ancient dragon
+############ XTAHUA ### An ancient fire dragon
 Xtahua
 
 @_Xtahua_common_@

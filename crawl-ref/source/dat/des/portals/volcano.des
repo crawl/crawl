@@ -327,7 +327,7 @@ function fiery_guardians (e, village)
             -- "Lair"-esque monster pack.
             e.mons("komodo dragon w:3 / fire bat band / fire drake / manticore"
                    .. " / hell hound w:3")
-            e.mons("mottled dragon w:4 / lindwurm w:4 / dragon w:1"
+            e.mons("mottled dragon w:4 / lindwurm w:4 / fire dragon w:1"
                    .. " / fire crab w:1")
         elseif set_weight < 5 then
             -- "Demonic" monster pack.

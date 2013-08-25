@@ -631,7 +631,7 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
         }
     else
     {
-        mon = (coinflip()) ? MONS_DRAGON : MONS_ICE_DRAGON;
+        mon = (coinflip()) ? MONS_FIRE_DRAGON : MONS_ICE_DRAGON;
         if (pow >= 100)
             how_many = 2;
     }

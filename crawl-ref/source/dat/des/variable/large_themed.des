@@ -178,7 +178,7 @@ ENDMAP
 NAME:    dragon1_lemuel
 ORIENT:  northeast
 DEPTH:   D:9-20, Lair
-MONS:    patrolling dragon, patrolling ice dragon
+MONS:    patrolling fire dragon, patrolling ice dragon
 ITEM:    potion of flight / scroll of teleportation
 SUBST:   ! : ?x
 SHUFFLE: 1?/2W
@@ -1411,7 +1411,7 @@ SUBST:   BDFHJLNPR = .
     mons = add_mons(mons, "mottled dragon", semi(depth, 11, 21, 334))
     mons = add_mons(mons, "efreet", peak(depth, 13, 19, 52))
     mons = add_mons(mons, "wizard", peak(depth, 14, 22, 89))
-    mons = add_mons(mons, "dragon", peak(depth, 14, 24, 192))
+    mons = add_mons(mons, "fire dragon", peak(depth, 14, 24, 192))
     mons = add_mons(mons, "ice dragon", semi(depth, 17, 25, 136))
     mons = add_mons(mons, "necromancer band", peak(depth, 18, 24, 52))
     mons = add_mons(mons, "orc sorcerer", peak(depth, 21, 27, 25))

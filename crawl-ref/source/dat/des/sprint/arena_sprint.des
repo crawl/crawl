@@ -371,7 +371,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "troll / deep troll / iron troll",
                 "fire drake w:5 / swamp drake / swamp dragon /\
                     mottled dragon w:5 / komodo dragon w:5 / lindwurm w:5 /\
-                    dragon w:5 / ice dragon w:5 / storm dragon w:1",
+                    fire dragon w:5 / ice dragon w:5 / storm dragon w:1",
                 "necrophage / plague shambler / ghoul / bog body",
                 "shapeshifter",
                 -- Gimmicks
@@ -405,7 +405,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:5 sphinx",
                 "place:Hell w:30 / geryon w:1",
                 -- Fire, Air, Earth, Water, Death
-                "fire elemental / dragon / sun demon / efreet / hell hound /\
+                "fire elemental / fire dragon / sun demon / efreet / hell hound /\
                     hell hog / fire crab / fire giant / w:5 balrug / w:1 margery /\
                     w:2 azrael",
                 "storm dragon / air elemental / w:5 vapour / spriggan air mage /\
@@ -426,7 +426,7 @@ function arena_sprint_get_monster_set(round, boss)
                     lich / w:5 ancient lich / w:1 frederick",
                 "hill giant / stone giant / w:5 frost giant / w:5 fire giant /\
                     w:1 titan",
-                "dragon / ice dragon / storm dragon / w:5 shadow dragon /\
+                "fire dragon / ice dragon / storm dragon / w:5 shadow dragon /\
                     w:5 golden dragon / w:1 xtahua",
                 "yak / sheep / death yak / apis / catoblepas",
                 "glowing shapeshifter",
@@ -495,7 +495,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "very ugly thing",
                 "lich / w:5 ancient lich / w:5 unborn / w:2 boris",
                 "stone giant / frost giant / fire giant / titan / w:1 chuck",
-                "dragon / ice dragon / storm dragon / shadow dragon /\
+                "fire dragon / ice dragon / storm dragon / shadow dragon /\
                     golden dragon / quicksilver dragon / iron dragon / w:1 xtahua",
                 "glowing shapeshifter",
                 "hell knight w:20 / w:1 margery",
@@ -569,7 +569,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "yaktaur captain",
                 "lich / ancient lich",
                 "stone giant / w:15 frost giant / w:15 fire giant / w:15 titan",
-                "w:5 dragon / w:5 ice dragon / w:7 storm dragon / shadow dragon /\
+                "w:5 fire dragon / w:5 ice dragon / w:7 storm dragon / shadow dragon /\
                     golden dragon / quicksilver dragon / iron dragon",
                 "glowing shapeshifter hd:20",
                 "w:5 base draconian / nonbase draconian",

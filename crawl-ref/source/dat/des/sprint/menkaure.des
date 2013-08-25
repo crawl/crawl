@@ -584,7 +584,7 @@ ENDMAP
 
 NAME:   sprint2_smallroom_6
 TAGS:   sprint2_smallroom no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-MONS:   dragon
+MONS:   fire dragon
 KITEM:  $ = gold q:81
 MAP
 %*

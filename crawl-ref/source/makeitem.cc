@@ -271,7 +271,7 @@ void item_colour(item_def &item)
         {
         case ARM_FIRE_DRAGON_HIDE:
         case ARM_FIRE_DRAGON_ARMOUR:
-            item.colour = mons_class_colour(MONS_DRAGON);
+            item.colour = mons_class_colour(MONS_FIRE_DRAGON);
             break;
         case ARM_TROLL_HIDE:
         case ARM_TROLL_LEATHER_ARMOUR:

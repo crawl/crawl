@@ -98,7 +98,7 @@ static void _create_monster_hide(const item_def corpse)
         mons_class = MONS_TROLL;
     switch (mons_class)
     {
-    case MONS_DRAGON:         type = ARM_FIRE_DRAGON_HIDE;    break;
+    case MONS_FIRE_DRAGON:    type = ARM_FIRE_DRAGON_HIDE;    break;
     case MONS_TROLL:          type = ARM_TROLL_HIDE;          break;
     case MONS_ICE_DRAGON:     type = ARM_ICE_DRAGON_HIDE;     break;
     case MONS_STEAM_DRAGON:   type = ARM_STEAM_DRAGON_HIDE;   break;

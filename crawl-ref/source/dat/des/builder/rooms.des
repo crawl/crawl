@@ -129,10 +129,10 @@ function sroom_morgue(e)
               .. " | glaive" .. weap .. " | battleaxe" .. weap
     if you.branch() == "Geh" then
         mons[5] = "fire giant zombie w:5 / fire giant skeleton w:5 / "
-                 .. "dragon zombie w:5/ dragon skeleton w:5"
+                 .. "fire dragon zombie w:5 / fire dragon skeleton w:5"
         mons[6] = "flaming corpse / flayed ghost w:5"
         bodies = "fire giant corpse / fire giant skeleton / "
-                 .. "dragon corpse / dragon skeleton / nothing w:60"
+                 .. "fire dragon corpse / fire dragon skeleton / nothing w:60"
     elseif you.branch() == "Coc" then
         mons[5] = "hydra zombie w:5 / hydra simulacrum w:5 / "
                  .. "alligator snapping turtle zombie w:5 / "
@@ -244,14 +244,14 @@ function sroom_mythical_zoo(e)
         mons[8] = "harpy w:" .. (Z - 15)
     end
     if Z >= 19 then
-        mons[9] = "dragon w:" .. (Z * 2 - 37)
+        mons[9] = "fire dragon w:" .. (Z * 2 - 37)
         mons[10] = "sphinx w:" .. (Z - 18)
     end
 
     if Z >= 21 then
        lord_mon = "catoblepas / sphinx w:40 / hell beast w:20 / phoenix w:20"
     elseif Z >= 16 then
-       lord_mon = "catoblepas / hydra w:40 / dragon w:35 / phoenix w:5"
+       lord_mon = "catoblepas / hydra w:40 / fire dragon w:35 / phoenix w:5"
     else
        lord_mon = "catoblepas / griffon w:40 / hydra w:40"
     end

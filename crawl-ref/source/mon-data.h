@@ -2838,6 +2838,19 @@ static monsterentry mondata[] =
 },
 
 // dragons ('D')
+{   // genus monster
+    MONS_DRAGON, 'D', GREEN, "dragon",
+    M_WARM_BLOOD | M_CANT_SPAWN,
+    MR_RES_POISON | mrd(MR_RES_FIRE, 2) | MR_VUL_COLD,
+    2400, 12, MONS_DRAGON, MONS_DRAGON, MH_NATURAL, -4,
+    { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 13},
+      {AT_TRAMPLE, AF_PLAIN, 13}, AT_NO_ATK },
+    { 12, 5, 5, 0 },
+    10, 8, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_WINGED, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
+},
+
 {
     MONS_WYVERN, 'D', LIGHTRED, "wyvern",
     M_WARM_BLOOD,
@@ -2851,10 +2864,10 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRAGON, 'D', GREEN, "dragon",
+    MONS_FIRE_DRAGON, 'D', GREEN, "fire dragon",
     M_WARM_BLOOD | M_FLEES,
     MR_RES_POISON | mrd(MR_RES_FIRE, 2) | MR_VUL_COLD,
-    2400, 12, MONS_DRAGON, MONS_DRAGON, MH_NATURAL, -4,
+    2400, 12, MONS_DRAGON, MONS_FIRE_DRAGON, MH_NATURAL, -4,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 13},
       {AT_TRAMPLE, AF_PLAIN, 13}, AT_NO_ATK },
     { 12, 5, 5, 0 },
@@ -6088,7 +6101,7 @@ static monsterentry mondata[] =
     MONS_XTAHUA, 'D', RED, "Xtahua",
     M_UNIQUE | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_POISON | mrd(MR_RES_FIRE, 2) | MR_VUL_COLD,
-    2400, 18, MONS_DRAGON, MONS_DRAGON, MH_NATURAL, -7,
+    2400, 18, MONS_DRAGON, MONS_FIRE_DRAGON, MH_NATURAL, -7,
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 17},
       {AT_TRAMPLE, AF_PLAIN, 20}, AT_NO_ATK },
     { 19, 0, 0, 133 },

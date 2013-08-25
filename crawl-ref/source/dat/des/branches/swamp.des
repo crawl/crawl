@@ -1034,7 +1034,7 @@ WEIGHT:  20
 ORIENT:  float
 TAGS:    no_rotate
 MONS:    swamp dragon, swamp drake, hydra
-KMONS:   O = the lernaean hydra w:2 / dragon w:1 / ice dragon w:1 / hydra w:18
+KMONS:   O = the lernaean hydra w:2 / fire dragon w:1 / ice dragon w:1 / hydra w:18
 SHUFFLE: 12
 KITEM:   O = decaying rune of Zot
 KFEAT:   t = mangrove
@@ -1071,7 +1071,7 @@ WEIGHT:  20
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, fire drake, bog body
-KMONS:   O = the lernaean hydra w:2 / dragon w:1 / hydra w:19
+KMONS:   O = the lernaean hydra w:2 / fire dragon w:1 / hydra w:19
 KMONS:   P = the lernaean hydra w:2 / ice dragon w:1 / hydra w:19
 SHUFFLE: Od, 123, lLO4 / wWP5
 SUBST:   1 = 111., 2 = 2., 3 = 333.
@@ -1153,7 +1153,7 @@ NAME:    swamp_fiery
 PLACE:   Swamp:$
 TAGS:    no_pool_fixup no_rotate transparent
 ORIENT:  float
-MONS:    dragon, mottled dragon w:6 / lindwurm / fire crab w:8
+MONS:    fire dragon, mottled dragon w:6 / lindwurm / fire crab w:8
 MONS:    swamp dragon / hydra w:12, fire drake / swamp drake / steam dragon w:4
 SUBST:   L = ll., ' = t., " = t
 MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \

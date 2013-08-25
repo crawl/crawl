@@ -65,7 +65,7 @@ function base_monster_setup(e)
            hell hound band w:5 / neqoxec / simulacrum / sixfirhy /\
            chaos spawn / ice devil / sun demon / iron devil /\
            hell hog band w:5 / alligator band w:5 / minotaur")
-  e.kmons("D = dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
+  e.kmons("D = fire dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
            very ugly thing band w:5 / sphinx / iron troll /\
            orc warlord band / yaktaur captain band w:5 /\
            deep troll shaman band w:5 / fire giant w:20 / frost giant w:20 /\
@@ -148,7 +148,7 @@ function base_monster_setup(e)
            giant eyeball w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / death ooze / acid blob")
-  e.kmons("W = mottled dragon / steam dragon / dragon / ice dragon /\
+  e.kmons("W = mottled dragon / steam dragon / fire dragon / ice dragon /\
            storm dragon / swamp drake / lindwurm / fire drake /\
            shadow dragon w:5")
   e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
@@ -2078,7 +2078,7 @@ KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
 KMONS:  D = lich
 KMONS:  e = hydra w:20 / swamp dragon / mottled dragon / steam dragon /\
         catoblepas / dire elephant / fire drake / lindwurm / komodo dragon /\
-        basilisk / swamp drake / wyvern / dragon w:5 / ice dragon w:5
+        basilisk / swamp drake / wyvern / fire dragon w:5 / ice dragon w:5
 KMONS:  E = golden dragon
 SUBST:  1 : a, 2 : A
 SHUFFLE: aA / bB / cC / dD / eE
@@ -2120,7 +2120,7 @@ KMONS:  b = zombie w:20 / skeleton w:20 / simulacrum w:20 /\
         greater mummy / bone dragon / ghoul / skeletal warrior /\
         guardian mummy
 KMONS:  B = ancient lich
-KMONS:  c = dragon / ice dragon / shadow dragon / iron dragon w:5 /\
+KMONS:  c = fire dragon / ice dragon / shadow dragon / iron dragon w:5 /\
         quicksilver dragon w:5 / golden dragon / swamp dragon /\
         hydra
 KMONS:  C = quicksilver dragon

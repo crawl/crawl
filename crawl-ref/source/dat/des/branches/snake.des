@@ -613,7 +613,7 @@ TAGS:    allow_dup
 DEPTH:   Snake:1-4, Zot:1-4
 : if you.branch() == "Zot" then
 KMONS:  A = base draconian / green draconian w:4
-KMONS:  B = swamp dragon w:5 / dragon / ice dragon / storm dragon w:5
+KMONS:  B = swamp dragon w:5 / fire dragon / ice dragon / storm dragon w:5
 KMONS:  C = nonbase green draconian / draconian annihilator
 KMONS:  D = golden dragon / shadow dragon / quicksilver dragon w:5 / \
             iron dragon w:5
