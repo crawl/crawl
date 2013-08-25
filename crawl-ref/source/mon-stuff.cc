@@ -2012,44 +2012,45 @@ int monster_die(monster* mons, killer_type killer,
             // killing born-friendly monsters.
             if (good_kill
                 && (you_worship(GOD_MAKHLEB)
-                    || you_worship(GOD_SHINING_ONE)
-                       && (mons->is_evil() || mons->is_unholy()))
-                && !mons_is_object(mons->type)
-                && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0)
-                && !you.duration[DUR_DEATHS_DOOR])
-            {
-                if (you.hp < you.hp_max)
-                {
-                    int heal = (you_worship(GOD_MAKHLEB)) ?
-                                mons->hit_dice + random2(mons->hit_dice) :
-                                random2(1 + 2 * mons->hit_dice);
-                    if (heal > 0)
-                        mprf("You feel a little better.");
-                    inc_hp(heal);
-                }
-            }
-
-            if (good_kill
-                && (you_worship(GOD_VEHUMET)
+                    || you_worship(GOD_VEHUMET)
                     || you_worship(GOD_SHINING_ONE)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0))
             {
-                if (you.species != SP_DJINNI ?
-                        you.magic_points < you.max_magic_points :
-                        you.hp < you.hp_max)
+                int hp_heal = 0, mp_heal = 0;
+
+                switch (you.religion)
                 {
-                    int mana = (you_worship(GOD_VEHUMET)) ?
-                            1 + random2(mons->hit_dice / 2) :
-                            random2(2 + mons->hit_dice / 3);
-                    if (mana > 0)
-                    {
-                        mpr("You feel your power returning.");
-                        inc_mp(mana);
-                    }
+                case GOD_MAKHLEB:
+                    hp_heal = mons->hit_dice + random2(mons->hit_dice);
+                    break;
+                case GOD_SHINING_ONE:
+                    hp_heal = random2(1 + 2 * mons->hit_dice);
+                    mp_heal = random2(2 + mons->hit_dice / 3);
+                    break;
+                case GOD_VEHUMET:
+                    mp_heal = 1 + random2(mons->hit_dice / 2);
+                    break;
+                default:
+                    die("bad kill-on-healing god!");
+                }
+
+                if (you.species == SP_DJINNI)
+                    hp_heal += mp_heal * 2, mp_heal = 0;
+
+                if (hp_heal && you.hp < you.hp_max
+                    && !you.duration[DUR_DEATHS_DOOR])
+                {
+                    mprf("You feel a little better.");
+                    inc_hp(hp_heal);
+                }
+
+                if (mp_heal && you.magic_points < you.max_magic_points)
+                {
+                    mpr("You feel your power returning.");
+                    inc_mp(mp_heal);
                 }
             }
 
