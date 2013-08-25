@@ -4115,7 +4115,8 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
     {
         if (x_chance_in_y(pow, 15))
         {
-            hit_dice--;
+            if (hit_dice > 1)
+                hit_dice--;
             experience = 0;
         }
 
