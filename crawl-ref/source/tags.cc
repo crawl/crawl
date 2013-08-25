@@ -3367,6 +3367,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallInt(th, m.number);
     marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);
+    marshallInt(th, m.summoner);
 
     if (parts & MP_ITEMS)
         for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
@@ -3942,6 +3943,12 @@ void unmarshallMonster(reader &th, monster& m)
     m.number         = unmarshallInt(th);
     m.base_monster   = unmarshallMonType(th);
     m.colour         = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SUMMONER)
+        m.summoner = 0;
+    else
+#endif
+    m.summoner       = unmarshallInt(th);
 
     if (parts & MP_ITEMS)
         for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
