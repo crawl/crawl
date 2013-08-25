@@ -3897,6 +3897,13 @@ void unmarshallMonster(reader &th, monster& m)
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);
     m.hit_dice        = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    // Draining used to be able to take a monster to 0 HD, but that
+    // caused crashes if they tried to cast spells.
+    m.hit_dice = max(m.hit_dice, 1);
+#else
+    ASSERT(m.hit_dice > 0);
+#endif
     m.speed           = unmarshallByte(th);
     // Avoid sign extension when loading files (Elethiomel's hang)
     m.speed_increment = unmarshallUByte(th);
