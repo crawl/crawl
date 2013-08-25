@@ -530,7 +530,6 @@ static void _give_items_skills(const newgame_def& ng)
         {
             newgame_make_item(1, EQ_GLOVES, OBJ_ARMOUR, ARM_GLOVES, -1, 1, 0,
                               TGLOV_DESC_GAUNTLETS);
-            newgame_make_item(3, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS);
         }
         else
         {
@@ -990,6 +989,10 @@ static void _give_items_skills(const newgame_def& ng)
     // Zotdef: everyone gets bonus two potions of curing.
     if (crawl_state.game_is_zotdef())
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
+
+    // Give jumping boots to all species that can wear them for testing purposes
+    newgame_make_item(6, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS);
+    set_item_ego_type(you.inv[6], OBJ_ARMOUR, SPARM_JUMPING);
 
     if (weap_skill)
     {
