@@ -678,8 +678,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_RESTRICTED;
         }
     case WPN_FALCHION:
-        if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR)
-            return CC_BANNED;
         switch (ng.species)
         {
         case SP_HUMAN:

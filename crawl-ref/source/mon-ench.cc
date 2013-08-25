@@ -831,6 +831,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             mprf("%s toxic aura wanes.", name(DESC_ITS).c_str());
         break;
 
+    case ENCH_GRASPING_ROOTS_SOURCE:
+        if (!quiet && you.see_cell(pos()))
+            mpr("The grasping roots settle back into the ground.");
+
+        // Done here to avoid duplicate messages
+        if (you.duration[DUR_GRASPING_ROOTS])
+            check_grasping_roots(&you, true);
+
+        break;
+
     default:
         break;
     }
@@ -1797,6 +1807,15 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me);
         break;
 
+    case ENCH_GRASPING_ROOTS_SOURCE:
+        if (!apply_grasping_roots(this))
+            decay_enchantment(me);
+        break;
+
+    case ENCH_GRASPING_ROOTS:
+        check_grasping_roots(this);
+        break;
+
     default:
         break;
     }
@@ -1938,7 +1957,7 @@ static const char *enchant_names[] =
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
-    "toxic_radiance",
+    "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "buggy",
 };
 

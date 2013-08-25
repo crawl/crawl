@@ -155,6 +155,8 @@ static duration_def duration_data[] =
       MAGENTA, "Toxic", "radiating poison", "You are radiating toxic energy."},
     { DUR_RECITE, false,
       WHITE, "Recite", "reciting", "You are reciting Zin's Axioms of Law." },
+    { DUR_GRASPING_ROOTS, false,
+      BROWN, "Roots", "grasped by roots", "Your movement is impeded by grasping roots." },
 };
 
 static int duration_index[NUM_DURATIONS];

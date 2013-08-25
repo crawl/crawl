@@ -235,7 +235,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
                                       hurted, true);
 
         if (doEffects)
-            drain_exp(true, min(75, 25 + original * 2 / 3));
+            drain_exp(true, min(75, 35 + original * 2 / 3));
         break;
 
     case BEAM_ICE:
@@ -742,7 +742,7 @@ void lose_level(int death_source, const char *aux)
     if (you.experience_level == 1)
     {
         ouch(INSTANT_DEATH, death_source, KILLED_BY_DRAINING, aux);
-        // Return in case death was canceled via wizard mode
+        // Return in case death was cancelled via wizard mode
         return;
     }
 

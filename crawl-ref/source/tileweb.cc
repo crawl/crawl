@@ -655,10 +655,10 @@ void TilesFramework::_send_player(bool force_full)
         // Don't send more information than can be seen from the console HUD.
         // Compare _print_stats_contam and get_contamination_level
         int contam = you.magic_contamination;
-        if (contam >= 26)
-            contam = 26;
-        else if (contam >= 16)
-            contam = 16;
+        if (contam >= 26000)
+            contam = 26000;
+        else if (contam >= 16000)
+            contam = 16000;
         _update_int(force_full, c.contam, contam, "contam");
     }
 

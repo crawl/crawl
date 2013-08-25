@@ -1118,7 +1118,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_INK_CLOUD:
     case SPELL_SILENCE:
     case SPELL_AWAKEN_FOREST:
-    case SPELL_SUMMON_CANIFORMS:
+    case SPELL_DRUIDS_CALL:
     case SPELL_SUMMON_SPECTRAL_ORCS:
     case SPELL_REGENERATION:
     case SPELL_CORPSE_ROT:
@@ -1337,6 +1337,14 @@ static bool _valid_encircle_ally(const monster* caster, const monster* target,
             && target->pos().distance_from(foepos) > 1);
 }
 
+static bool _valid_druids_call_target(const monster* caller, const monster* callee)
+{
+    return (mons_aligned(caller, callee) && mons_is_beast(callee->type)
+            && !caller->see_cell(callee->pos())
+            && mons_habitat(callee) != HT_WATER
+            && mons_habitat(callee) != HT_LAVA);
+}
+
 // Checks to see if a particular spell is worth casting in the first place.
 static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 {
@@ -1530,7 +1538,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_DIMENSION_ANCHOR:
     {
         if ((monspell == SPELL_HIBERNATION || monspell == SPELL_SLEEP)
-            && (!foe || foe->asleep()))
+            && (!foe || foe->asleep()) || !foe->can_sleep())
         {
             ret = true;
             break;
@@ -1740,6 +1748,15 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_FREEZE:
         return (!foe || !adjacent(mon->pos(), foe->pos()));
+
+    case SPELL_DRUIDS_CALL:
+        // Don't cast unless there's at least one valid target
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (_valid_druids_call_target(mon, *mi))
+                return false;
+        }
+        return true;
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -2080,6 +2097,46 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     }
 }
 
+static void _cast_druids_call(const monster* mon)
+{
+    vector<monster*> mon_list;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (_valid_druids_call_target(mon, *mi))
+            mon_list.push_back(*mi);
+    }
+
+    random_shuffle(mon_list.begin(), mon_list.end());
+
+    // Can call a second low-HD monster if (and only if) the first called was
+    // also low-HD (otherwise this summons a single creature)
+    bool second = false;
+    for (unsigned int i = 0; i < mon_list.size(); ++i)
+    {
+        if (second && mon_list[i]->hit_dice > 10)
+            continue;
+
+        coord_def empty;
+        if (find_habitable_spot_near(mon->pos(), mons_base_type(mon_list[i]),
+                                     3, false, empty)
+            && mon_list[i]->move_to_pos(empty))
+        {
+            mon_list[i]->behaviour = BEH_SEEK;
+            mon_list[i]->foe = mon->foe;
+            mon_list[i]->add_ench(ENCH_MIGHT);
+            mon_list[i]->flags |= MF_WAS_IN_VIEW;
+            simple_monster_message(mon_list[i], " answers the druid's call!");
+
+            // If this is a low-HD monster, try to summon a second. Otherwise,
+            // we're done. (Only normal druids can ever summon two monsters)
+            if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10)
+                second = true;
+            else
+                return;
+        }
+    }
+}
+
 static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
 {
     double ang0 = atan2(p1.x - origin.x, p1.y - origin.y);
@@ -2270,8 +2327,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         return false;
     }
-    else if (random2(200) > mons->hit_dice + 50)
+    else if (random2(200) > mons->hit_dice + 50
+                            + ((mons_class_flag(mons->type, M_STABBER)
+                                && mons->pos() == mons->firing_pos) ? 75 : 0))
+    {
         return false;
+    }
     else if (spellcasting_poly && coinflip()) // 50% chance of not casting
         return false;
     else
@@ -2976,9 +3037,8 @@ static monster_type _pick_undead_summon()
 
 static monster_type _pick_vermin()
 {
-    return random_choose_weighted(8, MONS_ORANGE_RAT,
-                                  3, MONS_SPIDER,
-                                  3, MONS_REDBACK,
+    return random_choose_weighted(9, MONS_ORANGE_RAT,
+                                  5, MONS_REDBACK,
                                   2, MONS_TARANTELLA,
                                   1, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER,
@@ -4366,30 +4426,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_CANIFORMS: // Bears and wolves
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
-        summon_type = random_choose_weighted(
-                            10, MONS_WOLF,
-                             8, MONS_GRIZZLY_BEAR,
-                             0); // no polar bears
-
-        if (summon_type == MONS_WOLF)
-            sumcount2 = 1 + random2(mons->hit_dice / 6 + 1);
-        else
-            sumcount2 = 1 + random2(2);
-
-        if (summon_type == MONS_GRIZZLY_BEAR && mons->hit_dice < 9)
-            summon_type = MONS_BLACK_BEAR;
-
-        duration  = min(1 + mons->hit_dice / 5, 6);
-        for (int i = 0; i < sumcount2; ++i)
-        {
-            create_monster(mgen_data(summon_type, SAME_ATTITUDE(mons),
-                          mons, duration, spell_cast, mons->pos(),
-                          mons->foe, 0, god));
-        }
+    case SPELL_DRUIDS_CALL:
+        _cast_druids_call(mons);
         return;
 
     case SPELL_SUMMON_TWISTER:
@@ -4870,7 +4908,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_VERMIN:
         _do_high_level_summon(mons, monsterNearby, spell_cast,
-                              _pick_vermin, random_range(2, 3), god);
+                              _pick_vermin, one_chance_in(4) ? 3 : 2 , god);
         return;
     }
 

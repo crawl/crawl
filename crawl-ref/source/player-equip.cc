@@ -428,7 +428,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MUTAGENIC] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
-        contaminate_player(7, true);
+        contaminate_player(7000, true);
     }
 
     if (is_unrandom_artefact(item))
@@ -1416,7 +1416,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
                                   "");
             ident = ID_KNOWN_TYPE;
 
-            contaminate_player(pow(amount, 0.333), item_type_known(item));
+            // XXX: This can probably be improved.
+            contaminate_player(pow(amount, 0.333) * 1000, item_type_known(item));
 
             int dir = 0;
             if (you.duration[DUR_HASTE])

@@ -1973,7 +1973,9 @@ int monster_die(monster* mons, killer_type killer,
                                     mons->hit_dice, true, mons);
                 }
 
-                if (mons_is_slime(mons))
+                // Jiyva hates you killing slimes, but eyeballs
+                // mutation can confuse without you meaning it.
+                if (mons_is_slime(mons) && killer != KILL_YOU_CONF)
                 {
                     did_god_conduct(DID_KILL_SLIME, mons->hit_dice,
                                     true, mons);
@@ -2523,6 +2525,13 @@ int monster_die(monster* mons, killer_type killer,
         env.markers.add(marker);
         env.markers.clear_need_activate();
     }
+    // Give the treant a last chance to release its wasps if it is killed in a
+    // single blow from above half health
+    else if (mons->type == MONS_TREANT && !was_banished
+             && !mons->pacified() && (!summoned || duration > 0) && !wizard)
+    {
+        treant_release_wasps(mons);
+    }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())
@@ -2721,6 +2730,10 @@ void monster_cleanup(monster* mons)
     // So that a message is printed for the effect ending
     if (mons->has_ench(ENCH_CONTROL_WINDS))
         mons->del_ench(ENCH_CONTROL_WINDS);
+
+    // So proper messages are printed
+    if (mons->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
+        mons->del_ench(ENCH_GRASPING_ROOTS_SOURCE);
 
     // May have been constricting something. No message because that depends
     // on the order in which things are cleaned up: If the constrictee is

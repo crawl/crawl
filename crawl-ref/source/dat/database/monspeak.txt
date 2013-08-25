@@ -5344,35 +5344,6 @@ whispers
 
 ## END Norris ##
 %%%%
-############ PAN ### Lord of the satyrs
-Pan
-
-@_Pan_common_@
-
-w:5
-@_Pan_rare_@
-%%%%
-_Pan_common_
-VISUAL:@The_monster@ leers at @foe@.
-
-VISUAL:@The_monster@ twirls @possessive@ pipes idly.
-
-VISUAL:@The_monster@ raises @possessive@ pipes, ready for another tune.
-
-VISUAL:@The_monster@ ties some reeds together.
-
-VISUAL:@The_monster@ licks @possessive@ lips.
-%%%%
-_Pan_rare_
-
-@The_monster@ sighs @at_foe@, "Seen any nymphs lately?"
-
-@The_monster@ stares at @possessive@ pipes for a moment, mumbling, "No, that's
-not how it goes..."
-
-@The_monster@ says @to_foe@, "Put on a good show for me!"
-### END Pan
-%%%%
 ############ Pikel ######## A big kobold slaver!
 Pikel
 

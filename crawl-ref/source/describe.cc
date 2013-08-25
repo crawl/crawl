@@ -45,6 +45,7 @@
 #include "message.h"
 #include "mon-chimera.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 #include "output.h"
 #include "player.h"
 #include "quiver.h"
@@ -2708,96 +2709,46 @@ void inscribe_item(item_def &item, bool msgwin)
         mpr_nocap(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
     const bool is_inscribed = !item.inscription.empty();
+    string prompt = is_inscribed ? "Replace inscription with what? "
+                                 : "Inscribe with what? ";
 
-    string prompt;
-    int keyin;
-
-    if (is_inscribed)
+    char buf[79];
+    int ret;
+    if (msgwin)
+        ret = msgwin_get_line(prompt, buf, sizeof buf, NULL, item.inscription);
+    else
     {
-        prompt = "You can (a)dd to, (r)eplace or (c)lear the inscription.";
-
-        if (msgwin)
-            mpr(prompt.c_str(), MSGCH_PROMPT);
-        else
-        {
-            _safe_newline();
-            prompt = "<cyan>" + prompt + "</cyan>";
-            formatted_string::parse_string(prompt).display();
-
-            if (crawl_state.game_is_hints()
-                && wherey() <= get_number_of_lines() - 5)
-            {
-                hints_inscription_info(prompt);
-            }
-        }
+        _safe_newline();
+        prompt = "<cyan>" + prompt + "</cyan>";
+        formatted_string::parse_string(prompt).display();
+        ret = cancellable_get_line(buf, sizeof buf, NULL, NULL,
+                                  item.inscription);
     }
 
-    keyin = (is_inscribed ? getch_ck() : 'i');
-    keyin = toalower(keyin);
-    switch (keyin)
+    if (ret)
     {
-    case 'c':
-        item.inscription.clear();
-        break;
-    case 'a':
-    case 'i':
-    case 'r':
-    {
-        if (!is_inscribed)
-            prompt = "Inscribe with what? ";
-        else if (keyin == 'r')
-            prompt = "Replace inscription with what? ";
-        else
-            prompt = "Add what to inscription? ";
-
-        char buf[79];
-        int ret;
-        if (msgwin)
-            ret = msgwin_get_line(prompt, buf, sizeof buf);
-        else
-        {
-            _safe_newline();
-            prompt = "<cyan>" + prompt + "</cyan>";
-            formatted_string::parse_string(prompt).display();
-            ret = cancelable_get_line(buf, sizeof buf);
-        }
-
-        if (!ret)
-        {
-            // Strip spaces from the end.
-            for (int i = strlen(buf) - 1; i >= 0; --i)
-            {
-                if (isspace(buf[i]))
-                    buf[i] = 0;
-                else
-                    break;
-            }
-
-            if (strlen(buf) > 0)
-            {
-                if (is_inscribed && keyin == 'r')
-                    item.inscription = string(buf);
-                else
-                {
-                    if (is_inscribed)
-                        item.inscription += ", ";
-
-                    item.inscription += string(buf);
-                }
-            }
-        }
-        else if (msgwin)
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        break;
-    }
-    default:
         if (msgwin)
             canned_msg(MSG_OK);
         return;
     }
+
+    // Strip spaces from the end.
+    for (int i = strlen(buf) - 1; i >= 0; --i)
+    {
+        if (isspace(buf[i]))
+            buf[i] = 0;
+        else
+            break;
+    }
+
+    if (item.inscription == buf)
+    {
+        if (msgwin)
+            canned_msg(MSG_OK);
+        return;
+    }
+
+    item.inscription = buf;
 
     if (msgwin)
     {
@@ -3190,6 +3141,13 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     }
 }
 
+// Is the spell worth listing for a monster?
+static bool _interesting_mons_spell(spell_type spell)
+{
+    return spell != SPELL_NO_SPELL && spell != SPELL_MELEE
+           && spell != SPELL_CANTRIP;
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
@@ -3316,6 +3274,77 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " can see invisible.\n";
     else if (mons_class_flag(mi.type, M_SENSE_INVIS))
         result << uppercase_first(pronoun) << " can sense the presence of invisible creatures.\n";
+
+    // Show monster spells and spell-like abilities.
+    if (mons_class_flag(mi.type, M_SPELLCASTER))
+    {
+        const bool caster = mons_class_flag(mi.type, M_ACTUAL_SPELLS);
+        const bool priest = mons_class_flag(mi.type, M_PRIEST);
+
+        const monsterentry *m = get_monster_data(mi.type);
+        mon_spellbook_type book = (m->sec);
+        result << uppercase_first(pronoun);
+
+        // The combination of M_ACTUAL_SPELLS with MST_NO_SPELLS means multiple
+        // spellbooks.  cjo: the division here gets really arbitrary. For
+        // example, wretched stars cast mystic blast, but are not flagged with
+        // M_ACTUAL_SPELLS.  Possibly these should be combined.
+        //
+        if (caster && book == MST_NO_SPELLS)
+            result << " has mastered one of the following spellbooks:\n";
+        else if (caster)
+            result << " has mastered the following spells: ";
+        else if (book != MST_NO_SPELLS)
+        {
+            result << " possesses the following "
+                   << (priest ? "divine" : "magical") << " abilities: ";
+        }
+        else
+        {
+            result << " possesses one of the following sets of "
+                   << (priest ? "divine" : "magical") << " abilities: \n";
+        }
+
+        vector<mon_spellbook_type> books = mons_spellbook_list(mi.type);
+
+        // Loop through books and display spells/abilities for each of them
+        int num_books = books.size();
+        for (int i = 0; i < num_books; ++i)
+        {
+           // Create spell list containing no duplicate or irrelevant entries
+           book = books[i];
+           vector<spell_type> book_spells;
+           for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+           {
+               const spell_type spell = mspell_list[book].spells[j];
+               bool match = false;
+               for (unsigned int k = 0; k < book_spells.size(); ++k)
+                   if (book_spells[k] == spell)
+                       match = true;
+
+               if (!match && _interesting_mons_spell(spell))
+                   book_spells.push_back(spell);
+           }
+
+           // Special casing for Ogre Mages (they always get their first spell
+           // changed to Haste Other).
+           if (mi.type == MONS_OGRE_MAGE)
+               book_spells[0] = SPELL_HASTE_OTHER;
+
+           // Display spells for this book
+           if (num_books > 1)
+               result << (caster ? " Book " : " Set ") << i+1 << ": ";
+
+           for (unsigned int j = 0; j < book_spells.size(); ++j)
+           {
+               const spell_type spell = book_spells[j];
+               if (j > 0)
+                   result << ", ";
+               result << spell_title(spell);
+           }
+           result << "\n";
+        }
+    } // end if (mons_class_flag(mi.type, M_SPELLCASTER))
 
     // Unusual monster speed.
     const int speed = mi.base_speed();

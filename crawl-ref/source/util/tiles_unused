@@ -1,0 +1,28 @@
+#!/usr/bin/perl -w
+
+# This script lists tiles which are not even loaded by tiledefs.  This implies
+# being unused, although the converse is not true: tiles not listed by this
+# script have an enum and are included in textures, but that enum might be
+# never referenced anywhere.
+#
+# The logic for the UNUSED/ dir is reversed.
+
+for (qw(feat floor gui icons main player wall))
+{
+    open IN, "<", "rltiles/$_.d" or die "Tiledefs must be built.\n";
+    for (<IN>)
+    {
+        next unless m{^  (.+\.png) \\$};
+        $used{$1}++;
+    }
+    close IN;
+}
+
+open IN, "-|", 'cd rltiles && git ls-files' or die "Can't read ls-files.\n";
+for (<IN>)
+{
+    chomp;
+    next unless /\.png$/;
+    print "$_\n" unless !$used{$_} != !/^UNUSED/;
+}
+close IN;

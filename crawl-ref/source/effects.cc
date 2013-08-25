@@ -2079,6 +2079,106 @@ static void _rot_inventory_food(int time_delta)
     }
 }
 
+static void _handle_magic_contamination()
+{
+    int added_contamination = 0;
+
+    // Scale has been increased by a factor of 1000, but the effect now happens
+    // every turn instead of every 20 turns, so everything has been multiplied
+    // by 50 and scaled to you.time_taken.
+
+    if (you.duration[DUR_INVIS])
+        added_contamination += 30;
+
+    if (you.duration[DUR_HASTE])
+        added_contamination += 30;
+
+    // Is there a point to this? It's not even strong enough to cancel normal
+    // dissipation, so it only slows it down. Shouldn't it cancel dissipation
+    // like haste and invis do?
+    if (you.duration[DUR_FINESSE])
+        added_contamination += 20;
+
+    if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI)
+        added_contamination += 30;
+
+    // The Orb halves dissipation (well a bit more, I had to round it),
+    // but won't cause glow on its own -- otherwise it'd spam the player
+    // with messages about contamination oscillating near zero.
+    if (you.magic_contamination && orb_haloed(you.pos()))
+        added_contamination += 13;
+
+    // Normal dissipation
+    if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE])
+        added_contamination -= 25;
+
+    // Scaling to turn length
+    added_contamination = div_rand_round(added_contamination * you.time_taken,
+                                         BASELINE_DELAY);
+
+    contaminate_player(added_contamination, false);
+}
+
+static void _magic_contamination_effects()
+{
+    // [ds] Move magic contamination effects closer to b26 again.
+    const bool glow_effect = you.species == SP_DJINNI ?
+        get_contamination_level() > 2
+            && x_chance_in_y(you.magic_contamination, 24000):
+        get_contamination_level() > 1
+            && x_chance_in_y(you.magic_contamination, 12000);
+
+    if (glow_effect && is_sanctuary(you.pos()))
+    {
+        mpr("Your body momentarily shudders from a surge of wild "
+            "energies until Zin's power calms it.", MSGCH_GOD);
+    }
+    else if (glow_effect)
+    {
+        mpr("Your body shudders with the violent release "
+            "of wild energies!", MSGCH_WARN);
+
+        // For particularly violent releases, make a little boom.
+        if (you.magic_contamination > 10000 && coinflip())
+        {
+            bolt beam;
+
+            beam.flavour      = BEAM_RANDOM;
+            beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage       = dice_def(3,
+                                 div_rand_round(you.magic_contamination, 2000));
+            beam.target       = you.pos();
+            beam.name         = "magical storm";
+            beam.beam_source  = NON_MONSTER;
+            beam.aux_source   = "a magical explosion";
+            beam.ex_size      = max(1, min(9,
+                               div_rand_round(you.magic_contamination, 15000)));
+            beam.ench_power   = div_rand_round(you.magic_contamination, 200);
+            beam.is_explosion = true;
+
+            // Undead enjoy extra contamination explosion damage because
+            // the magical contamination has a harder time dissipating
+            // through non-living flesh. :-)
+            if (you.is_undead)
+                beam.damage.size *= 2;
+
+            beam.explode();
+        }
+
+        // We want to warp the player, not do good stuff!
+        mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+               "mutagenic glow", true,
+               coinflip(),
+               false, false, false, false,
+               you.species == SP_DJINNI);
+
+        // we're meaner now, what with explosions and whatnot, but
+        // we dial down the contamination a little faster if its actually
+        // mutating you.  -- GDL
+        contaminate_player(-(random2(you.magic_contamination / 4) + 1000));
+    }
+}
+
 // Get around C++ dividing integers towards 0.
 static int _div(int num, int denom)
 {
@@ -2109,6 +2209,10 @@ void handle_time()
     // Labyrinth and Abyss maprot.
     if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
         forget_map(true);
+
+    // Magic contamination from spells and Orb.
+    if (!crawl_state.game_is_arena())
+        _handle_magic_contamination();
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))
@@ -2173,104 +2277,15 @@ void handle_time()
         }
     }
 
+    // Bad effects from magic contamination.
+    if (coinflip())
+        _magic_contamination_effects();
+
     // Adjust the player's stats if s/he has the deterioration mutation.
     if (player_mutation_level(MUT_DETERIORATION)
         && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
         lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
-    }
-
-    int added_contamination = 0;
-
-    // Account for mutagenic radiation.  Invis and haste will give the
-    // player about .1 points per turn, mutagenic randarts will give
-    // about 1.5 points on average, so they can corrupt the player
-    // quite quickly.  Wielding one for a short battle is OK, which is
-    // as things should be.   -- GDL
-    if (you.duration[DUR_INVIS] && x_chance_in_y(6, 10))
-        added_contamination++;
-
-    if (you.duration[DUR_HASTE] && x_chance_in_y(6, 10))
-        added_contamination++;
-
-    if (you.duration[DUR_FINESSE] && x_chance_in_y(4, 10))
-        added_contamination++;
-
-    if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI
-        && x_chance_in_y(6, 10))
-    {
-        added_contamination++;
-    }
-
-    // The Orb adds .25 points per turn (effectively halving dissipation),
-    // but won't cause glow on its own -- otherwise it'd spam the player
-    // with messages about contamination oscillating near zero.
-    if (you.magic_contamination && orb_haloed(you.pos()) && one_chance_in(4))
-        added_contamination++;
-
-    // We take off about .5 points per turn.
-    if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
-        added_contamination--;
-
-    // Don't punish for this contamination.
-    // (Haste and invisibility already penalised earlier).
-    contaminate_player(added_contamination, false);
-
-    // Only check for badness once every other turn.
-    if (coinflip())
-    {
-        // [ds] Move magic contamination effects closer to b26 again.
-        const bool glow_effect = you.species == SP_DJINNI ?
-            get_contamination_level() > 2
-                && x_chance_in_y(you.magic_contamination, 24):
-            get_contamination_level() > 1
-                && x_chance_in_y(you.magic_contamination, 12);
-
-        if (glow_effect && is_sanctuary(you.pos()))
-        {
-            mpr("Your body momentarily shudders from a surge of wild "
-                "energies until Zin's power calms it.", MSGCH_GOD);
-        }
-        else if (glow_effect)
-        {
-            mpr("Your body shudders with the violent release "
-                "of wild energies!", MSGCH_WARN);
-
-            // For particularly violent releases, make a little boom.
-            // Undead enjoy extra contamination explosion damage because
-            // the magical contamination has a harder time dissipating
-            // through non-living flesh. :-)
-            if (you.magic_contamination > 10 && coinflip())
-            {
-                bolt beam;
-
-                beam.flavour      = BEAM_RANDOM;
-                beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-                beam.damage       = dice_def(3, you.magic_contamination
-                                             * (you.is_undead ? 4 : 2) / 4);
-                beam.target       = you.pos();
-                beam.name         = "magical storm";
-                beam.beam_source  = NON_MONSTER;
-                beam.aux_source   = "a magical explosion";
-                beam.ex_size      = max(1, min(9, you.magic_contamination / 15));
-                beam.ench_power   = you.magic_contamination * 5;
-                beam.is_explosion = true;
-
-                beam.explode();
-            }
-
-            // We want to warp the player, not do good stuff!
-            mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-                   "mutagenic glow", true,
-                   coinflip(),
-                   false, false, false, false,
-                   you.species == SP_DJINNI);
-
-            // we're meaner now, what with explosions and whatnot, but
-            // we dial down the contamination a little faster if its actually
-            // mutating you.  -- GDL
-            contaminate_player(-(random2(you.magic_contamination / 4) + 1));
-        }
     }
 
     // Check to see if an upset god wants to do something to the player.

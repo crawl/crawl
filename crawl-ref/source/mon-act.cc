@@ -1583,7 +1583,7 @@ static bool _handle_throw(monster* mons, bolt & beem)
         return false;
     }
 
-    const bool archer = mons->is_archer();
+    bool archer = mons->is_archer();
 
     const bool liquefied = mons->liquefied_ground();
 
@@ -1594,12 +1594,16 @@ static bool _handle_throw(monster* mons, bolt & beem)
         || (!liquefied && one_chance_in(archer ? 9 : 5)))
         return false;
 
-    // Stabbers going in for the kill don't use ranged attacks.
     if (mons_class_flag(mons->type, M_STABBER)
-        && mons->get_foe() != NULL
-        && mons->get_foe()->incapacitated())
+        && mons->get_foe() != NULL)
     {
-        return false;
+        // Stabbers going in for the kill don't use ranged attacks.
+        if (mons->get_foe()->incapacitated())
+            return false;
+        // But assassins WILL use their blowguns in melee range, if their foe is
+        // not already incapacitated and they have useful ammo left.
+        else if (mons_has_incapacitating_ranged_attack(mons, mons->get_foe()))
+            archer = true;
     }
 
     // Don't allow offscreen throwing for now.
@@ -1790,13 +1794,6 @@ static void _pre_monster_move(monster* mons)
             monster_die(mons, KILL_RESET, NON_MONSTER);
             return;
         }
-    }
-
-    // Possibly replenish bees (1 per 10 turns, on average)
-    if (mons->type == MONS_TREANT && mons->number < 5
-        && x_chance_in_y(you.time_taken, 100))
-    {
-        mons->number++;
     }
 
     if (mons_stores_tracking_data(mons))

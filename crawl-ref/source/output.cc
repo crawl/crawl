@@ -580,7 +580,7 @@ static void _print_stats_contam(int x, int y)
     if (you.species != SP_DJINNI)
         return;
 
-    const int max_contam = 16;
+    const int max_contam = 16000;
     int contam = min(you.magic_contamination, max_contam);
 
     // Calculate colour
@@ -756,7 +756,9 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
-    textcolor(you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
+    textcolor(you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
+              || you.cannot_move() ? RED :
+              you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", player_evasion());
 }
@@ -1010,7 +1012,8 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_DRAINED,
         DUR_TOXIC_RADIANCE,
         STATUS_RAY,
-        DUR_RECITE
+        DUR_RECITE,
+        DUR_GRASPING_ROOTS,
     };
 
     status_info inf;
@@ -2490,7 +2493,8 @@ static string _status_mut_abilities(int sw)
         DUR_SPIRIT_HOWL,
         STATUS_DRAINED,
         DUR_TOXIC_RADIANCE,
-        DUR_RECITE
+        DUR_RECITE,
+        DUR_GRASPING_ROOTS,
     };
 
     status_info inf;

@@ -271,12 +271,11 @@ Apart from (de)selecting skills, you also have the following toggles:
 <w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
 
                                <h>Training restrictions</h>
-Fighting, Throwing, Dodging, Stealth, Traps, Unarmed Combat,
-and Spellcasting can always be trained. For the rest:
+Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
+can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
-* Armour requires wearing an armour with an evasion penalty.
 * Shields requires that you either be wearing a shield, or have the capacity
-      to obtain one through magical or divine means.
+      to obtain one through divine means.
 * Evocations requires carrying an evocable item, or having a Nemelex ability.
 * Spell schools require knowing a spell of the school.
 * Necromancy can also be trained when having a Kikubaaqudgha ability.

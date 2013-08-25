@@ -48,7 +48,6 @@ struct armour_def
     int                 ev;
     int                 mass;
 
-    bool                light;
     equipment_type      slot;
     size_type           fit_min;
     size_type           fit_max;
@@ -61,94 +60,94 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[NUM_ARMOURS] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,  100,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_ROBE,                 "robe",                   2,   0,   60,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_BIG },
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -4,  150,
-        true,  EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
 
     { ARM_RING_MAIL,            "ring mail",              5,  -7,  250,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_SCALE_MAIL,           "scale mail",             6, -11,  350,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -15,  400,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -19,  650,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -24, 1200,
-        false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
 
     { ARM_TROLL_HIDE,           "troll hide",             2,  -4,  220,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",   4,  -4,  220,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STEAM_DRAGON_HIDE,    "steam dragon hide",      2,   0,  120,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STEAM_DRAGON_ARMOUR,  "steam dragon armour",    5,   0,  120,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_MOTTLED_DRAGON_HIDE,  "mottled dragon hide",    3,  -4,  150,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6,  -4,  150,
-        true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3,  -7,  200,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7,  -7,  200,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_FIRE_DRAGON_HIDE,     "fire dragon hide",       3, -11,  350,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_FIRE_DRAGON_ARMOUR,   "fire dragon armour",     8, -11,  350,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_ICE_DRAGON_HIDE,      "ice dragon hide",        4, -11,  350,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_ICE_DRAGON_ARMOUR,    "ice dragon armour",      9, -11,  350,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_PEARL_DRAGON_HIDE,    "pearl dragon hide",      3, -11,  400,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_PEARL_DRAGON_ARMOUR,  "pearl dragon armour",   10, -11,  400,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STORM_DRAGON_HIDE,    "storm dragon hide",      4, -11,  600,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -17,  600,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -17, 1100,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -27, 1100,
-        false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   40,
-        true,  EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG },
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_BIG },
     { ARM_GLOVES,               "gloves",                 1,   0,   20,
-        true,  EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM },
 
     { ARM_HELMET,               "helmet",                 1,   0,   80,
-        false, EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
 
     { ARM_CAP,                  "cap",                    0,   0,   40,
-        true,  EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
+        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
 
     { ARM_WIZARD_HAT,           "wizard hat",             0,   0,   40,
-        true,  EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
+        EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race
     // and shapeshift status.
     { ARM_BOOTS,                "boots",                  1,   0,   30,
-        true,  EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM },
+        EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM },
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
     { ARM_CENTAUR_BARDING,      "centaur barding",        4,  -6,  100,
-        true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
+        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
     { ARM_NAGA_BARDING,         "naga barding",           4,  -6,  100,
-        true,  EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
+        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE },
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
     { ARM_BUCKLER,              "buckler",                3,  -1,   90,
-        true,  EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM },
+        EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM },
     { ARM_SHIELD,               "shield",                 8,  -3,  150,
-        false, EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG    },
+        EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG    },
     { ARM_LARGE_SHIELD,         "large shield",          13,  -5,  230,
-        false, EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT  },
+        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT  },
 };
 
 struct weapon_def
@@ -1615,6 +1614,23 @@ bool convert2bad(item_def &item)
     case WPN_BLESSED_TRIPLE_SWORD: item.sub_type = WPN_TRIPLE_SWORD; break;
     case WPN_SACRED_SCOURGE:       item.sub_type = WPN_DEMON_WHIP; break;
     case WPN_TRISHULA:             item.sub_type = WPN_DEMON_TRIDENT; break;
+    }
+
+    return true;
+}
+
+bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
+{
+    if (wpn.base_type != OBJ_WEAPONS)
+        return false;
+
+    if (is_artefact(wpn))
+        return false;
+
+    if (!allow_ranged && is_range_weapon(wpn)
+        || wpn.sub_type == WPN_BLOWGUN)
+    {
+        return false;
     }
 
     return true;

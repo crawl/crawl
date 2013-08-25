@@ -261,6 +261,17 @@ static void _set_curse_skull_lurk_pos(monster* mon)
     }
 }
 
+static bool _stabber_keep_distance(const monster* mon, const actor* foe)
+{
+    return (mons_class_flag(mon->type, M_STABBER)
+            && !mon->berserk_or_insane()
+            && (mons_has_incapacitating_ranged_attack(mon, foe)
+                || mons_has_incapacitating_spell(mon, foe))
+            && !foe->incapacitated()
+            && !adjacent(mon->pos(), foe->pos())
+            && !mons_aligned(mon, foe));
+}
+
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -783,18 +794,21 @@ void handle_behaviour(monster* mon)
             if (mon->foe == MHITYOU)
             {
                 // The foe is the player.
-
-                if ((mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                     || (mons_class_flag(mon->type, M_STABBER)
-                         && (mons_has_ranged_attack(mon)
-                             || mons_has_ranged_spell(mon, false, true))
-                         && you.can_see(mon)
-                         && !you.incapacitated()
-                         && !adjacent(mon->pos(), you.pos())))
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
                     && !mon->berserk_or_insane())
                 {
                     if (mon->attitude != ATT_FRIENDLY)
                         // Get to firing range even if we are close.
+                        _set_firing_pos(mon, you.pos());
+                }
+                else if (_stabber_keep_distance(mon, &you))
+                {
+                    if (mon->pos().distance_from(you.pos()) < 4
+                        && !one_chance_in(7))
+                    {
+                        mon->firing_pos = mon->pos();
+                    }
+                    else
                         _set_firing_pos(mon, you.pos());
                 }
                 else if (!mon->firing_pos.zero()
@@ -836,16 +850,20 @@ void handle_behaviour(monster* mon)
                 monster* target = &menv[mon->foe];
                 mon->target = target->pos();
 
-                if ((mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                     || (mons_class_flag(mon->type, M_STABBER)
-                         && (mons_has_ranged_attack(mon)
-                             || mons_has_ranged_spell(mon, false, true))
-                         && target->can_see(mon)
-                         && !target->incapacitated()
-                         && !adjacent(mon->pos(), target->pos())))
+                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
                     && !mon->berserk_or_insane())
                 {
                     _set_firing_pos(mon, mon->target);
+                }
+                else if (target && _stabber_keep_distance(mon, target))
+                {
+                    if (mon->pos().distance_from(target->pos()) < 4
+                        && !one_chance_in(7))
+                    {
+                        mon->firing_pos = mon->pos();
+                    }
+                    else
+                        _set_firing_pos(mon, target->pos());
                 }
 
             }

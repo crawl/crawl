@@ -2531,8 +2531,8 @@ void forest_damage(const actor *mon)
                             "A root lunges and passes through @foe@ from below.",
                             0);
                 }
-                else if (!(dmg = foe->apply_ac(div_rand_round(hd, 2) + random2(hd),
-                                               (hd * 3 - 1) / 2, AC_PROPORTIONAL)))
+                else if (!(dmg = foe->apply_ac(hd + random2(hd), hd * 2 - 1,
+                                               AC_PROPORTIONAL)))
                 {
                     msg = random_choose(
                             "@foe@ @is@ scraped by a branch!",

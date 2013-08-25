@@ -2351,6 +2351,9 @@ int player_movement_speed(bool ignore_burden)
         mv -= 2;
     }
 
+    if (you.duration[DUR_GRASPING_ROOTS])
+        mv += 5;
+
     // Lava orc heat-based speed. -2 when cold; 0 when normal; +2 when hot.
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_SLOW_MOVE))
         mv += 2;
@@ -2625,8 +2628,11 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
 // Player EV scaling for being flying tengu or swimming merfolk.
 static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
-    if (you.duration[DUR_PETRIFYING] || you.caught())
+    if (you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
+        || you.caught())
+    {
         prescaled_ev /= 2;
+    }
 
     switch (you.species)
     {
@@ -3128,7 +3134,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 
     if (you.attribute[ATTR_XP_DRAIN])
     {
-        int loss = div_rand_round(exp_gained * 3,
+        int loss = div_rand_round(exp_gained * 3 / 2,
                                   calc_skill_cost(you.skill_cost_level));
 
         // Make it easier to recover from very heavy levels of draining
@@ -4387,7 +4393,8 @@ void display_char_status()
         DUR_SONG_OF_SLAYING,
         STATUS_DRAINED,
         DUR_TOXIC_RADIANCE,
-        DUR_RECITE
+        DUR_RECITE,
+        DUR_GRASPING_ROOTS,
     };
 
     status_info inf;
@@ -4990,15 +4997,15 @@ int get_contamination_level()
 {
     const int glow = you.magic_contamination;
 
-    if (glow > 60)
-        return (glow / 20 + 3);
-    if (glow > 40)
+    if (glow > 60000)
+        return (glow / 20000 + 3);
+    if (glow > 40000)
         return 5;
-    if (glow > 25)
+    if (glow > 25000)
         return 4;
-    if (glow > 15)
+    if (glow > 15000)
         return 3;
-    if (glow > 5)
+    if (glow > 5000)
         return 2;
     if (glow > 0)
         return 1;
@@ -5038,7 +5045,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     int old_level  = get_contamination_level();
     int new_level  = 0;
 
-    you.magic_contamination = max(0, min(250, you.magic_contamination + change));
+    you.magic_contamination = max(0, min(250000, you.magic_contamination + change));
 
     new_level = get_contamination_level();
 
@@ -5478,7 +5485,7 @@ bool haste_player(int turns, bool rageext)
     else if (!rageext)
     {
         mpr("You feel as though your hastened speed will last longer.");
-        contaminate_player(1, true); // always deliberate
+        contaminate_player(1000, true); // always deliberate
     }
 
     you.increase_duration(DUR_HASTE, turns, threshold);
@@ -5572,6 +5579,12 @@ void fly_player(int pow, bool already_flying)
     if (you.form == TRAN_TREE)
         return mpr("Your roots keep you in place.");
 
+    if (you.duration[DUR_GRASPING_ROOTS])
+    {
+        mpr("The grasping roots prevent you from becoming airborne.");
+        return;
+    }
+
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)
         mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
@@ -5582,13 +5595,14 @@ void fly_player(int pow, bool already_flying)
         float_player();
 }
 
-bool land_player()
+bool land_player(bool quiet)
 {
     // there was another source keeping you aloft
     if (you.airborne())
         return false;
 
-    mpr("You float gracefully downwards.");
+    if (!quiet)
+        mpr("You float gracefully downwards.");
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
@@ -6061,6 +6075,10 @@ player::~player()
 
 flight_type player::flight_mode() const
 {
+    // Might otherwise be airborne, but currently stuck to the ground
+    if (you.duration[DUR_GRASPING_ROOTS])
+        return FL_NONE;
+
     if (duration[DUR_FLIGHT]
         || attribute[ATTR_PERM_FLIGHT]
         || form == TRAN_WISP
@@ -7712,7 +7730,7 @@ void player::hibernate(int)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!can_hibernate())
+    if (!can_hibernate() || duration[DUR_SLEEP_IMMUNITY])
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
@@ -7732,7 +7750,7 @@ void player::put_to_sleep(actor*, int power)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!can_sleep())
+    if (!can_sleep() || duration[DUR_SLEEP_IMMUNITY])
     {
         canned_msg(MSG_YOU_UNAFFECTED);
         return;
@@ -7753,6 +7771,7 @@ void player::awake()
     ASSERT(!crawl_state.game_is_arena());
 
     duration[DUR_SLEEP] = 0;
+    duration[DUR_SLEEP_IMMUNITY] = 1;
     mpr("You wake up.");
     flash_view(BLACK);
 }

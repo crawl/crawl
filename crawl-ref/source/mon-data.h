@@ -67,6 +67,11 @@
            105 < hp < 165
         hp will be around 135 each time.
 
+   sec: if the monster has only one possible spellbook, sec is set to that book.
+     If a monster has multiple possible books, sec is set to MST_NO_SPELLS. Then
+     the function mons_spellbook_list in mon-util.cc checks for the flag
+     M_SPELLCASTER, and handles the books.
+
    corpse_thingy
    - err, bad name. Describes effects of eating corpses.
      CE_NOCORPSE,        leaves no corpse (mass == 0)
@@ -3817,7 +3822,7 @@ static monsterentry mondata[] = {
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
     MR_RES_POISON,
     0, 10, MONS_PLANT, MONS_SNAPLASHER_VINE, MH_PLANT, -3,
-    { {AT_CONSTRICT, AF_CRUSH, 0}, {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK },
+    { {AT_CONSTRICT, AF_CRUSH, 0}, {AT_HIT, AF_PLAIN, 24}, AT_NO_ATK, AT_NO_ATK },
     { 16, 1, 1, 0 },
     4, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 13, DEFAULT_ENERGY,
@@ -3867,9 +3872,9 @@ static monsterentry mondata[] = {
     MR_RES_POISON | MR_VUL_FIRE,
     0, 12, MONS_TREANT, MONS_TREANT, MH_PLANT, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 48}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 16, 7, 5, 0 },
+    { 16, 6, 4, 0 },
     16, 3, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_NORMAL, HT_LAND, FL_NONE, 7, DEFAULT_ENERGY,
+    I_NORMAL, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
@@ -3943,7 +3948,7 @@ static monsterentry mondata[] = {
     MR_VUL_FIRE,
     500, 10, MONS_DRYAD, MONS_DRYAD, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 5, 4, 0 },
+    { 12, 4, 4, 0 },
     6, 12, MST_DRYAD, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
     I_NORMAL, HT_FOREST, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM

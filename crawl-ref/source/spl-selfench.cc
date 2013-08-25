@@ -232,6 +232,12 @@ spret_type cast_fly(int power, bool fail)
         return SPRET_ABORT;
     }
 
+    if (you.duration[DUR_GRASPING_ROOTS])
+    {
+        mpr("The grasping roots prevent you from becoming airborne.", MSGCH_WARN);
+        return SPRET_ABORT;
+    }
+
     fail_check();
     const int dur_change = 25 + random2(power) + random2(power);
     const bool was_flying = you.airborne();

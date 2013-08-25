@@ -3386,7 +3386,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
         evasion = 0;
     else if (caught() || is_constricted())
         evasion /= (body_size(PSIZE_BODY) + 2);
-    else if (confused())
+    else if (confused() || has_ench(ENCH_GRASPING_ROOTS))
         evasion /= 2;
     return max(evasion, 0);
 }
@@ -5348,8 +5348,11 @@ int monster::action_energy(energy_use_type et) const
         if (has_ench(ENCH_SWIFT))
             move_cost -= 2;
 
+        if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS) && !suppressed())
+            move_cost += 2;
+
         if (run())
-            move_cost -= 2;
+            move_cost -= 1;
 
         // Shadows move more quickly when blended with the darkness
         if (type == MONS_SHADOW && invisible())
@@ -5380,6 +5383,9 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
         energy_loss *= 3;
         energy_loss /= 2;
     }
+
+    if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_GRASPING_ROOTS))
+        energy_loss += 5;
 
     // Randomize movement cost slightly, to make it less predictable,
     // and make pillar-dancing not entirely safe.
@@ -5676,10 +5682,10 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         }
     }
     else if (mons_is_tentacle_or_tentacle_segment(type)
-            && type != MONS_ELDRITCH_TENTACLE
-            && flavour != BEAM_TORMENT_DAMAGE
-            && !invalid_monster_index(number)
-            && menv[number].is_parent_monster_of(this))
+             && type != MONS_ELDRITCH_TENTACLE
+             && flavour != BEAM_TORMENT_DAMAGE
+             && !invalid_monster_index(number)
+             && menv[number].is_parent_monster_of(this))
     {
         (new deferred_damage_fineff(oppressor, &menv[number],
                                     damage, false))->schedule();
@@ -5948,7 +5954,8 @@ void monster::steal_item_from_player()
     new_item = you.inv[steal_what];
 
     // Set quantity, and set the item as unlinked.
-    new_item.quantity -= random2(new_item.quantity);
+    const int orig_qty = new_item.quantity;
+    new_item.quantity -= random2(orig_qty);
     new_item.pos.reset();
     new_item.link = NON_ITEM;
 
@@ -5965,6 +5972,18 @@ void monster::steal_item_from_player()
 
     // Item is gone from player's inventory.
     dec_inv_item_quantity(steal_what, new_item.quantity);
+
+    // Fix up blood timers.
+    if (is_blood_potion(new_item))
+    {
+        // Somehow they always steal the freshest blood.
+        for (int i = new_item.quantity; i < orig_qty; ++i)
+            remove_oldest_blood_potion(new_item);
+
+        // If the whole stack is gone, it doesn't need to be cleaned up.
+        if (you.inv[steal_what].defined())
+            remove_newest_blood_potion(you.inv[steal_what]);
+    }
 }
 
 bool monster::is_web_immune() const

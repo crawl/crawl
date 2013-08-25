@@ -63,21 +63,22 @@ void msgwin_got_input();
 int msgwin_get_line(string prompt,
                     char *buf, int len,
                     input_history *mh = NULL,
-                    int (*keyproc)(int &c) = NULL);
+                    const string &fill = "");
 
 
 // Do not use this templated function directly.  Use the macro below instead.
 template<int> static int msgwin_get_line_autohist_temp(string prompt,
-                                                       char *buf, int len)
+                                                       char *buf, int len,
+                                                       const string &fill = "")
 {
     static input_history hist(10);
-    return msgwin_get_line(prompt, buf, len, &hist);
+    return msgwin_get_line(prompt, buf, len, &hist, fill);
 }
 
 // This version of mswgin_get_line will automatically retain its own
 // input history, independent of other calls to msgwin_get_line.
-#define msgwin_get_line_autohist(prompt, buf, len) \
-    msgwin_get_line_autohist_temp<__LINE__>(prompt, buf, len)
+#define msgwin_get_line_autohist(...) \
+    msgwin_get_line_autohist_temp<__LINE__>(__VA_ARGS__)
 
 // Tell the message window that the game is about to read a new
 // command from the player.

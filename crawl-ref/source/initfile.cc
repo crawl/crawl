@@ -806,10 +806,7 @@ void game_options::reset_options()
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     auto_drop_chunks       = ADC_NEVER;
-    prefer_safe_chunks     = true;
     easy_eat_chunks        = false;
-    easy_eat_gourmand      = false;
-    easy_eat_contaminated  = false;
     auto_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
@@ -2479,10 +2476,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
-    else BOOL_OPTION(prefer_safe_chunks);
     else BOOL_OPTION(easy_eat_chunks);
-    else BOOL_OPTION(easy_eat_gourmand);
-    else BOOL_OPTION(easy_eat_contaminated);
     else BOOL_OPTION(auto_eat_chunks);
     else if (key == "auto_drop_chunks")
     {

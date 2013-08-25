@@ -1481,7 +1481,7 @@ static void _find_description(bool *again, string *error_inout)
 
         mpr("Describe what? ", MSGCH_PROMPT);
         char buf[80];
-        if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+        if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
         {
             *error_inout = "Okay, then.";
             return;

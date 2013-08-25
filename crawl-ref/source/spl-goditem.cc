@@ -463,7 +463,7 @@ void antimagic()
              danger ? "Careful! " : "");
     }
 
-    contaminate_player(-1 * (1 + random2(5)));
+    contaminate_player(-1 * (1000 + random2(4000)));
 }
 
 int detect_traps(int pow)

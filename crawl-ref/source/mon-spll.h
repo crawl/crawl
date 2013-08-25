@@ -4,9 +4,13 @@
 
 /* *********************************************************************
 
+    This file determines which spells are contained in monster spellbooks.
+    It is used by /util/gen-mst.pl to generate spellbook enums, which are
+    listed in mon-mst.h.
 
     Template Format:
 
+    {    mon_spellbook_type,
         {
              bolt spell,
              enchantment,
@@ -15,6 +19,7 @@
              misc(2) spell,             // SPELL_DIG must be here to work!
              emergency spell            // only when fleeing
         }
+    }
 
 ********************************************************************* */
 
@@ -1479,7 +1484,7 @@
        SPELL_SUNRAY,
        SPELL_AWAKEN_FOREST,
        SPELL_HASTE_PLANTS,
-       SPELL_SUMMON_CANIFORMS,
+       SPELL_DRUIDS_CALL,
        SPELL_HASTE_PLANTS,
        SPELL_MINOR_HEALING
       }
@@ -2070,8 +2075,8 @@
 
     {  MST_SPRIGGAN_ENCHANTER,
       {
-       SPELL_HIBERNATION,
-       SPELL_HIBERNATION,
+       SPELL_SLEEP,
+       SPELL_SLEEP,
        SPELL_INVISIBILITY,
        SPELL_NO_SPELL,
        SPELL_STRIP_RESISTANCE,
@@ -2193,8 +2198,8 @@
       {
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
        SPELL_SLOW,
-       SPELL_SUMMON_MINOR_DEMON,
-       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_NO_SPELL,
+       SPELL_VENOM_BOLT,
        SPELL_BLINK,
        SPELL_BLINK
       }

@@ -2592,7 +2592,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_TREANT:
-        if (one_chance_in(3))
+        if (one_chance_in(4))
         {
             band = BAND_SPRIGGAN_DRUID;
             band_size = 1;

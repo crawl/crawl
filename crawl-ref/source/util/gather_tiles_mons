@@ -1,0 +1,40 @@
+#!/usr/bin/perl -w
+
+for (grep /\.des$/, `git ls-files`)
+{
+    chomp;
+    open IN, "<", $_ or die "Can't read $_\n";
+    { undef local $/; $_ = <IN>; }
+    close IN;
+
+    $ptile{"\U$_"}=1 for /\btile:([^ \n"']+)/mg; #"
+}
+
+open IN, "<", "tilepick.cc" or die "Can't read tilepick.cc\n";
+{ undef local $/; $_ = <IN>; }
+close IN;
+$ptile{$_}=1 for /TILEP_(MONS_[A-Z0-9_]+)/mg;
+
+$ptile{$_}=1 for split "\n", <<___;
+MONS_AGATE_SNAIL_SHELL
+MONS_ALLIGATOR_SNAPPING_TURTLE_SHELL
+MONS_SNAPPING_TURTLE_SHELL
+MONS_CENTAUR_MELEE
+MONS_CENTAUR_WARRIOR_MELEE
+MONS_YAKTAUR_MELEE
+MONS_YAKTAUR_CAPTAIN_MELEE
+MONS_UNKNOWN
+___
+
+my @tent = qw(E N S W NE NW SE SW);
+for my $i (0..7)
+{
+    for my $mon (qw(MONS_ELDRITCH_TENTACLE MONS_STARSPAWN_TENTACLE))
+    {
+        $ptile{"${mon}_$tent[$i]"}=1;
+        $ptile{"${mon}_SEGMENT_$tent[$i]_$tent[$_]"}=1 for ($i+1..7);
+    }
+    $ptile{"MONS_ELDRITCH_TENTACLE_PORTAL_$tent[$i]"}=1;
+}
+
+print "$_\n" for sort keys %ptile;

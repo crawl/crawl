@@ -11,7 +11,8 @@ Contents:  G. Glyphs
 This document contains the syntax needed for making maps and vaults. It
 does not say anything about principles of vault making; for this, see
 introduction.txt. For more technical aspects, including tests, lua and
-portal vaults, refer to advanced.txt. For Triggerables, please see triggerables.txt.
+portal vaults, refer to advanced.txt. For Triggerables, please see
+triggerables.txt.
 
 G.   Glyphs
 ===========
@@ -75,8 +76,8 @@ Features
      Also, sight-based effects like smiting work past granite statues, as does
      apportation.
 
-     NOTE: F used to put down a granite Statue most of the time but occasionally
-     Orange or Silver or Ice statues (1 in 100). You can reproduce this by using
+     NOTE: F used to put down a granite statue most of the time but occasionally
+     orange or silver or ice statues (1 in 100). You can reproduce this by using
      F on the map together with
      SUBST:   F = G:99 F:1
      KMONS:   F = orange crystal statue / silver statue / ice statue
@@ -347,9 +348,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              to indicate that if the map's CHANCE roll is made, one of the maps
              tagged chance_FOO should be picked.
           * "decor": this tag indicates that the vault is purely decorative, and
-             has neither threats nor items. Levels of the main Dungeon deeper than
-             D:12 have an 80% chance to place an extra vault with this tag; see
-             dungeon_decor in builder/decor.des .
+             has neither threats nor items. Levels of the main Dungeon deeper
+             than D:12 have an 80% chance to place an extra vault with this tag;
+             see dungeon_decor in builder/decor.des .
           * "dummy": this tag indicates that the vault is a stub; if the dungeon
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
@@ -418,8 +419,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "overwritable": Lets the dungeon builder overwrite this vault with
              other ones. Don't use this casually.
           * "can_overwrite": Tells the dungeon builder that this vault can be
-             placed on top of other vaults, even those without the "overwritable"
-             tag. Don't use this casually.
+             placed on top of other vaults, even those without the
+             "overwritable" tag. Don't use this casually.
           * "layout": Makes the vault eligible for use as a level layout. Do
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
@@ -659,10 +660,11 @@ ITEM:     (list of items, separated by comma)
 
           * "numspells:number" maximum number of spells to include in the book.
             A book may contain at most 8 spells.
-          * "owner:name" will be used to make the title include the apostrophised
-            owner (or author) of the book if provided. For example, "owner:Roxanne"
-            may create "Roxanne's Treatise on Mountains". You can use the keyword
-            "player" (i.e. "owner:player") to use the player's name instead.
+          * "owner:name" will be used to make the title include the
+            apostrophised owner (or author) of the book if provided. For
+            example, "owner:Roxanne" may create "Roxanne's Treatise on
+            Mountains". You can use the keyword "player" (i.e. "owner:player")
+            to use the player's name instead.
 
           In addition, themed books allow the use of the following tags:
 
@@ -1460,7 +1462,8 @@ KPROP:    x = bloody
             mode, and will appear in dumps as "?". For debugging use only; this
             property should be removed before submitting vaults.
           * "mold": The square is covered with mold. This property is reserved
-            for use by ballistomycetes and should in general not be set by vaults.
+            for use by ballistomycetes and should in general not be set by
+            vaults.
 
           Properties can also be used as tags to apply to the entire vault:
             TAGS: no_rtele_into no_tide

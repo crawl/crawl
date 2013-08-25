@@ -2702,16 +2702,16 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             return 0;
     }
 
+    // Manuals are consumable, and interesting enough to keep on list.
+    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+        return 0;
+
     // Item is already on shopping-list.
     const bool on_list = find_thing(item, level_pos::current()) != -1;
 
-    const bool do_prompt =
-        (item.base_type == OBJ_JEWELLERY && !jewellery_is_amulet(item)
-         && ring_has_stackable_effect(item))
-     // Manuals and tomes of destruction are consumable.
-     || (item.base_type == OBJ_BOOKS
-         && (item.sub_type == BOOK_MANUAL
-             || item.sub_type == BOOK_DESTRUCTION));
+    const bool do_prompt = item.base_type == OBJ_JEWELLERY
+                           && !jewellery_is_amulet(item)
+                           && ring_has_stackable_effect(item);
 
     bool add_item = false;
 
@@ -2968,7 +2968,7 @@ void ShoppingListMenu::draw_title()
                            menu_action == ACT_EXAMINE ? "examine" :
                                                         "delete";
         draw_title_suffix(formatted_string::parse_string(make_stringf(
-            "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
+            "<lightgrey>  [<w>a-z</w>: %-8s <w>?</w>/<w>!</w>: change action]",
             verb)), false);
     }
 }

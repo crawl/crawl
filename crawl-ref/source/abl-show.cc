@@ -2165,7 +2165,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
         potion_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
-        contaminate_player(1 + random2(3), true);
+        contaminate_player(1000 + random2(2000), true);
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:
@@ -3154,21 +3154,18 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
+
     if (player_mutation_level(MUT_JUMP) && !you.evokable_jump())
         _add_talent(talents, ABIL_JUMP, check_confused);
-    // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
-    // Transformed nagas, or non-nagas, can only get Spit Poison.
-    if (you.species == SP_NAGA
-        && (!form_changed_physiology()
-            || you.form == TRAN_SPIDER))
+
+    // Spit Poison. Nagas can upgrade to Breathe Poison.
+    if (you.species == SP_NAGA)
     {
         _add_talent(talents, player_mutation_level(MUT_BREATHE_POISON) ?
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
-    else if (player_mutation_level(MUT_SPIT_POISON)
-             || you.species == SP_NAGA)
-    {        _add_talent(talents, ABIL_SPIT_POISON, check_confused);
-    }
+    else if (player_mutation_level(MUT_SPIT_POISON))
+        _add_talent(talents, ABIL_SPIT_POISON, check_confused);
 
     if (player_genus(GENPC_DRACONIAN))
     {

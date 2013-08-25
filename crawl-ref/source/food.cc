@@ -86,7 +86,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         if (!magic)
             return;
 
-        contaminate_player(div_rand_round(hunger_amount, 250), true);
+        contaminate_player(4 * hunger_amount, true);
         return;
     }
 
@@ -532,6 +532,8 @@ bool butchery(int which_corpse, bool bottle_blood)
             int badness = _corpse_badness(ce, *si, wants_any);
             if (ce == CE_POISONOUS)
                 badness += 500;
+            else if (ce == CE_MUTAGEN)
+                badness += 1000;
 
             if (badness < best_badness)
                 corpse_id = si->index(), best_badness = badness;
@@ -1219,7 +1221,7 @@ public:
         if (food2->base_type != OBJ_CORPSES && food2->base_type != OBJ_FOOD)
             return false;
 
-        // At this point, we know bothe are corpses or chunks, edible
+        // At this point, we know both are corpses or chunks, edible
         // (not rotten, or player is saprovore).
 
         // Always offer poisonous/mutagenic chunks last.
@@ -1227,20 +1229,6 @@ public:
             return false;
         if (is_bad_food(*food2) && !is_bad_food(*food1))
             return true;
-
-        if (Options.prefer_safe_chunks && !you.is_undead)
-        {
-            // Offer rotten chunks last.
-            if (food_is_rotten(*food1) && !food_is_rotten(*food2))
-                return false;
-            if (food_is_rotten(*food2) && !food_is_rotten(*food1))
-                return true;
-            // Offer contaminated chunks last.
-            if (is_contaminated(*food1) && !is_contaminated(*food2))
-                return false;
-            if (is_contaminated(*food2) && !is_contaminated(*food1))
-                return true;
-        }
 
         return (food1->special < food2->special);
     }
@@ -1659,9 +1647,6 @@ int prompt_eat_chunks(bool only_auto)
     //    or until they have some hp rot to heal.
     const bool easy_eat = (Options.easy_eat_chunks || only_auto)
         && !you.is_undead;
-    const bool easy_contam = easy_eat
-        && (Options.easy_eat_gourmand && you.gourmand()
-            || Options.easy_eat_contaminated);
 
     if (found_valid)
     {
@@ -1672,16 +1657,13 @@ int prompt_eat_chunks(bool only_auto)
             item_def *item = chunks[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
-            const bool contam = is_contaminated(*item);
-            const bool bad    = is_bad_food(*item);
+            const bool bad = is_bad_food(*item);
 
-            if (easy_eat && !bad && !contam)
+            if (easy_eat && !bad)
             {
                 // If this chunk is safe to eat, just do so without prompting.
                 autoeat = true;
             }
-            else if (easy_contam && contam && !bad)
-                autoeat = true;
             else if (only_auto)
                 return 0;
             else

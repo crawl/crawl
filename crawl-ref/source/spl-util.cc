@@ -737,7 +737,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 }
 
 // Select a spell direction and fill dist and pbolt appropriately.
-// Return false if the user canceled, true otherwise.
+// Return false if the user cancelled, true otherwise.
 // FIXME: this should accept a direction_chooser_args directly rather
 // than move the arguments into one.
 bool spell_direction(dist &spelld, bolt &pbolt,

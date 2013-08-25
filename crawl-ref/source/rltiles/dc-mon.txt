@@ -37,8 +37,6 @@ microbat MONS_MICROBAT
 %rim 1
 megabat MONS_MEGABAT
 gigabat MONS_GIGABAT
-fruity_bat MONS_FRUITY_BAT
-ice_bat MONS_ICE_BAT
 phase_bat MONS_PHASE_BAT
 %sdir mon/abyss
 %rim 0
@@ -348,10 +346,8 @@ efreet MONS_EFREET
 ## Rakshasa ('R')
 %sdir mon/unique
 mara MONS_MARA
-mara MONS_MARA_FAKE
 %sdir mon/demons
 rakshasa MONS_RAKSHASA
-rakshasa MONS_RAKSHASA_FAKE
 
 ## Abominations ('X')
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
@@ -425,28 +421,6 @@ overlay_mage_hat MONS_STATUE_MAGE
 overlay_scythe MONS_STATUE_SCYTHE
 overlay_sword MONS_STATUE_SWORD
 overlay_whip MONS_STATUE_WHIP
-%back none
-
-%back light_vine_statue_base
-overlay_axe MONS_LIGHT_VINE_STATUE_AXE
-overlay_bow MONS_LIGHT_VINE_STATUE_ARCHER
-overlay_crossbow MONS_LIGHT_VINE_STATUE_CROSSBOW
-overlay_mace MONS_LIGHT_VINE_STATUE_MACE
-overlay_mage MONS_LIGHT_VINE_STATUE_MAGE
-overlay_scythe MONS_LIGHT_VINE_STATUE_SCYTHE
-overlay_sword MONS_LIGHT_VINE_STATUE_SWORD
-overlay_whip MONS_LIGHT_VINE_STATUE_WHIP
-%back none
-
-%back dark_vine_statue_base
-overlay_axe MONS_DARK_VINE_STATUE_AXE
-overlay_bow MONS_DARK_VINE_STATUE_ARCHER
-overlay_crossbow MONS_DARK_VINE_STATUE_CROSSBOW
-overlay_mace MONS_DARK_VINE_STATUE_MACE
-overlay_mage MONS_DARK_VINE_STATUE_MAGE
-overlay_scythe MONS_DARK_VINE_STATUE_SCYTHE
-overlay_sword MONS_DARK_VINE_STATUE_SWORD
-overlay_whip MONS_DARK_VINE_STATUE_WHIP
 %back none
 
 %rim 0

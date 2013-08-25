@@ -185,9 +185,14 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
+    bool wants_for_spells = you.has_spell(SPELL_SIMULACRUM)
+                            || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
     // Don't mark it as dropped if we are forcing autopickup of chunks.
-    if (is_bad_food(item) && you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= 0)
+    if (you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= 0
+        && is_bad_food(item) && !wants_for_spells)
+    {
         item.flags |= ISFLAG_DROPPED;
+    }
     else if (you.species != SP_VAMPIRE)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
@@ -499,8 +504,7 @@ static string _get_desc_quantity(const int quant, const int total)
         return "Some of your";
 }
 
-// Prints messages for blood potions coagulating in inventory (coagulate = true)
-// or whenever potions are cursed into potions of decay (coagulate = false).
+// Prints messages for blood potions coagulating or rotting in inventory.
 static void _potion_stack_changed_message(item_def &potion, int num_changed,
                                           string verb)
 {
@@ -513,7 +517,8 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
          verb.c_str());
 }
 
-// Returns true if "equipment weighs less" message needed.
+// Returns true if the total number of potions in inventory decreased,
+// in which case burden_change() will need to be called.
 // Also handles coagulation messages.
 bool maybe_coagulate_blood_potions_inv(item_def &blood)
 {

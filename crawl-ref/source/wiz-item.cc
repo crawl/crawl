@@ -71,7 +71,7 @@ void wizard_create_spec_object_by_name()
 {
     char buf[1024];
     mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
-    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
+    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;
@@ -678,7 +678,7 @@ void wizard_make_object_randart()
     mpr("Fake item as gift from which god (ENTER to leave alone): ",
         MSGCH_PROMPT);
     char name[80];
-    if (!cancelable_get_line(name, sizeof(name)) && name[0])
+    if (!cancellable_get_line(name, sizeof(name)) && name[0])
     {
         god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
@@ -1561,7 +1561,7 @@ void wizard_draw_card()
 {
     msg::streams(MSGCH_PROMPT) << "Which card? " << endl;
     char buf[80];
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
     {
         mpr("Unknown card.");
         return;
