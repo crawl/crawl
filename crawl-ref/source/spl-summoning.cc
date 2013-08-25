@@ -3036,7 +3036,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
         mons->props["band_leader"].get_int() = agent->mid;
     }
 
-    mons->props["sw_mid"].get_int() = agent->mid;
+    mons->summoner = agent->mid;
     agent->props["spectral_weapon"].get_int() = mons->mid;
 
     return SPRET_SUCCESS;
@@ -3048,7 +3048,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (!mons)
         return;
 
-    actor *owner = actor_by_mid(mons->props["sw_mid"].get_int());
+    actor *owner = actor_by_mid(mons->summoner);
 
     if (owner)
         owner->props.erase("spectral_weapon");
