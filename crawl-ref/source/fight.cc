@@ -486,7 +486,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
 // Used by cleave and jump attack to determine if multi-hit targets will be
 // attacked.
-bool dont_harm(const actor* attacker, const actor* defender)
+static bool _dont_harm(const actor* attacker, const actor* defender)
 {
     return (mons_aligned(attacker, defender)
             || attacker == &you && defender->wont_attack()
@@ -512,7 +512,7 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
             break;
 
         actor * target = actor_at(atk + atk_vector);
-        if (target && !dont_harm(attacker, target))
+        if (target && !_dont_harm(attacker, target))
             targets.push_back(target);
     }
 }
@@ -538,7 +538,7 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
     {
         actor* def = targets.front();
         if (attacker->alive() && def && def->alive()
-            && !dont_harm(attacker, def))
+            && !_dont_harm(attacker, def))
         {
             melee_attack attck(attacker, def, attack_number,
                                ++effective_attack_number, true);
