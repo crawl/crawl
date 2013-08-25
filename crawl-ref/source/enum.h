@@ -2775,6 +2775,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_DRAGON,                // genus
 #endif
+    MONS_SNAKE,                 // genus
 
     NUM_MONSTERS,               // used for polymorph
 
