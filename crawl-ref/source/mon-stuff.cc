@@ -731,9 +731,8 @@ int exp_rate(int killer)
     // Damage by the spectral weapon is considered to be the player's damage ---
     // so the player does not lose any exp from dealing damage with a spectral weapon summon
     if (!invalid_monster_index(killer)
-        && (&menv[killer])->type == MONS_SPECTRAL_WEAPON
-        && (&menv[killer])->props.exists("sw_mid")
-        && actor_by_mid((&menv[killer])->props["sw_mid"].get_int())->is_player())
+        && menv[killer].type == MONS_SPECTRAL_WEAPON
+        && menv[killer].summoner == MID_PLAYER)
     {
         return 2;
     }
@@ -1657,9 +1656,8 @@ int monster_die(monster* mons, killer_type killer,
 
     // Kills by the spectral weapon are considered as kills by the player instead
     if (killer == KILL_MON
-        && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON
-        && (&menv[killer_index])->props.exists("sw_mid")
-        && actor_by_mid((&menv[killer_index])->props["sw_mid"].get_int())->is_player())
+        && menv[killer_index].type == MONS_SPECTRAL_WEAPON
+        && menv[killer_index].summoner == MID_PLAYER)
     {
         killer = KILL_YOU;
         killer_index = you.mindex();
