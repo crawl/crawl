@@ -4081,8 +4081,14 @@ void unmarshallMonster(reader &th, monster& m)
         && m.type == MONS_BATTLESPHERE && !m.props.exists("bs_mid"))
     {
         // It must have belonged to the player.
-        m.props["bs_mid"].get_int() = MID_PLAYER;
+        m.summoner = MID_PLAYER;
     }
+    else if (m.props.exists("bs_mid"))
+    {
+        m.summoner = m.props["bs_mid"].get_int();
+        m.props.erase("bs_mid");
+    }
+
     if (m.type == MONS_ZOMBIE_SMALL || m.type == MONS_ZOMBIE_LARGE)
         m.type = MONS_ZOMBIE;
     if (m.type == MONS_SKELETON_SMALL || m.type == MONS_SKELETON_LARGE)
