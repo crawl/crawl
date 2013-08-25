@@ -352,7 +352,7 @@ function choose_mset_3(e)
 -- Fire
   elseif rnd < 73 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
-               fire drake / efreet / dragon / fire giant")
+               fire drake / efreet / fire dragon / fire giant")
 -- Ice
   elseif rnd < 75 then
     e.kmons("1 = ice beast / polar bear / white imp / simulacrum /\
@@ -369,7 +369,7 @@ function choose_mset_3(e)
 -- Dragon
   elseif rnd < 81 then
     e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\
-               death drake / swamp dragon / dragon / ice dragon / wyvern /\
+               death drake / swamp dragon / fire dragon / ice dragon / wyvern /\
                hydra")
 -- Ranged
   elseif rnd < 83 then
@@ -484,7 +484,7 @@ local rnd = crawl.random2(142)
 -- Fire
   elseif rnd < 78 then
     e.kmons("1 = fire vortex / hell hound / hell hog / fire elemental /\
-               fire drake / efreet / dragon / fire giant / orb of fire w:5 /\
+               fire drake / efreet / fire dragon / fire giant / orb of fire w:5 /\
                balrug")
 -- Ice
   elseif rnd < 81 then
@@ -502,7 +502,7 @@ local rnd = crawl.random2(142)
 -- Dragon
   elseif rnd < 90 then
     e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\
-               death drake / swamp dragon / dragon / ice dragon /\
+               death drake / swamp dragon / fire dragon / ice dragon /\
                shadow dragon / iron dragon / quicksilver dragon /\
                golden dragon / wyvern / hydra")
 -- Ranged

@@ -1458,8 +1458,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // dragons ('D')
     case MONS_WYVERN:
         return TILEP_MONS_WYVERN;
-    case MONS_DRAGON:
-        return TILEP_MONS_DRAGON;
+    case MONS_FIRE_DRAGON:
+        return TILEP_MONS_FIRE_DRAGON;
     case MONS_HYDRA:
         // Number of heads
         return _mon_clamp(TILEP_MONS_HYDRA, number - 1);
@@ -3979,8 +3979,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // dragons ('D')
     case MONS_WYVERN:
         return TILE_CORPSE_WYVERN;
-    case MONS_DRAGON:
-        return TILE_CORPSE_DRAGON;
+    case MONS_FIRE_DRAGON:
+        return TILE_CORPSE_FIRE_DRAGON;
     case MONS_HYDRA:
         return TILE_CORPSE_HYDRA;
     case MONS_ICE_DRAGON:

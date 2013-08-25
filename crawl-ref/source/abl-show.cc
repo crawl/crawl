@@ -3290,7 +3290,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
     //     Make better ones come first.
     if ((you.form == TRAN_DRAGON
-        && dragon_form_dragon_type() == MONS_DRAGON
+        && dragon_form_dragon_type() == MONS_FIRE_DRAGON
         && you.species != SP_RED_DRACONIAN)
         || player_mutation_level(MUT_BREATHE_FLAMES))
     {

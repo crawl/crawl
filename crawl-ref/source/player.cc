@@ -1619,7 +1619,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         case TRAN_DRAGON:
         {
             monster_type drag = dragon_form_dragon_type();
-            if (drag == MONS_DRAGON)
+            if (drag == MONS_FIRE_DRAGON)
                 rf += 2;
             else if (drag == MONS_ICE_DRAGON)
                 rf--;
@@ -1695,7 +1695,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         case TRAN_DRAGON:
         {
             monster_type form = dragon_form_dragon_type();
-            if (form == MONS_DRAGON)
+            if (form == MONS_FIRE_DRAGON)
                 rc--;
             else if (form == MONS_ICE_DRAGON)
                 rc += 2;

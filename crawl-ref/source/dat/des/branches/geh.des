@@ -248,7 +248,7 @@ MONS:    flaming corpse w:8 / red draconian / fire elemental w:5 / \
          red very ugly thing w:15 / efreet w:12
 SUBST:   * = *||, {}[] = ***|, xc = xxxccb, 5 = 2, 6 = 4
 :  else
-KMONS:   123 = dragon
+KMONS:   123 = fire dragon
 KMONS:   456 = ice dragon
 KMONS:   789 = red draconian ; cloak . long sword ego:freezing ident:type
 KMONS:   ABC = white draconian ; cloak . long sword ego:flaming ident:type

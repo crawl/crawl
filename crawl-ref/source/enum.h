@@ -2167,7 +2167,7 @@ enum monster_type                      // menv[].type
     MONS_STEAM_DRAGON,
     MONS_MOTTLED_DRAGON,
     MONS_SWAMP_DRAGON,
-    MONS_DRAGON,
+    MONS_FIRE_DRAGON,
     MONS_ICE_DRAGON,
     MONS_SHADOW_DRAGON,
     MONS_STORM_DRAGON,
@@ -2702,6 +2702,9 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_ARACHNOID,             // genus
 #endif
+#if TAG_MAJOR_VERSION > 34
+    MONS_DRAGON,                // genus
+#endif
 
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,
@@ -2765,6 +2768,10 @@ enum monster_type                      // menv[].type
     MONS_FORMICID,
     MONS_FORMICID_DRONE,
     MONS_FORMICID_VENOM_MAGE,
+
+#if TAG_MAJOR_VERSION == 34
+    MONS_DRAGON,                // genus
+#endif
 
     NUM_MONSTERS,               // used for polymorph
 

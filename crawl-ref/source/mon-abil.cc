@@ -3743,7 +3743,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     // Intentional fallthrough
 
     // Dragon breath weapons:
-    case MONS_DRAGON:
+    case MONS_FIRE_DRAGON:
     case MONS_HELL_HOUND:
     case MONS_LINDWURM:
     case MONS_FIRE_DRAKE:

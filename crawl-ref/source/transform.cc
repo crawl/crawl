@@ -511,7 +511,7 @@ monster_type dragon_form_dragon_type()
         return MONS_STEAM_DRAGON;
     case SP_RED_DRACONIAN:
     default:
-        return MONS_DRAGON;
+        return MONS_FIRE_DRAGON;
     }
 }
 

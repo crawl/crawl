@@ -1122,7 +1122,7 @@ MARKER: ! = lua:fog_machine { cloud_type = "seething chaos", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
             size = 1, walk_dist = 1, spread_rate = 33 }
 SUBST:  ! = ., X = x., x = xc
-MONS:   bat, chaos spawn, dragon / ice dragon
+MONS:   bat, chaos spawn, fire dragon / ice dragon
 MONS:   ogre mage, hill giant
 MAP
  cccX X X

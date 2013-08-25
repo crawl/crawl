@@ -674,7 +674,7 @@ static const pop_entry pop_beasts[] =
   { 16, 27,  100, PEAK, MONS_ANACONDA },
   { 16, 27,   50, PEAK, MONS_RAVEN },
   { 18, 27,   50, UP,   MONS_DIRE_ELEPHANT },
-  { 20, 27,   25, UP,   MONS_DRAGON },
+  { 20, 27,   25, UP,   MONS_FIRE_DRAGON },
   { 20, 27,   25, UP,   MONS_ANCIENT_BEAR },
   { 23, 27,   10, UP,   MONS_APIS },
   { 23, 27,   10, UP,   MONS_HELLEPHANT },

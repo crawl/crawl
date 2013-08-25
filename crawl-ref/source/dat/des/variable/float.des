@@ -4835,7 +4835,7 @@ TAGS:    no_monster_gen no_pool_fixup allow_dup
 ORIENT:  float
 DEPTH:   D:19-
 MONS:    plant w:14 / fungus w:4 / bush w:2
-MONS:    dragon / ice dragon / lindwurm / hell hound
+MONS:    fire dragon / ice dragon / lindwurm / hell hound
 MONS:    death yak / griffon / catoblepas / dire elephant
 MONS:    hydra / anaconda / red wasp w:2 / redback w:3 / wolf spider w:5 / harpy
 MONS:    spriggan druid, spriggan rider, sphinx / phoenix / hell beast
@@ -4891,7 +4891,7 @@ TAGS: no_monster_gen
 SHUFFLE: PFIEMONLSAKRVCTHD
 KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
            redback
-KMONS: F = fire giant w:5 / dragon / fire elemental / red draconian / sun demon
+KMONS: F = fire giant w:5 / fire dragon / fire elemental / red draconian / sun demon
 KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
            ice dragon
 KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning / vapour
@@ -5067,7 +5067,7 @@ PLACE:  D:$
      kmons("2 = moth of wrath")
      kmons("3 = base draconian")
      kmons("* = golden dragon / shadow dragon / storm dragon / bone dragon"
-           .. " / dragon / ice dragon")
+           .. " / fire dragon / ice dragon")
      colour("c = lightmagenta")
   else
      local bigweight = you.absdepth() - 16
@@ -5197,7 +5197,7 @@ PLACE:  D:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
-           / dragon / ice dragon
+           / fire dragon / ice dragon
 KMONS:  9 = nonbase draconian
 KMONS:  0 = base draconian
 KFEAT:  O = enter_zot
@@ -5236,7 +5236,7 @@ PLACE:  D:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
-           / dragon / ice dragon
+           / fire dragon / ice dragon
 KMONS:  9 = nonbase draconian
 KMONS:  0 = base draconian
 KFEAT:  O = enter_zot

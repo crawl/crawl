@@ -14,7 +14,7 @@
 function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
     e.depth("Zot:1-4")
-    e.kmons("D = mottled dragon / dragon w:25 / ice dragon w:25 /\
+    e.kmons("D = mottled dragon / fire dragon w:25 / ice dragon w:25 /\
                storm dragon w:20 / shadow dragon w:20 / golden dragon /\
                iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
                lindwurm w:2 / fire drake w:2 / death drake w:2 /\
@@ -171,7 +171,7 @@ SUBST:  - = ^ .:90
 KFEAT:  O = enter_zot
 SUBST:  4 = 122223
 MONS:   patrolling nonbase draconian
-MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   fire dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
 MONS:   patrolling base draconian
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
@@ -217,7 +217,7 @@ COLOUR: x = magenta
 FTILE:  .+cm^1234$ = floor_hall
 SUBST:  D = +, "' = .
 MONS:   patrolling nonbase draconian
-MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   fire dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
 MONS:   w:20 patrolling base draconian / nothing
 MONS:   base draconian ; glaive | halberd
 MAP
@@ -274,7 +274,7 @@ MONS:   green draconian, swamp dragon
 : end
 # hard: 5, 6
 : if crawl.coinflip() then
-MONS:   red draconian, dragon
+MONS:   red draconian, fire dragon
 : else
 MONS:   white draconian, ice dragon
 : end
@@ -332,7 +332,7 @@ COLOUR: . = white
 FTILE:  -23O = floor_hall
 SUBST:  - = .
 MONS:   draconian zealot / draconian caller
-MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   fire dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
 MONS:   base draconian
 KMONS:  O = nonbase draconian
 MAP
@@ -378,7 +378,7 @@ SUBST:  v: ....cnXblw, z:..cnXblw
 NSUBST: d = 5:3 / 2:2 / *:.
 SUBST:  D = +
 MONS:   nonbase draconian
-MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   fire dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
 MONS:   base draconian
 MAP
                    cccccccccccc
@@ -408,7 +408,7 @@ KPROP:  O- = no_tele_into
 SUBST:  - = .
 NSUBST: d = 5:3 / 2:2 / 1:1
 MONS:   patrolling nonbase draconian
-MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   fire dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
 MONS:   patrolling base draconian
 MAP
 ....d....
@@ -436,7 +436,7 @@ SUBST:  - = .
 NSUBST: 2 = 2:2 / *:.
 NSUBST: 1 = 2:1 / *:2
 MONS:   patrolling nonbase draconian
-MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   fire dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
 MONS:   patrolling base draconian
 MAP
       ..1..
@@ -467,7 +467,7 @@ COLOUR: ABC-_ = magenta
 FTILE:  ABC-_O = floor_hall
 SUBST:  _ = ., A = 1, B = 2, C = c, - = +
 MONS:   golden dragon / storm dragon / shadow dragon / bone dragon / \
-        dragon / ice dragon
+        fire dragon / ice dragon
 MONS:   nonbase draconian, base draconian
 MAP
       cccccccccccccccccccc
@@ -495,7 +495,7 @@ KFEAT:  O = enter_zot
 COLOUR: 123c+. = magenta
 FTILE:  123c+.O = floor_hall
 MONS:   golden dragon / storm dragon / shadow dragon / bone dragon / \
-        dragon / ice dragon
+        fire dragon / ice dragon
 MONS:   nonbase draconian, base draconian
 MAP
       @       @
@@ -531,7 +531,7 @@ COLOUR: 123c+. = magenta
 FTILE:  123c+.AO = floor_hall
 NSUBST: A = 1:O / *:A
 MONS:   golden dragon / storm dragon / shadow dragon / bone dragon / \
-        dragon / ice dragon
+        fire dragon / ice dragon
 MONS:   nonbase draconian, base draconian
 MAP
        @
@@ -564,7 +564,7 @@ COLOUR: 123c+_ = magenta
 FTILE:  123+_OT = floor_hall
 SUBST:  _ = .
 MONS:   golden dragon / storm dragon / shadow dragon / bone dragon / \
-        dragon / ice dragon
+        fire dragon / ice dragon
 MONS:   nonbase draconian, base draconian
 MAP
             .....
@@ -595,7 +595,7 @@ COLOUR: ABC-_ = magenta
 FTILE:  ABC-_O = floor_hall
 SUBST:  _ = ., A = 1, B = 3, C = c, - = +
 MONS:   golden dragon / storm dragon / shadow dragon / bone dragon / \
-        dragon / ice dragon
+        fire dragon / ice dragon
 MONS:   nonbase draconian, base draconian
 MAP
 @......               ......@
@@ -635,7 +635,7 @@ COLOUR: ABC-_ = magenta
 FTILE:  ABC-_O = floor_hall
 SUBST:  _ = ., A = 1, B = 3, C = c, - = +
 MONS:   golden dragon / storm dragon / shadow dragon / bone dragon / \
-        dragon / ice dragon
+        fire dragon / ice dragon
 MONS:   nonbase draconian, base draconian
 MAP
            .........
@@ -682,7 +682,7 @@ FTILE:  1C-_O = floor_hall
 SUBST:  _ = ., C = c
 NSUBST: @ = 1:@ / *:.
 MONS:   golden dragon / storm dragon / shadow dragon / bone dragon / \
-        dragon / ice dragon
+        fire dragon / ice dragon
 MONS:   nonbase draconian, base draconian
 MAP
      ccccccc
@@ -1084,7 +1084,7 @@ ITEM:    wand of cold, staff of cold, book of frost, book of ice
 SUBST:   w = l
 SUBST:   W = l..
 : else
-MONS:    fire giant, dragon
+MONS:    fire giant, fire dragon
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
@@ -1874,7 +1874,7 @@ MONS:    ettin / stone giant w:5 / fire giant / frost giant
 MONS:    base draconian w:18 / death cob w:1 / guardian mummy w:1
 MONS:    glowing shapeshifter w:20 / sphinx w:15 / quicksilver dragon w:20 / \
          iron dragon w:20 / shadow dragon / golden dragon
-MONS:    dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
+MONS:    fire dragon / ice dragon / storm dragon w:8 / moth of wrath w:12 / \
          ghost moth w:5 / tentacled monstrosity w:5 / bone dragon w:5
 MONS:    titan / lich / deep elf annihilator w:3 / deep elf high priest w:4 / \
          deep elf sorcerer w:3 / giant orange brain w:3
@@ -2337,7 +2337,7 @@ DEPTH:  Zot, !Zot:$
 ORIENT: east
 SUBST:  } = }:80 >, ] = ]:80 >, ) = ):80 >
 MONS:   nonbase draconian, base draconian w:30 / nothing, moth of wrath
-MONS:   dragon w:30 / ice dragon w:30 / shadow dragon w:20 / \
+MONS:   fire dragon w:30 / ice dragon w:30 / shadow dragon w:20 / \
         storm dragon w:50 / bone dragon w:30 / golden dragon w:35
 MONS:   Killer Klown / electric golem w:5 / curse toe w:5 / nothing
 MONS:   orb of fire
@@ -2437,7 +2437,7 @@ SUBST: GP = x, g = r, p = c, HQ = @, hq = .
 COLOUR: r = red, c = blue
 KMONS: R = nonbase red draconian
 KMONS: C = nonbase white draconian
-KMONS: D = dragon
+KMONS: D = fire dragon
 KMONS: I = ice dragon
 KFEAT: r = c
 MAP

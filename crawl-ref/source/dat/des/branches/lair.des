@@ -829,7 +829,7 @@ NAME:   bobbens_dragon_lair_wall
 DEPTH:  Lair:4-
 TAGS:   no_monster_gen mini_float
 : if you.absdepth() >= 18 then
-MONS:   dragon
+MONS:   fire dragon
 MONS:   fire drake / w:2 mottled dragon / w:4 nothing
 : else
 MONS:   mottled dragon / steam dragon
@@ -919,7 +919,7 @@ ENDMAP
 NAME:   hibernation_bobbens
 DEPTH:  Lair:4-
 TAGS:   allow_dup no_monster_gen no_item_gen mini_float
-MONS:   w:5 death drake / ice dragon / dragon / swamp dragon
+MONS:   w:5 death drake / ice dragon / fire dragon / swamp dragon
 MONS:   swamp dragon / hydra / anaconda
 MONS:   swamp drake / w:20 spiny frog / w:20 komodo dragon /\
         w:20 basilisk / w:20 black mamba
@@ -1928,7 +1928,7 @@ TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
 ORIENT: southeast
 MONS:   plant
 MONS:   spiny worm, brain worm, worm, giant leech, lindwurm
-KMONS:  7 = dragon
+KMONS:  7 = fire dragon
 KMONS:  8 = giant firefly
 KMONS:  9 = rock worm
 KFEAT:  9 = rock_wall
@@ -2182,7 +2182,7 @@ PLACE:  Lair:$
 TAGS:   patrolling no_monster_gen
 ORIENT: southeast
 KMONS:  1 = fire drake / swamp drake / mottled dragon / steam dragon
-KMONS:  2 = dragon
+KMONS:  2 = fire dragon
 KMONS:  3 = plant
 KMONS:  4 = basilisk / komodo dragon
 KMONS:  5 = iguana / crocodile

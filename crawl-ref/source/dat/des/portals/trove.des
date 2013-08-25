@@ -623,7 +623,7 @@ TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op
 COLOUR:  x = blue
 MONS:    storm dragon zombie
 MONS:    golden dragon zombie
-MONS:    dragon skeleton
+MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
 ITEM:    gold dragon hide / storm dragon hide / fire dragon hide / troll hide / any useful armour good_item
 ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item

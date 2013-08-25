@@ -36,7 +36,7 @@ function st_box_setup(e)
   e.kmons("7 = patrolling vault guard")
   e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
                golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
-               iron dragon w:2 / swamp dragon / dragon / ice dragon /\
+               iron dragon w:2 / swamp dragon / fire dragon / ice dragon /\
                catoblepas / moth of wrath w:1 / ghost moth w:1 /\
                eye of draining / giant eyeball / eye of devastation /\
                giant orange brain / greater naga / guardian serpent /\

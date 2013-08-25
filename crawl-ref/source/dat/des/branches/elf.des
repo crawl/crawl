@@ -627,7 +627,7 @@ KITEM:   A= any good_item race:elven
 KITEM:   B= any good_item race:elven
 KMONS:   A= patrolling deep elf knight
 KMONS:   B= patrolling deep elf high priest / patrolling deep elf demonologist
-MONS:    ice dragon, dragon
+MONS:    ice dragon, fire dragon
 MONS:    orc knight / orc sorcerer / orc high priest
 MONS:    orc warrior / orc wizard / orc priest
 MONS:    orc

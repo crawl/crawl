@@ -154,7 +154,7 @@ DEPTH:   D:16-24
 MONS:    hell hound / nothing
 MONS:    lindwurm
 MONS:    fire drake / steam dragon w:1
-MONS:    fire giant / dragon / mottled dragon w:5 / efreet w:2
+MONS:    fire giant / fire dragon / mottled dragon w:5 / efreet w:2
 MONS:    smoke demon
 MONS:    hell knight / nothing w:5
 KMONS:   7 = molten gargoyle
@@ -166,8 +166,8 @@ KITEM:   $ = $
 NSUBST:  = = 1:= / *:v
 SUBST:   = = +v
 SUBST:   ' : l.
-: _G.set_random_mon_list("fire bat w:30 / fire drake / dragon / hell hound / " ..
-:     "efreet / fire crab / fire giant w:3 / mottled dragon / " ..
+: _G.set_random_mon_list("fire bat w:30 / fire drake / fire dragon / " ..
+:     "hell hound / efreet / fire crab / fire giant w:3 / mottled dragon / " ..
 :     "fire elemental / crimson imp / fire vortex / molten gargoyle")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
@@ -1071,11 +1071,11 @@ MONS:    frost giant w:5 / fire giant w:5 / naga mage / hell knight / \
          yaktaur captain ; crossbow ego:flame | crossbow ego:frost . bolt / \
          rakshasa w:5 ; wand of fire | wand of cold | \
          glaive w:2 ego:flaming | glaive w:2 ego:freezing
-MONS:    lorocyproca w:5 / dragon perm_ench:shapeshifter w:12 / dragon w:3 / \
+MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon w:3 / \
          ice dragon perm_ench:shapeshifter w:12 / ice dragon w:3 / \
          metal gargoyle w:5 / glowing shapeshifter / ghost moth w:1 / \
          boulder beetle / anaconda simulacrum w:4 / harpy simulacrum w:4 / \
-         hydra simulacrum w:4 / dragon simulacrum w:3 / fire crab w:5 / \
+         hydra simulacrum w:4 / fire dragon simulacrum w:3 / fire crab w:5 / \
          dancing weapon w:15 ; glaive ego:flaming | glaive ego:freezing | \
          battleaxe w:5 ego:flaming | battleaxe ego:freezing | \
          great sword ego:flaming | great sword w:5 ego:freezing | \
@@ -1563,7 +1563,7 @@ MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
          red wasp / tarantella w:2 / redback w:3 / wolf spider / \
          sea snake w:5 / alligator / hell hound w:2 / rock worm w:2
 MONS:    swamp dragon w:5 / fire crab w:4 / catoblepas w:4 / \
-         dragon w:16 / ice dragon w:16 / orb spider w:1 / spiny worm w:1 / \
+         fire dragon w:16 / ice dragon w:16 / orb spider w:1 / spiny worm w:1 / \
          dire elephant w:9 / anaconda / hydra w:15 / snapping turtle / harpy w:4
 MONS:    ghost moth w:4 / death drake w:2 / golden dragon / iron dragon / \
          quicksilver dragon w:15 / shadow dragon w:20 / storm dragon w:20 / \

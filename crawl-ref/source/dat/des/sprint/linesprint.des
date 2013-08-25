@@ -744,7 +744,7 @@ ENDMAP
 NAME:     d_27
 TAGS:     d_27
 KMONS:    1 = place:D:$
-KMONS:    2 = dragon w:20 / ice dragon w:20 / storm dragon /\
+KMONS:    2 = fire dragon w:20 / ice dragon w:20 / storm dragon /\
               bone dragon / golden dragon / mottled dragon
 KMONS:    3 = base draconian
 SUBST:    2 = 2223, 3 = 3332

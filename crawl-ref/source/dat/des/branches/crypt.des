@@ -568,11 +568,11 @@ KFEAT: z = deep_water
 KMASK: z = no_pool_fixup
 KFEAT: T = .
 KITEM: T = * / w:5 |
-KMONS: T = w:25 phantasmal warrior / spectral dragon / spectral ice dragon / \
+KMONS: T = w:25 phantasmal warrior / spectral fire dragon / spectral ice dragon / \
            spectral storm dragon
 KFEAT: S = .
 KITEM: S = $ / nothing
-KMONS: S = w:25 phantasmal warrior / spectral dragon / spectral ice dragon / \
+KMONS: S = w:25 phantasmal warrior / spectral fire dragon / spectral ice dragon / \
            spectral storm dragon
 MAP
     cccccccccccc
@@ -1095,7 +1095,7 @@ KMONS:  z = skeletal warrior
 KMONS:  N = necromancer
 KMONS:  H = hell knight
 KMONS:  M = zombie / skeleton / w:5 necrophage
-KMONS:  h = titan zombie/dragon zombie/golden dragon zombie/ghoul
+KMONS:  h = titan zombie / fire dragon zombie / golden dragon zombie / ghoul
 KMONS:  0 = lost soul / nothing
 # red metal walls
 COLOUR: = = red
@@ -1281,7 +1281,7 @@ KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
-KMONS:  t = w:20 flaming corpse / fire giant skeleton / dragon skeleton
+KMONS:  t = w:20 flaming corpse / fire giant skeleton / fire dragon skeleton
 KMONS:  X = w:1 curse skull / w:19 revenant
 : else
 KMONS:  t = w:20 hell knight / smoke demon / red devil

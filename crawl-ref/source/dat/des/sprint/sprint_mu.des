@@ -518,7 +518,7 @@ KMONS: j = patrolling spriggan ; blowgun . q:5 needle ego:sleep | \
 KMONS: k = patrolling spriggan druid
 KMONS: q = electric eel
 KFEAT: q = deep_water
-KMONS: r = hydra simulacrum / dragon simulacrum / grizzly bear simulacrum /\
+KMONS: r = hydra simulacrum / fire dragon simulacrum / grizzly bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
 KITEM: r = any, any, any, any, any, superb_item / w:1 wand of fire /\
  w:1 wand of disintegration
@@ -751,7 +751,7 @@ MARKER:  ! = lua:fog_machine { \
                  size_buildup_time = 5, cloud_type = "freezing vapour" \
              }
 : else
-MONS: fire drake, dragon, hydra, Xtahua
+MONS: fire drake, fire dragon, hydra, Xtahua
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
                  size = 2, size_buildup_amnt = 3, \
@@ -926,7 +926,7 @@ KMONS: U = Norris ; morningstar ego:vorpal . large shield ego:reflection / \
 KMONS: C = generate_awake Chuck
 KMONS: k = yaktaur captain ; crossbow ego:chaos . bolt
 KMONS: b = bush
-KMONS: D = dragon
+KMONS: D = fire dragon
 NSUBST: $ = 1:1 / *:|
 NSUBST: D = 1:D / *:*
 NSUBST: a = 1:+ / *:v

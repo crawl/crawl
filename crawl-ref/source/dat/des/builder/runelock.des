@@ -57,7 +57,7 @@ ENDMAP
 NAME: grunt_runelock_hoard
 ORIENT: float
 PLACE: D:14
-MONS: dragon / ice dragon
+MONS: fire dragon / ice dragon
 MAP
   cccccc
  cc$$$$ccc
