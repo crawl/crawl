@@ -46,11 +46,19 @@ be moved by this spell.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Banishment spell
+
+<Banish ability>
+%%%%
 Beastly Appendage spell
 
 This spell makes you temporarily replace one or a pair of appendages with an
 animal counterpart, giving you an extra attack. It is not powerful enough to
 meld armour.
+%%%%
+Berserker Rage spell
+
+<Berserk ability>
 %%%%
 Blade Hands spell
 
@@ -97,6 +105,10 @@ permanently lessens his or her resilience to injury — to a degree dependent on
 
 The spell is powerful enough to literally pull someone out of Death's Door,
 although the shock will render the caster incapable of action for a while.
+%%%%
+Brothers in Arms spell
+
+<Brothers in Arms ability>
 %%%%
 Call Canine Familiar spell
 
@@ -259,6 +271,10 @@ This spell temporarily transforms the caster into a great, fire-breathing
 dragon. Draconian casters will instead retain their innate colour and breath
 weapon once transformed.
 %%%%
+Drain Life spell
+
+<Drain Life ability>
+%%%%
 Enslavement spell
 
 This spell causes an otherwise hostile creature to fight on your side for a
@@ -280,6 +296,10 @@ Fire Brand spell
 
 This spell sets a weapon or launcher held by the caster ablaze. It will not
 affect weapons otherwise subject to special enchantments.
+%%%%
+Fire Breath spell
+
+<Breathe Fire ability>
 %%%%
 Fire Storm spell
 
@@ -340,6 +360,10 @@ Haunt spell
 
 This spell calls wraiths and ghosts to haunt the caster's target. Calling on
 the undead exacts a toll on the caster's health, however.
+%%%%
+Hellfire spell
+
+<Hellfire ability>
 %%%%
 Throw Icicle spell
 
@@ -474,6 +498,10 @@ Metabolic Englaciation spell
 This spell tries to lower the metabolic rate of every creature in the caster's
 vicinity, slowing all those who are not resistant to cold. It bypasses magic
 resistance, although tougher monsters will not be slowed for as long as others.
+%%%%
+Mirror Damage spell
+
+<Injury Mirror ability>
 %%%%
 Necromutation spell
 
@@ -671,6 +699,10 @@ Slow spell
 
 This spell slows the actions of a creature.
 %%%%
+Smiting spell
+
+<Smiting ability>
+%%%%
 Song of Shielding spell
 
 This spell draws from your magical essence to create a temporary protective
@@ -731,6 +763,10 @@ Sticky Flame spell:quote
 for the rest of his life.”
 
     -Terry Pratchett, “Jingo”
+%%%%
+Sticky Flame Splash spell
+
+<Breathe Sticky Flame ability>
 %%%%
 Sting spell
 
@@ -852,6 +888,10 @@ The spell's effectiveness is greatly diminished in closed areas.
 
 As a side effect, this spell may be used to cross lava, but beware of its short
 duration.
+%%%%
+Trog's Hand spell
+
+<Trog's Hand ability>
 %%%%
 Tukima's Dance spell
 
