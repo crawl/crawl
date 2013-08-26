@@ -372,7 +372,7 @@ static int _strength_modifier()
 
     // mutations
     result += 2 * (player_mutation_level(MUT_STRONG)
-              - player_mutation_level(MUT_WEAK));
+                  - player_mutation_level(MUT_WEAK));
 #if TAG_MAJOR_VERSION == 34
     result += player_mutation_level(MUT_STRONG_STIFF)
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
@@ -418,7 +418,7 @@ static int _int_modifier()
 
     // mutations
     result += 2 * (player_mutation_level(MUT_CLEVER)
-              - player_mutation_level(MUT_DOPEY));
+                  - player_mutation_level(MUT_DOPEY));
 
     return result;
 }
@@ -449,7 +449,7 @@ static int _dex_modifier()
 
     // mutations
     result += 2 * (player_mutation_level(MUT_AGILE)
-              - player_mutation_level(MUT_CLUMSY));
+                  - player_mutation_level(MUT_CLUMSY));
 #if TAG_MAJOR_VERSION == 34
     result += player_mutation_level(MUT_FLEXIBLE_WEAK)
               - player_mutation_level(MUT_STRONG_STIFF);
