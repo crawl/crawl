@@ -1199,16 +1199,9 @@ string get_ability_desc(const ability_type ability)
 {
     const string& name = ability_name(ability);
 
-    // XXX: The suffix is necessary to distinguish between similarly
-    // named spells.  Yes, this is a hack.
     string lookup = getLongDescription(name + " ability");
-    if (lookup.empty())
-    {
-        // Try again without the suffix.
-        lookup = getLongDescription(name);
-    }
 
-    if (lookup.empty()) // Still nothing found?
+    if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
 
     return name + "\n\n" + lookup + "\n" + _detailed_cost_description(ability);

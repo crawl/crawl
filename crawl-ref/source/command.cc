@@ -1004,6 +1004,10 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
+    if (!ends_with(key, " ability"))
+        return true;
+    key.erase(key.length() - 8);
+
     if (string_matches_ability_name(key))
         return false;
 
@@ -1430,6 +1434,7 @@ static void _find_description(bool *again, string *error_inout)
     case 'A':
         type   = "ability";
         filter = _ability_filter;
+        suffix = " ability";
         break;
     case 'C':
         type   = "card";
