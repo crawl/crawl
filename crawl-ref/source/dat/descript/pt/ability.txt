@@ -3,40 +3,40 @@ Blink ability
 
 Teleportar aleatoriamente para uma distância curta
 %%%%
-Breathe Fire
+Breathe Fire ability
 
 Esbafora uma rajada de fogo em um monstro alvo, possivelmente deixando nuvens
 de fogo na sua vista.
 %%%%
-Breathe Frost
+Breathe Frost ability
 
 Esbafora uma rajada de gelo em um monstro alvo.
 %%%%
-Breathe Poison Gas
+Breathe Poison Gas ability
 
 Esbafora uma rajada de gás venenoso em um monstro alvo.
 %%%%
-Breathe Lightning
+Breathe Lightning ability
 
 Libera uma grande descarga de eletricidade, causando um tempestade de trovões
 sem controle.
 %%%%
-Breathe Sticky Flame
+Breathe Sticky Flame ability
 
 Esbafora uma rajada de chama pegajosa no monstro alvo. Como o nome sugere, a
 chama pegajosa vai ficar em volta do monstro, de forma que ela ficará coberto
 de chamas por algumas rodadas até que elas desapareçam. Pode respingar no
 impacto.
 %%%%
-Breathe Steam
+Breathe Steam ability
 
 Esbafora um jato de vapor em um monstro alvo.
 %%%%
-Breathe Noxious Fumes
+Breathe Noxious Fumes ability
 
 Esbafora um rajada de fumaça nociva em um monstro alvo.
 %%%%
-Bat Form
+Bat Form ability
 
 Transforma em um morcego vampiro rápido. Na forma de morcego, você não pode
 interagir com itens de qualquer forma (exceto pegá-los ou descartá-los), nem
@@ -44,19 +44,19 @@ lançar magias. Note que Forma de Morcego vai reduzir sua Força atual e aumenta
 sua Destreza. Dessa forma, você não poderá mudar de forma se sua Força estive
 muito baixa.
 %%%%
-Bottle Blood
+Bottle Blood ability
 
 No nível 6 ou mais, Vampiros podem engarrafar o sangue de um corpo não podre, e
 que contenha sangue, estando sobre ele. Para fazer isso, é necessário ter a
 capacidade de empunhar sua faca, como fazem açougueiros.
 %%%%
-Cleansing Flame
+Cleansing Flame ability
 
 Invoca uma grande rajada de fúria divina centrada em você, causando grandes
 danos a mortos-vivos e demônios. Todos outros hostis tomam dano, ou não,
 ficando você e seus aliados imunes.
 %%%%
-Animate Remains
+Animate Remains ability
 
 Reanima um corpo ou esqueleto singular como um seguidor. Note que zumbis e
 esqueletos não podem sair do nível em que foram criados.
@@ -66,44 +66,44 @@ Animate Dead ability
 Reanima todos os corpos e esqueletos perto de você como seguidores. Note que
 zumbis e esqueletos não podem sair do nível em que foram criados.
 %%%%
-Animate Remains or Dead
+Animate Remains or Dead ability
 
 Se você obteve esta descrição, houve um erro.
 %%%%
-Channel Energy
+Channel Energy ability
 
 Reabasteça um pouco de sua reserva mágica, dependendo de sua habilidade de
 Invocações.
 %%%%
-Burn Spellbooks
+Burn Spellbooks ability
 
 Incendeia todos livros de magias no seu campo de visão. O fogo é alimentado
 pelo ódio de Trog, e Trog gosta disso principalmente quando você não se importa
 qualquer livros de loucuras são queimados.
 %%%%
-Brothers in Arms
+Brothers in Arms ability
 
 Conjura aliados grandes e nervosos para causar estragos.
 %%%%
-Bend Space
+Bend Space ability
 
 Dobra o espaço a sua volta, teleportando você a uma distância curta e,
 possivelmente, também teleportando e causando dano a monstros a sua volta.
 %%%%
-Banish
+Banish ability
 
 Tenta banir um monstro para o Abismo.
 %%%%
-Bend Time
+Bend Time ability
 
 Tenta reduzir a velocidade de todo muito perto de você. A habilidade Invocações
 Altas tornam mais difícil de resistir.
 %%%%
-Acquire gold
+Acquire gold ability
 
 Adquire uma grande quantidade de ouro.
 %%%%
-Acquirement
+Acquirement ability
 
 Adquire um tipo escolhido de item.
 %%%%

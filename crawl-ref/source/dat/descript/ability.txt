@@ -1,9 +1,9 @@
 %%%%
-No ability
+No ability ability
 
 If you get this description, it is a bug.
 %%%%
-Spit Poison
+Spit Poison ability
 
 Spit poison at a targeted monster.
 %%%%
@@ -11,44 +11,44 @@ Blink ability
 
 Randomly translocate a short distance.
 %%%%
-Breathe Dispelling Energy
+Breathe Dispelling Energy ability
 
 Breathe a blast of power at a targeted monster, possibly removing some of its
 enchantments.
 %%%%
-Breathe Fire
+Breathe Fire ability
 
 Breathe a blast of fire at a targeted monster, possibly leaving fire clouds in
 its wake.
 %%%%
-Breathe Frost
+Breathe Frost ability
 
 Breathe a blast of frost at a targeted monster.
 %%%%
-Breathe Poison Gas
+Breathe Poison Gas ability
 
 Breathe a blast of poison gas at a targeted monster.
 %%%%
-Breathe Lightning
+Breathe Lightning ability
 
 Release a great discharge of electricity causing an uncontrollable lightning
 storm.
 %%%%
-Breathe Sticky Flame
+Breathe Sticky Flame ability
 
 Breathe a blast of sticky flame at a targeted monster. As the name suggests,
 sticky flame will stick around, so the monster may be covered in flames for
 several rounds until they eventually go out. It may splash on impact.
 %%%%
-Breathe Steam
+Breathe Steam ability
 
 Breathe a jet of steam at a targeted monster.
 %%%%
-Breathe Noxious Fumes
+Breathe Noxious Fumes ability
 
 Breathe a blast of noxious fumes at a targeted monster.
 %%%%
-Bat Form
+Bat Form ability
 
 Turn into a speedy vampire bat. In bat form, you can neither interact with
 items in any form (except picking them up or dropping them), nor cast spells.
@@ -57,46 +57,46 @@ Dexterity. Thus, you won't be able to change form if your Strength is too low.
 The flight is magically augmented, so you will stay in the air even if the
 weight of your possessions or some disability would normally drag you down.
 %%%%
-Bottle Blood
+Bottle Blood ability
 
 At experience level 6 and higher, Vampires can bottle the blood from non-rotten
 and blood-containing corpses they are standing on. Doing so requires the
 capability of wielding your knife, as is the case for butchering.
 %%%%
-Spit Acid
+Spit Acid ability
 
 Spit acid at a targeted monster.
 %%%%
 # Both for Fly I and II.
-Fly
+Fly ability
 
 Start flying. During flight you can safely cross water and similar obstacles.
 Be warned, though, that flight may time out at inopportune moments and cause
 you to fall to your death.
 %%%%
-Hellfire
+Hellfire ability
 
 Blast your enemies with hellfire.
 %%%%
-Release Delayed Fireball
+Release Delayed Fireball ability
 
 Instantly release a previously memorised (delayed) fireball without additional
 cost in terms of magic or hunger.
 %%%%
-Stop Singing
+Stop Singing ability
 
 Stop singing your Song of Slaying.
 %%%%
-Self-Restoration
+Self-Restoration ability
 
 At the permanent loss of one magic point restore your Strength, Dexterity and
 Intelligence, and heal a large amount of rotted hit points.
 %%%%
-Device Recharging
+Device Recharging ability
 
 At the permanent loss of one magic point recharge a wand or rod.
 %%%%
-Evoke Teleportation
+Evoke Teleportation ability
 
 Teleport yourself to a random location on the level.
 %%%%
@@ -104,7 +104,7 @@ Evoke Blink
 
 Randomly translocate a short distance.
 %%%%
-Evoke Berserk Rage
+Evoke Berserk Rage ability
 
 Go berserk. Going berserk greatly, if temporarily, increases your hit points
 and damage output in melee fights. It will time out quickly if you don't kill
@@ -114,28 +114,28 @@ something, evoke wands or items, or cast spells. Such a rage is usually
 followed by deep exhaustion, a time during which you are slowed down, cannot
 berserk again, and occasionally even pass out.
 %%%%
-Evoke Invisibility
+Evoke Invisibility ability
 
 Turn yourself invisible for a limited amount of time. Turning invisible
 increases your magical contamination and may eventually cause glowing.
 %%%%
-Turn Visible
+Turn Visible ability
 
 Turn visible again.
 %%%%
-Evoke Flight
+Evoke Flight ability
 
-<Fly>
+<Fly ability>
 %%%%
-Stop Flying
+Stop Flying ability
 
 Stop flying.
 %%%%
-Evoke Fog
+Evoke Fog ability
 
 Release a thick cloud of fog to obscure vision.
 %%%%
-Evoke Teleport Control
+Evoke Teleport Control ability
 
 Gain the ability to control your next translocation – either by selecting an
 approximate target for a teleport, or by selecting a direction for a blink. Be
@@ -143,12 +143,12 @@ wary that controlled translocations will cause the subject to become
 contaminated with magical energy, and that controlled teleports will take
 longer to trigger than uncontrolled ones.
 %%%%
-End Transformation
+End Transformation ability
 
 Revert to your normal form, with a short delay.
 %%%%
 # Zin
-Recite
+Recite ability
 
 Preach to monsters about Zin's laws, which can lead to various results. There
 are four books you can preach from:
@@ -168,53 +168,53 @@ permanently deprived of means to spread their foul faith.
 * Book of Anathema: Demons and the undead are hated by Zin. This book gives you
 means to rebuke them.
 %%%%
-Vitalisation
+Vitalisation ability
 
 Vitalise yourself, gaining divine stamina and sustenance from Zin. Divine
 stamina protects you from sickness, poisoning, petrification, confusion and
 rot, and temporarily boosts and sustains your Strength, Intelligence and
 Dexterity.
 %%%%
-Imprison
+Imprison ability
 
 Temporarily imprison a monster in walls of silver. The duration of the prison
 is increased by Invocations skill.
 %%%%
-Sanctuary
+Sanctuary ability
 
 For a short duration gain safety in a divine refuge. While you are inside the
 sanctuary, monsters will not attack you, but the protection will disappear at
 once should you breach the divine peace.
 %%%%
-Cure All Mutations
+Cure All Mutations ability
 
 Cure all your mutations — but only once.
 %%%%
 # The Shining One
-Divine Shield
+Divine Shield ability
 
 The Shining One grants you a divine shield. Because it is held aloft by godly
 power, it does not interfere with your equipment. However, it is controlled by
 your willpower, and your skill with Shields will improve it.
 %%%%
-Cleansing Flame
+Cleansing Flame ability
 
 Invoke a huge blast of divine fury centered on you, severely damaging undead
 and demons. All other hostiles also take damage, if less so, whereas you and
 your allies are never affected.
 %%%%
-Summon Divine Warrior
+Summon Divine Warrior ability
 
 Summon an angel or daeva, powerful warriors against evil. They may be blessed
 by the Shining One to stay longer in this world.
 %%%%
 # Kikubaaqudgha
-Receive Corpses
+Receive Corpses ability
 
 Create one or more reanimatable monster corpses near yourself. The number and
 freshness of these are dependent on Necromancy skill.
 %%%%
-Torment
+Torment ability
 
 Sacrifice a cadaver to make everyone in sight, including you, experience all
 the pain that being suffered in its life. This will decimate the resilience of
@@ -223,17 +223,17 @@ all those who can feel it.
 Kikubaaqudgha may choose to protect you from it... or may not.
 %%%%
 # Yredelemnul
-Animate Remains
+Animate Remains ability
 
 Reanimate a single corpse or skeleton as a follower. Note that zombies and
 skeletons cannot leave the level they were created on.
 %%%%
-Recall Undead Slaves
+Recall Undead Slaves ability
 
 Recall your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Injury Mirror
+Injury Mirror ability
 
 Hurt attacking monsters by reflecting damage they do to you back at them.
 %%%%
@@ -242,11 +242,11 @@ Animate Dead ability
 Reanimate all corpses and skeletons in your vicinity as followers. Note that
 zombies and skeletons cannot leave the level they were created on.
 %%%%
-Drain Life
+Drain Life ability
 
 Heal hit points by draining the life force of the monsters surrounding you.
 %%%%
-Enslave Soul
+Enslave Soul ability
 
 Mark a living intelligent monster's soul as ripe for the taking. Once the
 marked monster dies, its soul will be yours.
@@ -258,58 +258,58 @@ Furthermore, the duration of the mark is dependent on Invocations skill.
 
 Note that enslaved souls can follow you beyond the level they were created on.
 %%%%
-Animate Remains or Dead
+Animate Remains or Dead ability
 
 If you get this description, it is a bug.
 %%%%
 # Okawaru
-Heroism
+Heroism ability
 
 Temporarily increase all of your combat skills, including the ability to sneak
 around.
 %%%%
-Finesse
+Finesse ability
 
 Greatly increase your combat speed, with no loss of accuracy. This unnatural
 effect causes small amounts of magic contamination, prolonged exposure to which
 may be bad for your health.
 %%%%
 # Makhleb
-Minor Destruction
+Minor Destruction ability
 
 Shoot a random harmful blast at the targeted monster.
 %%%%
-Lesser Servant of Makhleb
+Lesser Servant of Makhleb ability
 
 Summon a minor demon, with a chance of being hostile at low Invocations skill.
 %%%%
-Major Destruction
+Major Destruction ability
 
 Shoot a random harmful beam or explosion at the targeted monster.
 %%%%
-Greater Servant of Makhleb
+Greater Servant of Makhleb ability
 
 Summon a major demon, with a chance of being hostile at low Invocations skill.
 %%%%
 # Sif Muna
-Channel Energy
+Channel Energy ability
 
 Replenish your magical reservoir by an amount depending on your Invocations
 skill.
 %%%%
-Forget Spell
+Forget Spell ability
 
 Forget any spell out of the ones you've currently memorised, so as to free
 memory to learn others.
 %%%%
 # Trog
-Burn Spellbooks
+Burn Spellbooks ability
 
 Set all spellbooks within your field of vision on fire. The fire is fuelled by
 Trog's hatred, and Trog likes it most when you don't even care which books of
 madness burst into flames.
 %%%%
-Berserk
+Berserk ability
 
 Go berserk. Going berserk greatly, if temporarily, increases your hit points
 and damage output in melee fights. It will time out quickly if you don't kill
@@ -320,18 +320,18 @@ followed by deep exhaustion, a time during which you are slowed down, and
 cannot berserk again. Unlike other sources of rage, depending on your piety
 Trog may occasionally prevent you from passing out.
 %%%%
-Trog's Hand
+Trog's Hand ability
 
 Invoke a powerful regeneration ability which stacks with all other sources and
 even allows otherwise non-healing species to regenerate. This will also
 increase protection from magical effects.
 %%%%
-Brothers in Arms
+Brothers in Arms ability
 
 Summon huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
-Divine Protection
+Divine Protection ability
 
 Beseech Elyvilon to save your life. If you are mortally wounded, the Healer may
 undo the killing blow. Especially pious individuals may be certain of this
@@ -340,7 +340,7 @@ merely asking for intervention, which is always free).
 
 Beware: killing others while asking to be spared yourself is a major sin!
 %%%%
-Lesser Healing
+Lesser Healing ability
 
 Depending on your Invocations skill, heal a creature other than you by a small
 amount. Using this ability on hostile monsters will try to make them neutral.
@@ -356,17 +356,17 @@ and you gain nothing.
 
 You can also heal allies and neutral monsters.
 %%%%
-Lesser Self-Healing
+Lesser Self-Healing ability
 
 Depending on your Invocations skill, heal a small amount of hit points.
 %%%%
-Purification
+Purification ability
 
 Purge your body of all bad effects such as sickness, poisoning, slowness,
 petrification, confusion and rot, and fully restore your Strength, Dexterity
 and Intelligence.
 %%%%
-Greater Healing
+Greater Healing ability
 
 Depending on your Invocations skill, heal a creature other than you by a
 moderate amount. Using this ability on hostile monsters will try to make them
@@ -383,115 +383,115 @@ is unaffected and you gain nothing.
 
 You can also heal allies and neutral monsters.
 %%%%
-Greater Self-Healing
+Greater Self-Healing ability
 
 Depending on your Invocations skill, heal a moderate amount of hit points.
 Roughly, Greater Healing will allow you to heal three times the amount of
 Lesser Healing at a slightly higher total piety cost.
 %%%%
-Divine Vigour
+Divine Vigour ability
 
 Depending on your Invocations skill, restore a large amount of, and temporarily
 increase, both your hit points and your magic points.
 %%%%
 # Lugonu
-Depart the Abyss
+Depart the Abyss ability
 
 Leave the Abyss to return to the place you came from.
 %%%%
-Bend Space
+Bend Space ability
 
 Bend the fabric of space around you, instantly translocating you a small
 distance, and possibly also translocating and damaging monsters in your
 vicinity.
 %%%%
-Banish
+Banish ability
 
 Attempt to banish a monster into the Abyss.
 %%%%
-Corrupt
+Corrupt ability
 
 Corrupt the current level by unleashing Abyssal energies on it. This will cause
 the level to largely change appearance, and will gate in demons from the Abyss
 bent on causing destruction. This will not work on levels already corrupted or
 in the Abyss.
 %%%%
-Enter the Abyss
+Enter the Abyss ability
 
 Transfer yourself to Lugonu's realm instantly. The effort of even using the
 ability will leave your health and magic depleted.
 %%%%
 # Nemelex Xobeh
-Draw One
+Draw One ability
 
 Choose any deck in your inventory and draw a card from it.
 %%%%
-Peek at Two
+Peek at Two ability
 
 Discard one card from any deck in your inventory to draw two cards from the
 deck, look at them, and shuffle them back into the deck. The deck will be
 inscribed as containing those two cards, and, if they are different, this will
 identify the deck.
 %%%%
-Triple Draw
+Triple Draw ability
 
 Draw three cards from any deck in your inventory, look at them, and decide
 which one to keep, discarding the other two.
 %%%%
-Deal Four
+Deal Four ability
 
 Deal four cards from any unmarked deck in the time it normally takes to draw a
 single card. The rest of the deck is lost. If the deck does not contain enough
 cards, Nemelex will give you one extra card, but you might not like it.
 %%%%
-Stack Five
+Stack Five ability
 
 Draw five cards from any unmarked deck in your inventory, losing the rest of
 the deck. Look at the cards and sort them into any order you'd like.
 Subsequently, you can draw these cards in the order you chose.
 %%%%
 # Beogh
-Smiting
+Smiting ability
 
 Smite an enemy within your field of vision. This doesn't require a direct path,
 just seeing the enemy is enough.
 %%%%
-Recall Orcish Followers
+Recall Orcish Followers ability
 
 Recall your orcish followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Stop Recall
+Stop Recall ability
 
 Stop recalling your followers.
 %%%%
 # Fedhas
-Sunlight
+Sunlight ability
 
 Call sunlight down over a small area of the dungeon. Monsters illuminated by
 the light will be easier to hit. Water affected by the sunlight will evaporate.
 In particular, deep water will become shallow water, and shallow water will dry
 up completely, revealing the dungeon floor.
 %%%%
-Growth
+Growth ability
 
 Use fruit to grow a ring of plants around yourself. If a complete ring cannot
 be formed (because you do not have enough fruit), plants will grow on squares
 adjacent to you that are close to monsters. The plants you create gain bonus HP
 proportional to your Invocations skill.
 %%%%
-Rain
+Rain ability
 
 Cause rain to fall around yourself, turning the dungeon floor into shallow
 water and shallow water into deep water. This is likely to allow plants and
 mushrooms to grow in areas not directly drenched.
 %%%%
-Reproduction
+Reproduction ability
 
 Create giant spores from corpses in your line of sight. The spores will
 explode, causing damage to you or your enemies.
 %%%%
-Evolution
+Evolution ability
 
 Turn plants and fungi into stronger species. Upgrading fungi requires piety,
 while upgrading plants requires fruit. Upgraded plants gain a bonus to attack
@@ -499,22 +499,22 @@ accuracy proportional to the user's Invocations skill, and oklob plants are
 more likely to spit acid at higher Invocations.
 %%%%
 # Cheibriados
-Bend Time
+Bend Time ability
 
 Attempt to slow down everyone adjacent to you. High Invocations skill makes it
 harder to resist.
 %%%%
-Temporal Distortion
+Temporal Distortion ability
 
 Warp the flow of time around you, causing monsters to skip forwards in time
 relative to you.
 %%%%
-Slouch
+Slouch ability
 
 Cause damage to everyone in sight who is moving faster than you. Those
 magically hasted will be hurt particularly painfully.
 %%%%
-Step From Time
+Step From Time ability
 
 Remove yourself from the flow of time. Things around you will happen at their
 usual busy pace, monsters will wander, perishable items will decay, plants will
@@ -522,50 +522,50 @@ grow. After some time has passed, you will return in the same state as the very
 second you departed.
 %%%%
 # Jiyva
-Request Jelly
+Request Jelly ability
 
 Create a neutral jelly that will wander the floor and digest items.
 %%%%
-Jelly Paralyse
+Jelly Paralyse ability
 
 Pray to temporarily halt your slimes' item consumption.
 %%%%
-Slimify
+Slimify ability
 
 Coat a wielded weapon or your fists with slime, turning the next living or
 undead monster hit into a neutral slime.
 %%%%
-Cure Bad Mutation
+Cure Bad Mutation ability
 
 Remove a randomly selected bad mutation.
 %%%%
 # Ashenzari
-Scrying
+Scrying ability
 
 Gain astral sight to see through walls. This is not enough to let you target
 spells and abilities, even those that work through glass.
 %%%%
-Transfer Knowledge
+Transfer Knowledge ability
 
 Sacrifice part of one of your skills to improve another.
 %%%%
-End Transfer Knowledge
+End Transfer Knowledge ability
 
 Abort an ongoing skill transfer.
 %%%%
 # Vehumet
-Memorise spell
+Memorise spell ability
 
 Immediately gain knowledge of a destructive spell offered to you by Vehumet.
 The offer will expire after a short while. Check the Religion screen (^) to see
 which spell is offered.
 %%%%
-Renounce Religion
+Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually
 anger said god).
 %%%%
-Convert to Beogh
+Convert to Beogh ability
 
 Swear your fealty to Beogh, the god of cave orcs. This god demands that all
 non-believers must die, but new believers must be spared and accepted into the
@@ -575,122 +575,122 @@ you've built your reputation!
 All other gods hate Beogh, and don't take desertion lightly.
 %%%%
 # Zotdef
-Make dart trap
+Make dart trap ability
 
 Create a dart trap at the targeted location.
 %%%%
-Make oklob sapling
+Make oklob sapling ability
 
 Plant an oklob sapling with the ability to spit acid at the targeted location.
 %%%%
-Make arrow trap
+Make arrow trap ability
 
 Create an arrow trap at the targeted location.
 %%%%
-Make plant
+Make plant ability
 
 Cause a plant to grow at the targeted location.
 %%%%
-Remove Curse
+Remove Curse ability
 
 Uncurse all of your equipment.
 %%%%
-Make burning bush
+Make burning bush ability
 
 Plant a burning bush with the ability to throw fire and see invisible monsters
 at the targeted location.
 %%%%
-Make altar
+Make altar ability
 
 Create an altar to a chosen god at your location.
 %%%%
-Make grenades
+Make grenades ability
 
 Spawn a number of explosive giant spores around you.
 %%%%
-Make oklob plant
+Make oklob plant ability
 
 Plant a fully grown oklob plant with the ability to spit acid at the targeted
 location.
 %%%%
-Make net trap
+Make net trap ability
 
 Create a net trap at the targeted location.
 %%%%
-Make ice statue
+Make ice statue ability
 
 Construct a statue with various icy abilities at the targeted location.
 %%%%
-Make spear trap
+Make spear trap ability
 
 Create a spear trap at the targeted location.
 %%%%
-Make alarm trap
+Make alarm trap ability
 
 Create an alarm trap to alert you to the presence of monsters at the targeted
 location.
 %%%%
-Make mushroom circle
+Make mushroom circle ability
 
 Grow a circle of fungi centred at the targeted location.
 %%%%
-Make bolt trap
+Make bolt trap ability
 
 Create a bolt trap at the targeted location.
 %%%%
-Make crystal statue
+Make crystal statue ability
 
 Construct a statue with the ability to confuse monsters at the targeted
 location.
 %%%%
-Make needle trap
+Make needle trap ability
 
 Create a poisonous needle trap at the targeted location.
 %%%%
-Zot-teleport
+Zot-teleport ability
 
 Perform a controlled teleport.
 %%%%
-Make water
+Make water ability
 
 Create a pool of shallow water at your location.
 %%%%
-Make lightning spire
+Make lightning spire ability
 
 Construct a lightning spire with the ability to throw electricity at the
 targeted location.
 %%%%
-Make silver statue
+Make silver statue ability
 
 Construct a statue with the ability to summon friendly demons at the targeted
 location.
 %%%%
-Make bazaar
+Make bazaar ability
 
 Create a portal to a bazaar at your location.
 %%%%
-Acquire gold
+Acquire gold ability
 
 Acquire a large quantity of gold.
 %%%%
-Make oklob circle
+Make oklob circle ability
 
 Grow a circle of oklob plants centred at the targeted location.
 %%%%
-Sage
+Sage ability
 
 Funnel some of your earned experience towards a certain skill and train it
 faster than normal.
 %%%%
-Acquirement
+Acquirement ability
 
 Acquire a chosen type of item.
 %%%%
-Make blade trap
+Make blade trap ability
 
 Create a blade trap at the targeted location.
 %%%%
-Make curse skull
+Make curse skull ability
 
 Construct a curse skull with the ability to summon the undead at the targeted
 location, at the cost of a necromantic backlash to yourself.
