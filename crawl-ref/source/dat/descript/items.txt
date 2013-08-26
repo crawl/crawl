@@ -2290,9 +2290,8 @@ scroll of identify:quote
 %%%%
 scroll of immolation
 
-This scroll is treated with an incredibly flammable substance, which explodes
-violently when the scroll is opened and read, scorching the reader and anything
-else nearby.
+This scroll fills the creatures around the reader with an unstable and powerful
+inner flame.
 %%%%
 scroll of immolation:quote
 
