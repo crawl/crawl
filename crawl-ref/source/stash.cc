@@ -1875,8 +1875,15 @@ void StashSearchMenu::draw_title()
 {
     if (title)
     {
+        const unsigned avail_width = get_number_of_cols();
         cgotoxy(1, 1);
         formatted_string fs = formatted_string(title->colour);
+        if (avail_width > 92)
+        {
+            fs.cprintf("%d %s%s, ",
+                       title->quantity, title->text.c_str(),
+                       title->quantity > 1 ? "es" : "");
+        }
         fs.cprintf("%s %s %s", stack_style, sort_style, filtered);
         fs.display();
 
@@ -1889,9 +1896,10 @@ void StashSearchMenu::draw_title()
                  " <w>?</w>/<w>!</w>: %s"
                  "  <w>-</w>:stacking"
                  "  <w>/</w>:sorting"
-                 "  <w>=</w>:filter]",
+                 "  <w>=</w>:filter%s]",
                  menu_action == ACT_EXECUTE ? "go" : "view",
-                 menu_action == ACT_EXECUTE ? "view" : "go")), false);
+                 menu_action == ACT_EXECUTE ? "view" : "go",
+                 avail_width > 100 ? " useless" : "")), false);
     }
 }
 
