@@ -2436,9 +2436,7 @@ int how_mutated(bool all, bool levels)
                 continue;
 
             if (levels)
-            {
                 j += you.mutation[i];
-            }
             else
                 j++;
         }
