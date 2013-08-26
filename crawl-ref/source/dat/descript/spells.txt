@@ -250,6 +250,11 @@ Discord spell
 This spell drives nearby creatures into an insane frenzy, mercilessly
 attacking anything and everything nearby with great strength and speed.
 %%%%
+Disintegrate spell
+
+This spell violently rends apart anything in a small volume of space. It can
+be used to cause severe damage, or remove a chunk of rock.
+%%%%
 Disjunction spell
 
 This spell destabilizes the space in a sphere around you for a while, causing
@@ -861,9 +866,19 @@ This spell imbues its caster with the ability to achieve great movement speeds.
 But this speed comes at a price: the caster is less stealthy and more likely to
 blunder into traps while the spell is in effect.
 %%%%
+Symbol of Torment spell
+
+This spell calls on the powers of Hell to cause agonising injury to any living
+thing in the caster's vicinity. Despite its ominous power, this spell is never
+lethal.
+%%%%
 Teleport Other spell
 
 This spell randomly translocates another creature.
+%%%%
+Teleport Self spell
+
+This spell teleports the caster to a random location.
 %%%%
 Throw Flame spell
 
@@ -876,6 +891,13 @@ This spell throws a small bolt of frost.
 Thunderbolt spell
 
 This spell creates an arc of electricity.
+%%%%
+Tomb of Doroklohe spell
+
+This spell entombs the caster within four walls of rock. These walls will
+push away objects in their way, but their growth is obstructed by the
+presence of any creature. They are not permanent, and will expire after a
+period of time.
 %%%%
 Tornado spell
 
