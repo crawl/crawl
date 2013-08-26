@@ -2248,6 +2248,68 @@ static void tag_read_you(reader &th)
         }
 #endif
     }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_STAT_MUT)
+    {
+        // Convert excess mutational stats into base stats.
+        mutation_type stat_mutations[] = {
+            MUT_STRONG, MUT_CLEVER, MUT_AGILE
+        };
+        stat_type stat_types[] = {
+            STAT_STR, STAT_INT, STAT_DEX
+        };
+        for (j = 0; j < 3; ++j)
+        {
+            mutation_type mut = stat_mutations[j];
+            stat_type stat = stat_types[j];
+            int total_mutation_level = you.temp_mutations[mut] + you.mutation[mut];
+            if (total_mutation_level > 2)
+            {
+                int new_level = max(0, min(you.temp_mutations[mut] - you.mutation[mut], 2));
+                you.temp_mutations[mut] = new_level;
+            }
+            if (you.mutation[mut] > 2)
+            {
+                int excess = you.mutation[mut] - 4;
+                if (excess > 0)
+                {
+                    you.base_stats[stat] += excess;
+                }
+                you.mutation[mut] = 2;
+            }
+        }
+        mutation_type bad_stat_mutations[] = {
+            MUT_WEAK, MUT_DOPEY, MUT_CLUMSY
+        };
+        for (j = 0; j < 3; ++j)
+        {
+            mutation_type mut = bad_stat_mutations[j];
+            int level = you.mutation[mut];
+            switch (level)
+            {
+            case 0:
+            case 1:
+                you.mutation[mut] = 0;
+                break;
+            case 2:
+            case 3:
+                you.mutation[mut] = 1;
+                break;
+            default:
+                you.mutation[mut] = 2;
+                break;
+            };
+            if (you.temp_mutations[mut] > 2 && you.mutation[mut] < 2)
+            {
+                you.temp_mutations[mut] = 1;
+            } else {
+                you.temp_mutations[mut] = 0;
+            }
+        }
+    }
+#endif
+
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;
 
