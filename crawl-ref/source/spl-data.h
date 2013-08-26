@@ -2695,7 +2695,7 @@ struct spell_desc
 },
 
 {
-    SPELL_MIRROR_DAMAGE, "Mirror Damage",
+    SPELL_INJURY_MIRROR, "Injury Mirror",
      SPTYP_NONE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      4,
