@@ -3279,8 +3279,10 @@ static string _monster_stat_description(const monster_info& mi)
         mon_spellbook_type book = (m->sec);
         vector<mon_spellbook_type> books = mons_spellbook_list(mi.type);
 
-        // If there are really really no spells, print nothing
-        if (books.size() > 0 && books[0] != MST_NO_SPELLS)
+        // If there are really really no spells, print nothing.  Ghosts,
+        // player illusions, and random pan lords don't have consistent
+        // spell lists, and might not even have spells; omit them as well.
+        if (books.size() > 0 && books[0] != MST_NO_SPELLS && book != MST_GHOST)
         {
             result << uppercase_first(pronoun);
 
