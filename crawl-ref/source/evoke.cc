@@ -1361,130 +1361,64 @@ static void _fan_of_gales_elementals()
         mpr("The winds coalesce and take form.");
 }
 
-static bool _list_contains(coord_def pos, const vector<coord_def>& spaces)
-{
-    for (unsigned int i = 0; i < spaces.size(); ++i)
-    {
-        if (spaces[i] == pos)
-            return true;
-    }
-    return false;
-}
-
-static int _delta_to_dir(coord_def delta)
-{
-    for (int i = 0; i < 8; i++)
-        if (Compass[i] == delta)
-            return i;
-    return -1;
-}
-
-static void _rotate_dir(int& dir, int turn)
-{
-    if (turn < 0)
-        dir = (dir + turn < 0) ? 8 + dir + turn : (dir + turn);
-    else if (turn > 0)
-        dir = (dir + turn > 7) ? dir - 8 + turn : (dir + turn);
-}
-
-static coord_def _adjacent_by_dir(coord_def pos, int dir, int turn)
-{
-    _rotate_dir(dir, turn);
-    return pos + Compass[dir];
-}
-
 static bool _is_rock(dungeon_feature_type feat)
 {
     return (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
             || feat == DNGN_SLIMY_WALL);
 }
 
-static void _trace_shockwave(coord_def start, int dir, int facing, int max_len,
-                             vector<coord_def>& path, vector<coord_def>& rocks)
+static bool _is_rubble_source(dungeon_feature_type feat)
 {
-    coord_def p;
-
-    if (!feat_is_solid(grd(start)))
-        path.push_back(start);
-
-    int j = 2;
-    while ((int)path.size() < max_len && j > -5)
+    switch (feat)
     {
-        p = _adjacent_by_dir(start, dir, facing * j);
-        if (p == you.pos())
-            break;
-        if (!feat_is_solid(grd(p)) || feat_is_door(grd(p)))
-        {
-            _rotate_dir(dir, facing * j);
-            start += Compass[dir];
-            path.push_back(p);
-            j = 2;
-            continue;
-        }
-        // Can no longer follow shockwave without appropriate wall
-        else if (!_is_rock(grd(p)))
-            break;
-        else
-        {
-            if (!_list_contains(p, rocks))
-                rocks.push_back(p);
-            j--;
-        }
+        case DNGN_ROCK_WALL:
+        case DNGN_CLEAR_ROCK_WALL:
+        case DNGN_SLIMY_WALL:
+        case DNGN_STONE_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+        case DNGN_PERMAROCK_WALL:
+            return true;
+
+        default:
+            return false;
     }
 }
 
-static void _tremor_at(coord_def start, coord_def delta)
+static bool _adjacent_to_rubble_source(coord_def pos)
 {
-    int dir = _delta_to_dir(delta);
-
-    vector<coord_def> path[2];
-    vector<coord_def> rocks;
-
-    int shockwave_len = min(4 + you.skill_rdiv(SK_EVOCATIONS, 1, 3), 10);
-
-    for (int i = 0; i < 7; ++i)
+    for (adjacent_iterator ai(pos); ai; ++ai)
     {
-        int ndir = (dir + i);
-        if (ndir > 7)
-            ndir -= 8;
-
-        if (!feat_is_solid(grd(start+Compass[ndir])))
-        {
-            _trace_shockwave(start+Compass[ndir], ndir, -1, shockwave_len,
-                             path[0], rocks);
-            break;
-        }
-        else if (_is_rock(grd(start+Compass[ndir]))
-                 &&!_list_contains(start+Compass[ndir], rocks))
-        {
-            rocks.push_back(start+Compass[ndir]);
-        }
+        if (_is_rubble_source(grd(*ai)) && you.see_cell_no_trans(*ai))
+            return true;
     }
 
-    for (int i = 0; i < 7; ++i)
-    {
-        int ndir = (dir - i);
-        if (ndir < 0)
-            ndir += 8;
+    return false;
+}
 
-        if (!feat_is_solid(grd(start+Compass[ndir])))
-        {
-            _trace_shockwave(start+Compass[ndir], ndir, 1, shockwave_len,
-                             path[1], rocks);
-            break;
-        }
-        else if (_is_rock(grd(start+Compass[ndir]))
-                 &&!_list_contains(start+Compass[ndir], rocks))
-        {
-            rocks.push_back(start+Compass[ndir]);
-        }
+static bool _stone_of_tremors()
+{
+    vector<coord_def> wall_pos;
+    vector<coord_def> rubble_pos;
+    vector<coord_def> door_pos;
+
+    for (distance_iterator di(you.pos(), false, true, LOS_RADIUS); di; ++di)
+    {
+        if (_is_rubble_source(grd(*di)))
+            wall_pos.push_back(*di);
+        else if (feat_is_door(grd(*di)))
+            door_pos.push_back(*di);
+        else if (_adjacent_to_rubble_source(*di))
+            rubble_pos.push_back(*di);
     }
+
+    mpr("The dungeon trembles and rubble falls from the walls!");
+    noisy(15, you.pos());
 
     bolt rubble;
     rubble.name        = "falling rubble";
     rubble.range       = 1;
-    rubble.hit         = 10 + you.skill_rdiv(SK_EVOCATIONS, 1, 4);
-    rubble.damage      = dice_def(3, 5 + you.skill_rdiv(SK_EVOCATIONS, 2, 3));
+    rubble.hit         = 10 + you.skill_rdiv(SK_EVOCATIONS, 1, 2);
+    rubble.damage      = dice_def(3, 5 + you.skill(SK_EVOCATIONS));
     rubble.beam_source = MHITYOU;
     rubble.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
     rubble.colour      = LIGHTGREY;
@@ -1494,68 +1428,56 @@ static void _tremor_at(coord_def start, coord_def delta)
     rubble.loudness    = 10;
     rubble.draw_delay  = 0;
 
-    vector<coord_def> affected;
-    for (unsigned int i = 0; i < max(path[0].size(), path[1].size()); ++i)
+    // Hit the affected area with falling rubble.
+    for (unsigned int i = 0; i < rubble_pos.size(); ++i)
     {
-        for (unsigned int j = 0; j < 2; ++j)
+        rubble.source = rubble_pos[i];
+        rubble.target = rubble_pos[i];
+        rubble.fire();
+    }
+    update_screen();
+    delay(200);
+
+    // Possibly shaft some monsters.
+    for (monster_iterator mi(&you); mi; ++mi)
+    {
+        if (grd(mi->pos()) == DNGN_FLOOR
+            && !mi->airborne() && is_valid_shaft_level()
+            && x_chance_in_y(75 + you.skill(SK_EVOCATIONS, 2), 800))
         {
-            if (i < path[j].size())
-            {
-                if (feat_is_closed_door(grd(path[j][i])))
-                {
-                    if (cell_see_cell(you.pos(), path[j][i], LOS_DEFAULT))
-                        mpr("The door collapses!");
-                    nuke_wall(path[j][i]);
-                }
-                if (grd(path[j][i]) == DNGN_FLOOR)
-                {
-                    monster* mon = monster_at(path[j][i]);
-                    if (mon && !mon->airborne() && is_valid_shaft_level()
-                        && x_chance_in_y(75 + you.skill(SK_EVOCATIONS, 2), 1000))
-                    {
-                        mon->do_shaft();
-                    }
-                }
-
-                rubble.source = path[j][i];
-                rubble.target = path[j][i];
-                // Don't hit one space more than once
-                if (_list_contains(path[j][i], affected))
-                {
-                    rubble.affects_nothing = true;
-                    rubble.fire();
-                    rubble.affects_nothing = false;
-                }
-                else
-                {
-                    affected.push_back(path[j][i]);
-                    rubble.fire();
-                }
-            }
+            mi->do_shaft();
         }
-
-        update_screen();
-        delay(20);
     }
 
+    // Destroy doors.
+    for (unsigned int i = 0; i < door_pos.size(); ++i)
+    {
+        nuke_wall(door_pos[i]);
+        mpr("The door collapses!");
+    }
+
+    // Collapse some walls and mark collapsed walls as valid elemental positions.
     int num_elementals = _num_evoker_elementals();
-
-    vector<coord_def> elementals;
-    for (unsigned int i = 0; i < rocks.size(); ++i)
+    for (unsigned int i = 0; i < wall_pos.size(); ++i)
     {
-        if (cell_see_cell(you.pos(), rocks[i], LOS_NO_TRANS))
-            elementals.push_back(rocks[i]);
-        if (one_chance_in(3))
-            nuke_wall(rocks[i]);
+        if (_is_rock(grd(wall_pos[i])) && one_chance_in(3))
+        {
+            nuke_wall(wall_pos[i]);
+            rubble_pos.push_back(wall_pos[i]);
+        }
     }
-    random_shuffle(elementals.begin(), elementals.end());
+    random_shuffle(rubble_pos.begin(), rubble_pos.end());
 
+    // Create elementals.
     bool created = false;
-    for (int n = 0; n < min(num_elementals, (int)elementals.size()); ++n)
+    for (int n = 0; n < min(num_elementals, (int)rubble_pos.size()); ++n)
     {
-        nuke_wall(elementals[n]);
+        // Skip occupied positions
+        if (actor_at(rubble_pos[n]))
+            continue;
+
         mgen_data mg(MONS_EARTH_ELEMENTAL, BEH_FRIENDLY, &you, 3, SPELL_NO_SPELL,
-                     elementals[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
+                     rubble_pos[n], 0, MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                      MONS_EARTH_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
         mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
         if (create_monster(mg))
@@ -1563,33 +1485,8 @@ static void _tremor_at(coord_def start, coord_def delta)
     }
     if (created)
         mpr("The rubble rises up and takes form.");
-}
 
-static bool _stone_of_tremors()
-{
-    bolt beam;
-    dist target;
-
-    if (spell_direction(target, beam, DIR_TARGET, TARG_ANY, 1,
-                        true, true, false, "Prompt?",
-                        "Press the stone against what?", true, NULL))
-    {
-        coord_def targ = beam.target;
-        dungeon_feature_type feat = grd(targ);
-        if (!_is_rock(feat))
-        {
-            mpr("You cannot induce a tremor in that!");
-            return false;
-        }
-        else
-        {
-            mpr("Shockwaves run through the rock!");
-            _tremor_at(you.pos(), targ-you.pos());
-            return true;
-        }
-    }
-
-    return false;
+    return true;
 }
 
 static bool _phial_of_floods()
