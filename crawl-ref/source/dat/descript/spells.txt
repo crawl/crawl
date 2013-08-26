@@ -432,10 +432,6 @@ Lethal Infusion spell
 This spell infuses a weapon held by the caster with unholy energies. It will
 not affect weapons which are otherwise subject to special enchantments.
 %%%%
-Levitation spell
-
-This spell allows the caster to float in the air.
-%%%%
 Lightning Bolt spell
 
 This spell hurls a mighty bolt of lightning. Although this spell inflicts less
