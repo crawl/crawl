@@ -758,7 +758,7 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         if (you.species == SP_DJINNI)
-            ret << "\nGlow : ";
+            ret << "\nGlow   : ";
         else
             ret << "\nHunger : ";
         ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
