@@ -2253,12 +2253,8 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() < TAG_MINOR_STAT_MUT)
     {
         // Convert excess mutational stats into base stats.
-        mutation_type stat_mutations[] = {
-            MUT_STRONG, MUT_CLEVER, MUT_AGILE
-        };
-        stat_type stat_types[] = {
-            STAT_STR, STAT_INT, STAT_DEX
-        };
+        mutation_type stat_mutations[] = { MUT_STRONG, MUT_CLEVER, MUT_AGILE };
+        stat_type stat_types[] = { STAT_STR, STAT_INT, STAT_DEX };
         for (j = 0; j < 3; ++j)
         {
             mutation_type mut = stat_mutations[j];
@@ -2273,15 +2269,11 @@ static void tag_read_you(reader &th)
             {
                 int excess = you.mutation[mut] - 4;
                 if (excess > 0)
-                {
                     you.base_stats[stat] += excess;
-                }
                 you.mutation[mut] = 2;
             }
         }
-        mutation_type bad_stat_mutations[] = {
-            MUT_WEAK, MUT_DOPEY, MUT_CLUMSY
-        };
+        mutation_type bad_stat_mutations[] = { MUT_WEAK, MUT_DOPEY, MUT_CLUMSY };
         for (j = 0; j < 3; ++j)
         {
             mutation_type mut = bad_stat_mutations[j];
@@ -2301,11 +2293,9 @@ static void tag_read_you(reader &th)
                 break;
             };
             if (you.temp_mutations[mut] > 2 && you.mutation[mut] < 2)
-            {
                 you.temp_mutations[mut] = 1;
-            } else {
+            else
                 you.temp_mutations[mut] = 0;
-            }
         }
     }
 #endif
