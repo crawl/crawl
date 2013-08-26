@@ -870,9 +870,9 @@ static bool _ball_of_energy(void)
 static int _num_evoker_elementals()
 {
     int n = 1;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 80)
+    if (you.skill(SK_EVOCATIONS, 10) + random2(70) > 110)
         ++n;
-    if (you.skill(SK_EVOCATIONS, 10) + random2(60) > 130)
+    if (you.skill(SK_EVOCATIONS, 10) + random2(70) > 170)
         ++n;
     return n;
 }
@@ -1060,7 +1060,7 @@ static bool _lamp_of_fire()
     bolt base_beam;
     dist target;
 
-    const int pow = 12 + you.skill(SK_EVOCATIONS, 2);
+    const int pow = 8 + you.skill_rdiv(SK_EVOCATIONS, 9, 4);
     if (spell_direction(target, base_beam, DIR_TARGET, TARG_ANY, 8,
                         true, true, false, NULL,
                         "Aim the lamp in which direction?", true, NULL))
@@ -1085,8 +1085,8 @@ static bool _lamp_of_fire()
             beams[n].is_beam     = true;
             beams[n].name        = "trail of fire";
             beams[n].hit         = 10 + (pow/8);
-            beams[n].damage      = dice_def(2, 4 + pow/4);
-            beams[n].ench_power  = (pow/8);
+            beams[n].damage      = dice_def(2, 5 + pow/4);
+            beams[n].ench_power  = 1 + (pow/10);
             beams[n].loudness    = 5;
             beams[n].fire();
         }
@@ -1097,7 +1097,7 @@ static bool _lamp_of_fire()
                          SPELL_NO_SPELL, elementals[n], 0,
                          MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                          MONS_FIRE_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
-            mg.hd = 6 + (pow/14);
+            mg.hd = 6 + (pow/20);
             create_monster(mg);
         }
 
@@ -1494,7 +1494,7 @@ static bool _phial_of_floods()
     dist target;
     bolt beam;
 
-    zappy(ZAP_PRIMAL_WAVE, 25 + you.skill(SK_EVOCATIONS, 8), beam);
+    zappy(ZAP_PRIMAL_WAVE, 25 + you.skill(SK_EVOCATIONS, 6), beam);
     beam.range = LOS_RADIUS;
     beam.thrower = KILL_YOU;
     beam.name = "flood of elemental water";
@@ -1535,7 +1535,7 @@ static bool _phial_of_floods()
                           SPELL_NO_SPELL, elementals[n], 0,
                           MG_FORCE_BEH | MG_FORCE_PLACE, GOD_NO_GOD,
                           MONS_WATER_ELEMENTAL, 0, BLACK, PROX_CLOSE_TO_PLAYER);
-            mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 13);
+            mg.hd = 6 + you.skill_rdiv(SK_EVOCATIONS, 2, 15);
             if (create_monster(mg))
                 created = true;
         }
