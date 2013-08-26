@@ -429,7 +429,8 @@
   "blink"
 },
 
-{ MUT_STRONG_STIFF,                  10,  3, false,  true, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_STRONG_STIFF,                  0,  3, false,  true, false,
   NULL,
 
   {"Your muscles are strong, but stiff (Str +1, Dex -1).",
@@ -447,7 +448,7 @@
   "strong stiff"
 },
 
-{ MUT_FLEXIBLE_WEAK,                 10,  3, false,  true, false,
+{ MUT_FLEXIBLE_WEAK,                 0,  3, false,  true, false,
   NULL,
 
   {"Your muscles are flexible, but weak (Str -1, Dex +1).",
@@ -464,6 +465,7 @@
 
   "flexible weak"
 },
+#endif
 
 { MUT_SCREAM,                         6,  3,  true, false, false,
   "screaming",
