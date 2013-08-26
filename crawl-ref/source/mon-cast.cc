@@ -1057,7 +1057,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_STICKS_TO_SNAKES:
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_VAMPIRIC_DRAINING:
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
     case SPELL_MAJOR_HEALING:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_VAMPIRE_SUMMON:
@@ -1451,7 +1451,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         break;
 
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
         if (mon->has_ench(ENCH_MIRROR_DAMAGE)
             || (mon->props.exists("mirror_recast_time")
                 && you.elapsed_time < mon->props["mirror_recast_time"].get_int()))
@@ -1857,7 +1857,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
         return !targ_friendly;
     case SPELL_BLINK_OTHER:
         return !targ_sanct && targ_adj && !targ_friendly;
@@ -3801,7 +3801,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     if (spell_cast == SPELL_CANTRIP
         || spell_cast == SPELL_VAMPIRIC_DRAINING
-        || spell_cast == SPELL_MIRROR_DAMAGE
+        || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
         || spell_cast == SPELL_LEDAS_LIQUEFACTION)
@@ -3860,7 +3860,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             simple_monster_message(mons, " is healed.");
         return;
 
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
         simple_monster_message(mons,
                                make_stringf(" offers %s to %s, and fills with unholy energy.",
                                    mons->pronoun(PRONOUN_REFLEXIVE).c_str(),

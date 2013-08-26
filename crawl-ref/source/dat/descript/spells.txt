@@ -401,6 +401,10 @@ This spell infuses the caster's melee attacks with magic, drawing from their
 reserves of magical energy to deal additional damage whenever an enemy is hit.
 It has no effect when the caster's magic is depleted.
 %%%%
+Injury Mirror spell
+
+<Injury Mirror ability>
+%%%%
 Inner Flame spell
 
 This spell fills an enemy with an intense fire, to be explosively released upon
@@ -498,10 +502,6 @@ Metabolic Englaciation spell
 This spell tries to lower the metabolic rate of every creature in the caster's
 vicinity, slowing all those who are not resistant to cold. It bypasses magic
 resistance, although tougher monsters will not be slowed for as long as others.
-%%%%
-Mirror Damage spell
-
-<Injury Mirror ability>
 %%%%
 Necromutation spell
 
