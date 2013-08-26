@@ -2889,9 +2889,6 @@ bool is_emergency_item(const item_def &item)
         case SCR_FEAR:
         case SCR_FOG:
             return true;
-        case SCR_IMMOLATION:
-            if (you.species == SP_DJINNI)
-                return true;
         default:
             return false;
         }
@@ -3044,9 +3041,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
-            // If you're fire-immune, immolation is not dangerous (to
-            // you, anyway).
-            return player_res_fire(false, temp) <= 3;
+            return true;
         case SCR_NOISE:
             return true;
         case SCR_TORMENT:
