@@ -3274,6 +3274,8 @@ static string _monster_stat_description(const monster_info& mi)
     {
         const bool caster = mons_class_flag(mi.type, M_ACTUAL_SPELLS);
         const bool priest = mons_class_flag(mi.type, M_PRIEST);
+        const bool natural = mons_class_flag(mi.type, M_FAKE_SPELLS);
+        string adj = priest ? "divine" : natural ? "special" : "magical";
 
         const monsterentry *m = get_monster_data(mi.type);
         mon_spellbook_type book = (m->sec);
@@ -3296,14 +3298,11 @@ static string _monster_stat_description(const monster_info& mi)
             else if (caster)
                 result << " has mastered the following spells: ";
             else if (book != MST_NO_SPELLS)
-            {
-                result << " possesses the following "
-                       << (priest ? "divine" : "magical") << " abilities: ";
-            }
+                result << " possesses the following " << adj << " abilities: ";
             else
             {
-                result << " possesses one of the following sets of "
-                       << (priest ? "divine" : "magical") << " abilities: \n";
+                result << " possesses one of the following sets of " << adj
+                       << " abilities: \n";
             }
 
 
