@@ -29,30 +29,33 @@
   "tough skin"
 },
 
-{ MUT_STRONG,                         8, 14, false,  true, false,
+{ MUT_STRONG,                         7, 2, false,  true, false,
   NULL,
 
-  {"Your muscles are strong (Str +", "", ""},
+  {"Your muscles are strong. (Str +2)",
+   "Your muscles are very strong. (Str +4)", ""},
   {"", "", ""},
   {"", "", ""},
 
   "strong"
 },
 
-{ MUT_CLEVER,                         8, 14, false,  true, false,
+{ MUT_CLEVER,                         7, 2, false,  true, false,
   NULL,
 
-  {"Your mind is acute (Int +", "", ""},
+  {"Your mind is acute. (Int +2)",
+   "Your mind is very acute. (Int +4)", ""},
   {"", "", ""},
   {"", "", ""},
 
   "clever"
 },
 
-{ MUT_AGILE,                          8, 14, false,  true, false,
+{ MUT_AGILE,                          7, 2, false,  true, false,
   NULL,
 
-  {"You are agile (Dex +", "", ""},
+  {"You are agile. (Dex +2)",
+   "You are very agile. (Dex +4)", ""},
   {"", "", ""},
   {"", "", ""},
 
@@ -241,25 +244,28 @@
   "slow metabolism"
 },
 
-{ MUT_WEAK,                          10, 14,  true,  true, false,
+{ MUT_WEAK,                          8, 2,  true,  true, false,
   NULL,
-  {"You are weak (Str -", "", ""},
+  {"You are weak. (Str -2)",
+   "You are very weak. (Str -4)", ""},
   {"", "", ""},
   {"", "", ""},
   "weak"
 },
 
-{ MUT_DOPEY,                         10, 14,  true,  true, false,
+{ MUT_DOPEY,                         8, 2,  true,  true, false,
   NULL,
-  {"You are dopey (Int -", "", ""},
+  {"You are dopey. (Int -2)",
+   "You are very dopey. (Int -4)", ""},
   {"", "", ""},
   {"", "", ""},
   "dopey",
 },
 
-{ MUT_CLUMSY,                        10, 14,  true,  true, false,
+{ MUT_CLUMSY,                        8, 2,  true,  true, false,
   NULL,
-  {"You are clumsy (Dex -", "", ""},
+  {"You are clumsy. (Dex -2)",
+   "You are very clumsy. (Dex -4)", ""},
   {"", "", ""},
   {"", "", ""},
   "clumsy"
