@@ -2773,7 +2773,7 @@ struct spell_desc
 },
 
 {
-    SPELL_MELEE, "melee",
+    SPELL_MELEE, "Melee",
      0,
      SPFLAG_BATTLE,
      1,
