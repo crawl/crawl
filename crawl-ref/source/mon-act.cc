@@ -415,12 +415,12 @@ static bool _mons_can_cast_dig(const monster* mons, bool random)
             && !(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
             && (!mons->has_ench(ENCH_ANTIMAGIC)
                 || (random
-                    && x_chance_in_y(mons->hit_dice * BASELINE_DELAY,
-                                     mons->hit_dice * BASELINE_DELAY
+                    && x_chance_in_y(4 * BASELINE_DELAY,
+                                     4 * BASELINE_DELAY
                                      + mons->get_ench(ENCH_ANTIMAGIC).duration)
                    || (!random
-                       && mons->hit_dice * BASELINE_DELAY
-                          < mons->get_ench(ENCH_ANTIMAGIC).duration))));
+                       && 4 * BASELINE_DELAY
+                          >= mons->get_ench(ENCH_ANTIMAGIC).duration))));
 }
 
 static bool _mons_can_zap_dig(const monster* mons)

@@ -2672,8 +2672,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
         // Check for antimagic.
         if (mons->has_ench(ENCH_ANTIMAGIC)
-            && !x_chance_in_y(mons->hit_dice * BASELINE_DELAY,
-                              mons->hit_dice * BASELINE_DELAY
+            && !x_chance_in_y(4 * BASELINE_DELAY,
+                              4 * BASELINE_DELAY
                               + mons->get_ench(ENCH_ANTIMAGIC).duration)
             && !_is_physiological_spell(spell_cast)
             && spell_cast != draco_breath)
