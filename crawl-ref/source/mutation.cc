@@ -603,7 +603,7 @@ string describe_mutations(bool center_title)
     case SP_FORMICID:
         result += "Your are under a permanent stasis effect.\n";
         result += "You can dig through walls and to a lower floor.\n";
-        result += "Your four strong arms can wield any weapon.\n";
+        result += "Your four strong arms can wield any weapon, most with a shield.\n";
         result += "You are susceptible to poison.\n";
         result += "The antennae on your head can retract.\n";
         have_any = true;
