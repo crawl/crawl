@@ -514,6 +514,10 @@ The rod of striking is designed for melee combat, releasing its charges to deal
 additional damage dependent on evocations skill when it strikes a foe. Maces &
 Flails skill will help improve your basic effectiveness with the weapon.
 %%%%
+Mesmerise spell
+
+This spell makes its victim unwilling to move away from the caster.
+%%%%
 Metabolic Englaciation spell
 
 This spell tries to lower the metabolic rate of every creature in the caster's
@@ -621,6 +625,16 @@ Polymorph spell
 This spell randomly alters the form of a creature. It is especially effective
 against shape-changing creatures.
 %%%%
+Porkalator spell
+
+This spell transforms an unwilling victim into a certain unclean pink
+creature, known for bad table manners, squealing and rooting for truffles.
+Not even angels and demons are immune — have you ever tried holy or unholy
+bacon?
+
+If the spell is hastily cast, the effect is not permanent. In any case, the
+caster's demise will turn the victims back into their former shapes.
+%%%%
 Portal Projectile spell
 
 This spell teleports a fired or thrown missile directly to its target, greatly
@@ -712,6 +726,11 @@ sublimate into a freezing cloud, if it isn't hacked or melted into a small
 puddle of water first. Note that simulacra are incapable of leaving the level
 they were created on.
 %%%%
+Sleep spell
+
+This spell attempts to put its target to sleep. Taking damage will typically
+wake affected person up, loud sounds can potentially do this as well.
+%%%%
 Slow spell
 
 This spell slows the actions of a creature.
@@ -799,6 +818,11 @@ This spell hardens one's skin to a degree determined by one's skill in Earth
 Magic. It only works on relatively normal flesh, and will aid neither the
 undead nor the bodily transformed. However, there is one exception: the effects
 of this spell will be boosted for casters in Statue Form.
+%%%%
+Strip Resistance spell
+
+This spell attempts to greatly reduce its target's magic resistance, making
+him or her more vulnerable to hex type spells.
 %%%%
 Sublimation of Blood spell
 
