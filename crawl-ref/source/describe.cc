@@ -1975,8 +1975,8 @@ string get_item_description(const item_def &item, bool verbose,
                 description << "\n\nThis meat is poisonous";
                 if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 {
-                    description << " and may cause sickness even if poison "
-                                   "resistant";
+                    description << " and provides less nutrition even for the "
+                                   "poison-resistant";
                 }
                 description << ".";
                 break;
