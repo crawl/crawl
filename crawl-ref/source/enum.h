@@ -2935,6 +2935,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_CLING,
 #endif
+    MUT_FUMES,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

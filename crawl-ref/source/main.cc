@@ -3499,6 +3499,7 @@ void world_reacts()
 
     handle_time();
     manage_clouds();
+    fume();
     if (env.level_state & LSTATE_GLOW_MOLD)
         _update_mold();
     if (env.level_state & LSTATE_GOLUBRIA)
