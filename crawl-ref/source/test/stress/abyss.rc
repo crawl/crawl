@@ -25,6 +25,7 @@ function ready()
     crawl.enable_more(false)
     crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('save_checkpoints')" .. eol ..
                    "debug.disable('confirmations')" .. eol ..
                    "debug.disable('death')" .. eol ..
                    "debug.disable('hunger')" .. eol ..
@@ -62,6 +63,7 @@ function ready()
     crawl.enable_more(false)
     crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('save_checkpoints')" .. eol ..
                    "debug.disable('confirmations')" .. eol ..
                    "debug.disable('death')" .. eol ..
                    "debug.disable('hunger')" .. eol ..

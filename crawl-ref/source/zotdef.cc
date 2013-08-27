@@ -1044,7 +1044,8 @@ void zotdef_bosses_check()
         }
 
         // since you don't move between maps, any crash would be fatal
-        save_game(false);
+        if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+            save_game(false);
     }
 
     if ((you.num_turns + 1) % ZOTDEF_CYCLE_LENGTH == ZOTDEF_CYCLE_INTERVAL)
