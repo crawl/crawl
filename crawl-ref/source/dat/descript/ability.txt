@@ -103,9 +103,9 @@ Evoke Teleportation ability
 
 Teleport yourself to a random location on the level.
 %%%%
-Evoke Blink
+Evoke Blink ability
 
-Randomly translocate a short distance.
+<Blink ability>
 %%%%
 Evoke Berserk Rage ability
 
