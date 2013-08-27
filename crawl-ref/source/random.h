@@ -24,6 +24,7 @@ double random_range_real(double low, double high, int nrolls = 1);
 
 int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
+int biased_random2(int max, int n);
 int random2limit(int max, int limit);
 int binomial_generator(unsigned n_trials, unsigned trial_prob);
 bool bernoulli(double n_trials, double trial_prob);
