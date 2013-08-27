@@ -262,6 +262,9 @@ static const char* _prop_name[] = {
     "SInv",
     "+Inv",
     "+Fly",
+#if TAG_MAJOR_VERSION > 34
+    "+Fog",
+#endif
     "+Blnk",
     "+Rage",
     "Noisy",
@@ -282,7 +285,9 @@ static const char* _prop_name[] = {
     "BAcc",
     "BDam",
     "RMsl",
-    "Fog",
+#if TAG_MAJOR_VERSION == 34
+    "+Fog",
+#endif
 };
 
 #define ARTP_VAL_BOOL 0
@@ -305,6 +310,9 @@ static int8_t _prop_type[] = {
     ARTP_VAL_BOOL, //EYESIGHT
     ARTP_VAL_BOOL, //INVISIBLE
     ARTP_VAL_BOOL, //FLIGHT
+#if TAG_MAJOR_VERSION > 34
+    ARTP_VAL_BOOL, //FOG
+#endif
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
     ARTP_VAL_POS,  //NOISES
@@ -325,7 +333,9 @@ static int8_t _prop_type[] = {
     ARTP_VAL_ANY,  //BASE_ACC
     ARTP_VAL_ANY,  //BASE_DAM
     ARTP_VAL_BOOL, //RMSL
+#if TAG_MAJOR_VERSION == 34
     ARTP_VAL_BOOL, //FOG
+#endif
 };
 
 static void _tweak_randart(item_def &item)
