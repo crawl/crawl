@@ -2920,7 +2920,7 @@ void melee_attack::chaos_affects_attacker()
             form = TRAN_APPENDAGE;
         if (one_chance_in(5))
             form = coinflip() ? TRAN_STATUE : TRAN_LICH;
-        if (transform(0, form))
+        if (transform(0, form, true))
         {
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
             take_note(Note(NOTE_MESSAGE, 0, 0,
