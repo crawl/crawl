@@ -1305,7 +1305,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
         // You wouldn't want to lose this accomplishment to a crash, would you?
         // Especially if you manage to trigger one via lua somehow...
-        save_game(false);
+        if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+            save_game(false);
 
         mprnojoin("You die...");
         xom_death_message((kill_method_type) se.get_death_type());
