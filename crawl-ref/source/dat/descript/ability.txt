@@ -94,12 +94,13 @@ At the permanent loss of one magic point recharge a wand or rod.
 %%%%
 Dig
 
-Tunnels through rock walls.
+Tunnels through rock walls in a straight line. Noisy.
 %%%%
 Shaft Self
 
 Sends you to a random position one to three floors down,
-as if you fell through a shaft trap.
+as if you fell through a shaft trap. It takes time to dig the shaft
+and the landing is noisy.
 %%%%
 Evoke Teleportation
 
