@@ -1,21 +1,17 @@
-#!/usr/bin/env perl -w
-
+#!/usr/bin/env perl
+use warnings;
 use strict;
 
-if (@ARGV != 2) {
-    die "usage: descript-sort.pl infile outfile\n";
-}
+@ARGV == 2 or die "usage: descript-sort.pl infile outfile\n";
 
 my $INNAME  = $ARGV[0];
 my $OUTNAME = $ARGV[1];
 
-unless (open(INFILE, "$INNAME")) {
-    die "Couldn't open input file '$INNAME' for reading: $!\n";
-}
+open(INFILE, "$INNAME")
+    or die "Couldn't open input file '$INNAME' for reading: $!\n";
 
-unless (open(OUTFILE, ">$OUTNAME")) {
-    die "Couldn't open output file '$OUTNAME' for writing: $!\n";
-}
+open(OUTFILE, ">$OUTNAME")
+    or die "Couldn't open output file '$OUTNAME' for writing: $!\n";
 
 undef $/;
 
@@ -26,7 +22,8 @@ my @entries = split(/\n?%%%%\s*\n?/m, $content);
 
 my($entry, %entry_table);
 
-foreach $entry (@entries) {
+foreach $entry (@entries)
+{
     chomp(my @lines = split(/\n/m, $entry));
     next if (@lines < 1);
 
@@ -36,7 +33,8 @@ foreach $entry (@entries) {
 
     shift(@lines) while (@lines && length($lines[0]) == 0);
 
-    if (@lines == 0) {
+    if (@lines == 0)
+    {
         print "'$key' has no definition\n";
         $entry_table{$key} = "";
         next;
@@ -47,13 +45,12 @@ foreach $entry (@entries) {
 
 my @entry_order = sort keys(%entry_table);
 
-foreach $entry (@entry_order) {
+foreach $entry (@entry_order)
+{
     print OUTFILE "%%%%\n";
     print OUTFILE "$entry\n\n";
 
-    if ($entry_table{$entry} ne "") {
-        print OUTFILE "$entry_table{$entry}\n";
-    }
+    print OUTFILE "$entry_table{$entry}\n" if ($entry_table{$entry} ne "");
 }
 
 print OUTFILE "%%%%\n";
