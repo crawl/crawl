@@ -5012,7 +5012,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CANTRIP:
     case SPELL_QUICKSILVER_BOLT:
     case SPELL_METAL_SPLINTERS:
-    case SPELL_MIASMA:
+    case SPELL_MIASMA_BREATH:
     case SPELL_SUMMON_DRAKES:
     case SPELL_BLINK_OTHER:
     case SPELL_SUMMON_MUSHROOMS:

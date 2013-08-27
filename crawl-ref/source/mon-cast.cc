@@ -729,7 +729,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_big_cloud = true;
         break;
 
-    case SPELL_MIASMA:            // death drake
+    case SPELL_MIASMA_BREATH:      // death drake
         beam.name     = "foul vapour";
         beam.damage   = dice_def(3, 5 + power / 24);
         beam.colour   = DARKGREY;
@@ -1405,7 +1405,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         if (!foe || _foe_should_res_negative_energy(foe))
             ret = true;
         break;
-    case SPELL_MIASMA:
+    case SPELL_MIASMA_BREATH:
         ret = (!foe || foe->res_rotting());
         break;
 

@@ -2135,7 +2135,7 @@ struct spell_desc
 },
 
 {
-    SPELL_MIASMA, "Miasma",
+    SPELL_MIASMA_BREATH, "Miasma Breath",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNCLEAN | SPFLAG_MONSTER,
      6,
