@@ -371,8 +371,13 @@ static void _tweak_randart(item_def &item)
 
         if (choice_num < 26)
             choice = 'A' + choice_num;
+        else if (choice_num < 'A' - '0' + 26)
+        {
+            // 0-9 then :;<=>?@ . Any higher would collide with letters.
+            choice = '0' + choice_num - 26;
+        }
         else
-            choice = '1' + choice_num - 26;
+            choice = '-'; // Too many choices!
 
         if (props[i])
             snprintf(buf, sizeof(buf), "%c) <w>%-5s</w> ", choice, _prop_name[i]);
@@ -392,8 +397,8 @@ static void _tweak_randart(item_def &item)
 
     if (isaalpha(keyin))
         choice = keyin - 'a';
-    else if (isadigit(keyin) && keyin != '0')
-        choice = keyin - '1' + 26;
+    else if (keyin >= '0' && keyin < 'A')
+        choice = keyin - '0' + 26;
     else
     {
         canned_msg(MSG_OK);
