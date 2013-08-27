@@ -226,6 +226,8 @@ weapon_type str_to_weapon(const string &str)
         return WPN_DARTS;
     else if (str == "random")
         return WPN_RANDOM;
+    else if (str == "viable")
+        return WPN_VIABLE;
 
     return WPN_UNKNOWN;
 }
@@ -262,6 +264,8 @@ static string _weapon_to_str(int weapon)
         return "javelins";
     case WPN_DARTS:
         return "darts";
+    case WPN_VIABLE:
+        return "viable";
     case WPN_RANDOM:
     default:
         return "random";
