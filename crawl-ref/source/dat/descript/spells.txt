@@ -46,6 +46,13 @@ be moved by this spell.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Awaken Forest spell
+
+This spell allows the caster to give some very limited motility to
+surrounding trees, allowing them to sway their branches and shift their
+roots. Such enchanted trees will lash at any enemy foolish enough to stand
+close enough.
+%%%%
 Banishment spell
 
 <Banish ability>
@@ -279,6 +286,11 @@ weapon once transformed.
 Drain Life spell
 
 <Drain Life ability>
+%%%%
+Druid's Call spell
+
+This spell allows a druid to recall a woodland creature or two from a
+location on the same dungeon level.
 %%%%
 Enslavement spell
 
@@ -854,6 +866,15 @@ This spell summons forth a pestilential swarm.
 Summon Ugly Thing spell
 
 This spell summons a mutated otherworldly creature to the caster's aid.
+%%%%
+Sunray spell
+
+This spell lets a beam of intense light into the dungeon, damaging its
+target. Obviously, invisibility lets the light pass through, making such
+creatures unarmed. Vampires are known to be especially vulnerable to it.
+
+Not being a missile, this spell is not affected by Repel and Deflect effects
+— you want to be able to see, don't you?
 %%%%
 Sure Blade spell
 
