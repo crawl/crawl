@@ -2514,9 +2514,11 @@ void melee_attack::antimagic_affects_defender()
              && !defender->as_monster()->is_priest()
              && !mons_class_flag(defender->type, M_FAKE_SPELLS))
     {
+        int dur = div_rand_round(damage_done * 8, defender->as_monster()->hit_dice);
+        dur = random2(dur + 1) * BASELINE_DELAY;
         defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                 attacker, // doesn't matter
-                                random2(damage_done * 2) * BASELINE_DELAY));
+                                dur));
         special_damage_message =
                     apostrophise(defender->name(DESC_THE))
                     + " magic leaks into the air.";
