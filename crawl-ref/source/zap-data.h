@@ -230,7 +230,7 @@ struct zap_info
     false,
     true,
     false,
-    4
+    12
 },
 
 {
