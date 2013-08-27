@@ -1531,5 +1531,15 @@
   {"You feel slippery.", "", ""},
 
   "cling"
-}
+},
 #endif
+
+{ MUT_FUMES,            5,  2, false, false, false,
+  "fuming",
+
+  {"You emit clouds of smoke.", "You frequently emit clouds of smoke.", ""},
+  {"You fume.", "You fume more.", ""},
+  {"You stop fuming.", "You fume less.", ""},
+
+  "fumes"
+}
