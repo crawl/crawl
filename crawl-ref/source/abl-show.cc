@@ -1924,7 +1924,7 @@ static bool _do_ability(const ability_def& abil)
     {                    
         if (you.can_do_shaft_ability())
         {
-            if (yesno("Are you sure you want to shaft yourself?"))
+            if (yesno("Are you sure you want to shaft yourself? It is not instant."))
                 start_delay(DELAY_SHAFT_SELF, 1);
             else
                 return false;
