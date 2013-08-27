@@ -1803,6 +1803,7 @@ void StashTracker::search_stashes()
     bool sort_by_dist = true;
     bool show_as_stacks = true;
     bool filter_useless = false;
+    bool default_execute = true;
     while (true)
     {
         // Note that sort_by_dist and show_as_stacks can be modified by the
@@ -1811,7 +1812,8 @@ void StashTracker::search_stashes()
         const bool again = display_search_results(results,
                                                   sort_by_dist,
                                                   show_as_stacks,
-                                                  filter_useless);
+                                                  filter_useless,
+                                                  default_execute);
         if (!again)
             break;
     }
@@ -1875,16 +1877,11 @@ void StashSearchMenu::draw_title()
 {
     if (title)
     {
-        const unsigned avail_width = get_number_of_cols();
         cgotoxy(1, 1);
         formatted_string fs = formatted_string(title->colour);
-        if (avail_width > 92)
-        {
-            fs.cprintf("%d %s%s, ",
-                       title->quantity, title->text.c_str(),
-                       title->quantity > 1 ? "es" : "");
-        }
-        fs.cprintf("%s %s %s", stack_style, sort_style, filtered);
+        fs.cprintf("%d %s%s,",
+                   title->quantity, title->text.c_str(),
+                   title->quantity > 1 ? "es" : "");
         fs.display();
 
 #ifdef USE_TILE_WEB
@@ -1894,12 +1891,12 @@ void StashSearchMenu::draw_title()
         draw_title_suffix(formatted_string::parse_string(make_stringf(
                  "<lightgrey> [<w>a-z</w>: %s"
                  " <w>?</w>/<w>!</w>: %s"
-                 "  <w>-</w>:stacking"
-                 "  <w>/</w>:sorting"
-                 "  <w>=</w>:filter%s]",
-                 menu_action == ACT_EXECUTE ? "go" : "view",
-                 menu_action == ACT_EXECUTE ? "view" : "go",
-                 avail_width > 100 ? " useless" : "")), false);
+                 "  <w>-</w>:show %s"
+                 "  <w>/</w>:sort %s"
+                 "  <w>=</w>:%s]",
+                 menu_action == ACT_EXECUTE ? "travel" : "view",
+                 menu_action == ACT_EXECUTE ? "view" : "travel",
+                 stack_style, sort_style, filtered)), false);
     }
 }
 
@@ -2045,7 +2042,8 @@ bool StashTracker::display_search_results(
     vector<stash_search_result> &results_in,
     bool& sort_by_dist,
     bool& show_as_stacks,
-    bool& filter_useless)
+    bool& filter_useless,
+    bool& default_execute)
 {
     if (results_in.empty())
         return false;
@@ -2085,7 +2083,7 @@ bool StashTracker::display_search_results(
     stashmenu.set_tag("stash");
     stashmenu.can_travel   = can_travel_interlevel();
     stashmenu.action_cycle = Menu::CYCLE_TOGGLE;
-    stashmenu.menu_action  = Menu::ACT_EXECUTE;
+    stashmenu.menu_action  = default_execute ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
     string title = "match";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
@@ -2138,7 +2136,8 @@ bool StashTracker::display_search_results(
     while (true)
     {
         sel = stashmenu.show();
-
+        
+        default_execute = stashmenu.menu_action == Menu::ACT_EXECUTE;
         if (stashmenu.request_toggle_sort_method)
         {
             sort_by_dist = !sort_by_dist;
