@@ -627,13 +627,14 @@ against shape-changing creatures.
 %%%%
 Porkalator spell
 
-This spell transforms an unwilling victim into a certain unclean pink
-creature, known for bad table manners, squealing and rooting for truffles.
-Not even angels and demons are immune — have you ever tried holy or unholy
-bacon?
+This spell transforms an unwilling victim into a certain pink quadruped, known
+for bad table manners, squealing, and rooting for truffles.  Not even angels
+and demons are immune — leading to the world's tastiest and nastiest bacon,
+respectively.
 
-If the spell is hastily cast, the effect is not permanent. In any case, the
-caster's demise will turn the victims back into their former shapes.
+If the spell is hastily cast, the transformation is temporary; only a days-long
+ritual can make the effect permanent.  In either case, the caster's demise will
+turn the victims back into their former shapes.
 %%%%
 Portal Projectile spell
 
@@ -729,7 +730,7 @@ they were created on.
 Sleep spell
 
 This spell attempts to put its target to sleep. Taking damage will typically
-wake affected person up, loud sounds can potentially do this as well.
+wake the affected person, and loud sounds can potentially do so as well.
 %%%%
 Slow spell
 
@@ -822,7 +823,7 @@ of this spell will be boosted for casters in Statue Form.
 Strip Resistance spell
 
 This spell attempts to greatly reduce its target's magic resistance, making
-him or her more vulnerable to hex type spells.
+him or her more vulnerable to hexes and similar spells.
 %%%%
 Sublimation of Blood spell
 
@@ -893,9 +894,9 @@ This spell summons a mutated otherworldly creature to the caster's aid.
 %%%%
 Sunray spell
 
-This spell lets a beam of intense light into the dungeon, damaging its
-target. Obviously, invisibility lets the light pass through, making such
-creatures unarmed. Vampires are known to be especially vulnerable to it.
+This spell calls forth a beam of intense light, damaging its target. Obviously,
+invisibility lets the light pass through, leaving such creatures unharmed.
+Vampires are known to be especially vulnerable to it.
 
 Not being a missile, this spell is not affected by Repel and Deflect effects
 — you want to be able to see, don't you?
