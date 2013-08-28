@@ -2051,7 +2051,7 @@ bool StashTracker::display_search_results(
     vector<stash_search_result> * results = &results_in;
     vector<stash_search_result> results_single_items;
     vector<stash_search_result> results_filtered;
-    
+
     if (filter_useless)
     {
         _stash_filter_useless(results_in, results_filtered);
@@ -2136,7 +2136,7 @@ bool StashTracker::display_search_results(
     while (true)
     {
         sel = stashmenu.show();
-        
+
         default_execute = stashmenu.menu_action == Menu::ACT_EXECUTE;
         if (stashmenu.request_toggle_sort_method)
         {
@@ -2155,7 +2155,7 @@ bool StashTracker::display_search_results(
             filter_useless = !filter_useless;
             return true;
         }
-        
+
         if (sel.size() == 1
             && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
         {
