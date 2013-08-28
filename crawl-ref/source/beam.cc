@@ -1796,7 +1796,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_LIGHT:
         if (mons->invisible())
             hurted = 0;
-        else if (mons_genus(mons->type) == MONS_VAMPIRE)
+        else if (mons_genus(mons->type) == MONS_VAMPIRE || mons->type == MONS_SHADOW)
             hurted += hurted / 2;
         if (!hurted)
         {
