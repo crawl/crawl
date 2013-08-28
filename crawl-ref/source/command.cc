@@ -1182,7 +1182,7 @@ static bool _append_books(string &desc, item_def &item, string key)
 
         for (int j = 0; j < 8; j++)
             if (which_spell_in_book(book, j) == type)
-                rods.push_back(item.name(DESC_PLAIN));
+                rods.push_back(item.name(DESC_BASENAME));
     }
 
     if (!books.empty())
