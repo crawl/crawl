@@ -1067,7 +1067,7 @@ enum delay_type
 
     DELAY_INTERRUPTIBLE,                // simple interruptible delay
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
-    
+
     DELAY_SHAFT_SELF, // Formicid ability
 
     NUM_DELAYS

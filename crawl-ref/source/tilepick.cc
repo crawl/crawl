@@ -1007,7 +1007,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_FORMICID_DRONE:
         return TILEP_MONS_FORMICID_DRONE;
     case MONS_FORMICID_VENOM_MAGE:
-        return TILEP_MONS_FORMICID_VENOM_MAGE;  
+        return TILEP_MONS_FORMICID_VENOM_MAGE;
 
     // bats and birds ('b')
     case MONS_BAT:

@@ -1340,7 +1340,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_POISON_MAGIC,   -1),
     APT(SP_LAVA_ORC,        SK_INVOCATIONS,     3),
     APT(SP_LAVA_ORC,        SK_EVOCATIONS,      1),
-    
+
     // SP_FORMICID
     APT(SP_FORMICID,        SK_FIGHTING,        0),
     APT(SP_FORMICID,        SK_SHORT_BLADES,    1),

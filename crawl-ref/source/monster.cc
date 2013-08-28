@@ -5979,7 +5979,7 @@ bool monster::stasis(bool calc_unid, bool items) const
 {
     if (mons_class_flag(type, M_PERMA_STASIS))
         return true;
-    
+
     return actor::stasis(calc_unid, items);
 }
 
