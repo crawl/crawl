@@ -1096,6 +1096,32 @@ static void _append_non_item(string &desc, string key)
     }
 }
 
+static bool _is_rod_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_RODS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i + NUM_FIXED_BOOKS, j) == spell)
+                return true;
+
+    return false;
+}
+
+static bool _is_book_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i, j) == spell)
+                return true;
+
+    return false;
+}
+
 // Adds a list of all books/rods that contain a given spell (by name)
 // to a description string.
 static bool _append_books(string &desc, item_def &item, string key)
@@ -1682,6 +1708,9 @@ static void _find_description(bool *again, string *error_inout)
                 spell_type spell = spell_by_name(str);
                 if (spell != SPELL_NO_SPELL)
                     me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+                me->colour = _is_book_spell(spell) ? WHITE
+                           : _is_rod_spell(spell)  ? LIGHTGREY
+                                                   : DARKGREY; // monster-only
             }
 #else
             UNUSED(doing_spells);
