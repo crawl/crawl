@@ -1176,7 +1176,7 @@ static bool _append_books(string &desc, item_def &item, string key)
             desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
         }
     }
-    else // rods-only
+    else if (!rods.empty()) // rods-only
     {
         desc += "\n\nThis spell can be found in the following rod";
         if (rods.size() > 1)
@@ -1184,6 +1184,8 @@ static bool _append_books(string &desc, item_def &item, string key)
         desc += ":\n";
         desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
     }
+    else
+        desc += "\n\nThis spell is not found in any books or rods.";
 
     return true;
 }
