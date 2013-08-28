@@ -1096,7 +1096,6 @@ static void _append_non_item(string &desc, string key)
     }
 }
 
-#ifdef USE_TILE
 static bool _is_rod_spell(spell_type spell)
 {
     if (spell == SPELL_NO_SPELL)
@@ -1122,7 +1121,6 @@ static bool _is_book_spell(spell_type spell)
 
     return false;
 }
-#endif
 
 // Adds a list of all books/rods that contain a given spell (by name)
 // to a description string.
@@ -1704,19 +1702,17 @@ static void _find_description(bool *again, string *error_inout)
         {
             me = new MenuEntry(str, MEL_ITEM, 1, letter);
 
-#ifdef USE_TILE
             if (doing_spells)
             {
                 spell_type spell = spell_by_name(str);
+#ifdef USE_TILE
                 if (spell != SPELL_NO_SPELL)
                     me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+#endif
                 me->colour = _is_book_spell(spell) ? WHITE
                            : _is_rod_spell(spell)  ? LIGHTGREY
                                                    : DARKGREY; // monster-only
             }
-#else
-            UNUSED(doing_spells);
-#endif
 
             me->data = &key_list[i];
         }
