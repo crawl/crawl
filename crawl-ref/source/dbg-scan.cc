@@ -462,7 +462,7 @@ void debug_mons_scan()
                 ASSERT(monster_by_mid(m->mid) == m);
         }
 
-        if (m->constricted_by && !monster_by_mid(m->constricted_by))
+        if (m->constricted_by && !actor_by_mid(m->constricted_by))
         {
             mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->mindex());
