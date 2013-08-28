@@ -1143,6 +1143,12 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
     }
 
+    if (you.species == SP_FORMICID
+        && get_item_slot(item) == EQ_HELMET)
+    {
+        mpr("Your antennae begin to slowly extend from your head.");
+    }
+
     if (is_artefact(item))
         _unequip_artefact_effect(item, NULL, meld);
 }
