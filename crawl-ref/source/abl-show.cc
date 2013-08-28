@@ -231,7 +231,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
       1, 0, 0, 0, 0, ABFLAG_PERMANENT_MP},
-    
+
     { ABIL_DIG, "Dig", 0, 0, 75, 0, 0, ABFLAG_NONE},
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_NONE},
 
@@ -1900,7 +1900,7 @@ static bool _do_ability(const ability_def& abil)
         if (recharge_wand() <= 0)
             return false; // fail message is already given
         break;
-    
+
     case ABIL_DIG:
     {
         power = 0;
@@ -1921,7 +1921,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_SHAFT_SELF:
-    {                    
+    {
         if (you.can_do_shaft_ability())
         {
             if (yesno("Are you sure you want to shaft yourself? It is not instant."))
@@ -3133,7 +3133,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
-    
+
     if (you.species == SP_FORMICID)
     {
         _add_talent(talents, ABIL_DIG, check_confused);

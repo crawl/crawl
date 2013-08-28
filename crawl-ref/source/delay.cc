@@ -718,7 +718,7 @@ void handle_delay()
         case DELAY_PASSWALL:
             mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
             break;
-        
+
         case DELAY_SHAFT_SELF:
             mpr("You begin to dig a shaft.", MSGCH_MULTITURN_ACTION);
             break;

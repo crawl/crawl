@@ -120,7 +120,7 @@ public:
                             bool calc_unid = true) const = 0;
     virtual int scan_artefacts(artefact_prop_type which_property,
                                bool calc_unid = true) const = 0;
-    
+
     virtual hands_reqd_type hands_reqd(const item_def &item) const;
 
             bool can_wield(const item_def* item,

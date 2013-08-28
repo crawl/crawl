@@ -538,7 +538,7 @@ public:
 
     item_def *weapon(int which_attack = -1) const;
     item_def *shield();
-    
+
     hands_reqd_type hands_reqd(const item_def &item) const;
 
     bool      can_wield(const item_def &item,
@@ -712,7 +712,7 @@ public:
     int  skill(skill_type skill, int scale =1, bool real = false) const;
 
     bool do_shaft();
-    
+
     bool can_do_shaft_ability() const;
     bool do_shaft_ability();
 

@@ -2299,7 +2299,7 @@ static void _decrement_durations()
     }
     else
         you.duration[DUR_GOURMAND] = 0;
-    
+
     // Retractable antennae
     if (you.species == SP_FORMICID && !player_wearing_slot(EQ_HELMET))
     {

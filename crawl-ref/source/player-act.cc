@@ -328,7 +328,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return false;
     if (species == SP_FORMICID)
         return true;
-    
+
     if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
             && (item_mass(item) >= 500
                 || item.base_type == OBJ_WEAPONS

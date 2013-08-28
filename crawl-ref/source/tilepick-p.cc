@@ -817,7 +817,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             else
             {
                 result = TILEP_BASE_FORMICID
-                        + ((you.duration[DUR_ANTENNAE_EXTEND] 
+                        + ((you.duration[DUR_ANTENNAE_EXTEND]
                             * player_mutation_level(MUT_ANTENNAE))
                            / ANTENNAE_EXTEND_TIME);
             }

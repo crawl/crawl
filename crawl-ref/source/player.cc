@@ -842,7 +842,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return false;
 
-        if (eq == EQ_HELMET 
+        if (eq == EQ_HELMET
             && player_mutation_level(MUT_ANTENNAE) == 3
             && you.species != SP_FORMICID)
         {
@@ -1914,7 +1914,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     // Only thirsty vampires are naturally poison resistant.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
         rp++;
-    
+
     // Formicids are vulnerable, but can make up for it with 2 rPois sources.
     if (you.species == SP_FORMICID)
         rp--;
@@ -5772,7 +5772,7 @@ void player::init()
 
     temperature = 1; // 1 is min; 15 is max.
     temperature_last = 1;
-    
+
     duration[DUR_ANTENNAE_EXTEND] = ANTENNAE_EXTEND_TIME;
 
     xray_vision = false;
@@ -7345,8 +7345,8 @@ int player::has_antennae(bool allow_tran) const
     {
         if (player_wearing_slot(EQ_HELMET))
             return 0;
-        
-        return (you.duration[DUR_ANTENNAE_EXTEND] 
+
+        return (you.duration[DUR_ANTENNAE_EXTEND]
                 * player_mutation_level(MUT_ANTENNAE, allow_tran))
                / ANTENNAE_EXTEND_TIME;
     }
@@ -7651,7 +7651,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return (species == SP_OGRE 
+    return (species == SP_OGRE
             || species == SP_TROLL
             || species == SP_FORMICID);
 }

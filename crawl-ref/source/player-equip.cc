@@ -1007,13 +1007,13 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
 
     if (get_item_slot(arm) == EQ_SHIELD)
         warn_shield_penalties();
-    
+
     if (you.species == SP_FORMICID
         && get_item_slot(arm) == EQ_HELMET)
     {
         mpr("Your antennae retract into your head.");
         start_delay(DELAY_UNINTERRUPTIBLE, 2);
-        you.duration[DUR_ANTENNAE_EXTEND] = 0;    
+        you.duration[DUR_ANTENNAE_EXTEND] = 0;
         #ifdef USE_TILE
             init_player_doll();
         #endif

@@ -2359,7 +2359,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (mons->type != MONS_FORMICID_VENOM_MAGE
                 && cast_los_attack_spell(spell_cast, mons->hit_dice, mons,
                                       false) != SPRET_SUCCESS)
-                return false; 
+                return false;
         }
         // See if we have a good spot to cast LRD at.
         else if (spell_cast == SPELL_LRD)
@@ -3074,19 +3074,19 @@ static int _mons_mass_cure_poison(monster* mons, bool actual)
 
     if (actual)
         simple_monster_message(mons, " cures the poison of those in need.");
-    
+
     for (actor_iterator ai(mons->get_los()); ai; ++ai)
     {
         if (ai->is_player())
         {
             if (!mons->pacified() && !mons->friendly())
                 continue;
-            
+
             if (you.duration[DUR_POISONING] == 0)
                 continue;
 
             retval = 0;
-            
+
             if (actual && you.duration[DUR_POISONING])
             {
                 reduce_poison_player(2 + random2(3));
@@ -3096,15 +3096,15 @@ static int _mons_mass_cure_poison(monster* mons, bool actual)
         else
         {
             monster* m = ai->as_monster();
-              
+
             if (!mons->pacified() && mons->friendly() != m->friendly())
                 continue;
-            
+
             if (!m->has_ench(ENCH_POISON))
                 continue;
-            
+
             retval = 0;
-            
+
             if (actual)
             {
                 retval = 1;
