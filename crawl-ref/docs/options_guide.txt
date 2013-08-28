@@ -307,19 +307,25 @@ remember_name = true
         simply reuse your old name if remember_name is set.
 
 weapon = (short sword | falchion | quarterstaff | hand axe | spear | mace
-          | trident | unarmed | random)
+          | trident | unarmed | random | viable)
         Specifying the weapon option allows you to bypass the weapon
         selection screen. Tridents and falchions are restricted to only
         fighters and gladiators, quarterstaves are restricted to gladiators,
         and unarmed is restricted to races with claws. The standard weapon
         prompt will be shown if an illegal choice for the selected
-        background is specified.
+        background is specified. The "viable" option makes a random choice
+        from among the "good" weapons for the chosen character.
 
-species = (Human |...| Vampire | random)
-        The usual abbreviations (Hu, HE, etc.) work.
+species = (Human |...| Vampire | random | viable)
+        The usual abbreviations (Hu, HE, etc.) work. Because species and
+        background selections from options are applied before player choices,
+        "viable" is essentially the same as "random" unless the background
+        option is also set.
 
-background = (Fighter |...| Wanderer | random)
-        Here again the abbreviations (Fi, Wz, Pr, etc.) can be used.
+background = (Fighter |...| Wanderer | random | viable)
+        Here again the abbreviations (Fi, Wz, Pr, etc.) can be used. The same
+        caveat applies to "viable": it is only really meaningful if the
+        species option is also set.
 
 random_pick = false
         The random_pick option will randomly generate a character.
@@ -328,8 +334,8 @@ random_pick = false
 
 good_random = true
         Whenever random_pick is used, species or background are set
-        random, or a remembered random choice is executed in the
-        character selection, the game will only pick good combinations.
+        random, or a remembered random choice is executed in the character
+        selection, the game will only pick good (viable) combinations.
 
 restart_after_game = true/false
         When a game ends, Crawl will return to the main menu if
