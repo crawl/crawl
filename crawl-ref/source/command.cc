@@ -1096,6 +1096,7 @@ static void _append_non_item(string &desc, string key)
     }
 }
 
+#ifdef USE_TILE
 static bool _is_rod_spell(spell_type spell)
 {
     if (spell == SPELL_NO_SPELL)
@@ -1121,6 +1122,7 @@ static bool _is_book_spell(spell_type spell)
 
     return false;
 }
+#endif
 
 // Adds a list of all books/rods that contain a given spell (by name)
 // to a description string.
