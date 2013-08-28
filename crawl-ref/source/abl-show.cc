@@ -408,8 +408,6 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, 0, 50, ABFLAG_ZOTDEF},
     { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, 30, ABFLAG_ZOTDEF},
     { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap",
-      0, 0, 0, 0, 15000, ABFLAG_ZOTDEF|ABFLAG_TLOC_MISCAST},
     { ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
     { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, 3000, ABFLAG_ZOTDEF},
     { ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, 0, 1000, ABFLAG_ZOTDEF},
@@ -547,7 +545,6 @@ static trap_type _trap_for_ability(const ability_def& abil)
         case ABIL_MAKE_SPEAR_TRAP: return TRAP_SPEAR;
         case ABIL_MAKE_NEEDLE_TRAP: return TRAP_NEEDLE;
         case ABIL_MAKE_NET_TRAP: return TRAP_NET;
-        case ABIL_MAKE_TELEPORT_TRAP: return TRAP_TELEPORT;
         case ABIL_MAKE_ALARM_TRAP: return TRAP_ALARM;
         case ABIL_MAKE_BLADE_TRAP: return TRAP_BLADE;
         default: return TRAP_UNASSIGNED;
@@ -619,10 +616,6 @@ static int _zp_cost(const ability_def& abil)
         case ABIL_MAKE_ALARM_TRAP:
             num = count_traps(_trap_for_ability(abil));
             scale10 = max(num-5, 0);   // First 5 at base cost
-            break;
-
-        case ABIL_MAKE_TELEPORT_TRAP:
-            scale20 = count_traps(TRAP_TELEPORT);
             break;
 
         case ABIL_MAKE_BLADE_TRAP:
@@ -887,7 +880,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_SPEAR_TRAP:
     case ABIL_MAKE_NEEDLE_TRAP:
     case ABIL_MAKE_NET_TRAP:
-    case ABIL_MAKE_TELEPORT_TRAP:
     case ABIL_MAKE_ALARM_TRAP:
     case ABIL_MAKE_BLADE_TRAP:
     case ABIL_MAKE_OKLOB_CIRCLE:
@@ -1775,13 +1767,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     // ZotDef traps
-    case ABIL_MAKE_TELEPORT_TRAP:
-        // BUG: it's the trap's position, not yours, that should matter.
-        if ((you.pos() - env.orb_pos).abs() < 100)
-        {
-            mpr("Radiation from the Orb interferes with the trap's magic!");
-            return false;
-        }
     case ABIL_MAKE_DART_TRAP:
     case ABIL_MAKE_ARROW_TRAP:
     case ABIL_MAKE_BOLT_TRAP:
@@ -3096,18 +3081,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
         if (you.experience_level >= 26)
             _add_talent(talents, ABIL_MAKE_CURSE_SKULL, check_confused);
-#if 0
-        // Disabled, and hard to fix.  Easiest to just replace it.
-        // Before enabling, please check the following:
-        // * monsters don't pathfind through it, sometimes even after I tried
-        //   hard-wiring teleport traps to be always unknown...
-        // * infinite ammo allows permanent blocks.  When changing that, please
-        //   keep in mind that teleporting into a shaft invalidates the whole
-        //   level, instantly.
-        // * placement is buggy (looks at your position)
-        if (you.experience_level >= 27)
-            _add_talent(talents, ABIL_MAKE_TELEPORT_TRAP, check_confused);
-#endif
+        // 27 was: Make teleport trap
     }
 
     // Species-based abilities.

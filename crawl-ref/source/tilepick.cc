@@ -5471,8 +5471,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZOTDEF_NEEDLE_TRAP;
     case ABIL_MAKE_NET_TRAP:
         return TILEG_ABILITY_ZOTDEF_NET_TRAP;
-    case ABIL_MAKE_TELEPORT_TRAP:
-        return TILEG_ABILITY_ZOTDEF_TELEPORT_TRAP;
     case ABIL_MAKE_ALARM_TRAP:
         return TILEG_ABILITY_ZOTDEF_ALARM_TRAP;
     case ABIL_MAKE_BLADE_TRAP:
