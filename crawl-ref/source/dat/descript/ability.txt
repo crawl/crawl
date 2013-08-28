@@ -78,8 +78,8 @@ Hellfire ability
 
 Blast your enemies with hellfire. This ball of unholy flames explodes on
 impact, and is not affected by any means of protection such as armour or
-resistances. Certain creatures, usually fire-based, are immune to hellfire
-entirely, though.
+resistances. However, certain creatures, usually fire-based, are immune to
+hellfire entirely.
 %%%%
 Release Delayed Fireball ability
 
