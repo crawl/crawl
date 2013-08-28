@@ -1892,8 +1892,8 @@ void StashSearchMenu::draw_title()
                  "<lightgrey> [<w>a-z</w>: %s"
                  " <w>?</w>/<w>!</w>: %s"
                  "  <w>-</w>:show %s"
-                 "  <w>/</w>:sort %s"
-                 "  <w>=</w>:%s]",
+                 " <w>/</w>:sort %s"
+                 " <w>=</w>:%s]",
                  menu_action == ACT_EXECUTE ? "travel" : "view",
                  menu_action == ACT_EXECUTE ? "view" : "travel",
                  stack_style, sort_style, filtered)), false);
@@ -2077,7 +2077,7 @@ bool StashTracker::display_search_results(
     else
         sort(results->begin(), results->end(), compare_by_name());
 
-    StashSearchMenu stashmenu(show_as_stacks ? "stacks" : "items",
+    StashSearchMenu stashmenu(show_as_stacks ? "stacks" : "items ",
                               sort_by_dist ? "by dist" : "by name",
                               filter_useless ? "filtered" : "unfiltered");
     stashmenu.set_tag("stash");
