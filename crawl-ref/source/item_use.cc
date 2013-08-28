@@ -573,12 +573,6 @@ static int armour_equip_delay(const item_def &item)
     // Shields are comparatively easy to wear.
     if (is_shield(item))
         delay = delay / 2 + 1;
-    
-    // Formicids are slow to put on helmets
-    if (you.species == SP_FORMICID && get_armour_slot(item) == EQ_HELMET)
-    {
-        delay += 2;
-    }
 
     if (delay < 1)
         delay = 1;
