@@ -155,7 +155,6 @@ __________________________________________________________________________();
 read_file("descript/unident");
 read_file("descript/gods");
 read_file("descript/skills");
-read_file("descript/ability");
 read_file("descript/commands");
 
 if (read_file("descript/items"))
@@ -185,6 +184,12 @@ if (read_file("descript/cards"))
     delete $keys{'a buggy card'};
     delete $keys{'a very buggy card'};
     check_desc_needed("card", map {s/$/ card/ && $_} `util/gather_cards`);
+}
+
+if (read_file("descript/ability"))
+{
+    check_desc_needed("ability", sort map {chomp;"$_ ability"}
+        `util/gather_abilities`);
 }
 
 if (read_file("descript/spells"))
