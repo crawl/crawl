@@ -896,7 +896,7 @@ Sunray spell
 
 This spell calls forth a beam of intense light, damaging its target. Obviously,
 invisibility lets the light pass through, leaving such creatures unharmed.
-Vampires are known to be especially vulnerable to it.
+Vampires and shadows are known to be especially vulnerable to it.
 
 Not being a missile, this spell is not affected by Repel and Deflect effects
 — you want to be able to see, don't you?
