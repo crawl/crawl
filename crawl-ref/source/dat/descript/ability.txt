@@ -556,13 +556,6 @@ End Transfer Knowledge ability
 
 Abort an ongoing skill transfer.
 %%%%
-# Vehumet
-Memorise spell ability
-
-Immediately gain knowledge of a destructive spell offered to you by Vehumet.
-The offer will expire after a short while. Check the Religion screen (^) to see
-which spell is offered.
-%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually
