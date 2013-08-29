@@ -2563,7 +2563,7 @@ void forest_damage(const actor *mon)
                 if (foe->is_player())
                 {
                     ouch(dmg, mon->mindex(), KILLED_BY_BEAM,
-                         "angry trees", true);
+                         "by angry trees", true);
                 }
                 else
                     foe->hurt(mon, dmg);

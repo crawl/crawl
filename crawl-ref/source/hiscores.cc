@@ -2482,10 +2482,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 if (!semiverbose)
                 {
-                    if (auxkilldata == "angry trees")
-                        desc += "... awoken ";
-                    else desc += (is_vowel(auxkilldata[0])) ? "... with an "
-                        : "... with a ";
+                    desc += (is_vowel(auxkilldata[0])) ? "... with an "
+                                                       : "... with a ";
                     desc += auxkilldata;
                     desc += _hiscore_newline_string();
                     needs_damage = true;
@@ -2498,8 +2496,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             }
             else if (needs_called_by_monster_line)
             {
-                snprintf(scratch, sizeof(scratch), "... invoked by %s",
-                          death_source_name.c_str());
+                snprintf(scratch, sizeof(scratch), "... %s by %s",
+                         auxkilldata == "by angry trees" ? "awakened"
+                                                         : "invoked",
+                         death_source_name.c_str());
                 desc += scratch;
                 desc += _hiscore_newline_string();
                 needs_damage = true;
