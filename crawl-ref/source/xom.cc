@@ -3772,6 +3772,7 @@ static void _handle_accidental_death(const int orig_hp,
                         true, true, true);
     }
 
+#if TAG_MAJOR_VERSION == 34
     while (you.dex() <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] <
                   orig_mutation[MUT_FLEXIBLE_WEAK])
@@ -3791,6 +3792,7 @@ static void _handle_accidental_death(const int orig_hp,
     {
         mutate(MUT_STRONG_STIFF, "Xom's lifesaving", true, true, true);
     }
+#endif
 
     mutation_type bad_muts[3]  = {MUT_WEAK, MUT_DOPEY, MUT_CLUMSY};
     mutation_type good_muts[3] = {MUT_STRONG, MUT_CLEVER, MUT_AGILE};
