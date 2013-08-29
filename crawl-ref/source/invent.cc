@@ -220,11 +220,22 @@ string InvEntry::get_text(bool need_cursor) const
     if (Options.tile_menu_icons && Options.show_inventory_weights)
         max_chars_in_line = get_number_of_cols() * 4 / 9 - 2;
 #endif
+
+    int colour_tag_adjustment = 0;
+    if (InvEntry::show_glyph)
+    {
+        // colour tags have to be taken into account for terminal width
+        // calculations on the ^x screen (monsters/items/features in LOS)
+        string colour_tag = colour_to_str(get_item_glyph(item).col);
+        colour_tag_adjustment = colour_tag.size() * 2 + 5;
+    }
+
     if (Options.show_inventory_weights)
     {
         max_chars_in_line -= 1;
         const int w_weight = 10; //length of " (999 aum)"
-        int excess = strwidth(tstr.str()) + text.size() + w_weight - max_chars_in_line;
+        int excess = strwidth(tstr.str()) - colour_tag_adjustment
+                     + text.size() + w_weight - max_chars_in_line;
         if (excess > 0)
             tstr << text.substr(0, max<int>(0, text.size() - excess - 2)) << "..";
         else
@@ -236,16 +247,8 @@ string InvEntry::get_text(bool need_cursor) const
     if (Options.show_inventory_weights)
     {
         const int mass = item_mass(*item) * item->quantity;
-        int colour_tag_adjustment = 0;
-        if (InvEntry::show_glyph)
-        {
-            // colour tags have to be taken into account for terminal width
-            // calculations on the ^x screen (monsters/items/features in LOS)
-            string colour_tag = colour_to_str(item->colour);
-            colour_tag_adjustment = colour_tag.size() * 2 + 5;
-        }
-
-        //Note: If updating the " (%i aum)" format, remember to update w_weight above.
+        // Note: If updating the " (%i aum)" format, remember to update
+        // w_weight above.
         tstr << setw(max_chars_in_line - strwidth(tstr.str())
                      + colour_tag_adjustment)
              << right
