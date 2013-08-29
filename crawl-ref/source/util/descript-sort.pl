@@ -2,16 +2,12 @@
 use warnings;
 use strict;
 
-@ARGV == 2 or die "usage: descript-sort.pl infile outfile\n";
+@ARGV == 1 or die "usage: descript-sort.pl file\n";
 
-my $INNAME  = $ARGV[0];
-my $OUTNAME = $ARGV[1];
+my $FNAME  = $ARGV[0];
 
-open(INFILE, "$INNAME")
-    or die "Couldn't open input file '$INNAME' for reading: $!\n";
-
-open(OUTFILE, ">$OUTNAME")
-    or die "Couldn't open output file '$OUTNAME' for writing: $!\n";
+open(INFILE, '<', $ARGV[0])
+    or die "Couldn't open file '$ARGV[0]' for reading: $!\n";
 
 undef $/;
 
@@ -44,6 +40,9 @@ foreach $entry (@entries)
 }
 
 my @entry_order = sort keys(%entry_table);
+
+open(OUTFILE, '>', $ARGV[0])
+    or die "Couldn't open file '$ARGV[0]' for writing: $!\n";
 
 foreach $entry (@entry_order)
 {
