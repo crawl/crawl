@@ -15,7 +15,7 @@ autofight_stop = 0
 Lua{
 bot_start = true
 last_turn = -1
-first_turn = you.turns()
+time1000 = math.floor(you.time() / 10000)
 local cmds = {string.char(9), 'u', 'k', 'l', 'n', '.'}
 function ready()
   local esc = string.char(27)
@@ -102,7 +102,7 @@ function ready()
   crawl.sendkeys(cmds[command])
 
   --# do only 1000 turns per invocation
-  if you.turns() - first_turn >= 1000 then
+  if math.floor(you.time() / 10000) > time1000 then
       crawl.sendkeys(string.char(19))
   end
 end
