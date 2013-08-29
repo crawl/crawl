@@ -26,10 +26,17 @@ LUAFN(l_spells_range)
     PLUARET(number, spell_range(spell, calc_spell_power(spell, true)));
 }
 
+LUAFN(l_spells_fail)
+{
+    spell_type spell = spell_by_name(luaL_checkstring(ls, 1), false);
+    PLUARET(number, failure_rate_to_int(spell_fail(spell)));
+}
+
 static const struct luaL_reg spells_clib[] =
 {
     { "mana_cost"     , l_spells_mana_cost },
     { "range"         , l_spells_range },
+    { "fail"          , l_spells_fail },
     { NULL, NULL }
 };
 
