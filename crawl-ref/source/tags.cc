@@ -2268,6 +2268,8 @@ static void tag_read_you(reader &th)
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] =
         you.innate_mutations[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
     }
+    if (you.species == SP_FELID && you.innate_mutations[MUT_JUMP] == 0)
+        you.innate_mutations[MUT_JUMP] = min(1 + you.experience_level / 6, 3);
 #endif
 
     count = unmarshallUByte(th);
