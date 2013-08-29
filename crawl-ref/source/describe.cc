@@ -227,7 +227,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "+Inv",   ARTP_INVISIBLE,             2 },
         { "+Fly",   ARTP_FLY,                   2 },
         { "+Fog",   ARTP_FOG,                   2 },
-        { "+Jump",  ARTP_JUMP,                   2 },
+        { "+Jump",  ARTP_JUMP,                  2 },
 
         // Resists, also really important
         { "rElec",  ARTP_ELECTRICITY,           2 },
