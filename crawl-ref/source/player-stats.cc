@@ -371,10 +371,12 @@ static int _strength_modifier()
     }
 
     // mutations
-    result += player_mutation_level(MUT_STRONG)
-              - player_mutation_level(MUT_WEAK);
+    result += 2 * (player_mutation_level(MUT_STRONG)
+                  - player_mutation_level(MUT_WEAK));
+#if TAG_MAJOR_VERSION == 34
     result += player_mutation_level(MUT_STRONG_STIFF)
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
+#endif
     result -= player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE)
               ? player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE) - 1 : 0;
 
@@ -415,8 +417,8 @@ static int _int_modifier()
     }
 
     // mutations
-    result += player_mutation_level(MUT_CLEVER)
-              - player_mutation_level(MUT_DOPEY);
+    result += 2 * (player_mutation_level(MUT_CLEVER)
+                  - player_mutation_level(MUT_DOPEY));
 
     return result;
 }
@@ -446,11 +448,12 @@ static int _dex_modifier()
     }
 
     // mutations
-    result += player_mutation_level(MUT_AGILE)
-              - player_mutation_level(MUT_CLUMSY);
+    result += 2 * (player_mutation_level(MUT_AGILE)
+                  - player_mutation_level(MUT_CLUMSY));
+#if TAG_MAJOR_VERSION == 34
     result += player_mutation_level(MUT_FLEXIBLE_WEAK)
               - player_mutation_level(MUT_STRONG_STIFF);
-
+#endif
     result += 2 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 

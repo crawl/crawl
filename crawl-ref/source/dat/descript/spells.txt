@@ -46,11 +46,26 @@ be moved by this spell.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Awaken Forest spell
+
+This spell allows the caster to give some very limited motility to
+surrounding trees, allowing them to sway their branches and shift their
+roots. Such enchanted trees will lash at any enemy foolish enough to stand
+close enough.
+%%%%
+Banishment spell
+
+<Banish ability>
+%%%%
 Beastly Appendage spell
 
 This spell makes you temporarily replace one or a pair of appendages with an
 animal counterpart, giving you an extra attack. It is not powerful enough to
 meld armour.
+%%%%
+Berserker Rage spell
+
+<Berserk ability>
 %%%%
 Blade Hands spell
 
@@ -97,6 +112,10 @@ permanently lessens his or her resilience to injury — to a degree dependent on
 
 The spell is powerful enough to literally pull someone out of Death's Door,
 although the shock will render the caster incapable of action for a while.
+%%%%
+Brothers in Arms spell
+
+<Brothers in Arms ability>
 %%%%
 Call Canine Familiar spell
 
@@ -238,6 +257,11 @@ Discord spell
 This spell drives nearby creatures into an insane frenzy, mercilessly
 attacking anything and everything nearby with great strength and speed.
 %%%%
+Disintegrate spell
+
+This spell violently rends apart anything in a small volume of space. It can
+be used to cause severe damage, or remove a chunk of rock.
+%%%%
 Disjunction spell
 
 This spell destabilizes the space in a sphere around you for a while, causing
@@ -258,6 +282,15 @@ Dragon Form spell
 This spell temporarily transforms the caster into a great, fire-breathing
 dragon. Draconian casters will instead retain their innate colour and breath
 weapon once transformed.
+%%%%
+Drain Life spell
+
+<Drain Life ability>
+%%%%
+Druid's Call spell
+
+This spell allows a druid to recall a woodland creature or two from a
+location on the same dungeon level.
 %%%%
 Enslavement spell
 
@@ -280,6 +313,10 @@ Fire Brand spell
 
 This spell sets a weapon or launcher held by the caster ablaze. It will not
 affect weapons otherwise subject to special enchantments.
+%%%%
+Fire Breath spell
+
+<Breathe Fire ability>
 %%%%
 Fire Storm spell
 
@@ -341,6 +378,10 @@ Haunt spell
 This spell calls wraiths and ghosts to haunt the caster's target. Calling on
 the undead exacts a toll on the caster's health, however.
 %%%%
+Hellfire spell
+
+<Hellfire ability>
+%%%%
 Throw Icicle spell
 
 This spell throws forth a shard of ice. It is particularly effective against
@@ -376,6 +417,10 @@ Infusion spell
 This spell infuses the caster's melee attacks with magic, drawing from their
 reserves of magical energy to deal additional damage whenever an enemy is hit.
 It has no effect when the caster's magic is depleted.
+%%%%
+Injury Mirror spell
+
+<Injury Mirror ability>
 %%%%
 Inner Flame spell
 
@@ -432,10 +477,6 @@ Lethal Infusion spell
 This spell infuses a weapon held by the caster with unholy energies. It will
 not affect weapons which are otherwise subject to special enchantments.
 %%%%
-Levitation spell
-
-This spell allows the caster to float in the air.
-%%%%
 Lightning Bolt spell
 
 This spell hurls a mighty bolt of lightning. Although this spell inflicts less
@@ -472,6 +513,10 @@ Melee spell
 The rod of striking is designed for melee combat, releasing its charges to deal
 additional damage dependent on evocations skill when it strikes a foe. Maces &
 Flails skill will help improve your basic effectiveness with the weapon.
+%%%%
+Mesmerise spell
+
+This spell makes its victim unwilling to move away from the caster.
 %%%%
 Metabolic Englaciation spell
 
@@ -580,6 +625,17 @@ Polymorph spell
 This spell randomly alters the form of a creature. It is especially effective
 against shape-changing creatures.
 %%%%
+Porkalator spell
+
+This spell transforms an unwilling victim into a certain pink quadruped, known
+for bad table manners, squealing, and rooting for truffles.  Not even angels
+and demons are immune — leading to the world's tastiest and nastiest bacon,
+respectively.
+
+If the spell is hastily cast, the transformation is temporary; only a days-long
+ritual can make the effect permanent.  In either case, the caster's demise will
+turn the victims back into their former shapes.
+%%%%
 Portal Projectile spell
 
 This spell teleports a fired or thrown missile directly to its target, greatly
@@ -671,9 +727,18 @@ sublimate into a freezing cloud, if it isn't hacked or melted into a small
 puddle of water first. Note that simulacra are incapable of leaving the level
 they were created on.
 %%%%
+Sleep spell
+
+This spell attempts to put its target to sleep. Taking damage will typically
+wake the affected person, and loud sounds can potentially do so as well.
+%%%%
 Slow spell
 
 This spell slows the actions of a creature.
+%%%%
+Smiting spell
+
+<Smiting ability>
 %%%%
 Song of Shielding spell
 
@@ -736,6 +801,10 @@ for the rest of his life.”
 
     -Terry Pratchett, “Jingo”
 %%%%
+Sticky Flame Splash spell
+
+<Breathe Sticky Flame ability>
+%%%%
 Sting spell
 
 This spell throws a magical dart of poison.
@@ -750,6 +819,11 @@ This spell hardens one's skin to a degree determined by one's skill in Earth
 Magic. It only works on relatively normal flesh, and will aid neither the
 undead nor the bodily transformed. However, there is one exception: the effects
 of this spell will be boosted for casters in Statue Form.
+%%%%
+Strip Resistance spell
+
+This spell attempts to greatly reduce its target's magic resistance, making
+him or her more vulnerable to hexes and similar spells.
 %%%%
 Sublimation of Blood spell
 
@@ -818,6 +892,15 @@ Summon Ugly Thing spell
 
 This spell summons a mutated otherworldly creature to the caster's aid.
 %%%%
+Sunray spell
+
+This spell calls forth a beam of intense light, damaging its target. Obviously,
+invisibility lets the light pass through, leaving such creatures unharmed.
+Vampires and shadows are known to be especially vulnerable to it.
+
+Not being a missile, this spell is not affected by Repel and Deflect effects
+— you want to be able to see, don't you?
+%%%%
 Sure Blade spell
 
 This spell forms a mystical bond between the caster and a wielded short blade,
@@ -829,9 +912,19 @@ This spell imbues its caster with the ability to achieve great movement speeds.
 But this speed comes at a price: the caster is less stealthy and more likely to
 blunder into traps while the spell is in effect.
 %%%%
+Symbol of Torment spell
+
+This spell calls on the powers of Hell to cause agonising injury to any living
+thing in the caster's vicinity. Despite its ominous power, this spell is never
+lethal.
+%%%%
 Teleport Other spell
 
 This spell randomly translocates another creature.
+%%%%
+Teleport Self spell
+
+This spell teleports the caster to a random location.
 %%%%
 Throw Flame spell
 
@@ -845,6 +938,13 @@ Thunderbolt spell
 
 This spell creates an arc of electricity.
 %%%%
+Tomb of Doroklohe spell
+
+This spell entombs the caster within four walls of rock. These walls will
+push away objects in their way, but their growth is obstructed by the
+presence of any creature. They are not permanent, and will expire after a
+period of time.
+%%%%
 Tornado spell
 
 This spell turns the air around the caster in a mighty vortex, doing tremendous
@@ -856,6 +956,10 @@ The spell's effectiveness is greatly diminished in closed areas.
 
 As a side effect, this spell may be used to cross lava, but beware of its short
 duration.
+%%%%
+Trog's Hand spell
+
+<Trog's Hand ability>
 %%%%
 Tukima's Dance spell
 

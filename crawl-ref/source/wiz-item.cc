@@ -262,7 +262,9 @@ static const char* _prop_name[] = {
     "SInv",
     "+Inv",
     "+Fly",
-    "+Jump",
+#if TAG_MAJOR_VERSION > 34
+    "+Fog",
+#endif
     "+Blnk",
     "+Rage",
     "Noisy",
@@ -283,7 +285,10 @@ static const char* _prop_name[] = {
     "BAcc",
     "BDam",
     "RMsl",
-    "Fog",
+#if TAG_MAJOR_VERSION == 34
+    "+Fog",
+#endif
+    "+Jump",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -306,7 +311,9 @@ static int8_t _prop_type[] = {
     ARTP_VAL_BOOL, //EYESIGHT
     ARTP_VAL_BOOL, //INVISIBLE
     ARTP_VAL_BOOL, //FLIGHT
-    ARTP_VAL_BOOL, //JUMPING
+#if TAG_MAJOR_VERSION > 34
+    ARTP_VAL_BOOL, //FOG
+#endif
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
     ARTP_VAL_POS,  //NOISES
@@ -327,7 +334,10 @@ static int8_t _prop_type[] = {
     ARTP_VAL_ANY,  //BASE_ACC
     ARTP_VAL_ANY,  //BASE_DAM
     ARTP_VAL_BOOL, //RMSL
+#if TAG_MAJOR_VERSION == 34
     ARTP_VAL_BOOL, //FOG
+#endif
+    ARTP_VAL_BOOL, //JUMPING
 };
 
 static void _tweak_randart(item_def &item)
@@ -363,8 +373,13 @@ static void _tweak_randart(item_def &item)
 
         if (choice_num < 26)
             choice = 'A' + choice_num;
+        else if (choice_num < 'A' - '0' + 26)
+        {
+            // 0-9 then :;<=>?@ . Any higher would collide with letters.
+            choice = '0' + choice_num - 26;
+        }
         else
-            choice = '1' + choice_num - 26;
+            choice = '-'; // Too many choices!
 
         if (props[i])
             snprintf(buf, sizeof(buf), "%c) <w>%-5s</w> ", choice, _prop_name[i]);
@@ -384,8 +399,8 @@ static void _tweak_randart(item_def &item)
 
     if (isaalpha(keyin))
         choice = keyin - 'a';
-    else if (isadigit(keyin) && keyin != '0')
-        choice = keyin - '1' + 26;
+    else if (keyin >= '0' && keyin < 'A')
+        choice = keyin - '0' + 26;
     else
     {
         canned_msg(MSG_OK);
@@ -1168,7 +1183,6 @@ static void _debug_acquirement_stats(FILE *ostat)
             "intelligence",
             "ponderous",
             "flight",
-            "jumping",
             "magic reistance",
             "protection",
             "stealth",
@@ -1179,6 +1193,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reflection",
             "spirit shield",
             "archery",
+            "jumping",
         };
 
         const int non_art = acq_calls - num_arts;

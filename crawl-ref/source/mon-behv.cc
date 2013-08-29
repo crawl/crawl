@@ -385,10 +385,10 @@ void handle_behaviour(monster* mon)
     if (mon->type == MONS_SPECTRAL_WEAPON)
     {
         // Do nothing if we're still being placed
-        if (!mon->props.exists("sw_mid"))
+        if (!mon->summoner)
             return;
 
-        actor *owner = actor_by_mid(mon->props["sw_mid"].get_int());
+        actor *owner = actor_by_mid(mon->summoner);
 
         if (!owner || !owner->alive())
         {

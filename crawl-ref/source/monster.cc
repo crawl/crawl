@@ -4158,7 +4158,8 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
     {
         if (x_chance_in_y(1, 5))
         {
-            hit_dice--;
+            if (hit_dice > 1)
+                hit_dice--;
             experience = 0;
         }
 
@@ -5657,7 +5658,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (type == MONS_SPECTRAL_WEAPON && oppressor)
     {
         // The owner should not be able to damage itself
-        actor *owner = actor_by_mid(props["sw_mid"].get_int());
+        actor *owner = actor_by_mid(summoner);
         if (owner && owner != oppressor)
         {
             int shared_damage = damage / 2;

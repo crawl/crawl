@@ -1554,3 +1554,17 @@ void run_cloud_spreaders(int dur)
         }
     }
 }
+
+void fume()
+{
+    static cloud_type clouds[] =
+        { CLOUD_PURPLE_SMOKE, CLOUD_BLUE_SMOKE, CLOUD_GREY_SMOKE };
+    if (you.mutation[MUT_FUMES])
+    {
+        int level = you.mutation[MUT_FUMES];
+        if (x_chance_in_y(you.time_taken * level, 35))
+        {
+            place_cloud(clouds[bestroll(3, 2)], you.pos(), 3 + random2(4), &you, 4);
+        }
+    }
+}

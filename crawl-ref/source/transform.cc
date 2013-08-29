@@ -695,11 +695,11 @@ static int _transform_duration(transformation_type which_trans, int pow)
     }
 }
 
-// Transforms you into the specified form. If force is true, checks for
+// Transforms you into the specified form. If involuntary, checks for
 // inscription warnings are skipped, and the transformation fails silently
 // (if it fails). If just_check is true the transformation doesn't actually
 // happen, but the method returns whether it would be successful.
-bool transform(int pow, transformation_type which_trans, bool force,
+bool transform(int pow, transformation_type which_trans, bool involuntary,
                bool just_check)
 {
     transformation_type previous_trans = you.form;
@@ -714,10 +714,10 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return false;
     }
 
-    if (!force && crawl_state.is_god_acting())
-        force = true;
+    if (!involuntary && crawl_state.is_god_acting())
+        involuntary = true;
 
-    if (!force && you.transform_uncancellable)
+    if (you.transform_uncancellable)
     {
         // Jiyva's wrath-induced transformation is blocking the attempt.
         // May need to be updated if transform_uncancellable is used for
@@ -728,7 +728,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-        force || just_check))
+        involuntary || just_check))
     {
         return false;
     }
@@ -752,7 +752,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         }
         else
         {
-            if (!force && which_trans != TRAN_PIG && which_trans != TRAN_NONE)
+            if (!involuntary && which_trans != TRAN_PIG && which_trans != TRAN_NONE)
                 mpr("You fail to extend your transformation any further.");
             return false;
         }
@@ -783,14 +783,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
         && (you.species != SP_VAMPIRE
             || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED))
     {
-        if (!force)
+        if (!involuntary)
             mpr("Your unliving flesh cannot be transformed in this way.");
         return _abort_or_fizzle(just_check);
     }
 
     if (which_trans == TRAN_LICH && you.duration[DUR_DEATHS_DOOR])
     {
-        if (!force)
+        if (!involuntary)
         {
             mpr("The transformation conflicts with an enchantment "
                 "already in effect.");
@@ -801,7 +801,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
         && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
     {
-        if (!force)
+        if (!involuntary)
             mpr("Your temperature is too high to benefit from that spell.");
         return _abort_or_fizzle(just_check);
     }
@@ -957,7 +957,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     const bool bad_str = you.strength() > 0 && str + you.strength() <= 0;
-    if (!force && just_check && (bad_str
+    if (!involuntary && just_check && (bad_str
             || you.dex() > 0 && dex + you.dex() <= 0))
     {
         string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
@@ -974,8 +974,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return true;
 
     // Switching between forms takes a bit longer.
-    if (!force && previous_trans != TRAN_NONE && previous_trans != which_trans)
+    if (!involuntary && previous_trans != TRAN_NONE
+        && previous_trans != which_trans)
+    {
         you.time_taken = div_rand_round(you.time_taken * 3, 2);
+    }
 
     // All checks done, transformation will take place now.
     you.redraw_quiver       = true;

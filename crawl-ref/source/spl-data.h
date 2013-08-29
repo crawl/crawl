@@ -2135,7 +2135,7 @@ struct spell_desc
 },
 
 {
-    SPELL_MIASMA, "Miasma",
+    SPELL_MIASMA_BREATH, "Miasma Breath",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNCLEAN | SPFLAG_MONSTER,
      6,
@@ -2695,7 +2695,7 @@ struct spell_desc
 },
 
 {
-    SPELL_MIRROR_DAMAGE, "Mirror Damage",
+    SPELL_INJURY_MIRROR, "Injury Mirror",
      SPTYP_NONE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      4,
@@ -2773,7 +2773,7 @@ struct spell_desc
 },
 
 {
-    SPELL_MELEE, "melee",
+    SPELL_MELEE, "Melee",
      0,
      SPFLAG_BATTLE,
      1,

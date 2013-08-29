@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Usage: test/stress/abyss game_id, where game_id must be a number.  If not
+# provided, it defaults to the script's PID.
+
+GAME=${1:-$$}
+
+while ./crawl -name "Abyss-$GAME" -rc test/stress/abyss.rc -seed "$GAME"
+  do
+    # ^Q to exit the loop, &^C to crash and retain the save
+    if ! [ -f "saves/Abyss-$GAME.cs" ]
+      then exit
+    fi
+  done

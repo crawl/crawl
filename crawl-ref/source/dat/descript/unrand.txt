@@ -64,11 +64,15 @@ Eerie flames cover its twisted blade.
 %%%%
 Staff of Dispater
 
-This legendary item can unleash the fury of Hell.
+This legendary item can unleash the fury of Hell. The unholy flames it evokes
+may cost a portion of your life and your soul, but since when have such
+details stopped anyone in their quest for power?
 %%%%
 Sceptre of Asmodeus
 
-It carries some of the powers of the arch-fiend Asmodeus.
+It carries some of the powers of the arch-fiend Asmodeus. Waving this sceptre
+can yank powerful hellspawn from their infernal home and enslave them to do
+your bidding. Obviously, they're not going to like you when the spell expires.
 %%%%
 faerie dragon armour
 

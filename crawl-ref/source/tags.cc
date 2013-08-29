@@ -2248,6 +2248,58 @@ static void tag_read_you(reader &th)
         }
 #endif
     }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_STAT_MUT)
+    {
+        // Convert excess mutational stats into base stats.
+        mutation_type stat_mutations[] = { MUT_STRONG, MUT_CLEVER, MUT_AGILE };
+        stat_type stat_types[] = { STAT_STR, STAT_INT, STAT_DEX };
+        for (j = 0; j < 3; ++j)
+        {
+            mutation_type mut = stat_mutations[j];
+            stat_type stat = stat_types[j];
+            int total_mutation_level = you.temp_mutations[mut] + you.mutation[mut];
+            if (total_mutation_level > 2)
+            {
+                int new_level = max(0, min(you.temp_mutations[mut] - you.mutation[mut], 2));
+                you.temp_mutations[mut] = new_level;
+            }
+            if (you.mutation[mut] > 2)
+            {
+                int excess = you.mutation[mut] - 4;
+                if (excess > 0)
+                    you.base_stats[stat] += excess;
+                you.mutation[mut] = 2;
+            }
+        }
+        mutation_type bad_stat_mutations[] = { MUT_WEAK, MUT_DOPEY, MUT_CLUMSY };
+        for (j = 0; j < 3; ++j)
+        {
+            mutation_type mut = bad_stat_mutations[j];
+            int level = you.mutation[mut];
+            switch (level)
+            {
+            case 0:
+            case 1:
+                you.mutation[mut] = 0;
+                break;
+            case 2:
+            case 3:
+                you.mutation[mut] = 1;
+                break;
+            default:
+                you.mutation[mut] = 2;
+                break;
+            };
+            if (you.temp_mutations[mut] > 2 && you.mutation[mut] < 2)
+                you.temp_mutations[mut] = 1;
+            else
+                you.temp_mutations[mut] = 0;
+        }
+    }
+#endif
+
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;
 
@@ -3369,6 +3421,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallInt(th, m.number);
     marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);
+    marshallInt(th, m.summoner);
 
     if (parts & MP_ITEMS)
         for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
@@ -3899,6 +3952,13 @@ void unmarshallMonster(reader &th, monster& m)
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);
     m.hit_dice        = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    // Draining used to be able to take a monster to 0 HD, but that
+    // caused crashes if they tried to cast spells.
+    m.hit_dice = max(m.hit_dice, 1);
+#else
+    ASSERT(m.hit_dice > 0);
+#endif
     m.speed           = unmarshallByte(th);
     // Avoid sign extension when loading files (Elethiomel's hang)
     m.speed_increment = unmarshallUByte(th);
@@ -3937,6 +3997,12 @@ void unmarshallMonster(reader &th, monster& m)
     m.number         = unmarshallInt(th);
     m.base_monster   = unmarshallMonType(th);
     m.colour         = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SUMMONER)
+        m.summoner = 0;
+    else
+#endif
+    m.summoner       = unmarshallInt(th);
 
     if (parts & MP_ITEMS)
         for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
@@ -4069,8 +4135,17 @@ void unmarshallMonster(reader &th, monster& m)
         && m.type == MONS_BATTLESPHERE && !m.props.exists("bs_mid"))
     {
         // It must have belonged to the player.
-        m.props["bs_mid"].get_int() = MID_PLAYER;
+        m.summoner = MID_PLAYER;
     }
+    else if (m.props.exists("bs_mid"))
+    {
+        m.summoner = m.props["bs_mid"].get_int();
+        m.props.erase("bs_mid");
+    }
+
+    if (m.props.exists("iood_mid"))
+        m.summoner = m.props["iood_mid"].get_int(), m.props.erase("iood_mid");
+
     if (m.type == MONS_ZOMBIE_SMALL || m.type == MONS_ZOMBIE_LARGE)
         m.type = MONS_ZOMBIE;
     if (m.type == MONS_SKELETON_SMALL || m.type == MONS_SKELETON_LARGE)

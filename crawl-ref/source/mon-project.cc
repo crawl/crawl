@@ -92,7 +92,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     mon->props["iood_caster"].get_string() = caster->as_monster()
         ? caster->name(DESC_PLAIN, true)
         : (caster->is_player()) ? "you" : "";
-    mon->props["iood_mid"].get_int() = caster->mid;
+    mon->summoner = caster->mid;
 
     if (caster->is_player() || caster->type == MONS_PLAYER_GHOST
         || caster->type == MONS_PLAYER_ILLUSION)
@@ -235,7 +235,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.flavour = BEAM_NUKE;
     beam.attitude = mon.attitude;
 
-    actor *caster = actor_by_mid(mon.props["iood_mid"].get_int());
+    actor *caster = actor_by_mid(mon.summoner);
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
         caster = &mon;  // friendliness is correct)
     beam.set_agent(caster);
@@ -362,7 +362,7 @@ move_again:
 
     if (iood && mon.props.exists("iood_flawed"))
     {
-        const actor *caster = actor_by_mid(mon.props["iood_mid"].get_int());
+        const actor *caster = actor_by_mid(mon.summoner);
         if (!caster || caster->pos().origin() ||
             (caster->pos() - pos).rdist() > LOS_RADIUS)
         {   // not actual vision, because of the smoke trail

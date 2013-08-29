@@ -2520,7 +2520,7 @@ spret_type cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         {
             int dur = min((7 + roll_dice(2, pow)) * 10, 500);
             battlesphere->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 1, 0, dur));
-            battlesphere->props["bs_mid"].get_int() = agent->mid;
+            battlesphere->summoner = agent->mid;
             agent->props["battlesphere"].get_int() = battlesphere->mid;
 
             if (agent->is_player())
@@ -2551,7 +2551,7 @@ void end_battlesphere(monster* mons, bool killed)
     if (!mons)
         return;
 
-    actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
+    actor* agent = actor_by_mid(mons->summoner);
     if (agent)
         agent->props.erase("battlesphere");
 
@@ -2756,7 +2756,7 @@ bool fire_battlesphere(monster* mons)
     if (!mons || mons->type != MONS_BATTLESPHERE)
         return false;
 
-    actor* agent = actor_by_mid(mons->props["bs_mid"].get_int());
+    actor* agent = actor_by_mid(mons->summoner);
 
     if (!agent || !agent->alive())
     {
@@ -3036,7 +3036,7 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
         mons->props["band_leader"].get_int() = agent->mid;
     }
 
-    mons->props["sw_mid"].get_int() = agent->mid;
+    mons->summoner = agent->mid;
     agent->props["spectral_weapon"].get_int() = mons->mid;
 
     return SPRET_SUCCESS;
@@ -3048,7 +3048,7 @@ void end_spectral_weapon(monster* mons, bool killed, bool quiet)
     if (!mons)
         return;
 
-    actor *owner = actor_by_mid(mons->props["sw_mid"].get_int());
+    actor *owner = actor_by_mid(mons->summoner);
 
     if (owner)
         owner->props.erase("spectral_weapon");

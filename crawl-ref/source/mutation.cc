@@ -2002,11 +2002,9 @@ string mutation_name(mutation_type mut, int level, bool colour)
         || mut == MUT_AGILE || mut == MUT_WEAK
         || mut == MUT_DOPEY || mut == MUT_CLUMSY)
     {
-        ostringstream ostr;
-        ostr << mdef.have[0] << level << ").";
-        result = ostr.str();
+        level = min(level, 2);
     }
-    else if (mut == MUT_ICEMAIL)
+    if (mut == MUT_ICEMAIL)
     {
         ostringstream ostr;
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
@@ -2437,16 +2435,7 @@ int how_mutated(bool all, bool levels)
                 continue;
 
             if (levels)
-            {
-                // These allow for 14 levels.
-                if (i == MUT_STRONG || i == MUT_CLEVER || i == MUT_AGILE
-                    || i == MUT_WEAK || i == MUT_DOPEY || i == MUT_CLUMSY)
-                {
-                    j += (you.mutation[i] / 5 + 1);
-                }
-                else
-                    j += you.mutation[i];
-            }
+                j += you.mutation[i];
             else
                 j++;
         }

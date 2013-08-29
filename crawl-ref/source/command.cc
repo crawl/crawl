@@ -1004,6 +1004,10 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
+    if (!ends_with(key, " ability"))
+        return true;
+    key.erase(key.length() - 8);
+
     if (string_matches_ability_name(key))
         return false;
 
@@ -1092,6 +1096,32 @@ static void _append_non_item(string &desc, string key)
     }
 }
 
+static bool _is_rod_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_RODS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i + NUM_FIXED_BOOKS, j) == spell)
+                return true;
+
+    return false;
+}
+
+static bool _is_book_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i, j) == spell)
+                return true;
+
+    return false;
+}
+
 // Adds a list of all books/rods that contain a given spell (by name)
 // to a description string.
 static bool _append_books(string &desc, item_def &item, string key)
@@ -1152,7 +1182,7 @@ static bool _append_books(string &desc, item_def &item, string key)
 
         for (int j = 0; j < 8; j++)
             if (which_spell_in_book(book, j) == type)
-                rods.push_back(item.name(DESC_PLAIN));
+                rods.push_back(item.name(DESC_BASENAME));
     }
 
     if (!books.empty())
@@ -1172,7 +1202,7 @@ static bool _append_books(string &desc, item_def &item, string key)
             desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
         }
     }
-    else // rods-only
+    else if (!rods.empty()) // rods-only
     {
         desc += "\n\nThis spell can be found in the following rod";
         if (rods.size() > 1)
@@ -1180,6 +1210,8 @@ static bool _append_books(string &desc, item_def &item, string key)
         desc += ":\n";
         desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
     }
+    else
+        desc += "\n\nThis spell is not found in any books or rods.";
 
     return true;
 }
@@ -1430,6 +1462,7 @@ static void _find_description(bool *again, string *error_inout)
     case 'A':
         type   = "ability";
         filter = _ability_filter;
+        suffix = " ability";
         break;
     case 'C':
         type   = "card";
@@ -1669,16 +1702,17 @@ static void _find_description(bool *again, string *error_inout)
         {
             me = new MenuEntry(str, MEL_ITEM, 1, letter);
 
-#ifdef USE_TILE
             if (doing_spells)
             {
                 spell_type spell = spell_by_name(str);
+#ifdef USE_TILE
                 if (spell != SPELL_NO_SPELL)
                     me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
-            }
-#else
-            UNUSED(doing_spells);
 #endif
+                me->colour = _is_book_spell(spell) ? WHITE
+                           : _is_rod_spell(spell)  ? LIGHTGREY
+                                                   : DARKGREY; // monster-only
+            }
 
             me->data = &key_list[i];
         }

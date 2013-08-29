@@ -2258,7 +2258,8 @@ bool is_mutagenic(const item_def &food)
     return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN);
 }
 
-// Returns true if a food item (also corpses) may cause sickness.
+// Returns true if a food item (also corpses) is contaminated and thus
+// gives less nutrition.
 bool is_contaminated(const item_def &food)
 {
     if ((food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)

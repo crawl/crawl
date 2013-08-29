@@ -434,10 +434,21 @@ void newgame_make_item(int slot, equipment_type eqslot,
     // If the character is restricted in wearing armour of equipment
     // slot eqslot, hand out replacement instead.
     if (item.base_type == OBJ_ARMOUR && replacement != -1
-        && !can_wear_armour(item, false, true))
+        && !can_wear_armour(item, false, false))
     {
         item.sub_type = replacement;
     }
+    if (eqslot == EQ_WEAPON && replacement != -1
+        && !can_wield(&item, false, false))
+    {
+        item.sub_type = replacement;
+    }
+
+    if (item.base_type == OBJ_ARMOUR && !can_wear_armour(item, false, false))
+        return;
+
+    if (eqslot == EQ_WEAPON && !can_wield(&item, false, false))
+        return;
 
     if (eqslot != EQ_NONE && you.equip[eqslot] == -1)
         you.equip[eqslot] = slot;

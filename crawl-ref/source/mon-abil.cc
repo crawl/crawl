@@ -1961,7 +1961,8 @@ static bool _lost_soul_teleport(monster* mons)
     {
         if (_lost_soul_affectable(*mi) && mons_aligned(mons, *mi))
         {
-            pair<monster* , int> m = make_pair(*mi, mi->hit_dice + random2(7));
+            pair<monster* , int> m = make_pair(*mi, min(mi->hit_dice, 18)
+                                                    + random2(8));
             candidates.push_back(m);
         }
     }

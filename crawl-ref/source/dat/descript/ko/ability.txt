@@ -1,9 +1,9 @@
 %%%%
-No ability
+No ability ability
 
 버그를 발견하셨습니다! 한글화 팀의 잘못이 아니니, 게임 개발자들을 욕하세요.
 %%%%
-Spit Poison
+Spit Poison ability
 
 대상에게 독침을 내뱉는다.
 %%%%
@@ -11,84 +11,84 @@ Blink ability
 
 임의의 장소로 순간이동을 한다. 어디로 이동할지는 알 수 없다.
 %%%%
-Breathe Dispelling Energy
+Breathe Dispelling Energy ability
 
 대상에게 마력이 깃든 숨결을 내뿜는다. 이 숨결은 적에게 걸려있는 각종 효과를
 없애버린다.
 %%%%
-Breathe Fire
+Breathe Fire ability
 
 대상에게 화염을 내뿜는다. 화염이 지나간 길의 끝에는 불의 구름이 남는다.
 %%%%
-Breathe Frost
+Breathe Frost ability
 
 대상에게 냉기를 내뿜는다. 날아다니는 적은 그 충격에 뒤로 밀릴 것이다.
 %%%%
-Breathe Poison Gas
+Breathe Poison Gas ability
 
 대상에게 독구름을 내뿜는다.
 %%%%
-Breathe Lightning
+Breathe Lightning ability
 
 막대한 양의 전기를 뿜어내어, 통제할 수 없는 번개 폭풍을 만들어낸다.
 %%%%
-Breathe Sticky Flame
+Breathe Sticky Flame ability
 
 대상에게 점착화염을 내뿜는다. 그 이름에서 알 수 있듯이, 점착화염은 적에게
 달라붙어, 꺼질 때까지 적을 괴롭힌다. 대상 주변에 다른 적이 있다면, 불꽃이 튀어
 주변의 적들이 동시에 타오른다.
 %%%%
-Breathe Steam
+Breathe Steam ability
 
 대상에게 뜨거운 증기를 내뿜는다. 증기구름이 대량으로 발생한다.
 %%%%
-Breathe Noxious Fumes
+Breathe Noxious Fumes ability
 
 대상에게 냄새나는 숨결을 내뿜는다. 숨결이 지나가는 길에 악취구름을 만들어낸다.
 %%%%
-Bat Form
+Bat Form ability
 
 재빠른 흡혈박쥐로 변신한다. 박쥐가 되면 어떤 도구도 사용할 수 없으며
 (떨어트리거나 줍는 것은 가능하다) 주문도 사용할 수 없다. 변신 중에는 민첩해지나
 힘이 약해지므로, 당신의 힘이 너무 약하다면 변신할 수 없다. 힘의 감소 때문에
 소지품이 감당하지 못할 만큼 무겁게 느껴질 수도 있으니 주의하라.
 %%%%
-Bottle Blood
+Bottle Blood ability
 
 레벨 6 이상일 때, 뱀파이어는 신선한 피를 가진 시체에서 피 한 병을 만들 수 있다.
 피를 뽑기 위해서는 날붙이를 들고 있거나, 최소한 주머니칼을 꺼낼 수 있는
 상태여야 한다.
 %%%%
-Spit Acid
+Spit Acid ability
 
 대상에게 산성 액체를 내뱉는다.
 %%%%
-Fly
+Fly ability
 
 공중으로 날아오른다.
 %%%%
-Hellfire
+Hellfire ability
 
 대상과 그 주변을 지옥불로 불태워버린다.
 %%%%
-Release Delayed Fireball
+Release Delayed Fireball ability
 
 이전에 미리 시전해둔 (지연된) 화염구를, 마력이나 포만감의 소비 없이 즉시
 사용한다. 사용하는 데에 찰나의 시간밖에 걸리지 않는다.
 %%%%
-Self-Petrification
+Self-Petrification ability
 
 스스로를 돌로 만들어, 적에게 받는 피해를 줄이고 생명력을 빠르게 치유한다.
 %%%%
-Self-Restoration
+Self-Restoration ability
 
 영구적으로 최대 마력을 1 소비하는 대신, 능력치와 부패된 생명력을 회복한다.
 %%%%
-Device Recharging
+Device Recharging ability
 
 영구적으로 최대 마력을 1 소비하는 대신, 마법봉 혹은 마법 막대를 재충전한다.
 %%%%
-Evoke Teleportation
+Evoke Teleportation ability
 
 현재 층의 임의의 장소로 공간이동한다. 이동까지 약간의 시간이 필요하다.
 %%%%
@@ -96,7 +96,7 @@ Evoke Blink
 
 임의의 장소로 순간이동을 한다. 어디로 이동할지는 알 수 없다.
 %%%%
-Evoke Berserk Rage
+Evoke Berserk Rage ability
 
 광폭화 상태가 되어, 생명력과 근접전투력을 짧은 시간 동안 크게 향상시킨다.
 아무도 죽이지 않는다면 금방 분노가 풀리지만, 적을 죽이면 죽일수록 분노가 더
@@ -106,35 +106,35 @@ Evoke Berserk Rage
 원거리 공격, 장비 장착 및 해제, 물약 마시기, 마법봉이나 다른 도구 발동, 주문
 시전 등 이성이 필요한 행동을 할 수 없다.
 %%%%
-Evoke Invisibility
+Evoke Invisibility ability
 
 짧은 시간동안 몸을 투명하게 만든다. 투명 상태에서는 마법오염이 조금씩 쌓이며,
 마법오염이 너무 많이 쌓이면 발광 상태가 되어 적이 볼 수 있게 된다.
 %%%%
-Turn Visible
+Turn Visible ability
 
 투명화를 해제한다.
 %%%%
-Stop Flying
+Stop Flying ability
 
 비행을 그만둔다.
 %%%%
-Evoke Fog
+Evoke Fog ability
 
 시야를 가리기 위해 두꺼운 안개구름을 일으킨다.
 %%%%
-Evoke Teleport Control
+Evoke Teleport Control ability
 
 당신이 다음 차례에 사용할 전이술, 즉 공간이동할 장소 혹은 순간이동을 할 방향 을
 제어할 수 있는 능력을 얻는다. 주의할 점은 이러한 공간이동의 제어는 마법 오염을
 일으킨다는 것이고, 제어된 공간이동은 발동되는 데 제어되지 않은 공간이동보다
 오랜 시간을 필요로 한다는 점이다.
 %%%%
-End Transformation
+End Transformation ability
 
 현재 변신상태를 해제한다. 해제하는데 약간의 시간이 걸린다.
 %%%%
-Recite
+Recite ability
 
 주변의 적들에게 진의 규율을 설파하여 다양한 효과를 일으킨다. 설교에 사용할 수
 있는 책에는 네 가지 종류가 있다.
@@ -156,52 +156,52 @@ Recite
 하지만 다양한 효과가 일어나는 만큼, 경우에 따라서는 다른 설교보다
 효과적일지도...
 %%%%
-Vitalisation
+Vitalisation ability
 
 진으로부터 신성한 체력을 부여받아 질병, 독, 석화, 혼란, 부패, 능력치 감소로부터
 보호받으며, 기도술에 따라 힘, 민첩, 지능을 일시적으로 강화시켜준다. 약간의
 만복도 또한 회복된다.
 %%%%
-Imprison
+Imprison ability
 
 몬스터를 은빛 감옥에 일시적으로 가둔다.  감옥이 유지되는 시간은 기도술이
 늘어남에 따라 증가한다.
 %%%%
-Sanctuary
+Sanctuary ability
 
 짧은 시간 동안 당신을 중심으로 한 성역을 만든다. 성역 안에서는 적이 당신을
 공격하지 못하고 도망가며, 해로운 구름이나 원거리 공격도 당신을 위협하지 못한다.
 하지만 당신이 성역에서 적을 공격해 성역의 평온을 깬다면, 그 순간 성역은
 사라진다.
 %%%%
-Cure All Mutations
+Cure All Mutations ability
 
 모든 돌연변이를 없애버린다. 딱 한 번만 사용할 수 있다.
 %%%%
-Divine Shield
+Divine Shield ability
 
 샤이닝 원의 힘으로 신성한 방패를 만들어낸다. 신의 힘으로 떠다디는 방패이기
 때문에 거슬리거나 하지 않아, 양손무기를 들거나 마법을 사용할 때 방해되지
 않는다. 자신의 의지로 조종하는 방패이기 때문에, 방패 사용에 능숙한 사람일수록
 권능을 더 효과적으로 쓸 수 있을 것이다.
 %%%%
-Cleansing Flame
+Cleansing Flame ability
 
 당신의 주변에 성스러운 불꽃을 일으킨다. 언데드와 악마에게 특히 효과적이며 다른
 종류의 적에게도 어느 정도 피해를 주지만, 당신과 동료들은 그 어떤 피해도 입지
 않는다.
 %%%%
-Summon Divine Warrior
+Summon Divine Warrior ability
 
 악에 맞서 싸우는 천사 혹은 데바를 하나 소환한다. 이들이 악을 단죄할 때마다,
 샤이닝 원이 축복을 내려 이 세계에 더 오래 머무르게 될 확률이 있다.
 %%%%
-Receive Corpses
+Receive Corpses ability
 
 하나 혹은 그 이상의 시체를 당신에게 선사한다. 시체의 숫자와 신선도는 당신의
 강령술에 달려있다.
 %%%%
-Torment
+Torment ability
 
 시체를 희생하여, 당신을 포함한 시야 내의 모든 적에게 지금껏 겪어보지 못했을
 극심한 고통을 선사한다. 이 고통은 현재 생명력의 절반을 앗아갈 것이다.
@@ -209,17 +209,17 @@ Torment
 키쿠바쿠드하는 이 고통으로부터 당신을 보호해줄 때도 있다. ...안 해줄 때도
 있지만.
 %%%%
-Animate Remains
+Animate Remains ability
 
 주변의 시체나 해골 하나를 일으켜 당신의 언데드 수하로 만든다. 이 권능으로
 되살아난 좀비와 해골은 다른 층으로 이동할 수 없다.
 %%%%
-Recall Undead Slaves
+Recall Undead Slaves ability
 
 당신의 오크 추종자들을 주변으로 불러온다. 추종자가 어디에 있어도 (즉, 같은 층에
 있지 않아도)  불러오는 것이 가능하다.
 %%%%
-Injury Mirror
+Injury Mirror ability
 
 당신이 받은 고통만큼, 적도 고통받게 된다. 고통을 같이 받을 때마다, 신앙심이
 계속 감소한다.
@@ -229,11 +229,11 @@ Animate Dead ability
 주변의 모든 시체와 해골들을 일으켜 당신의 언데드 수하로 만든다. 이 권능으로
 되살아난 좀비와 해골은 다른 층으로 이동할 수 없다.
 %%%%
-Drain Life
+Drain Life ability
 
 주변에 있는 모든 적들의 생명력을 흡수하여, 당신의 것으로 만든다.
 %%%%
-Enslave Soul
+Enslave Soul ability
 
 살아있는 지성체의 영혼에 각인을 새긴다. 각인을 새긴 적이 죽으면, 그 영혼을
 가져올 수 있다.
@@ -245,53 +245,53 @@ Enslave Soul
 
 지배당한 영혼은 당신을 따르기 위해 그들이 만들어진 층을 벗어날 수 있다.
 %%%%
-Animate Remains or Dead
+Animate Remains or Dead ability
 
 버그를 발견하셨습니다! 친구들에게 이 사실을 자랑하세요.
 %%%%
-Heroism
+Heroism ability
 
 잠시동안 영웅의 힘을 빌어, 전투와 관련된 모든 기술들을 더 능숙하게 만들어준다.
 은밀한 이동과 함정 탐지까지도 더 능숙해지지만, 마법과 관련된 능력과 기도술,
 발동술은 영향을 받지 않는다.
 %%%%
-Finesse
+Finesse ability
 
 공격 속도를 정확도 하락 없이 큰 폭으로 향상한다. 단, 이와 같은 부자연스러운
 효과는 마법오염을 일으킬 수 있으므로 주의해야 한다.
 %%%%
-Minor Destruction
+Minor Destruction ability
 
 대상이 된 적을, 임의의 파괴 마법으로 공격한다.
 %%%%
-Lesser Servant of Makhleb
+Lesser Servant of Makhleb ability
 
 하급 악마를 소환한다. 기도술이 낮을수록 적대적인 악마가 소환될 확률이 높아진다.
 %%%%
-Major Destruction
+Major Destruction ability
 
 대상을 파괴의 광선이나 폭발로 공격한다. 어떤 속성의 공격이 나갈지는 정할 수
 없다.
 %%%%
-Greater Servant of Makhleb
+Greater Servant of Makhleb ability
 
 상급 악마를 소환한다. 기도술이 낮을수록 적대적인 악마가 소환될 확률이 높아진다.
 %%%%
-Channel Energy
+Channel Energy ability
 
 마력을 조금 회복한다. 회복되는 양은 기도술의 영향을 받는다.
 %%%%
-Forget Spell
+Forget Spell ability
 
 기억한 주문을 잊어버리고, 그만큼의 마법 포인트를 돌려받는다.
 %%%%
-Burn Spellbooks
+Burn Spellbooks ability
 
 주변의 모든 마법책들을 불태운다. 마법을 향한 트로그의 분노가 책을 불태우는
 원동력이며, 특히 무슨 마법책인지 확인조차 하지 않고 태워버리는 것을 가장
 좋아한다.
 %%%%
-Berserk
+Berserk ability
 
 광폭화 상태가 되어, 생명력과 근접전투력을 짧은 시간 동안 크게 향상시킨다.
 아무도 죽이지 않는다면 금방 분노가 풀리지만, 적을 죽이면 죽일수록 분노가 더
@@ -301,17 +301,17 @@ Berserk
 원거리 공격, 장비 장착 및 해제, 물약 마시기, 마법봉이나 다른 도구 발동, 주문
 시전 등 이성이 필요한 행동을 할 수 없다.
 %%%%
-Trog's Hand
+Trog's Hand ability
 
 짧은 시간 동안 트로그의 강력한 재생력을 부여받는다. 다른 모든 재생 효과에
 중첩되며, 자신이 자연적으로 회복되지 않는 종족일지라도 사용할 수 있다. 마법
 저항력 또한 올려준다.
 %%%%
-Brothers in Arms
+Brothers in Arms ability
 
 광폭화 상태의 거인족이 소환되어, 당신의 적들에게 재앙을 일으킬 것이다.
 %%%%
-Divine Protection
+Divine Protection ability
 
 엘리빌론에게 구제를 요청한다. 보호를 받는 동안에는 신이 최후의 일격을
 무효화해줄 확률이 극도로 커지며, 당신이 독실한 신도라면 100% 보호받을 수도
@@ -319,7 +319,7 @@ Divine Protection
 않았는데 확률적으로 지켜줄 때는 신앙심이 감소하지 않는다) 보호받는 도중에
 살생하는 것은 엄청난 죄가 되므로 주의해야한다.
 %%%%
-Lesser Healing
+Lesser Healing ability
 
 당신의 기도술과 비례한 양만큼, 당신을 제외한 다른 개체를 약간 회복시킨다.
 적대적인 괴물에게 사용할 경우 그들을 중립화시킬 확률이 존재한다. 이 중립화
@@ -334,16 +334,16 @@ Lesser Healing
 
 이 권능은 동료 또는 중립 상태의 다른 개체에게도 사용할 수 있다.
 %%%%
-Lesser Self-Healing
+Lesser Self-Healing ability
 
 당신의 기도술과 비례한 양만큼, 당신의 생명력을 약간 회복시킨다.
 %%%%
-Purification
+Purification ability
 
 당신의 몸에서 질병, 독, 감속, 석화, 혼란, 부패 등의 안좋은 효과들을 모두
 제거한다. 또한 당신의 힘, 민첩, 지능을 모두 회복한다.
 %%%%
-Greater Healing
+Greater Healing ability
 
 당신의 기도술과 비례한 양만큼, 당신을 제외한 다른 개체를 상당량 회복시킨다.
 적대적인 괴물에게 사용할 경우 그들을 중립화시킬 확률이 존재한다. 이 중립화
@@ -359,175 +359,175 @@ Greater Healing
 
 이 권능은 동료 또는 중립 상태의 다른 개체에게도 사용할 수 있다.
 %%%%
-Greater Self-Healing
+Greater Self-Healing ability
 
 당신의 기도술과 비례한 양만큼, 당신의 생명력을 회복시킨다. 대략적으로, 대치료는
 소치료에 비해 약간 더 많은 신앙심을 소비해서 3배정도 더 많은 양을 회복시켜준다.
 %%%%
-Divine Vigour
+Divine Vigour ability
 
 생명력과 마력의 최대치를 증가시킨다. 현재 생명력과 마력도 최대치의 증가 비율에
 맞게 회복되며, 기도술이 높을수록 증가량이 커진다.
 %%%%
-Depart the Abyss
+Depart the Abyss ability
 
 어비스를 떠나, 원래 있던 곳으로 되돌아간다.
 %%%%
-Bend Space
+Bend Space ability
 
 주변의 공간을 비틀어 짧은 거리를 순간이동하며, 확률적으로 주변의 적들에게
 피해를 주면서 순간이동시킨다. 기도술이 능숙해질수록, 확률도 높아진다.
 %%%%
-Banish
+Banish ability
 
 적을 어비스로 추방한다. 적의 마법 저항에 따라 실패할 확률이 있다.
 %%%%
-Corrupt
+Corrupt ability
 
 당신이 있는 층에 어비스의 기운을 불러와 오염시킨다. 주변의 모습이 완전히
 달라지며, 어비스의 악마들이 나타나 모든 것을 파괴하려고 할 것이다. 이미
 오염시킨 층이나 어비스에서는 사용할 수 없다.
 %%%%
-Enter the Abyss
+Enter the Abyss ability
 
 당신을 루고누가 지배하는 지역으로 즉시 이동시킨다. 대신 그 대가로 최대 생명력과
 마력이 영구적으로 감소하며, 현재 생명력과 마력 역시 크게 소모된다.
 %%%%
-Draw One
+Draw One ability
 
 가지고 있는 카드 덱에서 한 장을 뽑는다. 카드 덱을 손에 들지 않고도 카드를 뽑을
 수 있다는 장점이 있다.
 %%%%
-Peek at Two
+Peek at Two ability
 
 덱에서 두 장의 카드를 뽑아 무슨 카드인지 확인한 후, 다시 덱에 넣고 카드를
 섞는다. 뽑은 두 장의 카드가 서로 다를 경우, 덱이 감정된다. 그 대가로 덱에서 한
 장의 카드를 잃는다.
 %%%%
-Triple Draw
+Triple Draw ability
 
 카드 덱에서 세 장을 뽑아 확인한 다음, 한 장은 사용하고 두 장은 버린다.
 %%%%
-Deal Four
+Deal Four ability
 
 다음 카드가 어떤 카드인지 표시되지 않은 덱에서, 한 턴만에 4장의 카드를 뽑아
 차례대로 발동시키고 나머지를 버린다. 만약 카드 덱에 충분한 카드가 있지 않을
 경우, 네멜렉스가 한 장의 추가 카드를 만들어서 마무리를 짓는다. 하지만, 이 추가
 카드를 보고 좋아할 사람은 아마 아무도 없을 것이다.
 %%%%
-Stack Five
+Stack Five ability
 
 다음 카드가 어떤 카드인지 표시되지 않은 덱에서 5장의 카드를 남기고, 나머지
 카드를 버린다. 남긴 카드들을 보고 마음에 드는 순서대로 배치할 수 있으며, 다음에
 카드를 뽑을 때 배치한 순서대로 카드를 뽑을 수 있다.
 %%%%
-Smiting
+Smiting ability
 
 시야 내의 적 하나에게 징벌을 내린다. 적이 보이기만 하면 사용할 수 있으며, 숨을
 수도, 막을 수도, 피할 수도 없다. 단, 유리벽 너머로 보이는 적에게는 사용할 수
 없다.
 %%%%
-Recall Orcish Followers
+Recall Orcish Followers ability
 
 당신의 오크 추종자들을 주변으로 불러온다. 추종자가 어디에 있어도 (즉, 같은 층에
 있지 않아도)  불러오는 것이 가능하다.
 %%%%
-Stop Recall
+Stop Recall ability
 
 당신의 동료들을 소집하는 것을 중지한다.
 %%%%
-Sunlight
+Sunlight ability
 
 던전의 좁은 지역에 강한 햇빛을 비춘다. 빛을 받은 적은 좀 더 맞추기 쉬워지며,
 투명한 적도 윤곽이 드러나 볼 수 있게 된다. 깊은 물이 햇빛을 받으면 증발하여
 얕아지며, 얕은 물은 완전히 말라버린다.
 %%%%
-Growth
+Growth ability
 
 과일을 사용하여 주변에 식물을 자라나게 한다. 식물은 적이 있는 방향에서부터
 자라나며, 기도술이 높을수록 더 튼튼한 식물이 자라난다.
 %%%%
-Rain
+Rain ability
 
 주변에 비를 내려 물이 고이게 하고, 얕은 물은 더욱 깊게 만든다. 주변에 식물이나
 버섯이 자라날 수도 있다.
 %%%%
-Reproduction
+Reproduction ability
 
 주변의 시체에서 거대 포자를 만든다. 이 포자는 적에게 부딪히면 폭발하여 피해를
 준다.
 %%%%
-Evolution
+Evolution ability
 
 식물이나 버섯류를 더욱 강한 종으로 진화시킨다. 버섯류의 진화에는 신앙심이,
 식물류의 진화에는 과일이 필요하다. 사용자의 기도 스킬과 비례하여 식물들의 공격
 명중률이 높아지며, 오클롭 식물의 경우 기도 스킬이 높을수록 좀 더 빈번하게 산성
 물질을 뱉어내게 된다.
 %%%%
-Bend Time
+Bend Time ability
 
 인접한 모든 적들을 느리게 만든다. 기도술이 능숙해질수록, 적들은 저항하지 못하고
 느려질 것이다.
 %%%%
-Temporal Distortion
+Temporal Distortion ability
 
 시간의 흐름을 비틀어서, 몇 턴 후의 미래로 이동한다. 이동은 턴 소모 없이
 이루어지며, 이동하는 동안 자신은 이 세계에 존재하지 않는 것으로 취급된다.
 %%%%
-Slouch
+Slouch ability
 
 당신보다 빠르게 움직이는 시야 내의 모든 것들에게 피해를 준다. 특히 마법을
 이용해 자신의 행동을 가속시킨 적에게 큰 피해를 준다.
 %%%%
-Step From Time
+Step From Time ability
 
 존재를 지워, 시간의 흐름에서 사라진다. 주변의 다른 존재들은 영향을 받지 않기
 때문에 적은 떠돌아다니고 시체는 부패하며, 식물은 자라난다. 충분한 시간이 지난
 뒤에, 당신은 전과 같은 모습으로 제자리에 돌아온다.
 %%%%
-Request Jelly
+Request Jelly ability
 
 중립적인 젤리를 소환한다. 이들은 주변을 배회하며, 눈에 보이는 모든 물건을
 먹어치운다.
 %%%%
-Jelly Paralyse
+Jelly Paralyse ability
 
 지바에게 기도하여, 당신의 슬라임들이 짧은 시간 동안 그 어떤 물건도 손대지
 못하게 한다.
 %%%%
-Slimify
+Slimify ability
 
 무기 또는 주먹에 점액을 두른다. 이 점액은 생명체나 언데드를 슬라임으로
 만들어버리며, 어떤 방식으로도 저항할 수조차 없다.
 %%%%
-Cure Bad Mutation
+Cure Bad Mutation ability
 
 나쁜 돌연변이를 치료한다. 어떤 돌연변이가 선택될지는 알 수 없다.
 %%%%
-Scrying
+Scrying ability
 
 벽 너머를 볼 수 있는 초자연적인 시력을 얻는다. 하지만 벽 너머의 적을 볼 수
 있다고 해서, 벽 너머의 적에게 마법이나 원거리 공격을 사용할 수는 없다.
 %%%%
-Transfer Knowledge
+Transfer Knowledge ability
 
 하나의 기술을 희생하여, 다른 기술을 향상시킨다.
 %%%%
-End Transfer Knowledge
+End Transfer Knowledge ability
 
 진행 중인 기술 이전을 중단한다.
 %%%%
-Memorise spell
+Memorise spell ability
 
 베후메트가 제공한 파괴 마법에 대한 지식을 즉시 얻는다. 제공된 마법은 시간이
 지나면 만기되어 사라진다.  신앙 정보 화면(^키)을 통해, 어떠한 주문이
 제공받았는지를 확인하도록 하자.
 %%%%
-Renounce Religion
+Renounce Religion ability
 
 현재 믿고 있는 신을 버린다. 당신에게 버림받은 신은 분노하여 징벌을 내릴 것이다.
 %%%%
-Convert to Beogh
+Convert to Beogh ability
 
 동굴 오크들의 신, 베오그에게 대한 당신의 충절을 서약한다. 베오그는 모든
 '불신자' 들에게 죽음을 선사하길 요구하고 있지만, 당신과 같은 새로운 들은 이러한
@@ -536,116 +536,116 @@ Convert to Beogh
 오크들은 여전히 적대감을 가라앉히지 않는다는 점이다! 베오그를 제외한 모든 다른
 신들은 이러한 베오그를 혐오하며, 가볍게 저버리지 않을 것이다.
 %%%%
-Make dart trap
+Make dart trap ability
 
 해당 지역에 다트 함정을 만든다.
 %%%%
-Make oklob sapling
+Make oklob sapling ability
 
 해당 지역에 산을 뿌리는 오클롭 식물의 새싹을 심는다.
 %%%%
-Make arrow trap
+Make arrow trap ability
 
 해당 지역에 화살 함정을 만든다.
 %%%%
-Make plant
+Make plant ability
 
 해당 지역에 식물이 자라게 한다.
 %%%%
-Remove Curse
+Remove Curse ability
 
 현재 입고있는 장비에 걸린 모든 저주를 해제한다.
 %%%%
-Make burning bush
+Make burning bush ability
 
 해당 지역에 투명한 적들을 볼 수 있으며 불을 뿜는, 화염의 식물을 심는다.
 %%%%
-Make altar
+Make altar ability
 
 당신이 서있는 곳에, 선택한 신의 제단을 만든다.
 %%%%
-Make grenades
+Make grenades ability
 
 당신의 근처에, 폭발하는 거대 포자를 몇 개 소환한다.
 %%%%
-Make oklob plant
+Make oklob plant ability
 
 해당 지역에 산을 뿌리는 다 자란 오클롭 식물을 심는다.
 %%%%
-Make net trap
+Make net trap ability
 
 해당 지역에 그물 함정을 만든다.
 %%%%
-Make ice statue
+Make ice statue ability
 
 해당 지역에 냉기공격과 관련된 여러 능력을 가진 석상을 설치한다.
 %%%%
-Make spear trap
+Make spear trap ability
 
 해당 지역에 창 함정을 만든다.
 %%%%
-Make alarm trap
+Make alarm trap ability
 
 해당 지역에 알람 함정을 만들어서, 다른 적들의 존재를 알 수 있게 한다.
 %%%%
-Make mushroom circle
+Make mushroom circle ability
 
 해당 지역을 중심으로 하는 버섯의 원을 자라게 한다.
 %%%%
-Make bolt trap
+Make bolt trap ability
 
 해당 지역에 석궁화살 함정을 만든다.
 %%%%
-Make crystal statue
+Make crystal statue ability
 
 해당 지역에 적들을 혼란하게 만드는 석상을 설치한다.
 %%%%
-Make needle trap
+Make needle trap ability
 
 해당 지역에 독이 발린 바늘 함정을 만든다.
 %%%%
-Zot-teleport
+Zot-teleport ability
 
 제어된 공간이동을 사용한다.
 %%%%
-Make water
+Make water ability
 
 당신이 서있는 곳에 얕은 물을 만든다.
 %%%%
-Make lightning spire
+Make lightning spire ability
 
 해당 지역에 전기를 발사하는 능력을 가진 번개탑을 설치한다.
 %%%%
-Make silver statue
+Make silver statue ability
 
 해당 지역에 동료 악마를 소환하는 석상을 설치한다.
 %%%%
-Make bazaar
+Make bazaar ability
 
 당신이 서있는 곳에, 상점가로 가는 포탈을 만든다.
 %%%%
-Acquire gold
+Acquire gold ability
 
 백만장자가 된다.
 %%%%
-Make oklob circle
+Make oklob circle ability
 
 해당 지역을 중심으로 하는 오클롭 식물의 원을 자라게 한다.
 %%%%
-Sage
+Sage ability
 
 당신이 획득한 경험치의 일부가 강제로 특정 기술에 투자되지만, 그 대신 평소보다
 기술의 수련 속도가 빨라진다.
 %%%%
-Acquirement
+Acquirement ability
 
 선택한 종류의 물건을 얻는다.
 %%%%
-Make blade trap
+Make blade trap ability
 
 해당 지역에 칼날 함정을 만든다.
 %%%%
-Make curse skull
+Make curse skull ability
 
 해당 지역에 언데드 동료를 소환하는 저주받은 해골을 설치한다. 끔찍한 것을
 만들어낸 대가로, 강령술 마법의 실패효과를 겪게 된다.
