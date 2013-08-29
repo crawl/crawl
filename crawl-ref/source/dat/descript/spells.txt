@@ -95,10 +95,6 @@ This spell inflicts enormous damage upon any creature struck by the bolt of
 incandescent energy conjured into existence. Unfortunately, it is very
 difficult to aim and very rarely hits anything. Pity, that.
 %%%%
-Iron Shot spell
-
-This spell hurls a large and heavy metal bolt at the caster's foe.
-%%%%
 Bolt of Magma spell
 
 This spell hurls a sizzling bolt of molten rock, capable of dealing some
@@ -364,10 +360,6 @@ and unleashes it after a short while as a violent explosion of arcane force. Be
 warned that the prism is extremely fragile and any damage caused to it may
 result in premature detonation!
 %%%%
-Major Healing spell
-
-This spell heals a large amount of damage to the caster's body.
-%%%%
 Haste spell
 
 This spell speeds the actions of a creature. Hasting yourself will increase
@@ -381,13 +373,6 @@ the undead exacts a toll on the caster's health, however.
 Hellfire spell
 
 <Hellfire ability>
-%%%%
-Throw Icicle spell
-
-This spell throws forth a shard of ice. It is particularly effective against
-those creatures not immune to the effects of freezing. But as most of its
-destructive potential comes from strong impact and cutting edges, even
-cold-resistant creatures are notably affected.
 %%%%
 Ice Form spell
 
@@ -433,6 +418,10 @@ This spell hides a creature from the sight of others. While invisible you will
 gain magical contamination, which may eventually cause enough glow to make you
 visible again.
 %%%%
+Iron Shot spell
+
+This spell hurls a large and heavy metal bolt at the caster's foe.
+%%%%
 Iskenderun's Battlesphere spell
 
 This spell conjures a small globe of magical energy linked to the caster's own
@@ -468,10 +457,6 @@ Lehudib's Crystal Spear spell
 
 This spell hurls a lethally sharp bolt of crystal.
 %%%%
-Minor Healing spell
-
-This spell heals a small amount of damage to the caster's body.
-%%%%
 Lethal Infusion spell
 
 This spell infuses a weapon held by the caster with unholy energies. It will
@@ -486,6 +471,10 @@ of creatures.
 Magic Dart spell
 
 This spell hurls a small bolt of magical energy. It never misses.
+%%%%
+Major Healing spell
+
+This spell heals a large amount of damage to the caster's body.
 %%%%
 Malign Gateway spell
 
@@ -504,15 +493,15 @@ Mass Confusion spell
 
 This spell causes confusion in all who gaze upon the caster.
 %%%%
-Mephitic Cloud spell
-
-This spell conjures up a large but short-lived cloud of vile fumes.
-%%%%
 Melee spell
 
 The rod of striking is designed for melee combat, releasing its charges to deal
 additional damage dependent on evocations skill when it strikes a foe. Maces &
 Flails skill will help improve your basic effectiveness with the weapon.
+%%%%
+Mephitic Cloud spell
+
+This spell conjures up a large but short-lived cloud of vile fumes.
 %%%%
 Mesmerise spell
 
@@ -523,6 +512,10 @@ Metabolic Englaciation spell
 This spell tries to lower the metabolic rate of every creature in the caster's
 vicinity, slowing all those who are not resistant to cold. It bypasses magic
 resistance, although tougher monsters will not be slowed for as long as others.
+%%%%
+Minor Healing spell
+
+This spell heals a small amount of damage to the caster's body.
 %%%%
 Necromutation spell
 
@@ -789,6 +782,10 @@ Sticks to Snakes spell
 This spell uses wooden items in the caster's grasp as raw material for a
 powerful transmutation. Note that magical artefacts will not be affected.
 %%%%
+Sticky Flame Splash spell
+
+<Breathe Sticky Flame ability>
+%%%%
 Sticky Flame spell
 
 This spell conjures a sticky glob of liquid fire, which will adhere to and burn
@@ -800,10 +797,6 @@ Sticky Flame spell:quote
 for the rest of his life.”
 
     -Terry Pratchett, “Jingo”
-%%%%
-Sticky Flame Splash spell
-
-<Breathe Sticky Flame ability>
 %%%%
 Sting spell
 
@@ -933,6 +926,13 @@ This spell throws a small bolt of flame.
 Throw Frost spell
 
 This spell throws a small bolt of frost.
+%%%%
+Throw Icicle spell
+
+This spell throws forth a shard of ice. It is particularly effective against
+those creatures not immune to the effects of freezing. But as most of its
+destructive potential comes from strong impact and cutting edges, even
+cold-resistant creatures are notably affected.
 %%%%
 Thunderbolt spell
 
