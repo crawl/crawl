@@ -54,7 +54,6 @@ enum ability_type
     ABIL_BREATHE_MEPHITIC,
     ABIL_SPIT_ACID,
     ABIL_BLINK,
-    ABIL_JUMP,
     // Others
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
@@ -74,7 +73,8 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
-    ABIL_MAX_INTRINSIC = ABIL_RECHARGING,
+    ABIL_JUMP,
+    ABIL_MAX_INTRINSIC = ABIL_JUMP,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -83,14 +83,14 @@ enum ability_type
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
     ABIL_EVOKE_TURN_VISIBLE,
-    ABIL_EVOKE_JUMP,
     ABIL_EVOKE_FLIGHT,
 #if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_STOP_LEVITATING,
 #endif
     ABIL_EVOKE_FOG,
     ABIL_EVOKE_TELEPORT_CONTROL,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_TELEPORT_CONTROL,
+    ABIL_EVOKE_JUMP,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_JUMP,
 
     // Divine abilities
     // Zin
@@ -2881,7 +2881,7 @@ enum mutation_type
     MUT_HEAT_RESISTANCE,
     MUT_HERBIVOROUS,
     MUT_HURL_HELLFIRE,
-    MUT_JUMP,
+
     MUT_FAST,
     MUT_FAST_METABOLISM,
 #if TAG_MAJOR_VERSION == 34
@@ -2948,6 +2948,7 @@ enum mutation_type
     MUT_CLING,
 #endif
     MUT_FUMES,
+    MUT_JUMP,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3097,7 +3098,6 @@ enum artefact_prop_type
 #if TAG_MAJOR_VERSION != 34
     ARTP_FOG,
 #endif
-    ARTP_JUMP,
     ARTP_BLINK,
     ARTP_BERSERK,
     ARTP_NOISES,
@@ -3122,6 +3122,7 @@ enum artefact_prop_type
     ARTP_FOG,
 #endif
     ARTP_REGENERATION,
+    ARTP_JUMP,
     ARTP_NUM_PROPERTIES
 };
 
