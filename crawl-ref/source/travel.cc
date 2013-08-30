@@ -2549,9 +2549,6 @@ static void _start_translevel_travel()
 
 void start_translevel_travel(const travel_target &pos)
 {
-    if (!i_feel_safe(true, true))
-        return;
-
     if (!can_travel_to(pos.p.id))
     {
         if (!can_travel_interlevel())
@@ -2596,20 +2593,20 @@ void start_translevel_travel(const travel_target &pos)
     }
 
     trans_travel_dest = _get_trans_travel_dest(level_target);
-    _start_translevel_travel();
-}
 
-static void _start_translevel_travel_prompt()
-{
     if (!i_feel_safe(true, true))
         return;
-
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
         return;
     }
 
+    _start_translevel_travel();
+}
+
+static void _start_translevel_travel_prompt()
+{
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.
     travel_cache.get_level_info(level_id::current()).update();
@@ -2966,9 +2963,6 @@ void start_travel(const coord_def& p)
     if (p == you.pos())
         return;
 
-    if (!i_feel_safe(true, true))
-        return;
-
     // Can we even travel to this square?
     if (!in_bounds(p))
         return;
@@ -2985,6 +2979,14 @@ void start_travel(const coord_def& p)
 
     if (!can_travel_interlevel())
     {
+        if (!i_feel_safe(true, true))
+            return;
+        if (you.confused())
+        {
+            canned_msg(MSG_TOO_CONFUSED);
+            return;
+        }
+
         // Start running
         you.running = RMODE_TRAVEL;
         _start_running();
