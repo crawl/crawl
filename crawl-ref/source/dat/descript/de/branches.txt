@@ -18,6 +18,19 @@ Ein Tempel der Götter, ein Ort des Friedens und der Erholung vom Wahnsinn des
 Verlieses. Er enthält normalerweise Altare für die meisten bekannten Götter und
 befindet sich stets zwischen den Ebenen 4 und 7.
 %%%%
+Temple:quote
+
+„In einer Stadt — den Namen nenn' ich nicht,
+  Ihr braucht's wahrhaftig auch nicht zu bedauern,
+ In einer Stadt — wer so von Trümmern spricht,
+  Die Residenz von Juden und von Bauern,
+ In einer Stadt — ein Schloß, Burg und Gericht,
+  Des Leichtsinns Denkmal mit verfall'nen Mauern:
+ Dort Standen Schänken ... drei, Thortrümmer ... vier,
+  Neun Klöster und ... auch Häuschen dort und hier.”
+    -Ignacy Krasicki, “Der Mönche-Krieg(Monachomachia)”, 1778
+     übersetzt von Dr. Alexander Winklewski
+%%%%
 Orcish Mines
 
 Die gut bearbeiteten Goldminen des Orkenvolkes. Diese verworrenen Höhlen sind
