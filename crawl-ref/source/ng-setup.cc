@@ -351,7 +351,7 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_FORMICID:
         you.mutation[MUT_ANTENNAE]    = 1;
-        you.mutation[MUT_CHITIN_SKIN] = 1;
+        you.mutation[MUT_EXOSKELETON] = 1;
         break;
     default:
         break;

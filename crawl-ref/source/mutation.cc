@@ -202,11 +202,11 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_FAST:
         case MUT_SLOW:
         case MUT_IRIDESCENT_SCALES:
-        case MUT_CHITIN_SKIN:
             return MUTACT_INACTIVE;
         case MUT_LARGE_BONE_PLATES:
         case MUT_ROUGH_BLACK_SCALES:
         case MUT_RUGGED_BROWN_SCALES:
+        case MUT_EXOSKELETON:
             return MUTACT_PARTIAL;
         case MUT_YELLOW_SCALES:
         case MUT_ICY_BLUE_SCALES:
@@ -2660,4 +2660,10 @@ int augmentation_amount()
     }
 
     return amount;
+}
+
+int exoskeleton_hp()
+{
+    const int level = player_mutation_level(MUT_EXOSKELETON);
+    return 5 * level * level;
 }

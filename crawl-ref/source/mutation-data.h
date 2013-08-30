@@ -1517,22 +1517,22 @@
   "trample resistance"
 },
 
-{ MUT_CHITIN_SKIN,                     0,  2, false,  true,  true,
-  "chitin skin",
+{ MUT_EXOSKELETON,                         0,  2, false,  true,  true,
+  "exoskeleton",
 
-  {"Your skin is composed of chitin. (AC +3)",
-   "Your body is surrounded by an exoskeleton. (AC +6)",
+  {"Your body is surrounded by an exoskeleton. (HP +5, AC +1)",
+   "Your body is surrounded by a tough exoskeleton. (HP +20, AC +2)",
    ""},
 
-  {"Your skin hardens.",
-   "Your skin hardens into an exoskeleton.",
+  {"Your exoskeleton hardens.",
+   "Your exoskeleton hardens into an exoskeleton.",
    ""},
 
-  {"Your skin softens.",
-   "Your skin softens.",
+  {"Your exoskeleton softens.",
+   "Your exoskeleton softens.",
    ""},
 
-  "chitin skin"
+  "exoskeleton"
 }
 
 
