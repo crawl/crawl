@@ -1,21 +1,97 @@
 %%%%
+amulet of clarity
+
+Tento amulet chrání nositele před některými druhy pomatení mysli včetně těch,
+které způsobují nedobrovolné rozzuření.
+%%%%
+amulet of conservation
+
+Tento amulet chrání některé předměty nositele před úplným zničením, ale ne
+zcela spolehlivě.
+%%%%
+amulet of guardian spirit
+
+Tento amulet snižuje nositelovu náchylnost ke zraněním a namísto toho vysává
+magickou sílu. V případě, že zásoby magie jsou na nule, duch nedokáže nositele
+ochránit dokud nebude k dispozici více energie.
+%%%%
 amulet of rage
 
-Tento amulet umožňuje jeho nositeli pokusit se vstoupit do stavu šíleného
-hněvu.
+Tento amulet umožňuje jeho nositeli pokusit se rozzuřit.
 %%%%
 amulet of resist corrosion
 
-Tento amulet chrání nositele a jejho vybavení proti korozi způsobené kyselinou,
-i když ne tak uplně neomylně.
+Tento amulet chrání nositele a jeho vybavení před korozí způsobenou kyselinou,
+ale ne zcela spolehlivě.
 %%%%
 amulet of resist mutation
 
-Tento amulet chrání svého nositele před mutací, i když ne tak úplně neomylně.
+Tento amulet chrání svého nositele před mutacemi, ale ne zcela spolehlivě.
+%%%%
+amulet of warding
+
+Tento amulet odráží některé z útoků bytostí, které byly vyvolány pomocí magie,
+a rovněž činí nositele více odolným proti útokům, které vysávají životní sílu.
+%%%%
+amulet of faith
+
+Toto je amulet vyrobený k upoutání božské pozornosti k nositeli, následkem níž
+je snazší božstvo potěšit, ale zároveň snižuje toleranci božstva k prohřeškům,
+a při sundání odejme část božské přízně.
+%%%%
+amulet of stasis
+
+Pečlivě vyrobený amulter, který pomocí magických ochran blokuje magické a
+fyziologické vlivy, které by jinak nositele teleportovaly, zpomalily, zrychlily
+či paralyzovaly.
+%%%%
+apple
+
+Nadherně červené ovoce, které lahodí jazyku.
 %%%%
 apricot
 
-Sukulentní žlutooranžové ovoce, prunus armeniaca.
+Dužnaté žlutooranžové ovoce, prunus armeniaca.
+%%%%
+banana
+
+Lahodné žluté ovoce, pravděpodobně vypěstované a importované nějakou amorální
+nadnárodní společností v důsledku zkorumpované obchodní dohody.
+%%%%
+bardiche
+
+Dlouhá tyč s obrovskou čepelí určenou k sekání na konci.
+%%%%
+beef jerky
+
+Proužek konzervované, mrtvé krávy či býka.
+%%%%
+blessed double sword
+
+Magická zbraň se dvěma čepelemi, ostrými jako břitva. Byl vylepšen silou
+Zářícího.
+%%%%
+blessed falchion
+
+Meč s širokou čepelí určenou k sekání. Byl vylepšen silou Zářícího.
+%%%%
+blessed great sword
+
+Meč s velmi dlouhou a těžkou čepelí, a dlouhou rukojetí. Byl vylepšen silou
+Zářícího.
+%%%%
+blessed long sword
+
+Meč s dlouhou čepelí určenou k sekání. Byl vylepšen silou Zářícího.
+%%%%
+blessed scimitar
+
+Dlouhý meč se zakřivenou čepelí. Byl vylepšen silou Zářícího.
+%%%%
+blessed triple sword
+
+Magická zbraň se třemi obrovskými čepelemi, ostrými jako břitva. Byl vylepšen
+silou Zářícího.
 %%%%
 book of fixed level
 
@@ -25,17 +101,312 @@ book of fixed theme
 
 Kniha kouzel.
 %%%%
+book of war chants
+
+Kniha kouzel určená bojovníkům. Verze v této knize jsou zhudebněné podle
+tradice bojujících skaldů. Funkčně jsou však identické s těmi, které jsou
+obyčejně vyslovovány.
+%%%%
+bow
+
+Zakřivený kus dřeva s tětivou, určený k střílení šípů. V boji způsobuje
+obstojné zranění, a zkušený uživatel jej bude schopen dobře využít.
+%%%%
+bread ration
+
+Ztvrdlé, ale vydatné pečivo.
+%%%%
+cap
+
+Látkový či kožený čepec.
+%%%%
+centaur barding
+
+Zbroj určená kentaurům, kteří jej nosí na své koňské polovině těla.
+%%%%
 cheese
 
 Kus sýra.
+%%%%
+choko
+
+Listová zelenina, která roste na vinici. Téměř bez chuti.
 %%%%
 cloak
 
 Plátěný plášť.
 %%%%
+corpse
+
+Mrtvola. Je možno ji nasekat na poživatelné kousky.
+%%%%
+crystal ball of energy
+
+Magické zařízení, které je možné použít k doplnění magické energie – nese s
+sebou však riziko, že energii naopak vysaje. Toto riziko je nepřímo úměrné
+zbývající úrovni magické energie; nejpříznivější výsledek mohou očekávat
+uživatelé, jejichž zásoby magické energie jsou téměř plné.
+%%%%
 crystal plate armour
 
-Neuvěřitelně těžký, ale velmi účinný oblek krystalického brnění.
+Neuvěřitelně těžká, ale extrémně efektivní zbroj z křišťálu.
+%%%%
+deck of defence
+
+Balíček kouzelných karet, z nichž většina chrání uživatele určitým způsobem
+před újmou.
+
+Může obsahovat následující karty: Hrobka, Smrtka, Zatracení, Osamocení,
+Křivitel, Útěk, Elixír, Bojechtivost, Přeměna, Přílba, Čepel, Stín, Námezdník.
+%%%%
+deck of destruction
+
+Balíček kouzelných karet, z nichž většina sesílá smrt a destrukci na nepřátele
+(nebo na uživatele, pokud má smůlu).
+
+Může obsahovat následující karty: Jed, Plamen, Mráz, Jiskra, Kladivo, Bolest,
+Kotouč.
+%%%%
+deck of escape
+
+Balíček kouzelných karet, povětšinou umožňující různé formy útěku. Neopatrností
+se lze však dostat takříkajíc z deště pod okap!
+
+Může obsahovat následující karty: Portál, Pokřivení, Výměna, Rychlost, Hrobka,
+Smrtka, Zatracení, Osamocení, Křivitel, Útěk.
+%%%%
+deck of summonings
+
+Balíček kouzelných karet, zobrazující řadu roztodivných a úžasných bytostí.
+
+Může obsahovat následující karty: Křížová výprava, Stádo, Pentagram, Tanec,
+Vílí oheň, Kosti, Odpudivost.
+%%%%
+deck of war
+
+Balíček kouzelných karet, které jsou užitečné v průběhu bitvy i před ní.
+
+Může obsahovat následující karty: Portál, Pokřivení, Výměna, Rychlost, Hrobka,
+Smrtka, Zatracení, Osamocení, Křivitel, Útěk, Elixír, Bojechtivost, Proměna,
+Přílba, Čepel, Stín, Námezdník, Křížová výprava, Stádo, Pentagram, Tanec, Vílí
+oheň, Kosti, Odpudivost, Jed, Plamen, Mráz, Jiskra, Kladivo, Bolest, Muka.
+%%%%
+deck of wonders
+
+Balíček velmi záhadných kouzelných karet, které mohou pozměnit uživatelův
+fyzický či mentální stav k lepšímu, ale i k horšímu.
+
+Může obsahovat následující karty: Nápoj, Usměrnit, Promíchat, Zkušenost,
+Nespoutaná magie, Spirála, Mudrc, Alchemista.
+%%%%
+demon blade
+
+Strašná zbraň, kovaná v ohni pekla.
+%%%%
+demon whip
+
+Hrozivá zbraň, spletená v hloubi pekelného ohně.
+%%%%
+eggplant
+
+Shnilý lilek, který můžeš hodit po vývojářích této hry. (Pokud toto čteš, jedná
+se chybu ve hře.)
+%%%%
+executioner's axe
+
+Tato hrozivá zbraň je pokryta zaschlou krví a primitivními rytinami
+symbolizujícími mučení a smrt, a honosí se dobře nabroušeným ostřím, jehož obří
+velikost naznačuje, že je velmi schopné oddělit končetiny od těla leckterému
+nešťastníkovi. Jsi si jistý, že by stačil jediný švih.
+%%%%
+giant club
+
+Obrovský kus dřeva, tvarovaný pro zlobří ruce.
+%%%%
+giant spiked club
+
+Obrovský kus dřeva s ostrými hroty na jednom konci.
+%%%%
+glaive
+
+Tyč s obrovskou těžkou čepelí na konci.
+%%%%
+gold piece
+
+Hromada třpytivých zlatých mincí.
+%%%%
+grape
+
+Drobné ovoce.
+%%%%
+helmet
+
+Část kovové pokrývky hlavy.
+%%%%
+honeycomb
+
+Kus lahodného plástve obřích včel.
+%%%%
+lajatang
+
+Velmi vzácná a velmi efektivní dovážená zbraň. Představuje jí tyč s
+půlměsícovým ostřím na obou koncích.
+%%%%
+lantern of shadows
+
+Bezbožné zařízení, které povolává síly temnoty, aby uživateli za malou úplatu
+podaly pomocnou ruku.
+%%%%
+lemon
+
+Žluté ovoce.
+%%%%
+longbow
+
+Dlouhý, silný luk z tisu. Způsobuje výborné poškození v boji a zručný
+lukostřelec jej může použít s velkým efektem.
+%%%%
+lychee
+
+Tropické ovoce.
+%%%%
+manual
+
+Cenná kniha, která vám umožní praktikovat určité dovednosti efektivněji.
+%%%%
+meat ration
+
+Sytá porce sušené konzervovaného masa různého druhu.
+%%%%
+mottled dragon armour
+
+Zbroj vytvořená ze šupin skvrnitého draka. Ačkoliv neposkytuje vysokou úroveň
+ochrany, oproti zbrojím vytvořených ze šupin větších draků je lehčí a zátěží
+srovnatelná s koženou zbrojí. Je taky pozoruhodně hladká, což způsobuje, že
+lepkavý oheň po ní steče jako voda.
+%%%%
+mottled dragon hide
+
+Šupinatá kůže skvrnitého draka s podivnými vzory. Pomocí magie lze z ní
+vytvořit řádnou zbroj. Díky hladkému povrchu se na ní neudrží lepkavý oheň.
+%%%%
+naga barding
+
+Speciální brnění vyrobené pro Nagy, které nosí přes ocasy.
+%%%%
+necronomicon
+
+Extrémně vzácná, mocná a zlovolná kniha. Její vazba je vyhotovena z jemné kůže
+neznámého původu. Mnoho pošetilých mágů se ji pokusilo studovat a zapletlo se
+tak s nekromantickými silami, které nemohli zvládnout.
+%%%%
+orange
+
+Lahodné, šťavnaté oranžové plody.
+%%%%
+orb of zot
+
+Tvá práce je hotova jakmile se ti podaří s tímto cenným artefaktem utéct na
+povrch.
+%%%%
+pair of boots
+
+Pár bot.
+%%%%
+pair of bracers
+
+Dvojice nátepníků.
+%%%%
+pair of gauntlets
+
+Pár rukavic.
+%%%%
+pair of gloves
+
+Pár rukavic.
+%%%%
+pear
+
+Chutné šťavnaté ovoce.
+%%%%
+piece of ambrosia
+
+Kousek podivné hmoty vytvářené přízračnými motýli. Konzumací dojde k doplnění
+živin i magické energie, avšak za cenu dočasné ztráty mentálního soustředění.
+%%%%
+plate armour
+
+Kompletní plátová zbroj: kyrys, nárameníky, nátepníky, pásová zbroj a holenice.
+Kroužková zbroj vyplňuje prázdná místa a umožňuje tak pohyb.
+
+Poskytuje výtečnou ochranu, ale navléci se do něj trvá věčnost.
+%%%%
+potion of agility
+
+Kouzelný lektvar, jehož vypití náramně zvyšuje obratnost a schopnost uhýbat.
+%%%%
+potion of berserk rage
+
+Lekvar, který je schopen uvrhnout uživatele do bezmyšlenkovitého hněvu.
+%%%%
+potion of invisibility
+
+Lektvar, který vás skrývá před zraky ostatních.
+%%%%
+potion of magic
+
+Cenný lektvar, který poskytuje infuzi magické energie.
+%%%%
+potion of might
+
+Magický nápoj, výrazně zvyšující fyzickou sílu člověka, který jej vypije.
+%%%%
+potion of paralysis
+
+Lektvar, který eliminuje kontrolu nad vaším vlastním tělem.
+%%%%
+potion of poison
+
+Hnusná jedovatá kapalina.
+%%%%
+potion of slowing
+
+Lektvar, který zpomaluje vaše akce.
+%%%%
+potion of speed
+
+Okouzlený nápoj, který urychluje činnost každého, kdo ho vypije.
+%%%%
+potion of strong poison
+
+Nesmírně jedovatý lektvar.
+%%%%
+potion of beneficial mutation
+
+Lektvar, který údajně poskytuje dobrou mutaci.
+%%%%
+quarterstaff
+
+Robustni dreveni kul určenej k boji.
+%%%%
+rambutan
+
+Male, ale chuteé tropické ovoce. Jak se dostalo do tehle mist lze se jen
+dohadovat.
+%%%%
+ring of dexterity
+
+Tenhle prsten zvyšuje nebo snižuje hbitost svého nositele, v závislosti na tom,
+nakolik je prsten okouzlen.
+%%%%
+ring of evasion
+
+Tenhle prsten  svemu nositeli umoznuje více či mene  vyhnout se utokum, v
+zavislosti na stupni okouzleni.
+%%%%
+ring of protection from cold
+
+Tento prsten zajišťuje ochranu před chladem.
 %%%%
 ring of protection from fire
 
@@ -50,18 +421,70 @@ ring of regeneration
 Tento nádherný prsten výrazně zvyšuje regenerační schopnosti svého nositele,
 ale značně urychluje metabolismus.
 %%%%
+ring of see invisible
+
+Tento prsten umožňuje svému nositeli vidět věci skryté pohledu kouzlem.
+%%%%
 ring of sustain abilities
 
 Tento prsten chrání svého nositele před ztrátou jeho síly, obratnosti a
 inteligence.
 %%%%
+ring of sustenance
+
+Tento prsten zajišťuje energii pro jeho uživatele,  je možno méně často jíst.
+%%%%
 ring of wizardry
 
 Tento prsten zvyšuje schopnost svého nositele k použití magických kouzel.
 %%%%
+rod of the swarm
+
+Tato hůl umožňuje jeho nositely přivolat roj hmyzu.
+%%%%
+rod of venom
+
+Tato hůl obsahuje útočná kouzla jedu.
+%%%%
+rod of warding
+
+Tato hůl obsahuje kouzla, jejichž cílem je odrazit nepřátele.
+%%%%
+scroll of fear
+
+Tento svitek způsobuje velký strach v těch, které vidí ten, kdo ho čte.
+%%%%
+scroll of fog
+
+Tento svitek obklopí čtenáře hustým oblakem mlhy.
+%%%%
+decaying skeleton
+
+Rozpadající se kostra.
+%%%%
+snozzcumber
+
+Odporná zelenina ve tvaru okurky.
+%%%%
+strawberry
+
+Malé, ale chutné červené plody.
+%%%%
+wand of cold
+
+Magické zařízení, které vrhá velké údery chladu.
+%%%%
 wand of fireball
 
 Magické zařízení, které vrhá vybuchující poryvy ohně.
+%%%%
+wand of lightning
+
+Magický přístroj, který vrhá velké blesky.
+%%%%
+wand of magic darts
+
+Magický přístroj, který vrhá malé údery destruktivní energie. Nikdy se nemine.
 %%%%
 wand of paralysis
 

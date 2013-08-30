@@ -8,17 +8,87 @@ tutorial1 door
 
 Je kan een gesloten deur openen door erin te lopen.
 %%%%
+tutorial1 water
+
+Merk op dat je door ondiep water kan bewegen, maar niet door diep water.
+%%%%
 tutorial2 start
 
 In deze les leer je over monsters en vechten. Maar eerst hebben we een wapen
 nodig! Pak deze die hier ligt.
 %%%%
+tutorial2 melee
+
+Om een monster aan te vallen met de blote hand, of het wapen dat je vast hebt,
+ren je er gewoon tegen.
+%%%%
+tutorial2 tutorial_end
+
+Gefeliciteerd! Je hebt je eerste troep monsters overleefd! Om de tutorial te
+verlaten, ga je deze trap af.
+%%%%
+tutorial3 start
+
+In deze les leer je over voorwerpen, en hoe ze te gebruiken.
+%%%%
+tutorial3 autopickup
+
+Sommige voorwerpen<tiles>, aangeduid met een groen kadertje,</tiles> worden
+automatisch opgepakt als je erop stapt.
+%%%%
+tutorial3 gold
+
+Goud kan je besteden in winkels. Het is gewichtloos, en je kan het niet
+neerleggen.
+%%%%
+tutorial3 shop
+
+Winkels bieden een waaier aan voorwerpen aan, maar je kan er niets verkopen.
+%%%%
+tutorial3 optional_battle
+
+Waarshuwing: deze weg leidt naar een <lightred>moeilijk gevecht</lightred>.
+Ofwel gebruik je de vechtkennis die je zonet hebt opgedaan, ofwel probeer je de
+andere kant van het eiland te bereiken. Hoe dan ook is het een goed idee om
+eerst wat te winkelen, als je dat nog niet gedaan hebt.
+%%%%
 tutorial3 tutorial_end
 
 Goed gedaan! Om deze uitleg te sluiten ga je de trap af.
+%%%%
+tutorial4 start
+
+In deze les leer je hoe spreuken te leren en gebruiken.
 %%%%
 tutorial4 tutorial_end
 
 Super, je bent een echte tovenaar nu! Om deze uitleg te sluiten ga je de trap
 af.
+%%%%
+tutorial5 start
+
+In deze les bekijken we goden en leer je hoe hun krachten te gebruiken.
+%%%%
+tutorial5 piety_on_kill
+
+Sommige goden appreciëren het als je in hun naam monsters verslaat. Maak er een
+slachtpartij van!
+%%%%
+tutorial5 hunger
+
+Je kan berserk niet gebruiken als je te veel honger hebt, dus draag altijd wat
+eten bij je. Dit betekent dat je soms zal moeten kiezen of je een lijk wil
+slachten of offeren aan Trog.
+%%%%
+tutorial5 berserk2
+
+Berserk is ook erg nuttig tegen meerdere vijanden — zo lang je tussenin niet
+uitgeput geraakt.
+%%%%
+tutorial5 tutorial_end
+
+Gefeliciteerd! Je hebt de laatste tutorial-les voltooid; nu ben klaar voor het
+echte spel. Veel succes!
+
+Om de tutorial te verlaten, ga je deze trap af.
 %%%%

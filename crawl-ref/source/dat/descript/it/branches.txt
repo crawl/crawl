@@ -1,0 +1,334 @@
+%%%%
+Dungeon
+
+Risulta ancora misterioso come questo bizzarro posto sia stato creato. Alcuni
+sostengono che questo sia il parco giochi delle divinità annoiate, altri che
+sia stato plasmato da ogni tipo di specie che ha deciso di fuggire dal mondo
+superiore e di rinnegare la luce. La sua origine ha poca importanza, questa
+profonda caverna è piena di immense ricchezze ma anche di grandi pericoli per
+qualunque intruso. Pochi sono fuggiti vivi da qui, e pochissimi hanno mantenuto
+la lucidità mentale per poterlo raccontare.
+
+Il Dungeon è profondo 27 livelli, ma, francamente, questo è solo l'inizio.
+%%%%
+Temple
+
+Un tempio degli Dei, un luogo di pace e rifugio dalla pazzia del Dungeon.
+Tipicamente contiene la maggior parte degli altari degli dei conosciuti. È
+locato tra il 4° e il 7° livello del Dungeon
+%%%%
+Orcish Mines
+
+Le ben lavorate miniere d'oro delle tribù degli orchi. Queste tortuose cave
+sono piene d'orchi, dei loro lavoratori umanoidi, e dell'oro appena estratto.
+Alcuni mercanti ambulanti hanno aperto dei negozi per aiutare gli orchi ad
+alleviarsi del loro peso d'oro. La maniera puramente casuale con cui gli orchi
+tendono a scavare le loro miniere ha portato alla creazione di un complesso e
+pericoloso groviglio di sale in cui è facile essere intrappolati.
+
+Le Miniere Orchesche sono profonde sette livelli e contengono l'entrata alle
+Sale degli Elfi.
+%%%%
+Elven Halls
+
+Laddove la maggior parte degli elfi non entrerebbe mai in complessi sotterranei
+buio come questo, gli elfi della profondità hanno addirittura deciso di
+abitarci. Le loro sale sono piene di ricchezze, ma ogni passante dovrebbe
+essere al corrente della leggendaria conoscenza di questa specie.
+
+Le Sale degli Elfi sono profonde tre livelli.
+%%%%
+Lair
+
+La maggior parte degli avventurieri trova L'Antro delle Bestie un piacevole
+cambio di clima. E ovviamente, vi è molto a dirsi sul cambiamento dall'essere
+affettati, arsi vivi o pugnalati al farsi sventrare, azzannare e mangiati vivi.
+
+L'Antro è profondo otto livelli e contiene le scale ad altre tre ramificazioni.
+%%%%
+Swamp
+
+Una desolata palude, completa di melma, liquami, mosche e giganti mostri
+carnivori.
+
+La Palude è profonda cinque livelli e contiene la runa decadente. Un dungeon
+può avere solo due ramificazioni del gruppo del Fosso dei Serpenti, Palude,
+Secche e il Nido dei Ragni. Se la Palude è presente, l'entrata è locata fra
+Antro:2 e Antro:5
+%%%%
+Shoals
+
+Da lontano senti l'incessante suono delle onde e l'odore della spuma marina.
+Raggiungendo le Secche, sei impressionato dalle esotiche spiagge sotterranee,
+che costituiscono alcune isole nel vasto mare. Improvvisamente, un urlo
+terrificante riempe l'aria, seguito da un gorgoglio. Ansiosamente ti guardi
+attorno e pensi: chi è il predatore? E chi la preda?
+
+Le Secche sono profonde cinque livelli e contengono la runa dei molluschi. Un
+dungeon può avere solo due ramificazioni del gruppo del Fosso dei Serpenti,
+Palude, Secche e il Nido dei Ragni. Se le Secche sono presenti, l'entrata è
+locata fra Antro:3 e Antro:6.
+%%%%
+Snake Pit
+
+Casa del serpente, antro del naga.
+
+Il Fosso dei Serpenti è profondo cinque livelli e contiene la runa serpentina.
+Un dungeon può avere solo due ramificazioni del gruppo del Fosso dei Serpenti,
+Palude, Secche e il Nido dei Ragni. Se il Fosso dei Serpenti è presente,
+l'entrata è locata fra Antro:3 e Antro:6.
+%%%%
+Spider Nest
+
+In superficie, un ragno può essere facilmente scacciato con un semplice calcio.
+Quaggiù è diverso. Se non soffri già di aracnofobia, questo posto, con le sue
+crollanti caverne strozzate da ragnatele, i suoi artropodi velenosi e altre
+inquietanti e striscianti bestie assortite, te la farà venire.
+
+Il Nido dei Ragni è profondo cinque livelli e contiene la runa di ragnatela. Un
+dungeon può avere solo due ramificazioni del gruppo del Fosso dei Serpenti,
+Palude, Secche e il Nido dei Ragni. Se il Nido dei Ragni è presente, l'entrata
+è locata tra Antro:3 e Antro:6.
+%%%%
+Slime Pits
+
+Il regno amorfo di acidi, gelatine e protoplasmi. Ogni traccia di forme di vita
+intelligenti è stata dissolta. Eppure, ci sono ancora voci che raccontano di
+grandi tesori in profondità, nascosti al sicuro in camere segrete senza porta o
+finestra che faccia trapelare l'acido. È ben saputo che addirittura le pareti
+di questo orrendo posto colano di acido, diventando sempre più caustico più si
+va in profondità.
+
+I Fossi dei Protoplasmi sono profondi sei livelli e contengono la runa melmosa.
+L'entrata è fra Antro:6 e Antro:8
+%%%%
+Vaults
+
+Possibilmente costruito da qualche potente pazzoide, si dice che i Sotterranei
+siano casa di grandi tesori. Il sangue abbondantemente schizzato attorno
+all'entrata suggerisce che i vi è anche una certa attività violenta al suo
+interno.
+
+I Sotterranei sono profondi cinque livelli e contengono la runa di argento, e
+hanno anche le entrate ad altre due ramificazioni. L'entrata può essere trovata
+dai livelli 15 a 20 del Dungeon.
+%%%%
+Hall of Blades
+
+Una volta, tutti i pugnali, asce e lance si riunivano allo stesso tempo per
+danzare un walzer, sognando campi di battaglia svuotati da uomini e bestie.
+Quel tempo è passato, ma le armi sono ancora qui.
+
+La Sala delle Lame è un singolo livello e può essere trovato tra Sotteranei:3 e
+Sotterranei:4.
+%%%%
+Crypt
+
+Un enorme deposito per i morti antichi. L'aria è gelida e fetida, le mura
+fredde e umide. Le ossa sono sparse liberamente in ogni dove e tutto il posto
+risuona con l'acuto soffrire delle anime torturate e dei morti inquieti
+
+La Cripta è profonda cinque livelli. Il Dungeon può avere o la Cripta o la
+Foresta; se è presente la Cripta, può essere trovata tra Sotteranei:2 e
+Sotterranei:3, e contiene l'entrata alla Tomba.
+%%%%
+Tomb
+
+La Tomba degli Antichi è un luogo di dannazione, di orrori e della più vile
+negromanzia. Le creature oneste della superficie diventano pallide
+semplicemente a sentire il nome di questo posto. La lista di coloro che sono
+riusciti a tornare da questo posto di pura morte è incredibilmente breve.
+
+La Tomba è profonda tre livelli e contiene la runa d'oro. La sua entrata è o su
+Cripta:2 o Cripta:3
+%%%%
+Hell
+
+Il corridoio ai quattro inferni è sorvegliato da Gerione. Gli eroi che provano
+il loro valore nel vestibolo e soffiano il corno di Gerione possono esplorare
+le differenti regione dell'Inferno: Dite, Geenna, Cocito e Tartaro.
+
+I portali al Vestibolo dell'Inferno sono trovati nelle profondità più recondite
+del dungeon.
+%%%%
+Dis
+
+La Ferrea Città di DIte. Chi supererà la prova del ferro?
+
+Dite è profonda 7 livelli e contiene la runa di ferro. Vi ci si può accedere
+tramite il Vestibolo dell'Inferno.
+%%%%
+Gehenna
+
+I fuochi della Geenna hanno bruciato tanti confidenti eroi, e continueranno a
+farlo in eterno
+
+Gehenna è profonda sette livelli e contiene la runa di ossidiana. Vi ci si può
+accedere tramite il Vestibolo dell'Inferno.
+%%%%
+Cocytus
+
+Una deserto cupo e gelido.
+
+Il Cocito è profondo sette livelli e contiene la runa gelida. Vi ci si può
+accedere tramite il Vestibolo dell'Inferno.
+%%%%
+Tartarus
+
+Un mondo inferiore che decade. Col tempo, i nonmorti, demoni e diavoli di
+questo posto hanno assorbito tutta la vita dai visitatori a caccia di tesori.
+
+Il Tartaro è profondo sette livelli e contiene la runa d'ossa. Vi ci si può
+accedere tramite il Vestibolo dell'Inferno
+%%%%
+Zot
+
+Una regione del Dungeon che è così terrificante, piene di pazzia, furia e
+follia da essere stata chiusa a chiave per evitare intrusioni. Solo il più
+demente degli avventurieri oserebbe raccogliere le chiavi necessarie, rompere
+il sigillo e irrompere più in profondità - tutto per la vana speranza di
+trovare un artefatto favoloso su cui nessuno ha mai posato gli occhi.
+
+Il Regno di Zot è profondo tre livelli e vi si può entrare portando solo tre
+rune.
+%%%%
+Forest
+
+Fra questi alberi oscuri e sinistri vi sono gli antri di spiriggano, fauni,
+tengu e altre creature capaci di far piegare la mente degli intrusi a loro
+volontà. Potenti magie illusorie e dannose sono la norma, non l'eccezione.
+
+La Foresta Incantata è profonda cinque livelli. Il Dungeon può avere o la
+Cripta o la Foresta; se è presente la Foresta, può essere trovata tra
+Sotteranei:2 e Sotterranei:3, e contiene l'entrata alla Tomba.
+%%%%
+Abyss
+
+L'Abisso è davvero un posto bizzarro, sempre in cambiamento e corrotto. È pieno
+di qualunque sorta di mostro, principalmente di natura demoniaca, il cui
+principale intento è quello di fare banchetto degli intrusi. È anche una
+discarica di molti stregoni, che si deliziano nel mandare gli aspiranti
+campioni come te in questi terreni di prova della pazzia. A quanto si dice, c'è
+una qualche struttura a tutto questo caos, in quanto Lugonu sembra essere avere
+conoscenza di questo posto e dei suoi abitanti.
+
+L'abisso consiste di cinque livelli infiniti. La runa abissale può essere
+trovata dal terzo livello in poi, ed è più comune in profondità. L'abisso può
+essere raggiunto da portali appositi nei livelli più profondi del Dungeon.
+%%%%
+Pandemonium
+
+Il Pandemonio è un reame infinito di dolore e sofferenza. Anche se qui puoi
+trovare un grande bottino, tutti questi tesori sono protetti da demoni e dai
+crudeli signori dei demoni. Tanti eroi, confondendo confidenza e megalomania,
+sono morti urlando in una pioggia di tormento e fiamme infernali.
+
+Il Pandemonio è senza fine. I suoi portali sono trovati con abbondanza nelle
+parti più profonde del Dungeon. Nota che uscirne potrebbe essere più difficile
+che entrarci.
+
+Nel Pandemonio vi sono cinque rune:
+ • una runa fiammeggiante nel bollente regno di Cerebov
+ • una runa raggiante nel contaminato dominio di Mnoleg
+ • una runa magica sorvegliata dai poteri arcani di Lom Lobon e dai suoi
+sottoposti
+ • una runa oscura nella dimora ombrosa di Gloorx Vloq
+ • le rune demoniche che esistono in multiple copie, possedute da alcuni
+signori meno famosi.
+%%%%
+Ziggurat
+
+Una ziggurat è una strana torre costituita da ventisette livelli di arene
+sempre più grandi, ciascuna contenente ricchezze e pericoli più grandi rispetto
+alla precedente. L'entità che ha creato questo abominio fa pagare una salata
+tassa all'ingresso. Ma bada, poiché una ziggurat non è un posto per deboli di
+cuore: anche gli eroi più coraggiosi e abili hanno qui trovato la loro fine.
+Anche se su ogni livello è presente un portale di fuga, una volta abbandonata,
+non è più possibile entrare in una ziggurat.
+%%%%
+Labyrinth
+
+Il Labirinto è un largo, complesso dedalo progettato da menti subdole e
+maliziose oramai dimenticate dalla storia. Vecchi miti dicono che il Labirinto
+è stato costruito come prigione per un minotauro. Altre versioni più recenti
+sostengono che questa bestia abita ancora qui, sorvegliando l'unica uscita del
+Labirinto - e anche l'ammasso di tesori presi dai corpi degli sciocchi
+avventurieri morti di fame che si sono persi all'interno. Fa attenzione
+all'interno dei serpeggianti e variabili cunicoli del Labirinto, o anche i tuoi
+beni potrebbero entrare a far parte della pila del minotauro.
+%%%%
+Bazaar
+
+Quando alcuni mercanti decidono di aprire un negozio nel Dungeon, gli altri
+vagano in carovane da posto a posto. I bazaar di questi mercanti itineranti
+vantano una vasta quantità di diversi negozi e spesso hanno una scelta migliore
+di quelli sedentari, spesso anche a prezzi da affare.
+
+Ma ricordati che la loro natura di nomadi ha insegnato a questi mercanti ad
+appropriarsi di tutti gli oggetti che gli avventurieri si lasciano alle spalle
+per poi andarsene subito dopo, probabilmente con l'idea di rivenderli da
+qualche altra parte.
+%%%%
+Trove
+
+C'erano una volta un avventuroso ladro e uno stregone che, terrorizzati
+dall'essere colti ad intrufolarsi nelle case altrui, crearono un sistema di
+portali che porta a tesorerie e a camere da letto di ricchi. Non avendo il
+coraggio di saccheggiarle loro stessi, hanno invece scelto di far pagare un
+tassa salatissima a chiunque volesse fare uso di questi portali. Un furbo
+artificiere li ha programmati affinché portino alle entrate delle tesorerie più
+adatte ai bisogni della clientela.
+
+È probabile che gli oggetti trovati in questa tesoreria siano utili, ma bada:
+lo stregone è morto da tanto tempo, e anche da vivo non ha mai lontanamente
+pensato di fornire rimborsi ai clienti insoddisfatti.
+%%%%
+Sewer
+
+Ogni posto abitato necessita di un posto in cui gettare i suoi rifiuti. Anche
+il Dungeon ha le sue puteolenti fogne e tombini, piene di acqua torbida e
+ignorate da tutti, se non dai più disgustosi o dai disperati in cerca di
+rifugio. Vecchi miti raccontano di creature pericolose che si aggirano nella
+lurida acqua verde, facendo preda l'una dell'altra senza pietà alcuna. I
+racconti alludono anche a oggetti preziosi accidentalmente lavati via dalle
+condutture di scarico, dimenticati e abbandonati a marcire nelle umide caverne.
+%%%%
+Ossuary
+
+L'Ossuario è una piccola tomba contenente i resti e il corredo funerario di
+alcuni lontani parenti dei faraoni con le spoglie dei loro servi e degli
+animali domestici. Non vi è ombra di dubbio che è pieno zeppo trappole, e che i
+suoi residenti nonmorti non prenderanno di buon grado il suo saccheggio.
+%%%%
+Bailey
+
+L'Avamposto è la vecchia fortezza ancora occupata e difesa appartenente a un
+signore degli orchi. I suoi tesori sono protetti sia da barriere fisiche che da
+un grande numero di guerrieri ben armati.
+%%%%
+Ice Cave
+
+Una desolata caverna scolpita nel ghiaccio solido e riempito dagli urli
+riecheggianti delle bestie. Gli intricati bassorilievi e statue che una volta
+ornavano queste mura sono state del tutto cancellate e oscurate dal lento
+scogliere ricongelarsi.
+%%%%
+Volcano
+
+Costruita da enormi blocchi di ossidiana, questa soffocante sala  potrebbe
+essere stata una volta un tempio per qualche strana divinità, o magari
+l'abitazione di un potente gigante di fuoco. L'aria scintilla con un calore
+opprimente, mentre il ruggire sordo del cuore del vulcano non cessa mai di
+farsi sentire.
+%%%%
+Wizlab
+
+In tempi passati i più potenti maghi - probabilmente avrai sentito parlare di
+alcuni di loro - erano soliti trovare o costruire dei piccoli regni sigillati
+dal resto del mondo, dove potevano isolarsi alla ricerca di un sapere magico
+sempre più grande. I maghi non esistono più da tanto tempo, ma tanti dei loro
+arcani laboratori esistono ancora, colmi con i risultati dei loro esperimenti.
+Coloro che sono disposti a esplorare questi laboratori possono trovare dei
+potenti artefatti magici, ma attenzione: gli stregoni a cui appartenevano
+questi laboratori si meritavano la reputazione che avevano.
+%%%%

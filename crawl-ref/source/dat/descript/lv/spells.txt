@@ -27,10 +27,6 @@ Debugging Ray spell
 
 Stars, kas nodara milzīgus bojājumus (1500 dzīvības punktus) un vienmēr trāpa.
 %%%%
-Dig spell
-
-Burvestība izkausē akmeņus, radot jaunus tuneļus.
-%%%%
 Flight spell
 
 Burvestība sniedz tās būrējam spēju lidot pa gaisu.

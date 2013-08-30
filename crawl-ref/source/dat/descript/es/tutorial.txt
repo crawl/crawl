@@ -1,0 +1,46 @@
+%%%%
+tutorial1 go_on
+
+¡Lo estás haciendo muy bien! Ahora, explora un poco hasta que alcances el
+siguiente cuadrado azul.
+%%%%
+tutorial1 water
+
+Observa como eres capaz de atravesar las aguas superficiales pero no las
+profundas.
+%%%%
+tutorial2 start
+
+En esta lección vas a aprender un poco acerca de los monstruos y el combate. Lo
+primero, ¡necesitamos un arma! Ve y recoge una que está cerca de ti.
+%%%%
+tutorial2 melee
+
+Para atacar a un monstruo con tus puños o con un arma que hayas empuñado
+previamente, simplemente intenta caminar sobre él.
+%%%%
+tutorial2 tutorial_end
+
+¡Enhorabuena! ¡Has logrado sobrevivir tu primera banda de monstruos! Para
+salir, simplemente baja por esas escaleras.
+%%%%
+tutorial5 start
+
+En esta lección vas a aprender acerca de los dioses y de como usar sus poderes.
+%%%%
+tutorial5 piety_on_kill
+
+Algunos dioses realmente aprecian que mates monstruos en su nombre. ¡Qué
+empiece la masacre!
+%%%%
+tutorial5 hunger
+
+No puedes enfurecerte cuando esta muy hambriento, así que siempre deberías
+llevar algo de comida contigo. Esto significa que a veces tendrás que elegir
+entre descuartizar un cadáver u ofrecérselo a Trog.
+%%%%
+tutorial5 berserk2
+
+Ponerte hecho una furia también es muy útil cuando te enfrentes a varios
+oponentes, siempre que no te quedes exhausto antes de acabar con todos ellos.
+%%%%

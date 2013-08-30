@@ -11,7 +11,7 @@ gengæld er de hårdføre og har helbredende værktøjer.
 %%%%
 Deep Elf
 
-Den mest magisk talentfulde elver, men også den skrøbeligste.
+Denne elver har det største talent for magi, men er også den skrøbeligste.
 %%%%
 Demigod
 
@@ -22,6 +22,10 @@ Demonspawn
 
 Dæmonyngel er halvt menneske, halvt dæmon. De pådrager sig stærke, dæmoniske
 mutationer, når de vokser.
+%%%%
+Djinni
+
+Djinn er ildånder, og for dem er magi selve livets essens.
 %%%%
 Draconian
 
@@ -36,6 +40,10 @@ Ghoul
 
 En udød, som er fordømt til evigt at rådne. De leder altid efter rådden mad, de
 kan spise, og ofre, de kan hakke i med deres kløer.
+%%%%
+Gargoyle
+
+Gargoiler er skabt af levende sten, og har et overnaturligt talent for jorden.
 %%%%
 Halfling
 
@@ -66,6 +74,11 @@ Kobold
 
 Små, drilske og lidt skrøbelige, men med mange talenter. De kan og vil spise
 enhver form for kød.
+%%%%
+Lava Orc
+
+Disse mestre over jord- og ildmagi kommer fra jorden dybt under de
+underjordiske gange. Deres evner ændrer sig med deres temperatur.
 %%%%
 Merfolk
 

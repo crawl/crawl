@@ -872,9 +872,10 @@ water. It kills not by poison but by constricting its prey.
 %%%%
 ancient bear
 
-A lumbering ursine figure, grown venerable beyond its natural years by the magic
-of its forest home. Centuries of basking in the enchanted sunlight has left its
-russet fur with a strange warm sheen and an unnatural resilience to heat.
+A lumbering ursine figure, grown venerable beyond its natural years by the
+magic of its forest home. Centuries of basking in the enchanted sunlight has
+left its russet fur with a strange warm sheen and an unnatural resilience to
+heat.
 %%%%
 ancient lich
 
@@ -935,8 +936,8 @@ dank underground dungeon. {{
         return "Fedhas has suppressed its production of giant spores to " ..
                "protect you from explosions."
     else
-        return "When active it will occasionally produce giant spore balls, " ..
-               "which in turn will give rise to more ballistomycetes."
+        return "When active it will occasionally produce giant spore " ..
+               "balls, which in turn will give rise to more ballistomycetes."
     end
 }}
 %%%%
@@ -3794,9 +3795,9 @@ smoke demon:quote
 %%%%
 snaplasher vine
 
-A swift and sinuous vine brought alive by a dryad's magic. It can quickly
-bind and entangle even a troll, dragging them back to the forest from which
-it surges.
+A swift and sinuous vine brought alive by a dryad's magic. It can quickly bind
+and entangle even a troll, dragging them back to the forest from which it
+surges.
 %%%%
 snaplasher vine segment
 
@@ -3913,9 +3914,9 @@ spirit wolf
 
 A pale wolf-like apparition rimmed in ethereal light. It is a cunning pack
 hunter, running freely with its kin between the realms of waking and dream. The
-sound of its howl is a dire portent, for it heralds the start of a wild
-hunt - one cry answered by another and another until voices beyond count seem to
-fill the air from all directions.
+sound of its howl is a dire portent, for it heralds the start of a wild hunt –
+one cry answered by another and another until voices beyond count seem to fill
+the air from all directions.
 %%%%
 spriggan
 
@@ -4138,16 +4139,16 @@ battle-cry.”
 thorn hunter
 
 A predatory plant, possessed of motility and a rudimentary intelligence. It
-stalks its prey swiftly, creating sudden profusions of spiny brambles with which
-to ensnare them and then skewering the trapped creatures with accurate volleys
-of its own razor-sharp thorns.
+stalks its prey swiftly, creating sudden profusions of spiny brambles with
+which to ensnare them and then skewering the trapped creatures with accurate
+volleys of its own razor-sharp thorns.
 %%%%
 thorn lotus
 
-A large and vivid bloom drifting placidly upon the surface of the water. Beware,
-for its beauty is deceptive; cradled within its petals lies a stigma bristling
-with needle-like thorns, fully capable of impaling predators and unwitting
-adventurers alike before they can draw close enough to threaten it.
+A large and vivid bloom drifting placidly upon the surface of the water.
+Beware, for its beauty is deceptive; cradled within its petals lies a stigma
+bristling with needle-like thorns, fully capable of impaling predators and
+unwitting adventurers alike before they can draw close enough to threaten it.
 %%%%
 toenail golem
 
@@ -4208,9 +4209,9 @@ treant
 
 At first glance, you might mistake this being for an ordinary tree, but its
 branches sway and creak purposefully, and within the knots and grooves of its
-ruddy bark can be seen the wizened features of an aged forest protector.
-Though it moves with slow deliberateness, its enormous gnarled limbs can match
-the strength of giants and its bark withstand the bite of battleaxes. A curious
+ruddy bark can be seen the wizened features of an aged forest protector. Though
+it moves with slow deliberateness, its enormous gnarled limbs can match the
+strength of giants and its bark withstand the bite of battleaxes. A curious
 buzzing sound seems to follow it as it moves....
 %%%%
 troll
@@ -4258,8 +4259,8 @@ even beyond death.
 %%%%
 unseen horror
 
-A creature rarely seen by anyone; those few who have seen one would rather
-they hadn't.
+A creature rarely seen by anyone; those few who have seen one would rather they
+hadn't.
 %%%%
 unseen horror:quote
 
@@ -4379,10 +4380,10 @@ swimmer.
 water nymph
 
 A strikingly beautiful and capricious nature spirit, deeply bonded with the
-waters in which she lives. Wherever they flow, so may she, and ponds and
-rivers surge and leap at her whim. Beware, for many unwitting adventurers have
-found themselves drawn beneath her waters by a simple touch, only for it to
-become their final resting place.
+waters in which she lives. Wherever they flow, so may she, and ponds and rivers
+surge and leap at her whim. Beware, for many unwitting adventurers have found
+themselves drawn beneath her waters by a simple touch, only for it to become
+their final resting place.
 %%%%
 water nymph:quote
 
@@ -4411,9 +4412,8 @@ wight:quote
 %%%%
 wind drake
 
-A small but powerful dragon, particularly adept amongst its kin at
-manipulating the currents of air that surround it. It can exhale powerful
-blasts of wind.
+A small but powerful dragon, particularly adept amongst its kin at manipulating
+the currents of air that surround it. It can exhale powerful blasts of wind.
 %%%%
 wizard
 

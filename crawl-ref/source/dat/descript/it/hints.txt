@@ -1,0 +1,206 @@
+%%%%
+welcome
+
+<white>Benvenuto a Dungeon Crawl!</white>
+
+Il tuo obiettivo è condurre un <w>{{ return you.race() }} {{ return you.class()
+}}</w> vivo sino alle profondità del dungeon, catturando la Sfera di Zot per
+poi tornare in superficie. All'inizio, però, lascia che sia la scoperta il tuo
+obiettivo principale. Prova a scendere più in basso che puoi ma bada! La morte
+si nasconde dietro ogni angolo.
+
+Per il momento, basta che ti ricordi questi comandi e le loro funzioni:
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - mostra gli oggetti e i comandi
+  <input>$cmd[CMD_SAVE_GAME]</input> - salva il gioco, per essere ripreso dopo
+(ma ricorda che la morte è permanente)
+  <input>$cmd[CMD_LOOK_AROUND]</input> - esamina qualcosa nella tuoi pressi
+
+La modalità suggerimenti ti aiuterà a giocare a Crawl senza leggere alcuna
+documentazione. Se ancora non l'hai fatto, leggi il tutorial. Se ti senti
+intrigato, ci sono più informazioni disponibili nei seguenti files dalla
+cartella docs/ (che possono essere tutti letti durante il gioco):
+  <lightblue>quickstart.txt</lightblue> - Una brevissima guida a Crawl.
+  <lightblue>crawl_manual.txt</lightblue> - Questo contiene tutti i dettagli
+sulle specie, magie, abilità, ecc.
+  <lightblue>options_guide.txt</lightblue> - L'interfaccia di Crawl è molto
+configurabile. Questo documento spiega tutte le opzioni.
+
+Buon Crawling!
+%%%%
+death
+
+Condoglianze! La morte prematura del tuo personaggio è triste, ma è
+un'occorrenza comune in Crawl. Sii sicuro che con diligenza e con esperienza
+nel giocare i tuoi personaggi dureranno di più.
+
+Magari questi consigli possono migliorare il tuo stile di gioco:
+%%%%
+death conjurer melee
+
+Come mago della Comparizione la tua arma principale dovrebbe essere la magia.
+Lancia incantesimi più spesso! Ricordati di riposare quando la tua Magia è
+bassa.
+%%%%
+death berserker unberserked
+
+Non scordarti di infuriarti quando combatti contro nemici particolarmente
+difficili. È rischioso, ma ti fa più forte e resistente.
+{{
+    if you.hunger() < 3 then
+        return "Infuriarsi è impossibile se si è molto affamati o peggio, " ..
+               "quindi tenta di essere sempre nutrito, in caso qualcosa " ..
+               "vada male, devi infuriarti."
+    end
+}}
+%%%%
+death ranger melee
+
+Il tuo arco e frecce sono molto potenti contro i nemici lontani. Assicurati di
+raccogliere tutte le frecce che trovi per terra nel dungeon.
+%%%%
+death random 0
+
+Prendi sempre in considerazione l'utilizzo di armi a distanza, bacchette o
+incantesimi prima di attaccare i nemici da vicino.
+%%%%
+death random 1
+
+Impara quando fuggire dalle cose che non puoi sconfiggere - questo è
+importante! Spesso è saggio saltare un livello particolarmente pericoloso. Ma
+non esagerare poiché i mostri diventeranno più forti più scendi in profondità.
+%%%%
+death random 2
+
+Riposati tra le battaglie, se possibile in una zona già esplorata e libera da
+mostri. Premendo <input>$cmd[CMD_REST]</input><localtiles> o <input>cliccando
+l'area delle statistiche</input></localtiles> ti farà riposare per un momento
+(smetterai di riposarti quando sarai totalmente curato o dopo 100 turni).
+%%%%
+death random 3
+
+Ricorda di usare quelle pergamene, pozioni o bacchette che hai trovato. Molto
+spesso, non puoi aspettarti di identificare tutto solo con le pergamene. Impara
+a improvvisare: identifica con l'uso.
+%%%%
+death random 4
+
+Se una battaglia in particolare ti metter particolarmente in difficoltà, non
+dimenticarti di usare il prima possibile gli oggetti d'emergenza. Una pergamena
+del teletrasporto o una pozione della velocità può davvero salvarti la pelle.
+%%%%
+death random 5
+
+Non combatter mai più di un mostro alla volta, se puoi evitare. Ritirati in un
+corridoio così che puoi costringere i nemici ad attaccarti uno alla volta.
+%%%%
+finished
+
+Congratulazione! Sei sopravvissuto fino alla fine della modalità suggerimenti -
+assicurati di provare anche le altre. Nota che la schermata d'aiuto
+(<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) sarà molto diverso da adesso in
+poi. Eccoti un ultimo suggerimento per giocare
+%%%%
+finished explored
+
+Vagare e esplorare livelli diventa più facile utilizzando l'autoesplorazione
+(<input>$cmd[CMD_EXPLORE]</input>). Crawl ti permette di muoverti
+automaticamente e raccogliendo oggetti interessanti<localtiles>
+
+L'autoesplorazione può anche essere iniziata facendo  <input>Ctrl-click
+sinistro</input> sulla minimappa</localtiles>
+%%%%
+finished travel
+
+C'è un modo conveniente per viaggiare fra i livelli distanti del dungeon: premi
+<input>$cmd[CMD_INTERLEVEL_TRAVEL]</input>  e entra nella destinazione
+desiderata. Se il tuo viaggio è interrotto, premere
+<input>$cmd[CMD_INTERLEVEL_TRAVEL] Enter</input> lo farà riprendere.
+%%%%
+finished stashes
+
+Puoi cercare fra tutti gli oggetti esistenti nel dungeon con il comando
+<input>$cmd[CMD_SEARCH_STASHES]</input>. Per esempio,
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"coltello"</w> farà la lista di
+tutti i coltelli. Puoi in seguito viaggiare fino ad uno dei posti indicati. È
+anche possibile scrivere parole come <w>"negozio"</w> o <w>"altare"</w>.
+%%%%
+finished random 0
+
+Il gioco tiene un diario automatizzato per i tuoi personaggi. Usa
+<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> per leggerlo. Puoi scrivere
+manualmente delle note col comando <input>$cmd[CMD_MAKE_NOTE]</input>. Una
+volta che il tuo personaggio perisce, duo file morgue sono lasciati nella
+cartella <w>morgue/</w>. Quella che finisce in .txt contiene una copia del tuo
+diario. Durante il gioco, puoi creare un file dump con
+<input>$cmd[CMD_CHARACTER_DUMP]</input>.
+%%%%
+finished random 1
+
+Crawl ha incorporato una funziona per le macro: premi <input>~m</input> per
+definire una macro specificando prima il tasto che l'attiverà (ad esempio,
+<input>F1</input>), poi una sequenza di comandi, come <input>za+.</input>. Il
+secondo farà si che il tasto <input>F1</input> farà sempre lanciare
+l'incantesimo in quello slot al mostro più vicino. Per più informazioni sulle
+macro, premi <input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
+%%%%
+finished random 2
+
+L'interfaccia può essere altamente personalizzata. Tutte le opzioni sono
+spiegate nel file <w>options_guide.txt</w> che può essere trovato nella
+cartella <w>docs</w>. Le opzioni sono in <w>init.txt</w> o <w>.crawlrc</w>.
+Crawl darà problemi se non potrà trovare uno di questi due files.
+%%%%
+finished random 3
+
+Puoi chiedere aiuto e consigli agli altri giocatori di Crawl sul canale di IRC
+(Internet Relay Chat) <w>##crawl</w> sul freenode (<w>irc.freenode.net</w>).
+%%%%
+dissection reminder
+
+Se non vuoi mangiarlo, considera di offrire questa carcassa tramite preghiera
+(<input>$cmd[CMD_PRAY]</input>) come un sacrificio per {{ return you.god() }}.
+<localtiles>Puoi anche fare a pezzi un qualunque cadavere che trovi per terra
+cliccandoci con il <input>tasto sinistro del mouse</input>. </localtiles>Ogni
+volta che vedi un cadavere in modalità consigli puoi rileggere questa
+informazione.
+%%%%
+HINT_CONVERT Xom
+
+Hai appena iniziato a venerare <w>Xom</w>. Puoi far contento Xom facendolo
+divertire; non devi MAI far annoiare questa divinità!
+
+Se fai divertire Xom ti tratterà come un giocattolino, aiutandoti e ferendoti a
+caso per il suo divertimento; in caso contrario ti tratterà come un vecchio
+giocattolo.
+%%%%
+HINT_CONVERT
+
+Hai appena iniziato a venerare <w>{{ return you.god() }}</w>. Il tuo favore
+divino (o pietà divina) decrescerà naturalmente con il tempo, e se finisce {{
+return you.god() }} ti scomunicherà e ti punirà. Però puoi evitarlo, e puoi
+addirittura ottenere abbastanza favore divino per ottenere poteri aggiuntivi e
+doni divini, tutto ciò soddisfacendo {{ return you.god() }}. Ma non
+preoccuparti: inizi sempre con un ammontare decente di pietà, scacciando così
+il pericolo di scomunica.
+
+Puoi vedere ciò che piace e non piace alla tua divinità, il tuo rapporto e
+abilità divine premendo <input>^</input><localtiles> (in via alternativa, puoi
+anche premere <input>Click destro-Shift</input> sul tuo avatar)</localtiles>.
+%%%%
+HINT_SEEN_FIRST_OBJECT
+
+Quel <console>$1 </console> è un oggetto. Se ti ci vai sopra e premi
+<input>$cmd[CMD_PICKUP]</input>, lo raccoglierai. <console> Generalmente, gli
+oggetti sono sono simboleggiati da caratteri che non sono lettere come
+<w>%?!"=()[</w>.</console><tiles> Puoi anche raccogliere un oggetto cliccandoci
+col <input>tasto sinistro del mouse</input> stando sulla sua casella.</tiles>
+Inoltre, diversi tipi di oggetti saranno raccolti automaticamente.
+<tiles>Questi saranno marchiati da un contorno verde.</tiles>
+
+Una volta nel tuo inventario, puoi buttarlo via con <tiles>a <input>Shift-click
+sinistro</input>. Ogni volta che tu fai <input>click-destro</input> su un
+oggetto </tiles><console><input>$cmd[CMD_DROP]</input>. Ogni volta che guardi
+un oggetto nel tuo inventario
+(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>, tu puoi leggere le sue
+proprietà con la sua descrizione.
+%%%%
