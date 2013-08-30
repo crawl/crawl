@@ -26,6 +26,7 @@
 #include "monster.h"
 #include "spl-damage.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -721,7 +722,6 @@ bool player::can_jump(bool quiet) const
     {
         if (!quiet)
             mpr("You're too exhausted to jump.");
-        // or else they won't notice -- no message here
         return false;
     }
 
