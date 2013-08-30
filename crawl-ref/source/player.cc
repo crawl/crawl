@@ -4884,12 +4884,16 @@ int get_real_hp(bool trans, bool rotted)
     hitp *= 10 + species_hp_modifier(you.species);
     hitp /= 10;
 
-    // Frail and robust mutations, divine vigour, and rugged scale mut.
+    // Mutations that increase HP by a percentage
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (player_mutation_level(MUT_FRAIL) * 10);
+    
+    // Mutations that increase HP by a fixed value
+    hitp += 100 * exoskeleton_hp();
+    
     hitp /= 100;
 
     if (!rotted)
@@ -6540,8 +6544,8 @@ int player::armour_class() const
           ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0; // +2, +3, +4
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
-    AC += player_mutation_level(MUT_CHITIN_SKIN)
-          ? player_mutation_level(MUT_CHITIN_SKIN) * 300 : 0;                  // +3, +6
+    AC += _mut_level(MUT_EXOSKELETON, MUTACT_FULL)
+          ? _mut_level(MUT_EXOSKELETON, MUTACT_FULL) * 100 : 0;                // +1, +2
 
     return (AC / 100);
 }

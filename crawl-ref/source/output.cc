@@ -2782,6 +2782,11 @@ static string _status_mut_abilities(int sw)
                  snprintf(info, INFO_SIZE, "+%d accuracy", level*2+1);
                  current = info;
                  break;
+            case MUT_EXOSKELETON:
+                snprintf(info, INFO_SIZE, "+%d hp", exoskeleton_hp());
+                AC_change += level;
+                current = info;
+                break;
 
             // scales -> calculate sum of AC bonus
             case MUT_DISTORTION_FIELD:
@@ -2827,9 +2832,6 @@ static string _status_mut_abilities(int sw)
             case MUT_GELATINOUS_BODY:
                 AC_change += (level == 3) ? 2 : 1;
                 EV_change += level - 1;
-                break;
-            case MUT_CHITIN_SKIN:
-                AC_change += level * 3;
                 break;
             default:
                 die("mutation without a short desc: %d", i);
