@@ -1,0 +1,97 @@
+%%%%
+CMD_REPLAY_MESSAGES
+
+Son mesajları tekrar oku
+%%%%
+CMD_RESISTS_SCREEN
+
+Karakterin genel görünüşünü göster
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Bilinen dirençleri, yetenekleri, ekipman istatistliklerini vs. gösterir
+%%%%
+CMD_DISPLAY_RELIGION
+
+Dini durumu göster
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Mutasyonları göster
+%%%%
+CMD_DISPLAY_SKILLS
+
+Becerileri yönet
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Karakter statüsünü görüntüle
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Keşfedilmiş eşya türlerinin listesi
+%%%%
+CMD_SAVE_GAME_NOW
+
+Kaydet ve çık
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Oyun yardımı
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Komutlar, seçenekler, vs. listesi
+%%%%
+CMD_AUTOFIGHT
+
+En yakın yaratığa vur
+%%%%
+CMD_DROP
+
+Eşyaları bırak
+%%%%
+CMD_DISPLAY_MAP
+
+Harita moduna gir
+%%%%
+CMD_MAP_GOTO_TARGET
+
+İmlece seyahat et
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Bir seviye aşağı
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Bir seviye yukarı
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Yukarı merdivenlerini bul
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Aşağı merdivenlerini bul
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Basamaklardan aşağıya doğru pedal çevir
+%%%%
+CMD_MAP_FIND_YOU
+
+Beni bul
+%%%%
+CMD_ZOOM_IN
+
+Yakınlaştır
+%%%%
+CMD_ZOOM_IN verbose
+
+Zindan alanı üzerine yakınlaş
+%%%%
+CMD_ZOOM_OUT
+
+Uzaklaştır
+%%%%

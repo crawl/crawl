@@ -10,7 +10,7 @@ Casuale  (se vedete questo messaggio si tratta di un bug).
 %%%%
 Buggy
 
-Bacato  (se vedete questo messaggio si tratta di un bug).
+Bacato (se vedete questo messaggio si tratta di un bug).
 %%%%
 Zin
 
@@ -181,4 +181,143 @@ Splende li farà rimanere più a lungo al loro fianco. I seguaci guadagneranno l
 possibilità di usare uno scudo divino, per proteggersi durante la battaglia. In
 seguito potranno anche convogliare esplosioni di fiamme purificatrici,
 particolarmente efficaci contro nemici
+%%%%
+Kikubaaqudgha powers
+
+Kikubaaqudgha manderà cadaveri ai suoi seguaci, potenzierà le abilità
+negromantiche dei suoi sudditi con doni di libri magici e incanterà le loro
+armi con il dolore. I seguaci più ferventi possono proteggersi dal tormento, o
+addirittura invocarlo loro stessi offrendo un cadavere a Kikubaaqudgha.
+%%%%
+Yredelemnul powers
+
+Yredelemnul ti concede il potere di far alzari scheletri e cadaveri per
+combattere al tuo fianco, di poter far tornare i tuoi seguaci nonmorti vicino a
+te, e di curare punti ferita assorbendo la forza vitale degli esseri viventi.
+Alla fine, riceverai il potere di legare a te l'anima di un mostro per farla
+combattere per te. Yredelemnul ti donerà sporadicamente dei servi nonmorti più
+forti. In aggiunta, con abbastanza favore divino, Yredelemnul renderà a
+chiunque ti abbia attaccato la stessa ferita che hai dovuto subire.
+%%%%
+Xom powers
+
+Venerare Xom vuol dire vivere perennemente a rischio. Se di buon umore Xom può
+tempestarti di doni, ma a volte questa capricciosa divinità potrebbe voler
+rendere tutto un po' più "divertente" per poi mandarti incontro a morte certa.
+Se dimostri di essere il più forte, buon per te; in caso contrario, beh, ci
+saranno sempre altri giocattolini...
+%%%%
+Vehumet powers
+
+I fedeli di Vehumet saranno presto in grado di recuperare la loro energia
+magica quando uccidono. Ottenendo il suo favore, potranno anche ricevere
+potenziami ai loro incantesimi distruttivi - prima un aiuto per lanciarli, poi
+un raggio di tiro più grande per gli incantesimi di comparizione. Vehumet
+offrirà anche il sapere di incantesimi sempre più potenti più si conquista il
+suo favore.
+%%%%
+Okawaru powers
+
+I seguaci riceveranno presto l'abilità di incrementare le loro capacità in
+combattimento, e, molto dopo, di infliggere colpi molto più velocemente. In
+aggiunta, Okawaru donerà ai suoi fedeli armi e corazze.
+%%%%
+Makhleb powers
+
+Makhleb offre ai seguaci diversi metodi per infliggere immensi danni, e per
+chiedere l'aiuto di potenti demoni, anche se tutto questo potere ha un prezzo
+da pagatare col sangue. In ogni caso, Makhleb rigenererà la salute dei seguaci
+in cambio dell'uccisione di esseri di tutti i tipi.
+%%%%
+Sif Muna powers
+
+I seguaci si SIf Muna possono canalizzare l'energia magica quando è più
+necessario, e ottengono il potere per dimenticare incantesimi a volontà,
+cosicché possano impararne dei nuovi. SIf Muna protegge gli incantatori dagli
+effetti negativi causati dal lanciare male un incantesimo. Col tempo, i fedeli
+riceveranno libri magici contenenti tutte gli incantesimi del reame.
+%%%%
+Trog powers
+
+Trog offre diversi poteri per aiutarti in battaglia, più precisamente l'abilità
+di infuriarti a volontà, e l'abilità di far curare le ferite più velocemente
+incrementando la resistenza agli effetti magici. Più in là, i seguaci possono
+chiamare alcuni potenti e furiosi alleati. Infine, Trog regalerà ai fedeli armi
+che puntano tutto sul danno.
+%%%%
+Nemelex Xobeh powers
+
+I seguaci del Burlone ottengono diversi metodi per influenzare il fato quando
+giocano con le carte.
+%%%%
+Elyvilon powers
+
+Il Curatore offre ai seguaci i mezzi per curarsi dai danni e da altri effetti
+negativi. Elyvilon permette anche il curare mostri ostili,  provando a farli
+diventare neutrali. Elyvilon può intervenire direttamente per salvare la vita
+di un fedele, soprattutto quando gli è chiesto; i seguaci più pii possono
+essere certi di tale aiuto.
+%%%%
+Lugonu powers
+
+I seguaci di Lugonu ottengono poteri per lasciare l'Abisso a volontà, per
+piegare lo spazio attorno a loro, e per bandire i nemici nell'Abisso. Più
+avanti potranno corrompere il mondo ordinato, aprendo un cancello per lasciarci
+passare le creature dell'Abisso stesse direttamente in questo regno di caos.
+Lugonu infine offrirà la possibilità di corrompere un'arma di un seguace,
+incantandola con l'energie distorcenti dell'Abisso. Lugonu si aspetta che i
+fedeli seminino il caos nel mondo di sopra, e perciò nessun seguace otterrà il
+suo favore stando nell'Abisso stesso.
+%%%%
+Beogh powers
+
+Beogh incoraggia i seguaci a far uso dell'equipaggiamento orchesco trovato nel
+Dungeon. I seguaci possono abbattere i loro nemici sfruttando il potere divino
+di Beogh, e avranno addirittura dei seguaci orchi, che possono essere benedetti
+da Beogh e fatti riapparire in prossimità quando necessario. Infine, avranno il
+potere di camminare sull'acqua. Alle volte, Beogh interverrà direttamente per
+salvare la vita di un suo fedele. {{
+    if you.race() == "Lava Orc" then
+        return "Beogh sopprime l'aura di calore dei seguaci Orchi di Lava."
+    end
+}}
+%%%%
+Fedhas powers
+
+Piante e funghi non attaccheranno i seguaci di Fedhas se non provocati. I
+fedeli di Fedhas possono camminare attraverso piante o funghi, e gli
+incantesimi o proiettili infuocati possono passargli attraverso senza fare
+danni. Fedhas conferisce l'abilità di promuovere piante e funghi in specie più
+forti. I seguaci infine potranno far crescere un muro di piante e creare spore
+esplosive dai cadaveri, e ricevono anche poteri per controllare il tempo,
+essendo capaci di chiamare la luce del sole e più avanti anche tempeste.
+%%%%
+Cheibriados powers
+
+I seguaci di Cheibriados diventano più lenti all'aumentare del favore divino
+nei loro confronti, e sono ricompensati per uccidere le creature più veloci di
+loro. Il muoversi troppo velocemente o utilizzare armi magicamente accelerate è
+disapprovato. Cheibriados ricompensa i fedeli con un metabolismo rallentato, il
+potere di rallentare le altre creature, di distorcere il flusso del tempo e la
+possibilità di ferire chiunque sia più veloce dei suoi seguaci, e, infine, di
+uscire per intero dal flusso del tempo.
+%%%%
+Jiyva powers
+
+I seguaci di Jiyva possono richiedere gelatine, far diventare i mostri
+protoplasmi, e infine potranno rimuovere le loro mutazione dannose. Aumentando
+il favore di Jiyva nei loro confronti, la divinità farà apparire sempre più
+frequentemente gelatine; cambiare i loro attributi in base alle loro abilità,
+armatura e carico; e da doni sotto forma di mutazioni. I protoplasmi non
+attaccheranno mai un seguace di Jiyva, e Jiyva richiede la stessa condotta in
+cambio. Alla fine, tutti i protoplasmi visibili si uniranno in preghiera,
+bloccando il loro movimento.
+%%%%
+Ashenzari powers
+
+Ashenzari esorta i seguaci a vestirsi con maledizioni, e provvede ricompense
+per il tempo passato con armature, gioielleria e armi maledette. Il desidero
+ultimo di Ashenzari, ciononostante, non è la devozione ma la conoscenza di
+tutte le cose. I seguaci più pii possono decidere di liberarsi di una porzione
+per del loro sapere per riceverne in cambio una più grande da Ashenzari.
 %%%%

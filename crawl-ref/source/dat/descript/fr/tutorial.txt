@@ -320,16 +320,102 @@ déterminer leurs effets est de les utiliser. Essayez de lire ce parchemin avec
 <w>[$cmd[CMD_READ]]</w><localtiles> ou avec un <w>[mouseclick]</w> panneau
 d'inventaire</localtiles>.
 %%%%
+tutorial3 scroll_noautopickup
+
+Le ramassage automatique ne fonctionne pas s'il y a un monstre en vue. Vous
+pouvez ramasser ce parchemin maintenant avec
+<input>$cmd[CMD_PICKUP]</input><localtiles> ou <input> en cliquant </input> sur
+votre personnage,</localtiles> ou vous pouvez combattre l'ennemi à proximité et
+le ramasser par la suite.
+%%%%
+tutorial3 ego_weapon
+
+Un objet décrit comme <lightblue>runique </lightblue> ou <lightblue>brillant
+</lightblue> sera toujours enchanté, ou avoir des propriétés spéciales, ou les
+deux. Vous devez porter ce cimeterre (avec
+<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> ou en <input>cliquant
+</input> dessus dans le panneau d'inventaire </localtiles>) pour savoir ce
+qu'il est.
+%%%%
+tutorial3 inventory
+
+Pour afficher la description de votre nouvelle arme, recherchez et
+sélectionnez-la dans votre inventaire
+(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>). <localtiles>Vous pouvez également
+<input>passer la souris dessus </input> ou faire un <input> clic droit </input>
+dans le panneau d'inventaire. </localtiles>Notez que toutes les commandes
+d'objet fonctionnent également à partir de leur écran de description.
+%%%%
 tutorial3 battle
 
 Une fois que vous avez réussi à empoisonner un adversaire, il est parfois
 préférable de se replier et de laisser le poison agir. Pensez aussi à vous
 replier lorsque vous avez besoin de vous soigner.
 %%%%
+tutorial3 downstairs
+
+Bien joué! Si nécessaire, reposez vous avec <input>$cmd[CMD_REST]</input>, la
+suite continue en descendant avec
+<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> ou avec <input> Shift + clic
+</input> sur votre personnage</localtiles>.
+%%%%
+tutorial3 command_help
+
+Si les nombreuses commandes sont trop confuses, vous pouvez aussi chercher dans
+le panneau d'aide <input>$cmd[CMD_DISPLAY_COMMANDS]</input>. <localtiles>Un
+certain nombre de commandes sont également disponibles en cliquant <w> dans le
+panneau de commande</w> à la droite de l'écran. </localtiles>Relire les anciens
+messages avec <input>$cmd[CMD_REPLAY_MESSAGES]</input> est disponible comme
+d'habitude.
+%%%%
 tutorial3 potion
 
 Vous pouvez avaler une de ces potions avec <w>[$cmd[CMD_QUAFF]]</w><localtiles>
 ou avec <w>[mouseclick]</w></localtiles>.
+%%%%
+tutorial3 artefact_armour
+
+Les objets avec des <w>noms inhabituels </w> sont des artefacts. Les artefacts
+peuvent avoir un certain nombre de propriétés spéciales. Certains articles
+(comme ce manteau) sont connus et sont pré-identifiés, d'autres sont aléatoires
+et ont des propriétés inconnues. Essayez d'équiper cette cape avec
+<input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> ou en <input> cliquant
+</input> dessus dans le panneau d'inventaire</localtiles>.
+%%%%
+tutorial3 wand_fire
+
+Vous pouvez évoquer une baguette avec
+<input>$cmd[CMD_EVOKE]</input><localtiles> ou avec <input> un clic de souris
+</input> dans le panneau d'inventaire </localtiles>.
+%%%%
+tutorial3 wand_digging
+
+Un wand of digging peut détruire certains types de murs. Utilisez
+<input>$cmd[CMD_LOOK_AROUND]][$ cmd [CMD_TARGET_DESCRIBE]</input><localtiles>
+ou <input> passez la souris dessus </input></input> clic droit
+</input></localtiles> pour vérifier le type de murs.
+%%%%
+tutorial3 amulet
+
+Les bijoux sont porté avec <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
+ou avec <input> un clic de souris </input> dans le panneau d'inventaire
+</localtiles>. Certains types de bijoux sont identifiés lorsque vous les
+mettez. Pour d'autres, vous aurez besoin d'une autre façon de les identifier.
+%%%%
+tutorial3 scroll_id
+
+Le meilleur moyen d'identifier les objets inconnus est de lire les scrolls of
+identify. Essayez ce parchemin sur votre amulette en le lisant avec
+<input>$cmd[CMD_READ]</input><localtiles> ou en <input>cliquant </input> dans
+le panneau d'inventaire</localtiles>, puis en choisissant l'amulette à partir
+de la liste d'éléments avec la lettre qui lui est assignée <localtiles> ou par
+un<input> clic de souris</input></localtiles>.
+%%%%
+tutorial3 drop
+
+L'amulette est inutile, vous voudrez peut-être laisser tomber avec
+<input>$cmd[CMD_DROP]</input><localtiles> ou par <input> Shift + clic droit
+</input> dans le panneau d'inventaire </localtiles>.
 %%%%
 tutorial3 gold
 
@@ -340,6 +426,30 @@ tutorial3 shop
 
 Les magasins offrent une variété d'objets, mais ils achètent les objets à
 personne.
+%%%%
+tutorial3 enter_shop
+
+Pour entrer dans cette boutique, pressez
+<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> ou <input> Shift + clic droit
+</input> sur votre personnage </localtiles>. Pour acheter des objets,
+sélectionnez-les avec leur raccourci clavier, frappez <input> Enter </input> et
+confirmer avec <input> y </input> es. Vous pouvez passer en mode de description
+avec <input> ! </Input>.
+%%%%
+tutorial3 autoexplore_reminder
+
+Rappelez-vous, vous pouvez explorer le niveau automatiquement avec
+<input>$cmd[CMD_EXPLORE]</input><localtiles> ou en <input>cliquant </input> le
+bouton d’auto-exploration dans <w>le panneau de commande </w></localtiles>.
+%%%%
+tutorial3 go_shopping
+
+Vous avez maintenant assez d'or pour faire quelques achats sérieux! Le moyen le
+plus rapide pour retourner à la boutique est en la recherchant. Appuyez sur
+<input>$cmd[CMD_SEARCH_STASHES]</input>, puis entrez "<w> shop </w>".
+Sélectionnez le résultat pour commencer à voyager.<localtiles> Vous pouvez
+également <input>cliquer </input> sur le bouton de recherche dans le panneau de
+commande, ou utiliser la minicarte pour revenir à la boutique </localtiles>.
 %%%%
 tutorial3 optional_battle
 
@@ -387,16 +497,62 @@ tutorial4 start
 
 Cette partie vous explique comment un sort s'apprend et se lance.
 %%%%
+tutorial4 spellbook
+
+Vous pouvez mémoriser un sort figurant dans un grimoires que vous portez avec
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> ou en <input>cliquant
+</input> sur l'onglet de mémorisation et en sélectionnant le symbole du
+sort</localtiles>. Au niveau 1 d'expérience, seul les sorts de niveau 1 sont
+disponibles pour vous. Cela va changer quand vous aller acquérir de
+l'expérience.
+%%%%
+tutorial4 spellcasting
+
+Vous pouvez lancer des sorts avec
+<input>$cmd[CMD_CAST_SPELL]</input><localtiles> ou en <input>cliquant </input>
+sur le symbole du sorts </localtiles>. Presse
+<input>$cmd[CMD_CAST_SPELL]?</Input> pour obtenir une liste de vos sorts.
+
+Une fois que vous n'avez plus de points de magie, faite une retraite et prenez
+du repos pour les retrouver avec<input>$cmd[CMD_REST]</input><localtiles> ou en
+<input>cliquant </input> sur l'icône de repos dans le panneau de
+commande</localtiles>.
+%%%%
+tutorial4 ring_power
+
+Mettez cette bague avec <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> ou
+en <input>cliquant  </input> dessus dans le panneau d'inventaire </localtiles>,
+puis reposer vous jusqu'à votre nouveau plein potentiel.
+%%%%
+tutorial4 undead
+
+Contrairement à la plupart des monstres, morts-vivants ne se régénèrent pas et
+il est impossible de dire à quel point ils sont blessés.<localtiles> Par
+ailleurs, vous pouvez également lancer des sorts en appuyant sur <input>Ctrl +
+clic droit </input> sur le monstre.</localtiles>
+%%%%
+tutorial4 spell_success
+
+Pour vérifier vos competences de sorts, appuyer sur
+<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> ou <input> passez la souris
+</input> sur vos sorts mémorisés</localtiles>. Comparez votre taux de réussite
+de sorts avant et après avoir porté ce bâton.
+%%%%
 tutorial4 mephitic_cloud
 
-Nuage Mephitic est un sort de niveau 3, donc vous ne pouvez pas encore le
-mémoriser. Buvez cette potion d'expérience (with
-<input>$cmd[CMD_QUAFF]</input><localtiles> or
-<input>mouseclick</input></localtiles>) pour gagner un niveau, puis mémoriser
-le sort!
+Nuage méphitique est sortilège de niveau 3, de sorte que vous ne pouvez pas le
+mémoriser actuellement. Pour passer de niveau rapidement, voici plus de
+mannequins d'entraînement - sans pierres à leur jeter cette fois.
 
-Au niveau 3, vous serez en mesure d'augmenter une de vos caractéristiques -
-choisir <input>I<input>ntelligence aidera à lancer des sorts plus efficacement.
+Au niveau 3, vous serez en mesure d'augmenter une de vos stats - choisir
+<input>I</input>ntelligence améliorera vos lancer de sorts.
+%%%%
+tutorial4 meph_reminder
+
+N'oubliez pas de mémoriser votre nouveau sortilege disponible, en appuyant
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> ou en
+<input>cliquant</input> sur l'onglet de mémorisation et en sélectionnant
+l'icone du sort</localtiles>!
 %%%%
 tutorial4 aiming_clouds
 
@@ -432,6 +588,58 @@ tutorial4 displace_allies
 Aviez-vous noter que vous pouvez échanger vos positions avec vos alliés en vous
 déplaçant dans leur direction? Parmi d'autres choses, déplacer une créature
 alliée peut être un bon moyen d'échapper un combat.
+%%%%
+tutorial4 order_allies
+
+Essayez de laisser vos alliés faire le massacre! Si nécessaire, vous pouvez les
+commander avec <input>$cmd[CMD_SHOUT]</input>. Avant d'ouvrir cette porte, vous
+voudrez peut-être attendre avec <input>$cmd[CMD_MOVE_NOWHERE]</input> jusqu'à
+ce que vos alliés vous aient rattrapé.
+%%%%
+tutorial4 heavy_armour
+
+Les Armures lourde entravent vraiment le lancer des sorts. Essayez de mettre
+cette armure de maille et ce bouclier (avec <input>$cmd[CMD_WEAR_ARMOUR]</
+input><localtiles> ou en <input>cliquant </input> sur eux</localtiles>), et
+comparez vos taux de réussite de lanceur de sorts avec
+<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> ou en <input> passant la
+souris </input> sur vos sorts mémorisés</localtiles>. Vous pouvez enlever votre
+armure avec <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> ou encore via un
+<input>clic de souris </input></localtiles>.
+%%%%
+tutorial4 resting_reminder
+
+Assurez-vous que vous êtes plein de vie et de magie avant d'entrer dans une
+nouvelle zone. Si nécessaire, se reposer avec
+<input>$cmd[CMD_REST]</input><localtiles> ou avec <input>un clic de souris
+</input> dans le panneau de commande </localtiles>.
+
+Aussi, les morts-vivants, ne respirent pas, vous pouvez donc lancer Mephitic
+Cloud sans nuire à vos alliés.
+%%%%
+tutorial4 tutorial_end
+
+Félicitations, vous êtes un véritable sorcier maintenant ! Pour quitter le
+tutoriel, il suffit de descendre ces escaliers.
+%%%%
+tutorial4 exit
+
+:nowrap
+<yellow>Commandes de lanceur de sorts</yellow>
+  <w>$cmd[CMD_MEMORISE_SPELL]</w> apprendre un nouveau sort
+  <w>$cmd[CMD_DISPLAY_SPELLS]</w> examiner les sorts connus
+  <w>$cmd[CMD_CAST_SPELL]</w> lancer un sort
+<localtiles>     Vous pouvez aussi apprendre de nouveaux sorts via le <w>tableau de mémorisation</w>.
+     Vous pouvez lancer un sort mémorisé via <w>clic gauche</w>, et lire leur descriptions ainsi qu'examiner votre maitrise des sorts en <w>passant le curseur de souris dessus</w> ou <w>clic droit</w>
+</localtiles>
+
+  <w>$cmd[CMD_READ]</w> lire un livre, pour leurs ou oublier un sort
+  <w>$cmd[CMD_REST]</w> se reposer jusqu’à 100 tours pour regagner ses points de vie et de magie
+  <w>$cmd[CMD_SHOUT]</w> ordres aux alliés
+  <w>$cmd[CMD_REMOVE_ARMOUR]</w> enlever son armure
+
+
+                       <cyan>Appuyer <white>n'importe quelle touche</white> pour effacer cet écran...</cyan>
 %%%%
 tutorial5 start
 

@@ -5,31 +5,32 @@ Hvis den bliver bange, bliver den vred!
 %%%%
 __(_suffix_examine
 
-En fortryllelse får den til at danse gennem luften og angribe af sig selv.
+En fortryllelse får våbnet til at danse gennem luften og angribe af sig selv.
 %%%%
 Aizul
 
 En gang var denne slange den fremmeste vogter af en legendarisk skat, men han
-faldt i unåde, da skatten blev stjålet, mens han sov. Han snoer sig nu rundt i
-de underjordiske gange og søger at hævne sig på alle vordende røvere. Han er en
-talentfuld troldkarl men ikke mere farlig i nærkamp end andre af hans slags.
+faldt i unåde da skatten blev stjålet, mens han sov. Han snor sig nu rundt i de
+underjordiske gange og søger at hævne sig på alle vordende røvere. Han er en
+talentfuld troldkarl, men ikke mere farlig i nærkamp end andre af sin slags.
 %%%%
 Antaeus
 
 Denne forhenværende mægtige og navnkundige titans arrogance blev hans
-undergang. Denne korrumperede og fordærvede dæmon er nu herre over Kokytus'
-frosne sletter. Det lader til at være let at angribe hans gigantiske krop;
-uheldigvis lader det også til, at kun de stærkeste angreb kan skade ham.
+undergang. Nu er han korrumperet og fordærvet, en mægtig dæmon som hersker over
+Kokytus' frosne sletter. Hans gigantiske krop lader til at være let at ramme;
+uheldigvis lader det også til at alt andet end de stærkeste angreb ville prelle
+harmløst af.
 %%%%
 Arachne
 
 Arachne var som menneske den dygtigste væverske, men er i sin nuværende form
 forbandet: halvt menneske, halvt edderkop. Hun ældes ikke længere og har en
-menneskekvindes ungdom og skønhed samt en monstrøs kæmpeedderkops ben og
+menneskekvindes ungdom og skønhed samt en uhyrlig kæmpeedderkops ben og
 underkrop.
 
 Gennem sin tusindårige levetid har hun lært magi og en del andre kneb. Forvent
-at blive besnæret af edderkoppspind og magi, mens hendes kæledyr fordøjer og
+at blive besnæret af edderkoppespind og magi, mens hendes kæledyr fordøjer og
 fortærer dig.
 %%%%
 Asmodeus
@@ -44,17 +45,15 @@ Boris
 
 En ældgammel og mægtig dødning. Som alle sande dødninge er Boris udødelig og
 vil regenerere sine udtørrede knogler, selv hvis de fuldstændigt nedbrydes.
-Denne proces kan imidlertid tage måneder eller år, men Boris har mestret den
-til et punkt, hvor han kan genskabe sig selv i løbet af få minutter.
 %%%%
 Cerebov
 
-Cerebov, en voldelig og arrig dæmon, fremstår som et gigantiske menneske klædt
-i en skinnende, gylden rustning og er bevæbnet med et enormt, bølget sværd.
+Cerebov, en voldelig og arrig dæmon, fremstår som et gigantisk menneske klædt i
+en skinnende, gylden rustning og bevæbnet med et enormt, bølget sværd.
 %%%%
 Chuck
 
-Stenkæmpen Chuck elsker sten, jo større, desto bedre! Igennem årene har han
+Stenkæmpen Chuck elsker sten, jo større, jo bedre! Gennem årene har han
 akkumuleret en pæn samling, inklusive nogle sjældne, fortryllede nogle af
 slagsen.
 %%%%
@@ -66,24 +65,24 @@ fæstnet til hans ører med kroge?
 %%%%
 Dispater
 
-Herren af Jernbyen Dis.
+Herren over Jernbyen Dis.
 %%%%
 Dissolution
 
 Slimbrøndene var engang en blomstrende civilisation, og Nedbryderen var profet
 for dennes gud. Da byen blev erobret af dens nuværende indbyggere, overlevede
-kun Nedbryderen, da han som den eneste rettroende søgte hjælp hos slimguden.
+kun Nedbryderen da han som den eneste rettroende søgte hjælp hos slimguden.
 Nedbryderen blev en kolossal masse af slimsyre, men beholdt sit intellekt. Han
-er fyldt med had mod alt, der kan opretholde en fast form.
+er fyldt med had mod alt der kan opretholde en fast form.
 %%%%
 Dowan
 
-En smuk men forfængelig elver med talent for magi og ikke meget andet. Hans
+En smuk, men forfængelig elver med talent for magi og ikke meget andet. Hans
 evner supplerer hans tvillingesøster Duvessas kampdygtighed perfekt.
 %%%%
 Duvessa
 
-En jævnt udseende elverkriger, som er teknisk brillant i mange former for
+En jævnt udseende elverkriger som er teknisk brillant i mange former for
 kampteknik, men skråsikker som følge deraf. Hun suppleres af sin tvillingebror
 Dowans magiske evner.
 %%%%
@@ -96,7 +95,7 @@ eventyrere med sin dyre plejl og sit skarpe vid.
 %%%%
 Ereshkigal
 
-En frygtindgydende ærkedæmon, som hersker i det dødsensfarlige, underjordiske
+En frygtindgydende ærkedæmon som hersker i det dødsensfarlige, underjordiske
 rige Tartarus.
 %%%%
 Erica
@@ -105,35 +104,37 @@ En indtagende trolddomsvæverske.
 %%%%
 Erolcha
 
-En særligt snu jætte-magiker.
+En særligt snu jætte-troldkvinde.
 %%%%
 Eustachio
 
-En lærling udi kunsten at tryllebinde. Han har et bølget overskæg og nogle
+En lærling udi hidkaldelsernes kunst. Han har et bølget overskæg og nogle
 underfundige idéer om ære.
 %%%%
 Frances
 
 En hårdfør kriger som engang besejrede en mægtig hersker af Pandæmonium i
 tvekamp og tilegnede sig dæmonens rige og lensmænd. Som resultat af kampen
-pådrog hun sig et dybt ar i ansigtet, som hun bærer som med stolthed frem for
+pådrog hun sig et dybt ar i ansigtet som hun bærer med stolthed, snarere end
 skam.
 %%%%
 Frederick
 
-En slank kriger og magiker, som bærer en guldrandet monokel og søger en værdig
+En elegant kriger og magiker som bærer en guldrandet monokel og søger en værdig
 modstander. Det er du sandsynligvis ikke.
 %%%%
 Gastronok
 
-En glubsk og overraskende kløgtig snegl, som er opsat på at æde alt og alle,
-han møder. På hovedet har en en spidst hat spændstigt på sned. Han anskaffede
-sig hatten på samme måde, som han fik sin intelligens og sin viden om
-besværgelser: ved at fortære sin tidligere ejer, en mægtig troldmand.
+En glubsk og overraskende kløgtig snegl som er opsat på at æde alt og alle, han
+møder. På hovedet har en spids hat spændstigt på sned. Han anskaffede sig
+hatten på samme måde som han fik sin intelligens og sin viden om besværgelser:
+ved at fortære deres tidligere ejer, en mægtig troldmand.
 %%%%
 Geryon
 
-En enorm, trehovedet, bevinget ærkedæmon, vogter af Helvedes porte.
+En enorm, trehovedet, bevinget ærkedæmon, som vogter de fire helveder.
+Legenderne vil vide at hans sølvhorn bruges til at slå selve helvedernes porte
+på vid gab.
 %%%%
 Gloorx Vloq
 
@@ -147,13 +148,13 @@ kommentarer.
 %%%%
 Grum
 
-En barsk udseende gnold, som bærer en af sine tidligere krigskøteres skind.
+En barskt udseende gnold, som bærer en af sine tidligere krigshundes skind.
 %%%%
 Harold
 
-En midaldrende dusørjæger opsat på efter at trække sig tilbage for dusørræset
+En midaldrende dusørjæger opsat på efter at trække sig tilbage fra dusørræset
 efter en sidste opgave. Han ønsker at slå sig ned et sted og leve et stille liv
-med sin familie ved hjælp af pengene fra hans sidste mål: dig.
+med sin familie for pengene fra sit sidste mål: dig.
 %%%%
 Ignacio
 
@@ -173,23 +174,20 @@ dette niveau af de underjordiske gange; indtrængende straffes med døden.
 %%%%
 Ilsuiw
 
-En snu vandheks af nøkkeracen, som bruger sin skønhed og besværgelser til at
+En snu vandheks af nøkkeracen som bruger sin skønhed og besværgelser til at
 lokke intetanende eventyrere i døden.
 %%%%
 Jessica
 
 En ondsindet troldkvindelærling. Hun er kommet til de underjordiske gange i
-håbet om at finde et stille, afsides sted, hvor hun kan studere de mørke
-kunster uden at blive forstyrret.
+håbet om at finde et stille, afsides sted hvor hun kan studere de mørke kunster
+uden at blive forstyrret.
 %%%%
 Jory
 
 I levende live var Jory en simpel bonde, men som udød forvandlede han sig til
 et magtfuldt væsen. Gennem utallige århundreders uliv har han udviklet sine
-evner inden for kamp og magi, akkumuleret stor rigdom og mange ejendele, og han
-bor nu i det tavse Stilhedens Tårn. Han har ikke tænkt sig at lade nogen
-ynkelig eventyrer ødelægge al hans hårde arbejde, så enhver, som møder ham, bør
-tage sig i agt!
+evner inden for kamp og magi, akkumuleret stor rigdom og mange ejendele.
 %%%%
 Joseph
 
@@ -197,11 +195,11 @@ Ligner en lejesvend.
 %%%%
 Josephine
 
-En hæslig, gammel kone, hvis ansigt er dækket af vorter, modersmærker og hår
-her og der. Josephines udseende kan narre en til at tro, at hun er en svag,
-gammel kvinde, men hun er faktisk en formidabel nekromantiker. Brugen af sort
-magi har sat sine spor på den engang så smukke Josephine, som nu er blevet til
-en grim, gammel heks.
+En fæl, gammel kælling hvis ansigt er dækket af vorter, modersmærker og hår her
+og der. Josephines udseende kan narre en til at tro at hun er en svagelig,
+gammel kone, men hun er faktisk en formidabel nekromantiker. Brugen af sort
+magi har sat sine spor på den engang så smukke Josephine som nu er blevet til
+en hæslig heks.
 %%%%
 Khufu
 
@@ -220,17 +218,17 @@ Louise
 
 En mægtig troldkvinde klædt i tungt panser fra top til tå. Hun var engang en
 eventyrer på jagt efter den sagnomspundne Sfære fra Zot, men styrtede ned i
-afgrunden, hvor hun for håbløst vild. Louise var fanget på dette plan i næsten
-et årti, mens hun blev leget med af de højere magter. Da hun endelig undslap
-Afgrunden, var hun blevet ganske mægtig, men også fuldstændig vanvittig. Hun
+Afgrunden, hvor hun for håbløst vild. Louise var fanget på dette plan i næsten
+et årti, mens de højere magter legede med hende. Da hun endelig undslap
+Afgrunden var hun blevet ganske mægtig, men også fuldstændig vanvittig. Hun
 vandrer nu hvileløst rundt i de underjordiske gange og leder efter andre
-eventyrere, der kan dele hendes skæbne.
+eventyrere der kan dele hendes skæbne.
 %%%%
 Mara
 
-Denne høje og kraftfulde dæmon er Mara, Illusionernes Herre, mægtig blandt
-drømmere. Han er i stand til at skabe de mest detaljerede illusioner, som er i
-stand til at vildlede selv de mægtigste og mest brillante magikere.
+Denne høje og magtfulde dæmon er Mara, illusionernes herre, mægtig blandt
+drømmere. Han er i stand til at skabe de mest detaljerede illusioner som er i
+stand til at vildlede selv de mægtigste og mest geniale troldmænd.
 %%%%
 Nikola
 
@@ -245,12 +243,12 @@ mens du kigger.
 %%%%
 the Serpent of Hell tartarus
 
-Foran dig i mørket hænger et par glødende magenta øjne. Du kan skimte omridset
-af en svimlende gigantisk, senet drage. Den har dig ondt i sinde.
+Foran dig i mørket hænger et par glødende, magenta øjne. Du kan skimte omridset
+af en svimlende gigantisk, senet drage. Den vil dig det ondt.
 %%%%
 acid blob
 
-En klump sygelig, pusdryppende kød, hvorfra dødelig syre siver.
+En klump sygelig, pusdryppende kød hvorfra dødelig syre siver.
 %%%%
 Brimstone Fiend
 
@@ -259,18 +257,18 @@ En af de mest frygtsomme indbyggere i alle Helvedes cirkler.
 %%%%
 Executioner
 
-En skrækkeligt mægtig og lynsnar dæmon, hvis form er sløret af en sky af
+En skrækkeligt mægtig og lynsnar dæmon hvis form er sløret af en sky af
 hvirvlende le-lignende klinger.
 %%%%
 Hell Sentinel
 
-En tårnende monolit konstrueret og besat af dæmoniske krafter. Tusind øjne
+En tårnhøj monolit konstrueret og besat af dæmoniske kræfter. Tusind øjne
 skuler grumt ud af sprækker i dens forrevne, tornede rustning.
 %%%%
 Ice Fiend
 
-En kæmpestor frostdæmon, dækket af af rim og omsluttet af frysende vinde. En af
-de mest forfærdelige beboere i Helvedes mange cirkler.
+En kæmpemæssig frostdæmon dækket af rim og omsluttet af bidende kolde vinde. En
+af de mest forfærdelige beboere i Helvedes mange cirkler.
 %%%%
 item mimic
 
@@ -280,8 +278,8 @@ forklædning.
 Killer Klown
 
 En komisk figur fuld af liv og latter. Den synes at være meget glad for at se
-dig ... men kan en vis skadefro spores i dens ansigtstræk? Er det der rød
-ansigtsmaling, eller noget, som er meget mindre behageligt?
+dig ... men kan en vis skadefryd spores i dens ansigtstræk? Er det der rød
+ansigtsmaling eller noget langt mindre behageligt?
 %%%%
 Cigotuvi's Monster
 

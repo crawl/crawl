@@ -86,6 +86,10 @@ Release Delayed Fireball ability
 Entfessele augenblicklich einen vorher eingeprägten (verzögerten) Feuerball
 ohne zusätzliche Kosten an Magie und Hunger.
 %%%%
+Stop Singing ability
+
+Höre auf das Lied des Mordens zu singen.
+%%%%
 Self-Restoration ability
 
 Stelle deine Stärke, Geschicklichkeit und Intelligenz, beim permanenten Verlust
@@ -100,10 +104,6 @@ Zauberstange(?) wieder auf.
 Evoke Teleportation ability
 
 Teleportiere dich selbst an einen zufälligen Ort auf der Ebene.
-%%%%
-Evoke Blink
-
-Teleportiere über eine zufällige, kurze Distanz.
 %%%%
 Evoke Berserk Rage ability
 
@@ -267,7 +267,7 @@ Wenn du diese Beschreibung siehst, ist es ein Bug.
 Heroism ability
 
 Erhöht vorübergehend deine Kampffähigkeit, eingeschlossen die Fähigkeit zum
-Schleichen und Fallen meiden.
+Schleichen.
 %%%%
 Finesse ability
 
@@ -565,17 +565,21 @@ End Transfer Knowledge ability
 
 Brich einen laufenden Fähigkeitenwechsel ab.
 %%%%
-Memorise spell ability
-
-Gewinnen Sie sofort Kenntnisse einer zerstörenden Periode, die Ihnen durch
-Vehumet angeboten ist. Das Angebot wird nach einer kurzen Zeit ablaufen.
-Überprüfen Sie den Schirm Religion (^), um zu sehen, welche Periode angeboten
-wird.
-%%%%
 Renounce Religion ability
 
 Gebe deinen Glauben auf. Damit verlässt dein Charakter seinen Gott (und
 verärgert diesen Gott normalerweise noch).
+%%%%
+Convert to Beogh ability
+
+Schwöre Beogh deine Treue, dem Gott der Höhlen Orks. Dieser Gott verlangt, dass
+alle Nicht-Gläubigen sterben müssen, aber neue Gläubige müssen geschont und in
+die Gemeinschaft aufgenommen werden. Vorsicht! Für Orks, die nicht gesehen
+haben dass Sie konvertierten, sind sie eventuell noch feindlich bis Sie Ihren
+Ruf aufgebaut haben!
+
+Alle anderen Götter hassen Beogh, und nehmen Sie Fahnenfluch nicht auf die
+leichte Schulter.
 %%%%
 Make dart trap ability
 

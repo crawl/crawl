@@ -11,8 +11,8 @@ l'Air leur fournira la flexibilité nécessaire à leur survie.
 %%%%
 Arcane Marksman
 
-Les Tireurs Arcanistes portent des armes de distance et, utilisent leur magie
-pour rendre leurs ennemis plus vulnérables à leur attaque à distance.
+Les Tireurs d'élite Arcanistes sont entrainé à manier des armes à distance, et
+utilisent la magie pour rendre leurs ennemis plus vulnérables à leurs attaques.
 %%%%
 Artificer
 
@@ -21,15 +21,15 @@ les connaissances nécessaires pour les utiliser.
 %%%%
 Assassin
 
-Les Assassins sont tout en furtivité, prêts à poignarder tout adversaire
-inattentif. En plus d'une dague et d'une cape, ils ont de dangereuses aiguilles
-enduites de curare pour leur sarbacane.
+Les assassins misent tout sur la furtivité, prêt à poignarder leurs inattentifs
+adversaires. En plus d'une cape et d'une épée, ils possèdent aussi de méchantes
+aiguilles de curare pour armer leur sarbacane.
 %%%%
 Berserker
 
-Les Berserkers vénèrent Trog, le dieu de la frénésie détestant la magie. Pas
-grand chose est capable d'arrêter un berserker enragé en début de jeu, à part
-leur orgueil.
+Les Berserkers vénèrent Trog, le dieu de la frénésie, qui déteste la magie. Il
+n'y a pas grand chose capable d'arrêter un berserker enragé en début de partie,
+à part son orgueil.
 %%%%
 Chaos Knight
 
@@ -49,8 +49,8 @@ au nom de Yredelemnul le Ténébreux.
 Earth Elementalist
 
 Les Élémentalistes de la Terre connaisse le sort Explosion de Sable et,
-transporte des pierres pour accroitre leur pouvoir de leur sortilèges. Leur
-livre de Géomancie contient d'autres sortilèges de la terre.
+transporte des pierres pour accroitre le pouvoir de ce sortilège. Leur livre de
+Géomancie contient d'autres sortilèges de la terre.
 %%%%
 Enchanter
 
@@ -76,7 +76,7 @@ bouclier, des filets et une arme de leur choix.
 %%%%
 Healer
 
-Les Guérisseurs sont des fidèles de Elyvilon, prêts à se soigner et à soigner
+Les Guérisseurs sont des fidèles d'Elyvilon, prêts à se soigner et à soigner
 les autres. De telles guérisons pourraient pacifier les bêtes et les brutes,
 rapportant de l'expérience.
 %%%%
@@ -92,7 +92,8 @@ Leur livre contient d'autres sortilèges très variés.
 Monk
 
 Les Moines sont prêts à affronter tout ce qu'il vont trouver dans le Donjon
-avec juste une robe et la maîtrise de leur corps.
+avec juste une robe et la maîtrise de leur corps. Ils ont un gain de piété
+additionnel pour le premier dieu qu'ils vénèrent.
 %%%%
 Necromancer
 
@@ -101,8 +102,8 @@ connaissent le sort Douleur.
 %%%%
 Skald
 
-Les Scaldes sont des combattants au corps-à-corps qui peuvent accroitre leurs
-performances en combat grâce aux sorts de leur livre de Chants de Guerre.
+Les Skalds sont des combattants de mêlée pouvant chanter des sorts de leur book
+of battle.
 %%%%
 Summoner
 
@@ -111,8 +112,8 @@ Convoquer un Petit Mammifère dès le début.
 %%%%
 Transmuter
 
-Les Transmuteurs change leur forme pour combat avec des attributs bestiaux. Ils
-sont capables de transformer des bâtons en serpent aussi.
+Les Transmuteurs change leur forme pour combatre avec des attributs bestiaux.
+Ils sont aussi capables de transformer des bâtons en serpent.
 %%%%
 Venom Mage
 

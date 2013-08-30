@@ -48,3 +48,12 @@ tutorial2 explore
 Çıkışı bul !  <w>[$cmd[CMD_EXPLORE]]</w> kullanarak gezgine ulaşabileceğini
 unutma.
 %%%%
+tutorial2 tutorial_end
+
+Tebrikler! Canavarlar ile olan ilk karşılaşmandan sağ çıktın! Eğitimden çıkmak
+için merdivenlerden aşağı in.
+%%%%
+tutorial5 start
+
+Bu derste tanrıları ve güçlerini nasıl kullanacağını öğreneceksin.
+%%%%

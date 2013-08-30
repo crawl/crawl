@@ -261,8 +261,8 @@ This spell digs a tunnel through unworked rock.
 %%%%
 Discord spell
 
-This spell drives nearby creatures into an insane frenzy, mercilessly
-attacking anything and everything nearby with great strength and speed.
+This spell drives nearby creatures into an insane frenzy, mercilessly attacking
+anything and everything nearby with great strength and speed.
 %%%%
 Disintegrate spell
 
@@ -801,20 +801,21 @@ Song of Slaying spell
 
 This spell conjures ancient verses of battle within your mind and makes you
 recite them — quite loudly! Each non-summoned enemy you slay in combat during
-this recitation temporarily enhances your melee skills. Your effectiveness
-will only be enhanced for the duration of the song; casting this spell while
-already singing will start a new song, not extend an existing one.
+this recitation temporarily enhances your melee skills. Your effectiveness will
+only be enhanced for the duration of the song; casting this spell while already
+singing will start a new song, not extend an existing one.
 %%%%
 Spectral Weapon spell
 
 This spell draws out the spirit within a wielded weapon to fight for you, with
 its power dependent on your skill with said weapon. Never striking on its own,
-it only attacks when you do. You can only ever have one spectral weapon at a time.
+it only attacks when you do. You can only ever have one spectral weapon at a
+time.
 
 Kills by a spectral weapon count as your own when singing a Song of Slaying.
 
-Certain powerful named artefacts possess too strong a spirit for this spell
-to be able to draw them out.
+Certain powerful named artefacts possess too strong a spirit for this spell to
+be able to draw them out.
 %%%%
 Spider Form spell
 

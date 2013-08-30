@@ -21,9 +21,9 @@ kompetent umgehen.
 %%%%
 Assassin
 
-Assassinen haben viel mit Tarnung zu tun, immer bereit, unaufmerksame Gegner zu
-erdolchen. Neben Dolch und Umhang tragen sie fiese Kurarenadeln und ein
-Blasrohr mit sich.
+Assassinen sind die Heimlichkeit in Person, bereit um ahnungslose Gegner zu
+erstechen. Nicht nur Mantel und Degen, sie tragen fiese Curare Nadeln für ihr
+Blasrohr.
 %%%%
 Berserker
 
@@ -99,8 +99,8 @@ mit dem Schmerzfluch.
 %%%%
 Skald
 
-Skalde sind Nahkämpfer, die sich selbst mit Zaubersprüchen aus dem Buch der
-Kampfgesänge im Kampf unterstützen.
+Skalden sind Nahkämpfer, die sich im Kampf mit Zaubern aus dem Buch des
+Gefechts stärken können.
 %%%%
 Summoner
 

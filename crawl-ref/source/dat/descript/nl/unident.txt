@@ -1,0 +1,47 @@
+%%%%
+amulet
+
+Een talisman die rond de nek als juweel gedragen dient te worden, opgeladen met
+mysterieuze en onbekende krachten.
+%%%%
+book
+
+Een handboek met magische bezweringen van onbekende afkomst in. Het boek is
+geschreven voor beoefenaars zelf, en om het te benuttigen is een basiskennis
+over de kunst van het toveren vereist. Pas op: met sommige krachtige grimoires
+valt niet te sollen!
+%%%%
+deck of cards
+
+Een kaartenspel vol magische kaarten, geverfd met demonenichor. Wanneer je er
+een trekt, kunnen ze bepaalde nuttige of gevaarlijke effecten hebben.
+%%%%
+potion
+
+Een ongelabeld flesje met een enkele dosis van een onbekende vloeistof in.
+%%%%
+ring
+
+Een talisman die mysterieuze en onbekende krachten bezit, die rond een vinger
+gedragen wordt als juweel.
+%%%%
+rod
+
+Een magische staf, die men in de hand kan houden en evoceren om bepaalde
+spreuken te gebruiken. De staf berust op een zelf-herladend krachtreservoir.
+Hij is ook stevig genoeg om te gebruiken als een eenvoudig, stomp wapen.
+%%%%
+scroll
+
+Een magische formule beschreven op perkament door een professioneel tovenaar.
+Iedereen kan de kracht van de formule oproepen door de spreuk hardop uit te
+spreken, maar de aard van die kracht is a priori niet duidelijk.
+%%%%
+staff
+
+Een staf, vervolmaakt met magische krachten van onbekende aard.
+%%%%
+wand
+
+Een stokje. Misschien magisch.
+%%%%

@@ -1,28 +1,142 @@
 %%%%
+Singing Sword
+
+Jedinou zálibou této očarované zbraně je zpívat svému majiteli, ať už je mu to
+po chuť či nikoliv.
+%%%%
+Wrath of Trog
+
+Než se jednoho dne ztratila, byla tato zbraň oblíbeným nástrojem starého
+božstva Troga. Způsobuje bezhlavý, krvežíznivý vztek u každého, kdo s ní uhodí
+jiného.
+%%%%
 Mace of Variability
 
-Je to poněkud nespolehlivé.
+Je poněkud nespolehlivý.
+%%%%
+Glaive of Prune
+
+Výtvor šíleného božstva, nesoucí kletbu, která nositele promění v sušenou
+švestku. Naštěstí to chvíli trvá a je tak bezpečné ji krátce používat bez
+trvalejších následků, pomineme-li lehce nafialovělou kůži a něco málo vrásek.
+%%%%
+Sword of Power
+
+Mocné odměňuje mocí, a slabé slabostí.
+%%%%
+Staff of Olgreb
+
+Touto magickou zbraní kdysi vládl mocný mág Olgreb, než skonal někde v chodbách
+toho žaláře. Nositeli usnadňuje používat jedovatou magii, a také má magickou
+sílu, kterou lze vyvolat pomocí evokace. Podle pověstí se Olgreb zabýval
+vzácnými jedy, které měli částečný vliv i na ty stvoření, které jsou vůči
+běžným jedům immuní.
+%%%%
+Staff of Wucad Mu
+
+Pomocí evokace tato hůl dokáže doplnit velké množství magické energie, je zde
+však riziko poškození nositelovi mysli. Její moc závisí na tom, jak obratně
+dovede uživatel používat evokace.
+%%%%
+Vampire's Tooth
+
+Tato dýka z materiálu podobného slonovině byla ve skutečnosti vyrobena ze zubu
+nějakého obrovitého predátora, výškou očividně značně převyšující běžně
+vysokého krvepijce.
+
+Dokáže vysávat život se smrtící účinností.
 %%%%
 Scythe of Curses
 
 Tato zbraň nese strašlivé a vysoce znepokojivé prokletí.
 %%%%
+Sceptre of Torment
+
+Tato skrz naskrz prokletá zbraň je pekelným nástrojem.
+%%%%
+Sword of Zonguldrok
+
+Tuto strašlivou zbraň lze použít pouze na vlastní nebezpečí nositele.
+%%%%
 Sword of Cerebov
 
-Tajemné plameny kryjí zkroucený kotouč.
+Pokroucená čepel tohoto meče je pokryta tajemnými, hrůzu nahánějícími plameny.
 %%%%
 Staff of Dispater
 
-Tato legendární položka může rozpoutat běsnění pekla.
+Tento legendární předmět je schopen rozpoutat hněv samotných pekel.
+%%%%
+Sceptre of Asmodeus
+
+Nachází se v něm trochu z moji arciďábla Asmodea.
+%%%%
+faerie dragon armour
+
+Pohádkoví draci bývali kdysi velmi podobní skvrnitým drakům. Bohužel se jim
+jejich pestré zbarvení stalo zkázou, protože jím odstrašovali potenciální
+kořist. Dnes jsou již vyhynulí, a tento vzácný pozůstatek je jedním z
+posledních důkazů jejich existence.
+%%%%
+demon blade "Bloodbane"
+
+Je poskvrněna krví nelidského šílence.
+%%%%
+scimitar of Flaming Death
+
+Kouř!
+%%%%
+mace of Brilliance
+
+Tento palcát umožňuje do žaláře vnést trochu světla a také zaručuje, že
+nepřátelé budou na tvou přítomnost spolehlivě upozorněni. Nemrtví jeho světlo
+nesnáší, a také dokáže odkrýt jakékoliv nekalé úmysly těch, kdož chtějí zůstat
+neviditelnými.
+%%%%
+demon blade "Leech"
+
+Mysl svého vlastníka žene za jediným cílem: aby hltal životní sílu, vysávanou z
+ostatních.
 %%%%
 dagger of Chilly Death
 
 Dýka z jednoho velkého kusu safíru.
 %%%%
+dagger "Morg"
+
+Odpudivá, rezavá dýka.
+
+Před mnoha lety patřila mocnému mágovi jménem Boris, který se v žaláři ztratil
+na cestě za Zotovým kotoučem.
+%%%%
+scythe "Finisher"
+
+Dlouhá a ostrá kosa, speciálně upravená pro bojové účely.
+%%%%
+sling "Punk"
+
+Závěs z podivné modré kůže.
+%%%%
+bow of Krishna "Sharnga"
+
+Výtečný luk, vyrobený ze zlata.
+
+Kdysi patřil cizímu božstvu. Nejlépe funguje v kombinaci se speciálními šípy,
+které nejsou běžně k dostání.
+%%%%
+giant club "Skullcrusher"
+
+Ať už se jedná o hospodskou rvačku, pořádný masakr nebo něco mezi, tenhle
+roztomilý klacík dovede udělat radost nejednomu obrovi.
+%%%%
 glaive of the Guard
 
 Tato zbraň kdysi patřila Garu Doghovi, strážci královské poklady. Podle legendy
 byl ztracen někde v žaláři.
+%%%%
+sword of Jihad
+
+Dlouhý meč vytesaný z obrovského kusu krystalu. Podle legendy to byl dar
+Zářícího jednomu ze svých uctívačů.
 %%%%
 crossbow "Hellfire"
 
@@ -32,9 +146,28 @@ sword of the Doom Knight
 
 Adamantiový velký meč.
 %%%%
+morningstar "Eos"
+
+První paprsky úsvitu...
+%%%%
+spear of the Botono
+
+Černokněžný, zlovolný artefakt, který zvyšuje účinnost zaklínadel čarovaných
+kýmkoliv, kdo je natolik pošetilý, aby si dovolil jej použít.
+%%%%
+trident of the Octopus King
+
+Tento trojzubec byl před mnoha lety odcizen ze zahrad Krále chobotnic zcela
+nedůležitým mužem, který byl již jednou nohou v hrobě. Pozor však na králův
+hněv!
+%%%%
 mithril axe "Arga"
 
 Překrásná Mithril sekera, pravděpodobně ji ztratil nějaký trpasličí hrdina.
+%%%%
+Elemental Staff
+
+Tato mocná hůl patřila vůdci Cechu pěti elementů.
 %%%%
 crossbow "Sniper"
 
@@ -44,30 +177,155 @@ longbow "Piercer"
 
 Mimořádně velký kovový dlouhý luk.
 %%%%
+blowgun of the Assassin
+
+Tato foukačka byla navržena tak, aby se dala snadno skrýt, i přesto však dovede
+uštědřit značnou ránu.
+%%%%
+Spriggan's Knife
+
+Roztomile malý nožík.
+
+Tento nůž byl vyroben sprigany, nebo pro sprigany, nebo možná také ze spriganů.
+V každém případě nějaký vztah mezi ním a těmi nepraktickými podivíny existuje.
+%%%%
+plutonium sword
+
+Trojmeč vyrobený z podivně zářícího kovu. Říkáš si, jestli jeho dvě čepele
+dorostly vlivem radiace, a jestli i tobě kvůli ní narostou další dvě hlavy.
+%%%%
+great mace "Undeadhunter"
+
+Podle legendy kdysi byl pán lichů, který prováděl experimenty a chtěl vytvořit
+myslící nemrtvé služebníky namísto nemyslících automatů. Aby si zajistil jejich
+poslušnost, vyrobil řadu zbraní do ních vložil magickou moc, která měla
+schopnost neutralizovat magii, která nemrtvé držela pohromadě a způsobit tak
+nebývalé poškození.
+
+Ačkoliv onen lich již dávno skonal, říká se, že jeho zbraně, které mezi
+nemrtvými šířily chaos, byli velmi oblíbené. Přinejmenším staré příběhy jsou
+jich plné. Zdá se však, že tento palcát může být tou poslední, nejspíše díky
+snaze agentů Zářícícho, kteří tvrdí, že s nekromancií by se nemělo bojovat
+pomocí nekromancie.
+%%%%
+whip "Snakebite"
+
+Bič s rozeklaným koncem, vyrobený z vypreparovaných kůží černých mamb z Doupěte
+šelem.
+%%%%
 knife of Accuracy
 
 Je téměř neomylně přesná.
 %%%%
 Lehudib's crystal spear
 
-Pravděpodobně tato relikvie vedla k vynálezu slavného kouzla, nebo možná
-naopak.
+Tato relikvie pravděpodobně vedle k vynálezu stejnojmenného, slavného kouzla
+Mohlo to ale být i naopak.
+%%%%
+captain's cutlass
+
+Touto nechvalně proslulou zbraní zmasakroval zlotřilý kapitán pirátů nespočet
+nevinných. Nakonec se mu stalo osudným, když jeho loď i s celou posádkou
+spolknul kraken. Mělo se za to, že se šavle navždy ztratila, ale právě teď
+držíš ve svých rukou důkaz, že tomu tak není.
+%%%%
+storm bow
+
+Tento luk má barvu temných, bouřkových mraků, a line se z něj zápach vlhkého
+ozónu.
+%%%%
+large shield of Ignorance
+
+"Otevřená mysl je jako pevnost jejíž brány jsou neblokované a nehlídané."
+%%%%
+robe of Augmentation
+
+Plášť vyrobený z pravého hedvábí.
 %%%%
 cloak of the Thief
 
 Umožňuje jeho nositeli, aby vynikl v umění krádeže.
 %%%%
+shield "Bullseye"
+
+Jen kdybys náhodou měl problém se trefit.
+%%%%
 crown of Dyrovepreva
 
 Velká koruna z temného bronzu, set s oslnivou škálou drahých kamenů.
+%%%%
+hat of the Bear Spirit
+
+Kdysi jej vlastnil Ukta, mocný obří šaman. Tento klobouk z kožešiny v sobě
+skrývá obzvláště silného medvědího ducha.
+%%%%
+robe of Misfortune
+
+Báječná volná róba vyrobená z kožešin a hedvábí.
 %%%%
 cloak of Flash
 
 Vibrační plášť.
 %%%%
+boots of the Assassin
+
+Jemné boty, speciálně navržené Cechem vrahů.
+%%%%
+Lear's hauberk
+
+Řemeslně kvalitní zlaté kroužkové brnění, které pokrývá celé tělo. Součástí je
+kroužková kapuce, nohavice a šupinové pěstnice.
+%%%%
+skin of Zhor
+
+Páchnoucí kůže nějakého podivného zvířete.
+%%%%
+salamander hide armour
+
+Kožená zbroj z mločí kůže.
+%%%%
+gauntlets of War
+
+Tyto hrubé, ocelové rukavice byly darem Okawaru jednomu mocnému válečníkovi.
+Zasloužíš si je i ty?
+%%%%
+shield of Resistance
+
+Bronzový štít.
+%%%%
+robe of Folly
+
+Matný šedý plášť. Je okouzlen, aby opatřil svého nositele nesmírnou mocí a
+moudrostí.
+%%%%
+Maxwell's patent armour
+
+Podivně vypadající brnění.
+%%%%
 mask of the Dragon
 
 Modrá maska.
+%%%%
+robe of Night
+
+Dlouhá, černá robá, vyrobená ze zvláštního lesklého materiálu. Zdá se, že
+dokáže svého nositele zahalit do temnoty.
+
+Podle legendy tuto róbu darovala jednomu ze svých stoupenců Bohyně noci Ratri.
+%%%%
+armour of the Dragon King
+
+Kdysi dávno jistý mocný, zlatý drak vzal věci do svých pařátů a vládl všem
+draků ve své části světa. Přesto jeho vláda neměla dlouhého trvání, ukončena
+jedním obyčejným člověkem, který pak z jeho kůže vyhotovil toho brnění.
+%%%%
+hat of the Alchemist
+
+Umolousaný klobouk. Vypadá to, že přežil mnoho podivných výbuchů, což
+naznačuje, že dokáže ochránit hlavu před riziky souvisejícími s alchymistickými
+experimenty. Úroveň této ochrany také s jistotou říká, že dotyčný musel nějaké
+to zranění hlavy již dříve utrpět, když na takovéto experimenty měl byť jen
+pomyšlení.
 %%%%
 fencer's gloves
 
@@ -77,16 +335,138 @@ cloak of Starlight
 
 Fosforeskující plášť, tkaný z čistých světelných paprsků.
 %%%%
+ratskin cloak
+
+Jistý kouzelnice s magickým kolovrátkem a spostou času tento plášť vyrobila z
+kůží stovek krys, povětšinou oranžových. Nosí se trochu divně a vypadá docela
+hloupě, ale poskytuje výtečnou ochranu před krysami všeho druhu.
+%%%%
+shield of the gong
+
+To to je velký Bronzový gong, který je možné nosit jako štít. Podle některých
+mystiků, může takový gong udělit duchovní ochranu.
+%%%%
+amulet of the Air
+
+Mnoho ze svých ochranných vlastností tento nebesky modrý amulet pravděpodobně
+dostal od nějaké mocného vzdušného mága.  Zdá se, že jediné, co mu chybělo,
+byla pevná ruka.
+%%%%
+ring of Shadows
+
+Černý kroužek, který umožňuje svému nositeli splynout se stíny.
+%%%%
 amulet of Cekugob
 
 Podivně vyhlížející kus krystalu na obyčejně vypadajícím řetězu s podivným
 výběrem moci.
 %%%%
+amulet of the Four Winds
+
+Tento přívěšek, vyrobený z nejryzejšího nefritu, dává svému nositeli nesmírnou,
+mytickou sílu odolat nepřátelské magii.
+%%%%
+necklace of Bloodlust
+
+Říkáš si, že jen nevkusný hrubián by nosil tento krví zbrocený náhrdelník,
+vyrobený z lidských a zvířecích zubů, a něčeho, co vypadá jako vytržený kus
+páteře.
+%%%%
+ring of Shaolin
+
+Nezdobený nefritový kroužek, který nositeli dává do vínku až neuvěřitelnou
+kontrolu nad vlastním tělem, a umožňuje mu tak se v boji pohybovat nanejvýš
+obratně.
+%%%%
 ring of Robustness
 
 Prostý ocelový kroužek.
 %%%%
+ring of the Mage
+
+Očarovaný safír vsazený do prstenu. Svému nositeli umožňuje lépe používat
+magii.
+%%%%
+brooch of Shielding
+
+Za starých dobrých časů měl tuto užitečnou věcičku k dispozici každý dobrodruh.
+Tu a ještě poníka.
+%%%%
+robe of Clouds
+
+Róba z tak jemného materiálu, že by jeden až řekl, že je z obláčků.
+%%%%
+hat of Pondering
+
+Slizký kouzelnický klobouk.
+
+Oblíbený klobouk slimáčího kouzelníka Gastronoka, který je pokryt načervenalým
+slizem a očarován, aby mu sloužil v jeho magickém ploužení se. Také poskytuje
+zvláštní ochranu před účinky soli, ale to tě asi nezajímá.
+%%%%
+obsidian axe
+
+Tato sekera nese s sebou kletbu, uvalenou jedním z pánů Pandemonia, aby nic
+netušící dobrodruzi jako jsi ty do světa přilákali démony. Měj se na pozoru,
+neb tato sekera moc dobře ví, jak svého nositele přinutit poslouchat...
+%%%%
+lightning scales
+
+Tyto šupiny byly do podoby brnění vyrobeny ze spodní části těla nagy. Tiše
+jiskří a díky svému očarování umožňují nositeli plazit se téměř lidským tempem.
+%%%%
+Black Knight's horse barding
+
+Tato zbroj chránila oře Černého rytíře během jeho krutovlády. Má barvu
+nejčernější noci a zdá se, že není vyrobena pouze z jakési podivné černé oceli,
+ale také z celých plátů černého diamantu! Takto těžký náklad kovu a kamene
+přirozeně pozitivně nepřispívá k rychlosti daného koně. Neposkytuje však pouze
+běžnou ochranu proti zásahům - tento tvrzený materiál je rovněž očarován, aby
+nositele učinil částečně nemrtvým.
+%%%%
+ring of Vitality
+
+Tento známý prsten svému nositeli značně zlepšuje zdraví.
+%%%%
 autumn katana
 
 Tento exotický meč je zbraň pro skutečně osvícené uživatele.
+%%%%
+shillelagh "Devastator"
+
+Odhaduješ, že tahle tyč je nabitá něčím lepším, než jen olovem.
+%%%%
+dragonskin cloak
+
+Tento dračí plášť hraje všemi barvami duhy. Svého nositele chrání před
+elementálními útoky všeho druhu, ačkoliv ne zcela spolehlivě.
+%%%%
+ring of the Octopus King
+
+"Panna mořská, jenž zpívala ráda,
+ v králi chobotnic touhu vyvolala.
+ Nápadník její mnoho chapadel měl,
+ tuze se snažil a pannu chtěl,
+ prsteny jeho všechny však navléct nedokázala."
+%%%%
+Axe of Woe
+
+Pokud budete držet tuto sekeru, ve své mysli se nebudete cítit úplně sami. Vaše
+tělo začne vykazovat sílu, daleko za svými možnostmi, a vaše pohyby budou
+vedeny Makhleb.
+%%%%
+milk chocolate
+
+Tento předmět slouží jako pomůcka při debuggovaní, a poskytuje řadu povětšinou
+kladných vlastností.
+
+Pokud jsi ji našel během běžného hraní, jedná se o bug.
+%%%%
+dark chocolate
+
+Tento předmět slouží jako pomůcka při debuggovaní, a poskytuje řadu povětšinou
+záporných vlastností. Odlišuje se od svého mléčného protějšku, protože některé
+vlastnosti se vzájemně vylučují.
+
+Pokud jsi ji našel během běžného hraní, jedná se o bug.
 %%%%

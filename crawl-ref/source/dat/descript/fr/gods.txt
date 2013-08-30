@@ -35,8 +35,8 @@ convertir à Elyvilon ou à Zin tout en gardant une partie de leur Piété.
 %%%%
 Kikubaaqudgha
 
-Kikubaaqudgha est un terrible Dieu-Démon servi par ceux qui souhaite savourez
-les pouvoirs de la mort. Kikubaaqudgha est mauvais et, demande la mort des
+Kikubaaqudgha est un terrible Dieu-Démon servi par ceux qui souhaitent savourer
+les pouvoirs de la mort. Kikubaaqudgha est mauvais, et demande les morts des
 créatures vivantes et des démons aussi souvent que possible.
 %%%%
 Yredelemnul
@@ -280,12 +280,16 @@ abyssales peuvent passer.
 %%%%
 Beogh powers
 
-Beogh encourage ses fidèles à faire usage des objets orcs trouvés dans le
-donjon. Ses disciples peuvent ébranler leurs ennemis et, gagneront même des
-suivants orcs, qui pourront être bénis par Beogh en combat et pouvant être
-rappelés dans un niveau si besoin. Par la suite, ils gagneront le pouvoir de
-marcher sur l'eau. Beogh interviendra parfois directement pour sauver la vie de
-son fidèle.
+Beogh encourage ses disciples à faire usage des équipement orcs trouvé dans le
+donjon. Ils peuvent abattre leurs ennemis, et même gagner leurs propres adeptes
+orcs, qui peuvent être bénis par Beogh dans la bataille ainsi qu'être rappelés
+à votre voisinage si nécessaire. Finalement, ils vont acquérir le pouvoir de
+marcher sur l'eau. Beogh interviendra même parfois directement pour sauver la
+vie d'un adepte. {{
+    if you.race () == "Lava Orc" then
+        return "Beogh suppresses the heat aura of Lava Orc followers."
+    end
+}}
 %%%%
 Fedhas powers
 

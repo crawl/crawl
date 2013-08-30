@@ -96,10 +96,6 @@ Evoke Teleportation ability
 
 Te teleportas a una posición al azar en el nivel.
 %%%%
-Evoke Blink
-
-Translocación aleatoria a corta distancia.
-%%%%
 Evoke Berserk Rage ability
 
 Te vuelves berserk. Entrar en trance berserk incrementa espectacularmente,

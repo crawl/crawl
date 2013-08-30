@@ -1,12 +1,13 @@
 %%%%
 Centaur
 
-Rapides, forts et corpulents, ils ont des besoin en nourriture plus importants
-que les autres espèces.
+Rapides, forts et corpulents, ils ont des besoins en nourriture plus importants
+que les autres espèces. Ils sont particulièrement doués avec les armes à
+distances.
 %%%%
 Deep Dwarf
 
-Ils vivent dans de profonds souterrains ne peuvent pas se régénérer
+Ils vivent dans de profonds souterrains et ne peuvent pas se régénérer
 naturellement, mais ils sont résistants et ont des outils de guérison.
 %%%%
 Deep Elf
@@ -23,6 +24,11 @@ Demonspawn
 Les tieffelins sont moitié humain, moitié démon. Ils développent de puissantes
 mutations démoniaques à mesure qu'ils grandissent.
 %%%%
+Djinni
+
+Les Djinn sont des esprits du feu, pour qui la magie est l'essence même de la
+vie.
+%%%%
 Draconian
 
 Les Draconiens sont des hybrides polyvalents. Ils arrivent à maturité au niveau
@@ -31,13 +37,18 @@ Les Draconiens sont des hybrides polyvalents. Ils arrivent à maturité au nivea
 Felid
 
 Ces chats sont dotés de conscience, mais sont incapables de manipuler des
-objets complexes, ou d'utiliser des armes ou des armures.
+objets complexes, ou d'utiliser des armes ou armures.
 %%%%
 Ghoul
 
 Un mort-vivant, condamné à pourrir pour l'éternité. Ils sont toujours à la
 recherche de nourriture avariée à manger, taillant leur chemin avec leurs
 griffes.
+%%%%
+Gargoyle
+
+Fait de pierre vivante, les gargouilles ont une affinité naturelle avec la
+terre.
 %%%%
 Halfling
 
@@ -60,18 +71,23 @@ Ordinaire et moyen.
 %%%%
 Tengu
 
-Homme-oiseaux qui aiment combattre, autant avec des armes qu'avec des sorts.
-Ils sont assez fragiles mais finissent par apprendre à voler.
+Homme-oiseaux aimant combattre, autant avec des armes qu'avec des sorts. Ils
+sont assez fragiles mais finissent par apprendre à voler.
 %%%%
 Kobold
 
 Petits, malicieux et un peu fragiles, mais aux multiples talents. Ils peuvent
 manger n'importe quelle viande et ne s'en privent pas.
 %%%%
+Lava Orc
+
+Ces maîtres de la magie du feu et de la terre viennent de profondeurs bien en
+deçà du Donjon. Leurs capacités changent avec leur température corporelle.
+%%%%
 Merfolk
 
 Moitié poisson, moitié humain, les ondins habitent à la fois sur terre et dans
-l'eau.
+l'eau. Ce sont de bons combatant et expert en utilisation de magie de support.
 %%%%
 Minotaur
 

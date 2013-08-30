@@ -1,0 +1,670 @@
+%%%%
+No ability ability
+
+Hvis du får denne beskrivelse er det en fejl.
+%%%%
+Spit Poison ability
+
+Spytter gift efter det valgte uhyre.
+%%%%
+Blink ability
+
+Translokerer en kort afstand på må og få.
+%%%%
+Breathe Dispelling Energy ability
+
+Spyer en strøm af kraft mod det valgte uhyrer, som muligvis fjerner nogle af
+dets fortryllelser.
+%%%%
+Breathe Fire ability
+
+Du kan spy en strøm af ild efter et uhyre som muligvis efterlader ildskyer i
+sit kølvand.
+%%%%
+Breathe Frost ability
+
+Du kan spy en klump frost efter et uhyre.
+%%%%
+Breathe Poison Gas ability
+
+Udspyer en bølge af giftgas mod et uhyre.
+%%%%
+Breathe Lightning ability
+
+Udsender en enorm udladning af elektricitet, som forårsager et ustyrligt
+tordenvejr.
+%%%%
+Breathe Sticky Flame ability
+
+Udspyer en stråle af klæbrige flammer mod et uhyre. Som navnet antyder, bliver
+klæbrige flammer hængende, så uhyret kan være dækket af flammer i adskillige
+runder, før de går ud. De sprøjter sommetider, når de rammer.
+%%%%
+Breathe Steam ability
+
+Udspyer en stråle af damp mod et uhyre.
+%%%%
+Breathe Noxious Fumes ability
+
+Udspyer en bølge af særdeles skadelige dunste mod målet.
+%%%%
+Bat Form ability
+
+Forvandler dig til en hurtig vampyrflagermus. I flagermuseform ka du hverken
+håndtere genstande på nogen måde (bortset fra at samle dem eller lægge dem fra
+dig) eller bruge besværgelser. Bemærk, at flagermuseform mindsker din nuværende
+styrke og øger din behændighed. Derfor kan du ikke ændre form, hvis din styrke
+er for lav. Flyvningen er magisk understøttet, så du bliver i luften, selv hvis
+vægten af dine ejendele eller en form for legemlig skavank burde trække dig
+ned.
+%%%%
+Bottle Blood ability
+
+Når vampyrer når erfaringsniveau 6, får de evnen til at fylde blodet fra
+ikke-rådne og blodfyldte kadavere som de står på, på flaske. Det kræver at du
+har mulighed for at bruge din kniv, ligesom når du slagter.
+%%%%
+Spit Acid ability
+
+Spytter syre efter det valgte uhyre.
+%%%%
+Fly ability
+
+Begynd at flyve. Mens du flyver kan du trygt krydse vand og lignende
+forhindringer. Men vær dog opmærksom på, at evnen til at flyve kan udløbe på
+uheldige tidspunkter og lade dig styrte i døden.
+%%%%
+Hellfire ability
+
+Hærger dine fjender med helvedesild.
+%%%%
+Release Delayed Fireball ability
+
+Udløser øjeblikkeligt en tidligere memoriseret (forsinket) ildkugle uden
+yderligere omkostninger i magi eller sult.
+%%%%
+Stop Singing ability
+
+Hold op med at synge dit slagskvad.
+%%%%
+Self-Restoration ability
+
+På permanent bekostning af et magipoint kan du genoprette din styrke,
+behændighed eller intelligens og helbrede en stor mængde rådnede livspoint.
+%%%%
+Device Recharging ability
+
+Du kan genoplade en vånd eller stok på bekostning af et permanent magipoint.
+%%%%
+Evoke Teleportation ability
+
+Teleportere dig til et tilfældigt sted på niveauet.
+%%%%
+Evoke Berserk Rage ability
+
+Gå bersærk. Mens du er bersærk er dine livspoint og den skade du forvolder i
+nærkamp voldsomt øget. Bersærkergangen ophører hurtigt, hvis du ikke dræber
+noget, men kan forlænges med flere drab. Mens du er bersærk er der en række
+handlinger, du ikke kan foretage dig, såsom at trække et våben, drikke noget,
+vække vånde eller genstande eller kaste besværgelser. Et sådant raseri følges
+som regel af en dyb udmattelse, en tid hvor du er langsom, ikke kan gå bersærk
+og sommetider endda besvimer.
+%%%%
+Evoke Invisibility ability
+
+Gør dig usynlig i en begrænset periode. Det øger din magiske besmittelse at
+være usynlig og kan i sidste ende forårsage gløden.
+%%%%
+Turn Visible ability
+
+Bliv synlig igen.
+%%%%
+Stop Flying ability
+
+Hold op med at flyve.
+%%%%
+Evoke Fog ability
+
+Udsender en tyk sky af tåge, som slører udsynet.
+%%%%
+Evoke Teleport Control ability
+
+Få evnen til at kontrollere din næste translokation – enten ved at vælge et
+passende mål for en teleportation eller en retning for et blink. Vær opmærksom
+på, at kontrollerede translokationer vil besmitte brugeren med magisk energi,
+og at kontrollerede teleportationer er længere om at blive aktiveret end de
+ukontrollerede.
+%%%%
+End Transformation ability
+
+Vend tilbage til din normale form med en kort forsinkelse.
+%%%%
+Recite ability
+
+Prædiker for uhyrer om Zins bud, hvilket kan føre til forskellige resultater.
+Der er fire bøger, du kan prædike fra:
+
+* Afskyens Bog: Denne bog behandler det mest afskyvækkende, Zin kender til:
+kaos i alle dets former. Disse recitationer påkalder Zins mest voldsomme vrede.
+
+* Afsoningens Bog: De urene er næsten lige så hadet af lovgiveren. Recitationer
+fra denne bog vil forvolde sådanne væsener skade.
+
+* Apostatens Bog: Intelligente væsener, som ikke tilbeder Zin, men som ikke
+bedriver anden ondskab vil blive behandlet mindst hårdt. Recitation fra denne
+bog sår blot forvirring. Men de, som vover at tilbede en gud, Zin finder
+fremmed, kan permanent blive berøvet muligheden for at sprede deres modbydelige
+tro.
+
+* Anatemaets Bog: Dæmoner og udøde er hadet af Zin. Denne bog giver dig
+midlerne til at irettesætte dem.
+%%%%
+Vitalisation ability
+
+Vitaliserer dig, så du får guddommelig udholdenhed og næring fra Zin.
+Guddommelig udholdenhed beskytter dig mod sygdom, forgiftning, forstening,
+forvirring og forrådnelse og øger og vedligeholder midlertidigt din styrke,
+intelligens og behændighed.
+%%%%
+Imprison ability
+
+Fængsler midlertidigt et uhyre bag vægge af sølv. Fængslet varighed øges af din
+færdighed med påkaldelser.
+%%%%
+Sanctuary ability
+
+Du kan søge tilflugt i et guddommeligt refugie i en kort periode. Mens du er
+inde i refugiet angriber uhyrer dig ikke, men beskyttelsen forsvinder, hvis du
+bryder den guddommelige fred.
+%%%%
+Cure All Mutations ability
+
+Kurerer alle dine mutationer – men kun en gang.
+%%%%
+Divine Shield ability
+
+Den Strålende skænker dig et guddommeligt skjold. Fordi det bæres af gudens
+kraft, kommer det ikke i vejen for dit udstyr. Men det kontrolleres af din
+viljekraft, og din færdighed med skjold forbedrer det.
+%%%%
+Cleansing Flame ability
+
+Påkalder en enorm eksplosion af guddommelig vrede med dig som midtpunkt, der
+beskadiger udøde og dæmoner voldsomt. Alle andre fjender tager også skade, men
+lidt mindre, og du og dine allierede påvirkes aldrig.
+%%%%
+Summon Divine Warrior ability
+
+Hidkalder en engel eller en daeva, som er mægtige krigere mod ondskaben. De kan
+blive velsignet af Den Strålende, så de kan blive længere i denne verden.
+%%%%
+Receive Corpses ability
+
+Skaber en eller flere uhyrekadavere i nærheden af dig selv, som kan genoplives.
+Antallet og friskheden af disse afhænger af din nekromantikfærdighed.
+%%%%
+Torment ability
+
+Ofrer et kadaver for at få alle i syne, dig selv inklusive, til at føle den
+smerte, væsenet oplevede i sit liv. Dette decimerer livskraften hos dem, der
+kan føle det.
+
+Kikubaaqudgha kan vælge at beskytte dig mod smerten ... eller lade være.
+%%%%
+Animate Remains ability
+
+Genoplever et enkelt kadaver eller skelet som din følgesvend. Bemærk at zombier
+og skeletter ikke kan forlade det niveau, de blev skabt på.
+%%%%
+Recall Undead Slaves ability
+
+Kalder dine udøde følgesvende tilbage fra hvor som helst i de underjordiske
+gange til din umiddelbare nærhed.
+%%%%
+Injury Mirror ability
+
+Beskadiger angribende uhyrer ved at reflektere den skade, de forvolder, tilbage
+på dem.
+%%%%
+Animate Dead ability
+
+Genopliver alle kadavere og skeletter i nærheden af dig som følgesvende. Bemærk
+at zombier og skeletter ikke kan forlade det niveau, de blev skabt på.
+%%%%
+Drain Life ability
+
+Helbred dig selv ved at dræne livskraft fra uhyrerne omkring dig.
+%%%%
+Enslave Soul ability
+
+Mærker et levende, intelligent uhyres sjæl som værende moden til at blive
+plukket. Når det mærkede uhyre dør, vil dets sjæl være din.
+
+Den trælbundne sjæl beholder uhyrets færdigheder, udstyr og evner og noget af
+dets naturlige heling. Det er dog kun et relativt uskadt uhyre, som kan få sin
+sjæl markeret, og kun en sjæl kan trælbindes af gangen. Mærkningen er endvidere
+afhængig af dine færdigheder med påkaldelser.
+
+Bemærk, at trælbundne sjæle kan følge dig væk fra det niveau, de blev skabt på.
+%%%%
+Animate Remains or Dead ability
+
+Hvis du får denne beskrivelse er det en fejl.
+%%%%
+Heroism ability
+
+Øger midlertidigt alle dine kampfærdigheder, inklusive evnen til at snige dig
+omkring.
+%%%%
+Finesse ability
+
+Øger din kamphastighed markant, uden tab af præcision. Denne unaturlige
+virkning forårsager en anelse magisk besmittelse, som det kan være usundt at
+være udsat for gennem længere tid.
+%%%%
+Minor Destruction ability
+
+Skyder et tilfældigt, skadeligt skud efter det valgte uhyre.
+%%%%
+Lesser Servant of Makhleb ability
+
+Hidkalder en smådæmon med en risiko for at være fjendtlig, hvis din
+påkaldelsesfærdighed er lav.
+%%%%
+Major Destruction ability
+
+Skyder en tilfældig, skadelig stråle eller eksplosion efter målet.
+%%%%
+Greater Servant of Makhleb ability
+
+Hidkalder en større dæmon, med en chance for at være fjendtlig, der afhænger af
+din påkaldelsesfærdighed.
+%%%%
+Channel Energy ability
+
+Genopfylder dit magiske reservoir med en mængde, som er baseret på dine
+færdigheder med påkaldelser.
+%%%%
+Forget Spell ability
+
+Glemmer enhver af de besværgelser, du i øjeblikket kan huske, så du kan få
+hukommelse til at lære andre.
+%%%%
+Burn Spellbooks ability
+
+Sætter ild til alle trolddomsbøger i dit synsfelt. Ilden er næret af Trogs had,
+og det glæder Trog allermest, når du ikke engang er interesseret i, hvad det er
+for galskabsbøger, du sætter i brand.
+%%%%
+Berserk ability
+
+Du går bersærk. Mens du er bersærk er dine livspoint og den skade du forvolder
+i nærkamp voldsomt øget, men i en begrænset periode. Bersærkergangen ophører
+hurtigt, hvis du ikke dræber noget, men kan forlænges med flere drab. Mens du
+er bersærk er der en række handlinger, du ikke kan foretage dig, såsom at
+trække et våben, drikke noget, vække vånde eller genstande eller kaste
+besværgelser. Et sådant raseri følges som regel af en dyb udmattelse, en tid
+hvor du er langsom og ikke kan gå bersærk igen. I modsætning til andre kilder
+til raseri, kan din fromhed hos Trog sommetider forhindre dig i at besvime.
+%%%%
+Trog's Hand ability
+
+Påkalder dig en kraftig regenerationsevne, som samarbejder med alle andre
+kilder til regeneration og oven i købet lader ikke-helenede arter at
+regenerere. Dette øger også din beskyttelse mod magiske effekter.
+%%%%
+Brothers in Arms ability
+
+Hidkalder enorme, arrige allierede til at lave ravage.
+%%%%
+Divine Protection ability
+
+Bønfald Elyvilon om at redde dit liv. Hvis du er dødeligt såret, forhindrer
+Helbrederen måske banesåret. Særligt fromme individ kan være sikre på denne
+hjælp, men i det tilfælde koster enhver indgriben fromhed (i modsætning til
+blot at bede om indgriben, hvilket altid er gratis).
+
+Giv agt: Det er en stor synd at dræbe andre, mens du selv beder om at blive
+skånet!
+%%%%
+Lesser Healing ability
+
+Helbreder et andet væsen end dig en smule, afhængigt af dine færdigheder med
+påkaldelser. Hvis du bruger denne evne på fjendtligtsindede uhyrer forsøger den
+at gøre dem neutrale. Det virker bedst på dyr, dårligere på humanoider fra din
+egen race, endnu dårligere på andre humanoider og værst på dæmoner og udøde.
+Tanketomme væsener kan ikke pacificeres og intet uhyre kan pacificeres mens det
+sover. Chancen for en vellykket pacificering afhænger af helbredelsens
+virkning.
+
+Uanset om pacificeringen lykkes eller ej, så er den investerede mad og
+magipointet gået tabt. Hvis den lykkes, bliver uhyret helbredt og du får
+halvdelen af den erfaring, det er værd, og muligvis noget fromhed. Ellers er
+uhyret upåvirket og du får ingenting.
+
+Du kan også helbrede allierede og neutrale uhyrer.
+%%%%
+Lesser Self-Healing ability
+
+Helbreder en lille smule livspoint, afhængigt af din påkaldelsesfærdighed.
+%%%%
+Purification ability
+
+Renser din krop for alle ubehagelige virkninger som sygdom, forgiftning,
+langsomhed, forstening, forvirring og forrådnelse og genopretter fuldstændigt
+din styrke, behændighed og intelligens.
+%%%%
+Greater Healing ability
+
+Helbreder et andet væsen end dig i moderat omfang, afhængigt af dine
+færdigheder med påkaldelser. Hvis du bruger denne evne på fjendtligtsindede
+uhyrer forsøger den at gøre dem neutrale. Det virker bedst på dyr, dårligere på
+humanoider fra din egen race, endnu dårligere på andre humanoider og værst på
+dæmoner og udøde. Tanketomme væsener kan ikke pacificeres og intet uhyre kan
+pacificeres mens det sover. Chancen for en vellykket pacificering afhænger af
+helbredelsens virkning, så den er væsentlig bedre end mindre helbredelse.
+
+Uanset om pacificeringen lykkes eller ej, så er den investerede mad, fromhed og
+magipointene gået tabt. Hvis den lykkes, bliver uhyret helbredt og du får
+halvdelen af den erfaring, det er værd, og muligvis noget fromhed. Ellers er
+uhyret upåvirket og du får ingenting.
+
+Du kan også helbrede allierede og neutrale uhyrer.
+%%%%
+Greater Self-Healing ability
+
+Helbreder en moderat mængde livspoint, afhængigt af dine færdigheder med
+påkaldelser. Større helbredelse lader dig helbrede omtrent tre gange så meget
+som med mindre helbredelse, på bekostning af lidt mere fromhed.
+%%%%
+Divine Vigour ability
+
+Giver dig en stor mængde livs- og magipoint tilbage og øger midlertidigt
+maksimum for begge dele. Begge effekter afhænger af dine færdigheder inden for
+påkaldelser.
+%%%%
+Depart the Abyss ability
+
+Forlader Afgrunden til fordel for der, hvor du kom fra.
+%%%%
+Bend Space ability
+
+Bøjer rummets vævning omkring dig, hvilket øjeblikkeligt translokerer dig en
+kort afstand. Translokerer og beskadiger muligvis også uhyrer i nærheden af
+dig.
+%%%%
+Banish ability
+
+Forsøger at forvise et uhyre til Afgrunden.
+%%%%
+Corrupt ability
+
+Fordærver det nuværende niveau ved at udsætte det for Afgrundens energier.
+Dette vil vende og ned på niveauets udseende og hidkalde dæmoner fra Afgrunden,
+som tørster efter død og ødelæggelse. Denne evne påvirke ikke niveauer, som
+allerede er fordærvet eller som befinder sig i Afgrunden.
+%%%%
+Enter the Abyss ability
+
+Overfører dig øjeblikkeligt til Lugonus rige. Bare det at bruge den evne vil
+tappe dit helbred og din energi.
+%%%%
+Draw One ability
+
+Vælg et hvilket som helst spil kort i din oppakning, og træk et kort fra det.
+%%%%
+Peek at Two ability
+
+Kasserer et kort fra en valgfri stak i din oppakning for at lade dig trække to
+kort fra stakken, se på dem og blande dem ind i stakken igen. Stakken bliver
+indskrevet som indeholdende de to kort, og hvis de er forskellige identificerer
+det stakken.
+%%%%
+Triple Draw ability
+
+Træk tre kort fra en vilkårlig stak i din oppakning, se på dem og vælg, hvilket
+du vil beholde, og hvilke to, du vil kassere.
+%%%%
+Deal Four ability
+
+Giver fire kort fra enhver umærket stak på den tid, det normalt tager at trække
+et enkelt kort. Resten af stakken går tabt. Hvis stakken ikke indeholder
+tilstrækkeligt med kort, giver Nemelex dig et ekstra. men det er ikke sikkert,
+du bliver glad for det.
+%%%%
+Stack Five ability
+
+Trækker fem kort fra en umærket stak i din oppakning og kasserer resten af
+stakken. Se på kortene og sortér dem som du har lyst til. Derefter kan du
+trække kortene i den valgte rækkefølge.
+%%%%
+Smiting ability
+
+Får din guds vrede til at ramme en fjende du kan se. Det kræver ikke en direkte
+linje, der er nok at kunne se fjenden.
+%%%%
+Recall Orcish Followers ability
+
+Kalder dine orkiske følgesvende tilbage fra hvor som helst i de underjordiske
+gange til din umiddelbare nærhed.
+%%%%
+Stop Recall ability
+
+Hold op med at tilbagekalde dine følgesvende.
+%%%%
+Sunlight ability
+
+Kalder sollys ned over et lille område i de underjordiske gange. Uhyrer i lyset
+bliver lettere at ramme. Vand som påvirkes af sollyset fordamper. Mere
+specifikt bliver dybt vand til lavt vand og lavt vand tørrer helt ud og
+afslører gangenes gulv.
+%%%%
+Growth ability
+
+Brug frugt til at dyrke en ring af planter rundt om dig selv. Hvis der ikke kan
+dannes en hel ring (fordi du ikke har frugt nok), vokser planterne frem på de
+felter ved siden af dig som er tættest på uhyrer. De planter du skaber får
+ekstra LP i proportion til din færdighed med påkaldelser.
+%%%%
+Rain ability
+
+Får regn til at falde omkring dig, hvilket forvandler gulvet til lavt vand og
+lavt vand til dybt vand. Det får sandsynligvis planter og svampe til at vokse
+frem på steder, som ikke bliver direkte gennemblødt.
+%%%%
+Reproduction ability
+
+Skaber kæmpesporer fra kadavere i dit synsfelt. Sporerne eksploderer og
+forvolder skade på dig eller dine fjender.
+%%%%
+Evolution ability
+
+Forvandler planter og svampe til stærkere arter. Det koster fromhed at
+opgradere svampe, og det koster frugt at opgradere planter. Opgraderede planter
+får en bonus til deres angribs præcision som er proportionel med din
+påkaldelsesfærdighed, og oklobplanter bliver mere tilbøjelige til at spytte
+syre med højere påkaldelse.
+%%%%
+Bend Time ability
+
+Forsøger at sagtne alle ved siden af dig. En høj færdighed med påkaldelser gør
+den sværere at modstå.
+%%%%
+Temporal Distortion ability
+
+Forvrænger tidens strøm omkring dig, så uhyrer hopper fremad i tid i forhold
+til dig.
+%%%%
+Slouch ability
+
+Skader alle i syne som bevæger sig hurtigere end dig. De der er magisk
+forhastede, kommer særligt slemt til skade.
+%%%%
+Step From Time ability
+
+Fjerner dig fra tidens strøm. Ting omkring sker med deres sædvanlige tempo,
+uhyrer vandrer omkring, forgængelige ting forfalder, planter vokser. Efter et
+stykke tid vender du tilbage i samme tilstand som i det præcise sekund du drog
+af sted.
+%%%%
+Request Jelly ability
+
+Skaber en naturlig gele, som vandrer rundt på niveauet og fordøjer genstande.
+%%%%
+Jelly Paralyse ability
+
+Bed for midlertidigt at stoppe dine slims genstandsfortæring.
+%%%%
+Slimify ability
+
+Betrækket våbnet i dine hænder eller dine næver med slim, som vil forvandle det
+næste levende eller udøde uhyre til en neutral slim.
+%%%%
+Cure Bad Mutation ability
+
+Fjerner en tilfældigt valgt dårlig mutation.
+%%%%
+Scrying ability
+
+Få astralt syn, så du kan se gennem vægge. Det er ikke nok til at lade dig
+målrette besværgelser og evner, selv ikke dem, der virker gennem glas.
+%%%%
+Transfer Knowledge ability
+
+Ofrer en del af en af dine færdigheder for at forbedre en anden.
+%%%%
+End Transfer Knowledge ability
+
+Annullér en igangværende færdighedsoverførsel.
+%%%%
+Renounce Religion ability
+
+Forsager din tro. Dette vil få din karakter til at forlade sin gud (hvilket som
+regel vækker gudens vrede).
+%%%%
+Convert to Beogh ability
+
+Sværg troskab til Beogh, huleorkernes gud. Denne gud kræver alle hedninges død,
+men nye troende skal skånes og accepteres ind i folden. Pas på, for orker, som
+ikke har set dig konvertere er måske stadig fjendtlige indtil du har opbygget
+et omdømme!
+
+Alle andre guder hader Beogh og tager ikke let på desertering.
+%%%%
+Make dart trap ability
+
+Skaber en kastepilefælde på det valgte sted.
+%%%%
+Make oklob sapling ability
+
+Plante en oklob-spire med evnen til at spytte syre på det valgte sted.
+%%%%
+Make arrow trap ability
+
+Skaber en pilefælde på det valgte sted.
+%%%%
+Make plant ability
+
+Får en plante til at vokse frem det valgte sted.
+%%%%
+Remove Curse ability
+
+Fjerner forbandelser fra al dit udstyr.
+%%%%
+Make burning bush ability
+
+Planter en brændende busk med evnen til at kaste ild og se usynlige uhyrer på
+det valgte sted.
+%%%%
+Make altar ability
+
+Skaber et alter, dedikeret til en valgfri gud, der hvor du er.
+%%%%
+Make grenades ability
+
+Fremmaner et antal eksplosive kæmpesporer omkring dig.
+%%%%
+Make oklob plant ability
+
+Planter en fuldt udvokset oklob-plante med evnen til at spytte syre på det
+valgte sted.
+%%%%
+Make net trap ability
+
+Skaber en netfælde på det valgte sted.
+%%%%
+Make ice statue ability
+
+Bygger en statue med forskellige iskolde evner på det valgte sted.
+%%%%
+Make spear trap ability
+
+Skaber en spydfælde på det valgte sted.
+%%%%
+Make alarm trap ability
+
+Skaber en alarmfælde, som gør dig opmærksom på uhyrers tilstedeværelse på det
+valgte sted.
+%%%%
+Make mushroom circle ability
+
+Dyrker en kreds af svampe omkring det valgte sted.
+%%%%
+Make bolt trap ability
+
+Skaber en boltfælde på det valgte sted.
+%%%%
+Make crystal statue ability
+
+Skaber en statue med evnen til at forvirre uhyrer på det valgte sted.
+%%%%
+Make needle trap ability
+
+Skaber en giftig nålefælde på det valgte sted.
+%%%%
+Zot-teleport ability
+
+Udfører en kontrolleret teleportation.
+%%%%
+Make water ability
+
+Skaber et bassin af lavt vand der, hvor du står.
+%%%%
+Make lightning spire ability
+
+Bygger et lynspir, som kan udslynge elektricitet, på det valgte sted.
+%%%%
+Make silver statue ability
+
+Bygger en statue med evnen til at hidkalde venlige dæmoner på det valgte sted.
+%%%%
+Make bazaar ability
+
+Skaber en portal til en basar der, hvor du står.
+%%%%
+Acquire gold ability
+
+Erhverver en stor mængde guld.
+%%%%
+Make oklob circle ability
+
+Dyrker en kreds af oklob-planter omkring det valgte sted.
+%%%%
+Sage ability
+
+Kanaliserer noget af din tjente erfaring over i en bestemt færdighed og træner
+den hurtigere end normalt.
+%%%%
+Acquirement ability
+
+Erhverver en genstand af den valgte type.
+%%%%
+Make blade trap ability
+
+Skaber en sværdfælde på det valgte sted.
+%%%%
+Make curse skull ability
+
+Konstruerer et forbandelseskranium med evnen til at hidkalde udøde til det
+valgte sted, på bekostning af et nekromantisk tilbageslag på dig selv.
+%%%%

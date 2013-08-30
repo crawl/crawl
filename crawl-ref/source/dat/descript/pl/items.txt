@@ -268,10 +268,10 @@ Księga czarów.
 %%%%
 book of the sky
 
-Księga zawierająca potężniejsze czary Magii Powietrza. Przyjęte jest,
-aby skrybowie tworzący jej kopie robili to z wyższych komnat wysokich
-wież na otwartym terenie, aby lepiej przyjąć siłę wiatrów. Błyszczące
-runy którymi księga ta jest napisana to w istocie zaklęte pioruny.
+Księga zawierająca potężniejsze czary Magii Powietrza. Przyjęte jest, aby
+skrybowie tworzący jej kopie robili to z wyższych komnat wysokich wież na
+otwartym terenie, aby lepiej przyjąć siłę wiatrów. Błyszczące runy którymi
+księga ta jest napisana to w istocie zaklęte pioruny.
 %%%%
 book of the tempests
 
@@ -1085,8 +1085,8 @@ skutki są dość brutalne.
 %%%%
 rod of striking
 
-Tym prętem spuszcza się lanie osobiście. Przełożenie kogoś wpierw przez
-kolano nie jest obowiązkowe, jednak należy do dobrego tonu.
+Tym prętem spuszcza się lanie osobiście. Przełożenie kogoś wpierw przez kolano
+nie jest obowiązkowe, jednak należy do dobrego tonu.
 %%%%
 rod of striking:quote
 

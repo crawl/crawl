@@ -225,9 +225,7 @@ Jory
 El que fuera una vez un simple granjero, Jory se vio transformado en un
 poderoso no-muerto. A través de los incontables siglos desprovisto de vida ha
 entrenado sus habilidades en combate y en magia, amasado grandes riquezas y
-muchas posesiones, y ahora reside en la tranquila Torre del Silencio. No está
-por la labor de dejar que ningún ridículo aventurero arruine su duro trabajo,
-¡por eso quien se lo encuentre debe estar alerta!
+muchas posesiones.
 %%%%
 Joseph
 
@@ -511,6 +509,10 @@ apis
 Un plácido toro sagrado de Elyvilon. ¡Cuidado, servidores del mal, ya que con
 certeza se volverá contra vosotros!
 %%%%
+azure jelly
+
+Una masa de citoplasma azulado y extremadamente frío, envuelta en escarcha.
+%%%%
 baby alligator
 
 Un joven caimán. Aunque aún no tiene poderosas mandíbulas, ni la fuerza
@@ -522,10 +524,24 @@ ball lightning
 Una enorme y veloz esfera resplandeciente de energía eléctrica. Explotará en
 cuanto sea provocada.
 %%%%
+balrug
+
+Un demonio enorme y muy poderoso, envuelto en llamas y sombras.
+%%%%
 Brimstone Fiend
 
 Un enorme y poderoso demonio bañado en fuego infernal, con amplias alas
 escamosas. Uno de los más temibles habitantes de cualquiera de los Infiernos.
+%%%%
+centaur
+
+Un híbrido con el torso de un humano en lo alto del cuerpo de un gran caballo.
+Los centauros son famosos por ser hábiles arqueros.
+%%%%
+centaur warrior
+
+Un centauro musculoso y curtido en numerosas batallas, equipado con buenas
+armas y capaz de usarlas hábilmente.
 %%%%
 Executioner
 
@@ -574,6 +590,11 @@ fortifican, pero los dedos de mi pie no quieren saberlo. No les interesa otra
 cosa que emitir uñas: láminas córneas, semitransparentes y elásticas, para
 defenderse, ¿de quién?”
     -Jorge Luis Borges
+%%%%
+ancient champion
+
+Un antiguo e insondable esqueleto. Tiene cientos de sellos dorados grabados en
+sus huesos y palpita con una terrible energía impía.
 %%%%
 Cigotuvi's Monster
 
