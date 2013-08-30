@@ -143,6 +143,14 @@ Conjure Flame spell
 
 この呪文は唸りをあげる炎の円柱を生成する。
 %%%%
+Control Teleport spell
+
+この呪文は術者の次に行うテレポートをを制御することを可能とする。
+-テレポートならばおおよその地点を指定でき、
+瞬間移動ならば方向を選択することが可能になる。
+ただし制御されたテレポートは使用者を魔法のエネルギーで汚染することがあり、制御
+されていないテレポートよりも発動に時間を要することに注意しなくてはならない。
+%%%%
 Control Undead spell
 
 この呪文は術者の近辺にいるアンデッドを奴隷化しようと試みる。
@@ -172,6 +180,11 @@ Darkness spell
 この呪文はダンジョン内の光を弱め、視界を狭くする。
 この呪文の効果を及ぼす範囲は広大で、外から見ても不自然に見えないので、
 術者の非常に近くにいないモンスターには気づかれづらい。
+%%%%
+Dazzling Spray spell
+
+この呪文は術者の指先から明るく輝くエネルギーの帯を放つ。
+これは命中した生命あるモンスターの目を眩ませ、盲目状態にしふらふらさせる。
 %%%%
 Death Channel spell
 
@@ -210,10 +223,6 @@ Delayed Fireball spell
 Demonic Horde spell
 
 この呪文は術者の敵と(時にはお互いに)戦う小さな悪魔の一群を召換する。
-%%%%
-Dig spell
-
-この呪文は強化されていない壁を溶解させて横穴を穿つ。
 %%%%
 Disjunction spell
 
@@ -349,15 +358,38 @@ Inner Flame spell
 %%%%
 Invisibility spell
 
-この呪文は対象を他の存在の視覚から隠す。 While invisible you will gain magical
-contamination, which may eventually cause enough glow to make you visible
-again.
+この呪文は対象を他の存在の視覚から隠す。
+透明化している間あなたは魔力による汚染にさらされ、
+汚染の蓄積はやがて発光による透明化の解除をもたらす。
+%%%%
+Iskenderun's Battlesphere spell
+
+この呪文は術者の魔力に呼応する魔力の球体を造り出す。
+これは創造者の側に付き従い、術者の破壊の力を増大させる。
+この球体は独立した行動を行わないが、
+術者の破壊の魔術にほぼ同期して対象にエネルギーの斉射を行う。
 %%%%
 Iskenderun's Mystic Blast spell
 
-この呪文はバチバチと爆ぜる破壊的なエネルギーの球を放つ。 The sphere will
-sometimes explode on impact, and the chance of it doing so is higher if the
-sphere has traveled less distance.
+この呪文はバチバチと爆ぜる破壊的なエネルギーの球を放つ。
+この球体は着弾時にしばしば爆発を引き起こし、
+このような爆発の起こる可能性はこの球体の飛行距離が短い場合により高くなる。
+%%%%
+Leda's Liquefaction spell
+
+この呪文は術者の周囲の地面を液状化させて進みづらくする。
+液状化した地面に入っての攻撃は非常に遅くなる。
+%%%%
+Lee's Rapid Deconstruction spell
+
+この呪文は壁や弾力のない視界内のモンスターを解体し、
+致命的な破片の爆発を引き起こす。これは氷や骨、
+壁と同様の物質でできたモンスターに対して使用することができ、
+石化の呪文によって石化したモンスターにも同様に使用できる。
+
+岩石や氷、骨でできた対象物は小規模、あるいは中規模な爆発を引き起こす。
+金属でできた対象物は小規模ながら著しい威力の爆発を引き起こす。
+水晶でできた対象物は大規模で好意力の爆発を引き起こす。
 %%%%
 Lehudib's Crystal Spear spell
 
@@ -369,8 +401,8 @@ Minor Healing spell
 %%%%
 Lethal Infusion spell
 
-この呪文は術者の手にした武器に邪悪な力を充填する。 energies. It will not affect
-weapons which are otherwise subject to special enchantments.
+この呪文は術者の手にした武器に邪悪な力を充填する。
+これは既に何らかの魔力を帯びている武器には効果がない。
 %%%%
 Levitation spell
 
@@ -379,12 +411,24 @@ Levitation spell
 Lightning Bolt spell
 
 この呪文は強力な稲妻の矢を放つ。
-この呪文は炎や氷の同格の呪文と比べるとダメージが小さいが、 similar fire and ice
-spells, it can at once rip through whole rows of creatures.
+この呪文は炎や氷の同格の呪文と比べるとダメージが小さいが、
+列をなすモンスター全員を貫いて攻撃することができる。
 %%%%
 Magic Dart spell
 
-この呪文は魔法のエネルギーによる小さな矢を放つ。 It never misses.
+この呪文は魔法のエネルギーによる小さな矢を放つ。これは決して外れることがない。
+%%%%
+Malign Gateway spell
+
+この呪文は現実世界に深い亀裂を生じさせ、
+自ら領域を広げる未知の腐敗した異世界への門を、幸いにして一時的に創りだす。悪意
+に満ちた異世界の住人がその触腕を突き出さんしているとは誰も知りはしないだろうが
+、まず誰もが近づきたいとは思わないだろう。
+%%%%
+Mass Abjuration spell
+
+この呪文は視界内の全ての召喚されたモンスターを元いた場所に送還しようと試みる。
+少なくとも対象の存在可能な時間を短くする。
 %%%%
 Mass Confusion spell
 
@@ -396,29 +440,108 @@ Mephitic Cloud spell
 %%%%
 Metabolic Englaciation spell
 
-この呪文は術者の視界内全てのモンスターの対象の代謝率を低下させ、 in the
-caster's vicinity, slowing all those who are not resistant to cold. It bypasses
-magic resistance, although tougher monsters will not be slowed for as long as
-others.
+この呪文は術者の視界内全てのモンスター代謝率を低下させようと試み、
+冷気への耐性を持たない全ての対象の動きを遅延させる。
+これは対象の魔法への抵抗力を無視するが、
+強力なモンスターはそうでないモンスターよりも早く遅延から復帰する。
+%%%%
+Necromutation spell
+
+この呪文はまず術者を力ある骸骨であるリッチに変化させる。
+術者は幾つかの死の力を得、冷気と敵対的な魔術への抵抗力、そして毒、腐敗、
+負のエネルギーへの完全な免疫を獲得し、
+呪文の効果中には食料を一切必要としなくなる。
+
+術者は同様に幾つかのアンデッドであることの不利益を被ることにもなる。
+例えば聖なる武器が弱点になり、薬を飲むことができなくなる。
+
+この呪文は大方の予想に反してオクトポードに対しても効果があるが、
+邪悪な魔法の組織が骨の類似器官として働くというのは不可思議である。
+%%%%
+Orb of Destruction spell
+
+この呪文は純粋な破壊的魔術の球を創りだす。
+この球体は他の投射物と比べてゆっくりと射出され、対象へと飛来する。しかし、
+強力な慣性によって、特に素早い相手ならばその裏をかくことができるかもしれない。
+この球体は安定するまでに時間を要し、
+発生したばかりのものは本来持ち得る威力を発揮することができない。
+
+この呪文の写本の多くは筆記者の手違いから、
+飛距離が伸びると不安定になる憂き目に会っていると言われている。
+特定の個人はこの欠陥がない魔法書に閲覧することができる、用心せよ！
+%%%%
+Ozocubu's Armour spell
+
+この呪文は氷の保護層で術者の体を覆う。
+この強度は術者の氷の魔術の技能に依存している。
+術者とその装備はこの氷の保護層の影響を受けないが、
+他の要因による冷気からは通常通り影響を受ける。
+この呪文は術者が既に(行動阻害率6以上の)重鎧を着用している際には機能しない。
+術者が氷の躯である時には、この呪文の効果は増大する。
+%%%%
+Ozocubu's Refrigeration spell
+
+この呪文は術者とその周辺から熱を奪い取り、
+冷気に耐性のない存在全てに損害を与える。
+%%%%
+Pain spell
+
+この呪文は生命のあるモンスターに苦痛に満ちた損傷を与える。
+術者は反動として少量のダメージを受ける。
 %%%%
 Paralyse spell
 
 この呪文は対象を動くことができないようにする。
 %%%%
+Passage of Golubria spell
+
+この呪文は2つのゲートを創り出す。1つは常に術者の付近に設置され、このゲートに入
+った全ての者は無作為に開かれたもう1つのゲートへと即時にテレポートすることができ
+る。設置できるゲートの数には制限は存在しないが、
+ゲートは使用されるか時間経過によって閉じてしまう。
+%%%%
 Passwall spell
 
 この呪文はごく短い時間、術者の肉体が岩の中を通ることができるように変化させる。
-since it takes time for the caster to attune to the rock, during which time
-they will be helpless.
+体が岩を透過する状態に変化するまでに無防備な状態となるので、
+この呪文には危険が伴う。
+%%%%
+Petrify spell
+
+この呪文はモンスターを石化させようと試みる。もし成功すれば、
+モンスターは一時的に石へ変化するまでの少しの間減速する。
+石化したモンスターはわずかにダメージを受けづらくなる。
+これは翼の使用もまた不可能にし、溶岩の上を飛行している際は非常に危険である。
+%%%%
+Phase Shift spell
+
+この呪文は術者が物質界を行き来することを可能にし、
+時として全ての打撃を回避することができるようになる。
+%%%%
+Poison Arrow spell
+
+最も不浄で有害な毒素による魔法的な矢を放つ。
+この効果からの完全な免疫を持つ生命体はいない。アンデットであっても、
+この呪文による物理的な損傷を免れることはできない。
 %%%%
 Poison Weapon spell
 
-This spell temporarily coats any weapon or launcher with poison. It will only
+この呪文は手にして武器を一時的に毒で覆う。
 これは既に何らかの魔力を帯びている武器には効果がない。
 %%%%
 Poisonous Cloud spell
 
-This spell 致命的なガスによる巨大な雲を発生させる。
+この呪文は致命的なガスによる巨大な雲を発生させる。
+%%%%
+Polymorph spell
+
+この呪文はモンスターの形状を無作為に変化させる。
+これは変身するモンスターに対して特に効果的だ。
+%%%%
+Portal Projectile spell
+
+この呪文は投射された物体を対象へと直に転送する。
+これは命中率を大きく上昇させるが、威力には影響しない。
 %%%%
 Recall spell
 
@@ -427,21 +550,21 @@ Recall spell
 %%%%
 Regeneration spell
 
-This spell reanimates parts of the caster's wounds. This unholy act
-術者の再生能力を一定時間劇的に強化する。 recuperative abilities, while also
-increasing the rate of food consumption.
+この呪文は術者が損傷した部位を活性化させる。
+この不浄な行いは術者の再生能力を一定時間劇的に強化する。
+この間は栄養の消耗も同様に増加する。
 %%%%
 Repel Missiles spell
 
-この呪文は投射された攻撃が術者に命中する確率を減少させる。 the caster, by
-making them significantly easier to dodge.
+この呪文は投射された攻撃が術者に命中する確率を、
+非常に避けやすくすることによって減少させる。
 %%%%
 Ring of Flames spell
 
 この呪文は術者を、共に移動する猛火の環で取り巻き、
 他の術者による炎の雲などから保護する。この呪文は術者を炎の力と同調させ、
-炎の魔法を強化し炎からの保護をもたらす。 However, it also makes them much more
-susceptible to the forces of ice.
+炎の魔法を強化し炎からの保護をもたらす。しかしながら、
+これは同じく氷による損傷を受けやすくしてしまう。
 %%%%
 Sandblast spell
 
@@ -451,44 +574,47 @@ Sandblast spell
 %%%%
 Shadow Creatures spell
 
-この呪文は影と深淵の物質からモンスターを編み上げる。創り出された存在は術者の近
+この呪文は影と霊的な物質からモンスターを編み上げる。創り出された存在は術者の近
 くで何らかのモンスターへと実体化するこの呪文はモンスターの装備までも生成する。
-モンスターに生成された装備は強固な現実性を持つため、 the creature, which are
-given a lasting substance by their firm contact with reality.
+この装備は強固な現実性を持つため、永続的に存在する。
 %%%%
 Shatter spell
 
 この呪文は術者の周囲に振動性の爆発を起こす。
-これは大抵のモンスターにダメージを与えるが、 composed of stone, metal, crystal
-or otherwise brittle material will particularly suffer. The magic has been
+これは大抵のモンスターにダメージを与えるが、とりわけ石、金属、
+結晶などの弾力のない物質でできたモンスターに効果がある。
 この魔法は壁に対しても効果があることで知られている。
 %%%%
 Shock spell
 
-This spell throws a bouncing 電撃の矢.
+この呪文は跳弾する電撃の矢を放つ。
+%%%%
+Shroud of Golubria spell
+
+この呪文はあなたの身体を覆うとばりの周囲の空間を歪曲させる。
+これは敵の攻撃を宙へ逸らすことによって、あなたを打撃から保護する。
+遠距離からの攻撃は速度が早すぎるため、この呪文によって逸らすことはできない。
+このとばりは非常に不安定で、衝撃によって不意に飛散してしまう。
 %%%%
 Silence spell
 
 この呪文は術者の周辺のあらゆる音を消し去る。
 これは術者の周辺で巻物を読み上げること、呪文の詠唱、祈り、
-叫びなどを不可能にする。術者もこの効果を蒙る。 caster too, of course.) This
-spell will not hide your なぜならこの極端に不自然な効果は、
-モンスターにまず間違いなく will almost certainly alert any living creature that
-something is very wrong.
+叫びなどを不可能にする。術者もこの効果を蒙る。
+この呪文があなたの存在を隠すことはない。なぜならこの極端に不自然な効果は、モン
+スターにまず間違いなく何かが非常におかしいと警告を与えることになるからである。
 
-Silence starts out with a radius depending on power, which will then shrink,
-eventually covering only the caster, before the effect times out. Some
-creatures, such as demons, cast magic without speaking and so will be
-unaffected, and those with innate magical abilities will also still be able to
-use them.
+静寂は術者の力量に依る範囲から始まる。これは次第に縮小していき、
+やがて効果が時間切れになる直前には術者を覆うばかりになる。
+例えばデーモンなどの幾らかのモンスターは詠唱することなしに呪文を行使するため、
+この呪文は効果を及ぼさない。先天的な魔法の力を持つモンスターも同様である。
 %%%%
 Simulacrum spell
 
-This spell uses a piece of flesh in hand to create a replica
+この呪文は手にしたオリジナルの肉片から、氷のレプリカを作り出す。
 この呪文は不安定なので、レプリカはいずれ気体に昇華してしまう。
-それよりも先に斬り裂かれたり、 into a freezing cloud, if it isn't hacked or
-melted into a small puddle of water first. Note that simulacra are incapable of
-leaving the level they were created on.
+それよりも先に斬り裂かれたり、水溜りに溶けてしまったりしなければであるが。
+幻像は生成された階層から移動することができないことに留意せねばならない。
 %%%%
 Slow spell
 
@@ -496,27 +622,27 @@ Slow spell
 %%%%
 Spider Form spell
 
-この呪文は術者を一時的に鈍重な、しかし非常に強靭な石像に swift, venomous (but
-poison-susceptible), spider-like creature. Spellcasting is slightly more
-difficult in this form. While in this form, you can cling to walls.
+この呪文は術者を一時的に、素早く動き、毒を持つ(しかし毒の耐性を持たない
+)蜘蛛型のモンスターに変化させる。
+この形態を取っている間には呪文の詠唱がやや困難になる。
+この形態を取っている間は、あなたは壁を登ることができる。
 %%%%
 Static Discharge spell
 
-This spell 術者に隣接するモンスター全てに稲妻を放つ。 next to the caster. These
-may arc to adjacent monsters (or even the caster) before they eventually ground
-out.
+この呪文は術者に隣接するモンスター全てに稲妻を放つ。
+稲妻は地面に落ちて消えるまで、隣接した者(術者を含む)に連鎖していく。
 %%%%
 Statue Form spell
 
-この呪文は術者を一時的に鈍重な、しかし非常に強靭な石像に slow-moving (but
-extremely robust) stone statue, capable of dealing monstrous blows with weapons
-or bare fists. The caster's stone body is insulated from electricity and gains
-resistance to poison, rotting and negative energy.
+この呪文は術者を一時的に鈍重ながら非常に強靭な石像に変化させ、武器を用いて、
+あるいは素手で馬鹿げた威力の攻撃を繰り出すことを可能にする。
+石像に変化した術者は電気から絶縁され、毒、腐敗、
+負のエネルギーに対する耐性を得る。
 %%%%
 Sticks to Snakes spell
 
-この呪文は術者の手にした木製のアイテムを材料にして material for a powerful
-transmutation. Note that magical artefacts will not be affected.
+この呪文は術者の手にした木製のアイテムを材料にして強力な変成を行う。
+この呪文は魔力を持ったアーティファクトには影響を受けない。
 %%%%
 Sticky Flame spell
 
@@ -527,16 +653,23 @@ Sting spell
 
 この呪文は有毒な魔法の投げ矢を放つ。
 %%%%
-Striking spell
+Stone Arrow spell
 
-この呪文は小さな力場の矢を放つ。
+この呪文は鋭く尖った岩の杭を放つ。
+%%%%
+Stoneskin spell
+
+この呪文は術者の皮膚に大地の魔術の技能に応じた強靭さを与える。
+この呪文は比較的正常な肉体にしか作用しない。つまり、
+アンデッドも変身している者にも作用しない。ただし、
+もしも術者が石像の形態を取っている場合にはこの呪文の効果は強化される。
 %%%%
 Sublimation of Blood spell
 
-This spell converts flesh, blood and other bodily fluids
+この呪文は肉、血、その他体液を魔法のエネルギーに変換する。
 術者はこの呪文を自分の肉体に向けて使うこともできる。
-(これは危険ではあるが即死するほどのことはない)
-もしくは殺したての生肉を手に持った状態で魔力を引き出すこともできる。
+(これは危険ではあるが即死するほどのことはない
+)もしくは殺したての生肉を手に持った状態で魔力を引き出すこともできる。
 %%%%
 Summon Butterflies spell
 
@@ -544,22 +677,21 @@ Summon Butterflies spell
 %%%%
 Summon Demon spell
 
-この呪文はパンデモニウムの領域への門を開き、 and draws forth one of its
-inhabitants to serve the caster for a time (although the demon's servitude is
-by no means guaranteed).
+この呪文はパンデモニウムの領域への門を開き、
+その住人の一人を術者のしもべとして一定時間召換する。
+(しかしデーモンが隷属していることは決して保証されない。)
 %%%%
 Summon Dragon spell
 
-この呪文は強力なドラゴンを召換して、術者の命令に従うように支配する。 caster's
-bidding.
+この呪文は強力なドラゴンを召喚して、術者の命令に従うように支配する。
 %%%%
 Summon Elemental spell
 
-This spell calls forth 召換には対応する元素が大量に利用可能でなくてはならない。
+この呪文は元素界から精霊を召換し術者の助けとする。
+召換には対応する元素が大量に利用可能でなくてはならない。
 元素の確保は大地と大気の場合にはほとんどの場合問題にならないが、
-火と水の場合には問題となるだろう。精霊たちは大抵は術者に友好的である。 be
-friendly to casters — especially those skilled in the appropriate form of
-elemental magic.
+火と水の場合には問題となるだろう。精霊たちは大抵は術者に友好的である。
+……術者が該当する精霊魔法に熟達している場合にはだが。
 %%%%
 Summon Greater Demon spell
 
@@ -573,20 +705,41 @@ Summon Horrible Things spell
 1体から数体のひどく忌まわしい者を召換する。この召換に応える者たちは、
 奉仕の代償として術者の知力の一部を要求する。
 %%%%
+Summon Hydra spell
+
+この呪文は術者と共に戦う多首のヒドラを短い間召喚する。
+%%%%
+Summon Ice Beast spell
+
+この呪文は氷の獣を召換して術者のしもべとする。
+%%%%
+Summon Scorpions spell
+
+この呪文は術者の助けとなる大サソリを1匹から数匹召換する。
+(その幾らかは術者への労役に従わないかもしれない。)
+%%%%
+Summon Small Mammal spell
+
+この呪文は術者の助けとなる小動物を一匹召喚する。
+%%%%
 Summon Swarm spell
 
 この呪文は有害な昆虫の群れを召換する。
 %%%%
+Summon Ugly Thing spell
+
+この呪文は術者の助けとなる突然変異する異世界のモンスターを召喚する。
+%%%%
 Sure Blade spell
 
-この呪文は詠唱者とその手にした短剣との間に魔法の結合をもたらし、 a wielded
-short blade, making the blade much easier to use.
+この呪文は詠唱者とその手にした短剣との間に魔法の結合をもたらし、
+短剣を非常に扱いやすくする。
 %%%%
 Swiftness spell
 
-This spell 術者に卓越した移動速度をもたらす。 great movement speeds. But this
-speed comes at a price: the caster is less stealthy and more likely to blunder
-into traps while the spell is in effect.
+この呪文は術者に卓越した移動速度をもたらす。しかし、
+この速度は効果のある間術者の隠密性を損ない、
+罠にかかりやすくなるという代償と引き換えである。
 %%%%
 Teleport Other spell
 
@@ -600,19 +753,28 @@ Throw Frost spell
 
 この呪文は小さな冷気の矢を放つ。
 %%%%
+Thunderbolt spell
+
+この呪文は弧を描く電気を作り出す。
+%%%%
 Tukima's Dance spell
 
-この呪文は術者が手に持っていた剣を空中で舞わせて、敵を攻撃させる。 not function
-on certain wilful artefacts; any abilities that require evocation skill won't
-be used either.
+この呪文は術者が手に持っていた武器を空中で舞わせて、敵を攻撃させる。
+この呪文は意思を持つアーティファクトには作用しない。
+発動スキルを要するいかなる能力も同様に使用されない。
+%%%%
+Twisted Resurrection spell
+
+この呪文は周辺の死体を一斉に這い回らせ、おぞましい肉の塊へと合体させる。
+多量の、もしくは巨大な死体はより強力な創造物を作り上げる。
 %%%%
 Vampiric Draining spell
 
-この呪文は生きたモンスターから生命力を奪い、術者に与える。 to the caster. Life
-will not be drained in excess of what the caster can capably absorb.
+この呪文は生きたモンスターから生命力を奪い、術者に与える。
+ただし生命力は術者が吸収できる量を越えては奪えない。
 
-However, attempting to drain an undead or demonic creature will backfire on the
-caster.
+しかし、アンデッドやデーモンから生命力を奪おうという試みは術者に不測の事態をも
+たらすだろう。
 %%%%
 Venom Bolt spell
 
@@ -620,7 +782,7 @@ Venom Bolt spell
 %%%%
 Warp Weapon spell
 
-この呪文は一時的に術者の武器に、局所的な歪曲空間を結わえ付ける。 invoker's
-weapon. Note that unlike other brands, distortion can not be made permanent by
-reading a scroll of vorpalise weapon.
+この呪文は術者の手にした武器に一時的に局地的な歪曲場を纏わせる。
+他の属性とは異なり、苦痛の属性は殺戮の武器の巻物によって永続化することができな
+いことには留意せねばならない。
 %%%%

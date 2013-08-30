@@ -31,10 +31,6 @@ Evoke Teleportation ability
 
 Teleporttaa itsesi satunnaiseen paikkaan kerrosta.
 %%%%
-Evoke Blink
-
-Siirry satunnaisesti lyhyen matkaa.
-%%%%
 End Transformation ability
 
 Palaa takaisin perusmuotoosi pienellä viiveellä.

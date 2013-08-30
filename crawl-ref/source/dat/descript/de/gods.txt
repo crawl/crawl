@@ -287,7 +287,11 @@ benutzen. Seine Anhänger können ihre Feinde peinigen und werden sogar eigene
 orkische Anhänger erhalten, die von Beogh im Kampf gesegnet und auf der selben
 Ebene zurückgerufen werden können. Schließlich werden sie die Kraft erhalten,
 auf Wasser zu gehen. Beogh wird manchmal direkt eingreifen, um das Leben eines
-Anhängers zu schützen.
+Anhängers zu schützen. {{
+    if you.race() == "Lava Orc" then
+        return "Beogh unterdrückt die Hitzeaura von Lava Orc Anhängern."
+    end
+}}
 %%%%
 Fedhas powers
 

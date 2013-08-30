@@ -1,0 +1,41 @@
+%%%%
+death
+
+Vi kondolerer! Din karakters alt for tidlige død er bedrøvelig, men en ganske
+almindelige hændelse i Crawl. Du kan dog trygt stole på, at med knofedt og mere
+spilerfaring vil dine karakterer kunne overleve længere.
+
+Måske kan det følgende råd forbedre din spillestil:
+%%%%
+death conjurer melee
+
+Som fremmaner bør dit vigtigste våben være angrebsmagi. Kast besværgelser
+oftere! Husk at hvile når din magi er lav.
+%%%%
+death ranger melee
+
+Din bue og dine pile er ekstremt kraftfulde mod fjerne monstre. Sørg for at
+samle alle pile som ligger og flyder i de underjordiske gange.
+%%%%
+death random 0
+
+Overvej altid at bruge projektiler, vånde eller besværgelser før du angriber
+monstre i nærkamp.
+%%%%
+death random 3
+
+Husk nu at bruge de skriftruller, eliksirer og vånde du har fundet. Du kan
+oftest ikke forvente at få identificeret alt med skriftruller. Lær at
+improvisere: Identificér gennem brug.
+%%%%
+death random 4
+
+Glem ikke at bruge nødforsyninger tidligt hvis et særligt sammenstød synes
+overvældende. En skriftrulle med teleportation eller en hurtighedseliksir kan
+virkeligt redde dit skind.
+%%%%
+death random 5
+
+Kæmp aldrig mod mere end et monster hvis du kan undgå det. Bak altid ind i en
+korridor så de bliver tvunget til at kæmpe mod dig en mod en.
+%%%%

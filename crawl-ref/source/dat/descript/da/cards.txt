@@ -1,0 +1,103 @@
+%%%%
+Swap card
+
+Dette kort bytter om på dig og et væsen i nærheden. Det findes som regel i
+stakke til flugt eller krig.
+%%%%
+Velocity card
+
+Dette kort lader dig bevæge dig eller endda handle hurtigere. Det findes som
+regel i stakke til flugt eller krig.
+%%%%
+Damnation card
+
+Dette kort forviser et eller flere væsener i nærheden til Afgrunden, muligvis
+inklusive dig. Det findes som regel i stakke til forsvar, flugt og krig, eller
+i Nemelex Xobehs strafstak.
+%%%%
+Solitude card
+
+Dette kort teleporterer tilfældigt væsener, der er ved siden af dig. Det findes
+som regel i stakke til forsvar, flugt eller krig.
+%%%%
+Flight card
+
+Dette kort hjælper dig med at tage benene på nakken ved at forvandle dig, gøre
+dig hurtigere eller skabe andre flugtveje. Det findes som regel i stakke til
+forsvar, flugt og krig.
+%%%%
+Battlelust card
+
+Dette kort gør dig mægtigere i fysisk kamp. Det findes som regel i stakke til
+forandring, forsvar og krig.
+%%%%
+Metamorphosis card
+
+Dette kort forvandler dig midlertidigt. Det findes som regel i stakke til
+forandring, forsvar og krig.
+%%%%
+Focus card
+
+Dette kort øger din stærkeste egenskab på bekostning af din svageste. Det
+findes som regel i stakke til forandring og vidundere.
+%%%%
+Shuffle card
+
+Dette kort bytter rundt på dine tre egenskaber. Vær forsigtig med at bruge det!
+Det findes som regel i stakke med forandringer og vidundere.
+%%%%
+Experience card
+
+Dette kort gør dig mere erfaren. Det findes som regel i stakke til forandring
+eller vidundere.
+%%%%
+Vitrification card
+
+Dette kort gør væggene gennemsigtige. Det findes som regel i stakke til
+forandringer eller udgravning.
+%%%%
+Foxfire card
+
+Dette kort hidkalder flyvende væsener. Det findes som regel i stakke til
+hidkaldelser eller krig.
+%%%%
+Repulsiveness card
+
+Dette kort hidkalder en grim eller virkeligt grim ting. Det findes som regel i
+stakke med hidkaldelser og krig.
+%%%%
+Vitriol card
+
+Dette kort udløser et ætsende eller nedbrydende angrebsbesværgelse. Det findes
+som regel i stakke til ødelæggelse og krig.
+%%%%
+Flame card
+
+Dette kort udløser en flammende angrebsbesværgelse. Det findes som regel i
+stakke til ødeløggelse og krig.
+%%%%
+Frost card
+
+Dette kort udløser en iskold angrebsbesværgelse. Det findes som regel i stakke
+til ødelæggelse og krig.
+%%%%
+Venom card
+
+Dette kort udløser en giftig angrebsbesværgelse, som også kan påvirke dig. Det
+findes som regel i stakke til ødelæggelse og krig.
+%%%%
+Pain card
+
+Dette kort udløser en nekromantisk angrebsbesværgelse, som muligvis også rammer
+dig selv. Det findes som regel i stakke til ødelæggelse og krig.
+%%%%
+Torment card
+
+Dette kort påkalder sig mørkets kræfter for at forvolde pinefulde skader på
+levende væsener i nærheden. Det findes som regel i stakke til ødelæggelse og
+krig.
+%%%%
+Famine card
+
+Dette kort sulter dig. Det findes som regel kun i Nemelex Xobehs strafstak.
+%%%%

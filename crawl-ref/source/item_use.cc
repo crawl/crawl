@@ -2328,6 +2328,7 @@ static bool _drink_fountain()
         crawl_state.cancel_cmd_repeat();
     }
 
+    zin_recite_interrupt();
     you.turn_is_over = true;
     return true;
 }

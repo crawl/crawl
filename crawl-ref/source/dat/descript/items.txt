@@ -2105,8 +2105,8 @@ sack of spiders
 
 A woven silk bag. Something appears to be moving inside...
 
-Opening this bag will release a number of spiders friendly to your cause.
-You might need to dust off the cobwebs after, however.
+Opening this bag will release a number of spiders friendly to your cause. You
+might need to dust off the cobwebs after, however.
 %%%%
 sacred scourge
 

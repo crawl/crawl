@@ -299,8 +299,9 @@ bool iood_act(monster& mon, bool no_trail)
     // If the target is gone, the orb continues on a ballistic course since
     // picking a new one would require intelligence.
 
-    // Boulders don't home onto their targets.
-    if (iood && foe)
+    // Boulders don't home onto their targets.  IOODs can't home in on a
+    // submerged creature.
+    if (iood && foe && !foe->submerged())
     {
         const coord_def target = foe->pos();
         float dx = target.x - x;

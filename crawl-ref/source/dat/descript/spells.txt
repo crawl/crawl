@@ -95,10 +95,6 @@ This spell inflicts enormous damage upon any creature struck by the bolt of
 incandescent energy conjured into existence. Unfortunately, it is very
 difficult to aim and very rarely hits anything. Pity, that.
 %%%%
-Iron Shot spell
-
-This spell hurls a large and heavy metal bolt at the caster's foe.
-%%%%
 Bolt of Magma spell
 
 This spell hurls a sizzling bolt of molten rock, capable of dealing some
@@ -134,6 +130,17 @@ Chain Lightning spell
 This spell releases a massive electrical discharge that arcs from target to
 target until it grounds out. It may ground out harmlessly if there are no
 targets sufficiently close to the caster, however.
+%%%%
+Chaos Breath spell
+
+This creature may exhale a large cloud of fumes filled with the very essence
+of chaos. Effects of getting caught in this cloud are about as predictable
+as Xom him- or herself.
+%%%%
+Cold Breath spell
+
+This creature may exhale a focused blast of icy-cold air. It may knock back
+airborne targets.
 %%%%
 Condensation Shield spell
 
@@ -254,8 +261,8 @@ This spell digs a tunnel through unworked rock.
 %%%%
 Discord spell
 
-This spell drives nearby creatures into an insane frenzy, mercilessly
-attacking anything and everything nearby with great strength and speed.
+This spell drives nearby creatures into an insane frenzy, mercilessly attacking
+anything and everything nearby with great strength and speed.
 %%%%
 Disintegrate spell
 
@@ -276,6 +283,11 @@ inflict a great deal of damage on it.
 Dispersal spell
 
 This spell tries to teleport away any monsters directly beside the caster.
+%%%%
+Draconian Breath spell
+
+[This spell should have been replaced by a colour-specific one.  If you got
+it, this is a bug.]
 %%%%
 Dragon Form spell
 
@@ -364,10 +376,6 @@ and unleashes it after a short while as a violent explosion of arcane force. Be
 warned that the prism is extremely fragile and any damage caused to it may
 result in premature detonation!
 %%%%
-Major Healing spell
-
-This spell heals a large amount of damage to the caster's body.
-%%%%
 Haste spell
 
 This spell speeds the actions of a creature. Hasting yourself will increase
@@ -382,12 +390,11 @@ Hellfire spell
 
 <Hellfire ability>
 %%%%
-Throw Icicle spell
+Holy Breath spell
 
-This spell throws forth a shard of ice. It is particularly effective against
-those creatures not immune to the effects of freezing. But as most of its
-destructive potential comes from strong impact and cutting edges, even
-cold-resistant creatures are notably affected.
+This creature can exhale a large cloud of blessed flame, shining with the
+glory of the good gods. These flames are especially dangerous to those
+meeting The Shining One's definition of evil.
 %%%%
 Ice Form spell
 
@@ -422,6 +429,13 @@ Injury Mirror spell
 
 <Injury Mirror ability>
 %%%%
+Ink Cloud spell
+
+Krakens are known to inject an opaque liquid into water to secure their
+escape if a fight goes awry. Unlike their lesser cousins, this ink is potent
+enough to obscure vision above water as well, if the kraken stirs the water
+enough.
+%%%%
 Inner Flame spell
 
 This spell fills an enemy with an intense fire, to be explosively released upon
@@ -432,6 +446,10 @@ Invisibility spell
 This spell hides a creature from the sight of others. While invisible you will
 gain magical contamination, which may eventually cause enough glow to make you
 visible again.
+%%%%
+Iron Shot spell
+
+This spell hurls a large and heavy metal bolt at the caster's foe.
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -468,10 +486,6 @@ Lehudib's Crystal Spear spell
 
 This spell hurls a lethally sharp bolt of crystal.
 %%%%
-Minor Healing spell
-
-This spell heals a small amount of damage to the caster's body.
-%%%%
 Lethal Infusion spell
 
 This spell infuses a weapon held by the caster with unholy energies. It will
@@ -486,6 +500,10 @@ of creatures.
 Magic Dart spell
 
 This spell hurls a small bolt of magical energy. It never misses.
+%%%%
+Major Healing spell
+
+This spell heals a large amount of damage to the caster's body.
 %%%%
 Malign Gateway spell
 
@@ -504,15 +522,15 @@ Mass Confusion spell
 
 This spell causes confusion in all who gaze upon the caster.
 %%%%
-Mephitic Cloud spell
-
-This spell conjures up a large but short-lived cloud of vile fumes.
-%%%%
 Melee spell
 
 The rod of striking is designed for melee combat, releasing its charges to deal
 additional damage dependent on evocations skill when it strikes a foe. Maces &
 Flails skill will help improve your basic effectiveness with the weapon.
+%%%%
+Mephitic Cloud spell
+
+This spell conjures up a large but short-lived cloud of vile fumes.
 %%%%
 Mesmerise spell
 
@@ -523,6 +541,15 @@ Metabolic Englaciation spell
 This spell tries to lower the metabolic rate of every creature in the caster's
 vicinity, slowing all those who are not resistant to cold. It bypasses magic
 resistance, although tougher monsters will not be slowed for as long as others.
+%%%%
+Miasma Breath spell
+
+Uh oh, talk about a nasty case of halitosis. This is not your average ogre's
+burp, these noxious fumes can rot your flesh off your bones.
+%%%%
+Minor Healing spell
+
+This spell heals a small amount of damage to the caster's body.
 %%%%
 Necromutation spell
 
@@ -537,6 +564,13 @@ potions.
 
 Contrary to what one would expect, this spell works on octopodes, although what
 foul necromantic tissue serves as an analogue for bones remains a mystery.
+%%%%
+Noxious Cloud spell
+
+This breath includes the same substance as that used in a well-known wizard
+spell “Mephitic Cloud”. When inhaled by a person or creature not resistant
+to poison, it does only minor damage but can cause confusion and a bad
+headache.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -600,6 +634,13 @@ down for a while until it is temporarily turned into stone. In this state, a
 monster will take less damage upon being hit. It also precludes the use of
 wings, which can be quite unhealthy above lava.
 %%%%
+Petrifying Cloud spell
+
+Catoblepae can exhale calcifying dust, which turns anyone affected for
+longer than a brief moment into a statue.  Access to fresh air may let
+you recover — but not if your statue gets broken into pieces by the
+catoblepas' claws first.
+%%%%
 Phase Shift spell
 
 This spell allows the caster to phase in and out of the material plane,
@@ -610,6 +651,10 @@ Poison Arrow spell
 This spell hurls a magical arrow coated with the most vile and noxious toxin.
 No living thing is completely immune to its effects, and even the undead will
 take damage from the physical component of the spell.
+%%%%
+Poison Splash spell
+
+<Spit Poison ability>
 %%%%
 Poison Weapon spell
 
@@ -640,6 +685,12 @@ Portal Projectile spell
 
 This spell teleports a fired or thrown missile directly to its target, greatly
 increasing its accuracy (but not damage).
+%%%%
+Quicksilver Bolt spell
+
+Some dragon types can breathe dispelling energy, sometimes called
+“quicksilver” because of its appearance. Besides causing damage, it
+may remove some enchantments, both beneficial and harmful.
 %%%%
 Recall spell
 
@@ -750,20 +801,21 @@ Song of Slaying spell
 
 This spell conjures ancient verses of battle within your mind and makes you
 recite them — quite loudly! Each non-summoned enemy you slay in combat during
-this recitation temporarily enhances your melee skills. Your effectiveness
-will only be enhanced for the duration of the song; casting this spell while
-already singing will start a new song, not extend an existing one.
+this recitation temporarily enhances your melee skills. Your effectiveness will
+only be enhanced for the duration of the song; casting this spell while already
+singing will start a new song, not extend an existing one.
 %%%%
 Spectral Weapon spell
 
 This spell draws out the spirit within a wielded weapon to fight for you, with
 its power dependent on your skill with said weapon. Never striking on its own,
-it only attacks when you do. You can only ever have one spectral weapon at a time.
+it only attacks when you do. You can only ever have one spectral weapon at a
+time.
 
 Kills by a spectral weapon count as your own when singing a Song of Slaying.
 
-Certain powerful named artefacts possess too strong a spirit for this spell
-to be able to draw them out.
+Certain powerful named artefacts possess too strong a spirit for this spell to
+be able to draw them out.
 %%%%
 Spider Form spell
 
@@ -789,6 +841,10 @@ Sticks to Snakes spell
 This spell uses wooden items in the caster's grasp as raw material for a
 powerful transmutation. Note that magical artefacts will not be affected.
 %%%%
+Sticky Flame Splash spell
+
+<Breathe Sticky Flame ability>
+%%%%
 Sticky Flame spell
 
 This spell conjures a sticky glob of liquid fire, which will adhere to and burn
@@ -800,10 +856,6 @@ Sticky Flame spell:quote
 for the rest of his life.”
 
     -Terry Pratchett, “Jingo”
-%%%%
-Sticky Flame Splash spell
-
-<Breathe Sticky Flame ability>
 %%%%
 Sting spell
 
@@ -933,6 +985,13 @@ This spell throws a small bolt of flame.
 Throw Frost spell
 
 This spell throws a small bolt of frost.
+%%%%
+Throw Icicle spell
+
+This spell throws forth a shard of ice. It is particularly effective against
+those creatures not immune to the effects of freezing. But as most of its
+destructive potential comes from strong impact and cutting edges, even
+cold-resistant creatures are notably affected.
 %%%%
 Thunderbolt spell
 

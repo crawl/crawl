@@ -137,7 +137,8 @@ Crawl has a macro function built in: press <input>~m</input> to define a macro
 by first specifying a trigger key (say, <input>F1</input>) and a command
 sequence, for example <input>za+.</input>. The latter will make the
 <input>F1</input> key always zap the spell in slot a at the nearest monster.
-For more information on macros, type <input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
+For more information on macros, type
+<input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
 %%%%
 finished random 2
 
@@ -153,8 +154,8 @@ You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
 %%%%
 dissection reminder
 
-If you don't want to eat it, consider offering this corpse up under
-prayer (<input>$cmd[CMD_PRAY]</input>) as a sacrifice to
+If you don't want to eat it, consider offering this corpse up under prayer
+(<input>$cmd[CMD_PRAY]</input>) as a sacrifice to
 {{ return you.god() }}. <localtiles>You can also chop up any corpse that shows
 in the floor part of your inventory tiles by clicking on it with your
 <input>left mouse button</input>. </localtiles>Whenever you view a corpse while
@@ -175,6 +176,7 @@ HINT_CONVERT
 # Not the case for Chei, but not sure if we need to go into that much
 # detail here.
 #
+# TODO: use $cmd for ^
 You've just converted to worshipping <w>{{ return you.god() }}</w>. Your piety
 (divine favour) will gradually decrease over time, and if it runs out {{ return
 you.god() }} will excommunicate you and punish you. You can prevent this,
@@ -182,7 +184,6 @@ however, and even gain enough piety to get powers and divine gifts, by doing
 things to please {{ return you.god() }}. But don't panic: you start out with a
 decent amount of piety, so any danger of excommunication is far off.
 
-# TODO: use $cmd for ^
 You can check your god's likes and dislikes, as well as your current standing
 and divine abilities, by typing <input>^</input><localtiles> (alternatively
 press <input>Shift-right-click</input> on your avatar)</localtiles>.
@@ -193,14 +194,13 @@ That <console>$1 </console>is an item. If you move there and press
 <input>$cmd[CMD_PICKUP]</input>, you will pick it up.<console> Generally, items
 are shown by non-letter symbols like <w>%?!"=()[</w>.</console><tiles> You can
 also pick up an item by clicking on your <input>left mouse button</input> while
-standing on its square.</tiles>
-Also, several types of objects will usually be picked up automatically.
-<tiles>These will be marked with a green frame around them.</tiles>
+standing on its square.</tiles> Also, several types of objects will usually be
+picked up automatically. <tiles>These will be marked with a green frame around
+them.</tiles>
 
 Once it is in your inventory, you can drop it again with <tiles>a
-<input>Shift-leftclick</input>. Whenever you <input>right-click</input>
-on an item</tiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at
-an item in your inventory
-(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>, you can read about its
-properties and its description.
+<input>Shift-leftclick</input>. Whenever you <input>right-click</input> on an
+item</tiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at an
+item in your inventory (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>,
+you can read about its properties and its description.
 %%%%

@@ -3898,8 +3898,8 @@ void bolt::affect_player()
     extra_range_used += range_used_on_hit();
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-         || (name == "chilling blast" && you.airborne())
-         || (name == "lance of force" && hurted > 0)
+         || (origin_spell == SPELL_COLD_BREATH && you.airborne())
+         || (origin_spell == SPELL_FORCE_LANCE && hurted > 0)
          || (name == "flood of elemental water"))
     {
         beam_hits_actor(&you);

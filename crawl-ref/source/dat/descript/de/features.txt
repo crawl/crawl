@@ -132,23 +132,6 @@ stärksten und erfahrensten Abenteurer können hier sterben. Allerdings enthalte
 diese Hallen einige Runen und viele wertvolle Items. Es ist deutlich leichter,
 hineinzukommen, als wieder herauszukommen.
 %%%%
-A gas trap
-
-Glücklicherweise hast du diese Falle bemerkt, denn sie hätte dich mit einer
-Wolke tödlichen Gases umhüllt. Du weißt nicht, welche Art von Gas es ist -
-vielleicht ist es einfach nur Giftgas, vielleicht sind es mutagene Dämpfe oder
-entzündlicher Dunst – oder etwas noch schlimmeres.
-%%%%
-A gas trap:quote
-
-„Gut Ihre Gnade' hatte ich Zimmer für solch einen Gewitter innerhalb meiniger
-alte Därme, 'tis nicht im Grund ich konnte Sie dasselbe und lebend entlassen,
-um sich bei Gott für sich zu bedanken. Er hat wirklich so bescheidene Dienerin
-wodurch zu shew seine Macht gewählt. Nein, 'tis nicht ich yt haben broughte
-hervor dieser reiche o'ermastering Nebel, diese duftende Düsterkeit, so beten
-Sie Sie suche Sie weiter.“
-    -Mark Twain, „1601“, 1880.
-%%%%
 A gate to the Realm of Zot
 
 Dieses Tor führt zum Zot-Reich, der letzten Etappe deiner Suche, denn seine
@@ -472,6 +455,10 @@ A staircase back to the Dungeon
 
 Diese Treppe führt zurück zur Vertrautheit des Verlieses.
 %%%%
+A staircase back to the Forest
+
+Diese Treppe führt zurück in die relative Sicherheit des Waldes.
+%%%%
 A staircase back to the Lair
 
 Diese Treppe führt zurück zum Lager der Bestien.
@@ -503,19 +490,6 @@ A staircase to the Ecumenical Temple
 Ein Eingang zum Tempel der Götter, einem Ort der Ruhe und Erholung vom Wahnsinn
 des Verlieses.
 %%%%
-A staircase to the Ecumenical Temple:quote
-
-„In einer Stadt — den Namen nenn' ich nicht,
-  Ihr braucht's wahrhaftig auch nicht zu bedauern,
- In einer Stadt — wer so von Trümmern spricht,
-  Die Residenz von Juden und von Bauern,
- In einer Stadt — ein Schloß, Burg und Gericht,
-  Des Leichtsinns Denkmal mit verfall'nen Mauern:
- Dort Standen Schänken ... drei, Thortrümmer ... vier,
-  Neun Klöster und ... auch Häuschen dort und hier.”
-    -Ignacy Krasicki, “Der Mönche-Krieg(Monachomachia)”, 1778
-     übersetzt von Dr. Alexander Winklewski
-%%%%
 A staircase to the Elven Halls
 
 Eine breite Treppe führt nach unten zu den Hallen der Tiefelfen, geschickten
@@ -535,6 +509,11 @@ A staircase to the Orcish Mines
 
 Ein Eingang zu den Minen der Orks, gefüllt mit ihrem Gold, aber heimtückisch
 und voller Fallen.
+%%%%
+A staircase to the Enchanted Forest
+
+Am anderen Ende dieser Treppe liegt die bewaldete Heimat der Spriggans, Tengu,
+Faunen und allerlei schrecklichen Flüche.
 %%%%
 A staircase to the Shoals
 

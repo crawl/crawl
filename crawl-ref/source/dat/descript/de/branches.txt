@@ -124,6 +124,17 @@ Bestie. Diese Zeit ist vorüber, nur die Waffen sind noch dort.
 Die Halle der Klingen hat eine einzige Ebene und kann zwischen Gewölbe 3 und
 Gewölbe 4 gefunden werden.
 %%%%
+Crypt
+
+Eine riesige Lagerstätte für die alten Toten. Die Luft ist frostig und
+übelriechend, die Wände kalt und feucht. Knochen sind großzügig überall
+verstreut und der ganze Ort erhallt mit dem Wehklagen der gequälten Seelen der
+unruhigen Toten.
+
+Die Krypta ist fünf Ebenen tief. Das Verlies beinhaltet entweder die Krypta
+oder den Wald; wenn die Krypta vorhanden ist, kann sie zwischen Gewölbe:2 und
+Gewölbe:3 gefunden werden, und enthält den Eingang zum Grab.
+%%%%
 Tomb
 
 Das Grabmal der Antike ist ein Ort der Verdammnis und von niederträchtigster
@@ -186,6 +197,14 @@ dieses Ortes jedes Leben aus den Schatzlüsternden Besuchern herraus.
 Tartarus ist sieben Ebenen tief und enthält die Knochen Rune. Sie kann über den
 Vorhof der Hölle erreicht werden.
 %%%%
+Tartarus:quote
+
+“Dort ist ein trübes, tristeres Gebiet
+ der Hölle, fernab jeder Dunkelheit;
+ ein flach gebeugtes Land von Schatten weit
+ umspannt. – Und nichts davon sagt dieses Lied.”
+    -Edward Arlington Robinson, “Die höchste Macht/_Supremacy_”. 1897.
+%%%%
 Zot
 
 Eine Bereich der Verliese die so entsetzlich, so voller Wahnsinn, Raserei und
@@ -197,6 +216,18 @@ andere gesehen hat.
 
 Das Reich von Zot ist fünf Ebenen tief und kann nur betreten werden wenn man
 mindestens drei Runen bei sich trägt.
+%%%%
+Forest
+
+Unter diesem dunklen und unheimlichen Wald liegen die Höhlen der Spriggans,
+Faune, Tengu und andere Kreaturen die bereit sind den Verstand der
+Eindringlinge, die nicht bereit sind, ihren Willen aufzuzwingen.
+Leistungsstarke illusorische und behindernde Magier sind die Norm, nicht die
+Ausnahme.
+
+Der verzauberte Wald ist fünf Ebenen tief. Das Verlies verfügt entweder über
+eine Krypta oder den Wald, wenn der Wald vorhanden ist, kann er zwischen
+Gewölbe:2 und Gewölbe:3 gefunden werden, und enthält den Eingang zum Grab.
 %%%%
 Abyss
 

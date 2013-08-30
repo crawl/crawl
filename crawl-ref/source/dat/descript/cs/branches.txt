@@ -104,6 +104,25 @@ lze narazit také na určité množství násilí.
 Sklepení mají pět pater a nachází se zde stříbrná runa a také vstupy do dalších
 dvou částí. Vstup lze najít mezi 15. a 20. patrem hlavní části žaláře.
 %%%%
+Hall of Blades
+
+Bylo nebylo, kdysi se dýky, sekery a halapartny v noční čas scházely a tančili
+waltz, sníce o bitevních polích prosty člověka i zvířete. Ty časy jsou již
+dávno pryč, ony zbraně však zůstaly.
+
+Síň čepelí má pouze jedno podlaží a lze ji nalézt mezi Sklepením:3 a
+Sklepením:4.
+%%%%
+Crypt
+
+Obrovské úložiště starobylých nebožtíků. Vzduch je zapáchající a mrazivý, stěny
+chladné a vlhké. Všude jsou hojně rozeseté kosti a celým místem zaznívá
+pronikavý křik mučených duší neklidných zesnulých.
+
+Krypta má pět úrovní. V žaláři je k nalezení buď krypta nebo hvozd, a v
+případě, že krypta existuje, vchod do ní se nachází mezi sklepením:2 a
+sklepením:3, a obsahuje vchod do hrobky.
+%%%%
 Tomb
 
 Hrobka Prastarých je místo prokletí a hrůz oživených nejodpornějšími
@@ -161,10 +180,10 @@ přes Předsíň pekel.
 %%%%
 Tartarus:quote
 
-V pekle jest chmurný a osamělý světa kus
-od všeho ostatního šera na hony vzdálený:
-Prostý, smutný je to kraj, kde se stíny nacházejí,
-Smutek jeho verš můj nikdy nepoví.
+“V pekle jest chmurný a osamělý světa kus
+ od všeho ostatního šera na hony vzdálený:
+ Prostý, smutný je to kraj, kde se stíny nacházejí,
+ Smutek jeho verš můj nikdy nepoví.”
     -Edward Arlington Robinson, “Svrchovanost”. 1897.
 %%%%
 Zot
@@ -177,6 +196,17 @@ artefakt, který nikdo nikdy neviděl.
 
 Zotova říše má pět pater a lze vejít pouze když má vstupující u sebe alespoň
 tři runy.
+%%%%
+Forest
+
+V těchto temných a ponurých lesích leží doupě spriganů, faunů, tengu a dalších
+bytostí, které jsou schopny podmanit si mysl nezvaných hostů proti jejich vůli.
+Mocné magické iluze a překážky jsou zde v porovnání s jinými místy naprosto
+běžné.
+
+Začarovaný hvozd má pět úrovní. V žaláři je k nalezení buď krypta nebo hvozd, a
+v případě, že hvozd existuje, vchod do něj se nachází mezi sklepením:2 a
+sklepením:3, a obsahuje vchod do hrobky.
 %%%%
 Abyss
 
@@ -204,11 +234,11 @@ Pandemonium nemá konce. Portály lze v hojném počtu nalézt v hlubších patr
 žaláře, ale dostat se zpět už však nemusí být stejně jednoduché.
 
 V Pandemoniu se nachází ne méně než pět run:
-• ohnivá runa v příjemně vyhřáté říši Cerebově
-• zářná runa v zamořeném panství Mnolega
-• magická runa, střežena tajemnými silami Lom Lobona a jeho pohůnků
-• temná runa v stínovém příbytku Gloorxe Vloqa
-• démonické runy, které vlastní méně slavní pánové démonů
+ • ohnivá runa v příjemně vyhřáté říši Cerebově
+ • zářná runa v zamořeném panství Mnolega
+ • magická runa, střežena tajemnými silami Lom Lobona a jeho pohůnků
+ • temná runa v stínovém příbytku Gloorxe Vloqa
+ • démonické runy, které vlastní méně slavní pánové démonů
 %%%%
 Ziggurat
 

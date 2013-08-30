@@ -3274,9 +3274,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 }
 
 // If the returned value is mon.pos(), then nothing was found.
-static coord_def _random_monster_nearby_habitable_space(const monster& mon,
-                                                        bool allow_adjacent,
-                                                        bool respect_los)
+static coord_def _random_monster_nearby_habitable_space(const monster& mon)
 {
     const bool respect_sanctuary = mon.wont_attack();
 
@@ -3292,7 +3290,8 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
         if (delta.origin())
             continue;
 
-        if (delta.rdist() == 1 && !allow_adjacent)
+        // Blinks by 1 cell are not allowed.
+        if (delta.rdist() == 1)
             continue;
 
         // Update target.
@@ -3311,16 +3310,7 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
         if (target == you.pos())
             continue;
 
-        // Check that we didn't go through clear walls.
-        if (num_feats_between(mon.pos(), target,
-                              DNGN_MINSEE,
-                              DNGN_MAX_NONREACH,
-                              true, true) > 0)
-        {
-            continue;
-        }
-
-        if (respect_los && !mon.see_cell(target))
+        if (!cell_see_cell(mon.pos(), target, LOS_NO_TRANS))
             continue;
 
         // Survived everything, break out (with a good value of target.)
@@ -3335,9 +3325,7 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
 
 bool monster_blink(monster* mons, bool quiet)
 {
-    coord_def near = _random_monster_nearby_habitable_space(*mons, false,
-                                                            true);
-
+    coord_def near = _random_monster_nearby_habitable_space(*mons);
     return mons->blink_to(near, quiet);
 }
 

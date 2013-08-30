@@ -1705,7 +1705,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
         }
     }
 
-    if (motions_r)
+    if (motions_r && you.see_cell(a))
         *motions_r |= motions;
 
     if (number_found == 0)

@@ -1,0 +1,39 @@
+%%%%
+Animate Remains ability
+
+Doet een enkel lijk of skelet herleven als volger. Hou er rekening mee dat
+zombies en skeletten het niveau waarop ze gemaakt werden niet kunnen verlaten.
+%%%%
+Animate Dead ability
+
+Doet alle lijken en skeletten rondom je herleven als volgers. Hou er rekening
+mee dat zombies en skeletten het niveau waarop ze gemaakt werden niet kunnen
+verlaten.
+%%%%
+Animate Remains or Dead ability
+
+Als je deze omschrijving ziet, is dat een bug.
+%%%%
+Bend Space ability
+
+Buigt het ruimteweefsel rondom je, waardoor je ogenblikkelijk een kleine
+afstand aflegt. Mogelijk worden monsters rondom je ook getransloceerd en
+beschadigd.
+%%%%
+Banish ability
+
+Probeert een monster naar de Diepte te verbannen.
+%%%%
+Bend Time ability
+
+Probeert iedereen rondom je te vertragen. Hoe hoger je Invocatievaardigheid,
+hoe moeilijker het is voor monsters om zich hiertegen te verzetten.
+%%%%
+Acquire gold ability
+
+Bemachtigt een grote hoeveelheid goudstukken.
+%%%%
+Acquirement ability
+
+Bemachtigt een gekozen type voorwerp.
+%%%%

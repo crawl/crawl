@@ -11,10 +11,10 @@ rapidement avec toutes les armes de ce type, accroitra votre précision et les
 dégâts occasionnés par elles. Il est généralement recommandé de concentrer vos
 efforts dans un ou deux types d'armes pour devenir plus puissant avec elles.
 
-Les lames courtes ont la réputation de produire de faibles dégâts plus tard
+Les Epées courtes ont la réputation de produire de faibles dégâts plus tard
 dans le jeu mais, d'un autre côté, ils sont le meilleur outil pour poignarder.
 
-Être compétent en Lames Courtes rend plus facile l'apprentissage en Lames
+Être compétent en Epées Courtes rend plus facile l'apprentissage en Epées
 Longues, et vice versa.
 %%%%
 Long Blades
@@ -24,7 +24,7 @@ rapidement avec toutes les armes de ce type, accroitra votre précision et les
 dégâts occasionnés par elles. Il est généralement recommandé de concentrer vos
 efforts dans un ou deux types d'armes pour devenir plus puissant avec elles.
 
-Être compétent en Lames Longues rend plus facile l'apprentissage en Lames
+Être compétent en Épées Longues rend plus facile l'apprentissage en Épées
 Courtes, et vice versa.
 %%%%
 Axes
@@ -79,8 +79,8 @@ Armes d'Hast, et vice versa.
 %%%%
 Slings
 
-Être compétent avec un type particulier d'armes de distance vous permettra de
-faire plus de dégâts quand vous utiliserez une arme et des munitions
+Être compétent dans un type particulier d'armes à distance vous permettra de
+faire plus de dégâts quand vous an utiliserez une avec des munitions
 appropriées.
 
 Être compétent avec les Frondes facilite l'apprentissage en Lancer, et vice
@@ -88,20 +88,20 @@ versa.
 %%%%
 Bows
 
-Être compétent avec un type particulier d'armes de distance vous permettra de
-faire plus de dégâs quand vous utiliserez une arme et des munitions
+Être compétent dans un type particulier d'armes à distance vous permettra de
+faire plus de dégâts quand vous en utiliserez une avec des munitions
 appropriées.
 %%%%
 Crossbows
 
-Être compétent avec un type particulier d'armes de distance vous permettra de
-faire plus de dégâts quand vous utiliserez une arme et des munitions
+Être compétent dans un type particulier d'armes à distance vous permettra de
+faire plus de dégâts quand vous en utiliserez une avec des munitions
 appropriées.
 %%%%
 Darts
 
-Être compétent avec un type particulier d'armes de distance vous permettra de
-faire plus de dégâts quand vous utiliserez une arme et des munitions
+Être compétent dans un type particulier d'armes à distance vous permettra de
+faire plus de dégâts quand vous en utiliserez une avec des munitions
 appropriées.
 %%%%
 Throwing
@@ -139,33 +139,33 @@ Stabbing
 
 Poignarder est la compétence qui gouverne les probabilités de faire d'énormes
 dégâts quand vous attaquez une créature distraite ou sans défense
-(habituellement avec une lame courte), ainsi que la quantité de dégâts
+(habituellement avec une Épées courte), ainsi que la quantité de dégâts
 supplémentaires occasionnés. Certains dieux désapprouvent cette pratique.
 %%%%
 Shields
 
 Une haute compétence en Boucliers aide à bloquer les attaques en mêlée comme
-les projectiles (autant magique que non magique) avec votre bouclier équipé (ou
-magique). Certaines attaques, comme les carreaux pénétrant, ne peuvent pas être
-bloqués du tout.
+les projectiles (autant magique que non magique) avec votre bouclier équipé
+(qu'il soit ou non d'origine magique). Certaines attaques, comme les carreaux
+pénétrant, ne peuvent pas être bloqués du tout.
 %%%%
 Traps
 
-Un personnage formé aux pièges sera plus observateur et remarquera plus
-facilement les pièges, et pourra également plus facilement les désamorcer
+Un personnage formé aux pièges sera plus observateur et les remarquera plus
+rapidement, il pourra également plus facilement les désamorcer.
 %%%%
 Unarmed Combat
 
-Être compétent en Mains Nues accroit votre précision, vos dégâts et la vitesse
-de vos attaques au corps-à-corps sans arme aucune. Cela vous permet aussi
-occasionnellement de frapper avec votre main libre, en supposant que votre main
-soit libre pour cela.
+Être compétent en Combat à Mains Nues accroit votre précision, vos dégâts et la
+vitesse de vos attaques au corps-à-corps sans aucune arme. Cela vous permet
+aussi occasionnellement de frapper avec votre main libre, en supposant que
+votre main soit libre pour cela.
 %%%%
 Spellcasting
 
-Entrainer Sorcellerie rend l'apprentissage et le lancement des sorts plus
+Entrainer la Sorcellerie rend l'apprentissage et le lancement des sorts plus
 faciles, de plus cela accroit votre réserve de magie. Augmenter un niveau en
-Sorcellerie vous octroie un plus "d'emplacements de sorts" pour apprendre de
+Sorcellerie vous octroie plus "d'emplacements de sorts" pour apprendre de
 nouveaux sortilèges. La compétence Sorcellerie et votre intelligence sont les
 seuls facteurs contrant la fringale générée par un sort.
 %%%%
@@ -346,8 +346,8 @@ Sorcellerie et, seulement la plus haute contribution est utilisée.
 %%%%
 Evocations
 
-Évocations concerne l'usage des objets magiques tels que les baguettes, jeux de
-cartes ou objets peu communs. Plus votre compétence est élevée, plus les
+L'Évocation concerne l'usage des objets magiques tels que les baguettes, jeux
+de cartes ou objets peu communs. Plus votre compétence est élevée, plus les
 résultats seront concluant dans leur emploi. De plus, une haute compétence
 pourra déterminer le nombre de charges qu'il reste à une baguette. La
 compétence Évocations affecte aussi votre réserve de magie mais, à un niveau

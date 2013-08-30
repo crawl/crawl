@@ -2,11 +2,11 @@
 Dungeon
 
 Comment cet endroit étrange a été créé reste un mystère. Certains disent que
-c'est le terrain de jeu des dieux qui s'ennuyaient, alors que d'autres
+c'est le terrain de jeux des dieux qui s'ennuyaient, alors que d'autres
 prétendent qu'il a été façonné par toutes sortes d'espèces fuyant la lumière et
 l'outre-monde. Peu importe en vérité l'origine de cette caverne, elle est
 remplie de richesse autant que de terribles dangers. Peu en sont ressortis
-vivants et encore moins on garde suffisamment de santé mentale pour en parler.
+vivants et encore moins ont gardé suffisamment de santé mentale pour en parler.
 
 Le donjon est profond de 27 niveaux mais honnêtement, c'est seulement le début.
 %%%%
@@ -17,8 +17,13 @@ Il est localisé entre les niveaux 4 et 7 du donjon principal.
 %%%%
 Orcish Mines
 
-Les mines des orcs, emplies de leur or mais, perfides et il y est très facile
-de s'y faire prendre au piège.
+Les mines d'or bien exportée des tribus orcs. Ces cavernes tortueuses sont
+remplis d'Orcs, de leurs ouvriers humanoïdes, et des piles de leur or
+fraîchement extrait. Des commerçants entreprenants ont mis en place des postes
+de traite pour aider à soulager les Orcs de leur fardeau aurique. La manière
+désordonnée dont les orcs ont tendance à creuser leur puits de mine a donné
+lieu à un enchevêtrement complexe et dangereux de chambres dans lesquelles il
+est facile de se retrouver piégé.
 
 Les Mines Orcs sont profondes de quatre niveaux et contiennent l'entrée des
 Halls Elfiques.
@@ -26,9 +31,9 @@ Halls Elfiques.
 Elven Halls
 
 Alors que la plupart des elfes refuseraient de venir habiter dans des
-souterrains si sombres et complexes, les elfes profonds osent. Leurs halls sont
-emplies de richesses mais, tout explorateur doit être conscient des prouesses
-magiques légendaires de ce peuple.
+souterrains si sombres et complexes, les elfes des profondeurs l'osent. Leurs
+halls sont emplies de richesses, mais tout explorateur doit être conscient des
+prouesses magiques légendaires de ce peuple.
 
 Les Halls Elfiques sont profonds de trois niveaux.
 %%%%
@@ -49,7 +54,7 @@ monstres carnivores salivant.
 Le Marécage est profond de cinq niveaux et contient la rune en décomposition.
 Le donjon ne propose que deux des branches suivantes : la Fossé des Serpents,
 le Marécage, les Côtes et le Nid des Araignées. Si le Marécage est présent, son
-entrée est située entre Repaire:2 et Repaire:5.
+entrée est située entre le Repaire 2 et 5.
 %%%%
 Shoals
 
@@ -62,7 +67,7 @@ les alentours et vous demandez : Qui est le prédateur ? Et qui est la proie ?
 Les Côtes sont profondes de cinq niveaux et contiennent la rune écaillée. Deux
 des branches suivantes sont présentes dans le donjon : la Fosse aux Serpents,
 le Marécage, les Côtes et le Nid des Araignées. Si les Côtes sont présentes,
-leur entrée est située entre Repaire:3 et Repaire:6.
+leur entrée est située entre Repaire 3 et 6.
 %%%%
 Snake Pit
 
@@ -71,7 +76,7 @@ Habitat des serpent, repaire des nagas.
 La Fosse aux Serpents est profonde de cinq niveaux et contient la rune en
 serpentine. Deux des branches suivantes sont présentes dans le donjon : la
 Fosse aux Serpents, le Marécage, les Côtes et le Nid des Araignées. Si la Fosse
-aux Serpents est présente, son entrée est située entre Repaire:3 et Repaire:6.
+aux Serpents est présente, son entrée est située entre Repaire 3 et 6.
 %%%%
 Spider Nest
 
@@ -81,7 +86,7 @@ n'êtes pas encore arachnophobe, c'est pour bientôt.
 Le Nid des Araignées est profond de cinq niveaux et contient la rune
 arachnéenne. Deux des branches suivantes sont présentes dans le donjon : la
 Fosse aux Serpents, le Marécage, les Côtes et le Nid des Araignées. Si le Nid
-des Araignées est présente, son entrée est située entre Repaire:3 et Repaire:6.
+des Araignées est présente, son entrée est située entre Repaire 3 et 6.
 %%%%
 Slime Pits
 
@@ -93,17 +98,16 @@ dangereux acide suinte des murs de cet horrible endroit, et qu'il est de plus
 en plus caustique à mesure que vous descendez.
 
 La Fosse des Gelées est profonde de six niveaux  et contient la rune visqueuse.
-Son entrée est entre Repaire:6 et Repaire:8.
+Son entrée est entre Repaire 6 et 8.
 %%%%
 Vaults
 
-Probablement construite par un puissant fou, les Chambres Fortes sont réputées
-pour garder de grands trésors. Les traces de sang entourant son entrée
-indiquent aussi, qu'elles abritent une grande violence.
+Probablement construite par un puissant fou, les Caveaux sont réputées pour
+garder de grands trésors. Les traces de sang entourant son entrée indiquent
+aussi, qu'elles abritent une grande violence.
 
-Les Chambres Fortes sont profondes de huit niveaux et contiennent la rune
-argentée. Son entrée peut être trouvée entre les niveaux 14 et 19 du donjon
-principal.
+Les Caveaux sont profondes de cinq niveaux et contiennent la rune argentée. Son
+entrée peut être trouvée entre les niveaux 15 et 20 du donjon principal.
 %%%%
 Hall of Blades
 
@@ -130,8 +134,20 @@ Tomb
 La Tombe des Anciens est un lieu de damnation, peuplé d'horreurs animées par
 une nécromancie abjecte.
 
-LA Tombe est profonde de trois niveaux et contient la rune dorée. Son entrée se
-trouve en Crypte:2 ou Crypte:3.
+La Tombe est profonde de trois niveaux et contient la rune dorée. Son entrée se
+trouve en Crypte 2 ou 3.
+%%%%
+Tomb:quote
+
+« Dans les profondeurs de nos cœurs, il y a un tombeau et un donjon, même si
+les lumières, la musique, et les festivités peuvent faire oublier leurs
+existence, de ceux enterrés, ou prisonniers qu'ils cachent. Mais parfois, et
+souvent à minuit, de sombres récipients se retrouvent grands ouverts. Dans ces
+moments là, quand l'esprit somnolent est si passif, sans aucune volonté propre,
+où l'imagination est un miroir, donnant de l'éclat à toutes les idées, sans
+pouvoir les sélectionner ou de les contrôler; priant pour que votre chagrin
+s'estompe, et que la fraternité des remords ne se déchaine pas. »
+    -Nathaniel Hawthorne, « The Haunted Mind. ». 1835.
 %%%%
 Hell
 
@@ -176,7 +192,7 @@ atteint depuis le Vestibule de l'Enfer.
 Zot
 
 Une région du donjon qui est complexe, verrouillée par sécurité et à laquelle
-on fait référence avec les mots "folie", "fureur" et "folie". Seuls les
+on fait référence avec les mots "folie", "fureur" et "démence". Seuls les
 aventuriers les plus fous oseront briser le sceau qui protège son entrée et
 plonger dans ses profondeurs – dans le vain espoir de poser les yeux sur le
 légendaire artéfact.
@@ -287,13 +303,14 @@ visiteurs audacieux mais malchanceux.
 Ossuary
 
 Une petite tombe contenant les restes de quelques parents éloignés des
-pharaons. C'est sans nul doute un site largement piégé et, ses habitants ni
+pharaons. C'est sans nul doute un site largement piégé, et ses habitants ni
 apprécient guère le pillage.
 %%%%
 Bailey
 
-Le château d'un seigneur. Il est sans doute protégé par des remparts et des
-soldats entraînés.
+Le Bailey est la forteresse toujours occupée et bien gardée d'un orc seigneur.
+Dans celle-ci, ses trésors privés sont protégés par des barrières physiques et
+un grand nombre de guerriers humanoïdes bien armés.
 %%%%
 Ice Cave
 
@@ -310,7 +327,13 @@ accablante et, le grondement du volcan ne cesse de résonner.
 %%%%
 Wizlab
 
-Le laboratoire qu'un magicien dont le portail a été inconsciemment laissé
-ouvert. Méfiez-vous car les mages aiment protéger leurs possessions avec pièges
-et monstres de leur propre fabrication !
+Dans les siècles passés, les plus puissants mages - vous avez surement entendu
+parler de certains d'entre eux - se seraient fréquemment trouvé ou construit de
+petits royaumes isolée du reste du monde, où ils pouvaient s'isoler dans la
+poursuite de plus en plus grande connaissances et puissances magiques . Les
+mages sont partis depuis longtemps, mais beaucoup de leurs laboratoires obscurs
+existent encore, rempli avec les résultats de leurs expériences. Ceux qui sont
+prêts à explorer ces laboratoires peuvent trouver de puissant trésors magique,
+mais attention: les sorciers à qui ces laboratoires appartiennent à mérité leur
+réputation.
 %%%%

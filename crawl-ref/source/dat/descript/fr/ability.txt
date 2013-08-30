@@ -9,7 +9,7 @@ Crache du poison sur un monstre ciblé.
 %%%%
 Blink ability
 
-Vous translocalise à une courte distance dans une direction aléatoire.
+Vous déplace aléatoirement sur une courte distance.
 %%%%
 Breathe Dispelling Energy ability
 
@@ -59,8 +59,8 @@ Ainsi, vous ne pourrez change de forme si votre Force est trop basse.
 %%%%
 Bottle Blood ability
 
-Au niveau 6 et plus, les Vampires peuvent mettre en bouteille le sang, non
-contaminé et non décomposé, des corps sur leur position. Faire cela requière la
+Au niveau 6 et plus, les Vampires peuvent mettre en bouteille le sang non
+contaminé et non décomposé des corps sur leur position. Faire cela requière la
 capacité de tenir un couteau, comme pour découper.
 %%%%
 Spit Acid ability
@@ -69,7 +69,10 @@ Crache de l'acide sur un monstre ciblé.
 %%%%
 Fly ability
 
-Commencer à voler.
+Commencer à voler. Durant la lévitation, vous pouvez traverser en toute
+sécurité les eaux profondes et les obstacles similaires. soyez conscient que la
+lévitation peut s'achever à un moment inopportun et vous faire tomber vers
+votre mort.
 %%%%
 Hellfire ability
 
@@ -80,36 +83,36 @@ Release Delayed Fireball ability
 Relâche instantanément une boule de feu (retardée) sans coût additionnel de
 magie ou de faim.
 %%%%
+Stop Singing ability
+
+Vous cessez de chanter votre chanson du tueur.
+%%%%
 Self-Restoration ability
 
 Au prix d'une perte permanente d'un point de magie, restaurez votre Force,
 Dextérité et Intelligence et, soignez une grande quantité de points de vie
-perdus par décomposition.
+perdus par la décomposition.
 %%%%
 Device Recharging ability
 
 Au prix de la perte permanente d'un point de magie, recharge une baguette ou un
-bâton.
+sceptre.
 %%%%
 Evoke Teleportation ability
 
 Vous téléporte à une position aléatoire de l'étage dans lequel vous vous
 trouvez.
 %%%%
-Evoke Blink
-
-Téléporte aléatoirement à une courte distance.
-%%%%
 Evoke Berserk Rage ability
 
-Devenez berserk. Devenir grandement berserk accroit vos points de vie et dégâts
-en combat mêlée, même si c'est temporaire. Cela s'arrêtera rapidement si vous
-ne tuez personne mais, cela peut persister avec de nombreux carnages. Alors que
-vous êtes berserk, vous ne pouvez pas faire certaines actions telles que, par
-exemple, (dés)équiper une arme, boire quelque chose, évoquer une baguette ou un
-objet, ou jeter un sorts. Une telle rage est suivi d'une fatigue profonde, sera
-ralenti et il est impossible de repasser berserk pendant ce temps ; il est
-possible aussi que vous vous évanouissiez sous la fatigue.
+Devenez berserk. Devenir berserk accroit grandement, même si c'est temporaire,
+vos points de vie et les dégâts que vous infligez en mêlée. Cela s'arrêtera
+rapidement si vous ne tuez personne mais, peut être prolongé si vous faites un
+carnage. Pendant que vous êtes berserk, vous ne pouvez pas faire certaines
+actions comme par exemple, (dés)équiper une arme, boire quelque chose, évoquer
+une baguette ou un objet, ou lancer un sort. Une telle rage est toujours suivie
+d'une grande fatigue pendant laquelle vous êtes ralenti et ne pouvez pas
+redevenir berserk.
 %%%%
 Evoke Invisibility ability
 
@@ -118,7 +121,7 @@ contamination magique et peut vous rendre luminescent.
 %%%%
 Turn Visible ability
 
-Redevenir visible à nouveau.
+Redevenir à nouveau visible.
 %%%%
 Stop Flying ability
 
@@ -147,8 +150,8 @@ Prêchez aux monstres les lois de Zin, ce qui peut amener à différents
 résultats. Il existe quatre livres dont vous pouvez prêcher le contenu :
 
 * Livre des Abominations : Ce livre aborde ce qui existe de plus odieux pour
-Zin – le haos sous toutes ses formes. La récitation de ces versets invoquera le
-plus puissant des chocs de Zin.
+Zin – le chaos sous toutes ses formes. La récitation de ces versets invoquera
+le plus puissant des chocs de Zin.
 
 * Livre des Ablutions : Les impurs tiennent une place presque aussi élevée aux
 yeux du Donneur de Lois. La récitation des versets de ce livre blessera de
@@ -164,9 +167,10 @@ donne les moyens de le leur faire comprendre.
 %%%%
 Vitalisation ability
 
-Vivifie- vous, gagnant une endurance divine et subsistance de Zin. L'endurance
-divine vous protège de la maladie, pétrification, confusion et décomposition,
-et temporairement augmente et soutien votre Force, Dextérité et Intelligence.
+Vivifiez- vous, gagnant l'endurance et la subsistance divine de Zin.
+L'endurance divine vous protège de la maladie, pétrification, confusion et
+décomposition, et temporairement augmente et soutien votre Force, Dextérité et
+Intelligence.
 %%%%
 Imprison ability
 
@@ -182,7 +186,7 @@ divine.
 %%%%
 Cure All Mutations ability
 
-Annule toutes vos mutations – mais un seule et unique fois.
+Annule toutes vos mutations – mais une seule et unique fois.
 %%%%
 Divine Shield ability
 
@@ -195,8 +199,8 @@ Cleansing Flame ability
 
 Invoque une énorme salve de furie divine centrée sur vous, endommageant
 gravement les morts-vivants et les démons. Toutes autres créatures hostiles
-prendront aussi des dégâts, moins important certes mais, vous et vos alliés ne
-serez pas affectés.
+prendront aussi des dégâts, moins important certes, tandis que vous et vos
+alliés ne serez pas affectés.
 %%%%
 Summon Divine Warrior ability
 
@@ -211,8 +215,9 @@ Leur nombre et leur fraicheur dépend de la compétence Nécromancie.
 Torment ability
 
 Sacrifiez un cadavre pour faire en sorte que tous ceux dans votre champ de
-vision, vous y compris, expérimente toute la douleur que les êtres ont souffert
-dans leur vie. Cela décimera la résistance de tous ceux qui l'a ressentiront.
+vision, vous y compris, expérimentent toute la douleur que les êtres ont
+souffert dans leur vie. Cela décimera la résistance de tous ceux qui le
+ressentiront.
 
 Kikubaaqudgha pourrait vous en protéger... mais rien de moins sur.
 %%%%
@@ -228,8 +233,8 @@ actuellement dans le donjon.
 %%%%
 Injury Mirror ability
 
-Blesse les monstres attaquants en réfléchissant les dégâts qu'ils vous
-infligent vers eux.
+Blesse les monstres attaquants en leur réfléchissant les dégâts qu'ils vous
+infligent.
 %%%%
 Animate Dead ability
 
@@ -239,12 +244,12 @@ que les zombis et les squelettes ne peuvent quitter l'étage dans lequel ils ont
 %%%%
 Drain Life ability
 
-Guérir des points de vie en drainer la force vitale des monstres à proximité de
-vous.
+Restaure des points de vie en drainant la force vitale des monstres à
+proximité.
 %%%%
 Enslave Soul ability
 
-Marquez l'âme d'un monstre vivant intelligent comme prêt à être fauchée. Une
+Marquez l'âme d'un monstre vivant et intelligent comme prêt à être fauchée. Une
 fois marquée, le monstre meurt, son âme sera vôtre.
 
 L'âme asservie conservera les facultés du monstre, son équipement et ses
@@ -253,7 +258,8 @@ sévèrement blessé peut voir son âme marquée, et seulement une seule âme pe
 être asservie à la fois. La durée de la marque dépend de votre compétence
 Invocations.
 
-Notez que les âmes asservies peuvent au-delà du niveau où elles ont été créée.
+Notez que les âmes asservies peuvent vous suivre au-delà du niveau où elles ont
+été créée.
 %%%%
 Animate Remains or Dead ability
 
@@ -261,14 +267,14 @@ Si vous voyez cette description, c'est que vous avez rencontré un bug.
 %%%%
 Heroism ability
 
-Accroit temporairement toutes vos compétences de combat, incluant l'aptitude à
-la discrétion et à éviter les pièges.
+Augmente temporairement toutes vos compétences de combat, y compris la capacité
+à se déplacer furtivement.
 %%%%
 Finesse ability
 
-Accroit grandement votre vitesse de combat, avec aucun perte d'efficacité. Cet
+Accroit grandement votre vitesse de combat, avec aucune perte d'efficacité. Cet
 effet surnaturel provoque une faible contamination magique. Une exposition
-prolongée peut être mauvais pour la santé.
+prolongée peut être mauvaise pour la santé.
 %%%%
 Minor Destruction ability
 
@@ -276,7 +282,7 @@ Tire une salve dévastatrice aléatoire sur un monstre ciblé.
 %%%%
 Lesser Servant of Makhleb ability
 
-Invoque un démon mineur, qui aurait des chances de vous être hostile si votre
+Convoque un démon mineur, qui a des chances de vous être hostile si votre
 niveau d'Invocations est faible.
 %%%%
 Major Destruction ability
@@ -285,7 +291,7 @@ Tire aléatoirement une explosion ou un faisceau dangereux sur un monstre ciblé
 %%%%
 Greater Servant of Makhleb ability
 
-Invoquer un démon majeur, qui a une chance de vous être hostile si vos
+Convoquer un démon majeur, qui a une chance de vous être hostile si vos
 compétences en Invocations sont faibles.
 %%%%
 Channel Energy ability
@@ -302,11 +308,11 @@ Burn Spellbooks ability
 
 Enflamme tous les livres de sorts dans le champ de vision. Le feu est alimenté
 par la haine de Trog, et Trog apprécie encore plus quand vous ignorez
-complètement quelles folies contiennent ces livres qui brûlent.
+complètement les folies contenues dans ces livres qui brûlent.
 %%%%
 Berserk ability
 
-Devenir berserk. Devenir grandement berserk accroit, même si c'est temporaire,
+Devenez berserk. Devenir berserk accroit grandement, même si c'est temporaire,
 vos points de vie et les dégâts que vous infligez en mêlée. Cela s'arrêtera
 rapidement si vous ne tuez personne mais, peut être prolongé si vous faites un
 carnage. Pendant que vous êtes berserk, vous ne pouvez pas faire certaines
@@ -320,8 +326,8 @@ Trog's Hand ability
 
 Invoquez une aptitude de régénération puissante, qui se cumulera avec toutes
 autres sources, et pourra même régénérer des espèces que ne peuvent pas se
-soigner avec le temps. Cela augmentera aussi votre protection contre les effets
-magiques.
+soigner en temps normal. Cela augmentera aussi votre protection contre les
+effets magiques.
 %%%%
 Brothers in Arms ability
 
@@ -369,14 +375,14 @@ intégralement Force, Dextérité et Intelligence.
 %%%%
 Greater Healing ability
 
-En fonction de votre compétence Invocations, guérissez une créature autre que
+En fonction de votre compétence d'Invocations, guérissez une créature autre que
 vous d'une quantité modérée de points de vie. Utiliser vos aptitude sur un
 monstre hostile essayera de le pacifier. Ça marche mieux sur les animaux, moins
 bien sur les humanoïde de votre espèce, encore moins bien avec les humanoïdes,
 et encore pire avec les démons et les morts-vivants. Les créatures sans
-intelligence ne peuvent pas être pacifier, et aucun monstre ne peuvent être
-pacifiés si endormis. Les chances de succès de pacification dépendent de votre
-pouvoir de soins, donc elles sont meilleures qu'avec Soins Mineurs.
+intelligence ne peuvent pas être pacifié, et aucun monstre ne peut être pacifié
+si endormi. Les chances de succès de pacification dépendent de votre pouvoir de
+soins, donc elles sont meilleures qu'avec Soins Mineurs.
 
 Que la pacification soit réussie ou non, la nourriture et les points de magie
 investis sont perdus. Si vous réussissez, le monstre est soigné et vous gagnez
@@ -387,7 +393,7 @@ Vous pouvez aussi soigner des alliés et monstres neutres.
 %%%%
 Greater Self-Healing ability
 
-En fonction de votre compétence Évocations, guérit une quantité modérée de
+En fonction de votre compétence d'Évocations, guérit une quantité modérée de
 points de vie. Grossièrement, une Guérison Majeure vous permettra de soigner
 trois fois plus de points de vie que Guérison Mineure, pour un coût global de
 piété légèrement supérieur.
@@ -399,7 +405,7 @@ accroit temporairement, vos points de vie et vos points de magie.
 %%%%
 Depart the Abyss ability
 
-Quitte les Abysses pour retourne à l'endroit d'où vous veniez.
+Quittez les Abysses pour retourner à l'endroit d'où vous venez.
 %%%%
 Bend Space ability
 
@@ -412,17 +418,15 @@ Tente de bannir un monstre dans les Abysses.
 %%%%
 Corrupt ability
 
-Corrompe le niveau courant en déchainant des énergies des Abysses. Cela forcera
-la transformation de son apparence et, permettra à des démons des Abysses de
+Corromps le niveau courant en déchainant l'énergie des Abysses. Cela forcera la
+transformation de son apparence et, permettra à des démons des Abysses de
 pénétrer cette dimension pour y semer la destruction. Cela ne fonctionnera pas
 sur des niveaux déjà corrompus ou dans les Abysses.
 %%%%
 Enter the Abyss ability
 
-Vous transfère instantanément dans le royaume de Lugonu... au prix d'une
-réduction permanente de vos maximums de points de vie et de magie. Même
-l'effort d'avoir recours à cette aptitude entamera votre santé et vos réserves
-magiques.
+Vous transfère instantanément dans le royaume de Lugonu. L'effort d'avoir
+recours à cette aptitude entamera votre santé et vos réserves magiques.
 %%%%
 Draw One ability
 
@@ -456,8 +460,8 @@ vous voulez. Par la suite, vous tirerez les cartes dans l'ordre choisi.
 %%%%
 Smiting ability
 
-Choquez un ennemi dans votre champ de vision. Cela ne requière pas de ligne
-directe libre, juste que l'ennemi soit visible.
+Ecrasez divinement un ennemi dans votre champ de vision. Cela ne requière pas
+de ligne directe libre, juste que l'ennemi soit visible.
 %%%%
 Recall Orcish Followers ability
 
@@ -482,7 +486,7 @@ Utilise des fruits pour faire pousser un cercle de plantes autour de vous. Si
 un cercle complet ne peut être formé (car vous n'avez pas assez de fruits), les
 plantes pousseront sur les cases adjacentes les plus proches de monstres. Les
 plantes que vous créez obtiennent un bonus de points de vie en fonction de
-votre compétence en Évocations.
+votre compétence en Invocations.
 %%%%
 Rain ability
 
@@ -505,8 +509,8 @@ oklob pourraient cracher de l'acide avec un haut niveau d'invocations.
 %%%%
 Bend Time ability
 
-Tente de ralentir toute créature adjacente. Un haut niveau d'Invocations rend
-la résistance plus difficile.
+Tente de ralentir toute créatures adjacente. Un haut niveau en Invocations le
+rend plus difficile a résister.
 %%%%
 Temporal Distortion ability
 
@@ -547,7 +551,7 @@ Scrying ability
 
 Obtenez une vision astrale vous permettant de voir au travers les murs. Ce
 n'est pas suffisant pour cibler via des sorts ou des aptitudes, même celles
-fonctionnant au travers le verre.
+fonctionnant au travers du verre.
 %%%%
 Transfer Knowledge ability
 
@@ -557,16 +561,20 @@ End Transfer Knowledge ability
 
 Abandon d'un transfert de compétence en cours.
 %%%%
-Memorise spell ability
-
-Vous apprenez directement un sort destructeur offert par Vehumet. L'offre
-expirera après un court moment. Consulter l'écran de Religion (^) pour voir
-quel sort a été offert.
-%%%%
 Renounce Religion ability
 
-Renoncer à votre religion. Votre personnage quittera le service de son dieu (et
+Renoncez à votre religion. Votre personnage quittera le service de son dieu (et
 généralement le met en colère).
+%%%%
+Convert to Beogh ability
+
+Jurez fidélité à Beogh, le dieu des cavernes orcs. Ce dieu exige que tous les
+non-croyants doivent mourir, mais les nouveaux croyants doivent être épargné et
+accepté dans le giron. Attention, les orcs n'ayant pas vu en vous le messie,
+peuvent être hostile jusqu'à ce que votre réputation soit plus grande!
+
+Tous les autres dieux détestent Beogh, et ne prennent pas à la légère la
+désertion.
 %%%%
 Make dart trap ability
 
@@ -596,7 +604,7 @@ monstres invisibles, sur la localisation ciblée.
 %%%%
 Make altar ability
 
-Crée à vos pieds un autel d'un dieu choisi.
+Crée à vos pieds l'autel d'un dieu.
 %%%%
 Make grenades ability
 
@@ -666,7 +674,7 @@ Crée un portail vers un bazar sur votre localisation.
 %%%%
 Acquire gold ability
 
-Fourni une grande quantité d'or.
+Acquérir une grande quantité d'or.
 %%%%
 Make oklob circle ability
 
@@ -688,5 +696,5 @@ Crée un piège à lame sur la position ciblée.
 Make curse skull ability
 
 Construit un crâne maudit sur la position ciblée, avec l'aptitude de convoquer
-des morts-vivants, au prix d'un choc en retour nécromantique pour vous.
+des morts-vivants, au prix d'un retour de flamme nécromantique.
 %%%%

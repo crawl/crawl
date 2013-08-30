@@ -28,6 +28,14 @@ voleurs l’eurent pillé pendant son sommeil. Maintenant il serpente dans le
 donjon, cherchant sa revanche contre tout apprenti pilleur. C'est un sorcier
 chevronné, mais il ne brille pas plus au corps-à-corps que ceux de son espèce.
 %%%%
+Agnes
+
+Cette Spriggan semble assez âgé porte un bâton à lame (presque aussi grand
+qu'elle). Les poches de sa robe usé sont bombées de pièces dont on entend le
+tintement. Les pièces de monnaie et son lajatang ne semblent pas la ralentir,
+même si, elle lance des fléchettes çi et là, ses poches flottantes derrière
+elle et tremblantes comme si elles allaient éclater.
+%%%%
 Antaeus
 
 Autrefois un Titan fort et renommé, son arrogance fut sa perte. Corrompu et
@@ -262,6 +270,11 @@ Une apprenti-sorcière du mal. Elle est entrée dans le donjon en espérant
 trouver un endroit tranquille et isolé où elle pourrait étudier les arts
 obscurs sans être dérangée.
 %%%%
+Jorgrun
+
+Un nains des profondeurs magicien, particulièrement sur ses gardes dans ce
+donjon. Il manie au combat une puissante magie de la terre.
+%%%%
 Jory
 
 Fut un simple paysan du village, Jory s'est retrouvé en non-vie, transformé en
@@ -312,6 +325,29 @@ nombre de têtes. Les poètes parlent de bien plus de têtes que les potiers
 peuvent peindre sur leur vases, du venin empoisonné giclant de ses yeux, et que
 cette hydre est la gardienne de l'entrée du monde souterrain. Ce qui est vrai
 de tout cela en revanche, vous l'ignorez.
+%%%%
+Lom Lobon
+
+Stoïque et impénétrable, Lom Lobon est un vieux démon tristement célèbre pour
+sa maîtrise de la magie. Selon la rumeur, il est le plus savant de tout le
+royaume du Pandemonium, et est recherchés par les sorciers mortels qui offrent
+leurs âmes en échange des secrets de l'arcane. N'ayant pas la terrible colère
+présente dans la plupart des démons, l'œil unique de Lom Lobon cache plutot une
+froide et impartial cruauté.
+%%%%
+lorocyproca
+
+Une grande silhouette décharné, drapé dans une longue robe s'ecoulant tel une
+forme vivante. Elle a soif d'énergies magiques.
+%%%%
+lost soul
+
+L'écho d'une âme endeuillé, vacillant dans et hors du monde des mortels. Bien
+que les souvenirs de sa vie se soient depuis longtemps estompées, elle est
+attirée d'un instinct persistant vers le moment de la mort. Si puissant est
+cette impulsion envers elle même qu'elle saisit au passage d'autres âmes,
+perdant les derniers vestiges de sa conscience en la mémoire de la vie des
+autres.
 %%%%
 Louise
 
@@ -401,6 +437,12 @@ Un brillant scientifique obsédé par l'électricité. Depuis un terrible accide
 survenu lors d'une de ses tentatives pour parfaire son ire s d'électricité, il
 lui arrive de se déphaser de la réalité.
 %%%%
+Norris
+
+Un cultiste détendu avec une voix saine et douce, cherchant la paix dans la
+mort. Il s'en fiche un peu que ça soit vous ou lui qui meure — "les deux"
+serait probablement la meilleure option.
+%%%%
 Pikel
 
 Alors que les kobolds sont normalement des esclaves, la rude vie de Pikel, son
@@ -462,6 +504,11 @@ Sonja
 
 Une gracieuse assassin kobolde. Admirez ses belles pirouettes, frissonnez
 devant ses sauts audacieux ! Mais prenez garde à ses couteaux !
+%%%%
+Sojobo
+
+Le roi des tengus, il a une habileté légendaire à l'épée, la tactique, et la
+magie.
 %%%%
 Terence
 
@@ -559,10 +606,23 @@ anaconda
 Un serpent énorme qui se déplace étonnamment rapidement à la fois sur terre et
 dans l'eau. Il ne tue pas avec du poison mais en étranglant sa proie.
 %%%%
+ancient bear
+
+Une pesante silhouette ursine, continuant a vieillir au delà de son age naturel
+grâce à la magie de sa foret. Des siècles à se dorer au soleil enchanté a
+laissé sa fourrure roussir d'un étrange éclat chaud et lui a donné une
+résistance naturelle à la chaleur.
+%%%%
 ancient lich
 
 Une liche qui, durant son existence multicentenaire, possède une puissance
 inimaginable à travers ses études dans la magie noire.
+%%%%
+ancient zyme
+
+Un lien vivant entre le cancer et la maladie, flottant peut être seulement de
+facon maligne. Sa nature inflige une maladie foudroyante à tous les êtres
+vivants en sa présence.
 %%%%
 angel
 
@@ -575,6 +635,13 @@ apis
 
 Un placide taureau sacré de Elyvilon. Prenez garde malfaisants, car il va
 sûrement se retourner contre vous !
+%%%%
+apocalypse crab
+
+Un crabe opalescent avec les yeux noirs comme le jais. Un parent éloigné du
+crabe de feu, les rumeurs prétendent que cette espèce est en attente de la fin
+des temps. Les brumes chaotiques s'ecoulant de ses mandibule ne sont guère
+évocateur d'une attente.
 %%%%
 azure jelly
 
@@ -618,6 +685,13 @@ Un énorme et puissant démon, recouvert de flammes et d'ombres.
 basilisk
 
 Un lézard à crête de taille moyenne avec un souffle pétrifiant.
+%%%%
+battlesphere
+
+Un petit globe d'énergie magique qui suit son lanceur de sorts. Elle ne peut
+pas agir de façon indépendante, mais il fournira un appui en combat, agressant
+toute chose vers laquelle des sorts sont conjuré par son lanceur avec des
+missiles magiques qui ne ratent jamais leurs cible.
 %%%%
 big fish
 
@@ -694,6 +768,13 @@ brain worm
 Un ver mauve et visqueux avec un grande tête distendue, cette créature se
 nourrit de l'intellect des êtres doués de raison.
 %%%%
+briar patch
+
+Un amas inextricable de ronces épineuses, assez pointu pour percer une
+épaisseur de peau et d'armure. Bien que les ouvertures dans les taillis sont
+assez abondants pour tirer des missiles à travers, marcher dedans semble une
+perspective douloureuse.
+%%%%
 Brimstone Fiend
 
 Un démon puissant et énorme, baigné de flammes infernales et doté de grandes
@@ -745,6 +826,12 @@ centaur warrior
 Un puissant centaure, vétéran de nombreuses batailles, et qui porte une arme de
 qualité et tout à fait capable d'en tirer le meilleur.
 %%%%
+chaos butterfly
+
+Un particulièrement large papillon, aux couleurs criardes, apparemment
+chatoyant au milieu des nuages d'orage diluviens qui le suivent partout où il
+va.
+%%%%
 chaos spawn
 
 Un être de pur chaos, sa forme varie constamment, se faisant pousser puis
@@ -758,6 +845,11 @@ Admirez ! Un porteur du trône des Dieux, sa tête est composée de quatre visag
 êtres angéliques qui se tiennent devant les Bons Dieux, chantant les hymnes
 éternels de louange à leur Gloire et Bonté. Évidemment, ces hymnes ont le
 pouvoir d'éveiller la grandeur des cœurs purs.
+%%%%
+chimera
+
+Une grotesque parodie de la nature, cette créature fantastique se compose de
+trois bêtes individuels combinés en une seul.
 %%%%
 clay golem
 
@@ -810,6 +902,12 @@ aura d'une lumière dorée.
 dancing weapon
 
 Une arme enchantée pour voltiger dans l'air et attaquer par elle-même.
+%%%%
+deathcap
+
+Un champignon nocif et mortel nimbé d'énergie négative. Parasite dans la vie,
+la non-vie lui a accordé la capacité d'absorber ses nutriments directement à
+partir de la force de la vie d'autrui.
 %%%%
 death cob
 
@@ -921,6 +1019,17 @@ deep troll
 Un troll voûté à la peau sombre, les trolls vivants dans les grottes voyagent
 souvent en meute.
 %%%%
+deep troll earth mage
+
+Un troll des profondeurs particulièrement intelligent, il exerce la magie de la
+terre pour creuser a travers la roche pour lui permettre à lui et ses
+semblables de tendre une embuscade à ses ennemis.
+%%%%
+deep troll shaman
+
+Un troll des profondeurs ayant des pouvoir divins pour renforcer et accélérer
+ses semblables.
+%%%%
 demigod
 
 L'aura de puissance qui émane de cet être ressemblant à un humain trahit son
@@ -950,6 +1059,11 @@ dire elephant
 
 Un énorme pachyderme , plus sauvage et féroce que les éléphants normaux, avec
 une peau très épaisse, des pattes puissante et une mémoire à tomber par terre.
+%%%%
+djinni
+
+Un homme à la peau bleue sans jambes qui plane ici, sans le moindre soupçon
+d'avoir une envie de répondre à vos souhaits.
 %%%%
 draconian
 
@@ -1005,6 +1119,11 @@ Une gigantesque bête reptilienne avec des griffes puissantes sur ses membres,
 couverte de solides écailles vertes et avec deux grosses ailes de
 chauve-souris. Des trainées de fumée sortent de sa gueule dentée.
 %%%%
+dryad
+
+Un esprit de nature, liée à la forêt dans laquelle il réside. Il est capable de
+faire appel aux arbres pour se défendre contre les incursions.
+%%%%
 dwarf
 
 Un membre de la famille des petits habitants de la montagne. Plus robuste que
@@ -1046,6 +1165,12 @@ Contrairement à ce que pourrait laisser penser son nom, l'anguille électrique
 est en fait une variété de poisson. Cette race cependant, génère bien plus de
 voltage que ses cousins de mer.
 %%%%
+elemental wellspring
+
+Un confluent tourbillonnant d'eau élémentaire se diffusant du plan élémentaire
+à celui-ci. Les inondations et les esprits qui y habitent semblent sortir sans
+limite.
+%%%%
 elephant
 
 Un gros pachyderme à la peau dure. Il écrase ses ennemis puis les balance avec
@@ -1080,6 +1205,12 @@ eye of draining
 
 Une horreur flottante qui se sert dans votre magie.
 %%%%
+faun
+
+Un hybride avec le torse d'un homme au-dessus de pattes de bouc. Ils sont
+fabuleux pour leur capacité à jouer avec les esprits de ceux qui se dressent
+dans leurs domaines.
+%%%%
 feature mimic
 
 Une bestiole vicieuse qui se fait passer pour un objet quelconque du donjon.
@@ -1104,6 +1235,15 @@ fire elemental
 
 Un esprit venant du plan élémentaire du feu, il existe dans ce monde sous forme
 d'une colonne lumineuse de flammes déchaînées.
+%%%%
+fire giant
+
+Sous la peau d'obsidienne de ce géant une formation de cloques se déchaine sous
+l'effet de la chaleur, et sa crinière sauvage de cheveux rouges brille et fume.
+Il brandit une épée de feu, et son corps entre dans une éruption de Flammes
+virulentes, apparemment à volonté. Les géants de feu pensent qu'ils sont
+destinés à unir et à reduire le monde entier en cendres, mais, en attendant,
+ils vont se contenter des aventuriers assez fous pour les approcher.
 %%%%
 fire vortex
 
@@ -1148,6 +1288,12 @@ frost giant
 Un géant bleuâtre avec des cheveux gelés. Ses yeux sont aussi morne qu'un ciel
 d'hiver. Il s'avance farouchement dans la bataille avec son énorme hache glacée
 et ses rafales hurlantes de froid.
+%%%%
+fulminant prism
+
+Un mince prisme qui crépite d'une énergie destructrice à peine contenue. Tout
+coup qui fend sa surface fragile est susceptible d'entraîner une violente
+explosion.
 %%%%
 fungus
 
@@ -1595,6 +1741,18 @@ iron troll
 Un énorme troll aux membres puissant et recouvert de plaques qui ressemblent
 légèrement à du fer rouillé, particulièrement à cause de leur dureté.
 %%%%
+ironbrand convoker
+
+Mages gardien vêtu d'une armure gravé de motifs, les convokers peuvent lancer
+un mot de rappel pour invoquer des alliés éloignés, puis les imprégner de force
+surnaturelle.
+%%%%
+ironheart preserver
+
+De grandes silhouettes revêtus en armure lourde, les preservers protégent leurs
+alliés en acceptant généreusement une partie des blessures qui leur sont
+infligées.
+%%%%
 item mimic
 
 Semble être un objet abandonné, en fait c'est une vicieuse petite bête
@@ -1617,6 +1775,13 @@ pour piquer sa proie avec ses tentacules. Les tentacules ne blessent pas
 vraiment mais les toxines venimeuses qu'elles injectent peuvent faire des
 dégâts considérables sur le tissu musculaire.
 %%%%
+jiangshi
+
+Un vampire réduit a l'esclavage par des rituels ésotériques. Bien que ses
+membres rigides lui confèrent une démarche maladroite, il se déplace à une
+vitesse surprenante, sautant sur ses victimes et de buvant l'essence de leur
+vie avec ses griffes vicieuses.
+%%%%
 jumping spider
 
 Une grosse araignée venimeuse, qui tisse sa toile entre ses pattes de devant et
@@ -1627,6 +1792,20 @@ tengu
 
 Un humanoïde avec la tête et les serres d'un oiseau. Sa nature férocement
 agressive disconvient avec son apparence fragile.
+%%%%
+tengu conjurer
+
+Un des nombreux tengu avec un talent pour les arts magiques de la destruction.
+%%%%
+tengu reaver
+
+Une élite, tengu féroce et hautement qualifiée dans l'art de l'acier et des
+sorts.
+%%%%
+tengu warrior
+
+Un tengu particulièrement sanguinaire qui a choisi de parfaire sa compétences
+au combat et aux armes à la place de lancer des sorts.
 %%%%
 killer bee
 
@@ -1675,6 +1854,13 @@ Un poisson rouge brillant qui nage dans la lave avec la même aise que les
 autres poissons nagent dans l'eau. La chaleur intense de la lave qui passe dans
 ses branchies bruleraient tout ce qui s'approche trop près de sa bouche.
 %%%%
+lava orc
+
+Un grand humanoïde musclé fortement en accord avec les forces élémentaires du
+feu et la terre. Ces parents éloignés des orcs des cavernes sont possédés par
+un cœurs passionnés, et leur température interne est étroitement liée à leurs
+émotions.
+%%%%
 lava snake
 
 Un serpent rouge brûlant qui habite les veines de lave. Il crache de la roche
@@ -1696,10 +1882,20 @@ cadavre squelettique et desséché qui se conserve par le pouvoir de la magie
 noire. Ce mort-vivant est plutôt dur à cuire et il vaut mieux l'éviter si l'on
 est pas expérimenté.
 %%%%
+lightning spire
+
+Ce truc, fabriqué à partir d'une bobine et d'un sceptre, crépite d’électricité
+et peut le tirer loin, éliminant quiconque entre dans sa zone.
+%%%%
 lindwurm
 
 Un petit dragon ophite avec une paire de membres antérieurs robustes. Ses
 épaisses écailles brillent d'une lueur verte sinistre.
+%%%%
+lurking horror
+
+Une masse informe d'énergie. Elle semble arrêter de bouger lorsque vous le
+regardez.
 %%%%
 macabre mass
 
@@ -2041,6 +2237,11 @@ Un gros ours très fort et couvert d'un pelage d'un blanc brillant, habitué aux
 conditions climatiques basses. Comme tout les ursidés, l'ours polaire deviendra
 enragé s'il est grièvement blessé ou apeuré.
 %%%%
+polymoth
+
+Un petit papillon brillant. Une poussière mutagènes détestable tombe de ses
+ailes.
+%%%%
 porcupine
 
 Un rongeur vicieux vêtu de piquants pointus et ayant une morsure douloureuse.
@@ -2152,6 +2353,12 @@ redback
 Une araignée noire vicieuse avec une tache rouge sur son abdomen gonflé. Ses
 mandibules dégouttent d'un poison létal.
 %%%%
+revenant
+
+Une forme squelettique auréolé de feu bleu froid, debout à califourchon sur
+cette vie et la prochaine. Les échos de la mort persistante scintillent au sein
+de ses flammes fantomatiques.
+%%%%
 rock worm
 
 Un large vers qui se déplace dans la roche sans encombre aucune.
@@ -2186,6 +2393,11 @@ Non pas l'amphibien habituel et inoffensif, mais plutôt une bête mythologique
 bien plus dangereuse qui ne partage que le nom avec l'amphibien. C'est une
 créature rouge, mi-homme mi-serpent, à qui son affinité avec le feu est
 légendaire.
+%%%%
+satyr
+
+Un parent plus intelligent des fauns, souvent trouvé en leur compagnie, et bien
+plus impitoyable - et dangereux - pour les intrus.
 %%%%
 scorpion
 
@@ -2319,6 +2531,12 @@ skeleton
 
 Un squelette animé de non-vie par la nécromancie.
 %%%%
+sky beast
+
+Une étrange créature aérienne formée de nuages et de chairs torturées ayant
+l’éclat de l'électricité, et qui, de temps en temps, disparaît complètement de
+la vue.
+%%%%
 slave
 
 Un humain, autrefois si fier, qui a été magiquement réduit à l'esclavage et qui
@@ -2343,6 +2561,18 @@ Un démon infernal qui se montre sous un nuage frémissant de fumée. Ayant des
 pouvoirs pyrotechniques considérables, il peut très efficacement attaquer ses
 ennemis à distance.
 %%%%
+snaplasher vine
+
+Une vigne rapide et sinueuse rendu vivante par la magie d'une dryade. Elle peut
+rapidement lier et empêtrer un troll, trainez la jusqu'à la forêt d'où elle
+surgit.
+%%%%
+snaplasher vine segment
+
+Une partie d'une vigne rapide et sinueuse rendu vivante par la magie d'une
+dryade. Elle peut rapidement lier et empêtrer un troll, trainez la jusqu'à la
+forêt d'où elle surgit.
+%%%%
 snapping turtle
 
 Un testudine querelleur avec une carapace blindée. Son cou est incroyablement
@@ -2360,6 +2590,10 @@ soul eater
 Ce démon ressemble à une ombre changeante qui glisse dans l'air. Il irradie
 d'une intense aura de force négative.
 %%%%
+spatial maelstrom
+
+Une breche malveillante dans la réalité.
+%%%%
 spatial vortex
 
 Un tourbillon en constante déformation dans le tissu de la réalité.
@@ -2367,6 +2601,10 @@ Un tourbillon en constante déformation dans le tissu de la réalité.
 spectral thing
 
 Une hideuse apparition brillante.
+%%%%
+spectral weapon
+
+Un esprit tirée d'une arme - il ne frappe jamais de lui meme.
 %%%%
 sphinx
 
@@ -2389,6 +2627,15 @@ spiny worm
 
 Un énorme ver noir, son corps segmenté est couvert de plaques hérissées de
 pointes d'une armure chitineuse. Du venin acide coule de sa machoire dentée.
+%%%%
+spirit wolf
+
+Une pâle apparition ressemblant a un loup bordé de lumière éthérée. C'est le
+rusé chasseur d'une meute, courant librement avec sa parenté entre les royaumes
+de l’éveille et du rêve. Le son de son hurlement est un présage, il annonce le
+début d'une chasse sauvage - un cri répondu par un autre et un autre jusqu'à ce
+que les voix indépendantes ne se compte plus et semblent remplir l'air dans
+toutes les directions.
 %%%%
 spriggan
 
@@ -2425,10 +2672,35 @@ Un spriggan dont la connexion avec les oiseaux et les bêtes est
 exceptionnellement forte. Dans la nature, ces protecteurs de la terre sont la
 perte des non-écologistes.
 %%%%
+spriggan enchanter
+
+Un Spriggan particulièrement habile dans l'art des maléfices et des charmes -
+et, apparemment, mortel avec une lame rapide.
+%%%%
 spriggan rider
 
 Montés sur des lucioles géantes, ces cavaliers font en sorte que personne n'ose
 s'immiscer dans les forêts sprigganes et les cairns ne servent qu'a s'en aller.
+%%%%
+starcursed mass
+
+Une masse de détritus stellaire brillant tel la pourriture maladive d'une
+étoile mourante, criant silencieusement en permanence d'une voix au delà de la
+compréhension mortelle. Sa forme ondule et palpite constamment, se divisant
+spontanément puis s'enfuyant quand elles sont menacés. Alors que la voix d'une
+seule est troublante, en chœur, leurs cris peuvent submerger les esprits des
+plus braves guerriers, les laissant abasourdi et impuissant.
+%%%%
+starspawn tentacle
+
+L'appendice tortillant d'un Starspawn tentacle, capable de saisir presque
+toutes les proies et les faisant glisser en arrière pour qu'elles soit
+dévorées. Toute blessures lui étant infligée blesse l'ensemble de la créature.
+%%%%
+starspawn tentacle segment
+
+Une longueur sinueuse d'une longue Starspawn tentacle. Toute blessure lui étant
+infligée blesse l'ensemble de la créature.
 %%%%
 statue
 
@@ -2488,6 +2760,11 @@ tarantella
 Une petite araignée mais très redoutée, au poison redoutable causant même aux
 victimes les plus resistantes dans une danse frénétique.
 %%%%
+tentacle
+
+Ce puissant tentacule fait partie d'un kraken. Toute blessure qui lui est
+infligé blesse l'ensemble de la créature.
+%%%%
 tentacle segment
 
 Partie de la puissante tentacule d'un kraken. Tout dégat qui lui est infligé
@@ -2497,10 +2774,36 @@ tentacled monstrosity
 
 Une masse distordante de tentacules, le tout recouvert d'un mucus putride.
 %%%%
+tentacled starspawn
+
+Une gueule maladroite enveloppée d'une masse de tentacules sinueux. De temps en
+temps, l'un se glisse en dehors pour trainer une proie dans son gosier en
+attente.
+%%%%
+thrashing horror
+
+Une masse grouillante de chair jaune. Il se bat de façon erratique, les ennemis
+titubant sous le poids de ses impacts.
+%%%%
 titan
 
 Cet énorme humanoïde, portant des éclairs à la main, est inhabituellement grand
 et cela même pour des géants.
+%%%%
+thorn hunter
+
+Une plante prédatrice, pouvant se déplacer et possédant une intelligence
+rudimentaire. Elle traque sa proie rapidement, créant une soudaine profusion de
+ronces épineuses dans le but de prendre au piège et ensuite embrocher les
+créatures piégées avec de précises volées de ses propres épines acérées.
+%%%%
+thorn lotus
+
+Un grand et vif floraison dérive tranquillement à la surface de l'eau.
+Méfiez-vous, car sa beauté est trompeuse; maintenu l'intérieur de ses pétales
+se trouve une stigmatisation hérissée d'épines aiguille, pleinement capables
+d'empaler les prédateurs et les aventuriers inconscients avant même qu'ils
+soient suffisamment proche pour la menacer.
 %%%%
 toenail golem
 
@@ -2526,6 +2829,16 @@ trapdoor spider
 
 Un arachnide rapide qui à la fois surprend ses proies et fait fuir ses ennemis
 en s'occultant lui-même dans les recoins du sol du donjon.
+%%%%
+treant
+
+À première vue, vous pourriez le confondre avec un arbre ordinaire, mais ses
+branches se balancer et grincer délibérément, et dans les noeuds et les
+rainures de son écorce rougeâtre peut remarquer les caractéristiques ratatiné
+d'un protecteur âgée de la forêt. Bien qu'il se déplace d'une lenteur délibéré,
+ses énormes branches noueuses peuvent égaler la force des géants et son écorce
+résister à la morsure des haches. Un bourdonnement étrange semble le suivre
+lorsqu'il se déplace ....
 %%%%
 troll
 
@@ -2601,6 +2914,18 @@ vault guard
 
 Un gardien des Chambres Fortes, en armure et lourdement armé.
 %%%%
+vault sentinel
+
+Scouts Vigilant des Vaults, les sentinelles sont prompts à alerter leurs
+congénères de la présence d'intrus et peuvent marquer ces mêmes intrus avec de
+la magie de telle sorte qu'ils ne pourront pas se cacher des poursuites, peu
+importe où ils fuient.
+%%%%
+vault warden
+
+Commandants vétérans des Vaults, les gardiens peuvent sceller les portes
+voisines pour empêcher les intrus d'aller plus loin ou de s'échapper vivant.
+%%%%
 very ugly thing
 
 Une chose très hideuse. D'après la légende, cette créature mutante très moche
@@ -2630,6 +2955,14 @@ water moccasin
 Un serpent brun extrêmement venimeux. Il vit habituellement près de l'eau et
 est un nageur accompli.
 %%%%
+water nymph
+
+Un capricieux esprit de la nature d'une beauté frappante, profondément liée
+avec les eaux dans lesquelles elle vit. Partout où elles coulent, si elle peut,
+les étangs et les rivières débordent et bondissent à son caprice. Méfiez-vous,
+de nombreux aventuriers inconscients se sont trouvés attirés sous ses eaux d'un
+simple toucher, seulement pour qu'il devienne leur lieu de repos final.
+%%%%
 white draconian
 
 Un humanoïde couvert d'écailles avec une queue reptilienne et de petites ailes.
@@ -2642,6 +2975,12 @@ wight
 
 Un ancien guerrier, maintenu dans ce perpétuel état de non-vie par son désir de
 mourir au combat.
+%%%%
+wind drake
+
+Un petit mais puissant dragon, particulièrement habiles parmi ses parents à
+manipuler les courants d'air qui l'entourent. Il peut expirer de puissantes
+explosions de vent.
 %%%%
 wizard
 
@@ -2666,6 +3005,12 @@ wraith
 Cet esprit mort-vivant apparaît sous forme d'un nuage de brume noire entourant
 une forme squelettique incorporelle. Ses yeux brûlent d'une malveillance
 malsaine et d'une faim d'essence vitale, dont il se nourrit.
+%%%%
+wretched star
+
+Un conflux de lumière surnaturelle et d'énergie, inondé de couleurs non
+naturelles et de formes étranges qu'un être normal n'est pas censé percevoir.
+Être simplement proche d'elle remplit votre corps du désordre des Abysses.
 %%%%
 wyvern
 
@@ -2763,6 +3108,12 @@ Hellbinder
 Un lanceur de sorts très puissant, auréolé d'énergie arcane, et marmonnant les
 incantations les plus profanes que vous avez jamais entendues.
 %%%%
+Master Blaster
+
+Une vieille et puissante liche, tristement célèbre pour,à la moindre
+provocation, faire exploser les gens à l'aide de puissantes conjurations, ou
+tout simplement sur un coup de tête.
+%%%%
 Statue of Wucad Mu
 
 Cette statue, faite d'un beau cristal orange vitreux, représente un mystique
@@ -2796,6 +3147,12 @@ tirées ou d'en créer d'autres, mais vous devinez que l'auteur de cette statue
 lui a donné un stock suffisant pour vous tuer avant que quelqu'un vienne
 remplir de nouveau le carquois.
 %%%%
+captured wizard
+
+Avec des yeux sauvages, le sorcier marmonne frénétiquement quelque chose et
+agite ses bras, mais il est incapable de lancer un seul sort. Sa langue a été
+coupée!
+%%%%
 charred statue
 
 On dirait que cette statue a été imprégnée de magie de feu, lui permettant de
@@ -2826,6 +3183,10 @@ decayed bog body
 
 Une figure mort-vivante préservée par les eaux saumâtres des marais. Celle-ci
 semble s'être pas mal décomposée et elle à l'air faible.
+%%%%
+deep troll monk
+
+Il ressemble a un moine fragile, rien de plus qu'un souvenir à moitié formée.
 %%%%
 deformed humanoid
 
@@ -2874,6 +3235,11 @@ human monk
 Il a l'air d'une piètre représentation d'un moine; rien de plus qu'un souvenir
 à moité formé.
 %%%%
+iron troll monk
+
+Il semble etre une pietre représentation d'un moine, rien de plus qu'un
+souvenir à demi formée.
+%%%%
 kamikaze kobold
 
 Ce kobold est soit fou soit un martyr pour quelques croyances koboldes
@@ -2901,12 +3267,40 @@ oklob sapling priest
 
 Cette jeune plante oklob semble marmonner quelques oraisons... euh, quoi?!?
 %%%%
+orb of electricity
+
+Un massif ballon flottant. Il ressemble à une boule de foudre, mais semble
+beaucoup plus stable. Cependant, il manque certainement une robuste isolation.
+%%%%
+orb of ice
+
+Une boule de glace primordial, flottant dans l'air. Vous ne savez pas si les
+histoires sur la création du monde parlant d'un vide encadré par les royaumes
+sans fin du feu et du froids sont vraies, mais si elles le sont, cette orbe est
+peut-être un vestige de cette époque antique.
+
+De la glace ordinaire semble se former sur la surface, mais il est facile de
+distinguer une sphere parfaite a l'interieur. Vous feriez mieux de rester loin,
+ou vous pourriez finir congelé.
+%%%%
+orb slug
+
+Une monstrueusement grosse limace qui apparemment mangé un puissant conjureur,
+ou peut-être une orbe araignée. Ou peut-être est-ce un produit d'expériences
+divines, auquel cas cela ressemble à l'œuvre de Xom ...
+%%%%
 petrified plant
 
 Quelque chose à transformé ces plantes ordinaires en pierre. Il est préférable
 de ne pas s'attarder ici. Si la chose qui a pétrifié ces plantes vous attrape,
 nous serions alors coincés avec une statue aussi moche que vous pour des
 années.
+%%%%
+phase spider
+
+Une araignée d'un autre monde qui peut se déplacer sur de courtes et moyennes
+distances en se deplacant brievement entre les plans de la réalité, afin de
+mieux piéger ses proies.
 %%%%
 pristine statue
 
@@ -2923,6 +3317,12 @@ malade mais est toujours capable de charmer son public.
 strange machine
 
 Une machine scintillante en argent.
+%%%%
+succubus
+
+Un démon femelle qui utilise ses charmes pour séduire les mâles humanoïdes. Si
+vous souhaitez cependant profiter d'elle, vous allez échouer: elle semble très
+en colère en ce moment et a plus soif de sang que de plaisir.
 %%%%
 water elementalist statue
 
@@ -2951,6 +3351,16 @@ lierre, ce golem à toujours besoin d'être respecté. Il est toujours aussi dur
 que la pierre après tout, et son poids peut causer des dégâts considérables
 s'il est concentré sur un coup.
 %%%%
+witch
+
+Une anormale vielle et laide humaine, portant des robes colorées avec ce qui
+semble être de la boue des marais, de la suie de chaudron et des ingrédients
+d'infusions.
+
+Une magicienne avec une aussi bonne santé mentale et de tels mœurs a
+probablement de très bon animaux de compagnie. Vous pourriez ne pas avoir à
+attendre longtemps pour le savoir avec certitude.
+%%%%
 withered plant
 
 Cette plante à perdu la guerre contre les influences drainantes, et même si sa
@@ -2968,10 +3378,149 @@ bâton n'ont que très peu de poussière comparé au reste du corps, ce qui lais
 penser qu'elle est capable de faire des gestes magiques. Le piège est évident
 mais s'en occuper l'est beaucoup moins.
 %%%%
+zin angel
+
+Un agent divin de Zin, il a une imposante figure ailée avec une aura de lumière
+blanche et brillante. Le visage de cet ange, cependant, est marquée par sa
+mauvaise humeur, comme si son zèle contre les vices réels ou supposés éclipse
+sa bonté.
+%%%%
 zot statue
 
 Cette statue complètement bizarre, taillée dans une simple bout de gabbro noir,
 scintille de petits cristaux. Il est impossible de dire si cette statue devait
 représenter une créature ou une personne, ou alors si elle est totalement
 abstraite. Une seule chose est certaine: elle est profondément dérangeante.
+%%%%
+bag of meat
+
+Un des légions d'abominations créées par les sculpteurs de chair. Il s'agit
+d'une horrible imitation de la forme humaine, constituée d'une masse
+méconnaissable de viande cousues ensemble avec des membres raccommodé
+apparemment au hasard. Sa peau pend souplement dans certains endroits et se
+bombe de facon repoussante dans d'autres. Chacun porte un grand symbole gravé
+dans sa chair, une marque de fierté de son créateur tordu.
+%%%%
+large bag of meat
+
+Un des légions d'abominations créées par les sculpteurs de chair. Ses énormes
+boursouflement palpitent en permanence de feux maudit. C'est comme s'il pouvait
+exploser dans un torrent de viscères à tout moment.
+%%%%
+meat berserker
+
+Un des légions d'abominations créées par les sculpteurs de chair. Sa forme est
+large et musclé. Elle se déplace rapidement d'une fureur impétueuse, sa seule
+et unique pensée étant de vous déchirer avec une grande ferveur. Du fait de sa
+rage, il crée un vacarme cacophonique.
+%%%%
+meat hydra
+
+Un des légions d'abominations créées par les sculpteurs de chair. Chacun de ses
+huit cou est distendu et allongé, relié à un corps colossal froissé et
+dégoulinant d'ichor. Ses nombreuses têtes crachent du sang tout en se
+tortillant et convulsant d'agonie, car il apporte tourment pour lui-même et
+tout ceux qui contemplent son ignoble visage.
+%%%%
+meat beast
+
+Un des légions d'abominations créées par les sculpteurs de chair. Embrasé d'une
+frénésie démoniaque, il frappe de ses cornes et piétine avec une férocité
+inégalée. Sa peau est écorchée, exposant ses muscles brillants et ses tendons
+en dessous, les dents à l'intérieur de sa gueule caverneuse sont tachée de
+sang.
+%%%%
+sculptor of flesh
+
+Un artisan de la non-vie, le sculpteur apparaît comme une sinistre forme
+squelettique. Il dispose de six longs bras se terminant par des mains mutilées
+avec des doigts cassés, avec lesquelles il se traîne comme une araignée. Son
+crâne est anormalement grande et pleine de trous. Ses os sont fracturés et
+rougies, inscrit avec les sorts profanes dont il se sert pour assembler ses
+marionnettes.
+%%%%
+destroyer
+
+Les destroyers commencent à descendre sur vous. Ils viennent en grand nombre et
+en colere rage, leurs gueules béantes tel abaddon, sans fond et abyssal. Ils
+apportent votre mort et festoieront sur vos restes.
+%%%%
+accursed
+
+Les maudits sont ceux qui sont venus avant. Ils sont venus pour vous assurer de
+partager leur sort.
+%%%%
+tyrant
+
+Une masse colossale d'os et de crânes, une tombe de marche. Vous entendez des
+cris et des hurlements à mesure qu'elle s'approche, brisant des os à chaque
+pas, se reconstituant lui-même dans une eternelle damnation.
+%%%%
+dread
+
+Un affront à l'existence, un vide dans lequel il n'y a que tourments et feux de
+l'enfer. Sa forme surnaturelle est déchirée et tordue, noir et creux. Il est
+dépourvu de pensée rationnelle, connaissant seulement la haine et le désir de
+profaner votre âme.
+%%%%
+scourge
+
+Une grande forme serpentine avec la peau âpre et malade, suintant la bile et le
+pus, jaillissante de venin et de corruption.
+%%%%
+observer
+
+Vous voyez l'inapercevable, vous les fixez et ils vous rendent votre regard.
+Ils chuchotent et rient, ils sourient et pleurent, ils vous regardent avec
+mépris et vous contemple dans l'adoration. Ils sont les observateurs, ils sont
+le juge de votre valeur et décideront de votre fin.
+%%%%
+meat lost soul
+
+Un spectre, se débattant pour quitter le monde des mortels dans lequel il est
+incarcéré. Il draine la vie et non-vie de tous ceux qui entrent en contact avec
+lui.
+%%%%
+fleshlord
+
+Un des plus grands serviteurs du Meatlord. Il est musclé, agile et plein de
+malveillance.
+%%%%
+vile
+
+Une figure émaciée débordant de feux de l'enfer et de la peste. Son apparence
+signifie la fin des jours.
+%%%%
+The Servant
+
+Son glaive est illuminé par les flammes de l'enfer.
+%%%%
+The Captor
+
+Ceux qui entrent ne s'échapperont pas.
+%%%%
+The Defiler
+
+Son bouclier est décoré avec des images de flammes infernales.
+%%%%
+The Meatlord
+
+Vous voyez l'incarnation de la saleté, la corruption et la dépravation, le
+Meatlord. Son corps fétide est gonflé à l'extrême, fuit d'un liquide visqueux
+et pue la mort. Sa tête est celle d'un sanglier avec les yeux exorbités et des
+défenses divisé en deux, son groin flamboie et suinte des qu'il renifle et
+hurle a votre vue, sa bouche est une faille édenté bavant des litres de sang et
+vomissant des restes dégoûtants. Son cou est étiré et penche en avant, sa peau
+plie et s’affaisse. Son immense intestin se tord et se déforme tant les larves
+à l'intérieur attendent leur répugnante libération. Ses jambes sont de
+méconnaissables masses de chair, couverts de protubérances et de furoncles
+lancinant. Votre esprit vacille à la vue de cette forme hideuse et vos sens
+commencent à se fermer dans une tentative de préserver votre santé mentale
+tandis que son odeur oppressante vous étouffe.
+%%%%
+The Unspeakable
+
+A son approche, vous entendez l’écho des planètes derrière le rugissement
+assourdissant des étoiles. Il est la mâchoires des Abysses. Il apporte
+doucement le chaos. C'est le dernier spectacle que vous verrez jamais.
 %%%%

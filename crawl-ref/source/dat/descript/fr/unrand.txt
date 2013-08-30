@@ -41,9 +41,9 @@ d'endommager l'esprit de son utilisateur.
 %%%%
 Vampire's Tooth
 
-Cette dague d'ivoire pourrait avoir été taillée à partir d'un dent d'un
-prédateur énorme, et apparemment d'une taille suffisante sucer le sang d'un
-humain.
+Cette dague d'ivoire pourrait avoir été taillée à partir de la dent d'un
+prédateur énorme, et bien évidement pas celle d'un suceur de sang de taille
+humaine.
 
 C'est mortellement vampirique.
 %%%%
@@ -73,7 +73,7 @@ Il porte certains pouvoirs de l'archi-démon Asmodeus.
 %%%%
 faerie dragon armour
 
-Les dragons féés était un peuple de la même espèce que les dragons tachetés.
+Les dragons fées étaient un peuple de la même espèce que les dragons tachetés.
 Malheureusement, leurs couleurs vives firent leur perte, car elles alertaient
 leurs proies potentielles. Ils sont maintenant presque tous éteints, et cette
 précieuse relique est l'une des dernières preuves de leur existence.
@@ -167,7 +167,7 @@ Une belle hache en mithrill, probablement perdue par un héros nain.
 %%%%
 Elemental Staff
 
-Ce bâton puissant a appartenu au chef de la Guilde des Cinq Éléments.
+Ce puissant bâton a appartenu au chef de la Guilde des Cinq Éléments.
 %%%%
 crossbow "Sniper"
 
@@ -185,7 +185,8 @@ nerveuse.
 lance "Wyrmbane"
 
 Une lance enchantée qui devient plus puissante à chaque fois qu'elle inflige
-une frappe mortelle à un dragon.
+une frappe mortelle à un puissant dragon. Plus elle deviens puissante, plus il
+sera difficile de trouver un adversaire digne d'elle.
 %%%%
 Spriggan's Knife
 
@@ -212,7 +213,7 @@ terribles dégâts.
 Bien que la liche fut exterminée il y a longtemps, ses armes, qui répandirent
 la destruction au sein des morts-vivants, ont été très populaires. Du moins,
 les vieux contes en sont pleins. Toutefois, cette masse pourrait être la
-dernière d'entre elles — probablement parce que les fidèles du Raoyannant
+dernière d'entre elles — probablement parce que les fidèles du Rayonnant
 soutiennent que personne ne devrait combattre la nécromancie par la
 nécromancie.
 %%%%
@@ -232,7 +233,7 @@ bien, l'inverse.
 %%%%
 captain's cutlass
 
-Cette arme tristement célèbre a été utilisée par le capitaine pirate qui a
+Cette arme tristement célèbre a été utilisée par un capitaine pirate qui a
 égorgé bon nombre d'innocents. Finalement, il trouva la mort quand un kraken
 avala son navire avec tout son équipage. Le coutelas aurait du être perdu à
 jamais mais ce n'est pas le cas puisque vous le tenez dans vos mains.
@@ -280,6 +281,11 @@ boots of the Assassin
 
 Des bottes souples, spécialement dessinées par la Guilde des Assassins.
 %%%%
+Lear's hauberk
+
+Un haubert d'or de bonne facture qui couvre toutes les parties du corps de son
+porteur. Il comprend une cotte , des chausses et des gantelets en maille.
+%%%%
 skin of Zhor
 
 La peau puante d'un animal étrange.
@@ -307,7 +313,8 @@ Une armure à l'allure bizarre.
 %%%%
 mask of the Dragon
 
-Un masque bleu.
+Un étrange casque bleu en cuir rigide qui rend le visage du porteur semblable à
+celui d'un dragon.
 %%%%
 robe of Night
 
@@ -393,8 +400,8 @@ son porteur.
 %%%%
 brooch of Shielding
 
-Lors de l'age d'or, chaque aventurier avait une de ses pratiques broches. Ça et
-un poney.
+Lors de l'age d'or, chaque aventurier avait une de ses pratiques broches. Ça,
+et un poney.
 %%%%
 robe of Clouds
 
@@ -456,4 +463,25 @@ ring of the Octopus King
  Son ondulant prétendant,
  S'efforça de la courtiser,
  Mais elle ne pouvait porter tous ses anneaux."
+%%%%
+Axe of Woe
+
+Lorsque vous tenez cette hache, votre esprit ne semble plus entièrement le
+votre. Votre corps commence à présenter une force au-delà de ses capacités, et
+vos mouvements deviennent guidé par Makhleb.
+%%%%
+milk chocolate
+
+Cet objet est une aide au debuggage, et octroi d'une vaste gamme d'artefacts
+aux propriétés principalement bénéfique.
+
+Si vous le voyez en jeu, c'est un bug.
+%%%%
+dark chocolate
+
+Cet objet est une aide au debuggage, et octroi une vaste gamme d'artefacts aux
+propriétés principalement nuisibles. Il est distinct de son homologue par un
+conflit d'accessoires les uns avec les autres.
+
+Si vous le voyez en jeu, c'est un bug.
 %%%%
