@@ -490,6 +490,19 @@ A staircase to the Ecumenical Temple
 Ein Eingang zum Tempel der Götter, einem Ort der Ruhe und Erholung vom Wahnsinn
 des Verlieses.
 %%%%
+ staircase to the Ecumenical Temple:quote
+
+„In einer Stadt — den Namen nenn' ich nicht,
+  Ihr braucht's wahrhaftig auch nicht zu bedauern,
+ In einer Stadt — wer so von Trümmern spricht,
+  Die Residenz von Juden und von Bauern,
+ In einer Stadt — ein Schloß, Burg und Gericht,
+  Des Leichtsinns Denkmal mit verfall'nen Mauern:
+ Dort Standen Schänken ... drei, Thortrümmer ... vier,
+  Neun Klöster und ... auch Häuschen dort und hier.”
+    -Ignacy Krasicki, “Der Mönche-Krieg(Monachomachia)”, 1778
+     übersetzt von Dr. Alexander Winklewski
+%%%%
 A staircase to the Elven Halls
 
 Eine breite Treppe führt nach unten zu den Hallen der Tiefelfen, geschickten
