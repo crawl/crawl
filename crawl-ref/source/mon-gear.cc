@@ -377,10 +377,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         else
         {
-            item.sub_type = random_choose_weighted(15, WPN_HAND_AXE, 15, WPN_SABRE,
-                                                   15, WPN_MACE,     15, WPN_FLAIL,
-                                                   5, WPN_GREAT_SWORD, 5, WPN_GREAT_MACE,
-                                                   5, WPN_BATTLEAXE, 0);
+            item.sub_type = random_choose_weighted(10, WPN_HAND_AXE,   15, WPN_GLAIVE,
+                                                   10, WPN_MACE,       15, WPN_FLAIL,
+                                                    5, WPN_GREAT_SWORD, 5, WPN_GREAT_MACE,
+                                                    5, WPN_BATTLEAXE,   0);
         }
         if (coinflip())
         {
@@ -2012,6 +2012,19 @@ static void _give_shield(monster* mon, int level)
             if (get_armour_ego_type(*shield) == SPARM_ARCHERY)
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_NORMAL);
             shield->plus2 = TGLOV_DESC_GAUNTLETS;
+        }
+        break;
+
+    case MONS_FORMICID:
+        if (!one_chance_in(4))
+            break;
+    case MONS_FORMICID_DRONE:
+        if (one_chance_in(3))
+        {
+            armour_type shield_type = coinflip() ? ARM_BUCKLER : ARM_SHIELD;
+ 
+            shield = make_item_for_monster(mon, OBJ_ARMOUR, shield_type,
+                                           level, MAKE_ITEM_NO_RACE);
         }
         break;
     default:
