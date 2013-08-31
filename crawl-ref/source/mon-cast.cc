@@ -66,7 +66,6 @@ static bool _valid_mon_spells[NUM_SPELLS];
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
-static int  _mons_mass_cure_poison(monster* mons, bool actual = true);
 static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
 
@@ -1139,7 +1138,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
     case SPELL_SHAFT_SELF:
-    case SPELL_MASS_CURE_POISON:
         return true;
     default:
         if (check_validity)
@@ -2354,10 +2352,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
         {
-            // Formicids can cast freely as they also have mass cure poison.
-            // TODO: generalize this?
-            if (mons->type != MONS_FORMICID_VENOM_MAGE
-                && cast_los_attack_spell(spell_cast, mons->hit_dice, mons,
+            if (cast_los_attack_spell(spell_cast, mons->hit_dice, mons,
                                       false) != SPRET_SUCCESS)
                 return false;
         }
@@ -2389,12 +2384,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         else if (spell_cast == SPELL_MASS_CONFUSION)
         {
             if (_mons_mass_confuse(mons, false) < 0)
-                return false;
-        }
-        // Try to mass cure poison; if we can't, pretend nothing happened.
-        else if (spell_cast == SPELL_MASS_CURE_POISON)
-        {
-            if (_mons_mass_cure_poison(mons, false) < 0)
                 return false;
         }
         // Check if our enemy can be slowed for Metabolic Englaciation.
@@ -3062,54 +3051,6 @@ static int _mons_mass_confuse(monster* mons, bool actual)
         {
             retval = 1;
             ai->confuse(mons, pow);
-        }
-    }
-
-    return retval;
-}
-
-static int _mons_mass_cure_poison(monster* mons, bool actual)
-{
-    int retval = -1;
-
-    if (actual)
-        simple_monster_message(mons, " cures the poison of those in need.");
-
-    for (actor_iterator ai(mons->get_los()); ai; ++ai)
-    {
-        if (ai->is_player())
-        {
-            if (!mons->pacified() && !mons->friendly())
-                continue;
-
-            if (you.duration[DUR_POISONING] == 0)
-                continue;
-
-            retval = 0;
-
-            if (actual && you.duration[DUR_POISONING])
-            {
-                reduce_poison_player(2 + random2(3));
-                retval = 1;
-            }
-        }
-        else
-        {
-            monster* m = ai->as_monster();
-
-            if (!mons->pacified() && mons->friendly() != m->friendly())
-                continue;
-
-            if (!m->has_ench(ENCH_POISON))
-                continue;
-
-            retval = 0;
-
-            if (actual)
-            {
-                retval = 1;
-                m->del_ench(ENCH_POISON);
-            }
         }
     }
 
@@ -4452,10 +4393,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MASS_CONFUSION:
         _mons_mass_confuse(mons);
-        return;
-
-    case SPELL_MASS_CURE_POISON:
-        _mons_mass_cure_poison(mons);
         return;
 
     case SPELL_ENGLACIATION:

@@ -3102,19 +3102,6 @@ struct spell_desc
 },
 
 {
-    SPELL_MASS_CURE_POISON, "Mass Cure Poison",
-     SPTYP_POISON,
-     SPFLAG_AREA,
-     1,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
