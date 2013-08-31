@@ -1285,7 +1285,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
                     {
                         if (di->distance_from(agent->pos())
                                 == newpos.distance_from(agent->pos())
-                            && *di == agent->pos() // never aimed_at_feet
+                            && *di != agent->pos() // never aimed_at_feet
                             && !feat_is_solid(grd(*di))
                             && env.cgrid(*di) == EMPTY_CLOUD)
                         {

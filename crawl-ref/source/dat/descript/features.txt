@@ -493,6 +493,10 @@ A staircase to the Ecumenical Temple
 An entrance to a temple of Gods, a place of peace and refuge from the insanity
 of the dungeon.
 %%%%
+A staircase to the Ecumenical Temple:quote
+
+<Temple:quote>
+%%%%
 A staircase to the Elven Halls
 
 A wide stair down to the murky depths of the halls of the deep elves, skilled
