@@ -135,7 +135,7 @@ typedef uint32_t uchar_t;
  * Validate a single UTF-8 character starting at @s.
  * The string must be null-terminated.
  *
- * If it's valid, return its length (1 thru 4).
+ * If it's valid, return its length (1 through 4).
  * If it's invalid or clipped, return 0.
  *
  * This function implements the syntax given in RFC3629, which is

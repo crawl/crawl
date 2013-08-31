@@ -499,7 +499,7 @@ BOOL:     elec, poison
 MAGIC:    50
 
 NAME:    mithril axe "Arga"
-OBJ:     OBJ_WEAPONS/WPN_WAR_AXE
+OBJ:     OBJ_WEAPONS/WPN_BROAD_AXE
 PLUS:    +10/+6
 COLOUR:  WHITE
 TILE:    urand_arga
@@ -986,7 +986,7 @@ BOOL:     evil, seeinv, fly, special
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
-PLUS:     +3
+PLUS:     +6
 TILE:     urand_lightning_scales
 TILE_EQ:  lightning_scales
 COLOUR:   ETC_ELECTRICITY

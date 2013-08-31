@@ -31,6 +31,7 @@
 #include "output.h"
 #include "place.h"
 #include "random.h"
+#include "religion.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -774,6 +775,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
     // Magical level changes (Portal, Banishment) need this.
     clear_trapping_net();
+    end_searing_ray();
 
     // Markers might be deleted when removing portals.
     const string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");
@@ -904,7 +906,7 @@ void down_stairs(dungeon_feature_type force_stair)
             mpr("You enter the Abyss!");
 
         mpr("To return, you must find a gate leading back.");
-        if (you.religion == GOD_CHEIBRIADOS)
+        if (you_worship(GOD_CHEIBRIADOS))
         {
             mpr("You feel Cheibriados slowing down the madness of this place.",
                 MSGCH_GOD, GOD_CHEIBRIADOS);
@@ -1059,13 +1061,13 @@ static void _update_level_state()
 
     vector<coord_def> golub = find_golubria_on_level();
     if (!golub.empty())
-        env.level_state += LSTATE_GOLUBRIA;
+        env.level_state |= LSTATE_GOLUBRIA;
 
     if (_any_glowing_mold())
-        env.level_state += LSTATE_GLOW_MOLD;
+        env.level_state |= LSTATE_GLOW_MOLD;
     for (monster_iterator mon_it; mon_it; ++mon_it)
         if (mons_allows_beogh(*mon_it))
-            env.level_state += LSTATE_BEOGH;
+            env.level_state |= LSTATE_BEOGH;
 
     env.orb_pos = orb_position();
     if (player_has_orb())

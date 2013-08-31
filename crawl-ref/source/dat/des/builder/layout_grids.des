@@ -279,20 +279,20 @@ TAGS: no_hmirror no_vmirror chance_d layout_type_hyper_grid
 
 # Draws a random grid but can use a variety of different shapes to draw each grid area.
 NAME:   layout_grid_shapes
-DEPTH:  Snake, Pan
+DEPTH:  Snake, Pan, Zot
 WEIGHT: 8, 20(Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_open
 {{
   if is_validating() then return; end
 
-  -- TODO: This is almost Zot-worthy and maybe some other branches but it doesn't quite
-  -- look impressive enough yet. And it need enough variation options to be customised
-  -- more in each branch as it is. This can be done a few ways: specific shapes for
-  -- different branches; changing subdivide options; caves on/off; corridor widths;
-  -- distortion functions on the shapes (in snake); different types of cavey func; etc.
-  -- Also once grid connectivity stuff is worked out, would be good to not draw some
-  -- of the outer shapes whilst not breaking connectivity.
+  -- TODO: This needs enough variation options to be customised more in each
+  -- branch as it is. This can be done a few ways: specific shapes for
+  -- different branches; changing subdivide options; caves on/off; corridor
+  -- widths; distortion functions on the shapes (in snake); different types of
+  -- cavey func; etc.
+  -- Also once grid connectivity stuff is worked out, would be good to not
+  -- draw some of the outer shapes whilst not breaking connectivity.
 
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
@@ -305,8 +305,10 @@ TAGS: overwritable layout allow_dup unrand layout_type_open
   }
 
   local cavey = you.in_branch("snake")
+                or (you.in_branch("pan") and crawl.coinflip())
+  local distort = you.in_branch("zot")
 
-  local max_corridor = crawl.random_range(cavey and 4 or 2,10)
+  local max_corridor = crawl.random_range((cavey or distort) and 4 or 2,10)
   local bounds = padded_bounds(max_corridor,max_corridor + crawl.random_range(1,6))
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
@@ -321,6 +323,12 @@ TAGS: overwritable layout allow_dup unrand layout_type_open
                           end },
     { weight = 10, func = function(w,h)
                             return procedural.scale(procedural.translate(primitive.diamond(),1),w/2,h/2)
+                          end },
+    { weight = 10, func = function(w,h)
+                            return procedural.scale(procedural.translate(primitive.hexagon(.5),1),w/2,h/2)
+                          end },
+    { weight = 10, func = function(w,h)
+                            return procedural.scale(procedural.translate(primitive.triangle(),1),w/2,h/2)
                           end }
   }
 
@@ -338,6 +346,10 @@ TAGS: overwritable layout allow_dup unrand layout_type_open
   end
 
   for i,area in ipairs(grid) do
+    shape = util.random_weighted_from("weight",shapes).func
+    if distort then
+      fshape = procedural.transform.damped_distortion(shape)
+    end
     -- Work out dimensions and half-corridor size for this block
     area.w,area.h = area.x2 - area.x1 + 1,area.y2 - area.y1 + 1
     area.corridor = math.min(math.floor(math.min(area.w,area.h)/4),math.floor(max_corridor/2))
@@ -345,11 +357,12 @@ TAGS: overwritable layout allow_dup unrand layout_type_open
     procedural.render_map_area(_G,area.x1-area.corridor,area.y1-area.corridor,
                                area.x2+area.corridor,area.y2+area.corridor,
                                fshape(area.w+2*area.corridor,area.h+2*area.corridor),'.')
-  end
-
-  for i,area in ipairs(grid) do
     -- Chance of not filling increases the smaller the areas are
     if crawl.random_real() < (.5 + math.max(area.w,area.h) / (math.max(gxm,gym) * 2)) then
+      shape = util.random_weighted_from("weight",shapes).func
+      if distort then
+        fshape = procedural.transform.damped_distortion(shape)
+      end
       -- Draw the central column
       procedural.render_map_area(_G,area.x1+area.corridor,area.y1+area.corridor,
                                  area.x2-area.corridor,area.y2-area.corridor,

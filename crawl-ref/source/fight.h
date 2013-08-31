@@ -32,7 +32,6 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit = NULL,
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);
 
-bool is_melee_weapon(const item_def *weapon);
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 int calc_heavy_armour_penalty(bool random_factor);
 
@@ -47,5 +46,7 @@ void get_all_cleave_targets(const actor* attacker, const coord_def& def,
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
                            int attack_number = 0,
                            int effective_attack_number = 0);
+
+int finesse_adjust_delay(int delay);
 
 #endif

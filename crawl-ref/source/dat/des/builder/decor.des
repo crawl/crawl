@@ -1,0 +1,12 @@
+# Give deep levels of D an 80% chance for decorative vaults.
+
+NAME:    dungeon_decor
+TAGS:    no_dump extra allow_dup luniq
+DEPTH:   D:13-
+CHANCE:  80%
+{{
+  local c = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="decor", count=c}
+  end)
+}}

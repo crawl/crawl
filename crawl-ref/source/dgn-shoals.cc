@@ -83,9 +83,9 @@ static int shoals_plant_quota = 0;
 static dungeon_feature_type _shoals_feature_by_height(int height)
 {
     return height >= SHT_STONE ? DNGN_STONE_WALL :
-        height >= SHT_ROCK? DNGN_ROCK_WALL :
-        height >= SHT_FLOOR? DNGN_FLOOR :
-        height >= SHT_SHALLOW_WATER? DNGN_SHALLOW_WATER
+        height >= SHT_ROCK ? DNGN_ROCK_WALL :
+        height >= SHT_FLOOR ? DNGN_FLOOR :
+        height >= SHT_SHALLOW_WATER ? DNGN_SHALLOW_WATER
         : DNGN_DEEP_WATER;
 }
 
@@ -108,7 +108,7 @@ static int _shoals_feature_height(dungeon_feature_type feat)
     case DNGN_DEEP_WATER:
         return SHT_SHALLOW_WATER - 1;
     default:
-        return feat_is_solid(feat)? SHT_ROCK : SHT_FLOOR;
+        return feat_is_solid(feat) ? SHT_ROCK : SHT_FLOOR;
     }
 }
 
@@ -1008,7 +1008,7 @@ static tide_direction _shoals_feature_tide_height_change(
         _shoals_feature_height(newfeat) - _shoals_feature_height(oldfeat);
     // If the apparent height of the new feature is greater (floor vs water),
     // the tide is receding.
-    return height_delta < 0? TIDE_RISING : TIDE_FALLING;
+    return height_delta < 0 ? TIDE_RISING : TIDE_FALLING;
 }
 
 static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
@@ -1284,7 +1284,7 @@ void wizard_mod_tide()
              TIDE_MULTIPLIER);
         mpr("");
         const int res =
-            cancelable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
+            cancellable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
         mesclr(true);
         if (key_is_escape(res))
             break;

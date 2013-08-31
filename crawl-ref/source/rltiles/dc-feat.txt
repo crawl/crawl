@@ -95,6 +95,22 @@ vgate_sealed_up DNGN_VGATE_SEALED_UP
 vgate_sealed_middle DNGN_VGATE_SEALED_MIDDLE
 vgate_sealed_down DNGN_VGATE_SEALED_DOWN
 
+# Crypt doors
+closed_door_crypt DNGN_CLOSED_DOOR_CRYPT
+gate_closed_left_crypt DNGN_GATE_CLOSED_LEFT_CRYPT
+gate_closed_middle_crypt DNGN_GATE_CLOSED_MIDDLE_CRYPT
+gate_closed_right_crypt DNGN_GATE_CLOSED_RIGHT_CRYPT
+vgate_closed_up_crypt DNGN_VGATE_CLOSED_UP_CRYPT
+vgate_closed_middle_crypt DNGN_VGATE_CLOSED_MIDDLE_CRYPT
+vgate_closed_down_crypt DNGN_VGATE_CLOSED_DOWN_CRYPT
+open_door_crypt DNGN_OPEN_DOOR_CRYPT
+gate_open_left_crypt DNGN_GATE_OPEN_LEFT_CRYPT
+gate_open_middle_crypt DNGN_GATE_OPEN_MIDDLE_CRYPT
+gate_open_right_crypt DNGN_GATE_OPEN_RIGHT_CRYPT
+vgate_open_up_crypt DNGN_VGATE_OPEN_UP_CRYPT
+vgate_open_middle_crypt DNGN_VGATE_OPEN_MIDDLE_CRYPT
+vgate_open_down_crypt DNGN_VGATE_OPEN_DOWN_CRYPT
+
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or
 ## closed, open.
@@ -102,11 +118,11 @@ vgate_sealed_down DNGN_VGATE_SEALED_DOWN
 fleshy_orifice_closed DNGN_FLESHY_ORIFICE
 fleshy_orifice_open
 
-%sdir dngn/gateways
-stone_arch DNGN_STONE_ARCH
-
 # Place new door tiles before this point, otherwise they can't be used as
 # door overrides.
+
+%sdir dngn/gateways
+stone_arch DNGN_STONE_ARCH
 
 %sdir dngn/statues
 orcish_idol DNGN_ORCISH_IDOL
@@ -193,7 +209,11 @@ sarcophagus_pedestal_right DNGN_SARCOPHAGUS_PEDESTAL_RIGHT
 statue_elephant_jade DNGN_STATUE_ELEPHANT_JADE
 statue_iron_golem DNGN_STATUE_IRON_GOLEM
 
+## The edge of the level for wizlab_golubria.
 dimension_edge DNGN_DIMENSION_EDGE
+
+## The disco ball in pan_disco_hall.
+disco_ball DNGN_DISCO_BALL
 
 # A couple of placeholders in case we absolutely need
 # to add some more tiles for vault design.
@@ -217,7 +237,6 @@ teleport DNGN_TRAP_TELEPORT
 zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
-gas_trap DNGN_TRAP_GAS
 
 # order matters (tilepick.c tileidx_feature())
 cobweb_none_0 DNGN_TRAP_WEB
@@ -254,6 +273,8 @@ enter DNGN_ENTER
 %rim 1
 return DNGN_RETURN
 %rim 0
+sealed_stairs_up DNGN_SEALED_STAIRS_UP
+sealed_stairs_down DNGN_SEALED_STAIRS_DOWN
 
 %sdir dngn/shops
 ##enter_shop DNGN_ENTER_SHOP

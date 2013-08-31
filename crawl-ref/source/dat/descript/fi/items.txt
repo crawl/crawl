@@ -411,11 +411,6 @@ bow
 Kaartuva kappale puuta ja jännettä nuolten ampumiseen. Se tekee paljon vahinkoa
 taistelussa, ja taitavan käyttäjän käsissä se on erittäin tehokas.
 %%%%
-box of beasts
-
-Maaginen laatikko, joka sisältää monta villipetoa. Ne voi päästää pakoon
-avaamalla laatikon kannen.
-%%%%
 bread ration
 
 Täyttävä ateria väljähtänyttä, mutta runsasta leipää.

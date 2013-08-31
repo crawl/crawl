@@ -156,8 +156,8 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
     }
 }
 
-int cancelable_get_line(char *buf, int len, input_history *mh,
-                        int (*keyproc)(int &ch))
+int cancellable_get_line(char *buf, int len, input_history *mh,
+                        int (*keyproc)(int &ch), const string &fill)
 {
     flush_prev_message();
 
@@ -166,7 +166,7 @@ int cancelable_get_line(char *buf, int len, input_history *mh,
     reader.set_input_history(mh);
     reader.set_keyproc(keyproc);
 
-    return reader.read_line();
+    return reader.read_line(fill);
 }
 
 
@@ -290,10 +290,21 @@ static void _webtiles_abort_get_line()
 }
 #endif
 
+int line_reader::read_line(const string &prefill)
+{
+    strncpy(buffer, prefill.c_str(), bufsz);
+    // Just in case it was too long.
+    buffer[bufsz - 1] = '\0';
+    return read_line(false);
+}
+
 int line_reader::read_line(bool clear_previous)
 {
     if (bufsz <= 0)
         return false;
+
+    if (clear_previous)
+        *buffer = 0;
 
 #ifdef USE_TILE_WEB
     if (!tiles.is_in_crt_menu())
@@ -303,15 +314,13 @@ int line_reader::read_line(bool clear_previous)
         tiles.json_write_string("msg", "get_line");
         if (!tag.empty())
             tiles.json_write_string("tag", tag);
+        tiles.json_write_string("prefill", buffer);
         tiles.json_close_object();
         tiles.finish_message();
     }
 #endif
 
     cursor_control con(true);
-
-    if (clear_previous)
-        *buffer = 0;
 
     region = get_cursor_region();
     start = cgetpos(region);

@@ -179,10 +179,6 @@ blowgun of the Assassin
 감추기 쉽도록 아주 작게 만들어졌지만, 여전히 적의 목 뒤에 강력한 독침을
 꽂아넣을 수 있는 바람총이다.
 %%%%
-lance "Wyrmbane"
-
-용을 죽일 때마다 강해지는, 신비로운 창이다.
-%%%%
 Spriggan's Knife
 
 조그맣고 아담한 크기의 단도다.
@@ -307,7 +303,8 @@ Maxwell's patent armour
 %%%%
 mask of the Dragon
 
-푸른색 가면이다.
+착용자의 얼굴을 용의 얼굴을 닮도록 만들어주는 단단하면서도 유연한 가죽으로
+만들어진 기묘한 푸른 투구이다.
 %%%%
 robe of Night
 

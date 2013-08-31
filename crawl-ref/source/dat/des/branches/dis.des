@@ -1,7 +1,7 @@
 ##############################################################################
 # dis.des: Special maps for the Iron City of Dis.
-# Content: (mini)vaults particular to Dis, and/or first appearing in
-#          Dis (order: Dis, Geh, Coc, Tar)
+# Content: (mini)vaults particular to Dis, and/or first appearing in Dis
+#          (order: Dis, Geh, Coc, Tar)
 ##############################################################################
 
 {{
@@ -10,6 +10,7 @@ function dis_setup(e)
    e.place("Dis:7")
    e.tags("dis", "no_rotate")
    e.lflags("no_tele_control")
+   e.kitem("$ = $ no_pickup")
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
    e.set_feature_name("granite_statue", "iron statue")
@@ -54,42 +55,63 @@ function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
     end
 end
 
-}}
+function dis_divider(e, water)
+   e.tags("dis_divider no_rotate no_hmirror unrand")
+   e.orient("north")
+   e.depth("Dis:$")
+   e.kmons("1 = hell sentinel")
+   e.kmons("2 = iron dragon")
+   if water then
+      e.kfeat("2w = deep_water")
+      e.kmask("w = no_monster_gen")
+   end
+end
 
+function dis_castle(e)
+   e.tags("dis_castle no_rotate no_vmirror unrand")
+   e.orient("north")
+   e.depth("Dis:$")
+   dis_rune(e)
+end
+
+function dis_statues(e)
+    e.colour("G = cyan")
+    e.tile("G = dngn_statue_iron")
+    e.set_feature_name("granite_statue", "iron statue")
+end
+
+}}
 
 ##############################################################################
 # The Iron City of Dis
 ##############################################################################
+default-depth: Dis, !Dis:$
 
 NAME:   lemuel_mystery_crypt
-DEPTH:  Dis:*
 ORIENT: float
 MONS:   guardian mummy / mummy priest / greater mummy, lich
-NSUBST: 1:1=} / 1=) / 1=] / *=1
-SUBST:  = : +
-SUBST:  }=}>, )=)>, ]=]>
-TILE:   G = dngn_statue_iron
+NSUBST: 1:1=}> / 1=)> / 1=]> / *=1
 # occasionally (12.5%), all downstairs are in this vault
+: dis_statues(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
-xxGxxxx1.x1x.1xxx2..=1x
+xxGxxxx1.x1x.1xxx2..+1x
 xx.xxxxx.x.x.xxxx...xxx
-xx.xx1.x.x.x.x.1x...=1x
-xx.xxx=x=x=x=x=xx...xxx
-x...+...........+...=1x
+xx.xx1.x.x.x.x.1x...+1x
+xx.xxx+x+x+x+x+xx...xxx
+x...+...........+...+1x
 +...+.....G.....+.G.xxx
-x...+...........+...=1x
-xx.xxx=x=x=x=x=xx...xxx
-xx.xx1.x.x.x.x.1x...=1x
+x...+...........+...+1x
+xx.xxx+x+x+x+x+xx...xxx
+xx.xx1.x.x.x.x.1x...+1x
 xx.xxxxx.x.x.xxxx...xxx
-xxGxxxx1.x1x.1xxx2..=1x
+xxGxxxx1.x1x.1xxx2..+1x
 xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
 # The Dragons of Dis
 # There is an 8/27 chance all three downstairs will be here.
-#
 NAME:    Lemuel_Dis_Dragons
 DEPTH:   Dis:2-6
 ORIENT:  float
@@ -115,7 +137,6 @@ ENDMAP
 
 NAME: grunt_dis_stairs_iron_hall
 TAGS: transparent patrolling
-DEPTH: Dis:1-6
 MONS: iron dragon / quicksilver dragon, reaper w:7 / tormentor w:6
 MONS: iron troll
 MONS: iron devil / nothing, iron imp / nothing
@@ -141,11 +162,10 @@ MONS: iron devil / nothing, iron imp / nothing
                                   veto_shatter="veto"})
     set_feature_name("granite_statue", "iron statue")
 }}
-COLOUR: G = cyan
-TILE: G = dngn_statue_iron_golem
 SUBST: d = 3
 SUBST: e = 4
 SUBST: f = 5
+: dis_statues(_G)
 MAP
 ...............................
 .vvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
@@ -183,7 +203,7 @@ KMONS:   45 = hellion
 KMONS:   67 = quicksilver dragon
 KMONS:   89 = iron golem
 KMONS:   ABC = dancing weapon ; great sword good_item | battleaxe good_item | \
-                               bardiche good_item | great mace good_item
+                               glaive good_item | great mace good_item
 KMONS:   D = iron elemental
 KMONS:   E = lich
 KMONS:   F = executioner
@@ -207,7 +227,6 @@ KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
 KITEM:   % = % / * w:2
 : end
 KMONS:   H = iron dragon
-KFEAT:   - = runed_door
 SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
 SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
 NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
@@ -216,9 +235,7 @@ NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
 NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
 SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
 : if you.branch() == "Dis" then
-TILE:    G = dngn_statue_iron
-COLOUR:  G = cyan
-: set_feature_name("granite_statue", "iron statue")
+: dis_statues(_G)
 : end
 MAP
 .........................
@@ -226,8 +243,8 @@ MAP
 .vvv+vv.!.vv+vv.!.vv+vvv.
 .vv.!.vvbvv.!.vvdvv.!.vv.
 .vvvavv%g%vvcvv%i%vvevvv.
-.vv%f%vv-vv%h%vv-vv%j%vv.
-.vvv-vv.2.vv-vv.6.vv-vvv.
+.vv%f%vv+vv%h%vv+vv%j%vv.
+.vvv+vv.2.vv+vv.6.vv+vvv.
 .vv.0.v...v.4.v...v.'.vv.
 .vv...vv+vv...vv+vv...vv.
 .vvv+vv...vv+vv...vv+vvv.
@@ -238,18 +255,17 @@ MAP
 .vvv+vv...vv+vv...vv+vvv.
 .vv...vv+vv...vv+vv...vv.
 .vv.1.v...v.5.v...v.".vv.
-.vvv-vv.3.vv-vv.7.vv-vvv.
-.vv%}%vv-vv%}%vv-vv%}%vv.
+.vvv+vv.3.vv+vv.7.vv+vvv.
+.vv%}%vv+vv%}%vv+vv%}%vv.
 .vvvvvv%}%vvvvv%}%vvvvvv.
 .vv.G.vvvvv.G.vvvvv.G.vv.
 ............?............
 ENDMAP
 
-################################################################################
-# Looks really weird and silly in layout_dis, so it's limited to the city layouts.
+###############################################################################
+# Looks really weird and silly in box-packing, so limited to the city layouts.
 NAME:    hangedman_dis_monolith
 TAGS:    transparent layout_city
-DEPTH:   Dis:1-6
 ORIENT:  float
 MONS:    patrolling quicksilver dragon / patrolling iron dragon / \
          patrolling executioner
@@ -257,9 +273,9 @@ MONS:    patrolling hell sentinel
 MONS:    iron devil w:15 / skeletal warrior / iron dragon skeleton w:5 / \
          iron dragon zombie w:5 / iron troll skeleton w:5 / \
          iron troll zombie w:5 / hell knight w:15
-MONS:    hellion / tormentor / reaper / \
-         dancing weapon w:20 ; glaive good_item | battleaxe good_item | \
-                               great sword good_item | great mace good_item
+MONS:    hellion / tormentor / reaper / ancient champion / \
+         dancing weapon w:20 ; great sword good_item | battleaxe good_item | \
+                               glaive good_item | great mace good_item
 SHUFFLE: ABa / CDb / EFc
 NSUBST:  F = 1:112 / 1:1 / 1 : }:6 >:3 .:1
 SUBST:   ABCDE = 3:19 4:1, a = +, bc = v, V : v.
@@ -279,9 +295,122 @@ MAP
 .....................................................
 ENDMAP
 
+###############################################################################
+NAME:    nicolae_dis_hell_towers
+DEPTH:   Dis, !Dis:$
+TAGS:    transparent
+SHUFFLE: }])
+NSUBST:  a = + / v, b = + / v, c = + / v, d = + / v
+SUBST:   2 = 2., 0 = 0.
+KMONS:   12 = hell sentinel / executioner
+MAP
+  v v v v   v v v v
+  vvvavvv   vvvdvvv
+vvvv...vv v vv...vvvv
+ vv..0..vvvvv..0..vv
+vv.......vvv.......vv
+ a.0.2.0.+.+.0.2.0.d
+vv.......vvv.......vv
+ vv..0..vvvvv..0..vv
+vvvv...vvlllvv...vvvv
+   vv+vvlllllvv+vv
+  vvv.+..1}llvv.vvv
+   vv+vvlllllvv+vv
+vvvv...vvlllvv...vvvv
+ vv..0..vvvvv..0..vv
+vv.......vvv.......vv
+ b.0.2.0.+.+.0.2.0.c
+vv.......vvv.......vv
+ vv..0..vvvvv..0..vv
+vvvv...vv v vv...vvvv
+  vvvbvvv   vvvcvvv
+  v v v v   v v v v
+ENDMAP
 
+NAME:   nicolae_dis_strange_trophy_room
+DEPTH:  Dis
+TAGS:   transparent extra decor
+NSUBST: a = 2:+ / v, b = 2:+ / v, c = 2:+ / v, d = 2:+ / v, e = 2:+ / v
+NSUBST: f = + / v
+SUBST:  G = GG., V = .v
+: dis_statues(_G)
+MAP
+vvvavvv
+vG....a      vvdvvv
+a.....vvvv   v..G.d
+vvvv.....a   d....v
+   a..G..vvdvv...vv
+   vv....e.......v  vdv
+    a..Vvv....vvfvvvv.v
+ vvvv...e...vfv...G...d
+ a....vvv.G...V.......v
+ vvv..e..........V..vvv
+   b..v...vvcvv..v..c
+ vvv..V..Gv   c..v+vv
+ v......vvv   vv.V.c
+ b..vV..b      v...vv
+ v..+...vvvv   c.G..c
+ vvbvv..G..b   vvvvvv
+     b.....v
+     v.....v
+     vvvbvvv
+ENDMAP
+
+NAME:    nicolae_dis_lava_storage_tank
+DEPTH:   Dis
+TAGS:    transparent extra decor layout_city
+SHUFFLE: ABCD/EFGH, IJK/LMN, OPQR/STUV
+SUBST:   ABHIRS = g, CDKP = ., EGJLNOQT = v, FMUV = l
+KPROP:   l = no_rtele_into
+KPROP:   l = no_cloud_gen
+NSUBST:  g = 5:g / *:v
+KFEAT:   g = iron_grate
+MAP
+...........
+.....POgv..
+.vggOPRlAC.
+.gllQRQlBD.
+.gllllllBD.
+.vIJllllAC.
+..KIllvgv..
+...vggv....
+...........
+ENDMAP
+
+NAME:    nicolae_dis_iron_filings
+DEPTH:   Dis, !Dis:$
+TAGS:    transparent extra decor layout_city
+SUBST:   } = }}}{
+SHUFFLE: abcdefghijkl, mnopqrstu, }]), {[(
+SUBST:   abcmno = v, d : .v, e : .v, f : .v, g : .v, h : .v, i : .v, j : .v, \
+         k : .v, l : .v, p : .v, q : .v, r : .v, s : .v, t : .v, u : .v
+MAP
+         ...
+       lkj.jkl
+    ...ihg.ghi...
+   ut...fe.ef...tu
+  .tsr..dc.cd..rst.
+  ..rqp..b.b..pqr..
+  ...pon.a.a.nop...
+ li...nm.v+v.mn...il
+ khfd...+v.v+...dfhk
+.jgecbavv...vvabcegj.
+.......+..}..+.......
+.jgecbavv...vvabcegj.
+ khfd...+v.v+...dfhk
+ li...nm.v+v.mn...il
+  ...pon.a.a.nop...
+  ..rqp..b.b..pqr..
+  .tsr..dc.cd..rst.
+   ut...fe.ef...tu
+    ...ihg.ghi...
+       lkj.jkl
+         ...
+ENDMAP
+
+default-depth:
 ##############################################################################
-# Dispater's castle - subvaulted, with two main versions
+# Dispater's castle - subvaulted, with three main versions
 ##############################################################################
 NAME:     iron_city_of_dis
 TAGS:     no_rotate layout_city
@@ -335,8 +464,6 @@ vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
 ENDMAP
 
 NAME:    dis_old
-ORIENT:  north
-TAGS:    dis_castle no_rotate no_vmirror
 MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, \
          metal gargoyle, iron dragon
 KMONS:   7 = hell sentinel
@@ -344,7 +471,7 @@ KMONS:   8 = quicksilver dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
-: dis_rune(_G)
+: dis_castle(_G)
 MAP
 ....................................................................
 .....vvvvvvvvv........................................vvvvvvvvv.....
@@ -379,14 +506,11 @@ MAP
 ENDMAP
 
 NAME:    dis_mu
-ORIENT:  north
-TAGS:    dis_castle no_rotate no_vmirror
 KFEAT:   o = granite_statue
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, \
          metal gargoyle, iron dragon
 MONS:    iron troll
 KMONS:   8 = iron golem
-KFEAT:   8 = .
 KMONS:   9 = hell sentinel
 KMONS:   0 = quicksilver dragon
 : serpent_of_hell_setup(_G)
@@ -395,7 +519,6 @@ SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
 COLOUR:  o : cyan
 TILE:    o = dngn_statue_iron_golem
-: dis_rune(_G)
 # Use master/slave setup.
 MARKER:  o = lua:monster_on_death { \
             death_monster="Dispater", new_monster="generate_awake iron golem", \
@@ -406,8 +529,8 @@ MARKER:  o = lua:monster_on_death { \
             veto_shatter="veto" \
          }
 KITEM:   | = superb_item no_pickup
-KITEM:   $ = gold no_pickup
-: set_feature_name("granite_statue", "iron statue")
+: dis_castle(_G)
+: dis_statues(_G)
 MAP
 ....................................................................
 ...............................................v5v..v5v.............
@@ -442,8 +565,6 @@ MAP
 ENDMAP
 
 NAME:   dis_grunt
-ORIENT: north
-TAGS:   dis_castle no_rotate no_vmirror
 MONS:   patrolling Dispater, Hell Sentinel, iron dragon
 MONS:   iron devil / iron imp w:20
 MONS:   iron troll, quicksilver dragon, cacodemon
@@ -452,8 +573,9 @@ TILE:   G = dngn_statue_iron_golem
 COLOUR: G = cyan
 KMONS:  8 = iron golem
 KMONS:  9 = metal gargoyle
-: dis_rune(_G)
 : serpent_of_hell_setup(_G)
+: dis_castle(_G)
+: dis_statues(_G)
 MAP
 ....................................................................
 ....................................................................
@@ -488,9 +610,7 @@ MAP
 ENDMAP
 
 NAME:    dis_wall_1
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-MONS:    hell sentinel, iron dragon
+: dis_divider(_G, false)
 MAP
 ....................................................................
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -505,9 +625,7 @@ vvvv..............2...2..2................2..2...2..............vvvv
 ENDMAP
 
 NAME:    dis_wall_2
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-MONS:    hell sentinel, iron dragon
+: dis_divider(_G, false)
 MAP
 ....................................................................
 vvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvnnvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvv
@@ -522,9 +640,7 @@ vvvv.......2......2......2................2......2......2.......vvvv
 ENDMAP
 
 NAME:    dis_wall_3
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-MONS:    hell sentinel, iron dragon
+: dis_divider(_G, false)
 MAP
 ....................................................................
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -539,13 +655,7 @@ vvvv.2....2..............................................2....2.vvvv
 ENDMAP
 
 NAME:    dis_wall_4
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = hell sentinel
-KMONS:   2 = iron dragon
-KFEAT:   2 = deep_water
-KFEAT:   w = deep_water
-KMASK:   w = no_monster_gen
+: dis_divider(_G, true)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvv1..............1vvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -560,13 +670,7 @@ vvvvwwww..wwwww2wwwwwwwwwwwwwwwww22wwwwwwwwwwwwwwwww2wwwww..wwwwvvvv
 ENDMAP
 
 NAME:    dis_wall_5
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = hell sentinel
-KMONS:   2 = iron dragon
-KFEAT:   2 = deep_water
-KFEAT:   w = deep_water
-KMASK:   w = no_monster_gen
+: dis_divider(_G, true)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -581,10 +685,7 @@ vvvvwwww..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..wwwwvvvv
 ENDMAP
 
 NAME:    dis_wall_6
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = hell sentinel
-KMONS:   2 = iron dragon
+: dis_divider(_G, false)
 MAP
 ....................................................................
 vvvvvvvvvvv+++vvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvv+++vvvvvvvvvvv
@@ -599,10 +700,7 @@ vvvv............................................................vvvv
 ENDMAP
 
 NAME:    dis_wall_7
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = hell sentinel
-KMONS:   2 = iron dragon
+: dis_divider(_G, false)
 MAP
 vvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvv
@@ -617,10 +715,7 @@ vvvv............................................................vvvv
 ENDMAP
 
 NAME:    dis_wall_8
-ORIENT:  north
-TAGS:    dis_divider no_vmirror no_rotate
-KMONS:   1 = hell sentinel
-KMONS:   2 = iron dragon
+: dis_divider(_G, false)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -641,7 +736,7 @@ NAME:    dis_st
 ORIENT:  encompass
 MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
 MONS:    iron troll, iron dragon, cacodemon
-SUBST:   5=5.,6=6.,7=7.,8=4467...,0=09988...
+SUBST:   5=5.,6=6.,7=7.,8=4:15 67...,0=09988...
 SHUFFLE: 67
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
@@ -652,6 +747,7 @@ TILE:    G = dngn_statue_iron
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)
+: dis_statues(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v...........................v.....v........v.0...v.............v.....v
@@ -723,4 +819,98 @@ v...............v...v..0..v...v.WWWWW.v.0v.0..v....v.....v.+.....v...v
 v...............v.0.v.....v...v..WWW..v..v....v.0..v..0..v.v..0..v.0.v
 v.vv..vv..vv..vvv...v.....v...v.......v..v....v....v.....v.v.....v...v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+##############################################################################
+# Dis Stronghold by HangedMan
+##############################################################################
+NAME:    dis_hangedman
+ORIENT:  encompass
+MONS:    metal gargoyle w:90 / iron devil
+MONS:    iron troll w:75 / iron troll skeleton / \
+         iron dragon skeleton / iron golem w:5
+MONS:    brimstone fiend, ice fiend, hell sentinel
+MONS:    patrolling iron dragon w:15 / patrolling quicksilver dragon
+MONS:    patrolling Dispater
+KMONS:   8 = vampire knight w:8 / hell knight band w:8 / ancient champion w:18 / \
+         reaper w:6 / cacodemon w:2 / executioner w:6 / balrug w:4 / \
+         dancing weapon w:12 ; great mace good_item | glaive good_item | \
+                               battleaxe good_item | great sword w:15 good_item
+NSUBST:  - = 1:+ / 1 : v:14 +:1 / *:v, = = 1:+ / 1 : v:14 +:1 / *:v
+NSUBST:  0 = 2:8 / 5 = 0:29 8:1 / 2:. / * = 0:49 .:1
+NSUBST:  9 = 3:8 / 3 = 9:4 8:1 / *:9
+SHUFFLE: {([, 34, %$, ab, cd, ef / ef / fe, gh / gh / hg, ij / ij / ji
+SUBST:   acegi = v, bdfhj = ., k : vvv., l : vvv., m : vvv.
+: serpent_of_hell_setup(_G)
+: dis_setup(_G)
+: dis_rune(_G)
+: dis_statues(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvv.(.vv.....vv...vv...vv...vvvvvvv..vv..vv..vv..vvvvvvvvvvvvvvvvvv
+vv..........................v....0v..............v%%%%%.....0|||vvv
+vv[.......v.................+.....v..............v.............|vvv
+vv.......vvv................v.....v.............vv.....3v......|vvv
+vvv.......v1................+.....v..............v..vvvvv......8vvv
+vvv......vvv................v0....v.............vv..............vvv
+vv........v......v.......vv+vvv--vv........v0v...v..............vvv
+vv...v.v.{v2.v1v1v.......v..0v............vvvvv..v..............vvv
+vv..vvvvvvvvvvvvvvvv.....+...-..G........vvvvvv..vvvvv+vv...vv..vvv
+vv...v1v.2v18v2v2v.......v0..v.G.........0vvvvl.........v...v4..vvv
+vv........v8.....v...vv+vvvv-v...........vvvvvv.........+...v..$vvv
+vvv......vvv.........v....0v..............vvvvv..hh.gg..v...v..$vvv
+vvv......1v2.........v.....v.G.............v0v...hh.gg..v...v..$vvv
+vv.......vvv.........+.....-.G..........................v......$vvv
+vv.......1v2.........v.....v.....................gg.hh..v......$vvv
+vv......vvvvv........v0....v.....................gg.hh..vvvvvvvvvvv
+vvv.......v.......vv+vvvv-vv...............................v.v...vv
+vvv.......v.......v...0v........v0v.......v.b.a..................vv
+vv................+....v..G....vvvvv.....vvvv.va.....vvlvv.......vv
+vv..........vvv+vvv....-.G.....vvvvvv.....v8........vvvvvvv.....vvv
+vv..........v....0v0...v.......kvvvv0....bv.6.vb....0vvvvv0.....vvv
+vvv.........+.....vvv-vv.......vvvvvv........8v.....vvvvvvv......vv
+vvv.........v.....v............vvvvv.....av.vvvv.....vvvvv.......vv
+vv......vv+vv.....-..G..........v0v.......a.b.v.......v0v........vv
+vv......v..0v0....v.G.....ff....................................vvv
+vv......+...vvv-vvv.......fve...................................vvv
+vvvv+v+vv0..-..............ee........vv..........................vv
+vvv....0vv-vv.GG.............ff......vv..........................vv
+vvv.....v....................fve.................................vv
+vvv.....-..G........vvkvv.....ee................................vvv
+vvv.....-.G........vvvvvvv............v.........................vvv
+vvv0....v..........0vvvvv0............v..........................vv
+vvvvvvvvv..........vvvvvvv............vv.v.v.v...................vv
+vv..................vvvvv............vvv...v...v.vv.v.vv.........vv
+vv...................v0v............D.vv...v...v....v....v.vvv.vvvv
+vvv.........................vv.....v.5vv.91v.91v.92.v.92.v..92.vvvv
+vvv.........................vv..vvvvvvvvv=vvv=vvvv=vvv=vvvvv=vvvvvv
+vv................................vvvvv....5...................Gvvv
+vv....................................v.............888........Gvvv
+vvv.......v0v.......v.d.c.........v..9=..G.vvvvvvvvvvvvvvvvvvvvvvvv
+vvv......vvvvv.....vvvv.vc...........1v..............8..........vvv
+vv......vvvvvvv.....v8............vvvvv5.v.......v.v6.6v.v......vvv
+vv......0vvvvv0....dv.6.vd............v..v...........8..........vvv
+vvv.....vvvvvvv........8v.........v..9=..v...vvvvvvvvvvvvvvvvv..vvv
+vvv......vvmvv.....cv.vvvv...........1v..v...vvvvvvvvvvvvvvvvv..vvv
+vv..................c.d.v..........vvvv..v...vvO.v|v...v$v.$vv.Gvvv
+vv...v.v..............................v..v...vv.v....v......vv..vvv
+vvvvvvvvvvv..jj.jj.................v.9v..v.v.vvv.|v.|v$.$v.vvv..vvv
+vvv$......v..jj.jj.................v.2=..v...vv|.v7.vvv.4$.$vv..vvv
+vvv$......v...........................v..v.v.vvv.....v.....vvv..vvv
+vvv$..v...v..ii.jj...v0v...........vvvv.8v.6.vv..|v.....v$..vv..vvv
+vvv$..v...v..ii.jj..vvvvv.............v.8v8.8vv.vvvv...vvvv.vv.Gvvv
+vvv$..v...+.........vvvvvv.........v.9=.8v.6.vv..%v.....v...vv..vvv
+vvv..4v...v.........mvvvv0.........v.2v..v.v.vvv.....v.....vvv..vvv
+vvv..vv...vv+vvvvv..vvvvvv............v..v...vv%.%3.vvv.....vv..vvv
+vvv..............v..vvvvv...........vvv..v.v.vvv.v%.%v......++..vvv
+vvv..............v...v0v..............v..v...vv......v......++..vvv
+vvv..............vv.................v.v..v...vv%.v%v...v....vv..vvv
+vvv0......vvvvv..v..................v9=..v...vvvvvvvvvvvv++vvv.5vvv
+vvv|......v3.....vv.................v2v..v...vvvvvvvvvvvv++vvv..vvv
+vvv|.............v....................v..v......................vvv
+vvv|||8.....%%%%%v..................vvvGGv.....G.....G......5..Gvvv
+vvvvvvvvvvvvvvvvvv...vv...vv...vv...vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP

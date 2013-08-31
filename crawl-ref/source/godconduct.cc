@@ -55,8 +55,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
     bool retval = false;
 
-    if (you.religion != GOD_NO_GOD && you.religion != GOD_XOM
-        && (you.religion != GOD_LUGONU || !player_in_branch(BRANCH_ABYSS)))
+    if (!you_worship(GOD_NO_GOD) && !you_worship(GOD_XOM)
+        && (!you_worship(GOD_LUGONU) || !player_in_branch(BRANCH_ABYSS)))
     {
         int piety_change = 0;
         int piety_denom = 1;
@@ -78,7 +78,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                                        "blood-drinking, just this once.");
                     break;
                 }
-                if (you.religion == GOD_SHINING_ONE)
+                if (you_worship(GOD_SHINING_ONE))
                     penance = level;
                 piety_change = -2*level;
                 retval = true;
@@ -105,7 +105,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_CORPSE_VIOLATION:
-            if (you.religion == GOD_FEDHAS)
+            if (you_worship(GOD_FEDHAS))
             {
                 if (known)
                 {
@@ -122,7 +122,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_DESECRATE_HOLY_REMAINS:
-            if (you.religion == GOD_YREDELEMNUL)
+            if (you_worship(GOD_YREDELEMNUL))
             {
                 simple_god_message(" appreciates your desecration of holy "
                                    "remains.");
@@ -157,7 +157,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
 
                 piety_change = -level;
-                penance = level * ((you.religion == GOD_SHINING_ONE) ? 2
+                penance = level * ((you_worship(GOD_SHINING_ONE)) ? 2
                                                                      : 1);
                 retval = true;
                 break;
@@ -167,7 +167,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_HOLY:
-            if (you.religion == GOD_YREDELEMNUL)
+            if (you_worship(GOD_YREDELEMNUL))
             {
                 if (!known)
                 {
@@ -183,7 +183,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_UNCHIVALRIC_ATTACK:
         case DID_POISON:
-            if (you.religion == GOD_SHINING_ONE)
+            if (you_worship(GOD_SHINING_ONE))
             {
                 if (thing_done == DID_UNCHIVALRIC_ATTACK)
                 {
@@ -205,7 +205,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
        case DID_KILL_SLIME:
-            if (you.religion == GOD_JIYVA && !victim->is_shapeshifter())
+            if (you_worship(GOD_JIYVA) && !victim->is_shapeshifter())
             {
                 retval = true;
                 piety_change = -level;
@@ -216,7 +216,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
        case DID_KILL_PLANT:
        case DID_PLANT_KILLED_BY_SERVANT:
             // Piety loss but no penance for killing a plant.
-            if (you.religion == GOD_FEDHAS)
+            if (you_worship(GOD_FEDHAS))
             {
                 retval = true;
                 piety_change = -level;
@@ -282,8 +282,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_FRIEND_DIED:
         case DID_SOULED_FRIEND_DIED:
-            if (victim && you.religion != GOD_FEDHAS
-                && (victim->holiness() == MH_NONLIVING
+            if (victim && !you_worship(GOD_FEDHAS)
+                && (mons_is_object(victim->type)
                     || victim->holiness() == MH_PLANT))
             {
                 // For everyone but Fedhas, plants are items not creatures,
@@ -337,7 +337,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_BANISH:
-            if (you.religion != GOD_LUGONU)
+            if (!you_worship(GOD_LUGONU))
                 break;
         case DID_KILL_LIVING:
             switch (you.religion)
@@ -436,7 +436,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_KILL_NATURAL_UNHOLY:
         case DID_KILL_NATURAL_EVIL:
-            if (you.religion == GOD_SHINING_ONE
+            if (you_worship(GOD_SHINING_ONE)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" accepts your kill.");
@@ -448,7 +448,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_KILL_UNCLEAN:
         case DID_KILL_CHAOTIC:
-            if (you.religion == GOD_ZIN
+            if (you_worship(GOD_ZIN)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" accepts your kill.");
@@ -459,7 +459,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_KILL_PRIEST:
-            if (you.religion == GOD_BEOGH
+            if (you_worship(GOD_BEOGH)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" appreciates your killing of a heretic "
@@ -471,7 +471,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_KILL_WIZARD:
-            if (you.religion == GOD_TROG
+            if (you_worship(GOD_TROG)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" appreciates your killing of a magic "
@@ -483,7 +483,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_KILL_FAST:
-            if (you.religion == GOD_CHEIBRIADOS
+            if (you_worship(GOD_CHEIBRIADOS)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 retval = true;
@@ -508,7 +508,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_KILL_ARTIFICIAL:
-            if (you.religion == GOD_YREDELEMNUL
+            if (you_worship(GOD_YREDELEMNUL)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" accepts your kill.");
@@ -554,7 +554,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level + 18;
                 piety_change = piety_denom - 3;
 
-                if (you.religion == GOD_YREDELEMNUL)
+                if (you_worship(GOD_YREDELEMNUL))
                 {
                     simple_god_message(" appreciates your killing of a holy "
                                        "being.");
@@ -744,7 +744,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_NATURAL_UNHOLY_KILLED_BY_SERVANT:
         case DID_NATURAL_EVIL_KILLED_BY_SERVANT:
-            if (you.religion == GOD_SHINING_ONE)
+            if (you_worship(GOD_SHINING_ONE))
             {
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
@@ -755,7 +755,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_UNCLEAN_KILLED_BY_SERVANT:
         case DID_CHAOTIC_KILLED_BY_SERVANT:
-            if (you.religion == GOD_ZIN)
+            if (you_worship(GOD_ZIN))
             {
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
@@ -766,7 +766,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE:
-            if (you.religion == GOD_YREDELEMNUL)
+            if (you_worship(GOD_YREDELEMNUL))
             {
                 simple_god_message(" accepts your slave's kill.");
                 retval = true;
@@ -781,7 +781,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_SPELL_MEMORISE:
-            if (you.religion == GOD_TROG)
+            if (you_worship(GOD_TROG))
             {
                 penance = level * 10;
                 piety_change = -penance;
@@ -790,7 +790,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_SPELL_CASTING:
-            if (you.religion == GOD_TROG)
+            if (you_worship(GOD_TROG))
             {
                 piety_change = -level;
                 penance = level * 5;
@@ -804,13 +804,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             // typically 10 * exercise, but may be more/less if the
             // skill is at 0 (INT adjustment), or if the PC's pool is
             // low and makes change.
-            if (you.religion == GOD_SIF_MUNA)
+            if (you_worship(GOD_SIF_MUNA))
             {
                 piety_change = level;
                 piety_denom = 40;
                 retval = true;
             }
-            else if (you.religion == GOD_TROG)
+            else if (you_worship(GOD_TROG))
             {
                 simple_god_message(" doesn't appreciate your training magic!");
                 piety_change = -level;
@@ -820,7 +820,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_CARDS:
-            if (you.religion == GOD_NEMELEX_XOBEH)
+            if (you_worship(GOD_NEMELEX_XOBEH))
             {
                 piety_change = level;
                 retval = true;
@@ -854,7 +854,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_CAUSE_GLOWING:
         case DID_DELIBERATE_MUTATING:
-            if (you.religion == GOD_ZIN)
+            if (you_worship(GOD_ZIN))
             {
                 if (!known && thing_done != DID_CAUSE_GLOWING)
                 {
@@ -888,7 +888,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         // level depends on intelligence: normal -> 1, high -> 2
         // cannibalism is still worse
         case DID_EAT_SOULED_BEING:
-            if (you.religion == GOD_ZIN)
+            if (you_worship(GOD_ZIN))
             {
                 piety_change = -level * 5;
                 if (level > 1)
@@ -898,7 +898,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_UNCLEAN:
-            if (you.religion == GOD_ZIN)
+            if (you_worship(GOD_ZIN))
             {
                 retval = true;
                 if (!known)
@@ -913,7 +913,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_CHAOS:
-            if (you.religion == GOD_ZIN)
+            if (you_worship(GOD_ZIN))
             {
                 retval = true;
                 if (!known)
@@ -928,7 +928,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_ATTACK_IN_SANCTUARY:
-            if (you.religion == GOD_ZIN)
+            if (you_worship(GOD_ZIN))
             {
                 piety_change = -level;
                 retval = true;
@@ -936,7 +936,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_DESECRATE_ORCISH_REMAINS:
-            if (you.religion == GOD_BEOGH)
+            if (you_worship(GOD_BEOGH))
             {
                 piety_change = -level;
                 retval = true;
@@ -944,7 +944,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_DESTROY_ORCISH_IDOL:
-            if (you.religion == GOD_BEOGH)
+            if (you_worship(GOD_BEOGH))
             {
                 piety_change = -level;
                 penance = level * 3;
@@ -953,7 +953,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_HASTY:
-            if (you.religion == GOD_CHEIBRIADOS)
+            if (you_worship(GOD_CHEIBRIADOS))
             {
                 if (!known)
                 {
@@ -969,22 +969,16 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_DESTROY_SPELLBOOK:
-            if (you.religion == GOD_SIF_MUNA)
+            if (you_worship(GOD_SIF_MUNA))
             {
                 piety_change = -level;
                 penance = level * (known ? 2 : 1);
                 retval = true;
             }
-            else if (you.religion == GOD_TROG)
-            {
-                simple_god_message(" is delighted!");
-                piety_change = 2; // consistent with Burn Spellbooks
-                retval = true;
-            }
             break;
 
         case DID_EXPLORATION:
-            if (you.religion == GOD_ASHENZARI)
+            if (you_worship(GOD_ASHENZARI))
             {
                 const int base_gain = 6; // base gain per dungeon level
                 // levels: x1, x1.5, x2, x2.5, x3
@@ -995,7 +989,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_SEE_MONSTER:
-            if (you.religion == GOD_SHINING_ONE)
+            if (you_worship(GOD_SHINING_ONE))
             {
                 if (victim && (victim->is_evil() || victim->is_unholy()))
                     break;
@@ -1007,21 +1001,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_DESTROY_DECK:
-            if (you.religion == GOD_NEMELEX_XOBEH)
-            {
-                piety_change = -level;
-                penance = level * (known ? 2 : 1);
-                retval = true;
-            }
-            break;
-
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
         }
 
-        if (you.religion == GOD_OKAWARU
+        if (you_worship(GOD_OKAWARU)
             // currently no constructs and plants
             && (thing_done == DID_KILL_LIVING
                 || thing_done == DID_KILL_UNDEAD
@@ -1077,7 +1062,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
-                "Destroy Deck",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

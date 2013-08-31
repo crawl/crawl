@@ -8,6 +8,8 @@
 #include "dbg-scan.h"
 
 #include "artefact.h"
+#include "branch.h"
+#include "chardump.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dbg-util.h"
@@ -459,6 +461,12 @@ void debug_mons_scan()
             else
                 ASSERT(monster_by_mid(m->mid) == m);
         }
+
+        if (m->constricted_by && !actor_by_mid(m->constricted_by))
+        {
+            mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
+                 m->name(DESC_PLAIN, true).c_str(), m->mindex());
+        }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
     for (map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
@@ -569,6 +577,16 @@ void check_map_validity()
             portal = DNGN_ENTER_HELL;
     }
 
+    dungeon_feature_type exit = DNGN_UNSEEN;
+    if (you.depth == 1 && you.where_are_you != root_branch)
+        exit = branches[you.where_are_you].exit_stairs;
+
+    // these may require you to look farther:
+    if (exit == DNGN_EXIT_PANDEMONIUM)
+        exit = DNGN_TRANSIT_PANDEMONIUM;
+    if (exit == DNGN_EXIT_ABYSS)
+        exit = DNGN_UNSEEN;
+
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
@@ -587,12 +605,30 @@ void check_map_validity()
         if (!in_bounds(*ri))
             ASSERT(feat_is_solid(feat));
 
+        if (env.level_map_mask(*ri) & MMT_MIMIC)
+            continue;
+        // no mimics below
+
         if (feat == portal)
             portal = DNGN_UNSEEN;
+        if (feat == exit)
+            exit = DNGN_UNSEEN;
     }
 
     if (portal)
-        die("%s didn't get generated.", dungeon_feature_name(portal));
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        dump_map("missing_portal.map", true);
+#endif
+        die("Portal %s[%d] didn't get generated.", dungeon_feature_name(portal), portal);
+    }
+    if (exit)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        dump_map("missing_exit.map", true);
+#endif
+        die("Exit %s[%d] didn't get generated.", dungeon_feature_name(exit), exit);
+    }
 
     // And just for good measure:
     debug_item_scan();

@@ -37,6 +37,24 @@ stone_arrow5
 stone_arrow6
 stone_arrow7
 
+poison_arrow0 BOLT_POISON_ARROW
+poison_arrow1
+poison_arrow2
+poison_arrow3
+poison_arrow4
+poison_arrow5
+poison_arrow6
+poison_arrow7
+
+icicle0 BOLT_ICICLE
+icicle1
+icicle2
+icicle3
+icicle4
+icicle5
+icicle6
+icicle7
+
 flame0 BOLT_FLAME
 flame1
 flame2
@@ -47,6 +65,9 @@ frost1
 magic_dart0 BOLT_MAGIC_DART
 magic_dart1
 magic_dart2
+magic_dart3
+magic_dart4
+magic_dart5
 
 sandblast0 BOLT_SANDBLAST
 sandblast1
@@ -60,6 +81,19 @@ zap0 BOLT_ZAP
 zap1
 zap2
 zap3
+
+drain0 BOLT_DRAIN
+drain1
+drain2
+
+searing_ray0 BOLT_SEARING_RAY_I
+searing_ray1
+searing_ray2 BOLT_SEARING_RAY_II
+searing_ray3
+searing_ray4 BOLT_SEARING_RAY_III
+searing_ray5
+
+hellfire BOLT_HELLFIRE
 
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
@@ -81,6 +115,9 @@ cloud_cold2 CLOUD_COLD_2
 cloud_poison0 CLOUD_POISON_0
 cloud_poison1 CLOUD_POISON_1
 cloud_poison2 CLOUD_POISON_2
+cloud_meph0 CLOUD_MEPHITIC_0
+cloud_meph1 CLOUD_MEPHITIC_1
+cloud_meph2 CLOUD_MEPHITIC_2
 cloud_black_smoke CLOUD_BLACK_SMOKE
 cloud_black_smoke_disturbance CLOUD_BLACK_SMOKE_DISTURBANCE
 cloud_blue_smoke CLOUD_BLUE_SMOKE
@@ -127,6 +164,7 @@ cloud_grey_smoke CLOUD_MIST
 # ink spurts
 dngn/water/ink_full CLOUD_INK
 
+# TAG_MAJOR_VERSION == 34
 cloud_gloom CLOUD_GLOOM
 
 cloud_chaos1 CLOUD_CHAOS

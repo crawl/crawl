@@ -64,10 +64,10 @@ int mons_tracking_range(const monster* mon)
             range++;
     }
 
-    if (you.penance[GOD_ASHENZARI])
+    if (player_under_penance(GOD_ASHENZARI))
         range *= 5;
 
-    if (mons_foe_is_marked(mon))
+    if (mons_foe_is_marked(mon) || mon->has_ench(ENCH_HAUNTING))
         range *= 5;
 
     return range;
@@ -415,7 +415,17 @@ bool monster_pathfind::traversable(const coord_def& p)
     if (opc_immob(p) == OPC_OPAQUE
         && grd(p) != DNGN_CLOSED_DOOR && grd(p) != DNGN_SEALED_DOOR)
     {
-        return false;
+        // XXX: Ugly hack to make thorn hunters use their briars for defensive
+        //      cover instead of just pathing around them.
+        if (mons && mons->type == MONS_THORN_HUNTER
+            && monster_at(p)
+            && monster_at(p)->type == MONS_BRIAR_PATCH)
+        {
+            return true;
+        }
+        // Give wall-walkers a chance to see if this grid is compatible with them
+        else if (!mons || !mons_wall_shielded(mons) || actor_at(p))
+            return false;
     }
 
     if (mons)

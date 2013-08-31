@@ -1,9 +1,9 @@
 %%%%
-No ability
+No ability ability
 
 如果你看到这条消息，说明你遇到bug了。
 %%%%
-Spit Poison
+Spit Poison ability
 
 向目标怪物喷吐毒液。
 %%%%
@@ -11,116 +11,122 @@ Blink ability
 
 传送到近处的一个随机地点。
 %%%%
-Breathe Dispelling Energy
+Breathe Dispelling Energy ability
 
 向目标怪物喷吐出一股能量波，有可能会移除它身上的状态魔法。
 %%%%
-Breathe Fire
+Breathe Fire ability
 
 向目标怪物喷吐出火焰，有可能会制造出火焰云。
 %%%%
-Breathe Frost
+Breathe Frost ability
 
 向目标怪物喷吐出冰霜。
 %%%%
-Breathe Poison Gas
+Breathe Poison Gas ability
 
 向目标怪物喷吐出毒气。
 %%%%
-Breathe Lightning
+Breathe Lightning ability
 
 放出强大的电能，制造出一片不受控制的闪电风暴。
 %%%%
-Breathe Sticky Flame
+Breathe Sticky Flame ability
 
-向目标怪物喷吐出一团粘性火焰。顾名思义，粘性火焰会粘在目标的身上，因此怪物可能
-会被粘在它身上的火焰灼烧数轮；当然，这火焰最终还是会熄灭的。击中目标时
-，粘性火焰可能会四处飞溅。
+向目标怪物喷吐出一团粘性火焰。顾名思义，粘性火焰会粘在目标的身上，
+因此怪物可能会被粘在它身上的火焰灼烧数轮；当然，这火焰最终还是会熄灭的。
+击中目标时，粘性火焰可能会四处飞溅。
 %%%%
-Breathe Steam
+Breathe Steam ability
 
 向目标怪物喷吐出一团蒸汽。
 %%%%
-Breathe Noxious Fumes
+Breathe Noxious Fumes ability
 
 向目标怪物喷吐出有害的毒烟。
 %%%%
-Bat Form
+Bat Form ability
 
-你变形成一只行动迅捷的吸血蝙蝠。
-在蝙蝠形态中，你无法与任何物品进行任何形式的互动（除了拾起或丢下它们
-），也无法施放任何法术。需要注意的是，变成蝙蝠会增加你的敏捷值
-，但却会降低你的力量值。因此，如果你的力量太低，你将无法变成蝙蝠。
+你变形成一只行动迅捷的吸血蝙蝠。在蝙蝠形态中，
+你无法与任何物品进行任何形式的互动（除了拾起或丢下它们），也无法施放任何法术。
+需要注意的是，变成蝙蝠会增加你的敏捷值，但却会降低你的力量值。因此，
+如果你的力量太低，你将无法变成蝙蝠。
 %%%%
-Bottle Blood
+Bottle Blood ability
 
-经验等级是6级或更高的吸血鬼能提取出尸体内的鲜血并将其保存到瓶子里，但前提是该尸
-体内有血，而且没有腐烂。和屠宰时一样，吸血鬼在提取鲜血时手里也需要拿一把刀。
+经验等级是6级或更高的吸血鬼能提取出尸体内的鲜血并将其保存到瓶子里，
+但前提是该尸体内有血，而且没有腐烂。和屠宰时一样，
+吸血鬼在提取鲜血时手里也需要拿一把刀。
 %%%%
-Spit Acid
+Spit Acid ability
 
 向目标怪物喷吐强酸。
 %%%%
-Fly
+Fly ability
 
 开始飞行。
 %%%%
-Hellfire
+Hellfire ability
 
 让地狱火灼烧你的敌人。
 %%%%
-Release Delayed Fireball
+Release Delayed Fireball ability
 
 瞬间施放一发已经记忆的（延迟）火球术，不会额外消耗魔力或满腹度。
 %%%%
-Self-Restoration
+Stop Singing ability
 
-永久消耗一点魔法值来回复你的力量、敏捷和智力
-，并且大量回复因腐烂而失去的生命值。
+停止咏唱杀戮之歌。
 %%%%
-Device Recharging
+Self-Restoration ability
+
+永久消耗一点魔法值来回复你的力量、敏捷和智力，
+并且大量回复因腐烂而失去的生命值。
+%%%%
+Device Recharging ability
 
 永久失去一点魔法值，以此来为一根魔杖或法杖充能。
 %%%%
-Evoke Teleportation
+Evoke Teleportation ability
 
 将你自己传送到当前楼层上的一个随机地点。
 %%%%
-Evoke Blink
+Evoke Berserk Rage ability
 
-传送到近处的一个随机地点。
+进入狂暴状态。在狂暴中，你的生命值和伤害输出都会大幅提升，
+但这种强化只是暂时的。如果你不杀死任何生物，狂暴很快就会结束
+；但如果你杀死了多个生物，狂暴时间可能会进一步延长。在狂暴时，
+你无法进行某些动作，例如：装备（或收起）一件武器、喝药水、使用魔杖或其他物品、
+施法等。狂暴结束后，你通常会陷入深度的疲劳中，此时你的动作速度会减慢，
+而且你无法在疲劳时再次狂暴。疲劳时，你甚至可能会累昏过去。
 %%%%
-Evoke Berserk Rage
-
-进入狂暴状态。在狂暴中，你的生命值和伤害输出都会大幅提升
-，但这种强化只是暂时的。
-如果你不杀死任何生物，狂暴很快就会结束；但如果你杀死了多个生物
-，狂暴时间可能会进一步延长。在狂暴时，你无法进行某些动作，例如：装备（或收起
-）一件武器、喝药水、使用魔杖或其他物品、施法等。
-狂暴结束后，你通常会陷入深度的疲劳中，此时你的动作速度会减慢
-，而且你无法在疲劳时再次狂暴。疲劳时，你甚至可能会累昏过去。
-%%%%
-Evoke Invisibility
+Evoke Invisibility ability
 
 暂时隐去你自己的身形。隐身时产生的魔力会污染你的身体，时间长了会使你身上发光。
 %%%%
-Turn Visible
+Turn Visible ability
 
 再次隐身。
 %%%%
-Stop Flying
+Stop Flying ability
 
 停止飞行。
 %%%%
-Evoke Fog
+Evoke Fog ability
 
 释放一团浓雾来遮挡视线。
 %%%%
-End Transformation
+Evoke Teleport Control ability
+
+这项异能允许你控制你自身的传送——包括让你选择传送的大致目标地点，
+以及选择闪烁的方向。注意：受控的传送会导致被传送者的身体遭到魔力污染，
+而且受控型传送生效所需的时间比非受控型传送要长。
+%%%%
+End Transformation ability
 
 恢复到你的正常形态。该异能有一定延迟。
 %%%%
-Recite
+Recite ability
 
 向怪物们宣传辛制订的法则；这可能会导致各种各样的结果。
 你可以从以下四本法典中选一本进行宣传：
@@ -132,49 +138,53 @@ Recite
 朗读这本法典会对不净者造成伤害。
 
 *叛教之典：若他们没有做其他的恶行，不信仰辛的智能生物不会受到太严重的惩罚
-；朗读这本法典只会使它们陷入困惑。但是
-，信仰与辛敌对的神祗之生物可能会被永久剥夺传播它们的邪说的能力。
+；朗读这本法典只会使它们陷入困惑。但是，
+信仰与辛敌对的神祗之生物可能会被永久剥夺传播它们的邪说的能力。
 
 *诅咒之典：辛痛恨所有的恶魔和不死生物。这本法典赋予你叱喝它们的能力。
 %%%%
-Vitalisation
+Vitalisation ability
 
 辛赋予你生命力。辛会填饱你的肚子，并且保佑你不患病、不中毒、不石化、不困惑、
 不腐烂，同时还能暂时强化并维持你的力量、智力和敏捷。
 %%%%
-Sanctuary
+Imprison ability
 
-暂时躲藏到一个神圣的庇护所中。
-当你处于庇护所之中时，怪物无法攻击你；但如果你主动攻击他人
-，庇护所就会马上消失。
+创造出一面暂时性的白银墙壁，将一个怪物困在其中。你的神术技能越高，
+白银监牢的持续时间越长。
 %%%%
-Cure All Mutations
+Sanctuary ability
+
+暂时躲藏到一个神圣的庇护所中。当你处于庇护所之中时，怪物无法攻击你
+；但如果你主动攻击他人，庇护所就会马上消失。
+%%%%
+Cure All Mutations ability
 
 治愈你身体中所有的突变。仅能使用一次。
 %%%%
-Divine Shield
+Divine Shield ability
 
-让光明神赐予你一面圣盾。光明神的神力使它浮在空中
-，因此圣盾不会占用你的装备位置。不过，你得靠自己的意念控制它的动作
-，因此你的盾牌技能会使圣盾变得更为有效。
+让光明神赐予你一面圣盾。光明神的神力使它浮在空中，
+因此圣盾不会占用你的装备位置。不过，你得靠自己的意念控制它的动作，
+因此你的盾牌技能会使圣盾变得更为有效。
 %%%%
-Cleansing Flame
+Cleansing Flame ability
 
-将圣火引导进凡间，灼烧你周围的生物。
-不死生物和恶魔会受到巨大伤害；其他敌对怪物也会受伤
-，但不如不死生物和恶魔受到的伤害大。你自己和你的盟友完全不会受到圣火的影响。
+将圣火引导进凡间，灼烧你周围的生物。不死生物和恶魔会受到巨大伤害
+；其他敌对怪物也会受伤，但不如不死生物和恶魔受到的伤害大。
+你自己和你的盟友完全不会受到圣火的影响。
 %%%%
-Summon Divine Warrior
+Summon Divine Warrior ability
 
-召唤一个天使或天神来帮助你扫除邪恶。光明神可能会祝福它们
-，使它们在这个世界逗留更长的时间。
+召唤一个天使或天神来帮助你扫除邪恶。光明神可能会祝福它们，
+使它们在这个世界逗留更长的时间。
 %%%%
-Receive Corpses
+Receive Corpses ability
 
 在你身边创造出一具或多具怪物尸体；你可以将它们唤起成为你的仆人。
 创造出尸体的数量和新鲜度与你的死灵术技能有关。
 %%%%
-Torment
+Torment ability
 
 献祭一具尸体，让你视野中的所有生物——包括你自己
 ——在一瞬间体验到该生物一生中受过的所有苦难。
@@ -182,113 +192,115 @@ Torment
 
 奇库巴卡德加*可能*会保护你不受该痛苦的影响。
 %%%%
-Animate Remains
+Animate Remains ability
 
-将一具尸体或骸骨复活，使它成为你的追随者。注意
+将一具尸体或骸骨复活，使它成为你的部下。注意
 ：僵尸和骷髅都不能离开它们被创造出来的那一层地城。
 %%%%
-Injury Mirror
+Recall Undead Slaves ability
+
+立即将地城中所有属于你的死灵奴仆们召唤到你的身边。
+%%%%
+Injury Mirror ability
 
 将你受到的伤害反弹给攻击你的怪物。
 %%%%
 Animate Dead ability
 
-将你周围所有的尸体和骸骨复活，使它们成为你的追随者。注意
+将你周围所有的尸体和骸骨复活，使它们成为你的部下。注意
 ：僵尸和骷髅都不能离开它们被创造出来的那一层地城。
 %%%%
-Drain Life
+Drain Life ability
 
 吸取周围怪物的生命力来治疗你自己。
 %%%%
-Enslave Soul
+Enslave Soul ability
 
-标记一个有智能的活物的灵魂，为夺取它做准备。一旦该活物死亡
-，它的灵魂就是你的所有物了。
+标记一个有智能的活物的灵魂，为夺取它做准备。一旦该活物死亡，
+它的灵魂就是你的所有物了。
 
 被你驱使的灵魂依然保留生前的异能、装备和能力，并且部分保留生前的自然再生能力。
-如果一个活物已经身受重伤，你就无法标记它的灵魂。另外
-，你不能同时驱使一个以上的灵魂。灵魂标记的持续时间根据你的神术技能而定。
+如果一个活物已经身受重伤，你就无法标记它的灵魂。另外，
+你不能同时驱使一个以上的灵魂。灵魂标记的持续时间根据你的神术技能而定。
 
 值得注意的是，被驱使的灵魂是可以跟随你前往地城的其他楼层的。
 %%%%
-Animate Remains or Dead
+Animate Remains or Dead ability
 
 如果你看到这条消息，说明你遇到bug了。
 %%%%
-Heroism
+Heroism ability
 
 暂时强化你的所有战斗技能，包括潜行和躲避陷阱的能力。
 %%%%
-Finesse
+Finesse ability
 
 大幅加快你在战斗中的速度，并且完全不影响你的准确度。
 这个异能会导致你的身体慢慢受到魔力的污染；长时间处在这种状态下对你的身体有害。
 %%%%
-Minor Destruction
+Minor Destruction ability
 
 向目标怪物发射一发随机属性的杀伤性冲击波。
 %%%%
-Lesser Servant of Makhleb
+Lesser Servant of Makhleb ability
 
 召唤一个低阶恶魔。如果你的神术技能较低，它可能会攻击你。
 %%%%
-Major Destruction
+Major Destruction ability
 
 向目标怪物发射一发随机属性的杀伤性射线或爆炸物。
 %%%%
-Greater Servant of Makhleb
+Greater Servant of Makhleb ability
 
 召唤一个高阶恶魔。如果你的神术技能较低，它可能会攻击你。
 %%%%
-Channel Energy
+Channel Energy ability
 
 回复一定量的魔法值，回复量和你的神术技能有直接关系。
 %%%%
-Forget Spell
+Forget Spell ability
 
 忘记一道你记忆中的法术，以便腾出记忆空间来学新法术。
 %%%%
-Burn Spellbooks
+Burn Spellbooks ability
 
 让塔洛格的怒火将你的视野内的所有法术书点燃。
 如果你在把肮脏的魔法书烧掉前连翻都不翻一下它，塔洛格会对你更加满意。
 %%%%
-Berserk
+Berserk ability
 
-进入狂暴状态。在狂暴中，你的生命值和伤害输出都会大幅提升
-，但这种强化只是暂时的。
-如果你不杀死任何生物，狂暴很快就会结束；但如果你杀死了多个生物
-，狂暴时间可能会进一步延长。在狂暴时，你无法进行某些动作，例如：装备（或收起
-）一件武器、喝药水、使用魔杖或其他物品、施法等。
-狂暴结束后，你通常会陷入深度的疲劳中，此时你的动作速度会减慢
-，而且你无法在疲劳时再次狂暴。
-与其他狂暴来源不同，塔洛格可能会在狂暴结束时保护你不会晕过去
-，其概率与你的虔诚度有关。
+进入狂暴状态。在狂暴中，你的生命值和伤害输出都会大幅提升，
+但这种强化只是暂时的。如果你不杀死任何生物，狂暴很快就会结束
+；但如果你杀死了许多敌人，狂暴时间则可能会进一步延长。在狂暴时，
+你无法进行某些动作，例如：装备（或收起）一件武器、喝药水、使用魔杖或其他物品、
+施法等。狂暴结束后，你通常会陷入深度的疲劳中，此时你的动作速度会减慢，
+而且你无法在疲劳时再次狂暴。与其他狂暴来源不同，
+塔洛格可能会在狂暴结束时保护你不会晕过去，其概率与你的虔诚度有关。
 %%%%
-Trog's Hand
+Trog's Hand ability
 
-开启一种强力的再生异能。该再生力可与其他所有来源的再生力叠加
-，并且甚至能让本来无法自我再生的种族也获得再生能力。
+开启一种强力的再生异能。该再生力可与其他所有来源的再生力叠加，
+并且甚至能让本来无法自我再生的种族也获得再生能力。
 该异能还会加强你对魔法的抗力。
 %%%%
-Brothers in Arms
+Brothers in Arms ability
 
 召唤一个愤怒的巨人前来帮助你作战。
 %%%%
-Divine Protection
+Divine Protection ability
 
 请求艾利维隆拯救你的性命。如果你受到致命伤，艾利维隆可能会帮你挡住致命的一击
-；其概率与你的虔诚度成正比。
-仅仅是向艾利维隆请求帮助是不会消耗虔诚度的，但如果艾利维隆真的救了你
-，这救援会消耗虔诚度。
+；其概率与你的虔诚度成正比。仅仅是向艾利维隆请求帮助是不会消耗虔诚度的，
+但如果艾利维隆真的救了你，这救援会消耗虔诚度。
 
 小心：一边请求艾利维隆保住你的性命一边杀死其他人是一桩大罪！
 %%%%
-Lesser Healing
+Lesser Healing ability
 
-治疗一个除你之外的生物，治疗量和你的神术技能有关。对敌对怪物使用该异能可能会使
-它们对你的态度变得更友好，在不同生物身上使用该异能感化对方的成功率排行：动物最
-高，与你同族的生物次高，非同族的人形生物较低，对恶魔和不死生物的成功率最低。
+治疗一个除你之外的生物，治疗量和你的神术技能有关。
+对敌对怪物使用该异能可能会使它们对你的态度变得更友好，
+在不同生物身上使用该异能感化对方的成功率排行：动物最高，与你同族的生物次高，
+非同族的人形生物较低，对恶魔和不死生物的成功率最低。
 无心智或是睡眠中的生物不可能被感化。感化的成功率和治疗量成正比。
 
 不管你是否成功感化了目标生物，使用该异能都要消耗满腹度、虔诚度和魔法值。
@@ -297,22 +309,23 @@ Lesser Healing
 
 你也可以使用该异能治疗盟友或中立生物。
 %%%%
-Lesser Self-Healing
+Lesser Self-Healing ability
 
 治疗你自己的创伤，治疗量和你的神术技能有关。
 %%%%
-Purification
+Purification ability
 
-净化你的身体，移除身上所有的有害状态，包括：疾病、中毒、减速、石化、困惑和腐烂
-，并且还能完全回复你的力量、敏捷和智力值。
+净化你的身体，移除身上所有的有害状态，包括：疾病、中毒、减速、石化、
+困惑和腐烂，并且还能完全回复你的力量、敏捷和智力值。
 %%%%
-Greater Healing
+Greater Healing ability
 
-治疗一个除你之外的生物，治疗量和你的神术技能有关。对敌对怪物使用该异能可能会使
-它们对你的态度变得更友好，在不同生物身上使用该异能感化对方的成功率排行：动物最
-高，与你同族的生物次高，非同族的人形生物较低，对恶魔和不死生物的成功率最低。
-无心智或是睡眠中的生物不可能被感化。感化的成功率和治疗量是成正比的
-，因此该异能的感化率远比次级治疗术要高。
+治疗一个除你之外的生物，治疗量和你的神术技能有关。
+对敌对怪物使用该异能可能会使它们对你的态度变得更友好，
+在不同生物身上使用该异能感化对方的成功率排行：动物最高，与你同族的生物次高，
+非同族的人形生物较低，对恶魔和不死生物的成功率最低。
+无心智或是睡眠中的生物不可能被感化。感化的成功率和治疗量是成正比的，
+因此该异能的感化率远比次级治疗术要高。
 
 不管你是否成功感化了目标生物，使用该异能都要消耗满腹度、虔诚度和魔法值。
 如果感化成功，目标怪物会得到治疗，而你则得到该怪物的一半经验值和一些虔诚度。
@@ -320,257 +333,280 @@ Greater Healing
 
 你也可以使用该异能治疗盟友或中立生物。
 %%%%
-Greater Self-Healing
+Greater Self-Healing ability
 
-治疗你自己的创伤，治疗量和你的神术技能有关。
-大体来说，高级治疗术的治疗量是次级治疗术的三倍
-，而虔诚度消耗则比次级治疗术高一点点。
+治疗你自己的创伤，治疗量和你的神术技能有关。大体来说，
+高级治疗术的治疗量是次级治疗术的三倍，而虔诚度消耗则比次级治疗术高一点点。
 %%%%
-Divine Vigour
+Divine Vigour ability
 
 大幅回复你的生命值和魔法值，同时暂时增加它们的上限。效果和你的神术技能有关。
 %%%%
-Depart the Abyss
+Depart the Abyss ability
 
 离开无尽深渊，回到你原来所在的地方。
 %%%%
-Bend Space
+Bend Space ability
 
-扭曲你周围的空间，使你立刻进行一次短距离传送
-，同时也可能会传送并伤害你周围的怪物。
+扭曲你周围的空间，使你立刻进行一次短距离传送，
+同时也可能会传送并伤害你周围的怪物。
 %%%%
-Banish
+Banish ability
 
 尝试将一只怪物放逐到无尽深渊中。
 %%%%
-Corrupt
+Corrupt ability
 
-释放无尽深渊的能量，以此来腐化你当前所在的楼层。这会导致该楼层的外表剧变
-，而且还会有恶魔传送到这里进行破坏。
+释放无尽深渊的能量，以此来腐化你当前所在的楼层。这会导致该楼层的外表剧变，
+而且还会有恶魔传送到这里进行破坏。
 该异能对已经遭到腐化的楼层和无尽深渊本身没有任何效果。
 %%%%
-Enter the Abyss
+Enter the Abyss ability
 
 立刻将你自己传送到卢格努的领域中；代价是永久性减少你的最大生命值和魔法值。
 仅仅是使用该异能就会将你的生命力和魔力消耗殆尽。
 %%%%
-Draw One
+Draw One ability
 
 选定你背包中的一副卡组，从中抽取一张卡牌。
 %%%%
-Peek at Two
+Peek at Two ability
 
-选择一副你背包中的牌组。
-你放弃其中一张牌，然后再从中抽出两张，看清楚它们是什么牌
-，然后再把它们放回牌组并洗牌。
-该牌组会被标记为含有这两张牌；如果这两张牌是不同的牌，牌组的种类会被鉴定出来。
+选择一副你背包中的牌组。你放弃其中一张牌，然后再从中抽出两张，
+看清楚它们是什么牌，然后再把它们放回牌组并洗牌。该牌组会被标记为含有这两张牌
+；如果这两张牌是不同的牌，牌组的种类会被鉴定出来。
 %%%%
-Triple Draw
+Triple Draw ability
 
-从你背包中的任意一副牌组中抽三张牌。你看清它们的花色，选择一张留下
-，然后弃掉另外两张。
+从你背包中的任意一副牌组中抽三张牌。你看清它们的花色，选择一张留下，
+然后弃掉另外两张。
 %%%%
-Deal Four
+Deal Four ability
 
 从一个未受标记的卡组中抽出四张牌——只花费抽一张的时间。
 卡组中其余的卡牌都会消失。如果卡组中的卡牌不足四张，尼姆莱克斯会送你一张牌
 ——不一定是你想要的牌。
 %%%%
-Stack Five
+Stack Five ability
 
-从任意一副未标记的牌组中抽五张牌；牌组中剩下的牌就全部消失了。你看清牌上的花色
-，然后按你的意愿把它们排列起来。
+从任意一副未标记的牌组中抽五张牌；牌组中剩下的牌就全部消失了。
+你看清牌上的花色，然后按你的意愿把它们排列起来。
 以后你就可以按你排列的顺序将这些卡牌一张张抽出。
 %%%%
-Smiting
+Smiting ability
 
-向你视野中的一个敌人降下神罚。神罚不需要走直线；只要你能看到目标
-，就能对它降下神罚。
+向你视野中的一个敌人降下神罚。神罚不需要走直线；只要你能看到目标，
+就能对它降下神罚。
 %%%%
-Sunlight
+Recall Orcish Followers ability
+
+立即将地城中所有隶属于你的兽人部下召唤到你的身边。
+%%%%
+Stop Recall ability
+
+停止召唤你的部下。
+%%%%
+Sunlight ability
 
 让阳光照射地城中的一小片区域。被阳光照射到的怪物会变得更容易被打中。
-被阳光照射到的水会蒸发；具体来说，深水塘会变成浅水塘，浅水塘则会完全干涸
-，露出下面的地面。
+被阳光照射到的水会蒸发；具体来说，深水塘会变成浅水塘，浅水塘则会完全干涸，
+露出下面的地面。
 %%%%
-Growth
+Growth ability
 
-消耗一些水果来使你周围长出一圈植物。
-如果你没有足够数量的水果，该异能无法创造出完整的一圈植物；在这种情况下
-，只有你身边靠近怪物的格子会长出植物。该异能创造出的植物拥有比一般植物更多的HP
+消耗一些水果来使你周围长出一圈植物。如果你没有足够数量的水果，
+该异能无法创造出完整的一圈植物；在这种情况下，
+只有你身边靠近怪物的格子会长出植物。该异能创造出的植物拥有比一般植物更多的HP
 ，其增量与你的神术技能成正比。
 %%%%
-Rain
+Rain ability
 
 使你周围开始下雨。周围的普通地板会变成浅水塘，浅水塘则会变成深水塘。
 这可能会使植物和蕈菇在没有被完全淹没的地方生长。
 %%%%
-Reproduction
+Reproduction ability
 
 从你视野中的尸体上创造出自爆孢子。它们自爆时会对你的敌人以及你自己造成伤害。
 %%%%
-Bend Time
+Evolution ability
+
+让植物和真菌进化成更强的物种。强化真菌要消耗虔诚值，强化植物则要消耗水果。
+强化过的植物攻击会更加准确（具体加成由使用者的神术技能决定
+），而且如果使用者精通神术技能，强化过的酸箭草喷酸的频率也会更高。
+%%%%
+Bend Time ability
 
 尝试使你周围的一切生物减速。你的神术技能越高，该异能就越难被敌人抵抗。
 %%%%
-Temporal Distortion
+Temporal Distortion ability
 
 扭曲你周围的时间流，导致周围的怪物跳跃到未来的时间。
 %%%%
-Slouch
+Slouch ability
 
 对视野中所有移动速度比你快的生物造成伤害；对于受到魔法加速的生物效果更好。
 %%%%
-Step From Time
+Step From Time ability
 
-从时间流中将你自己移除。
-周围的东西还是按它们平常的习性忙忙碌碌：怪物会四处游荡，某些物品会慢慢腐烂
-，植物会继续生长。过一段时间后，你会以离开时间流时的状态回到时间流中。
+从时间流中将你自己移除。周围的东西还是按它们平常的习性忙忙碌碌
+：怪物会四处游荡，某些物品会慢慢腐烂，植物会继续生长。过一段时间后，
+你会以离开时间流时的状态回到时间流中。
 %%%%
-Request Jelly
+Request Jelly ability
 
 召唤一个非敌对的胶质怪。它会在该楼层上四处游荡并吃掉各种物品。
 %%%%
-Jelly Paralyse
+Jelly Paralyse ability
 
 向吉瓦祷告来让你的软泥怪们暂时停止吞噬物品。
 %%%%
-Slimify
+Slimify ability
 
 在你的武器或拳头上裹上软泥
 ；被它打到的下一个活物或不死生物会变成一个非敌对的软泥怪。
 %%%%
-Cure Bad Mutation
+Cure Bad Mutation ability
 
 随机移除你身体中的一个有害突变。
 %%%%
-Scrying
+Scrying ability
 
 赐予你星界的视觉，让你能看透墙壁。该异能不足以让你对墙壁另一端使用法术或异能
 ——即使是能隔着玻璃使用的那些也不行。
 %%%%
-Transfer Knowledge
+Transfer Knowledge ability
 
 牺牲你在一项技能中的部分经验来学习另一项技能。
 %%%%
-End Transfer Knowledge
+End Transfer Knowledge ability
 
 中断正在进行的技能转换。
 %%%%
-Renounce Religion
+Renounce Religion ability
 
-与你信仰的神祗断绝关系。这会导致你的角色不再信仰该神祗；通常来说
-，这会招致该神祗的怒火。
+与你信仰的神祗断绝关系。这会导致你的角色不再信仰该神祗；通常来说，
+这会招致该神祗的怒火。
 %%%%
-Make dart trap
+Convert to Beogh ability
+
+向洞穴兽人之神——比欧弗宣誓效忠。比欧弗要求祂的信徒杀死一切不信教者，
+但如果有新信徒选择信仰比欧弗，那么其他信徒就必须要饶恕他，
+而且要接受他加入比欧弗的教会。但是要小心
+：在你作为比欧弗信徒的名声响亮起来之前，
+没有亲眼看见你向比欧弗宣誓的兽人可能还是会与你为敌！
+
+除了比欧弗自己之外，所有的神祗都厌恶比欧弗。另外，
+比欧弗也不会轻易饶过背离祂的叛教者。
+%%%%
+Make dart trap ability
 
 在目标地点创造出一个飞镖陷阱。
 %%%%
-Make oklob sapling
+Make oklob sapling ability
 
 在目标地点长出一株酸箭草幼苗。
 %%%%
-Make arrow trap
+Make arrow trap ability
 
 在目标地点创造出一个飞箭陷阱。
 %%%%
-Make plant
+Make plant ability
 
 在目标地点长出一株植物。
 %%%%
-Remove Curse
+Remove Curse ability
 
 移除你身上所有装备的诅咒。
 %%%%
-Make burning bush
+Make burning bush ability
 
 在目标地点创造出一棵燃烧的灌木。燃烧的灌木可以喷火，而且可以看见隐形的怪物。
 %%%%
-Make altar
+Make altar ability
 
 在目标地点创造出一个祭坛；祭坛供奉的神祗由你选定。
 %%%%
-Make grenades
+Make grenades ability
 
 在你身边创造一些巨型的自爆孢子。
 %%%%
-Make oklob plant
+Make oklob plant ability
 
 在目标地点长出一株成年酸箭草。
 %%%%
-Make net trap
+Make net trap ability
 
 在目标地点创造出一个捕网陷阱。
 %%%%
-Make ice statue
+Make ice statue ability
 
 在目标地点建造一尊能使用各种冰系异能的雕像。
 %%%%
-Make spear trap
+Make spear trap ability
 
 在目标地点创造出一个飞矛陷阱。
 %%%%
-Make alarm trap
+Make alarm trap ability
 
 在目标地点创造出一个警报陷阱，在有怪物靠近时会发出警报。
 %%%%
-Make mushroom circle
+Make mushroom circle ability
 
 以目标地点为中心长出一圈蕈菇。
 %%%%
-Make bolt trap
+Make bolt trap ability
 
 在目标地点创造出一个矢弹陷阱。
 %%%%
-Make crystal statue
+Make crystal statue ability
 
 在目标地点建造一尊能使怪物陷入困惑的雕像。
 %%%%
-Make needle trap
+Make needle trap ability
 
 在目标地点创造出一个毒针陷阱。
 %%%%
-Zot-teleport
+Zot-teleport ability
 
 进行可控传送。
 %%%%
-Make water
+Make water ability
 
 在你所在的位置创造出一片浅水塘。
 %%%%
-Make lightning spire
+Make lightning spire ability
 
 在目标地点建造一座会发射电流束的闪电塔。
 %%%%
-Make silver statue
+Make silver statue ability
 
 在目标地点建造一尊会召唤恶魔来协助战斗的雕像。
 %%%%
-Make bazaar
+Make bazaar ability
 
 在你所在的位置创造出一个通往商场的传送门。
 %%%%
-Acquire gold
+Acquire gold ability
 
 取得大量金钱。
 %%%%
-Make oklob circle
+Make oklob circle ability
 
 以目标地点为中心长出一圈酸箭草。
 %%%%
-Sage
+Sage ability
 
 将一些你已经获得的经验导入到一项选定的技能中，加快训练该技能的速度。
 %%%%
-Acquirement
+Acquirement ability
 
 取得一件物品，该物品的类别由你选定。
 %%%%
-Make blade trap
+Make blade trap ability
 
 在目标地点创造出一个利刃陷阱。
 %%%%
-Make curse skull
+Make curse skull ability
 
 在目标地点创造一个能召唤不死生物的诅咒头骨
 ；代价是你自己也会受到死灵法术的打击。

@@ -122,11 +122,29 @@ function zonify.map_map(e)
 
 end
 
-function zonify.map_fill_zones(e,num_to_keep,glyph)
-
+function zonify.map_fill_zones(e, num_to_keep, glyph)
   if glyph == nil then glyph = 'x' end
 
   local zonemap = zonify.map_map(e)
+  zonify.fill_smallest_zones(zonemap,1,"floor",function(x,y,cell) e.mapgrd[x][y] = glyph end)
+end
+
+function zonify.map_fill_lava_zones(e, num_to_keep, glyph)
+  if glyph == nil then glyph = 'x' end
+
+  local wall = "wxcvbtg"
+
+  -- TODO: Can we check size of current map after extend_map?
+  local gxm,gym = dgn.max_bounds()
+  local zonemap = zonify.map(
+    { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 },
+    function(x,y)
+      return dgn.in_bounds(x,y) and { glyph = e.mapgrd[x][y] } or nil
+    end,
+    function(val)
+      return string.find(wall,val.glyph,1,true) and "wall" or "floor"
+    end
+  )
   zonify.fill_smallest_zones(zonemap,1,"floor",function(x,y,cell) e.mapgrd[x][y] = glyph end)
 end
 

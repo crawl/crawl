@@ -7,7 +7,7 @@
 #            are stored in the files listed in mini.des.
 #            Vaults using global lua functions go into individual .des files.
 #
-#            All maps dealing with the Vaults branch system, including Vaults:8
+#            All maps dealing with the Vaults branch system, including Vaults:$
 #            reside in vaults.des.
 ###############################################################################
 
@@ -30,7 +30,7 @@ function init_protected_by_tso(e)
 end
 }}
 
-# Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
+# Set the default depth for vaults. Be sure to adapt the DEPTH of particularly
 # easy or tough vaults. Also, exclude unthemely branches with !Lair etc.
 default-depth: D:12-26
 
@@ -949,13 +949,13 @@ ENDMAP
 NAME:    infiniplex_staircase_pool_2
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase no_monster_gen decor
-DEPTH:   D:2-26, Lair:*, Swamp:*
+DEPTH:   D:2-26, Lair, Swamp
 WEIGHT:  3 (D), 10 (Swamp)
 # Water
 SUBST:   D = WW.
 SUBST:   E = W..
 SUBST:   Z = wwW
-# Guarentee a path
+# Guarantee a path
 NSUBST:  S = 1:W / *:w
 # Place @(s)
 NSUBST:  ! = 1:@ / *:!
@@ -979,7 +979,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pool
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-20, Lair:*, Swamp:*
+DEPTH:   D:2-20, Lair, Swamp
 WEIGHT:  2 (D), 20 (Swamp)
 SUBST:   D = ww.
 SUBST:   E = w..
@@ -1197,7 +1197,7 @@ ENDMAP
 # An old-fashioned vault, by Lemuel
 #
 NAME:  lemuel_traditional_vault
-DEPTH: D:12-27
+DEPTH: D:12-
 ORIENT: float
 SUBST: 9 = 9 0 8:2
 SUBST: 0 = 0 .
@@ -1348,7 +1348,7 @@ DEPTH:  D:7-21
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
-MONS:   hound / wolf / hog
+MONS:   hound / wolf w:5 / hog
 SUBST:  1 = 1:30 2 3 4 .
 MAP
 cccccccccc
@@ -1437,14 +1437,14 @@ ENDMAP
 # Oklob shooting range
 #
 # Disallowing this vault on branch starts, as brown stairs can't help there.
-# Chance for a plant to turn oklob based on dungeon level. Elf:5 is hard, but
+# Chance for a plant to turn oklob based on dungeon level. Elf:$ is hard, but
 # considered okay. Has between 1 and 3 oklob plants.
 # Single oklob at absolute depth 10, expect 2 oklobs at depth 20.
 # Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,
 # and the walls are always diggable then.
 #
 NAME:    dpeg_oklob_shooting_range
-DEPTH:   D:18-26, Lair:2-, Elf:2-5
+DEPTH:   D:18-26, Lair:2-, Elf:2-
 WEIGHT:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'
@@ -1676,7 +1676,7 @@ NAME:    abrahamwl_protected_by_tso_1
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 ORIENT:  float
 WEIGHT:  4
-DEPTH:   D:23-27
+DEPTH:   D:23-
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 : init_protected_by_tso(_G)
 MAP
@@ -1709,7 +1709,7 @@ NAME:    abrahamwl_protected_by_tso_2
 ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  4
-DEPTH:   D:18-27
+DEPTH:   D:18-
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1754,7 +1754,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 TAGS:    uniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:18-27
+DEPTH:   D:18-
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1937,7 +1937,7 @@ ENDMAP
 #
 NAME:    nrook_guardian_serpent_snake_passage
 ORIENT:  float
-DEPTH:   D:9-27
+DEPTH:   D:9-
 TAGS:    no_monster_gen no_rotate
 MONS:    patrolling guardian serpent
 SHUFFLE: yY/zZ
@@ -2063,8 +2063,6 @@ MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
 MARKER:  f = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 2, pow_max = 4, delay = 23, start_clouds = 1, \
              size = 2, walk_dist = 0, spread_rate= 0 }
-MARKER:  G = lua:props_marker { stop_explore = "frost-covered granite \
-             statue.", feature_description = "frost-covered granite statue" }
 MAP
 mG++Gmmmmmmmmmmmmmmmmmm
 m......f..1..1...e...fm
@@ -2092,7 +2090,7 @@ ENDMAP
 #
 NAME:    lemuel_ice_spiral_2
 ORIENT:  float
-DEPTH:   D:5-27
+DEPTH:   D:5-
 TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
@@ -2107,8 +2105,6 @@ MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
 MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 9, pow_max = 9, delay = 200, start_clouds = 1, \
               size = 2, walk_dist = 0, spread_rate= 0 }
-MARKER:  G = lua:props_marker { stop_explore = "frost-covered granite \
-             statue.", feature_description = "frost-covered granite statue" }
 MAP
 mG+Gmmmmmmmmmmmmmmmmm
 mBBB111B111BeeeeeeeBm
@@ -2121,7 +2117,7 @@ ENDMAP
 # Flame loot (Lemuel)
 #
 NAME:   lemuel_Flame_loot_2
-DEPTH:  D:9-27
+DEPTH:  D:9-
 ORIENT: float
 ITEM:   nothing
 SUBST:  * = |**...
@@ -2158,7 +2154,7 @@ ENDMAP
 # Firewalk (Lemuel)
 #
 NAME:    lemuel_firewalk_3
-DEPTH:   D:16-27
+DEPTH:   D:16-
 TAGS:    uniq_firewalk abyss ruin_abyss
 WEIGHT:  2
 ORIENT:  float
@@ -2173,8 +2169,6 @@ MARKER:  e = lua:fog_machine { cloud_type = "flame", \
 MARKER:  f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 8, delay = 79, start_clouds = 1, \
              size = 2, walk_dist = 2, spread_rate= 0 }
-MARKER:  G = lua:props_marker { stop_explore = "scorch-marked granite \
-             statue.", feature_description = "scorch-marked granite statue" }
 MAP
 xxxxxxxG@Gxxxxxxx
 x...............x
@@ -2570,12 +2564,12 @@ MONS:    patrolling flying skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
 MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
-KMONS:   4 = Boris / lich / unborn deep dwarf
-KMONS:   5 = lich / unborn deep dwarf
+KMONS:   4 = Boris / lich / unborn
+KMONS:   5 = lich / unborn
 : elseif you.absdepth() > 13 then
 MONS:    skeletal warrior / plague shambler / eidolon
-KMONS:   4 = Frances / vampire mage / deep dwarf necromancer
-KMONS:   5 = vampire mage / deep dwarf necromancer
+KMONS:   4 = Frances / vampire mage / necromancer
+KMONS:   5 = vampire mage / necromancer
 : else
 MONS:    wight / necrophage / shadow w:5
 KMONS:   4 = Josephine / skeletal warrior / necromancer
@@ -3313,7 +3307,7 @@ KMONS:   K = catoblepas / iron golem w:5 / boulder beetle
 KMONS:   L = iron dragon / crystal golem
 KMONS:   M = orc warrior ; long sword ego:holy_wrath / holy swine / \
              merfolk ; trident ego:holy_wrath
-KMONS:   N = paladin / apis / phoenix w:5
+KMONS:   N = apis / phoenix w:5
 KMONS:   O = angel / cherub
 KMONS:   P = hellwing / red devil / hell hound
 KMONS:   Q = hell beast / smoke demon / ynoxinul
@@ -3330,7 +3324,7 @@ KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
 KMONS:   d = deep elf mage / wizard / boggart
 KMONS:   e = deep elf conjurer / ogre mage / great orb of eyes
 KMONS:   f = deep elf annihilator / sphinx w:5 / lich w:5
-KMONS:   g = centaur / yaktaur / deep dwarf artificer w:5
+KMONS:   g = centaur / yaktaur
 KMONS:   h = centaur warrior / yaktaur captain / cyclops
 KMONS:   i = stone giant / merfolk javelineer w:5
 KFEAT:   ! = granite_statue
@@ -3377,7 +3371,7 @@ ENDMAP
 
 NAME:   evilmike_silver_temple
 TAGS:   no_monster_gen
-DEPTH:  D:20-27
+DEPTH:  D:20-
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
 : if you.absdepth() > 24 then
@@ -3427,7 +3421,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   evilmike_horseshoe
-DEPTH:  D:12-27
+DEPTH:  D:12-
 ORIENT: float
 MAP
    xxxxxxxxxxxxxxxxxxxxx
@@ -4751,7 +4745,7 @@ ENDMAP
 
 NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
-DEPTH:   D:15-27
+DEPTH:   D:15-
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
          deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
@@ -5000,8 +4994,8 @@ ENDMAP
 
 NAME: lightli_eight_chambers
 ORIENT: float
-DEPTH: D:20-27
-TAGS: no_monster_gen no_ctele_into
+DEPTH: D:20-
+TAGS: no_monster_gen
 SHUFFLE: PFIEMONLSAKRVCTHD
 KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
            redback
@@ -5034,22 +5028,22 @@ MAP
 xxvvvvvvvvvvvvvxx
 xvv..vvvvvvv..vvx
 vv.II.vvvvv....vv
-v..II.+...=.EEE.v
-v..II.+...=.EEE.v
+v..II.+...+.EEE.v
+v..II.+...+.EEE.v
 vv....vvvvv....vv
-xvv==vv|||vv++vvx
+xvv++vv|||vv++vvx
 xxv..v*****v..vxx
 xxv..v%%%%%v..vxx
-xvv++vv%%%vv==vvx
-vv.FF.vv=vv....vv
+xvv++vv%%%vv++vvx
+vv.FF.vv+vv....vv
 v..FF..v.v..MM..v
 v..FF..v.v..MM..v
 vv....vv+vv.MM.vv
-xvv==vv...vv++vvx
+xvv++vv...vv++vvx
 xxv..v.NNN.v..vxx
 xxv..v.NNN.v..vxx
-xvv++vv...vv==vvx
-vv.PP.vv=vv....vv
+xvv++vv...vv++vvx
+vv.PP.vv+vv....vv
 v..PP..v.v..OO..v
 v..PP..v.+..OO..v
 vv....vvvvv.OO.vv
@@ -5118,7 +5112,7 @@ ORIENT:  float
 DEPTH:   Elf, Crypt
 : if you.branch() == "Crypt" then
 TAGS:    patrolling
-MONS:    skeletal warrior / eidolon, necromancer / deep dwarf necromancer w:6
+MONS:    skeletal warrior / eidolon, necromancer
 MONS:    necromancer band / vampire mage band w:6
 MONS:    vampire knight w:25 / bone dragon / ghoul / lich
 SUBST:   x = e
@@ -5163,8 +5157,8 @@ ENDMAP
 # (Arguably doesn't work as well in Zot / entering Zot, but moths of wrath...)
 NAME:   grunt_twist_and_shout
 ORIENT: centre
-DEPTH:  D:16-27, Zot, !Zot:$
-PLACE:  D:27
+DEPTH:  D:16-, Zot, !Zot:$
+PLACE:  D:$
 {{
   if you.branch() == "Zot" then
      kmons("1 = draconian annihilator band")
@@ -5220,4 +5214,177 @@ x.3x..c.......x..x3..
 x.3x3.....G...x.3x3..
 ...x...  ...  ...x...
  ...x.   .@.   ...x.
+ENDMAP
+
+NAME:   grunt_double_whammy
+ORIENT: float
+DEPTH:  D:17-26
+{{
+  local ettin_weight = you.absdepth() - 16
+  local ogre_weight  = 5 - ettin_weight
+  if ogre_weight <= 0 then
+    local elf_weight = you.absdepth() - 21
+    ettin_weight = 6 - elf_weight
+    mons("ettin / nothing")
+    mons("ettin w:" .. ettin_weight ..
+         "/ deep elf blademaster w:" .. elf_weight)
+  else
+    mons("two-headed ogre w:" .. ogre_weight ..
+         " / ettin w:" .. ettin_weight .. " / nothing w:5")
+    mons("ettin")
+  end
+}}
+MAP
+   cccccccc     cccccccc
+  cc|*2...ccccccc......cc
+ cc|**..2.+......cccccc.c
+  cc|*2...cccccccc    c.c
+ccccccccccccccccccccccc.cc
+@...1...1........1...1...@
+..........................
+@.1.....1........1.....1.@
+..........................
+@...1...1........1...1...@
+cc.ccccccccccccccccccccccc
+ c.c    cccccccc...2*|cc
+ c.cccccc......+.2..**|cc
+ cc......ccccccc...2*|cc
+  cccccccc     cccccccc
+ENDMAP
+
+NAME: lightli_tower_of_babel
+ORIENT: float
+# Random interlopers look badly out of place here.
+TAGS: no_monster_gen no_item_gen
+DEPTH: Dis:1-6, D:24-26
+: if you.branch() == "D" then
+# A more worthy adversary badly wanted.
+# What about an obvious up-HD rename of hell knight? *duck*
+MONS: fire giant
+: else
+MONS: Hell Sentinel
+: end
+MONS: flying skull
+ITEM: bolt ego:exploding q:5
+ITEM: potion of heal wounds
+ITEM: plate armour good_item
+ITEM: crossbow ego:flame w:9 ident:type / crossbow unrand:hellfire w:1
+SUBST: ( = ()
+TILE: c = wall_marble
+MAP
+1.........2...2..........
+..cc....2...c...2....cc..
+..cc........2........cc..
+....v...............v....
+.....v...vvv.vvv...v.....
+......vvvv.ddd.vvvv......
+......vvvvdddddvvvv......
+.....vvvvv.ddd.vvvvv.....
+.2...vvvvvvv.vvvvvvv...2.
+....vvvvvvvv+vvvvvvvv....
+2...vd.dvvvv.vvvvd.dv...2
+....v...vvv...vvv...v....
+.c2...e..+..(..+..g...2c.
+....v...vvv.f.vvv...v....
+2...vd.dvvvv.vvvvd.dv...2
+....vvvvvvvv+vvvvvvvv....
+.2...vvvvvvv.vvvvvvv...2.
+.....vvvvvd...dvvvvv.....
+......vvvv..e..vvvv......
+......vvvvd...dvvvv......
+.....v...vvv.vvv...v.....
+....v...............v....
+..cc........2........cc..
+..cc....2...c...2....cc..
+..........2...2..........
+ENDMAP
+
+NAME:   grunt_crosshair
+DEPTH:  D:16-
+PLACE:  D:$
+ORIENT: centre
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
+           / dragon / ice dragon
+KMONS:  9 = nonbase draconian
+KMONS:  0 = base draconian
+KFEAT:  O = enter_zot
+COLOUR: c = lightmagenta
+COLOUR: -+8|O = magenta
+FTILE:  -+8|O = floor_hall
+KITEM:  | = nothing
+: else
+KMONS:  8 = 8 band
+KMONS:  9 = 9 band
+KMONS:  0 = 0 band
+KITEM:  O = superb_item
+KITEM:  9 = any good_item
+: end
+MAP
+      x@x
+      x.x
+   xxxx.xxxx
+  xx0.0.0.0xx
+  x0xxx9xxx0x
+  x.xcc+ccx.x
+xxx0xc|8|cx0xxx
+@...9+8O8+9...@
+xxx0xc|8|cx0xxx
+  x.xcc+ccx.x
+  x0xxx9xxx0x
+  xx0.0.0.0xx
+   xxxx.xxxx
+      x.x
+      x@x
+ENDMAP
+
+NAME:   grunt_x_marks_the_spot
+DEPTH:  D:16-
+PLACE:  D:$
+ORIENT: centre
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
+           / dragon / ice dragon
+KMONS:  9 = nonbase draconian
+KMONS:  0 = base draconian
+KFEAT:  O = enter_zot
+COLOUR: c = lightmagenta
+COLOUR: -+8|O = magenta
+FTILE:  -+8|O = floor_hall
+KITEM:  | = nothing
+: else
+KMONS:  8 = 8 band
+KMONS:  9 = 9 band
+KMONS:  0 = 0 band
+KITEM:  O = superb_item
+KITEM:  9 = any good_item
+: end
+MAP
+        xxxxx@xxxxx
+      xxx.........xxx
+    xxx......0......xxx
+   xx..0..xxxxxxx..0..xx
+  xx....xxxxxxxxxxx....xx
+  x..9.xxxxxxxxxxxxx.9..x
+ xx.....xxxxxxxxxxx.....xx
+ x.0.x...xxxxxxxxx...x.0.x
+xx..xxx...xxxxxxx...xxx..xx
+x...xxxx...xxxxx...xxxx...x
+x..xxxxxx...ccc...xxxxxx..x
+x..xxxxxxx.++c++.xxxxxxx..x
+x..xxxxxxxc+|8|+cxxxxxxx..x
+@.0xxxxxxxcc8O8ccxxxxxxx0.@
+x..xxxxxxxc+|8|+cxxxxxxx..x
+x..xxxxxxx.++c++.xxxxxxx..x
+x..xxxxxx...ccc...xxxxxx..x
+x...xxxx...xxxxx...xxxx...x
+xx..xxx...xxxxxxx...xxx..xx
+ x.0.x...xxxxxxxxx...x.0.x
+ xx.....xxxxxxxxxxx.....xx
+  x..9.xxxxxxxxxxxxx.9..x
+  xx....xxxxxxxxxxx....xx
+   xx..0..xxxxxxx..0..xx
+    xxx......0......xxx
+      xxx.........xxx
+        xxxxx@xxxxx
 ENDMAP

@@ -87,6 +87,7 @@ struct direction_chooser_args
     bool cancel_at_self;
     bool show_floor_desc;
     desc_filter get_desc_func;
+    coord_def default_place;
 
     direction_chooser_args() :
         hitfunc(NULL),
@@ -101,7 +102,8 @@ struct direction_chooser_args
         behaviour(NULL),
         cancel_at_self(false),
         show_floor_desc(false),
-        get_desc_func(NULL) {}
+        get_desc_func(NULL),
+        default_place(0, 0) {}
 };
 
 class direction_chooser
@@ -241,6 +243,7 @@ private:
     bool cancel_at_self;        // Disallow self-targetting?
     bool show_floor_desc;       // Describe the floor of the current target
     targetter *hitfunc;         // Determine what would be hit.
+    coord_def default_place;    // Start somewhere other than you.pos()?
 
     // Internal data.
     ray_def beam;               // The (possibly invalid) beam.
@@ -307,6 +310,7 @@ string feature_description(dungeon_feature_type grid,
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
 void full_describe_view(void);
+void do_look_around(const coord_def &whence = coord_def(0, 0));
 
 extern const struct coord_def Compass[9];
 

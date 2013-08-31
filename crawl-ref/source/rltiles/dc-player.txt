@@ -136,6 +136,8 @@ vampire_f VAMPIRE
 vampire_m
 deep_dwarf_m DEEP_DWARF
 deep_dwarf_f
+gargoyle_m GARGOYLE
+gargoyle_f
 %sdir player/felids
 %rim 0
 cat1 FELID
@@ -596,8 +598,6 @@ hammer_two HAMMER2
 flail_stick FLAIL_STICK
 flail_ball FLAIL
 flail_ball2
-flail_spike SPIKED_FLAIL
-flail_spike2
 flail_great GREAT_FLAIL
 flail_great2
 flail_stick_slant FLAIL_STICK_SLANT

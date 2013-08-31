@@ -76,7 +76,7 @@
 }}
 
 NAME:   layout_hall_layers
-DEPTH:  D:2-,Zot,Lair,Elf
+DEPTH:  D:12-,Zot,Lair,Elf
 WEIGHT: 5, 10 (Zot), 5 (Lair), 20 (Elf)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand central layout_type_halls
@@ -201,7 +201,7 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   end
 
   -- TODO: Package the func(s) into room generators. Then place them using hyper (with a
-  -- symetrically padded placement strategy). Then optionally outline with transparent
+  -- symmetrically padded placement strategy). Then optionally outline with transparent
   -- stone and surround in lava like old crosses layout
 
   procedural.render_map(_G, func, function(v) return (v < 1 and '.' or 'x') end)
@@ -502,8 +502,12 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   end
 
   -- If this is being placed to benefit a central vault, do the polar layout.
-  if dgn.map_by_tag("central") then
-    polarise = true
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local mode = unpack(params)
+    if mode == "central" then
+      polarise = true
+    end
   end
 
   local scale = 80/reps

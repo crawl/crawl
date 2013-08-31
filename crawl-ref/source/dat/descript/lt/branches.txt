@@ -30,13 +30,6 @@ turėtų atminti legendinius šios giminės magijos sugebėjimus.
 
 Elfų Salės yra trijų lygių gylio.
 %%%%
-Dwarven Hall
-
-Šios dailiai tašyto akmens salės yra Gilumų Nykštukų buveinė. Jų puikūs
-kalvystės įgūdžiai leido nusikaldinti pakankamai ginklų prieš tokius, kaip jūs.
-
-Ji teturi vieną lygį.
-%%%%
 Lair
 
 Daugumai nuotykių ieškotojų Žvėrių Irštva yra jaudinantis aplinkos pakeitimas.

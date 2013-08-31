@@ -25,9 +25,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
   local item = {["No God"]="amulet of Faith ident:type",
          Ashenzari="amulet of clarity ident:type /\
               ring of see invisible ident:type",
-         Beogh="good_item battleaxe ego:orc_slaying ident:type /\
-              good_item broad axe ego:orc_slaying ident:type w:5 /\
-              scroll of immolation ident:type q:3-6 /\
+         Beogh="scroll of immolation ident:type q:3-6 /\
               scroll of fear ident:type q:3-6 /\
               disc of storms",
          Cheibriados="wand of hasting ident:type w:5 /\
@@ -82,7 +80,7 @@ end
 
 
 NAME:   tgw_lugonu_bribe
-DEPTH:  D:12-27
+DEPTH:  D:12-
 KFEAT:  _ = altar_lugonu
 MARKER: _ = lua:portal_desc {slave_name="altar"}
 

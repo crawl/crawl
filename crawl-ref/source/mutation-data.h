@@ -11,9 +11,6 @@
 // fourth strings = message given when losing the mutation
 // fifth  string  = wizard-mode name of mutation
 
-#ifndef MUTATION_DATA_H
-#define MUTATION_DATA_H
-
 { MUT_TOUGH_SKIN,                     0,  3, false,  true,  true,
   "tough skin",
 
@@ -32,30 +29,33 @@
   "tough skin"
 },
 
-{ MUT_STRONG,                         8, 14, false,  true, false,
+{ MUT_STRONG,                         7, 2, false,  true, false,
   NULL,
 
-  {"Your muscles are strong (Str +", "", ""},
+  {"Your muscles are strong. (Str +2)",
+   "Your muscles are very strong. (Str +4)", ""},
   {"", "", ""},
   {"", "", ""},
 
   "strong"
 },
 
-{ MUT_CLEVER,                         8, 14, false,  true, false,
+{ MUT_CLEVER,                         7, 2, false,  true, false,
   NULL,
 
-  {"Your mind is acute (Int +", "", ""},
+  {"Your mind is acute. (Int +2)",
+   "Your mind is very acute. (Int +4)", ""},
   {"", "", ""},
   {"", "", ""},
 
   "clever"
 },
 
-{ MUT_AGILE,                          8, 14, false,  true, false,
+{ MUT_AGILE,                          7, 2, false,  true, false,
   NULL,
 
-  {"You are agile (Dex +", "", ""},
+  {"You are agile. (Dex +2)",
+   "You are very agile. (Dex +4)", ""},
   {"", "", ""},
   {"", "", ""},
 
@@ -244,25 +244,28 @@
   "slow metabolism"
 },
 
-{ MUT_WEAK,                          10, 14,  true,  true, false,
+{ MUT_WEAK,                          8, 2,  true,  true, false,
   NULL,
-  {"You are weak (Str -", "", ""},
+  {"You are weak. (Str -2)",
+   "You are very weak. (Str -4)", ""},
   {"", "", ""},
   {"", "", ""},
   "weak"
 },
 
-{ MUT_DOPEY,                         10, 14,  true,  true, false,
+{ MUT_DOPEY,                         8, 2,  true,  true, false,
   NULL,
-  {"You are dopey (Int -", "", ""},
+  {"You are dopey. (Int -2)",
+   "You are very dopey. (Int -4)", ""},
   {"", "", ""},
   {"", "", ""},
   "dopey",
 },
 
-{ MUT_CLUMSY,                        10, 14,  true,  true, false,
+{ MUT_CLUMSY,                        8, 2,  true,  true, false,
   NULL,
-  {"You are clumsy (Dex -", "", ""},
+  {"You are clumsy. (Dex -2)",
+   "You are very clumsy. (Dex -4)", ""},
   {"", "", ""},
   {"", "", ""},
   "clumsy"
@@ -432,7 +435,8 @@
   "blink"
 },
 
-{ MUT_STRONG_STIFF,                  10,  3, false,  true, false,
+#if TAG_MAJOR_VERSION == 34
+{ MUT_STRONG_STIFF,                  0,  3, false,  true, false,
   NULL,
 
   {"Your muscles are strong, but stiff (Str +1, Dex -1).",
@@ -450,7 +454,7 @@
   "strong stiff"
 },
 
-{ MUT_FLEXIBLE_WEAK,                 10,  3, false,  true, false,
+{ MUT_FLEXIBLE_WEAK,                 0,  3, false,  true, false,
   NULL,
 
   {"Your muscles are flexible, but weak (Str -1, Dex +1).",
@@ -467,6 +471,7 @@
 
   "flexible weak"
 },
+#endif
 
 { MUT_SCREAM,                         6,  3,  true, false, false,
   "screaming",
@@ -642,7 +647,7 @@
   "torment resistance"
 },
 
-{ MUT_NEGATIVE_ENERGY_RESISTANCE,     0,  3, false, false,  true,
+{ MUT_NEGATIVE_ENERGY_RESISTANCE,     0,  3, false, false, false,
   "life protection",
 
   {"You resist negative energy.",
@@ -807,7 +812,7 @@
 },
 
 // Naga only; getting it is special-cased.
-{ MUT_BREATHE_POISON,                 0,  1, false, false,  true,
+{ MUT_BREATHE_POISON,                 0,  1, false, false,  false,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},
@@ -1497,7 +1502,7 @@
   "jelly missile"
 },
 
-{ MUT_PETRIFICATION_RESISTANCE,            3,  1, false, false, false,
+{ MUT_PETRIFICATION_RESISTANCE,            0,  1, false, false, false,
   "petrification resistance",
 
   {"You are immune to petrification.", "", ""},
@@ -1507,6 +1512,7 @@
   "petrification resistance"
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_TRAMPLE_RESISTANCE,                  0,  1, false, false, false,
   "trample resistance",
 
@@ -1516,6 +1522,17 @@
 
   "trample resistance"
 },
+
+{ MUT_CLING,                               0,  1, false, false, true,
+  "cling",
+
+  {"You can cling to walls.", "", ""},
+  {"You feel sticky.", "", ""},
+  {"You feel slippery.", "", ""},
+
+  "cling"
+},
+#endif
 
 { MUT_EXOSKELETON,                         0,  2, false,  true,  true,
   "exoskeleton",
@@ -1533,7 +1550,14 @@
    ""},
 
   "exoskeleton"
+},
+
+{ MUT_FUMES,            5,  2, false, false, false,
+  "fuming",
+
+  {"You emit clouds of smoke.", "You frequently emit clouds of smoke.", ""},
+  {"You fume.", "You fume more.", ""},
+  {"You stop fuming.", "You fume less.", ""},
+
+  "fumes"
 }
-
-
-#endif

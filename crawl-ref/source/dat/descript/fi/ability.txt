@@ -3,79 +3,75 @@ Blink ability
 
 Siirry satunnaisesti lyhyt matka.
 %%%%
-Breathe Frost
+Breathe Frost ability
 
 Henkäise pakkasta tähtäämääsi hirviöön.
 %%%%
-Breathe Poison Gas
+Breathe Poison Gas ability
 
 Henkäise myrkkykaasua tähtäämääsi hirviöön.
 %%%%
-Breathe Steam
+Breathe Steam ability
 
 Henkäise kaasusuihku tähtäämääsi hirviöön.
 %%%%
-Breathe Noxious Fumes
+Breathe Noxious Fumes ability
 
 Henkäise myrkyllisiä höyryjä tähtäämääsi hirviöön.
 %%%%
-Fly
+Fly ability
 
 Aloita lentäminen.
 %%%%
-Device Recharging
+Device Recharging ability
 
 Yhden taikapisteen menetyksen hinnalla saat ladata sauvan tai kepin.
 %%%%
-Evoke Teleportation
+Evoke Teleportation ability
 
 Teleporttaa itsesi satunnaiseen paikkaan kerrosta.
 %%%%
-Evoke Blink
-
-Siirry satunnaisesti lyhyen matkaa.
-%%%%
-End Transformation
+End Transformation ability
 
 Palaa takaisin perusmuotoosi pienellä viiveellä.
 %%%%
-Cure All Mutations
+Cure All Mutations ability
 
 Paranna kaikki mutaatiosi - mutta vain kerran.
 %%%%
-Drain Life
+Drain Life ability
 
 Paranna terveyttäsi imemällä ympäröivien hirviöiden elinvoimaa.
 %%%%
-Brothers in Arms
+Brothers in Arms ability
 
 Kutsu valtavia, vihaisia apulaisia aiheuttamaan sekasortoa.
 %%%%
-Depart the Abyss
+Depart the Abyss ability
 
 Jätä Syvänne taaksesi ja palaa sinne mistä tulit.
 %%%%
-Banish
+Banish ability
 
 Yritä karkottaa hirviö Syvänteeseen.
 %%%%
-Draw One
+Draw One ability
 
 Valitse jokin pakka inventaariossasi ja nosta siitä kortti.
 %%%%
-Cure Bad Mutation
+Cure Bad Mutation ability
 
 Poista satunnainen huono mutaatio.
 %%%%
-End Transfer Knowledge
+End Transfer Knowledge ability
 
 Hylkää käynnissäoleva taidonsiirto.
 %%%%
-Acquire gold
+Acquire gold ability
 
 Saa suuri määrä kultaa.
 %%%%
-Acquirement
+Acquirement ability
 
 Saa valituntyyppinen esine.
 %%%%

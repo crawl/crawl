@@ -42,8 +42,6 @@ microbat MONS_MICROBAT
 %rim 1
 megabat MONS_MEGABAT
 gigabat MONS_GIGABAT
-fruity_bat MONS_FRUITY_BAT
-ice_bat MONS_ICE_BAT
 phase_bat MONS_PHASE_BAT
 %sdir mon/abyss
 %rim 0
@@ -60,8 +58,10 @@ cbutterfly5
 jackal MONS_JACKAL
 hound MONS_HOUND
 warg MONS_WARG
-war_dog MONS_WAR_DOG
 wolf MONS_WOLF
+%rim 0
+spirit_wolf MONS_SPIRIT_WOLF
+%rim 1
 hell_hound MONS_HELL_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
@@ -199,6 +199,7 @@ sea_snake MONS_SEA_SNAKE
 black_bear MONS_BLACK_BEAR
 grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
+ancient_bear MONS_ANCIENT_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
@@ -215,12 +216,13 @@ apis MONS_APIS
 
 ### Elemental monsters
 %sdir mon/nonliving
-earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
-fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
-water_elemental MONS_WATER_ELEMENTAL /*'#'*/
-air_elemental MONS_AIR_ELEMENTAL /*'#'*/
+earth_elemental MONS_EARTH_ELEMENTAL
+fire_elemental MONS_FIRE_ELEMENTAL
+water_elemental MONS_WATER_ELEMENTAL
+air_elemental MONS_AIR_ELEMENTAL
 iron_elemental MONS_IRON_ELEMENTAL
 %rim 0
+wellspring MONS_ELEMENTAL_WELLSPRING
 fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
 fire_vortex2
 fire_vortex3
@@ -349,10 +351,8 @@ efreet MONS_EFREET
 ## Rakshasa ('R')
 %sdir mon/unique
 mara MONS_MARA
-mara MONS_MARA_FAKE
 %sdir mon/demons
 rakshasa MONS_RAKSHASA
-rakshasa MONS_RAKSHASA_FAKE
 
 ## Abominations ('X')
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
@@ -396,7 +396,7 @@ stone_golem MONS_STONE_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM
-# For the Erinya WizLab
+# For the Eringya WizLab
 vine-covered_golem MONS_VINE_GOLEM
 
 ## Statues and statue-like things (also '8')
@@ -428,28 +428,6 @@ overlay_sword MONS_STATUE_SWORD
 overlay_whip MONS_STATUE_WHIP
 %back none
 
-%back light_vine_statue_base
-overlay_axe MONS_LIGHT_VINE_STATUE_AXE
-overlay_bow MONS_LIGHT_VINE_STATUE_ARCHER
-overlay_crossbow MONS_LIGHT_VINE_STATUE_CROSSBOW
-overlay_mace MONS_LIGHT_VINE_STATUE_MACE
-overlay_mage MONS_LIGHT_VINE_STATUE_MAGE
-overlay_scythe MONS_LIGHT_VINE_STATUE_SCYTHE
-overlay_sword MONS_LIGHT_VINE_STATUE_SWORD
-overlay_whip MONS_LIGHT_VINE_STATUE_WHIP
-%back none
-
-%back dark_vine_statue_base
-overlay_axe MONS_DARK_VINE_STATUE_AXE
-overlay_bow MONS_DARK_VINE_STATUE_ARCHER
-overlay_crossbow MONS_DARK_VINE_STATUE_CROSSBOW
-overlay_mace MONS_DARK_VINE_STATUE_MACE
-overlay_mage MONS_DARK_VINE_STATUE_MAGE
-overlay_scythe MONS_DARK_VINE_STATUE_SCYTHE
-overlay_sword MONS_DARK_VINE_STATUE_SWORD
-overlay_whip MONS_DARK_VINE_STATUE_WHIP
-%back none
-
 %rim 0
 guardian-eyeopen-flame1 MONS_STATUE_GUARDIAN
 guardian-eyeopen-flame2
@@ -472,6 +450,15 @@ lightning_spire MONS_LIGHTNING_SPIRE
 gargoyle MONS_GARGOYLE
 metal_gargoyle MONS_METAL_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
+
+## Weaponry ('(')
+spectral_sbl MONS_SPECTRAL_SBL
+spectral_lbl MONS_SPECTRAL_LBL
+spectral_staff MONS_SPECTRAL_STAFF
+spectral_axe MONS_SPECTRAL_AXE
+spectral_mace MONS_SPECTRAL_MACE
+spectral_whip MONS_SPECTRAL_WHIP
+spectral_spear MONS_SPECTRAL_SPEAR
 
 ## Humans ('@')
 %sdir mon/unique
@@ -545,12 +532,13 @@ vault/master_elementalist MONS_MASTER_ELEMENTALIST
 %rim 1
 ## From an entry vault
 halfling MONS_HALFLING
+%rim 0
 demigod MONS_DEMIGOD
+%rim 1
 demonspawn MONS_DEMONSPAWN
-%sdir mon/holy
-paladin MONS_PALADIN
 
 ## Angels ('A')
+%sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
@@ -631,10 +619,12 @@ giant_spore MONS_GIANT_SPORE
 %sdir mon/eyes
 giant_eyeball MONS_GIANT_EYEBALL
 eye_of_draining MONS_EYE_OF_DRAINING
-mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
-great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
-shining_eye MONS_SHINING_EYE
 %rim 0
+mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
+%rim 1
+great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
+%rim 0
+shining_eye MONS_SHINING_EYE
 eye_of_devastation MONS_EYE_OF_DEVASTATION
 %rim 1
 golden_eye MONS_GOLDEN_EYE
@@ -704,6 +694,7 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 boris MONS_BORIS
 %sdir mon/undead
 revenant MONS_REVENANT
+unborn MONS_UNBORN
 %rim 1
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
@@ -770,6 +761,11 @@ bush_burning MONS_BUSH_BURNING
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
 oklob_plant MONS_OKLOB_PLANT
+%rim 0
+thorn_lotus MONS_THORN_LOTUS
+thorn_hunter MONS_THORN_HUNTER
+treant MONS_TREANT
+%rim 1
 
 ## Trolls ('T')
 %sdir mon/unique
@@ -811,7 +807,6 @@ orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 ## Centaurs ('c')
 %sdir mon/unique
 nessos MONS_NESSOS
-pan MONS_PAN
 %sdir mon
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
@@ -834,7 +829,6 @@ fannar MONS_FANNAR
 %sdir mon
 elf MONS_ELF
 deep_elf_fighter MONS_DEEP_ELF_FIGHTER
-deep_elf_soldier MONS_DEEP_ELF_SOLDIER
 deep_elf_knight MONS_DEEP_ELF_KNIGHT
 deep_elf_mage MONS_DEEP_ELF_MAGE
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER
@@ -870,6 +864,7 @@ ballistomycete MONS_BALLISTOMYCETE_INACTIVE
 active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
 hyperactive_ballistomycete MONS_HYPERACTIVE_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
+deathcap MONS_DEATHCAP
 %rim 1
 
 ## Goblins ('g')
@@ -919,6 +914,7 @@ mermaid_water MONS_MERMAID_WATER
 siren MONS_SIREN
 siren_water MONS_SIREN_WATER
 dryad MONS_DRYAD
+water_nymph MONS_WATER_NYMPH
 %rim 1
 
 ## Rotting monsters ('n')
@@ -959,21 +955,13 @@ hungry_ghost MONS_HUNGRY_GHOST
 %sdir mon/unique
 %sdir mon/nonliving
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP
-%sdir mon/holy
-spirit MONS_SPIRIT
 
 ## Dwarves ('q')
 %sdir mon
 dwarf MONS_DWARF
 deep_dwarf MONS_DEEP_DWARF
-deep_dwarf_scion MONS_DEEP_DWARF_SCION
-deep_dwarf_artificer MONS_DEEP_DWARF_ARTIFICER
 deep_dwarf_berserker MONS_DEEP_DWARF_BERSERKER
-deep_dwarf_necromancer MONS_DEEP_DWARF_NECROMANCER
 deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
-%rim 0
-undead/unborn_deep_dwarf MONS_UNBORN_DEEP_DWARF
-%rim 1
 %sdir mon/unique
 jorgrun MONS_JORGRUN
 # an entry vault

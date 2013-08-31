@@ -59,7 +59,7 @@ function grunt_ministairs_setup(e, hatches)
 end
 }}
 
-default-depth: D:9-27, Elf
+default-depth: D:9-, Elf
 
 ###############################################################################
 #
@@ -171,7 +171,7 @@ ENDMAP
 NAME:   not_door_vault_mu
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:15-27, Elf
+DEPTH:  D:15-, Elf
 MONS:   butterfly
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -396,7 +396,7 @@ MAP
 ENDMAP
 
 NAME: pubby_dwanthill
-DEPTH: D:13-18, Spider:2- 
+DEPTH: D:13-18, Spider:2-
 MONS: patrolling formicid venom mage, patrolling formicid drone / nothing
 MONS: patrolling formicid / nothing , patrolling formicid w:3 / nothing
 MAP
@@ -593,33 +593,38 @@ ENDMAP
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
 DEPTH:  D:8-18, Lair:2-
+KPROP:  '*|1> = no_rtele_into
 KMONS:  1 = lindwurm
 KITEM:  1 = *
-SUBST:  ' : ..'l
-SUBST:  ' = ..l
+SUBST:  L : ..Ll
+SUBST:  L = ..l
+SUBST:  ' = .
+NSUBST: | = 1:> / *:|
+KITEM:  > = |
+KFEAT:  > = escape_hatch_down
 MAP
-     .....''.....
-   ....'''ll'''....
-  ...''llllllll''...
- ...'llllllllllll'...
- ..'llllllllllllll'..
-..'llllllllllllllll'..
-..'llllll....llllll'..
-.'lllll...xx...lllll'.
-.'lllll..xxxx..lllll'.
-.'llll..x.1*.x..llll'.
-'lllll.xx*||1xx.lllll'
-'lllll.xx1||*xx.lllll'
-.'llll..x.*1.x..llll'.
-.'lllll..xxxx..lllll'.
-.'lllll...xx...lllll'.
-..'llllll....llllll'..
-..'llllllllllllllll'..
- ..'llllllllllllll'..
- ...'llllllllllll'...
-  ...''llllllll''...
-   ....'''ll'''....
-     .....''.....
+     .....LL.....
+   ....LLLllLLL....
+  ...LLllllllllLL...
+ ...LllllllllllllL...
+ ..LllllllllllllllL..
+..LllllllllllllllllL..
+..Lllllll''''llllllL..
+.Llllll'''xx'''lllllL.
+.Llllll''xxxx''lllllL.
+.Lllll''x'1*'x''llllL.
+Llllll'xx*||1xx'lllllL
+Llllll'xx1||*xx'lllllL
+.Lllll''x'*1'x''llllL.
+.Llllll''xxxx''lllllL.
+.Llllll'''xx'''lllllL.
+..Lllllll''''llllllL..
+..LllllllllllllllllL..
+ ..LllllllllllllllL..
+ ...LllllllllllllL...
+  ...LLllllllllLL...
+   ....LLLllLLL....
+     .....LL.....
 ENDMAP
 
 NAME:  pond
@@ -653,7 +658,7 @@ ENDMAP
 NAME:   not_door_vault_due
 TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:20-27, Elf:3-5
+DEPTH:  D:20-, Elf:$
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -1039,7 +1044,7 @@ KMONS:   C = iguana / basilisk w:8
 KMONS:   D = brain worm w:5 / giant leech
 KMONS:   E = jelly
 KMONS:   F = worker ant / giant centipede w:8
-KMONS:   G = hound / wolf w:5
+KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
 KMONS:   I = orange rat
 KMONS:   J = unseen horror
@@ -1271,7 +1276,7 @@ ENDMAP
 #   No loot but the elves' gear, but at the depth this appears that may be good
 NAME:    elves_outpost_lemuel
 DEPTH:   D:14-20, Orc:3-, Elf
-MONS:    deep elf soldier / w:4 deep elf fighter
+MONS:    deep elf fighter
 MONS:    w:20 deep elf mage / deep elf conjurer / deep elf summoner
 SHUFFLE: ?:/bb, :;/ww
 SUBST:   ?=., :=., ;=.
@@ -1409,7 +1414,7 @@ ENDMAP
 # evil one here?
 NAME:   mikee_hates_you
 TAGS:   no_monster_gen
-DEPTH:  D:13-27
+DEPTH:  D:13-
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake siren ; trident ego:distortion w:5 | trident ego:venom
 KITEM:  1 = acquire any
@@ -1463,7 +1468,7 @@ WEIGHT: 7
 TAGS:   no_monster_gen no_item_gen allow_dup extra
 NSUBST: 1 = 2:1 / *:.
 : if you.branch() == "Elf" then
-MONS:   deep elf soldier
+MONS:   deep elf fighter
 : else
 MONS:   goblin / hobgoblin / kobold / orc
 : end
@@ -1484,7 +1489,7 @@ SHUFFLE: mA
 SUBST:   A = x
 NSUBST:  1 = 2:1 / *:.
 : if you.branch() == "Elf" then
-MONS:    deep elf soldier
+MONS:    deep elf fighter
 : else
 MONS:    goblin / hobgoblin / kobold / orc
 : end
@@ -1549,8 +1554,12 @@ MAP
 ENDMAP
 
 NAME:   kilobyte_rumbling_trees
-DEPTH:  D:14-20, Elf, Lair:4-8
+DEPTH:  D:14-20, Elf, Lair:4-
+: if you.branch()=="Lair" then
+MONS:   patrolling spriggan druid n_adj n_noc name:young hd:8
+: else
 MONS:   patrolling spriggan druid
+: end
 MONS:   black bear / grizzly bear w:20 / bat w:20
 FTILE:  .t12@ = floor_moss
 MAP
@@ -1848,12 +1857,12 @@ ENDMAP
 NAME:    hangedman_elemental_death_ray
 TAGS:    transparent patrolling
 DEPTH:   D:13-
-MONS:    deep dwarf artificer ; wand of cold | wand of frost w:5 . \
+MONS:    deep dwarf ; wand of cold | wand of frost w:5 . \
          staff of fire w:15 | quarterstaff ego:flaming w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
-MONS:    deep dwarf artificer ; wand of fire | wand of flame w:5 . \
+MONS:    deep dwarf ; wand of fire | wand of flame w:5 . \
          staff of cold w:15 | quarterstaff ego:freezing w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
@@ -1906,9 +1915,9 @@ xx+xxx
 ENDMAP
 
 NAME:  guppyfry_early_elven_hall
-DEPTH: D:3-6
+DEPTH: D:6-9
 TAGS:  patrolling no_monster_gen mini_float transparent
-MONS:  deep elf soldier, plant
+MONS:  deep elf fighter, plant
 ITEM:  any scroll / any food / any book
 SUBST: - = 2.....GTd$
 MARKER: H = lua:props_marker { stop_explore = "statue" }
@@ -1963,7 +1972,7 @@ SUBST:   ? = 123d
 : if you.branch() == "Snake" then
 MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
 : elseif you.branch() == "Elf" then
-MONS:    deep elf soldier, deep elf mage, deep elf conjurer / deep elf summoner
+MONS:    deep elf fighter, deep elf mage, deep elf conjurer / deep elf summoner
 : elseif you.branch() == "Orc" then
 MONS:  Orc, orc warrior, orc wizard w:9 / orc sorcerer w:1
 : else
@@ -1986,7 +1995,7 @@ MAP
 ENDMAP
 
 NAME:   lightli_giant_bouncers
-DEPTH:  D:20-27
+DEPTH:  D:20-
 MONS:   fire giant
 MONS:   frost giant
 MONS:   titan
@@ -2061,6 +2070,87 @@ xxx+xx..xx
 xed.xx..xx
 xdexx..xxx
 xxxx.@xxxx
+ENDMAP
+
+NAME:     grunt_tower_of_power
+TAGS:     vaults_hard vaults_orient_s no_monster_gen patrolling
+DEPTH:    D:16-21, Vaults, !Vaults:$
+: if you.branch() == "Vaults" then
+SUBST:   c = vvb, @ = .
+: end
+# This spell set is Lich IV, picked for having IMB and IOOD.
+MONS:     lich spells:iskenderun's_mystic_blast;bolt_of_cold;invisibility;\
+                      animate_dead;orb_of_destruction;invisibility
+# The wizard spell set is Wizard II, picked for having IMB and venom bolt;
+# same logic for naga mages.
+# The tengu conjurer spellset is Tengu Conjurer II, picked for having
+# Bolt of Magma.
+MONS:     wizard spells:venom_bolt;iskenderun's_mystic_blast;invisibility;\
+                        confuse;slow;teleport_self / \
+          naga mage / \
+          tengu conjurer spells:throw_flame;bolt_of_magma;\
+                                iskenderun's_battlesphere;bolt_of_magma;\
+                                iskenderun's_battlesphere;blink
+# The tengu reaver spell set is Tengu Reaver III, picked for having Poisonous
+# Cloud.
+MONS:     tengu reaver spells:venom_bolt;.;iskenderun's_battlesphere;\
+                              poisonous_cloud;iskenderun's_battlesphere;blink
+ITEM:     book of Power, robe good_item, wizard hat good_item, robe, wizard hat
+KFEAT:    _ = altar_vehumet
+SHUFFLE: ef, gh, ij
+MAP
+      ccccc
+     ccedfcc
+     ceh_gfc
+     c..1..c
+cccccc.....cccccc
+c.fhccc...cccge.c
+ce2.cccc+cccc.2fc
+cg..cc.....cc..hc
+cccc+.......+cccc
+ ccc..2.U.2..ccc
+ cc...........cc
+ @....U.3.U....@
+ cc...........cc
+  cc....U....cc
+   cc.......cc
+    cc..@..cc
+ENDMAP
+
+NAME:  grunt_absolute_annihilation
+DEPTH: D:23-
+# These spell sets are Lich III and Lich IV; they have LCS and IOOD
+# respectively.
+MONS:    ancient lich spells:bolt_of_draining;slow;invisibility;throw_icicle;\
+                             lehudib's_crystal_spear;invisibility \
+                      spells:iskenderun's_mystic_blast;bolt_of_cold;\
+                             invisibility;animate_dead;orb_of_destruction;\
+                             invisibility
+MONS:    deep elf annihilator / draconian annihilator w:5 / \
+         lich w:5 spells:bolt_of_draining;slow;invisibility;throw_icicle;\
+                         lehudib's_crystal_spear;invisibility \
+                  spells:iskenderun's_mystic_blast;bolt_of_cold;invisibility;\
+                         animate_dead;orb_of_destruction;invisibility
+MONS:    deep elf conjurer / tengu conjurer / wizard / orc sorcerer / \
+         naga mage / ogre mage
+ITEM:    book of annihilations, book of power, book of conjurations
+ITEM:    randbook disc:conjuration, staff of conjuration
+KFEAT:   _ = altar_vehumet
+SHUFFLE: efgh
+MAP
+   xxxxxxxxxxx
+  xxcccccccccxxxxxxxxx
+  xcc2ccccc2cccccccccxx
+  xc.c.ccc.c.ccbbbbbccx
+ @xc.c.ccc.c.cbbe.fbbcx
+.3.c.c.ccc.c.cb.2...bcx
+@U..3.3...3.3.=.._1dbcx
+.3.cccc.c.ccccb.2...bcx
+ @xcccc.c.ccccbbg.hbbcx
+  xcccc.c.cccccbbbbbccx
+  xccccc2ccccccccccccxx
+  xxcccccccccxxxxxxxxx
+   xxxxxxxxxxx
 ENDMAP
 
 ################################################################################
@@ -2295,7 +2385,7 @@ ENDMAP
 #
 NAME:   nrook_kobold_shadow_demons
 TAGS:   patrolling
-DEPTH:  D:14-27
+DEPTH:  D:14-
 KMONS:  1 = kobold demonologist
 KMONS:  2 = w:5 shadow demon / lorocyproca
 KITEM:  1 = | / *, * / %
@@ -2381,7 +2471,7 @@ ENDMAP
 
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen
-DEPTH:   D:17-27
+DEPTH:   D:17-
 : if you.absdepth() > 21 then
 MONS:    pearl dragon
 : else
@@ -2608,7 +2698,7 @@ ENDMAP
 
 # Oklob assault; statistically, three oklobs
 NAME:    dpeg oklob_1
-DEPTH:   D:16-27, Lair:4-
+DEPTH:   D:16-, Lair:4-
 TAGS:    allow_dup
 MONS:    plant, oklob plant
 SUBST:   ? = 1 2:5 '
@@ -2795,7 +2885,7 @@ MONS:   jelly generate_awake
 TAGS:   uniq_jelly_drop
 WEIGHT: 5
 KFEAT:  a = teleport trap
-DEPTH:  D:8-27
+DEPTH:  D:8-
 MAP
 ..............
 ...vvvvvvvv...
@@ -3107,7 +3197,12 @@ ENDMAP
 NAME:    lasty_cornered_adventurer
 TAGS:    no_monster_gen patrolling
 DEPTH:   D:2-6
+WEIGHT:  4
+: if you.depth() < 5 then
+MONS:    ooze, jelly, ooze
+: else
 MONS:    jelly, jelly, ooze
+: end
 {{
 dgn.delayed_decay(_G, 'A', 'human corpse, damaged shield / nothing, '
                         .. 'damaged helmet / nothing, % / nothing, '
@@ -3117,7 +3212,7 @@ dgn.delayed_decay(_G, 'A', 'human corpse, damaged shield / nothing, '
 KMONS:   A = toadstool
 KFEAT:   B = altar_jiyva
 NSUBST:  C = 2:2 / *:.
-NSUBST:  D = 5:1 / *:W
+NSUBST:  D = 4:1 / *:W
 SUBST:   1 = 13
 MAP
 xxxxxxxxxxxxxx
@@ -3364,7 +3459,7 @@ ENDMAP
 # Small chamber for a nice item (Eino)
 NAME:   small_chamber_with_monster
 TAGS:   mini_float extra
-DEPTH:  D:8-27, Elf, Crypt
+DEPTH:  D:8-, Elf, Crypt
 MAP
 xxxxxxx
 xxG.Gxx
@@ -3490,7 +3585,7 @@ ENDMAP
 
 NAME:   minmay_librarian
 TAGS:   no_monster_gen no_item_gen no_trap_gen
-DEPTH:  D:9-27
+DEPTH:  D:9-
 : if you.absdepth() > 24 then
 MONS:   ancient lich w:50 / greater mummy
 ITEM:   any scroll w:6 / any book
@@ -3640,7 +3735,7 @@ vvvvv0....vvvvv
 ENDMAP
 
 NAME:   evilmike_bad_box
-DEPTH:  D:13-27
+DEPTH:  D:13-
 TAGS:   mini_float no_wall_fixup
 MONS:   boring beetle
 NSUBST: 9 = 1:1 / 1:19 / *:9
@@ -4062,7 +4157,7 @@ xx+xxx
 ENDMAP
 
 NAME:   lightli_gold_pyramid
-DEPTH:  D:15-27
+DEPTH:  D:15-
 TAGS:   no_vmirror no_rotate
 COLOUR: .089+*|c = yellow
 FTILE:  .089+*|c = floor_sandstone
@@ -4087,7 +4182,7 @@ cccccccc=cccccccc
 ENDMAP
 
 NAME: lightli_airlock
-DEPTH: D:11-27, Snake, Shoals
+DEPTH: D:11-, Snake, Shoals
 KPROP: W = no_rtele_into
 MAP
  WccccWWWccccWW
@@ -4431,7 +4526,7 @@ ENDMAP
 
 NAME:  grunt_potential
 TAGS:  no_pool_fixup
-DEPTH: D:6-27
+DEPTH: D:6-
 : init_hm_decor_walldepth(_G, 'x')
 SHUFFLE: wlvbn
 : if you.absdepth() > 20 then
@@ -4882,7 +4977,7 @@ TAGS:   no_monster_gen no_item_gen
 WEIGHT: 3
 # Is there a better way to do this?
 : if you.absdepth() > 16 then
-MONS:   place:D:27 zombie / place:D:27 skeleton, bone dragon
+MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
 : else
 MONS:   place:D:18 zombie / place:D:18 skeleton, bone dragon
 : end
@@ -5155,20 +5250,20 @@ ENDMAP
 # The end of a dwarven mineshaft; perhaps they just found the axe again?
 NAME:   grunt_guarded_unrand_arga
 TAGS:   no_monster_gen no_item_gen patrolling
-DEPTH:  D:14-
+DEPTH:  D:17-
 WEIGHT: 3
 # KMONS is used here to get the fallback to work properly.
-KMONS:  W = Wiglaf ; war axe unrand:arga . \
+KMONS:  W = Wiglaf ; broad axe unrand:arga . \
                      shield race:dwarven . \
                      chain mail w:8 race:dwarven | \
                      plate armour w:10 race:dwarven | \
                      crystal plate armour w:1 race:dwarven, \
-            deep dwarf berserker ; war axe unrand:arga . \
+            deep dwarf berserker ; broad axe unrand:arga . \
                                    chain mail w:7 race:dwarven | \
                                    plate armour w:1 race:dwarven
-KMONS:  J = Jorgrun, deep dwarf necromancer
+KMONS:  J = Jorgrun, deep dwarf death knight
 MONS:   deep dwarf berserker
-MONS:   deep dwarf scion / deep dwarf death knight w:2
+MONS:   deep dwarf death knight w:5 / nothing
 MONS:   deep dwarf
 SUBST:  X = x.
 KITEM:  . = gold w:5 / stone / large rock q:1 w:1 / nothing w:40
@@ -5277,7 +5372,7 @@ ENDMAP
 NAME:   door_vault
 TAGS:   allow_dup
 WEIGHT: 1 (Vaults), 10
-DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
+DEPTH:  D:15-, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
                                 stop_explore="strange structure made of doors" }
@@ -5325,7 +5420,7 @@ ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
-DEPTH:  D:15-27
+DEPTH:  D:15-
 WEIGHT: 4
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \

@@ -22,7 +22,7 @@ tools.
 Assassin
 
 Assassins are all about stealth, ready to stab unaware opponents. Not just
-dagger and cloak, they carry nasty curare needles for their blowgun.
+cloak and dagger, they carry nasty curare needles for their blowgun.
 %%%%
 Berserker
 
@@ -96,7 +96,7 @@ start out with the Pain spell.
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
-the book of War Chants.
+the book of Battle.
 %%%%
 Summoner
 

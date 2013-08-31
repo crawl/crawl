@@ -71,7 +71,7 @@ void wizard_create_spec_object_by_name()
 {
     char buf[1024];
     mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
-    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
+    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;
@@ -253,24 +253,27 @@ static const char* _prop_name[] = {
     "Str",
     "Int",
     "Dex",
-    "Fire",
-    "Cold",
-    "Elec",
-    "Pois",
-    "Neg",
-    "Mag",
+    "rFire",
+    "rCold",
+    "rElec",
+    "rPois",
+    "rNeg",
+    "MR",
     "SInv",
-    "Inv",
-    "Fly",
-    "Blnk",
-    "Bers",
-    "Nois",
-    "NoSpl",
-    "RndTl",
-    "NoTel",
-    "Anger",
-    "Metab",
-    "Mut",
+    "+Inv",
+    "+Fly",
+#if TAG_MAJOR_VERSION > 34
+    "+Fog",
+#endif
+    "+Blnk",
+    "+Rage",
+    "Noisy",
+    "-Cast",
+    "*Tele",
+    "-Tele",
+    "*Rage",
+    "Hungr",
+    "Contm",
     "Acc",
     "Dam",
     "Curse",
@@ -282,7 +285,9 @@ static const char* _prop_name[] = {
     "BAcc",
     "BDam",
     "RMsl",
-    "Fog",
+#if TAG_MAJOR_VERSION == 34
+    "+Fog",
+#endif
 };
 
 #define ARTP_VAL_BOOL 0
@@ -305,6 +310,9 @@ static int8_t _prop_type[] = {
     ARTP_VAL_BOOL, //EYESIGHT
     ARTP_VAL_BOOL, //INVISIBLE
     ARTP_VAL_BOOL, //FLIGHT
+#if TAG_MAJOR_VERSION > 34
+    ARTP_VAL_BOOL, //FOG
+#endif
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
     ARTP_VAL_POS,  //NOISES
@@ -325,7 +333,9 @@ static int8_t _prop_type[] = {
     ARTP_VAL_ANY,  //BASE_ACC
     ARTP_VAL_ANY,  //BASE_DAM
     ARTP_VAL_BOOL, //RMSL
+#if TAG_MAJOR_VERSION == 34
     ARTP_VAL_BOOL, //FOG
+#endif
 };
 
 static void _tweak_randart(item_def &item)
@@ -361,8 +371,13 @@ static void _tweak_randart(item_def &item)
 
         if (choice_num < 26)
             choice = 'A' + choice_num;
+        else if (choice_num < 'A' - '0' + 26)
+        {
+            // 0-9 then :;<=>?@ . Any higher would collide with letters.
+            choice = '0' + choice_num - 26;
+        }
         else
-            choice = '1' + choice_num - 26;
+            choice = '-'; // Too many choices!
 
         if (props[i])
             snprintf(buf, sizeof(buf), "%c) <w>%-5s</w> ", choice, _prop_name[i]);
@@ -382,8 +397,8 @@ static void _tweak_randart(item_def &item)
 
     if (isaalpha(keyin))
         choice = keyin - 'a';
-    else if (isadigit(keyin) && keyin != '0')
-        choice = keyin - '1' + 26;
+    else if (keyin >= '0' && keyin < 'A')
+        choice = keyin - '0' + 26;
     else
     {
         canned_msg(MSG_OK);
@@ -676,7 +691,7 @@ void wizard_make_object_randart()
     mpr("Fake item as gift from which god (ENTER to leave alone): ",
         MSGCH_PROMPT);
     char name[80];
-    if (!cancelable_get_line(name, sizeof(name)) && name[0])
+    if (!cancellable_get_line(name, sizeof(name)) && name[0])
     {
         god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
@@ -703,7 +718,7 @@ void wizard_make_object_randart()
     }
 
     // Remove curse flag from item, unless worshipping Ashenzari.
-    if (you.religion == GOD_ASHENZARI)
+    if (you_worship(GOD_ASHENZARI))
         do_curse_item(item, true);
     else
         do_uncurse_item(item, false);
@@ -996,7 +1011,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     // Print player species/profession.
     string godname = "";
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
         godname += " of " + god_name(you.religion);
 
     fprintf(ostat, "%s the %s, Level %d %s %s%s\n\n",
@@ -1558,7 +1573,7 @@ void wizard_draw_card()
 {
     msg::streams(MSGCH_PROMPT) << "Which card? " << endl;
     char buf[80];
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
     {
         mpr("Unknown card.");
         return;

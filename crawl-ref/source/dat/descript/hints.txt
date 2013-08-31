@@ -10,10 +10,10 @@ be your main goal. Try to delve as deeply as possible but beware; death lurks
 around every corner.
 
 For the moment, just remember the following keys and their functions:
-  <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> - shows the items and the commands
-  <white>$cmd[CMD_SAVE_GAME]</white>  - saves the game, to be resumed later
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - shows the items and the commands
+  <input>$cmd[CMD_SAVE_GAME]</input>  - saves the game, to be resumed later
 (but note that death is permanent)
-  <white>$cmd[CMD_LOOK_AROUND]</white>  - examines something in your vicinity
+  <input>$cmd[CMD_LOOK_AROUND]</input>  - examines something in your vicinity
 
 The hint mode will help you play Crawl without reading any documentation. If
 you haven't yet, you might want to try out the tutorial. Also, if you feel
@@ -70,11 +70,9 @@ monsters will only get harder the deeper you delve.
 death random 2
 
 Rest between encounters, if possible in an area already explored and cleared of
-monsters. In Crawl, searching and resting are one and the same. To search for
-one turn, press <w>s</w>, <w>.</w>, <w>delete</w> or <w>keypad-5</w>. Pressing
-<w>5</w> or <w>shift-and-keypad-5</w> <tiles>, or <w>clicking into the stat
-area</w></tiles> will let you rest for a longer time (you will stop resting
-after 100 turns, or when fully healed).
+monsters. Pressing <input>$cmd[CMD_REST]</input><localtiles>, or
+<input>clicking into the stat area</input></localtiles> will let you rest for a
+moment (you will stop resting after 100 turns, or when fully healed).
 %%%%
 death random 3
 
@@ -97,49 +95,50 @@ finished
 
 Congrats! You survived until the end of the hint mode — be sure to try the
 other ones as well. Note that the command help screen
-(<w>$cmd[CMD_DISPLAY_COMMANDS]?</w>) will look very different from now on.
-Here's a last playing hint:
+(<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) will look very different from now
+on. Here's a last playing hint:
 %%%%
 finished explored
 
 Walking around and exploring levels gets easier by using auto-explore
-(<w>$cmd[CMD_EXPLORE]</w>). Crawl will let you automatically move to and pick
-up interesting items. <tiles>
+(<input>$cmd[CMD_EXPLORE]</input>). Crawl will let you automatically move to
+and pick up interesting items.<localtiles>
 
-Autoexploration can also be started by <w>left-clicking</w> on the minimap
-while the <w>Control</w> key is pressed.</tiles>
+Autoexploration can also be started by <input>Ctrl-Leftclick</input> on the
+minimap.</localtiles>
 %%%%
 finished travel
 
 There is a convenient way for travelling between far away dungeon levels: press
-<w>$cmd[CMD_INTERLEVEL_TRAVEL]</w> or <w>G</w> and enter the desired
-destination. If your travel gets interrupted, issuing
-<w>$cmd[CMD_INTERLEVEL_TRAVEL] Enter</w> or <w>G Enter</w> will continue it.
+<input>$cmd[CMD_INTERLEVEL_TRAVEL]</input> and enter the desired destination.
+If your travel gets interrupted, issuing <input>$cmd[CMD_INTERLEVEL_TRAVEL]
+Enter</input> will continue it.
 %%%%
 finished stashes
 
 You can search among all items existing in the dungeon with the
-<w>$cmd[CMD_SEARCH_STASHES]</w> command. For example,
-<w>$cmd[CMD_SEARCH_STASHES] "knife"</w> will list all knives. You can then
-travel to one of the spots. It is even possible to enter words like
-<w>"shop"</w> or <w>"altar"</w>.
+<input>$cmd[CMD_SEARCH_STASHES]</input> command. For example,
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"knife"</w> will list all knives.
+You can then travel to one of the spots. It is even possible to enter words
+like <w>"shop"</w> or <w>"altar"</w>.
 %%%%
 finished random 0
 
 The game keeps an automated logbook for your characters. Use
-<w>$cmd[CMD_DISPLAY_COMMANDS]:</w> to read it. You can enter notes manually
-with the <w>$cmd[CMD_MAKE_NOTE]</w> command. Once your character perishes, two
-morgue files are left in the <w>morgue/</w> directory. The one ending in .txt
-contains a copy of your logbook. During play, you can create a dump file with
-<w>$cmd[CMD_CHARACTER_DUMP]</w>.
+<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> to read it. You can enter notes
+manually with the <input>$cmd[CMD_MAKE_NOTE]</input> command. Once your
+character perishes, two morgue files are left in the <w>morgue/</w> directory.
+The one ending in .txt contains a copy of your logbook. During play, you can
+create a dump file with <input>$cmd[CMD_CHARACTER_DUMP]</input>.
 %%%%
 finished random 1
 
-Crawl has a macro function built in: press <w>~m</w> to define a macro by first
-specifying a trigger key (say, <w>F1</w>) and a command sequence, for example
-<w>za+.</w>. The latter will make the <w>F1</w> key always zap the spell in
-slot a at the nearest monster. For more information on macros, type
-<w>$cmd[CMD_DISPLAY_COMMANDS]~</w>.
+Crawl has a macro function built in: press <input>~m</input> to define a macro
+by first specifying a trigger key (say, <input>F1</input>) and a command
+sequence, for example <input>za+.</input>. The latter will make the
+<input>F1</input> key always zap the spell in slot a at the nearest monster.
+For more information on macros, type
+<input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
 %%%%
 finished random 2
 
@@ -155,11 +154,12 @@ You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
 %%%%
 dissection reminder
 
-If you don't want to eat it, consider offering this corpse up under
-<w>p</w>rayer as a sacrifice to {{ return you.god() }}<tiles>. You can also
-chop up any corpse that shows in the floor part of your inventory tiles by
-clicking on it with your <w>left mouse button</w></tiles>. Whenever you view a
-corpse while in hint mode you can reread this information.
+If you don't want to eat it, consider offering this corpse up under prayer
+(<input>$cmd[CMD_PRAY]</input>) as a sacrifice to
+{{ return you.god() }}. <localtiles>You can also chop up any corpse that shows
+in the floor part of your inventory tiles by clicking on it with your
+<input>left mouse button</input>. </localtiles>Whenever you view a corpse while
+in hint mode you can reread this information.
 %%%%
 HINT_CONVERT Xom
 
@@ -176,6 +176,7 @@ HINT_CONVERT
 # Not the case for Chei, but not sure if we need to go into that much
 # detail here.
 #
+# TODO: use $cmd for ^
 You've just converted to worshipping <w>{{ return you.god() }}</w>. Your piety
 (divine favour) will gradually decrease over time, and if it runs out {{ return
 you.god() }} will excommunicate you and punish you. You can prevent this,
@@ -184,21 +185,22 @@ things to please {{ return you.god() }}. But don't panic: you start out with a
 decent amount of piety, so any danger of excommunication is far off.
 
 You can check your god's likes and dislikes, as well as your current standing
-and divine abilities, by typing <w>^</w><tiles> (alternatively press
-<w>Shift</w> while <w>right-clicking</w> on your avatar)</tiles>.
+and divine abilities, by typing <input>^</input><localtiles> (alternatively
+press <input>Shift-right-click</input> on your avatar)</localtiles>.
 %%%%
 HINT_SEEN_FIRST_OBJECT
 
-That <console>$1 </console>is an item. If you move there and press <w>g</w> or
-<w>,</w> you will pick it up.<console> Generally, items are shown by non-letter
-symbols like <w>%?!"=()[</w>.</console><tiles> You can also pick up an item by
-clicking on your <w>left mouse button</w> while standing on its square.</tiles>
-Also, several types of objects will usually be picked up automatically.
-<tiles>(In Tiles, these will be marked with a green frame around them.)</tiles>
+That <console>$1 </console>is an item. If you move there and press
+<input>$cmd[CMD_PICKUP]</input>, you will pick it up.<console> Generally, items
+are shown by non-letter symbols like <w>%?!"=()[</w>.</console><tiles> You can
+also pick up an item by clicking on your <input>left mouse button</input> while
+standing on its square.</tiles> Also, several types of objects will usually be
+picked up automatically. <tiles>These will be marked with a green frame around
+them.</tiles>
 
-Once it is in your inventory, you can drop it again with <tiles>a <w>left mouse
-click</w> while pressing the <w>Shift key</w>. Whenever you <w>right-click</w>
-on an item</tiles><console><w>d</w>. Any time you look at an item in your
-<w>i</w>nventory</console>, you can read about its properties and its
-description.
+Once it is in your inventory, you can drop it again with <tiles>a
+<input>Shift-leftclick</input>. Whenever you <input>right-click</input> on an
+item</tiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at an
+item in your inventory (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>,
+you can read about its properties and its description.
 %%%%

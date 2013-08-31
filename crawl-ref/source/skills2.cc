@@ -23,6 +23,7 @@
 #include "godabil.h"
 #include "libutil.h"
 #include "player.h"
+#include "religion.h"
 #include "species.h"
 #include "skills.h"
 #include "skill_menu.h"
@@ -91,7 +92,9 @@ static const char *skills[NUM_SKILLS][6] =
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
 #endif
     {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
+#if TAG_MAJOR_VERSION == 34
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
+#endif
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
@@ -496,7 +499,7 @@ void calc_mp()
 bool is_useless_skill(skill_type skill)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (skill == SK_STABBING)
+    if (skill == SK_STABBING || skill == SK_TRAPS)
         return true;
 #endif
     return species_apt(skill) == -99;
@@ -504,7 +507,7 @@ bool is_useless_skill(skill_type skill)
 
 bool is_harmful_skill(skill_type skill)
 {
-    return is_magic_skill(skill) && you.religion == GOD_TROG;
+    return is_magic_skill(skill) && you_worship(GOD_TROG);
 }
 
 bool all_skills_maxed(bool inc_harmful)
@@ -545,9 +548,6 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
                           8200, 9450, 10800, 12300, 13950,   // 16-20
                           15750, 17700, 19800, 22050, 24450, // 21-25
                           27000, 29750 };
-
-    if (lev > 27 && you.wizard)
-        lev = 27;
 
     ASSERT_RANGE(lev, 0, 27 + 1);
 
@@ -724,7 +724,7 @@ void dump_skills(string &text)
     {
         int real = you.skill((skill_type)i, 10, true);
         int cur  = you.skill((skill_type)i, 10);
-        if (real > 0)
+        if (real > 0 || (!you.auto_training && you.train[i] > 0))
         {
             text += make_stringf(" %c Level %.*f%s %s\n",
                                  real == 270       ? 'O' :
@@ -774,7 +774,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     if (!simu && you.ct_skill_points[fsk] > 0)
         dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
 
-    // We need to transfer by small steps and updating skill levels each time
+    // We need to transfer by small steps and update skill levels each time
     // so that cross/anti-training are handled properly.
     while (total_skp_lost < skp_max
            && (simu || total_skp_lost < (int)you.transfer_skill_points))

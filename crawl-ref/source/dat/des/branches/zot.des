@@ -161,7 +161,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_round
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 SUBST:  = = nnn+
 SUBST:  c: c:70 v:20 b:10
@@ -202,7 +202,7 @@ ENDMAP
 # Sorry, no wand of wishing in this one
 NAME:   evilmike_zot_entry_castle
 TAGS:   no_monster_gen zot_entry layout_city
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^.
@@ -250,7 +250,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_gauntlet
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 SUBST:  b: v.., v: c.
 TILE:   X = wall_zot_magenta
@@ -318,7 +318,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_argh
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 # Grey dracs can escape from the islands if they have water. This is intentional.
@@ -366,7 +366,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_hall
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 TILE:   X = wall_zot_magenta
@@ -399,7 +399,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_basic
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 TILE:   c = wall_zot_magenta
@@ -425,7 +425,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_diamond
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 KFEAT:  A = stone_arch
@@ -461,7 +461,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_hairpin
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: ABC-_ = magenta
@@ -490,7 +490,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_funnels
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: 123c+. = magenta
@@ -524,7 +524,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_pinwheel
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 KFEAT:  A = stone_arch
@@ -558,7 +558,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_bicorn
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: 123c+_ = magenta
@@ -589,7 +589,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_tricorne
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: ABC-_ = magenta
@@ -629,7 +629,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_gee_three
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: ABC-_ = magenta
@@ -675,7 +675,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_alcove
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:27
+PLACE:  D:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: 1C-_ = magenta
@@ -714,7 +714,7 @@ ENDMAP
 
 # There's few vaults on Zot:5, tone down their chances.
 NAME: dummy_balancer_zot
-DEPTH: Zot:5
+DEPTH: Zot:$
 TAGS: dummy
 ORIENT: float
 WEIGHT: 60
@@ -724,7 +724,7 @@ ENDMAP
 
 NAME:   lemuel_baited_zot_trap
 TAGS:   allow_dup extra luniq
-DEPTH:  Zot:*
+DEPTH:  Zot
 WEIGHT: 20
 KFEAT:  * = Zot trap
 KITEM:  * = any good_item
@@ -747,7 +747,7 @@ ENDMAP
 
 NAME:   lemuel_zot_upstairs
 TAGS:   allow_dup extra luniq
-DEPTH:  Zot:2-5
+DEPTH:  Zot:2-
 ORIENT: float
 SUBST:  . = .^
 KFEAT:  ^ = zot trap
@@ -831,7 +831,7 @@ ENDMAP
 # Lake of fire
 #
 NAME:  lemuel_lake_of_fire
-DEPTH: Zot:*
+DEPTH: Zot
 SUBST: * =*l
 KMONS: * = orb of fire
 KFEAT: * = l
@@ -851,7 +851,7 @@ ENDMAP
 # Globe of electric golems
 #
 NAME:  lemuel_golem_globe
-DEPTH: Zot:*
+DEPTH: Zot
 TAGS:  no_rotate
 KFEAT: T = teleport trap
 KFEAT: m = iron_grate
@@ -1148,7 +1148,7 @@ ORIENT: float
 MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
         w:6 lightning spire / nothing
 MONS:   ice statue / silver statue / orange crystal statue / \
-        curse skull / w:5 nothing
+        patrolling curse skull / w:5 nothing
 SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
@@ -1560,8 +1560,8 @@ xxxxxxxxxxxxxxxxxxxx.xxx@xx.xxxx
 ENDMAP
 
 # A mighty hoard indeed...
-# Intented to be an extreme visual spectacle.
-# Obviously lowering the amount of gold in stacks in necessary.
+# Intended to be an extreme visual spectacle.
+# Obviously lowering the amount of gold in stacks is necessary.
 # There's about 800 gold.
 NAME:   st_grand_hoard_of_tiamat
 TAGS:   no_monster_gen
@@ -1836,44 +1836,6 @@ c...ccccc..T.......................cc...c...ccl
 cG............G..G..G..G..G..G..G..ccc.ccc.ccc
 ccccccccccccqqcrrcyycbbcggcmmcqqcrrccccccccccc
            @.......................@
-ENDMAP
-
-##########################################################################
-
-NAME: nicolae_zot_lich_garden
-DEPTH: Zot
-TAGS: no_monster_gen no_item_gen no_trap_gen
-SUBST: P = P., ; = ;;.
-NSUBST: A = 1:A / *:.
-KITEM: f = apple / orange / apricot / nothing
-KMONS: L = lich
-KMONS: A = ancient lich
-KMONS: C = curse toe
-KMONS: P = plant
-KMONS: B = butterfly
-KMONS: k = giant goldfish
-COLOUR: .tPCALfB = green
-FTILE: .tPCALfB = floor_grass
-KFEAT: ; = .
-KFEAT: k = w
-MAP
-        ;@@@;
-      ;;;;;;;;;
-    tt;;;PBPB;;;tt
-   tttttPPPPPPPtttt;
-  ;ttAfPP.L..B.tAtt;;;
- ;PPttP..P.P.PP.ftP;;;
- ;P..B.PPP.B.PPP.PPB;@
-;;PP..PPPwwwC.P.BPPP;@
-;;;;B.L.wkwwww.L.ttP;@
-;@;PP.BPwwwwkw...fttt;
- @;;P..PP.wwwPPBttttt
-  @;PP.PPP..PPB.PPttt
-  ;;;Ptt.P.PPPPPP;;;;
-  ;;;ttfAttPP;B;;;;;
-    ;tttttt;;;;;;@
-     ;;tt;;;;;;;
-        ;;;;;
 ENDMAP
 
 ##########################################################################
@@ -2481,7 +2443,7 @@ ENDMAP
 ##############################################################################
 
 NAME:       hall_of_Zot
-PLACE:      Zot:5
+PLACE:      Zot:$
 ORIENT:     north
 TAGS:       no_dump layout_halls
 LFLAGS:     no_tele_control

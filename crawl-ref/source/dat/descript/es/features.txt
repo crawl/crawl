@@ -74,13 +74,6 @@ A gate leading to another region of Pandemonium
 
 Esta puerta te lleva a otra región más del Pandemonio. Siempre habrán más.
 %%%%
-A gas trap
-
-Eres afortunado por haber detectado esta trampa, porque podría haber soltado
-una nube de gas mortal hacia ti. No puedes decir exactamente qué gas contiene -
-quizás es simplemente veneno, quizás humos mutagénicos, quizás vapor
-inflamable, o quizás algo aún peor.
-%%%%
 A gate to the Realm of Zot
 
 Esta puerta lleva al Reino de Zot, la etapa final de tu aventura ya que en su
@@ -257,11 +250,6 @@ observar el flujo del agua en su interior.
 A glass window
 
 Un ventana picada y con cristales extremadamente duros.
-%%%%
-A granite statue of a fallen hero
-
-Un estatua a tamaño real de un enano presidiendo esta sala. No puedes evitar
-tener la sensación de que te está observando.
 %%%%
 A flagged portal
 

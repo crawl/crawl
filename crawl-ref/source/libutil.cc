@@ -438,8 +438,11 @@ string pluralise(const string &name, const char *qualifiers[],
 
     if (ends_with(name, "us"))
     {
-        // Fungus, ufetubus, for instance.
-        return name.substr(0, name.length() - 2) + "i";
+        if (ends_with(name, "lotus"))
+            return name + "es";
+        else
+            // Fungus, ufetubus, for instance.
+            return name.substr(0, name.length() - 2) + "i";
     }
     else if (ends_with(name, "larva") || ends_with(name, "amoeba")
           || ends_with(name, "antenna"))
@@ -496,9 +499,7 @@ string pluralise(const string &name, const char *qualifiers[],
              || ends_with(name, "folk") || ends_with(name, "spawn")
              || ends_with(name, "tengu") || ends_with(name, "shedu")
              || ends_with(name, "swine") || ends_with(name, "efreet")
-             // "shedu" is male, "lammasu" is female of the same creature
-             || ends_with(name, "lammasu") || ends_with(name, "lamassu")
-             || ends_with(name, "jiangshi")
+             || ends_with(name, "jiangshi") || ends_with(name, "unborn")
              || name == "gold")
     {
         return name;

@@ -155,6 +155,12 @@ const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 // tries to maintain range unless target is incapacitated
 const uint64_t M_STABBER           = (uint64_t)1<<48;
 
+// hybridized monster composed of other monster parts
+const uint64_t M_HYBRID            = (uint64_t)1<<49;
+
+// monster is always alerted to hostiles, and does not forget them over time
+const uint64_t M_VIGILANT          = (uint64_t)1<<50;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing
@@ -227,4 +233,5 @@ const uint64_t MF_SENSED             = BIT(33); // Player has been warned
 const uint64_t MF_NAME_NOCORPSE      = BIT(34); // mname should not be used for corpses
 const uint64_t MF_SEEN_RANGED        = BIT(35); // known to have a ranged attack
 
+const uint64_t MF_POLYMORPHED        = BIT(36); // this monster has been polymorphed.
 #endif

@@ -306,10 +306,6 @@ eggplant
 Uma berinjela podre pra você jogar nos desenvolvedores do Crawl. (Se você ver
 esta mensagem, é um bug.)
 %%%%
-empty ebony casket
-
-Uma caixa mágica após o seu poder ter sido gasto.
-%%%%
 eveningstar
 
 O oposto de uma maça-estrela.
@@ -541,10 +537,6 @@ spear
 
 Uma vara longa com uma lâmina pontiaguda em uma ponta. Pode ser tida em mãos ou
 arremessada.
-%%%%
-spiked flail
-
-Um mangual com grandes espinhos na bola de metal.
 %%%%
 staff of conjuration
 

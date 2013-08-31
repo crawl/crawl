@@ -173,7 +173,7 @@ static void termio_init()
 void set_mouse_enabled(bool enabled)
 {
 #ifdef NCURSES_MOUSE_VERSION
-    const int mask = enabled? ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION : 0;
+    const int mask = enabled ? ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION : 0;
     mmask_t oldmask = 0;
     mousemask(mask, &oldmask);
 #endif

@@ -442,7 +442,7 @@ xx.xxxx.x.x
 ENDMAP
 
 NAME:   nicolae_coiled_stairwell_up
-DEPTH:  Snake:2-5
+DEPTH:  Snake:2-
 TAGS:   uniq_coiled_stairwell
 SUBST:  { = {[(<
 MAP
@@ -1133,7 +1133,7 @@ ENDMAP
 NAME:   grunt_snake_rune_serpentine_throne
 PLACE:  Snake:$
 ORIENT: north
-KMONS:  L = Lamia band
+KMONS:  L = Lamia
 KITEM:  O = serpentine rune of Zot
 KFEAT:  A = altar_okawaru / altar_makhleb / altar_trog
 MONS:   greater naga / naga warrior w:5 / naga mage w:5

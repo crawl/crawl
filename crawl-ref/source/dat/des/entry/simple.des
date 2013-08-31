@@ -910,7 +910,7 @@ vv...v...vv
 vv[v.v.v(vv
 vvvv.v.vvvv
 v.........v
-v.vv.~.vv.v
+v.vv...vv.v
 v.<v...v{.v
 vvvv.@.vvvv
 ENDMAP
@@ -1222,7 +1222,7 @@ SUBST:   [=.
 MAP
           ......
         ..xx++xx..
-      ...xx1~~1xx...
+      ...xx1..1xx...
      ..xxxxt11txxxx..
     ..xxccccccccccxx..
     .xxcc1tt1t111ccxx.
@@ -1249,7 +1249,7 @@ SUBST:   [=.
 MAP
          ........
         ..xx++xx..
-      ...xxW~~Wxx...
+      ...xxW..Wxx...
      ..xxxxWWWWxxxx..
     ..xxccccccccccxx..
     .xxccwWWWWWWwccxx.
@@ -1278,7 +1278,7 @@ SUBST:   [=.
 MAP
          ........
         ..xx++xx..
-      ...xxl~~lxx...
+      ...xxl..lxx...
      ..xxxxllllxxxx..
     ..xxccccccccccxx..
     .xxccllllllllccxx.

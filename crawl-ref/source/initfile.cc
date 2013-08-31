@@ -162,7 +162,8 @@ static const string message_channel_names[] =
     "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
     "friend_spell", "friend_enchant", "monster_damage", "monster_target",
     "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial", "orb", "timed_portal"
+    "examine_filter", "diagnostic", "error", "tutorial", "orb", "timed_portal",
+    "hell_effect",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
@@ -225,6 +226,8 @@ weapon_type str_to_weapon(const string &str)
         return WPN_DARTS;
     else if (str == "random")
         return WPN_RANDOM;
+    else if (str == "viable")
+        return WPN_VIABLE;
 
     return WPN_UNKNOWN;
 }
@@ -261,6 +264,8 @@ static string _weapon_to_str(int weapon)
         return "javelins";
     case WPN_DARTS:
         return "darts";
+    case WPN_VIABLE:
+        return "viable";
     case WPN_RANDOM:
     default:
         return "random";
@@ -422,12 +427,8 @@ static job_type _str_to_job(const string &str)
     if (job == JOB_UNKNOWN)
         job = get_job_by_name(str.c_str());
 
-#if TAG_MAJOR_VERSION == 34
-    if (job == JOB_STALKER || job == JOB_JESTER || job == JOB_PRIEST)
-        job = JOB_UNKNOWN;
-#endif
-
-    if (job == JOB_UNKNOWN)
+    // This catches JOB_UNKNOWN as well as removed jobs.
+    if (!is_job_valid_choice(job))
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 
     return job;
@@ -584,7 +585,6 @@ void game_options::set_default_activity_interrupts()
         // trash all queued delays, including travel.
         "interrupt_ascending_stairs = teleport",
         "interrupt_descending_stairs = teleport",
-        "interrupt_recite = teleport",
         "interrupt_uninterruptible =",
         "interrupt_weapon_swap =",
 
@@ -774,6 +774,7 @@ void game_options::reset_options()
     scroll_margin_y  = 2;
 
     autopickup_on    = 1;
+    autopickup_starting_ammo = true;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     default_manual_training = false;
 
@@ -809,10 +810,7 @@ void game_options::reset_options()
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     auto_drop_chunks       = ADC_NEVER;
-    prefer_safe_chunks     = true;
     easy_eat_chunks        = false;
-    easy_eat_gourmand      = false;
-    easy_eat_contaminated  = false;
     auto_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
@@ -1320,19 +1318,20 @@ void game_options::add_feature_override(const string &text)
     {
         if (feats[i] >= NUM_FEATURES)
             continue; // TODO: handle other object types.
-        feature_override fov;
-        fov.object.cls = SH_FEATURE;
-        fov.object.feat = feats[i];
-
-        fov.override.symbol         = read_symbol(iprops[0]);
-        fov.override.magic_symbol   = read_symbol(iprops[1]);
-        fov.override.colour         = str_to_colour(iprops[2], BLACK);
-        fov.override.map_colour     = str_to_colour(iprops[3], BLACK);
-        fov.override.seen_colour    = str_to_colour(iprops[4], BLACK);
-        fov.override.em_colour      = str_to_colour(iprops[5], BLACK);
-        fov.override.seen_em_colour = str_to_colour(iprops[6], BLACK);
-
-        feature_overrides.push_back(fov);
+        feature_def &fov(feature_overrides[feats[i]]);
+#define SYM(n, field) if (ucs_t s = read_symbol(iprops[n])) \
+                          fov.field = s;
+#define COL(n, field) if (unsigned short c = str_to_colour(iprops[n], BLACK)) \
+                          fov.field = c;
+        SYM(0, symbol);
+        SYM(1, magic_symbol);
+        COL(2, colour);
+        COL(3, map_colour);
+        COL(4, seen_colour);
+        COL(5, em_colour);
+        COL(6, seen_em_colour);
+#undef SYM
+#undef COL
     }
 }
 
@@ -1455,6 +1454,9 @@ string read_init_file(bool runscript)
 
     for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
         Options.include(datafile_path(config_defaults[i]), false, runscript);
+#else
+    UNUSED(lua_builtins);
+    UNUSED(config_defaults);
 #endif
 
     Options.filename     = "extra opts first";
@@ -2415,6 +2417,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autopickup_on = 0;
     }
+    else BOOL_OPTION(autopickup_starting_ammo);
     else if (key == "default_friendly_pickup")
     {
         if (field == "none")
@@ -2477,10 +2480,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
-    else BOOL_OPTION(prefer_safe_chunks);
     else BOOL_OPTION(easy_eat_chunks);
-    else BOOL_OPTION(easy_eat_gourmand);
-    else BOOL_OPTION(easy_eat_contaminated);
     else BOOL_OPTION(auto_eat_chunks);
     else if (key == "auto_drop_chunks")
     {

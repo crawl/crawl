@@ -22,7 +22,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     //  ∆
         0x2206, // WGL4 and DEC
 #endif
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',
+    //       φ
+        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',
     //                                §     ♣       ©
         ':', '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
     //                                     ÷
@@ -35,7 +36,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     {
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
-        '{', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
+        '{', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '|', '}', '%', '$', '"', '0', '7', '^',   // book .. teleporter
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
@@ -48,7 +49,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         0x2592, 0x2591, 0x2219, 0xb7, '\'', 0x25a0, '^', '>', '<', // wall .. stairs up
     //       ▄       ∩       ⌠       ≈
         '#', 0x2584, 0x2229, 0x2320, 0x2248, '8', '{', '{',        // grate .. item detect
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',               // orb .. missile
+    //       φ
+        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',               // orb .. missile
     //  ∞       \                              ♣       Ω
         0x221e, '\\', '}', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
@@ -64,7 +66,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         0x2592, 0x2666, 0xb7, ':', '\'', 0x253c, '^', '>', '<', // wall .. stairs up
     //       π      ¶     §     »          →       ¨
         '#', 0x3c0, 0xb6, 0xa7, 0xbb, '8', 0x2192, 0xa8,        // grate .. item detect
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
+        '0', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '\\', '}', '%', '$', '"', '#', '7', '^',  // book .. teleporter
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#',             // fi_stick .. explosion
@@ -85,7 +87,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         0x2592, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
     //            ∩       ⌠       ≈                 ∆
         '#', '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
-        '0', ')', '[', '/', '%', '?', '=', '!', '(',
+        '0', '}', ')', '[', '/', '%', '?', '=', '!', '(',
     //  ∞                                §     ♣       ©
         0x221E, '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
     //                                     ÷
@@ -104,7 +106,7 @@ dungeon_char_type dchar_by_name(const string &name)
         "door_closed", "trap", "stairs_down", "stairs_up",
         "grate", "altar", "arch", "fountain", "wavy", "statue",
         "invis_exposed", "item_detected",
-        "item_orb", "item_weapon", "item_armour", "item_wand", "item_food",
+        "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
         "item_stave", "item_miscellany", "item_corpse", "item_gold",
         "item_amulet", "cloud", "tree", "teleporter",

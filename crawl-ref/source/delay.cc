@@ -86,24 +86,6 @@ static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
 static const char *_activity_interrupt_name(activity_interrupt_type ai);
 
-static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
-{
-    ASSERT_RANGE(prayertype, 0, NUM_RECITE_TYPES);
-    return zin_recite_to_single_monster(where, (recite_type)prayertype);
-}
-
-static string _get_zin_recite_speech(int trits[], size_t len, int prayertype, int step)
-{
-    const string str = zin_recite_text(trits, len, prayertype, step);
-
-    if (str.empty())
-    {
-        // In case nothing is found.
-        return "mumble mumble buggy mumble";
-    }
-    return str;
-}
-
 // Returns true if this delay can act as a parent to other delays, i.e. if
 // other delays can be spawned while this delay is running. If is_parent_delay
 // returns true, new delays will be pushed immediately to the front of the
@@ -260,12 +242,6 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         // No work lost
         if (!items_for_multidrop.empty())
             mpr("You stop dropping stuff.");
-        _pop_delay();
-        break;
-
-    case DELAY_RECITE:
-        mprf(MSGCH_PLAIN, "Your recitation is interrupted.");
-        mpr("You feel short of breath.");
         _pop_delay();
         break;
 
@@ -723,21 +699,6 @@ void handle_delay()
             mpr("You begin to dig a shaft.", MSGCH_MULTITURN_ACTION);
             break;
 
-        case DELAY_RECITE:
-        {
-            // We need to handle training here.
-            practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
-
-            // We don't actually start reciting on this turn, because we haven't "said" anything yet.
-            delay.len = 7;
-            for (size_t n = 0; n < delay.len; n++)
-                delay.trits[n] = random2(3);
-            mprf(MSGCH_PLAIN, "You clear your throat and prepare to recite %s.",
-                 _get_zin_recite_speech(delay.trits, delay.len,
-                                        delay.parm1, -1).c_str());
-            break;
-        }
-
         default:
             break;
         }
@@ -879,14 +840,6 @@ void handle_delay()
             return;
         }
     }
-    else if (delay.type == DELAY_RECITE)
-    {
-        if (you.hp*2 < delay.parm2) // ...or significant health drop.
-        {
-            stop_delay();
-            return;
-        }
-    }
 
     // Handle delay:
     if (delay.duration > 0)
@@ -942,42 +895,6 @@ void handle_delay()
             mpr("You continue digging a shaft.",
                 MSGCH_MULTITURN_ACTION);
             break;
-
-        case DELAY_RECITE:
-        {
-            mprf(MSGCH_MULTITURN_ACTION, "\"%s\"",
-                 _get_zin_recite_speech(delay.trits, delay.len,
-                                        delay.parm1, delay.duration).c_str());
-            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1, &you))
-                viewwindow();
-
-            // Recite trains more than once per use, because it has a
-            // long timer in between uses and actually takes up multiple
-            // turns.
-            practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
-
-            const string shout_verb = you.shout_verb();
-
-            int noise_level = 12; // "shout"
-
-            // Tweak volume for different kinds of vocalisation.
-            if (shout_verb == "roar")
-                noise_level = 18;
-
-            else if (shout_verb == "hiss")
-                noise_level = 8;
-            else if (shout_verb == "squeak")
-                noise_level = 4;
-            else if (shout_verb == "__NONE")
-                noise_level = 0;
-            else if (shout_verb == "yell")
-                noise_level = 14;
-            else if (shout_verb == "scream")
-                noise_level = 16;
-
-            noisy(noise_level, you.pos());
-            break;
-        }
 
         case DELAY_MULTIDROP:
             if (!drop_item(items_for_multidrop[0].slot,
@@ -1117,25 +1034,6 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
     }
 
-    case DELAY_RECITE:
-    {
-        string speech = _get_zin_recite_speech(const_cast<int*>(delay.trits),
-                                               delay.len, delay.parm1, -1);
-        speech += ".";
-        if (one_chance_in(9))
-        {
-            const string closure = getSpeakString("recite_closure");
-            if (!closure.empty() && one_chance_in(3))
-            {
-                speech += " ";
-                speech += closure;
-            }
-        }
-        mprf(MSGCH_PLAIN, "You finish reciting %s", speech.c_str());
-        mpr("You feel short of breath.");
-        break;
-    }
-
     case DELAY_PASSWALL:
     {
         mpr("You finish merging with the rock.");
@@ -1243,7 +1141,7 @@ static void _finish_delay(const delay_queue_item &delay)
                      mitm[delay.parm1].name(DESC_THE).c_str());
 
                 if (god_hates_cannibalism(you.religion)
-                    && is_player_same_species(item.mon_type))
+                    && is_player_same_genus(item.mon_type))
                 {
                     simple_god_message(" expects more respect for your"
                                        " departed relatives.");
@@ -1254,7 +1152,7 @@ static void _finish_delay(const delay_queue_item &delay)
                     simple_god_message(" expects more respect for holy"
                                        " creatures!");
                 }
-                else if (you.religion == GOD_ZIN
+                else if (you_worship(GOD_ZIN)
                          && mons_class_intel(item.mon_type) >= I_NORMAL)
                 {
                     simple_god_message(" expects more respect for this"
@@ -1575,6 +1473,7 @@ void run_macro(const char *macroname)
         }
     }
 #else
+    UNUSED(_decrement_delay);
     stop_delay();
 #endif
 }
@@ -1623,7 +1522,8 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     {
         return MB_TRUE;
     }
-
+#else
+    UNUSED(_activity_interrupt_name);
 #endif
     return MB_MAYBE;
 }
@@ -1953,7 +1853,11 @@ static const char *delay_names[] =
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
     "jewellery_on", "memorise", "butcher", "bottle_blood", "weapon_swap",
     "passwall", "drop_item", "multidrop", "ascending_stairs",
-    "descending_stairs", "recite", "run", "rest", "travel", "macro",
+    "descending_stairs",
+#if TAG_MAJOR_VERSION == 34
+    "recite",
+#endif
+    "run", "rest", "travel", "macro",
     "macro_process_key", "interruptible", "uninterruptible", "shaft self"
 };
 

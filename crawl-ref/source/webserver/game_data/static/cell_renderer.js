@@ -348,8 +348,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
             this.render_cursors(cx, cy, x, y);
 
-            if (fg_idx == tileinfo_player.PLAYER &&
-                this.display_mode != "glyphs")
+            if (cx == player.pos.x && cy == player.pos.y
+                && map_knowledge.player_on_level())
             {
                 this.draw_minibars(x, y);
             }

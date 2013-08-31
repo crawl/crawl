@@ -24,6 +24,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -413,7 +414,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MUTAGENIC] && !meld)
     {
         mpr("Mutagenic energies flood into your body!");
-        contaminate_player(7, true);
+        contaminate_player(7000, true);
     }
 
     if (is_unrandom_artefact(item))
@@ -433,21 +434,21 @@ static void _unequip_artefact_effect(item_def &item,
 
 static void _equip_use_warning(const item_def& item)
 {
-    if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
+    if (is_holy_item(item) && you_worship(GOD_YREDELEMNUL))
         mpr("You really shouldn't be using a holy item like this.");
     else if (is_unholy_item(item) && is_good_god(you.religion))
         mpr("You really shouldn't be using an unholy item like this.");
-    else if (is_corpse_violating_item(item) && you.religion == GOD_FEDHAS)
+    else if (is_corpse_violating_item(item) && you_worship(GOD_FEDHAS))
         mpr("You really shouldn't be using a corpse-violating item like this.");
     else if (is_evil_item(item) && is_good_god(you.religion))
         mpr("You really shouldn't be using an evil item like this.");
-    else if (is_unclean_item(item) && you.religion == GOD_ZIN)
+    else if (is_unclean_item(item) && you_worship(GOD_ZIN))
         mpr("You really shouldn't be using an unclean item like this.");
-    else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
+    else if (is_chaotic_item(item) && you_worship(GOD_ZIN))
         mpr("You really shouldn't be using a chaotic item like this.");
-    else if (is_hasty_item(item) && you.religion == GOD_CHEIBRIADOS)
+    else if (is_hasty_item(item) && you_worship(GOD_CHEIBRIADOS))
         mpr("You really shouldn't be using a hasty item like this.");
-    else if (is_poisoned_item(item) && you.religion == GOD_SHINING_ONE)
+    else if (is_poisoned_item(item) && you_worship(GOD_SHINING_ONE))
         mpr("You really shouldn't be using a poisoned item like this.");
 }
 
@@ -589,12 +590,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     }
                     else
                         mpr("You see sparks fly.");
-                    break;
-
-                case SPWPN_ORC_SLAYING:
-                    mpr(player_genus(GENPC_ORCISH)
-                            ? "You feel a sudden desire to commit suicide."
-                            : "You feel a sudden desire to kill orcs!");
                     break;
 
                 case SPWPN_DRAGON_SLAYING:
@@ -872,6 +867,16 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
         canned_msg(MSG_MANA_DECREASE);
     }
+
+    // Unwielding dismisses an active spectral weapon
+    monster *spectral_weapon = find_spectral_weapon(&you);
+    if (spectral_weapon)
+    {
+        mprf("Your spectral weapon disappears as %s.",
+             meld ? "your weapon melds" : "you unwield");
+        end_spectral_weapon(spectral_weapon, false, true);
+    }
+
 }
 
 static void _equip_armour_effect(item_def& arm, bool unmeld)
@@ -960,7 +965,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             if (!unmeld && you.spirit_shield() < 2)
             {
                 dec_mp(you.magic_points);
-                mpr("You feel your power drawn to a protective spirit.");
+                if (you.species == SP_DJINNI)
+                    mpr("You feel the presence of a powerless spirit.");
+                else
+                    mpr("You feel your power drawn to a protective spirit.");
                 if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
             }
@@ -1155,8 +1163,8 @@ static void _unequip_armour_effect(item_def& item, bool meld)
 
 static void _remove_amulet_of_faith(item_def &item)
 {
-    if (you.religion != GOD_NO_GOD
-        && you.religion != GOD_XOM)
+    if (!you_worship(GOD_NO_GOD)
+        && !you_worship(GOD_XOM))
     {
         simple_god_message(" seems less interested in you.");
 
@@ -1337,7 +1345,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case AMU_FAITH:
-        if (you.religion != GOD_NO_GOD)
+        if (!you_worship(GOD_NO_GOD))
         {
             mpr("You feel a surge of divine interest.", MSGCH_GOD);
             ident = ID_KNOWN_TYPE;
@@ -1367,7 +1375,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (you.spirit_shield() < 2 && !unmeld)
         {
             dec_mp(you.magic_points);
-            mpr("You feel your power drawn to a protective spirit.");
+            if (you.species == SP_DJINNI)
+                mpr("You feel the presence of a powerless spirit.");
+            else
+                mpr("You feel your power drawn to a protective spirit.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Now linked to your health, your magic stops regenerating.");
         }
@@ -1399,7 +1410,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
                                   "");
             ident = ID_KNOWN_TYPE;
 
-            contaminate_player(pow(amount, 0.333), item_type_known(item));
+            // XXX: This can probably be improved.
+            contaminate_player(pow(amount, 0.333) * 1000, item_type_known(item));
 
             int dir = 0;
             if (you.duration[DUR_HASTE])

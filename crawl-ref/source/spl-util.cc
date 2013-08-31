@@ -17,6 +17,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "beam.h"
 #include "coord.h"
 #include "coordit.h"
@@ -24,6 +25,7 @@
 #include "godabil.h"
 #include "stuff.h"
 #include "env.h"
+#include "items.h"
 #include "libutil.h"
 #include "mon-behv.h"
 #include "mon-util.h"
@@ -484,11 +486,7 @@ bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 //jmf: next two for simple bit handling
 unsigned int get_spell_disciplines(spell_type spell)
 {
-    unsigned int dis = _seekspell(spell)->disciplines;
-    if (spell == SPELL_DRAGON_FORM && player_genus(GENPC_DRACONIAN))
-        dis &= (~SPTYP_FIRE);
-
-    return dis;
+    return (_seekspell(spell)->disciplines);
 }
 
 int count_bits(unsigned int bits)
@@ -636,7 +634,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         //
         // 2) Assume the distribution is uniform at n = m+k.
         //    (ie. the probablity that any of the found elements
-        //     was chosen = m / (m+k) (the slots are symetric,
+        //     was chosen = m / (m+k) (the slots are symmetric,
         //     so it's the sum of the probabilities of being in
         //     any of them)).
         //
@@ -667,8 +665,8 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         // just don't care about the non-chosen slots enough
         // to store them, so it might look like the item
         // automatically takes the new slot when not chosen
-        // (although, by symetry all the non-chosen slots are
-        // the same... and similarly, by symetry, all chosen
+        // (although, by symmetry all the non-chosen slots are
+        // the same... and similarly, by symmetry, all chosen
         // slots are the same).
         //
         // Yes, that's a long comment for a short piece of
@@ -739,7 +737,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 }
 
 // Select a spell direction and fill dist and pbolt appropriately.
-// Return false if the user canceled, true otherwise.
+// Return false if the user cancelled, true otherwise.
 // FIXME: this should accept a direction_chooser_args directly rather
 // than move the arguments into one.
 bool spell_direction(dist &spelld, bolt &pbolt,
@@ -953,7 +951,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
 
     if (player_spell
         && vehumet_supports_spell(spell)
-        && you.religion == GOD_VEHUMET
+        && you_worship(GOD_VEHUMET)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && !player_under_penance()
@@ -1058,13 +1056,6 @@ spell_type zap_type_to_spell(zap_type zap)
 
 static bool _spell_is_empowered(spell_type spell)
 {
-    if ((you.religion == GOD_VEHUMET)
-        && vehumet_supports_spell(spell)
-        && piety_rank() > 2)
-    {
-        return true;
-    }
-
     switch (spell)
     {
     case SPELL_STONESKIN:
@@ -1146,22 +1137,24 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         if (you.racial_permanent_flight())
             return true;
-        if (transient && you.flight_mode())
+        if (transient && you.permanent_flight())
             return true;
         break;
     case SPELL_INVISIBILITY:
-        if (transient && (you.duration[DUR_INVIS] > 0 || you.backlit()))
+        if (transient && you.backlit())
             return true;
         break;
     case SPELL_CONTROL_TELEPORT:
-        if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
+        // Can be cast in advance in most places with -cTele,
+        // but useless once the orb is picked up.
+        if (player_has_orb())
             return true;
         break;
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())
             return true;
-        if (you.religion == GOD_SHINING_ONE && !player_under_penance())
+        if (you_worship(GOD_SHINING_ONE) && !player_under_penance())
             return true;
         break;
 #if TAG_MAJOR_VERSION == 34
@@ -1183,6 +1176,18 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
 
+    case SPELL_LEDAS_LIQUEFACTION:
+        if (!you.stand_on_solid_ground()
+            || you.duration[DUR_LIQUEFYING]
+            || liquefied(you.pos()))
+        {
+            return true;
+        }
+        break;
+
+    case SPELL_DELAYED_FIREBALL:
+        return transient && you.attribute[ATTR_DELAYED_FIREBALL];
+
     default:
         break; // quash unhandled constants warnings
     }
@@ -1193,18 +1198,12 @@ bool spell_is_useless(spell_type spell, bool transient)
 // This function takes a spell, and determines what color it should be
 // highlighted with. You shouldn't have to touch this unless you want
 // to add new highlighting options.
-//
-// as you can see, the functions it uses to determine highlights are:
-//       god_hates_spell(spell, god)
-//       god_likes_spell(spell, god)
-//       _spell_is_empowered(spell)
-//       spell_is_useless(spell, transient)
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool rod_spell)
 {
     // If your god hates the spell, that
     // overrides all other concerns
-    if (god_hates_spell(spell, you.religion))
+    if (god_hates_spell(spell, you.religion, rod_spell))
         return COL_FORBIDDEN;
 
     if (_spell_is_empowered(spell) && !rod_spell)

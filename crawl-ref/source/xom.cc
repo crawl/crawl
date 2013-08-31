@@ -149,7 +149,7 @@ static const char *describe_xom_mood()
 const string describe_xom_favour()
 {
     string favour;
-    if (you.religion != GOD_XOM)
+    if (!you_worship(GOD_XOM))
         favour = "a very buggy toy of Xom.";
     else if (you.gift_timeout < 1)
         favour = "a BORING thing.";
@@ -174,7 +174,7 @@ static string _get_xom_speech(const string key)
 
 static bool _xom_is_bored()
 {
-    return (you.religion == GOD_XOM && !you.gift_timeout);
+    return (you_worship(GOD_XOM) && !you.gift_timeout);
 }
 
 static bool _xom_feels_nasty()
@@ -186,10 +186,10 @@ static bool _xom_feels_nasty()
 
 bool xom_is_nice(int tension)
 {
-    if (you.penance[GOD_XOM])
+    if (player_under_penance(GOD_XOM))
         return false;
 
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         // If you.gift_timeout is 0, then Xom is BORED.  He HATES that.
         if (!you.gift_timeout)
@@ -225,7 +225,7 @@ static void _xom_is_stimulated(int maxinterestingness,
                                const char *message_array[],
                                bool force_message)
 {
-    if (you.religion != GOD_XOM || maxinterestingness <= 0)
+    if (!you_worship(GOD_XOM) || maxinterestingness <= 0)
         return;
 
     // Xom is not directly stimulated by his own acts.
@@ -273,7 +273,7 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
 void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message)
 {
-    if (you.religion != GOD_XOM)
+    if (!you_worship(GOD_XOM))
         return;
 
     const char *message_array[6];
@@ -291,8 +291,8 @@ void xom_tick()
     {
         // Xom semi-randomly drifts your piety.
         const string old_xom_favour = describe_xom_favour();
-        const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
-                                                      : you.piety > HALF_MAX_PIETY);
+        const bool good = (you.piety == HALF_MAX_PIETY ? coinflip()
+                                                       : you.piety > HALF_MAX_PIETY);
         int size = abs(you.piety - HALF_MAX_PIETY);
 
         // Piety slowly drifts towards the extremes.
@@ -3284,17 +3284,17 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     else if (coinflip())
     {
         // XP drain effect (25%).
-        if (player_prot_life() < 3 && (nasty || you.experience > 0))
+        if (player_prot_life() < 3)
         {
             if (debug)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, NON_MONSTER, aux.c_str());
-            if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp(true, NON_MONSTER, aux.c_str());
-            if (random2(sever) > 3 && (nasty || you.experience > 0))
-                drain_exp(true, NON_MONSTER, aux.c_str());
+            drain_exp(true, 75);
+            if (random2(sever) > 3)
+                drain_exp(true, 75);
+            if (random2(sever) > 3)
+                drain_exp(true, 75);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
@@ -3417,7 +3417,7 @@ static bool _will_not_banish()
 static bool _allow_xom_banishment()
 {
     // Always allowed if under penance.
-    if (you.penance[GOD_XOM])
+    if (player_under_penance(GOD_XOM))
         return true;
 
     // If Xom is bored, banishment becomes viable earlier.
@@ -3772,6 +3772,7 @@ static void _handle_accidental_death(const int orig_hp,
                         true, true, true);
     }
 
+#if TAG_MAJOR_VERSION == 34
     while (you.dex() <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] <
                   orig_mutation[MUT_FLEXIBLE_WEAK])
@@ -3791,6 +3792,7 @@ static void _handle_accidental_death(const int orig_hp,
     {
         mutate(MUT_STRONG_STIFF, "Xom's lifesaving", true, true, true);
     }
+#endif
 
     mutation_type bad_muts[3]  = {MUT_WEAK, MUT_DOPEY, MUT_CLUMSY};
     mutation_type good_muts[3] = {MUT_STRONG, MUT_CLEVER, MUT_AGILE};
@@ -3957,7 +3959,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 
     _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
 
-    if (you.religion == GOD_XOM && one_chance_in(5))
+    if (you_worship(GOD_XOM) && one_chance_in(5))
     {
         const string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY + 1);
@@ -4044,7 +4046,7 @@ static bool _death_is_funny(const kill_method_type killed_by)
 
 void xom_death_message(const kill_method_type killed_by)
 {
-    if (you.religion != GOD_XOM && (!you.worshipped[GOD_XOM] || coinflip()))
+    if (!you_worship(GOD_XOM) && (!you.worshipped[GOD_XOM] || coinflip()))
         return;
 
     const int death_tension = get_tension(GOD_XOM);
@@ -4125,7 +4127,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
                          const kill_method_type death_type, const char *aux,
                          bool see_source)
 {
-    if (you.religion != GOD_XOM || _xom_feels_nasty())
+    if (!you_worship(GOD_XOM) || _xom_feels_nasty())
         return false;
 
     // If this happens, don't bother.
@@ -4288,7 +4290,7 @@ void debug_xom_effects()
     fprintf(ostat, "%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 
-    if (you.penance[GOD_XOM])
+    if (player_under_penance(GOD_XOM))
         fprintf(ostat, "You are under Xom's penance!\n");
     else if (_xom_is_bored())
         fprintf(ostat, "Xom is BORED.\n");

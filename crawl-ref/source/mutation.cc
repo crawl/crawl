@@ -166,12 +166,7 @@ const mutation_def& get_mutation_def(mutation_type mut)
 mutation_activity_type mutation_activity_level(mutation_type mut)
 {
     // First make sure the player's form permits the mutation.
-    if (mut == MUT_BREATHE_POISON)
-    {
-        if (form_changed_physiology() && you.form != TRAN_SPIDER)
-            return MUTACT_INACTIVE;
-    }
-    else if (!form_keeps_mutations())
+    if (!form_keeps_mutations())
     {
         if (you.form == TRAN_DRAGON)
         {
@@ -179,6 +174,8 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             if (mut == MUT_SHOCK_RESISTANCE && drag == MONS_STORM_DRAGON)
                 return MUTACT_FULL;
             if (mut == MUT_UNBREATHING && drag == MONS_IRON_DRAGON)
+                return MUTACT_FULL;
+            if (mut == MUT_ACIDIC_BITE && drag == MONS_GOLDEN_DRAGON)
                 return MUTACT_FULL;
         }
         // Dex and HP changes are kept in all forms.
@@ -540,7 +537,7 @@ string describe_mutations(bool center_title)
     case SP_LAVA_ORC:
     {
         have_any = true;
-        std::string col = "darkgrey";
+        string col = "darkgrey";
 
         col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
         result += "<" + col + ">You have stony skin.</" + col + ">\n";
@@ -608,6 +605,24 @@ string describe_mutations(bool center_title)
         result += "The antennae on your head can retract.\n";
         have_any = true;
         break;
+
+    case SP_GARGOYLE:
+    {
+        result += "You are resistant to torment.\n";
+        result += "You are immune to poison.\n";
+        if (you.experience_level >= 14)
+            result += "You can fly continuously.\n";
+
+        ostringstream num;
+        num << 2 + you.experience_level * 2 / 5
+                 + max(0, you.experience_level - 7) * 2 / 5;
+        const string acstr = "Your stone body is very resilient (AC +"
+                                 + num.str() + ").";
+
+        result += _annotate_form_based(acstr, player_is_shapechanged()
+                                              && you.form != TRAN_STATUE);
+        break;
+    }
 
     default:
         break;
@@ -728,7 +743,7 @@ static const string _vampire_Ascreen_footer = (
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
 
-static const std::string _lava_orc_Ascreen_footer = (
+static const string _lava_orc_Ascreen_footer = (
 #ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
 #else
@@ -841,29 +856,29 @@ static void _display_temperature()
     clrscr();
     cgotoxy(1,1);
 
-    std::string result;
+    string result;
 
-    std::string title = "Temperature Effects";
+    string title = "Temperature Effects";
 
     // center title
     int offset = 39 - strwidth(title) / 2;
     if (offset < 0) offset = 0;
 
-    result += std::string(offset, ' ');
+    result += string(offset, ' ');
 
     result += "<white>";
     result += title;
     result += "</white>\n\n";
 
     const int lines = TEMP_MAX + 1; // 15 lines plus one for off-by-one.
-    std::string column[lines];
+    string column[lines];
 
     for (int t = 1; t <= TEMP_MAX; t++)  // lines
     {
-        std::string text;
-        std::ostringstream ostr;
+        string text;
+        ostringstream ostr;
 
-        std::string colourname = temperature_string(t);
+        string colourname = temperature_string(t);
 #define F(x) stringize_glyph(dchar_glyph(DCHAR_FRAME_##x))
         if (t == TEMP_MAX)
             text = "  " + F(TL) + F(HORIZ) + "MAX" + F(HORIZ) + F(HORIZ) + F(TR);
@@ -1183,7 +1198,9 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_STRONG,              MUT_WEAK,             1},
         { MUT_CLEVER,              MUT_DOPEY,            1},
         { MUT_AGILE,               MUT_CLUMSY,           1},
+#if TAG_MAJOR_VERSION == 34
         { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,    1},
+#endif
         { MUT_ROBUST,              MUT_FRAIL,            1},
         { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,        1},
         { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,      1},
@@ -1325,9 +1342,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species == SP_GREEN_DRACONIAN && mutat == MUT_SPIT_POISON)
         return true;
 
-    // Only Draconians can get wings.
-    if (!player_genus(GENPC_DRACONIAN) && mutat == MUT_BIG_WINGS)
+    // Only Draconians (and gargoyles) can get wings.
+    if (!player_genus(GENPC_DRACONIAN) && you.species != SP_GARGOYLE
+        && mutat == MUT_BIG_WINGS)
+    {
         return true;
+    }
 
     // Vampires' healing and thirst rates depend on their blood level.
     if (you.species == SP_VAMPIRE
@@ -1375,6 +1395,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     {
         return true;
     }
+
+    // Already immune.
+    if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)
+        return true;
 
     equipment_type eq_type = EQ_NONE;
 
@@ -1433,7 +1457,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
-static bool _undead_rot(bool is_beneficial_mutation)
+bool undead_mutation_rot(bool is_beneficial_mutation)
 {
     if (you.is_undead == US_SEMI_UNDEAD)
     {
@@ -1501,7 +1525,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
 
         // Zin's protection.
-        if (you.religion == GOD_ZIN
+        if (you_worship(GOD_ZIN)
             && (x_chance_in_y(you.piety, MAX_PIETY)
                 || x_chance_in_y(you.piety, MAX_PIETY + 22)))
         {
@@ -1512,7 +1536,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (_undead_rot(beneficial) && !demonspawn)
+    if (undead_mutation_rot(beneficial) && !demonspawn)
     {
         if (no_rot)
             return false;
@@ -1726,7 +1750,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
 
     case MUT_DEMONIC_GUARDIAN:
-        if (you.religion == GOD_OKAWARU)
+        if (you_worship(GOD_OKAWARU))
         {
             mpr("Your demonic guardian will not assist you as long as you "
                 "worship Okawaru.", MSGCH_MUTATION);
@@ -1876,7 +1900,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
         }
 
-        if (_undead_rot(false))
+        if (undead_mutation_rot(false))
             return false;
     }
 
@@ -2012,11 +2036,9 @@ string mutation_name(mutation_type mut, int level, bool colour)
         || mut == MUT_AGILE || mut == MUT_WEAK
         || mut == MUT_DOPEY || mut == MUT_CLUMSY)
     {
-        ostringstream ostr;
-        ostr << mdef.have[0] << level << ").";
-        result = ostr.str();
+        level = min(level, 2);
     }
-    else if (mut == MUT_ICEMAIL)
+    if (mut == MUT_ICEMAIL)
     {
         ostringstream ostr;
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
@@ -2447,16 +2469,7 @@ int how_mutated(bool all, bool levels)
                 continue;
 
             if (levels)
-            {
-                // These allow for 14 levels.
-                if (i == MUT_STRONG || i == MUT_CLEVER || i == MUT_AGILE
-                    || i == MUT_WEAK || i == MUT_DOPEY || i == MUT_CLUMSY)
-                {
-                    j += (you.mutation[i] / 5 + 1);
-                }
-                else
-                    j += you.mutation[i];
-            }
+                j += you.mutation[i];
             else
                 j++;
         }
@@ -2509,7 +2522,7 @@ static bool _balance_demonic_guardian()
 void check_demonic_guardian()
 {
     // Don't spawn guardians with Oka, they're a huge pain.
-    if (you.religion == GOD_OKAWARU)
+    if (you_worship(GOD_OKAWARU))
         return;
 
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
@@ -2590,7 +2603,7 @@ void check_antennae_detect()
 
                 if (mon->friendly())
                     mc = MONS_SENSED_FRIENDLY;
-                else if (you.religion == GOD_ASHENZARI
+                else if (you_worship(GOD_ASHENZARI)
                          && !player_under_penance())
                 {
                     mc = ash_monster_tier(mon);
@@ -2627,8 +2640,10 @@ int handle_pbd_corpses(bool do_rot)
     {
         for (stack_iterator j(*ri); j; ++j)
         {
-            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY
-                && j->special > 50)
+            if (j->base_type == OBJ_CORPSES
+                && j->sub_type == CORPSE_BODY
+                && j->special > 50
+                && !j->props.exists("never_hide"))
             {
                 ++corpse_count;
 

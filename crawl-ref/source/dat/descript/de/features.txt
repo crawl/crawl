@@ -132,23 +132,6 @@ stärksten und erfahrensten Abenteurer können hier sterben. Allerdings enthalte
 diese Hallen einige Runen und viele wertvolle Items. Es ist deutlich leichter,
 hineinzukommen, als wieder herauszukommen.
 %%%%
-A gas trap
-
-Glücklicherweise hast du diese Falle bemerkt, denn sie hätte dich mit einer
-Wolke tödlichen Gases umhüllt. Du weißt nicht, welche Art von Gas es ist -
-vielleicht ist es einfach nur Giftgas, vielleicht sind es mutagene Dämpfe oder
-entzündlicher Dunst – oder etwas noch schlimmeres.
-%%%%
-A gas trap:quote
-
-„Gut Ihre Gnade' hatte ich Zimmer für solch einen Gewitter innerhalb meiniger
-alte Därme, 'tis nicht im Grund ich konnte Sie dasselbe und lebend entlassen,
-um sich bei Gott für sich zu bedanken. Er hat wirklich so bescheidene Dienerin
-wodurch zu shew seine Macht gewählt. Nein, 'tis nicht ich yt haben broughte
-hervor dieser reiche o'ermastering Nebel, diese duftende Düsterkeit, so beten
-Sie Sie suche Sie weiter.“
-    -Mark Twain, „1601“, 1880.
-%%%%
 A gate to the Realm of Zot
 
 Dieses Tor führt zum Zot-Reich, der letzten Etappe deiner Suche, denn seine
@@ -472,6 +455,10 @@ A staircase back to the Dungeon
 
 Diese Treppe führt zurück zur Vertrautheit des Verlieses.
 %%%%
+A staircase back to the Forest
+
+Diese Treppe führt zurück in die relative Sicherheit des Waldes.
+%%%%
 A staircase back to the Lair
 
 Diese Treppe führt zurück zum Lager der Bestien.
@@ -523,9 +510,10 @@ A staircase to the Orcish Mines
 Ein Eingang zu den Minen der Orks, gefüllt mit ihrem Gold, aber heimtückisch
 und voller Fallen.
 %%%%
-A staircase to the Dwarven Hall
+A staircase to the Enchanted Forest
 
-Ein Eingang zur gut gemachten Halle der Zwerge. Du glaubst, Ale zu riechen.
+Am anderen Ende dieser Treppe liegt die bewaldete Heimat der Spriggans, Tengu,
+Faunen und allerlei schrecklichen Flüche.
 %%%%
 A staircase to the Shoals
 
@@ -712,11 +700,6 @@ An iron grate
 Dieses Eisengitter sieht verrostet aus, als ob es recht leicht mit einem
 Zauberspruch oder einem Zauberstab zerstört werden könnte. Es ist aber zu
 stabil, um von Hand zerbrochen zu werden.
-%%%%
-An iron tree
-
-Eine bemerkenswerte Darstellung der Natur im Frühjahr, gemacht völlig aus
-Eisen. Es sieht sehr fein – fast lebendig aus.
 %%%%
 An open door
 
@@ -1039,11 +1022,6 @@ man das Wasser fließen.
 A glass window
 
 Ein pockiges Fenster aus extrem hartem Glas.
-%%%%
-A granite statue of a fallen hero
-
-Die lebensgroße Granitstatue eines Zwergen, der diese Halle bewacht. Du fühlst
-dich von ihr beobachtet.
 %%%%
 An elephant-shaped statue
 

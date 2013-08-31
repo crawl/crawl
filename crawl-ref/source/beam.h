@@ -181,7 +181,7 @@ public:
 
     kill_category whose_kill() const;
 
-    actor* agent() const;
+    actor* agent(bool ignore_reflections = false) const;
 
     void fire();
 

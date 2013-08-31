@@ -9,29 +9,13 @@
 
 #include "externs.h"
 #include "branch.h"
+#include "coord.h"
+#include "env.h"
 #include "errors.h"
 #include "libutil.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
-
-enum distrib_type
-{
-    FLAT, // full chance throughout the range
-    SEMI, // 50% chance at range ends, 100% in the middle
-    PEAK, // 0% chance just outside range ends, 100% in the middle, range
-          // ends typically get ~20% or more
-    UP,   // linearly from near-zero to 100%, increasing with depth
-    DOWN, // linearly from 100% at the start to near-zero
-};
-
-typedef struct
-{
-    int minr;
-    int maxr;
-    int rarity; // 0..1000
-    distrib_type distrib;
-    monster_type mons;
-} pop_entry;
 
 #include "mon-pick-data.h"
 
@@ -58,8 +42,8 @@ int branch_ood_cap(branch_type branch)
 int mons_depth(monster_type mcls, branch_type branch)
 {
     // legacy function, until ZotDef is ported
-    for (const pop_entry *pe = population[branch].pop; pe->mons; pe++)
-        if (pe->mons == mcls)
+    for (const pop_entry *pe = population[branch].pop; pe->value; pe++)
+        if (pe->value == mcls)
         {
             if (pe->distrib == UP)
                 return pe->maxr;
@@ -76,8 +60,8 @@ int mons_depth(monster_type mcls, branch_type branch)
 // To be axed once ZotDef is ported.
 int mons_rarity(monster_type mcls, branch_type branch)
 {
-    for (const pop_entry *pe = population[branch].pop; pe->mons; pe++)
-        if (pe->mons == mcls)
+    for (const pop_entry *pe = population[branch].pop; pe->value; pe++)
+        if (pe->value == mcls)
         {
             // A rough and wrong conversion of new-style linear rarities to
             // old quadratic ones, with some compensation for distribution
@@ -103,7 +87,7 @@ monster_type pick_monster_no_rarity(branch_type branch)
     if (!population[branch].count)
         return MONS_0;
 
-    return population[branch].pop[random2(population[branch].count)].mons;
+    return population[branch].pop[random2(population[branch].count)].value;
 }
 
 monster_type pick_monster_by_hash(branch_type branch, uint32_t hash)
@@ -111,82 +95,68 @@ monster_type pick_monster_by_hash(branch_type branch, uint32_t hash)
     if (!population[branch].count)
         return MONS_0;
 
-    return population[branch].pop[hash % population[branch].count].mons;
-}
-
-static int _rarity_at(const pop_entry *pop, int depth)
-{
-    int rar = pop->rarity;
-    int len = pop->maxr - pop->minr;
-    switch (pop->distrib)
-    {
-    case FLAT: // 100% everywhere
-        return rar;
-
-    case SEMI: // 100% in the middle, 50% at the edges
-        if (len)
-            len *= 2;
-        else
-            len += 2; // a single-level range
-        return rar * (len - abs(pop->minr + pop->maxr - 2 * depth))
-                   / len;
-
-    case PEAK: // 100% in the middle, small at the edges, 0% outside
-        len += 2; // we want it to zero outside the range, not at the edge
-        return rar * (len - abs(pop->minr + pop->maxr - 2 * depth))
-                   / len;
-
-    case UP:
-        return rar * (depth - pop->minr + 1) / (len + 1);
-
-    case DOWN:
-        return rar * (pop->maxr - depth + 1) / (len + 1);
-    }
-
-    die("bad distrib");
+    return population[branch].pop[hash % population[branch].count].value;
 }
 
 monster_type pick_monster(level_id place, mon_pick_vetoer veto)
 {
-    struct { monster_type mons; int rarity; } valid[NUM_MONSTERS];
-    int nvalid = 0;
-    int totalrar = 0;
-
     ASSERT(place.is_valid());
-    for (const pop_entry *pop = population[place.branch].pop; pop->mons; pop++)
-    {
-        if (place.depth < pop->minr || place.depth > pop->maxr)
-            continue;
+    return pick_monster_from(population[place.branch].pop, place.depth, veto);
+}
 
-        if (veto && (*veto)(pop->mons))
-            continue;
+monster_type pick_monster(level_id place, monster_picker &picker, mon_pick_vetoer veto)
+{
+    ASSERT(place.is_valid());
+    return picker.pick_with_veto(population[place.branch].pop, place.depth, MONS_0, veto);
+}
 
-        int rar = _rarity_at(pop, place.depth);
-        ASSERT(rar > 0);
+monster_type pick_monster_from(const pop_entry *fpop, int depth,
+                               mon_pick_vetoer veto)
+{
+    // XXX: If creating/destroying instances has performance issues, cache a
+    // static instance
+    monster_picker picker = monster_picker();
+    return picker.pick_with_veto(fpop, depth, MONS_0, veto);
+}
 
-        valid[nvalid].mons = pop->mons;
-        valid[nvalid].rarity = rar;
-        totalrar += rar;
-        nvalid++;
-    }
+monster_type monster_picker::pick_with_veto(const pop_entry *weights,
+                                            int level, monster_type none,
+                                            mon_pick_vetoer vetoer)
+{
+    _veto = vetoer;
+    return pick(weights, level, none);
+}
 
-    if (!nvalid)
-        return MONS_0;
+// Veto specialisation for the monster_picker class; this simply calls the
+// stored veto function. Can subclass further for more complex veto behaviour.
+bool monster_picker::veto(monster_type mon)
+{
+    return _veto && _veto(mon);
+}
 
-    totalrar = random2(totalrar); // the roll!
+bool positioned_monster_picker::veto(monster_type mon)
+{
+    // Actually pick a monster that is happy where we want to put it.
+    // Fish zombies on land are helpless and uncool.
+    if (!in_bounds(pos) || !monster_habitable_grid(mon, grd(pos)))
+        return true;
+    // Optional positional veto
+    if (posveto && posveto(mon, pos)) return true;
+    return monster_picker::veto(mon);
+}
 
-    for (int i = 0; i < nvalid; i++)
-        if ((totalrar -= valid[i].rarity) < 0)
-            return valid[i].mons;
-
-    die("mon-pick roll out of range");
+monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto)
+{
+    monster_picker picker = monster_picker();
+    return pick_monster_all_branches(absdepth0, picker, veto);
 }
 
 // Used for picking zombies when there's nothing native.
 // TODO: cache potential zombifiables for the given level/size, with a
 // second pass to select ones that have a skeleton/etc and can be placed in
 // a given spot.
-monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto)
+monster_type pick_monster_all_branches(int absdepth0, monster_picker &picker,
+                                       mon_pick_vetoer veto)
 {
     monster_type valid[NUM_MONSTERS];
     int rarities[NUM_MONSTERS];
@@ -199,20 +169,21 @@ monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto)
         if (depth < 1 || depth > branch_ood_cap((branch_type)br))
             continue;
 
-        for (const pop_entry *pop = population[br].pop; pop->mons; pop++)
+        for (const pop_entry *pop = population[br].pop; pop->value; pop++)
         {
             if (depth < pop->minr || depth > pop->maxr)
                 continue;
 
-            if (veto && (*veto)(pop->mons))
+            if (veto && (*veto)(pop->value)
+                || !veto && picker.veto(pop->value))
                 continue;
 
-            int rar = _rarity_at(pop, depth);
+            int rar = picker.rarity_at(pop, depth);
             ASSERT(rar > 0);
 
-            monster_type mons = pop->mons;
+            monster_type mons = pop->value;
             if (!rarities[mons])
-                valid[nvalid++] = pop->mons;
+                valid[nvalid++] = pop->value;
             if (rarities[mons] < rar)
                 rarities[mons] = rar;
         }

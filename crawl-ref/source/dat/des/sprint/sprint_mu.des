@@ -39,7 +39,7 @@ end
 #
 NAME:   dungeon_sprint_mu
 DESC:   Sprint III: "The Ten Rune Challenge"
-TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
+TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 ORIENT: encompass
 SHUFFLE:  hnw
 SHUFFLE:  NI
@@ -175,11 +175,11 @@ MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
-KITEM: * = potion of flight q:2 / potion of flight q:1 / any potion, \
- potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
+KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
+ potion of cure mutation ident:all q:2 / potion of cure mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly / honeycomb / choko, \
- scroll of remove curse q:2 / scroll of remove curse q:1 / any scroll, \
- scroll of identify q:2 / scroll of identify q:1 / any scroll, \
+ scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
+ scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation / potion of decay / potion of strong poison
 SUBST: T = t.
@@ -208,11 +208,11 @@ MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
-KITEM: * = potion of flight q:2 / potion of flight q:1 / any potion, \
- potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
+KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
+ potion of cure mutation ident:all q:2 / potion of cure mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly / honeycomb / choko, \
- scroll of remove curse q:2 / scroll of remove curse q:1 / any scroll, \
- scroll of identify q:2 / scroll of identify q:1 / any scroll, \
+ scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
+ scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation / potion of decay / potion of strong poison
 
@@ -244,9 +244,9 @@ KMONS: e = patrolling deep elf priest ; long sword ego:holy_wrath
 KITEM: e = potion of curing / potion of heal wounds / potion of cure mutation
 KFEAT: O = altar_okawaru
 KFEAT: T = altar_trog
-KMONS: o = patrolling human ; potion of might
+KMONS: o = patrolling human ; potion of might ident:all
 KITEM: o = any armour
-KMONS: t = patrolling human ; potion of berserk rage
+KMONS: t = patrolling human ; potion of berserk rage ident:all
 KITEM: t = any weapon
 KFEAT: C = altar_cheibriados
 KFEAT: F = altar_fedhas
@@ -803,7 +803,7 @@ MONS: spriggan defender hd:5 hp:55 ; dagger
 MONS: silver statue / orange crystal statue
 MONS: crystal golem hd:10 hp:130, skeletal warrior
 KMONS: 2 = giant eyeball
-KITEM: 2 = q:10 scroll of identify
+KITEM: 2 = q:10 scroll of identify ident:all
 KMONS: P = plant
 SUBST: P = PPPPPPPPP.
 
@@ -832,8 +832,9 @@ KMONS: a = patrolling Wiglaf hp:100 ; war axe ego:holy_wrath
 KMONS: b = patrolling Frances hp:150 ; war axe ego:holy_wrath \
  . blowgun . needle ego:curare q:7
 :end
-KITEM: & = lamp of fire, scroll of acquirement, scroll of acquirement / \
-  w:15 scroll of torment, scroll of acquirement / w:25 scroll of torment
+KITEM: & = lamp of fire, scroll of acquirement ident:all, \
+ scroll of acquirement ident:all / w:15 scroll of torment ident:all, \
+ scroll of acquirement ident:all / w:25 scroll of torment ident:all
 NSUBST: L = 1:& / *:l
 KMONS: A = patrolling Azrael
 KITEM: " = any weapon, any armour, any wand, gold, strawberry
@@ -943,8 +944,9 @@ SUBST: f = f..
 NSUBST: . = 15:M / *:.
 KMONS: M = very ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
-KITEM: " = ring of flight, potion of flight q:3, scroll of acquirement, \
- wand of disintegration / wand of fire, acquire gold, ring of protection from fire
+KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
+ scroll of acquirement ident:all, wand of disintegration / wand of fire, \
+ acquire gold, ring of protection from fire ident:all
 
 COLOUR: #~^ = yellow
 KFEAT: # = closed_door
@@ -1105,7 +1107,7 @@ MONS: patrolling guardian mummy, patrolling sphinx
 KFEAT: - = needle trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
-KITEM: ? = scroll of acquirement q:5
+KITEM: ? = scroll of acquirement ident:all q:5
 COLOUR: X = lightgrey
 COLOUR: # = yellow
 KFEAT: # = closed_door
@@ -1270,7 +1272,7 @@ MONS: patrolling the iron giant ; giant club unrand:skullcrusher
 MONS: iron dragon, iron devil, patrolling hell sentinel, metal gargoyle, iron golem
 KMONS: & = dispater
 KITEM: * = superb_item, superb_item, superb_item
-KITEM: ? = star_item, star_item, scroll of enchant armour q:4
+KITEM: ? = star_item, star_item, scroll of enchant armour ident:all q:4
 : acq_on_sight(_G, '$', {"armour","armour"})
 KITEM: % = iron rune of zot
 KFEAT: ^ = blade trap
@@ -1310,7 +1312,7 @@ KMONS: 3 = brimstone fiend
 NSUBST: l = 1:1 / *:l
 KITEM: % = obsidian rune of zot
 KITEM: $ = superb_item, any, any
-KITEM: ? = superb_item, superb_item, scroll of enchant weapon III q:4
+KITEM: ? = superb_item, superb_item, scroll of enchant weapon III ident:all q:4
 : acq_on_sight(_G, '!', {"weapon","weapon"})
 MARKER:  G = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
@@ -1360,8 +1362,8 @@ NSUBST: g = 1:+ / *:c
 KITEM: 1 = icy rune of zot
 KITEM: 2 = superb_item, star_item
 KMONS: ! = patrolling ice fiend
-KITEM: ! = potion of resistance q:3, potion of agility q:3, cloak ego:preservation, \
-  wand of hasting
+KITEM: ! = potion of resistance ident:all q:3, potion of agility ident:all q:3, \
+  cloak ego:preservation ident:type, wand of hasting ident:type
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
@@ -1404,7 +1406,8 @@ KITEM: 1 = bone rune of zot
 KMONS: % = patrolling greater mummy
 KITEM: % = superb_item, superb_item, star_item, star_item, any, any
 KMONS: ? = patrolling greater mummy
-KITEM: ? = potion of curing q:2, potion of heal wounds q:3, wand of heal wounds
+KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:3, \
+  wand of heal wounds ident:type
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey
 KFEAT: # = closed_door
@@ -1417,7 +1420,7 @@ SUBST: . = ..........2233445
 MARKER: ! = lua:fog_machine { \
                 pow_max = 1000, delay_min = 1, delay_max = 1, \
                 size = 1000, size_buildup_amnt = 111, \
-                size_buildup_time = 1, cloud_type = "gloom" }
+                size_buildup_time = 1, cloud_type = "purple smoke" }
 MAP
 ccccccc#cccccc
 c!..c....c..!c

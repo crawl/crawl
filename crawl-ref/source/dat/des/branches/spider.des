@@ -349,7 +349,7 @@ ENDMAP
 
 NAME:   spiders_nest_the_unseen
 TAGS:   no_item_gen no_monster_gen mini_float
-DEPTH:  Spider:3-5
+DEPTH:  Spider:3-
 MONS:   trapdoor spider, patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
 ITEM:   piece of ambrosia
@@ -374,7 +374,7 @@ ENDMAP
 
 NAME:   spiders_nest_ghost_moth_duel
 TAGS:   no_item_gen no_monster_gen mini_float
-DEPTH:  Spider:3-5
+DEPTH:  Spider:3-
 MONS:   ghost moth, tarantella
 ITEM:   piece of ambrosia
 MAP
@@ -824,7 +824,7 @@ xxx.zzzxxzz.1.'@
 ENDMAP
 
 NAME:   nicolae_orb_island
-DEPTH:  Spider:2-5
+DEPTH:  Spider:2-
 TAGS:   no_pool_fixup mini_float
 MONS:   generate_awake orb spider
 KPROP:  1'z = no_rtele_into
@@ -854,7 +854,7 @@ ENDMAP
 
 NAME:   nicolae_orb_stairs
 TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  Spider:2-5
+DEPTH:  Spider:2-
 MONS:   orb spider / nothing w:8
 SUBST:  s = x.
 SUBST:  w = www^
@@ -939,7 +939,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_arachne_temple
-DEPTH:  Spider:2-5
+DEPTH:  Spider:2-
 TAGS:   no_item_gen no_monster_gen no_trap_gen mini_float
 MONS:   spider, tarantella, wolf spider, redback, jumping spider
 FTILE:  -2 = FLOOR_SANDSTONE
@@ -1177,7 +1177,7 @@ ABxBA....x......x..
 ENDMAP
 
 NAME: nicolae_spider_stair_cavern
-DEPTH: Spider:2-5
+DEPTH: Spider:2-
 SHUFFLE: {[(
 SUBST: X = .x, . = .:100 ^:5
 KFEAT: ^ = web trap

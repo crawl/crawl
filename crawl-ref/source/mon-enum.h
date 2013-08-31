@@ -114,6 +114,7 @@ enum attack_flavour
     AF_PLAGUE,
     AF_WEAKNESS_POISON,
     AF_SHADOWSTAB,
+    AF_WATERPORT,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

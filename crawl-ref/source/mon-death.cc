@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief Contains monster death functionality, including Dowan and Duvessa,
- *        Kirke, Pikel, shedu and spirits.
+ *        Kirke, Pikel and shedu.
 **/
 
 #include "AppHdr.h"
@@ -357,7 +357,7 @@ void elven_twins_pacify(monster* twin)
 
     ASSERT(!mons->neutral());
 
-    if (you.religion == GOD_ELYVILON)
+    if (you_worship(GOD_ELYVILON))
         gain_piety(random2(mons->max_hit_points / (2 + you.piety / 20)), 2);
 
     if (mons_near(mons))
@@ -405,48 +405,6 @@ void elven_twins_unpacify(monster* twin)
         return;
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
-}
-
-/**
- * Spirit death effects.
- *
- * When a spirit dies of "nautral" causes, ie, it's FADING_AWAY timer runs out,
- * it summons a high-level monster. This function is only called for spirits
- * that have died as a result of the FADING_AWAY timer enchantment running out.
- *
- * @param spirit    The monster that died.
-**/
-void spirit_fades(monster *spirit)
-{
-    // XXX: No check for silence; summoned?
-    if (mons_near(spirit))
-        simple_monster_message(spirit, " fades away with a wail!", MSGCH_TALK);
-    else
-        mpr("You hear a distant wailing.", MSGCH_TALK);
-
-    const coord_def c = spirit->pos();
-
-    mgen_data mon = mgen_data(random_choose_weighted(
-                        10, MONS_ANGEL, 10, MONS_CHERUB,
-                        5, MONS_APIS, 2, MONS_PHOENIX,
-                        1, MONS_DAEVA, 1, MONS_PEARL_DRAGON,
-                      0), SAME_ATTITUDE(spirit),
-                      NULL, 0, 0, c,
-                      spirit->foe, 0);
-
-    if (spirit->alive())
-        monster_die(spirit, KILL_MISC, NON_MONSTER, true);
-
-    monster *new_mon = create_monster(mon);
-
-    if (!new_mon)
-        return;
-
-    if (mons_near(new_mon))
-        simple_monster_message(new_mon, " seeks to avenge the fallen spirit!", MSGCH_TALK);
-    else
-        mpr("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
-
 }
 
 /**

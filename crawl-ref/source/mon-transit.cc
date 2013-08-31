@@ -115,7 +115,7 @@ m_transit_list *get_transit_list(const level_id &lid)
 void add_monster_to_transit(const level_id &lid, const monster& m)
 {
     m_transit_list &mlist = the_lost_ones[lid];
-    mlist.push_back(m);
+    mlist.push_back(follower(m));
 
     dprf("Monster in transit to %s: %s", lid.describe().c_str(),
          m.name(DESC_PLAIN, true).c_str());
@@ -237,7 +237,7 @@ void place_transiting_items()
                                   pos, true);
 
         // List of items we couldn't place.
-        if (!copy_item_to_grid(*item, where_to_go, MHITNOT, 1, false, true))
+        if (!copy_item_to_grid(*item, where_to_go, 1, false, true))
             keep.push_back(*item);
     }
 
@@ -255,7 +255,7 @@ void apply_daction_to_transit(daction_type act)
         {
             monster* mon = &j->mons;
             if (mons_matches_daction(mon, act))
-                apply_daction_to_mons(mon, act, false);
+                apply_daction_to_mons(mon, act, false, true);
         }
     }
 }
@@ -346,9 +346,9 @@ void follower::restore_mons_items(monster& m)
 
 static bool _is_religious_follower(const monster* mon)
 {
-    return ((you.religion == GOD_YREDELEMNUL
-             || you.religion == GOD_BEOGH
-             || you.religion == GOD_FEDHAS)
+    return ((you_worship(GOD_YREDELEMNUL)
+             || you_worship(GOD_BEOGH)
+             || you_worship(GOD_FEDHAS))
                  && is_follower(mon));
 }
 

@@ -1,12 +1,12 @@
 %%%%
 CMD_REST
 
-回血并搜索
+在一定时间内休息并搜索周围环境
 %%%%
 CMD_REST verbose
 
-最多花费100个回合自动回血、回魔，并且搜索周围。
-休息过程中如果发现敌对怪物会立即中断休息。
+最多花费100个回合自动回血、回魔，并且搜索周围的环境。
+在此过程中如果发现敌对怪物会立即停止休息。
 %%%%
 CMD_EXPLORE
 
@@ -15,8 +15,8 @@ CMD_EXPLORE
 CMD_EXPLORE verbose
 
 让角色在当前层自动探索尚未去过的地方，根据自动拾取的设置自动收集物品。
-如果遇到敌对怪物、发现物品、或特殊设施，移动自行会中止
-，并且通告发现的物品或特殊设施。
+如果遇到敌对怪物、发现物品、或发现特殊设施，移动自行会中止，
+并且通告发现的物品或特殊设施。
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
@@ -28,7 +28,7 @@ CMD_INTERLEVEL_TRAVEL verbose
 %%%%
 CMD_USE_ABILITY
 
-使用神能或自己的异能
+使用神能或内在异能
 %%%%
 CMD_PRAY
 
@@ -36,8 +36,8 @@ CMD_PRAY
 %%%%
 CMD_PRAY verbose
 
-如果你信仰的神接受献祭，祈祷会献祭尸体或其他物品。另外，如果你站在祭坛上
-，祈祷会让你加入相应的教会。对某些神来说，祈祷有其他特殊效果。
+如果你信仰的神接受献祭，祈祷会献祭尸体或其他物品。另外，如果你站在祭坛上，
+祈祷会让你加入相应的教会。对某些神来说，祈祷有其他特殊效果。
 %%%%
 CMD_SEARCH_STASHES
 
@@ -73,11 +73,11 @@ CMD_DISPLAY_RELIGION
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-显示你信仰的神祗的好恶、教规，以及当前的信仰值和可用的神能。
+显示你信仰的神祗的好恶、教规，以及当前的虔诚度和可用的神能。
 %%%%
 CMD_DISPLAY_MUTATIONS
 
-显示突变
+显示游戏角色的突变
 %%%%
 CMD_DISPLAY_SKILLS
 
@@ -89,7 +89,7 @@ CMD_DISPLAY_CHARACTER_STATUS
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-显示活跃的附魔和一些其他信息。
+显示目前生效中的状态魔法和一些其他信息。
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
@@ -101,7 +101,7 @@ CMD_SAVE_GAME_NOW
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-保存游戏并退出。一旦继续游戏，存档就会被删除。
+保存游戏并退出。一旦你重新开始游戏，这个存档就会被删除。
 %%%%
 CMD_EDIT_PLAYER_TILE
 
@@ -117,7 +117,7 @@ CMD_DISPLAY_COMMANDS
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
-命令及选项等列表
+命令及选项等的列表
 %%%%
 CMD_CHARACTER_DUMP
 
@@ -125,7 +125,7 @@ CMD_CHARACTER_DUMP
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-将角色资料输出到morgue文件夹下的“玩家名.txt”，以便空闲时查看。
+将游戏角色的资料输出到morgue文件夹下的“玩家名.txt”，以便空闲时查看。
 文件记录内容包括主要属性、装备、魔法、技能、笔记等。
 %%%%
 CMD_AUTOFIGHT
@@ -134,7 +134,7 @@ CMD_AUTOFIGHT
 %%%%
 CMD_AUTOFIGHT verbose
 
-向最近的敌对怪物移动，用持用的武器进行攻击。
+向最近的敌对怪物移动，并且用你持用的武器对它进行攻击。
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
@@ -142,7 +142,7 @@ CMD_AUTOFIGHT_NOMOVE
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-用挥舞的武器攻击一个邻接的怪物
+用正在持用的武器攻击一个邻接的怪物
 %%%%
 CMD_WAIT
 
@@ -154,11 +154,11 @@ CMD_WAIT verbose
 %%%%
 CMD_DISPLAY_INVENTORY
 
-显示物品栏内容
+显示你携带的物品清单
 %%%%
 CMD_DISPLAY_INVENTORY verbose
 
-显示物品栏内容。
+显示你携带的物品清单。
 %%%%
 CMD_CAST_SPELL
 
@@ -170,11 +170,11 @@ CMD_CAST_SPELL verbose
 %%%%
 CMD_BUTCHER
 
-解剖尸体
+切碎尸体
 %%%%
 CMD_BUTCHER verbose
 
-解剖一个尸体成为肉块。
+将一具尸体切成肉块。
 %%%%
 CMD_MEMORISE_SPELL
 
@@ -182,7 +182,7 @@ CMD_MEMORISE_SPELL
 %%%%
 CMD_MEMORISE_SPELL verbose
 
-阅读一本拿在手里或站在上面的书，记忆一道法术。
+阅读一本手中或地上的魔法书，记忆一道法术。
 %%%%
 CMD_DROP
 
@@ -190,7 +190,7 @@ CMD_DROP
 %%%%
 CMD_DROP verbose
 
-丢弃你现在拥有的一个或多个物品。
+丢弃你目前持有的一件或多件物品。
 %%%%
 CMD_DISPLAY_MAP
 
@@ -218,19 +218,19 @@ CMD_MAP_ADD_WAYPOINT verbose
 %%%%
 CMD_MAP_EXCLUDE_AREA
 
-旅行禁场
+移动禁区
 %%%%
 CMD_MAP_EXCLUDE_AREA verbose
 
-创建一个旅行禁场，改变它的半径，或消除它。
+创建一个移动禁区，改变它的半径，或将它消除。
 %%%%
 CMD_MAP_CLEAR_EXCLUDES
 
-清除旅行禁场
+清除移动禁区
 %%%%
 CMD_MAP_CLEAR_EXCLUDES verbose
 
-擦除本层所有旅行禁场。
+清除本层的所有移动禁区。
 %%%%
 CMD_MAP_NEXT_LEVEL
 
@@ -238,7 +238,7 @@ CMD_MAP_NEXT_LEVEL
 %%%%
 CMD_MAP_NEXT_LEVEL verbose
 
-检查向下的一层。
+检查楼下的一层地城。
 %%%%
 CMD_MAP_PREV_LEVEL
 
@@ -246,7 +246,7 @@ CMD_MAP_PREV_LEVEL
 %%%%
 CMD_MAP_PREV_LEVEL verbose
 
-检查向上的一层。
+检查楼上的一层地城。
 %%%%
 CMD_MAP_GOTO_LEVEL
 
@@ -254,7 +254,7 @@ CMD_MAP_GOTO_LEVEL
 %%%%
 CMD_MAP_GOTO_LEVEL verbose
 
-跳转到指定分支地城的指定楼层。
+移动到到指定分支地城的指定楼层。
 %%%%
 CMD_MAP_FIND_UPSTAIR
 
@@ -278,7 +278,7 @@ CMD_MAP_FIND_YOU
 %%%%
 CMD_MAP_FIND_YOU verbose
 
-将地图光标移回你目前所在位置。
+将地图光标移回你目前所在的位置。
 %%%%
 CMD_MAP_FIND_PORTAL
 
@@ -286,7 +286,7 @@ CMD_MAP_FIND_PORTAL
 %%%%
 CMD_MAP_FIND_PORTAL verbose
 
-切换到本层上的下一个商店或传送门。
+跳转到本层的下一个商店或传送门。
 %%%%
 CMD_MAP_FIND_TRAP
 
@@ -294,7 +294,7 @@ CMD_MAP_FIND_TRAP
 %%%%
 CMD_MAP_FIND_TRAP verbose
 
-切换到本层上的下一个陷阱。
+跳转到本层的下一个陷阱。
 %%%%
 CMD_MAP_FIND_ALTAR
 
@@ -310,7 +310,7 @@ CMD_MAP_FIND_EXCLUDED
 %%%%
 CMD_MAP_FIND_EXCLUDED verbose
 
-切换到本层上的下一个旅行禁场。
+跳转到本层的下一个移动禁区。
 %%%%
 CMD_MAP_FIND_WAYPOINT
 
@@ -318,7 +318,7 @@ CMD_MAP_FIND_WAYPOINT
 %%%%
 CMD_MAP_FIND_WAYPOINT verbose
 
-切换到本层上的下一个导航点。
+跳转到本层的下一个导航点。
 %%%%
 CMD_MAP_FIND_STASH
 
@@ -326,5 +326,21 @@ CMD_MAP_FIND_STASH
 %%%%
 CMD_MAP_FIND_STASH verbose
 
-切换到本层上的下一个储藏点。
+跳转到本层的下一个储藏点。
+%%%%
+CMD_ZOOM_IN
+
+放大
+%%%%
+CMD_ZOOM_IN verbose
+
+放大地城画面
+%%%%
+CMD_ZOOM_OUT
+
+缩小
+%%%%
+CMD_ZOOM_OUT verbose
+
+缩小地城画面
 %%%%

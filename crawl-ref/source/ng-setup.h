@@ -6,7 +6,10 @@
 #ifndef NG_SETUP_H
 #define NG_SETUP_H
 
+#include "itemprop-enum.h"
+
 void give_basic_mutations(species_type speci);
+void autopickup_starting_ammo(missile_type missile);
 
 void newgame_make_item(int slot, equipment_type eqslot,
                        object_class_type base,

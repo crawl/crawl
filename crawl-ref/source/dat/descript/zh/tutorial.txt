@@ -6,9 +6,8 @@ tutorial intro
 %%%%
 tutorial1 start
 
-本课程中你将学习如何移动以及如何探索地城。
-你可以<localtiles>用<w>[鼠标]</w>单击某个你想去的地方来移动，或者
-</localtiles>使用<w>[方向键]</w>。
+本课程中你将学习如何移动以及如何探索地城。你可以<localtiles>用<w>[鼠标]</w
+>单击某个你想去的地方来移动，或者 </localtiles>使用<w>[方向键]</w>。
 %%%%
 tutorial1 go_on
 
@@ -171,15 +170,16 @@ tutorial2 resting_reminder
 tutorial2 eat_reminder
 
 记住，你可以按<w>[$cmd[CMD_BUTCHER]]</w><localtiles>或者><w>[Shift + 鼠标点击 ]
-</w>来切下尸体上的肉块，然后按<w>[$cmd[CMD_EAT]]</w><localtiles>或者<w>[鼠标点
-击]</w></localtiles>食用。
+</w>来切下尸体上的肉块，
+然后按<w>[$cmd[CMD_EAT]]</w><localtiles>或者<w>[鼠标点击]</w></localtiles
+>食用。
 %%%%
 tutorial2 compare_monster_desc
 
 <localtiles>通过<w>鼠标指针悬停</w></localtiles><console>按
 <w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></console><webtiles
->按<w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></webtiles>来查
-看这些怪物，并且比较它们的详细描述（<localtiles><w>[鼠标右击
+>按<w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></webtiles
+>来查看这些怪物，并且比较它们的详细描述（<localtiles><w>[鼠标右击
 ]</w></localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_D
 ESCRIBE]]</w></console><webtiles><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCR
 IBE]]</w></webtiles>），看看从哪个笼子通过才是最安全的。
@@ -285,13 +285,14 @@ altiles>来阅读这张卷轴。
 tutorial3 scroll_noautopickup
 
 在周围有怪物的时候，自动拾取不会生效。你可以现在就按<w>[$cmd[CMD_PICKUP]]</w><l
-ocaltiles>或<w>[点击]</w>你的角色</localtiles>来拾起它
-，或者你也可以先干掉附近的敌人然后再拾取它。
+ocaltiles>或<w>[点击]</w>你的角色</localtiles>来拾起它，
+或者你也可以先干掉附近的敌人然后再拾取它。
 %%%%
 tutorial3 ego_weapon
 
-有<lightblue>符文</lightblue>或<lightblue>发光</lightblue>词缀的物品要么有附加
-值，要么有特殊属性，也可能两个都有。你必须得按<w>[$cmd[CMD_WIELD_WEAPON]]</w><l
+有<lightblue>符文</lightblue>或<lightblue>发光</lightblue
+>词缀的物品要么有附加值，要么有特殊属性，也可能两个都有。
+你必须得按<w>[$cmd[CMD_WIELD_WEAPON]]</w><l
 ocaltiles>或在物品栏内的图标上<w>[鼠标点击]</w></localtiles
 >来装备这把弯刀才能知道它的具体属性。
 %%%%
@@ -300,13 +301,8 @@ tutorial3 inventory
 如果你想查阅新武器的描述，只要在物品栏（<w>[$cmd[CMD_DISPLAY_INVENTORY]]</w
 >）中找到并选中它即可。
 <localtiles>你也可以<w>[鼠标悬停]</w>或在物品栏内的图标上<w
->[右击]</w>来收到同样效果</localtiles>。另外要注意的是
-，所有与物品有关的指令在物品描述界面同样有效。
-%%%%
-tutorial3 battle
-
-如果你成功让一个怪物中毒了，暂时撤退并让毒药杀死它可能会比较好。如果有必要
-，你也可以暂时撤退来让伤势回复。
+>[右击]</w>来收到同样效果</localtiles>。另外要注意的是，
+所有与物品有关的指令在物品描述界面同样有效。
 %%%%
 tutorial3 downstairs
 
@@ -329,9 +325,9 @@ tutorial3 potion
 %%%%
 tutorial3 artefact_armour
 
-有<w>不寻常名字</w>的物品就是神器了。神器可能有各种特殊的属性。有些物品（例如这
-件披风）很有名，因此一开始就已经被鉴定；其他一些神器则是随机出现的
-，并且属性也是未知。
+有<w>不寻常名字</w>的物品就是神器了。神器可能有各种特殊的属性。
+有些物品（例如这件披风）很有名，因此一开始就已经被鉴定
+；其他一些神器则是随机出现的，并且属性也是未知。
 试试按<w>[$cmd[CMD_WEAR_ARMOUR]]</w><localtiles>或在物品栏中<w>鼠标点击 </w
 >来装备这件披风。
 %%%%
@@ -349,8 +345,8 @@ DESCRIBE]]</w> <localtiles>或<w>[鼠标悬停]</w>在墙上<w>[右击]</w></loc
 tutorial3 amulet
 
 你可以按<w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles>或在物品栏内<w>[鼠标点击]<
-/w></localtiles>来戴上一件首饰。有些首饰只要戴上就会自动鉴定
-，另一些则需要其他的鉴定方式。
+/w></localtiles>来戴上一件首饰。有些首饰只要戴上就会自动鉴定，
+另一些则需要其他的鉴定方式。
 %%%%
 tutorial3 scroll_id
 
@@ -385,16 +381,15 @@ tutorial3 autoexplore_reminder
 tutorial3 go_shopping
 
 你现在有钱去商店买东西啦！要想回到商店，最快捷的方法就是搜索它。按下<w>[$cmd[CM
-D_SEARCH_STASHES]]</w>然后输入"<w>商店</w>"。选中搜索到的结果
-，然后你就会向目标地点移动。
-<localtiles>你也可以<w>[点击]</w>指令面板上的搜索按钮
-，或者通过小地图来回到商店。</localtiles>
+D_SEARCH_STASHES]]</w>然后输入"<w>商店</w>"。选中搜索到的结果，
+然后你就会向目标地点移动。 <localtiles>你也可以<w>[点击]</w
+>指令面板上的搜索按钮，或者通过小地图来回到商店。</localtiles>
 %%%%
 tutorial3 optional_battle
 
-小心，前面有一场<lightred>困难的战斗</lightred>。你可以试试在战斗中使用你学到的
-知识，也可以尝试直奔那个小岛上的出口。不管怎么说，如果你还没在商店里买过东西
-，最好先去一下。
+小心，前面有一场<lightred>困难的战斗</lightred
+>。你可以试试在战斗中使用你学到的知识，也可以尝试直奔那个小岛上的出口。
+不管怎么说，如果你还没在商店里买过东西，最好先去一下。
 %%%%
 tutorial3 tutorial_end
 
@@ -444,8 +439,8 @@ tutorial5 dungeon_overview
 tutorial5 altar
 
 你可以站在祭坛上按<w>$cmd[CMD_PRAY]</w><localtiles>（或者点击<w>命令栏</w>或者
-<w>按住Shift点击</w>你的角色）</localtiles>来祈祷，这样你就可以知道这个神能给你
-什么好处，并且可以加入教会。
+<w>按住Shift点击</w>你的角色）</localtiles>来祈祷，
+这样你就可以知道这个神能给你什么好处，并且可以加入教会。
 如果你在宗教界面上按<w>!</w><localtiles>或<w>右键点击</w>界面</localtiles
 >，你还可以看到更详细的说明。
 
@@ -480,15 +475,15 @@ tutorial5 berserk
 %%%%
 tutorial5 exhaustion
 
-狂暴之后，你会感到筋疲力尽。在疲劳状态下，你无法再次狂暴
-，而且行动速度也会减慢。
-最好是按<w>$cmd[CMD_REST]</w><localtiles>（或通过<w>命令栏
-</w>）</localtiles>来休息一会，等到精力恢复了再出发。
+狂暴之后，你会感到筋疲力尽。在疲劳状态下，你无法再次狂暴，
+而且行动速度也会减慢。
+最好是按<w>$cmd[CMD_REST]</w><localtiles>（或通过<w>命令栏 </w>）</localtiles
+>来休息一会，等到精力恢复了再出发。
 %%%%
 tutorial5 hunger
 
-你无法在非常饥饿的时候狂暴，因此你应该随时携带一些食物。这意味着有的时候
-，你必须得选择是要把一具尸体吃掉还是将它献给塔洛格。
+你无法在非常饥饿的时候狂暴，因此你应该随时携带一些食物。这意味着有的时候，
+你必须得选择是要把一具尸体吃掉还是将它献给塔洛格。
 %%%%
 tutorial5 berserk2
 

@@ -47,8 +47,23 @@ enum tag_minor_version
     TAG_MINOR_TRAVEL_ALLY_PACE,    // Pace travel to slowest ally setting
     TAG_MINOR_AUTOMATIC_MANUALS,   // Manuals are now always studied
     TAG_MINOR_RM_GARGOYLE_DR,      // Gargoyle DR is redundant.
+    TAG_MINOR_STAT_ZERO,           // Stat zero doesn't cause death.
+    TAG_MINOR_BOX_OF_BEASTS_CHARGES, // Box of Beasts counts its charges.
+    TAG_MINOR_WAR_DOG_REMOVAL,     // War dogs become wolves, then disappear
+    TAG_MINOR_CANARIES,            // Canaries in save files.
+    TAG_MINOR_CHIMERA_GHOST_DEMON, // Use ghost demon
+    TAG_MINOR_MONSTER_PARTS,       // Flag the presence of ghost_demon (and more)
+    TAG_MINOR_OPTIONAL_PARTS,      // Make three big monster structs optional.
+    TAG_MINOR_SHORT_SPELL_TYPE,    // Spell types changed to short instead of byte
+    TAG_MINOR_FORGOTTEN_MAP,       // X^F can be undone.
+    TAG_MINOR_CONTAM_SCALE,        // Scale the magic contamination by a factor of 1000
+    TAG_MINOR_SUMMONER,            // Store summoner data.
+    TAG_MINOR_STAT_MUT,            // Flag for converting stat mutations
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
+
+// Define for save compatibility of dwant experimental branch only
+#define FORMICID_EXPERIMENTAL
 
 #endif

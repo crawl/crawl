@@ -145,7 +145,9 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARVEN_HALL:
+#endif
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
@@ -161,7 +163,9 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_SPIDER_NEST:
     case DNGN_ENTER_FOREST:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -234,7 +238,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_DUNGEON:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -273,7 +279,9 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARVEN_HALL:
+#endif
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
@@ -407,7 +415,7 @@ bool feat_is_altar(dungeon_feature_type grid)
 bool feat_is_player_altar(dungeon_feature_type grid)
 {
     // An ugly hack, but that's what religion.cc does.
-    return (you.religion != GOD_NO_GOD
+    return (!you_worship(GOD_NO_GOD)
             && feat_altar_god(grid) == you.religion);
 }
 
@@ -1590,14 +1598,20 @@ static const char *dngn_feature_names[] =
 "teleporter", "enter_portal_vault", "exit_portal_vault",
 "expired_portal",
 
-"enter_dwarven_hall", "enter_orcish_mines", "enter_lair",
+#if TAG_MAJOR_VERSION == 34
+"enter_dwarven_hall",
+#endif
+"enter_orcish_mines", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
 "enter_swamp", "enter_shoals", "enter_spider_nest",
 "enter_forest", "",
 
-"return_from_dwarven_hall", "return_from_orcish_mines",
+#if TAG_MAJOR_VERSION == 34
+"return_from_dwarven_hall",
+#endif
+"return_from_orcish_mines",
 "return_from_lair", "return_from_slime_pits",
 "return_from_vaults", "return_from_crypt",
 "return_from_hall_of_blades", "return_from_zot",
@@ -1624,6 +1638,9 @@ static const char *dngn_feature_names[] =
 "abyssal_stair",
 "badly_sealed_door",
 #endif
+
+"sealed_stair_down",
+"sealed_stair_up",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)
@@ -1938,4 +1955,57 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
     }
     else
         return false;
+}
+
+bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
+{
+    // ....  Prevent this arrangement by never placing a plant in a way that
+    // #P##  locally disconnects two adjacent cells.  We scan clockwise around
+    // ##.#  p looking for maximal contiguous sequences of traversable cells.
+    // #?##  If we find more than one (and they don't join up cyclically),
+    //       reject the configuration so the plant doesn't disconnect floor.
+    //
+    // ...   We do reject many non-problematic cases, such as this one; dpeg
+    // #P#   suggests doing a connectivity check in ruination after placing
+    // ...   plants, and removing cut-point plants then.
+
+    // First traversable index, last consecutive traversable index, and
+    // the next traversable index after last+1.
+    int first = -1, last = -1, next = -1;
+    int passable = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        coord_def q = p + Compass[i];
+
+        if (feat_is_traversable(grd(q), true))
+        {
+            ++passable;
+            if (first < 0)
+                first = i;
+            else if (last >= 0 && next < 0)
+            {
+                // Found a maybe-disconnected traversable cell.  This is only
+                // acceptable if it might connect up at the end.
+                if (first == 0)
+                    next = i;
+                else
+                    return true;
+            }
+        }
+        else
+        {
+            if (first >= 0 && last < 0)
+                last = i - 1;
+            else if (next >= 0)
+                return true;
+        }
+    }
+
+    // ?#.  Forbid this arrangement when the ? squares are walls.
+    // #P#  If multiple plants conspire to do something similar, that's
+    // ##?  fine: we just want to avoid the most common occurrences.
+    //      This would be an info leak (that at least one ? is not a wall)
+    //      were it not for the previous check.
+
+    return (passable <= 1 && !connectivity_only);
 }

@@ -181,6 +181,13 @@ Call Lost Soul cast
 
 @The_monster@ beckons forth a restless soul!
 %%%%
+Haste Plants cast
+
+@The_monster@ empowers the plants around itself!
+%%%%
+Druid's Call cast
+
+@The_monster@ calls out to the beasts of the land!
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
@@ -244,6 +251,10 @@ Chaos Breath cast
 Frenzy cast
 
 @The_monster@ convulses with anger.
+%%%%
+Volley of Thorns cast
+
+@The_monster@ fires a volley of thorns @at@ @target@.
 ########################################################################
 # Unique monsters
 ########################################################################
@@ -393,6 +404,26 @@ thrashing horror cast
 Airstrike wind drake cast
 
 @The_monster@ flaps its wings at @target@.
+%%%%
+dryad cast
+
+@The_monster@ calls out to the forest.
+%%%%
+Minor Healing dryad cast
+
+@The_monster@ draws upon the vitality of nature.
+%%%%
+Summon Water Elementals elemental wellspring cast
+
+The water around @The_monster@ rises up and takes form!
+%%%%
+Cause Fear satyr cast
+
+@The_monster@ plays a frightful melody on his pipes!
+%%%%
+Sleep satyr cast
+
+@The_monster@ plays a lulling melody on his pipes!
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
@@ -504,6 +535,10 @@ Heal Other priest cast
 Might Other priest cast
 
 @The_monster@ calls upon @possessive_God@ to strengthen @target@.
+%%%%
+Malign Offering priest cast
+
+@The_monster@ utters a dark prayer and points at @target@.
 %%%%
 priest cast targeted
 

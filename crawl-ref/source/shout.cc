@@ -22,6 +22,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-chimera.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
@@ -65,6 +66,14 @@ void handle_monster_shouts(monster* mons, bool force)
     // choose a random verb and loudness for them.
     shout_type  s_type = mons_shouts(mons->type, false);
 
+    // Chimera can take a random shout type from any of their
+    // three components
+    if (mons->type == MONS_CHIMERA)
+    {
+        monster_type acting = mons->ghost->acting_part != MONS_0
+            ? mons->ghost->acting_part : random_chimera_part(mons);
+        s_type = mons_shouts(acting, false);
+    }
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
     // Muted monsters can't shout at all.
@@ -291,6 +300,10 @@ bool check_awaken(monster* mons)
     if (you.berserk())
         return true;
 
+    // Vigilant monsters are always alerted
+    if (mons_class_flag(mons->type, M_VIGILANT))
+        return true;
+
     // I assume that creatures who can sense invisible are very perceptive.
     int mons_perc = 10 + (mons_intel(mons) * 4) + mons->hit_dice
                        + mons_sense_invis(mons) * 5;
@@ -406,8 +419,10 @@ void item_noise(const item_def &item, string msg, int loudness)
     // replace references to player name and god
     msg = replace_all(msg, "@player_name@", you.your_name);
     msg = replace_all(msg, "@player_god@",
-                      you.religion == GOD_NO_GOD ? "atheism"
+                      you_worship(GOD_NO_GOD) ? "atheism"
                       : god_name(you.religion, coinflip()));
+    msg = replace_all(msg, "@a_player_genus@",
+                          article_a(species_name(you.species, true)));
 
     mpr(msg.c_str(), channel);
 
@@ -501,8 +516,8 @@ bool noisy(int original_loudness, const coord_def& where,
                 noise_msg,
                 (scaled_loudness + 1) * 1000,
                 who,
-                0 | (mermaid? NF_MERMAID : 0)
-                | (message_if_unseen? NF_MESSAGE_IF_UNSEEN : 0)));
+                0 | (mermaid ? NF_MERMAID : 0)
+                | (message_if_unseen ? NF_MESSAGE_IF_UNSEEN : 0)));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means
@@ -664,7 +679,8 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
             break;
 
         case SENSE_WEB_VIBRATION:
-            if (!mons_class_flag(mi->type, M_WEB_SENSE))
+            if (!mons_class_flag(mi->type, M_WEB_SENSE)
+                && !mons_class_flag(get_chimera_legs(*mi), M_WEB_SENSE))
                 break;
             if (!one_chance_in(4))
             {

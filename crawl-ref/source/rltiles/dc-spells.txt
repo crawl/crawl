@@ -34,6 +34,7 @@ battlesphere BATTLESPHERE
 dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
+searing_ray SEARING_RAY
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -64,6 +65,10 @@ mass_confusion MASS_CONFUSION
 slow SLOW
 sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE
+infusion INFUSION
+song_of_slaying SONG_OF_SLAYING
+song_of_shielding SONG_OF_SHIELDING
+spectral_weapon SPECTRAL_WEAPON
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
@@ -170,7 +175,6 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
 polymorph POLYMORPH
-homunculus HOMUNCULUS
 beastly_appendage BEASTLY_APPENDAGE
 
 %sdir gui/spells

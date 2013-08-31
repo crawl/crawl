@@ -225,7 +225,7 @@ class CrawlProcessHandlerBase(object):
         loader = DynamicTemplateLoader.get(templ_path)
         templ = loader.load("game.html")
         game_html = templ.generate(version = v)
-        watcher.send_message("game_client", content = game_html)
+        watcher.send_message("game_client", version = v, content = game_html)
 
     def stop(self):
         if self.process:

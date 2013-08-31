@@ -325,11 +325,6 @@ Una pieza curva de madera con una cuerda atada entre sus extremos, diseñada
 para disparar flechas. Hace bastante daño en combate, y alguien con habilidad
 puede usarlo con gran eficiencia.
 %%%%
-box of beasts
-
-Una caja mágica que contiene muchas bestias salvajes. Es posible levantar la
-tapa para permitir que salgan.
-%%%%
 bread ration
 
 Pan un poco rancio, aunque sustancioso.
@@ -514,10 +509,6 @@ eggplant
 
 Una berenjena podrida que puedes arrojar a los desarrolladores de Crawl. (Si
 ves este mensaje, se trata de un error del programa.)
-%%%%
-empty ebony casket
-
-Una caja mágica cuyo poder se ha agotado.
 %%%%
 eudemon blade
 
@@ -1014,12 +1005,6 @@ Este poderoso anillo puede ser activado para ocultar a su portador de la vista
 de los demás, pero incrementa la velocidad de su metabolismo en gran medida
 mientras lo hace.
 %%%%
-ring of life protection
-
-Este anillo bendito protege la fuerza vital de su portador de energías
-negativas, haciéndole parcialmente inmune a los efectos de absorción de vida de
-los no-muertos y de la necromancia.
-%%%%
 ring of magical power
 
 Este anillo incrementa las reservas mágicas de su portador.
@@ -1097,14 +1082,6 @@ rod of demonology
 
 Esta vara contiene hechizos de invocación, algunos de los cuales pueden liberar
 demonios hacia este mundo desprevenido.
-%%%%
-rod of destruction
-
-Esta vara contiene hechizos de caos y destrucción.
-%%%%
-rod of striking
-
-Esta vara permite al portador atacar a distancia.
 %%%%
 rod of venom
 
@@ -1262,10 +1239,6 @@ Un vegetal repulsivo en forma de pepino.
 spear
 
 Un palo largo con una punta de metal en un extremo, para ser asido o lanzado.
-%%%%
-spiked flail
-
-Un flagelo con largos pinchos en su cabeza de metal.
 %%%%
 staff of air
 

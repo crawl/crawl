@@ -5,6 +5,7 @@ enum show_item_type
 {
     SHOW_ITEM_NONE,
     SHOW_ITEM_ORB,
+    SHOW_ITEM_RUNE,
     SHOW_ITEM_WEAPON,
     SHOW_ITEM_ARMOUR,
     SHOW_ITEM_WAND,

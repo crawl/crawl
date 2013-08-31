@@ -24,6 +24,10 @@ Demonspawn
 Dämonenbruten sind halb Mensch, halb Dämon. Sie erlangen während ihres
 Wachstums starke Mutationen.
 %%%%
+Djinni
+
+Die Dschinn sind Geister des Feuers, für die Magie die Essenz des Lebens ist.
+%%%%
 Draconian
 
 Draken sind vielseitige Hybride. Sie werden mit Level 7 erwachsen und
@@ -39,6 +43,11 @@ Ghoul
 
 Ein Untoter, dazu verdammt auf ewig zu verrotten. Sie sind immer auf der Suche
 nach Faulem, um es zu essen...
+%%%%
+Gargoyle
+
+Hergestellt aus lebendem Stein, haben Gargoyles eine übernatürliche Affinität
+für  Erde.
 %%%%
 Halfling
 
@@ -69,6 +78,11 @@ Kobold
 
 Klein, bösartig und ein bisschen gebrechlich, aber vielseitig begabt. Sie
 können und werden jede Art von Fleisch essen.
+%%%%
+Lava Orc
+
+Diese Meister der Erde und Feuer Magie kommen von tief unter dem Dungeon. Ihre
+Fähigkeiten ändern sich mit ihrer Temperatur.
 %%%%
 Merfolk
 

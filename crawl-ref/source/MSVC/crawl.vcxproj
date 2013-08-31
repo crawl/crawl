@@ -97,7 +97,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|Win32'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h
@@ -126,7 +126,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Tiles|x64'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h
@@ -157,7 +157,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Tiles|Win32'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h
@@ -186,7 +186,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Tiles|x64'">
     <PreBuildEvent>
-      <Message>Generating build-specfic headers...</Message>
+      <Message>Generating build-specific headers...</Message>
       <Command>set PATH=c:\cygwin\bin%3bc:\msysgit\mingw\bin%3bc:\msysgit\bin%3bc:\mingw\bin%3b%25PATH%25
 cd $(SolutionDir)\..\
 perl.exe "util/gen_ver_msvc.pl" build.h
@@ -354,6 +354,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\l_you.cc" />
     <ClCompile Include="..\lev-pand.cc" />
     <ClCompile Include="..\melee_attack.cc" />
+    <ClCompile Include="..\mon-chimera.cc" />
     <ClCompile Include="..\mon-death.cc" />
     <ClCompile Include="..\mon-ench.cc" />
     <ClCompile Include="..\mon-stealth.cc" />
@@ -467,6 +468,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\spl-miscast.cc" />
     <ClCompile Include="..\spl-monench.cc" />
     <ClCompile Include="..\spl-other.cc" />
+    <ClCompile Include="..\spl-pick.cc" />
     <ClCompile Include="..\spl-selfench.cc" />
     <ClCompile Include="..\spl-summoning.cc" />
     <ClCompile Include="..\spl-tornado.cc" />
@@ -633,6 +635,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\crash.h" />
     <ClInclude Include="..\ctest.h" />
     <ClInclude Include="..\dactions.h" />
+    <ClInclude Include="..\data-index.h" />
     <ClInclude Include="..\database.h" />
     <ClInclude Include="..\dbg-crsh.h" />
     <ClInclude Include="..\dbg-maps.h" />
@@ -715,6 +718,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\matrix.h" />
     <ClInclude Include="..\melee_attack.h" />
     <ClInclude Include="..\mi-enum.h" />
+    <ClInclude Include="..\mon-chimera.h" />
     <ClInclude Include="..\mon-death.h" />
     <ClInclude Include="..\mon-ench.h" />
     <ClInclude Include="..\mon-flags.h" />
@@ -792,6 +796,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\process_desc.h" />
     <ClInclude Include="..\props.h" />
     <ClInclude Include="..\quiver.h" />
+    <ClInclude Include="..\random-pick.h" />
     <ClInclude Include="..\random-var.h" />
     <ClInclude Include="..\random-weight.h" />
     <ClInclude Include="..\random.h" />
@@ -822,6 +827,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\spl-miscast.h" />
     <ClInclude Include="..\spl-monench.h" />
     <ClInclude Include="..\spl-other.h" />
+    <ClInclude Include="..\spl-pick.h" />
     <ClInclude Include="..\spl-selfench.h" />
     <ClInclude Include="..\spl-summoning.h" />
     <ClInclude Include="..\spl-transloc.h" />

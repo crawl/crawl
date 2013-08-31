@@ -42,8 +42,8 @@
 // Note that they don't have to be equal, but it is important to make
 // sure that they're set so that the spending limit will always allow
 // for 1 skill point to be earned.
-#define MAX_COST_LIMIT           250
-#define MAX_SPENDING_LIMIT       250
+#define MAX_COST_LIMIT           265
+#define MAX_SPENDING_LIMIT       265
 
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 static void _train_skills(int exp, const int cost, const bool simu);
@@ -64,11 +64,11 @@ unsigned int skill_cost_needed(int level)
 int calc_skill_cost(int skill_cost_level)
 {
     const int cost[] = { 1, 2, 3, 4, 5,            // 1-5
-                         7, 9, 12, 15, 18,         // 6-10
-                         28, 40, 56, 76, 100,      // 11-15
-                         130, 165, 195, 215, 230,  // 16-20
-                         240, 248, 250, 250, 250,  // 21-25
-                         250, 250 };
+                         7, 8, 9, 13, 22,         // 6-10
+                         37, 48, 73, 98, 125,      // 11-15
+                         145, 170, 190, 212, 225,  // 16-20
+                         240, 255, 260, 265, 265,  // 21-25
+                         265, 265 };
 
     ASSERT_RANGE(skill_cost_level, 1, 27 + 1);
     return cost[skill_cost_level - 1];
@@ -298,7 +298,7 @@ static void _check_inventory_skills()
 {
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        // Exit early if ther's no more skill to check.
+        // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
@@ -321,7 +321,7 @@ static void _check_spell_skills()
 {
     for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
-        // Exit early if ther's no more skill to check.
+        // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
@@ -457,7 +457,6 @@ bool training_restricted(skill_type sk)
     case SK_ARMOUR:
     case SK_DODGING:
     case SK_STEALTH:
-    case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
         return false;
@@ -575,13 +574,13 @@ void init_training()
     skills.init(0);
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (skill_trained(i))
-            skills[i] = pow(you.skill_points[i], 2.0);
+            skills[i] = sqr(you.skill_points[i]);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises, skills);
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        skills[i] = pow(you.skill_points[i], 2.0);
+        skills[i] = sqr(you.skill_points[i]);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises_all, skills);

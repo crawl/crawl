@@ -166,7 +166,7 @@ end
 # 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
 TAGS: extra allow_dup can_overwrite replace_portal transparent
-DEPTH: D:21-27
+DEPTH: D:21-
 CHANCE: 100% (D:24), 25%
 : if you.where() == 'D:24' then
 KFEAT: O = enter_pandemonium no_mimic
@@ -182,7 +182,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_1
 TAGS:   patrolling no_monster_gen transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -201,7 +201,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_3
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -222,7 +222,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_4
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -242,7 +242,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_5
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -263,7 +263,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_7
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -285,7 +285,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_8
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -306,7 +306,7 @@ ENDMAP
 
 NAME:   rand_demon_pan_entry_9
 TAGS:   patrolling no_monster_gen mini_float transparent
-DEPTH:  D:21-27
+DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
@@ -1157,33 +1157,33 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx.......................xxxxxx
 xxxxx...3.x...x...x...x...x.3...xxxx
 xxxx.............................xxx
-xxx....x..ccccccccccccccccc...x...xx
-xxx.3.....c...x...x...x...cc...x..xx
-xx........c....x.x.x.x.x.x.cc......x
-xx.x.xx.x.c.....x...x...x...cc..3..x
-xx.....4..+......x.x.x.x.x.x.cc....x
-xx........+.......x...x.2.x...cc...x
-xx.....4..+......x.x.x.x.x.x.x.cc..x
-xx.x.xx.x.c.....x...x...x...x...c..x
-xxx......xc....ccccccccc.x.x.x.xc..x
-xx.x....x.c...ccccc.2.x...x.2.xcc..x
-xxx.x..x.xccccc....x.x.x.x.x.x.xc..x
-xx.x.xx.x.cc........x...x...x...c4.x
-xx..x..x..c.c......x.x.x.x.x.x.xc...
-xx..x..x..cOc.1...x...x.2.x...xcc..@
-xx.x.xx.x.c.c......x.x.x.x.x.x.xc...
-xxx.x..x.xcc........x...x...x...c4.x
-xx.x....x.ccccc....x.x.x.x.x.x.xc..x
-xxx......xc...ccccc.2.x...x.2.xcc..x
-xx........c....ccccccccc.x.x.x.xc..x
-xx.x.xx.x.c.....x...x...x...x...c..x
-xx.....4..+......x.x.x.x.x.x.x.cc..x
-xx........+.......x...x.2.x...cc...x
-xx.....4..+......x.x.x.x.x.x.cc....x
-xx.x.xx.x.c.....x...x...x...cc..3..x
-xx........c....x.x.x.x.x.x.cc......x
-xxx.3.....c...x...x...x...cc...x..xx
-xxx....x..ccccccccccccccccc...x...xx
+xxx...x..ccccccccccccccccc....x...xx
+xxx.3....c...x...x...x...cc....x..xx
+xx.......c....x.x.x.x.x.x.cc.......x
+xx.x.x.x.c.....x...x...x...cc....3.x
+xx....4..+......x.x.x.x.x.x.cc.....x
+xx.......+.......x...x.2.x...cc..x.x
+xx....4..+......x.x.x.x.x.x.x.cc...x
+xx.x.x.x.c.....x...x...x...x...c...x
+xxx.....xc....ccccccccc.x.x.x.xc...x
+xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
+xxx.x.x.xccccc....x.x.x.x.x.x.xc...x
+xx.x.x.x.cc........x...x...x...c.4.x
+xxx.x.x.xc.c......x.x.x.x.x.x.xc....
+xx.x.x.x.cOc.1...x...x.2.x...xcc.x.@
+xxx.x.x.xc.c......x.x.x.x.x.x.xc....
+xx.x.x.x.cc........x...x...x...c.4.x
+xxx.x.x.xccccc....x.x.x.x.x.x.xc...x
+xx.x...x.c...ccccc.2.x...x.2.xcc.x.x
+xxx.....xc....ccccccccc.x.x.x.xc...x
+xx.x.x.x.c.....x...x...x...x...c...x
+xx....4..+......x.x.x.x.x.x.x.cc...x
+xx.......+.......x...x.2.x...cc..x.x
+xx....4..+......x.x.x.x.x.x.cc.....x
+xx.x.x.x.c.....x...x...x...cc....3.x
+xx.......c....x.x.x.x.x.x.cc.......x
+xxx.3....c...x...x...x...cc....x..xx
+xxx...x..ccccccccccccccccc....x...xx
 xxxx.............................xxx
 xxxxx...3.x...x...x...x...x.3...xxxx
 xxxxxxx.......................xxxxxx
@@ -2242,6 +2242,7 @@ RTILE:  x = wall_zot_blue
 FTILE:  D.-0123456789 = floor_pebble
 SUBST:  - = 0:1 / .:10
 KFEAT:  D = granite_statue
+TILE:   D = dngn_disco_ball
 : set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
@@ -2303,7 +2304,7 @@ ITEM:   any
 NSUBST: i = 2=ghh / 3=ghhiii / *:i
 MONS:   angel
 MONS:   cherub
-MONS:   paladin
+MONS:   nothing
 MONS:   ophan
 MONS:   ophan
 MONS:   shedu band
@@ -2332,7 +2333,7 @@ SUBST:  D& = +, '"- = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
-:                     "apis / paladin / apis / shedu band / angel")
+:                     "apis / shedu band / apis / shedu band / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.
 veto {{
     if you.god() == "the Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then
@@ -2360,12 +2361,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..wwwwwwwwwwww.xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
-xCf7333....Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
+xCf71......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
 xCCCCCCCC..Cxxxx.......wwwwxxwwww...............xx...................xxxxxxxxxxx
 xxxxxxxCCC.Cxx........wwwwwwwwcccc.............................cccc...xxxxxxxxxx
 xxxxxxxxxC+Cx...xx...wwwwwwwwwc1*ccccccccccccccccccccccccccccccc*1c...xxxxxxxxxx
 xxxxxxxxx......xxx..wwwwwwwww.c*'ccccccccccccccccccccccccccccccc'*c...xxxxxxxxxx
-xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........3.......3..........+ccc...xxxxxxxxxx
+xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........1.......1..........+ccc...xxxxxxxxxx
 xxxxxxxx....xxxxx..wwwwwwwww...cc...............5...............cc...xxxxxxxxxxx
 xxxxxxx....xxxxx...wwwwwwww....cc..www.ccccccccccccccccccc.www..cc...xxxxxxxxxxx
 xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|||cccccccc.wHw..cc....xxxxxxxxxx
@@ -2390,8 +2391,8 @@ xx...wwwwwwwww.....xxxxxxxx....cc..cc''cccccccDcDcDccccccc''cc..cc........xxxxxx
 xx..wwwwwwwww.....xxxxxxxx.....cc..ccwwcccccG'''''''Gcccccwwcc..cc........xxxxxx
 xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''''''cccccccccc..cc...xx....xxxxx
 xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
-xwwwwwww.....xxxx.........x....cc......5........3........5......cc....xx....xxxx
-xwwwwww.....xxxx.........xx...ccc+.......3.............3.......+ccc.........xxxx
+xwwwwwww.....xxxx.........x....cc......5........1........5......cc....xx....xxxx
+xwwwwww.....xxxx.........xx...ccc+.............................+ccc.........xxxx
 xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
 xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
 xxxx..xx..v.vvvvvvvvvvvvvv....cccc..........H.......H..........cccc......xxxxxxx

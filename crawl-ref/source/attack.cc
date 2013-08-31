@@ -118,7 +118,7 @@ string attack::anon_pronoun(pronoun_type pron)
 /* Initializes an attack, setting up base variables and values
  *
  * Does not make any changes to any actors, items, or the environment,
- * in case the attack is canceled or otherwise fails. Only initializations
+ * in case the attack is cancelled or otherwise fails. Only initializations
  * that are universal to all types of attacks should go into this method,
  * any initialization properties that are specific to one attack or another
  * should go into their respective init_attack.
@@ -177,7 +177,16 @@ string attack::get_exclams(int dmg)
     else if (dmg < HIT_STRONG)
         return "!!";
     else
-        return "!!!";
+    {
+        string ret = "!!!";
+        int tmpdamage = dmg;
+        while (tmpdamage >= 2*HIT_STRONG)
+        {
+            ret += "!";
+            tmpdamage >>= 1;
+        }
+        return ret;
+    }
 }
 
 /* Returns evasion adverb

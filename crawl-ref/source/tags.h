@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Auxilary functions to make savefile versioning simpler.
+ * @brief Auxiliary functions to make savefile versioning simpler.
 **/
 
 #ifndef TAGS_H

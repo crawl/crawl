@@ -17,7 +17,7 @@ function castle_lemuel_subvault_setup(e)
          e.tags("no_monster_gen");
          e.tags("no_rotate");
          e.colour("? = brown")
-         e.ftile("? = floor_orc")
+         e.ftile("? = floor_mud")
          e.kfeat("? = floor")
          e.subst("X = c +:1")
          e.subst("~ = ~:2 .")
@@ -51,12 +51,12 @@ function castle_lemuel_subvault_setup(e)
          elseif you.absdepth() < 25 then
             e.subst("*:*$")
             e.subst("|=|.")
-            e.mons("deep elf soldier / deep elf fighter")
+            e.mons("deep elf fighter / deep elf mage w:4")
             e.mons("deep elf knight / deep elf mage / deep elf summoner / deep elf priest")
             e.mons("deep elf annihilator / deep elf sorcerer / deep elf demonologist /\
                     deep elf blademaster / deep elf master archer")
             e.mons("nothing")
-            e.mons("deep elf soldier")
+            e.mons("deep elf fighter")
             e.mons("nothing")
          else
             e.subst("*:*$")
@@ -170,8 +170,8 @@ ENDMAP
 ############################################################################
 NAME:     lemuel_castle_with_subvaults
 TAGS:     layout_city
-DEPTH:    D:3-27
-PLACE:    D:27
+DEPTH:    D:3-
+PLACE:    D:$
 ORIENT:   northwest
 : castle_lemuel_subvault_setup(_G)
 SUBVAULT: A : lemuel_castle_interior

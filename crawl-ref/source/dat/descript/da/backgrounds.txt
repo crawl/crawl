@@ -1,0 +1,130 @@
+%%%%
+Abyssal Knight
+
+Afgrundsriddere tilbeder Lugonu og sendes ud fra Afgrunden til de underjordiske
+gange for at sprede fordærv og kaos.
+%%%%
+Air Elementalist
+
+Lufttroldmænd har lært besværgelsen Stød. Senere giver deres Bogen om luften
+dem alsidighed nok til at overleve.
+%%%%
+Arcane Marksman
+
+Trolddomsskytter bærer skydevåben og bruger magi til at gøre deres fjender mere
+sårbare over for distanceangreb.
+%%%%
+Artificer
+
+Artefaktmagere starter med nogle magiske anordninger og er dygtige til at bruge
+den slags redskaber.
+%%%%
+Assassin
+
+Snigmordere bevæger sig uset, mens de venter på at dolke uvidende modstandere.
+Men de handler ikke kun om kappe og kårde, de har også vederstyggelige
+kurare-nåle til deres pusterør.
+%%%%
+Berserker
+
+Bersærkere tilbeder Trog, vildskabens trolddomshadske gud. Der er ikke meget,
+der kan stoppe en frådende bersærker i begyndelsen, bortset fra hybris.
+%%%%
+Chaos Knight
+
+Kaosriddere er den utilregnelige Xoms legetøj og underkaster sig gudens
+konstant skiftende humør.
+%%%%
+Conjurer
+
+Fremmanere løser problemer med skadelige besværgelser fra Bogen om
+fremmaninger.
+%%%%
+Death Knight
+
+Dødsriddere er nærkampskrigere, som kan kontrollere de udøde i Yredelemnul den
+Mørkes navn.
+%%%%
+Earth Elementalist
+
+Jordtroldmænd kender besværgelsen Sandblæst og bærer rundt på sten, der øger
+dens kraft. Der er flere jordbundne besværgelser i Bogen om geomantik.
+%%%%
+Enchanter
+
+Fortryllere bruger besværgelser fra Bogen om onde tunger til at gøre deres
+fjender ukampdygtige og er udstyret med en dolk og nogle kastepile.
+%%%%
+Fighter
+
+Krigere er udstyret med rustning, skjold og et valgfrit våben.
+%%%%
+Fire Elementalist
+
+Ildtroldmænd starter med Bogen om flammer og kender besværgelsen Flammetunge.
+De andre besværgelser i bogen fokuserer også ødelæggelse.
+%%%%
+Gladiator
+
+Gladiatorer er klar til arenaen med let rustning, net og et valgfrit våben.
+%%%%
+Healer
+
+Helbredere følger Elyvilons vej og er altid klar til at helbrede sig selv og
+andre. Den slags helbredelse kan muligvis pacificere bæster og bøller, hvilket
+giver erfaring.
+%%%%
+Hunter
+
+Jægere kan angribe med et valgfrit skydevåben uden at forlade sig på forbistret
+trolddom.
+%%%%
+Ice Elementalist
+
+Istroldmænd starter med Bogen om frost og besværgelsen Frys. Bogens andre
+besværgelser er ganske alsidige.
+%%%%
+Monk
+
+Munke er klar til at udfordre de underjordiske gange, kun iført en kåbe og med
+deres kroppe som våben. De får yderligere fromhed hos den første gud, de
+tilbeder.
+%%%%
+Necromancer
+
+Nekromantikere er troldmænd, som specialiserer sig i studiet af dødsmagi. De
+starter med besværgelsen Smerte.
+%%%%
+Skald
+
+Skjalde er nærkampskrigere, som kan styrke sig selv i kamp med Bogen om kamp.
+%%%%
+Summoner
+
+Hidkaldere starter med Bogen om kald og kan kaste Hidkald Små Pattedyr fra
+begyndelsen.
+%%%%
+Transmuter
+
+Forvandlere ændrer deres krop, så de kan kæmpe i form af et dyr. De kan også
+forvandle pinde til slanger.
+%%%%
+Venom Mage
+
+Gifttroldmænd starter med Den unge giftblanders håndbog og besværgelsen Stik.
+De har det ret let i begyndelsen.
+%%%%
+Wanderer
+
+Vandringsmænd starter med tilfældigt udstyr og færdigheder.
+%%%%
+Warper
+
+Forvrængere starter med et valgfrit våben og en skriftrulle med blink. De kan
+lære besværgelser fra Bogen om spatiale translokationer.
+%%%%
+Wizard
+
+Troldmænd starter med Bogen om mindre magi, som indeholder et bredt udvalg af
+besværgelser. De har større magiske reserver end nogen anden baggrund.
+%%%%

@@ -1,25 +1,31 @@
-﻿The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Samuel Bronson,
-Jude Brown, James Bulgin, Robert Burnham, Chris Campbell, Matthew Cline,
-Florian Diebold, Michael Gagno, Brendan Hickey, Pete Hurst, Eino Keskitalo,
-Vsevolod Kozlov, Janne Lahdenperä, Pekka Lampila, Raphaël Langella, Nat Lanza,
-Jesse Luehrs, Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan,
-Stefan O'Rear, Charles Otto, Aaron Pixton, David Ploog, Chris West, Samuel
-Wilson) would like to thank:
+﻿The Dungeon Crawl Stone Soup team would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
 * Brent Ross, Dungeon Crawl 4.0/4.1 maintainer. Stone Soup owes a lot to his
   ideas and code in Crawl 4.1.
 
-* Other members of the 4.0 Crawl development team: Michal Valvoda, Guus Sliepen,
-  Brian Robinson, Mark Mackey, Gordon Lipford, Daniel Ligon, Jesse Jones, Josh
-  Fishman, Don Brodale.
+* Other members of the 4.0 Crawl development team:
+    Michal Valvoda
+    Guus Sliepen
+    Brian Robinson
+    Mark Mackey
+    Gordon Lipford
+    Daniel Ligon
+    Jesse Jones
+    Josh Fishman
+    Don Brodale
 
 * Darshan Shaligram and Erik Piper, for starting the Stone Soup project, and
   rekindling interest in Crawl development.
 
-* Other retired members of the development team: Paul Du Bois, Haran Pilpel,
-  Johanna Ploog, David Lawrence Ramsey, Robert Vollmert, and Enne Walker.
+* Other retired members of the development team:
+    Paul Du Bois
+    Haran Pilpel
+    Johanna Ploog
+    David Lawrence Ramsey
+    Robert Vollmert
+    Enne Walker
 
 * Marc H. Thoben, for setting up and maintaining our current Mantis tracker,
   Wiki, development blog and Windows trunk builds, as well as providing public
@@ -30,135 +36,185 @@ Wilson) would like to thank:
   contributions.
 
 * The members of various usability testing teams from the department of
-  Information Processing Science in Oulu University: Satu Alanko, Sampo Jumisko,
-  Topi Leinonen, Tiina Kallinen, Aslak Karsi, Teemu Kaukoranta, Miikka Kuutila,
-  Sami Mylly, Joonas Nissinen, Perttu Piirainen, Pekka Reijonen, Jouni Rissanen,
-  Juulia Ruha, Tuomas Ristioja, Arto Saukko, Janne Seppänen, Henri Sorsa and
-  Sebastian Turpeinen. Additional thanks to Mikko Rajanen for providing the
-  opportunity for usability testing during various courses.
+  Information Processing Science in Oulu University:
+    Satu Alanko
+    Sampo Jumisko
+    Topi Leinonen
+    Tiina Kallinen
+    Aslak Karsi
+    Teemu Kaukoranta
+    Miikka Kuutila
+    Sami Mylly
+    Joonas Nissinen
+    Perttu Piirainen
+    Pekka Reijonen
+    Jouni Rissanen
+    Juulia Ruha
+    Tuomas Ristioja
+    Arto Saukko
+    Janne Seppänen
+    Henri Sorsa
+    Sebastian Turpeinen
+  Additional thanks to Mikko Rajanen for providing the opportunity for
+  usability testing during various courses.
 
-We'd also like to thank members of the Dungeon Crawl community who have
-contributed to Dungeon Crawl Stone Soup:
+* Members of the Dungeon Crawl community who have contributed to Dungeon
+  Crawl Stone Soup:
+    Mike Adams
+    Warwick Allison
+    Juha Arpiainen
+    Arxale
+    John 'Poor Yurik' Attea
+    Roy Axenov
+    Steve 'nfogravity' Balady
+    Max Bane
+    Bill Beher
+    Alexander Beisig
+    Stu Black
+    blackcustard
+    Peter 'xFleury' Blain
+    Terje Bø
+    Erik Inge Bolsø
+    Peter Borgmann
+    Daniel Mark Brownrigg
+    Andre Bubel
+    Trent W. Buck
+    Joe Buzzelli
+    Policarpo Caballero
+    Henry Cipolla
+    Aaron Curtis
+    Simon Curtis
+    Denzi
+    Lothar Dierkes
+    Mike Drinen
+    Kieron Dunbar
+    elliott
+    Micha Elsner
+    Carl-Oscar Erneholm
+    Christopher Evenstar
+    Brett Foster
+    Chris Galardi
+    Ben Goetter
+    Ed Gonzalez
+    Rob Grant
+    John Greenberg
+    GreyKnight
+    Joshua Gross
+    Brian Haase
+    Shayne Halvorson
+    Sophie Hamilton
+    Chris Hamons
+    Anders Heggestøyl
+    R. Dan Henry
+    Chris Honey
+    Sylvia 'Onia' Hörnke
+    Benoit Hudson
+    Iainuki
+    Icy Lich
+    Ilyak
+    Matthew Ince
+    Mitsuhiro Itakura
+    Mikko Juola
+    Dominic 'dk' Kexel
+    Jarmo Kielosto
+    Kornel Kisielewicz
+    Vesa Kivimäki
+    Daniel Klein
+    Jon Knapp
+    Ilkka Koskela
+    infiniplex
+    Vambola Kotkas
+    Ryan Kusnery
+    Jukka Kuusisto
+    Lantier
+    Maciej Lapinski
+    Jordan Lewis
+    Sami Liedes
+    Lain I. W. Madreisz
+    Markus Maier
+    Arien Malec
+    Paul Maloney
+    Wille Mäntylä
+    John McCartney
+    James 'Eronarn' Meickle
+    Andrew Minton
+    Shawn M Moore
+    Eva Myers
+    nooodl
+    Erkki Nurmi
+    Mattias Nyberg
+    nyra
+    Dylan O'Donnell
+    Chris Oelmueller
+    Yuuma Oohara
+    Malwyn P
+    William Parker
+    Pedro
+    Arlen Phillips
+    Lemuel Pitkin
+    Derek Ray
+    Terence Reeves
+    Remsleep
+    Ryan Riegel
+    RjY
+    Will Rogers
+    David Rose
+    Risto Saarelma
+    Sebastian Salman
+    Brett Scarborough
+    Roman Sêk
+    ShadyAmish
+    Robert Shimmin
+    Sigurd
+    Edgar Simo
+    Alex Smith
+    Solf
+    Michael Spang
+    Jan 'heftig' Steffens
+    Johan Strandell
+    Ben Striegel
+    Derrick Sund
+    Pavel 'Curio' Svinarchuk
+    Matthew Tadd
+    William Tanksley, Jr.
+    Jared 'Twinge' Tinney
+    Matt Titus
+    Jason Van
+    Steven Wheeler
+    Thomas Willem
+    Evan Williams
+    Jeremey Wilson
+    Yelve Yakut
+    Zannick
+    Zooko
 
-Mike Adams
-Warwick Allison
-Juha Arpiainen
-Arxale
-John 'Poor Yurik' Attea
-Roy Axenov
-Steve 'nfogravity' Balady
-Max Bane
-Bill Beher
-Alexander Beisig
-Stu Black
-Peter 'xFleury' Blain
-Terje Bø
-Erik Inge Bolsø
-Peter Borgmann
-Daniel Mark Brownrigg
-Andre Bubel
-Trent W. Buck
-Joe Buzzelli
-Policarpo Caballero
-Henry Cipolla
-Aaron Curtis
-Simon Curtis
-Denzi
-Lothar Dierkes
-Mike Drinen
-Kieron Dunbar
-Micha Elsner
-Carl-Oscar Erneholm
-Christopher Evenstar
-Brett Foster
-Chris Galardi
-Ben Goetter
-Rob Grant
-John Greenberg
-GreyKnight
-Joshua Gross
-Brian Haase
-Shayne Halvorson
-Sophie Hamilton
-Chris Hamons
-Anders Heggestøyl
-R. Dan Henry
-Chris Honey
-Sylvia 'Onia' Hörnke
-Benoit Hudson
-Iainuki
-Icy Lich
-Ilyak
-Matthew Ince
-Mitsuhiro Itakura
-Mikko Juola
-Dominic 'dk' Kexel
-Jarmo Kielosto
-Kornel Kisielewicz
-Vesa Kivimäki
-Daniel Klein
-Jon Knapp
-Ilkka Koskela
-Vambola Kotkas
-Ryan Kusnery
-Jukka Kuusisto
-Lantier
-Maciej Lapinski
-Jordan Lewis
-Sami Liedes
-Markus Maier
-Arien Malec
-Paul Maloney
-Wille Mäntylä
-John McCartney
-James 'Eronarn' Meickle
-Andrew Minton
-Shawn M Moore
-Eva Myers
-nooodl
-Erkki Nurmi
-Mattias Nyberg
-nyra
-Dylan O'Donnell
-Chris Oelmueller
-Yuuma Oohara
-Malwyn P
-William Parker
-Pedro
-Arlen Phillips
-Lemuel Pitkin
-Derek Ray
-Terence Reeves
-Remsleep
-Ryan Riegel
-RjY
-Will Rogers
-David Rose
-Risto Saarelma
-Sebastian Salman
-Brett Scarborough
-Roman Sêk
-ShadyAmish
-Robert Shimmin
-Sigurd
-Edgar Simo
-Alex Smith
-Solf
-Michael Spang
-Jan 'heftig' Steffens
-Johan Strandell
-Ben Striegel
-Derrick Sund
-Pavel 'Curio' Svinarchuk
-Matthew Tadd
-William Tanksley, Jr.
-Jared 'Twinge' Tinney
-Matt Titus
-Jason Van
-Steven Wheeler
-Thomas Willem
-Evan Williams
-Jeremey Wilson
-Yelve Yakut
-Zannick
-Zooko
+The Dungeon Crawl Stone Soup development team is:
+    Peter Berger
+    Adam Borowski
+    Samuel Bronson
+    Jude Brown
+    James Bulgin
+    Robert Burnham
+    Chris Campbell
+    Matthew Cline
+    Florian Diebold
+    Michael Gagno
+    Brendan Hickey
+    Pete Hurst
+    Eino Keskitalo
+    Vsevolod Kozlov
+    Janne Lahdenperä
+    Pekka Lampila
+    Raphaël Langella
+    Nat Lanza
+    Jesse Luehrs
+    Steve Melenchuk
+    Neil Middleton
+    Neil Moore
+    Steven Noonan
+    Stefan O'Rear
+    Charles Otto
+    Aaron Pixton
+    David Ploog
+    Chris West
+    Samuel Wilson

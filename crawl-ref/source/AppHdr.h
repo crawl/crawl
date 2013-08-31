@@ -47,7 +47,7 @@ static inline T move(T x) { return x; } // good enough for our purposes
 
 #ifdef __sun
 // Solaris libc has ambiguous overloads for float, double, long float, so
-// we need to upgrade ints explicitely:
+// we need to upgrade ints explicitly:
 #include <math.h>
 static inline double sqrt(int x) { return sqrt((double)x); }
 static inline double atan2(int x, int y) { return atan2((double)x, (double)y); }
@@ -372,6 +372,10 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
 // you define this option, wizard characters are still tagged as such
 // in the score file.
 // #define SCORE_WIZARD_CHARACTERS
+
+// Option to allow all characters to enter wizmode on turn zero, regardless
+// of WIZ_NEVER status, or dgl permissioning.
+// #define TURN_ZERO_WIZARD
 
 #define SAVE_SUFFIX ".cs"
 

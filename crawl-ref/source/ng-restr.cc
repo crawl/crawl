@@ -32,7 +32,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_MUMMY:
         case SP_VAMPIRE:
         case SP_OCTOPODE:
-        case SP_GARGOYLE:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
@@ -56,7 +55,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_VAMPIRE:
         case SP_OCTOPODE:
         case SP_DJINNI:
-        case SP_GARGOYLE:
         case SP_FORMICID:
             return CC_RESTRICTED;
         default:
@@ -96,7 +94,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_GHOUL:
         case SP_VAMPIRE:
         case SP_OCTOPODE:
-        case SP_GARGOYLE:
         case SP_DJINNI:
         case SP_FORMICID:
             return CC_RESTRICTED;
@@ -132,7 +129,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_VAMPIRE:
         case SP_FELID:
         case SP_OCTOPODE:
-        case SP_DJINNI:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
@@ -204,6 +200,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_FELID:
         case SP_OCTOPODE:
         case SP_FORMICID:
+        case SP_DJINNI:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
@@ -316,6 +313,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
+        case SP_MUMMY:
         case SP_GHOUL:
         case SP_FORMICID:
             return CC_RESTRICTED;
@@ -358,6 +356,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_MINOTAUR:
         case SP_TENGU:
         case SP_VAMPIRE:
+        case SP_DJINNI:
+        case SP_GARGOYLE:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
@@ -694,8 +694,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_RESTRICTED;
         }
     case WPN_FALCHION:
-        if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR)
-            return CC_BANNED;
         switch (ng.species)
         {
         case SP_HUMAN:
@@ -765,6 +763,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_DJINNI:
         case SP_FORMICID:
+        case SP_GARGOYLE:
             return CC_UNRESTRICTED;
 
         default:

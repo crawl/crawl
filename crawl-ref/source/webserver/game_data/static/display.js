@@ -56,8 +56,6 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
 
         monster_list.update();
 
-        dungeon_renderer.draw_minibars();
-
         var render_time = (new Date() - t1);
         if (!window.render_times)
             window.render_times = [];
@@ -82,6 +80,9 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
     {
         if (data.clear)
             clear_map();
+
+        if (data.player_on_level != null)
+            map_knowledge.set_player_on_level(data.player_on_level);
 
         if (data.vgrdc)
             minimap.do_view_center_update(data.vgrdc.x, data.vgrdc.y);

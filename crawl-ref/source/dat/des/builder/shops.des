@@ -257,7 +257,7 @@ KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    wand of heal wounds | dart ego:silver w:2 | javelin ego:silver w:2 | \
    bolt ego:silver w:2 | any weapon ego:holy_wrath | scroll of holy word | \
    sling bullet ego:silver w:2 | amulet of faith w:2 | potion of cure mutation | \
-   ring of life protection w:5 | any armour ego:positive_energy w:5
+   ring of positive energy w:5 | any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
 MONS: angel
 MAP

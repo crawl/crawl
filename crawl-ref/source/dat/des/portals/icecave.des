@@ -60,9 +60,6 @@ function ice_cave_portal(e)
   e.ftile(".1234O+ = floor_ice")
 end
 
-}}
-
-{{
 -- Figure out if an easy or a hard ice cave should be used. Players
 -- that enter the portal deeper in the dungeon end up in the hard ones.
 -- Possible depths for easy ice caves are D:11-14, Lair, Orc.
@@ -85,9 +82,7 @@ function ice_cave_difficulty()
 
   return hard
 end
-}}
 
-{{
 -- Find the slave of the teleporter and move to it.
 function callback.ice_cave_statue_garden_teleporter(data, triggerable,
                                                      triggerer, marker, ev)
@@ -99,12 +94,9 @@ function callback.ice_cave_statue_garden_teleporter(data, triggerable,
   crawl.mpr("Your surroundings suddenly seem different!")
 end
 
-}}
-
-# For destination (not entry) vaults, use the following line after all
-# substitutions have been performed:
-# : ice_cave_appearance(_G)
-{{
+-- For destination (not entry) vaults, use the following line after all
+-- substitutions have been performed:
+-- : ice_cave_appearance(_G)
 function ice_cave_appearance(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
@@ -120,110 +112,128 @@ function ice_cave_appearance(e)
   e.set_feature_name("shallow_water", "Some ice crusted shallow water")
   e.set_feature_name("deep_water", "Some ice crusted deep water")
 end
-}}
 
-# Using this function will turn any ! glyph on the map into a fog generator.
-# Any use requires two parameters as follows:
-# : place_fog(_G, "freezing vapour", 25)
-{{
+-- Using this function will turn any ! glyph on the map into a fog generator.
+-- Any use requires two parameters as follows:
+-- : place_fog(_G, "freezing vapour", 25)
+
 function place_fog(e, type, strength)
    e.lua_marker("!", fog_machine { pow_max = strength, cloud_type = type,
                      delay_min = 50, delay_max = 300, size = 12,
                      start_clouds = 1, excl_rad = -1 } )
 end
-}}
 
-# Monster set functions
+-- Monster set functions.
 
-# Some random monster lists are the same for multiple destination caves.
-# : ice_cave_random_monster_list_natural_giant(_G)
-{{
+-- Simulacrum definitions.
+-- : [mocking|savage|cruel]_simulacrum(_G)
+-- : mons([mocking|savage|cruel]_ice)
+function mocking_simulacrum(e)
+   mocking_ice = "naga simulacrum w:4 / troll simulacrum w:5 / " ..
+                 "draconian simulacrum w:4 / ogre simulacrum w:3 / " ..
+                 "centaur simulacrum w:3 / spriggan simulacrum w:2"
+end
+
+function savage_simulacrum(e)
+   savage_ice = "wolf spider simulacrum w:2 / elephant simulacrum w:2 / " ..
+                "polar bear simulacrum w:4 / alligator simulacrum w:2 / " ..
+                "death yak simulacrum w:4 / wolf simulacrum w:4 / " ..
+                "rock worm simulacrum w:1 / swamp dragon simulacrum w:1"
+end
+
+function cruel_simulacrum(e)
+   cruel_ice = "harpy simulacrum w:2 / anaconda simulacrum w:3 / " ..
+               "dire elephant simulacrum w:2 / hydra simulacrum w:3 / " ..
+               "ettin simulacrum w:1 / iron troll simulacrum w:2 / " ..
+               "golden dragon simulacrum w:1 / phoenix simulacrum w:1"
+end
+
+-- Some random monster lists are the same for multiple destination caves.
+-- : ice_cave_random_monster_list_natural_giant(_G)
 function ice_cave_random_monster_list_natural_giant(e)
   e.set_random_mon_list("wolf w:35 / yak w:35 / polar bear w:15 / death yak / \
                          frost giant w:5")
 end
-}}
 
-# : ice_cave_random_monster_list_undead_demon(_G)
-{{
+-- : ice_cave_random_monster_list_undead_demon(_G)
 function ice_cave_random_monster_list_undead_demon(e)
-  e.set_random_mon_list("white imp w:20 / ufetubus w:20 / freezing wraith / \
-                         wolf simulacrum / yak simulacrum / \
-                         polar bear simulacrum / human simulacrum / \
-                         elf simulacrum / orc simulacrum / \
-                         draconian simulacrum / ogre simulacrum / \
-                         centaur simulacrum / troll simulacrum / \
-                         naga simulacrum / blue devil / ice devil / \
-                         ice fiend w:5")
+  mocking_simulacrum(e)
+  savage_simulacrum(e)
+  cruel_simulacrum(e)
+  e.set_random_mon_list("white imp w:30 / ufetubus w:20 / freezing wraith / " ..
+                         mocking_ice .. " / " .. savage_ice .. " / " ..
+                         cruel_ice .. " / blue devil / ice devil / ice fiend w:5")
 end
-}}
 
-# : ice_cave_random_monster_list_undead_necromancer(_G)
-{{
+-- : ice_cave_random_monster_list_undead_necromancer(_G)
 function ice_cave_random_monster_list_undead_necromancer(e)
-  e.set_random_mon_list("white imp w:20 / ufetubus w:20 / freezing wraith / \
-                         wolf simulacrum / yak simulacrum / \
-                         polar bear simulacrum / human simulacrum / \
-                         elf simulacrum / orc simulacrum / \
-                         draconian simulacrum / ogre simulacrum / \
-                         centaur simulacrum / troll simulacrum / \
-                         naga simulacrum / necromancer")
+  mocking_simulacrum(e)
+  savage_simulacrum(e)
+  e.set_random_mon_list("white imp w:20 / ufetubus w:20 / freezing wraith / " ..
+                        mocking_ice .. " / " .. savage_ice .. " / necromancer")
 end
-}}
 
-# Currently, all the "caverns" maps use the same monster sets for placement.
-# : ice_cave_caverns_undead_demon_monster_set(_G)
-{{
+-- Currently, all the "caverns" maps use the same monster sets for placement.
+-- : ice_cave_caverns_undead_demon_monster_set(_G)
 function ice_cave_caverns_undead_demon_monster_set(e)
-  e.mons("white imp w:5 / ufetubus w:5 / human simulacrum w:2 / \
-          elf simulacrum w:2 / orc simulacrum w:2")
-  e.mons("polar bear simulacrum / freezing wraith w:3 / nothing w:1")
+  mocking_simulacrum(e)
+  savage_simulacrum(e)
+  cruel_simulacrum(e)
+  e.mons("white imp / ufetubus / " .. mocking_ice)
+  e.mons(savage_ice .. " / freezing wraith / nothing w:1")
   e.mons("ice statue")
   e.mons("ice devil")
-  e.mons("draconian simulacrum / ogre simulacrum / centaur simulacrum / \
-          naga simulacrum / troll simulacrum")
-  e.mons("freezing wraith / blue devil")
+  e.mons(cruel_ice)
+  e.mons("freezing wraith / blue devil / white very ugly thing w:1")
   e.mons("patrolling ice fiend")
+  e.kmons("8 = blizzard demon")
+  e.shuffle("7` / 7` / `8")
 end
-}}
 
-# : ice_cave_caverns_natural_giant_monster_set(_G)
-{{
+-- : ice_cave_caverns_natural_giant_monster_set(_G)
 function ice_cave_caverns_natural_giant_monster_set(e)
-  e.mons("wolf / yak w:3 / nothing w:1")
+  e.mons("wolf w:5 / yak w:3 / nothing w:1")
   e.mons("polar bear / nothing w:5")
   e.mons("ice statue")
   e.mons("polar bear / death yak w:5")
   e.mons("polar bear / yak")
-  e.mons("wolf")
-  e.mons("patrolling frost giant")
+  e.mons("wolf / nothing w:3")
+  e.mons("patrolling frost giant / patrolling white draconian w:1")
 end
-}}
 
-# : ice_cave_caverns_undead_demon_loot(_G)
-{{
+function ice_cave_item_attributes(e)
+  freezeweap = "ego:freezing ident:type"
+  goodfreezeweap = "ego:freezing good_item ident:type"
+  coldres = "ego:cold_resistance ident:type"
+  goodcoldres = "ego:cold_resistance good_item ident:type"
+end
+
+-- : ice_cave_caverns_undead_demon_loot(_G)
 function ice_cave_caverns_undead_demon_loot(e)
-  e.item("cloak ego:cold_resistance good_item / wizard hat good_item / \
+  ice_cave_item_attributes(e)
+  e.item("cloak " .. coldres .. " good_item w:8 / wizard hat good_item / \
           pair of gloves good_item / pair of boots good_item / nothing")
   e.item("book of ice / book of unlife / staff of cold / staff of death / \
-          nothing w:30")
+          randbook disc:ice disc2:necromancy numspells:6 w:2 / nothing w:30")
   e.item("ring of ice / ring of protection from cold / \
-          ring of life protection / wand of cold / wand of draining / nothing")
+          ring of positive energy / wand of cold / wand of draining / \
+          any ring w:1 / any wand w:1 / nothing")
 end
-}}
 
-# : ice_cave_caverns_natura_giant_loot(_G)
-{{
+-- : ice_cave_caverns_natural_giant_loot(_G)
 function ice_cave_caverns_natural_giant_loot(e)
-  e.item("animal skin good_item ego:cold_resistance / \
-          battleaxe good_item ego:freezing w:4 / \
-          glaive good_item ego:freezing w:4 / \
-          great sword good_item ego:freezing w:2 / nothing")
-  e.item("book of ice / crossbow ego:frost good_item no_uniq / \
-          longbow ego:frost good_item no_uniq / nothing w:20")
+  ice_cave_item_attributes(e)
+  e.item("animal skin " .. goodcoldres .. " / \
+          battleaxe " .. goodfreezeweap .. " w:4 / \
+          glaive " .. goodfreezeweap .. " w:4 / \
+          great sword " .. goodfreezeweap .. " w:2 / nothing")
+  e.item("book of ice / randbook disc:ice numspells:6 w:2 / \
+          crossbow ego:frost good_item no_uniq ident:type / \
+          longbow ego:frost good_item no_uniq ident:type / nothing w:20")
   e.item("ring of ice / ring of protection from cold / wand of cold / \
           arrow ego:ice q:25 / bolt ego:ice q:20 / nothing")
 end
+
 }}
 
 # Entries ##########################################
@@ -299,9 +309,9 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-19, Lair:6-8, Orc:4, Elf
+DEPTH:  D:14-19, Lair:6-, Orc:$, Elf
 : ice_cave_portal(_G)
-MONS:   wolf / yak w:5 / nothing w:1
+MONS:   wolf / yak / nothing w:1
 MONS:   yak / polar bear w:5 / nothing w:1
 MONS:   polar bear / nothing w:2
 MONS:   ice dragon w:8 / nothing w:2
@@ -482,7 +492,7 @@ default-depth: IceCv
 # to overcome the midpoint and then go back to dungeon, and strong characters
 # can try to clear the whole cave. The cavey parts should have no chokepoints.
 
-# Foes: animals + frost giant & an ice statue.
+# Foes: animals + frost giant (or rare draconian) & an ice statue.
 # Loot: heavy weapons and rC gear wearable by big races,
 #       plus some useful potions in the freezer.
 NAME:    ice_cave_small_giant
@@ -497,7 +507,7 @@ SUBST:   "=. , ':x .:1
 : ice_cave_random_monster_list_natural_giant(_G)
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
-MONS:    frost giant
+MONS:    frost giant / white draconian w:1
 MONS:    polar bear w:3 generate_awake / wolf generate_awake / \
          yak generate_awake
 MONS:    ice statue
@@ -507,18 +517,18 @@ ITEM:    giant club / giant spiked club / great mace w:9 / \
          nothing w:58
 ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
          halberd good_item / great sword good_item / nothing w:50
-ITEM:    battleaxe ego:freezing / glaive ego:freezing / halberd ego:freezing / \
-         great sword ego:freezing / battleaxe ego:freezing good_item / \
-         glaive ego:freezing good_item / halberd ego:freezing good_item / \
-         great sword ego:freezing good_item / nothing w:80
-ITEM:    cap ego:cold_resistance w:10 / \
-         cloak ego:cold_resistance w:10 / \
-         shield ego:cold_resistance w:10 / \
-         large shield ego:cold_resistance w:5 / \
-         animal skin ego:cold_resistance / nothing w:60
+: ice_cave_item_attributes(_G)
+: item("battleaxe " .. freezeweap .. " / glaive " .. freezeweap ..
+:   " / halberd " .. freezeweap .. " / great sword " .. freezeweap ..
+:   " / battleaxe " .. goodfreezeweap .. " / glaive " .. goodfreezeweap ..
+:   " / halberd " .. goodfreezeweap .. " / great sword " .. goodfreezeweap ..
+:   " / nothing w:80")
+: item("cap " .. coldres .. " / cloak " .. coldres ..
+:   " / shield " .. coldres ..  " / large shield " .. coldres ..
+:   " / animal skin " .. coldres .. " / nothing w:60")
 ITEM:    potion of resistance w:5 / potion of beneficial mutation / \
          potion of might / potion of confusion / potion of flight / \
-         potion of experience w:2
+         potion of experience w:2 / any potion w:1
 MAP
                   xxxxx        xxxxxxxx
                 xxx...xxxx  xxxx12....xx
@@ -579,8 +589,9 @@ MONS:    ice beast
 MONS:    ice dragon
 MONS:    ice beast generate_awake
 MONS:    ice statue
-ITEM:    any jewellery / gold w:15 / nothing w:5
-ITEM:    any jewellery good_item / gold w:5 / nothing w:5
+ITEM:    any jewellery
+ITEM:    any jewellery good_item
+NSUBST:  d = 1:d / * = d $:15 .:5, e = 1:e / * = e $:5 .:5
 MAP
                          xxxxxxxx
                       xxxx......xxxx
@@ -636,18 +647,17 @@ SUBST:   - = ........-
 KFEAT:   - = alarm trap
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
+: ice_cave_item_attributes(_G)
 MONS:    ice beast
 MONS:    white imp
 MONS:    freezing wraith
-MONS:    human simulacrum / elf simulacrum / orc simulacrum / \
-         draconian simulacrum w:5 / ogre simulacrum w:5 / \
-         centaur simulacrum w:5 / troll simulacrum w:5 / naga simulacrum w:5
-MONS:    necromancer / necromancer ; robe ego:cold_resistance / \
-         necromancer ; robe ego:cold_resistance . wand of fire / \
-         necromancer ; robe ego:cold_resistance . wand of fireball
-MONS:    polar bear simulacrum w:3 generate_awake / \
-         wolf simulacrum generate_awake / \
-         yak simulacrum generate_awake
+: mocking_simulacrum(_G)
+: mons(mocking_ice)
+: mons("necromancer / necromancer ; robe " .. coldres ..
+:   " / necromancer ; robe " .. coldres .. " . wand of fire " ..
+:   " / necromancer ; robe " .. coldres .. " . wand of flame")
+: savage_simulacrum(_G)
+: mons(savage_ice)
 MONS:    ice statue
 ITEM:    wand of frost / wand of cold w:5
 ITEM:    ring of ice / staff of cold
@@ -655,15 +665,13 @@ ITEM:    ring of ice / staff of cold
 ITEM:    manual of ice magic
 ITEM:    nothing
 : else
-ITEM:    book of ice / book of frost / book of conjurations
-ITEM:    book of ice / book of frost / book of conjurations
+KITEM:   de = book of ice / book of frost / randbook disc:ice numspells:6 w:2
 : end
-ITEM:    cap ego:cold_resistance w:10 / \
-         pair of gloves ego:cold_resistance w:10 / \
-         cloak ego:cold_resistance w:10 / \
-         naga barding ego:cold_resistance w:5 / \
-         centaur barding ego:cold_resistance w:5 / \
-         buckler ego:cold_resistance / helmet ego:cold_resistance
+
+: item("cap " .. coldres .. " / pair of gloves " .. coldres ..
+:   " / cloak " .. coldres .. " / naga barding " .. coldres .. " w:5 " ..
+:   " / centaur barding " .. coldres .. " / buckler " .. coldres .. " w:5 " ..
+:   " / helmet " .. coldres)
 MAP
                           xxxxxx
                         xxx....xx
@@ -731,6 +739,7 @@ SUBST:   ! = w
 ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil")
+ice_cave_item_attributes(_G)
 }}
 : if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
@@ -738,6 +747,8 @@ MONS:    ice devil / blue devil w:3 / nothing w:2
 MONS:    ice statue
 MONS:    blue devil
 MONS:    ice fiend
+MONS:    blizzard demon
+SHUFFLE: 5` / `6
 : else
 MONS:    white imp / ufetubus
 MONS:    blue devil / ice devil w:2 / nothing w:5
@@ -747,26 +758,28 @@ MONS:    ice devil
 : end
 SHUFFLE: dg, efh
 SUBST:   e = ed
-ITEM: battleaxe ego:freezing / executioner's axe ego:freezing / \
-      glaive ego:freezing / halberd ego:freezing / quick blade ego:freezing / \
-      great sword ego:freezing / triple sword ego:freezing / \
-      giant spiked club ego:freezing / demon trident ego:freezing
-ITEM: battleaxe ego:freezing good_item / executioner's axe ego:freezing good_item /\
-      glaive ego:freezing good_item / halberd ego:freezing good_item / \
-      great sword ego:freezing good_item / quick blade ego:freezing good_item /\
-      triple sword ego:freezing good_item / demon trident ego:freezing good_item /\
-      giant spiked club ego:freezing good_item
+SUBST:   ` = .
+: item("battleaxe " .. freezeweap .. " / executioner's axe " .. freezeweap ..
+:   " / glaive " .. freezeweap .. " / bardiche " .. freezeweap ..
+:   " / quick blade " .. freezeweap .. " / great sword " .. freezeweap ..
+:   " / triple sword " .. freezeweap .. " / giant spiked club " .. freezeweap ..
+:   " / demon trident " .. freezeweap)
+: item("battleaxe " .. goodfreezeweap .. " / executioner's axe " .. goodfreezeweap ..
+:   " / glaive " .. goodfreezeweap .. " / halberd " .. goodfreezeweap ..
+:   " / great sword " .. goodfreezeweap .. " / quick blade " .. goodfreezeweap ..
+:   " / triple sword " .. goodfreezeweap .. " / demon trident " .. goodfreezeweap ..
+:   " / giant spiked club " .. goodfreezeweap)
 ITEM: demon whip good_item / demon blade good_item / demon trident good_item
-ITEM: cap ego:cold_resistance / pair of gloves ego:cold_resistance / \
-      cloak ego:cold_resistance / buckler ego:cold_resistance / \
-      pair of boots ego:cold_resistance
-ITEM: crystal plate armour ego:cold_resistance / \
-      troll leather armour ego:cold_resistance / \
-      ice dragon armour good_item / robe ego:resistance / \
-      naga barding ego:cold_resistance good_item w:5 / \
-      centaur barding ego:cold_resistance good_item w:5 / \
-      crystal plate armour ego:cold_resistance good_item / \
-      troll leather armour ego:cold_resistance good_item
+: item("cap " .. coldres .. " / pair of gloves " .. coldres ..
+:   " / cloak " .. coldres .. " / buckler " .. coldres ..
+:   " / pair of boots " .. coldres)
+: item("crystal plate armour " .. coldres ..
+:   " / troll leather armour " .. coldres ..
+:   " / ice dragon armour good_item / robe ego:resistance / " ..
+:   " / naga barding " .. goodcoldres .. " w:5" ..
+:   " / centaur barding " .. goodcoldres .. " w:5" ..
+:   " / crystal plate armour " .. goodcoldres ..
+:   " / troll leather armour " .. goodcoldres)
 MAP
                     xxxxxx
                   xxx....xxx
@@ -794,7 +807,7 @@ xx............xxxxwwwwwwxxx...xx
  xx-----xxwwwwwxx.xx.M.m..xxx
  x---A---xxwwwccccc.M.M.ccccc
  x-------xwwwwc...ccc.ccc...c
- xx--<--xxwwwwc.e....5....f.c
+ xx--<--xxwwwwc.e...`5`...f.c
   xx---xxwwwwwc...cc*|*cc...c
    xxxxxxxwwwxccccccccccccccc
          xxxxx
@@ -811,22 +824,25 @@ WEIGHT: 6
 SUBST:  S = GGS
 KMONS:  S = ice statue
 # I is an ice statue with loot underneath.
-KITEM:  I = any scroll q:3
+KITEM:  I = any scroll
 KMONS:  I = ice statue
 : if dgn.persist.ice_cave_hard then
 MONS:   ice devil / blue devil / nothing w:7
-# FIXME: I can't quite make up more simulacrums
-MONS:   grizzly bear simulacrum w:20 / dragon simulacrum /\
-        human simulacrum / golden dragon simulacrum w:1
-MONS:   ice fiend
+: cruel_simulacrum(_G)
+: mons(cruel_ice)
+# Use KMONS for some items below.
+KMONS:  3 = ice fiend
+KMONS:  4 = blizzard demon
+SHUFFLE: 3` / 3` / `4
 : else
 MONS:   ice devil w:2 / blue devil / nothing
-MONS:   grizzly bear simulacrum w:20 / human simulacrum /\
-        swamp dragon simulacrum w:1
-MONS:   necromancer
+: mocking_simulacrum(_G)
+: mons(mocking_ice)
+KMONS:  3 = necromancer
 : end
-ITEM:   any potion / any scroll / any weapon good_item / any armour good_item
-KFEAT:  ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
+KITEM:  34 = any scroll q:3
+KITEM:  d` = any potion / any scroll / any weapon good_item / any armour good_item
+KFEAT:  ' = alarm trap / floor w:40
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_demon(_G)
 MAP
@@ -860,18 +876,18 @@ xx.............xx
 ccc.ccc...ccc.ccc
 c...c2c...c2c...c
 c+ccc+c...c+ccc+c
-c'c2+.......+2c'c
-c'ccc.G...G.ccc'c
-c'c2+.......+2c'c
-c'ccc.G...G.ccc'c
-c'c2+.......+2c'c
-c'ccc.G...G.ccc'c
-c'c2+.......+2c'c
+c.c2+.......+2c.c
+c.ccc.G...G.ccc.c
+c.c2+.......+2c.c
+c.ccc.G...G.ccc.c
+c.c2+.......+2c.c
+c.ccc.G...G.ccc.c
+c.c2+.......+2c.c
 c+cccccc+cccccc+c
 c...............c
 ccccS.ccccc.Scccc
    cc.cd3dc.cc
-    c.cdUdc.c
+    c.c`U`c.c
     c.cdddc.c
     c.cc+cc.c
     c.'''''.c
@@ -912,6 +928,7 @@ SUBST: _ = w
 : ice_cave_caverns_natural_giant_loot(_G)
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
+SUBST: ` = .
 MAP
    xxx         xxxx        xxx
  xxx.xx       xx-'xx       xwxxx  xxx xxxx      xxxxxxxxxx      xxx
@@ -931,7 +948,7 @@ xx..xxxwwwwxx...xxxgxxx...xxx_xxxx51xxxwwwxxxx..1.xxxwwx.U...xxx..x
 xx..xwwwwxxxx....xxxx5.xxxwxx_xx...xxxxxwwwxxxx.1.5xxxxx.x.xxx..xxx
  x..xxxwwwwxx'x.xxxxx5..5xxwwx_xxxx1.xxxxxwwxxxxx5415.xxxxx..xx...xx
  x...xxwwwxx..'xxxxwxx15.5xxwwx__xxx51xxxxwwxxxxxx5.41.xxxx..xxx454xx
- xx..-xxxxx..xxxwxwwwxxx5.1xxwwxx_--x1xxxxxwwwxxxxxx.5..x...xxx5.7.5x
+ xx..-xxxxx..xxxwxwwwxxx5.1xxwwxx_--x1xxxxxwwwxxxxxx.5..x...xxx5`7`5x
   x...-xx-..xxxwxwwxxwxx-x1.xxwwxx'''xxxxxxwwwwxxxxxxx'...xxxxxx5.5xxx
   x...x--xx..1xxxxxwxx--x-..'xxwx'x'xxxxxwxxwwwwxxxx*.xxxxx.xxx..xxx|x
   x222x''x''x..xx1xxx----xxxx'xx'''xxxxwxxxwwwwwwxxxx*xxxx.<.xxx.$defx
@@ -954,7 +971,7 @@ ORIENT: encompass
 : ice_cave_caverns_undead_demon_monster_set(_G)
 : ice_cave_caverns_undead_demon_loot(_G)
 # Take out ';' safety padding.
-SUBST: ; = .
+SUBST: ;` = .
 # Place the fog generators:
 SUBST: . = .:40 !:1
 : place_fog(_G, "freezing vapour", 25)
@@ -969,7 +986,7 @@ KFEAT: ! = .
 SUBST: . = .:60 !:1
 : place_fog(_G, "freezing vapour", 10)
 KFEAT: ! = .
-SUBST: ; = .
+SUBST: ;` = .
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
 # The ':' provides fog-free zone near the entrance.
@@ -1000,7 +1017,7 @@ x$x..x.!..xx..xxx..xwwwwxx--xxxx-xx;1;xxxwwwwwwxxxxx;;;;xxx
 xx.xx;x;;xxx..xx...xxwwwwxx1;xxxx.;;xxxxxwwwwwwxxxxxx;2;2;xx
 xxxxxx;;xxxx...xx.3.xxwwxx'-;1x'''xxxxxwwwwwwwwxxxxxx;54;2;xx
    xx;;xxxx...xxxx...xxxx;;x;;''xxxxxxwwwwwwwxxxx$$x;2475;;;xx
-   x5;5xx...xxxx.x.xxxxx..;x;xxxxxxwwwwwwwwxxxxdf$$;;;;;;;xx;xxx
+   x5;5xx...xxxx.x.xxxxx..;x;xxxxxxwwwwwwwwxxxxdf$$;;;;``;xx;xxx
    x;;xx;..xxwwxx|x.xx...xx;xx xxwwwwwwwwwwwxxed|$$$;;;xxxxxx..xxxxx
    x122;;.xxwwwwxx....xxxxxxx  xwwwwwwwwwwwwwxxfe|$$$$.x    xxx....xxx
    xx1;;xxxwwwwwxxxxxxx        xxwwwwwwwwwwwwwxxxxxxxxxx      xxx...<x
@@ -1022,7 +1039,7 @@ ORIENT: encompass
 SUBST: 3 = 3!
 : place_fog(_G, "freezing vapour", 25)
 KFEAT: ! = .
-SUBST: ; = .
+SUBST: ;` = .
 SUBST: . = .:100 !:1
 : place_fog(_G, "freezing vapour", 15)
 KFEAT: ! = .
@@ -1056,8 +1073,8 @@ MAP
                       xwwwwwwwwxxx.xxx$x..x...xx...xx;55xxx
                      xxxwwwwxWWWxxxxxxx..x..xxxxxxxxxx;554xxx
                     xxxxxwxxxxxWwWxWW.xxxxx..xxwwwwwwxx;2525x
-                  xxxwwxxxxxxxxxWWWWxW..xx..xxwwwwwwwwxx427;x
-                  xwwwwwxxxxxxxWWxwWwxx...xxxwwwwwwwxxx;;5xxx
+                  xxxwwxxxxxxxxxWWWWxW..xx..xxwwwwwwwwxx427`x
+                  xwwwwwxxxxxxxWWxwWwxx...xxxwwwwwwwxxx;`5xxx
                   xxwwwwwxxx.WWxxxxwwwxxxxxwwwwwwxxxxx;;;xx
                xxxxxxxwwwxx."xxxwwwwwxwwxwwwxxxxxxx....xxxx
              xxx;...xxxwwwxx..xxxwwwwwwwwwwxx<..!x...xx.xfxx

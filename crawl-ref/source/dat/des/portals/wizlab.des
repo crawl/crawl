@@ -414,7 +414,7 @@ end
 
 }}
 
-default-depth: D:22-27, Elf, Crypt, Vaults:1-4
+default-depth: D:22-, Elf, Crypt, Vaults:1-4
 
 ###############################################################################
 # Portal entrances.
@@ -437,7 +437,7 @@ wwbm..O..mbww
 ENDMAP
 
 NAME:       mu_enter_wizlab_2
-DEPTH:      D:22-27, Elf, Crypt, Vaults:1-4
+DEPTH:      D:22-, Elf, Crypt, Vaults:1-4
 SHUFFLE:    tU
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
@@ -585,7 +585,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_glasses
-DEPTH:    D:22-27, Elf, Crypt, Vaults:1-4
+DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
 FTILE:    GO_ = floor_rough_magenta
 TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
@@ -603,7 +603,7 @@ MAP
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_water
-DEPTH:    D:22-27, Elf, Crypt, Vaults:1-4
+DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
 FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
@@ -624,7 +624,7 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
-DEPTH:    D:22-27, Elf, Crypt, Vaults:1-4
+DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \
@@ -1167,9 +1167,13 @@ COLOUR:     W = green
 :           door_verb_open="You part the %s%s.",
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
-KITEM:      $ = w:45 potion of mutation / w:15 potion of beneficial mutation / \
-            w:1 potion of cure mutation
+KITEM:      $ = w:60 potion of mutation / w:10 potion of beneficial mutation / \
+            w:5 potion of cure mutation
+KITEM:      & = potion of beneficial mutation
+KITEM:      ~ = potion of cure mutation
+NSUBST:     $ = 1:& / 1:~ / *:$
 KITEM:      * = gold
+NSUBST:     % = 1:% / *:*
 KITEM:      % = amulet of resist mutation good_item
 KITEM:      : = randbook disc:transmutation owner:Cigotuvi
 KITEM:      ^ = book of transfigurations / randbook disc:transmutation
@@ -1193,16 +1197,16 @@ c.....ccc+ccccc..cccc+cccccccccccc......Wcccc
 ccLLLccc..ccccuuu.cm...m..d..ccccc+cccccccccc
 cccccccc..ccc..!...m.x.m.a..cccccc""ccccccccc
 cc$$cccc..ccc.uuu..m...m...ccccccc""cc**%**cc
-c$$$$cc...cccc....cm...m.cccWccccc""c...cee.c
+c$$$$cc...cccc....cm...m.cccWccccc""c...c...c
 c$$$$+...cccccc..cccc+cccc...Wcccc""c...c...c
-c$$$$c...ccccccccc.m...m.xx...Wccc""cmm+c+mmc
-cc$ccccc+cccccccc..m.x.m...u..Wccc""c.......c
-ccccccc...cccc...a.m...m....x.cc.c""c.......c
-cccc.........c..b..m...mc....cc..c""c...!...c
-c.xJ...ccc...cc..cccc+cccc..cc...c""c......cc
-c...ccccccc+cccccc.m.....ccccJJJJc""+.....ccc
-cc...ccccc'''cccc..m.....uccJJJJJc""ccccccccc
-cc...ccc''''''cc.!.m.....<uc.....+"""""""""cc
+c$$$$c...ccccccccc.m...m.xx...Wccc""ccc+c+ccc
+cc$ccccc+cccccccc..m.x.m...u..Wccc""c...e...c
+ccccccc...cccc...a.m...m....x.cc%c""c...J...c
+cccc.........c..b..m...mc....cc**c""c..JJJe.c
+c.xJ...ccc...cc..cccc+cccc..ccc+cc""c..JJ..cc
+c...ccccccc+cccccc.m.....cccc.JJJc""+.....ccc
+cc...ccccc'''cccc..m.....ucce.JJJc""ccccccccc
+cc...ccc''''''cc.!.m.....<uce....+"""""""""cc
 c..cccc''''''''cc.......cuccc....cc"""""""""c
 c..ccc'''''''''cccccc+cccccccccccccccccccc""c
 c..cc''''''''''ccccc...ccccccc""""""""""""""c

@@ -495,8 +495,8 @@ Beogh szepcze: „Będziesz cierpiał za tą sprawkę.”
 
 Beogh się gniewa: „Oko za oko, ząb za ząb.”
 %%%%
-# an unbelieving hill orc has destroyed an idol
-Beogh idol hill orc
+# an unbelieving orc has destroyed an idol
+Beogh idol orc
 
 Beogh grzmi: „Giń, heretyku!”
 

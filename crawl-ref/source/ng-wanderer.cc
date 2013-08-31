@@ -33,57 +33,55 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
             set_item_ego_type(you.inv[slot], OBJ_MISSILES, SPMSL_POISONED);
             slot++;
         }
+
+        autopickup_starting_ammo(MI_NEEDLE);
     }
 
-    newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-
-    // We'll also re-fill the template, all for later possible safe
-    // reuse of code in the future.
-    you.inv[slot].quantity  = 1;
-    you.inv[slot].plus      = 0;
-    you.inv[slot].plus2     = 0;
-    you.inv[slot].special   = 0;
+    int sub_type = WPN_DAGGER;
 
     // Now fill in the type according to the random wpn_skill.
     switch (wpn_skill)
     {
     case SK_SHORT_BLADES:
-        you.inv[slot].sub_type = WPN_SHORT_SWORD;
+        sub_type = WPN_SHORT_SWORD;
         break;
 
     case SK_LONG_BLADES:
-        you.inv[slot].sub_type = WPN_FALCHION;
+        sub_type = WPN_FALCHION;
         break;
 
     case SK_MACES_FLAILS:
-        you.inv[slot].sub_type = WPN_MACE;
+        sub_type = WPN_MACE;
         break;
 
     case SK_AXES:
-        you.inv[slot].sub_type = WPN_HAND_AXE;
+        sub_type = WPN_HAND_AXE;
         break;
 
     case SK_POLEARMS:
-        you.inv[slot].sub_type = WPN_SPEAR;
+        sub_type = WPN_SPEAR;
         break;
 
     case SK_STAVES:
-        you.inv[slot].sub_type = WPN_QUARTERSTAFF;
+        sub_type = WPN_QUARTERSTAFF;
         break;
 
     case SK_THROWING:
-        you.inv[slot].sub_type = WPN_BLOWGUN;
+        sub_type = WPN_BLOWGUN;
         break;
 
     case SK_BOWS:
-        you.inv[slot].sub_type = WPN_BOW;
+        sub_type = WPN_BOW;
         break;
 
     case SK_CROSSBOWS:
-        you.inv[slot].sub_type = WPN_CROSSBOW;
+        sub_type = WPN_CROSSBOW;
         break;
     }
 
+    newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, sub_type);
+    you.inv[slot].quantity  = 1;
+    you.inv[slot].special   = 0;
     int offset = plus ? 1 : 0;
     you.inv[slot].plus  = random2(plus) + offset;
     you.inv[slot].plus2 = random2(plus) + offset;
@@ -370,7 +368,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_CHARMS:
-        book_type = BOOK_WAR_CHANTS;
+        book_type = BOOK_BATTLE;
         break;
     }
 
@@ -555,7 +553,6 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
 
     case SK_DODGING:
     case SK_STEALTH:
-    case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     {
@@ -651,7 +648,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     if ((skill == SK_DODGING || skill == SK_STEALTH)
         && gift_skills.find(SK_ARMOUR) != gift_skills.end())
     {
-        skill = SK_TRAPS;
+        skill = SK_NONE;
     }
 
     // Give the player knowledge of only one spell.
@@ -661,7 +658,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
         {
             if (you.spells[i] != SPELL_NO_SPELL)
             {
-                skill = SK_TRAPS;
+                skill = SK_NONE;
                 break;
             }
         }
@@ -689,7 +686,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     // Don't give a gift from the same skill twice; just default to
     // a curing potion/teleportation scroll.
     if (gift_skills.find(skill) != gift_skills.end())
-        skill = SK_TRAPS;
+        skill = SK_NONE;
 
     switch ((int)skill)
     {
@@ -737,10 +734,10 @@ static void _wanderer_decent_equipment(skill_type & skill,
         _give_wanderer_spell(skill);
         break;
 
-    case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
+    case SK_NONE:
         _curing_or_teleport(1);
         break;
     }
@@ -809,6 +806,7 @@ static void _wanderer_cover_equip_holes(int & slot)
         newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
                            15 + random2avg(21, 5));
         slot++;
+        autopickup_starting_ammo(MI_BOLT);
     }
 
     // And the player needs arrows if they have a bow.
@@ -829,6 +827,7 @@ static void _wanderer_cover_equip_holes(int & slot)
         newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
                            15 + random2avg(21, 5));
         slot++;
+        autopickup_starting_ammo(MI_ARROW);
     }
 }
 
@@ -842,8 +841,7 @@ void create_wanderer(void)
 
     // Regardless of roles, players get a couple levels in these skills.
     const skill_type util_skills[] =
-        { SK_THROWING, SK_TRAPS, SK_STEALTH,
-          SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
+    { SK_THROWING, SK_STEALTH, SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
     int util_size = ARRAYSZ(util_skills);
 

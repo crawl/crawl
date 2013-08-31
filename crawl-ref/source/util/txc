@@ -237,7 +237,7 @@ class FullWidthTextWrapper(TextWrapper):
             kwargs.pop('no_space')
             # Those languages don't use spaces. Break lines on punctuation.
             self.wordsep_simple_re = re.compile(r'(\s+|[^\s\w]*\w+[^0-9\W]'
-                                                u'[、。])')
+                                                u'[、。，])')
         TextWrapper.__init__(self, **kwargs)
 
     def _split(self, text):
@@ -425,7 +425,7 @@ class ResourceFile():
 
     def __setitem__(self, key, value):
         """Called by the subclass which has already done the conversion.
-        Determine the change type and store the new value in the apropriate
+        Determine the change type and store the new value in the appropriate
         dict of self.diff"""
         if key not in self.entries:
             if key.find(':') != -1 and key.split(':')[1] == 'quote':

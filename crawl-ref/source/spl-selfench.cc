@@ -17,6 +17,9 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "options.h"
+#include "religion.h"
+#include "shout.h"
 #include "spl-cast.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -28,7 +31,7 @@ int allowed_deaths_door_hp(void)
 {
     int hp = you.skill(SK_NECROMANCY) / 2;
 
-    if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
+    if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance())
         hp += you.piety / 15;
 
     return max(hp, 1);
@@ -78,11 +81,15 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
-    // Allowed for Lava Orcs of sufficiently low temperature, despite
-    // their having a stoneskin-like effect.
-    if (you.duration[DUR_STONESKIN] || you.duration[DUR_FIRE_SHIELD])
+    if (player_stoneskin() || you.form == TRAN_STATUE)
     {
-        mpr("The spell conflicts with another spell still in effect.");
+        mpr("The film of ice won't work on stone.");
+        return SPRET_ABORT;
+    }
+
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        mpr("Your ring of flames would instantly melt the ice.");
         return SPRET_ABORT;
     }
 
@@ -232,6 +239,12 @@ spret_type cast_fly(int power, bool fail)
         return SPRET_ABORT;
     }
 
+    if (you.duration[DUR_GRASPING_ROOTS])
+    {
+        mpr("The grasping roots prevent you from becoming airborne.", MSGCH_WARN);
+        return SPRET_ABORT;
+    }
+
     fail_check();
     const int dur_change = 25 + random2(power) + random2(power);
     const bool was_flying = you.airborne();
@@ -278,11 +291,14 @@ int cast_selective_amnesia(string *pre_msg)
     int slot;
 
     // Pick a spell to forget.
+    mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+    keyin = Options.auto_list
+            ? list_spells(false, false, false, "Forget which spell?")
+            : get_ch();
+    redraw_screen();
+
     while (true)
     {
-        mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
-        keyin = get_ch();
-
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
@@ -291,13 +307,14 @@ int cast_selective_amnesia(string *pre_msg)
 
         if (keyin == '?' || keyin == '*')
         {
-            keyin = list_spells(false, false, false);
+            keyin = list_spells(false, false, false, "Forget which spell?");
             redraw_screen();
         }
 
         if (!isaalpha(keyin))
         {
             mesclr();
+            keyin = get_ch();
             continue;
         }
 
@@ -305,7 +322,11 @@ int cast_selective_amnesia(string *pre_msg)
         slot = get_spell_slot_by_letter(keyin);
 
         if (spell == SPELL_NO_SPELL)
+        {
             mpr("You don't know that spell.");
+            mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+            keyin = get_ch();
+        }
         else
             break;
     }
@@ -313,17 +334,48 @@ int cast_selective_amnesia(string *pre_msg)
     if (pre_msg)
         mpr(pre_msg->c_str());
 
-    const int ep_gain = spell_mana(spell);
     del_spell_from_memory_by_slot(slot);
 
-    if (ep_gain > 0)
-    {
-        inc_mp(ep_gain);
-        mpr("The spell releases its latent energy back to you as "
-            "it unravels.");
-    }
-
     return 1;
+}
+
+spret_type cast_infusion(int pow, bool fail)
+{
+    fail_check();
+    if (!you.duration[DUR_INFUSION])
+        mpr("Your attacks are magically infused.");
+    else
+        mpr("Your attacks are magically infused for longer.");
+
+    you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
+    you.props["infusion_power"] = pow;
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_song_of_slaying(int pow, bool fail)
+{
+    fail_check();
+
+    if (you.duration[DUR_SONG_OF_SLAYING])
+        mpr("You start a new song!");
+    else
+        mpr("You start singing a song of slaying.");
+
+    you.increase_duration(DUR_SONG_OF_SLAYING, 20 + pow / 3, 20 + pow / 3);
+
+    noisy(10, you.pos());
+
+    you.props["song_of_slaying_bonus"] = 0;
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_song_of_shielding(int pow, bool fail)
+{
+    fail_check();
+    you.increase_duration(DUR_SONG_OF_SHIELDING, 10 + random2(pow) / 3, 40);
+    mpr("You are being protected by your magic.");
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_silence(int pow, bool fail)

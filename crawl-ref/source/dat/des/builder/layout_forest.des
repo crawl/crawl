@@ -1,0 +1,129 @@
+###############################################################################
+# layout_forest.des: Enchanted Forest layouts
+###############################################################################
+
+: require("dlua/util.lua")
+: require("dlua/layout/procedural.lua")
+: require("dlua/layout/zonify.lua")
+: require("dlua/layout/hyper.lua")
+: require("dlua/layout/theme.lua")
+
+# A twisty turny forest maze.
+NAME:   layout_twisted_forest
+DEPTH:  Forest
+WEIGHT: 100
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand layout_type_forest
+{{
+  if is_validating() then return; end
+
+  -- TODO:
+  --  * Finish the rare version for Crypt with actual crypts scattered around (?)
+
+  local streams = crawl.one_chance_in(4)
+  local lakes = true
+
+  local scale = 1 -- util.random_range_real(1,2)
+  local tree_feature = 't'
+  local fill = 'x'
+  local plant_mons = "plant"
+  if you.in_branch("forest") then
+    fill = 't'
+    scale = 0.55 - 0.05 * you.depth()
+  elseif you.in_branch("crypt") then
+    streams = false
+    scale = 0.5
+    plant_mons = "w:2 col:darkgrey plant name:withered name_adjective               \
+                  tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+                  name_adjective tile:mons_withered_plant"
+    colour("t = w:5 lightgrey / w:5 darkgrey / brown")
+    set_feature_name("tree", "dead tree")
+    lakes = false
+    -- TODO: Graves instead of lakes
+  end
+  kmons("1 = " .. plant_mons)
+
+  local gxm,gym = dgn.max_bounds()
+  extend_map { width = gxm, height = gym, fill = fill }
+
+  -- Setup worley functions
+  local fwall = procedural.sub(1, procedural.border { padding = 5 },
+                               procedural.worley_diff { scale = util.random_range_real(0.125,0.25) })
+
+  local fstreams = procedural.abs(procedural.simplex3d { scale = 0.5, unit = false })
+  fstreams = procedural.distort {
+    source = fstreams,
+    offsetx = procedural.simplex3d { scale = 0.3, unit = false },
+    offsety = procedural.simplex3d { scale = 0.3, unit = false },
+    scale = 4
+  }
+
+  local ftree = procedural.worley_diff { scale = 0.15 / scale }
+  ftree = procedural.distort {
+    source = ftree,
+    offsetx = procedural.simplex3d { scale = 0.4, unit = false },
+    offsety = procedural.simplex3d { scale = 0.4, unit = false },
+    scale = 6 * scale
+  }
+  ftree = procedural.distort {
+    source = ftree,
+    offsetx = procedural.simplex3d { scale = 10, unit = false },
+    offsety = procedural.simplex3d { scale = 10, unit = false },
+    scale = 1.5 * scale
+  }
+
+  local fjitter1 = procedural.abs(procedural.simplex3d { scale = 100, unit = false }) -- Random
+  local fjitter2 = procedural.simplex3d { scale = 100 } -- Random
+
+  procedural.render_map(_G,fwall,function(v,x,y)
+    -- Rock wall
+    if v < 0 then return fill end
+    if streams then
+      local sm = procedural.minmax_map(fstreams(x,y),0.05,0.1)
+      if sm < (1 - fjitter1(x,y)) then return 'W' end
+    end
+
+    local tv, id = ftree(x,y)
+
+    -- Get four random numbers (we don't need them all)
+    local rand1,rand2,rand3 = crawl.split_bytes(id)
+
+    -- Decide the local feature
+    rand1 = rand1/255
+    -- Trees
+    local outer_feature, inner_feature, plant_feature = tree_feature,fill,'1'
+    -- Clearing (maybe rock center)
+    if rand1 > 0.95 then outer_feature,inner_feature,plant_feature = '.','.','.'
+    -- Rock
+    elseif rand1 > 0.9 then outer_feature,plant_feature = fill, crawl.coinflip() and 'W' or '.'
+    -- Pools
+    elseif rand1 > 0.8 then outer_feature,inner_feature,plant_feature = 'W','w',crawl.coinflip() and '1' or '.' end
+
+    -- Decide clump size
+    rand2 = rand2/255
+
+    local size = rand2/6 + 0.2
+    if tv > size + 0.6 then
+      return inner_feature
+    elseif tv >= size then
+      return outer_feature
+    else
+      -- Graduate plants over a slightly larger boundary
+      local pv = procedural.minmax_map(tv, size - 0.1, size + 0.6)
+      if rand3 > 180 and pv > fjitter1(x,y) then
+        return plant_feature
+      else
+        return '.'
+      end
+    end
+
+  end)
+
+  zonify.map_fill_zones(_G, 1, fill)
+
+  if you.in_branch("crypt") then
+    tile("t = dngn_tree_dead")
+  end
+  theme.D.caves(_G)
+  kmask("1 = vault")
+}}

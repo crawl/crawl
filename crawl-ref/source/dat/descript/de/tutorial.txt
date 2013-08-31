@@ -101,6 +101,10 @@ tutorial1 door
 Du kannst eine geschlossene Tür öffnen indem du in sie hinein gehst. Um eine
 offene Türe zu schließen drücke <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
 %%%%
+tutorial1 close_door
+
+Um eine offene Tür zu schließen, drücke <input>$cmd[CMD_CLOSE_DOOR]</input>.
+%%%%
 tutorial1 water
 
 Beachte das du durch flaches aber nicht durch tiefes Wasser laufen kannst.
@@ -534,6 +538,93 @@ Um Ihre Kenntnisse von Zauber zu überprüfen, drücken Sie
 <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder
 <input>mouseover</input> über Ihre gespeicherten Zauber </localtiles>.
 Vergleichen Sie Ihre Zauber Erfolgsraten vor und nach schwingt dieses Personal.
+%%%%
+tutorial4 aiming_clouds
+
+Eine verpestete Wolke bedeckt, wenn geworfen, eine Fläche mit schädlichen
+Dämpfen und während du zielst wirst du in der Lage sein zu sehen welchen
+Bereich sie betrifft. Versuche mehrere Feinde in einer einzigen Wolke zu
+fangen, um mit deiner Magie effizienter zu sein.
+%%%%
+tutorial4 spell_hunger
+
+Zaubern kann dich wirklich hungrig hungrig machen. Der Zauberhunger ist höher
+für schwierigere Zauber und kann durch hohe Intelligenz und Ausbildung der
+Fertigkeit Zaubern reduziert werden.
+%%%%
+tutorial4 forget_spell
+
+Eine Stufe aufsteigen und das Erhöhen der Zaubern Fertigkeit geben weitere
+Plätze für Zaubersprüche in deinem Gedächtnis frei. Ebenfalls kannst du
+<w>einen gelernten Spruch vergessen</w> um Platz für einen neuen/weiteren zu
+machen. Der einfachste Weg dies zu tun ist mit einer Schriftrolle der Amnesie.
+Lese einfach laut die Schriftrolle  (mit
+<input>$cmd[CMD_READ]</input><localtiles> oder <input>klicke</input> sie
+einfach</localtiles>) und wähle dann den Spruch/Zauber den du vergessen willst.
+%%%%
+tutorial4 memorise2
+
+Wiederum, lerne einen Spruch mit
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder <input>klicke</input>
+auf den Gedächtnis Reiter und wähle eine Zauberkachel</localtiles>. Und dann
+erhebe deine Armee von Untoten!
+%%%%
+tutorial4 displace_allies
+
+Haben du bemerkt, du kannst die Position mit deinen Verbündeten tauschen, indem
+du in sie hinein läufst? Unter anderem kann das Verschieben eines freundlichen
+Wesens ein guter Weg sein, um einem Kampf zu entkommen.
+%%%%
+tutorial4 order_allies
+
+Versuche das Töten deinen Verbündeten zu überlassen! Wenn notwendig kannst du
+sie mit <input>$cmd[CMD_SHOUT]</input> rufen. Bevor du diese Pforte öffnest
+kannst du mit <input>$cmd[CMD_MOVE_NOWHERE]</input> so lange warten bis sie zu
+dir aufgeschlossen haben.
+%%%%
+tutorial4 heavy_armour
+
+Schwere Rüstung behindert dich sehr beim Zaubern. Lege diese Rüstung und Schild
+an (mit <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> oder indem du auf sie
+<input>klickst</input> </localtiles>) und vergleiche die Erfolgsquote mit
+<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder mit einem
+<input>Mouseover</input> über deine gelernten Zaubersprüche</localtiles>. Deine
+Rüstung kannst du mit <input>$cmd[CMD_REMOVE_ARMOUR]</input> wieder
+ablegen<localtiles> oder, wiederum , via <input>Mausklick</input></localtiles>.
+%%%%
+tutorial4 resting_reminder
+
+Vergewissere dich das deine Lebens- und Zauberenergie voll ist, bevor du in ein
+neues Gebiet eintrittst. Falls notwendig, pausiere mit
+<input>$cmd[CMD_REST]</input><localtiles> oder <input>mausklicke</input> in das
+Kommandofeld</localtiles>.
+
+Außerdem, da Untote nicht atmen kannst du verpestete Wolke werfen ohne deinen
+Verbündeten zu schaden.
+%%%%
+tutorial4 tutorial_end
+
+Herzlichen Glückwunsch, du bist jetzt ein echter Zauberer! Um die Einführung zu
+beenden, gehe einfach diese Stufen hinunter.
+%%%%
+tutorial4 exit
+
+:nowrap
+<yellow>Zauber Kommandos</yellow>
+  <w>$cmd[CMD_MEMORISE_SPELL]</w> einen Zauberspruch lernen
+  <w>$cmd[CMD_DISPLAY_SPELLS]</w> die Leistung des Zauberspruchs prüfen
+  <w>$cmd[CMD_CAST_SPELL]</w> einen Zauberspruch aufsagen
+<localtiles>     Ausserdem kannst du neue Sprüche mit dem <w>Lernreiter</w> lernen.
+     Bereits erlernte Zaubersprüche rufst du mit <w>Linksklick</w> ab, und lies ihre Beschreibung und überprüfe deine Zauber Kenntnisse mit einem <w>Mouseover</w> oder <w>Rechtsklick</w>
+</localtiles>
+
+  <w>$cmd[CMD_READ]</w> lies ein Buch, um die Beschreibung zu lesen oder einen Zauberspruch zu vergessen
+  <w>$cmd[CMD_REST]</w> pausiere für bis zu 100 Runden um Magie- und Lebenspunkte aufzufrischen
+  <w>$cmd[CMD_SHOUT]</w> Verbündete rufen
+  <w>$cmd[CMD_REMOVE_ARMOUR]</w> Rüstung ablegen
+
+
+                   <cyan>Drücke <white>eine beliebige Taste</white> um diesen Bildschirm zu leeren...</cyan>
 %%%%
 tutorial5 start
 

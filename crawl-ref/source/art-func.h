@@ -253,11 +253,11 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     *pract    = 1;
     *did_work = true;
 
-    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 3);
+    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
     your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false);
 
-    if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 1000))
+    if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
         your_spells(SPELL_VENOM_BOLT, power, false);
 
     return false;
@@ -694,7 +694,8 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
         weapon->plus2++, boosted = true;
     if (boosted)
     {
-        mpr("<green>The lance glows as it skewers the body.</green>");
+        mprf("<green>The lance glows as it skewers %s.</green>",
+              defender->name(DESC_THE).c_str());
         you.wield_change = true;
     }
 }
@@ -727,7 +728,7 @@ static void _BRILLIANCE_unequip(item_def *item, bool *show_msgs)
 ///////////////////////////////////////////////////
 static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    _equip_mpr(show_msgs, "Time to introduce the shillelagh law.");
+    _equip_mpr(show_msgs, "Time to lay down the shillelagh law.");
 }
 
 

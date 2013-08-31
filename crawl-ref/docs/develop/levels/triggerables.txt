@@ -231,8 +231,8 @@ function callback.convert_lava (data, triggerable, triggerer, marker, ev)
     convert_slaves_to_lava(my_slaves)
   elseif lp == 7 then
     my_slaves = dgn.find_marker_positions_by_prop("lava_phase", 6)
-    crawl.mpr("The ground shudders. Some of the lava has hardened enough to walk " ..
-              "over!", "warning")
+    crawl.mpr("The ground shudders. Some of the lava has hardened enough to " ..
+              "walk over!", "warning")
     convert_slaves_to_lava(my_slaves, true)
   end
 end

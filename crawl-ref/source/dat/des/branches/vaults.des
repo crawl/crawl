@@ -238,7 +238,7 @@ MONS:    orc knight, orc priest / orc warrior / orc wizard / orc w:15
 KMONS:   7 = yaktaur
 KMONS:   8 = yaktaur / nothing w:5
 KMONS:   9 = deep elf knight
-KMONS:   0 = deep elf mage / deep elf summoner / deep elf soldier / nothing w:15
+KMONS:   0 = deep elf mage / deep elf summoner / deep elf fighter / nothing w:15
 KMONS:   A = kobold demonologist
 KMONS:   B = kobold demonologist w:1 / big kobold / kobold w:9
 KMONS:   C = skeletal warrior
@@ -374,7 +374,7 @@ ENDMAP
 # rune.
 #
 # Vaults:$ extensively uses subvaults. To provide another Vaults:$ quadrant
-# variation, create a map tagged vaults_end_quadrant that is 27x24. It should
+# variation, create a map tagged vaults_end_quadrant that is 27x23. It should
 # have three blank cells on one corner (see any existing quadrant for an
 # example), which will be used to orient that corner towards the middle of
 # the map. Each quadrant must be capable of generating a rune, which
@@ -470,7 +470,7 @@ ENDMAP
 
 
 ############################################################
-# Vaults:8 - the subvault used to place the rune.
+# Vaults:$ - the subvault used to place the rune.
 #
 # Used by the 'vaults_end_rune()' function in the prelude.
 #
@@ -483,7 +483,7 @@ O
 ENDMAP
 
 ############################################################
-# Vaults:8 - the subvault used for potential rune locations that do not
+# Vaults:$ - the subvault used for potential rune locations that do not
 # contain the real rune.
 #
 # Used by the 'vaults_end_rune()' function in the prelude.
@@ -501,7 +501,7 @@ o
 ENDMAP
 
 ############################################################
-# Vaults:8 - the subvault used for potential rune locations that do not
+# Vaults:$ - the subvault used for potential rune locations that do not
 # contain the rune, but rather a mimic of it!
 #
 # Used by the 'vaults_end_rune()' function in the prelude.
@@ -515,7 +515,7 @@ o
 ENDMAP
 
 ###############################################################################
-# Vaults:8 quadrants
+# Vaults:$ quadrants
 ###############################################################################
 
 ############################################################
@@ -1635,7 +1635,7 @@ ENDMAP
 # 19 *, 12 monsters
 NAME:   vaults_end_grunt_pinched
 TAGS:   vaults_end_quadrant
-NSUBST: O = 1:0 / *:*
+NSUBST: O = 1:O / *:*
 SUBST:  9 = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1665,8 +1665,145 @@ xxxO*............xO*......x
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 18 *, 12 monsters
+NAME:    vaults_end_grunt_door_to_door
+TAGS:    vaults_end_quadrant
+SHUFFLE: 456
+NSUBST:  1 = 1:9 / *:*
+NSUBST:  2 = 1:9 / *:*
+NSUBST:  3 = 1:9 / *:*
+NSUBST:  4 = 1:9 / *:*
+NSUBST:  5 = 1:9 / *:*
+NSUBST:  6 = 1:O / *:*
+SUBST:   9 = 8 9 .:30
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx+
+xx..........xxx..........xx
+x.9..+xx+..9.+.9..+xx+..9.x
+x....x11x....x....x22x....x
+x....x11x....x....x22x....x
+x.9..+xx+..9.+.9..+xx+..9.x
+xx..........xxx..........xx
+xx+xx+xx+xx+xxx+xx+xx+xx+xx
+xx..........xxx..........xx
+x.9..+xx+..9.x.9..+xx+..9.x
+x....x44x....x....x33x....x
+x....x44x....x....x33x....x
+x.9..+xx+..9.+.9..+xx+..9.x
+xx..........xxx..........xx
+xx+xx+xx+xx+xxx+xx+xx+xx+xx
+xx..........xxx..........xx
+x.9..+xx+..9.+.9..+xx+..9.x
+x....x55x....x....x66x....x
+x....x55x....x....x66x....x
+x.9..+xx+..9.+.9..+xx+..9.x
+xx..........xxx..........xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 17 *, 12 monsters
+NAME:   vaults_end_grunt_cloverleaf
+TAGS:   vaults_end_quadrant
+NSUBST: O = 1:O / *:*
+SUBST:  9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx+...
+xxxxx**..xxxxxxxxx....xxx.x
+xxxO*..9...xxxxx...9....x+x
+xx*..9.....xxxxx.....9...xx
+xx*.........xxx..........xx
+xx.9........xxx........9.xx
+xx........9..x..9........xx
+xxx..........+..........xxx
+xxxxx....9.+xxx+.9....xxxxx
+xxxxxxxx...x.9.x...xxxxxxxx
+xxxxxxxxx+xx9.9xx+xxxxxxxxx
+xxxxxxxx...x.9.x...xxxxxxxx
+xxxxx....9.+xxx+.9....xxxxx
+xxx..........+..........xxx
+xx........9..x..9........xx
+xx.9........xxx........9.xx
+xx*.........xxx.........*xx
+xx*..9......xxx......9..*xx
+xxxO*..9...xxxxx...9..*Oxxx
+xxxxx**..xxxxxxxxx..**xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 20 *, 14 monsters
+NAME:   vaults_end_grunt_tight_spiral
+TAGS:   vaults_end_quadrant
+SUBST:  9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx........9............
+xxxx....xxxxxxxxxxxxx.....x
+xxx...9xx....9......9.....x
+xxx.x9.x..xxxxxxxxxx.9....x
+xx..x.xx.xx..9.....xxx....x
+xx..x.x..x..xxxxxx...xx...x
+xx..x.x.xx.xx9...xxx..x...x
+xx..x.x.x..xx*xx...xx.x...x
+x...x.x.x.xx***xxx..x.x...x
+x...x.x.x.x*9*9*xxx.x.x...x
+x..9x9x9x9***O***9x9x9x9..x
+x...x.x.xxx*9*9*x.x.x.x...x
+x...x.x..xxx***xx.x.x.x...x
+xx..x.xx...xx*xx..x.x.x..xx
+xx..x..xxx...9xx.xx.x.x..xx
+xx..xx...xxxxxx..x..x.x..xx
+xx...xxx.....9..xx.xx.x..xx
+xxx..9.xxxxxxxxxx..x.9x.xxx
+xxx...9......9....xx9...xxx
+xxxx..xxxxxxxxxxxxx....xxxx
+xxxxx........9........xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 18 *, 12 monsters
+NAME:   vaults_end_grunt_simple_division
+TAGS:   vaults_end_quadrant
+SUBST:  9 = 8 9 .:20
+NSUBST: O = 1:O / *:*
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+x*.9.........+.........9..
+x...........xxx...........x
+x9.........xxOxx.........9x
+x....9....xx***xx.....9...x
+x.......xxx.9.9.xxx.......x
+x......+x.........x+......x
+x.....x+...........+x.....x
+x...xxx.............xxx...x
+x..xx........9........xx..x
+x.xx*9...............9*xx.x
+x+xO*......9...9......*Ox+x
+x.xx*9...............9*xx.x
+x..xx........9........xx..x
+x...xxx.............xxx...x
+x.....x+...........+x.....x
+x......+x.........x+......x
+x.......xxx.9.9.xxx.......x
+x....9....xx***xx.....9...x
+x9.........xxOxx.........9x
+x...........xxx...........x
+xO.9.........+.........9.*x
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
-# Vaults:8 prize quadrants
+# Vaults:$ prize quadrants
 ###############################################################################
 
 ############################################################
@@ -2405,7 +2542,75 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################
-# Vaults:8 - Rooms Quadrant
+# 16 *, 10 |, 16 monsters
+NAME:    vaults_end_nooodl_tilted_maze
+TAGS:    vaults_end_quadrant_prize
+SUBST:   9 = 8 9 .:10
+NSUBST:  O = 1:O / *:|
+SUBST:   * = * $:4
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xO***$...9...xx..xx.......
+x*||*$...xx..xx...9....9..x
+x****xx..xx...x.......xxxxx
+xxx$$xx.......x.9.xx..xx..x
+xxx.......9...xx..xx......x
+x.9.......xxxxxx...x.9....x
+x.....xx..xx.9.....x...xx.x
+x.xx..xx...........xxxxxx.x
+xxxx...x.9.....xx..xx.9...x
+x....9.x...xxxxxx.........x
+x......xxxxxx...x.......xxx
+x..xxxxxx....9..x...xx..xxx
+x9.xx....9......xxxxxx...9x
+x...9.......xx..xx..9.....x
+x.......xxxxxx...x.......xx
+x...xx..xx...9...x...xx$$xx
+xx..xx..9x.......xx..xx***x
+x*$......x...xxxxxx...$*|*x
+x|*$.....xx..xx..9....$*|*x
+x$|*$xx..xx...........xx|*x
+xO$|*xx9..x9......xx..xx*Ox
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 21 |, 20 monsters
+NAME:    vaults_end_grunt_nonplussed
+TAGS:    vaults_end_quadrant_prize
+NSUBST:  9 = 10:8 / 10:9 / *:.
+NSUBST:  O = 1:O / *:|
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxOxxx|xxx|xxx|xxx|xxx|x..
+xO9.x.9.x.9.x.9.x.9.x.9.x.x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+x|9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+x|9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+x|9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9|x
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xO9.x.9.x.9.x.9.x.9.x.9.xxx
+xx.x.x.x.x.x.x.x.x.x.x.x.xx
+xxx.9.x.9.x.9.x.9.x.9.x.9Ox
+xxxxOxxx|xxx|xxx|xxx|xxxOxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################
+# Vaults:$ - Rooms Quadrant
 #
 # This quadrant uses a subvault for each room. Any subvault tagged
 # vaults_end_room_rune should be guaranteed to provide a rune. Any subvault
@@ -2451,7 +2656,7 @@ x...........H..B..........
 xxxxxxxxxxxxxxxxxxxxxxxxa
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Traps and Loot Subvault
+# Vaults:$ - Rooms Quadrant - Traps and Loot Subvault
 #            Replace each square with traps or loot, but mostly floor.
 NAME: vaults_end_room_traps_and_loot
 TAGS: vaults_end_room
@@ -2461,7 +2666,7 @@ SUBST: . = ?
 MAP
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Border Subvault
+# Vaults:$ - Rooms Quadrant - Border Subvault
 #            Fill the room with loot, but leave an empty border.
 NAME: vaults_end_room_border
 TAGS: vaults_end_room
@@ -2484,7 +2689,7 @@ TAGS: vaults_end_room
 MAP
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Diamond Subvault
+# Vaults:$ - Rooms Quadrant - Diamond Subvault
 #            Fill the room with money in a diamond pattern.
 NAME: vaults_end_room_diamond
 TAGS: vaults_end_room
@@ -2505,7 +2710,7 @@ TAGS: vaults_end_room
 MAP
 ENDMAP
 
-# Vaults:8 - Rooms Quadrant - Rune Subvault
+# Vaults:$ - Rooms Quadrant - Rune Subvault
 #            Potentially contains the rune.
 NAME: vaults_end_room_rune
 TAGS: vaults_end_room_rune

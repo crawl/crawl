@@ -241,7 +241,7 @@ bool trap_def::is_safe(actor* act) const
         return false;
 
     // No prompt (teleport traps are ineffective if wearing an amulet of
-    // stasis or a -TELE item)
+    // stasis or a -Tele item)
     if (type == TRAP_TELEPORT && you.no_tele(false))
         return true;
 
@@ -573,7 +573,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (in_sight)
         reveal();
 
-    // Store the position now in case it gets cleared inbetween.
+    // Store the position now in case it gets cleared in between.
     const coord_def p(pos);
 
     if (type_has_ammo())
@@ -996,7 +996,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
+        if (in_sight && you_know)
+            mpr("The gas trap seems to be inoperative.");
+        trap_destroyed = true;
+        break;
+#endif
+
     case TRAP_PLATE:
         dungeon_events.fire_position_event(DET_PRESSURE_PLATE, pos);
         break;
@@ -1006,14 +1013,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     }
 
     if (you_trigger)
-    {
         learned_something_new(HINT_SEEN_TRAP, p);
-
-        // Exercise T&D if the trap revealed itself, but not if it ran
-        // out of ammo.
-        if (!you_know && type != TRAP_UNASSIGNED && is_known())
-            practise(EX_TRAP_TRIGGER);
-    }
 
     if (trap_destroyed)
         destroy(know_trap_destroyed);
@@ -1073,8 +1073,10 @@ int trap_def::difficulty()
         return 15;
     case TRAP_WEB:
         return 12;
+#if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
         return 15;
+#endif
     // Irrelevant:
     default:
         return 0;
@@ -1188,12 +1190,10 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skill_rdiv(SK_TRAPS) + 2) <= random2(trap.difficulty() + 5))
+    if (random2(div_rand_round(you.experience_level, 3) + 2) <= random2(trap.difficulty() + 5))
     {
         mpr("You failed to disarm the trap.");
-        if (random2(you.dex()) > 5 + random2(5 + trap.difficulty()))
-            practise(EX_TRAP_DISARM_FAIL, trap.difficulty());
-        else
+        if (random2(you.dex()) <= 5 + random2(5 + trap.difficulty()))
         {
             if ((trap.type == TRAP_NET || trap.type==TRAP_WEB)
                 && trap.pos != you.pos())
@@ -1206,15 +1206,12 @@ void disarm_trap(const coord_def& where)
             }
             else
                 trap.trigger(you, true);
-
-            practise(EX_TRAP_DISARM_TRIGGER);
         }
     }
     else
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        practise(EX_TRAP_DISARM, trap.difficulty());
     }
 }
 
@@ -1631,7 +1628,9 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_BOLT:
     case TRAP_NEEDLE:
     case TRAP_NET:
+#if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
+#endif
     case TRAP_PLATE:
         return DNGN_TRAP_MECHANICAL;
 

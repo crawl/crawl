@@ -35,13 +35,8 @@ Notes:
 #include "errors.h"
 #include "syscalls.h"
 
-#ifndef DGAMELAUNCH
+#if !defined(DGAMELAUNCH) && !defined(__ANDROID__) && !defined(DEBUG_DIAGNOSTICS)
 #define DO_FSYNC
-#endif
-
-// DO_FSYNC doesn't work on Android
-#ifdef __ANDROID__
-#undef DO_FSYNC
 #endif
 
 // debugging defines

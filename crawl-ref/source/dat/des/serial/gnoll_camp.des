@@ -32,7 +32,7 @@ MONS:   gnoll
 MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3 / nothing
 MONS:   gnoll shaman
 MONS:   gnoll sergeant
-MONS:   jackal / hound / war dog w:1
+MONS:   jackal / hound / wolf w:1
 MAP
 ................
 ..cccccccccccc..
@@ -59,7 +59,7 @@ MONS:   gnoll
 MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
 MONS:   gnoll shaman
 MONS:   gnoll sergeant
-MONS:   jackal w:20 / hound / war dog w:1 / nothing w:5
+MONS:   jackal w:20 / hound / wolf w:1 / nothing w:5
 MAP
 ...............
 ...ccccccccc...
@@ -81,9 +81,9 @@ ENDMAP
 NAME:   grums_kennel
 TAGS:   serial_gnoll_camp patrolling
 WEIGHT: 5
-MONS:   hound / war dog w:1 / nothing w:50
-MONS:   hound / war dog w:1
-# Grum is generated without the band. Loads of war dogs on D:5 is too harsh.
+MONS:   hound / wolf w:1 / nothing w:50
+MONS:   hound / wolf w:1
+# Grum is generated without the band. Loads of wolves on D:5 is too harsh.
 KMONS:  3 = Grum, gnoll
 MAP
 ............
@@ -110,7 +110,7 @@ NSUBST: . = 7:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
 MONS:   gnoll shaman
 MONS:   gnoll sergeant
-MONS:   jackal / hound / war dog w:1
+MONS:   jackal / hound / wolf w:1
 MAP
      ........
     ....cc....
@@ -140,7 +140,7 @@ NSUBST: . = 5:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
 MONS:   gnoll shaman
 MONS:   gnoll sergeant
-MONS:   jackal / hound / war dog w:1
+MONS:   jackal / hound / wolf w:1
 MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
 MAP
     .......
@@ -174,7 +174,7 @@ ENDMAP
 NAME:    gnoll_camp_mini_basic
 TAGS:    serial_gnoll_camp patrolling allow_dup
 SHUFFLE: 34
-MONS:    gnoll, jackal / hound / war dog w:1
+MONS:    gnoll, jackal / hound / wolf w:1
 MONS:    gnoll shaman
 MONS:    gnoll sergeant
 MAP
@@ -193,7 +193,7 @@ ENDMAP
 
 NAME:  gnoll_camp_mini_doghouse
 TAGS:  serial_gnoll_camp patrolling allow_dup
-MONS:  gnoll, jackal / hound / war dog w:1 / nothing w:20
+MONS:  gnoll, jackal / hound / wolf w:1 / nothing w:20
 MAP
 ............
 ...ccc......
@@ -208,7 +208,7 @@ ENDMAP
 
 NAME:  gnoll_camp_mini_loothouse
 TAGS:  serial_gnoll_camp patrolling
-MONS:  gnoll, hound / war dog w:2
+MONS:  gnoll, hound / wolf w:2
 MAP
 ............
 ...ccc......
@@ -262,7 +262,7 @@ SHUFFLE: 23
 MONS:    gnoll
 MONS:    gnoll shaman
 MONS:    gnoll sergeant
-MONS:    hound / war dog w:2
+MONS:    hound / wolf w:2
 MAP
 ...........
 ...1..1....

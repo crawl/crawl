@@ -68,10 +68,7 @@ static bool mons_block_immob(const monster* mons)
     if (crawl_state.game_is_zotdef())
         return false;
 
-    return (mons->type == MONS_PLANT
-            || mons->type == MONS_FUNGUS
-            || mons_species(mons->type) == MONS_BUSH
-            || mons_species(mons->type) == MONS_OKLOB_PLANT);
+    return (mons_is_stationary(mons));
 }
 
 opacity_type opacity_immob::operator()(const coord_def& p) const

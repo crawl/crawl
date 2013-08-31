@@ -233,6 +233,7 @@ protected:
     coord_def m_origin;
 
     bool m_view_loaded;
+    bool m_player_on_level;
 
     FixedArray<screen_cell_t, GXM, GYM> m_current_view;
     coord_def m_current_gc;

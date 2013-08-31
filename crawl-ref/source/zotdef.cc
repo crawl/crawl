@@ -287,7 +287,7 @@ static void _hound_wave(int power)
 {
     wave_name("HOUND WAVE");
     monster_type hounds[] = {MONS_JACKAL, MONS_HOUND, MONS_WARG,
-                MONS_WOLF, MONS_WAR_DOG, END};
+                MONS_WOLF, END};
     monster_type boss[] = {MONS_HELL_HOUND, END};
     _zotdef_fill_from_list(hounds, 0, power); // full
     _zotdef_choose_boss(boss, power);
@@ -1044,7 +1044,8 @@ void zotdef_bosses_check()
         }
 
         // since you don't move between maps, any crash would be fatal
-        save_game(false);
+        if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+            save_game(false);
     }
 
     if ((you.num_turns + 1) % ZOTDEF_CYCLE_LENGTH == ZOTDEF_CYCLE_INTERVAL)

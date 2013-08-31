@@ -35,7 +35,7 @@
 
  -- This defines rough standards used for monster placement in these subvaults.
  -- Try to stick with using this for most subvaults, depending on openness:
- -- "small for ~11x11, "large" for ~>14x14, and "medium" for some inbetween.
+ -- "small for ~11x11, "large" for ~>14x14, and "medium" for some in between.
  -- Otherwise, use "custom", or not bother with the function.
 
 function vaults_room_setup(e, nsubst_glyph, nsubst_size)

@@ -93,7 +93,7 @@
 # TODO: With the current rules and parameters it looks most like an iron maze for
 # Dis, but with some tweaking could do nice stuff in other branches (or maybe just
 # make different versions of a similar algorithm). The special rendering for Dis vs. Pan
-# is nice but produces some strange artifacts because walls next to each other might
+# is nice but produces some strange artefacts because walls next to each other might
 # not overlap properly. Some other render modes would be good.
 NAME:   layout_cellular_growth
 DEPTH:  Dis:1-6, Pan

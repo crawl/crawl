@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\abl-show.cc" />
@@ -292,6 +292,8 @@
     <ClCompile Include="..\zotdef.cc" />
     <ClCompile Include="..\dgn-irregular-box.cc" />
     <ClCompile Include="..\json.cc" />
+    <ClCompile Include="..\mon-chimera.cc" />
+    <ClCompile Include="..\spl-pick.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\abl-show.h" />
@@ -610,5 +612,9 @@
     <ClInclude Include="..\zap-data.h" />
     <ClInclude Include="..\zotdef.h" />
     <ClInclude Include="..\dgn-irregular-box.h" />
+    <ClInclude Include="..\mon-chimera.h" />
+    <ClInclude Include="..\random-pick.h" />
+    <ClInclude Include="..\spl-pick.h" />
+    <ClInclude Include="..\data-index.h" />
   </ItemGroup>
 </Project>

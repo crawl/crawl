@@ -68,7 +68,7 @@
 
 static void _zin_saltify(monster* mon);
 
-string zin_recite_text(int* trits, size_t len, int prayertype, int step)
+string zin_recite_text(const int seed, const int prayertype, int step)
 {
     // 'prayertype':
     // This is in enum.h; there are currently five prayers.
@@ -80,18 +80,25 @@ string zin_recite_text(int* trits, size_t len, int prayertype, int step)
     // That's too confusing, so:
 
     if (step > -1)
+    {
         step = abs(step-3);
+        if (step > 3)
+            step = 0;
+    }
 
     // We change it to turn 1, turn 2, turn 3.
 
-    // 'trits' && 'len':
+    // 'trits':
     // To have deterministic passages we need to store a random seed.
     // Ours consists of an array of trinary bits.
 
     // Yes, really.
 
-    int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
-    int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
+    const int trits[7] = { seed % 3, (seed / 3) % 3, (seed / 9) % 3,
+                           (seed / 27) % 3, (seed / 81) % 3, (seed / 243) % 3,
+                           (seed / 729) % 3};
+    const int chapter = 1 + trits[0] + trits[1] * 3 + trits[2] * 9;
+    const int verse = 1 + trits[3] + trits[4] * 3 + trits[5] * 9 + trits[6] * 27;
 
     string sinner_text[12] =
     {
@@ -496,6 +503,8 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         eligibility[RECITE_IMPURE]++;
     if (mon->has_attack_flavour(AF_STEAL_FOOD))
         eligibility[RECITE_IMPURE]++;
+    if (mon->has_attack_flavour(AF_PLAGUE))
+        eligibility[RECITE_IMPURE]++;
 
     // Being naturally mutagenic isn't good either.
     corpse_effect_type ce = mons_corpse_effect(mon->type);
@@ -518,9 +527,12 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     // Anti-unholy prayer
 
-    // Hits monsters that are undead or demonic.
-    if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+    // Hits demons and incorporeal undead.
+    if (holiness == MH_UNDEAD && mon->is_insubstantial()
+        || holiness == MH_DEMONIC)
+    {
         eligibility[RECITE_UNHOLY]++;
+    }
 
     // Anti-heretic prayer
     // Pro-ally prayer
@@ -614,6 +626,13 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 // Returns -1, if entire audience already affected or too dumb to understand.
 bool zin_check_able_to_recite(bool quiet)
 {
+    if (you.duration[DUR_RECITE])
+    {
+        if (!quiet)
+            mpr("Finish your current sermon first, please.");
+        return false;
+    }
+
     if (you.duration[DUR_BREATH_WEAPON])
     {
         if (!quiet)
@@ -627,9 +646,9 @@ bool zin_check_able_to_recite(bool quiet)
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
 {
     "Abominations (harms the forces of chaos and mutation)",
-    "Ablutions (harms the unclean and walking corpses)",
+    "Ablutions (harms the unclean and corporeal undead)",
     "Apostates (harms the faithless and heretics)",
-    "Anathema (harms all types of demons and undead)",
+    "Anathema (harms demons and incorporeal undead)",
     "Alliances (blesses intelligent allies)",
 };
 
@@ -685,8 +704,6 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
             if (count[i] > 0)
                 *prayertype = (recite_type)i;
 
-        // If we got this far, we're actually reciting:
-        you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
         return 1;
     }
 
@@ -720,8 +737,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
         else
             return 0;
     }
-    // If we got this far, we're actually reciting and are out of breath from it:
-    you.increase_duration(DUR_BREATH_WEAPON, 3 + random2(10) + random2(30));
+
     return 1;
 }
 
@@ -751,7 +767,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                                   recite_type prayertype)
 {
     // That's a pretty good sanity check, I guess.
-    if (you.religion != GOD_ZIN)
+    if (!you_worship(GOD_ZIN))
         return false;
 
     monster* mon = monster_at(where);
@@ -1258,6 +1274,17 @@ static void _zin_saltify(monster* mon)
     }
 }
 
+void zin_recite_interrupt()
+{
+    if (!you.duration[DUR_RECITE])
+        return;
+    mpr("Your recitation is interrupted.", MSGCH_DURATION);
+    mpr("You feel short of breath.");
+    you.duration[DUR_RECITE] = 0;
+
+    you.increase_duration(DUR_BREATH_WEAPON, random2(10) + random2(30));
+}
+
 bool zin_vitalisation()
 {
     simple_god_message(" grants you divine stamina.");
@@ -1466,7 +1493,7 @@ bool vehumet_supports_spell(spell_type spell)
 // Returns false if the invocation fails (no spellbooks in sight, etc.).
 bool trog_burn_spellbooks()
 {
-    if (you.religion != GOD_TROG)
+    if (!you_worship(GOD_TROG))
         return false;
 
     god_acting gdact;
@@ -1491,12 +1518,8 @@ bool trog_burn_spellbooks()
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, false); ri; ++ri)
     {
-        // This code has been rearranged a bit from its original form so that
-        // with the new handling of spellbook destruction god conducts, the
-        // message order "The spellbook bursts into flames! Trog is delighted!"
-        // is preserved.
         const unsigned short cloud = env.cgrid(*ri);
-        vector<int> targets;
+        int count = 0;
         int rarity = 0;
         for (stack_iterator si(*ri); si; ++si)
         {
@@ -1532,14 +1555,14 @@ bool trog_burn_spellbooks()
             rarity += book_rarity(si->sub_type);
 
             dprf("Burned spellbook rarity: %d", rarity);
-
-            targets.push_back(si.link());
+            destroy_spellbook(*si);
+            item_was_destroyed(*si);
+            destroy_item(si.link());
+            count++;
         }
 
-        if (targets.size())
+        if (count)
         {
-            const int count = targets.size();
-
             if (cloud != EMPTY_CLOUD)
             {
                 // Reinforce the cloud.
@@ -1547,31 +1570,23 @@ bool trog_burn_spellbooks()
                 const int extra_dur = count + random2(rarity / 2);
                 env.cloud[cloud].decay += extra_dur * 5;
                 env.cloud[cloud].set_whose(KC_YOU);
-            }
-            else
-            {
-                mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
-                     count == 1 ? ""  : "s",
-                     count == 1 ? "s" : "");
+                continue;
             }
 
-            for (vector<int>::iterator it = targets.begin();
-                 it != targets.end(); it++)
-            {
-                item_was_destroyed(mitm[*it], MHITYOU);
-                destroy_item(*it);
-            }
+            const int duration = min(4 + count + random2(rarity/2), 23);
+            place_cloud(CLOUD_FIRE, *ri, duration, &you);
 
-            if (cloud == EMPTY_CLOUD)
-            {
-                const int duration = min(4 + count + random2(rarity/2), 23);
-                place_cloud(CLOUD_FIRE, *ri, duration, &you);
-            }
+            mprf(MSGCH_GOD, "The spellbook%s burst%s into flames.",
+                 count == 1 ? ""  : "s",
+                 count == 1 ? "s" : "");
         }
     }
 
     if (totalpiety)
-        ; // Handled by destroy_item now.
+    {
+        simple_god_message(" is delighted!", GOD_TROG);
+        gain_piety(totalpiety);
+    }
     else if (totalblocked)
     {
         mprf("The spellbook%s fail%s to ignite!",
@@ -1595,7 +1610,7 @@ bool trog_burn_spellbooks()
 
 bool beogh_water_walk()
 {
-    return (you.religion == GOD_BEOGH && !player_under_penance()
+    return (you_worship(GOD_BEOGH) && !player_under_penance()
             && you.piety >= piety_breakpoint(4));
 }
 
@@ -1652,14 +1667,14 @@ bool jiyva_remove_bad_mutation()
 
 bool yred_injury_mirror()
 {
-    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+    return (you_worship(GOD_YREDELEMNUL) && !player_under_penance()
             && you.piety >= piety_breakpoint(1)
             && you.duration[DUR_MIRROR_DAMAGE]);
 }
 
 bool yred_can_animate_dead()
 {
-    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+    return (you_worship(GOD_YREDELEMNUL) && !player_under_penance()
             && you.piety >= piety_breakpoint(2));
 }
 
@@ -1840,7 +1855,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
 
     if (corpses_created)
     {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
+        if (you_worship(GOD_KIKUBAAQUDGHA))
         {
             simple_god_message(corpses_created > 1 ? " delivers you corpses!"
                                                    : " delivers you a corpse!");
@@ -1850,7 +1865,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
     }
     else
     {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
+        if (you_worship(GOD_KIKUBAAQUDGHA))
             simple_god_message(" can find no cadavers for you!");
         return false;
     }
@@ -1870,7 +1885,7 @@ bool kiku_take_corpse()
         if (item_is_stationary(item))
             continue;
 
-        item_was_destroyed(item, MHITYOU);
+        item_was_destroyed(item);
         destroy_item(i);
         return true;
     }
@@ -1880,9 +1895,11 @@ bool kiku_take_corpse()
 
 bool fedhas_passthrough_class(const monster_type mc)
 {
-    return (you.religion == GOD_FEDHAS
+    return (you_worship(GOD_FEDHAS)
             && mons_class_is_plant(mc)
-            && mons_class_is_stationary(mc));
+            && mons_class_is_stationary(mc)
+            && mc != MONS_SNAPLASHER_VINE
+            && mc != MONS_SNAPLASHER_VINE_SEGMENT);
 }
 
 // Fedhas allows worshipers to walk on top of stationary plants and
@@ -1915,7 +1932,7 @@ bool fedhas_shoot_through(const bolt& beam, const monster* victim)
     mon_attitude_type origin_attitude;
     if (originator->is_player())
     {
-        origin_worships_fedhas = you.religion == GOD_FEDHAS;
+        origin_worships_fedhas = you_worship(GOD_FEDHAS);
         origin_attitude = ATT_FRIENDLY;
     }
     else
@@ -2045,7 +2062,7 @@ int fedhas_fungal_bloom()
                     turn_corpse_into_skeleton(*j);
                 else
                 {
-                    item_was_destroyed(*j, MHITYOU);
+                    item_was_destroyed(*j);
                     destroy_item(j->index());
                 }
 
@@ -2176,7 +2193,6 @@ bool fedhas_sunlight()
     }
 
     {
-        // Remove gloom.
         unwind_var<int> no_time(you.time_taken, 0);
         process_sunlights(false);
     }
@@ -2202,7 +2218,6 @@ void process_sunlights(bool future)
     int time_cap = future ? INT_MAX - SUNLIGHT_DURATION : you.elapsed_time;
 
     int evap_count = 0;
-    int cloud_count = 0;
 
     for (int i = env.sunlight.size() - 1; i >= 0; --i)
     {
@@ -2211,20 +2226,6 @@ void process_sunlights(bool future)
 
         if (until <= time_cap)
             erase_any(env.sunlight, i);
-
-        // Remove gloom, even far away from the spot.
-        for (radius_iterator ai(c, 6); ai; ++ai)
-        {
-            if (env.cgrid(*ai) != EMPTY_CLOUD)
-            {
-                const int cloudidx = env.cgrid(*ai);
-                if (env.cloud[cloudidx].type == CLOUD_GLOOM)
-                {
-                    cloud_count++;
-                    delete_cloud(cloudidx);
-                }
-            }
-        }
 
         until = min(until, time_cap);
         int from = you.elapsed_time - you.time_taken;
@@ -2287,9 +2288,6 @@ void process_sunlights(bool future)
 
     if (evap_count)
         mpr("Some water evaporates in the bright sunlight.");
-
-    if (cloud_count)
-        mpr("Sunlight penetrates the thick gloom.");
 
     invalidate_agrid(true);
 }
@@ -2556,7 +2554,7 @@ bool fedhas_plant_ring_from_fruit()
     if (!_prompt_amount(max_use, target_count,
                         "How many plants will you create?"))
     {
-        // User canceled at the prompt.
+        // User cancelled at the prompt.
         return false;
     }
 
@@ -2789,7 +2787,7 @@ int fedhas_corpse_spores(beh_type attitude, bool interactive)
             turn_corpse_into_skeleton(*positions[i]);
         else
         {
-            item_was_destroyed(*positions[i], MHITYOU);
+            item_was_destroyed(*positions[i]);
             destroy_item(positions[i]->index());
         }
     }

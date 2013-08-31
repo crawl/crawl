@@ -1188,7 +1188,7 @@ void TilesFramework::place_minimap()
 
 int TilesFramework::calc_tab_lines(const int num_elements)
 {
-    // Integer divison rounded up
+    // Integer division rounded up
     return (num_elements - 1) / m_region_tab->mx + 1;
 }
 
@@ -1339,6 +1339,14 @@ void TilesFramework::layout_statcol()
         m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
 
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
+
+        // Lava orc temperature bar and zot points.
+        if (you.species == SP_LAVA_ORC)
+            ++crawl_view.hudsz.y;
+        if (crawl_state.game_is_zotdef())
+            ++crawl_view.hudsz.y;
+        m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
+        m_statcol_top += m_region_stat->dy;
 
         for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
         {
