@@ -4,7 +4,7 @@ use warnings;
 
 my @mons=();
 open IN, "<mon-spll.h" or die "Can't open mon-spll.h\n";
-while(<IN>)
+while (<IN>)
 {
     push @mons, $1 if /^\s*{\s*(MST_[A-Z_0-9]+),\s*$/;
 }

@@ -492,7 +492,8 @@ direction_chooser::direction_chooser(dist& moves_,
     behaviour(args.behaviour),
     cancel_at_self(args.cancel_at_self),
     show_floor_desc(args.show_floor_desc),
-    hitfunc(args.hitfunc)
+    hitfunc(args.hitfunc),
+    default_place(args.default_place)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;
@@ -529,8 +530,6 @@ public:
     void print(const string &str) { cprintf("%s", str.c_str()); }
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
-
-static void _describe_monster(const monster_info& mon);
 
 // Lists all the monsters and items currently in view by the player.
 // TODO: Allow sorting of items lists.
@@ -579,36 +578,24 @@ void full_describe_view()
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
     string title = "";
-    string action = "";
     if (!list_mons.empty())
-    {
         title  = "Monsters";
-        action = "view"; // toggle views monster description
-    }
-    bool nonmons = false;
     if (!list_items.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Items";
-        nonmons = true;
     }
     if (!list_features.empty())
     {
         if (!title.empty())
             title += "/";
         title += "Features";
-        nonmons = true;
     }
-    if (nonmons)
-    {
-        if (!action.empty())
-            action += "/";
-        action += "travel"; // toggle travels to items/features
-    }
+
     title = "Visible " + title;
-    string title1 = title + " (select to " + action + ", '!' to examine):";
-    title += " (select for more detail, '!' to " + action + "):";
+    string title1 = title + " (select to view/travel, '!' to examine):";
+    title += " (select for more detail, '!' to view/travel):";
 
     desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
     desc_menu.set_title(new MenuEntry(title1, MEL_TITLE));
@@ -714,7 +701,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             string desc = "";
 #ifndef USE_TILE_LOCAL
-            cglyph_t g = get_cell_glyph(c);
+            cglyph_t g = get_cell_glyph(c, true);
             const string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
@@ -723,7 +710,7 @@ void full_describe_view()
 
             desc += "</" + colour_str +">) ";
 #endif
-            desc += feature_description_at(c);
+            desc += feature_description_at(c, false, DESC_A, false);
             if (is_unknown_stair(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
@@ -773,10 +760,10 @@ void full_describe_view()
                 redraw_screen();
                 mesclr();
             }
-            else // ACT_EXECUTE, here used to display monster status.
+            else // ACT_EXECUTE -> view/travel
             {
-                _describe_monster(*m);
-                getchm();
+                do_look_around(m->pos);
+                break;
             }
         }
         else if (quant == 2)
@@ -785,9 +772,9 @@ void full_describe_view()
             item_def* i = static_cast<item_def*>(sel[0]->data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_item(*i);
-            else // ACT_EXECUTE -> travel to item
+            else // ACT_EXECUTE -> view/travel
             {
-                start_travel(i->pos);
+                do_look_around(i->pos);
                 break;
             }
         }
@@ -800,9 +787,9 @@ void full_describe_view()
 
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_feature_wide(c);
-            else // ACT_EXECUTE -> travel to feature
+            else // ACT_EXECUTE -> view/travel
             {
-                start_travel(c);
+                do_look_around(c);
                 break;
             }
         }
@@ -822,6 +809,24 @@ void full_describe_view()
     tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
+}
+
+void do_look_around(const coord_def &whence)
+{
+    dist lmove;   // Will be initialised by direction().
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.just_looking = true;
+    args.needs_path = false;
+    args.target_prefix = "Here";
+    args.may_target_monster = "Move the cursor around to observe a square.";
+    args.default_place = whence;
+    direction(lmove, args);
+    if (lmove.isValid && lmove.isTarget && !lmove.isCancel
+        && !crawl_state.arena_suspended)
+    {
+        start_travel(lmove.target);
+    }
 }
 
 
@@ -1333,7 +1338,10 @@ bool direction_chooser::pickup_item()
         item->flags |= ISFLAG_THROWN;
 
     if (!just_looking) // firing/casting prompt
+    {
+        mpr("Marked for pickup.", MSGCH_EXAMINE_FILTER);
         return false;
+    }
 
     moves.isValid  = true;
     moves.isTarget = true;
@@ -2036,7 +2044,9 @@ bool direction_chooser::choose_direction()
     moves.delta.reset();
 
     // Find a default target.
-    set_target(Options.default_target ? find_default_target() : you.pos());
+    set_target(!default_place.origin()  ? default_place
+               : Options.default_target ? find_default_target() : you.pos());
+
     objfind_pos = monsfind_pos = target();
 
     // If requested, show the beam on startup.
@@ -2128,13 +2138,14 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             // If examine_mons is true (currently only for the Tiles
             // mouse-over information), set monster's
             // equipment/woundedness/enchantment description as title.
-            string desc         = get_monster_equipment_desc(mi) + ".\n";
+            string desc = uppercase_first(get_monster_equipment_desc(mi))
+                        + ".\n";
             const string wounds = mi.wounds_description_sentence();
             if (!wounds.empty())
-                desc += wounds + "\n";
+                desc += uppercase_first(wounds) + "\n";
             const string constrictions = mi.constriction_description();
             if (!constrictions.empty())
-                desc += constrictions + "\n";
+                desc += "It is " + constrictions + ".\n";
             desc += _get_monster_desc(mi);
 
             inf.title = desc;
@@ -2531,7 +2542,7 @@ static int _next_los(int dir, int los, bool wrap)
         //    so we can go back to the first item in LOS. Unless we set
         //    fliphv, we can't flip from hidden to visible.
         //
-        los = flipvh? LS_FLIPHV : LS_FLIPVH;
+        los = flipvh ? LS_FLIPHV : LS_FLIPVH;
     }
     else
     {
@@ -2545,7 +2556,7 @@ static int _next_los(int dir, int los, bool wrap)
             return LS_NONE;
     }
 
-    los = (los & ~LS_VISMASK) | (vis? LS_HIDDEN : LS_VISIBLE);
+    los = (los & ~LS_VISMASK) | (vis ? LS_HIDDEN : LS_VISIBLE);
     return los;
 }
 
@@ -2921,8 +2932,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
             return "blade trap";
         case TRAP_NET:
             return "net trap";
+#if TAG_MAJOR_VERSION == 34
         case TRAP_GAS:
             return "gas trap";
+#endif
         case TRAP_ALARM:
             return "alarm trap";
         case TRAP_SHAFT:
@@ -3012,6 +3025,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
         return "stone staircase leading up";
+    case DNGN_SEALED_STAIRS_DOWN:
+        return "sealed passage leading down";
+    case DNGN_SEALED_STAIRS_UP:
+        return "sealed passage leading up";
     case DNGN_EXIT_DUNGEON:
         return "staircase leading out of the dungeon";
     case DNGN_ENTER_HELL:
@@ -3058,8 +3075,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "gate leading out of Pandemonium";
     case DNGN_TRANSIT_PANDEMONIUM:
         return "gate leading to another region of Pandemonium";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARVEN_HALL:
         return "staircase to the Dwarven Hall";
+#endif
     case DNGN_ENTER_ORCISH_MINES:
         return "staircase to the Orcish Mines";
     case DNGN_ENTER_LAIR:
@@ -3101,7 +3120,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_EXPIRED_PORTAL:
         // should be set whenever used
         return "collapsed entrance";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
@@ -3407,7 +3428,7 @@ static string _mon_enchantments_string(const monster_info& mi)
 
     if (!enchant_descriptors.empty())
     {
-        return string(mi.pronoun(PRONOUN_SUBJECTIVE))
+        return uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE))
             + " is "
             + comma_separated_line(enchant_descriptors.begin(),
                                    enchant_descriptors.end())
@@ -3448,14 +3469,20 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
         descs.push_back("friendly");
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         descs.push_back("peaceful");
-    else if (mi.attitude != ATT_HOSTILE) // don't differentiate between permanent or not
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    {
+        // don't differentiate between permanent or not
         descs.push_back("indifferent");
+    }
 
     if (mi.is(MB_SUMMONED))
         descs.push_back("summoned");
 
     if (mi.is(MB_PERM_SUMMON))
         descs.push_back("durably summoned");
+
+    if (mi.is(MB_SUMMONED_CAPPED))
+        descs.push_back("expiring");
 
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
@@ -3492,7 +3519,7 @@ static vector<string> _get_monster_desc_vector(const monster_info& mi)
 static string _get_monster_desc(const monster_info& mi)
 {
     string text    = "";
-    string pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
+    string pronoun = uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
     if (mi.is(MB_CLINGING))
         text += pronoun + " is clinging to the wall.\n";
@@ -3518,14 +3545,21 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is friendly.\n";
     else if (mi.attitude == ATT_GOOD_NEUTRAL)
         text += pronoun + " seems to be peaceful towards you.\n";
-    else if (mi.attitude != ATT_HOSTILE) // don't differentiate between permanent or not
+    else if (mi.attitude != ATT_HOSTILE && !mi.is(MB_INSANE))
+    {
+        // don't differentiate between permanent or not
         text += pronoun + " is indifferent to you.\n";
+    }
 
-    if (mi.is(MB_SUMMONED))
-        text += pronoun + " has been summoned.\n";
-
-    if (mi.is(MB_PERM_SUMMON))
-        text += pronoun + " has been summoned but will not time out.\n";
+    if (mi.is(MB_SUMMONED) || mi.is(MB_PERM_SUMMON))
+    {
+        text += pronoun + " has been summoned";
+        if (mi.is(MB_SUMMONED_CAPPED))
+            text += ", and is expiring";
+        else if (mi.is(MB_PERM_SUMMON))
+            text += " but will not time out";
+        text += ".\n";
+    }
 
     if (mi.is(MB_HALOED))
         text += pronoun + " is illuminated by a divine halo.\n";
@@ -3574,13 +3608,13 @@ static string _get_monster_desc(const monster_info& mi)
 static void _describe_monster(const monster_info& mi)
 {
     // First print type and equipment.
-    string text = get_monster_equipment_desc(mi) + ".";
+    string text = uppercase_first(get_monster_equipment_desc(mi)) + ".";
     const string wounds_desc = mi.wounds_description_sentence();
     if (!wounds_desc.empty())
-        text += " " + wounds_desc;
+        text += " " + uppercase_first(wounds_desc);
     const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
-        text += " " + constriction_desc;
+        text += " It is" + constriction_desc + ".";
     mpr(text, MSGCH_EXAMINE);
 
     // Print the rest of the description.
@@ -3614,6 +3648,8 @@ string get_monster_equipment_desc(const monster_info& mi,
                 str = "friendly";
             else if (mi.attitude == ATT_GOOD_NEUTRAL)
                 str = "peaceful";
+            else if (mi.is(MB_INSANE))
+                str = "insane";
             else if (mi.attitude != ATT_HOSTILE)
                 str = "neutral";
 
@@ -3629,6 +3665,13 @@ string get_monster_equipment_desc(const monster_info& mi,
                 if (!str.empty())
                     str += ", ";
                 str += "durably summoned";
+            }
+
+            if (mi.is(MB_SUMMONED_CAPPED))
+            {
+                if (!str.empty())
+                    str += ", ";
+                str += "expiring";
             }
 
             if (mi.type == MONS_DANCING_WEAPON
@@ -3658,7 +3701,7 @@ string get_monster_equipment_desc(const monster_info& mi,
     // true rakshasa when it summons. But Mara is fine, because his weapons
     // and armour are cloned with him.
 
-    if (mi.type != MONS_DANCING_WEAPON)
+    if (mi.type != MONS_DANCING_WEAPON && mi.type != MONS_SPECTRAL_WEAPON)
         weap = _describe_monster_weapon(mi, level == DESC_IDENTIFIED);
     else if (level == DESC_IDENTIFIED)
         return " " + mi.full_name(DESC_A);

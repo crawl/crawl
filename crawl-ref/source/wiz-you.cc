@@ -211,7 +211,7 @@ void wizard_cast_spec_spell(void)
     int spell;
 
     mpr("Cast which spell? ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist(specs, sizeof(specs))
+    if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
         canned_msg(MSG_OK);
@@ -241,7 +241,7 @@ void wizard_memorise_spec_spell(void)
     int spell;
 
     mpr("Memorise which spell? ", MSGCH_PROMPT);
-    if (cancelable_get_line_autohist(specs, sizeof(specs))
+    if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
         canned_msg(MSG_OK);
@@ -276,6 +276,7 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
         inc_max_hp(10);
+        you.attribute[ATTR_XP_DRAIN] = 0;
     }
 
     // Clear most status ailments.
@@ -324,7 +325,7 @@ void wizard_set_hunger_state()
 
 void wizard_set_piety()
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you_worship(GOD_NO_GOD))
     {
         mpr("You are not religious!");
         return;
@@ -333,7 +334,7 @@ void wizard_set_piety()
     mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
          you.piety);
     char buf[30];
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
     {
         canned_msg(MSG_OK);
         return;
@@ -346,7 +347,7 @@ void wizard_set_piety()
         return;
     }
 
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         you.piety = newpiety;
 
@@ -354,7 +355,7 @@ void wizard_set_piety()
         mprf(MSGCH_PROMPT, "Enter new interest (current = %d, Enter for 0): ",
              you.gift_timeout);
 
-        if (cancelable_get_line_autohist(buf, sizeof buf))
+        if (cancellable_get_line_autohist(buf, sizeof buf))
         {
             canned_msg(MSG_OK);
             return;
@@ -400,7 +401,7 @@ void wizard_set_piety()
     while (diff != 0);
 
     // Automatically reduce penance to 0.
-    if (you.penance[you.religion] > 0)
+    if (player_under_penance())
         dec_penance(you.penance[you.religion]);
 }
 
@@ -439,7 +440,7 @@ void wizard_set_skill_level(skill_type skill)
     mpr(skill_name(skill));
     double amount = prompt_for_float("To what level? ");
 
-    if (amount < 0)
+    if (amount < 0 || amount > 27)
     {
         canned_msg(MSG_OK);
         return;
@@ -463,12 +464,6 @@ void wizard_set_skill_level(skill_type skill)
                                       old_amount > amount ? "Lowered"
                                                           : "Reset"),
          skill_name(skill), amount);
-
-    if (skill == SK_STEALTH && amount == 27)
-    {
-        mpr("If you set the stealth skill to a value higher than 27, "
-            "hide mode is activated, and monsters won't notice you.");
-    }
 }
 #endif
 
@@ -680,7 +675,7 @@ void wizard_set_abyss()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
-    if (!cancelable_get_line_autohist(buf, sizeof buf))
+    if (!cancellable_get_line_autohist(buf, sizeof buf))
         abyss_teleport(true);
 
     uint32_t x = 0, y = 0, z = 0;
@@ -692,7 +687,7 @@ void wizard_set_stats()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
         return;
 
     int sstr = you.strength(false),
@@ -814,7 +809,20 @@ static const char* dur_names[] =
     "weak",
     "dimension anchor",
     "antimagic",
+#ifdef FORMICID_EXPERIMENTAL
     "antennae extend",
+#endif
+    "spirit howl",
+    "infused",
+    "song of slaying",
+    "song of shielding",
+    "toxic radiance",
+    "reciting",
+    "grasping roots",
+    "sleep immunity",
+#ifndef FORMICID_EXPERIMENTAL
+    "antennae extend",
+#endif
 };
 
 void wizard_edit_durations(void)
@@ -848,7 +856,7 @@ void wizard_edit_durations(void)
 
     char buf[80];
 
-    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
+    if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;
@@ -966,7 +974,7 @@ void wizard_set_xl()
 {
     mprf(MSGCH_PROMPT, "Enter new experience level: ");
     char buf[30];
-    if (cancelable_get_line_autohist(buf, sizeof buf))
+    if (cancellable_get_line_autohist(buf, sizeof buf))
     {
         canned_msg(MSG_OK);
         return;
@@ -994,7 +1002,7 @@ void set_xl(const int newxl, const bool train)
 
 void wizard_get_god_gift(void)
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you_worship(GOD_NO_GOD))
     {
         mpr("You are not religious!");
         return;
@@ -1012,7 +1020,7 @@ void wizard_toggle_xray_vision()
 
 void wizard_god_wrath()
 {
-    if (you.religion == GOD_NO_GOD)
+    if (you_worship(GOD_NO_GOD))
     {
         mpr("You suffer the terrible wrath of No God.");
         return;
@@ -1027,7 +1035,7 @@ void wizard_god_mollify()
 {
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
-        if (you.penance[i])
+        if (player_under_penance((god_type) i))
             dec_penance((god_type) i, you.penance[i]);
     }
 }
@@ -1068,18 +1076,9 @@ void wizard_transform()
         break;
     }
 
+    you.transform_uncancellable = false;
     if (!transform(200, form) && you.form != form)
-    {
-        if (yesno("Transformation failed, force it?", true, 'n'))
-        {
-            if (!transform(200, form, true))
-                mpr("The force is weak with this one.");
-        }
-        else
-        {
-            canned_msg(MSG_OK);
-        }
-    }
+        mpr("Transformation failed.");
 }
 
 static void _wizard_modify_character(string inputdata)

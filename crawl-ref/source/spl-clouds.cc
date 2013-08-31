@@ -10,6 +10,7 @@
 
 #include <algorithm>
 
+#include "act-iter.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
@@ -19,6 +20,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -326,7 +328,7 @@ void corpse_rot(actor* caster)
                     // Found a corpse.  Skeletonise it if possible.
                     if (!mons_skeleton(si->mon_type))
                     {
-                        item_was_destroyed(*si, caster->mindex());
+                        item_was_destroyed(*si);
                         destroy_item(si->index());
                     }
                     else
@@ -367,4 +369,123 @@ int holy_flames(monster* caster, actor* defender)
     }
 
     return cloud_count;
+}
+
+struct dist2_sorter
+{
+    coord_def pos;
+    bool operator()(const actor* a, const actor* b)
+    {
+        return distance2(a->pos(), pos) > distance2(b->pos(), pos);
+    }
+};
+
+static bool _safe_cloud_spot(const monster* mon, coord_def p)
+{
+    if (feat_is_solid(grd(p)) || env.cgrid(p) != EMPTY_CLOUD)
+        return false;
+
+    if (actor_at(p) && mons_aligned(mon, actor_at(p)))
+        return false;
+
+    return true;
+}
+
+void apply_control_winds(const monster* mon)
+{
+    vector<int> cloud_list;
+    for (distance_iterator di(mon->pos(), true, false, LOS_RADIUS); di; ++di)
+    {
+        if (env.cgrid(*di) != EMPTY_CLOUD
+            && cell_see_cell(mon->pos(), *di, LOS_SOLID)
+            && (di.radius() < 6 || env.cloud[env.cgrid(*di)].type == CLOUD_FOREST_FIRE
+                                || (actor_at(*di) && mons_aligned(mon, actor_at(*di)))))
+        {
+            cloud_list.push_back(env.cgrid(*di));
+        }
+    }
+
+    bolt wind_beam;
+    wind_beam.hit = AUTOMATIC_HIT;
+    wind_beam.is_beam = true;
+    wind_beam.affects_nothing = true;
+    wind_beam.source = mon->pos();
+    wind_beam.range = LOS_RADIUS;
+    wind_beam.is_tracer = true;
+
+    for (int i = cloud_list.size() - 1; i >= 0; --i)
+    {
+        cloud_struct* cl = &env.cloud[cloud_list[i]];
+        if (cl->type == CLOUD_FOREST_FIRE)
+        {
+            if (you.see_cell(cl->pos))
+                mpr("The forest fire is smothered by the winds.");
+            delete_cloud(cloud_list[i]);
+            continue;
+        }
+
+        // Leave clouds engulfing hostiles alone
+        if (actor_at(cl->pos) && !mons_aligned(actor_at(cl->pos), mon))
+            continue;
+
+        bool pushed = false;
+
+        coord_def newpos;
+        if (cl->pos != mon->pos())
+        {
+            wind_beam.target = cl->pos;
+            wind_beam.fire();
+            for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1; ++j)
+            {
+                if (env.cgrid(wind_beam.path_taken[j]) == cloud_list[i])
+                {
+                    newpos = wind_beam.path_taken[j+1];
+                    if (_safe_cloud_spot(mon, newpos))
+                    {
+                        swap_clouds(newpos, wind_beam.path_taken[j]);
+                        pushed = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!pushed)
+        {
+            for (distance_iterator di(cl->pos, true, true, 1); di; ++di)
+            {
+                if ((newpos.origin() || adjacent(*di, newpos))
+                    && di->distance_from(mon->pos())
+                        == (cl->pos.distance_from(mon->pos()) + 1)
+                    && _safe_cloud_spot(mon, *di))
+                {
+                    swap_clouds(*di, cl->pos);
+                    pushed = true;
+                    break;
+                }
+            }
+
+            if (!pushed && actor_at(cl->pos) && mons_aligned(mon, actor_at(cl->pos)))
+            {
+                env.cloud[cloud_list[i]].decay =
+                        env.cloud[cloud_list[i]].decay / 2 - 20;
+            }
+        }
+    }
+
+    // Now give a ranged accuracy boost to nearby allies
+    for (monster_iterator mi(mon); mi; ++mi)
+    {
+        if (distance2(mon->pos(), mi->pos()) < 33 && mons_aligned(mon, *mi))
+        {
+            if (!mi->has_ench(ENCH_WIND_AIDED))
+                mi->add_ench(mon_enchant(ENCH_WIND_AIDED, 1, mon, 20));
+            else
+            {
+                mon_enchant aid = mi->get_ench(ENCH_WIND_AIDED);
+                aid.duration = 20;
+                mi->update_ench(aid);
+            }
+        }
+    }
 }

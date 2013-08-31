@@ -1,0 +1,1089 @@
+# Sprint IX, by st
+{{
+
+function line_setup(e)
+  e.tags("no_rotate no_hmirror no_vmirror no_trap_gen")
+  e.tags("no_pool_fixup")
+-- TODO make these doors immune to disint
+  e.kfeat("& = closed_door")
+  e.marker("& = lua:restrict_door()")
+  e.kfeat("~ = closed_door")
+  e.marker("~ = lua:restrict_door()")
+  e.colour("~ = yellow")
+  e.kfeat("< = closed_door")
+  e.marker("< = lua:restrict_door()")
+  e.colour("< = yellow")
+  e.kfeat("x = permarock_wall")
+  e.colour("x = brown")
+  e.kfeat("# = permarock_wall")
+end
+
+function general_item_setup(e)
+  e.kitem("| = superb_item ident:all w:66 / star_item ident:all w:33")
+  e.kitem("* = star_item ident:all w:66 / any ident:all w:33")
+  e.kitem("% = any ident:all")
+  e.kitem("! = potion of heal wounds ident:all q:2 w:30 /\
+          potion of curing ident:all w:20 /\
+          potion of might ident:all / potion of agility ident:all /\
+          potion of speed ident:all /\
+          potion of restore abilities ident:all w:5 /\
+          potion of resistance ident:all w:5 / potion of brilliance ident:all /\
+          potion of berserk rage ident:all /\
+          potion of cure mutation ident:all")
+  e.kitem("? = scroll of blinking ident:all /\
+          scroll of remove curse ident:all /\
+          scroll of identify ident:all / scroll of recharging ident:all /\
+          scroll of fog ident:all / scroll of fear ident:all /\
+          scroll of enchant weapon i ident:all q:2 /\
+          scroll of enchant weapon ii ident:all q:2 /\
+          scroll of enchant weapon iii ident:all /\
+          scroll of enchant armour ident:all q:2")
+end
+
+}}
+NAME:      linesprint
+TAGS:      sprint
+DESC:      Sprint IX: "|||||||||||||||||||||||||||||"
+ORIENT:    encompass
+COLOUR:    x = brown
+KFEAT:     x = permarock_wall
+SUBVAULT:  A : early_d
+SUBVAULT:  B : line_temple
+SUBVAULT:  C : items_1
+SUBVAULT:  D : d_10
+SUBVAULT:  E : items_2
+SUBVAULT:  F : lair_1
+SUBVAULT:  G : lair_end
+SUBVAULT:  H : items_3
+SUBVAULT:  I : orc_1
+SUBVAULT:  J : orc_end
+SUBVAULT:  K : items_4
+SUBVAULT:  L : d_15
+SHUFFLE:   MNOP
+SUBVAULT:  M : swamp_1
+SUBVAULT:  N : shoals_1
+SUBVAULT:  O : snake_1
+SUBVAULT:  P : spider_1
+SUBVAULT:  Q : d_20
+SUBVAULT:  R : vaults_1
+SUBVAULT:  S : items_5
+SHUFFLE:   TUVW
+SUBVAULT:  T : swamp_end
+SUBVAULT:  U : shoals_end
+SUBVAULT:  V : snake_end
+SUBVAULT:  W : spider_end
+SUBVAULT:  X : vaults_end
+SUBVAULT:  Y : d_27
+SUBVAULT:  Z : items_6
+SUBVAULT:  z : zot_1
+SUBVAULT:  y : zot_end
+SUBVAULT:  w : crypt_end
+SUBVAULT:  u : forest_end
+SUBVAULT:  s : elf_end
+SUBVAULT:  r : slime_end
+SUBVAULT:  q : tomb_end
+SUBVAULT:  p : abyss_end
+SUBVAULT:  o : pan_hell_end
+MARKER:    & = lua:restrict_door()
+KFEAT:     & = closed_door
+KMONS:     a = Erica / Erolcha / Eustachio / Gastronok / Grum band /\
+               Harold / Joseph / Josephine band / Maurice / Psyche /\
+               Sonja / Urug
+NSUBST:    a = 1:a. / 1:a.. / 1:a... / 1:a.... / * = .:70 a:1
+KMONS:     b = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
+               Maud / Nergalle / Nessos / Rupert / Saint Roka band / Snorg /\
+               Wiglaf
+NSUBST:    b = 1:b. / 1:b.. / 1:ba.. / 1:baa.. / * = .:70 b:1
+KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
+               Xtahua / Jory / Mennas / Mara
+NSUBST:    b = 1:c. / 1:cb. / 1:cb.. / 1:cbb.. / * = .:70 c:1
+MAP
+xxxxxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
+x{.......AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
+xxxxxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
+x..........a.........a..........a.........a.............a............x
+x.xxxxxxEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHHxxxxxx
+x.......EEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHH&....x
+xxxxxxxxEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHHxxxx.x
+x......aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa......x
+x.xxxxxxxxxxxxIIIIIIIIIIIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJxxxxxxxxxxx
+x.............IIIIIIIIIIIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJ&.........x
+xxxxxxxxxxxxxxIIIIIIIIIIIIIIIIIIIIIIIIIIIJJJJJJJJJJJJJJJJJJxxxxxxxxx.x
+x......aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa......x
+x.xxxxxxxxKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKLLLLLLLLLLLLLLLLxxxxxxxxxxx
+x.........KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKLLLLLLLLLLLLLLLL&.........x
+xxxxxxxxxxKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKLLLLLLLLLLLLLLLLxxxxxxxxx.x
+x......bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb......x
+x.xxxxxxxxxxxxxxMMMMMMMMMMNNNNNNNNNNOOOOOOOOOOPPPPPPPPPPxxxxxxxxxxxxxx
+x...............MMMMMMMMMMNNNNNNNNNNOOOOOOOOOOPPPPPPPPPP&............x
+xxxxxxxxxxxxxxxxMMMMMMMMMMNNNNNNNNNNOOOOOOOOOOPPPPPPPPPPxxxxxxxxxxxx.x
+x......bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb......x
+x.xxxxxxxxxxxxxxxxQQQQQQQQQQQQQQQQQQQRRRRRRRRRRRRRRRRRRRRRRxxxxxxxxxxx
+x.................QQQQQQQQQQQQQQQQQQQRRRRRRRRRRRRRRRRRRRRRR&.........x
+xxxxxxxxxxxxxxxxxxQQQQQQQQQQQQQQQQQQQRRRRRRRRRRRRRRRRRRRRRRxxxxxxxxx.x
+x......cccccccccccccccccccccccccccccccccccccccccccccccccccccccc......x
+x.xxxxxxxxxxxSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSxxxxxxxxxxxx
+x............SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS&..........x
+xxxxxxxxxxxxxSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSxxxxxxxxxx.x
+x......cccccccccccccccccccccccccccccccccccccccccccccccccccccccc......x
+x.xxxxxxTTTTTTTTTTTTTTUUUUUUUUUUUUUUVVVVVVVVVVVVVVWWWWWWWWWWWWWWxxxxxx
+x.......TTTTTTTTTTTTTTUUUUUUUUUUUUUUVVVVVVVVVVVVVVWWWWWWWWWWWWWW&....x
+xxxxxxxxTTTTTTTTTTTTTTUUUUUUUUUUUUUUVVVVVVVVVVVVVVWWWWWWWWWWWWWWxxxx.x
+x......cccccccccccccccccccccccccccccccccccccccccccccccccccccccc......x
+x.xxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxx
+x..........XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&...x
+xxxxxxxxxxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx.x
+x......cccccccccccccccccccccccccccccccccccccccccccccccccccccccc......x
+x.xxxxxxZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZxxxxxxxx
+x.......ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ&......x
+xxxxxxxxZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZxxxxxx.x
+x......cccccccccccccccccccccccccccccccccccccccccccccccccccccccc......x
+x.xxYYYYYYYYYYYYYYYYYYYYYYYzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzxxxxxx
+x...YYYYYYYYYYYYYYYYYYYYYYYzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz&....x
+xxxxYYYYYYYYYYYYYYYYYYYYYYYzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzxxxx.x
+x....................................................................x
+x.xxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyxxx
+x.........yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy..x
+xxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyx.x
+x....................................................................x
+x.xxwwwwwwwwwwwwuuuuuuuuuuuusssssssssssssssrrrrrrrrrrrrrrrrrrrrxxxxxxx
+x...wwwwwwwwwwwwuuuuuuuuuuuusssssssssssssssrrrrrrrrrrrrrrrrrrrr&.....x
+xxxxwwwwwwwwwwwwuuuuuuuuuuuusssssssssssssssrrrrrrrrrrrrrrrrrrrrxxxxx.x
+x....................................................................x
+x.xxxxqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqppppppppppppxxxxxxxx
+x.....qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpppppppppppp&......x
+xxxxxxqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqppppppppppppxxxxxx.x
+x....................................................................x
+x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxoooooooooooooooooooooooooo
+x...........................................oooooooooooooooooooooooooo
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxoooooooooooooooooooooooooo
+ENDMAP
+
+
+NAME:      early_d
+TAGS:      early_d
+KMONS:     A = place:D:1
+KMONS:     B = place:D:5
+: line_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Dungeon",
+:           })
+MAP
+xxxxxxxxxxxxx
+.~AAAAA&BBBBB
+xxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     line_temple
+TAGS:     line_temple
+: line_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Temple",
+:           })
+MAP
+xxxxxxxxxxxxxxxxxx
+~BBBBBBBBBBBBBBBBB
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     items_1
+TAGS:     items_1
+KITEM:    a = potion of curing q:4 ident:all, \
+              potion of heal wounds q:2 ident:all, \
+              potion of invisibility q:1 ident:all, \
+              potion of magic q:2 ident:all
+KITEM:    b = scroll of blinking q:1 ident:all, \
+              scroll of amnesia q:2 ident:all, \
+              scroll of remove curse q:3 ident:all
+KITEM:    d = wand of fire charges:7 ident:all /\
+              wand of cold charges:7 ident:all /\
+              wand of draining charges:7 ident:all, \
+              staff of energy not_cursed ident:all
+KITEM:    e = sabre plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
+           sabre plus:2 plus2:2 ego:draining ident:all not_cursed /\
+           sabre plus:2 plus2:2 ego:venom ident:all not_cursed /\
+           sabre plus:2 plus2:2 ego:distortion ident:all not_cursed /\
+           sabre plus:2 plus2:2 good_item ident:all not_cursed, \
+           war axe plus:2 plus2:3 ego:freezing ident:all not_cursed /\
+           war axe plus:2 plus2:3 ego:vorpal ident:all not_cursed /\
+           war axe plus:2 plus2:3 good_item ident:all not_cursed w:5 /\
+           broad axe plus:2 plus2:0 ego:freezing ident:all not_cursed /\
+           broad axe plus:2 plus2:0 ego:vorpal ident:all not_cursed /\
+           broad axe plus:2 plus2:0 good_item ident:all not_cursed w:5, \
+           dire flail plus:2 plus2:2 ego:protection ident:all not_cursed /\
+           dire flail plus:2 plus2:2 ego:vorpal ident:all not_cursed /\
+           dire flail plus:2 plus2:2 good_item ident:all not_cursed w:5 /\
+           morningstar plus:2 plus2:2 ego:protection ident:all not_cursed /\
+           morningstar plus:2 plus2:2 ego:vorpal ident:all not_cursed /\
+           morningstar plus:2 plus2:2 good_item ident:all not_cursed w:5, \
+           halberd plus:2 plus2:2 ego:protection ident:all not_cursed /\
+           halberd plus:2 plus2:2 ego:venom ident:all not_cursed /\
+           halberd plus:2 plus2:2 good_item ident:all not_cursed w:5, \
+           lajatang plus:0 plus2:0 ident:all not_cursed /\
+           quarterstaff plus:4 plus2:4 ego:speed ident:all not_cursed w:15 /\
+           quarterstaff plus:4 plus2:4 good_item ident:all not_cursed w:5, \
+           scimitar plus:2 plus2:2 ego:flaming ident:all not_cursed /\
+           scimitar plus:2 plus2:2 ego:holy_wrath not_cursed ident:all /\
+           scimitar plus:2 plus2:2 good_item not_cursed ident:all
+KITEM:    f = pair of gloves mundane ident:all not_cursed /\
+           pair of boots mundane ident:all not_cursed /\
+           helmet mundane ident:all not_cursed /\
+           cloak mundane ident:all not_cursed
+KITEM:    g = chain mail plus:1 ident:all not_cursed w:20 /\
+           ring mail plus:2 ident:all not_cursed /\
+           scale mail plus:1 ident:all not_cursed /\
+           plate armour plus:0 ident:all not_cursed
+KITEM:    h = ring of protection plus:2 ident:all not_cursed /\
+           ring of evasion plus:2 ident:all not_cursed /\
+           ring of strength plus:3 ident:all not_cursed /\
+           ring of intelligence plus:3 ident:all not_cursed /\
+           ring of dexterity plus:3 ident:all not_cursed
+: line_setup(_G)
+MAP
+xxxxxxxxxx
+&abdeffghh
+xxxxxxxxxx
+ENDMAP
+
+
+NAME:     d_10
+TAGS:     d_10
+KMONS:    1 = place:D:10
+KMONS:    2 = place:D:13
+: line_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Dungeon",
+:           })
+MAP
+xxxxxxxxxxxxxx
+~111111&222222
+xxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     items_2
+TAGS:     items_2
+: line_setup(_G)
+: general_item_setup(_G)
+MAP
+xxxxxxxxxxxxxx
+&!!!!!*|*?????
+xxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     lair_1
+TAGS:     lair_1
+KMONS:    1 = place:Lair:1
+KMONS:    2 = place:Lair:4
+KMONS:    3 = place:Lair:7
+COLOUR:   123 = green
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Lair",
+:           })
+MAP
+xxxxxxxxxxxxxxxxxxxx
+~111111222&223333333
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     lair_end
+TAGS:     lair_end
+KMONS:    1 = wolf w:15 / warg / hell hound w:8
+KMONS:    2 = yak / death yak w:15 / catoblepas w:5
+KMONS:    3 = worm w:15 / spiny worm / lindwurm / giant firefly / brain worm
+KMONS:    4 = black bear / grizzly bear / polar bear
+KMONS:    5 = spiny frog / blink frog / vampire mosquito / giant frog /\
+              giant leech
+KMONS:    6 = elephant / dire elephant w:2
+COLOUR:   123456 = green
+SHUFFLE:  123456
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Lair:8",
+:           })
+MAP
+xxxxxxxxxxxxx
+~11111111****
+xxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     items_3
+TAGS:     items_3
+KITEM:    a = meat ration q:12, bread ration q:12, strawberry q:40
+KITEM:    b = pair of gloves mundane ident:all not_cursed /\
+           pair of boots mundane ident:all not_cursed /\
+           helmet mundane ident:all not_cursed /\
+           cloak mundane ident:all not_cursed
+: line_setup(_G)
+: general_item_setup(_G)
+MAP
+xxxxxxxxx
+&a.bbbb..
+xxxxxxxxx
+ENDMAP
+
+
+NAME:     orc_1
+TAGS:     orc_1
+KMONS:    1 = orc w:80 / orc wizard w:40 / orc priest w:40 /\
+              stone giant w:1 / ettin w:1
+KMONS:    2 = orc warrior
+KMONS:    3 = orc knight
+KMONS:    4 = orc sorcerer
+KMONS:    5 = orc high priest
+KITEM:    12345 = gold q:50
+SUBST:    1 = 1:40 2:10
+SUBST:    2 = 2:40 1:10 3:8 4:2 5:2
+COLOUR:   12345 = brown
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Orcish Mines",
+:           })
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+~1111111111111&222222222222
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     orc_end
+TAGS:     orc_end
+KMONS:    1 = orc knight / orc warrior
+KMONS:    2 = orc sorcerer / orc wizard
+KMONS:    3 = orc high priest / orc priest
+KMONS:    4 = ogre / two-headed ogre / ogre mage w:7
+KMONS:    5 = troll / deep troll / hill giant / ogre mage w:7 / stone giant w:1 /\
+              ettin w:1 / iron troll w:1
+KMONS:    6 = orc knight / orc sorcerer / orc high priest / orc w:25
+KMONS:    7 = orc knight / orc high priest
+KITEM:    1234567 = gold q:50
+COLOUR:   1234567 = brown
+SHUFFLE:  1234567
+KFEAT:    S = any shop
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Orc:4",
+:           })
+MAP
+xxxxxxxxxxxxxxxxxx
+~11111S1S1S1S11111
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     items_4
+TAGS:     items_4
+KITEM:    a = ring of protection from fire ident:all not_cursed /\
+          ring of protection from cold ident:all not_cursed /\
+          ring of protection from magic ident:all not_cursed /\
+          ring of fire ident:all not_cursed /\
+          ring of ice ident:all not_cursed /\
+          ring of see invisible ident:all not_cursed /\
+          ring of poison resistance ident:all not_cursed /\
+          any jewellery ident:all not_cursed
+KITEM:    b = any weapon level:27 ident:all /\
+          broad axe plus:3 plus2:2 not_cursed ident:all /\
+          battleaxe plus:1 plus2:1 not_cursed ident:all /\
+          executioner's axe plus:0 plus2:0 not_cursed ident:all w:3 /\
+          glaive plus:1 plus2:1 not_cursed ident:all /\
+          bardiche plus:0 plus2:0 not_cursed ident:all w:3 /\
+          dire flail plus:3 plus2:3 not_cursed ident:all /\
+          great mace plus:1 plus2:1 not_cursed ident:all /\
+          demon whip plus:1 plus2:1 not_cursed ident:all w:5 /\
+          giant spiked plus:1 plus2:1 club not_cursed ident:all /\
+          quick blade plus:3 plus2:3 not_cursed ident:all /\
+          great sword plus:1 plus2:1 not_cursed ident:all /\
+          double sword plus:1 plus2:1 not_cursed ident:all /\
+          demon blade plus:1 plus2:1 not_cursed ident:all w:3 /\
+          triple sword plus:0 plus2:0 not_cursed ident:all w:3 /\
+          lajatang plus:1 plus2:1 not_cursed ident:all /\
+          longbow plus:1 plus2:1 not_cursed ident:all /\
+          crossbow plus:1 plus2:1 not_cursed ident:all /\
+          any weapon good_item ident:all w:30
+KITEM:    d = any armour level:27 ident:all /\
+          pair of gloves plus:1 ident:all not_cursed /\
+          pair of boots plus:1 ident:all not_cursed /\
+          helmet plus:1 ident:all not_cursed /\
+          cloak plus:1 ident:all not_cursed /\
+          chain mail plus:3 ident:all not_cursed w:20 /\
+          ring mail plus:2 ident:all not_cursed /\
+          scale mail plus:3 ident:all not_cursed /\
+          plate armour plus:2 ident:all not_cursed /\
+          fire dragon armour plus:1 not_cursed ident:all /\
+          ice dragon armour plus:1 not_cursed ident:all /\
+          swamp dragon armour plus:0 not_cursed ident:all /\
+          mottled dragon armour plus:0 not_cursed ident:all /\
+          storm dragon armour plus:0 not_cursed ident:all /\
+          large shield plus:1 not_cursed ident:all /\
+          any armour good_item ident:all w:20
+KITEM:    e = any weapon good_item ident:all
+KITEM:    f = any armour good_item ident:all
+: line_setup(_G)
+: general_item_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+&aaaa.bbbbebbb.dddfdddd.!!!!.????
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     d_15
+TAGS:     d_15
+KMONS:    1 = place:D:15
+KMONS:    2 = place:D:19
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Dungeon",
+:           })
+MAP
+xxxxxxxxxxxxxxxx
+~111111112222222
+xxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     swamp_1
+TAGS:     swamp_1
+KMONS:    1 = place:Swamp:1
+KMONS:    2 = place:Swamp:4
+KFEAT:    t = mangrove
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Swamp",
+:           })
+MAP
+tttttttttt
+~222222222
+tttttttttt
+ENDMAP
+
+
+NAME:     shoals_1
+TAGS:     shoals_1
+KMONS:    1 = place:Shoals:1
+KMONS:    2 = place:Shoals:4
+COLOUR:   12 = brown
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Shoals",
+:           })
+MAP
+xxxxxxxxxx
+~222222222
+xxxxxxxxxx
+ENDMAP
+
+
+NAME:     spider_1
+TAGS:     spider_1
+KMONS:    1 = place:Spider:1
+KMONS:    2 = place:Spider:4
+COLOUR:   12 = brown
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Spider Nest",
+:           })
+MAP
+xxxxxxxxxx
+~222222222
+xxxxxxxxxx
+ENDMAP
+
+
+NAME:     snake_1
+TAGS:     snake_1
+KMONS:    1 = place:Snake:1
+KMONS:    2 = place:Snake:4
+COLOUR:   12 = lightgreen
+COLOUR:   # = yellow
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Snake Pit",
+:           })
+MAP
+##########
+~222222222
+##########
+ENDMAP
+
+
+NAME:     d_20
+TAGS:     d_20
+KMONS:    1 = place:D:21
+KMONS:    2 = place:D:26
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Dungeon",
+:           })
+MAP
+xxxxxxxxxxxxxxxxxxx
+~111112222222111111
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     vaults_1
+TAGS:     vaults_1
+KMONS:    1 = place:Vaults:1
+KMONS:    2 = place:Vaults:4
+KFEAT:    v = permarock_wall
+COLOUR:   v = cyan
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Vaults",
+:           })
+MAP
+vvvvvvvvvvvvvvvvvvvvvv
+~111111111112222222222
+vvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+NAME:     items_5
+TAGS:     items_5
+KITEM:    a = ring of slaying plus:0 plus2:3 ident:all not_cursed w:5 /\
+          ring of slaying plus:3 plus2:0 ident:all not_cursed w:5 /\
+          ring of regeneration ident:all not_cursed /\
+          ring of invisibility ident:all not_cursed /\
+          ring of protection plus:4 ident:all not_cursed /\
+          ring of evasion plus:4 ident:all not_cursed /\
+          ring of strength plus:6 ident:all not_cursed /\
+          ring of intelligence plus:6 ident:all not_cursed /\
+          ring of dexterity plus:6 ident:all not_cursed /\
+          ring of wizardry ident:all not_cursed /\
+          any jewellery ident:all not_cursed
+KITEM:    b = battleaxe plus:4 plus2:4 ego:none not_cursed ident:all /\
+    battleaxe plus:1 plus2:1 good_item not_cursed ident:all /\
+    executioner's axe plus:2 plus2:2 ego:none not_cursed ident:all /\
+    executioner's axe plus:0 plus2:0 good_item not_cursed ident:all /\
+    broad axe plus:7 plus2:7 ego:none not_cursed ident:all /\
+    broad axe plus:3 plus2:3 good_item not_cursed ident:all /\
+    glaive plus:4 plus2:4 ego:none not_cursed ident:all /\
+    glaive plus:2 plus2:2 good_item not_cursed ident:all /\
+    scythe plus:9 plus2:9 ego:none not_cursed ident:all /\
+    scythe plus:6 plus2:6 good_item not_cursed ident:all /\
+    bardiche plus:2 plus2:2 ego:none not_cursed ident:all /\
+    bardiche plus:0 plus2:0 good_item not_cursed ident:all /\
+    demon trident plus:4 plus2:4 ego:none not_cursed ident:all /\
+    demon trident plus:1 plus2:1 good_item not_cursed ident:all /\
+    great mace plus:4 plus2:4 ego:none not_cursed ident:all /\
+    great mace plus:1 plus2:1 good_item not_cursed ident:all /\
+    giant spiked club plus:4 plus2:4 ego:none not_cursed ident:all /\
+    giant spiked club plus:1 plus2:1 good_item not_cursed ident:all /\
+    demon whip plus:4 plus2:4 ego:none not_cursed ident:all /\
+    demon whip plus:1 plus2:1 good_item not_cursed ident:all /\
+    double sword plus:4 plus2:4 ego:none not_cursed ident:all /\
+    double sword plus:1 plus2:1 good_item not_cursed ident:all /\
+    triple sword plus:2 plus2:2 ego:none not_cursed ident:all /\
+    triple sword plus:0 plus2:0 good_item not_cursed ident:all /\
+    demon blade plus:4 plus2:4 ego:none not_cursed ident:all /\
+    demon blade plus:1 plus2:1 good_item not_cursed ident:all /\
+    great sword plus:4 plus2:4 ego:none not_cursed ident:all /\
+    great sword plus:1 plus2:1 good_item not_cursed ident:all /\
+    lajatang plus:4 plus2:4 ego:none not_cursed ident:all /\
+    lajatang plus:1 plus2:1 good_item not_cursed ident:all /\
+    longbow plus:3 plus2:3 good_item not_cursed ident:all w:15 /\
+    crossbow plus:3 plus2:3 good_item not_cursed ident:all w:15
+KITEM:    d = plate armour plus:5 not_cursed ident:all /\
+    plate armour plus:3 good_item not_cursed ident:all /\
+    chain mail plus:5 not_cursed ident:all w:20 /\
+    chain mail plus:2 good_item not_cursed ident:all w:20 /\
+    robe plus:4 not_cursed ident:all /\
+    robe plus:1 good_item not_cursed ident:all /\
+    fire dragon armour plus:3 not_cursed ident:all /\
+    ice dragon armour plus:3 not_cursed ident:all /\
+    swamp dragon armour plus:1 not_cursed ident:all /\
+    mottled dragon armour plus:1 not_cursed ident:all /\
+    storm dragon armour plus:2 not_cursed ident:all /\
+    gold dragon armour plus:0 not_cursed ident:all /\
+    pair of gloves plus:1 not_cursed ident:all /\
+    pair of gloves plus:0 good_item not_cursed ident:all /\
+    pair of boots plus:1 not_cursed ident:all /\
+    pair of boots plus:0 good_item not_cursed ident:all /\
+    helmet plus:1 not_cursed ident:all /\
+    helmet plus:0 good_item not_cursed ident:all /\
+    cloak plus:1 not_cursed ident:all /\
+    cloak plus:0 good_item not_cursed ident:all /\
+    wizard hat plus:1 not_cursed ident:all /\
+    wizard hat plus:0 good_item not_cursed ident:all /\
+    large shield plus:3 not_cursed ident:all /\
+    large shield plus:0 good_item not_cursed ident:all /\
+    naga barding plus:2 not_cursed ident:all w:5 /\
+    centaur barding plus:2 not_cursed ident:all w:5
+: line_setup(_G)
+: general_item_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+&.aaaaa...bbbbbb...dddddd...!!!!!!...???????.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     swamp_end
+TAGS:     swamp_end
+KMONS:    1 = hydra / swamp dragon / swamp drake w:2
+KMONS:    2 = place:Swamp:$
+KFEAT:    t = mangrove
+KITEM:    2 = decaying rune of zot
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Swamp:5",
+:           })
+MAP
+tttttttttttttt
+~1111112111111
+tttttttttttttt
+ENDMAP
+
+
+NAME:     shoals_end
+TAGS:     shoals_end
+KMONS:    1 = merfolk impaler / merfolk javelineer / merfolk aquamancer /\
+              siren w:3 / merfolk w:3
+KMONS:    2 = Ilsuiw
+COLOUR:   12 = brown
+KITEM:    2 = barnacled rune of zot
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Shoals:5",
+:           })
+MAP
+xxxxxxxxxxxxxx
+~1111112111111
+xxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     spider_end
+TAGS:     spider_end
+KMONS:    1 = redback / emperor scorpion w:35 / jumping spider /\
+              demonic crawler /\
+              wolf spider / ghost moth / moth of wrath
+KMONS:    2 = ghost moth / moth of wrath w:4
+COLOUR:   12 = brown
+KITEM:    2 = gossamer rune of zot
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Spider:5",
+:           })
+MAP
+xxxxxxxxxxxxxx
+~1111112111111
+xxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     snake_end
+TAGS:     snake_end
+KMONS:    1 = naga / naga warrior / naga mage / greater naga w:20 /\
+              guardian serpent
+KMONS:    2 = greater naga
+COLOUR:   12 = lightgreen
+KITEM:    2 = serpentine rune of zot
+COLOUR:   # = yellow
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Snake:5",
+:           })
+MAP
+##############
+~1111112111111
+##############
+ENDMAP
+
+
+NAME:     vaults_end
+TAGS:     vaults_end
+ORIENT:   encompass
+KMONS:    1 = vault guard
+KMONS:    2 = place:Vaults:$
+KMONS:    3 = shadow dragon w:15 / quicksilver dragon / golden dragon /\
+              titan / tentacled monstrosity / stone giant / lich w:5 /\
+              ancient lich / place:Vaults:$ w:40
+KMONS:    4 = shadow dragon
+KMONS:    5 = shadow dragon
+KITEM:    4 = silver rune of zot
+KITEM:    2 = *
+KITEM:    3 = |
+KFEAT:    v = permarock_wall
+COLOUR:   v = cyan
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Vaults:5",
+:           })
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+~1111111111111111111111111&22222322222525222&253334353
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+NAME:     d_27
+TAGS:     d_27
+KMONS:    1 = place:D:$
+KMONS:    2 = dragon w:20 / ice dragon w:20 / storm dragon /\
+              bone dragon / golden dragon / mottled dragon
+KMONS:    3 = base draconian
+SUBST:    2 = 2223, 3 = 3332
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to D:27",
+:           })
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+~111111111&222222333333
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     items_6
+TAGS:     items_6
+ORIENT:   encompass
+KITEM:    a = amulet of conservation randart not_cursed ident:all /\
+    amulet of faith randart not_cursed ident:all /\
+    amulet of guardian spirit randart not_cursed ident:all /\
+    amulet of resist corrosion randart not_cursed ident:all /\
+    amulet of resist mutation randart not_cursed ident:all /\
+    amulet of rage randart not_cursed ident:all /\
+    amulet of stasis randart not_cursed ident:all /\
+    amulet of the gourmand randart not_cursed ident:all /\
+    amulet of warding randart not_cursed ident:all /\
+    ring of slaying plus:0 plus2:5 ident:all not_cursed w:5 /\
+    ring of slaying plus:5 plus2:0 ident:all not_cursed w:5 /\
+    ring of slaying plus:3 plus2:3 randart ident:all not_cursed w:5 /\
+    any jewellery randart level:27 not_cursed ident:all w:40 /\
+    ring of protection from fire randart ident:all not_cursed /\
+    ring of protection from cold randart ident:all not_cursed /\
+    ring of protection from magic randart ident:all not_cursed /\
+    ring of fire randart ident:all not_cursed /\
+    ring of ice randart ident:all not_cursed /\
+    ring of see invisible randart ident:all not_cursed /\
+    ring of poison resistance randart ident:all not_cursed /\
+    ring of slaying plus:3 plus2:3 ident:all not_cursed w:5 /\
+    ring of slaying plus:3 plus2:3 ident:all not_cursed w:5 /\
+    ring of regeneration randart ident:all not_cursed /\
+    ring of invisibility randart ident:all not_cursed /\
+    ring of protection plus:3 randart ident:all not_cursed /\
+    ring of evasion plus:3 randart ident:all not_cursed /\
+    ring of strength plus:3 randart ident:all not_cursed /\
+    ring of intelligence plus:3 randart ident:all not_cursed /\
+    ring of dexterity plus:3 randart ident:all not_cursed /\
+    ring of wizardry ident:all randart not_cursed
+KITEM:    b = battleaxe plus:5 plus2:5 good_item not_cursed ident:all /\
+    battleaxe plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    battleaxe plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    executioner's axe plus:5 plus2:5 good_item not_cursed ident:all /\
+    executioner's axe plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    executioner's axe plus:0 plus2:7 randart not_cursed ident:all w:3 /\
+    broad axe plus:5 plus2:5 good_item not_cursed ident:all /\
+    broad axe plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    broad axe plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    glaive plus:5 plus2:5 good_item not_cursed ident:all /\
+    glaive plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    glaive plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    scythe plus:11 plus2:11 good_item not_cursed ident:all /\
+    scythe plus:9 plus2:9 randart not_cursed ident:all w:3 /\
+    scythe plus:5 plus2:15 randart not_cursed ident:all w:3 /\
+    bardiche plus:5 plus2:5 good_item not_cursed ident:all /\
+    bardiche plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    bardiche plus:0 plus2:7 randart not_cursed ident:all w:3 /\
+    demon trident plus:5 plus2:5 good_item not_cursed ident:all /\
+    demon trident plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    demon trident plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    great mace plus:5 plus2:5 good_item not_cursed ident:all /\
+    great mace plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    great mace plus:0 plus2:7 randart not_cursed ident:all w:3 /\
+    giant spiked club plus:5 plus2:5 good_item not_cursed ident:all /\
+    giant spiked club plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    giant spiked club plus:0 plus2:7 randart not_cursed ident:all w:3 /\
+    demon whip plus:5 plus2:5 good_item not_cursed ident:all /\
+    demon whip plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    demon whip plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    double sword plus:5 plus2:5 good_item not_cursed ident:all /\
+    double sword plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    double sword plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    triple sword plus:5 plus2:5 good_item not_cursed ident:all /\
+    triple sword plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    triple sword plus:0 plus2:7 randart not_cursed ident:all w:3 /\
+    demon blade plus:5 plus2:5 good_item not_cursed ident:all /\
+    demon blade plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    demon blade plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    great sword plus:5 plus2:5 good_item not_cursed ident:all /\
+    great sword plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    great sword plus:0 plus2:7 randart not_cursed ident:all w:3 /\
+    lajatang plus:5 plus2:5 good_item not_cursed ident:all /\
+    lajatang plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    lajatang plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    longbow plus:5 plus2:5 ego:vorpal not_cursed ident:all w:15 /\
+    crossbow plus:5 plus2:5 ego:vorpal not_cursed ident:all w:15
+KITEM:    d = plate armour plus:6 not_cursed ident:all /\
+    plate armour plus:4 good_item not_cursed ident:all /\
+    chain mail plus:6 not_cursed ident:all /\
+    chain mail plus:4 good_item not_cursed ident:all /\
+    robe plus:4 ego:resistance not_cursed ident:all /\
+    fire dragon armour plus:6 not_cursed ident:all /\
+    ice dragon armour plus:6 not_cursed ident:all /\
+    swamp dragon armour plus:4 not_cursed ident:all /\
+    swamp dragon armour plus:2 good_item not_cursed ident:all /\
+    mottled dragon armour plus:4 not_cursed ident:all /\
+    mottled dragon armour plus:2 good_item not_cursed ident:all /\
+    storm dragon armour plus:5 not_cursed ident:all /\
+    storm dragon armour plus:3 good_item not_cursed ident:all /\
+    gold dragon armour plus:4 not_cursed ident:all /\
+    gold dragon armour plus:0 good_item not_cursed ident:all /\
+    pair of gloves plus:2 not_cursed ident:all /\
+    pair of gloves plus:0 good_item not_cursed ident:all /\
+    pair of boots plus:2 not_cursed ident:all /\
+    pair of boots plus:0 good_item not_cursed ident:all /\
+    helmet plus:2 not_cursed ident:all /\
+    helmet plus:0 good_item not_cursed ident:all /\
+    cloak plus:2 not_cursed ident:all /\
+    cloak plus:0 good_item not_cursed ident:all /\
+    wizard hat plus:2 not_cursed ident:all /\
+    wizard hat plus:0 good_item not_cursed ident:all /\
+    large shield plus:5 not_cursed ident:all /\
+    large shield plus:3 good_item not_cursed ident:all /\
+    naga barding plus:4 not_cursed ident:all w:5 /\
+    centaur barding plus:4 not_cursed ident:all w:5
+KITEM:     e = wand of hasting charges:5 ident:all
+KITEM:     f = crystal ball of energy ident:all
+: line_setup(_G)
+: general_item_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+&...aaaaa....bbbbbbb...ddddddd...!!!!!!...??????..e.f.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME:     zot_1
+TAGS:     zot_1
+KMONS:    1 = place:Zot:1 w:30 / base draconian / nonbase draconian
+KMONS:    2 = place:Zot:2 w:30 / base draconian / nonbase draconian
+KMONS:    3 = place:Zot:3 w:30 / base draconian / nonbase draconian
+KMONS:    4 = place:Zot:4 w:30 / base draconian / nonbase draconian
+COLOUR:   # = white
+COLOUR:   1 = lightgrey
+COLOUR:   X = blue
+KFEAT:    X = permarock_wall
+COLOUR:   2 = lightgrey
+COLOUR:   Y = lightblue
+KFEAT:    Y = permarock_wall
+COLOUR:   3 = blue
+COLOUR:   Z = magenta
+KFEAT:    Z = permarock_wall
+COLOUR:   4 = lightblue
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Realm of Zot",
+:           })
+MAP
+########XXXXXXXXXYYYYYYYYYYZZZZZZZZZZ
+~1111111&22222222&333333333&444444444
+########XXXXXXXXXYYYYYYYYYYZZZZZZZZZZ
+ENDMAP
+
+
+NAME:     zot_end
+TAGS:     zot_end
+ORIENT:   encompass
+KMONS:    1 = orb guardian
+KMONS:    2 = place:Zot:$
+KMONS:    3 = orb of fire
+KMONS:    4 = ancient lich
+KMONS:    5 = electric golem
+KMONS:    6 = shadow dragon / golden dragon / nonbase draconian /\
+              killer klown / moth of wrath / place:Zot:$
+KMONS:    7 = moth of wrath
+KITEM:    7 = orb of zot
+KMONS:    8 = moth of wrath
+SUBST:    0 = 122345666
+COLOUR:   123456780 = magenta
+COLOUR:   # = lightmagenta
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Zot:5",
+:           })
+: lua_marker('<', props_marker {
+:           door_description_suffix=" to the ~*~Extended Endgame~*~",
+:           })
+MAP
+#########################################################
+~1111111111&22112211&4+3+5&00000003000000&11111171111181<
+#########################################################
+ENDMAP
+
+
+NAME:     crypt_end
+TAGS:     crypt_end
+KMONS:    1 = vampire knight w:40 / lich / ancient lich
+KFEAT:    c = permarock_wall
+COLOUR:   c = lightgrey
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Crypt",
+:           })
+MAP
+cccccccccccc
+~11111111111
+cccccccccccc
+ENDMAP
+
+
+NAME:     forest_end
+TAGS:     forest_end
+KMONS:    1 = spriggan col:white name:baker n_suf ; robe . dagger
+KFEAT:    t = mangrove
+COLOUR:   t = green / lightgreen w:5
+COLOUR:   1 = brown
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Forest",
+:           })
+MAP
+tttttttttttt
+~11111111111
+tttttttttttt
+ENDMAP
+
+
+NAME:     elf_end
+TAGS:     elf_end
+KMONS:    1 = deep elf annihilator / deep elf high priest / deep elf sorcerer /\
+          deep elf master archer / deep elf blademaster /\
+          deep elf demonologist / deep elf death mage
+KMONS:    2 = deep elf blademaster
+KITEM:    2 = elven rune of zot
+COLOUR:   # = elven_brick
+COLOUR:   12 = white
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Elven Halls",
+:           })
+MAP
+###############
+~11111121111111
+###############
+ENDMAP
+
+
+NAME:     slime_end
+TAGS:     slime_end
+KMONS:    1 = azure jelly / acid blob w:20 / death ooze / giant eyeball w:4 /\
+              golden eye w:4 / eye of draining w:2
+KMONS:    2 = the royal jelly
+KITEM:    2 = slimy rune of zot
+COLOUR:   # = lightgreen
+COLOUR:   12 = green
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Slime Pits",
+:           })
+MAP
+####################
+~1111111112111111111
+####################
+ENDMAP
+
+
+NAME:     tomb_end
+TAGS:     tomb_end
+KMONS:    1 = guardian mummy
+KMONS:    2 = mummy priest
+KMONS:    3 = greater mummy
+KMONS:    4 = sphinx
+KMONS:    5 = greater mummy
+KITEM:    5 = golden rune of zot
+COLOUR:   # = lightgrey
+COLOUR:   12345 = brown
+SUBST:    2 = 22111113, 3 = 333211
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Tomb",
+:           })
+MAP
+############################################
+~444444444444&1111111121&222222222&333335333
+############################################
+ENDMAP
+
+
+NAME:     abyss_end
+TAGS:     abyss_end
+KMONS:    1 = place:Abyss
+KMONS:    2 = wandering mushroom
+KITEM:    2 = abyssal rune of zot
+COLOUR:   #12 = random
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Abyss",
+:           })
+MAP
+############
+~11111211111
+############
+ENDMAP
+
+
+NAME:     pan_hell_end
+TAGS:     pan_hell_end
+KMONS:    1 = Dispater
+KITEM:    1 = iron rune of zot
+KMONS:    2 = Ereshkigal
+KITEM:    2 = bone rune of zot
+KMONS:    3 = Asmodeus
+KITEM:    3 = obsidian rune of zot
+KMONS:    4 = Antaeus
+KITEM:    4 = icy rune of zot
+KMONS:    5 = Cerebov
+KITEM:    5 = fiery rune of zot
+KMONS:    6 = Gloorx Vloq
+KITEM:    6 = dark rune of zot
+KMONS:    7 = Lom Lobon
+KITEM:    7 = magical rune of zot
+KMONS:    8 = Mnoleg
+KITEM:    8 = glowing rune of zot
+KMONS:    9 = Geryon
+SHUFFLE:  12345678
+COLOUR:   # = lightred
+: line_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to Hell & Pan",
+:           })
+MAP
+##########################
+~9&1..2..3..4..5..6..7..8#
+##########################
+ENDMAP

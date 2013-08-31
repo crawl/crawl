@@ -460,7 +460,7 @@ static void _setcursortype_internal(bool curstype)
     cci.dwSize = have_initial_cci && initial_cci.dwSize ? initial_cci.dwSize
                                                         : 5;
 
-    cci.bVisible = curstype? TRUE : FALSE;
+    cci.bVisible = curstype ? TRUE : FALSE;
     cursor_is_enabled = curstype;
     SetConsoleCursorInfo(outbuf, &cci);
 

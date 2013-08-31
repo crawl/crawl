@@ -206,6 +206,19 @@ int random2avg(int max, int rolls)
     return (sum / rolls);
 }
 
+// biased_random2() takes values in the same range [0, max) as random2() but
+// with mean value (max - 1)/(n + 1) biased towards the bottom end.
+// This can be thought of as the smallest of n _distinct_ random integers
+// chosen in [0, max + n - 1).
+// Never use with n < 2.
+int biased_random2(int max, int n)
+{
+    for (int i = 0; i < max; i++)
+        if (x_chance_in_y(n, n + max - 1 - i))
+            return i;
+    return 0;
+}
+
 // originally designed to randomise evasion -
 // values are slightly lowered near (max) and
 // approach an upper limit somewhere near (limit/2)
@@ -245,6 +258,31 @@ int binomial_generator(unsigned n_trials, unsigned trial_prob)
 double random_real()
 {
     return random_int() / 4294967296.0;
+}
+
+// range [0, 1.0]
+double random_real_inc()
+{
+    return random_int() / 4294967295.0;
+}
+
+// range [0, 1.0], weighted to middle with multiple rolls
+double random_real_avg(int rolls)
+{
+    ASSERT(rolls > 0);
+    double sum = 0;
+
+    for (int i = 0; i < rolls; i++)
+        sum += random_real_inc();
+
+    return (sum / (double)rolls);
+}
+
+// range [low, high], weighted to middle with multiple rolls
+double random_range_real(double low, double high, int nrolls)
+{
+    const int roll = random_real_avg(nrolls) * (high - low);
+    return low + roll;
 }
 
 // Roll n_trials, return true if at least one succeeded.  n_trials might be

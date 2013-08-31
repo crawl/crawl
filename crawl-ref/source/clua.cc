@@ -658,6 +658,7 @@ void CLua::init_lua()
     cluaopen_options(_state);
     cluaopen_travel(_state);
     cluaopen_view(_state);
+    cluaopen_spells(_state);
 
     cluaopen_globals(_state);
 

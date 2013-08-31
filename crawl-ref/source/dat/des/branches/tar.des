@@ -65,7 +65,7 @@ end
 ##############################################################################
 
 NAME:   lemuel_nasty_pond
-DEPTH:  Tar:*
+DEPTH:  Tar
 TAGS:   no_pool_fixup no_rotate
 MONS:   w:2 col:darkgrey plant name:withered name_adjective               \
         tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
@@ -125,7 +125,7 @@ KPROP: "H-}]) = no_rtele_into
 KPROP: "H-}]) = no_ctele_into
 MARKER: H = lua:fog_machine { \
                 pow_min = 10, pow_max = 10, delay = 10, \
-                size = 3, walk_dist = 1, cloud_type = "gloom" }
+                size = 3, walk_dist = 1, cloud_type = "purple smoke" }
 MAP
 cccccccccccccccccccccc.......
 c...2...............cG.5.....
@@ -164,7 +164,7 @@ KMONS:   ABCD = shadow dragon
 KMONS:   EF = death drake
 : end
 KMONS:   0 = soul eater
-KMONS:   Z = curse skull
+KMONS:   Z = patrolling curse skull
 SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
 SUBST:   { : -_= |:3, } : -= |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
 SUBST:   G : O:20 X, H : O X:50, I = X, X : xc
@@ -268,6 +268,259 @@ x...c.....cd..{..dc.....c...x
  .@xxxxxxxxxxxxxxxxxxxxxxx@.
 ENDMAP
 
+NAME:   nicolae_tar_cuneiform_heaven
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+................
+........xxxxx...
+.........xxx....
+.........xxx....
+.x...x....x.....
+.xxx.xxx..x.....
+.xxxxxxxxxxxxxx.
+.xxx.xxx..x.....
+.x...x....x.....
+..........x.....
+..........x.....
+................
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_sun
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+............
+....x.xxxxx.
+..xxx..xxx..
+.xxxx..xxx..
+..xxx...x...
+....x...x...
+..xxx...x...
+.xxxx...x...
+..xxx...x...
+....x...x...
+............
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_to_be
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+...............
+.xxxxx.........
+..xxx..........
+..xxxx.........
+...x.xxx.......
+...x.xxxxxxxxx.
+...x.xxx.......
+...x.x.........
+...x...........
+...x...........
+...............
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_two
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+.............
+.xxxxx.xxxxx.
+..xxx...xxx..
+..xxx...xxx..
+...x.....x...
+...x.....x...
+...x.....x...
+...x.....x...
+...x.....x...
+...x.....x...
+.............
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_three
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+...................
+.xxxxx.xxxxx.xxxxx.
+..xxx...xxx...xxx..
+..xxx...xxx...xxx..
+...x.....x.....x...
+...x.....x.....x...
+...x.....x.....x...
+...x.....x.....x...
+...x.....x.....x...
+...x.....x.....x...
+...................
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_bird
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+..................
+....xxxxx...xxxxx.
+.....xxx.....xxx..
+.....xxx.....xxx..
+.x....x....x..x...
+.xxx..x..xxx..x...
+.xxxxxxxxxxx..x...
+.xxx..x..xxx..x...
+.x....x....x..x...
+......x.......x...
+......x.......x...
+..................
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_water
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+.............
+.xxxxx.xxxxx.
+..xxx...xxx..
+..xxx...xxx..
+...x.....x...
+...x...xxxxx.
+...x....xxx..
+...x....xxx..
+...x.....x...
+...x.....x...
+.............
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_bread
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+...................
+.xxxxx.xxxxx.xxxxx.
+..xxx...xxx...xxx..
+..xxx...xxx...xxx..
+...x.....x.....x...
+...................
+.....xxxxxxxxx.....
+......xxxxxxx......
+.......xxxxx.......
+.......xxxxx.......
+........xxx........
+.........x.........
+...................
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_oil
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+.............
+.x...........
+.xxx.........
+.xxxxxxxxxxx.
+.xxx.........
+.x...........
+.............
+.x...xxx.xxx.
+.xxx..x...x..
+.xxxxxxxxxxx.
+.xxx..x...x..
+.x....x...x..
+.............
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_not
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+..............
+....xxxxx.....
+.....xxx......
+.....xxx......
+.x....x.....x.
+.xxx..x....x..
+.xxxxxxxxxxxx.
+.xxx..x..x....
+.x....x.x.....
+......xx......
+......x.......
+.....xx.......
+..xxx.x.......
+...xx.........
+....x.........
+..............
+ENDMAP
+
+NAME:   nicolae_tar_cuneiform_city
+DEPTH:  Tar
+WEIGHT: 10, 1 (Tar:$)
+TAGS:   transparent decor extra allow_dup luniq tar_grunt_decor
+MAP
+.................
+.....xxxxx.xxxxx.
+......xxx...xxx..
+......xxx...xxx..
+.x.....x.....x...
+.xxx...x.....x...
+.xxxxxxxxxxxxx...
+.xxx...x.....x...
+.x.....x.....x...
+.......x.....x...
+.x.....x.....x...
+.xxx...x.....x...
+.xxxxxxxxxxxx....
+.xxx.............
+.x...............
+.................
+ENDMAP
+
+NAME:    nicolae_tar_fractal_crypt
+DEPTH:   Tar, !Tar:$
+TAGS:    transparent
+SHUFFLE: ae, bf, cg, dh
+SUBST:   e : ae, f : bf, g : cg, h : dh
+NSUBST:  a = + / x, b = + / x, c = + / x, d = + / x, e = + / x, f = + / x, \
+         g = + / x, h = + / x, > = 1:} / 1:] / 1:) / .
+SUBST:   d = x, 0 = 0009.., 9 = 998, ] = ...]>, ) = .....)>, X = ..x
+SHUFFLE: }])
+KMONS:   0 = 0 / 0 band w:5
+KMONS:   9 = 9 band
+KMONS:   8 = 8 band
+MAP
+xaxxxaxaxxxaxexxxexexxxex
+h..x..x..x..x..x..x..x..b
+xX.X.XxX.X.XxX.X.XxX.X.Xx
+xxX0XxxxX0XxxxX0XxxxX0Xxx
+x..X..X..X..x..X..X..X..x
+h.Xx.....x.>x>.x.....xX.b
+xxxxX.0.XxxxxxxxX.0.Xxxxx
+h.Xx.....xxxxxxx.....xX.b
+x..X..X...XXXXX...X..X..x
+xxX0Xxxx.........xxxX0Xxx
+x..X..xxX.0...0.Xxx..X..x
+h.Xx.>xxX.......Xxx>.xX.b
+xxxxxxxxX...9...Xxxxxxxxx
+d.Xx.>xxX.......Xxx>.xX.f
+x..X..xxX.0...0.Xxx..X..x
+xxX0Xxxx.........xxxX0Xxx
+x..X..X...XXXXX...X..X..x
+d.Xx.....xxxxxxx.....xX.f
+xxxxX.0.XxxxxxxxX.0.Xxxxx
+d.Xx.....x.>x>.x.....xX.f
+x..X..X..X..x..X..X..X..x
+xxX0XxxxX0XxxxX0XxxxX0Xxx
+xX.X.XxX.X.XxX.X.XxX.X.Xx
+d.Xx..x..x..x..x..x..x..f
+xgxxxgxgxxxgxcxxxcxcxxxcx
+ENDMAP
 
 ##############################################################################
 # Ereshkigal (Tartarus)
@@ -350,179 +603,218 @@ ENDMAP
 
 
 ##############################################################################
-# Ereshkigal (Tartarus) by Mu
+# Ereshkigal (Tartarus) by Mu.
 ##############################################################################
-
 NAME:     tar_mu
 ORIENT:   encompass
-SUBVAULT: Z : eresh_room
-# Ereshkigal is placed in the subvault.
-MONS:     random, shadow fiend, reaper, soul eater, shadow demon
+MONS:     patrolling Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
 MONS:     shadow dragon, shadow wraith
 KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
-# Randomising the doors to get into the pyramid.
-# There may be ones that lead nowhere.
-SHUFFLE:  FfGgHh
-SUBST:    F = =
-SUBST:    f : fff=c, f = =c
-SUBST:    G : Gcc,   G = =cc
-SUBST:    g : gcccc, g = =cc
-SUBST:    H = c
-SUBST:    h = c
+SUBVAULT: = : tar_mu_maze
 # position of the loot chamber varies
 SHUFFLE:  AB
 SUBST:    A = %
 SUBST:    B = x
-NSUBST:   " = 1:= / *:x
 KFEAT:    % = .
 KMONS:    % = soul eater w:20 / shadow wraith w:15 / reaper w:5 / nothing w:20
 KITEM:    % = | / $
 SUBST:    4 = 3333444455566778
-# TODO: this vault needs to be reworked, for now we simply disable secrets
-SUBST:    = = +
+KMONS:    s = eidolon
+KMONS:    t = phantasmal warrior
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxx..............................................................xxxx
-xxxx..............................................................xxxx
-xxxx..cccccccccccccccccccccccccccccc..............................xxxx
-xxxx..cccccccccccccccccccccccccccccc..............................xxxx
-xxxx..cc..c...........4...........cc..............................xxxx
-xxxx..cc..F.......................cc..............................xxxx
-xxxx..cc..ccGcccccccccccccccccccGFcc..............................xxxx
-xxxx..cc..H.................f..c..cc..............ccccccc.........xxxx
-xxxx..cc..f.........5.......h..H..cc............ccccccccccc.......xxxx
-xxxx..cc..chgccccHccccccccGgc..c..cc...........ccccc$$$ccccc......xxxx
-xxxx..cc..c..F.G............c..c..cc..........cccc$$$$$$$cccc.....xxxx
-xxxx..cc..f..c.ccgcccccccccHc..c..cc..........ccc$$$$$$$$$ccc.....xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc.........ccc$$$$$$$$$$$ccc....xxxx
-xxxx..cc..c..c.hZZZZZZZZZZf.c..c..cc.........ccc.2.$$$$$.2.ccc....xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........ccc....xxxxx....ccc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx
-xxxx..cc..c..h.cZZZZZZZZZZc.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx
-xxxx..cc.4c..c.cZZZZZZZZZZc.c5.c..cc........cc=cxxxxxxxxxxxc=cc...xxxx
-xxxx..cc..c.5c.cZZZZZZZZZZc.c..cD2cc........cc.c...........c.cc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx
-xxxx..cc..c..G.cZZZZZZZZZZc.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx
-xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c.cx.444.xc.c.cc...xxxx
-xxxx..cc..c..cFccHccccGcFcc.H..f..cc........cc.c.cxxxxxxxc.c.cc...xxxx
-xxxx..cc..c..G............c.c..c..cc........cc.c.cccxxxccc.c.cc...xxxx
-xxxx..cc..c..cccccccccccHccfcgcc..cc........cc.c...cxxxc...c.cc...xxxx
-xxxx..cc..F..c......5..........c..cc........cc.c.cccxxxccc.c.cc...xxxx
-xxxx..cc..c..g.................c..cc........cc.c.cx|2.2|xc.c.cc...xxxx
-xxxx..cccHcfcccHcccccccccccccfcc==cc........cc.c.cx|$$$|xc.c.cc...xxxx
-xxxx..cc............4..........c..cc........cc.c.ccccxcccc.c.cc...xxxx
-xxxx..cc.......................c..cc........cc.c....cxc....c.cc...xxxx
-xxxx..cccccccccccccccccccccccccc++cc........cc.c.ccccxcccc.c.cc...xxxx
-xxxx..cccccccccccccccccccccccccc++cc........cc.c.cxx|||xxc.c.cc...xxxx
-xxxx........................................cc.c.cxx|||xxc.c.cc...xxxx
-xxxx.........................xx....xx.......cc=c.ccccccccc.c=cc...xxxx
-xxxx.........................xx....xx........c.c.....c.....c.c....xxxx
-xxxx...........................................c...........c......xxxx
-xxxx..............................................................xxxx
-xxxx..............4..........xx....xx.............................xxxx
-xxxx...4..4..................xx....xx.............................xxxx
-xxxx....44...................................xx.................xxxxxx
-xxxx..........4..............................xxx...............xxxxxxx
-xxxx.........................xx....xx.......xxxxxx"xxxxxxxxx"xxxxxxxxx
-xxxx.........................xx....xx.......xxxxxx.xxx.2.xxx.xxxxxxxxx
-xxxx........44..............................xxxxxx.xxx2.2xxx.xxxAAAAxx
-xxxx.......................................xxxxxxx.xxxxxxxxx.xxxAAAAxx
-xxxx......4...................x....x.......xxxxxxx..xxxxxxx..xxxAAAAxx
-xxxx.......................................xxxxxxxx.........xxxxAAAAxx
-xxxx......................................xxxxxxxxxx.......xxxxxxxxxxx
-xxxx..........................x....x......xxxxxxxxxxx.....xxAAAAAAAAxx
-xxxx.....................................xxBBBBBBBxxxx...xxxAAAAAAAAxx
-xxxx.....................................xxBBBBBBBxxxxx.xxxxAAAAAAAAxx
-xxxx..........................x....x....xxxBBBBBBBxxxxx=xxxxxxxxxxxxxx
-xxxx....................................xxxxxxxxxxxx..............$$xx
-xxxx...................................xxxBBBBxBBBBx.4...4.......$$$xx
-xxxx..........................x....x...xxxBBBBxBBBBx...4..4.....$$$$xx
-xxxx.................................{xxxxBBBBxBBBBx.2..4..4...$$$$$xx
-xxxx................................[xxxxxBBBBxBBBBx..........$$$$$$xx
-xxxx...............................(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.4.............................4.........................(..{.xxxx
+xxxx..ccccccccccccccccccccccccccccc...............................xxxx
+xxxx..c===========================+...............................xxxx
+xxxx..c===========================c.............................[.xxxx
+xxxx..c===========================c...............................xxxx
+xxxx..c===========================c...............................xxxx
+xxxx..c===========================c..............3ccccccc3........xxxx
+xxxx..c===========================c............7ccccccccccc7......xxxx
+xxxx..c===========================c...........3ccccc$$$ccccc3.....xxxx
+xxxx..c===========================c..........7cccc$$$$$$$cccc7....xxxx
+xxxx..c===========================c..........7ccc$$$$$$$$$ccc7....xxxx
+xxxx..c===========================c..........ccc$$$$$$$$$$$ccc....xxxx
+xxxx..c===========================c..........ccc.2.$$$$$.2.ccc....xxxx
+xxxx..c===========================c.........ccc....xxxxx....ccc...xxxx
+xxxx..c===========================c.........ccc..xxxxxxxxx..ccc...xxxx
+xxxx..c===========================c.........cc..xxxxxxxxxxx..cc...xxxx
+xxxx..c===========================c.........cc+cxxxxxxxxxxxc+cc...xxxx
+xxxx..c===========================c.........cc.c...........c.cc...xxxx
+xxxx..c===========================c.........cc.c.xxxxxxxxx.c.cc...xxxx
+xxxx..c===========================c.........cc.c+xxxxxxxxc+c.cc...xxxx
+xxxx..c===========================c.........cc.c.xx.444.xc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.cx.444.xc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.cxxxxxxxc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.cccxxxccc.c.cc...xxxx
+xxxx..c===========================c.........cc.c...cxxxc...c.cc...xxxx
+xxxx..c===========================c.........cc.c.cccxxxccc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.cx|2.2|xc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.cx|$$$|xc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.ccccxcccc.c.cc...xxxx
+xxxx..c===========================c.........cc.c....cxc....c.cc...xxxx
+xxxx..c===========================c.........cc.c.ccccxcccc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.cxx|||xxc.c.cc...xxxx
+xxxx..c===========================c.........cc.c.cxx|||xxc.c.cc...xxxx
+xxxx..c===========================c.........cc+c.ccccccccc.c+cc...xxxx
+xxxx..c===========================c..........c.c.....c.....c.c....xxxx
+xxxx..c===========================c............c...........c......xxxx
+xxxx..c===========================c...............................xxxx
+xxxx..c===========================c...............4.4.4.4.........xxxx
+xxxx..c===========================c................4...4..........xxxx
+xxxx..c===========================c...........x.................xxxxxx
+xxxx..c===========================c..........xxx...............xxxxxxx
+xxxx..c===========================c.........xxxxxx+xxxxxxxxx+xxxxxxxxx
+xxxx..c===========================c.........xxxxxx.x|$...$|x.xxxxxxxxx
+xxxx..ccccccccccccc===============c.........xxxxxx.xxx2.2xxx.xxxAAAAxx
+xxxx..cc..........+===============c........xxxxxxx.xxxxxxxxx.xxxAAAAxx
+xxxx..cc..........c===============c........xxxxxxx..xxxxxxx..xxxAAAAxx
+xxxx..cc..........c===============c........xxxxxxxx.........xxxxAAAAxx
+xxxx..cc..........c===============c.......xxxxxxxxxx.......xxxxxxxxxxx
+xxxx..cc.s...2..s.c===============c.......xxxxxxxxxxx.....xxAAAAAAAAxx
+xxxx..cc.7..1...7.c===============c......xxBBBBBBBxxxx...xxxAAAAAAAAxx
+xxxx..cc..........c===============c......xxBBBBBBBxxxxx.xxxxAAAAAAAAxx
+xxxx..cc..........c===============c.....xxxBBBBBBBxxxxx+xxxxxxxxxxxxxx
+xxxx..cc.5.t..t.5.c===============c.....xxxxxxxxxxxx..............$$xx
+xxxx..cc.$$$O$$$$.ccccccccccccccccc.....xxBBBBxBBBBx.4...4.......$$$xx
+xxxx..ccccccccccccccccccccccccccccc.....xxBBBBxBBBBx...4..4.....$$$$xx
+xxxx.4..............................4..xxxBBBBxBBBBx.2..4..4...$$$$$xx
+xxxx..................................xxxxBBBBxBBBBx..........$$$$$$xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    eresh_room_1
-TAGS:    eresh_room no_rotate
-WEIGHT:  30
-MONS:    patrolling Ereshkigal, shadow fiend
-: tar_setup(_G)
-MAP
-..........
-...c==c...
-...c..c...
-...c..c...
-.ccc..ccc.
-.cO.12..c.
-.ccc..ccc.
-...c||c...
-...c||c...
-...cccc...
-..........
-ENDMAP
+NAME:     tar_mu_maze
+# only to shut up the validator
+ORIENT:   encompass
+TAGS:     tar_mu_maze no_rotate no_hmirror no_vmirror unrand
+{{
+  function dig_maze(x, y)
+    local delta = { {x =  2, y =  0},
+                    {x = -2, y =  0},
+                    {x =  0, y =  2},
+                    {x =  0, y = -2} }
+    local count = 0
+    local passes = 0
+    local i = 0
+    local newx = 0
+    local newy = 0
+    local nextx = 0
+    local nexty = 0
+    while true do
+      count = 0
+      for i = 1, 4 do
+        newx = x + delta[i].x
+        newy = y + delta[i].y
+        if is_valid_coord { x = newx, y = newy }
+           and mapgrd[newx][newy] ~= '.'
+           and mapgrd[newx][newy] ~= ' '
+           and mapgrd[newx][newy] ~= 'L' then
+          count = count + 1
+          if crawl.random2(count) == 0 then
+            nextx = newx
+            nexty = newy
+          end
+        end
+      end
+      if count == 0 then
+          if passes == 0 then
+            mapgrd[x][y] = 'L'
+          end
+          return
+      end
+      if nexty == y then
+        newy = y
+        if nextx - x < 0 then
+          newx = nextx + 1
+        else
+          newx = nextx - 1
+        end
+      else
+        newx = x
+        if nexty - y < 0 then
+          newy = nexty + 1
+        else
+          newy = nexty - 1
+        end
+      end
+      passes = passes + 1
+      mapgrd[newx][newy] = '.'
+      mapgrd[nextx][nexty] = '.'
+      dig_maze(nextx, nexty)
+    end
+  end
 
-NAME:    eresh_room_2
-TAGS:    eresh_room no_rotate
-WEIGHT:  10
-MONS:    patrolling Ereshkigal, shadow fiend
-SHUFFLE: |O
-: tar_setup(_G)
+  dig_maze(0, 0)
+}}
+NSUBST:   L = 5:M / 5:N / 5:P / 5:V / 1:L / *:.
+NSUBST:   . = 5:Q / 5:R / *:.
+KFEAT:    L = teleport trap
+KMONS:    M = shadow fiend / nothing
+KFEAT:    N = floor
+KITEM:    N = superb_item
+KMONS:    N = patrolling shadow fiend / patrolling soul eater
+KFEAT:    P = floor
+KITEM:    P = star_item
+KMONS:    P = patrolling reaper / nothing
+KMONS:    Q = generate_awake unseen horror
+KFEAT:    R = blade trap / floor
+SUBST:    V = V / .
 MAP
-..........
-.G......G.
-..........
-c........c
-cc......cc
-|+..21..+O
-cc......cc
-c........c
-..........
-.G......G.
-..........
-ENDMAP
-
-NAME:    eresh_room_3
-TAGS:    eresh_room no_rotate
-WEIGHT:  10
-MONS:    patrolling Ereshkigal, shadow fiend
-: tar_setup(_G)
-MAP
-..........
-..........
-..cc++cc..
-.cc....cc.
-.c......c.
-.cG....Gc.
-.c..12..c.
-.c+cccc+c.
-.cc|O||cc.
-..cccccc..
-..........
-ENDMAP
-
-NAME:    eresh_room_4
-TAGS:    eresh_room no_rotate
-WEIGHT:  5
-MONS:    patrolling Ereshkigal, shadow fiend
-SHUFFLE: 12 / AB
-SUBST:   A=., B=.
-: tar_setup(_G)
-MAP
-..........
-.G......G.
-....A.....
-...nnnn...
-...n||n...
-..1nO|+2..
-...n||n...
-...nnnn...
-.....B....
-.G......G.
-..........
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
+           cccccccccccccccc
 ENDMAP
 
 ##############################################################################
@@ -629,7 +921,16 @@ ORIENT: encompass
 MONS:   shadow imp, soul eater
 {{
   extend_map{width = 70, height = 70}
-  fill_area{fill = '.', border = 'x'}
+  fill_area{fill = 'X', border = 'x'}
+  fill_area{x1 = 2, y1 = 2, x2 = 67, y2 = 67, fill = '_', border = '-'}
+  fill_area{x1 = 4, y1 = 4, x2 = 65, y2 = 65, fill = '.'}
+  subst('X = xx.')
+  subst('- = x.')
+  subst('_ = x..')
+  -- The remove_isolated_glyphs doesn't seem to consistently get rid of
+  -- pockets in the border, so...
+  kprop('X-_ = no_rtele_into')
+  remove_isolated_glyphs { find = '.', replace = 'x', percent = 100 }
   nsubst('. = 10:1 / 10:2 / *:.')
   tar_setup(_G)
   hook("post_place", function()
@@ -642,8 +943,7 @@ MONS:   shadow imp, soul eater
     end
     dgn.place_maps{tag="tar_grunt_big_loot",    count=1, die_on_error = true}
     dgn.place_maps{tag="tar_grunt_small_loot",  count=3}
-    dgn.place_maps{tag="tar_grunt_small_decoy", count=3}
-    dgn.place_maps{tag="tar_grunt_decor",       count=6}
+    dgn.place_maps{tag="tar_grunt_decor",       count=15}
   end)
 }}
 
@@ -723,33 +1023,49 @@ MAP
 ........@@........
 ENDMAP
 
-NAME: tar_grunt_small_loot
-TAGS: tar_grunt_small_loot allow_dup unrand
-MONS: shadow demon w:20 / reaper w:15 / shadow wraith w:10 / soul eater w:5
+NAME:   tar_grunt_small_loot
+TAGS:   tar_grunt_small_loot allow_dup unrand
+MONS:   shadow demon w:20 / reaper w:15 / shadow wraith w:10 / soul eater w:5
+NSUBST: x = 1:m / *:x
 MAP
-xxxxxxx
-x..$..x
-x.$|$.x
+cccxccc
+c..$..c
+c.$|$.c
 x$|1|$x
-x.$|$.x
-x..$..x
-xxxxxxx
+c.$|$.c
+c..$..c
+cccxccc
 ENDMAP
 
-NAME: tar_grunt_small_decoy
-TAGS: tar_grunt_small_decoy allow_dup unrand
+NAME:   tar_grunt_small_decor_pillar
+TAGS:   tar_grunt_decor transparent allow_dup unrand
+WEIGHT: 60
+{{
+  local size = crawl.random2(6) + 1
+  local glyphs = { {'A', 2},
+                   {'B', 3},
+                   {'C', 4},
+                   {'D', 5},
+                   {'E', 6} }
+  for i = 1, #glyphs do
+    if size >= glyphs[i][2] then
+      subst(glyphs[i][1] .. ' = x')
+    else
+      clear(glyphs[i][1])
+    end
+  end
+}}
 MAP
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
-xxxxxxx
+xABCDE
+AABCDE
+BBBCDE
+CCCCDE
+DDDDDE
+EEEEEE
 ENDMAP
 
 NAME: tar_grunt_decor_1
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
 ...
@@ -758,7 +1074,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_3
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
  .....
@@ -768,7 +1084,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_4
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
 ......
@@ -780,7 +1096,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_6
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
  ......
@@ -793,7 +1109,7 @@ MAP
 ENDMAP
 
 NAME: tar_grunt_decor_8
-TAGS: tar_grunt_decor allow_dup unrand
+TAGS: tar_grunt_decor transparent allow_dup unrand
 SUBST: G : GV
 MAP
   ......
@@ -805,4 +1121,58 @@ MAP
 ..........
  ..G..G..
   ......
+ENDMAP
+
+NAME: tar_grunt_decor_cross_ortho
+TAGS: tar_grunt_decor transparent allow_dup unrand
+MAP
+  ....
+  .xx.
+...xx...
+.xxxxxx.
+.xxxxxx.
+...xx...
+  .xx.
+  ....
+ENDMAP
+
+NAME: tar_grunt_decor_cross_diag
+TAGS: tar_grunt_decor transparent allow_dup unrand
+MAP
+...  ...
+.xx..xx.
+.xxxxxx.
+ .xxxx.
+ .xxxx.
+.xxxxxx.
+.xx..xx.
+...  ...
+ENDMAP
+
+NAME: tar_grunt_decor_circle_5
+TAGS: tar_grunt_decor transparent allow_dup unrand
+SUBST: G : GV
+MAP
+  ...
+ .xxx.
+.x...x.
+.x.G.x.
+.x...x.
+ .xxx.
+  ...
+ENDMAP
+
+NAME: tar_grunt_decor_octagon_7
+TAGS: tar_grunt_decor transparent allow_dup unrand
+SUBST: G : GV
+MAP
+   ...
+  .xxx.
+ .x...x.
+.x.....x.
+.x..G..x.
+.x.....x.
+ .x...x.
+  .xxx.
+   ...
 ENDMAP

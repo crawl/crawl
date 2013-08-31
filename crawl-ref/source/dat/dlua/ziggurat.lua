@@ -255,7 +255,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      "place:Spider:$ w:110 / ghost moth w:15 / red wasp / " ..
                 "orb spider / moth of suppression w:5",
      "place:Crypt:$ w:180 / vampire knight w:14 / lich w:3 / " ..
-                "unborn deep dwarf w:2 / curse toe w:1",
+                "unborn w:2 / curse toe w:1",
      "place:Forest:$ w:180 / satyr / tengu reaver w:5 / " ..
                 "spriggan defender w:5",
      "place:Abyss",
@@ -272,7 +272,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("place:Tar:$ w:460 / Shadow Fiend / " ..
                  "curse toe / shadow demon w:20", { weight = 5 }),
      with_props("daeva / angel / cherub / pearl dragon / shedu band / ophan / " ..
-                "apis / paladin / w:5 phoenix / w:5 silver star", { weight = 2 }),
+                "apis / w:5 phoenix / w:5 silver star", { weight = 2 }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..

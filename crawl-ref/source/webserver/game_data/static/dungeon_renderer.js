@@ -167,8 +167,6 @@ function ($, cr, map_knowledge, settings, dngn) {
                 for (var cx = 0; cx < this.cols; cx++)
                     this.render_cell(cx + this.view.x, cy + this.view.y,
                                      cx * cw, cy * ch);
-
-            this.draw_minibars();
         },
 
         fit_to: function(width, height, min_diameter)
@@ -311,7 +309,7 @@ function ($, cr, map_knowledge, settings, dngn) {
     });
 
     $(document).off("game_cleanup.dungeon_renderer")
-        .on("game_cleanup.dungoen_renderer", function () {
+        .on("game_cleanup.dungeon_renderer", function () {
             if (anim_interval)
             {
                 clearTimeout(anim_interval);

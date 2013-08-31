@@ -16,7 +16,7 @@ function base_monster_setup(e)
            giant eyeball / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
-           necrophage / quasit / zombie / sky beast / deep elf soldier /\
+           necrophage / quasit / zombie / sky beast / deep elf fighter /\
            giant frog / mummy / orc warrior band / wight band /\
            hungry ghost / big kobold band / giant centipede /\
            brain worm / warg / wolf / porcupine / black bear /\
@@ -36,13 +36,13 @@ function base_monster_setup(e)
            orc sorcerer band w:5 / orc knight band / grizzly bear /\
            redback / phantasmal warrior / spiny frog / orange rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
-           elephant / death yak / war dog band / sheep band /\
+           elephant / death yak / wolf band / sheep band /\
            raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / mermaid w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler / plague shambler /\
            flaming corpse / small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
-           red devil / centaur band / deep dwarf artificer")
+           red devil / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
@@ -55,16 +55,15 @@ function base_monster_setup(e)
            necromancer band w:5 / orc knight band w:5 / spiny worm /\
            harpy band w:5 / fire crab / redback band /\
            vapour / deep elf priest band w:3 / shapeshifter / zombie /\
-           skeleton / deep dwarf necromancer / deep dwarf death knight /\
-           eidolon / elephant band w:5 / death yak band w:5 /\
-           insubstantial wisp band w:5 / swamp dragon / siren /\
-           alligator snapping turtle / anaconda / greater naga /\
+           skeleton / deep dwarf death knight / eidolon / elephant band w:5 /\
+           death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
+           siren / alligator snapping turtle / anaconda / greater naga /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
            vampire knight / vampire mage / large abomination /\
            spriggan druid / spriggan rider / death cob /\
            hell hound band w:5 / neqoxec / simulacrum / sixfirhy /\
-           chaos spawn / ice devil / sun demon / iron devil / paladin /\
+           chaos spawn / ice devil / sun demon / iron devil /\
            hell hog band w:5 / alligator band w:5 / minotaur")
   e.kmons("D = dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
            very ugly thing band w:5 / sphinx / iron troll /\
@@ -74,7 +73,7 @@ function base_monster_setup(e)
            bone dragon / stone giant / deep elf annihilator /\
            deep elf death mage / deep elf high priest /\
            deep elf demonologist / deep elf sorcerer / shadow dragon /\
-           titan w:5 / deep dwarf berserker / unborn deep dwarf / ettin /\
+           titan w:5 / deep dwarf berserker / unborn / ettin /\
            greater naga / dancing weapon / dire elephant band /\
            eye of draining / giant eyeball / vault guard / ghoul band w:5 /\
            mummy priest / spriggan air mage / spriggan berserker /\
@@ -118,7 +117,7 @@ function base_monster_setup(e)
            the Serpent of Hell")
   e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
            Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
-           Ereshkigal / Ignacio / Geryon")
+           Ereshkigal / Ignacio / Geryon / the royal jelly")
   e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
            fire giant / ettin / deep troll / iron troll")
   e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
@@ -350,7 +349,7 @@ end
 
 function general_setup(e)
   e.tags("no_rotate no_hmirror no_vmirror")
-  e.tags("no_monster_gen no_item_gen no_trap_gen no_pool_fixup")
+  e.tags("no_item_gen no_trap_gen no_pool_fixup")
   e.kfeat("& = closed_door")
   e.marker("& = lua:restrict_door()")
   e.colour("& = lightgrey")
@@ -379,7 +378,7 @@ function metal_vault_setup(e)
   e.tile("v = dngn_metal_iron")
   e.kitem("a = ring of protection from fire ident:all not_cursed /\
           ring of protection from cold ident:all not_cursed /\
-          ring of life protection ident:all not_cursed /\
+          ring of positive energy ident:all not_cursed /\
           ring of protection from magic ident:all not_cursed /\
           ring of fire ident:all not_cursed /\
           ring of ice ident:all not_cursed /\
@@ -530,7 +529,7 @@ function coven_setup(e)
           any jewellery randart level:27 not_cursed ident:all w:40")
   e.kitem("c = ring of protection from fire randart ident:all not_cursed /\
           ring of protection from cold randart ident:all not_cursed /\
-          ring of life protection randart ident:all not_cursed /\
+          ring of positive energy randart ident:all not_cursed /\
           ring of protection from magic randart ident:all not_cursed /\
           ring of fire randart ident:all not_cursed /\
           ring of ice randart ident:all not_cursed /\
@@ -787,7 +786,7 @@ KITEM: c = mace ego:vorpal ident:all not_cursed /\
        flail ego:vorpal ident:all not_cursed /\
        flail ego:protection ident:all not_cursed
 KITEM: d = trident ego:vorpal ident:all not_cursed /\
-       trident ego:orc_slaying ident:all not_cursed
+       trident ego:dragon_slaying ident:all not_cursed
 KITEM: e = quarterstaff ego:protection ident:all not_cursed /\
        quarterstaff ego:speed ident:all not_cursed
 KITEM: f = long sword ego:holy_wrath ident:all not_cursed /\
@@ -2124,7 +2123,7 @@ KMONS:  c = dragon / ice dragon / shadow dragon / iron dragon w:5 /\
         quicksilver dragon w:5 / golden dragon / swamp dragon /\
         hydra
 KMONS:  C = quicksilver dragon
-KMONS:  d = angel / daeva / cherub / paladin
+KMONS:  d = angel / daeva / cherub
 KMONS:  D = silver star
 NSUBST: + = 1:& / *:v
 SUBST:  1 : a, 2 : A

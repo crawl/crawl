@@ -294,7 +294,7 @@ show_class get_cell_show_class(const map_cell& cell,
         return SH_MONSTER;
     }
 
-    if (cell.cloud() != CLOUD_NONE && cell.cloud() != CLOUD_GLOOM)
+    if (cell.cloud() != CLOUD_NONE)
         return SH_CLOUD;
 
     if (feat_is_trap(cell.feat())
@@ -451,14 +451,6 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
     {
         const feature_def &fdef = get_feature_def(show);
         g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
-    }
-
-    if (cell_cloud == CLOUD_GLOOM)
-    {
-        if (coloured)
-            g.col = cell.cloud_colour();
-        else
-            g.col = DARKGREY;
     }
 
     if (g.col)

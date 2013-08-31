@@ -11,16 +11,16 @@
 function lair_wad_woods_monsters(e)
     e.mons("plant")
     if you.branch() == "Forest" then
-        if crawl.coinflip() then
-            e.mons("spriggan / w:2 spriggan rider / w:2 spriggan druid"
-                   .. " / w:2 spriggan air mage / w:2 spriggan berserker")
-        else
-            e.mons("tengu / tengu conjurer w:4 / tengu warrior w:4")
-        end
-        e.mons("wind drake")
+        e.mons("spriggan / w:3 spriggan rider / w:2 spriggan druid"
+                .. " / w:3 spriggan air mage / w:3 spriggan berserker")
+        e.mons("wind drake / w:5 dryad / w:2 ancient bear / w:1 treant")
     else
         e.mons("gnoll")
-        e.mons("porcupine")
+        if you.absdepth() >= 8 then
+            e.mons("porcupine")
+        else
+            e.mons("green rat")
+        end
     end
 end
 
@@ -238,7 +238,7 @@ NAME:   erik_lair_island
 TAGS:   lair_entry
 ORIENT: float
 MONS:   troll
-MONS:   w:30 hound / jackal / w:20 war dog
+MONS:   w:30 hound / jackal / w:20 wolf
 SUBST:  ? = w.
 KFEAT:  O = enter_lair
 MAP
@@ -358,7 +358,7 @@ ORIENT: float
 TAGS:   lair_entry transparent
 MONS:   plant / fungus / nothing
 MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / yak / w:20 nothing
-MONS:   patrolling deep elf soldier
+MONS:   patrolling deep elf fighter
 KFEAT:  O = enter_lair
 SUBST:  D = 1:5 2:2 .
 SUBST:  . = 1:2 2:2 .
@@ -468,7 +468,7 @@ ENDMAP
 # Pointless little "vaults" by Lemuel
 #
 
-# Three seperate decorative bubbles mixed into one vault.
+# Three separate decorative bubbles mixed into one vault.
 NAME:   lemuel_strawberry_fields
 TAGS:   allow_dup extra transparent
 DEPTH:  Lair
@@ -514,7 +514,7 @@ ENDMAP
 # Plantage
 #
 
-# Two seperate small decorative vaults mixed into one:
+# Two separate small decorative vaults mixed into one:
 NAME:   lemuel_fruit_tree
 TAGS:   extra transparent
 DEPTH:  Lair, Snake
@@ -791,7 +791,7 @@ ENDMAP
 # Ice dragon lair with assorted imp pets
 #
 NAME:   bobbens_ice_dragon_lair
-DEPTH:  Lair:4-8
+DEPTH:  Lair:4-
 TAGS:   no_monster_gen
 MONS:   ice dragon
 MONS:   w:9 white imp/w:1 nothing
@@ -826,7 +826,7 @@ ENDMAP
 # Dragon lair embedded in wall
 #
 NAME:   bobbens_dragon_lair_wall
-DEPTH:  Lair:4-8
+DEPTH:  Lair:4-
 TAGS:   no_monster_gen mini_float
 : if you.absdepth() >= 18 then
 MONS:   dragon
@@ -917,7 +917,7 @@ ENDMAP
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
-DEPTH:  Lair:4-8
+DEPTH:  Lair:4-
 TAGS:   allow_dup no_monster_gen no_item_gen mini_float
 MONS:   w:5 death drake / ice dragon / dragon / swamp dragon
 MONS:   swamp dragon / hydra / anaconda
@@ -1113,7 +1113,7 @@ ENDMAP
 ###############################################################################
 # Catoblepas lookout (blackcustard)
 NAME: lookout_lair_type
-DEPTH: Lair:6-8
+DEPTH: Lair:6-
 TAGS: extra no_pool_fixup
 MONS: w:1 generate_awake catoblepas / w:4 nothing
 SUBST: a = w W .
@@ -1944,8 +1944,8 @@ MAP
  @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  ..PP.XX..Px..xxxxxxxxxxxxxxxxxX4x9xxxxx
  ..PP.XX..PPxxxxxxxxXX88Xxxxxx4%..xxxxxx
- ...x.....PPP.xxxxxP...88XxxxX44..Xxxxxx
- ..XxX..X.....xxxxxX....88xxx244..xxxxxx
+ ...x.....PPP.xxxxxP....8XxxxX44..Xxxxxx
+ ..XxX..X.....xxxxxX.....8xxx244..xxxxxx
  .Pxxxxx.x...xxxxxxx....%XxxxxX41.4xxxxx
  xxccccxx..XPPxxxxxP11.XPxxxxxxxXP.xxxxx
 Xxcc$$ccxxXxx..xxxxxX1..xXxxxxXxx.1xxxxx
@@ -2006,7 +2006,7 @@ PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling
 ORIENT: southeast
 MONS:   plant
-MONS:   jackal, hound, warg, wolf, war dog, hell hound
+MONS:   jackal, hound, warg, wolf, hell hound
 SUBST:  X = xx.
 SUBST:  P = 1111.
 KITEM:  $ = gold, acquire any
@@ -2014,12 +2014,12 @@ KITEM:  $ = gold, acquire any
 MAP
 @   @  @  XXXXXxxxxXXxxxxxxxxxxxxxxx
  ...P..Pxxxxxxxx.3xxxxxxxxxxxxxxxxxx
- .P...Pxxxxxx.......xxxxxxx$x7xxxxxx
-@P...1xxxxxx3...xx....xxxxxx6.6..xxx
- ...Px..xxxxx..xxx....xxxxx7.5.4.xxx
- .Pxxx.2.xxx...5xxx..6.4xx.......xxx
-@Pxxx.22.xx....xxx.6...xx......xxxxx
- xxxx.22.xxx....xxx66..4xx....xxxxxx
+ .P...Pxxxxxx.......xxxxxxx$x6xxxxxx
+@P...1xxxxxx3...xx....xxxxxx5.5..xxx
+ ...Px..xxxxx..xxx....xxxxx6.5.4.xxx
+ .Pxxx.2.xxx...5xxx..5.4xx.......xxx
+@Pxxx.22.xx....xxx.5...xx......xxxxx
+ xxxx.22.xxx....xxx55..4xx....xxxxxx
  xxxxx..x3xx.....x.....xx5x..xxxxxxx
 Xxxxxxx..xx3x...xx....xxxxx..xxxxxxx
 Xxxxxx3...xx...xxxx.22x2xxx...xxxxxx
@@ -2224,7 +2224,7 @@ ENDMAP
 NAME:    hangedman_lair_in_review
 TAGS:    no_monster_gen no_item_gen
 ORIENT:  float
-PLACE:   Lair:8
+PLACE:   Lair:$
 MONS:    basilisk, fire drake, komodo dragon, hydra
 MONS:    manticore, hippogriff, griffon
 KMONS:   8 = catoblepas
@@ -2241,7 +2241,7 @@ KMONS:   H = yak
 KMONS:   I = elephant
 KMONS:   J = death yak
 KMONS:   K = crocodile
-KMONS:   L = war dog
+KMONS:   L = wolf
 KMONS:   M = giant slug
 KMONS:   N = wyvern
 KMONS:   P = plant w:12 / fungus w:8 / nothing

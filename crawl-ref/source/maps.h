@@ -47,8 +47,6 @@ mapref_vector find_maps_for_tag (const string tag,
                                  bool check_depth = false,
                                  bool check_used = true);
 
-int weight_map_vector (vector<map_def> maps);
-
 void read_maps();
 void reread_maps();
 void read_map(const string &file);

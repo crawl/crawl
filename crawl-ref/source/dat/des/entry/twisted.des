@@ -541,7 +541,7 @@ MARKER:  E = lua:fog_machine{\
              size = 12, start_clouds = 1, \
              cloud_type = "black smoke"}
 SUBST:   E = e , e = e n:1
-FTILE:   e = floor_orc
+FTILE:   e = floor_mud
 COLOUR:  e = brown
 SUBST:   e =.
 SHUFFLE: XZ

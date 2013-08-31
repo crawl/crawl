@@ -89,18 +89,6 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
     const int lvl = bklt.degree + zin_bklt.degree;
 
-    // This enchantment overrides invisibility (neat).
-    if (mons->has_ench(ENCH_INVIS))
-    {
-        if (!mons->has_ench(ENCH_CORONA) && !mons->has_ench(ENCH_SILVER_CORONA))
-        {
-            mons->add_ench(
-                mon_enchant(ENCH_CORONA, 1, 0, random_range(30, 50)));
-            simple_monster_message(mons, " is lined in light.");
-        }
-        return true;
-    }
-
     mons->add_ench(mon_enchant(ENCH_CORONA, 1));
 
     if (lvl == 0)

@@ -302,8 +302,6 @@ MARKER:  e = lua:fog_machine { cloud_type = "flame", \
 MARKER:  f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 5, delay = 47, start_clouds = 1, \
              size = 2, walk_dist = 1, spread_rate= 0 }
-MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "scorch-marked granite statue" }
 KFEAT:  O = enter_temple
 MAP
 xxxxxxxG@Gxxxxxxx
@@ -347,8 +345,6 @@ MARKER:  f = lua:fog_machine { cloud_type = "flame", \
               size = 2, walk_dist = 2, spread_rate= 0 }
 COLOUR:  g = yellow
 FTILE:   g = floor_pebble_darkgray
-MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
-        , feature_description = "scorch-marked granite statue" }
 KFEAT:  O = enter_temple
 MAP
 xxxxxxxG@Gxxxxxxx
@@ -2812,96 +2808,4 @@ cc....+......+.....+......+....cc
   cc..cccccccc..G..cccccccc..cc
    cc.c      c.....c      c.cc
     ccc      ccccccc      ccc
-ENDMAP
-
-#############################################################################
-# Overflow temples
-##############################################################################
-
-# To make an overflow temple for N altars, give it the tag
-# "temple_overflow_N".
-
-# The boring standard.
-NAME:   overflow_temple_1_default
-TAGS:   temple_overflow_1 allow_dup
-MAP
-B
-ENDMAP
-
-NAME:   minmay_overflow_temple_star_quad
-TAGS:   temple_overflow_3
-ORIENT: float
-MAP
-           c
-           c
-          ccc
-          cBc
-         cc.cc
-         c...c
-        cc...cc
-        c.....c
-      ccc.....ccc
-    ccc....G....ccc
-  ccc......c......ccc
-cccB.....GcccG.....Bccc
-  ccc......c......ccc
-    ccc....G....ccc
-      ccc.....ccc
-        c.....c
-        cc...cc
-         c...c
-         cc.cc
-          c.c
-          c+c
-           @
-ENDMAP
-
-NAME:   minmay_overflow_temple_star_hex
-TAGS:   temple_overflow_5
-ORIENT: float
-KMASK:  T = no_monster_gen
-MAP
-          ccc
-         ccBcc
-        cc...cc
-       cc.....cc
-cccccccc...G...cccccccc
-cB...................Bc
-ccc......G...G......ccc
-  ccc.............ccc
-    ccc....T....ccc
-  ccc.............ccc
-ccc......G...G......ccc
-cB...................Bc
-cccccccc...G...cccccccc
-       cc.....cc
-        cc...cc
-         cc.cc
-          c+c
-          ...
-          .@.
-ENDMAP
-
-NAME:   minmay_overflow_temple_hex
-TAGS:   temple_overflow_6
-ORIENT: float
-MAP
-   cccccccccc
-   cB......Bc
-  cc........cc
-  c...c..c...c
- cc..........cc
- c...c....c...c
-cc............cc
-cB..c......c..Bc
-cc............cc
- c...c....c...c
- cc..........cc
-  c...c..c...c
-  cc........cc
-   cB......Bc
-   cccc++cccc
-      ....
-      ....
-      .@@.
 ENDMAP

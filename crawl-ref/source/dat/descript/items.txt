@@ -312,6 +312,10 @@ sorcerers, for it allows the gifted and resourceful to command destruction with
 ease. Feeble wizards, however, may well meet their doom when trying to read
 this opus.
 %%%%
+book of battle
+
+A book of spells used by skalds, whose battle songs grant them magical help.
+%%%%
 book of beasts
 
 A book of spells focused on the magical production of beasts, with pages made
@@ -579,8 +583,9 @@ bow:quote
 %%%%
 box of beasts
 
-A magical box containing many wild beasts. One may allow them to escape by
-opening the box's lid.
+A box filled with the bizarre leftovers of a depraved wizard's magical
+experimentations. Opening it might set loose a friendly chimera: a mythical
+hybrid composed from the parts of three separate beasts.
 %%%%
 bread ration
 
@@ -921,10 +926,6 @@ eggplant
 
 A rotten eggplant which you can throw at the Crawl developers. (It's a bug if
 you ever see this message.)
-%%%%
-empty ebony casket
-
-A magical box after its power is spent.
 %%%%
 eudemon blade
 
@@ -1875,16 +1876,6 @@ ring of flight:quote
 
 <ring:quote>
 %%%%
-ring of life protection
-
-This blessed ring protects the life-force of its wearer from negative energy,
-making them partially immune to the draining effects of undead and necromantic
-magic.
-%%%%
-ring of life protection:quote
-
-<ring:quote>
-%%%%
 ring of magical power
 
 This ring increases its wearer's reserves of magical power.
@@ -1898,6 +1889,16 @@ ring of poison resistance
 This ring provides protection from the effects of poisons and venom.
 %%%%
 ring of poison resistance:quote
+
+<ring:quote>
+%%%%
+ring of positive energy
+
+This blessed ring protects the life-force of its wearer from negative energy,
+making them partially immune to the draining effects of undead and necromantic
+magic.
+%%%%
+ring of positive energy:quote
 
 <ring:quote>
 %%%%
@@ -2039,7 +2040,15 @@ this unsuspecting world.
 %%%%
 rod of destruction
 
-This rod contains spells of mayhem and destruction.
+This rod contains a varied set of spells of mayhem and destruction.
+%%%%
+rod of fiery destruction
+
+This rod contains spells that launch destructive fire against your enemies.
+%%%%
+rod of frigid destruction
+
+This rod contains spells that destroy your enemies with projected cold.
 %%%%
 rod of inaccuracy
 
@@ -2048,7 +2057,15 @@ power.
 %%%%
 rod of striking
 
-This rod allows its wielder to strike foes from afar with force bolts.
+This rod is designed for melee combat, releasing its charges to deal additional
+damage dependent on evocations skill when it strikes a foe. Maces & Flails
+skill will help improve your basic effectiveness with the weapon.
+%%%%
+rod of striking:quote
+
+“He that spares his rod hates his son: but he that loves him chastens him
+ early.”
+    -King James 2000 Bible, Proverbs 13:24
 %%%%
 rod of the swarm
 
@@ -2083,6 +2100,13 @@ sabre:quote
  Of rugged steel his savage soul was made...”
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
      trans. James Grainger, 1822.
+%%%%
+sack of spiders
+
+A woven silk bag. Something appears to be moving inside...
+
+Opening this bag will release a number of spiders friendly to your cause. You
+might need to dust off the cobwebs after, however.
 %%%%
 sacred scourge
 
@@ -2266,9 +2290,8 @@ scroll of identify:quote
 %%%%
 scroll of immolation
 
-This scroll is treated with an incredibly flammable substance, which explodes
-violently when the scroll is opened and read, scorching the reader and anything
-else nearby.
+This scroll fills the creatures around the reader with an unstable and powerful
+inner flame.
 %%%%
 scroll of immolation:quote
 
@@ -2322,7 +2345,7 @@ scroll of remove curse:quote
 scroll of summoning
 
 This scroll calls forth several creatures woven from shadow into the shapes of
-those beings found within the reader's immediate vacinity.
+those beings found within the reader's immediate vicinity.
 %%%%
 scroll of summoning:quote
 
@@ -2349,13 +2372,12 @@ scroll of torment:quote
 %%%%
 scroll of vorpalise weapon
 
-This scroll enchants the wielded weapon so as to make it far more effective at
-inflicting harm on its wielder's enemies. Using it on a weapon already affected
-by some kind of permanent branding is not advised. On the other hand, the
-scroll can make permanent the temporary branding of weapons obtained from some
-spells.
+This scroll enchants a chosen weapon so as to make it far more effective at
+inflicting harm on its wielder's enemies. The scroll can make permanent the
+temporary branding of weapons obtained from some spells, or can be used on a
+weapon that is already permanently branded to randomly select a new brand.
 
-Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha,
+Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
 the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
 let such an opportunity for fun go to waste.
 %%%%
@@ -2484,11 +2506,6 @@ spear:quote
 can take the initiative; the halberd is defensive. In the hands of one of two
 men of equal ability, the spear gives a little extra strength.”
     -Miyamoto Musashi, _The Book of Five Rings_. 1645.
-%%%%
-spiked flail
-
-A flail improved by a longer chain and the addition of spikes on the striking
-head.
 %%%%
 staff of air
 
@@ -2666,10 +2683,11 @@ stone:quote
 %%%%
 stone of tremors
 
-A polished stone inhabited by benevolent earth spirits. Pressing it against a
-rocky surface will send powerful shockwaves through it as the spirits seek
-solid form within the rock, pelting nearby creatures with falling rubble in the
-process.
+A polished stone inhabited by benevolent earth spirits. Raising it aloft will
+send powerful shockwaves through the dungeon as the spirits seek solid form
+within its rock. Those creatures standing near to walls will be pelted with
+falling rubble as the rocky surface heaves and crumbles, while others may be
+swallowed up by cracks in the earth itself.
 %%%%
 storm dragon armour
 
@@ -2867,7 +2885,7 @@ wand of confusion:quote
 %%%%
 wand of digging
 
-A magical device which forms tunnels through unworked rock by liquefying it.
+A magical device which drills tunnels through unworked rock.
 %%%%
 wand of digging:quote
 

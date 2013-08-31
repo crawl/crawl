@@ -35,7 +35,6 @@
 #include "env.h"
 #include "evoke.h"
 #include "food.h"
-#include "godconduct.h"
 #include "godpassive.h"
 #include "godprayer.h"
 #include "hints.h"
@@ -589,8 +588,7 @@ void destroy_item(int dest, bool never_created)
 static void _handle_gone_item(const item_def &item)
 {
     if (player_in_branch(BRANCH_ABYSS)
-        && place_branch(item.orig_place) == BRANCH_ABYSS
-        && !(item.flags & ISFLAG_BEEN_IN_INV))
+        && place_branch(item.orig_place) == BRANCH_ABYSS)
     {
         if (is_unrandom_artefact(item))
             set_unique_item_status(item, UNIQ_LOST_IN_ABYSS);
@@ -607,17 +605,6 @@ void item_was_destroyed(const item_def &item, int cause)
 {
     if (item.props.exists("destroy_xp"))
         gain_exp(item.props["destroy_xp"].get_int());
-    if (cause == MHITYOU)
-    {
-        if (item_is_spellbook(item))
-            destroy_spellbook(item);
-        else if (is_deck(item))
-        {
-            did_god_conduct(DID_DESTROY_DECK,
-                            3 * deck_rarity(item) *
-                            (origin_is_god_gift(item) ? 2 : 1));
-        }
-    }
     _handle_gone_item(item);
     xom_check_destroyed_item(item, cause);
 }
@@ -1526,7 +1513,7 @@ int find_free_slot(const item_def &i)
     }
 
     // Either searchforward is true, or search backwards failed and
-    // we re-try searching the oposite direction.
+    // we re-try searching the opposite direction.
 
     int badslot = -1;
     // Return first free slot
@@ -1555,7 +1542,7 @@ static void _got_gold(item_def& item, int quant, bool quiet)
 {
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
-    if (you.religion == GOD_ZIN && !(item.flags & ISFLAG_THROWN))
+    if (you_worship(GOD_ZIN) && !(item.flags & ISFLAG_THROWN))
         quant -= zin_tithe(item, quant, quiet);
     if (quant <= 0)
         return;
@@ -1773,7 +1760,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
 
-        if (you.religion == GOD_CHEIBRIADOS)
+        if (you_worship(GOD_CHEIBRIADOS))
             simple_god_message(" tells them not to hurry.");
 
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
@@ -1879,8 +1866,7 @@ void mark_items_non_visit_at(const coord_def &pos)
 //
 // Returns false on error or level full - cases where you
 // keep the item.
-bool move_item_to_grid(int *const obj, const coord_def& p, int agent,
-                       bool silent)
+bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
 {
     ASSERT_IN_BOUNDS(p);
 
@@ -1893,7 +1879,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, int agent,
 
     if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
     {
-        item_was_destroyed(item, agent);
+        item_was_destroyed(item, NON_MONSTER);
         destroy_item(ob);
         ob = NON_ITEM;
 
@@ -1934,7 +1920,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, int agent,
         while (item.quantity > 1)
         {
             // If we can't copy the items out, we lose the surplus.
-            if (copy_item_to_grid(item, p, agent, 1, false, true))
+            if (copy_item_to_grid(item, p, 1, false, true))
                 --item.quantity;
             else
                 item.quantity = 1;
@@ -1983,7 +1969,7 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
 
 
 // Returns false if no items could be dropped.
-bool copy_item_to_grid(const item_def &item, const coord_def& p, int agent,
+bool copy_item_to_grid(const item_def &item, const coord_def& p,
                         int quant_drop, bool mark_dropped, bool silent)
 {
     ASSERT_IN_BOUNDS(p);
@@ -1993,7 +1979,10 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p, int agent,
 
     if (feat_destroys_item(grd(p), item, !silenced(p) && !silent))
     {
-        item_was_destroyed(item, agent);
+        if (item_is_spellbook(item))
+            destroy_spellbook(item);
+
+        item_was_destroyed(item, NON_MONSTER);
 
         return true;
     }
@@ -2050,7 +2039,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p, int agent,
         origin_set_unknown(new_item);
     }
 
-    move_item_to_grid(&new_item_idx, p, agent, true);
+    move_item_to_grid(&new_item_idx, p, true);
     if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
@@ -2090,7 +2079,7 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_MOVED, pos, 0, item, -1, dest), pos);
 
-    // Now move the item to its new possition...
+    // Now move the item to its new position...
     move_item_to_grid(&item, dest);
 
     return true;
@@ -2193,7 +2182,7 @@ bool drop_item(int item_dropped, int quant_drop)
     const dungeon_feature_type my_grid = grd(you.pos());
 
     if (!copy_item_to_grid(you.inv[item_dropped],
-                            you.pos(), MHITYOU, quant_drop, true, true))
+                            you.pos(), quant_drop, true, true))
     {
         mpr("Too many items on this level, not dropping the item.");
         return false;
@@ -2783,7 +2772,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return _item_different_than_inv(item, _similar_jewellery);
 
     case OBJ_FOOD:
-        if (you.religion == GOD_FEDHAS && is_fruit(item))
+        if (you_worship(GOD_FEDHAS) && is_fruit(item))
             return true;
 
         if (is_inedible(item))
@@ -3232,7 +3221,7 @@ bool item_def::is_greedy_sacrificeable() const
     if (!god_likes_items(you.religion, true))
         return false;
 
-    if (you.religion == GOD_NEMELEX_XOBEH
+    if (you_worship(GOD_NEMELEX_XOBEH)
         && !check_nemelex_sacrificing_item_type(*this)
         || flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
         || item_is_stationary(*this))
@@ -3501,7 +3490,7 @@ bool get_item_by_name(item_def *item, char* specs,
 
         if (item->base_type == OBJ_UNASSIGNED)
         {
-            // Rune or deck creation canceled, clean up item->
+            // Rune or deck creation cancelled, clean up item->
             return false;
         }
     }
@@ -3668,7 +3657,12 @@ bool get_item_by_name(item_def *item, char* specs,
         break;
 
     case OBJ_MISCELLANY:
-        if (!item_is_rune(*item) && !is_deck(*item) && !is_elemental_evoker(*item))
+        if (item->sub_type == MISC_BOX_OF_BEASTS
+            || item->sub_type == MISC_SACK_OF_SPIDERS)
+        {
+            item->plus = 50;
+        }
+        else if (!item_is_rune(*item) && !is_deck(*item) && !is_elemental_evoker(*item))
             item->plus2 = 50;
         break;
 
@@ -4139,13 +4133,6 @@ void corrode_item(item_def &item, actor *holder)
         return;
     }
 
-    how_rusty--;
-
-    if (item.base_type == OBJ_WEAPONS)
-        item.plus2 = how_rusty;
-    else
-        item.plus  = how_rusty;
-
     if (holder && holder->is_player())
     {
         mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
@@ -4171,4 +4158,11 @@ void corrode_item(item_def &item, actor *holder)
                  item.name(DESC_PLAIN).c_str());
         }
     }
+
+    how_rusty--;
+
+    if (item.base_type == OBJ_WEAPONS)
+        item.plus2 = how_rusty;
+    else
+        item.plus  = how_rusty;
 }

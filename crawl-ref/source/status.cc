@@ -135,6 +135,12 @@ static duration_def duration_data[] =
       BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
     { DUR_SENTINEL_MARK, true,
       MAGENTA, "Mark", "marked", "You are marked for hunting." },
+    { DUR_INFUSION, true,
+      BLUE, "Infus", "infused", "Your attacks are magically infused."},
+    { DUR_SONG_OF_SLAYING, true,
+      BLUE, "Slay", "singing", "Your melee attacks are strengthened by your song."},
+    { DUR_SONG_OF_SHIELDING, true,
+      BLUE, "SShield", "shielded", "Your magic is protecting you."},
     { DUR_FLAYED, true,
       RED, "Flay", "flayed", "You are covered in terrible wounds." },
     { DUR_RETCHING, true,
@@ -142,7 +148,15 @@ static duration_def duration_data[] =
     { DUR_WEAK, false,
       RED, "Weak", "weakened", "Your attacks are enfeebled." },
     { DUR_DIMENSION_ANCHOR, false,
-      RED, "-TELE", "cannot translocate", "You are firmly anchored to this plane." },
+      RED, "-Tele", "cannot translocate", "You are firmly anchored to this plane." },
+    { DUR_SPIRIT_HOWL, false,
+      MAGENTA, "Howl", "spirit howling", "The howling of a spirit pack pursues you." },
+    { DUR_TOXIC_RADIANCE, false,
+      MAGENTA, "Toxic", "radiating poison", "You are radiating toxic energy."},
+    { DUR_RECITE, false,
+      WHITE, "Recite", "reciting", "You are reciting Zin's Axioms of Law." },
+    { DUR_GRASPING_ROOTS, false,
+      BROWN, "Roots", "grasped by roots", "Your movement is impeded by grasping roots." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -499,7 +513,8 @@ bool fill_status_info(int status, status_info* inf)
                 inf->light_colour = GREEN;
             else
                 inf->light_colour = DARKGREY;
-            _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
+            if (you.form == TRAN_SPIDER)
+                _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
         }
         break;
 
@@ -557,6 +572,11 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case DUR_SONG_OF_SLAYING:
+        inf->light_text = make_stringf("Slay (%u)",
+                                       you.props["song_of_slaying_bonus"].get_int());
+        break;
+
     case STATUS_NO_CTELE:
         if (!allow_control_teleport(true))
         {
@@ -599,6 +619,38 @@ bool fill_status_info(int status, status_info* inf)
             inf->short_text   = "engulfed (cannot breathe)";
             inf->long_text    = "You are engulfed in water and unable to breathe.";
             inf->light_colour = RED;
+        }
+        break;
+
+    case STATUS_DRAINED:
+        if (you.attribute[ATTR_XP_DRAIN] > 250)
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "Drain";
+            inf->short_text   = "very heavily drained";
+            inf->long_text    = "Your life force is very heavily drained.";
+        }
+        else if (you.attribute[ATTR_XP_DRAIN] > 100)
+        {
+            inf->light_colour = LIGHTRED;
+            inf->light_text   = "Drain";
+            inf->short_text   = "heavily drained";
+            inf->long_text    = "Your life force is heavily drained.";
+        }
+        else if (you.attribute[ATTR_XP_DRAIN])
+        {
+            inf->light_colour = YELLOW;
+            inf->light_text   = "Drain";
+            inf->short_text   = "drained";
+            inf->long_text    = "Your life force is drained.";
+        }
+        break;
+
+    case STATUS_RAY:
+        if (you.attribute[ATTR_SEARING_RAY])
+        {
+            inf->light_colour = WHITE;
+            inf->light_text   = "Ray";
         }
         break;
 

@@ -253,15 +253,6 @@ deep dwarf berserker
 
 Negants un asinskārs pazemes rūķis, kas alkst cīņas neprāta.
 %%%%
-deep dwarf necromancer
-
-Ļauns dzīļu rūķis, kas iemainījis savu mirstīgo dvēseli pret okulto nāves un
-sāpju zinšu meistarību.
-%%%%
-deep dwarf scion
-
-Bruņots pazemes rūķis, kas bīstams tuvcīņā.
-%%%%
 Executioner
 
 Briesmīgi varens un spējš dēmons, ap kura tēlu šķind izkaptveidīgu asmeņu

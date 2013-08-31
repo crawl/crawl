@@ -395,7 +395,9 @@ bool tile::load(const string &new_filename)
         SDL_Palette *pal = img->format->palette;
         assert(pal);
         assert(pal->colors);
+#if SDL_MAJOR_VERSION == 1
         bool ck_enabled = img->flags & SDL_SRCCOLORKEY;
+#endif
 
         int dest = 0;
         for (int y = 0; y < img->h; y++)
@@ -408,13 +410,17 @@ bool tile::load(const string &new_filename)
 #if (SDL_MAJOR_VERSION == 1) && (SDL_MINOR_VERSION == 2)
                 if (ck_enabled)
                     m_pixels[dest].a = (index != img->format->colorkey ? 255 : 0);
-#else
+                else
+                    m_pixels[dest].a = 255;
+#elif (SDL_MAJOR_VERSION == 1) && (SDL_MINOR_VERSION == 3)
                 Uint32 key;
                 if (ck_enabled && !SDL_GetColorKey(img, &key))
                     m_pixels[dest].a = (index != key ? 255 : 0);
-#endif
                 else
                     m_pixels[dest].a = 255;
+#else
+                m_pixels[dest].a = pal->colors[index].a;
+#endif
                 dest++;
             }
     }

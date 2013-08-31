@@ -65,10 +65,14 @@ msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
 msc += $boring:disappears? in a puff of smoke
 msc += $boring:dissolves? into (sparkling lights|shadows)
+msc += $boring:crumbles away
 #
 msc += $boring:plain:miss(es)? (the|you|it)
 msc += $boring:but (do no|doesn't do any) damage
 msc += $boring:(prevent|prevents) you from hitting
+msc += $boring:nimbly evade
+msc += $boring:waved at by a branch
+msc += $boring:lunges up near
 
 ## Messages so important to require a --more--
 

@@ -26,4 +26,8 @@ function callback.monster_doors_stepped(data, triggerable, triggerer, marker, ev
   -- do nothing
 end
 
+function callback.cloud_trap_stepped(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
 }}

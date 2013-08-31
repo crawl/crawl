@@ -14,7 +14,7 @@ const feature_def &get_feature_def(show_type object)
     // If this is a monster that is hidden explicitly, show items if
     // any instead, or the base feature if there are no items.
     if (object.cls == SH_MONSTER)
-        object.cls = (object.item != SHOW_ITEM_NONE)? SH_ITEM : SH_FEATURE;
+        object.cls = (object.item != SHOW_ITEM_NONE) ? SH_ITEM : SH_FEATURE;
     return Features[object];
 }
 
@@ -29,11 +29,13 @@ const feature_def &get_feature_def(dungeon_feature_type feat)
 
 static void _apply_feature_overrides()
 {
-    for (int i = 0, size = Options.feature_overrides.size(); i < size; ++i)
+    for (map<dungeon_feature_type, feature_def>::const_iterator fo
+         = Options.feature_overrides.begin();
+         fo != Options.feature_overrides.end();
+         ++fo)
     {
-        const feature_override      &fov    = Options.feature_overrides[i];
-        const feature_def           &ofeat  = fov.override;
-        feature_def                 &feat   = Features[fov.object];
+        const feature_def           &ofeat  = fo->second;
+        feature_def                 &feat   = Features[fo->first];
         ucs_t c;
 
         if (ofeat.symbol && (c = get_glyph_override(ofeat.symbol)))
@@ -333,6 +335,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap        = MF_STAIR_DOWN;
             break;
 
+        case DNGN_SEALED_STAIRS_DOWN:
+            f.dchar          = DCHAR_STAIRS_DOWN;
+            f.colour         = LIGHTGREEN;
+            f.map_colour     = LIGHTGREEN;
+            f.minimap        = MF_STAIR_DOWN;
+            break;
+
         case DNGN_ESCAPE_HATCH_UP:
             f.dchar      = DCHAR_STAIRS_UP;
             f.colour     = BROWN;
@@ -348,6 +357,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.map_colour     = GREEN;
             f.em_colour      = WHITE;
             f.seen_em_colour = WHITE;
+            f.minimap        = MF_STAIR_UP;
+            break;
+
+        case DNGN_SEALED_STAIRS_UP:
+            f.dchar          = DCHAR_STAIRS_UP;
+            f.colour         = LIGHTGREEN;
+            f.map_colour     = LIGHTGREEN;
             f.minimap        = MF_STAIR_UP;
             break;
 
@@ -443,7 +459,9 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_DWARVEN_HALL:
+#endif
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
@@ -483,7 +501,9 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
@@ -733,6 +753,10 @@ static void _init_item(feature_def &f, show_item_type item)
 
         case SHOW_ITEM_ORB:
             f.dchar   = DCHAR_ITEM_ORB;
+            break;
+
+        case SHOW_ITEM_RUNE:
+            f.dchar   = DCHAR_ITEM_RUNE;
             break;
 
         case SHOW_ITEM_WEAPON:

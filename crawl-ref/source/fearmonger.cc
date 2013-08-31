@@ -18,9 +18,9 @@
 // Add a monster to the list of fearmongers.
 bool player::add_fearmonger(const monster* mon)
 {
-    if (is_sanctuary(you.pos()))
+    if (is_sanctuary(pos()))
     {
-        if (you.can_see(mon))
+        if (can_see(mon))
         {
             mprf("%s's aura of fear is muted, and has no effect on you.",
                  mon->name(DESC_THE).c_str());
@@ -33,14 +33,14 @@ bool player::add_fearmonger(const monster* mon)
 
     if (!duration[DUR_AFRAID])
     {
-        you.set_duration(DUR_AFRAID, 7, 12);
+        set_duration(DUR_AFRAID, 7, 12);
         fearmongers.push_back(mon->mindex());
         mprf(MSGCH_WARN, "You are terrified of %s!",
                          mon->name(DESC_THE).c_str());
     }
     else
     {
-        you.increase_duration(DUR_AFRAID, 5, 12);
+        increase_duration(DUR_AFRAID, 5, 12);
         if (!afraid_of(mon))
             fearmongers.push_back(mon->mindex());
     }
@@ -186,6 +186,7 @@ bool player::_possible_fearmonger(const monster* mon) const
          && !mon->submerged() && !mon->confused()
          && !mon->asleep() && !mon->cannot_move()
          && !mon->wont_attack() && !mon->pacified()
-         && !mon->berserk() && !mons_is_fleeing(mon)
-         && !is_sanctuary(you.pos()));
+         && !mon->berserk_or_insane()
+         && !mons_is_fleeing(mon)
+         && !is_sanctuary(pos()));
 }

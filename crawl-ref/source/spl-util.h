@@ -41,7 +41,7 @@ enum spell_highlight_colours
     COL_MEMORIZED    = LIGHTGRAY,   // spell has been memorized
     COL_USELESS      = DARKGRAY,    // ability would have no useful effect
     COL_INAPPLICABLE = COL_USELESS, // ability cannot be meanifully applied (eg, no targets)
-    COL_FORBIDDEN    = LIGHTRED,    // The player's god hates this abilty
+    COL_FORBIDDEN    = LIGHTRED,    // The player's god hates this ability
 
     COL_EMPOWERED    = LIGHTGREEN,  // The ability is made stronger by the player's status
     COL_FAVORED      = GREEN,       // the player's god likes this ability

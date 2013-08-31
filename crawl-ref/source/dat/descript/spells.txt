@@ -46,11 +46,26 @@ be moved by this spell.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Awaken Forest spell
+
+This spell allows the caster to give some very limited motility to
+surrounding trees, allowing them to sway their branches and shift their
+roots. Such enchanted trees will lash at any enemy foolish enough to stand
+close enough.
+%%%%
+Banishment spell
+
+<Banish ability>
+%%%%
 Beastly Appendage spell
 
 This spell makes you temporarily replace one or a pair of appendages with an
 animal counterpart, giving you an extra attack. It is not powerful enough to
 meld armour.
+%%%%
+Berserker Rage spell
+
+<Berserk ability>
 %%%%
 Blade Hands spell
 
@@ -80,10 +95,6 @@ This spell inflicts enormous damage upon any creature struck by the bolt of
 incandescent energy conjured into existence. Unfortunately, it is very
 difficult to aim and very rarely hits anything. Pity, that.
 %%%%
-Iron Shot spell
-
-This spell hurls a large and heavy metal bolt at the caster's foe.
-%%%%
 Bolt of Magma spell
 
 This spell hurls a sizzling bolt of molten rock, capable of dealing some
@@ -97,6 +108,10 @@ permanently lessens his or her resilience to injury — to a degree dependent on
 
 The spell is powerful enough to literally pull someone out of Death's Door,
 although the shock will render the caster incapable of action for a while.
+%%%%
+Brothers in Arms spell
+
+<Brothers in Arms ability>
 %%%%
 Call Canine Familiar spell
 
@@ -115,6 +130,17 @@ Chain Lightning spell
 This spell releases a massive electrical discharge that arcs from target to
 target until it grounds out. It may ground out harmlessly if there are no
 targets sufficiently close to the caster, however.
+%%%%
+Chaos Breath spell
+
+This creature may exhale a large cloud of fumes filled with the very essence
+of chaos. Effects of getting caught in this cloud are about as predictable
+as Xom him- or herself.
+%%%%
+Cold Breath spell
+
+This creature may exhale a focused blast of icy-cold air. It may knock back
+airborne targets.
 %%%%
 Condensation Shield spell
 
@@ -231,7 +257,17 @@ caster's foes (and sometimes with each other!).
 %%%%
 Dig spell
 
-This spell forms tunnels through unworked rock by liquefying it.
+This spell digs a tunnel through unworked rock.
+%%%%
+Discord spell
+
+This spell drives nearby creatures into an insane frenzy, mercilessly attacking
+anything and everything nearby with great strength and speed.
+%%%%
+Disintegrate spell
+
+This spell violently rends apart anything in a small volume of space. It can
+be used to cause severe damage, or remove a chunk of rock.
 %%%%
 Disjunction spell
 
@@ -248,11 +284,25 @@ Dispersal spell
 
 This spell tries to teleport away any monsters directly beside the caster.
 %%%%
+Draconian Breath spell
+
+[This spell should have been replaced by a colour-specific one.  If you got
+it, this is a bug.]
+%%%%
 Dragon Form spell
 
 This spell temporarily transforms the caster into a great, fire-breathing
 dragon. Draconian casters will instead retain their innate colour and breath
 weapon once transformed.
+%%%%
+Drain Life spell
+
+<Drain Life ability>
+%%%%
+Druid's Call spell
+
+This spell allows a druid to recall a woodland creature or two from a
+location on the same dungeon level.
 %%%%
 Enslavement spell
 
@@ -275,6 +325,10 @@ Fire Brand spell
 
 This spell sets a weapon or launcher held by the caster ablaze. It will not
 affect weapons otherwise subject to special enchantments.
+%%%%
+Fire Breath spell
+
+<Breathe Fire ability>
 %%%%
 Fire Storm spell
 
@@ -322,10 +376,6 @@ and unleashes it after a short while as a violent explosion of arcane force. Be
 warned that the prism is extremely fragile and any damage caused to it may
 result in premature detonation!
 %%%%
-Major Healing spell
-
-This spell heals a large amount of damage to the caster's body.
-%%%%
 Haste spell
 
 This spell speeds the actions of a creature. Hasting yourself will increase
@@ -336,12 +386,15 @@ Haunt spell
 This spell calls wraiths and ghosts to haunt the caster's target. Calling on
 the undead exacts a toll on the caster's health, however.
 %%%%
-Throw Icicle spell
+Hellfire spell
 
-This spell throws forth a shard of ice. It is particularly effective against
-those creatures not immune to the effects of freezing. But as most of its
-destructive potential comes from strong impact and cutting edges, even
-cold-resistant creatures are notably affected.
+<Hellfire ability>
+%%%%
+Holy Breath spell
+
+This creature can exhale a large cloud of blessed flame, shining with the
+glory of the good gods. These flames are especially dangerous to those
+meeting The Shining One's definition of evil.
 %%%%
 Ice Form spell
 
@@ -366,6 +419,23 @@ This spell attempts to convert all nearby poison into liquid flame, burning
 poisoned creatures from within. It is very effective against innately poisonous
 creatures. The caster is not affected.
 %%%%
+Infusion spell
+
+This spell infuses the caster's melee attacks with magic, drawing from their
+reserves of magical energy to deal additional damage whenever an enemy is hit.
+It has no effect when the caster's magic is depleted.
+%%%%
+Injury Mirror spell
+
+<Injury Mirror ability>
+%%%%
+Ink Cloud spell
+
+Krakens are known to inject an opaque liquid into water to secure their
+escape if a fight goes awry. Unlike their lesser cousins, this ink is potent
+enough to obscure vision above water as well, if the kraken stirs the water
+enough.
+%%%%
 Inner Flame spell
 
 This spell fills an enemy with an intense fire, to be explosively released upon
@@ -376,6 +446,10 @@ Invisibility spell
 This spell hides a creature from the sight of others. While invisible you will
 gain magical contamination, which may eventually cause enough glow to make you
 visible again.
+%%%%
+Iron Shot spell
+
+This spell hurls a large and heavy metal bolt at the caster's foe.
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -412,18 +486,10 @@ Lehudib's Crystal Spear spell
 
 This spell hurls a lethally sharp bolt of crystal.
 %%%%
-Minor Healing spell
-
-This spell heals a small amount of damage to the caster's body.
-%%%%
 Lethal Infusion spell
 
 This spell infuses a weapon held by the caster with unholy energies. It will
 not affect weapons which are otherwise subject to special enchantments.
-%%%%
-Levitation spell
-
-This spell allows the caster to float in the air.
 %%%%
 Lightning Bolt spell
 
@@ -434,6 +500,10 @@ of creatures.
 Magic Dart spell
 
 This spell hurls a small bolt of magical energy. It never misses.
+%%%%
+Major Healing spell
+
+This spell heals a large amount of damage to the caster's body.
 %%%%
 Malign Gateway spell
 
@@ -452,15 +522,34 @@ Mass Confusion spell
 
 This spell causes confusion in all who gaze upon the caster.
 %%%%
+Melee spell
+
+The rod of striking is designed for melee combat, releasing its charges to deal
+additional damage dependent on evocations skill when it strikes a foe. Maces &
+Flails skill will help improve your basic effectiveness with the weapon.
+%%%%
 Mephitic Cloud spell
 
 This spell conjures up a large but short-lived cloud of vile fumes.
+%%%%
+Mesmerise spell
+
+This spell makes its victim unwilling to move away from the caster.
 %%%%
 Metabolic Englaciation spell
 
 This spell tries to lower the metabolic rate of every creature in the caster's
 vicinity, slowing all those who are not resistant to cold. It bypasses magic
 resistance, although tougher monsters will not be slowed for as long as others.
+%%%%
+Miasma Breath spell
+
+Uh oh, talk about a nasty case of halitosis. This is not your average ogre's
+burp, these noxious fumes can rot your flesh off your bones.
+%%%%
+Minor Healing spell
+
+This spell heals a small amount of damage to the caster's body.
 %%%%
 Necromutation spell
 
@@ -476,11 +565,19 @@ potions.
 Contrary to what one would expect, this spell works on octopodes, although what
 foul necromantic tissue serves as an analogue for bones remains a mystery.
 %%%%
+Noxious Cloud spell
+
+This breath includes the same substance as that used in a well-known wizard
+spell “Mephitic Cloud”. When inhaled by a person or creature not resistant
+to poison, it does only minor damage but can cause confusion and a bad
+headache.
+%%%%
 Olgreb's Toxic Radiance spell
 
-This spell bathes the caster's surroundings in a sickly green light, inflicting
-poison on everything nearby (including the caster). It can be blocked by
-translucent walls, however, and invisible creatures are completely unaffected.
+This spell causes the caster to radiate toxic energy, continuously inflicting
+poison on everything nearby for as long as the spell lasts. Be warned that this
+magic is baleful for its user, as the epicenter of the aura is potent enough to
+afflict even those otherwise resistant to poison.
 %%%%
 Orb of Destruction spell
 
@@ -537,6 +634,13 @@ down for a while until it is temporarily turned into stone. In this state, a
 monster will take less damage upon being hit. It also precludes the use of
 wings, which can be quite unhealthy above lava.
 %%%%
+Petrifying Cloud spell
+
+Catoblepae can exhale calcifying dust, which turns anyone affected for
+longer than a brief moment into a statue.  Access to fresh air may let
+you recover — but not if your statue gets broken into pieces by the
+catoblepas' claws first.
+%%%%
 Phase Shift spell
 
 This spell allows the caster to phase in and out of the material plane,
@@ -547,6 +651,10 @@ Poison Arrow spell
 This spell hurls a magical arrow coated with the most vile and noxious toxin.
 No living thing is completely immune to its effects, and even the undead will
 take damage from the physical component of the spell.
+%%%%
+Poison Splash spell
+
+<Spit Poison ability>
 %%%%
 Poison Weapon spell
 
@@ -562,10 +670,27 @@ Polymorph spell
 This spell randomly alters the form of a creature. It is especially effective
 against shape-changing creatures.
 %%%%
+Porkalator spell
+
+This spell transforms an unwilling victim into a certain pink quadruped, known
+for bad table manners, squealing, and rooting for truffles.  Not even angels
+and demons are immune — leading to the world's tastiest and nastiest bacon,
+respectively.
+
+If the spell is hastily cast, the transformation is temporary; only a days-long
+ritual can make the effect permanent.  In either case, the caster's demise will
+turn the victims back into their former shapes.
+%%%%
 Portal Projectile spell
 
 This spell teleports a fired or thrown missile directly to its target, greatly
 increasing its accuracy (but not damage).
+%%%%
+Quicksilver Bolt spell
+
+Some dragon types can breathe dispelling energy, sometimes called
+“quicksilver” because of its appearance. Besides causing damage, it
+may remove some enchantments, both beneficial and harmful.
 %%%%
 Recall spell
 
@@ -596,6 +721,14 @@ Sandblast spell
 This spell creates a short blast of high-velocity particles. It works best when
 the caster provides some source (by wielding a stone), but will do what it can
 with whatever ambient grit is available.
+%%%%
+Searing Ray spell
+
+This spell fires a continuous ray of arcane energy from the caster's hands.
+Though initially mild, so long as the caster maintains focus upon the spell and
+supplies it with magical power (by waiting in place and not taking any other
+actions), the ray will grow in strength until it becomes a surging beam able to
+tear clean through the ranks of the caster's foes.
 %%%%
 Shadow Creatures spell
 
@@ -645,9 +778,44 @@ sublimate into a freezing cloud, if it isn't hacked or melted into a small
 puddle of water first. Note that simulacra are incapable of leaving the level
 they were created on.
 %%%%
+Sleep spell
+
+This spell attempts to put its target to sleep. Taking damage will typically
+wake the affected person, and loud sounds can potentially do so as well.
+%%%%
 Slow spell
 
 This spell slows the actions of a creature.
+%%%%
+Smiting spell
+
+<Smiting ability>
+%%%%
+Song of Shielding spell
+
+This spell draws from your magical essence to create a temporary protective
+barrier. Incoming damage will be absorbed by the shield, decreasing the
+caster's available magic in the process.
+%%%%
+Song of Slaying spell
+
+This spell conjures ancient verses of battle within your mind and makes you
+recite them — quite loudly! Each non-summoned enemy you slay in combat during
+this recitation temporarily enhances your melee skills. Your effectiveness will
+only be enhanced for the duration of the song; casting this spell while already
+singing will start a new song, not extend an existing one.
+%%%%
+Spectral Weapon spell
+
+This spell draws out the spirit within a wielded weapon to fight for you, with
+its power dependent on your skill with said weapon. Never striking on its own,
+it only attacks when you do. You can only ever have one spectral weapon at a
+time.
+
+Kills by a spectral weapon count as your own when singing a Song of Slaying.
+
+Certain powerful named artefacts possess too strong a spirit for this spell to
+be able to draw them out.
 %%%%
 Spider Form spell
 
@@ -672,6 +840,10 @@ Sticks to Snakes spell
 
 This spell uses wooden items in the caster's grasp as raw material for a
 powerful transmutation. Note that magical artefacts will not be affected.
+%%%%
+Sticky Flame Splash spell
+
+<Breathe Sticky Flame ability>
 %%%%
 Sticky Flame spell
 
@@ -700,9 +872,10 @@ Magic. It only works on relatively normal flesh, and will aid neither the
 undead nor the bodily transformed. However, there is one exception: the effects
 of this spell will be boosted for casters in Statue Form.
 %%%%
-Striking spell
+Strip Resistance spell
 
-This spell hurls a small bolt of force.
+This spell attempts to greatly reduce its target's magic resistance, making
+him or her more vulnerable to hexes and similar spells.
 %%%%
 Sublimation of Blood spell
 
@@ -771,6 +944,15 @@ Summon Ugly Thing spell
 
 This spell summons a mutated otherworldly creature to the caster's aid.
 %%%%
+Sunray spell
+
+This spell calls forth a beam of intense light, damaging its target. Obviously,
+invisibility lets the light pass through, leaving such creatures unharmed.
+Vampires and shadows are known to be especially vulnerable to it.
+
+Not being a missile, this spell is not affected by Repel and Deflect effects
+— you want to be able to see, don't you?
+%%%%
 Sure Blade spell
 
 This spell forms a mystical bond between the caster and a wielded short blade,
@@ -782,9 +964,19 @@ This spell imbues its caster with the ability to achieve great movement speeds.
 But this speed comes at a price: the caster is less stealthy and more likely to
 blunder into traps while the spell is in effect.
 %%%%
+Symbol of Torment spell
+
+This spell calls on the powers of Hell to cause agonising injury to any living
+thing in the caster's vicinity. Despite its ominous power, this spell is never
+lethal.
+%%%%
 Teleport Other spell
 
 This spell randomly translocates another creature.
+%%%%
+Teleport Self spell
+
+This spell teleports the caster to a random location.
 %%%%
 Throw Flame spell
 
@@ -794,21 +986,39 @@ Throw Frost spell
 
 This spell throws a small bolt of frost.
 %%%%
+Throw Icicle spell
+
+This spell throws forth a shard of ice. It is particularly effective against
+those creatures not immune to the effects of freezing. But as most of its
+destructive potential comes from strong impact and cutting edges, even
+cold-resistant creatures are notably affected.
+%%%%
 Thunderbolt spell
 
 This spell creates an arc of electricity.
 %%%%
+Tomb of Doroklohe spell
+
+This spell entombs the caster within four walls of rock. These walls will
+push away objects in their way, but their growth is obstructed by the
+presence of any creature. They are not permanent, and will expire after a
+period of time.
+%%%%
 Tornado spell
 
 This spell turns the air around the caster in a mighty vortex, doing tremendous
-damage to everyone caught in it. Only the eye of the storm is a safe place, and
-it follows the caster. Everything not firmly nailed down will be lifted and
-tossed around.
+damage to everyone caught in it. Those affected will also be swept up into the
+air and tossed around. Only the eye of the storm is a safe place, and it
+follows the caster.
 
 The spell's effectiveness is greatly diminished in closed areas.
 
 As a side effect, this spell may be used to cross lava, but beware of its short
 duration.
+%%%%
+Trog's Hand spell
+
+<Trog's Hand ability>
 %%%%
 Tukima's Dance spell
 

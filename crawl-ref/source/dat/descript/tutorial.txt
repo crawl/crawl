@@ -244,7 +244,7 @@ Pick up this bow and wield it with
 %%%%
 tutorial2 firing
 
-# FIXME: Lenghty because of the hint for choosing target.
+# FIXME: Lengthy because of the hint for choosing target.
 Firing arrows from your wielded bow works exactly the same as throwing darts:
 via <input>$cmd[CMD_FIRE]</input><localtiles> or <input>mouseclick</input>. You
 can change the targeted monster by pressing
@@ -354,7 +354,7 @@ description screens.
 %%%%
 tutorial3 battle
 
-Once you've succesfully managed to poison a monster, it is sometimes best to
+Once you've successfully managed to poison a monster, it is sometimes best to
 retreat and let the poison do the work. Also retreat to heal, if necessary.
 %%%%
 tutorial3 downstairs
@@ -553,12 +553,18 @@ before and after wielding this staff.
 %%%%
 tutorial4 mephitic_cloud
 
-Mephitic Cloud is a level 3 spell, so you can't memorise it yet. Quaff this
-potion of experience (with <input>$cmd[CMD_QUAFF]</input><localtiles> or
-<input>mouseclick</input></localtiles>) to level up, and then memorise it!
+Mephitic Cloud is a level 3 spell, so you can't memorise it yet. To level up
+quickly, here are more training dummies - without stones to throw this time.
 
 At experience level 3, you'll be able to increase one of your stats - choosing
 <input>I</input>ntelligence will help your spellcasting even further.
+%%%%
+tutorial4 meph_reminder
+
+Don't forget to memorise your newly-available spell, by pressing
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
+<input>clicking</input> on the memorisation tab and selecting the spell
+tile</localtiles>!
 %%%%
 tutorial4 aiming_clouds
 

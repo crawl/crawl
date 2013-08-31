@@ -5,8 +5,8 @@ Guérison et un peu de recherche
 %%%%
 CMD_REST verbose
 
-Passe 100 tours à restaurer la vie et la magie, et/ou à chercher. Le repos est
-interrompu des que vous apercevez un monstre hostile.
+Passer jusqu'à 100 tours à restaurer la vie et la magie, et/ou à chercher. Le
+repos est interrompu des que vous apercevez un monstre hostile.
 %%%%
 CMD_EXPLORE
 
@@ -158,11 +158,11 @@ Attaque un monstre à coté de vous avec l'arme tenue en main.
 %%%%
 CMD_WAIT
 
-Attend un tour
+Attendre un tour
 %%%%
 CMD_WAIT verbose
 
-Vous attendez et vous reposez un tour.
+Attendre et se reposer un tour.
 %%%%
 CMD_DISPLAY_INVENTORY
 
@@ -340,4 +340,20 @@ Trouve des piles d'objets
 CMD_MAP_FIND_STASH verbose
 
 Parcours les piles d'objets du niveau courant.
+%%%%
+CMD_ZOOM_IN
+
+Zoomer
+%%%%
+CMD_ZOOM_IN verbose
+
+Zoomer sur cette zone du donjon
+%%%%
+CMD_ZOOM_OUT
+
+Dézoomer
+%%%%
+CMD_ZOOM_OUT verbose
+
+Dézoomer cette zone du donjon
 %%%%

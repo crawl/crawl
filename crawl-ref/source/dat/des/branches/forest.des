@@ -41,8 +41,8 @@ ENDMAP
 NAME:   grunt_forest_entry_clearing
 TAGS:   forest_entry vaults_entry_forest
 KFEAT:  O = enter_forest
-MONS:   spriggan / tengu
-MONS:   centaur warrior / tengu warrior / faun
+MONS:   spriggan
+MONS:   faun / spriggan rider
 MONS:   wolf, black bear, grizzly bear
 SUBST:  t = t.
 KMONS:  P = plant / bush
@@ -65,8 +65,8 @@ ENDMAP
 NAME:   forest_entry_grove
 TAGS:   forest_entry vaults_entry_forest vaults_orient_s
 KFEAT:  O = enter_forest
-MONS:   spriggan / tengu
-MONS:   centaur warrior / tengu warrior / faun
+MONS:   spriggan
+MONS:   faun / spriggan rider
 MONS:   wolf, black bear, grizzly bear
 KMONS:  P = plant / bush
 NSUBST: Q = 3:1 / 1:2
@@ -141,11 +141,7 @@ SUBST: t = t..
 SUBST: . = O.........
 FTILE: . = floor_grass / floor_dirt
 KMONS: O = plant / bush
-: if crawl.coinflip() then
-MONS: tengu
-: else
 MONS: spriggan
-: end
 MAP
  tt...tt
 t.......t
@@ -186,14 +182,8 @@ SUBST: t = t..
 SUBST: . = O.........
 FTILE: . = floor_grass / floor_dirt
 KMONS: O = plant / bush
-: if crawl.one_chance_in(3) then
-MONS: tengu, tengu warrior / tengu conjurer
-: elseif crawl.coinflip() then
-MONS: faun, faun
-: else
-MONS: centaur, centaur warrior
-: end
-NSUBST: 7 = 3:1, 1:2
+MONS: faun, faun / satyr w:3
+NSUBST: 7 = 3:1 / 1:2
 MAP
  tt...tt
 t.......t
@@ -243,12 +233,8 @@ DEPTH: Forest
 SUBST: t = t..
 SUBST: . = O.........
 KMONS: O = plant / bush
-: if crawl.coinflip() then
-MONS: spriggan, centaur, centaur warrior
-: else
-MONS: tengu, tengu, tengu warrior / tengu conjurer
-: end
-NSUBST: P = 4:1, 3:2, 1:3
+MONS: spriggan, spriggan rider, spriggan air mage / spriggan berserker
+NSUBST: P = 4:1 / 3:2 / 1:3
 MAP
       tt...tt
     ttt.....ttt
@@ -277,7 +263,7 @@ DEPTH: Forest
 SUBST: t = t..
 SUBST: . = O.........
 KMONS: O = plant / bush
-KMONS: * = faun / tengu warrior
+KMONS: * = faun / spriggan berserker
 KITEM: . = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
            / w:1 apple / w:1 pear / w:1 orange / w:90 nothing
 MAP
@@ -472,6 +458,623 @@ txxxxxxxxxx....xxx.1.xxxx
  txxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME: nicolae_forest_garden
+DEPTH: Forest
+TAGS: no_monster_gen no_item_gen no_trap_gen
+SUBST: P = P., ; = ;;.
+NSUBST: A = 1:A / *:.
+KITEM: f = apple / orange / apricot / nothing
+KMONS: L = faun
+KMONS: A = satyr
+KMONS: C = dryad
+KMONS: P = plant
+KMONS: k = giant goldfish
+KFEAT: ; = .
+KFEAT: k = w
+MAP
+        ;@@@;
+      ;;;;;;;;;
+    tt;;;P.P.;;;tt
+   tttttPPPPPPPtttt;
+  ;ttAfPP.L....tAtt;;;
+ ;PPttP..P.P.PP.ftP;;;
+ ;P....PPP...PPP.PP.;@
+;;PP..PPPwwwC.P..PPP;@
+;;;;..L.wkwwww.L.ttP;@
+;@;PP..Pwwwwkw...fttt;
+ @;;P..PP.wwwPP.ttttt
+  @;PP.PPP..PP..PPttt
+  ;;;Ptt.P.PPPPPP;;;;
+  ;;;ttfAttPP;.;;;;;
+    ;tttttt;;;;;;@
+     ;;tt;;;;;;;
+        ;;;;;
+ENDMAP
+
+NAME:    nicolae_forest_circular_grove
+DEPTH:   Forest
+ORIENT:  float
+TAGS:    transparent
+SHUFFLE: Aa/Bb
+SUBST:   Aa = t, BT = .t, b = @, 1 = 11.
+KMONS:   1 = faun w:3 / satyr w:1 / centaur w:1
+KMONS:   2 = spriggan druid / spriggan air mage
+KMONS:   3 = spriggan rider w:15 / dryad w:3
+MAP
+      tBBbbbBBt
+     ttT..1..Ttt
+    aAT.T.T.T.TAa
+   aA.T.1.T.1.T.Aa
+  aA1..ttAAAtt..1Aa
+ tA..TBBT...TBBT..At
+ttTT.BB..T3T..BB.TTtt
+BT..tB.1TT.TT1.Bt..TB
+B.T1tT.TTT.TTT.Tt1T.B
+b...A.TTT...TTT.A...b
+b1TTA.3...2...3.ATT1b
+b...A.TTT...TTT.A...b
+B.T1tT.TTT.TTT.Tt1T.B
+BT..tB.1TT.TT1.Bt..TB
+ttTT.BB..T3T..BB.TTtt
+ tA..TBBT...TBBT..At
+  aA1..ttAAAtt..1Aa
+   aA.T.1.T.1.T.Aa
+    aAT.T.T.T.TAa
+     ttT..1..Ttt
+      tBBbbbBBt
+ENDMAP
+
+NAME:    nicolae_forest_elemental_fundamentals
+DEPTH:   Forest
+TAGS:    transparent
+SHUFFLE: abc
+SUBST:   a = W, b = .W, c = ., T = tw
+NSUBST:  W = 1 / W, . = 2 / .
+SUBST:   ' = .
+KMONS:   1 = elemental wellspring
+KMONS:   2 = spriggan air mage
+KFEAT:   1 = W
+MAP
+   ...@@...
+ .....bb.....
+..aaabbbbccc..
+.aaaabbbbcccc.
+.aaaWWWWWWccc.
+ttTTWWWWWWTTtt
+ tttTTWWTTttt
+   tttttttt
+ENDMAP
+
+NAME:  nicolae_forest_firefly_meadow
+DEPTH: Forest
+TAGS:  transparent
+KMONS: . = giant firefly w:1 / nothing w:15
+MAP
+ .......
+.........
+.........
+.........
+.........
+.........
+.........
+.........
+ .......
+ENDMAP
+
+NAME:   nicolae_forest_game_of_thorns
+DEPTH:  Forest
+TAGS:   no_monster_gen transparent
+NSUBST: h = 2:h / *:.
+NSUBST: l = 3:l / *:W
+SUBST:  T = t., W = WWWWw, q = W.
+KMONS:  h = thorn hunter
+KMONS:  l = thorn lotus
+KFEAT:  l = W
+MAP
+      ttttt
+    TtTTTtttT
+   ....q.TTqTTTT
+  @..hWT.WWWl.qT
+ T.T..qWWqqWWTTT
+TT..WWWqT.TW.q.T
+t.TqWlq..T..W..tt
+t.TTWWWq.Wqh.W.Tt
+tqWW...WWqWWWq.Tt
+tWqh.WWq..WlWq..t
+tT..Wq.TT.qWWWWqt
+tT..W..h.WWq..qWt
+tTTTTWlWWTTTWlW.t
+tT...WWWWTTTWWT.T
+ T.q.h..qW..TT..
+ TT.qt.qWq.h..@
+  TT.tTTq....q
+   TTtttTTTtTT
+      ttttt
+ENDMAP
+
+NAME:  nicolae_forest_godswood
+DEPTH: Forest
+TAGS:  transparent extra decor
+MAP
+ttttttttttt
+..ttttttt..
+@...ttt...@
+.tt..t..tt.
+tttt...tttt
+ttt..t..ttt
+tt.......tt
+ttt..w..ttt
+ttt.www.ttt
+ttt..w..ttt
+tt...C...tt
+ttt..t..ttt
+tttt...tttt
+ ttttttttt
+  ttttttt
+ENDMAP
+
+NAME:    nicolae_forest_grove_arrangements
+DEPTH:   Forest
+TAGS:    allow_dup transparent decor extra luniq
+SHUFFLE: abcdefghi/''''T''''/T'''''''T/T'''T'''T/T'T'''T'T/T'T'T'T'T/TTT'''TTT/ \
+         'T'T'T'T'/T'T''''T'/'T'TTT'T'/'T'''''T'/TTTT'TTTT/T'TTTTT'T/TT'TTT'TT/ \
+         '''TTT'''/T'TT'TTTT/TT'T'T'TT/TT'''''TT/TT''T''TT/TT''TT'T'/T''''T'T'
+SUBST:   abcdefghiT = ttttt., ' = ., _ = ._
+CLEAR:   _
+MAP
+__________________
+_................_
+_..aa...bb...cc.._
+_.aaaa.bbbb.cccc._
+_.aaaa.bbbb.cccc._
+_..aa...bb...cc.._
+_................_
+_..dd...ee...ff.._
+_.dddd.eeee.ffff._
+_.dddd.eeee.ffff._
+_..dd...ee...ff.._
+_................_
+_..gg...hh...ii.._
+_.gggg.hhhh.iiii._
+_.gggg.hhhh.iiii._
+_..gg...hh...ii.._
+_................_
+__________________
+ENDMAP
+
+NAME:   nicolae_forest_minotaur_hut
+DEPTH:  Forest
+NSUBST: a = t / ., b = . / t, d = t / ., 1 = 1 / .
+KMONS:  1 = minotaur
+KITEM:  1 = any good_item
+MAP
+ttt.@.ttt
+tccc.ccct
+tc.a.b.ct
+tc.cac.ct
+tc.a.b.ct
+tcdcdc.ct
+tc1d1b1ct
+tccccccct
+ttttttttt
+ENDMAP
+
+NAME:   nicolae_forest_no_swimming
+DEPTH:  Forest
+TAGS:   transparent
+NSUBST: b = 3:2 / *:b
+SUBST:  d = Ww, b = W.
+NSUBST: w = 1 / w
+KMONS:  1 = elemental wellspring
+KMONS:  2 = water nymph
+KFEAT:  1 = w
+KFEAT:  2 = W
+MAP
+    .........
+  .............
+ .....bbbbb.....
+ ....bbWWWbb....
+....bbWWWWWbb....
+...bbWWWWWWWbb...
+..bbWWWdddWWWbb..
+..bWWWdwwwdWWWb..
+..bWWWdwwwdWWWb..
+..bWWWdwwwdWWWb..
+..bbWWWdddWWWbb..
+...bbWWWWWWWbb...
+....bbWWWWWbb....
+ ....bbWWWbb....
+ .....bbbbb.....
+  .............
+    .........
+ENDMAP
+
+NAME:    nicolae_forest_oklob_treasure_island
+DEPTH:   Forest
+TAGS:    no_pool_fixup
+SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
+NSUBST:  ' = 1:^ / 1:o / *:'
+SUBST:   abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%
+KFEAT:   ^ = teleport trap
+KMONS:   o = oklob plant
+MAP
+       .....
+     .........
+    ...........
+   ....GGFFF....
+  ....GggfffF....
+ ....GggGFFffF....
+ ...GggG'''FeeE...
+...AaaA'''''EeeE...
+...AaA'''''''EeE...
+...AaA'''''''EeE...
+...AaA'''''''DdD...
+...BbbB'''''DddD...
+ ...BbbB'''DddD...
+ ....BbbCCCcdD....
+  ....BbccccC....
+   ....BCCCC....
+    ...........
+     .........
+       .....
+ENDMAP
+
+NAME:   nicolae_forest_orc_logging_accident
+DEPTH:  Forest
+TAGS:   decor extra no_monster_gen no_trap_gen
+SUBST:  F = 't, T = _t
+NSUBST: p = 4:p / *:., ' = o / '
+SUBST:  ' = '''B, . = ....b
+KPROP:  Bbop = bloody
+SUBST:  B = ', b = .
+: dgn.delayed_decay(_G, 'o', 'orc corpse, hand axe race:orcish / ' ..
+:    'broad axe race:orcish, leather armour race:orcish / ' ..
+:    'pair of gloves race:orcish, mundane quarterstaff ')
+: dgn.delayed_decay(_G, 'p', 'orc corpse, hand axe race:orcish / ' ..
+:    'broad axe race:orcish, leather armour race:orcish / pair of gloves race:orcish ')
+KITEM:  w = mundane quarterstaff
+KITEM:  s = meat ration / bread ration
+FTILE:  'o = floor_dirt
+CLEAR:  _
+MAP
+      TTTTTTTTTT
+     TTttttttttTT
+    TTttttttttttTT
+   TTtttF'FttttttTT
+  TTttttF''FFtttttTT
+ TTttttF'''''FtttttTT
+ TttttttF'''FtttttttT
+ Ttt.p...'''..p.ttttT
+TTt..xxxx........tptT
+Tttp.xwwx...xxmx...tT
+Tt...xww+...xpsx...tT
+Tt.p.xwwxp..+.sm.p.tT
+Tt...xxxx...x.sx..ttT
+Tt..p.......xxmx..tTT
+Ttt.....p......p.ttT
+TTtttt..........ttTT
+ TTTTtttt@@ttttttTT
+    TTTT     TTTTT
+ENDMAP
+
+NAME:    nicolae_forest_quartered_pool_little
+DEPTH:   Forest
+TAGS:    transparent extra decor allow_dup luniq_qpool
+SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm, Nn, Oo, Pp, Qq
+SUBST:   abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W, 7 = t
+MAP
+    777777
+   7qolLOQ7
+  7pnkiIKNP7
+ 7pmjhfFHJMP7
+7qnjgedDEGJNQ7
+7okhecbBCEHKO7
+7lifdbaABDFIL7
+7LIFDBAabdfil7
+7OKHECBbcehko7
+7QNJGEDdegjnq7
+ 7PMJHFfhjmp7
+  7PNKIiknp7
+   7QOLloq7
+    777777
+ENDMAP
+
+NAME:    nicolae_forest_quartered_pool_medium
+DEPTH:   Forest
+TAGS:    transparent extra decor allow_dup luniq_qpool
+SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
+SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu
+SUBST:   abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W, 7 = t
+MAP
+      7777
+    77spPS77
+   7urolLORU7
+  7tqnkiIKNQT7
+ 7uqmjhfFHJMQU7
+ 7rnjgedDEGJNR7
+7sokhecbBCEHKOS7
+7plifdbaABDFILP7
+7PLIFDBAabdfilp7
+7SOKHECBbcehkos7
+ 7RNJGEDdegjnr7
+ 7UQMJHFfhjmqu7
+  7TQNKIiknqt7
+   7UROLloru7
+    77SPps77
+      7777
+ENDMAP
+
+NAME:    nicolae_forest_quartered_pool_super
+DEPTH:   Forest
+TAGS:    transparent extra decor allow_dup luniq_qpool
+SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
+SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu, Vv, Ww, Xx, Yy, Zz
+SHUFFLE: 12, 34, 56
+SUBST:   abcdefghijklmnopqrstuvwxyz135 = ., ABCDEFGHIJKLMNOPQRSTUVWXYZ246 = W
+SUBST:   7 = t
+MAP
+      777777
+    771xtTX277
+   75zwspPSWZ67
+  73yvrolLORVY47
+ 75yuqnkiIKNQUY67
+ 7zvqmjhfFHJMQVZ7
+71wrnjgedDEGJNRW27
+7xsokhecbBCEHKOSX7
+7tplifdbaABDFILPT7
+7TPLIFDBAabdfilpt7
+7XSOKHECBbcehkosx7
+72WRNJGEDdegjnrw17
+ 7ZVQMJHFfhjmqvz7
+ 76YUQNKIiknquy57
+  74YVROLlorvy37
+   76ZWSPpswz57
+    772XTtx177
+      777777
+ENDMAP
+
+NAME:    nicolae_forest_small_spriggan_camp
+DEPTH:   Forest
+SHUFFLE: Ff/Gg/Hh/Ii
+SUBST:   ghi = .
+KMONS:   D = patrolling spriggan defender
+KMONS:   SGHI = spriggan
+KMONS:   F = spriggan air mage / spriggan druid
+KITEM:   f = potion of porridge / bread ration / apple / banana
+MAP
+t@@tt  ttttttt
+t..tttttttttttt
+t..ttttttgggttt
+t...ttt.t.G.tt
+t....D..tt.ttt
+tt.D....S...ttt
+ttttt.......ttt
+ tttt.S..S...tt
+ ttt......tt.tt
+ttttt.tt.tt..tt
+tti...t...tH.tt
+ttiI..t.F.thhtt
+tti...tffftttt
+ttttttttttttt
+  tttttttttt
+ENDMAP
+
+NAME:   nicolae_forest_thorn_lake
+DEPTH:  Forest
+TAGS:   transparent
+SUBST:  b = W.
+NSUBST: W = 3:1 / *:W, . = 1:2 / *:.
+KMONS:  1 = thorn lotus
+KMONS:  2 = thorn hunter
+KFEAT:  1 = W
+MAP
+  tt@@ttt
+  tt..ttt  tttt
+  ttt..tttttttt
+  ttt..tttttt.@
+   ttt..ttt...@
+   ttt..t....tt
+ tttttt....tttt
+ tttt....tttttt
+ tt....t..ttt
+ @...ttt..ttt
+ @.tttttt..ttt
+ tttttttt..ttt
+ tttt.......tt
+tttt........ttt
+ttt...bbb...ttt
+tt...bbWbb...tt
+tt..bbWWWbb..tt
+tt..bWWWWWb..tt
+tt..bbWWWbb..tt
+tt...bbWbb...tt
+ttt...bbb...ttt
+tttt.......tttt
+ tttt.....tttt
+  ttttttttttt
+   ttttttttt
+ENDMAP
+
+NAME:  nicolae_forest_triple_paths
+DEPTH: Forest
+TAGS:  transparent extra decor
+SUBST: T = t_
+CLEAR: _
+MAP
+         Tt@tT
+         Tt.tT
+     @TTTTt.tTTTT@
+    T..tttt.tttt..T
+    TT....t.t....TT
+     Tttt.t.t.tttT
+    TTttt.t.t.tttTT
+TTTTTtttt.t.t.ttttTTTTT
+ttttttttt.t.t.ttttttttt
+TTTTTtttt.t.t.ttttTTTTT
+    TTttt.t.t.tttTT
+     Tttt.t.t.tttT
+    TT....t.t....TT
+    T..tttt.tttt..T
+     @TTTtt.ttTTT@
+        TTt.tTT
+         Tt@tT
+ENDMAP
+
+###############################################################################
+## Yred has gained a foothold in the enchanted forest
+NAME:    gammafunk_forest_yreds_foothold
+DEPTH:   Forest
+ORIENT:  float
+TAGS:    patrolling
+SHUFFLE: HI / JK / LM / NO / PQ / RS
+SUBST:   HJLNP = t, IKMOQ = T, RS = ., F = 1:30 3, e = efghij
+SUBST:   T = tD
+FTILE:   _|567$*+ = floor_tomb
+SUBST:   E = tE
+KFEAT:   D = t
+TILE:    D = dngn_tree_dead
+: dgn.delayed_decay(_G, 'e', 'wolf spider corpse')
+: dgn.delayed_decay(_G, 'f', 'dire elephant corpse')
+: dgn.delayed_decay(_G, 'g', 'death yak corpse')
+: dgn.delayed_decay(_G, 'h', 'minotaur corpse')
+: dgn.delayed_decay(_G, 'i', 'grizzly bear corpse')
+: dgn.delayed_decay(_G, 'j', 'ancient bear corpse')
+MONS:    flaming corpse / flayed ghost / phantasmal warrior
+MONS:    skeletal warrior / deep dwarf death knight
+MONS:    jiangshi / eidolon / revenant
+MONS:    ancient champion / w:20 ghoul
+MONS:    w:20 unborn / w:20 bone dragon / revenant
+MONS:    profane servitor
+KFEAT:   7 = altar_yredelemnul
+TILE:    c = dngn_stone_dark
+CLEAR:   E
+MAP
+EEEEE..@...@.EEEEEEE...@.EEEE.@.EEEE
+Etttttt......ttttttttttt.tttt...tttE
+Ettttttt...ttttttttttttttttt..tttttE
+EttttttttttttttTTTTTTTttttt..ttttttE
+@....ttttttttTTT.....TTTtttt3.1ttt..
+@....eFPPPPPQT.........TTttttN.tttt@
+Ettte2PPPPQQQ..cG.4.Gc..TONNNNttttt.
+EttttttttTT...ccc+++ccc...OTtttttttE
+EtttttttTT..cccc_____cccc..TTtttettE
+Etttt3HHI..Gc|$c_____c$|cG..Ttt.2etE
+Ettt.1HHI..4c*$+_675_+$*c...SRRF...@
+@....ttTT..Gc|$c_____c$|cG..SRR.tt.@
+@...ttttTT..cccc_____cccc..TTttttttE
+EttttttJJJK...ccc+++ccc...TTtttttttE
+EttttttJJJJK...cG.4.Gc...MMLLLL3..tE
+Etttt.F2JttTT...........TMLLLLF.1..E
+Ettttte.etttTTTT.....TTTTtttttttt...
+...tttt..ttttttTTTTTTTtttttttttttt.@
+@..tttt..ttttttttttttttttttttttttt..
+....tttt...tttttttttttttt...tttttttE
+..@..EEEE.@.EEEEEEEEEEEE.@..@.EEEEEE
+ENDMAP
+
+###############################################################################
+## A spore trap set by a band of archers
+NAME:   gammafunk_forest_sporulate
+DEPTH:  Forest
+ORIENT: float
+TAGS:   patrolling
+NSUBST: D = 1:3 / *:., E = 1:3 / *:., S = 2:4 / *:., T = 2:4 / *:.
+SUBST:  * = *:50 |
+MONS:   w:30 satyr ; longbow good_item . arrow q:30 good_item / \
+        faun ; sling good_item . sling bullet q:30 good_item
+MONS:   centaur warrior ; longbow good_item . arrow q:30 good_item
+MONS:   ballistomycete
+MONS:   giant spore
+MONS:   bush
+MAP
+     ttttttttttt
+   ttttttttttttttt
+  ttttt**.2.**ttttt
+ ttttt..1.1.1..ttttt
+ttttt555.....55.ttttt
+tttS...5555555...Sttt
+tt....D.......E....tt
+tttS.DD..T.T..EE.Sttt
+ttttt...T.T.T...ttttt
+ tttttt..T.T..tttttt
+   tttttt...tttttt
+     tttt.@.tttt
+ENDMAP
+
+###############################################################################
+## A hidden river runs under a mountain, feeding into an enchanted lake
+NAME:   gammafunk_forest_enchanted_lake
+DEPTH:  Forest
+ORIENT: north
+TAGS:   no_monster_gen no_pool_fixup no_rotate patrolling
+SUBST:  R = tx, G = N L S:5, A = ML, E = tE
+MONS:   apis, dire elephant / spirit wolf, dryad / treant
+MONS:   thorn hunter / spriggan defender / ancient bear
+KMONS:  M = water elemental
+KMONS:  L = thorn lotus
+KMONS:  N = water nymph
+KMONS:  S = elemental wellspring
+KFEAT:  MLNE = deep_water
+FTILE:  _|* = floor_pebble_brown
+CLEAR:  E
+MAP
+tttcccccccccccccccccccccccttt
+EttcwwwGwwccwwccccc__wwwccttE
+EttcwwwwwwwwwAwwwwAwwwwwwcttE
+Ettc||**wwwwcccwwwwwwccwwcttE
+EttccxcccccccccccccccccwxxttE
+EttxxxxxxxxxxxxxxxxxxxxxwxttE
+EtttttxRRRRRRRRRRRRRRttwwtttE
+Etttttt...WwwttWWtwwWWwwwtttE
+Etttt....WwwwwwwwwwwwwwwwtttE
+Ettt....WwwAwwwwwwwAwwwwttttE
+Ettt...WwwwWttwWtttWWwttttttE
+Ettt...WwwwwttttttttttttttttE
+Ettt....WwwwwW...tttttttttttE
+Ettt.....WwwwwW.....ttttttttE
+Etttt......WWwwW.....tttttttE
+Etttt..4....WWwWW....tttttttE
+Etttt......WWWWWW..1...tttttE
+Ettttt....WWWWWWWW.....tttttE
+Ettttt....WWWWWWWW..2...ttttE
+Etttttt.3.WWWNWWWW.....tttttE
+Etttttt....WWWWNWW..2..tttttE
+Ettttttt...WWWWWW.....ttttttE
+Ettttttttt..WWWW....ttttttttE
+Ettttttttt........ttttttttttE
+Ettttttttt........ttttttttttE
+EEEEEEEEEE...@@...EEEEEEEEEEE
+ENDMAP
+
+###############################################################################
+## A den of ancient bears
+NAME:   gammafunk_forest_bear_cave
+DEPTH:  Forest
+ORIENT: float
+TAGS:   patrolling no_monster_gen
+SUBST:  E = tE, * = *:40 |, B = 1 / nothing
+MONS:   ancient bear
+KMONS:  L = thorn lotus
+KITEM:  f = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
+           / w:1 apple / w:1 pear / w:1 orange
+KFEAT:  L = shallow_water
+FTILE:  .1f* = floor_lair
+CLEAR:  E
+MAP
+EEEEEEEEEEEEEEEEEEEEEEEEE
+EtttttxxtttxxxxxxttxxtttE
+EttxxxxxxxxxxxxxxxxxxxxxE
+Etxxxxxxxxxxx..xxxxxxxxtE
+EtxxxxxLWxx......x.xxxttE
+Exxxf*..1.....x....xxxxtE
+ExxxfB.1...xxxxx.....xxtE
+Exxxxfff*xxxxxxxxxxx._xtE
+Etxxx*xxxxxxxtxxxxxxx___@
+EtxxxxxxxxxxtttttttxxxttE
+EttxxxxxttttttttttttttttE
+EEEEEEEEEEEEEEEEEEEEEEEEE
+ENDMAP
+
 # Place the Enchantress on Forest:$ if the ending doesn't.
 # XXX: this is only here because of how unique placement vaults are
 # handled normally; this placement behaves considerably differently.
@@ -499,8 +1102,7 @@ KMONS:  1 = spriggan defender
 MONS:   spriggan defender, spriggan berserker / spriggan
 MONS:   spriggan druid / spriggan, spriggan rider / spriggan
 MONS:   spriggan air mage / spriggan, spriggan / nothing w:30
-MONS:   faun / satyr w:5 / tengu warrior / tengu conjurer w:5 / \
-        tengu reaver w:2
+MONS:   faun / satyr w:5
 TILE:   c = wall_marble
 COLOUR: .|*%OT123456+ = lightgray
 FTILE:  .|*%OT123456+ = floor_normal
@@ -604,9 +1206,15 @@ tttttttttttttttttttttt@tt..@ttttttttttttttt
 ENDMAP
 
 NAME:   grunt_forest_end_winery
+TAGS:   no_pool_fixup
 PLACE:  Forest:$
 ORIENT: northeast
-MONS:   Pan band, satyr, faun, plant, faun
+MONS:   the Enchantress band, satyr / spriggan defender
+MONS:   faun / spriggan air mage / spriggan enchanter, plant
+MONS:   faun / thorn hunter w:2
+KMONS:  7 = thorn lotus
+KFEAT:  7 = deep_water
+NSUBST: w = 2:7 / *:w
 KFEAT:  T = tree / floor
 SUBST:  X = xt
 CLEAR:  x
@@ -615,9 +1223,6 @@ ITEM:   grape q:1 / grape q:2 / nothing w:180
 ITEM:   any potion / grape q:1 / nothing w:30
 TILE:   c = wall_vines
 FTILE:  e123+|%*$- = floor_vines
-veto {{
-  return you.uniques("Pan")
-}}
 MAP
 tttttttttttttttttttttttttttttttttttttttttttt
 Xttttttttttttttttttttttttttttttttttttttttttt
@@ -654,16 +1259,17 @@ ENDMAP
 NAME:   grunt_forest_end_shrine
 PLACE:  Forest:$
 ORIENT: float
-MONS:   Sojobo band, tengu reaver, tengu warrior band / tengu conjurer band
+MONS:   the Enchantress band
+MONS:   spriggan defender / thorn hunter
+MONS:   spriggan air mage / spriggan druid / spriggan enchanter / \
+        dryad w:5 / dire elephant w:5 / thorn hunter w:2 / treant w:1 / \
+        spirit wolf w:1 / ancient bear w:1
 KFEAT:  _ = altar_vehumet
 KFEAT:  - = floor
 SUBST:  T = tx
 CLEAR:  x
 FTILE:  1|*$-+ = floor_dirt
 TILE:   c = wall_church
-veto {{
-  return you.uniques("Sojobo")
-}}
 MAP
   TTTTTTTTTTTTT
  TTtttttttttttTT
@@ -682,4 +1288,102 @@ Ttt3.........3ttT
 TTtt.........ttTT
  TTtttttttttttTT
   TTTTTTTTTTTTT
+ENDMAP
+
+###############################################################################
+## A palace where denizens of the forest gather to worship a powerful
+## water deity
+NAME:     gammafunk_forest_water_palace
+PLACE:    Forest:$
+ORIENT:   north
+TAGS:     no_monster_gen no_rotate patrolling
+SHUFFLE:  HI / JK, QR / OP
+SUBVAULT: H : gammafunk_forest_water_palace_column
+SUBVAULT: I : gammafunk_forest_water_palace_column
+SUBVAULT: J : gammafunk_forest_water_palace_pool
+SUBVAULT: K : gammafunk_forest_water_palace_pool
+SUBVAULT: Q : gammafunk_forest_water_palace_column
+SUBVAULT: R : gammafunk_forest_water_palace_column
+SUBVAULT: O : gammafunk_forest_water_palace_pool
+SUBVAULT: P : gammafunk_forest_water_palace_pool
+MONS:     nothing w:30 / spriggan / spriggan rider / spriggan assassin
+MONS:     w:30 faun / satyr, spriggan berserker / spriggan enchanter
+KMONS:    4 = w:20 spirit wolf / ancient bear
+KMONS:    5 = spriggan defender
+KMONS:    6 = thorn hunter
+KMONS:    A = water elemental
+KMONS:    L = thorn lotus
+KMONS:    N = water nymph
+KMONS:    S = elemental wellspring
+KFEAT:    ALNS = shallow_water
+COLOUR:   c = white
+FTILE:    |*123456GTU+. = floor_pebble_cyan
+CLEAR:    E
+MAP
+ttttttttttttttttttttttttttttttttttttttttttttttttt
+Ett.....WWWWWWWWcccccccccccccccccWWWWWWWW.....ttE
+Ett....WWWWWWWWcc*..|||||||||..*ccWWWWWWWW....ttE
+Ett....WWWGLWWWc**.....555.....**cWWWLGWWW....ttE
+Ett....WWWWWWWWc**.4..........4**cWWWWWWWW....ttE
+Ett....WWWWWccccccccccc+++cccccccccccWWWWW....ttE
+Ett....WWWWccWWWWWWWWWWWWWWWWWWWWWWWccWWWW....ttE
+Ett.1..WWWWcWWWWWWWWWWWWWWWWWWWWWWWWWcWWWW..1.ttE
+Ett....WWLWcWWHHHWWSWWW.U.WWWSWWIIIWWcWWLW....ttE
+Ett....WWWWcWWHHHWWWWWU...UWWWWWIIIWWcWWWW....ttE
+Ett....WWWWcWWHHHWWWW.......WWWWIIIWWcWWWW....ttE
+Ett.1..WWWWcWWWWWWWWW..555..WWWWWWWWWcWWWW..1.ttE
+Ett....WWWWcWWWWWWWWW.......WWWWWWWWWcWWWW....ttE
+Ett....WWWWcWWWQQQWWWW.....WWWWRRRWWWcWWWW....ttE
+Ett....WWWWcWWWQQQWWWWW...WWWWWRRRWWWcWWWW....ttE
+Ett.1..WWLWcWWWQQQWWLWWWWWWWLWWRRRWWWcWWLW..1.ttE
+Ett....WWWWcWWWWWWWWWWWWWWWWWWWWWWWWWcWWWW....ttE
+Ett....WWWWcWWWWWWWWNWWWWWWWNWWWWWWWWcWWWW....ttE
+Ett....WWWWcWWWWWWWWWWWWWWWWWWWWWWWWWcWWWW....ttE
+Ett.1..WWWWcWWWcccWWWWW...WWWWWcccWWWcWWWW..1.ttE
+Ett....WWWWcWWWcTcWWWW.2.3.WWWWcTcWWWcWWWW....ttE
+Ett....WWWWcWWW.4.WWWW.....WWWW.4.WWWcWWWW....ttE
+Ett....WWWWcWWWWWWWWWW.3.2.WWWWWWWWWWcWWWW....ttE
+Ett....WWLWcWWWWLWWWWW.....WWWWWLWWWWcWWLW....ttE
+Ett.1..WWWWccWWWWWWWWW.....WWWWWWWWWccWWWW..1.ttE
+Ett....WWWWWccccccccccc+++cccccccccccWWWWW....ttE
+Ett....WWWWWWWWc.................cWWWWWWWW....ttE
+Ett....WWWWWWWWc..T...2...3...T..cWWWWWWWW....ttE
+Ett....WWcccWWWc......3...2......cWWWcccWW....ttE
+Ett....WWcGcWWWc...T..2...3..T...cWWWcGcWW....ttE
+Ett....WWWWWWWWcc...............ccWWWWWWWW....ttE
+Ett.....WWWWNWWWccccccc+++cccccccWWWNWWWW.....ttE
+Ettt......WWWWWWWAWWAWWWWWWAWWAWWWWWWWW......tttE
+Etttt......WWWWWWWWWWWWWWWWWWWWWWWWW........ttttE
+Etttttt............T.........T............ttttttE
+Etttttttt.....6...................6.....ttttttttE
+Etttttttttt........T.........T........ttttttttttE
+Ettttttttttttt.....................tttttttttttttE
+Ettttttttttttttttt.............tttttttttttttttttE
+Etttttttttttttttttttt.......ttttttttttttttttttttE
+EEEEEEEEEEEEEEEEEEEEEEE.@.EEEEEEEEEEEEEEEEEEEEEEE
+ENDMAP
+
+NAME: gammafunk_forest_column
+TAGS: gammafunk_forest_water_palace_column unrand no_rotate no_flip no_vmirror \
+      allow_dup patrolling no_monster_gen
+KMONS:  4 = w:20 spirit wolf / ancient bear
+COLOUR: c = white
+FTILE:  G4. = floor_pebble_cyan
+MAP
+ccc
+cGc
+.4.
+ENDMAP
+
+NAME:  gammafunk_forest_pool
+TAGS:  gammafunk_forest_water_palace_pool unrand no_rotate no_vmirror
+TAGS:  allow_dup patrolling no_monster_gen
+SUBST: N = N:20 L
+KMONS: N = water nymph
+KMONS: L = thorn lotus
+KFEAT: NL = shallow_water
+MAP
+WWW
+WNW
+WWW
 ENDMAP

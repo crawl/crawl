@@ -184,10 +184,10 @@ mesh1
 mesh2
 mesh3
 
-orc0 FLOOR_ORC
-orc1
-orc2
-orc3
+mud0 FLOOR_MUD
+mud1
+mud2
+mud3
 
 ice0 FLOOR_ICE
 ice1
@@ -216,6 +216,17 @@ lair6b
 lair7
 %weight 1
 lair7b
+
+%weight 10
+orc0 FLOOR_ORC
+orc1
+orc2
+orc3
+%weight 2
+orc4
+orc5
+orc6
+orc7
 
 moss0 FLOOR_MOSS
 moss1
@@ -486,13 +497,113 @@ grass0-dirt-mix2
 grass0-dirt-mix3
 
 %sdir dngn/floor
-floor_nerves0 FLOOR_NERVES
+floor_nerves0 FLOOR_NERVES FLOOR_NERVES_RED
 floor_nerves1
 floor_nerves2
 floor_nerves3
 floor_nerves4
 floor_nerves5
 floor_nerves6
+
+%variation FLOOR_NERVES blue
+%hue 0 240
+%hue 15 255
+%repeat FLOOR_NERVES FLOOR_NERVES_BLUE
+%resetcol
+
+%variation FLOOR_NERVES green
+%hue 0 140
+%hue 15 155
+%repeat FLOOR_NERVES FLOOR_NERVES_GREEN
+%resetcol
+
+%variation FLOOR_NERVES cyan
+%hue 0 180
+%hue 15 195
+%repeat FLOOR_NERVES FLOOR_NERVES_CYAN
+%resetcol
+
+%variation FLOOR_NERVES magenta
+%hue 0 270
+%hue 15 285
+%repeat FLOOR_NERVES FLOOR_NERVES_MAGENTA
+%resetcol
+
+%variation FLOOR_NERVES brown
+%hue 0 30
+%hue 15 45
+%repeat FLOOR_NERVES FLOOR_NERVES_BROWN
+%resetcol
+
+%variation FLOOR_NERVES lightgray
+%lum 0 5
+%desat 0
+%lum 15 10
+%desat 15
+%repeat FLOOR_NERVES FLOOR_NERVES_LIGHTGRAY
+%resetcol
+
+%variation FLOOR_NERVES darkgray
+%lum 0 -10
+%desat 0
+%lum 15 -5
+%desat 15
+%repeat FLOOR_NERVES FLOOR_NERVES_DARKGRAY
+%resetcol
+
+%variation FLOOR_NERVES lightblue
+%hue 0 210
+%hue 15 200
+%lum 0 5
+%lum 15 5
+%repeat FLOOR_NERVES FLOOR_NERVES_LIGHTBLUE
+%resetcol
+
+%variation FLOOR_NERVES lightgreen
+%hue 0 110
+%hue 15 125
+%lum 0 3
+%lum 15 5
+%repeat FLOOR_NERVES FLOOR_NERVES_LIGHTGREEN
+%resetcol
+
+%variation FLOOR_NERVES lightcyan
+%hue 0 180
+%hue 15 195
+%lum 0 4
+%lum 15 7
+%repeat FLOOR_NERVES FLOOR_NERVES_LIGHTCYAN
+%resetcol
+
+%variation FLOOR_NERVES lightred
+%lum 0 4
+%lum 15 7
+%repeat FLOOR_NERVES FLOOR_NERVES_LIGHTRED
+%resetcol
+
+%variation FLOOR_NERVES lightmagenta
+%hue 0 290
+%hue 15 305
+%lum 0 5
+%lum 15 5
+%repeat FLOOR_NERVES FLOOR_NERVES_LIGHTMAGENTA
+%resetcol
+
+%variation FLOOR_NERVES yellow
+%hue 0 40
+%hue 15 55
+%lum 0 5
+%lum 15 5
+%repeat FLOOR_NERVES FLOOR_NERVES_YELLOW
+%resetcol
+
+%variation FLOOR_NERVES white
+%lum 0 15
+%desat 0
+%lum 15 25
+%desat 15
+%repeat FLOOR_NERVES FLOOR_NERVES_WHITE
+%resetcol
 
 %start
 %compose grass/grass0
@@ -645,18 +756,26 @@ infernal_blank FLOOR_INFERNAL_BLANK
 
 %weight 10
 labyrinth0 FLOOR_LABYRINTH
+%weight 3
 labyrinth1
 labyrinth2
 labyrinth3
 
+%weight 10
 crypt0 FLOOR_CRYPT
 crypt1
 crypt2
 crypt3
+%weight 3
 crypt4
 crypt5
 crypt6
 crypt7
+%weight 2
+crypt8
+crypt9
+crypt10
+crypt11
 
 iron0 FLOOR_IRON
 %weight 1
@@ -779,3 +898,29 @@ cage3
 %weight 5
 cage4
 cage5
+
+etched0 FLOOR_ETCHED
+etched1
+etched2
+etched3
+etched4
+etched5
+
+%weight 10
+mosaic0 FLOOR_MOSAIC
+mosaic1
+mosaic2
+mosaic3
+%weight 4
+mosaic4
+mosaic5
+mosaic6
+mosaic7
+mosaic8
+mosaic9
+mosaic10
+mosaic11
+mosaic12
+mosaic13
+mosaic14
+mosaic15

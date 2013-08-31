@@ -233,7 +233,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 {
 #if TAG_MAJOR_VERSION == 34
     // There's nothing you can do with an empty box if you can't unwield it.
-    if (!equipped && item.sub_type == MISC_EMPTY_EBONY_CASKET)
+    if (!equipped && item.sub_type == MISC_BUGGY_EBONY_CASKET)
         return false;
 #endif
 
@@ -534,8 +534,10 @@ bool InventoryRegion::update_tip_text(string& tip)
                 // For Sublimation of Blood.
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                else if (item.sub_type == FOOD_CHUNK
-                         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
+                else if (food_is_meaty(item)
+                             && you.has_spell(SPELL_SIMULACRUM)
+                         || item.sub_type == FOOD_CHUNK
+                             && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
                 }

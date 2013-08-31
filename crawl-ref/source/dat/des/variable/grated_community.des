@@ -15,8 +15,8 @@ default-depth:  D:18-26
 NAME:   grated_community_mu
 TAGS:   no_rotate no_monster_gen no_item_gen
 ORIENT: north
-MONS:   patrolling vault guard, patrolling war dog, patrolling centaur warrior
-MONS:   generate_awake slave, deep dwarf artificer
+MONS:   patrolling vault guard, patrolling wolf, patrolling centaur warrior
+MONS:   generate_awake slave, deep dwarf
   : if you.absdepth() < 23 then
 KMONS:  a = patrolling two-headed ogre
   : else
@@ -27,12 +27,12 @@ KMONS:  k = patrolling vampire mage / patrolling boggart
 KMONS:  d = orc warlord
   : if you.absdepth() < 23 then
 KMONS:  e = vampire / yaktaur /\
-            ettin / orc / war dog / draconian / iron troll /\
+            ettin / orc / wolf / draconian / iron troll /\
             deep troll / cyclops / deep dwarf / centaur / warg / wizard
 KMONS:  i = frost giant / fire giant
   : else
 KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
-            ettin / orc / war dog / draconian / iron troll /\
+            ettin / orc / wolf / draconian / iron troll /\
             deep troll / cyclops / deep dwarf / centaur / warg / wizard
 KMONS:  i = titan
   : end
@@ -130,7 +130,7 @@ NAME: grated_community_mu_vampire_home
 TAGS: grated_community_mu_home grated_community_mu_home1 unrand
 KMONS:   1 = generate_awake slave
 KMONS:   2 = generate_awake spectral hound
-KMONS:   3 = generate_awake spectral war dog
+KMONS:   3 = generate_awake spectral wolf
 KMONS:   4 = generate_awake spectral warg
 KMONS:   V = vampire knight / vampire mage
 KITEM:   V = potion of blood / q:2 potion of blood / q:3 potion of blood, any good_item

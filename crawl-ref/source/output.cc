@@ -580,7 +580,7 @@ static void _print_stats_contam(int x, int y)
     if (you.species != SP_DJINNI)
         return;
 
-    const int max_contam = 16;
+    const int max_contam = 16000;
     int contam = min(you.magic_contamination, max_contam);
 
     // Calculate colour
@@ -756,7 +756,9 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     CGOTOXY(x+4, y, GOTO_STAT);
-    textcolor(you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
+    textcolor(you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
+              || you.cannot_move() ? RED :
+              you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
     CPRINTF("%2d ", player_evasion());
 }
@@ -1003,13 +1005,21 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
         STATUS_BEOGH,
+        DUR_SPIRIT_HOWL,
+        DUR_INFUSION,
+        DUR_SONG_OF_SLAYING,
+        DUR_SONG_OF_SHIELDING,
+        STATUS_DRAINED,
+        DUR_TOXIC_RADIANCE,
+        STATUS_RAY,
+        DUR_RECITE,
+        DUR_GRASPING_ROOTS,
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.light_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.light_text.empty())
         {
             status_light sl(inf.light_colour, inf.light_text);
             out.push_back(sl);
@@ -1172,10 +1182,10 @@ static void _redraw_title(const string &your_name, const string &job_name)
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
     NOWRAP_EOL_CPRINTF("%s", species.c_str());
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
     {
         string god = " of ";
-        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
+        god += you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                          : god_name(you.religion);
         NOWRAP_EOL_CPRINTF("%s", god.c_str());
 
@@ -1418,31 +1428,19 @@ static string _get_monster_name(const monster_info& mi, int count, bool fullname
 {
     string desc = "";
 
-    bool adj = false;
-    if (mi.attitude == ATT_FRIENDLY)
-    {
-        desc += "friendly ";
-        adj = true;
-    }
-    else if (mi.attitude != ATT_HOSTILE)
-    {
-        desc += "neutral ";
-        adj = true;
-    }
+    const char * const adj = mi.attitude == ATT_FRIENDLY ? "friendly"
+                           : mi.attitude == ATT_HOSTILE  ? nullptr
+                                                         : "neutral";
 
     string monpane_desc;
     int col;
-    mi.to_string(count, monpane_desc, col, fullname);
+    mi.to_string(count, monpane_desc, col, fullname, adj);
 
     if (count == 1)
     {
         if (!mi.is(MB_NAME_THE))
-        {
-            desc = ((!adj && is_vowel(monpane_desc[0])) ? "an "
-                                                        : "a ")
-                   + desc;
-        }
-        else if (adj)
+            desc = (is_vowel(monpane_desc[0]) ? "an " : "a ") + desc;
+        else if (adj || !mi.is(MB_NAME_UNQUALIFIED))
             desc = "the " + desc;
     }
 
@@ -1928,7 +1926,7 @@ static string _wiz_god_powers()
 static string _god_powers(bool simple)
 {
     string godpowers = simple ? "" : god_name(you.religion) ;
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         if (!you.gift_timeout)
             godpowers += simple ? "- BORED" : " - BORED";
@@ -1937,7 +1935,7 @@ static string _god_powers(bool simple)
         return (simple ? godpowers
                        : colour_string(godpowers, god_colour(you.religion)));
     }
-    else if (you.religion != GOD_NO_GOD)
+    else if (!you_worship(GOD_NO_GOD))
     {
         if (player_under_penance())
             return (simple ? "*" : colour_string("*" + godpowers, RED));
@@ -1945,7 +1943,7 @@ static string _god_powers(bool simple)
         {
             // piety rankings
             int prank = piety_rank() - 1;
-            if (prank < 0 || you.religion == GOD_XOM)
+            if (prank < 0 || you_worship(GOD_XOM))
                 prank = 0;
 
             // Careful about overflow. We erase some of the god's name
@@ -2172,7 +2170,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (you.rmut_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                       || you.religion == GOD_ZIN && you.piety >= 150);
+                       || you_worship(GOD_ZIN) && you.piety >= 150);
     const int rrott = you.res_rotting();
 
     snprintf(buf, sizeof buf,
@@ -2492,13 +2490,17 @@ static string _status_mut_abilities(int sw)
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
+        DUR_SPIRIT_HOWL,
+        STATUS_DRAINED,
+        DUR_TOXIC_RADIANCE,
+        DUR_RECITE,
+        DUR_GRASPING_ROOTS,
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.short_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
             status.push_back(inf.short_text);
     }
 
@@ -2660,6 +2662,16 @@ static string _status_mut_abilities(int sw)
         mutations.push_back("retractable antennae");
         break;
 
+    case SP_GARGOYLE:
+        AC_change += 2 + you.experience_level * 2 / 5
+                       + max(0, you.experience_level - 7) * 2 / 5;
+        break;
+
+    case SP_DJINNI:
+        mutations.push_back("fire immunity");
+        mutations.push_back("cold vulnerability");
+        break;
+
     default:
         break;
     }                           //end switch - innate abilities
@@ -2734,23 +2746,24 @@ static string _status_mut_abilities(int sw)
                 AC_change += level;
                 break;
             case MUT_STRONG:
-                Str_change += level;
+                Str_change += level * 2;
                 break;
             case MUT_CLEVER:
-                Int_change += level;
+                Int_change += level * 2;
                 break;
             case MUT_AGILE:
-                Dex_change += level;
+                Dex_change += level * 2;
                 break;
             case MUT_WEAK:
-                Str_change -= level;
+                Str_change -= level * 2;
                 break;
             case MUT_DOPEY:
-                Int_change -= level;
+                Int_change -= level * 2;
                 break;
             case MUT_CLUMSY:
-                Dex_change -= level;
+                Dex_change -= level * 2;
                 break;
+#if TAG_MAJOR_VERSION == 34
             case MUT_STRONG_STIFF:
                 Str_change += level;
                 Dex_change -= level;
@@ -2759,6 +2772,7 @@ static string _status_mut_abilities(int sw)
                 Str_change -= level;
                 Dex_change += level;
                 break;
+#endif
             case MUT_FRAIL:
                 snprintf(info, INFO_SIZE, "-%d%% hp", level*10);
                 current = info;

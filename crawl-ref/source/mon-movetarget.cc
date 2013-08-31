@@ -746,66 +746,42 @@ static bool _handle_monster_patrolling(monster* mon)
     if (!_choose_random_patrol_target_grid(mon))
     {
         // If we couldn't find a target that is within easy reach
-        // of the monster and close to the patrol point, depending
-        // on monster intelligence, do one of the following:
-        //  * set current position as new patrol point
-        //  * forget about patrolling
-        //  * head back to patrol point
+        // of the monster and close to the patrol point, head back
+        // to patrol point.
 
-        if (mons_intel(mon) == I_PLANT)
+        // Other than for tracking the player, there's currently
+        // no distinction between smart and stupid monsters when
+        // it comes to travelling back to the patrol point. This
+        // is in part due to the flavour of e.g. bees finding
+        // their way back to the Hive (and patrolling should
+        // really be restricted to cases like this), and for the
+        // other part it's not all that important because we
+        // calculate the path once and then follow it home, and
+        // the player won't ever see the orderly fashion the
+        // bees will trudge along.
+        // What he will see is them swarming back to the Hive
+        // entrance after some time, and that is what matters.
+        monster_pathfind mp;
+        if (mp.init_pathfind(mon, mon->patrol_point))
         {
-            // Really stupid monsters forget where they're supposed to be.
-            if (mon->friendly())
+            mon->travel_path = mp.calc_waypoints();
+            if (!mon->travel_path.empty())
             {
-                // Your ally was told to wait, and wait it will!
-                // (Though possibly not where you told it to.)
-                mon->patrol_point = mon->pos();
+                mon->target = mon->travel_path[0];
+                mon->travel_target = MTRAV_PATROL;
             }
             else
             {
-                // Stop patrolling.
-                mon->patrol_point.reset();
-                mon->travel_target = MTRAV_NONE;
-                return true;
+                // We're so close we don't even need a path.
+                mon->target = mon->patrol_point;
             }
         }
         else
         {
-            // It's time to head back!
-            // Other than for tracking the player, there's currently
-            // no distinction between smart and stupid monsters when
-            // it comes to travelling back to the patrol point. This
-            // is in part due to the flavour of e.g. bees finding
-            // their way back to the Hive (and patrolling should
-            // really be restricted to cases like this), and for the
-            // other part it's not all that important because we
-            // calculate the path once and then follow it home, and
-            // the player won't ever see the orderly fashion the
-            // bees will trudge along.
-            // What he will see is them swarming back to the Hive
-            // entrance after some time, and that is what matters.
-            monster_pathfind mp;
-            if (mp.init_pathfind(mon, mon->patrol_point))
-            {
-                mon->travel_path = mp.calc_waypoints();
-                if (!mon->travel_path.empty())
-                {
-                    mon->target = mon->travel_path[0];
-                    mon->travel_target = MTRAV_PATROL;
-                }
-                else
-                {
-                    // We're so close we don't even need a path.
-                    mon->target = mon->patrol_point;
-                }
-            }
-            else
-            {
-                // Stop patrolling.
-                mon->patrol_point.reset();
-                mon->travel_target = MTRAV_NONE;
-                return true;
-            }
+            // Stop patrolling.
+            mon->patrol_point.reset();
+            mon->travel_target = MTRAV_NONE;
+            return true;
         }
     }
     else

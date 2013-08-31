@@ -1,4 +1,9 @@
 %%%%
+tutorial1 close_door
+
+Chcete-li zavřít otevřené dveře, stiskněte tlačítko
+<input>$cmd[CMD_CLOSE_DOOR]</input>.
+%%%%
 tutorial5 tutorial_end
 
 Gratulujeme! Skončili jste poslední výukovou lekci a nyní jste připraveni pro

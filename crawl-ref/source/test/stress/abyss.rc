@@ -1,8 +1,7 @@
 # A bot to exercise player-vs-monsters combat and Abyss generation.
 #
-# Usage: ./crawl --no-save --rc test/stress/abyss.rc
-#
-# Wizmode is needed.
+# Usage: test/stress/abyss
+# (or disable the autosave then ./crawl --no-save --rc test/stress/abyss.rc)
 
 name = Abyss_walker
 species = mu
@@ -16,6 +15,7 @@ autofight_stop = 0
 Lua{
 bot_start = true
 last_turn = -1
+time1000 = math.floor(you.time() / 10000)
 local cmds = {string.char(9), 'u', 'k', 'l', 'n', '.'}
 function ready()
   local esc = string.char(27)
@@ -25,6 +25,7 @@ function ready()
     crawl.enable_more(false)
     crawl.sendkeys("&Y" .. esc)
     crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('save_checkpoints')" .. eol ..
                    "debug.disable('confirmations')" .. eol ..
                    "debug.disable('death')" .. eol ..
                    "debug.disable('hunger')" .. eol ..
@@ -42,8 +43,9 @@ function ready()
     crawl.sendkeys("g&o[helmet" .. eol .. "see invis" .. eol)
     crawl.sendkeys("g&o[gloves" .. eol .. "strength" .. eol)
     crawl.sendkeys("g&o[cloak" .. eol .. "preservation" .. eol)
+    crawl.sendkeys("g&o=sustain" .. eol)
     --# somehow ga doesn't work... why?
-    crawl.sendkeys("gwcWdWeWfWgWhWi")
+    crawl.sendkeys("gwcWdWeWfWgWhWiPj")
     crawl.sendkeys("&tca9" .. eol .. "b9" .. eol .. esc)
     crawl.sendkeys("&tda2" .. eol .. esc)
     crawl.sendkeys("&tea12" .. eol .. esc)
@@ -56,6 +58,16 @@ function ready()
                    "debug.disable('mon_act', false)" .. eol .. esc)
     --# exit the Abyss then go back, so it's not the special starting Abyss
     crawl.sendkeys("&B")
+  elseif bot_start then
+    bot_start = false
+    crawl.enable_more(false)
+    crawl.sendkeys("&Y" .. esc)
+    crawl.sendkeys("&" .. string.char(20) ..
+                   "debug.disable('save_checkpoints')" .. eol ..
+                   "debug.disable('confirmations')" .. eol ..
+                   "debug.disable('death')" .. eol ..
+                   "debug.disable('hunger')" .. eol ..
+                   "debug.disable('afflictions')" .. eol .. esc)
   end
   if you.turns() ~= last_turn then
     command = 1
@@ -88,5 +100,10 @@ function ready()
       command = 2
   end
   crawl.sendkeys(cmds[command])
+
+  --# do only 1000 turns per invocation
+  if math.floor(you.time() / 10000) > time1000 then
+      crawl.sendkeys(string.char(19))
+  end
 end
 }

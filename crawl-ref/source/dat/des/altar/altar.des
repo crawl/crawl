@@ -5,13 +5,13 @@
 #            Some maps containing altars should *not* go in this file.
 #            These are
 #            * Branch-specific vaults
-#              (Beogh altar minivaults for Orc:*, for example)
+#              (Beogh altar minivaults for Orc, for example)
 #              These go into the corresponding des-file of the branch.
 #            * Entry vaults with altars
 #              Use an entry_foo.des file.
 #            * Overflow altars.
-#              (I.e. altars dedicated to a single Temple god which can be
-#              used if the god does not show up in the Temple).
+#              (I.e. altars dedicated to Temple gods which can be used if the
+#              gods do not show up in the Temple).
 #              Use overflow.des.
 #            * Large non-overflow vaults.
 #              These are vaults where the altar is used for thematic reasons.
@@ -81,7 +81,6 @@ MAP
 ............
 ENDMAP
 
-
 ##############################################################################
 # II   General altars (containing a single C)
 ##############################################################################
@@ -90,7 +89,7 @@ NAME:   basic_altar
 TAGS:   allow_dup extra no_monster_gen transparent mini_float decor
 DEPTH:  5-
 CHANCE: 20% (Orc)
-CHANCE: 10% (Snake, Forest, Dwarf)
+CHANCE: 10% (Snake, Forest)
 CHANCE: 8% (D, Elf)
 CHANCE: 5% (Lair, Slime, Vaults, Crypt)
 CHANCE: 1% (Zot)
@@ -101,50 +100,6 @@ MAP
 ..C..
 .....
 .....
-ENDMAP
-
-NAME:    old_standard_altar
-TAGS:    transparent mini_float allow_dup decor
-SHUFFLE: cvxxxx
-: interest_check(_G)
-MAP
-...........
-.xxxx.xxxx.
-.xx.....xx.
-.x.......x.
-.x.......x.
-.....C.....
-.x.......x.
-.x.......x.
-.xx.....xx.
-.xxxx.xxxx.
-...........
-ENDMAP
-
-NAME:    lemuel_round_altar
-TAGS:    allow_dup decor
-SHUFFLE: cvxx
-SUBST:   X:x.
-: interest_check(_G)
-MAP
-   xxXxx
-  xx...xx
- xx.....xx
- x.......x
- X...C...@
- x.......x
- xx.....xx
-  xx...xx
-   xxXxx
-ENDMAP
-
-NAME: lemuel_crystal_altar
-TAGS: transparent allow_dup decor
-: interest_check(_G)
-MAP
-b.b
-.C.
-b.b
 ENDMAP
 
 NAME:   lemuel_altar_in_water
@@ -195,25 +150,6 @@ MAP
  2
 2C1
  2
-ENDMAP
-
-NAME:    lemuel_doored_altar
-TAGS:    transparent mini_float decor
-DEPTH:   D:1-18, Vaults, Lair, Elf, Crypt
-SHUFFLE: XY
-SUBST:   X = .
-SUBST:   Y = +
-: interest_check(_G)
-MAP
-.........
-.xxxmxxx.
-.xxxmxxx.
-.xxxmxxx.
-.X.YCY.X.
-.xxxYxxx.
-.xxx.xxx.
-.xxxXxxx.
-.........
 ENDMAP
 
 NAME:   lemuel_sealed_altar_a
@@ -282,21 +218,6 @@ MAP
 .F...>Cc.
 .ccccccc.
 .........
-ENDMAP
-
-NAME:   lemuel_coloured_pillars_altar
-TAGS:   no_rotate decor
-DEPTH:  D:2-18, Vaults, Elf
-COLOUR: c = blue / yellow / red / cyan
-: interest_check(_G)
-MAP
-xxxxxxxxxxxxxxxxxxxx
-...................x
-c...c...c...c...c..x
-@.................Cx
-c...c...c...c...c..x
-...................x
-xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   lemuel_upstairs_altar
@@ -374,73 +295,6 @@ MAP
    .....
 ENDMAP
 
-NAME:    good_gods_temple_1
-DEPTH:   D:2-27, Lair
-TAGS:    no_monster_gen no_trap_gen uniq_good_god_temple extra decor
-MONS:    plant
-KFEAT:   D = altar_elyvilon
-KFEAT:   E = altar_zin
-KFEAT:   F = altar_the_shining_one
-SHUFFLE: DEF
-SUBST:   1 : GTV1
-SUBST:   X : GTt
-SUBST:   ? : t@
-MAP
-  ttttttt
- tt.....tt
-tt...E...tt
-tt.D...F.tt
-tt...1...tt
- tt.....tt
-  tt...tt
-   ?X@X?
-ENDMAP
-
-NAME:    good_gods_mini_temple
-DEPTH:   D:2-27, Lair
-TAGS:    no_monster_gen no_trap_gen no_pool_fixup uniq_good_god_temple
-TAGS:    no_item_gen extra decor
-MONS:    plant
-KFEAT:   D = altar_elyvilon
-KFEAT:   E = altar_zin
-KFEAT:   F = altar_the_shining_one
-: if crawl.coinflip() then
-SHUFFLE: x" / t1 / wT / IJ
-: else
-SUBST:   " : ..x
-: end
-SUBST:   HI : x
-SUBST:   x : xcvb
-SUBST:   ' : .
-SHUFFLE: EG/'E
-SUBST:   J : G
-SHUFFLE: DEF
-MAP
- xxxxx
-xxxGxxx
-xD.E.Fx
-xx+++xx
- ""@""
-ENDMAP
-
-NAME: lightli_temple_of_fire
-DEPTH: D:2-9
-KPROP: Y = no_rtele_into
-KFEAT: _ = altar_trog / altar_makhleb
-MAP
-llcccccc
-lccYcYccc
-lclllllcc
-lcl...lcc
-lcl...lYc
-@+.._.lcc
-lcl...lYc
-lcl...lcc
-lclllllcc
-lccYcYccc
-llcccccc
-ENDMAP
-
 ##############################################################################
 # III   Altars to minor gods
 #
@@ -490,7 +344,7 @@ ENDMAP
 # Note: This altar is too deep to be of use as a Xom overflow altar.
 #
 NAME:       due_chaos_kobolds
-DEPTH:      D:13-27, Vaults, Elf, Crypt
+DEPTH:      D:13-, Vaults, Elf, Crypt
 TAGS:       no_rotate
 ORIENT:     float
 SUBST:      y  = c.
@@ -550,10 +404,19 @@ ENDMAP
 
 ### Altars to Jiyva ##########################################################
 
-NAME:  jiyva_altar_1
-DEPTH: D:2-20
-KFEAT: _ = altar_jiyva
-MONS:  jelly
+NAME:   jiyva_altar_1
+DEPTH:  D:2-20
+KFEAT:  _ = altar_jiyva
+: if you.depth() < 5 then
+SUBST:  1 = 2
+: elseif you.depth() < 7 then
+NSUBST: 1 = 1:1 / *:2
+: elseif you.depth() < 10 then
+NSUBST: 1 = 2:1 / *:2
+: elseif you.depth() < 13 then
+NSUBST: 1 = 3:1 / *:2
+: end
+MONS:  jelly, ooze
 MAP
 .....
 ..1..

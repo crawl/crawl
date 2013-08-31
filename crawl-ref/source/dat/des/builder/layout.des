@@ -95,8 +95,10 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
     if crawl.coinflip() then
         local width2 = 1 + crawl.random2(5)
 
-        fill_area{x1=10, y1=gym/2-width2, x2=gxm-10, y2=gym/2+width2, fill=floor}
-        fill_area{x1=gxm/2-width2, y1=10, x2=gxm/2+width2, y2=gym-10, fill=floor}
+        fill_area{x1=10,           y1=gym/2-width2,
+                  x2=gxm-10,       y2=gym/2+width2, fill=floor}
+        fill_area{x1=gxm/2-width2, y1=10,
+                  x2=gxm/2+width2, y2=gym-10,       fill=floor}
 
         -- sometimes add a small octagon room
         if crawl.coinflip() then
@@ -110,7 +112,8 @@ TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
                 ["w"] = 5,
                 ["l"] = 1,
             })
-            octa_room{x1=25, y1=25, x2=gxm-25, y2=gym-25, oblique=obl, replace='x', inside=fill}
+            octa_room{x1=25, y1=25, x2=gxm-25, y2=gym-25,
+                      oblique=obl, replace='x', inside=fill}
 
             -- decrease spotty chance
             spotty = crawl.one_chance_in(5)
@@ -143,7 +146,7 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   D:4-22, Lair:1-7, Pan
+DEPTH:   D:4-22, Lair:1-7
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_cross
@@ -375,7 +378,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot, Pan
+DEPTH: D, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_rooms
@@ -459,7 +462,7 @@ ENDMAP
 # ruination makes it basically indistinguishable from a big
 # open room
 NAME:   layout_city
-DEPTH:  D:15-, Lair:1-2, Snake, Dwarf, Crypt:1-4, Dis:1-6
+DEPTH:  D:15-, Lair:1-2, Snake, Crypt:1-4, Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
@@ -469,12 +472,27 @@ TAGS:   layout_type_city
         x2 = x2 + 1
         y2 = y2 + 1
 
-        if x2 <= x2 or y2 <= y2 then
+        if x2 <= x1 or y2 <= y1 then
             return false
         end
 
-        if (x2 - x1) * (y2 - y1) >= 40 then
+        local area = (x2 - x1) * (y2 - y1)
+        if area >= 40 then
             return false
+        end
+
+        -- for bigger rooms, use less valuable loot
+        local loot = { }
+        if area <= 4 then
+            loot['|'] = 1
+        elseif area <= 10 then
+            loot['|'] = 10 - area
+            loot['*'] = area - 4
+        elseif area < 25 then
+            loot['*'] = 25 - area
+            loot['%'] = area - 10
+        else
+            loot['%'] = 1
         end
 
         local tl = dgn.point(x1, y1)
@@ -482,8 +500,9 @@ TAGS:   layout_type_city
 
         for point in iter.rect_iterator(tl, br) do
             if is_valid_coord {x = point.x, y = point.y } then
-                if is_passable_coord { x=point.x, y=point.y } or crawl.coinflip() then
-                    mapgrd[point.x][point.y] = "|"
+                if is_passable_coord { x=point.x, y=point.y }
+                   or crawl.coinflip() then
+                    mapgrd[point.x][point.y] = crawl.random_element (loot)
                 end
             end
         end
@@ -495,16 +514,8 @@ TAGS:   layout_type_city
 
     extend_map{width = gxm, height = gym, fill = 'x'}
 
-    local wall_type_room
     local wall_type
     local rooms = {}
-
-    local xs = 0
-    local ys = 0
-    local ax1 = 0
-    local bx2 = 0
-    local ay1 = 0
-    local by2 = 0
     local i, j
 
     if you.branch() == "Dis" then
@@ -515,34 +526,101 @@ TAGS:   layout_type_city
         wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
     end
 
+    local percent_thickness_2 =   crawl.random_range(0, 8)
+                                * crawl.random_range(0, 8)
+    local percent_thickness_3 =   crawl.random_range(0, 7)
+                                * crawl.random_range(0, 7)
+    local percent_inner_box = crawl.random_range(0, 25)
+    local percent_inner_new_wall = crawl.random_range(0, 100)
+    local percent_inner_split = crawl.random_range(0, 25)
+    if you.branch() == "Dis" then
+        percent_thickness_2 = 0
+        percent_thickness_3 = 0
+        percent_inner_box = percent_inner_box * 1.5
+        percent_inner_new_wall = 0
+        percent_inner_split = percent_inner_split * 2
+    end
+
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
     for i = 0, 5 do
         for j = 0, 4 do
-            xs = 8 + (i * 13)
-            ys = 8 + (j * 14)
-            a1 = xs + crawl.random2avg(5, 2);
-            a2 = ys + crawl.random2avg(5, 2);
-            b1 = xs + 11 - crawl.random2avg(5, 2);
-            b2 = ys + 11 - crawl.random2avg(5, 2);
+            local xs = 8 + (i * 13)
+            local ys = 8 + (j * 14)
+            local a1 = xs + crawl.random2avg(5, 2);
+            local a2 = ys + crawl.random2avg(5, 2);
+            local b1 = xs + 11 - crawl.random2avg(5, 2);
+            local b2 = ys + 11 - crawl.random2avg(5, 2);
 
-            if crawl.x_chance_in_y(6, 7) and is_valid_coord {x=a1, y=a2} and is_valid_coord{x=b1, y=b2}
+            if crawl.x_chance_in_y(6, 7)
+                and is_valid_coord {x=a1, y=a2}
+                and is_valid_coord{x=b1, y=b2}
                 and not find_in_area {x1 = a1 - 1, y1 = a2 - 1,
                                       x2 = b1 + 1, y2 = b2 + 1,
                                       find = "xcvb+", find_vault = true } then
 
-                wall_type_room = theme.room_material(wall_type)
+                local wall_type_room = theme.room_material(wall_type)
 
-                table.insert(rooms, {a1, a2, b1, b2})
-                make_box { x1=a1, y1=a2, x2=b1, y2=b2, wall=wall_type_room }
+                local size_x = b1 - a1
+                local size_y = b2 - a2
+                local thickness = 1
+                if size_x > 6 and size_y > 6
+                   and crawl.x_chance_in_y(percent_thickness_3, 100) then
+                    thickness = 3
+                elseif size_x > 4 and size_y > 4
+                       and crawl.x_chance_in_y(percent_thickness_2, 100) then
+                    thickness = 2
+                end
 
-                if b1 - a1 > 5 and b2 - a2 > 5 and crawl.one_chance_in(8) then
-                    table.insert(rooms, {a1+2, a2+2, b1-2, b2-2})
-                    make_box { x1=a1+2, y1=a2+2, x2=b1-2, y2=b2-2, wall=wall_type_room }
+                table.insert(rooms, {a1, a2, b1, b2, thickness})
+                make_box { x1=a1, y1=a2, x2=b1, y2=b2,
+                           wall=wall_type_room, thickness=thickness }
 
-                    if crawl.one_chance_in(3) then
-                        treasure_area(a1+3, a2+3, b1-3, b2-3)
+                local size_x_inner = size_x - thickness * 2
+                local size_y_inner = size_y - thickness * 2
+                if size_x_inner > 3 and size_y_inner > 3 then
+
+                    if crawl.x_chance_in_y(percent_inner_box, 100) then
+                        local A1 = a1 + thickness + 1
+                        local A2 = a2 + thickness + 1
+                        local B1 = b1 - thickness - 1
+                        local B2 = b2 - thickness - 1
+                        local door_number = 1 +
+                                            crawl.random2(2) * crawl.random2(2)
+
+                        local wall_type_inner = wall_type_room
+                        if crawl.x_chance_in_y(percent_inner_new_wall, 100) then
+                            wall_type_inner = theme.room_material(wall_type)
+                        end
+
+                        make_box { x1=A1, y1=A2, x2=B1, y2=B2,
+                                   wall=wall_type_inner }
+                        make_box_doors { x1=A1, y1=A2, x2=B1, y2=B2,
+                                         number=door_number }
+
+                        if crawl.x_chance_in_y(thickness*4,
+                                               percent_inner_box) then
+                            treasure_area(A1+1, A2+1, B1-1, B2-1)
+                        end
+
+                    elseif crawl.x_chance_in_y(percent_inner_split, 100) then
+                        local door_x = a1 + thickness + 1
+                                       + crawl.random2(size_x_inner - 2)
+                        local door_y = a2 + thickness + 1
+                                       + crawl.random2(size_y_inner - 2)
+
+                        if crawl.coinflip() then
+                            for x = a1 + thickness, b1 - thickness do
+                                mapgrd[x][door_y] = wall_type_room
+                            end
+                        else
+                            for y = a2 + thickness, b2 - thickness do
+                                mapgrd[door_x][y] = wall_type_room
+                            end
+                        end
+                        mapgrd[door_x][door_y] = '+'
                     end
+
                 end
             end
         end
@@ -558,11 +636,32 @@ TAGS:   layout_type_city
             doors = 2
         end
 
-        make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4], number=doors}
+        local thickness = room[5]
+        local outer_door = '+'
+        local inner_door = '+'
+        if thickness == 2 then
+            outer_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
+            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 3 }
+        elseif thickness == 3 then
+            outer_door = crawl.random_element { ['+'] = 2, ['.'] = 1 }
+            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
+        end
+
+        if outer_door == '.' and crawl.coinflip() then
+            doors = doors + 1
+        end
+        if inner_door == '.' and crawl.coinflip() then
+            doors = doors + 1
+        end
+
+        make_box_doors {x1=room[1], y1=room[2], x2=room[3], y2=room[4],
+                        number=doors, thickness=thickness,
+                        door=outer_door, inner_door=inner_door,
+                        veto_gates=true }
     end
 
     -- Prevent treasure rooms being overwritten by vaults
-    kmask('| = vault')
+    kmask('|*% = vault')
 }}
 MAP
 ENDMAP
@@ -572,7 +671,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot, Pan
+DEPTH: D, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_misc
@@ -661,7 +760,7 @@ ENDMAP
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
-DEPTH: D:5-27
+DEPTH: D:5-
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_delve
@@ -932,7 +1031,9 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
                and (you.in_branch("D") or you.in_branch("Lair"))
                and crawl.x_chance_in_y(you.absdepth() - 9, 450)
             then
-                local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
+                local feat = crawl.random_element { ['v'] = 2,
+                                                    ['c'] = 3,
+                                                    ['x'] = 3 }
                 make_inner_room(room, feat, crawl.coinflip())
             end
         end
@@ -1027,7 +1128,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 # layout_cocytus
 #
 # An ice cave approximation for Cocytus.  There is one main
-#  delved path that is guarenteed to contain at least one up and
+#  delved path that is guaranteed to contain at least one up and
 #  down stairs.  There are also other delved paths and
 #  diamond-shaped rooms, but these might be behind pools of
 #  water.  To avoid trapping the player, all random teleports go
@@ -1090,7 +1191,7 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
     local top = 10
 
     -- Delve the main path and add two sets of stairs.  This
-    --  guarentees the map is connected without crossing water.
+    --  guarantees the map is connected without crossing water.
     --  Keep the '@' glyph for connectivity checking later.
     delve(ngb_min, ngb_max, connchance, total_count, top)
     nsubst('. = 1:@ / *:.')
@@ -1207,7 +1308,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
                fill(x1, y1, x3, y2, 1)
                fill(x3, y1, x2, y2, 1)
                if not alt then
-                   replace_random { x1=x3, y1=y1+1, x2=x3, y2=y2-1, find='x', replace='+' }
+                   replace_random { x1=x3, y1=y1+1, x2=x3, y2=y2-1,
+                                    find='x', replace='+' }
                end
            end
         else
@@ -1222,7 +1324,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
                fill(x1, y1, x2, y3, 0)
                fill(x1, y3, x2, y2, 0)
                if not alt then
-                   replace_random { x1=x1+1, y1=y3, x2=x2-1, y2=y3, find='x', replace='+' }
+                   replace_random { x1=x1+1, y1=y3, x2=x2-1, y2=y3,
+                                    find='x', replace='+' }
                end
             end
         end
@@ -1321,14 +1424,14 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
     local ROOMS_ACROSS = 4
     local ROOM_SIZE = 11
-    local ROOM_SEPERATION = 2
+    local ROOM_SEPARATION = 2
     local EDGE_IN = 5
     local ROOM_IN = 4
 
-    local ROOM_SPACING = ROOM_SIZE + ROOM_SEPERATION
-    local MAP_SIZE = ROOM_SPACING * ROOMS_ACROSS + ROOM_SEPERATION
+    local ROOM_SPACING = ROOM_SIZE + ROOM_SEPARATION
+    local MAP_SIZE = ROOM_SPACING * ROOMS_ACROSS + ROOM_SEPARATION
                      + EDGE_IN * 2
-    local FIRST_ROOM = EDGE_IN + ROOM_SEPERATION
+    local FIRST_ROOM = EDGE_IN + ROOM_SEPARATION
     local DOOR_OFFSET_MIN = FIRST_ROOM + ROOM_IN - 1
     local DOOR_OFFSET_MAX = FIRST_ROOM + ROOM_SIZE - ROOM_IN
 
@@ -1361,7 +1464,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
     for i = 0, ROOMS_ACROSS do
         for j = 0, ROOMS_ACROSS - 1 do
             local x = EDGE_IN + i * ROOM_SPACING
-                      + crawl.random_range(0, ROOM_SEPERATION - 1)
+                      + crawl.random_range(0, ROOM_SEPARATION - 1)
             local y = crawl.random_range(DOOR_OFFSET_MIN, DOOR_OFFSET_MAX)
                       + j * ROOM_SPACING
 
@@ -1392,7 +1495,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
             local x = crawl.random_range(DOOR_OFFSET_MIN, DOOR_OFFSET_MAX)
                       + i * ROOM_SPACING
             local y = EDGE_IN + j * ROOM_SPACING
-                      + crawl.random_range(0, ROOM_SEPERATION - 1)
+                      + crawl.random_range(0, ROOM_SEPARATION - 1)
 
             -- add door
             mapgrd[x][y] = '+'
@@ -1438,7 +1541,7 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: D, Lair, Snake, Elf, Dwarf, Crypt, Zot
+DEPTH: D, Lair, Snake, Elf, Crypt, Zot
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
@@ -1461,7 +1564,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: D:4-, Lair:1-3, Snake, Dwarf, Crypt:1-4, Dis, Pan
+DEPTH: D:4-, Lair:1-3, Snake, Crypt:1-4, Dis, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_city

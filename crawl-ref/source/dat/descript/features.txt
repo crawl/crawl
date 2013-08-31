@@ -132,22 +132,6 @@ experienced characters can die there. On the other hand, these halls contain
 several runes and lots of valuable items. It is much easier to get in than to
 get out.
 %%%%
-A gas trap
-
-You're lucky to have noticed this trap, for it would have released a cloud of
-deadly gas at you. Exactly what gas it holds, you cannot tell — perhaps it is
-plain poison, perhaps mutagenic fumes, perhaps flammable vapour, or perhaps
-something yet nastier.
-%%%%
-A gas trap:quote
-
-“Good your grace, an’ I had room for such a thundergust within mine ancient
-bowels, ’tis not in reason I coulde discharge ye same and live to thank God for
-yt. He did choose handmaid so humble whereby to shew his power. Nay, ’tis not I
-yt have broughte forth this rich o’ermastering fog, this fragrant gloom, so
-pray you seeke ye further.”
-    -Mark Twain, “1601”, 1880.
-%%%%
 A gate to the Realm of Zot
 
 This gate leads to the Realm of Zot, the final stage of your quest as its
@@ -300,6 +284,9 @@ A mangrove
 
 This tree is specially adapted for growing in swampy conditions. Its vines are
 too thick to see through.
+
+While too large to be felled with an axe, it is susceptible to bolts of
+lightning and to sufficiently intense sources of fire.
 %%%%
 A magical trap
 
@@ -408,6 +395,16 @@ A sealed door
 A door sealed tightly by arcane runes. It refuses to open for any creature not
 recognised by its magic.
 %%%%
+A sealed passage leading down
+
+A descending passage sealed tightly by a magical barricade. Forcing your way
+through it looks impossible, so long as the magic holds.
+%%%%
+A sealed passage leading up
+
+An ascending passage sealed tightly by a magical barricade. Forcing your way
+through it looks impossible, so long as the magic holds.
+%%%%
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
@@ -498,15 +495,7 @@ of the dungeon.
 %%%%
 A staircase to the Ecumenical Temple:quote
 
-„W mieście, którego nazwiska nie powiem,
- Nic to albowiem do rzeczy nie przyda,
- W mieście, ponieważ zbiór pustek tak zowiem,
- W godnem siedlisku i chłopa, i Żyda,
- W mieście (gród, ziemstwo trzymało albowiem
- Stare zamczysko, pustoty ohyda)
- Były trzy karczmy, bram cztery ułomki,
- Klasztorów dziewięć i gdzieniegdzie domki.”
-    -Ignacy Krasicki, “Monachomachia”, 1778
+<Temple:quote>
 %%%%
 A staircase to the Elven Halls
 
@@ -526,11 +515,6 @@ A staircase to the Orcish Mines
 
 An entrance to the mines of the orcs, filled with their gold, but treacherous
 and easy to get trapped in.
-%%%%
-A staircase to the Dwarven Hall
-
-An entrance to the well-worked hall of the dwarves. You think you can smell
-ale.
 %%%%
 A staircase to the Enchanted Forest
 
@@ -612,6 +596,9 @@ While the dungeon is filled with dim magic light, in most places it is not
 bright enough to sustain any larger plants. It is uneven, though, and there are
 spots where, with the grace of Fedhas, trees as big as those on the surface can
 grow underground.
+
+While too large to be felled with an axe, it is susceptible to bolts of
+lightning and to sufficiently intense sources of fire.
 %%%%
 A tree:quote
 
@@ -691,7 +678,7 @@ If you ever wanted to escape out of the pan into the fire, this is your chance.
 This gateway allows you to return from this place via a nice scenic path
 through infinite madness.
 %%%%
-# shown if the player is a Hill Orc
+# shown if the player is an orc
 An idol of Beogh
 
 {{
@@ -716,11 +703,6 @@ An iron grate
 
 This iron grate looks rusted, as if it could be disrupted with a spell or a
 wand quite easily. It's too strong to be breakable by hand, though.
-%%%%
-An iron tree
-
-A striking representation of nature in springtime, made completely of iron. It
-looks very delicate – almost alive.
 %%%%
 An open door
 
@@ -1097,12 +1079,6 @@ of the water flowing inside.
 A glass window
 
 A pockmarked, ultra-hard glass window.
-%%%%
-# Dwarf
-A granite statue of a fallen hero
-
-A life-size granite statue of a dwarf standing guard in this hall. You can't
-help but feel as though it's watching you.
 %%%%
 # due_jungle_book (Lair:8)
 An elephant-shaped statue

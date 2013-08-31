@@ -58,7 +58,7 @@ struct menu_letter
     }
 };
 
-// XXX Use inheritence instead of duplicate code
+// XXX Use inheritance instead of duplicate code
 struct menu_letter2
 {
     char letter;

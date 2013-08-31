@@ -64,11 +64,15 @@ Eerie flames cover its twisted blade.
 %%%%
 Staff of Dispater
 
-This legendary item can unleash the fury of Hell.
+This legendary item can unleash the fury of Hell. The unholy flames it evokes
+may cost a portion of your life and your soul, but since when have such
+details stopped anyone in their quest for power?
 %%%%
 Sceptre of Asmodeus
 
-It carries some of the powers of the arch-fiend Asmodeus.
+It carries some of the powers of the arch-fiend Asmodeus. Waving this sceptre
+can yank powerful hellspawn from their infernal home and enslave them to do
+your bidding. Obviously, they're not going to like you when the spell expires.
 %%%%
 faerie dragon armour
 
@@ -183,7 +187,8 @@ It is designed for easy concealment, but still packs a nasty punch.
 lance "Wyrmbane"
 
 An enchanted lance which grows more and more powerful every time it inflicts a
-killing blow on a dragon.
+killing blow on a strong dragon. The more powerful it grows, the harder it will
+be to find a worthy opponent.
 %%%%
 Spriggan's Knife
 
@@ -307,8 +312,8 @@ A weird-looking armour.
 %%%%
 mask of the Dragon
 
-A strange blue helm made of hard flexible leather that makes the wearer's
-face resemble a dragon's visage.
+A strange blue helm made of hard flexible leather that makes the wearer's face
+resemble a dragon's visage.
 %%%%
 robe of Night
 

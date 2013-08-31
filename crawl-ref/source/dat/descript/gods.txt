@@ -270,7 +270,11 @@ Beogh encourages followers to make use of orcish gear found in the dungeon.
 Followers can smite their foes, and will even gain orcish followers of their
 own, who may be blessed by Beogh in battle and can be recalled to your vicinity
 as needed. Eventually, they'll gain the power to walk on water. Beogh will
-sometimes directly intervene to save a follower's life.
+sometimes directly intervene to save a follower's life. {{
+    if you.race() == "Lava Orc" then
+        return "Beogh suppresses the heat aura of Lava Orc followers."
+    end
+}}
 %%%%
 Fedhas powers
 

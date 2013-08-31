@@ -336,6 +336,8 @@ static const char* disablements[] =
     "delay",
     "confirmations",
     "afflictions",
+    "mon_sight",
+    "save_checkpoints",
 };
 
 LUAFN(debug_disable)

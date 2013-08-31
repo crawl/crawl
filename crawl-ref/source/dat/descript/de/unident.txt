@@ -4,12 +4,20 @@ amulet
 Ein Talisman der als Schmuck um den Hals getragen wird, durchströmt von Magie
 unbekannten Ursprungs.
 %%%%
+amulet:quote
+
+"Gringoire streckte ihre Hand nach der kleine Tasche aus, aber sie zog sie
+zurück. 'Nicht anfassen! Es ist ein Amulett, und entweder machst du Unfug mit
+dem Zauber, oder es wird dir wehtun.'"
+    -Victor Marie Hugo, _Notre Dame de Paris_, Buch II, Kapitel VII 'A Wedding
+Night'. 1831.
+%%%%
 book
 
 Ein Buch mit Zaubersprüchen unbekannten Ursprungs. Geschrieben für wahre
 Meister, sind einleitende Kenntnisse in der okkulten Kunst des Zauberns
-erforderlich, um jeglichen Gebrauch des Wälzers zu machen. Nimm dich in Acht,
-denn mit einigen der mächtigeren Zauberbücher ist nicht zu spaßen.
+erforderlich um Gebrauch von diesem Wälzer zu machen. Nimm dich in Acht, denn
+mit einigen der mächtigeren Zauberbücher ist nicht zu spaßen!
 %%%%
 deck of cards
 
@@ -38,22 +46,50 @@ ring
 Ein Talisman welcher als Schmuck an einem Finger getragen wird, durchströmt von
 Magie unbekannten Ursprungs.
 %%%%
+ring:quote
+
+“Eine milchweiße Taube, ein Ring von Gold
+ Sind Gaben geziem für dich,
+ Ein Strick und ein Baum,
+ dran er hängen sollt’.”
+    -Oscar Wilde, “Chanson”. 1881.
+%%%%
 rod
 
-Ein magischer Stab, der in der Hand gehalten wird und evoziert werden kann, um
-einen von mehreren Zaubern hervorzurufen, die ihre Energie aus einem
+Ein magischer Stab, der in der Hand gehalten und evoziert werden kann, um einen
+von mehreren Zaubern hervorzurufen, die ihre Energie aus einem
 selbstaufladenden Reservoir beziehen. Der Stab ist robust genug, um als eine
 einfache Schlagwaffe zu dienen.
 %%%%
 scroll
 
-Eine von magischen Schriftzügen bedeckte Schriftrolle.
+Eine einmal nutzbare arkane Formel auf Pergament, geschrieben von einem
+professionellen Schreiber oder Zauberer. Jeder kann die Macht der
+geheimnisvollen Formel durch lautes Lesen hervorrufen, aber die Natur dieser
+Macht ist nicht a priori klar.
 %%%%
 staff
 
-Ein auf magische Weise verbesserter Schlagstock.
+Ein Stab mit unbekannter magischer Kraft.
+%%%%
+staff:quote
+
+“Bashō Osho sagte zu seinen Jüngern: 'Wenn du eine Dienerschaft hast, gebe ich
+dir Diener. Wenn du keine Dienerschaft hast, werde ich sie von dir nehmen.'
+ Kommentar des Mumon
+ Es hilft mir, durch einen Fluss zu waten, wenn die Brücke kaputt ist. Es
+geleitet mich in das Dorf, in einer Mondlosen Nacht. Wenn du es einen Diener
+nennst kommst du schnell wie ein Pfeil in die Hölle. ” -Mumon Ekai, _The
+Gateless Gate_, case 44. 1228.
 %%%%
 wand
 
 Ein Stab. Vielleicht ist er magisch.
+%%%%
+wand:quote
+
+"[The principle of selection] ist der Zauberstab, mit denen er das Leben in
+jeder Form, die er will, beschwören kann.”
+    -William Youatt, _Sheep: their breeds, management, and diseases; to which
+is added the Mountain Shepherd's Manual_, Kapitel III. 1837.
 %%%%

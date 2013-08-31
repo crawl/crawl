@@ -152,40 +152,12 @@ static void _print_character_info(const newgame_def* ng)
     cprintf("%s\n", _welcome(ng).c_str());
 }
 
-// Determines if a species is valid.
+// Determines if a species is a valid choice for a new game.
 static bool _is_species_valid_choice(species_type species)
 {
-    if (species < 0 || species > NUM_SPECIES)
-        return false;
-
-    if (species >= SP_ELF) // These are all invalid.
-        return false;
-
-    if (species == SP_LAVA_ORC
-        && Version::ReleaseType != VER_ALPHA)
-    {
-        return false;
-    }
-
     // Non-base draconians cannot be selected either.
-    if (species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN)
-        return false;
-
-    return true;
-}
-
-// Determines if a job is valid.
-static bool _is_job_valid_choice(job_type job)
-{
-    if (job < 0 || job > NUM_JOBS)
-        return false;
-
-#if TAG_MAJOR_VERSION == 34
-    if (job == JOB_STALKER || job == JOB_JESTER || job == JOB_PRIEST)
-        return false;
-#endif
-
-    return true;
+    return is_valid_species(species)
+        && !(species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN);
 }
 
 #ifdef ASSERTS
@@ -311,7 +283,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
             // any valid job will do
             do
                 ng->job = job_type(random2(NUM_JOBS));
-            while (!_is_job_valid_choice(ng->job));
+            while (!is_job_valid_choice(ng->job));
         }
         else
         {
@@ -323,7 +295,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
                 if (is_good_combination(ng->species, job, false)
                     && one_chance_in(++good_choices))
                 {
-                    ASSERT(_is_job_valid_choice(job));
+                    ASSERT(is_job_valid_choice(job));
                     ng->job = job;
                 }
             }

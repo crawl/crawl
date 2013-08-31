@@ -1261,9 +1261,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 45;
             break;
 
-#if TAG_MAJOR_VERSION == 34
-        case WPN_SPIKED_FLAIL:
-#endif
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
             valued += 50;
@@ -1366,10 +1363,6 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPWPN_VENOM:
                 valued *= 23;
-                break;
-
-            case SPWPN_ORC_SLAYING:
-                valued *= 21;
                 break;
 
             case SPWPN_VORPAL:
@@ -1516,7 +1509,7 @@ unsigned int item_value(item_def item, bool ident)
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_SICKNESS:
 #endif
-            case SPMSL_RAGE:
+            case SPMSL_FRENZY:
                 valued *= 23;
                 break;
             }
@@ -2168,14 +2161,20 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case MISC_BOTTLED_EFREET:
+        case MISC_SACK_OF_SPIDERS:
             valued += 400;
             break;
 
-#if TAG_MAJOR_VERSION == 34
-        case MISC_EMPTY_EBONY_CASKET:
-            valued += 20;
+        case MISC_FAN_OF_GALES:
+        case MISC_STONE_OF_TREMORS:
+        case MISC_PHIAL_OF_FLOODS:
+        case MISC_LAMP_OF_FIRE:
+            valued += 1000;
             break;
-#endif
+
+        case MISC_BOX_OF_BEASTS:
+            valued += 500;
+            break;
 
         default:
             if (is_deck(item))
@@ -2419,6 +2418,8 @@ static string _shop_type_name(shop_type type)
             return "Distillery";
         case SHOP_GENERAL:
             return "General Store";
+        case SHOP_MISCELLANY:
+            return "Gadget";
         default:
             return "Bug";
     }
@@ -2697,16 +2698,16 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             return 0;
     }
 
+    // Manuals are consumable, and interesting enough to keep on list.
+    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+        return 0;
+
     // Item is already on shopping-list.
     const bool on_list = find_thing(item, level_pos::current()) != -1;
 
-    const bool do_prompt =
-        (item.base_type == OBJ_JEWELLERY && !jewellery_is_amulet(item)
-         && ring_has_stackable_effect(item))
-     // Manuals and tomes of destruction are consumable.
-     || (item.base_type == OBJ_BOOKS
-         && (item.sub_type == BOOK_MANUAL
-             || item.sub_type == BOOK_DESTRUCTION));
+    const bool do_prompt = item.base_type == OBJ_JEWELLERY
+                           && !jewellery_is_amulet(item)
+                           && ring_has_stackable_effect(item);
 
     bool add_item = false;
 
@@ -2963,7 +2964,7 @@ void ShoppingListMenu::draw_title()
                            menu_action == ACT_EXAMINE ? "examine" :
                                                         "delete";
         draw_title_suffix(formatted_string::parse_string(make_stringf(
-            "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action]",
+            "<lightgrey>  [<w>a-z</w>: %-8s <w>?</w>/<w>!</w>: change action]",
             verb)), false);
     }
 }

@@ -53,22 +53,23 @@ void nowrap_eol_cprintf(PRINTF(0, ));
 // If keyproc is provided, it must return 1 for normal processing, 0 to exit
 // normally (pretend the user pressed Enter), or -1 to exit as if the user
 // pressed Escape
-int cancelable_get_line(char *buf,
+int cancellable_get_line(char *buf,
                          int len,
                          input_history *mh = NULL,
-                         int (*keyproc)(int &c) = NULL);
+                         int (*keyproc)(int &c) = NULL,
+                         const string &fill = "");
 
 // Do not use this templated function directly.  Use the macro below instead.
-template<int> static int cancelable_get_line_autohist_temp(char *buf, int len)
+template<int> static int cancellable_get_line_autohist_temp(char *buf, int len)
 {
     static input_history hist(10);
-    return cancelable_get_line(buf, len, &hist);
+    return cancellable_get_line(buf, len, &hist);
 }
 
-// This version of cancelable_get_line will automatically retain its own
-// input history, independent of other calls to cancelable_get_line.
-#define cancelable_get_line_autohist(buf, len) \
-    cancelable_get_line_autohist_temp<__LINE__>(buf, len)
+// This version of cancellable_get_line will automatically retain its own
+// input history, independent of other calls to cancellable_get_line.
+#define cancellable_get_line_autohist(buf, len) \
+    cancellable_get_line_autohist_temp<__LINE__>(buf, len)
 
 struct c_mouse_event
 {
@@ -221,7 +222,7 @@ private:
     bool smartcstate;
 };
 
-// Reads lines of text; used internally by cancelable_get_line.
+// Reads lines of text; used internally by cancellable_get_line.
 class line_reader
 {
 public:
@@ -232,6 +233,7 @@ public:
     typedef int (*keyproc)(int &key);
 
     int read_line(bool clear_previous = true);
+    int read_line(const string &prefill);
 
     string get_text() const;
 

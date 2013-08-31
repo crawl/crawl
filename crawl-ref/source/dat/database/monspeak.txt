@@ -2566,8 +2566,6 @@ w:50
 
 @The_monster@ says, "I don't get the difference between high elves and deep elves."
 
-@The_monster@ says, "What sort of sludge, anyway?"
-
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
 Swamp Donald
@@ -2784,13 +2782,23 @@ Vaults Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "This place is boring."
-
 @The_monster@ says, "They never drop hides for me, either."
 
 @The_monster@ says, "The Vaults? They should've called it the Dumps."
 
 @The_monster@ says, "Don't bother, there's only junk at the bottom."
+
+@The_monster@ says, "I asked the warden where the rune was. He slammed the door in my face."
+
+@The_monster@ says, "I don't remember getting an invitation to a convocation."
+
+@The_monster@ says, "What kind of idiots hire shapeshifters to protect treasure?"
+
+@The_monster@ says, "Who designed this place? It's just a bunch of weird little rooms stuck together."
+
+@The_monster@ says, "This is an awful lot of space just to hold some junk."
+
+@The_monster@ says, "I saw some yaktaurs earlier, but I bolted."
 %%%%
 Hall of Blades Donald
 
@@ -2920,6 +2928,56 @@ w:50
 @The_monster@ says, "What a crowded place."
 
 @The_monster@ says, "Mazes, puzzles. I hate puzzles."
+%%%%
+Forest Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I hate having to branch out like this."
+
+@The_monster@ says, "I asked some spriggans for directions; they got kind of evasive about it."
+
+@The_monster@ says, "I ran into some vines; they wouldn't let me leave."
+
+@The_monster@ says, "I was going to ask a faun for directions, but it got too confusing."
+
+@The_monster@ says, "Those wind drakes are really a blast. I still hate them."
+
+@The_monster@ says, "What kind of person lives in a tree, anyway?"
+
+@The_monster@ says, "What am I supposed to do with all this fruit? Make a salad?"
+
+@The_monster@ says, "Did that tree just move its branches?"
+
+@The_monster@ says, "Did that root just wiggle a little?"
+
+@The_monster@ says, "This place doesn't seem all that enchanting to me."
+
+@The_monster@ says, "I think I'm getting hay fever."
+
+@The_monster@ says, "Did you just hear a twig snapping?"
+
+@The_monster@ says, "I wish I was a lumberjack."
+
+@The_monster@ says, "How can such tiny little people be such huge pains in the neck?"
+%%%%
+Abyss Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "But I don't want to have to go deeper!"
+
+@The_monster@ says, "What does 'eldritch' mean, anyway?"
+
+@The_monster@ says, "I keep hearing this weird shrieking in my head. I hate that."
+
+@The_monster@ says, "I've never heard of a star cursing anything."
+
+@The_monster@ says, "I've never heard of a star spawning anything."
+
+@The_monster@ says, "That wasn't a gateway out; it was a stair. I hate that."
 %%%%
 ######################################################################## GODS #
 Zin Donald
@@ -3511,6 +3569,14 @@ VISUAL:@The_monster@ sticks a finger up @possessive@ nose.
 VISUAL:@The_monster@ tugs at @possessive@ hair.
 
 VISUAL:@The_monster@ twirls gently on the spot.
+%%%%
+Donald killed
+
+w:100
+__NONE
+
+w:1
+@The_monster@ says, "I'm dying. I hate that."
 %%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan
@@ -4503,16 +4569,10 @@ Jory
 %%%%
 _Jory_common_
 
-w:100
+w:50
 @_Jory_silent_@
 
 @The_monster@ says, "Leave me alone!"
-
-@The_monster@ says, "How dare you disturb my sanctum!"
-
-@The_monster@ says, "In my tower, I enforce my rules: silence at all times."
-
-@The_monster@ says, "Be quiet! Or I'll take your tongue!"
 
 @The_monster@ hisses in an unknowable language.
 
@@ -4549,8 +4609,6 @@ VISUAL:@The_monster@ smirks, showing shining fangs.
 VISUAL:@The_monster@ demonstrates baring @possessive@ neck.
 
 VISUAL:@The_monster@ hisses silently.
-
-VISUAL:@The_monster@ starts to speak, but stops.
 %%%%
 Jory killed
 
@@ -5286,35 +5344,6 @@ whispers
 
 ## END Norris ##
 %%%%
-############ PAN ### Lord of the satyrs
-Pan
-
-@_Pan_common_@
-
-w:5
-@_Pan_rare_@
-%%%%
-_Pan_common_
-VISUAL:@The_monster@ leers at @foe@.
-
-VISUAL:@The_monster@ twirls @possessive@ pipes idly.
-
-VISUAL:@The_monster@ raises @possessive@ pipes, ready for another tune.
-
-VISUAL:@The_monster@ ties some reeds together.
-
-VISUAL:@The_monster@ licks @possessive@ lips.
-%%%%
-_Pan_rare_
-
-@The_monster@ sighs @at_foe@, "Seen any nymphs lately?"
-
-@The_monster@ stares at @possessive@ pipes for a moment, mumbling, "No, that's
-not how it goes..."
-
-@The_monster@ says @to_foe@, "Put on a good show for me!"
-### END Pan
-%%%%
 ############ Pikel ######## A big kobold slaver!
 Pikel
 
@@ -5669,7 +5698,7 @@ _Rupert_rare_
 ## END Rupert ##
 %%%%
 ############ SAINT ROKA ### orc warlord
-# Only used if the player is not a Hill Orc.
+# Only used if the player is not an orc.
 Saint Roka
 
 w:7
@@ -5711,7 +5740,7 @@ Saint Roka rival
 
 @The_monster@ despairs, @at_foe@, "False prophets abound here!"
 
-@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!"
+@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere {{ return you.race() }}!"
 %%%%
 # need different speech if you also worship Beogh
 related beogh Saint Roka
@@ -6582,7 +6611,7 @@ friendly orc
 w:5
 @_generic_orc_speech_@
 %%%%
-# charmed orcs, for hill orcs (not counting Beogh)
+# charmed orcs, for orcs (not counting Beogh)
 friendly related orc
 
 @default friendly related humanoid@
@@ -6692,11 +6721,19 @@ _hostile_orc_beogh_believer_speech_common_
 
 @The_monster@ grunts @at_foe@, "You, the messiah? You don't even look the part!"
 
-@The_monster@ @_orc_says_to_foe_@, "The messiah will not be a Hill Orc!"
+@The_monster@ @_orc_says_to_foe_@, "The messiah will not be a {{ return you.race() }}!"
 
 @The_monster@ @_orc_says_to_foe_@, "The messiah will be a true Orc!"
 
-@The_monster@ @_orc_says_to_foe_@, "Turn back to the hills, deceiver!"
+@The_monster@ @_orc_says_to_foe_@, "{{
+    if you.race() == "Hill Orc" then
+        return "Turn back to the hills"
+    elseif you.race() == "Lava Orc" then
+        return "Go swim in a volcano"
+    else -- shouldn't happen
+        return "Go to hell"
+    end
+}}, deceiver!"
 
 @The_monster@ @_shouts_@ @at_foe@, "Die, @_orc_heathen_@!"
 
@@ -7141,6 +7178,26 @@ Yredelemnul
 Beogh
 
 Lugonu
+%%%%
+confused zin angel
+
+@The_monster@ rambles incoherently.
+
+@The_monster@ lectures the ground at length about @_important_subject_@
+
+@The_monster@ lectures @possessive@ feet at length about @_important_subject_@
+
+VISUAL:@The_monster@ stares off into space for a moment.
+%%%%
+silenced zin angel
+
+VISUAL:@The_monster@ gestures @at_foe@ frantically.
+
+VISUAL:@The_monster@ looks angrily to the heavens.
+
+VISUAL:@The_monster@ furiously gestures all around.
+
+VISUAL:@The_monster@ scowls with righteous anger.
 %%%%
 ###############################################################################
 # Speech keys used *specifically* in (portal) vaults.

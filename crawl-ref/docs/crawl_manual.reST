@@ -240,9 +240,9 @@ Dexterity
 They grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or using appropriate artefacts or abilities.
 
-If any one of these drops to zero for some reason, you will not die immediately.
-But you will experience very unpleasant effects, including death if the
-attribute remains at zero or below for very long.
+If any one of these drops to zero for some reason, you will experience very
+unpleasant side-effects, which will persist for a short while even after the
+attribute is restored.
 
 Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
 species gain additional attributes at some levels, with the frequency and the
@@ -1504,8 +1504,8 @@ Hill Orcs
   passable users of most types of magic and are particularly skilled with Fire.
 
   Many Orcs feel superior to all other species and beings, and they have formed
-  a religion around that idea. Only Hill Orcs can worship Beogh, the Orc god.
-  They can join Beogh whenever an orc priest is in sight.
+  a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
+  can join Beogh whenever an orc priest is in sight.
 
 Merfolk
   The Merfolk are a hybrid species of half-human, half-fish that typically live
@@ -1777,6 +1777,10 @@ Lava Orcs
 
   Lava Orcs make good melee fighters, preferring axes. They're pretty bad
   spellcasters, except for transmutations, fire and earth magic.
+  
+  Many Orcs feel superior to all other species and beings, and they have formed
+  a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
+  can join Beogh whenever an orc priest is in sight.
 
 Formicids
  The Formicids are an species of humanoid ants. Just like their tiny insect

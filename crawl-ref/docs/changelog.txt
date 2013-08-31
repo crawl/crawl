@@ -5,8 +5,13 @@ Stone Soup 0.13 (up to 0.13-a0-1380-g03ef21a)
 ---------------
 * Three new races: Lava Orcs, Djinni, and Gargoyles.
 * A new branch: the Enchanted Forest.
+* A reimagined Skald background.
 * A thorough rework of the monster set in Crypt.
 * Improvements to many evokable items.
+* Box of Beasts now creates new chimeric allies.
+* A new item: Sack of Spiders.
+* Massively overhauled layout generators.
+* Summoning school: per-spell limits and no stair following or pulling.
 
 Branches, environment
 ---------------------
@@ -14,7 +19,9 @@ Branches, environment
   long, and contains the entrance to Tomb where it exists.
 * Branches now have exactly one exit stair (except the Dungeon, which can,
   but is not guaranteed, to have more).
-* Several new layouts.
+* Many new layouts have been added to most branches, including unique layouts
+  for branches that didn't have them; and numerous tweaks and improvements
+  to existing layouts.
 * Vaults can now be placed at the centre of some layouts prepared to accept
   them there.
 * All portal vaults entrances that time out are now announced.
@@ -30,6 +37,14 @@ Character
       themselves to significantly reduce damage before becoming completely
       immobile.
 * Sludge elves are no more.
+* The Skald background gets a reworked spellbook with four new spells:
+    - Infusion grants additional melee damage costing MP with each strike;
+    - Song of Slaying grants an incremental slaying bonus with every monster
+      killed (of sufficient threat level);
+    - Spectral Weapon creates an allied spectral clone of your weapon
+      which strikes enemies in melee when you do.
+    - Song of Shielding has a similar effect to Spirit Shield, trading HP
+      loss for MP loss.
 * Priests are no more.
 * The nausea status from eating contaminated chunks has been removed;
   contaminated chunks now give less nutrition for characters that can't
@@ -129,6 +144,13 @@ Spells
     - Summons now fixate on their target.
     - Flayed ghosts are no longer summoned.
     - Friendlies are no longer targettable.
+* Summons caps are introduced. This acts on a per-spell basis, each spell
+  has a fixed numerical limit for the number of summons active at any time.
+  Going over this limit means your oldest summons will expire in a very
+  short number of turns. Applies only to non-necromantic non-permanent
+  summons.
+* Temporary summons will no longer follow the player down stairs.
+* Temporary summons expire when the player moves to a different level.
 
 Items
 -----
@@ -155,12 +177,23 @@ Items
 * The staff of power scales with your maximum magic power.
 * Splint mail has been removed; chain mail is now 8 AC to compensate.
 * Needles of sickness have been removed.
+* Box of Beasts has been reworked:
+    - Has a fixed, random number of charges between 5 and 15 inclusive
+    - 1/3 chance to fail on usage with no bad effects
+    - When successful, generates a chimera; a new monster with three heads.
+      Each head can be a different beast, picked from a list which provides
+      better/stronger beasts at higher Evocations skill. The heads determine
+      the attacks and abilities available to the monster.
+* New "Sack of Spiders" item:
+    - Fixed charges between 5 and 15 inclusive
+    - On evoking, creates webs around you and releases spiders
+    - Number of webs and type/number of spiders scales with Evo
 
 Gods
 ----
 * Yredelemnul no longer gifts rotting hulks / plague shamblers.
-* Hill orcs encountering an orc priest for the first time are offered the
-  chance to convert to Beogh on the spot.
+* Orcs encountering an orc priest for the first time are offered the chance
+  to convert to Beogh on the spot.
 
 Interface
 ---------
@@ -169,6 +202,7 @@ Interface
 Technical
 ---------
 * A port to OpenSolaris (Dyson/Illumos).
+* MSVC compilation once again possible (Visual Studio [Express] 2012)
 
 Stone Soup 0.12.2 (20130601)
 ----------------------------
@@ -3154,12 +3188,12 @@ Stone Soup 0.2 (20070401)
 * Greedy explore now works in Pandemonium.
 * Stash tracker now also tracks item inscriptions.
 * Many item stacking bugs fixed.
-* Artifacts are described as such when (v)iewed.
+* Artefacts are described as such when (v)iewed.
 * The Hat of the Alchemist is now a real wizard hat, not a helmet.
 * Fixed identify not clearing empty inscription.
 * Fixed broken fear behaviour for monsters.
 * Shop purchase asks for confirmation.
-* Minor tweaks to some unrand artifacts.
+* Minor tweaks to some unrand artefacts.
 * Gourmand contaminated -> clean effect is also gradual now.
 * Searching is more effective.
 * New god: Lugonu, god of the Void.
@@ -3190,7 +3224,7 @@ Stone Soup 0.2 (20070401)
   capacity, not absolute maximum.
 * Flying monsters no longer avoid mechanical traps.
 * Items dropped onto an altar while praying will be sacrificed.
-* Jellies can no longer eat artifacts.
+* Jellies can no longer eat artefacts.
 * Enabling delay_message_clear uses a scrolling message window.
 * Fixed bug where statues could move around.
 * Added temporary pain-brand spell "Excruciating Wounds".

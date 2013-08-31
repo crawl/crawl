@@ -127,7 +127,7 @@ PlaceInfo& player::get_place_info(branch_type branch) const
 
 void player::clear_place_info()
 {
-    you.global_info = PlaceInfo();
+    global_info = PlaceInfo();
     for (unsigned int i = 0; i < NUM_BRANCHES; ++i)
         branch_info[i] = PlaceInfo();
 }

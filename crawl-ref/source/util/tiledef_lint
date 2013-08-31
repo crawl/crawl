@@ -1,0 +1,17 @@
+#!/usr/bin/perl -w
+
+my %defs;
+open IN, "<rltiles/tiledef-player.h" or die "tiledefs must be generated\n";
+while (<IN>)
+{
+    next unless /TILEP_(MONS_[A-Z0-9_]+)/;
+    # multi-tile enums receive _1 _2 _3 automatically.  Could cause problems
+    # if we get such a name written manually.
+    next if $1 =~ /[0-9]$/;
+    $defs{$1} = 1;
+}
+close IN;
+
+delete $defs{$_} for (map {chomp;$_}`util/gather_tiles_mons`);
+
+print "$_\n" for sort keys %defs;

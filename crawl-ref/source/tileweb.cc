@@ -612,21 +612,21 @@ void TilesFramework::_send_player(bool force_full)
     _update_string(force_full, c.species, species_name(you.species),
                    "species");
     string god = "";
-    if (you.religion == GOD_JIYVA)
+    if (you_worship(GOD_JIYVA))
         god = god_name_jiyva(true);
-    else if (you.religion != GOD_NO_GOD)
+    else if (!you_worship(GOD_NO_GOD))
         god = god_name(you.religion);
     _update_string(force_full, c.god, god, "god");
-    _update_int(force_full, c.under_penance, player_under_penance(), "penance");
+    _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
     uint8_t prank = 0;
-    if (you.religion == GOD_XOM)
+    if (you_worship(GOD_XOM))
     {
         if (!you.gift_timeout)
             prank = 2;
         else if (you.gift_timeout == 1)
             prank = 1;
     }
-    else if (you.religion != GOD_NO_GOD)
+    else if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank() - 1);
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
              && !had_gods())
@@ -655,10 +655,10 @@ void TilesFramework::_send_player(bool force_full)
         // Don't send more information than can be seen from the console HUD.
         // Compare _print_stats_contam and get_contamination_level
         int contam = you.magic_contamination;
-        if (contam >= 26)
-            contam = 26;
-        else if (contam >= 16)
-            contam = 16;
+        if (contam >= 26000)
+            contam = 26000;
+        else if (contam >= 16000)
+            contam = 16000;
         _update_int(force_full, c.contam, contam, "contam");
     }
 
@@ -1205,6 +1205,12 @@ void TilesFramework::_send_map(bool force_full)
 
     if (force_full)
         json_write_bool("clear", true);
+
+    if (force_full || you.on_current_level != m_player_on_level)
+    {
+        json_write_bool("player_on_level", you.on_current_level);
+        m_player_on_level = you.on_current_level;
+    }
 
     if (force_full || m_current_gc != m_next_gc)
     {

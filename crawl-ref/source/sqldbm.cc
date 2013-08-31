@@ -106,7 +106,7 @@ From SQLite's documentation:
 #else
     if (ec(sqlite3_open_v2(
                 dbfile.c_str(), &db,
-                readonly? SQLITE_OPEN_READONLY :
+                readonly ? SQLITE_OPEN_READONLY :
                 (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
                 NULL
 #endif
@@ -196,7 +196,7 @@ int SQL_DBM::do_insert(const string &key, const string &value)
 
 int SQL_DBM::init_insert()
 {
-    return s_insert? SQLITE_OK :
+    return s_insert ? SQLITE_OK :
         prepare_query(&s_insert, "INSERT INTO dbm VALUES (?, ?)");
 }
 
@@ -217,7 +217,7 @@ int SQL_DBM::remove(const string &key)
 
 int SQL_DBM::init_remove()
 {
-    return s_remove? SQLITE_OK :
+    return s_remove ? SQLITE_OK :
         prepare_query(&s_remove, "DELETE FROM dbm WHERE key = ?");
 }
 
@@ -280,13 +280,13 @@ unique_ptr<string> SQL_DBM::nextkey()
 
 int SQL_DBM::init_query()
 {
-    return s_query? SQLITE_OK :
+    return s_query ? SQLITE_OK :
         prepare_query(&s_query, "SELECT value FROM dbm WHERE key = ?");
 }
 
 int SQL_DBM::init_iterator()
 {
-    return s_iterator? SQLITE_OK :
+    return s_iterator ? SQLITE_OK :
         prepare_query(&s_iterator, "SELECT key FROM dbm");
 }
 

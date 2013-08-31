@@ -30,7 +30,6 @@ mon/holy/phoenix CORPSE_PHOENIX
 jackal CORPSE_JACKAL
 hound CORPSE_HOUND
 warg CORPSE_WARG
-war_dog CORPSE_WAR_DOG
 wolf CORPSE_WOLF
 hog CORPSE_HOG
 hell_hound CORPSE_HELL_HOUND
@@ -153,6 +152,7 @@ sea_snake CORPSE_SEA_SNAKE
 black_bear CORPSE_BLACK_BEAR
 grizzly_bear CORPSE_GRIZZLY_BEAR
 polar_bear CORPSE_POLAR_BEAR
+ancient_bear CORPSE_ANCIENT_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep CORPSE_SHEEP
@@ -190,6 +190,7 @@ merfolk_water CORPSE_MERFOLK
 mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 dryad CORPSE_DRYAD
+water_nymph CORPSE_WATER_NYMPH
 
 ## Rotting monsters ('n')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4

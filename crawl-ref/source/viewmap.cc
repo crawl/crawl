@@ -57,8 +57,8 @@ static unsigned _get_travel_colour(const coord_def& p)
         return Options.tc_excluded;
     short dist = travel_point_distance[p.x][p.y];
     return dist > 0?                    Options.tc_reachable        :
-           dist == PD_EXCLUDED?         Options.tc_excluded         :
-           dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
+           dist == PD_EXCLUDED ?        Options.tc_excluded         :
+           dist == PD_EXCLUDED_RADIUS ? Options.tc_exclude_circle   :
            dist < 0?                    Options.tc_dangerous        :
                                         Options.tc_disconnected;
 }
@@ -216,7 +216,9 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
         case DNGN_EXIT_DUNGEON:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_RETURN_FROM_DWARVEN_HALL:
+#endif
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
@@ -243,9 +245,10 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
-        // Not a > glyph, but it goes deeper into the abyss.
         case DNGN_ABYSSAL_STAIR:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_DWARVEN_HALL:
+#endif
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
@@ -695,6 +698,31 @@ static level_pos _stair_dest(const coord_def& p, command_type dir)
     return sinf->destination;
 }
 
+static void _unforget_map()
+{
+    ASSERT(env.map_forgotten.get());
+    MapKnowledge &old(*env.map_forgotten.get());
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (!env.map_knowledge(*ri).seen() && old(*ri).seen())
+        {
+            // Don't overwrite known squares, nor magic-mapped with
+            // magic-mapped data -- what was forgotten is less up to date.
+            env.map_knowledge(*ri) = old(*ri);
+        }
+}
+
+static void _forget_map()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (env.map_knowledge(*ri).flags & MAP_VISIBLE_FLAG)
+            continue;
+        env.map_knowledge(*ri).flags &= ~MAP_SEEN_FLAG;
+        env.map_knowledge(*ri).flags |= MAP_MAGIC_MAPPED_FLAG;
+    }
+}
+
 // show_map() now centers the known map along x or y.  This prevents
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
@@ -952,13 +980,26 @@ bool show_map(level_pos &lpos,
                 break;
 
             case CMD_MAP_FORGET:
-                if (yesno("Really forget level map?", true, 'n'))
                 {
-                    forget_map();
+                    // Merge it with already forgotten data first.
+                    if (env.map_forgotten.get())
+                        _unforget_map();
+                    MapKnowledge *old = new MapKnowledge(env.map_knowledge);
+                    _forget_map();
+                    env.map_forgotten.reset(old);
                     mpr("Level map cleared.");
                 }
+                break;
+
+            case CMD_MAP_UNFORGET:
+                if (env.map_forgotten.get())
+                {
+                    _unforget_map();
+                    env.map_forgotten.reset();
+                    mpr("Remembered map restored.");
+                }
                 else
-                    canned_msg(MSG_OK);
+                    mpr("No remembered map.");
                 break;
 
             case CMD_MAP_ADD_WAYPOINT:

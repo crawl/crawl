@@ -167,38 +167,6 @@ static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char 
         lines(x1, y) = border, lines(x2, y) = border;
 }
 
-// Specifically only deals with horizontal lines.
-static vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side)
-{
-    vector<coord_def> line;
-
-    int start_x, start_y, stop_x, stop_y, x, y;
-
-    switch (side)
-    {
-    case 0: start_x = x1; start_y = y1; stop_x = x2; stop_y = y1; break;
-    case 1: start_x = x2; start_y = y1; stop_x = x2; stop_y = y2; break;
-    case 2: start_x = x1; start_y = y2; stop_x = x2; stop_y = y2; break;
-    case 3: start_x = x1; start_y = y1; stop_x = x1; stop_y = y2; break;
-    default: die("invalid _box_side");
-    }
-
-    x = start_x; y = start_y;
-
-    if (start_x == stop_x)
-    {
-        for (y = start_y+1; y < stop_y; y++)
-            line.push_back(coord_def(x, y));
-    }
-    else
-    {
-        for (x = start_x+1; x < stop_x; x++)
-            line.push_back(coord_def(x, y));
-    }
-
-    return line;
-}
-
 // Does what count_passable_neighbors does, but in C++ form.
 static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
                                      int y, const char *passable = traversable_glyphs)
@@ -216,16 +184,10 @@ static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
     return count;
 }
 
-static int _count_passable_neighbors(lua_State *ls, map_lines &lines, coord_def point,
-                                     const char *passable = traversable_glyphs)
-{
-    return _count_passable_neighbors(ls, lines, point.x, point.y, passable);
-}
-
 static vector<coord_def> _get_pool_seed_positions(
                                                 vector<vector<int> > pool_index,
                                                 int pool_size,
-                                                int min_seperation)
+                                                int min_separation)
 {
     const int NO_POOL   = 999997; // must match dgn_add_pools
 
@@ -245,7 +207,7 @@ static vector<coord_def> _get_pool_seed_positions(
 
     // 2. Choose the pool seed positions
 
-    int min_seperation_squared = min_seperation * min_seperation;
+    int min_separation_squared = min_separation * min_separation;
     int pool_count_goal = (floor_positions.size() + random2(pool_size))
                           / pool_size;
 
@@ -273,7 +235,7 @@ static vector<coord_def> _get_pool_seed_positions(
             int diff_y = chosen_coord.y - seeds[j].y;
             int distance_squared = diff_x * diff_x + diff_y * diff_y;
 
-            if (distance_squared < min_seperation_squared)
+            if (distance_squared < min_separation_squared)
             {
                 too_close = true;
                 break;
@@ -754,10 +716,11 @@ LUAFN(dgn_make_box)
 
     TABLE_CHAR(ls, floor, '.');
     TABLE_CHAR(ls, wall, 'x');
-    TABLE_INT(ls, width, 1);
+    TABLE_INT(ls, thickness, 1);
 
     _fill_area(ls, lines, x1, y1, x2, y2, wall);
-    _fill_area(ls, lines, x1+width, y1+width, x2-width, y2-width, floor);
+    _fill_area(ls, lines, x1+thickness, y1+thickness,
+                          x2-thickness, y2-thickness, floor);
 
     return 0;
 }
@@ -771,42 +734,100 @@ LUAFN(dgn_make_box_doors)
         return 0;
 
     TABLE_INT(ls, number, 1);
+    TABLE_INT(ls, thickness, 1);
+    TABLE_CHAR(ls, door, '+');
+    TABLE_CHAR(ls, inner_door, '.');
+    TABLE_CHAR(ls, between_doors, '.');
+    TABLE_BOOL(ls, veto_gates, false);
+    TABLE_STR(ls, passable, traversable_glyphs);
 
-    int sides[4] = {0, 0, 0, 0};
+    // size doesn't include corners
+    int size_x = x2 - x1 + 1 - thickness * 2;
+    int size_y = y2 - y1 + 1 - thickness * 2;
+    int position_count = size_x * 2 + size_y * 2;
 
-    int door_count;
+    int max_sanity = number * 100;
+    int sanity = 0;
 
-    for (door_count = 0; door_count < number; door_count++)
+    int door_count = 0;
+    while (door_count < number)
     {
-        int current_side = random2(4);
-        if (sides[current_side] >= 2)
-            current_side = random2(4);
-
-        vector<coord_def> points = _box_side(x1, y1, x2, y2, current_side);
-
-        int total_points = int(points.size());
-
-        int index = random2avg(total_points, 2 + random2(number));
-
-        int tries = 50;
-
-        while (_count_passable_neighbors(ls, lines, points[index]) <= 3)
+        int position = random2(position_count);
+        int side;
+        int x, y;
+        if (position < size_x)
         {
-            tries--;
-            index = random2(total_points);
+            side = 0;
+            x = x1 + thickness + position;
+            y = y1;
+        }
+        else if (position < size_x * 2)
+        {
+            side = 1;
+            x = x1 + thickness + (position - size_x);
+            y = y2;
+        }
+        else if (position < size_x * 2 + size_y)
+        {
+            side = 2;
+            x = x1;
+            y = y1 + thickness + (position - size_x * 2);
+        }
+        else
+        {
+            side = 3;
+            x = x2;
+            y = y1 + thickness + (position - size_x * 2 - size_y);
+        }
 
-            if (tries == 0)
+        // We veto a position if:
+        //  -> The cell outside the box is not passible
+        //  -> The cell (however far) inside the box is not passible
+        //  -> There is a door to the left or right and we are vetoing gates
+        bool good = true;
+        if (side < 2)
+        {
+            if (!strchr(passable, lines(x, y - (side == 0 ? 1 : thickness))))
+                good = false;
+            if (!strchr(passable, lines(x, y + (side == 1 ? 1 : thickness))))
+                good = false;
+            if (veto_gates && (lines(x-1, y) == door || lines(x+1, y) == door))
+                good = false;
+        }
+        else
+        {
+            if (!strchr(passable, lines(x - (side == 2 ? 1 : thickness), y)))
+                good = false;
+            if (!strchr(passable, lines(x + (side == 3 ? 1 : thickness), y)))
+                good = false;
+            if (veto_gates && (lines(x, y-1) == door || lines(x, y+1) == door))
+                good = false;
+        }
+
+        if (good)
+        {
+            door_count++;
+            lines(x, y) = door;
+            for (int i = 1; i < thickness; i++)
+            {
+                switch(side)
+                {
+                case 0: y++;  break;
+                case 1: y--;  break;
+                case 2: x++;  break;
+                case 3: x--;  break;
+                }
+                lines(x, y) = between_doors;
+            }
+            if (thickness > 1)
+                lines(x, y) = inner_door;
+        }
+        else
+        {
+            sanity++;
+            if (sanity >= max_sanity)
                 break;
         }
-
-        if (tries == 0)
-        {
-            door_count--;
-            continue;
-        }
-
-        sides[current_side]++;
-        lines(points[index]) = '+';
     }
 
     lua_pushnumber(ls, door_count);
@@ -834,6 +855,211 @@ LUAFN(dgn_make_irregular_box)
                        div_x, div_y, in_x, in_y,
                        floor, wall, door, door_count);
     return 0;
+}
+
+LUAFN(dgn_make_round_box)
+{
+    LINES(ls, 1, lines);
+
+    int x1, y1, x2, y2;
+    if (!_coords(ls, lines, x1, y1, x2, y2))
+        return 0;
+
+    TABLE_CHAR(ls, floor, '.');
+    TABLE_CHAR(ls, wall, 'x');
+    TABLE_CHAR(ls, door, '+');
+    TABLE_INT(ls, door_count, 1);
+    TABLE_STR(ls, passable, traversable_glyphs);
+    TABLE_BOOL(ls, veto_gates, false);
+    TABLE_BOOL(ls, veto_if_no_doors, false);
+
+    const int OUTSIDE = 0;
+    const int WALL    = 1;
+    const int FLOOR   = 2;
+    const int DOOR    = 3;
+
+    int size_x = x2 - x1 + 1;
+    int size_y = y2 - y1 + 1;
+
+    //
+    //  The basic idea here is we draw a filled circle, hollow
+    //    out the middle, and then place doors on straight walls
+    //    until we have enough.
+    //
+    //  We do not know for sure whether we want to actually draw
+    //    anything until the end, so we will draw out tower onto
+    //    our own separate array (actually a vector of vectors
+    //    so we can set the size at runtime).  Then, if
+    //    everything goes well, we will copy it to the world with
+    //    the appropriate glyphs.
+    //
+    //  Note that each of these steps has to be completed before
+    //    we can do the next one, so all the loops over the same
+    //    area are required.
+    //
+
+    //  1. Fill with OUTSIDE glyphs.
+    vector<vector<int> > new_glyphs(size_x, vector<int>(size_y, OUTSIDE));
+
+    //  2. Draw wall glyphs for filled circle.
+    //    -> This is a formula for an ellipse in case we get a
+    //       non-circular room to make
+    //    -> we add an extra 0.5 to the radius so that we don't
+    //       get wall isolated cells on the outside
+    float radius_x = (size_x - 1.0f) * 0.5f;
+    float radius_y = (size_y - 1.0f) * 0.5f;
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
+        {
+            float fraction_x = (x - radius_x) / (radius_x + 0.5f);
+            float fraction_y = (y - radius_y) / (radius_y + 0.5f);
+            if (fraction_x * fraction_x + fraction_y * fraction_y <= 1.0f)
+                new_glyphs[x][y] = WALL;
+        }
+
+    //  3. Replace all wall glypyhs that don't touch outside the
+    //     circle with floor glyphs.
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
+        {
+            // we can't use adjacent_iterator it doesn't
+            //  report neighbours with negative coordinates
+            if (new_glyphs[x][y] == WALL
+                && x > 0 && x < size_x - 1
+                && y > 0 && y < size_y - 1
+                && new_glyphs[x - 1][y - 1] != OUTSIDE
+                && new_glyphs[x    ][y - 1] != OUTSIDE
+                && new_glyphs[x + 1][y - 1] != OUTSIDE
+                && new_glyphs[x - 1][y    ] != OUTSIDE
+                && new_glyphs[x + 1][y    ] != OUTSIDE
+                && new_glyphs[x - 1][y + 1] != OUTSIDE
+                && new_glyphs[x    ][y + 1] != OUTSIDE
+                && new_glyphs[x + 1][y + 1] != OUTSIDE)
+            {
+                new_glyphs[x][y] = FLOOR;
+            }
+        }
+
+    //  4. Find all potential door positions.
+    vector<coord_def> door_positions;
+    for (int x = 0; x < size_x; x++)
+        for (int y = 0; y < size_y; y++)
+            if (new_glyphs[x][y] == WALL)
+            {
+                // check for wall in each direction
+                bool xm = (x - 1 >= 0      && new_glyphs[x - 1][y] == WALL);
+                bool xp = (x + 1 <  size_x && new_glyphs[x + 1][y] == WALL);
+                bool ym = (y - 1 >= 0      && new_glyphs[x][y - 1] == WALL);
+                bool yp = (y + 1 <  size_y && new_glyphs[x][y + 1] == WALL);
+
+                int real_x = x1 + x;
+                int real_y = y1 + y;
+
+                // We are on an X-aligned wall
+                if (xm && xp && !ym && !yp)
+                {
+                    //
+                    //  Check for passable glyphs in real map
+                    //    and outside the tower.  The check
+                    //    order is:
+                    //    -> in real map
+                    //    -> passable
+                    //    -> outside temporary array
+                    //       or array has OUTSIDE glyph
+                    //
+                    //  If we can find one on at least one side,
+                    //    we can put a door here.
+                    //    -> we will only get two on rooms only
+                    //       1 cell wide including walls
+                    //
+
+                    if (real_y - 1 >= 0
+                        && strchr(passable, lines(real_x, real_y - 1))
+                        && (y - 1 < 0
+                            || new_glyphs[x][y - 1] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                    else if (real_y + 1 < lines.height()
+                             && strchr(passable, lines(real_x, real_y + 1))
+                             && (y + 1 >= size_y
+                                 || new_glyphs[x][y + 1] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                }
+
+                // We are on an Y-aligned wall
+                if (!xm && !xp && ym && yp)
+                {
+                    // Same checks as above, but the other axis
+                    if (real_x - 1 >= 0
+                        && strchr(passable, lines(real_x - 1, real_y))
+                        && (x - 1 < 0
+                            || new_glyphs[x - 1][y] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                    else if (real_x + 1 < lines.width()
+                             && strchr(passable, lines(real_x + 1, real_y))
+                             && (x + 1 >= size_x
+                                 || new_glyphs[x + 1][y] == OUTSIDE))
+                    {
+                        door_positions.push_back(coord_def(x, y));
+                    }
+                }
+            }
+
+    //  5. Add doors
+    int doors_placed = 0;
+    while (doors_placed < door_count && !door_positions.empty())
+    {
+        int index = random2(door_positions.size());
+        coord_def pos = door_positions[index];
+        door_positions[index] = door_positions[door_positions.size() - 1];
+        door_positions.pop_back();
+
+        bool good_spot = true;
+        if (veto_gates)
+        {
+            if (pos.x - 1 >= 0     && new_glyphs[pos.x - 1][pos.y] == DOOR)
+                good_spot = false;
+            if (pos.x + 1 < size_x && new_glyphs[pos.x + 1][pos.y] == DOOR)
+                good_spot = false;
+            if (pos.y - 1 >= 0     && new_glyphs[pos.x][pos.y - 1] == DOOR)
+                good_spot = false;
+            if (pos.y + 1 < size_y && new_glyphs[pos.x][pos.y + 1] == DOOR)
+                good_spot = false;
+        }
+
+        if (good_spot)
+        {
+            new_glyphs[pos.x][pos.y] = DOOR;
+            doors_placed++;
+        }
+    }
+
+    //  6. Add tower to map (if not vetoed)
+    if (doors_placed > 0 || !veto_if_no_doors)
+    {
+        for (int x = 0; x < size_x; x++)
+            for (int y = 0; y < size_y; y++)
+            {
+                switch(new_glyphs[x][y])
+                {
+                // leave existing glyphs on OUTSIDE
+                case WALL:  lines(x1 + x, y1 + y) = wall;  break;
+                case FLOOR: lines(x1 + x, y1 + y) = floor; break;
+                case DOOR:  lines(x1 + x, y1 + y) = door; break;
+                }
+            }
+
+        lua_pushboolean(ls, true);
+    }
+    else
+        lua_pushboolean(ls, false);
+
+    return 1;
 }
 
 // Return a metatable for a point on the map_lines grid.
@@ -1334,7 +1560,7 @@ LUAFN(dgn_add_pools)
     TABLE_STR(ls, replace, ".");
     TABLE_CHAR(ls, border, '.');
     TABLE_INT(ls, pool_size, 100);
-    TABLE_INT(ls, seed_seperation, 2);
+    TABLE_INT(ls, seed_separation, 2);
 
     vector<char> fill_glyphs = _pool_fill_glyphs_from_table(ls, "contents");
 
@@ -1391,7 +1617,7 @@ LUAFN(dgn_add_pools)
 
     vector<coord_def> pool_seeds = _get_pool_seed_positions(pool_index,
                                                             pool_size,
-                                                            seed_seperation);
+                                                            seed_separation);
     vector<coord_def> open_list;
 
     for (unsigned int pool = 0; pool < pool_seeds.size(); pool++)
@@ -1628,6 +1854,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "make_box", &dgn_make_box },
     { "make_box_doors", &dgn_make_box_doors },
     { "make_irregular_box", &dgn_make_irregular_box },
+    { "make_round_box", &dgn_make_round_box },
     { "mapgrd_table", dgn_mapgrd_table },
     { "octa_room", &dgn_octa_room },
     { "remove_isolated_glyphs", &dgn_remove_isolated_glyphs },

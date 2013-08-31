@@ -83,7 +83,9 @@ enum brand_type // item_def.special
     SPWPN_FREEZING,
     SPWPN_HOLY_WRATH,
     SPWPN_ELECTROCUTION,
+#if TAG_MAJOR_VERSION == 34
     SPWPN_ORC_SLAYING,
+#endif
     SPWPN_DRAGON_SLAYING,
     SPWPN_VENOM,
     SPWPN_PROTECTION,
@@ -223,7 +225,7 @@ enum misc_item_type
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
 #if TAG_MAJOR_VERSION == 34
-    MISC_EMPTY_EBONY_CASKET,
+    MISC_BUGGY_EBONY_CASKET,
 #endif
     MISC_DISC_OF_STORMS,
 
@@ -245,6 +247,7 @@ enum misc_item_type
     MISC_QUAD_DAMAGE, // Sprint only
 
     MISC_PHIAL_OF_FLOODS,
+    MISC_SACK_OF_SPIDERS,
 
     NUM_MISCELLANY, // mv: used for random generation
     MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
@@ -374,16 +377,16 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,
     SPMSL_STEEL,
     SPMSL_SILVER,
-    SPMSL_PARALYSIS,                   // paralysis, needle only from here in
-    SPMSL_SLOW,                        // makes slow
-    SPMSL_SLEEP,                       // sleep
-    SPMSL_CONFUSION,                   // confusing
+    SPMSL_PARALYSIS,                   // needle only from here on
+    SPMSL_SLOW,
+    SPMSL_SLEEP,
+    SPMSL_CONFUSION,
 #if TAG_MAJOR_VERSION == 34
-    SPMSL_SICKNESS,                    // sickness/disease
+    SPMSL_SICKNESS,
 #endif
-    SPMSL_RAGE,                        // berserk rage
+    SPMSL_FRENZY,
     NUM_REAL_SPECIAL_MISSILES,
-    SPMSL_BLINDING,                    // blinding
+    SPMSL_BLINDING,
     NUM_SPECIAL_MISSILES,
 };
 
@@ -419,9 +422,9 @@ enum rod_type
 {
     ROD_LIGHTNING,
     ROD_SWARM,
-    ROD_DESTRUCTION_I,
-    ROD_DESTRUCTION_II,
-    ROD_DESTRUCTION_III,
+    ROD_FIERY_DESTRUCTION,
+    ROD_FRIGID_DESTRUCTION,
+    ROD_DESTRUCTION,
     ROD_INACCURACY,
     ROD_WARDING,
     ROD_DEMONOLOGY,
@@ -438,9 +441,7 @@ enum weapon_type
     WPN_MACE,
     WPN_FLAIL,
     WPN_MORNINGSTAR,
-#if TAG_MAJOR_VERSION == 34
-    WPN_SPIKED_FLAIL,
-#endif
+    WPN_ROD, // base item for magical rods only
     WPN_DIRE_FLAIL,
     WPN_EVENINGSTAR,
     WPN_GREAT_MACE,

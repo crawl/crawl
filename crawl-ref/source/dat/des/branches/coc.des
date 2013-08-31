@@ -72,6 +72,143 @@ xwwwwww..5...
 xwww..4......
 ENDMAP
 
+NAME:    nicolae_coc_three_mouths
+DEPTH:   Coc, !Coc:$
+TAGS:    transparent extra mini_float decor
+SUBST:   j = >}}, b = >]], c = >))
+SHUFFLE: )}]
+MAP
+              .....
+             ..x....
+            ..xx.....
+            .xx....x.
+            .x..j..x.
+         ....xx...xx.
+        ...xxxxx.xx..
+  ..........xxxxxx..
+ ..xxx..x...xxxxx..
+..xx.xxxxx...xxxxx.
+......xxxx.........
+....b..xxxx........
+......xxxx.........
+..xx.xxxxx...xxxxx.
+ ..xxx..x...xxxxx..
+  ..........xxxxxx...
+        ...xxxxx.xx..
+         ....xx...xx.
+            .x..c..x.
+            .xx....x.
+            ..xx.....
+             ..x....
+              .....
+ENDMAP
+
+NAME:    nicolae_coc_ice_floe
+DEPTH:   Coc:2-, !Coc:$
+SHUFFLE: {[(, }]}
+NSUBST:  D = 1:1 / 2:2 / *:34
+KMONS:   1 = Ice Fiend
+KMONS:   2 = blizzard demon
+KMONS:   3 = ice devil / blue devil
+KMONS:   4 = white imp
+MAP
+      wwwwwwwww
+    wwwwwwwwwwwww
+   wwwwwxxxxxwwwww
+  wwww.xx...xx.wwww
+ wwww.....D.....wwww
+ www.D..x...x..D.www
+www....xx.D.xx....www
+wwwx..xx.....xx..xwww
+wwxxDxx...x...xxDxxww
+wwx.....4xxx......xww
+wwx.{.3.xxxxx.1.}.xww
+wwx.....4xxx......xww
+wwxxDxx...x...xxDxxww
+wwwx..xx.....xx..xwww
+www....xx.D.xx....www
+ www.D..x...x..D.www
+ wwww.....D.....wwww
+  wwww.xx...xx.wwww
+   wwwwwxxxxxwwwww
+    wwwwwwwwwwwww
+      wwwwwwwww
+ENDMAP
+
+NAME:    nicolae_coc_snowflakes_chance_in_hell
+DEPTH:   Coc, !Coc:$
+ORIENT:  centre
+TAGS:    transparent extra decor
+SHUFFLE: abcdefghi, jklmno, ABCDEFGH
+SUBST:   abc : x, d : ., e : .x, f : .x, g : .x, h : .x, i : .x
+SUBST:   jk : x, l : ., m : .x, n : .x, o : .x, p : .x, q : .x, r : .x, s : .x
+SUBST:   AB : x, C : ., D : .x, E : .x, F : .x, G : .x, H : .x
+MAP
+      .............
+   .........n.........
+  .........mom.........
+ ....H....lkxkl....H....
+ ....GE....jxj....EG....
+ ..HGFDB.i..p..i.BDFGH..
+....EDCA.hg.q.gh.ACDE....
+.....BA..fedxdef..AB.....
+..........cbxbc..........
+.....ihf...axa...fhi.....
+...l..gec...r...ceg..l...
+..mkj..dba.sxs.abd..jkm..
+.noxxpqxxxrxxxrxxxqpxxon.
+..mkj..dba.sxs.abd..jkm..
+...l..gec...r...ceg..l...
+.....ihf...axa...fhi.....
+..........cbxbc..........
+.....BA..fedxdef..AB.....
+....EDCA.hg.q.gh.ACDE....
+ ..HGFDB.i..p..i.BDFGH..
+ ....GE....jxj....EG....
+ ....H....lkxkl....H....
+  .........mom.........
+   .........n.........
+      .............
+ENDMAP
+
+NAME:    nooodl_cocytus_jagged_cave
+ORIENT:  northwest
+DEPTH:   Coc, !Coc:$
+TAGS:    extra
+SUBST:   < : AB
+NSUBST:  A = 1:{ / 1:} / *:.
+NSUBST:  B = 1:[] / *:.
+SUBST:   . : ...W, ' : .W, _ : .W, " : .W, ; : .W
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx<x
+xxxxxxxxxx<xxxxxxxxxxxxxxxxxxxxxxxxxxxx..x
+xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx.xx
+xxxxxxxxxx..xxxxxxx<xxxxx<xxxxxxxxxxxx..xx
+xxxxxxxxxxx.xxxxxx.xxxxxx.xxxxxxxxxxxx.xxx
+xxxxxxxxxxx..xxxx..xxxxx..xxxxxxxxxxx..xxx
+xxxxxxxxxxx..xxxx.xxxxx...xxxxxxxxxxx..xxx
+xxxxxx<xxxxx..xx..xxxxx...xxx.xxxxxx..xxxx
+xx'xxx.xxxxx..x..xxxxx...xxxx.xxxxxx..xxxx
+xx'xxx.xxxxx.....xxxxx...xxx...xxxx..xxxxx
+xx''xx.xxxxx....xxx"xx"".xxx;;.xxxx..xxxxx
+x''''...xxxx....xxx"xx""xxx;;;;xx....xxxxx
+x''''''''''x.__xxxx"xx""xx;;;;;;x;..xxxxxx
+x''''''''''x___xxx""xx"x""";;;;;;;;.xxxxxx
+x''''x'''''____xxx"""""""""";;;;;;;xxxxxxx
+xx'''x''''____x___"""""""""";;;;;;;.xxxxxx
+xx'''xx''_________"""""""""xx;;;;;;.xxxxxx
+xx''xxx'__________"xx""x""""xxx;;;...xxxxx
+xxxxxxxx__________xxx"""x"""..xxx;....xxxx
+xxxxxxxxxx___x___xxx""""xx"....xxxxx..xxxx
+xxxxxxxxxxx..xx_xxxx.....xx......xxxxx<xxx
+xxxxxxxxxxxx.xxxxxx......xxx......xxxxxxxx
+xxxxxxxxxxxxx<xxxxx..xx...xxx...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxx..xxxx..xxxx<xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx<xxxxx...xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx@@xxxxxxxxxxxxxxx
+ENDMAP
 
 ##############################################################################
 # Antaeus; bottom of Cocytus.
@@ -345,7 +482,7 @@ KITEM:   d = superb_item
 KITEM:   e = gold
 KMONS:   de = Ice Fiend
 SHUFFLE: |d / $e
-: dgn.seen_replace_feat("rock_wall", "open_sea")
+: set_border_fill_type("open_sea")
 : coc_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccccccccccc
@@ -357,23 +494,23 @@ Xw..{..........wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccc
 Xw....(...............wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccc
 Xw..[............4......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccc
 Xww......................wwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwcccc
-Xwwwwwwww......4...4......wwwwww........4.....wwwwwwwwwwwwwwwwwwwwcccc
-Xwwwwwwwwwww.............wwwww........3........wwwwwwwwwwwwwwwwwwwwccc
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....4.........wwwwwwwww.....wwwwwwwwcc
-cccwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........wwwwwwwwwwwwww..4..wwwwwwwwc
+Xwwwwwwww......4...4......wwwww.........4.....wwwwwwwwwwwwwwwwwwwwcccc
+Xwwwwwwwwwww.............wwww.........3........wwwww......wwwwwwwwwccc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....4.........wwww.....4....wwwwwwwwcc
+cccwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.........wwwwwwwwwwwwww.....wwwwwwwwc
 cccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwc
-ccccccccwwwwwwwwcccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwc
-cccccccccccccccccccccccccccccccccccccwwwwwwwwwwcccccccwwwwww.2.wwwwwwX
-ccccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwww...wwwwwwX
-cccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwww..H.wwwwwwX
+ccccccccwwwwwwwwcccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwww.2..wwwwwwc
+cccccccccccccccccccccccccccccccccccccwwwwwwwwwwcccccccwwwwww...wwwwwwX
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwww.H.wwwwwwX
+cccccccccccccccccccccccccccccccccccccccccccccccccccccwwwwww....wwwwwwX
 cccccccccccccccccccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwX
 cccccccccccccccccwwwwwwcccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.4..wwwwwwwX
 ccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwwwX
-cccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wwwwwwww.....wwwwwwwwwX
-cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww......4.......wwwwwwwwwwwwwwwwwwcc
-Xwwwwwwwwwwwwwwwwwwwwww.wwwwwww.........3........wwwwwwwwwwwwwwwwwcccc
-Xwwwwwwwwwwwwwwwwww...4..wwww.........4.........wwwwwwwwwwwwwwwwcccccc
-Xwwwwwww.....wwww...3...wwwww..............wwwwwwwwwwwwwwwwwwwcccccccc
+cccccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.......wwwwww.....wwwwwwwwwX
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww......4.........wwwwwwwwwwwwwwwwcc
+Xwwwwwwwwwwwwwwwwwwwwww.wwwwwww.........3.........wwwwwwwwwwwwwwwwcccc
+Xwwwwwwwwwwwwwwwwww...4...www.........4.........wwwwwwwwwwwwwwwwcccccc
+Xwwwwwww.....wwww...3....wwww..............wwwwwwwwwwwwwwwwwwwcccccccc
 Xwwwwww.......www.4....wwwwwww......wwwwwwwwwwwwwwwwwwwwwwwwwccccccccc
 Xwwww...4....wwwww...wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccccccccccc
 Xwwww.....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwccccccccccccccc

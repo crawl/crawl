@@ -57,8 +57,10 @@ enum monster_info_flags
     MB_NAME_REPLACE, // [art] foo does
     MB_NAME_UNQUALIFIED, // Foo does...
     MB_NAME_THE, // The foo does....
+#if TAG_MAJOR_VERSION == 34
     MB_FADING_AWAY,
     MB_MOSTLY_FADED,
+#endif
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
     MB_ATTACHED,
@@ -94,6 +96,12 @@ enum monster_info_flags
     MB_RETCHING,
     MB_WEAK,
     MB_DIMENSION_ANCHOR,
+    MB_CONTROL_WINDS,
+    MB_WIND_AIDED,
+    MB_SUMMONED_NO_STAIRS, // Temp. summoned and capped monsters
+    MB_SUMMONED_CAPPED,    // Expiring due to summons cap
+    MB_TOXIC_RADIANCE,
+    MB_GRASPING_ROOTS,
     NUM_MB_FLAGS
 };
 
@@ -165,7 +173,8 @@ struct monster_info : public monster_info_base
         return *this;
     }
 
-    void to_string(int count, string& desc, int& desc_colour, bool fullname = true) const;
+    void to_string(int count, string& desc, int& desc_colour,
+                   bool fullname = true, const char *adjective = nullptr) const;
 
     /* only real equipment is visible, miscellany is for mimic items */
     unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
@@ -182,6 +191,7 @@ struct monster_info : public monster_info_base
             short xl_rank;
             short damage;
             short ac;
+            monster_type acting_part;
         } ghost;
     } u;
 
@@ -209,6 +219,7 @@ struct monster_info : public monster_info_base
     string common_name(description_level_type desc = DESC_PLAIN) const;
     string proper_name(description_level_type desc = DESC_PLAIN) const;
     string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
+    string chimera_part_names() const;
 
     vector<string> attributes() const;
 
@@ -269,6 +280,7 @@ struct monster_info : public monster_info_base
 
 protected:
     string _core_name() const;
+    string _base_name() const;
     string _apply_adjusted_description(description_level_type desc, const string& s) const;
 };
 

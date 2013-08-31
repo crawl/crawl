@@ -67,7 +67,7 @@ end
 ###############################################################################
 # Stair grate traps. Total weight: 30
 NAME:   basic_stair_grate_trap
-DEPTH:  D:9-27, Crypt:2-5, Elf:2-5, Snake:2-5, Zot:2-5
+DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 ORIENT: float
 TAGS:   allow_dup extra luniq_grate_trap layout_rooms layout_caves
 : place_grate_trap(_G, '^', 'm')
@@ -97,7 +97,7 @@ MAP
 ENDMAP
 
 NAME:   stair_cage_cross
-DEPTH:  D:9-27, Crypt:2-5, Elf:2-5, Snake:2-5, Zot:2-5
+DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 TAGS:   extra luniq_grate_trap
 WEIGHT: 5
 : place_grate_trap(_G, '^', 'm')
@@ -114,7 +114,7 @@ xxxx@xxxx
 ENDMAP
 
 NAME:   stair_cage_line
-DEPTH:  D:9-27, Crypt:2-5, Elf:2-5, Snake:2-5, Zot:2-5
+DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 TAGS:   allow_dup extra luniq_grate_trap
 : place_grate_trap(_G, '^', 'm')
 MAP
@@ -126,7 +126,7 @@ xxxxxxx
 ENDMAP
 
 NAME:   stair_cage_wide
-DEPTH:  D:9-27, Crypt:2-5, Elf:2-5, Snake:2-5, Zot:2-5
+DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 TAGS:   allow_dup extra luniq_grate_trap
 WEIGHT: 3
 : place_grate_trap(_G, '^', 'm')

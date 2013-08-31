@@ -631,7 +631,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
-    "mirror_damage",
+    "mirror_damage", "spines",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1011,7 +1011,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("ev", "%d", ev);
     fields->add_field("sh", "%d", sh);
 
-    fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
+    fields->add_field("god", "%s", god == GOD_NO_GOD ? "" :
                       god_name(god).c_str());
 
     if (wiz_mode)
@@ -1174,7 +1174,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION
-            || death_type == KILLED_BY_ROLLING)
+            || death_type == KILLED_BY_ROLLING
+            || death_type == KILLED_BY_SPINES
+            || death_type == KILLED_BY_WATER)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != MONS_NO_MONSTER)
     {
@@ -1504,14 +1506,14 @@ void scorefile_entry::init(time_t dt)
         STATUS_HUNGER, STATUS_REGENERATION, STATUS_SICK, STATUS_SPEED,
         DUR_INVIS, DUR_POISONING, STATUS_MISSILES, DUR_SURE_BLADE,
         DUR_TRANSFORMATION, STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
-        DUR_WEAK, DUR_DIMENSION_ANCHOR, DUR_ANTIMAGIC,
+        DUR_WEAK, DUR_DIMENSION_ANCHOR, DUR_ANTIMAGIC, DUR_SPIRIT_HOWL,
+        DUR_FLAYED, DUR_WATER_HOLD, STATUS_DRAINED, DUR_TOXIC_RADIANCE
     };
 
     status_info inf;
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.short_text.empty())
+        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
         {
             if (!status_effects.empty())
                 status_effects += ",";
@@ -1538,7 +1540,7 @@ void scorefile_entry::init(time_t dt)
     sh    = player_shield_class();
 
     god = you.religion;
-    if (you.religion != GOD_NO_GOD)
+    if (!you_worship(GOD_NO_GOD))
     {
         piety   = you.piety;
         penance = you.penance[you.religion];
@@ -1938,6 +1940,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         needs_damage = true;
         break;
 
+    case KILLED_BY_SPINES:
+        if (terse)
+            desc += apostrophise(death_source_desc()) + " spines";
+        else
+            desc += "Impaled on " + apostrophise(death_source_desc()) + " spines" ;
+        needs_damage = true;
+        break;
+
     case KILLED_BY_POISON:
         if (death_source_name.empty() || terse)
         {
@@ -2054,7 +2064,15 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (race == SP_MUMMY)
             desc += terse? "fell apart" : "Soaked and fell apart";
         else
-            desc += terse? "drowned" : "Drowned";
+        {
+            if (!death_source_name.empty())
+            {
+                desc += terse? "drowned by " : "Drowned by ";
+                desc += death_source_name;
+            }
+            else
+                desc += terse? "drowned" : "Drowned";
+        }
         break;
 
     case KILLED_BY_STUPIDITY:
@@ -2464,10 +2482,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 if (!semiverbose)
                 {
-                    if (auxkilldata == "angry trees")
-                        desc += "... awoken ";
-                    else desc += (is_vowel(auxkilldata[0])) ? "... with an "
-                        : "... with a ";
+                    desc += (is_vowel(auxkilldata[0])) ? "... with an "
+                                                       : "... with a ";
                     desc += auxkilldata;
                     desc += _hiscore_newline_string();
                     needs_damage = true;
@@ -2480,8 +2496,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             }
             else if (needs_called_by_monster_line)
             {
-                snprintf(scratch, sizeof(scratch), "... invoked by %s",
-                          death_source_name.c_str());
+                snprintf(scratch, sizeof(scratch), "... %s by %s",
+                         auxkilldata == "by angry trees" ? "awakened"
+                                                         : "invoked",
+                         death_source_name.c_str());
                 desc += scratch;
                 desc += _hiscore_newline_string();
                 needs_damage = true;

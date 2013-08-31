@@ -2,9 +2,9 @@
 # layout_pools.des
 #
 # These layouts are based on the add_pools function.  They
-#  divide the map into a bunch of irregular areas jammed aginst
-#  each other.  The layout may use either the areas themsleves
-#  are the paths between them.  These are not true vaults, in
+#  divide the map into a bunch of irregular areas jammed against
+#  each other.  The layout may use either the areas themselves
+#  or the paths between them.  These are not true vaults, in
 #  that the dungeon builder can add other vaults on top of them.
 #
 
@@ -19,7 +19,7 @@
 #  vaults because they are each used in more than one.
 #
 # These maps have a small chance of placing the up stairs.
-#  This is handlied by always generating the layout as if
+#  This is handled by always generating the layout as if
 #  the stairs were to be placed, but only sometimes adding
 #  them.
 #
@@ -36,22 +36,18 @@
     --  longer and thus harder
     STAIRS_PLACE_PERCENT = 20
 
-    -- The width of the path before the caves are grown is 1 + 2 * size
+    -- The minimum floor area for a layout
+    FLOOR_AREA_MINIMUM = 750
+
+    -- The width of the path before the caves are grown is
+    --  1 + 2 * PATH_SIZE_???
     PATH_SIZE_BASIC = 2
     PATH_SIZE_TRIPLE = 1
 
-    -- The spacing between 3 stairs placed together on the
-    --  _straight, _big_room, _U_turn, _T, and _trident layouts
+    -- The spacing between 3 stairs placed together at the end
+    --  of a large path
     STAIRS_SPACING_X = 3
     STAIRS_SPACING_Y = 8
-
-    -- The horizontal path in the _corner, U_turn, and _box
-    --  layouts is placed this far from the center of the room
-    BASIC_PATH_OFFSET_Y = 15
-
-    -- The spacing between the three paths on the _parallel and
-    --  _trident layouts
-    TRIPLE_PATH_SPACING = 22
 
 
 
@@ -59,25 +55,69 @@
     function gehenna_layout_epilogue (e)
         -- you.depth() is the depth in the current branch
         local branch_depth = dgn.br_depth(you.branch())
-        local depth_fraction = (you.depth() / branch_depth)
-
-        local pool_contents = {}
-        pool_contents["c"] = branch_depth * 2 - you.depth()
-        pool_contents["l"] = branch_depth     + you.depth()
-        pool_contents["."] = branch_depth
-        if pool_contents["."] <= 0 then
-            pool_contents["."] = nil
-        end
+        local depth_fraction = you.depth_fraction()
 
         e.widen_paths { find = "x", percent = 10 }
+
+        -- add the lava and rock pools
+        local pool_contents = {}
+        pool_contents["v"] = branch_depth * 2 - you.depth()
+        pool_contents["l"] = branch_depth * 2
+        pool_contents["."] = branch_depth
         e.add_pools { replace = ".",
-                      pool_size = 60 - 25 * depth_fraction,
+                      pool_size = 40 + 40 * depth_fraction,
                       contents = pool_contents }
-        e.widen_paths { find = "c", percent = 90 }
-        e.subst("c = x")
+
+        -- add some random rooms
+        local border = 4
+        local gxm, gym = dgn.max_bounds()
+        local right  = gxm - 1 - border
+        local bottom = gym - 1 - border
+        local size_max = 6 + 4 * depth_fraction
+        local separation_min = crawl.random_range(1, border - depth_fraction*2)
+
+        local room_count_min = ( 50 + depth_fraction *  950) / size_max
+        local room_count_max = (150 + depth_fraction * 1850) / size_max
+        for i = 1, crawl.random_range(room_count_min, room_count_max) do
+            local size = crawl.random_range(4, size_max)
+            local min_x = crawl.random_range(border, right  - size)
+            local min_y = crawl.random_range(border, bottom - size)
+            local max_x = min_x + size
+            local max_y = min_y + size
+
+            local cell_count = size * size
+            local wall_count = e.count_feature_in_box {x1 = min_x, x2 = max_x,
+                                                       y1 = min_y, y2 = max_y,
+                                                       feat = "xv" }
+            local blocked = e.find_in_area {x1 = min_x - separation_min,
+                                            x2 = max_x + separation_min,
+                                            y1 = min_y - separation_min,
+                                            y2 = max_y + separation_min,
+                                            find = "c", find_vault = true }
+            if not blocked and wall_count < cell_count
+               and wall_count >= cell_count * 0.5 then
+                local door_count = crawl.random_range(1, 3)
+                e.make_round_box {x1 = min_x, x2 = max_x,
+                                  y1 = min_y, y2 = max_y,
+                                  floor = '.', wall = 'c',
+                                  door_count = door_count, veto_gates=true,
+                                  veto_if_no_doors=true }
+            end
+        end
+
+        -- clean up the map
+        e.widen_paths { find = "v", percent = 90 }
+        e.subst("v = x")
         e.remove_isolated_glyphs { find = "x", percent = 75 }
         e.widen_paths { find = "l", percent = 60 }
         e.remove_isolated_glyphs { find = "l", percent = 90, boxy = true }
+
+        -- Two passes to fill zones; the first prevents actual disconnects,
+        -- the second removes any resultant lava pools
+        -- XXX: At some point conflate zonage to be able to perform this in
+        -- a single pass (layout_swamp also has a special zoning function)
+        zonify.map_fill_zones(e, 1, 'x')
+        zonify.map_fill_lava_zones(e, 1, 'x')
     end
 
 }}
@@ -90,11 +130,12 @@
 #  deeper depths.  Starting at depth 19, there is an increasing
 #  chance of lava pools instead of water pools (never mixed).
 #
-NAME: layout_pools
-DEPTH: D:9-
+NAME:   layout_pools
+DEPTH:  D:9-
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
+TAGS:   layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
@@ -137,11 +178,12 @@ ENDMAP
 #  directly beside each other.  They are sometimes connected
 #  by doors and sometimes just by holes in the wall.
 #
-NAME: layout_honeycomb
-DEPTH: D:12-, Snake:1-4, Tar
+NAME:   layout_honeycomb
+DEPTH:  D:12-, Snake:1-4, Tar
 WEIGHT: 10, 80(Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
+TAGS:   layout_type_rooms
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
@@ -188,554 +230,332 @@ ENDMAP
 # NOTE: There are other Gehenna layouts in other files.
 #
 # These layouts are long canyons with lava pools in them and
-#  rock "pools" to provide cover.  The up stairs may be placed
+#  rock "pools" to provide cover.  After this, a number of
+#  box-shaped rooms are added.  The up stairs may be placed
 #  randomly or at one end of the canyon, while the down stairs
 #  are always placed randomly.  Deeper maps have fewer, larger
-#  pools, of which more are lava and fewer are rock.
-#
-# The approximate shape the each canyon is shown above the
-#  layout vault.
+#  pools, of which more are lava and fewer are rock, and have
+#  more rooms.
 #
 # Simply put, the algorithm is:
 #  1. Draw the rough layout shape with fill_area
 #  2. Grow a cave map with spotty_map
 #  3. Add the stairs (pools must go around these)
 #  4. Add the lava and rock pools with add_pools
-#  5. Fix up lava and rock pools to look good and have wider
+#  5. Add some box-shaped rooms that overlap the rock
+#  6. Fix up lava and rock pools to look good and have wider
 #     paths
 #
 
-#  (       )
-# {+-------+}
-#  [       ]
-NAME: layout_gehenna_straight
-DEPTH: Geh
-WEIGHT: 20
+#
+# This layout has a single main horizontal path.  It may have
+#  large areas on either end and may have a large rooms at the
+#  middle.
+#
+NAME:   layout_gehenna_pools_basic
+DEPTH:  Geh
+WEIGHT: 100
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
-    local STAIRS_X_DOWN1  = gxm - STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_DOWN23 = gxm - STAIRS_FROM_MAP_EDGE - STAIRS_SPACING_X
-
-    local STAIRS_Y_1 = gym / 2
-    local STAIRS_Y_2 = STAIRS_Y_1 - STAIRS_SPACING_Y
-    local STAIRS_Y_3 = STAIRS_Y_1 + STAIRS_SPACING_Y
-
-    fill_area { x1 = STAIRS_X_UP23,   y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_UP23,   y2 = STAIRS_Y_3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP1,   y1 = STAIRS_Y_1 - PATH_SIZE_BASIC,
-                x2 = STAIRS_X_DOWN1, y2 = STAIRS_Y_1 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_DOWN23, y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_DOWN23, y2 = STAIRS_Y_3,
-                fill = '.' }
-
-    spotty_map { boxy = false, iterations = (4 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP1   ][STAIRS_Y_1] = '{'
-        mapgrd[STAIRS_X_UP23  ][STAIRS_Y_2] = '('
-        mapgrd[STAIRS_X_UP23  ][STAIRS_Y_3] = '['
-        shuffle("{([")
-
-        -- uncomment to place down stairs at other end
-        --mapgrd[STAIRS_X_DOWN1 ][STAIRS_Y_1] = '}'
-        --mapgrd[STAIRS_X_DOWN23][STAIRS_Y_2] = ')'
-        --mapgrd[STAIRS_X_DOWN23][STAIRS_Y_3] = ']'
-        --shuffle("})]")
-        --shuffle("{([/})]")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-#      +
-#  (  / \  )
-# {+-+ ? +-+}
-#  [  \ /  ]
-#      +
-NAME: layout_gehenna_big_room
-DEPTH: Geh
-WEIGHT: 25
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
-    local STAIRS_X_DOWN1  = gxm - STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_DOWN23 = gxm - STAIRS_FROM_MAP_EDGE - STAIRS_SPACING_X
-
-    local STAIRS_Y_1 = gym / 2
-    local STAIRS_Y_2 = STAIRS_Y_1 - STAIRS_SPACING_Y
-    local STAIRS_Y_3 = STAIRS_Y_1 + STAIRS_SPACING_Y
-
-    local big_room_x = gxm / 2 + crawl.random_range(-2, 2)
-    local big_room_y = gym / 2 + crawl.random_range(-5, 5)
-    local big_room_radius = crawl.random_range(15, 20)
-
-    fill_area { x1 = STAIRS_X_UP23, y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_UP23, y2 = STAIRS_Y_3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP1,   y1 = STAIRS_Y_1 - PATH_SIZE_BASIC,
-                x2 = STAIRS_X_DOWN1, y2 = STAIRS_Y_1 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_DOWN23, y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_DOWN23, y2 = STAIRS_Y_3,
-                fill = '.' }
-
-    make_diamond { x = big_room_x, y = big_room_y,
-                   radius = big_room_radius, fill = '.' }
-
-    if crawl.coinflip() then
-        make_diamond { x = big_room_x, y = big_room_y,
-                       radius = big_room_radius - PATH_SIZE_BASIC * 2,
-                       fill = 'x' }
-    end
-
-    spotty_map { boxy = false, iterations = (5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP1   ][STAIRS_Y_1] = '{'
-        mapgrd[STAIRS_X_UP23  ][STAIRS_Y_2] = '('
-        mapgrd[STAIRS_X_UP23  ][STAIRS_Y_3] = '['
-        shuffle("{([")
-
-        -- uncomment to place down stairs at other end
-        --mapgrd[STAIRS_X_DOWN1 ][STAIRS_Y_1] = '}'
-        --mapgrd[STAIRS_X_DOWN23][STAIRS_Y_2] = ')'
-        --mapgrd[STAIRS_X_DOWN23][STAIRS_Y_3] = ']'
-        --shuffle("})]")
-        --shuffle("{([/})]")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-#  (
-# {+-------+
-#  [       |
-#          |
-#        (-+-]
-#          }
-NAME: layout_gehenna_corner
-DEPTH: Geh
-WEIGHT: 10
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
-    local STAIRS_X_DOWN2 = gxm - STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_DOWN1 = STAIRS_X_DOWN2 - STAIRS_SPACING_Y
-    local STAIRS_X_DOWN3 = STAIRS_X_DOWN1 - STAIRS_SPACING_Y
-
-    local STAIRS_Y_UP1 = gym / 2 -  BASIC_PATH_OFFSET_Y
-    local STAIRS_Y_UP2 = STAIRS_Y_UP1 - STAIRS_SPACING_Y
-    local STAIRS_Y_UP3 = STAIRS_Y_UP1 + STAIRS_SPACING_Y
-    local STAIRS_Y_DOWN1  = gym - STAIRS_FROM_MAP_EDGE
-    local STAIRS_Y_DOWN23 = STAIRS_Y_DOWN1 - STAIRS_SPACING_X
-
-    fill_area { x1 = STAIRS_X_UP23, y1 = STAIRS_Y_UP2,
-                x2 = STAIRS_X_UP23, y2 = STAIRS_Y_UP3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP1,   y1 = STAIRS_Y_UP1 - PATH_SIZE_BASIC,
-                x2 = STAIRS_X_DOWN1, y2 = STAIRS_Y_UP1 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_DOWN1 - PATH_SIZE_BASIC, y1 = STAIRS_Y_UP1,
-                x2 = STAIRS_X_DOWN1 + PATH_SIZE_BASIC, y2 = STAIRS_Y_DOWN1,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_DOWN2, y1 = STAIRS_Y_DOWN23,
-                x2 = STAIRS_X_DOWN3, y2 = STAIRS_Y_DOWN23,
-                fill = '.' }
-
-    spotty_map { boxy = false, iterations = (5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP1  ][STAIRS_Y_UP1]    = '{'
-        mapgrd[STAIRS_X_UP23 ][STAIRS_Y_UP2]    = '('
-        mapgrd[STAIRS_X_UP23 ][STAIRS_Y_UP3]    = '['
-        shuffle("{([")
-
-        -- uncomment to place down stairs at vertical end of canyon
-        --mapgrd[STAIRS_X_DOWN1][STAIRS_Y_DOWN1]  = '}'
-        --mapgrd[STAIRS_X_DOWN2][STAIRS_Y_DOWN23] = ')'
-        --mapgrd[STAIRS_X_DOWN3][STAIRS_Y_DOWN23] = ']'
-        --shuffle("})]")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-#  (
-# {+-------+
-#  [       |
-#          |
-#  )       |
-# }+-------+
-#  ]
-NAME: layout_gehenna_U_turn
-DEPTH: Geh
-WEIGHT: 5
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_1  = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
-    local ROOM_END_X = gxm - STAIRS_FROM_MAP_EDGE
-
-    local STAIRS_Y_UP1 = gym / 2 - BASIC_PATH_OFFSET_Y
-    local STAIRS_Y_UP2 = STAIRS_Y_UP1 - STAIRS_SPACING_Y
-    local STAIRS_Y_UP3 = STAIRS_Y_UP1 + STAIRS_SPACING_Y
-    local STAIRS_Y_DOWN1 = gym / 2 + BASIC_PATH_OFFSET_Y
-    local STAIRS_Y_DOWN2 = STAIRS_Y_DOWN1 - STAIRS_SPACING_Y
-    local STAIRS_Y_DOWN3 = STAIRS_Y_DOWN1 + STAIRS_SPACING_Y
-
-    fill_area { x1 = STAIRS_X_23, y1 = STAIRS_Y_UP2,
-                x2 = STAIRS_X_23, y2 = STAIRS_Y_UP3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_1, y1 = STAIRS_Y_UP1 - PATH_SIZE_BASIC,
-                x2 = ROOM_END_X, y2 = STAIRS_Y_UP1 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = ROOM_END_X - PATH_SIZE_BASIC, y1 = STAIRS_Y_UP1,
-                x2 = ROOM_END_X + PATH_SIZE_BASIC, y2 = STAIRS_Y_DOWN1,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_1, y1 = STAIRS_Y_DOWN1 - PATH_SIZE_BASIC,
-                x2 = ROOM_END_X, y2 = STAIRS_Y_DOWN1 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_23, y1 = STAIRS_Y_DOWN2,
-                x2 = STAIRS_X_23, y2 = STAIRS_Y_DOWN3,
-                fill = '.' }
-
-    spotty_map { boxy = false, iterations = (7 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_1 ][STAIRS_Y_UP1]   = '{'
-        mapgrd[STAIRS_X_23][STAIRS_Y_UP2]   = '('
-        mapgrd[STAIRS_X_23][STAIRS_Y_UP3]   = '['
-        shuffle("{([")
-
-        -- uncomment to place down stairs on other branch of U
-        --mapgrd[STAIRS_X_1 ][STAIRS_Y_DOWN1] = '}'
-        --mapgrd[STAIRS_X_23][STAIRS_Y_DOWN2] = ')'
-        --mapgrd[STAIRS_X_23][STAIRS_Y_DOWN3] = ']'
-        --shuffle("})]")
-        --shuffle("{([/})]")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-#           )
-#  (        |
-# {+--------}
-#  [        |
-#           ]
-NAME: layout_gehenna_T
-DEPTH: Geh
-WEIGHT: 10
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
-    local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
-
-    local STAIRS_Y_1 = gym / 2
-    local STAIRS_Y_UP2 = STAIRS_Y_1 - STAIRS_SPACING_Y
-    local STAIRS_Y_UP3 = STAIRS_Y_1 + STAIRS_SPACING_Y
-    local STAIRS_Y_DOWN2 = STAIRS_FROM_MAP_EDGE
-    local STAIRS_Y_DOWN3 = gym - STAIRS_FROM_MAP_EDGE
-
-    fill_area { x1 = STAIRS_X_UP23, y1 = STAIRS_Y_UP2,
-                x2 = STAIRS_X_UP23, y2 = STAIRS_Y_UP3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP1,  y1 = STAIRS_Y_1 - PATH_SIZE_BASIC,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_1 + PATH_SIZE_BASIC,
-                fill = '.' }
-
-    fill_area { x1 = STAIRS_X_DOWN - PATH_SIZE_BASIC, y1 = STAIRS_Y_DOWN2,
-                x2 = STAIRS_X_DOWN + PATH_SIZE_BASIC, y2 = STAIRS_Y_DOWN3,
-                fill = '.' }
-
-    spotty_map { boxy = false, iterations = (4.5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP1 ][STAIRS_Y_1]     = '{'
-        mapgrd[STAIRS_X_UP23][STAIRS_Y_UP2]   = '('
-        mapgrd[STAIRS_X_UP23][STAIRS_Y_UP3]   = '['
-        mapgrd[STAIRS_X_DOWN][STAIRS_Y_1]     = '}'
-        mapgrd[STAIRS_X_DOWN][STAIRS_Y_DOWN2] = ')'
-        mapgrd[STAIRS_X_DOWN][STAIRS_Y_DOWN3] = ']'
-
-        shuffle("{([")
-        shuffle("})]")
-        shuffle("{([/})]")
-
-        -- remove to place down stairs at other end
-        subst("})] = .")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-# (         )
-# |         |
-# {---------}
-# |         |
-# [         ]
-NAME: layout_gehenna_H
-DEPTH: Geh
-WEIGHT: 5
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
+TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
+TAGS:   layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
 
     local STAIRS_X_UP   = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
-
-    local STAIRS_Y_1 = gym / 2
-    local STAIRS_Y_2 = STAIRS_FROM_MAP_EDGE
-    local STAIRS_Y_3 = gym - STAIRS_FROM_MAP_EDGE
-
-    fill_area { x1 = STAIRS_X_DOWN - PATH_SIZE_BASIC, y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_DOWN + PATH_SIZE_BASIC, y2 = STAIRS_Y_3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP,   y1 = STAIRS_Y_1 - PATH_SIZE_BASIC,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_1 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP - PATH_SIZE_BASIC, y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_UP + PATH_SIZE_BASIC, y2 = STAIRS_Y_3,
-                fill = '.' }
-
-    spotty_map { boxy = false, iterations = (5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_1] = '{'
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_2] = '('
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_3] = '['
-        shuffle("{([")
-
-        -- uncomment to place down stairs in canyon branches at other end
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_1] = '}'
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_2] = ')'
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_3] = ']'
-        --shuffle("})]")
-        --shuffle("{([/})]")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-# (---------)
-# |         |
-# {         }
-# |         |
-# [---------]
-NAME: layout_gehenna_box
-DEPTH: Geh
-WEIGHT: 10
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
-
-    local STAIRS_Y_1 = gym / 2
-    local STAIRS_Y_2 = STAIRS_Y_1 - BASIC_PATH_OFFSET_Y
-    local STAIRS_Y_3 = STAIRS_Y_1 + BASIC_PATH_OFFSET_Y
-
-    fill_area { x1 = STAIRS_X_UP,   y1 = STAIRS_Y_2 - PATH_SIZE_BASIC,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_2 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP,   y1 = STAIRS_Y_3 - PATH_SIZE_BASIC,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_3 + PATH_SIZE_BASIC,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP - PATH_SIZE_BASIC, y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_UP + PATH_SIZE_BASIC, y2 = STAIRS_Y_3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_DOWN - PATH_SIZE_BASIC, y1 = STAIRS_Y_2,
-                x2 = STAIRS_X_DOWN + PATH_SIZE_BASIC, y2 = STAIRS_Y_3,
-                fill = '.' }
-
-    spotty_map { boxy = false, iterations = (7.5 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_1] = '{'
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_2] = '('
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_3] = '['
-        shuffle("{([")
-
-        -- uncomment to place down stairs at other side of box
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_1] = '}'
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_2] = ')'
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_3] = ']'
-        --shuffle("})]")
-        --shuffle("{([/})]")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-# (-----+---)
-#       |
-# {--+--+---}
-#    |
-# [--+------]
-NAME: layout_gehenna_parallel
-DEPTH: Geh
-WEIGHT: 5
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_UP = STAIRS_FROM_MAP_EDGE
-    local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
-    local X_LENGTH = STAIRS_X_DOWN - STAIRS_X_UP
-
-    local STAIRS_Y_1 = gym / 2
-    local STAIRS_Y_2 = STAIRS_Y_1 - TRIPLE_PATH_SPACING
-    local STAIRS_Y_3 = STAIRS_Y_1 + TRIPLE_PATH_SPACING
-
-    local branch_x_1 = STAIRS_X_UP +
-                       X_LENGTH * crawl.random_range(20, 80) / 100
-    local branch_x_2 = STAIRS_X_UP +
-                       X_LENGTH * crawl.random_range(20, 80) / 100
-
-    -- parallel hallways
-    fill_area { x1 = STAIRS_X_UP,   y1 = STAIRS_Y_1 - PATH_SIZE_TRIPLE,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_1 + PATH_SIZE_TRIPLE,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP,   y1 = STAIRS_Y_2 - PATH_SIZE_TRIPLE,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_2 + PATH_SIZE_TRIPLE,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP,   y1 = STAIRS_Y_3 - PATH_SIZE_TRIPLE,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_3 + PATH_SIZE_TRIPLE,
-                fill = '.' }
-
-    -- connections
-    fill_area { x1 = branch_x_1 - PATH_SIZE_TRIPLE, y1 = STAIRS_Y_2,
-                x2 = branch_x_1 + PATH_SIZE_TRIPLE, y2 = STAIRS_Y_1,
-                fill = '.' }
-    fill_area { x1 = branch_x_2 - PATH_SIZE_TRIPLE, y1 = STAIRS_Y_1,
-                x2 = branch_x_2 + PATH_SIZE_TRIPLE, y2 = STAIRS_Y_3,
-                fill = '.' }
-
-    spotty_map { boxy = false, iterations = (6 * CANYON_SIZE_FACTOR) }
-    remove_isolated_glyphs { find = "x", percent = 100 }
-
-    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_1] = '{'
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_2] = '('
-        mapgrd[STAIRS_X_UP  ][STAIRS_Y_3] = '['
-        shuffle("{([")
-
-        -- uncomment to place down stairs at other ends of canyons
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_1] = '}'
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_2] = ')'
-        --mapgrd[STAIRS_X_DOWN][STAIRS_Y_3] = ']'
-        --shuffle("})]")
-        --shuffle("{([/})]")
-    end
-
-    gehenna_layout_epilogue(_G)
-}}
-
-#      +----)
-#  (   |
-# {+--------}
-#  [   |
-#      +----]
-NAME: layout_gehenna_trident
-DEPTH: Geh
-WEIGHT: 10
-ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate layout_type_caves
-{{
-    local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local STAIRS_X_UP1  = STAIRS_FROM_MAP_EDGE
     local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
-    local STAIRS_X_DOWN = gxm - STAIRS_FROM_MAP_EDGE
-    local BRANCH_X = gxm / 2
+    local STAIRS_X_DOWN   = gxm - STAIRS_FROM_MAP_EDGE
+    local STAIRS_X_DOWN23 = gxm - STAIRS_FROM_MAP_EDGE - STAIRS_SPACING_X
 
-    local STAIRS_Y_1 = gym / 2
-    local STAIRS_Y_UP2 = STAIRS_Y_1 - STAIRS_SPACING_Y
-    local STAIRS_Y_UP3 = STAIRS_Y_1 + STAIRS_SPACING_Y
-    local STAIRS_Y_DOWN2 = STAIRS_Y_1 - TRIPLE_PATH_SPACING
-    local STAIRS_Y_DOWN3 = STAIRS_Y_1 + TRIPLE_PATH_SPACING
+    local STAIRS_Y1 = gym / 2
+    local STAIRS_Y_SMALL2 = STAIRS_Y1 - STAIRS_SPACING_Y
+    local STAIRS_Y_SMALL3 = STAIRS_Y1 + STAIRS_SPACING_Y
+    local STAIRS_Y_BIG2 = STAIRS_FROM_MAP_EDGE
+    local STAIRS_Y_BIG3 = gym - STAIRS_FROM_MAP_EDGE
 
-    fill_area { x1 = STAIRS_X_UP23, y1 = STAIRS_Y_UP2,
-                x2 = STAIRS_X_UP23, y2 = STAIRS_Y_UP3,
-                fill = '.' }
-    fill_area { x1 = STAIRS_X_UP1, y1 = STAIRS_Y_1 - PATH_SIZE_BASIC,
-                x2 = BRANCH_X,     y2 = STAIRS_Y_1 + PATH_SIZE_BASIC,
-                fill = '.' }
+    local big_end_1 = crawl.one_chance_in(3)
+    local big_end_2 = crawl.one_chance_in(3)
+    local spotty_iterations = 4
 
-    fill_area { x1 = BRANCH_X - PATH_SIZE_TRIPLE, y1 = STAIRS_Y_DOWN2,
-                x2 = BRANCH_X + PATH_SIZE_TRIPLE, y2 = STAIRS_Y_DOWN3,
-                fill = '.' }
+    if big_end_1 then
+        fill_area { x1 = STAIRS_X_UP - PATH_SIZE_BASIC, y1 = STAIRS_Y_BIG2,
+                    x2 = STAIRS_X_UP + PATH_SIZE_BASIC, y2 = STAIRS_Y_BIG3,
+                    fill = '.' }
+        spotty_iterations = spotty_iterations + 0.5
+    else
+        fill_area { x1 = STAIRS_X_UP23,   y1 = STAIRS_Y_SMALL2,
+                    x2 = STAIRS_X_UP23,   y2 = STAIRS_Y_SMALL3,
+                    fill = '.' }
+    end
 
-    fill_area { x1 = BRANCH_X,      y1 = STAIRS_Y_1 - PATH_SIZE_TRIPLE,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_1 + PATH_SIZE_TRIPLE,
-                fill = '.' }
-    fill_area { x1 = BRANCH_X,      y1 = STAIRS_Y_DOWN2 - PATH_SIZE_TRIPLE,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_DOWN2 + PATH_SIZE_TRIPLE,
-                fill = '.' }
-    fill_area { x1 = BRANCH_X,      y1 = STAIRS_Y_DOWN3 - PATH_SIZE_TRIPLE,
-                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_DOWN3 + PATH_SIZE_TRIPLE,
+    fill_area { x1 = STAIRS_X_UP,   y1 = STAIRS_Y1 - PATH_SIZE_BASIC,
+                x2 = STAIRS_X_DOWN, y2 = STAIRS_Y1 + PATH_SIZE_BASIC,
                 fill = '.' }
 
-    spotty_map { boxy = false, iterations = (5.5 * CANYON_SIZE_FACTOR) }
+    if big_end_2 then
+        fill_area { x1 = STAIRS_X_DOWN - PATH_SIZE_BASIC, y1 = STAIRS_Y_BIG2,
+                    x2 = STAIRS_X_DOWN + PATH_SIZE_BASIC, y2 = STAIRS_Y_BIG3,
+                    fill = '.' }
+        spotty_iterations = spotty_iterations + 0.5
+    else
+        fill_area { x1 = STAIRS_X_DOWN23,   y1 = STAIRS_Y_SMALL2,
+                    x2 = STAIRS_X_DOWN23,   y2 = STAIRS_Y_SMALL3,
+                    fill = '.' }
+    end
+
+    -- maybe add an open are in the middle
+    if crawl.one_chance_in(3) then
+        local big_room_x = gxm / 2 + crawl.random_range(-2, 2)
+        local big_room_y = gym / 2 + crawl.random_range(-5, 5)
+        local big_room_radius = crawl.random_range(15, 20)
+
+        make_diamond { x = big_room_x, y = big_room_y,
+                       radius = big_room_radius, fill = '.' }
+
+        if crawl.coinflip() then
+            make_diamond { x = big_room_x, y = big_room_y,
+                           radius = big_room_radius - PATH_SIZE_BASIC * 2,
+                           fill = 'x' }
+        end
+        spotty_iterations = spotty_iterations + 1
+    end
+
+    spotty_iterations = spotty_iterations * CANYON_SIZE_FACTOR
+    spotty_map { boxy = false, iterations = spotty_iterations }
     remove_isolated_glyphs { find = "x", percent = 100 }
 
     if crawl.random2(100) < STAIRS_PLACE_PERCENT then
-        mapgrd[STAIRS_X_UP1 ][STAIRS_Y_1]     = '{'
-        mapgrd[STAIRS_X_UP23][STAIRS_Y_UP2]   = '('
-        mapgrd[STAIRS_X_UP23][STAIRS_Y_UP3]   = '['
-        mapgrd[STAIRS_X_DOWN][STAIRS_Y_1]     = '}'
-        mapgrd[STAIRS_X_DOWN][STAIRS_Y_DOWN2] = ')'
-        mapgrd[STAIRS_X_DOWN][STAIRS_Y_DOWN3] = ']'
+        if big_end_1 then
+            mapgrd[STAIRS_X_UP][STAIRS_Y1]     = '{'
+            mapgrd[STAIRS_X_UP][STAIRS_Y_BIG2] = '('
+            mapgrd[STAIRS_X_UP][STAIRS_Y_BIG3] = '['
+        else
+            mapgrd[STAIRS_X_UP  ][STAIRS_Y1]       = '{'
+            mapgrd[STAIRS_X_UP23][STAIRS_Y_SMALL2] = '('
+            mapgrd[STAIRS_X_UP23][STAIRS_Y_SMALL3] = '['
+        end
+
+        if big_end_2 then
+            mapgrd[STAIRS_X_DOWN][STAIRS_Y1]     = '}'
+            mapgrd[STAIRS_X_DOWN][STAIRS_Y_BIG2] = ')'
+            mapgrd[STAIRS_X_DOWN][STAIRS_Y_BIG3] = ']'
+        else
+            mapgrd[STAIRS_X_DOWN  ][STAIRS_Y1]       = '}'
+            mapgrd[STAIRS_X_DOWN23][STAIRS_Y_SMALL2] = ')'
+            mapgrd[STAIRS_X_DOWN23][STAIRS_Y_SMALL3] = ']'
+        end
 
         shuffle("{([")
         shuffle("})]")
         shuffle("{([/})]")
-
-        -- remove to place down stairs at other end(s) of canyon
         subst("})] = .")
     end
 
     gehenna_layout_epilogue(_G)
+}}
+validate {{
+    return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
+}}
+
+#
+# This layout draws a rough box which is often missing a
+#  horizontal and/or vertical side.
+#
+# Shape distribution:
+#  Complete box: 2/8 * 2/8     =  4/64 = 1/16 =  6.25%
+#  U-Shape:      2/8 * 6/8 * 2 = 24/64 = 3/8  = 37.5 %
+#  L-shape:      6/8 * 6/8     = 36/64 = 9/16 = 56.25%
+#
+NAME:   layout_gehenna_pools_box
+DEPTH:  Geh
+WEIGHT: 50
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
+TAGS:   layout_type_caves
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+
+    local CORNER_X1 = STAIRS_FROM_MAP_EDGE
+    local CORNER_X2 = gxm - STAIRS_FROM_MAP_EDGE
+
+    local PATH_OFFSET_Y = 15
+    local CORNER_Y1 = gym / 2 - PATH_OFFSET_Y
+    local CORNER_Y2 = gym / 2 + PATH_OFFSET_Y
+
+    local ODDS_1_SIDE  = 3
+    local ODDS_2_SIDES = 2
+    local ODDS_TOTAL = ODDS_1_SIDE * 2 + ODDS_2_SIDES
+
+    local which_paths_x = crawl.random2(ODDS_TOTAL)
+    local which_paths_y = crawl.random2(ODDS_TOTAL)
+    local spotty_iterations = 4
+
+    if which_paths_x < ODDS_TOTAL - ODDS_1_SIDE then
+        fill_area { x1 = CORNER_X1, y1 = CORNER_Y1 - PATH_SIZE_BASIC,
+                    x2 = CORNER_X2, y2 = CORNER_Y1 + PATH_SIZE_BASIC,
+                    fill = '.' }
+        spotty_iterations = spotty_iterations + 1
+    end
+    if which_paths_x >= ODDS_1_SIDE then
+        fill_area { x1 = CORNER_X1, y1 = CORNER_Y2 - PATH_SIZE_BASIC,
+                    x2 = CORNER_X2, y2 = CORNER_Y2 + PATH_SIZE_BASIC,
+                    fill = '.' }
+        spotty_iterations = spotty_iterations + 1
+    end
+    if which_paths_y < ODDS_TOTAL - ODDS_1_SIDE then
+        fill_area { x1 = CORNER_X1 - PATH_SIZE_BASIC, y1 = CORNER_Y1,
+                    x2 = CORNER_X1 + PATH_SIZE_BASIC, y2 = CORNER_Y2,
+                    fill = '.' }
+        spotty_iterations = spotty_iterations + 0.5
+    end
+    if which_paths_y >= ODDS_1_SIDE then
+        fill_area { x1 = CORNER_X2 - PATH_SIZE_BASIC, y1 = CORNER_Y1,
+                    x2 = CORNER_X2 + PATH_SIZE_BASIC, y2 = CORNER_Y2,
+                    fill = '.' }
+        spotty_iterations = spotty_iterations + 0.5
+    end
+
+    spotty_iterations = spotty_iterations * CANYON_SIZE_FACTOR
+    spotty_map { boxy = false, iterations = spotty_iterations }
+    remove_isolated_glyphs { find = "x", percent = 100 }
+
+    -- I am not even going to try to place stairs at the ends
+    --  of this mess
+
+    gehenna_layout_epilogue(_G)
+}}
+validate {{
+    return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
+}}
+
+#
+# This layout builds three parallel horizontal paths.  The paths
+#  may continue the whole length of the map separately, or may
+#  join up at one end.  If the paths do not join up,
+#  connections are added so that all three paths are connected.
+#
+NAME:   layout_gehenna_pools_triple
+DEPTH:  Geh
+WEIGHT: 50
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
+TAGS:   layout_type_caves
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'}
+
+    local DIVISION_SPACING = 15
+    local PATH_SPACING = 22
+
+    local STAIRS_X_UP   = STAIRS_FROM_MAP_EDGE
+    local STAIRS_X_UP23 = STAIRS_FROM_MAP_EDGE + STAIRS_SPACING_X
+    local STAIRS_X_DOWN   = gxm - STAIRS_FROM_MAP_EDGE
+    local STAIRS_X_DOWN23 = gxm - STAIRS_FROM_MAP_EDGE - STAIRS_SPACING_X
+
+    local STAIRS_Y1 = gym / 2
+    local STAIRS_Y_SMALL2 = STAIRS_Y1 - STAIRS_SPACING_Y
+    local STAIRS_Y_SMALL3 = STAIRS_Y1 + STAIRS_SPACING_Y
+    local STAIRS_Y_BIG2 = STAIRS_Y1 - PATH_SPACING
+    local STAIRS_Y_BIG3 = STAIRS_Y1 + PATH_SPACING
+
+    local ODDS_1_SIDE  = 2
+    local ODDS_2_SIDES = 3
+    local ODDS_TOTAL = ODDS_1_SIDE * 2 + ODDS_2_SIDES
+
+    local division_x = crawl.random_range(STAIRS_X_UP23   + DIVISION_SPACING,
+                                          STAIRS_X_DOWN23 - DIVISION_SPACING)
+    local open_end = crawl.random2(ODDS_TOTAL)
+    local spotty_iterations
+
+    if open_end < ODDS_1_SIDE then
+        fill_area { x1 = STAIRS_X_UP23, y1 = STAIRS_Y_SMALL2,
+                    x2 = STAIRS_X_UP23, y2 = STAIRS_Y_SMALL3,
+                    fill = '.' }
+        fill_area { x1 = STAIRS_X_UP, y1 = STAIRS_Y1 - PATH_SIZE_BASIC,
+                    x2 = division_x,  y2 = STAIRS_Y1 + PATH_SIZE_BASIC,
+                    fill = '.' }
+    else
+        fill_area { x1 = STAIRS_X_UP, y1 = STAIRS_Y1 - PATH_SIZE_TRIPLE,
+                    x2 = division_x,  y2 = STAIRS_Y1 + PATH_SIZE_TRIPLE,
+                    fill = '.' }
+        fill_area { x1 = STAIRS_X_UP, y1 = STAIRS_Y_BIG2 - PATH_SIZE_TRIPLE,
+                    x2 = division_x,  y2 = STAIRS_Y_BIG2 + PATH_SIZE_TRIPLE,
+                    fill = '.' }
+        fill_area { x1 = STAIRS_X_UP, y1 = STAIRS_Y_BIG3 - PATH_SIZE_TRIPLE,
+                    x2 = division_x,  y2 = STAIRS_Y_BIG3 + PATH_SIZE_TRIPLE,
+                    fill = '.' }
+    end
+
+    if open_end < ODDS_1_SIDE or open_end >= ODDS_TOTAL - ODDS_1_SIDE then
+        fill_area { x1 = division_x - PATH_SIZE_TRIPLE, y1 = STAIRS_Y_BIG2,
+                    x2 = division_x + PATH_SIZE_TRIPLE, y2 = STAIRS_Y_BIG3,
+                    fill = '.' }
+        spotty_iterations = 5.5
+    else
+        fill_area { x1 = division_x - PATH_SIZE_TRIPLE, y1 = STAIRS_Y_BIG2,
+                    x2 = division_x + PATH_SIZE_TRIPLE, y2 = STAIRS_Y1,
+                    fill = '.' }
+        division_x = crawl.random_range(STAIRS_X_UP23   + DIVISION_SPACING,
+                                        STAIRS_X_DOWN23 - DIVISION_SPACING)
+        fill_area { x1 = division_x - PATH_SIZE_TRIPLE, y1 = STAIRS_Y1,
+                    x2 = division_x + PATH_SIZE_TRIPLE, y2 = STAIRS_Y_BIG3,
+                    fill = '.' }
+        spotty_iterations = 6
+    end
+
+    if open_end >= ODDS_TOTAL - ODDS_1_SIDE then
+        fill_area { x1 = STAIRS_X_DOWN23, y1 = STAIRS_Y_SMALL2,
+                    x2 = STAIRS_X_DOWN23, y2 = STAIRS_Y_SMALL3,
+                    fill = '.' }
+        fill_area { x1 = division_x,    y1 = STAIRS_Y1 - PATH_SIZE_BASIC,
+                    x2 = STAIRS_X_DOWN, y2 = STAIRS_Y1 + PATH_SIZE_BASIC,
+                    fill = '.' }
+    else
+        fill_area { x1 = division_x,    y1 = STAIRS_Y1 - PATH_SIZE_TRIPLE,
+                    x2 = STAIRS_X_DOWN, y2 = STAIRS_Y1 + PATH_SIZE_TRIPLE,
+                    fill = '.' }
+        fill_area { x1 = division_x,    y1 = STAIRS_Y_BIG2 - PATH_SIZE_TRIPLE,
+                    x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_BIG2 + PATH_SIZE_TRIPLE,
+                    fill = '.' }
+        fill_area { x1 = division_x,    y1 = STAIRS_Y_BIG3 - PATH_SIZE_TRIPLE,
+                    x2 = STAIRS_X_DOWN, y2 = STAIRS_Y_BIG3 + PATH_SIZE_TRIPLE,
+                    fill = '.' }
+    end
+
+    spotty_iterations = spotty_iterations * CANYON_SIZE_FACTOR
+    spotty_map { boxy = false, iterations = spotty_iterations }
+    remove_isolated_glyphs { find = "x", percent = 100 }
+
+    if crawl.random2(100) < STAIRS_PLACE_PERCENT then
+        if open_end < ODDS_1_SIDE then
+            mapgrd[STAIRS_X_UP  ][STAIRS_Y1]       = '{'
+            mapgrd[STAIRS_X_UP23][STAIRS_Y_SMALL2] = '('
+            mapgrd[STAIRS_X_UP23][STAIRS_Y_SMALL3] = '['
+        else
+            mapgrd[STAIRS_X_UP][STAIRS_Y1]     = '{'
+            mapgrd[STAIRS_X_UP][STAIRS_Y_BIG2] = '('
+            mapgrd[STAIRS_X_UP][STAIRS_Y_BIG3] = '['
+        end
+
+        if open_end >= ODDS_TOTAL - ODDS_1_SIDE then
+            mapgrd[STAIRS_X_DOWN  ][STAIRS_Y1]       = '}'
+            mapgrd[STAIRS_X_DOWN23][STAIRS_Y_SMALL2] = ')'
+            mapgrd[STAIRS_X_DOWN23][STAIRS_Y_SMALL3] = ']'
+        else
+            mapgrd[STAIRS_X_DOWN][STAIRS_Y1]     = '}'
+            mapgrd[STAIRS_X_DOWN][STAIRS_Y_BIG2] = ')'
+            mapgrd[STAIRS_X_DOWN][STAIRS_Y_BIG3] = ']'
+        end
+
+        shuffle("{([")
+        shuffle("})]")
+        shuffle("{([/})]")
+        subst("})] = .")
+    end
+
+    gehenna_layout_epilogue(_G)
+}}
+validate {{
+    return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
 }}

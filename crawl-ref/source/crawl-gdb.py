@@ -91,7 +91,7 @@ class item_def_printer:
         return None
 
     def children(self):
-        # Since C++ hasn't got dependant types, we have to simulate them here.
+        # Since C++ hasn't got dependent types, we have to simulate them here.
         def f(fname):
             return (fname, self.val[fname])
         def g(fname, typename):

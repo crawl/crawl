@@ -241,6 +241,7 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_YOUNG_POISONERS:
     case BOOK_WAR_CHANTS:
+    case BOOK_BATTLE:
     case BOOK_DEBILITATION:
         return 5;
 
@@ -293,7 +294,6 @@ int book_rarity(uint8_t which_book)
 
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:
-    case BOOK_MUTATIONS:
         return 100;
 #endif
 
@@ -389,7 +389,7 @@ bool player_can_memorise_from_spellbook(const item_def &book)
             && (you.skill(SK_SUMMONINGS) < 10
                 || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_NECRONOMICON
-            && you.religion != GOD_KIKUBAAQUDGHA
+            && !you_worship(GOD_KIKUBAAQUDGHA)
             && (you.skill(SK_NECROMANCY) < 10
                 || you.skill(SK_SPELLCASTING) < 6)))
     {
@@ -504,89 +504,56 @@ bool you_cannot_memorise(spell_type spell)
     return you_cannot_memorise(spell, temp);
 }
 
-// undead is set to true if being undead prevents us from memorising the spell.
-bool you_cannot_memorise(spell_type spell, bool &undead)
+// form is set to true if a form (lich or wisp) prevents us from
+// memorising the spell.
+bool you_cannot_memorise(spell_type spell, bool &form)
 {
     bool rc = false;
 
-    if (you.form == TRAN_WISP)
+    if (you.is_undead)
     {
-        undead = false;
-        return true;
-    }
-
-    switch (you.is_undead)
-    {
-    case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
+        case SPELL_BORGNJORS_REVIVIFICATION:
+        case SPELL_DEATHS_DOOR:
+        case SPELL_NECROMUTATION:
+            // Prohibited to all undead.
+            rc = true;
+            break;
+
+        case SPELL_CURE_POISON:
+        case SPELL_STONESKIN:
         case SPELL_BEASTLY_APPENDAGE:
         case SPELL_BLADE_HANDS:
-        case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_CURE_POISON:
-        case SPELL_DEATHS_DOOR:
         case SPELL_DRAGON_FORM:
         case SPELL_ICE_FORM:
-        case SPELL_NECROMUTATION:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
-        case SPELL_STONESKIN:
-            rc = true;
+            // Allowed for vampires (depending on hunger).
+            rc = (you.is_undead != US_SEMI_UNDEAD);
             break;
-        default:
-            break;
-        }
-        break;
 
-    case US_SEMI_UNDEAD: // Vampires
-        switch (spell)
-        {
-        case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_DEATHS_DOOR:
-        case SPELL_NECROMUTATION:
-            // In addition, the above US_HUNGRY_DEAD spells are not castable
-            // when satiated or worse.
-            rc = true;
-            break;
-        default:
-            break;
-        }
-        break;
-
-    case US_UNDEAD: // Mummies
-        switch (spell)
-        {
-        case SPELL_BEASTLY_APPENDAGE:
-        case SPELL_BLADE_HANDS:
-        case SPELL_BORGNJORS_REVIVIFICATION:
-        case SPELL_CURE_POISON:
-        case SPELL_DEATHS_DOOR:
-        case SPELL_DRAGON_FORM:
-        case SPELL_ICE_FORM:
         case SPELL_INTOXICATE:
-        case SPELL_NECROMUTATION:
         case SPELL_REGENERATION:
-        case SPELL_SPIDER_FORM:
-        case SPELL_STATUE_FORM:
-        case SPELL_STONESKIN:
-            rc = true;
+            // Only prohibited for liches and mummies.
+            rc = (you.is_undead == US_UNDEAD);
             break;
+
         default:
             break;
         }
-        break;
 
-    case US_ALIVE:
-        break;
+        // If our undeath is only temporary, mark that fact. This
+        // assumes that the already undead cannot enter lich form.
+        if (rc && you.form == TRAN_LICH)
+            form = true;
     }
 
-    // If rc has been set to true before now, that was because we
-    // are (possibly temporarily) undead.
-    if (rc == true)
-        undead = true;
+    if (you.species == SP_GARGOYLE && spell == SPELL_CURE_POISON)
+        rc = true, form = false;
 
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
-        rc = true, undead = false;
+        rc = true, form = false;
 
     if (you.species == SP_FELID
         && (spell == SPELL_PORTAL_PROJECTILE
@@ -599,21 +566,36 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          || spell == SPELL_POISON_WEAPON
          || spell == SPELL_SURE_BLADE
          // could be useful if it didn't require wielding
-         || spell == SPELL_TUKIMAS_DANCE))
+         || spell == SPELL_TUKIMAS_DANCE
+         || spell == SPELL_SPECTRAL_WEAPON))
     {
-        rc = true, undead = false;
+        rc = true, form = false;
     }
 
     if (you.species == SP_DJINNI
         && (spell == SPELL_ICE_FORM
          || spell == SPELL_OZOCUBUS_ARMOUR
-         || spell == SPELL_DEATHS_DOOR))
+         || spell == SPELL_DEATHS_DOOR
+         || spell == SPELL_LEDAS_LIQUEFACTION
+         || spell == SPELL_SONG_OF_SHIELDING))
     {
-        rc = true, undead = false;
+        rc = true, form = false;
     }
 
-    if (you.species == SP_LAVA_ORC && spell == SPELL_STONESKIN)
-        rc = true, undead = false;
+    if (you.species == SP_LAVA_ORC
+        && (spell == SPELL_STONESKIN
+         || spell == SPELL_OZOCUBUS_ARMOUR))
+    {
+        rc = true, form = false;
+    }
+
+    if (you.form == TRAN_WISP)
+    {
+        // If we were otherwise allowed to memorise the spell.
+        if (!rc)
+            form = true;
+        return true;
+    }
 
     if (you.species == SP_FORMICID
         && (spell == SPELL_BLINK
@@ -621,7 +603,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          || spell == SPELL_CONTROLLED_BLINK
          || spell == SPELL_SWIFTNESS))
     {
-        rc = true, undead = false;
+        rc = true, form = false;
     }
 
     return rc;
@@ -1173,21 +1155,16 @@ bool learn_spell()
     return learn_spell(specspell);
 }
 
-// Returns a string about why an undead character can't memorise a spell.
-string desc_cannot_memorise_reason(bool undead)
+// Returns a string about why a character can't memorise a spell.
+string desc_cannot_memorise_reason(bool form)
 {
-    if (undead)
-        ASSERT(you.is_undead);
-
     string desc = "You cannot ";
-    if (you.form == TRAN_LICH || you.form == TRAN_WISP)
+    if (form)
         desc += "currently ";
     desc += "memorise or cast this spell because you are ";
 
-    if (you.form == TRAN_LICH)
-        desc += "in Lich form";
-    else if (you.form == TRAN_WISP)
-        desc += "in Wisp form";
+    if (form)
+        desc += "in " + uppercase_first(transform_name()) + " form";
     else
         desc += "a " + lowercase_string(species_name(you.species));
 
@@ -1204,10 +1181,10 @@ static bool _learn_spell_checks(spell_type specspell)
     if (already_learning_spell((int) specspell))
         return false;
 
-    bool undead = false;
-    if (you_cannot_memorise(specspell, undead))
+    bool form = false;
+    if (you_cannot_memorise(specspell, form))
     {
-        mpr(desc_cannot_memorise_reason(undead).c_str());
+        mpr(desc_cannot_memorise_reason(form).c_str());
         return false;
     }
 
@@ -1301,7 +1278,8 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
 
     if (del_spell_from_memory(spell))
     {
-        item_was_destroyed(*book, MHITYOU);
+        item_was_destroyed(*book);
+        destroy_spellbook(*book);
         dec_inv_item_quantity(book->link, 1);
         you.turn_is_over = true;
         return true;
@@ -2578,7 +2556,5 @@ void destroy_spellbook(const item_def &book)
         maxlevel = max(maxlevel, spell_difficulty(stype));
     }
 
-    did_god_conduct(DID_DESTROY_SPELLBOOK,
-                    maxlevel + 5 *
-                    (origin_is_god_gift(book) ? 2 : 1));
+    did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5);
 }

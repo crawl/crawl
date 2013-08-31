@@ -15,10 +15,10 @@ Die aktuelle Ebene automatisch erforschen
 %%%%
 CMD_EXPLORE verbose
 
-Das lässt deinen Charakter automatisch durch unerforschte Bereiche der
-aktuellen Ebene reisen und dabei brauchbare Gegenstände die auf dem Weg liegen
-aufheben. Die Reise wird unterbrochen, sobald ein feindseliges Monster in Sicht
-kommt, und auch um gefunden Gegenstände und Besonderheiten anzuzeigen.
+Lässt deinen Charakter automatisch durch unerforschte Bereiche der aktuellen
+Ebene reisen und dabei brauchbare Gegenstände die auf dem Weg liegen aufheben.
+Die Reise wird unterbrochen, sobald ein feindseliges Monster in Sicht kommt,
+und auch um gefunden Gegenstände und Besonderheiten anzuzeigen.
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
@@ -26,7 +26,7 @@ Reise zu entfernten Ebenen
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-Automatisch Reise zu entfernten Ebenen. Die Reise wird durch Monster, die in
+Automatische Reise zu entfernten Ebenen. Die Reise wird durch Monster, die in
 Sichtweite kommen, unterbrochen.
 %%%%
 CMD_USE_ABILITY
@@ -39,9 +39,9 @@ Bete deinen Gott an
 %%%%
 CMD_PRAY verbose
 
-Wenn deine Gott Opfer mag, wird dies eine Leiche oder andere Gegenstände
-opfern. Und wenn du an einem Altar stehst, erlaubt es dir dem dazugehörigen
-Gott beizutreten. Bei manchen Göttern hat beten auch andere spezielle Effekte.
+Wenn dein Gott Opfer mag, wird dies eine Leiche oder andere Gegenstände opfern.
+Und wenn du an einem Altar stehst, erlaubt es dir dem dazugehörigen Gott
+beizutreten. Bei manchen Göttern hat beten auch andere spezielle Effekte.
 %%%%
 CMD_SEARCH_STASHES
 
@@ -49,12 +49,12 @@ Suche nach Gegenständen/Besonderheiten
 %%%%
 CMD_SEARCH_STASHES verbose
 
-Suche nach Gegenständen/Besonderheiten die woanders gesehen hast, dann begib
-dich dort hin.
+Suche nach Gegenständen/Besonderheiten die du woanders gesehen hast, danach
+begib dich dort hin.
 %%%%
 CMD_REPLAY_MESSAGES
 
-Letzte Meldung lesen
+Letzte Meldung erneut lesen
 %%%%
 CMD_RESISTS_SCREEN
 
@@ -67,11 +67,11 @@ usw.
 %%%%
 CMD_DISPLAY_OVERMAP
 
-Zeigt die Verlies Übersichtskarte
+Zeige die Verlies Übersichtskarte
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
-Zeigt die Stellen von Abzweigungen, Läden und anderen Besonderheiten denen du
+Zeige die Stellen von Abzweigungen, Läden und anderen Besonderheiten denen du
 bis jetzt begegnet bist.
 %%%%
 CMD_DISPLAY_RELIGION
@@ -80,8 +80,8 @@ Religiösen Status anzeigen.
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-Zeigt was deinem Gott ge und missfällt, dein Betragen und deinen religiösen
-Stand und göttliche Fähigkeiten.
+Zeige was deinem Gott ge- und missfällt, dein Betragen und deinen religiösen
+Stand sowie göttliche Fähigkeiten.
 %%%%
 CMD_DISPLAY_MUTATIONS
 
@@ -101,7 +101,7 @@ Zeigt aktive Verzauberungen und ein paar andere Dinge an.
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
-Listet entdecke Gegenstands-Typen auf
+Listet entdeckte Gegenstands-Typen auf
 %%%%
 CMD_SAVE_GAME_NOW
 
@@ -114,11 +114,11 @@ wird die Speicherdatei gelöscht.
 %%%%
 CMD_EDIT_PLAYER_TILE
 
-Veränder das Aussehen der Spielfigur
+Verändere das Aussehen der Spielfigur
 %%%%
 CMD_EDIT_PLAYER_TILE verbose
 
-Verändert die Ausrüstung und Art des Aussehens der Spielfigur.
+Verändere die Ausrüstung und das Aussehen der Spielfigur.
 %%%%
 CMD_DISPLAY_COMMANDS
 
@@ -141,16 +141,16 @@ Fähigkeiten, Notizen, usw.
 %%%%
 CMD_AUTOFIGHT
 
-Schlage das nächststehende Monster
+Bekämpfe das nächst stehende Monster
 %%%%
 CMD_AUTOFIGHT verbose
 
-Bewege dich auf das nächste feindselige Monster zu und greife es mit deiner
-ausgerüsteten Waffe an.
+Bewege dich auf das am nächsten stehende feindselige Monster zu und greife es
+mit deiner ausgerüsteten Waffe an.
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
-Schlage das benachbarte Monster
+Bekämpfe das benachbarte Monster.
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
@@ -166,11 +166,11 @@ Verbringe wartend und rastend eine einzige Runde.
 %%%%
 CMD_DISPLAY_INVENTORY
 
-Zeigt den Inhalt deines Inventars an
+Zeige den Inhalt deines Inventars an
 %%%%
 CMD_DISPLAY_INVENTORY verbose
 
-Zeigt den Inhalt deines Inventars an
+Zeige den Inhalt deines Inventars an.
 %%%%
 CMD_CAST_SPELL
 
@@ -182,11 +182,11 @@ Wirke einen Zauberspruch.
 %%%%
 CMD_BUTCHER
 
-Zerhackte Leiche
+Zerhacke Leiche
 %%%%
 CMD_BUTCHER verbose
 
-In Stücke zerhackte Leiche
+Zerhacke Leiche in Stücke
 %%%%
 CMD_MEMORISE_SPELL
 
@@ -267,7 +267,7 @@ Gehe zur Ebene
 %%%%
 CMD_MAP_GOTO_LEVEL verbose
 
-Gehe zu einer anderen Ebene im Abzweig und Tiefe.
+Gehe zu einer anderen Ebene in dem du Abzweig und Tiefe wählst.
 %%%%
 CMD_MAP_FIND_UPSTAIR
 
@@ -351,9 +351,9 @@ In das Kerker Gebiet heranzoomen
 %%%%
 CMD_ZOOM_OUT
 
-Herauszoomen
+Heraus zoomen
 %%%%
 CMD_ZOOM_OUT verbose
 
-Aus dem Kerker Gebiet herauszoomen
+Aus dem Kerker Gebiet heraus zoomen
 %%%%

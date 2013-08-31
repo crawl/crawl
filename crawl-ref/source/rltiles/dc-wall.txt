@@ -351,10 +351,25 @@ beehives7
 beehives8
 beehives9
 
-lair0 WALL_LAIR WALL_ORC WALL_SWAMP
+lair0 WALL_LAIR
 lair1
 lair2
 lair3
+
+%weight 10
+orc0 WALL_ORC
+orc1
+orc2
+orc3
+%weight 2
+orc4
+orc5
+orc6
+orc7
+orc8
+orc9
+orc10
+orc11
 
 %weight 10
 slime0 WALL_SLIME
@@ -744,6 +759,91 @@ undead1
 undead2
 undead3
 
+%variation WALL_UNDEAD white
+%lum 0 20
+%lum 28 20
+%lum 29 20
+%lum 30 20
+%repeat WALL_UNDEAD WALL_UNDEAD_WHITE
+%resetcol
+
+%variation WALL_UNDEAD darkgray
+%lum 0 -15
+%repeat WALL_UNDEAD WALL_UNDEAD_DARKGRAY
+%resetcol
+
+%variation WALL_UNDEAD blue
+%hue 26 240
+%hue 27 240
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%hue 31 240
+%hue 32 240
+%hue 33 240
+undead_brown0 WALL_UNDEAD_BLUE
+undead_brown1
+undead_brown2
+undead_brown3
+%resetcol
+
+%variation WALL_UNDEAD green
+%hue 240 140
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_GREEN
+%resetcol
+
+%variation WALL_UNDEAD cyan
+%hue 240 180
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_CYAN
+%resetcol
+
+%variation WALL_UNDEAD red
+%hue 240 0
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_RED
+%resetcol
+
+%variation WALL_UNDEAD magenta
+%hue 240 270
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_MAGENTA
+%resetcol
+
+%variation WALL_UNDEAD brown
+%hue 240 30
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_BROWN
+%resetcol
+
+%variation WALL_UNDEAD yellow
+%hue 240 60
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_YELLOW
+%resetcol
+
+%variation WALL_UNDEAD lightblue
+%hue 240 210
+%lum 240 5
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_LIGHTBLUE
+%resetcol
+
+%variation WALL_UNDEAD lightgreen
+%hue 240 110
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_LIGHTGREEN
+%resetcol
+
+%variation WALL_UNDEAD lightcyan
+%hue 240 180
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_LIGHTCYAN
+%resetcol
+
+%variation WALL_UNDEAD lightred
+%hue 240 0
+%lum 240 5
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_LIGHTRED
+%resetcol
+
+%variation WALL_UNDEAD lightmagenta
+%hue 240 290
+%repeat WALL_UNDEAD_BLUE WALL_UNDEAD_LIGHTMAGENTA
+%resetcol
+
 %weight 10
 church0 WALL_CHURCH
 church1
@@ -752,7 +852,8 @@ church3
 #%weight 1
 #church4
 
-abyss0 WALL_ABYSS
+%sdir dngn/wall/abyss
+abyss0 WALL_ABYSS WALL_ABYSS_RED
 abyss1
 abyss2
 abyss3
@@ -761,6 +862,147 @@ abyss5
 abyss6
 abyss7
 
+%variation WALL_ABYSS brown
+abyss_brown0 WALL_ABYSS_BROWN
+abyss_brown1
+abyss_brown2
+abyss_brown3
+abyss_brown4
+abyss_brown5
+abyss_brown6
+abyss_brown7
+
+%variation WALL_ABYSS green
+abyss_green0 WALL_ABYSS_GREEN
+abyss_green1
+abyss_green2
+abyss_green3
+abyss_green4
+abyss_green5
+abyss_green6
+abyss_green7
+
+%variation WALL_ABYSS cyan
+abyss_cyan0 WALL_ABYSS_CYAN
+abyss_cyan1
+abyss_cyan2
+abyss_cyan3
+abyss_cyan4
+abyss_cyan5
+abyss_cyan6
+abyss_cyan7
+
+%variation WALL_ABYSS blue
+abyss_blue0 WALL_ABYSS_BLUE
+abyss_blue1
+abyss_blue2
+abyss_blue3
+abyss_blue4
+abyss_blue5
+abyss_blue6
+abyss_blue7
+
+%variation WALL_ABYSS magenta
+abyss_magenta0 WALL_ABYSS_MAGENTA
+abyss_magenta1
+abyss_magenta2
+abyss_magenta3
+abyss_magenta4
+abyss_magenta5
+abyss_magenta6
+abyss_magenta7
+
+%variation WALL_ABYSS lightred
+abyss_lightred0 WALL_ABYSS_LIGHTRED
+abyss_lightred1
+abyss_lightred2
+abyss_lightred3
+abyss_lightred4
+abyss_lightred5
+abyss_lightred6
+abyss_lightred7
+
+%variation WALL_ABYSS yellow
+abyss_yellow0 WALL_ABYSS_YELLOW
+abyss_yellow1
+abyss_yellow2
+abyss_yellow3
+abyss_yellow4
+abyss_yellow5
+abyss_yellow6
+abyss_yellow7
+
+%variation WALL_ABYSS lightgreen
+abyss_lightgreen0 WALL_ABYSS_LIGHTGREEN
+abyss_lightgreen1
+abyss_lightgreen2
+abyss_lightgreen3
+abyss_lightgreen4
+abyss_lightgreen5
+abyss_lightgreen6
+abyss_lightgreen7
+
+%variation WALL_ABYSS lightcyan
+abyss_lightcyan0 WALL_ABYSS_LIGHTCYAN
+abyss_lightcyan1
+abyss_lightcyan2
+abyss_lightcyan3
+abyss_lightcyan4
+abyss_lightcyan5
+abyss_lightcyan6
+abyss_lightcyan7
+
+%variation WALL_ABYSS lightblue
+abyss_lightblue0 WALL_ABYSS_LIGHTBLUE
+abyss_lightblue1
+abyss_lightblue2
+abyss_lightblue3
+abyss_lightblue4
+abyss_lightblue5
+abyss_lightblue6
+abyss_lightblue7
+
+%variation WALL_ABYSS lightmagenta
+abyss_lightmagenta0 WALL_ABYSS_LIGHTMAGENTA
+abyss_lightmagenta1
+abyss_lightmagenta2
+abyss_lightmagenta3
+abyss_lightmagenta4
+abyss_lightmagenta5
+abyss_lightmagenta6
+abyss_lightmagenta7
+
+%variation WALL_ABYSS darkgray
+abyss_darkgray0 WALL_ABYSS_DARKGRAY
+abyss_darkgray1
+abyss_darkgray2
+abyss_darkgray3
+abyss_darkgray4
+abyss_darkgray5
+abyss_darkgray6
+abyss_darkgray7
+
+%variation WALL_ABYSS lightgray
+abyss_lightgray0 WALL_ABYSS_LIGHTGRAY
+abyss_lightgray1
+abyss_lightgray2
+abyss_lightgray3
+abyss_lightgray4
+abyss_lightgray5
+abyss_lightgray6
+abyss_lightgray7
+
+%variation WALL_ABYSS white
+abyss_white0 WALL_ABYSS_WHITE
+abyss_white1
+abyss_white2
+abyss_white3
+abyss_white4
+abyss_white5
+abyss_white6
+abyss_white7
+
+%sdir dngn/wall
 hell01 WALL_HELL
 hell02
 hell03
@@ -783,7 +1025,7 @@ icy_stone1
 icy_stone2
 icy_stone3
 
-lab-rock0 WALL_LAB_ROCK
+lab-rock0 WALL_LAB_ROCK WALL_SWAMP
 lab-rock1
 lab-rock2
 lab-rock3
@@ -805,12 +1047,14 @@ lab-metal4
 lab-metal5
 lab-metal6
 
+%weight 15
 crypt0 WALL_CRYPT
+%weight 2
 crypt1
 crypt2
 crypt3
 crypt4
-%weight 2
+%weight 1
 crypt5
 crypt6
 crypt7
@@ -819,10 +1063,12 @@ crypt9
 %weight 10
 
 crypt-metal0 WALL_CRYPT_METAL
+%weight 2
 crypt-metal1
 crypt-metal2
 crypt-metal3
 crypt-metal4
+%weight 10
 
 cobalt_rock1 WALL_COBALT_ROCK
 cobalt_rock2
@@ -842,20 +1088,22 @@ cobalt_stone10
 cobalt_stone11
 cobalt_stone12
 
+%weight 30
 catacombs0 WALL_CATACOMBS
 catacombs1
+%weight 10
 catacombs2
 catacombs3
 catacombs4
 catacombs5
-%weight 6
+%weight 5
 catacombs6
 catacombs7
 catacombs8
 catacombs9
 catacombs10
 catacombs11
-%weight 3
+%weight 2
 catacombs12
 catacombs13
 catacombs14
@@ -920,6 +1168,33 @@ stone2_brown3
 %variation DNGN_STONE_WALL yellow
 %hue 240 60
 %repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_YELLOW
+%resetcol
+
+%variation DNGN_STONE_WALL lightblue
+%hue 240 210
+%lum 240 5
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTBLUE
+%resetcol
+
+%variation DNGN_STONE_WALL lightgreen
+%hue 240 110
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTGREEN
+%resetcol
+
+%variation DNGN_STONE_WALL lightcyan
+%hue 240 180
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTCYAN
+%resetcol
+
+%variation DNGN_STONE_WALL lightred
+%hue 240 0
+%lum 240 5
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTRED
+%resetcol
+
+%variation DNGN_STONE_WALL lightmagenta
+%hue 240 290
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_LIGHTMAGENTA
 %resetcol
 
 %variation DNGN_STONE_WALL white
@@ -1019,6 +1294,7 @@ transparent_stone DNGN_TRANSPARENT_STONE DNGN_TRANSPARENT_STONE_CYAN DNGN_FIRST_
 
 # Coloured metal walls
 mirrored_wall DNGN_MIRROR_WALL
+silver_wall DNGN_SILVER_WALL
 
 metal_wall DNGN_METAL_WALL
 
@@ -1202,11 +1478,19 @@ bars_red08
 %repeat WALL_BARS WALL_BARS_DARKGRAY
 %resetcol
 
-shadow_w DNGN_WALL_SHADOW_W
-shadow_nw DNGN_WALL_SHADOW_NW
-shadow_n DNGN_WALL_SHADOW_N
-shadow_ne DNGN_WALL_SHADOW_NE
-shadow_e DNGN_WALL_SHADOW_E
+%rim 0
+%shrink 0
+shadow_w DNGN_WALL_SHADOW
+shadow_nw
+shadow_n
+shadow_ne
+shadow_e
+
+shadow_w_darker DNGN_WALL_SHADOW_DARK
+shadow_nw_darker
+shadow_n_darker
+shadow_ne_darker
+shadow_e_darker
 
 %sdir dngn/vaults
 brick_dark_leak WALL_BRICK_DARK_LEAK

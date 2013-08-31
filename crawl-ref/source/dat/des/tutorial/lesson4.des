@@ -30,25 +30,26 @@ NAME:    tutorial_lesson4
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 4: Magic and Spellcasting"
 ORIENT:  encompass
-KFEAT:   ABCDE = .
-COLOUR:  ABCDdefgh = lightblue
-FTILE:   ABCDdefgh = tutorial_pad
+KFEAT:   ABCDEF = .
+COLOUR:  ABCDEFdefg = lightblue
+FTILE:   ABCDEFdefg = tutorial_pad
 ITEM:    randbook numspells:2 spells:magic_dart|mephitic_cloud title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 ITEM:    staff of wizardry not_cursed
-ITEM:    potion of experience ident:type
 ITEM:    bread ration
 MONS:    training dummy ; stone q:20
 MONS:    bat skeleton, goblin skeleton
 MONS:    rat, goblin
+KMONS:   8 = training dummy hd:3 hp:7
 MARKER:  d = lua:tutorial4.msg("spellbook")
 MARKER:  B = lua:tutorial4.msg("spellcasting")
 MARKER:  e = lua:tutorial4.msg("ring_power")
 MARKER:  C = lua:tutorial4.msg("undead")
 MARKER:  f = lua:tutorial4.msg("spell_success")
-MARKER:  g = lua:tutorial4.msg("mephitic_cloud")
-MARKER:  D = lua:tutorial4.msg("aiming_clouds")
-MARKER:  h = lua:tutorial4.msg("spell_hunger")
+MARKER:  D = lua:tutorial4.msg("mephitic_cloud")
+MARKER:  E = lua:tutorial4.msg("meph_reminder")
+MARKER:  F = lua:tutorial4.msg("aiming_clouds")
+MARKER:  g = lua:tutorial4.msg("spell_hunger")
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
                                  onclimb = "tutorial4.exit" }
 epilogue{{
@@ -72,19 +73,19 @@ xxxxxxxxxxxxx..wwwxxxxxxxx....xxxxxxxxxxxxx.3...xxxxx
 xxxxxxxxxxxxx..ww1xxxxxxx.xxxxxxxxxxxxxxxx.......xxxx
 xxxxxxxxxxxxx..wwwxxxxx..xxxxxxxxxxxxxxxxx.2...xxxxxx
 xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx..xxxxxxx
-xxxxxxxxxxxxx......e.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
+xxxxxxxxxxxxx......e.xxxxxxxxxxxxxxxxxxxxxxxxxDxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.g.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.8.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.8.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxExxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxDxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5h...4...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx}xxxxxxx4...xxxFxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx).....5g...4...xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx]xxxxxx..4...xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -99,7 +100,7 @@ ORIENT:  encompass
 KFEAT:   ABCDE = .
 COLOUR:  dABCDEe = lightblue
 FTILE:   dABCDEe = tutorial_pad
-ITEM:    scroll of amnesia
+ITEM:    scroll of amnesia ident:type
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
 ITEM:    never_decay bat skeleton / never_decay goblin; nothing skeleton
 ITEM:    never_decay ball python skeleton / never_decay jackal skeleton

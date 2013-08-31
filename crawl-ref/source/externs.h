@@ -361,7 +361,9 @@ struct delay_queue_item
     int         parm2;
     int         parm3;
     bool        started;
+#if TAG_MAJOR_VERSION == 34
     int         trits[6];
+#endif
     size_t      len;
 };
 

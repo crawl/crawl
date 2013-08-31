@@ -90,6 +90,7 @@ function volcano_portal (e)
     e.kfeat("S = .")
     e.colour("XOS = red")
     e.rtile("X = wall_volcanic")
+    e.kfeat("X = rock_wall")
     e.ftile("OS = floor_rough_red")
 end
 
@@ -432,7 +433,7 @@ end
 
 }}
 
-default-depth: Lair:1-8, Orc:1-4
+default-depth: Lair, Orc
 
 ###############################################################################
 # Entries:

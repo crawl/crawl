@@ -32,7 +32,7 @@ O
 ENDMAP
 
 ### Deep entry vaults to ziggurats ############################################
-default-depth: D:21-27
+default-depth: D:21-
 
 NAME:   enter_ziggurat_a
 COLOUR: ; : cyan / lightblue

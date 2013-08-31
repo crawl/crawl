@@ -87,7 +87,7 @@ namespace arena
 
     static int total_trials = 0;
 
-    static bool contest_canceled = false;
+    static bool contest_cancelled = false;
 
     static bool is_respawning = false;
 
@@ -690,7 +690,7 @@ namespace arena
     {
         if (key_is_escape(ch) || toalower(ch) == 'q')
         {
-            contest_canceled = true;
+            contest_cancelled = true;
             mpr("Canceled contest at user request");
             return;
         }
@@ -801,7 +801,7 @@ namespace arena
                     const int ch = getchm();
                     handle_keypress(ch);
                     ASSERT(crawl_state.game_is_arena() && !crawl_state.arena_suspended);
-                    if (contest_canceled)
+                    if (contest_cancelled)
                         return;
                 }
 
@@ -907,6 +907,16 @@ namespace arena
 
     static void global_setup(const string& arena_teams)
     {
+        // Clear some things that shouldn't persist across restart_after_game.
+        // parse_monster_spec and setup_fight will clear the rest.
+        total_trials = trials_done = team_a_wins = ties = 0;
+        contest_cancelled = false;
+        is_respawning = false;
+        uniques_list.clear();
+        memset(banned_glyphs, 0, sizeof(banned_glyphs));
+        arena_type = "";
+        place = level_id(BRANCH_MAIN_DUNGEON, 20);
+
         // [ds] Turning off view_lock crashes arena.
         Options.view_lock_x = Options.view_lock_y = true;
 
@@ -998,7 +1008,7 @@ namespace arena
             if (trials_done < total_trials)
                 delay(Options.arena_delay * 5);
         }
-        while (!contest_canceled && trials_done < total_trials);
+        while (!contest_cancelled && trials_done < total_trials);
 
         if (total_trials > 0)
         {
@@ -1228,7 +1238,7 @@ void arena_monster_died(monster* mons, killer_type killer,
         }
     }
 
-    // Only respawn those monsers which were initally placed in the
+    // Only respawn those monsters which were initially placed in the
     // arena.
     const int midx = mons->mindex();
     if (arena::respawn && arena::to_respawn[midx] != -1

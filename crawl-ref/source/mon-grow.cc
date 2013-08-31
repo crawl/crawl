@@ -45,7 +45,6 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_NAGA, MONS_NAGA_WARRIOR),
     monster_level_up(MONS_NAGA_MAGE, MONS_GREATER_NAGA),
 
-    monster_level_up(MONS_DEEP_ELF_SOLDIER, MONS_DEEP_ELF_FIGHTER),
     monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
 
     // Deep elf magi can become either summoners or conjurers.
@@ -68,8 +67,6 @@ static const monster_level_up mon_grow[] =
     // Spriggan -> rider is no good (no mount), -> defender would be an insane
     // power jump, -> druid or -> air mage would require magic training,
     // -> berserker an altar.
-
-    monster_level_up(MONS_DEEP_DWARF, MONS_DEEP_DWARF_SCION),
 
     monster_level_up(MONS_FAUN, MONS_SATYR),
     monster_level_up(MONS_TENGU, MONS_TENGU_CONJURER, 500),

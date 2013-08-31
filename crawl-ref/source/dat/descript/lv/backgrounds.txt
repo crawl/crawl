@@ -4,12 +4,6 @@ Arcane Marksman
 Burvju strēlnieki nēsā tālcīņas ieročus, reizē arī izmantojot burvestības savu
 naidnieku novājināšanai pret uzbrukumiem no attāluma.
 %%%%
-Assassin
-
-Slepkavas paļaujas uz lavīšanos, gatavi nodurt neuzmanīgos pretiniekus. To
-arsenālā ir ne tikai duncis un apmetnis, tie līdzi nēsā arī nejaukas ar kurāri
-noziestas šautriņas savai pūšamcaurulei.
-%%%%
 Chaos Knight
 
 Haosa bruņinieki ir neparedzamā Ksorna spēlmantiņas, kas atkarīgas no dieva

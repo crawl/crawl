@@ -18,7 +18,9 @@
 #include "maps.h"
 #include "player.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
+#include "spl-util.h"
 #include "state.h"
 #include "store.h"
 #include "stuff.h"
@@ -98,6 +100,26 @@ void initialise_branch_depths()
 }
 
 #define MAX_OVERFLOW_LEVEL 9
+
+static void _use_overflow_temple(vector<god_type> temple_gods)
+{
+    CrawlVector &overflow_temples
+        = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
+
+    const unsigned int level = random_range(2, MAX_OVERFLOW_LEVEL);
+
+    // List of overflow temples on this level.
+    CrawlVector &level_temples = overflow_temples[level - 1].get_vector();
+
+    CrawlHashTable temple;
+
+    CrawlVector &gods = temple[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
+
+    for (unsigned int i = 0; i < temple_gods.size(); i++)
+        gods.push_back((char) temple_gods[i]);
+
+    level_temples.push_back(temple);
+}
 
 // Determine which altars go into the Ecumenical Temple, which go into
 // overflow temples, and on what level the overflow temples are.
@@ -192,27 +214,120 @@ void initialise_temples()
         = you.props[OVERFLOW_TEMPLES_KEY].new_vector(SV_VEC);
     overflow_temples.resize(MAX_OVERFLOW_LEVEL);
 
+    // Count god overflow temple weights.
+    int overflow_weights[NUM_GODS + 1];
+    overflow_weights[0] = 0;
+
+    for (unsigned int i = 1; i < NUM_GODS; i++)
+    {
+        string mapname = make_stringf("temple_overflow_generic_%d", i);
+        mapref_vector maps = find_maps_for_tag(mapname);
+        if (!maps.empty())
+        {
+            int chance = 0;
+            for (mapref_vector::iterator map = maps.begin();
+                 map != maps.end(); map++)
+            {
+                // XXX: this should handle level depth better
+                chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
+                                                  MAX_OVERFLOW_LEVEL));
+            }
+            overflow_weights[i] = chance;
+        }
+        else
+            overflow_weights[i] = 0;
+    }
+
+    // Try to find combinations of overflow gods that have specialised
+    // overflow vaults.
+multi_overflow:
+    for (unsigned int i = 1, size = 1 << overflow_gods.size();
+         i <= size; i++)
+    {
+        unsigned int num = count_bits(i);
+
+        // TODO: possibly make this place single-god vaults too?
+        // XXX: upper limit on num here because this code gets really
+        // slow otherwise.
+        if (num <= 1 || num > 3)
+            continue;
+
+        vector<god_type> this_temple_gods;
+        vector<god_type> new_overflow_gods;
+
+        string tags = make_stringf("temple_overflow_%d", num);
+        for (unsigned int j = 0; j < overflow_gods.size(); j++)
+        {
+            if (i & (1 << j))
+            {
+                string name = replace_all(god_name(overflow_gods[j]), " ", "_");
+                lowercase(name);
+                tags = tags + " temple_overflow_" + name;
+                this_temple_gods.push_back(overflow_gods[j]);
+            }
+            else
+                new_overflow_gods.push_back(overflow_gods[j]);
+        }
+
+        mapref_vector maps = find_maps_for_tag(tags);
+        if (maps.empty())
+            continue;
+
+        if (overflow_weights[num] > 0)
+        {
+            int chance = 0;
+            for (mapref_vector::iterator map = maps.begin(); map != maps.end();
+                 map++)
+            {
+                chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
+                                                  MAX_OVERFLOW_LEVEL));
+            }
+            if (!x_chance_in_y(chance, overflow_weights[num] + chance))
+                continue;
+        }
+
+        _use_overflow_temple(this_temple_gods);
+
+        overflow_gods = new_overflow_gods;
+
+        goto multi_overflow;
+    }
+
     // NOTE: The overflow temples don't have to contain only one
     // altar; they can contain any number of altars, so long as there's
     // at least one vault definition with the tag "overflow_temple_num"
     // (where "num" is the number of altars).
-    for (unsigned int i = 0; i < overflow_gods.size(); i++)
+    for (unsigned int i = 0, size = overflow_gods.size(); i < size; i++)
     {
-        const unsigned int level = random_range(2, MAX_OVERFLOW_LEVEL);
+        unsigned int remaining_size = size - i;
+        // At least one god.
+        vector<god_type> this_temple_gods;
+        this_temple_gods.push_back(overflow_gods[i]);
 
-        // List of overflow temples on this level.
-        CrawlVector &level_temples
-            = overflow_temples[level - 1].get_vector();
+        // Maybe place a larger overflow temple.
+        if (remaining_size > 1 && one_chance_in(remaining_size + 1))
+        {
+            vector<pair<unsigned int, int> > num_weights;
+            unsigned int num_gods = 1;
 
-        CrawlHashTable temple;
+            // Randomly choose from the sizes which have maps.
+            for (unsigned int j = 2; j <= remaining_size; j++)
+            {
+                if (overflow_weights[j] > 0)
+                {
+                    num_weights.push_back(
+                        pair<unsigned int, int>(j, overflow_weights[j]));
+                }
+            }
+            if (!num_weights.empty())
+                num_gods = *(random_choose_weighted(num_weights));
 
-        CrawlVector &gods
-            = temple[TEMPLE_GODS_KEY].new_vector(SV_BYTE);
+            // Add any extra gods (the first was added already).
+            for (; num_gods > 1; i++, num_gods--)
+                this_temple_gods.push_back(overflow_gods[i + 1]);
+        }
 
-        // Only single-altar overflow temples for now.
-        gods.push_back((char) overflow_gods[i]);
-
-        level_temples.push_back(temple);
+        _use_overflow_temple(this_temple_gods);
     }
 }
 

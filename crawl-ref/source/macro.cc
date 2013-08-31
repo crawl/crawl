@@ -108,7 +108,7 @@ static KeymapContext _context_for_command(command_type cmd);
 
 static inline int userfunc_index(int key)
 {
-    int index = (key <= USERFUNCBASE? USERFUNCBASE - key : -1);
+    int index = (key <= USERFUNCBASE ? USERFUNCBASE - key : -1);
     return (index < 0 || index >= (int) userfunctions.size()? -1 : index);
 }
 
@@ -389,7 +389,7 @@ static string vtostr(const keyseq &seq)
 }
 
 /*
- * Add a macro (suprise, suprise).
+ * Add a macro (surprise, surprise).
  */
 static void macro_add(macromap &mapref, keyseq key, keyseq action)
 {

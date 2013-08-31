@@ -28,7 +28,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
@@ -109,7 +109,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
@@ -191,7 +191,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
@@ -271,7 +271,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
@@ -352,7 +352,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
@@ -434,7 +434,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
@@ -517,7 +517,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
@@ -598,7 +598,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generating build-specfic headers..."
+				Description="Generating build-specific headers..."
 				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool

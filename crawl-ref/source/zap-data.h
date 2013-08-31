@@ -3,9 +3,6 @@
  * @brief Zap definitions. See zap_info struct in beam.cc.
 **/
 
-#ifndef ZAP_DATA_H
-#define ZAP_DATA_H
-
 /*
 struct zap_info
 {
@@ -495,7 +492,7 @@ struct zap_info
     200,
     new calcdice_calculator<3, 8, 3, 5>,
     new tohit_calculator<20, 1, 10>,
-    RED,
+    LIGHTRED,
     false,
     BEAM_HELLFIRE,
     DCHAR_FIRED_ZAP,
@@ -519,22 +516,6 @@ struct zap_info
     false,
     false,
     6
-},
-
-{
-    ZAP_STRIKING,
-    "concussive force",
-    50,
-    new dicedef_calculator<1, 8, 1, 5>,
-    new tohit_calculator<8, 1, 10>,
-    BLACK,
-    false,
-    BEAM_MMISSILE,
-    NUM_DCHAR_TYPES,
-    true,
-    false,
-    false,
-    4 // XXX: this is just a guess.
 },
 
 {
@@ -1071,9 +1052,9 @@ struct zap_info
 {
     ZAP_FORCE_LANCE,
     "lance of force",
-    50,
-    new dicedef_calculator<2, 3, 1, 12>,
-    new tohit_calculator<10, 1, 10>,
+    100,
+    new dicedef_calculator<2, 6, 1, 6>,
+    new tohit_calculator<10, 1, 9>,
     CYAN,
     false,
     BEAM_MMISSILE,
@@ -1081,6 +1062,53 @@ struct zap_info
     true,
     false,
     false,
-    3
+    5
 },
-#endif
+
+{
+    ZAP_SEARING_RAY_I,
+    "searing ray",
+    50,
+    new dicedef_calculator<2, 3, 1, 13>,
+    new tohit_calculator<10, 1, 9>,
+    MAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    2
+},
+
+{
+    ZAP_SEARING_RAY_II,
+    "searing ray",
+    50,
+    new dicedef_calculator<3, 3, 1, 12>,
+    new tohit_calculator<11, 1, 8>,
+    LIGHTMAGENTA,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    false,
+    2
+},
+
+{
+    ZAP_SEARING_RAY_III,
+    "searing ray",
+    50,
+    new dicedef_calculator<4, 3, 1, 12>,
+    new tohit_calculator<12, 1, 7>,
+    WHITE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    2
+},

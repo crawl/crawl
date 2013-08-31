@@ -251,11 +251,8 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         }
 
         // You can't open doors in bat form.
-        if ((grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
-            && !try_fallback)
-        {
+        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
             return player_can_open_doors() || you.form == TRAN_JELLY;
-        }
     }
 
     return feat_is_traversable(grid, try_fallback);
@@ -593,6 +590,8 @@ static void _userdef_run_stoprunning_hook(void)
 #ifdef CLUA_BINDINGS
     if (you.running)
         clua.callfn("ch_stop_running", "s", _run_mode_name(you.running));
+#else
+    UNUSED(_run_mode_name);
 #endif
 }
 
@@ -1912,7 +1911,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
     level_id lid(branch, subdepth);
     vec.push_back(lid);
 
-    if (branch != BRANCH_MAIN_DUNGEON)
+    if (branch != root_branch)
     {
         branch_type pb;
         int pd;
@@ -2198,11 +2197,16 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         case '\n': case '\r':
             return ID_REPEAT;
         case '<':
-            return (allow_updown? ID_UP : ID_CANCEL);
+            return (allow_updown ? ID_UP : ID_CANCEL);
         case '>':
-            return (allow_updown? ID_DOWN : ID_CANCEL);
+            return (allow_updown ? ID_DOWN : ID_CANCEL);
         case CONTROL('P'):
-            return _find_parent_branch(curr.branch);
+            {
+                const branch_type parent = _find_parent_branch(curr.branch);
+                if (parent < NUM_BRANCHES)
+                    return parent;
+            }
+            break;
         case '.':
             return curr.branch;
         case '*':
@@ -2269,7 +2273,7 @@ level_id find_up_level(level_id curr, bool up_branch)
 
     if (curr.depth < 1)
     {
-        if (curr.branch != BRANCH_MAIN_DUNGEON)
+        if (curr.branch != BRANCH_MAIN_DUNGEON && curr.branch != root_branch)
         {
             level_id parent;
             _find_parent_branch(curr.branch, curr.depth,
@@ -2425,7 +2429,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
         char buf[100];
         const int response =
-            cancelable_get_line(buf, sizeof buf, NULL, _travel_depth_keyfilter);
+            cancellable_get_line(buf, sizeof buf, NULL, _travel_depth_keyfilter);
 
         if (!response)
             return _parse_travel_target(buf, target);
@@ -2545,9 +2549,6 @@ static void _start_translevel_travel()
 
 void start_translevel_travel(const travel_target &pos)
 {
-    if (!i_feel_safe(true, true))
-        return;
-
     if (!can_travel_to(pos.p.id))
     {
         if (!can_travel_interlevel())
@@ -2592,20 +2593,20 @@ void start_translevel_travel(const travel_target &pos)
     }
 
     trans_travel_dest = _get_trans_travel_dest(level_target);
-    _start_translevel_travel();
-}
 
-static void _start_translevel_travel_prompt()
-{
     if (!i_feel_safe(true, true))
         return;
-
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
         return;
     }
 
+    _start_translevel_travel();
+}
+
+static void _start_translevel_travel_prompt()
+{
     // Update information for this level. We need it even for the prompts, so
     // we can't wait to confirm that the user chose to initiate travel.
     travel_cache.get_level_info(level_id::current()).update();
@@ -2962,9 +2963,6 @@ void start_travel(const coord_def& p)
     if (p == you.pos())
         return;
 
-    if (!i_feel_safe(true, true))
-        return;
-
     // Can we even travel to this square?
     if (!in_bounds(p))
         return;
@@ -2981,6 +2979,14 @@ void start_travel(const coord_def& p)
 
     if (!can_travel_interlevel())
     {
+        if (!i_feel_safe(true, true))
+            return;
+        if (you.confused())
+        {
+            canned_msg(MSG_TOO_CONFUSED);
+            return;
+        }
+
         // Start running
         you.running = RMODE_TRAVEL;
         _start_running();
@@ -3000,7 +3006,7 @@ void start_explore(bool grab_items)
     // Forget interrupted butchering.
     maybe_clear_weapon_swap();
 
-    you.running = (grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
+    you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 
     if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
     {
@@ -3219,7 +3225,7 @@ string stair_info::describe() const
         return make_stringf(" (-> %s@(%d,%d)%s%s)", lp.id.describe().c_str(),
                              lp.pos.x, lp.pos.y,
                              guessed_pos? " guess" : "",
-                             type == PLACEHOLDER? " placeholder" : "");
+                             type == PLACEHOLDER ? " placeholder" : "");
     }
     else if (destination.id.is_valid())
         return make_stringf(" (->%s (?))", destination.id.describe().c_str());

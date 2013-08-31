@@ -1,9 +1,9 @@
 %%%%
-No ability
+No ability ability
 
 Si lees esta descripción, ha ocurrido un error en el programa.
 %%%%
-Spit Poison
+Spit Poison ability
 
 Escupes veneno al monstruo que apuntes.
 %%%%
@@ -11,44 +11,44 @@ Blink ability
 
 Translocación aleatoria a corta distancia.
 %%%%
-Breathe Dispelling Energy
+Breathe Dispelling Energy ability
 
 Exhalas una descarga de energía al monstruo que apuntes, posiblemente
 eliminando alguno de sus encantamientos.
 %%%%
-Breathe Fire
+Breathe Fire ability
 
 Exhalas una llamarada al monstruo que apuntes, posiblemente dejando nubes en
 llamas tras su paso.
 %%%%
-Breathe Frost
+Breathe Frost ability
 
 Exhalas una ráfaga heladora al monstruo que apuntes.
 %%%%
-Breathe Poison Gas
+Breathe Poison Gas ability
 
 Exhalas una nube de gas venenoso al monstruo que apuntes.
 %%%%
-Breathe Lightning
+Breathe Lightning ability
 
 Liberas una gran descarga de electricidad creando una incontrolable tormenta
 eléctrica.
 %%%%
-Breathe Sticky Flame
+Breathe Sticky Flame ability
 
 Exhalas una llamarada de fuego adherente al monstruo que apuntes. Como sugiere
 el nombre, el fuego se adhiere de modo que el monstruo se verá cubierto en
 llamas por varios turnos hasta que se extinga. Puede salpicar al impactar.
 %%%%
-Breathe Steam
+Breathe Steam ability
 
 Exhalas una ráfaga de vapor a alta temperatura al monstruo que apuntes.
 %%%%
-Breathe Noxious Fumes
+Breathe Noxious Fumes ability
 
 Exhalas humos nocivos al monstruo que apuntes.
 %%%%
-Bat Form
+Bat Form ability
 
 Te conviertes en un veloz murciélago vampiro. En esta forma ni puedes
 interactuar con los objetos (salvo recogiéndolos o dejándolos caer) ni
@@ -56,51 +56,47 @@ pronunciar hechizos. Date cuenta de que la forma de murciélago disminuirá tu
 Fuerza actual aunque aumentará tu Destreza. Por tanto no podrás cambiar de
 forma si tu Fuerza es demasiado baja.
 %%%%
-Bottle Blood
+Bottle Blood ability
 
 A partir del nivel de experiencia 6, los Vampiros pueden embotellar la sangre
 de aquellos cadáveres sobre los que se situen, si contienen sangre y no están
 en descomposición.
 %%%%
-Spit Acid
+Spit Acid ability
 
 Escupes ácido al monstruo que apuntes.
 %%%%
-Fly
+Fly ability
 
 Empiezas a volar. Durante el vuelo puedes sobrevolar agua y obstáculos
 similares. Se advierte, sin embargo, que el vuelo puede expirar en momentos
 inoportunos y causar que te precipites a tu muerte.
 %%%%
-Hellfire
+Hellfire ability
 
 Quema a tus enemigos con fuego infernal.
 %%%%
-Release Delayed Fireball
+Release Delayed Fireball ability
 
 Instantáneamente liberas una bola de fuego previamente memorizada (retardada)
 sin coste adicional de magia o hambre.
 %%%%
-Self-Restoration
+Self-Restoration ability
 
 A costa de perder un punto de magia permanentemente, recuperas tu Fuerza,
 Destreza e Inteligencia, y sanas una gran cantidad de puntos de vida en
 descomposición.
 %%%%
-Device Recharging
+Device Recharging ability
 
 A costa de perder un punto de magia permanentemente se recarga una vara o una
 barra.
 %%%%
-Evoke Teleportation
+Evoke Teleportation ability
 
 Te teleportas a una posición al azar en el nivel.
 %%%%
-Evoke Blink
-
-Translocación aleatoria a corta distancia.
-%%%%
-Evoke Berserk Rage
+Evoke Berserk Rage ability
 
 Te vuelves berserk. Entrar en trance berserk incrementa espectacularmente,
 aunque por poco tiempo, tus puntos de vida y la capacidad de daño en el combate
@@ -112,28 +108,28 @@ uno queda profundamente exhausto, un periodo durante el que quedas ralentizado,
 no puedes volverte berserk nuevamente y, ocasionalmente, incluso podrías
 desmayarte.
 %%%%
-Evoke Invisibility
+Evoke Invisibility ability
 
 Te vuelves invisible durante un tiempo limitado. Volverse invisible incrementa
 tu contaminación mágica y puede finalmente causar brillo.
 %%%%
-Turn Visible
+Turn Visible ability
 
 Te vuelves visible de nuevo.
 %%%%
-Stop Flying
+Stop Flying ability
 
 Paras de volar.
 %%%%
-Evoke Fog
+Evoke Fog ability
 
 Expulsa una densa nube de humo para dificultar la visión.
 %%%%
-End Transformation
+End Transformation ability
 
 Recuperas tu forma normal, tras un leve retardo.
 %%%%
-Recite
+Recite ability
 
 Predicas a monstruos sobre las Leyes de Zin, lo que puede causar varios
 efectos. Hay cuatro libros sobre los que puedes predicar:
@@ -154,48 +150,48 @@ permanentemente desprovistos de la capacidad para difundir su perversa fe.
 * Libro del Anatema: Los demonios y los no-muertos son odiados por Zin. Este
 libro te permite combatirlos.
 %%%%
-Vitalisation
+Vitalisation ability
 
 Zin te aporta una resistencia divina y sustento. La resistencia divina te
 protege de la enfermedad, de envenenamientos, petrificación, confusión y
 descomposición, además de incrementar y mantener temporalmente tu Fuerza,
 Inteligencia y Destreza.
 %%%%
-Sanctuary
+Sanctuary ability
 
 Por un breve espacio de tiempo estás a salvo en un refugio divino. Mientras
 estés dentro del santuario los monstruos no te atacarán, pero la protección
 desaparecerá en cuanto se acabe con la paz.
 %%%%
-Cure All Mutations
+Cure All Mutations ability
 
 Se curan todas tus mutaciones - pero sólo por una vez.
 %%%%
-Divine Shield
+Divine Shield ability
 
 El Resplandeciente te concede un escudo divino. Dado que se mantiene por
 poderes divinos no interfiere con tu equipación. Sin embargo está controlado
 por tu voluntad y tu capacidad en Escudos lo mejorará.
 %%%%
-Cleansing Flame
+Cleansing Flame ability
 
 Invocas una enorme llamarada de furia divina centrada en ti, dañando
 severamente a los no-muertos y a los demonios. El resto de hostiles también se
 ven afectados, aunque en menor medida, mientras que tus aliados y tú nunca os
 veis afectados.
 %%%%
-Summon Divine Warrior
+Summon Divine Warrior ability
 
 Convocas a un ángel o daeva, que son unos poderosos guerreros enfrentados al
 mal. Pueden ser bendecidos por El Resplandeciente para permanecer más tiempo en
 este mundo.
 %%%%
-Receive Corpses
+Receive Corpses ability
 
 Se crean uno o más cadáveres de monstruos reanimables cerca de ti. El número y
 frescor de éstos depende de la capacidad en Necromancia.
 %%%%
-Torment
+Torment ability
 
 Sacrificas a un cadáver para que cualquiera en tu rango de visión, incluyéndote
 a ti, experimente todo el dolor que esa criatura sufrió en su vida. Esto
@@ -203,13 +199,13 @@ diezmará la resiliencia de aquellos que puedan sentirlo.
 
 Kikubaaqudgha puede elegir entre protegerte de ello... o no.
 %%%%
-Animate Remains
+Animate Remains ability
 
 Reanimas a un cadáver o esqueleto y lo conviertes en tu seguidor. Date cuenta
 de que los zombies y los esqueletos no pueden dejar el nivel donde fueron
 creados.
 %%%%
-Injury Mirror
+Injury Mirror ability
 
 Daña a los monstruos que te ataquen, reflejando hacia ellos el daño que ellos
 te hagan a ti.
@@ -220,12 +216,12 @@ Reanimas a todos los cadáveres o esqueletos y los conviertes en tus seguidores.
 Date cuenta de que los zombies y los esqueletos no pueden dejar el nivel donde
 fueron creados.
 %%%%
-Drain Life
+Drain Life ability
 
 Sanas puntos de vida absorbiendo la fuerza vital de los monstruos alrededor de
 ti.
 %%%%
-Enslave Soul
+Enslave Soul ability
 
 Marcas el alma de un monstruo vivo y con inteligencia como lista para ser
 tomada. Cuando el monstruo marcado muera, su alma será tuya.
@@ -238,56 +234,56 @@ nivel de Invocaciones.
 
 Las almas esclavizadas pueden seguirte más allá del nivel donde fueron creadas.
 %%%%
-Animate Remains or Dead
+Animate Remains or Dead ability
 
 Si lees esta descripción, ha ocurrido un error en el programa.
 %%%%
-Heroism
+Heroism ability
 
 Temporalmente se incrementan todas tus capacidades de combate, incluyendo la
 capacidad de pasar desapercibido o de evitar trampas.
 %%%%
-Finesse
+Finesse ability
 
 Incrementas en gran medida tu velocidad de combate sin perder precisión. Este
 efecto no natural causa pequeñas cantidades de contaminación mágica y la
 exposición prolongada puede ser mala para tu salud.
 %%%%
-Minor Destruction
+Minor Destruction ability
 
 Disparas un destructivo rayo al monstruo que apuntes
 %%%%
-Lesser Servant of Makhleb
+Lesser Servant of Makhleb ability
 
 Convoca a un demonio menor, con una probabilidad de ser hostil si tienes un
 nivel bajo de Invocaciones.
 %%%%
-Major Destruction
+Major Destruction ability
 
 Lanza un rayo destructivo o una explosión al monstruo que apuntes.
 %%%%
-Greater Servant of Makhleb
+Greater Servant of Makhleb ability
 
 Convocas a un demonio mayor, con una probabilidad de que sea hostil con un
 nivel bajo en Invocaciones.
 %%%%
-Channel Energy
+Channel Energy ability
 
 Recargas tus reservas mágicas en una cierta cantidad en función del nivel en
 Invocaciones.
 %%%%
-Forget Spell
+Forget Spell ability
 
 Olvidas cualquier hechizo de los que hayas memorizado, para poder liberar
 memoria para aprender otros.
 %%%%
-Burn Spellbooks
+Burn Spellbooks ability
 
 Prendes fuego a todos los libros de magia que estén en tu campo de visión. El
 fuego está alimentado por la ira de Trog, y a Trog le gusta más si ni siquiera
 te molestas en saber que locura de libros arden.
 %%%%
-Berserk
+Berserk ability
 
 Te vuelves berserk. Entrar en trance berserk incrementa espectacularmente,
 aunque por poco tiempo, tus puntos de vida y la capacidad de daño en el combate
@@ -299,17 +295,17 @@ uno queda profundamente exhausto, un periodo durante el que quedas ralentizado,
 no puedes volverte berserk nuevamente y, ocasionalmente, incluso podrías
 desmayarte.
 %%%%
-Trog's Hand
+Trog's Hand ability
 
 Invoca una poderosa regeneración que se añade junto con otras fuentes e incluso
 permite que especies sin capacidad de curación se regeneren. También aumenta la
 protección ante efectos mágicos.
 %%%%
-Brothers in Arms
+Brothers in Arms ability
 
 Convocas a aliados enormes y furiosos para causar estragos.
 %%%%
-Divine Protection
+Divine Protection ability
 
 Implora a Elyvilon para que salve tu vida. Si resultas mortalmente herido,
 Elyvilon puede deshacer el golpe mortal. Individuos especialmente piadosos
@@ -320,7 +316,7 @@ siempre es gratis).
 Cuidado: ¡matar a otros mientras pides que se te salve a ti mismo es un pecado
 capital!
 %%%%
-Lesser Healing
+Lesser Healing ability
 
 En función de tu nivel de Invocaciones, sanas a una criatura que no seas tú por
 una pequeña cantidad. Usar esta habilidad en monstruos hostiles los intentará
@@ -337,18 +333,18 @@ de piedad. Si no, el monstruo no se ve afectado y no ganas nada.
 
 Puedes sanar a aliados y a monstruos neutrales.
 %%%%
-Lesser Self-Healing
+Lesser Self-Healing ability
 
 En función de tu nivel de Invocaciones, sanas una pequeña cantidad de puntos de
 vida.
 %%%%
-Purification
+Purification ability
 
 Purgas tu cuerpo de todos los efectos nocivos como enfermedad, envenenamiento,
 lentitud, petrificación, confusión y descomposición, y restauras completamente
 tu Fuerza, Destreza e Inteligencia.
 %%%%
-Greater Healing
+Greater Healing ability
 
 En función de tu nivel de Invocaciones, sanas a una criatura que no seas tú por
 una pequeña cantidad. Usar esta habilidad en monstruos hostiles los intentará
@@ -365,85 +361,85 @@ de piedad. Si no, el monstruo no se ve afectado y no ganas nada.
 
 Puedes sanar a aliados y a monstruos neutrales.
 %%%%
-Greater Self-Healing
+Greater Self-Healing ability
 
 En función de tu nivel de Invocaciones, sanas una cantidad moderada de puntos
 de vida. Grosso modo, la Sanación Mayor te permitirá sanar tres veces la
 cantidad de la Sanación Menor a un coste de piedad un poco mayor.
 %%%%
-Divine Vigour
+Divine Vigour ability
 
 Dependiendo de tu capacidad en Invocaciones, se restauran una gran cantidad de
 puntos de vida y mágicos, además de aumentarlos temporalmente.
 %%%%
-Depart the Abyss
+Depart the Abyss ability
 
 Dejas el Abismo para regresar al lugar de donde viniste.
 %%%%
-Bend Space
+Bend Space ability
 
 Pliegas la estructura del espacio a tu alrededor, de modo que te trasladas
 instantáneamente a una corta distancia, y posiblemente también trasladando y
 dañando a monstruos cercanos.
 %%%%
-Banish
+Banish ability
 
 Intentas desterrar a un monstruo al Abismo.
 %%%%
-Corrupt
+Corrupt ability
 
 Corrompe el nivel actual liberando energías abismales en él. Esto causará que
 el nivel cambie bastante en su aspecto y permitirá que accedan demonios del
 Abismo para causar destrucción. Esto no funcionará en niveles ya corruptos o en
 el propio Abismo.
 %%%%
-Enter the Abyss
+Enter the Abyss ability
 
 Te transportas al reino de Lugonu instantáneamente... a costa de reducir
 permanentemente tus máximos de vida y magia. El esfuerzo asociado a esta
 habilidad te vaciará de vida y magia.
 %%%%
-Draw One
+Draw One ability
 
 Elige cualquier mazo de tu inventario y saca una carta de él.
 %%%%
-Peek at Two
+Peek at Two ability
 
 Descartas una carta de un mazo de tu inventario para sacar dos cartas del mazo,
 mirarlas y mezclarlas de nuevo en el mazo. El mazo será inscrito conteniendo
 dichas dos cartas y, si fueran diferentes, eso identificaría al mazo.
 %%%%
-Triple Draw
+Triple Draw ability
 
 Sacas tres cartas de un mazo en tu inventario, las miras, y decides cual
 conservar, descartando las otras dos.
 %%%%
-Deal Four
+Deal Four ability
 
 Extraes cuatro cartas de un mazo no marcado en el tiempo que normalmente
 extraerías una. El resto del mazo es descartado. Si el mazo no contiene
 suficientes cartas, Nemelex te dará una carta adicional, pero es posible no sea
 de tu agrado.
 %%%%
-Stack Five
+Stack Five ability
 
 Sacas cinco cartas de cualquier mazo no marcado de tu inventario, perdiendo el
 resto de las cartas. Mira a las cartas y las reordenas de la forma que
 prefieras. Por lo tanto, puedes sacar dichas cartas en el orden que elegiste.
 %%%%
-Smiting
+Smiting ability
 
 Golpea a un enemigo dentro de tu campo de visión. Esto no requiere un camino
 directo, simplemente viendo al enemigo es suficiente.
 %%%%
-Sunlight
+Sunlight ability
 
 Iluminas con luz solar un área pequeña. Los monstruos iluminados por la luz
 serán más fáciles de dar. El agua afectada por la luz se evaporará. En
 particular, el agua profunda se volverá superficial, y el agua superficial se
 secará completamente, revelando el suelo.
 %%%%
-Growth
+Growth ability
 
 Usa fruta para hacer crecer un anillo de plantas a tu alrededor. Si no se puede
 formar el anillo completo (porque no hay suficiente fruta), las plantas
@@ -451,17 +447,17 @@ crecerán en casillas adyacentes a ti y cercanas a los monstruos. Las plantas
 así creadas ganan un bonus sobre sus puntos de vida, que es proporcional a tu
 nivel de Invocaciones.
 %%%%
-Rain
+Rain ability
 
 Provocas que llueva a tu alrededor, convirtiendo el suelo en aguas poco
 profunda y a las aguas poco profundas en aguas profundas.
 %%%%
-Reproduction
+Reproduction ability
 
 Creas esporas gigantes de los cadáveres en tu linea de visión. Las esporas
 explotarán, causando daño a ti o a tus enemigos.
 %%%%
-Evolution
+Evolution ability
 
 Conviertes plantas y hongos en especies más fuertes. Aumentar de nivel a los
 hongos requiere piedad mientras que las plantas requieren fruta. Las plantas
@@ -469,183 +465,183 @@ evolucionadas ganan un bonus de ataque proporcional al nivel de Invocaciones
 del usuario, y las plantas oklob son más propensas a escupir ácido a mayores
 niveles de Invocaciones.
 %%%%
-Bend Time
+Bend Time ability
 
 Intentas de ralentizar a cualquiera que este adyacente a ti. Un nivel alto en
 Invocaciones lo hace más difícil de resistir.
 %%%%
-Temporal Distortion
+Temporal Distortion ability
 
 Distorsionas el flujo del tiempo a tu alrededor, causando que los monstruos
 avancen en el tiempo relativo a ti.
 %%%%
-Slouch
+Slouch ability
 
 Causas daño a todo el que esté en tu campo de visión moviéndose más rápido que
 tu. Aquellos mágicamente acelerados serán agredidos especialmente.
 %%%%
-Step From Time
+Step From Time ability
 
 Te excluyes del flujo del tiempo. Las cosas a tu alrededor sucederán a su
 típico ritmo, los monstruos merodearán, los objetos perecederos se
 descompondrán, las plantas crecerán. Tras algo de tiempo, volverás con el mismo
 estado que tenías en el mismo segundo en que partiste.
 %%%%
-Request Jelly
+Request Jelly ability
 
 Creas una gelatina neutral que vagará por el suelo digiriendo objetos.
 %%%%
-Jelly Paralyse
+Jelly Paralyse ability
 
 Rezas para detener temporalmente la consumición de objetos por parte de tus
 limos.
 %%%%
-Slimify
+Slimify ability
 
 Recubres el arma que empuñas, o tus propios puños, con baba, transformando al
 siguiente ser vivo o no-muerto golpeado en una baba neutral.
 %%%%
-Cure Bad Mutation
+Cure Bad Mutation ability
 
 Se elimina una mutación perjudicial al azar.
 %%%%
-Scrying
+Scrying ability
 
 Ganas visión astral para ver a través de los muros. Esto no es suficiente para
 permitirte apuntar hechizos o habilidades, incluso aquellos que funcionarían a
 través del vidrio.
 %%%%
-Transfer Knowledge
+Transfer Knowledge ability
 
 Sacrifica una parte de una de tus capacidades para mejorar otra.
 %%%%
-End Transfer Knowledge
+End Transfer Knowledge ability
 
 Cancelas una transferencia de capacidades.
 %%%%
-Renounce Religion
+Renounce Religion ability
 
 Renuncias a tu fe. Esto hará a tu personaje abandonar a su dios (y normalmente
 enfadar a dicho dios).
 %%%%
-Make dart trap
+Make dart trap ability
 
 Creas una trampa de dardos en la posición señalada.
 %%%%
-Make oklob sapling
+Make oklob sapling ability
 
 Plantas una planta oklob joven con la habilidad de escupir ácido en la posición
 señalada.
 %%%%
-Make arrow trap
+Make arrow trap ability
 
 Creas una trampa de flechas en la posición señalada.
 %%%%
-Make plant
+Make plant ability
 
 Causa que crezca una planta en la posición señalada.
 %%%%
-Remove Curse
+Remove Curse ability
 
 Elimina todas las maldiciones de tu equipación.
 %%%%
-Make burning bush
+Make burning bush ability
 
 Plantas una zarza en llamas con la habilidad de lanzar fuego y de ver monstruos
 invisibles en el lugar señalado.
 %%%%
-Make altar
+Make altar ability
 
 Creas un altar para tu dios en tu posición.
 %%%%
-Make grenades
+Make grenades ability
 
 Crea un cierto número de explosivas esporas gigantes a tu alrededor.
 %%%%
-Make oklob plant
+Make oklob plant ability
 
 Plantas una planta oklob adulta con la habilidad de escupir ácido en la
 posición señalada
 %%%%
-Make net trap
+Make net trap ability
 
 Creas una trampa de red en la posición señalada.
 %%%%
-Make ice statue
+Make ice statue ability
 
 Construyes una estatua con varias habilidades glaciares en la posición
 señalada.
 %%%%
-Make spear trap
+Make spear trap ability
 
 Creas una trampa de lanzas en la posición señalada.
 %%%%
-Make alarm trap
+Make alarm trap ability
 
 Creas una trampa de alarma para alertar de la presencia de monstruos en la
 posición señalada.
 %%%%
-Make mushroom circle
+Make mushroom circle ability
 
 Haces crecer un círculo de hongos centrado en la posición señalada.
 %%%%
-Make bolt trap
+Make bolt trap ability
 
 Creas una trampa de virotes en la posición señalada.
 %%%%
-Make crystal statue
+Make crystal statue ability
 
 Construyes una estatua con la habilidad de confundir monstruos en el lugar
 señalado.
 %%%%
-Make needle trap
+Make needle trap ability
 
 Creas una trampa de dardos venenosos en la posición señalada.
 %%%%
-Zot-teleport
+Zot-teleport ability
 
 Realizas una teleportación controlada.
 %%%%
-Make water
+Make water ability
 
 Creas una charca de agua en tu posición
 %%%%
-Make lightning spire
+Make lightning spire ability
 
 Construyes una espiral de rayos con la habilidad de lanzar electricidad en la
 posición señalada.
 %%%%
-Make silver statue
+Make silver statue ability
 
 Construyes una estatua con la habilidad de convocar demonios amistosos en la
 posición señalada.
 %%%%
-Make bazaar
+Make bazaar ability
 
 Creas un portal a un bazar en tu posición.
 %%%%
-Acquire gold
+Acquire gold ability
 
 Consigues una gran cantidad de oro.
 %%%%
-Make oklob circle
+Make oklob circle ability
 
 Haces crecer un círculo de plantas oklob centrado en la posición señalada.
 %%%%
-Sage
+Sage ability
 
 Canalizas algo de tu experiencia lograda hacia una cierta capacidad y la
 entrenas más rápido de lo normal.
 %%%%
-Acquirement
+Acquirement ability
 
 Consigues un objeto de la clase que tu elijas.
 %%%%
-Make blade trap
+Make blade trap ability
 
 Creas una trampa de filo en la posición señalada.
 %%%%
-Make curse skull
+Make curse skull ability
 
 Creas una calavera maldita con la habilidad de convocar a los no-muertos en la
 posición seleccionada, con el coste de sufrir un efecto de magia negra.

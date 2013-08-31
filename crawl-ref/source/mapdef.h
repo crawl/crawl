@@ -663,6 +663,8 @@ class mons_spec
 
     monster_type initial_shifter;
 
+    vector<monster_type> chimera_mons;
+
     CrawlHashTable props;
 
     mons_spec(monster_type t = RANDOM_MONSTER,

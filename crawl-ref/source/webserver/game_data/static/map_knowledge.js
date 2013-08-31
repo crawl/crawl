@@ -1,5 +1,5 @@
 define(["jquery", "./enums"], function ($, enums) {
-    var k, monster_table, dirty_locs, bounds, bounds_changed;
+    var k, player_on_level, monster_table, dirty_locs, bounds, bounds_changed;
 
     function init()
     {
@@ -209,6 +209,8 @@ define(["jquery", "./enums"], function ($, enums) {
         clear: clear,
         touch: touch,
         visible: visible,
+        player_on_level: function () { return player_on_level; },
+        set_player_on_level: function (v) { player_on_level = v; },
         dirty: function () { return dirty_locs; },
         reset_dirty: function () { dirty_locs = []; },
         bounds: function () { return bounds; },

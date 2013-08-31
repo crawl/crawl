@@ -28,7 +28,7 @@
 
 int che_stat_boost(int piety)
 {
-    if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
+    if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
         return 0;
     if (piety < 30)  // Since you've already begun to slow down.
         return 1;
@@ -41,7 +41,7 @@ int che_stat_boost(int piety)
 void jiyva_eat_offlevel_items()
 {
     // For wizard mode 'J' command
-    if (you.religion != GOD_JIYVA)
+    if (!you_worship(GOD_JIYVA))
         return;
 
     if (crawl_state.game_is_sprint())
@@ -55,10 +55,10 @@ void jiyva_eat_offlevel_items()
         const int branch = random2(NUM_BRANCHES);
         int js = JS_NONE;
 
-        // Choose level based on main dungeon depth so that levels short branches
-        // aren't picked more often.
+        // Choose level based on main dungeon depth so that levels of
+        // short branches aren't picked more often.
         ASSERT(brdepth[branch] <= MAX_BRANCH_DEPTH);
-        const int level  = random2(MAX_BRANCH_DEPTH) + 1;
+        const int level = random2(MAX_BRANCH_DEPTH) + 1;
 
         const level_id lid(static_cast<branch_type>(branch), level);
 
@@ -105,7 +105,7 @@ void jiyva_eat_offlevel_items()
 
 void jiyva_slurp_bonus(int item_value, int *js)
 {
-    if (you.penance[GOD_JIYVA])
+    if (player_under_penance(GOD_JIYVA))
         return;
 
     if (you.piety >= piety_breakpoint(1)
@@ -167,7 +167,7 @@ static bool _two_handed()
 
 void ash_check_bondage(bool msg)
 {
-    if (you.religion != GOD_ASHENZARI)
+    if (!you_worship(GOD_ASHENZARI))
         return;
 
     int cursed[NUM_ET] = {0}, slots[NUM_ET] = {0};
@@ -381,7 +381,7 @@ static bool _jewel_auto_id(const item_def& item)
     case RING_INTELLIGENCE:
         return !!item.plus;
     case AMU_FAITH:
-        return (you.religion != GOD_NO_GOD);
+        return (!you_worship(GOD_NO_GOD));
     case AMU_THE_GOURMAND:
         return (you.species != SP_MUMMY
                 && player_mutation_level(MUT_HERBIVOROUS) < 3);
@@ -406,7 +406,7 @@ bool god_id_item(item_def& item, bool silent)
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
     iflags_t ided = 0;
 
-    if (you.religion == GOD_ASHENZARI)
+    if (you_worship(GOD_ASHENZARI))
     {
         // Don't identify runes or the orb, since this has no gameplay purpose
         // and might mess up other things.
@@ -464,7 +464,7 @@ bool god_id_item(item_def& item, bool silent)
             ided |= ISFLAG_EQ_JEWELLERY_MASK;
         }
     }
-    else if (you.religion == GOD_ELYVILON)
+    else if (you_worship(GOD_ELYVILON))
     {
         if ((item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
             && (is_evil_item(item) || is_unholy_item(item)))
@@ -510,7 +510,7 @@ bool god_id_item(item_def& item, bool silent)
 
 void ash_id_monster_equipment(monster* mon)
 {
-    if (you.religion != GOD_ASHENZARI)
+    if (!you_worship(GOD_ASHENZARI))
         return;
 
     bool id = false;
@@ -585,7 +585,7 @@ static bool _check_portal(coord_def where)
 
 int ash_detect_portals(bool all)
 {
-    if (you.religion != GOD_ASHENZARI)
+    if (!you_worship(GOD_ASHENZARI))
         return 0;
 
     int portals_found = 0;

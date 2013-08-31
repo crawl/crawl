@@ -17,7 +17,7 @@ The contents of this text are:
 1-  Starting Screen.
                 name, remember_name, weapon, species, background,
                 random_pick, good_random, restart_after_game,
-                default_manual_training
+                default_manual_training, autopickup_starting_ammo
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Interface.
@@ -53,11 +53,10 @@ The contents of this text are:
 3-h     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
-                confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
-                easy_eat_gourmand, easy_eat_contaminated, auto_drop_chunks,
+                confirm_butcher, easy_eat_chunks, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
-                autofight_throw, autofight_throw_nomove
+                autofight_throw, autofight_throw_nomove, autofight_fire_stop
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -245,7 +244,7 @@ It is possible to reset, add items to, or remove items from such an option.
    Empty the list:
       drop_filter =
 
-The "listopt = value" syntax first clears the list, then adds values.  In
+The "listopt = value" syntax first clears the list, then adds values. In
 previous versions of Crawl it was a synonym for +=, and only bare
 "listopt =" cleared the list.
 
@@ -308,19 +307,25 @@ remember_name = true
         simply reuse your old name if remember_name is set.
 
 weapon = (short sword | falchion | quarterstaff | hand axe | spear | mace
-          | trident | unarmed | random)
+          | trident | unarmed | random | viable)
         Specifying the weapon option allows you to bypass the weapon
         selection screen. Tridents and falchions are restricted to only
         fighters and gladiators, quarterstaves are restricted to gladiators,
         and unarmed is restricted to races with claws. The standard weapon
         prompt will be shown if an illegal choice for the selected
-        background is specified.
+        background is specified. The "viable" option makes a random choice
+        from among the "good" weapons for the chosen character.
 
-species = (Human |...| Vampire | random)
-        The usual abbreviations (Hu, HE, etc.) work.
+species = (Human |...| Vampire | random | viable)
+        The usual abbreviations (Hu, HE, etc.) work. Because species and
+        background selections from options are applied before player choices,
+        "viable" is essentially the same as "random" unless the background
+        option is also set.
 
-background = (Fighter |...| Wanderer | random)
-        Here again the abbreviations (Fi, Wz, Pr, etc.) can be used.
+background = (Fighter |...| Wanderer | random | viable)
+        Here again the abbreviations (Fi, Wz, Pr, etc.) can be used. The same
+        caveat applies to "viable": it is only really meaningful if the
+        species option is also set.
 
 random_pick = false
         The random_pick option will randomly generate a character.
@@ -329,8 +334,8 @@ random_pick = false
 
 good_random = true
         Whenever random_pick is used, species or background are set
-        random, or a remembered random choice is executed in the
-        character selection, the game will only pick good combinations.
+        random, or a remembered random choice is executed in the character
+        selection, the game will only pick good (viable) combinations.
 
 restart_after_game = true/false
         When a game ends, Crawl will return to the main menu if
@@ -340,6 +345,13 @@ restart_after_game = true/false
 default_manual_training = false
         When set to true, new characters will start with skill training
         set to manual mode instead of automatic mode.
+
+autopickup_starting_ammo = true
+        When set, at game start, autopickup is forced on (as per the \
+        menu) for the player's starting ammunition type (including stones
+        for Earth Elementalists). Even when this option is set, autopickup
+        of those items can be disabled from the \ menu once the game has
+        begun.
 
 2-  File System.
 ================
@@ -853,8 +865,7 @@ explore_stop_pickup_ignore += <regex>, <regex>, ...
         then picking up any items matching any of the regexes in the list
         will *not* stop auto-explore.
 
-        This options has no affect on items which were thrown by the
-        player.
+        This option has no effect on items which were thrown by the player.
 
 explore_wall_bias = 0
         Adjusts how much autoexplore favours attempting to discover room
@@ -1035,34 +1046,12 @@ confirm_butcher = (always | never | auto)
         even if there are multiple corpses on the square. If always, you will
         be prompted before butchering any number of corpses.
 
-prefer_safe_chunks = true
-        The (e)at command will prompt for all chunks on the floor and in your
-        inventory, sorted by age. If this option is set to true, clean chunks
-        will be offered before contaminated ones even if the latter are older.
-        Rotten chunks will be offered after clean or contaminated ones.
-        Poisonous, mutagenic, rot-inducing, and chunks forbidden by
-        your religion will always be offered last.
-
 easy_eat_chunks = false
         If this is set to true then when using the (e)at command, the
         game will automatically determine the oldest chunk that is safe
         to eat, and eat it without prompting.
-        If prefer_safe_chunks is set to false you will be prompted if
-        the oldest chunk happens to be contaminated, and you will always
-        be prompted for harmful chunks.
+        You will always be prompted to eat harmful chunks.
         Note that this option is ignored for each of the undead species.
-
-easy_eat_gourmand = false
-        If both this and easy_eat_chunks are true, and you're wearing an
-        amulet of the Gourmand, then religion-safe contaminated chunks will
-        be eaten without prompting. If prefer_safe_chunks is true then this
-        will only be done if you have no safe chunks to eat, but if it's
-        false then you'll auto-eat older contaminated chunks before fresher
-        safe chunks.
-
-easy_eat_contaminated = false
-        Like easy_eat_gourmand, but always in effect, not just when you're
-        wearing an amulet of the Gourmand.
 
 auto_eat_chunks = false
         Setting this option to true will allow you to automatically eat a chunk
@@ -1256,6 +1245,12 @@ autofight_throw = false
 autofight_throw_nomove = true
         This works same as above, except that only for ===hit_adjacent
         rather than ===hit_closest; this is usually bound to shift-Tab.
+
+autofight_fire_stop = false
+        When firing missiles or throwing objects using autofight, if this
+        option is true, shots will stop at the target (like "f.") rather than
+        continuing past. Note that this setting may be decidedly suboptimal
+        for missiles of penetration.
 
 
 3-i     Messages and Display Enhancements.
@@ -2117,9 +2112,9 @@ cset = <dungeon_character_name : symbol>
         The possible entries for dungeon_character_name are:
            wall, wall_magic, floor, floor_magic, door_open, door_closed,
            trap, stairs_down, stairs_up, grate, altar, arch, fountain, wavy,
-           statue, invis_exposed, item_detected, item_orb, item_weapon,
-           item_armour, item_wand, item_food, item_scroll, item_ring,
-           item_potion, item_missile, item_book, item_stave,
+           statue, invis_exposed, item_detected, item_orb, item_rune,
+           item_weapon, item_armour, item_wand, item_food, item_scroll,
+           item_ring, item_potion, item_missile, item_book, item_stave,
            item_miscellany, item_corpse, item_gold, item_amulet, cloud,
            tree, fired_flask, fired_bolt, fired_chunk, fired_book,
            fired_weapon, fired_zap, fired_burst, fired_stick, fired_trinket,

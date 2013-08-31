@@ -528,7 +528,7 @@ ENDMAP
 # (Mini)vaults specific to the Orcish Mines
 ############################################################################
 
-default-depth: Orc:*
+default-depth: Orc
 
 ##################################
 # Dummy Orc minivault balancer.
@@ -653,7 +653,7 @@ ENDMAP
 # Some deep elves on a diplomatic mission (Shiori)
 # They have brought some of their enchanted armaments as gifts
 NAME:    elf_legates
-DEPTH:   Orc:3-4
+DEPTH:   Orc:3-
 SHUFFLE: 23
 SUBST:   6 : 6 .
 NSUBST:  0 = 3=9. / *=0.
@@ -662,8 +662,8 @@ MONS:    patrolling orc warlord
 MONS:    patrolling orc sorcerer
 MONS:    patrolling orc high priest
 MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf priest
-MONS:    deep elf soldier / deep elf mage / deep elf priest
-MONS:    deep elf soldier
+MONS:    deep elf fighter / deep elf mage / deep elf priest
+MONS:    deep elf fighter / nothing
 ITEM:    good_item scimitar race:elven / good_item chain mail race:elven
 SUBST:   = : +x
 MAP
@@ -1158,7 +1158,7 @@ default-depth:
 
 NAME:    st_orc_town
 TAGS:    no_rotate no_item_gen
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    orc / nothing
 #
 : local brnd = crawl.random2(8)
@@ -1198,7 +1198,7 @@ ENDMAP
 ##################################################
 NAME:    st_orc_ogre_mass
 TAGS:    no_item_gen no_monster_gen
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    ogre / nothing w:5, two-headed ogre / nothing w:5, ogre mage
 KMONS:   S = ogre / nothing w:5
 KFEAT:   S = any shop
@@ -1222,7 +1222,7 @@ ENDMAP
 ##################################################
 NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    orc warrior w:1 ; crossbow . bolt . halberd | war axe | morningstar /\
          orc w:10 ; crossbow . bolt . trident | hand axe | mace
 MONS:    orc warrior ; crossbow . bolt . glaive | broad axe | battleaxe | great mace
@@ -1255,7 +1255,7 @@ ENDMAP
 ##################################################
 NAME:    st_orc_mages
 TAGS:    no_item_gen no_monster_gen
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    orc / nothing, orc wizard / nothing, orc sorcerer
 MONS:    orc priest / nothing, orc high priest, orc warrior
 KFEAT:   S = any shop
@@ -1287,7 +1287,7 @@ ENDMAP
 ##################################################
 NAME:    st_orc_pillars
 TAGS:    no_item_gen no_monster_gen
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    orc / nothing, orc warrior / nothing, orc knight / nothing
 MONS:    orc priest / nothing, orc high priest
 KFEAT:   S = any shop
@@ -1314,7 +1314,7 @@ ENDMAP
 ##################################################
 NAME:    st_orc_congregation
 TAGS:    no_item_gen no_monster_gen
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    orc / nothing, orc warrior / nothing, orc priest / nothing
 MONS:    orc wizard / nothing, orc knight, orc high priest, orc sorcerer
 KMONS:   V = orc warlord
@@ -1358,7 +1358,7 @@ ENDMAP
 ##################################################
 NAME:    st_orc_open
 TAGS:    no_item_gen no_monster_gen
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    ogre, two-headed ogre, troll, deep troll w:19 / iron troll w:1
 MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
 KFEAT:   S = any shop
@@ -1378,7 +1378,7 @@ ENDMAP
 ##################################################
 NAME:    st_orc_elflike
 TAGS:    no_item_gen no_monster_gen
-PLACE:   Orc:4
+PLACE:   Orc:$
 MONS:    orc high priest, orc sorcerer, orc knight
 MONS:    orc warrior, orc priest, orc wizard
 KFEAT:   S = any shop

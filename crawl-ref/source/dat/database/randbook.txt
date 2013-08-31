@@ -30,7 +30,7 @@
 # Books also may get previous "owners" (or authors) that may be the gifting
 # god (if gifted), a name depending on school(s) as defined in this file,
 # a random name, or an appropriate god (if not a god gift).
-# The school dependant names consist of uniques or spell names that have a
+# The school dependent names consist of uniques or spell names that have a
 # strong connection to one or more schools. Pandemonium or hell lords' names
 # may only get used if a book is "highlevel", i.e. contains at least one
 # spell of level 6 or higher.
@@ -438,11 +438,11 @@ w:3
 Self-Knowledge
 
 w:3
-Improving Self
+Self-Improvement
 
 Aid
 
-Buffs
+Augmentations
 
 w:1
 Benedictions
@@ -916,6 +916,8 @@ Air owner
 
 Nikola
 
+Sojobo
+
 __NONE
 %%%%
 highlevel Conjuration owner
@@ -972,23 +974,31 @@ Roxanne
 
 __NONE
 %%%%
-rare Enchantment owner
+Charms owner
+
+Nessos
+
+Gastronok
+
+Maurice
+
+__NONE
+%%%%
+rare Hexes owner
 
 Sigmund
 
 w:2
 Gastronok
 %%%%
-Enchantment owner
-
-Rupert
+Hexes owner
 
 Norris
 
 Kirke
 
 w:2
-@rare Enchantment owner@
+@rare Hexes owner@
 
 __NONE
 %%%%
@@ -1011,8 +1021,11 @@ __NONE
 %%%%
 Ice owner
 
-w:5
 Ozocubu
+
+Fannar
+
+Ilsuiw
 
 __NONE
 %%%%
@@ -1032,8 +1045,6 @@ Borgnjor
 Cigotuvi
 
 Boris
-
-Frances
 
 Murray
 

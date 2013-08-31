@@ -19,7 +19,7 @@ class _CtypesLibcINotifyWrapper():
         try:
             libc_name = ctypes.util.find_library('c')
         except (OSError, IOError):
-            pass  # Will attemp to load it with None anyway.
+            pass  # Will attempt to load it with None anyway.
 
         if sys.version_info >= (2, 6):
             self._libc = ctypes.CDLL(libc_name, use_errno=True)

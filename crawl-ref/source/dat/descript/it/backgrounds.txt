@@ -21,9 +21,9 @@ loro uso.
 %%%%
 Assassin
 
-Gli assassini sono abili nella furtività, pronti a pugnalare i nemici ignari.
-Non utilizzano solo mantello e pugnale, ma hanno con sé anche terribili aghi al
-curaro per le loro cerbottane.
+L'abilità degli assassini è tutta nella furtività, pronti a pugnalare i loro
+nemici alla sprovvista. Non sono solo cappa e pugnale, ma hanno con sé anche
+dei terribili aghi intrisi di curaro per la loro cerbottana.
 %%%%
 Berserker
 
@@ -100,8 +100,8 @@ l'incantesimo Dolore.
 %%%%
 Skald
 
-Gli skald sono combattenti in mischia che possono aumentare le loro capacità in
-battaglia con incantesimi dal Libro dei Canti in Guerra.
+Gli Skald sono dei guerrieri che possono potenziarsi in battaglia con gli
+incantesimi dal libro della Battaglia.
 %%%%
 Summoner
 

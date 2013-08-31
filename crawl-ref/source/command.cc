@@ -334,12 +334,12 @@ static void _adjust_spell(void)
 
     int keyin = 0;
     if (Options.auto_list)
-        keyin = list_spells(false, false, false);
+        keyin = list_spells(false, false, false, "Adjust which spell?");
     else
     {
         keyin = get_ch();
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(false, false, false);
+            keyin = list_spells(false, false, false, "Adjust which spell?");
     }
 
     if (!isaalpha(keyin))
@@ -372,8 +372,10 @@ static void _adjust_spell(void)
             canned_msg(MSG_OK);
             return;
         }
+        // FIXME: It would be nice if the user really could select letters
+        // without spells from this menu.
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells(true, false, false);
+            keyin = list_spells(true, false, false, "Adjust to which letter?");
     }
 
     const int input_2 = keyin;
@@ -932,8 +934,8 @@ static vector<string> _get_branch_keys()
 
 static bool _monster_filter(string key, string body)
 {
-    int mon_num = get_monster_by_name(key.c_str());
-    return (mon_num == MONS_PROGRAM_BUG);
+    monster_type mon_num = get_monster_by_name(key.c_str());
+    return mons_class_flag(mon_num, M_CANT_SPAWN);
 }
 
 static bool _spell_filter(string key, string body)
@@ -1002,6 +1004,10 @@ static bool _card_filter(string key, string body)
 static bool _ability_filter(string key, string body)
 {
     lowercase(key);
+    if (!ends_with(key, " ability"))
+        return true;
+    key.erase(key.length() - 8);
+
     if (string_matches_ability_name(key))
         return false;
 
@@ -1090,6 +1096,32 @@ static void _append_non_item(string &desc, string key)
     }
 }
 
+static bool _is_rod_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_RODS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i + NUM_FIXED_BOOKS, j) == spell)
+                return true;
+
+    return false;
+}
+
+static bool _is_book_spell(spell_type spell)
+{
+    if (spell == SPELL_NO_SPELL)
+        return false;
+
+    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i, j) == spell)
+                return true;
+
+    return false;
+}
+
 // Adds a list of all books/rods that contain a given spell (by name)
 // to a description string.
 static bool _append_books(string &desc, item_def &item, string key)
@@ -1121,11 +1153,11 @@ static bool _append_books(string &desc, item_def &item, string key)
 
     desc += make_stringf("\nLevel:      %d", spell_difficulty(type));
 
-    bool undead = false;
-    if (you_cannot_memorise(type, undead))
+    bool form = false;
+    if (you_cannot_memorise(type, form))
     {
         desc += "\n";
-        desc += desc_cannot_memorise_reason(undead);
+        desc += desc_cannot_memorise_reason(form);
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -1150,7 +1182,7 @@ static bool _append_books(string &desc, item_def &item, string key)
 
         for (int j = 0; j < 8; j++)
             if (which_spell_in_book(book, j) == type)
-                rods.push_back(item.name(DESC_PLAIN));
+                rods.push_back(item.name(DESC_BASENAME));
     }
 
     if (!books.empty())
@@ -1170,7 +1202,7 @@ static bool _append_books(string &desc, item_def &item, string key)
             desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
         }
     }
-    else // rods-only
+    else if (!rods.empty()) // rods-only
     {
         desc += "\n\nThis spell can be found in the following rod";
         if (rods.size() > 1)
@@ -1178,6 +1210,8 @@ static bool _append_books(string &desc, item_def &item, string key)
         desc += ":\n";
         desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
     }
+    else
+        desc += "\n\nThis spell is not found in any books or rods.";
 
     return true;
 }
@@ -1428,6 +1462,7 @@ static void _find_description(bool *again, string *error_inout)
     case 'A':
         type   = "ability";
         filter = _ability_filter;
+        suffix = " ability";
         break;
     case 'C':
         type   = "card";
@@ -1479,7 +1514,7 @@ static void _find_description(bool *again, string *error_inout)
 
         mpr("Describe what? ", MSGCH_PROMPT);
         char buf[80];
-        if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
+        if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
         {
             *error_inout = "Okay, then.";
             return;
@@ -1667,16 +1702,17 @@ static void _find_description(bool *again, string *error_inout)
         {
             me = new MenuEntry(str, MEL_ITEM, 1, letter);
 
-#ifdef USE_TILE
             if (doing_spells)
             {
                 spell_type spell = spell_by_name(str);
+#ifdef USE_TILE
                 if (spell != SPELL_NO_SPELL)
                     me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
-            }
-#else
-            UNUSED(doing_spells);
 #endif
+                me->colour = _is_book_spell(spell) ? WHITE
+                           : _is_rod_spell(spell)  ? LIGHTGREY
+                                                   : DARKGREY; // monster-only
+            }
 
             me->data = &key_list[i];
         }
@@ -1799,7 +1835,7 @@ help_highlighter::help_highlighter(string highlight_string) :
 
 int help_highlighter::entry_colour(const MenuEntry *entry) const
 {
-    return !pattern.empty() && pattern.matches(entry->text)? WHITE : -1;
+    return !pattern.empty() && pattern.matches(entry->text) ? WHITE : -1;
 }
 
 // To highlight species in aptitudes list. ('?%')
