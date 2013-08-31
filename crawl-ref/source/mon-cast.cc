@@ -729,7 +729,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_big_cloud = true;
         break;
 
-    case SPELL_MIASMA:            // death drake
+    case SPELL_MIASMA_BREATH:      // death drake
         beam.name     = "foul vapour";
         beam.damage   = dice_def(3, 5 + power / 24);
         beam.colour   = DARKGREY;
@@ -1057,7 +1057,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_STICKS_TO_SNAKES:
     case SPELL_SUMMON_SMALL_MAMMAL:
     case SPELL_VAMPIRIC_DRAINING:
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
     case SPELL_MAJOR_HEALING:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_VAMPIRE_SUMMON:
@@ -1340,6 +1340,7 @@ static bool _valid_encircle_ally(const monster* caster, const monster* target,
 static bool _valid_druids_call_target(const monster* caller, const monster* callee)
 {
     return (mons_aligned(caller, callee) && mons_is_beast(callee->type)
+            && !callee->is_shapeshifter()
             && !caller->see_cell(callee->pos())
             && mons_habitat(callee) != HT_WATER
             && mons_habitat(callee) != HT_LAVA);
@@ -1405,7 +1406,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         if (!foe || _foe_should_res_negative_energy(foe))
             ret = true;
         break;
-    case SPELL_MIASMA:
+    case SPELL_MIASMA_BREATH:
         ret = (!foe || foe->res_rotting());
         break;
 
@@ -1451,7 +1452,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         break;
 
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
         if (mon->has_ench(ENCH_MIRROR_DAMAGE)
             || (mon->props.exists("mirror_recast_time")
                 && you.elapsed_time < mon->props["mirror_recast_time"].get_int()))
@@ -1538,7 +1539,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_DIMENSION_ANCHOR:
     {
         if ((monspell == SPELL_HIBERNATION || monspell == SPELL_SLEEP)
-            && (!foe || foe->asleep()) || !foe->can_sleep())
+            && (!foe || foe->asleep() || !foe->can_sleep()))
         {
             ret = true;
             break;
@@ -1857,7 +1858,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
         return !targ_friendly;
     case SPELL_BLINK_OTHER:
         return !targ_sanct && targ_adj && !targ_friendly;
@@ -2672,8 +2673,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
         // Check for antimagic.
         if (mons->has_ench(ENCH_ANTIMAGIC)
-            && !x_chance_in_y(mons->hit_dice * BASELINE_DELAY,
-                              mons->hit_dice * BASELINE_DELAY
+            && !x_chance_in_y(4 * BASELINE_DELAY,
+                              4 * BASELINE_DELAY
                               + mons->get_ench(ENCH_ANTIMAGIC).duration)
             && !_is_physiological_spell(spell_cast)
             && spell_cast != draco_breath)
@@ -3801,7 +3802,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     if (spell_cast == SPELL_CANTRIP
         || spell_cast == SPELL_VAMPIRIC_DRAINING
-        || spell_cast == SPELL_MIRROR_DAMAGE
+        || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
         || spell_cast == SPELL_LEDAS_LIQUEFACTION)
@@ -3860,7 +3861,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             simple_monster_message(mons, " is healed.");
         return;
 
-    case SPELL_MIRROR_DAMAGE:
+    case SPELL_INJURY_MIRROR:
         simple_monster_message(mons,
                                make_stringf(" offers %s to %s, and fills with unholy energy.",
                                    mons->pronoun(PRONOUN_REFLEXIVE).c_str(),

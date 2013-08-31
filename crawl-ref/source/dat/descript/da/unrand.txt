@@ -1,0 +1,485 @@
+%%%%
+Singing Sword
+
+Der er intet, dette fortryllede våben elsker mere end at synge for sin
+ejermand, uanset om de vil have det eller ej.
+%%%%
+Wrath of Trog
+
+Dette var den gamle gud Trogs yndlingsvåben, indtil det en dag gik tabt. Det
+fylder enhver, som rammer en anden med det, med et blodtørstigt
+bersærkerraseri.
+%%%%
+Mace of Variability
+
+Den er ganske upålidelig.
+%%%%
+Glaive of Prune
+
+Det er skabt af en gal gud og bærer en forbandelse, som forvandler enhver, der
+bruger det, til en sveske. Heldigvis virker forbandelsen meget, meget langsomt,
+og man kan godt bruge den i korte perioder uden værre konsekvenser end en svag,
+lilla hudfarve og nogle rynker.
+%%%%
+Sword of Power
+
+Det belønner de magtfulde med magt og de svage med svaghed.
+%%%%
+Staff of Olgreb
+
+Det var dette magiske våben, den mægtig troldmand Olgreb bar, før han mødte sit
+endeligt et sted i disse underjordiske gange. Den øger bærerens evne til at
+bruge giftmagi og bærer magiske kræfter, som kan vækkes. Sagnene vil vide, at
+Olgreb forskede i sjældne gifte, der i begrænset omfang kunne påvirke selv
+væsener, som var immune over for alle almindeligt kendte gifte.
+%%%%
+Staff of Wucad Mu
+
+Den kan vækkes for at genoprette store mængder magisk energi, men risikerer
+også at beskadige brugerens sind. Dens kraft afhænger af brugerens
+vækkelsesevne.
+%%%%
+Vampire's Tooth
+
+Denne elfenbensagtige dolk kunne faktisk godt være udskåret af et eller andet
+enormt rovdyrs tand, selvom den selvfølgelig ikke kunne komme fra en blodsuger
+i menneskestørrelse.
+
+Den er dødbringende vampyrisk.
+%%%%
+Scythe of Curses
+
+Dette våben bærer en frygtelig og overordentligt irriterende forbandelse.
+%%%%
+Sceptre of Torment
+
+Dette overordentligt forbandede våben er et af Helvedes instrumenter.
+%%%%
+Sword of Zonguldrok
+
+Dette skrækkelige våben anvendes på brugerens eget ansvar.
+%%%%
+Sword of Cerebov
+
+Sælsomme flammer dækker dets forvredne klinge.
+%%%%
+Staff of Dispater
+
+Denne legendariske genstand kan slippe Helvedes vrede løs.
+%%%%
+Sceptre of Asmodeus
+
+Det bærer en del af ærkedjævelen Asmodeus' kræfter.
+%%%%
+faerie dragon armour
+
+Fedrager var engang en race af samme art som de spættede. Uheldigvis blev deres
+livlige farver deres undergang, fordi de advarede eventuelt bytte. De er nu
+uddøde, og dette skattede relikvie er et af de sidste beviser på, at de
+overhovedet har eksisteret.
+%%%%
+demon blade "Bloodbane"
+
+Den bærer en umenneskelig galnings blodige besmittelse.
+%%%%
+scimitar of Flaming Death
+
+Brandvarm!
+%%%%
+mace of Brilliance
+
+Denne stridskølle lader dig kaste lys over de underjordiske gange og sørger
+også for, at fjender bliver grundigt varskoet om din tilstedeværelse. De udøde
+hader dens lys, og det kan afsløre de lumske personager, der forsøger at holde
+sig usynlige.
+%%%%
+demon blade "Leech"
+
+Den forblænder ejerens sind over for alt andet en et enkelt, snævert formål: at
+mæske sig i drænet livskraft.
+%%%%
+dagger of Chilly Death
+
+En dolk, som er lavet af et kæmpe stykke safir.
+%%%%
+dagger "Morg"
+
+En grim, rusten dolk.
+
+For mange år siden tilhørte den en magtfuld troldmand ved navn Boris. Han for
+vild i de underjordiske gange, mens han søgte Sfæren.
+%%%%
+scythe "Finisher"
+
+En lang og skarp le, som er særligt modificeret til brug i kamp.
+%%%%
+sling "Punk"
+
+En slynge, som er lavet af noget underligt, blåt læder.
+%%%%
+bow of Krishna "Sharnga"
+
+En underfuld, gylden bue.
+
+Den har engang tilhørt en fremmed gud. Den virker bedst med særlige pile, som
+ikke er lette at opdrive.
+%%%%
+giant club "Skullcrusher"
+
+Denne yndige knippel kan fylde enhver jætte med fryd – uanset om det gælder
+barslagsmål, folkedrab eller en blanding af de to.
+%%%%
+glaive of the Guard
+
+Dette våben har engang tilhørt Gar Dogh, som vogtede en konges skatte. I følge
+legenderne for han vild et sted i de underjordiske gange.
+%%%%
+sword of Jihad
+
+Et langsværd, som er lavet af et kæmpemæssigt stykke krystal. Legenderne vil
+vide, at det var Den Strålendes gave til en tilbeder.
+%%%%
+crossbow "Hellfire"
+
+En flammende armbrøst, som er smedet i helvedernes ild.
+%%%%
+sword of the Doom Knight
+
+Et ubrydeligt slagsværd.
+%%%%
+morningstar "Eos"
+
+Daggryets rosenrøde fingre ...
+%%%%
+spear of the Botono
+
+Et mørkt og ildesindet artefakt. Hos de, der er ubesindige nok til at bære den,
+øger den effekten af de forbandelser, de kaster.
+%%%%
+trident of the Octopus King
+
+Denne trefork blev stjålet fra blækspruttekongens have for mange år siden af en
+virkeligt ubetydelig og allerede død mand. Men vogt dig for blækspruttekongens
+vrede!
+%%%%
+mithril axe "Arga"
+
+En smuk økse af mitril, som en eller anden dværghelt nok har tabt.
+%%%%
+Elemental Staff
+
+Denne magtfulde stav tilhørte engang lederen af De Fem Elementers Laug.
+%%%%
+crossbow "Sniper"
+
+En armbrøst, som er lavet af et sort materiale.
+%%%%
+longbow "Piercer"
+
+En exceptionelt stor langbue af metal.
+%%%%
+blowgun of the Assassin
+
+Det er udformet til at være let at skjule, men det sparker stadig som en hest.
+%%%%
+lance "Wyrmbane"
+
+En fortryllet lanse, som vokser sig mere og mere mægtig for hver gang, den
+nedlægger en stærk drage. Jo mere mægtig den bliver, jo sværere bliver det at
+finde en værdig modstander.
+%%%%
+Spriggan's Knife
+
+En yndig, lille kniv.
+
+Denne kniv er lavet af sprigger, eller til sprigger, eller måske ud af
+sprigger. Den er i hvert fald på en eller anden måde forbundet til dette
+huldrefolk.
+%%%%
+plutonium sword
+
+Et tredobbelt sværd, som er lavet af et sælsomt, glødende metal. Du undrer dig
+over, om det har udviklet de to sideklinger på grund af sin stråling, og om du
+også vil få to ekstra hoveder.
+%%%%
+great mace "Undeadhunter"
+
+Legenderne vil vide, at engang for længe siden eksperimenterede en
+dødningeherre med at skabe bevidste undersåtter i steder for tanketomme
+tjenere. For at sikre sig deres loyalitet smedede han en række våben med evnen
+til at opløse den trolddom, som binder udøde sammen, og dermed at forvolde stor
+skade på dem.
+
+Selvom dødningen gik til grunde for længe siden, siges hans våben at have været
+overordentligt populære for deres evne til at rive udøde fra hinanden. De gamle
+sagn er i hvert fald fulde af dem. Denne stridskølle kunne dog være den sidste,
+der er tilbage, muligvis takket være Den Strålendes agenter, som siger, at man
+ikke skal bekæmpe nekromantik med nekromantik.
+%%%%
+whip "Snakebite"
+
+En kløvet pisk, som er lavet af garvede huder fra Bæsternes Hules dødbringende
+sorte mambaer.
+%%%%
+knife of Accuracy
+
+Den er næsten usvigeligt præcis.
+%%%%
+Lehudib's crystal spear
+
+Dette relikvie førte formentlig til opfindelsen af den berømte besværgelse,
+eller også var det omvendt.
+%%%%
+captain's cutlass
+
+Dette berygtede våben blev brugt af en vederstyggelig sørøver til at slagte
+utallige uskyldige. Han mødte omsider sit endeligt, da en kraken slugte hans
+skib med hele mandskabet om bord. Huggerten regnedes for at være tabt for
+evigt, men nu holder du beviset på dit modsatte i din hule hånd.
+%%%%
+storm bow
+
+Denne bue har samme farve som mørke regnvejrsskyer og lugter af våd ozon.
+%%%%
+large shield of Ignorance
+
+"Et åbent sind er som en fæstning, hvor portene står åbne og murene er
+ubevogtede."
+%%%%
+robe of Augmentation
+
+En kåbe af den fineste silke.
+%%%%
+cloak of the Thief
+
+Den lader bæreren brillere i tyveriets kunst og kan udløse tykke røgskyer, når
+den vækkes, så det bliver lettere at tage flugten.
+%%%%
+shield "Bullseye"
+
+Bare hvis du nu havde svært ved at blive ramt.
+%%%%
+crown of Dyrovepreva
+
+En stor krone af mat bronze, som er indlagt med et funklende udvalg af
+ædelsten.
+%%%%
+hat of the Bear Spirit
+
+Denne pelshat tilhørte engang Ukta, en mægtig jætte-shaman, og huser en særligt
+mægtig bjørns ånd.
+%%%%
+robe of Misfortune
+
+En pragtfuld, flagrende kåbe af pels og silke.
+%%%%
+cloak of Flash
+
+En vibrerende kappe.
+%%%%
+boots of the Assassin
+
+Et par bløde støvler, der er lavet på særlig bestilling fra Snigmordernes Laug.
+%%%%
+Lear's hauberk
+
+En veludført, gylden kjortel af ringbrynje, som dækker alle brugerens lemmer.
+Den inkluderer en hjelmhue, hoser og brynjehandsker.
+%%%%
+skin of Zhor
+
+Et sært dyrs stinkende skind.
+%%%%
+salamander hide armour
+
+En læderrustning, som er lavet af en salamanders skind.
+%%%%
+gauntlets of War
+
+Disse tykke stålhandsker var Okawarus belønning til en mægtig krigsherre.
+Fortjener du at eje dem?
+%%%%
+shield of Resistance
+
+Et bronzeskjold.
+%%%%
+robe of Folly
+
+En kedelig, grå kåbe. Den er fortryllet, så den giver sin bærer umådelig kraft
+og visdom.
+%%%%
+Maxwell's patent armour
+
+En underligt udseende rustning.
+%%%%
+mask of the Dragon
+
+En sær, blå hjelm, som er lavet af hårdt, men fleksibelt læder, der får
+bærerens ansigt til at ligne en drages åsyn.
+%%%%
+robe of Night
+
+En lang, sort kåbe af et besynderligt, blankt materiale. Det lader til at
+indhylle bæreren i mørke.
+
+I følge legenderne var det en gave fra Ratri, nattens gudinde, til en af hendes
+tilbedere.
+%%%%
+armour of the Dragon King
+
+Engang for længe siden tog en mægtig gulddrage magten over alle dragerne i hans
+del af verden. Men hans regeringstid blev kort, bragt til ende af et enkelt,
+ynkeligt menneske, som efterfølgende lavede denne rustning af dragens skind.
+%%%%
+hat of the Alchemist
+
+En beskidt hat. Den bærer præg af at have overlevet mange mystiske
+eksplosioner, hvilket kunne tyde på, at den er i stand til at beskytte det
+hoved, der er indeni, mod de risici, der er forbundet med alkymistiske
+eksperimenter. Og med den beskyttelse, hatten yder, har det med garanti krævet
+en forudgående hjerneskade overhovedet at overveje sådanne eksperimenter.
+%%%%
+fencer's gloves
+
+Et par handsker, som er lavet af hvid silke.
+%%%%
+cloak of Starlight
+
+En fosforescerende kappe, som er vævet af rene lysstråler.
+%%%%
+ratskin cloak
+
+En fortryllerske med en magisk væv og for meget fritid syede denne kappe af
+skindet fra hundredvis af rotter, hovedsagligt de orange af slagsen. Den er
+lidt akavet at have på og ser tåbelig ud, men den yder fremragende beskyttelse
+mod alle slags rotter.
+%%%%
+shield of the gong
+
+Dette er en stor bronzegongong, som man kan bære som et skjold. I følge visse
+mystikere vil det yde dig åndelig beskyttelse at slå på den.
+
+Og det her skjold vil med garanti blive hørt!
+%%%%
+amulet of the Air
+
+Mange af denne himmelblå amulets beskyttende egenskaber må stamme fra en
+magtfuld lufttroldmand. Det eneste, han manglede, var åbenbart en rolig hånd.
+%%%%
+ring of Shadows
+
+En sort ring, som lader sin bærer smelte sammen med skyggerne.
+%%%%
+amulet of Cekugob
+
+Et underligt udseende stykke krystal i en almindeligt udseende snor med et
+besynderligt udvalg af kræfter.
+%%%%
+amulet of the Four Winds
+
+Dette vedhæng er lavet af den reneste jade og giver sin bærer umådelig okkult
+styrke, når det kommer til at ryste fjendtlig magi af sig.
+%%%%
+necklace of Bloodlust
+
+Du undrer dig over hvilket brutalt bæst, der ville gå med en blodindsmurt
+halskæde af menneske- og dyretænder og noget, der ser ud til at være en flækket
+ryghvirvel.
+%%%%
+ring of Shaolin
+
+En jadering uden udsmykning, som giver bæreren en forbløffende viden om sin
+egen krop, hvilket giver mulighed for imponerende behændighedspræstationer.
+%%%%
+ring of Robustness
+
+En enkel stålring.
+%%%%
+ring of the Mage
+
+En fortryllet safir, som er indfattet i en ring. Den hjælper bæreren med at
+kaste besværgelser.
+%%%%
+brooch of Shielding
+
+I de gode, gamle dage havde alle eventyrere en af de her praktiske anordninger.
+Sådan en og en pony.
+%%%%
+robe of Clouds
+
+En kåbe af et så skrøbeligt materiale, at det næsten kunne være skyer.
+%%%%
+hat of Pondering
+
+En slimet troldmandshat.
+
+Snegletroldmanden Gastronoks yndlingshat, som er plettet af rødligt slim og
+fortryllet til at bistå ham i hans okkulte grublen. Den er særligt fortryllet
+til at beskytte mod virkningerne af salt, men det er du nok ligeglad med.
+%%%%
+obsidian axe
+
+Denne økse er forbandet af en af Pandæmoniums herrer, så intetanende eventyrere
+som dig kommer til at slippe dæmoner løs i denne verden. Tag dig i agt, for
+denne økse kan tage magten over den, der bærer den ...
+%%%%
+lightning scales
+
+Disse skæl er blevet formet som en rustning til den nedre del af en nagas krop.
+De knitrer svagt af elektricitet og er fortryllet til at lade bæreren bugte sig
+af sted næsten lige så hurtigt som et menneske.
+%%%%
+Black Knight's horse barding
+
+Under Den Sorte Ridders rædselsregime var hans personlige hest iført denne
+rustning. Den er sort som tjære og er tilsyneladende ikke alene lavet af noget
+besynderligt, sort stål, men også af hele plader af sort diamant! Så stor en
+byrde af metal og sten kan naturligvis ikke være godt for gangerens fart. Til
+gengæld beskytter den ikke kun mod jordiske slag, adamanten bærer også en
+fortryllelse, som gør bæreren delvist udød.
+%%%%
+ring of Vitality
+
+Denne berømte ring forbedrer sin bærers helbred markant.
+%%%%
+autumn katana
+
+Dette eksotiske sværd er et våben for oplyste krigere.
+%%%%
+shillelagh "Devastator"
+
+Du gætter på, at denne pind er ladet med mere end bare bly.
+%%%%
+dragonskin cloak
+
+Denne opaliserende kappe glimter med alle dragers farver. Den beskytter bæreren
+mod alle former for elementarangreb, men er desværre ikke synderligt pålidelig.
+%%%%
+ring of the Octopus King
+
+"En havfrue med sangen så kær
+ Vakte blækspruttekongens begær
+ Hendes blævrende bejler
+ Blev gejler og gejler Men med så mange ringe var opgaven svær."
+%%%%
+Axe of Woe
+
+Da du griber om skaftet på denne økse, føles dit sind ikke længere helt som dit
+eget. Din krop begynder at udvise en hidtil umulig styrke, og dine bevægelser
+bliver styret af Makhleb.
+%%%%
+milk chocolate
+
+Det her er en hjælp til at rette fejl, og den giver en lang række hovedsagligt
+gavnlige artefakt-egenskaber.
+
+Hvis du ser den i det rigtige spil, er det en fejl.
+%%%%
+dark chocolate
+
+Det her er en hjælp til at rette fejl, og den giver en lang række hovedsagligt
+gavnlige artefakt-egenskaber. Den adskiller sig fra sit mælkede modstykke ved
+at visse egenskaber modstrider hinanden.
+
+Hvis du ser den i det rigtige spil, er det en fejl.
+%%%%

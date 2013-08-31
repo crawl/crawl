@@ -57,6 +57,8 @@ enum tag_minor_version
     TAG_MINOR_SHORT_SPELL_TYPE,    // Spell types changed to short instead of byte
     TAG_MINOR_FORGOTTEN_MAP,       // X^F can be undone.
     TAG_MINOR_CONTAM_SCALE,        // Scale the magic contamination by a factor of 1000
+    TAG_MINOR_SUMMONER,            // Store summoner data.
+    TAG_MINOR_STAT_MUT,            // Flag for converting stat mutations
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

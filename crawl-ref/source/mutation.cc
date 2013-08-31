@@ -1188,7 +1188,9 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_STRONG,              MUT_WEAK,             1},
         { MUT_CLEVER,              MUT_DOPEY,            1},
         { MUT_AGILE,               MUT_CLUMSY,           1},
+#if TAG_MAJOR_VERSION == 34
         { MUT_STRONG_STIFF,        MUT_FLEXIBLE_WEAK,    1},
+#endif
         { MUT_ROBUST,              MUT_FRAIL,            1},
         { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,        1},
         { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,      1},
@@ -2002,11 +2004,9 @@ string mutation_name(mutation_type mut, int level, bool colour)
         || mut == MUT_AGILE || mut == MUT_WEAK
         || mut == MUT_DOPEY || mut == MUT_CLUMSY)
     {
-        ostringstream ostr;
-        ostr << mdef.have[0] << level << ").";
-        result = ostr.str();
+        level = min(level, 2);
     }
-    else if (mut == MUT_ICEMAIL)
+    if (mut == MUT_ICEMAIL)
     {
         ostringstream ostr;
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
@@ -2437,16 +2437,7 @@ int how_mutated(bool all, bool levels)
                 continue;
 
             if (levels)
-            {
-                // These allow for 14 levels.
-                if (i == MUT_STRONG || i == MUT_CLEVER || i == MUT_AGILE
-                    || i == MUT_WEAK || i == MUT_DOPEY || i == MUT_CLUMSY)
-                {
-                    j += (you.mutation[i] / 5 + 1);
-                }
-                else
-                    j += you.mutation[i];
-            }
+                j += you.mutation[i];
             else
                 j++;
         }

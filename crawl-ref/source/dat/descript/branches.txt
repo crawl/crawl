@@ -16,6 +16,12 @@ A Temple of the Gods, a place of peace and refuge from the insanity of the
 dungeon. It usually contains altars to most of the known gods. It is located
 between the levels 4 and 7 of the main dungeon.
 %%%%
+Temple:quote
+
+“And I heard a great voice out of the temple saying to the seven angels, Go
+your ways, and pour out the vials of the wrath of God upon the earth.”
+    -KJV Bible, Rev 16:1
+%%%%
 Orcish Mines
 
 The well-worked goldmines of the orcish tribes. These tortuous caverns are

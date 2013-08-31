@@ -206,6 +206,19 @@ int random2avg(int max, int rolls)
     return (sum / rolls);
 }
 
+// biased_random2() takes values in the same range [0, max) as random2() but
+// with mean value (max - 1)/(n + 1) biased towards the bottom end.
+// This can be thought of as the smallest of n _distinct_ random integers
+// chosen in [0, max + n - 1).
+// Never use with n < 2.
+int biased_random2(int max, int n)
+{
+    for (int i = 0; i < max; i++)
+        if (x_chance_in_y(n, n + max - 1 - i))
+            return i;
+    return 0;
+}
+
 // originally designed to randomise evasion -
 // values are slightly lowered near (max) and
 // approach an upper limit somewhere near (limit/2)

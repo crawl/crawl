@@ -19,12 +19,6 @@ Artificer
 Esinesoturit aloittavat muutamalla maagisella esineellä, joiden käytössä he
 ovat taitavia.
 %%%%
-Assassin
-
-Salamurhaajat luottavat hiiviskelyyn, ollen valmiina puukottamaan varomattomia
-vastustajia. Tikarin ja kaavun lisäksi he kantavat ilkeitä myrkkyneuloja
-puhallusputkeensa.
-%%%%
 Berserker
 
 Berserkit uskovat Trogiin, taikaa vihaavaan vimmajumalaan. Moni asia ei voi
@@ -94,11 +88,6 @@ kehoonsa.
 Necromancer
 
 Nekromantikot ovat kuolotaikuuden spesialisteja. He aloittavat Kipu-loitsulla.
-%%%%
-Skald
-
-Skaldit ovat lähitaistelijoita, jotka nostavat suorituskykyään Sotahymnien
-kirjan taioilla.
 %%%%
 Transmuter
 

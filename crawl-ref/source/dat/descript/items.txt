@@ -2105,8 +2105,8 @@ sack of spiders
 
 A woven silk bag. Something appears to be moving inside...
 
-Opening this bag will release a number of spiders friendly to your cause.
-You might need to dust off the cobwebs after, however.
+Opening this bag will release a number of spiders friendly to your cause. You
+might need to dust off the cobwebs after, however.
 %%%%
 sacred scourge
 
@@ -2290,9 +2290,8 @@ scroll of identify:quote
 %%%%
 scroll of immolation
 
-This scroll is treated with an incredibly flammable substance, which explodes
-violently when the scroll is opened and read, scorching the reader and anything
-else nearby.
+This scroll fills the creatures around the reader with an unstable and powerful
+inner flame.
 %%%%
 scroll of immolation:quote
 
@@ -2684,10 +2683,11 @@ stone:quote
 %%%%
 stone of tremors
 
-A polished stone inhabited by benevolent earth spirits. Pressing it against a
-rocky surface will send powerful shockwaves through it as the spirits seek
-solid form within the rock, pelting nearby creatures with falling rubble in the
-process.
+A polished stone inhabited by benevolent earth spirits. Raising it aloft will
+send powerful shockwaves through the dungeon as the spirits seek solid form
+within its rock. Those creatures standing near to walls will be pelted with
+falling rubble as the rocky surface heaves and crumbles, while others may be
+swallowed up by cracks in the earth itself.
 %%%%
 storm dragon armour
 

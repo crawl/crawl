@@ -858,26 +858,15 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
 
         // The rest are normal randarts.
         make_item_randart(item);
-        item.plus  = random2(7);
-        item.plus2 = random2(7);
+        // Mean enchantment +6.
+        item.plus  = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
+        item.plus2 = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
 
-        if (one_chance_in(3))
-            item.plus += random2(7);
-
-        if (one_chance_in(3))
-            item.plus2 += random2(7);
-
-        if (one_chance_in(9))
-            item.plus -= random2(7);
-
-        if (one_chance_in(9))
-            item.plus2 -= random2(7);
-
-        if (one_chance_in(4))
+        if (one_chance_in(5))
         {
             do_curse_item(item);
-            item.plus  = -random2(6);
-            item.plus2 = -random2(6);
+            item.plus  = 3 - random2(6);
+            item.plus2 = 3 - random2(6);
         }
         else if ((item.plus < 0 || item.plus2 < 0)
                  && !one_chance_in(3))

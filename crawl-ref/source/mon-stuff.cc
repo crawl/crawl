@@ -731,9 +731,8 @@ int exp_rate(int killer)
     // Damage by the spectral weapon is considered to be the player's damage ---
     // so the player does not lose any exp from dealing damage with a spectral weapon summon
     if (!invalid_monster_index(killer)
-        && (&menv[killer])->type == MONS_SPECTRAL_WEAPON
-        && (&menv[killer])->props.exists("sw_mid")
-        && actor_by_mid((&menv[killer])->props["sw_mid"].get_int())->is_player())
+        && menv[killer].type == MONS_SPECTRAL_WEAPON
+        && menv[killer].summoner == MID_PLAYER)
     {
         return 2;
     }
@@ -1657,9 +1656,8 @@ int monster_die(monster* mons, killer_type killer,
 
     // Kills by the spectral weapon are considered as kills by the player instead
     if (killer == KILL_MON
-        && (&menv[killer_index])->type == MONS_SPECTRAL_WEAPON
-        && (&menv[killer_index])->props.exists("sw_mid")
-        && actor_by_mid((&menv[killer_index])->props["sw_mid"].get_int())->is_player())
+        && menv[killer_index].type == MONS_SPECTRAL_WEAPON
+        && menv[killer_index].summoner == MID_PLAYER)
     {
         killer = KILL_YOU;
         killer_index = you.mindex();
@@ -2014,44 +2012,45 @@ int monster_die(monster* mons, killer_type killer,
             // killing born-friendly monsters.
             if (good_kill
                 && (you_worship(GOD_MAKHLEB)
-                    || you_worship(GOD_SHINING_ONE)
-                       && (mons->is_evil() || mons->is_unholy()))
-                && !mons_is_object(mons->type)
-                && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0)
-                && !you.duration[DUR_DEATHS_DOOR])
-            {
-                if (you.hp < you.hp_max)
-                {
-                    int heal = (you_worship(GOD_MAKHLEB)) ?
-                                mons->hit_dice + random2(mons->hit_dice) :
-                                random2(1 + 2 * mons->hit_dice);
-                    if (heal > 0)
-                        mprf("You feel a little better.");
-                    inc_hp(heal);
-                }
-            }
-
-            if (good_kill
-                && (you_worship(GOD_VEHUMET)
+                    || you_worship(GOD_VEHUMET)
                     || you_worship(GOD_SHINING_ONE)
                        && (mons->is_evil() || mons->is_unholy()))
                 && !mons_is_object(mons->type)
                 && !player_under_penance()
                 && random2(you.piety) >= piety_breakpoint(0))
             {
-                if (you.species != SP_DJINNI ?
-                        you.magic_points < you.max_magic_points :
-                        you.hp < you.hp_max)
+                int hp_heal = 0, mp_heal = 0;
+
+                switch (you.religion)
                 {
-                    int mana = (you_worship(GOD_VEHUMET)) ?
-                            1 + random2(mons->hit_dice / 2) :
-                            random2(2 + mons->hit_dice / 3);
-                    if (mana > 0)
-                    {
-                        mpr("You feel your power returning.");
-                        inc_mp(mana);
-                    }
+                case GOD_MAKHLEB:
+                    hp_heal = mons->hit_dice + random2(mons->hit_dice);
+                    break;
+                case GOD_SHINING_ONE:
+                    hp_heal = random2(1 + 2 * mons->hit_dice);
+                    mp_heal = random2(2 + mons->hit_dice / 3);
+                    break;
+                case GOD_VEHUMET:
+                    mp_heal = 1 + random2(mons->hit_dice / 2);
+                    break;
+                default:
+                    die("bad kill-on-healing god!");
+                }
+
+                if (you.species == SP_DJINNI)
+                    hp_heal = max(hp_heal, mp_heal * 2), mp_heal = 0;
+
+                if (hp_heal && you.hp < you.hp_max
+                    && !you.duration[DUR_DEATHS_DOOR])
+                {
+                    mprf("You feel a little better.");
+                    inc_hp(hp_heal);
+                }
+
+                if (mp_heal && you.magic_points < you.max_magic_points)
+                {
+                    mpr("You feel your power returning.");
+                    inc_mp(mp_heal);
                 }
             }
 
@@ -3275,9 +3274,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 }
 
 // If the returned value is mon.pos(), then nothing was found.
-static coord_def _random_monster_nearby_habitable_space(const monster& mon,
-                                                        bool allow_adjacent,
-                                                        bool respect_los)
+static coord_def _random_monster_nearby_habitable_space(const monster& mon)
 {
     const bool respect_sanctuary = mon.wont_attack();
 
@@ -3293,7 +3290,8 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
         if (delta.origin())
             continue;
 
-        if (delta.rdist() == 1 && !allow_adjacent)
+        // Blinks by 1 cell are not allowed.
+        if (delta.rdist() == 1)
             continue;
 
         // Update target.
@@ -3312,16 +3310,7 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
         if (target == you.pos())
             continue;
 
-        // Check that we didn't go through clear walls.
-        if (num_feats_between(mon.pos(), target,
-                              DNGN_MINSEE,
-                              DNGN_MAX_NONREACH,
-                              true, true) > 0)
-        {
-            continue;
-        }
-
-        if (respect_los && !mon.see_cell(target))
+        if (!cell_see_cell(mon.pos(), target, LOS_NO_TRANS))
             continue;
 
         // Survived everything, break out (with a good value of target.)
@@ -3336,9 +3325,7 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
 
 bool monster_blink(monster* mons, bool quiet)
 {
-    coord_def near = _random_monster_nearby_habitable_space(*mons, false,
-                                                            true);
-
+    coord_def near = _random_monster_nearby_habitable_space(*mons);
     return mons->blink_to(near, quiet);
 }
 

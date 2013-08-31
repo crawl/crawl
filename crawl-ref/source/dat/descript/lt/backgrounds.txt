@@ -18,12 +18,6 @@ Artificer
 
 Mechanikai pradeda su keliais magiškais įrenginiais ir moka jais naudotis.
 %%%%
-Assassin
-
-Žudikai yra itin tylūs, pasiruošę nudurti nieko neįtariančius priešininkus. Be
-durklo ir apsiausto, jie nešiojasi ir grėsmingas kurarės adatas pučiamajam
-vamzdeliui.
-%%%%
 Berserker
 
 Berserkeriai tiki Trogą, nekenčiantį magijos įtūžio dievą. Nedaug kas pradžioje
@@ -90,11 +84,6 @@ Necromancer
 
 Nekromantai yra burtininkai specializuojantys mirties magijos taikyme. Jie
 pradeda su Skausmo burtažodžiu.
-%%%%
-Skald
-
-Dainiai yra kariai, galintys save sustiprinti burtažodžiais iš Karo Giesmių
-knygos.
 %%%%
 Transmuter
 

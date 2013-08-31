@@ -1038,6 +1038,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     if (player_in_branch(BRANCH_ABYSS) && !mg.summoner
+        && in_bounds(mon->pos())
         && !(mg.extra_flags & MF_WAS_IN_VIEW))
     {
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
@@ -1646,6 +1647,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
              && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
+        mon->summoner = mg.summoner->mid;
         if (mg.summoner->is_player())
             mons_add_blame(mon, blame_prefix + "the player character");
         else

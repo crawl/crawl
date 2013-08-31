@@ -2551,9 +2551,11 @@ void melee_attack::antimagic_affects_defender()
              && !defender->as_monster()->is_priest()
              && !mons_class_flag(defender->type, M_FAKE_SPELLS))
     {
+        int dur = div_rand_round(damage_done * 8, defender->as_monster()->hit_dice);
+        dur = random2(dur + 1) * BASELINE_DELAY;
         defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                 attacker, // doesn't matter
-                                random2(damage_done * 2) * BASELINE_DELAY));
+                                dur));
         special_damage_message =
                     apostrophise(defender->name(DESC_THE))
                     + " magic leaks into the air.";
@@ -2566,7 +2568,7 @@ void melee_attack::pain_affects_defender()
     if (defender->res_negative_energy())
         return;
 
-    if (x_chance_in_y(attacker->skill_rdiv(SK_NECROMANCY) + 1, 8))
+    if (!one_chance_in(attacker->skill_rdiv(SK_NECROMANCY) + 1))
     {
         if (defender_visible)
         {
@@ -2955,7 +2957,7 @@ void melee_attack::chaos_affects_attacker()
             form = TRAN_APPENDAGE;
         if (one_chance_in(5))
             form = coinflip() ? TRAN_STATUE : TRAN_LICH;
-        if (transform(0, form))
+        if (transform(0, form, true))
         {
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
             take_note(Note(NOTE_MESSAGE, 0, 0,
@@ -3312,7 +3314,7 @@ bool melee_attack::apply_damage_brand()
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
             || !attacker->is_player()
                && attacker->as_monster()->has_ench(ENCH_DEATHS_DOOR)
-            || one_chance_in(5))
+            || x_chance_in_y(2, 5))
         {
             break;
         }

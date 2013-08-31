@@ -26,6 +26,7 @@
 #include "monster.h"
 #include "spl-damage.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -721,35 +722,39 @@ bool player::can_jump(bool quiet) const
     {
         if (!quiet)
             mpr("You're too exhausted to jump.");
-        // or else they won't notice -- no message here
         return false;
     }
 
-    if (you.in_water())
+    if (in_water())
     {
         if (!quiet)
             mpr("You can't jump while in water.");
         return false;
     }
-    if (feat_is_lava(grd(you.pos())))
+    if (feat_is_lava(grd(pos())))
     {
         if (!quiet)
             mpr("You can't jump while standing in lava.");
         return false;
     }
-    if (you.liquefied_ground())
+    if (liquefied_ground())
     {
         if (!quiet)
             mpr("You can't jump while stuck in this mess.");
         return false;
     }
-    if (you.is_constricted())
+    if (is_constricted())
     {
         if (!quiet)
             mpr("You can't jump while being constricted.");
         return false;
     }
-
+    if (form == TRAN_TREE || form == TRAN_WISP)
+    {
+        if (!quiet)
+            canned_msg(MSG_PRESENT_FORM);
+        return false;
+    }
     return true;
 }
 

@@ -180,11 +180,6 @@ blowgun of the Assassin
 
 Geschaffen für die leichte Tarnung, hält aber trotzdem fiese Schläge ab.
 %%%%
-lance "Wyrmbane"
-
-Eine verzauberte Lanze welche immer mehr und mehr wächst für jedes mal, wenn
-damit ein Drache erschlagen wurde.
-%%%%
 Spriggan's Knife
 
 Ein elegantes kleines Messer.
@@ -284,10 +279,6 @@ Eine langweilige graue Robe.
 Maxwell's patent armour
 
 Eine seltsam aussehende Rüstung.
-%%%%
-mask of the Dragon
-
-Eine blaue Maske.
 %%%%
 armour of the Dragon King
 

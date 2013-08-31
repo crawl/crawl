@@ -35,8 +35,8 @@ la trouve généralement dans les paquets de défense, d'évasion et de guerre.
 %%%%
 Damnation card
 
-Cette carte bannit une ou plusieurs créatures proches vers les Abysses,
-probablement vous avec. On la trouve généralement dans les paquets de défense,
+Cette carte bannit une ou plusieurs créatures proches vers les Abysses, peut
+etre vous avec. On la trouve généralement dans les paquets de défense,
 d'évasion et de guerre ou, dans le paquet de punition de Nemelex Xobeh.
 %%%%
 Solitude card
@@ -46,8 +46,8 @@ la trouve généralement dans les paquets de défense, d'évasion et de guerre.
 %%%%
 Warpwright card
 
-Cette carte peut créer des téléporteurs. On la trouve en général dans les
-paquets de défense, d'évasion et de guerre.
+Cette carte peut créer des pieges de teleportation. On la trouve en général
+dans les paquets de défense, d'évasion et de guerre.
 %%%%
 Flight card
 
@@ -271,7 +271,7 @@ paquet de punition de Nemelex Xobeh.
 Famine card
 
 Cette carte vous affame. On la trouve habituellement et uniquement dans le
-paquet de punition de Nemelex Xobeh.
+paquet de punitions de Nemelex Xobeh.
 %%%%
 the Swine card
 

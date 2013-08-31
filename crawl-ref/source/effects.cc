@@ -3256,7 +3256,7 @@ void recharge_elemental_evokers(int exp)
     int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
                              you.experience_level * 425),
                         you.experience_level*4 + 30)
-                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 7));
+                    / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
 
     for (unsigned int i = 0; i < evokers.size(); ++i)
     {

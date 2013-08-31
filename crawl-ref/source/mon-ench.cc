@@ -2210,7 +2210,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 10 * (4 + random2(4)) / _mod_speed(10, mons->speed);
         break;
     case ENCH_INNER_FLAME:
-        return (random_range(75, 125) * 10);
+        return (random_range(25, 35) * 10);
     case ENCH_BERSERK:
         return (16 + random2avg(13, 2)) * 10;
     case ENCH_ROLLING:

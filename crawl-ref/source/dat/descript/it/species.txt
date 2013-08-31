@@ -25,6 +25,11 @@ Demonspawn
 I demoniaci sono mezzi uomini e mezzi demoni. Acquisendo potere subiscono
 potenti mutazioni che derivano dalla loro discendenza.
 %%%%
+Djinni
+
+I Djinn sono gli spiriti del fuoco, per loro la magia è la stessa essenza
+vitale.
+%%%%
 Draconian
 
 I draconici sono ibridi versatili. Al raggiungimento del livello sette maturano
@@ -40,6 +45,10 @@ Ghoul
 
 I ghoul sono non morti eternamente dannati a cibarsi di cibo avariato e a
 uccidere utilizzando i loro artigli.
+%%%%
+Gargoyle
+
+Fatti di pietra vivente, i Gargoyle hanno un'innaturale affinità con la terra.
 %%%%
 Halfling
 
@@ -71,6 +80,11 @@ Kobold
 
 I coboldi sono piccoli, maligni e un po' fragili, ma possiedono molti talenti.
 Possono mangiare ogni tipo di carne e lo fanno spesso.
+%%%%
+Lava Orc
+
+Questi maestri della magia di terra e fuoco vengono dalle profondità sotto al
+Dungeon. Le loro abilità variano al cambiare della loro temperatura.
 %%%%
 Merfolk
 

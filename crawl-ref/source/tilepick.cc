@@ -5012,7 +5012,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CANTRIP:
     case SPELL_QUICKSILVER_BOLT:
     case SPELL_METAL_SPLINTERS:
-    case SPELL_MIASMA:
+    case SPELL_MIASMA_BREATH:
     case SPELL_SUMMON_DRAKES:
     case SPELL_BLINK_OTHER:
     case SPELL_SUMMON_MUSHROOMS:
@@ -5475,8 +5475,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZOTDEF_NEEDLE_TRAP;
     case ABIL_MAKE_NET_TRAP:
         return TILEG_ABILITY_ZOTDEF_NET_TRAP;
-    case ABIL_MAKE_TELEPORT_TRAP:
-        return TILEG_ABILITY_ZOTDEF_TELEPORT_TRAP;
     case ABIL_MAKE_ALARM_TRAP:
         return TILEG_ABILITY_ZOTDEF_ALARM_TRAP;
     case ABIL_MAKE_BLADE_TRAP:
@@ -5596,7 +5594,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     if (rotten && !saprovorous)
         return TILE_FOOD_INEDIBLE;
 
-    // Harmful chunk effects > religious rules > chance of sickness.
+    // Harmful chunk effects > religious rules > reduced nutrition.
     if (is_poisonous(item))
         return TILE_FOOD_POISONED;
 

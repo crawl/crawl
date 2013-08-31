@@ -33,6 +33,12 @@ amulet of resist mutation
 
 Denne amulet beskytter bæreren mod mutationer, men den er ikke ufejlbarlig.
 %%%%
+amulet of the gourmand
+
+Denne amulet lader sin bærer spise friskt, råt kød uden at være sulten og
+forbedrer markant den næring, du får fra det. Disse virkninger på bærerens
+fordøjelse er kumulative og tid og som udgangspunkt små.
+%%%%
 amulet of warding
 
 Denne amulet afværger angreb fra væsener, der er magisk fremmanet, og gør
@@ -60,9 +66,34 @@ Et stort stykke tyk hud, dækket af pels, som er flået af et dyrekadaver, og so
 kan bæres som en primitiv klædedragt. Den yder rudimentær beskyttelse mod slag,
 men fordi det ikke er garvet, lugter det svagt af råddent kød.
 %%%%
+animal skin:quote
+
+“Han dræbte den ædle Mudjokivis.
+ Af skindet lavede han vanter,
+ med pelssiden på indersiden,
+ med hudsiden på ydersiden.
+ For at få den varme side på indersiden,
+ lavede han indersidens skindside på ydersiden.
+ For at få den kolde side på ydersiden,
+ lavende han den varme sides pelsside på indersiden,
+ Derfor lavede han pelssiden på indersiden,
+ derfor lavede han skindsiden på ydersiden,
+ derfor gjorde han indersiden til ydersiden.”
+    – Anonym, i Carolyn Wells' _A Parody Anthology_, s. 120. 1904.
+%%%%
 apple
 
 En lækker, fast, rød frugt, som er syrlig på tungen.
+%%%%
+apple:quote
+
+“MINERVA var visdommens gudinde, men ved en enkelt lejlighed gjorde hun noget
+meget tåbeligt: Hun indgik i et væddemål med Juno og Venus om, hvem der var
+smukkest. Det foregik således: Til Peleus og Thetis' bryllupsceremony var alle
+guderne inviteret, undtagen Eris, ufredens gudinde. Hun blev rasende over ikke
+at være inkluderet, og derfor kastede hun et æble ind til gæsten med påskriften
+'Til den smukkeste.'”
+    – Thomas Bulfinch, _Bulfinch's Mythology_, kap. XXVII. a. 1855.
 %%%%
 apricot
 
@@ -153,6 +184,11 @@ sølle troldkarle risikerer en krank skæbne, hvis de læser dette værk.
 
 ADVARSEL: Hvis det mislykkes at lære en besværgelse fra denne bog, vil den
 angribe dig.
+%%%%
+book of battle
+
+Denne bog med besværgelser bruges af skjalde, som får magisk hjælp af dens
+kampsange.
 %%%%
 book of beasts
 
@@ -343,6 +379,74 @@ Klassiskeren over dem alle om translokationernes magiske felt, skrevet af
 siden. Bogen findes stadig i magiske biblioteker over hele verdenen, selvom den
 ikke altid er der, hvor bibliotekaren efterlod den.
 %%%%
+book of summonings
+
+En avanceret afhandling om hidkaldelsesmagi, der beskriver, hvordan man
+hidkalder og betvinger væsener fra alle hånde hæslige riger. Der er en lange
+række skrækkelige advarsler med detaljerede illustrationer om farerne ved at
+hidkalde sådanne uhyrer, da de ikke alle vil være venligtsindede.
+%%%%
+book of the dragon
+
+En magisk bog med besværgelser, som vil give dig en grad af kontrol over drager
+og deres aspekter. Bogen føles varm og er indbundet i en skællet type læder, og
+hver side er overdådigt illustreret med en ny art drage, både ægte og
+opdigtede.
+%%%%
+book of the earth
+
+En lærebog for erfarne jord-elementartroldmænd. Den har en aura af ufattelig
+tæthed, som får enhver, der ser på den, til at føle sig, som om de står under
+mange hundrede tons klipper, selvom de står under den åbne himmel.
+%%%%
+book of the sky
+
+En magisk bog, som indeholder magtfulde elementarbesværgelser fra luftens rige.
+De skrivere, som laver kopier af denne grimoire, afsondrer sig i høje tårne på
+sletterne, så de bedre kan bringe sig i harmoni med luftens kræfter, og de
+gnistrende runer er skrevet med sitrende lyn.
+%%%%
+book of the tempests
+
+Denne bog indeholder magiske besværgelser, som råder over nogle af naturens
+mest destruktive kræfter. Når den åbnes, knitrer lyn mellem siderne, vinden
+hyler mod læserens ansigt og hele bogen skælver af voldsomme rystelser.
+%%%%
+book of the warp
+
+En bog med translokationsbesværgelser til erfarne forvrængere. Dens flimrende
+sider eksisterer i flere dimensioner på samme tid, og det er ikke dem alle, der
+overholder den konventionelle geometris regler. Nogle blade forsvinder, når de
+vendes, andre dukker op ud af ingenting, og endnu andre passerer direkte gennem
+andre sider eller sig selv. Nogle af bladene har tre sider, eller kun en, eller
+antallet af hjørner er en brøk. Effekten kan være forstyrrende.
+%%%%
+book of transfigurations
+
+En avanceret bog med transmutationsbesværgelser, som er skrevet på et
+materiale, der konstant ændrer sig. På ethvert givet tidspunkt kunne
+troldmanden læse ord, der var skrevet på papir, silke, sten, pergament, raderet
+glas, uld, metalfolie, slangeskind, fløjl eller tusind andre ting.
+%%%%
+book of unlife
+
+Denne uhellige bog beskriver en lang række magiske metoder til at skabe og
+kontrollere udøde tjenere. Den skrækkelige bog udstråler en hadsk aura, og dens
+pergamentsider spjætter og skælver ind i mellem af sig selv.
+%%%%
+book of war chants
+
+En bog med besværgelser, som er nyttige for en kriger. Her er de alle sat til
+musik, i overensstemmelse med kriger-skjaldenes traditioner. Funktionelt
+adskiller de sig dog ikke fra besværgelser, hvis magisk ord blot udtales.
+%%%%
+book of wizardry
+
+En bog med forskellige besværgelser, som er nyttige for enhver troldmand, der
+er dygtig nok. De mere akademiske af slagsen sætter en ære i at have bidraget
+til dette værk på en eller anden måde, selvom flere af dem er blevet slået
+ihjel af jaloux rivaler, som brugte deres egne besværgelser mod dem.
+%%%%
 bottled efreet
 
 En mægtig ifrit, som blev fanget af en troldmand og bundet i en bronzeflaske.
@@ -356,8 +460,9 @@ en dygtig bruger kan bruge den med stor effekt.
 %%%%
 box of beasts
 
-En magisk æske, som indeholder mange vilde dyr. Man kan slippe dem fri ved at
-åbne æskens låg.
+Denne æske indeholder en forkvaklet troldmands magiske eksperimenters bizarre
+rester. Hvis den åbnes, kan den slippe en venlig kimære løs: en mytisk hybrid
+som består af dele fra tre separate væsener.
 %%%%
 bread ration
 
@@ -368,6 +473,12 @@ broad axe
 En krigsøkse, som er forbedret med metalbånd, pigge, et forlænget skæfte og et
 halvmåneformet blad. Den kan forårsage frygtelige skader, men er svær at bruge
 med en hånd på grund af længden og vægten.
+%%%%
+buckler
+
+Et lille stykke træ og metal, som spændes på den ene arm til forsvar. Det er
+lidt uhåndterligt, så en kriger uden en smule træning vil angribe en kende
+langsommere.
 %%%%
 cap
 
@@ -415,9 +526,100 @@ crossbow
 Et stykke maskineri, som kan affyre bolte. Det tager et stykke tid at lade og
 affyre den, men den gør særdeles god skade i kamp.
 %%%%
+crystal ball of energy
+
+En magisk anordning, som kan bruges til at genopfylde dine reserver af magisk
+energi, men som også kan risikere at dræne denne energi fuldstændigt. Denne
+risiko er omvendt proportionel med med din maksimale magiske energi. Den er
+mest nyttig, når den bruges, mens du er tæt på dit fulde potentiale.
+%%%%
 crystal plate armour
 
 En utroligt tung, men ekstremt effektiv krystallinsk rustning.
+%%%%
+dagger
+
+En tveægget, spids kampkniv, som kan kastes. Nogle ser det som et svagt våben,
+en sidste udvej, men for andre er det det perfekte værktøj til snigmord.
+%%%%
+dart
+
+Et lille, sylespidst projektil med styrefjer som er lavet til at blive kastet
+med håndkraft.
+%%%%
+deck of changes
+
+En stak magiske kort, som forårsager forandringer i brugeren eller dennes
+omgivelser.
+
+Den kan indeholde følgende kort: eliksiren, blodtørst, metamorfose, hjelmen,
+sværdet, skyggen, lejesoldaten, trylledrikken, fokus, bland, erfaring, vild
+magi, spiralen, vismanden, alkymisten, vand, forvitring, ønskekvisten,
+murskeen, minefeltet.
+%%%%
+deck of defence
+
+Et spil magiske kort, hvoraf de fleste beskytter brugeren på forskellige måder.
+
+Det kan indeholde følgende kort: graven, skriget, fortabelse, ensomhed,
+portalbygger, fugleflugt, eliksiren, blodtørst, metamorfose, hjelmen, sværdet,
+skyggen, lejesoldaten.
+%%%%
+deck of destruction
+
+En stak magiske kort, hvoraf de fleste slynger død og ødelæggelse efter dine
+fjender (eller dig selv, hvis du er uheldig).
+
+Den kan indeholde følgende kort: vitriol, flamme, frost, gift, gnisten,
+hammeren, smerte, kuglen.
+%%%%
+deck of dungeons
+
+En stak magiske kort, der kan forme de underjordiske gange.
+
+Den kan indeholde følgende kort: vand, forvitring, ønskekvisten, murskeen,
+minefeltet.
+%%%%
+deck of escape
+
+En stak magiske kort, som hovedsageligt beskæftiger sig med forskellige former
+for flugt. Halsløs brug kan resultere i, at du bliver smidt fra asken og i
+ilden!
+
+Den kan indeholde følgende kort: portalen, rejsen, byt, fart, graven, skriget,
+fortabelse, ensomhed, portalbygger, fugleflugt.
+%%%%
+deck of punishment
+
+En stak magiske kort, som skaber problemer for brugeren.
+
+Den kan indeholde følgende kort: genfærdet, vild magi, vrede, Xom, hunger,
+forbandelsen, graven, fortabelse, portalen, minefeltet, svinet, pinsel.
+%%%%
+deck of summonings
+
+En stak magiske kort, som afbilder en lang række sære og underfulde væsener.
+
+Den kan indeholde følgende kort: korstoget, hjorden, marekorset, dansen,
+honningsvamp, knoglerne, afskyelighed.
+%%%%
+deck of war
+
+En stak magiske kort, som er nyttige før og efter kamp.
+
+Den kan indeholde følgende kort: portalen, rejsen, byt, fart, graven, skriget,
+fortabelse, ensomhed, portalbygger, fugleflugt, eliksiren, blodtørst,
+metamorfose, hjelmen, sværdet, skyggen, lejesoldaten, korstoget, hjorden,
+marekorset, dansen, honningsvamp, knoglerne, afskyelighed, vitriol, flamme,
+frost, gift, gnisten, hammeren, smerte, pinsel.
+%%%%
+deck of wonders
+
+En stak særdeles mystiske og magiske kort, som kan ændre din fysiske og mentale
+tilstand til det bedre eller det værre.
+
+Den kan indeholde følgende kort: trylledrikken, fokus, blanding, erfaring, vild
+magi, spiralen, vismanden, alkymisten.
 %%%%
 demon blade
 
@@ -435,6 +637,19 @@ Et grufuldt våben, som er vævet i infernoets dybder.
 dire flail
 
 En stridsplejl med længere pigge og et tungere hoved.
+%%%%
+disc of storms
+
+Denne ekstremt kraftulde genstand kan udløse en altødelæggende storm af
+elektricitet. Dens effektivitet er langt større i hænderne på en, som er dygtig
+med magiske anordninger.
+%%%%
+double sword
+
+Et magisk våben med to knivskarpe klinger. Legenderne fortæller at en ridder
+engang foreslog idéen om et dobbelt-klinget sværd til en mestersmed som en
+vittighed, men blev behageligt overrasket over at smeden ikke alene kunne skabe
+et sådant sværd, men at resultatet også var utroligt dødbringende.
 %%%%
 eggplant
 
@@ -463,6 +678,12 @@ falchion
 
 Et langt, enægget sværd med en lidt krum klinge. Vægten er samlet i odden for
 at gøre det mere dødbringende.
+%%%%
+fan of gales
+
+En fortryllet vifte som er beboet af venligtsindede luftånder. Hvis man svinger
+viften slipper man et voldsomt vindstød og ånderne fri til at feje bærerens
+fjender bort.
 %%%%
 fire dragon armour
 
@@ -499,9 +720,25 @@ En magisk rustning, som er lavet af en gulddrages skæl. Den er meget tungere
 end de fleste drageskæls-rustninger og beskytter bæreren mod gift, ild og
 kulde.
 %%%%
+gold dragon hide
+
+En gulddrages skind, dækket af ekstremt hårde, gyldne skæl. I sin ubehandlede
+form giver det ikke megen beskyttelse ud over modstandskraft over for gift, ild
+og kulde, men med magiske midler kan det forvandles til en fremragende
+rustning.
+%%%%
 gold piece
 
 En bunke glimtende guldmønter.
+%%%%
+grand grimoire
+
+En dødlignende stilhed synes at omgive denne bog, når den åbnes; selv luften
+synes at vige tilbage fra de uhyrligheder, der er afbildet i den. Siderne, som
+er dækket af vederstyggelige runer, beskriver, hvordan de mægtige blandt
+hidkalderne kan knægte de forfærdelige skabninger, der lever mellem planerne.
+Mangen en ubesindig sjæl har dog taget for let på dette bind, og er blevet
+drevet fra forstanden af ubegribelige rædsler fra det hinsides.
 %%%%
 grape
 
@@ -511,17 +748,153 @@ great mace
 
 En enorm stridskølle af metal, som er overordentligt uhåndterlig.
 %%%%
+great sword
+
+Et enormt, lige, tveægget sværd med et langt fæste og en tung knap. Det kan
+potentielt forårsage sønderlemmende skade, men kræver at man bruger begge
+hænder.
+%%%%
+halberd
+
+Et tohåndet, militært stagevåben, som består af at økseblad, monteret på et
+langt skaft og forstærket med metalkanter, der kan blokere andre våben, f.eks.
+sværd. På toppen er der en pig og bag øksebladet en hage. Våbenet kan være
+meget farligt i øvede hænder.
+%%%%
+hammer
+
+Dette stumpe våben består af et hammerhoved med en spidshakke på et mellemlangt
+skaft, som er forstærket med skinner, og kan levere betragtelig slagkraft og
+gennembore rustning.
+%%%%
+hand axe
+
+Et værktøj, som kan adskille fibrene i træ, eller kød. Lille og lavet til
+hurtig, præcis håndtering, men også balanceret så den kan kastes, hvis det
+bliver nødvendigt
+%%%%
+helmet
+
+En hovedbeklædning af metal.
+%%%%
 honeycomb
 
 En klump lækker bikage, som er lavet af kæmpebier.
+%%%%
+horn of Geryon
+
+Dette horn tilhører Geryon, som vogter Helvedes forhal. Legenderne vil vide, at
+en dødelig, som ønsker at besøge et af helvederne, må bruge det for at få
+adgang.
+%%%%
+ice dragon armour
+
+En rustning, som er lavet af skællene fra en drage med kuldeånde. Den yder
+stærk beskyttelse mod virkningerne af kulde, men gør også bæreren mere
+modtagelig over for ild og varme.
+%%%%
+ice dragon hide
+
+Det skællede skind fra en drage med kuldeånde. Det kan laves om til en rigtig
+rustning, men selv i sin rå form giver det fremragende beskyttelse mod kuldens
+effekter, men gør også bæreren mere sårbar over for ild.
+%%%%
+javelin
+
+Dette lette spyd er designet til at blive kastet og kan forvolde alvorlige
+skader.
+{{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Det er desværre for langt og uhåndterligt til, at du kan " ..
+               "bruge det."
+    else
+        return ""
+    end
+}}
+%%%%
+lajatang
+
+Et meget sjældent og ekstremt effektivt eksotisk våben, bestående af en stav
+med halvmåneformede klinger i begge ender.
+%%%%
+lamp of fire
+
+En magisk lampe, som er beboet af venligtsindede ildånder. Åbner du dens hægte,
+sætter du ånderne fri til at danse på dine fjender i et flammehav.
+%%%%
+lantern of shadows
+
+En uhellig anordning, som påkalder sig mørkets kræfter for at hjælpe sin ejer,
+mod en lille pris.
+%%%%
+large rock
+
+En meget stor og meget tung sten. {{
+    if string.find(you.race(), "Ogre")
+       or you.race() == "Troll"
+    then
+        return ""
+    else
+        return "Det kræver ekstraordinær styrke overhovedet at løfte en, " ..
+               "og kun store væsener kan kaste den."
+    end
+}}
+%%%%
+large shield
+
+Et stort stykke træ og metal som man spænder på armen til forsvar. {{
+    if string.find(you.race(), "Ogre")
+       or string.find(you.race(), "Draconian")
+       or you.race() == "Troll"
+    then
+        return "Det ser ud til, at det ville passe dig godt."
+    else
+        return "Det er meget uhåndterligt, og uden en hel masse træning " ..
+               "vil det få dig til at angribe langt langsommere."
+    end
+}}
+%%%%
+leather armour
+
+Denne lette rustning er lavet af lag af garvet dyrehud og yder grundlæggende
+beskyttelse stort set uden at hæmme udførlige gestus eller hurtige, snigende
+bevægelser.
 %%%%
 lemon
 
 En gul frugt.
 %%%%
+lightning rod
+
+Denne stok lader brugeren affyre kontinuerlige lyn: udladningen er konstant og
+kan rettes mod nye mål ved at vække stokken i efterfølgende ture (hvis man ikke
+gør det, ophører udladningen). Stokken er et øjeblik om at komme i gang,
+hvorimens den laver korte, ret ineffektive stød. Men når den først er i gang,
+kan man vifte med stokken og skabe imponerende og livsfarlige  buer af
+elektricitet.
+%%%%
+long sword
+
+Et lige, tveægget sværd af medium størrelse med et solidt skæfte og knap. Dette
+ædle våben kombinerer præcise manøvrer med dødbringende kraft og er ganske
+effektiv i hænderne på de, der er trænet i dets brug.
+%%%%
+longbow
+
+En lang, stærk bue, lavet af takstræ. Den gør fremragende skade i kamp, og en
+dygtig bueskytte kan bruge den overordentligt effektivt.
+%%%%
 lychee
 
 En tropisk frugt.
+%%%%
+mace
+
+En kort militærkølle med metalpigge. Dette effektive værktø buler rustninger og
+knuser knogler med stump kraft.
 %%%%
 manual
 
@@ -531,6 +904,210 @@ meat ration
 
 En mættende ration af tørret og konserveret kød.
 %%%%
+morningstar
+
+En stridskølle med et hoved, der er dækket af korte pigge. Den kompenserer for
+sin let reducerede manøvredygtighed med øger kraft og er dødbringende i
+hænderne på en veltrænet kombattant.
+%%%%
+mottled dragon armour
+
+Denne rustning er lavet af skællene fra en spættet drage. Selvom den i
+modsætning til rustning, som er lavet af skællene fra visse større drager, ikke
+yder den store beskyttelse, så er den let og lige så relativt smidig som
+læderrustning. Den er også bemærkelsesværdigt glat, så klistrede flammer glider
+af den som vand på en gås.
+%%%%
+mottled dragon hide
+
+En spættet drages skællede skind, som er dækket mystiske mønstre. Det kan
+forvandles til en rigtig rustning ved hjælp af magi. Dets glatte overflade
+afviser klæbrige flammer.
+%%%%
+naga barding
+
+En særlig rustning til nagaer, som de kan bære på halen.
+%%%%
+necronomicon
+
+En ekstremt sjælden bog, magtfuld og uheldsvanger. Indbindingen er lavet af en
+sart hud af ukendt proveniens. Mangen dumdristig troldmand har forsøgt at
+studere dette bind, blot for at blive viklet ind i nekromantiske kræfter, de
+aldrig kan håbe på at beherske.
+%%%%
+needle
+
+Et tyndt stykke metal, der som regel er overtrukket med en skadelig substans.
+Når den affyres fra et pusterør, kan den på dødbringende vis overlevere sine
+giftstoffer til levende eller dæmoniske væseners blodomløb.
+%%%%
+orange
+
+En lækker, saftig, orange frugt.
+%%%%
+orb of zot
+
+Når du er undsluppet til overfladen med dette uvurderlige klenodie, er din
+søgen forbi.
+%%%%
+pair of boots
+
+Et par støvler.
+%%%%
+pair of bracers
+
+Et par lædermanchetter.
+%%%%
+pair of gauntlets
+
+Et par stridshandsker.
+%%%%
+pair of gloves
+
+Et par handsker.
+%%%%
+pear
+
+En lækker, saftig frugt.
+%%%%
+pearl dragon armour
+
+En rustning, som er lavet af de perlemorsfarvede skæl fra en perledrage. Den
+giver bæreren modstandskraft over for negativ energi.
+%%%%
+pearl dragon hide
+
+En perledrages skind, dækket af iridiserende perlemorsskæl. I sin rå form yder
+det ikke den store beskyttelse, men med magiske midler kan det forvandles til
+en fremragende rustning.
+%%%%
+phial of floods
+
+Dette fortryllede kar er ved at flyde over af elementarvand. Hvis man fjerner
+proppen, flyder en rivende strøm af vand fra karret og slipper vandånderne i
+den fri.
+%%%%
+piece of ambrosia
+
+En del af en sælsom substans, som spøgelsesmøl producerer. Man får både magisk
+energi og næring, når man spiser den, på bekostning af at miste sit mentale
+fokus i en kort periode.
+%%%%
+plate armour
+
+En hel dragt af solide metalplader: kyras, skulderstykker, armskinner,
+taljeplade og benskinner. Mellemrummene er dækket af ringbrynje, så du kan
+bevæge dig.
+
+Den giver fremragende beskyttelse, men tager en evighed at tage på.
+%%%%
+potion of agility
+
+En trylledrik, som øger din behændighed og din evne til at undvige
+betragteligt, når du drikker den.
+%%%%
+potion of berserk rage
+
+En trylledrik, som bevirker et usammenhængende raserianfald.
+%%%%
+potion of blood
+
+En flaske, som indeholder livets essens. Den er livsvigtig for alle levende
+væsener og for visse udøde. Den giver også næring til dem, der kan fordøje kød.
+%%%%
+potion of brilliance
+
+En trylledrik, som kan øge både intelligens og magisk kraft voldsomt hos den,
+der drikker den.
+%%%%
+potion of coagulated blood
+
+En flaske, som indeholder livets essens. Den er livsvigtig for alle levende
+væsener og for visse udøde. Den giver også næring til dem, der kan fordøje kød.
+Blodet heri bliver snart udrikkeligt.
+%%%%
+potion of confusion
+
+En drik, som forvirrer dine senser og begrænser din kontrol over dine egne
+handlinger.
+%%%%
+potion of cure mutation
+
+En trylledrik, som fjerner flere af de mutationer, du kunne have pådraget dig.
+%%%%
+potion of curing
+
+En velsignet væske, som lukker sår, klarer sindet og kurerer sygdomme. Hvis den
+drikkes, når du er helt eller næsten helt helbredt, kan den også reparere
+permanente skader en smule.
+%%%%
+potion of decay
+
+En ækel og modbydelig forbandet væske, som får dit kød til at forrådne for
+øjnene af dig.
+%%%%
+potion of degeneration
+
+Et usundt rodsammen, som kan have frygtelige konsekvenser for din krop, din
+hjerne og dine reflekser.
+%%%%
+potion of experience
+
+En virkeligt vidunderlig og særdeles sjælden drik.
+%%%%
+potion of heal wounds
+
+En helende trylledrik, som får sår til at lukke sig og hele næsten
+øjeblikkeligt. Hvis den bruges, når man er næsten eller helt helet, kan den
+også reparere permanente skader.
+%%%%
+potion of invisibility
+
+En eliksir, som skjuler dig for andres øjne.
+%%%%
+potion of flight
+
+En drik, som giver stor opdrift til den, der drikker den.
+%%%%
+potion of magic
+
+En værdifuld trylledrik, som giver en person en infusion af magisk energi.
+%%%%
+potion of might
+
+En trylledrik, som øger din styrke og fysiske kraft betragteligt, hvis du
+drikker den.
+%%%%
+potion of mutation
+
+En drik, som gør overordentligt underlige ting ved dig.
+%%%%
+potion of paralysis
+
+En drik, som fratager dig kontrollen over din egen krop.
+%%%%
+potion of poison
+
+En fæl, giftig væske.
+%%%%
+potion of porridge
+
+En mættende portion slim, som er fyldt med kornfiber.
+%%%%
+potion of resistance
+
+En trylledrik, som gør dig midlertidigt modstandsdygtig mod elementerne og
+gift.
+%%%%
+potion of restore abilities
+
+En trylledrik, som restituerer evnerne hos den, der drikker den. Den giver også
+mulighed for at bruge et åndevåben igen ved at annullere forsinkelsen.
+%%%%
+potion of slowing
+
+En drik, som forsinker dine handlinger.
+%%%%
 potion of speed
 
 En fortryllet drik, som gør alle, der drikker den, hurtigere.
@@ -538,6 +1115,10 @@ En fortryllet drik, som gør alle, der drikker den, hurtigere.
 potion of strong poison
 
 En forfærdeligt giftig drik.
+%%%%
+potion of beneficial mutation
+
+En eliksir, som giver dig en formodentlig god mutation.
 %%%%
 quad damage
 
@@ -549,10 +1130,81 @@ quarterstaff
 
 En solid træstang, som er lavet til kamp.
 %%%%
+quick blade
+
+Dette omhyggeligt udformede kortsværd er overnaturligt afbalanceret, så selv
+uerfarne krigere kan angribe hurtigt med det. Der er ikke mange sværdsmede, der
+har evnerne til at lave et, så der fremstilles kun få, og de er svære at finde.
+%%%%
 rambutan
 
 En lille, men lækker tropisk frugt. Hvordan den er havnet her, er ikke til at
 vide.
+%%%%
+ring mail
+
+En let læderdragt, som er forsynet med en overflade af metalringe. Den
+beskytter i kamp, men er lidt besværlig at bære på grund af den øgede vægt.
+%%%%
+ring of dexterity
+
+Denne ring øger eller formindsker din behændighed, når du har den på, afhængigt
+af hvor meget, den er fortryllet.
+%%%%
+ring of evasion
+
+Denne ring gør enten sin ejer bedre eller dårligere til at undgå angreb,
+afhængigt af hvor meget, den er fortryllet.
+%%%%
+ring of fire
+
+Denne ring bringer sin ejer i tættere kontakt med ildens kræfter. Han eller hun
+bliver modstandsdygtig over for varme og mere effektiv til at bruge ildmagi,
+men bliver også sårbar over for kuldens effekter.
+%%%%
+ring of hunger
+
+Denne nederdrægtige ring gør sin ejer sulten hurtigere.
+%%%%
+ring of ice
+
+Denne ring bringer sin bærer i tættere forbindelse med kuldens og isens
+kræfter. Han eller hun bliver mere modstandsdygtig mod kulde og is og kan bruge
+ismagi mere effektivt, men bliver også mere sårbar over for ildens effekter.
+%%%%
+ring of intelligence
+
+Denne ring øger eller mindsker sin bærers mentale evner, afhængigt af hvor
+meget den er fortryllet.
+%%%%
+ring of invisibility
+
+Denne magtfulde ring kan aktiveres for at skjule sin bærer fra andres øjne, men
+øger hans eller hendes stofskifte betragteligt, mens den gør det.
+%%%%
+ring of flight
+
+Denne ring ladere bæreren flyve. Ringens kraft kan ikke vækkes, mens man er i
+luften, så den er ikke egnet til længere rejser over dødbringende væsker.
+%%%%
+ring of magical power
+
+Denne ring øger sin bærers reserver af magisk energi.
+%%%%
+ring of poison resistance
+
+Denne ring beskytter sin bærer mod effekterne af gifte og edder.
+%%%%
+ring of positive energy
+
+Denne velsignede ring beskytter bærerens livskraft mod negativ energi, så du
+bliver delvist immun over for de drænende konsekvenser af udød og nekromantisk
+magi.
+%%%%
+ring of protection
+
+Denne ring beskytter dig mod skade eller gør dig mere sårbar, afhængigt af
+fortryllelse, når du har den på.
 %%%%
 ring of protection from cold
 
@@ -562,13 +1214,117 @@ ring of protection from fire
 
 Denne ring beskytter mod varme og ild.
 %%%%
+ring of protection from magic
+
+Denne ring øger bærerens modstandsdygtighed over for fjendtlige fortryllelser.
+%%%%
+ring of regeneration
+
+Denne vidunderlige ring sætter bæreren i stand til at hele langt hurtigere, på
+bekostning af et væsentligt accelereret stofskifte, mens helingen foregår.
+%%%%
 ring of see invisible
 
 Denne ring lader bæreren se de ting, der er skjult af magi.
 %%%%
+ring of slaying
+
+Denne ring øger eller forringer bærerens evner inden for både nær- og
+distancekamp.
+%%%%
+ring of strength
+
+Denne ring øger eller mindsker sin bærers fysiske styrke, alt efter hvor
+fortryllet den er.
+%%%%
+ring of sustain abilities
+
+Denne ring beskytter sin bærer mod tab af styrke, behændighed og intelligens.
+%%%%
 ring of sustenance
 
 Denne ring giver bæreren energi, så man ikke har brug for at spise så ofte.
+%%%%
+ring of teleport control
+
+Denne ring kan vækkes for at lade bæreren kontrollere en teleportations eller
+et blinks destination, men desværre ikke med usvigelig præcision. Forsøg på at
+teleportere ind i solide genstande vil resultere i en tilfældig teleportation,
+i hvert fald når det gælder almindelige teleportationer. Vær også på vagt over
+for det faktum, at kontrollerede translokationer vil besmitte brugeren med
+magisk restenergi, og at kontrollerede teleportationer er længere om at
+aktiveres.
+%%%%
+ring of teleportation
+
+Denne ring translokerer lejlighedsvis bæreren til et tilfældigt sted og kan
+aktiveres med vilje for at opnå samme effekt.
+%%%%
+ring of wizardry
+
+Denne ring øger bærerens evne til at bruge magiske besværgelser.
+%%%%
+robe
+
+En stor, løstsiddende form for overtøj med store ærmer, som er lavet af let
+stof. Kåber tilpasser sig nemt til at passe humanoide kroppe af enhver
+størrelse. Klædedragter af denne art yder kun en smule beskyttelse mod fysiske
+men, men deres gavmilde snit hæmmer ikke evnen til at undvige angreb eller
+udføre trolddom ordentligt.
+%%%%
+rod of demonology
+
+Denne stok indeholder hidkaldelsesbesværgelser, endda nogle, som kan slippe
+dæmoner løs i denne intetanende verden.
+%%%%
+rod of destruction
+
+Denne stok indeholder et varieret udvalg af besværgelser, der forårsager død og
+ødelæggelse.
+%%%%
+rod of fiery destruction
+
+Denne stok indeholder besværgelser, der kan slynge altødelæggende ild efter
+dine fjender.
+%%%%
+rod of frigid destruction
+
+Denne stok indeholder besværgelser, der kan udrydde dine fjender ved at
+udslynge kulde.
+%%%%
+rod of inaccuracy
+
+Denne stok lader brugeren affyre en kraftfuld, men utroligt upræcis kraftkile.
+%%%%
+rod of striking
+
+Denne stok er beregnet til nærkamp, hvor den udløser sine ladninger for at
+forvolde yderligere skade, som afhænger af dine færdigheder med vækkelser, når
+den rammer en fjende. Køller og plejle-færdigheden hjælper med at forbedre din
+grundlæggende effektivitet med våbnet.
+%%%%
+rod of striking:quote
+
+“Den, der sparer på stokken, hader sin søn, den, der elsker sin søn, tugter ham
+i tide.”
+    – Bibelen, Ordsprogenes bog 13:24
+%%%%
+rod of the swarm
+
+Denne stok lader brugeren hidkalde en sværm af insekter.
+%%%%
+rod of venom
+
+Denne stok indeholder giftbaserede angrebsbesværgelser.
+%%%%
+rod of warding
+
+Denne stok indeholder besværgelser, der driver dine fjender bort.
+%%%%
+royal jelly
+
+En særligt fed og gylden geléagtig tingest. Hvis du indtager den, giver den,
+udover næring, dig dine tabte evner tilbage.
 %%%%
 rune of zot
 
@@ -578,4 +1334,524 @@ sabre
 
 Selvom det egentlig er lavet til at blive brugt fra hesteryg, så fungerer dette
 enæggede, let krumme kortsværd stadig udmærket i hænderne på krigere til fods.
+%%%%
+sack of spiders
+
+En vævet silkepose. Der er noget indeni, der bevæger sig ...
+
+Hvis du åbner denne pose, kan du slippe en masse edderkopper løs, som kan
+hjælpe din sag. Men du bliver nok nødt til at stoppe spindelvævene bagefter.
+%%%%
+sacred scourge
+
+En velsignet våben, som er vævet af helgenerne i himmelen og hadet af det
+uhellige. Den er et yndet våben for Den Strålendes tjenere.
+%%%%
+sausage
+
+En aflang klump brusk, indvolde og kornprodukter af lav kvalitet, som er
+indkapslet i en tarm. Mums!
+%%%%
+scale mail
+
+Denne læderdragt er dækket af metalplader, som er sammenføjet i overlappende
+rækker for at yde fuld beskyttelse, men på bekostning af reduceret
+bevægelsesfrihed.
+%%%%
+scimitar
+
+En lang sabel. Dens brede, buede klinge øger den skade, den forvolder, men det
+gør den også en smule vanskeligere at bruge.
+%%%%
+scroll of acquirement
+
+Denne vidunderlige skriftrulle skaber en værdifuld genstand, hvis type er valgt
+af læseren. De genstande, der skabes, er i høj grad vægtet mod overensstemmelse
+med læserens færdigheder og mod udstyr, som læseren endnu ikke har set.
+Desværre er der intet, der er sikkert.
+%%%%
+scroll of amnesia
+
+Denne skriftrulle lader læseren slette en valgfri besværgelse fra hukommelsen,
+så den magiske energi, der er investeret i den, kan frigøres til andre formål.
+%%%%
+scroll of blinking
+
+Denne skriftrulle lader læseren teleportere en kort distance med præcis
+kontrol. Vær opmærksom på, at kontrolleret teleportation vil besmitte den
+teleporterede med magisk energi.
+%%%%
+scroll of curse armour
+
+Denne skriftrulle kaster en forbandelse på et båret stykke rustning.
+%%%%
+scroll of curse jewellery
+
+Denn. skriftrulle kaster en forbandelse på en amulet eller ring, du har på.
+%%%%
+scroll of curse weapon
+
+Denne skriftrulle kaster en forbandelse på dit våben.
+%%%%
+scroll of enchant armour
+
+Denne skriftrulle fortryller et stykke rustning. De fleste former for rustning
+kan kun fortrylles til +2, bortset fra skjolde, som kan fortrylles til +3, og
+visse former for krops- og dyrerustning, som kan fortrylles til samme værdi som
+deres basis-RK.
+
+Den kan også bruges til at fortrylle visse eksotiske væseners skind.
+%%%%
+scroll of enchant weapon i
+
+Denne skriftrulle fortryller det våben, du har i hånden, og gør det mere
+præcist i kamp. Det bliver sværere og sværere at få den til at virke på stærkt
+fortryllede våben og kan aldrig fortrylle dem højere end +9. Magiske artefakter
+kan slet ikke fortrylles.
+%%%%
+scroll of enchant weapon ii
+
+Denne skriftrulle fortryller det våben, du har i hånden, og får det til at
+forvolde større skade i kamp. Det bliver sværere og sværere at få den til at
+virke på stærkt fortryllede våben og kan aldrig fortrylle dem højere end +9.
+Magiske artefakter kan slet ikke fortrylles.
+%%%%
+scroll of enchant weapon iii
+
+Denne skriftrulle fortryller det våben, du har i hånden, og gør det langt mere
+effektivt i kamp ved at øge både præcision og skade. Det bliver sværere og
+sværere at få den til at virke på stærkt fortryllede våben og kan aldrig
+fortrylle dem højere end +9. Magiske artefakter kan slet ikke fortrylles.
+%%%%
+scroll of fear
+
+Denne skriftrulle indgyder de, der ser den blive læst, med en afgrundsdyb
+rædsel.
+%%%%
+scroll of fog
+
+Denne skriftrulle indhyller læseren i en tæt sky af tåge.
+%%%%
+scroll of holy word
+
+Denne skriftrulle påkalder sig himmelske kræfter for at forvolde stor skade på
+uhellige væsener i nærheden – inklusive dig!
+%%%%
+scroll of identify
+
+Denne nyttige, magiske skriftrulle lader dig bestemme en given genstands
+egenskaber, og vil lejlighedsvis tillade flere identifikationer.
+
+Hvis den bruges på en stak kort, vil den også afsløre det øverste kort.
+%%%%
+scroll of immolation
+
+Denne skriftrulle er behandlet med en utroligt brandbar substans, som
+eksploderer voldsomt, når rullen åbnes og læses, og brænder både læseren og alt
+andet i nærheden.
+%%%%
+scroll of magic mapping
+
+Denne skriftrulle afslører læserens omgivelser.
+%%%%
+scroll of noise
+
+Denne drilske skriftrulle, som ofte sniges ned i en troldmands rygsæk af en
+lusket lærling, laver et værre spektakel. Derudover er den ikke kendt for at
+være brugbar.
+%%%%
+scroll of random uselessness
+
+Det er let at glemme denne skriftrulles essentielle ubrugelighed, når det
+lykkes overhovedet at få den til at virke.
+%%%%
+scroll of recharging
+
+Denne skriftrulle genopfylder en valgfri, magisk vånd eller stoks ladninger.
+Når den bruges på en stok, øger den også stokkens kraftlager og den fart, den
+genvinder kraft med, og forbedrer oven i købet dens kampegenskaber.
+%%%%
+scroll of remove curse
+
+Denne skriftrulle fjerner forbandelserne fra de ting, du bruger, når du læser
+den.
+%%%%
+scroll of summoning
+
+Denne skriftrulle hidkalder adskillige væsener, som er vævet af skygger til at
+ligne de fjender, der findes i læserens umiddelbare nærhed.
+%%%%
+scroll of teleportation
+
+Kort tid efter at have læst ordene på denne skriftrulle, vil du blive
+translokeret til en tilfældig position.
+%%%%
+scroll of torment
+
+Denne skriftrulle påkalder sig mørkets kræfter for at påføre væsener i nærheden
+store smerter – inklusive dig! Dette halverer alle levende væseners livskraft,
+men er aldrig decideret dødbringende.
+%%%%
+scroll of vorpalise weapon
+
+Denne skriftrulle fortryller et valgfrit våben, så det bliver langt mere
+effektivt til at forvolde skade på dine fjender. Den kan gøre de midlertidige
+præg, som visse besværgelser giver, permanente, eller den kan bruges på et
+permanent præget våben for at vælge et nyt, tilfældigt præg.
+
+Præg som er tæt knyttet til en af guderne (Trog, Lugonu, Kikubaaqudgha, Den
+Strålende) kan ikke fikseres på denne måde. Xom ville på den anden side ikke
+lade så oplagt en mulighed for løjer gå til spilde.
+%%%%
+scroll of vulnerability
+
+Denne skriftrulle fjerner alle magiske fortryllelser fra læseren og fra væsener
+i nærheden. Magisk modstandskraft hos læseren og andre væsener i nærheden vil
+også blive halveret i en kort periode. Sidstnævnte effekt påvirker dog ikke
+væsener, som er komplet immune over for magi.
+%%%%
+scroll of silence
+
+Denne skriftrulle fjerner alle lyde i nærheden af læseren. Det gør det umuligt
+at læse skriftruller, kaste besværgelser, bede eller råbe i nærheden af
+læseren. (Dette gælder naturligvis også læseren selv.)
+
+Denne stilhed skjuler ikke din tilstedeværelse, da dens trykkende, unaturlige
+effekt næsten med garanti vil gøre ethvert levende væsen opmærksom på, at der
+er noget helt galt. Stilheden starter med en radius på halvdelen af den normale
+synsvidde og skrumper så, indtil den kun dækker læseren, hvorefter effekten
+ophører.
+
+Bemærk, at dæmoner ikke har brug for lyd for at kaste besværgelser. Visse
+nekromantiske effekter opfører sig på samme måde.
+%%%%
+scythe
+
+Et landbrugsredskab, der som regel bruges af utrænet bærme i kamp.
+%%%%
+shield
+
+Et stykke træ og metal, som spændes på den ene arm til beskyttelse. Det er
+uhåndterligt at gå med, og uden træning vil det få dig til at angribe
+langsommere.
+%%%%
+short sword
+
+En lille, tveægget klinge med et kort greb. Våbnet er robust og let at håndtere
+og findes ofte i hænderne på dem, der gene vil dolke deres fjender i al
+hemmelighed.
+%%%%
+decaying skeleton
+
+Et rådnende skelet.
+%%%%
+slice of pizza
+
+Et stykke pizza: et fladbrød med tomatsauce, mozzarella di bufala og basilikum.
+%%%%
+sling
+
+Et stykke stof og læder, som bruges til at affyre sten med, som gør en lille
+smule skade, når de rammer. I modsætning til andre affyringsvåben bliver den
+ikke langsommere af, at man bruger et skjold samtidig.
+%%%%
+sling bullet
+
+Et lille, tungt projektil, som er særligt velformet til brug med slynger. Det
+er en mere effektiv form for ammunition end gemene sten.
+%%%%
+snozzcumber
+
+En frastødende, agurkeformet grøntsag.
+%%%%
+spear
+
+Et jagtvåben, som består af et afbalanceret træskaft med et spidst metalhoved,
+som er fæstnet i den ene ende. Det er kortere end andre stagevåben og kan
+bruges med en eller to hænder. Det er endda let nok til at man kan kaste det.
+%%%%
+staff of air
+
+Denne stav øger brugerens luftmagis kraft og isolerer ham eller hende mod
+elektricitet. Hvis brugeren er kyndig i både vækkelser og luftmagi, kan staven
+give stød, når den rammer fjender.
+%%%%
+staff of cold
+
+Denne stav øger brugerens isbesværgelsers kraft og beskytter mod kuldens
+effekter. Hvis brugeren er kyndig i vækkelser, kan staven fryse fjender, der
+bliver ramt af den, og give større skade, jo bedre brugeren er til ismagi.
+%%%%
+staff of conjuration
+
+Denne stav øger brugerens fremmaningers kraft.
+%%%%
+staff of death
+
+Denne stav øger brugerens nekromantiske besværgelsers kraft og beskytter mod
+negativ energi. Hvis brugeren er kyndig i både vækkelser og nekromantik, vil
+staven forårsage store smerter, når den rammer levende sjæle.
+%%%%
+staff of earth
+
+Den stav øger brugerens jordbesværgelsers kraft. Hvis brugeren er kyndig i
+vækkelser, kan den knuse dem, den rammer, og gøre endnu mere skade, hvis
+brugeren også mestrer jordmagi.
+%%%%
+staff of energy
+
+Denne stav lader sin bærer kontrollere magisk energi: Man bliver ikke længere
+sulten af at kaste besværgelser, og naturlig baggrundsmagi kan kanaliseres til
+bærerens formål.
+%%%%
+staff of fire
+
+Denne stav øger brugerens ildbesværgelsers kraft og beskytter mod varmens og
+ildens effekter. Hvis du er kyndig til vækkelser, kan den brænde dem, den
+rammer, og gøre endnu mere skade, hvis du også mestrer ildmagi.
+%%%%
+staff of poison
+
+Denne stav øger brugerens giftige besværgelsers kraft og beskytter ham eller
+hende mod konsekvenserne af gift. Hvis brugeren er kyndig i både vækkelser og
+giftmagi, vil staven også forgifte dem, den rammer – selv hvis ofrene
+sædvanligvis er modstandsdygtige.
+%%%%
+staff of power
+
+Denne stav giver brugeren et reservoir af magisk energi.
+%%%%
+staff of summoning
+
+Denne stav øger brugerens hidkaldelsers kraft og beskytter mod hidkaldte
+væseners angreb. Hvis du er kyndig i vækkelser, kan du forsøge at bortvise
+hidkaldte væsener, når du slår dem.
+%%%%
+staff of wizardry
+
+Denne stav øger brugerens evne til at bruge magiske besværgelser betragteligt.
+%%%%
+steam dragon armour
+
+En rustning, som er lavet af skællene fra en drage, der ånder damp. Selvom den
+i modsætning til rustninger, der er lavet af skællene fra visse større drager,
+ikke yder den store beskyttelse, så er den ekstremt let og smidig som stof.
+%%%%
+steam dragon hide
+
+En dampdrages bløde og spændstige skællede skind. Det kan forvandles til en
+rigtig rustning ved hjælp af magi.
+%%%%
+stone
+
+En lille klump kompakt, men ellers ikke opsigtsvækkende naturligt forekommende
+mineraler. Den kan kastes med hænderne eller affyres med en slynge.
+%%%%
+stone of tremors
+
+Denne polerede sten er beboet af venligtsindede jordånder. Hvis man presser den
+mod en stenet overflade, sender den kraftige chokbølger gennem den, fordi
+ånderne søger at tage fast form i klippen, mens omgivende væsener prygles af
+faldende murbrokker.
+%%%%
+storm dragon armour
+
+En rustning, som er lavet af skællene fra en drage med lynånde. Den er tungere
+end de fleste rustninger af drageskæl og giver bæreren stor modstandskraft over
+for elektriske udladninger.
+%%%%
+storm dragon hide
+
+Skindet fra en drage med lynånde er dækket af utroligt hårde, blå skæl. I sin
+rå form giver det ikke megen beskyttelse ud over modstandskraft over for
+elektriske udladninger, men med magiske metoder kan det gøres til en
+fremragende rustning.
+%%%%
+strawberry
+
+En lille, men lækker, rød frugt.
+%%%%
+sultana
+
+En ydmyg rosin.
+%%%%
+swamp dragon armour
+
+En rustning, som er lavet af skællene fra sumpdrage. Den giver bæreren
+modstandskraft mod gift.
+%%%%
+swamp dragon hide
+
+Det slimede{{
+    if you.can_smell() then
+        return ", stinkende"
+    end
+}} skind fra en sumpdrage. Det giver modstandskraft over for gift og kan med
+magiske midler forvandles til rigtig rustning.
+%%%%
+throwing net
+
+Et net af reb, som er bundet sammen og har vægte i kanten. Det blev oprindeligt
+brugt af jægere til at besnære og indfange bytte, men blev hurtigt taget i brug
+i kamp og gladiatorarenaer. Sprællende ofre vil til sidst ødelægge nettet og
+bryde fri hvis de lever længe nok.
+{{
+    if you.race() == "Halfling"
+       or you.race() == "Kobold"
+       or you.race() == "Spriggan"
+    then
+        return "Det er desværre for stort og uhåndterligt til at du kan " ..
+               "bruge det."
+    else
+        return ""
+    end
+}}
+%%%%
+tome of destruction
+
+En ekstremt kraftfuld, men uforudsigelig bog med vild magi. Advarsel: Det kan
+være skadeligt for dig eller dine omgivelser at læse den!
+%%%%
+trident
+
+Et fiskespyd, som er forbedret med et længere skaft og et tregrenet metalhoved.
+På grund af den ekstra vægt kan den ikke kastes effektivt.
+%%%%
+triple sword
+
+Et magisk våben med tre store, barberbladsskarpe klinger. Legenderne vil vide,
+at en spøgefuld ridder engang spurgte en mestersmed, om han kunne lave et sværd
+med to klinger. Resultatet viste sig at være ganske funktionelt, hvortil
+ridderen gemytligt replicerede: "Ah, udmærket, men kunne De lave et
+*tredobbelt* sværd?" Da svaret viste sig at være ja, var ridderen for chokeret
+til at spørge om mulighederne for et firedobbelt sværd.
+%%%%
+trishula
+
+En velsignet trefork, som er formet af rensende flammer, med tre takker, som
+symboliserer de tre hellige guders samlede kraft. Den er et yndet våben for Den
+Strålendes tjenere.
+%%%%
+troll hide
+
+Det stivede og noprede skind fra en trold. Det har magiske, regenerative
+egenskaber. Du kan tage det på, ligesom med andre skind. Og så er det
+modtageligt over for fortryllelse.
+%%%%
+troll leather armour
+
+En rustning, som er lavet af det stive og noprede skind fra en helt almindelig
+trold. Det regenerer lige så langsomt bærerens kød ved hjælp af magi (med
+mindre vedkommende allerede er en trold).
+%%%%
+wand of cold
+
+En magisk anordning, som kan kaste kolossale kuldekiler.
+%%%%
+wand of confusion
+
+En magisk enhed, som fremkalder forvirring og desorientering i målet.
+%%%%
+wand of digging
+
+En magisk anordning, som graver tunneller gennem uforarbejdet klippe.
+%%%%
+wand of disintegration
+
+En magisk anordning, som kan sprænge alt andet end de hårdeste mures fysiske
+struktur – selv stenhårde statuer, for slet ikke at tale om kød.
+%%%%
+wand of draining
+
+En magisk enhed, som kaster en kile af negativ energi, der dræner levende
+væseners livsessens, men som er ubrugelig mod udøde, dæmoner, kunstige væsener
+og endda levende planter.
+%%%%
+wand of enslavement
+
+En magisk anordning, som forårsager slavisk lydighed i et væsen.
+%%%%
+wand of fire
+
+En magisk anordning, som kaster kolossale ildkiler.
+%%%%
+wand of fireball
+
+En magisk anordning, som kaster eksplosive ildkugler.
+%%%%
+wand of flame
+
+En magisk enhed, som kaster med små luer.
+%%%%
+wand of frost
+
+En magisk anordning, som kaster med små stumper frost.
+%%%%
+wand of hasting
+
+En magisk anordning, som kaster fortryllelser, der får målet til at bevæge sig
+og handle hurtigere.
+%%%%
+wand of heal wounds
+
+En magisk anordning, som kan helbrede et væsens sår.
+%%%%
+wand of invisibility
+
+En magisk anordning, som kan skjule et væsen for andres øjne.
+%%%%
+wand of lightning
+
+En magisk enhed, som kaster kolossale lynkiler.
+%%%%
+wand of magic darts
+
+En magisk anordning, som kaster med små kiler af destruktiv energi. De rammer
+aldrig ved siden af.
+%%%%
+wand of paralysis
+
+En magisk anordning øjeblikkeligt standser enhver bevægelse i målet og gør dets
+lemmer immobile. Et paralyseret væsen kan kun ånde, tænke og hjælpeløst se på,
+mens det bliver kastet i laven under sig, eller du udfrier det af dets lidelser
+med din dolk.
+%%%%
+wand of polymorph
+
+En magisk anordning som omskaber et væsen til en anden form. Den er særligt
+effektiv mod formskiftende væsener.
+%%%%
+wand of random effects
+
+En magisk anordning, som kan producere en lang række effekter.
+%%%%
+wand of slowing
+
+En magisk anordning, som kaster fortryllelser, der gør et væsens handlinger
+langsommere.
+%%%%
+wand of teleportation
+
+En magisk anordning, som translokerer et væsen til et tilfældigt sted.
+%%%%
+war axe
+
+En militærøkse til en hånd med et langt skaft og et enægget hoved.
+%%%%
+whip
+
+Et langt, flettet stykke læder. Dette enkle våben blev oprindeligt brugt i
+uoverensstemmelser med kvæg, men bruges nu i uoverensstemmelser mellem alle
+mulige former for væsener.
+%%%%
+wizard hat
+
+En konisk stofhat.
+%%%%
+young poisoner's handbook
+
+En introduktion til giftmagiens kunst. Meget af den er skrevet med blæk, som
+indeholder de samme gifte, som beskrives i teksten, og troldmænd med tendens
+til at slikke på fingeren, før de bladrer, dropper som regel hurtigt den vane,
+når de går i gang med den. På den ene eller den anden måde.
 %%%%

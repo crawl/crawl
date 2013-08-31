@@ -54,6 +54,7 @@ public:
     monster_type  base_monster;        // zombie base monster, draconian colour
     unsigned int  number;              // #heads (hydra), etc.
     int           colour;
+    mid_t         summoner;
 
     int foe_memory;                    // how long to 'remember' foe x,y
                                        // once they go out of sight.

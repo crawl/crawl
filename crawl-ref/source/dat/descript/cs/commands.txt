@@ -1,45 +1,87 @@
 %%%%
 CMD_REST
 
-Trochu léčit a hledat
+Trochu se vyléčit a prohledat okolí
 %%%%
 CMD_REST verbose
 
-Strávit až 100 kol regenerací zdraví, dobíjením magie, nebo vyhledáváním.
-Odpočinek je přerušen, jakmile se nepřátelské monstrum objeví v zorném poly.
+Hráč stráví až 100 tahů regenerací zdraví a/nebo dobíjením magie, nebo
+prohledáváním okolí. Jakmile se objeví nepřítel, odpočinek je přerušen.
 %%%%
 CMD_EXPLORE
 
 Automaticky prozkoumat současnou úroveň
 %%%%
+CMD_EXPLORE verbose
+
+Umožňuje, aby postava automaticky procestovala neprozkoumané částí současného
+patra a posbírala předměty, které jsou nastaveny pro automatický sběr. Kdykoliv
+je objeven nepřítel, nebo je nalezen předmět či zajímavé místo, cestování je
+zastaveno.
+%%%%
 CMD_INTERLEVEL_TRAVEL
 
-Cestovat do vzdálených úrovní
+Cestovat do jiných úrovní
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-Automaticky cestovat do vzdálených úrovní. Cesta je přerušena, jakmile se
-nepřátelské monstrum objeví v zorném poly.
+Hráč bude automaticky dopraven do zvolené úrovně. Pokud je objeven nepřítel,
+cestování je zastaveno.
 %%%%
 CMD_USE_ABILITY
 
-Použít božské, nebo vrozené schopnosti
+Použít božské nebo vrozené schopnosti
 %%%%
 CMD_PRAY
 
-Modlit se k bohu
+Modlit se k zvolenému bohu
+%%%%
+CMD_PRAY verbose
+
+Pokud si tvé božstvo přeje oběti, pomocí tohoto příkazu mu bude nabídnuta
+mrtvola či jiný předmět. Pokud zrovna stojíš na oltáři, bude tímto příkazem
+nabídnuto připojit se k danému božstvu. U některých bohů může mít modlitba i
+další zvláštní účinky.
 %%%%
 CMD_SEARCH_STASHES
 
-Vyhledat předměty/vlastnosti
+Vyhledat předmět/místo
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Umožňuje vyhledat předmět či místo, na které již hráč narazil, a pak tam
+cestovat.
 %%%%
 CMD_REPLAY_MESSAGES
 
-Znovu přečíst poslední zprávy
+Zobrazit nedávnou historii zpráv
+%%%%
+CMD_RESISTS_SCREEN
+
+Zobrazit přehled postavy
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Zobrazí informace o známých odolnostech, schopnostech, vlastnotech předmětů
+atp.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Zobrazit přehled žáláře
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Zobrazí umístění vstupů do vedlejších částí žaláře, obchodů a dalších
+zajímavých míst, na které jsi zatím narazil.
 %%%%
 CMD_DISPLAY_RELIGION
 
-Zobrazit náboženskou příslušnost
+Zobrazit informace o náboženství
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Zobrazí, co tebou uctívaný bůh má rád a co nemá, jak se chovat, tvé aktuální
+postavení a udělené privilegia.
 %%%%
 CMD_DISPLAY_MUTATIONS
 
@@ -49,9 +91,17 @@ CMD_DISPLAY_SKILLS
 
 Spravovat dovednosti
 %%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Zobrazit stav postavy
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Zobrazí aktivní očarování a pár dalších věcí.
+%%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
-Seznam zjištěných typů předmětů
+Seznam objevených předmětů
 %%%%
 CMD_SAVE_GAME_NOW
 
@@ -59,26 +109,245 @@ Uložit a ukončit
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-Ukončit a uložit hru, pro pozdější příchod. Jakmile se vrátíte do hry, je
-soubor s uložením odstraněn.
+Uloží a ukončí hru. Při opětovném vstupu do hry je soubor s uloženou hrou
+smazán.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Změnit vzhled postavy
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Umožňuje změnit, jak bude tvá postava vypadat co do vybavení a rasy.
 %%%%
 CMD_DISPLAY_COMMANDS
 
-Herní nápověda
+Nápověda ke hře
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
-Seznam příkazů, možností, atd.
+Seznam příkazů, předvoleb atd.
+%%%%
+CMD_CHARACTER_DUMP
+
+Export informací do souboru
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Exportuje velké množství informací o postavě do souboru 'jmenohrace.txt' ve
+složce 'morgue' k pohodlnému prohlédnutí. Exportováno je vše včetně atributů
+postavy, kouzel, dovedností, poznámek atd.
 %%%%
 CMD_AUTOFIGHT
 
 Zasáhnout nejbližší monstrum
 %%%%
+CMD_AUTOFIGHT verbose
+
+Pohnout se směrem k nejbližšímu nepříteli a zaútočit pomocí držené zbraně.
+%%%%
 CMD_AUTOFIGHT_NOMOVE
 
-Zasáhnout sousední monstrum
+Zasáhnout nejbližší monstrum
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Zaútočit na nejbližší monstrum pomocí držené zbraně.
 %%%%
 CMD_WAIT
 
-Počkat jedno kolo
+Čekat jeden tah
+%%%%
+CMD_WAIT verbose
+
+Hráč stráví jeden tah čekáním a odpočinkem.
+%%%%
+CMD_DISPLAY_INVENTORY
+
+Zobrazit seznam věcí v inventáři
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Zobrazí seznam předmětů, které momentálně máte u sebe.
+%%%%
+CMD_CAST_SPELL
+
+Seslat kouzlo
+%%%%
+CMD_CAST_SPELL verbose
+
+Sešle zvolené kouzlo.
+%%%%
+CMD_BUTCHER
+
+Sekat mrtvolu
+%%%%
+CMD_BUTCHER verbose
+
+Naporcuje mrtvolu na kousky.
+%%%%
+CMD_MEMORISE_SPELL
+
+Zapamatovat si kouzlo
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Uloží do paměti kouzlo z knihy, kterou má hráč u sebe nebo na které stojí.
+%%%%
+CMD_DROP
+
+Zahodit předměty
+%%%%
+CMD_DROP verbose
+
+Zahodí jeden či více předmětů, které máš zrovna sebe.
+%%%%
+CMD_DISPLAY_MAP
+
+Zobrazit mapu
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Umožňuje zobrazit a pohybovat se po již dříve prozkoumané mapě.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Cestovat na místo
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Započne cestu na místo určené kurzorem.
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Přidat cestovní bod
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Umožňuje uložit aktuální místo pro pozdější snadné cestování.
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Zákaz cestování
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Umožňuje označit místo, kam automaticky necestovat, případně změnit velikost či
+tuto vyjímku odstranit.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Odstranit zákazy cestování
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Smaže všechny zákazy cestovaní na daném patře.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+O patro níže
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Přepne zobrazení na nižší patro.
+%%%%
+CMD_MAP_PREV_LEVEL
+
+O patro výše
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Přepne zobrazení na vyšší patro.
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Cestovat do jiného patra
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Automatická cesta do jiného patra žaláře či vedlejší části.
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Najít schody nahoru
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Přepíná mezi nalezenými schodišti o patro výše.
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Najít schody dolů
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Přepíná mezi nalezenými schodišti o patro níže.
+%%%%
+CMD_MAP_FIND_YOU
+
+Najít hráče
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Přesune kurzor zpět na hráčovu pozici.
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Najít obchody a portály
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Přepíná mezi nalezenými obchody a portály na současném patře.
+%%%%
+CMD_MAP_FIND_TRAP
+
+Najít pasti
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Přepíná mezi pastmi na současném patře.
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Najít oltáře
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Najít zákaz cestování
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Přepíná mezi zákazy cestování na současném patře.
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Najít cestovní bod
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Přepíná mezi všemi cestovními body na současném patře.
+%%%%
+CMD_MAP_FIND_STASH
+
+Najít skrýš
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Přepíná mezi všemi uloženými skrýšemi na současném patře.
+%%%%
+CMD_ZOOM_IN
+
+Přiblížit
+%%%%
+CMD_ZOOM_IN verbose
+
+Přiblíží část žaláře
+%%%%
+CMD_ZOOM_OUT
+
+Oddálit
+%%%%
+CMD_ZOOM_OUT verbose
+
+Oddálí část žaláře
 %%%%

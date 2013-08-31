@@ -66,7 +66,7 @@ A dart trap
 
 Ce piège peut tirer des piques de métal relativement faibles. Elles ne
 pourraient pas tuer n'importe qui directement, mais elles pourraient venir à
-bout de quelqu'un qui courrait à moitié-mort en étant poursuivi par un monstre.
+bout de quelqu'un qui court à moitié-mort en étant poursuivi par un monstre.
 %%%%
 A deep blue altar of Sif Muna
 
@@ -75,8 +75,8 @@ langue depuis longtemps oubliée, dédiée à Sif Muna le Gardien des Savoirs.
 %%%%
 A detected altar
 
-Un autel de quelque religion. Si vous voulez savoir à quelle divinité il est
-consacré, vous devriez alors venir plus près.
+Une sorte d'autel. Si vous voulez savoir à quelle divinité il est consacré,
+vous devriez alors venir plus près.
 %%%%
 A detected shop or portal
 
@@ -103,11 +103,11 @@ réactions magiques tant qu'elle restera magique.
 %%%%
 A gate leading back out of here
 
-Cet accès semble pouvoir vous ramener d'où vous venez.
+Ce portail semble pouvoir vous ramener d'où vous venez.
 %%%%
 A gate leading back out of this place
 
-Cet accès reconduit au Donjon.
+Ce portail reconduit au Donjon.
 %%%%
 A gate leading out of Pandemonium
 
@@ -120,26 +120,18 @@ d'autres.
 %%%%
 A one-way gate leading to the halls of Pandemonium
 
-Cette accès mène aux salles sans fin de Pandémonium. Des contes des pillages
+Cette accès mène aux salles sans fin du Pandémonium. Les histoires de pillages
 réussis de ces ténèbres sont rares. Même les personnages les plus forts et les
 plus expérimentés peuvent y mourir. Cependant, ces salles contiennent plusieurs
 runes et beaucoup d'objets de valeur. Il est beaucoup plus facile d'entrer que
 de sortir.
 %%%%
-A gas trap
-
-Vous avez de la chance d'avoir détecté ce piège car aurait pu libérer un nuage
-de gaz mortel autour de vous. Vous ne pouvez pas déterminer exactement quel
-type de gaz il contient — peut-être un simple poison, peut être des vapeurs
-mutagènes, peut-être du gaz inflammable, ou peut-être quelque chose d'encore
-plus vicieux.
-%%%%
 A gate to the Realm of Zot
 
 Cette porte mène au Royaume de Zot, la dernière épreuve de votre quête. Son
 dernier niveau contient la fameuse Orbe de Zot. L'Orbe et ce Royaume ont une
-terrible réputation sous remise en question mais, une chose semble certaine :
-les monstres qui y hantent ses couloirs et protège l'Orbe sont puissants et
+terrible et peu recommandable réputation, mais une chose semble certaine : les
+monstres qui y hantent ses couloirs et protège l'Orbe sont puissants et
 étranges — certains ne pouvant être rencontrés qu'en ces lieux.
 %%%%
 A gateway back into the Dungeon
@@ -151,6 +143,11 @@ A gateway leading out of the Abyss
 
 Un portail menant hors de ces fichus Abysses, il chatoie et se distord dans ce
 paysage changeant.
+%%%%
+A gateway leading deeper into the Abyss
+
+Un passage étrangement calme au milieu du paysage mouvant. Il mène plus loin
+dans les profondeurs des abysses.
 %%%%
 A gateway to a ziggurat
 
@@ -194,7 +191,7 @@ un monstre. Il est plutôt friable et ne résistera pas très longtemps.
 %%%%
 A glowing golden altar of the Shining One
 
-Un autel du Lumineux, fait de l'or le plus pur, d'une brillance presque
+Un autel de l'étincelant, fait de l'or le plus pur, d'une brillance presque
 aveuglante.
 %%%%
 A glowing silver altar of Zin
@@ -221,8 +218,11 @@ pour y mourir de faim.
 %%%%
 A mangrove
 
-Cet arbre est spécialement adapté pour poussé dans des conditions marécageuses.
-Ses branches sont trop entrelacées pour pouvoir voir au travers.
+Cet arbre est spécialement adapté pour pousser dans des conditions
+marécageuses. Ses branches sont trop entrelacées pour voir au travers.
+
+Bien trop grand pour être abattus à la hache, il est sensible à la foudre et à
+des sources de feux suffisamment intenses.
 %%%%
 A magical trap
 
@@ -249,17 +249,30 @@ A needle trap
 Il est plus que certain que les aiguilles de ce piège soient recouvertes d'une
 substance innommable.
 %%%%
+A net trap
+
+Caché, un grand filet est suspendu au plafond du donjon, avec une corde
+attachée et gréé pour le faire tomber sur quelqu'un acionnant le piège.
+%%%%
 A one-way gate to the infinite horrors of the Abyss
 
-Une porte à sens unique vers un royaume démoniaque, déchiré par le chaos, sa
-substance même fluctuante et capricieuse, rempli de créatures sorties tout
-droit d'un cauchemar. Il est facile d'y entrer, mais très difficile d'en
+Une porte à sens unique menant à un royaume démoniaque, déchiré par le chaos,
+sa substance même est fluctuante et capricieuse, rempli de créatures sorties
+tout droit d'un cauchemar. Il est facile d'y entrer, mais très difficile d'en
 ressortir.
 %%%%
 A one-way gate to the infinite horrors of the Abyss:quote
 
 “Et si vous regardez longtemps dans une abysse, l'abysse regarde en toi.”
-    -Friedrich Nietzsche, “Au-delà du Bien et du Mal”
+    -Friedrich Nietzsche, “Au-delà du Bien et du Mal”, Aphorism 146. 1886.
+
+“Well, in our country,” said Alice, still panting a little, “you’d generally
+get to somewhere else – if you ran very fast for a long time, as we’ve been
+doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
+all the running you can do, to keep in the same place. If you want to get
+somewhere else, you must run at least twice as fast as that!” -Lewis Carroll,
+_Through the Looking-Glass, and What Alice Found There_, ch. 2 “The Garden of
+Live Flowers”. 1871.
 %%%%
 A passage of Golubria
 
@@ -276,8 +289,8 @@ bouge.
 A pressure plate
 
 Une des pierres du sol n'a pas l'air très solide, et vous remarquez qu'il
-s'agit en fait d'une sorte d'enclencheur, vous ne saurez pas dire cependant à
-quel piège elle est reliée.
+s'agit en fait d'une sorte de d'enclencheur, vous ne saurez pas dire cependant
+à quel piège elle est reliée.
 %%%%
 A radiant altar of Vehumet
 
@@ -286,20 +299,42 @@ dévastateur à tout ceux qui voudraient prier Vehumet.
 %%%%
 A rock wall
 
-Paroi de roche.
+Un mur fait de roche commune.
 %%%%
 A rock-blocked tunnel
 
-L'endroit n'est plus accessible.
+Le passage que vous venez de prendre n'est plus accessible.
 %%%%
 A rocky tunnel leading out of this place
 
 Un passage instable dans la roche volcanique, laissant passer un courant d'air
-froid venant de derrière.
+frais venant de derrière.
 %%%%
 A roughly hewn altar of Beogh
 
 Un autel de Beogh, indéniablement taillé grossièrement par des artisans orcs.
+%%%%
+A runed door
+
+Une porte, couverte d'écriture runique. Il semble qu'il y ait quelque chose de
+spécial derrière elle - peut-être le danger, peut-être un trésor. Vous pouvez
+casser les runes et l'ouvrir comme n'importe quel autre porte (c'est à dire en
+marchant dedans ou en appuyant sur 'O').
+%%%%
+A sealed door
+
+Une porte fermée hermétiquement par des arcanes runiques. Elle refuse de
+s'ouvrir à toute créature que sa magie ne reconnait pas.
+%%%%
+A sealed passage leading down
+
+Un passage descendant fermée hermétiquement par une barricade magique. Forcer
+votre chemin à travers elle semble impossible, tant que la magie est en place.
+%%%%
+A sealed passage leading up
+
+Un passage ascendant fermée hermétiquement par une barricade magique. Forcer
+votre chemin à travers elle semble impossible, tant que la magie est en place.
 %%%%
 A shaft
 
@@ -314,9 +349,9 @@ représentent.
 %%%%
 A shimmering altar of Xom
 
-Cet autel brille dans toutes les couleurs visible et probablement aussi dans
-quelques unes invisibles, représentant les fantaisies de Xom l'Imprévisible,
-auquel il est dédié.
+Cet autel brille de toutes les couleurs visible et probablement aussi quelques
+unes invisibles, représentant les fantaisies de Xom l'Imprévisible, auquel il
+est dédié.
 %%%%
 A shop
 
@@ -339,8 +374,12 @@ Ce autel semble, à sa manière, plus stationnaire que les autres.
 %%%%
 A sparkling altar of Nemelex Xobeh
 
-Cet autel brille d'un meilleur jeu de lumière que n'importe quel tripot pour
-attirer de nouveaux adeptes à Nemelex Xobeh.
+Cet autel brille d'un meilleur jeu de lumière que n'importe quel tripot, de
+facon à attirer de nouveaux adeptes pour Nemelex Xobeh.
+%%%%
+A spawn point
+
+Voici l'une des entrées que peut emprunter l'adversité.
 %%%%
 A spear trap
 
@@ -354,6 +393,10 @@ A staircase back to the Dungeon
 
 Ces escaliers ramènent à la moiteur familière au donjon.
 %%%%
+A staircase back to the Forest
+
+Ces escaliers ramènent vers la sécurité toute relative de la forêt.
+%%%%
 A staircase back to the Lair
 
 Ces escaliers ramènent au Repaire des Bêtes.
@@ -364,7 +407,7 @@ Ces escaliers ramènent aux Mines Orcs.
 %%%%
 A staircase back to the Vaults
 
-Ces escaliers ramènent aux formidables Chambres Fortes.
+Ces escaliers ramènent aux formidables Caveaux.
 %%%%
 A staircase leading out of the dungeon
 
@@ -372,7 +415,7 @@ Cette sortie mène à la Grande Salle Bleue. Le ciel, des oiseaux qui chantent,
 de l'air frais — ce genre de choses. Aussi des impôts et de tout ce que vous
 avez fui.
 
-Monter ces escaliers terminera votre quête, que vous transportiez iez l& ou
+Monter ces escaliers terminera votre quête, que vous transportiez l'Orbe ou
 non.
 %%%%
 A staircase to the Crypt
@@ -403,7 +446,7 @@ climat.
 %%%%
 A staircase to the Orcish Mines
 
-Une entrée pour les mines des orcs, remplies de leur or mais, traitresses où on
+Une entrée pour les mines orcs, remplies de leur or mais traitresses, où on
 peut se faire piéger facilement.
 %%%%
 A staircase to the Enchanted Forest
@@ -413,7 +456,7 @@ tengu, faunes et toutes sortes de malédictions effrayantes.
 %%%%
 A staircase to the Shoals
 
-Et voici les Côtés : plages exotiques souterraines, embruns salés et créatures
+Et voici les Côtes : plages exotiques souterraines, embruns salés et créatures
 qui mordent, poignardent et broient.
 %%%%
 A staircase to the Slime Pits
@@ -426,7 +469,7 @@ Ceci est le passage vers l'antre des serpents, le repaire des nagas.
 %%%%
 A staircase to the Swamp
 
-Un escalier vers les territoires marécageux, pleins d'oozes, de mouches et de
+Un escalier vers les territoires marécageux, pleins de vase, de mouches et de
 larges monstres carnivores.
 %%%%
 A staircase to the Tomb
@@ -436,8 +479,8 @@ par la plus vile des nécromancies.
 %%%%
 A staircase to the Vaults
 
-Ces escaliers descendent dans les Chambres Fortes, réputées pour leurs trésors.
-Ils sont tâchés de sang...
+Ces escaliers descendent dans les Caveaux, réputées pour leurs trésors. Ils
+sont tâchés de sang...
 %%%%
 A stone staircase leading down
 
@@ -450,7 +493,7 @@ Ces escaliers remontent plus haut.
 A stone wall
 
 Un obstacle plus solide que les simples parois de roche. Seule la plus
-puissante des magie peut briser les murs de pierre.
+puissante des magie peut briser ces murs de pierre.
 %%%%
 A short-range portal
 
@@ -469,7 +512,7 @@ Mais vous ne pourriez pas dire si c'est naturel ou magique.
 %%%%
 A translucent stone wall
 
-Un obstacle plus solide que les simples parois de roche. Seule la plus
+Un obstacle plus solide que les simples parois de roches. Seule la plus
 puissante des magie peut briser les murs de pierre. Celui ci a été imprégné
 d'arcanes magiques qui l'ont rendu translucide.
 %%%%
@@ -485,6 +528,9 @@ temps elle n'est pas assez forte pour rendre possible la vie de grandes
 plantes. Elle est inégale cependant, et il y a des endroits où, avec la grâce
 de Fedhas, des arbres aussi gros que ceux de la surface peuvent pousser sous
 terre.
+
+Bien trop grand pour être abattus à la hache, il est sensible à la foudre et à
+des sources de feux suffisamment intenses.
 %%%%
 A tree:quote
 
@@ -509,8 +555,8 @@ semble se comporter comme de la roche.
 %%%%
 A white marble altar of Elyvilon
 
-Un autel de Elyvilon le Guérisseur, fait du marbre blanc le plus pur et
-surmonté d'une sculpture du Calice de la Purification.
+Un autel d'Elyvilon le Guérisseur, fait du marbre blanc le plus pur et surmonté
+d'une sculpture du Calice de la Purification.
 %%%%
 A web
 
@@ -536,8 +582,8 @@ An arrow trap
 
 Vous pouvez voir plusieurs cordes à arc et des flèches attachées à des choses
 ressemblant à des arcs fixes. Typiquement, dans des pièges comme cela, une
-seule flèche est tirée à chaque fois que l'enclencheur est déclenché. Un tel
-piège  est moins cher et plus facile à faire qu'un mécanisme d'auto-recharge et
+seule flèche est tirée à chaque fois que le déclendheur est activé. Un tel
+piège est moins cher et plus facile à faire qu'un mécanisme d'auto-recharge et
 d'un arc en acier ayant la détente monstrueuse d'un piège à carreaux, donc
 n'espérez pas d’énormes dégâts. En revanche, une simple flèche dans une artère
 est suffisante pour tuer une personne.
@@ -566,24 +612,22 @@ panoramique à travers la folie à l'état pur.
 An idol of Beogh
 
 {{
-  if you.god() == "Beogh"
-    then
-      return "Cette statue brute mais majestueuse représente Beogh dans sa
-gloire "
-          .. "Que tous ces abrutis de non-Orcs soient ébranlés !";
+    if you.god() == "Beogh" then
+        return "Cette statue brute mais majestueuse représente Beogh dans sa "
+..
+               "gloire. Que tous ces infects non-Orcs soient frappés !";
     else
-      return "Cette statue grossière représente Beogh, le dieu des orcs
-primitifs "
-          .. "vivant ici. Leur religion appelle à assassiner tous les "
-          .. "non-croyants. Ça serait un plaisir de détruire cette idole, mais
-"
-          .. "prudence, Beogh est connu pour être rancunier.";
-  end
+        return "Cette statue grossière représente Beogh, le dieu des orcs " ..
+               "primitifs vivant ici. Leur religion appelle à assassiner " ..
+               "tous les non-croyants. Ça serait un plaisir de détruire " ..
+               "cette idole, mais prudence, Beogh est connu pour être " ..
+               "rancunier.";
+    end
 }}
 %%%%
 An iron altar of Okawaru
 
-Un autel de fer et d'acier dédié au Maître de la Guerre Okawaru. Ses arêtes
+Un autel de fer et d'acier dédié a Okawaru, le Maître de la Guerre. Ses arêtes
 sont étonnamment coupantes.
 %%%%
 An iron grate
@@ -594,12 +638,9 @@ avec un sort ou un bâton facilement. Elle est quand même trop résistante pour
 %%%%
 An open door
 
-Une porte en bois. Vous pouvez la fermer en vous tenant à coté et {{
-    if crawl.is_tiles() then
-        return "en faisant Ctrl-L-Click sur la porte ou en appuyant sur 'C'."
-    else
-        return "en appuyant sur 'C'."
-    end
+Une porte en bois. Vous pouvez la fermer en vous tenant à coté et {{ if
+crawl.is_tiles() then return "en faisant Ctrl-L-Click sur la porte ou en
+appuyant sur 'C'." else return "en appuyant sur 'C'." end
 }}
 %%%%
 An orcish idol
@@ -622,15 +663,17 @@ en un temps record à cause de la convection extrême.
 %%%%
 A floor
 
-Sol du Donjon
+Un sol en pierre usagé faite de dalles de granit étroitement intégrés qui ont
+été taillés et fixés il y a des temps immémoriaux par des mains oubliées depuis
+longtemps.
 %%%%
 Some deep water
 
 Cette eau est aussi profonde que dangereuse. Aucun voyageur sain d'esprit ne
 mettra le pied dedans, excepté ceux qui volent ou nagent. Ceci est un
 avertissement pour vous : de nombreux aventuriers confus ont trouvé la mort
-dans ces profondeurs, et une fin prématurée de lévitation à noyé des voyageurs
-encore plus expérimentés.
+dans ces profondeurs, et une fin prématurée à la lévitation a noyé des
+voyageurs encore plus expérimentés.
 %%%%
 Some lava
 
@@ -702,7 +745,7 @@ Le marbre luit et brille. C'est vraiment très beau !
 %%%%
 A marble floor
 
-Lorsque les murs sont en marbre noir, le sol est blanc et argenté, avec des
+Alors que les murs sont en marbre noir, le sol est blanc et argenté, avec des
 nuances de rose ici et là.
 %%%%
 A rose-covered archway
@@ -711,7 +754,7 @@ Ces roses sont superbes !
 %%%%
 A vine-covered statue
 
-Elle ressemble à monstre entièrement composé de lianes.
+Elle ressemble à un monstre entièrement composé de lianes.
 %%%%
 A crumbling stone wall
 
@@ -724,7 +767,7 @@ l'herbe est craquante et fraîche.
 %%%%
 A strange rock wall
 
-Cela est décoré d'images que vous pourriez votre dans une tombe.
+C'est décoré d'images que vous pourriez voir dans une tombe.
 %%%%
 A highly decorated stone wall
 
@@ -750,7 +793,7 @@ travers.
 %%%%
 A pulsating floor
 
-Ce plancher de soie semble pulser à un rythme inconnu.
+Ce plancher lisse semble pulser à un rythme inconnu.
 %%%%
 Zonguldrok's gravestone
 
@@ -789,7 +832,7 @@ pouvoir le traverser.
 %%%%
 A hot floor
 
-Profond sous le sol brûle un feu plus chaud que tous les autres feus : le feu
+Profond sous le sol brûle un feu plus chaud que tous les autres feux : le feu
 des enfers. Le sol en est brûlant.
 %%%%
 A black wall
@@ -827,7 +870,7 @@ Un mur de pierre couvert d'une fine couche de glace.
 %%%%
 Frost-covered floor
 
-Sol couvert de givre qui crisse agréablement sous vos pas.
+Un sol couvert de givre. Il crisse agréablement sous vos pas.
 %%%%
 A golden statue
 
@@ -849,14 +892,13 @@ Un sarcophage antique. Il est vide.
 %%%%
 A heavily etched metal wall
 
-Ce mur métal est gravé de représentations détaillées de ce qui arrive à ceux
-qui essayent de piller les Chambres Fortes. Cela n'est pas très rassurant.
+Ce mur métallique est gravé de représentations détaillées de ce qui arrive à
+ceux qui essayent de piller les Caveaux. Cela n'est pas très rassurant.
 %%%%
 A heavily etched wall of green crystal
 
 Ce mur en cristal vert est gravé de représentation détaillées de ce qui arrive
-à ceux qui essayent de piller les Chambres Fortes. Cela n'est pas très
-rassurant.
+à ceux qui essayent de piller les Caveaux. Cela n'est pas très rassurant.
 %%%%
 An adventurer's gravestone
 
@@ -865,7 +907,7 @@ La tombe d'un aventurier qui avait presque réussi.
 A granite stump
 
 Ce morceau de granite est tout ce qu'il reste de ce qui était probablement une
-statue longtemps dans le passé.
+statue dans le passé.
 %%%%
 An ice choked empty arch of ancient stone
 
@@ -895,7 +937,8 @@ corporelle.
 %%%%
 Some ice crusted deep water
 
-Ça a l'air gelé !
+Ici, la glace est cassée en morceaux, et l'eau sur laquelle elle flotte sur n'a
+du tout l'air accueillante.
 %%%%
 Some ice crusted shallow water
 
@@ -996,7 +1039,7 @@ lentement.
 An open sea?
 
 Au mépris total de toutes les règles conventionnelles de la physique et de la
-géométrie que vous savez être vraies, on ne peut nier que là, dans cette pièce
+géométrie que vous savez être vraie, on ne peut nier que là, dans cette pièce
 minuscule, se trouve une mer vaste et imposante dont vous ne pouvez voir
 l'extrémité.
 

@@ -70,10 +70,6 @@ Demonic Horde spell
 Tämä taika kutsuu pienen lauman pikkupiruja taistelemaan loitsijan vastustajia
 vastaan (ja joskus toisiaan!)
 %%%%
-Dig spell
-
-Tämä taika nesteyttää kiveä, synnyttäen tunneleita.
-%%%%
 Dispersal spell
 
 Tämä taika yrittää teleportata läheisen hirviön jonnekin muualle.

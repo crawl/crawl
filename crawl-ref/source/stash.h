@@ -352,7 +352,9 @@ private:
                               bool curr_lev = false) const;
     bool display_search_results(vector<stash_search_result> &results,
                                 bool& sort_by_dist,
-                                bool& show_as_stacks);
+                                bool& show_as_stacks,
+                                bool& filter_useless,
+                                bool& default_execute);
     string stash_search_prompt();
 
 private:

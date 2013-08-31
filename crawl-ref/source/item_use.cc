@@ -36,6 +36,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "options.h"
@@ -2327,6 +2328,7 @@ static bool _drink_fountain()
         crawl_state.cancel_cmd_repeat();
     }
 
+    zin_recite_interrupt();
     you.turn_is_over = true;
     return true;
 }
@@ -3212,7 +3214,7 @@ void read_scroll(int slot)
     string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
-    if (which_scroll != SCR_IMMOLATION && !_is_cancellable_scroll(which_scroll))
+    if (!_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg.c_str());
         // Actual removal of scroll done afterwards. -- bwr
@@ -3302,13 +3304,25 @@ void read_scroll(int slot)
         break;
 
     case SCR_IMMOLATION:
-        mprf("The scroll explodes in your %s!", you.hand_name(true).c_str());
+    {
+        bool had_effect = false;
+        for (monster_iterator mi(you.get_los()); mi; ++mi)
+        {
+            if (mons_immune_magic(*mi) || mi->is_summoned())
+                continue;
 
-        // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
-        immolation(10, IMMOLATION_SCROLL, alreadyknown);
+            if (mi->add_ench(ENCH_INNER_FLAME))
+                had_effect = true;
+        }
+
+        if (had_effect)
+            mpr("The creatures around you are filled with an inner flame!");
+        else
+            mpr("The air around you briefly surges with heat, but it dissipates.");
+
         bad_effect = true;
-        more();
         break;
+    }
 
     case SCR_CURSE_WEAPON:
         if (!you.weapon()

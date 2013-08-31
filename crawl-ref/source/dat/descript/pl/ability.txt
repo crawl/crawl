@@ -1,0 +1,191 @@
+%%%%
+Breathe Fire ability
+
+Uwalnia uderzenie ognia w zaznaczony cel, możliwe jest pozostawienie płonącej
+chmury.
+%%%%
+Breathe Frost ability
+
+Uwalnia uderzenie mrozu na określony cel.
+%%%%
+Breathe Poison Gas ability
+
+Uwalnia uderzenie zatrutego gazu na wybranym celu.
+%%%%
+Breathe Lightning ability
+
+Uwalnia silne wyładowanie elektryczne, powodujące niekontrolowane uderzenie
+błyskawic.
+%%%%
+Breathe Sticky Flame ability
+
+Uwalnia uderzenie przywierającego ognia na wybranym celu. Jak sugeruje nazwa
+ogień ten ogarnia wroga na dłużej i może zadać obrażenia kilka razy by w końcu
+zgasnąć. Może się rozprysnąć przy uderzeniu.
+%%%%
+Breathe Steam ability
+
+Uwalnia wiązkę pary na wybranym celu.
+%%%%
+Breathe Noxious Fumes ability
+
+Uwalnia uderzenie trujących spalin na wybranym celu.
+%%%%
+Bottle Blood ability
+
+Na poziomie doświadczenia 6 bądź wyżej. Wampiry mogą zabutelkować krew z nie
+zepsutych i posiadających krew zwłok nad którymi stoją. By tego dokonać
+wymagana jest umiejętność noszenia noża by móc pociąć zwłoki.
+%%%%
+Hellfire ability
+
+Niszczy wrogów  piekielnym ogniem.
+%%%%
+Device Recharging ability
+
+Kosztem trwałej straty jednego punktu magii, odnawia różdżkę bądź kostur.
+%%%%
+Evoke Teleportation ability
+
+Teleportuje cię w losowe miejsce na poziomie.
+%%%%
+Evoke Invisibility ability
+
+Stajesz się niewidzialny na pewien okres czasu. Włączenie niewidzialności
+zwiększa twoje magiczne zanieczyszczenie i może spowodować świecenie.
+%%%%
+End Transformation ability
+
+Przywraca Ci normalną postać,z małym opóźnieniem.
+%%%%
+Divine Shield ability
+
+Jedyny Lśniący zapewnia ci niebiańską tarczę. Ponieważ jest ona przepełniona
+boską mocą, nie wpływa ona na twój ekwipunek. Jednakże jest ona zależna od
+twojej siły woli i twoje umiejętności we władaniu Tarczą polepszają jej
+właściwości.
+%%%%
+Cleansing Flame ability
+
+Wywołuje wielki wybuch świętej furii którego epicentrum jest w tobie,
+kilkukrotnie zadając obrażenia nieumarłym i demonom. Wszystkie inne wrogie
+stwory także otrzymują obrażenia lecz nie tak silne. Nie wpływa na
+sprzymierzeńców.
+%%%%
+Injury Mirror ability
+
+Rani atakujące cię stworzenia poprzez obijanie części obrażeń które Ci one
+zadają.
+%%%%
+Animate Dead ability
+
+Zamienia wszystkie zwłoki i szkielety w twoim otoczeniu w kwiaty. Pamiętaj
+jednak że zombi i szkielety nie mogą opuścić poziomu na którym zostały
+stworzone.
+%%%%
+Drain Life ability
+
+Leczy twe punkty życia poprzez wyssanie siły życiowej z otaczających cię
+potworków.
+%%%%
+Enslave Soul ability
+
+Zaznacz duszę żyjącego inteligentnego potworka jako  owoc do zebrania. Gdy
+zaznaczony potworek zginie, jego dusza będzie twoja. Zniewolona dusza będzie
+posiadała potworka cechy, ekwipunek i umiejętności, jak również trochę jego
+wrodzonej regenracji. Jednakże tylko nie zranione potworki mogą zostać
+naznaczone, oraz tylko jedna dusza może być zniewolona w tym samym czasie.
+Dodatkowo czas trwania zniewolenia jest zależne od poziomu umiejętności
+wywoływania.
+
+Zauważ,że zniewolona dusza podąża za tobą tylko na poziomie w którym została
+pojamna.
+%%%%
+Animate Remains or Dead ability
+
+Jeśli otrzymałeś ten opis, gdzieś wystąpił błąd.
+%%%%
+Finesse ability
+
+Silnie zwiększa twoją prędkość walki,bez straty celności. Ten nienaturalny
+efekt może powodować małe zanieczyszczenie magią m  wydłużone trwanie tego
+efektu jest złe dla twojego zdrowia.
+%%%%
+Greater Servant of Makhleb ability
+
+Przyzywa większego demona, może się zdarzyć że nie będzie on posłużny jeśli nie
+jesteś obeznany w wywoływaniu.
+%%%%
+Channel Energy ability
+
+Uzupełnia twój magiczny rezerwuar o określoną wielkość zależną od twoich
+umiejętności wywoływania.
+%%%%
+Forget Spell ability
+
+Zapomnij jakiekolwiek zaklęcie z tych które niedawno poznałeś, pozwala oczyścić
+pamięć dla innych czarów.
+%%%%
+Divine Protection ability
+
+Wzywa Elyvilon by ocalić twe życie. Jeśli jesteś śmiertelnie ranny, Uzdrowiciel
+może cofnąć śmiertelne ciosy. Ta forma pomocy jest szczególnie pobożna i wymaga
+w zamian punktów pobożności ( w przeciwieństwie do  jedynie proszenia o
+interwencję,które jest darmowe jednak nie zawsze przyzwie Elyvilon ).
+
+Uważaj : zabicie kogoś podczas proszenia o ocalenie jest  wielkim grzechem !
+%%%%
+Lesser Self-Healing ability
+
+Zależnie od twoich umiejętności wywoływania, przywraca duże ilości punktów
+życia i magii, oraz czasowo zwiększa ich zasób.
+%%%%
+Greater Healing ability
+
+Zależnie od umiejętności wywoływania, leczy stworzenie o określoną ilość życia
+. Jeśli użyto tej umiejętności na wrogim stworzeniu będzie ona starała się
+obrócić je w stworzenie neutralne. Działa dobrze na zwierzętach, gorzej na
+humanoidach z twojego gatunku, jeszcze gorzej na humanoidach z innego gatunku
+oraz bardzo słabo na demonach i nieumarłych. Bezmózgie kreatury nie mogą zostać
+zneutralizowane oraz każda śpiąca kreatura także. Szansa na neutralizację
+zależy od umiejętności leczenia.
+%%%%
+Divine Vigour ability
+
+Zależnie od twoich umiejętności wywoływania, przywraca duże ilości punktów
+życia i magii, oraz czasowo zwiększa ich zasób.
+%%%%
+Bend Space ability
+
+Zagina poszycie przestrzeni dookoła ciebie, natychmiastowo przemieszczając cię
+na małą odległość, jednocześnie może przenieść i zadać obrażenia potworkom w
+twoim sąsiedztwie.
+%%%%
+Banish ability
+
+Usiłuje odesłać stwora w otchłań.
+%%%%
+Corrupt ability
+
+Zatruwa aktualny poziom poprzez uwolnienie Pustej energii na niem. Powoduje
+duże zmiany na poziomie oraz zmieniając jego zachowanie, otwiera bramy dla
+demonów z Pustki. Nie zadziała na poziomie,który już został zepsuty bądź w
+Pustce.
+%%%%
+Draw One ability
+
+Wybierz dowolny zestaw ze swojego ekwipunku i wyciągnij z niego kartę.
+%%%%
+Bend Time ability
+
+Usiłuje spowolnić wszystkich w twoim sąsiedztwie. Wysoki poziom tej
+umiejętności sprawia że trudniej się jej oprzeć.
+%%%%
+Cure Bad Mutation ability
+
+Oczyszcza losowo z wybranej złej mutacji.
+%%%%
+End Transfer Knowledge ability
+
+Przerwij trwający transfer umiejętności.
+%%%%

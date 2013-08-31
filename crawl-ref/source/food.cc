@@ -46,6 +46,7 @@
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
+#include "godabil.h"
 #include "skills2.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1960,6 +1961,7 @@ static void _eat_chunk(item_def& food)
     if (do_eat)
     {
         dprf("nutrition: %d", nutrition);
+        zin_recite_interrupt();
         start_delay(DELAY_EAT, food_turns(food) - 1,
                     (suppress_msg) ? 0 : nutrition, -1);
         lessen_hunger(nutrition, true);
@@ -1976,6 +1978,7 @@ static void _eating(item_def& food)
         duration = 0;           // to eat multiple things per turn
 
     // use delay.parm3 to figure out whether to output "finish eating"
+    zin_recite_interrupt();
     start_delay(DELAY_EAT, duration, 0, food.base_type == OBJ_FOOD ?
         food.sub_type : -2, duration);
 
@@ -2258,7 +2261,8 @@ bool is_mutagenic(const item_def &food)
     return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN);
 }
 
-// Returns true if a food item (also corpses) may cause sickness.
+// Returns true if a food item (also corpses) is contaminated and thus
+// gives less nutrition.
 bool is_contaminated(const item_def &food)
 {
     if ((food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)

@@ -190,11 +190,6 @@ Ein mächtiger Zauberkundiger welcher Kräfte aus der Hölle verwendet, und im
 Besitz von geringeren geheimnisvollen Fähigkeiten der Zerstörung, Beschwörung
 und Vertreibung ist.
 %%%%
-deep elf summoner
-
-Dieser Tiefen-Elf ist in der Beschwörung von kleinen Dämonen und Kreaturen
-ausgebildet.
-%%%%
 deep troll
 
 Ein alters gebeugter Troll mit dunkler Haut, diese in Höhlen lebenden

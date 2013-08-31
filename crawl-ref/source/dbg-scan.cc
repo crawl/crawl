@@ -461,6 +461,12 @@ void debug_mons_scan()
             else
                 ASSERT(monster_by_mid(m->mid) == m);
         }
+
+        if (m->constricted_by && !actor_by_mid(m->constricted_by))
+        {
+            mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
+                 m->name(DESC_PLAIN, true).c_str(), m->mindex());
+        }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
     for (map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();

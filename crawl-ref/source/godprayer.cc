@@ -486,6 +486,7 @@ static bool _zin_donate_gold()
         mpr(result.c_str());
     }
 
+    zin_recite_interrupt();
     return true;
 }
 

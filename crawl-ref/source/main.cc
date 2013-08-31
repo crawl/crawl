@@ -3267,7 +3267,8 @@ static void _player_reacts()
             // It's effectively a new level, make a checkpoint save so eventual
             // crashes lose less of the player's progress (and fresh new bad
             // mutations).
-            save_game(false);
+            if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+                save_game(false);
         }
         else if (you.form == TRAN_WISP)
             random_blink(false);
@@ -3498,6 +3499,7 @@ void world_reacts()
 
     handle_time();
     manage_clouds();
+    fume();
     if (env.level_state & LSTATE_GLOW_MOLD)
         _update_mold();
     if (env.level_state & LSTATE_GOLUBRIA)
@@ -3558,7 +3560,8 @@ void world_reacts()
         crawl_state.lua_calls_no_turn = 0;
         if (crawl_state.game_is_sprint()
             && !(you.num_turns % 256)
-            && !you_are_delayed())
+            && !you_are_delayed()
+            && !crawl_state.disables[DIS_SAVE_CHECKPOINTS])
         {
             // Resting makes the saving quite random, but meh.
             save_game(false);
