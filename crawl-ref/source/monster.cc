@@ -539,7 +539,7 @@ item_def *monster::weapon(int which_attack) const
 // Give hands required to wield weapon.
 hands_reqd_type monster::hands_reqd(const item_def &item) const
 {
-    if (mons_class_flag(type, M_FOUR_HANDS))
+    if (mons_genus(type) == MONS_FORMICID)
     {
         if (weapon_size(item) >= SIZE_BIG)
             return HANDS_TWO;
@@ -5977,7 +5977,7 @@ bool monster::check_clarity(bool silent) const
 
 bool monster::stasis(bool calc_unid, bool items) const
 {
-    if (mons_class_flag(type, M_PERMA_STASIS))
+    if (mons_genus(type) == MONS_FORMICID)
         return true;
 
     return actor::stasis(calc_unid, items);
@@ -5985,7 +5985,7 @@ bool monster::stasis(bool calc_unid, bool items) const
 
 bool monster::check_stasis(bool silent, bool calc_unid) const
 {
-    if (mons_class_flag(type, M_PERMA_STASIS))
+    if (mons_genus(type) == MONS_FORMICID)
         return true;
 
     if (!stasis())
