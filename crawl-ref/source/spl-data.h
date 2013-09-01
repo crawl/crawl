@@ -2044,7 +2044,7 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_BEAST, "Summon Beast",
+    SPELL_SUMMON_HELL_BEAST, "Summon Hell Beast",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY | SPFLAG_MONSTER,
      4,

@@ -5005,7 +5005,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_STEAM_BALL:
     case SPELL_SUMMON_UFETUBUS:
-    case SPELL_SUMMON_BEAST:
+    case SPELL_SUMMON_HELL_BEAST:
     case SPELL_ENERGY_BOLT:
     case SPELL_POISON_SPLASH:
     case SPELL_SUMMON_UNDEAD:
