@@ -90,7 +90,6 @@
 # * poison:   Grants poison resistance.
 # * randapp:  Generated with a random artefact's appearance (used by
 #             strictly-bad unrands).
-# * regen:    Provides regeneration.
 # * rmsl:     Passively repels missiles.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
@@ -141,6 +140,7 @@
 # METAB:    Hunger modifier.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
+# REGEN:    Provides regeneration (40 = ring of regen, 100 = the spell).
 # STEALTH:  Stealth modifier.
 # STR:      Strength modifier.
 # TILE:     The file containing the artefact's tile, with file type png.
@@ -1075,7 +1075,7 @@ PLUS:     +4
 COLOUR:   ETC_SHIMMER_BLUE
 BRAND:    SPARM_SPIRIT_SHIELD
 MP:       +5
-BOOL:     regen
+REGEN:    40
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
