@@ -1250,12 +1250,12 @@
     // demon lords
     {  MST_GERYON,
       {
-       SPELL_SUMMON_BEAST,
-       SPELL_SUMMON_BEAST,
+       SPELL_SUMMON_HELL_BEAST,
+       SPELL_SUMMON_HELL_BEAST,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_BEAST,
+       SPELL_SUMMON_HELL_BEAST,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_BEAST
+       SPELL_SUMMON_HELL_BEAST
       }
     },
 

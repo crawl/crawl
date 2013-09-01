@@ -1077,7 +1077,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_UFETUBUS:
-    case SPELL_SUMMON_BEAST:       // Geryon
+    case SPELL_SUMMON_HELL_BEAST:  // Geryon
     case SPELL_SUMMON_UNDEAD:      // summon undead around player
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_MUSHROOMS:
@@ -4220,7 +4220,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_BEAST:       // Geryon
+    case SPELL_SUMMON_HELL_BEAST:  // Geryon
         create_monster(
             mgen_data(MONS_HELL_BEAST, SAME_ATTITUDE(mons), mons,
                       4, spell_cast, mons->pos(), mons->foe, 0, god));
