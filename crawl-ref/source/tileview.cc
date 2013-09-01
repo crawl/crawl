@@ -1037,7 +1037,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB)
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
-    else if (bg_idx == TILE_DNGN_LAVA)
+    else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
         // sets are the same). This cycles between the four sets, picking
@@ -1045,8 +1045,11 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
         flv->special = ((flv->special - ((flv->special % 4)))
                         + 4 + random2(4)) % tile_dngn_count(bg_idx);
     }
-    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
+    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD
+             && Options.tile_water_anim)
+    {
         flv->special = random2(256);
+    }
     else if (bg_idx == TILE_WALL_NORMAL)
     {
         tileidx_t basetile = tile_dngn_basetile(flv->wall);
