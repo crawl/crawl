@@ -1409,25 +1409,22 @@ int player_hunger_rate(bool temp)
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
     {
-        // rings
         if (you.hp < you.hp_max
             && player_mutation_level(MUT_SLOW_HEALING) < 3)
         {
+            // rings
             hunger += 3 * you.wearing(EQ_RINGS, RING_REGENERATION);
-        }
 
-        hunger += 4 * you.wearing(EQ_RINGS, RING_HUNGER);
-
-        // troll leather armour
-        if (you.species != SP_TROLL && you.hp < you.hp_max
-            && player_mutation_level(MUT_SLOW_HEALING) < 3)
-        {
-            if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-                || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
+            // troll leather
+            if (you.species != SP_TROLL
+                && (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+                    || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE)))
             {
                 hunger += coinflip() ? 2 : 1;
             }
         }
+
+        hunger += 4 * you.wearing(EQ_RINGS, RING_HUNGER);
 
         // randarts
         hunger += you.scan_artefacts(ARTP_METABOLISM);
