@@ -1061,6 +1061,7 @@ void game_options::reset_options()
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
     tile_show_demon_tier     = true;
+    tile_water_anim          = true;
     tile_force_regenerate_levels = false;
 #endif
 
@@ -3560,6 +3561,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
+    else BOOL_OPTION(tile_water_anim);
     else BOOL_OPTION(tile_force_regenerate_levels);
     else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_tag_pref")
