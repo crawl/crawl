@@ -103,7 +103,8 @@ The contents of this text are:
                 tile_font_tip_size, tile_font_lbl_size,
                 tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier,
-                tile_layout_priority, tile_force_regenerate_levels
+                tile_water_anim, tile_layout_priority,
+                tile_force_regenerate_levels
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -1859,6 +1860,9 @@ tile_show_demon_tier = true
         Will overlay demon tiles with an icon intended to represent their
         tier (or difficulty rank) among demons, as is the case for non-Tiles
         builds.
+
+tile_water_anim = true
+        If disabled, animation of liquids will be suppressed.
 
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         (Ordered list option)
