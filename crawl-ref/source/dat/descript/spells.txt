@@ -72,6 +72,37 @@ Blade Hands spell
 This spell causes long, scythe-shaped blades to grow from the caster's hands.
 It makes spellcasting somewhat difficult.
 %%%%
+Blink Allies Encircling spell
+
+This spell takes a bunch of allies in the caster's sight and translocates
+them adjacent to a pointed at enemy.
+%%%%
+Blink Away spell
+
+This spell translocates the caster a short distance away from a designated
+enemy, always further than where it was cast but still within sight. No
+finer control is provided.
+%%%%
+Blink Close spell
+
+This spell translocates the caster a short distance towards a chosen foe,
+who must already be within sight.
+%%%%
+Blink Other Close spell
+
+This spell translocates an enemy in sight a short distance towards the
+caster. It cannot be resisted by usual means of magic resistance.
+%%%%
+Blink Other spell
+
+This spell randomly translocates an enemy in sight by a short distance. It
+cannot be resisted by usual means of magic resistance.
+%%%%
+Blink Range spell
+
+This spell translocates the caster a short distance, trying to go away from
+an enemy. Unlike "Blink Away", it allows going out of sight.
+%%%%
 Blink spell
 
 This spell randomly translocates the caster a short distance.
