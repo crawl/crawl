@@ -63,7 +63,7 @@ public:
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;
-  FixedVector<int, NUM_STATS> stat_zero;
+  FixedVector<uint8_t, NUM_STATS> stat_zero;
 
   int hunger;
   int disease;
