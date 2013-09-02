@@ -27,6 +27,10 @@
 #include "tilepick.h"
 #endif
 
+// Don't make this larger than 255 without changing the type of you.stat_zero
+// in player.h as well as the associated marshalling code in tags.cc
+const int STATZERO_TURN_CAP = 200;
+
 int player::stat(stat_type s, bool nonneg) const
 {
     const int val = max_stat(s) - stat_loss[s];
@@ -684,7 +688,10 @@ void update_stat_zero()
     {
         stat_type s = static_cast<stat_type>(i);
         if (you.stat(s) <= 0)
-            you.stat_zero[s]++;
+        {
+            if (you.stat_zero[s] < STATZERO_TURN_CAP)
+                you.stat_zero[s]++;
+        }
         else if (you.stat_zero[s] > 0)
         {
             you.stat_zero[s]--;
