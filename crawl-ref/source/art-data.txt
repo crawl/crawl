@@ -1074,6 +1074,8 @@ OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
 PLUS:     +4
 COLOUR:   ETC_SHIMMER_BLUE
 BRAND:    SPARM_SPIRIT_SHIELD
+TILE:     urand_moon_troll_leather_armour
+TILE_EQ:  moon_troll_leather_armour
 MP:       +5
 REGEN:    40
 
