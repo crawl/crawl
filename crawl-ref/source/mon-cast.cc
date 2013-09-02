@@ -1066,7 +1066,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_FAKE_MARA_SUMMON:
     case SPELL_SUMMON_ILLUSION:
-    case SPELL_SUMMON_RAKSHASA:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_ANIMATE_DEAD:
@@ -4069,17 +4068,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
-
-    case SPELL_SUMMON_RAKSHASA:
-        sumcount2 = 1 + random2(4) + random2(mons->hit_dice / 7 + 1);
-
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            create_monster(
-                mgen_data(MONS_RAKSHASA, SAME_ATTITUDE(mons), mons,
-                          3, spell_cast, mons->pos(), mons->foe, 0, god));
-        }
-        return;
 
     case SPELL_SUMMON_ILLUSION:
         _mons_cast_summon_illusion(mons, spell_cast);
