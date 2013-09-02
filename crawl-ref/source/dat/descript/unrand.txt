@@ -466,9 +466,13 @@ As you hold this axe your mind does not feel fully your own. Your body begins
 to exhibit strength far beyond its capabilities, and your movements become
 guided by Makhleb.
 %%%%
-Moon Troll leather armour
+moon troll leather armour
 
-An enchanted hide from a now extinct species.
+This armour was reportedly created by enchanting the hide of a now-extinct
+species of troll. Whether this armour is truly a remnant of the legendary
+unseen terrors of the wind or merely an appropriation of the name to add
+mystique is something of a mystery; its power of rapid regeneration at the
+occasional expense of the wearer's magic power, however, is hard to dispute.
 %%%%
 milk chocolate
 
