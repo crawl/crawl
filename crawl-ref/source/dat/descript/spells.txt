@@ -729,6 +729,12 @@ Some dragon types can breathe dispelling energy, sometimes called
 “quicksilver” because of its appearance. Besides causing damage, it
 may remove some enchantments, both beneficial and harmful.
 %%%%
+Rakshasa Summon spell
+
+Rakshasas are known to often weave illusions of themselves to fool their
+foes. These illusions are partially real, and can even hit you or cast
+spells, although it takes but a single hit to dispel them.
+%%%%
 Recall spell
 
 This spell is greatly prized by summoners and necromancers, as it allows the
@@ -1007,12 +1013,6 @@ Summon Mushrooms spell
 
 This spell summons a bunch of icky wandering mushrooms and deathcaps next
 to a chosen foe.
-%%%%
-Summon Rakshasa spell
-
-Rakshasas are known to often weave illusions of themselves to fool their
-foes. These illusions are partially real, and can even hit you or cast
-spells, although it takes but a single hit to dispel them.
 %%%%
 Summon Scorpions spell
 

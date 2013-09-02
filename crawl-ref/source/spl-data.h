@@ -2447,6 +2447,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_RAKSHASA, "Summon Rakshasa",
      SPTYP_SUMMONING,
@@ -2459,6 +2460,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_MISLEAD, "Mislead",
