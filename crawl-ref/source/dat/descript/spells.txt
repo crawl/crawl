@@ -75,7 +75,7 @@ It makes spellcasting somewhat difficult.
 Blink Allies Encircling spell
 
 This spell takes a bunch of allies in the caster's sight and translocates
-them adjacent to a pointed at enemy.
+them adjacent to a pointed-at enemy.
 %%%%
 Blink Away spell
 
@@ -948,7 +948,7 @@ This spell summons and binds a powerful dragon to perform the caster's bidding.
 Summon Drakes spell
 
 This spell summons a bunch of drakes, and possibly one true dragon of some
-kind, baring the most powerful ones.
+kind, barring the most powerful ones.
 %%%%
 Summon Earth Elementals spell
 
@@ -1027,7 +1027,7 @@ Summon Spectral Orcs spell
 
 This spell summons between one and three orc spectres. As such apparitions
 cannot use magic themselves, this spell picks melee specialists, sometimes
-even rivalling most powerful of live orcs.
+even rivalling the most powerful of live orcs.
 %%%%
 Summon Swarm spell
 
@@ -1050,7 +1050,7 @@ This spell summons a mutated otherworldly creature to the caster's aid.
 Summon Undead spell
 
 This spell summons multiple undead monsters. It cannot spawn liches,
-revenants or high ranking mummies, but it's still one of most dangerous
+revenants or high ranking mummies, but it's still one of the most dangerous
 summoning spells.
 %%%%
 Summon Vermin spell
