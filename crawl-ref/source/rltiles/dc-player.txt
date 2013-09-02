@@ -430,6 +430,7 @@ vanhel1 VANHEL
 maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
+moon_troll_leather_armour MOON_TROLL_LEATHER_ARMOUR
 %end_ctg
 
 ### Arms
