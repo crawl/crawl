@@ -171,6 +171,14 @@ static bool mg_build_dungeon()
         const level_id &lid = places[i];
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
+
+        // An unholy hack, FIXME!
+        if (startdepth[BRANCH_FOREST] == -1
+            && lid.branch == BRANCH_FOREST && lid.depth == 5)
+        {
+            you.unique_creatures.set(MONS_THE_ENCHANTRESS, false);
+        }
+
         if (!mg_do_build_level(1))
             return false;
     }
