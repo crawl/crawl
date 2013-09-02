@@ -543,6 +543,12 @@ temporary portal to an unknown, tainted otherworld. Which dastardly denizens of
 this place might choose to poke their tentacled appendages through, nobody
 knows, but certainly nobody would want to be nearby when it happens.
 %%%%
+Mara Summon spell
+
+Mara, the lord of rakshasas, likes to weave illusions of himself. Unlike
+lesser rakshasas, his doubles are physically as strong as Mara himself, and
+hardly weaker in magic.
+%%%%
 Mass Abjuration spell
 
 This spell attempts to send all hostile summoned creatures in sight to the
@@ -915,6 +921,10 @@ Casters may focus this spell on their own bodies (which can be dangerous but
 never directly lethal) or can wield freshly butchered flesh in order to draw
 power into themselves.
 %%%%
+Summon Air Elementals spell
+
+This spell summons one or more air elementals.
+%%%%
 Summon Butterflies spell
 
 This spell creates a shower of colourful butterflies. How pretty!
@@ -929,6 +939,15 @@ Summon Dragon spell
 
 This spell summons and binds a powerful dragon to perform the caster's bidding.
 %%%%
+Summon Drakes spell
+
+This spell summons a bunch of drakes, and possibly one true dragon of some
+kind, baring the most powerful ones.
+%%%%
+Summon Earth Elementals spell
+
+This spell summons one or more earth elementals.
+%%%%
 Summon Elemental spell
 
 This spell calls forth a spirit from the elemental planes to aid the caster. A
@@ -937,11 +956,24 @@ problem for earth and air, but may be for fire or water. The elemental will
 usually be friendly to casters — especially those skilled in the appropriate
 form of elemental magic.
 %%%%
+Summon Eyeballs spell
+
+This spell summons a bunch of floating eyeballs. These can paralyse,
+drain, confuse, mutate or damage you.
+%%%%
+Summon Fire Elementals spell
+
+This spell summons one or more fire elementals.
+%%%%
 Summon Greater Demon spell
 
 This spell calls forth one of the greater demons of Pandemonium to serve the
 caster. Beware, for the spell binding it to service may not outlast that which
 binds it to this world!
+%%%%
+Summon Hell Beast spell
+
+Using his horn, Geryon can summon a deadly hell beast against you.
 %%%%
 Summon Horrible Things spell
 
@@ -958,6 +990,30 @@ Summon Ice Beast spell
 
 This spell calls forth a beast of ice to serve the caster.
 %%%%
+Summon Illusion spell
+
+This spell summons a temporary mirror image of an enemy. Such a copy has the
+same physical prowess as the original, and can cast the same spells.
+%%%%
+Summon Iron Elementals spell
+
+This spell summons one or more iron elementals.
+%%%%
+Summon Minor Demon spell
+
+This spell summons between one and three minor (rank 5) demons.
+%%%%
+Summon Mushrooms spell
+
+This spell summons a bunch of icky wandering mushrooms and deathcaps next
+to a chosen foe.
+%%%%
+Summon Rakshasa spell
+
+Rakshasas are known to often weave illusions of themselves to fool their
+foes. These illusions are partially real, and can even hit you or cast
+spells, although it takes but a single hit to dispel them.
+%%%%
 Summon Scorpions spell
 
 This spell summons one or more scorpions (some of which may not be bound to the
@@ -967,13 +1023,43 @@ Summon Small Mammal spell
 
 This spell summons a small creature to the caster's aid.
 %%%%
+Summon Spectral Orcs spell
+
+This spell summons between one and three orc spectres. As such apparitions
+cannot use magic themselves, this spell picks melee specialists, sometimes
+even rivalling most powerful of live orcs.
+%%%%
 Summon Swarm spell
 
 This spell summons forth a pestilential swarm.
 %%%%
+Summon Twister spell
+
+A chaos butterfly can spawn a tornado on the other side of the world with
+a mere flap of its wings.
+%%%%
+Summon Ufetubus spell
+
+This spell summons multiple ufetubi, small annoying demons who flock around
+you.
+%%%%
 Summon Ugly Thing spell
 
 This spell summons a mutated otherworldly creature to the caster's aid.
+%%%%
+Summon Undead spell
+
+This spell summons multiple undead monsters. It cannot spawn liches,
+revenants or high ranking mummies, but it's still one of most dangerous
+summoning spells.
+%%%%
+Summon Vermin spell
+
+This spell summons a bunch of rats, spiders or worms.
+%%%%
+Summon Water Elementals spell
+
+This spell summons one or more water elementals.
 %%%%
 Sunray spell
 
