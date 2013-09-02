@@ -1069,7 +1069,7 @@ TILE:     urand_axe_of_woe
 TILE_EQ:  axe_of_woe
 BOOL:     nogen
 
-NAME:     Moon Troll leather armour
+NAME:     moon troll leather armour
 OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
 PLUS:     +4
 COLOUR:   ETC_SHIMMER_BLUE
