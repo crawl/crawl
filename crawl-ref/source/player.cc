@@ -2365,7 +2365,7 @@ int player_speed(void)
         return ps;
 
     for (int i = 0; i < NUM_STATS; ++i)
-        if (you.stat_zero[i] > 0)
+        if (you.stat_zero[i])
             ps *= 2;
 
     if (you.duration[DUR_SLOW])

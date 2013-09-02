@@ -541,7 +541,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     {
         you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
-        if (you.stat_zero[which_stat] > 0)
+        if (you.stat_zero[which_stat])
         {
             mprf(MSGCH_DANGER, "You convulse from lack of %s!", stat_desc(which_stat, SD_NAME));
             ouch(5 + random2(you.hp_max / 10), NON_MONSTER, _statloss_killtype(which_stat), cause);
@@ -644,7 +644,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
         // Turns required for recovery once the stat is restored, randomised slightly.
-        you.stat_zero[stat] += 10 + random2(10);
+        you.stat_zero[stat] = 10 + random2(10);
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
         take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
             stat_desc(stat, SD_NAME)).c_str()), true);
@@ -692,7 +692,7 @@ void update_stat_zero()
             if (you.stat_zero[s] < STATZERO_TURN_CAP)
                 you.stat_zero[s]++;
         }
-        else if (you.stat_zero[s] > 0)
+        else if (you.stat_zero[s])
         {
             you.stat_zero[s]--;
             if (you.stat_zero[s] == 0)
