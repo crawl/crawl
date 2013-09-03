@@ -1935,9 +1935,9 @@ MAP
      xx.....xxxxxxxxx.....xxxxxxxxx.....xx
     xx...xxxxxxxxxx.........xxxxxxxxxx...xx
    xx..xxxxxxxxxxx...........xxxxxxxxxxx..xx
-  xx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xx
+  xx..xxxxxxxxxxxx.....{.....xxxxxxxxxxxx..xx
   x..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..x
- xx..xxx.....xxxxxx....{....xxxxxx.....xxx..xx
+ xx..xxx.....xxxxxx.........xxxxxx.....xxx..xx
  x..+x..B......xxxxxx.....xxxxxx......B..x+..x
 xx..x...........xxxxxxxxxxxxxxx...........x..xx
 x..xx.....X..B..xxxxxxxxxxxxxxx..B..X.....xx..x
