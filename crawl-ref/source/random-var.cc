@@ -38,7 +38,7 @@ int random_var::weight(int val) const
 {
     if (val < start || val >= end)
         return 0;
-    return (weights[val - start]);
+    return weights[val - start];
 }
 
 void random_var::init_weights(weight_func w)

@@ -3170,7 +3170,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_TELEPORTATION:
             return crawl_state.game_is_sprint();
         case SCR_AMNESIA:
-            return (you_worship(GOD_TROG));
+            return you_worship(GOD_TROG);
         case SCR_RECHARGING:
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
@@ -3325,7 +3325,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
 
         case RING_WIZARDRY:
-            return (you_worship(GOD_TROG));
+            return you_worship(GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
             return crawl_state.game_is_zotdef();

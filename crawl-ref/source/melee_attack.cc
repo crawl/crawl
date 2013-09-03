@@ -4345,7 +4345,7 @@ string melee_attack::mons_attack_verb()
     };
 
     ASSERT(attk_type < (int)ARRAYSZ(attack_types));
-    return (attack_types[attk_type]);
+    return attack_types[attk_type];
 }
 
 string melee_attack::mons_attack_desc()

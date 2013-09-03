@@ -2492,7 +2492,7 @@ string ugly_thing_colour_name(colour_t colour)
     if (colour_offset == -1)
         return "buggy";
 
-    return (ugly_colour_names[colour_offset]);
+    return ugly_colour_names[colour_offset];
 }
 
 static const colour_t ugly_colour_values[] = {
@@ -2536,7 +2536,7 @@ string draconian_colour_name(monster_type mon_type)
     if (mon_type < MONS_BLACK_DRACONIAN || mon_type > MONS_PALE_DRACONIAN)
         return "buggy";
 
-    return (drac_colour_names[mon_type - MONS_BLACK_DRACONIAN]);
+    return drac_colour_names[mon_type - MONS_BLACK_DRACONIAN];
 }
 
 monster_type draconian_colour_by_name(const string &name)
@@ -4519,7 +4519,7 @@ string get_mon_shape_str(const mon_body_shape shape)
     };
 
     COMPILE_CHECK(ARRAYSZ(shape_names) == MON_SHAPE_MISC + 1);
-    return (shape_names[shape]);
+    return shape_names[shape];
 }
 
 bool player_or_mon_in_sanct(const monster* mons)

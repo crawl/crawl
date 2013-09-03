@@ -1228,7 +1228,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (!i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY);
 
     case OSEL_BRANDABLE_WEAPON:
-        return (is_brandable_weapon(i, true));
+        return is_brandable_weapon(i, true);
 
     default:
         return false;

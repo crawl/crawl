@@ -6190,7 +6190,7 @@ int calc_hunger(int food_cost)
 
 bool player::paralysed() const
 {
-    return (duration[DUR_PARALYSIS]);
+    return duration[DUR_PARALYSIS];
 }
 
 bool player::cannot_move() const
@@ -6200,22 +6200,22 @@ bool player::cannot_move() const
 
 bool player::confused() const
 {
-    return (duration[DUR_CONF]);
+    return duration[DUR_CONF];
 }
 
 bool player::caught() const
 {
-    return (attribute[ATTR_HELD]);
+    return attribute[ATTR_HELD];
 }
 
 bool player::petrifying() const
 {
-    return (duration[DUR_PETRIFYING]);
+    return duration[DUR_PETRIFYING];
 }
 
 bool player::petrified() const
 {
-    return (duration[DUR_PETRIFIED]);
+    return duration[DUR_PETRIFIED];
 }
 
 bool player::liquefied_ground() const
@@ -6356,9 +6356,9 @@ int player_icemail_armour_class()
     if (!you.mutation[MUT_ICEMAIL])
         return 0;
 
-    return (ICEMAIL_MAX
-               - (you.duration[DUR_ICEMAIL_DEPLETED]
-                   * ICEMAIL_MAX / ICEMAIL_TIME));
+    return ICEMAIL_MAX
+           - you.duration[DUR_ICEMAIL_DEPLETED]
+             * ICEMAIL_MAX / ICEMAIL_TIME;
 }
 
 bool player_stoneskin()
@@ -7458,7 +7458,7 @@ bool player::invisible() const
 
 bool player::misled() const
 {
-    return (duration[DUR_MISLED]);
+    return duration[DUR_MISLED];
 }
 
 bool player::visible_to(const actor *looker) const
@@ -7667,7 +7667,7 @@ void player::reset_prev_move()
 
 bool player::asleep() const
 {
-    return (duration[DUR_SLEEP]);
+    return duration[DUR_SLEEP];
 }
 
 bool player::cannot_act() const
@@ -7917,9 +7917,9 @@ void player::sentinel_mark(bool trap)
     else
     {
         mpr("A sentinel's mark forms upon you.", MSGCH_WARN);
-        increase_duration(DUR_SENTINEL_MARK, (trap ? random_range(35, 55)
-                                                       : random_range(50, 80)),
-                              250);
+        increase_duration(DUR_SENTINEL_MARK, trap ? random_range(35, 55)
+                                                  : random_range(50, 80),
+                          250);
     }
 }
 
@@ -7932,17 +7932,17 @@ bool player::made_nervous_by(const coord_def &p)
         return false;
     for (monster_iterator mi(get_los()); mi; ++mi)
     {
-            if (!(mons_is_wandering(*mi)
-                        || mi->asleep()
-                        || mi->confused()
-                        || mi->cannot_act())
-                && you.can_see(*mi)
-                && !mons_is_firewood(*mi)
-                && !mi->neutral()
-                && !mi->wont_attack())
-            {
-                return true;
-            }
+        if (!mons_is_wandering(*mi)
+            && !mi->asleep()
+            && !mi->confused()
+            && !mi->cannot_act()
+            && you.can_see(*mi)
+            && !mons_is_firewood(*mi)
+            && !mi->wont_attack()
+            && !mi->neutral())
+        {
+            return true;
+        }
     }
     return false;
 }

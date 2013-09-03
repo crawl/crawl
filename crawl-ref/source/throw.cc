@@ -877,7 +877,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, special_missile_type type,
         else if (type == SPMSL_PARALYSIS || type == SPMSL_SLEEP)
             chance = chance * 4 / 5;
 
-        return (x_chance_in_y(chance, 100));
+        return x_chance_in_y(chance, 100);
     }
 
     const int skill = you.skill_rdiv(SK_THROWING);

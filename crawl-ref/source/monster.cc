@@ -6134,5 +6134,5 @@ bool monster::is_projectile() const
 
 bool monster::is_jumpy() const
 {
-    return (mons_is_jumpy(this));
+    return mons_is_jumpy(this);
 }

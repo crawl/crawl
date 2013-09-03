@@ -51,7 +51,7 @@ species_type get_species(const int index)
     if (index < 0 || index >= ng_num_species())
         return SP_UNKNOWN;
 
-    return (species_order[index]);
+    return species_order[index];
 }
 
 static const char * Species_Abbrev_List[NUM_SPECIES] =
