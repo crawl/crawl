@@ -888,7 +888,7 @@ TAGS:   no_rotate
 ORIENT: encompass
 MAP
                ccccccccccccc
-           ccccc.....<.....ccccc
+           ccccc...........ccccc
         cccc...................cccc
       ccc.........................ccc
     ccc..............B..............ccc
@@ -899,7 +899,7 @@ MAP
 cc.................T...T.................cc
 c.........................................c
 c.........................................c
-c(......B.......T.........T.......B......{c
+c.......B.......T....{....T.......B.......c
 c.........................................c
 c.........................................c
 cc.................T...T.................cc
@@ -910,7 +910,7 @@ cc.................T...T.................cc
     ccc..............B..............ccc
       ccc.........................ccc
         cccc...................cccc
-           ccccc.....[.....ccccc
+           ccccc...........ccccc
                ccccccccccccc
 ENDMAP
 
@@ -922,7 +922,7 @@ ORIENT:  encompass
 SHUFFLE: BG
 MAP
                ccccccccccccc
-           ccccc.....<.....ccccc
+           ccccc...........ccccc
         cccc...................cccc
       ccc.........................ccc
     ccc..............B..............ccc
@@ -933,7 +933,7 @@ MAP
 cc.................T...T.................cc
 c.........................................c
 c.........................................c
-c(......G.......T.........T.......G......{c
+c.......G.......T....{....T.......G.......c
 c.........................................c
 c.........................................c
 cc.................T...T.................cc
@@ -944,7 +944,7 @@ cc.................T...T.................cc
     ccc..............B..............ccc
       ccc.........................ccc
         cccc...................cccc
-           ccccc.....[.....ccccc
+           ccccc...........ccccc
                ccccccccccccc
 ENDMAP
 
@@ -957,7 +957,7 @@ ORIENT:  encompass
 MAP
          ccccccccccccc
       cccc...........cccc
-    ccc........(........ccc
+    ccc........{........ccc
    cc.....................cc
   cc.....B...........B.....cc
  cc.........................cc
@@ -969,7 +969,7 @@ c..B...........B...........B..c
 c.............................c
 c........B...........B........c
 cc...........................cc
- c.[...........B...........{.c
+ c.............B.............c
  cc.........................cc
   cc.....B...........B.....cc
    cc.....................cc
@@ -986,7 +986,7 @@ TAGS:    no_rotate no_pool_fixup
 ORIENT:  encompass
 SHUFFLE: AC
 SUBST:   A = B
-NSUBST:  C = 1:( / 1:{ / 1:[ / 1:<
+NSUBST:  C = 1:{ / *:.
 #
 : local arnd = crawl.random2(6)
 : if arnd == 0 then
@@ -1047,7 +1047,7 @@ PLACE:   Temple
 WEIGHT:  5
 TAGS:    no_rotate no_pool_fixup
 ORIENT:  encompass
-NSUBST:  A = 1:( / 1:{ / 1:[ / 1:<
+NSUBST:  A = 1:{ / *:.
 #
 : local arnd = crawl.random2(6)
 : if arnd == 0 then
@@ -1114,7 +1114,6 @@ PLACE:   Temple
 WEIGHT:  15
 TAGS:    no_rotate
 ORIENT:  encompass
-SHUFFLE: {([
 NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
 SUBST:   ' = .
 COLOUR:  " : darkgrey w:3 / white w:1 / none
@@ -1127,11 +1126,11 @@ tttttttt.........1111....tttttttttttt.........tttttttttttttt
 tttt.......................1tttttt.......t.........ttttttttt
 tt.........2........t..........''''''...............2222tttt
 tt.....{..21...t...............''ccccccccccccccc.....22.tttt
-ttt...........ttt.......(......''G'c"""""""""""ctt..t..ttttt
+ttt...........ttt.......t......''G'c"""""""""""ctt..t..ttttt
 tttt......2....................''''c"B"B"B"B"B"ctt......tttt
 tttttt.....................t...''G'c"""""""""""cttt.....tttt
 ttttttttt..1.....2...t.........''''+"B"B"B"B"B"ctt...t....tt
-tttttttt.....[.................''G'c"""""""""""ct...ttt..ttt
+tttttttt.......................''G'c"""""""""""ct...ttt..ttt
 ttttttttt...................1..''''c"B"B"B"B"B"ct..tttt.tttt
 ttttttttttttttt....2....t......''G'c"""""""""""ct....t..tttt
 ttttttttttttttttt..............''ccccccccccccccct.......2ttt
@@ -1154,7 +1153,6 @@ COLOUR:  ' : darkgrey w:3 / white w:1 / none
 COLOUR:  . = green, " = brown
 FTILE:   .t = floor_grass, 'ABGT = floor_vault, D" = floor_dirt
 SUBST:   D = G
-NSUBST:  A = { / ( / [
 NSUBST:  . = 12:1 / 7:2 / *:.
 SUBST:   "' = .
 MONS:    bush, plant
@@ -1165,19 +1163,19 @@ tt''''''''''....................................................tt
 tt'G'''''G''.............................t............t.........tt
 tt''''''''''......................t.............................tt
 tt''''''''''....................................t...............tt
-tt''''A'''''...............................................t....tt
+tt''''''''''...............................................t....tt
 tt''''''''''................cccccccccccccccccccccccc............tt
 tt''''''''''................c''''''''''''''''''''''c....t.......tt
 tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c............tt
 tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
 tt''''''''''""""""""""""""""+''''''''''''''''''''''c.........t..tt
-tt''''A'''''""""""""""""""""+''''''T''''''''T''''''c...t........tt
+tt''''{'''''""""""""""""""""+''''''T''''''''T''''''c...t........tt
 tt''''''''''""""""""""""""""+''''''''''''''''''''''c............tt
 tt'T'''''T''"""""""""""""""Dc''''''''''''''''''''''c............tt
 tt''''''''''..t.t.t.t.t.t...c'''B''''B''''B''''B'''c......t.....tt
 tt''''''''''................c''''''''''''''''''''''c............tt
 tt''''''''''................cccccccccccccccccccccccc............tt
-tt''''A'''''..........................................t.........tt
+tt''''''''''..........................................t.........tt
 tt''''''''''..................t.................................tt
 tt''''''''''.................................t..................tt
 tt'G'''''G''.........................t.......................t..tt
@@ -1194,7 +1192,6 @@ TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: '"
 FTILE:   ' = floor_dirt, ."tABX = floor_grass
-NSUBST:  A = { / ( / [
 SUBST:   ' = ., " = t
 KFEAT:   X : G / U / T
 COLOUR:  . = green / brown w:2
@@ -1203,10 +1200,10 @@ MAP
            ttttttttttttttttt
          ttttttttt.....ttttttttt
       tttttttttt.........tttttttttt
-    ttttttttt''..A.....A..''ttttttttt
-   tttttttt''tt.....X.....tt''tttttttt
+    ttttttttt''...........''ttttttttt
+   tttttttt''tt.....{.....tt''tttttttt
  ttttttttt'tttt...........tttt'ttttttttt
-ttttt.....tttttt....A....tttttt.....ttttt
+ttttt.....tttttt.........tttttt.....ttttt
 ttt..B......tttttt.....tttttt......B..ttt
 tt...........ttttttt"ttttttt...........tt
 tt.....X..B..ttttttt"ttttttt..B..X.....tt
@@ -1234,8 +1231,7 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SUBST:   ' : t"
-FTILE:   "A = floor_dirt, tBTX. = floor_grass
-NSUBST:  A = { / ( / [
+FTILE:   "{ = floor_dirt, tBTX. = floor_grass
 SUBST:   " = .
 SHUFFLE: TX
 KFEAT:   X : G / U
@@ -1254,7 +1250,7 @@ tt...........ttttttt"ttttttt...........tt
 tt.....X..B..ttttttt"ttttttt..B..X.....tt
 tt..........."tttttt"tttttt"...........tt
 ttt..B......tt""ttt"""ttt""tt......B..ttt
-ttttt.....tttttt"""AAA"""tttttt.....ttttt
+ttttt.....tttttt""""{""""tttttt.....ttttt
 ttttt'tttttttttttt"""""tttttttttttt'ttttt
 tttttt'ttttttttt""ttttt""ttttttttt'tttttt
 ttttttt'tt....."ttttttttt".....tt'ttttttt
@@ -1283,7 +1279,7 @@ tttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttt
 ttt...tttttttttttttttttttttttttttttttttttttttttttt
 tt.......ttttttttttt...tttttttttttttttttttt.{.tttt
-tt..B..tt...ttttt.......tttttttttttttttttt[...(ttt
+tt..B..tt...ttttt.......tttttttttttttttttt.....ttt
 tt.....ttttt.tt..tt..B..tttttttttttttttttt.....ttt
 ttt...ttttttt..tttt.....tttttttttttttttttt.....ttt
 ttt.ttttttttt.ttttt....ttttttttttt...tttttt...tttt
@@ -1349,11 +1345,11 @@ MAP
                  tt.."B"....."""....."B"..tt
                  tt.."""....."B"....."""..tt
 ccccccccccccccccccc.........."""..........tt
-c(''G''G''G''G''G'c.......................tt
+c'''G''G''G''G''G'c.......................tt
 c'''''''''''''''''+__.."""..."""..."""....tt
 c{''''''''''''''''+__.."B"..."T"..."B"....tt
 c'''''''''''''''''+__.."""..."""..."""....tt
-c[''G''G''G''G''G'c.......................tt
+c'''G''G''G''G''G'c.......................tt
 ccccccccccccccccccc.........."""..........tt
                  tt.."""....."B"....."""..tt
                  tt.."B"....."""....."B"..tt
@@ -1426,7 +1422,7 @@ ttttttt''tttttttcccdttttttttt''ttttwwttt
 ttttttcd'ttttttttttttttttttt''tttttwwttt
 ttttttc'''ctttttttttttttttttt''''tttwwtt
 ttttttc'B'cttttttttttttttttt''''''tttwtt
-ttttttc'''c.ttttttttttttttt''({[''tttAtt
+ttttttc'''c.ttttttttttttttt'''{'''tttAtt
 ttttttdcccc.tttttttttttttttt''''''tttttt
 ttttttt.....tttttttttttttttttt''tttttttt
 tttttttttt.ttttttttttttttttttttttttttttt
@@ -1450,7 +1446,6 @@ PLACE:   Temple
 WEIGHT:  8
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  encompass
-SHUFFLE: {([
 MAP
 ccccccccccccccccccccccccccccccccc
 cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
@@ -1479,7 +1474,7 @@ cwwwwwwwwwwwwwwwwww...wwwwwwwwwwc
 cwwwwwwwwwwwwwwwww...wwwwwwwwwwwc
 cwwwwwwwwwwwwwwww...wwwwwwwwwwwwc
 cwwwwwwwwww...........wwwwwwwwwwc
-cwwwwwwwww..G.{.[.(.G..wwwwwwwwwc
+cwwwwwwwww..G...{...G..wwwwwwwwwc
 cwwwwwwwwww...........wwwwwwwwwwc
 cwwwwwwwwwwww...wwwwwwwwwwwwwwwwc
 cwwwwwwwwwww...wwwwwwwwwwwwwwwwwc
@@ -1521,7 +1516,7 @@ SUBST:   ~ = ':20 W
 COLOUR:  ' = green / brown w:2
 FTILE:   'A = floor_grass, .BT = floor_vault
 NSUBST:  ' = 5:t / 7:1 / 4:2 / .
-NSUBST:  A = { / ( / [
+NSUBST:  A = 1:{ / *:'
 MONS:    bush, plant
 :   set_border_fill_type("open_sea")
 MAP
@@ -1561,6 +1556,7 @@ NAME:   minmay_temple_bridge_a_8
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 7
+SUBST: A : TUV
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
 :   set_border_fill_type("endless_lava")
@@ -1578,19 +1574,19 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
-wwwwwwww..{..wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww..A..wwwwwwwwwwwwww.....wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww.....wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
 wwwwwwww......wwwwwwwwwwww......wwwwwwww
 wwwwwwww.....................B..wwwwwwww
-wwwwwwww..(.....................wwwwwwww
+wwwwwwww..{.....................wwwwwwww
 wwwwwwww.....................B..wwwwwwww
 wwwwwwww......wwwwwwwwwwww......wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww.....wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
-wwwwwwww..[..wwwwwwwwwwwwww.....wwwwwwww
+wwwwwwww..A..wwwwwwwwwwwwww.....wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
 wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1608,6 +1604,7 @@ NAME:   minmay_temple_bridge_b_8
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 1
+SUBST:  A : TUV
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
 :   set_border_fill_type("endless_lava")
@@ -1625,19 +1622,19 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww
 wwwwwwwww...wwwww.wwww.wwwww...wwwwwwwww
 wwwwwwww.....www.wwbbww.www..B..wwwwwwww
-wwwwwwww..{..www.wbbbbw.www.....wwwwwwww
+wwwwwwww..A..www.wbbbbw.www.....wwwwwwww
 wwwwwwww.....www.wwbbww.www..B..wwwwwwww
 wwwwwwww.....wwww.wwww.wwww.....wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
 wwwwwwww......wwww.ww.wwww......wwwwwwww
 wwwwwwww...........ww........B..wwwwwwww
-wwwwwwww..(........ww...........wwwwwwww
+wwwwwwww..{........ww...........wwwwwwww
 wwwwwwww...........ww........B..wwwwwwww
 wwwwwwww......wwww.ww.wwww......wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
 wwwwwwww.....wwww.wwww.wwww.....wwwwwwww
 wwwwwwww.....www.wwbbww.www..B..wwwwwwww
-wwwwwwww..[..www.wbbbbw.www.....wwwwwwww
+wwwwwwww..A..www.wbbbbw.www.....wwwwwwww
 wwwwwwww.....www.wwbbww.www..B..wwwwwwww
 wwwwwwwww...wwwww.wwww.wwwww...wwwwwwwww
 wwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww
@@ -1655,6 +1652,7 @@ NAME:   minmay_temple_bridge_c_8
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 1
+SUBST:  A : TUV
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
 :   set_border_fill_type("endless_lava")
@@ -1672,19 +1670,19 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
-wwwwwwww..{..wwwwww..wwwwww.....wwwwwwww
+wwwwwwww..A..wwwwww..wwwwww.....wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww.....wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
 wwwwwwww......www.wwww.www......wwwwwwww
 wwwwwwww.......w.wwbbww.w....B..wwwwwwww
-wwwwwwww..(.....wwbbbbww........wwwwwwww
+wwwwwwww..{.....wwbbbbww........wwwwwwww
 wwwwwwww.......w.wwbbww.w....B..wwwwwwww
 wwwwwwww......www.wwww.www......wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww.....wwwwwwww
 wwwwwwww.....wwwww.ww.wwwww..B..wwwwwwww
-wwwwwwww..[..wwwwww..wwwwww.....wwwwwwww
+wwwwwwww..A..wwwwww..wwwwww.....wwwwwwww
 wwwwwwww.....wwwwwwwwwwwwww..B..wwwwwwww
 wwwwwwwww...wwwwwwwwwwwwwwww...wwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1702,6 +1700,7 @@ NAME:   minmay_temple_bridge_d_8
 PLACE:  Temple
 ORIENT: encompass
 WEIGHT: 1
+SUBST:  A : TUV
 : if crawl.one_chance_in(10) then
 SUBST:  w = l
 :   set_border_fill_type("endless_lava")
@@ -1719,19 +1718,19 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwww...www...wwwwwwwwww...wwwwwwwww
 wwwwwwww.....w.www.wwwwwwww..B..wwwwwwww
-wwwwwwww..{..w.wbw.wwww..ww.....wwwwwwww
+wwwwwwww..A..w.wbw.wwww..ww.....wwwwwwww
 wwwwwwww.....w.www.www.ww.w..B..wwwwwwww
 wwwwwwww.....ww.w.www.www.w.....wwwwwwww
 wwwwwwww.....ww.w.ww.ww..ww..B..wwwwwwww
 wwwwwwww......w.w.ww.w.www......wwwwwwww
 wwwwwwww........w.w.ww.w.....B..wwwwwwww
-wwwwwwww..(.....w.w..w.w........wwwwwwww
+wwwwwwww..{.....w.w..w.w........wwwwwwww
 wwwwwwww........w.ww.w.w.....B..wwwwwwww
 wwwwwwww......www.w.ww.w.w......wwwwwwww
 wwwwwwww.....ww..ww.ww.w.ww..B..wwwwwwww
 wwwwwwww.....w.www.www.w.ww.....wwwwwwww
 wwwwwwww.....w.ww.www.www.w..B..wwwwwwww
-wwwwwwww..[..ww..wwww.wbw.w.....wwwwwwww
+wwwwwwww..A..ww..wwww.wbw.w.....wwwwwwww
 wwwwwwww.....wwwwwwww.www.w..B..wwwwwwww
 wwwwwwwww...wwwwwwwwww...www...wwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1756,6 +1755,7 @@ PLACE:  Temple
 WEIGHT: 10
 TAGS:   no_rotate
 ORIENT: encompass
+SUBST:  A : TUVt...
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xlllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllx
@@ -1785,7 +1785,7 @@ xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
 xllllllllllll.....................................llllllllllllx
 xlllllllllll.......................................lllllllllllx
 xllllllllll.........................................llllllllllx
-xlllllllll....(.........B.............B.........[....lllllllllx
+xlllllllll....A.........B.............B.........A....lllllllllx
 xllllllll......................B.....................lllllllllx
 xllllllll............................................lllllllllx
 xlllllllll..........................................llllllllllx
@@ -1835,7 +1835,7 @@ xlllllllllllll.....B.......B.......B.......B.....lllllllllllllx
 xllllllllllll.....................................llllllllllllx
 xlllllllllll.......................................lllllllllllx
 xllllllllll.........................................llllllllllx
-xlllllllll....(.........B.............B.........[....lllllllllx
+xlllllllll....T.........B.............B.........T....lllllllllx
 xllllllll......................T.....................lllllllllx
 xllllllll............................................lllllllllx
 xlllllllll..........................................llllllllllx
@@ -1856,7 +1856,6 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  5
-SHUFFLE: {([
 COLOUR:  c = red
 MAP
        cccc    ccc
@@ -1870,9 +1869,9 @@ ccl...................lcc
 cl..B...............B..lc
 ccl...................lcc
  cccG...............Gccc
- cc..........[........cc
- cl..B.....(.......B..lc
- cc..........{........cc
+ cc...................cc
+ cl..B......{......B..lc
+ cc...................cc
  cccG...............Gccc
 ccl...................lcc
 cl..B...............B..lc
@@ -1892,7 +1891,6 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  5
-SHUFFLE: {([
 COLOUR:  c = red
 MAP
       ccc     ccc
@@ -1904,7 +1902,7 @@ MAP
  cl.................lc
  ccG...............Gccc
 cc...................cc
-cl..B....{.(.[....B..lc
+cl..B......{......B..lc
 cc...................cc
  ccG...............Gcc
  cl.................lc
@@ -1936,7 +1934,7 @@ MAP
       xxxx........xxxxx+xxxxx........xxxx
      xx.....xxxxxxxxx.....xxxxxxxxx.....xx
     xx...xxxxxxxxxx.........xxxxxxxxxx...xx
-   xx..xxxxxxxxxxx..(.....[..xxxxxxxxxxx..xx
+   xx..xxxxxxxxxxx...........xxxxxxxxxxx..xx
   xx..xxxxxxxxxxxx.....X.....xxxxxxxxxxxx..xx
   x..xxxxxxxxxxxxx...........xxxxxxxxxxxxx..x
  xx..xxx.....xxxxxx....{....xxxxxx.....xxx..xx
@@ -1963,12 +1961,12 @@ xx..xxxxxxx......B..xxxxxxx..B......xxxxxxx..xx
                    xxxxxxxxx
 ENDMAP
 
-# 12 gods
-NAME:    minmay_temple_curvy_12
+# 14 gods
+NAME:    minmay_temple_curvy_14
 PLACE:   Temple
 WEIGHT:  5
 ORIENT:  encompass
-SHUFFLE: {[(, GT
+SHUFFLE: GT
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
@@ -1982,21 +1980,21 @@ x.....x........xxxxxxxxxxxxxxxxxxxxxxxxx........x.....x
 x..B..+..G........xxxxxxxxxxxxxxxxxxx........G..+..B..x
 x.....x.............xxxxxx...xxxxxx.............x.....x
 xx...xxx.............xxxx.....xxxx.............xxx...xx
-xxxxxxxxx+xxxx.......xxxx..[..xxxx.......xxxx+xxxxxxxxx
+xxxxxxxxx+xxxx.......xxxx..B..xxxx.......xxxx+xxxxxxxxx
 xxxxxxxx...xxxxxx.....xxx.....xxx.....xxxxxx...xxxxxxxx
 xxxxxxx.....xxxxxxx....xxx...xxx....xxxxxxx.....xxxxxxx
 xxxxxxx..B..xxxxxxxx.....xx+xx.....xxxxxxxx..B..xxxxxxx
 xxxxxxx.....xxxxxxxx...............xxxxxxxx.....xxxxxxx
 xxxxxxxx...xxxxxxxxxx....T...T....xxxxxxxxxx...xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx......(......xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx......{......xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx.............xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx...xxxxxxxxxx....T...T....xxxxxxxxxx...xxxxxxxx
 xxxxxxx.....xxxxxxxx...............xxxxxxxx.....xxxxxxx
 xxxxxxx..B..xxxxxxxx.....xx+xx.....xxxxxxxx..B..xxxxxxx
 xxxxxxx.....xxxxxxx....xxx...xxx....xxxxxxx.....xxxxxxx
 xxxxxxxx...xxxxxx.....xxx.....xxx.....xxxxxx...xxxxxxxx
-xxxxxxxxx+xxxx.......xxxx..{..xxxx.......xxxx+xxxxxxxxx
+xxxxxxxxx+xxxx.......xxxx..B..xxxx.......xxxx+xxxxxxxxx
 xx...xxx.............xxxx.....xxxx.............xxx...xx
 x.....x.............xxxxxx...xxxxxx.............x.....x
 x..B..+..G........xxxxxxxxxxxxxxxxxxx........G..+..B..x
@@ -2017,15 +2015,14 @@ PLACE:   Temple
 TAGS:    no_rotate
 WEIGHT:  5
 ORIENT:  encompass
-SHUFFLE: {[(
 MONS:    plant
 SUBST:   y = Ww, Y = W., 1 : 1G.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxx...xxxxxxxxxxxxxxxxxxxxwwwxxxx
-xxx..{..xxxxxxxxxxxxxxxxxxwwwwwxxx
-xxx.....xxxxxxxxxxxxxxxxxxWywwwxxx
-xx..[.(..xx...xxxxxx...xxWWWWWwwxx
+xxx.....xxxxxxxxxxxxxxxxxxwwwwwxxx
+xxx..{..xxxxxxxxxxxxxxxxxxWywwwxxx
+xx.......xx...xxxxxx...xxWWWWWwwxx
 xx.......x.....xxxx.....xWY.YWywxx
 x1.......+..B..xxxx..B..+....WWyxx
 xx.......x.....xxxx.....x.....WWxx
@@ -2085,7 +2082,7 @@ v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
 vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
  vvv.vvvv.............................vvvv.vvv
   v..vvvv.............................vvvv..v
-  v.vvvvv...T......(...{...[......T...vvvvv.v
+  v.vvvvv...T..........{..........T...vvvvv.v
   v..vvvv.............................vvvv..v
  vvv.vvvv.............................vvvv.vvv
 vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
@@ -2119,7 +2116,7 @@ v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
 vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
  vvv.vvvv.....................................vvvv.vvv
   v..vvvv.....................................vvvv..v
-  v.vvvvv......T.......(...{...[.......T......vvvvv.v
+  v.vvvvv......T...........{...........T......vvvvv.v
   v..vvvv.....................................vvvv..v
  vvv.vvvv.....................................vvvv.vvv
 vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
@@ -2153,7 +2150,7 @@ v........vvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvv........v
 vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
  vvv.vvvv.............................................vvvv.vvv
   v..vvvv.............................................vvvv..v
-  v.vvvvv........T.........(...{...[.........T........vvvvv.v
+  v.vvvvv........T.............{.............T........vvvvv.v
   v..vvvv.............................................vvvv..v
  vvv.vvvv.............................................vvvv.vvv
 vv.....v..vvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvvvv.vvvvv..v.....vv
@@ -2188,11 +2185,11 @@ cwwwwwwww.................................wwwwwwwwc
 cwwwww...................B...................wwwwwc
 cwww......B.............................B......wwwc
 cwww.............B...............B.............wwwc
-cww......................(......................wwc
 cww.............................................wwc
-cww...B......B...........T...........B......B...wwc
 cww.............................................wwc
-cww...................[.....{...................wwc
+cww...B......B...........{...........B......B...wwc
+cww.............................................wwc
+cww.............................................wwc
 cwww.............B...............B.............wwwc
 cwww......B.............................B......wwwc
 cwwwww...................B...................wwwwwc
@@ -2216,11 +2213,11 @@ cwwwwwwww.................................wwwwwwwwc
 cwwwww...................G...................wwwwwc
 cwww......B.............................B......wwwc
 cwww.............B...............B.............wwwc
-cww......................(......................wwc
 cww.............................................wwc
-cww...B......B...........T...........B......B...wwc
 cww.............................................wwc
-cww...................[.....{...................wwc
+cww...B......B...........{...........B......B...wwc
+cww.............................................wwc
+cww.............................................wwc
 cwww.............B...............B.............wwwc
 cwww......B.............................B......wwwc
 cwwwww...................G...................wwwwwc
@@ -2243,14 +2240,13 @@ WEIGHT:  8
 TAGS:    no_rotate
 ORIENT:  encompass
 COLOUR:  c = magenta
-SHUFFLE: {[
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cccc.......ccccccc.......ccccccc.......cccc
 cc...B...B...ccc...B...B...ccc...B...B...cc
 c.............c.............c.............c
 cc...........ccc...........ccc...........cc
-cccc...(.............[.............{....ccc
+cccc.................{..................ccc
 cc...........ccc...........ccc...........cc
 c.............c.............c.............c
 cc...B...B...ccc...B...B...ccc...B...B...cc
@@ -2265,14 +2261,13 @@ WEIGHT:  2
 TAGS:    no_rotate
 ORIENT:  encompass
 COLOUR:  c = magenta
-SHUFFLE: {[
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cccc.......ccccccc.......ccccccc.......cccc
 cc...B...B...ccc...T...T...ccc...B...B...cc
 c.............c.............c.............c
 cc...........ccc...........ccc...........cc
-cccc...(.............{.............[....ccc
+cccc.................{..................ccc
 cc...........ccc...........ccc...........cc
 c.............c.............c.............c
 cc...B...B...ccc...T...T...ccc...B...B...cc
@@ -2302,10 +2297,10 @@ MAP
  bb..B........bbb bbb........B..bb
  bb.........B...bbb...B.........bb
 bb....B..........b..........B....bb
-bb........B...{.....[...B........bb
- bbbbbbbb........b........bbbbbbbb
+bb........B.............B........bb
+ bbbbbbbb........{........bbbbbbbb
         bbbbbbbb...bbbbbbbb
-              bb.(.bb
+              bb...bb
              bb.....bb
             bb..B.B..bb
            bb.........bb
@@ -2332,10 +2327,10 @@ MAP
  bb..B........bbb bbb........B..bb
  bb.............bbb.............bb
 bb....B....T.....b.....T....B....bb
-bb............{.....[............bb
- bbbbbbbb........b........bbbbbbbb
+bb...............................bb
+ bbbbbbbb........{........bbbbbbbb
         bbbbbbbb...bbbbbbbb
-              bb.(.bb
+              bb...bb
              bb.....bb
             bb.......bb
            bb....T....bb
@@ -2352,7 +2347,6 @@ NAME:    eino_narrow_crystal_temple_a_12
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-SHUFFLE: {([
 WEIGHT:  1
 MAP
             bbbbb
@@ -2369,11 +2363,11 @@ MAP
  bb.b.bb    bb.bb    bb.b.bb
  bb.bb.bb   bb.bb   bb.bb.bb
  b.bbbb.bb  b...b  bb.bbbb.b
-bb.bbbbb.bbbb.[.bbbb.bbbbb.bb
+bb.bbbbb.bbbb...bbbb.bbbbb.bb
 b.bbbbbbb...b...b...bbbbbbb.b
 b.bbbbbbb.B...{...B.bbbbbbb.b
 b.bbbbbbb...b...b...bbbbbbb.b
-bb.bbbbb.bbbb.(.bbbb.bbbbb.bb
+bb.bbbbb.bbbb...bbbb.bbbbb.bb
  b.bbbb.bb  b...b  bb.bbbb.b
  bb.bb.bb   bb.bb   bb.bb.bb
  bb.b.bb    bb.bb    bb.b.bb
@@ -2395,7 +2389,6 @@ NAME:    eino_narrow_crystal_temple_b_12
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-SHUFFLE: {([
 WEIGHT:  1
 MAP
               bbbbb
@@ -2413,9 +2406,9 @@ MAP
     bb.bbbbb.bb...bb.bbbbb.bb
    bb.bbbbbbb.bb.bb.bbbbbbb.bb
 bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
-b...bbbbbb...bb.[.bb...bbbbbb...b
-b.B........B.........B........B.b
-b...bbbbbb...bb{.(bb...bbbbbb...b
+b...bbbbbb...bb...bb...bbbbbb...b
+b.B........B....{....B........B.b
+b...bbbbbb...bb...bb...bbbbbb...b
 bbbb.bbbbbbbbb.b.b.bbbbbbbbb.bbbb
    bb.bbbbbbb.bb.bb.bbbbbbb.bb
     bb.bbbbb.bb...bb.bbbbb.bb
@@ -2439,14 +2432,13 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  1
-SHUFFLE: {([
 MAP
             bbbbb
           bbb...bbb
-          b...(...b
+          b...{...b
     bbbbbbb.b...b.bbbbbbb
     b...b...........b...b
-bbbbb.{.....b.T.b.....[.bbbbb
+bbbbb.T.....b.T.b.....T.bbbbb
 b...b.....B.......B.....b...b
 b.B....bb...b...b...bb....B.b
 b...b...b.....B.....b...b...b
@@ -2459,23 +2451,22 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
-# 13 gods
-NAME:    eino_wide_crystal_templ_13
+# 15 gods
+NAME:    eino_wide_crystal_templ_15
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  1
-SHUFFLE: {([
 MAP
             bbbbb
             b...b
-            b.(.b
+            b.{.b
         bbbbb...bbbbb
         b...bb.bb...b
         b.B.......B.b
     bbbbb...b...b...bbbbb
     b...bb.bb.B.bbbbb...b
-bbbbb.{.b...b...b.....[.bbbbb
+bbbbb.B.b...b...b.....B.bbbbb
 b...b...b.B.bbbbb.B.b...b...b
 b.B....bb...........bb....B.b
 b...b...bbbbb.B.bbbbb...b...b
@@ -2494,11 +2485,12 @@ TAGS:    no_rotate
 PLACE:   Temple
 WEIGHT:  1
 ORIENT:  encompass
+NSUBST:  T = 1:{ / *:T
 MAP
         bbb   bbb   bbb
        bb.bb bb.bb bb.bb
       bb...bbb...bbb...bb
-      b..B.....B.....(..b
+      b..B.....B.....T..b
       bb...bbb...bbb...bb
        bb.bb bb.bb bb.bb
   bbb   b.b   bbb   b.b
@@ -2516,13 +2508,13 @@ bb...bbb...bb     bb...bb
         bbb   b.b   bbb   bbb   bbb
        bb.bb bb.bb       bb.bb bb.bb
       bb...bbb...bb     bb...bbb...bb
-      b..[.....B..b     b..B.....B..b
+      b..T.....B..b     b..B.....B..b
       bb...bbb...bb     bb...bbb...bb
        bb.bb bb.bb       bb.bb bb.bb
         b.b   bbb   bbb   b.b   bbb
        bb.bb       bb.bb bb.bb
       bb...bb     bb...bbb...bb
-      b..B..b     b..{.....B..b
+      b..B..b     b..T.....B..b
       bb...bb     bb...bbb...bb
        bb.bb       bb.bb bb.bb
         b.b   bbb   b.b   bbb
@@ -2555,9 +2547,9 @@ MAP
                 bb......b     b......bb
 bbbbbbb     bbbbb...bbbbbbbbbbbbbbb...bbbbb
 b.....b     b......bb   b.....b   bb......b
-b..{..b     b.....bb    b.....b    bb.....b
-b.....b     b..B..b     b..B..b     b..B..b
-b.[.(.bb    b.....bb   bb.....b    bb.....b
+b.....b     b.....bb    b.....b    bb.....b
+b..{..b     b..B..b     b..B..b     b..B..b
+b.....bb    b.....bb   bb.....b    bb.....b
 b......bb   b......bb bb......b   bb......b
 bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
     bb......b   bb.......bb   b......bb
@@ -2602,7 +2594,7 @@ bbbb...bbb...bbb...bbb...bbb...bbb...bbbb
 bbbbbb.bbb.bbbbbbb.bbb.bbbbbbb.bbb.bbbbbb
 bbbbbb..b..bbbbbbb..b..bbbbbbb..b..bbbbbb
 bbbbbbb...bbbbbbbbb...bbbbbbbbb...bbbbbbb
-bbbbbbbb.bbbbbbbbbb[{(bbbbbbbbbb.bbbbbbbb
+bbbbbbbb.bbbbbbbbbb.{.bbbbbbbbbb.bbbbbbbb
 bbbbbbb...bbbbbbbbb...bbbbbbbbb...bbbbbbb
 bbbbbb..b..bbbbbbb..b..bbbbbbb..b..bbbbbb
 bbbbbb.bbb.bbbbbbb.bbb.bbbbbbb.bbb.bbbbbb
@@ -2642,9 +2634,9 @@ c.d.d.d.d.d.d.c
 c.............c
 c.d.B.B.B.B.d.c
 c.............c
-c.d.B..[..B.d.c
-c.............c
-c.d.B.{.(.B.d.c
+c.d.B.....B.d.c
+c......{......c
+c.d.B.....B.d.c
 c.............c
 c.d.B.B.B.B.d.c
 c.............c
@@ -2699,7 +2691,7 @@ xx.O.xxx.'.xxx.O.xx
        x..'x
        x..'x
        x.'.x
-       x[.(x
+       x'..x
        x1{1x
        xxxxx
 ENDMAP
@@ -2734,8 +2726,9 @@ xxx.....B.....xxxx.....xxxx.....B.....xxx
 xxx...........xxx...B...xxx...........xxx
 xxxx.........xxxx.......xxxx.........xxxx
 xxxxx.......xxxx.........xxxx.......xxxxx
-xxxxxx.....xxx....[.{.(....xxx.....xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.....xxx.............xxx.....xxxxxx
+xxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxx
+                   xxx
 ENDMAP
 
 # 7 gods
@@ -2768,8 +2761,9 @@ xxx...........xxxx.....xxxx...........xxx
 xxx...........xxx.......xxx...........xxx
 xxxx.........xxxx.......xxxx.........xxxx
 xxxxx.......xxxx.........xxxx.......xxxxx
-xxxxxx.....xxx....[.{.(....xxx.....xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx.....xxx.............xxx.....xxxxxx
+xxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxx
+                   xxx
 ENDMAP
 
 # 8 gods
@@ -2782,7 +2776,7 @@ MAP
     ccc      ccccccc      ccc
    cc.c      c.....c      c.cc
   cc..cccccccc..G..cccccccc..cc
- cc{..+......+.....+......+..[cc
+ cc{..+......+.....+......+...cc
 cc....+......+.....+......+....cc
 c....Gcccccccc.....ccccccccG....c
 ccc++cc ccc..+..B..+..ccc cc++ccc
@@ -2804,7 +2798,7 @@ ccc++c++ccc...cc+cc...ccc++c++ccc
 ccc++cc ccc..+..B..+..ccc cc++ccc
 c....Gcccccccc.....ccccccccG....c
 cc....+......+.....+......+....cc
- cc(..+......+.....+......+..<cc
+ cc...+......+.....+......+...cc
   cc..cccccccc..G..cccccccc..cc
    cc.c      c.....c      c.cc
     ccc      ccccccc      ccc
