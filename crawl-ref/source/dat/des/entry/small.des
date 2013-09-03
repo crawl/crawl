@@ -1608,6 +1608,7 @@ TAGS:    entry no_monster_gen
 MONS:    generate_awake jelly / kobold
 ITEM:    dart
 ORIENT:  float
+KPROP:   1d> = no_rtele_into
 SHUFFLE: {[(
 SUBST:   [=., (=.
 SUBST:   v:vxx
