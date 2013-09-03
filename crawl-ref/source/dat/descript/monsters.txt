@@ -2502,6 +2502,11 @@ Kobolds are small, greyish creatures with the looks and temperaments of feral
 dogs. No one knows for sure where kobolds come from, but ancient demon-gods,
 evil spirits, and meddling wizards have all been suggested as culprits.
 %%%%
+kobold:quote
+
+“Kobolds are harmless.”
+    -Bearand the Bold, epitaph
+%%%%
 kobold demonologist
 
 A kobold who is in league with demonic powers and can call forth beings from
