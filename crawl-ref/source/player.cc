@@ -7938,8 +7938,11 @@ bool player::made_nervous_by(const coord_def &p)
                         || mi->cannot_act())
                 && you.can_see(*mi)
                 && !mons_is_firewood(*mi)
-                && !mi->neutral())
+                && !mi->neutral()
+                && !mi->wont_attack())
+            {
                 return true;
+            }
     }
     return false;
 }
