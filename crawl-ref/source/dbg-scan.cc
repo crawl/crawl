@@ -336,6 +336,12 @@ void debug_mons_scan()
         ASSERT(m->mid > 0);
         coord_def pos = m->pos();
 
+        if (invalid_monster_type(m->type))
+        {
+            mprf(MSGCH_ERROR, "Bogus monster type %d at (%d, %d), midx = %d",
+                              m->type, pos.x, pos.y, i);
+        }
+
         if (!in_bounds(pos))
         {
             mprf(MSGCH_ERROR, "Out of bounds monster: %s at (%d, %d), "
