@@ -3537,7 +3537,7 @@ mons_spec mons_list::get_monster(int slot_index, int list_index) const
     if (list_index < 0 || list_index >= (int)list.size())
         return mons_spec(RANDOM_MONSTER);
 
-    return (list[list_index]);
+    return list[list_index];
 }
 
 void mons_list::clear()

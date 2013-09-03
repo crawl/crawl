@@ -1968,7 +1968,7 @@ static const char *_mons_enchantment_name(enchant_type ench)
     if (ench > NUM_ENCHANTMENTS)
         ench = NUM_ENCHANTMENTS;
 
-    return (enchant_names[ench]);
+    return enchant_names[ench];
 }
 
 enchant_type name_to_ench(const char *name)

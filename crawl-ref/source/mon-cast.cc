@@ -99,7 +99,7 @@ bool is_valid_mon_spell(spell_type spell)
     if (spell < 0 || spell >= NUM_SPELLS)
         return false;
 
-    return (_valid_mon_spells[spell]);
+    return _valid_mon_spells[spell];
 }
 
 static void _scale_draconian_breath(bolt& beam, int drac_type)

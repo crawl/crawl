@@ -717,7 +717,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
 
 bool player::berserk() const
 {
-    return (duration[DUR_BERSERK]);
+    return duration[DUR_BERSERK];
 }
 
 bool player::can_cling_to_walls() const
