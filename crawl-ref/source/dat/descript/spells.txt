@@ -367,6 +367,12 @@ This spell calls forth a mighty storm of roaring flame directly onto the
 target, dealing partially irresistible fire damage in a large area and leaving
 behind short-lived fire vortices.
 %%%%
+Fire Storm spell:quote
+
+“Some have said there is no subtlety to destruction. You know what? They're
+dead.”
+    —Jaya Ballard, task mage
+%%%%
 Fireball spell
 
 This spell hurls an exploding bolt of fire. This spell does not cost additional
