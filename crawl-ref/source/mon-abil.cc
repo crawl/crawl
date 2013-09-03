@@ -3373,13 +3373,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3))
-            _starcursed_split(mons);
+            _starcursed_split(mons), used = true;
 
         if (!mons_is_confused(mons)
                 && !is_sanctuary(mons->pos()) && !is_sanctuary(beem.target)
                 && _will_starcursed_scream(mons)
                 && coinflip())
+        {
             _starcursed_scream(mons, actor_at(beem.target));
+            used = true;
+        }
         break;
 
 
