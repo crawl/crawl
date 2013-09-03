@@ -371,7 +371,7 @@ Fire Storm spell:quote
 
 “Some have said there is no subtlety to destruction. You know what? They're
 dead.”
-    —Jaya Ballard, task mage
+    -Jaya Ballard, task mage
 %%%%
 Fireball spell
 
