@@ -17,6 +17,12 @@ Un tempio degli Dei, un luogo di pace e rifugio dalla pazzia del Dungeon.
 Tipicamente contiene la maggior parte degli altari degli dei conosciuti. È
 locato tra il 4° e il 7° livello del Dungeon
 %%%%
+Temple:quote
+
+“E udii una gran voce dal tempio, che diceva ai sette angeli: Andate e versate
+sulla terra le sette coppe dell'ira di Dio.”
+    -Bibbia, Apocalisse 16:1
+%%%%
 Orcish Mines
 
 Le ben lavorate miniere d'oro delle tribù degli orchi. Queste tortuose cave

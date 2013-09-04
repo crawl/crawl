@@ -18,20 +18,20 @@ Zin è una divinità che si focalizza sulla forza interiore. I seguaci devono
 rimanere puri nel corpo e nell'anima, evitando incantesimi blasfemi, malvagi,
 sporchi o caotici; l'uso di mutazioni e il consumo delle carni di esseri
 intelligenti. Possono predicare o imprigionare coloro che non sono stati
-illuminate e possono infine ottenere un rifugio divino. Zin valorizza la
-generosità e richiede una decima di tutto l'oro guadagnato, oltre naturalmente
-alle donazioni spontanee. I seguaci di Zin possono convertirsi Elyvilon o Colui
-Che Splende mantenendo parte della propria devozione.
+illuminati e possono infine ottenere protezione divina. Zin valorizza la
+generosità e richiede una decima di tutto l'oro guadagnato (ma apprezzerà
+ulteriori donazioni). I seguaci di Zin possono convertirsi Elyvilon o al
+Lucente mantenendo parte della propria devozione.
 %%%%
 the Shining One
 
-Colui Che Splende è una divinità potente che è dedicata alla crociata contro il
-maligno. I seguaci e i loro alleati possono essere benedetti uccidendo gli
-esseri malvagi e blasfemi, ma non possono utilizzare magia malvagia o blasfema
-e ci si attende che dimostrino la loro superiorità morale combattendo in
-maniera onorevole. La divinità richiede che i seguaci vaghino per il mondo alla
-ricerca di tracce del male da sradicare. I seguaci di Colui Che Splende possono
-convertirsi a Elyvilon o Zin mantenendo parte della propria devozione.
+Il Lucente è una divinità potente che è dedicata alla crociata contro ogni
+male. I seguaci e i loro alleati possono essere benedetti uccidendo gli esseri
+malvagi e blasfemi, ma non possono utilizzare magia malvagia o blasfema e ci si
+attende che dimostrino la loro superiorità morale combattendo in maniera
+onorevole. La divinità richiede che i seguaci vaghino per il mondo alla ricerca
+di tracce del male da sradicare. I seguaci del Lucente possono convertirsi a
+Elyvilon o Zin mantenendo parte della propria devozione.
 %%%%
 Kikubaaqudgha
 
@@ -106,10 +106,11 @@ Nemelex si assicura che la fortuna aiuti gli audaci.
 Elyvilon
 
 Elyvilon il Curatore accetta tutte le buone anime che sono pronte ad aiutare
-gli altri. Costoro guadagnano potenti poteri curativi e professano un credo di
-pacifismo ed evitano di spargere sangue. Elyvilon apprezza la distruzione delle
-armi malvage e blasfeme per aumentare la propria devozione. I seguaci possono
-convertirsi a Colui Che Splende o Zin e mantenere parte della propria
+gli altri. Questi guadagnano dei potenti poteri curativi. Il Curatore professa
+un credo di pacifismo e aiuta i suoi fedeli ad evitare di spargere sangue.
+Elyvilon apprezza la distruzione delle armi, ance se i fedeli più pii devono
+trovare delle armi malvage o blasfeme per aumentare la propria devozione. I
+seguaci possono convertirsi al Lucente o a Zin e mantenere parte della propria
 devozione.
 %%%%
 Lugonu
@@ -174,13 +175,16 @@ la vita di un seguace.
 %%%%
 the Shining One powers
 
-I seguaci di Colui Che Splende irraggiano un'aura che rivela i nemici nelle
-vicinanze, e guadagnano potere uccidendo esseri malvagi. Se gli alleati,
-attratti e incantati, suoi seguaci si rivelano degni della battaglia, Colui Che
-Splende li farà rimanere più a lungo al loro fianco. I seguaci guadagneranno la
-possibilità di usare uno scudo divino, per proteggersi durante la battaglia. In
-seguito potranno anche convogliare esplosioni di fiamme purificatrici,
-particolarmente efficaci contro nemici
+I seguaci del Lucente irraggiano un'aura che rivela i nemici nelle vicinanze, e
+guadagnano potere uccidendo esseri malvagi. Se gli alleati, richiamati e
+attratti, si dimostreranno degni della crociata, Il Lucente li farà rimanere
+più a lungo al fianco dei suoi fedeli. I seguaci guadagneranno la possibilità
+di usare uno scudo divino per proteggersi durante la battaglia. In seguito
+potranno anche convogliare esplosioni di fiamme purificatrici, particolarmente
+efficaci contro nemici blasfemi. Infine, potranno chiedere al Lucente di
+mandargli dei potenti alleati divini come alleati. Il Lucente alle volte potrà
+salvare in modo diretto la vita di un seguace. Aumentando la devozione, il
+Lucente proteggerà la forza vitale di un suo fedele.
 %%%%
 Kikubaaqudgha powers
 

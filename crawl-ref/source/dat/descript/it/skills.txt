@@ -184,8 +184,9 @@ potenza dipenderà dalla media dell'abilità in queste scuole.
 
 Le malie infliggono degli incanti sulle cose vicine. Anche se nessuno infligge
 danni diretti, stregare un avversario lo può escludere dal combattimento, anche
-se questo significa superare la sua resistenza agli incantesimi ostili. Avere
-abilità nella scuola di magia delle malie aiuta a superare questa resistenza.
+se questo significa dover superare la sua resistenza agli incantesimi ostili.
+Avere abilità nella scuola di magia delle malie aiuta a superare questa
+resistenza.
 %%%%
 Charms
 

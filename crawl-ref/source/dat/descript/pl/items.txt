@@ -1213,11 +1213,6 @@ scroll of identify
 Ten zwój pozwala odkryć własności od jednego do trzech przedmiotów. Użyty na
 talii kart, zwój ten także podejrzy górną kartę bez aktywowania jej działania.
 %%%%
-scroll of immolation
-
-Ten zwój nasączony jest łatwopalną substancją, która ulegnie zapłonowi przy
-próbie odczytania.
-%%%%
 scroll of magic mapping
 
 Ten zwój tworzy mapę poziomu lochów wokół czytającego.

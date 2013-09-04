@@ -65,11 +65,16 @@ Des flammes étranges courent sur cette lame sinueuse.
 %%%%
 Staff of Dispater
 
-Cet objet légendaire peut déclencher la fureur des Enfers.
+Cet objet légendaire peut déclencher la fureur des Enfers. Les flammes impies
+qu'il évoque peuvent vous coûter une partie de votre vie et de votre âme, mais
+depuis quand ces détails empêchent quiconque de poursuivre leur quête de
+pouvoir?
 %%%%
 Sceptre of Asmodeus
 
-Il porte certains pouvoirs de l'archi-démon Asmodeus.
+Il porte certains pouvoirs de l'archi-démon Asmodeus. Brandir ce puissant
+sceptre peut convoquer des rejetons infernaux de leur domicile et les asservir
+à votre volonté. Evidemment, ils ne vont pas vous aimer quand le sort expirera.
 %%%%
 faerie dragon armour
 
@@ -469,6 +474,15 @@ Axe of Woe
 Lorsque vous tenez cette hache, votre esprit ne semble plus entièrement le
 votre. Votre corps commence à présenter une force au-delà de ses capacités, et
 vos mouvements deviennent guidé par Makhleb.
+%%%%
+moon troll leather armour
+
+Cette armure aurait été créé par l'enchantement de la peau d'un troll dont
+l'espèce est désormais éteinte. Que cette armure soit véritablement un vestige
+des légendaires terreurs invisibles du vent ou simplement une appropriation du
+nom pour y ajouter du mysticisme est un mystère; son pouvoir de régénération
+rapide au détriment occasionnelle de la puissance magique du porteur, est
+cependant difficile a contester.
 %%%%
 milk chocolate
 

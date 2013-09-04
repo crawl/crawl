@@ -48,10 +48,9 @@ the pull of this spell.
 %%%%
 Awaken Forest spell
 
-This spell allows the caster to give some very limited motility to
-surrounding trees, allowing them to sway their branches and shift their
-roots. Such enchanted trees will lash at any enemy foolish enough to stand
-close enough.
+This spell allows the caster to give some very limited motility to surrounding
+trees, allowing them to sway their branches and shift their roots. Such
+enchanted trees will lash at any enemy foolish enough to stand close enough.
 %%%%
 Banishment spell
 
@@ -74,24 +73,24 @@ It makes spellcasting somewhat difficult.
 %%%%
 Blink Allies Encircling spell
 
-This spell takes a bunch of allies in the caster's sight and translocates
-them adjacent to a pointed-at enemy.
+This spell takes a bunch of allies in the caster's sight and translocates them
+adjacent to a pointed-at enemy.
 %%%%
 Blink Away spell
 
 This spell translocates the caster a short distance away from a designated
-enemy, always further than where it was cast but still within sight. No
-finer control is provided.
+enemy, always further than where it was cast but still within sight. No finer
+control is provided.
 %%%%
 Blink Close spell
 
-This spell translocates the caster a short distance towards a chosen foe,
-who must already be within sight.
+This spell translocates the caster a short distance towards a chosen foe, who
+must already be within sight.
 %%%%
 Blink Other Close spell
 
-This spell translocates an enemy in sight a short distance towards the
-caster. It cannot be resisted by usual means of magic resistance.
+This spell translocates an enemy in sight a short distance towards the caster.
+It cannot be resisted by usual means of magic resistance.
 %%%%
 Blink Other spell
 
@@ -100,8 +99,8 @@ cannot be resisted by usual means of magic resistance.
 %%%%
 Blink Range spell
 
-This spell translocates the caster a short distance, trying to go away from
-an enemy. Unlike "Blink Away", it allows going out of sight.
+This spell translocates the caster a short distance, trying to go away from an
+enemy. Unlike "Blink Away", it allows going out of sight.
 %%%%
 Blink spell
 
@@ -164,9 +163,9 @@ targets sufficiently close to the caster, however.
 %%%%
 Chaos Breath spell
 
-This creature may exhale a large cloud of fumes filled with the very essence
-of chaos. Effects of getting caught in this cloud are about as predictable
-as Xom him- or herself.
+This creature may exhale a large cloud of fumes filled with the very essence of
+chaos. Effects of getting caught in this cloud are about as predictable as Xom
+him- or herself.
 %%%%
 Cold Breath spell
 
@@ -297,8 +296,8 @@ anything and everything nearby with great strength and speed.
 %%%%
 Disintegrate spell
 
-This spell violently rends apart anything in a small volume of space. It can
-be used to cause severe damage, or remove a chunk of rock.
+This spell violently rends apart anything in a small volume of space. It can be
+used to cause severe damage, or remove a chunk of rock.
 %%%%
 Disjunction spell
 
@@ -317,8 +316,8 @@ This spell tries to teleport away any monsters directly beside the caster.
 %%%%
 Draconian Breath spell
 
-[This spell should have been replaced by a colour-specific one.  If you got
-it, this is a bug.]
+[This spell should have been replaced by a colour-specific one.  If you got it,
+this is a bug.]
 %%%%
 Dragon Form spell
 
@@ -332,8 +331,8 @@ Drain Life spell
 %%%%
 Druid's Call spell
 
-This spell allows a druid to recall a woodland creature or two from a
-location on the same dungeon level.
+This spell allows a druid to recall a woodland creature or two from a location
+on the same dungeon level.
 %%%%
 Enslavement spell
 
@@ -429,9 +428,9 @@ Hellfire spell
 %%%%
 Holy Breath spell
 
-This creature can exhale a large cloud of blessed flame, shining with the
-glory of the good gods. These flames are especially dangerous to those
-meeting The Shining One's definition of evil.
+This creature can exhale a large cloud of blessed flame, shining with the glory
+of the good gods. These flames are especially dangerous to those meeting The
+Shining One's definition of evil.
 %%%%
 Ice Form spell
 
@@ -468,10 +467,9 @@ Injury Mirror spell
 %%%%
 Ink Cloud spell
 
-Krakens are known to inject an opaque liquid into water to secure their
-escape if a fight goes awry. Unlike their lesser cousins, this ink is potent
-enough to obscure vision above water as well, if the kraken stirs the water
-enough.
+Krakens are known to inject an opaque liquid into water to secure their escape
+if a fight goes awry. Unlike their lesser cousins, this ink is potent enough to
+obscure vision above water as well, if the kraken stirs the water enough.
 %%%%
 Inner Flame spell
 
@@ -551,9 +549,9 @@ knows, but certainly nobody would want to be nearby when it happens.
 %%%%
 Mara Summon spell
 
-Mara, the lord of rakshasas, likes to weave illusions of himself. Unlike
-lesser rakshasas, his doubles are physically as strong as Mara himself, and
-hardly weaker in magic.
+Mara, the lord of rakshasas, likes to weave illusions of himself. Unlike lesser
+rakshasas, his doubles are physically as strong as Mara himself, and hardly
+weaker in magic.
 %%%%
 Mass Abjuration spell
 
@@ -611,9 +609,8 @@ foul necromantic tissue serves as an analogue for bones remains a mystery.
 Noxious Cloud spell
 
 This breath includes the same substance as that used in a well-known wizard
-spell “Mephitic Cloud”. When inhaled by a person or creature not resistant
-to poison, it does only minor damage but can cause confusion and a bad
-headache.
+spell “Mephitic Cloud”. When inhaled by a person or creature not resistant to
+poison, it does only minor damage but can cause confusion and a bad headache.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -679,10 +676,9 @@ wings, which can be quite unhealthy above lava.
 %%%%
 Petrifying Cloud spell
 
-Catoblepae can exhale calcifying dust, which turns anyone affected for
-longer than a brief moment into a statue.  Access to fresh air may let
-you recover — but not if your statue gets broken into pieces by the
-catoblepas' claws first.
+Catoblepae can exhale calcifying dust, which turns anyone affected for longer
+than a brief moment into a statue.  Access to fresh air may let you recover —
+but not if your statue gets broken into pieces by the catoblepas' claws first.
 %%%%
 Phase Shift spell
 
@@ -731,15 +727,15 @@ increasing its accuracy (but not damage).
 %%%%
 Quicksilver Bolt spell
 
-Some dragon types can breathe dispelling energy, sometimes called
-“quicksilver” because of its appearance. Besides causing damage, it
-may remove some enchantments, both beneficial and harmful.
+Some dragon types can breathe dispelling energy, sometimes called “quicksilver”
+because of its appearance. Besides causing damage, it may remove some
+enchantments, both beneficial and harmful.
 %%%%
 Rakshasa Summon spell
 
-Rakshasas are known to often weave illusions of themselves to fool their
-foes. These illusions are partially real, and can even hit you or cast
-spells, although it takes but a single hit to dispel them.
+Rakshasas are known to often weave illusions of themselves to fool their foes.
+These illusions are partially real, and can even hit you or cast spells,
+although it takes but a single hit to dispel them.
 %%%%
 Recall spell
 
@@ -923,8 +919,8 @@ of this spell will be boosted for casters in Statue Form.
 %%%%
 Strip Resistance spell
 
-This spell attempts to greatly reduce its target's magic resistance, making
-him or her more vulnerable to hexes and similar spells.
+This spell attempts to greatly reduce its target's magic resistance, making him
+or her more vulnerable to hexes and similar spells.
 %%%%
 Sublimation of Blood spell
 
@@ -970,8 +966,8 @@ form of elemental magic.
 %%%%
 Summon Eyeballs spell
 
-This spell summons a bunch of floating eyeballs. These can paralyse,
-drain, confuse, mutate or damage you.
+This spell summons a bunch of floating eyeballs. These can paralyse, drain,
+confuse, mutate or damage you.
 %%%%
 Summon Fire Elementals spell
 
@@ -1017,8 +1013,8 @@ This spell summons between one and three minor (rank 5) demons.
 %%%%
 Summon Mushrooms spell
 
-This spell summons a bunch of icky wandering mushrooms and deathcaps next
-to a chosen foe.
+This spell summons a bunch of icky wandering mushrooms and deathcaps next to a
+chosen foe.
 %%%%
 Summon Scorpions spell
 
@@ -1032,8 +1028,8 @@ This spell summons a small creature to the caster's aid.
 Summon Spectral Orcs spell
 
 This spell summons between one and three orc spectres. As such apparitions
-cannot use magic themselves, this spell picks melee specialists, sometimes
-even rivalling the most powerful of live orcs.
+cannot use magic themselves, this spell picks melee specialists, sometimes even
+rivalling the most powerful of live orcs.
 %%%%
 Summon Swarm spell
 
@@ -1041,8 +1037,8 @@ This spell summons forth a pestilential swarm.
 %%%%
 Summon Twister spell
 
-A chaos butterfly can spawn a tornado on the other side of the world with
-a mere flap of its wings.
+A chaos butterfly can spawn a tornado on the other side of the world with a
+mere flap of its wings.
 %%%%
 Summon Ufetubus spell
 
@@ -1055,9 +1051,9 @@ This spell summons a mutated otherworldly creature to the caster's aid.
 %%%%
 Summon Undead spell
 
-This spell summons multiple undead monsters. It cannot spawn liches,
-revenants or high ranking mummies, but it's still one of the most dangerous
-summoning spells.
+This spell summons multiple undead monsters. It cannot spawn liches, revenants
+or high ranking mummies, but it's still one of the most dangerous summoning
+spells.
 %%%%
 Summon Vermin spell
 
@@ -1073,8 +1069,8 @@ This spell calls forth a beam of intense light, damaging its target. Obviously,
 invisibility lets the light pass through, leaving such creatures unharmed.
 Vampires and shadows are known to be especially vulnerable to it.
 
-Not being a missile, this spell is not affected by Repel and Deflect effects
-— you want to be able to see, don't you?
+Not being a missile, this spell is not affected by Repel and Deflect effects —
+you want to be able to see, don't you?
 %%%%
 Sure Blade spell
 
@@ -1122,10 +1118,9 @@ This spell creates an arc of electricity.
 %%%%
 Tomb of Doroklohe spell
 
-This spell entombs the caster within four walls of rock. These walls will
-push away objects in their way, but their growth is obstructed by the
-presence of any creature. They are not permanent, and will expire after a
-period of time.
+This spell entombs the caster within four walls of rock. These walls will push
+away objects in their way, but their growth is obstructed by the presence of
+any creature. They are not permanent, and will expire after a period of time.
 %%%%
 Tornado spell
 

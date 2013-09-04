@@ -80,10 +80,6 @@ Bolt of Inaccuracy spell
 不幸にもこの呪文は狙いをつけることが非常に難しく、極々稀にしか命中しない。
 ご愁傷様である。
 %%%%
-Iron Shot spell
-
-この呪文は大きくて重い金属の矢を術者の敵に放つ。
-%%%%
 Bolt of Magma spell
 
 この呪文は煮えたぎる溶岩の矢を放つ。
@@ -312,10 +308,6 @@ Fulminant Prism spell
 暴力的な魔力の爆発を引き起こす晶柱を出現させる。晶柱は極度に脆く、
 少しの損傷でも爆発が早まってしまうことに注意しなければならない。
 %%%%
-Major Healing spell
-
-この呪文は術者が肉体に負ったダメージを大いに癒す。
-%%%%
 Haste spell
 
 この呪文は対象の動きを加速する。
@@ -325,13 +317,6 @@ Haunt spell
 
 この呪文は術者の敵を苦しめるレイスや悪霊を呼び寄せる。しかし、
 アンデッドを呼び寄せると術者の健全さが代償として奪われる。
-%%%%
-Throw Icicle spell
-
-この呪文は巨大な氷の破片を放つ。
-これは凍結への耐性のないモンスターには特に有効だが、
-呪文の破壊力の大部分は強力な衝撃と鋭利な断面に依るものなので、
-冷気に耐性のあるモンスターにも顕著に効果がある。
 %%%%
 Ice Form spell
 
@@ -361,6 +346,10 @@ Invisibility spell
 この呪文は対象を他の存在の視覚から隠す。
 透明化している間あなたは魔力による汚染にさらされ、
 汚染の蓄積はやがて発光による透明化の解除をもたらす。
+%%%%
+Iron Shot spell
+
+この呪文は大きくて重い金属の矢を術者の敵に放つ。
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -395,18 +384,10 @@ Lehudib's Crystal Spear spell
 
 この呪文は致命的なまでに鋭い水晶の矢を放つ。
 %%%%
-Minor Healing spell
-
-この呪文は術者が肉体に負ったダメージを少しだけ癒す。
-%%%%
 Lethal Infusion spell
 
 この呪文は術者の手にした武器に邪悪な力を充填する。
 これは既に何らかの魔力を帯びている武器には効果がない。
-%%%%
-Levitation spell
-
-この呪文は術者を宙に浮かせる。
 %%%%
 Lightning Bolt spell
 
@@ -417,6 +398,10 @@ Lightning Bolt spell
 Magic Dart spell
 
 この呪文は魔法のエネルギーによる小さな矢を放つ。これは決して外れることがない。
+%%%%
+Major Healing spell
+
+この呪文は術者が肉体に負ったダメージを大いに癒す。
 %%%%
 Malign Gateway spell
 
@@ -444,6 +429,10 @@ Metabolic Englaciation spell
 冷気への耐性を持たない全ての対象の動きを遅延させる。
 これは対象の魔法への抵抗力を無視するが、
 強力なモンスターはそうでないモンスターよりも早く遅延から復帰する。
+%%%%
+Minor Healing spell
+
+この呪文は術者が肉体に負ったダメージを少しだけ癒す。
 %%%%
 Necromutation spell
 
@@ -752,6 +741,13 @@ Throw Flame spell
 Throw Frost spell
 
 この呪文は小さな冷気の矢を放つ。
+%%%%
+Throw Icicle spell
+
+この呪文は巨大な氷の破片を放つ。
+これは凍結への耐性のないモンスターには特に有効だが、
+呪文の破壊力の大部分は強力な衝撃と鋭利な断面に依るものなので、
+冷気に耐性のあるモンスターにも顕著に効果がある。
 %%%%
 Thunderbolt spell
 

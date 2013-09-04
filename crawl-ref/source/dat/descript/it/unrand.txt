@@ -1,0 +1,504 @@
+%%%%
+Singing Sword
+
+Quest'arma incantata non ama fare altro che cantare a chi la possiede, che lo
+voglia o no.
+%%%%
+Wrath of Trog
+
+Era l'arma preferita dell'antica divinità Trog, prima di essere perduta. Usarla
+per attaccare indurrà chiunque l'adopera in una furia assetata di sangue.
+%%%%
+Mace of Variability
+
+È decisamente inaffidabile.
+%%%%
+Glaive of Prune
+
+È la creazione di un dio pazzo, e porta una maledizione che trasforma chiunque
+la usi in una prugna. Per fortuna, la maledizione fa effetto molto lentamente,
+e si può utilizzarlo per brevi periodi senza alcun sintomo se non quello di
+avere la pelle vagamente viola e alcune rughe.
+%%%%
+Sword of Power
+
+Ricompensa i potenti con potere e i deboli con debolezza.
+%%%%
+Staff of Olgreb
+
+Questa era l'arma magica usata dal grande stregone Olgreb prima che morì da
+qualche parte in questo dungeon. Migliora l'abilità di chi la impugna ad usare
+magia velenosa, e porta con sé poteri magici che possono essere evocati. I miti
+dicono che Olgreb aveva ricercato rari veleni che potevano avere effetti
+limitati anche sulle creature immuni ai veleni comunemente conosciuti.
+%%%%
+Staff of Wucad Mu
+
+Può essere evocata per ripristinare una grande quantità di energia magica, ma
+al rischio di danneggiare la mente di chi la usa. Il suo dipende dall'abilità
+di evocazione dell'utilizzatore.
+%%%%
+Vampire's Tooth
+
+Questo pugnale di simil-avorio sembra che potrebbe essere stato davvero fatto
+da un dente di un'enorme creatura predatoria, anche se ovviamente non si tratta
+di normalissimo succhia sangue di dimesioni umane.
+
+È letalmente vampirica.
+%%%%
+Scythe of Curses
+
+Quest'arma porta con sé una terribile e fastidiosissima maledizione.
+%%%%
+Sceptre of Torment
+
+Quest'arma maledetta è davvero uno strumento degno dell'Inferno.
+%%%%
+Sword of Zonguldrok
+
+Questa disgraziata arma mette a rischio colui che la usa.
+%%%%
+Sword of Cerebov
+
+Spettrali fiamme coprono la sua contorta lama.
+%%%%
+Staff of Dispater
+
+Questo leggendario oggetto può sguinzagliare la furia dell'Inferno. Le fiamme
+blasfeme che evoca possono costare una parte della tua anima e vita, ma quando
+queste inezie hanno fermato qualcuno di darsi all'avventura?
+%%%%
+Sceptre of Asmodeus
+
+Porta alcuni dei poteri dell'arcidemonio Asmodeo. Sventagliare questo scettro
+può strappare i demoni dalle loro case infernali per schiavizzarli al tuo
+servizio. Ovviamente, alla fine dell'incantesimo non saranno felici.
+%%%%
+faerie dragon armour
+
+I draghi fatati erano una razza della stessa specie di quelli chiazzati.
+Sfortunatamente, i loro vividi colori furono la loro disgrazia, poiché
+allertavano le potenziali prede. Adesso sono estinti, e questo prezioso
+artefatto è una delle ultime prove della loro passata esistenza.
+%%%%
+demon blade "Bloodbane"
+
+Porta la macchia di un inumano folle.
+%%%%
+scimitar of Flaming Death
+
+Fumo!
+%%%%
+mace of Brilliance
+
+Questa mazza ti permetterà di far splendere della luce nel Dungeon, e di certo
+farà ai tuoi nemici della tua presenza. La sua luce è odiata dai nonmorti, e
+può rivelare ogni macchina che prova ad essere invisibile.
+%%%%
+demon blade "Leech"
+
+Instilla nella mente di chi la possiede un solo proposito: abbuffarsi di
+energia vitale rubata.
+%%%%
+dagger of Chilly Death
+
+Un pugnale fatto di un enorme pezzo di zaffiro.
+%%%%
+dagger "Morg"
+
+Un orrendo pugnale arruginito.
+
+Tanti anni fa apparteneva a un potente stregone chiamato Boris. Si perse nel
+Dungeon cercando la Sfera.
+%%%%
+scythe "Finisher"
+
+Una lunga e affilata falce, modificata apposta per il combattimento.
+%%%%
+sling "Punk"
+
+Una fionda fatta di uno strano cuoio blu.
+%%%%
+bow of Krishna "Sharnga"
+
+Un meraviglioso arco d'oro.
+
+Una volta apparteneva a una divinità straniera. Funziona meglio con delle
+frecce speciali che non sono comunemente reperibili.
+%%%%
+giant club "Skullcrusher"
+
+Quest'amabile randello rendere euforico ogni ogre - sia una rissa al bar, un
+genocidio o un'unione di entrambi.
+%%%%
+glaive of the Guard
+
+Quest'arma era una volta di Gar Dogh, la guarda dei tesori reali. Secondo la
+legenda, lui si perse da qualche parte nel Dungeon.
+%%%%
+sword of Jihad
+
+Una lunga spada fatta un singolo pezzo di cristallo. La legenda vuole che fu il
+regalo del Lucente ad un seguace.
+%%%%
+crossbow "Hellfire"
+
+Una balestra fiammeggiante, forgiata fra le fiamme degli Inferni.
+%%%%
+sword of the Doom Knight
+
+Uno spadone adamantino.
+%%%%
+morningstar "Eos"
+
+Le rosee dita dell'Alba...
+%%%%
+spear of the Botono
+
+Un artefatto oscuro e maligno. Aumenta il potere delle malie lanciate da
+chiunque sia così sciocco da rischiare ad usarlo.
+%%%%
+trident of the Octopus King
+
+Il tridente fu rubato tanti anni fa dal giardino del Re Polpo da un uomo
+davvero insignificante e già morto. Ma bada della furia del Re Polpo!
+%%%%
+mithril axe "Arga"
+
+Una splendida ascia di mithril, probabilmente perduta da qualche eroe nano.
+%%%%
+Elemental Staff
+
+Questa potente staffa apparteneva una volta al capo della Gilda dei Cinque
+Elementi.
+%%%%
+crossbow "Sniper"
+
+Una balestra fatta di un qualche materiale nero.
+%%%%
+longbow "Piercer"
+
+Un eccezionalmente grande arco di metallo.
+%%%%
+blowgun of the Assassin
+
+È progettata per essere nascosta facilmente, ma riesce comunque a fare molto
+male.
+%%%%
+lance "Wyrmbane"
+
+Una lancia incantata che diventa più forte ogni volta che uccide un potente
+drago. Più diventa forte, più sarà difficile trovarle un degno sfidante.
+%%%%
+Spriggan's Knife
+
+Un fine, piccolo coltello.
+
+Questo coltello è stato fatto da Spiriggan, o per gli Spiriggan, o
+possibilmente di Spiriggan. In ogni modo, è in qualche modo collegato a questa
+soprannaturale gente.
+%%%%
+plutonium sword
+
+Una spada tripla fatta di uno strano metallo brillante. Ti chiedi se abbia
+cresciuto le due lame laterali per la sua radiazioni, e se anche tu crescerai
+due teste aggiuntive.
+%%%%
+great mace "Undeadhunter"
+
+Le legende dicono che tanto tempo fa, un signore dei lich sperimentava il
+creare servi senzienti piuttosto che macchine senza cervello. Per assicurarsi
+la loro fedeltà, fece una grande quantità di armi potenziate con un magia che
+poteva reagire con la magia che teneva assieme i nonmorti, infliggendo grandi
+danni.
+
+Anche se il lich è morto da tanto tempo, le sue armi, spargendo distruzione fra
+i nonmorti, sono diventate famose. O, almeno, le vecchie storie ne sono piene.
+Comunque, questa mazza potrebbe essere solo l'unica ad essere rimasta - magari
+per gli sforzi degli agenti del Lucente, che sostiene che non si dovrebbe
+combattere la negromanzia con la negromanzia.
+%%%%
+whip "Snakebite"
+
+Una frusta a due teste fatta dalle pelli delle mortali mamba nere dell'Antro
+delle Bestie.
+%%%%
+knife of Accuracy
+
+È quasi infallibilmente preciso.
+%%%%
+Lehudib's crystal spear
+
+Probabilmente questa reliquia ha portato all'invenzione del famoso incantesimo,
+o forse l'esatto opposto.
+%%%%
+captain's cutlass
+
+Questa famigerata arma era usata da un vile capitano pirata per massacrare
+infiniti innocenti. Alla fine, incontrò il suo destino quando un kraken ingoiò
+la sua barca con tutta ciurma al suo interno. Si pensava poi che la sciabola
+fosse per sempre perduta, ma adesso hai nelle tue stesse mani la prova del
+contrario.
+%%%%
+storm bow
+
+Quest'arco ha il colore delle nere nubi da pioggia, e l'odore di ozono bagnato.
+%%%%
+large shield of Ignorance
+
+"Una mente aperta è come una fortezza con i suoi cancello spalancati e
+sguarniti."
+%%%%
+robe of Augmentation
+
+Una tunica fatta della seta più pura.
+%%%%
+cloak of the Thief
+
+Permette al suo indossatore di eccellere nelle arti del furto, e può essere
+evocata per rilasciare delle dense nuvole di fumo per aiutare una fuga
+affrettata.
+%%%%
+shield "Bullseye"
+
+Giusto in caso avessi problemi a farti colpire.
+%%%%
+crown of Dyrovepreva
+
+Una grande corona di bronzo grezzo, tempestata di svariate gemme diverse.
+%%%%
+hat of the Bear Spirit
+
+Una volta in possesso di Ukta, un potente orco sciamano, questo cappello di
+pelliccia fa da casa allo spirito di un orso particolarmente potente.
+%%%%
+robe of Misfortune
+
+Una splendida tunica di pelliccia e seta.
+%%%%
+cloak of Flash
+
+Un mantello vibrante.
+%%%%
+boots of the Assassin
+
+Un paio di stivali soffici, progettati specificatamente per la Gilda degli
+Assassini.
+%%%%
+Lear's hauberk
+
+Un hauberk che copre tutte le parte del corpo dell'indossatore. Include una
+cuffia, gambali e guanti di maglia.
+%%%%
+skin of Zhor
+
+Una puzzolente pelliccia di un qualche strano animale.
+%%%%
+salamander hide armour
+
+Un'armatura di cuoio fatta della pelle di salamandra.
+%%%%
+gauntlets of War
+
+Questi spessi guanti d'acciaio erano la ricompensa di Okawaru per un potente
+signore della guerra. Ti meriti di possederli?
+%%%%
+shield of Resistance
+
+Uno scudo di bronzo.
+%%%%
+robe of Folly
+
+Un abito di grigio spento. È incantato per dare all'indossatore
+incommensurabile potere e saggezza.
+%%%%
+Maxwell's patent armour
+
+Una strana armatura.
+%%%%
+mask of the Dragon
+
+Uno strano elmo blu fatto di un duro cuoio flessibile che rende la faccia
+dell'indossatore simile al muso di un drago.
+%%%%
+robe of Night
+
+Una lunga tunica nera fatta di un materiale patinato. Sembra ammantare il suo
+indossatore nelle tenebre.
+
+Secondo la legenda, era il regalo di Ratri la Dea della Notte ad uno dei suoi
+fedeli.
+%%%%
+armour of the Dragon King
+
+Tanto tempo fa, un possente drago d'oro si impose re di tutti i draghi nella
+sua parte di mondo. Ma il suo regno non durò a lungo, fermato da un singolo,
+insignificante umano che poi fece quest'armatura dalla pelle del drago.
+%%%%
+hat of the Alchemist
+
+Un cappello sporco. Porta i segni di sopravvivenza da tante strane esplosioni,
+che suggeriscono che potrebbe essere stato un mezzo per proteggere la testa al
+suo interno dai rischi correlati con gli esperimenti d'alchimia. E con la
+protezione data questo cappello, è certo che essersi fatti male alla testa da
+prima sia un prerequisito anche solo per pensare di fare certi esperimenti
+%%%%
+fencer's gloves
+
+Un paio di guanti fatti di seta bianca.
+%%%%
+cloak of Starlight
+
+Un mantello fosforescente, tessuto di puri raggi di luce.
+%%%%
+ratskin cloak
+
+Un'incantatrice con un telaio magico e troppo tempo libero ha tessuto questo
+mantello dalle pellicce di centinaia di ratti, la maggior parte di queste di
+color arancio. È decisamente imbarazzante da indossare, ma provvede
+un'eccellente protezione da ratti di tutti i tipi.
+%%%%
+shield of the gong
+
+Questo è un grande gong di bronzo che può essere usato a mo' di scudo. Secondo
+certi mistici, colpire questo gong ti darà protezione spirituale.
+
+E questo scudo sarà sicuramente sentito!
+%%%%
+amulet of the Air
+
+Questo amuleto blu cielo deve aver ricevuto le sue tante proprietà protettive
+da un potente mago dell'aria. Sembra che una delle cose che gli mancava era la
+mano ferma.
+%%%%
+ring of Shadows
+
+Un anello nero che rende il suo indossatore un tutt'uno con le ombre.
+%%%%
+amulet of Cekugob
+
+Un strano pezzo di cristallo su uno stano filo, dotato di una strana selezione
+di poteri.
+%%%%
+amulet of the Four Winds
+
+Questo pendente fatto della giada più pura da al suo indossatore un'immensa
+forza mistica per ignorare la magia ostile.
+%%%%
+necklace of Bloodlust
+
+Ti domandi quale bruto possa indossare una collana macchiata di sangue fatta di
+denti animali ed umani insieme a qualcosa che sembra essere un pezzo di colonna
+vertebrale fatta a pezzi.
+%%%%
+ring of Shaolin
+
+Un disadorno anello di giada che da al suo indossatore un'inspiegabile
+conoscenza del proprio corpo, premettendo di fare grande prodezze con la
+propria destrezza.
+%%%%
+ring of Robustness
+
+Un semplice anello d'acciaio.
+%%%%
+ring of the Mage
+
+Uno zaffiro incantato, incastonato in un anello. Aiuta l'indossatore a lanciare
+incantesimi.
+%%%%
+brooch of Shielding
+
+Nei bei vecchi tempi passati, ogni avventuriero aveva uno di questi comodi
+attrezzi. Questo, ed un pony.
+%%%%
+robe of Clouds
+
+Una tunica di un materiale così leggero che potrebbe quasi essere fatta di
+nuvole.
+%%%%
+hat of Pondering
+
+Un melmoso cappello da stregone.
+
+Il cappello preferito dalla lumaca stregone Gastronok, macchiato con melma
+rossastra e incantato per aiutarlo nel suo ragionare arcano. In particolare, è
+stato incantato per proteggere contro gli effetti del sale, ma probabilmente
+non ti importa.
+%%%%
+obsidian axe
+
+Quest'ascia è stata maledetta da uno dei signori del Pandemonio cosicché gli
+ignari avventurieri come te possano liberare i demoni in questo mondo. Bada,
+poiché quest'ascia ha i suoi modi per prendere il controllo di chi la usa...
+%%%%
+lightning scales
+
+Queste scaglie sono state rese un armatura per la parte inferiore del corpo di
+un naga. Scoppiettando debolmente di elettricità, quest'armatura permette al
+suo indossatore di muoversi quasi tanto velocemente quanto un umano.
+%%%%
+Black Knight's horse barding
+
+Questa bardatura una volta era indossata dal cavallo personale del Cavaliere
+Nero durante il suo regno di terrore. Nera come la pece, sembra essere fatta
+non solo di qualche strano tipo di acciaio nero, ma anche di intere piastre di
+diamante nero! Naturalmente, un tale peso di metallo e pietra non può
+certamente giovare alla velocità della cavalcatura. Ciononostante, non offre
+soltanto una protezione contro gli attacchi di base; questa adamantina armatura
+è incantata affinché l'indossatore diventi in parte nonmorto.
+%%%%
+ring of Vitality
+
+Questo celebre anello migliora la salute del suo indossatore.
+%%%%
+autumn katana
+
+Quest'esotica arma è fatta per essere usata da persone illuminate.
+%%%%
+shillelagh "Devastator"
+
+Immagini che questo bastone sia caricato con qualcosa in più del solo piombo.
+%%%%
+dragonskin cloak
+
+Questo iridescente mantello sfavilla con i colori di tutti i draghi. Protegge
+chi lo indossa da tutti gli elementi, anche se non infallibilmente.
+%%%%
+ring of the Octopus King
+
+“Una sirena amava cantare,
+ E svegliò la lussuria nel re Polo.
+ Il suo sinuoso pretendente,
+ Provò tanto a corteggiarla,
+ Ma lei non poteva indossare tutti i suoi anelli.”
+%%%%
+Axe of Woe
+
+Stringendo quest'ascia in mano la tua mente non sembra davvero appartenerti. Il
+tuo corpo inizia a mostrare forza ben oltre le sue capacità, e i tuoi movimenti
+diventano guidati da Makhleb.
+%%%%
+moon troll leather armour
+
+A quanto si dice, quest'armatura è stata creata incantando la pelliccia di una
+specie ormai estinta di troll. Se quest'armatura sia davvero la testimonianza
+di qualche orrore mai visto o una semplice appropriazione di un nome per
+aggiungere del misterioso ad un mistero; ciononostante il suo potere di rapida
+rigenerazione all'occasionale costo del potere magico dell'indossatore, è
+difficile da discutere.
+%%%%
+milk chocolate
+
+Quest'oggetto aiuta al debugging, poiché da una tanti degli effetti più utili
+degli artefatti.
+
+Semmai lo vedessi in una vera partita, è un bug.
+%%%%
+dark chocolate
+
+Quest'oggetto aiuta al debugging, poiché da una tanti degli effetti più utili
+degli artefatti. Si distingue dalla sua controparte di latte poiché alcuni
+effetti vanno in conflitto fra loro.
+
+Semmai lo vedessi in una vera partita, è un bug.
+%%%%

@@ -80,10 +80,6 @@ Bolt of Inaccuracy spell
 준다. 불행히도 이 주문은 강렬한 에너지 때문에 조준하기 매우 어렵고, 덕분에
 무언가를 맞추는 일은 거의 일어나지 않는다. 유감스럽게도...
 %%%%
-Iron Shot spell
-
-이 주문은 시전자의 적에게 거대한 강철 화살을 발사하여 큰 피해를 준다.
-%%%%
 Bolt of Magma spell
 
 이 주문은 반쯤 녹은, 매우 뜨거운 바위 화살을 만들어 적에게 발사한다. 이 주문은
@@ -314,10 +310,6 @@ Fulminant Prism spell
 분광기는 충격에 극히 약하며, 어떠한 종류의 충격이 가해지던 간에, 예상보다
 빠르게 폭발할 수도 있다는 점이다.
 %%%%
-Major Healing spell
-
-이 주문은 시전자의 생명력을 상당히 많이 회복시켜준다.
-%%%%
 Haste spell
 
 이 주문은 시전자 및 다른 대상의 모든 행동을 일시적으로 가속시킨다. 자기 자신을
@@ -327,12 +319,6 @@ Haunt spell
 
 이 주문은 각종 망령들을 대상의 주변에 강령시킨다. 시전자는 그 대가로 질병에
 걸리게 된다.
-%%%%
-Throw Icicle spell
-
-이 주문은 뾰족한 얼음 파편을 적에게 발사한다. 냉기 저항이 없는 적이라면 가장
-좋겠지만, 이 주문의 주된 위력은 고드름의 뾰족한 모서리로 가하는 충격에서 나오기
-때문에 냉기 저항이 있는 적에게도 큰 피해를 줄 수 있다.
 %%%%
 Ice Form spell
 
@@ -369,6 +355,10 @@ Invisibility spell
 쌓이게 되며, 오염이 많이 진행되면 몸이 환하게 빛나 투명 주문을 사용한 의미가
 없어져 버린다.
 %%%%
+Iron Shot spell
+
+이 주문은 시전자의 적에게 거대한 강철 화살을 발사하여 큰 피해를 준다.
+%%%%
 Iskenderun's Battlesphere spell
 
 이 주문은 시전자의 마력과 연결되어 있는 마력 에너지를 가진 작은 구체를
@@ -401,18 +391,10 @@ Lehudib's Crystal Spear spell
 
 날카롭고 치명적인, 수정으로 만들어진 창을 적에게 발사한다.
 %%%%
-Minor Healing spell
-
-이 주문은 시전자의 생명력을 약간 회복시켜준다.
-%%%%
 Lethal Infusion spell
 
 이 주문은 시전자의 무기를 사악한 에너지로 감싼다. 무기에 다른 마법 효과가
 걸려있을 경우 사용할 수 없다.
-%%%%
-Levitation spell
-
-이 주문은 시전자를 공중에 떠다닐 수 있게 한다.
 %%%%
 Lightning Bolt spell
 
@@ -423,6 +405,10 @@ Lightning Bolt spell
 Magic Dart spell
 
 이 주문은 자그마한 마법 화살을 만들어 적에게 발사한다. 절대 빗나가지 않는다.
+%%%%
+Major Healing spell
+
+이 주문은 시전자의 생명력을 상당히 많이 회복시켜준다.
 %%%%
 Malign Gateway spell
 
@@ -449,6 +435,10 @@ Metabolic Englaciation spell
 이 주문은 시전자의 시야에 있는 모든 적들의 신진대사를 늦춰서, 냉기 저항이 없는
 적들을 감속시킨다. 이 주문은 마법 저항을 무시하지만, 강력한 적은 다른 적들처럼
 그렇게 오랫동안 느려진 상태로 있지는 않을 것이다.
+%%%%
+Minor Healing spell
+
+이 주문은 시전자의 생명력을 약간 회복시켜준다.
 %%%%
 Necromutation spell
 
@@ -759,6 +749,12 @@ Throw Flame spell
 Throw Frost spell
 
 이 주문은 얼음으로 이루어진 작은 화살을 발사한다.
+%%%%
+Throw Icicle spell
+
+이 주문은 뾰족한 얼음 파편을 적에게 발사한다. 냉기 저항이 없는 적이라면 가장
+좋겠지만, 이 주문의 주된 위력은 고드름의 뾰족한 모서리로 가하는 충격에서 나오기
+때문에 냉기 저항이 있는 적에게도 큰 피해를 줄 수 있다.
 %%%%
 Thunderbolt spell
 

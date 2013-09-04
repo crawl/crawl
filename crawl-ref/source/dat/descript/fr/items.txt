@@ -162,6 +162,11 @@ sorciers, car il permet aux plus doués de répandre la destruction avec la
 facilité d'un claquement de doigt. Cependant, les médiocres courent à leur
 perte s'ils essaient de le lire.
 %%%%
+book of battle
+
+Un livre de sorts utilisés par les skalds, dont les chansons de batailles leur
+accorde une aide magique.
+%%%%
 book of beasts
 
 Un livre de sortilèges magiques. Prenez garde à ne pas vous faire mordre !
@@ -1019,6 +1024,10 @@ potion of strong poison
 
 Une épouvantable potion empoisonnée.
 %%%%
+potion of beneficial mutation
+
+Une potion qui vous donne une supposé bonne mutation.
+%%%%
 quad damage
 
 Un mystérieux objet qui ressemble à une rune. Une fois évoqué, l'utilisateur
@@ -1192,6 +1201,21 @@ rod of destruction
 Ce sceptre contient un ensemble varié de sorts de destruction et
 d'extermination.
 %%%%
+rod of fiery destruction
+
+Ce sceptre contient des sorts qui lancent un feu destructeur contre vos
+ennemis.
+%%%%
+rod of frigid destruction
+
+Ce sceptre contient des sorts qui détruisent vos ennemis en projetant de la
+glace.
+%%%%
+rod of inaccuracy
+
+Ce sceptre permet à son possesseur de lancer une puissante boule d’énergie,
+mais de façon très imprécise.
+%%%%
 rod of striking
 
 Ce sceptre est conçu pour le combat au corps à corps, libérant ses charges
@@ -1225,6 +1249,13 @@ sabre
 Originellement prévue pour trancher depuis le haut d'une monture, cette épée
 courte à simple tranchant et légèrement courbée reste très efficace dans les
 mains d'un fantassin.
+%%%%
+sack of spiders
+
+Un sac de soie tissée. Quelque chose semble se déplacer à l'intérieur ...
+
+Ouvrir ce sac va libérer un certain nombre d'araignées amicales à votre cause.
+Vous pourriez cependant avoir besoin d'enlever ensuite les toiles d'araignée.
 %%%%
 sacred scourge
 
@@ -1329,9 +1360,8 @@ au dessus du paquet.
 %%%%
 scroll of immolation
 
-Ce parchemin est traitée avec une substance incroyablement inflammable, qui
-explose violemment quand il est lu, brûlant le lecteur et rien d'autre à
-proximité.
+Ce parchemin imprègne les créatures autour du lecteur d'un feu puissant et
+instable.
 %%%%
 scroll of magic mapping
 
@@ -1360,6 +1390,11 @@ scroll of remove curse
 
 Lire ce parchemin permet de libérer les objets que vous utilisez de leurs
 malédictions.
+%%%%
+scroll of summoning
+
+Ce parchemin suscite plusieurs créatures, tissées a partir des ombres et dans
+les formes des êtres à proximité du lecteur.
 %%%%
 scroll of teleportation
 
@@ -1541,6 +1576,15 @@ transformée en armure grâce à la magie.
 stone
 
 Une pierre. Elle peut être jetée à la main ou lancée avec une fronde.
+%%%%
+stone of tremors
+
+Une pierre polie habitée par de bienveillants esprits de la terre. La tenir en
+l'air enverra de puissantes ondes de choc dans le donjon pendant que les
+esprits cherchent une forme solide à l'intérieur de sa roche. Les créatures se
+tenant près des murs seront bombardés avec des chutes de gravats que la surface
+rocheuse laisse s'écrouler, tandis que d'autres peuvent être avalés par des
+fissures dans la terre elle-même.
 %%%%
 storm dragon armour
 

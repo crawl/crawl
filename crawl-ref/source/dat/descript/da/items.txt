@@ -1444,12 +1444,6 @@ egenskaber, og vil lejlighedsvis tillade flere identifikationer.
 
 Hvis den bruges på en stak kort, vil den også afsløre det øverste kort.
 %%%%
-scroll of immolation
-
-Denne skriftrulle er behandlet med en utroligt brandbar substans, som
-eksploderer voldsomt, når rullen åbnes og læses, og brænder både læseren og alt
-andet i nærheden.
-%%%%
 scroll of magic mapping
 
 Denne skriftrulle afslører læserens omgivelser.
@@ -1646,13 +1640,6 @@ stone
 
 En lille klump kompakt, men ellers ikke opsigtsvækkende naturligt forekommende
 mineraler. Den kan kastes med hænderne eller affyres med en slynge.
-%%%%
-stone of tremors
-
-Denne polerede sten er beboet af venligtsindede jordånder. Hvis man presser den
-mod en stenet overflade, sender den kraftige chokbølger gennem den, fordi
-ånderne søger at tage fast form i klippen, mens omgivende væsener prygles af
-faldende murbrokker.
 %%%%
 storm dragon armour
 
