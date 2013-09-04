@@ -1,0 +1,349 @@
+%%%%
+CMD_REST
+
+回復と少々の検索
+%%%%
+CMD_REST verbose
+
+HPかMPが完全に回復するまで最大100ターン休憩する。
+敵対的なモンスターを発見すると休憩は中止される。
+%%%%
+CMD_EXPLORE
+
+現在の階層の自動探索
+%%%%
+CMD_EXPLORE verbose
+
+自動で現在の階層の未踏の領域を探索し、自動収集対象のアイテムを収集する。
+敵対的なモンスターや未発見の施設を発見すると探索は中止される。
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+離れた階層への移動
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+離れた階層に自動で移動する。敵対的なモンスターを発見すると移動は中止される。
+%%%%
+CMD_USE_ABILITY
+
+神から授けられた能力、もしくは生得的な能力を使用する
+%%%%
+CMD_PRAY
+
+神に祈る
+%%%%
+CMD_PRAY verbose
+
+あなたの神が生贄を好む場合、死体かアイテムを捧げる。
+またあなたが祭壇の上に立っている場合、祭壇に対応する神を信仰することができる。
+いくつかの神々は祈ることでも特別な効力をもたらす。
+%%%%
+CMD_SEARCH_STASHES
+
+アイテム、施設の検索
+%%%%
+CMD_SEARCH_STASHES verbose
+
+既に発見したアイテムや施設を検索し、その後それの存在する場所まで自動移動する。
+%%%%
+CMD_REPLAY_MESSAGES
+
+最近のメッセージの再読
+%%%%
+CMD_RESISTS_SCREEN
+
+キャラクターの情報を表示する
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+キャラクターの知っている耐性、能力、装備の能力、その他を表示する。
+%%%%
+CMD_DISPLAY_OVERMAP
+
+ダンジョンの概要の表示
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+あなたが発見した分岐の入口、店やその他の施設の場所を表示する。
+%%%%
+CMD_DISPLAY_RELIGION
+
+信仰の状態の表示
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+あなたの進行する神の好き嫌い、行為、あなたの現在の信仰状況、
+神の能力について表示する。
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+突然変異の表示
+%%%%
+CMD_DISPLAY_SKILLS
+
+スキルの管理
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+キャラクターのステータスの表示
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+あなたに働いているエンチャントとその他の物を表示する。
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+発見済みのアイテムのリスト
+%%%%
+CMD_SAVE_GAME_NOW
+
+ゲームの保存と終了
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+ゲームを保存しゲームを終了します。
+一度ゲームを再開すると保存ファイルは再び削除されます。
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+プレイヤータイルの改造
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+プレイヤードールに表示される装備と種族のタイルを改造します。
+%%%%
+CMD_DISPLAY_COMMANDS
+
+ゲームのヘルプ
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+コマンド、オプション、その他の一覧表を表示する。
+%%%%
+CMD_CHARACTER_DUMP
+
+ダンプの出力
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+自由時間に熟読するためmorgueディレクトリー内のファイル 'playername.txt'
+にあなたのキャラクターに関する膨大な量の情報を出力します。
+これはメインステータス、装備、呪文、スキル、注意事項などが含まれます。
+%%%%
+CMD_AUTOFIGHT
+
+近くの敵モンスターとの自動戦闘
+%%%%
+CMD_AUTOFIGHT verbose
+
+最も近い敵に向かって移動し、装備した武器でそれを攻撃する
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+隣接した敵モンスターとの自動戦闘
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+あなたが装備した武器で隣接した敵モンスターと自動戦闘を行う。
+%%%%
+CMD_WAIT
+
+1ターンの休憩
+%%%%
+CMD_WAIT verbose
+
+1ターンその場で停止し休息する。
+%%%%
+CMD_DISPLAY_INVENTORY
+
+インベントリの表示
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+あなたのインベントリの内容を表示する。
+%%%%
+CMD_CAST_SPELL
+
+呪文の詠唱
+%%%%
+CMD_CAST_SPELL verbose
+
+呪文を唱える。
+%%%%
+CMD_BUTCHER
+
+死体を捌く
+%%%%
+CMD_BUTCHER verbose
+
+死体を厚切れに捌く。
+%%%%
+CMD_MEMORISE_SPELL
+
+呪文の記憶
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+運んでいる本、もしくは足元にある本を読み、呪文を記憶に引き受ける。
+%%%%
+CMD_DROP
+
+アイテムを落とす
+%%%%
+CMD_DROP verbose
+
+あなたの現在持っている一つ以上のアイテムを落とす。
+%%%%
+CMD_DISPLAY_MAP
+
+マップの表示
+%%%%
+CMD_DISPLAY_MAP verbose
+
+以前探索したマップを案内する。
+%%%%
+CMD_MAP_GOTO_TARGET
+
+カーソル位置への移動
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+現在のカーソル位置まで移動を開始する。
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+中間地点の登録
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+現在地点を中間地点に設定する。
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+探索禁域の設定
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+探索禁域を設定、範囲の変更、領域の削除を行う。
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+探索禁域の削除
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+この階層の全ての探索禁域を削除する。
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+下層に下る
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+次の下層を調べる。
+%%%%
+CMD_MAP_PREV_LEVEL
+
+上層に上がる
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+次の上層を調べる。
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+階層の移動
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+分岐や階層を通って別の階層に行く。
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+登り階段の検索
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+登り階段に移動する。
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+下り階段の検索
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+下り階段に移動する。
+%%%%
+CMD_MAP_FIND_YOU
+
+自分自身の検索
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+マップカーソルをあなたの現在の位置に戻す。
+%%%%
+CMD_MAP_FIND_PORTAL
+
+店、ポータルの検索
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+現在の階層の店かポータルに移動する。
+%%%%
+CMD_MAP_FIND_TRAP
+
+罠の検索
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+現在の階層の罠に移動する。
+%%%%
+CMD_MAP_FIND_ALTAR
+
+祭壇の検索
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+現在の階層の祭壇を移動する。
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+探索禁域の検索
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+現在の階層の全ての探索禁域を移動する。
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+中間地点の検索
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+現在の階層の全ての中間地点を移動する。
+%%%%
+CMD_MAP_FIND_STASH
+
+隠し場所の検索
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+現在の階層の全ての隠し場所を移動する。
+%%%%
+CMD_ZOOM_IN
+
+拡大
+%%%%
+CMD_ZOOM_IN verbose
+
+ダンジョン領域を拡大する。
+%%%%
+CMD_ZOOM_OUT
+
+縮小
+%%%%
+CMD_ZOOM_OUT verbose
+
+ダンジョン領域を縮小する。
+%%%%

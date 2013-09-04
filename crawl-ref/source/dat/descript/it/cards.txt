@@ -5,6 +5,21 @@ Questa carta ti teletrasporta in un post a caso, permettendo il controllo della
 traslocazione ad un livello di potere alto. È tipicamente trovata nel mazzo
 della fuga e della guerra, o nel mazzo della punizione di Nemelex Xobeh.
 %%%%
+the Warp card
+
+Questa carta ti sposta di poco, casualmente o in modo controllato, a livelli di
+potere più alti. È tipicamente trovata nel mazzo della fuga e della guerra.
+%%%%
+Swap card
+
+Questa carta scambia la tua posizione con quella di una creatura vicina. È
+tipicamente trovata nel mazzo della fuga e della guerra.
+%%%%
+Velocity card
+
+Questa carta ti fa muovere o addirittura fa agire più velocemente. È
+tipicamente trovata nel mazzo della fuga e della guerra.
+%%%%
 the Tomb card
 
 Questa carta seppellisce il giocatore in un muro protettivo di solida roccia. A
@@ -12,11 +27,26 @@ livelli di potere più basso, la tomba potrebbe essere imperfetta. Usare con
 cautela! È tipicamente trovata nel mazzo della difesa, della fuga e della
 guerra, o nel mazzo della punizione di Nemelex Xobeh.
 %%%%
+the Banshee card
+
+Il canto della Banshee instilla terrore nelle creature nei paraggi . È
+tipicamente trovata nel mazzo della difesa, della fuga e della guerra.
+%%%%
 Damnation card
 
 Questa carta esilia nell'abisso una o più creature nelle tue vicinanze,
 probabilmene includendo anche te. È tipicamente trovata nei mazzi della fuga,
 della difesa e della guerra, o nel mazzo della punizione di Nemelx Xobeh
+%%%%
+Solitude card
+
+Questa carta teletrasporta a caso una creatura prossima a te. È tipicamente
+trovata nel mazzo della difesa, della guerra e della fuga.
+%%%%
+Warpwright card
+
+Questa carta può creare trappole del teletrasporto. È tipicamente trovata nel
+mazzo della difesa, della fuga e della guerra.
 %%%%
 Flight card
 
@@ -24,10 +54,20 @@ Questa carta ti aiuta a fuggire trasformandoti, facendoti andare più veloce o
 creando altri mezzi di fuga. È tipicamente trovata nei mazzi della difesa,
 della fuga e della guerra
 %%%%
+the Elixir card
+
+Questa carta ti cura e nel farlo potrebbe anche assorbire o rigenerare la tua
+energia magica. È tipicamente trovata nel mazzo dei cambiamenti.
+%%%%
 Battlelust card
 
 Questa carta ti rende più forte nel combattimento fisico. È tipicamente trovata
 nei mazzi dei cambiamenti, della difesa e della guerra.
+%%%%
+Metamorphosis card
+
+Questa carta ti trasforma per un periodo di tempo limitato. È tipicamente
+trovata nel mazzo dei cambiamenti, della difesa e della guerra.
 %%%%
 the Helm card
 
@@ -61,9 +101,26 @@ Focus card
 Questa carta potenzia il tuo attributo più forte a scapito di quello più
 debole. È tipicamente trovata nei mazzi dei cambiamenti e delle meraviglie.
 %%%%
+Shuffle card
+
+Questa carta scambia i tuoi tre attributi. Usare con attenzione! È tipicamente
+trovata nel mazzo dei cambiamenti e delle meraviglie.
+%%%%
 Experience card
 
 Questa carta ti rende più esperto. È tipicamente trovata nei mazzi dei
+cambiamenti e delle meraviglie.
+%%%%
+Wild Magic card
+
+Questa carta fa manifestare su di te della magia selvaggia, identica agli
+effetti di lanciare male un incantesimo. È tipicamente trovata nel mazzo dei
+cambiamenti e delle meraviglie.
+%%%%
+the Helix card
+
+Questa carta cambie le tue mutazioni. Livelli di potere più elevati rendono più
+probabili i cambiamenti positivi. È tipicamente trovata nel mazzo dei
 cambiamenti e delle meraviglie.
 %%%%
 the Sage card
@@ -71,6 +128,34 @@ the Sage card
 Questa carta conduce una parte dell'esperienza da te guadagnata in un'abilità
 specifica e la farà allenare più velocemente del normale. È tipicamente trovata
 nel mazzo dei cambiamenti e delle meraviglie.
+%%%%
+the Alchemist card
+
+Questa carta trasmuta una parte del tuo oro in salute e energia magica. È
+tipicamente trovata nel mazzo dei cambiamenti e delle meraviglie.
+%%%%
+Water card
+
+Questa carta fa diventare acqua il pavimento attorno a te. È tipicamente
+trovata nel mazzo dei cambiamenti e dei dungeon.
+%%%%
+Vitrification card
+
+Questa carta fa diventare le pareti trasparenti. È tipicamente trovata nel
+mazzo dei dungeon e dei cambiamenti.
+%%%%
+Dowsing card
+
+Questa carta ti permette di trovare le trappole o ti permette rivelare ciò che
+vi è nei tuoi paraggi o ti rende temporaneamente telepatico, o una combinazione
+di queste tre cose. È tipicamente trovata nel mazzo dei cambiamenti e dei
+dungeon.
+%%%%
+the Trowel card
+
+Questa carta può creare un altare, statua, golem o addirittura un portale, ma
+funziona bene solo nel Dungeon e nelle sue ramificazioni. È tipicamente trovata
+nel mazzo dei cambiamenti e dei dungeon.
 %%%%
 the Minefield card
 
@@ -148,6 +233,12 @@ Pain card
 Questa carta rilascia un incantesimo negromantico offensivo che può anche
 danneggiarti. È tipicamente trovata nei mazzi della distruzione e della guerra.
 %%%%
+Torment card
+
+Questa carta richiama dei poteri di oscurità per causare ferite agonizzanti ai
+qualunque creatura vivente nei paraggi. È tipicamente trovata nel mazzo della e
+distruzione e della guerra.
+%%%%
 the Orb card
 
 Questa carta rilascia una sfera di pura magia distruttiva, e alle volte anche
@@ -186,12 +277,22 @@ Xobeh.
 %%%%
 the Bargain card
 
-Questa carta conferisce uno sconto temporario nei negozi. Normalmente non fa
-parte di alcun mazzo.
+Questa carta garantisce temporaneamente uno sconto nei negozi. Normalmente non
+fa parte di alcun mazzo.
+%%%%
+the Genie card
+
+Il Genio potrebbe concederti un'acquisizione o punirti per averci provat .
+Normalmente non fa parte di alcun mazzo.
 %%%%
 the Feast card
 
-Questa carta ti nutre. Non è parte di un mazzo.
+Questa carta ti nutre. Normalmente non fa parte di alcun mazzo.
+%%%%
+the Stairs card
+
+Questa carta fa avvicinare o allontanare le scale. (se vedete questo messaggio
+si tratta di un bug)
 %%%%
 a buggy card
 

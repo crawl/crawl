@@ -1170,12 +1170,6 @@ cualquier objeto, y ocasionalmente permitirá múltiples identificaciones.
 
 Si es usado en un mazo de cartas, este pergamino revelará la carta superior.
 %%%%
-scroll of immolation
-
-Este pergamino fue tratado con una sustancia increíblemente inflamable, que
-explota violentamente cuando éste es abierto y leído, quemando al lector y a
-todo lo cercano.
-%%%%
 scroll of magic mapping
 
 Este pergamino revela los alrededores del lector.

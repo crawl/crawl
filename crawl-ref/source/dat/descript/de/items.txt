@@ -2080,12 +2080,6 @@ erlauben.
 Wenn verwendet, auf einem Deck von Karten wird diese Schriftrolle auch die
 Spitzenkarte weggeben.
 %%%%
-scroll of immolation
-
-Diese Schriftrolle wird mit einer unglaublich feuergefährlichen Substanz
-behandelt, die gewaltsam explodiert, wenn die Schriftrolle geöffnet und gelesen
-wird, den Leser und irgend etwas anderes in der Nähe versengend.
-%%%%
 scroll of magic mapping
 
 Diese Schriftrolle offenbart die Umgebungen von demjenigen, der es liest.

@@ -6,8 +6,8 @@ d'origine ou, au moins de raccourcir leur séjour dans ce monde.
 %%%%
 Agony spell
 
-Ce sort réduit de moitié la vie de la créature ciblée, malgré que cela ne
-puisse jamais causer sa mort.
+Ce sort réduit de moitié la vie de la créature ciblée, sans que cela ne puisse
+jamais causer sa mort.
 %%%%
 Airstrike spell
 
@@ -22,15 +22,15 @@ frappant de confusion toutes les créatures humanoïdes intelligentes à portée
 vue du sorcier (mais les créatures résistantes au poison ne subiront aucun
 effet). Les effets sont fortement concentrés sur le sorcier lui-même, de sorte
 que même une résistance au poison ne pourra les protéger. Ce sortilège est
-fréquemment employé pour briser la glace lors des soirée entre magiciens.
+fréquemment employé pour briser la glace lors des soirées entre magiciens.
 %%%%
 Animate Dead spell
 
 Ce sort lève les morts afin qu'ils servent le nécromancien. Tous les corps à
 portée de vue du sorcier seront affectés. Au moyen de ce sortilège, de
 puissants magiciens peuvent lever une véritable armée de stupides
-morts-vivants. Notez que les zombis sont incapables de quitter le niveau où ils
-ont été créés.
+morts-vivants. Notez que les zombies sont incapables de quitter le niveau où
+ils ont été créés.
 %%%%
 Animate Skeleton spell
 
@@ -48,6 +48,13 @@ moyen.
 Les objets extrêmement puissants, comme l'Orbe de Zot, résisteront activement à
 ce sortilège.
 %%%%
+Awaken Forest spell
+
+Ce sort permet au lanceur de donner une motilité très limité aux arbres
+environnants, leur permettant de balancer leurs branches et décaler leurs
+racines. Ces arbres enchantés se déchaîneront contre tout ennemi assez stupide
+pour se tenir assez près d'eux.
+%%%%
 Beastly Appendage spell
 
 Ce sort vous permet de remplacer un ou une paire d'appendices avec celui ou
@@ -58,6 +65,39 @@ Blade Hands spell
 
 Ce sort fait pousser de longues et tranchantes lames, en forme de faux, sur les
 mains du sorcier. Cela rend l'incantation de sortilèges plus difficile.
+%%%%
+Blink Allies Encircling spell
+
+Ce sort prend une poignée d'alliés dans la vue du lanceur de sort et les
+translocalise à proximité d'un ennemi.
+%%%%
+Blink Away spell
+
+Ce sort translocalise le lanceur à une courte distance plus loin d'un ennemi
+désigné, toujours plus loin que là où il a été lancé mais encore à portée de
+vue. Aucun contrôle plus fin est fourni.
+%%%%
+Blink Close spell
+
+Ce sort translocalise le lanceur sur une courte distance en direction d'un
+ennemi choisi, qui doit déjà être en vue.
+%%%%
+Blink Other Close spell
+
+Ce sort translocalise un ennemi en vue sur une courte distance, en direction du
+lanceur. Il ne peut pas être résisté par les moyens habituels de résistance à
+la magie.
+%%%%
+Blink Other spell
+
+Ce sort translocalise au hasard un ennemi en vue sur une courte distance. Il ne
+peut pas être résisté par les moyens habituels de résistance à la magie.
+%%%%
+Blink Range spell
+
+Ce sort translocalise le lanceur sur une courte distance, en essayant de
+s'éloigner d'un ennemi. Contrairement à "Blink Away", il permet de sortir de sa
+vue.
 %%%%
 Blink spell
 
@@ -81,10 +121,6 @@ Bolt of Inaccuracy spell
 Ce sort inflige d'énormes dégâts sur toutes créatures frappées par le missile
 d'énergie incandescente conjuré. Malheureusement, Il est très difficile de
 viser et frappe très rarement quelque chose. Quel dommage.
-%%%%
-Iron Shot spell
-
-Ce sort expédie un énorme et lourd missile de métal sur l'ennemi du sorcier.
 %%%%
 Bolt of Magma spell
 
@@ -118,6 +154,17 @@ Chain Lightning spell
 Ce sort libère une massive décharge électrique qui passe d'une cible à l'autre
 jusqu'à ce qu'elle touche le sol. Elle peut se mettre à la terre de façon
 inoffensive s'il n'y a pas de cibles suffisamment  proche au sorcier.
+%%%%
+Chaos Breath spell
+
+Cette créature peut cracher un large souffle de fumées remplis de l'essence
+même du chaos. Se faire prendre dans cette fumée provoque des effets aussi
+prévisible que Xom lui-même.
+%%%%
+Cold Breath spell
+
+Cette créature peut cracher un souffle concentré d'air glacial. Il peut
+repousser les cibles aériennes.
 %%%%
 Condensation Shield spell
 
@@ -246,6 +293,11 @@ Ce sort entraîne les créatures proches dans une folle frénésie, attaquant sa
 pitié tout et n'importe quoi se trouvant à proximité, avec une grande force et
 vitesse d'attaque.
 %%%%
+Disintegrate spell
+
+Ce sort déchire violemment quelque chose dans un petit volume d'espace. Il peut
+être utilisé pour causer de grave dégats ou supprimer un morceau de roche.
+%%%%
 Disjunction spell
 
 Ce sort déstabilise l'espace dans une sphère autour de vous pendant un certain
@@ -263,11 +315,21 @@ Dispersal spell
 
 Ce sort tente de téléporter au loin, tous monstres à proximité du sorcier.
 %%%%
+Draconian Breath spell
+
+[Ce sort aurait du etre remplacé par une couleur spécifique. Si vous l'avez,
+c'est un bug.]
+%%%%
 Dragon Form spell
 
 Ce sort transforme temporairement le sorcier en un grand dragon cracheur de
 feu. Les sorciers draconiens conserveront leur couleur et leur souffle initial
 une fois transformés.
+%%%%
+Druid's Call spell
+
+Ce sort permet a un druide de rappeler une ou deux créature des bois à partir
+d'un emplacement situé sur le même niveau du donjon.
 %%%%
 Enslavement spell
 
@@ -337,10 +399,6 @@ le relâche après un court moment dans une violente explosion arcanique. Soyez
 conscient que le prisme est extrêmement fragile et que tout dommage lui étant
 causé peut entraîner prématurément sa détonation!
 %%%%
-Major Healing spell
-
-Ce sort soigne un grand nombre de dégâts subit par le corps du sorcier.
-%%%%
 Haste spell
 
 Ce sort accélère la vitesse d'exécution des actions d'une créature. Lancer ce
@@ -351,13 +409,12 @@ Haunt spell
 Ce sort convoque des esprits et fantômes pour hanter la cible du sorcier. Faire
 ainsi appel aux morts-vivants extrait une portion de la vitalité du sorcier.
 %%%%
-Throw Icicle spell
+Holy Breath spell
 
-Ce sort projette un fragment de glace. Cela est particulièrement efficace
-contre la plupart des créatures qui ne sont pas immunisée aux effets du froid.
-Mais comme la majorité de sa puissance destructrice provient d'un fort impact
-et des bords tranchants, même les créatures résistantes au froid seront
-notablement affectées.
+Cette créature peut cracher un large souffle de nuages de flammes bénie,
+brillante de la gloire des dieux bienveillants. Ces flammes sont
+particulièrement dangereuses pour ceux qui remplissent la définition du mal
+selon l’Etincelant.
 %%%%
 Ice Form spell
 
@@ -392,6 +449,13 @@ réserves d'énergie magique, et ce, afin d'infliger des dégâts supplémentair
 chaque fois qu'un ennemi est touché. Il n'a aucun effet si la magie du lanceur
 est épuisée.
 %%%%
+Ink Cloud spell
+
+Les krakens sont connus pour injecter un liquide opaque dans l'eau affin
+d'assurer leur fuite si un combat tourne mal. Contrairement à ses plus petit
+cousins, son encre est assez puissant pour obscurcir la vision au-dessus de
+l'eau, si le kraken l'agite suffisamment.
+%%%%
 Inner Flame spell
 
 Ce sort remplit un ennemi avec un feu intense, pour être relâché en une
@@ -403,6 +467,10 @@ Invisibility spell
 Ce sortilège cache une créature à la vue des autres. Sous invisibilité, vous
 gagnerez en contamination magique, ce qui pourrait créer suffisamment de
 luminescence pour vous rendre à nouveau visible.
+%%%%
+Iron Shot spell
+
+Ce sort expédie un énorme et lourd missile de métal sur l'ennemi du sorcier.
 %%%%
 Iskenderun's Battlesphere spell
 
@@ -441,18 +509,10 @@ Lehudib's Crystal Spear spell
 
 Ce sort expédie un missile de cristal mortellement tranchant.
 %%%%
-Minor Healing spell
-
-Ce sort soigne une petite quantité de dégâts au corps du sorcier.
-%%%%
 Lethal Infusion spell
 
 Ce sort insuffle de l'énergie négative dans une arme portée par le sorcier.
 Cela n'affectera pas les armes sujettes à des enchantements spéciaux.
-%%%%
-Levitation spell
-
-Ce sort permet au sorcier de flotter dans les airs.
 %%%%
 Lightning Bolt spell
 
@@ -464,12 +524,22 @@ Magic Dart spell
 
 Ce sort expédie un petit missile d'énergie magique. Il ne rate jamais sa cible.
 %%%%
+Major Healing spell
+
+Ce sort soigne un grand nombre de dégâts subit par le corps du sorcier.
+%%%%
 Malign Gateway spell
 
 Ce sort déchire la trame de la réalité, créant un portail vers l'inconnu,
 auto-alimenté mais heureusement temporaire. Quels ignobles habitants de cet
 ailleurs choisira de lancer leurs appendices tentaculaires au travers, personne
 ne sait mais, très certainement personne ne veut être à côté pour le savoir.
+%%%%
+Mara Summon spell
+
+Mara, le seigneur des rakshasas, aime tisser des illusions de lui-même.
+Contrairement aux rakshasas inferieur, ses doubles sont physiquement aussi fort
+que Mara lui-même, et à peine plus faible en magie.
 %%%%
 Mass Abjuration spell
 
@@ -481,10 +551,6 @@ Mass Confusion spell
 
 Ce sort provoque la confusion à tous ceux qui contemplent le sorcier.
 %%%%
-Mephitic Cloud spell
-
-Ce sort conjure un large mais très éphémère nuage de viles vapeurs.
-%%%%
 Melee spell
 
 Le sceptre de frappe est conçu pour le combat au corps à corps, libérant des
@@ -492,12 +558,30 @@ charges infligeant des dégâts supplémentaires dépendant de la compétence
 d'évocations quand elle frappe un ennemi. Etre competent en Masses et fléaux
 aidera à améliorer l'efficacité de base de l'arme.
 %%%%
+Mephitic Cloud spell
+
+Ce sort conjure un large mais très éphémère nuage de viles vapeurs.
+%%%%
+Mesmerise spell
+
+Ce sort rend sa victime incapable de s'éloigner du lanceur.
+%%%%
 Metabolic Englaciation spell
 
 Ce sort tente de réduire le rythme métabolique de toute créatures à proximité
 du sorcier, ralentissant toutes les créatures non immunisées au froid. Il
 contourne la résistance à la magie, cependant les monstres les plus coriaces ne
 seront pas ralentis aussi longtemps que les autres.
+%%%%
+Miasma Breath spell
+
+Uh oh, parlons d'un méchant cas d'halitose. Ce n'est pas un rot d'ogre
+ordinaire, ces vapeurs nocives peuvent faire pourrir et détacher votre chair de
+vos os.
+%%%%
+Minor Healing spell
+
+Ce sort soigne une petite quantité de dégâts au corps du sorcier.
 %%%%
 Necromutation spell
 
@@ -513,6 +597,13 @@ tel que la vulnérabilité aux armes saintes et l'incapacité à boire des potio
 Contrairement à ce que l'on pourrait attendre, ce sort fonctionne sur les
 octopodes, même si on se demande quel tissu nécromantique peut bien servir
 comme analogie aux os. C'est un mystère.
+%%%%
+Noxious Cloud spell
+
+Ce souffle comprend la même substance que celle utilisée dans le bien connu
+sort de magicien "nuage méphitique". Lorsqu'il est inhalé par une personne ou
+créature non résistante au poison, il ne fait que des dégâts mineurs mais peut
+causer la confusion et un bon mal de tête.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -580,6 +671,13 @@ Ce sort tente de pétrifier un monstre. En cas de succès, le monstre est ralent
 pendant un certain temps jusqu'à ce qu'il soit temporairement transformé en
 pierre. Dans cet état, un monstre souffrira de moins de dégâts lorsque frappé.
 %%%%
+Petrifying Cloud spell
+
+Un  catoblepae peut expirer de la poussière calcifiante, qui transforme toute
+personne touchée en statue pour un bref moment. Accéder à de l'air frais peut
+vous permettre de récupérer - sauf pas si votre statue est cassé en morceaux
+par les griffes des Catoblépas en premier.
+%%%%
 Phase Shift spell
 
 Ce sort permet au sorcier de se déphaser temporairement du plan matériel, lui
@@ -605,10 +703,35 @@ Polymorph spell
 Ce sort altère aléatoirement la forme d'une autre créature. Cela est
 spécialement efficace contre les créatures changeuses de forme.
 %%%%
+Porkalator spell
+
+Ce sort transforme une victime non consentante en un certain quadrupède rose,
+connu pour ses mauvaises manières à table, ses couinement, et déterrer des
+truffes. Pas même les anges et les démons ne sont à l'abri - conduisant
+respectivement au plus savoureux et au pire bacon du monde.
+
+Si le sort est jeté à la hâte, la transformation est temporaire; seulement un
+bon jour de rituel peut donner un effet permanent. Dans les deux cas, la
+disparition du lanceur de sort renverra les victimes dans leurs anciennes
+formes.
+%%%%
 Portal Projectile spell
 
 Ce sort téléporte un projectile lancé ou tiré directement sur sa cible,
 accroissant son efficacité (mais pas ses dégâts).
+%%%%
+Quicksilver Bolt spell
+
+Un certain type de Dragon peut cracher un souffle d'énergie dissipant, parfois
+appelé «vif-argent» à cause de son apparence. Outre les dégâts, il peut
+supprimer certains enchantements, à la fois les bénéfiques et les néfastes.
+%%%%
+Rakshasa Summon spell
+
+Les Rakshasas sont connus pour souvent tisser des illusions d'eux-mêmes afin de
+tromper leurs ennemis. Ces illusions sont partiellement réelle, et peuvent même
+vous frapper ou lancer des sorts, mais il ne faut qu'un seul coup de les
+dissiper.
 %%%%
 Recall spell
 
@@ -698,6 +821,12 @@ l'original à partir de glace. Cette magie est instable et la réplique pourra s
 dissoudre en un nuage de glace si elle n'est pas détruite ou fondue avant.
 Notez que ce simulacre est incapable de quitter le niveau ou il a été créé.
 %%%%
+Sleep spell
+
+Ce sort tente d'endormir sa cible. Prendre des dégâts va généralement réveiller
+la personne concernée, et les sons bruyant peuvent potentiellement faire de
+même.
+%%%%
 Slow spell
 
 Ce sort ralentit les actions d'une créature.
@@ -784,12 +913,21 @@ normale et donc, n'aidera aucunement les morts-vivants ou les créatures au
 corps transformé. Toutefois, il existe une exception : les effets de ce sort
 seront accrus pour les sorciers sous Forme de Statue.
 %%%%
+Strip Resistance spell
+
+Ce sort tente de réduire considérablement la résistance magique de la cible, ce
+qui le rend plus vulnérable aux malédictions et sortilèges similaires.
+%%%%
 Sublimation of Blood spell
 
 Ce sort convertit la chair, le sang et les autres fluides corporels en énergies
 magiques. Les sorciers peuvent centrer ce sortilège sur leur propre corps (ce
 qui peut être dangereux mais jamais mortel) ou peuvent tenir en main un morceau
 de chair fraichement découpé pour en extirper du pouvoir magique.
+%%%%
+Summon Air Elementals spell
+
+Ce sort invoque un ou plusieurs élémentaires d'air.
 %%%%
 Summon Butterflies spell
 
@@ -805,6 +943,15 @@ Summon Dragon spell
 
 Ce sort convoque et asservi un puissant dragon aux ordres du sorcier.
 %%%%
+Summon Drakes spell
+
+Ce sort invoque un tas de drakes, et peut-être un vrai dragon, sauf les plus
+puissants.
+%%%%
+Summon Earth Elementals spell
+
+Ce sort invoque un ou plusieurs élémentaires de terre.
+%%%%
 Summon Elemental spell
 
 Ce sort convoque un esprit du plan élémentaire pour aider le sorcier. Une large
@@ -813,11 +960,25 @@ pour la terre et l'air mais, peut l'être pour l'eau ou le feu. L'élémentaire
 sera généralement amical au sorcier – spécialement si le sorcier est compétent
 dans la magie élémentaire concernée.
 %%%%
+Summon Eyeballs spell
+
+Ce sort invoque un tas de globes oculaires flottants. Ceux-ci peuvent
+paralyser, drainer, désorienter, muter ou vous endommager.
+%%%%
+Summon Fire Elementals spell
+
+Ce sort invoque un ou plusieurs élémentaires de feu.
+%%%%
 Summon Greater Demon spell
 
 Ce sort convoque un des démons les plus puissants du Pandémonium pour servir le
 sorcier. Méfiez-vous, le charme liant le démon à votre service pourrait ne pas
 durer aussi longtemps que celui qui retient le démon sur ce plan !
+%%%%
+Summon Hell Beast spell
+
+En utilisant sa corne, Geryon peut convoquer contre vous une meurtrière bête de
+l'enfer.
 %%%%
 Summon Horrible Things spell
 
@@ -834,6 +995,24 @@ Summon Ice Beast spell
 
 Ce sort convoque une bête de glace pour servir le sorcier.
 %%%%
+Summon Illusion spell
+
+Ce sort invoque l'image miroir temporaire d'un ennemi. Cette copie a les même
+capacités physique que l'original, et peut lancer les mêmes sorts.
+%%%%
+Summon Iron Elementals spell
+
+Ce sort invoque un ou plusieurs élémentaires de fer.
+%%%%
+Summon Minor Demon spell
+
+Ce sort convoque entre un et trois démons mineurs (rang 5).
+%%%%
+Summon Mushrooms spell
+
+Ce sort convoque un tas de poisseux champignons errants et de calices de la
+mort à côté de l'ennemi choisi.
+%%%%
 Summon Scorpions spell
 
 Ce sort convoque un ou plusieurs scorpions (dont certains pourraient ne pas
@@ -843,13 +1022,53 @@ Summon Small Mammal spell
 
 Ce sort convoque une ou deux petites créatures pour aider le sorcier.
 %%%%
+Summon Spectral Orcs spell
+
+Ce sort convoque entre un et trois orcs spectraux. Comme ces apparitions ne
+peuvent pas utiliser la magie eux-mêmes, ce sort choisi des spécialistes de la
+mêlée, qui rivalisent parfois avec les plus puissant orcs vivants.
+%%%%
 Summon Swarm spell
 
 Ce sort convoque un essaim pestilentiel.
 %%%%
+Summon Twister spell
+
+Un papillon du chaos peut engendrer une tornade à l'autre bout du monde d'un
+simple battement de ses ailes.
+%%%%
+Summon Ufetubus spell
+
+Ce sort convoque plein d'ufetubi, petits démons ennuyeux se pressant autour de
+vous.
+%%%%
 Summon Ugly Thing spell
 
 Ce sort convoque une créature mutante d'un autre monde pour aider le sorcier.
+%%%%
+Summon Undead spell
+
+Ce sort convoque plusieurs monstres morts-vivants. Il ne peut pas faire
+apparaitre de liches, revenants ou momies de haut rang, mais il est toujours
+l'un des sorts de convocation les plus dangereux.
+%%%%
+Summon Vermin spell
+
+Ce sort invoque un tas de rats, d'araignées ou de vers.
+%%%%
+Summon Water Elementals spell
+
+Ce sort invoque un ou plusieurs élémentaires d'eau.
+%%%%
+Sunray spell
+
+Ce sort suscite un faisceau de lumière intense, endommageant sa cible. De toute
+évidence, l'invisibilité laisse passer la lumière, laissant ces créatures
+saines et sauves. Les vampires et les ombres sont connus pour y être
+particulièrement vulnérables.
+
+N'étant pas un missile, ce sort n'est pas affecté par les effets de Renvoie et
+de Déflection - vous voulez être en mesure de voir, n'est-ce pas?
 %%%%
 Sure Blade spell
 
@@ -862,9 +1081,19 @@ Ce sort imprègne le sorcier d'une aptitude à se déplacer plus vite. Mais cela
 un prix : l'incantateur sera moins discret et moins vigilant aux pièges
 lorsqu'il est sous les effets de ce sortilège.
 %%%%
+Symbol of Torment spell
+
+Ce sort appelle les puissances de l'enfer pour causer de torturants dommages à
+toutes chose vivantes dans le voisinage du lanceur. Malgré sa sinistre
+puissance, ce sort n'est jamais mortelle.
+%%%%
 Teleport Other spell
 
 Ce sort téléporte aléatoirement une autre créature.
+%%%%
+Teleport Self spell
+
+Ce sort téléporte le lanceur à un endroit aléatoire.
 %%%%
 Throw Flame spell
 
@@ -874,9 +1103,24 @@ Throw Frost spell
 
 Ce sort projette un petit missile de froid.
 %%%%
+Throw Icicle spell
+
+Ce sort projette un fragment de glace. Cela est particulièrement efficace
+contre la plupart des créatures qui ne sont pas immunisée aux effets du froid.
+Mais comme la majorité de sa puissance destructrice provient d'un fort impact
+et des bords tranchants, même les créatures résistantes au froid seront
+notablement affectées.
+%%%%
 Thunderbolt spell
 
 Ce sort crée un arc électrique.
+%%%%
+Tomb of Doroklohe spell
+
+Ce sort entoure le lanceur de quatre murs de roche. Ces murs repousseront les
+objets sur son passage, mais leur croissance est entravée par la présence de
+n'importe quelle créature. Ils ne sont pas permanents, et expireront après une
+période de temps.
 %%%%
 Tornado spell
 
