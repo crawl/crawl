@@ -3711,8 +3711,8 @@ void god_pitch(god_type which_god)
             mpr("Unknown good god.", MSGCH_ERROR);
         }
         // Give a piety bonus when switching between good gods.
-        if (old_piety > 30)
-            gain_piety(old_piety - 30, 2, true, false);
+        if (old_piety > piety_breakpoint(0))
+            gain_piety(old_piety - piety_breakpoint(0), 2, true, false);
     }
 
     // Warn if a good god is starting wrath now.

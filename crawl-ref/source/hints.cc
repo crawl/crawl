@@ -2538,7 +2538,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                             " didn't mind your converting to " << new_god_name
                          << ". ";
 
-                    if (old_piety > 30)
+                    if (old_piety > piety_breakpoint(0))
                         text << "You even kept some of your piety! ";
 
                     text << "Note that this kind of alliance only exists "
