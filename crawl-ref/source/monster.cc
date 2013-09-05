@@ -3757,17 +3757,19 @@ int monster::res_asphyx() const
 
 int monster::res_water_drowning() const
 {
-    if (is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX))
-        return 1;
+    int rw = 0;
 
-    switch (mons_habitat(this))
-    {
-    case HT_WATER:
-    case HT_AMPHIBIOUS:
-        return 1;
-    default:
-        return 0;
-    }
+    if (is_unbreathing() || get_mons_resist(this, MR_RES_ASPHYX))
+        rw++;
+
+    habitat_type hab = mons_habitat(this);
+    if (hab == HT_WATER || hab == HT_AMPHIBIOUS)
+        rw++;
+
+    if (get_mons_resist(this, MR_VUL_WATER))
+        rw--;
+
+    return sgn(rw);
 }
 
 int monster::res_poison(bool temp) const

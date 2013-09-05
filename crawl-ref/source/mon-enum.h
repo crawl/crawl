@@ -211,6 +211,7 @@ enum mon_resist_flags
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
+    MR_VUL_WATER         = 1 << 29,
     MR_VUL_ELEC          = mrd(MR_RES_ELEC, -1),
     MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
     MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),
