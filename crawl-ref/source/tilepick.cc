@@ -4996,34 +4996,6 @@ tileidx_t tileidx_spell(spell_type spell)
         return TILEG_TODO;
 
     // --------------------------------------------
-    // Spells that don't need icons:
-    case SPELL_DISINTEGRATE:  // wand and card
-
-    // Monster spells (mostly?)
-    case SPELL_HELLFIRE_BURST:
-    case SPELL_BRAIN_FEED:
-    case SPELL_FAKE_RAKSHASA_SUMMON:
-    case SPELL_STEAM_BALL:
-    case SPELL_SUMMON_UFETUBUS:
-    case SPELL_SUMMON_HELL_BEAST:
-    case SPELL_ENERGY_BOLT:
-    case SPELL_POISON_SPLASH:
-    case SPELL_SUMMON_UNDEAD:
-    case SPELL_CANTRIP:
-    case SPELL_QUICKSILVER_BOLT:
-    case SPELL_METAL_SPLINTERS:
-    case SPELL_MIASMA_BREATH:
-    case SPELL_SUMMON_DRAKES:
-    case SPELL_BLINK_OTHER:
-    case SPELL_SUMMON_MUSHROOMS:
-    case SPELL_SPIT_ACID:
-    case SPELL_STICKY_FLAME_SPLASH:
-    case SPELL_FIRE_BREATH:
-    case SPELL_COLD_BREATH:
-    case SPELL_DRACONIAN_BREATH:
-    case SPELL_WATER_ELEMENTALS:
-    case SPELL_PORKALATOR:
-    case SPELL_STICKY_FLAME_RANGE:
     default:
         return TILEG_ERROR;
     }
