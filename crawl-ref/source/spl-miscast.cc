@@ -1617,7 +1617,7 @@ void MiscastEffect::_necromancy(int severity)
         if (spell != SPELL_NO_SPELL)
         {
             // An actual necromancy miscast.
-            if (x_chance_in_y(you.piety, 150))
+            if (x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
                 return;
