@@ -1486,7 +1486,7 @@ Denne skriftrulle påkalder sig mørkets kræfter for at påføre væsener i næ
 store smerter – inklusive dig! Dette halverer alle levende væseners livskraft,
 men er aldrig decideret dødbringende.
 %%%%
-scroll of vorpalise weapon
+scroll of brand weapon
 
 Denne skriftrulle fortryller et valgfrit våben, så det bliver langt mere
 effektivt til at forvolde skade på dine fjender. Den kan gøre de midlertidige

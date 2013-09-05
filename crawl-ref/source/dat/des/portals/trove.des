@@ -189,7 +189,7 @@ end
 -- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
 function trove.good_scroll (e)
     e.item([[scroll of enchant weapon i / scroll of enchant weapon ii /
-             scroll of enchant weapon iii w:5 / scroll of vorpalise weapon w:3 /
+             scroll of enchant weapon iii w:5 / scroll of brand weapon w:3 /
              scroll of enchant armour / scroll of identify w:20 /
              scroll of magic mapping w:5 / scroll of blinking / scroll of silence w:2 /
              scroll of recharging / scroll of acquirement w:1 / scroll of teleportation w:20 /

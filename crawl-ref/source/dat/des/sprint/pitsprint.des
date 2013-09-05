@@ -176,7 +176,7 @@ function general_item_setup(e)
           scroll of acquirement w:1 ident:all /\
           scroll of enchant weapon iii ident:all q:2 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
-          scroll of vorpalise weapon ident:all")
+          scroll of brand weapon ident:all")
   e.kitem("| = superb_item ident:all w:66 / star_item ident:all w:33")
   e.kitem("* = star_item ident:all w:66 / any ident:all w:33")
   e.kitem("% = any ident:all")

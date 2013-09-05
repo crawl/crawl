@@ -1970,7 +1970,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_ENCHANT_WEAPON_III:
-            case SCR_VORPALISE_WEAPON:
+            case SCR_BRAND_WEAPON:
                 valued += 200;
                 break;
 

@@ -2752,7 +2752,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
 
                  // High-level scrolls.
-                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_VORPALISE_WEAPON),
+                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
                  140, (depth_mod < 7 ? NUM_SCROLLS : SCR_TORMENT),
                  140, (depth_mod < 7 ? NUM_SCROLLS : SCR_HOLY_WORD),
 
@@ -2765,7 +2765,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
     }
 
     // determine quantity
-    if (item.sub_type == SCR_VORPALISE_WEAPON
+    if (item.sub_type == SCR_BRAND_WEAPON
         || item.sub_type == SCR_ENCHANT_WEAPON_III
         || item.sub_type == SCR_ACQUIREMENT
         || item.sub_type == SCR_TORMENT

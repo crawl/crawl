@@ -1408,7 +1408,7 @@ douleur sur toute les créatures à proximité – y compris vous! Ceci traverse
 moitié de la résistance de toutes les créatures vivantes, bien que ce ne soit
 jamais directement fatale.
 %%%%
-scroll of vorpalise weapon
+scroll of brand weapon
 
 Ce parchemin enchante l'arme choisie de façon à la rendre beaucoup plus
 efficaces pour infliger des dommages sur les ennemis de son porteur. Il peut

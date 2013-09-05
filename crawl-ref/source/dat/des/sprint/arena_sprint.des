@@ -1054,7 +1054,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
             scroll of recharging q:3 | scroll of recharging q:3 | scroll of recharging q:3 |\
-            scroll of silence q:3 | scroll of vorpalise weapon | scroll of vulnerability q:3 |\
+            scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
             scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon iii q:6 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
 KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
