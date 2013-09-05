@@ -2675,7 +2675,7 @@ static void _gain_piety_point()
     {
         if (you.piety >= MAX_PIETY
             || you.piety > 150 && one_chance_in(3)
-            || you.piety > 100 && one_chance_in(3))
+            || you.piety >= piety_breakpoint(3) && one_chance_in(3))
         {
             do_god_gift();
             return;
