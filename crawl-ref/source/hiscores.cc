@@ -742,6 +742,9 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     zigs              = se.zigs;
     zigmax            = se.zigmax;
     fixup_char_name();
+
+    // We could just reset raw_line to "" instead.
+    raw_line          = se.raw_line;
 }
 
 xlog_fields scorefile_entry::get_fields() const
@@ -1267,6 +1270,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 void scorefile_entry::reset()
 {
     // simple init
+    raw_line.clear();
     version.clear();
     tiles                = 0;
     points               = -1;
