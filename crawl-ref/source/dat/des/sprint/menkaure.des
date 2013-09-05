@@ -22,6 +22,7 @@ end
 
 NAME:   the_violet_keep_of_menkaure
 DESC:   Sprint II: "The Violet Keep of Menkaure"
+ORDER:  2
 TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 ORIENT: encompass
 SHUFFLE: 123

@@ -566,6 +566,7 @@ TAGS:      sprint
 LFLOORCOL: lightgrey
 ORIENT:    encompass
 DESC:      Sprint VII: "The Pits"
+ORDER:     7
 SUBVAULT:  A : the_storerooms
 SUBVAULT:  B : the_entrance_hall
 SUBVAULT:  C : the_vault_of_metal
