@@ -30,11 +30,11 @@ int chei_stat_boost(int piety)
 {
     if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
         return 0;
-    if (piety < 30)  // Since you've already begun to slow down.
+    if (piety < piety_breakpoint(0))  // Since you've already begun to slow down.
         return 1;
-    if (piety > 160) // Fudging this slightly to agree with ****** piety.
+    if (piety >= piety_breakpoint(5))
         return 15;
-    return min((piety - 10) / 10, 14);
+    return ((piety - 10) / 10);
 }
 
 // Eat from one random off-level item stack.
