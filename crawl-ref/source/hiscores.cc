@@ -1820,13 +1820,13 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                 // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
                 snprintf(scratch, INFO_SIZE, "Was %s of %s%s",
-                             (piety >  160) ? "the Champion" :
-                             (piety >= 120) ? "a High Priest" :
-                             (piety >= 100) ? "an Elder" :
-                             (piety >=  75) ? "a Priest" :
-                             (piety >=  50) ? "a Believer" :
-                             (piety >=  30) ? "a Follower"
-                                            : "an Initiate",
+                             (piety >= piety_breakpoint(5)) ? "the Champion" :
+                             (piety >= piety_breakpoint(4)) ? "a High Priest" :
+                             (piety >= piety_breakpoint(3)) ? "an Elder" :
+                             (piety >= piety_breakpoint(2)) ? "a Priest" :
+                             (piety >= piety_breakpoint(1)) ? "a Believer" :
+                             (piety >= piety_breakpoint(0)) ? "a Follower"
+                                                            : "an Initiate",
                           god_name(god).c_str(),
                              (penance > 0) ? " (penitent)." : ".");
 
