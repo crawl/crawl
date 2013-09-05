@@ -5016,7 +5016,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SUMMON_DRAKES:
     case SPELL_BLINK_OTHER:
     case SPELL_SUMMON_MUSHROOMS:
-    case SPELL_ACID_SPLASH:
+    case SPELL_SPIT_ACID:
     case SPELL_STICKY_FLAME_SPLASH:
     case SPELL_FIRE_BREATH:
     case SPELL_COLD_BREATH:

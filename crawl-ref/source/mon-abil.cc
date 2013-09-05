@@ -3554,7 +3554,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (spit)
         {
-            spell = SPELL_ACID_SPLASH;
+            spell = SPELL_SPIT_ACID;
             setup_mons_cast(mons, beem, spell);
 
             // Fire tracer.

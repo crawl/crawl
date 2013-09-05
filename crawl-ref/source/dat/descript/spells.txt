@@ -1009,6 +1009,10 @@ This spell temporarily transforms the caster into a swift, venomous (but
 poison-susceptible), spider-like creature. Spellcasting is slightly more
 difficult in this form. While in this form, you can cling to walls.
 %%%%
+Spit Acid spell
+
+<Spit Acid ability>
+%%%%
 Static Discharge spell
 
 This spell releases electric charges against those next to the caster. These

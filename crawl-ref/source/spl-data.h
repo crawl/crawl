@@ -2201,7 +2201,7 @@ struct spell_desc
 },
 
 {
-    SPELL_ACID_SPLASH, "Acid Splash",
+    SPELL_SPIT_ACID, "Spit Acid",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
      5,

@@ -138,7 +138,7 @@ static spell_type _draco_type_to_breath(int drac_type)
     {
     case MONS_BLACK_DRACONIAN:   return SPELL_LIGHTNING_BOLT;
     case MONS_MOTTLED_DRACONIAN: return SPELL_STICKY_FLAME_SPLASH;
-    case MONS_YELLOW_DRACONIAN:  return SPELL_ACID_SPLASH;
+    case MONS_YELLOW_DRACONIAN:  return SPELL_SPIT_ACID;
     case MONS_GREEN_DRACONIAN:   return SPELL_POISONOUS_CLOUD;
     case MONS_PURPLE_DRACONIAN:  return SPELL_QUICKSILVER_BOLT;
     case MONS_RED_DRACONIAN:     return SPELL_FIRE_BREATH;
@@ -696,7 +696,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_POISON;
         break;
 
-    case SPELL_ACID_SPLASH:
+    case SPELL_SPIT_ACID:
         beam.colour   = YELLOW;
         beam.name     = "splash of acid";
         beam.damage   = dice_def(3, 7);
@@ -5314,7 +5314,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
             break;
 
         case MONS_YELLOW_DRACONIAN:
-            actual_spell = SPELL_ACID_SPLASH;
+            actual_spell = SPELL_SPIT_ACID;
             break;
 
         case MONS_PLAYER_GHOST:
