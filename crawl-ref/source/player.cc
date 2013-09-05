@@ -2460,11 +2460,11 @@ static int _player_armour_racial_bonus(const item_def& item)
         {
             if (you.piety >= 160)
                 racial_bonus += racial_bonus * 9 / 4;
-            else if (you.piety >= 120)
+            else if (you.piety >= piety_breakpoint(4))
                 racial_bonus += racial_bonus * 7 / 4;
-            else if (you.piety >= 75)
+            else if (you.piety >= piety_breakpoint(2))
                 racial_bonus += racial_bonus * 5 / 4;
-            else if (you.piety >= 30)
+            else if (you.piety >= piety_breakpoint(0))
                 racial_bonus += racial_bonus * 3 / 4;
             else
                 racial_bonus += racial_bonus / 4;
