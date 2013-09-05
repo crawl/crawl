@@ -1518,6 +1518,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         {
             if (!hurted)
                 simple_monster_message(mons, " shrugs off the wave.");
+            else if (hurted > original)
+                simple_monster_message(mons, " is doused terribly!");
         }
         break;
 
