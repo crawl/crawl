@@ -1593,7 +1593,7 @@
       {
        SPELL_IOOD,
        SPELL_NO_SPELL,
-       SPELL_CANTRIP,
+       SPELL_IOOD,
        SPELL_IOOD,
        SPELL_NO_SPELL,
        SPELL_IOOD

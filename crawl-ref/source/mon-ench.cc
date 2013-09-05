@@ -1958,7 +1958,7 @@ static const char *enchant_names[] =
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "buggy",
+    "iood_charged", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

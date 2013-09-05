@@ -906,7 +906,7 @@ VISUAL:@The_monster@ seems to be having trouble coordinating @possessive@ many l
 
 VISUAL:@The_monster@ wildly waves @possessive@ antennae.
 %%%%
-orb_spider_cantrip
+orb spider charge
 
 @The_monster@ spins a strand of pure energy.
 
