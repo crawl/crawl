@@ -2233,7 +2233,8 @@ bool do_god_gift(bool forced)
                     gift = BOOK_DEATH;
                 }
             }
-            else if (forced || you.piety > 160 && random2(you.piety) > 100)
+            else if (forced || you.piety >= piety_breakpoint(5)
+                               && random2(you.piety) > 100)
             {
                 if (you_worship(GOD_SIF_MUNA))
                     gift = OBJ_RANDOM;
@@ -2293,7 +2294,7 @@ bool do_god_gift(bool forced)
                           && (you.piety >= piety_breakpoint(0) && gifts == 0
                               || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
                               || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
-                              || you.piety >= 161 && gifts <= 12 && one_chance_in(20)))
+                              || you.piety >= piety_breakpoint(5) && gifts <= 12 && one_chance_in(20)))
             {
                 set<spell_type> offers = _vehumet_get_spell_gifts();
                 if (!offers.empty())
@@ -2636,7 +2637,8 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         _gain_piety_point();
     if (you.piety > you.piety_max[you.religion])
     {
-        if (you.piety > 160 && you.piety_max[you.religion] <= 160)
+        if (you.piety >= piety_breakpoint(5)
+            && you.piety_max[you.religion] < piety_breakpoint(5))
         {
             mark_milestone("god.maxpiety", "became the Champion of "
                            + god_name(you.religion) + ".");
@@ -2769,7 +2771,7 @@ static void _gain_piety_point()
         invalidate_agrid(true);
     }
 
-    if (you.piety > 160 && old_piety <= 160)
+    if (you.piety >= piety_breakpoint(5) && old_piety < piety_breakpoint(5))
     {
         // In case the best skill is Invocations, redraw the god title.
         you.redraw_title = true;
@@ -2847,7 +2849,8 @@ void lose_piety(int pgn)
     // are withheld.
     if (!player_under_penance() && you.piety != old_piety)
     {
-        if (you.piety <= 160 && old_piety > 160
+        if (you.piety < piety_breakpoint(5)
+            && old_piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[you.religion])
         {
             // In case the best skill is Invocations, redraw the god
