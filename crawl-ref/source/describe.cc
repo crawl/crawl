@@ -3960,11 +3960,11 @@ static string _describe_favour(god_type which_god)
         return uppercase_first(describe_xom_favour());
 
     const string godname = god_name(which_god);
-    return (you.piety > 130) ? "A prized avatar of " + godname + ".":
+    return (you.piety > 120) ? "A prized avatar of " + godname + ".":
            (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
-           (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
-           (you.piety >  40) ? uppercase_first(godname) + " is most pleased with you." :
-           (you.piety >  20) ? uppercase_first(godname) + " is pleased with you." :
+           (you.piety >  75) ? "A rising star in the eyes of " + godname + "." :
+           (you.piety >  50) ? uppercase_first(godname) + " is most pleased with you." :
+           (you.piety >  30) ? uppercase_first(godname) + " is pleased with you." :
            (you.piety >   5) ? uppercase_first(godname) + " is noncommittal."
                              : "You are beneath notice.";
 }
