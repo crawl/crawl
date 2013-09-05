@@ -1317,7 +1317,8 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (you_worship(GOD_SIF_MUNA)
             && !player_under_penance()
-            && you.piety >= 100 && x_chance_in_y(you.piety + 1, 150))
+            && you.piety >= piety_breakpoint(3)
+            && x_chance_in_y(you.piety + 1, 150))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return SPRET_FAIL;
