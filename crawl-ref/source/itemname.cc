@@ -697,7 +697,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
     case SCR_ENCHANT_WEAPON_II:  return "enchant weapon II";
-    case SCR_VORPALISE_WEAPON:   return "vorpalise weapon";
+    case SCR_BRAND_WEAPON:       return "brand weapon";
     case SCR_RECHARGING:         return "recharging";
     case SCR_ENCHANT_WEAPON_III: return "enchant weapon III";
     case SCR_HOLY_WORD:          return "holy word";
@@ -3178,7 +3178,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
         case SCR_ENCHANT_ARMOUR:
-        case SCR_VORPALISE_WEAPON:
+        case SCR_BRAND_WEAPON:
             return (you.species == SP_FELID);
         default:
             return false;

@@ -2370,7 +2370,7 @@ scroll of torment:quote
 
 <scroll:quote>
 %%%%
-scroll of vorpalise weapon
+scroll of brand weapon
 
 This scroll enchants a chosen weapon so as to make it far more effective at
 inflicting harm on its wielder's enemies. The scroll can make permanent the
@@ -2381,7 +2381,7 @@ Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
 the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
 let such an opportunity for fun go to waste.
 %%%%
-scroll of vorpalise weapon:quote
+scroll of brand weapon:quote
 
 <scroll:quote>
 %%%%

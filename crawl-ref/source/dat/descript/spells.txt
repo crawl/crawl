@@ -349,7 +349,7 @@ Excruciating Wounds spell
 This spell temporarily infuses the weapon held by the caster with the essence
 of pain itself. It will not affect weapons which are otherwise subject to
 special enchantments. Note that unlike other brands, pain can not be made
-permanent by reading a scroll of vorpalise weapon.
+permanent by reading a scroll of brand weapon.
 %%%%
 Fire Brand spell
 
@@ -1166,5 +1166,5 @@ Warp Weapon spell
 
 This spell temporarily binds a localized warp field to the invoker's weapon.
 Note that unlike other brands, distortion can not be made permanent by reading
-a scroll of vorpalise weapon.
+a scroll of brand weapon.
 %%%%

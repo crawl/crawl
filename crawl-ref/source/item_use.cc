@@ -2439,7 +2439,7 @@ static void _rebrand_weapon(item_def& wpn)
     }
 }
 
-static void _vorpalise_weapon(bool alreadyknown, item_def &wpn)
+static void _brand_weapon(bool alreadyknown, item_def &wpn)
 {
     you.wield_change = true;
 
@@ -2558,9 +2558,9 @@ static void _vorpalise_weapon(bool alreadyknown, item_def &wpn)
         success = false;
 
         // This is only naughty if you know you're doing it.
-        // XXX: assumes this can only happen from Vorpalise Weapon scroll.
+        // XXX: assumes this can only happen from Brand Weapon scroll.
         did_god_conduct(DID_NECROMANCY, 10,
-                        get_ident_type(OBJ_SCROLLS, SCR_VORPALISE_WEAPON)
+                        get_ident_type(OBJ_SCROLLS, SCR_BRAND_WEAPON)
                         == ID_KNOWN_TYPE);
         break;
 
@@ -2607,7 +2607,7 @@ static void _vorpalise_weapon(bool alreadyknown, item_def &wpn)
 }
 
 // Returns false if we're cancelling the scroll.
-static bool _handle_vorpalise_weapon(bool alreadyknown, string *pre_msg)
+static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
 {
     int item_slot;
 
@@ -2651,7 +2651,7 @@ static bool _handle_vorpalise_weapon(bool alreadyknown, string *pre_msg)
         if (pre_msg && alreadyknown)
             mpr(pre_msg->c_str());
 
-        _vorpalise_weapon(alreadyknown, wpn);
+        _brand_weapon(alreadyknown, wpn);
 
         return true;
     }
@@ -3023,7 +3023,7 @@ bool _is_cancellable_scroll(scroll_type scroll)
             || scroll == SCR_REMOVE_CURSE
             || scroll == SCR_CURSE_ARMOUR
             || scroll == SCR_CURSE_JEWELLERY
-            || scroll == SCR_VORPALISE_WEAPON);
+            || scroll == SCR_BRAND_WEAPON);
 }
 
 void read_scroll(int slot)
@@ -3353,16 +3353,16 @@ void read_scroll(int slot)
         _handle_enchant_weapon(1 + random2(2), 1 + random2(2), "bright yellow");
         break;
 
-    case SCR_VORPALISE_WEAPON:
+    case SCR_BRAND_WEAPON:
         if (!alreadyknown)
         {
             mpr(pre_succ_msg.c_str());
-            mpr("It is a scroll of vorpalise weapon.");
+            mpr("It is a scroll of brand weapon.");
             // Pause to display the message before jumping to the weapon list.
             if (Options.auto_list)
                 more();
         }
-        cancel_scroll = !_handle_vorpalise_weapon(alreadyknown, &pre_succ_msg);
+        cancel_scroll = !_handle_brand_weapon(alreadyknown, &pre_succ_msg);
         break;
 
     case SCR_IDENTIFY:
@@ -3485,7 +3485,7 @@ void read_scroll(int slot)
     if (id_the_scroll
         && !alreadyknown
         && which_scroll != SCR_ACQUIREMENT
-        && which_scroll != SCR_VORPALISE_WEAPON)
+        && which_scroll != SCR_BRAND_WEAPON)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",

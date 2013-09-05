@@ -750,7 +750,7 @@ i-fog SCR_FOG
 i-acquirement SCR_ACQUIREMENT
 %back scroll-green
 i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
-i-vorpalize-weapon SCR_VORPALISE_WEAPON
+i-brand-weapon SCR_BRAND_WEAPON
 i-recharging SCR_RECHARGING
 i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
 %back scroll-red

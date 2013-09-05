@@ -94,7 +94,7 @@ function setup_room(e, id)
             potion of speed q:2 ident:all w:2 / scroll of acquirement w:1 ident:all /\
             scroll of enchant weapon iii ident:all q:2 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
-            scroll of vorpalise weapon ident:all")
+            scroll of brand weapon ident:all")
 
     -- Place monsters
     if id < 7 then

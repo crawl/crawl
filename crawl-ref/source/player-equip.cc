@@ -834,7 +834,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding
-                // effect in vorpalise weapon scroll effect in read_scoll.
+                // effect in brand weapon scroll effect in read_scoll.
             }
 
             if (you.duration[DUR_WEAPON_BRAND])

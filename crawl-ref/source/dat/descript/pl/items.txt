@@ -1252,7 +1252,7 @@ Ten zwój używa mocy sił ciemności aby zesłać straszliwe cierpienie na wszy
 żywe istoty w pobliżu — łącznie z tobą! Powoduje to znaczną utratę zdrowia,
 jednakże nigdy samo z siebie nie powoduje śmierci.
 %%%%
-scroll of vorpalise weapon
+scroll of brand weapon
 
 Ten zwój trwale nadaje broni którą trzymasz w ręce zdolność bardziej
 efektywnego wyrządzania krzywdy bliźniemu. Nie zadziała to jeśli broń ta już ma
