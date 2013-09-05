@@ -360,7 +360,7 @@ static int _strength_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
-    result += che_stat_boost();
+    result += chei_stat_boost();
 
     if (!you.suppressed())
     {
@@ -406,7 +406,7 @@ static int _int_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
-    result += che_stat_boost();
+    result += chei_stat_boost();
 
     if (!you.suppressed())
     {
@@ -437,7 +437,7 @@ static int _dex_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
-    result += che_stat_boost();
+    result += chei_stat_boost();
 
     if (!you.suppressed())
     {

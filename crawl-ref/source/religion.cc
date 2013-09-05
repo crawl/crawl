@@ -2755,7 +2755,7 @@ static void _gain_piety_point()
     }
 
     if (you_worship(GOD_CHEIBRIADOS)
-        && che_stat_boost(old_piety) < che_stat_boost())
+        && chei_stat_boost(old_piety) < chei_stat_boost())
     {
         simple_god_message(" raises the support of your attributes as your movement slows.");
         notify_stat_change("Cheibriados piety gain");
@@ -2911,7 +2911,7 @@ void lose_piety(int pgn)
     }
 
     if (you_worship(GOD_CHEIBRIADOS)
-        && che_stat_boost(old_piety) > che_stat_boost())
+        && chei_stat_boost(old_piety) > chei_stat_boost())
     {
         simple_god_message(" reduces the support of your attributes as your movement quickens.");
         notify_stat_change("Cheibriados piety loss");
