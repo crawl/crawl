@@ -26,7 +26,7 @@
 #include "skills2.h"
 #include "state.h"
 
-int che_stat_boost(int piety)
+int chei_stat_boost(int piety)
 {
     if (!you_worship(GOD_CHEIBRIADOS) || you.penance[GOD_CHEIBRIADOS])
         return 0;
