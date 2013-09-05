@@ -1038,7 +1038,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
         invoc = true;
-        failure = 160 - you.piety;      // starts at 60%
+        failure = piety_breakpoint(5) - you.piety; // starts at 60%
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
