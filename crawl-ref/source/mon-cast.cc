@@ -1131,7 +1131,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_LRD:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_FRENZY:
+#endif
     case SPELL_SUMMON_TWISTER:
     case SPELL_BATTLESPHERE:
     case SPELL_SPECTRAL_WEAPON:
@@ -1195,8 +1197,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         || spell_cast == SPELL_INVISIBILITY
         || spell_cast == SPELL_MINOR_HEALING
         || spell_cast == SPELL_TELEPORT_SELF
-        || spell_cast == SPELL_SILENCE
-        || spell_cast == SPELL_FRENZY)
+        || spell_cast == SPELL_SILENCE)
     {
         pbolt.target = mons->pos();
     }
@@ -1420,11 +1421,6 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_BERSERKER_RAGE:
         if (!mon->needs_berserk(false))
-            ret = true;
-        break;
-
-    case SPELL_FRENZY:
-        if (mon->has_ench(ENCH_HASTE) && mon->has_ench(ENCH_MIGHT))
             ret = true;
         break;
 
@@ -1764,6 +1760,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+#if TAG_MAJOR_VERSION == 34
+    case SPELL_FRENZY:
+#endif
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1849,7 +1848,6 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_HASTE:
     case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
-    case SPELL_FRENZY:
     case SPELL_MIGHT:
     case SPELL_WIND_BLAST:
         return true;
@@ -3877,10 +3875,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BERSERKER_RAGE:
         mons->props.erase("brothers_count");
         mons->go_berserk(true);
-        return;
-
-    case SPELL_FRENZY:
-        mons->go_frenzy(mons);
         return;
 
     case SPELL_TROGS_HAND:

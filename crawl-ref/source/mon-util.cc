@@ -3160,7 +3160,6 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     {
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
-    case SPELL_FRENZY:
     case SPELL_HASTE:
     case SPELL_MIGHT:
     case SPELL_MINOR_HEALING:
