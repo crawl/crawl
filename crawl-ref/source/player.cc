@@ -2458,7 +2458,7 @@ static int _player_armour_racial_bonus(const item_def& item)
         // an additional bonus for Beogh worshippers
         if (you_worship(GOD_BEOGH) && !player_under_penance())
         {
-            if (you.piety >= 160)
+            if (you.piety >= piety_breakpoint(5))
                 racial_bonus += racial_bonus * 9 / 4;
             else if (you.piety >= piety_breakpoint(4))
                 racial_bonus += racial_bonus * 7 / 4;
