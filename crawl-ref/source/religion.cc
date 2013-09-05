@@ -1242,7 +1242,7 @@ static bool _need_missile_gift(bool forced)
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
-    return ((forced || you.piety > 80
+    return ((forced || you.piety >= piety_breakpoint(2)
                        && random2(you.piety) > 70
                        && one_chance_in(8))
             && you.skills[ best_missile_skill ] >= 8
@@ -2193,9 +2193,10 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_JIYVA:
-            if (forced || you.piety > 80 && random2(you.piety) > 50
-                         && one_chance_in(4) && !you.gift_timeout
-                         && you.can_safely_mutate())
+            if (forced || you.piety >= piety_breakpoint(2)
+                          && random2(you.piety) > 50
+                          && one_chance_in(4) && !you.gift_timeout
+                          && you.can_safely_mutate())
             {
                 if (_jiyva_mutate())
                 {
