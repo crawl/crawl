@@ -924,7 +924,9 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
 
     // Exclude torment damage.
     const bool torment = aux && strstr(aux, "torment");
-    if (you_worship(GOD_JIYVA) && you.piety > 160 && !torment)
+    if (you_worship(GOD_JIYVA)
+        && you.piety >= piety_breakpoint(5)
+        && !torment)
     {
         int how_many = 0;
         if (dam >= you.hp_max * 3 / 4)

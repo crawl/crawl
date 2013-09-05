@@ -206,10 +206,9 @@ static bool _altar_prayer()
 
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
-    if (you_worship(GOD_SHINING_ONE)
-        && !you.one_time_ability_used[GOD_SHINING_ONE]
-        && !player_under_penance()
-        && you.piety > 160)
+    if (you_worship(GOD_SHINING_ONE) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_SHINING_ONE])
     {
         item_def *wpn = you.weapon();
 
@@ -223,10 +222,9 @@ static bool _altar_prayer()
     }
 
     // Lugonu blesses weapons with distortion.
-    if (you_worship(GOD_LUGONU)
-        && !you.one_time_ability_used[GOD_LUGONU]
-        && !player_under_penance()
-        && you.piety > 160)
+    if (you_worship(GOD_LUGONU) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_LUGONU])
     {
         item_def *wpn = you.weapon();
 
@@ -235,10 +233,9 @@ static bool _altar_prayer()
     }
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
-    if (you_worship(GOD_KIKUBAAQUDGHA)
-        && !you.one_time_ability_used[GOD_KIKUBAAQUDGHA]
-        && !player_under_penance()
-        && you.piety > 160)
+    if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_KIKUBAAQUDGHA])
     {
         if (you.species != SP_FELID)
         {

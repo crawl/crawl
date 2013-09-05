@@ -3977,7 +3977,8 @@ static string _religion_help(god_type god)
     {
     case GOD_ZIN:
         result += "You can pray at an altar to donate your money.";
-        if (!player_under_penance() && you.piety > 160
+        if (!player_under_penance()
+            && you.piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[god])
         {
             if (!result.empty())
@@ -4007,7 +4008,8 @@ static string _religion_help(god_type god)
             result += "righteous aura, and all beings within it are "
                       "easier to hit.";
         }
-        if (!player_under_penance() && you.piety > 160
+        if (!player_under_penance()
+            && you.piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[god])
         {
             if (!result.empty())
@@ -4027,7 +4029,8 @@ static string _religion_help(god_type god)
         break;
 
     case GOD_LUGONU:
-        if (!player_under_penance() && you.piety > 160
+        if (!player_under_penance()
+            && you.piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[god])
         {
             result += "You can pray at an altar to have your weapon "
@@ -4036,7 +4039,8 @@ static string _religion_help(god_type god)
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        if (!player_under_penance() && you.piety > 160
+        if (!player_under_penance()
+            && you.piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[god])
         {
             result += "You can pray at an altar to have your necromancy "

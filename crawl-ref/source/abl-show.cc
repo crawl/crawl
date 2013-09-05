@@ -3475,8 +3475,12 @@ vector<ability_type> get_god_abilities(bool include_unusable)
         }
     }
 
-    if (you_worship(GOD_ZIN) && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)
+    if (you_worship(GOD_ZIN)
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_ZIN])
+    {
         abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
+    }
 
     return abilities;
 }
