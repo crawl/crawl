@@ -2198,8 +2198,9 @@ string depth_ranges::describe() const
 
 const int DEFAULT_MAP_WEIGHT = 10;
 map_def::map_def()
-    : name(), description(), tags(), place(), depths(), orient(), _chance(),
-      _weight(DEFAULT_MAP_WEIGHT), map(), mons(), items(), random_mons(),
+    : name(), description(), order(INT_MAX), tags(), place(), depths(),
+      orient(), _chance(), _weight(DEFAULT_MAP_WEIGHT),
+      map(), mons(), items(), random_mons(),
       prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(""),
@@ -2214,6 +2215,7 @@ void map_def::init()
     orient = MAP_NONE;
     name.clear();
     description.clear();
+    order = INT_MAX;
     tags.clear();
     place.clear();
     depths.clear();
@@ -2234,6 +2236,7 @@ void map_def::init()
 void map_def::reinit()
 {
     description.clear();
+    order = INT_MAX;
     items.clear();
     random_mons.clear();
     level_flags.clear();
