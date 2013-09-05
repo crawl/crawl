@@ -2676,7 +2676,7 @@ static void _gain_piety_point()
     if (!you_worship(GOD_SIF_MUNA))
     {
         if (you.piety >= MAX_PIETY
-            || you.piety > 150 && one_chance_in(3)
+            || you.piety >= piety_breakpoint(5) && one_chance_in(3)
             || you.piety >= piety_breakpoint(3) && one_chance_in(3))
         {
             do_god_gift();
@@ -2688,7 +2688,7 @@ static void _gain_piety_point()
         // Sif Muna has a gentler taper off because training becomes
         // naturally slower as the player gains in spell skills.
         if (you.piety >= MAX_PIETY
-            || you.piety > 150 && one_chance_in(5))
+            || you.piety >= piety_breakpoint(5) && one_chance_in(5))
         {
             do_god_gift();
             return;
