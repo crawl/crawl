@@ -3143,8 +3143,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
 // Is the spell worth listing for a monster?
 static bool _interesting_mons_spell(spell_type spell)
 {
-    return spell != SPELL_NO_SPELL && spell != SPELL_MELEE
-           && spell != SPELL_CANTRIP;
+    return spell != SPELL_NO_SPELL && spell != SPELL_MELEE;
 }
 
 static string _monster_spells_description(const monster_info& mi)
