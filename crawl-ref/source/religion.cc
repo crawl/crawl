@@ -2132,7 +2132,8 @@ bool do_god_gift(bool forced)
             object_class_type gift_type;
 
             if (forced && (!need_missiles || one_chance_in(4))
-                || (!forced && you.piety > 130 && random2(you.piety) > 120
+                || (!forced && you.piety >= piety_breakpoint(4)
+                    && random2(you.piety) > 120
                     && one_chance_in(4)))
             {
                 if (you_worship(GOD_TROG)
