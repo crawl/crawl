@@ -359,6 +359,12 @@ Ce sort invoque une puissante et furieuse tempête de flammes directement sur la
 cible, causant des dégâts de feu partiellement irrésistibles sur une large zone
 et laissant derrière elle d'éphémères vortex de feu.
 %%%%
+Fire Storm spell:quote
+
+« Certains disent qu'il n'y a pas de finesse dans la destruction. Vous savez
+quoi? Ils sont morts. »
+    -Jaya Ballard, spécimage
+%%%%
 Fireball spell
 
 Ce sort expédie un missile de feu explosif. Ce sortilège n'a aucune coût

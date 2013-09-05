@@ -15,6 +15,12 @@ Temple
 Le Temple des Dieux, un lieu de paix et de refuge loin des insanités du donjon.
 Il est localisé entre les niveaux 4 et 7 du donjon principal.
 %%%%
+Temple:quote
+
+« Et j'entendis une grande voix venant du temple, qui disait aux sept anges:
+Allez et versez sur la terre les coupes de la colère de Dieu. »
+    -Bible, Apocalypse 16:1
+%%%%
 Orcish Mines
 
 Les mines d'or bien exportée des tribus orcs. Ces cavernes tortueuses sont

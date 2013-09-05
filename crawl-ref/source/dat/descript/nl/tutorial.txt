@@ -8,6 +8,10 @@ tutorial1 door
 
 Je kan een gesloten deur openen door erin te lopen.
 %%%%
+tutorial1 close_door
+
+Druk op <input>$cmd[CMD_CLOSE_DOOR]</input> om een deur dicht te doen.
+%%%%
 tutorial1 water
 
 Merk op dat je door ondiep water kan bewegen, maar niet door diep water.
@@ -22,10 +26,57 @@ tutorial2 melee
 Om een monster aan te vallen met de blote hand, of het wapen dat je vast hebt,
 ren je er gewoon tegen.
 %%%%
+tutorial2 resting_reminder
+
+Onthoud: je kunt rusten via <input>$cmd[CMD_REST]</input>.
+%%%%
+tutorial2 downstairs
+
+Goed zo! Ga nadat je gezondheidsmeter helemaal is bijgevuld verder naar het
+volgende niveau via <input>$cmd[CMD_GO_DOWNSTAIRS]</input>.
+%%%%
+tutorial2 newlevel
+
+Onthoud: je kunt oude berichten opnieuw lezen via
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>.
+%%%%
 tutorial2 tutorial_end
 
 Gefeliciteerd! Je hebt je eerste troep monsters overleefd! Om de tutorial te
 verlaten, ga je deze trap af.
+%%%%
+tutorial2 exit
+
+:nowrap
+<yellow>Wapens<console> <cyan>)</cyan></console></yellow>
+
+  <w>$cmd[CMD_PICKUP]</w>  voorwerp oppakken
+  <w>$cmd[CMD_WIELD_WEAPON]</w>  wapen hanteren
+<localtiles>     Je kunt dit ook doen door in je inventaris op het wapen te <w>klikken</w>.</localtiles>
+
+
+<yellow>Monsters</yellow>
+<localtiles>  <w>mouse-over</w>  monster examineren
+  <w>rechter muisknop</w> gedetailleerde omschrijving lezen</localtiles>
+<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  monster examineren
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> gedetailleerde omschrijving lezen</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  monster examineren
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> gedetailleerde omschrijving lezen</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> munitie op vooraf geselecteerd monster afvuren
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> ander monster selecteren
+<localtiles>  Je kunt ook een voorwerp afvuren door hierop te <w>klikken</w> en het doel te bevestigen met <w>Enter</w>.</localtiles>
+
+
+<yellow>Rusten</yellow>
+  <w>$cmd[CMD_MOVE_NOWHERE]</w>  een beurt wachten en rusten
+  <w>$cmd[CMD_REST]</w>  tot maximaal 100 beurten wachten en rusten
+
+
+<yellow>Lijken<console> <brown>%</brown></console></yellow>
+  <w>$cmd[CMD_BUTCHER]</w>  lijk in stukken vlees hakken
+  <w>$cmd[CMD_EAT]</w>  stuk vlees eten
+
+
+                                 <cyan>Druk op een <w>toets</w> om dit scherm leeg te maken...</cyan>
 %%%%
 tutorial3 start
 
@@ -35,6 +86,12 @@ tutorial3 autopickup
 
 Sommige voorwerpen<tiles>, aangeduid met een groen kadertje,</tiles> worden
 automatisch opgepakt als je erop stapt.
+%%%%
+tutorial3 battle
+
+Wanneer je erin slaagt een monster te vergiftigen, is het vaak een goed idee om
+terug te trekken en het vergif te laten inwerken. Trek ook terug om te genezen,
+wanneer nodig.
 %%%%
 tutorial3 gold
 
@@ -56,9 +113,44 @@ tutorial3 tutorial_end
 
 Goed gedaan! Om deze uitleg te sluiten ga je de trap af.
 %%%%
+tutorial3 exit
+
+:nowrap
+<yellow>Voorwerpopdrachten</yellow>
+  <w>$cmd[CMD_PICKUP]</w>  voorwerp oppakken
+  <w>$cmd[CMD_WEAR_ARMOUR]</w>  kledij dragen
+  <w>$cmd[CMD_READ]</w>  perkament lezen
+  <w>$cmd[CMD_WIELD_WEAPON]</w>  wapen hanteren
+  <w>$cmd[CMD_QUAFF]</w>  drankje drinken
+  <w>$cmd[CMD_EVOKE]</w>  staf evoceren
+  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  sieraad dragen
+  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  sieraad verwijderen
+  <w>$cmd[CMD_DROP]</w>  voorwerp laten vallen
+
+  <w></w>Daarnaast zijn er gebruiksopdrachten in het inventarismenu (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>) beschikbaar, net als de omschrijvingen van voorwerpen.
+  <localtiles><w></w>En natuurlijk werken ook <white>muisklikken</white>.
+</localtiles>
+
+<yellow>Overig</yellow>
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> opdrachthulp openen
+  <w>$cmd[CMD_RESISTS_SCREEN]</w>  personageoverzicht weergeven
+  <w>$cmd[CMD_USE_ABILITY]</w>  bekwaamheid gebruiken
+  <w>$cmd[CMD_EXPLORE]</w>  automatisch verkennen
+  <w>$cmd[CMD_SEARCH_STASHES]</w>  naar eerder geziene voorwerpen/kenmerken zoeken
+
+  <localtiles><w></w>Een aantal van deze opdrachten kan ook worden uitgevoerd door in het <w>opdrachtenvenster</w> te klikken.
+</localtiles>
+
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+%%%%
 tutorial4 start
 
 In deze les leer je hoe spreuken te leren en gebruiken.
+%%%%
+tutorial4 spell_hunger
+
+Tovenarij kan jou erg hongerig maken. Je krijgt meer honger van lastigere
+spreuken, maar hoge Intelligentie en Tovenarij vaardigheid helpt daartegen.
 %%%%
 tutorial4 tutorial_end
 

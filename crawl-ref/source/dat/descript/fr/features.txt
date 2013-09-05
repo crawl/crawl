@@ -37,6 +37,14 @@ A broken pillar
 Les constructeurs de ce pilier sont morts il y a longtemps. Plus personne ne se
 rappelle pourquoi il a été construit.
 %%%%
+A broken pillar:quote
+
+« De son vivant, Absalom avait pris
+ et avait érigé pour lui un pilier
+ situé dans la vallée du roi ; car il disait :
+ Je n'ai point de fils pour garder le souvenir de mon nom »
+    2 Samuel 18:18
+%%%%
 A burning altar of Makhleb
 
 Un autel enflammé à Makhleb le Destructeur. Des formes étranges et sinueuses
@@ -172,6 +180,22 @@ A gateway to Hell
 
 Ce portail mène au Vestibule des Enfers. Peu s'y risquent volontairement.
 %%%%
+A gateway to Hell:quote
+
+« Par moi l’on va dans la cité des pleurs,
+ par moi l’on va dans l’éternelle douleur,
+ par moi l’on va chez la race perdue.
+
+ La Justice mut mon souverain Auteur,
+ la divine Puissance, la suprême Sagesse,
+ et le premier Amour me firent.
+
+ Avant moi ne furent créées nulles choses,
+ sauf les éternelles, et éternellement je dure.
+ Vous qui entrez, laissez toute espérance ! »
+    -Dante, La divine Comédie, L'enfer, chant III. 1315
+     Trad. Lamennais
+%%%%
 A gateway to the Iron City of Dis
 
 Qui survivra à l'épreuve du Fer ?
@@ -300,6 +324,17 @@ dévastateur à tout ceux qui voudraient prier Vehumet.
 A rock wall
 
 Un mur fait de roche commune.
+%%%%
+A rock wall:quote
+
+« J'ignore, quand a moi, si les Lois ont raison,
+    Ou si les Lois ont tort ;
+ Tout ce que nous savons, gisant dans la prison,
+    C'est que le mur est fort,
+ Et que chaque journée ressemble à une année,
+    Une année aux longues journées. »
+    -Oscar Wilde, « La Ballade de la Geôle de Reading ». 1898.
+     Trad. française 1998
 %%%%
 A rock-blocked tunnel
 
@@ -1021,6 +1056,19 @@ A portal to a secret trove of treasure
 
 Une porte somptueusement orfévrée qui mène à un véritable gisement d'objets
 précieux. Mais l'entrée est plutôt chère...
+%%%%
+A portal to a secret trove of treasure:quote
+
+« Au voleur ! au voleur ! » il y a quelque chose de magique dans ce cri ; le
+marchand quitte son comptoir et le charretier sa charrette ; le boucher laisse
+là son panier, le boulanger sa corbeille, le laitier son seau, le
+commissionnaire ses paquets, l’écolier ses billes, le paveur sa pioche, et
+l’enfant sa raquette. Tous s’élancent pêle-mêle, en désordre, tout d’un trait,
+criant, hurlant, culbutant les passants au détour des rues, excitant les chiens
+et effarouchant les poules. Rues, places, passages, tout retentit bientôt du
+même cri.
+    -Charles Dickens, Oliver Twist, ch X. 1838.
+     trad. francaise par Alfred Gérardin, 1893.
 %%%%
 A dark tunnel
 
