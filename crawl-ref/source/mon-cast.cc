@@ -3799,6 +3799,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     if (spell_cast == SPELL_CANTRIP
         || spell_cast == SPELL_VAMPIRIC_DRAINING
+        || spell_cast == SPELL_IOOD
         || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
@@ -4453,16 +4454,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
 
-        if (mons->type == MONS_ORB_SPIDER)
-        {
-            string msg = getSpeakString("orb_spider_cantrip");
-            if (!msg.empty())
-            {
-                msg = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
-                mpr(msg.c_str(), channel);
-            }
-        }
-        else if (mons->type == MONS_GASTRONOK)
+        if (mons->type == MONS_GASTRONOK)
         {
             bool has_mon_foe = !invalid_monster_index(mons->foe);
             string slugform = "";
@@ -4702,6 +4694,23 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     case SPELL_IOOD:
+        if (mons->type == MONS_ORB_SPIDER && !mons->has_ench(ENCH_IOOD_CHARGED))
+        {
+            mons->add_ench(ENCH_IOOD_CHARGED);
+
+            if (!monsterNearby)
+                return;
+            string msg = getSpeakString("orb spider charge");
+            if (!msg.empty())
+            {
+                msg = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
+                mpr(msg.c_str(), mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
+                    : MSGCH_MONSTER_ENCHANT);
+            }
+            return;
+        }
+        mons->del_ench(ENCH_IOOD_CHARGED);
+        mons_cast_noise(mons, pbolt, spell_cast, special_ability);
         cast_iood(mons, 6 * mons->hit_dice, &pbolt);
         return;
     case SPELL_AWAKEN_FOREST:
