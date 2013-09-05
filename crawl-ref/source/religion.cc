@@ -4232,7 +4232,7 @@ int piety_rank(int piety)
         die("INT_MAX is no good");
     }
 
-    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 1 };
+    const int breakpoints[] = { 160, 120, 100, 75, 50, 30, 1 };
     const int numbreakpoints = ARRAYSZ(breakpoints);
 
     for (int i = 0; i < numbreakpoints; ++i)
@@ -4246,7 +4246,7 @@ int piety_rank(int piety)
 
 int piety_breakpoint(int i)
 {
-    int breakpoints[MAX_GOD_ABILITIES] = { 30, 50, 75, 100, 120 };
+    int breakpoints[MAX_GOD_ABILITIES + 1] = { 30, 50, 75, 100, 120, 160 };
     if (i >= MAX_GOD_ABILITIES || i < 0)
         return 255;
     else
