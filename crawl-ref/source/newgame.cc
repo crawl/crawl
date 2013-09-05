@@ -1911,9 +1911,11 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     }
 }
 
-static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
+// Compare two maps by their ORDER: header, falling back to desc or name if equal.
+static bool _cmp_map_by_order(const map_def* m1, const map_def* m2)
 {
-    return (m1->desc_or_name() < m2->desc_or_name());
+    return m1->order < m2->order
+           || m1->order == m2->order && m1->desc_or_name() < m2->desc_or_name();
 }
 
 static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
@@ -1928,7 +1930,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
-    sort(maps.begin(), maps.end(), _cmp_map_by_name);
+    sort(maps.begin(), maps.end(), _cmp_map_by_order);
     _construct_gamemode_map_menu(maps, defaults, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
