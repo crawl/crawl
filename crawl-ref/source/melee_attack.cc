@@ -1804,7 +1804,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                 const int orig_damage = damage;
 #endif
 
-                if (you.piety > 80 || coinflip())
+                if (you.piety >= piety_breakpoint(2) || coinflip())
                     damage++;
 
                 damage +=
