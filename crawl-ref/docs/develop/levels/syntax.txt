@@ -146,6 +146,13 @@ DESC:     readable name
           Map descriptions are also written to scores and logfile
           entries.
 
+ORDER:    <integer>
+          Used only for special game types (Sprint, Zot Defence, Tutorial).
+          When the user is prompted to select a map, the available maps are
+          sorted by the integer value (ascending). Maps without an ORDER:
+          line follow those that have one. Maps with the same value of
+          ORDER: are sorted by description (if present) or name.
+
 ORIENT:   (float | encompass | north | northwest | ... | southeast)
 
           Some kind of ORIENT: line is mandatory for vaults; skipping
