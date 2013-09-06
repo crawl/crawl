@@ -3657,6 +3657,9 @@ int monster::res_fire() const
             u++;
     }
 
+    if (has_ench(ENCH_FIRE_VULN))
+        u--;
+
     if (u < -3)
         u = -3;
     else if (u > 3)

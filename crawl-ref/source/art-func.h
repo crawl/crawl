@@ -117,15 +117,33 @@ static bool _ASMODEUS_evoke(item_def *item, int* pract, bool* did_work,
 }
 
 ////////////////////////////////////////////////////
-
-// XXX: Defender's resistance to fire being temporarily downgraded is
-// hardcoded in melee_attack::fire_res_apply_cerebov_downgrade()
-
 static void _CEREBOV_melee_effect(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
+
+    if (dam)
+    {
+        if (defender->is_player()
+            && defender->res_fire() <= 3
+            && !you.duration[DUR_FIRE_VULN])
+        {
+            mpr("The Sword of Cerebov burns away your fire resistance.");
+            you.increase_duration(DUR_FIRE_VULN, 3 + random2(dam), 50);
+        }
+        if (defender->is_monster()
+            && !mondied
+            && !defender->as_monster()->res_hellfire()
+            && !defender->as_monster()->has_ench(ENCH_FIRE_VULN))
+        {
+            mprf("The Sword of Cerebov burns away %s fire resistance.",
+                 defender->name(DESC_ITS).c_str());
+            defender->as_monster()->add_ench(
+                mon_enchant(ENCH_FIRE_VULN, 1, attacker,
+                            (3 + random2(dam)) * BASELINE_DELAY));
+        }
+    }
 }
 
 ////////////////////////////////////////////////////

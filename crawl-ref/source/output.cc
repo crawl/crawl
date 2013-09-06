@@ -1014,6 +1014,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_RAY,
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
+        DUR_FIRE_VULN,
     };
 
     status_info inf;
@@ -2495,6 +2496,7 @@ static string _status_mut_abilities(int sw)
         DUR_TOXIC_RADIANCE,
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
+        DUR_FIRE_VULN,
     };
 
     status_info inf;

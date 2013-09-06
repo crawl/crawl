@@ -2340,14 +2340,6 @@ bool melee_attack::player_monattk_hit_effects()
     return true;
 }
 
-int melee_attack::fire_res_apply_cerebov_downgrade(int res)
-{
-    if (weapon && weapon->special == UNRAND_CEREBOV)
-        --res;
-
-    return res;
-}
-
 void melee_attack::drain_defender()
 {
     if (defender->is_monster() && one_chance_in(3))
@@ -3123,7 +3115,7 @@ attack_flavour melee_attack::random_chaos_attack_flavour()
 bool melee_attack::apply_damage_brand()
 {
     bool brand_was_known = false;
-    int brand, res = 0;
+    int brand = 0;
     bool ret = false;
 
     if (weapon)
@@ -3160,8 +3152,7 @@ bool melee_attack::apply_damage_brand()
     switch (brand)
     {
     case SPWPN_FLAMING:
-        res = fire_res_apply_cerebov_downgrade(defender->res_fire());
-        calc_elemental_brand_damage(BEAM_FIRE, res,
+        calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
         noise_factor += 400 / max(1, damage_done);

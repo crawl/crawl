@@ -102,6 +102,7 @@ enum monster_info_flags
     MB_SUMMONED_CAPPED,    // Expiring due to summons cap
     MB_TOXIC_RADIANCE,
     MB_GRASPING_ROOTS,
+    MB_FIRE_VULN,
     NUM_MB_FLAGS
 };
 

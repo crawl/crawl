@@ -157,6 +157,8 @@ static duration_def duration_data[] =
       WHITE, "Recite", "reciting", "You are reciting Zin's Axioms of Law." },
     { DUR_GRASPING_ROOTS, false,
       BROWN, "Roots", "grasped by roots", "Your movement is impeded by grasping roots." },
+    { DUR_FIRE_VULN, false,
+      RED, "-rF", "fire vulnerable", "You are more vulnerable to fire." },
 };
 
 static int duration_index[NUM_DURATIONS];
