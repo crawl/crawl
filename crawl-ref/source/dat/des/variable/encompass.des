@@ -69,9 +69,14 @@ SUBST:   b = b|
 SUBST:   | = |*
 ITEM:    any scroll, potion of experience
 SHUFFLE: dD/eE/fF/gG
-SUBST:   D=+, d=|, E=x, e=%%*, F=x, f=%, G=x, g=%
+SUBST:   D=+, d=|, E=x, F=x, G=x
+NSUBST:  e = 1:y / 1:* / *:%
+NSUBST:  f = 1:y / *:%
+NSUBST:  g = 1:y / *:%
+KFEAT:   y = >
+KITEM:   y = any / w:1 any good_item
 SHUFFLE: PQ
-SUBST:   Q=xw
+SUBST:   Q = xw
 KMONS:   P = orange crystal statue
 KFEAT:   P = floor
 KMONS:   k = giant eyeball
@@ -100,7 +105,7 @@ xwwwwxx;;;7;;;cc*4.+;;;;;;;c.......c.c..ww....c;;;;;7;;;;;;;;xxxxxxwwx
 xxwwwwx;;;;;;;;cccccc;;;;;;c6.6.6.6c.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;cccc;;;;;;;ccccccccc.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;;;;;;;;;;;;c$$+....+.c....www.c;;;;;;;ccccccccxxxxxwwx
-xxxwwxx;;cccc;;;;;;;;;;;;;;c$$cccccc.c.....wwwc;;;;;;;c.....$$Dddxxwwx
+xxxwwxx;;cccc;;;;;;;;;;;;;;c$$cccccc.c>....wwwc;;;;;;;c.....$$Dddxxwwx
 xxxwwwx;cccccc;;;;;;xx;;;;;c$$cccccc+cccccccwww;;;;;;;c.....$$xdd+wwwx
 xxxwwwxcc*4.+;;;;;;xxxx;;;;ccccccccc.....c...www;;ccccc.......xxxxxwwx
 xxxwwwxxcccccc;;;;xxxxx;;;;;;;cccccc.....+...www;;c...c.......xeexxwwx
@@ -122,7 +127,7 @@ xxxxxwwwwwwwwwwwwwwwwQxwwwwwwwxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxx
 xxxxxxwwwwwwwwwwwwwxxxxwwwwwwwwwwwwwxxxPwwwwwwwwwwxxwwwwwwwwxxxxxxxxxx
 xxxxxxxwwwwwxxxxxxxxxxwwwwwwwxxwwwwxxxxxwwwwwwwwwxxxwwxwwwwxxxxxxxxxxx
 xxxxxxxx;7;;xxx222xxxxxxwwwwxxwww2222xxxxx22wwwwwwxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx;;;xxx;;;;;xx2222wwwwww;;;;;;;;xxxx22;;;;wwwwxxxxxxxxxxxxxxxxx
+xxxxxxx>;;;xxx;;;;;xx2222wwwwww;;;;;;;;xxxx22;;;;wwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxx;xxxx;;;;;;;;;;;;ww;;;;;;;;;;;;;;;;;;;;;;;;wwwxxxxxxxxxxxxxxx
 xxxxxxxxxxxx;;;;2;;;;;;;;;;;;;;;;;);;;;;;2;;;;;;;;;;wwwxxxxxxxxxxxxxxx
 xxxxxxxxxxxx;;;;;;;;;;;;;;;;;;;;;[](;;;;;;;;;;;;;;;;2wxxxxxxxxxxxxxxxx
