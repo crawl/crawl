@@ -1553,6 +1553,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_FIRE_SHIELD])
             rf += 2;
 
+        if (you.duration[DUR_FIRE_VULN])
+            rf--;
+
         // transformations:
         switch (you.form)
         {
@@ -4356,6 +4359,7 @@ void display_char_status()
         DUR_TOXIC_RADIANCE,
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
+        DUR_FIRE_VULN,
     };
 
     status_info inf;

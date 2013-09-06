@@ -1546,6 +1546,7 @@ enum duration_type
     DUR_RECITE,
     DUR_GRASPING_ROOTS,
     DUR_SLEEP_IMMUNITY,
+    DUR_FIRE_VULN,
     NUM_DURATIONS
 };
 
@@ -1654,6 +1655,7 @@ enum enchant_type
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
     ENCH_GRASPING_ROOTS,
     ENCH_IOOD_CHARGED,
+    ENCH_FIRE_VULN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

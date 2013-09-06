@@ -181,6 +181,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_TOXIC_RADIANCE;
     case ENCH_GRASPING_ROOTS:
         return MB_GRASPING_ROOTS;
+    case ENCH_FIRE_VULN:
+        return MB_FIRE_VULN;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1556,6 +1558,8 @@ vector<string> monster_info::attributes() const
         v.push_back("radiating toxic energy");
     if (is(MB_GRASPING_ROOTS))
         v.push_back("movement impaired by roots");
+    if (is(MB_FIRE_VULN))
+        v.push_back("more vulnerable to fire");
     return v;
 }
 

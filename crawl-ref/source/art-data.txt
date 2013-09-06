@@ -273,13 +273,15 @@ NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
 TYPE:    flamberge
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+BASE_DAM: +1
+BASE_ACC: +1
 PLUS:    +6/+6
 COLOUR:  ETC_FIRE
 TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    tilerim, nogen
+BOOL:    tilerim, evil, nogen
 
 NAME:    Staff of Dispater
 APPEAR:  golden staff

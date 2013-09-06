@@ -817,6 +817,7 @@ static const char* dur_names[] =
     "reciting",
     "grasping roots",
     "sleep immunity",
+    "fire vulnerability",
 };
 
 void wizard_edit_durations(void)

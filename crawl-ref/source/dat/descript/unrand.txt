@@ -60,7 +60,8 @@ This dreadful weapon is used at the user's peril.
 %%%%
 Sword of Cerebov
 
-Eerie flames cover its twisted blade.
+Eerie flames cover its twisted blade. Its demonic power burns away some of the
+defender's fire resistance.
 %%%%
 Staff of Dispater
 
