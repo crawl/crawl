@@ -20,8 +20,6 @@ parser.add_option("-d", "--diff", help="Diff format (unified, context, n)",
                   default='n')
 parser.add_option("-f", "--force", action="store_true",
                   help="Overwrite files even if no change detected")
-parser.add_option("-i", "--invalidate", action="store_true",
-                  help="On merge, remove invalidated entries")
 parser.add_option("-l", "--language", help="Specify which languages to work on")
 parser.add_option("-r", "--resource", help="Specify which resources to work on")
 parser.add_option("-s", "--source", help="Work on source files (same as -l en)",
@@ -558,7 +556,7 @@ class ResourceFile():
         for (key, value) in self.entries.items():
             entries[key] = self.raw_entry(value)
             
-    def update(self):
+    def update(self, update_removed_keys = True):
         """Update the resource file with the content of raw_entries. New values
         will be converted in the resource format and stored in the appropriate
         diff dictionary by the __setitem__ methods"""
@@ -569,7 +567,7 @@ class ResourceFile():
                 # self[key + ":quote"] = raw_entries[(self.lang(), 'quotes')][key]
             if key not in entries: continue
             self[key] = entries[key]
-        if self.lang() != 'en' or self.ext == 'ini':
+        if update_removed_keys and (self.lang() != 'en' or self.ext == 'ini'):
             self.update_removed_keys()
 
     def write_file(self):
@@ -588,8 +586,7 @@ class ResourceFile():
         and allow editing (useful to fix renamed keys)."""
         entries = raw_entries[(self.lang(), self.resource)]
         for k in self.entries.keys():
-            if k not in self.source_keys() \
-               or options.invalidate and k not in entries:
+            if k not in self.source_keys() or k not in entries:
                 self.diff['removed'][k] = self.entries[k]
 
     def edit_file(self):
@@ -611,7 +608,7 @@ class ResourceFile():
         tmp_res.read_file()
         tmp_res.merge_file()
         os.remove(tmp.name)
-        self.update()
+        self.update(False)
         return True
 
 class TxtFile(ResourceFile):
