@@ -279,7 +279,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    tilerim, evil, nogen
+BOOL:    tilerim, nogen
 
 NAME:    Staff of Dispater
 APPEAR:  golden staff
