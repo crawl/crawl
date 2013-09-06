@@ -1384,6 +1384,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_MOTH_OF_WRATH;
     case MONS_MOTH_OF_SUPPRESSION:
         return TILEP_MONS_MOTH_OF_SUPPRESSION;
+    case MONS_POLYMOTH:
+        return TILEP_MONS_POLYMOTH;
 
     // small zombies, etc. ('z')
     case MONS_ZOMBIE:
@@ -3920,6 +3922,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_MOTH_OF_WRATH;
     case MONS_MOTH_OF_SUPPRESSION:
         return TILE_CORPSE_MOTH_OF_SUPPRESSION;
+    case MONS_POLYMOTH:
+        return TILE_CORPSE_POLYMOTH;
 
     // beetles ('B')
     case MONS_GOLIATH_BEETLE:
