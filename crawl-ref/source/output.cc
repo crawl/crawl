@@ -2170,8 +2170,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (you.rmut_from_item(calc_unid)
-                       || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                       || you_worship(GOD_ZIN) && you.piety >= 150);
+                       || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
     const int rrott = you.res_rotting();
 
     snprintf(buf, sizeof buf,
