@@ -764,10 +764,15 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
+    // Silently take MP before the spell.
+    const int cost = spell_mana(spell);
+    dec_mp(cost, true);
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
+        // Return the MP since the spell is aborted.
+        inc_mp(cost, true);
         return false;
     }
 
@@ -783,16 +788,17 @@ bool cast_a_spell(bool check_range, spell_type spell)
     else
         practise(EX_DID_MISCAST, spell);
 
-    // Nasty special cases.  Mana should be taken first, but that would make
-    // cancelling spells tricky, baring some refactoring.
+    // Nasty special cases.
     if (you.species == SP_DJINNI && cast_result == SPRET_SUCCESS
         && (spell == SPELL_BORGNJORS_REVIVIFICATION
          || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
     {
         // These spells have replenished essence to full.
+        inc_mp(cost, true);
+    } else {
+      // Redraw MP
+      flush_mp();
     }
-    else
-        dec_mp(spell_mana(spell));
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
     {
