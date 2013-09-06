@@ -436,6 +436,11 @@ class ResourceFile():
             return
         self.diff[change_t][key] = value
 
+        # If the key was previously removed and edited back in
+        # delete it from the 'removed' dict
+        if key in self.diff['removed']:
+            del self.diff['removed'][key]
+
     def items(self, diff_only):
         """Returns an iterator to a list of (key, value) tuples, depending on
         what is selected in res_index.changes and what is found in self.diff.
