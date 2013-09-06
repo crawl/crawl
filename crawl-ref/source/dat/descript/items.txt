@@ -1551,19 +1551,6 @@ An enchanted vessel brimming over with elemental water. Removing the stopper
 unleashes a torrent of water from the phial and sets free the water spirits
 that dwell within it.
 %%%%
-pie
-
-A custard pie. It appears anachronistically dangerous.
-%%%%
-pie:quote
-
-“And from that moment on I could not banish Oedipus's terrible end from my
- mind: putting his own eyes out with a pin after hearing those fateful words
- that Tiresias had uttered and being present when his mother hanged herself.”
-    -- Fernando Vidal Olmos, Report on the Blind
-    Ernesto Sabato, On Heroes and Tombs,
-    Translated by Helen R. Lane
-%%%%
 piece of ambrosia
 
 A portion of strange substance, produced by ghost moths. Consuming it provides
