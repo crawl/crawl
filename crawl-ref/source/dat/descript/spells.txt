@@ -161,9 +161,9 @@ Cantrip spell
 
 Cantrips are minor spells, aimed at trying to scare ignorant enemies or
 bolster the caster's morale. They have no real effect otherwise, and an
-adventurer of your stature has no need or fear of these. Or perhaps, just
-to be safe, you should knock thrice on unpainted wood to ward off their
-evil eye.
+adventurer of your stature has no need for or fear of these tricks. Or
+perhaps, just to be safe, you should knock thrice on unpainted wood to ward
+off their evil eye.
 %%%%
 Cause Fear spell
 
