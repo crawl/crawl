@@ -1445,7 +1445,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
         switch (weapons[i].first)
         {
         case WPN_UNARMED:
-            text += "claws";
+            text += species_has_claws(ng->species) ? "claws" : "unarmed";
             break;
         case WPN_THROWN:
             if (species_can_throw_large_rocks(ng->species))
@@ -1559,7 +1559,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
 
         text += defweapon == WPN_RANDOM  ? "Random" :
                 defweapon == WPN_VIABLE  ? "Viable" :
-                defweapon == WPN_UNARMED ? "claws"  :
+                defweapon == WPN_UNARMED ? "unarmed"  :
                 weapon_base_name(defweapon);
 
         // Adjust the end marker to aling the - because
@@ -1725,10 +1725,6 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
 
             switch (wp.first)
             {
-            case WPN_UNARMED:
-                if (!species_has_claws(ng->species))
-                    continue;
-                break;
             case WPN_SHORT_SWORD:
                 // Fighters and gladiators get cutlasses.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
