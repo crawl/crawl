@@ -938,11 +938,12 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
 bool enough_zp(int minimum, bool suppress_msg);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
-void dec_mp(int mp_loss);
+void dec_mp(int mp_loss, bool silent = false);
 void drain_mp(int mp_loss);
 
-void inc_mp(int mp_gain);
+void inc_mp(int mp_gain, bool silent = false);
 void inc_hp(int hp_gain);
+void flush_mp();
 
 void rot_hp(int hp_loss);
 void unrot_hp(int hp_recovered);

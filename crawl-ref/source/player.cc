@@ -4614,7 +4614,20 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     you.redraw_hit_points = true;
 }
 
-void dec_mp(int mp_loss)
+void flush_mp()
+{
+  if (Options.magic_point_warning
+          && you.magic_points < (you.max_magic_points
+                                 * Options.magic_point_warning) / 100)
+      {
+          mpr("* * * LOW MAGIC WARNING * * *", MSGCH_DANGER);
+      }
+
+      take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
+      you.redraw_magic_points = true;
+}
+
+void dec_mp(int mp_loss, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4627,16 +4640,10 @@ void dec_mp(int mp_loss)
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
-
-    if (Options.magic_point_warning
-        && you.magic_points < (you.max_magic_points
-                               * Options.magic_point_warning) / 100)
+    if (!silent)
     {
-        mpr("* * * LOW MAGIC WARNING * * *", MSGCH_DANGER);
+      flush_mp();
     }
-
-    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    you.redraw_magic_points = true;
 }
 
 void drain_mp(int loss)
@@ -4713,7 +4720,7 @@ bool enough_zp(int minimum, bool suppress_msg)
     return true;
 }
 
-void inc_mp(int mp_gain)
+void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4730,10 +4737,12 @@ void inc_mp(int mp_gain)
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
-    if (wasnt_max && you.magic_points == you.max_magic_points)
-        interrupt_activity(AI_FULL_MP);
-
-    you.redraw_magic_points = true;
+    if (!silent)
+    {
+        if (wasnt_max && you.magic_points == you.max_magic_points)
+            interrupt_activity(AI_FULL_MP);
+        you.redraw_magic_points = true;
+    }
 }
 
 // Note that "max_too" refers to the base potential, the actual
