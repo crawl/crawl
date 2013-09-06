@@ -867,7 +867,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     case WPN_UNARMED:
         if (species_has_claws(ng.species))
             return CC_UNRESTRICTED;
-        return CC_BANNED;
+        return CC_RESTRICTED;
 
     case WPN_SHORT_SWORD:
     case WPN_CUTLASS:
