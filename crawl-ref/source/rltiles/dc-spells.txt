@@ -69,6 +69,7 @@ infusion INFUSION
 song_of_slaying SONG_OF_SLAYING
 song_of_shielding SONG_OF_SHIELDING
 spectral_weapon SPECTRAL_WEAPON
+discord DISCORD
 
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
