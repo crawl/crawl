@@ -1536,8 +1536,9 @@ bool activate_talent(const talent& tal)
     // Doing these would outright kill the player.
     if (tal.which == ABIL_STOP_FLYING)
     {
-        if (grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
-            || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
+        if ((grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
+             || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
+            && !djinni_floats())
         {
             mpr("Stopping flight right now would be fatal!");
             crawl_state.zero_turns_taken();
