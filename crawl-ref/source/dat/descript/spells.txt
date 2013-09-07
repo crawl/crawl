@@ -691,8 +691,8 @@ Obviously, one wants to use it on allies.
 %%%%
 Might spell
 
-This ability significantly enhances one's melee ability. It works same as
-a potion of this name.
+This ability significantly enhances one's melee ability, just like the potion
+of the same name.
 %%%%
 Minor Healing spell
 
@@ -701,7 +701,7 @@ This spell heals a small amount of damage to the caster's body.
 Mislead spell
 
 This spell clouds the mind of an enemy. People thus affected cannot discern
-identities of beings around them, although certain prominent sights remain
+the identities of beings around them, although certain prominent sights remain
 obvious.
 %%%%
 Necromutation spell
@@ -842,7 +842,7 @@ Primal Wave spell
 This spell allows conjuring a great wave of water and directing it towards
 an enemy. The water tends to quickly flow away, yet not before filling the
 lungs (or equivalent) of creatures that need to breathe. Certain fire-based
-beings, such as fire bats, balrugs or the djinn, suffer extra damage.
+beings, such as fire bats, balrugs and djinn, suffer extra damage.
 %%%%
 Quicksilver Bolt spell
 
