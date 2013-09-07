@@ -711,8 +711,8 @@
 
     {  MST_NAGA,
       {
-       SPELL_POISON_SPLASH,
-       SPELL_POISON_SPLASH,
+       SPELL_SPIT_POISON,
+       SPELL_SPIT_POISON,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,

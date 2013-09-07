@@ -224,11 +224,11 @@ unseen Draconian Breath cast
 
 You hear a roar.
 %%%%
-Poison Splash cast
+Spit Poison cast
 
 @The_monster@ spits poison @at@ @target@.
 %%%%
-unseen Poison Splash cast
+unseen Spit Poison cast
 
 You hear a spitting sound.
 %%%%
