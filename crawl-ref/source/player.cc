@@ -4643,9 +4643,7 @@ void dec_mp(int mp_loss, bool silent)
 
     you.magic_points = max(0, you.magic_points);
     if (!silent)
-    {
-      flush_mp();
-    }
+        flush_mp();
 }
 
 void drain_mp(int loss)

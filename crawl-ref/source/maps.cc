@@ -674,7 +674,7 @@ const map_def *find_map_by_name(const string &name)
 {
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].name == name)
-            return (&vdefs[i]);
+            return &vdefs[i];
 
     return NULL;
 }
@@ -1503,7 +1503,7 @@ void run_map_local_preludes()
 
 const map_def *map_by_index(int index)
 {
-    return (&vdefs[index]);
+    return &vdefs[index];
 }
 
 ///////////////////////////////////////////////////////////////////////////

@@ -1685,7 +1685,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     break;
 
     case SPELL_CONTROL_WINDS:
-        return (mon->has_ench(ENCH_CONTROL_WINDS));
+        return mon->has_ench(ENCH_CONTROL_WINDS);
 
     case SPELL_WATERSTRIKE:
         return !foe || !feat_is_water(grd(foe->pos()));
