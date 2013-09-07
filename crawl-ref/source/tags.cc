@@ -1597,6 +1597,7 @@ static void tag_construct_you_dungeon(writer &th)
 static void marshall_follower(writer &th, const follower &f)
 {
     ASSERT(!invalid_monster_type(f.mons.type));
+    ASSERT(f.mons.alive());
     marshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         marshallItem(th, f.items[i]);
