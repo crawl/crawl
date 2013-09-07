@@ -179,9 +179,11 @@ static int _missile_colour(const item_def &item)
     case MI_THROWING_NET:
         item_colour = MAGENTA;
         break;
+#if TAG_MAJOR_VERSION == 34
     case MI_PIE:
         item_colour = YELLOW;
         break;
+#endif
     case NUM_SPECIAL_MISSILES:
     case NUM_REAL_SPECIAL_MISSILES:
         die("invalid missile brand");
@@ -1802,9 +1804,11 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
+#if TAG_MAJOR_VERSION == 34
     case MI_PIE:
         rc = SPMSL_BLINDING;
         break;
+#endif
     case MI_STONE:
         // deliberate fall through
     case MI_LARGE_ROCK:
@@ -1867,8 +1871,10 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_FRENZY:
         return (type == MI_NEEDLE);
 
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_BLINDING:
         return (type == MI_PIE);
+#endif
 
     default:
         if (type == MI_NEEDLE)

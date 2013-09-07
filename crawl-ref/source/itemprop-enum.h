@@ -266,7 +266,9 @@ enum missile_type
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
+#if TAG_MAJOR_VERSION == 34
     MI_PIE,
+#endif
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection

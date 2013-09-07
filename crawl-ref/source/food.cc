@@ -800,9 +800,7 @@ bool prompt_eat_inventory_item(int slot)
     }
     else if (you.species != SP_VAMPIRE)
     {
-        if (you.inv[which_inventory_slot].base_type != OBJ_FOOD
-            && (you.inv[which_inventory_slot].base_type != OBJ_MISSILES
-                || you.inv[which_inventory_slot].sub_type != MI_PIE))
+        if (you.inv[which_inventory_slot].base_type != OBJ_FOOD)
         {
             mpr("You can't eat that!");
             return false;
@@ -2321,12 +2319,6 @@ bool is_inedible(const item_def &item)
         return true;
     }
 
-    if (item.base_type == OBJ_MISSILES
-        && (item.sub_type != MI_PIE
-            || you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED))
-    {
-        return true;
-    }
     return false;
 }
 
@@ -2349,9 +2341,6 @@ bool is_preferred_food(const item_def &food)
     {
         return !player_mutation_level(MUT_CARNIVOROUS);
     }
-
-    if (food.base_type == OBJ_MISSILES && food.sub_type == MI_PIE)
-        return !player_mutation_level(MUT_CARNIVOROUS);
 
     if (food.base_type != OBJ_FOOD)
         return false;
@@ -2543,21 +2532,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             }
         }
         return false;
-
-    case OBJ_MISSILES:
-        switch (kindof_thing)
-        {
-            case MI_PIE:
-                if (ur_carnivorous)
-                {
-                    if (!suppress_msg)
-                        mpr("Sorry, you're a carnivore.");
-                    return false;
-                }
-                return true;
-            default:
-                return true;
-        }
 
     case OBJ_POTIONS: // called by lua
         if (get_ident_type(OBJ_POTIONS, kindof_thing) != ID_KNOWN_TYPE)
