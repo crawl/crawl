@@ -421,8 +421,10 @@ static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
         return (t == MBN_TERSE ? "penet" : "penetration");
     case SPMSL_DISPERSAL:
         return (t == MBN_TERSE ? "disperse" : "dispersal");
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_BLINDING:
         return (t == MBN_TERSE ? "blind" : "blinding");
+#endif
     case SPMSL_NORMAL:
         return "";
     default:
@@ -1392,7 +1394,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
         if (brand != SPMSL_NORMAL
+#if TAG_MAJOR_VERSION == 34
             && brand != SPMSL_BLINDING
+#endif
             && !basename && !qualname && !dbname)
         {
             if (terse)
