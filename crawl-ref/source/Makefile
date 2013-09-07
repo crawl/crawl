@@ -530,7 +530,7 @@ else
   ifneq (,$(shell $(GXX) --version|grep 'g++.*4\.2\.'))
     # OS X uses a buggy ancient version of gcc without fixes from even
     # subsequent point releases of 4.2.
-    CFOPTIMIZE := -O1
+    CFOPTIMIZE := -O0
   else
     CFOPTIMIZE := -O2
   endif
