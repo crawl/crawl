@@ -2312,6 +2312,7 @@ int player_movement_speed(bool ignore_burden)
     // Swiftness doesn't work in liquid.
     if (you.duration[DUR_SWIFTNESS] > 0
         && !you.in_water()
+        && !you.in_lava()
         && !you.liquefied_ground())
     {
         mv -= 2;
@@ -4154,7 +4155,8 @@ static void _display_movement_speed()
 {
     const int move_cost = (player_speed() * player_movement_speed()) / 10;
 
-    const bool water  = you.in_water() || you.liquefied_ground();
+    const bool water  = you.in_water() || you.in_lava()
+                        || you.liquefied_ground();
     const bool swim   = you.swimming();
 
     const bool fly    = you.flight_mode();
@@ -6074,6 +6076,11 @@ bool player::in_water() const
 {
     return (ground_level() && !beogh_water_walk()
             && feat_is_water(grd(pos())));
+}
+
+bool player::in_lava() const
+{
+    return ground_level() && feat_is_lava(grd(pos()));
 }
 
 bool player::can_swim(bool permanently) const
