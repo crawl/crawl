@@ -3373,7 +3373,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3)
-            && mons->hit_points > 1)
+            && mons->hit_points >= 8)
         {
             _starcursed_split(mons), used = true;
         }
