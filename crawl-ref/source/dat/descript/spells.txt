@@ -1,4 +1,4 @@
-%%%%
+﻿%%%%
 Abjuration spell
 
 This spell attempts to send the targeted hostile summoned creature to the place
@@ -803,7 +803,7 @@ This spell hurls a magical arrow coated with the most vile and noxious toxin.
 No living thing is completely immune to its effects, and even the undead will
 take damage from the physical component of the spell.
 %%%%
-Poison Splash spell
+Spit Poison spell
 
 <Spit Poison ability>
 %%%%

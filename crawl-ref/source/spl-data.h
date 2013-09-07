@@ -2071,7 +2071,7 @@ struct spell_desc
 },
 
 {
-    SPELL_POISON_SPLASH, "Poison Splash",
+    SPELL_SPIT_POISON, "Spit Poison",
      SPTYP_POISON,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
      2,

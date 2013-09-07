@@ -688,7 +688,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour  = BEAM_MMISSILE;   // similarly unresisted thing
         break;
 
-    case SPELL_POISON_SPLASH:
+    case SPELL_SPIT_POISON:
         beam.colour   = GREEN;
         beam.name     = "splash of poison";
         beam.damage   = dice_def(1, 4 + power / 10);
@@ -1282,7 +1282,7 @@ static bool _is_physiological_spell(spell_type spell)
     return spell == SPELL_QUICKSILVER_BOLT
         || spell == SPELL_METAL_SPLINTERS
         || spell == SPELL_STICKY_FLAME_SPLASH
-        || spell == SPELL_POISON_SPLASH
+        || spell == SPELL_SPIT_POISON
         || spell == SPELL_HOLY_BREATH
         || spell == SPELL_FIRE_BREATH;
 }
