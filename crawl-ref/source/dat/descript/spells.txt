@@ -1,4 +1,4 @@
-﻿%%%%
+%%%%
 Abjuration spell
 
 This spell attempts to send the targeted hostile summoned creature to the place
