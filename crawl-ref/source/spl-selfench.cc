@@ -194,14 +194,6 @@ spret_type cast_swiftness(int power, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.in_water() || you.in_lava() || you.liquefied_ground())
-    {
-        mprf("The %s foams!", you.in_water() ? "water"
-                            : you.in_lava()  ? "lava"
-                                             : "liquid ground");
-        return SPRET_ABORT;
-    }
-
     if (!you.duration[DUR_SWIFTNESS] && player_movement_speed() <= 6)
     {
         mpr("You can't move any more quickly.");
@@ -210,10 +202,20 @@ spret_type cast_swiftness(int power, bool fail)
 
     fail_check();
 
+    if (you.in_liquid())
+    {
+        // Hint that the player won't be faster until they leave the liquid.
+        mprf("The %s foams!", you.in_water() ? "water"
+                            : you.in_lava()  ? "lava"
+                                             : "liquid ground");
+    }
+
     // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
     // you're flying, for instance.
     you.increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
-                          "You feel quick.");
+                          you.in_liquid()
+                              ? "You feel like you could be more quick."
+                              : "You feel quick.");
     did_god_conduct(DID_HASTY, 8, true);
 
     return SPRET_SUCCESS;

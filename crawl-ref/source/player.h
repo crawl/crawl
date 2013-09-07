@@ -419,6 +419,7 @@ public:
 
     bool in_water() const;
     bool in_lava() const;
+    bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool can_cling_to_walls() const;

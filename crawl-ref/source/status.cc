@@ -294,7 +294,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_SWIFTNESS:
-        if (you.in_water() || you.in_lava() || you.liquefied_ground())
+        if (you.in_liquid())
             inf->light_colour = DARKGREY;
         break;
 
