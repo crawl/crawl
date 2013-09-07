@@ -24,6 +24,7 @@ struct ray_def
     coord_def pos() const;
     bool advance();
     void bounce(const reflect_grid &rg);
+    void nudge_inside();
     void regress();
 
     // Get and set the direction.
