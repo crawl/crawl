@@ -312,7 +312,7 @@ void debug_mons_scan()
             else if (!m->alive())
             {
                 _announce_level_prob(warned);
-                mprf_nocap(MSGCH_WARN,
+                mprf_nocap(MSGCH_ERROR,
                      "mgrd at (%d,%d) points at dead monster %s",
                      x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;
