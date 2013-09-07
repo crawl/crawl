@@ -405,7 +405,7 @@ static monster* _do_split(monster* thing, coord_def & target)
     new_slime->props = thing->props;
     new_slime->summoner = thing->summoner;
     if (thing->props.exists("blame"))
-        new_slime->props["blame"] = thing->props["blame"].get_string();
+        new_slime->props["blame"] = thing->props["blame"].get_vector();
 
     int split_off = thing->number / 2;
     float max_per_blob = thing->max_hit_points / float(thing->number);
