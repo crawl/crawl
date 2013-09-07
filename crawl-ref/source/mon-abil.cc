@@ -373,6 +373,8 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 // Now it returns index of new slime (-1 if it fails).
 static monster* _do_split(monster* thing, coord_def & target)
 {
+    ASSERT(thing->alive());
+
     // Create a new slime.
     mgen_data new_slime_data = mgen_data(thing->type,
                                          thing->behaviour,
@@ -419,6 +421,9 @@ static monster* _do_split(monster* thing, coord_def & target)
 
     if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);
+
+    ASSERT(thing->alive());
+    ASSERT(new_slime->alive());
 
     return new_slime;
 }
