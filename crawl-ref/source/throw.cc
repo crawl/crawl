@@ -1820,7 +1820,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             || (wepClass == OBJ_MISSILES
                 && (wepType == MI_STONE || wepType == MI_LARGE_ROCK
                     || wepType == MI_DART || wepType == MI_JAVELIN
-                    || wepType == MI_PIE)))
+#if TAG_MAJOR_VERSION == 34
+                    || wepType == MI_PIE
+#endif
+                    )))
         {
             // Elves with elven weapons.
             if (get_equip_race(item) == ISFLAG_ELVEN
@@ -1903,8 +1906,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_DART:
+#if TAG_MAJOR_VERSION == 34
             case MI_PIE:
-                // Darts and pies use throwing skill.
+#endif
+                // Darts use throwing skill.
                 exHitBonus += skill_bump(SK_THROWING);
                 exDamBonus += you.skill(SK_THROWING, 3) / 5;
                 break;
@@ -2549,8 +2554,10 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         chance = (brand == SPMSL_CURARE ? 6 : 12);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case MI_PIE:
         return true;
+#endif
 
     case MI_SLING_BULLET:
     case MI_STONE:

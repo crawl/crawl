@@ -318,8 +318,6 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_NET;
     else if (str == "return" || str == "returning")
         return FIRE_RETURNING;
-    else if (str == "pie")
-        return FIRE_PIE;
     else if (str == "inscribed")
         return FIRE_INSCRIBED;
 
