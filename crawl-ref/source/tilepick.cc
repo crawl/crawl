@@ -5001,6 +5001,30 @@ tileidx_t tileidx_spell(spell_type spell)
         return TILEG_TODO;
 
     // --------------------------------------------
+    // Monster spells
+    case SPELL_BLINK_OTHER:              return TILEG_BLINK_OTHER;
+    case SPELL_BRAIN_FEED:               return TILEG_BRAIN_FEED;
+    case SPELL_CANTRIP:                  return TILEG_CANTRIP;
+    case SPELL_COLD_BREATH:              return TILEG_COLD_BREATH;
+    case SPELL_FAKE_RAKSHASA_SUMMON:     return TILEG_FAKE_RAKSHASA_SUMMON;
+    case SPELL_FIRE_BREATH:              return TILEG_FIRE_BREATH;
+    case SPELL_HELLFIRE_BURST:           return TILEG_HELLFIRE_BURST;
+    case SPELL_METAL_SPLINTERS:          return TILEG_METAL_SPLINTERS;
+    case SPELL_MIASMA_BREATH:            return TILEG_MIASMA_BREATH;
+    case SPELL_PORKALATOR:               return TILEG_PORKALATOR;
+    case SPELL_QUICKSILVER_BOLT:         return TILEG_QUICKSILVER_BOLT;
+    case SPELL_SPIT_ACID:                return TILEG_SPIT_ACID;
+    case SPELL_SPIT_POISON:              return TILEG_SPIT_POISON;
+    case SPELL_STEAM_BALL:               return TILEG_STEAM_BALL;
+    case SPELL_STICKY_FLAME_RANGE:       return TILEG_STICKY_FLAME_RANGE;
+    case SPELL_STICKY_FLAME_SPLASH:      return TILEG_STICKY_FLAME_SPLASH;
+    case SPELL_SUMMON_DRAKES:            return TILEG_SUMMON_DRAKES;
+    case SPELL_SUMMON_HELL_BEAST:        return TILEG_SUMMON_HELL_BEAST;
+    case SPELL_SUMMON_MUSHROOMS:         return TILEG_SUMMON_MUSHROOMS;
+    case SPELL_SUMMON_UFETUBUS:          return TILEG_SUMMON_UFETUBUS;
+    case SPELL_SUMMON_UNDEAD:            return TILEG_SUMMON_UNDEAD;
+    case SPELL_WATER_ELEMENTALS:         return TILEG_WATER_ELEMENTALS;
+
     default:
         return TILEG_ERROR;
     }
