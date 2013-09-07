@@ -119,7 +119,7 @@ static const mutation_def* _seek_mutation(mutation_type mut)
     if (mut_index[mut] == -1)
         return NULL;
     else
-        return (&mut_data[mut_index[mut]]);
+        return &mut_data[mut_index[mut]];
 }
 
 bool is_valid_mutation(mutation_type mut)
@@ -160,7 +160,7 @@ bool is_body_facet(mutation_type mut)
 const mutation_def& get_mutation_def(mutation_type mut)
 {
     ASSERT(is_valid_mutation(mut));
-    return (*_seek_mutation(mut));
+    return *_seek_mutation(mut);
 }
 
 mutation_activity_type mutation_activity_level(mutation_type mut)

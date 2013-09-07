@@ -409,7 +409,7 @@ monster* monster_at(const coord_def &pos)
         return NULL;
 
     ASSERT(mindex <= MAX_MONSTERS);
-    return (&menv[mindex]);
+    return &menv[mindex];
 }
 
 bool mons_class_flag(monster_type mc, uint64_t bf)
@@ -2660,7 +2660,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
 monsterentry *get_monster_data(monster_type mc)
 {
     if (mc >= 0 && mc < NUM_MONSTERS)
-        return (&mondata[mon_entry[mc]]);
+        return &mondata[mon_entry[mc]];
     else
         return NULL;
 }

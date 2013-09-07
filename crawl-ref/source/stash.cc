@@ -1155,7 +1155,7 @@ const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 {
     for (unsigned i = 0; i < m_shops.size(); ++i)
         if (m_shops[i].isAt(c))
-            return (&m_shops[i]);
+            return &m_shops[i];
 
     return NULL;
 }

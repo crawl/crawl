@@ -183,7 +183,7 @@ static const duration_def* _lookup_duration(duration_type dur)
     if (duration_index[dur] == -1)
         return NULL;
     else
-        return (&duration_data[duration_index[dur]]);
+        return &duration_data[duration_index[dur]];
 }
 
 static void _reset_status_info(status_info* inf)

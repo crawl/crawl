@@ -517,7 +517,7 @@ item_def *monster::launcher()
 // caller's responsibility.
 static int _mons_offhand_weapon_index(const monster* m)
 {
-    return (m->inv[MSLOT_ALT_WEAPON]);
+    return m->inv[MSLOT_ALT_WEAPON];
 }
 
 item_def *monster::weapon(int which_attack) const
