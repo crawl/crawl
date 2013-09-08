@@ -58,10 +58,6 @@ Sword of Zonguldrok
 
 Questa disgraziata arma mette a rischio colui che la usa.
 %%%%
-Sword of Cerebov
-
-Spettrali fiamme coprono la sua contorta lama.
-%%%%
 Staff of Dispater
 
 Questo leggendario oggetto può sguinzagliare la furia dell'Inferno. Le fiamme

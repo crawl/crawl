@@ -21,8 +21,70 @@ previamente, simplemente intenta caminar sobre él.
 %%%%
 tutorial2 tutorial_end
 
-¡Enhorabuena! ¡Has logrado sobrevivir tu primera banda de monstruos! Para
-salir, simplemente baja por esas escaleras.
+¡Enhorabuena! ¡Has logrado sobrevivir tu primera banda de monstruos! Para salir
+del curso, simplemente desciende esas escaleras.
+%%%%
+tutorial3 start
+
+En esta lección vas a aprender acerca de los objetos y de como usarlos.
+%%%%
+tutorial3 autopickup
+
+Algunos tipos de objetos<tiles>, marcados con un recuadro verde,</tiles> son
+recogidos de forma automática cuando pases por encima de ellos.
+%%%%
+tutorial3 gold
+
+Puedes gastar el oro en las tiendas. El oro no pesa y no puede ser depositado.
+%%%%
+tutorial3 shop
+
+Las tiendas venden objetos diversos, pero no comprarán objetos de nadie.
+%%%%
+tutorial3 optional_battle
+
+Advertencia: esta senda conduce a <lightred>una batalla difícil</lightred>.
+Puedes elegir entre usar lo que has aprendido para combatir, o intentar
+alcanzar la otra salida en la isla. En cualquier caso, es posible que sea una
+buena idea comprar algunos objetos, si no los has comprado todavía.
+%%%%
+tutorial3 tutorial_end
+
+¡Bien hecho! Para salir del curso, simplemente desciende estas escaleras.
+%%%%
+tutorial3 exit
+
+:nowrap
+<yellow>Comandos para usar objetos</yellow>
+  <w>$cmd[CMD_PICKUP]</w>  recoger un objeto
+  <w>$cmd[CMD_WEAR_ARMOUR]</w>  ponerse una pieza de una armadura
+  <w>$cmd[CMD_READ]</w>  leer un pergamino
+  <w>$cmd[CMD_WIELD_WEAPON]</w>  empuñar un arma
+  <w>$cmd[CMD_QUAFF]</w>  beber una poción
+  <w>$cmd[CMD_EVOKE]</w>  invocar una varita
+  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  ponerse joyería
+  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  quitarse joyería
+  <w>$cmd[CMD_DROP]</w>  depositar un objeto
+
+  <w></w>Los comandos para usar objetos también están disponibles en el menú del inventario (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), así como las descripciones de los mismos.
+  <localtiles><w></w>Y por supuesto, <white>los clics con el ratón</white> también funcionan.
+</localtiles>
+
+<yellow>Otros comandos</yellow>
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> muestra la ayuda sobre comandos
+  <w>$cmd[CMD_RESISTS_SCREEN]</w>  muestra información acerca del personaje
+  <w>$cmd[CMD_USE_ABILITY]</w>  usar una habilidad
+  <w>$cmd[CMD_EXPLORE]</w>  explorar de forma automatizada
+  <w>$cmd[CMD_SEARCH_STASHES]</w>  buscar objetos o lugares que hayan sido vistos previamente
+
+  <localtiles><w></w>Varios de estos comandos también pueden ser ejecutados cliqueando en el <w>panel de comandos</w>.
+</localtiles>
+
+                                 <cyan>Presiona <w>cualquier tecla</w> para limpiar esta pantalla...</cyan>
+%%%%
+tutorial4 start
+
+En esta lección vas a aprender acerca de como memorizar e invocar hechizos.
 %%%%
 tutorial5 start
 
@@ -43,4 +105,11 @@ tutorial5 berserk2
 
 Ponerte hecho una furia también es muy útil cuando te enfrentes a varios
 oponentes, siempre que no te quedes exhausto antes de acabar con todos ellos.
+%%%%
+tutorial5 tutorial_end
+
+¡Enhorabuena! Has completado la última lección del curso y ya estás preparado
+para el juego auténtico. ¡Buena suerte!
+
+Para salir del curso, simplemente desciende estas escaleras.
 %%%%

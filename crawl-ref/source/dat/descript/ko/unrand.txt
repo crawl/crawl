@@ -58,10 +58,6 @@ Sword of Zonguldrok
 
 이 무시무시한 무기는 사용자를 위험에 빠트린다.
 %%%%
-Sword of Cerebov
-
-요사스러운 불꽃이 꼬인 칼날을 감싸고 있다.
-%%%%
 Staff of Dispater
 
 이 전설적인 도구는 지옥의 불꽃을 일으킬 수 있다.
