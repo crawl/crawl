@@ -141,9 +141,9 @@ although the shock will render the caster incapable of action for a while.
 %%%%
 Brain Feed spell
 
-This spell allows draining a portion of an enemy's intelligence. Such a loss
-is only temporary, and rings of sustain ability can prevent or greatly
-reduce this effect.
+This spell allows draining a portion of an enemy's intelligence. Such a loss is
+only temporary, and rings of sustain ability can prevent or greatly reduce this
+effect.
 %%%%
 Brothers in Arms spell
 
@@ -159,11 +159,11 @@ This spell calls forth a minor demon from the pits of Hell.
 %%%%
 Cantrip spell
 
-Cantrips are minor spells, aimed at trying to scare ignorant enemies or
-bolster the caster's morale. They have no real effect otherwise, and an
-adventurer of your stature has neither need for, nor fear of, such tricks.
-Or perhaps, just to be safe, you should knock thrice on unpainted wood to
-ward off their evil eye.
+Cantrips are minor spells, aimed at trying to scare ignorant enemies or bolster
+the caster's morale. They have no real effect otherwise, and an adventurer of
+your stature has neither need for, nor fear of, such tricks. Or perhaps, just
+to be safe, you should knock thrice on unpainted wood to ward off their evil
+eye.
 %%%%
 Cause Fear spell
 
@@ -355,8 +355,8 @@ while.
 %%%%
 Ensnare spell
 
-This spells lets the caster shoot out a sticky white substance that
-immediately forms a spider web.
+This spells lets the caster shoot out a sticky white substance that immediately
+forms a spider web.
 %%%%
 Ensorcelled Hibernation spell
 
@@ -393,9 +393,9 @@ dead.”
 %%%%
 Fire Summon spell
 
-Evoking his sceptre, Asmodeus can summon his minions. Unlike you, Asmodeus
-is feared so much that demons summoned this way know better than to turn
-against him, and they were on his team in the first place.
+Evoking his sceptre, Asmodeus can summon his minions. Unlike you, Asmodeus is
+feared so much that demons summoned this way know better than to turn against
+him, and they were on his team in the first place.
 %%%%
 Fireball spell
 
@@ -439,19 +439,18 @@ result in premature detonation!
 %%%%
 Ghostly Fireball spell
 
-This spell allows the caster to throw an exploding ball of necromantic
-energy. It somehow resembles eerie greenish flames, but it has nothing in
-common with fire besides appearance. This energy can be resisted using life
-protection, and it not only does no damage to the undead but can even heal
-them.
+This spell allows the caster to throw an exploding ball of necromantic energy.
+It somehow resembles eerie greenish flames, but it has nothing in common with
+fire besides appearance. This energy can be resisted using life protection, and
+it not only does no damage to the undead but can even heal them.
 %%%%
 Ghostly Flames spell
 
 This spell allows the caster to send forth a conflagration of necromantic
-energy. It resembles eerie greenish flames, but it has nothing in common
-with fire besides appearance. Both the direct hit and residual flame does
-damage to living beings and heals the undead. The energy tends to coalesce
-into spectral undead creatures on its own.
+energy. It resembles eerie greenish flames, but it has nothing in common with
+fire besides appearance. Both the direct hit and residual flame does damage to
+living beings and heals the undead. The energy tends to coalesce into spectral
+undead creatures on its own.
 %%%%
 Haste Other spell
 
@@ -459,9 +458,9 @@ This spell allows the caster to speed up all actions of a nearby ally.
 %%%%
 Haste Plants spell
 
-This spell allows the caster to speed up a bunch of nearby plants. Of
-course, this serves no purpose when used on immotile weeds or bushes, but
-plants that can do damage will benefit from it.
+This spell allows the caster to speed up a bunch of nearby plants. Of course,
+this serves no purpose when used on immotile weeds or bushes, but plants that
+can do damage will benefit from it.
 %%%%
 Haste spell
 
@@ -479,10 +478,10 @@ This spell allows the caster to heal a nearby ally.
 %%%%
 Hellfire Burst spell
 
-This ability allows a sudden burst of hellish fire to appear beneath a
-chosen target. There is no protection possible against this unholy flame
-— it goes straight through armour. Only certain creatures, usually fire
-based, are immune.
+This ability allows a sudden burst of hellish fire to appear beneath a chosen
+target. There is no protection possible against this unholy flame — it goes
+straight through armour. Only certain creatures, usually fire based, are
+immune.
 %%%%
 Hellfire spell
 
@@ -496,16 +495,15 @@ Shining One's definition of evil.
 %%%%
 Holy Flames spell
 
-This spell allows one to trap an enemy in a ring of blessed flame. If such
-a foe decides to step through it, it does extra damage especially to evil
-and unholy beings. Holy creatures can step through it without any ill
-effects.
+This spell allows one to trap an enemy in a ring of blessed flame. If such a
+foe decides to step through it, it does extra damage especially to evil and
+unholy beings. Holy creatures can step through it without any ill effects.
 %%%%
 Holy Light spell
 
-This spell allows the caster to shoot out a beam of holy energy. It does
-damage to anyone hit not holy themselves, and those evil and unholy suffer
-far more damage.
+This spell allows the caster to shoot out a beam of holy energy. It does damage
+to anyone hit not holy themselves, and those evil and unholy suffer far more
+damage.
 %%%%
 Ice Form spell
 
@@ -629,8 +627,8 @@ knows, but certainly nobody would want to be nearby when it happens.
 %%%%
 Malign Offering spell
 
-This spell allows the caster to drain life from an enemy, healing nearby
-allies in the process.
+This spell allows the caster to drain life from an enemy, healing nearby allies
+in the process.
 %%%%
 Malmutate spell
 
@@ -676,8 +674,8 @@ resistance, although tougher monsters will not be slowed for as long as others.
 %%%%
 Metal Splinters spell
 
-This ability sends a directed stream of sharp metal splinters, usually as
-a breath weapon.
+This ability sends a directed stream of sharp metal splinters, usually as a
+breath weapon.
 %%%%
 Miasma Breath spell
 
@@ -700,8 +698,8 @@ This spell heals a small amount of damage to the caster's body.
 %%%%
 Mislead spell
 
-This spell clouds the mind of an enemy. People thus affected cannot discern
-the identities of beings around them, although certain prominent sights remain
+This spell clouds the mind of an enemy. People thus affected cannot discern the
+identities of beings around them, although certain prominent sights remain
 obvious.
 %%%%
 Necromutation spell
@@ -839,10 +837,10 @@ increasing its accuracy (but not damage).
 %%%%
 Primal Wave spell
 
-This spell allows conjuring a great wave of water and directing it towards
-an enemy. The water tends to quickly flow away, yet not before filling the
-lungs (or equivalent) of creatures that need to breathe. Certain fire-based
-beings, such as fire bats, balrugs and djinn, suffer extra damage.
+This spell allows conjuring a great wave of water and directing it towards an
+enemy. The water tends to quickly flow away, yet not before filling the lungs
+(or equivalent) of creatures that need to breathe. Certain fire-based beings,
+such as fire bats, balrugs and djinn, suffer extra damage.
 %%%%
 Quicksilver Bolt spell
 
@@ -896,9 +894,8 @@ tear clean through the ranks of the caster's foes.
 %%%%
 Sentinel's Mark spell
 
-This spell bestows a strong beacon upon an enemy. It announces the presence
-and location of the marked person to everyone on the same same dungeon
-level.
+This spell bestows a strong beacon upon an enemy. It announces the presence and
+location of the marked person to everyone on the same same dungeon level.
 %%%%
 Shadow Creatures spell
 
@@ -944,11 +941,11 @@ Silver Blast spell
 
 # Yes, Zin's hatreds are about as arbitrary as those of religions he's based
 # on.
-This ability sends a ball of pure power of Zin. When it explodes, it
-severely damages anyone chaotic or unclean who gets caught in the blast.
-Those merely guilty of chaotic or unclean acts get hurt somewhat less, while
-those evil or unholy suffer less yet. Mutated beings draw the ire of Zin as
-well, even if they became mutated against their will.
+This ability sends a ball of pure power of Zin. When it explodes, it severely
+damages anyone chaotic or unclean who gets caught in the blast. Those merely
+guilty of chaotic or unclean acts get hurt somewhat less, while those evil or
+unholy suffer less yet. Mutated beings draw the ire of Zin as well, even if
+they became mutated against their will.
 %%%%
 Simulacrum spell
 
@@ -988,8 +985,8 @@ singing will start a new song, not extend an existing one.
 Spawn Tentacles spell
 
 Monstrous creatures who possess large tentacles may use extend them far from
-their main body, for purposes which nearly always involve smacking some
-uppity snack like you with those tentacles.
+their main body, for purposes which nearly always involve smacking some uppity
+snack like you with those tentacles.
 %%%%
 Spectral Weapon spell
 
@@ -1037,8 +1034,8 @@ powerful transmutation. Note that magical artefacts will not be affected.
 %%%%
 Sticky Flame Range spell
 
-This spell allows conjuring a glob of sticky flaming substance and throwing
-it a possibly distant enemy.
+This spell allows conjuring a glob of sticky flaming substance and throwing it
+a possibly distant enemy.
 %%%%
 Sticky Flame Splash spell
 

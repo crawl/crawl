@@ -343,10 +343,9 @@ hibernation hypodermique.
 Excruciating Wounds spell
 
 Ce sort imprègne temporairement l'arme portée par le sorcier avec l'essence
-même de la douleur. Cela n'affectera pas les armes qui sont déjà sujète à des
+même de la douleur. Cela n'affectera pas les armes qui sont déjà sujette à des
 enchantements spéciaux. Notez que contrairement à d'autres enchantements, la
-douleur ne peut pas être rendu permanente par un parchemin de vorpalisation
-d'arme.
+douleur ne peut pas être rendu permanente par un parchemin d'aura d'arme.
 %%%%
 Fire Brand spell
 
@@ -1167,7 +1166,8 @@ Ce sort projette un missile de poison.
 %%%%
 Warp Weapon spell
 
-Ce sort lie temporairement une zone de transfert localisée avec l'arme du
-sorcier. Notez que contrairement aux autres enchantements, la distorsion ne
-peut pas être rendue permanente en lisant un parchemin de vorpalisation d'arme.
+Ce sort lie temporairement une zone de déformation temporelle localisée avec
+l'arme du sorcier. Notez que contrairement aux autres enchantements, la
+distorsion ne peut pas être rendue permanente en lisant un parchemin d'aura
+d'arme.
 %%%%

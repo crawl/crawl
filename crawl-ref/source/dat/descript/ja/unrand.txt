@@ -58,10 +58,6 @@ Sword of Zonguldrok
 
 この恐ろしき武器は使用者を危険に晒す。
 %%%%
-Sword of Cerebov
-
-薄気味の悪い炎がこの捩じれた刃を包んでいる。
-%%%%
 Staff of Dispater
 
 この伝説的な品は、地獄の猛威を放つことができる。

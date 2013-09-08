@@ -59,10 +59,6 @@ Sword of Zonguldrok
 
 Dette skrækkelige våben anvendes på brugerens eget ansvar.
 %%%%
-Sword of Cerebov
-
-Sælsomme flammer dækker dets forvredne klinge.
-%%%%
 Staff of Dispater
 
 Denne legendariske genstand kan slippe Helvedes vrede løs.

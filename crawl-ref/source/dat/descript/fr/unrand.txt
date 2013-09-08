@@ -61,7 +61,8 @@ Cette arme terrible est utilisée par son porteur à ses risques et périls.
 %%%%
 Sword of Cerebov
 
-Des flammes étranges courent sur cette lame sinueuse.
+Des flammes étranges courent sur cette lame sinueuse. Son pouvoir démoniaque
+fait s'évaporer une partie de la résistance au feu du défenseur.
 %%%%
 Staff of Dispater
 
