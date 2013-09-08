@@ -596,17 +596,17 @@ bool wizard_add_mutation()
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         mutation_type mut = static_cast<mutation_type>(i);
-        if (!is_valid_mutation(mut))
+        const char* wizname = mutation_name(mut);
+        if (!wizname)
             continue;
 
-        const mutation_def& mdef = get_mutation_def(mut);
-        if (spec == mdef.wizname)
+        if (spec == wizname)
         {
             mutat = mut;
             break;
         }
 
-        if (strstr(mdef.wizname, spec.c_str()))
+        if (strstr(wizname, spec.c_str()))
             partial_matches.push_back(mut);
     }
 
@@ -625,7 +625,7 @@ bool wizard_add_mutation()
             vector<string> matches;
 
             for (unsigned int i = 0; i < partial_matches.size(); ++i)
-                matches.push_back(get_mutation_def(partial_matches[i]).wizname);
+                matches.push_back(mutation_name(partial_matches[i]));
 
             string prefix = "No exact match for mutation '" +
                             spec +  "', possible matches are: ";
@@ -641,7 +641,7 @@ bool wizard_add_mutation()
     else
     {
         mprf("Found #%d: %s (\"%s\")", (int) mutat,
-             get_mutation_def(mutat).wizname,
+             mutation_name(mutat),
              mutation_desc(mutat, 1, false).c_str());
 
         const int levels =
