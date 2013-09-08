@@ -178,7 +178,8 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
 
     // And some need more complicated logic.
     case TRAN_BLADE_HANDS:
-        return (eqslot != EQ_SHIELD && eqslot != EQ_GLOVES);
+        return (eqslot != EQ_SHIELD && eqslot != EQ_GLOVES
+                && item.special != UNRAND_LEAR);
 
     case TRAN_STATUE:
         return (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
@@ -386,6 +387,11 @@ static void _unmeld_equipment(const set<equipment_type>& melded)
 
 void unmeld_one_equip(equipment_type eq)
 {
+    if (eq >= EQ_HELMET && eq <= EQ_BOOTS)
+        if (const item_def* arm = you.slot_item(EQ_BODY_ARMOUR, true))
+            if (arm->special == UNRAND_LEAR)
+                eq = EQ_BODY_ARMOUR;
+
     set<equipment_type> e;
     e.insert(eq);
     _unmeld_equipment(e);
