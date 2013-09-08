@@ -823,7 +823,7 @@ void game_options::reset_options()
     note_all_skill_levels  = false;
     note_skill_max         = true;
     note_xom_effects       = true;
-    note_chat_messages     = false;
+    note_chat_messages     = true;
     note_hp_percent        = 5;
 
     // [ds] Grumble grumble.
