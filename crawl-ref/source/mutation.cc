@@ -1972,6 +1972,14 @@ bool delete_temp_mutation()
     return false;
 }
 
+const char* mutation_name(mutation_type mut)
+{
+    if (!is_valid_mutation(mut))
+        return nullptr;
+
+    return get_mutation_def(mut).wizname;
+}
+
 // Return a string describing the mutation.
 // If colour is true, also add the colour annotation.
 string mutation_desc(mutation_type mut, int level, bool colour)
