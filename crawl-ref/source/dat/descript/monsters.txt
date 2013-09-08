@@ -2505,7 +2505,7 @@ evil spirits, and meddling wizards have all been suggested as culprits.
 kobold:quote
 
 “Kobolds are harmless.”
-    -Bearand the Bold, epitaph
+    -Bearand the Bold, epitaph (Magic: the Gathering)
 %%%%
 kobold demonologist
 
