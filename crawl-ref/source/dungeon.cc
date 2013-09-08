@@ -2359,6 +2359,26 @@ static void _place_item_mimics()
 
 }
 
+// Apply modifications (ruination, plant clumps) that should happen
+// regardless of game mode.
+static void _post_vault_build()
+{
+    if (player_in_branch(BRANCH_LAIR))
+    {
+        int depth = you.depth + 1;
+        _ruin_level(rectangle_iterator(1), MMT_VAULT,
+                    20 - depth, depth / 2 + 4, 1 + (depth / 3));
+        do
+        {
+            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
+            depth -= 3;
+        } while (depth > 0);
+    }
+
+    if (player_in_branch(BRANCH_FOREST))
+        _add_plant_clumps(2);
+}
+
 static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 {
     bool place_vaults = _builder_by_type();
@@ -2374,21 +2394,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     // yet to be placed). Some items and monsters already exist.
 
     _check_doors();
-
-    if (player_in_branch(BRANCH_LAIR))
-    {
-        int depth = you.depth + 1;
-        _ruin_level(rectangle_iterator(1), MMT_VAULT,
-                    20 - depth, depth / 2 + 4, 1 + (depth / 3));
-        do
-        {
-            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
-            depth -= 3;
-        } while (depth > 0);
-    }
-
-    if (player_in_branch(BRANCH_FOREST))
-        _add_plant_clumps(2);
 
     const unsigned nvaults = env.level_vaults.size();
 
@@ -2423,6 +2428,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
             _place_chance_vaults();
         }
 
+        // Ruination and plant clumps.
+        _post_vault_build();
+
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
         _place_uniques();
@@ -2443,6 +2451,12 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _builder_items();
 
         _fixup_walls();
+    }
+    else
+    {
+        // Do ruination and plant clumps even in funny game modes, if
+        // they happen to have the relevant branch.
+        _post_vault_build();
     }
 
     _fixup_branch_stairs();
