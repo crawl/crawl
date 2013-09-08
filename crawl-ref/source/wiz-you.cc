@@ -642,7 +642,7 @@ bool wizard_add_mutation()
     {
         mprf("Found #%d: %s (\"%s\")", (int) mutat,
              get_mutation_def(mutat).wizname,
-             mutation_name(mutat, 1, false).c_str());
+             mutation_desc(mutat, 1, false).c_str());
 
         const int levels =
             prompt_for_int("How many levels to increase or decrease? ",
