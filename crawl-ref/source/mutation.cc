@@ -687,7 +687,7 @@ string describe_mutations(bool center_title)
         if (you.mutation[i] != 0 && you.innate_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
-            result += mutation_name(mut_type, -1, true);
+            result += mutation_desc(mut_type, -1, true);
             result += "\n";
             have_any = true;
         }
@@ -700,7 +700,7 @@ string describe_mutations(bool center_title)
                 && !you.temp_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
-            result += mutation_name(mut_type, -1, true);
+            result += mutation_desc(mut_type, -1, true);
             result += "\n";
             have_any = true;
         }
@@ -712,7 +712,7 @@ string describe_mutations(bool center_title)
         if (you.mutation[i] != 0 && you.temp_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
-            result += mutation_name(mut_type, -1, true);
+            result += mutation_desc(mut_type, -1, true);
             result += "\n";
             have_any = true;
         }
@@ -1974,7 +1974,7 @@ bool delete_temp_mutation()
 
 // Return a string describing the mutation.
 // If colour is true, also add the colour annotation.
-string mutation_name(mutation_type mut, int level, bool colour)
+string mutation_desc(mutation_type mut, int level, bool colour)
 {
     // Ignore the player's forms, etc.
     const bool ignore_player = (level != -1);
