@@ -1820,7 +1820,8 @@ static void _print_overview_screen_equip(column_composer& cols,
                      equip_char,
                      colname,
                      melded ? "melded " : "",
-                     chop_string(item.name(DESC_PLAIN, true), sw - 38, false).c_str(),
+                     chop_string(item.name(DESC_PLAIN, true),
+                                 melded ? sw - 38 : sw - 31, false).c_str(),
                      colname);
             equip_chars.push_back(equip_char);
         }
@@ -2167,8 +2168,8 @@ static vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 21, 38
-    column_composer cols(3, 21, 38);
+    // 3 columns, splits at columns 15, 28
+    column_composer cols(3, 15, 28);
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
@@ -2178,96 +2179,97 @@ static vector<formatted_string> _get_overview_resistances(
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (you.rmut_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
-    const int rrott = you.res_rotting();
-
     snprintf(buf, sizeof buf,
-             "%sRes.Fire  : %s\n"
-             "%sRes.Cold  : %s\n"
-             "%sLife Prot.: %s\n"
-             "%sRes.Poison: %s\n"
-             "%sRes.Elec. : %s\n"
-             "%sSust.Abil.: %s\n"
-             "%sRes.Mut.  : %s\n"
-             "%sRes.Rott. : %s\n",
+             "%srFire  %s\n"
+             "%srCold  %s\n"
+             "%srNeg   %s\n"
+             "%srPois  %s\n"
+             "%srElec  %s\n"
+             "%sSustAb %s\n"
+             "%srMut   %s\n"
+             ,
              _determine_colour_string(rfire, 3), _itosym3(rfire),
              _determine_colour_string(rcold, 3), _itosym3(rcold),
              _determine_colour_string(rlife, 3), _itosym3(rlife),
              _determine_colour_string(rpois, 1), _itosym1(rpois),
              _determine_colour_string(relec, 1), _itosym1(relec),
              _determine_colour_string(rsust, 2), _itosym2(rsust),
-             _determine_colour_string(rmuta, 1), _itosym1(rmuta),
-             _determine_colour_string(rrott, 1), _itosym1(rrott));
+             _determine_colour_string(rmuta, 1), _itosym1(rmuta));
     cols.add_formatted(0, buf, false);
 
-    int saplevel = player_mutation_level(MUT_SAPROVOROUS);
-    const char* pregourmand;
-    const char* postgourmand;
+    const int saplevel = player_mutation_level(MUT_SAPROVOROUS);
+    const bool show_gourm = (you.species != SP_MUMMY
+                             && you.species != SP_VAMPIRE
+                             && player_mutation_level(MUT_HERBIVOROUS) < 3
+                             && you.gourmand());
 
-    if (you.species != SP_MUMMY
-        && you.species != SP_VAMPIRE
-        && player_mutation_level(MUT_HERBIVOROUS) < 3
-        && you.gourmand())
-    {
-        pregourmand = "Gourmand  : ";
-        postgourmand = _itosym1(1);
-        saplevel = 1;
-    }
-    else
-    {
-        pregourmand = "Saprovore : ";
-        postgourmand = _itosym3(saplevel);
-    }
-    snprintf(buf, sizeof buf, "%s%s%s",
-             _determine_colour_string(saplevel, 3), pregourmand, postgourmand);
+    snprintf(buf, sizeof buf, "%s%s %s",
+             _determine_colour_string(
+                 show_gourm ? 1 : saplevel, show_gourm ? 1 : 3),
+             show_gourm ? "Gourmand"  : "Saprov",
+             show_gourm ? _itosym1(1) : _itosym3(saplevel));
+
     cols.add_formatted(0, buf, false);
-
 
     const int rinvi = you.can_see_invisible(calc_unid);
-    const int rward = you.warding(calc_unid);
+    // TODO: Also show *Rage in clarity line
+    const int rclar = you.clarity(calc_unid);
     const int rcons = you.conservation(calc_unid);
     const int rcorr = you.res_corr(calc_unid);
-    const int rclar = you.clarity(calc_unid);
+    const int rrott = you.res_rotting();
     const int rspir = you.spirit_shield(calc_unid);
+    const int rward = you.warding(calc_unid);
     snprintf(buf, sizeof buf,
-             "%sSee Invis. : %s\n"
-             "%sWarding    : %s\n"
-             "%sConserve   : %s\n"
-             "%sRes.Corr.  : %s\n"
-             "%sClarity    : %s\n"
-             "%sSpirit.Shd : %s\n"
+             "%sSeeInvis %s\n"
+             "%sClarity  %s\n"
+             "%sConserve %s\n"
+             "%srCorr    %s\n"
+             "%srRot     %s\n"
+             "%sSpirit   %s\n"
+             "%sWarding  %s\n"
              ,
              _determine_colour_string(rinvi, 1), _itosym1(rinvi),
-             _determine_colour_string(rward, 1), _itosym1(rward),
+             _determine_colour_string(rclar, 1), _itosym1(rclar),
              _determine_colour_string(rcons, 1), _itosym1(rcons),
              _determine_colour_string(rcorr, 1), _itosym1(rcorr),
-             _determine_colour_string(rclar, 1), _itosym1(rclar),
-             _determine_colour_string(rspir, 1), _itosym1(rspir));
+             _determine_colour_string(rrott, 1), _itosym1(rrott),
+             _determine_colour_string(rspir, 1), _itosym1(rspir),
+             _determine_colour_string(rward, 1), _itosym1(rward));
     cols.add_formatted(1, buf, false);
+
+    const int no_cast = you.no_cast(calc_unid);
+    const int sil = silenced(you.pos());
+    if (no_cast)
+    {
+        snprintf(buf, sizeof buf, "%sNoCast   %s",
+                 _determine_colour_string(-2, 2), _itosym1(1));
+        cols.add_formatted(1, buf, false);
+    }
+    else if (sil)
+    {
+        snprintf(buf, sizeof buf, "%sSilenced %s",
+                 _determine_colour_string(-sil, 1), _itosym1(1));
+        cols.add_formatted(1, buf, false);
+    }
 
     const int stasis = you.stasis(calc_unid);
     const int notele = you.no_tele(calc_unid);
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
-        snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
-                 _determine_colour_string(-1, 1), _itosym1(1));
+        snprintf(buf, sizeof buf, "%sNoTele   %s",
+                 _determine_colour_string(-2, 2), _itosym1(1));
     }
     else if (rrtel && !stasis)
     {
-        snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
+        snprintf(buf, sizeof buf, "%s*Tele    %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
     }
     else
     {
-        snprintf(buf, sizeof buf, "%sStasis     : %s",
+        snprintf(buf, sizeof buf, "%sStasis   %s",
                  _determine_colour_string(stasis, 1), _itosym1(stasis));
     }
-    cols.add_formatted(1, buf, false);
-
-    const int rflyi = you.airborne();
-    snprintf(buf, sizeof buf,
-             "%sFlight     : %s\n",
-             _determine_colour_string(rflyi, 1), _itosym1(rflyi));
     cols.add_formatted(1, buf, false);
 
     _print_overview_screen_equip(cols, equip_chars, sw);
