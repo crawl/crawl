@@ -1248,6 +1248,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
         *bg = orig + flv.special % tile_dngn_count(orig);
+    else if ((orig == TILE_SHOALS_SHALLOW_WATER || orig == TILE_SHOALS_DEEP_WATER)
+             && element_colour(ETC_WAVES, 0, gc) == LIGHTCYAN)
+        *bg = orig + 6 + flv.special % 6;
     else if (orig < TILE_DNGN_MAX)
         *bg = _pick_random_dngn_tile(orig, flv.special);
 
