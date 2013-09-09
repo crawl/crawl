@@ -7825,8 +7825,6 @@ bool player::do_shaft()
             return false;
         }
 
-        handle_items_on_shaft(pos(), false);
-
         if (!ground_level() || total_weight() == 0)
             return true;
 

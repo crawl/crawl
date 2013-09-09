@@ -1775,12 +1775,22 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
 
         if (mitm[o].defined())
         {
-            if (env.map_knowledge(pos).seen())
+            bool update_stash = false;
+            if (env.map_knowledge(pos).visible())
             {
                 mprf("%s fall%s through the shaft.",
                      mitm[o].name(DESC_INVENTORY).c_str(),
                      mitm[o].quantity == 1 ? "s" : "");
+
+                update_stash = true;
             }
+
+            if (update_stash)
+            {
+                env.map_knowledge(pos).clear_item();
+                StashTrack.update_stash(pos);
+            }
+
             // Item will be randomly placed on the destination level.
             mitm[o].pos = INVALID_COORD;
             add_item_to_transit(dest, mitm[o]);
