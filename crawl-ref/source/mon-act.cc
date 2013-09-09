@@ -1862,6 +1862,8 @@ static void _pre_monster_move(monster* mons)
         mons->accum_has_constricted();
 
         _heated_area(mons);
+        if (mons->type == MONS_NO_MONSTER)
+            return;
     }
 
     // Apply monster enchantments once for every normal-speed
