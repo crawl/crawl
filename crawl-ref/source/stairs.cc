@@ -705,6 +705,8 @@ void down_stairs(dungeon_feature_type force_stair)
                                     + short_place_name(shaft_dest) + ".");
         }
 
+        handle_items_on_shaft(you.pos(), false);
+
         if (!you.flight_mode() || force_stair)
             mpr("You fall through a shaft!");
         if (you.flight_mode() && !force_stair)
@@ -928,9 +930,7 @@ void down_stairs(dungeon_feature_type force_stair)
         break;
 
     default:
-        if (shaft)
-            handle_items_on_shaft(you.pos(), false);
-        else
+        if (!shaft)
             _climb_message(stair_find, false, old_level.branch);
         break;
     }
