@@ -7187,6 +7187,7 @@ void player::paralyse(actor *who, int str, string source)
         paralysis = 13 * BASELINE_DELAY;
 
     stop_constricting_all();
+    end_searing_ray();
 }
 
 void player::petrify(actor *who, bool force)
@@ -7227,6 +7228,9 @@ bool player::fully_petrify(actor *foe, bool quiet)
                         + random2(4 * BASELINE_DELAY);
     redraw_evasion = true;
     mpr("You have turned to stone.");
+
+    end_searing_ray();
+
     return true;
 }
 
@@ -7715,6 +7719,7 @@ void player::hibernate(int)
     }
 
     stop_constricting_all();
+    end_searing_ray();
     mpr("You fall asleep.");
 
     stop_delay();
@@ -7737,6 +7742,7 @@ void player::put_to_sleep(actor*, int power)
     mpr("You fall asleep.");
 
     stop_constricting_all();
+    end_searing_ray();
     stop_delay();
     flash_view(DARKGREY);
 

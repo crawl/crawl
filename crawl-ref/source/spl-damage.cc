@@ -2863,8 +2863,7 @@ void handle_searing_ray()
     ASSERT_RANGE(you.attribute[ATTR_SEARING_RAY], 1, 4);
 
     // All of these effects interrupt a channeled ray
-    if (you.paralysed() || you.confused() || you.asleep() || you.petrified()
-        || you.berserk())
+    if (you.confused() || you.berserk())
     {
         end_searing_ray();
         return;
