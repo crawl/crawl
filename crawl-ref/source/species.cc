@@ -289,11 +289,6 @@ size_type species_size(species_type species, size_part_type psize)
     case SP_TROLL:
         return SIZE_LARGE;
     case SP_NAGA:
-        // Most of their body is on the ground giving them a low profile.
-        if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
-            return SIZE_MEDIUM;
-        else
-            return SIZE_LARGE;
     case SP_CENTAUR:
         return ((psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE);
     case SP_HALFLING:
