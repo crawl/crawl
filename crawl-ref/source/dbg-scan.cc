@@ -472,14 +472,26 @@ void debug_mons_scan()
         if (you.constricted_by == m->mid && (!m->constricting
               || m->constricting->find(MID_PLAYER) == m->constricting->end()))
         {
-            mprf(MSGCH_ERROR, "Error: constricting[] entry missing for monster %s(%d)",
+            mprf(MSGCH_ERROR, "Error: constricting[you] entry missing for monster %s(%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->mindex());
         }
 
-        if (m->constricted_by && !actor_by_mid(m->constricted_by))
+        if (m->constricted_by)
         {
-            mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
-                 m->name(DESC_PLAIN, true).c_str(), m->mindex());
+            const actor *h = actor_by_mid(m->constricted_by);
+            if (!h)
+            {
+                mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
+                     m->name(DESC_PLAIN, true).c_str(), m->mindex());
+            }
+            if (!h->constricting
+                || h->constricting->find(m->mid) == h->constricting->end())
+            {
+                mprf(MSGCH_ERROR, "Error: constricting[%s(mindex=%d mid=%d)] "
+                                  "entry missing for monster %s(mindex=%d mid=%d)",
+                     h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid,
+                     m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid);
+            }
         }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
