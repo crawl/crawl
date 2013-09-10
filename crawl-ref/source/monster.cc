@@ -6001,7 +6001,6 @@ bool monster::attempt_escape(int attempts)
     size_type thesize;
     int attfactor;
     int randfact;
-    monster *themonst = 0;
 
     if (!is_constricted())
         return true;
@@ -6013,7 +6012,7 @@ bool monster::attempt_escape(int attempts)
     if (constricted_by != MID_PLAYER)
     {
         randfact = roll_dice(1,5) + 5;
-        themonst = monster_by_mid(constricted_by);
+        const monster* themonst = monster_by_mid(constricted_by);
         ASSERT(themonst);
         randfact += roll_dice(1, themonst->hit_dice);
     }
