@@ -5925,6 +5925,7 @@ void player::init()
     redraw_status_flags = 0;
     redraw_hit_points   = false;
     redraw_magic_points = false;
+    redraw_temperature  = false;
     redraw_stats.init(false);
     redraw_experience   = false;
     redraw_armour_class = false;
