@@ -126,6 +126,7 @@ void monster::reset()
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_SLEEP;
     foe             = MHITNOT;
+    summoner        = 0;
     number          = 0;
     damage_friendly = 0;
     damage_total    = 0;
