@@ -815,7 +815,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
     {
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
-        random_shuffle(training_order.begin(), training_order.end());
+        shuffle_array(training_order);
         for (vector<skill_type>::iterator it = training_order.begin();
              it != training_order.end(); ++it)
         {

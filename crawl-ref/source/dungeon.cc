@@ -1500,7 +1500,7 @@ static void _fixup_branch_stairs()
 
             if (!stairs.empty())
             {
-                random_shuffle(stairs.begin(), stairs.end());
+                shuffle_array(stairs);
                 coord_def coord = *(stairs.begin());
                 env.markers.add(new map_feature_marker(coord, grd(coord)));
                 _set_grd(coord, exit);
@@ -3131,7 +3131,7 @@ static void _place_chance_vaults()
     // [ds] If there are multiple CHANCE maps that share an luniq_ or
     // uniq_ tag, only the first such map will be placed. Shuffle the
     // order of chosen maps so we don't have a first-map bias.
-    random_shuffle(maps.begin(), maps.end());
+    shuffle_array(maps);
     for (int i = 0, size = maps.size(); i < size; ++i)
     {
         const map_def *map = maps[i];
@@ -3665,7 +3665,7 @@ static void _place_aquatic_monsters_weighted()
     if (water.size() > 49)
     {
         int num = min(random2avg(9, 2) + (random2(water_count) / 10), 15);
-        random_shuffle(water.begin(), water.end());
+        shuffle_array(water);
 
         for (int i = 0; i < num; i++)
         {
@@ -5408,7 +5408,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
         }
         // Randomized altar list for mini-temples.
         _temple_altar_list = temple_god_list();
-        random_shuffle(_temple_altar_list.begin(), _temple_altar_list.end());
+        shuffle_array(_temple_altar_list);
     }
 
     const god_type god = _temple_altar_list.back();

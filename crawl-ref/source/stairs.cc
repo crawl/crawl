@@ -741,7 +741,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
         ASSERT(runes.size() >= 3);
 
-        random_shuffle(runes.begin(), runes.end());
+        shuffle_array(runes);
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
 #ifdef USE_TILE_LOCAL
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));

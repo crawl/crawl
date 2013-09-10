@@ -1973,7 +1973,7 @@ void mons_word_of_recall(monster* mons)
 
         mon_list.push_back(*mi);
     }
-    random_shuffle(mon_list.begin(), mon_list.end());
+    shuffle_array(mon_list);
 
     // Now actually recall things
     for (unsigned int i = 0; i < mon_list.size(); ++i)
@@ -2033,7 +2033,7 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
             spots.push_back(*ri);
     }
 
-    random_shuffle(spots.begin(), spots.end());
+    shuffle_array(spots);
 
     actor* foe = mon->get_foe();
 
@@ -2104,7 +2104,7 @@ static void _cast_druids_call(const monster* mon)
             mon_list.push_back(*mi);
     }
 
-    random_shuffle(mon_list.begin(), mon_list.end());
+    shuffle_array(mon_list);
 
     // Can call a second low-HD monster if (and only if) the first called was
     // also low-HD (otherwise this summons a single creature)
@@ -3557,7 +3557,7 @@ static void _blink_allies_encircle(const monster* mon)
         if (_valid_encircle_ally(mon, *mi, foepos))
             allies.push_back(*mi);
     }
-    random_shuffle(allies.begin(), allies.end());
+    shuffle_array(allies);
 
     int count = 2 + random2(4);
 
@@ -3637,7 +3637,7 @@ static void _mons_create_tentacles(monster* head)
     if (unsigned(possible_count) > adj_squares.size())
         possible_count = adj_squares.size();
     else if (adj_squares.size() > unsigned(possible_count))
-        random_shuffle(adj_squares.begin(), adj_squares.end());
+        shuffle_array(adj_squares);
 
     int visible_count = 0;
 

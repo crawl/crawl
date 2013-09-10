@@ -3209,7 +3209,7 @@ static int _xom_repel_stairs(bool debug = false)
         you.duration[DUR_REPEL_STAIRS_CLIMB] = 500;
     }
 
-    random_shuffle(stairs_avail.begin(), stairs_avail.end());
+    shuffle_array(stairs_avail);
     int count_moved = 0;
     for (unsigned int i = 0; i < stairs_avail.size(); i++)
         if (move_stair(stairs_avail[i], true, true))

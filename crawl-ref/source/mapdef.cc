@@ -1451,7 +1451,7 @@ void map_lines::nsubst(nsubst_spec &spec)
         while ((pos = lines[y].find_first_of(spec.key, pos)) != string::npos)
             positions.push_back(coord_def(pos++, y));
     }
-    random_shuffle(positions.begin(), positions.end(), random2);
+    shuffle_array(positions);
 
     int pcount = 0;
     const int psize = positions.size();
@@ -1483,7 +1483,7 @@ int map_lines::apply_nsubst(vector<coord_def> &pos, int start, int nsub,
 string map_lines::block_shuffle(const string &s)
 {
     vector<string> segs = split_string("/", s);
-    random_shuffle(segs.begin(), segs.end(), random2);
+    shuffle_array(segs);
     return (comma_separated_line(segs.begin(), segs.end(), "/", "/"));
 }
 
