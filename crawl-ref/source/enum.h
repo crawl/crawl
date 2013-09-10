@@ -2945,6 +2945,8 @@ enum mutation_type
     MUT_CLING,
 #endif
     MUT_FUMES,
+    MUT_NIMBLE,
+    MUT_HULK,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,

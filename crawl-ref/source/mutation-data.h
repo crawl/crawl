@@ -1542,4 +1542,41 @@
   {"You stop fuming.", "You fume less.", ""},
 
   "fumes"
+},
+
+{ MUT_NIMBLE,           0,  3, false,  true,  true,
+  "nimble",
+
+  {"You are small for your race.",
+   "You are small and nimble for your race (-10% HP).",
+   "You are small and very nimble for your race."},
+
+  {"You feel small and nimble.",
+   "You feel more nimble",
+   "You feel more nimble."},
+
+  {"You feel large and awkward.",
+   "You feel less nimble.",
+   "You feel less nimble."},
+
+  "nimble"
+},
+
+{ MUT_HULK,             0,  3, false,  true,  true,
+  "hulking",
+
+  {"You are a hulk (Str +2).",
+   "You are a great hulk (Str +4, +10% HP).",
+   "You are a massive hulk (Str +6, +20% HP)."},
+
+  {"You feel large and beefy.",
+   "You feel more beefy.",
+   "You feel more beefy."},
+
+  {"You feel small and puny.",
+   "You feel less beefy.",
+   "You feel less beefy."},
+
+  "hulk"
 }
+

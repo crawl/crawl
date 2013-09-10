@@ -173,11 +173,24 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
 size_type player::body_size(size_part_type psize, bool base) const
 {
     if (base)
-        return species_size(species, psize);
+    {
+        const size_type size = species_size(species, psize);
+        // These two mutations affect overall body size (EV, stealth, etc)
+        // but not torso size (wieldability, armour).
+        if (psize == PSIZE_BODY)
+        {
+            const int mod = player_mutation_level(MUT_HULK)   ? 1
+                          : player_mutation_level(MUT_NIMBLE) ? -1 : 0;
+
+            // Assumes at least one size above and below the max/min base size.
+            return (size_type)(size + mod);
+        }
+        return size;
+    }
     else
     {
         size_type tf_size = transform_size(form, psize);
-        return (tf_size == SIZE_CHARACTER ? species_size(species, psize)
+        return (tf_size == SIZE_CHARACTER ? body_size(psize, true)
                                           : tf_size);
     }
 }
@@ -329,9 +342,9 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return true;
 
     // Small species wielding large weapons...
-    if (body_size(PSIZE_BODY, ignore_transform) < SIZE_MEDIUM
+    if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_MEDIUM
         && !check_weapon_wieldable_size(item,
-               body_size(PSIZE_BODY, ignore_transform)))
+               body_size(PSIZE_TORSO, ignore_transform)))
     {
         return false;
     }

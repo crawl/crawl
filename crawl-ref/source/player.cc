@@ -2329,6 +2329,9 @@ int player_movement_speed(bool ignore_burden)
     if (player_mutation_level(MUT_FAST) > 0 && !you.swimming())
         mv -= player_mutation_level(MUT_FAST) + 1;
 
+    if (player_mutation_level(MUT_NIMBLE) > 1)
+        mv -= player_mutation_level(MUT_NIMBLE);
+
     if (player_mutation_level(MUT_SLOW) > 0 && !you.swimming())
     {
         mv *= 10 + player_mutation_level(MUT_SLOW) * 2;
@@ -4885,10 +4888,13 @@ int get_real_hp(bool trans, bool rotted)
 
     // Frail and robust mutations, divine vigour, and rugged scale mut.
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
+                + (player_mutation_level(MUT_HULK) >= 2
+                   ? player_mutation_level(MUT_HULK) * 10 - 10 : 0)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
-                   player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
-                - (player_mutation_level(MUT_FRAIL) * 10);
+                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES)
+                   ? player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
+                - (player_mutation_level(MUT_FRAIL) * 10)
+                - (player_mutation_level(MUT_NIMBLE) >= 2 ? 10 : 0);
     hitp /= 100;
 
     if (!rotted)

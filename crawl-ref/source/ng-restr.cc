@@ -707,7 +707,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
     case WPN_TRIDENT:
         if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR
-            || species_size(ng.species, PSIZE_BODY) < SIZE_MEDIUM)
+            || species_size(ng.species, PSIZE_TORSO) < SIZE_MEDIUM)
         {
             return CC_BANNED;
         }

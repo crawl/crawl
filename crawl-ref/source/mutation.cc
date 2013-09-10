@@ -1673,6 +1673,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     {
     case MUT_FRAIL:
     case MUT_ROBUST:
+    case MUT_NIMBLE:
+    case MUT_HULK:
     case MUT_RUGGED_BROWN_SCALES:
         calc_hp();
         break;
@@ -1825,6 +1827,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     // Do post-mutation effects.
     if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
+        || mutat == MUT_NIMBLE || mutat == MUT_HULK
         || mutat == MUT_RUGGED_BROWN_SCALES)
     {
         calc_hp();
@@ -2149,9 +2152,6 @@ static const facet_def _demon_facets[] =
     { 1, { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES,
         MUT_THIN_METALLIC_SCALES },
       { -33, -33, 0 } },
-    { 1, { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
-           MUT_THIN_SKELETAL_STRUCTURE },
-      { -33, -33, 0 } },
     { 1, { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { -33, -33, 0 } },
     // Tier 2 facets
@@ -2178,7 +2178,9 @@ static const facet_def _demon_facets[] =
       { 50, 50, 50 } },
     { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
       { 50, 50, 50 } },
-    { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
+    { 3, { MUT_HULK, MUT_HULK, MUT_HULK },
+      { 50, 50, 50 } },
+    { 3, { MUT_NIMBLE, MUT_NIMBLE, MUT_NIMBLE },
       { 50, 50, 50 } },
     { 3, { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
            MUT_STOCHASTIC_TORMENT_RESISTANCE },

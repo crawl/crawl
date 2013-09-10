@@ -3148,7 +3148,7 @@ bool is_useless_item(const item_def &item, bool temp)
                     || !you.can_throw_large_rocks());
         case MI_JAVELIN:
         case MI_THROWING_NET:
-            return (you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM);
+            return (you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM);
         }
 
         return false;

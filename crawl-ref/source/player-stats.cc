@@ -377,12 +377,16 @@ static int _strength_modifier()
     // mutations
     result += 2 * (player_mutation_level(MUT_STRONG)
                   - player_mutation_level(MUT_WEAK));
+
+    result += 2 * player_mutation_level(MUT_HULK);
+
 #if TAG_MAJOR_VERSION == 34
     result += player_mutation_level(MUT_STRONG_STIFF)
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
 #endif
     result -= player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE)
               ? player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE) - 1 : 0;
+
 
     // transformations
     switch (you.form)

@@ -570,7 +570,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
 
         // Small species get darts, the others nets.
-        if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
+        if (you.body_size(PSIZE_TORSO) < SIZE_MEDIUM)
             newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
         else
             newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
