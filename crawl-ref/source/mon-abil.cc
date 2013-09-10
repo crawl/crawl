@@ -107,7 +107,7 @@ static void _search_dungeon(const coord_def & start,
         current = fringe.front();
         fringe.pop();
 
-        random_shuffle(compass_idx, compass_idx + connect_mode);
+        shuffle_array(compass_idx, connect_mode);
 
         for (int i=0; i < connect_mode; ++i)
         {
@@ -656,7 +656,7 @@ static bool _slime_merge(monster* thing)
 
     int max_slime_merge = 5;
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
     coord_def origin = thing->pos();
 
     int target_distance = grid_distance(thing->target, thing->pos());
@@ -734,7 +734,7 @@ static bool _crawling_corpse_merge(monster *crawlie)
         return false;
 
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
     coord_def origin = crawlie->pos();
 
     monster* merge_target = NULL;
@@ -796,7 +796,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     }
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
 
     // Anywhere we can place an offspring?
     for (int i = 0; i < 8; ++i)
@@ -873,7 +873,7 @@ static bool _starcursed_split(monster* mon)
     const coord_def origin = mon->pos();
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
 
     // Anywhere we can place an offspring?
     for (int i = 0; i < 8; ++i)
@@ -2449,7 +2449,7 @@ struct tentacle_attack_constraints
     void operator()(const position_node & node,
                     vector<position_node> & expansion)
     {
-        random_shuffle(connect_idx, connect_idx + 8);
+        shuffle_array(connect_idx, 8);
 
 //        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
         for (unsigned i=0; i < 8; i++)
@@ -2560,7 +2560,7 @@ struct tentacle_connect_constraints
     void operator()(const position_node & node,
                     vector<position_node> & expansion)
     {
-        random_shuffle(connect_idx, connect_idx + 8);
+        shuffle_array(connect_idx, 8);
 
         for (unsigned i=0; i < 8; i++)
         {
@@ -2946,7 +2946,7 @@ void move_solo_tentacle(monster* tentacle)
 
     if (severed)
     {
-        random_shuffle(compass_idx, compass_idx + 8);
+        shuffle_array(compass_idx, 8);
         for (unsigned i = 0; i < 8; ++i)
         {
             coord_def new_base = base_position + Compass[compass_idx[i]];
@@ -3039,7 +3039,7 @@ void move_solo_tentacle(monster* tentacle)
         // todo: set a random position?
 
         dprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
-        random_shuffle(compass_idx, compass_idx + 8);
+        shuffle_array(compass_idx, 8);
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
@@ -4791,7 +4791,7 @@ void activate_ballistomycetes(monster* mons, const coord_def& origin,
     if (candidates.size() > 25)
         return;
 
-    random_shuffle(candidates.begin(), candidates.end());
+    shuffle_array(candidates);
 
     int index = 0;
 
@@ -4904,7 +4904,7 @@ void starcursed_merge(monster* mon, bool forced)
 {
     //Find a random adjacent starcursed mass
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
 
     for (int i = 0; i < 8; ++i)
     {

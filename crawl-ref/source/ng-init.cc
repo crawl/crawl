@@ -189,8 +189,7 @@ void initialise_temples()
     // Now set up the overflow temples.
 
     vector<god_type> god_list = temple_god_list();
-
-    random_shuffle(god_list.begin(), god_list.end());
+    shuffle_array(god_list);
 
     vector<god_type> overflow_gods;
 

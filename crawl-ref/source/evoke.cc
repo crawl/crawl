@@ -1342,7 +1342,7 @@ static void _fan_of_gales_elementals()
             elementals.push_back(*ri);
         }
     }
-    random_shuffle(elementals.begin(), elementals.end());
+    shuffle_array(elementals);
 
     int num_elementals = _num_evoker_elementals();
 
@@ -1466,7 +1466,7 @@ static bool _stone_of_tremors()
             rubble_pos.push_back(wall_pos[i]);
         }
     }
-    random_shuffle(rubble_pos.begin(), rubble_pos.end());
+    shuffle_array(rubble_pos);
 
     // Create elementals.
     bool created = false;

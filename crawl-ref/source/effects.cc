@@ -1610,7 +1610,7 @@ void change_labyrinth(bool msg)
                                          min((int) targets.size(), 45));
 
     // Shuffle the targets, then pick the max_targets first ones.
-    random_shuffle(targets.begin(), targets.end(), random2);
+    shuffle_array(targets);
 
     // For each of the chosen wall grids, calculate the path connecting the
     // two floor grids to either side, and block off one floor grid on this
@@ -1811,7 +1811,7 @@ void change_labyrinth(bool msg)
                  ri->x, ri->y);
         }
         // Search the eight possible directions in random order.
-        random_shuffle(dirs.begin(), dirs.end(), random2);
+        shuffle_array(dirs);
         for (unsigned int i = 0; i < dirs.size(); i++)
         {
             const coord_def p = *ri + dirs[i];
@@ -2734,7 +2734,7 @@ int place_ring(vector<coord_def> &ring_points,
                int arc_occupancy,
                int &seen_count)
 {
-    random_shuffle(ring_points.begin(), ring_points.end());
+    shuffle_array(ring_points);
 
     int target_amount = ring_points.size();
     int spawned_count = 0;
@@ -3031,7 +3031,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
             break;
 
         // Wish adjacent_iterator had a random traversal.
-        random_shuffle(permutation, permutation+c_size);
+        shuffle_array(permutation, c_size);
 
         for (int count = 0; count < c_size; ++count)
         {

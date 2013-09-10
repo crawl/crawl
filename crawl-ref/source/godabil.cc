@@ -2406,7 +2406,7 @@ bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
 
     if (mons_positions.empty())
     {
-        random_shuffle(candidates.begin(), candidates.end());
+        shuffle_array(candidates);
         return true;
     }
 

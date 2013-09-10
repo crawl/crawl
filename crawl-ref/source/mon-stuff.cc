@@ -3195,7 +3195,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         if (target_types.empty())
             return false;
 
-        random_shuffle(target_types.begin(), target_types.end(), random2);
+        shuffle_array(target_types);
         targetc = target_types[0];
     }
 

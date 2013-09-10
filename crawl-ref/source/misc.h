@@ -228,7 +228,7 @@ struct simple_connect
     void operator()(const position_node & node,
                     vector<position_node> & expansion)
     {
-        random_shuffle(compass_idx, compass_idx + connect);
+        shuffle_array(compass_idx, connect);
 
         for (int i=0; i < connect; i++)
         {
