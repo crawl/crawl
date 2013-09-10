@@ -188,54 +188,56 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
     disable_other_crashes();
 
-    string error = print_error? strerror(errno) : "";
-    if (format)
+    // Let "error" go out of scope for valgrind's sake.
     {
-        va_list arg;
-        va_start(arg, format);
-        char buffer[1024];
-        vsnprintf(buffer, sizeof buffer, format, arg);
-        va_end(arg);
+        string error = print_error? strerror(errno) : "";
+        if (format)
+        {
+            va_list arg;
+            va_start(arg, format);
+            char buffer[1024];
+            vsnprintf(buffer, sizeof buffer, format, arg);
+            va_end(arg);
 
-        if (error.empty())
-            error = string(buffer);
-        else
-            error = string(buffer) + ": " + error;
+            if (error.empty())
+                error = string(buffer);
+            else
+                error = string(buffer) + ": " + error;
 
-        if (!error.empty() && error[error.length() - 1] != '\n')
-            error += "\n";
-    }
+            if (!error.empty() && error[error.length() - 1] != '\n')
+                error += "\n";
+        }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
      || defined(DGL_PAUSE_AFTER_ERROR)
-    bool need_pause = true;
-    if (exit_code && !error.empty())
-    {
-        if (_print_error_screen("%s", error.c_str()))
-            need_pause = false;
-    }
+        bool need_pause = true;
+        if (exit_code && !error.empty())
+        {
+            if (_print_error_screen("%s", error.c_str()))
+                need_pause = false;
+        }
 #endif
 
 #ifdef USE_TILE_WEB
-    tiles.shutdown();
+        tiles.shutdown();
 #endif
 
-    cio_cleanup();
-    msg::deinitialise_mpr_streams();
-    _clear_globals_on_exit();
-    databaseSystemShutdown();
+        cio_cleanup();
+        msg::deinitialise_mpr_streams();
+        _clear_globals_on_exit();
+        databaseSystemShutdown();
 #ifdef DEBUG_PROPS
-    dump_prop_accesses();
+        dump_prop_accesses();
 #endif
 
-    if (!error.empty())
-    {
-
+        if (!error.empty())
+        {
 #ifdef __ANDROID__
-        __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", error.c_str());
+            __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", error.c_str());
 #endif
-        fprintf(stderr, "%s", error.c_str());
-        error.clear();
+            fprintf(stderr, "%s", error.c_str());
+            error.clear();
+        }
     }
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
