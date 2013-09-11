@@ -66,34 +66,9 @@ Et stort stykke tyk hud, dækket af pels, som er flået af et dyrekadaver, og so
 kan bæres som en primitiv klædedragt. Den yder rudimentær beskyttelse mod slag,
 men fordi det ikke er garvet, lugter det svagt af råddent kød.
 %%%%
-animal skin:quote
-
-“Han dræbte den ædle Mudjokivis.
- Af skindet lavede han vanter,
- med pelssiden på indersiden,
- med hudsiden på ydersiden.
- For at få den varme side på indersiden,
- lavede han indersidens skindside på ydersiden.
- For at få den kolde side på ydersiden,
- lavende han den varme sides pelsside på indersiden,
- Derfor lavede han pelssiden på indersiden,
- derfor lavede han skindsiden på ydersiden,
- derfor gjorde han indersiden til ydersiden.”
-    – Anonym, i Carolyn Wells' _A Parody Anthology_, s. 120. 1904.
-%%%%
 apple
 
 En lækker, fast, rød frugt, som er syrlig på tungen.
-%%%%
-apple:quote
-
-“MINERVA var visdommens gudinde, men ved en enkelt lejlighed gjorde hun noget
-meget tåbeligt: Hun indgik i et væddemål med Juno og Venus om, hvem der var
-smukkest. Det foregik således: Til Peleus og Thetis' bryllupsceremony var alle
-guderne inviteret, undtagen Eris, ufredens gudinde. Hun blev rasende over ikke
-at være inkluderet, og derfor kastede hun et æble ind til gæsten med påskriften
-'Til den smukkeste.'”
-    – Thomas Bulfinch, _Bulfinch's Mythology_, kap. XXVII. a. 1855.
 %%%%
 apricot
 
@@ -1302,12 +1277,6 @@ Denne stok er beregnet til nærkamp, hvor den udløser sine ladninger for at
 forvolde yderligere skade, som afhænger af dine færdigheder med vækkelser, når
 den rammer en fjende. Køller og plejle-færdigheden hjælper med at forbedre din
 grundlæggende effektivitet med våbnet.
-%%%%
-rod of striking:quote
-
-“Den, der sparer på stokken, hader sin søn, den, der elsker sin søn, tugter ham
-i tide.”
-    – Bibelen, Ordsprogenes bog 13:24
 %%%%
 rod of the swarm
 

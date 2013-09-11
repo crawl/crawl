@@ -73,15 +73,6 @@ arrow
 
 Una flecha, hecha para ser disparada con un arco.
 %%%%
-arrow:quote
-
-“En un corredor vi una flecha que indicaba una dirección y pensé que aquel
-símbolo inofensivo había sido alguna vez una cosa de hierro, un proyectil
-inevitable y mortal, que entró en la carne de los hombres y de los leones y
-nubló el sol en las Termópilas y dio a Harald Sigurdarson, para siempre, seis
-pies de tierra inglesa.”
-    -Jorge Luis Borges, Mutaciones. 1960.
-%%%%
 banana
 
 Una deliciosa fruta amarillenta, probablemente cultivada e importada por alguna
@@ -703,23 +694,6 @@ Una fruta amarillenta.
 long sword
 
 Una espada con una larga cuchilla.
-%%%%
-long sword:quote
-
-"Y andando en estas priesas entre aquellos grandes guerreros y sus temerosos
-montantes, parece ser acordaron de se juntar muchos dellos y de mayores fuerzas
-para tomar a manos algún caballo, y lo pusieron por obra, y arremetieron, y
-echan mano a una muy buena yegua y bien revuelta, de juego y de carrera, y el
-caballero que en ella iba muy buen jinete, que se decía Pedro de Morón; y como
-entró rompiendo con otros tres de a caballo entre los escuadrones de los
-contrarios, porque así les era mandado, porque se ayudasen unos a otros,
-échanle mano de la lanza, que no la pudo sacar, y otros le dan de cuchilladas
-con los montantes y le hirieron malamente, y entonces dieron una cuchillada a
-la yegua, que le cortaron el pescuezo en redondo, y allí quedó muerta; y si de
-presto no socorrieran los dos compañeros de a caballo al Pedro de Morón,
-también le acabaran de matar."
-    -Bernal Díaz del Castillo, Historia verdadera de la conquista de la Nueva
-España. 1632.
 %%%%
 longbow
 

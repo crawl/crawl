@@ -327,14 +327,6 @@ buckler
 
 Mała tarcza.
 %%%%
-buckler:quote
-
-„Stateczność jego tarcz i puklerz mocny,
- Za którym stojąc, na żaden strach nocny,
- Na żadną trwogę, ani dbaj na strzały,
- Którymi sieje przygoda w dzień biały.”
-    -pieśń kościelna
-%%%%
 cap
 
 Coś do przykrycia głowy.
@@ -602,18 +594,6 @@ horn of Geryon
 Ten róg należy do Geryona, strażnika Przedsionka Piekła. Legendy mówią że
 śmiertelnik który zapragnie dostać się do piekieł żywy, musiałby zadąć w ten
 róg.
-%%%%
-horn of Geryon:quote
-
-„Natenczas Wojski chwycił na taśmie przypięty
- Swój róg bawoli, długi, cętkowany, kręty
- Jak wąż boa, oburącz do ust go przycisnął,
- Wzdął policzki jak banię, w oczach krwią zabłysnął,
- Zasunął wpół powieki, wciągnął w głąb pół brzucha
- I do płuc wysłał z niego cały zapas ducha
- I zagrał: róg jak wicher wirowatym dechem,
- Niesie w puszczę muzykę i podwaja echem.”
-    -Adam Mickiewicz, „Pan Tadeusz”
 %%%%
 ice dragon armour
 
@@ -1029,12 +1009,6 @@ ring of see invisible
 
 Ten pierścień pozwala swemu nosicielowi ujrzeć niewidzialne istoty.
 %%%%
-ring of see invisible:quote
-
-„A oto mój sekret. Jest bardzo prosty: dobrze widzi się tylko sercem.
-Najważniejsze jest niewidoczne dla oczu.”
-    -Antoine de Saint-Exupéry, „Mały Książę”, 1943
-%%%%
 ring of slaying
 
 Ten pierścień zwiększa (lub zmniejsza) celność i zadawane obrażenia w walce
@@ -1087,12 +1061,6 @@ rod of striking
 
 Tym prętem spuszcza się lanie osobiście. Przełożenie kogoś wpierw przez kolano
 nie jest obowiązkowe, jednak należy do dobrego tonu.
-%%%%
-rod of striking:quote
-
-„Kto zawściąga rózgi swej, ma w nienawiści syna swego; ale kto go miłuje,
- wczas go karze.̈́”
-    -Biblia Gdańska, Księga przysłów 13:24
 %%%%
 rod of the swarm
 

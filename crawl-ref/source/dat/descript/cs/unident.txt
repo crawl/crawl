@@ -4,13 +4,6 @@ amulet
 Talisman, který lze nosit coby šperk kolem krku, nabitý magickými silami
 neznámého původu.
 %%%%
-amulet:quote
-
-“Gringoire pro ten malý pytlík natáhl ruku, ale ona ucukla zpět. 'Nesahej na
-to! Je to amulet, ale buď s ním natropíš neplechu nebo ti ublíží.'”
-    -Victor Marie Hugo, _Zvoník od Matky Boží_, Kniha II, kapitola VII
-“Svatební noc”. 1831.
-%%%%
 book
 
 Magická kniha, obsahující tradiční kouzla neznámého původu. Je psána pro
@@ -27,29 +20,10 @@ potion
 
 Neoznačená baňka, obsahující jednu dávku neznámé kapaliny.
 %%%%
-potion:quote
-
-“Dal jsem jí proto, dík svým znalostem,
- jakýsi uspávací nápoj, po kterém,
- když vypila ho, vskutku vypadala
- jakoby mrtvá. Mezitím jsem napsal
- Romeovi, ať dnešní kruté noci,
- kdy účinek nápoje pomine,
- přijede sem a pomůže jí z hrobu."
-    -William Shakespeare, _Romeo a Julie_
-%%%%
 ring
 
 Talisman s nábojem magických sil neznámého původu, který se nosí coby šperk na
 prstu.
-%%%%
-ring:quote
-
-“Prstenec zlata a mléčně bílá holubice
- Jsou dobrým darem tobě,
- I lano konopné lásce tvé
- Na němž ze stromu viseti bude.”
-    -Oscar Wilde, "Chanson". 1881.
 %%%%
 rod
 
@@ -67,24 +41,7 @@ staff
 
 Hůl, zlepšená magickými silami neznámé povahy.
 %%%%
-staff:quote
-
-“Bašó Ošo řekl svým učňům, 'Máte-li hůl, já hůl vám dám. Nemáte-li hůl, vezmu
-vám ji.'
- Mumonova poznámka
- Pomáhá mi, když potřebuji přebrodit se řekou a most nestojí. Je mým
-společníkem na cestě do vesnice v bezměsíčnou noc. Zvete-li ji holí, do pekel
-vletíte jako šíp.”
-    -Mumon Ekai, _Brána bez brány_, případ 44. 1228.
-%%%%
 wand
 
 Hůlka. Možná i kouzelná.
-%%%%
-wand:quote
-
-“[Princip výběru] je hůlkou mágovou, prostřednictvím které moci povolat v život
-jakoukoliv formu i neformu, jakou si žádá.”
-    -William Youatt, _Ovce: plemena, hospodaření a choroby; přiložena Rukověť
-horského pastýře_, kap. III. 1837
 %%%%

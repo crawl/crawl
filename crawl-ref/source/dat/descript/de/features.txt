@@ -37,14 +37,6 @@ A broken pillar
 Die Hersteller dieser Säule sind schon vor langer Zeit gestorben. Niemand, der
 noch lebt, erinnert sich daran, warum sie sie gebaut haben.
 %%%%
-A broken pillar:quote
-
-„Jetzt hatte Absalom in seiner Lebenszeit
- genommen und sich für sich eine Säule,
- aufgebäumt, der im Tal des Königs ist: weil er gesagt hat,
- habe ich keinen Sohn, um meinen Namen in der Erinnerung zu halten...“
-    2 Samuel 18:18
-%%%%
 A burning altar of Makhleb
 
 Ein ewig brennender Altar für Makhleb, den Zerstörer. Merkwürdige, drehende
@@ -161,12 +153,6 @@ A gateway to a ziggurat
 Dieses Portal führt zu einem antiken Zikkurat, einem Ort unsäglicher
 Herausforderungen und unermesslichem Reichtums.
 %%%%
-A gateway to a ziggurat:quote
-
-„Kapitän: Nehmen Sie jeden 'zig' weg!!
- Kapitän: Für die große Justiz.“
-    -Zero Wing
-%%%%
 A gateway to the ashen valley of Gehenna
 
 Du kannst die Hitze fühlen. Ghenna scheint aus nichts als Flammen, Lava und
@@ -176,21 +162,6 @@ A gateway to Hell
 
 Dieses Tor führt in den Vorraum der Hölle. Nur wenige würden freiwillig dorthin
 gehen.
-%%%%
-A gateway to Hell:quote
-
-„Ich bin auf dem Weg in die Stadt des Wehs.
- bin ich der Weg zu verlassene Leute.
- bin ich der Weg in den ewigen Kummer.
-
- Heilige Justiz hat meinen Architekten bewegt.
- wurde ich hier durch die Gottesomnipotenz,
- Primordiale Liebe und äußerstes Intellekt erzogen.
- Nur jene Elemente kann Zeit nicht halten
- Wurden vor mir gemacht, und außer der Zeit stehe ich.
- Hemmungslosigkeit die ganze Hoffnung, Sie, die hier hereingehen.“
-    -Dante Alighieri, _The Gotteskomödie _, „Inferno“, Gesang III. ca. 1315.
-     trans. John Ciardi, 1954.
 %%%%
 A gateway to the Iron City of Dis
 
@@ -225,24 +196,6 @@ A granite statue
 Trotz der Härte des verwendeten Steins ist diese Statue schon ziemlich
 verwittert.
 %%%%
-A granite statue:quote
-
-„Ich habe einen Reisenden von einem antiken Land
- getroffen, Wer gesagt hat: Zwei riesengroße und trunkless Beine des Steins
- Standplatz in der Wüste. In der Nähe von ihnen auf dem Sand,
- Halb versenkt, liegt ein shatter'd Gesichtsausdruck, wessen Stirnrunzeln
- Und runzlige Lippe und Hohnlächeln des kalten Befehls
- Sagt, dass sein Bildhauer gut jene Leidenschaften
- lesen, Die noch, stamp'd auf diesen leblosen Dingen,
- Die Hand überleben, dass mock'd sie und das Herz, das gefressen hat.
- Und auf dem Sockel erscheinen diese Wörter:
- ‚Mein Name ist Ozymandias, König von Königen:
- Blick auf meine Arbeiten, Sie Mächtig, und Verzweiflung!‘
- Nichts daneben bleibt: um den Zerfall strecken sich
- dieses riesigen Wrackes, grenzenlos und bloß,
- Das einsame und die Niveau-Sande weit weg.“
-    -Percy Bysshe Shelley, „Ozymandias“. 1818.
-%%%%
 A hole to the Spider Nest
 
 Dies ist ein natürlicherer Weg nach unten als eine Treppe, aber er wird
@@ -255,28 +208,6 @@ entworfenes, verworrenes Labyrinth führt, dessen Ausgang von einem
 furchteinflößenden Monster bewacht wird. Viele Abenteurer starben bereits in
 diesen verzweigten, sich ständig veränderten Passagen einen grausamen
 Hungertod.
-%%%%
-A labyrinth entrance:quote
-
-„Irrgarten-Läufer, dessen Vision vorn und hinten streng eingezwängt und
-gebrochen wird, erträgt Verwirrung, wohingegen Irrgarten-Zuschauer, die das
-Muster ganz von oben oder in einem Diagramm sehen, durch sein kompliziertes
-Künstlertum geblendet werden. Was Sie sehen, hängt ab, wo Sie, und so zur
-gleichen Zeit stehen, sind Irrgärten einzeln (es gibt eine physische Struktur),
-und doppelt: sie vereinigen gleichzeitig Ordnung und Unordnung, Klarheit und
-Verwirrung, Einheit und Vielfältigkeit, Künstlertum und Verwirrung.“
-    -Zeichen Z. Danielewski, „Haus von Blättern“. 2000.
-
-„Seitdem ich an diesem Tag aus dem Irrgarten,
- Betäubt mit den hohen und hallenden Durchgängen,
- Der schnelle Rückstoß, so viele erschienen bin, habe ich fast
- gefürchtet ich würde mich treffen, an einer glatten Ecke,
- Selbst oder mein Geist, für alle zurückkehrend, was es unwirklichen
- gab, Nachdem das Stroh aufgehört hat zu rauschen und der Stier
- tot auf das Stroh Liegen und ich,
- Blutbespritzt geblieben bin, wenn tot oder lebendig ich
- Im Zwielicht-Nichts“
-    -Edwin Muir, „Der Irrgarten“. 1949.
 %%%%
 A mangrove
 
@@ -320,20 +251,6 @@ spuken. Die ganze Substanz dieses Ortes ist unbeständig und skurril, und du
 findest dort die Wesen aus deinen schlimmsten Albträumen. Es ist leicht, hinein
 zu gehen, doch der Rückweg wird nicht durch dieses Tor führen.
 %%%%
-A one-way gate to the infinite horrors of the Abyss:quote
-
-„Und wenn Sie lange in einen Abgrund, die Abgrund-Blicke auch in Sie starren. “
-    -Friedrich Nietzsche, _Beyond Gut und Evil_, Sprichwort 146. 1886.
-
-„so, In unserem Land,“ hat Alice gesagt, noch etwas keuchend, „würden Sie
-allgemein zu sonst wohin kommen – wenn Sie sehr schnell seit langem laufen
-würden, wie wir getan haben.“ „Eine langsame Sorte des Landes!“ hat die Königin
-gesagt. „Jetzt hier sehen Sie, man braucht das ganze Führen von Ihnen können
-tun, um in demselben Platz zu behalten. Wenn Sie sonst wohin kommen wollen,
-müssen Sie mindestens zweimal so schnell wie das führen!“
-    -Lewis Carroll, _Through der Spiegel, und Was Alice Found There _, ch. 2
-    „Der Garten von Lebenden Blumen“. 1871.
-%%%%
 A passage of Golubria
 
 Dieses unstabile Portal ermöglicht die sofortige Reise zu einem anderen, nahe
@@ -361,16 +278,6 @@ Anhängern Vehumets große, zerstörerische Macht.
 A rock wall
 
 Diese Wand besteht aus einfachem Fels.
-%%%%
-A rock wall:quote
-
-„Ich weiß nicht ob Gesetze,
-    Oder ob Gesetze Recht zu haben, falsch zu sein;
- Alles, was wir wissen, die im Gefängnis lügen, Ist
-    dass die Wand stark ist;
- Und dass jeder Tag einem Jahr,
-    Ein Jahr ähnlich ist, dessen Tage lang sind.“
-    -Oskar Wilde, „Die Ballade, Gefängnis Zu lesen“. 1898.
 %%%%
 A rock-blocked tunnel
 
@@ -590,13 +497,6 @@ meisten Stellen nicht hell genug, um größere Pflanzen wachsen zu lassen. Das
 Licht ist allerdings nicht gleichmäßig, und es gibt auch hier unten Stellen, an
 denen mit Fedhas Segen einige Bäume, so groß wie die an der Erdoberfläche,
 wachsen können.
-%%%%
-A tree:quote
-
-Ich mag Bäume, weil sie resignierter zur Weise scheinen, wie sie leben müssen
-als andere Dinge.
-
-    -Willa Cather, _O Pioneers_. 1913.
 %%%%
 A viscous altar of Jiyva
 
@@ -1077,19 +977,6 @@ A portal to a secret trove of treasure
 
 Ein aufwendig bearbeitetes goldenes Tor, das zu einem riesigen Schatz
 wertvoller Items führt. Der Eintrittspreis ist nicht gering.
-%%%%
-A portal to a secret trove of treasure:quote
-
-„,Halt Dieb! Halt Dieb!‘ Es gibt eine Magie im Ton. Der Großhändler verlässt
-seinen Schalter und den Straßenbahnfahrer sein Wagen; der Metzger wirft unten
-sein Tablett; der Bäcker sein Korb; der Milchmann sein Eimer; der Laufbursche
-seine Pakete; der Schüler seine Marmore; der paviour seine Spitzhacke; das Kind
-sein Federball. Weg führen sie, durcheinander, Durcheinander, heftig: das
-Reißen, brüllend, schreiend, die Passagiere niederschlagend, weil sie die Ecken
-drehen, die Hunde, und erstaunlich das Geflügel wachrüttelnd: und Straßen,
-Quadrate, und Gerichte, hallen mit dem Ton wieder. “
-    -Charles Dickens, _Oliver Drehung; oder, Der Kirchspiel-Junge-Fortschritt
-_, ch. X. 1838.
 %%%%
 A dark tunnel
 

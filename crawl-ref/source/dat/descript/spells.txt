@@ -385,12 +385,6 @@ This spell calls forth a mighty storm of roaring flame directly onto the
 target, dealing partially irresistible fire damage in a large area and leaving
 behind short-lived fire vortices.
 %%%%
-Fire Storm spell:quote
-
-“Some have said there is no subtlety to destruction. You know what? They're
-dead.”
-    -Jaya Ballard, task mage (Magic: the Gathering)
-%%%%
 Fire Summon spell
 
 Evoking his sceptre, Asmodeus can summon his minions. Unlike you, Asmodeus is
@@ -514,13 +508,6 @@ Ice Storm spell
 
 This spell hurls a raging blizzard of ice, sleet and freezing gasses at the
 target, dealing partially irresistible cold damage in a large area.
-%%%%
-Ice Storm spell:quote
-
-“Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall
-Stay These Messengers About Their Sacred Business. Do Not Ask Us About
-Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol.”
-    -Anghammarad, “Going Postal”, Terry Pratchett.
 %%%%
 Ignite Poison spell
 
@@ -1045,13 +1032,6 @@ Sticky Flame spell
 
 This spell conjures a sticky glob of liquid fire, which will adhere to and burn
 any creature it strikes.
-%%%%
-Sticky Flame spell:quote
-
-“Give a man a fire and he's warm for a day, but set fire to him and he's warm
-for the rest of his life.”
-
-    -Terry Pratchett, “Jingo”
 %%%%
 Sting spell
 
