@@ -2814,13 +2814,16 @@ ENDMAP
 NAME:    bh_familiar_temple
 WEIGHT:  2
 PLACE:   Temple
-TAGS:    no_rotate
+TAGS:    no_rotate no_hmirror no_vmirror
 ORIENT:  encompass
 SHUFFLE: '"
 FTILE:   ' = floor_grass, " = floor_dirt
+COLOUR:  d = yellow
+COLOUR:  " = green w:5 / brown
+COLOUR:  ' = green / brown w:5
 SUBST:   '" = .
+SUBST:   d = +
 KFEAT:   Q : abandoned_shop
-COLOUR:  . = green / brown w:2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x''''''''''''''''''''''{'''''''x
@@ -2832,7 +2835,7 @@ x'"""""cQ.c...c"c.Qc..c"cccccc'x
 x'cccc"c..cc+cc"c..c.Bc"c...Bc'x
 x'cQ.+"c+cc""T""c+cc..c"+....c'x
 x'c..c"""""""""""""c+cc"c....c'x
-x'ccccc=cc"cccc+cc""""""cB...c'x
+x'cccccdcc"cccc+cc""""""cB...c'x
 x'cB.c...c"+..c..cc+cccccccccc'x
 x'c..c.Q.c"c.QcB.c....cQ.cB..+'x
 x'c..c...c"cccc..c..B.c..c...c'x
