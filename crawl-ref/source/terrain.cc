@@ -1948,6 +1948,10 @@ bool revert_terrain_change(coord_def pos, terrain_change_type ctype)
         }
     }
 
+    // Don't revert opened sealed doors.
+    if (feat_is_door(newfeat) && grd(pos) == DNGN_OPEN_DOOR)
+        newfeat = DNGN_UNSEEN;
+
     if (newfeat != DNGN_UNSEEN)
     {
         dungeon_terrain_changed(pos, newfeat, true, false, true);
