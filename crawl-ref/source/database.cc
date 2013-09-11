@@ -120,6 +120,10 @@ static TextDB AllDBs[] =
             "godname.txt",  // god-related names (mostly His Xomminess)
             NULL),
 
+    TextDB("quotes", "descript/",
+            "quotes.txt",   // quotes for items and monsters
+            NULL),
+
     TextDB("help", "database/",
             "help.txt",     // database for outsourced help texts
             NULL),
@@ -140,9 +144,10 @@ static TextDB& RandartDB     = AllDBs[2];
 static TextDB& SpeakDB       = AllDBs[3];
 static TextDB& ShoutDB       = AllDBs[4];
 static TextDB& MiscDB        = AllDBs[5];
-static TextDB& HelpDB        = AllDBs[6];
-static TextDB& FAQDB         = AllDBs[7];
-static TextDB& HintsDB       = AllDBs[8];
+static TextDB& QuotesDB      = AllDBs[6];
+static TextDB& HelpDB        = AllDBs[7];
+static TextDB& FAQDB         = AllDBs[8];
+static TextDB& HintsDB       = AllDBs[9];
 
 static string _db_cache_path(string db, const char *lang)
 {
@@ -751,7 +756,7 @@ static string _query_database(TextDB &db, string key, bool canonicalise_key,
 
 string getQuoteString(const string &key)
 {
-    return unwrap_desc(_query_database(DescriptionDB, key + ":quote", true, true));
+    return unwrap_desc(_query_database(QuotesDB, key, true, true));
 }
 
 /////////////////////////////////////////////////////////////////////////////

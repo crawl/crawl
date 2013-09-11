@@ -15,12 +15,6 @@ Temple
 Le Temple des Dieux, un lieu de paix et de refuge loin des insanités du donjon.
 Il est localisé entre les niveaux 4 et 7 du donjon principal.
 %%%%
-Temple:quote
-
-« Et j'entendis une grande voix venant du temple, qui disait aux sept anges:
-Allez et versez sur la terre les coupes de la colère de Dieu. »
-    -Bible, Apocalypse 16:1
-%%%%
 Orcish Mines
 
 Les mines d'or bien exportée des tribus orcs. Ces cavernes tortueuses sont
@@ -142,18 +136,6 @@ une nécromancie abjecte.
 
 La Tombe est profonde de trois niveaux et contient la rune dorée. Son entrée se
 trouve en Crypte 2 ou 3.
-%%%%
-Tomb:quote
-
-« Dans les profondeurs de nos cœurs, il y a un tombeau et un donjon, même si
-les lumières, la musique, et les festivités peuvent faire oublier leurs
-existence, de ceux enterrés, ou prisonniers qu'ils cachent. Mais parfois, et
-souvent à minuit, de sombres récipients se retrouvent grands ouverts. Dans ces
-moments là, quand l'esprit somnolent est si passif, sans aucune volonté propre,
-où l'imagination est un miroir, donnant de l'éclat à toutes les idées, sans
-pouvoir les sélectionner ou de les contrôler; priant pour que votre chagrin
-s'estompe, et que la fraternité des remords ne se déchaine pas. »
-    -Nathaniel Hawthorne, « The Haunted Mind. ». 1835.
 %%%%
 Hell
 

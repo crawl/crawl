@@ -59,17 +59,6 @@ Asmodeus
 
 Un des Archidémons qui règnent sur l'Enfer, enveloppé de feu.
 %%%%
-Asmodeus:quote
-
-« Pour moi, j’ai d’autres occupations : je fais des mariages ridicules; j’unis
-des barbons avec des mineures, des maîtres avec leurs servantes, des filles mal
-dotées avec de tendres amants qui n’ont point de fortune. C’est moi qui ai
-introduit dans le monde le luxe, la débauche, les jeux de hasard et la chimie.
-Je suis l’inventeur des carrousels, de la danse, de la musique, de la comédie,
-et de toutes les modes nouvelles de France. En un mot, je m’appelle Asmodée,
-surnommé Le Diable Boiteux. »
-    -Alain-René Lesage, _Le Diable Boiteux_. 1707.
-%%%%
 Azrael
 
 Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
@@ -411,11 +400,6 @@ Une étrange figure brillante, dansant a travers l'air distordu du Pandémonium.
 Murray
 
 Un crane démoniaque qui roule sur le sol du donjon.
-%%%%
-Murray:quote
-
-“Regardez derrière vous ! Un singe à trois tête !”
-    -Guybrush Threepwood, _The Secret of Monkey Island_
 %%%%
 Nellie
 
@@ -1944,18 +1928,6 @@ adorent chanter et charmer leur public.
 metal gargoyle
 
 Un hideuse statue de métal ayant pris vie.
-%%%%
-metal gargoyle:quote
-
-«Leurs innombrables sculptures de diables et de dragons prenaient un aspect
-lugubre. La clarté inquiète de la flamme les faisait remuer à l’œil. Il y avait
-des guivres qui avaient l’air de rire, des gargouilles qu’on croyait entendre
-japper, des salamandres qui soufflaient dans le feu, des tarasques qui
-éternuaient dans la fumée. Et parmi ces monstres ainsi réveillés de leur
-sommeil de pierre par cette flamme, par ce bruit, il y en avait un qui marchait
-et qu’on voyait de temps en temps passer sur le front ardent du bûcher comme
-une chauve-souris devant une chandelle.»
-    -Victor Hugo, _Notre-Dame de Paris_, Livre 10, ch. IV. 1831
 %%%%
 microbat
 

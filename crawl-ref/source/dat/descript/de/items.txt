@@ -65,68 +65,18 @@ und getragen als primitive Ausrüstung. Es bietet einfachen Schutz gegen
 Schaden, doch da es niemals gegerbt wurde, verbreitet es einen leichten Geruch
 nach faulendem Fleisch.
 %%%%
-animal skin:quote
-
-„Er hat edlen Mudjokivis getötet.
- der Haut hat er ihn Fausthandschuhe,
- Gemacht sie mit der Pelz-Seite innen,
- Gemacht sie mit der Hautseite draußen gemacht.
- Er, um die warme Seite innen,
- Gestellt die Innenhautseite draußen zu bekommen;
- Er, um die kalte Seite draußen,
- Gestellt die warme Seitenpelz-Seite innen zu bekommen.
- Deshalb hat er die Pelz-Seite innen,
- gebracht, Warum er die Hautseite draußen,
- gebracht hat, Warum er sie innen draußen gedreht hat.“
-    -Anonym, in der _A-Parodie-Anthologie von Wells _, p.  120. 1904.
-%%%%
 apple
 
 Eine köstliche und kräftig rote Frucht – säuerlich auf der Zunge.
-%%%%
-apple:quote
-
-„MINERVA war die Göttin des Verstands, aber bei einer Gelegenheit hat sie eine
-sehr dumme Sache gemacht; sie ist in Konkurrenz mit Juno und Venus für den
-Preis der Schönheit eingetreten. Es ist so geschehen: An der Hochzeit von
-Peleus und Thetis wurden alle Götter mit Ausnahme von Eris oder Dissonanz
-eingeladen. Wütend gemacht bei ihrem Ausschluss hat die Göttin einen goldenen
-Apfel unter den Gästen, mit der Inschrift, ‚Für das schönste geworfen.‘“
-   -Thomas Bulfinch, _Bulfinch's Mythologie _, ch.. XXVII. a. 1855.
 %%%%
 apricot
 
 Eine saftige Gelb-Orangene Frucht, Prunus armeniaca.
 %%%%
-apricot:quote
-
-„Aprikose Ratafia
-  Das wird zwei Wege, nämlich entweder durch das Aufgießen der Aprikose-Kürzung
-in Stücken in Kognak seit einem Tag oder zwei, und dann den Übergang ihm von
-thro' die abfließende Tasche und das Stellen in den üblichen Zutaten gemacht;
-oder die Aprikosen boil'd in Weißem Wein, und dadurch Mittel leichter clarify'd
-das Hinzufügen einer gleichen Menge von Kognak und eines Viertels eines Pfundes
-Zucker zu jeder Quart, mit Zimt, Nelken, Muskatblüte und Kernen der Aprikosen
-sein können. Nachdem alle Zutaten acht oder zehn Tage aufgegossen haben, soll
-der Geistige Getränk strain'd wieder sein und in Flaschen und so behalten
-stellen.“
-    -Charles Carter, _The Compleat City und Landkoch: Oder, Accomplish'd
-haus-wife_. 1732.
-%%%%
 arrow
 
 Ein langschaftiges Projektil, hergestellt, um mit einem Bogen oder Langbogen
 verschossen zu werden, mit Federn an einem Ende und einer Spitze am anderen.
-%%%%
-arrow:quote
-
-„Ich habe in einem Saal einen Pfeil gesehen, der den Weg anspitzt, und ich habe
-gedacht, dass dieses harmlose Symbol einmal ein Ding von Eisen gewesen war, hat
-eine unvermeidliche und tödliche Kugel, die das Fleisch von Männern und Löwen
-durchstoßen hat und die Sonne an Thermopylae bewölkt hat und Harald Sigurdarson
-sechs Fuß der englischen Erde für immer gegeben.“
-    -Jorge Luis Borges, _Mutations_. 1960.
-     trans. Mildred Boyle
 %%%%
 banana
 
@@ -137,32 +87,10 @@ bardiche
 
 Eine lange Stange mit einer enormen, spaltenden Klinge an einem Ende.
 %%%%
-bardiche:quote
-
-„Die Republik unterstützt immer siebentausend oder achttausend regelmäßige
-Truppen an den Grenzen, um die Einfälle der Tataren zu verhindern. Der König
-unterstützt diese Truppen nicht; er bezahlt nur Heydukes, Semelles und
-Janizaries. Die zuerst erwähnten werden ins Blau, mit großen Knöpfen und
-Tellern von Dose angekleidet, und ließen Häubchen gefühlter auf ihre Köpfe
-machen. Sie haben firelocks, und der bardiche, den sie sagen, ist eine sehr
-gute Waffe.“
-    -John Pinkerton, _A Allgemeine Sammlung der Besten und Interessantesten
-Reisen und des Reisens in allen Teilen der Welt, von denen viele jetzt der
-erste ins Englisch übersetzte sind. Verdaut auf einem Neuen Plan_. 1808.
-%%%%
 battleaxe
 
 Eine große zweihändige Kriegsaxt mit einem beachtlichen Doppelkopf, gemacht für
 die Benutzung im Kampf durch erfahrene Krieger.
-%%%%
-battleaxe:quote
-
-„Auf Carian Münzen, tatsächlich des ziemlich späten Datums, hat der labrys, der
-auf seinem langen einer Säule ähnlichen Griff mit zwei abhängigen Leisten
-aufgestellt ist, viel das Äußere eines Kultimages.“
-    -Herr Arthur John Evans, „Baum von Mycenaean und Säule-Kult und seine
-mittelmeerischen Beziehungen,“ _Journal von hellenischem Studies_ XXI, p. 109.
-1901.
 %%%%
 beef jerky
 
@@ -204,50 +132,10 @@ Ein langes, leichtes Rohr, offen an beiden Enden, durch die verschiedene Arten
 von Nadeln, angetrieben durch Atemluftstöße, auf Gegner geschossen werden
 können. Es macht kaum Geräusche.
 %%%%
-blowgun:quote
-
-„Entlang den Oberen Caiary-Uaupes Blasrohren werden von den Stämmen einer
-Vielfalt der Palme (Iriartea setigera Martius) gemacht... Der Inder wählt zwei
-Stämme solcher Größen aus, die das kleinere innerhalb des größeren genau passen
-wird. Nachdem diese Stämme sorgfältig ausgetrocknet worden sind und die
-Quintessenz mit einer langen Stange beseitigt, wird die langweilige
-Angelegenheit glatt durch die Zeichnung hin und her dadurch eines kleinen
-Bündels von Baumfarn-Wurzeln gemacht. Der kleinere Stamm wird dann ins größere
-eingefügt, so dass man dienen wird, um jede Gekrümmtkeit zu korrigieren, die im
-anderen bestehen kann. Das Holzmundstück wird dann an ein Ende geeignet, und
-ungefähr drei und eine Hälfte von Füßen davon, ein Zahn eines Ebers wird der
-Pistole durch eine gummiartige Substanz für einen Anblick befestigt. Über die
-Außenseite die Schöpfer-Winde spiralförmig ist ein Streifen des dunklen
-glänzenden Rindes eines Kriechers, der ihm einen dekorativen Schluss und sein
-Blasrohr gibt, abgeschlossen.  „Die Pfeile sind von zehn bis vierzehn Zoll
-langen, und von der Dicke eines gewöhnlichen Lucifer-Matchs. Diejenigen der
-Inder des Caiary-Uaupes werden vom midrib eines Palmzweigs oder von den
-dornigen Prozessen von Patawa (Enocarpus Batawa) gemacht, der zu einem Punkt an
-einem Ende und Wunde in der Nähe von anderem mit einer feinen Sorte von wilder
-Baumwolle geschärft ist, die in einer Schote auf einen großen Baum (Bombax
-ceiba) wächst. Diese Masse von Baumwolle ist gerade groß genug, um die Tube zu
-füllen, wenn der Pfeil darin freundlich gedrückt wird. Der Punkt wird in Gift
-getaucht, hat erlaubt zu trocknen, und hat bis gut angestrichen,
-wiedereingetaucht. Die genaue Zusammensetzung dieses Giftes ist unbekannt, und
-ändert sich wahrscheinlich in verschiedenen Gegenden; aber es würde scheinen,
-dass die Hauptzutat immer der Saft eines Werks von Strychnos ist. Es ist unter
-verschiedenen Stämmen durch viele Namen bekannt; solcher als Curari, Ourari,
-Urari und Woorali.“
-    -c.w. Mead, _The amerikanische Museum-Zeitschrift _, vol. VIII. 1908.
-%%%%
 bolt
 
 Ein Metallprojektil. Es ist kürzer als ein Pfeil und zum verschießen mit einer
 Armbrust vorgesehen.
-%%%%
-bolt:quote
-
-„In der Mitte unseres letzten Angriffs, der hätte das Tor sicher und gegeben
-wir Paris und tatsächlich Frankreich getragen, wurde Joan durch einen
-Armbrust-Bolzen niedergeschlagen, und unsere Männer wichen sofort und fast in
-einer Panik — dafür zurück wie waren sie ohne sie? Sie war die Armee selbst.“
-    -Zeichen Twain, _Personal Erinnerungen von Joan of Arc, durch den Sieur
-Louis de Conte _, Buch II, Junge. 40 „Verrat Überwindet Joan“. 1896.
 %%%%
 book of air
 
@@ -569,26 +457,9 @@ Ein rundes Stück Holz mit einer Sehne, zum Schießen von Pfeilen. Es verursacht
 guten Schaden im Kampf, und ein fähiger Benutzer kann es sehr wirksam
 verwenden.
 %%%%
-bow:quote
-
-„Sie sind die Bögen, von denen Ihre Kinder weil lebende Pfeile hervor gesandt
-werden.“
-    -Khalil Ghibran, _The Hellseher _, „Auf Kindern“. 1923.
-%%%%
 bread ration
 
 Eine sättigende Mahlzeit aus abgestandenem, aber herzhaftem Brot.
-%%%%
-bread ration:quote
-
-„Es wird weiter berichtet, dass in den Provinzen [Caesar] Bankette ständig in
-zwei Speisesälen gegeben hat, in von dem einem sich seine Offiziere oder
-griechische Begleiter, in den anderen römischen Bürgern und dem
-ausgezeichneteren vom provincials beim Tisch zurückgelehnt haben. Er war im
-Management seines Haushalts, in kleinen Sachen sowie in denjenigen der größeren
-Wichtigkeit so pedantisch und streng, dass er seinen Bäcker in Eisen gebracht
-hat, um ihm mit einer Art von Brot und seinen Gästen mit einem anderen...“
-    -Suetonius, _De Vita Caesarum, Divus Iulius_ zu dienen. 110 CE.
 %%%%
 broad axe
 
@@ -597,36 +468,12 @@ halbmondförmigen Kopf einzelnen mit Halmen verbessert. Es kann schmerzliche
 Wunden zufügen, aber ist beschwerlich, um mit gerade ein zu manövrieren,
 reichen wegen seiner Länge und Gewichts.
 %%%%
-broad axe:quote
-
-„Waffe, wohl geformt, nackt, blass!
- Kopf von den gezogenen Därmen der Mutter!
- Bewaldetes Fleisch und Metallknochen! Glied nur ein und Lippe nur ein!
- Grau-blaues Blatt durch die angebaute rote Hitze! Stiel, der von einem kleinen
-gesäten Samen erzeugt ist!
- Ruhe des Grases mitten in und auf,
- um lean'd zu sein, und sich darauf zu neigen.“
-    -Walt Whitman, _Song der Breiten Axt _, l. 1-6. 1867.
-%%%%
 buckler
 
 Ein kleines Stück von Holz und Metall, um auf einem Arm für die Verteidigung
 festgeschnallt zu werden. Es ist etwas beschwerlich, um, und ohne ein bisschen
 Ausbildung zu halten, verlangsamt ein bisschen die Rate, an der ein Krieger
 angreift.
-%%%%
-buckler:quote
-
-„Lassen Sie, wer sich ihres Mutes im Feld rühmen wird,
- finde ich nur wenig Sicherheit von meinem Schild.
- Natur, nicht Ehre, Gesetz müssen wir folgen:
- hat Das mich mein nutzloses Schild wegwerfen lassen,
- Und durch einen vernünftigen Flug und Gerissenheit sparen
- Ein Leben, welche Tapferkeit nicht vom Grab gekonnt hat.
- Ein besserer Rundschild kann ich bald wiedergewinnen;
- Aber wer kann ein anderes Leben wieder bekommen?“
-    -Archilochos. 7. Cent. B.C.
-     trans. William H. Goodwin, 1878.
 %%%%
 cap
 
@@ -650,18 +497,6 @@ choko
 
 Eine fast geschmackslose grüne Frucht, die an einer Kletterpflanze wächst.
 %%%%
-choko:quote
-
-„Ich sollte nicht versäumen, ein Gemüse zu nennen, das Herr Yates auf unserem
-Tisch gelegt hat, und zu dem er unsere Aufmerksamkeit gelenkt hat. Es war der
-Tchu-tchu (Sechium edule) genannt auch von den Leuten _pepinella_. Es ist ein
-kleiner Kürbis sehr viel wie Gemüseknochenmark; ein Samen bedeckt eine Wand mit
-seinen Implikationen.“
-    -John Overton Choules, _The Vergnügungsreise der Dampfjacht nach Norden
-Stern: Ein Bericht des Ausflugs der Partei von Herrn Vanderbilt nach England,
-Russland, Dänemark, Frankreich, Spanien, Malta, der Türkei, der Madeira, dem
-Etc_. 1854.
-%%%%
 chunk of flesh
 
 Ein Stück rohen Fleisches, gefunden im Verlies. Es wird nicht lange frisch
@@ -671,18 +506,6 @@ cloak
 
 Ein Stoffumhang.
 %%%%
-cloak:quote
-
-„O Bell meine Frau, warum dost thou flyte?
-    ist Jetzt jetzt, und war dann dann:
- Suchen jetzt die ganze Welt überall,
-    Kenntnisse von Thou nicht Clowns von Herren:
- sind Sie in Schwarzem, Grün, Gelb und Blau,
-     Bis jetzt über ihrem eigenen Grad gekleidet.
- Einmal in meinem Leben werde ich eine Ansicht vertreten;
-    Weil ich einen neuen Umhang über mich haben werde.“
-    -Anonym, „Der Alte Umhang“. Das 16. Jahrhundert.
-%%%%
 club
 
 Ein schweres Stück Holz, mit einem Platz, auf einem Ende und dem grössten Teil
@@ -690,16 +513,6 @@ seines Gewichts am anderen zu packen, es passend machend, um zu schwingen oder
 an einem Feind zu werfen. Während Klubs ziemlich primitive Waffen sind,
 jemandes Schädel mit einhauend, bleibt man ein sehr populäres und wirksames
 Mittel der Streitentschlossenheit.
-%%%%
-club:quote
-
-„Ich habe immer das westafrikanische Sprichwort geliebt: 'Sprechen Sie weich
-und tragen Sie einen großen Stock; Sie werden weit gehen. ' Wenn ich den großen
-Stock nicht getragen hätte, wäre die Organisation ich nicht zurückgeblieben,
-und wenn ich gebrüllt und, als Pankhurst und die ähnlichen unehrlichen
-gewünschten Wahnsinnigen gebraust hätte, hätte ich zehn Stimmen nicht gehabt.“
-    -Theodore Roosevelt, in einem Brief an Henry L. Sprague. Am 26. Januar
-1900.
 %%%%
 corpse
 
@@ -710,23 +523,6 @@ crossbow
 Ein Stück der Maschinerie, die verwendet wird, um Bolzen anzuzünden, der Zeit
 in Anspruch nimmt, um zu laden und zu schießen. Es richtet sehr guten Schaden
 im Kampf an.
-%%%%
-crossbow:quote
-
-„(Tell, geht mit seiner Armbrust herein)
- W. Tell:
- Mein wertvolles Juwel jetzt — mein Chiefest-Schatz —
- Ein Zeichen werde ich dich untergehen, in den der Schrei des Kummers
- nie eindringen Konnte —, aber thou durchstoßen shalt es —
- Und thou, meine vertrauensvolle Bogensehne, die so oft
- Für den Sport mir treu und so,
- gedient hat, Verlässt mich nicht in dieser Todesangst-Stunde des Bedürfnisses—
- Nur das einmal, meine eigene gute Schnur,
- wahr sein, Dass hast so häufig wing'd der scharfe shaft: —
- Für shouldst thou successless von meiner Hand fliegen,
- habe ich keine Sekunde, um danach dich zu senden.“
-    -Friedrich Schiller, _Wilhelm Tell _, IV, iii. 1804.
-     trans. Herr Theodore Martin, 1898.
 %%%%
 crystal ball of energy
 
@@ -747,27 +543,9 @@ Ein zweischneidiges kämpfendes Messer mit einem scharfen Punkt, der von fern
 geworfen werden kann. Gesehen von einigen als eine schwache Waffe des letzten
 Auswegs schätzen andere es als ein vollkommenes Werkzeug für Morde.
 %%%%
-dagger:quote
-
-„Er hat seinen Dolch gezogen, der scharf,
-   sae war, Der scharf sae war und treffen Sie sich,
- Und drave er in die Braut der Nuss-browne,
-   Der deid an seinem feit gefallen ist.
- ‚Bleiben jetzt für mich, lieben Annet,‘ er bleiben sed,
-   ‚Jetzt, mein liebes,‘ er cry'd;
- Dann strake der Dolch bis unzu seinem Herzen,
-   Und ist deid neben ihr gefallen.“
-    -englische traditionelle Ballade, „Herr Thomas und Fair Annet“, um 1650.
-%%%%
 dart
 
 Ein kleiner, pfeilartiger und spitz zulaufender Wurfgegenstand.
-%%%%
-dart:quote
-
-„Wenn er die Hand liebt, die ihm
- Ich gesandt hatte, verehrt der Wurfpfeil.“
-    -Emily Dickinson. Mitte 19. Cent.
 %%%%
 deck of changes
 
@@ -853,55 +631,17 @@ demon blade
 Eine schreckliche Waffe, geschmiedet in den Feuern der Hölle. Geführt von jenen
 mit dämonischer Natur wird sie noch um einiges tödlicher.
 %%%%
-demon blade:quote
-
-„Quemadmodum gladius neminem occidit: occidentis telum est.“
- „Ein Schwert mordet allein nicht; es ist bloß die vom Mörder verwendete
-Waffe.“
-    -Lucius Annaeus Seneca, _Epistulae Anzeige von Morales Lucilium _, Brief
-LXXXVII: Einige Argumente für das einfache Leben, l. 30. ca. 65 n. Chr.
-     trans. Richard Mott Gummere, 1917.
-%%%%
 demon trident
 
 Eine schreckliche dreizackige Waffe, geschmiedet aus Feuer und Schwefel.
-%%%%
-demon trident:quote
-
-„An diesen Wörtern ist er aufgesprungen, und hat — nicht seine Sophia — nein,
-noch ein tscherkessisches Dienstmädchen reich angeschaut und hat elegant für
-das Serail des großartigen Signiors gekleidet. Nein; ohne ein Abendkleid in
-einer Verschiebung, die etwas des rausten, und keiner der saubersten, betauten
-ebenfalls mit einem wohlriechenden effluvia, dem Erzeugen der Arbeit des Tages
-mit einer Heugabel in ihrer Hand war, hat sich Molly Seagrim genähert.“
-    -Henry Fielding, _The Geschichte von Tom Jones, einem Findelkind _, Buch V,
-ch. X. 1749.
 %%%%
 demon whip
 
 Eine schreckliche Waffe, hergestellt in den Tiefen des Infernos.
 %%%%
-demon whip:quote
-
-„Mit einem schrecklichen Schrei ist Balrog vorwärts, und sein Schatten getaucht
-unten gefallen und hat verschwunden. Aber gerade als es gefallen ist, hat es
-seine Peitsche und die Peitschenschnüre geschwungen, die gepeitscht und über
-die Knie des Zauberers lockig sind, ihn zum Rand schleppend. Er ist geschwankt,
-und, ist ergriffen eitel am Stein gefallen, und ist in den Abgrund geglitten.“
-    -J.R.R. Tolkien, _The Kameradschaft des Ring_. II, 5, „Die Brücke von
-Khazad-dûm“. 1954.
-%%%%
 dire flail
 
 Ein gestachelter Flegel mit längeren Stacheln und einem schwererem Kopf.
-%%%%
-dire flail:quote
-
-„‚Ah! ah! ah!‘ gelacht seine zwei Männer, ,wie die normannischen Bengel
-demütigt werden, wenn sie den Schädel ihres tapferen Ritters sehen, der in
-durch unseren tapferen Landsmann geschlagen ist.’“
-    -_Tales der Ritterlichkeit; oder, Risikos durch die Überschwemmung und den
-Field_. 1830.
 %%%%
 disc of storms
 
@@ -916,18 +656,6 @@ hat ein Ritter einmal die Idee von einem Schwert doppelten mit Halmen einem
 Master-Schmied als ein Witz vorgeschlagen, aber war angenehm überrascht zu
 finden, dass nicht nur der Schmied dazu fähig war, solch ein Schwert zu machen,
 aber dass die erzeugte Waffe äußerst tödlich war.
-%%%%
-double sword:quote
-
-„Oh werde ich nicht aufstehen, ich werde nicht aufstehen,
- kann ich nicht für mein Leben
- Für Sie aufstehen haben zwei lange geschlagene Schwerter
- Und ich habe nur ein Taschenmesser.
- Gut ist es wahr, dass ich zwei geschlagene Schwerter habe,
- kosten Sie mich tief im Geldbeutel
- Aber Sie werden besser ihrer
- haben, Und ich werde das schlechteste haben.“
-    -englische traditionelle Ballade, „Mattie Groves“. ca. 1600.
 %%%%
 eggplant
 
@@ -945,15 +673,6 @@ eveningstar
 Die Stacheln dieser Art von Morgenstern sind besonders lang und ermöglichen
 ihm, gemeine Wunden zu verursachen.
 %%%%
-eveningstar:quote
-
-„Es wird gesagt, dass die bevorzugte Waffe der normannischen Priester, der,
-seine Einwände gegen das Vergießen von Blut, hatte keine Skrupel über den
-schneidigen aus der Gehirne haben.“
-    -T. M. Allison, „Der Flegel und Kindred Werkzeuge (aus einer historischen
-und literarischen Standpunkt)“, _Archaeologia Aeliana_, Third Series, vol. IV.
-Jahr 1908.
-%%%%
 executioner's axe
 
 Diese Furcht erregende Waffe ist gedeckt in getrocknetem Blut und rohen
@@ -962,41 +681,10 @@ Das enorme axehead sieht dazu ziemlich fähig aus, jedes Opfer zu zersplittern,
 das in Kollision damit fällt, und Sie fühlen sich zuversichtlich, dass ein
 einzelner Schlag genügen würde.
 %%%%
-executioner's axe:quote
-
-„Sie hat getanzt und wurde dazu gezwungen zu tanzen — um in der dunklen Nacht
-zu tanzen. Die Schuhe haben sie über den Dorn und Dornbusch fortgesetzt; sie
-hat sich gekratzt, bis sie verblutet hat; sie hat weg über das Moor zu einem
-kleinen einsamen Haus getanzt. Hier hat sie gewusst, dass der Scharfrichter
-gewohnt hat; und sie hat mit ihren Fingern an die Fensterscheiben geklopft und
-hat gerufen — ‚Kommen heraus, kommen heraus! Ich kann nicht eingehen, weil ich
-tanzen muss!‘
- Und der Scharfrichter sagte — ‚Sie wissen wahrscheinlich nicht, wer ich bin?
-Ich habe die Köpfe der schlechten Leute mit meiner Axt abgeschnitten und
-kennzeichne, wie meine Axt klingelt!‘
- ,Streichen meinen Kopf nicht aus,’ hat Karen gesagt, ‚dafür, wenn Sie, ich
-meine Sünde nicht bereuen kann. Aber streichen Sie meine Füße mit den roten
-Schuhen aus?‘
- Und dann hat sie ihre ganze Sünde bekannt, und der Scharfrichter hat ihre Füße
-mit den roten Schuhen abgeschnitten; aber die Schuhe haben weg mit den kleinen
-Füßen über die Felder und in den tiefen Wald getanzt.
- Und hat er sie ein Paar von Holzfüßen mit Krücken geschnitten, und hat sie
-einen Psalm unterrichtet, den die Verbrecher immer singen; und sie hat die Hand
-geküsst, die die Axt gehalten hatte, und über das Moor weggegangen ist.“
-    -Hans Christian Andersen, „Die Roten Schuhe“, _Nye Eventyr. Første Binden.
-Tredie Samling._. 1845.
-%%%%
 falchion
 
 Ein langes einseitiges Schwert mit einer leicht gekrümmten Klinge – das Gewicht
 ist auf den Punkt konzentriert, um seine Tödlichkeit zu erhöhen.
-%%%%
-falchion:quote
-
-„Ich habe den Tag gesehen, mit meinem guten scharfen falchion
- hätte ich sie hüpfen lassen: Ich bin jetzt,
- alt, Und diese dieselben Kreuze verderben mich.“
-    -William Shakespeare, _King Lear _, V, iii. 1608.
 %%%%
 fan of gales
 
@@ -1023,62 +711,17 @@ Eine Muskatblüte mit einer kurzen Kette, die den Kopf mit dem Heft verbindet.
 Das fügt ein bisschen mehr Kraft zum Schlag auf Kosten des Komplizierens des
 Gebrauches hinzu.
 %%%%
-flail:quote
-
-„Sogar nach dem Zwingen ihres Weges, mit der großen Anstrengung und dem
-Verlust, durch diese doppelte Verteidigung, [haben sich die Deutschen] noch an
-einem Nachteil gefunden; für ihre knappe Rüstung hat ihnen ermöglicht, unter
-gleichen Bedingungen mit den ungehobelten, aber furchterregenden Waffen ihrer
-Gegner zu kämpfen. Die Böhmen wurden mit langen Eisendreschflegeln bewaffnet,
-die sie mit der erstaunlichen Kraft geschwungen haben. Sie haben selten
-gescheitert zu schlagen, und als sie so getan haben, ist der Dreschflegel durch
-den bronzenen Helm, Schädel und alle abgestürzt.“
-    -James A. Wylie, _The Geschichte des Protestantismus _, vol. Ich, Buch 3,
-ch. 15 „Jon Huss und die Hussite Kriege“. 1878.
-%%%%
 giant club
 
 Ein riesiges Stück Holz, für die Hände eines Ogers geformt.
-%%%%
-giant club:quote
-
-„Damit hat der gyant ihn zugeschnallt, um,
- Inflamd mit dem scornefull Zorn und hohem disdaine,
- Und das Erheben seines schrecklichen Klubs auf hight,
- Alle zu kämpfen, die mit zerlumptem snubbes und knottie graine,
- Er Gedanke bei der ersten Begegnung bewaffnet sind, um slaine zu haben.“
-    -Edmund Spenser, _The Feenqueene _, Buch I, „Die Legende des Ritters von
-der Rote Crosse“, Gesang VIII, Strophe vii, l. 55-9. 1590.
 %%%%
 giant spiked club
 
 Ein riesiges Stück Holz mit spitzen Stacheln an einem Ende.
 %%%%
-giant spiked club:quote
-
- oni-ni-kanabō
- „oni mit einem Eisenklub mit Spitzen“
-    -japanisches Sprichwort, das überwältigende Macht anzeigt
-%%%%
 glaive
 
 Eine Stange mit einer großen und schweren Klinge an einem Ende.
-%%%%
-glaive:quote
-
-„To know the perfect length of your ſhort ſtaffe, or half Pike, Forreſt bil,
-Partiſan or Gleue, or ſuch like weapons of vantage and perfect lenghts, you
-ſhall ſtand vpright, holding the ſtaffe vpright cloſe by your body, with your
-left hãd, reaching with your right hand your ſtaffe as high as you can, and
-then allow to that length a ſpace to ſet both your hands, when you come to
-fight, wherein you may conueniently ſtrike, thrust and ward, & that is the iuſt
-length according to you ſtature. And this note, that theſe lengths will
-commonly fall out to be eight or nine foor long, and will fit, although not
-iuſt, the ſtatures of all men, without any hindrance at all vnto them in their
-fight, becauſe in any weapon wherin the hands may be remoued, and at libertie,
-to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
-ſtaffe behind the backmost hand doth no harme.“
-    -George Silver,_Paradoxes of Defence_.1599.
 %%%%
 gold dragon armour
 
@@ -1096,17 +739,6 @@ verwendet werden kann, um ausgezeichnete Rüstung zu machen.
 gold piece
 
 Ein Stapel glänzender Goldmünzen.
-%%%%
-gold piece:quote
-
-„Hier war es, dass die Botschafter von Samnites, ihn findend, Rüben in der
-Kaminecke kochend, ihm eine Gegenwart von Gold angeboten haben; aber er hat sie
-mit diesem Ausspruch weggeschickt; dass er, der mit solch einem Abendessen
-zufrieden war, kein Bedürfnis nach Gold hatte; und das er hat es achtbarer
-vorgehabt, diejenigen zu überwinden, die das Gold besessen haben, als, das Gold
-selbst zu besitzen.“
-    -Plutarch, „Marcus Cato“, _Lives_. 75 n. Chr.
-     trans. John Dryden, 1683.
 %%%%
 grand grimoire
 
@@ -1126,12 +758,6 @@ great mace
 
 Ein enormer Metallkriegsklub, der großen Lästigkeit.
 %%%%
-great mace:quote
-
-“Es wird einer emporkommen namens Feridoun der deinen Thron erbt und dein
- Schicksal umkehrt, und dich mit einer kuhköpfigen Keule erschlagen wird.”
-    -Firdausi, _Schāhnāme_. ca. 1000 n.Chr. übersetzt Helen Zimmern, 1883.
-%%%%
 great sword
 
 Eine massive, gerade, zweischneidige Klinge mit einem langen Griff und schwer
@@ -1146,44 +772,17 @@ Waffen wie Schwerter zu blockieren. Überstiegen mit einer Spitze und einem Dorn
 auf der Rückseite der Beilklinge kann diese Waffe sehr gefährlich in erzogenen
 Händen sein.
 %%%%
-halberd:quote
-
-“Und Diarmid oh, Diarmid umgekommen in Un-frieden;
- Sein Kopf wurde auf eine hohe Hellebarde gesetzt;
- Seine Farben sie wurden mit Füßen getreten: er hatte keine Chance zu leben
- Wenn der Herrgott selbst unterstützt!-
- Trauer, oh Trauer!”
-    -James Clarence Mangan , _A Farewell to Patrick Sarsfield, Earl of Lucan_.
-ca. 1840.
-%%%%
 hammer
 
 Aus einem Hammerhai mit Spitzen auf einem mittleren durch langets verstärkten
 Heft bestehend, kann diese stumpfe Waffe bedeutende bemerkenswerte Kraft
 liefern und sogar durch die Rüstung eindringen.
 %%%%
-hammer:quote
-
-“Der Hammah den John Henry schwang,
- Er wog über neun Pfund,
- Er brach eine Rippe in seiner linken Seit',
- Und seine intrels fielen zu Grund,
- Und seine intrels fielen zu Grund.”
-    -Onah L. Spencer, _John Henry_. frühes 20. Jahrh.
-%%%%
 hand axe
 
 Ein Werkzeug, um einzeln die Fasern von Holz oder Fleisch zu zerreißen. Klein
 und gefertigt für das schnelle, genaue Berühren wird es auch solch erwogen,
 dass es nötigenfalls geworfen werden kann.
-%%%%
-hand axe:quote
-
-“Lizzie Borden nahm eine Axt
- Und schlug die Mutter vierzig mal.
- Als sie sah, was sie getan,
- Den Vater einundvierzig mal.”
-    -A bekannter Springseil Reim, nach 1893.
 %%%%
 helmet
 
@@ -1227,25 +826,10 @@ Verwundungen .
     end
 }}
 %%%%
-javelin:quote
-
-“Angenommen, Sie finden Ihren Bruder im Bett mit ihrer Frau, und stoßen einen
-Speer durch die Beiden. Sie würden gerichtet werden, und die Beiden würden für
-ihre Sünden zu büßen und in das Reich Gottes aufgenommen werden.”
-    -Brigham Young, _Journal of Discourses_, 3:247. 1856.
-%%%%
 lajatang
 
 Eine sehr seltene und extrem effektive importierte Waffe aus einem Stab mit
 halbmondförmigen Klingen an beiden Enden.
-%%%%
-lajatang:quote
-
-“Eine Waffe die zur Ruhe kommt
- Wie Schneeflocken auf das Gras;
- Aber wenn er eines freien Mannes Willen tut,
- Tut er es wie ein Blitz den Willen Gottes.”
-    -John Pierpont, “The Ballot”. ca. 1850.
 %%%%
 lamp of fire
 
@@ -1271,13 +855,6 @@ Ein sehr großer und sehr schwerer Stein. {{
    end
 }}
 %%%%
-large rock:quote
-
-“Ich laufe an den Felsen und verstecke mein Gesicht
- Der Fels rief aus: 'Kein Versteck in Sicht
- Es gibt kein Versteck hier unten.'”
-    -Negrospiritual. 19. Jahrh.
-%%%%
 large shield
 
 großes Stück Holz und Metall, auf einen Arm zur Abwehr geschnallt werden. {{
@@ -1300,12 +877,6 @@ diese leichte Rüstung stellt grundlegenden Schutz mit fast keiner Hindernis zur
 Verfügung, um Gesten oder schnelle, verstohlene Bewegung sorgfältig
 auszuarbeiten.
 %%%%
-leather armour:quote
-
-“Nichts verformen kann die menschliche Rasse
- Wie der Rüstungen Eisen Spange”
-    -William Blake, “Auguries of Innocence”, 99-100. 1803.
-%%%%
 lemon
 
 Eine gelbe Frucht.
@@ -1327,68 +898,20 @@ Griff und schlägt. Diese edle Waffe verbindet genaue Beweglichkeit mit der
 tödlichen Kraft, und ist in der Hand eines erzogenen in seinem Gebrauch
 ziemlich stark.
 %%%%
-long sword:quote
-
-"Während wir in den Fängen dieser großen Armee und ihrer schrecklichen
-Schwerter (Maquahuitl [aus Obsidian]) waren, schienen unter dem Feind viele der
-Mächtigsten zu entscheiden, ein Pferd zu kapern. Sie begannen mit einem
-wütenden Angriff und legten die Hände auf eine gute Stute, gut sowohl für den
-Sport als auch für den Kampf trainiert. Ihr Reiter, Pedro de Moron, war ein
-feiner Reitersmann, und als er mit drei weiteren Reitern in die feindlichen
-Reihen stürmte - sie waren angewiesen worden zur gegenseitigen Unterstützung
-zusammen zu bleiben - einige von ihnen ergriffen seine Lanze so dass er sie
-nicht verwenden konnte, und andere zerschnitten ihn mit ihren Schwertern
-(Maquahuitl) und verletzten ihn schwer. Dann schlitzten sie seine Stute,
-schnitten am Kopf im Nacken, so dass er hing nur an der Haut. Die Stute fiel
-tot um, und wenn seine montierten Genossen nicht zur Rettung von Moron gekommen
-wären, würde er wohl auch getötet worden sein. "
-    Bernal Díaz del-Castillo, _Die Conquest of New Spain_. 1623.
-%%%%
 longbow
 
 Ein rundes Stück Holz mit einer Sehne, zum Schießen von Pfeilen. Es verursacht
 guten Schaden im Kampf, und ein fähiger Benutzer kann es sehr wirksam
 verwenden.
 %%%%
-longbow:quote
-
-“Robyn krümmte einen vollständigen Bogen,
- Einen Pfeil er drehte nach Will';
- So traf er den Sheriff den stolzen, ungelogen,
- Im Grunde liegt er noch ganz Still.”
-    -_A Gest of Robyn Hode_ Sixth Fytte, l. 120-123. ca. 1450.
-%%%%
 lychee
 
 Eine tropische Frucht.
-%%%%
-lychee:quote
-
-“Die Litschi ist die berühmteste einheimische Frucht Chinas. Sie ist fast
-runde, etwa anderthalb Zentimeter im Durchmesser, die Schale ist hart, aber
-spröde, von einer schokoladenbraunen Farbe und bedeckt mit warzenhaften
-Erhöhungen. Wenn sie frisch ist mit einem weißen fast durchsichtigen, süß,
-geleeartigen Fruchtfleisch, in dem ein ziemlich großer, glänzender, brauner
-Samen liegt gefüllt; das Fruchtfleisch ist von einem köstlichen wenig
-säuerlichem Geschmack, wenn frisch. Die Chinesen trocknen sie, bis sie schwarz
-wie eine Pflaume wird und somit erhalten sie sie für den Einsatz während des
-ganzen Jahres, in diesem Zustand ist sie häufig in den Londoner Obstläden zu
-sehen.”
-    -John Smith, _A Dictionary of Popular Names of the Plants which Furnish the
-Natural and Acquired Wants of Man, in All Matters of Domestic and General
-Economy: Their History, Products, & Uses_. 1882.
 %%%%
 mace
 
 Ein kurzer militärischer Metallklub mit Spitzen. Dieses wirksame Instrument
 beult Rüstung und Brechungsknochen durch die stumpfe Kraft ein.
-%%%%
-mace:quote
-
-“[My plan] sieht nicht vor Ihren Empfangsbereich mit zankenden Kolonie Agenten
-zu füllen, die die Zwischenschaltung Ihre Keule zu jedem Zeitpunkt erfordern,
-um den Frieden unter ihnen zu halten.”
-    -Edmund Burke, “On Conciliation with America”, speech in Parliament. 1775.
 %%%%
 manual
 
@@ -1404,18 +927,6 @@ morningstar
 Eine Muskatblüte mit mit einem in kurzen Spitzen bedeckten Kopf. Vergrößerte
 Kraft gegen die nur ein bisschen reduzierte Beweglichkeit tauschend, kann diese
 Waffe in den Händen eines gut erzogenen Kämpfers tödlich sein.
-%%%%
-morningstar:quote
-
-“Wenig tat dann sein Pomp Federn beistehen
- Die Azteken, oder glitzernder Stolz von Gold.
- Vor dem gemäßigten Schwert; wenig sein Helm,
- Cay mit seiner gefiederten Krone oder drest
- In eingegrabenem Schrecken, als der Britannier die Hand
- Fuhr durch Helm und Kopf der Morgenstern;
- Oder schwang seine Eisengewichte mit erschütternder Herrschaft.
- Welche, wo sie fielen, zerstörten.”
-    -Robert Southey, _Madoc_. 1805.
 %%%%
 mottled dragon armour
 
@@ -1448,29 +959,9 @@ Ein dünnes Stück von Metall, das normalerweise in einer schädlichen Substanz
 angestrichen ist. Wenn gestartet, von einem Blasrohr kann es tödlich sein,
 seine Toxine in den Blutstrom eines Lebens oder dämonischen Wesens liefernd.
 %%%%
-needle:quote
-
-“Ich bete, dass von den Toten erwacht,
- Ich möge stehen in Herrlichkeit-
- Eine Krone, vielleicht, auf meinem Haupt,
- Aber eine Nadel in meiner Hand.”
-    -Eugene Field, “Grandma's Prayer”. spätes 19. Jahrh.
-%%%%
 orange
 
 Eine köstliche, saftige und orangene Frucht.
-%%%%
-orange:quote
-
-“Orangenschalen konservieren
-
-SOBALD sie die Rinde einiger Sevilla Orangen so dünn wie Sie können gerieben
-haben, wiegen Sie sie und für jedes Pfund Orangenschale fügen Sie drei Pfund
-Zucker hinzu. Zerstoßen Sie die Orangenschale gut in einem Marmor-Mörser, und
-mischen Sie den Zucker nach und nach bei. Füllen Sie es in Gläser und binden
-Sie es richtig fest zu, um die Luftzufuhr zu verhindern.”
-    -Collingwood-Francis, John Woollams, _Der Universal-Koch: Und Stadt und
-Land Haushälterin._ 1792.
 %%%%
 orb of zot
 
@@ -1617,12 +1108,6 @@ potion of poison
 
 Eine böse giftige Flüssigkeit.
 %%%%
-potion of poison:quote
-
-“‘Gift‘ ist ein hartes Wort. Ich bevorzuge 'Zaubertrank von Halt verdammt noch
-mal die Schnauze!'”
-    -Oglaf, gesäubert
-%%%%
 potion of porridge
 
 Ein sättigender Trank von Schlamm, hoher Getreidefasergehalt.
@@ -1663,34 +1148,6 @@ quarterstaff
 
 Eine starre hölzerne Stange, geschaffen für den Kampf.
 %%%%
-quarterstaff:quote
-
-“Dann schnallte Robin seinen Gürtel ab,
- Und legte seinen Bogen zu Boden;
- Er nahm einen Stab von einer anderen Eiche,
- Der war sowohl steif und als auch fest.
- "Aber lassen Sie mich messen", sagte Robin vergnügt,
- "Bevor wir beginnen unser Getümmel;
- Damit meiner nicht länger sei als deiner,
- Denn das wird als Foul gewertet werden."
- "Ich schaue nicht auf die Länge," antwortete Fett-Arthur
- "Mein Stab ist aus Eiche so frei;
- Acht Fuß und ein halber wird er ein Kalb niederschlagen,
- Und ich hoffe, er wird dich niederzuschlagen."
- Robin konnt's nicht länger ertragen,
- Er gab ihm einen Schlag,
- Schnell und bald kam das Blut,
- Bevor es zehn Uhr war.
- Über und über und über sie gingen,
- Wie zwei Wildschweine in einer Verfolgungsjagd,
- Das Streben, sich gegenseitig zu verstümmeln wollen,
- Bein-, Arm-, oder an jedem anderen Ort.
- Und Schlag für Schlag sie behandelten sich hastig,
- Für zwei Stunden gehalten und mehr;
- Das Holz klingelte bei jedem Knall,
- Sie hantierten mit ihrem Werkzeug so schmerzhaft.”
-    -Anonymous, “Robin Hood und das Tanner”.
-%%%%
 quick blade
 
 Dieses sorgfältig bearbeitete kurze Schwert ist übernatürlich ausgeglichen, es
@@ -1699,31 +1156,10 @@ anzugreifen. Nicht viele swordsmiths haben die notwendige Sachkenntnis, ein zu
 machen, so werden sie nur in kleinen Zahlen erzeugt und sind schwierig zu
 finden.
 %%%%
-quick blade:quote
-
-"Er hat den verhängnisvollen Blitz seines grausamen flinken Schwertes
-losgelassen ..."
-    -Julia Ward Howe, "The Battle Hymn of the Republic".  1861.
-%%%%
 rambutan
 
 Eine kleine, aber köstliche tropische Frucht. Wie es in dieses Verlies
 hineinkam, ist irgendjemandes Annahme.
-%%%%
-rambutan:quote
-
-"Die Rambutan (_nephelium lappaceum_) ist eine schöne Frucht, auf die ich
-bereits hingewiesen habe, ähnlich dem Mammut Erdbeerbaum; und Sie vermissen sie
-erst, wenn Sie in einer kleinen Entfernung, ein leckeres Gericht von einer
-tropischen Erdbeere bekommen. Aber Sie finden in den 'Angaben innerhalb' des
-äußeren Mantels, dass es unterhalb der rot-haarigen Abdeckung ein
-halbdurchlässiges Fruchtfleisch mit angenehm sauren Geschmack, welches einen
-einzigen ovalen und länglich Samen umhüllt. Ich weiß nicht, aber ich habe eine
-eigenartige Erinnerung der schönen Früchte der Meerenge, aber keiner hält sich
-in meiner Erinnerung so süß in ihren angehäuften Schönheiten eines Obst-Tellers
-als die bärtige und rosige rambutan."
-    -Fitch-Waterman Taylor, _A Voyage Round the World And Visits to Various
-Foreign Countries, in the United States Frigate Columbia_.  1847.
 %%%%
 ring mail
 
@@ -1746,12 +1182,6 @@ Dieser Ring bringt seinem Träger mehr im Kontakt mit den Mächten des Feuers. E
 oder sie gewinnt Widerstand gegen die Hitze und kann Feuermagie effektiver
 verwenden, aber wird verwundbarer zu den Effekten der Kälte.
 %%%%
-ring of fire:quote
-
-"Die Liebe ist ein brennendes Ding
- Und es macht einen feurigen Ring"
-    -June Carter, Merle Kilgore, "Ring of Fire". 1963.
-%%%%
 ring of hunger
 
 Dieser verfluchte Ring lässt deinen Träger schneller hungern.
@@ -1761,19 +1191,6 @@ ring of ice
 Dieser Ring bringt seinem Träger mehr im Kontakt mit den Mächten der Kälte und
 des Eises. Er oder sie gewinnt Widerstand gegen die Kälte und kann Eismagie
 effektiver verwenden, aber wird verwundbarer zu den Effekten des Feuers.
-%%%%
-ring of ice:quote
-
-“So mancher sagt, die Welt vergeht in Feuer,
- so mancher sagt, in Eis.
- Nach dem, was ich von Lust gekostet,
- halt ich's mit denen, die das Feuer vorzieh'n.
- Doch müsst sie zweimal untergeh'n,
- kenn' ich den Hass wohl gut genug,
- zu wissen, dass für die Zerstörung Eis
- auch bestens ist
- und sicher reicht.”
-    -Robert Frost, “Fire and Ice”. 1920.
 %%%%
 ring of intelligence
 
@@ -1785,16 +1202,6 @@ ring of invisibility
 Dieser starke Ring kann aktiviert werden, um seinen Träger vor der Ansicht von
 anderen zu verbergen, aber vergrößert die Geschwindigkeit seines oder ihres
 Metabolismus außerordentlich, während man so tut.
-%%%%
-ring of invisibility:quote
-
-“Mit Freudengeschrei stürzten sich die Goblins auf ihn. Ein Anflug von Angst
-und Verlust, wie ein Echo von Gollums Elend, schlug Bilbo, und er vergaß sogar
-sein Schwert zu ziehen, steckte die Hände in die Tasche. Und - da war der Ring
-immer noch in seiner linken Tasche, und er rutschte auf seinen Finger. Die
-Goblins stutzten. Sie konnten keine Spur mehr von ihm sehen. Er war
-verschwunden.”
-    -J.R.R. Tolkien, _Der Hobbit_. 1937.
 %%%%
 ring of flight
 
@@ -1842,14 +1249,6 @@ ring of see invisible
 Dieser Ring erlaubt seinem Träger, jene Dinge zu sehen, die vor der Ansicht
 durch die Magie verborgen sind.
 %%%%
-ring of see invisible:quote
-
-"Und hier ist mein Geheimnis", sagte der Fuchs,
- "es ist ganz einfach."
- "Man sieht nur mit dem Herzen gut,
- das Wesentliche ist für die Augen unsichtbar."
-    -Antoine de Saint Exupéry, _Der kleine Prinz_. 1943.
-%%%%
 ring of slaying
 
 Dieser Ring vergrößert oder vermindert das Handgemenge und hat
@@ -1887,12 +1286,6 @@ Stoff gemacht. Roben passen sich leicht an, um humanoid Körper jeder Größe zu
 passen. Kleidungsstücke dieser Sorte bieten nur einen kleinen Schutz gegen den
 physischen Schaden an, aber ihre großzügige Kürzung hindert Vermeidung am
 Angriff oder der richtigen Leistung von thaumaturgical Gesten nicht.
-%%%%
-robe:quote
-
-“CLEOPATRA: Den Mantel gib, setz' mir die Krone auf, Ich fühl' ein Sehnen nach
-Unsterblichkeit!”
-    -William Shakespeare, _Anthonius & Cleopatra_, V, ii. ca. 1605.
 %%%%
 rod of demonology
 
@@ -1947,12 +1340,6 @@ Obwohl ursprünglich entworfen, von einer bestiegenen Position zu hauen,
 arbeitet dieses einzeln-schneidige, ein bisschen gekrümmte kurze Schwert noch
 sehr gut in den Händen von unmontierten Kriegern.
 %%%%
-sabre:quote
-
-“Wer hat bloß als erster die schrecklichen Schwerter erfunden?
- Wie grausam und wahrhaft hartherzig war der! ...”
-    -Albius Tibullus, _Elegies_ I, X v.1-2, ca.  25 n.Chr.
-%%%%
 sack of spiders
 
 Eine gewebte Seidentasche. Etwas scheint sich im Inneren zu bewegen ...
@@ -1982,15 +1369,6 @@ scimitar
 Ein langer Säbel. Seine breite, gekrümmte Klinge vergrößert den Schaden er
 befasst sich, sondern auch macht es ein kleines bisschen härter, genau zu
 behandeln.
-%%%%
-scimitar:quote
-
-“Das Museum - Schrank und riesige Bibliothek, die sich die gesamte untere Etage
-anmaßte - dort waren die umstrittenen und unvereinbaren Bücher, die irgendwie
-die Geschichte des neunzehnten Jahrhunderts waren; es gab Krummsäbel aus
-Nishapur, in deren gefrorenen Halbmonde der Wind und die Gewalt des Kampfes
-weiterzuleben schien.”
-    -Jorge Luis Borges, _The Form of the Sword_. 1953.
 %%%%
 scroll of acquirement
 
@@ -2144,16 +1522,6 @@ scythe
 Ein Farm-Werkzeug, das gewöhnlich nur durch ungeschulte Mengen im Kampf
 verwendet ist.
 %%%%
-scythe:quote
-
-“Es war Instinkt. Unlogisch wie Blitzeinschläge die nicht verletzen. Jeden Tag
-musste das Korn geschnitten werden. Es musste geschnitten werden. Warum? Nun,
-einfach nur der Sache wegen, das war alles. Er lachte über die Sense in seinen
-großen Händen. Dann, pfeifend, nahm er sie zum Lager- und Wartefeld und tat die
-Arbeit. Er hielt sich für ein wenig verrückt. Zur Hölle, es war ein
-durchschnittlich-gewöhnliches Weizenfeld, wirklich, nicht wahr?”
-    -Ray Bradbury, _The Scythe_/Die Sense. 1943.
-%%%%
 shield
 
 Ein Stück von Holz und Metall, um auf einem Arm für die Verteidigung
@@ -2166,12 +1534,6 @@ Eine kleine, zweischneidige Klinge mit einem kurzen Griff. Robust und leicht,
 zu behandeln, wird diese Waffe häufig in den Händen von denjenigen gefunden,
 die ihre unbewussten Feinde stechen möchten.
 %%%%
-short sword:quote
-
-“Wer hat bloß als erster die schrecklichen Schwerter erfunden?
- Wie grausam und wahrhaft hartherzig war der!”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 v.Chr.
-%%%%
 decaying skeleton
 
 Ein zerfallendes Skelett.
@@ -2181,11 +1543,6 @@ slice of pizza
 Ein Stück Pizza: Ein Fladenbrot mit Tomatensoße, Büffelmozzarella und
 Basilikum.
 %%%%
-slice of pizza:quote
-
-“Wenn der Mond deine Augen berührt wie ein Pizzastück, das ist Liebe.”
-    -Jack Brooks, “That’s Amore”. 1952.
-%%%%
 sling
 
 Ein Stück von Stoff und Leder, um Steine zu starten, die einen kleinen Betrag
@@ -2193,24 +1550,10 @@ des Schadens auf dem Einfluss tun. Unterschiedlich mit anderen
 Abschussvorrichtungen, ein Schild tragend, verlangsamt seine Rate des Feuers
 nicht.
 %%%%
-sling:quote
-
-“Und David tat seine Hand in die Tasche und nahm einen Stein daraus und
-schleuderte und traf den Philister an seine Stirn, daß der Stein in seine Stirn
-fuhr und er zur Erde fiel auf sein Angesicht.”
-    -Luther Bibel 1912, 1. Samuel 17:49.
-%%%%
 sling bullet
 
 Ein kleines, schweres Projektil, das speziell für die Nutzung mit Schleudern
 geformt ist. Als Munition sind diese effektiver als einfache Steine.
-%%%%
-sling bullet:quote
-
-“Denn wenn die Dinge einmal zur Ausführung kommen, gibt es keine
-Verschwiegenheit vergleichbar mit der Schnelligkeit, wie die Bewegung einer
-Kugel in der Luft, die so schnell fliegt das sie das Auge überholt.”
-    -Francis Bacon, _Essays_, “Of Delays”. 1625.
 %%%%
 snozzcumber
 
@@ -2222,13 +1565,6 @@ Eine Jagdwaffe, die aus einer erwogenen Holzwelle mit einem spitzen einem Ende
 befestigten Metallkopf besteht. Kürzer als anderer polearms kann es mit einer
 oder zwei Händen ausgeübt werden und ist auch leicht genug, um geworfen zu
 werden.
-%%%%
-spear:quote
-
-“Auf dem Schlachtfeld ist die Hellebarde dem Speer unterlegen. Mit dem Speer
-läßt sich angreifen; die Hellebarde dient lediglich zur Abwehr. In der Hand
-zweier gleich kräftiger Männer ist der Speer die etwas wirkungsvollere Waffe.”
-    -Miyamoto Musashi, _Das Buch der fünf Ringe_. 1645.
 %%%%
 staff of air
 
@@ -2257,29 +1593,6 @@ wielder geworfen sind, und schützt ihn oder sie von der negativen Energie. Wenn
 der wielder in beiden Anrufungen und Geisterbeschwörung erfahren ist, können
 sie großen Schmerz jenen lebenden Seelen zufügen, die sie schlagen.
 %%%%
-staff of death:quote
-
-“'Ich bin Aed Abaid von Ess Ruaid, das heißt, der gute Gott der Zauberei der
-Tuatha Dé Danann und die Ruad Rofhessa und Eochaid Ollathair sind meine drei
-Namen.’
- Und so war er, mit Cermait Milbél, einem seiner Söhne, auf dem Rücken, der in
-Kampf und  Bekämpfung von Lug, Sohn von Cian, Hochkönig von Irland gefallen
-war. Der Dagda begab sich, sein Wissen und Lernen, und deshalb Weihrauch und
-Myrrhe und Kräuter wurden um den Körper des Cermait gelegt, und er hob Cermait
-auf den Rücken, und Cermait tragend durchsuchte er die Welt, und kam ins große
-Morgenland.
- Er traf drei Männer auf der Straße unterwegs mit den Schätzen ihrer Väter. Der
-Dagda fragte sie nach Neuigkeiten, und sie sagten: ‘Wir sind drei Söhne eines
-Vaters und einer Mutter, und wir teilen unseres Vaters Schätze.’
- ‘Was habt Ihr?’ sagte der Dagda.
- ‘Ein Hemd und einen Stab und einen Mantel,’ sagten sie.
- ‘Welche Tugenden haben diese?’ sagte der Dagda.
- ‘Dieser große Stab den Du siehst,’ sagte er, ‘hat ein glattes Ende und ein
-raues Ende. Ein Ende erschlägt die Lebenden, und das andere Ende bringt die
-Toten zum Leben.’”
-    -Osborn Bergin, “How the Dagda Got His Magic Staff”, _Medieval Studies in
-Memory of Gertrude Schoepperle Loomis_. 1927.
-%%%%
 staff of earth
 
 Dieser Personal vergrößert die Macht von durch seinen wielder geworfenen
@@ -2300,18 +1613,6 @@ wielder geworfen sind, und schützt ihn oder sie von den Effekten der Hitze und
 des Feuers. Wenn der wielder in Anrufungen erfahren ist, können sie diejenigen
 verbrennen, die dadurch geschlagen sind, noch größeren Schaden anrichtend, wenn
 sie auch in der Feuermagie erfahren sind.
-%%%%
-staff of fire:quote
-
-“Der Zauberer erinnerte sich plötzlich an die Worte Gottes. Er erinnerte sich,
-dass von allen Kreaturen die die Erde bevölkern, Feuer das einzige, das von
-seinem Sohn wusste, ein Phantom zu sein. Dieses Wissen, welches ihn auf den
-ersten Blick beruhigte, endete damit ihn zu quälen. Er fürchtete, für den Fall
-dass seinen Sohn über dieses abnorme Privileg meditieren sollte und durch
-einige Mittel heraus fand, dass er nur ein Trugbild sei. Nicht ein Mann zu
-sein, nur eine Projektion des anderen Mannes Träume - welch unvergleichliche
-Demütigung, was für ein Wahnsinn!”
-    -Jorge Luis Borges, _Die kreisförmigen Ruinen_. 1940.
 %%%%
 staff of poison
 
@@ -2350,31 +1651,10 @@ steam dragon hide
 Die weiche und geschmeidige schuppige Haut eines Dampfdrachen. Es kann in die
 richtige Rüstung durch magische Mittel verwandelt werden.
 %%%%
-steam dragon hide:quote
-
-“Prächtig sind seine starken Schilder, fest zusammengeschlossen und versiegelt;
-einer fügt sich an den andern, daß kein Luftzug dazwischen kommt; sie hängen
-fest zusammen, sind geschlossen und trennen sich nicht.”
-    -Schlachter Bibel 1951, Hiob 41:15-17.
-%%%%
 stone
 
 Ein kleiner Klotz von dichten, aber sonst unbeachtlichem natürlichem Mineral.
 Es kann mit der Hand geworfen oder mit einer Schleuder gestartet werden.
-%%%%
-stone:quote
-
-“Wie glücklich ist der kleine Stein,
- Der über Wege streift allein
- Und um Erfolg sich kümmert nicht
- Auch kein Verlangen aus ihm spricht – –;
- Der eingehüllt in schlichtes Braun
- Um sich das Universum trägt,
- Und wie die Sonne frei und rein
- Verbindet und alleine leuchtet,
- das höchste Sein verwirklicht er
- durch schlichte Einfachheit … nichts mehr – –”
-    -Emily Dickinson, “How happy is the little Stone”. ca. 1865.
 %%%%
 storm dragon armour
 
@@ -2393,29 +1673,9 @@ strawberry
 
 Eine kleine aber leckere rote Frucht.
 %%%%
-strawberry:quote
-
-“Ein Samurai ging spazieren, als ein großer Tiger anfing, ihn zu jagen. Der
-Samurai rannte um sein Leben, übersah Klippe zu seinen Füßen. Als er fiel,
-streckte er sich und fing eine Rebe, die nach unten hing. Er blickte nach unten
-und sah einen anderen Tiger unten kreisen, der erste Tiger wartete oben. Die
-Rebe begann nachzugeben. Der Samurai dann sah eine einzige Erdbeere die an der
-Rebe wuchs. Er streckte die Hand aus und aß die Erdbeere. Wie süß sie
-schmeckte!”
-    -verschiedenen japanischen buddhistischen Mönchen zugeschrieben.
-%%%%
 sultana
 
 Eine kleine Rosine.
-%%%%
-sultana:quote
-
-“Ein türkischer Garten gehörte zu den Kuriositäten, in denen die Juden Zugang
-zu Bentham fanden. Es war eine Art von Obstgarten von Reben und anderen Bäumen,
-ohne Ordnung oder scheinbare Anordnung. Von diesem Garten sendete Bentham
-Exemplare der Sultana Rosinen nach England, welche er glaubte die ersten dieser
-Art gewesen waren, die jemals sein Land erreicht hätten.”
-    -John Bowring, _The Works of Jeremy Bentham_. 1839.
 %%%%
 swamp dragon armour
 
@@ -2450,12 +1710,6 @@ sie genug lange leben.
     end
 }}
 %%%%
-throwing net:quote
-
-“Das Aussehen einer erschreckenden Sache
- Sitzen in einem Netz!”
-    -Edna St. Vincent Millay, “When the Year Grows Old”. 1917.
-%%%%
 tome of destruction
 
 Ein äußerst starkes, aber unvorhersehbares Buch der wilden Magie. Warnung: Das
@@ -2466,17 +1720,6 @@ trident
 Ein Fischenspeer hat sich mit einer längeren Welle und einem dreizackigen
 Metallkopf verbessert. Wegen des zusätzlichen Gewichts kann es nicht effektiv
 geworfen werden.
-%%%%
-trident:quote
-
-“Da die Beschäftigungen der folgenden zwei Tage in nichts als dem gewöhnlichen
-Jagdvergnügen des Schießens und des Herumtreibens bestanden, und also für den
-Leser von wenigem Interesse seyn dürften, so gehen wir zu einem andern über,
-das einigermaßen nur Schottland eigen ißt, und das man eine Art Lachsjagd
-nennen kann. Diese Jagd, in welcher der Fisch mit einer langen, bärtigen Gabel,
-oder sogenanntem Stechtrident verfolgt und getötet wird, ißt an der Mündung der
-Esk und einiger anderen Flüsse Schottlands sehr üblich.”
-    -Sir Walter Scott, _Guy Mannering oder der Sterndeuter_, Kap. XXVI. 1815.
 %%%%
 triple sword
 
@@ -2499,32 +1742,6 @@ troll hide
 Die Leiche und knubbelig verbirgt sich von einem Troll mit magischen
 verbessernden Eigenschaften. Tragbar, wie andere brutale Häute, reagiert es
 auch gut auf das Entzücken.
-%%%%
-troll hide:quote
-
-“Der Dovre-Alte: Hör' nun und nimm Vernunft an, Prinz Peer!
- Du hast Begabung zum Troll. Nicht wahr, er
- Trägt sich nun schon so ziemlich wie ein Troll?
- Und willst doch auch Troll sein?
- Peer Gynt: Weiß Gott, will ich's sein.
- Für 'ne Braut und ein wohlbestellt Reich obendrein
- Gibt man ja wohl auch einmal etwas viel.
- Aber alles in der Welt hat sein Maß und sein Ziel.
- Den Wedel nahm ich an, weil ich's also verstand:
- Man kann wieder lösen, was der Hoftroll band.
- Die Hos' warf ich ab, weil sie alt war und fetzig;
- Doch die kann man ja wohl wieder anknöpfen, schätz' ich.
- Und schließlich drück' ich mich wohl auch noch leis
- Von dieser Dovreschen Lebensweis'.
- Ich will ja gern schwören, eine Kuh wär' eine Maid;
- Einen Eid kann ja einer mal in sich fressen; –
- Aber so seine Menschheit auf immer vergessen,
- Nicht einmal als ehrlicher Mensch sterben sollen,
- Als Bergtroll so umgehn auf Lebenszeit, –
- Niemalen mehr von Euch zurücktreten können, –
- So Troll sein mit all seinem Fühlen und Wollen; –
- Nein, nein; da tu' ich mir Besseres gönnen.”
-    -Henrik Ibsen, _Peer Gynt_ . 1867.
 %%%%
 troll leather armour
 
@@ -2624,29 +1841,11 @@ war axe
 Eine einhändige militärische Axt mit einem langen Heft und einem Kopf einzelnen
 mit Halmen.
 %%%%
-war axe:quote
-
-“'Gott sei mit diesem Kuss,' sagte Max, und Katie seufzt',
- mit andächtigen Handflächen umschliessend, 'Gott sei mit dieser Axt!'”
-    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
-Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
-%%%%
 whip
 
 Ein langer gepflochtener-Streifen aus Leder. Ursprünglich entwickelt für den
 Gebrauch in Unstimmigkeiten mit dem Vieh wird diese einfache Waffe jetzt weit
 verwendet, um Unterschiede zwischen allen Sorten von Wesen zu setzen.
-%%%%
-whip:quote
-
-“Nicht mit einem Knüppel, wird das Herz gebrochen
- Auch nicht mit einem Stein -
- Eine Peitsche so klein, die man kann nicht sehen
- Ich kenn' Um die magische Kreatur zu peitschen
- Bis sie wird fallen,
- Doch der Peitschen Nam'
- Zu edel ihn zu sagen.”
-    -Emily Dickinson, “Not with a Club, the Heart is broken”. ca. 1865.
 %%%%
 wizard hat
 

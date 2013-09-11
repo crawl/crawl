@@ -4,14 +4,6 @@ amulet
 A talisman to be worn as jewellery around the neck, charged with arcane powers
 of unknown provenance.
 %%%%
-amulet:quote
-
-“Gringoire put out his hand for the little bag, but she drew back. 'Do not
-touch it! It is an amulet, and either you will do mischief to the charm, or it
-will hurt you.'”
-    -Victor Marie Hugo, _Notre Dame de Paris_, Book II, chapter VII “A Wedding
-     Night”. 1831.
-%%%%
 book
 
 An arcane textbook containing magical spells of unknown origin. Written for
@@ -28,29 +20,10 @@ potion
 
 An unlabelled flask containing a single dose of unknown liquid.
 %%%%
-potion:quote
-
-“Then gave I her, — so tutor’d by my art, —
- A sleeping potion; which so took effect
- As I intended, for it wrought on her
- The form of death: meantime I writ to Romeo
- That he should hither come as this dire night,
- To help to take her from her borrow’d grave,
- Being the time the potion’s force should cease.”
-    -William Shakespeare, _Romeo and Juliet_
-%%%%
 ring
 
 A talisman charged with arcane forces of unknown provenance, to be worn as
 jewellery on a finger.
-%%%%
-ring:quote
-
-“A ring of gold and a milk-white dove
- Are goodly gifts for thee,
- And a hempen rope for your own love
- To hang upon a tree.”
-    -Oscar Wilde, “Chanson”. 1881.
 %%%%
 rod
 
@@ -68,25 +41,7 @@ staff
 
 A staff improved with arcane powers of unknown nature.
 %%%%
-staff:quote
-
-“Bashō Osho said to his disciples, 'If you have a staff, I will give you a
-staff. If you have no staff, I will take it from you.'
- Mumon's Comment
- It helps me wade across a river when the bridge is down. It accompanies me to
-the village on a moonless night. If you call it a staff, you will enter hell
-like an arrow.”
-    -Mumon Ekai, _The Gateless Gate_, case 44. 1228.
-     trans. Katsuki Sekida
-%%%%
 wand
 
 A stick. Maybe it's magical.
-%%%%
-wand:quote
-
-"[The principle of selection] is the magician’s wand, by means of which he may
-summon into life whatever form and mould he pleases.”
-    -William Youatt, _Sheep: their breeds, management, and diseases; to which
-     is added the Mountain Shepherd's Manual_, ch. III. 1837.
 %%%%

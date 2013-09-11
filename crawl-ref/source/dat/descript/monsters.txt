@@ -15,19 +15,6 @@ __cap-T_suffix
 
 You feel a lump in the pit of your stomach.
 %%%%
-__cap-T_suffix:quote
-
-“Buckshank bold and Elfinstone,
- And more than I can mention here,
- They caused to be built so stout a ship,
- And unto Iceland they would steer.
-
- They launched the ship upon the main,
- Which bellowed like a wrathful bear;
- Down to the bottom the vessel sank,
- A laidly Trold has dragged it there.”
-    -George Borrow, _Lavengro: The Scholar, the Gypsy, the Priest_. 1851.
-%%%%
 __cap-U_suffix
 
 If made afraid, it may become angry!
@@ -44,14 +31,6 @@ disgraced after thieves looted it while he slept. He now slithers about the
 dungeon, seeking vengeance against all would-be looters. He is an accomplished
 spellcaster, but no more deadly in melee combat than others of his kind.
 %%%%
-Aizul:quote
-
-“I went to Heaven —
- ’Twas a small Town —
- Lit — with a Ruby —
- Lathed — with Down —”
-    -Emily Dickinson, _I went to Heaven_. ca. 1860.
-%%%%
 Agnes
 
 This somewhat older looking spriggan carries a bladed staff (almost as large as
@@ -67,16 +46,6 @@ Cocytus. His gigantic body seems as though it would be easily struck by your
 attacks; unfortunately, it also seems as though it would remain unscathed by
 all but the strongest of them.
 %%%%
-Antaeus:quote
-
-“That country was then ruled by Antaeus, son of Poseidon, who used to kill
-strangers by forcing them to wrestle. Being forced to wrestle with him,
-Hercules hugged him, lifted him aloft, broke and killed him; for when he
-touched earth so it was that he waxed stronger, wherefore some said that he was
-a son of Earth.”
-    -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
-    trans. Sir James George Frazer, 1913.
-%%%%
 Arachne
 
 Once the best human weaver, Arachne was cursed by being transformed into her
@@ -91,16 +60,6 @@ you dry.
 Asmodeus
 
 One of the arch-demons who dwell in the depths of Hell, wreathed in fire.
-%%%%
-Asmodeus:quote
-
-“For myself, I have other occupations:  I make absurd matches; I marry
-greybeards with minors, masters with servants, girls with small fortunes with
-tender lovers who have none. It is I who introduced into this world luxury,
-debauchery, games of chance, and chemistry. I am the author of the first
-cookery book, the inventor of festivals, of dancing, music, plays, and of the
-newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks.”
-    -Alain René Le Sage, _Asmodeus: Or, The Devil on Two Sticks_. 1707.
 %%%%
 Azrael
 
@@ -132,30 +91,9 @@ A withered old gnoll with a long silver beard, wielding a quarterstaff and
 wearing a cloak. He looks like a figure from mythology! Wait, is his beard held
 on to his ears with hooks?
 %%%%
-Crazy Yiuf:quote
-
-“There was an Old Man with a beard,
- Who said, 'It is just as I feared!
- Two Owls and a Hen,
- Four Larks and a Wren,
- Have all built their nests in my beard!'”
-    -Edward Lear, _A Book of Nonsense [No. 1]_. 1846.
-%%%%
 Dispater
 
 The lord of the Iron City of Dis.
-%%%%
-Dispater:quote
-
-“Hoc idem magis ostendit antiquius Iovis nomen: nam olim Diovis et Diespiter
-dictus, id est dies pater; a quo dei dicti qui inde, et dius et divum, unde sub
-divo, Dius Fidius. Itaque inde eius perforatum tectum, ut ea videatur divum, id
-est caelum. Quidam negant sub tecto per hunc deierare oportere. Aelius Dium
-Fidium dicebat Diovis filium, ut Graeci Dioskopon Castorem, et putabat hunc
-esse Sancum ab Sabina lingua et Herculem a Graeca. Idem hic Dis pater dicitur
-infimus, qui est coniunctus terrae, ubi omnia ut oriuntur ita aboriuntur;
-quorum quod finis ortuum, Orcus dictus.”
-    -Marcus Terentius Varro, _De Lingua Latina_, Liber V, circa 40 BC.
 %%%%
 Dissolution
 
@@ -187,27 +125,11 @@ Dowan
 A beautiful but vain elf with an aptitude for magic and little else. His skills
 are the perfect complement of his twin sister Duvessa's fighting prowess.
 %%%%
-Dowan:quote
-
-“Skill and grace, the twin brother and sister, are dancing playfully on your
-finger tips.”
-    -Rabindranath Tagore, _Chitra_, Act I, Scene iv. 1914.
-%%%%
 Duvessa
 
 A plain-looking elven fighter who is technically brilliant in many forms of
 combat, but over-confident because of it. She is complemented by the magical
 skills of her twin brother, Dowan.
-%%%%
-Duvessa:quote
-
-“Twin children: the Girl, she was plain;
- The Brother was handsome & vain;
- ‘Let him brag of his looks,’
- Father said; ‘mind your books!
- The best beauty is bred in the brain.’”
-    -Aesop & Walter Crane, _The Baby’s Own Aesop_, 36: "Brother & Sister".
-1887.
 %%%%
 Edmund
 
@@ -215,19 +137,6 @@ A jealous sibling of Sigmund (indeed, the youngest of nine brothers). He has
 none of Sigmund's skills in magic, but makes up for it with his skills in
 fighting and a canny head for money. He is eager to prove his superiority by
 killing hapless adventurers with his expensive flail and quick wit.
-%%%%
-Edmund:quote
-
-“And my invention thrive, Edmund the base
- Shall top the legitimate. I grow; I prosper.—
- Now, gods, stand up for bastards!”
-    -William Shakespeare, _King Lear_, I, ii. 1606.
-
-“When the forces stood in array Edmund proposed to decide their claims by
-single combat; but Canute saying that he, a man of small stature, would have
-little chance against the tall athletic Edmund, proposed, on the contrary, for
-them to divide the realm as their fathers had done.”
-    -Thomas Keightley, _The History of England_. 1839.
 %%%%
 the Enchantress
 
@@ -266,13 +175,6 @@ Frederick
 A svelte fighter-mage who wears a gold-rimmed monocle and seeks a suitable and
 worthy opponent. You likely do not fit the bill.
 %%%%
-Frederick:quote
-
-“I thoroughly disapprove of duels. I consider them unwise and I know they are
-dangerous. Also, sinful. If a man should challenge me, I would take him kindly
-and forgivingly by the hand and lead him to a quiet retired spot and kill him.”
-    -Mark Twain, _Autobiography of Mark Twain_. 1924.
-%%%%
 Fannar
 
 A cold-hearted elven sorcerer, draped in robes of high office. He whispers
@@ -303,16 +205,6 @@ Geryon
 
 A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends
 say that his silver horn is used to throw open the gates of Hell themselves.
-%%%%
-Geryon:quote
-
-“Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to
-the triple-headed Geryon, but Geryon was killed by the great strength of
-Herakles at sea-circled Erytheis beside his own shambling cattle on that day
-when Herakles drove those broad-faced cattle toward holy Tiryns, when he
-crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion out
-in the gloomy meadow beyond fabulous Okeanos.”
-    -Hesiod, _Theogony_, circa 700 BCE.
 %%%%
 Gloorx Vloq
 
@@ -353,13 +245,6 @@ Ilsuiw
 A cunning merfolk water-witch, who uses her beauty and spellcraft to draw
 unwitting adventurers to their deaths.
 %%%%
-Ilsuiw:quote
-
-“We have lingered in the chambers of the sea
- By sea-girls wreathed with seaweed red and brown
- Till human voices wake us, and we drown.”
-    -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. lines 129-131. 1915.
-%%%%
 Jessica
 
 An evil apprentice sorceress. She entered the dungeon hoping to find a quiet,
@@ -393,23 +278,9 @@ Khufu
 
 An incredibly powerful emperor on the way to godhood.
 %%%%
-Khufu:quote
-
-“And then I looked farther, beyond the pallid line of the sands, and I saw a
-Pyramid of gold, the wonder Khufu had built. As a golden wonder it saluted me,
-as a golden thing it greeted me, as a golden miracle I shall remember it.”
-    -Robert Hichens, _The Spell of Egypt_
-%%%%
 Kirke
 
 A beautiful enchantress.
-%%%%
-Kirke:quote
-
-“Lo, thy comrades yonder in the house of Kirke are penned like swine in
-close-barred sties. And art thou come to release them? Nay, I tell thee, thou
-shalt not thyself return, but shalt remain there with the others.”
-    -Homer, Odysseia
 %%%%
 Lamia
 
@@ -428,19 +299,6 @@ The poets mention more heads than vase-painters can paint, poisonous venom
 coming out of its eyes, and that this hydra is a guardian of an entrance to the
 Underworld. What of this is true, you do not know.
 %%%%
-the Lernaean hydra:quote
-
-“The second Labour which he undertook was the slaying of the Lernaian Hydra,
- springing from whose single body were fashioned a hundred necks, each bearing
- the head of a serpent. And when one head was cut off, the place where it was
- severed put forth two others; for this reason it was considered to be
- invincible, and with good reason, since the part of it which was subdued sent
- forth a two-fold assistance in its place. Against a thing so difficult to
- manage as this Herakles devised an ingenious scheme and commanded Iolaos to
- sear with a burning brand the part which had been severed, in order to check
- the flow of the blood.”
-    -Diodorus Siculus, _Bibliotheca Historica_. [4. 11. 5.]. c. 100.
-%%%%
 Lom Lobon
 
 Stoic and inscrutable, Lom Lobon is an ancient demon infamous for his mastery
@@ -453,13 +311,6 @@ lorocyproca
 
 A tall and gaunt figure, draped in long robes which flow as if alive. It
 thirsts for magical energies.
-%%%%
-lorocyproca:quote
-
-“There it had assumed a wild, incalculable and incredible shape, twisted into a
-fantastic arabesque — invisible to their eyes, but dreadful nonetheless — into
-the unfamiliar numeral under whose menace they lived.”
-    -Bruno Schulz, “The Brilliant Epoch”. 1937.
 %%%%
 lost soul
 
@@ -484,23 +335,6 @@ This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers.
 He is capable of creating intricately detailed illusions, able to mislead even
 the minds of the mightiest and most brilliant spell-casters.
 %%%%
-Mara:quote
-
-“This night the Lord of Illusion passed among you, Mara, mighty among dreamers,
-mighty for ill. He did come upon another who may work with the stuff of dreams
-in a different way. He did meet with Dharma, who may expel a dreamer from his
-dream. They did struggle, and the Lord Mara is no more. Why did they struggle,
-deathgod against illusionist? You say their ways are incomprehensible, being
-the ways of gods. This is not the answer.”
-    -Roger Zelazny, “Lord of Light”, 1967
-
-“He who lives looking for pleasures only,
- his senses uncontrolled, immoderate in his food,
- idle, and weak, Mara will certainly overthrow him,
- as the wind throws down a weak tree.”
-    -The Buddha, _Dhammapada_, 1:7.
-     trans. F. Max Muller
-%%%%
 Margery
 
 A lithe spellcaster in service to the powers of Hell; it is her duty to ensure
@@ -518,18 +352,6 @@ Maurice
 A sly, conniving thief. In his profession, Maurice is considered a legend — at
 least according to himself. He is skilled, nonetheless, and among all the
 thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
-%%%%
-Maurice:quote
-
-“'Stop thief! Stop thief!' There is a magic in the sound. The tradesman leaves
-his counter, and the car-man his waggon; the butcher throws down his tray; the
-baker his basket; the milkman his pail; the errand-boy his parcels; the
-school-boy his marbles; the paviour his pickaxe; the child his battledore. Away
-they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming,
-knocking down the passengers as they turn the corners, rousing up the dogs, and
-astonishing the fowls: and streets, squares, and courts, re-echo with the
-sound.”
-    -Charles Dickens, _Oliver Twist_. 1838.
 %%%%
 Mennas
 
@@ -549,16 +371,6 @@ early death. His faithful priests subsequently infused him with great and
 powerful magic, seeking to grant him eternal life. Now he is forgotten and
 reduced to mouldering bandages and dry, brittle bones.
 %%%%
-Menkaure:quote
-
-“Ye men of Egypt, ye have heard your king!
- I go, and I return not. But the will
- Of the great Gods is plain; and ye must bring
- Ill deeds, ill passions, zealous to fulfil
- Their pleasure, to their feet; and reap their praise,
- The praise of Gods, rich boon! and length of days.”
-    -Matthew Arnold, _Mycerinus_
-%%%%
 Mnoleg
 
 A weirdly glowing figure, dancing through the twisted air of Pandemonium.
@@ -566,11 +378,6 @@ A weirdly glowing figure, dancing through the twisted air of Pandemonium.
 Murray
 
 A demonic skull rolling along the dungeon floor.
-%%%%
-Murray:quote
-
-“Look behind you! A three-headed monkey!”
-    -Guybrush Threepwood, _The Secret of Monkey Island_
 %%%%
 Nellie
 
@@ -592,24 +399,11 @@ A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
 %%%%
-Nikola:quote
-
-“One can prophesy with a Daniel's confidence that skilled electricians will
-settle the battles of the near future.”
-    -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
-Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
-%%%%
 Norris
 
 A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
 doesn't really care if it is you or him who dies — “both” would probably be the
 best option.
-%%%%
-Norris:quote
-
-“Death and death alone gives meaning to life and this meaning is entirely
-negative.”
-    -Georges Poulet
 %%%%
 Pikel
 
@@ -623,51 +417,15 @@ Polyphemus
 A cyclops shepherd, he is very protective of his charges, whom he watches with
 an undying fervor through his single massive eye.
 %%%%
-Polyphemus:quote
-
-“...as soon as he had got through with all his work, he clutched up two more of
-my men, and began eating them for his morning’s meal. Presently, with the
-utmost ease, he rolled the stone away from the door and drove out his sheep,
-but he at once put it back again—as easily as though he were merely clapping
-the lid on to a quiver full of arrows.”
-    -Homer, _The Odyssey_, Book IX.
-    trans. Samuel Butler, 1900.
-%%%%
 Prince Ribbit
 
 A handsome prince before he was cursed, he now adventures for a cure. On the
 top of his head he wears a crown tilted jauntily to one side. How it still
 stays in place even after his transformation is a mystery.
 %%%%
-Prince Ribbit:quote
-
-“Princess! youngest princess!
- Open the door for me!
- Dost thou not know what thou saidst to me
-
- Yesterday by the cool waters of the fountain?
- Princess, youngest princess!
- Open the door for me!”
-    -Brothers Grimm (Margaret Hunt), _The Frog King, or Iron Henry_
-%%%%
 Psyche
 
 A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
-%%%%
-Psyche:quote
-
-“Let Psyche’s corpse be clad in mourning weed
- And set on rock of yonder hill aloft;
- Her husband is no wight of human seed,
- But serpent dire and fierce, as may be thought,
- Who flies with wings above in starry skies,
- And doth subdue each thing with fiery flight.
- The Gods themselves and powers that seem so wise
- With mighty love be subject to his might.
- The rivers black and deadly floods of pain
- And darkness eke as thrall to him remain.”
-    -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
-    trans. William Adlington, 1566.
 %%%%
 Purgy
 
@@ -696,22 +454,6 @@ scythe now leave little time for his victims to wonder. Despite his reputation
 as a vicious murderer, his grandiose and dramatic ways have earned him the
 admiration of many denizens of the dungeon.
 %%%%
-Sigmund:quote
-
-“But Sigmund turned him about, and he said: ‘What aileth thee, son?
- Shall our life-days never be merry, and our labour never be done?’
-
- But Sinfiotli said: ‘I have looked, and lo, there is death in the cup.’
-
- And the song, and the tinkling of harp-strings to the roof-tree winded up;
- And Sigmund was dreamy with wine and the wearing of many a year;
- And the noise and the glee of the people as the sound of the wild woods were
- And the blossoming boughs of the Branstock were the wild trees waving about;
-
- So he said: ‘Well seen, my fosterling; let the lip then strain it out.’”
-    -William Morris, _The Story of Sigurd the Volsung and the Fall of the
-Niblungs_. 1891.
-%%%%
 Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
@@ -734,41 +476,10 @@ forced into hiding after a botched job, and can't really afford to risk letting
 anyone who has seen him leave the dungeon alive — there is a price on his head,
 after all.
 %%%%
-Terence:quote
-
-“A MAN committed a murder, and was pursued by the relations of the man whom he
-murdered. On his reaching the river Nile he saw a Lion on its bank and being
-fearfully afraid, climbed up a tree. He found a serpent in the upper branches
-of the tree, and again being greatly alarmed, he threw himself into the river,
-where a crocodile caught him and ate him. Thus the earth, the air, and the
-water alike refused shelter to a murderer.”
-    -Aesop, _The Manslayer_. 6th century BCE.
-     trans. George Fyler Townsend
-%%%%
 Tiamat
 
 A powerful dragon with mighty wings. Her scales seem to shimmer and change
 colour as you watch.
-%%%%
-Tiamat:quote
-
-“He saith that Tiamat our mother hath conceived a hatred for us,
- With all her force she rageth, full of wrath.
- All the gods have turned to her,
- With those, whom ye created, they go at her side.
- They are banded together, and at the side of Tiamat they advance;
- They are furious, they devise mischief without resting night and day.
- They prepare for battle, fuming and raging;
- They have joined their forces and are making war.
- Tiamat who formed all things,
- Made in addition weapons invincible; she spawned monster-serpents,
- Sharp of tooth, and merciless of fang;
- With poison, instead of blood, she filled their bodies.
- Fierce monster-vipers she clothed with terror,
- With splendor she decked them, she made them of lofty stature.
- Whoever beheld them, terror overcame him,
- Their bodies reared up and none could withstand their attack.”
-    -Enuma Elish, Third Tablet. circa 668 BCE.
 %%%%
 Urug
 
@@ -831,16 +542,6 @@ agate snail
 A huge and disgusting gastropod with a celadon shell, inside which it will hide
 when frightened.
 %%%%
-agate snail:quote
-
-“Snail, snail, slug-slow,
- To me thy four horns show;
- If thou dost not show me thy four,
- I will throw thee out of the door,
- For the crow in the gutter,
- To eat for bread and butter.”
-    -Silesian rhyme, _Notes and Queries_, Number 69. 1851.
-%%%%
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a
@@ -851,13 +552,6 @@ alligator
 A sneaky crocodilian that hides in water and waits patiently for its prey to
 get too close, at which point it puts on a great burst of speed and crushes its
 victim with massive jaws.
-%%%%
-alligator:quote
-
-“Alligators commit errors of diet.”
-    -Bennet Bowler, M.D., _Contributions to the Natural History of the
-     Alligator, (Crocodilus Mississipiensis), with a Microscopic Addendum_,
-     p. 17. 1846.
 %%%%
 alligator snapping turtle
 
@@ -915,10 +609,6 @@ A juvenile alligator. While it does not have crushing jaws, nor the strength to
 put on massive bursts of speed, it is more limber than the adult form, and its
 milk-tooth is still very sharp.
 %%%%
-baby alligator:quote
-
-<alligator:quote>
-%%%%
 ball lightning
 
 A huge, swift sphere of coruscating electrical energy. It will explode at the
@@ -959,11 +649,6 @@ big fish
 
 A stout fish with a wide, toothy mouth.
 %%%%
-big fish:quote
-
-“And what are you, reader, but a Loose-Fish and a Fast-Fish, too?”
-    -Herman Melville, _Moby Dick_, ch. lxxxix. 1851.
-%%%%
 big kobold
 
 A kobold that is bigger and tougher than the ordinary kobold, and often armed.
@@ -997,50 +682,12 @@ A muscular horned humanoid figure originating from some frigid hell. It swoops
 through the air on powerful wings, taking sadistic joy from harrying those who
 would try to flee its grasp.
 %%%%
-blue devil:quote
-
-“From the sad marine decanter I then drew the cork. Instanter
- Out there jumped a little devil, blue in colour; and before
- I could speak to the new comer (for I never was struck dumber),
- Down upon my empty rummer, straight the little devil bore,
- Right into my empty tumbler straight the little devil bore,
- Squatted, grinned and nothing more.
-
- There the little imp sat grinning at me while my head went spinning,
- So that had I not sat down I should have fallen upon the floor;
- 'Though thy looks be somewhat evil,' said I ”tell me thou blue devil,
- Wherefore holdest though thy revel in the glass that held before
- Much the more agreeable spirit,—mizzle! leave me as before.“
- Then the imp said 'Never-more!'
-
- Though I felt uncommon funky, still this answer put my monkey
- Up, and at the small blue devil in an undertone I swore.
- Then I said I must be dreaming, although broad awake I'm seeming;
- Doubtless I shall have a screaming morning headache — what a bore:
- Salmon I will eat no more.”
-    -J.T.S, “The Blue Imp”, _Melbourne Punch_. Sept. 4, 1856.
-%%%%
 boggart
 
 A malevolent and dangerous little sprite. Although physically unprepossessing,
 boggarts can rapidly summon large numbers of creatures, including more
 boggarts, to do their perverse bidding. These troublesome pests can also cloud
 one's mind and render themselves unseen.
-%%%%
-boggart:quote
-
-“He thinks every bush a boggart.”
-    -John Ray, _A Compleat Collection of English Proverbs_. 1768.
-
-“A BOGGART intruded himself, upon what pretext or by what authority is unknown,
-into the house of a quiet, inoffensive, and laborious farmer; and, when once it
-had taken possession it disputed the right of domicile with the legal mortal
-tenant, in a very unneighbourly and arbitrary manner. In particular, it seemed
-to have a great aversion to children. As there is no point on which a parent
-feels more acutely than that of the maltreatment of his offspring, the feelings
-of the father and more particularly of his good dame, were daily, ay, and
-nightly, harrowed up by the malice of this malignant and invisible boggart.”
-    -C.J.T., _Folk-lore and Legends: English_  1890.
 %%%%
 bone dragon
 
@@ -1091,13 +738,6 @@ A woody plant. It looks dry enough to be easily set on fire, and its foliage is
 not very dense, permitting missiles to pass through it. However, it is firmly
 rooted, and requires much effort to destroy.
 %%%%
-bush:quote
-
-“And the angel of the LORD appeared unto him in a flame of fire out of the
-midst of a bush: and he looked, and, behold, the bush burned with fire, and the
-bush was not consumed.”
-    -KJV Bible, Ex3:2.
-%%%%
 burning bush
 
 A mass of blackened twigs wreathed in orange flames. The walls and floor
@@ -1108,23 +748,10 @@ butterfly
 A large, brightly coloured butterfly with beautifully patterned wings,
 fluttering incongruously through the darkness of the cave.
 %%%%
-butterfly:quote
-
-“Happiness is a butterfly, which when pursued, is always just beyond your
-grasp, but which, if you will sit down quietly, may alight upon you.”
-    -Nathaniel Hawthorne
-%%%%
 cacodemon
 
 A hideously ugly demon of rage and legendary power, it disables its foes before
 blasting them to pieces.
-%%%%
-cacodemon:quote
-
-“We’ll call him Cacodemon, with his black Gib there, his Succuba, his Devil’s
-Seed, his Spawn of Phlegethon, that o’ my Consience was bred o’ the Spume of
-Cocytus.”
-    -John Fletcher, _The Knight of Malta_. 1647.
 %%%%
 catoblepas
 
@@ -1133,22 +760,6 @@ hog-like head just above the ground, protected by a stiff mane of bristles,
 joined to its body by a neck as long and loose as an emptied intestine. Man and
 beast alike would be wise to steer clear of this creature, as its fearsome
 breath is known to turn flesh into stone.
-%%%%
-catoblepas:quote
-
-“So passed he over into the island, taking with him the two brothers of
-Anaxius; where he found the forsaken knight attired in his own livery, as black
-as sorrow itself could see itself in the blackest glass: his ornaments of the
-same hue, but formd into the figures of ravens which seemed to gape for
-carrion: only his reins were snakes, which finely wrapping themselves one
-within the other, their heads came together to the cheeks and bosses of the
-bit, where they might seem to bite at the horse, and the horse, as he champed
-the bit, to bite at them, and that the white foam was engendered by the
-poisonous fury of the combat. His impresa was a Catoblepta, which so long lies
-dead as the moon (whereto it hath so natural a sympathy) wants her light. The
-word signified, that the moon wanted not the light, but the poor beast wanted
-the moon’s light.”
-    -Sir Philip Sidney
 %%%%
 centaur
 
@@ -1178,15 +789,6 @@ angelic beings who stand before the Good Gods, singing eternal hymns of praise
 to their Glory and Goodness. Indeed, these hymns have the power to rouse
 greatness in hearts pure and true.
 %%%%
-cherub:quote
-
-“The glory of Yahweh mounted up from the cherub, and stood over the threshold
-of the house; and the house was filled with the cloud, and the court was full
-of the brightness of Yahweh’s glory.
- The sound of the wings of the cherubim was heard even to the outer court, as
-the voice of God Almighty when he speaks.”
-    -WEB Bible, Ezk10:4-5
-%%%%
 chimera
 
 A grotesque parody of nature, this fantastical creature consists of three
@@ -1195,25 +797,6 @@ individual beasts combined into one.
 clay golem
 
 A huge clay statue that has been animated by occult means.
-%%%%
-clay golem:quote
-
-“Once upon a time a great Cabbalist lived in Prague called the Rabbi Löw. He
-made a human figure of clay, and left a small aperture in the lesser brain in
-which he laid a parchment with the unutterable name of God written on it. The
-clod immediately arose and was a man; he performed all the duties of a servant
-for his creator, he fetched water, and hewed wood. All through the Jews quarter
-he was known as the Golem of the great Rabbi Löw. Every Friday evening the
-Rabbi took the parchment out of his head, and he was clay until Sunday morning.
-Once the Rabbi forgot this duty, all were in the Synagogue, the Sabbath hymn
-was begun, when all the women and children in the assembly started and screamed
-out, ‘the Golem! the Golem is destroying everything!’ The Rabbi ordered the
-precentor to pause at the end of the prayer: it was yet possible to save all,
-but later nought would avail, the whole world would be destroyed. He hastened
-home, and saw the Golem already seizing the joists of his house to tear down
-the building: he sprang forward, took the parchment out, and dead clay again
-lay at his feet.”
-    -Berthold Auerbach, _Spinoza_. 1882.
 %%%%
 crawling corpse
 
@@ -1224,13 +807,6 @@ crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign
 grin, and its horns protrude obscenely from its scaly pate.
-%%%%
-crimson imp:quote
-
-“The Devil, too, sometimes steals human children; it is not infrequent for him
-to carry away infants within the first six weeks after birth, and to substitute
-in their place imps.”
-    -Martin Luther
 %%%%
 crocodile
 
@@ -1261,15 +837,6 @@ daeva
 
 A divine agent of the Shining One, a daeva is a towering winged figure
 radiating an aura of brilliant golden light.
-%%%%
-daeva:quote
-
-“Between these twain the Daevas also chose not aright, for infatuation came
-upon them as they took counsel together, so that they chose the Worst Thought.
-Then they rushed together to Violence, that they might enfeeble the world of
-men.”
-    -the Avesta, Yasna XXX, 6, Ahunavaiti Gatha.
-    trans. Christian Bartholomae, 1951.
 %%%%
 # Only used in lookup mode, not when examining an actual monster.
 dancing weapon
@@ -1500,18 +1067,6 @@ efreet
 
 A huge and muscular figure engulfed in a cloud of searing flame.
 %%%%
-efreet:quote
-
-“When the hoopoe returned to Solomon (he told him the news), and he responded
-(to Sheba’s people): “Are you giving me money? What GOD has given me is far
-better than what He has given you. You are the ones to rejoice in such gifts.”
-(To the hoopoe, he said), “Go back to them (and let them know that) we will
-come to them with forces they cannot imagine. We will evict them, humiliated
-and debased." He said, "O you elders, which of you can bring me her mansion,
-before they arrive here as submitters?" One afrit from the jinns said, “I can
-bring it to you before you stand up. I am powerful enough to do this.”
-    -The Quran, Sura 27 Al-Naml
-%%%%
 eidolon
 
 An ancient skeletal apparition, sheathed in a cloud of mist. Its form glows
@@ -1532,11 +1087,6 @@ electric golem
 An animated figure made completely of electricity, created in some demented
 wizard's experiment.
 %%%%
-electric golem:quote
-
-“I sing the Body electric”
-    -Walt Whitman, “I Sing the Body Electric”, _Leaves of Grass_. 1867.
-%%%%
 electric eel
 
 Despite its name, the electric eel is actually a variety of fish. This breed,
@@ -1553,43 +1103,6 @@ elephant
 A large, thick-hided pachyderm. It crushes its foes and then thrashes them with
 its trunk.
 %%%%
-elephant:quote
-
-“And the King went to where the blind men were, and drawing near said to them:
-'Do you now know what an elephant is like?'
- 'Assuredly, Lord: we now know what an elephant is like.'
- 'Tell me then, O blind men, what an elephant is like.'
- And those blind men, O Bhikkhus, who had felt the head of the elephant, said:
-'An elephant, Sir, is like a large round jar .
- Those who had felt its ears, said: 'it is like a winnowing basket.'
- Those who had felt its tusks, said: 'it is like a plough-share.'
- Those who had felt its trunk, said: 'it is like a plough.'
- Those who had felt its body, said: 'it is like a granary.'
- Those who had felt its feet, said: 'it is like a pillar.'
- Those who had felt its back, said: 'it is like a mortar.'
- Those who had felt its tail, said: 'it is a like a pestle.'
- Those who had felt the tuft of its tail, said: 'it is like a broom.'
- And they all fought amongst themselves with their fists, declaring, 'such is
-an elephant, such is not elephant, an elephant is not like that, it is like
-this.'”
- And the King, O Bhikkhus, was highly delighted.
-    -_Udāna_, VI “Jaccandhavagga”. ca. 5th cent. B.C.
-     trans. Dawsonne Melanchthon Strong, 1902.
-
-“And so these men of Indostan
- Disputed loud and long,
- Each in his own opinion
- Exceeding stiff and strong,
- Though each was partly in the right,
- And all were in the wrong!
- So oft in theologic wars,
- The disputants, I ween,
- Rail on in utter ignorance
- Of what each other mean,
- And prate about an Elephant
- Not one of them has seen!”
-    -John Godfrey Saxe, “The Blind Men and the Elephant”. 1872.
-%%%%
 elephant slug
 
 A grey gastropod of impressive size, with folds upon folds of wrinkled skin.
@@ -1604,16 +1117,6 @@ ettin
 
 A two-headed giant, stronger than most giants, able to land devastating blows
 left and right with its two huge weapons. Though powerful, the ettin is clumsy.
-%%%%
-ettin:quote
-
-“But he had not been long in his hiding-hole, before the awful Ettin came in;
-and no sooner was he in, than he was heard crying:
- ‘Snouk but and snouk ben,
-  I find the smell of an earthly man,
-  Be he living, or be he dead,
-  His heart this night shall kitchen my bread.’”
-    -Joseph Jacobs, _The Red Ettin_
 %%%%
 Executioner
 
@@ -1653,14 +1156,6 @@ These crabs are prized for their brilliantly jewelled shells. The rarity of
 these shells is only enhanced by the vicious, fiery nature of the animal, and
 their almost supernatural ability to expel massive quantities of flames.
 %%%%
-fire crab:quote
-
-“The planet brought forth scintillating jewelled scuttling crabs, which [they]
-ate, smashing their shells with iron mallets; tall aspiring trees with
-breathtaking slenderness and colour which [they] cut down and burned the crab
-meat with.”
-    -Douglas Adams, The Hitch-hiker’s Guide to the Galaxy
-%%%%
 fire elemental
 
 A spirit drawn from the elemental plane of fire, which exists in this world as
@@ -1698,14 +1193,6 @@ flying skull
 
 An undead skull kept aloft and flitting swiftly about by unholy magic. It
 periodically emits loud, blood-curdling shrieks.
-%%%%
-flying skull:quote
-
-“Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
-excellent fancy. He hath bore me on his back a thousand times, and now how
-abhorr’d in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1.
-1603.
 %%%%
 freed slave
 
@@ -1746,21 +1233,9 @@ The few who have seen one and lived recall that it resembles an enormous, spiny
 moth. Its bizarre lifecycle involves the production of ambrosia, much valued by
 gods and wizards.
 %%%%
-ghost moth:quote
-
-“Always in focus
- You can't feel my stare.
- I zoom into you
- You don't know I'm there.”
-    -Judas Priest, “Electric Eye”
-%%%%
 ghost-faced bat
 
 Does this bat merely possess the visage of a ghost, or is it a ghost itself?
-%%%%
-ghost-faced bat:quote
-
-<bat:quote>
 %%%%
 ghoul
 
@@ -1768,20 +1243,6 @@ A truly horrible undead creature, a ghoul is a decayed cadaver, reanimated and
 accursed with a terrible hunger. It desires nothing but to feed on the flesh of
 the living, and will fell its victims with its vicious claws or with one of the
 diseases it is host to.
-%%%%
-ghoul:quote
-
-“In the desert
- I saw a creature, naked, bestial,
- Who, squatting upon the ground,
- Held his heart in his hands,
- And ate of it.
- I said, ‘Is it good, friend?’
- ‘It is bitter — bitter’, he answered,
- ‘But I like it
- Because it is bitter,
- And because it is my heart.’”
-    -Stephen Crane, _The Black Riders and Other Lines_. 1895.
 %%%%
 giant amoeba
 
@@ -1799,18 +1260,6 @@ bat
 A large grey bat that, despite being herbivorous, is quite aggressive. It is
 myopic and uses echolocation to navigate.
 %%%%
-bat:quote
-
-“The sun was set; the night came on apace,
- And falling dews bewet around the place;
- The bat takes airy rounds on leathern wings,
- And the hoarse owl his woeful dirges sings.”
-    -John Gay, Shepherd's Week, Wednesday; or, The Dumps.
-
-“Ere the bat hath flown
- His cloister'd flight.”
-    -William Shakespeare, Macbeth (1605), Act III, scene 2, line 40.
-%%%%
 megabat
 
 A huge black bat.
@@ -1826,14 +1275,6 @@ A chilopod of quite an unusual size, the giant centipede mostly comes out to
 hunt when it is dark. Physically weak, it relies on its nasty poison to
 dispatch its victims.
 %%%%
-giant centipede:quote
-
-“Traffickers in the Black Meat, flesh of the giant black centipede—sometimes
-attaining a length of six feet—found in a lane of black rocks and iridescent,
-brown lagoons, exhibit paralyzed crustaceans in camouflage pockets of the Plaza
-visible only to the Meat Eaters.”
-    -William S. Burroughs, _Naked Lunch_. 1959.
-%%%%
 giant cockroach
 
 A big brown insect that makes a nasty hissing noise. Contrary to popular myth,
@@ -1843,13 +1284,6 @@ giant eyeball
 
 A giant floating eyeball, with a mesmerising gaze. Some say giant eyeballs are
 servitors of Jiyva.
-%%%%
-giant eyeball:quote
-
-“El ojo que ves
- no es ojo porque tú lo veas,
- es ojo porque te ve.”
-    -Antonio Machado, Campos de Castilla. 1912-1917.
 %%%%
 giant firefly
 
@@ -1861,23 +1295,6 @@ giant frog
 
 A large and unusually aggressive amphibian that can cover distance rapidly by
 hopping.
-%%%%
-giant frog:quote
-
-“Hello, my baby
- Hello, my honey
- Hello, my ragtime gal
-
- Send me a kiss by wire
- Baby, my hearts on fire
-
- If you refuse me
- Honey, you’ll lose me
- Then you’ll be left alone
-
- Oh baby, telephone
- And tell me I’m your own.”
-    -Ida Emerson and Joseph E. Howard, “Hello My Baby!”
 %%%%
 giant gecko
 
@@ -1916,17 +1333,6 @@ on its tail drips with a deadly venom, and its pincers are big enough to shear
 you in half. Though the ordinary dungeon scorpion may be both large and
 dangerous, this freakish relative puts it to shame.
 %%%%
-emperor scorpion:quote
-
-“Portents had occurred indicating [Titus Flavius Vespasianus'] approaching end,
-such as the comet which was visible for a long time and the opening of the
-mausoleum of Augustus of its own accord. When his physicians chided him for
-continuing his usual course of living during his illness and attending to all
-the duties that belonged to his office, he answered: 'The emperor ought to die
-on his feet.'”
-    -Cassius Dio, _Roman History_, LXVI, xvii, 2. 222 A.D.
-     trans. Earnest Cary, 1925.
-%%%%
 giant slug
 
 A huge and disgusting gastropod, squirming slowly across the dungeon floor.
@@ -1940,10 +1346,6 @@ giga bat
 
 A huge, bloated bat.
 %%%%
-giga bat:quote
-
-<bat:quote>
-%%%%
 glowing shapeshifter
 
 A shapeshifter which has lost control over its transformations, and is
@@ -1953,17 +1355,6 @@ gnoll
 
 A taller and better-equipped relative of goblins and orcs, somewhat doglike in
 appearance.
-%%%%
-gnoll:quote
-
-“Then he descended softly and beckoned to Nuth. But the gnoles had watched him
-through knavish holes that they bore in trunks of the trees, and the unearthly
-silence gave way, as it were with a grace, to the rapid screams of Tonker as
-they picked him up from behind — screams that came faster and faster until they
-were incoherent. And where they took him it is not good to ask, and what they
-did with him I shall not say.”
-    -Lord Dunsany, “How Nuth Would Have Practiced His Art Upon the Gnoles”.
-1912.
 %%%%
 gnoll sergeant
 
@@ -1986,40 +1377,15 @@ goblin
 A short, ugly and unfriendly humanoid: squat, broad, flat-nosed,
 sallow-skinned, with a wide mouth and pistachio-shaped eyes.
 %%%%
-goblin:quote
-
-“Swish, smack! Whip crack!
- Batter and beat! Yammer and bleat!
- Work, work! Nor dare to shirk,
- While Goblins quaff, and Goblins laugh,
- Round and round far underground
- Below, my lad!”
-    -J.R.R. Tolkien, _The Hobbit_
-%%%%
 golden dragon
 
 A great winged dragon covered in shining golden scales. Legends say that their
 blood runs both hot and cold, and is venomous to boot.
 %%%%
-golden dragon:quote
-
-“You do not come dramatically, with dragons
- That rear up with my life between their paws
- And dash me butchered down beside the wagons”
-    -Philip Larkin, “To Failure”. 1949.
-%%%%
 golden eye
 
 A tiny and shimmering floating eye, swift as the wind and glistening like gold.
 It has a peculiarly hypnotic look.
-%%%%
-golden eye:quote
-
-“No coveting nor envy burns
-   In thy bright golden eye,
- That calm and innocently turns
-   On all below the sky.”
-    -Hannah Flagg Gould, _The Youth’s Coronal_
 %%%%
 great orb of eyes
 
@@ -2031,28 +1397,9 @@ greater mummy
 An ancient pharaoh, embalmed and cursed to undeath, now capable of great and
 terrifying feats of magic.
 %%%%
-greater mummy:quote
-
-<mummy:quote>
-%%%%
 greater naga
 
 A formidable naga that is skilled in both martial and magical arts.
-%%%%
-greater naga:quote
-
-“Then there have also come
- nagas from Lake Nabhasa,
- Vesali, and Tacchaka.
- Kambalas, Assataras,
- Payagas, and their kin.
- And from the River Yamuna
- comes the prestigious naga, Dhatarattha.
- The great naga Eravanna:
- He, too, has come
- to the forest meeting.”
-    -Mahasamaya Sutta, _Dīgha Nikāya_, 20. ca. 500 B.C.
-     trans. Thanissaro Bhikkhu
 %%%%
 green death
 
@@ -2079,15 +1426,6 @@ griffon
 
 A large creature with the hindquarters of a lion and the wings, head and talons
 of a great eagle.
-%%%%
-griffon:quote
-
-“As when a Gryphon through the wilderness,
- With winged course, o’er hill and moory dale,
- Pursues the Arimaspian who by stealth
- Hath from his wakeful custody purloined
- His guarded gold.”
-    -Milton, _Paradise Lost_, Book II. 1667.
 %%%%
 grizzly bear
 
@@ -2119,20 +1457,6 @@ Harpies have roamed the coasts as long as seafarers can remember. They strike
 fear in the hearts of all sentient beings, but not for their claws. It is their
 way to devour the food of the unwary, causing many a man to starve to death.
 %%%%
-harpy:quote
-
-“Bird-bodied, girl-faced things they are; abominable their droppings, their
-hands are talons, their faces haggard with hunger insatiable.”
-    -Virgil, Aeneid 3
-
-“And Phineus had scarcely taken the first morsel up when, with as little
-warning as a whirlwind or a lightning flash, they dropped from the clouds
-proclaiming their desire for food with raucous cries. The young lords saw them
-coming and raised the alarm. Yet they had hardly done so before the Harpyiai
-had devoured the whole meal and were on the wing once more, far out at sea. All
-they left was an intolerable stench.”
-    -Apollonius Rhodius, Argonautica 2. 179 - 434
-%%%%
 hell hound
 
 A huge black dog, with glowing red eyes and smoke pouring from its fanged
@@ -2142,12 +1466,6 @@ hell knight
 
 A heavily armoured warrior, in league with the powers of Hell, and usually
 accompanied by other unsavoury beings of its ilk.
-%%%%
-hell knight:quote
-
-“Ok, let’s review. It’s up to the fair young maiden to rescue the dragon from
-the fire breathing knights in shining armour.”
-    -Exiern
 %%%%
 hell hog
 
@@ -2193,28 +1511,10 @@ A larger and even uglier goblin, with an even worse temper to match. Many
 foolish young adventurers have underestimated the danger of crossing a
 hobgoblin and paid for it with their lives.
 %%%%
-hobgoblin:quote
-
-“A foolish consistency is the hobgoblin of little minds, adored by little
-statesmen and philosophers and divines.”
-    -Ralph Waldo Emerson, _Essays: First Series_, Essay II: Self-Reliance.
-     1841.
-%%%%
 hog
 
 A large even-toed ungulate. Like human beings, it is omnivorous, intelligent,
 and nearly hairless.
-%%%%
-hog:quote
-
-“Fern came slowly down the stairs. Her eyes were red from crying. As she
-approached her chair, the carton wobbled, and there was a scratching noise.
-Fern looked at her father. Then she lifted the lid of the carton. There,
-inside, looking up at her, was the newborn pig. It was a white one. The morning
-light shone through its ears, turning them pink. “He’s yours,” said Mr. Arable.
-“Saved from an untimely death. And may the good Lord forgive me for this
-foolishness.”
-    -E.B. White, _Charlotte’s Web_
 %%%%
 holy swine
 
@@ -2226,26 +1526,11 @@ hound
 A fearsome hunting dog, lithe and alert. Its master must be long gone, for it
 looks dishevelled, and has a lean and hungry look.
 %%%%
-hound:quote
-
-“A traveller, by the faithful hound, Half-buried in the snow was found, Still
-grasping in his hand of ice That banner with the strange device, Excelsior!”
-    -Henry Wadsworth Longfellow, “Excelsior”
-%%%%
 # Stolen from http://rustyandco.com/frequently-asked-questions/monster-guide/
 human
 
 An uppity sort of surface-dwelling, hairless ape. Dwarves think of them as
 fragile, elves think of them as clumsy, and monsters think of them as tasty.
-%%%%
-human:quote
-
-“Do you know
- Do I know
- What’s this thing called ‘man’?
- God only knows what a man is!
- I only know his price.”
-    -Bertolt Brecht, “The Measures Taken”. 1930.
 %%%%
 hungry ghost
 
@@ -2275,10 +1560,6 @@ ice bat
 
 An undead creature in the shape of a bat, made of ice.
 %%%%
-ice bat:quote
-
-<bat:quote>
-%%%%
 ice beast
 
 A terrible creature, formed of snow and crystalline ice. Its feet leave puddles
@@ -2306,20 +1587,6 @@ iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
 %%%%
-iguana:quote
-
-“Once on a time when Brahmadatta was reigning in Benares, the Bodhisatta was
-born an iguana. When he grew up he dwelt in a big burrow in the river bank with
-a following of many hundreds of other iguanas. Now the Bodhisatta had a son, a
-young iguana, who was great friends with a chameleon, whom he used to clip and
-embrace. This intimacy being reported to the iguana king, he sent for his young
-son and said that such friendship was misplaced, for chameleons were low
-creatures, and that if the intimacy was persisted in, calamity would befall the
-whole of the tribe of iguanas. And he enjoined his son to have no more to do
-with the chameleon. But the son continued in his intimacy.”
-    -_Khuddaka Nikāya_, Jātaka 141 “Godha-jātaka”. ca. 4th cent. B.C.
-     trans. Robert Chalmers, 1895.
-%%%%
 inept feature mimic
 
 A predator masquerading as an ordinary dungeon feature. This one is less
@@ -2333,18 +1600,6 @@ insubstantial wisp
 
 A thin wisp of floating gas, flickering, disappearing and reforming in a
 disconcertingly random fashion.
-%%%%
-insubstantial wisp:quote
-
-„Dotknij teraz mych czarów
- Wichrze czarci tańcu
- Oto płoną błędne ognie
- Oto bóstwa lasów i gór
- Których nie przebłagam
- Ich sny srebrzą się ponad jeziorami
- Gdzie słyszałem drzewa krzyczące w nocy
- Wyją błagając o zemstę po raz, po raz, po raz...”
-    Mastiphal, „Nad jeziorami myśli nieśmiertelnej”
 %%%%
 iron devil
 
@@ -2401,30 +1656,10 @@ jackal
 A small canine scavenger. Packs of these creatures roam the underworld,
 searching for carrion to devour.
 %%%%
-jackal:quote
-
-Always ready to take advantage of every favourable opportunity, the Jackal is a
-sad parasite, and hangs on the skirts of the larger carnivora as they roam the
-country for prey, in the hope of securing some share of the creatures which
-they destroy or wound."
-    -John George Wood, _The Illustrated Natural History: Mammalia_. 1865.
-%%%%
 jelly
 
 A pulsating mass of acidic protoplasm. It can and will eat almost anything, and
 grows a little each time...
-%%%%
-jelly:quote
-
-“Beware of the Blob!
- It creeps
- And leaps
- and glides and slides
- Across the floor
- Right through the door
- And all around the wall,
- A splotch, a blotch...”
-    -Burt Bacharach, “Beware of the Blob”
 %%%%
 jellyfish
 
@@ -2432,16 +1667,6 @@ A pulsating glob of transparent flesh, waiting just below the surface of the
 water to sting its prey with its many tentacles. The tentacles do little harm
 on their own, but the poisonous toxins they inject can cause significant damage
 to muscle tissue.
-%%%%
-jellyfish:quote
-
-“From this story it is evident that in former times the jellyfish once had a
-shell and bones something like a tortoise, but, ever since the Dragon King's
-sentence was carried out on the ancestor of the jelly fishes, his descendants
-have all been soft and boneless just as you see them to-day thrown up by the
-waves high upon the shores of Japan.”
-    -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
-     Folk's Treasury_, vol. II. 1909.
 %%%%
 jiangshi
 
@@ -2459,14 +1684,6 @@ tengu
 
 A humanoid figure with the head and talons of a bird. Its ferociously combative
 nature belies its fragile appearance.
-%%%%
-tengu:quote
-
-“A Bird came down the Walk –
- He did not know I saw –
- He bit an Angleworm in halves
- And ate the fellow, raw”
-    -Emily Dickinson, “A Bird came down the Walk”. ca. 1865.
 %%%%
 tengu conjurer
 
@@ -2491,21 +1708,11 @@ A comical figure full of life and laughter. It looks very happy to see you...
 but is there a slightly malicious cast to its features? Is that red face paint
 or something altogether less pleasant?
 %%%%
-Killer Klown:quote
-
-“All the world loves a clown.”
-    -Cole Porter, “Be a Clown”. 1948.
-%%%%
 kobold
 
 Kobolds are small, greyish creatures with the looks and temperaments of feral
 dogs. No one knows for sure where kobolds come from, but ancient demon-gods,
 evil spirits, and meddling wizards have all been suggested as culprits.
-%%%%
-kobold:quote
-
-“Kobolds are harmless.”
-    -Bearand the Bold, epitaph (Magic: the Gathering)
 %%%%
 kobold demonologist
 
@@ -2525,23 +1732,6 @@ with its tentacles and draws them into the depths. Fortunately, the tentacles
 are too big to embrace a small creature like you. Wait, did I say
 "fortunately"?
 %%%%
-kraken:quote
-
-“... Kraken, also called the Crab-fish, which [according to the pilots of
-Norway] is not that huge, for heads and tails counted, he is no larger than our
-Öland is wide [i.e. less than 16 km] ... He stays at the sea floor, constantly
-surrounded by innumerable small fishes, who serve as his food and are fed by
-him in return: for his meal, if I remember correctly what E. Pontoppidan
-writes, lasts no longer than three months, and another three are then needed to
-digest it. His excrements nurture in the following an army of lesser fish, and
-for this reason, fishermen plumb after his resting place ... Gradually, Kraken
-ascends to the surface, and when he is at ten to twelve fathoms, the boats had
-better move out of his vicinity, as he will shortly thereafter burst up, like a
-floating island, spurting water from his dreadful nostrils and making ring
-waves around him, which can reach many miles. Could one doubt that this is the
-Leviathan of Job?”
-    -Jacob Wallenberg, “Min son på galejan”, 1781.
-%%%%
 large abomination
 
 A large and hideous conglomeration of mangled body parts, demonically possessed
@@ -2552,15 +1742,6 @@ lava fish
 A bright red fish that swims through hot lava as easily as other fish swim
 through water. The intense heat of the lava that passes through its gills will
 sear anything that gets too close to its mouth.
-%%%%
-lava fish:quote
-
-“In the black rocks about Tahiti is found the black noki or lava-fish
-(Emmydrichthys vulcanus), which corresponds perfectly in color and form to a
-piece of lava. This fish is also noteworthy for having envenomed spines in the
-fin on its back.”
-    -Jordan, Kellogg and Heath, _Animal Studies: A Text-book of Elementary
-     Zoology_. 1903.
 %%%%
 lava orc
 
@@ -2577,43 +1758,10 @@ lava worm
 
 A vicious red worm which swims through molten rock.
 %%%%
-lava worm:quote
-
-“Type-species. — Magmatodrilus obscurus....From magma (Greek, =lava) + drilos
-(Greek, =worm), masculine, 'lava-worm' for the locality, springs in the lava
-beds of Shasta County, Calif., from which topotypes were taken.”
-    -_Proceedings of the United States National Musem_. 1968.
-%%%%
 lemure
 
 A vaguely humanoid blob of putrid white flesh. It gargles horribly as pus flows
 from its orifices.
-%%%%
-lemure:quote
-
-“When Hesperus, the Evening Star, has shown his lovely face
- Three times, from that day, and the defeated stars fled Phoebus,
- It will be the ancient sacred rites of the Lemuria,
- When we make offerings to the voiceless spirits.
- ...
- When midnight comes, lending silence to sleep,
- And all the dogs and hedgerow birds are quiet,
- He who remembers ancient rites, and fears the gods,
- Rises (no fetters binding his two feet)
- And makes the sign with thumb and closed fingers,
- Lest an insubstantial shade meets him in the silence.
- After cleansing his hands in spring water,
- He turns and first taking some black beans,
- Throws them with averted face: saying, while throwing:
- 'With these beans I throw I redeem me and mine.'
- He says this nine times without looking back: the shade
- Is thought to gather the beans, and follow behind, unseen.
- Again he touches water, and sounds the Temesan bronze,
- And asks the spirit to leave his house.
- When nine times he’s cried: 'Ancestral spirit, depart,'
- He looks back, and believes the sacred rite’s fulfilled.”
-    -Publius Ovidius Naso, _Fasti_, Book V: May 9. ca. 8 A.D.
-     trans. A.S. Kline, 2004.
 %%%%
 lich
 
@@ -2631,23 +1779,6 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie green glow.
 %%%%
-lindwurm:quote
-
-“Freilich verbürgt uns keine Silbe die Existenz von solcherlei Thieren, wenn
-wir uns den Drachen oder Lindwurm als ein Ungeheuer vorstellen, dessen langer
-Hals in einen Adler-, Löwen- oder Delphinenkopf endigt; das auf dem breiten
-Rücken Greifs- oder Nachisittige trägt; und am vielfach gerollten Schweif einen
-Stachel mit Widerhaken hat; Feuer speit; sich in Mädchen verliebt und diese
-entführt; bald diese bald jene Gestalt annimmt; auf sauer erworbenen Schatzen
-ruht — kurz, als ein Ungeheuer, das alle Eigenschaften besitzt, welche die
-Fabel ihm andichtet; dann wäre es Wahnsinn, an Drachen und Lindwürmer glauben
-zu wollen. Nehmen wir aber dafür bloß ein furchtbares Ungeheuer überhaupt,
-welches nun aus unserem Welttheile vertilgt ist, so hat der Glaube daran nichts
-Lächerliches.”
-    -Leopold Ziegelhauſer, _Schattenbilder der Vorzeit: Ein Kranz von
-     Geschichten, Sagen, Legenden, Märchen, Skizzen und Heldenmahlen, Aus allen
-     Gegenden Deutschlands und des österreichischen Kaiserstaates_. 1844.
-%%%%
 lurking horror
 
 A formless mass of energy. It seems to stop moving when you look at it.
@@ -2663,27 +1794,11 @@ mad acolyte of Lugonu
 An insane follower of Lugonu. Years of living in the abyss have clearly taken
 their toll on this one's feeble mind.
 %%%%
-mad acolyte of Lugonu:quote
-
-“And when you look long into an abyss, the abyss also looks into you.”
-    -Friedrich Nietzche, “Beyond Good and Evil”, 1886
-%%%%
 manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
-%%%%
-manticore:quote
-
-“Ctesias writeth, that in Aethiopia likewise there is a beast which he calleth
-Mantichora, having three rankes of teeth, which when they meet togither are let
-in one within another like the teeth of combes: with the face and eares of a
-man, with red eyes; of colour sanguine, bodied like a lyon, and having a taile
-armed with a sting like a scorpion: his voice resembleth the noise of a flute
-and trumpet sounded together: very swift he is, and mans flesh of all others
-hee most desireth.”
-    -Pliny the Elder, _Natural History_, Book 8, Chapter XXI
 %%%%
 master elementalist
 
@@ -2694,83 +1809,32 @@ merfolk
 A hybrid with the torso of a man and the tail of a fish, a merfolk dwells both
 in water and on land, and fiercely defends its domain.
 %%%%
-merfolk:quote
-
-“Again at length my thought reviving came,
- When I no longer found my self the same;
- Then first this sea-green beard I felt to grow,
- And these large honours on my spreading brow;
- My long-descending locks the billows sweep,
- And my broad shoulders cleave the yielding deep;
- My fishy tail, my arms of azure hue,
- And ev'ry part divinely chang'd, I view.”
-    -Ovid, _Metamorphoses_, XIII, 546-7. 8 A.D.
-     trans. Garth, Dryden, et al.
-%%%%
 merfolk impaler
 
 A powerfully muscled merfolk warrior, bearing a deadly weapon.
-%%%%
-merfolk impaler:quote
-
-<merfolk:quote>
 %%%%
 merfolk aquamancer
 
 A slender merfolk mystic with unusually webby hands. Its form shifts and
 glistens as if seen through ocean spray.
 %%%%
-merfolk aquamancer:quote
-
-<merfolk:quote>
-%%%%
 merfolk javelineer
 
 A fearsome merfolk champion with a piercing gaze and a large bundle of
 javelins.
-%%%%
-merfolk javelineer:quote
-
-<merfolk:quote>
 %%%%
 mermaid
 
 A young woman with a fish tail in place of legs. Mermaids love to sing and
 charm their audience.
 %%%%
-mermaid:quote
-
-“Then up it raise the mermaiden,
- Wi the comb an glass in her hand:
- ‘Here’s a health to you, my merrie young men,
- For you never will see dry land.’”
-    -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
-     Child, _The English and Scottish Popular Ballads_. 1898.
-%%%%
 metal gargoyle
 
 A hideous metal statue come to life.
 %%%%
-metal gargoyle:quote
-
-“Their innumerable sculptures of demons and dragons assumed a lugubrious
-aspect. The restless light of the flame made them move to the eye. There were
-griffins which had the air of laughing, gargoyles which one fancied one heard
-yelping, salamanders which puffed at the fire, tarasques which sneezed in the
-smoke. And among the monsters thus roused from their sleep of stone by this
-flame, by this noise, there was one who walked about, and who was seen, from
-time to time, to pass across the glowing face of the pile, like a bat in front
-of a candle.”
-    -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
-     trans. Isabel F. Hapgood
-%%%%
 microbat
 
 A bat that, despite its name, is not any smaller than a megabat.
-%%%%
-microbat:quote
-
-<bat:quote>
 %%%%
 minotaur
 
@@ -2781,10 +1845,6 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with fearsome claws and flames
 licking out from its toothy maw.
-%%%%
-molten gargoyle:quote
-
-<metal gargoyle:quote>
 %%%%
 moth
 
@@ -2798,25 +1858,10 @@ in its vicinity seems to shimmer with a dull, dusty haze. Regarded as a
 nuisance, these creatures were driven from the surface centuries ago due to
 their naturally inhibitive effect on magical items in their vicinity.
 %%%%
-moth of suppression:quote
-
-“Everybody knows there is no fineness or accuracy of suppression; if you hold
-down one thing, you hold down the adjoining.”
-    -Saul Bellow, _The Adventures of Augie March_
-%%%%
 moth of wrath
 
 A rare species of moth, eradicated from the surface centuries ago due to its
 ability to drive those who look upon it insane with rage.
-%%%%
-moth of wrath:quote
-
-“When within sight of their foe Berserks wrought themselves into such a state
-of frenzy, that they bit their shields and rushed forward to the attack,
-throwing away their arms of defence, reckless of every danger, sometimes having
-nothing but a club, which carried with it death and destruction.”
-    -Paul Belloni Du Chaillu,_The Viking Age: the Early History, Manners, and
-     Customs of the Ancestors of the English Speaking Nations_. 1889
 %%%%
 mottled draconian
 
@@ -2832,17 +1877,6 @@ mummy
 An undead figure covered in bandages and embalming fluids, compelled to walk by
 an ancient curse. It radiates a malign aura to those who intrude on its domain.
 %%%%
-mummy:quote
-
-“I see Egypt and the Egyptians — I see the pyramids and obelisks;
- I look on chisel’d histories, songs, philosophies, cut in slabs
-     of sand-stone, or on granite-blocks;
- I see at Memphis mummy-pits, containing mummies, embalm’d, swathed
-     in linen cloth, lying there many centuries;
- I look on the fall’n Theban, the large-ball’d eyes, the side-drooping
-     neck, the hands folded across the breast.”
-    -Walt Whitman, “Salut au Monde”
-%%%%
 mummy priest
 
 An ancient servant of a long forgotten god, embalmed and cursed to walk in
@@ -2853,32 +1887,14 @@ naga
 A hybrid that is human from the waist up; below is a scaly, muscular snakelike
 tail. Its mouth drips with venomous saliva.
 %%%%
-naga:quote
-
-“Amongst the deities and Asuras and celestial Rishis, O amiable lady, the Nagas
-are endued with great energy. Possessed of great speed, they are endued again
-with excellent fragrance. They deserve to be worshipped. They are capable of
-granting boons. Indeed, we too deserve to be followed by others in our train. I
-tell thee, O lady, that we are incapable of being seen by human beings.”
-    -Mahābhārata, Santi Parva, Mokshadharma Parva, section CCCLX. ca. 500 B.C.
-     trans. Kisari Mohan Ganguli, 1883.
-%%%%
 naga mage
 
 A naga that has trained in the use of magic, trailed by an eldritch nimbus. It
 is especially skilled in spells dealing with poison and venom.
 %%%%
-naga mage:quote
-
-<naga:quote>
-%%%%
 naga warrior
 
 A fearsome naga warrior clad in sturdy armour and wielding a mighty weapon.
-%%%%
-naga warrior:quote
-
-<naga:quote>
 %%%%
 necromancer
 
@@ -2896,35 +1912,11 @@ neqoxec
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly
 distended with the devoured brains of its victims.
 %%%%
-neqoxec:quote
-
-“If thus mutation is influenced by natural selection, it implies, that any
-particular mutation must advance in a direction advantageous for the respective
-species, and, indeed, many examples of mutation known among fossil animals are
-apparently due to the advantage produced by the change. I must add here,
-however that probably not all mutations (in a palaeontological meaning) are due
-to natural selection, but that many do not imply an actual improvement.”
-    -_Proceedings of the American Philosophical Society_, Volume XXV, no. 150.
-     1896.
-%%%%
 octopode
 
 A more intelligent cousin of the mighty kraken, capable of using tools and
 spells. They are fully amphibious, but most of their species choose to stay
 beneath the waves and serve their King.
-%%%%
-octopode:quote
-
-“In their brief time together Slothrop forms the impression that this octopus
-is not in good mental health, though where’s his basis for comparing? But there
-is a mad exhuberance, as with inanimate objects which fall off of tables when
-we are sensitive to noise and our own clumsiness and don’t want them to fall, a
-sort of wham! ha-ha you hear that? here it is again, WHAM! in the cephalopod’s
-every movement, which Slothrop is glad to get away from as he finally scales
-the crab like a discus, with all his strength, out to sea, and the octopus,
-with an eager splash and gurgle, strikes out in pursuit, and is presently
-gone.”
-    -Thomas Pynchon, _Gravity's Rainbow_. 1973.
 %%%%
 ogre
 
@@ -2941,54 +1933,20 @@ oklob plant
 A very dangerous plant which fends off predators by spraying corrosive vitriol
 at them. Even experienced adventurers give oklob plants a wide berth.
 %%%%
-oklob plant:quote
-
-“Carbonic acid is one of the three materials which together form the starting
-point of vegetable growth; the others being water and nitric acid. This acid is
-formed of carbon and oxygen in the proportion of one part of the former to two
-of the latter chemically combined. It is a colorless gas, having an acid taste
-and smell; is soluble in water; weighs one-half more than air and can be poured
-from one vessel to another, as a liquid may be; 100 parts of water dissolve 106
-parts of this gas, and it is from this source that the roots of plants derive
-the needed supplies of it.”
-    -Henry Stuart, _The Culture of Farm Crops: A Manual of the Science of
-    Agriculture, and a Hand-book of Practice for American Farmers_, ch X. 1887.
-%%%%
 oklob sapling
 
 A young oklob plant, but already dangerous.
-%%%%
-oklob sapling:quote
-
-<oklob plant:quote>
 %%%%
 ooze
 
 A glob of grey sludge that has somehow developed a rudimentary awareness and
 limited motility.
 %%%%
-ooze:quote
-
-“Sea horses floundering in the slimy mud,
- Tossed up their heads, and dashed the ooze about them.”
-    -John Dryden. _All For Love_, I, i, 15-17. 1678.
-%%%%
 ophan
 
 A creature from the heavenly realms. It consists of a wheel within a wheel, and
 both of these are covered in eyes; strange flames of holy fire flicker all over
 it.
-%%%%
-ophan:quote
-
-“As I looked at the living creatures, I saw a wheel on the ground beside
- each creature with its four faces. This was the appearance and structure
- of the wheels: They sparkled like chrysolite, and all four looked alike.
- Each appeared to be made like a wheel intersecting a wheel. As they
- moved, they would go in any one of the four directions the creatures faced;
- the wheels did not turn about as the creatures went. Their rims were
- high and awesome, and all four rims were full of eyes all around.”
-    -Ezekiel 1:15-18 (New International Version)
 %%%%
 orange crystal statue
 
@@ -3000,14 +1958,6 @@ orange demon
 
 An amber-coloured demon with a tail not unlike that of a scorpion. It contains
 a potent venom that can render its victims weak and their blows feeble.
-%%%%
-orange demon:quote
-
-“In Sparkill buried lies that man of mark
- Who brought the Obelisk to Central Park,
- Redoubtable Commander H.H. Gorringe,
- Whose name supplies the long-sought rhyme for 'orange.'”
-    -Arthur Guiterman, “Local Note”. 1934.
 %%%%
 orange rat
 
@@ -3032,13 +1982,6 @@ orb of fire
 
 A globe of raw primordial fire, capable of impressive pyrotechnics, and of
 twisting the very flesh of creatures who come into its ken.
-%%%%
-orb of fire:quote
-
-“There ’s not the smallest orb which thou behold’st
- But in his motion like an angel sings,
- Still quiring to the young-eyed cherubins.”
-    -William Shakespeare, _The Merchant of Venice_, V, i. 1597.
 %%%%
 orb spider
 
@@ -3095,16 +2038,6 @@ pandemonium lord
 A formidable demon lord inhabiting the endless halls of Pandemonium. Each one
 is different, with its own set of strengths and weaknesses.
 %%%%
-pandemonium lord:quote
-
-“Mean while the winged heralds by command
- Of Sovran power, with awful Ceremony
- And Trumpets sound throughout the Host proclaim
- A solemn Councel forthwith to be held
- At Pandaemonium, the high Capital
- Of Satan and his Peers...”
-    -John Milton, _Paradise Lost_,  Book I, l. 752-7. 1667.
-%%%%
 pearl dragon
 
 A dragon consecrated to the holy divine powers. Its breath is blessed fire, and
@@ -3123,56 +2056,18 @@ A nearly-transparent undead spirit, suspected by some sages to be a degenerate
 form of ghost, with no memories of its former life. It rarely stays in one
 place for long.
 %%%%
-phantom:quote
-
-“Who wondrous things concerning our welfare, And straunge phantomes doth lett
-us ofte foresee.”
-    -Spenser, _The Faerie Queene_ II. xii. 47
-%%%%
 phase bat
 
 A strange, glowing bat that seems to flutter through more dimensions than the
 average bat.
 %%%%
-phase bat:quote
-
-<bat:quote>
-%%%%
 phoenix
 
 A bird of myth and legend, said to die in flames and be reborn from the ashes.
 %%%%
-phoenix:quote
-
-“They have also another sacred bird called the phoenix which I myself have
-never seen, except in pictures. Indeed it is a great rarity, even in Egypt,
-only coming there (according to the accounts of the people of Heliopolis) once
-in five hundred years, when the old phoenix dies. Its size and appearance, if
-it is like the pictures, are as follow:- The plumage is partly red, partly
-golden, while the general make and size are almost exactly that of the eagle.
-They tell a story of what this bird does, which does not seem to me to be
-credible: that he comes all the way from Arabia, and brings the parent bird,
-all plastered over with myrrh, to the temple of the Sun, and there buries the
-body. In order to bring him, they say, he first forms a ball of myrrh as big as
-he finds that he can carry; then he hollows out the ball, and puts his parent
-inside, after which he covers over the opening with fresh myrrh, and the ball
-is then of exactly the same weight as at first; so he brings it to Egypt,
-plastered over as I have said, and deposits it in the temple of the Sun. Such
-is the story they tell of the doings of this bird.”
-    -Herodotus, _Histories_, II, 73. ca. 440 B.C.
-     trans. George Rawlinson, 1858.
-%%%%
 pillar of salt
 
 A large pillar of salt that is quickly crumbling away.
-%%%%
-pillar of salt:quote
-
-“Then the LORD rained upon Sodom and upon Gomorrah brimstone and fire from the
-LORD out of heaven; And he overthrew those cities, and all the plain, and all
-the inhabitants of the cities, and that which grew upon the ground. But his
-wife looked back from behind him, and she became a pillar of salt.”
-    -KJV Bible, Gen. XIX, 24-6.
 %%%%
 plague shambler
 
@@ -3192,37 +2087,15 @@ abilities the adventurer had in life. It is condemned to haunt this particular
 level of the dungeons, lashing out violently at the next adventurer to cross
 its path.
 %%%%
-player ghost:quote
-
-“Know thyself.”
-    -Inscription in the pronaos of the Temple of Apollo at Delphi
-%%%%
 polar bear
 
 A large and very strong bear covered in glistening white fur, habituated to
 cold conditions. Like all ursines, the polar bear will become enraged if badly
 hurt or frightened.
 %%%%
-polar bear:quote
-
-“The Polar Bear is an animal of tremendous strength and fierceness.iBarentz, in
-his voyage in search of a north-east passage to China, had proofs of the
-ferocity of these animals, in the island of Nova Zembla, where they attacked
-his seamen, seizing them in their mouths; carrying them off with the utmost
-ease, and devouring them in the sight of their comrades. It is said that they
-will attack and attempt to board armed vessels, at a great distance from shore,
-and have sometimes been with much difficulty repelled.”
-    -George Shaw, _General Zoology, or, Systematic Natural History_, vol. I,
-     p. 2. 1800.
-%%%%
 polymoth
 
 A brilliant little moth. A hateful mutagenic dust rolls off its wings.
-%%%%
-polymoth:quote
-
-“All those moments will be lost in time, like tears in the rain.”
-    -Roy Batty, “Blade Runner”
 %%%%
 porcupine
 
@@ -3234,30 +2107,10 @@ This blasphemous being used to be an angel of the Shining One. Now it stands as
 unliving proof that not even the holiest of beings are beyond Yredelemnul's
 grasp.
 %%%%
-profane servitor:quote
-
-“A spell was cast and the sky turned red
- The angel's heart froze to ice
- In the gloomy sky black clouds were gathering
- The silence was broken by cries
- A spell was cast and the sky turned red
- The angel's heart froze to ice
- In the gloomy sky — The silence where dead angels lie
-
- Touch the snow... Caress the lifeless sculptures
- Die!!!”
-    -Dissection, “Where Dead Angels Lie”
-%%%%
 program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
-%%%%
-program bug:quote
-
-“If builders built buildings the way programmers wrote programs, then the first
-woodpecker that came along would destroy civilization.”
-    -Gerald Weinberg, Weinberg’s Second Law
 %%%%
 pulsating lump
 
@@ -3265,14 +2118,6 @@ A revolting blob of all kinds of living matter — muscle, gut, nerves, viscera,
 marrow — piled haphazardly into a single writhing mass. This distorted flesh is
 mutagenic on contact, but without any kind of structural arrangement to its
 parts, it lacks the coordination needed to move quickly.
-%%%%
-pulsating lump:quote
-
-“Doom!
- He finds that in a sudden scrimmage,
- And lies, an unsightly lump on the sodden grass …
- An image that shall take long to pass!”
-    -Ford Madox Hueffer, “Antwerp”. 1915.
 %%%%
 purple draconian
 
@@ -3282,13 +2127,6 @@ quasit
 
 A cowardly little demon with a long, viciously pointed tail. Its sharp claws
 are coated with a venom that stiffens muscles.
-%%%%
-quasit:quote
-
-“You’ll have to pay double reckoning; ’tis only fair you should pay for your
-dexterity.”
-    -Johann Wolfgang von Goethe, _Egmont_, I, 1. 1788.
-     trans. Anna Swanwick, 1914.
 %%%%
 queen ant
 
@@ -3318,18 +2156,6 @@ A demon in the form of a tiger who comes to the material world in search of
 power and knowledge. Rakshasas are experts in the art of illusion, and are
 simultaneously intelligent and cruel.
 %%%%
-rakshasa:quote
-
-“Vaisampayana said, 'Not far from the place where the Pandavas were asleep, a
-Rakshasa by name Hidimva dwelt on the Sala tree. Possessed of great energy and
-prowess, he was a cruel cannibal of visage that was grim in consequence of his
-sharp and long teeth. He was now hungry and longing for human flesh. Of long
-shanks and a large belly, his locks and beard were both red in hue. His
-shoulders were broad like the neck of a tree; his ears were like unto arrows,
-and his features were frightful.”
-    -_Mahābhārata_, Adi Parva, Hidimva-vadha Parva, section CLIV. ca. 500 B.C.
-     trans. Kisari Mohan Ganguli, 1883.
-%%%%
 rat
 
 A dirty rodent that has grown large and aggressive in the dungeon environment.
@@ -3339,12 +2165,6 @@ raven
 An opportunistic scavenger bird that is quite proactive in the production of
 carrion. It has a particularly unhealthy fascination with eyeballs and things
 resembling eyeballs, such as pickled onions, walnuts and olives.
-%%%%
-raven:quote
-
-“The Hatter opened his eyes very wide on hearing this; but all he said was ‘Why
-is a raven like a writing-desk?’”
-    -Lewis Carroll, Alice’s Adventures in Wonderland
 %%%%
 ravenous feature mimic
 
@@ -3395,10 +2215,6 @@ rotten bat
 
 I guess this bat is well past its sell-by date.
 %%%%
-rotten bat:quote
-
-<bat:quote>
-%%%%
 rotting devil
 
 A hideous, miserable creature covered in oozing sores, afflicted by some
@@ -3415,14 +2231,6 @@ next victim.
     end
 }}
 %%%%
-rotting devil:quote
-
-“The slow adagio begins;
- The winding-sheets are ravelled out
- That swathe the minds of men, the sins
- That wrap their rotting souls about.“
-    -John Davidson, ”A Ballad of Heaven". Late 19th cent.
-%%%%
 the royal jelly
 
 A particularly rich and golden gelatinous thing.
@@ -3432,19 +2240,6 @@ salamander
 Not the common harmless amphibian, but the far more dangerous mythological
 beast with which that amphibian shares its name. A red, flaming half-human
 half-snake creature, whose affinity for fire is legendary.
-%%%%
-salamander:quote
-
-“As for example: the Salamander made in fashion of a Lizard, marked with spots
-like to stars, never comes abroad and sheweth it selfe but in great showers;
-for in faire weather he is not seene. He is of so cold a complexion, that if
-hee do but touch the fire, hee wil quench it as presently, as if yce were put
-into it. The Salamander casteth up at the mouth a certaine venomous matter like
-unto milke, let it but once touch any bare part of a man or womans bodie, all
-the haire will fall off: and the part so touched will change the colour of the
-skin to the white morphew.”
-    -Gaius Plinius Secundus, _Naturalis Historia_, Book X, ch. LXVII. 79 A.D.
-     trans. Philemon Holland, 1601.
 %%%%
 satyr
 
@@ -3457,12 +2252,6 @@ A loathsome arachnid, armed to the teeth. Its body is covered in a thick
 carapace, its tail is tipped by a venomous sting, and its forelimbs are
 equipped with a pair of sharp grasping claws.
 %%%%
-scorpion:quote
-
-“Those poisonous fields, with rank luxuriance crown’d,
- Where the dark scorpion gathers death around”
-    -Oliver Goldsmith, “The Deserted Village”, l. 351-2. 1770.
-%%%%
 sea snake
 
 A brightly coloured snake, very comfortable in the water. It has a highly
@@ -3474,50 +2263,17 @@ The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts,
 the mightiest servants of the Good Gods. They have six wings and but one face,
 and are said to sometimes take the forms of fiery serpents.
 %%%%
-seraph:quote
-
-“In the year that king Uzziah died I saw also the LORD sitting upon a throne,
-high and lifted up, and his train filled the temple.
- Above it stood the seraphims: each one had six wings; with twain he covered
-his face, and with twain he covered his feet, and with twain he did fly.
- And one cried unto another, and said, Holy, holy, holy, is the LORD of hosts:
-the whole earth is full of his glory.”
-    -KJV Bible, Isaiah6:1-3
-%%%%
 shadow
 
 A wisp of unliving shadow, slipping in and out of the darkness of the dungeon.
 It moves swiftly and silently from one pool of shade to another, striking
 unerringly from the blind spots of those who cannot see it.
 %%%%
-shadow:quote
-
-“Between the idea
- And the reality
- Between the motion
- And the act
- Falls the Shadow
-     For thine is the Kingdom
-
- Between the conception
- And the creation
- Between the emotion
- And the response
- Falls the Shadow
-     Life is very long”
-    -T.S. Eliot, “The Hollow Men”. 1925.
-%%%%
 shadow demon
 
 A mysterious demonic figure, constantly blurring into multiple shadows of
 itself. It weaves creatures into existence from the very shadows surrounding
 it.
-%%%%
-shadow demon:quote
-
-“As we grow old, we become aware that death is drawing near; his shadow falls
-across our path...”
-    -Stefan Zweig, _Twenty-Four Hours in the Life of a Woman_, 1927.
 %%%%
 shadow dragon
 
@@ -3539,36 +2295,10 @@ shadow wraith
 A mist-wreathed skeletal shadow hanging in mid-air that leeches away the
 lifeforce of living beings.
 %%%%
-shadow wraith:quote
-
-“Yesterday, upon the stair,
- I met a man who wasn’t there
- He wasn’t there again today
- I wish, I wish he’d go away...”
-    -Hughes Mearns ,_Antigonish_, 1-4. 1899.
-%%%%
 shapeshifter
 
 A disturbing creature with the power to change its form. It is very rarely
 observed alive in its natural state.
-%%%%
-shapeshifter:quote
-
-“And then th' old Sea-God crept
- From forth the deeps, and found his fat calves there,
- Survey'd, and number'd, and came never near
- The craft we used, but told us five for calves.
- His temples then dis-eased with sleep he salves;
- And in rush'd we, with an abhorred cry,
- Cast all our hands about him manfully;
- And then th' old Forger all his forms began:
- First was a lion with a mighty mane,
- Then next a dragon, a pied panther then,
- A vast boar next, and suddenly did strain
- All into water. Last he was a tree,
- Curl'd all at top, and shot up to the sky.”
-    -Homer, _The Odyssey_, IV, 602-14.
-     trans. George Chapman, 1857.
 %%%%
 shark
 
@@ -3580,13 +2310,6 @@ shedu
 These boviform divine beings are always found in pairs, often protecting some
 sacred shrine, and can heal and even resurrect each other, doubling their
 effectiveness as guardians.
-%%%%
-shedu:quote
-
-“May my god stand at my right hand!
- May my goddess stand at my left hand!
- May the favourable Shedu, the favourable Lamassu...with me!”
-    -Assyrian prayer. 2nd millennium B.C.
 %%%%
 sheep
 
@@ -3605,23 +2328,9 @@ The bane of wizards, these terrible spirits bring an unearthly silence to the
 area around them, making it impossible to recite the magical incantations
 involved with casting spells or reading scrolls.
 %%%%
-silent spectre:quote
-
-“There is a silence where hath been no sound,
- There is a silence where no sound may be,—
- In the cold grave, under the deep, deep sea,
- Or in the wide desert where no life is found.”
-    -Thomas Hood, “Silence”. Early 19th cent.
-%%%%
 silver star
 
 An orb of divine energy pulsating with blinding light.
-%%%%
-silver star:quote
-
-“Ah star of evil! star of pain!
- Highhearted youth comes not again”
-    -James Joyce, “Bahnhofstrasse”, _Pomes Penyeach_. 1927.
 %%%%
 silver statue
 
@@ -3632,37 +2341,10 @@ simulacrum
 
 An ice replica of a monster that is animated by the powers of necromancy.
 %%%%
-simulacrum:quote
-
-“The simulacrum now hides, not the truth, but the fact that there is none, that
-is to say, the continuation of Nothingness.”
-    -Jean Baudrillard, _La Pensée Radicale_. 1994.
-%%%%
 siren
 
 A young woman with a fish tail in place of legs. Sirens are capable of casting
 a powerful spell over their audience.
-%%%%
-siren:quote
-
-“Row'd on, in reach of an erected voice,
- The Sirens soon took note, without our noise,
- Tuned those sweet accents that made charms so strong,
- And these learn'd numbers made the Sirens' song:
- 'Come here, thou worthy of a world of praise,
- That dost so high the Grecian glory raise,
- Ulysses! stay thy ship, and that song hear
- That none past ever but it bent his ear,
- But left him ravish'd, and instructed more
- By us, than any ever heard before.
- For we know all things whatsoever were
- In wide Troy labour'd; whatsoever there
- The Grecians and the Trojans both sustain'd
- By those high issues that the Gods ordain'd.
- And whatsoever all the earth can show
- T' inform a knowledge of desert, we know.'”
-    -Homer, _The Odyssey_, XII, 268-82.
-     trans. George Chapman, 1857.
 %%%%
 sixfirhy
 
@@ -3672,79 +2354,30 @@ lightning speed. It seems to throw sparks all around.
 It can heal from electrical damage, although being hit by more than it can
 handle will have rather violent results.
 %%%%
-sixfirhy:quote
-
-“I saw a mouth jeering. A smile of melted red iron ran over it. Its laugh was
-full of nails rattling. It was a child’s dream of a mouth.
- A fist hit the mouth: knuckles of gun-metal driven by an electric wrist and
-shoulder. It was a child’s dream of an arm.
- The fist hit the mouth over and over, again and again. The mouth bled melted
-iron, and laughed its laughter of nails rattling.
- And I saw the more the fist pounded the more the mouth laughed. The fist is
-pounding and pounding, and the mouth answering.”
-    -Carl Sandburg, “Gargoyle”, _Cornhusker_. 1918.
-%%%%
 skeletal archer
 
 Since when is having flesh a requirement to be a master archer? These skeletal
 fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
 only good for a supply of sinew for bowstrings anyway.
 %%%%
-skeletal archer:quote
-
-“For a glory of all evil spirits rise for victory
- Pain for pain, blood for blood
- Pagan warriors moved quickly forward
- Bows are ready to shoot out their searing
- Darts...”
-    -Mastiphal, “For a Glory of All Evil spirits”
-%%%%
 skeletal bat
 
 A bat skeleton without the decency to lie unmoving like dead bats are supposed
 to.
-%%%%
-skeletal bat:quote
-
-<bat:quote>
 %%%%
 skeletal warrior
 
 The vicious and heavily armed skeleton of a humanoid creature, animated by
 unholy power.
 %%%%
-skeletal warrior:quote
-
-“Speak! speak! thou fearful guest!
- Who, with thy hollow breast
- Still in rude armor drest,
- Comest to daunt me!
- Wrapt not in Eastern balms,
- But with thy fleshless palms
- Stretched, as if asking alms,
- Why dost thou haunt me?”
-    -Henry Wadsworth Longfellow, “The Skeleton in Armor”. 1841.
-%%%%
 skeleton
 
 A skeleton compelled to unlife by the exercise of necromancy.
-%%%%
-skeleton:quote
-
-“God save us from the skeleton
- Who sitteth at the feast!”
-    -James Jeffrey Roche, _The Skeleton at the Feast_. 1890.
 %%%%
 sky beast
 
 A strange aerial creature formed of clouds and tortured flesh that sparkles
 with electricity and, every so often, slips entirely from view.
-%%%%
-sky beast:quote
-
-“Her own mother lived the latter years of her life in the horrible suspicion
-that electricity was dripping invisibly all over the house.”
-    -James Thurber, _My Life and Hard Times_. 1934.
 %%%%
 slave
 
@@ -3753,50 +2386,20 @@ simpering creature, ready to perform any deed at its master's command. However,
 its magical enslavement lasts only as long as its master does, and it would
 surely appreciate being freed.
 %%%%
-slave:quote
-
-“Who rebels? Who rises in arms? Rarely the slave, but almost always the
-oppressor turned slave.”
-    -E.M. Cioran, _History and Utopia_. 1960.
-%%%%
 slime creature
 
 An icky glob of slime, which slithers along the ground, occasionally merging
 with other nearby globs...
 %%%%
-slime creature:quote
-
-“The very deep did rot: O Christ!
- That ever this should be!
- Yea, slimy things did crawl with legs
- Upon the slimy sea.”
-    -Samuel Tayor Coleridge, “The Rime of the Ancient Mariner”. 1798.
-%%%%
 small abomination
 
 A hideous mass of body parts, part animated dead flesh, part demon.
-%%%%
-small abomination:quote
-
-“No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
-had shapes, a thousand shapes of horror beyond all memory. There were eyes –
-and a blemish. It was the pit — the maelstrom — the ultimate abomination.
-Carter, it was the unnamable!”
-    -H.P. Lovecraft, _The Unnamable_. 1925.
 %%%%
 smoke demon
 
 An infernal demon that manifests itself as a writhing cloud of smoke. Having
 considerable pyrokinetic powers, it can very effectively attack its enemies
 from afar.
-%%%%
-smoke demon:quote
-
-“Why does the thin grey strand
- Floating up from the forgotten
- Cigarette between my fingers,
- Why does it trouble me?”
-    -D.H. Lawrence, “Sorrow”. 1916.
 %%%%
 snaplasher vine
 
@@ -3816,28 +2419,6 @@ A belligerent testudine with an armoured carapace. Its neck is surprisingly
 extensible and can reach out and bite from afar. When threatened, it will
 retreat inside its shell.
 %%%%
-snapping turtle:quote
-
-“After a while they came to a village. ”Now then,“ said Snapping Turtle, ”in
-the morning at daylight, my friends, we will make on attack. I myself will
-first go to the place,“ the leader of the war party said to them.
-
-”Good,“ said the other little one, ”thou art the one who sees to it what we
-shall do,“ they said to that Snapping Turtle. ”Now then,“ said Snapping Turtle,
-”verily I am now going to tell you what I shall do.“ Thus he spoke. ”Now is the
-time I shall begin to walk toward this village. Verily at the time I shall kill
-the daughter of the chief will be when the light of day is breaking, and at the
-same instant the sky will glow with red in the direction whence the morrow
-comes. 'Ho, there, our comrade has killed her!' will thus be the thought in
-your hearts. Then is the time when you want to make a great noise, when you
-shall whoop all keep it up. Now is the time that you go to attack this
-village.“ Thus he spoke to those his young men.
-
-”All right!“ said the other little fellows.”
-    -“When Snapping Turtle went to War”, _Publications of the American
-     Ethnological Society, Volume IX: Kickapoo Tales_, 1915.
-     trans. Truman Michelson
-%%%%
 soldier ant
 
 A tough ant with a disproportionately large head with strong mandibles and a
@@ -3849,11 +2430,6 @@ soul eater
 This demon looks like a malignantly shifting shadow gliding through the air. It
 radiates an intense aura of negative force.
 %%%%
-soul eater:quote
-
-“Negation is the mind's first freedom.”
-    -E.M. Cioran, _The Temptation to Exist_. 1956.
-%%%%
 spatial maelstrom
 
 A malevolent rift in reality.
@@ -3862,23 +2438,9 @@ spatial vortex
 
 A crazily shifting twist in the fabric of reality.
 %%%%
-spatial vortex:quote
-
-“It was just a colour out of space—a frightful messenger from unformed realms
-of infinity beyond all Nature as we know it; from realms whose mere existence
-stuns the brain and numbs us with the black extra-cosmic gulfs it throws open
-before our frenzied eyes.”
-    -H.P. Lovecraft, “The Colour out of Space”. 1927.
-%%%%
 spectral thing
 
 A hideous glowing apparition.
-%%%%
-spectral thing:quote
-
-“On the hungry craving wind
- My Spectre follows thee behind.”
-    -William Blake, “Broken Love”. ca. 1800.
 %%%%
 spectral weapon
 
@@ -3904,16 +2466,6 @@ spiny worm
 
 A great black worm, its many-segmented body covered in spiky plates of
 chitinous armour. Acidic venom drips from its toothy maw.
-%%%%
-spiny worm:quote
-
-“No sooner had I reached the place than I began to vomit, during which there
-came from my stomach a hairy worm about a quarter of a cubit in length: the
-hairs were long, and the worm was very ugly, speckled of divers colours, green,
-black, and red. They kept and showed it to the doctor, who said he had never
-seen anything of the sort before...”
-    -Benvenuto Cellini, _Autobiography_. 1563.
-     trans. John Addington Symonds, 1187.
 %%%%
 spirit wolf
 
@@ -4004,27 +2556,9 @@ stone giant
 A gigantic humanoid with grey skin almost as hard as rock. It carries several
 boulders, and is perfectly capable of flinging them a great distance.
 %%%%
-stone giant:quote
-
-“I really believe what you say, answered the knight; for, I have been engaged
-with the giant, in the most obstinate and outrageous combat that I believe I
-shall ever fight in all the days of my life: with one backstroke, slam went his
-head to the ground; and discharged such a quantity of blood, that it ran like
-rills of water, along the field.”
-    -Miguel de Cervantes Saavedra, _The Ingenious Gentleman Don Quixote of La
-     Mancha_, IV, 10. 1605.
-     trans. Carlos Fuentes, 1997.
-%%%%
 stone golem
 
 A huge, magically animated statue made of incredibly hard basalt.
-%%%%
-stone golem:quote
-
-“I see him there
- Bringing a stone grasped firmly by the top
- In each hand, like an old-stone savage armed.”
-    -Robert Frost, “Mending Wall”, _North of Boston_. 1914.
 %%%%
 storm dragon
 
@@ -4035,12 +2569,6 @@ crackling.
 sun demon
 
 A demonic figure shining with the light and fury of a fallen star.
-%%%%
-sun demon:quote
-
-“Behold him setting in his western skies,
- The shadows lengthening as the vapours rise.”
-    -John Dryden, “Absalom and Achitophel”, I, 268. 1681.
 %%%%
 swamp dragon
 
@@ -4057,30 +2585,9 @@ A small and slimy dragon, covered in swamp muck.
     end
 }}
 %%%%
-swamp drake:quote
-
-“Sweet is the swamp with its secrets,
- Until we meet a snake;
- ’T is then we sigh for houses,
- And our departure take
-
- At that enthralling gallop
- That only childhood knows.
- A snake is summer’s treason,
- And guile is where it goes.”
-    -Emily Dickinson, “A Snake”. ca. 1865.
-%%%%
 swamp worm
 
 A large slimy worm, adept at swimming through the muck of this foul swamp.
-%%%%
-swamp worm:quote
-
-“The fool, as I think, at the chasm’s brink,
- Prone by the swamp or the marsh’s side,
- Did, even as I, in the end rejoice,
- Since the voice of death must be His true voice.”
-    -Arthur Edward Waite, “At The End of Things”. 1906.
 %%%%
 tarantella
 
@@ -4101,17 +2608,6 @@ tentacled monstrosity
 
 A writhing mass of tentacles, all covered in putrid mucus.
 %%%%
-tentacled monstrosity:quote
-
-“Oozing and surging up out of that yawning trap-door in the Cyclopean crypt I
-had glimpsed such an unbelievable behemothic monstrosity that I could not doubt
-the power of its original to kill with its mere sight. Even now I cannot begin
-to suggest it with any words at my command. I might call it gigantic —
-tentacled — proboscidian — octopus-eyed — semi-amorphous — plastic — partly
-squamous and partly rugose — ugh!”
-    -H.P. Lovecraft and Hazel Heald, “Out of the Aeons”, _Weird Tales_, 25, No.
-     4, pp. 478–96. April 1935.
-%%%%
 tentacled starspawn
 
 A lumbering maw shrouded in a mass of sinuous tentacles. Every now and again,
@@ -4126,20 +2622,6 @@ titan
 
 This huge, bolt-hurling, lightning-limned humanoid is unusually large and
 powerful, even among giants.
-%%%%
-titan:quote
-
-“And on the other part the Titans eagerly strengthened their ranks, and both
-sides at one time showed the work of their hands and their might. The boundless
-sea rang terribly around, and the earth crashed loudly: wide Heaven was shaken
-and groaned, and high Olympus reeled from its foundation under the charge of
-the undying gods, and a heavy quaking reached dim Tartarus and the deep sound
-of their feet in the fearful onset and of their hard missiles. So, then, they
-launched their grievous shafts upon one another, and the cry of both armies as
-they shouted reached to starry heaven; and they met together with a great
-battle-cry.”
-    -Hesiod, _Theogony_, 8th cent. B.C.
-     trans. H.G. Evelyn-White, 1914.
 %%%%
 thorn hunter
 
@@ -4160,50 +2642,19 @@ toenail golem
 A huge animated statue made entirely from toenail clippings. Some people just
 have too much time on their hands.
 %%%%
-toenail golem:quote
-
-“Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
-but my toes hardly notice. All they’re interested in is turning out
-toenails—semitransparent, flexible sheets of a hornlike material, as defense
-against—whom?”
-    -Jorge Luis Borges, “Toenails”. 1960.
-    trans. Andrew Hurley, 1998.
-%%%%
 toadstool
 
 A short-lived species of fungus typically found on or around decaying organic
 matter.
-%%%%
-toadstool:quote
-
-“Ale Wojski zbierał muchomory.”
- “But the Seneschal gathered the toadstool fly-bane.”
-    -Adam Mickiewicz, _Pan Tadeusz_, III. 1834.
-     trans. G.R. Noyes, 1917.
 %%%%
 tormentor
 
 A malign devil covered in all manner of claws, spines, and cruel hooks. It is
 able to inflict torturous agony on those foolish enough to gaze upon it.
 %%%%
-tormentor:quote
-
-“Thou art to me a delicious torment.”
-    -Ralph Waldo Emerson, _Essays: First Series_, Essay VI: Friendship. 1841.
-%%%%
 training dummy
 
 A mannequin used for battle practice.
-%%%%
-training dummy:quote
-
-“Things are only mannequins and even the great world-historical events are only
-costumes beneath which they exchange glances with nothingness, with the base
-and the banal.”
-    -Walter Benjamin, _Protocols to the Experiments on Hashish, Opium and
-     Mescaline 1927-1934_, “Protocol II: Highlights of the Second Hashish
-     Impression”. 15 January 1928.
-     trans. Scott J. Thompson, 1997.
 %%%%
 trapdoor spider
 
@@ -4238,24 +2689,10 @@ ufetubus
 
 A chattering and shrieking minor demon.
 %%%%
-ufetubus:quote
-
-“We were permitted to shriek in the tongue of dwarfs and demons”
-    -Czesław Miłosz, “A Task”.
-%%%%
 ugly thing
 
 An ugly thing. According to legend, this mutated creature is the otherworldly
 spawn of a wizard's breeding experiment. Yuck.
-%%%%
-ugly thing:quote
-
-“Beauty is no quality in things themselves: It exists merely in the mind which
-contemplates them; and each mind perceives a different beauty. One person may
-even perceive deformity, where another is sensible of beauty; and every
-individual ought to acquiesce in his own sentiment, without pretending to
-regulate those of others.”
-    -David Hume
 %%%%
 unborn
 
@@ -4267,31 +2704,11 @@ unseen horror
 A creature rarely seen by anyone; those few who have seen one would rather they
 hadn't.
 %%%%
-unseen horror:quote
-
-“The awful shadow of some unseen Power
- Floats, tho’ unseen, amongst us.”
-    -Percy Bysshe Shelley, “Hymn to Intellectual Beauty”, I, 1-2. 1816.
-%%%%
 vampire
 
 A human cursed with vampirism, drifting in a state between life and undeath,
 perpetually hungry for the blood of the living. It has power over beasts and
 the minds of lesser men, and can appear in the form of a bat.
-%%%%
-vampire:quote
-
- • Scuze me. My friend Burt says you're a vampire hunter. 'zat so?
- - Uh yes. Yes it is.
- • Well you n'ain't gonna find one round here, mate. They ain't no vampires.
- - You don't believe in vampires?
- • 'course not!
- • But I do believe in con artists. And charletans who like to stir up trouble!
- • Dead people who get up at night and suck blood. How stupid do you think we
-are?
- • My place is haunted with 16 ghosts and they all say there n'ain't no
-vampires!
-    -Rich Morris
 %%%%
 vampire bat
 
@@ -4320,14 +2737,6 @@ A cloud of weird vapour, only visible to those with supernaturally enhanced
 eyesight. As it floats aimlessly through the dungeon, it builds up an electric
 charge, which it will occasionally discharge in your direction.
 %%%%
-vapour:quote
-
-“I had rather be a toad,
- And live upon the vapour of a dungeon,
- Than keep a corner in the thing I love
- For others’ uses.”
-    -William Shakespeare, _Othello_, III, 3. 1603.
-%%%%
 vault guard
 
 A heavily armed and armoured guardian of the Vaults.
@@ -4354,18 +2763,6 @@ A large, fleshy mushroom that wanders slowly around the dungeon. It is both
 innately curious and incredibly shy, pursuing the objects of its curiosity only
 when out of sight. Noxious spores drift around its cap.
 %%%%
-wandering mushroom:quote
-
-“Telimena, wearied with the prolonged wrangling, wanted to go out into the
-fresh air, but sought a partner. She took a little basket from the peg.
-“Gentlemen, I see that you wish to remain within doors,” she said, wrapping
-around her head a red cashmere shawl, “but I am going for mushrooms: follow me
-who will!” Under one arm she took the little daughter of the Chamberlain, with
-the other she raised her skirt up to her ankles. Thaddeus silently hastened
-after her—to seek mushrooms!”
-    -Adam Mickiewicz, _Pan Tadeusz_, II. 1834.
-     trans. G.R. Noyes, 1917.
-%%%%
 warg
 
 A particularly large and evil-looking wolf, usually found in the company of
@@ -4390,12 +2787,6 @@ surge and leap at her whim. Beware, for many unwitting adventurers have found
 themselves drawn beneath her waters by a simple touch, only for it to become
 their final resting place.
 %%%%
-water nymph:quote
-
-“Oh, but you can't expect to wield supreme executive power just because some
-watery tart threw a sword at you.”
-    -Monty Python and the Holy Grail, 1975.
-%%%%
 white draconian
 
 A scale-covered humanoid with a reptilian tail and small wings.
@@ -4409,12 +2800,6 @@ wight
 An ancient warrior, kept in a state of perpetual undeath by its desire to die
 with honour in battle.
 %%%%
-wight:quote
-
-“Unhappie wight, borne to desastrous end,
- That doth his life in so long tendance spend!”
-    -Edmund Spenser, “Mother Hubberds Tale”, _Complaints_. 1591.
-%%%%
 wind drake
 
 A small but powerful dragon, particularly adept amongst its kin at manipulating
@@ -4423,12 +2808,6 @@ the currents of air that surround it. It can exhale powerful blasts of wind.
 wizard
 
 A rather eccentric person, dabbling in all sorts of arcanities.
-%%%%
-wizard:quote
-
-“Each family or tribe has a wizard or conjuring doctor, whose office we could
-never clearly ascertain.”
-    -Charles Darwin, _The Voyage of the Beagle_, ch. X. 1839.
 %%%%
 wolf
 
@@ -4443,27 +2822,11 @@ worm
 
 A giant annelid, glistening with slime, with unusually large teeth.
 %%%%
-worm:quote
-
-“While the angels, all pallid and wan,
-   Uprising, unveiling, affirm
- That the play is the tragedy, ‘Man’,
-   And its hero, the Conqueror Worm.”
-    -Edgar Allan Poe
-%%%%
 wraith
 
 This undead spirit appears as a cloud of black mist surrounding an
 insubstantial skeletal form. Its eyes burn bright with unholy malevolence and
 hunger for life essence, on which it feeds.
-%%%%
-wraith:quote
-
-“God, though this life is but a wraith,
- Although we know not what we use,
- Although we grope with little faith,
- Give me the heart to fight—and lose.”
-    -Louis Untermeyer, “Prayer”. 1919.
 %%%%
 wretched star
 
@@ -4506,41 +2869,9 @@ ynoxinul
 A winged demon covered in shiny metallic scales. It has a legion of imp minions
 under its command.
 %%%%
-ynoxinul:quote
-
-“He fixed his eyes upon the door, which, slowly opening, disclosed a stranger
-of majestic form, but scowling features, who demanded sternly, why he was
-summoned? 'I did not summon you,' said the trembling student. 'You did!' said
-the stranger, advancing, angrily; 'and the demons are not to be invoked in
-vain.' The student could make no reply; and the demon, enraged that one of the
-uninitiated should have summoned him out of mere presumption, seized him by the
-throat and strangled him.
-
-When Agrippa returned, a few days afterwards, he found his house beset with
-devils. Some of them were sitting on the chimneypots, kicking up their legs in
-the air; while others were playing at leapfrog, on the very edge of the
-parapet. His study was so filled with them that he found it difficult to make
-his way to his desk.”
-    -Charles Mackay, _Memoirs of Extraordinary Popular Delusions_, Vol. III,
-     Part I. 1841.
-%%%%
 zombie
 
 A corpse raised to undeath by necromancy.
-%%%%
-zombie:quote
-
-“It seemed that while the zombie came from the grave, it was neither a ghost,
-nor yet a person who had been raised like Lazarus from the dead. The zombie,
-they say, is a soulless human corpse, still dead, but taken from the grave and
-endowed by sorcery with a mechanical semblance of life—it is a dead body which
-is made to walk and act and move as if it were alive. People who have the power
-to do this go to a fresh grave, dig up the body before it has had time to rot,
-galvanize it into movement, and then make of it a servant or slave,
-occasionally for the commission of some crime, more often simply as a drudge
-around the habitation or the farm, setting it dull heavy tasks, and beating it
-like a dumb beast if it slackens.”
-    -William Seabrook, _The Magic Island_. 1929.
 %%%%
 # Specials
 test spawner
@@ -4651,15 +2982,6 @@ Cigotuvi's Monster
 This terrifying creation looks to have been constructed from the body parts of
 every monstrous creature imaginable.
 %%%%
-Cigotuvi's Monster:quote
-
-“I beheld the wretch — the miserable monster whom I had
- created. He held up the curtain of the bed; and his eyes, if
- eyes they may be called, were fixed on me. His jaws opened,
- and he muttered some inarticulate sounds, while a grin
- wrinkled his cheeks.”
-    -Mary Shelley, “Frankenstein”
-%%%%
 # In the first umpteen pages of googling, the only use of "Iskenderun" for a
 # living being is the first Turkish Van cat brought to Britain. With
 # Crawl's felids being sentient, it'd be hard to not make a connection with
@@ -4751,14 +3073,6 @@ lasher statue
 This statue depicts a savage-looking slave driver with a vicious barbed whip.
 It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
-lasher statue:quote
-
-“To be a slave for a moment
- The body offered up to cruelty
- To the lash which whips on the skin
- Which slashes the flesh, lacerates the back”
-    -Samael, “Flagellation”
-%%%%
 malarious mermaid
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
@@ -4849,13 +3163,6 @@ strange machine
 
 A glistening silver machine.
 %%%%
-strange machine:quote
-
-“The machine had stood there a long time. It was several
- hundred feet long and could run on a thimbleful of earth or
- water. It had been working seven and a half million years.”
-    -Sweet Their Blood and Sticky, Albert Teichner
-%%%%
 succubus
 
 A female demon who uses her charms to seduce humanoid males. If you wish to
@@ -4894,11 +3201,6 @@ be swamp ooze, cauldron soot and brew ingredients.
 
 A magician with such stellar sanity and manners probably has great pets as
 well. You might not have to wait long to find out for certain.
-%%%%
-witch:quote
-
-“Thou shalt not suffer a witch to live.”
-    -KJV Bible, Exodus 22:18
 %%%%
 withered plant
 

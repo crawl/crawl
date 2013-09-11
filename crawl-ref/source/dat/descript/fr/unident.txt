@@ -4,13 +4,6 @@ amulet
 Un talisman à porter autour du cou comme un bijou, chargé de pouvoirs obscurs
 d'origine inconnue.
 %%%%
-amulet:quote
-
-« Gringoire voulut prendre le sachet. Elle recula. "- N'y touchez pas. C'est
-une amulette ; tu ferais mal au charme, ou le charme à toi." »
-    -Victor Marie Hugo, _Notre Dame de Paris_, Livre II, chapitre VII "Une Nuit
-de Noces". 1831
-%%%%
 book
 
 Un livre obscur contenant des sorts magiques d'origine inconnue. Ecrit pour les
@@ -27,26 +20,10 @@ potion
 
 Un flacon sans étiquette contenant une seule dose d'un liquide inconnu.
 %%%%
-potion:quote
-
-« Alors, sur la foi de mon art, je lui ai remis un narcotique qui a agi, comme
-je m'y attendais, en lui donnant l'apparence de la mort. Cependant j'ai écrit à
-Roméo d'arriver dès cette nuit fatale, pour aider Juliette à sortir de sa tombe
-empruntée, au moment où l'effet du breuvage cesserait. »
-    -William Shakespeare, _Romeo et Juliette_
-%%%%
 ring
 
 Un talisman chargé de forces obscures d'origine inconnue, à porter au doigt
 comme un bijou.
-%%%%
-ring:quote
-
-« Un anneau d'or et une colombe blanche comme
- le lait, tels sont les présents qui te conviennent ;
- puis une corde de chanvre pour votre amour à vous,
- pour le pendre à quelque arbre. »
-    -Oscar Wilde, « Chanson ». extrait. 1881.
 %%%%
 rod
 

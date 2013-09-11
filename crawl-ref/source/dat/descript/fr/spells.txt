@@ -358,12 +358,6 @@ Ce sort invoque une puissante et furieuse tempête de flammes directement sur la
 cible, causant des dégâts de feu partiellement irrésistibles sur une large zone
 et laissant derrière elle d'éphémères vortex de feu.
 %%%%
-Fire Storm spell:quote
-
-« Certains disent qu'il n'y a pas de finesse dans la destruction. Vous savez
-quoi? Ils sont morts. »
-    -Jaya Ballard, spécimage
-%%%%
 Fireball spell
 
 Ce sort expédie un missile de feu explosif. Ce sortilège n'a aucune coût
@@ -431,14 +425,6 @@ Ice Storm spell
 Ce sort propulse un blizzard de glace rageur, des giboulées, et du gaz gelés
 sur votre cible, causant des dégâts de froid partiellement irrésistibles sur
 une large zone.
-%%%%
-Ice Storm spell:quote
-
-“Ni Le Déluge Ni La Tempête De Glace Ni Le Silence Noir Des Enfers Ne
-Détourneront Ces Messagers De Leur Tâche Sacrée. Ne Nous Demandez Rien Sur Les
-Tigres À Dents De Sabre, Les Puits De Goudron, Les Gros Machins Verts Avec Des
-Dents Ni La Déesse Czol.”
-    -Anghammarad, “Timbré”, Terry Pratchett.
 %%%%
 Ignite Poison spell
 
@@ -895,12 +881,6 @@ Sticky Flame spell
 
 Ce sort conjure un globe de feu liquide, qui adhèrera sur, et brûlera, toute
 créature touchée.
-%%%%
-Sticky Flame spell:quote
-
-“Donnez du feu a un homme et il aura chaud pour une journée, mais mettez lui le
-feu et il aura chaud pour le restant de sa vie.”
-    -Terry Pratchett, “Jingo”
 %%%%
 Sting spell
 

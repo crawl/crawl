@@ -36,14 +36,6 @@ A broken pillar
 The makers of this pillar were overrun long ago. No one alive remembers why
 they built it.
 %%%%
-A broken pillar:quote
-
-“Now Absalom in his lifetime had taken
- and reared up for himself a pillar,
- which is in the king's dale: for he said,
- I have no son to keep my name in remembrance...”
-    2 Samuel 18:18
-%%%%
 A burning altar of Makhleb
 
 An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
@@ -162,12 +154,6 @@ untold riches.
 
 The portal is usable just once, and there's a large monetary fee to be paid.
 %%%%
-A gateway to a ziggurat:quote
-
-“Captain: Take off every ‘zig’!!
- Captain: For great justice.”
-    -Zero Wing
-%%%%
 A gateway to the ashen valley of Gehenna
 
 You can feel the heat. Gehenna seems to be made out of nothing but flames, lava
@@ -177,22 +163,6 @@ A gateway to Hell
 
 This gateway leads to the Vestibule of Hell. Few would go there voluntarily.
 %%%%
-A gateway to Hell:quote
-
-“I am the way into the city of woe.
- I am the way to a forsaken people.
- I am the way into eternal sorrow.
-
- Sacred justice moved my architect.
- I was raised here by divine omnipotence,
- Primordial love and ultimate intellect.
-
- Only those elements time cannot wear
- Were made before me, and beyond time I stand.
- Abandon all hope, ye who enter here.”
-    -Dante Alighieri, _The Divine Comedy_, “Inferno”, Canto III. ca. 1315.
-     trans. John Ciardi, 1954.
-%%%%
 A gateway to the Iron City of Dis
 
 Who will stand the test of iron?
@@ -200,10 +170,6 @@ Who will stand the test of iron?
 A gateway to the decaying netherworld of Tartarus
 
 This place seems to radiate negative energy.
-%%%%
-A gateway to the decaying netherworld of Tartarus:quote
-
-<Tartarus:quote>
 %%%%
 A gateway to the freezing wastes of Cocytus
 
@@ -229,24 +195,6 @@ A granite statue
 Despite the hardness of the stone, this statue's features have long withered
 away.
 %%%%
-A granite statue:quote
-
-“I met a traveller from an antique land
- Who said: Two vast and trunkless legs of stone
- Stand in the desert. Near them on the sand,
- Half sunk, a shatter’d visage lies, whose frown
- And wrinkled lip and sneer of cold command
- Tell that its sculptor well those passions read
- Which yet survive, stamp’d on these lifeless things,
- The hand that mock’d them and the heart that fed.
- And on the pedestal these words appear:
- ‘My name is Ozymandias, king of kings:
- Look on my works, ye Mighty, and despair!’
- Nothing beside remains: round the decay
- Of that colossal wreck, boundless and bare,
- The lone and level sands stretch far away.”
-    -Percy Bysshe Shelley, “Ozymandias”. 1818.
-%%%%
 A hole to the Spider Nest
 
 This is more of a natural sloped shaft than a stairway, but it will do. If you
@@ -257,28 +205,6 @@ A labyrinth entrance
 A gateway to an intricate maze designed by subtle and malicious minds, its exit
 guarded by a fearsome monster. Many a hapless adventurer has lost his way in
 the twisted, shifting passages, and starved to death.
-%%%%
-A labyrinth entrance:quote
-
-“Maze-treaders, whose vision ahead and behind is severely constricted and
-fragmented, suffer confusion, whereas maze-viewers who see the pattern whole,
-from above or in a diagram, are dazzled by its complex artistry. What you see
-depends on where you stand, and thus, at one and the same time, labyrinths are
-single (there is one physical structure) and double: they simultaneously
-incorporate order and disorder, clarity and confusion, unity and multiplicity,
-artistry and chaos.”
-    -Mark Z. Danielewski, “House of Leaves”. 2000.
-
-“Since I emerged that day from the labyrinth,
- Dazed with the tall and echoing passages,
- The swift recoils, so many I almost feared
- I’d meet myself returning at some smooth corner,
- Myself or my ghost, for all there was unreal
- After the straw ceased rustling and the bull
- Lay dead upon the straw and I remained,
- Blood-splashed, if dead or alive I could not tell
- In the twilight nothingness”
-    -Edwin Muir, “The Labyrinth”. 1949.
 %%%%
 A mangrove
 
@@ -321,20 +247,6 @@ A one-way gate to a demon-haunted realm, riven by chaos, its very substance
 impermanent and whimsical, filled with creatures out of nightmare. Easy to
 enter, difficult to leave.
 %%%%
-A one-way gate to the infinite horrors of the Abyss:quote
-
-“And if you gaze for long into an abyss, the abyss gazes also into you.”
-    -Friedrich Nietzsche, _Beyond Good and Evil_ , Aphorism 146. 1886.
-
-“Well, in our country,” said Alice, still panting a little, “you’d generally
-get to somewhere else – if you ran very fast for a long time, as we’ve been
-doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
-all the running you can do, to keep in the same place. If you want to get
-somewhere else, you must run at least twice as fast as that!”
-    -Lewis Carroll, _Through the Looking-Glass, and What Alice Found There_,
-ch. 2
-    “The Garden of Live Flowers”. 1871.
-%%%%
 A passage of Golubria
 
 This unstable gateway allows instantaneous travel to another nearby passage of
@@ -360,16 +272,6 @@ powers to those who would follow Vehumet.
 A rock wall
 
 This wall consists of simple rock.
-%%%%
-A rock wall:quote
-
-“I know not whether Laws be right,
-   Or whether Laws be wrong;
- All that we know who lie in gaol
-   Is that the wall is strong;
- And that each day is like a year,
-   A year whose days are long.”
-    -Oscar Wilde, “The Ballad of Reading Gaol”. 1898.
 %%%%
 A rock-blocked tunnel
 
@@ -493,10 +395,6 @@ A staircase to the Ecumenical Temple
 An entrance to a temple of Gods, a place of peace and refuge from the insanity
 of the dungeon.
 %%%%
-A staircase to the Ecumenical Temple:quote
-
-<Temple:quote>
-%%%%
 A staircase to the Elven Halls
 
 A wide stair down to the murky depths of the halls of the deep elves, skilled
@@ -543,10 +441,6 @@ A staircase to the Tomb
 
 A way to the Tomb of the Ancients, a place of damnation, of horrors animated by
 the vilest necromancy.
-%%%%
-A staircase to the Tomb:quote
-
-<Tomb:quote>
 %%%%
 A staircase to the Vaults
 
@@ -599,13 +493,6 @@ grow underground.
 
 While too large to be felled with an axe, it is susceptible to bolts of
 lightning and to sufficiently intense sources of fire.
-%%%%
-A tree:quote
-
-I like trees because they seem more resigned to the way they have to live than
-other things do.
-
-    -Willa Cather, _O Pioneers_. 1913.
 %%%%
 A viscous altar of Jiyva
 
@@ -1139,19 +1026,6 @@ A portal to a secret trove of treasure
 
 A sumptuously worked golden gate that leads to a very rich trove of valuable
 items. The price of entry is not low.
-%%%%
-A portal to a secret trove of treasure:quote
-
-“‘Stop thief! Stop thief!’ There is a magic in the sound. The tradesman leaves
-his counter, and the car-man his waggon; the butcher throws down his tray; the
-baker his basket; the milkman his pail; the errand-boy his parcels; the
-school-boy his marbles; the paviour his pickaxe; the child his battledore. Away
-they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming,
-knocking down the passengers as they turn the corners, rousing up the dogs, and
-astonishing the fowls: and streets, squares, and courts, re-echo with the
-sound.”
-    -Charles Dickens, _Oliver Twist; or, The parish boy's progress_, ch. X.
-1838.
 %%%%
 A dark tunnel
 

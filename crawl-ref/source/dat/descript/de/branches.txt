@@ -18,19 +18,6 @@ Ein Tempel der Götter, ein Ort des Friedens und der Erholung vom Wahnsinn des
 Verlieses. Er enthält normalerweise Altare für die meisten bekannten Götter und
 befindet sich stets zwischen den Ebenen 4 und 7.
 %%%%
-Temple:quote
-
-„In einer Stadt — den Namen nenn' ich nicht,
-  Ihr braucht's wahrhaftig auch nicht zu bedauern,
- In einer Stadt — wer so von Trümmern spricht,
-  Die Residenz von Juden und von Bauern,
- In einer Stadt — ein Schloß, Burg und Gericht,
-  Des Leichtsinns Denkmal mit verfall'nen Mauern:
- Dort Standen Schänken ... drei, Thortrümmer ... vier,
-  Neun Klöster und ... auch Häuschen dort und hier.”
-    -Ignacy Krasicki, “Der Mönche-Krieg(Monachomachia)”, 1778
-     übersetzt von Dr. Alexander Winklewski
-%%%%
 Orcish Mines
 
 Die gut bearbeiteten Goldminen des Orkenvolkes. Diese verworrenen Höhlen sind
@@ -158,19 +145,6 @@ die con diesem Ort zurückkehrten ist überaus kurz.
 Das Grabmal ist drei Ebenen tief und beinhaltet die Goldene Rune. Sein Eingang
 befindet sich entweder in der Krypta Ebene 2 oder 3.
 %%%%
-Tomb:quote
-
-„In den Tiefen jedes Herzens gibt es eine Grabstätte und einen Kerker, obwohl
-die Lichter, die Musik und der Rummel uns oben veranlassen können, ihre
-Existenz, und die begrabenen oder Gefangenen zu vergessen, die sie verbergen.
-Aber manchmal, und oftenest in der Mitternacht werden jene dunklen Container
-weit geöffnet geschleudert. In einer Stunde wie das, wenn die Meinung ein
-passives Feingefühl, aber keine aktive Kraft hat; wenn die Einbildungskraft ein
-Spiegel ist, Lebhaftigkeit allen Ideen, ohne die Macht des Auswählens oder
-Steuerns von ihnen gebend; dann beten Sie, dass sich Ihr grämt, kann
-schlummern, und die Bruderschaft von Gewissensbissen nicht bricht ihre Kette.“
-    -Nathaniel Hawthorne, „Die Verfolgte Meinung“. 1835.
-%%%%
 Hell
 
 Das Vorhaus zu den vier Höllen wird von Geyron bewacht. Helden die sich im
@@ -209,14 +183,6 @@ dieses Ortes jedes Leben aus den Schatzlüsternden Besuchern herraus.
 
 Tartarus ist sieben Ebenen tief und enthält die Knochen Rune. Sie kann über den
 Vorhof der Hölle erreicht werden.
-%%%%
-Tartarus:quote
-
-“Dort ist ein trübes, tristeres Gebiet
- der Hölle, fernab jeder Dunkelheit;
- ein flach gebeugtes Land von Schatten weit
- umspannt. – Und nichts davon sagt dieses Lied.”
-    -Edward Arlington Robinson, “Die höchste Macht/_Supremacy_”. 1897.
 %%%%
 Zot
 

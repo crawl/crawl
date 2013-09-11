@@ -1140,12 +1140,6 @@ ring of see invisible
 Cet anneau permet à son porteur de voir tout ce qui a été dissimulé
 magiquement.
 %%%%
-ring of see invisible:quote
-
-“Voici mon secret. Il est très simple: on ne voit bien qu'avec le coeur.
-L'essentiel est invisible pour les yeux.”
-    -Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
-%%%%
 ring of slaying
 
 Cet anneau augmente ou réduit les compétences de combat (autant au contact qu'a
@@ -1467,11 +1461,6 @@ Un squelette en décomposition.
 slice of pizza
 
 Une part de pizza : de la pâte avec sauce tomate, mozzarella, et basilic.
-%%%%
-slice of pizza:quote
-
-“Quand la lune frappe ton oeil comme une grosse tarte pizza, c'est l'amour.”
-    -Jack Brooks, “C'est l'amour”
 %%%%
 sling
 
