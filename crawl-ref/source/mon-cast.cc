@@ -1608,7 +1608,8 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_AWAKEN_FOREST:
         if (mon->has_ench(ENCH_AWAKEN_FOREST)
             || env.forest_awoken_until > you.elapsed_time
-            || !forest_near_enemy(mon))
+            || !forest_near_enemy(mon)
+            || you_worship(GOD_FEDHAS))
         {
             ret = true;
         }
