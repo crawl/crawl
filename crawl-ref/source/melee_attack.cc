@@ -2445,10 +2445,6 @@ bool melee_attack::distortion_affects_defender()
         return false;
     }
 
-    // Used to be coinflip() || coinflip() for players, just coinflip()
-    // for monsters; this is a compromise. Note that it makes banishment
-    // a touch more likely for players, and a shade less likely for
-    // monsters.
     if (!one_chance_in(3))
     {
         if (defender_visible)
