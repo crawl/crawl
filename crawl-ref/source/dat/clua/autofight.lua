@@ -19,6 +19,7 @@ AUTOFIGHT_CAUGHT = false
 AUTOFIGHT_THROW = false
 AUTOFIGHT_THROW_NOMOVE = true
 AUTOFIGHT_FIRE_STOP = false
+AUTOMAGIC_ACTIVE = false
 
 local function delta_to_vi(dx, dy)
   local d2v = {
@@ -247,6 +248,10 @@ local function set_af_fire_stop(key, value, mode)
   AUTOFIGHT_FIRE_STOP = string.lower(value) ~= "false"
 end
 
+function set_automagic(key, value, mode)
+  AUTOMAGIC_ACTIVE = string.lower(value) ~= "false"
+end
+
 local function hp_is_low()
   local hp, mhp = you.hp()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
@@ -263,9 +268,6 @@ function attack(allow_movement)
     else
       crawl.mpr("You are " .. caught .. "!")
     end
-  elseif caught then
-  elseif hp_is_low() then
-    crawl.mpr("You are too injured to fight recklessly!")
   elseif info == nil then
     crawl.mpr("No target in view!")
   elseif info.attack_type == 3 then
@@ -286,10 +288,21 @@ function attack(allow_movement)
 end
 
 function hit_closest()
-  attack(true)
+  if hp_is_low() then
+    crawl.mpr("You are too injured to fight recklessly!")
+  elseif AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
+    mag_attack(true)
+  else
+    attack(true)
+  end
 end
 
 function hit_adjacent()
+  if hp_is_low() then
+    crawl.mpr("You are too injured to fight recklessly!")
+  elseif AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
+    mag_attack(false)
+  else
   attack(false)
 end
 
@@ -303,3 +316,4 @@ chk_lua_option.autofight_caught = set_af_caught
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
 chk_lua_option.autofight_fire_stop = set_af_fire_stop
+chk_lua_option.automagic_enable = set_automagic

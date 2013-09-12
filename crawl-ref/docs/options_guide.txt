@@ -1258,6 +1258,21 @@ autofight_caught = false
         If true, autofight will attempt to escape webs or nets that are
         holding you, even if no enemies are in view.
 
+automagic_enable = false
+	If true, the autofight function will resort to casting an assigned
+	spell at a target. Default spell slot is a. Can be toggled in game
+	by assigning am_set_spell to a macro.
+
+automagic_fight = false
+	Setting this to true causes melee combat when trying to cast a spell
+	that you either do not have enough magic points for, or are below
+	the set threshold. If false, a message will appear and no further
+	action is taken.
+
+automagic_stop = 30
+	Similar to autofight_stop, if magic points are below this number
+	(percentage of total), casting is prevented. What happens depends
+	on automagic_fight setting.
 
 3-i     Messages and Display Enhancements.
 ------------------------------------------

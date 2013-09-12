@@ -194,6 +194,9 @@
 # sort_menus = inv: true : equipped, freshness, charged
 
 # autofight_stop = 30
+# automagic_enable = false
+# automagic_stop = 0
+# automagic_fight = false
 
 ##### 3-i       Messages and Display Enhancements #####
 #
