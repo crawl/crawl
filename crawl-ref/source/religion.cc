@@ -3674,6 +3674,9 @@ void god_pitch(god_type which_god)
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.",
             MSGCH_MONSTER_ENCHANT);
+        if (env.forest_awoken_until)
+            for (monster_iterator mi; mi; ++mi)
+                mi->del_ench(ENCH_AWAKEN_FOREST);
     }
 
     if (you.worshipped[you.religion] < 100)
