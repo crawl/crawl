@@ -1416,6 +1416,7 @@ static const char* lua_builtins[] =
     "clua/gearset.lua",
     "clua/trapwalk.lua",
     "clua/autofight.lua",
+    "clua/automagic.lua",
     "clua/kills.lua",
 };
 
