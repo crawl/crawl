@@ -152,38 +152,6 @@ MAP
  2
 ENDMAP
 
-NAME:   lemuel_sealed_altar_a
-WEIGHT: 3
-DEPTH:  D:2-18, Vaults, Elf, Crypt
-MAP
-xxxxxxxxxxxxx
-x...........x
-x...........x
-x...........x
-x...........x
-x.....>.....x
-x.....C.....x
-x...........x
-x...........x
-x...........x
-x...........x
-xxxxxxxxxxxxx
-ENDMAP
-
-NAME: lemuel_sealed_altar_b
-WEIGHT: 7
-DEPTH: D:2-18, Vaults, Elf, Crypt
-MAP
-xxxxxxxxxxx
-x.........x
-x.........x
-x....>....x
-x....C....x
-x.........x
-x.........x
-xxxxxxxxxxx
-ENDMAP
-
 NAME:  lemuel_tele_altar
 TAGS:  transparent mini_float decor
 DEPTH: D:2-18, Vaults
