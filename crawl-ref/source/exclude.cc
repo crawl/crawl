@@ -30,7 +30,7 @@ extern set<pair<string, level_id> > auto_unique_annotations;
 
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
-    if (mons_is_stationary(mon))
+    if (mon->is_stationary())
         return !sleepy;
 
     // Auto exclusion only makes sense if the monster is still asleep or if it
@@ -42,7 +42,7 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 {
     // This only works if the name is lowercased.
-    string name = mon->name(DESC_BASENAME, mons_is_stationary(mon)
+    string name = mon->name(DESC_BASENAME, mon->is_stationary()
                                            && testbits(mon->flags, MF_SEEN));
     lowercase(name);
 

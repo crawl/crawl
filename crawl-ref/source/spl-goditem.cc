@@ -157,7 +157,7 @@ int is_pacifiable(const monster* mon)
         return -1;
     }
 
-    if (mons_is_stationary(mon)) // not able to leave the level
+    if (mon->is_stationary()) // not able to leave the level
         return -1;
 
     if (mon->asleep()) // not aware of what is happening

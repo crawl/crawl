@@ -642,7 +642,7 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(MB_FLEEING);
         else if (mons_is_wandering(m) && !mons_is_batty(m))
         {
-            if (mons_is_stationary(m))
+            if (m->is_stationary())
                 mb.set(MB_UNAWARE);
             else
                 mb.set(MB_WANDERING);

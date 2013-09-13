@@ -4942,6 +4942,11 @@ bool monster::can_bleed(bool /*allow_tran*/) const
     return mons_has_blood(type);
 }
 
+bool monster::is_stationary() const
+{
+    return mons_class_is_stationary(type) || has_ench(ENCH_WITHDRAWN);
+}
+
 bool monster::malmutate(const string &reason)
 {
     if (!can_mutate())

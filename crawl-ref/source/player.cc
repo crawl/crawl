@@ -7602,6 +7602,11 @@ bool player::can_bleed(bool allow_tran) const
     return true;
 }
 
+bool player::is_stationary() const
+{
+    return you.form == TRAN_TREE;
+}
+
 bool player::malmutate(const string &reason)
 {
     ASSERT(!crawl_state.game_is_arena());

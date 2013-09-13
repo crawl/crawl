@@ -621,12 +621,6 @@ bool mons_class_is_stationary(monster_type mc)
     return mons_class_flag(mc, M_STATIONARY);
 }
 
-bool mons_is_stationary(const monster* mon)
-{
-    return (mons_class_is_stationary(mon->type)
-            || mon->has_ench(ENCH_WITHDRAWN));
-}
-
 // Monsters that are worthless obstacles: not to
 // be attacked by default, but may be cut down to
 // get to target even if coaligned.
@@ -2910,7 +2904,7 @@ bool mons_is_lurking(const monster* m)
 
 bool mons_is_influenced_by_sanctuary(const monster* m)
 {
-    return (!m->wont_attack() && !mons_is_stationary(m));
+    return !m->wont_attack() && !m->is_stationary();
 }
 
 bool mons_is_fleeing_sanctuary(const monster* m)

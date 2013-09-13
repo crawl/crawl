@@ -5284,8 +5284,7 @@ bool melee_attack::do_knockback(bool trample)
 {
     do
     {
-        monster* def_monster = defender->as_monster();
-        if (def_monster && mons_is_stationary(def_monster))
+        if (defender->is_stationary())
             return false; // don't even print a message
 
         int size_diff =

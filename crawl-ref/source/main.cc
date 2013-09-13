@@ -4500,7 +4500,7 @@ static void _move_player(coord_def move)
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
     const bool can_swap_places = targ_monst
-                                 && !mons_is_stationary(targ_monst)
+                                 && !targ_monst->is_stationary()
                                  && (targ_monst->wont_attack()
                                        && !you.confused()
                                      || is_sanctuary(you.pos())
