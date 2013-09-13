@@ -785,7 +785,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     {
         // If we're not already adjacent to the foe, check whether we can
         // move any closer. If so, do that rather than splitting.
-        for (radius_iterator ri(origin, 1, true, false, true); ri; ++ri)
+        for (adjacent_iterator ri(origin); ri; ++ri)
         {
             if (_slime_can_spawn(*ri)
                 && grid_distance(*ri, foe_pos) < old_dist)
