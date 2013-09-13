@@ -127,10 +127,10 @@ tengu_winged_f
 tengu_winged_m
 tengu_wingless_brown_f
 tengu_wingless_brown_m
-merfolk_m MERFOLK
-merfolk_f
-merfolk_water_m MERFOLK_WATER
-merfolk_water_f
+merfolk_f MERFOLK
+merfolk_m
+merfolk_water_f MERFOLK_WATER
+merfolk_water_m
 vampire_f VAMPIRE
 vampire_m
 deep_dwarf_m DEEP_DWARF
@@ -921,6 +921,8 @@ topknot2 TOPKNOT2
 sweep SWEEP
 chopsticks CHOPSTICKS
 troll TROLL
+djinn1 DJINN1
+djinn2 DJINN2
 %end_ctg
 
 ###Beard
