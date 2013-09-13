@@ -623,19 +623,12 @@ void direct_effect(monster* source, spell_type spell,
     case SPELL_WATERSTRIKE:
         if (feat_is_water(grd(defender->pos())))
         {
-            if (def && you.can_see(def))
+            if (defender->is_player() || you.can_see(defender))
             {
-                if (def->flight_mode())
-                    mprf("The water rises up and strikes %s", def->name(DESC_THE).c_str());
+                if (defender->flight_mode())
+                    mprf("The water rises up and strikes %s!", defender->name(DESC_THE).c_str());
                 else
-                    mprf("The water swirls and strikes %s", def->name(DESC_THE).c_str());
-            }
-            else if (!def)
-            {
-                if (you.flight_mode())
-                    mpr("The water rises up and strikes you!");
-                else
-                    mpr("The water swirls around and strikes you!");
+                    mprf("The water swirls and strikes %s!", defender->name(DESC_THE).c_str());
             }
 
             pbolt.name       = "waterstrike";
