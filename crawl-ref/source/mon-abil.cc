@@ -1023,7 +1023,7 @@ static bool _siren_movement_effect(const monster* mons)
             {
                 coord_def swapdest;
                 if (mon->wont_attack()
-                    && !mons_is_stationary(mon)
+                    && !mon->is_stationary()
                     && !mon->is_projectile()
                     && !mon->cannot_act()
                     && !mon->asleep()
@@ -1466,7 +1466,7 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
                     bool ignore_tension, const vector<coord_def>* excluded)
 {
-    if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
+    if (act && act->is_stationary())
         return false;
 
     int max_tension = -1;

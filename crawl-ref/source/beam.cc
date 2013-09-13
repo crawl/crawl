@@ -5116,7 +5116,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_AFFECTED;
 
         if (!mon->has_ench(ENCH_HASTE)
-            && !mons_is_stationary(mon)
+            && !mon->is_stationary()
             && mon->add_ench(ENCH_HASTE))
         {
             if (!mons_is_immotile(mon)
@@ -5129,7 +5129,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_MIGHT:
         if (!mon->has_ench(ENCH_MIGHT)
-            && !mons_is_stationary(mon)
+            && !mon->is_stationary()
             && mon->add_ench(ENCH_MIGHT))
         {
             if (simple_monster_message(mon, " seems to grow stronger."))
@@ -5390,8 +5390,7 @@ bool bolt::knockback_actor(actor *act)
     const coord_def newpos(ray.pos());
     if (newpos == oldpos
         || actor_at(newpos)
-        || (act->is_monster()
-            && mons_is_stationary(act->as_monster()))
+        || act->is_stationary()
         || feat_is_solid(grd(newpos))
         || !act->can_pass_through(newpos)
         || !act->is_habitable(newpos)

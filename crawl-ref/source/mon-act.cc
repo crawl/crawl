@@ -153,11 +153,8 @@ static bool _swap_monsters(monster* mover, monster* moved)
     // Can't swap with a stationary monster.
     // Although nominally stationary kraken tentacles can be swapped
     // with the main body.
-    if (mons_is_stationary(moved)
-        && !moved->is_child_tentacle())
-    {
+    if (moved->is_stationary() && !moved->is_child_tentacle())
         return false;
-    }
 
     // If the target monster is constricted it is stuck
     // and not eligible to be swapped with
@@ -327,7 +324,7 @@ static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
         if (ally == NULL)
             continue;
 
-        if (mons_is_stationary(ally) || ally->reach_range() > REACH_NONE)
+        if (ally->is_stationary() || ally->reach_range() > REACH_NONE)
             continue;
 
         // Hostile monsters of normal intelligence only move aside for
@@ -2352,7 +2349,7 @@ void handle_monster_move(monster* mons)
             mons->props.erase("blocked_deadline");
         }
 
-        if (invalid_monster(mons) || mons_is_stationary(mons))
+        if (invalid_monster(mons) || mons->is_stationary())
         {
             if (mons->speed_increment == old_energy)
                 mons->speed_increment -= non_move_energy;
@@ -3100,11 +3097,10 @@ static bool _mons_can_displace(const monster* mpusher,
     // elbow past them, and the wake-up check happens downstream.
     // Monsters caught in a net also can't be pushed past.
     if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
-        || mpusher->cannot_move() || mons_is_stationary(mpusher)
+        || mpusher->cannot_move() || mpusher->is_stationary()
         || mpusher->is_constricted() || mpushee->is_constricted()
         || (!_same_tentacle_parts(mpusher, mpushee)
-           && (mpushee->cannot_move()
-               || mons_is_stationary(mpushee)))
+           && (mpushee->cannot_move() || mpushee->is_stationary()))
         || mpusher->asleep() || mpushee->caught())
     {
         return false;
@@ -3314,7 +3310,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             // - prevents plugging gaps with hostile oklobs
             if (crawl_state.game_is_zotdef())
             {
-                if (!mons_is_stationary(targmonster)
+                if (!targmonster->is_stationary()
                     || targmonster->attitude != ATT_HOSTILE)
                 {
                     return false;
@@ -3655,9 +3651,9 @@ static bool _may_cutdown(monster* mons, monster* targ)
     if (!crawl_state.game_is_zotdef())
         return false;
 
-    return (mons_is_stationary(targ)
-            || mons_class_flag(mons_base_type(targ), M_NO_EXP_GAIN)
-               && !mons_is_tentacle_or_tentacle_segment(targ->type));
+    return targ->is_stationary()
+           || mons_class_flag(mons_base_type(targ), M_NO_EXP_GAIN)
+              && !mons_is_tentacle_or_tentacle_segment(targ->type);
 }
 
 static bool _monster_move(monster* mons)

@@ -656,7 +656,7 @@ bool mons_speaks(monster* mons)
 
     // Now that we're not dealing with a specific monster name, include
     // whether or not it can move in the prefix.
-    if (mons_is_stationary(mons))
+    if (mons->is_stationary())
         prefixes.insert(prefixes.begin(), "stationary");
 
     // Names for the exact monster name and its genus have failed,

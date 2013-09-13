@@ -486,7 +486,7 @@ static bool _is_safe_move(const coord_def& c)
         // unless worshipping Fedhas.
         if (you.can_see(mon)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && mons_is_stationary(mon)
+            && mon->is_stationary()
             && !fedhas_passthrough(mon)
             && !travel_kill_monster(mon->type))
         {

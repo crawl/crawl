@@ -982,7 +982,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
                 del_ench(i->first);
-            if (!mons_is_stationary(this))
+            if (!is_stationary())
                 monster_blink(this, true);
             break;
 
@@ -1197,7 +1197,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HELD:
     {
-        if (mons_is_stationary(this) || cannot_act() || asleep())
+        if (is_stationary() || cannot_act() || asleep())
             break;
 
         int net = get_trapping_net(pos(), true);

@@ -2418,7 +2418,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (mons_primary_habitat(mon) != HT_LAND
         || mons_is_zombified(mon)
            && mons_class_primary_habitat(mon->base_monster) != HT_LAND
-        || mons_is_stationary(mon))
+        || mon->is_stationary())
     {
         return;
     }
