@@ -767,7 +767,7 @@ static bool _slime_can_spawn(const coord_def target)
 // we can find a square to place the new slime creature on.
 static monster *_slime_split(monster* thing, bool force_split)
 {
-    if (!thing || thing->number <= 1
+    if (!thing || thing->number <= 1 || thing->hit_points < 4
         || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
         || _disabled_merge(thing))
     {
