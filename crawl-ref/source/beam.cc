@@ -3116,9 +3116,11 @@ bool bolt::harmless_to_player() const
     case BEAM_PETRIFY:
         return (you.res_petrify() || you.petrified());
 
+    // Fire and ice can destroy inventory items, acid damage equipment.
     case BEAM_COLD:
+        return is_big_cloud && you.mutation[MUT_ICEMAIL];
+
     case BEAM_ACID:
-        // Fire and ice can destroy inventory items, acid damage equipment.
         return false;
 
     case BEAM_FIRE:
