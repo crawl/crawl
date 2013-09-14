@@ -104,6 +104,16 @@ define(function() {
         }
     }
 
+    if ($.browser.opera)
+    {
+        // Opera uses 107 for keydown for =/+, but reports 43 ('+') in the
+        // keypress regardless of whether shift is pressed. Unfortunately
+        // it also uses 107/43 for numpad +, so we can't distinguish those.
+        // We are handling this Opera-specifically so that other browsers
+        // can continue to distinguish the two.
+        key_conversion[107] = 61;
+    }
+
     var shift_key_conversion = {
         // Numpad / Arrow keys
         45: CK_SHIFT_INSERT,
