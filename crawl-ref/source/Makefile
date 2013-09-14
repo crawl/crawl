@@ -443,6 +443,7 @@ ifdef BUILD_UNIVERSAL
 # [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
 CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
 CFLAGS_DEPCC_ARCH := -arch i386
+NO_INLINE_DEPGEN := YesPlease
 else
 CFLAGS_ARCH := -arch $(MARCH)
 endif
@@ -458,8 +459,9 @@ CXX += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 endif
 
 ifndef CROSSHOST
-HOSTCC = $(CC)
-HOSTCXX = $(CXX)
+# Don't need a universal build of host tools, so use DEPCC.
+HOSTCC = $(DEPCC)
+HOSTCXX = $(DEPCXX)
 export HOSTCC
 export HOSTCXX
 endif
