@@ -2587,6 +2587,9 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int m
     base_beam.attitude = ATT_FRIENDLY;
     base_beam.is_tracer = true;
     base_beam.is_targetting = true;
+    base_beam.dont_stop_player = true;
+    base_beam.friend_info.dont_stop = true;
+    base_beam.foe_info.dont_stop = true;
     base_beam.range = range;
     base_beam.source = caster->pos();
     base_beam.target = aim;
@@ -2598,6 +2601,9 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int m
     center_beam.hit = 1;
     center_beam.fire();
     center_beam.is_tracer = false;
+    center_beam.dont_stop_player = false;
+    center_beam.foe_info.dont_stop = false;
+    center_beam.friend_info.dont_stop = false;
     beams.push_back(center_beam);
 
     for (distance_iterator di(aim, false, false, 3); di; ++di)
@@ -2643,7 +2649,10 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int m
                 tempbeam.target = testbeam.path_taken.back();
                 tempbeam.fire();
                 tempbeam.is_tracer = false;
-                base_beam.is_targetting = false;
+                tempbeam.is_targetting = false;
+                tempbeam.dont_stop_player = false;
+                tempbeam.foe_info.dont_stop = false;
+                tempbeam.friend_info.dont_stop = false;
                 beams.push_back(tempbeam);
                 num_targets++;
             }
