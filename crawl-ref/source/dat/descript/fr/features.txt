@@ -185,7 +185,7 @@ un monstre. Il est plutôt friable et ne résistera pas très longtemps.
 %%%%
 A glowing golden altar of the Shining One
 
-Un autel de l'étincelant, fait de l'or le plus pur, d'une brillance presque
+Un autel de L'Étincelant, fait de l'or le plus pur, d'une brillance presque
 aveuglante.
 %%%%
 A glowing silver altar of Zin
@@ -450,7 +450,7 @@ Ceci est le passage vers l'antre des serpents, le repaire des nagas.
 %%%%
 A staircase to the Swamp
 
-Un escalier vers les territoires marécageux, pleins de vase, de mouches et de
+Un escalier vers les territoires marécageux, pleins de limons, de mouches et de
 larges monstres carnivores.
 %%%%
 A staircase to the Tomb

@@ -413,7 +413,7 @@ Holy Breath spell
 Cette créature peut cracher un large souffle de nuages de flammes bénie,
 brillante de la gloire des dieux bienveillants. Ces flammes sont
 particulièrement dangereuses pour ceux qui remplissent la définition du mal
-selon l’Etincelant.
+selon L’Étincelant.
 %%%%
 Ice Form spell
 

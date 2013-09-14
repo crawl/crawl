@@ -107,29 +107,29 @@ Une tranche séchée de vache ou de bœuf mort.
 blessed double sword
 
 Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a été
-améliorée par l'Étincelant.
+améliorée par L’Étincelant.
 %%%%
 blessed falchion
 
-Une épée à large tranchant. Elle a été améliorée par l'Étincelant.
+Une épée à large tranchant. Elle a été améliorée par L'Étincelant.
 %%%%
 blessed great sword
 
 Une épée avec une une très longue et lourde lame, et une longue garde. Elle a
-été améliorée par l'Étincelant.
+été améliorée par L'Étincelant.
 %%%%
 blessed long sword
 
-Une épée à la lame longue et tranchante. Elle a été améliorée par l'Étincelant.
+Une épée à la lame longue et tranchante. Elle a été améliorée par L'Étincelant.
 %%%%
 blessed scimitar
 
-Une épée longue à lame courbée. Elle a été améliorée par l'Étincelant.
+Une épée longue à lame courbée. Elle a été améliorée par L'Étincelant.
 %%%%
 blessed triple sword
 
 Une arme magique avec trois grandes lames tranchantes comme des rasoirs. Elle a
-été améliorée par l'Étincelant.
+été améliorée par L'Étincelant.
 %%%%
 blowgun
 
@@ -561,7 +561,7 @@ s'agit d'un bug si jamais vous voyez ce message.)
 eudemon blade
 
 Une lame sacrée tout droit sortie des forges du paradis, et habitée par une
-présence bienveillante. C'est l'arme favorite des serviteurs de l'Étincelant,
+présence bienveillante. C'est l'arme favorite des serviteurs de L'Étincelant,
 et elle ne peut être manipulée par les forces du mal.
 %%%%
 eveningstar
@@ -1254,7 +1254,7 @@ Vous pourriez cependant avoir besoin d'enlever ensuite les toiles d'araignée.
 sacred scourge
 
 Une arme bénie, forgé par les saints du paradis et haï par les impies. Il
-s'agit de l'arme de prédilection des serviteurs de l'Étincelant.
+s'agit de l'arme de prédilection des serviteurs de L'Étincelant.
 %%%%
 sausage
 
@@ -1411,7 +1411,7 @@ sorts, ou peut être utilisé sur une arme en ayant déjà une provoquant ainsi
 l'effacement de celle ci pour en mettre une nouvelle au hasard.
 
 Les marques qui sont étroitement liés à l'un des dieux (Trog, Lugonu,
-Kikubaaquadgha, Shining One) ne peuvent être apposé de cette façon. Xom,
+Kikubaaquadgha, L’Étincelant) ne peuvent être apposé de cette façon. Xom,
 d'autre part, ne laisserait pas une telle occasion de s'amuser pour la rendre
 inutile.
 %%%%
@@ -1655,8 +1655,8 @@ faire une épée quadruple.
 trishula
 
 Un trident béni, baigné de flammes, avec trois pointes symbolisant la force
-combinée des trois dieux saints. C'est une arme appréciée des fidèles du
-Rayonnant.
+combinée des trois dieux saints. C'est une arme appréciée des fidèles de
+L’Étincelant.
 %%%%
 troll hide
 

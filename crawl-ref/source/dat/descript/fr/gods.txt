@@ -19,19 +19,19 @@ souillée ou chaotique autant que de l'usage des mutations et la consommation de
 la chair d'êtres intelligents. Ils peuvent prêcher à ou emprisonner les
 hérétiques et, ultimement peuvent obtenir un refuge divin. Zin valorise
 l'altruisme, exigent une dîme (un dixième) de tout l'or gagné, préférant les
-dons plus élevés. Les disciples de Zin peuvent se convertir à Elyvilon ou au
-Rayonnant tout en gardant une partie de leur Piété.
+dons plus élevés. Les disciples de Zin peuvent se convertir à Elyvilon ou à
+L’Étincelant tout en gardant une partie de leur Piété.
 %%%%
 the Shining One
 
-Le Rayonnant est une divinité puissante dans la croisade contre le mal. Ses
+L’Étincelant est une divinité puissante dans la croisade contre le mal. Ses
 fidèles et leurs alliés peuvent recevoir diverses bénédictions quand ils
 éradiquent sans pitié les êtres démoniaques ou maudits. Les fidèles ne doivent
 jamais utiliser la magie démoniaque ou impie et, doivent prouver leur
 supériorité morale en combattant honorablement. Le Dieu demande à ses suivants
 de parcourir le monde, examinant tous ses habitants à la recherche de traces
-démoniaques qui doivent être éradiquées. Les disciples du Rayonnant peuvent se
-convertir à Elyvilon ou à Zin tout en gardant une partie de leur Piété.
+démoniaques qui doivent être éradiquées. Les disciples de L’Étincelant peuvent
+se convertir à Elyvilon ou à Zin tout en gardant une partie de leur Piété.
 %%%%
 Kikubaaqudgha
 
@@ -114,7 +114,7 @@ autres. Ces individus peuvent s'attendre à obtenir de puissantes capacités de
 guérison. Le Guérisseur préfère le pacifisme et, aide ses fidèles à éviter les
 bains de sang. Elyvilon apprécie la destruction des armes, les plus pieux de
 ses disciples cherchent et détruisent les armes maudites pour faire grandir
-leur Piété. Les fidèles d'Elyvilon peuvent se convertir au Rayonnant ou à Zin
+leur Piété. Les fidèles d'Elyvilon peuvent se convertir à L’Étincelant ou à Zin
 tout en conservant une partie de leur Piété.
 %%%%
 Lugonu
@@ -160,7 +160,7 @@ Ashenzari, pouvoir, bénédiction et malédiction sont une seule et même chose.
 %%%%
 Jiyva
 
-Jiyva est l'ancienne divinité chaotique des limons. Ses fidèles doivent
+Jiyva est l'ancienne divinité chaotique des slimes. Ses fidèles doivent
 soutenir la propagation et la satiété de leurs suivants limons en leur
 permettant d'engloutir des objets et, il leur est interdit de nuire à un limon.
 Jiyva consommera même occasionnellement des objets laissés ailleurs dans le
@@ -180,16 +180,17 @@ peut même intervenir pour sauver directement la vie de ses disciples.
 %%%%
 the Shining One powers
 
-Les disciples du Rayonnant sont entourés par un halo qui révèle leurs ennemis.
-Ils gagnent du pouvoir en tuant les êtres maléfiques. Le Rayonnant gardera plus
-longtemps les alliés convoqués aux côtés du disciple, si les alliés s'avèrent
-dignes en croisade. Les disciples gagneront l'utilisation d'un bouclier divin
-pour les protéger au combat. Plus tard, ils pourront canaliser des explosions
-de flammes purificatrices, particulièrement mortelles pour les créatures
-impies. Éventuellement, ils pourront demander au Rayonnant de leur envoyer de
-puissants êtres divins comme alliés. Le Rayonnant pourra occasionnellement
-directement intervenir pour sauver la vie de ses fidèles. Avec une piété
-grandissante, le Rayonnant protègera la force vitale de ses fidèles.
+Les disciples de L’Étincelant sont entourés par un halo qui révèle leurs
+ennemis. Ils gagnent du pouvoir en tuant les êtres maléfiques. L’Étincelant
+gardera plus longtemps les alliés convoqués aux côtés du disciple, si les
+alliés s'avèrent dignes en croisade. Les disciples gagneront l'utilisation d'un
+bouclier divin pour les protéger au combat. Plus tard, ils pourront canaliser
+des explosions de flammes purificatrices, particulièrement mortelles pour les
+créatures impies. Éventuellement, ils pourront demander a L’Étincelant de leur
+envoyer de puissants êtres divins comme alliés. L’Étincelant pourra
+occasionnellement directement intervenir pour sauver la vie de ses fidèles.
+Avec une piété grandissante, L’Étincelant protègera la force vitale de ses
+fidèles.
 %%%%
 Kikubaaqudgha powers
 
@@ -315,14 +316,14 @@ qu'eux, et finalement, la capacité à sortir entièrement du flux temporel.
 %%%%
 Jiyva powers
 
-Les fidèles de Jiyva peuvent demander des gelées, transformer des montres en
-gelées, plus tard, supprimer leurs mutations néfastes. Alors que leur piété
+Les fidèles de Jiyva peuvent demander des gelées, transformer des monstres en
+slimes, plus tard, supprimer leurs mutations néfastes. Alors que leur piété
 grandit, Jiyva fera apparaitre des gelées, avec une fréquence grandissante,
 dans le donjon ; réorganisera les attributs de ses disciples en fonction de
 leurs compétences, armure et équipement ; accordera des mutations comme
-récompense. Les gelées n'attaqueront jamais un fidèle de Jiyva, et Jiyva
-demande la même conduite en retour. Finalement, toutes les gelées visibles se
-joindront en prières, les empêchant de se déplacer pour un moment.
+récompense. Les slimes n'attaqueront jamais un fidèle de Jiyva, et Jiyva
+demande la même conduite en retour. Éventuellement, touts les slimes visibles
+se joindront à la prières, les empêchant de se déplacer pour un moment.
 %%%%
 Ashenzari powers
 
