@@ -1052,13 +1052,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             ammo_brand = SPMSL_NORMAL;
         }
         // Nessos gets to cheat.
-        else if (agent->is_monster())
-        {
-            const monster* mon = static_cast<const monster* >(agent);
-            if (mon->type != MONS_NESSOS)
-                bow_brand = SPWPN_NORMAL;
-        }
-        else
+        else if (agent->type != MONS_NESSOS)
             bow_brand = SPWPN_NORMAL;
     }
 
