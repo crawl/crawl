@@ -153,6 +153,19 @@ cookery book, the inventor of festivals, of dancing, music, plays, and of the
 newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks.”
     -Alain René Le Sage, _Asmodeus: Or, The Devil on Two Sticks_. 1707.
 %%%%
+Awaken Forest spell
+
+ • Hel: [died to] Infection! She's mine!
+ - Thor: From a splinter that she got bravely fighting an elm!
+ • Hel: Trees are inanimate plants, you buffoon!
+ - Thor: Bravery knows no limits!
+    -Rich Burlew, Order of the Stick, #874
+%%%%
+Banishment spell
+
+“An immense river of oblivion is sweeping us away into a nameless abyss.”
+    -Ernest Renan, Souvenirs
+%%%%
 Cigotuvi's Monster
 
 “I beheld the wretch — the miserable monster whom I had
@@ -170,6 +183,12 @@ Crazy Yiuf
  Four Larks and a Wren,
  Have all built their nests in my beard!'”
     -Edward Lear, _A Book of Nonsense [No. 1]_. 1846.
+%%%%
+Darkness spell
+
+“If I must die, I will encounter darkness as a bride,
+     And hug it in my arms.”
+    -William Shakespeare, “Measure for Measure”
 %%%%
 Dispater
 
@@ -383,6 +402,13 @@ Sticky Flame spell
 for the rest of his life.”
 
     -Terry Pratchett, “Jingo”
+%%%%
+Summon Demon spell
+
+“'Tis now the very witching time of night,
+ When churchyards yawn and hell itself breathes out
+ Contagion to this world.”
+    -William Shakespeare, “The Tragedy of Hamlet, Prince of Denmark”, A3-2
 %%%%
 Tartarus
 
@@ -607,6 +633,11 @@ pillar-like handle, with two dependent fillets, has much the appearance of a
 cult image.”
     -Sir Arthur John Evans, “Mycenaean tree and pillar cult and its
      Mediterranean relations,” _Journal of Hellenic Studies_ XXI, p. 109. 1901.
+%%%%
+battlesphere
+
+Rule 4: Close air support covereth a multitude of sins.
+    -The Seven Habits of Highly Effective Pirates
 %%%%
 big fish
 
@@ -927,6 +958,13 @@ double sword
  But you will have the better of them
  And I will have the worst.”
     -English traditional ballad, “Mattie Groves”. ca. 1600.
+%%%%
+dryad
+
+ • Roy Quixote: Wait, what's my beef with clean energy again?
+ - Durkon Pansa: Dunno, but if'n ye prefer, I know a grove o'peach trees
+tha've been gettin' fresh wit tha locals.
+    -Rich Burlew, “Haleo and Julean”
 %%%%
 efreet
 
@@ -1577,6 +1615,14 @@ lorocyproca
 fantastic arabesque — invisible to their eyes, but dreadful nonetheless — into
 the unfamiliar numeral under whose menace they lived.”
     -Bruno Schulz, “The Brilliant Epoch”. 1937.
+%%%%
+lost soul
+
+“She walks in the twilight, her steps make no sound,
+  Her feet leave no tracks on the dew-covered ground.
+ Her hand gently beckons, she whispers your name—
+  But those who go with her are never the same.”
+    -Magic: the Gathering
 %%%%
 lychee
 
@@ -2970,7 +3016,13 @@ vampire
 are?
  • My place is haunted with 16 ghosts and they all say there n'ain't no
 vampires!
-    -Rich Morris
+    -Rich Morris, Yet Another Fantasy Gamer Comic
+%%%%
+vampire bat
+
+“For something is amiss and out of place
+ When mice with wings can wear a human face.”
+    -Theadore Roethke, “The Bat”
 %%%%
 vapour
 
