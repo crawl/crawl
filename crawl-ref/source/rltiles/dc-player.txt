@@ -70,8 +70,10 @@ octopode2
 octopode3
 octopode4
 octopode5
+%rim 0
 djinni_f DJINNI
 djinni_m
+%rim 1
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
