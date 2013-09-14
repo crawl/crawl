@@ -186,6 +186,7 @@ bool CrawlIsCrashing = false;
 
 NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
+    bool need_pause = true;
     disable_other_crashes();
 
     // Let "error" go out of scope for valgrind's sake.
@@ -210,7 +211,6 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
      || defined(DGL_PAUSE_AFTER_ERROR)
-        bool need_pause = true;
         if (exit_code && !error.empty())
         {
             if (_print_error_screen("%s", error.c_str()))
@@ -248,6 +248,8 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
         fprintf(stderr, "Hit Enter to continue...\n");
         getchar();
     }
+#else
+    UNUSED(need_pause);
 #endif
 
     CrawlIsExiting = true;
