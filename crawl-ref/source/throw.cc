@@ -1220,12 +1220,10 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (penetrating)
     {
         beam.range_funcs.push_back(_item_penetrates_victim);
-        if (item.sub_type == MI_LARGE_ROCK)
-        {
+        if (item.base_type == OBJ_MISSILES && item.sub_type == MI_LARGE_ROCK)
             beam.hit_verb = "crashes through";
-        } else {
+        else
             beam.hit_verb = "pierces through";
-        }
     }
     if (disperses)
         beam.hit_funcs.push_back(_dispersal_hit_victim);
