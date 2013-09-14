@@ -48,8 +48,8 @@ trois autre branches.
 %%%%
 Swamp
 
-Un marécage inhospitalier, plein d'oozes, de mouches, de sangsues et de larges
-monstres carnivores salivant.
+Un marécage inhospitalier, plein de limons, de mouches, de sangsues et de
+larges monstres carnivores salivant.
 
 Le Marécage est profond de cinq niveaux et contient la rune en décomposition.
 Le donjon ne propose que deux des branches suivantes : la Fossé des Serpents,
@@ -97,8 +97,8 @@ fenêtre, évitant ainsi la corrosion de l'acide. Il est bien connu qu'un
 dangereux acide suinte des murs de cet horrible endroit, et qu'il est de plus
 en plus caustique à mesure que vous descendez.
 
-La Fosse des Gelées est profonde de six niveaux  et contient la rune visqueuse.
-Son entrée est entre Repaire 6 et 8.
+Les Fosses gluantes sont profondes de six niveaux  et contient la rune
+visqueuse. Son entrée est entre Repaire 6 et 8.
 %%%%
 Vaults
 

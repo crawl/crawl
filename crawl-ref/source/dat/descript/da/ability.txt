@@ -168,8 +168,8 @@ intelligens og behændighed.
 %%%%
 Imprison ability
 
-Fængsler midlertidigt et uhyre bag vægge af sølv. Fængslet varighed øges af din
-færdighed med påkaldelser.
+Fængsler midlertidigt et uhyre bag vægge af sølv. Fængslets varighed øges af
+din færdighed med påkaldelser.
 %%%%
 Sanctuary ability
 

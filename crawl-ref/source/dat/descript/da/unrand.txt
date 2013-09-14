@@ -59,6 +59,11 @@ Sword of Zonguldrok
 
 Dette skrækkelige våben anvendes på brugerens eget ansvar.
 %%%%
+Sword of Cerebov
+
+Sælsomme flammer dækker dets forvredne klinge. Dets dæmoniske kraft brænder
+noget af forsvarerens modstandskraft over for ild bort.
+%%%%
 Staff of Dispater
 
 Denne legendariske genstand kan slippe Helvedes vrede løs.
@@ -463,6 +468,14 @@ Axe of Woe
 Da du griber om skaftet på denne økse, føles dit sind ikke længere helt som dit
 eget. Din krop begynder at udvise en hidtil umulig styrke, og dine bevægelser
 bliver styret af Makhleb.
+%%%%
+moon troll leather armour
+
+Denne rustning blev efter sigende skabt ved at fortrylle skindet fra en nu
+uddød race af trolde. Det er umuligt at sige med sikkerhed, om denne rustning
+virkelig er en rest fra de legendariske vindrædsler, eller blot en tillempning
+for at gøre den mere mystisk. Men dens magt til hurtigt at helbrede brugeren på
+bekostning af magisk kraft er i hvert fald ikke til at komme uden om.
 %%%%
 milk chocolate
 

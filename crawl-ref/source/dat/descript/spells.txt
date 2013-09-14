@@ -54,8 +54,8 @@ enchanted trees will lash at any enemy foolish enough to stand close enough.
 %%%%
 Awaken Vines spell
 
-This spell makes a few vines grow from the ground. The vines reach out and
-grab interlopers, dragging them towards nearby trees.
+This spell makes a few vines grow from the ground. The vines reach out and grab
+interlopers, dragging them towards nearby trees.
 %%%%
 Banishment spell
 
@@ -166,17 +166,17 @@ Call Lost Soul spell
 
 This spell summons a necromantic spectre, and gives it a temporary material
 form. Such spectres, or “lost souls”, can enter the bodies of more powerful
-undead to bring them back from brink of demise, or turn dying living
-creatures into spectral versions of themselves. While the soul's material
-form is only temporary, the effect of such repair is not. At least, until
-you kill the repairee again.
+undead to bring them back from brink of demise, or turn dying living creatures
+into spectral versions of themselves. While the soul's material form is only
+temporary, the effect of such repair is not. At least, until you kill the
+repairee again.
 %%%%
 Call Tide spell
 
 This spell lets the caster affect the tidal phase of all water within a large
-distance. Soon after calling it, the tide on the whole level reaches high
-tide levels. It has a localised effect as well: nearby the caster, the
-waters go higher than they ever naturally would.
+distance. Soon after calling it, the tide on the whole level reaches high tide
+levels. It has a localised effect as well: nearby the caster, the waters go
+higher than they ever naturally would.
 %%%%
 Cantrip spell
 
@@ -248,8 +248,8 @@ This spell attempts to enslave any undead in the vicinity of the caster.
 %%%%
 Control Winds spell
 
-This spell allows limited powers over the flow of air in caster's sight.
-This grants a wide array of minor benefits:
+This spell allows limited powers over the flow of air in caster's sight. This
+grants a wide array of minor benefits:
  • an accuracy bonus to missiles shot or thrown by allies
  • extinguishes any forest fires and blocks new ones from starting
  • blows airborne agents such as flame or poison gas away
@@ -339,8 +339,8 @@ This spell digs a tunnel through unworked rock.
 Dimension Anchor spell
 
 This spell, if not resisted, blocks any translocations attempted by the
-affected target, be they voluntary or not. This includes even some
-cross-plane effects, although notably not Banishment.
+affected target, be they voluntary or not. This includes even some cross-plane
+effects, although notably not Banishment.
 %%%%
 Discord spell
 
@@ -1344,9 +1344,9 @@ This ability allows launching a small hail of sharp thorns.
 Wall of Brambles spell
 
 Thorn hunters have a means to direct rapid growth of brambles. These have
-almost no structural strength, but wicked thorns they bear make removal not
-so pleasant. Such brambles are so sparse almost any missiles can pass
-through unhindered.
+almost no structural strength, but wicked thorns they bear make removal not so
+pleasant. Such brambles are so sparse almost any missiles can pass through
+unhindered.
 %%%%
 Warp Weapon spell
 
@@ -1356,17 +1356,17 @@ a scroll of brand weapon.
 %%%%
 Waterstrike spell
 
-This spell causes water around or under the target to violently swirl,
-dealing damage. It cannot be cast at those not already in water, although
-floating above the surface doesn't make you safe.
+This spell causes water around or under the target to violently swirl, dealing
+damage. It cannot be cast at those not already in water, although floating
+above the surface doesn't make you safe.
 %%%%
 Wind Blast spell
 
-This spell causes a strong gust of wind to push away creatures and clouds
-in a cone.
+This spell causes a strong gust of wind to push away creatures and clouds in a
+cone.
 %%%%
 Word of Recall spell
 
-This spell teleports a bunch of allies from somewhere on the same dungeon
-level near the caster. The casting time is longer than usual.
+This spell teleports a bunch of allies from somewhere on the same dungeon level
+near the caster. The casting time is longer than usual.
 %%%%
