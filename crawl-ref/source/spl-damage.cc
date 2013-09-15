@@ -2411,7 +2411,7 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int m
 
     int num_targets = 0;
     vector<bolt> beams;
-    int range2 = dist_range(6);
+    int range2 = dist_range(range);
 
     bolt base_beam;
 
