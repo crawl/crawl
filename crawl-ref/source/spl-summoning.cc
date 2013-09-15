@@ -209,6 +209,18 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     if (_snakable_weapon(wpn))
     {
+        if (wpn.inscription.find("+S") == string::npos)
+        {
+            // Don't let the player accidentally snake an unstackable stick.
+            const string prompt = "Really turn " + wpn.name(DESC_YOUR)
+                                + " into a snake?";
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return SPRET_ABORT;
+            }
+        }
+
         fail_check();
         // Upsizing Snakes to Water Moccasins as the base class for using
         // the really big sticks (so bonus applies really only to trolls
