@@ -206,8 +206,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             }
         }
     }
-
-    if (_snakable_weapon(wpn))
+    else if (_snakable_weapon(wpn))
     {
         if (wpn.inscription.find("+S") == string::npos)
         {
@@ -250,6 +249,11 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             count++;
             snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
+    }
+    else
+    {
+        mpr(abort_msg);
+        return SPRET_ABORT;
     }
 
     if (!count)
