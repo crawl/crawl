@@ -408,7 +408,7 @@ Summon Demon spell
 “'Tis now the very witching time of night,
  When churchyards yawn and hell itself breathes out
  Contagion to this world.”
-    -William Shakespeare, “The Tragedy of Hamlet, Prince of Denmark”, A3-2
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 2.
 %%%%
 Tartarus
 
@@ -624,7 +624,7 @@ bat
 
 “Ere the bat hath flown
  His cloister'd flight.”
-    -William Shakespeare, Macbeth (1605), Act III, scene 2, line 40.
+    -William Shakespeare, _Macbeth_, III, 2, line 40. 1605.
 %%%%
 battleaxe
 
@@ -3022,7 +3022,7 @@ vampire bat
 
 “For something is amiss and out of place
  When mice with wings can wear a human face.”
-    -Theadore Roethke, “The Bat”
+    -Theodore Roethke, “The Bat”. 1938.
 %%%%
 vapour
 
