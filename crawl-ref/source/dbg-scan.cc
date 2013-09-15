@@ -489,8 +489,8 @@ void debug_mons_scan()
             {
                 mprf(MSGCH_ERROR, "Error: constricting[%s(mindex=%d mid=%d)] "
                                   "entry missing for monster %s(mindex=%d mid=%d)",
-                     h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid,
-                     m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid);
+                     m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid,
+                     h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid);
             }
         }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
