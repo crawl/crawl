@@ -41,6 +41,7 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
+#include "version.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -1124,7 +1125,8 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     const bool exploding    = (ammo_brand == SPMSL_EXPLODING);
     const bool penetrating  = (bow_brand  == SPWPN_PENETRATION
                                 || ammo_brand == SPMSL_PENETRATION
-                                || (item.base_type == OBJ_MISSILES
+                                || (Version::ReleaseType == VER_ALPHA
+                                    && item.base_type == OBJ_MISSILES
                                     && item.sub_type == MI_LARGE_ROCK));
     const bool silver       = (ammo_brand == SPMSL_SILVER);
     const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
