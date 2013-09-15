@@ -155,6 +155,12 @@ static void _print_character_info(const newgame_def* ng)
 // Determines if a species is a valid choice for a new game.
 static bool _is_species_valid_choice(species_type species)
 {
+    if ((species == SP_LAVA_ORC || species == SP_DJINNI)
+        && Version::ReleaseType != VER_ALPHA)
+    {
+        return false;
+    }
+
     // Non-base draconians cannot be selected either.
     return is_valid_species(species)
         && !(species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN);
