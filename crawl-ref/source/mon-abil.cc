@@ -1397,14 +1397,15 @@ static bool _moth_polymorph(const monster* mon)
     return false;
 }
 
-static bool _moth_incite_monsters(const monster* mon)
+static bool _moth_incite_monsters(monster* mon)
 {
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
         return false;
 
+    // Only things both in LOS of the moth and within radius 4.
+    const int radius_sq = 4 * 4 + 1;
     int goaded = 0;
-    circle_def c(mon->pos(), 4, C_ROUND);
-    for (monster_iterator mi(&c); mi; ++mi)
+    for (monster_iterator mi(mon->get_los_no_trans()); mi; ++mi)
     {
         if (*mi == mon || !mi->needs_berserk())
             continue;
@@ -1414,6 +1415,9 @@ static bool _moth_incite_monsters(const monster* mon)
 
         // Cannot goad other moths of wrath!
         if (mi->type == MONS_MOTH_OF_WRATH)
+            continue;
+
+        if (distance2(mon->pos(), (*mi)->pos()) > radius_sq)
             continue;
 
         if (_make_monster_angry(mon, *mi) && !one_chance_in(3 * ++goaded))
