@@ -66,12 +66,14 @@ void initialise_branch_depths()
 
     // You will get one of Shoals/Swamp and one of Spider/Snake.
     // This way you get one "water" branch and one "poison" branch.
-    const branch_type disabled_branch[] =
+    branch_type disabled_branch[] =
     {
         random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
         random_choose(BRANCH_SNAKE_PIT, BRANCH_SPIDER_NEST, -1),
         random_choose(BRANCH_CRYPT, BRANCH_FOREST, -1),
     };
+    if (Version::ReleaseType != VER_ALPHA)
+        disabled_branch[2] = BRANCH_FOREST;
 
     for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
     {
