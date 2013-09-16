@@ -2311,9 +2311,7 @@ int player_movement_speed(bool ignore_burden)
 
     // Swiftness doesn't work in liquid.
     if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_liquid())
-    {
         mv -= 2;
-    }
 
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 5;
