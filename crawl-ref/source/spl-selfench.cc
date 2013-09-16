@@ -214,7 +214,7 @@ spret_type cast_swiftness(int power, bool fail)
     // you're flying, for instance.
     you.increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
                           you.in_liquid()
-                              ? "You feel like you could be more quick."
+                              ? "You feel like you could be quicker."
                               : "You feel quick.");
     did_god_conduct(DID_HASTY, 8, true);
 
