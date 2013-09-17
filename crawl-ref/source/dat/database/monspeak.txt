@@ -6170,7 +6170,7 @@ VISUAL:@The_monster@ smiles without lips.
 
 @The_monster@ shouts @at_foe@, "Death awaits you!"
 
-@The_monster@ says @to_foe@, "Everyone has to die one time, and your time is now."
+@The_monster@ says @to_foe@, "Everyone has to die sometime, and your time is now."
 
 VISUAL:@The_monster@ draws a finger across @possessive@ throat.
 
