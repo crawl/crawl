@@ -675,8 +675,8 @@ DAM:      -3
 STEALTH:  60
 BOOL:     seeinv, fog
 
-NAME:    shield "Bullseye"
-OBJ:     OBJ_ARMOUR/ARM_SHIELD
+NAME:    large shield "Bullseye"
+OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
@@ -881,7 +881,6 @@ PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
 TILE_EQ:  shield_gong
-BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
 BOOL:     elec, life
 
