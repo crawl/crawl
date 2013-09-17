@@ -1952,10 +1952,10 @@ static bool _should_recall(monster* caller)
         return false;
 }
 
-void mons_word_of_recall(monster* mons)
+unsigned short mons_word_of_recall(monster* mons)
 {
-    int num_recalled = 0;
-    int recall_target = 3 + random2(5);
+    unsigned short num_recalled = 0;
+    unsigned short recall_target = 3 + random2(5);
     vector<monster* > mon_list;
 
     // Build the list of recallable monsters and randomize
@@ -1969,23 +1969,29 @@ void mons_word_of_recall(monster* mons)
             continue;
 
         // Don't recall things that are already close to us
-        if (mons->can_see(*mi))
+        if ((mons && mons->can_see(*mi))
+            || (!mons && you.can_see(*mi)))
+        {
             continue;
+        }
 
         mon_list.push_back(*mi);
     }
     shuffle_array(mon_list);
 
+    coord_def target   = (mons) ? mons->pos() : you.pos();
+    unsigned short foe = (mons) ? mons->foe   : MHITYOU;
+
     // Now actually recall things
     for (unsigned int i = 0; i < mon_list.size(); ++i)
     {
         coord_def empty;
-        if (find_habitable_spot_near(mons->pos(), mons_base_type(mon_list[i]),
+        if (find_habitable_spot_near(target, mons_base_type(mon_list[i]),
                                      3, false, empty)
             && mon_list[i]->move_to_pos(empty))
         {
             mon_list[i]->behaviour = BEH_SEEK;
-            mon_list[i]->foe = mons->foe;
+            mon_list[i]->foe = foe;
             ++num_recalled;
             simple_monster_message(mon_list[i], " is recalled.");
         }
@@ -1993,6 +1999,7 @@ void mons_word_of_recall(monster* mons)
         if (num_recalled == recall_target)
             break;
     }
+    return num_recalled;
 }
 
 static bool _valid_vine_spot(coord_def p)
