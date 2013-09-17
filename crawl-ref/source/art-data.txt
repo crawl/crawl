@@ -604,6 +604,7 @@ TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
 
+# TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
 TYPE:     knife
@@ -611,7 +612,7 @@ PLUS:     +27/-1
 COLOUR:   LIGHTCYAN
 TILE:     urand_knife_of_accuracy
 TILE_EQ:  knife_of_accuracy
-BOOL:     tilerim
+BOOL:     tilerim, nogen
 
 # A play on the spell of the same name.  Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
@@ -726,6 +727,7 @@ TILE_EQ:  red
 EV:       4
 BOOL:     fly
 
+# TAG_MAJOR_VERSION == 34
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
@@ -735,7 +737,7 @@ TILE:     urand_assassin
 TILE_EQ:  middle_gray
 DEX:      3
 STEALTH:  80
-BOOL:     inv
+BOOL:     inv, nogen
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
