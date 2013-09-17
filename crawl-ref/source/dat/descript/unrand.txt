@@ -222,6 +222,7 @@ whip "Snakebite"
 A double-ended whip made from the cured hides of the Lair of Beasts' deadly
 black mambas.
 %%%%
+# TAG_MAJOR_VERSION == 34
 knife of Accuracy
 
 It is almost unerringly accurate.
@@ -276,6 +277,7 @@ cloak of Flash
 
 A vibrating cloak.
 %%%%
+# TAG_MAJOR_VERSION == 34
 boots of the Assassin
 
 Some soft boots, specially designed by the Assassin's Guild.
