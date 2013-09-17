@@ -818,6 +818,9 @@ bool mons_speaks_msg(monster* mons, const string &msg,
 
     bool noticed = false;       // Any messages actually printed?
 
+    if (mons->has_ench(ENCH_MUTE))
+        silence = true;
+
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
         string line = lines[i];
