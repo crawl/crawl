@@ -561,13 +561,18 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_BOOKS:
+        if (item.sub_type == BOOK_MANUAL)
+        {
+            item.colour = WHITE;
+            break;
+        }
         switch (item.special % NDSC_BOOK_PRI)
         {
         case 0:
         case 1:
         default:
             do item.colour = random_colour();
-                while (item.colour == DARKGREY);
+                while (item.colour == DARKGREY || item.colour == WHITE);
             break;
         case 2:
             item.colour = BROWN;
