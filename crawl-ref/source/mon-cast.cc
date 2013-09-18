@@ -1952,10 +1952,9 @@ static bool _should_recall(monster* caller)
         return false;
 }
 
-unsigned short mons_word_of_recall(monster* mons)
+unsigned short mons_word_of_recall(monster* mons, unsigned short recall_target)
 {
     unsigned short num_recalled = 0;
-    unsigned short recall_target = 3 + random2(5);
     vector<monster* > mon_list;
 
     // Build the list of recallable monsters and randomize
