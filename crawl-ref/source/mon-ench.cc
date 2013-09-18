@@ -1750,7 +1750,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
         if (decay_enchantment(me))
-            mons_word_of_recall(this);
+            mons_word_of_recall(this, 3 + random2(5));
         break;
 
     case ENCH_INJURY_BOND:
