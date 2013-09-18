@@ -1060,8 +1060,8 @@ This creature can emit and throw a ball of hot steam towards an enemy.
 %%%%
 Sticks to Snakes spell
 
-This spell uses wooden items in the caster's grasp as raw material for a
-powerful transmutation. Note that magical artefacts will not be affected.
+This spell uses wooden missiles (arrows or javelins) in the caster's grasp as
+raw material for a powerful transmutation.
 %%%%
 Sticky Flame Range spell
 
