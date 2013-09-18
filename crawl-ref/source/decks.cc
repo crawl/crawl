@@ -3126,13 +3126,10 @@ colour_t deck_rarity_to_colour(deck_rarity_type rarity)
     switch (rarity)
     {
     case DECK_RARITY_COMMON:
-    {
-        const colour_t colours[] = {LIGHTBLUE, GREEN, CYAN, RED};
-        return RANDOM_ELEMENT(colours);
-    }
+        return GREEN;
 
     case DECK_RARITY_RARE:
-        return coinflip() ? MAGENTA : BROWN;
+        return MAGENTA;
 
     case DECK_RARITY_LEGENDARY:
         return LIGHTMAGENTA;

@@ -600,29 +600,48 @@ void item_colour(item_def &item)
 
         switch (item.sub_type)
         {
+        case MISC_LANTERN_OF_SHADOWS:
+            item.colour = BLUE;
+            break;
+
+        // GREEN is for plain decks
+
+        case MISC_FAN_OF_GALES:
+            item.colour = CYAN;
+            break;
+
         case MISC_BOTTLED_EFREET:
+            item.colour = RED;
+            break;
+
+        // MAGENTA is for ornate decks
+
         case MISC_STONE_OF_TREMORS:
             item.colour = BROWN;
             break;
 
-        case MISC_FAN_OF_GALES:
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
         case MISC_DISC_OF_STORMS:
-        case MISC_HORN_OF_GERYON:
-        case MISC_LANTERN_OF_SHADOWS:
             item.colour = LIGHTGREY;
+            break;
+
+        case MISC_PHIAL_OF_FLOODS:
+            item.colour = LIGHTBLUE;
+            break;
+
+        case MISC_BOX_OF_BEASTS:
+            item.colour = LIGHTGREEN; // ugh, but we're out of other options
+            break;
+
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
+            item.colour = LIGHTCYAN;
+            break;
+
+        case MISC_HORN_OF_GERYON:
+            item.colour = LIGHTRED;
             break;
 
         case MISC_LAMP_OF_FIRE:
             item.colour = YELLOW;
-            break;
-
-        case MISC_PHIAL_OF_FLOODS:
-            item.colour = CYAN;
-            break;
-
-        case MISC_BOX_OF_BEASTS:
-            item.colour = BLUE;
             break;
 
         case MISC_SACK_OF_SPIDERS:
