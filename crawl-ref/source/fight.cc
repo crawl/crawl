@@ -16,6 +16,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "env.h"
+#include "fineff.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -142,7 +143,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
 
         // Monster went away?
-        if (!defender->alive() || defender->pos() != pos)
+        if (!defender->alive()
+            || defender->pos() != pos
+            || defender->is_banished())
         {
             if (attacker == defender
                || !attacker->as_monster()->has_multitargetting())
@@ -192,6 +195,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             effective_attack_number = melee_attk.effective_attack_number;
         else if (did_hit && !(*did_hit))
             *did_hit = melee_attk.did_hit;
+
+        fire_final_effects();
     }
 
     // A spectral weapon attacks whenever the player does
