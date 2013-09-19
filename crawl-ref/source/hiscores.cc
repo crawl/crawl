@@ -2083,7 +2083,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN)
+        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN || race == SP_GARGOYLE)
             desc += "Forgot to exist";
         else
             desc += "Forgot to breathe";
