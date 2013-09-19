@@ -5388,3 +5388,71 @@ xx..xxx...xxxxxxx...xxx..xx
       xxx.........xxx
         xxxxx@xxxxx
 ENDMAP
+
+NAME:    grunt_bruiser_brothers
+ORIENT:  centre
+TAGS:    transparent no_monster_gen no_item_gen
+DEPTH:   D:24-26, Geh, !Geh:$
+# Spell set is Hell Knight II; it has the more powerful ranged spell.
+MONS:    hell knight spells:pain;bolt_of_fire;.;.;.;blink
+: if you.branch() == "D" then
+MONS:    deep troll
+: else
+# hell beast perm_ench:invis is too gimmicky.
+# Fortunately, we have a permanently invisible 2 already.
+MONS:    lorocyproca
+: end
+ITEM:    crossbow, bolt, potion of curing, potion of heal wounds
+ITEM:    potion of invisibility
+KFEAT:   - = open_door
+SHUFFLE: })]>
+MARKER:  O = lua:fog_machine { cloud_type = 'flame', pow_min=10, pow_max=10, \
+                               delay=10, size=1, excl_rad=0 }
+MAP
+             cccc
+             c})c
+             c]>c
+             c..c
+             c..c
+             c..c
+             c++c
+             c..c
+             c2gc
+            cc2ecc
+            cc..cc
+            c....c
+            c....c
+           cc....cc
+           c......c
+          cc......cc
+ccccccccccc........ccccccccccc
+c.h........................g.c
+cc..e....................e2.cc
+ cc....2................2..cc
+  ccc.2..................ccc
+    cc.....ccc..ccc.....cc
+     ccc...c1c..c1c...ccc
+       cc..c-c..c-c..cc
+        c............c
+       cc............cc
+       c..............c
+       c..............c
+      cc......++......cc
+      c......c++c......c
+      c....ccc..ccc....c
+     cce2.cc c..c cc.2ecc
+     cf2.cc  c..c  cc.2dc
+     c.ccc   c..c   ccc.c
+     ccc     c..c     ccc
+             c..c
+             c..c
+             c..c
+            cc..cc
+           ccO..Occ
+           c......c
+           c......c
+           cc....cc
+            cc..cc
+             c++c
+              @@
+ENDMAP
