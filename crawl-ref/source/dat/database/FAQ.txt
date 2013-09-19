@@ -256,7 +256,7 @@ A hint: They cannot see invisible.
 %%%%
 Q:randart
 
-What do the terms "randart", "unrandart" and "egoitem" signify?
+What do the terms "randart" and "unrandart" signify?
 %%%%
 A:randart
 
@@ -266,9 +266,7 @@ A: Apart from the standard items you'll find lying around in the dungeon, you mi
 
 * unrandart: an artefact that looks like a randart but is really predefined. While a few (formerly known as "fixed artefacts") have special hardcoded effects, for most there's no further difference except that you may recognize them from previous games. In addition, most unrandarts come pre-identified.
 
-Neither of these types can be enchanted or branded, either temporarily or permanently. There is another type of special item that pops up a bit more frequently:
-
-* egoitem: these are ordinary items with one special property. For example, a short sword of venom, a cap of see invisible, or boots of running. These can be affected by enchanting scrolls and also by corrosion and acids. Weapons of this type are branded, and only divine intervention can change the brand.
+Neither of these types can be enchanted or branded, either temporarily or permanently, nor can they be corroded by acid.
 %%%%
 Q:interact
 
