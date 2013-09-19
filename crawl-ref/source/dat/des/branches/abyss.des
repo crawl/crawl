@@ -1361,6 +1361,62 @@ MAP
     .......
 ENDMAP
 
+####
+NAME: nicolae_abyss_rune_more_like_crabyss
+TAGS: abyss_rune transparent
+SHUFFLE: O1/01/Pw
+KITEM: OP = abyssal rune of Zot
+KMONS: O = apocalypse crab / nothing
+KMONS: 1P = apocalypse crab
+KMONS: 2 = fire crab
+KFEAT: O1Pw = W
+MAP
+  ...........
+  .cc.....cc.
+....c.ccc.c....
+.ccccccOcccccc.
+...ccWWWWWcc...
+.ccc1WWWWW1ccc.
+...cWWWWWWWc...
+.cccccWWWccccc.
+....cc...cc....
+ ..cc.....cc..
+ ..c.......c..
+ .ccc.....ccc.
+ .c2.......2c.
+ .ccc.....ccc.
+ .............
+ENDMAP
+
+
+NAME: nicolae_abyss_rune_star_stuff
+TAGS: abyss_rune no_monster_gen
+NSUBST: s = 2:1 / 2:2 / 2:3
+SHUFFLE: AaBbDdEeFf/BbDdEeFfAa/DdEeFfAaBb/EeFfAaBbDd/FfAaBbDdEe
+NSUBST: FAB : 1:O / *:.
+SUBST: a = +, DE = ., bdef = c
+KITEM: O = abyssal rune of zot
+KMONS: 1 = starcursed mass
+KMONS: 2 = wretched star
+KMONS: 3 = tentacled starspawn
+SUBST: c = cccxbv
+MAP
+      ccc
+    cccBccc
+   ec..s..cf
+ ccc...c...ccc
+cc....c.c....cc
+cA...........Dc
+c..sc.....cs..c
+cc..c..s..c..cc
+ d...........a
+ c...c...c...c
+ cc..cc.cc..cc
+  c.s.....s.c
+  cF.......Ec
+  cccccbccccc
+ENDMAP
+
 ###############################################################################
 # abyss exit vaults
 # Note from HangedMan: Don't tag your abyss exit with allow_dup unless

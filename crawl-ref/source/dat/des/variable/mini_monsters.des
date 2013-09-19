@@ -380,6 +380,28 @@ MAP
   ..'.C.1.C.'..      ...'
 ENDMAP
 
+NAME: nicolae_looking_at_the_future
+DEPTH: D:8-16, Spider
+TAGS: no_monster_gen no_trap_gen
+NSUBST: b = B / bb.
+KMONS: B = patrolling queen bee
+KMONS: b = patrolling killer bee
+KMONS: p = plant
+MAP
+xxxxx++xxxxx
+xp........px
+xpb.pb.pb.px
+xp..p..p..px
+xp.bp.bp.bpx
+xp..p..p..px
+xpb.pb.pb.px
+xp..p..p..px
+xp.bp.bp.bpx
+xp..p..p..px
+xpb..b..b.px
+xxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Vertebrae
@@ -4883,6 +4905,45 @@ xx8ACC888xx8CAA.ACC8888CCA8xx
    xxx||||x ..CCAAA....xxx
      xxxxxx  ..CCCC.
               .....@
+ENDMAP
+
+NAME: nicolae_tainted_love
+DEPTH: D:14-24, Crypt
+TAGS: no_monster_gen no_pool_fixup
+KMONS: 1 = siren
+KMONS: 2 = plague shambler
+MAP
+xxxxxxxxxxxxxx
+x..2..xxxxxxxx
+xWww.....x...x
+xW1w2....=...+
+xWww.....x...x
+x..2..xxxxxxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
+
+NAME: nicolae_the_rest_of_me
+DEPTH: D:12-24
+TAGS: no_monster_gen no_item_gen
+KPROP: 1' = no_rtele_into
+KITEM: 1 = superb_item / star_item
+KITEM: 2 = star_item / any good_item
+KMONS: 1 = 8 zombie
+KMONS: 8 = 8
+KFEAT: 8 = >
+MAP
+...........
+.vvvvmvvvv.
+.v1'v2v'1v.
+.v'nv.vn'v.
+.vvv.v.vvv.
+.m2.v8v.2m.
+.vvv.v.vvv.
+.v'nv.vn'v.
+.v1'v2v'1v.
+.vvvvmvvvv.
+...........
 ENDMAP
 
 ################################################################

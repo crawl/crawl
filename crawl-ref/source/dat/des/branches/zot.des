@@ -2434,6 +2434,57 @@ xxxx.....xxx...xxx.....xxxx
 xxxxxxxxxxx@@@@@xxxxxxxxxxx
 ENDMAP
 
+NAME: nicolae_zot_crop_circle
+DEPTH: Zot, !Zot:1
+TAGS: no_monster_gen transparent
+SHUFFLE: {[(
+NSUBST: p = 8:1 / *:2
+KMONS: 1 = plant
+KMONS: 2 = death cob
+MAP
+   ..@..
+  .......
+ ...ppp...
+...p...p...
+..p.....p..
+@.p..{..p.@
+..p.....p..
+...p...p...
+ ...ppp...
+  .......
+   ..@..
+ENDMAP
+
+
+NAME: nicolae_zot_stationary_front
+DEPTH: Zot
+ORIENT: float
+TAGS: transparent no_pool_fixup patrolling
+SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
+SUBST: GP = x, g = r, p = c, HQ = @, hq = .
+COLOUR: r = red, c = blue
+KMONS: R = nonbase red draconian
+KMONS: C = nonbase white draconian
+KMONS: D = dragon
+KMONS: I = ice dragon
+KFEAT: r = c
+MAP
+    xxx                   xxx
+   xxrxx                 xxrxx
+  xxrrrxx               xxrrrxx
+ xxrrlrrxx             xxrrlrrxx
+xxrrlllrrxx           xxrrlllrrxx
+xrrllDllrrxxxxxxPxxxxxxrrllDllrrxxxxxxPxxxxx
+rrll...llrrcccccpcccccrrll...llrrcccccpccccc
+@....R..........C..........R..........C....@
+rrrrrgrrrrrccw.....wccrrrrrgrrrrrccw.....wcc
+xxxxxGxxxxxxcww...wwcxxxxxxGxxxxxxcww...wwcx
+           xccwwIwwccx           xccwwIwwccx
+           xxccwwwccxx           xxccwwwccxx
+            xxcccccxx             xxcccccxx
+             xxxxxxx               xxxxxxx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

@@ -956,6 +956,66 @@ eE.....T....TtT...Ee
        eeeeewttt
 ENDMAP
 
+NAME: nicolae_swamp_dragon_and_kin
+DEPTH: Swamp
+TAGS: patrolling transparent mini_float
+SUBST: T = t., B = tt_
+NSUBST: d = D / d
+KMONS: D = swamp dragon
+KMONS: d = swamp drake w:12 / nothing w:3
+KFEAT: t = mangrove
+MAP
+        BBBBBB
+      .TtttttBB
+   ....T..T.tttt
+  BTT....T.T.TTt
+ BBtttttT.TT....
+BBtttTTTT.TttT..
+BttTTT.T.TTTttT.
+BtTT.T..TT.TTtTT
+BtT.TdT..T..TttB
+BtTd.T..T.TTTTtB
+BtTT.T.T.Td.dTtB
+BttT..T.T.T.TTtB
+BttTTdT..dTTTttB
+BBttTTTTTTTtttBB
+ BBtttttttttBBB
+  BBBBBBBBBBB
+ENDMAP
+
+
+NAME: nicolae_swamp_hydra_murder_den
+DEPTH: Swamp
+TAGS: no_monster_gen mini_float
+: local heads = crawl.roll_dice(2, 3) + 7
+KPROP: ' = no_rtele_into
+SUBST: X = TTt, Z = T_
+NSUBST: ' = 1:h / 1:g / 2:c / 1:c' / 2:% / 2:%' / 5:p / 4:p' / *:'
+SUBST: ' = ....b
+KPROP: bc = bloody
+SUBST: b = ., . = ..W
+KFEAT: T = mangrove
+KMONS: p = plant
+: kmons( "h = " .. heads .. "-headed hydra patrolling" )
+KITEM: g = any weapon good_item / any armour good_item / any jewellery good_item
+: dgn.delayed_decay(_G, 'c', 'human corpse')
+CLEAR: _
+MAP
+   ZZZZZZ
+  ZZTTTTZZ
+ ZZTT''TT.Z
+ZZTT''''XX.
+ZTT''''''X.
+ZT'''''''t..
+ZT'''''''t.@
+ZT'''''''t..
+ZT''''''XX.
+ZTT'''''X..
+ZZTTT''TTZ
+ ZZZTTTTZZ
+   ZZZZZZ
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #
