@@ -2161,6 +2161,103 @@ MAP
      ...   ...
 ENDMAP
 
+NAME: nicolae_sextant
+DEPTH: D:5-
+TAGS: extra decor transparent
+SUBST: y : b m v X:60, X : xxc
+MAP
+xxxxxxxxxxxxxxX@@Xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxX..Xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxX..Xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxX..Xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxXX..XXxxxxxxxxxxxxx
+xxxxxxxxxxxxXX....XXxxxxxxxxxxxx
+xxxxxxxxxxxXX......XXxxxxxxxxxxx
+XXXXXXXXXXXX...yy...XXXXXXXXXXXX
+@......XXXXX..yyyy..XXXXX......@
+@......XXXXX..yyyy..XXXXX......@
+XXXXX..XXXXX...yy...XXXXX..XXXXX
+xxxxX..XXXXX........XXXXX..Xxxxx
+xxxxXX..XXX..........XXX..XXxxxx
+xxxxxX..XX...XXXXXX...XX..Xxxxxx
+xxxxxXX.....XXxxxxXX.....XXxxxxx
+xxxxxxXX...XXxxxxxxXX...XXxxxxxx
+xxxxxxxXX...XXxxxxXX...XXxxxxxxx
+xxxxxxxxXX...XXXXXX...XXxxxxxxxx
+xxxxxxxxxXX..........XXxxxxxxxxx
+xxxxxxxxxxXXX......XXXxxxxxxxxxx
+xxxxxxxxxxxxXXXXXXXXxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_twisting_strands
+DEPTH: D:10-, Elf
+TAGS: transparent extra decor
+SHUFFLE: '!/^;, cd/AB
+SUBST: '; : e., ! = x, ^ = ., x : x_, A = a, B = b
+SHUFFLE: abcde
+SUBST: a = v, d = m, e = x
+CLEAR: _
+MAP
+xxxxxxxx!'a.@.d'!xxxxxxxx
+xxxxxxxx!'a...d'!xxxxxxxx
+xxxxxxxx!'.a.d.'!xxxxxxxx
+xxxxxxxx!'..a..'!xxxxxxxx
+xxxxxxxx!'.d.a.'!xxxxxxxx
+xxxxxxxx!'d...a'!xxxxxxxx
+xxxxxxxx!'d...a'!xxxxxxxx
+xxxxxxxx!'d...a'!xxxxxxxx
+!!!!!!!!!'.d.a.'!!!!!!!!!
+''''''''''..d..''''''''''
+aa...bbb...a.d...ccc...dd
+..a.b...b.a...d.c...c.d..
+@..b.....a.....c.....d..@
+..b.a...a.b...c.d...d.c..
+bb...aaa...b.c...ddd...cc
+''''''''''..b..''''''''''
+!!!!!!!!!'.c.b.'!!!!!!!!!
+xxxxxxxx!'c...b'!xxxxxxxx
+xxxxxxxx!'c...b'!xxxxxxxx
+xxxxxxxx!'c...b'!xxxxxxxx
+xxxxxxxx!'.c.b.'!xxxxxxxx
+xxxxxxxx!'..c..'!xxxxxxxx
+xxxxxxxx!'.b.c.'!xxxxxxxx
+xxxxxxxx!'b...c'!xxxxxxxx
+xxxxxxxx!'b.@.c'!xxxxxxxx
+ENDMAP
+
+NAME: nicolae_wwwww
+DEPTH: D:8-, Elf
+TAGS: decor extra transparent
+SUBST: b : bcvmx
+MAP
+      .............
+     ....b.....b....
+    ....bb.....bb....
+   ..b.bb..b.b..bb.b..
+  ..bb....bb.bb....bb..
+ ..bb..b.bb...bb.b..bb..
+......bb.........bb......
+...b.bb..b.....b..bb.b...
+..bb....bb.....bb....bb..
+.bb..b.bb..b.b..bb.b..bb.
+....bb....bb.bb....bb....
+...bb....bb...bb....bb...
+.........................
+...bb....bb...bb....bb...
+....bb....bb.bb....bb....
+.bb..b.bb..b.b..bb.b..bb.
+..bb....bb.....bb....bb..
+...b.bb..b.....b..bb.b...
+......bb.........bb......
+ ..bb..b.bb...bb.b..bb..
+  ..bb....bb.bb....bb..
+   ..b.bb..b.b..bb.b..
+    ....bb.....bb....
+     ....b.....b....
+      .............
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2663,6 +2760,99 @@ MAP
 ..xxaaaxx..
 ..x..G..x..
 ...........
+ENDMAP
+
+NAME: nicolae_benzene_ring
+DEPTH: D:6-
+NSUBST: d = d / .
+ITEM: any ring
+TAGS: transparent mini_float extra decor
+MAP
+ xxxxxxxxxx...xxxxxxxxxx
+ xxxxxxxx...x...xxxxxxxx
+ xxxxxx...xxxxx...xxxxxx
+ xxxx.d.x...xxxxx...xxxx
+ xx...xxxxx...xxxxx...xx
+ ...x.xxxxxxx...xxxxx...
+x.xxx.xxxxxxxxxd..xxxxx.x
+x.xxx.xxxxxxxxxxx...xxx.x
+x.xxx.xxxxxxxxxxxxx...x.x
+x.xxx.xxxxxxxxxxxxxxx...x
+x.xxx.xxxxxxxxxxxxxxxxx.x
+x.xxxdxxxxxxxxxxxxxxxxxdx
+x.xxx.xxxxxxxxxxxxxxxxx.x
+x.xxx.xxxxxxxxxxxxxxx...x
+x.xxx.xxxxxxxxxxxxx...x.x
+x.xxx.xxxxxxxxxxx...xxx.x
+x.xxx.xxxxxxxxxd..xxxxx.x
+ ...x.xxxxxxx...xxxxx...
+ xx...xxxxx...xxxxx...xx
+ xxxx.d.x...xxxxx...xxxx
+ xxxxxx...xxxxx...xxxxxx
+ xxxxxxxx...x...xxxxxxxx
+ xxxxxxxxxx...xxxxxxxxxx
+ENDMAP
+
+NAME: nicolae_straight_to_the_point
+DEPTH: D:8-16
+TAGS: no_item_gen
+KITEM: >i = any / any good_item / star_item w:1 / $ / $ good_item w:1
+KFEAT: > = >
+NSUBST: a = @ / .
+CLEAR: _
+MAP
+@........           ........@
+..c......           ......c..
+.ccc...c.           .c...ccc.
+..ccc.cc.           .cc.ccc..
+...ccccc.           .ccccc...
+....cccc.           .cccc....
+...ccccc.           .ccccc...
+..cccccc.           .cccccc..
+.........           .........
+         _
+          _
+           ..aaa..
+           .cxxxc.
+           .xiiix.
+           .xi>ix.
+           .xiiix.
+           .cxxxc.
+           .......
+                  _
+                   _
+.........           .........
+..cccccc.           .cccccc..
+...ccccc.           .ccccc...
+....cccc.           .cccc....
+...ccccc.           .ccccc...
+..ccc.cc.           .cc.ccc..
+.ccc...c.           .c...ccc.
+..c......           ......c..
+@........           ........@
+ENDMAP
+
+NAME: nicolae_zen_rock_garden
+TAGS: no_monster_gen no_trap_gen no_item_gen extra decor
+DEPTH: D:4-12
+SUBST: Q = TPW, T = tP, P = p'', Y = W', Z = tW, ' = ':13 r:1
+FTILE: tp'r = floor_sand
+KMONS: p = plant
+KITEM: r = stone q:1 / large rock q:1 w:5
+KITEM: s = pair of boots
+KFEAT: ' = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xtttttttttttT''x.....x
+xttTTTttttTT'''+.....x
+xtTPPPTTTT''''Px.....x
+xtTP''''''''PTTxxx+xxx
+xtTP'''''''PTttxx...xx
+xtTP'''PP'''Tttxxx+xxx
+xttTPPPTTP'''QZx....sx
+xtttTTTttTP''WWx.....+
+xttttttttttZWWWx.....x
+xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################################################

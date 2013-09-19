@@ -227,22 +227,26 @@ ENDMAP
 
 NAME: nicolae_slime_entry_slimehenge
 TAGS: slime_entry transparent
+NSUBST: A = . / A, B = . / B, C = . / C
 SHUFFLE: ABCD
 SUBST: A = x, BCD = .
 KFEAT: O = enter_slime_pits
 KMONS: 1 = ooze / jelly / nothing
+KFEAT: x = slimy_wall
 MAP
-  .......
- ...DAD...
-..A.CBC.A..
-...B.1.B...
-.DC.1.1.CD.
-.AB1.O.1BA.
-.DC.1.1.CD.
-...B.1.B...
-..A.CBC.A..
- ...DAD...
-  .......
+  .........
+ ...........
+.....DAD.....
+...A.CBC.A...
+....B.1.B....
+..DC.1.1.CD..
+..AB1.O.1BA..
+..DC.1.1.CD..
+....B.1.B....
+...A.CBC.A...
+.....DAD.....
+ ...........
+  .........
 ENDMAP
 
 NAME: nicolae_slime_entry_wandering_lumps
@@ -483,6 +487,102 @@ xxxXX.....1.@
  xxxxXXX..1@
    xxxxxxxx
       xxx
+ENDMAP
+
+NAME: nicolae_slime_phagocytosis
+DEPTH: Slime
+TAGS: transparent
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = WX, ' = ._
+NSUBST: W = 4:1 / *:W
+KMONS: 1 = giant amoeba
+KFEAT: 1 = W
+CLEAR: _
+MAP
+       '.......'
+      '..........'
+    '.....................'
+ '........ee...............'
+'........exxe...............'
+.......eexxxxeee.xxxxxxx.....'
+....ddxxxxxxxxxxxxxxxxxxx.....
+@..dxxxxxXXXXxxxxx.....xxx....
+@..dxxxxXWWWWXx.........xxx...
+@...ddxxXWWWW............xx...
+@.....cxXWWWW....{..x....x....
+@.....cxXWWWWXx.....xx........
+'....cxxxXXXXxxx...xxx.......'
+ ...cxxxxxxxxxxxxxxxx.......'
+ ...cxxxxabxxxxxxxxx.......
+ ....axxa..bxxxb.........'
+ .....aa....bbb.........'
+ '....................'
+  '...............'
+   ''...........''
+ENDMAP
+
+NAME: nicolae_slime_round_cave
+DEPTH: Slime, !Slime:1, !Slime:$
+TAGS: no_monster_gen
+SHUFFLE: {}/()/[]
+NSUBST: a = X / .
+SUBST: X = x., z = x_, 0 = 0009.., 9 = 9998
+CLEAR: _
+MAP
+       zzzzzzzzzzz
+     zzzXXXXXXXXXzzz
+    zzXXX.X.X.X.XXXzz
+   zzXX...........XXzz
+  zzXX...0..0..0...XXzz
+ zzXX..0............XXzz
+ zXX.....XXX.XXX..0..XXz
+zzX..0..XXxx.xxXX.....Xzz
+zXX....XXxxX.XxxXX....XXz
+zX..0.XXxxXX.XXxxXX.9..Xz
+zXX..aXxxXX...XxxxX...XXz
+zX....XxXX.............Xz
+zXX.{.......}....9..0.XXz
+zX....XxXX.............Xz
+zXX..aXxxXX...XxxxX...XXz
+zX..0.XXxxXX.XXxxXX.9..Xz
+zXX....XXxxX.XxxXX....XXz
+zzX..0..XXxx.xxXX.....Xzz
+ zXX.....XXX.XXX..0..XXz
+ zzXX..0............XXzz
+  zzXX...0..0..0...XXzz
+   zzXX...........XXzz
+    zzXXX.X.X.X.XXXzz
+     zzzXXXXXXXXXzzz
+       zzzzzzzzzzz
+ENDMAP
+
+NAME: nicolae_slime_ancient_tower_intersection
+DEPTH: Slime
+WEIGHT: 2
+TAGS: extra decor transparent
+SUBST: c = ccc., X = x_, V = V..
+CLEAR: _
+MAP
+  XXXX         XXXX
+ XXxxXX       XXxxXX
+XXxxxxxx@@@@@xxxxxxXX
+Xxxxx...........xxxxX
+Xxxx.............xxxX
+XXx...............xXX
+ Xx.....ccccc.....xX
+  x....cc...cc....x
+  @...cc.....cc...@
+  @...c..V.V..c...@
+  @...c.......+...@
+  @...c..V.V..c...@
+  @...cc.....cc...@
+  x....cc...cc....x
+ Xx.....ccccc.....xX
+XXx...............xXX
+Xxxx.............xxxX
+Xxxxx...........xxxxX
+XXxxxxxx@@@@@xxxxxxXX
+ XXxxXX       XXxxXX
+  XXXX         XXXX
 ENDMAP
 
 ################################################################################

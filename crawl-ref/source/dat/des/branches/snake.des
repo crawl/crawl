@@ -796,6 +796,26 @@ xx....xx..........xxx.........xxx.........xx...x
           xxxxxxx     xxxxxxx     xxxxxxx     xxxxx
 ENDMAP
 
+NAME: nicolae_snake_salamander_stairs
+DEPTH: Snake, !Snake:$
+: local level = you.depth() ; local weight = level * level
+KMONS: 1 = salamander
+SHUFFLE: ])}
+: kmons("2 = nothing w:21 / salamander w:" .. weight )
+NSUBST: l = 1 / 1:2 / 1:2l, a = 2:. / *:x, b = 2:. / *:x, c = @ / .
+SUBST: L = l.
+KPROP: 12l = no_cloud_gen
+KFEAT: 12 = l
+MAP
+ xxxxxxxxxx
+xxllllL.a.bc
+x.llllL.a.bc
+x]llllL.a.bc
+x.llllL.a.bc
+xxllllL.a.bc
+ xxxxxxxxxx
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################
