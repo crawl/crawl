@@ -6060,7 +6060,7 @@ flight_type player::flight_mode() const
 
 bool player::is_banished() const
 {
-    return (!alive() && banished);
+    return banished;
 }
 
 bool player::in_water() const
