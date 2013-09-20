@@ -4250,7 +4250,7 @@ int piety_rank(int piety)
 int piety_breakpoint(int i)
 {
     int breakpoints[MAX_GOD_ABILITIES + 1] = { 30, 50, 75, 100, 120, 160 };
-    if (i >= MAX_GOD_ABILITIES || i < 0)
+    if (i >= MAX_GOD_ABILITIES + 1 || i < 0)
         return 255;
     else
         return breakpoints[i];
