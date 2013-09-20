@@ -4167,14 +4167,14 @@ static const char *divine_title[NUM_GODS][8] =
 
 static int _piety_level(int piety)
 {
-    return (piety >  160) ? 7 :
-           (piety >= 120) ? 6 :
-           (piety >= 100) ? 5 :
-           (piety >=  75) ? 4 :
-           (piety >=  50) ? 3 :
-           (piety >=  30) ? 2 :
-           (piety >    0) ? 1
-                          : 0;
+    return (piety >= piety_breakpoint(5)) ? 7 :
+           (piety >= piety_breakpoint(4)) ? 6 :
+           (piety >= piety_breakpoint(3)) ? 5 :
+           (piety >= piety_breakpoint(2)) ? 4 :
+           (piety >= piety_breakpoint(1)) ? 3 :
+           (piety >= piety_breakpoint(0)) ? 2 :
+           (piety >                    0) ? 1
+                                          : 0;
 }
 
 string god_title(god_type which_god, species_type which_species, int piety)
