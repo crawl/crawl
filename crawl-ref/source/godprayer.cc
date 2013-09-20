@@ -68,13 +68,13 @@ string god_prayer_reaction()
     else
         result += " is ";
     result +=
-        (you.piety > 120) ? "exalted by your worship" :
-        (you.piety > 100) ? "extremely pleased with you" :
-        (you.piety >  75) ? "greatly pleased with you" :
-        (you.piety >  50) ? "most pleased with you" :
-        (you.piety >  30) ? "pleased with you" :
-        (you.piety >   5) ? "noncommittal"
-                          : "displeased";
+        (you.piety >= piety_breakpoint(5)) ? "exalted by your worship" :
+        (you.piety >= piety_breakpoint(4)) ? "extremely pleased with you" :
+        (you.piety >= piety_breakpoint(3)) ? "greatly pleased with you" :
+        (you.piety >= piety_breakpoint(2)) ? "most pleased with you" :
+        (you.piety >= piety_breakpoint(1)) ? "pleased with you" :
+        (you.piety >= piety_breakpoint(0)) ? "aware of your devotion"
+                                           : "noncommittal";
     result += ".";
 
     return result;
@@ -471,14 +471,14 @@ static bool _zin_donate_gold()
     {
         string result = "You feel that " + god_name(GOD_ZIN) + " will soon be ";
         result +=
-            (estimated_piety > 120) ? "exalted by your worship" :
-            (estimated_piety > 100) ? "extremely pleased with you" :
-            (estimated_piety >  75) ? "greatly pleased with you" :
-            (estimated_piety >  50) ? "most pleased with you" :
-            (estimated_piety >  30) ? "pleased with you" :
-            (estimated_piety >   5) ? "noncommittal"
-                                    : "displeased";
-        result += (donation >= 30 && you.piety <= 160) ? "!" : ".";
+            (estimated_piety >= piety_breakpoint(5)) ? "exalted by your worship" :
+            (estimated_piety >= piety_breakpoint(4)) ? "extremely pleased with you" :
+            (estimated_piety >= piety_breakpoint(3)) ? "greatly pleased with you" :
+            (estimated_piety >= piety_breakpoint(2)) ? "most pleased with you" :
+            (estimated_piety >= piety_breakpoint(1)) ? "pleased with you" :
+            (estimated_piety >= piety_breakpoint(0)) ? "aware of your devotion"
+                                                     : "noncommittal";
+        result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
 
         mpr(result.c_str());
     }
