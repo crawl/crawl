@@ -1121,7 +1121,8 @@ ring of fire
 
 This ring brings its wearer more in contact with the powers of fire. He or she
 gains resistance to heat and can use fire magic more effectively, but becomes
-less effective at the use of ice magic more vulnerable to the effects of cold.
+less effective at the use of ice magic and more vulnerable to the effects of
+cold.
 %%%%
 ring of hunger
 
