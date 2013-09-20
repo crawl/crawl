@@ -17,8 +17,11 @@ define(["jquery", "comm"], function ($, comm) {
     function receive_message(data)
     {
         var msg = data.content;
+        var histcon = $('#chat_history_container');
+        var atBottom = (histcon[0].scrollHeight - histcon.scrollTop() == histcon.outerHeight());
         $("#chat_history").append(msg + "<br>");
-        $("#chat_history_container").scrollTop($("#chat_history").height());
+        if (atBottom)
+            $('#chat_history_container').scrollTop($('#chat_history_container')[0].scrollHeight);
         if ($("#chat_body").css("display") === "none")
         {
             new_message_count++;
