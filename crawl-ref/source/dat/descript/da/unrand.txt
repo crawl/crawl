@@ -256,7 +256,7 @@ cloak of the Thief
 Den lader bæreren brillere i tyveriets kunst og kan udløse tykke røgskyer, når
 den vækkes, så det bliver lettere at tage flugten.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 Bare hvis du nu havde svært ved at blive ramt.
 %%%%

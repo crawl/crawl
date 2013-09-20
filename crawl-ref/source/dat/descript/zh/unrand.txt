@@ -226,7 +226,7 @@ cloak of the Thief
 
 它使穿戴者变得精通盗术。你也可以手动启动它，让它放出厚厚的烟云来掩护你逃跑。
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 如果你觉得自己被打中的次数还不够多，那你现在可找到救星了！
 %%%%

@@ -3,6 +3,26 @@ CMD_EXPLORE
 
 Autoudforsker det nuværende niveau
 %%%%
+CMD_EXPLORE verbose
+
+Lader din karakter rejse på autopilot mod uudforskede områder af det nuværende
+niveau og samle genstande, der er underlagt automatisk opsamling, undervejs.
+Rejsen stopper, så snart et fjendtligtsindet uhyrer kommer til syne, og når
+genstande og landmærker skal annonceres.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Rejs til fjerne niveauer
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Rejs automatisk til fjerne niveauer. Rejsen bliver afbrudt, hvis uhyrer kommer
+til syne.
+%%%%
+CMD_PRAY
+
+Bed til din gud
+%%%%
 CMD_DISPLAY_OVERMAP
 
 Viser oversigtskortet over de underjordiske gange

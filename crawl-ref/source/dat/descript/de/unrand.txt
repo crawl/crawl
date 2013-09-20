@@ -225,7 +225,7 @@ cloak of the Thief
 Es erlaubt seinem Träger, das Diebeshandwerk überragend auszuführen, und kann
 aktiviert werden, um dicke Rauchwolken zur schnellen Flucht auszustoßen.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 Nur für den Fall, dass du Probleme hattest, getroffen zu werden.
 %%%%
