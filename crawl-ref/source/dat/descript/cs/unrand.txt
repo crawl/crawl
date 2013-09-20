@@ -242,7 +242,7 @@ cloak of the Thief
 
 Umožňuje jeho nositeli, aby vynikl v umění krádeže.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 Jen kdybys náhodou měl problém se trefit.
 %%%%
