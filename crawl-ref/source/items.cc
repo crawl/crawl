@@ -907,8 +907,7 @@ void pickup_menu(int item_link)
                 int num_to_take = selected[i].quantity;
                 const bool take_all = (num_to_take == mitm[j].quantity);
                 iflags_t oldflags = mitm[j].flags;
-                mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED
-                                   | ISFLAG_NO_PICKUP);
+                clear_item_pickup_flags(mitm[j]);
                 int result = move_item_to_player(j, num_to_take);
 
                 // If we cleared any flags on the items, but the pickup was
@@ -1224,7 +1223,7 @@ bool pickup_single_item(int link, int qty)
         qty = item->quantity;
 
     iflags_t oldflags = item->flags;
-    item->flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
+    clear_item_pickup_flags(*item);
     int num = move_item_to_player(link, qty);
     if (item->defined())
         item->flags = oldflags;
@@ -1326,7 +1325,7 @@ void pickup(bool partial_quantity)
             {
                 int num_to_take = mitm[o].quantity;
                 const iflags_t old_flags(mitm[o].flags);
-                mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
+                clear_item_pickup_flags(mitm[o]);
                 int result = move_item_to_player(o, num_to_take);
 
                 if (result == 0 || result == -1)
@@ -1857,6 +1856,11 @@ void mark_items_non_visit_at(const coord_def &pos)
             mitm[item].flags |= ISFLAG_DROPPED;
         item = mitm[item].link;
     }
+}
+
+void clear_item_pickup_flags(item_def &item)
+{
+    item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
 }
 
 // Moves mitm[obj] to p... will modify the value of obj to
@@ -2891,7 +2895,7 @@ static void _do_autopickup()
             if ((iflags & ISFLAG_THROWN))
                 learned_something_new(HINT_AUTOPICKUP_THROWN);
 
-            mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
+            clear_item_pickup_flags(mitm[o]);
 
             const int result = move_item_to_player(o, num_to_take);
 

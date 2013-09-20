@@ -194,7 +194,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
         item.flags |= ISFLAG_DROPPED;
     }
     else if (you.species != SP_VAMPIRE)
-        item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
+        clear_item_pickup_flags(item);
 
     // Happens after the corpse has been butchered.
     if (make_hide)
@@ -929,7 +929,7 @@ void turn_corpse_into_blood_potions(item_def &item)
     item.base_type = OBJ_POTIONS;
     item.sub_type  = POT_BLOOD;
     item_colour(item);
-    item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
+    clear_item_pickup_flags(item);
 
     item.quantity = num_blood_potions_from_corpse(mons_class);
 
