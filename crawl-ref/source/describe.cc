@@ -2839,7 +2839,9 @@ static int _get_spell_description(const spell_type spell,
                        + " creatures summoned by this spell.";
     }
 
-    if (god_hates_spell(spell, you.religion))
+    bool rod = item && item->base_type == OBJ_RODS;
+
+    if (god_hates_spell(spell, you.religion, rod))
     {
         description += uppercase_first(god_name(you.religion))
                        + " frowns upon the use of this spell.\n";
@@ -2859,7 +2861,6 @@ static int _get_spell_description(const spell_type spell,
     if (spell_is_useless(spell))
         description += "This spell will have no effect right now.\n";
 
-    bool rod = item && item->base_type == OBJ_RODS;
     _append_spell_stats(spell, description, rod);
 
     if (crawl_state.player_is_dead())
