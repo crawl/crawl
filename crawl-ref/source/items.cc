@@ -907,7 +907,8 @@ void pickup_menu(int item_link)
                 int num_to_take = selected[i].quantity;
                 const bool take_all = (num_to_take == mitm[j].quantity);
                 iflags_t oldflags = mitm[j].flags;
-                mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+                mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED
+                                   | ISFLAG_NO_PICKUP);
                 int result = move_item_to_player(j, num_to_take);
 
                 // If we cleared any flags on the items, but the pickup was
@@ -1223,7 +1224,7 @@ bool pickup_single_item(int link, int qty)
         qty = item->quantity;
 
     iflags_t oldflags = item->flags;
-    item->flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    item->flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
     int num = move_item_to_player(link, qty);
     if (item->defined())
         item->flags = oldflags;
@@ -1325,7 +1326,7 @@ void pickup(bool partial_quantity)
             {
                 int num_to_take = mitm[o].quantity;
                 const iflags_t old_flags(mitm[o].flags);
-                mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+                mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
                 int result = move_item_to_player(o, num_to_take);
 
                 if (result == 0 || result == -1)
@@ -2890,7 +2891,7 @@ static void _do_autopickup()
             if ((iflags & ISFLAG_THROWN))
                 learned_something_new(HINT_AUTOPICKUP_THROWN);
 
-            mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+            mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
 
             const int result = move_item_to_player(o, num_to_take);
 
