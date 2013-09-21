@@ -1340,7 +1340,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_FROST:
             case SPWPN_HOLY_WRATH:
             case SPWPN_REACHING:
-            case SPWPN_RETURNING:
                 valued *= 50;
                 break;
 

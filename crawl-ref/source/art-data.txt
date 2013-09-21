@@ -623,7 +623,6 @@ COLOUR:   GREEN
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
-BRAND:    SPWPN_RETURNING
 
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE

@@ -1176,9 +1176,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_DAGGER:
-            if (one_chance_in(4))
-                rc = SPWPN_RETURNING;
-
             if (one_chance_in(10))
                 rc = SPWPN_PAIN;
 
@@ -1279,9 +1276,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (item.sub_type == WPN_HAND_AXE && one_chance_in(10))
-                rc = SPWPN_RETURNING;
-
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
@@ -1350,9 +1344,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
-
-            if (item.sub_type == WPN_SPEAR && one_chance_in(6))
-                rc = SPWPN_RETURNING;
 
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
@@ -1557,11 +1548,11 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_REACHING:
-    case SPWPN_RETURNING:
     case SPWPN_ANTIMAGIC:
     case SPWPN_REAPING:
 #if TAG_MAJOR_VERSION == 34
     case SPWPN_ORC_SLAYING:
+    case SPWPN_RETURNING:
 #endif
         if (is_range_weapon(item))
             return false;
@@ -1586,9 +1577,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
             item.name(DESC_PLAIN).c_str());
         break;
     }
-
-    if (brand == SPWPN_RETURNING && !is_throwable(&you, item, true))
-        return false;
 
     return true;
 }

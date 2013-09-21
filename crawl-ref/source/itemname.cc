@@ -453,7 +453,6 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_PAIN: return terse ? " (pain)" : " of pain";
     case SPWPN_DISTORTION: return terse ? " (distort)" : " of distortion";
     case SPWPN_REACHING: return terse ? " (reach)" : " of reaching";
-    case SPWPN_RETURNING: return terse ? " (return)" : " of returning";
 
     case SPWPN_VAMPIRICISM:
         return terse ? " (vamp)" : ""; // non-terse already handled

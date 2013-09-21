@@ -4036,11 +4036,8 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
 int mons_thrown_weapon_damage(const item_def *weap,
                               bool only_returning_weapons)
 {
-    if (!weap ||
-        (only_returning_weapons && get_weapon_brand(*weap) != SPWPN_RETURNING))
-    {
+    if (!weap || only_returning_weapons)
         return 0;
-    }
 
     return max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
 }
