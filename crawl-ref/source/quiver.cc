@@ -148,14 +148,6 @@ void player_quiver::empty_quiver(ammo_t ammo_type)
     you.redraw_quiver = true;
 }
 
-static bool _wielded_slot_no_quiver(int slot)
-{
-    return (slot == you.equip[EQ_WEAPON]
-            && you.inv[slot].base_type == OBJ_WEAPONS
-            && (get_weapon_brand(you.inv[slot]) != SPWPN_RETURNING
-                || you.skills[SK_THROWING] == 0));
-}
-
 void quiver_item(int slot)
 {
     const item_def item = you.inv[slot];
@@ -186,8 +178,7 @@ void choose_item_for_quiver()
     int slot = prompt_invent_item("Quiver which item? (- for none, * to show all)",
                                   MT_INVLIST,
                                   OSEL_THROWABLE, true, true, true, '-',
-                                  you.equip[EQ_WEAPON], NULL, OPER_QUIVER,
-                                  false);
+                                  -1, NULL, OPER_QUIVER, false);
 
     if (prompt_failed(slot))
         return;
@@ -203,13 +194,6 @@ void choose_item_for_quiver()
              t == AMMO_SLING    ? "sling" :
              t == AMMO_BOW      ? "bow" :
                                   "crossbow");
-        return;
-    }
-    else if (_wielded_slot_no_quiver(slot))
-    {
-        // Don't quiver a wielded weapon unless it's a weapon of returning
-        // and we've got some throwing skill.
-        mpr("You can't quiver wielded weapons.");
         return;
     }
     else
@@ -425,16 +409,6 @@ void player_quiver::_get_fire_order(vector<int>& order,
         if (!item.defined())
             continue;
 
-        // Don't quiver a wielded weapon unless it's a weapon of returning
-        // and we've got some throwing skill.
-        if (you.equip[EQ_WEAPON] == i_inv
-            && you.inv[i_inv].base_type == OBJ_WEAPONS
-            && (get_weapon_brand(you.inv[i_inv]) != SPWPN_RETURNING
-                || you.skills[SK_THROWING] == 0))
-        {
-            continue;
-        }
-
         // Don't do anything if this item is not really fit for throwing.
         if (is_launched(&you, you.weapon(), item) == LRET_FUMBLED)
             continue;
@@ -548,44 +522,28 @@ static bool _item_matches(const item_def &item, fire_type types,
         if (item.inscription.find(manual ? "+F" : "+f", 0) != string::npos)
             return true;
 
-    if (item.base_type == OBJ_MISSILES)
-    {
-        if ((types & FIRE_DART) && item.sub_type == MI_DART)
-            return true;
-        if ((types & FIRE_STONE) && item.sub_type == MI_STONE)
-            return true;
-        if ((types & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
-            return true;
-        if ((types & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
-            return true;
-        if ((types & FIRE_NET) && item.sub_type == MI_THROWING_NET)
-            return true;
-        if ((types & FIRE_TOMAHAWK) && item.sub_type == MI_TOMAHAWK)
-            return true;
+    if (item.base_type != OBJ_MISSILES)
+        return false;
 
-        if (types & FIRE_LAUNCHER)
-        {
-            if (launcher && item.launched_by(*launcher))
-                return true;
-        }
-    }
-    else if (item.base_type == OBJ_WEAPONS && is_throwable(&you, item))
+    if ((types & FIRE_DART) && item.sub_type == MI_DART)
+        return true;
+    if ((types & FIRE_STONE) && item.sub_type == MI_STONE)
+        return true;
+    if ((types & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
+        return true;
+    if ((types & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
+        return true;
+    if ((types & FIRE_NET) && item.sub_type == MI_THROWING_NET)
+        return true;
+    if ((types & FIRE_TOMAHAWK) && item.sub_type == MI_TOMAHAWK)
+        return true;
+
+    if (types & FIRE_LAUNCHER)
     {
-        if ((types & FIRE_RETURNING)
-            && item.special == SPWPN_RETURNING
-            && item_ident(item, ISFLAG_KNOW_TYPE))
-        {
-            return true;
-        }
-        if ((types & FIRE_DAGGER) && item.sub_type == WPN_DAGGER)
-            return true;
-        if ((types & FIRE_SPEAR) && item.sub_type == WPN_SPEAR)
-            return true;
-        if ((types & FIRE_HAND_AXE) && item.sub_type == WPN_HAND_AXE)
-            return true;
-        if ((types & FIRE_CLUB) && item.sub_type == WPN_CLUB)
+        if (launcher && item.launched_by(*launcher))
             return true;
     }
+
     return false;
 }
 
@@ -603,19 +561,15 @@ static int _get_pack_slot(const item_def& item)
     for (int i = 0; i < ENDOFPACK; i++)
     {
         const item_def &inv_item = you.inv[i];
-        if (inv_item.quantity && _items_similar(item, inv_item, false)
-            && !_wielded_slot_no_quiver(i))
-        {
+        if (inv_item.quantity && _items_similar(item, inv_item, false))
             return i;
-        }
     }
 
     // If that fails, try to find an item sufficiently similar.
     for (int i = 0; i < ENDOFPACK; i++)
     {
         const item_def &inv_item = you.inv[i];
-        if (inv_item.quantity && _items_similar(item, inv_item, true)
-            && !_wielded_slot_no_quiver(i))
+        if (inv_item.quantity && _items_similar(item, inv_item, true))
         {
             // =f prevents item from being in fire order.
             if (strstr(inv_item.inscription.c_str(), "=f"))
