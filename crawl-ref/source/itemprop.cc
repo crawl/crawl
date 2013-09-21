@@ -809,7 +809,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             return;
         break;
 
-    case OBJ_MISSILES:
     default:
         return;
     }
@@ -840,10 +839,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             if (item.sub_type == ARM_PLATE_ARMOUR || is_hard_helmet(item))
                 return;
             break;
-        case OBJ_MISSILES:
-            if (item.sub_type == MI_BOLT)
-                return;
-            break;
         default:
             break;
         }
@@ -871,14 +866,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             if (item.sub_type == ARM_ROBE
                 || item.sub_type == ARM_LEATHER_ARMOUR
                 || get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
-            {
-                return;
-            }
-            break;
-        case OBJ_MISSILES:
-            if (item.sub_type == MI_NEEDLE
-                || item.sub_type == MI_ARROW
-                || item.sub_type == MI_JAVELIN)
             {
                 return;
             }
