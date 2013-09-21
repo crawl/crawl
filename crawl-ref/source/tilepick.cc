@@ -3290,9 +3290,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_STONE:        return TILE_MI_STONE;
     case MI_LARGE_ROCK:   return TILE_MI_LARGE_ROCK;
     case MI_THROWING_NET: return TILE_MI_THROWING_NET;
-#if TAG_MAJOR_VERSION == 34
-    case MI_PIE:          return TILE_MI_PIE;
-#endif
+    case MI_TOMAHAWK:     return TILE_ERROR;
 
     case MI_DART:
         switch (brand)
@@ -4454,10 +4452,8 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
             case MI_THROWING_NET:
                 ch = TILE_MI_THROWING_NET0;
                 break;
-#if TAG_MAJOR_VERSION == 34
-            case MI_PIE:
-                ch = TILE_MI_PIE0;
-#endif
+            case MI_TOMAHAWK:
+                ch = TILE_ERROR;
             default:
                 break;
         }

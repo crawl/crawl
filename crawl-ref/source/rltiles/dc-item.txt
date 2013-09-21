@@ -431,16 +431,6 @@ rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
 
-pie MI_PIE
-effect/pie0 MI_PIE0
-effect/pie1 MI_PIE1
-effect/pie2 MI_PIE2
-effect/pie3 MI_PIE3
-effect/pie4 MI_PIE4
-effect/pie5 MI_PIE5
-effect/pie6 MI_PIE6
-effect/pie7 MI_PIE7
-
 ######OBJ_ARMOUR
 %sdir item/armour
 robe1 ARM_ROBE

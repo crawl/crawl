@@ -273,7 +273,7 @@
 #
 # fire_items_start = a
 # fire_order = launcher, return
-# fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger / club
+# fire_order += javelin / tomahawk / dart / stone / rock / spear / net / handaxe / dagger / club
 # fire_order += inscribed
 
 ##### 3-l       Channels ##############################

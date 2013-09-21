@@ -593,6 +593,7 @@ static missile_type _acquirement_missile_subtype()
             vector<pair<missile_type, int> > missile_weights;
 
             missile_weights.push_back(make_pair(MI_DART, 100));
+            missile_weights.push_back(make_pair(MI_TOMAHAWK, 100));
 
             if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
                 missile_weights.push_back(make_pair(MI_NEEDLE, 100));
