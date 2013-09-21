@@ -425,7 +425,7 @@ bool god_id_item(item_def& item, bool silent)
             ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
 
         if (_jewel_auto_id(item))
-            ided |= ISFLAG_EQ_JEWELLERY_MASK;
+            ided |= ISFLAG_IDENT_MASK;
 
         if (item.base_type == OBJ_ARMOUR
             && you.piety >= piety_breakpoint(0)
@@ -449,7 +449,7 @@ bool god_id_item(item_def& item, bool silent)
                  (_is_slot_cursed(EQ_LEFT_RING) && _is_slot_cursed(EQ_RIGHT_RING))
              ))
         {
-            ided |= ISFLAG_EQ_JEWELLERY_MASK;
+            ided |= ISFLAG_IDENT_MASK;
         }
         else if (you.species == SP_OCTOPODE && item.base_type == OBJ_JEWELLERY
             && you.piety >= piety_breakpoint(1)
@@ -461,7 +461,7 @@ bool god_id_item(item_def& item, bool silent)
                   _is_slot_cursed(EQ_RING_SEVEN) && _is_slot_cursed(EQ_RING_EIGHT))
              ))
         {
-            ided |= ISFLAG_EQ_JEWELLERY_MASK;
+            ided |= ISFLAG_IDENT_MASK;
         }
     }
     else if (you_worship(GOD_ELYVILON))

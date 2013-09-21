@@ -1833,11 +1833,6 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_KNOW_PROPERTIES   = 0x00000008,  // know special artefact properties
     ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
 
-    // these three masks are of the minimal flags set upon using equipment:
-    ISFLAG_EQ_WEAPON_MASK    = 0x0000000B,  // mask of flags for weapon equip
-    ISFLAG_EQ_ARMOUR_MASK    = 0x0000000F,  // mask of flags for armour equip
-    ISFLAG_EQ_JEWELLERY_MASK = 0x0000000F,  // mask of flags for known jewellery
-
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_BLESSED_WEAPON    = 0x00000200,  // personalized TSO's gift
     ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
