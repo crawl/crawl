@@ -475,9 +475,9 @@ A cloth cloak.
 club
 
 A heavy piece of wood, with a place to grip on one end and most of its weight
-at the other, making it suitable for swinging or throwing at a foe. While clubs
-are rather primitive weapons, bashing someone's skull in with one remains a
-very popular and effective means of dispute resolution.
+at the other, making it suitable for hitting a foe with. While clubs are
+rather primitive weapons, bashing someone's skull in with one remains a very
+popular and effective means of dispute resolution.
 %%%%
 corpse
 
@@ -502,9 +502,9 @@ An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
 dagger
 
-A double-edged fighting knife with a sharp point that can be thrown from afar.
-Seen by some as a weak weapon of last resort, others appreciate it as a perfect
-tool for assassinations.
+A double-edged fighting knife with a sharp point. Seen by some as a weak
+weapon of last resort, others appreciate it as a perfect tool for
+assassinations.
 %%%%
 dart
 
@@ -728,9 +728,9 @@ armour.
 %%%%
 hand axe
 
-A tool for rending apart the fibres of wood, or flesh. Small and crafted for
-fast, precise handling, it is also balanced such that it can be thrown if
-necessary.
+A tool for rending apart the fibres of wood, or flesh. It might be enough if
+you care primarily for the weapon's weight, but for a proper rampage, you
+want something bigger.
 %%%%
 helmet
 
@@ -1521,7 +1521,7 @@ spear
 
 A hunting weapon consisting of a balanced wooden shaft with a pointed metal
 head fastened on one end. Shorter than other polearms, it can be wielded with
-one or two hands and is also light enough to be thrown.
+one or two hands.
 %%%%
 staff of air
 
