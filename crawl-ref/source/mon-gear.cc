@@ -1502,7 +1502,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
-// throwable weapon depending on the monster type.
+// throwable missiles depending on the monster type.
 static void _give_ammo(monster* mon, int level,
                        item_make_species_type item_race,
                        bool mons_summoned)
@@ -1719,7 +1719,7 @@ static void _give_ammo(monster* mon, int level,
 
             w.quantity = qty;
             _give_monster_item(mon, thing_created, false,
-                               &monster::pickup_throwable_weapon);
+                               &monster::pickup_missile);
         }
     }
 }

@@ -4032,16 +4032,6 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
     return !_mons_avoids_cloud(mons, our_cloud, true);
 }
 
-// Returns a rough estimate of damage from throwing the wielded weapon.
-int mons_thrown_weapon_damage(const item_def *weap,
-                              bool only_returning_weapons)
-{
-    if (!weap || only_returning_weapons)
-        return 0;
-
-    return max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
-}
-
 int mons_weapon_damage_rating(const item_def &launcher)
 {
     return (property(launcher, PWPN_DAMAGE) + launcher.plus2);
@@ -4059,30 +4049,16 @@ int mons_missile_damage(monster* mons, const item_def *launch,
     return max(0, launch_damage + missile_damage);
 }
 
-// Given the monster's current weapon and alt weapon (either or both of
-// which may be NULL), works out whether using missiles or throwing the
-// main weapon (with returning brand) is better. If using missiles that
-// need a launcher, sets *launcher to the launcher.
-//
-// If the monster has no ranged weapon attack, returns NON_ITEM.
-//
-int mons_pick_best_missile(monster* mons, item_def **launcher,
-                           bool ignore_melee)
+int mons_usable_missile(monster* mons, item_def **launcher)
 {
     *launcher = NULL;
-    item_def *melee = NULL, *launch = NULL;
-    int melee_weapon_count = 0;
+    item_def *launch = NULL;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
         {
             if (is_range_weapon(*item))
                 launch = item;
-            else if (!ignore_melee)
-            {
-                melee = item;
-                ++melee_weapon_count;
-            }
         }
     }
 
@@ -4090,17 +4066,10 @@ int mons_pick_best_missile(monster* mons, item_def **launcher,
     if (launch && missiles && !missiles->launched_by(*launch))
         launch = NULL;
 
-    const int n_usable_melee_weapons(mons_wields_two_weapons(mons) ? 2 : 1);
-    const bool only = melee_weapon_count == n_usable_melee_weapons
-                      && melee->quantity == 1;
-    const int tdam = (melee && is_throwable(mons, *melee)) ?
-                         mons_thrown_weapon_damage(melee, only) : 0;
     const int fdam = mons_missile_damage(mons, launch, missiles);
 
-    if (!tdam && !fdam)
+    if (!fdam)
         return NON_ITEM;
-    else if (tdam >= fdam)
-        return melee->index();
     else
     {
         *launcher = launch;
