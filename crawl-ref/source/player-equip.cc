@@ -646,10 +646,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         mpr("You feel an empty sense of dread.");
                     break;
 
-                case SPWPN_RETURNING:
-                    mpr("It wiggles slightly.");
-                    break;
-
                 case SPWPN_PAIN:
                 {
                     const char* your_arm = you.arm_name(false).c_str();

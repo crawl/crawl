@@ -3179,6 +3179,8 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = WPN_FLAIL;
     }
 
+    if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_RETURNING)
+        item.special = SPWPN_NORMAL;
 #endif
 
     bind_item_tile(item);

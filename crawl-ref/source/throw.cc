@@ -1067,10 +1067,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_brand = SPMSL_NORMAL;
     }
 
-    // This is a bit of a special case because it applies even for melee
-    // weapons, for which brand is normally ignored.
-    returning = get_weapon_brand(item) == SPWPN_RETURNING
-                || ammo_brand == SPMSL_RETURNING;
+    returning = ammo_brand == SPMSL_RETURNING;
 
     if (agent->is_player())
     {

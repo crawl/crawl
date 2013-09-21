@@ -99,7 +99,9 @@ enum brand_type // item_def.special
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
     SPWPN_REACHING,
+#if TAG_MAJOR_VERSION == 34
     SPWPN_RETURNING,
+#endif
     SPWPN_CHAOS,
     SPWPN_EVASION,
 

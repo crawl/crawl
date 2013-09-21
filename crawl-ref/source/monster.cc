@@ -898,9 +898,6 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
         case SPWPN_FROST:
             mpr("It is covered in frost.");
             break;
-        case SPWPN_RETURNING:
-            mpr("It wiggles slightly.");
-            break;
         case SPWPN_DISTORTION:
             mpr("Its appearance distorts for a moment.");
             break;
