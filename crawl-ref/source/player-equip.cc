@@ -542,7 +542,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         const bool was_known      = item_type_known(item);
               bool known_recurser = false;
 
-        set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         special = item.special;
 
@@ -719,7 +719,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         }
 
         _wield_cursed(item, known_cursed || known_recurser, unmeld);
-        maybe_id_weapon(item);
         break;
     }
     default:
@@ -1442,7 +1441,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         set_ident_type(item, ident);
 
         if (ident == ID_KNOWN_TYPE)
-            set_ident_flags(item, ISFLAG_EQ_JEWELLERY_MASK);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     if (item.cursed())

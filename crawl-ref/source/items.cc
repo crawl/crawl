@@ -1786,7 +1786,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     item.flags &= ~(ISFLAG_DROPPED_BY_ALLY | ISFLAG_UNOBTAINABLE);
 
     god_id_item(item);
-    maybe_id_weapon(item);
     if (item.base_type == OBJ_BOOKS)
         maybe_id_book(item, true);
 
