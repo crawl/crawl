@@ -179,11 +179,9 @@ static int _missile_colour(const item_def &item)
     case MI_THROWING_NET:
         item_colour = MAGENTA;
         break;
-#if TAG_MAJOR_VERSION == 34
-    case MI_PIE:
-        item_colour = YELLOW;
+    case MI_TOMAHAWK:
+        item_colour = GREEN;
         break;
-#endif
     case NUM_SPECIAL_MISSILES:
     case NUM_REAL_SPECIAL_MISSILES:
         die("invalid missile brand");
@@ -1828,11 +1826,14 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
-#if TAG_MAJOR_VERSION == 34
-    case MI_PIE:
-        rc = SPMSL_BLINDING;
+    case MI_TOMAHAWK:
+        rc = random_choose_weighted(15, SPMSL_POISONED,
+                                    10, SPMSL_SILVER,
+                                    10, SPMSL_STEEL,
+                                    40, SPMSL_RETURNING,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
-#endif
     case MI_STONE:
         // deliberate fall through
     case MI_LARGE_ROCK:
@@ -1897,7 +1898,8 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
 
 #if TAG_MAJOR_VERSION == 34
     case SPMSL_BLINDING:
-        return (type == MI_PIE);
+        // possible on ex-pies
+        return (type == MI_TOMAHAWK && !strict);
 #endif
 
     default:
@@ -1921,31 +1923,32 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     switch (brand)
     {
     case SPMSL_FLAME:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART;
     case SPMSL_FROST:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART;
     case SPMSL_POISONED:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART
-                || type == MI_JAVELIN);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART
+               || type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_RETURNING:
-        return (type == MI_JAVELIN);
+        return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_CHAOS:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART
-                || type == MI_JAVELIN || type == MI_THROWING_NET);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART || type == MI_TOMAHAWK
+               || type == MI_JAVELIN || type == MI_THROWING_NET;
     case SPMSL_PENETRATION:
-        return (type == MI_JAVELIN || type == MI_BOLT);
+        return type == MI_JAVELIN || type == MI_BOLT;
     case SPMSL_DISPERSAL:
-        return (type == MI_ARROW || type == MI_DART);
+        return type == MI_ARROW || type == MI_DART;
     case SPMSL_EXPLODING:
-        return (type == MI_SLING_BULLET || type == MI_DART);
+        return type == MI_SLING_BULLET || type == MI_DART;
     case SPMSL_STEEL: // deliberate fall through
     case SPMSL_SILVER:
-        return (type == MI_BOLT || type == MI_SLING_BULLET
-                || type == MI_JAVELIN || type == MI_THROWING_NET);
+        return type == MI_BOLT || type == MI_SLING_BULLET
+               || type == MI_JAVELIN || type == MI_TOMAHAWK
+               || type == MI_THROWING_NET;
     default: break;
     }
 
@@ -1973,6 +1976,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    12, MI_BOLT,
                                    12, MI_SLING_BULLET,
                                    10, MI_NEEDLE,
+                                   3,  MI_TOMAHAWK,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,
                                    1,  MI_LARGE_ROCK,
@@ -2005,7 +2009,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
 
     // Reduced quantity if special.
-    if (item.sub_type == MI_JAVELIN
+    if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK
         || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
         || get_ammo_brand(item) == SPMSL_RETURNING
         || (item.sub_type == MI_DART && get_ammo_brand(item) == SPMSL_POISONED))

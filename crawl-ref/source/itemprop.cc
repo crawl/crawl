@@ -373,9 +373,7 @@ static const missile_def Missile_prop[NUM_MISSILES] =
     { MI_SLING_BULLET,  "sling bullet",  6,    4, false },
     { MI_JAVELIN,       "javelin",      10,   80, true  },
     { MI_THROWING_NET,  "throwing net",  0,   30, true  },
-#if TAG_MAJOR_VERSION == 34
-    { MI_PIE,           "pie",           2,    6, true  },
-#endif
+    { MI_TOMAHAWK,      "tomahawk",      6,   30, true  },
 };
 
 enum food_flag_type
@@ -1897,9 +1895,7 @@ bool has_launcher(const item_def &ammo)
     return (ammo.sub_type != MI_DART
             && ammo.sub_type != MI_LARGE_ROCK
             && ammo.sub_type != MI_JAVELIN
-#if TAG_MAJOR_VERSION == 34
-            && ammo.sub_type != MI_PIE
-#endif
+            && ammo.sub_type != MI_TOMAHAWK
             && ammo.sub_type != MI_THROWING_NET);
 }
 

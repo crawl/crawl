@@ -1667,6 +1667,12 @@ net and break free, if they live long enough.
     end
 }}
 %%%%
+tomahawk
+
+An axe-like item designed for throwing. While some larger tomahawk types
+would be fit for melee, this one sacrifices melee ability to make it
+smaller, handier and to optimize its ballistic properties.
+%%%%
 tome of destruction
 
 An extremely powerful but unpredictable book of wild magic. Warning: Reading

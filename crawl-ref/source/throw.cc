@@ -1828,9 +1828,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             || (wepClass == OBJ_MISSILES
                 && (wepType == MI_STONE || wepType == MI_LARGE_ROCK
                     || wepType == MI_DART || wepType == MI_JAVELIN
-#if TAG_MAJOR_VERSION == 34
-                    || wepType == MI_PIE
-#endif
+                    || wepType == MI_TOMAHAWK
                     )))
         {
             // Elves with elven weapons.
@@ -1914,9 +1912,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 break;
 
             case MI_DART:
-#if TAG_MAJOR_VERSION == 34
-            case MI_PIE:
-#endif
+            case MI_TOMAHAWK:
                 // Darts use throwing skill.
                 exHitBonus += skill_bump(SK_THROWING);
                 exDamBonus += you.skill(SK_THROWING, 3) / 5;
@@ -2562,11 +2558,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         chance = (brand == SPMSL_CURARE ? 6 : 12);
         break;
 
-#if TAG_MAJOR_VERSION == 34
-    case MI_PIE:
-        return true;
-#endif
-
     case MI_SLING_BULLET:
     case MI_STONE:
     case MI_ARROW:
@@ -2576,6 +2567,10 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 
     case MI_DART:
         chance = 6;
+        break;
+
+    case MI_TOMAHAWK:
+        chance = 30;
         break;
 
     case MI_JAVELIN:

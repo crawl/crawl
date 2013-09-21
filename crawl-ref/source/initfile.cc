@@ -314,6 +314,8 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_CLUB;
     else if (str == "javelin")
         return FIRE_JAVELIN;
+    else if (str == "tomahawk")
+        return FIRE_TOMAHAWK;
     else if (str == "net")
         return FIRE_NET;
     else if (str == "return" || str == "returning")
@@ -940,7 +942,7 @@ void game_options::reset_options()
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
-                   "javelin / dart / pie / stone / rock /"
+                   "javelin / tomahawk / dart / stone / rock /"
                    " spear / net / handaxe / dagger / club, inscribed",
                    false, false);
 
