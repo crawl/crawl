@@ -431,11 +431,13 @@ public:
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage() const = 0;
 
+    // Be careful using this, as it doesn't keep the constrictor in sync.
+    void clear_constricted();
+
     string describe_props() const;
 
 
 protected:
-    void clear_constricted();
     void end_constriction(constricting_t::iterator i, bool intentional,
                           bool quiet);
 
