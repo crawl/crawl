@@ -716,6 +716,14 @@ static int dgn_load_des_file(lua_State *ls)
     return 0;
 }
 
+static int dgn_register_des_file(lua_State *ls)
+{
+    const string &file = luaL_checkstring(ls, 1);
+    if (!file.empty())
+        crawl_state.des_files.insert(file);
+    return 0;
+}
+
 static int dgn_lfloorcol(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1901,6 +1909,7 @@ const struct luaL_reg dgn_dlib[] =
 { "gly_points", dgn_gly_points },
 { "original_map", dgn_original_map },
 { "load_des_file", dgn_load_des_file },
+{ "register_des_file", dgn_register_des_file },
 { "register_listener", dgn_register_listener },
 { "remove_listener", dgn_remove_listener },
 { "remove_marker", dgn_remove_marker },

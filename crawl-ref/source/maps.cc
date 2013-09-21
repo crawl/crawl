@@ -1432,6 +1432,13 @@ void read_maps()
     if (dlua.execfile("dlua/loadmaps.lua", true, true, true))
         end(1, false, "Lua error: %s", dlua.error.c_str());
 
+    for (set<string>::const_iterator mi = crawl_state.des_files.begin();
+         mi != crawl_state.des_files.end(); ++mi)
+    {
+        read_map(*mi);
+    }
+
+    crawl_state.des_files.clear();
     lc_loaded_maps.clear();
 
     {

@@ -1310,7 +1310,7 @@ endif
 	    >$(datadir_fp)/dat/dlua/loadmaps.lua
 	find dat -name '*.des'|sed s:dat/::| \
           while read x; \
-	    do echo "dgn.load_des_file('$$x')"; \
+	    do echo "dgn.register_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
 	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
 	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
