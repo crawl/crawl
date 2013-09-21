@@ -1082,7 +1082,7 @@ MP:       +5
 REGEN:    40
 
 ENUM:     FINGER_AMULET
-NAME:     Macabre Finger Necklace
+NAME:     macabre finger necklace
 OBJ:      OBJ_JEWELLERY/AMU_WARDING
 COLOUR:   ETC_BONE
 
