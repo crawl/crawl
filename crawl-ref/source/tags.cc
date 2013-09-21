@@ -649,6 +649,39 @@ coord_def unmarshallCoord(reader &th)
     return c;
 }
 
+#if TAG_MAJOR_VERSION == 34
+// Between TAG_MINOR_OPTIONAL_PARTS and TAG_MINOR_FIXED_CONSTRICTION
+// we neglected to marshall the constricting[] map of monsters.  Fix
+// those up.
+static void _fix_missing_constrictions()
+{
+    for (int i = -1; i < MAX_MONSTERS; ++i)
+    {
+        const actor* m = i < 0 ? (actor*)&you : (actor*)&menv[i];
+        if (!m->alive())
+            continue;
+        if (!m->constricted_by)
+            continue;
+        actor *h = actor_by_mid(m->constricted_by);
+        // Not a known bug, so don't fix this up.
+        if (!h)
+            continue;
+
+        if (!h->constricting)
+            h->constricting = new actor::constricting_t;
+        if (h->constricting->find(m->mid) == h->constricting->end())
+        {
+            dprf("Fixing missing constriction for %s (mindex=%d mid=%d)"
+                 " of %s (mindex=%d mid=%d)",
+                 h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid,
+                 m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid);
+
+            (*h->constricting)[m->mid] = 0;
+        }
+    }
+}
+#endif
+
 static void _marshall_constriction(writer &th, const actor *who)
 {
     _marshall_as_int(th, who->held);
@@ -4249,6 +4282,15 @@ static void tag_read_level_monsters(reader &th)
             mgrd(m.pos()) = i;
         }
     }
+#if TAG_MAJOR_VERSION == 34
+    // This relies on TAG_YOU (including lost monsters) being unmarshalled
+    // on game load before the initial level.
+    if (th.getMinorVersion() < TAG_MINOR_FIXED_CONSTRICTION
+        && th.getMinorVersion() >= TAG_MINOR_OPTIONAL_PARTS)
+    {
+        _fix_missing_constrictions();
+    }
+#endif
 }
 
 static void _debug_count_tiles()

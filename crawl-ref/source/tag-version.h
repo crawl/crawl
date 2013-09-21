@@ -60,6 +60,7 @@ enum tag_minor_version
     TAG_MINOR_SUMMONER,            // Store summoner data.
     TAG_MINOR_STAT_MUT,            // Flag for converting stat mutations
     TAG_MINOR_MAP_ORDER,           // map_def::order added to des cache
+    TAG_MINOR_FIXED_CONSTRICTION,  // Corrected a constricting marshalling bug.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
