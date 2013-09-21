@@ -77,6 +77,11 @@ static bool initialised_randmons = false;
 static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
+const mon_spellbook mspell_list[] =
+{
+#include "mon-spll.h"
+};
+
 #include "mon-data.h"
 
 #define MONDATASIZE ARRAYSZ(mondata)
