@@ -1387,9 +1387,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     }
 
     // These classes also require pluses and special.
-    if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
-        || item1.base_type == OBJ_MISSILES
-        || item1.base_type == OBJ_FOOD)        // chunks
+    if (item1.base_type == OBJ_MISSILES || item1.base_type == OBJ_FOOD)
     {
         if (item1.plus != item2.plus
             || item1.plus2 != item2.plus2
@@ -1418,12 +1416,10 @@ bool items_similar(const item_def &item1, const item_def &item2)
     return true;
 }
 
-bool items_stack(const item_def &item1, const item_def &item2,
-                 bool force_merge)
+bool items_stack(const item_def &item1, const item_def &item2)
 {
     // Both items must be stackable.
-    if (!force_merge
-        && (!is_stackable_item(item1) || !is_stackable_item(item2))
+    if (!is_stackable_item(item1) || !is_stackable_item(item2)
         || static_cast<int>(item1.quantity) + item2.quantity > 32767)
     {
         COMPILE_CHECK(sizeof(item1.quantity) == 2); // can be relaxed otherwise
