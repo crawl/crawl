@@ -3372,7 +3372,7 @@ void marshallMonster(writer &th, const monster& m)
     uint32_t parts = 0;
     if (mons_is_ghost_demon(m.type))
         parts |= MP_GHOST_DEMON;
-    if (m.held)
+    if (m.held || m.constricting && m.constricting->size())
         parts |= MP_CONSTRICTION;
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         if (m.inv[i] != NON_ITEM)
