@@ -4827,7 +4827,7 @@ void reset_all_monsters()
         {
             delete menv[i].constricting;
             menv[i].constricting = nullptr;
-            menv[i].constricted_by = 0;
+            menv[i].clear_constricted();
         }
         menv[i].reset();
     }
