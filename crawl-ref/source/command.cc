@@ -537,8 +537,9 @@ void list_jewellery(void)
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
-        if ((you.species != SP_OCTOPODE && i > EQ_AMULET)
-            || (you.species == SP_OCTOPODE && i < EQ_AMULET))
+        if ((you.species != SP_OCTOPODE && i > EQ_AMULET
+            || you.species == SP_OCTOPODE && i < EQ_AMULET)
+            && i != EQ_RING_AMULET)
         {
             continue;
         }
