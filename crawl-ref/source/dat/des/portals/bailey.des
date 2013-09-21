@@ -76,12 +76,12 @@ end
 
 -- Axes.
 function axe_returning(e)
-  e.mons("generate_awake kobold ; hand axe ego:returning /\
-          generate_awake goblin ; hand axe ego:returning")
+  e.mons("generate_awake kobold ; tomahawk ego:returning /\
+          generate_awake goblin ; tomahawk ego:returning")
 end
 
 function kobold_axe_returning(e)
-  e.mons("generate_awake kobold ; hand axe ego:returning")
+  e.mons("generate_awake kobold ; tomahawk ego:returning")
 end
 
 function easy_axe_fighter(e)
@@ -226,8 +226,8 @@ WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe race:orcish
-MONS:   goblin ; hand axe ego:returning / hobgoblin ; hand axe ego:returning /\
-        orc ; hand axe race:orcish ego:returning
+MONS:   goblin ; tomahawk ego:returning / hobgoblin ; tomahawk ego:returning /\
+        orc ; tomahawk ego:returning
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear race:orcish
@@ -252,7 +252,7 @@ ENDMAP
 NAME: enter_bailey_5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: goblin ; hand axe ego:returning
+MONS: goblin ; tomahawk ego:returning
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS: goblin ; spear
@@ -466,8 +466,8 @@ ENDMAP
 NAME:   bailey_axe_2
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate
-MONS:   generate_awake kobold ; hand axe ego:returning /\
-        generate_awake goblin ; hand axe ego:returning
+MONS:   generate_awake kobold ; tomahawk ego:returning /\
+        generate_awake goblin ; tomahawk ego:returning
 MONS:   gnoll ; halberd | halberd ego:electrocution
 MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
