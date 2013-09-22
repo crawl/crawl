@@ -2613,8 +2613,12 @@ static const map_def *_pick_layout(const map_def *vault)
     {
         do
         {
-             layout = random_map_for_tag("layout", true, true);
-             tries--;
+            if (!tries--)
+            {
+                die("Couldn't find a layout for %s",
+                    level_id::current().describe().c_str());
+            }
+            layout = random_map_for_tag("layout", true, true);
         }
         while (layout->has_tag("no_primary_vault")
                || (tries > 10 && !_vault_can_use_layout(vault, layout)));
