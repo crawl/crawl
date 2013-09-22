@@ -994,6 +994,9 @@ metal_cyan
 metal_green
 ############papyrus 1
 cloth BOOK_PAPYRUS
+############manuals
+manual1 BOOK_MANUAL
+manual2
 # randarts
 %sdir item/book/artefact
 wrinkled BOOK_RANDART_OFFSET
