@@ -4810,59 +4810,6 @@ cc.....BxA.....ccccccc...%E121E%...cc
              @.ccccccc.@
 ENDMAP
 
-# Based off Zaba's beehive_diamond.
-# Hopefully the changes for it to fit in D make it more interesting than Hive.
-NAME:    hangedman_what_comes_after_a
-TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:12-19
-ORIENT:  north
-MONS:    killer bee, queen bee, oklob plant
-KFEAT:   X = x
-ITEM:    honeycomb / royal jelly w:1, honeycomb w:4 / royal jelly
-SUBST:   A = X:3 .:2, z = x.., ' = .:460 01d%
-: if you.absdepth() > 15 then
-SUBST:   " = 1
-: else
-SUBST:   8 = 9, " = '
-: end
-TILE:    X = wall_wax
-COLOUR:  X = yellow
-MAP
-             xxxxxxxxxxxxxxx
-             xxxxxcccccxxxxx
-             xxxccc*e*cccxxx
-              xxc3%e|e%3cxx
-               xcc3*e*3ccx
-               xxcccmcccxx
-             xxxxx18281xxxxx
-           xxxxxd1911191dxxxxx
-          xxxxx'"X"eAe"X"'xxxxx
-         xxxx'''XXX"""XXX'''xxxx
-        xxxx''X''X''X''X''X''xxxx
-      xxxx'''XXX'''XXX'''XXX'''xxxx
-     xxxx''X'1X''X''X''X''X1'X''xxxx
-    xxx'''XXX90'XXX'0'XXX'09XXX'''xxx
- xxxxx.'X''X'1X1'X''X''X'1X1'X''X'.xxxxx
-xxzx...XXX'''XXX'''XXX'''XXX'''XXX...xzxx
-x.x..A.'X''X''X''X'1X1'X''X''X''X'.A..x.x
-x.x.AAA'''XXX'0'XXX'9'XXX'0'XXX'''AAA.x.x
-.x...A.'X'1X''X''X'1X1'X''X''X1'X'.A...x.
-x.x....XXX010XXX'''XXX'''XXX010XXX....x.x
-x.x..A.'X'1X1'X''X''X''X''X'1X1'X'.A..x.x
-.x..AAA'''XXX'''XXX'''XXX'''XXX'''AAA..x.
-x.x..A.'A''X''X'1X''X''X1'X''X''A'.A..x.x
-x.x....AAA'''XXX010XXX010XXX'''AAA....x.x
-.x.x....A''A''X'1X1'X'1X1'X''A''A....x.x.
-x.xzx.....AAA'''XXX'''XXX'''AAA.....xzx.x
-.x.xzx.....A''A''X''X''X''A''A.....xzx.x.
- .x.x.x.x....AAA...XXX...AAA....x.x.x.x.
-  .xzx.x.x....A..A..X..A..A....x.x.xzx.
-   .xzx.xzx...................xzx.xzx.
-    .....xzxx.xx.xx.x.xx.xx.xxzx.....
-         .x..x.zx..xzx..xz.x..x.
-          .xx.xx.xx.x.xx.xx.xx.
-ENDMAP
-
 NAME:    hangedman_arch_fort
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 ORIENT:  float
