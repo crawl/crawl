@@ -890,7 +890,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    6, FLAT, MONS_EARTH_ELEMENTAL },
   {  1,  5,    6, FLAT, MONS_FIRE_ELEMENTAL },
   {  1,  5,    6, FLAT, MONS_AIR_ELEMENTAL },
-  {  1,  5,   15, FLAT, MONS_GOLDEN_EYE },
+  {  1,  5,   35, FLAT, MONS_GOLDEN_EYE },
   {  1,  5,   35, FLAT, MONS_INSUBSTANTIAL_WISP },
   {  1,  5,   21, FLAT, MONS_VAPOUR },
   {  1,  5,   17, FLAT, MONS_FUNGUS },
@@ -987,7 +987,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,  334, FLAT, MONS_TENTACLED_STARSPAWN },
   {  1,  5,  334, FLAT, MONS_ANCIENT_ZYME },
   {  1,  5,  334, FLAT, MONS_STARCURSED_MASS },
-  {  1,  5,  167, FLAT, MONS_THRASHING_HORROR },
+  {  1,  5,  334, FLAT, MONS_THRASHING_HORROR },
 //{  1,  5,  334, FLAT, MONS_CHAOS_BUTTERFLY }, // whyyy disabled?
   {  1,  5,   89, FLAT, MONS_LURKING_HORROR },
   {  1,  5,   89, FLAT, MONS_SPATIAL_MAELSTROM },
