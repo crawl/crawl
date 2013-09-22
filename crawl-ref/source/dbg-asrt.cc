@@ -110,7 +110,7 @@ static void _dump_level_info(FILE* file)
         fprintf(file, "Abyssal state:\n"
                       "    major_coord = (%d,%d)\n"
                       "    seed = 0x%" PRIx32 "\n"
-                      "    depth = %" PRId64 "\n"
+                      "    depth = %" PRIu32 "\n"
                       "    phase = %g\n"
                       "    nuke_all = %d\n",
                 abyssal_state.major_coord.x, abyssal_state.major_coord.y,
