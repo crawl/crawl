@@ -17,7 +17,7 @@ struct abyss_state
 {
     coord_def major_coord;
     uint32_t seed;
-    uint64_t depth;
+    uint32_t depth;
     double phase;
     bool nuke_all;
 };
