@@ -1,14 +1,24 @@
-Stone Soup 0.12.3 (not released)
+Stone Soup 0.12.3 (20130923)
 ----------------------------
 * Silver stars deal full damage to unclean monsters, not un-unclean ones.
-* Don't leak unidentified cold resistance on the draconian 'A' screen.
-* Fixed a crash with LRD at the map edge.
+* Unidentified cold resistance is no longer leaked on the draconian 'A' screen.
 * Arena mode works better with restart_after_game.
-* G ctrl-P (parent branch) doesn't crash in the Dungeon.
 * Local tiles ability icons check for berserk like the 'a' menu always has.
 * The down arrow key works correctly in the webtiles help browser.
 * Player ghosts no longer incorrectly get acid resistance when saved and
   restored.
+* Exiting unique Pan lord levels without the rune gives a warning.
+* Certain vaults don't trap people who teleported in.
+* Merfolk unmeld boots correctly again.
+* Vehumet's extension of Dazzling Spray's range has been corrected.
+* Autotravel won't try to go through monsters trapped in nets.
+* A couple of clinging into water fixes.
+* Some off-screen messages are properly suppressed.
+* The last place high score is shown correctly.
+* A load of crash fixes: LRD at the map edge, G ctrl-P (parent branch) in
+  the Dungeon, 0-hp starcursed masses, chaos bounces, loading levels with
+  scrying active, deporkalating transiting monsters, etc.
+* Mac universal builds work again.
 
 Stone Soup 0.12.2 (20130601)
 ----------------------------
