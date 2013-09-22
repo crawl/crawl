@@ -1634,7 +1634,8 @@ void save_game(bool leave_game, const char *farewellmsg)
     // If just save, early out.
     if (!leave_game)
     {
-        you.save->commit();
+        if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
+            you.save->commit();
         return;
     }
 
