@@ -14,11 +14,15 @@ endif
 CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
              $(shell dpkg-buildflags --get LDFLAGS) \
              $(shell dpkg-buildflags --get CPPFLAGS)
-ifeq ($(shell g++ -x c++ /dev/null -flto=jobserver -fwhole-program 2>&1 | grep 'unrecognized command line option'),)
+GXX = $(DEB_HOST_GNU_TYPE)-g++ -x c++
+ifeq ($(shell $(GXX) /dev/null -flto=jobserver -fwhole-program 2>&1 | grep 'unrecognized command line option'),)
   CFOPTIMIZE += -flto=jobserver -fwhole-program
 endif
-ifeq ($(shell g++ -x c++ /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
+ifeq ($(shell $(GXX) /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
   CFOPTIMIZE += -fno-fat-lto-objects
+endif
+ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) - -o /dev/null -fuse-ld=gold 2>&1))
+  CFOPTIMIZE += -fuse-ld=gold
 endif
 
 ifeq (,$(filter terse%,$(DEB_BUILD_OPTIONS))$(filter quiet%,$(DEB_BUILD_OPTIONS)))
