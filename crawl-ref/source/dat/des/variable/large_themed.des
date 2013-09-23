@@ -1516,6 +1516,8 @@ ORIENT:  north
 MONS:    killer bee, queen bee, oklob plant
 KFEAT:   X = x
 ITEM:    honeycomb / royal jelly w:1, honeycomb w:4 / royal jelly
+KITEM:   | = |
+KFEAT:   | = >
 SUBST:   A = X:3 .:2, z = x.., ' = .:460 01d%
 : if you.absdepth() > 15 then
 SUBST:   " = 1
