@@ -723,8 +723,9 @@ bool is_valid_border_feat(dungeon_feature_type feat)
 // Other features can be defined as mimic in vaults.
 bool is_valid_mimic_feat(dungeon_feature_type feat)
 {
-    // Don't risk trapping the player inside a portal vault.
-    if (feat == DNGN_EXIT_PORTAL_VAULT)
+    // Don't risk trapping the player inside a portal vault, don't destroy
+    // runed doors either.
+    if (feat == DNGN_EXIT_PORTAL_VAULT || feat == DNGN_RUNED_DOOR)
         return false;
 
     if (feat_is_portal(feat) || feat_is_gate(feat))
