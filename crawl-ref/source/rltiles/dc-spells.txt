@@ -234,7 +234,7 @@ error GHOSTLY_FIREBALL
 error GHOSTLY_FLAMES
 %sdir gui/spells/monster
 haste_other HASTE_OTHER
-%sdir error
+%sdir misc
 error HASTE_PLANTS
 %sdir gui/spells/monster
 hellfire_burst HELLFIRE_BURST
