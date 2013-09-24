@@ -539,8 +539,8 @@ double ray_def::get_degrees() const
 void ray_def::set_degrees(double d)
 {
     // Changing the angle while on a diamond corner causes problems when the
-    // new direction points inside a diamond (#5892).  Move the ray slightly
-    // inside the diamond first correct for this.
+    // new direction points inside the diamond (#5892).  Avoid that case by
+    // first moving the ray's start slightly inside the diamond.
     if (on_corner)
         nudge_inside();
     r.dir = geom::degree_to_vector(d);
