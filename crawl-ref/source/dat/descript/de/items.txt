@@ -1176,21 +1176,9 @@ ring of evasion
 Dieser Ring macht seinen Träger irgendeinen mehr oder weniger fähig dazu,
 Angriffe abhängig von seinem Grad des Entzückens zu vermeiden.
 %%%%
-ring of fire
-
-Dieser Ring bringt seinem Träger mehr im Kontakt mit den Mächten des Feuers. Er
-oder sie gewinnt Widerstand gegen die Hitze und kann Feuermagie effektiver
-verwenden, aber wird verwundbarer zu den Effekten der Kälte.
-%%%%
 ring of hunger
 
 Dieser verfluchte Ring lässt deinen Träger schneller hungern.
-%%%%
-ring of ice
-
-Dieser Ring bringt seinem Träger mehr im Kontakt mit den Mächten der Kälte und
-des Eises. Er oder sie gewinnt Widerstand gegen die Kälte und kann Eismagie
-effektiver verwenden, aber wird verwundbarer zu den Effekten des Feuers.
 %%%%
 ring of intelligence
 
@@ -1566,21 +1554,6 @@ befestigten Metallkopf besteht. Kürzer als anderer polearms kann es mit einer
 oder zwei Händen ausgeübt werden und ist auch leicht genug, um geworfen zu
 werden.
 %%%%
-staff of air
-
-Dieser Stab vergrößert die Macht von Luft-Zaubern die durch seinen Ausüber
-geworfen wurden, zusätzlich wird er oder sie gegen Elektrizität isoliert. Wenn
-der Ausüber in Anrufungen und Luftmagie erfahren ist, kann er diejenigen
-schocken die mit ihm geschlagen wurden.
-%%%%
-staff of cold
-
-Dieser Personal vergrößert die Macht von Eisperioden, die durch seinen wielder
-geworfen sind, und schützt ihn oder sie von den Effekten der Kälte. Wenn der
-wielder in Anrufungen erfahren ist, können sie diejenigen einfrieren, die
-dadurch geschlagen sind, noch größeren Schaden anrichtend, wenn sie auch in der
-Eismagie erfahren sind.
-%%%%
 staff of conjuration
 
 Dieser Personal vergrößert die Macht von durch seinen Besitzer geworfenen
@@ -1593,26 +1566,11 @@ wielder geworfen sind, und schützt ihn oder sie von der negativen Energie. Wenn
 der wielder in beiden Anrufungen und Geisterbeschwörung erfahren ist, können
 sie großen Schmerz jenen lebenden Seelen zufügen, die sie schlagen.
 %%%%
-staff of earth
-
-Dieser Personal vergrößert die Macht von durch seinen wielder geworfenen
-Erdperioden. Wenn der wielder in Anrufungen erfahren ist, kann er diejenigen
-zerquetschen, die dadurch geschlagen sind, noch größeren Schaden anrichtend,
-wenn sie auch in der Erdmagie erfahren sind.
-%%%%
 staff of energy
 
 Dieser Stab erlaubt seinem Ausüber magische Energie zu steuern: Zaubern führt
 nicht mehr zu Hunger und atmosphärische Magie kann zu des Ausübers Zwecken
 kanalisiert werden.
-%%%%
-staff of fire
-
-Dieser Personal vergrößert die Macht von Feuerperioden, die durch seinen
-wielder geworfen sind, und schützt ihn oder sie von den Effekten der Hitze und
-des Feuers. Wenn der wielder in Anrufungen erfahren ist, können sie diejenigen
-verbrennen, die dadurch geschlagen sind, noch größeren Schaden anrichtend, wenn
-sie auch in der Feuermagie erfahren sind.
 %%%%
 staff of poison
 

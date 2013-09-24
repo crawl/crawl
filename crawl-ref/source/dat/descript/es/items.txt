@@ -951,22 +951,10 @@ ring of evasion
 Este anillo hace que su portador sea más o menos capaz de evitar ataques, en
 función de su grado de encantamiento.
 %%%%
-ring of fire
-
-Este anillo hace que su portador esté más en contacto con los poderes del
-fuego. Ganará resistencia al calor y podrá usar la magia del fuego más
-eficazmente pero será más vulnerable a los efectos del frío.
-%%%%
 ring of hunger
 
 Este anillo maldito hace que su portador tenga hambre considerablemente más
 deprisa.
-%%%%
-ring of ice
-
-Este anillo hace que su portador esté más en contacto con los poderes del
-hielo. Ganará resistencia al frío y podrá usar la magia del hielo más
-eficazmente, pero será más vulnerable a los efectos del fuego.
 %%%%
 ring of intelligence
 
@@ -1208,20 +1196,6 @@ spear
 
 Un palo largo con una punta de metal en un extremo, para ser asido o lanzado.
 %%%%
-staff of air
-
-Este bastón incrementa el poder de los hechizos de aire recitados por su
-portador, y lo aisla de la electricidad. Si el portador del bastón tiene
-capacidad en evocaciones y magia del aire, puede provocar descargas a quienes
-golpee con él.
-%%%%
-staff of cold
-
-Este bastón incrementa el poder de los hechizos de hielo recitados por su
-portador y lo protege de los efectos del frío. Si el portador del bastón tiene
-capacidad en evocaciones puede congelar a quienes golpee con él, con mayor
-efecto si también posee conocimiento de la magia del hielo.
-%%%%
 staff of conjuration
 
 Este bastón aumenta el poder de los conjuros lanzados por su portador.
@@ -1232,19 +1206,6 @@ Este bastón aumenta el poder de los conjuros necromántico del portador, ademá
 de protegerlo de energía negativa. Si el portador tiene la habilidad
 evocaciones además de la de necromancia, pueden causar mucho dolor a las almas
 vivientes que golpee.
-%%%%
-staff of earth
-
-Este bastón aumenta el poder de los conjuros de tierra del portador. Si éste es
-hábil en evocaciones, puede triturar a quien es golpeado, el daño es aún mayor
-si también se es hábil en magia de tierra.
-%%%%
-staff of fire
-
-Este bastón aumenta el poder de los conjuros de fuego del portador, y lo
-protege de los efectos producidos por el calor y el fuego. Si el portador es
-hábil en evocación, puede quemar a quien es golpeado por este bastón; el efecto
-es aún mayor si se tiene habilidad en magia de fuego.
 %%%%
 staff of poison
 

@@ -935,21 +935,9 @@ ring of evasion
 Ten pierścień ułatwia lub utrudnia nosicielowi na unikanie ataków, w zależności
 od mocy i kierunku czaru nań rzuconego.
 %%%%
-ring of fire
-
-Ten pierścień daje swemu nosicielowi moc ognia. Wzmacnia to wszelkie czary
-Magii Ognia jak i zapewnia odporność na ogień, jednakże czary Magii Lodu są
-osłabione, a nosiciel jest bardziej wrażliwy na zimno.
-%%%%
 ring of hunger
 
 Ten pierścień pomaga zrzucić nadwagę, wielce zwiększając zużycie pokarmu.
-%%%%
-ring of ice
-
-Ten pierścień daje swemu nosicielowi moc zimna. Wzmacnia to wszelkie czary
-Magii Lodu jak i zapewnia odporność na chłód, jednakże czary Magii Ognia są
-osłabione, a nosiciel jest bardziej wrażliwy na wysoką temperaturę.
 %%%%
 ring of intelligence
 
@@ -1290,20 +1278,6 @@ spear
 Długi patyk, z zaostrzonym grotem na końcu. Nadaje się do walki wręcz jak i do
 rzucania.
 %%%%
-staff of air
-
-Ten kij zwiększa moc czarów Magii Powietrza, a także zapewnia ochronę przed
-porażeniem elektrycznością. Jeśli użytkownik ma wystarczające umiejętności
-zarówno w Magii Powietrza jak i użyciu przedmiotów magicznych, wrogowie
-uderzeni tym kijem zostaną porażeni prądem.
-%%%%
-staff of cold
-
-Ten kij zwiększa moc czarów Magii Lodu, a także zapewnia ochronę przed efektami
-zimna. Jeśli użytkownik potrafi posługiwać się magicznymi przedmiotami,
-wrogowie uderzeni tym kijem zostaną przymrożeni — mocniej jeśli użytkownik
-posiada umiejętności w Magii Lodu.
-%%%%
 staff of conjuration
 
 Ten kij zwiększa moc czarów Magii Niszczenia.
@@ -1315,23 +1289,10 @@ ochronę. Jeśli użytkownik posiada umiejętności zarówno w Nekromancji jak i
 użyciu przedmiotów magicznym, żywe istoty uderzone tym kijem ucierpią dodatkowe
 obrażenia.
 %%%%
-staff of earth
-
-Ten kij zwiększa moc czarów Magii Ziemi. Jeśli użytkownik potrafi posługiwać
-się magicznymi przedmiotami, wrogowie uderzeni tym kijem zostaną zmiażdżeni —
-mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi.
-%%%%
 staff of energy
 
 Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go w
 celu uzupełnienia magicznej energii.
-%%%%
-staff of fire
-
-Ten kij zwiększa moc czarów Magii Ognia, a także zapewnia ochronę przed
-efektami gorąca. Jeśli użytkownik potrafi posługiwać się magicznymi
-przedmiotami, wrogowie uderzeni tym kijem zostaną przypaleni — mocniej jeśli
-użytkownik posiada umiejętności w Magii Ognia.
 %%%%
 staff of poison
 

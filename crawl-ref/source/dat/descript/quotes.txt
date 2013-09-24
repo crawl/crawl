@@ -148,7 +148,6 @@ apocalypse crab
 “I should have been a pair of ragged claws
  scuttling across the floors of silent seas.”
     -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. 1915.
-
 %%%%
 Asmodeus
 
@@ -570,10 +569,10 @@ amulet of the gourmand
 %%%%
 amulet of warding
 
-[...] says a traveller in Central Borneo: “[...] When a company from the
-middle Mahakam River visited me among the Blu-u Kayans in the year 1897,
-no woman showed herself outside her house without a burning bundle of
-/plehiding/ bark, the stinking smoke of which drives away evil spirits.”
+[...] says a traveller in Central Borneo: “[...] When a company from the middle
+Mahakam River visited me among the Blu-u Kayans in the year 1897, no woman
+showed herself outside her house without a burning bundle of /plehiding/ bark,
+the stinking smoke of which drives away evil spirits.”
     -Sir James George Frazer, _The Golden Bough_. 1922.
 %%%%
 animal skin
@@ -2455,9 +2454,9 @@ shadow dragon
         “Let the Holy Cross be my light / Let not the dragon be my guide
         Step back Satan / Never tempt me with vain things
         What you offer me is evil / You drink the poison yourself.”
-    -full text of initials on the Saint Benedict Medal, worn to ward off
-evil spririts. Inscription from 11-15th century, formally approved by pope
-Benedict XIV in 18th century
+    -full text of initials on the Saint Benedict Medal, worn to ward off evil
+spririts. Inscription from 11-15th century, formally approved by pope Benedict
+XIV in 18th century
 %%%%
 shadow wraith
 
@@ -3078,7 +3077,6 @@ very ugly thing
  By inch-meal a disease! His spirits hear me
  And yet I needs must curse. ”
     -William Shakespeare, _The Tempest_, II, 2. 1611.
-
 %%%%
 wand
 

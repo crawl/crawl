@@ -1131,21 +1131,9 @@ ring of evasion
 Denne ring gør enten sin ejer bedre eller dårligere til at undgå angreb,
 afhængigt af hvor meget, den er fortryllet.
 %%%%
-ring of fire
-
-Denne ring bringer sin ejer i tættere kontakt med ildens kræfter. Han eller hun
-bliver modstandsdygtig over for varme og mere effektiv til at bruge ildmagi,
-men bliver også sårbar over for kuldens effekter.
-%%%%
 ring of hunger
 
 Denne nederdrægtige ring gør sin ejer sulten hurtigere.
-%%%%
-ring of ice
-
-Denne ring bringer sin bærer i tættere forbindelse med kuldens og isens
-kræfter. Han eller hun bliver mere modstandsdygtig mod kulde og is og kan bruge
-ismagi mere effektivt, men bliver også mere sårbar over for ildens effekter.
 %%%%
 ring of intelligence
 
@@ -1538,18 +1526,6 @@ Et jagtvåben, som består af et afbalanceret træskaft med et spidst metalhoved
 som er fæstnet i den ene ende. Det er kortere end andre stagevåben og kan
 bruges med en eller to hænder. Det er endda let nok til at man kan kaste det.
 %%%%
-staff of air
-
-Denne stav øger brugerens luftmagis kraft og isolerer ham eller hende mod
-elektricitet. Hvis brugeren er kyndig i både vækkelser og luftmagi, kan staven
-give stød, når den rammer fjender.
-%%%%
-staff of cold
-
-Denne stav øger brugerens isbesværgelsers kraft og beskytter mod kuldens
-effekter. Hvis brugeren er kyndig i vækkelser, kan staven fryse fjender, der
-bliver ramt af den, og give større skade, jo bedre brugeren er til ismagi.
-%%%%
 staff of conjuration
 
 Denne stav øger brugerens fremmaningers kraft.
@@ -1560,23 +1536,11 @@ Denne stav øger brugerens nekromantiske besværgelsers kraft og beskytter mod
 negativ energi. Hvis brugeren er kyndig i både vækkelser og nekromantik, vil
 staven forårsage store smerter, når den rammer levende sjæle.
 %%%%
-staff of earth
-
-Den stav øger brugerens jordbesværgelsers kraft. Hvis brugeren er kyndig i
-vækkelser, kan den knuse dem, den rammer, og gøre endnu mere skade, hvis
-brugeren også mestrer jordmagi.
-%%%%
 staff of energy
 
 Denne stav lader sin bærer kontrollere magisk energi: Man bliver ikke længere
 sulten af at kaste besværgelser, og naturlig baggrundsmagi kan kanaliseres til
 bærerens formål.
-%%%%
-staff of fire
-
-Denne stav øger brugerens ildbesværgelsers kraft og beskytter mod varmens og
-ildens effekter. Hvis du er kyndig til vækkelser, kan den brænde dem, den
-rammer, og gøre endnu mere skade, hvis du også mestrer ildmagi.
 %%%%
 staff of poison
 
