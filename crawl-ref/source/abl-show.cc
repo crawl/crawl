@@ -1196,7 +1196,15 @@ string get_ability_desc(const ability_type ability)
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
 
-    return name + "\n\n" + lookup + "\n" + _detailed_cost_description(ability);
+    ostringstream res;
+    res << name << "\n\n" << lookup << "\n"
+        << _detailed_cost_description(ability);
+
+    const string quote = getQuoteString(name + " ability");
+    if (!quote.empty())
+        res << "\n\n" << quote;
+
+    return res.str();
 }
 
 static void _print_talent_description(const talent& tal)
