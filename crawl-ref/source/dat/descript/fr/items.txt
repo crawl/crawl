@@ -1068,9 +1068,10 @@ attaques, en fonction de son degré d'enchantement.
 %%%%
 ring of fire
 
-Cet anneau permet à son porteur d’être plus proche des pouvoirs du feu. Il ou
-elle gagne de la résistance à la chaleur et peut utiliser la magie du feu plus
-efficacement, mais devient plus vulnérable aux effets du froid.
+Cet anneau permet à son porteur d'avoir une plus grande affinité avec les
+pouvoirs du feu. Il ou elle gagne de la résistance à la chaleur et peut
+utiliser la magie du feu plus efficacement, mais devient moins efficace avec la
+magie de la glace et plus vulnérable aux effets du froid.
 %%%%
 ring of hunger
 
@@ -1078,9 +1079,10 @@ Cet anneau maudit affame son porteur rapidement.
 %%%%
 ring of ice
 
-Cet anneau permet à son porteur d’être plus proche avec les pouvoirs de la
-glace. Il ou elle gagne de la résistance au froid et peut utiliser la magie de
-la glace plus efficacement, mais devient plus vulnérable aux effets du feu.
+Cet anneau permet à son porteur d'avoir une plus grande affinité avec les
+pouvoirs de la glace. Il ou elle gagne de la résistance au froid et peut
+utiliser la magie de la glace plus efficacement, mais devient moins efficace
+avec la magie du feu et plus vulnérable aux effets du feu.
 %%%%
 ring of intelligence
 
@@ -1486,16 +1488,17 @@ légere pour être jeté.
 %%%%
 staff of air
 
-Ce bâton augmente la puissance des sorts d'air lancés par son porteur, et
-l'isole électriquement. Si le porteur est compétent en évocation et en magie de
-l'air, il peut choquer ce qu'il frappe avec ce bâton.
+Ce bâton augmente la puissance des sorts d'air lancés par son porteur, mais
+réduit celle des sorts de terre. Il l'isole électriquement. Si le porteur est
+compétent en évocations, il peut électrifier ceux qu'il frappe avec, leur
+causant d'autant plus de dégâts qu'il est compétent en magie de l'air.
 %%%%
 staff of cold
 
-Ce bâton accroit la puissance des sortilèges de glace de son porteur et, le
-protège contre les effets du froid. Si son possesseur est compétent en
-Évocations, il peut geler les ennemis qu'il frappe avec, faisant de grands
-dégâts s'il est aussi compétent en Magie de la Glace.
+Ce bâton augmente la puissance des sorts de glace de son porteur, mais diminue
+celle des sorts de feu. Il le protège contre les effets du froid. Si le porteur
+est compétent en évocations, il peut geler ceux qu'il frappe avec, leur causant
+d'autant plus de dégâts qu'il est compétent en magie de la glace.
 %%%%
 staff of conjuration
 
@@ -1510,10 +1513,10 @@ vivantes qu'il frappe avec.
 %%%%
 staff of earth
 
-Ce bâton accroit la puissance des sorts de la terre lancés par son porteur. Si
-son possesseur est compétent en Évocations, il peut briser ceux qu'il frappe
-avec, et leur causer de terrible dégâts si en plus il est compétent en Magie de
-la Terre.
+Ce bâton augmente la puissance des sorts de terre lancés par son porteur mais
+diminue celle des sorts d'air. Si le porteur est compétent en évocations, il
+peut écraser ceux qu'il frappe avec, leur causant d'autant plus de dégâts qu'il
+est compétent en magie de la terre.
 %%%%
 staff of energy
 
@@ -1522,10 +1525,11 @@ ne donne plus faim et il peut canaliser la magie ambiante.
 %%%%
 staff of fire
 
-Ce bâton accroit le pouvoir des sorts de feu lancés par le porteur, et le
-protège des effets de la chaleur et du feu. Si le possesseur est compétent en
-Évocations, il pourra brûler ceux qu'il frappe avec, et leur causer de
-terribles dégâts si en plus il est compétent en Magie du Feu.
+Ce bâton augmente la puissance des sorts de feu lancés par le porteur, mais
+diminue celle des sorts de glace. Il le protège des effets de la chaleur et du
+feu. Si le porteur est compétent en évocations, il peut brûler ceux qu'il
+frappe avec, leur causant d'autant plus de dégâts qu'il est compétent en magie
+du feu.
 %%%%
 staff of poison
 
