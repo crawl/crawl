@@ -2390,7 +2390,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     damage = victim->hurt(agent, damage, BEAM_NEG);
 
     // Actors that had LOS to the victim (blocked by glass, clouds, etc),
-    // even if they couldn't actually see each another because of blindness
+    // even if they couldn't actually see each other because of blindness
     // or invisibility.
     for (actor_iterator ai(victim_los); ai; ++ai)
     {
