@@ -812,30 +812,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_UNRESTRICTED;
         }
 
-    case WPN_ROCKS:
-        switch (ng.species)
-        {
-        case SP_OGRE:
-        case SP_TROLL:
-            return CC_UNRESTRICTED;
-        default:
-            return CC_BANNED;
-        }
-
-    case WPN_JAVELINS:
-        switch (ng.species)
-        {
-        case SP_DEEP_DWARF:
-        case SP_DJINNI:
-            return CC_RESTRICTED;
-        case SP_SPRIGGAN:
-        case SP_FELID:
-            return CC_BANNED;
-        default:
-            return CC_UNRESTRICTED;
-        }
-
-    case WPN_DARTS:
+    case WPN_THROWN:
         switch (ng.species)
         {
         case SP_DEEP_DWARF:

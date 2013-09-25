@@ -218,12 +218,13 @@ weapon_type str_to_weapon(const string &str)
         return WPN_BOW;
     else if (str == "crossbow")
         return WPN_CROSSBOW;
-    else if (str == "rocks")
-        return WPN_ROCKS;
-    else if (str == "javelins")
-        return WPN_JAVELINS;
-    else if (str == "darts")
-        return WPN_DARTS;
+    else if (str == "thrown"
+             || str == "rocks"
+             || str == "javelins"
+             || str == "tomahawks")
+    {
+        return WPN_THROWN;
+    }
     else if (str == "random")
         return WPN_RANDOM;
     else if (str == "viable")
@@ -258,12 +259,8 @@ static string _weapon_to_str(int weapon)
         return "bow";
     case WPN_CROSSBOW:
         return "crossbow";
-    case WPN_ROCKS:
-        return "rocks";
-    case WPN_JAVELINS:
-        return "javelins";
-    case WPN_DARTS:
-        return "darts";
+    case WPN_THROWN:
+        return "thrown";
     case WPN_VIABLE:
         return "viable";
     case WPN_RANDOM:

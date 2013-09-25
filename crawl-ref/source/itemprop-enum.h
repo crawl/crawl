@@ -511,11 +511,8 @@ enum weapon_type
     WPN_RANDOM,
     WPN_VIABLE,
 
-// thrown weapons (for hunter weapon selection)
+// thrown weapons (for hunter weapon selection) - rocks, javelins, tomahawks
     WPN_THROWN,
-    WPN_ROCKS,
-    WPN_JAVELINS,
-    WPN_DARTS,
 };
 
 enum weapon_property_type
