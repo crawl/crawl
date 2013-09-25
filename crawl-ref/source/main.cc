@@ -844,13 +844,8 @@ static void _handle_wizard_command(void)
     // it's used to prevent access for non-authorised users to wizard
     // builds in dgamelaunch builds unless the game is started with the
     // -wizard flag.
-#ifdef TURN_ZERO_WIZARD
-    if (Options.wiz_mode == WIZ_NEVER && you.num_turns != 0)
-        return;
-#else
     if (Options.wiz_mode == WIZ_NEVER)
         return;
-#endif
 
     if (!you.wizard)
     {
