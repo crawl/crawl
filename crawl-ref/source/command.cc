@@ -537,8 +537,9 @@ void list_jewellery(void)
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
-        if ((you.species != SP_OCTOPODE && i > EQ_AMULET)
-            || (you.species == SP_OCTOPODE && i < EQ_AMULET))
+        if ((you.species != SP_OCTOPODE && i > EQ_AMULET
+            || you.species == SP_OCTOPODE && i < EQ_AMULET)
+            && i != EQ_RING_AMULET)
         {
             continue;
         }
@@ -547,18 +548,19 @@ void list_jewellery(void)
         int       colour       = MSGCOL_BLACK;
 
         const char *slot =
-                 (i == EQ_LEFT_RING)  ? "Left ring" :
-                 (i == EQ_RIGHT_RING) ? "Right ring" :
-                 (i == EQ_AMULET)     ? "Amulet" :
-                 (i == EQ_RING_ONE)   ? "1st ring" :
-                 (i == EQ_RING_TWO)   ? "2nd ring" :
-                 (i == EQ_RING_THREE) ? "3rd ring" :
-                 (i == EQ_RING_FOUR)  ? "4th ring" :
-                 (i == EQ_RING_FIVE)  ? "5th ring" :
-                 (i == EQ_RING_SIX)   ? "6th ring" :
-                 (i == EQ_RING_SEVEN) ? "7th ring" :
-                 (i == EQ_RING_EIGHT) ? "8th ring"
-                                      : "unknown";
+                 (i == EQ_LEFT_RING)   ? "Left ring" :
+                 (i == EQ_RIGHT_RING)  ? "Right ring" :
+                 (i == EQ_AMULET)      ? "Amulet" :
+                 (i == EQ_RING_ONE)    ? "1st ring" :
+                 (i == EQ_RING_TWO)    ? "2nd ring" :
+                 (i == EQ_RING_THREE)  ? "3rd ring" :
+                 (i == EQ_RING_FOUR)   ? "4th ring" :
+                 (i == EQ_RING_FIVE)   ? "5th ring" :
+                 (i == EQ_RING_SIX)    ? "6th ring" :
+                 (i == EQ_RING_SEVEN)  ? "7th ring" :
+                 (i == EQ_RING_EIGHT)  ? "8th ring" :
+                 (i == EQ_RING_AMULET) ? "Amulet ring"
+                                       : "unknown";
 
         string item;
         if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])

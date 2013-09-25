@@ -99,7 +99,9 @@ enum brand_type // item_def.special
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
     SPWPN_REACHING,
+#if TAG_MAJOR_VERSION == 34
     SPWPN_RETURNING,
+#endif
     SPWPN_CHAOS,
     SPWPN_EVASION,
 
@@ -266,9 +268,7 @@ enum missile_type
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
-#if TAG_MAJOR_VERSION == 34
-    MI_PIE,
-#endif
+    MI_TOMAHAWK,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection

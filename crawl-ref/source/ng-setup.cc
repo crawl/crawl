@@ -1388,17 +1388,6 @@ static void _setup_generic(const newgame_def& ng)
         you.train[SK_STEALTH] = 0;
     }
 
-    // If the item in slot 'a' is a throwable weapon like a dagger,
-    // inscribe it with {=f} to prevent it being autoquivered.
-    // (It's no fun to discover you've just thrown your +2 dagger
-    // because you ran out of needles for your blowgun!)
-    // FIXME: It ought to be possible to override this with autoinscribe rules.
-    if (you.inv[0].base_type == OBJ_WEAPONS
-        && is_throwable(&you, you.inv[0]))
-    {
-        you.inv[0].inscription = "=f";
-    }
-
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();
     autoinscribe();

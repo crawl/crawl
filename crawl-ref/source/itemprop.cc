@@ -14,6 +14,7 @@
 
 #include "externs.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "decks.h"
 #include "describe.h"
@@ -164,7 +165,6 @@ struct weapon_def
     hands_reqd_type     hands;
     size_type           fit_size;
     missile_type        ammo;         // MI_NONE for non-launchers
-    bool                throwable;
 
     int                 dam_type;
     int                 acquire_weight;
@@ -175,159 +175,159 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
 {
     // Maces & Flails
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_ROD,               "rod",                 5,  3, 13,  50,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_WHIP,              "whip",                6,  2, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 0 },
     { WPN_HAMMER,            "hammer",              7,  3, 13,  90,  7,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_MACE,              "mace",                8,  3, 14, 120,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_FLAIL,             "flail",              10,  0, 14, 130,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_MORNINGSTAR,       "morningstar",        13, -2, 15, 140,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DEMON_WHIP,        "demon whip",         11,  1, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 2 },
     { WPN_SACRED_SCOURGE,    "sacred scourge",     12,  0, 11,  30,  2,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_SLASHING, 0 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        15, -1, 15, 180,  8,
-        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 2 },
     { WPN_GREAT_MACE,        "great mace",         18, -4, 17, 270,  9,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 330, 10,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_SPIKED_CLUB, "giant spiked club",  22, -7, 18, 350, 10,
-        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_TWO,    SIZE_BIG,    MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
 
     // Short Blades
     { WPN_DAGGER,            "dagger",              4,  6, 10,  20,  1,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
+        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_STABBING | DAM_SLICE, 10 },
     { WPN_QUICK_BLADE,       "quick blade",         5,  6,  7,  50,  0,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_STABBING | DAM_SLICE, 2 },
     { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,  80,  2,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE, false,
+        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 10 },
     { WPN_SABRE,             "sabre",               7,  4, 12,  90,  2,
-        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE, false,
+        SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 10 },
 
     // Long Blades
     { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
     { WPN_BLESSED_FALCHION,      "blessed falchion",       9,  2, 12, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_SLICING, 0 },       // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    11,  0, 13, 160,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_SCIMITAR,              "scimitar",              12, -2, 14, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13, 200,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 2 },
     { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12, 200,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_DOUBLE_SWORD,          "double sword",          15, -1, 15, 220,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 2 },
     { WPN_BLESSED_DOUBLE_SWORD,  "blessed double sword",  16, -2, 14, 220,  3,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_GREAT_SWORD,           "great sword",           16, -3, 16, 250,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 10 },
     { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -4, 15, 250,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19, 260,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 2 },
     { WPN_BLESSED_TRIPLE_SWORD,  "blessed triple sword",  20, -5, 18, 260,  5,
-        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 0 },
 
     // Axes
     { WPN_HAND_AXE,          "hand axe",            7,  3, 13,  80,  6,
-        SK_AXES,         HANDS_ONE,    SIZE_LITTLE, MI_NONE, true,
+        SK_AXES,         HANDS_ONE,    SIZE_LITTLE, MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_WAR_AXE,           "war axe",            11,  0, 15, 180,  7,
-        SK_AXES,         HANDS_ONE,    SIZE_SMALL,  MI_NONE, false,
+        SK_AXES,         HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_BROAD_AXE,         "broad axe",          13, -2, 16, 230,  8,
-        SK_AXES,         HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_AXES,         HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17, 250,  8,
-        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_EXECUTIONERS_AXE,  "executioner's axe",  18, -6, 20, 280,  9,
-        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CHOPPING, 2 },
 
     // Polearms
     { WPN_SPEAR,             "spear",               6,  4, 11,  50,  3,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_SMALL,  MI_NONE, true,
+        SK_POLEARMS,     HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_PIERCING, 10 },
     { WPN_TRIDENT,           "trident",             9,  1, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 10 },
     { WPN_HALBERD,           "halberd",            13, -3, 15, 200,  5,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CHOPPING | DAM_PIERCE, 10 },
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 0 },
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 2 },
     { WPN_TRISHULA,          "trishula",           13,  0, 13, 160,  4,
-        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_POLEARMS,     HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 17, 200,  6,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CHOPPING, 10 },
     { WPN_BARDICHE,          "bardiche",           18, -6, 20, 200,  8,
-        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CHOPPING, 2 },
 
     // Staves
     // WPN_STAFF is for weapon stats for magical staves only.
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  3,
-        SK_STAVES,       HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_STAVES,       HANDS_ONE,    SIZE_MEDIUM, MI_NONE,
         DAMV_CRUSHING, 0 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  3,
-        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",            16,-3, 14, 200,  3,
-        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 2 },
 
     // Range weapons
@@ -336,19 +336,19 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     // - slings get a bonus from dex, not str (as tension is meaningless)
     // - str weight is used for speed and applying dex to skill
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
-        SK_THROWING,     HANDS_ONE,    SIZE_LITTLE, MI_NEEDLE, false,
+        SK_THROWING,     HANDS_ONE,    SIZE_LITTLE, MI_NEEDLE,
         DAMV_NON_MELEE, 0 },
     { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
-        SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE, false,
+        SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 10 },
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
-        SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT, false,
+        SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT,
         DAMV_NON_MELEE, 10 },
     { WPN_BOW,               "bow",                 3,  1, 11,  90,  2,
-        SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW, false,
+        SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW,
         DAMV_NON_MELEE, 10 },
     { WPN_LONGBOW,           "longbow",             6,  0, 12, 120,  3,
-        SK_BOWS,         HANDS_TWO,    SIZE_LARGE,  MI_ARROW, false,
+        SK_BOWS,         HANDS_TWO,    SIZE_LARGE,  MI_ARROW,
         DAMV_NON_MELEE, 10 },
 };
 
@@ -373,9 +373,7 @@ static const missile_def Missile_prop[NUM_MISSILES] =
     { MI_SLING_BULLET,  "sling bullet",  6,    4, false },
     { MI_JAVELIN,       "javelin",      10,   80, true  },
     { MI_THROWING_NET,  "throwing net",  0,   30, true  },
-#if TAG_MAJOR_VERSION == 34
-    { MI_PIE,           "pie",           2,    6, true  },
-#endif
+    { MI_TOMAHAWK,      "tomahawk",      6,   30, true  },
 };
 
 enum food_flag_type
@@ -809,7 +807,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             return;
         break;
 
-    case OBJ_MISSILES:
     default:
         return;
     }
@@ -840,10 +837,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             if (item.sub_type == ARM_PLATE_ARMOUR || is_hard_helmet(item))
                 return;
             break;
-        case OBJ_MISSILES:
-            if (item.sub_type == MI_BOLT)
-                return;
-            break;
         default:
             break;
         }
@@ -871,14 +864,6 @@ void set_equip_race(item_def &item, iflags_t flags)
             if (item.sub_type == ARM_ROBE
                 || item.sub_type == ARM_LEATHER_ARMOUR
                 || get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
-            {
-                return;
-            }
-            break;
-        case OBJ_MISSILES:
-            if (item.sub_type == MI_NEEDLE
-                || item.sub_type == MI_ARROW
-                || item.sub_type == MI_JAVELIN)
             {
                 return;
             }
@@ -1765,6 +1750,15 @@ static bool _slot_blocked(const item_def &item)
             }
         }
 
+        if (player_equip_unrand(UNRAND_FINGER_AMULET))
+        {
+            if (you.equip[EQ_RING_AMULET] == -1
+                || _item_is_swappable(you.inv[you.equip[EQ_RING_AMULET]], false))
+            {
+                return false;
+            }
+        }
+
         // No free slot found.
         return true;
     }
@@ -1910,54 +1904,47 @@ bool has_launcher(const item_def &ammo)
     return (ammo.sub_type != MI_DART
             && ammo.sub_type != MI_LARGE_ROCK
             && ammo.sub_type != MI_JAVELIN
-#if TAG_MAJOR_VERSION == 34
-            && ammo.sub_type != MI_PIE
-#endif
+            && ammo.sub_type != MI_TOMAHAWK
             && ammo.sub_type != MI_THROWING_NET);
 }
 
 // Returns true if item can be reasonably thrown without a launcher.
 bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 {
+    if (wpn.base_type != OBJ_MISSILES)
+        return false;
+
     const size_type bodysize = actor->body_size();
 
-    if (wpn.base_type == OBJ_WEAPONS)
-        return Weapon_prop[Weapon_index[wpn.sub_type]].throwable;
-    else if (wpn.base_type == OBJ_MISSILES)
+    if (!force)
     {
-        if (!force)
+        if ((bodysize < SIZE_LARGE
+                || !actor->can_throw_large_rocks())
+            && wpn.sub_type == MI_LARGE_ROCK)
         {
-            if ((bodysize < SIZE_LARGE
-                    || !actor->can_throw_large_rocks())
-                && wpn.sub_type == MI_LARGE_ROCK)
-            {
-                return false;
-            }
-
-            if (bodysize < SIZE_MEDIUM
-                && (wpn.sub_type == MI_JAVELIN
-                    || wpn.sub_type == MI_THROWING_NET))
-            {
-                return false;
-            }
+            return false;
         }
 
-        return Missile_prop[Missile_index[wpn.sub_type]].throwable;
+        if (bodysize < SIZE_MEDIUM
+            && (wpn.sub_type == MI_JAVELIN
+                || wpn.sub_type == MI_THROWING_NET))
+        {
+            return false;
+        }
     }
 
-    return false;
+    return Missile_prop[Missile_index[wpn.sub_type]].throwable;
 }
 
 // Decide if something is launched or thrown.
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile)
 {
-    if (missile.base_type == OBJ_MISSILES
-        && launcher
-        && missile.launched_by(*launcher))
-    {
+    if (missile.base_type != OBJ_MISSILES)
+        return LRET_FUMBLED;
+
+    if (launcher && missile.launched_by(*launcher))
         return LRET_LAUNCHED;
-    }
 
     return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
 }

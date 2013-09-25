@@ -1502,7 +1502,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
-// throwable weapon depending on the monster type.
+// throwable missiles depending on the monster type.
 static void _give_ammo(monster* mon, int level,
                        item_make_species_type item_race,
                        bool mons_summoned)
@@ -1608,9 +1608,8 @@ static void _give_ammo(monster* mon, int level,
     }
     else
     {
-        // Give some monsters throwing weapons.
+        // Give some monsters throwables.
         int weap_type = -1;
-        object_class_type weap_class = OBJ_WEAPONS;
         int qty = 0;
         switch (mon->type)
         {
@@ -1619,7 +1618,6 @@ static void _give_ammo(monster* mon, int level,
             if (x_chance_in_y(2, 5))
             {
                 item_race  = MAKE_ITEM_NO_RACE;
-                weap_class = OBJ_MISSILES;
                 weap_type  = MI_DART;
                 qty = 1 + random2(5);
             }
@@ -1629,44 +1627,36 @@ static void _give_ammo(monster* mon, int level,
             if (one_chance_in(
                     player_in_branch(BRANCH_ORCISH_MINES)? 9 : 20))
             {
-                weap_type = random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
+                weap_type = MI_TOMAHAWK;
                 qty       = random_range(4, 8);
-                item_race = MAKE_ITEM_ORCISH;
             }
             break;
 
         case MONS_ORC:
             if (one_chance_in(20))
             {
-                weap_type = random_choose(WPN_HAND_AXE, WPN_SPEAR, -1);
+                weap_type = MI_TOMAHAWK;
                 qty       = random_range(2, 5);
-                item_race = MAKE_ITEM_ORCISH;
             }
             break;
 
         case MONS_URUG:
             weap_type  = MI_JAVELIN;
-            weap_class = OBJ_MISSILES;
-            item_race  = MAKE_ITEM_ORCISH;
             qty = random_range(4, 7);
             break;
 
         case MONS_CHUCK:
             weap_type  = MI_LARGE_ROCK;
-            weap_class = OBJ_MISSILES;
             qty = 2;
             break;
 
         case MONS_POLYPHEMUS:
             weap_type  = MI_LARGE_ROCK;
-            weap_class = OBJ_MISSILES;
             qty        = random_range(8, 12);
             break;
 
         case MONS_MERFOLK_JAVELINEER:
-            weap_class = OBJ_MISSILES;
             weap_type  = MI_JAVELIN;
-            item_race  = MAKE_ITEM_NO_RACE;
             qty        = random_range(9, 23, 2);
             if (one_chance_in(3))
                 level = MAKE_GOOD_ITEM;
@@ -1676,16 +1666,13 @@ static void _give_ammo(monster* mon, int level,
             if (one_chance_in(3)
                 || active_monster_band == BAND_MERFOLK_JAVELINEER)
             {
-                item_race  = MAKE_ITEM_NO_RACE;
-                weap_class = OBJ_WEAPONS;
-                weap_type  = WPN_SPEAR;
+                weap_type  = MI_TOMAHAWK;
                 qty        = random_range(4, 8);
                 if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                     break;
             }
             if (one_chance_in(6) && !mons_summoned)
             {
-                weap_class = OBJ_MISSILES;
                 weap_type  = MI_THROWING_NET;
                 qty        = 1;
                 if (one_chance_in(4))
@@ -1704,7 +1691,6 @@ static void _give_ammo(monster* mon, int level,
             if (mons_summoned)
                 break;
 
-            weap_class = OBJ_MISSILES;
             weap_type  = MI_THROWING_NET;
             qty        = 1;
             if (one_chance_in(3))
@@ -1722,7 +1708,7 @@ static void _give_ammo(monster* mon, int level,
             return;
 
         const int thing_created =
-            items(0, weap_class, weap_type, true, level, item_race);
+            items(0, OBJ_MISSILES, weap_type, true, level, item_race);
 
         if (thing_created != NON_ITEM)
         {
@@ -1733,9 +1719,7 @@ static void _give_ammo(monster* mon, int level,
 
             w.quantity = qty;
             _give_monster_item(mon, thing_created, false,
-                               (weap_class == OBJ_WEAPONS ?
-                                &monster::pickup_melee_weapon
-                                : &monster::pickup_throwable_weapon));
+                               &monster::pickup_missile);
         }
     }
 }

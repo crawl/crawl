@@ -1387,9 +1387,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     }
 
     // These classes also require pluses and special.
-    if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
-        || item1.base_type == OBJ_MISSILES
-        || item1.base_type == OBJ_FOOD)        // chunks
+    if (item1.base_type == OBJ_MISSILES || item1.base_type == OBJ_FOOD)
     {
         if (item1.plus != item2.plus
             || item1.plus2 != item2.plus2
@@ -1418,12 +1416,10 @@ bool items_similar(const item_def &item1, const item_def &item2)
     return true;
 }
 
-bool items_stack(const item_def &item1, const item_def &item2,
-                 bool force_merge)
+bool items_stack(const item_def &item1, const item_def &item2)
 {
     // Both items must be stackable.
-    if (!force_merge
-        && (!is_stackable_item(item1) || !is_stackable_item(item2))
+    if (!is_stackable_item(item1) || !is_stackable_item(item2)
         || static_cast<int>(item1.quantity) + item2.quantity > 32767)
     {
         COMPILE_CHECK(sizeof(item1.quantity) == 2); // can be relaxed otherwise
@@ -1790,7 +1786,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     item.flags &= ~(ISFLAG_DROPPED_BY_ALLY | ISFLAG_UNOBTAINABLE);
 
     god_id_item(item);
-    maybe_id_weapon(item);
     if (item.base_type == OBJ_BOOKS)
         maybe_id_book(item, true);
 
@@ -2121,7 +2116,8 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_FIVE]
      || item_dropped == you.equip[EQ_RING_SIX]
      || item_dropped == you.equip[EQ_RING_SEVEN]
-     || item_dropped == you.equip[EQ_RING_EIGHT])
+     || item_dropped == you.equip[EQ_RING_EIGHT]
+     || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
         {

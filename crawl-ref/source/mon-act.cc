@@ -1633,7 +1633,7 @@ static bool _handle_throw(monster* mons, bolt & beem)
 
     item_def *launcher = NULL;
     const item_def *weapon = NULL;
-    const int mon_item = mons_pick_best_missile(mons, &launcher);
+    const int mon_item = mons_usable_missile(mons, &launcher);
 
     if (mon_item == NON_ITEM || !mitm[mon_item].defined())
         return false;
@@ -1644,9 +1644,8 @@ static bool _handle_throw(monster* mons, bolt & beem)
     item_def *missile = &mitm[mon_item];
 
     const actor *act = actor_at(beem.target);
-    if (missile->base_type == OBJ_MISSILES
-        && missile->sub_type == MI_THROWING_NET
-        && act)
+    ASSERT(missile->base_type == OBJ_MISSILES);
+    if (act && missile->sub_type == MI_THROWING_NET)
     {
         // Throwing a net at a target that is already caught would be
         // completely useless, so bail out.

@@ -954,10 +954,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_REACHING:
             description += "It can be evoked to extend its reach.";
             break;
-        case SPWPN_RETURNING:
-            description += "A skilled user can throw it in such a way "
-                "that it will return to its owner.";
-            break;
         case SPWPN_PENETRATION:
             description += "Ammo fired by it will pass through the "
                 "targets it hits, potentially hitting all targets in "
