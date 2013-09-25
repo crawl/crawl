@@ -3984,7 +3984,7 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
     case DNGN_TRAP_ALARM:
     case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:
-    case DNGN_TRAP_NATURAL:
+    case DNGN_TRAP_SHAFT:
     case DNGN_TRAP_WEB:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
@@ -4056,7 +4056,7 @@ static void _hints_describe_feature(int x, int y)
             Hints.hints_events[HINT_SEEN_TRAP] = false;
             break;
 
-       case DNGN_TRAP_NATURAL: // only shafts for now
+       case DNGN_TRAP_SHAFT:
             ostr << "The dungeon contains a number of natural obstacles such "
                     "as shafts, which lead one to three levels down. They "
                     "can't be disarmed, but once you know the shaft is there, "

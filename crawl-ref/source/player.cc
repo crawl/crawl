@@ -7829,7 +7829,7 @@ bool player::do_shaft()
         case DNGN_TRAP_TELEPORT:
         case DNGN_TRAP_ALARM:
         case DNGN_TRAP_ZOT:
-        case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_SHAFT:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
             break;
@@ -7841,7 +7841,7 @@ bool player::do_shaft()
         if (!ground_level() || total_weight() == 0)
             return true;
 
-        force_stair = DNGN_TRAP_NATURAL;
+        force_stair = DNGN_TRAP_SHAFT;
     }
 
     down_stairs(force_stair);

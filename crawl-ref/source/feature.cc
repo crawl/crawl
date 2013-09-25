@@ -246,7 +246,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap    = MF_TRAP;
             break;
 
-        case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_SHAFT:
             f.colour     = BROWN;
             f.dchar      = DCHAR_TRAP;
             f.map_colour = BROWN;

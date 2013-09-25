@@ -189,7 +189,7 @@ bool trap_def::is_known(const actor* act) const
         // * very intelligent monsters can be assumed to have a high T&D
         //   skill (or have memorised part of the dungeon layout ;))
 
-        if (category() == DNGN_TRAP_NATURAL)
+        if (type == TRAP_SHAFT)
         {
             // Slightly different rules for shafts:
             // * Lower intelligence requirement for native monsters.
@@ -1165,7 +1165,7 @@ void disarm_trap(const coord_def& where)
     case DNGN_PASSAGE_OF_GOLUBRIA: // not a trap, FIXME
         mpr("You can't disarm that trap.");
         return;
-    case DNGN_TRAP_NATURAL:
+    case DNGN_TRAP_SHAFT:
         // Only shafts for now.
         mpr("You can't disarm a shaft.");
         return;
@@ -1613,7 +1613,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_WEB:
         return DNGN_TRAP_WEB;
     case TRAP_SHAFT:
-        return DNGN_TRAP_NATURAL;
+        return DNGN_TRAP_SHAFT;
 
     case TRAP_TELEPORT:
         return DNGN_TRAP_TELEPORT;
@@ -1774,7 +1774,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     if (env.map_knowledge(pos).seen() && open_shaft)
     {
         mpr("A shaft opens up in the floor!");
-        grd(pos) = DNGN_TRAP_NATURAL;
+        grd(pos) = DNGN_TRAP_SHAFT;
     }
 
     while (o != NON_ITEM)

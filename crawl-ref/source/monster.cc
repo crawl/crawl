@@ -5201,7 +5201,7 @@ bool monster::do_shaft()
         case DNGN_TRAP_TELEPORT:
         case DNGN_TRAP_ALARM:
         case DNGN_TRAP_ZOT:
-        case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_SHAFT:
         case DNGN_TRAP_WEB:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
