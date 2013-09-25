@@ -1325,7 +1325,8 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
-static void _construct_weapon_menu(const weapon_type& defweapon,
+static void _construct_weapon_menu(const newgame_def* ng,
+                                   const weapon_type& defweapon,
                                    const vector<weapon_choice>& weapons,
                                    MenuFreeform* menu)
 {
@@ -1361,14 +1362,13 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
         case WPN_UNARMED:
             text += "claws";
             break;
-        case WPN_JAVELINS:
-            text += "javelins";
-            break;
-        case WPN_ROCKS:
-            text += "large rocks";
-            break;
-        case WPN_DARTS:
-            text += "darts";
+        case WPN_THROWN:
+            if (species_size(ng->species, PSIZE_TORSO) >= SIZE_LARGE)
+                text += "large rocks";
+            else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
+                text += "tomahawks";
+            else
+                text += "javelins";
             break;
         default:
             text += weapon_base_name(weapons[i].first);
@@ -1513,7 +1513,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
-    _construct_weapon_menu(defweapon, weapons, freeform);
+    _construct_weapon_menu(ng, defweapon, weapons, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
@@ -1619,16 +1619,6 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
         {
             weapon_choice wp;
             wp.first = startwep[i];
-
-            if (wp.first == WPN_THROWN)
-            {
-                if (species_size(ng->species, PSIZE_TORSO) == SIZE_LARGE)
-                    wp.first = WPN_ROCKS;
-                else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
-                    wp.first = WPN_DARTS;
-                else
-                    wp.first = WPN_JAVELINS;
-            }
 
             wp.second = weapon_restriction(wp.first, *ng);
             if (wp.second != CC_BANNED)

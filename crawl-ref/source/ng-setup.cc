@@ -476,20 +476,28 @@ static void _update_weapon(const newgame_def& ng)
 
     switch (ng.weapon)
     {
-    case WPN_ROCKS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 4 + plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-        autopickup_starting_ammo(MI_LARGE_ROCK);
-        break;
-    case WPN_JAVELINS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 5 + plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-        autopickup_starting_ammo(MI_JAVELIN);
-        break;
-    case WPN_DARTS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20 + 10 * plus);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-        autopickup_starting_ammo(MI_DART);
+    case WPN_THROWN:
+        if (species_size(ng.species, PSIZE_TORSO) >= SIZE_LARGE)
+        {
+            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1,
+                              4 + plus);
+            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+            autopickup_starting_ammo(MI_LARGE_ROCK);
+        }
+        else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
+        {
+            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1,
+                              8 + 2 * plus);
+            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+            autopickup_starting_ammo(MI_DART);
+        }
+        else
+        {
+            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1,
+                              5 + plus);
+            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+            autopickup_starting_ammo(MI_JAVELIN);
+        }
         break;
     case WPN_BOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, -1, 1, plus, plus);
@@ -569,9 +577,9 @@ static void _give_items_skills(const newgame_def& ng)
                            ARM_ANIMAL_SKIN);
         newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
 
-        // Small species get darts, the others nets.
+        // Small species get tomahawks, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
+            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 6);
         else
             newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
 
