@@ -365,7 +365,7 @@ bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
     return (feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_TELEPORT
             || feat == DNGN_TRAP_ALARM   || feat == DNGN_TRAP_ZOT
             || feat == DNGN_PASSAGE_OF_GOLUBRIA // FIXME
-            || feat == DNGN_TRAP_NATURAL || feat == DNGN_TRAP_WEB
+            || feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_WEB
             || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP);
 }
 
@@ -1583,7 +1583,7 @@ static const char *dngn_feature_names[] =
 
 // DNGN_MINWALK
 "shallow_water", "floor", "open_door",
-"trap_mechanical", "trap_teleport", "trap_natural", "trap_web",
+"trap_mechanical", "trap_teleport", "shaft", "trap_web",
 "undiscovered_trap", "enter_shop", "abandoned_shop",
 
 "stone_stairs_down_i", "stone_stairs_down_ii",

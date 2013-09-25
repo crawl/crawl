@@ -6072,9 +6072,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // Shafts and hatches.
     if (stair_to_find == DNGN_ESCAPE_HATCH_UP
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
-        || stair_to_find == DNGN_TRAP_NATURAL)
+        || stair_to_find == DNGN_TRAP_SHAFT)
     {
-        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_NATURAL));
+        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT));
         if (player_in_branch(BRANCH_SLIME_PITS))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))

@@ -3045,8 +3045,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "alarm trap";
     case DNGN_TRAP_ZOT:
         return "Zot trap";
-    case DNGN_TRAP_NATURAL:
-        return "natural trap";
+    case DNGN_TRAP_SHAFT:
+        return "shaft";
     case DNGN_TRAP_WEB:
         return "web";
     case DNGN_ENTER_SHOP:
@@ -3342,8 +3342,6 @@ string feature_description_at(const coord_def& where, bool covering,
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
-    case DNGN_TRAP_NATURAL:
-    case DNGN_TRAP_WEB:
         return feature_description(grid, get_trap_type(where),
                                    covering_description, dtype,
                                    add_stop, base_desc);

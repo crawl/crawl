@@ -235,7 +235,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_ALARM;
     case DNGN_TRAP_ZOT:
         return TILE_DNGN_TRAP_ZOT;
-    case DNGN_TRAP_NATURAL:
+    case DNGN_TRAP_SHAFT:
         return TILE_DNGN_TRAP_SHAFT;
     case DNGN_TRAP_WEB:
         return TILE_DNGN_TRAP_WEB;
@@ -499,7 +499,6 @@ tileidx_t tileidx_feature(const coord_def &gc)
     }
 
     case DNGN_TRAP_MECHANICAL:
-    case DNGN_TRAP_NATURAL:
         return (_tileidx_trap(env.map_knowledge(gc).trap()));
 
     case DNGN_TRAP_WEB:
