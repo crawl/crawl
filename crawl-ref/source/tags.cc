@@ -978,6 +978,8 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
         else if (x >= DNGN_LAVA_SEA && x < 30)
             x = (dungeon_feature_type)(x - 1);
     }
+    if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
+        x = DNGN_DRY_FOUNTAIN;
 #endif
 
     return x;

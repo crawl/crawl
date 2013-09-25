@@ -456,7 +456,7 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 
 bool feat_is_fountain(dungeon_feature_type feat)
 {
-    return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN;
+    return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN;
 }
 
 bool feat_is_reachable_past(dungeon_feature_type feat)
