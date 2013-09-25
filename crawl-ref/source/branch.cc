@@ -81,7 +81,7 @@ bool branch_is_unfinished(branch_type branch)
     if (branch == BRANCH_UNUSED || branch == BRANCH_DWARVEN_HALL)
         return true;
 #endif
-    return false;
+    return branch == BRANCH_FOREST;
 }
 
 branch_type parent_branch(branch_type branch)
