@@ -1174,6 +1174,23 @@ static void _nuke_all_terrain(bool vaults)
     }
 }
 
+static void _ensure_player_habitable(bool dig_instead)
+{
+    dungeon_feature_type feat = grd(you.pos());
+    if (!you.can_pass_through_feat(feat)
+        || is_feat_dangerous(feat) && !(you.is_wall_clinging()
+                                        && cell_is_clingable(you.pos())))
+    {
+        bool shoved = you.shove();
+        if (!shoved)
+        {
+            // legal only if we just placed a vault
+            ASSERT(dig_instead);
+            grd(you.pos()) = DNGN_FLOOR;
+        }
+    }
+}
+
 static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false, bool now = false)
 {
@@ -1246,14 +1263,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     }
     if (ii)
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
-    dungeon_feature_type feat = grd(you.pos());
-    if (!you.can_pass_through_feat(feat)
-        || is_feat_dangerous(feat) && !(you.is_wall_clinging()
-                                        && cell_is_clingable(you.pos())))
-    {
-        bool shoved = you.shove();
-        ASSERT(shoved);
-    }
+    _ensure_player_habitable(false);
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         ASSERT_RANGE(grd(*ri), DNGN_UNSEEN + 1, NUM_FEATURES);
 }
@@ -1311,6 +1321,8 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
     }
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     setup_environment_effects();
+
+    _ensure_player_habitable(true);
 
     // Abyss has a constant density.
     env.density = 0;
