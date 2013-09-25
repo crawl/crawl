@@ -1208,7 +1208,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         if (item.base_type == OBJ_WEAPONS)
             verb = "Unwield";
         else
-            verb = "Remov";
+            verb = "Remov"; // -ing, not a typo
     }
     else
     {
