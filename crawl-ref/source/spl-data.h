@@ -1824,7 +1824,7 @@ struct spell_desc
     SPELL_CONJURE_BALL_LIGHTNING, "Conjure Ball Lightning",
      SPTYP_AIR | SPTYP_CONJURATION,
      SPFLAG_NONE,
-     7,
+     6,
      200,
      -1, -1,
      0,
