@@ -237,12 +237,27 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_TRAP_TELEPORT:
+            f.colour = f.map_colour = LIGHTBLUE;
+            f.dchar      = DCHAR_TRAP;
+            f.minimap    = MF_TRAP;
+            break;
+
         case DNGN_TRAP_ALARM:
-        case DNGN_TRAP_ZOT:
-        case DNGN_PASSAGE_OF_GOLUBRIA:
-            f.colour     = MAGENTA;
+            f.colour = f.map_colour = YELLOW;
             f.dchar      = DCHAR_TRAP;
             f.map_colour = MAGENTA;
+            f.minimap    = MF_TRAP;
+            break;
+
+        case DNGN_TRAP_ZOT:
+            f.colour = f.map_colour = LIGHTMAGENTA;
+            f.dchar      = DCHAR_TRAP;
+            f.minimap    = MF_TRAP;
+            break;
+
+        case DNGN_PASSAGE_OF_GOLUBRIA:
+            f.colour = f.map_colour = GREEN;
+            f.dchar      = DCHAR_TRAP;
             f.minimap    = MF_TRAP;
             break;
 
