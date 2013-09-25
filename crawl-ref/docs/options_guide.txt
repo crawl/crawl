@@ -2,10 +2,10 @@ Guide to Crawl's options
 ========================
 
 This document explains all of the options in the latest version of
-Dungeon Crawl Stone Soup. If you get stuck or some things won't seem to
-work properly, ask for help on the newsgroup rec.games.roguelike.misc.
-Please flag queries with '-crawl-', as other roguelikes are discussed
-there as well.
+Dungeon Crawl Stone Soup. If you get stuck or some things don't seem to
+work properly, ask for help in ##crawl on freenode, or on the Crawl
+forums at http://crawl.develz.org/tavern/.
+
 The contents of this text are:
 
 0-  Generalities.
