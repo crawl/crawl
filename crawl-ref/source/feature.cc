@@ -236,7 +236,10 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap    = MF_TRAP;
             break;
 
-        case DNGN_TRAP_MAGICAL:
+        case DNGN_TRAP_TELEPORT:
+        case DNGN_TRAP_ALARM:
+        case DNGN_TRAP_ZOT:
+        case DNGN_PASSAGE_OF_GOLUBRIA:
             f.colour     = MAGENTA;
             f.dchar      = DCHAR_TRAP;
             f.map_colour = MAGENTA;

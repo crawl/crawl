@@ -227,7 +227,7 @@ bool trap_def::is_safe(actor* act) const
 
     // Shaft and mechanical traps are safe when flying or clinging.
     if ((act->airborne() || act->can_cling_to(pos) || you.species == SP_DJINNI)
-        && category() != DNGN_TRAP_MAGICAL)
+        && ground_only())
     {
         return true;
     }
@@ -560,8 +560,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         return;
     }
     // Only magical traps and webs affect flying critters.
-    if (!triggerer.ground_level() && category() != DNGN_TRAP_MAGICAL
-                                  && category() != DNGN_TRAP_WEB)
+    if (!triggerer.ground_level() && ground_only())
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
@@ -1157,14 +1156,15 @@ void disarm_trap(const coord_def& where)
 
     switch (trap.category())
     {
-    case DNGN_TRAP_MAGICAL:
+    case DNGN_TRAP_ALARM:
         // Zotdef - allow alarm traps to be disarmed
-        if (!crawl_state.game_is_zotdef() || trap.type != TRAP_ALARM)
-        {
-            mpr("You can't disarm that trap.");
-            return;
-        }
-        break;
+        if (crawl_state.game_is_zotdef())
+            break;
+    case DNGN_TRAP_TELEPORT:
+    case DNGN_TRAP_ZOT:
+    case DNGN_PASSAGE_OF_GOLUBRIA: // not a trap, FIXME
+        mpr("You can't disarm that trap.");
+        return;
     case DNGN_TRAP_NATURAL:
         // Only shafts for now.
         mpr("You can't disarm a shaft.");
@@ -1616,10 +1616,13 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_TRAP_NATURAL;
 
     case TRAP_TELEPORT:
+        return DNGN_TRAP_TELEPORT;
     case TRAP_ALARM:
+        return DNGN_TRAP_ALARM;
     case TRAP_ZOT:
+        return DNGN_TRAP_ZOT;
     case TRAP_GOLUBRIA:
-        return DNGN_TRAP_MAGICAL;
+        return DNGN_PASSAGE_OF_GOLUBRIA;
 
     case TRAP_DART:
     case TRAP_ARROW:
@@ -1637,6 +1640,11 @@ dungeon_feature_type trap_category(trap_type type)
     default:
         die("placeholder trap type %d used", type);
     }
+}
+
+bool trap_def::ground_only() const
+{
+    return type == TRAP_SHAFT || category() == DNGN_TRAP_MECHANICAL;
 }
 
 bool is_valid_shaft_level(const level_id &place)

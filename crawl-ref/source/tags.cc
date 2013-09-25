@@ -3311,6 +3311,12 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() == TAG_MINOR_0_11 && trap >= TRAP_TELEPORT)
             trap = (trap_type)(trap - 1);
+        if (trap == TRAP_ALARM)
+            feature = DNGN_TRAP_ALARM;
+        else if (trap == TRAP_ZOT)
+            feature = DNGN_TRAP_ZOT;
+        else if (trap == TRAP_GOLUBRIA)
+            feature = DNGN_PASSAGE_OF_GOLUBRIA;
 #endif
     }
 

@@ -7824,8 +7824,11 @@ bool player::do_shaft()
         {
         case DNGN_FLOOR:
         case DNGN_OPEN_DOOR:
+        // what's the point of this list?
         case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_MAGICAL:
+        case DNGN_TRAP_TELEPORT:
+        case DNGN_TRAP_ALARM:
+        case DNGN_TRAP_ZOT:
         case DNGN_TRAP_NATURAL:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
