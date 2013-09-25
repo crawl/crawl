@@ -1065,7 +1065,7 @@ static bool _suppress_blood(const map_cell& mc)
     if (feat_is_tree(feat))
         return true;
 
-    if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
+    if (feat == DNGN_DRY_FOUNTAIN)
         return true;
 
     if (feat_is_altar(feat))
