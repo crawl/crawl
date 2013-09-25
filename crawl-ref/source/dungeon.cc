@@ -1452,9 +1452,6 @@ static void _fixup_branch_stairs()
     // dungeon or wherever:
     if (_at_top_of_branch())
     {
-#ifdef DEBUG_DIAGNOSTICS
-        int count = 0;
-#endif
         // Just in case we somehow get here with more than one stair placed.
         // Prefer stairs that are placed in vaults for picking an exit at
         // random.
@@ -1469,13 +1466,6 @@ static void _fixup_branch_stairs()
             else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
                      && grd(*ri) <= DNGN_STONE_STAIRS_UP_III)
             {
-#ifdef DEBUG_DIAGNOSTICS
-                if (count++ && you.where_are_you != root_branch)
-                {
-                    mprf(MSGCH_ERROR, "Multiple branch exits on %s",
-                         level_id::current().describe().c_str());
-                }
-#endif
                 if (you.where_are_you == root_branch)
                 {
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
