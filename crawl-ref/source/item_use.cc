@@ -2252,9 +2252,7 @@ static bool _drink_fountain()
     {
         mpr("The fountain dries up!");
 
-        grd(you.pos()) = static_cast<dungeon_feature_type>(feat
-                         + DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
-
+        grd(you.pos()) = DNGN_DRY_FOUNTAIN;
         set_terrain_changed(you.pos());
 
         crawl_state.cancel_cmd_repeat();

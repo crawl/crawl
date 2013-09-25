@@ -3196,10 +3196,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "fountain of sparkling water";
     case DNGN_FOUNTAIN_BLOOD:
         return "fountain of blood";
-    case DNGN_DRY_FOUNTAIN_BLUE:
-    case DNGN_DRY_FOUNTAIN_SPARKLING:
-    case DNGN_DRY_FOUNTAIN_BLOOD:
-    case DNGN_PERMADRY_FOUNTAIN:
+    case DNGN_DRY_FOUNTAIN:
         return "dry fountain";
     case DNGN_PASSAGE_OF_GOLUBRIA:
         return "passage of Golubria";

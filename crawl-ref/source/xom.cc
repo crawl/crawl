@@ -2101,9 +2101,6 @@ static int _xom_change_scenery(bool debug = false)
     if (debug)
         return XOM_GOOD_SCENERY;
 
-    const int fountain_diff = (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
-
-    int fountains_flow  = 0;
     int fountains_blood = 0;
     int doors_open      = 0;
     int doors_close     = 0;
@@ -2125,19 +2122,7 @@ static int _xom_change_scenery(bool debug = false)
             if (you.see_cell(pos))
                 doors_close++;
             break;
-        case DNGN_DRY_FOUNTAIN_BLUE:
-        case DNGN_DRY_FOUNTAIN_SPARKLING:
-        case DNGN_DRY_FOUNTAIN_BLOOD:
-        {
-            if (x_chance_in_y(fountains_flow, 5))
-                continue;
-
-            grd(pos) = (dungeon_feature_type) (grd(pos) - fountain_diff);
-            set_terrain_changed(pos);
-            if (you.see_cell(pos))
-                fountains_flow++;
-            break;
-        }
+        case DNGN_DRY_FOUNTAIN:
         case DNGN_FOUNTAIN_BLUE:
             if (x_chance_in_y(fountains_blood, 3))
                 continue;
@@ -2151,30 +2136,17 @@ static int _xom_change_scenery(bool debug = false)
             break;
         }
     }
-    if (!doors_open && !doors_close && !fountains_flow && !fountains_blood)
+    if (!doors_open && !doors_close && !fountains_blood)
         return XOM_DID_NOTHING;
 
     god_speaks(GOD_XOM, speech.c_str());
 
     vector<string> effects, terse;
-    if (fountains_flow > 0)
-    {
-        snprintf(info, INFO_SIZE,
-                 "%s fountain%s start%s reflowing",
-                 fountains_flow == 1 ? "A" : "Some",
-                 fountains_flow == 1 ? ""  : "s",
-                 fountains_flow == 1 ? "s" : "");
-        effects.push_back(info);
-        terse.push_back(make_stringf("%d fountains restart", fountains_flow));
-    }
     if (fountains_blood > 0)
     {
         snprintf(info, INFO_SIZE,
-                 "%s%s fountain%s start%s gushing blood",
+                 "%s fountain%s start%s gushing blood",
                  fountains_blood == 1 ? "a" : "some",
-                 fountains_flow > 0 ? (fountains_blood == 1 ? "nother"
-                                                            : " other")
-                                    : "",
                  fountains_blood == 1 ? ""  : "s",
                  fountains_blood == 1 ? "s" : "");
 
@@ -2527,9 +2499,7 @@ static void _xom_zero_miscast()
         priority.push_back("The water in the fountain briefly glows.");
     }
 
-    if (in_view[DNGN_DRY_FOUNTAIN_BLUE]
-        || in_view[DNGN_DRY_FOUNTAIN_SPARKLING]
-        || in_view[DNGN_PERMADRY_FOUNTAIN])
+    if (in_view[DNGN_DRY_FOUNTAIN])
     {
         priority.push_back("Water briefly sprays from the dry fountain.");
         priority.push_back("Dust puffs up from the dry fountain.");

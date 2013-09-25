@@ -716,10 +716,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap = MF_FEATURE;
             break;
 
-        case DNGN_DRY_FOUNTAIN_BLUE:
-        case DNGN_DRY_FOUNTAIN_SPARKLING:
-        case DNGN_DRY_FOUNTAIN_BLOOD:
-        case DNGN_PERMADRY_FOUNTAIN:
+        case DNGN_DRY_FOUNTAIN:
             f.colour  = LIGHTGREY;
             f.dchar   = DCHAR_FOUNTAIN;
             f.minimap = MF_FEATURE;
