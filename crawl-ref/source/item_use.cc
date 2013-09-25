@@ -1290,6 +1290,8 @@ static bool _swap_rings(int ring_slot)
         item_def* ring = you.slot_item(*eq_it, true);
         if (!you_tran_can_wear(*eq_it) || you.melded[*eq_it])
             melded++;
+        else if (_ring_change_prohibited_by_gloves(*eq_it))
+            gloves_prohibit = true;
         else if (ring != NULL)
         {
             if (first_ring == NULL)
@@ -1305,12 +1307,9 @@ static bool _swap_rings(int ring_slot)
                 }
             }
 
-            if (_ring_change_prohibited_by_gloves(*eq_it))
-                gloves_prohibit = true;
-
             if (ring->cursed())
                 cursed++;
-            else if (!_ring_change_prohibited_by_gloves(*eq_it))
+            else
             {
                 available++;
                 unwanted = you.equip[*eq_it];
