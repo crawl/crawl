@@ -3980,7 +3980,9 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
     // So are statues, traps, and stairs.
     case DNGN_ORCISH_IDOL:
     case DNGN_GRANITE_STATUE:
-    case DNGN_TRAP_MAGICAL:
+    case DNGN_TRAP_TELEPORT:
+    case DNGN_TRAP_ALARM:
+    case DNGN_TRAP_ZOT:
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_NATURAL:
     case DNGN_TRAP_WEB:
@@ -4026,7 +4028,9 @@ static void _hints_describe_feature(int x, int y)
                     "areas, dangerous ones or ones harbouring treasure.";
             break;
 
-       case DNGN_TRAP_MAGICAL:
+       case DNGN_TRAP_TELEPORT:
+       case DNGN_TRAP_ALARM:
+       case DNGN_TRAP_ZOT:
        case DNGN_TRAP_MECHANICAL:
             ostr << "These nasty constructions can do physical damage (with "
                     "darts or needles, for example) or have other, more "

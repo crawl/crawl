@@ -3039,8 +3039,12 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "short-range portal";
     case DNGN_TRAP_MECHANICAL:
         return "mechanical trap";
-    case DNGN_TRAP_MAGICAL:
-        return "magical trap";
+    case DNGN_TRAP_TELEPORT:
+        return "teleport trap";
+    case DNGN_TRAP_ALARM:
+        return "alarm trap";
+    case DNGN_TRAP_ZOT:
+        return "Zot trap";
     case DNGN_TRAP_NATURAL:
         return "natural trap";
     case DNGN_TRAP_WEB:
@@ -3197,6 +3201,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_DRY_FOUNTAIN_BLOOD:
     case DNGN_PERMADRY_FOUNTAIN:
         return "dry fountain";
+    case DNGN_PASSAGE_OF_GOLUBRIA:
+        return "passage of Golubria";
+
     case DNGN_EXPLORE_HORIZON:
         return "explore horizon";
     case DNGN_UNKNOWN_ALTAR:
@@ -3335,7 +3342,6 @@ string feature_description_at(const coord_def& where, bool covering,
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
-    case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
     case DNGN_TRAP_WEB:
         return feature_description(grid, get_trap_type(where),
