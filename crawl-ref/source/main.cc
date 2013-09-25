@@ -3338,8 +3338,12 @@ static void _player_reacts_to_monsters()
         manage_fire_shield(you.time_taken);
 
     // penance checked there (as you can have antennae too)
-    if (player_mutation_level(MUT_ANTENNAE) || you_worship(GOD_ASHENZARI))
+    if (player_mutation_level(MUT_ANTENNAE)
+        || you_worship(GOD_ASHENZARI)
+        || player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
+    {
         check_antennae_detect();
+    }
 
     if ((you_worship(GOD_ASHENZARI) && !player_under_penance())
         || you.mutation[MUT_JELLY_GROWTH])
