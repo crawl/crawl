@@ -1,3 +1,29 @@
+Stone Soup 0.14 (up to 0.14-a0)
+-------------------------------
+* Two new races: Lava Orcs and Djinni.
+* A new branch: the Enchanted Forest.
+
+Branches, environment
+---------------------
+* A new branch: the Enchanted Forest, alternating with Crypt; five levels
+  long, and contains the entrance to Tomb where it exists.
+
+Character
+---------
+* New races:
+    - Lava Orcs heat up and cool down in response to their surroundings, with
+      their abilities changing as a result;
+    - Djinni draw both health and magic from a shared Essence pool, and have
+      complete immunity to all forms of fire;
+    - Gargoyles are immune to involuntary petrification, but can petrify
+      themselves to significantly reduce damage before becoming completely
+      immobile.
+
+Items
+-----
+* Large rocks now crash through monsters / the player, i.e. implicitly have
+  the penetration brand.
+
 Stone Soup 0.13 (20131011)
 --------------------------
 
