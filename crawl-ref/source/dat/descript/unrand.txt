@@ -277,10 +277,10 @@ cloak of Flash
 
 A vibrating cloak.
 %%%%
-# TAG_MAJOR_VERSION == 34
 boots of the Assassin
 
-Some soft boots, specially designed by the Assassin's Guild.
+Some soft boots with a concealed dagger inside, specially designed by the
+Assassin's Guild. It makes the wearer more perceptive of potential victims.
 %%%%
 Lear's hauberk
 

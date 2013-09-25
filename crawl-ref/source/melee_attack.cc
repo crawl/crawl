@@ -1858,6 +1858,8 @@ int melee_attack::player_apply_final_multipliers(int damage)
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
+    int modified_wpn_skill = (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
+                              ? SK_SHORT_BLADES : wpn_skill);
 
     if (weapon && weapon->base_type == OBJ_WEAPONS
         && (weapon->sub_type == WPN_CLUB
@@ -1870,13 +1872,14 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         goto ok_weaps;
     }
 
-    switch (wpn_skill)
+    switch (modified_wpn_skill)
     {
     case SK_SHORT_BLADES:
     {
         int bonus = (you.dex() * (stab_skill + 100)) / 500;
 
-        if (weapon->sub_type != WPN_DAGGER)
+        // We might be unarmed if we're using the boots of the Assassin.
+        if (!weapon || weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
@@ -1886,7 +1889,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     ok_weaps:
     case SK_LONG_BLADES:
         damage *= 10 + div_rand_round(stab_skill, 100 *
-                       (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 2)));
+                       (stab_bonus + (modified_wpn_skill == SK_SHORT_BLADES ? 0 : 2)));
         damage /= 10;
         // fall through
     default:
@@ -1954,6 +1957,14 @@ void melee_attack::set_attack_verb()
             attack_verb = "hit";
         else
             attack_verb = "clumsily bash";
+        return;
+    }
+
+    // Special message for stabs while wearing the Boots of the Assassin.
+    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN) && stab_attempt && stab_bonus > 0)
+    {
+        attack_verb = "stab";
+        verb_degree = "with your concealed dagger";
         return;
     }
 

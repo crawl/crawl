@@ -728,7 +728,6 @@ TILE_EQ:  red
 EV:       4
 BOOL:     fly
 
-# TAG_MAJOR_VERSION == 34
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
@@ -736,9 +735,7 @@ PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
 TILE_EQ:  middle_gray
-DEX:      3
 STEALTH:  80
-BOOL:     inv, nogen
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
