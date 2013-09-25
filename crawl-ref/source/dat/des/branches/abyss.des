@@ -1328,40 +1328,6 @@ MAP
 ENDMAP
 
 ####
-NAME:    grunt_abyss_rune_twisted_forest
-TAGS:    abyss_rune patrolling no_pool_fixup
-SHUFFLE: 1234
-MONS:    treant, thorn hunter, dryad, satyr
-SUBST:   T = t.
-SUBST:   E = ttWw
-NSUBST:  w = 2:5 / *:w
-NSUBST:  W = 2:6 / 2:7 / *:W
-KMONS:   5 = elemental wellspring
-KMONS:   6 = water nymph
-KMONS:   7 = thorn lotus
-KFEAT:   5 = deep_water
-KFEAT:   67 = shallow_water
-KITEM:   O = abyssal rune of Zot
-FTILE:   .t1234567O = floor_grass
-MAP
-    .......
-  ....EEE....
- ..EWwtttwWE..
- .E.Tt.w.tT.E.
-..WT..E.E..TW..
-..wtWtt.tt.tw..
-.Et.Et1.2tE.tE.
-.Etw...O...wtE.
-.Et.Et4.3tE.tE.
-..wtWtt.tt.tw..
-..WT..E.E..TW..
- .E.Tt.w.tT.E.
- ..EWwtttwWE..
-  ....EEE....
-    .......
-ENDMAP
-
-####
 NAME: nicolae_abyss_rune_more_like_crabyss
 TAGS: abyss_rune transparent
 SHUFFLE: O1/01/Pw

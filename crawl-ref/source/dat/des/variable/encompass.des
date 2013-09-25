@@ -915,7 +915,7 @@ KMONS:   r = vault guard
 :           "orc warlord", "vampire knight", "yaktaur captain",
 :           "deep elf high priest", "ancient champion" },
 :     [you.absdepth() - 20] =
-:         { "deep dwarf death knight", "spriggan defender", "satyr",
+:         { "deep dwarf death knight", "spriggan defender",
 :           "merfolk aquamancer", "merfolk javelineer",
 :           "Margery", "Saint Roka", "Sojobo" },
 : }
@@ -1580,7 +1580,7 @@ MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
          dire elephant simulacrum w:1 / dancing weapon w:5 ; long sword good_item
 MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
          glowing shapeshifter hd:11 w:30 / glowing shapeshifter hd:12 w:15 / \
-         azure jelly / thorn hunter w:5 / flayed ghost / \
+         azure jelly / flayed ghost / \
          dancing weapon w:5 ; glaive good_item
 MONS:    centaur warrior / yaktaur w:5 / orc knight / \
          deep elf priest w:5 / deep troll / boggart w:5 / \
@@ -1597,7 +1597,7 @@ KMONS:   9 = fire giant / frost giant w:11 / stone giant w:11 / ettin w:11 / \
          minotaur w:5 ; any armour good_item . any weapon good_item / \
          vampire knight / tengu reaver w:4 / base draconian w:5 / \
          spriggan air mage w:6 / deep elf death mage w:6 / \
-         satyr w:2 / ancient champion w:6
+         ancient champion w:6
 KMONS:   0 = titan w:15 / lich / sphinx / deep elf annihilator / \
          deep elf sorcerer / deep elf high priest w:5 / greater naga w:5 / \
          spriggan defender w:5 / shadow demon w:5 / reaper w:5
