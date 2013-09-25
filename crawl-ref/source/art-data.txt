@@ -614,6 +614,7 @@ TILE:     urand_knife_of_accuracy
 TILE_EQ:  knife_of_accuracy
 BOOL:     tilerim, nogen
 
+# TAG_MAJOR_VERSION == 34
 # A play on the spell of the same name.  Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
 NAME:     Lehudib's crystal spear
@@ -623,7 +624,7 @@ COLOUR:   GREEN
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
-BRAND:    SPWPN_RETURNING
+BOOL:     nogen
 
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
@@ -1081,6 +1082,11 @@ TILE:     urand_moon_troll_leather_armour
 TILE_EQ:  moon_troll_leather_armour
 MP:       +5
 REGEN:    40
+
+ENUM:     FINGER_AMULET
+NAME:     macabre finger necklace
+OBJ:      OBJ_JEWELLERY/AMU_WARDING
+COLOUR:   ETC_BONE
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are

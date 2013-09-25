@@ -3323,14 +3323,9 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
     const item_def *primary = mnc->mslot_item(MSLOT_WEAPON);
     const item_def *missile = mnc->missiles();
 
-    if (!missile && weapon != primary && primary
-        && get_weapon_brand(*primary) == SPWPN_RETURNING)
-    {
-        return true;
-    }
     // We don't have a usable ranged weapon if a different cursed weapon
     // is presently equipped.
-    else if (weapon != primary && primary && primary->cursed())
+    if (weapon != primary && primary && primary->cursed())
         return false;
 
     if (!missile)

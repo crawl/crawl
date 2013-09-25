@@ -2,6 +2,7 @@
 
 #include "player-equip.h"
 
+#include "art-enum.h"
 #include "areas.h"
 #include "artefact.h"
 #include "delay.h"
@@ -145,7 +146,8 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
 
     ASSERT(slot == eq
            || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPODE);
+           || eq == EQ_RINGS && you.species == SP_OCTOPODE
+           || eq == EQ_RINGS && player_equip_unrand(UNRAND_FINGER_AMULET));
 
     if (msg)
         _equip_use_warning(item);
@@ -169,7 +171,8 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
 
     ASSERT(slot == eq
            || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPODE);
+           || eq == EQ_RINGS && you.species == SP_OCTOPODE
+           || eq == EQ_RINGS && player_equip_unrand(UNRAND_FINGER_AMULET));
 
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
@@ -542,7 +545,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         const bool was_known      = item_type_known(item);
               bool known_recurser = false;
 
-        set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         special = item.special;
 
@@ -646,10 +649,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         mpr("You feel an empty sense of dread.");
                     break;
 
-                case SPWPN_RETURNING:
-                    mpr("It wiggles slightly.");
-                    break;
-
                 case SPWPN_PAIN:
                 {
                     const char* your_arm = you.arm_name(false).c_str();
@@ -723,7 +722,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         }
 
         _wield_cursed(item, known_cursed || known_recurser, unmeld);
-        maybe_id_weapon(item);
         break;
     }
     default:
@@ -1446,7 +1444,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         set_ident_type(item, ident);
 
         if (ident == ID_KNOWN_TYPE)
-            set_ident_flags(item, ISFLAG_EQ_JEWELLERY_MASK);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     if (item.cursed())

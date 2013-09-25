@@ -258,6 +258,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_RING_EIGHT:
                     buff << " (on tentacle)";
                     break;
+                case EQ_RING_AMULET:
+                    buff << " (on amulet)";
+                    break;
                 default:
                     die("Item in an invalid slot");
                 }
@@ -453,7 +456,6 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_PAIN: return terse ? " (pain)" : " of pain";
     case SPWPN_DISTORTION: return terse ? " (distort)" : " of distortion";
     case SPWPN_REACHING: return terse ? " (reach)" : " of reaching";
-    case SPWPN_RETURNING: return terse ? " (return)" : " of returning";
 
     case SPWPN_VAMPIRICISM:
         return terse ? " (vamp)" : ""; // non-terse already handled
@@ -2368,11 +2370,6 @@ void check_item_knowledge(bool unknown_items)
         // Missiles
         for (int i = 0; i < NUM_MISSILES; i++)
         {
-#if TAG_MAJOR_VERSION == 34
-            if (i == MI_PIE)
-                continue;
-#endif
-
             item_def* ptmp = new item_def;
             if (ptmp != 0)
             {

@@ -898,9 +898,6 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
         case SPWPN_FROST:
             mpr("It is covered in frost.");
             break;
-        case SPWPN_RETURNING:
-            mpr("It wiggles slightly.");
-            break;
         case SPWPN_DISTORTION:
             mpr("Its appearance distorts for a moment.");
             break;
@@ -1194,7 +1191,7 @@ void monster::pickup_message(const item_def &item, int near)
     }
 }
 
-bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
+bool monster::pickup(item_def &item, int slot, int near)
 {
     ASSERT(item.defined());
 
@@ -1262,7 +1259,7 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
     if (inv[slot] != NON_ITEM)
     {
         item_def &dest(mitm[inv[slot]]);
-        if (items_stack(item, dest, force_merge))
+        if (items_stack(item, dest))
         {
             dungeon_events.fire_position_event(
                 dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
@@ -1584,10 +1581,8 @@ static bool _item_race_matches_monster(const item_def &item, monster* mons)
 
 bool monster::pickup_melee_weapon(item_def &item, int near)
 {
-    // Throwable weapons may be picked up as though dual-wielding.
-    const bool dual_wielding = (mons_wields_two_weapons(this)
-                                || is_throwable(this, item));
-    if (dual_wielding && item.quantity == 1)
+    const bool dual_wielding = mons_wields_two_weapons(this);
+    if (dual_wielding)
     {
         // If we have either weapon slot free, pick up the weapon.
         if (inv[MSLOT_WEAPON] == NON_ITEM)
@@ -1610,11 +1605,6 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         weap = mslot_item(static_cast<mon_inv_type>(i));
-
-        // If the weapon is a stack of throwing weaons, the monster
-        // will not use the stack as their primary melee weapon.
-        if (item.quantity != 1 && i == MSLOT_WEAPON)
-            continue;
 
         if (!weap)
         {
@@ -1679,7 +1669,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
             }
             else if (!dual_wielding)
             {
-                // We've got a good melee weapon, that's enough.
+                // Only dual wielders want two melee weapons.
                 return false;
             }
         }
@@ -1702,14 +1692,9 @@ static int _q_adj_damage(int damage, int qty)
     return (damage * min(qty, 8));
 }
 
-bool monster::pickup_throwable_weapon(item_def &item, int near)
+bool monster::pickup_missile(item_def &item, int near)
 {
     const mon_inv_type slot = item_to_mslot(item);
-
-    // If it's a melee weapon then pickup_melee_weapon() already rejected
-    // it, even though it can also be thrown.
-    if (slot == MSLOT_WEAPON)
-        return false;
 
     ASSERT(slot == MSLOT_MISSILE);
 
@@ -1717,22 +1702,23 @@ bool monster::pickup_throwable_weapon(item_def &item, int near)
     if (mons_has_ranged_spell(this, true, false))
         return false;
 
-    // If occupied, don't pick up a throwable weapons if it would just
-    // stack with an existing one. (Upgrading is possible.)
+    // If occupied, pick up a missile only if it would stack with an existing
+    // one. (Upgrading is possible.)
     if (mslot_item(slot)
         && (mons_is_wandering(this) || friendly() && foe == MHITYOU)
-        && pickup(item, slot, near, true))
+        && pickup(item, slot, near))
     {
         return true;
     }
 
     item_def *launch = NULL;
-    const int exist_missile = mons_pick_best_missile(this, &launch, true);
+    const int exist_missile = mons_usable_missile(this, &launch);
     if (exist_missile == NON_ITEM
         || (_q_adj_damage(mons_missile_damage(this, launch,
                                               &mitm[exist_missile]),
                           mitm[exist_missile].quantity)
-            < _q_adj_damage(mons_thrown_weapon_damage(&item), item.quantity)))
+            < _q_adj_damage(mons_missile_damage(this, launch, &item),
+                          item.quantity)))
     {
         if (inv[slot] != NON_ITEM && !drop_item(slot, near))
             return false;
@@ -2084,8 +2070,6 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
     //   one we have).
     // - If it is a ranged weapon, and we already have a ranged weapon,
     //   pick it up if it is better than the one we have.
-    // - If it is a throwable weapon, and we're carrying no missiles (or our
-    //   missiles are the same type), pick it up.
 
     if (is_range_weapon(item))
         return pickup_launcher(item, near, force);
@@ -2093,7 +2077,7 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
     if (pickup_melee_weapon(item, near))
         return true;
 
-    return (can_use_missile(item) && pickup_throwable_weapon(item, near));
+    return false;
 }
 
 bool monster::pickup_missile(item_def &item, int near, bool force)
@@ -2444,9 +2428,7 @@ void monster::wield_melee_weapon(int near)
 
         // Switch to the alternate weapon if it's not a ranged weapon, too,
         // or switch away from our main weapon if it's a ranged weapon.
-        //
-        // Don't switch to alt weapon if it's a stack of throwing weapons.
-        if (alt && !is_range_weapon(*alt) && alt->quantity == 1
+        if (alt && !is_range_weapon(*alt)
             || weap && !alt && type != MONS_STATUE)
         {
             swap_weapons(near);

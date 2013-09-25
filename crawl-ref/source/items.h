@@ -47,8 +47,7 @@ void mark_items_non_visit_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);
 bool is_stackable_item(const item_def &item);
 bool items_similar(const item_def &item1, const item_def &item2);
-bool items_stack(const item_def &item1, const item_def &item2,
-                  bool force_merge = false);
+bool items_stack(const item_def &item1, const item_def &item2);
 void merge_item_stacks(item_def &source, item_def &dest,
                        int quant = -1);
 

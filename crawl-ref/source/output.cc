@@ -1698,7 +1698,8 @@ const char *equip_slot_to_name(int equip)
 {
     if (equip == EQ_RINGS
         || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
-        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT)
+        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT
+        || equip == EQ_RING_AMULET)
     {
         return "Ring";
     }
@@ -1761,6 +1762,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
         EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
         EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
+        EQ_RING_AMULET,
     };
 
     char buf[100];
@@ -1781,6 +1783,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
+        // This skips over EQ_RING_AMULET, but that's probably okay for now.
         if (you.species != SP_OCTOPODE && eqslot > EQ_AMULET)
             continue;
 
