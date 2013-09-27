@@ -97,6 +97,7 @@ struct bolt
     bool        affects_items;         // hits items on ground/inventory
 
     bool        effect_known;          // did we _know_ this would happen?
+    bool        effect_wanton;         // could we have guessed it would happen?
 
     int         draw_delay;            // delay used when drawing beam.
 
@@ -262,6 +263,7 @@ public:
     void affect_endpoint();
 
     void beam_hits_actor(actor *act);
+    bool god_cares() const; // Will the god be unforgiving about this beam?
 
     // Stuff when a monster or player is hit.
     void affect_player_enchantment();

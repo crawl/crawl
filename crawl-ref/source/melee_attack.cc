@@ -2782,6 +2782,7 @@ void melee_attack::chaos_affects_defender()
         beam.range        = 0;
         beam.colour       = BLACK;
         beam.effect_known = false;
+        beam.effect_wanton = true; // Wielded brand is always known.
 
         if (weapon && you.can_see(attacker))
         {

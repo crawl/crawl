@@ -1800,7 +1800,10 @@ void zap_wand(int slot)
     targetter *hitfunc      = 0;
 
     if (!alreadyknown)
+    {
         beam.effect_known = false;
+        beam.effect_wanton = false;
+    }
     else
     {
         switch (wand.sub_type)
@@ -1880,7 +1883,10 @@ void zap_wand(int slot)
         zap_wand.confusion_fuzz();
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
+    {
         beam.effect_known = false;
+        beam.effect_wanton = alreadyknown;
+    }
 
     beam.source   = you.pos();
     beam.attitude = ATT_FRIENDLY;
