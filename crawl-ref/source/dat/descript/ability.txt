@@ -76,13 +76,12 @@ you to fall to your death.
 %%%%
 Jump Attack
 
-Jump attack at limited distance, covering ground with great speed.  You may
-target an enemy to perform a jumping attack with increased damage and landing in
-some position next to your target.  You cannot jump over flying enemies nor
-giant enemies not submerged in deep water or lava.  Standing or swimming in
-water, lava, or liquified ground will also prevent you from using this ability.
-Felids have an innate ability to jump attack that increases in range at
-experience levels 6 and 12.
+An ability that borrows a creature's kinetic energy to power a high-speed jump
+attack, landing you safely nearby while dealing increased damage if successful. You
+cannot jump over flying enemies and can only leap giant enemies submerged in
+lava or deep water. Standing or swimming in water, lava, or liquified ground
+will also prevent you from using this ability. Felids are natural jumpers and
+will become more skilled at pouncing upon reaching experience levels 6 and 12.
 %%%%
 Hellfire ability
 
@@ -142,12 +141,12 @@ Evoke Flight ability
 %%%%
 Evoke Jump Attack ability
 
-Jump attack at limited distance, covering ground with great speed.  You may
-target an enemy to perform a jumping attack with increased damage and landing in
-some position next to your target.  You cannot jump over flying enemies nor
-giant enemies not submerged in deep water or lava.  Standing or swimming in
-water, lava, or liquified ground will also prevent you from using this ability.
-At evocations skill levels 5 and 10, the range of your jump attack increases.
+An ability that borrows a creature's kinetic energy to power a high-speed jump
+attack, landing you safely nearby while dealing increased damage if successful. You
+cannot jump over flying enemies and can only leap giant enemies submerged in
+lava or deep water. Standing or swimming in water, lava, or liquified ground
+will also prevent you from using this ability. Training evocations increases the
+range of your jump-attack at skill levels 5 and 10.
 %%%%
 Stop Flying ability
 

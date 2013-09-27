@@ -894,33 +894,13 @@ targetter_jump::targetter_jump(const actor* act, int range)
 
 bool targetter_jump::valid_aim(coord_def a)
 {
-    actor *act;
     bool is_valid = true;
     coord_def c, jump_pos;
     ray_def ray;
 
-    act = actor_at(a);
     if ((origin - a).abs() > range2)
     {
         is_valid = notify_fail("Out of range.");
-    }
-    // If there's an actor we can see, check that we have at least one valid
-    // landing site for a jump attack based on what the agent can see.
-    else if (act && agent->can_see(act))
-    {
-        if(!has_additional_sites(a, true))
-        {
-            if (no_landing_reason == BLOCKED_FLYING)
-                is_valid = notify_fail("A flying creature is in the way.");
-            else if (no_landing_reason == BLOCKED_GIANT)
-                is_valid = notify_fail("A giant creature is in the way.");
-            else if (no_landing_reason == BLOCKED_MOVE)
-                is_valid = notify_fail("There is no safe place to move near the"
-                                       " monster.");
-            else if (no_landing_reason == BLOCKED_PATH)
-                is_valid = notify_fail("A dungeon feature is in the way.");
-        }
-        return is_valid;
     }
     else if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
@@ -933,10 +913,22 @@ bool targetter_jump::valid_aim(coord_def a)
     {
         is_valid = notify_fail("There's something in the way.");
     }
-    if (!find_ray(agent->pos(), a, ray, opc_no_trans))
+    else if (!find_ray(agent->pos(), a, ray, opc_no_trans))
     {
         is_valid = notify_fail("A dungeon feature is in the way");
         return is_valid;
+    }
+    else if(!has_additional_sites(a, true))
+    {
+        if (no_landing_reason == BLOCKED_FLYING)
+            is_valid = notify_fail("A flying creature is in the way.");
+        else if (no_landing_reason == BLOCKED_GIANT)
+            is_valid = notify_fail("A giant creature is in the way.");
+        else if (no_landing_reason == BLOCKED_MOVE)
+            is_valid = notify_fail("There is no safe place to jump near that"
+                                   " location.");
+        else if (no_landing_reason == BLOCKED_PATH)
+            is_valid = notify_fail("A dungeon feature is in the way.");
     }
     return is_valid;
 }
@@ -1029,7 +1021,6 @@ aff_type targetter_jump::is_affected(coord_def loc)
 // indicate that with jump_is_blocked.
 bool targetter_jump::set_aim(coord_def a)
 {
-    actor *act;
     ray_def ray;
     set<coord_def>::const_iterator site;
 
@@ -1039,11 +1030,7 @@ bool targetter_jump::set_aim(coord_def a)
         return false;
 
     jump_is_blocked = false;
-    act = actor_at(aim);
-    // Can't set aim if we can't see anything at the location.
-    if (!env.map_knowledge(aim).invisible_monster()
-        && (!act || !agent->can_see(act)))
-        return false;
+
     // Find our set of landing sites, choose one at random, and see if it's
     // actually blocked.
     set_additional_sites(aim);
@@ -1112,7 +1099,7 @@ bool targetter_jump::has_additional_sites(coord_def a, bool allow_harmful)
     for (site = temp_sites.begin();
          site != temp_sites.end(); site++)
     {
-        if (check_moveto(*site, "jump", "", false))
+        if (check_moveto_dangerous(*site, "jump", "", false))
             return true;
     }
     return false;

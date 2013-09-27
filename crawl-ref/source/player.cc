@@ -128,8 +128,8 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
-static bool _check_moveto_cloud(const coord_def& p, const string &move_verb,
-                                bool interactive = true)
+bool check_moveto_cloud(const coord_def& p, const string &move_verb,
+                        bool *prompted)
 {
     const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD && !you.confused())
@@ -153,20 +153,16 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb,
                     return true;
             }
 
-            if (interactive)
-            {
-                string prompt = make_stringf("Really %s into that cloud of %s?",
-                                             move_verb.c_str(),
-                                             cloud_name_at_index(cloud).c_str());
-                learned_something_new(HINT_CLOUD_WARNING);
+            if (prompted)
+                *prompted = true;
+            string prompt = make_stringf("Really %s into that cloud of %s?",
+                                         move_verb.c_str(),
+                                         cloud_name_at_index(cloud).c_str());
+            learned_something_new(HINT_CLOUD_WARNING);
 
-                if (!yesno(prompt.c_str(), false, 'n'))
-                {
-                canned_msg(MSG_OK);
-                return false;
-                }
-            } else
+            if (!yesno(prompt.c_str(), false, 'n'))
             {
+                canned_msg(MSG_OK);
                 return false;
             }
         }
@@ -174,8 +170,8 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb,
     return true;
 }
 
-    static bool _check_moveto_trap(const coord_def& p, const string &move_verb,
-                                   bool interactive = true)
+bool check_moveto_trap(const coord_def& p, const string &move_verb,
+                       bool *prompted)
 {
     // If there's no trap, let's go.
     trap_def* trap = find_trap(p);
@@ -184,48 +180,55 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb,
 
     if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        if (interactive)
+        string msg = (move_verb == "jump-attack"
+                      ? "Do you really want to %s when you might land in "
+                      "the Zot trap"
+                      : "Do you really want to %s into the Zot trap");
+        string prompt = make_stringf(msg.c_str(), move_verb.c_str());
+
+        if (prompted)
+            *prompted = true;
+        if (!yes_or_no("%s", prompt.c_str()))
         {
-            string prompt = make_stringf("Do you really want to %s into the Zot trap",
-                                  move_verb.c_str());
-            if (!yes_or_no("%s", prompt.c_str()))
-            {
-                canned_msg(MSG_OK);
+            canned_msg(MSG_OK);
                 return false;
-            }
-        } else
-        {
-            return false;
         }
     }
     else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        if (interactive)
+        string prompt;
+
+        if (prompted)
+            *prompted = true;
+        if (move_verb == "jump-attack")
         {
-            string prompt = make_stringf(
-                                         "Really %s %s that %s?",
-                                         move_verb.c_str(),
-                                         (trap->type == TRAP_ALARM
-                                          || trap->type == TRAP_PLATE) ? "onto"
-                                         : "into",
-                                         feature_description_at(p, false,
-                                                                DESC_BASENAME,
-                                                                false).c_str());
-            if (!yesno(prompt.c_str(), true, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
-        } else
+            prompt = make_stringf("Really jump when you might land on that %s?",
+                                  feature_description_at(p, false,
+                                                         DESC_BASENAME,
+                                                         false).c_str());
+        }
+        else
         {
+            prompt = make_stringf("Really %s %s that %s?",
+                                  move_verb.c_str(),
+                                  (trap->type == TRAP_ALARM
+                                   || trap->type == TRAP_PLATE) ? "onto"
+                                  : "into",
+                                  feature_description_at(p, false,
+                                                         DESC_BASENAME,
+                                                         false).c_str());
+        }
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
             return false;
         }
     }
     return true;
 }
 
-static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
-                                    bool cling = true, bool interactive = true)
+bool check_moveto_dangerous(const coord_def& p, const string& msg, bool cling,
+                            bool do_prompt)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
         || you.airborne() || cling && you.can_cling_to(p)
@@ -234,7 +237,7 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
         return true;
     }
 
-    if (interactive)
+    if (do_prompt)
     {
         if (msg != "")
             mpr(msg.c_str());
@@ -251,54 +254,52 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
     return false;
 }
 
-static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
-                                  const string &msg, bool interactive = true)
+bool check_moveto_terrain(const coord_def& p, const string &move_verb,
+                          const string &msg, bool *prompted)
 {
     if (you.is_wall_clinging()
         && (move_verb == "blink" || move_verb == "passwall"))
     {
-        return _check_moveto_dangerous(p, msg, false, interactive);
+        return check_moveto_dangerous(p, msg, false);
     }
+    else if (!check_moveto_dangerous(p, msg))
+        return false;
 
     if (!need_expiration_warning() && need_expiration_warning(p)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        if (!_check_moveto_dangerous(p, msg))
-            return false;
+        string prompt;
 
-        if (interactive)
+        if (prompted)
+            *prompted = true;
+
+        if (msg != "")
+            prompt = msg + " ";
+
+        prompt += "Are you sure you want to " + move_verb;
+
+        if (you.ground_level())
+            prompt += " into ";
+        else
+            prompt += " over ";
+
+        prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
+
+        prompt += need_expiration_warning(DUR_FLIGHT, p)
+            ? " while you are losing your buoyancy?"
+            : " while your transformation is expiring?";
+
+        if (!yesno(prompt.c_str(), false, 'n'))
         {
-            string prompt;
-
-            if (msg != "")
-                prompt = msg + " ";
-
-            prompt += "Are you sure you want to " + move_verb;
-
-            if (you.ground_level())
-                prompt += " into ";
-            else
-                prompt += " over ";
-
-            prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
-
-            prompt += need_expiration_warning(DUR_FLIGHT, p)
-                ? " while you are losing your buoyancy?"
-                : " while your transformation is expiring?";
-
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
+            canned_msg(MSG_OK);
+            return false;
         }
     }
-
-    return _check_moveto_dangerous(p, msg, true, interactive);
+    return true;
 }
 
-static bool _check_moveto_exclusion(const coord_def& p, const string &move_verb,
-                                    bool interactive = true)
+bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
+                            bool *prompted)
 {
     string prompt;
 
@@ -307,28 +308,26 @@ static bool _check_moveto_exclusion(const coord_def& p, const string &move_verb,
         && !is_excluded(you.pos())
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        if (interactive)
-        {
-            prompt = make_stringf("Really %s into a travel-excluded area?",
-                                  move_verb.c_str());
+        if (prompted)
+            *prompted = true;
+        prompt = make_stringf("Really %s into a travel-excluded area?",
+                              move_verb.c_str());
 
-            if (!yesno(prompt.c_str(), false, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return false;
-            }
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
         }
     }
     return true;
 }
 
-bool check_moveto(const coord_def& p, const string &move_verb,
-                  const string &msg, bool interactive)
+bool check_moveto(const coord_def& p, const string &move_verb, const string &msg)
 {
-    return (_check_moveto_terrain(p, move_verb, msg, interactive)
-            && _check_moveto_cloud(p, move_verb, interactive)
-            && _check_moveto_trap(p, move_verb, interactive)
-            && _check_moveto_exclusion(p, move_verb, interactive));
+    return (check_moveto_terrain(p, move_verb, msg)
+            && check_moveto_cloud(p, move_verb)
+            && check_moveto_trap(p, move_verb)
+            && check_moveto_exclusion(p, move_verb));
 }
 
 static void _splash()

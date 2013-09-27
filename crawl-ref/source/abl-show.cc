@@ -3582,9 +3582,7 @@ bool _jump_player(int jump_range)
         canned_msg(MSG_OK);
         return false;
     }
-
-    if (!fight_jump(&you, actor_at(jdirect.target), tgt.jump_is_blocked,
-                    tgt.landing_site, tgt.additional_sites))
-        return false;
-    return true;
+    return fight_jump(&you, actor_at(jdirect.target), jdirect.target,
+                      tgt.landing_site, tgt.additional_sites,
+                      tgt.jump_is_blocked);
 }
