@@ -1024,7 +1024,6 @@ i-staff_air STAFF_AIR
 i-staff_earth STAFF_EARTH
 %rim 0
 i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
-%rim 1
 
 %sdir item/rod
 rod00 ROD
@@ -1038,7 +1037,6 @@ rod07
 rod08
 rod09
 
-%rim 0
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
