@@ -642,7 +642,27 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (!ignore_temporary)
+        if (ignore_temporary)
+        {
+            // Hooves and talons were already checked by player_has_feet.
+
+            if (species_has_claws(you.species) >= 3
+                || player_mutation_level(MUT_CLAWS, false) >= 3)
+            {
+                if (verbose)
+                    mprf("The hauberk won't fit your hands.");
+                return false;
+            }
+
+            if (player_mutation_level(MUT_HORNS, false) >= 3
+                || player_mutation_level(MUT_ANTENNAE, false) >= 3)
+            {
+                if (verbose)
+                    mprf("The hauberk won't fit your head.");
+                return false;
+            }
+        }
+        else
         {
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
