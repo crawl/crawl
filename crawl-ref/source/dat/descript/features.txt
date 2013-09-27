@@ -464,7 +464,7 @@ A short-range portal
 
 Stepping on this teleporter will send you to another room.
 %%%%
-A teleportation trap
+A teleport trap
 
 This magical trap can displace anyone hapless enough to step on it — or even
 fly above it — to a random place on the same dungeon level.

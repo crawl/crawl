@@ -480,7 +480,7 @@ A short-range portal
 
 Passer par ce portail vous enverra dans une autre salle.
 %%%%
-A teleportation trap
+A teleport trap
 
 Ce piège magique peut déplacer quiconque d'assez malchanceux pour marcher
 dessus — voire même voler au dessus — vers un endroit quelconque du niveau

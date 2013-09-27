@@ -468,7 +468,7 @@ A short-range portal
 
 Dieser Teleporter wird dich in einen anderen Raum bringen.
 %%%%
-A teleportation trap
+A teleport trap
 
 Diese magische Falle kann jeden, der arglos genug ist und darüber geht – oder
 sogar fliegt -, an einen zufälligen Ort auf der gleichen Ebene teleportieren.

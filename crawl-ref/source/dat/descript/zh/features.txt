@@ -388,7 +388,7 @@ A short-range portal
 
 如果你踩上这个传送器，就会被传送到另一间房间中。
 %%%%
-A teleportation trap
+A teleport trap
 
 如果有任何倒霉蛋踩到——或者甚至是从上方飞过——这个魔法陷阱，
 他将会被立刻传送到这层地城上的一个随机地点。
