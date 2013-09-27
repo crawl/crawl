@@ -214,18 +214,10 @@ too thick to see through.
 While too large to be felled with an axe, it is susceptible to bolts of
 lightning and to sufficiently intense sources of fire.
 %%%%
-A magical trap
-
-A magical device designed to harm trespassers that can't be deactivated.
-%%%%
 A mechanical trap
 
 A mechanical contraption designed to harm trespassers. A skilled adventurer can
 try to disarm it, though.
-%%%%
-A natural trap
-
-A natural hazard, although it looks almost as if designed to harm trespassers.
 %%%%
 A metal wall
 

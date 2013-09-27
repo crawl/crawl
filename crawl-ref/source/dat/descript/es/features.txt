@@ -143,11 +143,6 @@ cuya salida esta guardada por un temible monstruo. Muchos desafortunados
 aventureros se han extraviado en los retorcidos y cambiantes corredores y
 muerto de inanición.
 %%%%
-A magical trap
-
-Un mecanismo mágico diseñado para causar daño a los saqueadores, que no puede
-ser desactivado.
-%%%%
 A mechanical trap
 
 Un dispositivo mecánico diseñado para causar daño a los invasores. No obstante,

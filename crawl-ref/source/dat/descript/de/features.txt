@@ -214,20 +214,10 @@ A mangrove
 Dieser Baum ist speziell für das Wachsen unter sumpfigen Bedingungen angepasst.
 Seine Reben(?) sind zu dick, um hindurchzusehen.
 %%%%
-A magical trap
-
-Eine magische Einrichtung, hergestellt, um Vorbeikommende zu verletzen. Sie
-kann nicht deaktiviert werden.
-%%%%
 A mechanical trap
 
 Eine mechanische Vorrichtung, hergestellt, um Vorbeikommende zu verletzen. Ein
 erfahrener Abenteurer könnte versuchen, sie zu deaktivieren.
-%%%%
-A natural trap
-
-Eine natürlich entstandene Falle, die so aussieht, als sei sie speziell zum
-Verletzen von Vorbeikommenden gemacht worden.
 %%%%
 A metal wall
 
