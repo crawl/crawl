@@ -4982,9 +4982,7 @@ static bool _dgn_place_one_monster(const vault_placement &place,
     return false;
 }
 
-/* "Oddball grids" are handled in _vault_grid. 'B' is arguably oddball, too, as
- * it depends on the place where the vault is. Maybe handling it here is not
- * such a good idea. */
+/* "Oddball grids" are handled in _vault_grid. */
 static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
@@ -5011,8 +5009,6 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
             (glyph == ']') ? DNGN_STONE_STAIRS_DOWN_III :
             (glyph == '[') ? DNGN_STONE_STAIRS_UP_III :
             (glyph == 'A') ? DNGN_STONE_ARCH :
-            (glyph == 'B') ? (place ? _pick_temple_altar(*place)
-                                    : DNGN_ALTAR_ZIN) :
             (glyph == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
             (glyph == 'I') ? DNGN_ORCISH_IDOL :
             (glyph == 'G') ? DNGN_GRANITE_STATUE :
@@ -5114,13 +5110,15 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     case '+':
         if (_map_feat_is_on_edge(place, where))
             place.exits.push_back(where);
-
         break;
     case '^':
         place_specific_trap(where, TRAP_RANDOM);
         break;
     case '~':
         place_specific_trap(where, random_trap_for_place());
+        break;
+    case 'B':
+        grd(where) = _pick_temple_altar(place);
         break;
     }
 
