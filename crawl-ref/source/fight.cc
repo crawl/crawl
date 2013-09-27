@@ -12,11 +12,13 @@
 #include <stdio.h>
 #include <algorithm>
 
+#include "art-enum.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
 #include "env.h"
 #include "fineff.h"
+#include "fprop.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -35,8 +37,10 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #include "terrain.h"
 #include "travel.h"
+#include "traps.h"
 
 /* Handles melee combat between attacker and defender
  *
@@ -208,52 +212,75 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     return true;
 }
 
-// Handles jump attack between attacker and defender.
-bool fight_jump(actor *attacker, actor *defender, bool jump_blocked,
+// Handles jump attack between attacker and defender.  We need attack_pos since
+// defender may not exist.
+bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 coord_def landing_pos, set<coord_def> landing_sites,
-                bool *did_hit)
+                bool jump_blocked, bool *did_hit)
 {
-    bool sanctuary_warning = false;
     set<coord_def>::const_iterator site;
 
     ASSERT(!crawl_state.game_is_arena());
 
-    // Can't damage orbs this way.
-    if (mons_is_projectile(defender->type) && !you.confused())
-    {
-        you.turn_is_over = false;
-        return false;
-    }
     melee_attack first_attk(attacker, defender, -1, -1, false, true,
                             jump_blocked, landing_pos);
 
-    // Check if the player is fighting with something unsuitable,
-    // or someone unsuitable.
-    if (you.can_see(defender)
-        && !wielded_weapon_check(first_attk.weapon))
-    {
-        you.turn_is_over = false;
-        return false;
-    }
     // Do player warnings for electrocution and sanctuary based on possible
     // landing sites.
-    if (attacker->is_player() && defender->is_monster()
-        && attacker->damage_brand(-1) == SPWPN_ELECTROCUTION)
+    if (attacker->is_player())
     {
+        bool sanctuary_prompted, zot_trap_prompted, trap_prompted,
+            exclusion_prompted, cloud_prompted, terrain_prompted;
+        bool defender_vuln = !defender
+            || (feat_is_water(grd(defender->pos()))
+                && (!you.can_see(defender) || defender->ground_level()));
+        bool check_landing_only = false;
+        string prompt;
+        item_def *weapon = attacker->weapon(-1);
+
+        sanctuary_prompted = zot_trap_prompted = trap_prompted
+            = exclusion_prompted = cloud_prompted = terrain_prompted = false;
+
+        // Can't damage orbs this way.
+        if (defender && mons_is_projectile(defender->type) && !you.confused())
+        {
+            you.turn_is_over = false;
+            return false;
+        }
+
+        // Check if the player is fighting with something unsuitable,
+        // or someone unsuitable.
+        if (defender && you.can_see(defender)
+            && !wielded_weapon_check(first_attk.weapon))
+        {
+            you.turn_is_over = false;
+            return false;
+        }
+        else if (!defender || !you.can_see(defender))
+        {
+            prompt = "Really jump-attack where there is no visible monster?";
+            if (!yesno(prompt.c_str(), true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                you.turn_is_over = false;
+                return false;
+            }
+        }
+
         for (site = landing_sites.begin(); site != landing_sites.end(); site++)
         {
             bool ground_level = !you.airborne() && !you.can_cling_to(*site)
                 && you.species != SP_DJINNI;
-            if (!you.received_weapon_warning
-                && adjacent(*site, defender->pos())
-                && (feat_is_water(grd(defender->pos())) && defender->ground_level())
+            if (attacker->damage_brand(-1) == SPWPN_ELECTROCUTION
+                && !you.received_weapon_warning
                 && (feat_is_water(grd(*site)) && ground_level)
-                && !attacker->res_elec())
-
+                && !attacker->res_elec()
+                && defender_vuln
+                && adjacent(*site, defender->pos()))
             {
-                string prompt = "Really attack with ";
-                if (attacker->weapon(-1))
-                    prompt += attacker->weapon(-1)->name(DESC_YOUR);
+                prompt = "Really attack with ";
+                if (weapon)
+                    prompt += weapon->name(DESC_YOUR);
                 else
                     prompt += "your electric unarmed attack";
                 prompt += " when you might land in water? ";
@@ -268,13 +295,113 @@ bool fight_jump(actor *attacker, actor *defender, bool jump_blocked,
                     return false;
                 }
             }
-            else if (!sanctuary_warning)
+            // If we have no defender or have one we can't see and are attacking
+            // within the sanctuary, prompt.
+            if (!sanctuary_prompted && (!defender || !you.can_see(defender)))
             {
-                if (stop_attack_prompt(defender->as_monster(), false,
-                                       *site, false, nullptr, true, *site))
+                prompt = "";
+                if (is_sanctuary(attack_pos))
+                    prompt = "Really jump-attack in your sanctuary?";
+                else if (is_sanctuary(*site))
+                    prompt = "Really jump-attack when you might land in your "
+                        "sanctuary?";
+                if (prompt != "")
+                {
+                    if (yesno(prompt.c_str(), true, 'n'))
+                    {
+                        sanctuary_prompted = true;
+                    }
+                    else
+                    {
+                        canned_msg(MSG_OK);
+                        you.turn_is_over = false;
+                        return false;
+                    }
+                }
+            }
+            // Check the hit function for elec or devastator if we're checking
+            // the first landing site.
+            else if (!check_landing_only
+                     && (attacker->damage_brand(-1) == SPWPN_ELECTROCUTION
+                         || weapon && is_unrandom_artefact(*weapon)
+                         && weapon->special == UNRAND_DEVASTATOR))
+            {
+
+                bool (*aff_func)(const coord_def &) = 0;
+                if (attacker->damage_brand(-1) == SPWPN_ELECTROCUTION)
+                    aff_func = conduction_affected;
+
+                targetter_smite hitfunc(attacker, 1, 1, 1, false, aff_func);
+                hitfunc.set_aim(attack_pos);
+
+                if (stop_attack_prompt(hitfunc, "jump-attack"))
                     return false;
-                else
-                    sanctuary_warning = true;
+
+                check_landing_only = true;
+            }
+            // If we have a defender that we can see and we haven't yet
+            // prompted about sanctuary, check the landing site and possibly the
+            // attack on the defender.  On the first landing site,
+            // check_landing_only is false, so stop_attack_prompt checks
+            // chivalry and the defender's alignment then.
+            else if (defender && !sanctuary_prompted)
+            {
+                if(stop_attack_prompt(defender->as_monster(), false, *site,
+                                      false, nullptr, *site,
+                                      check_landing_only))
+                {
+                    you.turn_is_over = false;
+                    return false;
+                }
+                // See if we generated a sanctuary prompt (we may have
+                // generated an alignment prompt or no prompt).
+                if (is_sanctuary(*site) || is_sanctuary(attack_pos))
+                    sanctuary_prompted = true;
+                check_landing_only = true;
+            }
+            if (!cloud_prompted
+                && !check_moveto_cloud(*site, "jump-attack", &cloud_prompted))
+            {
+                you.turn_is_over = false;
+                return false;
+            }
+            //  Check traps, continuing to check for zot traps even if we've
+            //  prompted about other kinds of traps.
+            if (!zot_trap_prompted)
+            {
+                trap_def* trap = find_trap(*site);
+                if (trap && env.grid(*site) != DNGN_UNDISCOVERED_TRAP
+                    && trap->type == TRAP_ZOT)
+                {
+                    if (!check_moveto_trap(*site, "jump-attack",
+                                           &trap_prompted))
+                    {
+                        you.turn_is_over = false;
+                        return false;
+                    }
+                    zot_trap_prompted = true;
+                }
+                else if (!trap_prompted
+                         && !check_moveto_trap(*site, "jump-attack",
+                                               &trap_prompted))
+                {
+                    you.turn_is_over = false;
+                    return false;
+                }
+            }
+            if (!exclusion_prompted
+                && !check_moveto_exclusion(*site, "jump-attack",
+                                           &exclusion_prompted))
+            {
+                you.turn_is_over = false;
+                return false;
+            }
+            if (!terrain_prompted
+                && !check_moveto_terrain(*site, "jump-attack", "",
+                                         &terrain_prompted))
+            {
+                you.turn_is_over = false;
+                return false;
             }
         }
     }
@@ -565,4 +692,12 @@ int finesse_adjust_delay(int delay)
         delay = div_rand_round(delay, 2);
     }
     return delay;
+}
+
+bool conduction_affected(const coord_def &pos)
+{
+    const actor *act = actor_at(pos);
+
+    // Don't check rElec to avoid leaking information about armour etc.
+    return feat_is_water(grd(pos)) && act && act->ground_level();
 }

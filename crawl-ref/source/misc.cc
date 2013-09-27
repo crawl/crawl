@@ -2227,33 +2227,33 @@ int speed_to_duration(int speed)
 }
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
-                bool jump_check_landing, coord_def attack_pos)
+                coord_def attack_pos, bool check_landing_only)
 {
     ASSERT(!crawl_state.game_is_arena());
-    bool jump_landing_warning = false;
-    coord_def attack_position;
+    bool bad_landing = false;
 
     if (!you.can_see(mon))
         return false;
 
-    if (!jump_check_landing)
+    if (attack_pos == coord_def(0, 0))
         attack_pos = you.pos();
 
     adj.clear();
     suffix.clear();
 
-    if (is_sanctuary(attack_pos) || is_sanctuary(mon->pos()))
+    if (!check_landing_only
+        && (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos)))
     {
-        if (jump_check_landing)
-        {
-            suffix = ", when you might land in your sanctuary";
-            jump_landing_warning = true;
-        }
-        else
-        {
-            suffix = ", despite your sanctuary";
-        }
+        suffix = ", despite your sanctuary";
     }
+    else if (check_landing_only && is_sanctuary(attack_pos))
+    {
+        suffix = ", when you might land in your sanctuary";
+        bad_landing = true;
+    }
+    if (check_landing_only)
+        return bad_landing;
+
     if (mon->friendly())
     {
         if (you_worship(GOD_OKAWARU))
@@ -2285,15 +2285,13 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     {
         return true;
     }
-
-    return (jump_check_landing && jump_landing_warning)
-        || (!adj.empty() || !suffix.empty());
+    return (!adj.empty() || !suffix.empty());
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first,
-                        bool *prompted, bool jump_check_landing,
-                        coord_def attack_pos)
+                        bool *prompted, coord_def attack_pos,
+                        bool check_landing_only)
 {
     if (prompted)
         *prompted = false;
@@ -2305,7 +2303,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         return false;
 
     string adj, suffix;
-    if (!bad_attack(mon, adj, suffix, jump_check_landing, attack_pos))
+    if (!bad_attack(mon, adj, suffix, attack_pos, check_landing_only))
         return false;
 
     // Listed in the form: "your rat", "Blork the orc".

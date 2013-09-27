@@ -1148,16 +1148,11 @@ const coord_def& direction_chooser::target() const
 
 void direction_chooser::set_target(const coord_def& new_target)
 {
-    coord_def jump_pos;
     set<coord_def>::const_iterator site;
-    monster *mons;
 
     if (restricts == DIR_JUMP)
     {
-        mons = monster_at(new_target);
-        if (((mons && you.can_see(mons))
-             || env.map_knowledge(new_target).invisible_monster())
-            && hitfunc->has_additional_sites(new_target, true))
+        if (hitfunc->has_additional_sites(new_target, true))
             valid_jump = true;
         else
             valid_jump = false;
@@ -1341,10 +1336,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 
     if (restricts == DIR_JUMP && !valid_jump)
     {
-        if (mons && you.can_see(mons))
-            mpr("The monster cannot be jump-attacked there.");
-        else
-            mpr("There is no monster to jump-attack there!");
+        mpr("There is no safe place to jump near there.");
         return false;
     }
     if (!allow_out_of_range && !in_range(target()))

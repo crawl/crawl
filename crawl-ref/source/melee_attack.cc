@@ -123,7 +123,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attack_occurred = false;
     weapon          = attacker->weapon(attack_number);
     damage_brand    = attacker->damage_brand(attack_number);
-    wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
+   wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     if (_form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
     to_hit          = calc_to_hit();
@@ -192,14 +192,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attacker_shield_penalty = attacker->adjusted_shield_penalty(20);
 }
 
-static bool _conduction_affected(const coord_def &pos)
-{
-    const actor *act = actor_at(pos);
-
-    // Don't check rElec to avoid leaking information about armour etc.
-    return feat_is_water(grd(pos)) && act && act->ground_level();
-}
-
 bool melee_attack::can_reach()
 {
     return ((attk_type == AT_HIT && weapon && weapon_reach(*weapon))
@@ -210,7 +202,8 @@ bool melee_attack::can_reach()
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
-    if ((!adjacent(attack_position, defender->pos()) && !jumping_attack && !can_reach())
+    if (defender && (!adjacent(attack_position, defender->pos())
+                     && !jumping_attack && !can_reach())
         || attk_type == AT_SHOOT
         || attk_type == AT_CONSTRICT && !attacker->can_constrict(defender))
     {
@@ -219,17 +212,19 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
-    if (attacker->is_player() && defender->is_monster())
+    if (attacker->is_player() && defender && defender->is_monster())
     {
-        if ((damage_brand == SPWPN_ELECTROCUTION
-                && _conduction_affected(defender->pos()))
+        // These checks are handled in fight_jump() for jump attacks
+        if (!jumping_attack
+            && (damage_brand == SPWPN_ELECTROCUTION
+                && conduction_affected(defender->pos()))
             || (weapon && is_unrandom_artefact(*weapon)
                 && weapon->special == UNRAND_DEVASTATOR))
         {
-            // This check is handled in fight_jump() for jump attacks
-            if (!jumping_attack && damage_brand == SPWPN_ELECTROCUTION
+
+            if (damage_brand == SPWPN_ELECTROCUTION
                 && adjacent(attack_position, defender->pos())
-                && _conduction_affected(attack_position)
+                && conduction_affected(attack_position)
                 && !attacker->res_elec()
                 && !you.received_weapon_warning)
             {
@@ -257,7 +252,7 @@ bool melee_attack::handle_phase_attempted()
                                     ? "attack" : "attack near");
                 bool (*aff_func)(const coord_def &) = 0;
                 if (damage_brand == SPWPN_ELECTROCUTION)
-                    aff_func = _conduction_affected;
+                    aff_func = conduction_affected;
 
                 targetter_smite hitfunc(attacker, 1, 1, 1, false, aff_func);
                 hitfunc.set_aim(defender->pos());
@@ -304,12 +299,23 @@ bool melee_attack::handle_phase_attempted()
 
     if (attacker->is_player())
     {
+        // Handle jump_attack movement.  If the player is jump-attacking a
+        // square with no visible target, defender may be empty, but
+        // path-blocking events are handled first.
         if (jumping_attack)
         {
-            mprf("You jump-attack %s!", defender->name(DESC_THE).c_str());
+            if (defender && you.can_see(defender))
+                mprf("You jump-attack %s!", defender->name(DESC_THE).c_str());
+            else
+                mprf("You jump-attack!");
             if (jump_blocked)
             {
-                mpr("You rebound off of something unseen!");
+                mpr("Something unseen blocks your movement!");
+                return false;
+            }
+            else if (!defender)
+            {
+                mpr("There is nothing there, so you fail to move!");
                 return false;
             }
         }
@@ -342,7 +348,7 @@ bool melee_attack::handle_phase_attempted()
                  defender->name(DESC_THE).c_str());
             if (jump_blocked)
             {
-                mprf("%s rebounds off of something %s can't see!",
+                mprf("%s is blocked by something %s can't see!",
                      attacker->name(DESC_THE).c_str(),
                      attacker->pronoun(PRONOUN_SUBJECTIVE).c_str());
                 return false;
@@ -3243,7 +3249,7 @@ bool melee_attack::apply_damage_brand()
 
             // We know the defender isn't electricity resistant, from
             // above, but we still have to make sure it is in water.
-            if (_conduction_affected(pos))
+            if (conduction_affected(pos))
                 (new lightning_fineff(attacker, pos))->schedule();
         }
 
