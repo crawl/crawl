@@ -1002,6 +1002,8 @@ bool melee_attack::attack()
 
             if (!cont)
             {
+                if (!defender->alive())
+                    handle_phase_killed();
                 handle_phase_end();
                 return false;
             }
