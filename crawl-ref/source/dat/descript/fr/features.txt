@@ -218,20 +218,10 @@ marécageuses. Ses branches sont trop entrelacées pour voir au travers.
 Bien trop grand pour être abattus à la hache, il est sensible à la foudre et à
 des sources de feux suffisamment intenses.
 %%%%
-A magical trap
-
-Un dispositif magique conçu pour blesser ceux qui passent à sa portée et qui ne
-peut être désactivé.
-%%%%
 A mechanical trap
 
 Un engin mécanique conçu pour nuire à des intrus. Un aventurier habile peut
 essayer de le désarmer.
-%%%%
-A natural trap
-
-Un piège naturel, on dirait presque qu'il a été façonné pour nuire aux
-passants.
 %%%%
 A metal wall
 
