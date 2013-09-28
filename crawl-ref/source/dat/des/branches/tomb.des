@@ -274,7 +274,6 @@ SUBST:   - = T
 SUBST:   _ = F 6 ~:30 .:30
 SUBST:   T = ~ .
 SUBST:   t = ~ .:50
-SUBST:   ' = ~ ':200
 SUBST:   ' = 5 .:100
 SUBST:   2 = 2 1:2 .
 SUBST:   1 = 1 2:3 .

@@ -149,7 +149,7 @@ KMONS:   L = patrolling efreet w:12 / patrolling fire elemental w:8
 KFEAT:   L = l
 KPROP:   l = no_cloud_gen
 SHUFFLE: 13, 24, 12 / 12 / 12 / 11 / 11 / 22, ()~- / ()~- / -~(), () / {( / }) / '' / ''
-SUBST:   4 = 3, ' = .:99 >:1, ( = ( <:2, ) = ) >:2
+SUBST:   4 = 3, ' = .:99 >:1, ( = ( <:2, ) = ) >:2, ~- = .
 : if you.branch() == "Geh" then
 SUBST:   d$ = .
 : end

@@ -631,7 +631,6 @@ TAGS:    extra luniq_staircase decor
 DEPTH:   D:2-26
 WEIGHT:  3
 NSUBST:  } = 1:} / *:.
-NSUBST:  ~ = 1:~ / *:.
 SHUFFLE: })]{([
 MAP
 xxxxxxx
@@ -641,7 +640,7 @@ x.x.x.x
 x.x.x.x
 x.x.x.x
 x+x+x+x
-x~~~~~x
+x.....x
 x.....x
 x.....x
 xx...xx
@@ -1201,8 +1200,6 @@ DEPTH: D:12-
 ORIENT: float
 SUBST: 9 = 9 0 8:2
 SUBST: 0 = 0 .
-KFEAT: $ = ^
-KITEM: $ = gold
 MAP
 ........................
 wwwwwwwwwwwwwwwwwwwwwwww
@@ -1486,8 +1483,8 @@ SHUFFLE: AB@
 SUBST:   x = .:30 W x:4
 SUBST:   A : x, B : x
 SUBST:   D = .:30 W
-KFEAT:   E = w:20 . / x / w:50 W / w:30 w / ~
-KFEAT:   F = w:150 w / w:70 W / ~ / . / x
+KFEAT:   E = w:20 . / x / w:50 W / w:30 w
+KFEAT:   F = w:150 w / w:70 W / . / x
 KFEAT:   G = x / . / w / W
 KFEAT:   H = . / W
 KMONS:   D = Plant / w:200 nothing
@@ -2307,7 +2304,6 @@ DEPTH:  D:14-
 ORIENT: float
 NSUBST: . = 7:0 / 2:9 / 1:8 / *:.
 NSUBST: ' = 7:0 / 2:9 / 1:8 / *:.
-SUBST:  . = .:90 ~
 NSUBST: % = 6:* / 3:| / *=%$
 SUBST:  - = .
 MAP
@@ -2466,7 +2462,6 @@ ORIENT: float
 TAGS:   no_pool_fixup
 SUBST:  w: wlll
 NSUBST: . = 10:0 / 4:9 / *:.
-SUBST:  . = .:90 ~
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 wwwwwwwwwwxxxxxxwwwxxxxxxxxxxxx
@@ -2886,7 +2881,7 @@ WEIGHT: 4
 SUBST:  X : cccvvb
 MAP
 X@XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X....XXXXXXXX0X.X.............~...........X....X
+X....XXXXXXXX0X.X.........................X....X
 XXXX.XX.......X.X.XXX.XXXXXXXX.XXXXXXXX.X.X.XX.X
 X....XX.XXXXXXX.X...X.XG.....X.XXXXXXXX.X...XX.X
 X.XXXXX.X.......XXX.X.XXXXXX.X.X.....XX.XXXXXX.X
@@ -2897,7 +2892,7 @@ X.....X.XXXXXXX.XXXXX.X....X.X.X.XXX......XXXX.X
 X.XX.XX..X....X.....X.X.XX.X.X.X.XXXXXXXXXXXXX.X
 X.XXXXXX.X.XX.XXXXXXX.XGXX.....X.X|X...XX....X.X
 X......X.X.XXXXXXXXXXXXXXXXXXXXX.n|X.X.XX.XX.X.X
-XXXXXX.X.X..........~............X|+.X....XX.X.X
+XXXXXX.X.X.......................X|+.X....XX.X.X
 X.XXXX.X.X.XXXXXXXX.X.XXXXXXXXXX.XXXXXXXXXXX.X.X
 X.XXXX.X.X.X.XX...X.X.XXXXX....X.XX..........X.X
 X......X...X....XXX.X.X...X.XX.X.XX.XXX.XXXXXX.X
@@ -2907,7 +2902,7 @@ X.XX.X.XXXXXXX.X.X.XX.XX..X.XX...X......XXX....X
 X.XX...XXX.XXX.X.X.XX.XX.XX.XXXX.X.XXXX.....XX.X
 X.XXXXXXXX.X...X...XX.XX.....9*X.X....XXX.XXXX.X
 X.XXXXXXXX.XXXXXXXXXX.XXXXXXXXXX.X.XXXX0X.X.GX.X
-X.XXXXXXXX............~..........X.XXX..X.X.XX.X
+X.XXXXXXXX.......................X.XXX..X.X.XX.X
 X.X...XXXX.XXXXXXXXXX.XXXXXXXXXX.X.....XX.X.XX.X
 X.X.X.XXXX.X........X.XX.......X.XXXXXXXX.X.XX.X
 X...X........XXXXXX0X....XXXXX............X....X
@@ -2925,19 +2920,19 @@ xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx..0....0....0....+........x
 xxG%xxxG%xxxG%xxxG%x........x
 xxxxxxxxxxxxxxxxxxxx+xxxxxxxx
-xx0........0.......~.......xx
+xx0........0...............xx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xwwwwwwwwwwwwwwwwwwwwwwwwwwwx
 xx.........................xx
 xxxx.xxxxxxxxxxxxxxxxxxxxxxxx
-xxx.xxx~.xxxxxxxxx..xxxxxG.xx
+xxx.xxx..xxxxxxxxx..xxxxxG.xx
 xx.xx0.xx.xxxxxxx.xx.xxxxxx.x
-x.xxxxxxxx.xxx...xxxx..xxxx~x
+x.xxxxxxxx.xxx...xxxx..xxxx.x
 x.x...xxx.x.x.xxx.xxxxx.xx.xx
 xx.xxx...xxx.xxxxx.xx%0x..xxx
 xxxxxxxxxxxxxxxxxxx.xxxxxxxxx
 .x.0..x.x..0.x....x.x....x...
-..x..x...x..x.....~.......x..
+..x..x...x..x.............x..
 ..................x.x........
 ...................@.........
 ENDMAP
@@ -2984,11 +2979,11 @@ X..%X.............X%..X
 X0G.X.GXGXG.GXGXG.X.G0X
 X.0.X.X.........X.X.0.X
 X+XXX.X.XXXXXXX.X.XXX+X
-X.......~.............X
+X.....................X
 XXXXX+XXXXXXXXXXX+XXXXX
 XXXX...X.X.X.X.X...XXXX
 XXX.....'..X..'.9...XXX
-@.....%'''.+~'''......@
+@.....%'''.+.'''......@
 XXX..0..'..X..'.....XXX
 XXXX...X.X.X.X9X...XXXX
 XXXXX+XXXXnXnXXXX+XXXXX
@@ -2998,7 +2993,7 @@ XXXXXXX.XXX9XXX.XXXXXXX
 XXXXXXXX.XX+XX.XXXXXXXX
 XXXXXXXXX.X.X.XXXXXXXXX
 XXXXXXXGXX.X.XXGXXXXXXX
-X0......XXX.XXX.~...0%X
+X0......XXX.XXX.....0%X
 XXXXXXX.+..X..+.XXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
@@ -3015,15 +3010,15 @@ MAP
 xxxxxxxxxxxxxxxxx@xxxxxxxxxx
 xxxxxx...xxxxxxx..xxxxxxxxxx
 xxxxxx..%xxxxxxx...xxxxxxxxx
-x%..xx.x~xxxxxxx....xxxxxxxx
+x%..xx.x.xxxxxxx....xxxxxxxx
 x...+.x.xxxxxxx..'..xxxxxxxx
 x...xxxx.xxx....'.'..xxxxxxx
-xxxxxxxxx......'.'.'~..xxxxx
+xxxxxxxxx......'.'.'...xxxxx
 xxxx1.WWW..xxx..'.'.xx+xxxxx
-xx...WW....+0x~..'..x....xxx
+xx...WW....+0x...'..x....xxx
 x1.........xxx......x...0xxx
 xxx.xxxx...'........xxxxxxxx
-xxxxx0.+..'.'...~.xxxxxxxxxx
+xxxxx0.+..'.'.....xxxxxxxxxx
 xxxxxxxx.'.'.'.xx+x%..x9..xx
 xxxxxxxxx.'.'xxxx.x...+...xx
 xxxxxxxxxx.'xxxxx....0x...xx

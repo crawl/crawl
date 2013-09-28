@@ -3385,7 +3385,7 @@ TAGS:  transparent mini_float allow_dup extra
 DEPTH: D:8-26
 MAP
 ............
-.~xxxxxxxx~.
+..xxxxxxxx..
 .x........x.
 .x.ccnccc.x.
 .x.c|..<c.x.
@@ -3394,7 +3394,7 @@ MAP
 .x.c>..|c.x.
 .x.cccncc.x.
 .x........x.
-.~xxxxxxxx~.
+..xxxxxxxx..
 ............
 ENDMAP
 
@@ -3402,6 +3402,7 @@ NAME:  minivault_22
 TAGS:  transparent mini_float allow_dup extra abyss ruin_abyss
 DEPTH: D:6-26
 SUBST: $ : $ *:5
+SUBST: ~ : . +:2
 MAP
 ............
 .....xx.....

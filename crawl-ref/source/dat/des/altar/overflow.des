@@ -1484,7 +1484,8 @@ MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
 MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
 MONS:   place:D:1-8
 NSUBST: ' = 1:_ / *:.
-SUBST:  . = .:200 ~:70 W:60 w:50 x:80 n:80 v b l Z T U M:20
+SUBST:  . = .:200 ~:10 W:60 w:50 x:80 n:80 v b l Z T U M:20
+KFEAT:  ~ = shaft trap / teleport trap / alarm trap w:3
 NSUBST: Z = 1:* / *:%
 SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
 COLOUR: . = random
@@ -1599,6 +1600,7 @@ SUBST:   . = lWwtm_~......
 KFEAT:   _ = altar_xom
 NSUBST:  T = 3:T / .
 KFEAT:   T = known teleport trap
+KFEAT:   ~ = shaft trap / alarm trap / teleport trap
 : interest_check(_G)
 MAP
       @
