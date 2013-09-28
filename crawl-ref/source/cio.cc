@@ -146,13 +146,14 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
 
     while (!buf.empty())
     {
-        int x = wherex(), y = wherey();
+        const GotoRegion region = get_cursor_region();
+        const coord_def pos = cgetpos(region);
 
-        int avail = wrapcol - x + 1;
+        int avail = wrapcol - pos.x + 1;
         if (avail > 0)
             cprintf("%s", wordwrap_line(buf, avail).c_str());
         if (!buf.empty())
-            cgotoxy(1, y + 1);
+            cgotoxy(1, pos.y + 1, region);
     }
 }
 
@@ -267,10 +268,6 @@ void line_reader::cursorto(int ncx)
     {
         // There's no space left in the region, so we scroll it.
         // XXX: cscroll only implemented for GOTO_MSG.
-        // XXX: wrapcprintf works in GOTO_SCREEN; in particular
-        //      it wraps to the screen's first column, so this
-        //      won't work for regions that don't start at the
-        //      left edge.
         cscroll(diff, region);
         start.y -= diff;
         y -= diff;
