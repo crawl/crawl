@@ -3291,7 +3291,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_STONE:        return TILE_MI_STONE;
     case MI_LARGE_ROCK:   return TILE_MI_LARGE_ROCK;
     case MI_THROWING_NET: return TILE_MI_THROWING_NET;
-    case MI_TOMAHAWK:     return TILE_ERROR;
 
     case MI_DART:
         switch (brand)
@@ -3300,6 +3299,14 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_POISONED: return TILE_MI_DART_POISONED;
         case SPMSL_STEEL:    return TILE_MI_DART_STEEL;
         case SPMSL_SILVER:   return TILE_MI_DART_SILVER;
+        }
+
+    case MI_TOMAHAWK:
+        switch (brand)
+        {
+        default:             return TILE_MI_TOMAHAWK;
+        case SPMSL_STEEL:    return TILE_MI_TOMAHAWK_STEEL;
+        case SPMSL_SILVER:   return TILE_MI_TOMAHAWK_SILVER;
         }
 
     case MI_NEEDLE:
@@ -4457,7 +4464,7 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 ch = TILE_MI_THROWING_NET0;
                 break;
             case MI_TOMAHAWK:
-                ch = TILE_ERROR;
+                ch = TILE_MI_TOMAHAWK0;
             default:
                 break;
         }
