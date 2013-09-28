@@ -1160,8 +1160,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             item.special = SPMSL_NORMAL;
 
         beam.effect_known = false;
-        beam.effect_wanton = (bow_brand == SPWPN_CHAOS
-                              || item_ident(item, ISFLAG_KNOW_TYPE));
+        beam.effect_wanton = true;
 
         beam.flavour = BEAM_CHAOS;
         if (ammo_brand != SPMSL_CHAOS)
