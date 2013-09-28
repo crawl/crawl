@@ -281,17 +281,16 @@ KMONS:   3 = vapour
 KFEAT:   t = mangrove
 KFEAT:   123 = deep_water
 SHUFFLE: })
-SUBST:   T = w:3 t, M = ~:4 t, W = W:3 w, . = .:3 W, } = }:20 >, ) = ):25 <>
-KPROP:   ~ = no_rtele_into
+SUBST:   T = w:3 t, W = W:3 w, . = .:3 W, } = }:20 >, ) = ):25 <>
 MAP
-  Mtttttt  @tt{@
- Mttttttttt..ttM
-Mttt3twwwtWT.wtt
-Mtt211w}wwt.wwwtt
+  ttttttt  @tt{@
+ tttttttttt..ttt
+tttt3twwwtWT.wtt
+ttt211w}wwt.wwwtt
 ttt11w.w.w.w11ttt
-ttwww.tWw)w112ttM
-Mttw.TWt.wwt3tttM
- Mtt..tttttttttM
+ttwww.tWw)w112ttt
+tttw.TWt.wwt3tttt
+ ttt..tttttttttt
    tt@  ttttttt
 ENDMAP
 
