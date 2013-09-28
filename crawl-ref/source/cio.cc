@@ -312,6 +312,8 @@ int line_reader::read_line(bool clear_previous)
         if (!tag.empty())
             tiles.json_write_string("tag", tag);
         tiles.json_write_string("prefill", buffer);
+        tiles.json_write_int("maxlen", (int) bufsz - 1);
+        tiles.json_write_int("size", (int) min(bufsz - 1, strlen(buffer) + 15));
         tiles.json_close_object();
         tiles.finish_message();
     }
