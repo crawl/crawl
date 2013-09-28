@@ -115,10 +115,15 @@ function ($, comm, client, util, settings) {
 
         var prompt = $("#messages .game_message").last();
         var input = $("<input class='text' type='text'>");
-        prompt.append(input);
 
+        if ("maxlen" in msg)
+            input.attr("maxlength", msg.maxlen)
+        if ("size" in msg)
+            input.attr("size", msg.size)
         if ("prefill" in msg)
             input.val(msg.prefill)
+
+        prompt.append(input);
         input.focus();
 
         function restore()
