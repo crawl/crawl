@@ -79,7 +79,7 @@ A one-way gate to the infinite horrors of the Abyss
     -Friedrich Nietzsche, _Beyond Good and Evil_ , Aphorism 146. 1886.
 
 “Well, in our country,” said Alice, still panting a little, “you’d generally
-get to somewhere else – if you ran very fast for a long time, as we’ve been
+get to somewhere else — if you ran very fast for a long time, as we’ve been
 doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
 all the running you can do, to keep in the same place. If you want to get
 somewhere else, you must run at least twice as fast as that!”
@@ -2635,7 +2635,7 @@ it outruns the eye.”
 small abomination
 
 “No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
-had shapes, a thousand shapes of horror beyond all memory. There were eyes –
+had shapes, a thousand shapes of horror beyond all memory. There were eyes —
 and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
     -H.P. Lovecraft, _The Unnamable_. 1925.
@@ -2899,8 +2899,8 @@ swamp worm
 %%%%
 tengu
 
-“A Bird came down the Walk –
- He did not know I saw –
+“A Bird came down the Walk —
+ He did not know I saw —
  He bit an Angleworm in halves
  And ate the fellow, raw”
     -Emily Dickinson, “A Bird came down the Walk”. ca. 1865.
@@ -2914,7 +2914,7 @@ to suggest it with any words at my command. I might call it gigantic —
 tentacled — proboscidian — octopus-eyed — semi-amorphous — plastic — partly
 squamous and partly rugose — ugh!”
     -H.P. Lovecraft and Hazel Heald, “Out of the Aeons”, _Weird Tales_, 25, No.
-     4, pp. 478–96. April 1935.
+     4, pp. 478-96. April 1935.
 %%%%
 the Lernaean hydra
 
