@@ -573,11 +573,14 @@ static void _construct_species_menu(const newgame_def* ng,
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
 
-    for (int i = 0; i < ng_num_species(); ++i)
+    for (int i = 0, pos = 0; i < ng_num_species(); ++i, ++pos)
     {
         const species_type species = get_species(i);
         if (!_is_species_valid_choice(species))
+        {
+            --pos;
             continue;
+        }
 
         tmp = new TextItem();
         text.clear();
@@ -604,21 +607,21 @@ static void _construct_species_menu(const newgame_def* ng,
         }
         else
         {
-            text = index_to_letter(i);
+            text = index_to_letter(pos);
             text += " - ";
             text += species_name(species);
         }
         // Fill to column width - 1
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
-        ASSERT(i < items_in_column * 3);
-        min_coord.x = X_MARGIN + (i / items_in_column) * COLUMN_WIDTH;
-        min_coord.y = 3 + i % items_in_column;
+        ASSERT(pos < items_in_column * 3);
+        min_coord.x = X_MARGIN + (pos / items_in_column) * COLUMN_WIDTH;
+        min_coord.y = 3 + pos % items_in_column;
         max_coord.x = min_coord.x + text.size();
         max_coord.y = min_coord.y + 1;
         tmp->set_bounds(min_coord, max_coord);
 
-        tmp->add_hotkey(index_to_letter(i));
+        tmp->add_hotkey(index_to_letter(pos));
         tmp->set_id(species);
         tmp->set_description_text(unwrap_desc(getGameStartDescription(species_name(species))));
         menu->attach_item(tmp);
