@@ -5,7 +5,7 @@ A broken pillar
  and reared up for himself a pillar,
  which is in the king's dale: for he said,
  I have no son to keep my name in remembrance...”
-    2 Samuel 18:18
+    -KJV Bible, 2 Samuel 18:18.
 %%%%
 A gateway to Hell
 
@@ -331,7 +331,7 @@ Mass Confusion spell
 “Go to, let us go down, and there confound their language, that they may not
 understand one another's speech.  So the LORD scattered them abroad from
 thence upon the face of all the earth: and they left off to build the city.”
-    -KJV Bible, Gen 11:7-8
+    -KJV Bible, Genesis 11:7-8.
 %%%%
 Maurice
 
@@ -451,7 +451,7 @@ Temple
 
 “And I heard a great voice out of the temple saying to the seven angels, Go
 your ways, and pour out the vials of the wrath of God upon the earth.”
-    -KJV Bible, Rev 16:1
+    -KJV Bible, Revelations 16:1.
 %%%%
 Terence
 
@@ -801,7 +801,7 @@ bush
 “And the angel of the LORD appeared unto him in a flame of fire out of the
 midst of a bush: and he looked, and, behold, the bush burned with fire, and the
 bush was not consumed.”
-    -KJV Bible, Ex3:2.
+    -KJV Bible, Exodus 3:2.
 %%%%
 butterfly
 
@@ -843,7 +843,7 @@ of the house; and the house was filled with the cloud, and the court was full
 of the brightness of Yahweh’s glory.
  The sound of the wings of the cherubim was heard even to the outer court, as
 the voice of God Almighty when he speaks.”
-    -WEB Bible, Ezk10:4-5
+    -WEB Bible, Ezekiel 10:4-5
 %%%%
 choko
 
@@ -1962,9 +1962,9 @@ pillar of salt
 
 “Then the LORD rained upon Sodom and upon Gomorrah brimstone and fire from the
 LORD out of heaven; And he overthrew those cities, and all the plain, and all
-the inhabitants of the cities, and that which grew upon the ground. But his
+the inhabitants of the cities, and that which grew upon the ground. But [Lot's]
 wife looked back from behind him, and she became a pillar of salt.”
-    -KJV Bible, Gen. XIX, 24-6.
+    -KJV Bible, Genesis 19:24-6.
 %%%%
 player ghost
 
@@ -2428,7 +2428,7 @@ high and lifted up, and his train filled the temple.
 his face, and with twain he covered his feet, and with twain he did fly.
  And one cried unto another, and said, Holy, holy, holy, is the LORD of hosts:
 the whole earth is full of his glory.”
-    -KJV Bible, Isaiah6:1-3
+    -KJV Bible, Isaiah 6:1-3.
 %%%%
 shadow
 
@@ -2623,7 +2623,7 @@ sling
 “And David put his hand in his bag, and took thence a stone, and slang it, and
 smote the Philistine in his forehead, that the stone sunk into his forehead;
 and he fell upon his face to the earth.”
-    -KJV Bible, Sam 17:49.
+    -KJV Bible, 1 Samuel 17:49.
 %%%%
 sling bullet
 
@@ -3214,7 +3214,7 @@ wight
 witch
 
 “Thou shalt not suffer a witch to live.”
-    -KJV Bible, Exodus 22:18
+    -KJV Bible, Exodus 22:18.
 %%%%
 wizard
 
