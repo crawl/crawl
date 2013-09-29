@@ -140,6 +140,7 @@
     Andrew Minton
     Shawn M Moore
     Eva Myers
+    Naruni
     nooodl
     Erkki Nurmi
     Mattias Nyberg
@@ -177,6 +178,7 @@
     Pavel 'Curio' Svinarchuk
     Matthew Tadd
     William Tanksley, Jr.
+    Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus
     Jason Van
