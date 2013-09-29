@@ -130,6 +130,7 @@
     Maciej Lapinski
     Jordan Lewis
     Sami Liedes
+    Michael Lynn
     Lain I. W. Madreisz
     Markus Maier
     Arien Malec
