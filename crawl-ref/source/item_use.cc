@@ -2132,6 +2132,14 @@ void drink(int slot)
         return;
     }
 
+    if (alreadyknown && is_blood_potion(potion)
+        && is_good_god(you.religion)
+        && !yesno("Really drink that potion of blood?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     zin_recite_interrupt();
 
     // The "> 1" part is to reduce the amount of times that Xom is
