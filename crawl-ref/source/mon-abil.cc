@@ -4205,11 +4205,20 @@ bool mon_special_ability(monster* mons, bolt & beem)
             else
                 found = true;
 
-            if (found && mons->move_to_pos(hopspot))
+            if (found)
             {
-                simple_monster_message(mons, " hops backward while attacking.");
+                const bool could_see = you.can_see(mons);
+
                 fight_melee(mons, mons->get_foe());
-                mons->speed_increment -= 2; // Add a small extra delay
+                if (mons->move_to_pos(hopspot))
+                {
+                    if (could_see || you.can_see(mons))
+                    {
+                        mprf("%s hops backward while attacking.",
+                             mons->name(DESC_THE, true).c_str());
+                    }
+                    mons->speed_increment -= 2; // Add a small extra delay
+                }
                 return true; // Energy has already been deducted via melee
             }
         }
