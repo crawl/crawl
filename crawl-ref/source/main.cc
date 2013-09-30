@@ -3340,7 +3340,7 @@ static void _player_reacts_to_monsters()
     // penance checked there (as you can have antennae too)
     if (player_mutation_level(MUT_ANTENNAE)
         || you_worship(GOD_ASHENZARI)
-        || player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
+        || player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN))
     {
         check_antennae_detect();
     }
