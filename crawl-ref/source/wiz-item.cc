@@ -1186,7 +1186,6 @@ static void _debug_acquirement_stats(FILE *ostat)
             "intelligence",
             "ponderous",
             "flight",
-            "jumping",
             "magic reistance",
             "protection",
             "stealth",
@@ -1197,6 +1196,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reflection",
             "spirit shield",
             "archery",
+            "jumping",
         };
 
         const int non_art = acq_calls - num_arts;
