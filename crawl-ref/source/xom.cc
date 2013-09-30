@@ -1984,7 +1984,7 @@ static int _xom_change_scenery(bool debug = false)
             continue;
 
         dungeon_feature_type feat = grd(*ri);
-        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
+        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN)
             candidates.push_back(*ri);
         else if (feat_is_closed_door(feat))
         {
