@@ -2277,9 +2277,12 @@ void handle_monster_move(monster* mons)
                 && !mons->has_ench(ENCH_CHARM)
                 && !mons->withdrawn())
             {
-                // If it steps into you, cancel other targets.
-                mons->foe = MHITYOU;
-                mons->target = you.pos();
+                if (!mons->wont_attack())
+                {
+                    // If it steps into you, cancel other targets.
+                    mons->foe = MHITYOU;
+                    mons->target = you.pos();
+                }
 
                 fight_melee(mons, &you);
 
