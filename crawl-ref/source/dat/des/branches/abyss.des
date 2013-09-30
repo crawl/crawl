@@ -190,7 +190,7 @@ NAME:   hangedman_abyss_overflow_altar
 TAGS:   abyss no_item_gen no_monster_gen no_pool_fixup
 MONS:   stone golem
 KFEAT:  A = altar_lugonu
-KFEAT:  B = permadry_fountain
+KFEAT:  B = dry_fountain
 SUBST:  x = xcv++, y = ..w, z = Wl
 MAP
 yyyyyyyy
@@ -208,7 +208,7 @@ TAGS:   abyss no_monster_gen patrolling
 KMONS:  1 = water elemental / nothing w:5
 KMONS:  2 = stone golem
 KFEAT:  0 = abandoned_shop
-KFEAT:  1 = permadry_fountain
+KFEAT:  1 = dry_fountain
 SUBST:  x = xcv, . = ...W
 MAP
      . .

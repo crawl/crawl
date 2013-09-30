@@ -1634,7 +1634,7 @@ static const char *dngn_feature_names[] =
 #if TAG_MAJOR_VERSION == 34
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
 #endif
-"permadry_fountain",
+"dry_fountain",
 
 "explore_horizon",
 "unknown_altar", "unknown_portal",

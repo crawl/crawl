@@ -1000,7 +1000,7 @@ LROCKTILE:  wall_hall
     lua_marker("!", portal_desc { spawn_point = 1, south = 1, west = 1 })
     lua_marker("?", portal_desc { spawn_point = 1, south = 1, east = 1 })
 
-    set_feature_name("permadry_fountain", "spawn point")
+    set_feature_name("dry_fountain", "spawn point")
 
     crawl.mpr("<cyan>You have entered the arena!\n" ..
               "You will win if you kill everything that spawns (including allies).\n" ..
@@ -1123,7 +1123,7 @@ KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15
             ring of see invisible
 SUBST:  b : cb
 TILE:   c = wall_marble
-KFEAT:  TUVWYZ!? = permadry_fountain
+KFEAT:  TUVWYZ!? = dry_fountain
 TILE:   TUVWYZ!? = floor_black_cobalt
 COLOUR: TUVWYZ!? = magenta
 MAP
