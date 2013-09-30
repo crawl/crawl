@@ -257,7 +257,6 @@ NAME:    hangedman_abyss_feature_spike
 TAGS:    abyss extra no_item_gen no_pool_fixup allow_dup
 MONS:    fungus, plant, bush
 ITEM:    stone q:1, large rock q:1
-KFEAT:   ^ : known dart trap / known needle trap / known blade trap
 KFEAT:   A : stone_arch w:99 / abandoned_shop w:1
 KFEAT:   - = altar_lugonu
 KMASK:   wWl = no_monster_gen
@@ -270,7 +269,7 @@ SUBST:   f = A, g = C, h = T, i = U, j = V
 SUBST:   o = t, p = G, q = w, r = W, s = l
 SUBST:   J = x, K = c, L = v, MN = m, O = 1, P = 2, Q = 3, RS = b
 SUBST:   - = -----A
-SHUFFLE: AACCTTUUVYYdeefghi^, tGGwWlI, xxccvvbbmm+123
+SHUFFLE: AACCTTUUVYYdeefghi, tGGwWlI, xxccvvbbmm+123
 : dgn.delayed_decay(_G, 'f', 'human skeleton')
 : dgn.delayed_decay(_G, 'g', 'elf skeleton')
 : dgn.delayed_decay(_G, 'h', 'dwarf skeleton')
