@@ -3073,6 +3073,8 @@ enum pronoun_type
     PRONOUN_OBJECTIVE,
 };
 
+// Be sure to update _prop_name[] in wiz-item.cc to match.  Also
+// _randart_propnames(), but order doesn't matter there.
 enum artefact_prop_type
 {
     ARTP_BRAND,
