@@ -1631,7 +1631,9 @@ static const char *dngn_feature_names[] =
 "altar_ashenzari", "",
 
 "fountain_blue", "fountain_sparkling", "fountain_blood",
+#if TAG_MAJOR_VERSION == 34
 "dry_fountain_blue", "dry_fountain_sparkling", "dry_fountain_blood",
+#endif
 "permadry_fountain",
 
 "explore_horizon",
