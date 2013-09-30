@@ -4630,7 +4630,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "anti-magic",
         "distortion",
         "reaching",
+#if TAG_MAJOR_VERSION == 34
         "returning",
+#endif
         "chaos",
         "evasion",
 #if TAG_MAJOR_VERSION == 34
