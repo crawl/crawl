@@ -355,6 +355,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
 
                 targetter_smite hitfunc(attacker, 1, 1, 1, false, aff_func);
                 hitfunc.set_aim(attack_pos);
+                hitfunc.origin = *site;
 
                 if (stop_attack_prompt(hitfunc, verb, nullptr,
                                        &conduct_prompted))

@@ -216,10 +216,10 @@ bool melee_attack::handle_phase_attempted()
     {
         // These checks are handled in fight_jump() for jump attacks
         if (!jumping_attack
-            && (damage_brand == SPWPN_ELECTROCUTION
-                && conduction_affected(defender->pos()))
-            || (weapon && is_unrandom_artefact(*weapon)
-                && weapon->special == UNRAND_DEVASTATOR))
+            && ((damage_brand == SPWPN_ELECTROCUTION
+                 && conduction_affected(defender->pos()))
+                || (weapon && is_unrandom_artefact(*weapon)
+                    && weapon->special == UNRAND_DEVASTATOR)))
         {
 
             if (damage_brand == SPWPN_ELECTROCUTION
