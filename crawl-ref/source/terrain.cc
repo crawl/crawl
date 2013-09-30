@@ -1642,8 +1642,8 @@ static const char *dngn_feature_names[] =
 "badly_sealed_door",
 #endif
 
-"sealed_stair_down",
 "sealed_stair_up",
+"sealed_stair_down",
 
 "trap_alarm",
 "trap_zot",
