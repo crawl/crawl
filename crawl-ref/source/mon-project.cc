@@ -222,7 +222,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     }
 
     noisy(5, pos);
-    return victim && victim->alive();
+    return victim && victim->alive() || !mon.alive();
 }
 
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
