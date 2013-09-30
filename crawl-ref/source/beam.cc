@@ -725,7 +725,7 @@ void bolt::apply_beam_conducts()
         switch (flavour)
         {
         case BEAM_HELLFIRE:
-            did_god_conduct(DID_UNHOLY, 2 + random2(3), effect_known);
+            did_god_conduct(DID_UNHOLY, 2 + random2(3), god_cares());
             break;
         default:
             break;
@@ -898,9 +898,9 @@ void bolt::fire_wall_effect()
     else if (you.can_smell())
         emit_message(MSGCH_PLAIN, "You smell burning wood.");
     if (whose_kill() == KC_YOU)
-        did_god_conduct(DID_KILL_PLANT, 1, effect_known);
+        did_god_conduct(DID_KILL_PLANT, 1, god_cares());
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-        did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known);
+        did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
     ASSERT(agent());
     place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
@@ -1042,7 +1042,7 @@ void bolt::nuke_wall_effect()
         if (whose_kill() == KC_YOU)
             did_god_conduct(DID_KILL_PLANT, 1);
         else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, effect_known, 0);
+            did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares(), 0);
     }
 
     finish_beam();
@@ -1650,7 +1650,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             mons->drain_exp(pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
-                did_god_conduct(DID_NECROMANCY, 2, pbolt.effect_known);
+                did_god_conduct(DID_NECROMANCY, 2, pbolt.god_cares());
         }
         break;
 
@@ -1671,7 +1671,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             miasma_monster(mons, pbolt.agent());
 
             if (YOU_KILL(pbolt.thrower))
-                did_god_conduct(DID_UNCLEAN, 2, pbolt.effect_known);
+                did_god_conduct(DID_UNCLEAN, 2, pbolt.god_cares());
         }
         break;
 
@@ -3384,7 +3384,7 @@ void bolt::affect_player_enchantment()
 
     bool nasty = true, nice = false;
 
-    const bool blame_player = effect_known && YOU_KILL(thrower);
+    const bool blame_player = god_cares() && YOU_KILL(thrower);
 
     switch (flavour)
     {
@@ -3419,7 +3419,7 @@ void bolt::affect_player_enchantment()
 
     case BEAM_HASTE:
         potion_effect(POT_SPEED, ench_power, false, blame_player);
-        contaminate_player(1000, effect_known);
+        contaminate_player(1000, blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3442,7 +3442,7 @@ void bolt::affect_player_enchantment()
     case BEAM_INVISIBILITY:
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
         potion_effect(POT_INVISIBILITY, ench_power, false, blame_player);
-        contaminate_player(1000 + random2(1000), effect_known);
+        contaminate_player(1000 + random2(1000), blame_player);
         obvious_effect = true;
         nasty = false;
         nice  = true;
@@ -3782,7 +3782,7 @@ void bolt::affect_player()
         && !you.is_unbreathing())
     {
         potion_effect(POT_CONFUSION, 1, false,
-                      effect_known && YOU_KILL(thrower));
+                      god_cares() && YOU_KILL(thrower));
     }
 
     // handling of missiles
@@ -4403,6 +4403,13 @@ void bolt::beam_hits_actor(actor *act)
     }
 }
 
+// Return true if the player's god will be unforgiving about the effects
+// of this beam.
+bool bolt::god_cares() const
+{
+    return effect_known || effect_wanton;
+}
+
 // Return true if the block succeeded (including reflections.)
 bool bolt::attempt_block(monster* mon)
 {
@@ -4596,7 +4603,7 @@ void bolt::affect_monster(monster* mon)
             // ?immolation.
             const bool okay =
                 (!you.can_see(mon)
-                    || aux_source == "scroll of immolation" && !effect_known);
+                    || aux_source == "scroll of immolation" && !god_cares());
 
             if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
                 remove_sanctuary(true);
@@ -5023,7 +5030,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (YOU_KILL(thrower))
         {
             did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3),
-                            effect_known);
+                            god_cares());
         }
         return MON_AFFECTED;
 
@@ -5033,7 +5040,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (YOU_KILL(thrower))
         {
             did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3),
-                            effect_known);
+                            god_cares());
         }
         return MON_AFFECTED;
 
@@ -5112,7 +5119,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_HASTE:
         if (YOU_KILL(thrower))
-            did_god_conduct(DID_HASTY, 6, effect_known);
+            did_god_conduct(DID_HASTY, 6, god_cares());
 
         if (mon->check_stasis(false))
             return MON_AFFECTED;
@@ -5951,6 +5958,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                loudness(0), noise_msg(), is_beam(false), is_explosion(false),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
+               effect_wanton(false),
                draw_delay(15), special_explosion(NULL), animate(true),
                ac_rule(AC_NORMAL),
 #ifdef DEBUG_DIAGNOSTICS

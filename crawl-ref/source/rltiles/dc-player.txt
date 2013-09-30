@@ -674,16 +674,16 @@ staff_fork STAFF_FORK
 
 ## rods
 # These 10 rods correspond to the same order as item/rod/
-rod_brown ROD_BROWN
-rod_moon
-rod_aries
-rod_blue
-rod_magenta
-rod_hammer
-rod_thick
-rod_ruby
-rod_forked
+rod_ruby ROD_FIRST
+rod_brown
 rod_emerald
+rod_hammer
+rod_blue
+rod_thick
+rod_moon
+rod_magenta
+rod_forked
+rod_aries
 
 ## axes
 axe_small AXE_SMALL

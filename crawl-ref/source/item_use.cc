@@ -642,7 +642,27 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (!ignore_temporary)
+        if (ignore_temporary)
+        {
+            // Hooves and talons were already checked by player_has_feet.
+
+            if (species_has_claws(you.species) >= 3
+                || player_mutation_level(MUT_CLAWS, false) >= 3)
+            {
+                if (verbose)
+                    mprf("The hauberk won't fit your hands.");
+                return false;
+            }
+
+            if (player_mutation_level(MUT_HORNS, false) >= 3
+                || player_mutation_level(MUT_ANTENNAE, false) >= 3)
+            {
+                if (verbose)
+                    mprf("The hauberk won't fit your head.");
+                return false;
+            }
+        }
+        else
         {
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
@@ -1800,7 +1820,10 @@ void zap_wand(int slot)
     targetter *hitfunc      = 0;
 
     if (!alreadyknown)
+    {
         beam.effect_known = false;
+        beam.effect_wanton = false;
+    }
     else
     {
         switch (wand.sub_type)
@@ -1880,7 +1903,10 @@ void zap_wand(int slot)
         zap_wand.confusion_fuzz();
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
+    {
         beam.effect_known = false;
+        beam.effect_wanton = alreadyknown;
+    }
 
     beam.source   = you.pos();
     beam.attitude = ATT_FRIENDLY;
@@ -2103,6 +2129,14 @@ void drink(int slot)
         && (!berserk_check_wielded_weapon()
             || !you.can_go_berserk(true, true)))
     {
+        return;
+    }
+
+    if (alreadyknown && is_blood_potion(potion)
+        && is_good_god(you.religion)
+        && !yesno("Really drink that potion of blood?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
         return;
     }
 
