@@ -16,6 +16,8 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "cio.h"
 #include "coordit.h"
 #include "delay.h"
@@ -2547,6 +2549,9 @@ void check_demonic_guardian()
 void check_antennae_detect()
 {
     int radius = player_mutation_level(MUT_ANTENNAE) * 2;
+
+    if (player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN))
+        radius = max(radius, 4);
     if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         radius = max(radius, you.piety / 20);
     if (radius <= 0)

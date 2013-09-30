@@ -2233,8 +2233,8 @@ bool is_bad_food(const item_def &food)
             || is_forbidden_food(food) || causes_rot(food));
 }
 
-// Returns true if a food item (also corpses) is poisonous AND the player
-// is not (known to be) poison resistant.
+// Returns true if a food item (or corpse) is poisonous AND the player is not
+// (known to be) poison resistant.
 bool is_poisonous(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
@@ -2246,7 +2246,7 @@ bool is_poisonous(const item_def &food)
     return chunk_is_poisonous(mons_corpse_effect(food.mon_type));
 }
 
-// Returns true if a food item (also corpses) is mutagenic.
+// Returns true if a food item (or corpse) is mutagenic.
 bool is_mutagenic(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
@@ -2259,7 +2259,7 @@ bool is_mutagenic(const item_def &food)
     return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN);
 }
 
-// Returns true if a food item (also corpses) is contaminated and thus
+// Returns true if a food item (or corpse) is contaminated and thus
 // gives less nutrition.
 bool is_contaminated(const item_def &food)
 {
@@ -2276,7 +2276,7 @@ bool is_contaminated(const item_def &food)
                && player_mutation_level(MUT_SAPROVOROUS) < 3);
 }
 
-// Returns true if a food item (also corpses) will cause rotting.
+// Returns true if a food item (or corpse) will cause rotting.
 bool causes_rot(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)

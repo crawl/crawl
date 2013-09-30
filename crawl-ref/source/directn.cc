@@ -2941,7 +2941,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         case TRAP_SHAFT:
             return "shaft";
         case TRAP_TELEPORT:
-            return "teleportation trap";
+            return "teleport trap";
         case TRAP_ZOT:
             return "Zot trap";
         case TRAP_GOLUBRIA:

@@ -387,6 +387,20 @@ effect/dart5 MI_DART5
 effect/dart6 MI_DART6
 effect/dart7 MI_DART7
 
+tomahawk1 MI_TOMAHAWK
+tomahawk2
+steel_tomahawk MI_TOMAHAWK_STEEL
+silver_tomahawk MI_TOMAHAWK_SILVER
+# flying tomahawks
+effect/tomahawk0 MI_TOMAHAWK0
+effect/tomahawk1 MI_TOMAHAWK1
+effect/tomahawk2 MI_TOMAHAWK2
+effect/tomahawk3 MI_TOMAHAWK3
+effect/tomahawk4 MI_TOMAHAWK4
+effect/tomahawk5 MI_TOMAHAWK5
+effect/tomahawk6 MI_TOMAHAWK6
+effect/tomahawk7 MI_TOMAHAWK7
+
 needle1 MI_NEEDLE
 needle2
 needle-p MI_NEEDLE_P
@@ -1024,7 +1038,6 @@ i-staff_air STAFF_AIR
 i-staff_earth STAFF_EARTH
 %rim 0
 i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
-%rim 1
 
 %sdir item/rod
 rod00 ROD
@@ -1038,7 +1051,6 @@ rod07
 rod08
 rod09
 
-%rim 0
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE

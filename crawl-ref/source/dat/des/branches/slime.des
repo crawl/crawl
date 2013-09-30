@@ -492,7 +492,7 @@ ENDMAP
 NAME: nicolae_slime_phagocytosis
 DEPTH: Slime
 TAGS: transparent
-SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = WX, ' = ._
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = Wx, ' = ._
 NSUBST: W = 4:1 / *:W
 KMONS: 1 = giant amoeba
 KFEAT: 1 = W
