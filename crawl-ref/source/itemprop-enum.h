@@ -75,6 +75,7 @@ const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
 const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
 
+// Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum brand_type // item_def.special
 {
     SPWPN_FORBID_BRAND = -1,
@@ -335,6 +336,7 @@ enum scroll_type
     NUM_SCROLLS
 };
 
+// Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum special_armour_type
 {
     SPARM_FORBID_EGO = -1,
@@ -364,6 +366,7 @@ enum special_armour_type
     NUM_SPECIAL_ARMOURS,
 };
 
+// Be sure to update _str_to_ego to match.
 enum special_missile_type // to separate from weapons in general {dlb}
 {
     SPMSL_FORBID_BRAND = -1,
