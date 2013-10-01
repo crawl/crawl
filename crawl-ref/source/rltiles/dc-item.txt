@@ -900,7 +900,7 @@ i-warding AMU_WARDING
 i-r-corrosion AMU_RESIST_CORROSION
 i-gourmand AMU_THE_GOURMAND
 i-conservation AMU_CONSERVATION
-# Remove i-c-flight when save compatibility is broken
+# Remove i-c-flight when TAG_MAJOR_VERSION > 34
 i-c-flight AMU_CONTROLLED_FLIGHT
 i-inaccuracy AMU_INACCURACY
 i-r-mutation AMU_RESIST_MUTATION
