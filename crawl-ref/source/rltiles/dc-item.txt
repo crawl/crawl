@@ -594,6 +594,8 @@ boots3_stripe
 boots4_green
 
 ### Armour brands
+# The order of armour brands must be identical to the one defined
+# in itemprop-enum.h.
 %sdir item/armour/brands
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
