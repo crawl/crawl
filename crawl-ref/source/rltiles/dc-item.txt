@@ -299,9 +299,11 @@ i-antimagic BRAND_ANTIMAGIC
 %rim 0
 i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
+# Remove i-returning when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
 i-evasion BRAND_EVASION
+# Remove i-confusion when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_CONFUSION
 i-penetration BRAND_PENETRATION
 i-reaping BRAND_REAPING BRAND_WEP_LAST
