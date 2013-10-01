@@ -641,6 +641,7 @@ gem_plastic
 %rim 1
 
 %sdir item/wand
+#### These must be in the same order as the enum in itemprop-enum.h!
 i-flame WAND_FLAME WAND_ID_FIRST
 i-frost WAND_FROST
 i-slowing WAND_SLOWING
@@ -830,6 +831,7 @@ snake
 #########ID-ed
 %sdir item/ring
 %rim 0
+#### These must be in the same order as the enum in itemprop-enum.h!
 i-regeneration RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
 i-r-fire RING_PROTECTION_FROM_FIRE
@@ -891,6 +893,7 @@ eye_green AMU_COL_LAST
 
 %rim 0
 ### ID-ed amulet
+# These must be in the same order as the enum in itemprop-enum.h!
 i-rage AMU_RAGE AMU_ID_FIRST
 i-clarity AMU_CLARITY
 i-warding AMU_WARDING
@@ -926,6 +929,7 @@ white
 %sdir item/potion
 %back i-label
 %rim 0
+# These must be in the same order as the enum in itemprop-enum.h!
 i-curing POT_CURING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
 i-speed POT_SPEED
@@ -1028,6 +1032,7 @@ staff07
 staff08
 staff09
 
+# These must be in the same order as the enum in itemprop-enum.h!
 i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
@@ -1055,6 +1060,7 @@ rod07
 rod08
 rod09
 
+# These must be in the same order as the enum in itemprop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
