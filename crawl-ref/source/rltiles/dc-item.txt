@@ -299,7 +299,7 @@ i-antimagic BRAND_ANTIMAGIC
 %rim 0
 i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
-# Remove i-returning when TAG_MAJOR_VERSION > 34
+# Move i-returning below to missile-only brands when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
 i-evasion BRAND_EVASION
