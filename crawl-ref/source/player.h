@@ -988,6 +988,7 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
+bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);

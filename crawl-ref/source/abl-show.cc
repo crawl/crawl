@@ -1589,10 +1589,9 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT)
-        && you.liquefied_ground())
+    if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT || tal.which == ABIL_FLY)
+        && !flight_allowed())
     {
-        mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
         crawl_state.zero_turns_taken();
         return false;
     }
