@@ -5614,13 +5614,13 @@ tileidx_t tileidx_known_brand(const item_def &item)
     {
         const int brand = get_weapon_brand(item);
         if (brand != SPWPN_NORMAL)
-            return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
+            return (TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1);
     }
     else if (item.base_type == OBJ_ARMOUR)
     {
         const int brand = get_armour_ego_type(item);
         if (brand != SPARM_NORMAL)
-            return (TILE_BRAND_ARM_RUNNING + get_armour_ego_type(item) - 1);
+            return (TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1);
     }
     else if (item.base_type == OBJ_MISSILES)
     {
