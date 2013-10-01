@@ -135,6 +135,24 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld);
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld);
 static void _equip_use_warning(const item_def& item);
 
+static void _assert_valid_slot(equipment_type eq, equipment_type slot)
+{
+#ifdef ASSERTS
+    if (eq == slot)
+        return;
+    ASSERT(eq == EQ_RINGS); // all other slots are unique
+    equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
+    if (you.species == SP_OCTOPODE)
+        r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
+    if (slot >= r1 && slot <= r2)
+        return;
+    if (const item_def* amu = you.slot_item(EQ_AMULET, true))
+        if (amu->special == UNRAND_FINGER_AMULET && slot == EQ_RING_AMULET)
+            return;
+    die("ring on invalid slot %d", slot);
+#endif
+}
+
 static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg)
 {
@@ -144,10 +162,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
     if (slot == EQ_WEAPON && eq != EQ_WEAPON)
         return;
 
-    ASSERT(slot == eq
-           || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPODE
-           || eq == EQ_RINGS && player_equip_unrand(UNRAND_FINGER_AMULET));
+    _assert_valid_slot(eq, slot);
 
     if (msg)
         _equip_use_warning(item);
@@ -169,10 +184,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
     if (slot == EQ_WEAPON && eq != EQ_WEAPON)
         return;
 
-    ASSERT(slot == eq
-           || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPODE
-           || eq == EQ_RINGS && player_equip_unrand(UNRAND_FINGER_AMULET));
+    _assert_valid_slot(eq, slot);
 
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
