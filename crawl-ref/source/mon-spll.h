@@ -275,8 +275,8 @@
        SPELL_BOLT_OF_DRAINING,
        SPELL_SUMMON_DEMON,
        SPELL_PARALYSE,
-       SPELL_DIG,
        SPELL_ANIMATE_DEAD,
+       SPELL_NO_SPELL,
       }
     },
 
