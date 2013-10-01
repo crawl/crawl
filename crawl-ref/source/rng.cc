@@ -28,7 +28,7 @@ static void _seed_rng(uint32_t* seed_key, size_t num_keys)
 {
     seed_asg(seed_key, num_keys);
 
-    // for random_shuffle()
+    // Just in case something calls libc's rand(); currently nothing does.
     uint32_t oneseed = 0;
     for (size_t i = 0; i < num_keys; ++i)
         oneseed += seed_key[i];

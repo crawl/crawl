@@ -4,13 +4,6 @@ amulet
 Un talisman à porter autour du cou comme un bijou, chargé de pouvoirs obscurs
 d'origine inconnue.
 %%%%
-amulet:quote
-
-« Gringoire voulut prendre le sachet. Elle recula. "- N'y touchez pas. C'est
-une amulette ; tu ferais mal au charme, ou le charme à toi." »
-    -Victor Marie Hugo, _Notre Dame de Paris_, Livre II, chapitre VII "Une Nuit
-de Noces". 1831
-%%%%
 book
 
 Un livre obscur contenant des sorts magiques d'origine inconnue. Ecrit pour les

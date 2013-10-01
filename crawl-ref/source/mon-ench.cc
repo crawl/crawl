@@ -841,6 +841,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         break;
 
+    case ENCH_FIRE_VULN:
+        if (!quiet)
+            simple_monster_message(this, " is no longer more vulnerable to fire.");
+        break;
+
     default:
         break;
     }
@@ -977,7 +982,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_CONFUSION:
             if (!mons_class_flag(type, M_CONFUSED))
                 del_ench(i->first);
-            if (!mons_is_stationary(this))
+            if (!is_stationary())
                 monster_blink(this, true);
             break;
 
@@ -1152,6 +1157,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WEAK:
     case ENCH_AWAKEN_VINES:
     case ENCH_WIND_AIDED:
+    case ENCH_FIRE_VULN:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1191,7 +1197,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HELD:
     {
-        if (mons_is_stationary(this) || cannot_act() || asleep())
+        if (is_stationary() || cannot_act() || asleep())
             break;
 
         int net = get_trapping_net(pos(), true);
@@ -1490,7 +1496,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             // Search for an open adjacent square to place a spore on
             int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-            random_shuffle(idx, idx + 8);
+            shuffle_array(idx, 8);
 
             bool re_add = true;
 
@@ -1744,7 +1750,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
         if (decay_enchantment(me))
-            mons_word_of_recall(this);
+            mons_word_of_recall(this, 3 + random2(5));
         break;
 
     case ENCH_INJURY_BOND:
@@ -1958,7 +1964,7 @@ static const char *enchant_names[] =
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "buggy",
+    "iood_charged", "fire_vuln", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1968,7 +1974,7 @@ static const char *_mons_enchantment_name(enchant_type ench)
     if (ench > NUM_ENCHANTMENTS)
         ench = NUM_ENCHANTMENTS;
 
-    return (enchant_names[ench]);
+    return enchant_names[ench];
 }
 
 enchant_type name_to_ench(const char *name)

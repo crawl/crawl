@@ -907,7 +907,7 @@ void pickup_menu(int item_link)
                 int num_to_take = selected[i].quantity;
                 const bool take_all = (num_to_take == mitm[j].quantity);
                 iflags_t oldflags = mitm[j].flags;
-                mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+                clear_item_pickup_flags(mitm[j]);
                 int result = move_item_to_player(j, num_to_take);
 
                 // If we cleared any flags on the items, but the pickup was
@@ -1223,7 +1223,7 @@ bool pickup_single_item(int link, int qty)
         qty = item->quantity;
 
     iflags_t oldflags = item->flags;
-    item->flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    clear_item_pickup_flags(*item);
     int num = move_item_to_player(link, qty);
     if (item->defined())
         item->flags = oldflags;
@@ -1325,7 +1325,7 @@ void pickup(bool partial_quantity)
             {
                 int num_to_take = mitm[o].quantity;
                 const iflags_t old_flags(mitm[o].flags);
-                mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+                clear_item_pickup_flags(mitm[o]);
                 int result = move_item_to_player(o, num_to_take);
 
                 if (result == 0 || result == -1)
@@ -1387,9 +1387,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
     }
 
     // These classes also require pluses and special.
-    if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
-        || item1.base_type == OBJ_MISSILES
-        || item1.base_type == OBJ_FOOD)        // chunks
+    if (item1.base_type == OBJ_MISSILES || item1.base_type == OBJ_FOOD)
     {
         if (item1.plus != item2.plus
             || item1.plus2 != item2.plus2
@@ -1418,12 +1416,10 @@ bool items_similar(const item_def &item1, const item_def &item2)
     return true;
 }
 
-bool items_stack(const item_def &item1, const item_def &item2,
-                 bool force_merge)
+bool items_stack(const item_def &item1, const item_def &item2)
 {
     // Both items must be stackable.
-    if (!force_merge
-        && (!is_stackable_item(item1) || !is_stackable_item(item2))
+    if (!is_stackable_item(item1) || !is_stackable_item(item2)
         || static_cast<int>(item1.quantity) + item2.quantity > 32767)
     {
         COMPILE_CHECK(sizeof(item1.quantity) == 2); // can be relaxed otherwise
@@ -1790,7 +1786,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     item.flags &= ~(ISFLAG_DROPPED_BY_ALLY | ISFLAG_UNOBTAINABLE);
 
     god_id_item(item);
-    maybe_id_weapon(item);
     if (item.base_type == OBJ_BOOKS)
         maybe_id_book(item, true);
 
@@ -1856,6 +1851,11 @@ void mark_items_non_visit_at(const coord_def &pos)
             mitm[item].flags |= ISFLAG_DROPPED;
         item = mitm[item].link;
     }
+}
+
+void clear_item_pickup_flags(item_def &item)
+{
+    item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
 }
 
 // Moves mitm[obj] to p... will modify the value of obj to
@@ -2116,7 +2116,8 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_FIVE]
      || item_dropped == you.equip[EQ_RING_SIX]
      || item_dropped == you.equip[EQ_RING_SEVEN]
-     || item_dropped == you.equip[EQ_RING_EIGHT])
+     || item_dropped == you.equip[EQ_RING_EIGHT]
+     || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
         {
@@ -2890,7 +2891,7 @@ static void _do_autopickup()
             if ((iflags & ISFLAG_THROWN))
                 learned_something_new(HINT_AUTOPICKUP_THROWN);
 
-            mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+            clear_item_pickup_flags(mitm[o]);
 
             const int result = move_item_to_player(o, num_to_take);
 

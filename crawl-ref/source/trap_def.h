@@ -9,6 +9,7 @@ struct trap_def
     uint8_t   skill_rnd;
 
     dungeon_feature_type category() const;
+    bool ground_only() const;
     string name(description_level_type desc = DESC_PLAIN) const;
     bool is_known(const actor* act = 0) const;
     bool is_safe(actor* act = 0) const;

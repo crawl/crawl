@@ -1467,7 +1467,8 @@ static bool _write_dump(const string &fname, dump_params &par, bool quiet)
 void display_notes()
 {
     formatted_scroller scr;
-    scr.set_flags(MF_START_AT_END);
+    scr.set_flags(MF_START_AT_END | MF_ALWAYS_SHOW_MORE);
+    scr.set_more();
     scr.set_tag("notes");
     scr.set_highlighter(new MenuHighlighter);
     scr.set_title(new MenuEntry("Turn   | Place    | Note"));

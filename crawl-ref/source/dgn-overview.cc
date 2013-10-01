@@ -254,7 +254,7 @@ static string _get_seen_branches(bool display)
     char buffer[100];
     string disp;
 
-    disp += "\n<lightblue>Branches:</lightblue>";
+    disp += "\n<green>Branches:</green>";
     if (display)
     {
         disp += " (use <white>G</white> to reach them and "
@@ -403,7 +403,7 @@ static string _get_altars(bool display)
 
     string disp;
 
-    disp += "\n<lightblue>Altars:</lightblue>";
+    disp += "\n<green>Altars:</green>";
     if (display)
     {
         disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
@@ -503,7 +503,7 @@ static string _get_shops(bool display)
 
     if (!shops_present.empty())
     {
-        disp +="\n<lightblue>Shops:</lightblue>";
+        disp +="\n<green>Shops:</green>";
         if (display)
             disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
         disp += "\n";
@@ -562,7 +562,7 @@ static string _get_portals()
     string disp;
 
     if (!portals_present.empty())
-        disp += "\n<lightblue>Portals:</lightblue>\n";
+        disp += "\n<green>Portals:</green>\n";
     disp += _portals_description_string();
 
     return disp;
@@ -583,7 +583,7 @@ static string _get_notes()
 
     if (disp.empty())
         return disp;
-    return "\n<lightblue>Annotations:</lightblue>\n" + disp;
+    return "\n<green>Annotations:</green>\n" + disp;
 }
 
 template <typename Z, typename Key>

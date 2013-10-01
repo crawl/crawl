@@ -1459,6 +1459,9 @@ Trog's @_anger_name_@
 Hellblazer
 
 Hell-Harrower
+
+# Sigmund's sword
+Gram
 %%%%
 _joke_weapon_name_
 
@@ -1491,8 +1494,6 @@ Giant's Toothpick
 Backscratcher
 
 Brush
-
-Gram
 
 Grom
 

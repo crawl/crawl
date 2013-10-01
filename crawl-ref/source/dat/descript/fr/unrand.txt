@@ -61,15 +61,21 @@ Cette arme terrible est utilisée par son porteur à ses risques et périls.
 %%%%
 Sword of Cerebov
 
-Des flammes étranges courent sur cette lame sinueuse.
+Des flammes étranges courent sur cette lame sinueuse. Son pouvoir démoniaque
+fait s'évaporer une partie de la résistance au feu du défenseur.
 %%%%
 Staff of Dispater
 
-Cet objet légendaire peut déclencher la fureur des Enfers.
+Cet objet légendaire peut déclencher la fureur des Enfers. Les flammes impies
+qu'il évoque peuvent vous coûter une partie de votre vie et de votre âme, mais
+depuis quand ces détails empêchent quiconque de poursuivre leur quête de
+pouvoir?
 %%%%
 Sceptre of Asmodeus
 
-Il porte certains pouvoirs de l'archi-démon Asmodeus.
+Il porte certains pouvoirs de l'archi-démon Asmodeus. Brandir ce puissant
+sceptre peut convoquer des rejetons infernaux de leur domicile et les asservir
+à votre volonté. Evidemment, ils ne vont pas vous aimer quand le sort expirera.
 %%%%
 faerie dragon armour
 
@@ -137,7 +143,7 @@ légende, elle avait été perdue quelque part dans le donjon.
 sword of Jihad
 
 Une épée longue taillée dans un énorme bloc de cristal. La légende raconte
-qu'elle aurait été un cadeau accordé par Le Rayonnant à un de ses fidèles.
+qu'elle aurait été un cadeau accordé par L’Étincelant à un de ses fidèles.
 %%%%
 crossbow "Hellfire"
 
@@ -213,7 +219,7 @@ terribles dégâts.
 Bien que la liche fut exterminée il y a longtemps, ses armes, qui répandirent
 la destruction au sein des morts-vivants, ont été très populaires. Du moins,
 les vieux contes en sont pleins. Toutefois, cette masse pourrait être la
-dernière d'entre elles — probablement parce que les fidèles du Rayonnant
+dernière d'entre elles — probablement parce que les fidèles de L’Étincelant
 soutiennent que personne ne devrait combattre la nécromancie par la
 nécromancie.
 %%%%
@@ -256,7 +262,7 @@ cloak of the Thief
 
 Elle permet à son porteur d'exceller dans l'art du vol.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 Juste au cas où vous auriez du mal à vous faire toucher.
 %%%%
@@ -411,10 +417,10 @@ hat of Pondering
 
 Un chapeau de mage visqueux.
 
-Le chapeau préféré de la limace magicienne Gastronok, coloré de mucus rougeâtre
-et enchanté pour favoriser ses incantations. Il a été aussi spécialement
-ensorcelé pour protéger contre les effets du sel, bien que vous vous en fichiez
-probablement.
+Le chapeau préféré de la limace magicienne Gastronok, coloré de slimes
+rougeâtre et enchanté pour favoriser ses incantations. Il a été aussi
+spécialement ensorcelé pour protéger contre les effets du sel, bien que vous
+vous en fichiez probablement.
 %%%%
 obsidian axe
 
@@ -469,6 +475,15 @@ Axe of Woe
 Lorsque vous tenez cette hache, votre esprit ne semble plus entièrement le
 votre. Votre corps commence à présenter une force au-delà de ses capacités, et
 vos mouvements deviennent guidé par Makhleb.
+%%%%
+moon troll leather armour
+
+Cette armure aurait été créé par l'enchantement de la peau d'un troll dont
+l'espèce est désormais éteinte. Que cette armure soit véritablement un vestige
+des légendaires terreurs invisibles du vent ou simplement une appropriation du
+nom pour y ajouter du mysticisme est un mystère; son pouvoir de régénération
+rapide au détriment occasionnelle de la puissance magique du porteur, est
+cependant difficile a contester.
 %%%%
 milk chocolate
 

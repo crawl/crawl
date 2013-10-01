@@ -107,29 +107,29 @@ Une tranche séchée de vache ou de bœuf mort.
 blessed double sword
 
 Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a été
-améliorée par l'Étincelant.
+améliorée par L’Étincelant.
 %%%%
 blessed falchion
 
-Une épée à large tranchant. Elle a été améliorée par l'Étincelant.
+Une épée à large tranchant. Elle a été améliorée par L'Étincelant.
 %%%%
 blessed great sword
 
 Une épée avec une une très longue et lourde lame, et une longue garde. Elle a
-été améliorée par l'Étincelant.
+été améliorée par L'Étincelant.
 %%%%
 blessed long sword
 
-Une épée à la lame longue et tranchante. Elle a été améliorée par l'Étincelant.
+Une épée à la lame longue et tranchante. Elle a été améliorée par L'Étincelant.
 %%%%
 blessed scimitar
 
-Une épée longue à lame courbée. Elle a été améliorée par l'Étincelant.
+Une épée longue à lame courbée. Elle a été améliorée par L'Étincelant.
 %%%%
 blessed triple sword
 
 Une arme magique avec trois grandes lames tranchantes comme des rasoirs. Elle a
-été améliorée par l'Étincelant.
+été améliorée par L'Étincelant.
 %%%%
 blowgun
 
@@ -161,6 +161,11 @@ en sentir la fureur contenu dans ses arcanes. Il est recherché par les
 sorciers, car il permet aux plus doués de répandre la destruction avec la
 facilité d'un claquement de doigt. Cependant, les médiocres courent à leur
 perte s'ils essaient de le lire.
+%%%%
+book of battle
+
+Un livre de sorts utilisés par les skalds, dont les chansons de batailles leur
+accorde une aide magique.
 %%%%
 book of beasts
 
@@ -556,7 +561,7 @@ s'agit d'un bug si jamais vous voyez ce message.)
 eudemon blade
 
 Une lame sacrée tout droit sortie des forges du paradis, et habitée par une
-présence bienveillante. C'est l'arme favorite des serviteurs de l'Étincelant,
+présence bienveillante. C'est l'arme favorite des serviteurs de L'Étincelant,
 et elle ne peut être manipulée par les forces du mal.
 %%%%
 eveningstar
@@ -1019,6 +1024,10 @@ potion of strong poison
 
 Une épouvantable potion empoisonnée.
 %%%%
+potion of beneficial mutation
+
+Une potion qui vous donne une supposé bonne mutation.
+%%%%
 quad damage
 
 Un mystérieux objet qui ressemble à une rune. Une fois évoqué, l'utilisateur
@@ -1059,9 +1068,10 @@ attaques, en fonction de son degré d'enchantement.
 %%%%
 ring of fire
 
-Cet anneau permet à son porteur d’être plus proche des pouvoirs du feu. Il ou
-elle gagne de la résistance à la chaleur et peut utiliser la magie du feu plus
-efficacement, mais devient plus vulnérable aux effets du froid.
+Cet anneau permet à son porteur d'avoir une plus grande affinité avec les
+pouvoirs du feu. Il ou elle gagne de la résistance à la chaleur et peut
+utiliser la magie du feu plus efficacement, mais devient moins efficace avec la
+magie de la glace et plus vulnérable aux effets du froid.
 %%%%
 ring of hunger
 
@@ -1069,9 +1079,10 @@ Cet anneau maudit affame son porteur rapidement.
 %%%%
 ring of ice
 
-Cet anneau permet à son porteur d’être plus proche avec les pouvoirs de la
-glace. Il ou elle gagne de la résistance au froid et peut utiliser la magie de
-la glace plus efficacement, mais devient plus vulnérable aux effets du feu.
+Cet anneau permet à son porteur d'avoir une plus grande affinité avec les
+pouvoirs de la glace. Il ou elle gagne de la résistance au froid et peut
+utiliser la magie de la glace plus efficacement, mais devient moins efficace
+avec la magie du feu et plus vulnérable aux effets du feu.
 %%%%
 ring of intelligence
 
@@ -1131,12 +1142,6 @@ ring of see invisible
 Cet anneau permet à son porteur de voir tout ce qui a été dissimulé
 magiquement.
 %%%%
-ring of see invisible:quote
-
-“Voici mon secret. Il est très simple: on ne voit bien qu'avec le coeur.
-L'essentiel est invisible pour les yeux.”
-    -Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
-%%%%
 ring of slaying
 
 Cet anneau augmente ou réduit les compétences de combat (autant au contact qu'a
@@ -1192,6 +1197,21 @@ rod of destruction
 Ce sceptre contient un ensemble varié de sorts de destruction et
 d'extermination.
 %%%%
+rod of fiery destruction
+
+Ce sceptre contient des sorts qui lancent un feu destructeur contre vos
+ennemis.
+%%%%
+rod of frigid destruction
+
+Ce sceptre contient des sorts qui détruisent vos ennemis en projetant de la
+glace.
+%%%%
+rod of inaccuracy
+
+Ce sceptre permet à son possesseur de lancer une puissante boule d’énergie,
+mais de façon très imprécise.
+%%%%
 rod of striking
 
 Ce sceptre est conçu pour le combat au corps à corps, libérant ses charges
@@ -1226,10 +1246,17 @@ Originellement prévue pour trancher depuis le haut d'une monture, cette épée
 courte à simple tranchant et légèrement courbée reste très efficace dans les
 mains d'un fantassin.
 %%%%
+sack of spiders
+
+Un sac de soie tissée. Quelque chose semble se déplacer à l'intérieur ...
+
+Ouvrir ce sac va libérer un certain nombre d'araignées amicales à votre cause.
+Vous pourriez cependant avoir besoin d'enlever ensuite les toiles d'araignée.
+%%%%
 sacred scourge
 
 Une arme bénie, forgé par les saints du paradis et haï par les impies. Il
-s'agit de l'arme de prédilection des serviteurs de l'Étincelant.
+s'agit de l'arme de prédilection des serviteurs de L'Étincelant.
 %%%%
 sausage
 
@@ -1329,9 +1356,8 @@ au dessus du paquet.
 %%%%
 scroll of immolation
 
-Ce parchemin est traitée avec une substance incroyablement inflammable, qui
-explose violemment quand il est lu, brûlant le lecteur et rien d'autre à
-proximité.
+Ce parchemin imprègne les créatures autour du lecteur d'un feu puissant et
+instable.
 %%%%
 scroll of magic mapping
 
@@ -1361,6 +1387,11 @@ scroll of remove curse
 Lire ce parchemin permet de libérer les objets que vous utilisez de leurs
 malédictions.
 %%%%
+scroll of summoning
+
+Ce parchemin suscite plusieurs créatures, tissées a partir des ombres et dans
+les formes des êtres à proximité du lecteur.
+%%%%
 scroll of teleportation
 
 Lire les mots inscrits sur ce parchemin vous translocalise dans un lieu
@@ -1373,7 +1404,7 @@ douleur sur toute les créatures à proximité – y compris vous! Ceci traverse
 moitié de la résistance de toutes les créatures vivantes, bien que ce ne soit
 jamais directement fatale.
 %%%%
-scroll of vorpalise weapon
+scroll of brand weapon
 
 Ce parchemin enchante l'arme choisie de façon à la rendre beaucoup plus
 efficaces pour infliger des dommages sur les ennemis de son porteur. Il peut
@@ -1382,7 +1413,7 @@ sorts, ou peut être utilisé sur une arme en ayant déjà une provoquant ainsi
 l'effacement de celle ci pour en mettre une nouvelle au hasard.
 
 Les marques qui sont étroitement liés à l'un des dieux (Trog, Lugonu,
-Kikubaaquadgha, Shining One) ne peuvent être apposé de cette façon. Xom,
+Kikubaaquadgha, L’Étincelant) ne peuvent être apposé de cette façon. Xom,
 d'autre part, ne laisserait pas une telle occasion de s'amuser pour la rendre
 inutile.
 %%%%
@@ -1433,11 +1464,6 @@ slice of pizza
 
 Une part de pizza : de la pâte avec sauce tomate, mozzarella, et basilic.
 %%%%
-slice of pizza:quote
-
-“Quand la lune frappe ton oeil comme une grosse tarte pizza, c'est l'amour.”
-    -Jack Brooks, “C'est l'amour”
-%%%%
 sling
 
 Un morceau de tissu et du cuir utilisé pour lancer des pierres, qui font peu de
@@ -1462,16 +1488,17 @@ légere pour être jeté.
 %%%%
 staff of air
 
-Ce bâton augmente la puissance des sorts d'air lancés par son porteur, et
-l'isole électriquement. Si le porteur est compétent en évocation et en magie de
-l'air, il peut choquer ce qu'il frappe avec ce bâton.
+Ce bâton augmente la puissance des sorts d'air lancés par son porteur, mais
+réduit celle des sorts de terre. Il l'isole électriquement. Si le porteur est
+compétent en évocations, il peut électrifier ceux qu'il frappe avec, leur
+causant d'autant plus de dégâts qu'il est compétent en magie de l'air.
 %%%%
 staff of cold
 
-Ce bâton accroit la puissance des sortilèges de glace de son porteur et, le
-protège contre les effets du froid. Si son possesseur est compétent en
-Évocations, il peut geler les ennemis qu'il frappe avec, faisant de grands
-dégâts s'il est aussi compétent en Magie de la Glace.
+Ce bâton augmente la puissance des sorts de glace de son porteur, mais diminue
+celle des sorts de feu. Il le protège contre les effets du froid. Si le porteur
+est compétent en évocations, il peut geler ceux qu'il frappe avec, leur causant
+d'autant plus de dégâts qu'il est compétent en magie de la glace.
 %%%%
 staff of conjuration
 
@@ -1486,10 +1513,10 @@ vivantes qu'il frappe avec.
 %%%%
 staff of earth
 
-Ce bâton accroit la puissance des sorts de la terre lancés par son porteur. Si
-son possesseur est compétent en Évocations, il peut briser ceux qu'il frappe
-avec, et leur causer de terrible dégâts si en plus il est compétent en Magie de
-la Terre.
+Ce bâton augmente la puissance des sorts de terre lancés par son porteur mais
+diminue celle des sorts d'air. Si le porteur est compétent en évocations, il
+peut écraser ceux qu'il frappe avec, leur causant d'autant plus de dégâts qu'il
+est compétent en magie de la terre.
 %%%%
 staff of energy
 
@@ -1498,10 +1525,11 @@ ne donne plus faim et il peut canaliser la magie ambiante.
 %%%%
 staff of fire
 
-Ce bâton accroit le pouvoir des sorts de feu lancés par le porteur, et le
-protège des effets de la chaleur et du feu. Si le possesseur est compétent en
-Évocations, il pourra brûler ceux qu'il frappe avec, et leur causer de
-terribles dégâts si en plus il est compétent en Magie du Feu.
+Ce bâton augmente la puissance des sorts de feu lancés par le porteur, mais
+diminue celle des sorts de glace. Il le protège des effets de la chaleur et du
+feu. Si le porteur est compétent en évocations, il peut brûler ceux qu'il
+frappe avec, leur causant d'autant plus de dégâts qu'il est compétent en magie
+du feu.
 %%%%
 staff of poison
 
@@ -1541,6 +1569,15 @@ transformée en armure grâce à la magie.
 stone
 
 Une pierre. Elle peut être jetée à la main ou lancée avec une fronde.
+%%%%
+stone of tremors
+
+Une pierre polie habitée par de bienveillants esprits de la terre. La tenir en
+l'air enverra de puissantes ondes de choc dans le donjon pendant que les
+esprits cherchent une forme solide à l'intérieur de sa roche. Les créatures se
+tenant près des murs seront bombardés avec des chutes de gravats que la surface
+rocheuse laisse s'écrouler, tandis que d'autres peuvent être avalés par des
+fissures dans la terre elle-même.
 %%%%
 storm dragon armour
 
@@ -1622,8 +1659,8 @@ faire une épée quadruple.
 trishula
 
 Un trident béni, baigné de flammes, avec trois pointes symbolisant la force
-combinée des trois dieux saints. C'est une arme appréciée des fidèles du
-Rayonnant.
+combinée des trois dieux saints. C'est une arme appréciée des fidèles de
+L’Étincelant.
 %%%%
 troll hide
 

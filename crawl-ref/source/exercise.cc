@@ -224,7 +224,7 @@ static void _exercise_spell(spell_type spell, bool success)
     if (conj && !x_chance_in_y(skillcount, 4))
         return;
 
-    random_shuffle(disc.begin(), disc.end());
+    shuffle_array(disc);
 
     for (unsigned int k = 0; k < disc.size(); ++k)
     {
@@ -366,6 +366,7 @@ void practise(exer_type ex, int param1)
         switch (param1) // missile subtype
         {
         case MI_DART:
+        case MI_TOMAHAWK:
         case MI_JAVELIN:
         case MI_THROWING_NET:
             deg = 1;

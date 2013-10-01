@@ -54,10 +54,6 @@ Sword of Zonguldrok
 
 这件可怕的武器对使用者自己也是个威胁。
 %%%%
-Sword of Cerebov
-
-阴森的火焰在它扭曲的刀刃上舞动。
-%%%%
 Staff of Dispater
 
 这件传奇物品可以释放地狱的怒火。
@@ -230,7 +226,7 @@ cloak of the Thief
 
 它使穿戴者变得精通盗术。你也可以手动启动它，让它放出厚厚的烟云来掩护你逃跑。
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 如果你觉得自己被打中的次数还不够多，那你现在可找到救星了！
 %%%%

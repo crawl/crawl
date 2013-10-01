@@ -1,0 +1,92 @@
+%%%%
+Abjuration spell
+
+Dieser Zauber versucht eine beschwörte feindliche Kreatur in die Ebene
+zurückzuschicken, aus der sie herkommt, oder wenigstens ihre Zeit in dieser
+Welt zu verkürzen.
+%%%%
+Agony spell
+
+Dieser Zauber halbiert die Lebenskraft einer feindlichen Kreatur, wird jedoch
+niemals direkt den Tod bringen.
+%%%%
+Airstrike spell
+
+Dieser Zauber sorgt dafür das die Luft um eine Kreatur herum sich zu einem
+Wirbel meteoroligischen Zorns verwandelt. Dieser Zauber ist besonders effektiv
+gegen fligende Gegner.
+%%%%
+Alistair's Intoxication spell
+
+Dieser Zauber funktioniert in dem er ein kleines Stück Gehirnmasse in reinen
+Alkohol verwandelt und damit alle intilligenten Humanoiden im Sichtfeld des
+Zauberes verwirrt (Gift-ressistente Monster werden jedoch keine negativen
+Effekte zu spüren bekommen). Dieser Zauber ist jedoch sehr stark auf den
+Zauberer fokussiert, weshalb Gift-Ressistenz ihn nicht vor dem Effekt schützt.
+Dieser Zauber wird gerne als Eisbrecher auf Zauberparties benutzt.
+%%%%
+Animate Dead spell
+
+Dieser finstere Zauber lässt alle Toten in der Sichtweite des Zauberers
+auferstehen damit sie ihm dienen. Mit der Kraft diese Zaubers können sich
+mächtige Nekromanten Armeen hirnloser Untoter beschwören. Man solte jedoch
+bedenken dass Untote unfähig sind die Ebene zu verlassen auf der sie geschaffen
+worden sind.
+%%%%
+Animate Skeleton spell
+
+Dieser Zauber erhebt das Skelett einer Leiche in den Status des Unlebens,
+selbst wenn das Skelett noch von Fleisch ummantelt ist.! Man solte jedoch
+bedenken dass Skelette unfähig sind die Ebene zu verlassen auf der sie
+erschaffen worden sind.
+%%%%
+Blade Hands spell
+
+Dieser Zauber verwandelt die Hände des Zauberers in große Sensen-artige
+Klingen. Er macht aber auch das Zaubern umständlicher.
+%%%%
+Blink spell
+
+Dieser Zauber teleportiert den Zuaberer über eine kurze zufällige Distanz.
+%%%%
+Bolt of Cold spell
+
+Dieser Zauber verschießt einen großen Strahl aus Eis und Frost.
+%%%%
+Bolt of Draining spell
+
+Dieser Zauber verschießt einen tödlichen Strahl negativer Energie, der die
+Lebenskraft aller Lebewesen entzieht die er trifft.
+%%%%
+Bolt of Fire spell
+
+Dieser Zauber verschießt einen großen Strahl aus reinem Feuer.
+%%%%
+Call Canine Familiar spell
+
+Dieser Zauber beschwört ein Tier aus der Famillie der Canidae um dem Zauberer
+zu helfen.
+%%%%
+Call Imp spell
+
+Dieser Zauber beschwört einen niederen Dämon aus den Tiefen der Hölle.
+%%%%
+Cause Fear spell
+
+Dieser Zauber verursacht große Furcht in jenen die auf den Zauberer blicken.
+%%%%
+Chain Lightning spell
+
+Dieser Zauber entfesselt eine riesiege elektrische Ladung die von Gegner zu
+Gegner springt bevor sie erdet. Die Ladung kann auch dann erden wenn keine
+Gegner in der Nähe des Zauberers sind.
+%%%%
+Conjure Flame spell
+
+Dieser Zauber erschafft eine Säule aus Feuer.
+%%%%
+Iron Shot spell
+
+Dieser Zauber verschießt einen riesigen und schweren Bolzen aus Metall gegen
+einen Gegner.
+%%%%

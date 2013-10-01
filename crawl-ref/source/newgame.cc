@@ -155,6 +155,12 @@ static void _print_character_info(const newgame_def* ng)
 // Determines if a species is a valid choice for a new game.
 static bool _is_species_valid_choice(species_type species)
 {
+    if ((species == SP_LAVA_ORC || species == SP_DJINNI)
+        && Version::ReleaseType != VER_ALPHA)
+    {
+        return false;
+    }
+
     // Non-base draconians cannot be selected either.
     return is_valid_species(species)
         && !(species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN);
@@ -567,11 +573,14 @@ static void _construct_species_menu(const newgame_def* ng,
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
 
-    for (int i = 0; i < ng_num_species(); ++i)
+    for (int i = 0, pos = 0; i < ng_num_species(); ++i, ++pos)
     {
         const species_type species = get_species(i);
         if (!_is_species_valid_choice(species))
+        {
+            --pos;
             continue;
+        }
 
         tmp = new TextItem();
         text.clear();
@@ -598,21 +607,21 @@ static void _construct_species_menu(const newgame_def* ng,
         }
         else
         {
-            text = index_to_letter(i);
+            text = index_to_letter(pos);
             text += " - ";
             text += species_name(species);
         }
         // Fill to column width - 1
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
-        ASSERT(i < items_in_column * 3);
-        min_coord.x = X_MARGIN + (i / items_in_column) * COLUMN_WIDTH;
-        min_coord.y = 3 + i % items_in_column;
+        ASSERT(pos < items_in_column * 3);
+        min_coord.x = X_MARGIN + (pos / items_in_column) * COLUMN_WIDTH;
+        min_coord.y = 3 + pos % items_in_column;
         max_coord.x = min_coord.x + text.size();
         max_coord.y = min_coord.y + 1;
         tmp->set_bounds(min_coord, max_coord);
 
-        tmp->add_hotkey(index_to_letter(i));
+        tmp->add_hotkey(index_to_letter(pos));
         tmp->set_id(species);
         tmp->set_description_text(unwrap_desc(getGameStartDescription(species_name(species))));
         menu->attach_item(tmp);
@@ -1319,7 +1328,8 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
-static void _construct_weapon_menu(const weapon_type& defweapon,
+static void _construct_weapon_menu(const newgame_def* ng,
+                                   const weapon_type& defweapon,
                                    const vector<weapon_choice>& weapons,
                                    MenuFreeform* menu)
 {
@@ -1355,14 +1365,13 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
         case WPN_UNARMED:
             text += "claws";
             break;
-        case WPN_JAVELINS:
-            text += "javelins";
-            break;
-        case WPN_ROCKS:
-            text += "large rocks";
-            break;
-        case WPN_DARTS:
-            text += "darts";
+        case WPN_THROWN:
+            if (species_can_throw_large_rocks(ng->species))
+                text += "large rocks";
+            else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
+                text += "tomahawks";
+            else
+                text += "javelins";
             break;
         default:
             text += weapon_base_name(weapons[i].first);
@@ -1507,7 +1516,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
-    _construct_weapon_menu(defweapon, weapons, freeform);
+    _construct_weapon_menu(ng, defweapon, weapons, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
     highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
@@ -1613,17 +1622,6 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
         {
             weapon_choice wp;
             wp.first = startwep[i];
-
-            if (wp.first == WPN_THROWN)
-            {
-                if (species_size(ng->species, PSIZE_TORSO) == SIZE_LARGE
-                    || ng->species == SP_FORMICID)
-                    wp.first = WPN_ROCKS;
-                else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
-                    wp.first = WPN_DARTS;
-                else
-                    wp.first = WPN_JAVELINS;
-            }
 
             wp.second = weapon_restriction(wp.first, *ng);
             if (wp.second != CC_BANNED)
@@ -1912,9 +1910,11 @@ static void _construct_gamemode_map_menu(const mapref_vector& maps,
     }
 }
 
-static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
+// Compare two maps by their ORDER: header, falling back to desc or name if equal.
+static bool _cmp_map_by_order(const map_def* m1, const map_def* m2)
 {
-    return (m1->desc_or_name() < m2->desc_or_name());
+    return m1->order < m2->order
+           || m1->order == m2->order && m1->desc_or_name() < m2->desc_or_name();
 }
 
 static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
@@ -1929,7 +1929,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
-    sort(maps.begin(), maps.end(), _cmp_map_by_name);
+    sort(maps.begin(), maps.end(), _cmp_map_by_order);
     _construct_gamemode_map_menu(maps, defaults, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);

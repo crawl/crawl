@@ -26,6 +26,7 @@
 #include "message.h"
 #include "monster.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "options.h"
 #include "religion.h"
 #include "skills2.h"
@@ -109,7 +110,7 @@ static void _dump_level_info(FILE* file)
         fprintf(file, "Abyssal state:\n"
                       "    major_coord = (%d,%d)\n"
                       "    seed = 0x%" PRIx32 "\n"
-                      "    depth = %" PRId64 "\n"
+                      "    depth = %" PRIu32 "\n"
                       "    phase = %g\n"
                       "    nuke_all = %d\n",
                 abyssal_state.major_coord.x, abyssal_state.major_coord.y,
@@ -272,15 +273,36 @@ static void _dump_player(FILE *file)
 
     fprintf(file, "Mutations:\n");
     for (int i = 0; i < NUM_MUTATIONS; ++i)
-        if (you.mutation[i] > 0)
-            fprintf(file, "    #%d: %d\n", i, you.mutation[i]);
+    {
+        mutation_type mut = static_cast<mutation_type>(i);
+        int normal = you.mutation[i];
+        int innate = you.innate_mutations[i];
+        int temp   = you.temp_mutations[i];
 
-    fprintf(file, "\n");
+        // Normally innate and temp imply normal, but a crash handler should
+        // expect the spanish^Wunexpected.
+        if (!normal && !innate && !temp)
+            continue;
 
-    fprintf(file, "Demon mutations:\n");
-    for (int i = 0; i < NUM_MUTATIONS; ++i)
-        if (you.innate_mutations[i] > 0)
-            fprintf(file, "    #%d: %d\n", i, you.innate_mutations[i]);
+        if (const char* name = mutation_name(mut))
+            fprintf(file, "    %s: %d", name, normal);
+        else
+            fprintf(file, "    unknown #%d: %d", i, normal);
+
+        if (innate)
+            if (innate == normal)
+                fprintf(file, " (innate)");
+            else
+                fprintf(file, " (%d innate)", innate);
+
+        if (temp)
+            if (temp == normal)
+                fprintf(file, " (temporary)");
+            else
+                fprintf(file, " (%d temporary)", temp);
+
+        fprintf(file, "\n");
+    }
 
     fprintf(file, "\n");
 

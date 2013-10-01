@@ -671,6 +671,13 @@ bool you_can_wear(int eq, bool special_armour)
                     || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
     }
 
+    // Amulet provides another slot
+    if (player_equip_unrand(UNRAND_FINGER_AMULET))
+    {
+        if (eq == EQ_RING_AMULET)
+            return true;
+    }
+
     switch (eq)
     {
     case EQ_LEFT_RING:
@@ -871,7 +878,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // Everyone else can wear jewellery...
     if (eq == EQ_AMULET || eq == EQ_RINGS
         || eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING
-        || eq == EQ_RING_ONE || eq == EQ_RING_TWO)
+        || eq == EQ_RING_ONE || eq == EQ_RING_TWO
+        || eq == EQ_RING_AMULET)
     {
         return true;
     }
@@ -1264,6 +1272,9 @@ static int _player_bonus_regen()
         // Rings.
         rr += 40 * you.wearing(EQ_RINGS, RING_REGENERATION);
 
+        // Artefacts
+        rr += you.scan_artefacts(ARTP_REGENERATION);
+
         // Troll leather (except for trolls).
         if ((you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
              || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
@@ -1412,25 +1423,22 @@ int player_hunger_rate(bool temp)
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
     {
-        // rings
         if (you.hp < you.hp_max
             && player_mutation_level(MUT_SLOW_HEALING) < 3)
         {
+            // rings
             hunger += 3 * you.wearing(EQ_RINGS, RING_REGENERATION);
-        }
 
-        hunger += 4 * you.wearing(EQ_RINGS, RING_HUNGER);
-
-        // troll leather armour
-        if (you.species != SP_TROLL && you.hp < you.hp_max
-            && player_mutation_level(MUT_SLOW_HEALING) < 3)
-        {
-            if (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
-                || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
+            // troll leather
+            if (you.species != SP_TROLL
+                && (you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
+                    || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE)))
             {
                 hunger += coinflip() ? 2 : 1;
             }
         }
+
+        hunger += 4 * you.wearing(EQ_RINGS, RING_HUNGER);
 
         // randarts
         hunger += you.scan_artefacts(ARTP_METABOLISM);
@@ -1558,6 +1566,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
         if (you.duration[DUR_FIRE_SHIELD])
             rf += 2;
+
+        if (you.duration[DUR_FIRE_VULN])
+            rf--;
 
         // transformations:
         switch (you.form)
@@ -2317,12 +2328,8 @@ int player_movement_speed(bool ignore_burden)
         mv--;
 
     // Swiftness doesn't work in liquid.
-    if (you.duration[DUR_SWIFTNESS] > 0
-        && !you.in_water()
-        && !you.liquefied_ground())
-    {
+    if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_liquid())
         mv -= 2;
-    }
 
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 5;
@@ -2375,7 +2382,7 @@ int player_speed(void)
         return ps;
 
     for (int i = 0; i < NUM_STATS; ++i)
-        if (you.stat_zero[i] > 0)
+        if (you.stat_zero[i])
             ps *= 2;
 
     if (you.duration[DUR_SLOW])
@@ -2469,15 +2476,13 @@ static int _player_armour_racial_bonus(const item_def& item)
         // an additional bonus for Beogh worshippers
         if (you_worship(GOD_BEOGH) && !player_under_penance())
         {
-            if (you.piety >= 185)
+            if (you.piety >= piety_breakpoint(5))
                 racial_bonus += racial_bonus * 9 / 4;
-            else if (you.piety >= 160)
-                racial_bonus += racial_bonus * 2;
-            else if (you.piety >= 120)
+            else if (you.piety >= piety_breakpoint(4))
                 racial_bonus += racial_bonus * 7 / 4;
-            else if (you.piety >= 80)
+            else if (you.piety >= piety_breakpoint(2))
                 racial_bonus += racial_bonus * 5 / 4;
-            else if (you.piety >= 40)
+            else if (you.piety >= piety_breakpoint(0))
                 racial_bonus += racial_bonus * 3 / 4;
             else
                 racial_bonus += racial_bonus / 4;
@@ -4176,7 +4181,7 @@ static void _display_movement_speed()
 {
     const int move_cost = (player_speed() * player_movement_speed()) / 10;
 
-    const bool water  = you.in_water() || you.liquefied_ground();
+    const bool water  = you.in_liquid();
     const bool swim   = you.swimming();
 
     const bool fly    = you.flight_mode();
@@ -4381,6 +4386,7 @@ void display_char_status()
         DUR_TOXIC_RADIANCE,
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
+        DUR_FIRE_VULN,
     };
 
     status_info inf;
@@ -4647,7 +4653,20 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     you.redraw_hit_points = true;
 }
 
-void dec_mp(int mp_loss)
+void flush_mp()
+{
+  if (Options.magic_point_warning
+          && you.magic_points < (you.max_magic_points
+                                 * Options.magic_point_warning) / 100)
+      {
+          mpr("* * * LOW MAGIC WARNING * * *", MSGCH_DANGER);
+      }
+
+      take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
+      you.redraw_magic_points = true;
+}
+
+void dec_mp(int mp_loss, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4660,16 +4679,8 @@ void dec_mp(int mp_loss)
     you.magic_points -= mp_loss;
 
     you.magic_points = max(0, you.magic_points);
-
-    if (Options.magic_point_warning
-        && you.magic_points < (you.max_magic_points
-                               * Options.magic_point_warning) / 100)
-    {
-        mpr("* * * LOW MAGIC WARNING * * *", MSGCH_DANGER);
-    }
-
-    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    you.redraw_magic_points = true;
+    if (!silent)
+        flush_mp();
 }
 
 void drain_mp(int loss)
@@ -4746,7 +4757,7 @@ bool enough_zp(int minimum, bool suppress_msg)
     return true;
 }
 
-void inc_mp(int mp_gain)
+void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4763,10 +4774,12 @@ void inc_mp(int mp_gain)
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
-    if (wasnt_max && you.magic_points == you.max_magic_points)
-        interrupt_activity(AI_FULL_MP);
-
-    you.redraw_magic_points = true;
+    if (!silent)
+    {
+        if (wasnt_max && you.magic_points == you.max_magic_points)
+            interrupt_activity(AI_FULL_MP);
+        you.redraw_magic_points = true;
+    }
 }
 
 // Note that "max_too" refers to the base potential, the actual
@@ -5550,6 +5563,32 @@ void dec_disease_player(int delay)
     }
 }
 
+bool flight_allowed(bool quiet)
+{
+    if (you.form == TRAN_TREE)
+    {
+        if (!quiet)
+            mpr("Your roots keep you in place.");
+        return false;
+    }
+
+    if (you.liquefied_ground())
+    {
+        if (!quiet)
+            mpr("You can't fly while stuck in liquid ground.");
+        return false;
+    }
+
+    if (you.duration[DUR_GRASPING_ROOTS])
+    {
+        if (!quiet)
+            mpr("The grasping roots prevent you from becoming airborne.");
+        return false;
+    }
+
+    return true;
+}
+
 void float_player()
 {
     if (you.fishtail)
@@ -5572,14 +5611,8 @@ void float_player()
 
 void fly_player(int pow, bool already_flying)
 {
-    if (you.form == TRAN_TREE)
-        return mpr("Your roots keep you in place.");
-
-    if (you.duration[DUR_GRASPING_ROOTS])
-    {
-        mpr("The grasping roots prevent you from becoming airborne.");
+    if (!flight_allowed())
         return;
-    }
 
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)
@@ -5955,6 +5988,7 @@ void player::init()
     redraw_status_flags = 0;
     redraw_hit_points   = false;
     redraw_magic_points = false;
+    redraw_temperature  = false;
     redraw_stats.init(false);
     redraw_experience   = false;
     redraw_armour_class = false;
@@ -6093,13 +6127,23 @@ flight_type player::flight_mode() const
 
 bool player::is_banished() const
 {
-    return (!alive() && banished);
+    return banished;
 }
 
 bool player::in_water() const
 {
     return (ground_level() && !beogh_water_walk()
             && feat_is_water(grd(pos())));
+}
+
+bool player::in_lava() const
+{
+    return ground_level() && feat_is_lava(grd(pos()));
+}
+
+bool player::in_liquid() const
+{
+    return in_water() || in_lava() || liquefied_ground();
 }
 
 bool player::can_swim(bool permanently) const
@@ -6229,7 +6273,7 @@ int calc_hunger(int food_cost)
 
 bool player::paralysed() const
 {
-    return (duration[DUR_PARALYSIS]);
+    return duration[DUR_PARALYSIS];
 }
 
 bool player::cannot_move() const
@@ -6239,22 +6283,22 @@ bool player::cannot_move() const
 
 bool player::confused() const
 {
-    return (duration[DUR_CONF]);
+    return duration[DUR_CONF];
 }
 
 bool player::caught() const
 {
-    return (attribute[ATTR_HELD]);
+    return attribute[ATTR_HELD];
 }
 
 bool player::petrifying() const
 {
-    return (duration[DUR_PETRIFYING]);
+    return duration[DUR_PETRIFYING];
 }
 
 bool player::petrified() const
 {
-    return (duration[DUR_PETRIFIED]);
+    return duration[DUR_PETRIFIED];
 }
 
 bool player::liquefied_ground() const
@@ -6395,9 +6439,9 @@ int player_icemail_armour_class()
     if (!you.mutation[MUT_ICEMAIL])
         return 0;
 
-    return (ICEMAIL_MAX
-               - (you.duration[DUR_ICEMAIL_DEPLETED]
-                   * ICEMAIL_MAX / ICEMAIL_TIME));
+    return ICEMAIL_MAX
+           - you.duration[DUR_ICEMAIL_DEPLETED]
+             * ICEMAIL_MAX / ICEMAIL_TIME;
 }
 
 bool player_stoneskin()
@@ -7210,6 +7254,7 @@ void player::paralyse(actor *who, int str, string source)
         paralysis = 13 * BASELINE_DELAY;
 
     stop_constricting_all();
+    end_searing_ray();
 }
 
 void player::petrify(actor *who, bool force)
@@ -7250,6 +7295,9 @@ bool player::fully_petrify(actor *foe, bool quiet)
                         + random2(4 * BASELINE_DELAY);
     redraw_evasion = true;
     mpr("You have turned to stone.");
+
+    end_searing_ray();
+
     return true;
 }
 
@@ -7528,7 +7576,7 @@ bool player::invisible() const
 
 bool player::misled() const
 {
-    return (duration[DUR_MISLED]);
+    return duration[DUR_MISLED];
 }
 
 bool player::visible_to(const actor *looker) const
@@ -7648,6 +7696,11 @@ bool player::can_bleed(bool allow_tran) const
     return true;
 }
 
+bool player::is_stationary() const
+{
+    return you.form == TRAN_TREE;
+}
+
 bool player::malmutate(const string &reason)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -7737,7 +7790,7 @@ void player::reset_prev_move()
 
 bool player::asleep() const
 {
-    return (duration[DUR_SLEEP]);
+    return duration[DUR_SLEEP];
 }
 
 bool player::cannot_act() const
@@ -7747,9 +7800,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return (species == SP_OGRE
-            || species == SP_TROLL
-            || species == SP_FORMICID);
+    return species_can_throw_large_rocks(species);
 }
 
 bool player::can_smell() const
@@ -7768,6 +7819,7 @@ void player::hibernate(int)
     }
 
     stop_constricting_all();
+    end_searing_ray();
     mpr("You fall asleep.");
 
     stop_delay();
@@ -7790,6 +7842,7 @@ void player::put_to_sleep(actor*, int power)
     mpr("You fall asleep.");
 
     stop_constricting_all();
+    end_searing_ray();
     stop_delay();
     flash_view(DARKGREY);
 
@@ -7863,9 +7916,12 @@ bool player::do_shaft()
         {
         case DNGN_FLOOR:
         case DNGN_OPEN_DOOR:
+        // what's the point of this list?
         case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_MAGICAL:
-        case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_TELEPORT:
+        case DNGN_TRAP_ALARM:
+        case DNGN_TRAP_ZOT:
+        case DNGN_TRAP_SHAFT:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
             break;
@@ -7874,12 +7930,10 @@ bool player::do_shaft()
             return false;
         }
 
-        handle_items_on_shaft(pos(), false);
-
         if (!ground_level() || total_weight() == 0)
             return true;
 
-        force_stair = DNGN_TRAP_NATURAL;
+        force_stair = DNGN_TRAP_SHAFT;
     }
 
     down_stairs(force_stair);
@@ -7907,7 +7961,7 @@ bool player::do_shaft_ability()
     if (can_do_shaft_ability())
     {
         mpr("A shaft appears beneath you!");
-        down_stairs(DNGN_TRAP_NATURAL);
+        down_stairs(DNGN_TRAP_SHAFT);
         mpr("The earth vibrates loudly upon landing!");
         fake_noisy(20, pos());
         // Make it more likely for OOD to spawn
@@ -8027,9 +8081,9 @@ void player::sentinel_mark(bool trap)
     else
     {
         mpr("A sentinel's mark forms upon you.", MSGCH_WARN);
-        increase_duration(DUR_SENTINEL_MARK, (trap ? random_range(35, 55)
-                                                       : random_range(50, 80)),
-                              250);
+        increase_duration(DUR_SENTINEL_MARK, trap ? random_range(35, 55)
+                                                  : random_range(50, 80),
+                          250);
     }
 }
 
@@ -8042,14 +8096,17 @@ bool player::made_nervous_by(const coord_def &p)
         return false;
     for (monster_iterator mi(get_los()); mi; ++mi)
     {
-            if (!(mons_is_wandering(*mi)
-                        || mi->asleep()
-                        || mi->confused()
-                        || mi->cannot_act())
-                && you.can_see(*mi)
-                && !mons_is_firewood(*mi)
-                && !mi->neutral())
-                return true;
+        if (!mons_is_wandering(*mi)
+            && !mi->asleep()
+            && !mi->confused()
+            && !mi->cannot_act()
+            && you.can_see(*mi)
+            && !mons_is_firewood(*mi)
+            && !mi->wont_attack()
+            && !mi->neutral())
+        {
+            return true;
+        }
     }
     return false;
 }

@@ -192,11 +192,11 @@ Druid's Call cast
 # Individual innate spells (breathing and spitting).
 #####################################################
 %%%%
-Acid Splash cast
+Spit Acid cast
 
 @The_monster@ spits acid @at@ @target@.
 %%%%
-unseen Acid Splash cast
+unseen Spit Acid cast
 
 You hear a spitting sound.
 %%%%
@@ -224,11 +224,11 @@ unseen Draconian Breath cast
 
 You hear a roar.
 %%%%
-Poison Splash cast
+Spit Poison cast
 
 @The_monster@ spits poison @at@ @target@.
 %%%%
-unseen Poison Splash cast
+unseen Spit Poison cast
 
 You hear a spitting sound.
 %%%%

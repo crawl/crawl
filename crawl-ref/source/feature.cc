@@ -236,14 +236,31 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap    = MF_TRAP;
             break;
 
-        case DNGN_TRAP_MAGICAL:
-            f.colour     = MAGENTA;
+        case DNGN_TRAP_TELEPORT:
+            f.colour = f.map_colour = LIGHTBLUE;
             f.dchar      = DCHAR_TRAP;
-            f.map_colour = MAGENTA;
             f.minimap    = MF_TRAP;
             break;
 
-        case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_ALARM:
+            f.colour = f.map_colour = YELLOW;
+            f.dchar      = DCHAR_TRAP;
+            f.minimap    = MF_TRAP;
+            break;
+
+        case DNGN_TRAP_ZOT:
+            f.colour = f.map_colour = LIGHTMAGENTA;
+            f.dchar      = DCHAR_TRAP;
+            f.minimap    = MF_TRAP;
+            break;
+
+        case DNGN_PASSAGE_OF_GOLUBRIA:
+            f.colour = f.map_colour = GREEN;
+            f.dchar      = DCHAR_TRAP;
+            f.minimap    = MF_TRAP;
+            break;
+
+        case DNGN_TRAP_SHAFT:
             f.colour     = BROWN;
             f.dchar      = DCHAR_TRAP;
             f.map_colour = BROWN;
@@ -713,10 +730,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap = MF_FEATURE;
             break;
 
-        case DNGN_DRY_FOUNTAIN_BLUE:
-        case DNGN_DRY_FOUNTAIN_SPARKLING:
-        case DNGN_DRY_FOUNTAIN_BLOOD:
-        case DNGN_PERMADRY_FOUNTAIN:
+        case DNGN_DRY_FOUNTAIN:
             f.colour  = LIGHTGREY;
             f.dchar   = DCHAR_FOUNTAIN;
             f.minimap = MF_FEATURE;

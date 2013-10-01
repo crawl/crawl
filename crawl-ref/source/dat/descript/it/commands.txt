@@ -1,0 +1,356 @@
+%%%%
+CMD_REST
+
+Ti curi e cerchi un po'
+%%%%
+CMD_REST verbose
+
+Passi fino a 100 turni rigenerando salute e/o ricaricando magia. Il riposo è
+interrotto appena viene visto un mostro ostile.
+%%%%
+CMD_EXPLORE
+
+Autoesplora il livello corrente
+%%%%
+CMD_EXPLORE verbose
+
+Lascia viaggiare il tuo personaggio con l'autopilota verso aree inesplorate del
+livello corrente e raccoglie gli oggetti previsti dall'autoraccolta. Il
+viaggiare si ferma appena un mostro ostile è visibile, e anche per annunciare
+oggetti e peculiarità trovate.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Viaggia a livelli distanti
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Autoviaggio verso livelli distanti. Il viaggio è interrotto appena sono visti
+mostri.
+%%%%
+CMD_USE_ABILITY
+
+Usa abilità innate o divine
+%%%%
+CMD_PRAY
+
+Prega la tua divinità
+%%%%
+CMD_PRAY verbose
+
+Se la tua divinità apprezza sacrifici, questo offrirà un cadavere o un altro
+oggetto. In più, se stai su un altare, questo ti permette di iniziare a
+venerare la divinità corrispondente. Per alcune divinità, pregare ha altri
+effetti speciali.
+%%%%
+CMD_SEARCH_STASHES
+
+Cerca oggetti o peculiarità
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Cerca oggetti o peculiarità viste da qualche altra parte, per poi andarci.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Rileggi messaggi recenti
+%%%%
+CMD_RESISTS_SCREEN
+
+Mostra la scheda del personaggio
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Mostra informazioni su resistenze, abilità, statistiche dell'equipaggiamento,
+ecc.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Mostra la struttura del Dungeon
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Mostra la posizione delle entrate alle ramificazioni, negozi e altre cose che
+hai incontrato sino ad ora.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Mostra lo status religioso
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Mostra ciò che piace e non alla tua divinità, la tua condotta, il tuo rapporto
+con la divinità e le abilità divine.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Mostra le mutazioni
+%%%%
+CMD_DISPLAY_SKILLS
+
+Organizza le abilità
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Mostra lo status del personaggio
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Mostra gli incantamenti attivi e altre cose.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Lista dei tipi di oggetti scoperti
+%%%%
+CMD_SAVE_GAME_NOW
+
+Salva ed esci
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Salvi il gioco per dopo ed esci. Una volta ripreso il gioco, il salvataggio è
+perduto.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Modifica la casella del giocatore
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Modifica l'equipaggiamento e la specie mostrata dall'icona del giocatore.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Aiuto per il gioco
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Lista di comandi, opzioni, ecc.
+%%%%
+CMD_CHARACTER_DUMP
+
+Copia il progresso del personaggio.
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Copia una grande quantità di informazioni nel file 'playername.txt' nella
+cartella morgue, da usare a tuo puro piacimento. Tutto ciò include statistiche
+principali, incantesimi, abilità, note, ecc.
+%%%%
+CMD_AUTOFIGHT
+
+Attacca il nemico più vicino
+%%%%
+CMD_AUTOFIGHT verbose
+
+Ti fa muovere e lo attacca con l'arma impugnata.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Attacca un mostro adiacente
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Attacca un mostro accanto a te con l'arma impugnata.
+%%%%
+CMD_WAIT
+
+Aspetta un singolo turno
+%%%%
+CMD_WAIT verbose
+
+Attendi un turno riposando e aspettando.
+%%%%
+CMD_DISPLAY_INVENTORY
+
+Mostra i contenuti del tuo inventario
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Mostra i contenuti del tuo inventario.
+%%%%
+CMD_CAST_SPELL
+
+Lancia un incantesimo
+%%%%
+CMD_CAST_SPELL verbose
+
+Lancia un incantesimo.
+%%%%
+CMD_BUTCHER
+
+Macella un cadavere
+%%%%
+CMD_BUTCHER verbose
+
+Macella un cadavere in cosciotti.
+%%%%
+CMD_MEMORISE_SPELL
+
+Memorizza un incantesimo
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Ti impegni a ricordare un incantesimo, leggendolo da un libro che hai in mano o
+che è per terra.
+%%%%
+CMD_DROP
+
+Getta oggetti
+%%%%
+CMD_DROP verbose
+
+Getta uno o più oggetti che possiedi,
+%%%%
+CMD_DISPLAY_MAP
+
+Entra in modalità mappa
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Naviga nella mappa precedentemente esplorata.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Viaggia sino al cursore
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Inizia a viaggiare sino alla posizione corrente del cursore.
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Aggiungi un punto di riferimento
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Imposta il punto di riferimento alla posizione corrente.
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Esclusione dal viaggiare
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Crei un area che escludi dal viaggiare, cambia la sua area o rimuovila.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Rimuove tutte le limitazioni di viaggio
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Rimuove tutte le limitazioni di viaggio sul livello.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Giù di un livello
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Esamini il livello appena più profondo.
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Su di un livello
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Esamini il livello appena più in alto.
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Vai in un livello
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Vai in un livello in base alla ramificazione e profondità.
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Trova le scale per andare su
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Esamina tutte le scalinate per andare su.
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Trova le scale per andare giù
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Esamina tutte le scalinate per andare giù.
+%%%%
+CMD_MAP_FIND_YOU
+
+Trovami
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Fa tornare il cursore della mappa alla tua posizione corrente.
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Trova portali e negozi
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Esamina tutti i portali e negozi sul livello corrente.
+%%%%
+CMD_MAP_FIND_TRAP
+
+Trova trappole
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Esamina tutte le trappole sul livello corrente.
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Trova altari
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Esamina tutti gli altari sul livello corrente.
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Trova esclusioni di viaggio
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Esamina tutte le esclusioni di viaggio sul livello corrente
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Trova punto di riferimento
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Esamina tutti i punti di riferimento sul livello corrente.
+%%%%
+CMD_MAP_FIND_STASH
+
+Trova deposito
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Esamina tutti i depositi sul livello corrente.
+%%%%
+CMD_ZOOM_IN
+
+Ingrandisci
+%%%%
+CMD_ZOOM_IN verbose
+
+Ingrandisci un'area del Dungeon
+%%%%
+CMD_ZOOM_OUT
+
+Rimpicciolisci
+%%%%
+CMD_ZOOM_OUT verbose
+
+Rimpicciolisci un'area del Dungeon
+%%%%

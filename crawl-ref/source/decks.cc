@@ -1680,7 +1680,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
         return;
     }
 
-    random_shuffle(stairs_avail.begin(), stairs_avail.end());
+    shuffle_array(stairs_avail);
 
     for (unsigned int i = 0; i < stairs_avail.size(); ++i)
         move_stair(stairs_avail[i], stair_draw_count % 2, false);
@@ -2024,8 +2024,9 @@ static void _focus_card(int power, deck_rarity_type rarity)
 
 static void _shuffle_card(int power, deck_rarity_type rarity)
 {
-    int perm[NUM_STATS] = { 0, 1, 2 };
-    random_shuffle(perm, perm + 3);
+    int perm[] = { 0, 1, 2 };
+    COMPILE_CHECK(ARRAYSZ(perm) == NUM_STATS);
+    shuffle_array(perm, NUM_STATS);
 
     FixedVector<int8_t, NUM_STATS> new_base;
     for (int i = 0; i < NUM_STATS; ++i)
@@ -3125,13 +3126,10 @@ colour_t deck_rarity_to_colour(deck_rarity_type rarity)
     switch (rarity)
     {
     case DECK_RARITY_COMMON:
-    {
-        const colour_t colours[] = {LIGHTBLUE, GREEN, CYAN, RED};
-        return RANDOM_ELEMENT(colours);
-    }
+        return GREEN;
 
     case DECK_RARITY_RARE:
-        return coinflip() ? MAGENTA : BROWN;
+        return MAGENTA;
 
     case DECK_RARITY_LEGENDARY:
         return LIGHTMAGENTA;

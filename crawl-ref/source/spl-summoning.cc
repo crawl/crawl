@@ -112,43 +112,12 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-static bool _snakable_missile(const item_def& item)
+bool item_is_snakable(const item_def& item)
 {
     return (item.base_type == OBJ_MISSILES
             && (item.sub_type == MI_ARROW || item.sub_type == MI_JAVELIN)
             && item.special != SPMSL_SILVER
             && item.special != SPMSL_STEEL);
-}
-
-static bool _snakable_weapon(const item_def& item)
-{
-    if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
-        return true;
-
-    return (item.base_type == OBJ_WEAPONS
-            && !is_artefact(item)
-            && (item.sub_type == WPN_CLUB
-                || item.sub_type == WPN_GIANT_CLUB
-                || item.sub_type == WPN_GIANT_SPIKED_CLUB
-                || item.sub_type == WPN_SPEAR
-                || item.sub_type == WPN_TRIDENT
-                || item.sub_type == WPN_HALBERD
-                || item.sub_type == WPN_SCYTHE
-                || item.sub_type == WPN_DEMON_TRIDENT
-                || item.sub_type == WPN_GLAIVE
-                || item.sub_type == WPN_BARDICHE
-#if TAG_MAJOR_VERSION == 34
-                || item.sub_type == WPN_STAFF
-#endif
-                || item.sub_type == WPN_QUARTERSTAFF
-                || item.sub_type == WPN_BLOWGUN
-                || item.sub_type == WPN_BOW
-                || item.sub_type == WPN_LONGBOW));
-}
-
-bool item_is_snakable(const item_def& item)
-{
-    return (_snakable_missile(item) || _snakable_weapon(item));
 }
 
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
@@ -178,7 +147,12 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     int count = 0;
 
-    if (_snakable_missile(wpn))
+    if (!item_is_snakable(wpn))
+    {
+        mpr(abort_msg);
+        return SPRET_ABORT;
+    }
+    else
     {
         fail_check();
         if (wpn.quantity < how_many_max)
@@ -204,39 +178,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
                 count++;
                 snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
             }
-        }
-    }
-
-    if (_snakable_weapon(wpn))
-    {
-        fail_check();
-        // Upsizing Snakes to Water Moccasins as the base class for using
-        // the really big sticks (so bonus applies really only to trolls
-        // and ogres).  Still, it's unlikely any character is strong
-        // enough to bother lugging a few of these around. - bwr
-        monster_type mon = MONS_ADDER;
-
-        if (get_weapon_brand(wpn) == SPWPN_VENOM || item_mass(wpn) >= 300)
-            mon = MONS_WATER_MOCCASIN;
-
-        if (pow > 20 && one_chance_in(3))
-            mon = MONS_WATER_MOCCASIN;
-
-        if (pow > 40 && coinflip())
-            mon = MONS_WATER_MOCCASIN;
-
-        if (pow > 70 && one_chance_in(3))
-            mon = MONS_BLACK_MAMBA;
-
-        if (pow > 90 && one_chance_in(3))
-            mon = MONS_ANACONDA;
-
-        if (monster *snake = create_monster(mgen_data(mon, beha, &you,
-                                  0, SPELL_STICKS_TO_SNAKES, you.pos(),
-                                  MHITYOU, 0, god), false))
-        {
-            count++;
-            snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
 

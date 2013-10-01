@@ -157,7 +157,7 @@ int is_pacifiable(const monster* mon)
         return -1;
     }
 
-    if (mons_is_stationary(mon)) // not able to leave the level
+    if (mon->is_stationary()) // not able to leave the level
         return -1;
 
     if (mon->asleep()) // not aware of what is happening
@@ -744,7 +744,7 @@ bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
     if (armour)
         min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
     else
-        min_type = EQ_LEFT_RING, max_type = EQ_RING_EIGHT;
+        min_type = EQ_LEFT_RING, max_type = EQ_RING_AMULET;
     for (int i = min_type; i <= max_type; i++)
     {
         if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())

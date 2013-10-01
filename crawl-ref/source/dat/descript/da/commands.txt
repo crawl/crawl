@@ -1,0 +1,106 @@
+%%%%
+CMD_EXPLORE
+
+Autoudforsker det nuværende niveau
+%%%%
+CMD_EXPLORE verbose
+
+Lader din karakter rejse på autopilot mod uudforskede områder af det nuværende
+niveau og samle genstande, der er underlagt automatisk opsamling, undervejs.
+Rejsen stopper, så snart et fjendtligtsindet uhyrer kommer til syne, og når
+genstande og landmærker skal annonceres.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Rejs til fjerne niveauer
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Rejs automatisk til fjerne niveauer. Rejsen bliver afbrudt, hvis uhyrer kommer
+til syne.
+%%%%
+CMD_PRAY
+
+Bed til din gud
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Viser oversigtskortet over de underjordiske gange
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Viser placeringen af indgange til forgreninger, butikker og andre
+karakteristiske træk, du er stødt på.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Viser religiøs status
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Viser, hvad din gud kan lide og ikke kan lide, opførsel og din nuværende
+religiøse anseelse og guddommelige evner.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Viser mutationer
+%%%%
+CMD_DISPLAY_SKILLS
+
+Hold styr på dine færdigheder
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Vis karakterens status
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Viser aktive fortryllelser og et par andre ting.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Viser en liste over typer af genstande, du har mødt
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Lav om på spillergrafikken
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Tilpasser den grafik, der bliver vist for udstyr og art på spillerdukken.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Spilhjælp
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Liste med kommandoer, indstillinger osv.
+%%%%
+CMD_CHARACTER_DUMP
+
+Gem karakterfremskridt
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Gemmer en masse oplysninger om din karakter i en fil ved navn 'spillernavn.txt'
+i morgue-mappen, så du kan læse den, når du lyster. Dette inkluderer den
+vigtigste statistik, udstyr, besværgelser, færdigheder, noter osv.
+%%%%
+CMD_AUTOFIGHT
+
+Slå det nærmeste uhyre
+%%%%
+CMD_AUTOFIGHT verbose
+
+Ryk frem mod det nærmeste, fjendtlige uhyre, og angrib det med det
+forhåndenværende våben.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Slå et uhyre ved siden af dig
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Angriber et uhyre ved siden af dig med dit våben.
+%%%%

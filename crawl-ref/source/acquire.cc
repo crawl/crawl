@@ -407,12 +407,16 @@ static bool _try_give_plain_armour(item_def &arm)
 }
 
 // Write results into arguments.
-static void _acquirement_determine_food(int& type_wanted, int& quantity,
-                                        const has_vector& already_has)
+static void _acquirement_determine_food(int& type_wanted, int& quantity)
 {
     // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
-        type_wanted = one_chance_in(10) ? FOOD_ROYAL_JELLY : FOOD_CHUNK;
+    {
+        type_wanted = random_choose_weighted(4, FOOD_CHUNK,
+                                             2, FOOD_ROYAL_JELLY,
+                                             1, FOOD_AMBROSIA,
+                                             0);
+    }
     else if (you.species == SP_VAMPIRE)
     {
         // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
@@ -423,32 +427,22 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity,
     else if (you_worship(GOD_FEDHAS))
     {
         // Fedhas worshippers get fruit to use for growth and evolution
-        type_wanted = one_chance_in(3) ? FOOD_BANANA : FOOD_ORANGE;
+        type_wanted = random_choose(FOOD_BANANA, FOOD_ORANGE, FOOD_LEMON, -1);
     }
     else
     {
-        // Meat is better than bread (except for herbivores), and
-        // by choosing it as the default we don't have to worry
-        // about special cases for carnivorous races (e.g. kobolds)
-        type_wanted = FOOD_MEAT_RATION;
-
-        if (player_mutation_level(MUT_HERBIVOROUS))
-            type_wanted = FOOD_BREAD_RATION;
-
-        // If we have some regular rations, then we're probably more
-        // interested in faster foods (especially royal jelly)...
-        // otherwise the regular rations should be a good enough offer.
-        if (already_has[FOOD_MEAT_RATION]
-            + already_has[FOOD_BREAD_RATION] >= 2 || coinflip())
-        {
-            type_wanted = one_chance_in(5) ? FOOD_HONEYCOMB
-                : FOOD_ROYAL_JELLY;
-        }
+        type_wanted = random_choose_weighted(
+                        5, FOOD_ROYAL_JELLY,
+                        3, FOOD_AMBROSIA,
+                        1, player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
+                                                                  : FOOD_MEAT_RATION,
+                        1, FOOD_HONEYCOMB,
+                        0);
     }
 
     quantity = 3 + random2(5);
 
-    if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE)
+    if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE || type_wanted == FOOD_LEMON)
         quantity = 8 + random2avg(15, 2);
     // giving more of the lower food value items
     else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
@@ -599,6 +593,7 @@ static missile_type _acquirement_missile_subtype()
             vector<pair<missile_type, int> > missile_weights;
 
             missile_weights.push_back(make_pair(MI_DART, 100));
+            missile_weights.push_back(make_pair(MI_TOMAHAWK, 100));
 
             if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
                 missile_weights.push_back(make_pair(MI_NEEDLE, 100));
@@ -828,7 +823,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
             // Deliberate fall-through
         case OBJ_POTIONS: // Should only happen for vampires.
             // set type_wanted and quantity
-            _acquirement_determine_food(type_wanted, quantity, already_has);
+            _acquirement_determine_food(type_wanted, quantity);
             break;
 
         case OBJ_WEAPONS:    type_wanted = _acquirement_weapon_subtype(divine);  break;

@@ -674,7 +674,7 @@ const map_def *find_map_by_name(const string &name)
 {
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].name == name)
-            return (&vdefs[i]);
+            return &vdefs[i];
 
     return NULL;
 }
@@ -1262,6 +1262,12 @@ static bool _load_map_index(const string& cache, const string &base,
         return false;
     }
 
+#if TAG_MAJOR_VERSION == 34
+    // Throw out pre-ORDER: indices entirely.
+    if (minor < TAG_MINOR_MAP_ORDER)
+        return false;
+#endif
+
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize(nexist + nmaps, map_def());
@@ -1270,6 +1276,7 @@ static bool _load_map_index(const string& cache, const string &base,
         map_def &vdef(vdefs[nexist + i]);
         vdef.read_index(inf);
         vdef.description = unmarshallString(inf);
+        vdef.order = unmarshallInt(inf);
 
         vdef.set_file(cache);
         lc_loaded_maps[vdef.name] = vdef.place_loaded_from;
@@ -1356,6 +1363,7 @@ static void _write_map_index(const string &filebase, size_t vs, size_t ve,
     {
         vdefs[i].write_index(outf);
         marshallString(outf, vdefs[i].description);
+        marshallInt(outf, vdefs[i].order);
         vdefs[i].place_loaded_from.clear();
         vdefs[i].strip();
     }
@@ -1495,7 +1503,7 @@ void run_map_local_preludes()
 
 const map_def *map_by_index(int index)
 {
-    return (&vdefs[index]);
+    return &vdefs[index];
 }
 
 ///////////////////////////////////////////////////////////////////////////

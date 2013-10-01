@@ -656,7 +656,7 @@ void down_stairs(dungeon_feature_type force_stair)
                               && get_trap_type(you.pos()) == TRAP_SHAFT
                               && stair_find != DNGN_UNDISCOVERED_TRAP);
     // Latter case is falling down a shaft.
-    const bool shaft = known_shaft || (force_stair == DNGN_TRAP_NATURAL);
+    const bool shaft = known_shaft || (force_stair == DNGN_TRAP_SHAFT);
     level_id shaft_dest;
 
     // Up and down both work for portals.
@@ -705,6 +705,8 @@ void down_stairs(dungeon_feature_type force_stair)
                                     + short_place_name(shaft_dest) + ".");
         }
 
+        handle_items_on_shaft(you.pos(), false);
+
         if (!you.flight_mode() || force_stair)
             mpr("You fall through a shaft!");
         if (you.flight_mode() && !force_stair)
@@ -739,7 +741,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
         ASSERT(runes.size() >= 3);
 
-        random_shuffle(runes.begin(), runes.end());
+        shuffle_array(runes);
         mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
 #ifdef USE_TILE_LOCAL
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
@@ -884,7 +886,7 @@ void down_stairs(dungeon_feature_type force_stair)
     dungeon_feature_type stair_taken = stair_find;
 
     if (shaft)
-        stair_taken = DNGN_TRAP_NATURAL;
+        stair_taken = DNGN_TRAP_SHAFT;
 
     switch (you.where_are_you)
     {
@@ -928,9 +930,7 @@ void down_stairs(dungeon_feature_type force_stair)
         break;
 
     default:
-        if (shaft)
-            handle_items_on_shaft(you.pos(), false);
-        else
+        if (!shaft)
             _climb_message(stair_find, false, old_level.branch);
         break;
     }

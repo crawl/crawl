@@ -61,10 +61,6 @@ Sword of Zonguldrok
 
 Diese entsetzliche Waffe sollte auf eigene Gefahr eingesetzt werden.
 %%%%
-Sword of Cerebov
-
-Gespenstische Flammen bedecken diese verzerrte Klinge.
-%%%%
 Staff of Dispater
 
 Dieser legendäre Gegenstand kann den Zorn der Hölle entfesseln.
@@ -229,7 +225,7 @@ cloak of the Thief
 Es erlaubt seinem Träger, das Diebeshandwerk überragend auszuführen, und kann
 aktiviert werden, um dicke Rauchwolken zur schnellen Flucht auszustoßen.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 Nur für den Fall, dass du Probleme hattest, getroffen zu werden.
 %%%%

@@ -73,15 +73,6 @@ arrow
 
 Una flecha, hecha para ser disparada con un arco.
 %%%%
-arrow:quote
-
-“En un corredor vi una flecha que indicaba una dirección y pensé que aquel
-símbolo inofensivo había sido alguna vez una cosa de hierro, un proyectil
-inevitable y mortal, que entró en la carne de los hombres y de los leones y
-nubló el sol en las Termópilas y dio a Harald Sigurdarson, para siempre, seis
-pies de tierra inglesa.”
-    -Jorge Luis Borges, Mutaciones. 1960.
-%%%%
 banana
 
 Una deliciosa fruta amarillenta, probablemente cultivada e importada por alguna
@@ -704,23 +695,6 @@ long sword
 
 Una espada con una larga cuchilla.
 %%%%
-long sword:quote
-
-"Y andando en estas priesas entre aquellos grandes guerreros y sus temerosos
-montantes, parece ser acordaron de se juntar muchos dellos y de mayores fuerzas
-para tomar a manos algún caballo, y lo pusieron por obra, y arremetieron, y
-echan mano a una muy buena yegua y bien revuelta, de juego y de carrera, y el
-caballero que en ella iba muy buen jinete, que se decía Pedro de Morón; y como
-entró rompiendo con otros tres de a caballo entre los escuadrones de los
-contrarios, porque así les era mandado, porque se ayudasen unos a otros,
-échanle mano de la lanza, que no la pudo sacar, y otros le dan de cuchilladas
-con los montantes y le hirieron malamente, y entonces dieron una cuchillada a
-la yegua, que le cortaron el pescuezo en redondo, y allí quedó muerta; y si de
-presto no socorrieran los dos compañeros de a caballo al Pedro de Morón,
-también le acabaran de matar."
-    -Bernal Díaz del Castillo, Historia verdadera de la conquista de la Nueva
-España. 1632.
-%%%%
 longbow
 
 Un largo y fuerte arco hecho de madera de tejo. Es capaz de hacer un daño
@@ -977,22 +951,10 @@ ring of evasion
 Este anillo hace que su portador sea más o menos capaz de evitar ataques, en
 función de su grado de encantamiento.
 %%%%
-ring of fire
-
-Este anillo hace que su portador esté más en contacto con los poderes del
-fuego. Ganará resistencia al calor y podrá usar la magia del fuego más
-eficazmente pero será más vulnerable a los efectos del frío.
-%%%%
 ring of hunger
 
 Este anillo maldito hace que su portador tenga hambre considerablemente más
 deprisa.
-%%%%
-ring of ice
-
-Este anillo hace que su portador esté más en contacto con los poderes del
-hielo. Ganará resistencia al frío y podrá usar la magia del hielo más
-eficazmente, pero será más vulnerable a los efectos del fuego.
 %%%%
 ring of intelligence
 
@@ -1170,12 +1132,6 @@ cualquier objeto, y ocasionalmente permitirá múltiples identificaciones.
 
 Si es usado en un mazo de cartas, este pergamino revelará la carta superior.
 %%%%
-scroll of immolation
-
-Este pergamino fue tratado con una sustancia increíblemente inflamable, que
-explota violentamente cuando éste es abierto y leído, quemando al lector y a
-todo lo cercano.
-%%%%
 scroll of magic mapping
 
 Este pergamino revela los alrededores del lector.
@@ -1240,20 +1196,6 @@ spear
 
 Un palo largo con una punta de metal en un extremo, para ser asido o lanzado.
 %%%%
-staff of air
-
-Este bastón incrementa el poder de los hechizos de aire recitados por su
-portador, y lo aisla de la electricidad. Si el portador del bastón tiene
-capacidad en evocaciones y magia del aire, puede provocar descargas a quienes
-golpee con él.
-%%%%
-staff of cold
-
-Este bastón incrementa el poder de los hechizos de hielo recitados por su
-portador y lo protege de los efectos del frío. Si el portador del bastón tiene
-capacidad en evocaciones puede congelar a quienes golpee con él, con mayor
-efecto si también posee conocimiento de la magia del hielo.
-%%%%
 staff of conjuration
 
 Este bastón aumenta el poder de los conjuros lanzados por su portador.
@@ -1264,19 +1206,6 @@ Este bastón aumenta el poder de los conjuros necromántico del portador, ademá
 de protegerlo de energía negativa. Si el portador tiene la habilidad
 evocaciones además de la de necromancia, pueden causar mucho dolor a las almas
 vivientes que golpee.
-%%%%
-staff of earth
-
-Este bastón aumenta el poder de los conjuros de tierra del portador. Si éste es
-hábil en evocaciones, puede triturar a quien es golpeado, el daño es aún mayor
-si también se es hábil en magia de tierra.
-%%%%
-staff of fire
-
-Este bastón aumenta el poder de los conjuros de fuego del portador, y lo
-protege de los efectos producidos por el calor y el fuego. Si el portador es
-hábil en evocación, puede quemar a quien es golpeado por este bastón; el efecto
-es aún mayor si se tiene habilidad en magia de fuego.
 %%%%
 staff of poison
 

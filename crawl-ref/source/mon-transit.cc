@@ -237,7 +237,7 @@ void place_transiting_items()
                                   pos, true);
 
         // List of items we couldn't place.
-        if (!copy_item_to_grid(*item, where_to_go, 1, false, true))
+        if (!copy_item_to_grid(*item, where_to_go, -1, false, true))
             keep.push_back(*item);
     }
 
@@ -365,7 +365,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
         || fol->speed_increment < 50
         || fol->incapacitated()
         || mons_is_boulder(fol)
-        || mons_is_stationary(fol))
+        || fol->is_stationary())
     {
         return false;
     }

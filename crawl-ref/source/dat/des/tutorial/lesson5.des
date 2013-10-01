@@ -24,6 +24,7 @@ end
 NAME:    tutorial_lesson5
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 5: Gods and Divine Abilities"
+ORDER:   5
 ORIENT:  encompass
 KFEAT:   bABCDEHIJ = .
 KFEAT:   F = +

@@ -258,6 +258,9 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 case EQ_RING_EIGHT:
                     buff << " (on tentacle)";
                     break;
+                case EQ_RING_AMULET:
+                    buff << " (on amulet)";
+                    break;
                 default:
                     die("Item in an invalid slot");
                 }
@@ -421,8 +424,10 @@ static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
         return (t == MBN_TERSE ? "penet" : "penetration");
     case SPMSL_DISPERSAL:
         return (t == MBN_TERSE ? "disperse" : "dispersal");
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_BLINDING:
         return (t == MBN_TERSE ? "blind" : "blinding");
+#endif
     case SPMSL_NORMAL:
         return "";
     default:
@@ -451,7 +456,6 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_PAIN: return terse ? " (pain)" : " of pain";
     case SPWPN_DISTORTION: return terse ? " (distort)" : " of distortion";
     case SPWPN_REACHING: return terse ? " (reach)" : " of reaching";
-    case SPWPN_RETURNING: return terse ? " (return)" : " of returning";
 
     case SPWPN_VAMPIRICISM:
         return terse ? " (vamp)" : ""; // non-terse already handled
@@ -697,7 +701,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
     case SCR_ENCHANT_WEAPON_II:  return "enchant weapon II";
-    case SCR_VORPALISE_WEAPON:   return "vorpalise weapon";
+    case SCR_BRAND_WEAPON:       return "brand weapon";
     case SCR_RECHARGING:         return "recharging";
     case SCR_ENCHANT_WEAPON_III: return "enchant weapon III";
     case SCR_HOLY_WORD:          return "holy word";
@@ -1392,7 +1396,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
         if (brand != SPMSL_NORMAL
+#if TAG_MAJOR_VERSION == 34
             && brand != SPMSL_BLINDING
+#endif
             && !basename && !qualname && !dbname)
         {
             if (terse)
@@ -2364,11 +2370,6 @@ void check_item_knowledge(bool unknown_items)
         // Missiles
         for (int i = 0; i < NUM_MISSILES; i++)
         {
-#if TAG_MAJOR_VERSION == 34
-            if (i == MI_PIE)
-                continue;
-#endif
-
             item_def* ptmp = new item_def;
             if (ptmp != 0)
             {
@@ -3173,7 +3174,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_BLINKING:
             return (you.species == SP_FORMICID);
         case SCR_AMNESIA:
-            return (you_worship(GOD_TROG));
+            return you_worship(GOD_TROG);
         case SCR_RECHARGING:
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
@@ -3181,7 +3182,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
         case SCR_ENCHANT_ARMOUR:
-        case SCR_VORPALISE_WEAPON:
+        case SCR_BRAND_WEAPON:
             return (you.species == SP_FELID);
         default:
             return false;
@@ -3336,7 +3337,7 @@ bool is_useless_item(const item_def &item, bool temp)
 #endif
 
         case RING_WIZARDRY:
-            return (you_worship(GOD_TROG));
+            return you_worship(GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
             return (you.species == SP_FORMICID

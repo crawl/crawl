@@ -61,7 +61,7 @@ syn match desGod contained /nemelex_xobeh\|okawaru\|sif_muna\|trog\|vehumet\|xom
 
 syn keyword desDeclarator ORIENT: DEPTH: PLACE: MONS: FLAGS: default-depth: TAGS: CHANCE: WEIGHT:
 syn keyword desDeclarator ITEM: KFEAT: KMONS: KITEM: KMASK: KPROP: MARKER: WELCOME: LFLAGS: BFLAGS:
-syn keyword desDeclarator LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT: DESC:
+syn keyword desDeclarator LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: FHEIGHT: DESC: ORDER:
 
 " keywords
 " ORIENT

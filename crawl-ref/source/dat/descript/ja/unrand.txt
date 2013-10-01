@@ -58,10 +58,6 @@ Sword of Zonguldrok
 
 この恐ろしき武器は使用者を危険に晒す。
 %%%%
-Sword of Cerebov
-
-薄気味の悪い炎がこの捩じれた刃を包んでいる。
-%%%%
 Staff of Dispater
 
 この伝説的な品は、地獄の猛威を放つことができる。
@@ -249,7 +245,7 @@ cloak of the Thief
 これは着用者を盗みの技巧に於いて卓越した存在とする。これは迅速な逃走を助ける、
 濃密な煙幕を放つことを可能にする。
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 もし敵の攻撃でお困りでしたらどうぞ。
 %%%%

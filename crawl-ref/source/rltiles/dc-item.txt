@@ -299,9 +299,11 @@ i-antimagic BRAND_ANTIMAGIC
 %rim 0
 i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
+# Move i-returning down to missile-only brands when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
 i-evasion BRAND_EVASION
+# Move i-confusion down to missile-only brands when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_CONFUSION
 i-penetration BRAND_PENETRATION
 i-reaping BRAND_REAPING BRAND_WEP_LAST
@@ -387,6 +389,20 @@ effect/dart5 MI_DART5
 effect/dart6 MI_DART6
 effect/dart7 MI_DART7
 
+tomahawk1 MI_TOMAHAWK
+tomahawk2
+steel_tomahawk MI_TOMAHAWK_STEEL
+silver_tomahawk MI_TOMAHAWK_SILVER
+# flying tomahawks
+effect/tomahawk0 MI_TOMAHAWK0
+effect/tomahawk1 MI_TOMAHAWK1
+effect/tomahawk2 MI_TOMAHAWK2
+effect/tomahawk3 MI_TOMAHAWK3
+effect/tomahawk4 MI_TOMAHAWK4
+effect/tomahawk5 MI_TOMAHAWK5
+effect/tomahawk6 MI_TOMAHAWK6
+effect/tomahawk7 MI_TOMAHAWK7
+
 needle1 MI_NEEDLE
 needle2
 needle-p MI_NEEDLE_P
@@ -430,16 +446,6 @@ effect/throwing_net7 MI_THROWING_NET7
 rock MI_LARGE_ROCK
 # flying rock
 effect/rock0 MI_LARGE_ROCK0
-
-pie MI_PIE
-effect/pie0 MI_PIE0
-effect/pie1 MI_PIE1
-effect/pie2 MI_PIE2
-effect/pie3 MI_PIE3
-effect/pie4 MI_PIE4
-effect/pie5 MI_PIE5
-effect/pie6 MI_PIE6
-effect/pie7 MI_PIE7
 
 ######OBJ_ARMOUR
 %sdir item/armour
@@ -590,6 +596,8 @@ boots3_stripe
 boots4_green
 
 ### Armour brands
+# The order of armour brands must be identical to the one defined
+# in itemprop-enum.h.
 %sdir item/armour/brands
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
@@ -633,6 +641,7 @@ gem_plastic
 %rim 1
 
 %sdir item/wand
+#### These must be in the same order as the enum in itemprop-enum.h!
 i-flame WAND_FLAME WAND_ID_FIRST
 i-frost WAND_FROST
 i-slowing WAND_SLOWING
@@ -750,7 +759,7 @@ i-fog SCR_FOG
 i-acquirement SCR_ACQUIREMENT
 %back scroll-green
 i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
-i-vorpalize-weapon SCR_VORPALISE_WEAPON
+i-brand-weapon SCR_BRAND_WEAPON
 i-recharging SCR_RECHARGING
 i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
 %back scroll-red
@@ -822,6 +831,7 @@ snake
 #########ID-ed
 %sdir item/ring
 %rim 0
+#### These must be in the same order as the enum in itemprop-enum.h!
 i-regeneration RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
 i-r-fire RING_PROTECTION_FROM_FIRE
@@ -883,13 +893,14 @@ eye_green AMU_COL_LAST
 
 %rim 0
 ### ID-ed amulet
+# These must be in the same order as the enum in itemprop-enum.h!
 i-rage AMU_RAGE AMU_ID_FIRST
 i-clarity AMU_CLARITY
 i-warding AMU_WARDING
 i-r-corrosion AMU_RESIST_CORROSION
 i-gourmand AMU_THE_GOURMAND
 i-conservation AMU_CONSERVATION
-# Remove i-c-flight when save compatibility is broken
+# Remove i-c-flight when TAG_MAJOR_VERSION > 34
 i-c-flight AMU_CONTROLLED_FLIGHT
 i-inaccuracy AMU_INACCURACY
 i-r-mutation AMU_RESIST_MUTATION
@@ -918,6 +929,7 @@ white
 %sdir item/potion
 %back i-label
 %rim 0
+# These must be in the same order as the enum in itemprop-enum.h!
 i-curing POT_CURING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
 i-speed POT_SPEED
@@ -994,6 +1006,9 @@ metal_cyan
 metal_green
 ############papyrus 1
 cloth BOOK_PAPYRUS
+############manuals
+manual1 BOOK_MANUAL
+manual2
 # randarts
 %sdir item/book/artefact
 wrinkled BOOK_RANDART_OFFSET
@@ -1017,6 +1032,7 @@ staff07
 staff08
 staff09
 
+# These must be in the same order as the enum in itemprop-enum.h!
 i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
@@ -1031,7 +1047,6 @@ i-staff_air STAFF_AIR
 i-staff_earth STAFF_EARTH
 %rim 0
 i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
-%rim 1
 
 %sdir item/rod
 rod00 ROD
@@ -1045,7 +1060,7 @@ rod07
 rod08
 rod09
 
-%rim 0
+# These must be in the same order as the enum in itemprop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE

@@ -15,6 +15,7 @@
 #include "dbg-util.h"
 #include "dungeon.h"
 #include "env.h"
+#include "godabil.h"
 #include "itemname.h"
 #include "libutil.h"
 #include "message.h"
@@ -311,7 +312,7 @@ void debug_mons_scan()
             else if (!m->alive())
             {
                 _announce_level_prob(warned);
-                mprf_nocap(MSGCH_WARN,
+                mprf_nocap(MSGCH_ERROR,
                      "mgrd at (%d,%d) points at dead monster %s",
                      x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;
@@ -334,6 +335,12 @@ void debug_mons_scan()
 
         ASSERT(m->mid > 0);
         coord_def pos = m->pos();
+
+        if (invalid_monster_type(m->type))
+        {
+            mprf(MSGCH_ERROR, "Bogus monster type %d at (%d, %d), midx = %d",
+                              m->type, pos.x, pos.y, i);
+        }
 
         if (!in_bounds(pos))
         {
@@ -462,10 +469,29 @@ void debug_mons_scan()
                 ASSERT(monster_by_mid(m->mid) == m);
         }
 
-        if (m->constricted_by && !actor_by_mid(m->constricted_by))
+        if (you.constricted_by == m->mid && (!m->constricting
+              || m->constricting->find(MID_PLAYER) == m->constricting->end()))
         {
-            mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
+            mprf(MSGCH_ERROR, "Error: constricting[you] entry missing for monster %s(%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->mindex());
+        }
+
+        if (m->constricted_by)
+        {
+            const actor *h = actor_by_mid(m->constricted_by);
+            if (!h)
+            {
+                mprf(MSGCH_ERROR, "Error: constrictor missing for monster %s(%d)",
+                     m->name(DESC_PLAIN, true).c_str(), m->mindex());
+            }
+            if (!h->constricting
+                || h->constricting->find(m->mid) == h->constricting->end())
+            {
+                mprf(MSGCH_ERROR, "Error: constricting[%s(mindex=%d mid=%d)] "
+                                  "entry missing for monster %s(mindex=%d mid=%d)",
+                     m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid,
+                     h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid);
+            }
         }
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
@@ -476,6 +502,14 @@ void debug_mons_scan()
         ASSERT(!invalid_monster_index(idx));
         ASSERT(menv[idx].mid == mc->first);
     }
+
+    if (in_bounds(you.pos()))
+        if (const monster* m = monster_at(you.pos()))
+            if (!m->submerged() && !fedhas_passthrough(m))
+            {
+                mprf(MSGCH_ERROR, "Error: player on same spot as monster: %s(%d)",
+                      m->name(DESC_PLAIN, true).c_str(), m->mindex());
+            }
 
     // No problems?
     if (!warned)

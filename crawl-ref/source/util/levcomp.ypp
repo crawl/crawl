@@ -45,7 +45,7 @@ static NORETURN void yyerror(const char *e)
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO EPILOGUE NSUBST WELCOME LFLAGS BFLAGS
 %token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE
-%token <i>      SUBVAULT FHEIGHT DESC
+%token <i>      SUBVAULT FHEIGHT DESC ORDER
 
 %token <i>      COMMA COLON PERC DASH CHARACTER
 %token <f>      NUMBER
@@ -143,6 +143,7 @@ name            : NAME STRING
 
 metaline        : place
                 | desc
+                | order
                 | depth
                 | chance
                 | weight
@@ -581,6 +582,14 @@ desc            : DESC STRING
                         yylineno,
                         make_stringf("desc(\"%s\")",
                             quote_lua_string($2).c_str()));
+                }
+                ;
+
+order           : ORDER NUMBER
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("order(%d)", int($2)));
                 }
                 ;
 

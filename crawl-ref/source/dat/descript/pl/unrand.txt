@@ -56,10 +56,6 @@ Sword of Zonguldrok
 
 Tą przerażającą broń używasz na własne ryzyko.
 %%%%
-Sword of Cerebov
-
-Przedziwne płomienie tańczą wokół jego pokręconego ostrza.
-%%%%
 Staff of Dispater
 
 Ten legendarny przedmiot może rozpętać szał piekieł.
@@ -240,7 +236,7 @@ cloak of the Thief
 
 Pozwala nosicielowi przodować w złodziejskich sztukach.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 Na wypadek jakby twoi wrogowie mieli problemy z trafianiem w ciebie.
 %%%%

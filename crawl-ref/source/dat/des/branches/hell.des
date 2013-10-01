@@ -310,11 +310,10 @@ ENDMAP
 NAME: vestibule_tar_mu
 TAGS: vestibule_tar
 MARKER: T=feat:enter_tartarus
-FTILE:  =~T3Dz+'; = floor_infernal_blank
+FTILE:  =T3Dz+'; = floor_infernal_blank
 TILE:   c = dngn_stone_dark
 SUBST:  T=A
-SUBST:  . = ~.........
-SUBST:  ; = ~...
+SUBST:  ; = .
 KMONS:  3 = shadow wraith
 KMONS:  z = skeletal warrior / zombie / nothing
 KMONS:  D = shadow dragon

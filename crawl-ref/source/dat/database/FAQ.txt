@@ -150,7 +150,7 @@ My characters keep starving. What am I doing wrong?
 %%%%
 A:starving
 
-A: It's possible that you simply spend too much time on cleared levels where not enough monsters are generated to dine on. You might also be too choosy about what you eat; unless you are herbivorous, you will have to occasionally eat monster chunks, even those that sometimes make you nauseous (coloured brown in the menu and the prompt). If you worship a god who enjoys sacrifices, pay attention to your own hunger status instead of offering all corpses you come across.
+A: It's possible that you simply spend too much time on cleared levels where not enough monsters are generated to dine on. You might also be too choosy about what you eat; unless you are herbivorous, you will have to occasionally eat monster chunks. If you worship a god who enjoys sacrifices, pay attention to your own hunger status instead of offering all corpses you come across.
 
 Also, casting (difficult) spells will make you hungry, but high Intelligence and Spellcasting will lessen this effect. If you press 'II', you can read about the hunger effects of your spells. Invocations likewise often have a Food cost.
 %%%%
@@ -256,7 +256,7 @@ A hint: They cannot see invisible.
 %%%%
 Q:randart
 
-What do the terms "randart", "unrandart" and "egoitem" signify?
+What do the terms "randart" and "unrandart" signify?
 %%%%
 A:randart
 
@@ -266,9 +266,7 @@ A: Apart from the standard items you'll find lying around in the dungeon, you mi
 
 * unrandart: an artefact that looks like a randart but is really predefined. While a few (formerly known as "fixed artefacts") have special hardcoded effects, for most there's no further difference except that you may recognize them from previous games. In addition, most unrandarts come pre-identified.
 
-Neither of these types can be enchanted or branded, either temporarily or permanently. There is another type of special item that pops up a bit more frequently:
-
-* egoitem: these are ordinary items with one special property. For example, a short sword of venom, a cap of see invisible, or boots of running. These can be affected by enchanting scrolls and also by corrosion and acids. Weapons of this type are branded, and only divine intervention can change the brand.
+Neither of these types can be enchanted or branded, either temporarily or permanently, nor can they be corroded by acid.
 %%%%
 Q:interact
 

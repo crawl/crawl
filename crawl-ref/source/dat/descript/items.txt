@@ -4,18 +4,10 @@ amulet of clarity
 This amulet protects its wearer from some forms of mental confusion, including
 being infuriated against one's will.
 %%%%
-amulet of clarity:quote
-
-<amulet:quote>
-%%%%
 amulet of conservation
 
 This amulet protects some of the possessions of its wearer from outright
 destruction, but not infallibly so.
-%%%%
-amulet of conservation:quote
-
-<amulet:quote>
 %%%%
 amulet of guardian spirit
 
@@ -23,43 +15,23 @@ This amulet makes its wearer less susceptible to external damage, draining
 magical power instead. Should the reserves of magic be depleted, the spirit
 will fail to provide its protection until more power is available.
 %%%%
-amulet of guardian spirit:quote
-
-<amulet:quote>
-%%%%
 amulet of inaccuracy
 
 This amulet makes its wearer less accurate in melee combat and when targetting
 monsters via ranged attacks or spells.
 %%%%
-amulet of inaccuracy:quote
-
-<amulet:quote>
-%%%%
 amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk rage.
-%%%%
-amulet of rage:quote
-
-<amulet:quote>
 %%%%
 amulet of resist corrosion
 
 This amulet protects the wearer and their equipment from corrosion caused by
 acids, although not infallibly so.
 %%%%
-amulet of resist corrosion:quote
-
-<amulet:quote>
-%%%%
 amulet of resist mutation
 
 This amulet protects its wearer from mutations, although not infallibly so.
-%%%%
-amulet of resist mutation:quote
-
-<amulet:quote>
 %%%%
 amulet of the gourmand
 
@@ -67,18 +39,10 @@ This amulet allows its wearer to eat fresh raw meat when not hungry, and
 drastically increases nutrition you can get from them. These effects on the
 wearer's digestion are cumulative over time and are initially small.
 %%%%
-amulet of the gourmand:quote
-
-<amulet:quote>
-%%%%
 amulet of warding
 
 This amulet repels some of the attacks of creatures which have been magically
 summoned, and also makes the wearer more resistant to draining attacks.
-%%%%
-amulet of warding:quote
-
-<amulet:quote>
 %%%%
 amulet of faith
 
@@ -86,10 +50,6 @@ This is a talisman crafted to call the attention of the gods to its wearer.
 This divine attention makes it easier to please your god, but your god is also
 less likely to forgive your transgressions, and the amulet will drain some of
 your divine favour when removed.
-%%%%
-amulet of faith:quote
-
-<amulet:quote>
 %%%%
 amulet of stasis
 
@@ -100,77 +60,24 @@ its wearer.
 While the amulet is effective against most translocular magic, plane shifts
 such as banishment are beyond its ability to block.
 %%%%
-amulet of stasis:quote
-
-<amulet:quote>
-%%%%
 animal skin
 
 A large piece of thick skin covered in fur, cut from the corpse of an animal
 and worn as a primitive garment. It offers rudimentary protection against harm,
 but, having never been tanned, it carries a light stench of rotting flesh.
 %%%%
-animal skin:quote
-
-“He killed the noble Mudjokivis.
- Of the skin he made him mittens,
- Made them with the fur side inside,
- Made them with the skin side outside.
- He, to get the warm side inside,
- Put the inside skin side outside;
- He, to get the cold side outside,
- Put the warm side fur side inside.
- That's why he put the fur side inside,
- Why he put the skin side outside,
- Why he turned them inside outside.”
-    -Anonymous, in Wells' _A Parody Anthology_, p. 120. 1904.
-%%%%
 apple
 
 A delicious, firm red fruit, tart to the tongue.
-%%%%
-apple:quote
-
-“MINERVA was the goddess of wisdom, but on one occasion she did a very foolish
-thing; she entered into competition with Juno and Venus for the prize of
-beauty. It happened thus: At the nuptials of Peleus and Thetis all the gods
-were invited with the exception of Eris, or Discord. Enraged at her exclusion,
-the goddess threw a golden apple among the guests, with the inscription, ‘For
-the fairest.’”
-    -Thomas Bulfinch, _Bulfinch’s Mythology_, ch.. XXVII. a. 1855.
 %%%%
 apricot
 
 A succulent yellow-orange fruit, prunus armeniaca.
 %%%%
-apricot:quote
-
-“Apricot Ratafia
-
-This is made two Ways, viz. either by infusing the Apricots cut in Pieces in
-Brandy for a Day or two, and then passing it thro’ the draining Bag, and
-putting in the usual Ingredients; or else the Apricots may be boil’d in White
-wine, and by that Means more easily clarify’d adding an equal Quantity of
-Brandy, and a quarter of a pound of Sugar to every quart, with Cinnamon,
-Cloves, Mace, and Kernels of the Apricots. After all the Ingredients have
-infused eight or ten Days the Liquor is to be strain’d again and put into
-Bottles and so kept.”
-    -Charles Carter, _The Compleat City and Country Cook: Or, Accomplish’d
-House-wife_. 1732.
-%%%%
 arrow
 
 A long shafted projectile intended to be shot with a bow or longbow, fletched
 with feathers at one end and a point at the other.
-%%%%
-arrow:quote
-
-“I saw in a hall an arrow pointing the way and I thought that this inoffensive
-symbol had once been a thing of iron, an inescapable and fatal projectile that
-pierced the flesh of men and lions and clouded the sun at Thermopylae and gave
-Harald Sigurdarson six feet of English earth forever.”
-    -Jorge Luis Borges, _Mutations_. 1960.
-     trans. Mildred Boyle
 %%%%
 banana
 
@@ -181,30 +88,10 @@ bardiche
 
 A long pole with an enormous, cleaving blade on one end.
 %%%%
-bardiche:quote
-
-“The republic always maintains seven or eight thousand regular troops on the
-frontiers, to prevent the incursions of the Tartars. The King does not maintain
-these troops; he only pays the Heydukes, the Semelles, and the Janizaries. The
-first-mentioned are dressed in blue, with large buttons and plates of tin, and
-have bonnets made of felt upon their heads. They have firelocks, and the
-bardiche, which they say is a very good weapon.”
-    -John Pinkerton, _A General Collection of the Best and Most Interesting
-     Voyages and Travels in all parts of the World, many of which are now first
-     translated into English. Digested on a New Plan_. 1808.
-%%%%
 battleaxe
 
 A large two-handed war axe with a formidable double-sided head, designed for
 use in battle by skilled warriors.
-%%%%
-battleaxe:quote
-
-“On Carian coins, indeed of quite late date, the labrys, set up on its long
-pillar-like handle, with two dependent fillets, has much the appearance of a
-cult image.”
-    -Sir Arthur John Evans, “Mycenaean tree and pillar cult and its
-     Mediterranean relations,” _Journal of Hellenic Studies_ XXI, p. 109. 1901.
 %%%%
 beef jerky
 
@@ -245,52 +132,9 @@ blowgun
 A long, light tube, open at both ends, through which various types of needles
 are propelled by puffs of breath at enemies. It makes very little noise.
 %%%%
-blowgun:quote
-
-“Along the Upper Caiary-Uaupes blow-guns are made from the stems of a variety
-of palm (Iriartea setigera Martius)... The Indian selects two stems of such
-sizes that the smaller will exactly fit within the larger. After these stems
-have been carefully dried and the pith cleared out with a long rod, the bore is
-made smooth by drawing back and forth through it a little bunch of tree-fern
-roots. The smaller stem is then inserted in the larger, so that one will serve
-to correct any crookedness that may exist in the other. The wooden mouth-piece
-is then fitted to one end, and about three and one half feet from it, a boar's
-tooth is fastened on the gun by some gummy substance, for a sight. Over the
-outside the maker winds spirally a strip of the dark shiny bark of a creeper
-which gives it an ornamental finish, and his blow-gun is complete.
- ”The arrows are from ten to fourteen inches long, and of the thickness of an
-ordinary lucifer match. Those of the Indians of the Caiary-Uaupes are made from
-the midrib of a palm leaf or of the spinous processes of the Patawa (Enocarpus
-Batawa) sharpened to a point at one end and wound near the other with a
-delicate sort of wild cotton which grows in a pod upon a large tree (Bombax
-ceiba). This mass of cotton is just big enough to fill the tube when the arrow
-is gently pressed into it. The point is dipped into poison, allowed to dry, and
-redipped until well coated. The exact composition of this poison is unknown,
-and probably varies in different localities; but it would seem that the chief
-ingredient is always the juice of a Strychnos plant. It is known among
-different tribes by many names; such as Curari, Ourari, Urari and Woorali.”
-    -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
-%%%%
 bolt
 
 A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
-%%%%
-bolt:quote
-
-“In the midst of our last assault, which would have carried the gate sure and
-given us Paris and in effect France, Joan was struck down by a crossbow bolt,
-and our men fell back instantly and almost in a panic — for what were they
-without her? She was the army, herself.”
-    -Mark Twain, _Personal Recollections of Joan of Arc, by the Sieur Louis de
-     Conte_, Book II, chap. 40 “Treachery Conquers Joan”. 1896.
-%%%%
-book:quote
-
-“On leaf of palm, on sedge-wrought roll;
- On plastic clay and leathern scroll,
- Man wrote his thoughts; the ages passed,
- And lo! the Press was found at last!”
-    -John Greenleaf Whittier, _The Library_, st. 4.
 %%%%
 book of air
 
@@ -576,11 +420,6 @@ bow
 A curved piece of wood and string, for shooting arrows. It does good damage in
 combat, and a skilled user can use it to great effect.
 %%%%
-bow:quote
-
-“You are the bows from which your children as living arrows are sent forth.”
-    -Khalil Ghibran, _The Prophet_, “On Children”. 1923.
-%%%%
 box of beasts
 
 A box filled with the bizarre leftovers of a depraved wizard's magical
@@ -591,50 +430,17 @@ bread ration
 
 A filling meal of stale, but hearty, bread.
 %%%%
-bread ration:quote
-
-“It is further reported that in the provinces [Caesar] gave banquets constantly
-in two dining halls, in one of which his officers or Greek companions, in the
-other Roman civilians and the more distinguished of the provincials reclined at
-table. He was so punctilious and strict in the management of his household, in
-small matters as well as in those of greater importance, that he put his baker
-in irons for serving him with one kind of bread and his guests with another...”
-    -Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
-%%%%
 broad axe
 
 A war axe improved with langets, spikes, a lengthed haft and a single-bladed
 crescent head. It can inflict grievous wounds, but is cumbersome to manoeuvre
 with just one hand due to its length and weight.
 %%%%
-broad axe:quote
-
-“Weapon, shapely, naked, wan!
- Head from the mother’s bowels drawn!
- Wooded flesh and metal bone! limb only one, and lip only one!
- Gray-blue leaf by red-heat grown! helve produced from a little seed sown!
- Resting the grass amid and upon,
- To be lean’d, and to lean on.”
-    -Walt Whitman, _Song of the Broad-Axe_, l. 1-6. 1867.
-%%%%
 buckler
 
 A small piece of wood and metal, to be strapped on one arm for defence. It is
 somewhat cumbersome to wear, and, without a little training, slightly slows the
 rate at which a warrior attacks.
-%%%%
-buckler:quote
-
-“Let who will boast their courage in the field,
- I find but little safety from my shield.
- Nature's, not honour's, law we must obey:
- This made me cast my useless shield away,
- And by a prudent flight and cunning save
- A life, which valour could not, from the grave.
- A better buckler I can soon regain;
- But who can get another life again?”
-    -Archilochos. 7th cent. B.C.
-     trans. William H. Goodwin, 1878.
 %%%%
 cap
 
@@ -650,10 +456,6 @@ A suit made entirely out of tiny metal rings. Offering strong protection
 against weapons, claws and carnassials, chain mail hinders quick and stealthy
 movement.
 %%%%
-chain mail:quote
-
-<leather armour:quote>
-%%%%
 cheese
 
 A lump of cheese.
@@ -661,16 +463,6 @@ A lump of cheese.
 choko
 
 An almost tasteless green vegetable, which grows on a vine.
-%%%%
-choko:quote
-
-“I ought not to omit naming a vegetable which Mr Yates placed on our table, and
-to which he directed our attention. It was the Tchu-tchu (Sechium edule) called
-also by the people _pepinella_. It is a small gourd, very much like vegetable
-marrow; one seed covers a wall with its ramifications.”
-    -John Overton Choules, _The Cruise of the Steam Yacht North Star: A
-Narrative of the Excursion of Mr. Vanderbilt’s Party to England, Russia,
-Denmark, France, Spain, Malta, Turkey, Madeira, Etc_. 1854.
 %%%%
 chunk of flesh
 
@@ -680,33 +472,12 @@ cloak
 
 A cloth cloak.
 %%%%
-cloak:quote
-
-“O Bell my wife, why dost thou flyte?
-   Now is now, and then was then:
- Seek now all the world throughout,
-   Thou kens not clowns from gentlemen:
- They are clad in black, green, yellow and blue,
-   So far above their own degree.
- Once in my life I’ll take a view;
-   For I’ll have a new cloak about me.”
-    -Anonymous, “The Old Cloak”. 16th Century.
-%%%%
 club
 
 A heavy piece of wood, with a place to grip on one end and most of its weight
-at the other, making it suitable for swinging or throwing at a foe. While clubs
-are rather primitive weapons, bashing someone's skull in with one remains a
-very popular and effective means of dispute resolution.
-%%%%
-club:quote
-
-“I have always been fond of the West African proverb: 'Speak softly and carry a
-big stick; you will go far.' If I had not carried the big stick, the
-organization would not have gotten behind me, and if I had yelled and
-blustered, as Pankhurst and the similar dishonest lunatics desired, I would not
-have had ten votes.”
-    -Theodore Roosevelt, in a letter to Henry L. Sprague. January 26, 1900.
+at the other, making it suitable for hitting a foe with. While clubs are
+rather primitive weapons, bashing someone's skull in with one remains a very
+popular and effective means of dispute resolution.
 %%%%
 corpse
 
@@ -716,23 +487,6 @@ crossbow
 
 A piece of machinery, used for firing bolts, which takes some time to load and
 fire. It does very good damage in combat.
-%%%%
-crossbow:quote
-
-“(Tell enters with his crossbow)
- W. TELL:
- My precious jewel now, —my chiefest treasure—
- A mark I'll set thee, which the cry of grief
- Could never penetrate,—but thou shalt pierce it,—
- And thou, my trusty bowstring, that so oft
- For sport has served me faithfully and well,
- Desert me not in this dread hour of need,—
- Only be true this once, my own good cord,
- That hast so often wing'd the biting shaft:—
- For shouldst thou fly successless from my hand,
- I have no second to send after thee.”
-    -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
-     trans. Sir Theodore Martin, 1898.
 %%%%
 crystal ball of energy
 
@@ -748,32 +502,13 @@ An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
 dagger
 
-A double-edged fighting knife with a sharp point that can be thrown from afar.
-Seen by some as a weak weapon of last resort, others appreciate it as a perfect
-tool for assassinations.
-%%%%
-dagger:quote
-
-“He drew his dagger, that was sae sharp,
-   That was sae sharp and meet,
- And drave it into the nut-browne bride,
-   That fell deid at his feit.
-
- ‘Now stay for me, dear Annet,’ he sed,
-   ‘Now stay, my dear,’ he cry’d;
- Then strake the dagger untill his heart,
-   And fell deid by her side.”
-    -English traditional ballad, “Lord Thomas and Fair Annet”, circa 1650.
+A double-edged fighting knife with a sharp point. Seen by some as a weak
+weapon of last resort, others appreciate it as a perfect tool for
+assassinations.
 %%%%
 dart
 
 A little, fletched, sharply pointed projectile designed to be thrown by hand.
-%%%%
-dart:quote
-
-“Loving the hand that sent it
- I the dart revere.”
-    -Emily Dickinson. mid 19th cent.
 %%%%
 deck of changes
 
@@ -852,50 +587,17 @@ demon blade
 
 A terrible weapon, forged in the fires of Hell.
 %%%%
-demon blade:quote
-
-“Quemadmodum gladius neminem occidit: occidentis telum est.”
- “A sword by itself does not slay; it is merely the weapon used by the slayer.”
-    -Lucius Annaeus Seneca, _Epistulae Morales ad Lucilium_, Letter LXXXVII:
-     Some arguments in favor of the simple life, l. 30. ca. 65 A.D.
-     trans. Richard Mott Gummere, 1917.
-%%%%
 demon trident
 
 A terrible three-pronged weapon, moulded by fire and brimstone.
-%%%%
-demon trident:quote
-
-“At these words he started up, and beheld—not his Sophia—no, nor a Circassian
-maid richly and elegantly attired for the grand Signior’s seraglio. No; without
-a gown, in a shift that was somewhat of the coarsest, and none of the cleanest,
-bedewed likewise with some odoriferous effluvia, the produce of the day’s
-labour, with a pitchfork in her hand, Molly Seagrim approached.”
-    -Henry Fielding, _The History of Tom Jones, a Foundling_, Book V, ch. X.
-     1749.
 %%%%
 demon whip
 
 A terrible weapon, woven in the depths of the inferno.
 %%%%
-demon whip:quote
-
-“With a terrible cry the Balrog fell forward, and its shadow plunged down and
-vanished. But even as it fell it swung its whip, and the thongs lashed and
-curled about the wizard's knees, dragging him to the brink. He staggered, and
-fell, grasped vainly at the stone, and slid into the abyss.”
-    -J.R.R. Tolkien, _The Fellowship of the Ring_. II, 5, “The Bridge of
-     Khazad-dûm”. 1954.
-%%%%
 dire flail
 
 A spiked flail with longer spikes and a heavier head.
-%%%%
-dire flail:quote
-
-“'Ah! ah! ah!' laughed his two men, 'how the Norman villains will be humbled
-when they see their doughty knight's skull beaten in by our brave countryman.'”
-    -_Tales of Chivalry; or, Perils by Flood and Field_. 1830.
 %%%%
 disc of storms
 
@@ -910,18 +612,6 @@ once suggested the idea of a double-bladed sword to a master forger as a joke,
 but was pleasantly surprised to find that not only was the forger capable of
 making such a sword, but that the weapon produced was extremely deadly.
 %%%%
-double sword:quote
-
-“Oh I won't get up, I won't get up,
- I can't get up for my life
- For you have two long beaten swords
- And I have but a pocket knife.
- Well it's true I have two beaten swords,
- They cost me deep in the purse
- But you will have the better of them
- And I will have the worst.”
-    -English traditional ballad, “Mattie Groves”. ca. 1600.
-%%%%
 eggplant
 
 A rotten eggplant which you can throw at the Crawl developers. (It's a bug if
@@ -933,22 +623,9 @@ A sacred blade from the forges of Heaven, inhabited by a good spirit. It is a
 favoured weapon of the Shining One's servants, and cannot be wielded by the
 forces of evil.
 %%%%
-eudemon blade:quote
-
-<demon blade:quote>
-%%%%
 eveningstar
 
 The opposite of a morningstar.
-%%%%
-eveningstar:quote
-
-“It is said to have been the favourite weapon of the Norman priest, who,
-objecting to the shedding of blood, had no scruple about the dashing out of
-brains.”
-    -T. M. Allison, “The Flail and Kindred Tools (from a historical and
-     literary standpoint)”, _Archaeologia Aeliana_, Third Series, vol. IV.
-     1908.
 %%%%
 executioner's axe
 
@@ -957,37 +634,10 @@ and death, but bears a well-honed blade. The enormous axehead looks quite
 capable of dismembering any victim who falls afoul of it, and you feel
 confident that a single stroke would suffice.
 %%%%
-executioner's axe:quote
-
-“She danced, and was compelled to dance—to dance in the dark night. The shoes
-carried her on over thorn and brier; she scratched herself till she bled; she
-danced away across the heath to a little lonely house. Here she knew the
-executioner dwelt; and she tapped with her fingers on the panes, and
-called,—'Come out, come out! I cannot come in, for I must dance!'
- And the Executioner said,—'You probably don’t know who I am? I cut off the bad
-people’s heads with my axe, and mark how my axe rings!'
- 'Do not strike off my head,' said Karen, 'for if you do I cannot repent of my
-sin. But strike off my feet with the red shoes?'
- And then she confessed all her sin, and the Executioner cut off her feet with
-the red shoes; but the shoes danced away with the little feet over the fields
-and into the deep forest.
- And he cut her a pair of wooden feet, with crutches, and taught her a psalm,
-which the criminals always sing; and she kissed the hand that had held the axe,
-and went away across the heath.”
-    -Hans Christian Andersen, “The Red Shoes”, _Nye Eventyr. Første Bind.
-     Tredie Samling._. 1845.
-%%%%
 falchion
 
 A long single-edged sword with a slightly curved blade, with its weight
 concentrated at the point to increase its lethality.
-%%%%
-falchion:quote
-
-“I have seen the day, with my good biting falchion
- I would have made them skip: I am old now,
- And these same crosses spoil me.”
-    -William Shakespeare, _King Lear_, V, iii. 1608.
 %%%%
 fan of gales
 
@@ -1001,79 +651,28 @@ Armour made from the scales of a fire-breathing dragon. It provides great
 protection from the effects of fire, while rendering its wearer more
 susceptible to the effects of cold.
 %%%%
-fire dragon armour:quote
-
-<steam dragon hide:quote>
-%%%%
 fire dragon hide
 
 The scaly skin of a common true dragon. It can be fashioned into proper armour,
 but even in its raw form it provides great protection from the effects of fire
 while rendering its wearer susceptible to cold.
 %%%%
-fire dragon hide:quote
-
-<steam dragon hide:quote>
-%%%%
 flail
 
 A mace with a short chain connecting the head to the haft. This adds slightly
 more force to the blow at the cost of complicating use.
 %%%%
-flail:quote
-
-“Even after forcing their way, with great effort and loss, through this double
-defense, [the Germans] still found themselves at a disadvantage; for their
-armor scarce enabled them to contend on equal terms with the uncouth but
-formidable weapons of their adversaries. The Bohemians were armed with long
-iron flails, which they swung with prodigious force. They seldom failed to hit,
-and when they did so, the flail crashed through brazen helmet, skull and all.”
-    -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
-     “Jon Huss and the Hussite Wars”. 1878.
-%%%%
 giant club
 
 A giant lump of wood, shaped for an ogre's hands.
-%%%%
-giant club:quote
-
-“Therewith the gyant buckled him to fight,
- Inflamd with scornefull wrath and high disdaine,
- And lifting up his dreadful club on hight,
- All armed with ragged snubbes and knottie graine,
- Him thought at first encounter to have slaine.”
-    -Edmund Spenser, _The Faerie Queene_, Book I, “The Legend of the Knight of
-     the Red Crosse”, Canto VIII, stanza vii, l. 55-9. 1590.
 %%%%
 giant spiked club
 
 A giant lump of wood with sharp spikes at one end.
 %%%%
-giant spiked club:quote
-
- oni-ni-kanabō
- “oni with a spiked iron club”
-    -Japanese proverb indicating overwhelming power
-%%%%
 glaive
 
 A pole with a large, heavy blade on one end.
-%%%%
-glaive:quote
-
-“To know the perfect length of your ſhort ſtaffe, or half Pike, Forreſt bil,
-Partiſan or Gleue, or ſuch like weapons of vantage and perfect lenghts, you
-ſhall ſtand vpright, holding the ſtaffe vpright cloſe by your body, with your
-left hãd, reaching with your right hand your ſtaffe as high as you can, and
-then allow to that length a ſpace to ſet both your hands, when you come to
-fight, wherein you may conueniently ſtrike, thrust and ward, & that is the iuſt
-length according to you ſtature. And this note, that theſe lengths will
-commonly fall out to be eight or nine foor long, and will fit, although not
-iuſt, the ſtatures of all men, without any hindrance at all vnto them in their
-fight, becauſe in any weapon wherin the hands may be remoued, and at libertie,
-to make the weapon lõger or ſhorter in fight at his pleaſure, a foot of the
-ſtaffe behind the backmost hand doth no harme.”
-    -George Silver,_Paradoxes of Defence_.1599.
 %%%%
 gold dragon armour
 
@@ -1081,33 +680,15 @@ Armour made from the scales of a gold dragon. It is much heavier than most
 dragon scale armours, and grants its wearer resistance to poison, fire and
 cold.
 %%%%
-gold dragon armour:quote
-
-<steam dragon hide:quote>
-%%%%
 gold dragon hide
 
 The hide of a gold dragon, covered in extremely hard golden scales. In its raw
 form it does not provide much protection beyond resistance to poison, fire and
 cold, but with magical means it may be used to make excellent armour.
 %%%%
-gold dragon hide:quote
-
-<steam dragon hide:quote>
-%%%%
 gold piece
 
 A pile of glittering gold coins.
-%%%%
-gold piece:quote
-
-“Here it was that the ambassadors of the Samnites, finding him boiling turnips
-in the chimney corner, offered him a present of gold; but he sent them away
-with this saying; that he, who was content with such a supper, had no need of
-gold; and that he thought it more honourable to conquer those who possessed the
-gold, than to possess the gold itself.”
-    -Plutarch, “Marcus Cato”, _Lives_. 75 AD.
-    trans. John Dryden, 1683.
 %%%%
 grand grimoire
 
@@ -1126,22 +707,11 @@ great mace
 
 An enormous metal war club, of great cumbrousness.
 %%%%
-great mace:quote
-
-“There will arise one named Feridoun, who shall inherit thy throne
- and reverse thy fortunes, and strike thee down with a cow-headed mace.”
-    -Firdausi, _Shahnameh_. ca. 1000 A.D.
-     trans. Helen Zimmern, 1883.
-%%%%
 great sword
 
 A massive, straight, double-edged blade with a long hilt and heavy pommel. It
 has the potential to inflict devastating wounds, but must be wielded with both
 hands.
-%%%%
-great sword:quote
-
-<demon blade:quote>
 %%%%
 halberd
 
@@ -1150,44 +720,17 @@ shaft reinforced with metal rims to block other weapons like swords. Topped
 with a spike and a thorn on the back side of the axe blade, this weapon can be
 very dangeous in trained hands.
 %%%%
-halberd:quote
-
-“And Diarmid oh, Diarmid he perished in the strife;
- His head it was spiked upon a halberd high;
- His colours they were trampled: he had no chance of life
- If the Lord God Himself stood by!—
-  Och, ochone!”
-    -James Clarence Mangan , _A Farewell to Patrick Sarsfield, Earl of Lucan_.
-     ca. 1840.
-%%%%
 hammer
 
 Consisting of a spiked hammerhead on a medium haft reinforced by langets, this
 blunt weapon can deliver significant striking force and even pierce through
 armour.
 %%%%
-hammer:quote
-
-“The hammah that John Henry swung,
- It weighed over nine poun',
- He broke a rib in his left han' side,
- And his intrels fell on the groun',
- And his intrels fell on the groun'.”
-    -Onah L. Spencer, _John Henry_. Early 20th cent.
-%%%%
 hand axe
 
-A tool for rending apart the fibres of wood, or flesh. Small and crafted for
-fast, precise handling, it is also balanced such that it can be thrown if
-necessary.
-%%%%
-hand axe:quote
-
-“Lizzie Borden took an axe
- And gave her mother forty whacks.
- When she saw what she had done
- She gave her father forty-one.”
-    -A popular skipping-rope rhyme, after 1893.
+A tool for rending apart the fibres of wood, or flesh. It might be enough if
+you care primarily for the weapon's weight, but for a proper rampage, you
+want something bigger.
 %%%%
 helmet
 
@@ -1203,38 +746,17 @@ The horn belonging to Geryon, guardian of the Vestibule of Hell. Legends say
 that a mortal who desires access into one of the Hells must use it in order to
 gain entry.
 %%%%
-horn of Geryon:quote
-
-‘So Joshua called together the priests and said, “Take up the Ark of the Lord’s
-Covenant, and assign seven priests to walk in front of it, each carrying a
-ram’s horn.’
-
-‘When the people heard the sound of the rams’ horns, they shouted as loud as
-they could. Suddenly, the walls of Jericho collapsed, and the Israelites
-charged straight into the town and captured it. They completely destroyed
-everything in it with their swords—men and women, young and old, cattle, sheep,
-goats, and donkeys.’
-    -Joshua 6:6,20-21, New Living Translation
-%%%%
 ice dragon armour
 
 Armour made from the scales of a cold-breathing dragon. It provides great
 protection from the effects of cold while rendering its wearer more susceptible
 to the effects of fire and heat.
 %%%%
-ice dragon armour:quote
-
-<steam dragon hide:quote>
-%%%%
 ice dragon hide
 
 The scaly skin of a cold-breathing dragon. It can be fashioned into proper
 armour, but even in its raw form it provides great protection from the effects
 of cold while rendering its wearer susceptible to fire.
-%%%%
-ice dragon hide:quote
-
-<steam dragon hide:quote>
 %%%%
 javelin
 
@@ -1250,25 +772,10 @@ This lightweight spear is designed for throwing and can cause serious injury.
     end
 }}
 %%%%
-javelin:quote
-
-“Suppose you found your brother in bed with your wife, and put a javelin
-through both of them, you would be justified, and they would atone for their
-sins, and be received into the kingdom of God.”
-    -Brigham Young, _Journal of Discourses_, 3:247. 1856.
-%%%%
 lajatang
 
 A very rare and extremely effective imported weapon, featuring a pole with
 half-moon blades at both ends.
-%%%%
-lajatang:quote
-
-“A weapon that comes down as still
- As snowflakes fall upon the sod;
- But executes a freeman’s will,
- As lightning does the will of God.”
-    -John Pierpont, “The Ballot”. ca. 1850.
 %%%%
 lamp of fire
 
@@ -1293,13 +800,6 @@ A very large and very heavy stone. {{
    end
 }}
 %%%%
-large rock:quote
-
-“Well, I run to the rock and I hide my face
- The rock cried out, No hiding place
- There's no hiding place down here.”
-    -Negro spiritual. 19th cent.
-%%%%
 large shield
 
 A large piece of wood and metal, to be strapped on one arm for defence. {{
@@ -1315,21 +815,11 @@ A large piece of wood and metal, to be strapped on one arm for defence. {{
     end
 }}
 %%%%
-large shield:quote
-
-<buckler:quote>
-%%%%
 leather armour
 
 A suit made from layers of tanned animal hide, this light armour provides basic
 protection with almost no hindrance to elaborate gestures or swift, stealthy
 movement.
-%%%%
-leather armour:quote
-
-“Nought can Deform the Human race
- Like to the Armours iron brace”
-    -William Blake, “Auguries of Innocence”, 99-100. 1803.
 %%%%
 lemon
 
@@ -1350,72 +840,23 @@ A straight, double-edged blade of medium size, with a sturdy hilt and pommel.
 This noble weapon combines accurate manoeuvrability with deadly force, and is
 quite powerful in the hand of one trained in its use.
 %%%%
-long sword:quote
-
-“While we were at grips with this great army and their dreadful broadswords
-(maquahuitl [made of obsidian]), many of the most powerful among the enemy seem
-to have decided to capture a horse. They began with a furious attack, and laid
-hands on a good mare well trained both for sport and battle. Her rider, Pedro
-de Moron, was a fine horseman; and as he charged with three other horsemen into
-the enemy ranks—they had been instructed to charge together for mutual
-support—some of them seized his lance so he could not use it, and others
-slashed at him with their broadswords (maquahuitl), wounding him severely. Then
-they slashed at his mare, cutting her head at the neck so that it only hung by
-the skin. The mare fell dead, and if his mounted comrades had not come to
-Moron's rescue, he would probably have been killed also.”
-    -Bernal Díaz del Castillo, _The Conquest of New Spain_. 1623.
-     trans. J.M.Cohen, 1963.
-%%%%
 longbow
 
 A long, strong bow made of yew. It does excellent damage in combat and a
 skilled archer can use it to great effect.
 %%%%
-longbow:quote
-
-“Robyn bent a full goode bowe,
- An arrowe he drowe at wyll;
- He hit so the proud sherife
- Upon the grounde he lay full still.”
-    -_A Gest of Robyn Hode_ Sixth Fytte, l. 120-123. ca. 1450.
-%%%%
 lychee
 
 A tropical fruit.
-%%%%
-lychee:quote
-
-“The Litchi is the most celebrated native fruit of China. It is nearly round,
-about an inch and a half in diameter, the shell is tough, becoming brittle, of
-a chocolate brown colour covered all over with wart-like protuberances. When
-fresh it is filled with a white almost transparent, sweet, jelly-like pulp in
-which lies a rather large, shining, brown seed; the pulp is of a delicious
-sub-acid flavour when fresh. The Chinese dry it when it becomes black like a
-prune and thus preserve it for use throughout the year; in this state it is
-frequently to be seen in the London fruit shops.”
-    -John Smith, _A Dictionary of Popular Names of the Plants which Furnish the
-Natural and Acquired Wants of Man, in All Matters of Domestic and General
-Economy: Their History, Products, & Uses_. 1882.
 %%%%
 mace
 
 A short metal spiked military club. This effective instrument dents armour and
 breaks bones through blunt force.
 %%%%
-mace:quote
-
-“[My plan] does not propose to fill your lobby with squabbling colony agents,
-who will require the interposition of your mace at every instant to keep the
-peace among them.”
-    -Edmund Burke, “On Conciliation with America”, speech in Parliament. 1775.
-%%%%
 manual
 
 A valuable book which allows one to practise a certain skill more efficiently.
-%%%%
-manual:quote
-
-<book:quote>
 %%%%
 meat ration
 
@@ -1427,18 +868,6 @@ A mace with with a head covered in short spikes. Trading increased force for
 only slightly reduced manoeuvrability, this weapon can be deadly in the hands
 of a well-trained combatant.
 %%%%
-morningstar:quote
-
-“Little did then his pomp of plumes bestead
- The Azteca, or glittering pride of gold.
- Against the tempered sword; little his casque,
- Cay with its feathery coronal, or drest
- In graven terrors, when the Briton's hand
- Drove in through helm and head the spiked mace;
- Or swung its iron weights with shattering sway.
- Which, where they fell, destroyed.”
-    -Robert Southey, _Madoc_. 1805.
-%%%%
 mottled dragon armour
 
 Armour made from the scales of a mottled dragon. Although it does not provide
@@ -1446,19 +875,11 @@ its wearer with much protection, unlike the armour made from the scales of some
 larger dragons, it is as light and relatively uncumbersome as leather armour.
 It is also remarkably smooth, letting sticky flames flow down like water.
 %%%%
-mottled dragon armour:quote
-
-<steam dragon hide:quote>
-%%%%
 mottled dragon hide
 
 The weirdly-patterned scaly skin of a mottled dragon. It may be turned into
 proper armour by magical means. Its smooth surface does not let sticky flames
 attach.
-%%%%
-mottled dragon hide:quote
-
-<steam dragon hide:quote>
 %%%%
 naga barding
 
@@ -1477,29 +898,9 @@ A thin piece of metal, typically coated in some harmful substance. When
 launched from a blowgun it can be deadly, delivering its toxins into the
 bloodstream of a living or demonic being.
 %%%%
-needle:quote
-
-“I pray that, risen from the dead,
- I may in glory stand—
- A crown, perhaps, upon my head,
- But a needle in my hand.”
-    -Eugene Field, “Grandma's Prayer”. late 19th cent.
-%%%%
 orange
 
 A delicious, juicy orange fruit.
-%%%%
-orange:quote
-
-“Conserve of Orange Peel
-
-HAVING grated the rinds of some Seville oranges as thin as you can, weigh them,
-and to every pound of orange rind add three pounds of loaf sugar. Pound the
-orange rind well in a marble mortar, mix the sugar by degrees with them and
-beat all well together. Put it into gallipots and tie it down so as properly to
-prevent the air getting to it.”
-    -Francis Collingwood, John Woollams, _The Universal Cook: And City and
-Country Housekeeper._ 1792.
 %%%%
 orb of zot
 
@@ -1531,38 +932,17 @@ pearl dragon armour
 Armour made from the nacreous scales of a pearl dragon. It grants its wearer
 resistance to negative energies.
 %%%%
-pearl dragon armour:quote
-
-<steam dragon hide:quote>
-%%%%
 pearl dragon hide
 
 The hide of a pearl dragon, covered in iridescent nacreous scales. In its raw
 form it does not provide much protection, but by magical means it may be used
 to make excellent armour.
 %%%%
-pearl dragon hide:quote
-
-<steam dragon hide:quote>
-%%%%
 phial of floods
 
 An enchanted vessel brimming over with elemental water. Removing the stopper
 unleashes a torrent of water from the phial and sets free the water spirits
 that dwell within it.
-%%%%
-pie
-
-A custard pie. It appears anachronistically dangerous.
-%%%%
-pie:quote
-
-“And from that moment on I could not banish Oedipus's terrible end from my
- mind: putting his own eyes out with a pin after hearing those fateful words
- that Tiresias had uttered and being present when his mother hanged herself.”
-    -- Fernando Vidal Olmos, Report on the Blind
-    Ernesto Sabato, On Heroes and Tombs,
-    Translated by Helen R. Lane
 %%%%
 piece of ambrosia
 
@@ -1671,11 +1051,6 @@ potion of poison
 
 A nasty poisonous liquid.
 %%%%
-potion of poison:quote
-
-“‘poison’ is a harsh word. I prefer ‘potion of shut the hell up’”
-    -Oglaf, bowdlerized
-%%%%
 potion of porridge
 
 A filling potion of sludge, high in cereal fibre.
@@ -1701,10 +1076,6 @@ potion of strong poison
 
 A terribly venomous potion.
 %%%%
-potion of strong poison:quote
-
-<potion of poison:quote>
-%%%%
 potion of beneficial mutation
 
 A potion which gives you a supposedly good mutation.
@@ -1719,34 +1090,6 @@ quarterstaff
 
 A sturdy wooden pole, meant for fighting.
 %%%%
-quarterstaff:quote
-
-“Then Robin he unbuckled his belt,
- And laid down his bow so long;
- He took up a staff of another oak graff,
- That was both stiff and strong.
- 'But let me measure,' said jolly Robin,
- 'Before we begin our fray;
- For I'll not have mine to be longer than thine,
- For that will be counted foul play.'
- 'I pass not for length,' bold Arthur replied,
- 'My staff is of oak so free;
- Eight foot and a half it will knock down a calf,
- And I hope it will knock down thee.'
- Then Robin could no longer forbear,
- He gave him such a knock,
- Quickly and soon the blood came down,
- Before it was ten o'clock.
- About and about and about they went,
- Like two wild boars in a chase,
- Striving to aim each other to maim,
- Leg, arm, or any other place.
- And knock for knock they hastily dealt,
- Which held for two hours and more;
- That all the wood rang at every bang,
- They plied their work so sore.”
-    -Anonymous, “Robin Hood and the Tanner”.
-%%%%
 quick blade
 
 This carefully wrought short sword is preternaturally well-balanced, making it
@@ -1754,143 +1097,66 @@ much easier for even inexperienced handlers to attack with it quickly. Not many
 swordsmiths have the requisite skill to make one, so they are only produced in
 small numbers, and are difficult to find.
 %%%%
-quick blade:quote
-
-“He hath loosed the fateful lightning of His terrible swift sword...”
-    -Julia Ward Howe, “The Battle Hymn of the Republic”. 1861.
-%%%%
 rambutan
 
 A small but delicious tropical fruit. How it got into this dungeon is anyone's
 guess.
-%%%%
-rambutan:quote
-
-“The rambutan (_nephelium lappaceum_) is a beautiful fruit to which I have
-already alluded, as resembling the mammoth arbutus; and you suppose them at
-first, when at a little distance from you, a delicious dish of some tropical
-strawberry. But you find on inquiring into the ‘particulars within’ the outer
-coat, that there is concealed beneath the red and hairy covering a
-semi-transparent pulp of a pleasant acid taste, enveloping a single oval and
-oblong seed. I know not but I am peculiar in my memory of the beautiful fruits
-of the straits, but none lingers in my recollection so sweetly in its clustered
-beauties of the fruit-dish as the bearded and rosy rambutan.”
-    -Fitch Waterman Taylor, _A Voyage Round the World And Visits to Various
-Foreign Countries, in the United States Frigate Columbia_. 1847.
 %%%%
 ring mail
 
 A light leather suit reinforced with a covering of metal rings. Protective in
 combat, but slightly uncomfortable due to the added weight.
 %%%%
-ring mail:quote
-
-<leather armour:quote>
-%%%%
 ring of dexterity
 
 This ring increases or decreases the dexterity of its wearer, depending on the
 degree to which it has been enchanted.
-%%%%
-ring of dexterity:quote
-
-<ring:quote>
 %%%%
 ring of evasion
 
 This ring makes its wearer either more or less capable of avoiding attacks,
 depending on its degree of enchantment.
 %%%%
-ring of evasion:quote
-
-<ring:quote>
-%%%%
 ring of fire
 
 This ring brings its wearer more in contact with the powers of fire. He or she
 gains resistance to heat and can use fire magic more effectively, but becomes
-more vulnerable to the effects of cold.
-%%%%
-ring of fire:quote
-
-“Love is a burning thing
- And it makes a fiery ring”
-    -June Carter, Merle Kilgore, “Ring of Fire”. 1963.
+less effective at the use of ice magic and more vulnerable to the effects of
+cold.
 %%%%
 ring of hunger
 
 This accursed ring causes its wearer to hunger considerably more quickly.
 %%%%
-ring of hunger:quote
-
-<ring:quote>
-%%%%
 ring of ice
 
 This ring brings its wearer more in contact with the powers of cold and ice. He
 or she gains resistance to cold and can use ice magic more effectively, but
-becomes more vulnerable to the effects of fire.
-%%%%
-ring of ice:quote
-
-“Some say the world will end in fire;
- Some say in ice.
- From what I've tasted of desire
- I hold with those who favor fire.
- But if it had to perish twice,
- I think I know enough of hate
- To say that for destruction ice
- Is also great
- And would suffice.”
-    -Robert Frost, “Fire and Ice”. 1920.
+becomes less effective at the use of fire magic and more vulnerable to the
+effects of fire.
 %%%%
 ring of intelligence
 
 This ring increases or decreases the mental ability of its wearer, depending on
 the degree to which it has been enchanted.
 %%%%
-ring of intelligence:quote
-
-<ring:quote>
-%%%%
 ring of invisibility
 
 This powerful ring can be activated to hide its wearer from the view of others,
 but increases the speed of his or her metabolism greatly while doing so.
-%%%%
-ring of invisibility:quote
-
-“With yells of delight the goblins rushed upon him. A pang of fear and loss,
-like an echo of Gollum's misery, smote Bilbo, and forgetting even to draw his
-sword he struck his hands into his pockets. And — there was the ring still, in
-his left pocket, and it slipped on his finger. The goblins stopped short. They
-could not see a sign of him. He had vanished.”
-    -J.R.R. Tolkien, _The Hobbit, or There and Back Again_. 1937.
 %%%%
 ring of flight
 
 This ring allows its wearer to fly. The ring's power cannot be evoked while
 airborne, so it's ill-suited for longer trips above deadly liquid.
 %%%%
-ring of flight:quote
-
-<ring:quote>
-%%%%
 ring of magical power
 
 This ring increases its wearer's reserves of magical power.
 %%%%
-ring of magical power:quote
-
-<ring:quote>
-%%%%
 ring of poison resistance
 
 This ring provides protection from the effects of poisons and venom.
-%%%%
-ring of poison resistance:quote
-
-<ring:quote>
 %%%%
 ring of positive energy
 
@@ -1898,96 +1164,50 @@ This blessed ring protects the life-force of its wearer from negative energy,
 making them partially immune to the draining effects of undead and necromantic
 magic.
 %%%%
-ring of positive energy:quote
-
-<ring:quote>
-%%%%
 ring of protection
 
 This ring either protects its wearer from harm or makes them more vulnerable to
 injury, to a degree dependent on its power.
 %%%%
-ring of protection:quote
-
-<ring:quote>
-%%%%
 ring of protection from cold
 
 This ring provides protection from cold.
-%%%%
-ring of protection from cold:quote
-
-<ring:quote>
 %%%%
 ring of protection from fire
 
 This ring provides protection from heat and fire.
 %%%%
-ring of protection from fire:quote
-
-<ring:quote>
-%%%%
 ring of protection from magic
 
 This ring increases its wearer's resistance to hostile enchantments.
-%%%%
-ring of protection from magic:quote
-
-<ring:quote>
 %%%%
 ring of regeneration
 
 This wonderful ring greatly increases the recuperative powers of its wearer,
 but also considerably speeds his or her metabolism while doing so.
 %%%%
-ring of regeneration:quote
-
-<ring:quote>
-%%%%
 ring of see invisible
 
 This ring allows its wearer to see those things hidden from view by magic.
-%%%%
-ring of see invisible:quote
-
-“Here is my secret. It is very simple: It is only with the heart that one can
-see rightly; what is essential is invisible to the eye.”
-    -Antoine de Saint Exupéry, _The Little Prince_. 1943.
 %%%%
 ring of slaying
 
 This ring increases or decreases the melee and ranged combat skills of its
 wearer.
 %%%%
-ring of slaying:quote
-
-<ring:quote>
-%%%%
 ring of strength
 
 This ring increases or decreases the physical strength of its wearer, to a
 degree dependent on its power.
-%%%%
-ring of strength:quote
-
-<ring:quote>
 %%%%
 ring of sustain abilities
 
 This ring protects its wearer from the loss of their strength, dexterity and
 intelligence.
 %%%%
-ring of sustain abilities:quote
-
-<ring:quote>
-%%%%
 ring of sustenance
 
 This ring provides energy to its wearer, so that they need eat less often.
-%%%%
-ring of sustenance:quote
-
-<ring:quote>
 %%%%
 ring of teleport control
 
@@ -1998,26 +1218,14 @@ normal teleportation. Also be wary that controlled translocations will
 contaminate the subject with residual magical energy, and that controlled
 teleports will take longer to trigger than uncontrolled ones.
 %%%%
-ring of teleport control:quote
-
-<ring:quote>
-%%%%
 ring of teleportation
 
 This ring occasionally exerts its power to randomly translocate its wearer to
 another place, and can be deliberately activated for the same effect.
 %%%%
-ring of teleportation:quote
-
-<ring:quote>
-%%%%
 ring of wizardry
 
 This ring increases the ability of its wearer to use magical spells.
-%%%%
-ring of wizardry:quote
-
-<ring:quote>
 %%%%
 robe
 
@@ -2026,12 +1234,6 @@ easily adjust to fit humanoid bodies of any size. Habiliments of this sort
 offer only a little protection against physical harm, but their generous cut
 does not hinder evasion from attack or the proper performance of thaumaturgical
 gestures.
-%%%%
-robe:quote
-
-“CLEOPATRA: Give me my robe, put on my crown; I have
- Immortal longings in me”
-    -William Shakespeare, _Anthony & Cleopatra_, V, ii. ca. 1605.
 %%%%
 rod of demonology
 
@@ -2061,12 +1263,6 @@ This rod is designed for melee combat, releasing its charges to deal additional
 damage dependent on evocations skill when it strikes a foe. Maces & Flails
 skill will help improve your basic effectiveness with the weapon.
 %%%%
-rod of striking:quote
-
-“He that spares his rod hates his son: but he that loves him chastens him
- early.”
-    -King James 2000 Bible, Proverbs 13:24
-%%%%
 rod of the swarm
 
 This rod allows its wielder to summon a swarm of insects.
@@ -2094,13 +1290,6 @@ Though originally designed to slash from a mounted position, this single-edged,
 slightly-curved short sword still works very well in the hands of unmounted
 warriors.
 %%%%
-sabre:quote
-
-“Who was the first that forged the deadly blade?
- Of rugged steel his savage soul was made...”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
-     trans. James Grainger, 1822.
-%%%%
 sack of spiders
 
 A woven silk bag. Something appears to be moving inside...
@@ -2124,33 +1313,10 @@ A leather suit covered with metal plates attached to each other in overlapping
 rows to provide full protection, but at the cost of reduced freedom of
 movement.
 %%%%
-scale mail:quote
-
-<leather armour:quote>
-%%%%
 scimitar
 
 A long sabre. Its wide, curved blade increases the damage it deals, but also
 makes it a little bit harder to handle accurately.
-%%%%
-scimitar:quote
-
-“The museum-cabinet and huge library arrogated to themselves the entire lower
-floor — there were the controversial and incompatible books that are somehow
-the history of the nineteenth century; there were scimitars from Nishapur, in
-whose frozen crescents the wind and violence of battle seemed to be living on.”
-    -Jorge Luis Borges, _The Form of the Sword_. 1953.
-     trans. Andrew Hurley.
-%%%%
-scroll:quote
-
-“To drift with every passion till my soul
- Is a stringed lute on which all winds can play,
- Is it for this that I have given away
- Mine ancient wisdom, and austere control?
- Methinks my life is a twice-written scroll
- Scrawled over on some boyish holiday.”
-    -Oscar Wilde, _Helas_. 1881.
 %%%%
 scroll of acquirement
 
@@ -2159,18 +1325,10 @@ choosing the type of item to be created. Items produced are heavily biased
 towards something fitting the reader's skills, and also towards gear that
 hasn't been seen yet, but, alas, nothing is guaranteed.
 %%%%
-scroll of acquirement:quote
-
-<scroll:quote>
-%%%%
 scroll of amnesia
 
 This scroll allows its reader to selectively erase one spell from memory to
 recapture the magical energy bound up with it.
-%%%%
-scroll of amnesia:quote
-
-<scroll:quote>
 %%%%
 scroll of blinking
 
@@ -2178,33 +1336,17 @@ This scroll allows its reader to teleport a short distance, with precise
 control. Be wary that controlled teleports will cause the subject to become
 contaminated with magical energy.
 %%%%
-scroll of blinking:quote
-
-<scroll:quote>
-%%%%
 scroll of curse armour
 
 This scroll places a curse on a worn piece of armour.
-%%%%
-scroll of curse armour:quote
-
-<scroll:quote>
 %%%%
 scroll of curse jewellery
 
 This scroll places a curse on an equipped amulet or a ring.
 %%%%
-scroll of curse jewellery:quote
-
-<scroll:quote>
-%%%%
 scroll of curse weapon
 
 This scroll places a curse on a wielded weapon.
-%%%%
-scroll of curse weapon:quote
-
-<scroll:quote>
 %%%%
 scroll of enchant armour
 
@@ -2215,20 +1357,12 @@ AC.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
-scroll of enchant armour:quote
-
-<scroll:quote>
-%%%%
 scroll of enchant weapon i
 
 This scroll places an enchantment on the wielded weapon, making it more
 accurate in combat. It becomes increasingly less likely to succeed when used on
 highly enchanted weapons, and can only ever enchant them up to +9. Magical
 artefacts cannot be enchanted at all.
-%%%%
-scroll of enchant weapon i:quote
-
-<scroll:quote>
 %%%%
 scroll of enchant weapon ii
 
@@ -2237,10 +1371,6 @@ greater damage in combat. It becomes increasingly less likely to succeed when
 used on highly enchanted weapons, and can only ever enchant them up to +9.
 Magical artefacts cannot be enchanted at all.
 %%%%
-scroll of enchant weapon ii:quote
-
-<scroll:quote>
-%%%%
 scroll of enchant weapon iii
 
 This scroll enchants the wielded weapon to be far more effective in combat,
@@ -2248,34 +1378,18 @@ increasing both accuracy and damage. It becomes increasingly less likely to
 succeed when used on highly enchanted weapons, and can only ever enchant them
 up to +9. Magical artefacts cannot be enchanted at all.
 %%%%
-scroll of enchant weapon iii:quote
-
-<scroll:quote>
-%%%%
 scroll of fear
 
 This scroll causes great fear in those who see the one who reads it.
-%%%%
-scroll of fear:quote
-
-<scroll:quote>
 %%%%
 scroll of fog
 
 This scroll surrounds the reader with a dense cloud of fog.
 %%%%
-scroll of fog:quote
-
-<scroll:quote>
-%%%%
 scroll of holy word
 
 This scroll calls on the powers of Heaven to cause great damage to any nearby
 unholy creature — including you!
-%%%%
-scroll of holy word:quote
-
-<scroll:quote>
 %%%%
 scroll of identify
 
@@ -2284,44 +1398,24 @@ and will occasionally allow multiple identifications.
 
 If used on a deck of cards, this scroll will also give away the top card.
 %%%%
-scroll of identify:quote
-
-<scroll:quote>
-%%%%
 scroll of immolation
 
 This scroll fills the creatures around the reader with an unstable and powerful
 inner flame.
 %%%%
-scroll of immolation:quote
-
-<scroll:quote>
-%%%%
 scroll of magic mapping
 
 This scroll reveals the surroundings of the one who reads it.
-%%%%
-scroll of magic mapping:quote
-
-<scroll:quote>
 %%%%
 scroll of noise
 
 This prank scroll, often slipped into a wizard's backpack by a devious
 apprentice, causes a loud noise. It is not otherwise noted for its usefulness.
 %%%%
-scroll of noise:quote
-
-<scroll:quote>
-%%%%
 scroll of random uselessness
 
 It is easy to be blinded to the essential uselessness of this scroll by the
 sense of achievement you get from getting it to work at all.
-%%%%
-scroll of random uselessness:quote
-
-<scroll:quote>
 %%%%
 scroll of recharging
 
@@ -2330,35 +1424,19 @@ reader. When used on a rod, it also increases the size of the rod's power
 storage, increases the rate at which it regenerates power, and even improves
 its melee combat qualities.
 %%%%
-scroll of recharging:quote
-
-<scroll:quote>
-%%%%
 scroll of remove curse
 
 Reading this scroll removes curses from the items you are using.
-%%%%
-scroll of remove curse:quote
-
-<scroll:quote>
 %%%%
 scroll of summoning
 
 This scroll calls forth several creatures woven from shadow into the shapes of
 those beings found within the reader's immediate vicinity.
 %%%%
-scroll of summoning:quote
-
-<scroll:quote>
-%%%%
 scroll of teleportation
 
 Reading the words on this scroll translocates you to a random position after a
 short delay.
-%%%%
-scroll of teleportation:quote
-
-<scroll:quote>
 %%%%
 scroll of torment
 
@@ -2366,11 +1444,7 @@ This scroll calls on the powers of darkness to inflict great pain on any nearby
 creature — including you! This halves the resilience of all living creatures,
 although is never directly fatal.
 %%%%
-scroll of torment:quote
-
-<scroll:quote>
-%%%%
-scroll of vorpalise weapon
+scroll of brand weapon
 
 This scroll enchants a chosen weapon so as to make it far more effective at
 inflicting harm on its wielder's enemies. The scroll can make permanent the
@@ -2381,20 +1455,12 @@ Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
 the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
 let such an opportunity for fun go to waste.
 %%%%
-scroll of vorpalise weapon:quote
-
-<scroll:quote>
-%%%%
 scroll of vulnerability
 
 This scroll cancels all magical enchantments from the reader and from beings in
 the vicinity. Also, the magical resistances of the reader and nearby beings are
 halved for a short duration. The latter effect does not apply to beings fully
 immune to magic.
-%%%%
-scroll of vulnerability:quote
-
-<scroll:quote>
 %%%%
 scroll of silence
 
@@ -2411,22 +1477,9 @@ times out.
 Note that demons do not need sound to cast spells; certain necromantic fixtures
 have this property as well.
 %%%%
-scroll of silence:quote
-
-<scroll:quote>
-%%%%
 scythe
 
 A farm implement, usually only used by untrained mobs in combat.
-%%%%
-scythe:quote
-
-“It was instinct. Illogical as lightning striking and not hurting. Each day the
-grain must be cut. It had to be cut. Why? Well, it just did, that was all. He
-laughed at the scythe in his big hands. Then, whistling, he took it out to the
-ripe and waiting field and did the work. He thought himself a little mad. Hell,
-it was an ordinary-enough wheat field, really, wasn't it?”
-    -Ray Bradbury, _The Scythe_. 1943.
 %%%%
 shield
 
@@ -2434,22 +1487,11 @@ A piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and, without training, slows the rate at which a warrior
 attacks.
 %%%%
-shield:quote
-
-<buckler:quote>
-%%%%
 short sword
 
 A small, double-edged blade with a short grip. Robust and easy to handle, this
 weapon is often found in the hands of those who wish to stab their foes
 unaware.
-%%%%
-short sword:quote
-
-“Who was the first that forged the deadly blade?
- Of rugged steel his savage soul was made”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
-     trans. James Grainger, 1822.
 %%%%
 decaying skeleton
 
@@ -2460,35 +1502,16 @@ slice of pizza
 A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and
 basil.
 %%%%
-slice of pizza:quote
-
-“When the moon hits your eye like a big pizza pie, that’s amore.”
-    -Jack Brooks, “That’s Amore”. 1952.
-%%%%
 sling
 
 A piece of cloth and leather for launching stones, which do a small amount of
 damage on impact. Unlike with other launchers, wearing a shield does not slow
 down its rate of fire.
 %%%%
-sling:quote
-
-“And David put his hand in his bag, and took thence a stone, and slang it, and
-smote the Philistine in his forehead, that the stone sunk into his forehead;
-and he fell upon his face to the earth.”
-    -KJV Bible, Sam 17:49.
-%%%%
 sling bullet
 
 A small, heavy projectile specially shaped for use with slings. It is more
 effective as ammunition than simple stones.
-%%%%
-sling bullet:quote
-
-“For when things are once come to the execution, there is no secrecy comparable
-to celerity; like the motion of a bullet in the air, which flieth so swift as
-it outruns the eye.”
-    -Francis Bacon, _Essays_, “Of Delays”. 1625.
 %%%%
 snozzcumber
 
@@ -2498,43 +1521,25 @@ spear
 
 A hunting weapon consisting of a balanced wooden shaft with a pointed metal
 head fastened on one end. Shorter than other polearms, it can be wielded with
-one or two hands and is also light enough to be thrown.
-%%%%
-spear:quote
-
-“The halberd is inferior to the spear on the battlefield. With the spear you
-can take the initiative; the halberd is defensive. In the hands of one of two
-men of equal ability, the spear gives a little extra strength.”
-    -Miyamoto Musashi, _The Book of Five Rings_. 1645.
+one or two hands.
 %%%%
 staff of air
 
-This staff increases the power of air spells cast by its wielder, and insulates
-him or her from electricity. If the wielder is skilled in both evocations and
-air magic, they can shock those struck by it.
-%%%%
-staff of air:quote
-
-<staff:quote>
+This staff increases the power of air spells cast by its wielder, but decreases
+that of earth spells. It insulates him or her from electricity. If the wielder
+is skilled in evocations, they can shock those struck by it, dealing even
+greater damage if they are also skilled in air magic.
 %%%%
 staff of cold
 
-This staff increases the power of ice spells cast by its wielder, and protects
-him or her from the effects of cold. If the wielder is skilled in evocations,
-they can freeze those struck by it, dealing even greater damage if they are
-also skilled in ice magic.
-%%%%
-staff of cold:quote
-
-<staff:quote>
+This staff increases the power of ice spells cast by its wielder, but decreases
+that of fire spells. It protects him or her from the effects of ice and cold.
+If the wielder is skilled in evocations, they can freeze those struck by it,
+dealing even greater damage if they are also skilled in ice magic.
 %%%%
 staff of conjuration
 
 This staff increases the power of conjurations cast by its wielder.
-%%%%
-staff of conjuration:quote
-
-<staff:quote>
 %%%%
 staff of death
 
@@ -2543,36 +1548,12 @@ protects him or her from negative energy. If the wielder is skilled in both
 evocations and necromancy, they can inflict great pain on those living souls
 they strike.
 %%%%
-staff of death:quote
-
-“'I am Aed Abaid of Ess Rúaid, that is, the good god of wizardry of the Tuatha
-Dé Danann, and the Rúad Rofhessa, and Eochaid Ollathair are my three names.’
- And thus he was, with Cermait Milbél, one of his sons, on his back, who had
-fallen in fight and combat by Lug, son of Cian, High King of Ireland. The Dagda
-betook himself to his knowledge and learning, and therefore frankincense and
-myrrh and herbs were put around the body of Cermait, and he lifted Cermait on
-his back, and bearing Cermait he searched the world, and came to the great
-eastern world.
- He met three men going the road and the way with their father’s treasures. The
-Dagda asked news of them, and they said ‘We are three sons of one father and
-mother, and we are sharing our father’s treasures.’
- ‘What have ye?’ said the Dagda.
- ‘A shirt and a staff and a cloak,’ said they.
- ‘What virtues have these?’ said the Dagda.
- ‘This great staff that thou seest,’ said he, ‘has a smooth end and a rough
-end. One end slays the living, and the other end brings the dead to life.’”
-    -Osborn Bergin, “How the Dagda Got His Magic Staff”, _Medieval Studies in
-     Memory of Gertrude Schoepperle Loomis_. 1927.
-%%%%
 staff of earth
 
-This staff increases the power of earth spells cast by its wielder. If the
-wielder is skilled in evocations, it can crush those struck by it, dealing even
-greater damage if they are also skilled in earth magic.
-%%%%
-staff of earth:quote
-
-<staff:quote>
+This staff increases the power of earth spells cast by its wielder, but
+decreases that of air spells. If the wielder is skilled in evocations, it can
+crush those struck by it, dealing even greater damage if they are also skilled
+in earth magic.
 %%%%
 staff of energy
 
@@ -2580,27 +1561,12 @@ This staff allows its wielder to control magical energy: casting spells no
 longer causes hunger, and ambient magic can be channeled for the wielder's
 purposes.
 %%%%
-staff of energy:quote
-
-<staff:quote>
-%%%%
 staff of fire
 
-This staff increases the power of fire spells cast by its wielder, and protects
-him or her from the effects of heat and fire. If the wielder is skilled in
-evocations, they can burn those struck by it, dealing even greater damage if
-they are also skilled in fire magic.
-%%%%
-staff of fire:quote
-
-“The wizard suddenly remembered the words of the god. He remembered that of all
-the creatures that people the earth, Fire was the only one who knew his son to
-be a phantom. This memory, which at first calmed him, ended by tormenting him.
-He feared lest his son should meditate on this abnormal privilege and by some
-means find out he was a mere simulacrum. Not to be a man, to be a projection of
-another man's dreams—what an incomparable humiliation, what madness!”
-    -Jorge Luis Borges, _The Circular Ruins_. 1940.
-    trans. Anthony Bonner, 1962.
+This staff increases the power of fire spells cast by its wielder, but
+decreases that of cold spells. It protects him or her from the effects of heat
+and fire. If the wielder is skilled in evocations, they can burn those struck
+by it, dealing even greater damage if they are also skilled in fire magic.
 %%%%
 staff of poison
 
@@ -2609,17 +1575,9 @@ protects him or her from the effects of poison. If the wielder is skilled in
 both evocations and poison magic, they can poison creatures struck by it — even
 if the victims were normally resistant.
 %%%%
-staff of poison:quote
-
-<staff:quote>
-%%%%
 staff of power
 
 This staff provides a reservoir of magical power to its wielder.
-%%%%
-staff of power:quote
-
-<staff:quote>
 %%%%
 staff of summoning
 
@@ -2627,18 +1585,10 @@ This staff increases the power of summonings cast by its wielder, and wards him
 or her from the attacks of summoned creatures. If the wielder is skilled in
 evocations, they can attempt to dismiss summoned creatures that they strike.
 %%%%
-staff of summoning:quote
-
-<staff:quote>
-%%%%
 staff of wizardry
 
 This staff significantly increases the ability of its wielder to use magical
 spells.
-%%%%
-staff of wizardry:quote
-
-<staff:quote>
 %%%%
 steam dragon armour
 
@@ -2646,40 +1596,15 @@ Armour made from the scales of a steam-breathing dragon. Although, unlike the
 armour made from the scales of some larger dragons, it does not provide its
 wearer with much protection, it is extremely light and as supple as cloth.
 %%%%
-steam dragon armour:quote
-
-<steam dragon hide:quote>
-%%%%
 steam dragon hide
 
 The soft and supple scaly skin of a steam dragon. It may be turned into proper
 armour by magical means.
 %%%%
-steam dragon hide:quote
-
-“His scales are his pride, shut up together as with a close seal. One is so
-near to another, that no air can come between them. They are joined one to
-another, they stick together, that they cannot be sundered.”
-    -KJV Bible, Job 41:15-17.
-%%%%
 stone
 
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
 thrown by hand or launched with a sling.
-%%%%
-stone:quote
-
-“How happy is the little Stone
- That rambles in the Road alone,
- And doesn't care about Careers
- And Exigencies never fears —
- Whose Coat of elemental Brown
- A passing Universe put on,
- And independent as the Sun
- Associates or glows alone,
- Fulfilling absolute Decree
- In casual simplicity —”
-    -Emily Dickinson, “How happy is the little Stone”. ca. 1865.
 %%%%
 stone of tremors
 
@@ -2695,10 +1620,6 @@ Armour made from the scales of a lightning-breathing dragon. It is heavier than
 most dragon scale armours, and gives its wearer great resistance to electrical
 discharges.
 %%%%
-storm dragon armour:quote
-
-<steam dragon hide:quote>
-%%%%
 storm dragon hide
 
 The hide of a lightning-breathing dragon, covered in extremely hard blue
@@ -2706,45 +1627,18 @@ scales. In its raw form it does not provide much protection beyond resistance
 to electrical discharge, but with magical means it may be used to make
 excellent armour.
 %%%%
-storm dragon hide:quote
-
-<steam dragon hide:quote>
-%%%%
 strawberry
 
 A small but delicious red fruit.
-%%%%
-strawberry:quote
-
-“A Samurai was out walking when a large tiger began to chase him. The samurai
-ran for his life, never seeing the cliff under his feet. As he fell, he reached
-out and caught a vine that hung down. He looked down and saw another tiger
-circling below; the first tiger waited above. The vine began to give away. The
-samurai then saw a single strawberry growing on the vine. He reached out and
-ate the strawberry. How sweet it tasted!”
-    -Attributed to various Japanese buddhist monks.
 %%%%
 sultana
 
 A humble raisin.
 %%%%
-sultana:quote
-
-“A Turkish garden was among the curiosities to which the Jew found access for
-Bentham. It was a sort of orchard of vines and other trees, without order or
-apparent arrangement. From that garden Bentham sent specimens of the Sultana
-raisin to England which he believed to have been the first of that species
-which had ever reached his country.”
-    -John Bowring, _The Works of Jeremy Bentham_. 1839.
-%%%%
 swamp dragon armour
 
 Armour made from the scales of a swamp dragon. It confers resistance to poison
 on its wearer.
-%%%%
-swamp dragon armour:quote
-
-<steam dragon hide:quote>
 %%%%
 # Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
 swamp dragon hide
@@ -2755,10 +1649,6 @@ The slimy{{
     end
 }} skin of a swamp-dwelling dragon. It confers resistance to poison on its
 wearer, and it may be turned into proper armour by magical means.
-%%%%
-swamp dragon hide:quote
-
-<steam dragon hide:quote>
 %%%%
 throwing net
 
@@ -2777,36 +1667,21 @@ net and break free, if they live long enough.
     end
 }}
 %%%%
-throwing net:quote
+tomahawk
 
-“The look of a scared thing
- Sitting in a net!”
-    -Edna St. Vincent Millay, “When the Year Grows Old”. 1917.
+An axe-like item designed for throwing. While some larger tomahawk types
+would be fit for melee, this one sacrifices melee ability to make it
+smaller, handier and to optimize its ballistic properties.
 %%%%
 tome of destruction
 
 An extremely powerful but unpredictable book of wild magic. Warning: Reading
 may be hazardous to you or your surroundings!
 %%%%
-tome of destruction:quote
-
-<book:quote>
-%%%%
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
 Due to the added weight it cannot be thrown effectively.
-%%%%
-trident:quote
-
-“Without noticing the occupations of an intervening day or two, which, as they
-consisted of the ordinary sylvan amusements of shooting and coursing, have
-nothing sufficiently interesting to detain the reader, we pass to one in some
-degree peculiar to Scotland, which may be called a sort of salmon-hunting. This
-chase, in which the fish is pursued and struck with barbed spears, or a sort of
-long shafted trident, called a waster, is much practised at the mouth of the
-Esk, and in the other salmon rivers of Scotland.”
-    -Sir Walter Scott, _Guy Mannering_, ch. XXVI. 1815.
 %%%%
 triple sword
 
@@ -2816,10 +1691,6 @@ knight, who, finding that the resulting blade was quite functional, jovially
 quipped, “Ah, very good, but could you make a *triple* sword?” When the answer
 turned out to be yes, the knight was too shocked to ask about the possibilities
 of a quadruple sword.
-%%%%
-triple sword:quote
-
-<demon blade:quote>
 %%%%
 trishula
 
@@ -2832,73 +1703,27 @@ troll hide
 The stiff and knobbly hide of a troll, with magical regenerative properties.
 Wearable, like other beastly skins, it also reacts well to enchantment.
 %%%%
-troll hide:quote
-
-“THE TROLL KING: Now, listen, Prince Peer, and give way to reason!
- You're cut out for a Troll. Why, look, already
- You bear yourself quite in a Troll-like fashion!
- And you want to become one, don't you?
- PEER GYNT: Of course.
- In return for a bride and a well-found kingdom
- I'm not unwilling to sacrifice something;
- But all things have their natural limit.
- I have taken a tail, it is true; but, then,
- I can undo the knots that our friend has tied
- And take the thing off. I have shed my breeches;
- They were old and patched; but that won't prevent me
- From putting them on if I have a mind to.
- I shall probably find it just as easy
- To deal with your Trollish way of living.
- I can easily swear that a cow's a maiden;
- An oath's not a difficult thing to swallow.
- But to know that one never can get one's freedom —
- Not even to die as a human being —
- To end one's days as a Troll of the mountains —
- Never go back, as you tell me plainly —
- That is a thing that I'll not submit to.”
-    -Henrik Ibsen, _Peer Gynt_ . 1867.
-%%%%
 troll leather armour
 
 Armour made from the stiff and knobbly skin of a common troll. It magically
 regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
 %%%%
-troll leather armour:quote
-
-<troll hide:quote>
-%%%%
 wand of cold
 
 A magical device which throws great bolts of cold.
-%%%%
-wand of cold:quote
-
-<wand:quote>
 %%%%
 wand of confusion
 
 A magical device which induces confusion and bewilderment in a target creature.
 %%%%
-wand of confusion:quote
-
-<wand:quote>
-%%%%
 wand of digging
 
 A magical device which drills tunnels through unworked rock.
-%%%%
-wand of digging:quote
-
-<wand:quote>
 %%%%
 wand of disintegration
 
 A magical device which disrupts the physical structure of anything but the
 hardest walls — even rigid statues, to say nothing of flesh.
-%%%%
-wand of disintegration:quote
-
-<wand:quote>
 %%%%
 wand of draining
 
@@ -2906,58 +1731,30 @@ A magical device which throws a bolt of negative energy which drains the life
 essences of living creatures, but is useless against the undead, demons,
 artificial creatures and even living plants.
 %%%%
-wand of draining:quote
-
-<wand:quote>
-%%%%
 wand of enslavement
 
 A magical device which causes slavish obedience in a creature.
-%%%%
-wand of enslavement:quote
-
-<wand:quote>
 %%%%
 wand of fire
 
 A magical device which throws great bolts of fire.
 %%%%
-wand of fire:quote
-
-<wand:quote>
-%%%%
 wand of fireball
 
 A magical device which throws exploding blasts of flame.
-%%%%
-wand of fireball:quote
-
-<wand:quote>
 %%%%
 wand of flame
 
 A magical device which throws little bits of flame.
 %%%%
-wand of flame:quote
-
-<wand:quote>
-%%%%
 wand of frost
 
 A magical device which throws little bits of frost.
-%%%%
-wand of frost:quote
-
-<wand:quote>
 %%%%
 wand of hasting
 
 A magical device which casts enchantments to speed up the actions of a creature
 at which it is directed.
-%%%%
-wand of hasting:quote
-
-<wand:quote>
 %%%%
 wand of heal wounds
 
@@ -2967,26 +1764,14 @@ wand of invisibility
 
 A magical device which hides a creature from the view of others.
 %%%%
-wand of invisibility:quote
-
-<wand:quote>
-%%%%
 wand of lightning
 
 A magical device which throws great bolts of lightning.
-%%%%
-wand of lightning:quote
-
-<wand:quote>
 %%%%
 wand of magic darts
 
 A magical device which throws small bolts of destructive energy. They never
 miss.
-%%%%
-wand of magic darts:quote
-
-<wand:quote>
 %%%%
 wand of paralysis
 
@@ -2995,72 +1780,33 @@ of its limbs. A paralysed creature can only breathe, think, and helplessly
 watch as it falls into lava below or you put it out of its misery with your
 dagger.
 %%%%
-wand of paralysis:quote
-
-<wand:quote>
-%%%%
 wand of polymorph
 
 A magical device which causes a creature to be transmogrified into another
 form. It is especially effective against shape-changing creatures.
 %%%%
-wand of polymorph:quote
-
-<wand:quote>
-%%%%
 wand of random effects
 
 A magical device which can produce a variety of effects.
-%%%%
-wand of random effects:quote
-
-<wand:quote>
 %%%%
 wand of slowing
 
 A magical device which casts enchantments to slow down the actions of a
 creature at which it is directed.
 %%%%
-wand of slowing:quote
-
-<wand:quote>
-%%%%
 wand of teleportation
 
 A magical device which causes a creature to be randomly translocated.
 %%%%
-wand of teleportation:quote
-
-<wand:quote>
-%%%%
 war axe
 
 A one-handed military axe with a long haft and a single-bladed head.
-%%%%
-war axe:quote
-
-“'God speed the kiss,' said Max, and Katie sigh'd,
- With pray'rful palms close seal'd, 'God speed the axe!'”
-    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
-     Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
 %%%%
 whip
 
 A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
-%%%%
-whip:quote
-
-“Not with a Club, the Heart is broken
- Nor with a Stone —
- A Whip so small you could not see it
- I've known
- To lash the Magic Creature
- Till it fell,
- Yet that Whip's Name
- Too noble then to tell.”
-    -Emily Dickinson, “Not with a Club, the Heart is broken”. ca. 1865.
 %%%%
 wizard hat
 

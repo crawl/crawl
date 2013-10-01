@@ -206,18 +206,18 @@ KMONS:  1 = rat / grey rat / green rat w:5 / giant centipede w:5 / \
             giant cockroach / giant mite / giant gecko / worm w:5 / nothing
 NSUBST: - = 8:1 / *:W
 MAP
-.xxx....xxx.
+ xxx    xxx
 xx-xxxxxx-xx
 x----------x
 x---xxxx---x
 xx-xx--xx-xx
-.x-x--O-x-x.
-.x-x----x-x.
+ x-x--O-x-x
+ x-x----x-x
 xx-xx--xx-xx
 x---x--x---x
 x---x------x
 xx-xxxxxx-xx
-.x@x....xxx.
+ x@x    xxx
 ENDMAP
 
 NAME:   gup_sewer_entry_bowl

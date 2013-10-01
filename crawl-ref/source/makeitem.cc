@@ -158,8 +158,10 @@ static int _missile_colour(const item_def &item)
     {
     case MI_STONE:
     case MI_SLING_BULLET:
-    case MI_LARGE_ROCK:
         item_colour = BROWN;
+        break;
+    case MI_LARGE_ROCK:
+        item_colour = YELLOW;
         break;
     case MI_ARROW:
         item_colour = BLUE;
@@ -179,8 +181,8 @@ static int _missile_colour(const item_def &item)
     case MI_THROWING_NET:
         item_colour = MAGENTA;
         break;
-    case MI_PIE:
-        item_colour = YELLOW;
+    case MI_TOMAHAWK:
+        item_colour = GREEN;
         break;
     case NUM_SPECIAL_MISSILES:
     case NUM_REAL_SPECIAL_MISSILES:
@@ -559,13 +561,18 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_BOOKS:
+        if (item.sub_type == BOOK_MANUAL)
+        {
+            item.colour = WHITE;
+            break;
+        }
         switch (item.special % NDSC_BOOK_PRI)
         {
         case 0:
         case 1:
         default:
             do item.colour = random_colour();
-                while (item.colour == DARKGREY);
+                while (item.colour == DARKGREY || item.colour == WHITE);
             break;
         case 2:
             item.colour = BROWN;
@@ -598,29 +605,48 @@ void item_colour(item_def &item)
 
         switch (item.sub_type)
         {
+        case MISC_LANTERN_OF_SHADOWS:
+            item.colour = BLUE;
+            break;
+
+        // GREEN is for plain decks
+
+        case MISC_FAN_OF_GALES:
+            item.colour = CYAN;
+            break;
+
         case MISC_BOTTLED_EFREET:
+            item.colour = RED;
+            break;
+
+        // MAGENTA is for ornate decks
+
         case MISC_STONE_OF_TREMORS:
             item.colour = BROWN;
             break;
 
-        case MISC_FAN_OF_GALES:
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
         case MISC_DISC_OF_STORMS:
-        case MISC_HORN_OF_GERYON:
-        case MISC_LANTERN_OF_SHADOWS:
             item.colour = LIGHTGREY;
+            break;
+
+        case MISC_PHIAL_OF_FLOODS:
+            item.colour = LIGHTBLUE;
+            break;
+
+        case MISC_BOX_OF_BEASTS:
+            item.colour = LIGHTGREEN; // ugh, but we're out of other options
+            break;
+
+        case MISC_CRYSTAL_BALL_OF_ENERGY:
+            item.colour = LIGHTCYAN;
+            break;
+
+        case MISC_HORN_OF_GERYON:
+            item.colour = LIGHTRED;
             break;
 
         case MISC_LAMP_OF_FIRE:
             item.colour = YELLOW;
-            break;
-
-        case MISC_PHIAL_OF_FLOODS:
-            item.colour = CYAN;
-            break;
-
-        case MISC_BOX_OF_BEASTS:
-            item.colour = BLUE;
             break;
 
         case MISC_SACK_OF_SPIDERS:
@@ -1152,9 +1178,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_DAGGER:
-            if (one_chance_in(4))
-                rc = SPWPN_RETURNING;
-
             if (one_chance_in(10))
                 rc = SPWPN_PAIN;
 
@@ -1255,9 +1278,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (item.sub_type == WPN_HAND_AXE && one_chance_in(10))
-                rc = SPWPN_RETURNING;
-
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
@@ -1326,9 +1346,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
-
-            if (item.sub_type == WPN_SPEAR && one_chance_in(6))
-                rc = SPWPN_RETURNING;
 
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
@@ -1533,11 +1550,11 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_REACHING:
-    case SPWPN_RETURNING:
     case SPWPN_ANTIMAGIC:
     case SPWPN_REAPING:
 #if TAG_MAJOR_VERSION == 34
     case SPWPN_ORC_SLAYING:
+    case SPWPN_RETURNING:
 #endif
         if (is_range_weapon(item))
             return false;
@@ -1562,9 +1579,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
             item.name(DESC_PLAIN).c_str());
         break;
     }
-
-    if (brand == SPWPN_RETURNING && !is_throwable(&you, item, true))
-        return false;
 
     return true;
 }
@@ -1802,8 +1816,13 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
-    case MI_PIE:
-        rc = SPMSL_BLINDING;
+    case MI_TOMAHAWK:
+        rc = random_choose_weighted(15, SPMSL_POISONED,
+                                    10, SPMSL_SILVER,
+                                    10, SPMSL_STEEL,
+                                    40, SPMSL_RETURNING,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_STONE:
         // deliberate fall through
@@ -1867,8 +1886,11 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_FRENZY:
         return (type == MI_NEEDLE);
 
+#if TAG_MAJOR_VERSION == 34
     case SPMSL_BLINDING:
-        return (type == MI_PIE);
+        // possible on ex-pies
+        return (type == MI_TOMAHAWK && !strict);
+#endif
 
     default:
         if (type == MI_NEEDLE)
@@ -1891,31 +1913,32 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     switch (brand)
     {
     case SPMSL_FLAME:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART;
     case SPMSL_FROST:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART;
     case SPMSL_POISONED:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART
-                || type == MI_JAVELIN);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART
+               || type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_RETURNING:
-        return (type == MI_JAVELIN);
+        return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_CHAOS:
-        return (type == MI_SLING_BULLET || type == MI_ARROW
-                || type == MI_BOLT || type == MI_DART
-                || type == MI_JAVELIN || type == MI_THROWING_NET);
+        return type == MI_SLING_BULLET || type == MI_ARROW
+               || type == MI_BOLT || type == MI_DART || type == MI_TOMAHAWK
+               || type == MI_JAVELIN || type == MI_THROWING_NET;
     case SPMSL_PENETRATION:
-        return (type == MI_JAVELIN || type == MI_BOLT);
+        return type == MI_JAVELIN || type == MI_BOLT;
     case SPMSL_DISPERSAL:
-        return (type == MI_ARROW || type == MI_DART);
+        return type == MI_ARROW || type == MI_DART;
     case SPMSL_EXPLODING:
-        return (type == MI_SLING_BULLET || type == MI_DART);
+        return type == MI_SLING_BULLET || type == MI_DART;
     case SPMSL_STEEL: // deliberate fall through
     case SPMSL_SILVER:
-        return (type == MI_BOLT || type == MI_SLING_BULLET
-                || type == MI_JAVELIN || type == MI_THROWING_NET);
+        return type == MI_BOLT || type == MI_SLING_BULLET
+               || type == MI_JAVELIN || type == MI_TOMAHAWK
+               || type == MI_THROWING_NET;
     default: break;
     }
 
@@ -1943,6 +1966,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    12, MI_BOLT,
                                    12, MI_SLING_BULLET,
                                    10, MI_NEEDLE,
+                                   3,  MI_TOMAHAWK,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,
                                    1,  MI_LARGE_ROCK,
@@ -1975,7 +1999,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
 
     // Reduced quantity if special.
-    if (item.sub_type == MI_JAVELIN
+    if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK
         || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
         || get_ammo_brand(item) == SPMSL_RETURNING
         || (item.sub_type == MI_DART && get_ammo_brand(item) == SPMSL_POISONED))
@@ -2752,7 +2776,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
 
                  // High-level scrolls.
-                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_VORPALISE_WEAPON),
+                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
                  140, (depth_mod < 7 ? NUM_SCROLLS : SCR_TORMENT),
                  140, (depth_mod < 7 ? NUM_SCROLLS : SCR_HOLY_WORD),
 
@@ -2765,7 +2789,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
     }
 
     // determine quantity
-    if (item.sub_type == SCR_VORPALISE_WEAPON
+    if (item.sub_type == SCR_BRAND_WEAPON
         || item.sub_type == SCR_ENCHANT_WEAPON_III
         || item.sub_type == SCR_ACQUIREMENT
         || item.sub_type == SCR_TORMENT

@@ -1201,6 +1201,114 @@ xxX.X...X.XXXxx
   xxxxxxxxxx
 ENDMAP
 
+NAME: nicolae_spider_ant_collections
+DEPTH: Spider
+NSUBST: % = 1:* / 5:% / 3:$ / *:1
+SUBST: X = xxxx., 1 = 11102.
+MONS: worker ant, soldier ant, queen ant
+MAP
+        xxxx      xxxxx
+      xxxXXxxxx xxxxxxxx
+  xxxxxXX%XxX%xxxXxxXXXxx
+ xxXXxxX..XX.XX%x%XXX%Xxx
+xxX.%xxXX.XX.XxX.X.XX.Xxx
+xX.XXxxX.XX%X.XX.XxXX.Xxx
+xxX..xX.xxxXX.XxX.Xx.xxx
+ xxXX..x1.xxx.xxX.xx....
+ xX%XXx......xxxxx...1..@
+ xX.XXx.3.2.1..xx.......@
+xxxX..x..........1..1xx.
+xxX.Xx.x1.xx.1.1....xxxx
+xxxX.xxxx.xxxx....xx.Xxxx
+ xxxX%XX...XXx.xxxxXX.Xxx
+  xxxXX.X.X.XxX.xx%XX.Xxx
+   xxxXXX.XXxxXX..XxX%Xxx
+     xxX%X%XxxxxXXxxxXxx
+      xxxxxxx xxxxxxxxx
+        xxxx     xxxx
+ENDMAP
+
+
+NAME: nicolae_spider_cling_halls
+DEPTH: Spider, !Spider:1, !Spider:$
+ORIENT: float
+TAGS: no_pool_fixup extra
+NSUBST: A = 2:w / *:x, B = 2:w / *:x, C = 2:w / *:x
+SUBST: ' = ..wx, . = W...., [ = [{()}], X = x_, Q = xw
+KMASK: Ww = no_monster_gen
+CLEAR: _
+MAP
+ Xxx.......xxX
+Xxxww'w'w'wwxxX
+XxQwwAwBwCwwQxX
+XxQwwAwBwCwwQxX
+XxQwwAwBwCwwQxX
+XxQwwAwBwCwwQxX
+XxQwwAwBwCwwQxX
+XxQww'w'w'wwQxX
+XxQww.....wwQxX
+XxQww..[..wwQxX
+XxQww.....wwQxX
+XxQwwwwwwwwwQxX
+XxQwwwwwwwwwQxX
+XxQQQQQQQQQQQxX
+XxxxxxxxxxxxxxX
+ XXXXXXXXXXXXX
+ENDMAP
+
+
+NAME: nicolae_spider_cling_ruins
+DEPTH: Spider, !Spider:1
+ORIENT: float
+TAGS: no_pool_fixup extra
+SHUFFLE: [{(
+NSUBST: A = wx / x, B = wx / x, C = wx / x, D = wx / x, \
+        E = 2:w / x, F = 2:w / x, G = 2:w / x, H = 2:w / x, I = ' / 1:'x / x
+SUBST: X = x', ' = W..., Z = xw
+KMASK: Ww = no_monster_gen
+MAP
+xxxX'''''''Xxxx
+x'X'wwwwwww'X'x
+xX'XwEEEEEwX'Xx
+X'XXwwwwwwwXX'X
+'wwwZwAAAwZwww'
+'wHwwwwwwwwwFw'
+'wHwDw'I'wBwFw'
+'wHwDwI[IwBwFw'
+'wHwDw'I'wBwFw'
+'wHwwwwwwwwwFw'
+'wwwZwCCCwZwww'
+X'XXwwwwwwwXX'X
+xX'XwGGGGGwX'Xx
+x'X'wwwwwww'X'x
+xxxX'''''''Xxxx
+ENDMAP
+
+
+NAME: nicolae_spider_hall_of_the_moth_king
+DEPTH: Spider
+ORIENT: west
+TAGS: transparent
+KMONS: M = moth of wrath / ghost moth / moth of suppression w:3 / butterfly w:1
+SHUFFLE: AB, CD
+SUBST: B : ....c, D : ....c, AC : ., G : GGGc, G = GGGG., c : ccccx, \
+       & = @...., 0 = 00., 0 = 0009
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx.&.xx
+xxxxcccccccccccccccccccccc+ccx
+xxxxcG.GccG.GccG.GccG.GccG.Gcx
+xcccc.0.cc.0.cc.0.cc.0.cc.0.cx
+xc..9...AA...CC...AA...CC...cx
+xc.G..G....G....G....G....G.cx
+xc.M..0.BB.0.DD.0.BB.0.DD.0.cx
+xc.G..G....G....G....G....G.cx
+xc..9...AA...CC...AA...CC...cx
+xcccc.0.cc.0.cc.0.cc.0.cc.0.cx
+xxxxcG.GccG.GccG.GccG.GccG.Gcx
+xxxxcccccccccccccccccccccc+ccx
+xxxxxxxxxxxxxxxxxxxxxxxxx.@.xx
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################

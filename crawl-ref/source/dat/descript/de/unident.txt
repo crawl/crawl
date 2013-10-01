@@ -4,14 +4,6 @@ amulet
 Ein Talisman der als Schmuck um den Hals getragen wird, durchströmt von Magie
 unbekannten Ursprungs.
 %%%%
-amulet:quote
-
-"Gringoire streckte ihre Hand nach der kleine Tasche aus, aber sie zog sie
-zurück. 'Nicht anfassen! Es ist ein Amulett, und entweder machst du Unfug mit
-dem Zauber, oder es wird dir wehtun.'"
-    -Victor Marie Hugo, _Notre Dame de Paris_, Buch II, Kapitel VII 'A Wedding
-Night'. 1831.
-%%%%
 book
 
 Ein Buch mit Zaubersprüchen unbekannten Ursprungs. Geschrieben für wahre
@@ -29,30 +21,10 @@ potion
 Ein unetikettiertes Fläschchen, das eine einzelne Dosis einer unbekannten
 Flüssigkeit enthält.
 %%%%
-potion:quote
-
-"Da gab ich, so belehrt durch meine Kunst,
- Ihr einen Schlaftrunk; er bewies sich wirksam
- Nach meiner Absicht, denn er goss den Schein
- Des Todes ueber sie.  Indessen schrieb ich
- An Romeo, dass er sich herbegaebe
- Und huelf aus dem erborgten Grab sie holen
- In dieser Schreckensnacht, als um die Zeit,
- Wo jenes Trankes Kraft erloesche."
-    -William Shakespeare, _Romeo und Julia_
-%%%%
 ring
 
 Ein Talisman welcher als Schmuck an einem Finger getragen wird, durchströmt von
 Magie unbekannten Ursprungs.
-%%%%
-ring:quote
-
-“Eine milchweiße Taube, ein Ring von Gold
- Sind Gaben geziem für dich,
- Ein Strick und ein Baum,
- dran er hängen sollt’.”
-    -Oscar Wilde, “Chanson”. 1881.
 %%%%
 rod
 
@@ -72,24 +44,7 @@ staff
 
 Ein Stab mit unbekannter magischer Kraft.
 %%%%
-staff:quote
-
-“Bashō Osho sagte zu seinen Jüngern: 'Wenn du eine Dienerschaft hast, gebe ich
-dir Diener. Wenn du keine Dienerschaft hast, werde ich sie von dir nehmen.'
- Kommentar des Mumon
- Es hilft mir, durch einen Fluss zu waten, wenn die Brücke kaputt ist. Es
-geleitet mich in das Dorf, in einer Mondlosen Nacht. Wenn du es einen Diener
-nennst kommst du schnell wie ein Pfeil in die Hölle. ” -Mumon Ekai, _The
-Gateless Gate_, case 44. 1228.
-%%%%
 wand
 
 Ein Stab. Vielleicht ist er magisch.
-%%%%
-wand:quote
-
-"[The principle of selection] ist der Zauberstab, mit denen er das Leben in
-jeder Form, die er will, beschwören kann.”
-    -William Youatt, _Sheep: their breeds, management, and diseases; to which
-is added the Mountain Shepherd's Manual_, Kapitel III. 1837.
 %%%%

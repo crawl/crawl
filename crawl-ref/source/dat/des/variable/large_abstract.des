@@ -417,7 +417,7 @@ ENDMAP
 NAME:   thingy_vault_2
 DEPTH:  D:14-26
 ORIENT: southeast
-SUBST:  ' = ^ .:50
+KFEAT:  ' = alarm trap / floor w:190
 MONS:   orange crystal statue
 MAP
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
@@ -498,19 +498,19 @@ xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx...xxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxx..........................xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx..xx
-x.^^..........................xx
-xx.^^xx+xxxxxxxxxxxxxxxxxxxxxxxx
-xxx.^...11....xxxxxxxx..xxxxxxxx
+x.............................xx
+xx...xx+xxxxxxxxxxxxxxxxxxxxxxxx
+xxx.....11....xxxxxxxx..xxxxxxxx
 xxxx..x.1..6..xxx........xx..xxx
 xxxxx.xxxxxxxxx...vvvvv...x...xx
 x6..1...x.........+1..v.......xx
 x..1....x.........vvvvv........x
 x..5...xx......................x
-xxxxxx^++...........vvvvvvv....x
-xxxxxx^xx...xx=xx...vv$%$vvvvv.x
-xxxxxx^x...xxv1vxx...vvv*2...v.x
-xxxxxx^x..vvvv7.vvvv...vv.vv+v^x
-x..xxx^..vvvb....bvvv...vvv^...x
+xxxxxx.++...........vvvvvvv....x
+xxxxxx.xx...xx=xx...vv$%$vvvvv.x
+xxxxxx.x...xxv1vxx...vvv*2...v.x
+xxxxxx.x..vvvv7.vvvv...vv.vv+v.x
+x..xxx...vvvb....bvvv...vvv....x
 x%%.xx..vvvvb....bvvvv.......xxx
 xx.....vvbbb......bbbvv.....xxxx
 xxx....vvb....66....bvvxxxxxxxxx

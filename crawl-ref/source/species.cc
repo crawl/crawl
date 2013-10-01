@@ -51,7 +51,7 @@ species_type get_species(const int index)
     if (index < 0 || index >= ng_num_species())
         return SP_UNKNOWN;
 
-    return (species_order[index]);
+    return species_order[index];
 }
 
 static const char * Species_Abbrev_List[NUM_SPECIES] =
@@ -252,6 +252,13 @@ bool species_likes_lava(species_type species)
     return (species == SP_LAVA_ORC);
 }
 
+bool species_can_throw_large_rocks(species_type species)
+{
+    return (species == SP_OGRE
+            || species == SP_TROLL
+            || species == SP_FORMICID);
+}
+
 genus_type species_genus(species_type species)
 {
     switch (species)
@@ -290,11 +297,6 @@ size_type species_size(species_type species, size_part_type psize)
     case SP_TROLL:
         return SIZE_LARGE;
     case SP_NAGA:
-        // Most of their body is on the ground giving them a low profile.
-        if (psize == PSIZE_TORSO || psize == PSIZE_PROFILE)
-            return SIZE_MEDIUM;
-        else
-            return SIZE_LARGE;
     case SP_CENTAUR:
         return ((psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE);
     case SP_HALFLING:

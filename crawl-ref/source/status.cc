@@ -157,6 +157,8 @@ static duration_def duration_data[] =
       WHITE, "Recite", "reciting", "You are reciting Zin's Axioms of Law." },
     { DUR_GRASPING_ROOTS, false,
       BROWN, "Roots", "grasped by roots", "Your movement is impeded by grasping roots." },
+    { DUR_FIRE_VULN, false,
+      RED, "-rF", "fire vulnerable", "You are more vulnerable to fire." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -181,7 +183,7 @@ static const duration_def* _lookup_duration(duration_type dur)
     if (duration_index[dur] == -1)
         return NULL;
     else
-        return (&duration_data[duration_index[dur]]);
+        return &duration_data[duration_index[dur]];
 }
 
 static void _reset_status_info(status_info* inf)
@@ -292,7 +294,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_SWIFTNESS:
-        if (you.in_water() || you.liquefied_ground())
+        if (you.in_liquid())
             inf->light_colour = DARKGREY;
         break;
 

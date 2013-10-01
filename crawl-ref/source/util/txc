@@ -20,8 +20,6 @@ parser.add_option("-d", "--diff", help="Diff format (unified, context, n)",
                   default='n')
 parser.add_option("-f", "--force", action="store_true",
                   help="Overwrite files even if no change detected")
-parser.add_option("-i", "--invalidate", action="store_true",
-                  help="On merge, remove invalidated entries")
 parser.add_option("-l", "--language", help="Specify which languages to work on")
 parser.add_option("-r", "--resource", help="Specify which resources to work on")
 parser.add_option("-s", "--source", help="Work on source files (same as -l en)",
@@ -247,7 +245,7 @@ class ResourceIndex():
     """Class which holds current language / resource settings and serves as an
     iterator for ResourceCollection.
     self.changes holds a list of the types of change currently selected
-    (changed, new, quote or removed). This is used to select which value to
+    (changed, new or removed). This is used to select which value to
     display when iterating through entries for showing a diff or writing a
     resource file.
     Note that not selecting "removed" only affects diffs and temporary files
@@ -428,15 +426,17 @@ class ResourceFile():
         Determine the change type and store the new value in the appropriate
         dict of self.diff"""
         if key not in self.entries:
-            if key.find(':') != -1 and key.split(':')[1] == 'quote':
-                change_t = 'quote'
-            else:
-                change_t = 'new'
+            change_t = 'new'
         elif value != self.entries[key]:
             change_t = 'changed'
         else:
             return
         self.diff[change_t][key] = value
+
+        # If the key was previously removed and edited back in
+        # delete it from the 'removed' dict
+        if key in self.diff['removed']:
+            del self.diff['removed'][key]
 
     def items(self, diff_only):
         """Returns an iterator to a list of (key, value) tuples, depending on
@@ -448,16 +448,8 @@ class ResourceFile():
         items = []
         for key in self.source_keys():
             found_diff = False
-            # we sort res_index.changes to make sure quotes are treated last.
-            # Conveniently, q comes after c and n.
-            for change_t in sorted(res_index.changes):
+            for change_t in res_index.changes:
                 if change_t == 'removed' or change_t not in self.diff: continue
-                if change_t == 'quote':
-                    # Here, we search only for new quotes.
-                    quote_key = key + ':quote'
-                    if quote_key in self.diff['quote'] \
-                       and quote_key not in self.source_keys():
-                       items.append((quote_key, self.diff['quote'][quote_key]))
                 if key in self.diff[change_t]:
                     items.append((key, self.diff[change_t][key]))
                     found_diff = True
@@ -498,7 +490,15 @@ class ResourceFile():
         this resource file. This list is used as a reference when iterating
         through keys. It helps keep the order consistent and translations can't
         exist if there isn't a source associated to them anyway."""
-        return self.source_res.entries.keys()
+        keys = self.source_res.entries.keys()
+
+        # To allow submitting new quotes from another resource, they are sorted
+        if self.resource == 'quotes' and 'new' in self.diff:
+            for k in self.diff['new']:
+                if k not in keys:
+                    keys.append(k)
+            keys.sort()
+        return keys
 
     def diff_txt(self, diff_format):
         """When diff_format is True, returns a string with a diff for each new
@@ -527,6 +527,10 @@ class ResourceFile():
                 diff_txt += self.separator()
 
         return diff_txt
+
+    def load(self):
+        if not self.entries and not self.diff:
+            self.read_file()
 
     def read_file(self):
         """Called by the subclasses to handle the basic checks. Returns the
@@ -558,18 +562,15 @@ class ResourceFile():
         for (key, value) in self.entries.items():
             entries[key] = self.raw_entry(value)
             
-    def update(self):
+    def update(self, update_removed_keys = True):
         """Update the resource file with the content of raw_entries. New values
         will be converted in the resource format and stored in the appropriate
         diff dictionary by the __setitem__ methods"""
         entries = raw_entries[(self.lang(), self.resource)]
         for key in self.source_keys():
-            # Those 2 lines have been used once to move the quotes out of their own file.
-            # if self.resource != 'quotes' and key in raw_entries[(self.lang(), 'quotes')]:
-                # self[key + ":quote"] = raw_entries[(self.lang(), 'quotes')][key]
             if key not in entries: continue
             self[key] = entries[key]
-        if self.lang() != 'en' or self.ext == 'ini':
+        if update_removed_keys and (self.lang() != 'en' or self.ext == 'ini'):
             self.update_removed_keys()
 
     def write_file(self):
@@ -588,8 +589,7 @@ class ResourceFile():
         and allow editing (useful to fix renamed keys)."""
         entries = raw_entries[(self.lang(), self.resource)]
         for k in self.entries.keys():
-            if k not in self.source_keys() \
-               or options.invalidate and k not in entries:
+            if k not in self.source_keys() or k not in entries:
                 self.diff['removed'][k] = self.entries[k]
 
     def edit_file(self):
@@ -611,7 +611,7 @@ class ResourceFile():
         tmp_res.read_file()
         tmp_res.merge_file()
         os.remove(tmp.name)
-        self.update()
+        self.update(False)
         return True
 
 class TxtFile(ResourceFile):
@@ -638,15 +638,27 @@ class TxtFile(ResourceFile):
         for tag, tag_value in entry.tags.items():
             # If it has a quote tag, we store the new quote in its own entry
             if tag == 'quote':
-                quote_key = key + ':quote'
-                quote_value = wrap(tag_value, self.eac, self.no_space) + "\n"
-                ResourceFile.__setitem__(self, quote_key, quote_value)
+                e = Entry()
+                e.value = tag_value
+                quote_res = txt_files[(self.language, 'quotes')]
+                quote_res.load()
+                quote_res[key] = e
+
+                # add the quote resource to the index
+                if 'quotes' not in res_index.resources:
+                    res_index.resources.append('quotes')
+
                 # If we're adding a foreign quote and the source doesn't have
                 # one, we also create it in the corresponding source
-                if self.language and quote_key not in self.source_keys():
-                    ResourceFile.__setitem__(self.source_res, quote_key, quote_value)
+                if self.language and key not in quote_res.source_res.entries:
+                    en_quote_res = txt_files[('', 'quotes')]
+                    en_quote_res.load()
+                    en_quote_res[key] = e
+
+                    # Add english to the index
                     if 'en' not in res_index.languages:
                         res_index.languages.insert(0, 'en')
+
             elif tag_value is True:
                 value += ":%s\n" % tag
             else:

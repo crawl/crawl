@@ -77,6 +77,11 @@ static bool initialised_randmons = false;
 static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
+const mon_spellbook mspell_list[] =
+{
+#include "mon-spll.h"
+};
+
 #include "mon-data.h"
 
 #define MONDATASIZE ARRAYSZ(mondata)
@@ -409,7 +414,7 @@ monster* monster_at(const coord_def &pos)
         return NULL;
 
     ASSERT(mindex <= MAX_MONSTERS);
-    return (&menv[mindex]);
+    return &menv[mindex];
 }
 
 bool mons_class_flag(monster_type mc, uint64_t bf)
@@ -621,12 +626,6 @@ bool mons_class_is_stationary(monster_type mc)
     return mons_class_flag(mc, M_STATIONARY);
 }
 
-bool mons_is_stationary(const monster* mon)
-{
-    return (mons_class_is_stationary(mon->type)
-            || mon->has_ench(ENCH_WITHDRAWN));
-}
-
 // Monsters that are worthless obstacles: not to
 // be attacked by default, but may be cut down to
 // get to target even if coaligned.
@@ -771,7 +770,8 @@ bool mons_allows_beogh(const monster* mon)
 bool mons_allows_beogh_now(const monster* mon)
 {
     // Do the expensive LOS check last.
-    return mon && mons_allows_beogh(mon) && !silenced(mon->pos())
+    return mon && mons_allows_beogh(mon)
+               && !silenced(mon->pos()) && !mon->has_ench(ENCH_MUTE)
                && !mons_is_confused(mon) && mons_is_seeking(mon)
                && mon->foe == MHITYOU && !mons_is_immotile(mon)
                && you.visible_to(mon) && you.can_see(mon);
@@ -2492,7 +2492,7 @@ string ugly_thing_colour_name(colour_t colour)
     if (colour_offset == -1)
         return "buggy";
 
-    return (ugly_colour_names[colour_offset]);
+    return ugly_colour_names[colour_offset];
 }
 
 static const colour_t ugly_colour_values[] = {
@@ -2536,7 +2536,7 @@ string draconian_colour_name(monster_type mon_type)
     if (mon_type < MONS_BLACK_DRACONIAN || mon_type > MONS_PALE_DRACONIAN)
         return "buggy";
 
-    return (drac_colour_names[mon_type - MONS_BLACK_DRACONIAN]);
+    return drac_colour_names[mon_type - MONS_BLACK_DRACONIAN];
 }
 
 monster_type draconian_colour_by_name(const string &name)
@@ -2660,7 +2660,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
 monsterentry *get_monster_data(monster_type mc)
 {
     if (mc >= 0 && mc < NUM_MONSTERS)
-        return (&mondata[mon_entry[mc]]);
+        return &mondata[mon_entry[mc]];
     else
         return NULL;
 }
@@ -2910,7 +2910,7 @@ bool mons_is_lurking(const monster* m)
 
 bool mons_is_influenced_by_sanctuary(const monster* m)
 {
-    return (!m->wont_attack() && !mons_is_stationary(m));
+    return !m->wont_attack() && !m->is_stationary();
 }
 
 bool mons_is_fleeing_sanctuary(const monster* m)
@@ -3160,7 +3160,6 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     {
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
-    case SPELL_FRENZY:
     case SPELL_HASTE:
     case SPELL_MIGHT:
     case SPELL_MINOR_HEALING:
@@ -3324,14 +3323,9 @@ static bool _mons_has_usable_ranged_weapon(const monster* mon)
     const item_def *primary = mnc->mslot_item(MSLOT_WEAPON);
     const item_def *missile = mnc->missiles();
 
-    if (!missile && weapon != primary && primary
-        && get_weapon_brand(*primary) == SPWPN_RETURNING)
-    {
-        return true;
-    }
     // We don't have a usable ranged weapon if a different cursed weapon
     // is presently equipped.
-    else if (weapon != primary && primary && primary->cursed())
+    if (weapon != primary && primary && primary->cursed())
         return false;
 
     if (!missile)
@@ -3711,7 +3705,7 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
         return false;
 
     // Creatures allied with the player can't open sealed doors either
-    if (mon->attitude == ATT_FRIENDLY && grd(pos) == DNGN_SEALED_DOOR)
+    if (mon->friendly() && grd(pos) == DNGN_SEALED_DOOR)
         return false;
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
@@ -4519,7 +4513,7 @@ string get_mon_shape_str(const mon_body_shape shape)
     };
 
     COMPILE_CHECK(ARRAYSZ(shape_names) == MON_SHAPE_MISC + 1);
-    return (shape_names[shape]);
+    return shape_names[shape];
 }
 
 bool player_or_mon_in_sanct(const monster* mons)
@@ -4821,14 +4815,14 @@ void reset_all_monsters()
 {
     for (int i = 0; i < MAX_MONSTERS; i++)
     {
-        // Since these aren't new monsters, and clearing constriction is no
-        // longer handled in reset(), we need to do it here.
-        // We're already clearing all monster data, so concerns about invalid
-        // mids and the like should not be a problem.
+        // The monsters here have already been saved or discarded, so this
+        // is the only place when a constricting monster can legitimately
+        // be reset.  Thus, clear constriction manually.
         if (!invalid_monster(&menv[i]))
         {
-            menv[i].stop_constricting_all(false, true);
-            menv[i].stop_being_constricted(true);
+            delete menv[i].constricting;
+            menv[i].constricting = nullptr;
+            menv[i].clear_constricted();
         }
         menv[i].reset();
     }
@@ -4846,7 +4840,8 @@ bool mons_is_recallable(actor* caller, monster* targ)
     }
     // Monster recall requires same attitude and at least normal intelligence
     else if (mons_intel(targ) < I_NORMAL
-             || !mons_aligned(targ, caller->as_monster()))
+             || (!caller && targ->friendly())
+             || (caller && !mons_aligned(targ, caller->as_monster())))
     {
         return false;
     }

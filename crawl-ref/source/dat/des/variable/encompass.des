@@ -69,9 +69,14 @@ SUBST:   b = b|
 SUBST:   | = |*
 ITEM:    any scroll, potion of experience
 SHUFFLE: dD/eE/fF/gG
-SUBST:   D=+, d=|, E=x, e=%%*, F=x, f=%, G=x, g=%
+SUBST:   D=+, d=|, E=x, F=x, G=x
+NSUBST:  e = 1:y / 1:* / *:%
+NSUBST:  f = 1:y / *:%
+NSUBST:  g = 1:y / *:%
+KFEAT:   y = >
+KITEM:   y = any / w:1 any good_item
 SHUFFLE: PQ
-SUBST:   Q=xw
+SUBST:   Q = xw
 KMONS:   P = orange crystal statue
 KFEAT:   P = floor
 KMONS:   k = giant eyeball
@@ -100,7 +105,7 @@ xwwwwxx;;;7;;;cc*4.+;;;;;;;c.......c.c..ww....c;;;;;7;;;;;;;;xxxxxxwwx
 xxwwwwx;;;;;;;;cccccc;;;;;;c6.6.6.6c.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;cccc;;;;;;;ccccccccc.c...ww...c;;;;;;;;;;;;;;;xxxxxwwx
 xxxwwwxx;;;;;;;;;;;;;;;;;;;c$$+....+.c....www.c;;;;;;;ccccccccxxxxxwwx
-xxxwwxx;;cccc;;;;;;;;;;;;;;c$$cccccc.c.....wwwc;;;;;;;c.....$$Dddxxwwx
+xxxwwxx;;cccc;;;;;;;;;;;;;;c$$cccccc.c>....wwwc;;;;;;;c.....$$Dddxxwwx
 xxxwwwx;cccccc;;;;;;xx;;;;;c$$cccccc+cccccccwww;;;;;;;c.....$$xdd+wwwx
 xxxwwwxcc*4.+;;;;;;xxxx;;;;ccccccccc.....c...www;;ccccc.......xxxxxwwx
 xxxwwwxxcccccc;;;;xxxxx;;;;;;;cccccc.....+...www;;c...c.......xeexxwwx
@@ -122,7 +127,7 @@ xxxxxwwwwwwwwwwwwwwwwQxwwwwwwwxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxx
 xxxxxxwwwwwwwwwwwwwxxxxwwwwwwwwwwwwwxxxPwwwwwwwwwwxxwwwwwwwwxxxxxxxxxx
 xxxxxxxwwwwwxxxxxxxxxxwwwwwwwxxwwwwxxxxxwwwwwwwwwxxxwwxwwwwxxxxxxxxxxx
 xxxxxxxx;7;;xxx222xxxxxxwwwwxxwww2222xxxxx22wwwwwwxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx;;;xxx;;;;;xx2222wwwwww;;;;;;;;xxxx22;;;;wwwwxxxxxxxxxxxxxxxxx
+xxxxxxx>;;;xxx;;;;;xx2222wwwwww;;;;;;;;xxxx22;;;;wwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxx;xxxx;;;;;;;;;;;;ww;;;;;;;;;;;;;;;;;;;;;;;;wwwxxxxxxxxxxxxxxx
 xxxxxxxxxxxx;;;;2;;;;;;;;;;;;;;;;;);;;;;;2;;;;;;;;;;wwwxxxxxxxxxxxxxxx
 xxxxxxxxxxxx;;;;;;;;;;;;;;;;;;;;;[](;;;;;;;;;;;;;;;;2wxxxxxxxxxxxxxxxx
@@ -878,105 +883,6 @@ ccJ.1.Jcc
  cc...cc
   cc+cc
 ENDMAP
-
-################################################################################
-# You are in a maze of twisty little passages, all alike.
-#
-NAME: grunt_twisty_little_passages
-TAGS: no_monster_gen uniq_d_encompass
-DEPTH: D:16-26
-ORIENT: encompass
-SHUFFLE: defghijk
-SUBST: def = c
-SUBST: ghi = v
-SUBST: jk = b
-SHUFFLE: {[(<
-SHUFFLE: }] / )> / HI / JK
-SHUFFLE: }]
-SHUFFLE: )>
-SHUFFLE: HI
-SHUFFLE: JK
-: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
-KFEAT: H = enter_vaults
-: else
-KFEAT: H = stone_arch
-MARKER: H = lua:props_marker { portal=1 }
-: end
-KITEM: J = acquire any
-KFEAT: IK = stone_arch
-MARKER: I = lua:props_marker { portal=1 }
-MARKER: K = lua:props_marker { portal=1 }
-NSUBST: O = 1:O / *:%
-KITEM:  O = wand of digging
-KMONS: 8 = 8 band
-KMONS: 9 = 9 band
-KMONS: 0 = 0 band
-KMASK: 098 = !no_monster_gen
-NSUBST: | = 2:*
-SUBST: % = %.
-MAP
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-ccccdeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
-ccccddeeeeeeeeeeeeeeeeecffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
-ccccdd.....eeee........ecff%%.................................%Oxx......{.kkcccc
-ccccdd.9....eee.0.......ecf%%..0...........................0...%xx.......[kkcccc
-ccccdd..ce...eee....ee...ecf....ffffffffffffffffffffffffff......ik..kk....kkcccc
-ccccdd..dce...eee...eee...ecf...ffffffffffffffffffffffffff..8...ik..kkk...kkcccc
-ccccdd...dce...eee...eee...ecf...ffff..............%*ffff.....0.ik...kkk..kkcccc
-ccccddc...dce...eee...eee...ecf...fff...89.........%%fff........ikk...kkkkkkcccc
-ccccddcc...dce...eee...eee...ecf...fff......ff......fff.....ii..ikkk...kkkkkcccc
-ccccddccc...dce...eee...eee...ecf...fff.}].fff.....fff.....iii..ikkkk...kkkkcccc
-ccccddcccc...dce...eee...eee.0.ecf...fff|*fff.0...fff.....iiii..ikkkkk...kkkcccc
-ccccdd..ccc...dce...ee...eee...eecf...ffffff.....fff.....iiiii..ik..kkk...kkcccc
-ccccdd.0.ccc..dgge......eee...eeeecf...ffff.....fff.....iiiiii..ik.0.kkk..kkcccc
-ccccdd....cc..dggge..0.eee...eee..ecf...ff.....fff..0..iii%*ii..ik....kk..kkcccc
-ccccdd........dgggce..eee...eee.0..ecf.0......fff.....iii.%%ii..ik........kkcccc
-ccccdd........dg%%gceeee...eee......ecf......fff.....iii....ii..ik........kkcccc
-ccccdd..dd....dg%%.gcee...eee...ee...ecf.%%.fff.....iii.....ii..ik..kk....kkcccc
-ccccdd..ddd.0.dg....gce.0.eee.0.eee...ecf%%fff.....iii......ii..ik..kkk.0.kkcccc
-ccccdd...ddd..dg.....gce...eee...eee...ecffff.....iii.......ii..ik...kkk..kkcccc
-ccccddd...dddddg.0....gce...eee...eee...ecff.....iii...0....ii..ikk...kkkkkkcccc
-ccccdddd...ddddg..gg...gce...eee...eee...ec.....iii.....ii..ii..ikkk...kkkkkcccc
-ccccddddd...dddg..ggg...gce...eee...eee....0...iii.....iii..ii..ikkkk...kkkkcccc
-ccccdddddd...ddg..gggg...gce...eee...eee.9....iii.....iii...ii..ikkkkk...kkkcccc
-ccccdd..ddd...dg..ggggg...gce...eee...eee....cii%%...iii....ii..ik..kkk...kkcccc
-ccccdd.0.ddd..dg..gg.ggg...gce...ee.0.eee...jjci%%..iii|).9.ii..ik.0.kkk..kkcccc
-ccccdd....dd..dg..gg..ggg...gce......eee...jjjjci...iii*>.8.ii..ik....kk..kkcccc
-ccccdd........dg..gg...ggg...gce.0..eee...jjj..jci.0.iii....ii..ik........kkcccc
-ccccdd........dg..gg....ggg.0.gce..eee...jjj..0.jci...iii...ii..ik........kkcccc
-ccccdd..dd....dg..gg.8.H*ggg...gceeee...jjj......jci...iii..ii..ik..kk....kkcccc
-ccccdd..ddd.0.dg..gg.9.I|ggg..%%gcee...jjj.0.jj...jci...iiiiii..ik..kkk.0.kkcccc
-ccccdd...ddd..dg..gg....ggg...%%ggc....jjj...jjj...jci...iiiii..ik...kkk..kkcccc
-ccccddd...dddddg..gg...ggg.....ggg....9.jjj...jjj...jci...iiii..ikk...kkkkkkcccc
-ccccdddd...ddddg..gg..ggg.....ggg...0....jjj...jjj...jci...iii..ikkk...kkkkkcccc
-ccccddddd...dddg..gg..gg.....ggg.....cj...jjj...jjj...jci...ii..ikkkk...kkkkcccc
-ccccdddddd...ddg..gg....0...ggg.....hhcj...jjj...jjj...jci....0.ikkkkk...kkkcccc
-ccccdd..ddd...dg..gg.......ggg.....hhhhcj...jjj...jjj...jci.....ik..kkk...kkcccc
-ccccdd.0.ddd..dg..gg......ggg.....hhh%%hcj...jjj.0.jjj...jci....ik.0.kkk..kkcccc
-ccccdd....dd..dg..gg.....ggg.....hhh.%%.hcj...jj...jjj.0.jjci.%%ik....kk..kkcccc
-ccccdd........dg..gg....ggg.....hhh......hcj......jjj...jjjjci%%ik........kkcccc
-ccccdd........dg..gg%%.ggg.....hhh......0.hcj..0.jjj...jjj..jciiik........kkcccc
-ccccdd..dd....dg..gg*%ggg..0..hhh.....hh...hcj..jjj...jjj.0..jcckk..kk....kkcccc
-ccccdd..ddd.0.dg..gggggg.....hhh.....hhhh...hcjjjj...jjj......jckk..kkk.0.kkcccc
-ccccdd...ddd..dg..ggggg.....hhh.....hhhhhh...hcjj...jjj...jj...jck...kkk..kkcccc
-ccccddd...dddddg..gggg.....hhh...0.hhh*|hhh...hcj.0.jjj...jjj...jck...kkkkkkcccc
-ccccdddd...ddddg..ggg.....hhh.....hhh.JK.hhh...hcj...jjj...jjj...jck...kkkkkcccc
-ccccddddd...dddg..gg.....hhh......hh......hhh...hcj...jjj...jjj...jck...kkkkcccc
-ccccdddddd...ddg........hhh%%.........89...hhh...hcj...jjj...jjj...jck...kkkcccc
-ccccdd..ddd...dg.0.....hhhh*%..............hhhh...hcj...jjj...jjj...jck...kkcccc
-ccccdd...ddd..dg...8..hhhhhhhhhhhhhhhhhhhhhhhhhh...hcj...jjj...jjj...jck..kkcccc
-ccccdd....dd..dg......hhhhhhhhhhhhhhhhhhhhhhhhhh....hcj...jj....jjj...jc..kkcccc
-ccccdd(.......xx%...0...........................0..%%hcj.......0.jjj....9.kkcccc
-ccccdd.<......xxO%.................................%%hhcj........jjjj.....kkcccc
-ccccdddddddddddchhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhcjjjjjjjjjjjjjjjjjkkcccc
-ccccdddddddddddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjkcccc
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-ENDMAP
-
 ###############################################################################
 #  This vault excercises varied old ideas for the Vaults branch:
 #  a primarily humanoid-based monster set, a focus on placing groups,

@@ -94,7 +94,7 @@ void disjunction()
         if (mvec.empty())
             return;
         // blink should be isotropic
-        random_shuffle(mvec.begin(), mvec.end());
+        shuffle_array(mvec);
         for (vector<monster*>::iterator mitr = mvec.begin();
             mitr != mvec.end(); mitr++)
         {

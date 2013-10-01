@@ -1451,7 +1451,7 @@ void map_lines::nsubst(nsubst_spec &spec)
         while ((pos = lines[y].find_first_of(spec.key, pos)) != string::npos)
             positions.push_back(coord_def(pos++, y));
     }
-    random_shuffle(positions.begin(), positions.end(), random2);
+    shuffle_array(positions);
 
     int pcount = 0;
     const int psize = positions.size();
@@ -1483,7 +1483,7 @@ int map_lines::apply_nsubst(vector<coord_def> &pos, int start, int nsub,
 string map_lines::block_shuffle(const string &s)
 {
     vector<string> segs = split_string("/", s);
-    random_shuffle(segs.begin(), segs.end(), random2);
+    shuffle_array(segs);
     return (comma_separated_line(segs.begin(), segs.end(), "/", "/"));
 }
 
@@ -2198,8 +2198,9 @@ string depth_ranges::describe() const
 
 const int DEFAULT_MAP_WEIGHT = 10;
 map_def::map_def()
-    : name(), description(), tags(), place(), depths(), orient(), _chance(),
-      _weight(DEFAULT_MAP_WEIGHT), map(), mons(), items(), random_mons(),
+    : name(), description(), order(INT_MAX), tags(), place(), depths(),
+      orient(), _chance(), _weight(DEFAULT_MAP_WEIGHT),
+      map(), mons(), items(), random_mons(),
       prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(""),
@@ -2214,6 +2215,7 @@ void map_def::init()
     orient = MAP_NONE;
     name.clear();
     description.clear();
+    order = INT_MAX;
     tags.clear();
     place.clear();
     depths.clear();
@@ -2234,6 +2236,7 @@ void map_def::init()
 void map_def::reinit()
 {
     description.clear();
+    order = INT_MAX;
     items.clear();
     random_mons.clear();
     level_flags.clear();
@@ -3537,7 +3540,7 @@ mons_spec mons_list::get_monster(int slot_index, int list_index) const
     if (list_index < 0 || list_index >= (int)list.size())
         return mons_spec(RANDOM_MONSTER);
 
-    return (list[list_index]);
+    return list[list_index];
 }
 
 void mons_list::clear()
@@ -4627,7 +4630,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "anti-magic",
         "distortion",
         "reaching",
+#if TAG_MAJOR_VERSION == 34
         "returning",
+#endif
         "chaos",
         "evasion",
 #if TAG_MAJOR_VERSION == 34

@@ -1,4 +1,16 @@
 %%%%
+the Portal card
+
+Dette kort teleporterer dig til et tilfældigt sted, men lader dig kontrollere
+translokationen ved høj kraft. Det findes som regel i stakke med flugt og krig,
+eller i Nemelex Xobehs stak med straffe.
+%%%%
+the Warp card
+
+Dette kort translokerer dig en kort afstand, enten tilfældig eller med stigende
+grad af kontrol ved højere kraftniveauer. Det findes som regel i stakke med
+flugt og krig.
+%%%%
 Swap card
 
 Dette kort bytter om på dig og et væsen i nærheden. Det findes som regel i
@@ -8,6 +20,18 @@ Velocity card
 
 Dette kort lader dig bevæge dig eller endda handle hurtigere. Det findes som
 regel i stakke til flugt eller krig.
+%%%%
+the Tomb card
+
+Dette kort begraver spilleren bag beskyttende mure af solid klippe. På lavere
+kraftniveauer er graven muligvis ikke perfekt. Brug det forsigtigt! Det findes
+som regel i stakke med forsvar, flugt og krig eller i Nemelex Xobehs stak med
+straffe.
+%%%%
+the Banshee card
+
+De onde ånders skrig indgyder rædsel i dine fjender. Det findes som regel i
+stakke med forsvar, flugt og krig.
 %%%%
 Damnation card
 
@@ -20,11 +44,21 @@ Solitude card
 Dette kort teleporterer tilfældigt væsener, der er ved siden af dig. Det findes
 som regel i stakke til forsvar, flugt eller krig.
 %%%%
+Warpwright card
+
+Dette kort skaber teleportationsfælder. Det findes som regel i stakke med
+forsvar, flugt og krig.
+%%%%
 Flight card
 
 Dette kort hjælper dig med at tage benene på nakken ved at forvandle dig, gøre
 dig hurtigere eller skabe andre flugtveje. Det findes som regel i stakke til
 forsvar, flugt og krig.
+%%%%
+the Elixir card
+
+Dette kort helbreder dig og kan også dræne eller styrke din magiske energi. Det
+findes som regel i stakke med forandringer, forsvar og krig.
 %%%%
 Battlelust card
 
@@ -35,6 +69,32 @@ Metamorphosis card
 
 Dette kort forvandler dig midlertidigt. Det findes som regel i stakke til
 forandring, forsvar og krig.
+%%%%
+the Helm card
+
+Dette kort øger dine forsvar. Det findes som regel i stakke med forandringer,
+forsvar og krig.
+%%%%
+the Blade card
+
+Dette kort fortryller dit våben midlertidigt og vækker det til live. Det findes
+som regel i stakke med forandringer, forsvar og krig.
+%%%%
+the Shadow card
+
+Dette kort lader dig smelte sammen med skyggerne, så du bliver sværere at
+opdage. Det findes som regel i stakke med forandringer, forsvar og krig.
+%%%%
+the Mercenary card
+
+Dette kort hidkalder lejesoldater til at kæmpe ved din side ... for en pris.
+Det findes som regel i stakke med forandringer, forsvar og krig.
+%%%%
+the Potion card
+
+Dette kort har den samme virkning, positiv eller negativ, som at drikke en
+tilfældig, magisk eliksir. Det findes som regel i stakke med forandringer og
+vidundere.
 %%%%
 Focus card
 
@@ -51,15 +111,85 @@ Experience card
 Dette kort gør dig mere erfaren. Det findes som regel i stakke til forandring
 eller vidundere.
 %%%%
+Wild Magic card
+
+Dette kort udsætter dig for vild magi, ligesom hvis du kaster en besværgelse
+forkert. Det findes som regel i stakke med forandringer og vidundere.
+%%%%
+the Helix card
+
+Dette kort ændrer dine mutationer. På højere kraftniveauer bliver det mere
+sandsynligt at ændringen er gavnlig. Det findes som regel i stakke med
+forandringer og vidundere.
+%%%%
+the Sage card
+
+Dette kort kanaliserer noget af din indtjente erfaring mod en bestemt færdighed
+og træner den hurtigere end normalt. Det findes som regel i stakke med
+forandringer og vidundere.
+%%%%
+the Alchemist card
+
+Dette kort forvandler noget af dit guld til helbred og magisk energi. Det
+findes som regel i stakke med forandringer og vidundere.
+%%%%
+Water card
+
+Dette kort forvandler gulvet omkring dig til vand. Det findes som regel i
+stakke med forandringer og udgravning.
+%%%%
 Vitrification card
 
 Dette kort gør væggene gennemsigtige. Det findes som regel i stakke til
 forandringer eller udgravning.
 %%%%
+Dowsing card
+
+Dette kort lader dig opdage fælder, afslører dine omgivelser, gør dig
+telepatisk for en kort stund eller en kombination af disse. Det findes som
+regel i stakke med forandringer og udgravninger.
+%%%%
+the Trowel card
+
+Dette kort skaber et alter, en statue, en golem eller måske endda en portal,
+men virker bedst i de centrale underjordiske gange og deres forgreninger. Det
+findes som regel i stakke med forandringer og udgravninger.
+%%%%
+the Minefield card
+
+Dette kort gør dine umiddelbare omgivelser mere farlige. Det findes som regel i
+stakke med forandringer og udgravninger eller i Nemelex Xobehs stak med
+straffe.
+%%%%
+the Crusade card
+
+Dette kort forsøger at omvende væsener i nærheden til din sag. Det findes som
+regel i stakke med hidkaldelser og krig.
+%%%%
+the Herd card
+
+Dette kort hidkalder dyr. Det findes som regel i stakke med hidkaldelser og
+krig.
+%%%%
+the Pentagram card
+
+Dette kort hidkalder en dæmon til at hjælpe dig. Det findes som regel i stakke
+med hidkaldelser og krig.
+%%%%
+the Dance card
+
+Dette kort hidkalder et dansende våben. Det findes som regel i stakke med
+hidkaldelser og krig.
+%%%%
 Foxfire card
 
 Dette kort hidkalder flyvende væsener. Det findes som regel i stakke til
 hidkaldelser eller krig.
+%%%%
+the Bones card
+
+Dette kort hidkalder et knokkelvæsen. Det findes som regel i stakke med
+hidkaldelser og krig.
 %%%%
 Repulsiveness card
 
@@ -86,6 +216,16 @@ Venom card
 Dette kort udløser en giftig angrebsbesværgelse, som også kan påvirke dig. Det
 findes som regel i stakke til ødelæggelse og krig.
 %%%%
+the Spark card
+
+Dette kort udløser en elektrisk angrebsbesværgelse. Det findes som regel i
+stakke med ødelæggelse og krig.
+%%%%
+the Hammer card
+
+Dette kort udløser en fysisk angrebsbesværgelse. Det findes som regel i stakke
+med ødelæggelse og krig.
+%%%%
 Pain card
 
 Dette kort udløser en nekromantisk angrebsbesværgelse, som muligvis også rammer
@@ -97,7 +237,64 @@ Dette kort påkalder sig mørkets kræfter for at forvolde pinefulde skader på
 levende væsener i nærheden. Det findes som regel i stakke til ødelæggelse og
 krig.
 %%%%
+the Orb card
+
+Dette kort udløser en ødelæggende kugle af ren magi, og sommetider endda flere.
+Det findes som regel i stakke med ødelæggelse og krig.
+%%%%
+Wrath card
+
+Dette kort pådrager dig en guds vrede. Det findes som regel kun i Nemelex
+Xobehs stak med straffe.
+%%%%
+the Wraith card
+
+Dette kort dræner dig. Det findes som regel kun i Nemelex Xobehs stak med
+straffe.
+%%%%
+the Curse card
+
+Dette kort forbander dine egen dele. Det findes som regel i Nemelex Xobehs stak
+med straffe.
+%%%%
+Xom card
+
+Dette kort pådrager dig Xoms opmærksomhed. Det findes som regel kun i Nemelex
+Xobehs stak med straffe.
+%%%%
 Famine card
 
 Dette kort sulter dig. Det findes som regel kun i Nemelex Xobehs strafstak.
+%%%%
+the Swine card
+
+Dette kort gør dig lyserød og får dig til at rode efter trøfler. Det findes som
+regel kun i Nemelex Xobehs stak med straffe.
+%%%%
+the Bargain card
+
+Dette kort giver dig midlertidigt rabat i butikker. Det er normalt ikke en del
+af nogen stakke.
+%%%%
+the Genie card
+
+Lampeånden kan skænke dig erhvervelse eller straffe dig for at prøve. Den er
+normalt ikke del af nogen stak.
+%%%%
+the Feast card
+
+Dette kort brødføder dig. Det er som regel ikke del af nogen stak.
+%%%%
+the Stairs card
+
+Dette kort får trapper til at glide hen imod dig eller væk fra dig. (Det er en
+fejl, hvis du nogensinde støder på dette kort.)
+%%%%
+a buggy card
+
+Fejlbehæftet (det er en fejl, hvis du nogensinde ser den her.)
+%%%%
+a very buggy card
+
+Fejlbehæftet (det er en fejl, hvis du nogensinde ser den her.)
 %%%%

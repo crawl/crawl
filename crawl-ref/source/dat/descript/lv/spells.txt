@@ -7,10 +7,6 @@ Bolt of Fire spell
 
 Šī burvestība sviež lielu uguns šautru.
 %%%%
-Iron Shot spell
-
-Burvestība raida lielu un smagu metāla bultu uz izvēlēto pretinieku.
-%%%%
 Call Imp spell
 
 Šī burvestība no Elles dzīlēm atsauc šurp kādu dēmoniņu.
@@ -40,13 +36,13 @@ Freezing Cloud spell
 
 Burvestība uzburt lielu nāvīgi aukstu garaiņu mākoni.
 %%%%
+Iron Shot spell
+
+Burvestība raida lielu un smagu metāla bultu uz izvēlēto pretinieku.
+%%%%
 Lehudib's Crystal Spear spell
 
 Burvestība raida nāvīgi asu kristāla bultu.
-%%%%
-Levitation spell
-
-Burvestība sniedz tās būrējam spēju karāties gaisā.
 %%%%
 Paralyse spell
 

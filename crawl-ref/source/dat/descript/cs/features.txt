@@ -32,10 +32,6 @@ A gateway to the decaying netherworld of Tartarus
 
 Toto místo se zdá vyzařuje negativní energii.
 %%%%
-A magical trap
-
-Magické zařízení určené k ohrožení vetřelců, které nelze deaktivovat.
-%%%%
 A mechanical trap
 
 Mechanický vynález navržen tak, aby ohrozil nepovolané osoby. Avšak zručný

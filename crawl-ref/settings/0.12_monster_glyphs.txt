@@ -15,3 +15,10 @@ item_glyph += helmet : darkgrey
 item_glyph += artefact.*helmet : yellow
 
 item_glyph += throwing net : darkgrey
+
+item_glyph += lantern of shadows : lightgrey
+item_glyph += bottled efreet : brown
+item_glyph += box of beasts : darkgrey
+item_glyph += crystal ball of energy : lightgrey
+item_glyph += horn of Geryon : lightgrey
+item_glyph += fan of gales : lightgrey

@@ -1296,8 +1296,8 @@ enum dungeon_feature_type
     DNGN_OPEN_DOOR,
 
     DNGN_TRAP_MECHANICAL,
-    DNGN_TRAP_MAGICAL,
-    DNGN_TRAP_NATURAL,
+    DNGN_TRAP_TELEPORT,
+    DNGN_TRAP_SHAFT,
     DNGN_TRAP_WEB,
     DNGN_UNDISCOVERED_TRAP,
 
@@ -1412,11 +1412,12 @@ enum dungeon_feature_type
     DNGN_FOUNTAIN_BLUE,
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
     DNGN_FOUNTAIN_BLOOD,
-    // same order as above!
+#if TAG_MAJOR_VERSION == 34
     DNGN_DRY_FOUNTAIN_BLUE,
     DNGN_DRY_FOUNTAIN_SPARKLING,
     DNGN_DRY_FOUNTAIN_BLOOD,
-    DNGN_PERMADRY_FOUNTAIN,
+#endif
+    DNGN_DRY_FOUNTAIN,
 
     // Not meant to ever appear in grd().
     DNGN_EXPLORE_HORIZON, // dummy for redefinition
@@ -1431,6 +1432,9 @@ enum dungeon_feature_type
 
     DNGN_SEALED_STAIRS_UP,
     DNGN_SEALED_STAIRS_DOWN,
+    DNGN_TRAP_ALARM,
+    DNGN_TRAP_ZOT,
+    DNGN_PASSAGE_OF_GOLUBRIA,
 
     NUM_FEATURES
 };
@@ -1543,9 +1547,6 @@ enum duration_type
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
-#ifdef FORMICID_EXPERIMENTAL
-    DUR_ANTENNAE_EXTEND,
-#endif
     DUR_SPIRIT_HOWL,
     DUR_INFUSION,
     DUR_SONG_OF_SLAYING,
@@ -1554,9 +1555,8 @@ enum duration_type
     DUR_RECITE,
     DUR_GRASPING_ROOTS,
     DUR_SLEEP_IMMUNITY,
-#ifndef FORMICID_EXPERIMENTAL
+    DUR_FIRE_VULN,
     DUR_ANTENNAE_EXTEND,
-#endif
     NUM_DURATIONS
 };
 
@@ -1664,6 +1664,8 @@ enum enchant_type
     ENCH_TOXIC_RADIANCE,
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
     ENCH_GRASPING_ROOTS,
+    ENCH_IOOD_CHARGED,
+    ENCH_FIRE_VULN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -1712,11 +1714,13 @@ enum equipment_type
     EQ_RING_SIX,
     EQ_RING_SEVEN,
     EQ_RING_EIGHT,
+    // Finger amulet provides an extra ring slot
+    EQ_RING_AMULET,
     NUM_EQUIP,
 
     EQ_MIN_ARMOUR = EQ_CLOAK,
     EQ_MAX_ARMOUR = EQ_BODY_ARMOUR,
-    EQ_MAX_WORN   = EQ_RING_EIGHT,
+    EQ_MAX_WORN   = EQ_RING_AMULET,
     // these aren't actual equipment slots, they're categories for functions
     EQ_STAFF            = 100,         // weapon with base_type OBJ_STAVES
     EQ_RINGS,                          // check both rings
@@ -1840,11 +1844,6 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_KNOW_PLUSES       = 0x00000004,  // to hit/to dam/to AC/charges
     ISFLAG_KNOW_PROPERTIES   = 0x00000008,  // know special artefact properties
     ISFLAG_IDENT_MASK        = 0x0000000F,  // mask of all id related flags
-
-    // these three masks are of the minimal flags set upon using equipment:
-    ISFLAG_EQ_WEAPON_MASK    = 0x0000000B,  // mask of flags for weapon equip
-    ISFLAG_EQ_ARMOUR_MASK    = 0x0000000F,  // mask of flags for armour equip
-    ISFLAG_EQ_JEWELLERY_MASK = 0x0000000F,  // mask of flags for known jewellery
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_BLESSED_WEAPON    = 0x00000200,  // personalized TSO's gift
@@ -2731,12 +2730,6 @@ enum monster_type                      // menv[].type
 
     MONS_SOJOBO,
 
-#ifdef FORMICID_EXPERIMENTAL
-    MONS_FORMICID,
-    MONS_FORMICID_DRONE,
-    MONS_FORMICID_VENOM_MAGE,
-#endif
-
     MONS_CHIMERA,
 
     MONS_SNAPLASHER_VINE,
@@ -2758,11 +2751,9 @@ enum monster_type                      // menv[].type
 
     MONS_DEATHCAP,
 
-#ifndef FORMICID_EXPERIMENTAL
     MONS_FORMICID,
     MONS_FORMICID_DRONE,
     MONS_FORMICID_VENOM_MAGE,
-#endif
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -2961,16 +2952,11 @@ enum mutation_type
     MUT_MANA_LINK,
     MUT_PETRIFICATION_RESISTANCE,
     MUT_TRAMPLE_RESISTANCE,
-#ifdef FORMICID_EXPERIMENTAL
-    MUT_EXOSKELETON,
-#endif
 #if TAG_MAJOR_VERSION == 34
     MUT_CLING,
 #endif
     MUT_FUMES,
-#ifndef FORMICID_EXPERIMENTAL
     MUT_EXOSKELETON,
-#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3046,7 +3032,6 @@ enum size_part_type
 {
     PSIZE_BODY,         // entire body size -- used for EV/size of target
     PSIZE_TORSO,        // torso only (hybrids -- size of parts that use equip)
-    PSIZE_PROFILE,      // profile only (for stealth checks)
 };
 
 enum potion_type
@@ -3099,6 +3084,8 @@ enum pronoun_type
     PRONOUN_OBJECTIVE,
 };
 
+// Be sure to update _prop_name[] in wiz-item.cc to match.  Also
+// _randart_propnames(), but order doesn't matter there.
 enum artefact_prop_type
 {
     ARTP_BRAND,
@@ -3142,6 +3129,7 @@ enum artefact_prop_type
 #if TAG_MAJOR_VERSION == 34
     ARTP_FOG,
 #endif
+    ARTP_REGENERATION,
     ARTP_NUM_PROPERTIES
 };
 
@@ -3508,9 +3496,9 @@ enum spell_type
     SPELL_FAKE_RAKSHASA_SUMMON,
     SPELL_STEAM_BALL,
     SPELL_SUMMON_UFETUBUS,
-    SPELL_SUMMON_BEAST,
+    SPELL_SUMMON_HELL_BEAST,
     SPELL_ENERGY_BOLT,
-    SPELL_POISON_SPLASH,
+    SPELL_SPIT_POISON,
     SPELL_SUMMON_UNDEAD,
     SPELL_CANTRIP,
     SPELL_QUICKSILVER_BOLT,
@@ -3519,7 +3507,7 @@ enum spell_type
     SPELL_SUMMON_DRAKES,
     SPELL_BLINK_OTHER,
     SPELL_SUMMON_MUSHROOMS,
-    SPELL_ACID_SPLASH,
+    SPELL_SPIT_ACID,
     SPELL_STICKY_FLAME_SPLASH,
     SPELL_FIRE_BREATH,
     SPELL_COLD_BREATH,
@@ -3540,7 +3528,9 @@ enum spell_type
     SPELL_BLINK_AWAY,
     SPELL_MISLEAD,
     SPELL_FAKE_MARA_SUMMON,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SUMMON_RAKSHASA,
+#endif
     SPELL_SUMMON_ILLUSION,
     SPELL_PRIMAL_WAVE,
     SPELL_CALL_TIDE,
@@ -3600,7 +3590,9 @@ enum spell_type
     SPELL_SUMMON_MINOR_DEMON,
     SPELL_DISJUNCTION,
     SPELL_CHAOS_BREATH,
+#if TAG_MAJOR_VERSION == 34
     SPELL_FRENZY,
+#endif
     SPELL_SUMMON_TWISTER,
     SPELL_BATTLESPHERE,
     SPELL_FULMINANT_PRISM,
@@ -3616,12 +3608,6 @@ enum spell_type
     SPELL_CALL_LOST_SOUL,
     SPELL_DIMENSION_ANCHOR,
     SPELL_BLINK_ALLIES_ENCIRCLE,
-#ifdef FORMICID_EXPERIMENTAL
-    SPELL_SHAFT_SELF,
-    #if TAG_MAJOR_VERSION == 34
-    SPELL_MASS_CURE_POISON,
-    #endif
-#endif
     SPELL_AWAKEN_VINES,
     SPELL_CONTROL_WINDS,
     SPELL_THORN_VOLLEY,
@@ -3638,12 +3624,7 @@ enum spell_type
     SPELL_MALIGN_OFFERING,
     SPELL_SEARING_RAY,
     SPELL_DISCORD,
-#ifndef FORMICID_EXPERIMENTAL
     SPELL_SHAFT_SELF,
-    #if TAG_MAJOR_VERSION == 34
-    SPELL_MASS_CURE_POISON,
-    #endif
-#endif
     NUM_SPELLS
 };
 

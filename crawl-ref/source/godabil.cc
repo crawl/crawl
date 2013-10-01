@@ -2338,7 +2338,7 @@ static void _path_distance(const coord_def& origin,
             {
                 monster* temp = monster_at(*adj_it);
                 if (!temp || (temp->attitude == ATT_HOSTILE
-                              && !mons_is_stationary(temp)))
+                              && !temp->is_stationary()))
                 {
                     fringe.push(point_distance(*adj_it, current.second+1));
                 }
@@ -2406,7 +2406,7 @@ bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
 
     if (mons_positions.empty())
     {
-        random_shuffle(candidates.begin(), candidates.end());
+        shuffle_array(candidates);
         return true;
     }
 
@@ -3119,7 +3119,7 @@ void cheibriados_time_bend(int pow)
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
-        if (mon && !mons_is_stationary(mon))
+        if (mon && !mon->is_stationary())
         {
             int res_margin = roll_dice(mon->hit_dice, 3) - random2avg(pow, 2);
             if (res_margin > 0)
@@ -3142,7 +3142,7 @@ void cheibriados_time_bend(int pow)
 static int _slouchable(coord_def where, int pow, int, actor* agent)
 {
     monster* mon = monster_at(where);
-    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
+    if (mon == NULL || mon->is_stationary() || mon->cannot_move()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(mon))
     {

@@ -107,7 +107,7 @@ static void _search_dungeon(const coord_def & start,
         current = fringe.front();
         fringe.pop();
 
-        random_shuffle(compass_idx, compass_idx + connect_mode);
+        shuffle_array(compass_idx, connect_mode);
 
         for (int i=0; i < connect_mode; ++i)
         {
@@ -373,6 +373,8 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 // Now it returns index of new slime (-1 if it fails).
 static monster* _do_split(monster* thing, coord_def & target)
 {
+    ASSERT(thing->alive());
+
     // Create a new slime.
     mgen_data new_slime_data = mgen_data(thing->type,
                                          thing->behaviour,
@@ -401,7 +403,9 @@ static monster* _do_split(monster* thing, coord_def & target)
     new_slime->attitude = thing->attitude;
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
-    // XXX copy summoner info
+    new_slime->summoner = thing->summoner;
+    if (thing->props.exists("blame"))
+        new_slime->props["blame"] = thing->props["blame"].get_vector();
 
     int split_off = thing->number / 2;
     float max_per_blob = thing->max_hit_points / float(thing->number);
@@ -417,6 +421,9 @@ static monster* _do_split(monster* thing, coord_def & target)
 
     if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);
+
+    ASSERT(thing->alive());
+    ASSERT(new_slime->alive());
 
     return new_slime;
 }
@@ -649,7 +656,7 @@ static bool _slime_merge(monster* thing)
 
     int max_slime_merge = 5;
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
     coord_def origin = thing->pos();
 
     int target_distance = grid_distance(thing->target, thing->pos());
@@ -727,7 +734,7 @@ static bool _crawling_corpse_merge(monster *crawlie)
         return false;
 
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
     coord_def origin = crawlie->pos();
 
     monster* merge_target = NULL;
@@ -760,7 +767,7 @@ static bool _slime_can_spawn(const coord_def target)
 // we can find a square to place the new slime creature on.
 static monster *_slime_split(monster* thing, bool force_split)
 {
-    if (!thing || thing->number <= 1
+    if (!thing || thing->number <= 1 || thing->hit_points < 4
         || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
         || _disabled_merge(thing))
     {
@@ -778,7 +785,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     {
         // If we're not already adjacent to the foe, check whether we can
         // move any closer. If so, do that rather than splitting.
-        for (radius_iterator ri(origin, 1, true, false, true); ri; ++ri)
+        for (adjacent_iterator ri(origin); ri; ++ri)
         {
             if (_slime_can_spawn(*ri)
                 && grid_distance(*ri, foe_pos) < old_dist)
@@ -789,7 +796,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     }
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
 
     // Anywhere we can place an offspring?
     for (int i = 0; i < 8; ++i)
@@ -866,7 +873,7 @@ static bool _starcursed_split(monster* mon)
     const coord_def origin = mon->pos();
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
 
     // Anywhere we can place an offspring?
     for (int i = 0; i < 8; ++i)
@@ -1016,7 +1023,7 @@ static bool _siren_movement_effect(const monster* mons)
             {
                 coord_def swapdest;
                 if (mon->wont_attack()
-                    && !mons_is_stationary(mon)
+                    && !mon->is_stationary()
                     && !mon->is_projectile()
                     && !mon->cannot_act()
                     && !mon->asleep()
@@ -1390,14 +1397,15 @@ static bool _moth_polymorph(const monster* mon)
     return false;
 }
 
-static bool _moth_incite_monsters(const monster* mon)
+static bool _moth_incite_monsters(monster* mon)
 {
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
         return false;
 
+    // Only things both in LOS of the moth and within radius 4.
+    const int radius_sq = 4 * 4 + 1;
     int goaded = 0;
-    circle_def c(mon->pos(), 4, C_ROUND);
-    for (monster_iterator mi(&c); mi; ++mi)
+    for (monster_iterator mi(mon->get_los_no_trans()); mi; ++mi)
     {
         if (*mi == mon || !mi->needs_berserk())
             continue;
@@ -1407,6 +1415,9 @@ static bool _moth_incite_monsters(const monster* mon)
 
         // Cannot goad other moths of wrath!
         if (mi->type == MONS_MOTH_OF_WRATH)
+            continue;
+
+        if (distance2(mon->pos(), (*mi)->pos()) > radius_sq)
             continue;
 
         if (_make_monster_angry(mon, *mi) && !one_chance_in(3 * ++goaded))
@@ -1459,7 +1470,7 @@ static void _set_door(set<coord_def> door, dungeon_feature_type feat)
 bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
                     bool ignore_tension, const vector<coord_def>* excluded)
 {
-    if (act && act->is_monster() && mons_is_stationary(act->as_monster()))
+    if (act && act->is_stationary())
         return false;
 
     int max_tension = -1;
@@ -1915,19 +1926,13 @@ void heal_flayed_effect(actor* act, bool quiet, bool blood_only)
 
 void end_flayed_effect(monster* ghost)
 {
-    if (you.duration[DUR_FLAYED] && !ghost->wont_attack()
-        && cell_see_cell(ghost->pos(), you.pos(), LOS_DEFAULT))
-    {
+    if (you.duration[DUR_FLAYED] && !ghost->wont_attack())
         heal_flayed_effect(&you);
-    }
 
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(ghost, *mi)
-            && cell_see_cell(ghost->pos(), mi->pos(), LOS_DEFAULT))
-        {
+        if (mi->has_ench(ENCH_FLAYED) && !mons_aligned(ghost, *mi))
             heal_flayed_effect(*mi);
-        }
     }
 }
 
@@ -2442,7 +2447,7 @@ struct tentacle_attack_constraints
     void operator()(const position_node & node,
                     vector<position_node> & expansion)
     {
-        random_shuffle(connect_idx, connect_idx + 8);
+        shuffle_array(connect_idx, 8);
 
 //        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
         for (unsigned i=0; i < 8; i++)
@@ -2553,7 +2558,7 @@ struct tentacle_connect_constraints
     void operator()(const position_node & node,
                     vector<position_node> & expansion)
     {
-        random_shuffle(connect_idx, connect_idx + 8);
+        shuffle_array(connect_idx, 8);
 
         for (unsigned i=0; i < 8; i++)
         {
@@ -2939,7 +2944,7 @@ void move_solo_tentacle(monster* tentacle)
 
     if (severed)
     {
-        random_shuffle(compass_idx, compass_idx + 8);
+        shuffle_array(compass_idx, 8);
         for (unsigned i = 0; i < 8; ++i)
         {
             coord_def new_base = base_position + Compass[compass_idx[i]];
@@ -3032,7 +3037,7 @@ void move_solo_tentacle(monster* tentacle)
         // todo: set a random position?
 
         dprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
-        random_shuffle(compass_idx, compass_idx + 8);
+        shuffle_array(compass_idx, 8);
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
@@ -3554,7 +3559,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (spit)
         {
-            spell = SPELL_ACID_SPLASH;
+            spell = SPELL_SPIT_ACID;
             setup_mons_cast(mons, beem, spell);
 
             // Fire tracer.
@@ -4047,14 +4052,20 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_STARCURSED_MASS:
-        if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3))
-            _starcursed_split(mons);
+        if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3)
+            && mons->hit_points >= 8)
+        {
+            _starcursed_split(mons), used = true;
+        }
 
         if (!mons_is_confused(mons)
                 && !is_sanctuary(mons->pos()) && !is_sanctuary(beem.target)
                 && _will_starcursed_scream(mons)
                 && coinflip())
+        {
             _starcursed_scream(mons, actor_at(beem.target));
+            used = true;
+        }
         break;
 
 
@@ -4194,11 +4205,20 @@ bool mon_special_ability(monster* mons, bolt & beem)
             else
                 found = true;
 
-            if (found && mons->move_to_pos(hopspot))
+            if (found)
             {
-                simple_monster_message(mons, " hops backward while attacking.");
+                const bool could_see = you.can_see(mons);
+
                 fight_melee(mons, mons->get_foe());
-                mons->speed_increment -= 2; // Add a small extra delay
+                if (mons->move_to_pos(hopspot))
+                {
+                    if (could_see || you.can_see(mons))
+                    {
+                        mprf("%s hops backward while attacking.",
+                             mons->name(DESC_THE, true).c_str());
+                    }
+                    mons->speed_increment -= 2; // Add a small extra delay
+                }
                 return true; // Energy has already been deducted via melee
             }
         }
@@ -4319,9 +4339,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (foe && !feat_is_water(grd(foe->pos())))
             {
                 coord_def spot;
-                find_habitable_spot_near(foe->pos(), MONS_BIG_FISH, 3, false, spot);
-                if (!spot.origin() && foe->pos().distance_from(spot)
-                                      < foe->pos().distance_from(mons->pos()))
+                if (find_habitable_spot_near(foe->pos(), MONS_BIG_FISH, 3, false, spot)
+                    && foe->pos().distance_from(spot)
+                     < foe->pos().distance_from(mons->pos()))
                 {
                     if (mons->move_to_pos(spot))
                     {
@@ -4778,7 +4798,7 @@ void activate_ballistomycetes(monster* mons, const coord_def& origin,
     if (candidates.size() > 25)
         return;
 
-    random_shuffle(candidates.begin(), candidates.end());
+    shuffle_array(candidates);
 
     int index = 0;
 
@@ -4891,7 +4911,7 @@ void starcursed_merge(monster* mon, bool forced)
 {
     //Find a random adjacent starcursed mass
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    random_shuffle(compass_idx, compass_idx + 8);
+    shuffle_array(compass_idx, 8);
 
     for (int i = 0; i < 8; ++i)
     {

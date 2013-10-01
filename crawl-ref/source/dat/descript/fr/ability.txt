@@ -190,7 +190,7 @@ Annule toutes vos mutations – mais une seule et unique fois.
 %%%%
 Divine Shield ability
 
-Le Rayonnant vous octroie un bouclier divin. Parce qu'il est maintenu par un
+L’Étincelant vous octroie un bouclier divin. Parce qu'il est maintenu par un
 pouvoir divin, il n'interfère aucunement avec votre équipement. Cependant, il
 est contrôlé par votre propre volonté et, votre compétence Boucliers en
 améliorera l'usage.
@@ -205,7 +205,7 @@ alliés ne serez pas affectés.
 Summon Divine Warrior ability
 
 Invoque un ange ou un déva, de puissants guerriers contre le mal. Ils pourront
-être bénis à rester plus longtemps sur ce plan d'existence par Le Rayonnant.
+être bénis à rester plus longtemps sur ce plan d'existence par L’Étincelant.
 %%%%
 Receive Corpses ability
 

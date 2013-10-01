@@ -895,7 +895,7 @@ static const spell_desc *_seekspell(spell_type spell)
     const int index = spell_list[spell];
     ASSERT(index != -1);
 
-    return (&spelldata[index]);
+    return &spelldata[index];
 }
 
 bool is_valid_spell(spell_type spell)

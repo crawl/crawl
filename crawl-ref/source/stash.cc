@@ -90,7 +90,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
     if (item->quantity > 1)
     {
         text += "\n";
-        text += item->name(DESC_BASENAME);
+        text += item->name(DESC_QUALNAME);
     }
 
     return text;
@@ -1155,7 +1155,7 @@ const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 {
     for (unsigned i = 0; i < m_shops.size(); ++i)
         if (m_shops[i].isAt(c))
-            return (&m_shops[i]);
+            return &m_shops[i];
 
     return NULL;
 }

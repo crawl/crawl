@@ -189,7 +189,7 @@ end
 -- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
 function trove.good_scroll (e)
     e.item([[scroll of enchant weapon i / scroll of enchant weapon ii /
-             scroll of enchant weapon iii w:5 / scroll of vorpalise weapon w:3 /
+             scroll of enchant weapon iii w:5 / scroll of brand weapon w:3 /
              scroll of enchant armour / scroll of identify w:20 /
              scroll of magic mapping w:5 / scroll of blinking / scroll of silence w:2 /
              scroll of recharging / scroll of acquirement w:1 / scroll of teleportation w:20 /
@@ -771,7 +771,6 @@ ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          cap unrand:hat_of_the_bear_spirit                                   /\
          wizard hat unrand:hat_of_the_alchemist / randart pair of gloves     /\
          wizard hat unrand:hat_of_pondering / randart pair of boots          /\
-         pair of boots unrand:boots_of_the_assassin                          /\
          pair of gloves unrand:gauntlets_of_war                              /\
          pair of gloves unrand:fencers_gloves                                /\
          naga barding unrand:lightning_scales                                /\
@@ -781,8 +780,7 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          dagger unrand:morg / great sword unrand:sword_of_the_doom_knight    /\
          great sword unrand:sword_of_power / demon blade unrand:bloodbane    /\
          scimitar unrand:scimitar_of_flaming_death / broad axe unrand:arga   /\
-         dagger unrand:knife_of_accuracy / broad axe unrand:obsidian_axe     /\
-         triple sword unrand:plutonium_sword                                 /\
+         broad axe unrand:obsidian_axe / triple sword unrand:plutonium_sword /\
          demon blade unrand:leech / long sword unrand:sword_of_zonguldrok    /\
          staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
          quarterstaff unrand:elemental_staff / mace unrand:devastator        /\
@@ -799,7 +797,7 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          crossbow unrand:hellfire / crossbow unrand:sniper                   /\
          longbow unrand:piercer / longbow unrand:storm_bow                   /\
          long sword unrand:autumn_katana / sabre unrand:captains_cutlass     /\
-         randart demon blade  / blowgun unrand:blowgun_of_the_assassin
+         randart demon blade / blowgun unrand:blowgun_of_the_assassin
 SHUFFLE: def
 : trove.setup_features(_G)
 MAP

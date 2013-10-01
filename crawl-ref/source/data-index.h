@@ -17,7 +17,7 @@ public:
     {
         ASSERT_RANGE(key, 0, NMax);
         check_index();
-        return (&pop[index[key]]);
+        return &pop[index[key]];
     }
 
     bool contains(TKey key)

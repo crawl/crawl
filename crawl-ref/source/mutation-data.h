@@ -1552,7 +1552,7 @@
   "exoskeleton"
 },
 
-{ MUT_FUMES,            5,  2, false, false, false,
+{ MUT_FUMES,            0,  2, false, false, false,
   "fuming",
 
   {"You emit clouds of smoke.", "You frequently emit clouds of smoke.", ""},

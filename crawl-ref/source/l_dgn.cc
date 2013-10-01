@@ -134,6 +134,13 @@ static int dgn_desc(lua_State *ls)
     PLUARET(string, map->description.c_str());
 }
 
+static int dgn_order(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    map->order = luaL_checkint(ls, 2);
+    PLUARET(number, map->order);
+}
+
 static int dgn_tags(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1849,6 +1856,7 @@ const struct luaL_reg dgn_dlib[] =
 { "depth", dgn_depth },
 { "place", dgn_place },
 { "desc", dgn_desc },
+{ "order", dgn_order },
 { "tags",  dgn_tags },
 { "has_tag", dgn_has_tag },
 { "tags_remove", dgn_tags_remove },

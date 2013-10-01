@@ -140,6 +140,7 @@
 # METAB:    Hunger modifier.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
+# REGEN:    Provides regeneration (40 = ring of regen, 100 = the spell).
 # STEALTH:  Stealth modifier.
 # STR:      Strength modifier.
 # TILE:     The file containing the artefact's tile, with file type png.
@@ -272,6 +273,8 @@ NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
 TYPE:    flamberge
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
+BASE_DAM: +1
+BASE_ACC: +1
 PLUS:    +6/+6
 COLOUR:  ETC_FIRE
 TILE:    spwpn_sword_of_cerebov
@@ -601,6 +604,7 @@ TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
 
+# TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
 TYPE:     knife
@@ -608,8 +612,9 @@ PLUS:     +27/-1
 COLOUR:   LIGHTCYAN
 TILE:     urand_knife_of_accuracy
 TILE_EQ:  knife_of_accuracy
-BOOL:     tilerim
+BOOL:     tilerim, nogen
 
+# TAG_MAJOR_VERSION == 34
 # A play on the spell of the same name.  Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
 NAME:     Lehudib's crystal spear
@@ -619,7 +624,7 @@ COLOUR:   GREEN
 TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
-BRAND:    SPWPN_RETURNING
+BOOL:     nogen
 
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
@@ -672,8 +677,8 @@ DAM:      -3
 STEALTH:  60
 BOOL:     seeinv, fog
 
-NAME:    shield "Bullseye"
-OBJ:     OBJ_ARMOUR/ARM_SHIELD
+NAME:    large shield "Bullseye"
+OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
@@ -730,9 +735,7 @@ PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
 TILE_EQ:  middle_gray
-DEX:      3
 STEALTH:  80
-BOOL:     inv
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
@@ -878,7 +881,6 @@ PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
 TILE_EQ:  shield_gong
-BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
 BOOL:     elec, life
 
@@ -1067,6 +1069,21 @@ COLOUR:   ETC_BLOOD
 TILE:     urand_axe_of_woe
 TILE_EQ:  axe_of_woe
 BOOL:     nogen
+
+NAME:     moon troll leather armour
+OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
+PLUS:     +4
+COLOUR:   ETC_SHIMMER_BLUE
+BRAND:    SPARM_SPIRIT_SHIELD
+TILE:     urand_moon_troll_leather_armour
+TILE_EQ:  moon_troll_leather_armour
+MP:       +5
+REGEN:    40
+
+ENUM:     FINGER_AMULET
+NAME:     macabre finger necklace
+OBJ:      OBJ_JEWELLERY/AMU_WARDING
+COLOUR:   ETC_BONE
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are

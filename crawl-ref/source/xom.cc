@@ -99,7 +99,7 @@ static const spell_type _xom_nontension_spells[] =
 static const spell_type _xom_tension_spells[] =
 {
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_CAUSE_FEAR, SPELL_ENGLACIATION,
-    SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES,
+    SPELL_DISPERSAL, SPELL_STONESKIN, SPELL_RING_OF_FLAMES, SPELL_DISCORD,
     SPELL_OLGREBS_TOXIC_RADIANCE, SPELL_FIRE_BRAND, SPELL_FREEZING_AURA,
     SPELL_POISON_WEAPON, SPELL_LETHAL_INFUSION, SPELL_EXCRUCIATING_WOUNDS,
     SPELL_WARP_BRAND, SPELL_TUKIMAS_DANCE, SPELL_SUMMON_BUTTERFLIES,
@@ -316,7 +316,7 @@ void xom_tick()
             // doesn't really matter.
             you.piety = HALF_MAX_PIETY + (good ? size : -size);
         }
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef DEBUG_XOM
         snprintf(info, INFO_SIZE, "xom_tick(), delta: %d, piety: %d",
                  delta, you.piety);
         take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
@@ -1984,7 +1984,7 @@ static int _xom_change_scenery(bool debug = false)
             continue;
 
         dungeon_feature_type feat = grd(*ri);
-        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
+        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN)
             candidates.push_back(*ri);
         else if (feat_is_closed_door(feat))
         {
@@ -2101,9 +2101,6 @@ static int _xom_change_scenery(bool debug = false)
     if (debug)
         return XOM_GOOD_SCENERY;
 
-    const int fountain_diff = (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
-
-    int fountains_flow  = 0;
     int fountains_blood = 0;
     int doors_open      = 0;
     int doors_close     = 0;
@@ -2125,19 +2122,7 @@ static int _xom_change_scenery(bool debug = false)
             if (you.see_cell(pos))
                 doors_close++;
             break;
-        case DNGN_DRY_FOUNTAIN_BLUE:
-        case DNGN_DRY_FOUNTAIN_SPARKLING:
-        case DNGN_DRY_FOUNTAIN_BLOOD:
-        {
-            if (x_chance_in_y(fountains_flow, 5))
-                continue;
-
-            grd(pos) = (dungeon_feature_type) (grd(pos) - fountain_diff);
-            set_terrain_changed(pos);
-            if (you.see_cell(pos))
-                fountains_flow++;
-            break;
-        }
+        case DNGN_DRY_FOUNTAIN:
         case DNGN_FOUNTAIN_BLUE:
             if (x_chance_in_y(fountains_blood, 3))
                 continue;
@@ -2151,30 +2136,17 @@ static int _xom_change_scenery(bool debug = false)
             break;
         }
     }
-    if (!doors_open && !doors_close && !fountains_flow && !fountains_blood)
+    if (!doors_open && !doors_close && !fountains_blood)
         return XOM_DID_NOTHING;
 
     god_speaks(GOD_XOM, speech.c_str());
 
     vector<string> effects, terse;
-    if (fountains_flow > 0)
-    {
-        snprintf(info, INFO_SIZE,
-                 "%s fountain%s start%s reflowing",
-                 fountains_flow == 1 ? "A" : "Some",
-                 fountains_flow == 1 ? ""  : "s",
-                 fountains_flow == 1 ? "s" : "");
-        effects.push_back(info);
-        terse.push_back(make_stringf("%d fountains restart", fountains_flow));
-    }
     if (fountains_blood > 0)
     {
         snprintf(info, INFO_SIZE,
-                 "%s%s fountain%s start%s gushing blood",
+                 "%s fountain%s start%s gushing blood",
                  fountains_blood == 1 ? "a" : "some",
-                 fountains_flow > 0 ? (fountains_blood == 1 ? "nother"
-                                                            : " other")
-                                    : "",
                  fountains_blood == 1 ? ""  : "s",
                  fountains_blood == 1 ? "s" : "");
 
@@ -2527,9 +2499,7 @@ static void _xom_zero_miscast()
         priority.push_back("The water in the fountain briefly glows.");
     }
 
-    if (in_view[DNGN_DRY_FOUNTAIN_BLUE]
-        || in_view[DNGN_DRY_FOUNTAIN_SPARKLING]
-        || in_view[DNGN_PERMADRY_FOUNTAIN])
+    if (in_view[DNGN_DRY_FOUNTAIN])
     {
         priority.push_back("Water briefly sprays from the dry fountain.");
         priority.push_back("Dust puffs up from the dry fountain.");
@@ -3209,7 +3179,7 @@ static int _xom_repel_stairs(bool debug = false)
         you.duration[DUR_REPEL_STAIRS_CLIMB] = 500;
     }
 
-    random_shuffle(stairs_avail.begin(), stairs_avail.end());
+    shuffle_array(stairs_avail);
     int count_moved = 0;
     for (unsigned int i = 0; i < stairs_avail.size(); i++)
         if (move_stair(stairs_avail[i], true, true))
