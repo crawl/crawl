@@ -5526,6 +5526,32 @@ void dec_disease_player(int delay)
     }
 }
 
+bool flight_allowed(bool quiet)
+{
+    if (you.form == TRAN_TREE)
+    {
+        if (!quiet)
+            mpr("Your roots keep you in place.");
+        return false;
+    }
+
+    if (you.liquefied_ground())
+    {
+        if (!quiet)
+            mpr("You can't fly while stuck in liquid ground.");
+        return false;
+    }
+
+    if (you.duration[DUR_GRASPING_ROOTS])
+    {
+        if (!quiet)
+            mpr("The grasping roots prevent you from becoming airborne.");
+        return false;
+    }
+
+    return true;
+}
+
 void float_player()
 {
     if (you.fishtail)
@@ -5548,14 +5574,8 @@ void float_player()
 
 void fly_player(int pow, bool already_flying)
 {
-    if (you.form == TRAN_TREE)
-        return mpr("Your roots keep you in place.");
-
-    if (you.duration[DUR_GRASPING_ROOTS])
-    {
-        mpr("The grasping roots prevent you from becoming airborne.");
+    if (!flight_allowed())
         return;
-    }
 
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)

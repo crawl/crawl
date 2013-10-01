@@ -223,23 +223,8 @@ spret_type cast_swiftness(int power, bool fail)
 
 spret_type cast_fly(int power, bool fail)
 {
-    if (you.form == TRAN_TREE)
-    {
-        mpr("Your roots keep you in place.", MSGCH_WARN);
+    if (!flight_allowed())
         return SPRET_ABORT;
-    }
-
-    if (you.liquefied_ground())
-    {
-        mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
-        return SPRET_ABORT;
-    }
-
-    if (you.duration[DUR_GRASPING_ROOTS])
-    {
-        mpr("The grasping roots prevent you from becoming airborne.", MSGCH_WARN);
-        return SPRET_ABORT;
-    }
 
     fail_check();
     const int dur_change = 25 + random2(power) + random2(power);
