@@ -738,7 +738,8 @@ bool monster::can_throw_large_rocks() const
     monster_type species = mons_species(false); // zombies can't
     return (species == MONS_STONE_GIANT
             || species == MONS_CYCLOPS
-            || species == MONS_OGRE);
+            || species == MONS_OGRE
+            || species == MONS_FORMICID);
 }
 
 bool monster::can_speak()
