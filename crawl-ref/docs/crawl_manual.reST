@@ -1186,7 +1186,7 @@ is to quaff a potion of cure mutation, which will attempt to remove one or more
 random mutations.
 
 Demonspawn are a special case. Characters of this species get certain special
-powers during their career; these are listed in magenta. They are permanent and
+powers during their career; these are listed in cyan. They are permanent and
 can never be removed. If one of your Demonspawn powers has been augmented by a
 mutation, it is displayed in a lighter colour.
 

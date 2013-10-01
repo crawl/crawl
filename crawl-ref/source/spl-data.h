@@ -896,6 +896,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FRENZY, "Frenzy",
      SPTYP_CHARMS,
@@ -908,7 +909,7 @@ struct spell_desc
      false,
      false
 },
-
+#endif
 
 {
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
@@ -1823,7 +1824,7 @@ struct spell_desc
     SPELL_CONJURE_BALL_LIGHTNING, "Conjure Ball Lightning",
      SPTYP_AIR | SPTYP_CONJURATION,
      SPFLAG_NONE,
-     7,
+     6,
      200,
      -1, -1,
      0,
@@ -2044,7 +2045,7 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_BEAST, "Summon Beast",
+    SPELL_SUMMON_HELL_BEAST, "Summon Hell Beast",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY | SPFLAG_MONSTER,
      4,
@@ -2070,7 +2071,7 @@ struct spell_desc
 },
 
 {
-    SPELL_POISON_SPLASH, "Poison Splash",
+    SPELL_SPIT_POISON, "Spit Poison",
      SPTYP_POISON,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
      2,
@@ -2200,7 +2201,7 @@ struct spell_desc
 },
 
 {
-    SPELL_ACID_SPLASH, "Acid Splash",
+    SPELL_SPIT_ACID, "Spit Acid",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
      5,
@@ -2447,6 +2448,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_RAKSHASA, "Summon Rakshasa",
      SPTYP_SUMMONING,
@@ -2459,6 +2461,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_MISLEAD, "Mislead",

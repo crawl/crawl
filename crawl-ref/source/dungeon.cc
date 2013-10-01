@@ -1452,6 +1452,9 @@ static void _fixup_branch_stairs()
     // dungeon or wherever:
     if (_at_top_of_branch())
     {
+#ifdef DEBUG_DIAGNOSTICS
+        int count = 0;
+#endif
         // Just in case we somehow get here with more than one stair placed.
         // Prefer stairs that are placed in vaults for picking an exit at
         // random.
@@ -1466,6 +1469,13 @@ static void _fixup_branch_stairs()
             else if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
                      && grd(*ri) <= DNGN_STONE_STAIRS_UP_III)
             {
+#ifdef DEBUG_DIAGNOSTICS
+                if (count++ && you.where_are_you != root_branch)
+                {
+                    mprf(MSGCH_ERROR, "Multiple branch exits on %s",
+                         level_id::current().describe().c_str());
+                }
+#endif
                 if (you.where_are_you == root_branch)
                 {
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
@@ -1490,7 +1500,7 @@ static void _fixup_branch_stairs()
 
             if (!stairs.empty())
             {
-                random_shuffle(stairs.begin(), stairs.end());
+                shuffle_array(stairs);
                 coord_def coord = *(stairs.begin());
                 env.markers.add(new map_feature_marker(coord, grd(coord)));
                 _set_grd(coord, exit);
@@ -2349,6 +2359,26 @@ static void _place_item_mimics()
 
 }
 
+// Apply modifications (ruination, plant clumps) that should happen
+// regardless of game mode.
+static void _post_vault_build()
+{
+    if (player_in_branch(BRANCH_LAIR))
+    {
+        int depth = you.depth + 1;
+        _ruin_level(rectangle_iterator(1), MMT_VAULT,
+                    20 - depth, depth / 2 + 4, 1 + (depth / 3));
+        do
+        {
+            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
+            depth -= 3;
+        } while (depth > 0);
+    }
+
+    if (player_in_branch(BRANCH_FOREST))
+        _add_plant_clumps(2);
+}
+
 static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 {
     bool place_vaults = _builder_by_type();
@@ -2364,21 +2394,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     // yet to be placed). Some items and monsters already exist.
 
     _check_doors();
-
-    if (player_in_branch(BRANCH_LAIR))
-    {
-        int depth = you.depth + 1;
-        _ruin_level(rectangle_iterator(1), MMT_VAULT,
-                    20 - depth, depth / 2 + 4, 1 + (depth / 3));
-        do
-        {
-            _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
-            depth -= 3;
-        } while (depth > 0);
-    }
-
-    if (player_in_branch(BRANCH_FOREST))
-        _add_plant_clumps(2);
 
     const unsigned nvaults = env.level_vaults.size();
 
@@ -2413,6 +2428,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
             _place_chance_vaults();
         }
 
+        // Ruination and plant clumps.
+        _post_vault_build();
+
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
         _place_uniques();
@@ -2433,6 +2451,12 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _builder_items();
 
         _fixup_walls();
+    }
+    else
+    {
+        // Do ruination and plant clumps even in funny game modes, if
+        // they happen to have the relevant branch.
+        _post_vault_build();
     }
 
     _fixup_branch_stairs();
@@ -2589,8 +2613,12 @@ static const map_def *_pick_layout(const map_def *vault)
     {
         do
         {
-             layout = random_map_for_tag("layout", true, true);
-             tries--;
+            if (!tries--)
+            {
+                die("Couldn't find a layout for %s",
+                    level_id::current().describe().c_str());
+            }
+            layout = random_map_for_tag("layout", true, true);
         }
         while (layout->has_tag("no_primary_vault")
                || (tries > 10 && !_vault_can_use_layout(vault, layout)));
@@ -3107,7 +3135,7 @@ static void _place_chance_vaults()
     // [ds] If there are multiple CHANCE maps that share an luniq_ or
     // uniq_ tag, only the first such map will be placed. Shuffle the
     // order of chosen maps so we don't have a first-map bias.
-    random_shuffle(maps.begin(), maps.end());
+    shuffle_array(maps);
     for (int i = 0, size = maps.size(); i < size; ++i)
     {
         const map_def *map = maps[i];
@@ -3641,7 +3669,7 @@ static void _place_aquatic_monsters_weighted()
     if (water.size() > 49)
     {
         int num = min(random2avg(9, 2) + (random2(water_count) / 10), 15);
-        random_shuffle(water.begin(), water.end());
+        shuffle_array(water);
 
         for (int i = 0; i < num; i++)
         {
@@ -4954,9 +4982,7 @@ static bool _dgn_place_one_monster(const vault_placement &place,
     return false;
 }
 
-/* "Oddball grids" are handled in _vault_grid. 'B' is arguably oddball, too, as
- * it depends on the place where the vault is. Maybe handling it here is not
- * such a good idea. */
+/* "Oddball grids" are handled in _vault_grid. */
 static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
@@ -4983,14 +5009,12 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
             (glyph == ']') ? DNGN_STONE_STAIRS_DOWN_III :
             (glyph == '[') ? DNGN_STONE_STAIRS_UP_III :
             (glyph == 'A') ? DNGN_STONE_ARCH :
-            (glyph == 'B') ? (place ? _pick_temple_altar(*place)
-                                    : DNGN_ALTAR_ZIN) :
             (glyph == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
             (glyph == 'I') ? DNGN_ORCISH_IDOL :
             (glyph == 'G') ? DNGN_GRANITE_STATUE :
             (glyph == 'T') ? DNGN_FOUNTAIN_BLUE :
             (glyph == 'U') ? DNGN_FOUNTAIN_SPARKLING :
-            (glyph == 'V') ? DNGN_PERMADRY_FOUNTAIN :
+            (glyph == 'V') ? DNGN_DRY_FOUNTAIN :
             (glyph == 'Y') ? DNGN_FOUNTAIN_BLOOD :
             (glyph == '\0')? DNGN_ROCK_WALL
                            : DNGN_FLOOR); // includes everything else
@@ -5086,13 +5110,15 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     case '+':
         if (_map_feat_is_on_edge(place, where))
             place.exits.push_back(where);
-
         break;
     case '^':
         place_specific_trap(where, TRAP_RANDOM);
         break;
     case '~':
         place_specific_trap(where, random_trap_for_place());
+        break;
+    case 'B':
+        grd(where) = _pick_temple_altar(place);
         break;
     }
 
@@ -5384,7 +5410,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
         }
         // Randomized altar list for mini-temples.
         _temple_altar_list = temple_god_list();
-        random_shuffle(_temple_altar_list.begin(), _temple_altar_list.end());
+        shuffle_array(_temple_altar_list);
     }
 
     const god_type god = _temple_altar_list.back();
@@ -6044,9 +6070,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // Shafts and hatches.
     if (stair_to_find == DNGN_ESCAPE_HATCH_UP
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN
-        || stair_to_find == DNGN_TRAP_NATURAL)
+        || stair_to_find == DNGN_TRAP_SHAFT)
     {
-        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_NATURAL));
+        coord_def pos(_get_hatch_dest(base_pos, stair_to_find == DNGN_TRAP_SHAFT));
         if (player_in_branch(BRANCH_SLIME_PITS))
             _fixup_slime_hatch_dest(&pos);
         if (in_bounds(pos))

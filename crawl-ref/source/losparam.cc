@@ -68,7 +68,7 @@ static bool mons_block_immob(const monster* mons)
     if (crawl_state.game_is_zotdef())
         return false;
 
-    return (mons_is_stationary(mons));
+    return mons->is_stationary();
 }
 
 opacity_type opacity_immob::operator()(const coord_def& p) const

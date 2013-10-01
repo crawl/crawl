@@ -357,13 +357,11 @@ LUAFN(you_mutation)
     string mutname = luaL_checkstring(ls, 1);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        mutation_type mut = static_cast<mutation_type>(i);
-        if (!is_valid_mutation(mut))
+        const char *wizname = mutation_name(static_cast<mutation_type>(i));
+        if (!wizname)
             continue;
-
-        const mutation_def& mdef = get_mutation_def(mut);
-        if (!strcmp(mutname.c_str(), mdef.wizname))
-            PLUARET(integer, you.mutation[mut]);
+        if (!strcmp(mutname.c_str(), wizname))
+            PLUARET(integer, you.mutation[i]);
     }
 
     string err = make_stringf("No such mutation: '%s'.", mutname.c_str());

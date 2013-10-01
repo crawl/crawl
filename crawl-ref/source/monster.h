@@ -262,7 +262,7 @@ public:
     bool      pickup_gold(item_def &item, int near);
     bool      pickup_launcher(item_def &launcher, int near, bool force = false);
     bool      pickup_melee_weapon(item_def &item, int near);
-    bool      pickup_throwable_weapon(item_def &item, int near);
+    bool      pickup_missile(item_def &item, int near);
     bool      pickup_weapon(item_def &item, int near, bool force);
     bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_jewellery(item_def &item, int near, bool force);
@@ -310,6 +310,7 @@ public:
     bool can_safely_mutate() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
+    bool is_stationary() const;
     bool malmutate(const string &reason);
     bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
@@ -507,7 +508,7 @@ private:
     bool need_message(int &near) const;
     bool level_up();
     bool level_up_change();
-    bool pickup(item_def &item, int slot, int near, bool force_merge = false);
+    bool pickup(item_def &item, int slot, int near);
     void equip_weapon(item_def &item, int near, bool msg = true);
     void equip_armour(item_def &item, int near);
     void equip_jewellery(item_def &item, int near);

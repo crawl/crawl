@@ -1631,9 +1631,7 @@ void load_messages(reader& inf)
 void replay_messages(void)
 {
     formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
-    hist.set_more(formatted_string::parse_string(
-                        "<cyan>[up/<< : Page up.    down/Space/> : Page down."
-                        "                         Esc exits.]</cyan>"));
+    hist.set_more();
 
     const store_t msgs = buffer.get_store();
     for (int i = 0; i < msgs.size(); ++i)

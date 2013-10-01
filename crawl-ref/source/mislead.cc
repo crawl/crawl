@@ -20,7 +20,7 @@
 #include "view.h"
 #include "xom.h"
 
-static bool _unsuitable_misled_monster(monster_type mons)
+bool unsuitable_misled_monster(monster_type mons)
 {
     return (invalid_monster_type(mons)
             || mons_is_unique(mons)
@@ -46,10 +46,10 @@ static bool _unsuitable_misled_monster(monster_type mons)
 static monster_type _get_misled_monster(monster* mons)
 {
     monster_type mt = random_monster_at_grid(mons->pos());
-    if (_unsuitable_misled_monster(mt))
+    if (unsuitable_misled_monster(mt))
         mt = random_monster_at_grid(mons->pos());
 
-    if (_unsuitable_misled_monster(mt))
+    if (unsuitable_misled_monster(mt))
         return MONS_0;
 
     return mt;

@@ -63,7 +63,7 @@ public:
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;
-  FixedVector<int, NUM_STATS> stat_zero;
+  FixedVector<uint8_t, NUM_STATS> stat_zero;
 
   int hunger;
   int disease;
@@ -418,6 +418,8 @@ public:
     int max_dex() const;
 
     bool in_water() const;
+    bool in_lava() const;
+    bool in_liquid() const;
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool can_cling_to_walls() const;
@@ -571,6 +573,7 @@ public:
     bool is_lifeless_undead() const;
     bool can_polymorph() const;
     bool can_bleed(bool allow_tran = true) const;
+    bool is_stationary() const;
     bool malmutate(const string &reason);
     bool polymorph(int pow);
     void backlight();
@@ -946,11 +949,12 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
 bool enough_zp(int minimum, bool suppress_msg);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
-void dec_mp(int mp_loss);
+void dec_mp(int mp_loss, bool silent = false);
 void drain_mp(int mp_loss);
 
-void inc_mp(int mp_gain);
+void inc_mp(int mp_gain, bool silent = false);
 void inc_hp(int hp_gain);
+void flush_mp();
 
 void rot_hp(int hp_loss);
 void unrot_hp(int hp_recovered);
@@ -992,6 +996,7 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
+bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);

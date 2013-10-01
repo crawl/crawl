@@ -44,6 +44,7 @@ end
 NAME:      linesprint
 TAGS:      sprint
 DESC:      Sprint IX: "|||||||||||||||||||||||||||||"
+ORDER:     9
 ORIENT:    encompass
 COLOUR:    x = brown
 KFEAT:     x = permarock_wall

@@ -1157,8 +1157,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
 
     for (actor_iterator ai(agent->get_los()); ai; ++ai)
     {
-        if ((ai->is_monster() && mons_is_stationary(ai->as_monster()))
-            || (ai->is_player() && you.form == TRAN_TREE)
+        if (ai->is_stationary()
             || !cell_see_cell(you.pos(), ai->pos(), LOS_SOLID)
             || ai->pos().distance_from(you.pos()) > radius
             || ai->pos() == agent->pos() // so it's never aimed_at_feet
@@ -1342,7 +1341,7 @@ static void _fan_of_gales_elementals()
             elementals.push_back(*ri);
         }
     }
-    random_shuffle(elementals.begin(), elementals.end());
+    shuffle_array(elementals);
 
     int num_elementals = _num_evoker_elementals();
 
@@ -1466,7 +1465,7 @@ static bool _stone_of_tremors()
             rubble_pos.push_back(wall_pos[i]);
         }
     }
-    random_shuffle(rubble_pos.begin(), rubble_pos.end());
+    shuffle_array(rubble_pos);
 
     // Create elementals.
     bool created = false;

@@ -2,6 +2,7 @@
 
 #include "player-equip.h"
 
+#include "art-enum.h"
 #include "areas.h"
 #include "artefact.h"
 #include "delay.h"
@@ -134,6 +135,24 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld);
 static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld);
 static void _equip_use_warning(const item_def& item);
 
+static void _assert_valid_slot(equipment_type eq, equipment_type slot)
+{
+#ifdef ASSERTS
+    if (eq == slot)
+        return;
+    ASSERT(eq == EQ_RINGS); // all other slots are unique
+    equipment_type r1 = EQ_LEFT_RING, r2 = EQ_RIGHT_RING;
+    if (you.species == SP_OCTOPODE)
+        r1 = EQ_RING_ONE, r2 = EQ_RING_EIGHT;
+    if (slot >= r1 && slot <= r2)
+        return;
+    if (const item_def* amu = you.slot_item(EQ_AMULET, true))
+        if (amu->special == UNRAND_FINGER_AMULET && slot == EQ_RING_AMULET)
+            return;
+    die("ring on invalid slot %d", slot);
+#endif
+}
+
 static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg)
 {
@@ -143,9 +162,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
     if (slot == EQ_WEAPON && eq != EQ_WEAPON)
         return;
 
-    ASSERT(slot == eq
-           || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPODE);
+    _assert_valid_slot(eq, slot);
 
     if (msg)
         _equip_use_warning(item);
@@ -167,9 +184,7 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
     if (slot == EQ_WEAPON && eq != EQ_WEAPON)
         return;
 
-    ASSERT(slot == eq
-           || eq == EQ_RINGS && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING)
-           || eq == EQ_RINGS && you.species == SP_OCTOPODE);
+    _assert_valid_slot(eq, slot);
 
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
@@ -542,7 +557,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         const bool was_known      = item_type_known(item);
               bool known_recurser = false;
 
-        set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
 
         special = item.special;
 
@@ -646,10 +661,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         mpr("You feel an empty sense of dread.");
                     break;
 
-                case SPWPN_RETURNING:
-                    mpr("It wiggles slightly.");
-                    break;
-
                 case SPWPN_PAIN:
                 {
                     const char* your_arm = you.arm_name(false).c_str();
@@ -723,7 +734,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         }
 
         _wield_cursed(item, known_cursed || known_recurser, unmeld);
-        maybe_id_weapon(item);
         break;
     }
     default:
@@ -834,7 +844,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding
-                // effect in vorpalise weapon scroll effect in read_scoll.
+                // effect in brand weapon scroll effect in read_scoll.
             }
 
             if (you.duration[DUR_WEAPON_BRAND])
@@ -1467,7 +1477,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         set_ident_type(item, ident);
 
         if (ident == ID_KNOWN_TYPE)
-            set_ident_flags(item, ISFLAG_EQ_JEWELLERY_MASK);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     if (item.cursed())

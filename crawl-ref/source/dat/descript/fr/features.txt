@@ -157,12 +157,6 @@ richesses sans précédent.
 Le portail ne peut être utilisé qu'une seule fois et, il y a un taxe énorme à
 payer pour pouvoir le franchir.
 %%%%
-A gateway to a ziggurat:quote
-
-“Capitaine : tuez les tous !!
- Capitaine : Pour la justice.”
-    -Sans Aile
-%%%%
 A gateway to the ashen valley of Gehenna
 
 Vous sentez la chaleur. Gehenna semble n'être rien de plus que flammes, lave et
@@ -191,7 +185,7 @@ un monstre. Il est plutôt friable et ne résistera pas très longtemps.
 %%%%
 A glowing golden altar of the Shining One
 
-Un autel de l'étincelant, fait de l'or le plus pur, d'une brillance presque
+Un autel de L'Étincelant, fait de l'or le plus pur, d'une brillance presque
 aveuglante.
 %%%%
 A glowing silver altar of Zin
@@ -224,20 +218,10 @@ marécageuses. Ses branches sont trop entrelacées pour voir au travers.
 Bien trop grand pour être abattus à la hache, il est sensible à la foudre et à
 des sources de feux suffisamment intenses.
 %%%%
-A magical trap
-
-Un dispositif magique conçu pour blesser ceux qui passent à sa portée et qui ne
-peut être désactivé.
-%%%%
 A mechanical trap
 
 Un engin mécanique conçu pour nuire à des intrus. Un aventurier habile peut
 essayer de le désarmer.
-%%%%
-A natural trap
-
-Un piège naturel, on dirait presque qu'il a été façonné pour nuire aux
-passants.
 %%%%
 A metal wall
 
@@ -260,19 +244,6 @@ Une porte à sens unique menant à un royaume démoniaque, déchiré par le chao
 sa substance même est fluctuante et capricieuse, rempli de créatures sorties
 tout droit d'un cauchemar. Il est facile d'y entrer, mais très difficile d'en
 ressortir.
-%%%%
-A one-way gate to the infinite horrors of the Abyss:quote
-
-“Et si vous regardez longtemps dans une abysse, l'abysse regarde en toi.”
-    -Friedrich Nietzsche, “Au-delà du Bien et du Mal”, Aphorism 146. 1886.
-
-“Well, in our country,” said Alice, still panting a little, “you’d generally
-get to somewhere else – if you ran very fast for a long time, as we’ve been
-doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
-all the running you can do, to keep in the same place. If you want to get
-somewhere else, you must run at least twice as fast as that!” -Lewis Carroll,
-_Through the Looking-Glass, and What Alice Found There_, ch. 2 “The Garden of
-Live Flowers”. 1871.
 %%%%
 A passage of Golubria
 
@@ -469,7 +440,7 @@ Ceci est le passage vers l'antre des serpents, le repaire des nagas.
 %%%%
 A staircase to the Swamp
 
-Un escalier vers les territoires marécageux, pleins de vase, de mouches et de
+Un escalier vers les territoires marécageux, pleins de limons, de mouches et de
 larges monstres carnivores.
 %%%%
 A staircase to the Tomb
@@ -499,7 +470,7 @@ A short-range portal
 
 Passer par ce portail vous enverra dans une autre salle.
 %%%%
-A teleportation trap
+A teleport trap
 
 Ce piège magique peut déplacer quiconque d'assez malchanceux pour marcher
 dessus — voire même voler au dessus — vers un endroit quelconque du niveau
@@ -531,11 +502,6 @@ terre.
 
 Bien trop grand pour être abattus à la hache, il est sensible à la foudre et à
 des sources de feux suffisamment intenses.
-%%%%
-A tree:quote
-
-“Seulement TOI peut éviter les feux de forêt !”
-    -Fumebeaucoup l'Ours
 %%%%
 A viscous altar of Jiyva
 

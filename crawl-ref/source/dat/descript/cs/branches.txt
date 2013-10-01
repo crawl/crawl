@@ -132,17 +132,6 @@ kteří se vrátili z tohoto místa čisté smrti je mimořádně krátký.
 Hrobka má tři úrovně a obsahuje zlatou runu.  Její vstup je buď v  kryptě: 2
 nebo kryptě: 3.
 %%%%
-Tomb:quote
-
-V hloubi každého srdce jest hrobka i žalář, a byť světla, hudba a povyk shůry
-občas může dát zapomenout na jejich bytí, a na ty, jež jsou zakopáni nebo
-uvězněni. Občas však, o půlnoci víc, tyto temná místa brány své otevřou. V
-takovouto hodinu, kdy mysl v nečinnosti jest, bez síly činu; když
-obrazotvornost jest zrcadlem, myšlenkám všem život vdechuje, bez moci výběru či
-kontroly; tehdy modli se nechť tvé smutky spí hlubokým spánkem a ať bratrstvo
-výčitek nezlomí jejich řetězy.
-    -Nathaniel Hawthorne, "Strašlivá mysl". 1835
-%%%%
 Hell
 
 Vstupní síň do pekel je strážena Geryonem. Hrdinové, jež prokáží své schopnosti
@@ -177,14 +166,6 @@ kteří se ženou za poklady, postupně vysávají všechen život.
 
 Tartaros má sedm podlaží a nalézá se zde kostěná runa. Lze se do něj dostat
 přes Předsíň pekel.
-%%%%
-Tartarus:quote
-
-“V pekle jest chmurný a osamělý světa kus
- od všeho ostatního šera na hony vzdálený:
- Prostý, smutný je to kraj, kde se stíny nacházejí,
- Smutek jeho verš můj nikdy nepoví.”
-    -Edward Arlington Robinson, “Svrchovanost”. 1897.
 %%%%
 Zot
 

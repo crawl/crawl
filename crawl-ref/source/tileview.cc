@@ -1037,7 +1037,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB)
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
-    else if (bg_idx == TILE_DNGN_LAVA)
+    else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
         // sets are the same). This cycles between the four sets, picking
@@ -1045,8 +1045,11 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
         flv->special = ((flv->special - ((flv->special % 4)))
                         + 4 + random2(4)) % tile_dngn_count(bg_idx);
     }
-    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
+    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD
+             && Options.tile_water_anim)
+    {
         flv->special = random2(256);
+    }
     else if (bg_idx == TILE_WALL_NORMAL)
     {
         tileidx_t basetile = tile_dngn_basetile(flv->wall);
@@ -1062,7 +1065,7 @@ static bool _suppress_blood(const map_cell& mc)
     if (feat_is_tree(feat))
         return true;
 
-    if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
+    if (feat == DNGN_DRY_FOUNTAIN)
         return true;
 
     if (feat_is_altar(feat))
@@ -1245,6 +1248,12 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
         *bg = orig + flv.special % tile_dngn_count(orig);
+    else if ((orig == TILE_SHOALS_SHALLOW_WATER
+              || orig == TILE_SHOALS_DEEP_WATER)
+             && element_colour(ETC_WAVES, 0, gc) == LIGHTCYAN)
+    {
+        *bg = orig + 6 + flv.special % 6;
+    }
     else if (orig < TILE_DNGN_MAX)
         *bg = _pick_random_dngn_tile(orig, flv.special);
 

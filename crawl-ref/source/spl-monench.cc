@@ -31,8 +31,7 @@ int englaciate(coord_def where, int pow, int, actor *agent)
     monster* mons = victim->as_monster();
 
     if (victim->res_cold() > 0
-        || (mons && mons_is_stationary(mons))
-        || (!mons && you.form == TRAN_TREE))
+        || victim->is_stationary())
     {
         if (!mons)
             canned_msg(MSG_YOU_UNAFFECTED);
@@ -107,7 +106,7 @@ bool do_slow_monster(monster* mon, const actor* agent, int dur)
         return true;
 
     if (!mon->has_ench(ENCH_SLOW)
-        && !mons_is_stationary(mon)
+        && !mon->is_stationary()
         && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
     {
         if (!mon->paralysed() && !mon->petrified()

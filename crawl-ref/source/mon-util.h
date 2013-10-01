@@ -103,11 +103,7 @@ struct mon_spellbook
     spell_type spells[NUM_MONSTER_SPELL_SLOTS];
 };
 
-static const mon_spellbook mspell_list[] =
-{
-#include "mon-spll.h"
-};
-
+extern const mon_spellbook mspell_list[];
 
 struct monsterentry
 {
@@ -383,7 +379,6 @@ bool mons_landlubbers_in_reach(const monster* mons);
 
 bool mons_class_is_confusable(monster_type mc);
 bool mons_class_is_stationary(monster_type mc);
-bool mons_is_stationary(const monster* mon);
 bool mons_class_is_firewood(monster_type mc);
 bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);

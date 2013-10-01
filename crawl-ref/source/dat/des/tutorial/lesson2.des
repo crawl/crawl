@@ -24,6 +24,7 @@ end
 NAME:    tutorial_lesson2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 2: Monsters and Combat"
+ORDER:   2
 ORIENT:  encompass
 KFEAT:   BCDFG = .
 KFEAT:   AE = +

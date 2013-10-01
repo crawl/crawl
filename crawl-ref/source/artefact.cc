@@ -2020,6 +2020,8 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
         _make_octoring(item);
+    else if (unrand_index == UNRAND_ARGA)
+        set_equip_race(item, ISFLAG_DWARVEN);
     else if (unrand_index == UNRAND_WOE && you.species != SP_FELID
              && !you.could_wield(item, true, true))
     {

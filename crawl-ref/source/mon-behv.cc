@@ -452,7 +452,7 @@ void handle_behaviour(monster* mon)
     // Zotdef: immobile allies forget targets that are out of sight
     if (crawl_state.game_is_zotdef())
     {
-        if (isFriendly && mons_is_stationary(mon)
+        if (isFriendly && mon->is_stationary()
             && (mon->foe != MHITNOT && mon->foe != MHITYOU)
             && !mon->can_see(&menv[mon->foe]))
         {
@@ -1418,7 +1418,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     case ME_SCARE:
         // Stationary monsters can't flee, and berserking monsters
         // are too enraged.
-        if (mons_is_stationary(mon) || mon->berserk_or_insane())
+        if (mon->is_stationary() || mon->berserk_or_insane())
         {
             mon->del_ench(ENCH_FEAR, true, true);
             break;

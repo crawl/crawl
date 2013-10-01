@@ -82,10 +82,6 @@ Bolt of Inaccuracy spell
 Ten czar strzela magicznym pociskiem który zadaje ogromne obrażenia — o ile
 cokolwiek trafi. Celowanie nim jest niewiarygodnie trudne.
 %%%%
-Iron Shot spell
-
-Ten czar tworzy spory i ciężki metalowy pocisk, po czym ciska nim.
-%%%%
 Bolt of Magma spell
 
 Ten czar ciska pocisk z gorącej roztopionej skały, zadając spore obrażenia
@@ -255,13 +251,6 @@ Ensorcelled Hibernation spell
 Ten czar próbuje oziębić metabolizm wybranej istoty, co skutkuje zapadnięciem w
 stan przypominający sen.
 %%%%
-Excruciating Wounds spell
-
-Ten czar tymczasowo nadaje trzymanej broni magiczną markę cierpienia. Nie
-zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
-
-Nie jest możliwe utrwalenie tej marki za pomocą zwojów worpalizacji.
-%%%%
 Fire Brand spell
 
 Ten czar tymczasowo nadaje trzymanej broni magiczną markę płomieni. Nie
@@ -312,13 +301,6 @@ Haunt spell
 Ten czar przyzywa duchy i upiory wokół wskazanej istoty. Użycie tego czaru
 często powoduje że rzucającemu robi się niedobrze.
 %%%%
-Throw Icicle spell
-
-Ten czar tworzy i ciska ostry sopel lodu. Jakkolwiek ten czar jest szczególnie
-skuteczny wobec istot wrażliwych na zimno, większość obrażeń jest zadawanych
-wskutek uderzenia i ostrych krawędzi, tak więc odporność na zimno nie za wiele
-pomaga.
-%%%%
 Ice Form spell
 
 Ten czar tymczasowo zmienia rzucającego w lodową bestię — mniej więcej w
@@ -351,6 +333,10 @@ Ten czar ukrywa jakąś istotę (zwykle siebie samego) przed wzrokiem innych.
 Dłuższa niewidzialność z czasem powoduje magiczne skażenie, które w większych
 dawkach, oprócz innych nieprzyjemnych rezultatów, jest widoczne jako poświata,
 co czyni niewidzialność bezużyteczną.
+%%%%
+Iron Shot spell
+
+Ten czar tworzy spory i ciężki metalowy pocisk, po czym ciska nim.
 %%%%
 Iskenderun's Mystic Blast spell
 
@@ -746,6 +732,13 @@ Throw Frost spell
 
 ten czar ciska małą porcją szronu.
 %%%%
+Throw Icicle spell
+
+Ten czar tworzy i ciska ostry sopel lodu. Jakkolwiek ten czar jest szczególnie
+skuteczny wobec istot wrażliwych na zimno, większość obrażeń jest zadawanych
+wskutek uderzenia i ostrych krawędzi, tak więc odporność na zimno nie za wiele
+pomaga.
+%%%%
 Tornado spell
 
 Ten czar tworzy ogromny wir powietrza wokół rzucającego, zadając wielkie
@@ -781,13 +774,4 @@ Użycie tego czaru na demony i nieumarłych jest wysoce niewskazane.
 Venom Bolt spell
 
 Ten czar ciska pocisk zrobiony z jadu.
-%%%%
-Warp Weapon spell
-
-Ten czar tymczasowo nadaje trzymanej broni magiczną markę zniekształcenia. Nie
-zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
-
-Nie jest możliwe utrwalenie tej marki za pomocą zwojów worpalizacji.
-Wypuszczenie tej broni z rąk kończy działanie czaru, bez zwykłych konsekwencji
-związanych ze zniekształceniem.
 %%%%

@@ -11,12 +11,12 @@
 function elf_setup(e)
   e.lflags("no_tele_control")
   e.tags("no_rotate")
-  e.kitem("$ = $ no_pickup")
-  e.kitem("* = * no_pickup")
-  e.kitem("| = | no_pickup")
 end
 
 function elf_loot_randomisation(e)
+  e.kfeat("$ = $")
+  e.kfeat("* = *")
+  e.kfeat("| = |")
   e.subst("| = | *:2")
   e.subst("$ = $:20 *:4 |:1")
   e.subst("* = * |:3")
@@ -1134,11 +1134,15 @@ SUBST:   4=4., 2=2., 5=5., 3=3.
 KMONS:   $ = weight:115 nothing / deep elf annihilator
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
+KFEAT:   $ = $
+KFEAT:   * = *
+KFEAT:   | = |
 SUBST:   | = | *:2
 SUBST:   * = * |:3
 KMONS:   A = deep elf master archer
+KFEAT:   A = |
 KMONS:   B = deep elf blademaster
-KITEM:   AB = | no_pickup
+KFEAT:   B = |
 MAP
 cccccccccccccccccccccccccc
 c2ccccccc........ccccccccc
@@ -1182,9 +1186,15 @@ SUBST:   N=@, n=., Z=c, z=c
 KMONS:   $ = weight:115 nothing / deep elf annihilator
 KMONS:   * = weight:105 nothing / deep elf death mage
 KMONS:   | = weight:290 nothing / deep elf sorcerer
+KFEAT:   $ = $
+KFEAT:   * = *
+KFEAT:   | = |
 SUBST:   | = | *:2
 SUBST:   * = * |:3
-KITEM:   67 = | no_pickup
+KITEM:   6 = |
+KITEM:   7 = |
+KFEAT:   6 = 6
+KFEAT:   7 = 7
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc

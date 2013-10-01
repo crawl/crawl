@@ -60,13 +60,14 @@ This dreadful weapon is used at the user's peril.
 %%%%
 Sword of Cerebov
 
-Eerie flames cover its twisted blade.
+Eerie flames cover its twisted blade. Its demonic power burns away some of the
+defender's fire resistance.
 %%%%
 Staff of Dispater
 
 This legendary item can unleash the fury of Hell. The unholy flames it evokes
-may cost a portion of your life and your soul, but since when have such
-details stopped anyone in their quest for power?
+may cost a portion of your life and your soul, but since when have such details
+stopped anyone in their quest for power?
 %%%%
 Sceptre of Asmodeus
 
@@ -221,6 +222,7 @@ whip "Snakebite"
 A double-ended whip made from the cured hides of the Lair of Beasts' deadly
 black mambas.
 %%%%
+# TAG_MAJOR_VERSION == 34
 knife of Accuracy
 
 It is almost unerringly accurate.
@@ -254,7 +256,7 @@ cloak of the Thief
 It allows its wearer to excel in the arts of thievery, and can be evoked to
 release thick clouds of smoke to allow for a hasty escape.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 Just in case you had trouble getting hit.
 %%%%
@@ -277,7 +279,8 @@ A vibrating cloak.
 %%%%
 boots of the Assassin
 
-Some soft boots, specially designed by the Assassin's Guild.
+Some soft boots with a concealed dagger inside, specially designed by the
+Assassin's Guild. It makes the wearer more perceptive of potential victims.
 %%%%
 Lear's hauberk
 
@@ -465,6 +468,18 @@ Axe of Woe
 As you hold this axe your mind does not feel fully your own. Your body begins
 to exhibit strength far beyond its capabilities, and your movements become
 guided by Makhleb.
+%%%%
+moon troll leather armour
+
+This armour was reportedly created by enchanting the hide of a now-extinct
+species of troll. Whether this armour is truly a remnant of the legendary
+unseen terrors of the wind or merely an appropriation of the name to add
+mystique is something of a mystery; its power of rapid regeneration at the
+occasional expense of the wearer's magic power, however, is hard to dispute.
+%%%%
+macabre finger necklace
+
+This dangling finger would look better with a ring on it.
 %%%%
 milk chocolate
 

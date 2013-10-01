@@ -218,17 +218,8 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 #endif
 
     case POT_FLIGHT:
-        if (you.form == TRAN_TREE)
-        {
-            mprf(MSGCH_WARN, "Your roots keep you in place.");
+        if (!flight_allowed())
             break;
-        }
-
-        if (you.liquefied_ground())
-        {
-            mprf(MSGCH_WARN, "This potion isn't strong enough to pull you from the ground!");
-            break;
-        }
 
         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
         fly_player(pow);

@@ -288,6 +288,7 @@ static const char* _prop_name[] = {
 #if TAG_MAJOR_VERSION == 34
     "+Fog",
 #endif
+    "Regen",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -336,6 +337,7 @@ static int8_t _prop_type[] = {
 #if TAG_MAJOR_VERSION == 34
     ARTP_VAL_BOOL, //FOG
 #endif
+    ARTP_VAL_BOOL, //REGEN
 };
 
 static void _tweak_randart(item_def &item)
@@ -1026,7 +1028,8 @@ static void _debug_acquirement_stats(FILE *ostat)
         EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
         EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
-        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT
+        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
+        EQ_RING_AMULET
     };
 
     bool naked = true;
@@ -1376,6 +1379,7 @@ static void _debug_rap_stats(FILE *ostat)
          0, //ARTP_BASE_DAM
          1, //ARTP_RMSL
          1, //ARTP_FOG
+         1, //ARTP_REGENERATION
          -1
     };
 
@@ -1523,6 +1527,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_BASE_DAM",
         "ARTP_RMSL"
         "ARTP_FOG",
+        "ARTP_REGENERATION",
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");

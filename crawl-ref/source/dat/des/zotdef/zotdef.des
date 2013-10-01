@@ -43,6 +43,7 @@
 NAME:    zotvault
 TAGS:    zotdef
 DESC:    Scenario I: Hall of Zot
+ORDER:   1
 : zotdef_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -96,6 +97,7 @@ ENDMAP
 NAME:    zotvault2
 TAGS:    zotdef
 DESC:    Scenario II: Battle Heart
+ORDER:   2
 FTILE:   "E[ = floor_rough_red
 COLOUR:  "E = red
 : zotdef_setup(_G)
@@ -156,6 +158,7 @@ ENDMAP
 NAME:    zotvault3
 TAGS:    zotdef no_rotate
 DESC:    Scenario III: Two or Three?
+ORDER:   3
 : zotdef_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -224,6 +227,7 @@ ENDMAP
 NAME:    zotvault4
 TAGS:    zotdef no_rotate
 DESC:    Scenario IV: Columnade
+ORDER:   4
 : zotdef_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -275,6 +279,7 @@ ENDMAP
 NAME:    zotvault5
 TAGS:    zotdef no_rotate
 DESC:    Scenario V: Glassed Sandwich
+ORDER:   5
 : zotdef_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

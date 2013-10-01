@@ -29,7 +29,7 @@ name. Don't spend too much time over this, as your first character will *not*
 last very long (sorry, but it's true).
 
 Next you are given menus of species and backgrounds from which to choose.
-A dwarf, orc, ogre or troll Fighter is a good bet. Elves are quite fragile,
+A hill orc, ogre or troll Fighter is a good bet. Elves are quite fragile,
 humans are pretty average at everything, and the weirder species are mostly
 too tricky for beginning players. Finally, you may be given a choice of
 weapons. I suggest an axe (axes are fun).
@@ -53,11 +53,7 @@ something interesting or see a hostile creature, press Shift and the direction.
 If you want to know what a certain character on the screen represents, you can
 use the 'x' (examine) command to get a short description. You use the 'O', 'C'
 commands to open or close doors, and the '<' (up) and '>' (down) commands to
-climb staircases. Sometimes doors are hidden, and must be searched out by
-standing next to walls and resting (a number of commands do the same thing:
-'s', '.' (period), delete, or '5' on the numeric keypad; even better you rest
-or search for a longer duration with either '5' on the digit row or Shift-5 on
-the numeric keypad).
+climb staircases.
 
 The Dungeon gets more dangerous (but more interesting!) as you go down. If you
 get lost you can access a map of the whole level you are on with the 'X'
@@ -83,15 +79,15 @@ There are several different types of items:
 
  - Ammunition (which has the ( sign). Throw it with 'f' and 'F' (fire). Darts
    are meant to be thrown by hand; other missiles need an appropriate launcher
-   to be wielded (e.g. arrows are much more effective when shot with a bow).
+   to be wielded (e.g. arrows are only effective when shot with a bow).
 
  - Wands (/), Scrolls (?) and Potions (!) can be very valuable, but have
    limited uses (scrolls and potions can only be used once each, wands contain
    only a certain number of charges). Wands are e'V'oked, scrolls are 'r'ead
    and potions are 'q'uaffed. Unfortunately, you won't at first know what a
    wand, scroll or potion does; it will only be described by its physical
-   appearance. But once you have used, for example, a potion of healing, you
-   will in future recognise all potions of healing.
+   appearance. But once you have used, for example, a potion of curing, you
+   will in future recognise all potions of curing.
 
  - Rings (=) and Amulets (") often contain powerful magic, but it can be
    difficult to work out exactly what one does. They are put on with 'P' (put

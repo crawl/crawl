@@ -99,6 +99,25 @@ struct dice_def
 dice_def calc_dice(int num_dice, int max_damage);
 void scale_dice(dice_def &dice, int threshold = 24);
 
+template <typename T>
+void shuffle_array(T* arr, int n)
+{
+    while (n > 1)
+    {
+        int i = random2(n);
+        n--;
+        T tmp = arr[i];
+        arr[i] = arr[n];
+        arr[n] = tmp;
+    }
+}
+
+template <typename T>
+void shuffle_array(vector<T> &vec)
+{
+    shuffle_array(&vec[0], vec.size());
+}
+
 class rng_save_excursion
 {
 public:

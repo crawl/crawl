@@ -59,17 +59,6 @@ Asmodeus
 
 Un des Archidémons qui règnent sur l'Enfer, enveloppé de feu.
 %%%%
-Asmodeus:quote
-
-« Pour moi, j’ai d’autres occupations : je fais des mariages ridicules; j’unis
-des barbons avec des mineures, des maîtres avec leurs servantes, des filles mal
-dotées avec de tendres amants qui n’ont point de fortune. C’est moi qui ai
-introduit dans le monde le luxe, la débauche, les jeux de hasard et la chimie.
-Je suis l’inventeur des carrousels, de la danse, de la musique, de la comédie,
-et de toutes les modes nouvelles de France. En un mot, je m’appelle Asmodée,
-surnommé Le Diable Boiteux. »
-    -Alain-René Lesage, _Le Diable Boiteux_. 1707.
-%%%%
 Azrael
 
 Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
@@ -108,10 +97,10 @@ Le seigneur de la Cité de Fer de Dis.
 %%%%
 Dissolution
 
-La Fosse aux Fanges était autrefois une civilisation prospère, et Dissolution
+Les Fosses gluantes étaient autrefois une civilisation prospère, et Dissolution
 était le prophète de leur dieu. Quand la ville a été envahie par ses résidents
 actuels, seul Dissolution à survécu, car lui seul s'est tourné fidèlement au
-Dieu Fangeux. Dissolution devint alors une masse énorme d'acide suintant, ayant
+Dieu Fangeux. Dissolution devint alors une masse énorme de limon acide, ayant
 conservé son intelligence. Il est haineux envers tout ce que peut avoir une
 forme.
 %%%%
@@ -412,11 +401,6 @@ Murray
 
 Un crane démoniaque qui roule sur le sol du donjon.
 %%%%
-Murray:quote
-
-“Regardez derrière vous ! Un singe à trois tête !”
-    -Guybrush Threepwood, _The Secret of Monkey Island_
-%%%%
 Nellie
 
 Une éléphante très intelligente qui a voyagé avec une troupe de cirque. Lors
@@ -626,7 +610,7 @@ vivants en sa présence.
 %%%%
 angel
 
-Un guerrier divin du Rayonnant, il a des ailes imposantes d'une beauté
+Un guerrier divin de L’Étincelant, il a des ailes imposantes d'une beauté
 surnaturelle, et est entouré d'une aura de lumière blanche et brillante. Il
 semble aussi léger qu'une plume et est plutôt agile en volant, malgré le fait
 qu'il porte une armure lourde.
@@ -896,7 +880,7 @@ effrayante.
 %%%%
 daeva
 
-Un agent divin du Rayonnant, la div est une figure immense, brillante d'une
+Un agent divin de L’Étincelant, la div est une figure immense, brillante d'une
 aura d'une lumière dorée.
 %%%%
 dancing weapon
@@ -921,7 +905,7 @@ mortel de sa gueule pestilentielle.
 %%%%
 death ooze
 
-Une masse de chair en putréfaction qui crache de la bave pestilentielle.
+Une masse de chair en putréfaction qui crache du slime pestilentielle.
 %%%%
 death yak
 
@@ -1945,18 +1929,6 @@ metal gargoyle
 
 Un hideuse statue de métal ayant pris vie.
 %%%%
-metal gargoyle:quote
-
-«Leurs innombrables sculptures de diables et de dragons prenaient un aspect
-lugubre. La clarté inquiète de la flamme les faisait remuer à l’œil. Il y avait
-des guivres qui avaient l’air de rire, des gargouilles qu’on croyait entendre
-japper, des salamandres qui soufflaient dans le feu, des tarasques qui
-éternuaient dans la fumée. Et parmi ces monstres ainsi réveillés de leur
-sommeil de pierre par cette flamme, par ce bruit, il y en avait un qui marchait
-et qu’on voyait de temps en temps passer sur le front ardent du bûcher comme
-une chauve-souris devant une chandelle.»
-    -Victor Hugo, _Notre-Dame de Paris_, Livre 10, ch. IV. 1831
-%%%%
 microbat
 
 Une chauve-souris qui, en dépit de son nom, n'est pas plus petite qu'une
@@ -2248,9 +2220,9 @@ Un rongeur vicieux vêtu de piquants pointus et ayant une morsure douloureuse.
 %%%%
 profane servitor
 
-Cet être blasphémateur fut autrefois un ange du Rayonnant. Maintenant il n'est
-qu'une preuve dépourvue de vie que même l'être le plus sacré n'est pas hors de
-la portée de Yredelemnul.
+Cet être blasphémateur fut autrefois un ange de L’Étincelant. Maintenant il
+n'est qu'une preuve dépourvue de vie que même l'être le plus sacré n'est pas
+hors de la portée de Yredelemnul.
 %%%%
 program bug
 
@@ -2547,7 +2519,7 @@ d'être libéré.
 %%%%
 slime creature
 
-Un globe dégueulasse de limon, qui se faufile sur le sol et qui parfois se fond
+Un globe dégueulasse de slime, qui se faufile sur le sol et qui parfois se fond
 avec d'autres globes avoisinants...
 %%%%
 small abomination
@@ -2997,7 +2969,7 @@ errant dans le donjon en quête de proie qu'elle tue de son venin mortel.
 %%%%
 worm
 
-Un annélide géant, luisant de bave et possédant des dents inhabituellement
+Un annélide géant, luisant de slime et possédant des dents inhabituellement
 larges.
 %%%%
 wraith
@@ -3134,7 +3106,7 @@ ses os, et il palpite d'un pouvoir terrible et malsain.
 %%%%
 antique lich
 
-Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
+Une liche qui est devenu très coûteuse au fil d'un temps incalculable.
 %%%%
 archer statue
 

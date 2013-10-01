@@ -141,13 +141,13 @@ Vend tilbage til din normale form med en kort forsinkelse.
 %%%%
 Recite ability
 
-Prædiker for uhyrer om Zins bud, hvilket kan føre til forskellige resultater.
-Der er fire bøger, du kan prædike fra:
+Prædiker Zins bud for dine fjender, hvilket kan føre til forskellige
+resultater. Der er fire bøger, du kan prædike fra:
 
 * Afskyens Bog: Denne bog behandler det mest afskyvækkende, Zin kender til:
 kaos i alle dets former. Disse recitationer påkalder Zins mest voldsomme vrede.
 
-* Afsoningens Bog: De urene er næsten lige så hadet af lovgiveren. Recitationer
+* Afsoningens Bog: De urene er næsten lige så hadet af Lovgiveren. Recitationer
 fra denne bog vil forvolde sådanne væsener skade.
 
 * Apostatens Bog: Intelligente væsener, som ikke tilbeder Zin, men som ikke
@@ -168,8 +168,8 @@ intelligens og behændighed.
 %%%%
 Imprison ability
 
-Fængsler midlertidigt et uhyre bag vægge af sølv. Fængslet varighed øges af din
-færdighed med påkaldelser.
+Fængsler midlertidigt et uhyre bag vægge af sølv. Fængslets varighed øges af
+din færdighed med påkaldelser.
 %%%%
 Sanctuary ability
 
@@ -320,11 +320,11 @@ Hidkalder enorme, arrige allierede til at lave ravage.
 Divine Protection ability
 
 Bønfald Elyvilon om at redde dit liv. Hvis du er dødeligt såret, forhindrer
-Helbrederen måske banesåret. Særligt fromme individ kan være sikre på denne
+Helbrederen måske banesåret. Særligt fromme individer kan være sikre på denne
 hjælp, men i det tilfælde koster enhver indgriben fromhed (i modsætning til
 blot at bede om indgriben, hvilket altid er gratis).
 
-Giv agt: Det er en stor synd at dræbe andre, mens du selv beder om at blive
+Bemærk: Det er en stor synd at dræbe andre, mens du selv beder om at blive
 skånet!
 %%%%
 Lesser Healing ability

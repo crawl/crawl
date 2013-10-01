@@ -1242,7 +1242,7 @@ static bool _need_missile_gift(bool forced)
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
-    return ((forced || you.piety > 80
+    return ((forced || you.piety >= piety_breakpoint(2)
                        && random2(you.piety) > 70
                        && one_chance_in(8))
             && you.skills[ best_missile_skill ] >= 8
@@ -2132,7 +2132,8 @@ bool do_god_gift(bool forced)
             object_class_type gift_type;
 
             if (forced && (!need_missiles || one_chance_in(4))
-                || (!forced && you.piety > 130 && random2(you.piety) > 120
+                || (!forced && you.piety >= piety_breakpoint(4)
+                    && random2(you.piety) > 120
                     && one_chance_in(4)))
             {
                 if (you_worship(GOD_TROG)
@@ -2193,9 +2194,10 @@ bool do_god_gift(bool forced)
             break;
 
         case GOD_JIYVA:
-            if (forced || you.piety > 80 && random2(you.piety) > 50
-                         && one_chance_in(4) && !you.gift_timeout
-                         && you.can_safely_mutate())
+            if (forced || you.piety >= piety_breakpoint(2)
+                          && random2(you.piety) > 50
+                          && one_chance_in(4) && !you.gift_timeout
+                          && you.can_safely_mutate())
             {
                 if (_jiyva_mutate())
                 {
@@ -2231,7 +2233,8 @@ bool do_god_gift(bool forced)
                     gift = BOOK_DEATH;
                 }
             }
-            else if (forced || you.piety > 160 && random2(you.piety) > 100)
+            else if (forced || you.piety >= piety_breakpoint(5)
+                               && random2(you.piety) > 100)
             {
                 if (you_worship(GOD_SIF_MUNA))
                     gift = OBJ_RANDOM;
@@ -2291,7 +2294,7 @@ bool do_god_gift(bool forced)
                           && (you.piety >= piety_breakpoint(0) && gifts == 0
                               || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
                               || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
-                              || you.piety >= 161 && gifts <= 12 && one_chance_in(20)))
+                              || you.piety >= piety_breakpoint(5) && gifts <= 12 && one_chance_in(20)))
             {
                 set<spell_type> offers = _vehumet_get_spell_gifts();
                 if (!offers.empty())
@@ -2634,7 +2637,8 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         _gain_piety_point();
     if (you.piety > you.piety_max[you.religion])
     {
-        if (you.piety > 160 && you.piety_max[you.religion] <= 160)
+        if (you.piety >= piety_breakpoint(5)
+            && you.piety_max[you.religion] < piety_breakpoint(5))
         {
             mark_milestone("god.maxpiety", "became the Champion of "
                            + god_name(you.religion) + ".");
@@ -2672,8 +2676,8 @@ static void _gain_piety_point()
     if (!you_worship(GOD_SIF_MUNA))
     {
         if (you.piety >= MAX_PIETY
-            || you.piety > 150 && one_chance_in(3)
-            || you.piety > 100 && one_chance_in(3))
+            || you.piety >= piety_breakpoint(5) && one_chance_in(3)
+            || you.piety >= piety_breakpoint(3) && one_chance_in(3))
         {
             do_god_gift();
             return;
@@ -2684,7 +2688,7 @@ static void _gain_piety_point()
         // Sif Muna has a gentler taper off because training becomes
         // naturally slower as the player gains in spell skills.
         if (you.piety >= MAX_PIETY
-            || you.piety > 150 && one_chance_in(5))
+            || you.piety >= piety_breakpoint(5) && one_chance_in(5))
         {
             do_god_gift();
             return;
@@ -2755,7 +2759,7 @@ static void _gain_piety_point()
     }
 
     if (you_worship(GOD_CHEIBRIADOS)
-        && che_stat_boost(old_piety) < che_stat_boost())
+        && chei_stat_boost(old_piety) < chei_stat_boost())
     {
         simple_god_message(" raises the support of your attributes as your movement slows.");
         notify_stat_change("Cheibriados piety gain");
@@ -2767,7 +2771,7 @@ static void _gain_piety_point()
         invalidate_agrid(true);
     }
 
-    if (you.piety > 160 && old_piety <= 160)
+    if (you.piety >= piety_breakpoint(5) && old_piety < piety_breakpoint(5))
     {
         // In case the best skill is Invocations, redraw the god title.
         you.redraw_title = true;
@@ -2845,7 +2849,8 @@ void lose_piety(int pgn)
     // are withheld.
     if (!player_under_penance() && you.piety != old_piety)
     {
-        if (you.piety <= 160 && old_piety > 160
+        if (you.piety < piety_breakpoint(5)
+            && old_piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[you.religion])
         {
             // In case the best skill is Invocations, redraw the god
@@ -2911,7 +2916,7 @@ void lose_piety(int pgn)
     }
 
     if (you_worship(GOD_CHEIBRIADOS)
-        && che_stat_boost(old_piety) > che_stat_boost())
+        && chei_stat_boost(old_piety) > chei_stat_boost())
     {
         simple_god_message(" reduces the support of your attributes as your movement quickens.");
         notify_stat_change("Cheibriados piety loss");
@@ -3674,6 +3679,9 @@ void god_pitch(god_type which_god)
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.",
             MSGCH_MONSTER_ENCHANT);
+        if (env.forest_awoken_until)
+            for (monster_iterator mi; mi; ++mi)
+                mi->del_ench(ENCH_AWAKEN_FOREST);
     }
 
     if (you.worshipped[you.religion] < 100)
@@ -3706,8 +3714,8 @@ void god_pitch(god_type which_god)
             mpr("Unknown good god.", MSGCH_ERROR);
         }
         // Give a piety bonus when switching between good gods.
-        if (old_piety > 30)
-            gain_piety(old_piety - 30, 2, true, false);
+        if (old_piety > piety_breakpoint(0))
+            gain_piety(old_piety - piety_breakpoint(0), 2, true, false);
     }
 
     // Warn if a good god is starting wrath now.
@@ -4227,7 +4235,7 @@ int piety_rank(int piety)
         die("INT_MAX is no good");
     }
 
-    const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 1 };
+    const int breakpoints[] = { 160, 120, 100, 75, 50, 30, 1 };
     const int numbreakpoints = ARRAYSZ(breakpoints);
 
     for (int i = 0; i < numbreakpoints; ++i)
@@ -4241,8 +4249,8 @@ int piety_rank(int piety)
 
 int piety_breakpoint(int i)
 {
-    int breakpoints[MAX_GOD_ABILITIES] = { 30, 50, 75, 100, 120 };
-    if (i >= MAX_GOD_ABILITIES || i < 0)
+    int breakpoints[MAX_GOD_ABILITIES + 1] = { 30, 50, 75, 100, 120, 160 };
+    if (i >= MAX_GOD_ABILITIES + 1 || i < 0)
         return 255;
     else
         return breakpoints[i];

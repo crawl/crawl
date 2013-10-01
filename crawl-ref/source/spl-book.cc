@@ -1670,7 +1670,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
         return false;
     }
-    random_shuffle(spells.begin(), spells.end());
+    shuffle_array(spells);
 
     if (num_spells > (int) spells.size())
     {

@@ -310,7 +310,7 @@ DEPTH:  D:21-
 MONS:   common demon
 KMONS:  O = any demon
 KFEAT:  O = enter_pandemonium
-NSUBST: ^ = 4:^ / 4:1 / *:.
+NSUBST: ^ = 4:1 / *:.
 MAP
 ............
 .xxxxxxxxxx.
@@ -1387,10 +1387,10 @@ MAP
 .xxxxxxxxxx.
 .x2+3+3+3xx.
 .x+xxxxxx2x.
-.x3x^^^^x+x.
-.x+x^P^^x2x.
-.x3x^^1^x+x.
-.x+x^^^^x3x.
+.x3x....x+x.
+.x+x.P..x2x.
+.x3x..1.x+x.
+.x+x....x3x.
 .x2xxxx+x+x.
 .xx2+2+3x3x.
 .xxxxxxxx=x.
@@ -2235,7 +2235,7 @@ NAME:   pan_disco_hall
 TAGS:   pan no_rotate
 ORIENT: float
 COLOUR: D = random
-COLOUR: .x-0123456789 = disco
+COLOUR: .x-0123456789P = disco
 # WALL_ZOT_BLUE and FLOOR_PEBBLE are the bases for coloured variants of the
 # tiles thereof.
 RTILE:  x = wall_zot_blue
@@ -2251,6 +2251,9 @@ MONS:   col:random name:demonic name_adjective plant tile:mons_demonic_plant
 MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
 MONS:   red devil ; demon blade good_item ego:distortion
+KMONS:  P = pandemonium lord
+KFEAT:  P = floor
+FTILE:  P = floor_hall
 KFEAT:  _ = floor
 FTILE:  _ = floor_hall
 MAP
@@ -2264,7 +2267,7 @@ MAP
    x.x.x.x.x.x.x.x.x.x.x.x..x---------------_....x
 xxxx.........................---------------_..2.x
 x1.x.........................---------------_....x
-@...........................D---------------_..3.x
+@...........................D-------P-------_..3.x
 x1.x.........................---------------_....x
 xxxx.........................---------------_..4.x
    x.xxxxxxxxxxxxxxxxxxxxx..x---------------_....x

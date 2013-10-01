@@ -194,7 +194,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
         item.flags |= ISFLAG_DROPPED;
     }
     else if (you.species != SP_VAMPIRE)
-        item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+        clear_item_pickup_flags(item);
 
     // Happens after the corpse has been butchered.
     if (make_hide)
@@ -929,7 +929,7 @@ void turn_corpse_into_blood_potions(item_def &item)
     item.base_type = OBJ_POTIONS;
     item.sub_type  = POT_BLOOD;
     item_colour(item);
-    item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    clear_item_pickup_flags(item);
 
     item.quantity = num_blood_potions_from_corpse(mons_class);
 
@@ -1438,7 +1438,7 @@ bool go_berserk(bool intentional, bool potion)
 // assumed that this is the case.
 static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 {
-    if (mons_is_stationary(mon) && !mons_is_tentacle(mon->type))
+    if (mon->is_stationary() && !mons_is_tentacle(mon->type))
     {
         int dist = grid_distance(you.pos(), mon->pos());
         if (want_move)
@@ -2589,60 +2589,13 @@ void maybe_id_resist(beam_type flavour)
     }
 }
 
-bool maybe_id_weapon(item_def &item, const char *msg)
-{
-    // Do we need to identify an artefact brand?
-    bool do_art_brand = false;
-    iflags_t id = 0;
-
-    // Weapons you have wielded or know enough about.
-    if (item.base_type == OBJ_WEAPONS
-        && !(item.flags & ISFLAG_KNOW_PLUSES))
-    {
-        int min_skill20 = ((int)item.rnd) * 2 / 3;
-
-        if (item.flags & ISFLAG_KNOW_CURSE
-            && item.flags & ISFLAG_KNOW_TYPE
-            && you.skill(is_range_weapon(item) ? range_skill(item)
-                         : weapon_skill(item), 20, true) > min_skill20)
-        {
-            id = ISFLAG_KNOW_PLUSES;
-        }
-        else if (is_throwable(&you, item)
-                 && you.skill(SK_THROWING, 20, true) > min_skill20)
-        {
-            id = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_CURSE;
-            if (is_artefact(item))
-                do_art_brand = !artefact_known_wpn_property(item, ARTP_BRAND);
-            else
-                id |= ISFLAG_KNOW_TYPE;
-        }
-    }
-
-    if ((item.flags | id) != item.flags || do_art_brand)
-    {
-        set_ident_flags(item, id);
-        if (do_art_brand)
-            artefact_wpn_learn_prop(item, ARTP_BRAND);
-        if (msg)
-            mprf("%s%s", msg, item.name(DESC_INVENTORY_EQUIP).c_str());
-        you.wield_change = true;
-        return true;
-    }
-
-    return false;
-}
-
 void auto_id_inventory()
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item = you.inv[i];
         if (item.defined())
-        {
-            maybe_id_weapon(item, "You determine that you are carrying: ");
             god_id_item(item, false);
-        }
     }
 }
 

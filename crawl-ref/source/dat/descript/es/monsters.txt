@@ -548,13 +548,6 @@ Executioner
 Un horrible, poderoso y ágil demonio cuya forma está oculta en un remolino de
 hojas de guadaña
 %%%%
-giant eyeball:quote
-
-“El ojo que ves
- no es ojo porque tú lo veas,
- es ojo porque te ve.”
-    -Antonio Machado, Campos de Castilla. 1912-1917.
-%%%%
 Hell Sentinel
 
 Un imponente monolito construido y poseído por fuerzas demoníacas. Unos mil
@@ -582,14 +575,6 @@ Shadow Fiend
 Un horrible ser que aparece como una gran masa de sombras retorcidas que
 ocasionalmente revelan un enorme esqueleto con cuernos. Es uno de los más
 temibles habitantes de los Infiernos.
-%%%%
-toenail golem:quote
-
-“Dóciles medias los halagan de día y zapatos de cuero claveteados los
-fortifican, pero los dedos de mi pie no quieren saberlo. No les interesa otra
-cosa que emitir uñas: láminas córneas, semitransparentes y elásticas, para
-defenderse, ¿de quién?”
-    -Jorge Luis Borges
 %%%%
 ancient champion
 

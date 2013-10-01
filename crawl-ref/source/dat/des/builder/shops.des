@@ -322,3 +322,46 @@ MAP
  ..x..
   ...
 ENDMAP
+
+#####################################################
+# Contains only four items: an evocable item, a staff, a randbook, and a wand,
+# associated with one of each of the four elemental schools.
+NAME: nicolae_elemental_shop
+TAGS: no_monster_gen no_trap_gen no_item_gen no_pool_fixup
+DEPTH: D:4-
+SHUFFLE: AB
+NSUBST: A = a / l / w / x
+SUBST: B = .
+KPROP: l = no_cloud_gen
+MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
+            pow_min = 100, pow_max = 100, delay = 1, \
+            size = 1, walk_dist = 0, start_clouds = 1 }
+{{
+  local evocables = {"lamp of fire","phial of floods",
+                     "fan of gales","stone of tremors"}
+  local staffs    = {"staff of fire","staff of cold",
+                     "staff of air","staff of earth"}
+  local randbooks = {"randbook disc:fire","randbook disc:ice",
+                     "randbook disc:air","randbook disc:earth"}
+  local wands     = {"wand of fire","wand of cold",
+                     "wand of lightning","wand of digging"}
+  local choices   = {1, 2, 3, 4}
+  local i, j, temp
+  for i = 4, 2, -1 do
+     j = crawl.random_range(1,i)
+     temp = choices[j] ; choices[j] = choices[i] ; choices[i] = temp
+  end
+  local inventory = evocables[choices[1]] .. " | " .. staffs[choices[2]] ..
+           " | " .. randbooks[choices[3]] .. " | " .. wands[choices[4]]
+  kfeat("s = general shop type:Elemental suffix:Accessories count:4 use_all ; "
+         .. inventory )
+}}
+MAP
+.......
+.B.A.B.
+.......
+.A.s.A.
+.......
+.B.A.B.
+.......
+ENDMAP

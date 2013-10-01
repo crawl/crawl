@@ -119,14 +119,7 @@ sub check_desc_needed($@)
         err "$file: No description for $kind '$_'\n" unless $entries{$_};
         delete $keys{$_};
     }
-    $_ =~ /:quote$/ or err "$file: Unused description for $kind '$_'\n" for sort keys %keys;
-
-    for (sort keys %keys)
-    {
-        next unless s/:quote$//;
-        next if /^__(?:cap-[A-Z]|[a-z])_suffix$/;
-        err "$file: quote for undescribed '$_'\n" unless $entries{$_};
-    }
+    err "$file: Unused description for $kind '$_'\n" for sort keys %keys;
 }
 
 sub check_desc_links()
@@ -218,7 +211,21 @@ if (read_file("descript/monsters"))
 }
 
 check_desc_links();
+$described{$_} = 1 for keys %entries;
 __________________________________________________________________________();
+if ($lang)
+{
+    # Quotes may be already translated even if the desc they're appended to
+    # is not yet.
+    my $real_lang = $lang;
+    undef $lang;
+    read_file("descript/$_") for qw(features items unident unrand monsters spells
+        gods branches skills ability cards commands);
+    $described{$_} = 1 for keys %entries;
+    $lang = $real_lang;
+}
+__________________________________________________________________________();
+# These go to GameStartDB rather than DescriptionDB.
 read_file("descript/$_") for qw(species backgrounds);
 __________________________________________________________________________();
 read_file("database/$_") for qw(randname rand_wpn rand_arm rand_all randbook monname);
@@ -229,6 +236,17 @@ check_db_locals();
 __________________________________________________________________________();
 read_file("database/$_") for qw(shout insult);
 check_db_locals();
+__________________________________________________________________________();
+read_file("descript/quotes");
+check_desc_links();
+if (%described) # can't check unless descs are loaded
+{
+    for (keys %entries)
+    {
+        next if /^__(?:cap-[A-Z]|[a-z])_suffix$/;
+        err "$file: quote for undescribed '$_'\n" unless $described{$_};
+    }
+}
 __________________________________________________________________________();
 read_file("database/help");
 __________________________________________________________________________();

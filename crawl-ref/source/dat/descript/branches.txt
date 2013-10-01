@@ -16,12 +16,6 @@ A Temple of the Gods, a place of peace and refuge from the insanity of the
 dungeon. It usually contains altars to most of the known gods. It is located
 between the levels 4 and 7 of the main dungeon.
 %%%%
-Temple:quote
-
-“And I heard a great voice out of the temple saying to the seven angels, Go
-your ways, and pour out the vials of the wrath of God upon the earth.”
-    -KJV Bible, Rev 16:1
-%%%%
 Orcish Mines
 
 The well-worked goldmines of the orcish tribes. These tortuous caverns are
@@ -140,18 +134,6 @@ pure death is exceedingly short.
 The Tomb is three levels deep and contains the golden rune. Its entry is either
 on Crypt:2 or Crypt:3.
 %%%%
-Tomb:quote
-
-“In the depths of every heart, there is a tomb and a dungeon, though the
-lights, the music, and revelry above may cause us to forget their existence,
-and the buried ones, or prisoners whom they hide. But sometimes, and oftenest
-at midnight, those dark receptacles are flung wide open. In an hour like this,
-when the mind has a passive sensibility, but no active strength; when the
-imagination is a mirror, imparting vividness to all ideas, without the power of
-selecting or controlling them; then pray that your grieves may slumber, and the
-brotherhood of remorse not break their chain.”
-    -Nathaniel Hawthorne, “The Haunted Mind”. 1835.
-%%%%
 Hell
 
 The hallway to the four hells is guarded by Geryon. Heroes who prove their
@@ -190,14 +172,6 @@ drain all life out of treasure-craving visitors.
 
 Tartarus is seven levels deep and contains the bone rune. It can be accessed
 via the Vestibule of Hell.
-%%%%
-Tartarus:quote
-
-“There is a drear and lonely tract of hell
- From all the common gloom removed afar:
- A flat, sad land it is, where shadows are,
- Whose lorn estate my verse may never tell.”
-    -Edward Arlington Robinson, “Supremacy”. 1897.
 %%%%
 Zot
 

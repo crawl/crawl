@@ -87,7 +87,6 @@ private:
     int calc_stat_to_hit_base();
     int calc_stat_to_dam_base();
     int apply_defender_ac(int damage, int damage_max = 0, bool half_ac = false);
-    int fire_res_apply_cerebov_downgrade(int res);
 
     /* Attack effects */
     void check_autoberserk();

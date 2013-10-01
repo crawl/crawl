@@ -73,7 +73,7 @@ x....ZzZx...x...x.}.x...x...xZzZ....x
 xx......xZzZxZzZx...xZzZxZzZx......xx
  xxx...........ZxZzZxZ...........xxx
    xxxxx.....................xxxxx
-       xxxxxx...[.{.(...xxxxxx
+       xxxxxx.....{.....xxxxxx
             xxxxxxxxxxxxx
 ENDMAP
 
@@ -107,9 +107,9 @@ KMONS:   T = vampire spells:. ; nothing
 KMONS:   U = demigod ; nothing
 KMONS:   V = octopode ; nothing
 MAP
-ccccccc
-c[.{.(c
-c.....c
+ ccccc
+ c.{.c
+ c...c
 ccc+ccc
 cAm.mBc
 ccc.ccc
@@ -146,12 +146,11 @@ ITEM:    stone q:2 w:5 / stone q:1 w:5 / nothing
 ITEM:    stone q:1 w:5 / nothing
 ITEM:    stone q:1 w:1 / nothing w:20
 TILE:    G = dngn_granite_stump
-SHUFFLE: {[(
 :        set_feature_name("granite_statue", "granite stump")
 MAP
    xxxxxxx
   xx.....xx
-  x.{h[h(.x
+  x..h{h..x
   xxhggghxx
    xxx+xxx
  xxxeeeeexxx
@@ -209,9 +208,9 @@ MAP
 xxxxxxxxxxxxxx     xxxxxxxxx
 xxxxxxxxMxMxMxxxxxxxMxMxMxMx
 xxxxxxxxmxmxmxMxMxMxmxmxmxmxxxx@x
-xxxxxx[......xmxmxmx.....T.mMxx=xx
+xxxxxxx......xmxmxmx.....T.mMxx=xx
 xxxxxx{..............xmxmxTxmx...xxx
-xxxxxx(..........xmxmxMxMm.T.T.>.mMx
+xxxxxxx..........xmxmxMxMm.T.T.>.mMx
 xxxxxxxxmxmxmxmxmxMxMxxxxxmxmx...xxx
 xxxxxxxxMxMxMxMxMxxxxx   xMxMxxAxx
 xxxxxxxxxxxxxxxxxx       xxxxxxBx
@@ -236,7 +235,7 @@ COLOUR: ' = red
 SUBST:  ' = .
 MAP
 bbbbbbbbbbb
-b..(.{.[..b
+b....{....b
 b.........b
 b.........b
 b..b...b..b
@@ -269,7 +268,7 @@ MAP
 .xxxx..''.......''..xxxx.
 .xxx...'..""+""..'...xxx.
 .xxx..''.""..."".''..xxx.
-.xxx..''.""[({"".''..xxx.
+.xxx..''."".{."".''..xxx.
 .xxx..''.""..."".''..xxx.
 .xxx...'.."""""..'...xxx.
 .xxxx..''.......''..xxxx.
@@ -287,6 +286,7 @@ NAME:    dpeg_entry_solitude
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: C{! / B(' / V["
+SUBST:   ([ = .
 SUBST:   C=., !=@
 SHUFFLE: B(' / zzz, V[" / yyy
 SUBST:   z=x, y=x, B=., '=+, V=., "=+
@@ -317,6 +317,7 @@ NAME:    dpeg_entry_connections
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
+SUBST:   ([ = .
 SUBST:   A=+, a=...>, BCDEbcde=x
 SUBST:   1=@, 2:2., 3:33., 4:444., 234:x
 MAP
@@ -347,7 +348,7 @@ xxx@xxx@xxx@xxx
 x.....B0B.....x
 xCx.xAxxxAx.xCx
 @.x.A.....A.x.@
-x.x.x.[.(.x.x.x
+x.x.x.....x.x.x
 x.xBx..>..xBx.x
 x.x.x..{..x.x.x
 @.x.A.....A.x.@
@@ -364,7 +365,7 @@ TAGS:     entry no_rotate
 WEIGHT:   20
 ORIENT:   float
 SHUFFLE:  {[(
-SUBST:    ?=C., !=CCC., C:ccxxt
+SUBST:    ?=C., !=CCC., C:ccxxt, ([ = .
 SUBVAULT: _ : cave_to_hall_subvault / cave_to_temple_subvault w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -466,7 +467,7 @@ ENDMAP
 NAME:   enne_entry_octagon_isle
 ORIENT: float
 TAGS:   entry no_monster_gen
-FTILE:  '[({ = floor_sand
+FTILE:  '{ = floor_sand
 SUBST:  ' = .
 {{
     octa_room({
@@ -487,9 +488,9 @@ x.............x
 x.............x
 x.............x
 ......www......
-.....w[''w.....
+.....w'''w.....
 @....w'{'w....@
-.....w''(w.....
+.....w'''w.....
 ......www......
 x.............x
 x.............x
@@ -544,10 +545,8 @@ SUBST:   E = e , e = e n:1
 FTILE:   e = floor_mud
 COLOUR:  e = brown
 SUBST:   e =.
-SHUFFLE: XZ
-NSUBST:  Z = ) / ]
-NSUBST:  X = ( / [
 SUBST:   = = m
+SUBST:   X : c.
 MAP
           ...
        ccc===ccc
@@ -558,11 +557,11 @@ MAP
   cccccccnn=nnccccccc
  cc..ccccc...ccccc..cc
  c.w..ccccc+ccccc..f.c
- c.ww.nccX...Zccn.ff.c
+ c.ww.nccX...Xccn.ff.c
 .=www.n_c.....cln.fff=.
 .=wWww=.+..{..+.=ffFf=.
 .=www.n_c.....cln.fff=.
- c.ww.nccZ...Xccn.ff.c
+ c.ww.nccX...Xccn.ff.c
  c.w..ccccc+ccccc..f.c
  cc..cccccG.Gccccc..cc
   cccccccnn+nnccccccc
@@ -693,7 +692,7 @@ MAP
 .xABCDEm=medcbax.
 .x.............x.
 .+T....xxx....T+.
-.x.....({[.....x.
+.x......{......x.
 .x..T...]...T..x.
 .xxx+xxxxxxx+xxx.
 .................
@@ -740,7 +739,6 @@ NAME: nicolae_entry_kraken_aquarium_a
 TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake
 ORIENT: float
 WEIGHT: 1
-SHUFFLE: ({[>
 KMONS: K = kraken att:neutral
 KFEAT: K = w
 NSUBST: ' = 12:! / *:'
@@ -751,17 +749,17 @@ KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
 KPROP: Kw'! = no_rtele_into
 KFEAT: ' = .
 MAP
-  ...[...
+  .......
  .........
 ..nnnnnnn..
 ..n'''''n..
 ..n'www'n..
-(.n'wKw'n.{
+..n'wKw'n.{
 ..n'www'n..
 ..n'''''n..
 ..nnnnnnn..
  .........
-  ...>...
+  .......
 ENDMAP
 
 ###############################################################################
@@ -770,7 +768,6 @@ NAME: nicolae_entry_kraken_aquarium_b
 TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen
 ORIENT: float
 WEIGHT: 1
-SHUFFLE: ({[
 KMONS: K = kraken att:neutral
 KFEAT: K = w
 NSUBST: ' = 15:! / *:'
@@ -784,11 +781,11 @@ MAP
 .........
 .nnnnnnn.
 .n'''''n.xxxxx
-.n'www'n.x.(.x
+.n'www'n.x...x
 .n'www'n+x...x
-.n'wKw'n+..[.x
+.n'wKw'n+..{.x
 .n'www'n+x...x
-.n'www'n.x.{.x
+.n'www'n.x...x
 .n'''''n.xxxxx
 .nnnnnnn.
 .........
@@ -823,7 +820,7 @@ KFEAT:   A = abandoned_shop
 KFEAT:   B = stone_arch
 NSUBST:  C = AB / c
 KFEAT:   M = mangrove
-NSUBST:  H = 1:[ / 1:( / *: G:60 >:30 <:5 T:5
+SUBST:   H : G:60 T:5
 SUBST:   '" = .
 MAP
        ccc
@@ -903,6 +900,7 @@ KFEAT:   A = abandoned_shop / stone_arch / known shaft trap / \
          known teleport trap
 NSUBST:  A = A / x
 SUBST:   X = x
+SUBST:   ([ = .
 MAP
     XXXXXXXXXXXXXXXXXXXXXXXXXXXX
  XXXXxxxxxxxxxxxxxxxxxxxx"xxxxxx

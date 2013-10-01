@@ -945,6 +945,7 @@ end
 NAME:       arena_sprint
 TAGS:       sprint no_item_gen no_trap_gen no_rotate no_hmirror no_vmirror
 DESC:       Sprint VI: "Thunderdome"
+ORDER:      6
 ORIENT:     encompass
 LROCKTILE:  wall_hall
 {{
@@ -999,7 +1000,7 @@ LROCKTILE:  wall_hall
     lua_marker("!", portal_desc { spawn_point = 1, south = 1, west = 1 })
     lua_marker("?", portal_desc { spawn_point = 1, south = 1, east = 1 })
 
-    set_feature_name("permadry_fountain", "spawn point")
+    set_feature_name("dry_fountain", "spawn point")
 
     crawl.mpr("<cyan>You have entered the arena!\n" ..
               "You will win if you kill everything that spawns (including allies).\n" ..
@@ -1054,7 +1055,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
             scroll of recharging q:3 | scroll of recharging q:3 | scroll of recharging q:3 |\
-            scroll of silence q:3 | scroll of vorpalise weapon | scroll of vulnerability q:3 |\
+            scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
             scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon iii q:6 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
 KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
@@ -1122,7 +1123,7 @@ KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15
             ring of see invisible
 SUBST:  b : cb
 TILE:   c = wall_marble
-KFEAT:  TUVWYZ!? = permadry_fountain
+KFEAT:  TUVWYZ!? = dry_fountain
 TILE:   TUVWYZ!? = floor_black_cobalt
 COLOUR: TUVWYZ!? = magenta
 MAP

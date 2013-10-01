@@ -218,12 +218,13 @@ weapon_type str_to_weapon(const string &str)
         return WPN_BOW;
     else if (str == "crossbow")
         return WPN_CROSSBOW;
-    else if (str == "rocks")
-        return WPN_ROCKS;
-    else if (str == "javelins")
-        return WPN_JAVELINS;
-    else if (str == "darts")
-        return WPN_DARTS;
+    else if (str == "thrown"
+             || str == "rocks"
+             || str == "javelins"
+             || str == "tomahawks")
+    {
+        return WPN_THROWN;
+    }
     else if (str == "random")
         return WPN_RANDOM;
     else if (str == "viable")
@@ -258,12 +259,8 @@ static string _weapon_to_str(int weapon)
         return "bow";
     case WPN_CROSSBOW:
         return "crossbow";
-    case WPN_ROCKS:
-        return "rocks";
-    case WPN_JAVELINS:
-        return "javelins";
-    case WPN_DARTS:
-        return "darts";
+    case WPN_THROWN:
+        return "thrown";
     case WPN_VIABLE:
         return "viable";
     case WPN_RANDOM:
@@ -304,22 +301,14 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_STONE;
     else if (str == "rock")
         return FIRE_ROCK;
-    else if (str == "dagger")
-        return FIRE_DAGGER;
-    else if (str == "spear")
-        return FIRE_SPEAR;
-    else if (str == "hand axe" || str == "handaxe" || str == "axe")
-        return FIRE_HAND_AXE;
-    else if (str == "club")
-        return FIRE_CLUB;
     else if (str == "javelin")
         return FIRE_JAVELIN;
+    else if (str == "tomahawk")
+        return FIRE_TOMAHAWK;
     else if (str == "net")
         return FIRE_NET;
     else if (str == "return" || str == "returning")
         return FIRE_RETURNING;
-    else if (str == "pie")
-        return FIRE_PIE;
     else if (str == "inscribed")
         return FIRE_INSCRIBED;
 
@@ -942,7 +931,7 @@ void game_options::reset_options()
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
-                   "javelin / dart / pie / stone / rock /"
+                   "javelin / tomahawk / dart / stone / rock /"
                    " spear / net / handaxe / dagger / club, inscribed",
                    false, false);
 
@@ -1061,6 +1050,7 @@ void game_options::reset_options()
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
     tile_show_demon_tier     = true;
+    tile_water_anim          = true;
     tile_force_regenerate_levels = false;
 #endif
 
@@ -3560,6 +3550,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
+    else BOOL_OPTION(tile_water_anim);
     else BOOL_OPTION(tile_force_regenerate_levels);
     else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_tag_pref")

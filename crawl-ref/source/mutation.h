@@ -86,7 +86,8 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 
 bool delete_all_mutations(const string &reason);
 
-string mutation_name(mutation_type which_mutat, int level = -1,
+const char* mutation_name(mutation_type mut);
+string mutation_desc(mutation_type which_mutat, int level = -1,
                           bool colour = false);
 
 void roll_demonspawn_mutations();

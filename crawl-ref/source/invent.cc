@@ -1194,9 +1194,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return is_enchantable_armour(i, true, true);
 
     case OBJ_FOOD:
-        return (itype == OBJ_FOOD
-                || (itype == OBJ_MISSILES && i.sub_type == MI_PIE))
-               && !is_inedible(i);
+        return itype == OBJ_FOOD && !is_inedible(i);
 
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
@@ -1228,7 +1226,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (!i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY);
 
     case OSEL_BRANDABLE_WEAPON:
-        return (is_brandable_weapon(i, true));
+        return is_brandable_weapon(i, true);
 
     default:
         return false;

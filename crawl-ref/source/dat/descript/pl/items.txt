@@ -327,14 +327,6 @@ buckler
 
 Mała tarcza.
 %%%%
-buckler:quote
-
-„Stateczność jego tarcz i puklerz mocny,
- Za którym stojąc, na żaden strach nocny,
- Na żadną trwogę, ani dbaj na strzały,
- Którymi sieje przygoda w dzień biały.”
-    -pieśń kościelna
-%%%%
 cap
 
 Coś do przykrycia głowy.
@@ -602,18 +594,6 @@ horn of Geryon
 Ten róg należy do Geryona, strażnika Przedsionka Piekła. Legendy mówią że
 śmiertelnik który zapragnie dostać się do piekieł żywy, musiałby zadąć w ten
 róg.
-%%%%
-horn of Geryon:quote
-
-„Natenczas Wojski chwycił na taśmie przypięty
- Swój róg bawoli, długi, cętkowany, kręty
- Jak wąż boa, oburącz do ust go przycisnął,
- Wzdął policzki jak banię, w oczach krwią zabłysnął,
- Zasunął wpół powieki, wciągnął w głąb pół brzucha
- I do płuc wysłał z niego cały zapas ducha
- I zagrał: róg jak wicher wirowatym dechem,
- Niesie w puszczę muzykę i podwaja echem.”
-    -Adam Mickiewicz, „Pan Tadeusz”
 %%%%
 ice dragon armour
 
@@ -955,21 +935,9 @@ ring of evasion
 Ten pierścień ułatwia lub utrudnia nosicielowi na unikanie ataków, w zależności
 od mocy i kierunku czaru nań rzuconego.
 %%%%
-ring of fire
-
-Ten pierścień daje swemu nosicielowi moc ognia. Wzmacnia to wszelkie czary
-Magii Ognia jak i zapewnia odporność na ogień, jednakże czary Magii Lodu są
-osłabione, a nosiciel jest bardziej wrażliwy na zimno.
-%%%%
 ring of hunger
 
 Ten pierścień pomaga zrzucić nadwagę, wielce zwiększając zużycie pokarmu.
-%%%%
-ring of ice
-
-Ten pierścień daje swemu nosicielowi moc zimna. Wzmacnia to wszelkie czary
-Magii Lodu jak i zapewnia odporność na chłód, jednakże czary Magii Ognia są
-osłabione, a nosiciel jest bardziej wrażliwy na wysoką temperaturę.
 %%%%
 ring of intelligence
 
@@ -1029,12 +997,6 @@ ring of see invisible
 
 Ten pierścień pozwala swemu nosicielowi ujrzeć niewidzialne istoty.
 %%%%
-ring of see invisible:quote
-
-„A oto mój sekret. Jest bardzo prosty: dobrze widzi się tylko sercem.
-Najważniejsze jest niewidoczne dla oczu.”
-    -Antoine de Saint-Exupéry, „Mały Książę”, 1943
-%%%%
 ring of slaying
 
 Ten pierścień zwiększa (lub zmniejsza) celność i zadawane obrażenia w walce
@@ -1087,12 +1049,6 @@ rod of striking
 
 Tym prętem spuszcza się lanie osobiście. Przełożenie kogoś wpierw przez kolano
 nie jest obowiązkowe, jednak należy do dobrego tonu.
-%%%%
-rod of striking:quote
-
-„Kto zawściąga rózgi swej, ma w nienawiści syna swego; ale kto go miłuje,
- wczas go karze.̈́”
-    -Biblia Gdańska, Księga przysłów 13:24
 %%%%
 rod of the swarm
 
@@ -1213,11 +1169,6 @@ scroll of identify
 Ten zwój pozwala odkryć własności od jednego do trzech przedmiotów. Użyty na
 talii kart, zwój ten także podejrzy górną kartę bez aktywowania jej działania.
 %%%%
-scroll of immolation
-
-Ten zwój nasączony jest łatwopalną substancją, która ulegnie zapłonowi przy
-próbie odczytania.
-%%%%
 scroll of magic mapping
 
 Ten zwój tworzy mapę poziomu lochów wokół czytającego.
@@ -1257,7 +1208,7 @@ Ten zwój używa mocy sił ciemności aby zesłać straszliwe cierpienie na wszy
 żywe istoty w pobliżu — łącznie z tobą! Powoduje to znaczną utratę zdrowia,
 jednakże nigdy samo z siebie nie powoduje śmierci.
 %%%%
-scroll of vorpalise weapon
+scroll of brand weapon
 
 Ten zwój trwale nadaje broni którą trzymasz w ręce zdolność bardziej
 efektywnego wyrządzania krzywdy bliźniemu. Nie zadziała to jeśli broń ta już ma
@@ -1327,20 +1278,6 @@ spear
 Długi patyk, z zaostrzonym grotem na końcu. Nadaje się do walki wręcz jak i do
 rzucania.
 %%%%
-staff of air
-
-Ten kij zwiększa moc czarów Magii Powietrza, a także zapewnia ochronę przed
-porażeniem elektrycznością. Jeśli użytkownik ma wystarczające umiejętności
-zarówno w Magii Powietrza jak i użyciu przedmiotów magicznych, wrogowie
-uderzeni tym kijem zostaną porażeni prądem.
-%%%%
-staff of cold
-
-Ten kij zwiększa moc czarów Magii Lodu, a także zapewnia ochronę przed efektami
-zimna. Jeśli użytkownik potrafi posługiwać się magicznymi przedmiotami,
-wrogowie uderzeni tym kijem zostaną przymrożeni — mocniej jeśli użytkownik
-posiada umiejętności w Magii Lodu.
-%%%%
 staff of conjuration
 
 Ten kij zwiększa moc czarów Magii Niszczenia.
@@ -1352,23 +1289,10 @@ ochronę. Jeśli użytkownik posiada umiejętności zarówno w Nekromancji jak i
 użyciu przedmiotów magicznym, żywe istoty uderzone tym kijem ucierpią dodatkowe
 obrażenia.
 %%%%
-staff of earth
-
-Ten kij zwiększa moc czarów Magii Ziemi. Jeśli użytkownik potrafi posługiwać
-się magicznymi przedmiotami, wrogowie uderzeni tym kijem zostaną zmiażdżeni —
-mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi.
-%%%%
 staff of energy
 
 Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go w
 celu uzupełnienia magicznej energii.
-%%%%
-staff of fire
-
-Ten kij zwiększa moc czarów Magii Ognia, a także zapewnia ochronę przed
-efektami gorąca. Jeśli użytkownik potrafi posługiwać się magicznymi
-przedmiotami, wrogowie uderzeni tym kijem zostaną przypaleni — mocniej jeśli
-użytkownik posiada umiejętności w Magii Ognia.
 %%%%
 staff of poison
 

@@ -2,10 +2,10 @@ Guide to Crawl's options
 ========================
 
 This document explains all of the options in the latest version of
-Dungeon Crawl Stone Soup. If you get stuck or some things won't seem to
-work properly, ask for help on the newsgroup rec.games.roguelike.misc.
-Please flag queries with '-crawl-', as other roguelikes are discussed
-there as well.
+Dungeon Crawl Stone Soup. If you get stuck or some things don't seem to
+work properly, ask for help in ##crawl on freenode, or on the Crawl
+forums at http://crawl.develz.org/tavern/.
+
 The contents of this text are:
 
 0-  Generalities.
@@ -103,7 +103,8 @@ The contents of this text are:
                 tile_font_tip_size, tile_font_lbl_size,
                 tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier,
-                tile_layout_priority, tile_force_regenerate_levels
+                tile_water_anim, tile_layout_priority,
+                tile_force_regenerate_levels
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -1592,24 +1593,29 @@ CHANNEL_NAME can currently be one of these:
    recovery        = recovery from disease/stat loss/poison conditions
    talk            = monsters talking
    talk_visual     = monster performing some action that the player sees
+   timed_portal    = portal timeout messages
+   sound           = other sounds
    intrinsic_gain  = level/stat/species power gains
    mutation        = gain/lose mutations
    monster_spell   = messages about monsters gesturing or casting spells
    monster_enchant = messages pertaining to monster enchantments
    friend_spell    = as monster_spell, but only for friendly monsters
    friend_enchant  = as monster_enchant, but only for friendly monsters
+   friend_action   = other actions by friendly monsters
    monster_damage  = messages telling how damaged a monster is
+   monster_target  = messages marking the monster as a target (unused)
+   banishment      = messages about banishing and being banished to the Abyss
    rotten_meat     = messages about chunks/corpses becoming rotten
    equipment       = messages indicating worn/wielded equipment
-   floor           = messages when looking at or walking over a floor
-                     item
-   multiturn       = indicates long actions (wearing armour, dissecting
-                     etc.)
+   floor           = messages when looking at or walking over a floor item
+   multiturn       = indicates long actions (wearing armour, dissecting etc.)
    examine         = messages from examining your surroundings
    examine_filter  = boring messages from examining your surroundings
    diagnostics     = debugging messages
    error           = error messages
    tutorial        = messages from the tutorial
+   orb             = messages about the Orb of Zot
+   hell_effect     = messages about environmental effects of the Hells
 
 The channel options are
    mute      = show no messages from channel (dangerous, be careful!)
@@ -1859,6 +1865,9 @@ tile_show_demon_tier = true
         Will overlay demon tiles with an icon intended to represent their
         tier (or difficulty rank) among demons, as is the case for non-Tiles
         builds.
+
+tile_water_anim = true
+        If disabled, animation of liquids will be suppressed.
 
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         (Ordered list option)

@@ -19,8 +19,8 @@ function castle_lemuel_subvault_setup(e)
          e.colour("? = brown")
          e.ftile("? = floor_mud")
          e.kfeat("? = floor")
+         e.kfeat("~ = alarm trap w:1 / floor")
          e.subst("X = c +:1")
-         e.subst("~ = ~:2 .")
          e.subst("8 = 89")
          e.tile("c = wall_stone_brick")
          e.ftile(".~*X|+$ = floor_cobble_blood")
@@ -94,7 +94,7 @@ NAME:   lemuel_castle_interior_original
 TAGS:   lemuel_castle_interior
 : castle_lemuel_subvault_setup(_G)
 MAP
-+c....+~~~.~~~+..+~~.~~~~+.***c+
++c....+~......+..+......~+.***c+
 .c||..ccccccccc++ccccccccc.***c.
 1c||2.c1...1..1321..1...1c.***c1
 .cccccc..1...211112...1..cccccc.
@@ -117,7 +117,7 @@ MAP
 .c.11.ccc+cccccccccccc+ccc..2.c.
 .c|.2.X*m.1..........1.m|c....c.
 .ccm+mc|m.....1111.....m|cm+mcc.
-....~.c|m..1...22......m*c.~1...
+......c|m..1...22......m*c..1...
 ......c.+....1132.2....+.X..1...
 .cccccccccccccccccccccccccccccc.
 .c........1..m....m..1........c.
@@ -134,14 +134,14 @@ TAGS:   lemuel_castle_interior
 SUBST:  $=$:5 .
 ITEM:   w:5 meat ration / sausage / beef jerky / potion of confusion
 MAP
-+c....+~~.....1............~$*c+
++c....+.......1.............$*c+
 ...1..cccccccccccccccccccccccXc.
 cc....c......cG..Gc.1.......c|c1
 *cc++cc..cG..+....+...12....m|c.
-|....~12.cG..+....+...23....+~c.
+|....~12.cG..+....+...23....+.c.
 $....~.2.....c....c...12....m*c.
 *cc++ccccccccc....ccccccc++ccXc+
-cc.~~.c.m444dc....c2..$c.~~.....
+cc~~~~c.m444dc....c2..$c.~~.....
 ...12.c.cm4mmc....c$cc.c12......
 +c....+...2..c....c...........c+
   cccccccccccc++++cccccccccccc
@@ -154,14 +154,14 @@ TAGS:   lemuel_castle_interior
 : castle_lemuel_subvault_setup(_G)
 SUBST:  $=$:5 .
 MAP
-+c....+~~.*c$*|cc|*$cccccc$...c+
++c....+...*c$*|cc|*$cccccc$...c+
 .c.1..ccccccmc1321cmcccccc....c.
 .c..2........c.12.c...........c.
 .cc++c.........ww.....2..1c++cc.
 .....c.2.......ww.........c.....
 .2...c...1...c..$.c...1...c..1..
 .ccccc+cccccccccXcccccccc+ccccc.
-.c.1.c.~..1..+....+2.....~c2..c.
+.c.1.c.~..1..+....+2....~.c2..c.
 .~.c$c.~2....c....c.....~.c$c1~.
 +c..2c.~..1..c....c..1..~.c...c+
   cccccccccccc++++cccccccccccc

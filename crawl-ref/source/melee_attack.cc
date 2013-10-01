@@ -1002,6 +1002,8 @@ bool melee_attack::attack()
 
             if (!cont)
             {
+                if (!defender->alive())
+                    handle_phase_killed();
                 handle_phase_end();
                 return false;
             }
@@ -1804,7 +1806,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                 const int orig_damage = damage;
 #endif
 
-                if (you.piety > 80 || coinflip())
+                if (you.piety >= piety_breakpoint(2) || coinflip())
                     damage++;
 
                 damage +=
@@ -1856,6 +1858,8 @@ int melee_attack::player_apply_final_multipliers(int damage)
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
+    int modified_wpn_skill = (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
+                              ? SK_SHORT_BLADES : wpn_skill);
 
     if (weapon && weapon->base_type == OBJ_WEAPONS
         && (weapon->sub_type == WPN_CLUB
@@ -1868,13 +1872,14 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         goto ok_weaps;
     }
 
-    switch (wpn_skill)
+    switch (modified_wpn_skill)
     {
     case SK_SHORT_BLADES:
     {
         int bonus = (you.dex() * (stab_skill + 100)) / 500;
 
-        if (weapon->sub_type != WPN_DAGGER)
+        // We might be unarmed if we're using the boots of the Assassin.
+        if (!weapon || weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
@@ -1884,7 +1889,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     ok_weaps:
     case SK_LONG_BLADES:
         damage *= 10 + div_rand_round(stab_skill, 100 *
-                       (stab_bonus + (wpn_skill == SK_SHORT_BLADES ? 0 : 2)));
+                       (stab_bonus + (modified_wpn_skill == SK_SHORT_BLADES ? 0 : 2)));
         damage /= 10;
         // fall through
     default:
@@ -1952,6 +1957,14 @@ void melee_attack::set_attack_verb()
             attack_verb = "hit";
         else
             attack_verb = "clumsily bash";
+        return;
+    }
+
+    // Special message for stabs while wearing the Boots of the Assassin.
+    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN) && stab_attempt && stab_bonus > 0)
+    {
+        attack_verb = "stab";
+        verb_degree = "with your concealed dagger";
         return;
     }
 
@@ -2340,14 +2353,6 @@ bool melee_attack::player_monattk_hit_effects()
     return true;
 }
 
-int melee_attack::fire_res_apply_cerebov_downgrade(int res)
-{
-    if (weapon && weapon->special == UNRAND_CEREBOV)
-        --res;
-
-    return res;
-}
-
 void melee_attack::drain_defender()
 {
     if (defender->is_monster() && one_chance_in(3))
@@ -2453,10 +2458,6 @@ bool melee_attack::distortion_affects_defender()
         return false;
     }
 
-    // Used to be coinflip() || coinflip() for players, just coinflip()
-    // for monsters; this is a compromise. Note that it makes banishment
-    // a touch more likely for players, and a shade less likely for
-    // monsters.
     if (!one_chance_in(3))
     {
         if (defender_visible)
@@ -2792,6 +2793,7 @@ void melee_attack::chaos_affects_defender()
         beam.range        = 0;
         beam.colour       = BLACK;
         beam.effect_known = false;
+        beam.effect_wanton = true; // Wielded brand is always known.
 
         if (weapon && you.can_see(attacker))
         {
@@ -3123,7 +3125,7 @@ attack_flavour melee_attack::random_chaos_attack_flavour()
 bool melee_attack::apply_damage_brand()
 {
     bool brand_was_known = false;
-    int brand, res = 0;
+    int brand = 0;
     bool ret = false;
 
     if (weapon)
@@ -3160,8 +3162,7 @@ bool melee_attack::apply_damage_brand()
     switch (brand)
     {
     case SPWPN_FLAMING:
-        res = fire_res_apply_cerebov_downgrade(defender->res_fire());
-        calc_elemental_brand_damage(BEAM_FIRE, res,
+        calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
         noise_factor += 400 / max(1, damage_done);
@@ -4345,7 +4346,7 @@ string melee_attack::mons_attack_verb()
     };
 
     ASSERT(attk_type < (int)ARRAYSZ(attack_types));
-    return (attack_types[attk_type]);
+    return attack_types[attk_type];
 }
 
 string melee_attack::mons_attack_desc()
@@ -5297,8 +5298,7 @@ bool melee_attack::do_knockback(bool trample)
 {
     do
     {
-        monster* def_monster = defender->as_monster();
-        if (def_monster && mons_is_stationary(def_monster))
+        if (defender->is_stationary())
             return false; // don't even print a message
 
         int size_diff =

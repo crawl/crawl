@@ -41,7 +41,6 @@ TAGS:   no_item_gen no_monster_gen
 KITEM:  $ = ring of regeneration unrand:ring_of_vitality / acquire any
 KITEM:  1234 = gold / any / nothing
 KITEM:  M4 = superb_item / any
-SUBST:  . = .:10 ~:1
 COLOUR: G = yellow
 TILE:   G = dngn_sarcophagus_sealed
 COLOUR: c = yellow
@@ -50,7 +49,7 @@ COLOUR: C = white
 TILE:   C = wall_lab_stone
 COLOUR: X = brown
 TILE:   X = dngn_stone_wall_brown
-FTILE:  .!~>cCXG1234M$ = floor_sandstone
+FTILE:  .!>cCXG1234M$ = floor_sandstone
 : if you.absdepth() <= 17 then
 KMONS: 1 = mummy / guardian mummy / nothing
 KMONS: 2 = mummy / guardian mummy / nothing

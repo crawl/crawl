@@ -149,7 +149,7 @@ static string _spell_extra_description(spell_type spell, bool viewing)
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                string title, spell_selector selector)
+                const string &title, spell_selector selector)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
@@ -764,10 +764,15 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
+    // Silently take MP before the spell.
+    const int cost = spell_mana(spell);
+    dec_mp(cost, true);
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
+        // Return the MP since the spell is aborted.
+        inc_mp(cost, true);
         return false;
     }
 
@@ -783,16 +788,17 @@ bool cast_a_spell(bool check_range, spell_type spell)
     else
         practise(EX_DID_MISCAST, spell);
 
-    // Nasty special cases.  Mana should be taken first, but that would make
-    // cancelling spells tricky, baring some refactoring.
+    // Nasty special cases.
     if (you.species == SP_DJINNI && cast_result == SPRET_SUCCESS
         && (spell == SPELL_BORGNJORS_REVIVIFICATION
          || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
     {
         // These spells have replenished essence to full.
+        inc_mp(cost, true);
+    } else {
+      // Redraw MP
+      flush_mp();
     }
-    else
-        dec_mp(spell_mana(spell));
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
     {
@@ -1087,7 +1093,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_FULMINANT_PRISM:
         return new targetter_smite(&you, range, 0, 2);
     case SPELL_DAZZLING_SPRAY:
-        return new targetter_spray(&you, 6, ZAP_DAZZLING_SPRAY);
+        return new targetter_spray(&you, range, ZAP_DAZZLING_SPRAY);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1314,7 +1320,8 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (you_worship(GOD_SIF_MUNA)
             && !player_under_penance()
-            && you.piety >= 100 && x_chance_in_y(you.piety + 1, 150))
+            && you.piety >= piety_breakpoint(3)
+            && x_chance_in_y(you.piety, piety_breakpoint(5)))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return SPRET_FAIL;

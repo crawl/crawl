@@ -366,23 +366,39 @@ murky_bord_bl MURKY_WAVE_SW
 murky_bord_lft MURKY_WAVE_W
 murky_bord_tl MURKY_WAVE_NW
 
-# Make all base variants equally likely, but their special ones less so.
-%weight 4
-shoals_deep_water1 SHOALS_DEEP_WATER
+%weight 10
+shoals_deep_water0 SHOALS_DEEP_WATER
+shoals_deep_water1
 shoals_deep_water2
+%weight 8
 shoals_deep_water3
 shoals_deep_water4
-%weight 1
 shoals_deep_water5
+%weight 3
 shoals_deep_water6
 shoals_deep_water7
 shoals_deep_water8
+%weight 1
 shoals_deep_water9
+shoals_deep_water10
+shoals_deep_water11
 
-shoals_shallow_water1 SHOALS_SHALLOW_WATER
+%weight 10
+shoals_shallow_water0 SHOALS_SHALLOW_WATER
+shoals_shallow_water1
 shoals_shallow_water2
+%weight 8
 shoals_shallow_water3
 shoals_shallow_water4
+shoals_shallow_water5
+%weight 3
+shoals_shallow_water6
+shoals_shallow_water7
+shoals_shallow_water8
+%weight 1
+shoals_shallow_water9
+shoals_shallow_water10
+shoals_shallow_water11
 shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
 shoals_shallow_water_disturbance2
 shoals_shallow_water_disturbance3

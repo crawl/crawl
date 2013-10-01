@@ -24,6 +24,7 @@ end
 NAME:    tutorial_lesson3
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_pool_fixup tutorial
 DESC:    "Lesson 3: Items and Inventory"
+ORDER:   3
 ORIENT:  encompass
 KFEAT:   ABC = .
 COLOUR:  defgABC = lightblue

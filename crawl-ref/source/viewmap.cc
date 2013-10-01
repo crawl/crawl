@@ -271,9 +271,12 @@ bool is_feature(ucs_t feature, const coord_def& where)
         switch (grid)
         {
         case DNGN_TRAP_MECHANICAL:
-        case DNGN_TRAP_MAGICAL:
-        case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_TELEPORT:
+        case DNGN_TRAP_ALARM:
+        case DNGN_TRAP_ZOT:
+        case DNGN_TRAP_SHAFT:
         case DNGN_TRAP_WEB:
+        case DNGN_PASSAGE_OF_GOLUBRIA:
             return true;
         default:
             return false;
@@ -562,7 +565,7 @@ class feature_list
 
         if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
             return feat_dir(feat);
-        if (feat == DNGN_TRAP_NATURAL)
+        if (feat == DNGN_TRAP_SHAFT)
             return G_DOWN;
         if (feat_is_altar(feat) || feat == DNGN_ENTER_SHOP)
             return G_OTHER;

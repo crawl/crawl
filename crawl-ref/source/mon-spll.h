@@ -359,7 +359,7 @@
 
     {  MST_WIZARD_III,
       {
-       SPELL_PETRIFY,
+       SPELL_NO_SPELL,
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
        SPELL_BLINK,
        SPELL_BOLT_OF_FIRE,
@@ -711,8 +711,8 @@
 
     {  MST_NAGA,
       {
-       SPELL_POISON_SPLASH,
-       SPELL_POISON_SPLASH,
+       SPELL_SPIT_POISON,
+       SPELL_SPIT_POISON,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -1250,12 +1250,12 @@
     // demon lords
     {  MST_GERYON,
       {
-       SPELL_SUMMON_BEAST,
-       SPELL_SUMMON_BEAST,
+       SPELL_SUMMON_HELL_BEAST,
+       SPELL_SUMMON_HELL_BEAST,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_BEAST,
+       SPELL_SUMMON_HELL_BEAST,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_BEAST
+       SPELL_SUMMON_HELL_BEAST
       }
     },
 
@@ -1593,7 +1593,7 @@
       {
        SPELL_IOOD,
        SPELL_NO_SPELL,
-       SPELL_CANTRIP,
+       SPELL_IOOD,
        SPELL_IOOD,
        SPELL_NO_SPELL,
        SPELL_IOOD
@@ -1713,7 +1713,7 @@
     {  MST_GNOLL_SHAMAN,
       {
        SPELL_CORONA,
-       SPELL_PETRIFY,
+       SPELL_NO_SPELL,
        SPELL_HEAL_OTHER,
        SPELL_HASTE_OTHER,
        SPELL_HEAL_OTHER,
@@ -2176,7 +2176,7 @@
       {
        SPELL_PRIMAL_WAVE,
        SPELL_PRIMAL_WAVE,
-       SPELL_WATER_ELEMENTALS,
+       SPELL_NO_SPELL,
        SPELL_PRIMAL_WAVE,
        SPELL_PRIMAL_WAVE,
        SPELL_NO_SPELL
@@ -2210,7 +2210,7 @@
        SPELL_BOLT_OF_MAGMA,
        SPELL_STONE_ARROW,
        SPELL_NO_SPELL,
-       SPELL_PETRIFY,
+       SPELL_NO_SPELL,
        SPELL_STONE_ARROW,
        SPELL_NO_SPELL
       }

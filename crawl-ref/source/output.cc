@@ -683,7 +683,7 @@ static void _print_stats_hp(int x, int y)
 
 static short _get_stat_colour(stat_type stat)
 {
-    if (you.stat_zero[stat] > 0)
+    if (you.stat_zero[stat])
         return LIGHTRED;
 
     // Check the stat_colour option for warning thresholds.
@@ -1014,6 +1014,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_RAY,
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
+        DUR_FIRE_VULN,
     };
 
     status_info inf;
@@ -1697,7 +1698,8 @@ const char *equip_slot_to_name(int equip)
 {
     if (equip == EQ_RINGS
         || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
-        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT)
+        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT
+        || equip == EQ_RING_AMULET)
     {
         return "Ring";
     }
@@ -1760,6 +1762,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
         EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
         EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
+        EQ_RING_AMULET,
     };
 
     char buf[100];
@@ -1780,6 +1783,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
+        // This skips over EQ_RING_AMULET, but that's probably okay for now.
         if (you.species != SP_OCTOPODE && eqslot > EQ_AMULET)
             continue;
 
@@ -2169,8 +2173,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (you.rmut_from_item(calc_unid)
-                       || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                       || you_worship(GOD_ZIN) && you.piety >= 150);
+                       || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
     const int rrott = you.res_rotting();
 
     snprintf(buf, sizeof buf,
@@ -2273,15 +2276,9 @@ static char _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
+
     overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
-    overview.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                        "<cyan>[ +/L-click : Page down.   - : Page up."
-                        "           Esc/R-click exits.]"));
-#else
-                        "<cyan>[ + : Page down.   - : Page up."
-                        "                           Esc exits.]"));
-#endif
+    overview.set_more();
     overview.set_tag("resists");
 
     overview.add_text(_overview_screen_title(get_number_of_cols()));
@@ -2292,7 +2289,6 @@ static char _get_overview_screen_results()
             overview.add_item_formatted_string(blines[i]);
         overview.add_text(" ");
     }
-
 
     {
         vector<char> equip_chars;
@@ -2495,6 +2491,7 @@ static string _status_mut_abilities(int sw)
         DUR_TOXIC_RADIANCE,
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
+        DUR_FIRE_VULN,
     };
 
     status_info inf;

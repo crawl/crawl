@@ -342,8 +342,10 @@ public:
     bool draw_title_suffix(const formatted_string &fs, bool titlefirst = true);
     void update_title();
 
-    // Sets a replacement for the --more-- string.
+    // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
+    // Shows a stock message about scrolling the menu instead of -more-
+    void set_more();
     const formatted_string &get_more() const { return more; }
 
     void set_highlighter(MenuHighlighter *h);

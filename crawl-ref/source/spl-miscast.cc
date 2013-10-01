@@ -23,6 +23,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"
@@ -1616,7 +1617,7 @@ void MiscastEffect::_necromancy(int severity)
         if (spell != SPELL_NO_SPELL)
         {
             // An actual necromancy miscast.
-            if (x_chance_in_y(you.piety, 150))
+            if (x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
                 return;
@@ -2971,7 +2972,7 @@ void MiscastEffect::_zot()
     case 3:    // other misc stuff
     reroll_2:
         // Cases at the end are for players only.
-        switch (random2(target->is_player() ? 14 : 10))
+        switch (random2(target->is_player() ? 15 : 10))
         {
         case 0:
             target->paralyse(act_source, 2 + random2(4), cause);
@@ -3086,6 +3087,10 @@ void MiscastEffect::_zot()
             mpr("An unnatural silence engulfs you.");
             you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
             invalidate_agrid(true);
+            break;
+        case 14:
+            if (mons_word_of_recall(NULL, 2 + random2(3)) == 0)
+                canned_msg(MSG_NOTHING_HAPPENS);
             break;
         }
         break;

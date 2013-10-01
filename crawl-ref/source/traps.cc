@@ -189,7 +189,7 @@ bool trap_def::is_known(const actor* act) const
         // * very intelligent monsters can be assumed to have a high T&D
         //   skill (or have memorised part of the dungeon layout ;))
 
-        if (category() == DNGN_TRAP_NATURAL)
+        if (type == TRAP_SHAFT)
         {
             // Slightly different rules for shafts:
             // * Lower intelligence requirement for native monsters.
@@ -227,7 +227,7 @@ bool trap_def::is_safe(actor* act) const
 
     // Shaft and mechanical traps are safe when flying or clinging.
     if ((act->airborne() || act->can_cling_to(pos) || you.species == SP_DJINNI)
-        && category() != DNGN_TRAP_MAGICAL)
+        && ground_only())
     {
         return true;
     }
@@ -560,8 +560,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         return;
     }
     // Only magical traps and webs affect flying critters.
-    if (!triggerer.ground_level() && category() != DNGN_TRAP_MAGICAL
-                                  && category() != DNGN_TRAP_WEB)
+    if (!triggerer.ground_level() && ground_only())
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
@@ -1157,15 +1156,16 @@ void disarm_trap(const coord_def& where)
 
     switch (trap.category())
     {
-    case DNGN_TRAP_MAGICAL:
+    case DNGN_TRAP_ALARM:
         // Zotdef - allow alarm traps to be disarmed
-        if (!crawl_state.game_is_zotdef() || trap.type != TRAP_ALARM)
-        {
-            mpr("You can't disarm that trap.");
-            return;
-        }
-        break;
-    case DNGN_TRAP_NATURAL:
+        if (crawl_state.game_is_zotdef())
+            break;
+    case DNGN_TRAP_TELEPORT:
+    case DNGN_TRAP_ZOT:
+    case DNGN_PASSAGE_OF_GOLUBRIA: // not a trap, FIXME
+        mpr("You can't disarm that trap.");
+        return;
+    case DNGN_TRAP_SHAFT:
         // Only shafts for now.
         mpr("You can't disarm a shaft.");
         return;
@@ -1613,13 +1613,16 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_WEB:
         return DNGN_TRAP_WEB;
     case TRAP_SHAFT:
-        return DNGN_TRAP_NATURAL;
+        return DNGN_TRAP_SHAFT;
 
     case TRAP_TELEPORT:
+        return DNGN_TRAP_TELEPORT;
     case TRAP_ALARM:
+        return DNGN_TRAP_ALARM;
     case TRAP_ZOT:
+        return DNGN_TRAP_ZOT;
     case TRAP_GOLUBRIA:
-        return DNGN_TRAP_MAGICAL;
+        return DNGN_PASSAGE_OF_GOLUBRIA;
 
     case TRAP_DART:
     case TRAP_ARROW:
@@ -1637,6 +1640,11 @@ dungeon_feature_type trap_category(trap_type type)
     default:
         die("placeholder trap type %d used", type);
     }
+}
+
+bool trap_def::ground_only() const
+{
+    return type == TRAP_SHAFT || category() == DNGN_TRAP_MECHANICAL;
 }
 
 bool is_valid_shaft_level(const level_id &place)
@@ -1766,7 +1774,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     if (env.map_knowledge(pos).seen() && open_shaft)
     {
         mpr("A shaft opens up in the floor!");
-        grd(pos) = DNGN_TRAP_NATURAL;
+        grd(pos) = DNGN_TRAP_SHAFT;
     }
 
     while (o != NON_ITEM)
@@ -1775,12 +1783,22 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
 
         if (mitm[o].defined())
         {
-            if (env.map_knowledge(pos).seen())
+            bool update_stash = false;
+            if (env.map_knowledge(pos).visible())
             {
                 mprf("%s fall%s through the shaft.",
                      mitm[o].name(DESC_INVENTORY).c_str(),
                      mitm[o].quantity == 1 ? "s" : "");
+
+                update_stash = true;
             }
+
+            if (update_stash)
+            {
+                env.map_knowledge(pos).clear_item();
+                StashTrack.update_stash(pos);
+            }
+
             // Item will be randomly placed on the destination level.
             mitm[o].pos = INVALID_COORD;
             add_item_to_transit(dest, mitm[o]);

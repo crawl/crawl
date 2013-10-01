@@ -468,6 +468,17 @@ static geom::ray _bounce_corner(const geom::ray &rorig, const coord_def &side,
     return r;
 }
 
+// Nudge an on-corner ray to be inside the diamond.
+void ray_def::nudge_inside()
+{
+    ASSERT(on_corner);
+    geom::vector centre(pos().x + 0.5, pos().y + 0.5);
+    // Move a little bit towards cell center.
+    r.start = 0.9 * r.start + 0.1 * centre;
+    on_corner = false;
+    ASSERT(in_diamond_int(r.start));
+}
+
 void ray_def::bounce(const reflect_grid &rg)
 {
     ASSERT(_valid());
@@ -476,19 +487,15 @@ void ray_def::bounce(const reflect_grid &rg)
     const coord_def old_pos = pos();
 #endif
 
+    // If we're exactly on a corner, adjust to slightly inside the diamond.
+    if (on_corner)
+        nudge_inside();
+
     // Translate to cell (0,0).
     geom::vector p(pos().x, pos().y);
     geom::ray rtrans;
     rtrans.start = r.start - p;
     rtrans.dir = r.dir;
-
-    if (on_corner)
-    {
-        // Move a little bit towards cell center (0.5, 0.5).
-       rtrans.start = 0.9 * rtrans.start + 0.1 * geom::vector(0.5, 0.5);
-       on_corner = false;
-       ASSERT(in_diamond_int(rtrans.start));
-    }
 
     // Move to the diamond edge to determine the side.
     coord_def side;
@@ -531,5 +538,10 @@ double ray_def::get_degrees() const
 
 void ray_def::set_degrees(double d)
 {
+    // Changing the angle while on a diamond corner causes problems when the
+    // new direction points inside the diamond (#5892).  Avoid that case by
+    // first moving the ray's start slightly inside the diamond.
+    if (on_corner)
+        nudge_inside();
     r.dir = geom::degree_to_vector(d);
 }

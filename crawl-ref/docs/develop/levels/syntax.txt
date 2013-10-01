@@ -76,12 +76,6 @@ Features
      Also, sight-based effects like smiting work past granite statues, as does
      apportation.
 
-     NOTE: F used to put down a granite statue most of the time but occasionally
-     orange or silver or ice statues (1 in 100). You can reproduce this by using
-     F on the map together with
-     SUBST:   F = G:99 F:1
-     KMONS:   F = orange crystal statue / silver statue / ice statue
-
  T - Water fountain
  U - Magic fountain
  V - Permanently dry fountain
@@ -145,6 +139,13 @@ DESC:     readable name
 
           Map descriptions are also written to scores and logfile
           entries.
+
+ORDER:    <integer>
+          Used only for special game types (Sprint, Zot Defence, Tutorial).
+          When the user is prompted to select a map, the available maps are
+          sorted by the integer value (ascending). Maps without an ORDER:
+          line follow those that have one. Maps with the same value of
+          ORDER: are sorted by description (if present) or name.
 
 ORIENT:   (float | encompass | north | northwest | ... | southeast)
 

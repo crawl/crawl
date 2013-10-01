@@ -269,7 +269,7 @@ brand_type player::damage_brand(int)
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
-// eq must be in [EQ_WEAPON, EQ_RING_EIGHT], or bad things will happen.
+// eq must be in [EQ_WEAPON, EQ_RING_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
     ASSERT_RANGE(eq, EQ_WEAPON, NUM_EQUIP);
@@ -732,7 +732,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
 
 bool player::berserk() const
 {
-    return (duration[DUR_BERSERK]);
+    return duration[DUR_BERSERK];
 }
 
 bool player::can_cling_to_walls() const

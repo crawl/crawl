@@ -656,7 +656,7 @@ bool mons_speaks(monster* mons)
 
     // Now that we're not dealing with a specific monster name, include
     // whether or not it can move in the prefix.
-    if (mons_is_stationary(mons))
+    if (mons->is_stationary())
         prefixes.insert(prefixes.begin(), "stationary");
 
     // Names for the exact monster name and its genus have failed,
@@ -817,6 +817,9 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     const vector<string> lines = split_string("\n", _msg);
 
     bool noticed = false;       // Any messages actually printed?
+
+    if (mons->has_ench(ENCH_MUTE))
+        silence = true;
 
     for (int i = 0, size = lines.size(); i < size; ++i)
     {

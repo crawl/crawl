@@ -844,13 +844,8 @@ static void _handle_wizard_command(void)
     // it's used to prevent access for non-authorised users to wizard
     // builds in dgamelaunch builds unless the game is started with the
     // -wizard flag.
-#ifndef TURN_ZERO_WIZARD
-    if (Options.wiz_mode == WIZ_NEVER && you.num_turns != 0)
-        return;
-#else
     if (Options.wiz_mode == WIZ_NEVER)
         return;
-#endif
 
     if (!you.wizard)
     {
@@ -2745,8 +2740,9 @@ static void _decrement_durations()
         {
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if (you_worship(GOD_TROG) && x_chance_in_y(you.piety, 150)
-                && !player_under_penance())
+            if (you_worship(GOD_TROG)
+                && !player_under_penance()
+                && x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
                 mpr("Trog's vigour flows through your veins.");
             }
@@ -3070,6 +3066,9 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SLEEP_IMMUNITY, delay);
 
+    _decrement_a_duration(DUR_FIRE_VULN, delay,
+                          "You feel less vulnerable to fire.");
+
     if (!env.sunlight.empty())
         process_sunlights();
 }
@@ -3364,8 +3363,12 @@ static void _player_reacts_to_monsters()
         manage_fire_shield(you.time_taken);
 
     // penance checked there (as you can have antennae too)
-    if (you.has_antennae(true) || you.religion == GOD_ASHENZARI)
+    if (you.has_antennae(true)
+        || you.religion == GOD_ASHENZARI
+        || player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN))
+    {
         check_antennae_detect();
+    }
 
     if ((you_worship(GOD_ASHENZARI) && !player_under_penance())
         || you.mutation[MUT_JELLY_GROWTH])
@@ -4522,7 +4525,7 @@ static void _move_player(coord_def move)
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
     const bool can_swap_places = targ_monst
-                                 && !mons_is_stationary(targ_monst)
+                                 && !targ_monst->is_stationary()
                                  && (targ_monst->wont_attack()
                                        && !you.confused()
                                      || is_sanctuary(you.pos())

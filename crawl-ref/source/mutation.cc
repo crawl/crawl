@@ -16,6 +16,8 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "cio.h"
 #include "coordit.h"
 #include "delay.h"
@@ -119,7 +121,7 @@ static const mutation_def* _seek_mutation(mutation_type mut)
     if (mut_index[mut] == -1)
         return NULL;
     else
-        return (&mut_data[mut_index[mut]]);
+        return &mut_data[mut_index[mut]];
 }
 
 bool is_valid_mutation(mutation_type mut)
@@ -160,7 +162,7 @@ bool is_body_facet(mutation_type mut)
 const mutation_def& get_mutation_def(mutation_type mut)
 {
     ASSERT(is_valid_mutation(mut));
-    return (*_seek_mutation(mut));
+    return *_seek_mutation(mut);
 }
 
 mutation_activity_type mutation_activity_level(mutation_type mut)
@@ -697,7 +699,7 @@ string describe_mutations(bool center_title)
         if (you.mutation[i] != 0 && you.innate_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
-            result += mutation_name(mut_type, -1, true);
+            result += mutation_desc(mut_type, -1, true);
             result += "\n";
             have_any = true;
         }
@@ -710,7 +712,7 @@ string describe_mutations(bool center_title)
                 && !you.temp_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
-            result += mutation_name(mut_type, -1, true);
+            result += mutation_desc(mut_type, -1, true);
             result += "\n";
             have_any = true;
         }
@@ -722,7 +724,7 @@ string describe_mutations(bool center_title)
         if (you.mutation[i] != 0 && you.temp_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
-            result += mutation_name(mut_type, -1, true);
+            result += mutation_desc(mut_type, -1, true);
             result += "\n";
             have_any = true;
         }
@@ -2003,9 +2005,17 @@ bool delete_temp_mutation()
     return false;
 }
 
+const char* mutation_name(mutation_type mut)
+{
+    if (!is_valid_mutation(mut))
+        return nullptr;
+
+    return get_mutation_def(mut).wizname;
+}
+
 // Return a string describing the mutation.
 // If colour is true, also add the colour annotation.
-string mutation_name(mutation_type mut, int level, bool colour)
+string mutation_desc(mutation_type mut, int level, bool colour)
 {
     // Ignore the player's forms, etc.
     const bool ignore_player = (level != -1);
@@ -2570,7 +2580,10 @@ void check_demonic_guardian()
 void check_antennae_detect()
 {
     int radius = you.has_antennae(true) * 2;
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+
+    if (player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN))
+        radius = max(radius, 4);
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         radius = max(radius, you.piety / 20);
     if (radius <= 0)
         return;

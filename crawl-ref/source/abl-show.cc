@@ -1040,12 +1040,12 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_TROG_REGEN_MR:            // piety >= 50
         invoc = true;
-        failure = 80 - you.piety;       // starts at 30%
+        failure = piety_breakpoint(2) - you.piety; // starts at 25%
         break;
 
     case ABIL_TROG_BROTHERS_IN_ARMS:    // piety >= 100
         invoc = true;
-        failure = 160 - you.piety;      // starts at 60%
+        failure = piety_breakpoint(5) - you.piety; // starts at 60%
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
@@ -1203,7 +1203,15 @@ string get_ability_desc(const ability_type ability)
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
 
-    return name + "\n\n" + lookup + "\n" + _detailed_cost_description(ability);
+    ostringstream res;
+    res << name << "\n\n" << lookup << "\n"
+        << _detailed_cost_description(ability);
+
+    const string quote = getQuoteString(name + " ability");
+    if (!quote.empty())
+        res << "\n\n" << quote;
+
+    return res.str();
 }
 
 static void _print_talent_description(const talent& tal)
@@ -1548,8 +1556,9 @@ bool activate_talent(const talent& tal)
     // Doing these would outright kill the player.
     if (tal.which == ABIL_STOP_FLYING)
     {
-        if (grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
-            || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
+        if ((grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
+             || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
+            && !djinni_floats())
         {
             mpr("Stopping flight right now would be fatal!");
             crawl_state.zero_turns_taken();
@@ -1592,10 +1601,9 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT)
-        && you.liquefied_ground())
+    if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT || tal.which == ABIL_FLY)
+        && !flight_allowed())
     {
-        mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
         crawl_state.zero_turns_taken();
         return false;
     }
@@ -3533,8 +3541,12 @@ vector<ability_type> get_god_abilities(bool include_unusable)
         }
     }
 
-    if (you_worship(GOD_ZIN) && !you.one_time_ability_used[GOD_ZIN] && you.piety > 160)
+    if (you_worship(GOD_ZIN)
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_ZIN])
+    {
         abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
+    }
 
     return abilities;
 }

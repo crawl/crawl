@@ -150,9 +150,10 @@ red_wasp MONS_RED_WASP
 ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 moth_of_suppression MONS_MOTH_OF_SUPPRESSION
+%rim 0
+polymoth MONS_POLYMOTH
 
 ## Aquatics (';')
-%rim 0
 big_fish MONS_BIG_FISH
 giant_goldfish MONS_GIANT_GOLDFISH
 electric_eel MONS_ELECTRIC_EEL
@@ -765,6 +766,7 @@ oklob_plant MONS_OKLOB_PLANT
 thorn_lotus MONS_THORN_LOTUS
 thorn_hunter MONS_THORN_HUNTER
 treant MONS_TREANT
+briar_patch MONS_BRIAR_PATCH
 %rim 1
 
 ## Trolls ('T')

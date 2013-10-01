@@ -49,6 +49,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "misc.h"
+#include "mislead.h"
 #include "mon-info.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-chimera.h"
@@ -648,6 +649,39 @@ coord_def unmarshallCoord(reader &th)
     return c;
 }
 
+#if TAG_MAJOR_VERSION == 34
+// Between TAG_MINOR_OPTIONAL_PARTS and TAG_MINOR_FIXED_CONSTRICTION
+// we neglected to marshall the constricting[] map of monsters.  Fix
+// those up.
+static void _fix_missing_constrictions()
+{
+    for (int i = -1; i < MAX_MONSTERS; ++i)
+    {
+        const actor* m = i < 0 ? (actor*)&you : (actor*)&menv[i];
+        if (!m->alive())
+            continue;
+        if (!m->constricted_by)
+            continue;
+        actor *h = actor_by_mid(m->constricted_by);
+        // Not a known bug, so don't fix this up.
+        if (!h)
+            continue;
+
+        if (!h->constricting)
+            h->constricting = new actor::constricting_t;
+        if (h->constricting->find(m->mid) == h->constricting->end())
+        {
+            dprf("Fixing missing constriction for %s (mindex=%d mid=%d)"
+                 " of %s (mindex=%d mid=%d)",
+                 h->name(DESC_PLAIN, true).c_str(), h->mindex(), h->mid,
+                 m->name(DESC_PLAIN, true).c_str(), m->mindex(), m->mid);
+
+            (*h->constricting)[m->mid] = 0;
+        }
+    }
+}
+#endif
+
 static void _marshall_constriction(writer &th, const actor *who)
 {
     _marshall_as_int(th, who->held);
@@ -944,6 +978,8 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
         else if (x >= DNGN_LAVA_SEA && x < 30)
             x = (dungeon_feature_type)(x - 1);
     }
+    if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
+        x = DNGN_DRY_FOUNTAIN;
 #endif
 
     return x;
@@ -1178,7 +1214,7 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.stat_loss[i]);
     for (i = 0; i < NUM_STATS; ++i)
-        marshallByte(th, you.stat_zero[i]);
+        marshallUByte(th, you.stat_zero[i]);
 
     CANARY;
 
@@ -1597,6 +1633,7 @@ static void tag_construct_you_dungeon(writer &th)
 static void marshall_follower(writer &th, const follower &f)
 {
     ASSERT(!invalid_monster_type(f.mons.type));
+    ASSERT(f.mons.alive());
     marshallMonster(th, f.mons);
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         marshallItem(th, f.items[i]);
@@ -2028,7 +2065,7 @@ static void tag_read_you(reader &th)
     for (i = 0; i < NUM_STATS; ++i)
         you.stat_loss[i] = unmarshallByte(th);
     for (i = 0; i < NUM_STATS; ++i)
-        you.stat_zero[i] = unmarshallByte(th);
+        you.stat_zero[i] = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_STAT_ZERO)
     {
@@ -3144,6 +3181,8 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = WPN_FLAIL;
     }
 
+    if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_RETURNING)
+        item.special = SPWPN_NORMAL;
 #endif
 
     bind_item_tile(item);
@@ -3274,6 +3313,12 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() == TAG_MINOR_0_11 && trap >= TRAP_TELEPORT)
             trap = (trap_type)(trap - 1);
+        if (trap == TRAP_ALARM)
+            feature = DNGN_TRAP_ALARM;
+        else if (trap == TRAP_ZOT)
+            feature = DNGN_TRAP_ZOT;
+        else if (trap == TRAP_GOLUBRIA)
+            feature = DNGN_PASSAGE_OF_GOLUBRIA;
 #endif
     }
 
@@ -3370,7 +3415,7 @@ void marshallMonster(writer &th, const monster& m)
     uint32_t parts = 0;
     if (mons_is_ghost_demon(m.type))
         parts |= MP_GHOST_DEMON;
-    if (m.held)
+    if (m.held || m.constricting && m.constricting->size())
         parts |= MP_CONSTRICTION;
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
         if (m.inv[i] != NON_ITEM)
@@ -3442,6 +3487,12 @@ void marshallMonster(writer &th, const monster& m)
 
     if (parts & MP_CONSTRICTION)
         _marshall_constriction(th, &m);
+
+    if (m.props.exists("mislead_as"))
+    {
+        ASSERT(!unsuitable_misled_monster(
+            m.props["mislead_as"].get_monster().type));
+    }
 
     m.props.write(th);
 }
@@ -4157,8 +4208,15 @@ void unmarshallMonster(reader &th, monster& m)
             m.type = MONS_WOLF;
     }
 
-    if (m.props.exists("mislead_as") && !you.misled())
+    // The second part of this is here to deal with saves that have the
+    // invald misled monster problem (#7501).
+    if (m.props.exists("mislead_as")
+        && (!you.misled()
+            || unsuitable_misled_monster(
+                m.props["mislead_as"].get_monster().type)))
+    {
         m.props.erase("mislead_as");
+    }
 #endif
 
     if (m.type != MONS_PROGRAM_BUG && mons_species(m.type) == MONS_PROGRAM_BUG)
@@ -4234,6 +4292,15 @@ static void tag_read_level_monsters(reader &th)
             mgrd(m.pos()) = i;
         }
     }
+#if TAG_MAJOR_VERSION == 34
+    // This relies on TAG_YOU (including lost monsters) being unmarshalled
+    // on game load before the initial level.
+    if (th.getMinorVersion() < TAG_MINOR_FIXED_CONSTRICTION
+        && th.getMinorVersion() >= TAG_MINOR_OPTIONAL_PARTS)
+    {
+        _fix_missing_constrictions();
+    }
+#endif
 }
 
 static void _debug_count_tiles()

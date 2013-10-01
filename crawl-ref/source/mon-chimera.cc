@@ -109,7 +109,7 @@ static bool is_valid_chimera_part(monster_type part)
 // Indicates preferred chimera parts
 // TODO: Should maybe check any of:
 // mons_is_object / mons_is_conjured / some of mons_has_flesh
-// mons_is_stationary / mons_class_is_firewood / mons_is_mimic / mons_class_holiness
+// is_stationary / mons_class_is_firewood / mons_is_mimic / mons_class_holiness
 static bool is_bad_chimera_part(monster_type part)
 {
     return (!is_valid_chimera_part(part))

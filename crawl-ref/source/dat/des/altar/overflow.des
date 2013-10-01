@@ -1484,7 +1484,8 @@ MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
 MONS:   gnoll; club ego:chaos / gnoll; dagger ego:chaos / gnoll; spear ego:chaos
 MONS:   place:D:1-8
 NSUBST: ' = 1:_ / *:.
-SUBST:  . = .:200 ~:70 W:60 w:50 x:80 n:80 v b l Z T U M:20
+SUBST:  . = .:200 ~:10 W:60 w:50 x:80 n:80 v b l Z T U M:20
+KFEAT:  ~ = shaft trap / teleport trap / alarm trap w:3
 NSUBST: Z = 1:* / *:%
 SUBST:  M : 123333M, 1 = 1.., 2 = 2.., M = 123.
 COLOUR: . = random
@@ -1599,6 +1600,7 @@ SUBST:   . = lWwtm_~......
 KFEAT:   _ = altar_xom
 NSUBST:  T = 3:T / .
 KFEAT:   T = known teleport trap
+KFEAT:   ~ = shaft trap / alarm trap / teleport trap
 : interest_check(_G)
 MAP
       @
@@ -2535,6 +2537,25 @@ cc...cc.cc...cc
  ccccc.@.ccccc
 ENDMAP
 
+NAME: nicolae_overflow_quartered_altars
+TAGS: temple_overflow_generic_4
+SHUFFLE: fgh/ijk, pq/rs
+SUBST: pqi = ., rk = c, s = +, z : cm, j : GTt
+CLEAR: fgh
+MAP
+  ffghgff
+ @.ccccc.@
+f.qp.c.pq.f
+fcp..z..pcf
+gc..BcB..cg
+hcczccczcch
+gc..BcB..cg
+fcp..z..pcf
+f.qp.c.pq.f
+ @.ccccc.@
+  ffghgff
+ENDMAP
+
 NAME:   minmay_overflow_temple_star_hex
 TAGS:   temple_overflow_generic_5
 KMASK:  T = no_monster_gen
@@ -2702,4 +2723,50 @@ G.c.c.c.c.Bc
 G.c.c.c.c.Bc
 cBcBcBcBcBcc
 cccccccccccc
+ENDMAP
+
+NAME: nicolae_overflow_hidden_temple
+TAGS: temple_overflow_generic_5 temple_overflow_generic_4 temple_overflow_generic_3 \
+      temple_overflow_generic_2 temple_overflow_generic_1 no_monster_gen
+{{
+  local altarcount = 1
+  if is_validating() then
+    altarcount = 5
+  end
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_overflow_generic_ is 24 characters
+      altarcount = string.sub(tag, 25)
+    end
+  end
+  if altarcount == "1" then
+    subst("c = B")
+    subst("abde = G")
+  elseif altarcount == "2" then
+    subst("bd = B")
+    subst("ace = G")
+  elseif altarcount == "3" then
+    shuffle("ae/bd")
+    subst("cbd = B")
+    subst("ae = G")
+  elseif altarcount == "4" then
+    subst("abde = B")
+    subst("c = G")
+  else
+    subst("abcde = B")
+  end
+}}
+SUBST: } = })]
+MAP
+xxxxxxxxxxxxx
+xxxxaxxxbxxxx
+xxG...G...Gxx
+xx.........xx
+x}.........cx
+xx.........xx
+xxG...G...Gxx
+xxxxexxxdxxxx
+xxxxxxxxxxxxx
 ENDMAP

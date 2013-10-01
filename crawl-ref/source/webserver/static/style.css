@@ -156,6 +156,7 @@ body {
 }
 
 #chat {
+    background: rgba(0, 0, 0, 0.75);
     width: 400px;
     position: fixed;
     bottom: 20px;

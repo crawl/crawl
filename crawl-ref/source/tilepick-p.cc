@@ -42,7 +42,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     }
 
     if (item.base_type == OBJ_RODS)
-        return _mon_mod(TILEP_HAND1_ROD_BROWN, item.rnd);
+        return _mon_mod(TILEP_HAND1_ROD_FIRST, item.rnd);
 
     if (item.base_type == OBJ_MISCELLANY)
     {
@@ -756,7 +756,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             hair = 0;
             break;
         case SP_TROLL:
-            hair = 0;
+            hair = TILEP_HAIR_TROLL;
             break;
         case SP_BASE_DRACONIAN:
         case SP_RED_DRACONIAN:
@@ -786,8 +786,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             result = you.fishtail ? TILEP_BASE_MERFOLK_WATER
                                   : TILEP_BASE_MERFOLK;
             hair = TILEP_HAIR_GREEN;
-            beard = TILEP_BEARD_SHORT_GREEN;
             break;
+        case SP_NAGA:
+            hair = TILEP_HAIR_PART2_RED;
         case SP_VAMPIRE:
             hair = TILEP_HAIR_ARWEN;
             break;
@@ -814,6 +815,9 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
                             * player_mutation_level(MUT_ANTENNAE))
                            / ANTENNAE_EXTEND_TIME);
             }
+            break;
+        case SP_DJINNI:
+            hair = TILEP_HAIR_DJINN2;
             break;
         default:
             // nothing to do
@@ -1093,6 +1097,7 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]   = TILEP_FLAG_CUT_NAGA; // Do they need their own flag?
     }
     else if (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_DRACONIAN_FIRST
              && doll.parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_LAST)

@@ -156,7 +156,7 @@ spret_type cast_tornado(int powc, bool fail)
 static bool _mons_is_unmovable(const monster *mons)
 {
     // hard to explain uprooted oklobs surviving
-    if (mons_is_stationary(mons))
+    if (mons->is_stationary())
         return true;
     // we'd have to rotate everything
     if (mons_is_tentacle_or_tentacle_segment(mons->type)

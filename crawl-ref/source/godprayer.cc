@@ -68,13 +68,13 @@ string god_prayer_reaction()
     else
         result += " is ";
     result +=
-        (you.piety > 130) ? "exalted by your worship" :
-        (you.piety > 100) ? "extremely pleased with you" :
-        (you.piety >  70) ? "greatly pleased with you" :
-        (you.piety >  40) ? "most pleased with you" :
-        (you.piety >  20) ? "pleased with you" :
-        (you.piety >   5) ? "noncommittal"
-                          : "displeased";
+        (you.piety >= piety_breakpoint(5)) ? "exalted by your worship" :
+        (you.piety >= piety_breakpoint(4)) ? "extremely pleased with you" :
+        (you.piety >= piety_breakpoint(3)) ? "greatly pleased with you" :
+        (you.piety >= piety_breakpoint(2)) ? "most pleased with you" :
+        (you.piety >= piety_breakpoint(1)) ? "pleased with you" :
+        (you.piety >= piety_breakpoint(0)) ? "aware of your devotion"
+                                           : "noncommittal";
     result += ".";
 
     return result;
@@ -206,10 +206,9 @@ static bool _altar_prayer()
 
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
-    if (you_worship(GOD_SHINING_ONE)
-        && !you.one_time_ability_used[GOD_SHINING_ONE]
-        && !player_under_penance()
-        && you.piety > 160)
+    if (you_worship(GOD_SHINING_ONE) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_SHINING_ONE])
     {
         item_def *wpn = you.weapon();
 
@@ -223,10 +222,9 @@ static bool _altar_prayer()
     }
 
     // Lugonu blesses weapons with distortion.
-    if (you_worship(GOD_LUGONU)
-        && !you.one_time_ability_used[GOD_LUGONU]
-        && !player_under_penance()
-        && you.piety > 160)
+    if (you_worship(GOD_LUGONU) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_LUGONU])
     {
         item_def *wpn = you.weapon();
 
@@ -235,10 +233,9 @@ static bool _altar_prayer()
     }
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
-    if (you_worship(GOD_KIKUBAAQUDGHA)
-        && !you.one_time_ability_used[GOD_KIKUBAAQUDGHA]
-        && !player_under_penance()
-        && you.piety > 160)
+    if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_KIKUBAAQUDGHA])
     {
         if (you.species != SP_FELID)
         {
@@ -474,14 +471,14 @@ static bool _zin_donate_gold()
     {
         string result = "You feel that " + god_name(GOD_ZIN) + " will soon be ";
         result +=
-            (estimated_piety > 130) ? "exalted by your worship" :
-            (estimated_piety > 100) ? "extremely pleased with you" :
-            (estimated_piety >  70) ? "greatly pleased with you" :
-            (estimated_piety >  40) ? "most pleased with you" :
-            (estimated_piety >  20) ? "pleased with you" :
-            (estimated_piety >   5) ? "noncommittal"
-                                    : "displeased";
-        result += (donation >= 30 && you.piety <= 170) ? "!" : ".";
+            (estimated_piety >= piety_breakpoint(5)) ? "exalted by your worship" :
+            (estimated_piety >= piety_breakpoint(4)) ? "extremely pleased with you" :
+            (estimated_piety >= piety_breakpoint(3)) ? "greatly pleased with you" :
+            (estimated_piety >= piety_breakpoint(2)) ? "most pleased with you" :
+            (estimated_piety >= piety_breakpoint(1)) ? "pleased with you" :
+            (estimated_piety >= piety_breakpoint(0)) ? "aware of your devotion"
+                                                     : "noncommittal";
+        result += (donation >= 30 && you.piety < piety_breakpoint(5)) ? "!" : ".";
 
         mpr(result.c_str());
     }

@@ -318,6 +318,7 @@ TAGS:      sprint no_rotate no_hmirror no_vmirror
 TAGS:      no_item_gen no_trap_gen no_pool_fixup
 ORIENT:    encompass
 DESC:      Sprint VIII: "Arena of Blood"
+ORDER:     8
 KFEAT:     { = {
 LROCKCOL:  red
 LFLOORCOL: red

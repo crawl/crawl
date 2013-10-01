@@ -944,3 +944,38 @@ xW111111111W.W111111111Wx
 xWWWWWWWWWWW.WWWWWWWWWWWx
 xxxxxxxxxxxx+xxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
+
+NAME: nicolae_entry_somewhat_less_tricky_entry
+ORIENT: float
+TAGS: entry no_item_gen no_monster_gen no_trap_gen
+SHUFFLE: GTt, ab, cd, ef, gh, ij, kl
+SUBST: acegik = ., bdfhjl = x
+MAP
+@.......................@
+.........xxx+xxx.........
+..t....+xxxx.xxxx+....t..
+......xx.xx..xx..xx......
+....xxx..xx.xxx.xxxxx....
+....x...xxx.a...x...x....
+...xx.xxxxx.xbxxx.x.xx...
+..+xx.xxxx..x.....x..x+..
+..x.l....f.xx.xxxxxx..x..
+.xxkxxxxex..x.xx...xxxxx.
+.xxk...xexx+x+xx.x.x...x.
+.xxx.x.xexx...xx.x.x.x.x.
+.+.x.x.x..+.{.+..x.x.x.+.
+.x.x.x.x.xx...xxhx.x.xxx.
+.x...x.x.xx+x+xxhx...jxx.
+.xxxxx...xx.x..xhxxxxjxx.
+..x..xxxxxx.xx.g....i.x..
+..+x..x.....x..xxxx.xx+..
+...xx.x.xxxcx.xxxxx.xx...
+....x...x...d.xxx...x....
+....xxxxx.xxx.xx..xxx....
+......xx..xx..xx.xx......
+..t....+xxxx.xxxx+....t..
+.........xxx+xxx.........
+@.......................@
+ENDMAP

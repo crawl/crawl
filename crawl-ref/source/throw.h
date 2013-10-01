@@ -16,15 +16,11 @@ enum fire_type
     FIRE_LAUNCHER  = 0x0001,
     FIRE_DART      = 0x0002,
     FIRE_STONE     = 0x0004,
-    FIRE_DAGGER    = 0x0008,
     FIRE_JAVELIN   = 0x0010,
-    FIRE_SPEAR     = 0x0020,
-    FIRE_HAND_AXE  = 0x0040,
-    FIRE_CLUB      = 0x0080,
     FIRE_ROCK      = 0x0100,
     FIRE_NET       = 0x0200,
     FIRE_RETURNING = 0x0400,
-    FIRE_PIE       = 0x0800,
+    FIRE_TOMAHAWK  = 0x0800,
     FIRE_INSCRIBED = 0x1000,   // Only used for _get_fire_order
 };
 

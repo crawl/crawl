@@ -1,7 +1,8 @@
 define(["jquery", "./map_knowledge", "./dungeon_renderer", "./view_data",
-        "./tileinfo-player", "./tileinfo-main", "./tileinfo-dngn", "./enums"],
+        "./tileinfo-player", "./tileinfo-main", "./tileinfo-dngn", "./enums",
+        "./player"],
 function ($, map_knowledge, dungeon_renderer, view_data,
-          player, main, dngn, enums) {
+          tileinfo_player, main, dngn, enums, player) {
     var minimap_colours = [
         "black",       // MF_UNSEEN
         "darkgrey",    // MF_FLOOR
@@ -86,7 +87,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
         if (cell) cell.fg = enums.prepare_fg_flags(cell.fg || 0);
 
-        if (cell && cell.fg.value == player.PLAYER)
+        if (cell && cell.fg.value == tileinfo_player.PLAYER)
             return enums.MF_PLAYER;
         else
             return map_cell.mf || enums.MF_UNSEEN;
@@ -148,6 +149,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     {
         cell = cell || map_knowledge.get(x, y);
         var feat = get_cell_map_feature(cell);
+        if (x == player.pos.x && y == player.pos.y)
+            feat = enums.MF_PLAYER;
         set(x, y, minimap_colours[feat]);
     }
 

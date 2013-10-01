@@ -36,9 +36,8 @@ function init_column_ruins(e)
   e.subst('q = GGG__')
   e.subst('r = GG__.')
   e.subst('s = G_...')
-  e.subst('_ = _:24 ~:1')
-  e.ftile('_~$%*90GTUVB = floor_rough_brown')
-  e.colour('_~$%*90TUVB = brown')
+  e.ftile('_$%*90GTUVB = floor_rough_brown')
+  e.colour('_$%*90TUVB = brown')
   e.tile('G = dngn_crumbled_column')
   e.colour('G = lightgrey')
   e.subst('_ = .')
@@ -670,7 +669,6 @@ TAGS:    allow_dup mini_float transparent
 WEIGHT:  10
 SUBST:   0 = 0:40 9:10 $:15 %:5 *:1 T:9 _:20
 SUBST:   T = TTUVVV
-SUBST:   ~ = ~__
 : init_column_ruins_hut(_G)
 : init_column_ruins(_G)
 MAP
@@ -681,7 +679,7 @@ MKJx___xJKM
 LJ_x_0_x_JL
 MJ_x___x_JM
 MKJxx+xxJKM
-rLp_G~G_pLr
+rLp_G_G_pLr
 MLKJ___JKLM
 sMrKqJqKrMs
 NMMMLLLMMMN

@@ -208,17 +208,7 @@ static void _print_version(void)
     int flags = MF_NOSELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP | MF_EASY_EXIT;
     cmd_version.set_flags(flags, false);
     cmd_version.set_tag("version");
-
-    // FIXME: Allow for hiding Page down when at the end of the listing, ditto
-    // for page up at start of listing.
-    cmd_version.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                              "<cyan>[ +/L-click : Page down.   - : Page up."
-                              "           Esc/R-click exits.]"));
-#else
-                              "<cyan>[ + : Page down.   - : Page up."
-                              "                           Esc exits.]"));
-#endif
+    cmd_version.set_more();
 
     cmd_version.add_text(_get_version_information(), true);
     cmd_version.add_text(_get_version_features(), true);
@@ -547,8 +537,9 @@ void list_jewellery(void)
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
-        if ((you.species != SP_OCTOPODE && i > EQ_AMULET)
-            || (you.species == SP_OCTOPODE && i < EQ_AMULET))
+        if ((you.species != SP_OCTOPODE && i > EQ_AMULET
+            || you.species == SP_OCTOPODE && i < EQ_AMULET)
+            && i != EQ_RING_AMULET)
         {
             continue;
         }
@@ -557,18 +548,19 @@ void list_jewellery(void)
         int       colour       = MSGCOL_BLACK;
 
         const char *slot =
-                 (i == EQ_LEFT_RING)  ? "Left ring" :
-                 (i == EQ_RIGHT_RING) ? "Right ring" :
-                 (i == EQ_AMULET)     ? "Amulet" :
-                 (i == EQ_RING_ONE)   ? "1st ring" :
-                 (i == EQ_RING_TWO)   ? "2nd ring" :
-                 (i == EQ_RING_THREE) ? "3rd ring" :
-                 (i == EQ_RING_FOUR)  ? "4th ring" :
-                 (i == EQ_RING_FIVE)  ? "5th ring" :
-                 (i == EQ_RING_SIX)   ? "6th ring" :
-                 (i == EQ_RING_SEVEN) ? "7th ring" :
-                 (i == EQ_RING_EIGHT) ? "8th ring"
-                                      : "unknown";
+                 (i == EQ_LEFT_RING)   ? "Left ring" :
+                 (i == EQ_RIGHT_RING)  ? "Right ring" :
+                 (i == EQ_AMULET)      ? "Amulet" :
+                 (i == EQ_RING_ONE)    ? "1st ring" :
+                 (i == EQ_RING_TWO)    ? "2nd ring" :
+                 (i == EQ_RING_THREE)  ? "3rd ring" :
+                 (i == EQ_RING_FOUR)   ? "4th ring" :
+                 (i == EQ_RING_FIVE)   ? "5th ring" :
+                 (i == EQ_RING_SIX)    ? "6th ring" :
+                 (i == EQ_RING_SEVEN)  ? "7th ring" :
+                 (i == EQ_RING_EIGHT)  ? "8th ring" :
+                 (i == EQ_RING_AMULET) ? "Amulet ring"
+                                       : "unknown";
 
         string item;
         if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
@@ -889,6 +881,9 @@ static vector<string> _get_monster_keys(ucs_t showchar)
             continue;
 
         if (me->mc != i)
+            continue;
+
+        if (i == MONS_MARA_FAKE || i == MONS_RAKSHASA_FAKE)
             continue;
 
         if (getLongDescription(me->name).empty())
@@ -1864,17 +1859,7 @@ static int _show_keyhelp_menu(const vector<formatted_string> &lines,
         flags |= MF_EASY_EXIT;
     cmd_help.set_flags(flags, false);
     cmd_help.set_tag("help");
-
-    // FIXME: Allow for hiding Page down when at the end of the listing, ditto
-    // for page up at start of listing.
-    cmd_help.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                            "<cyan>[ +/L-click : Page down.   - : Page up."
-                            "           Esc/R-click exits.]"));
-#else
-                            "<cyan>[ + : Page down.   - : Page up."
-                            "                           Esc exits.]"));
-#endif
+    cmd_help.set_more();
 
     if (with_manual)
     {

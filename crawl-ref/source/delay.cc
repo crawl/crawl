@@ -1254,7 +1254,7 @@ static void _armour_wear_effects(const int item_slot)
 
     item_def &arm = you.inv[item_slot];
 
-    set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK);
+    set_ident_flags(arm, ISFLAG_IDENT_MASK);
     if (is_artefact(arm))
         arm.flags |= ISFLAG_NOTED_ID;
 

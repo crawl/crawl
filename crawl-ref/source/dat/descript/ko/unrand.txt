@@ -58,10 +58,6 @@ Sword of Zonguldrok
 
 이 무시무시한 무기는 사용자를 위험에 빠트린다.
 %%%%
-Sword of Cerebov
-
-요사스러운 불꽃이 꼬인 칼날을 감싸고 있다.
-%%%%
 Staff of Dispater
 
 이 전설적인 도구는 지옥의 불꽃을 일으킬 수 있다.
@@ -245,7 +241,7 @@ cloak of the Thief
 
 이 망토는 착용자에게 예술적으로 탁월한 도둑질 능력을 선사한다.
 %%%%
-shield "Bullseye"
+large shield "Bullseye"
 
 적에게 얻어맞을 경우를 위한, 완벽한 대비책.
 %%%%

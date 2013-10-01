@@ -1,5 +1,32 @@
 %%%%
-butterfly:quote
+A gateway to Hell
+
+„Lasciate ogne speranza, voi ch’intrate.”
+
+„Porzućcie wszelką nadzieję, wy, którzy tu wchodzicie”
+    -Dante Alighieri, „Boska Komedia”, „Piekło”, pieśń III, około 1315.
+%%%%
+Temple
+
+„W mieście, którego nazwiska nie powiem,
+ Nic to albowiem do rzeczy nie przyda,
+ W mieście, ponieważ zbiór pustek tak zowiem,
+ W godnem siedlisku i chłopa, i Żyda,
+ W mieście (gród, ziemstwo trzymało albowiem
+ Stare zamczysko, pustoty ohyda)
+ Były trzy karczmy, bram cztery ułomki,
+ Klasztorów dziewięć i gdzieniegdzie domki.”
+    -Ignacy Krasicki, “Monachomachia”, 1778
+%%%%
+buckler
+
+„Stateczność jego tarcz i puklerz mocny,
+ Za którym stojąc, na żaden strach nocny,
+ Na żadną trwogę, ani dbaj na strzały,
+ Którymi sieje przygoda w dzień biały.”
+    -pieśń kościelna
+%%%%
+butterfly
 
 „Dni nasze jak dni motylka,
  Życiem wschód, śmiercią południe.
@@ -12,7 +39,19 @@ butterfly:quote
 “Rzekła lilia do motyla: – nikt nie patrzy, niech pan zapyla!”
     -Jan Sztaudynger
 %%%%
-insubstantial wisp:quote
+horn of Geryon
+
+„Natenczas Wojski chwycił na taśmie przypięty
+ Swój róg bawoli, długi, cętkowany, kręty
+ Jak wąż boa, oburącz do ust go przycisnął,
+ Wzdął policzki jak banię, w oczach krwią zabłysnął,
+ Zasunął wpół powieki, wciągnął w głąb pół brzucha
+ I do płuc wysłał z niego cały zapas ducha
+ I zagrał: róg jak wicher wirowatym dechem,
+ Niesie w puszczę muzykę i podwaja echem.”
+    -Adam Mickiewicz, „Pan Tadeusz”
+%%%%
+insubstantial wisp
 
 „Dotknij teraz mych czarów
  Wichrze czarci tańcu
@@ -24,30 +63,42 @@ insubstantial wisp:quote
  Wyją błagając o zemstę po raz, po raz, po raz...”
     Mastiphal, „Nad jeziorami myśli nieśmiertelnej”
 %%%%
-mad acolyte of Lugonu:quote
+mad acolyte of Lugonu
 
 „Bo kiedy patrzysz w otchłań, otchłań może zacząć patrzeć w ciebie.”
     -Fryderyk Nietzsche
 %%%%
-raven:quote
+raven
 
 „Więc kruk w kantaty; skoro pysk rozdziawił,
  Ser wypadł, lis go porwał i kruka zostawił.”
     -Jean de La Fontaine, „Kruk i lis”, tłum. Ignacy Krasicki
 %%%%
-shedu:quote
+ring of see invisible
+
+„A oto mój sekret. Jest bardzo prosty: dobrze widzi się tylko sercem.
+Najważniejsze jest niewidoczne dla oczu.”
+    -Antoine de Saint-Exupéry, „Mały Książę”, 1943
+%%%%
+rod of striking
+
+„Kto zawściąga rózgi swej, ma w nienawiści syna swego; ale kto go miłuje,
+ wczas go karze.̈́”
+    -Biblia Gdańska, Księga przysłów 13:24
+%%%%
+shedu
 
 „Niech mój bóg stoi po mojej prawicy!
  Niech moja bogini stoi po mojej lewicy!
  Niech przychylne shedu, przychylne lamassu... przy mnie!”
     -Asyryjska modlitwa z II tysiąclecia p.n.e.
 %%%%
-toadstool:quote
+toadstool
 
 „Ale Wojski zbierał muchomory.”
     -Adam Mickiewicz, „Pan Tadeusz”
 %%%%
-wandering mushroom:quote
+wandering mushroom
 
 „Telimena, znudzona zbyt długimi swary,
  Chciała wyjść na dziedziniec, lecz szukała pary;

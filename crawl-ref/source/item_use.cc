@@ -643,7 +643,27 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (!ignore_temporary)
+        if (ignore_temporary)
+        {
+            // Hooves and talons were already checked by player_has_feet.
+
+            if (species_has_claws(you.species) >= 3
+                || player_mutation_level(MUT_CLAWS, false) >= 3)
+            {
+                if (verbose)
+                    mprf("The hauberk won't fit your hands.");
+                return false;
+            }
+
+            if (player_mutation_level(MUT_HORNS, false) >= 3
+                || player_mutation_level(MUT_ANTENNAE, false) >= 3)
+            {
+                if (verbose)
+                    mprf("The hauberk won't fit your head.");
+                return false;
+            }
+        }
+        else
         {
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
@@ -1022,93 +1042,80 @@ bool takeoff_armour(int item)
     return true;
 }
 
-static int _prompt_ring_to_remove(int new_ring)
+// Returns a list of possible ring slots.
+static vector<equipment_type> _current_ring_types()
 {
-    const item_def *left  = you.slot_item(EQ_LEFT_RING, true);
-    const item_def *right = you.slot_item(EQ_RIGHT_RING, true);
-
-    mesclr();
-    mprf("Wearing %s.", you.inv[new_ring].name(DESC_A).c_str());
-
-    const char lslot = index_to_letter(left->link);
-    const char rslot = index_to_letter(right->link);
-
-#ifdef TOUCH_UI
-    string prompt = "You're wearing two rings. Remove which one?";
-    Popup *pop = new Popup(prompt);
-    pop->push_entry(new MenuEntry(prompt, MEL_TITLE));
-    InvEntry *me = new InvEntry(*left);
-    pop->push_entry(me);
-    me = new InvEntry(*right);
-    pop->push_entry(me);
-
-    int c;
-    do
-        c = pop->pop();
-    while (c != lslot && c != rslot && c != '<' && c != '>'
-           && !key_is_escape(c) && c != ' ');
-
-#else
-    mprf(MSGCH_PROMPT,
-         "You're wearing two rings. Remove which one? (%c/%c/<</>/Esc)",
-         lslot, rslot);
-
-    mprf(" << or %s", left->name(DESC_INVENTORY).c_str());
-    mprf(" > or %s", right->name(DESC_INVENTORY).c_str());
-    flush_prev_message();
-
-    // Deactivate choice from tile inventory.
-    // FIXME: We need to be able to get the choice (item letter)
-    //        *without* the choice taking action by itself!
-    mouse_control mc(MOUSE_MODE_PROMPT);
-    int c;
-    do
-        c = getchm();
-    while (c != lslot && c != rslot && c != '<' && c != '>'
-           && !key_is_escape(c) && c != ' ');
-#endif
-
-    mesclr();
-
-    if (key_is_escape(c) || c == ' ')
-        return -1;
-
-    const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
-                                                : EQ_RIGHT_RING;
-    return you.equip[eqslot];
+    vector<equipment_type> ret;
+    if (you.species == SP_OCTOPODE)
+    {
+        const int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
+                               ? 8 : 2);
+        for (int i = 0; i != num_rings; ++i)
+            ret.push_back((equipment_type)(EQ_RING_ONE + i));
+    }
+    else
+    {
+        ret.push_back(EQ_LEFT_RING);
+        ret.push_back(EQ_RIGHT_RING);
+    }
+    if (player_equip_unrand(UNRAND_FINGER_AMULET))
+        ret.push_back(EQ_RING_AMULET);
+    return ret;
 }
 
-static int _prompt_ring_to_remove_octopode(int new_ring)
+static vector<equipment_type> _current_jewellery_types()
 {
-    const item_def *rings[8];
-    char slots[8];
+    vector<equipment_type> ret = _current_ring_types();
+    ret.push_back(EQ_AMULET);
+    return ret;
+}
 
-    const int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
-                           ? 8 : 2);
+static bool _ring_change_prohibited_by_gloves(equipment_type eq)
+{
+    const item_def* gloves = you.slot_item(EQ_GLOVES, false);
+    return (gloves && gloves->cursed()
+            && (eq == EQ_LEFT_RING
+                || eq == EQ_RIGHT_RING));
+}
 
-    for (int i = 0; i < num_rings; i++)
+static int _prompt_ring_to_remove(int new_ring)
+{
+    const vector<equipment_type> ring_types = _current_ring_types();
+    vector<char> slot_chars;
+    vector<item_def*> rings;
+    for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
+         eq_it != ring_types.end();
+         ++eq_it)
     {
-        rings[i] = you.slot_item((equipment_type)(EQ_RING_ONE + i), true);
-        ASSERT(rings[i]);
-        slots[i] = index_to_letter(rings[i]->link);
+        rings.push_back(you.slot_item(*eq_it, true));
+        ASSERT(rings.back());
+        slot_chars.push_back(index_to_letter(rings.back()->link));
     }
 
     mesclr();
-//    mprf("Wearing %s.", you.inv[new_ring].name(DESC_A).c_str());
 
     mprf(MSGCH_PROMPT,
          "You're wearing all the rings you can. Remove which one?");
-//I think it looks better without the letters.
-// (%c/%c/%c/%c/%c/%c/%c/%c/Esc)",
-//         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
     mprf(MSGCH_PROMPT, "(<w>?</w> for menu, <w>Esc</w> to cancel)");
 
-    for (int i = 0; i < num_rings; i++)
-        mprf_nocap("%s", rings[i]->name(DESC_INVENTORY).c_str());
+    // FIXME: Needs TOUCH_UI version
+
+    for (size_t i = 0; i < rings.size(); i++)
+    {
+        string m;
+        if (ring_types[i] == EQ_LEFT_RING)
+            m += "<< or ";
+        if (ring_types[i] == EQ_RIGHT_RING)
+            m += "> or ";
+        if (ring_types[i] == EQ_RING_AMULET)
+            m += "^ or ";
+        m += rings[i]->name(DESC_INVENTORY);
+        mprf_nocap("%s", m.c_str());
+    }
     flush_prev_message();
 
     // Deactivate choice from tile inventory.
-    // FIXME: We need to be able to get the choice (item letter)
+    // FIXME: We need to be able to get the choice (item letter)n
     //        *without* the choice taking action by itself!
     int eqslot = EQ_NONE;
 
@@ -1117,13 +1124,18 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     do
     {
         c = getchm();
-        for (int i = 0; i < num_rings; i++)
-            if (c == slots[i])
+        for (size_t i = 0; i < slot_chars.size(); i++)
+        {
+            if (c == slot_chars[i]
+                || (ring_types[i] == EQ_LEFT_RING   && c == '<')
+                || (ring_types[i] == EQ_RIGHT_RING  && c == '>')
+                || (ring_types[i] == EQ_RING_AMULET && c == '^'))
             {
-                eqslot = EQ_RING_ONE + i;
+                eqslot = ring_types[i];
                 c = ' ';
                 break;
             }
+        }
     } while (!key_is_escape(c) && c != ' ' && c != '?');
 
     mesclr();
@@ -1219,7 +1231,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         if (item.base_type == OBJ_WEAPONS)
             verb = "Unwield";
         else
-            verb = "Remov";
+            verb = "Remov"; // -ing, not a typo
     }
     else
     {
@@ -1285,92 +1297,51 @@ bool safe_to_remove(const item_def &item, bool quiet)
 // Does not do amulets.
 static bool _swap_rings(int ring_slot)
 {
-    const item_def* lring = you.slot_item(EQ_LEFT_RING, true);
-    const item_def* rring = you.slot_item(EQ_RIGHT_RING, true);
-
-    // If ring slots were melded, we should have been prevented from
-    // putting on the ring at all.  If it becomes possible for just
-    // one ring slot to be melded, the subsequent code will need to
-    // be revisited, so prevent that, too.
-    ASSERT(!you.melded[EQ_LEFT_RING]);
-    ASSERT(!you.melded[EQ_RIGHT_RING]);
-
-    if (lring->cursed() && rring->cursed())
-    {
-        mprf("You're already wearing two cursed rings!");
-        return false;
-    }
-
-    int unwanted;
-
-    // Don't prompt if both rings are of the same type.
-    if ((lring->sub_type == rring->sub_type
-         && lring->plus == rring->plus
-         && lring->plus2 == rring->plus2
-         && !is_artefact(*lring) && !is_artefact(*rring)) ||
-        lring->cursed() || rring->cursed())
-    {
-        if (lring->cursed())
-            unwanted = you.equip[EQ_RIGHT_RING];
-        else
-            unwanted = you.equip[EQ_LEFT_RING];
-    }
-    else
-    {
-        // Ask the player which existing ring is persona non grata.
-        unwanted = _prompt_ring_to_remove(ring_slot);
-    }
-
-    if (unwanted == -1)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    if (!remove_ring(unwanted, false))
-        return false;
-
-    // Check for stat loss.
-    if (!_safe_to_remove_or_wear(you.inv[ring_slot], false))
-        return false;
-
-    // Put on the new ring.
-    start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
-
-    return true;
-}
-
-static bool _swap_rings_octopode(int ring_slot)
-{
-    const item_def* ring[8];
-    for (int i = 0; i < 8; i++)
-        ring[i] = you.slot_item((equipment_type)(EQ_RING_ONE + i), true);
-    int array = 0;
+    vector<equipment_type> ring_types = _current_ring_types();
+    const int num_rings = ring_types.size();
     int unwanted = 0;
     int cursed = 0;
     int melded = 0; // Both melded rings and unavailable slots.
     int available = 0;
-
-    for (int slots = EQ_RING_ONE;
-         slots < NUM_EQUIP && array < 8;
-         ++slots, ++array)
+    bool all_same = true;
+    item_def* first_ring = NULL;
+    bool gloves_prohibit = false;
+    for (vector<equipment_type>::iterator eq_it = ring_types.begin();
+         eq_it != ring_types.end();
+         ++eq_it)
     {
-        if (!you_tran_can_wear(slots) || you.melded[slots])
+        item_def* ring = you.slot_item(*eq_it, true);
+        if (!you_tran_can_wear(*eq_it) || you.melded[*eq_it])
             melded++;
-        else if (ring[array] != NULL)
+        else if (_ring_change_prohibited_by_gloves(*eq_it))
+            gloves_prohibit = true;
+        else if (ring != NULL)
         {
-            if (ring[array]->cursed())
+            if (first_ring == NULL)
+                first_ring = ring;
+            else if (all_same)
+            {
+                if (ring->sub_type != first_ring->sub_type
+                    || ring->plus  != first_ring->plus
+                    || ring->plus2 != first_ring->plus2
+                    || is_artefact(*ring))
+                {
+                    all_same = false;
+                }
+            }
+
+            if (ring->cursed())
                 cursed++;
             else
             {
                 available++;
-                unwanted = you.equip[slots];
+                unwanted = you.equip[*eq_it];
             }
         }
     }
 
-    // We can't put a ring on, because we're wearing 8 cursed ones.
-    if (melded == 8)
+    // We can't put a ring on, because we're wearing all cursed ones.
+    if (melded == num_rings)
     {
         // Shouldn't happen, because hogs and bats can't put on jewellery at
         // all and thus won't get this far.
@@ -1379,9 +1350,12 @@ static bool _swap_rings_octopode(int ring_slot)
     }
     else if (available == 0)
     {
-        mprf("You're already wearing %s cursed rings!%s",
-             number_in_words(cursed).c_str(),
-             (cursed == 8 ? " Isn't that enough for you?" : ""));
+        if (gloves_prohibit)
+            mpr("You can't take your gloves off to put on a ring!");
+        else
+            mprf("You're already wearing %s cursed rings!%s",
+                 number_in_words(cursed).c_str(),
+                 (cursed == num_rings ? " Isn't that enough for you?" : ""));
         return false;
     }
     // The simple case - only one available ring.
@@ -1394,7 +1368,9 @@ static bool _swap_rings_octopode(int ring_slot)
     // multiple available rings.
     else if (available > 1)
     {
-        unwanted = _prompt_ring_to_remove_octopode(ring_slot);
+        // Don't prompt if all the rings are the same
+        if (!all_same)
+            unwanted = _prompt_ring_to_remove(ring_slot);
 
         // Cancelled:
         if (unwanted < -1)
@@ -1406,15 +1382,6 @@ static bool _swap_rings_octopode(int ring_slot)
         if (!remove_ring(unwanted, false))
             return false;
     }
-
-#if 0
-    // In case something goes wrong.
-    if (unwanted == -1)
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-#endif
 
     // Put on the new ring.
     start_delay(DELAY_JEWELLERY_ON, 1, ring_slot);
@@ -1451,26 +1418,8 @@ static bool _puton_item(int item_slot)
         return false;
     }
 
-    const bool lring = you.slot_item(EQ_LEFT_RING, true);
-    const bool rring = you.slot_item(EQ_RIGHT_RING, true);
+    const vector<equipment_type> ring_types = _current_ring_types();
     const bool is_amulet = jewellery_is_amulet(item);
-    bool blinged_octopode = false;
-    if (you.species == SP_OCTOPODE)
-    {
-        blinged_octopode = true;
-        for (int eq = EQ_RING_ONE; eq <= EQ_RING_EIGHT; eq++)
-        {
-            // Skip unavailable slots.
-            if (!you_tran_can_wear(eq))
-                continue;
-
-            if (!you.slot_item((equipment_type)eq, true))
-            {
-                blinged_octopode = false;
-                break;
-            }
-        }
-    }
 
     if (!is_amulet)     // i.e. it's a ring
     {
@@ -1480,18 +1429,21 @@ static bool _puton_item(int item_slot)
             return false;
         }
 
-        const item_def* gloves = you.slot_item(EQ_GLOVES, false);
-        // Cursed gloves cannot be removed.
-        if (gloves && gloves->cursed())
+        bool need_swap = true;
+        for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
+             eq_it != ring_types.end();
+             ++eq_it)
         {
-            mpr("You can't take your gloves off to put on a ring!");
-            return false;
+            if (_ring_change_prohibited_by_gloves(*eq_it))
+                continue;
+            if (!you.slot_item(*eq_it, true))
+            {
+                need_swap = false;
+                break;
+            }
         }
 
-        if (blinged_octopode)
-            return _swap_rings_octopode(item_slot);
-
-        if (lring && rring)
+        if (need_swap)
             return _swap_rings(item_slot);
     }
     else if (item_def* amulet = you.slot_item(EQ_AMULET, true))
@@ -1518,32 +1470,31 @@ static bool _puton_item(int item_slot)
     if (!_safe_to_remove_or_wear(item, false))
         return false;
 
-    equipment_type hand_used;
+    equipment_type hand_used = EQ_NONE;
 
     if (is_amulet)
         hand_used = EQ_AMULET;
-    else if (you.species == SP_OCTOPODE)
-    {
-        for (hand_used = EQ_RING_ONE; hand_used <= EQ_RING_EIGHT;
-             hand_used = (equipment_type)(hand_used + 1))
-        {
-            // Skip unavailble slots.
-            if (!you_tran_can_wear(hand_used))
-                continue;
-
-            if (!you.slot_item(hand_used, true))
-                break;
-        }
-        ASSERT(hand_used <= EQ_RING_EIGHT);
-    }
     else
     {
-        // First ring always goes on left hand.
-        hand_used = EQ_LEFT_RING;
-
-        // ... unless we're already wearing a ring on the left hand.
-        if (lring && !rring)
-            hand_used = EQ_RIGHT_RING;
+        bool gloves_prohibit = false;
+        for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
+             eq_it != ring_types.end();
+             ++eq_it)
+        {
+            if (_ring_change_prohibited_by_gloves(*eq_it))
+                gloves_prohibit = true;
+            else if (!you.slot_item(*eq_it, true))
+            {
+                hand_used = *eq_it;
+                break;
+            }
+        }
+        if (hand_used == EQ_NONE && gloves_prohibit)
+        {
+            // This shouldn't happen, but just in case...
+            mpr("You can't take your gloves off to put on a ring!");
+            return false;
+        }
     }
 
     const unsigned int old_talents = your_talents(false).size();
@@ -1604,14 +1555,14 @@ bool remove_ring(int slot, bool announce)
     int ring_wear_2;
     bool has_jewellery = false;
     bool has_melded = false;
-    const equipment_type first = you.species == SP_OCTOPODE ? EQ_AMULET
-                                                            : EQ_LEFT_RING;
-    const equipment_type last = you.species == SP_OCTOPODE ? EQ_RING_EIGHT
-                                                           : EQ_AMULET;
+    const vector<equipment_type> ring_types = _current_ring_types();
+    const vector<equipment_type> jewellery_slots = _current_jewellery_types();
 
-    for (int eq = first; eq <= last; eq++)
+    for (vector<equipment_type>::const_iterator eq_it = jewellery_slots.begin();
+         eq_it != jewellery_slots.end();
+         ++eq_it)
     {
-        if (player_wearing_slot(eq))
+        if (player_wearing_slot(*eq_it))
         {
             if (has_jewellery)
             {
@@ -1619,11 +1570,11 @@ bool remove_ring(int slot, bool announce)
                 hand_used = EQ_NONE;
             }
             else
-                hand_used = (equipment_type) eq;
+                hand_used = *eq_it;
 
             has_jewellery = true;
         }
-        else if (you.melded[eq])
+        else if (you.melded[*eq_it])
             has_melded = true;
     }
 
@@ -1640,14 +1591,6 @@ bool remove_ring(int slot, bool announce)
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-
-    const item_def* gloves = you.slot_item(EQ_GLOVES);
-    const bool gloves_cursed = gloves && gloves->cursed();
-    if (gloves_cursed && !player_wearing_slot(EQ_AMULET))
-    {
-        mpr("You can't take your gloves off to remove any rings!");
         return false;
     }
 
@@ -1686,10 +1629,19 @@ bool remove_ring(int slot, bool announce)
         mpr("You can't take that off while it's melded.");
         return false;
     }
-    else if (gloves_cursed
-             && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
+    else if (_ring_change_prohibited_by_gloves(hand_used))
     {
-        mpr("You can't take your gloves off to remove any rings!");
+        mpr("You can't take your gloves off to remove a ring!");
+        return false;
+    }
+    else if (hand_used == EQ_AMULET
+        && you.equip[EQ_RING_AMULET] != -1
+        && !remove_ring(you.equip[EQ_RING_AMULET], announce))
+    {
+        // This can be removed in the future if more ring amulets are added.
+        ASSERT(player_equip_unrand(UNRAND_FINGER_AMULET));
+
+        mpr("The amulet cannot be taken off without first removing the ring!");
         return false;
     }
 
@@ -1871,7 +1823,10 @@ void zap_wand(int slot)
     targetter *hitfunc      = 0;
 
     if (!alreadyknown)
+    {
         beam.effect_known = false;
+        beam.effect_wanton = false;
+    }
     else
     {
         switch (wand.sub_type)
@@ -1954,7 +1909,10 @@ void zap_wand(int slot)
         zap_wand.confusion_fuzz();
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
+    {
         beam.effect_known = false;
+        beam.effect_wanton = alreadyknown;
+    }
 
     beam.source   = you.pos();
     beam.attitude = ATT_FRIENDLY;
@@ -2180,6 +2138,14 @@ void drink(int slot)
         return;
     }
 
+    if (alreadyknown && is_blood_potion(potion)
+        && is_good_god(you.religion)
+        && !yesno("Really drink that potion of blood?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     zin_recite_interrupt();
 
     // The "> 1" part is to reduce the amount of times that Xom is
@@ -2326,9 +2292,7 @@ static bool _drink_fountain()
     {
         mpr("The fountain dries up!");
 
-        grd(you.pos()) = static_cast<dungeon_feature_type>(feat
-                         + DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
-
+        grd(you.pos()) = DNGN_DRY_FOUNTAIN;
         set_terrain_changed(you.pos());
 
         crawl_state.cancel_cmd_repeat();
@@ -2445,7 +2409,7 @@ static void _rebrand_weapon(item_def& wpn)
     }
 }
 
-static void _vorpalise_weapon(bool alreadyknown, item_def &wpn)
+static void _brand_weapon(bool alreadyknown, item_def &wpn)
 {
     you.wield_change = true;
 
@@ -2564,9 +2528,9 @@ static void _vorpalise_weapon(bool alreadyknown, item_def &wpn)
         success = false;
 
         // This is only naughty if you know you're doing it.
-        // XXX: assumes this can only happen from Vorpalise Weapon scroll.
+        // XXX: assumes this can only happen from Brand Weapon scroll.
         did_god_conduct(DID_NECROMANCY, 10,
-                        get_ident_type(OBJ_SCROLLS, SCR_VORPALISE_WEAPON)
+                        get_ident_type(OBJ_SCROLLS, SCR_BRAND_WEAPON)
                         == ID_KNOWN_TYPE);
         break;
 
@@ -2613,7 +2577,7 @@ static void _vorpalise_weapon(bool alreadyknown, item_def &wpn)
 }
 
 // Returns false if we're cancelling the scroll.
-static bool _handle_vorpalise_weapon(bool alreadyknown, string *pre_msg)
+static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
 {
     int item_slot;
 
@@ -2657,7 +2621,7 @@ static bool _handle_vorpalise_weapon(bool alreadyknown, string *pre_msg)
         if (pre_msg && alreadyknown)
             mpr(pre_msg->c_str());
 
-        _vorpalise_weapon(alreadyknown, wpn);
+        _brand_weapon(alreadyknown, wpn);
 
         return true;
     }
@@ -3029,7 +2993,7 @@ bool _is_cancellable_scroll(scroll_type scroll)
             || scroll == SCR_REMOVE_CURSE
             || scroll == SCR_CURSE_ARMOUR
             || scroll == SCR_CURSE_JEWELLERY
-            || scroll == SCR_VORPALISE_WEAPON);
+            || scroll == SCR_BRAND_WEAPON);
 }
 
 void read_scroll(int slot)
@@ -3362,16 +3326,16 @@ void read_scroll(int slot)
         _handle_enchant_weapon(1 + random2(2), 1 + random2(2), "bright yellow");
         break;
 
-    case SCR_VORPALISE_WEAPON:
+    case SCR_BRAND_WEAPON:
         if (!alreadyknown)
         {
             mpr(pre_succ_msg.c_str());
-            mpr("It is a scroll of vorpalise weapon.");
+            mpr("It is a scroll of brand weapon.");
             // Pause to display the message before jumping to the weapon list.
             if (Options.auto_list)
                 more();
         }
-        cancel_scroll = !_handle_vorpalise_weapon(alreadyknown, &pre_succ_msg);
+        cancel_scroll = !_handle_brand_weapon(alreadyknown, &pre_succ_msg);
         break;
 
     case SCR_IDENTIFY:
@@ -3494,7 +3458,7 @@ void read_scroll(int slot)
     if (id_the_scroll
         && !alreadyknown
         && which_scroll != SCR_ACQUIREMENT
-        && which_scroll != SCR_VORPALISE_WEAPON)
+        && which_scroll != SCR_BRAND_WEAPON)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",

@@ -75,6 +75,7 @@ const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
 const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
 
+// Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum brand_type // item_def.special
 {
     SPWPN_FORBID_BRAND = -1,
@@ -99,7 +100,9 @@ enum brand_type // item_def.special
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
     SPWPN_REACHING,
+#if TAG_MAJOR_VERSION == 34
     SPWPN_RETURNING,
+#endif
     SPWPN_CHAOS,
     SPWPN_EVASION,
 
@@ -266,7 +269,7 @@ enum missile_type
     MI_LARGE_ROCK,
     MI_SLING_BULLET,
     MI_THROWING_NET,
-    MI_PIE,
+    MI_TOMAHAWK,
 
     NUM_MISSILES,
     MI_NONE             // was MI_EGGPLANT... used for launch type detection
@@ -322,7 +325,7 @@ enum scroll_type
     SCR_FOG,
     SCR_ACQUIREMENT,
     SCR_ENCHANT_WEAPON_II,
-    SCR_VORPALISE_WEAPON,
+    SCR_BRAND_WEAPON,
     SCR_RECHARGING,
     SCR_ENCHANT_WEAPON_III,
     SCR_HOLY_WORD,
@@ -333,6 +336,7 @@ enum scroll_type
     NUM_SCROLLS
 };
 
+// Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum special_armour_type
 {
     SPARM_FORBID_EGO = -1,
@@ -362,6 +366,7 @@ enum special_armour_type
     NUM_SPECIAL_ARMOURS,
 };
 
+// Be sure to update _str_to_ego to match.
 enum special_missile_type // to separate from weapons in general {dlb}
 {
     SPMSL_FORBID_BRAND = -1,
@@ -509,11 +514,8 @@ enum weapon_type
     WPN_RANDOM,
     WPN_VIABLE,
 
-// thrown weapons (for hunter weapon selection)
+// thrown weapons (for hunter weapon selection) - rocks, javelins, tomahawks
     WPN_THROWN,
-    WPN_ROCKS,
-    WPN_JAVELINS,
-    WPN_DARTS,
 };
 
 enum weapon_property_type

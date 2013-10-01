@@ -358,15 +358,8 @@ static void _show_morgue(scorefile_entry& se)
 
     morgue_file.set_flags(flags, false);
     morgue_file.set_tag("morgue");
+    morgue_file.set_more();
 
-    morgue_file.set_more(formatted_string::parse_string(
-#ifdef USE_TILE_LOCAL
-                            "<cyan>[ +/L-click : Page down.   - : Page up."
-                            "           Esc/R-click exits.]"));
-#else
-                            "<cyan>[ + : Page down.   - : Page up."
-                            "                           Esc exits.]"));
-#endif
     string morgue_base = morgue_name(se.get_name(), se.get_death_time());
     string morgue_path = morgue_directory()
                          + strip_filename_unsafe_chars(morgue_base) + ".txt";
@@ -745,6 +738,9 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     zigs              = se.zigs;
     zigmax            = se.zigmax;
     fixup_char_name();
+
+    // We could just reset raw_line to "" instead.
+    raw_line          = se.raw_line;
 }
 
 xlog_fields scorefile_entry::get_fields() const
@@ -1291,6 +1287,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 void scorefile_entry::reset()
 {
     // simple init
+    raw_line.clear();
     version.clear();
     tiles                = 0;
     points               = -1;
@@ -1507,7 +1504,8 @@ void scorefile_entry::init(time_t dt)
         DUR_INVIS, DUR_POISONING, STATUS_MISSILES, DUR_SURE_BLADE,
         DUR_TRANSFORMATION, STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
         DUR_WEAK, DUR_DIMENSION_ANCHOR, DUR_ANTIMAGIC, DUR_SPIRIT_HOWL,
-        DUR_FLAYED, DUR_WATER_HOLD, STATUS_DRAINED, DUR_TOXIC_RADIANCE
+        DUR_FLAYED, DUR_WATER_HOLD, STATUS_DRAINED, DUR_TOXIC_RADIANCE,
+        DUR_FIRE_VULN
     };
 
     status_info inf;
@@ -1815,13 +1813,13 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                 // Not exactly the same as the religion screen, but
                 // good enough to fill this slot for now.
                 snprintf(scratch, INFO_SIZE, "Was %s of %s%s",
-                             (piety >  160) ? "the Champion" :
-                             (piety >= 120) ? "a High Priest" :
-                             (piety >= 100) ? "an Elder" :
-                             (piety >=  75) ? "a Priest" :
-                             (piety >=  50) ? "a Believer" :
-                             (piety >=  30) ? "a Follower"
-                                            : "an Initiate",
+                             (piety >= piety_breakpoint(5)) ? "the Champion" :
+                             (piety >= piety_breakpoint(4)) ? "a High Priest" :
+                             (piety >= piety_breakpoint(3)) ? "an Elder" :
+                             (piety >= piety_breakpoint(2)) ? "a Priest" :
+                             (piety >= piety_breakpoint(1)) ? "a Believer" :
+                             (piety >= piety_breakpoint(0)) ? "a Follower"
+                                                            : "an Initiate",
                           god_name(god).c_str(),
                              (penance > 0) ? " (penitent)." : ".");
 
@@ -2078,7 +2076,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_STUPIDITY:
         if (terse)
             desc += "stupidity";
-        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN)
+        else if (_species_is_undead(race) || race == SP_GREY_DRACONIAN || race == SP_GARGOYLE)
             desc += "Forgot to exist";
         else
             desc += "Forgot to breathe";
