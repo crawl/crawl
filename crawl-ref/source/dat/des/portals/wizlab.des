@@ -181,31 +181,15 @@ function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
 
   local count = 0
 
-  if crawl.one_chance_in(5) then
-    -- Fruit!
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and crawl.one_chance_in(3) then
-        dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
-                          .. "/ banana / strawberry q:4 / lemon / rambutan "
-                          .. "/ grape q:7 / sultana q:9 / lychee")
-        count = count + 1
-      end
+  for spot in iter.adjacent_iterator() do
+    if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
+       and not crawl.one_chance_in(3) then
+      dgn.create_monster(spot.x, spot.y, "toadstool")
+      count = count + 1
     end
-    if count > 0 then
-      crawl.mpr("Fruit sprouts up around you!")
-    end
-  else
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and not crawl.one_chance_in(3) then
-        dgn.create_monster(spot.x, spot.y, "toadstool")
-        count = count + 1
-      end
-    end
-    if count > 0 then
-      crawl.mpr("Toadstools sprout up around you!")
-    end
+  end
+  if count > 0 then
+    crawl.mpr("Toadstools sprout up around you!")
   end
 end
 
