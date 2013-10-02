@@ -263,8 +263,12 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
 // Ignores swimming, flying, and travel_avoid_terrain.
 bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
 {
-    if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
+    if (feat_is_trap(feat) && feat != DNGN_PASSAGE_OF_GOLUBRIA)
+    {
+        if (ignore_player_traversability)
+            return !(feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_TELEPORT);
         return false;
+    }
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
     else if (feat >= DNGN_MINWALK || feat == DNGN_RUNED_DOOR
