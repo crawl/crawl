@@ -355,11 +355,6 @@ cloak
 
 Wierzchnie okrycie z tkaniny.
 %%%%
-club
-
-Twardy kawał drewna, można nim kogoś uderzyć lub w niego rzucić. W
-szczególności, czujesz chęć aby zakraść się za kogoś i zdzielić go w łeb.
-%%%%
 corpse
 
 Trup. Możesz oprawić go aby uzyskać jadalne mięso.
@@ -379,11 +374,6 @@ crystal plate armour
 
 Niewiarygodnie ciężka ale też i nieziemsko efektywna zbroja z litego kawału
 wytrzymałego kryształu.
-%%%%
-dagger
-
-Długi ostry nóż, dobry do walki w zwarciu jak też i do rzucania. Powoduje
-ogromne obrażenia w czasie ataku znienacka.
 %%%%
 dart
 
@@ -575,10 +565,6 @@ Długie drzewce z ostrzem, hakiem i ostrzem topora na końcu.
 hammer
 
 Coś czym przybijasz gwoździe, zaadaptowane do walki.
-%%%%
-hand axe
-
-Mała siekiera zdatna zarówno do walki wręcz jak i do rzucania.
 %%%%
 helmet
 
@@ -1272,11 +1258,6 @@ warianty.
 snozzcumber
 
 Paskudne warzywo w kształcie ogórka.
-%%%%
-spear
-
-Długi patyk, z zaostrzonym grotem na końcu. Nadaje się do walki wręcz jak i do
-rzucania.
 %%%%
 staff of conjuration
 

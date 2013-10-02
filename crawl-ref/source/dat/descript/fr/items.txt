@@ -409,11 +409,11 @@ Une cape en tissu.
 %%%%
 club
 
-Un lourd morceau de bois, avec un espace pour le saisir d'un coté et la plus
-grande partie de son poids de l'autre, ce qui conviens pour frapper avec ou le
-jeter sur un ennemi. Alors que les massues sont des armes assez primitive,
-frapper le crâne de quelqu'un avec reste un moyen très populaire et efficace de
-régler des différends.
+Un lourd morceau de bois, avec la place pour le saisir d'un coté et la plus
+grande partie de son poids de l'autre, ce qui conviens pour frapper un ennemi.
+Alors que les massues sont des armes assez primitive, frapper le crâne de
+quelqu'un avec reste un moyen très populaire et efficace de régler des
+différends.
 %%%%
 corpse
 
@@ -439,10 +439,10 @@ Une armure cristalline incroyablement lourde mais extrêmement protectrice.
 %%%%
 dagger
 
-Un couteau de combat à double tranchant, et à la pointe acérée qui peut être
-lancé. Considérée par certains comme une arme faible qu'ils n'utiliseront qu'en
-dernier recours, d'autres l’apprécient tout particulièrement en tant que
-parfaite arme d'assassinat.
+Un couteau de combat à double tranchant, et à la pointe acérée. Considérée par
+certains comme une arme faible qu'ils n'utiliseront qu'en dernier recours,
+d'autres l’apprécient tout particulièrement en tant que parfaite arme
+d'assassinat.
 %%%%
 dart
 
@@ -673,9 +673,9 @@ et même percer l'armure.
 %%%%
 hand axe
 
-Un outil pour trancher des buches de bois, ou de la chair. Petite et conçue
-pour une manipulation rapide et précise, elle est également équilibrée de façon
-a être lancée si nécessaire.
+Un outil pour trancher des bûches de bois, ou de la chair. Il peut être
+suffisant si vous êtes concerné principalement par le poids de l'arme, mais
+pour massacrer convenablement, il vous faut quelque chose de plus gros.
 %%%%
 helmet
 
@@ -1481,10 +1481,9 @@ Un légume repoussant en forme de concombre.
 %%%%
 spear
 
-Une arme de chasse comprenant un arbre équilibrée en bois avec une tête
-métallique pointue fixé sur une extrémitée. Plus court que d'autres armes
-d'hast, elle peut être manié avec une ou deux mains et est également assez
-légere pour être jeté.
+Une arme de chasse composée d'un manche en bois avec une tête métallique
+pointue fixée au bout. Plus courte que d'autres armes d'hast, elle peut être
+maniée avec une ou deux mains.
 %%%%
 staff of air
 
@@ -1634,6 +1633,12 @@ suffisamment longtemps.
         return ""
     end
 }}
+%%%%
+tomahawk
+
+Un objet ressemblant à une hache, conçu pour être lancé. Alors que d'autres
+tomahawks plus gros pourraient convenir au combat au corps à corps, celui-ci
+est plus petit et plus maniable afin d'optimiser ses propriétés balistiques.
 %%%%
 tome of destruction
 

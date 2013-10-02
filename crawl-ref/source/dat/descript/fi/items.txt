@@ -457,13 +457,6 @@ cloak
 
 Kangasviitta.
 %%%%
-club
-
-Raskas puukappale, jonka toisessa päässä on paikka kiinniottamiselle ja painot
-toisessa päässä. Se on sopiva heilutus- tai heittoaseena. Vaikka nuijat ovat
-melko alkukantaisia aseita, pääkallon mäjäyttäminen sellaisella on edelleen
-hyvin suosittu ja tehokas riidanratkaisukeino.
-%%%%
 corpse
 
 Ruumis. Voit teurastaa sen tuottaaksesi syömäkelpoisia lihakimpaleita.
@@ -483,12 +476,6 @@ maksimipotentiaalia esine on hyödyllisin.
 crystal plate armour
 
 Uskomattoman raskas mutta äärimmäisen tehokas kristallipanssari.
-%%%%
-dagger
-
-Kaksiteräinen taisteluveitsi terävällä kärjellä, jonka voi heittää kaukaa.
-Joidenkin mielestä se on heikko ase, viimeinen oljenkorsi; jotkut arvostavat
-sitä täydellisenä työkaluna salamurhiin.
 %%%%
 dart
 

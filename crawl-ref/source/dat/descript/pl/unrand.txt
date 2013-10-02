@@ -258,10 +258,6 @@ cloak of Flash
 
 Wibrujący płaszcz.
 %%%%
-boots of the Assassin
-
-Para miękkich butów, specjalnie zaprojektowana dla gildii zabójców.
-%%%%
 skin of Zhor
 
 Śmierdząca skóra jakiegoś dziwnego zwierzęcia.

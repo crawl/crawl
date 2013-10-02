@@ -350,10 +350,6 @@ hammer
 
 O tipo de coisa que se usa para martelar pregos, adaptado para combate.
 %%%%
-hand axe
-
-Machadinha de arremesso ou combate mano a mano.
-%%%%
 helmet
 
 Uma peça de armadura para a cabeça.
@@ -532,11 +528,6 @@ búfala e manjericão.
 snozzcumber
 
 Um vegetal repulsivo no formato de um pepino.
-%%%%
-spear
-
-Uma vara longa com uma lâmina pontiaguda em uma ponta. Pode ser tida em mãos ou
-arremessada.
 %%%%
 staff of conjuration
 
