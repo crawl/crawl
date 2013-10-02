@@ -484,6 +484,7 @@ static void _update_weapon(const newgame_def& ng)
                               4 + plus);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_LARGE_ROCK);
+            autopickup_starting_ammo(MI_THROWING_NET);
         }
         else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
         {
@@ -491,6 +492,7 @@ static void _update_weapon(const newgame_def& ng)
                               8 + 2 * plus);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_TOMAHAWK);
+            autopickup_starting_ammo(MI_THROWING_NET);
         }
         else
         {
@@ -498,6 +500,7 @@ static void _update_weapon(const newgame_def& ng)
                               5 + plus);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_JAVELIN);
+            autopickup_starting_ammo(MI_THROWING_NET);
         }
         break;
     case WPN_BOW:
@@ -580,9 +583,15 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Small species get tomahawks, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
+        {
             newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 6);
+            autopickup_starting_ammo(MI_TOMAHAWK);
+        }
         else
+        {
             newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
+            autopickup_starting_ammo(MI_THROWING_NET);
+        }
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -745,6 +754,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
 
+        // Plain darts are maybe too weak for autopickup.
+        // autopickup_starting_ammo(MI_DART);
+
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
         you.skills[SK_DODGING]        = 2;
@@ -801,6 +813,9 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 12);
+
+        // Plain darts are maybe too weak for autopickup.
+        // autopickup_starting_ammo(MI_DART);
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
