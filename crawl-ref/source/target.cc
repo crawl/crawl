@@ -915,7 +915,7 @@ bool targetter_jump::valid_aim(coord_def a)
     }
     else if (!find_ray(agent->pos(), a, ray, opc_no_trans))
     {
-        is_valid = notify_fail("A dungeon feature is in the way");
+        is_valid = notify_fail("A dungeon feature is in the way.");
         return is_valid;
     }
     else if(!has_additional_sites(a, true))
