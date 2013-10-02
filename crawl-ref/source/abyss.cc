@@ -591,7 +591,8 @@ static void _push_items()
         for (distance_iterator di(item.pos); di; ++di)
             if (!_pushy_feature(grd(*di)))
             {
-                move_item_to_grid(&i, *di, true);
+                int j = i;
+                move_item_to_grid(&j, *di, true);
                 break;
             }
     }
