@@ -3131,7 +3131,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
-    if (player_mutation_level(MUT_JUMP) && !you.evokable_jump())
+
+    if (player_mutation_level(MUT_JUMP))
         _add_talent(talents, ABIL_JUMP, check_confused);
 
     // Spit Poison. Nagas can upgrade to Breathe Poison.
