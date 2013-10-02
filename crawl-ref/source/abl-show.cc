@@ -1911,8 +1911,9 @@ static bool _do_ability(const ability_def& abil)
     }
     case ABIL_JUMP:
     {
-        if(!_jump_player(player_mutation_level(MUT_JUMP) + 2))
+        if (!_jump_player(player_mutation_level(MUT_JUMP) + 2))
             return false;
+
         you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
                               + random2(30 - you.experience_level));
         break;
@@ -2176,8 +2177,9 @@ static bool _do_ability(const ability_def& abil)
         break;
     case ABIL_EVOKE_JUMP:
     {
-        if(!_jump_player(player_evoke_jump_range()))
+        if (!_jump_player(player_evoke_jump_range()))
             return false;
+
         you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
                               + random2(30 - you.skill(SK_EVOCATIONS, 1)));
         break;
