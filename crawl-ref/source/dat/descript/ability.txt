@@ -74,7 +74,7 @@ Start flying. During flight you can safely cross water and similar obstacles.
 Be warned, though, that flight may time out at inopportune moments and cause
 you to fall to your death.
 %%%%
-Jump Attack
+Jump Attack ability
 
 An ability that borrows a creature's kinetic energy to power a high-speed jump
 attack, landing you safely nearby while dealing increased damage if successful. You
