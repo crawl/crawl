@@ -384,6 +384,15 @@ void debug_mons_scan()
             }
         } // if (mgrd(m->pos()) != i)
 
+        if (feat_is_wall(grd(pos)) && mons_primary_habitat(m) != HT_ROCK
+            && mons_primary_habitat(m) != HT_INCORPOREAL)
+        {
+            mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)",
+                 m->full_name(DESC_PLAIN, true).c_str(),
+                 dungeon_feature_name(grd(pos)),
+                 pos.x, pos.y);
+        }
+
         for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
         {
             const int idx = m->inv[j];
