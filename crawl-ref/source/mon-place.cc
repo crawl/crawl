@@ -3216,7 +3216,7 @@ public:
     coord_def pathfind()
     {
         set_floodseed(start);
-        return travel_pathfind::pathfind(RMODE_EXPLORE);
+        return travel_pathfind::pathfind(RMODE_CONNECTIVITY);
     }
 
     bool path_flood(const coord_def &c, const coord_def &dc)

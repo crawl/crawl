@@ -44,6 +44,7 @@
 #include "religion.h"
 #include "stairs.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
@@ -1294,11 +1295,16 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
     if (runmode == RMODE_CONNECTIVITY)
         ignore_player_traversability = true;
-    else if (runmode == RMODE_EXPLORE_GREEDY)
-    {
-        autopickup = can_autopickup();
-        sacrifice = god_likes_items(you.religion, true);
-        need_for_greed = (autopickup || sacrifice);
+    else {
+        ASSERTM(crawl_state.need_save,
+                "Pathfind with mode %d without a game?", runmode);
+
+        if (runmode == RMODE_EXPLORE_GREEDY)
+        {
+            autopickup = can_autopickup();
+            sacrifice = god_likes_items(you.religion, true);
+            need_for_greed = (autopickup || sacrifice);
+        }
     }
 
     if (!ls && (annotate_map || need_for_greed))
