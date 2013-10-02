@@ -614,11 +614,6 @@ kamienną statuę. Ciosy zadawane w tej postaci, tak bronią jak i gołymi
 kamiennymi pięściami, zadają ogromne obrażenia. Ponadto, forma ta zapewnia
 odporność na elektryczność, trucizny, zgniliznę jak i nekromancję.
 %%%%
-Sticks to Snakes spell
-
-Ten czar zmienia drewniane przedmioty w dłoni rzucającego w węże. Artefakty nie
-mogą zostać w ten sposób przemienione.
-%%%%
 Sticky Flame spell
 
 Ten czar tworzy grudę lepkiego płynnego ognia, która opryskuje i przylepia się

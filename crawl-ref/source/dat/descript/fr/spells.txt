@@ -137,6 +137,12 @@ Ce sortilège est assez puissant pour littéralement extirper quelqu'un des
 griffes de la mort, malgré qu'il choquera le sorcier au point de le rendre
 incapable d'agir pendant un moment.
 %%%%
+Brain Feed spell
+
+Ce sort permet de diminuer une partie de l'intelligence de l'ennemi. Une telle
+perte n'est que temporaire, et les anneaux de soutien de facultés peuvent
+prévenir ou réduire considérablement cet effet.
+%%%%
 Call Canine Familiar spell
 
 Ce sort fait apparaitre un canidé pour venir en aide au sorcier.
@@ -335,6 +341,11 @@ Enslavement spell
 
 Ce sort force une créature hostile à se battre à vos côtés pour un moment.
 %%%%
+Ensnare spell
+
+Ce sortilège provoque l'envoie, à partir du lanceur de sort, d'une substance
+blanche et collante qui forme immédiatement une toile d'araignée.
+%%%%
 Ensorcelled Hibernation spell
 
 Ce sort tente de réduire le rythme métabolique de la cible, induisant une
@@ -357,6 +368,13 @@ Fire Storm spell
 Ce sort invoque une puissante et furieuse tempête de flammes directement sur la
 cible, causant des dégâts de feu partiellement irrésistibles sur une large zone
 et laissant derrière elle d'éphémères vortex de feu.
+%%%%
+Fire Summon spell
+
+En évoquant son sceptre, Asmodeus peut invoquer ses sbires. Contrairement à
+vous, Asmodeus est si craint que les démons appelés de cette façon savent qu'il
+vaut mieux ne pas se retourner contre lui, et ils étaient dans son équipe en
+premier.
 %%%%
 Fireball spell
 
@@ -398,6 +416,35 @@ le relâche après un court moment dans une violente explosion arcanique. Soyez
 conscient que le prisme est extrêmement fragile et que tout dommage lui étant
 causé peut entraîner prématurément sa détonation!
 %%%%
+Ghostly Fireball spell
+
+Ce sort permet à l'utilisateur de lancer une boule explosive d'énergie
+nécromantique. Ça  ressemble en quelque sorte à d'étranges flammes verdâtres,
+mais n'a rien de commun avec le feu si ce n'est l'apparence. Ce sortilège peut
+être combattu en utilisant de la protection contre l’énergie négative, et non
+seulement il ne fait aucun dégâts aux morts-vivants, mais il peut même les
+guérir.
+%%%%
+Ghostly Flames spell
+
+Ce sort permet à l'utilisateur de lancer une boule explosive d'énergie
+nécromantique. Ça  ressemble en quelque sorte à d'étranges flammes verdâtres,
+mais n'a rien de commun avec le feu si ce n'est l'apparence. L'impacte directe
+et la flamme résiduelle font des dégâts aux êtres vivants et guérissent les
+morts-vivants. L'énergie tend à se fondre en morts-vivants spectraux de sa
+propre volontés.
+%%%%
+Haste Other spell
+
+Ce sort permet au lanceur d'accélérer toutes les actions d'un allié proche.
+%%%%
+Haste Plants spell
+
+Ce sort permet au lanceur d'accélérer un tas de plantes à proximité. Bien sûr,
+cela ne sert à rien quand il est utilisé sur les mauvaises herbes ou des
+arbustes immobiles, mais les plantes pouvant faire des dommages en
+bénéficieront.
+%%%%
 Haste spell
 
 Ce sort accélère la vitesse d'exécution des actions d'une créature. Lancer ce
@@ -407,6 +454,10 @@ Haunt spell
 
 Ce sort convoque des esprits et fantômes pour hanter la cible du sorcier. Faire
 ainsi appel aux morts-vivants extrait une portion de la vitalité du sorcier.
+%%%%
+Heal Other spell
+
+Ce sort permet au lanceur pour guérir un allié proche.
 %%%%
 Holy Breath spell
 
@@ -873,9 +924,8 @@ effets électriques et gagne une résistance au poison, à la décomposition et 
 %%%%
 Sticks to Snakes spell
 
-Ce sort utilise des objets de bois tenus en main comme matière première pour
-une puissant transmutation. Notez que les artéfacts magiques ne seront pas
-affectés.
+Ce sort utilise des projectiles en bois (flèches ou javelots) tenus en main
+comme matière première pour une puissant transmutation.
 %%%%
 Sticky Flame spell
 

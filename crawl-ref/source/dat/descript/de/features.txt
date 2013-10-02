@@ -410,7 +410,7 @@ und voller Fallen.
 A staircase to the Enchanted Forest
 
 Am anderen Ende dieser Treppe liegt die bewaldete Heimat der Spriggans, Tengu,
-Faunen und allerlei schrecklichen Flüche.
+Faunen und allerlei schrecklichen Flüchen.
 %%%%
 A staircase to the Shoals
 
@@ -457,11 +457,6 @@ zerschmettern.
 A short-range portal
 
 Dieser Teleporter wird dich in einen anderen Raum bringen.
-%%%%
-A teleport trap
-
-Diese magische Falle kann jeden, der arglos genug ist und darüber geht – oder
-sogar fliegt -, an einen zufälligen Ort auf der gleichen Ebene teleportieren.
 %%%%
 A translucent rock wall
 

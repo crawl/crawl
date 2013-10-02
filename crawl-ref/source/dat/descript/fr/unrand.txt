@@ -285,7 +285,9 @@ Une cape vibrante.
 %%%%
 boots of the Assassin
 
-Des bottes souples, spécialement dessinées par la Guilde des Assassins.
+Des bottes souples avec un dague dissimulée à l'intérieur, conçue par la Guilde
+des Assassins. Elles permettent au porteur de sentir la présence de victimes
+potentielles.
 %%%%
 Lear's hauberk
 
@@ -484,6 +486,10 @@ des légendaires terreurs invisibles du vent ou simplement une appropriation du
 nom pour y ajouter du mysticisme est un mystère; son pouvoir de régénération
 rapide au détriment occasionnelle de la puissance magique du porteur, est
 cependant difficile a contester.
+%%%%
+macabre finger necklace
+
+Ce doigt aurait l'air mieux avec un anneau.
 %%%%
 milk chocolate
 
