@@ -124,7 +124,7 @@ Monsters
       creature; they can be summoned by deep elf death mages.
     - Necromancers don't come with necrophages, but do some with simulacra.
     - Unborn deep dwarves are now just unborn.
-    - New monster: jiangshi, who move in short burts (like sixfirhies) and
+    - New monster: jiangshi, who move in short bursts (like sixfirhies) and
       possess a vampiric melee attack.
 * New forest-themed monsters:
     - Spriggan assassins and enchanters, who attempt to disable the player
