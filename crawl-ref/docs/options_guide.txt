@@ -1548,7 +1548,7 @@ fire_items_start = a
         missiles to fire. The default is a.
 
 fire_order  = launcher, return
-fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
+fire_order += javelin / tomahawk / dart / stone / rock / net
 fire_order += inscribed
         (Ordered list option)
         Controls the order of items autoselected for firing. Items
