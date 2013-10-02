@@ -144,7 +144,7 @@ Evoke Jump Attack ability
 An ability that borrows a creature's kinetic energy to power a high-speed jump
 attack, landing you safely nearby while dealing increased damage if successful. You
 cannot jump over flying enemies and can only leap giant enemies submerged in
-lava or deep water. Standing or swimming in water, lava, or liquified ground
+lava or deep water. Standing or swimming in water, lava, or liquefied ground
 will also prevent you from using this ability. Training evocations increases the
 range of your jump-attack at skill levels 5 and 10.
 %%%%
