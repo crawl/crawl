@@ -490,7 +490,7 @@ static void _update_weapon(const newgame_def& ng)
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1,
                               8 + 2 * plus);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-            autopickup_starting_ammo(MI_DART);
+            autopickup_starting_ammo(MI_TOMAHAWK);
         }
         else
         {
