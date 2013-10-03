@@ -1045,7 +1045,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     // Message to player from stairwell/gate/abyss appearance.
-    if (you.see_cell(mg.pos)
+    if (!Generating_Level && you.see_cell(mg.pos)
         && (mg.proximity == PROX_NEAR_STAIRS
             || (player_in_branch(BRANCH_ABYSS)
                 && !mg.summoner && !mons_is_mimic(mon->type)
