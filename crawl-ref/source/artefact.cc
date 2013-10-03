@@ -976,15 +976,6 @@ static void _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    // jump attack
-    if (!done_powers
-        && one_chance_in(10)
-        && (aclass != OBJ_WEAPONS || !is_range_weapon(item)))
-    {
-        proprt[ARTP_JUMP] = 1;
-        power_level++;
-    }
-
     if (!done_powers && one_chance_in(10) && aclass == OBJ_ARMOUR
         && (atype == ARM_CAP || atype == ARM_SHIELD))
     {
