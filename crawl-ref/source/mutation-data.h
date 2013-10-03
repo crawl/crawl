@@ -424,9 +424,9 @@
    "You can jump attack at a medium distance.",
    "You can jump attack at a long distance."},
 
-  {"You feel sure on your feet.",
-   "You feel sure on your feet.",
-   "You feel sure on your feet."},
+  {"You feel more sure on your feet.",
+   "You feel more sure on your feet.",
+   "You feel more sure on your feet."},
 
   {"You feel less sure on your feet.",
    "You feel less sure on your feet.",
