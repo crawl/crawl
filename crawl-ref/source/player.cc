@@ -5729,15 +5729,7 @@ player::player(const player &other)
     : kills(0), m_quiver(0)
 {
     init();
-
-    // why doesn't this do a copy_from?
-    player_quiver* saved_quiver = m_quiver;
-    delete kills;
-    *this = other;
-    m_quiver = saved_quiver;
-
-    kills = new KillMaster(*(other.kills));
-    *m_quiver = *(other.m_quiver);
+    copy_from(other);
 }
 
 // Not called operator= because it is implemented in terms of the
