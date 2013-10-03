@@ -243,7 +243,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_TRAP_ALARM:
-            f.colour = f.map_colour = YELLOW;
+            f.colour = f.map_colour = LIGHTRED;
             f.dchar      = DCHAR_TRAP;
             f.minimap    = MF_TRAP;
             break;
