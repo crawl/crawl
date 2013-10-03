@@ -1376,6 +1376,8 @@ void dump_map(FILE *fp, bool debug, bool dist)
                 {
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
+                else if (grd[x][y] >= NUM_FEATURES)
+                    fputc('!', fp);
                 else
                 {
                     fputs(OUTS(stringize_glyph(
