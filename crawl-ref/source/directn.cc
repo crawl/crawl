@@ -1061,16 +1061,15 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
             search_range += 1;
         }
         else
-        {
             find_targ = _find_monster;
-        }
+
         // The previous target is no good. Try to find one from scratch.
         success = _find_square_wrapper(result, 1, find_targ, needs_path, mode,
                                        search_range, hitfunc, true);
 
         // We might be able to hit monsters in LOS that are outside of
         // normal range, but inside explosion/cloud range
-        if (!success && hitfunc && restricts != DIR_JUMP
+        if (!success && hitfunc && hitfunc->can_affect_outside_range()
             && (you.current_vision > range || hitfunc->can_affect_walls()))
         {
             success = _find_square_wrapper(result, 1, _find_monster_expl,
@@ -2474,7 +2473,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         return true;
 
     // Don't target out of range
-    if (hitfunc && !_is_target_in_range(where, range, hitfunc))
+    if (!_is_target_in_range(where, range, hitfunc))
         return false;
 
     const monster* mon = monster_at(where);
