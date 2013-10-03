@@ -5740,7 +5740,8 @@ player::player(const player &other)
     *m_quiver = *(other.m_quiver);
 }
 
-// why is this not called "operator="?
+// Not called operator= because it is implemented in terms of the
+// default operator=
 void player::copy_from(const player &other)
 {
     if (this == &other)
@@ -5749,6 +5750,8 @@ void player::copy_from(const player &other)
     KillMaster *saved_kills = kills;
     player_quiver* saved_quiver = m_quiver;
 
+    // Rather than trying (and failing) to include explicit assignments
+    // for every member at this point, we use the default operator=.
     *this = other;
 
     kills  = saved_kills;
