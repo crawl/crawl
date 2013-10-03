@@ -918,7 +918,6 @@ ENDMAP
 NAME:   tar_grunt
 TAGS:   overwritable
 ORIENT: encompass
-MONS:   shadow imp, soul eater
 {{
   extend_map{width = 70, height = 70}
   fill_area{fill = 'X', border = 'x'}
@@ -931,7 +930,6 @@ MONS:   shadow imp, soul eater
   -- pockets in the border, so...
   kprop('X-_ = no_rtele_into')
   remove_isolated_glyphs { find = '.', replace = 'x', percent = 100 }
-  nsubst('. = 10:1 / 10:2 / *:.')
   tar_setup(_G)
   hook("post_place", function()
     local map, vplace = dgn.resolve_map(dgn.map_by_tag("tar_grunt_ereshkigal"))
@@ -944,6 +942,8 @@ MONS:   shadow imp, soul eater
     dgn.place_maps{tag="tar_grunt_big_loot",    count=1, die_on_error = true}
     dgn.place_maps{tag="tar_grunt_small_loot",  count=3}
     dgn.place_maps{tag="tar_grunt_decor",       count=15}
+    dgn.place_maps{tag="tar_grunt_mons1",       count=10}
+    dgn.place_maps{tag="tar_grunt_mons2",       count=10}
   end)
 }}
 
@@ -1175,4 +1175,18 @@ MAP
  .x...x.
   .xxx.
    ...
+ENDMAP
+
+NAME:    tar_grunt_mons_1
+TAGS:    tar_grunt_mons_1 transparent allow_dup unrand
+MONS:    shadow imp
+MAP
+1
+ENDMAP
+
+NAME:    tar_grunt_mons_2
+TAGS:    tar_grunt_mons_2 transparent allow_dup unrand
+MONS:    soul eater
+MAP
+1
 ENDMAP
