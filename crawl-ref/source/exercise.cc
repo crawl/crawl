@@ -27,6 +27,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
     case ABIL_EVOKE_TELEPORT_CONTROL:
+    case ABIL_EVOKE_JUMP:
         return SK_EVOCATIONS;
 
     case ABIL_NEMELEX_DRAW_ONE:
@@ -102,6 +103,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_FOG:
     case ABIL_EVOKE_TELEPORT_CONTROL:
+    case ABIL_EVOKE_JUMP:
         return 1;
 
     case ABIL_NEMELEX_DRAW_ONE:
