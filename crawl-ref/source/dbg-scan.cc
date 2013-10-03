@@ -233,7 +233,7 @@ void debug_item_scan(void)
 #ifdef DEBUG_MONS_SCAN
 static void _announce_level_prob(bool warned)
 {
-    if (!warned && Generating_Level)
+    if (!warned && crawl_state.generating_level)
     {
         mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
         mpr("mgrd problem occurred during level generation", MSGCH_ERROR);
@@ -552,7 +552,7 @@ void debug_mons_scan()
 
     // If this wasn't the result of generating a level then there's nothing
     // more to report.
-    if (!Generating_Level)
+    if (!crawl_state.generating_level)
     {
         // Force the dev to notice problems. :P
         more();

@@ -21,6 +21,7 @@
 #include "mon-place.h"
 #include "mon-util.h"
 #include "random.h"
+#include "state.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
@@ -990,7 +991,7 @@ static dungeon_feature_type _shoals_apply_tide_feature_at(
     if (feat == current_feat)
         return DNGN_UNSEEN;
 
-    if (Generating_Level)
+    if (crawl_state.generating_level)
         grd(c) = feat;
     else
         dungeon_terrain_changed(c, feat, true, false, true);

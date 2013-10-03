@@ -54,6 +54,7 @@ struct game_state
     bool last_game_won;
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
+    bool generating_level;
 
     bool dump_maps;         // Dump map Lua to stderr on fresh parse.
     bool test;              // Set if we want to run self-tests and exit.

@@ -199,7 +199,7 @@ static bool _abyss_place_map(const map_def *mdef)
 {
     // This is to prevent the player position from being updated by vaults
     // until after everything is done.
-    unwind_bool gen(Generating_Level, true);
+    unwind_bool gen(crawl_state.generating_level, true);
 
     const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)

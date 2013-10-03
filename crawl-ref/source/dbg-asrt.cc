@@ -18,7 +18,6 @@
 #include "dbg-util.h"
 #include "directn.h"
 #include "dlua.h"
-#include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -729,7 +728,7 @@ void do_crash_dump()
 #endif
 
     // Now a screenshot
-    if (Generating_Level)
+    if (crawl_state.generating_level)
     {
         fprintf(file, "\nMap:\n");
         dump_map(file, true);
