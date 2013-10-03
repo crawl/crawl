@@ -417,7 +417,7 @@
   "breathe flames"
 },
 
-{ MUT_JUMP,                 4,  3, false, false, false,
+{ MUT_JUMP,                 0,  3, false, false, false,
   "jump",
 
   {"You can jump attack at a short distance.",
