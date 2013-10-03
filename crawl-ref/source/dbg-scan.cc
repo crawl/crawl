@@ -271,6 +271,31 @@ static vector<string> _in_vaults(const coord_def &pos)
     return out;
 }
 
+static string _vault_desc(const coord_def pos)
+{
+    int mi = env.level_map_ids(pos);
+    if (mi == INVALID_MAP_INDEX)
+        return "";
+
+    string out;
+
+    for (unsigned int i = 0; i < env.level_vaults.size(); ++i)
+    {
+        const vault_placement &vp = *env.level_vaults[i];
+        if (_inside_vault(vp, pos))
+        {
+            coord_def br = vp.pos + vp.size - 1;
+            out += make_stringf(" [vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
+                        vp.map_name_at(pos).c_str(),
+                        vp.pos.x, vp.pos.y,
+                        br.x, br.y,
+                        vp.size.x, vp.size.y);
+        }
+    }
+
+    return out;
+}
+
 void debug_mons_scan()
 {
     vector<coord_def> bogus_pos;
@@ -387,10 +412,11 @@ void debug_mons_scan()
         if (feat_is_wall(grd(pos)) && mons_primary_habitat(m) != HT_ROCK
             && mons_primary_habitat(m) != HT_INCORPOREAL)
         {
-            mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)",
+            mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
                  m->full_name(DESC_PLAIN, true).c_str(),
                  dungeon_feature_name(grd(pos)),
-                 pos.x, pos.y);
+                 pos.x, pos.y,
+                 _vault_desc(pos).c_str());
         }
 
         for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
