@@ -554,12 +554,6 @@ bool player_genus(genus_type which_genus, species_type species)
     return (species_genus(species) == which_genus);
 }
 
-int player_evoke_jump_range()
-{
-    return 3 + (you.skill(SK_EVOCATIONS, 1) >= 5)
-        + (you.skill(SK_EVOCATIONS, 1) >= 10);
-}
-
 // If transform is true, compare with current transformation instead
 // of (or in addition to) underlying species.
 // (See mon-data.h for species/genus use.)
