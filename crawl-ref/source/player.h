@@ -835,8 +835,6 @@ static inline int player_under_penance(god_type god = you.religion)
     return you.penance[god];
 }
 
-int player_evoke_jump_range();
-
 int burden_change(void);
 
 int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
