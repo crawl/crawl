@@ -730,6 +730,13 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
     if (feat == DNGN_EXIT_PORTAL_VAULT || feat == DNGN_RUNED_DOOR)
         return false;
 
+    // There's only one branch exit.
+    if (you.depth == 1 && feat_is_travelable_stair(feat)
+        && feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
+    {
+        return false;
+    }
+
     if (feat_is_portal(feat) || feat_is_gate(feat))
         return true;
 
