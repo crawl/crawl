@@ -59,6 +59,21 @@ function grunt_ministairs_setup(e, hatches)
 end
 }}
 
+{{
+function random_stair(e, symbol)
+  local valid;
+  if you.depth() > 1 then
+    valid = "([{"
+  else
+    valid = "{"
+  end
+  if you.depth_fraction() < 1 then
+    valid = valid .. ")]}"
+  end
+  e.subst(symbol .. " = " .. valid)
+end
+}}
+
 default-depth: D:9-, Elf
 
 ###############################################################################
@@ -4003,7 +4018,7 @@ NAME:    st_stairs_8
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 1 = 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x
 .......
@@ -4018,7 +4033,7 @@ NAME:    st_stairs_9
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 2:0 / 2 = .:3 0:1 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x
 .........
@@ -4035,7 +4050,7 @@ NAME:    st_stairs_10
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 2 = 0:19 .:1 / 4 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x
 ...........
@@ -4054,7 +4069,7 @@ NAME:    st_stairs_11
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 3 = 0:19 .:1 / 5 = 0:1 .:9 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x.x.x.x
 .................
@@ -4073,7 +4088,7 @@ NAME:    st_stairs_12
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 1 : 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x.x.x.x
 .................
@@ -4088,7 +4103,7 @@ NAME:    st_stairs_13
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 1 : 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x.x.x.x.x.x
 .....................
@@ -4101,7 +4116,7 @@ NAME:    st_stairs_14
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Elf, Crypt
 NSUBST:  . = 1 : 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = }])
+: random_stair(_G, ">")
 SHUFFLE: abc / bab / cbb / bcb
 SUBST:   a=x, b=., c:Gx
 MAP
