@@ -9,6 +9,7 @@
 #include <signal.h>
 
 #include "abyss.h"
+#include "chardump.h"
 #include "clua.h"
 #include "coord.h"
 #include "coordit.h"
@@ -17,6 +18,7 @@
 #include "dbg-util.h"
 #include "directn.h"
 #include "dlua.h"
+#include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -727,8 +729,16 @@ void do_crash_dump()
 #endif
 
     // Now a screenshot
-    fprintf(file, "\nScreenshot:\n");
-    fprintf(file, "%s\n", screenshot().c_str());
+    if (Generating_Level)
+    {
+        fprintf(file, "\nMap:\n");
+        dump_map(file, true);
+    }
+    else
+    {
+        fprintf(file, "\nScreenshot:\n");
+        fprintf(file, "%s\n", screenshot().c_str());
+    }
 
     // If anything has screwed up the Lua runtime stacks then trying to
     // print those stacks will likely crash, so do this after the others.
