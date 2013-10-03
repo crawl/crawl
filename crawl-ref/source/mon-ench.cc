@@ -1690,7 +1690,15 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_TORNADO:
         tornado_damage(this, speed_to_duration(speed));
-        decay_enchantment(en);
+        if (decay_enchantment(en))
+        {
+            add_ench(ENCH_TORNADO_COOLDOWN);
+            if (you.can_see(this))
+            {
+                mprf("The winds around %s start to calm down.",
+                     name(DESC_THE).c_str());
+            }
+        }
         break;
 
     case ENCH_BLEED:
@@ -1826,6 +1834,15 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_GRASPING_ROOTS:
         check_grasping_roots(this);
+        break;
+
+    case ENCH_TORNADO_COOLDOWN:
+       if (decay_enchantment(en))
+        {
+            remove_tornado_clouds(mindex());
+            if (you.can_see(this))
+                mprf("The winds around %s calm down.", name(DESC_THE).c_str());
+        }
         break;
 
     default:
@@ -1971,7 +1988,7 @@ static const char *enchant_names[] =
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "iood_charged", "fire_vuln", "buggy",
+    "iood_charged", "fire_vuln", "tornado_cooldown", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2232,6 +2249,9 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_WRETCHED:
         cturn = (20 + roll_dice(3, 10)) * 10 / _mod_speed(10, mons->speed);
+        break;
+    case ENCH_TORNADO_COOLDOWN:
+        cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
         break;
     default:
         break;

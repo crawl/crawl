@@ -1662,6 +1662,7 @@ enum enchant_type
     ENCH_GRASPING_ROOTS,
     ENCH_IOOD_CHARGED,
     ENCH_FIRE_VULN,
+    ENCH_TORNADO_COOLDOWN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
