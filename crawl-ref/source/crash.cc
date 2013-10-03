@@ -369,10 +369,17 @@ void disable_other_crashes()
 
 void watchdog()
 {
+#ifdef UNIX
     struct itimerval t;
     t.it_interval.tv_sec = 0;
     t.it_interval.tv_usec = 0;
     t.it_value.tv_sec = 60;
     t.it_value.tv_usec = 0;
     setitimer(ITIMER_VIRTUAL, &t, 0);
+#else
+    // Real time rather than CPU time.
+    // This will break DGL, but it makes no sense on Windows anyway.
+    // Mapstat is cool with this.
+    alarm(60);
+#endif
 }
