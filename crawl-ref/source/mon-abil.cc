@@ -4210,6 +4210,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 const bool could_see = you.can_see(mons);
 
                 fight_melee(mons, mons->get_foe());
+                if (!mons->alive())
+                    return true;
+
                 if (mons->move_to_pos(hopspot))
                 {
                     if (could_see || you.can_see(mons))
