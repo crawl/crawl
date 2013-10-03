@@ -49,7 +49,7 @@ void debug_dump_levgen()
     string method;
     string type;
 
-    if (Generating_Level)
+    if (crawl_state.generating_level)
     {
         mpr("Currently generating level.");
         method = env.level_build_method;

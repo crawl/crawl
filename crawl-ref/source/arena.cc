@@ -244,7 +244,7 @@ namespace arena
             for (int y = 0; y < GYM; ++y)
                 grd[x][y] = DNGN_ROCK_WALL;
 
-        unwind_bool gen(Generating_Level, true);
+        unwind_bool gen(crawl_state.generating_level, true);
 
         typedef unwind_var< set<string> > unwind_stringset;
 

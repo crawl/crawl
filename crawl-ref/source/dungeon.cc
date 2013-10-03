@@ -206,8 +206,6 @@ static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 const map_bitmask *Vault_Placement_Mask = NULL;
 
-bool Generating_Level = false;
-
 static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
@@ -275,7 +273,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
     // And unrands
     temp_unique_items = you.unique_items;
 
-    unwind_bool levelgen(Generating_Level, true);
+    unwind_bool levelgen(crawl_state.generating_level, true);
 
     // N tries to build the level, after which we bail with a capital B.
     int tries = 50;
@@ -356,7 +354,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     }
 
 #ifdef DEBUG_MONS_SCAN
-    // If debug_mons_scan() finds a problem while Generating_Level is
+    // If debug_mons_scan() finds a problem while crawl_state.generating_level is
     // still true then it will announce that a problem was caused
     // during level generation.
     debug_mons_scan();
@@ -4030,7 +4028,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
 
     const dgn_colour_override_manager colour_man;
 
-    if (mdef->orient == MAP_ENCOMPASS && !Generating_Level)
+    if (mdef->orient == MAP_ENCOMPASS && !crawl_state.generating_level)
     {
         if (check_collision)
         {
@@ -4042,7 +4040,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
         }
 
         // For encompass maps, clear the entire level.
-        unwind_bool levgen(Generating_Level, true);
+        unwind_bool levgen(crawl_state.generating_level, true);
         dgn_reset_level();
         dungeon_events.clear();
         const vault_placement *vault_place =
@@ -4057,7 +4055,7 @@ const vault_placement *dgn_place_map(const map_def *mdef,
                                make_no_exits, where);
 
     // Activate any markers within the map.
-    if (vault_place && !Generating_Level)
+    if (vault_place && !crawl_state.generating_level)
     {
 #ifdef ASSERTS
         if (mdef->name != vault_place->map.name)
@@ -4801,7 +4799,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
         if (in_bounds(where) && !monster_habitable_grid(montype, grd(where)))
-            dungeon_terrain_changed(where, habitat2grid(habitat), !Generating_Level);
+            dungeon_terrain_changed(where, habitat2grid(habitat), !crawl_state.generating_level);
     }
 
     if (type == RANDOM_MONSTER)
@@ -6740,7 +6738,7 @@ void vault_placement::apply_grid()
             keyed_mapspec *mapsp = map.mapspec_at(dp);
             _vault_grid(*this, feat, *ri, mapsp);
 
-            if (!Generating_Level)
+            if (!crawl_state.generating_level)
             {
                 // Have to link items each square at a time, or
                 // dungeon_terrain_changed could blow up.
@@ -6909,7 +6907,7 @@ static void _remember_vault_placement(const vault_placement &place, bool extra)
         // When generating a level, vaults may be vetoed together with the
         // whole level after being placed, thus we need to save them in a
         // temp list.
-        if (Generating_Level)
+        if (crawl_state.generating_level)
             _you_vault_list.push_back(place.map.name);
         else
             you.vault_list[level_id::current()].push_back(place.map.name);

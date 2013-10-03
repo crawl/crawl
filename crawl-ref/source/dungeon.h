@@ -169,7 +169,6 @@ private:
     const map_bitmask *oldmask;
 };
 
-extern bool Generating_Level;
 extern vector<vault_placement> Temp_Vaults;
 
 extern const map_bitmask *Vault_Placement_Mask;

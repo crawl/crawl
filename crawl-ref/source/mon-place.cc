@@ -1045,7 +1045,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     // Message to player from stairwell/gate/abyss appearance.
-    if (!Generating_Level && you.see_cell(mg.pos)
+    if (!crawl_state.generating_level && you.see_cell(mg.pos)
         && (mg.proximity == PROX_NEAR_STAIRS
             || (player_in_branch(BRANCH_ABYSS)
                 && !mg.summoner && !mons_is_mimic(mon->type)
@@ -1752,7 +1752,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
-    else if (!Generating_Level && !dont_place && you.can_see(mon))
+    else if (!crawl_state.generating_level && !dont_place && you.can_see(mon))
     {
         if (mg.flags & MG_DONT_COME)
             mon->seen_context = SC_JUST_SEEN;
