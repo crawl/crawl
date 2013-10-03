@@ -3385,11 +3385,10 @@ static string _monster_stat_description(const monster_info& mi)
     case FL_NONE:
         break;
     case FL_WINGED:
-        result << uppercase_first(pronoun) << " can fly by flapping "
-               << mi.pronoun(PRONOUN_POSSESSIVE) << " wings.\n";
+        result << uppercase_first(pronoun) << " can fly.\n";
         break;
     case FL_LEVITATE:
-        result << uppercase_first(pronoun) << " can fly.\n";
+        result << uppercase_first(pronoun) << " can fly magically.\n";
         break;
     }
 
