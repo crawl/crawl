@@ -130,7 +130,7 @@ static bool mg_do_build_level(int niters)
                     level_id::current().describe().c_str(),
                     vaults.c_str());
 
-            dump_map(fp);
+            dump_map(fp, true);
             fclose(fp);
 
             mprf(MSGCH_ERROR,
