@@ -1307,8 +1307,10 @@ static void _input()
                 clua.callfn("ready", 0, 0);
         }
 
+#ifdef WATCHDOG
         // We're not in an infinite loop, reset the timer.
         watchdog();
+#endif
 
         // Flush messages and display message window.
         msgwin_new_cmd();

@@ -148,7 +148,7 @@ static void _crash_signal_handler(int sig_num)
     tiles.shutdown();
 #endif
 
-#ifdef DGAMELAUNCH
+#ifdef WATCHDOG
     /* Infinite loop protection.
 
        Not tickling the watchdog for 60 seconds of user CPU time (not wall
@@ -367,7 +367,6 @@ void disable_other_crashes()
 #endif
 }
 
-#ifdef DGAMELAUNCH
 void watchdog()
 {
     struct itimerval t;
@@ -377,4 +376,3 @@ void watchdog()
     t.it_value.tv_usec = 0;
     setitimer(ITIMER_VIRTUAL, &t, 0);
 }
-#endif
