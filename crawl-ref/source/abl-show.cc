@@ -933,12 +933,11 @@ talent get_talent(ability_type ability, bool check_confused)
         if (you.form == TRAN_DRAGON)
             failure -= 20;
         break;
-    // copied from spit poison
+
     case ABIL_JUMP:
-        failure = ((you.species == SP_FELID) ? 20 : 40)
-            - 10 * player_mutation_level(MUT_JUMP)
-            - you.experience_level;
+        failure = 25 - you.experience_level;
         break;
+
     case ABIL_FLY:
         failure = 45 - (3 * you.experience_level);
         break;
