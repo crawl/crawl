@@ -103,6 +103,8 @@ enum monster_info_flags
     MB_TOXIC_RADIANCE,
     MB_GRASPING_ROOTS,
     MB_FIRE_VULN,
+    MB_TORNADO,
+    MB_TORNADO_COOLDOWN,
     NUM_MB_FLAGS
 };
 

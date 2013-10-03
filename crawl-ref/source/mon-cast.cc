@@ -1149,6 +1149,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HASTE_PLANTS:
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
+    case SPELL_TORNADO:
         return true;
     default:
         if (check_validity)
@@ -2269,6 +2270,43 @@ static bool _wall_of_brambles(monster* mons)
     return true;
 }
 
+static bool _should_tornado(monster* agent)
+{
+    if (agent->has_ench(ENCH_TORNADO)
+        || agent->has_ench(ENCH_TORNADO_COOLDOWN))
+    {
+        return false;
+    }
+
+    bolt tracer;
+    tracer.foe_ratio = 80;
+    for (actor_iterator ai(agent->get_los()); ai; ++ai)
+    {
+        if (agent == *ai)
+            continue;
+
+        if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
+            && !ai->res_wind())
+        {
+           if (mons_aligned(agent, *ai))
+            {
+                tracer.friend_info.count++;
+                tracer.friend_info.power +=
+                        ai->is_player() ? you.experience_level
+                                        : ai->as_monster()->hit_dice;
+            }
+            else
+            {
+                tracer.foe_info.count++;
+                tracer.foe_info.power +=
+                        ai->is_player() ? you.experience_level
+                                        : ai->as_monster()->hit_dice;
+            }
+        }
+    }
+    return mons_should_fire(tracer);
+}
+
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -2798,6 +2836,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 return false;
             }
+        }
+        else if (spell_cast == SPELL_TORNADO)
+        {
+            if (!_should_tornado(mons))
+                return false;
         }
 
         if (mons->type == MONS_BALL_LIGHTNING)
@@ -3702,6 +3745,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_SHATTER:
+    case SPELL_TORNADO:
         if (!monsterNearby)
             return true;
         break;
@@ -4428,6 +4472,33 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SPECTRAL_WEAPON:
         cast_spectral_weapon(mons, min(6 * mons->hit_dice, 200), mons->god, false);
         return;
+
+    case SPELL_TORNADO:
+    {
+        int dur = 60;
+        if (you.can_see(mons))
+        {
+            bool flying = mons->flight_mode();
+            mprf("A great vortex of raging winds appears %s%s%s!",
+                 flying ? "around " : "and lifts ",
+                 mons->name(DESC_THE).c_str(),
+                 flying ? "" : " up!");
+        }
+        else if (you.see_cell(mons->pos()))
+            mpr("A great vortex of raging winds appears out of thin air!");
+        mons->props["tornado_since"].get_int() = you.elapsed_time;
+        mon_enchant me(ENCH_TORNADO, 0, mons, dur);
+        mons->add_ench(me);
+        if (mons->has_ench(ENCH_FLIGHT))
+        {
+            mon_enchant me2 = mons->get_ench(ENCH_FLIGHT);
+            me2.duration = me.duration;
+            mons->update_ench(me2);
+        }
+        else
+            mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, dur));
+        return;
+    }
 
     // TODO: Outsource the cantrip messages and allow specification of
     //       special cantrip spells per monster, like for speech, both as
