@@ -349,16 +349,18 @@ void tornado_damage(actor *caster, int dur)
                         if (standing)
                             float_player();
                     }
-                    int dmg = victim->apply_ac(
-                                div_rand_round(roll_dice(9, rpow), 15),
-                                0, AC_PROPORTIONAL);
-                    if (dur < 0)
-                        dmg = 0;
-                    dprf("damage done: %d", dmg);
-                    if (victim->is_player())
-                        ouch(dmg, caster->mindex(), KILLED_BY_BEAM, "tornado");
-                    else
-                        victim->hurt(caster, dmg);
+
+                    if (dur > 0)
+                    {
+                        int dmg = victim->apply_ac(
+                                    div_rand_round(roll_dice(9, rpow), 15),
+                                    0, AC_PROPORTIONAL);
+                        dprf("damage done: %d", dmg);
+                        if (victim->is_player())
+                            ouch(dmg, caster->mindex(), KILLED_BY_BEAM, "tornado");
+                        else
+                            victim->hurt(caster, dmg);
+                    }
                 }
 
                 if (victim->alive() && !leda && dur > 0)
