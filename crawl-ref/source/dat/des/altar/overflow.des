@@ -1181,10 +1181,11 @@ TAGS:   no_item_gen no_pool_fixup no_monster_gen
 TAGS:   temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KPROP:  1d = no_rtele_into
 KFEAT:  _ = altar_sif_muna
-ITEM:   randbook owner:Sif_Muna numspells:1 slevels:1
+KFEAT:  d = escape_hatch_down
+KITEM:  d = randbook owner:Sif_Muna numspells:1 slevels:1
 MONS:   orc wizard
-COLOUR: .@+1deG = blue
-FTILE:  .@+1deG_ = floor_marble
+COLOUR: .@+1G = blue
+FTILE:  .@+1G_ = floor_marble
 : interest_check(_G)
 MAP
 xxxxxxxxx
