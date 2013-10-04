@@ -1053,13 +1053,8 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     }
     if (!success)
     {
-        // Have to increase search_range by one so monsters out of range but
-        // with landing sites in-range are found.
         if (restricts == DIR_JUMP)
-        {
             find_targ = _find_jump_attack_mons;
-            search_range += 1;
-        }
         else
             find_targ = _find_monster;
 
