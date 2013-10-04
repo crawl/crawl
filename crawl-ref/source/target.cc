@@ -910,7 +910,7 @@ bool targetter_jump::valid_aim(coord_def a)
     else if (feat_is_solid(grd(a)))
         return notify_fail("There's something in the way.");
     else if (!find_ray(agent->pos(), a, ray, opc_solid_see))
-        return notify_fail("A dungeon feature is in the way.");
+        return notify_fail("There's something in the way.");
     else if (!has_additional_sites(a, true))
     {
         switch (no_landing_reason)
@@ -924,7 +924,7 @@ bool targetter_jump::valid_aim(coord_def a)
             return notify_fail("There is no safe place to jump near that"
                                " location.");
         case BLOCKED_PATH:
-            return notify_fail("A dungeon feature is in the way.");
+            return notify_fail("There's something in the way.");
         case BLOCKED_NONE:
             die("buggy no_landing_reason");
         }
