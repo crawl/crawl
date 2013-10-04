@@ -897,7 +897,11 @@ bool targetter_jump::valid_aim(coord_def a)
     coord_def c, jump_pos;
     ray_def ray;
 
-    if ((origin - a).abs() > range2)
+    if (origin == a)
+    {
+        is_valid = notify_fail("You cannot jump-attack yourself.");
+    }
+    else if ((origin - a).abs() > range2)
     {
         is_valid = notify_fail("Out of range.");
     }
