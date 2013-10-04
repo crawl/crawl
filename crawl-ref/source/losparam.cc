@@ -91,7 +91,7 @@ opacity_type opacity_solid::operator()(const coord_def& p) const
 }
 
 // Make anything solid block in addition to normal LOS.
-// That's just granite statues in addition to opacity_no_trans.
+// That includes statues and grates in addition to opacity_no_trans.
 opacity_type opacity_solid_see::operator()(const coord_def& p) const
 {
     dungeon_feature_type f = env.grid(p);
