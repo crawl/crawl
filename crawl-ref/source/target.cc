@@ -913,15 +913,21 @@ bool targetter_jump::valid_aim(coord_def a)
         return notify_fail("A dungeon feature is in the way.");
     else if (!has_additional_sites(a, true))
     {
-        if (no_landing_reason == BLOCKED_FLYING)
+        switch (no_landing_reason)
+        {
+        case BLOCKED_FLYING:
             return notify_fail("A flying creature is in the way.");
-        else if (no_landing_reason == BLOCKED_GIANT)
+        case BLOCKED_GIANT:
             return notify_fail("A giant creature is in the way.");
-        else if (no_landing_reason == BLOCKED_MOVE)
+        case BLOCKED_MOVE:
+        case BLOCKED_OCCUPIED:
             return notify_fail("There is no safe place to jump near that"
                                " location.");
-        else if (no_landing_reason == BLOCKED_PATH)
+        case BLOCKED_PATH:
             return notify_fail("A dungeon feature is in the way.");
+        case BLOCKED_NONE:
+            die("buggy no_landing_reason");
+        }
     }
     return true;
 }
