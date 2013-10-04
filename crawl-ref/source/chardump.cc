@@ -1392,12 +1392,12 @@ void dump_map(FILE *fp, bool debug, bool dist)
                         nv++;
                     }
                 int v = env.level_map_ids[x][y];
-                if (nv && v == INVALID_MAP_INDEX)
+                if (v == INVALID_MAP_INDEX)
                     v = -1;
                 if (nv != last_nv || v != last_v)
                 {
                     if (nv)
-                        fprintf(fp, "\e[%d;3%dm", nv > 1, 6 - v % 6);
+                        fprintf(fp, "\e[%d;3%dm", nv != 1, 6 - v % 6);
                     else
                         fprintf(fp, "\e[0m");
                     last_nv = nv;
@@ -1423,6 +1423,9 @@ void dump_map(FILE *fp, bool debug, bool dist)
                 }
             }
             fputc('\n', fp);
+#ifdef COLOURED_DUMPS
+            last_v = 0; // force a colour code, because of less+libvte
+#endif
         }
 #ifdef COLOURED_DUMPS
         fprintf(fp, "\e[0m");
