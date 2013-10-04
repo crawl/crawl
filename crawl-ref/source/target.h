@@ -220,7 +220,6 @@ private:
     jump_block_reason blocked_landing_reason;
     set<coord_def> temp_sites;
     int range2;
-    int landing_range2;
 };
 
 

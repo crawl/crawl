@@ -888,7 +888,6 @@ targetter_jump::targetter_jump(const actor* act, int range)
     agent = act;
     origin = act->pos();
     range2 = dist_range(range);
-    landing_range2 = dist_range(range - 1);
     jump_is_blocked = false;
 }
 
@@ -938,10 +937,8 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
     actor *act;
     ray_def ray;
 
-    if ((origin - a).abs() > landing_range2)
-        return false;
     if (grd(a) == DNGN_OPEN_SEA || grd(a) == DNGN_LAVA_SEA
-        || !agent->is_habitable(a) || (origin - a).abs() > range2 - 1)
+        || !agent->is_habitable(a))
     {
         blocked_landing_reason = BLOCKED_MOVE;
         return false;
