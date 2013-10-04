@@ -318,8 +318,9 @@ bool melee_attack::handle_phase_attempted()
                 mpr("There is nothing there, so you fail to move!");
                 return false;
             }
+            move_player_to_grid(attack_position, false, true);
         }
-        move_player_to_grid(attack_position, false, true);
+
         // Set delay now that we know the attack won't be cancelled.
         you.time_taken = calc_attack_delay();
         if (weapon)
