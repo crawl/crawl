@@ -909,7 +909,7 @@ bool targetter_jump::valid_aim(coord_def a)
     }
     else if (feat_is_solid(grd(a)))
         return notify_fail("There's something in the way.");
-    else if (!find_ray(agent->pos(), a, ray, opc_no_trans))
+    else if (!find_ray(agent->pos(), a, ray, opc_solid_see))
         return notify_fail("A dungeon feature is in the way.");
     else if (!has_additional_sites(a, true))
     {
@@ -959,7 +959,7 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
             return false;
         }
     }
-    if (!find_ray(agent->pos(), a, ray, opc_no_trans))
+    if (!find_ray(agent->pos(), a, ray, opc_solid_see))
     {
         blocked_landing_reason = BLOCKED_PATH;
         return false;
