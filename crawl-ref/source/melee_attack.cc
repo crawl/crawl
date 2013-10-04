@@ -4145,7 +4145,7 @@ void melee_attack::player_stab_check()
     }
 
     if (stab_bonus && jumping_attack)
-        stab_bonus = min(6, stab_bonus + 2);
+        stab_bonus += 1;
 
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
