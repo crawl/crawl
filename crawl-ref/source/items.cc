@@ -4042,6 +4042,9 @@ static const object_class_type _mimic_item_classes[] =
     OBJ_BOOKS,
     OBJ_STAVES,
     OBJ_RODS,
+    OBJ_FOOD,
+    OBJ_MISCELLANY,
+    OBJ_JEWELLERY,
 };
 
 object_class_type get_random_item_mimic_type()
