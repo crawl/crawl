@@ -785,8 +785,12 @@ bool you_can_wear(int eq, bool special_armour)
         }
         return true;
 
+    case EQ_WEAPON:
+    case EQ_STAFF:
+        return true; // kittehs were handled earlier
+
     default:
-        return true;
+        return false;
     }
 }
 
