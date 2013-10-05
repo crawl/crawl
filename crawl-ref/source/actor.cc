@@ -392,8 +392,7 @@ int actor::evokable_jump(bool calc_unid) const
     if (suppressed())
         return 0;
 
-    return wearing_ego(EQ_ALL_ARMOUR, SPARM_JUMPING, calc_unid)
-           + scan_artefacts(ARTP_JUMP, calc_unid);
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_JUMPING, calc_unid);
 }
 
 int actor::spirit_shield(bool calc_unid, bool items) const

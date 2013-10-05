@@ -3124,7 +3124,9 @@ enum artefact_prop_type
     ARTP_FOG,
 #endif
     ARTP_REGENERATION,
+#if TAG_MAJOR_VERSION == 34
     ARTP_JUMP,
+#endif
     ARTP_NUM_PROPERTIES
 };
 

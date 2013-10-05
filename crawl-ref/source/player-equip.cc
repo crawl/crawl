@@ -328,12 +328,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
             mpr("You feel a build-up of mutagenic energy.");
         artefact_wpn_learn_prop(item, ARTP_MUTAGENIC);
     }
-    if (unknown_proprt(ARTP_JUMP))
-    {
-        if (msg && !items_give_ability(item.link, ARTP_JUMP))
-            mpr("You feel more sure on your feet.");
-        artefact_wpn_learn_prop(item, ARTP_JUMP);
-    }
 
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
