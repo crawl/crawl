@@ -1193,22 +1193,14 @@ void direction_chooser::draw_beam_if_needed()
 #ifndef USE_TILE_LOCAL
                 int bcol = BLACK;
                 if (aff < 0)
-                {
                     bcol = DARKGREY;
-                }
                 else if (aff < AFF_YES)
-                {
                     bcol = (*ri == target()) ? RED : MAGENTA;
-                }
                 else if (aff == AFF_YES)
-                {
                     bcol = (*ri == target()) ? LIGHTRED : LIGHTMAGENTA;
-                }
                 // Jump attack landing sites
                 else
-                {
                     bcol = (*ri == target()) ? LIGHTGREEN : GREEN;
-                }
                 _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
             }

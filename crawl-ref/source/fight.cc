@@ -285,9 +285,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                     prompt += "your electric unarmed attack";
                 prompt += " when you might land in water? ";
                 if (yesno(prompt.c_str(), true, 'n'))
-                {
                     you.received_weapon_warning = true;
-                }
                 else
                 {
                     canned_msg(MSG_OK);
@@ -308,9 +306,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 if (prompt != "")
                 {
                     if (yesno(prompt.c_str(), true, 'n'))
-                    {
                         conduct_prompted = true;
-                    }
                     else
                     {
                         canned_msg(MSG_OK);
