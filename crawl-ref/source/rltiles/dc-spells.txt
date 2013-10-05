@@ -289,7 +289,6 @@ summon_mushrooms SUMMON_MUSHROOMS
 %sdir misc
 error SUMMON_SPECTRAL_ORCS
 %sdir gui/spells/monster
-summon_twister SUMMON_TWISTER
 summon_ufetubus SUMMON_UFETUBUS
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
