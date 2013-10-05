@@ -688,6 +688,10 @@ void update_vision_range()
 // ---------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
+    // Amulet provides another slot
+    if (eq == EQ_RING_AMULET && player_equip_unrand(UNRAND_FINGER_AMULET))
+        return true;
+
     if (you.species == SP_FELID)
         return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
 
@@ -699,13 +703,6 @@ bool you_can_wear(int eq, bool special_armour)
         else
             return (eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
                     || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
-    }
-
-    // Amulet provides another slot
-    if (player_equip_unrand(UNRAND_FINGER_AMULET))
-    {
-        if (eq == EQ_RING_AMULET)
-            return true;
     }
 
     switch (eq)
