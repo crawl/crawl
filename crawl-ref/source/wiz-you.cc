@@ -46,7 +46,6 @@ static void _swap_equip(equipment_type a, equipment_type b)
 void wizard_change_species(void)
 {
     char specs[80];
-    int i;
 
     msgwin_get_line("What species would you like to be now? " ,
                     specs, sizeof(specs));
@@ -57,7 +56,7 @@ void wizard_change_species(void)
 
     species_type sp = SP_UNKNOWN;
 
-    for (i = 0; i < NUM_SPECIES; ++i)
+    for (int i = 0; i < NUM_SPECIES; ++i)
     {
         const species_type si = static_cast<species_type>(i);
         const string sp_name = lowercase_string(species_name(si));
@@ -84,7 +83,7 @@ void wizard_change_species(void)
     }
 
     // Re-scale skill-points.
-    for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
         you.skill_points[i] *= species_apt_factor(sk, sp)
@@ -97,7 +96,7 @@ void wizard_change_species(void)
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
-    for (i = 0; i < NUM_MUTATIONS; ++i)
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (you.innate_mutations[i] > 0)
         {
@@ -111,7 +110,7 @@ void wizard_change_species(void)
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
-    for (i = 0; i < NUM_MUTATIONS; ++i)
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (prev_muts[i] > you.innate_mutations[i])
             you.innate_mutations[i] = 0;
@@ -158,7 +157,7 @@ void wizard_change_species(void)
     case SP_DEMONSPAWN:
     {
         roll_demonspawn_mutations();
-        for (i = 0; i < int(you.demonic_traits.size()); ++i)
+        for (int i = 0; i < int(you.demonic_traits.size()); ++i)
         {
             mutation_type m = you.demonic_traits[i].mutation;
 
