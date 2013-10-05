@@ -810,12 +810,6 @@ centaur warrior
 Un puissant centaure, vétéran de nombreuses batailles, et qui porte une arme de
 qualité et tout à fait capable d'en tirer le meilleur.
 %%%%
-chaos butterfly
-
-Un particulièrement large papillon, aux couleurs criardes, apparemment
-chatoyant au milieu des nuages d'orage diluviens qui le suivent partout où il
-va.
-%%%%
 chaos spawn
 
 Un être de pur chaos, sa forme varie constamment, se faisant pousser puis
