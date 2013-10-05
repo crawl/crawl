@@ -289,7 +289,9 @@ static const char* _prop_name[] = {
     "+Fog",
 #endif
     "Regen",
-    "+Jump",
+#if TAG_MAJOR_VERSION == 34
+    "Unused",
+#endif
 };
 
 #define ARTP_VAL_BOOL 0
