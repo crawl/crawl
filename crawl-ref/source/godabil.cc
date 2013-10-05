@@ -2896,7 +2896,7 @@ bool fedhas_evolve_flora()
     // This is a little sloppy, but cancel early if nothing useful is in
     // range.
     bool in_range = false;
-    for (radius_iterator rad(you.get_los()); rad; ++rad)
+    for (radius_iterator rad(you.get_los(), true); rad; ++rad)
     {
         const monster* temp = monster_at(*rad);
         if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,
@@ -2922,6 +2922,7 @@ bool fedhas_evolve_flora()
     args.range = LOS_RADIUS;
     args.needs_path = false;
     args.may_target_monster = false;
+    args.cancel_at_self = true;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
 
