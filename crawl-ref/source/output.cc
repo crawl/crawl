@@ -927,7 +927,8 @@ static void _get_status_lights(vector<status_light>& out)
     }
 #endif
 
-    const int statuses[] = {
+    const int statuses[] =
+    {
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         STATUS_BURDEN,
         STATUS_HUNGER,
@@ -2416,7 +2417,8 @@ static string _status_mut_abilities(int sw)
     string text = "<w>@:</w> ";
     vector<string> status;
 
-    const int statuses[] = {
+    const int statuses[] =
+    {
         DUR_TRANSFORMATION,
         DUR_PARALYSIS,
         DUR_PETRIFIED,

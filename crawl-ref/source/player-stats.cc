@@ -243,7 +243,8 @@ static kill_method_type _statloss_killtype(stat_type stat)
     }
 }
 
-static const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
+static const char* descs[NUM_STATS][NUM_STAT_DESCS] =
+{
     { "strength", "weakened", "weaker", "stronger" },
     { "intelligence", "dopey", "stupid", "clever" },
     { "dexterity", "clumsy", "clumsy", "agile" }

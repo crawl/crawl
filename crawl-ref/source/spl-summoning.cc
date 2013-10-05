@@ -236,7 +236,8 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        const monster_type swarmers[] = {
+        const monster_type swarmers[] =
+        {
             MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
             MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
             MONS_GOLIATH_BEETLE, MONS_SPIDER,        MONS_BUTTERFLY,

@@ -63,7 +63,8 @@ static void _adjust_item(void);
 static void _adjust_spell(void);
 static void _adjust_ability(void);
 
-static const char *features[] = {
+static const char *features[] =
+{
 #ifdef CLUA_BINDINGS
     "Lua user scripts",
 #endif
@@ -727,7 +728,8 @@ struct help_file
     bool auto_hotkey;
 };
 
-static help_file help_files[] = {
+static help_file help_files[] =
+{
     { "crawl_manual.txt",  '*', true },
     { "../README.txt",     '!', false },
     { "aptitudes.txt",     '%', false },

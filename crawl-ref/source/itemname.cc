@@ -1564,14 +1564,16 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             const int pqual   = PQUAL(plus);
             const int pcolour = PCOLOUR(plus);
 
-            static const char *potion_qualifiers[] = {
+            static const char *potion_qualifiers[] =
+            {
                 "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",
                 "smoky ", "glowing ", "sedimented ", "metallic ", "murky ",
-                "gluggy ", "oily ", "slimy ", "emulsified "
+                "gluggy ", "oily ", "slimy ", "emulsified ",
             };
             COMPILE_CHECK(ARRAYSZ(potion_qualifiers) == PDQ_NQUALS);
 
-            static const char *potion_colours[] = {
+            static const char *potion_colours[] =
+            {
 #if TAG_MAJOR_VERSION == 34
                 "clear",
 #endif
@@ -2388,12 +2390,14 @@ void check_item_knowledge(bool unknown_items)
             }
         }
         // Misc.
-        static const object_class_type misc_list[] = {
+        static const object_class_type misc_list[] =
+        {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
             OBJ_MISCELLANY, OBJ_MISCELLANY
         };
-        static const int misc_ST_list[] = {
+        static const int misc_ST_list[] =
+        {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_HONEYCOMB,
             NUM_BOOKS, BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
             NUM_MISCELLANY

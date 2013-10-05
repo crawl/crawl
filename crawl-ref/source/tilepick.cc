@@ -506,7 +506,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         if (this_trap_type==TRAP_WEB) {*/
 
         // Determine web connectivity on all sides
-        const coord_def neigh[4] = {
+        const coord_def neigh[4] =
+        {
             coord_def(gc.x, gc.y - 1),
             coord_def(gc.x + 1, gc.y),
             coord_def(gc.x, gc.y + 1),

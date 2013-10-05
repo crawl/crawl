@@ -119,7 +119,8 @@ struct dump_params
     }
 };
 
-static dump_section_handler dump_handlers[] = {
+static dump_section_handler dump_handlers[] =
+{
     { "header",         _sdump_header        },
     { "stats",          _sdump_stats         },
     { "location",       _sdump_location      },

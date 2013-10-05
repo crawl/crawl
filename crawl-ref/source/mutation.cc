@@ -53,7 +53,8 @@
 
 static int _body_covered();
 
-static const mutation_def mut_data[] = {
+static const mutation_def mut_data[] =
+{
 #include "mutation-data.h"
 };
 
@@ -130,7 +131,8 @@ bool is_valid_mutation(mutation_type mut)
             && _seek_mutation(mut));
 }
 
-static const mutation_type _all_scales[] = {
+static const mutation_type _all_scales[] =
+{
     MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
     MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
     MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
@@ -1069,7 +1071,8 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 
 static mutation_type _get_random_slime_mutation()
 {
-    const mutation_type slime_muts[] = {
+    const mutation_type slime_muts[] =
+    {
         MUT_GELATINOUS_BODY, MUT_EYEBALLS, MUT_TRANSLUCENT_SKIN,
         MUT_PSEUDOPODS, MUT_ACIDIC_BITE, MUT_TENDRILS,
         MUT_JELLY_GROWTH, MUT_JELLY_MISSILE
@@ -1109,7 +1112,8 @@ static bool _is_slime_mutation(mutation_type m)
 
 static mutation_type _get_random_xom_mutation()
 {
-    const mutation_type bad_muts[] = {
+    const mutation_type bad_muts[] =
+    {
         MUT_WEAK,          MUT_DOPEY,
         MUT_CLUMSY,        MUT_DEFORMED,      MUT_SCREAM,
         MUT_DETERIORATION, MUT_BLURRY_VISION, MUT_FRAIL
@@ -1176,7 +1180,8 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                                          const string &reason,
                                          bool temp = false)
 {
-    const int conflict[][3] = {
+    const int conflict[][3] =
+    {
         { MUT_REGENERATION,        MUT_SLOW_METABOLISM,  0},
         { MUT_REGENERATION,        MUT_SLOW_HEALING,     0},
         { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,    0},

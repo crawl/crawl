@@ -342,7 +342,8 @@ int spell_fail(spell_type spell)
 
     int chance2 = chance;
 
-    const int chance_breaks[][2] = {
+    const int chance_breaks[][2] =
+    {
         {45, 45}, {42, 43}, {38, 41}, {35, 40}, {32, 38}, {28, 36},
         {22, 34}, {16, 32}, {10, 30}, {2, 28}, {-7, 26}, {-12, 24},
         {-18, 22}, {-24, 20}, {-30, 18}, {-38, 16}, {-46, 14},
@@ -1954,7 +1955,8 @@ string spell_noise_string(spell_type spell)
 
     const int noise = max(casting_noise, effect_noise);
 
-    const char* noise_descriptions[] = {
+    const char* noise_descriptions[] =
+    {
         "Silent", "Almost silent", "Quiet", "A bit loud", "Loud", "Very loud",
         "Extremely loud", "Deafening"
     };

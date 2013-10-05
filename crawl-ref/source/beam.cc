@@ -395,7 +395,8 @@ struct zap_info
     int hit_loudness;
 };
 
-static const zap_info zap_data[] = {
+static const zap_info zap_data[] =
+{
 #include "zap-data.h"
 };
 

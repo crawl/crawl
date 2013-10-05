@@ -506,8 +506,9 @@ static int _leading_sacrifice_group()
 static void _give_sac_group_feedback(int which)
 {
     ASSERT_RANGE(which, 0, 5);
-    const char* names[] = {
-        "Escape", "Destruction", "Dungeons", "Summoning", "Wonder"
+    const char* names[] =
+    {
+        "Escape", "Destruction", "Dungeons", "Summoning", "Wonder",
     };
     mprf(MSGCH_GOD, "A symbol of %s coalesces before you, then vanishes.",
          names[which]);

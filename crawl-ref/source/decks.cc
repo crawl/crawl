@@ -96,7 +96,8 @@ typedef card_with_weights deck_archetype;
 
 #define END_OF_DECK {NUM_CARDS, {0,0,0}}
 
-const deck_archetype deck_of_transport[] = {
+const deck_archetype deck_of_transport[] =
+{
     { CARD_PORTAL,   {5, 5, 5} },
     { CARD_WARP,     {5, 5, 5} },
     { CARD_SWAP,     {5, 5, 5} },
@@ -104,7 +105,8 @@ const deck_archetype deck_of_transport[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_emergency[] = {
+const deck_archetype deck_of_emergency[] =
+{
     { CARD_TOMB,       {4, 4, 4} },
     { CARD_BANSHEE,    {5, 5, 5} },
     { CARD_DAMNATION,  {0, 1, 2} },
@@ -114,7 +116,8 @@ const deck_archetype deck_of_emergency[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_destruction[] = {
+const deck_archetype deck_of_destruction[] =
+{
     { CARD_VITRIOL, {5, 5, 5} },
     { CARD_FLAME,   {5, 5, 5} },
     { CARD_FROST,   {5, 5, 5} },
@@ -126,7 +129,8 @@ const deck_archetype deck_of_destruction[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_battle[] = {
+const deck_archetype deck_of_battle[] =
+{
     { CARD_ELIXIR,        {5, 5, 5} },
     { CARD_BATTLELUST,    {5, 5, 5} },
     { CARD_METAMORPHOSIS, {5, 5, 5} },
@@ -137,12 +141,14 @@ const deck_archetype deck_of_battle[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_enchantments[] = {
+const deck_archetype deck_of_enchantments[] =
+{
     { CARD_ELIXIR, {5, 5, 5} },
     END_OF_DECK
 };
 
-const deck_archetype deck_of_summoning[] = {
+const deck_archetype deck_of_summoning[] =
+{
     { CARD_CRUSADE,         {5, 5, 5} },
     { CARD_SUMMON_ANIMAL,   {5, 5, 5} },
     { CARD_SUMMON_DEMON,    {5, 5, 5} },
@@ -153,7 +159,8 @@ const deck_archetype deck_of_summoning[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_wonders[] = {
+const deck_archetype deck_of_wonders[] =
+{
     { CARD_POTION,     {5, 5, 5} },
     { CARD_FOCUS,      {1, 1, 2} },
     { CARD_SHUFFLE,    {0, 1, 2} },
@@ -165,7 +172,8 @@ const deck_archetype deck_of_wonders[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_dungeons[] = {
+const deck_archetype deck_of_dungeons[] =
+{
     { CARD_WATER,     {5, 5, 5} },
     { CARD_GLASS,     {5, 5, 5} },
     { CARD_DOWSING,   {5, 5, 5} },
@@ -174,7 +182,8 @@ const deck_archetype deck_of_dungeons[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_oddities[] = {
+const deck_archetype deck_of_oddities[] =
+{
     { CARD_GENIE,   {5, 5, 5} },
     { CARD_BARGAIN, {5, 5, 5} },
     { CARD_WRATH,   {5, 5, 5} },
@@ -185,7 +194,8 @@ const deck_archetype deck_of_oddities[] = {
     END_OF_DECK
 };
 
-const deck_archetype deck_of_punishment[] = {
+const deck_archetype deck_of_punishment[] =
+{
     { CARD_WRAITH,     {5, 5, 5} },
     { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_WRATH,      {5, 5, 5} },
@@ -1951,7 +1961,8 @@ static void _shadow_card(int power, deck_rarity_type rarity)
 static void _potion_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    potion_type pot_effects[] = {
+    potion_type pot_effects[] =
+    {
         POT_AGILITY, POT_AGILITY, POT_BRILLIANCE,
         POT_BRILLIANCE, POT_MIGHT, POT_MIGHT,
         POT_CURING, POT_CURING, POT_CONFUSION,
@@ -2414,7 +2425,8 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             // to you...
             int num_made = 0;
 
-            const monster_type statues[] = {
+            const monster_type statues[] =
+            {
                 MONS_ORANGE_STATUE, MONS_SILVER_STATUE, MONS_ICE_STATUE
             };
 
@@ -2427,7 +2439,8 @@ static void _trowel_card(int power, deck_rarity_type rarity)
                 num_made++;
             }
 
-            const monster_type golems[] = {
+            const monster_type golems[] =
+            {
                 MONS_CLAY_GOLEM, MONS_STONE_GOLEM, MONS_IRON_GOLEM,
                 MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM
             };
@@ -2452,7 +2465,8 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             const coord_def pos = pick_adjacent_free_square(you.pos());
             if (in_bounds(pos))
             {
-                const dungeon_feature_type statfeat[] = {
+                const dungeon_feature_type statfeat[] =
+                {
                     DNGN_GRANITE_STATUE, DNGN_ORCISH_IDOL
                 };
                 // We leave the items on the square
@@ -2599,7 +2613,8 @@ static void _summon_animals(int power)
 {
     // Maybe we should just generate a Lair monster instead (and
     // guarantee that it is mobile)?
-    const monster_type animals[] = {
+    const monster_type animals[] =
+    {
         MONS_ORANGE_RAT, MONS_SHEEP, MONS_YAK,
         MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
         MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
@@ -2717,7 +2732,8 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
 
-    const monster_type flytypes[] = {
+    const monster_type flytypes[] =
+    {
         MONS_BUTTERFLY, MONS_FIREFLY, MONS_INSUBSTANTIAL_WISP,
         MONS_VAMPIRE_MOSQUITO, MONS_VAPOUR, MONS_YELLOW_WASP,
         MONS_RED_WASP
@@ -2749,7 +2765,8 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     const bool friendly = !one_chance_in(4 + power_level * 2);
-    const monster_type skeltypes[] = {
+    const monster_type skeltypes[] =
+    {
         MONS_SKELETON, MONS_SKELETAL_WARRIOR, MONS_BONE_DRAGON
     };
 
@@ -2789,7 +2806,8 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
 static void _mercenary_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    const monster_type merctypes[] = {
+    const monster_type merctypes[] =
+    {
         MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_NAGA,
         MONS_TENGU, MONS_ORC_KNIGHT, MONS_CENTAUR_WARRIOR,
         MONS_SPRIGGAN_RIDER, MONS_OGRE_MAGE, MONS_MINOTAUR,

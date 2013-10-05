@@ -392,7 +392,8 @@ int cast_healing(int pow, int max_pow, bool divine_ability,
 // not as direct as falling into deep water) -- bwr
 void antimagic()
 {
-    duration_type dur_list[] = {
+    duration_type dur_list[] =
+    {
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
         DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
         DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
@@ -791,7 +792,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
-    const dungeon_feature_type safe_tiles[] = {
+    const dungeon_feature_type safe_tiles[] =
+    {
         DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
     };
 

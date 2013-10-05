@@ -553,7 +553,8 @@ void game_options::set_default_activity_interrupts()
                 is_delay_interruptible(static_cast<delay_type>(adelay)));
         }
 
-    const char *default_activity_interrupts[] = {
+    const char *default_activity_interrupts[] =
+    {
         "interrupt_armour_on = hp_loss, monster_attack",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
@@ -1350,7 +1351,8 @@ void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
 
 static string _find_crawlrc()
 {
-    const char* locations_data[][2] = {
+    const char* locations_data[][2] =
+    {
         { SysEnv.crawl_dir.c_str(), "init.txt" },
 #ifdef UNIX
         { SysEnv.home.c_str(), ".crawl/init.txt" },
@@ -1366,8 +1368,10 @@ static string _find_crawlrc()
     };
 
     // We'll look for these files in any supplied -rcdirs.
-    static const char *rc_dir_filenames[] = {
-        ".crawlrc", "init.txt"
+    static const char *rc_dir_filenames[] =
+    {
+        ".crawlrc",
+        "init.txt",
     };
 
     // -rc option always wins.
@@ -1787,7 +1791,8 @@ void game_options::fixup_options()
 
 static int _str_to_killcategory(const string &s)
 {
-    static const char *kc[] = {
+    static const char *kc[] =
+    {
         "you",
         "friend",
         "other",
@@ -3814,7 +3819,8 @@ enum commandline_option_type
     CLO_NOPS
 };
 
-static const char *cmd_ops[] = {
+static const char *cmd_ops[] =
+{
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "dump-maps", "test", "script", "builddb",

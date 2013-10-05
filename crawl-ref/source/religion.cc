@@ -1675,11 +1675,13 @@ static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed
 static void _beogh_blessing_reinforcements()
 {
     // Possible reinforcement.
-    const monster_type followers[] = {
+    const monster_type followers[] =
+    {
         MONS_ORC, MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
     };
 
-    const monster_type high_xl_followers[] = {
+    const monster_type high_xl_followers[] =
+    {
         MONS_ORC_PRIEST, MONS_ORC_WARRIOR, MONS_ORC_KNIGHT
     };
 

@@ -19,7 +19,8 @@
 
 static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 {
-    static dungeon_feature_type features[] = {
+    static dungeon_feature_type features[] =
+    {
         DNGN_STONE_WALL,
         DNGN_STONE_WALL,
         DNGN_STONE_WALL,

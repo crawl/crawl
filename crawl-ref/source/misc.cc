@@ -1668,7 +1668,8 @@ bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
                                  require_visible).empty());
 }
 
-static const char *shop_types[] = {
+static const char *shop_types[] =
+{
     "weapon",
     "armour",
     "antique weapon",

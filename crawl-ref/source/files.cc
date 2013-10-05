@@ -389,7 +389,8 @@ string canonicalise_file_separator(const string &path)
 
 static vector<string> _get_base_dirs()
 {
-    const string rawbases[] = {
+    const string rawbases[] =
+    {
 #ifdef DATA_DIR_PATH
         DATA_DIR_PATH,
 #else
@@ -404,7 +405,8 @@ static vector<string> _get_base_dirs()
 #endif
     };
 
-    const string prefixes[] = {
+    const string prefixes[] =
+    {
         string("dat") + FILE_SEPARATOR,
 #ifdef USE_TILE_LOCAL
         string("dat/tiles") + FILE_SEPARATOR,

@@ -500,7 +500,8 @@ set<coord_def> connected_doors(const coord_def& d)
 
 void get_door_description(int door_size, const char** adjective, const char** noun)
 {
-    const char* descriptions[] = {
+    const char* descriptions[] =
+    {
         "miniscule " , "buggy door",
         ""           , "door",
         "large "     , "door",

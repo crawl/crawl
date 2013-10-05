@@ -974,13 +974,21 @@ static bool _jiyva_retribution()
     }
     else
     {
-        const monster_type slimes[] = {
-                MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
-                MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES,
-                MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
-                MONS_JELLY, MONS_BROWN_OOZE, MONS_ACID_BLOB, MONS_AZURE_JELLY,
-                MONS_DEATH_OOZE, MONS_SLIME_CREATURE
-            };
+        const monster_type slimes[] =
+        {
+            MONS_GIANT_EYEBALL,
+            MONS_EYE_OF_DRAINING,
+            MONS_EYE_OF_DEVASTATION,
+            MONS_GREAT_ORB_OF_EYES,
+            MONS_SHINING_EYE,
+            MONS_GIANT_ORANGE_BRAIN,
+            MONS_JELLY,
+            MONS_BROWN_OOZE,
+            MONS_ACID_BLOB,
+            MONS_AZURE_JELLY,
+            MONS_DEATH_OOZE,
+            MONS_SLIME_CREATURE,
+        };
 
         int how_many = 1 + (you.experience_level / 10) + random2(3);
         bool success = false;
