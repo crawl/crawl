@@ -199,6 +199,16 @@ void wizard_change_species(void)
         // Finger Necklace on neck 2 here.
     }
 
+    // FIXME: this checks only for valid slots, not for suitability of the
+    // item in question.  This is enough to make assertions happy, though.
+    for (int i = 0; i < NUM_EQUIP; ++i)
+        if (!you_can_wear(i, true))
+        {
+            // Silently unwear items without the usual processing.
+            you.equip[i] = -1;
+            you.melded.set(i, false);
+        }
+
     // Sanitize skills.
     fixup_skills();
 
