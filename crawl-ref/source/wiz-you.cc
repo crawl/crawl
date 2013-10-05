@@ -202,9 +202,10 @@ void wizard_change_species(void)
     // FIXME: this checks only for valid slots, not for suitability of the
     // item in question.  This is enough to make assertions happy, though.
     for (int i = 0; i < NUM_EQUIP; ++i)
-        if (!you_can_wear(i, true))
+        if (!you_can_wear(i, true) && you.equip[i] != -1)
         {
-            // Silently unwear items without the usual processing.
+            mprf("%s falls away.", you.inv[you.equip[i]].name(DESC_YOUR).c_str());
+            // Unwear items without the usual processing.
             you.equip[i] = -1;
             you.melded.set(i, false);
         }
