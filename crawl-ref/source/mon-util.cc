@@ -852,7 +852,6 @@ bool mons_is_abyssal_only(monster_type mc)
     case MONS_ELDRITCH_TENTACLE_SEGMENT:
     case MONS_LURKING_HORROR:
     case MONS_WRETCHED_STAR:
-    case MONS_CHAOS_BUTTERFLY:
         return true;
     default:
         return false;
@@ -1828,8 +1827,7 @@ int mons_class_res_wind(monster_type mc)
 {
     // Lightning goes well with storms.
     if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
-        || mc == MONS_TWISTER || mc == MONS_CHAOS_BUTTERFLY
-        || mc == MONS_WIND_DRAKE)
+        || mc == MONS_TWISTER || mc == MONS_WIND_DRAKE)
     {
         return 1;
     }
@@ -4288,7 +4286,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'a': // ants
         return MON_SHAPE_INSECT;
     case 'b': // bats and butterflies
-        if (mc == MONS_BUTTERFLY || mc == MONS_CHAOS_BUTTERFLY)
+        if (mc == MONS_BUTTERFLY)
             return MON_SHAPE_INSECT_WINGED;
         else
             return MON_SHAPE_BAT;

@@ -3813,19 +3813,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_CHAOS_BREATH;
     // Intentional fallthrough
 
-    case MONS_CHAOS_BUTTERFLY:
-        if (spell == SPELL_NO_SPELL)
-        {
-            if (!mons->props.exists("twister_time")
-                || you.elapsed_time - (int)mons->props["twister_time"] > 200)
-            {
-                spell = SPELL_SUMMON_TWISTER;
-            }
-            else
-                break;
-        }
-    // Intentional fallthrough
-
     // Dragon breath weapons:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
@@ -3849,9 +3836,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
         }
 
-        if (mons->type == MONS_HELL_HOUND || mons->type == MONS_CHAOS_BUTTERFLY
-                ? one_chance_in(10)
-                : x_chance_in_y(4, 13))
+        if (mons->type == MONS_HELL_HOUND ? one_chance_in(10)
+                                          : x_chance_in_y(4, 13))
         {
             setup_mons_cast(mons, beem, spell);
 
@@ -4471,8 +4457,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             setup_breath_timeout(mons);
         }
-        else if (mons->type == MONS_CHAOS_BUTTERFLY)
-            mons->props["twister_time"].get_int() = you.elapsed_time;
     }
 
     return used;
