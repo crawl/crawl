@@ -35,6 +35,14 @@
 #include "xom.h"
 
 #ifdef WIZARD
+static void _swap_equip(equipment_type a, equipment_type b)
+{
+    swap(you.equip[a], you.equip[b]);
+    bool tmp = you.melded[a];
+    you.melded.set(a, you.melded[b]);
+    you.melded.set(b, tmp);
+}
+
 void wizard_change_species(void)
 {
     char specs[80];
@@ -83,6 +91,7 @@ void wizard_change_species(void)
                                / species_apt_factor(sk);
     }
 
+    species_type old_sp = you.species;
     you.species = sp;
     you.is_undead = get_undead_state(sp);
 
@@ -180,6 +189,15 @@ void wizard_change_species(void)
 
     default:
         break;
+    }
+
+    if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
+    {
+        _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
+        _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
+        // All species allow exactly one amulet.  When (and knowing you guys,
+        // that's "when" not "if") ettins go in, you'll need handle the Macabre
+        // Finger Necklace on neck 2 here.
     }
 
     // Sanitize skills.
