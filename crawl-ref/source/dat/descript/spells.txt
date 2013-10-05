@@ -1210,11 +1210,6 @@ Summon Swarm spell
 
 This spell summons forth a pestilential swarm.
 %%%%
-Summon Twister spell
-
-A chaos butterfly can spawn a tornado on the other side of the world with a
-mere flap of its wings.
-%%%%
 Summon Ufetubus spell
 
 This spell summons multiple ufetubi, small annoying demons who flock around
