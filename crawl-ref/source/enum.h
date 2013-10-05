@@ -2672,7 +2672,9 @@ enum monster_type                      // menv[].type
     MONS_STARSPAWN_TENTACLE_SEGMENT,
 
     MONS_SPATIAL_MAELSTROM,
+#if TAG_MAJOR_VERSION == 34
     MONS_CHAOS_BUTTERFLY,
+#endif
 
     MONS_JORGRUN,
     MONS_LAMIA,

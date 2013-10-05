@@ -38,15 +38,6 @@ microbat MONS_MICROBAT
 megabat MONS_MEGABAT
 gigabat MONS_GIGABAT
 phase_bat MONS_PHASE_BAT
-%sdir mon/abyss
-%rim 0
-cbutterfly MONS_CHAOS_BUTTERFLY
-cbutterfly1
-cbutterfly2
-cbutterfly3
-cbutterfly4
-cbutterfly5
-%rim 1
 %sdir mon/animals
 
 ## Hounds and hogs ('h')
