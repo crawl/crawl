@@ -5497,7 +5497,8 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
         if (heal(5 + random2(7)))
             simple_monster_message(this, " is healed!");
 
-        const enchant_type cured_enchants[] = {
+        const enchant_type cured_enchants[] =
+        {
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
         };
 

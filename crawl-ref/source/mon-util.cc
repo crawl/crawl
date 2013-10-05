@@ -2479,7 +2479,8 @@ void define_monster(monster* mons)
     mons->calc_speed();
 }
 
-static const char *ugly_colour_names[] = {
+static const char *ugly_colour_names[] =
+{
     "red", "brown", "green", "cyan", "purple", "white"
 };
 
@@ -2493,7 +2494,8 @@ string ugly_thing_colour_name(colour_t colour)
     return ugly_colour_names[colour_offset];
 }
 
-static const colour_t ugly_colour_values[] = {
+static const colour_t ugly_colour_values[] =
+{
     RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
 };
 
@@ -2522,7 +2524,8 @@ int ugly_thing_colour_offset(colour_t colour)
     return -1;
 }
 
-static const char *drac_colour_names[] = {
+static const char *drac_colour_names[] =
+{
     "black", "mottled", "yellow", "green", "purple", "red", "white", "grey", "pale"
 };
 

@@ -50,7 +50,8 @@
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 
-static const char *map_section_names[] = {
+static const char *map_section_names[] =
+{
     "",
     "north",
     "south",
@@ -3158,7 +3159,8 @@ void map_def::rotate(bool clock)
         map.rotate(clock);
 
         // Orientation shifts for clockwise rotation:
-        const map_section_type clockrotate_orients[][2] = {
+        const map_section_type clockrotate_orients[][2] =
+        {
             { MAP_NORTH,        MAP_EAST        },
             { MAP_NORTHEAST,    MAP_SOUTHEAST   },
             { MAP_EAST,         MAP_SOUTH       },

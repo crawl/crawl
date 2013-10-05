@@ -1006,10 +1006,11 @@ command_type travel()
 
         if (you.running < 0 && (*move_x || *move_y))
         {
-            const int delta_to_dir[9] = {
+            const int delta_to_dir[9] =
+            {
                 7,  0, 1,
                 6, -1, 2,
-                5,  4, 3
+                5,  4, 3,
             };
             prev_travel_moves[prev_travel_index] =
                 delta_to_dir[(*move_x + 1) + 3 * (*move_y + 1)];
@@ -4522,9 +4523,12 @@ void do_interlevel_travel()
 const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
 const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
 
-const int cmd_array[8] = {CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT,
-                          CMD_MOVE_LEFT, CMD_MOVE_RIGHT,
-                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT};
+const int cmd_array[8] =
+{
+    CMD_MOVE_DOWN_LEFT,  CMD_MOVE_DOWN,  CMD_MOVE_DOWN_RIGHT,
+    CMD_MOVE_LEFT,                       CMD_MOVE_RIGHT,
+    CMD_MOVE_UP_LEFT,    CMD_MOVE_UP,    CMD_MOVE_UP_RIGHT,
+};
 
 
 static int _adjacent_cmd(const coord_def &gc, bool force)

@@ -151,7 +151,8 @@
 #define SWIM_ENERGY(x)     {10,  x, 10, 10, 10, 10, 10, 100}
 
 
-static monsterentry mondata[] = {
+static monsterentry mondata[] =
+{
 
 // The Thing That Should Not Be(tm)
 // NOTE: Do not remove, or seekmonster will crash on unknown mc request!

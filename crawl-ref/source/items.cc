@@ -3311,7 +3311,8 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         trim_string(type_str);
     }
 
-    misc_item_type types[] = {
+    misc_item_type types[] =
+    {
         MISC_DECK_OF_ESCAPE,
         MISC_DECK_OF_DESTRUCTION,
         MISC_DECK_OF_DUNGEONS,
@@ -3373,7 +3374,8 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         }
     }
 
-    const char* rarities[] = {
+    const char* rarities[] =
+    {
         "plain",
         "ornate",
         "legendary",

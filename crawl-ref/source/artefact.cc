@@ -299,7 +299,8 @@ string replace_name_parts(const string &name_in, const item_def& item)
 // Functions defined in art-func.h are referenced in art-data.h
 #include "art-func.h"
 
-static const unrandart_entry unranddata[] = {
+static const unrandart_entry unranddata[] =
+{
 #include "art-data.h"
 };
 

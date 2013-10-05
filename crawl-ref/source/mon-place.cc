@@ -786,7 +786,8 @@ static string _abyss_monster_creation_message(const monster* mon, bool visible)
         return " smells like butter!";
     }
 
-    string messages[] = {
+    string messages[] =
+    {
         (visible ? " appears" : " flickers") + string(" in a shower of ")
             + (one_chance_in(3) ? "translocational energy." : "sparks."),
         " materialises.",

@@ -209,8 +209,8 @@ static vector<string> _randart_propnames(const item_def& item,
     vector<string> propnames;
 
     // list the following in rough order of importance
-    const property_annotators propanns[] = {
-
+    const property_annotators propanns[] =
+    {
         // (Generally) negative attributes
         // These come first, so they don't get chopped off!
         { "-Cast",  ARTP_PREVENT_SPELLCASTING,  2 },
@@ -403,7 +403,8 @@ static string _randart_descrip(const item_def &item)
     artefact_known_props_t known;
     artefact_desc_properties(item, proprt, known);
 
-    const property_descriptor propdescs[] = {
+    const property_descriptor propdescs[] =
+    {
         { ARTP_AC, "It affects your AC (%d).", false },
         { ARTP_EVASION, "It affects your evasion (%d).", false},
         { ARTP_STRENGTH, "It affects your strength (%d).", false},
@@ -462,7 +463,8 @@ static string _randart_descrip(const item_def &item)
                 idx = min(idx, 6);
                 idx = max(idx, 0);
 
-                const char* prefixes[] = {
+                const char* prefixes[] =
+                {
                     "It makes you extremely vulnerable to ",
                     "It makes you very vulnerable to ",
                     "It makes you vulnerable to ",
@@ -564,7 +566,8 @@ static string _describe_demon(const string& name, flight_type fly)
     rng_save_excursion exc;
     seed_rng(seed);
 
-    const char* body_descs[] = {
+    const char* body_descs[] =
+    {
         "huge, barrel-shaped ",
         "wispy, insubstantial ",
         "spindly ",
@@ -598,7 +601,8 @@ static string _describe_demon(const string& name, flight_type fly)
         "slender ",
     };
 
-    const char* wing_names[] = {
+    const char* wing_names[] =
+    {
         " with small insectoid wings",
         " with large insectoid wings",
         " with moth-like wings",
@@ -611,12 +615,14 @@ static string _describe_demon(const string& name, flight_type fly)
         " with shiny metal wings",
     };
 
-    const char* lev_names[] = {
+    const char* lev_names[] =
+    {
         " who hovers in mid-air",
         " with sacs of gas hanging from its back",
     };
 
-    const char* nonfly_names[] = {
+    const char* nonfly_names[] =
+    {
         " covered in tiny crawling spiders",
         " covered in tiny crawling insects",
         " and the head of a crocodile",
@@ -647,7 +653,8 @@ static string _describe_demon(const string& name, flight_type fly)
         " and eyes out on stalks",
     };
 
-    const char* misc_descs[] = {
+    const char* misc_descs[] =
+    {
         " It seethes with hatred of the living.",
         " Tiny orange flames dance around it.",
         " Tiny purple flames dance around it.",
@@ -3239,7 +3246,8 @@ static string _monster_stat_description(const monster_info& mi)
     // monsters, except for (very) ugly things.
     resists_t resist = mi.resists();
 
-    const mon_resist_flags resists[] = {
+    const mon_resist_flags resists[] =
+    {
         MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
         MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
         MR_RES_ROTTING, MR_RES_NEG,
@@ -3397,7 +3405,8 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " regenerates quickly.\n";
 
     // Size
-    const char *sizes[NUM_SIZE_LEVELS] = {
+    const char *sizes[NUM_SIZE_LEVELS] =
+    {
         "tiny",
         "very small",
         "small",
@@ -3758,7 +3767,8 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     return key;
 }
 
-static const char* xl_rank_names[] = {
+static const char* xl_rank_names[] =
+{
     "weakling",
     "average",
     "experienced",

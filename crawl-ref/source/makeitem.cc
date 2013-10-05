@@ -802,22 +802,40 @@ static weapon_type _determine_weapon_subtype(int item_level)
 {
     weapon_type rc = WPN_UNKNOWN;
 
-    const weapon_type common_subtypes[] = {
+    const weapon_type common_subtypes[] =
+    {
         WPN_SLING,
-        WPN_SPEAR, WPN_HAND_AXE, WPN_MACE,
-        WPN_DAGGER, WPN_DAGGER, WPN_CLUB,
-        WPN_WHIP, WPN_SHORT_SWORD
+        WPN_SPEAR,
+        WPN_HAND_AXE,
+        WPN_MACE,
+        WPN_DAGGER, WPN_DAGGER,
+        WPN_CLUB,
+        WPN_WHIP,
+        WPN_SHORT_SWORD
     };
 
-    const weapon_type good_common_subtypes[] = {
-        WPN_QUARTERSTAFF, WPN_FALCHION, WPN_LONG_SWORD, WPN_WAR_AXE,
-        WPN_TRIDENT, WPN_FLAIL, WPN_SABRE
+    const weapon_type good_common_subtypes[] =
+    {
+        WPN_QUARTERSTAFF,
+        WPN_FALCHION,
+        WPN_LONG_SWORD,
+        WPN_WAR_AXE,
+        WPN_TRIDENT,
+        WPN_FLAIL,
+        WPN_SABRE,
     };
 
-    const weapon_type rare_subtypes[] = {
-        WPN_LAJATANG, WPN_DEMON_WHIP, WPN_DEMON_BLADE,
-        WPN_DEMON_TRIDENT, WPN_DOUBLE_SWORD, WPN_EVENINGSTAR,
-        WPN_EXECUTIONERS_AXE, WPN_QUICK_BLADE, WPN_TRIPLE_SWORD,
+    const weapon_type rare_subtypes[] =
+    {
+        WPN_LAJATANG,
+        WPN_DEMON_WHIP,
+        WPN_DEMON_BLADE,
+        WPN_DEMON_TRIDENT,
+        WPN_DOUBLE_SWORD,
+        WPN_EVENINGSTAR,
+        WPN_EXECUTIONERS_AXE,
+        WPN_QUICK_BLADE,
+        WPN_TRIPLE_SWORD,
     };
 
     if (item_level > 6 && one_chance_in(30)

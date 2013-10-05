@@ -799,7 +799,8 @@ static int _xom_give_item(int power, bool debug = false)
         if (debug)
             return XOM_GOOD_ACQUIREMENT;
 
-        const object_class_type types[] = {
+        const object_class_type types[] =
+        {
             OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
             OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_FOOD,  OBJ_GOLD,
             OBJ_MISSILES
@@ -1694,7 +1695,8 @@ static int _xom_random_stickable(const int HD)
     // XXX: Unify this with the list in spl-summoning:_snakable_weapon().
     // It has everything but demon tridents and bardiches, and puts the
     // giant club types at the end as special cases.
-    static const int arr[] = {
+    static const int arr[] =
+    {
         WPN_CLUB,    WPN_SPEAR,      WPN_TRIDENT,      WPN_HALBERD,
         WPN_SCYTHE,  WPN_GLAIVE,     WPN_QUARTERSTAFF,
         WPN_BLOWGUN, WPN_BOW,        WPN_LONGBOW,      WPN_GIANT_CLUB,
@@ -2263,15 +2265,22 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
 
     if (helpful) // To the player, not the monster.
     {
-        beam_type enchantments[] = {
-            BEAM_PETRIFY, BEAM_SLOW, BEAM_PARALYSIS, BEAM_ENSLAVE,
+        beam_type enchantments[] =
+        {
+            BEAM_PETRIFY,
+            BEAM_SLOW,
+            BEAM_PARALYSIS,
+            BEAM_ENSLAVE,
         };
         ench = RANDOM_ELEMENT(enchantments);
     }
     else
     {
-        beam_type enchantments[] = {
-            BEAM_HASTE, BEAM_MIGHT, BEAM_INVISIBILITY
+        beam_type enchantments[] =
+        {
+            BEAM_HASTE,
+            BEAM_MIGHT,
+            BEAM_INVISIBILITY,
         };
         ench = RANDOM_ELEMENT(enchantments);
     }

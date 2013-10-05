@@ -4802,7 +4802,8 @@ void mons_att_changed(monster* mon)
 void debuff_monster(monster* mon)
 {
     // List of magical enchantments which will be dispelled.
-    const enchant_type lost_enchantments[] = {
+    const enchant_type lost_enchantments[] =
+    {
         ENCH_SLOW,
         ENCH_HASTE,
         ENCH_SWIFT,

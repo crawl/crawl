@@ -16,7 +16,8 @@
 // Fantasy staples and humanoid creatures come first, then diminutive and
 // stealthy creatures, then monstrous creatures, then planetouched and after
 // all living creatures finally the undead. (MM)
-static species_type species_order[] = {
+static species_type species_order[] =
+{
     // comparatively human-like looks
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,

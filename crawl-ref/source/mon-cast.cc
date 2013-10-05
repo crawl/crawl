@@ -4495,15 +4495,19 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         else
         {
             // Messages about the monster influencing itself.
-            const char* buff_msgs[] = { " glows brightly for a moment.",
-                                        " looks braver.",
-                                        " becomes somewhat translucent.",
-                                        "'s eyes start to glow." };
+            const char* buff_msgs[] =
+            {
+                " glows brightly for a moment.",
+                " looks braver.",
+                " becomes somewhat translucent.",
+                "'s eyes start to glow.",
+            };
 
             // Messages about the monster influencing you.
-            const char* other_msgs[] = {
+            const char* other_msgs[] =
+            {
                 "You feel troubled.",
-                "You feel a wave of unholy energy pass over you."
+                "You feel a wave of unholy energy pass over you.",
             };
 
             if (buff_only || crawl_state.game_is_arena() || x_chance_in_y(2,3))
@@ -4556,8 +4560,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (!hp_lost)
             sumcount++;
 
-        const dungeon_feature_type safe_tiles[] = {
-            DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
+        const dungeon_feature_type safe_tiles[] =
+        {
+            DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
         };
 
         bool proceed;

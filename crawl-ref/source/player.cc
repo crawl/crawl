@@ -4317,7 +4317,8 @@ void display_char_status()
     if (you.species == SP_VAMPIRE)
         _display_vampire_status();
 
-    static int statuses[] = {
+    static int statuses[] =
+    {
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         DUR_PETRIFYING,
         DUR_TRANSFORMATION,

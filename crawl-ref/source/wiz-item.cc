@@ -246,7 +246,8 @@ void wizard_create_spec_object()
     }
 }
 
-static const char* _prop_name[] = {
+static const char* _prop_name[] =
+{
     "Brand",
     "AC",
     "EV",
@@ -298,7 +299,8 @@ static const char* _prop_name[] = {
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-static int8_t _prop_type[] = {
+static int8_t _prop_type[] =
+{
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION
@@ -1128,7 +1130,8 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         fprintf(ostat, "Egos (including artefacts):\n");
 
-        const char* names[] = {
+        const char* names[] =
+        {
             "normal",
             "flaming",
             "freezing",
@@ -1175,7 +1178,8 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         fprintf(ostat, "Egos (excluding artefacts):\n");
 
-        const char* names[] = {
+        const char* names[] =
+        {
             "normal",
             "running",
             "fire resistance",
@@ -1218,7 +1222,8 @@ static void _debug_acquirement_stats(FILE *ostat)
         {
             fprintf(ostat, "Primary disciplines/levels of randart books:\n");
 
-            const char* names[] = {
+            const char* names[] =
+            {
                 "none",
                 "conjuration",
                 "enchantment",
@@ -1345,7 +1350,8 @@ static void _debug_rap_stats(FILE *ostat)
     }
 
     // -1 = always bad, 1 = always good, 0 = depends on value
-    const int good_or_bad[] = {
+    const int good_or_bad[] =
+    {
          1, //ARTP_BRAND
          0, //ARTP_AC
          0, //ARTP_EVASION
@@ -1495,7 +1501,8 @@ static void _debug_rap_stats(FILE *ostat)
             max_balance_props,
             (float) total_balance_props / (float) num_randarts);
 
-    const char* rap_names[] = {
+    const char* rap_names[] =
+    {
         "ARTP_BRAND",
         "ARTP_AC",
         "ARTP_EVASION",

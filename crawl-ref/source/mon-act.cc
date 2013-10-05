@@ -74,7 +74,8 @@ static void _shedu_movement_clamp(monster* mons);
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
 
-static const coord_def mon_compass[8] = {
+static const coord_def mon_compass[8] =
+{
     coord_def(-1,-1), coord_def(0,-1), coord_def(1,-1), coord_def(1,0),
     coord_def(1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
 };
