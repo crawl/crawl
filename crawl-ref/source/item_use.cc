@@ -1250,7 +1250,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
 }
 
 // Checks whether removing an item would cause flight to end and the
-// player to fall to their death.
+// player to fall to their death.  Same for clinging.
 bool safe_to_remove(const item_def &item, bool quiet)
 {
     item_info inf = get_item_info(item);
@@ -1259,13 +1259,15 @@ bool safe_to_remove(const item_def &item, bool quiet)
          inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT
          || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
          || is_artefact(inf)
-            && artefact_known_wpn_property(inf, ARTP_FLY);
+            && (artefact_known_wpn_property(inf, ARTP_FLY)
+                || inf.special == UNRAND_SPIDER);
 
     // assumes item can't grant flight twice
-    const bool removing_ends_flight =
-        you.flight_mode()
-        && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-        && (you.evokable_flight() == 1);
+    const bool removing_ends_flight = you.flight_mode()
+          && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+          && (you.evokable_flight() == 1)
+        || you.is_wall_clinging() && !you.flight_mode()
+          && is_artefact(inf) && inf.special == UNRAND_SPIDER;
 
     const dungeon_feature_type feat = grd(you.pos());
 
