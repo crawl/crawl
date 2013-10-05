@@ -1133,8 +1133,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHATTER:
 #if TAG_MAJOR_VERSION == 34
     case SPELL_FRENZY:
-#endif
     case SPELL_SUMMON_TWISTER:
+#endif
     case SPELL_BATTLESPHERE:
     case SPELL_SPECTRAL_WEAPON:
     case SPELL_WORD_OF_RECALL:
@@ -1763,6 +1763,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_FRENZY:
+    case SPELL_SUMMON_TWISTER:
 #endif
     case SPELL_NO_SPELL:
         ret = true;
@@ -4419,17 +4420,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DRUIDS_CALL:
         _cast_druids_call(mons);
-        return;
-
-    case SPELL_SUMMON_TWISTER:
-        duration  = min(2 + mons->hit_dice / 10, 6);
-
-        create_monster(
-            mgen_data(MONS_TWISTER,
-                      SAME_ATTITUDE(mons), mons,
-                      duration, spell_cast,
-                      mons->pos(), mons->foe, 0, god));
-
         return;
 
     case SPELL_BATTLESPHERE:

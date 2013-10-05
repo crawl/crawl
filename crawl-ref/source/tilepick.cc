@@ -5108,7 +5108,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SUMMON_MINOR_DEMON:       return TILEG_SUMMON_MINOR_DEMON;
     case SPELL_SUMMON_MUSHROOMS:         return TILEG_SUMMON_MUSHROOMS;
     case SPELL_SUMMON_SPECTRAL_ORCS:     return TILEG_SUMMON_SPECTRAL_ORCS;
-    case SPELL_SUMMON_TWISTER:           return TILEG_SUMMON_TWISTER;
     case SPELL_SUMMON_UFETUBUS:          return TILEG_SUMMON_UFETUBUS;
     case SPELL_SUMMON_UNDEAD:            return TILEG_SUMMON_UNDEAD;
     case SPELL_SUMMON_VERMIN:            return TILEG_SUMMON_VERMIN;
