@@ -109,6 +109,24 @@ int random2(int max)
     }
 }
 
+// [0, max), separate RNG state
+int random3(int max)
+{
+    if (max <= 1)
+        return 0;
+
+    uint32_t partn = UINT32_MAX / max;
+
+    while (true)
+    {
+        uint32_t bits = get_uint32();
+        uint32_t val  = bits / partn;
+
+        if (val < (uint32_t)max)
+            return ((int)val);
+    }
+}
+
 // [0, 1]
 bool coinflip(void)
 {
