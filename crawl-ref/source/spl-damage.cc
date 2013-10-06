@@ -1979,7 +1979,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.ex_size    = 2;
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
-            beam.damage.num = you.species == SP_GARGOYLE ? 2 : 3;
+            beam.damage.num = you.form == TRAN_STATUE ? 3 : 2;
             return true;
         }
         else if (petrifying || petrified)
