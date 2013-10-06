@@ -6,6 +6,9 @@
 #include <map>
 #include <vector>
 
+void seed_rng();
+void seed_rng(uint32_t seed);
+
 bool coinflip();
 int div_rand_round(int num, int den);
 int div_round_up(int num, int den);
@@ -17,6 +20,7 @@ int maybe_random_div(int nom, int denom, bool random_factor);
 int maybe_roll_dice(int num, int size, bool random);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
+uint32_t random_int();
 double random_real();
 double random_real_inc();
 double random_real_avg(int rolls);
