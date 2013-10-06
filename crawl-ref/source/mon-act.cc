@@ -1781,7 +1781,7 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
-    if (mons->summoner && mons->has_ench(ENCH_ABJ))
+    if (mons->summoner && mons->is_summoned())
     {
         const actor * const act = actor_by_mid(mons->summoner);
         if ((!act || !act->alive()) && mons->del_ench(ENCH_ABJ))
