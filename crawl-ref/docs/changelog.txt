@@ -15,9 +15,6 @@ Character
       their abilities changing as a result;
     - Djinni draw both health and magic from a shared Essence pool, and have
       complete immunity to all forms of fire;
-    - Gargoyles are immune to involuntary petrification, but can petrify
-      themselves to significantly reduce damage before becoming completely
-      immobile.
 
 Items
 -----
