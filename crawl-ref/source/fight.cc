@@ -321,9 +321,9 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
             // sanctuary if necessary.
             if (defender && !conduct_prompted)
             {
-                if(stop_attack_prompt(defender->as_monster(), false, *site,
-                                      false, &conduct_prompted, *site,
-                                      check_landing_only))
+                if (stop_attack_prompt(defender->as_monster(), false, *site,
+                                       false, &conduct_prompted, *site,
+                                       check_landing_only))
                 {
                     you.turn_is_over = false;
                     return false;
