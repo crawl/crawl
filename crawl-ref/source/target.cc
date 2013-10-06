@@ -967,7 +967,7 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
     // Check if a landing site is invalid due to a visible monster obstructing
     // the path.
     ray.advance();
-    while(map_bounds(ray.pos()))
+    while (map_bounds(ray.pos()))
     {
         act = actor_at(ray.pos());
         if (ray.pos() == a)
@@ -990,8 +990,8 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
                 blocked_landing_reason = BLOCKED_FLYING;
                 return false;
             }
-            else if(act->body_size() == SIZE_GIANT
-                    && grid != DNGN_DEEP_WATER && grid != DNGN_LAVA)
+            else if (act->body_size() == SIZE_GIANT
+                     && grid != DNGN_DEEP_WATER && grid != DNGN_LAVA)
             {
                 blocked_landing_reason = BLOCKED_GIANT;
                 return false;
