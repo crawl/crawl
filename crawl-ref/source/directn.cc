@@ -375,14 +375,12 @@ void direction_chooser::print_key_hints() const
             prompt += hint_string;
             break;
         case DIR_TARGET:
+        case DIR_JUMP:
             prompt += ", Dir - move target cursor";
             prompt += hint_string;
             break;
         case DIR_DIR:
         case DIR_TARGET_OBJECT:
-            break;
-        case DIR_JUMP:
-            prompt += hint_string;
             break;
         }
     }
@@ -1142,7 +1140,6 @@ const coord_def& direction_chooser::target() const
 
 void direction_chooser::set_target(const coord_def& new_target)
 {
-
     if (restricts == DIR_JUMP)
         valid_jump = hitfunc->has_additional_sites(new_target);
     moves.target = new_target;
@@ -1317,7 +1314,7 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     if (restricts == DIR_JUMP && !valid_jump)
         return false;
 
-    if (!allow_out_of_range && !in_range(target()))
+    if ((restricts == DIR_JUMP || !allow_out_of_range) && !in_range(target()))
     {
         mpr(hitfunc? hitfunc->why_not : "That is beyond the maximum range.",
             MSGCH_EXAMINE_FILTER);
@@ -1587,7 +1584,7 @@ void direction_chooser::reinitialize_move_flags()
 // Returns true if we've completed targetting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
-    if (restricts != DIR_TARGET)
+    if (restricts != DIR_TARGET && restricts != DIR_JUMP)
     {
         // A direction is allowed, and we've selected it.
         moves.delta    = delta;
@@ -2021,7 +2018,7 @@ bool direction_chooser::do_main_loop()
     }
 
     // Redraw whatever is necessary.
-    if (restricts == DIR_JUMP || old_target != target())
+    if (old_target != target())
     {
         have_beam = show_beam && find_ray(you.pos(), target(), beam,
                                           opc_solid_see, BDS_DEFAULT);
