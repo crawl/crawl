@@ -1,11 +1,10 @@
 /**
  * @file
- * @brief Random number generator wrapping.
+ * @brief Hashes.
 **/
 
 #include "AppHdr.h"
-
-#include "rng.h"
+#include "hash.h"
 
 //-----------------------------------------------------------------------------
 // MurmurHash2, by Austin Appleby
