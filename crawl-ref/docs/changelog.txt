@@ -1,5 +1,5 @@
-Stone Soup 0.14 (up to 0.14-a0)
--------------------------------
+Stone Soup 0.14 (up to 0.14-a0-205-g13084f7)
+--------------------------------------------
 * Two new races: Lava Orcs and Djinni.
 * A new branch: the Enchanted Forest.
 
@@ -15,11 +15,50 @@ Character
       their abilities changing as a result;
     - Djinni draw both health and magic from a shared Essence pool, and have
       complete immunity to all forms of fire;
+* Felids have an innate jump attack ability, allowing them to jump over
+  other monsters to attack their target.
+    - There must be a safe, unoccupied landing spot next to the target.
+      One of these spots is selected at random for landing.
+    - The attack does 20% extra damage.
+    - It is not possible to jump over giant or flying creatures.
+    - Jumping causes exhaustion like berserk (but no slowing).
+
+Monsters
+--------
+* Summoned creatures are dismissed upon the death of their summoner.
+
+Spells
+------
+* Sticks to Snakes only works on missiles (arrows and javelins) now.
+* Conjure Ball Lightning has been reduced from level 7 to 6.
 
 Items
 -----
+* Weapons are identified immediately on wield.
 * Large rocks now crash through monsters / the player, i.e. implicitly have
   the penetration brand.
+* Spears, daggers, clubs, and hand axes are no longer good for throwing.
+    - The artefact "Lehudib's crystal spear" has been removed.
+* New "tomahawk" item: a throwing missile, usable by all non-felids, between
+  darts and javelins in damage.
+    - Small race hunters and arcane marksmen may select tomahawks.
+    - Small race gladiators receive tomahawks instead of nets.
+* The jumping ego (available only on boots) gives a jump attack ability
+  like that of felids.
+* Boots of the Assassin return in a new form: they now detect monsters and
+  allow short-blade-quality stabbing with any weapon (or unarmed).
+* New unrand "macabre finger necklace". Gives warding and an extra ring slot.
+* New unrand "boots of the spider". Gives clinging, trample immunity, and
+  jump attack.
+
+Gods
+----
+* Gods no longer forgive the player for disliked effects of known wands
+  of random effects and weapons of chaos.
+
+Interface
+---------
+* Different types of magical trap are coloured differently.
 
 Stone Soup 0.13 (20131011)
 --------------------------
