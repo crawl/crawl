@@ -1781,6 +1781,16 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
+    if (mons->summoner)
+    {
+        actor* act = actor_by_mid(mons->summoner);
+        if (!act || !act->alive())
+        {
+            mons->remove_enchantment_effect(ENCH_ABJ);        
+            return;
+        }
+    }
+
     if (mons->type == MONS_SNAPLASHER_VINE
         && mons->props.exists("vine_awakener"))
     {
