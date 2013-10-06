@@ -45,7 +45,7 @@ protected:
 
 int element_colour_calc::rand(bool non_random)
 {
-    return non_random ? 0 : random2(120);
+    return non_random ? 0 : random3(120);
 }
 
 int element_colour_calc::get(const coord_def& loc, bool non_random)
