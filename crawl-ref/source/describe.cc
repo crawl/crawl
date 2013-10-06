@@ -559,9 +559,7 @@ int str_to_trap(const string &s)
 //---------------------------------------------------------------
 static string _describe_demon(const string& name, flight_type fly)
 {
-    const uint32_t seed =
-        accumulate(name.begin(), name.end(), 0) *
-        name.length();
+    const uint32_t seed = hash32(&name[0], name.length());
 
     rng_save_excursion exc;
     seed_rng(seed);
