@@ -118,3 +118,11 @@ uint32_t hash32(const void *data, int len)
 
     return h;
 }
+
+unsigned int hash_rand(int x, uint32_t seed, uint32_t id)
+{
+    if (x < 2)
+        return 0;
+    uint32_t data[2] = {seed, id};
+    return hash32(data, 2 * sizeof(int32_t)) % x;
+}
