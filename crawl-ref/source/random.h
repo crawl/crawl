@@ -34,7 +34,7 @@ bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 int roll_dice(int num, int size);
 
-int random3(int max);
+int ui_random(int max);
 
 /**
  * Chooses one of the numbers passed in at random. The list of numbers
