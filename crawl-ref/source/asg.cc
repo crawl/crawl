@@ -9,7 +9,7 @@
 #include "AppHdr.h"
 #include "asg.h"
 
-static AsgKISS* asg_rng = new AsgKISS();
+static AsgKISS asg_rng[2];
 
 uint32_t
 AsgKISS::get_uint32()
@@ -58,13 +58,25 @@ AsgKISS::AsgKISS(uint32_t init_key[], int key_length)
     }
 }
 
-uint32_t get_uint32()
+uint32_t get_uint32(int generator)
 {
-    return asg_rng->get_uint32();
+    return asg_rng[generator].get_uint32();
 }
 
 void seed_asg(uint32_t seed_array[], int seed_len)
 {
-    delete asg_rng;
-    asg_rng = new AsgKISS(seed_array, seed_len);
+    {
+        const AsgKISS seeded(seed_array, seed_len);
+        asg_rng[0] = seeded;
+    }
+
+    // Use the just seeded RNG to initialize the rest.
+    for (size_t i = 1; i < ARRAYSZ(asg_rng); ++i)
+    {
+        uint32_t key[5];
+        for (size_t j = 0; j < ARRAYSZ(key); ++j)
+            key[j] = asg_rng[0].get_uint32();
+        const AsgKISS seeded(key, ARRAYSZ(key));
+        asg_rng[i] = seeded;
+    }
 }
