@@ -538,12 +538,8 @@ void list_jewellery(void)
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
-        if ((you.species != SP_OCTOPODE && i > EQ_AMULET
-            || you.species == SP_OCTOPODE && i < EQ_AMULET)
-            && i != EQ_RING_AMULET)
-        {
+        if (!you_can_wear(i))
             continue;
-        }
 
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;
