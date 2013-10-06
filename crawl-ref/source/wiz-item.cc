@@ -319,7 +319,6 @@ static int8_t _prop_type[] =
 #if TAG_MAJOR_VERSION > 34
     ARTP_VAL_BOOL, //FOG
 #endif
-    ARTP_VAL_BOOL, //JUMPING
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
     ARTP_VAL_POS,  //NOISES
@@ -344,6 +343,9 @@ static int8_t _prop_type[] =
     ARTP_VAL_BOOL, //FOG
 #endif
     ARTP_VAL_BOOL, //REGEN
+#if TAG_MAJOR_VERSION == 34
+    ARTP_VAL_BOOL, //UNUSED
+#endif
 };
 
 static void _tweak_randart(item_def &item)
