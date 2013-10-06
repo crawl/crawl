@@ -962,7 +962,6 @@ static bool _in_wastes(const coord_def &p)
 
 static level_id _get_real_level()
 {
-    rng_save_excursion rngstate(abyssal_state.seed);
     vector<level_id> levels;
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
@@ -980,8 +979,8 @@ static level_id _get_real_level()
         // Let this fail later on.
         return level_id(static_cast<branch_type>(BRANCH_MAIN_DUNGEON), 1);
     }
-    int pick = random2(levels.size());
-    return levels[pick];
+
+    return levels[hash_rand(levels.size(), abyssal_state.seed)];
 }
 
 /**************************************************************/

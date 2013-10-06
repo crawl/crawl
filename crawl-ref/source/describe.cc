@@ -560,9 +560,7 @@ int str_to_trap(const string &s)
 static string _describe_demon(const string& name, flight_type fly)
 {
     const uint32_t seed = hash32(&name[0], name.length());
-
-    rng_save_excursion exc;
-    seed_rng(seed);
+    #define HRANDOM_ELEMENT(arr, id) arr[hash_rand(ARRAYSZ(arr), seed, id)]
 
     const char* body_descs[] =
     {
@@ -676,32 +674,32 @@ static string _describe_demon(const string& name, flight_type fly)
     ostringstream description;
     description << "A powerful demon, " << name << " has ";
 
-    const string a_body = RANDOM_ELEMENT(body_descs);
+    const string a_body = HRANDOM_ELEMENT(body_descs, 1);
     description << article_a(a_body) << "body";
 
     switch (fly)
     {
     case FL_WINGED:
-        description << RANDOM_ELEMENT(wing_names);
+        description << HRANDOM_ELEMENT(wing_names, 2);
         break;
 
     case FL_LEVITATE:
-        description << RANDOM_ELEMENT(lev_names);
+        description << HRANDOM_ELEMENT(lev_names, 2);
         break;
 
     case FL_NONE:  // does not fly
-        if (!one_chance_in(4))
-            description << RANDOM_ELEMENT(nonfly_names);
+        if (hash_rand(4, seed, 3))
+            description << HRANDOM_ELEMENT(nonfly_names, 2);
         break;
     }
 
     description << ".";
 
-    if (x_chance_in_y(3, 40))
+    if (hash_rand(40, seed, 4) < 3)
     {
         if (you.can_smell())
         {
-            switch (random2(3))
+            switch (hash_rand(3, seed, 5))
             {
             case 0:
                 description << " It stinks of brimstone.";
@@ -717,7 +715,7 @@ static string _describe_demon(const string& name, flight_type fly)
             }
         }
     }
-    else if (coinflip())
+    else if (hash_rand(2, seed, 6))
         description << RANDOM_ELEMENT(misc_descs);
 
     return description.str();
