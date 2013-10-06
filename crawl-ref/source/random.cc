@@ -110,7 +110,7 @@ int random2(int max)
 }
 
 // [0, max), separate RNG state
-int random3(int max)
+int ui_random(int max)
 {
     if (max <= 1)
         return 0;

@@ -966,7 +966,7 @@ static tileidx_t _mon_clamp(tileidx_t tile, int offset)
 static tileidx_t _mon_random(tileidx_t tile)
 {
     int count = tile_player_count(tile);
-    return (tile + random3(count));
+    return (tile + ui_random(count));
 }
 
 // actually, a triangle wave, but it's up to the actual tiles
@@ -4409,7 +4409,7 @@ tileidx_t tileidx_item(const item_def &item)
             return _tileidx_corpse(item);
 
     case OBJ_ORBS:
-        return TILE_ORB + random3(tile_main_count(TILE_ORB));
+        return TILE_ORB + ui_random(tile_main_count(TILE_ORB));
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
@@ -4637,7 +4637,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
                       dur == 1 ? TILE_CLOUD_MUTAGENIC_1
                                : TILE_CLOUD_MUTAGENIC_2);
-                ch += random3(tile_main_count(ch));
+                ch += ui_random(tile_main_count(ch));
                 break;
 
             case CLOUD_MIST:
@@ -4645,7 +4645,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 break;
 
             case CLOUD_RAIN:
-                ch = TILE_CLOUD_RAIN + random3(tile_main_count(TILE_CLOUD_RAIN));
+                ch = TILE_CLOUD_RAIN + ui_random(tile_main_count(TILE_CLOUD_RAIN));
                 break;
 
             case CLOUD_MAGIC_TRAIL:
@@ -4675,12 +4675,12 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 
             case CLOUD_PETRIFY:
                 ch = TILE_CLOUD_PETRIFY;
-                ch += random3(tile_main_count(ch));
+                ch += ui_random(tile_main_count(ch));
                 break;
 
             case CLOUD_CHAOS:
                 ch = TILE_CLOUD_CHAOS;
-                ch += random3(tile_main_count(ch));
+                ch += ui_random(tile_main_count(ch));
                 break;
 
             case CLOUD_FOREST_FIRE:
@@ -4809,7 +4809,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_STING:
         return tile + dist % tile_main_count(tile);
     case TILE_BOLT_FLAME:
-        return tile + random3(tile_main_count(tile));
+        return tile + ui_random(tile_main_count(tile));
     default:
         return tile;
     }
