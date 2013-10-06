@@ -4222,10 +4222,10 @@ _build_vault_impl(const map_def *vault,
 
     if (!build_only
         && (placed_vault_orientation == MAP_ENCOMPASS || is_layout)
-        && vault->border_fill_type != DNGN_ROCK_WALL)
+        && place.map.border_fill_type != DNGN_ROCK_WALL)
     {
        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
-                        vault->border_fill_type);
+                        place.map.border_fill_type);
     }
 
     // XXX: Moved this out of dgn_register_place so that vault-set monsters can
