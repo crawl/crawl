@@ -291,6 +291,9 @@ public:
   // A list of allies awaiting an active recall
   vector<mid_t> recall_list;
 
+  // Hash seeds for deterministic stuff.
+  FixedVector<uint32_t, NUM_SEEDS> game_seeds;
+
   // -------------------
   // Non-saved UI state:
   // -------------------
