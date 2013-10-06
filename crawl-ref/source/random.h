@@ -1,10 +1,9 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include "rng.h"
-
 #include <map>
 #include <vector>
+#include "hash.h"
 
 void seed_rng();
 void seed_rng(uint32_t seed);

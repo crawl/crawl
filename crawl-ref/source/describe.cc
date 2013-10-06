@@ -51,7 +51,6 @@
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
-#include "rng.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
