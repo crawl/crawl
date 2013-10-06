@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 #include "hash.h"
+#include "endianness.h"
 
 //-----------------------------------------------------------------------------
 // MurmurHash2, by Austin Appleby
