@@ -845,24 +845,6 @@ xxxxbbbMNOwwwx
       xxxxx
 ENDMAP
 
-# The dragon can be ood, but it can only get out if you let it chase you. A
-# window provides ample warning.
-NAME:   evilmike_quicksilver_bait
-TAGS:   no_monster_gen
-DEPTH:  D:16-
-{{
-  local gold = 1 + crawl.random2avg(25,2) + crawl.random2avg(25,2) + crawl.random2(you.absdepth())
-  kitem("1 = gold q:" .. gold .. ", superb_item, acquire any")
-}}
-KMONS:  1 = patrolling quicksilver dragon
-MAP
- ccccccccccccc
-@llllllllllllc
- cnccccccccclc
- c1llllllllllc
- ccccccccccccc
-ENDMAP
-
 NAME:    hangedman_aviary
 TAGS:    no_rotate no_h_mirror
 DEPTH:   D:13-
