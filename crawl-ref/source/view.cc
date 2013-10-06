@@ -380,26 +380,26 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     static FixedArray<uint8_t, GXM, GYM> cache;
     static int cache_seed = -1;
 
-    int seed = random ? -1 :
-        (static_cast<int>(you.where_are_you) << 8) + you.depth - 1731813538;
-
-    if (seed == cache_seed && !random)
-        return cache;
-
-    if (!random)
+    if (random)
     {
-        push_rng_state();
-        seed_rng(cache_seed);
+        cache_seed = -1;
+        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+            for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+                cache[x][y] = random2(100);
+        return cache;
     }
+
+    // must not produce the magic value (-1)
+    int seed = (static_cast<int>(you.where_are_you) << 8) + you.depth;
+
+    if (seed == cache_seed)
+        return cache;
 
     cache_seed = seed;
 
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-            cache[x][y] = random2(100);
-
-    if (!random)
-        pop_rng_state();
+            cache[x][y] = hash_rand(100, seed, y * GXM + x);
 
     return cache;
 }
