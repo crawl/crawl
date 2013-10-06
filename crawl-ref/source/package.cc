@@ -812,6 +812,9 @@ void chunk_reader::init(plen_t start)
     block_left = 0;
 
 #ifdef USE_ZLIB
+    if (!start)
+        corrupted("save file corrupted -- zlib header missing");
+
     zs.zalloc    = 0;
     zs.zfree     = 0;
     zs.opaque    = Z_NULL;
@@ -877,6 +880,9 @@ plen_t chunk_reader::raw_read(void *data, plen_t len)
             off = next_block + sizeof(block_header);
             block_left = htole(bl.len);
             next_block = htole(bl.next);
+            // This reeks of on-disk corruption (zeroed data).
+            if (!block_left)
+                corrupted("save file corrupted -- empty block");
         }
         else
             pkg->seek(off);
