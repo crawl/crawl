@@ -8,7 +8,6 @@
 
 #include "AppHdr.h"
 #include "asg.h"
-#include <stack>
 
 static AsgKISS* asg_rng = new AsgKISS();
 
@@ -57,26 +56,6 @@ AsgKISS::AsgKISS(uint32_t init_key[], int key_length)
         m_lfsr = 7654321;
         while (!(m_lfsr = get_uint32()));
     }
-}
-
-static stack<AsgKISS*> states;
-
-void push_asg_state()
-{
-    AsgKISS* rng = new AsgKISS(*asg_rng);
-    if (!rng)
-        return;
-    states.push(rng);
-}
-
-void pop_asg_state()
-{
-    if (states.empty())
-        return;
-
-    delete asg_rng;
-    asg_rng = states.top();
-    states.pop();
 }
 
 uint32_t get_uint32()

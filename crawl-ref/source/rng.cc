@@ -63,16 +63,6 @@ uint32_t random_int(void)
     return get_uint32();
 }
 
-void push_rng_state()
-{
-    push_asg_state();
-}
-
-void pop_rng_state()
-{
-    pop_asg_state();
-}
-
 //-----------------------------------------------------------------------------
 // MurmurHash2, by Austin Appleby
 uint32_t hash32(const void *data, int len)
