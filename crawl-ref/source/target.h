@@ -31,7 +31,7 @@ public:
     virtual bool can_affect_walls();
 
     virtual aff_type is_affected(coord_def loc) = 0;
-    virtual bool has_additional_sites(coord_def a, bool allow_harmful);
+    virtual bool has_additional_sites(coord_def a);
 protected:
     bool anyone_there(coord_def loc);
 };
@@ -209,7 +209,7 @@ public:
     bool set_aim(coord_def a);
     bool jump_is_blocked;
     aff_type is_affected(coord_def loc);
-    bool has_additional_sites(coord_def a, bool allow_harmful);
+    bool has_additional_sites(coord_def a);
     set<coord_def> additional_sites;
     coord_def landing_site;
 private:

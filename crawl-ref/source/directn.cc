@@ -1142,15 +1142,9 @@ const coord_def& direction_chooser::target() const
 
 void direction_chooser::set_target(const coord_def& new_target)
 {
-    set<coord_def>::const_iterator site;
 
     if (restricts == DIR_JUMP)
-    {
-        if (hitfunc->has_additional_sites(new_target, true))
-            valid_jump = true;
-        else
-            valid_jump = false;
-    }
+        valid_jump = hitfunc->has_additional_sites(new_target);
     moves.target = new_target;
 }
 
@@ -1321,10 +1315,8 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     const monster* mons = monster_at(target());
 
     if (restricts == DIR_JUMP && !valid_jump)
-    {
-        mpr("There is no safe place to jump near there.");
         return false;
-    }
+
     if (!allow_out_of_range && !in_range(target()))
     {
         mpr(hitfunc? hitfunc->why_not : "That is beyond the maximum range.",
@@ -2503,7 +2495,7 @@ static bool _find_jump_attack_mons(const coord_def& where, int mode, bool need_p
     if (where == you.pos())
         return false;
 
-    return hitfunc->has_additional_sites(where, false);
+    return hitfunc->has_additional_sites(where);
 }
 
 

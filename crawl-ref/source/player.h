@@ -797,8 +797,6 @@ bool check_moveto(const coord_def& p, const string &move_verb = "step",
                   const string &msg = "");
 bool check_moveto_terrain(const coord_def& p, const string &move_verb,
                           const string &msg = "", bool *prompted = nullptr);
-bool check_moveto_dangerous(const coord_def& p, const string& msg = "",
-                            bool cling = true, bool do_prompt = true);
 bool check_moveto_cloud(const coord_def& p, const string &move_verb = "step",
                         bool *prompted = nullptr);
 bool check_moveto_exclusion(const coord_def& p,
