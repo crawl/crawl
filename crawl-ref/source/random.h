@@ -118,14 +118,6 @@ void shuffle_array(vector<T> &vec)
     shuffle_array(&vec[0], vec.size());
 }
 
-class rng_save_excursion
-{
-public:
-    rng_save_excursion(uint32_t seed) { push_rng_state(); seed_rng(seed); }
-    rng_save_excursion()          { push_rng_state(); }
-    ~rng_save_excursion()         { pop_rng_state(); }
-};
-
 /**
  * A defer_rand object represents an infinite tree of random values, allowing
  * for a much more functional approach to randomness.  defer_rand values which

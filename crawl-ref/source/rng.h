@@ -3,10 +3,6 @@
 
 void seed_rng();
 void seed_rng(uint32_t seed);
-void push_rng_state();
-void pop_rng_state();
-
-void cf_setseed();
 
 uint32_t random_int();
 
