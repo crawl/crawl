@@ -227,8 +227,9 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
     return true;
 }
 
-bool check_moveto_dangerous(const coord_def& p, const string& msg, bool cling,
-                            bool do_prompt)
+static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
+                                    bool cling = true)
+
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
         || you.airborne() || cling && you.can_cling_to(p)
@@ -237,20 +238,17 @@ bool check_moveto_dangerous(const coord_def& p, const string& msg, bool cling,
         return true;
     }
 
-    if (do_prompt)
+    if (msg != "")
+        mpr(msg.c_str());
+    else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
+        mpr("You cannot swim in your current form.");
+    else if (you.species == SP_LAVA_ORC && feat_is_lava(env.grid(p))
+             && is_feat_dangerous(env.grid(p)))
     {
-        if (msg != "")
-            mpr(msg.c_str());
-        else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
-            mpr("You cannot swim in your current form.");
-        else if (you.species == SP_LAVA_ORC && feat_is_lava(env.grid(p))
-                 && is_feat_dangerous(env.grid(p)))
-        {
-            mpr("You cannot enter lava in your current form.");
-        }
-        else
-            canned_msg(MSG_UNTHINKING_ACT);
+        mpr("You cannot enter lava in your current form.");
     }
+    else
+        canned_msg(MSG_UNTHINKING_ACT);
     return false;
 }
 
@@ -260,9 +258,9 @@ bool check_moveto_terrain(const coord_def& p, const string &move_verb,
     if (you.is_wall_clinging()
         && (move_verb == "blink" || move_verb == "passwall"))
     {
-        return check_moveto_dangerous(p, msg, false);
+        return _check_moveto_dangerous(p, msg, false);
     }
-    else if (!check_moveto_dangerous(p, msg))
+    else if (!_check_moveto_dangerous(p, msg))
         return false;
 
     if (!need_expiration_warning() && need_expiration_warning(p)

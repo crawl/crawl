@@ -53,7 +53,7 @@ bool targetter::anyone_there(coord_def loc)
     return actor_at(loc);
 }
 
-bool targetter::has_additional_sites(coord_def loc, bool allow_harmful)
+bool targetter::has_additional_sites(coord_def loc)
 {
     return false;
 }
@@ -911,7 +911,7 @@ bool targetter_jump::valid_aim(coord_def a)
         return notify_fail("There's something in the way.");
     else if (!find_ray(agent->pos(), a, ray, opc_solid_see))
         return notify_fail("There's something in the way.");
-    else if (!has_additional_sites(a, true))
+    else if (!has_additional_sites(a))
     {
         switch (no_landing_reason)
         {
@@ -983,7 +983,7 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
         if (act && (!check_invis || agent->can_see(act)))
         {
 
-            // Can't jump over airborn enemies nor gient enemies not in deep
+            // Can't jump over airborn enemies nor giant enemies not in deep
             // water or lava.
             if (act->airborne())
             {
@@ -1013,12 +1013,11 @@ aff_type targetter_jump::is_affected(coord_def loc)
     return aff;
 }
 
-// Handle setting the aim for jump, which is the landing position of the jump.
-// If something unsee either occupies the aim positiion or blocks the jump path,
-// indicate that with jump_is_blocked.
+// If something unseen either occupies the aim position or blocks the jump path,
+// indicate that with jump_is_blocked, but still return true so long there is at
+// least one valid landing position from the player's perspective.
 bool targetter_jump::set_aim(coord_def a)
 {
-    ray_def ray;
     set<coord_def>::const_iterator site;
 
     if (a == origin)
@@ -1028,8 +1027,8 @@ bool targetter_jump::set_aim(coord_def a)
 
     jump_is_blocked = false;
 
-    // Find our set of landing sites, choose one at random, and see if it's
-    // actually blocked.
+    // Find our set of landing sites, choose one at random to be the destination
+    // and see if it's actually blocked.
     set_additional_sites(aim);
     if (additional_sites.size())
     {
@@ -1083,21 +1082,8 @@ void targetter_jump::get_additional_sites(coord_def a)
 }
 
 // See if we can find at least one valid landing position for the given monster.
-// Base on allow_harmful we might care to exclude sites harmful to the player.
-bool targetter_jump::has_additional_sites(coord_def a, bool allow_harmful)
+bool targetter_jump::has_additional_sites(coord_def a)
 {
-    set<coord_def>::const_iterator site;
-
     get_additional_sites(a);
-    if (allow_harmful || !agent->is_player())
-        return temp_sites.size();
-    // Find a valid jump_attack position in the adjacent squares, chosing the
-    // valid position closest to the player.
-    for (site = temp_sites.begin();
-         site != temp_sites.end(); site++)
-    {
-        if (check_moveto_dangerous(*site, "jump", "", false))
-            return true;
-    }
-    return false;
+    return temp_sites.size();
 }
