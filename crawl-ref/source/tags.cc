@@ -1471,6 +1471,10 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < (int)you.recall_list.size(); i++)
         _marshall_as_int<mid_t>(th, you.recall_list[i]);
 
+    marshallUByte(th, NUM_SEEDS);
+    for (i = 0; i < NUM_SEEDS; i++)
+        marshallInt(th, you.game_seeds[i]);
+
     CANARY;
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
@@ -2592,9 +2596,7 @@ static void tag_read_you(reader &th)
     }
 #if TAG_MAJOR_VERSION == 34
     }
-#endif
 
-#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_INCREMENTAL_RECALL)
     {
 #endif
@@ -2602,6 +2604,18 @@ static void tag_read_you(reader &th)
     you.recall_list.resize(count);
     for (i = 0; i < count; i++)
         you.recall_list[i] = unmarshall_int_as<mid_t>(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+
+    if (th.getMinorVersion() >= TAG_MINOR_SEEDS)
+    {
+#endif
+    count = unmarshallUByte(th);
+    ASSERT(count <= NUM_SEEDS);
+    for (i = 0; i < count; i++)
+        you.game_seeds[i] = unmarshallInt(th);
+    for (i = count; i < NUM_SEEDS; i++)
+        you.game_seeds[i] = random_int();
 #if TAG_MAJOR_VERSION == 34
     }
 #endif

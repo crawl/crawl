@@ -3909,6 +3909,13 @@ enum uncancellable_type
     UNC_MERCENARY,             // arg is mid of the monster
 };
 
+// game-wide random seeds
+enum seed_type
+{
+    SEED_PASSIVE_MAP,          // determinist magic mapping
+    NUM_SEEDS
+};
+
 // Tiles stuff.
 
 enum screen_mode
