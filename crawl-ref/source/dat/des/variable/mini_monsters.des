@@ -2242,22 +2242,22 @@ ENDMAP
 NAME:   bh_circular_ruins
 DEPTH:  D:9-14
 KMONS:  1 = human simulacrum
-KITEM:  1 = book of dreams ident:all
+KITEM:  O = book of dreams ident:all
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 30, size = 1, \
+                              pow_max = 10, delay = 15, size = 2, \
                               walk_dist = 1, excl_rad = 1}
 MAP
   ..
  .xx.  ...
-.xx....xxx.
-.xO.....Oxx.
+.xx1...xxx.
+.x.......xx.
  ....xx...x.
   ..xx....x.
-  ..x.1.x..
+  ..x.O.x..
  .x....xx..
  .x...xx....
- .xxO.....Ox.
-  .xxx....xx.
+ .xx.......x.
+  .xxx...1xx.
    ...  .xx.
          ..
 ENDMAP
