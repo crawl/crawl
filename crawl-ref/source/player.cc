@@ -2353,12 +2353,6 @@ int player_movement_speed(bool ignore_burden)
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 5;
 
-    // Lava orc heat-based speed. -2 when cold; 0 when normal; +2 when hot.
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_SLOW_MOVE))
-        mv += 2;
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_FAST_MOVE))
-        mv -= 2;
-
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
     if (player_mutation_level(MUT_FAST) > 0 && !you.swimming())
