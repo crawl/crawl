@@ -395,9 +395,6 @@ void spawn_random_monsters()
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        // In Abyss, monsters spawn regularly every 5 turns which might look
-        // a bit strange for a place as chaotic as the Abyss.  Then again,
-        // the player is unlikely to meet all of them and notice this.
         if (you.char_direction != GDT_GAME_START)
             rate = 5;
         if (you_worship(GOD_CHEIBRIADOS))
