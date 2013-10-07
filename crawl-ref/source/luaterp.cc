@@ -41,7 +41,7 @@ static int _incomplete(lua_State *ls, int status)
 
 static int _pushline(lua_State *ls, int firstline)
 {
-    char buffer[80];
+    char buffer[16384];
     char *b = buffer;
     size_t l;
     string prompt = firstline ? "> " : ". ";
