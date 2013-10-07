@@ -1755,7 +1755,8 @@ static string _status_mut_abilities(int sw);
 
 // helper for print_overview_screen
 static void _print_overview_screen_equip(column_composer& cols,
-                                         vector<char>& equip_chars)
+                                         vector<char>& equip_chars,
+                                         int sw)
 {
     const int e_order[] =
     {
@@ -1766,7 +1767,9 @@ static void _print_overview_screen_equip(column_composer& cols,
         EQ_RING_AMULET,
     };
 
-    char buf[100];
+    sw = min(max(sw, 79), 640);
+
+    char buf[641];
     for (int i = 0; i < NUM_EQUIP; i++)
     {
         int eqslot = e_order[i];
@@ -1816,7 +1819,7 @@ static void _print_overview_screen_equip(column_composer& cols,
                      equip_char,
                      colname,
                      melded ? "melded " : "",
-                     chop_string(item.name(DESC_PLAIN, true), 42, false).c_str(),
+                     chop_string(item.name(DESC_PLAIN, true), sw - 38, false).c_str(),
                      colname);
             equip_chars.push_back(equip_char);
         }
@@ -2159,8 +2162,7 @@ static vector<formatted_string> _get_overview_stats()
 }
 
 static vector<formatted_string> _get_overview_resistances(
-    vector<char> &equip_chars,
-    bool calc_unid = false)
+    vector<char> &equip_chars, bool calc_unid, int sw)
 {
     char buf[1000];
 
@@ -2267,7 +2269,7 @@ static vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rflyi, 1), _itosym1(rflyi));
     cols.add_formatted(1, buf, false);
 
-    _print_overview_screen_equip(cols, equip_chars);
+    _print_overview_screen_equip(cols, equip_chars, sw);
 
     return cols.formatted_lines();
 }
@@ -2294,7 +2296,7 @@ static char _get_overview_screen_results()
     {
         vector<char> equip_chars;
         vector<formatted_string> blines =
-            _get_overview_resistances(equip_chars, calc_unid);
+            _get_overview_resistances(equip_chars, calc_unid, get_number_of_cols());
 
         for (unsigned int i = 0; i < blines.size(); ++i)
         {
@@ -2326,7 +2328,7 @@ string dump_overview_screen(bool full_id)
     text += "\n";
 
     vector<char> equip_chars;
-    blines = _get_overview_resistances(equip_chars, full_id);
+    blines = _get_overview_resistances(equip_chars, full_id, 640);
     for (unsigned int i = 0; i < blines.size(); ++i)
     {
         text += blines[i];
