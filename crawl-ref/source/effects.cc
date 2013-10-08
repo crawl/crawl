@@ -1234,7 +1234,7 @@ bool vitrify_area(int radius)
         if (newgrid != grid)
         {
             grd(*ri) = newgrid;
-            set_terrain_changed(ri->x, ri->y);
+            set_terrain_changed(*ri);
             something_happened = true;
         }
     }
