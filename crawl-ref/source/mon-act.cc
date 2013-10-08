@@ -2169,6 +2169,8 @@ void handle_monster_move(monster* mons)
         }
     }
     mon_nearby_ability(mons);
+    if (!mons->alive())
+        return;
 
     // XXX: A bit hacky, but stores where we WILL move, if we don't take
     //      another action instead (used for decision-making)
