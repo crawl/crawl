@@ -1410,7 +1410,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
 
 string direction_chooser::target_interesting_terrain_description() const
 {
-    const dungeon_feature_type feature = grid_appearance(target());
+    const dungeon_feature_type feature = grd(target());
 
     // Only features which can make you lose the item are interesting.
     // FIXME: extract the naming logic from here and use
@@ -2155,6 +2155,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
     const monster* mons = monster_at(c);
     const int oid = you.visible_igrd(c);
+    const dungeon_feature_type feat = env.map_knowledge(c).feat();
 
     if (mons && mons->visible_to(&you))
     {
@@ -2188,9 +2189,9 @@ void get_square_desc(const coord_def &c, describe_info &inf,
         if (mitm[oid].defined())
             get_item_desc(mitm[oid], inf, examine_mons);
     }
-    else if (show_floor || grid_appearance(c) != DNGN_FLOOR
-                           && !feat_is_wall(grid_appearance(c))
-                           && !feat_is_tree(grid_appearance(c)))
+    else if (show_floor || feat != DNGN_FLOOR
+                           && !feat_is_wall(feat)
+                           && !feat_is_tree(feat))
     {
         // Third priority: features.
         get_feature_desc(c, inf);

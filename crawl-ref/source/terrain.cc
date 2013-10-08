@@ -516,18 +516,6 @@ void get_door_description(int door_size, const char** adjective, const char** no
     *noun = descriptions[idx+1];
 }
 
-dungeon_feature_type grid_appearance(const coord_def &gc)
-{
-    dungeon_feature_type feat = env.grid(gc);
-    switch (feat)
-    {
-    case DNGN_UNDISCOVERED_TRAP:
-        return DNGN_FLOOR;
-    default:
-        return feat;
-    }
-}
-
 coord_def get_random_stair()
 {
     vector<coord_def> st;
