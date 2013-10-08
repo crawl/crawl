@@ -186,7 +186,7 @@ static void _update_feat_at(const coord_def &gp)
             env.map_knowledge(gp).flags |= MAP_GLOWING_MOLDY;
     }
 
-    if (slime_wall_neighbour(gp))
+    if (env.level_state & LSTATE_SLIMY_WALL && slime_wall_neighbour(gp))
         env.map_knowledge(gp).flags |= MAP_CORRODING;
 
     if (emphasise(gp))
