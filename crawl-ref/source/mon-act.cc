@@ -3144,8 +3144,8 @@ static int _count_adjacent_slime_walls(const coord_def &pos)
 static bool _check_slime_walls(const monster *mon,
                                const coord_def &targ)
 {
-    if (!player_in_branch(BRANCH_SLIME_PITS) || mons_is_slime(mon)
-        || actor_slime_wall_immune(mon) || mons_intel(mon) <= I_REPTILE)
+    if (mons_is_slime(mon) || actor_slime_wall_immune(mon)
+        || mons_intel(mon) <= I_REPTILE)
     {
         return false;
     }
@@ -3211,7 +3211,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (mons_avoids_cloud(mons, targ_cloud_num))
         return false;
 
-    if (_check_slime_walls(mons, targ))
+    if (env.level_state & LSTATE_SLIMY_WALL && _check_slime_walls(mons, targ))
         return false;
 
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
