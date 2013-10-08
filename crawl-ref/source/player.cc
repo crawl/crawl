@@ -2951,7 +2951,7 @@ void forget_map(bool rot)
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         const coord_def &p = *ri;
-        if (you.see_cell(p) || !env.map_knowledge(p).known())
+        if (!env.map_knowledge(p).known() || you.see_cell(p))
             continue;
 
         if (rot)
@@ -2962,6 +2962,9 @@ void forget_map(bool rot)
             if (x_chance_in_y(chance, scalar))
                 continue;
         }
+
+        if (you.see_cell(p))
+            continue;
 
         env.map_knowledge(p).clear();
         if (env.map_forgotten.get())
