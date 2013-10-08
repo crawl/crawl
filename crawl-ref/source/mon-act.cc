@@ -3178,10 +3178,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (!in_bounds(targ))
         return false;
 
-    // No monster may enter the open sea.
-    if (grd(targ) == DNGN_OPEN_SEA || grd(targ) == DNGN_LAVA_SEA)
-        return false;
-
     // Non-friendly and non-good neutral monsters won't enter
     // sanctuaries.
     if (!mons->wont_attack()
@@ -3198,13 +3194,14 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     const dungeon_feature_type target_grid = grd(targ);
     const habitat_type habitat = mons_primary_habitat(mons);
 
+    // No monster may enter the open sea.
+    if (target_grid == DNGN_OPEN_SEA || target_grid == DNGN_LAVA_SEA)
+        return false;
+
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (mons_base_type(mons) == MONS_KRAKEN
-        && target_grid == DNGN_SHALLOW_WATER)
-    {
+    if (target_grid == DNGN_SHALLOW_WATER && mons_base_type(mons) == MONS_KRAKEN)
         return false;
-    }
 
     const int targ_cloud_num = env.cgrid(targ);
     if (mons_avoids_cloud(mons, targ_cloud_num))
@@ -3213,17 +3210,11 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (env.level_state & LSTATE_SLIMY_WALL && _check_slime_walls(mons, targ))
         return false;
 
-    const bool burrows = mons_class_flag(mons->type, M_BURROWS);
-    const bool digs = _mons_can_cast_dig(mons, false)
-                      || _mons_can_zap_dig(mons);
-    const bool flattens_trees = mons_flattens_trees(mons);
-    if (((burrows || digs) && (target_grid == DNGN_ROCK_WALL
-                               || target_grid == DNGN_CLEAR_ROCK_WALL))
-        || (flattens_trees && feat_is_tree(target_grid)))
+    if ((target_grid == DNGN_ROCK_WALL || target_grid == DNGN_CLEAR_ROCK_WALL)
+        && (mons_class_flag(mons->type, M_BURROWS)
+            || _mons_can_cast_dig(mons, false) || _mons_can_zap_dig(mons))
+        || feat_is_tree(target_grid) && mons_flattens_trees(mons))
     {
-        // Don't burrow out of bounds.
-        if (!in_bounds(targ))
-            return false;
     }
     else if (!mons_can_traverse(mons, targ, false)
              && !monster_habitable_grid(mons, target_grid))
@@ -3246,14 +3237,10 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         || (mons->type == MONS_LURKING_HORROR
             && mons->foe_distance() > random2(LOS_RADIUS + 1)))
     {
-        if (!mons->wont_attack()
-            && is_sanctuary(mons->pos()))
-        {
+        if (!mons->wont_attack() && is_sanctuary(mons->pos()))
             return true;
-        }
 
-        if (!mons->friendly()
-                && you.see_cell(targ)
+        if (!mons->friendly() && you.see_cell(targ)
             || mon_enemies_around(mons))
         {
             return false;
