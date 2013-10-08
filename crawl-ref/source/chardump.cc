@@ -1370,8 +1370,8 @@ void dump_map(FILE *fp, bool debug, bool dist)
         for (size_t i = 0; i < env.level_vaults.size(); ++i)
         {
             const vault_placement &vp(*env.level_vaults[i]);
-            fprintf(fp, "  \e[3%lum%s\e[0m at (%d,%d) size (%d,%d)\n",
-                    6 - i % 6, vp.map.name.c_str(),
+            fprintf(fp, "  \e[3%dm%s\e[0m at (%d,%d) size (%d,%d)\n",
+                    6 - (int)i % 6, vp.map.name.c_str(),
                     vp.pos.x, vp.pos.y, vp.size.x, vp.size.y);
         }
         fprintf(fp, "  (bright = stacked, \e[37;1mwhite\e[0m = not in level_map_ids)\n");
