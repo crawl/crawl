@@ -24,6 +24,9 @@
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed(const coord_def p)
 {
+    if (grd(p) == DNGN_SLIMY_WALL)
+        env.level_state |= LSTATE_SLIMY_WALL;
+
     env.map_knowledge(p).flags |= MAP_CHANGED_FLAG;
 
     dungeon_events.fire_position_event(DET_FEAT_CHANGE, p);
