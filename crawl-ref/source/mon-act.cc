@@ -3205,7 +3205,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     {
         return false;
     }
-    bool no_water = false;
 
     const int targ_cloud_num = env.cgrid(targ);
     if (mons_avoids_cloud(mons, targ_cloud_num))
@@ -3226,8 +3225,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         if (!in_bounds(targ))
             return false;
     }
-    else if (no_water && feat_is_water(target_grid))
-        return false;
     else if (!mons_can_traverse(mons, targ, false)
              && !monster_habitable_grid(mons, target_grid))
     {
