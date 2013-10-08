@@ -4844,11 +4844,6 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s lunges at you hungrily!", atk_name(DESC_THE).c_str());
 
         expose_player_to_element(BEAM_DEVOUR_FOOD, 10);
-        const bool ground = expose_items_to_element(BEAM_DEVOUR_FOOD, you.pos(),
-                                                    10);
-
-        if (needs_message && ground)
-            mpr("Some of the food beneath you is devoured!");
         break;
     }
 
