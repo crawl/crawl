@@ -295,25 +295,11 @@ private:
     trap_type _trap:8;
 };
 
-void set_terrain_mapped(int x, int y);
-static inline void set_terrain_mapped(const coord_def& c)
-{
-    set_terrain_mapped(c.x,c.y);
-}
+void set_terrain_mapped(const coord_def c);
+void set_terrain_seen(const coord_def c);
+void set_terrain_changed(const coord_def c);
 
-void set_terrain_seen(int x, int y);
-static inline void set_terrain_seen(const coord_def& c)
-{
-    set_terrain_seen(c.x, c.y);
-}
-
-void set_terrain_changed(int x, int y);
-static inline void set_terrain_changed(const coord_def &c)
-{
-    set_terrain_changed(c.x, c.y);
-}
-
-void set_terrain_visible(const coord_def &c);
+void set_terrain_visible(const coord_def c);
 void clear_terrain_visibility();
 
 int count_detected_mons(void);
