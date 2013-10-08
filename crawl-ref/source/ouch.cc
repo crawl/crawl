@@ -1136,7 +1136,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             // round off fairly (important for taking 1 damage at a time)
             int mp = div_rand_round(dam * you.magic_points,
-                                    you.hp + you.magic_points);
+                                    max(you.hp + you.magic_points, 1));
             // but don't kill the player with round-off errors
             mp = max(mp, dam + 1 - you.hp);
             mp = min(mp, you.magic_points);
