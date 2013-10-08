@@ -1097,42 +1097,6 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     return damage;
 }
 
-static int _shatter_items(coord_def where, int pow, actor *)
-{
-    UNUSED(pow);
-
-    int broke_stuff = 0;
-
-    for (stack_iterator si(where); si; ++si)
-    {
-        if (si->base_type == OBJ_POTIONS)
-        {
-            for (int j = 0; j < si->quantity; ++j)
-            {
-                if (one_chance_in(10))
-                {
-                    broke_stuff++;
-                    if (!dec_mitm_item_quantity(si->index(), 1)
-                        && is_blood_potion(*si))
-                    {
-                       remove_oldest_blood_potion(*si);
-                    }
-                }
-            }
-        }
-    }
-
-    if (broke_stuff)
-    {
-        if (player_can_hear(where))
-            mpr("You hear glass break.", MSGCH_SOUND);
-
-        return 1;
-    }
-
-    return 0;
-}
-
 static int _shatter_walls(coord_def where, int pow, actor *agent)
 {
     int chance = 0;
@@ -1249,7 +1213,6 @@ spret_type cast_shatter(int pow, bool fail)
         if (!cell_see_cell(you.pos(), *di, LOS_SOLID))
             continue;
 
-        _shatter_items(*di, pow, &you);
         _shatter_monsters(*di, pow, &you);
         dest += _shatter_walls(*di, pow, &you);
     }
@@ -1330,7 +1293,6 @@ bool mons_shatter(monster* caster, bool actual)
 
         if (actual)
         {
-            _shatter_items(*di, pow, caster);
             _shatter_monsters(*di, pow, caster);
             if (*di == you.pos())
                 _shatter_player(pow, caster);

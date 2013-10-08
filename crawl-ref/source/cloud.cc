@@ -359,7 +359,6 @@ void manage_clouds()
             _handle_ghostly_flame(cloud);
 
         _cloud_interacts_with_terrain(cloud);
-        expose_items_to_element(_cloud2beam(cloud.type), cloud.pos, 2);
 
         _dissipate_cloud(i, dissipate);
     }
