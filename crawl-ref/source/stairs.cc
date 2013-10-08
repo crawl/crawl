@@ -1068,6 +1068,9 @@ static void _update_level_state()
     for (monster_iterator mon_it; mon_it; ++mon_it)
         if (mons_allows_beogh(*mon_it))
             env.level_state |= LSTATE_BEOGH;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (grd(*ri) == DNGN_SLIMY_WALL)
+            env.level_state |= LSTATE_SLIMY_WALL;
 
     env.orb_pos = orb_position();
     if (player_has_orb())

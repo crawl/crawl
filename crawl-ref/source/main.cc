@@ -3277,7 +3277,8 @@ static void _player_reacts()
 
     actor_apply_cloud(&you);
 
-    slime_wall_damage(&you, you.time_taken);
+    if (env.level_state & LSTATE_SLIMY_WALL)
+        slime_wall_damage(&you, you.time_taken);
 
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
