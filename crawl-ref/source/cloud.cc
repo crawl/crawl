@@ -343,6 +343,8 @@ void manage_clouds()
         if (cloud.type == CLOUD_NONE)
             continue;
 
+        ASSERT(!cell_is_solid(cloud.pos));
+
         int dissipate = you.time_taken;
 
         // Fire clouds dissipate faster over water,
