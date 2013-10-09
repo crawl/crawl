@@ -926,7 +926,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             actor* targ = NULL;
             if (m->wont_attack() || crawl_state.game_is_arena())
                 targ = m;
-            else if (in_sight && one_chance_in(5))
+            else if (you.see_cell_no_trans(pos) && one_chance_in(5))
                 targ = &you;
 
             // Give the player a chance to figure out what happened
