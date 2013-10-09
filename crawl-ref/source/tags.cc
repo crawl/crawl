@@ -3858,7 +3858,7 @@ static void tag_read_level(reader &th)
         env.cloud[i].excl_rad = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 34
         // Please remove soon, after games get unstuck.
-        if (!in_bounds(env.cloud[i].pos))
+        if (!in_bounds(env.cloud[i].pos) || cell_is_solid(env.cloud[i].pos))
         {
             env.cloud[i].type = CLOUD_NONE;
             continue;
