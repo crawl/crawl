@@ -676,8 +676,8 @@ DAM:      -3
 STEALTH:  60
 BOOL:     seeinv, fog
 
-NAME:    large shield "Bullseye"
-OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
+NAME:    shield "Bullseye"
+OBJ:     OBJ_ARMOUR/ARM_SHIELD
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
