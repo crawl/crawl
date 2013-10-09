@@ -256,7 +256,7 @@ cloak of the Thief
 It allows its wearer to excel in the arts of thievery, and can be evoked to
 release thick clouds of smoke to allow for a hasty escape.
 %%%%
-large shield "Bullseye"
+shield "Bullseye"
 
 Just in case you had trouble getting hit.
 %%%%

@@ -255,7 +255,7 @@ Permette al suo indossatore di eccellere nelle arti del furto, e può essere
 evocata per rilasciare delle dense nuvole di fumo per aiutare una fuga
 affrettata.
 %%%%
-large shield "Bullseye"
+shield "Bullseye"
 
 Giusto in caso avessi problemi a farti colpire.
 %%%%

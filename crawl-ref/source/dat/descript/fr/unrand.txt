@@ -262,7 +262,7 @@ cloak of the Thief
 
 Elle permet à son porteur d'exceller dans l'art du vol.
 %%%%
-large shield "Bullseye"
+shield "Bullseye"
 
 Juste au cas où vous auriez du mal à vous faire toucher.
 %%%%

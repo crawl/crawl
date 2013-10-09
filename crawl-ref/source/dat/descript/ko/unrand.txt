@@ -241,7 +241,7 @@ cloak of the Thief
 
 이 망토는 착용자에게 예술적으로 탁월한 도둑질 능력을 선사한다.
 %%%%
-large shield "Bullseye"
+shield "Bullseye"
 
 적에게 얻어맞을 경우를 위한, 완벽한 대비책.
 %%%%

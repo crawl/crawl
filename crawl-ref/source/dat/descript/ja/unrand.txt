@@ -245,7 +245,7 @@ cloak of the Thief
 これは着用者を盗みの技巧に於いて卓越した存在とする。これは迅速な逃走を助ける、
 濃密な煙幕を放つことを可能にする。
 %%%%
-large shield "Bullseye"
+shield "Bullseye"
 
 もし敵の攻撃でお困りでしたらどうぞ。
 %%%%

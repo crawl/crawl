@@ -236,7 +236,7 @@ cloak of the Thief
 
 Pozwala nosicielowi przodować w złodziejskich sztukach.
 %%%%
-large shield "Bullseye"
+shield "Bullseye"
 
 Na wypadek jakby twoi wrogowie mieli problemy z trafianiem w ciebie.
 %%%%
