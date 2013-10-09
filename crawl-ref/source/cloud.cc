@@ -311,6 +311,10 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
     if (!x_chance_in_y(chance, you.time_taken * 600))
         return;
 
+    // No spawns in problematic places.
+    if (!monster_habitable_grid(MONS_IGUANA, grd(cloud.pos)))
+        return;
+
     monster_type basetype = random_choose_weighted(4,   MONS_ANACONDA,
                                                    6,   MONS_HYDRA,
                                                    8,   MONS_ROCK_WORM,
