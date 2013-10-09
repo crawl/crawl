@@ -358,7 +358,7 @@ from rats of all kinds.
 shield of the gong
 
 This is a large bronze gong that can be worn as a shield. According to certain
-mystics, beating on such a gong can grant you spiritual protection.
+mystics, beating on such a gong can grant you some kinds of protection.
 
 And this shield surely will be heard!
 %%%%
