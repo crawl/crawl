@@ -399,7 +399,6 @@ function arena_sprint_get_monster_set(round, boss)
                     guardian serpent / anaconda",
                 "place:Slime:$",
                 "dancing weapon",
-                "place:Forest",
                 "place:Crypt:$",
                 "common demon w:30 / greater demon w:5",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:5 sphinx",
@@ -469,8 +468,6 @@ function arena_sprint_get_monster_set(round, boss)
                     guardian serpent / w:5 anaconda",
                 "place:Slime:$ / acid blob / azure jelly / great orb of eyes",
                 "dancing weapon",
-                "place:Forest:$ w:20 / spriggan defender / spriggan rider /\
-                    spriggan air mage / spriggan druid w:3 / spriggan berserker",
                 "place:Crypt:$ w:25 / w:3 lich / w:5 vampire knight /\
                     w:2 boris / w:2 curse skull",
                 "any demon w:30 / pandemonium lord",
@@ -738,7 +735,7 @@ function arena_sprint_init_boss_table()
                  "barnacled rune of zot"}
     end
 
-    if crawl.coinflip() then
+    if True then
         -- Elementalist boss is from mu_elemental_laboratory
         bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster /\
                  deep elf master archer / deep elf annihilator / deep elf high priest",

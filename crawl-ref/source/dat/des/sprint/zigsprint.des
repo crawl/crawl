@@ -323,10 +323,6 @@ function choose_mset_3(e)
 -- Abyss
   elseif rnd < 39 then
     e.kmons("1 = lesser demon w:5 / place:Abyss")
--- Forest
-  elseif rnd < 44 then
-    e.kmons("1 = place:Forest:$ w:50 /\
-               spriggan druid w:2 / spriggan air mage w:5 / spriggan berserker w:5")
 -- Shoals
   elseif rnd < 49 then
     e.kmons("1 = place:Shoals:3 / place:Shoals:$ w:45 / merfolk javelineer /\
@@ -451,10 +447,6 @@ local rnd = crawl.random2(142)
 -- Abyss
   elseif rnd < 42 then
     e.kmons("1 = pandemonium lord / place:Abyss w:500")
--- Forest
-  elseif rnd < 47 then
-    e.kmons("1 = place:Forest:$ w:50 / spriggan defender /\
-               spriggan air mage / spriggan druid w:3 / spriggan berserker")
 -- Shoals
   elseif rnd < 52 then
     e.kmons("1 = place:Shoals:$ w:55 / merfolk javelineer / merfolk impaler /\
