@@ -928,6 +928,9 @@ void monster::timeout_enchantments(int levels)
     for (mon_enchant_list::const_iterator i = ec.begin();
          i != ec.end(); ++i)
     {
+        if (!alive())
+            return;
+
         switch (i->first)
         {
         case ENCH_WITHDRAWN:
