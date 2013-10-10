@@ -4498,11 +4498,8 @@ static void _place_delayed_monsters()
 
         if (mon)
         {
-            if (you_worship(GOD_YREDELEMNUL)
-                || you_worship(GOD_BEOGH))
-            {
+            if (you_worship(GOD_YREDELEMNUL) || you_worship(GOD_BEOGH))
                 add_companion(mon);
-            }
             placed++;
         }
 

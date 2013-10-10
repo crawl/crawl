@@ -35,6 +35,7 @@ void init_companions(void)
 
 void add_companion(monster* mons)
 {
+    ASSERT(mons->alive());
     companion_list[mons->mid] = companion(*mons);
 }
 
@@ -97,6 +98,7 @@ void update_companions()
         {
             if (mons->is_divine_companion())
             {
+                ASSERT(mons->alive());
                 i->second.mons = follower(*mons);
                 i->second.timestamp = you.elapsed_time;
             }
