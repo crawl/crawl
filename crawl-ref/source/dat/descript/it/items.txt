@@ -1,1 +1,14 @@
 %%%%
+amulet of clarity
+
+Questo amuleto protegge il portatore da alcune forme di confusione mentale,
+incluso l'essere infuriati contro la propria volontà
+%%%%
+amulet of faith
+
+Questo è un talismano realizzato per richiamare l'attenzione degli dei su chi
+lo indossa. Questa attenzione divina rende più facile compiacere il tuo dio, ma
+contemporaneamente è anche meno probabile che il tuo dio chiuda un occhio sulle
+tue trasgressioni e una volta rimosso l'amuleto ti priverà di una parte del tuo
+favore divino.
+%%%%

@@ -491,6 +491,11 @@ réserves d'énergie magique, et ce, afin d'infliger des dégâts supplémentair
 chaque fois qu'un ennemi est touché. Il n'a aucun effet si la magie du lanceur
 est épuisée.
 %%%%
+Injury Bond spell
+
+Ce sort permet au lanceur de protéger ses alliés, redirigeant vers lui la
+moitié de tous les dommages qu'ils subissent.
+%%%%
 Ink Cloud spell
 
 Les krakens sont connus pour injecter un liquide opaque dans l'eau affin
@@ -576,6 +581,11 @@ Ce sort déchire la trame de la réalité, créant un portail vers l'inconnu,
 auto-alimenté mais heureusement temporaire. Quels ignobles habitants de cet
 ailleurs choisira de lancer leurs appendices tentaculaires au travers, personne
 ne sait mais, très certainement personne ne veut être à côté pour le savoir.
+%%%%
+Malign Offering spell
+
+Ce sort permet au lanceur de vider un ennemi de son énergie vitale, et
+guérissant ainsi les alliés à proximité.
 %%%%
 Mara Summon spell
 
@@ -922,6 +932,11 @@ avec une arme qu'à mains nues. Le sorcier avec un corps de pierre est isolé au
 effets électriques et gagne une résistance au poison, à la décomposition et aux
 énergies négatives.
 %%%%
+Steam Ball spell
+
+Cette créature peut dégager une boule de vapeur chaude et la lancer vers un
+ennemi.
+%%%%
 Sticks to Snakes spell
 
 Ce sort utilise des projectiles en bois (flèches ou javelots) tenus en main
@@ -1067,11 +1082,6 @@ Summon Swarm spell
 
 Ce sort convoque un essaim pestilentiel.
 %%%%
-Summon Twister spell
-
-Un papillon du chaos peut engendrer une tornade à l'autre bout du monde d'un
-simple battement de ses ailes.
-%%%%
 Summon Ufetubus spell
 
 Ce sort convoque plein d'ufetubi, petits démons ennuyeux se pressant autour de
@@ -1193,6 +1203,10 @@ l'effet inverse sur le sorcier.
 Venom Bolt spell
 
 Ce sort projette un missile de poison.
+%%%%
+Volley of Thorns spell
+
+Ce pouvoir permet de lancer une petite pluie d'épines acérées.
 %%%%
 Warp Weapon spell
 

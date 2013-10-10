@@ -1,0 +1,61 @@
+%%%%
+death berserker unberserked
+
+Nie zapominaj o używaniu trybu berserk kiedy walczysz z wymagającymi
+przeciwnikami. Używanie go jest ryzykowne, ale stajesz się szybszy i
+silniejszy.
+{{
+    if you.hunger() < 3
+      then return "Włączenie berserka jest niemożliwe, jeśli jesteś " ..
+                  "głodny, upewnij się, że zawsze jesteś najedzony na " ..
+                  "wszelki wypadek you need to berserk." end
+}}
+%%%%
+death ranger melee
+
+Twój łuk i strzały są niesamowicie silne przeciwko oddalonym od siebie
+potworom. Zawsze zbieraj leżące strzały w lochach.
+%%%%
+death random 0
+
+Zawsze bierz pod uwagę użycie pocisków, różdżek lub czarów zanim dojdzie do
+walki bezpośredniej w bliskim dystansie.
+%%%%
+death random 1
+
+Naucz się kiedy uciekać od przeciwników silniejszych od siebie - to bardzo
+ważne! Często opłaca się ominąć zbyt niebezpieczny poziom. Nie rób tego jednak
+zbyt często, ponieważ potwory staną się jeszcze silniejsze im głębiej się
+zapuścisz.
+%%%%
+death random 3
+
+Pamiętaj, aby używać zwojów, mikstur i różdżek, które znajdziesz. W wielu
+przypadkach nie będziesz mógł zidentyfikować czegoś tylko przy użyciu zwojów.
+Naucz się improwizować: identyfikuj używając
+%%%%
+death random 5
+
+Jeśli masz wybór, nigdy nie walcz z więcej niż jednym przeciwnikiem
+jednocześnie. Zawsze używaj korytarzy wymuszając walkę jeden na jednego.
+%%%%
+finished stashes
+
+Możesz szukać przedmiotów na danej mapie używając komendy
+<input>$cmd[CMD_SEARCH_STASHES]</input>. Na przykład komenda
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"knife"</w> pokaże lokacje
+wszystkich noży. Możesz wtedy przenieść się do danego miejsca. Możesz także w
+komendach użyć takich słów jak <w>"shop"</w> lub <w>"altar"</w>.
+%%%%
+finished random 2
+
+Interfejs może być dogłębnie zmieniany. Wszystkie opcje są opisane w pliku
+<w>options_guide.txt</w> który znajdziesz w <w>docs</w> . Same ustawienia
+znajdują się w <w>init.txt</w> lub <w>.crawlrc</w>. Zostaniesz powiadomiony,
+jeśli żaden plik nie zostanie znaleziony.
+%%%%
+finished random 3
+
+Możesz poprosić o pomoc innych graczy na <w>##crawl</w> kanale IRC na freenode
+(<w>irc.freenode.net</w>).
+%%%%
