@@ -374,7 +374,10 @@ COLOUR:  C = white
 KFEAT:   C = stone_wall
 TILE:    C = wall_marble
 KFEAT:   _ = altar_trog
-: _G.set_random_mon_list("place:Forest:3")
+: _G.set_random_mon_list("wolf / grizzly bear / black bear w:4 / giant firefly w:5 /" ..
+:    "wind drake / spriggan / spriggan druid w:5 / spriggan rider /" ..
+:    "spriggan assassin / spriggan enchanter w:5 / spriggan berserker /" ..
+:    "spriggan air mage w:5 / spriggan defender w:5 / anaconda w:3")
 veto {{
   return crawl.game_started() and dgn.br_exists("Forest")
 }}
