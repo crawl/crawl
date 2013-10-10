@@ -425,9 +425,6 @@ void beogh_convert_orc(monster* orc, bool emergency,
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_NO_REWARD;
 
-    mons_make_god_gift(orc, GOD_BEOGH);
-    add_companion(orc);
-
     if (orc->is_patrolling())
     {
         // Make orcs stop patrolling and forget their patrol point,
@@ -437,6 +434,9 @@ void beogh_convert_orc(monster* orc, bool emergency,
 
     if (!orc->alive())
         orc->hit_points = min(random_range(1, 4), orc->max_hit_points);
+
+    mons_make_god_gift(orc, GOD_BEOGH);
+    add_companion(orc);
 
     // Avoid immobile "followers".
     behaviour_event(orc, ME_ALERT);
