@@ -43,11 +43,6 @@ Death Knight
 Death Knights are melee fighters who command the undead in the name of
 Yredelemnul the Dark.
 %%%%
-Dragoon
-
-Dragoons harness the power of magical armour that allows them to
-launch a devestating jumping attack on multiple foes.
-%%%%
 Earth Elementalist
 
 Earth Elementalists know the Sandblast spell, and carry stones to increase the
