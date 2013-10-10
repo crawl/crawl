@@ -1,4 +1,91 @@
 %%%%
+Fighting
+
+Umiejętność Walki zwiększa celność i zadawane obrażenia w walce wręcz oraz
+zwiększa maksymalną ilość punktów życia.
+%%%%
+Short Blades
+
+Bycie wyszkolonym w danym rodzaju broni pozwala na szybsze atakowanie, oraz
+zwiększa celność i obrażenia broni tego typu. Ogólnie zalecane jest, aby
+skoncentrować się na jednym lub dwóch typach broni, by używanie ich było jak
+najbardziej efektywne.
+
+Krótkie Ostrza znane są z zadawania niskich obrażeń w późniejszych etapach gry,
+jednak są idealnym narzędziem do dźgania.
+
+Będąc specjalistą od Krótkich Ostrzy łatwiej jest wyszkolić się w używaniu
+Długich Ostrzy, jak i na odwrót.
+%%%%
+Long Blades
+
+Bycie wyszkolonym w danym rodzaju broni pozwala na szybsze atakowanie, oraz
+zwiększa celność i obrażenia broni tego typu. Ogólnie zalecane jest, aby
+skoncentrować się na jednym lub dwóch typach broni, by używanie ich było jak
+najbardziej efektywne.
+
+Będąc specjalistą od Długich Ostrzy łatwiej jest wyszkolić się w używaniu
+Krótkich Mieczy, jak i na odwrót.
+%%%%
+Axes
+
+Bycie wyszkolonym w danym rodzaju broni pozwala na szybsze atakowanie, oraz
+zwiększa  celność i obrażenia broni tego typu. Ogólnie zalecane jest, aby
+skoncentrować się na jednym lub dwóch typach broni, by używanie ich było jak
+najbardziej efektywne.
+
+Topory przecinają wielu przeciwników za jednym zamachem, zadając obrażenia
+wszystkim wokół siebie.
+
+Będąc specjalistą od Toporów łatwiej jest wyszkolić się w używaniu Maczug,
+Cepów oraz Broni Drzewcowych, jak i na odwrót.
+%%%%
+Maces & Flails
+
+Bycie wyszkolonym w danym rodzaju broni pozwala na szybsze atakowanie, oraz
+zwiększa  celność i obrażenia broni tego typu. Ogólnie zalecane jest, aby
+skoncentrować się na jednym lub dwóch typach broni, by używanie ich było jak
+najbardziej efektywne.
+
+Będąc specjalistą od Maczug  i Cepów łatwiej jest wyszkolić się w używaniu
+Toporów oraz Buław, jak i na odwrót.
+%%%%
+Staves
+
+Being skilled with a particular type of weapon will allow you to attack more
+quickly with all weapons of this type, as well as increasing your accuracy and
+damage with them. It is generally recommended to concentrate your efforts on
+one or two weapon types to become more powerful in them.
+
+Laski są łatwe w użyciu, lecz zadają niskie obrażenia w porównaniu do innych
+broni.
+
+Będąc specjalistą od Lasek łatwiej jest wyszkolić się w używaniu Maczug, Cepów
+oraz Broni Drzewcowych, jak i na odwrót.
+%%%%
+Slings
+
+Będąc wyszkolonym w danym rodzaju atakach dystansowych pozwoli na zadawanie
+większych obrażeń używając odpowiednich broni i amunicji.
+
+Będąc specjalistą od Proc łatwiej jest wyszkolić się w Rzucaniu, jak i na
+odwrót
+%%%%
+Bows
+
+Będąc wyszkolonym w danym rodzaju ataków dystansowych pozwoli na zadawanie
+większych obrażeń używając odpowiednich broni i amunicji.
+%%%%
+Crossbows
+
+Będąc wyszkolonym w danym rodzaju ataków dystansowych pozwoli na zadawanie
+większych obrażeń używając odpowiednich broni i amunicji.
+%%%%
+Darts
+
+Będąc wyszkolonym w danym rodzaju ataków dystansowych pozwoli na zadawanie
+większych obrażeń używając odpowiednich broni i amunicji.
+%%%%
 Throwing
 
 Rozwijając Rzucanie sprawisz ,że broń rzucana ( np. Włócznie ) oraz wybuchowa
@@ -19,15 +106,37 @@ pozwoli Ci także prędzej zatrzeć swój ślad gdy już znikniesz z pola widzen
 wroga. Przyuważ ,że potworki staja się bardziej uważne i podejrzliwe gdy tylko
 im umkniesz.
 %%%%
+Stabbing
+
+Dźganie to umiejętność zwiększająca szanse na zadanie ogromnych obrażeń na
+nieświadomych lub zdezorientowanych celach (przeważnie używając krótkiego
+ostrza).
+%%%%
+Shields
+
+Wysoki poziom posługiwania się Tarczami pozwala na blokowanie ciosów oraz
+pocisków (magicznych oraz niemagicznych) używając Tarczy (fizycznej lub
+magicznej). Niektóre ataki, takie jak przebijające strzały, nie mogą zostać
+zablokowane.
+%%%%
+Unarmed Combat
+
+Bycie wyszkolonym w Nieuzbrojonej Walce zwiększa twoją celność, zadawane
+obrażenia oraz szybkość atak w walce wręcz. Pozwala także na okazjonalne
+zaatakowanie drugą ręką jako dodatkowy atak.
+%%%%
 Air Magic
 
 Rozwijając umiejętności magiczne danej "szkoły" łatwiej będzie Ci uczyć się i
 rzucać czary z tejże szkoły . Wiele zaklęć zależy od kombinacji kilku szkół, w
 tym przypadku szansa na udane zaklęcie i jego moc zależeć będą od uśrednionej
-wartości wyszkolenia w tych szkołach.⏎ ⏎ Magia Powietrza zapewnia obrania
-prosto z wiatru, podobnie jak głośna ale potężna błyskawica. Wiatr zapewnia
-także kilka umiejętności użytkowych takich jak przyzwanie wiatru by
-przyspieszył Cię lub chronił od ataków bronią dystansową ⏎ ⏎ Wyszkolenie w
-Magii Wiatru powoduje trudności w uczeniu się Magii Ziemi i tak samo w drugą
-stronę .
+wartości wyszkolenia w tych szkołach.
+
+Magia Powietrza zapewnia obrania prosto z wiatru, podobnie jak głośna ale
+potężna błyskawica. Wiatr zapewnia także kilka umiejętności użytkowych takich
+jak przyzwanie wiatru by przyspieszył Cię lub chronił od ataków bronią
+dystansową.
+
+Wyszkolenie w Magii Wiatru powoduje trudności w uczeniu się Magii Ziemi i tak
+samo w drugą stronę .
 %%%%

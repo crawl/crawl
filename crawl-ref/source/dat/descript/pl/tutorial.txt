@@ -34,6 +34,65 @@ tutorial1 shiftmove
 Szybszym sposobem "Biegania" przez korytarze jest wcisniecie <w>[Shift]</w>
 razem z <w>[number pad]</w> (sprawdź Numpad) lub <w>[vi keys]</w>.
 %%%%
+tutorial1 downstairs
+
+Stojąc na schodach prowadzących w dół, możesz przejść do następnej lokacji,
+używając <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> lub klikając
+<input>Shift-Click</input> na swoją postać</localtiles>.
+%%%%
+tutorial1 door
+
+Zamknięte drzwi możesz otworzyć podchodząc do nich.
+%%%%
+tutorial1 water
+
+Zauważ, że możesz przechodzić tylko przez płytką wodę.
+%%%%
+tutorial1 upstairs
+
+Stojąc na schodach prowadzących w górę, możesz powrócić do wcześniejszej
+lokacji, używająć <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> lub klikając
+<input>Shift-clicking</input> na swoją postać</localtiles>.
+%%%%
+tutorial2 start
+
+Ta lekcja nauczy cię o potworach oraz walce. Po pierwsze, potrzebujemy broni!
+Idź i podnieś tą broń.
+%%%%
+tutorial2 rest_and_chop_reminder
+
+Nie zapomnij o cięciu ciał na jedzenie (with <input>$cmd[CMD_BUTCHER]</input>),
+lub odpoczywaniu (with <input>$cmd[CMD_REST]</input>)!
+%%%%
+tutorial2 wait
+
+Zamiast wchodzić w pomieszczenie pełne potworów, które po chwili cię otoczą
+możesz poczekać(with <input>$cmd[CMD_MOVE_NOWHERE]</input>) aż same do ciebie
+podejdą.
+%%%%
+tutorial2 resting_reminder
+
+Pamiętaj, możesz odpoczywać używając <input>$cmd[CMD_REST]</input>.
+%%%%
+tutorial2 newlevel
+
+Pamiętaj: Możesz przeczytać stare wiadomości używając
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>.
+%%%%
+tutorial3 battle
+
+Kiedy już uda ci się zatruć przeciwnika, lepiej jest czasami oddalić się i
+pozwolić truciźnie działać. Oddal się także, by się uleczyć jeśli to potrzebne
+%%%%
+tutorial4 start
+
+Na tej lekcji dowiesz się jak nauczyć się zaklęć i jak ich używać.
+%%%%
+tutorial4 tutorial_end
+
+Gratulacje, jesteś już prawdziwym czarownikiem! Aby wyjść z samouczka, idź
+schodami w dół.
+%%%%
 tutorial5 start
 
 W tej lekcji nauczysz się o bogach, i jak używać ich mocy.

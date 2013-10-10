@@ -491,6 +491,10 @@ macabre finger necklace
 
 Ce doigt aurait l'air mieux avec un anneau.
 %%%%
+boots of the spider
+
+Une paire de bottes originale, inventée par un soupirant d'Arachne.
+%%%%
 milk chocolate
 
 Cet objet est une aide au debuggage, et octroi d'une vaste gamme d'artefacts
