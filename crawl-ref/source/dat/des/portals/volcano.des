@@ -182,7 +182,7 @@ function make_fiery_armour (e, armour)
     for _, at in ipairs(armour) do
         armour_string = armour_string .. " / " .. at .. " ego:fire_resistance good_item"
     end
-    return string.gsub(armour_string, "%s*\/$", "")
+    return string.gsub(armour_string, "%s*/$", "")
 end
 
 function make_fiery_weapon (e, weapon)
@@ -193,7 +193,7 @@ function make_fiery_weapon (e, weapon)
           else weapon_string = weapon_string .. " / " .. wt .. " ego:flame good_item"
         end
     end
-    local n_weapon = string.gsub(weapon_string, "%s*\/$", "")
+    local n_weapon = string.gsub(weapon_string, "%s*/$", "")
     e.item(n_weapon)
 end
 
