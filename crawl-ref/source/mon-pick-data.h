@@ -1193,7 +1193,6 @@ static const pop_entry pop_water_d[] =
   {  5,  20,  100, FLAT, MONS_JELLYFISH },
   {  9,  32,  200, SEMI, MONS_SHARK },
   {  11, 27,  600,   UP, MONS_WATER_ELEMENTAL },
-  {  15, 27,  325,   UP, MONS_ELEMENTAL_WELLSPRING },
   { 0,0,0,FLAT,MONS_0 }
 };
 
