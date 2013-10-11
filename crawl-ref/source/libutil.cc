@@ -1210,6 +1210,11 @@ void init_signals()
     SetConsoleCtrlHandler(console_handler, true);
 }
 
+void release_cli_signals()
+{
+    SetConsoleCtrlHandler(nullptr, false);
+}
+
 void text_popup(const string& text, const wchar_t *caption)
 {
     MessageBoxW(0, OUTW(text), caption, MB_OK);
@@ -1275,6 +1280,14 @@ void init_signals()
         lim.rlim_cur = RLIM_INFINITY;
         setrlimit(RLIMIT_CORE, &lim);
     }
+#endif
+}
+
+void release_cli_signals()
+{
+#ifdef USE_UNIX_SIGNALS
+    signal(SIGQUIT, SIG_DFL);
+    signal(SIGINT, SIG_DFL);
 #endif
 }
 

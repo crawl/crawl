@@ -254,4 +254,5 @@ private:
 };
 
 void init_signals();
+void release_cli_signals();
 #endif

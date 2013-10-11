@@ -155,6 +155,7 @@ static void _initialize()
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
     {
+        release_cli_signals();
         generate_map_stats();
         end(0, false);
     }
