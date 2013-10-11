@@ -103,27 +103,11 @@ Monsters
 * New forest-themed monsters:
     - Spriggan assassins and enchanters, who attempt to disable the player
       with blowguns and hexes respectively before moving in for the kill.
-    - Fauns, who hex the player before attacking from afar, and their larger
-      brethren satyrs, who can empower their nearby allies.
-    - Dryads, who can awaken the forest and summon vines to pull their
-      enemies closer to trees.
     - Wind drakes, who can breathe powerful blasts of wind and airstrike the
       player.
-    - Thorn lotuses, plants adrift on the water that pepper the player with
-      thorns fired from afar.
-    - Thorn hunters, who fire volleys of thorns and create briar patches to
-      impede their foes' movements.
-    - Spirit wolves, who can howl to summon additional spirit wolves at
-      periodic intervals.
-    - Ancient bears, a bear to rival a dire elephant and fire resistance.
-    - Water nymphs, who can teleport their target to their home water area
-      and strike down the player with said water.
-    - Treants, slow-moving, tough plants home to a nest of wasps.
 * Other new monsters:
     - Tengu reavers, skilled with both steel and spells; appearing in the
       late dungeon and in Vaults.
-    - Elemental wellsprings, aquatic enemies that fire primal waves at their
-      foes while they're busy dealing with water elementals.
     - Deathcaps, summonable by curse toes - tougher wandering mushrooms
       with Drain Life.
 * New unique: Sojobo, king of the tengu.
@@ -294,7 +278,6 @@ Items
 * New unrand: the +4 moon troll leather armour {Spirit MP+5 Regen}.
 * Adjustments to unrands:
    - Arga is now a broad axe.
-   - Bullseye is now a large shield.
    - The shield of the gong no longer has guardian spirit; it is otherwise
      unchanged.
    - The knife of accuracy and boots of the Assassin are no more.
