@@ -998,8 +998,6 @@ ifeq ($(strip $(YACC)),)
 NO_YACC = YesPlease
 endif
 
-DWZ := $(shell which dwz 2> /dev/null)
-
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
         QUIET_CC       = @echo '   ' CC $@;
@@ -1394,9 +1392,6 @@ distclean: clean clean-contrib clean-rltiles
 
 $(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
-ifneq ($(DWZ),)
-	$(DWZ) --low-mem-die-limit 1 $(GAME)
-endif
 
 debug: all
 debug-lite: all
