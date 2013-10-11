@@ -1912,15 +1912,18 @@ void monster::apply_enchantments()
     if (enchantments.empty())
         return;
 
+    // We process an enchantment only if it existed both at the start of this
+    // function and when getting to it in order; any enchantment can add, modify
+    // or remove others -- or even itself.
+    FixedBitVector<NUM_ENCHANTMENTS> ec = ench_cache;
+
     // The ordering in enchant_type makes sure that "super-enchantments"
     // like berserk time out before their parts.
-    const mon_enchant_list ec = enchantments;
-    for (mon_enchant_list::const_iterator i = ec.begin(); i != ec.end(); ++i)
-    {
-        apply_enchantment(i->second);
-        if (!alive())
-            break;
-    }
+    for (int i = 0; i < NUM_ENCHANTMENTS; ++i)
+        if (ec[i] && has_ench(static_cast<enchant_type>(i)))
+        {
+            apply_enchantment(enchantments.find(static_cast<enchant_type>(i))->second);
+        }
 }
 
 // Used to adjust time durations in calc_duration() for monster speed.
