@@ -144,11 +144,6 @@ static void _initialize()
     if (crawl_state.build_db)
         end(0);
 
-    if (!crawl_state.io_inited)
-        cio_init();
-
-    // System initialisation stuff.
-    textbackground(0);
 #ifdef USE_TILE_LOCAL
     if (!Options.tile_skip_title && crawl_state.title_screen)
     {
@@ -157,8 +152,6 @@ static void _initialize()
     }
 #endif
 
-    clrscr();
-
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
     {
@@ -166,6 +159,11 @@ static void _initialize()
         end(0, false);
     }
 #endif
+
+    if (!crawl_state.io_inited)
+        cio_init();
+
+    clrscr();
 
     if (crawl_state.test)
     {

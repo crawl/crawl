@@ -109,6 +109,7 @@ void cio_init()
     console_startup();
     set_cursor_enabled(false);
     crawl_view.init_geometry();
+    textbackground(0);
 }
 
 void cio_cleanup()
