@@ -728,7 +728,6 @@ Items
 * New unrand: the +4 moon troll leather armour {Spirit MP+5 Regen}.
 * Adjustments to unrands:
    - Arga is now a broad axe.
-   - Bullseye is now a large shield.
    - The shield of the gong no longer has guardian spirit; it is otherwise
      unchanged.
    - The knife of accuracy and boots of the Assassin are no more.
