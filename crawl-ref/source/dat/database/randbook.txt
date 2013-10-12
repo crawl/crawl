@@ -822,13 +822,13 @@ Asmodeus
 Cerebov
 
 w:5
-@Conjuration Fire owner@
+__NONE
 %%%%
 highlevel Conjuration Necromancy owner
 
 Ereshkigal
 
-@Conjuration Necromancy owner@
+__NONE
 %%%%
 highlevel Conjuration Summoning owner
 
@@ -965,13 +965,13 @@ Dispater
 
 Mnoleg
 
-@Summoning owner@
+__NONE
 %%%%
 highlevel Translocation owner
 
 Lom Lobon
 
-@Translocation owner@
+__NONE
 %%%%
 Transmutation owner
 
