@@ -11,7 +11,6 @@ function init_undead(e)
   e.ftile('- = floor_pebble_brown')
   e.ftile('_ = floor_pebble_darkgray')
   e.colour('- = brown')
-  e.colour('_ = darkgrey')
 
   e.subst('S = .....S')
   e.lua_marker('S', fog_machine { pow_max = 10, delay_min = 10, delay_max = 10,
