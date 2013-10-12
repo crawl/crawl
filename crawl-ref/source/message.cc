@@ -444,7 +444,7 @@ public:
 
     bool first_col_more() const
     {
-        return use_first_col() && Options.small_more;
+        return Options.small_more;
     }
 
     bool use_first_col() const
