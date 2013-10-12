@@ -1235,8 +1235,9 @@ show_more = true
 small_more = false
         With small_more = false (default), the --more-- prompt is on a
         separate line at the bottom of the message window. With
-        small_more = true, it is just the bottom left character if
-        clear_messages is not set.
+        small_more = true, it is just the bottom left character.
+        Note: This will overwrite the first letter of the last message
+              line if clear_messages is set.
 
 show_newturn_mark = true
         When set to false, this option disables the underscore (_) displayed in
