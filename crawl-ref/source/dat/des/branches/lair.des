@@ -1857,7 +1857,7 @@ xxttttt......Xxx                           xxxx
 xttttxx.X..X..Xxx                         xxT.xxx...@
 xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
 xtttxccco.Gc....GccPWWcco..%cccP..ccP....P.G.o.TTxxx.
-xttxcccc...c.P...=P.WwW+...%Qc.....+.....c.c...TTTx..
+xttxcccc...c.P...+P.WwW+...%Qc.....+.....c.c...TTTx..
 xxccccccPc.ccccPGc.WwwS+...%|c.22..c.Pcccc.P.cTTccc..
 xccccccc+c.P.PccccPwwwwco..%cc.22..cccc.P..c+ccccccc.
 xcc1...PPccccP.P.cWwWWPccccccc%...PcP.PPccccPP1..%cc.
@@ -1906,13 +1906,13 @@ MAP
  .Tttttttttttttt..ttt...ttt....ttttttttttT.5Tttttttx
  ...Ttttttttttt..ttttt.......tttttttttttT....Ttttttx
  ...tttttttttt..ttttttt0tt.tttttttttcccccc++cccccccx
- ..Tttttttttt..tttttttttttt=ccccccccc:::::::::::::cL
+ ..Tttttttttt..tttttttttttt+ccccccccc:::::::::::::cL
  ..Ttttttttt.0t..ttttttttttc::::::::c:::Q;;;;Q::::cL
- .Tttttttttt..tt..tttttttttc::G:G:::=:::::::::::::cL
+ .Tttttttttt..tt..tttttttttc::G:G:::+:::::::::::::cL
  ..Tttttttt..tttt.tttttttttc:::G:G::cccccccccccccccL
  .Tttttttt..ttttt..ttttttttc::G:G:::c;;;;;;;2llllllL
  ..Ttttt.0ttttttt...tttttttc:::G:G::c;;;;;;;222llllL
- ....T..tttttttt....tttttttc::G:G:::=;;;;_;3142/lllL
+ ....T..tttttttt....tttttttc::G:G:::+;;;;_;3142/lllL
  ...T0tttttttttt.Q5ttttttttc:::G:G::c;;;;;2222lllllL
  ..Ttttttttttttttttttttttttc:::::::6c;;;;2lllllllllL
  ttttttttttttttttttttttttttccccccccccccclllllllllllL
