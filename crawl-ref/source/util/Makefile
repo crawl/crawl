@@ -15,11 +15,8 @@ all: levcomp.tab.cc levcomp.lex.cc
 clean:
 	$(RM) levcomp.tab.cc levcomp.tab.h levcomp.lex.cc *.o
 
-%.tab.cc: %.tab.c
-	@mv $< $@
-
 %.lex.cc: %.lpp
 	$(QUIET_LEX)$(LEX) -o$@ $<
 
-%.tab.c: %.ypp
-	$(QUIET_YACC)$(YACC) -d -b $* $<
+%.tab.cc: %.ypp
+	$(QUIET_YACC)$(YACC) -d -b $* -o $@ $<
