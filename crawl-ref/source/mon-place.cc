@@ -1744,7 +1744,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mons_class_flag(mon->type, M_UNFINISHED))
     {
         mprf(MSGCH_WARN, "Warning: monster '%s' is not yet fully coded.",
-             mon->name(DESC_PLAIN).c_str());
+             mon->name(DESC_PLAIN, true).c_str());
     }
 #endif
 
