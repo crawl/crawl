@@ -58,29 +58,29 @@ Czujesz się zagubiony, i bardzo, bardzo daleko od domu...
 
 Trzęsiesz się ze strachu.
 
-WARN:Masz straszliwe przeczucie...
+Masz straszliwe przeczucie...
 
-WARN:Coś przerażającego się staje...
+Coś przerażającego się staje...
 
-WARN:Wydaje ci się że starożytne zło na ciebie patrzy.
+Wydaje ci się że starożytne zło na ciebie patrzy.
 
-WARN:Nagle czujesz się sam jeden, mały, nieznaczny i bezbronny.
+Nagle czujesz się sam jeden, mały, nieznaczny i bezbronny.
 
-WARN:Wyczuwasz jakąś wrogą obecność.
+Wyczuwasz jakąś wrogą obecność.
 
-TALK:„Nigdy nie opuścisz tego miejsca.”
+„Nigdy nie opuścisz tego miejsca.”
 
-TALK:„Giń, śmiertelniku!”
+„Giń, śmiertelniku!”
 
-TALK:„My nie wybaczamy!”
+„My nie wybaczamy!”
 
-TALK:„Goście nie są tu mile widziani!”
+„Goście nie są tu mile widziani!”
 
-TALK:„Nie masz prawa tu być!”
+„Nie masz prawa tu być!”
 
-TALK:„Wynoś się, albo giń!”
+„Wynoś się, albo giń!”
 
-TALK:„Tu cię mamy!”
+„Tu cię mamy!”
 
 SOUND:Rozlega się skręcający trzewia krzyk!
 
