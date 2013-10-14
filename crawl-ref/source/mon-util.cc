@@ -1464,12 +1464,6 @@ bool mons_class_is_animated_weapon(monster_type type)
     return type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON;
 }
 
-bool mons_class_has_base_type(monster_type mc)
-{
-    return mons_class_is_zombified(mc)
-        || mons_class_is_chimeric(mc);
-}
-
 bool mons_is_zombified(const monster* mon)
 {
     return mons_class_is_zombified(mon->type);
@@ -1477,8 +1471,9 @@ bool mons_is_zombified(const monster* mon)
 
 monster_type mons_base_type(const monster* mon)
 {
-    return (mons_class_has_base_type(mon->type) ? mon->base_monster
-                                                : mon->type);
+    if (mons_class_is_zombified(mon->type) || mons_class_is_chimeric(mon->type))
+        return mon->base_monster;
+    return mon->type;
 }
 
 bool mons_class_can_leave_corpse(monster_type mc)
