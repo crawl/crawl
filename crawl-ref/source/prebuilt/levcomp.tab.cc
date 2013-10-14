@@ -115,9 +115,9 @@ static NORETURN void yyerror(const char *e)
 #endif
 
 /* In a future release of Bison, this section will be replaced
-   by #include "levcomp.tab.hh".  */
-#ifndef YY_YY_LEVCOMP_TAB_HH_INCLUDED
-# define YY_YY_LEVCOMP_TAB_HH_INCLUDED
+   by #include "levcomp.tab.h".  */
+#ifndef YY_YY_LEVCOMP_TAB_H_INCLUDED
+# define YY_YY_LEVCOMP_TAB_H_INCLUDED
 /* Enabling traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -276,7 +276,7 @@ int yyparse ();
 #endif
 #endif /* ! YYPARSE_PARAM */
 
-#endif /* !YY_YY_LEVCOMP_TAB_HH_INCLUDED  */
+#endif /* !YY_YY_LEVCOMP_TAB_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
 
