@@ -247,7 +247,7 @@ void init_crash_handler()
             continue;
 #endif
 
-        signal(i, _crash_signal_handler);
+        signal(i, crash_signal_handler);
     }
 
 #endif // if defined(USE_UNIX_SIGNALS)
