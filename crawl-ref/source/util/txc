@@ -875,7 +875,7 @@ class ResourceCollection(OrderedDict):
 
     def write_files(self):
         for res in self:
-            if options.force or res.changed():
+            if res.changed() or options.force and list(res.items(False)):
                 res.write_file()
                 for change_t in res_index.changes:
                     if change_t in res.diff:
