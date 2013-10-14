@@ -19,4 +19,4 @@ clean:
 	$(QUIET_LEX)$(LEX) -o$@ $<
 
 %.tab.cc: %.ypp
-	$(QUIET_YACC)$(YACC) -d -b $* -o $@ $<
+	$(QUIET_YACC)$(YACC) --defines=$*.tab.h -b $* -o $@ $<
