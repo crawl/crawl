@@ -31,6 +31,10 @@ monster_type player_species_to_mons_species(species_type species);
 
 // species_type bounds checking.
 bool is_valid_species(species_type);
+
+// Is the species valid for a new game?
+bool is_species_valid_choice(species_type);
+
 int species_exp_modifier(species_type species);
 int species_hp_modifier(species_type species);
 int species_mp_modifier(species_type species);

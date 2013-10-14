@@ -372,17 +372,8 @@ static species_type _str_to_species(const string &str)
     if (ret == SP_UNKNOWN)
         ret = str_to_species(str);
 
-    if (!is_valid_species(ret)
-        || (species_genus(ret) == GENPC_DRACONIAN
-            && ret != SP_BASE_DRACONIAN))
-    {
+    if (!is_species_valid_choice(ret))
         ret = SP_UNKNOWN;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    if (ret == SP_SLUDGE_ELF)
-        ret = SP_UNKNOWN;
-#endif
 
     if (ret == SP_UNKNOWN)
         fprintf(stderr, "Unknown species choice: %s\n", str.c_str());
@@ -416,8 +407,10 @@ static job_type _str_to_job(const string &str)
     if (job == JOB_UNKNOWN)
         job = get_job_by_name(str.c_str());
 
-    // This catches JOB_UNKNOWN as well as removed jobs.
     if (!is_job_valid_choice(job))
+        job = JOB_UNKNOWN;
+
+    if (job == JOB_UNKNOWN)
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 
     return job;
