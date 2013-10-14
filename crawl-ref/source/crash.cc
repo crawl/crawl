@@ -80,9 +80,9 @@ static int _recursion_depth = 0;
 static mutex_t crash_mutex;
 
 // Make this non-static so stack traces are easier to follow
-void _crash_signal_handler(int sig_num);
+void crash_signal_handler(int sig_num);
 
-void _crash_signal_handler(int sig_num)
+void crash_signal_handler(int sig_num)
 {
     // We rely on mutexes ignoring locks held by the same thread.
     // On some platforms, this must be explicitly enabled (which we do).
