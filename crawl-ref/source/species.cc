@@ -5,6 +5,8 @@
 #include "libutil.h"
 #include "random.h"
 
+#include "version.h"
+
 // March 2008: change order of species and jobs on character selection
 // screen as suggested by Markus Maier. Summarizing comments below are
 // copied directly from Markus' SourceForge comments. (jpeg)
@@ -396,6 +398,23 @@ monster_type player_species_to_mons_species(species_type species)
 bool is_valid_species(species_type species)
 {
     return (species >= 0 && species <= LAST_VALID_SPECIES);
+}
+
+bool is_species_valid_choice(species_type species)
+{
+#if TAG_MAJOR_VERSION == 34
+    if (species == SP_SLUDGE_ELF)
+        return false;
+#endif
+    if ((species == SP_LAVA_ORC || species == SP_DJINNI)
+        && Version::ReleaseType != VER_ALPHA)
+    {
+        return false;
+    }
+
+    // Non-base draconians cannot be selected either.
+    return is_valid_species(species)
+        && !(species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN);
 }
 
 int species_exp_modifier(species_type species)
