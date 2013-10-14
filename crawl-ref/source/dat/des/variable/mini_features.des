@@ -2435,21 +2435,6 @@ MAP
 .....
 ENDMAP
 
-NAME:    treasure_zot_lemuel
-DEPTH:   D:10-, Elf, Crypt
-TAGS:    allow_dup
-NSUBST:  Z = 4=. / z
-KFEAT:   z = zot trap
-SUBST:   *: *$
-WEIGHT:  3
-MAP
-xxxxxxcccc
-xxxxxxc**c
-@ZZZZZ+**c
-xxxxxxc**c
-xxxxxxcccc
-ENDMAP
-
 NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
 WEIGHT: 5
@@ -2496,20 +2481,6 @@ wwd*dwwc*cww
 wwxdxwwxcxww
  wwwwwwwwww
   wwwwwwww
-ENDMAP
-
-NAME:  minmay_trapped_gold
-TAGS:  extra no_monster_gen
-DEPTH: D:16-, Crypt
-KFEAT: a = spear trap / bolt trap
-KFEAT: b = blade trap
-KFEAT: c = zot trap
-MAP
-   xxxxx
-xxxx$$$x
-@abc$$$x
-xxxx$$$x
-   xxxxx
 ENDMAP
 
 # Transporter accident (mumra)
