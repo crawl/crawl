@@ -116,19 +116,16 @@ void init_mut_index()
     }
 }
 
-static const mutation_def* _seek_mutation(mutation_type mut)
+const mutation_def& get_mutation_def(mutation_type mut)
 {
     ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
-    if (mut_index[mut] == -1)
-        return NULL;
-    else
-        return &mut_data[mut_index[mut]];
+    ASSERT(mut_index[mut] != -1);
+    return *&mut_data[mut_index[mut]];
 }
 
-bool is_valid_mutation(mutation_type mut)
+static bool _is_valid_mutation(mutation_type mut)
 {
-    return (mut >= 0 && mut < NUM_MUTATIONS
-            && _seek_mutation(mut));
+    return (mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1);
 }
 
 static const mutation_type _all_scales[] =
@@ -159,12 +156,6 @@ bool is_body_facet(mutation_type mut)
     }
 
     return false;
-}
-
-const mutation_def& get_mutation_def(mutation_type mut)
-{
-    ASSERT(is_valid_mutation(mut));
-    return *_seek_mutation(mut);
 }
 
 mutation_activity_type mutation_activity_level(mutation_type mut)
@@ -1036,7 +1027,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
 
 static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 {
-    if (!is_valid_mutation(mutat))
+    if (!_is_valid_mutation(mutat))
         return false;
 
     if (physiology_mutation_conflict(mutat))
@@ -1565,7 +1556,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
     }
 
-    if (!is_valid_mutation(mutat))
+    if (!_is_valid_mutation(mutat))
         return false;
 
     // [Cha] don't allow teleportitis in sprint
@@ -1967,7 +1958,7 @@ bool delete_temp_mutation()
 
 const char* mutation_name(mutation_type mut)
 {
-    if (!is_valid_mutation(mut))
+    if (!_is_valid_mutation(mut))
         return nullptr;
 
     return get_mutation_def(mut).wizname;
@@ -2382,7 +2373,7 @@ void roll_demonspawn_mutations()
 
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 {
-    ASSERT(is_valid_mutation(which_mut));
+    ASSERT(_is_valid_mutation(which_mut));
 
     int cap = get_mutation_def(which_mut).levels;
     how_much = min(how_much, cap);
