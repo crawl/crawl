@@ -115,8 +115,10 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
         else
         {
             int food = 0;
+            // Take at most 90% of currhp.
+            const int minhp = max(div_rand_round(you.hp, 10), 1);
 
-            while (you.magic_points < you.max_magic_points && you.hp > 1
+            while (you.magic_points < you.max_magic_points && you.hp > minhp
                    && (you.is_undead != US_SEMI_UNDEAD
                        || you.hunger - food >= 7000))
             {
@@ -129,7 +131,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
                 if (you.is_undead == US_SEMI_UNDEAD)
                     food += 15;
 
-                for (int loopy = 0; loopy < (you.hp > 1 ? 3 : 0); ++loopy)
+                for (int loopy = 0; loopy < (you.hp > minhp ? 3 : 0); ++loopy)
                     if (x_chance_in_y(6, pow))
                         dec_hp(1, false);
 
