@@ -1822,6 +1822,10 @@ bool zombie_picker::veto(monster_type mt)
     // Zombifiability in general.
     if (mons_species(mt) != mt)
         return true;
+    // Monsters that don't really exist
+    if (mons_class_flag(mt, M_UNFINISHED))
+        return true;
+    // Monsters that can have derived undead, but never randomly generated.
     if (mons_class_flag(mt, M_NO_GEN_DERIVED))
         return true;
     if (!mons_zombie_size(mt) || mons_is_unique(mt))
