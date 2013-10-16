@@ -387,7 +387,7 @@ bool melee_attack::handle_phase_attempted()
     attacker->make_hungry(3, true);
 
     // Xom thinks fumbles are funny...
-    if (attacker->fumbles_attack())
+    if (!jumping_attack && attacker->fumbles_attack())
     {
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
