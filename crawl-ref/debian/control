@@ -55,7 +55,7 @@ Description: Dungeon Crawl, a text-based roguelike game (tile data files)
 
 Package: crawl-tiles
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version}), crawl-tiles-data (= ${source:Version}), ttf-dejavu
+Depends: ${shlibs:Depends}, ${misc:Depends}, crawl-common (= ${source:Version}), crawl-tiles-data (= ${source:Version}), fonts-dejavu-core | ttf-dejavu
 Description: Dungeon Crawl, a roguelike game, tiles version
  Crawl is a fun game in the grand tradition of games like Rogue, Hack, and
  Moria. Your objective is to travel deep into a subterranean cave complex and
