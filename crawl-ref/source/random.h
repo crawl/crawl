@@ -115,7 +115,9 @@ void shuffle_array(T* arr, int n)
 template <typename T>
 void shuffle_array(vector<T> &vec)
 {
-    shuffle_array(&vec[0], vec.size());
+    // &vec[0] is undefined behaviour, and vec.data() is C++11-only.
+    if (vec.size() > 0)
+        shuffle_array(&vec[0], vec.size());
 }
 
 class rng_save_excursion
