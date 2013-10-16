@@ -770,7 +770,7 @@ sub write_tiles
 HEADER_END
 
     # Output the tile definitions sorted by type (and thus path).
-    foreach my $type (keys %art_by_type)
+    foreach my $type (sort keys %art_by_type)
     {
         print TILES "%sdir item/$type/artefact\n";
 
