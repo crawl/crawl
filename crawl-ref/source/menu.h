@@ -538,7 +538,7 @@ private:
         column(int marg = 1) : margin(marg), lines(0) { }
     };
 
-    int ncols, pagesize;
+    int pagesize;
     vector<column> columns;
     vector<formatted_string> flines;
 };
