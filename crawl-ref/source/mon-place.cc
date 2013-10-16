@@ -2613,8 +2613,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         {
             band = BAND_PHANTASMAL_WARRIORS;
             band_size = 2;
-            break;
         }
+        break;
 
     case MONS_ELEMENTAL_WELLSPRING:
         natural_leader = true;
