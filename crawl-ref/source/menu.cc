@@ -1698,7 +1698,7 @@ int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 // column_composer
 
 column_composer::column_composer(int cols, ...)
-    : ncols(cols), pagesize(0), columns()
+    : pagesize(0), columns()
 {
     ASSERT(cols > 0);
 
