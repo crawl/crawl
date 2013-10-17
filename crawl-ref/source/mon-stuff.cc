@@ -3029,6 +3029,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mon_enchant sub       = mons->get_ench(ENCH_SUBMERGED);
     mon_enchant summon    = mons->get_ench(ENCH_SUMMON);
     mon_enchant tp        = mons->get_ench(ENCH_TP);
+    mon_enchant vines     = mons->get_ench(ENCH_AWAKEN_VINES);
 
     monster_spells spl    = mons->spells;
     const bool need_save_spells
@@ -3080,6 +3081,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->add_ench(sub);
     mons->add_ench(summon);
     mons->add_ench(tp);
+    mons->add_ench(vines);
 
     // Allows for handling of submerged monsters which polymorph into
     // monsters that can't submerge on this square.
