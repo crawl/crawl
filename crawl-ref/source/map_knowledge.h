@@ -120,7 +120,10 @@ struct map_cell
 
     dungeon_feature_type feat() const
     {
-        return _feat;
+        // Ugh; MSVC makes the bit field signed even though that means it can't
+        // actually hold all the enum values. That seems to be in contradiction
+        // of the standard (§9.6 [class.bit] paragraph 4) but what can you do?
+        return dungeon_feature_type(uint8_t(_feat));
     }
 
     unsigned feat_colour() const
