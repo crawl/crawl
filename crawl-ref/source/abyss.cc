@@ -1153,6 +1153,12 @@ static void _update_abyss_terrain(const coord_def &p,
             if (cloud != CLOUD_NONE)
                 check_place_cloud(_cloud_from_feat(currfeat), rp, cloud_life, 0, 3);
         }
+        else if (feat_is_solid(feat))
+        {
+            int cloud = env.cgrid(rp);
+            if (cloud != EMPTY_CLOUD)
+                delete_cloud(cloud);
+        }
         monster* mon = monster_at(rp);
         if (mon && !monster_habitable_grid(mon, feat))
             _push_displaced_monster(mon);
