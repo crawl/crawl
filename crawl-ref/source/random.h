@@ -121,7 +121,7 @@ template <typename T>
 void shuffle_array(vector<T> &vec)
 {
     // &vec[0] is undefined behaviour, and vec.data() is C++11-only.
-    if (vec.size() > 0)
+    if (!vec.empty())
         shuffle_array(&vec[0], vec.size());
 }
 

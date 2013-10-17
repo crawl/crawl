@@ -217,7 +217,7 @@ void start_recall(int type)
     if (type > 0 && branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
-    if (rlist.size() > 0)
+    if (!rlist.empty())
     {
         // Sort the recall list roughly by HD, randomizing a little
         for (unsigned int i = 0; i < rlist.size(); ++i)

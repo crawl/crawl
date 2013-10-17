@@ -3660,7 +3660,7 @@ static string _get_monster_desc(const monster_info& mi)
     }
 
     text += _mon_enchantments_string(mi);
-    if (text.size() > 0 && text[text.size() - 1] == '\n')
+    if (!text.empty() && text[text.size() - 1] == '\n')
         text = text.substr(0, text.size() - 1);
     return text;
 }

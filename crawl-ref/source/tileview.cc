@@ -371,7 +371,7 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
 
 static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int value = -1)
 {
-    ASSERT(candidates.size() > 0);
+    ASSERT(!candidates.empty());
 
     int total = 0;
     for (unsigned int i = 0; i < candidates.size(); ++i)

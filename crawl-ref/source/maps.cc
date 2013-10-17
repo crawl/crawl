@@ -520,7 +520,7 @@ static coord_def _find_minivault_place(
                     candidates.push_back(v1);
             }
         }
-        if (candidates.size() > 0)
+        if (!candidates.empty())
             return candidates[random2(candidates.size())];
     }
 

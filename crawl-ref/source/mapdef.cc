@@ -4465,13 +4465,13 @@ void item_list::clear()
 
 item_spec item_list::random_item()
 {
-    if (items.size() <= 0)
+    if (items.empty())
     {
         const item_spec none;
         return none;
     }
 
-    return (get_item(random2(size())));
+    return get_item(random2(size()));
 }
 
 typedef pair<item_spec, int> item_pair;
