@@ -169,8 +169,11 @@ struct monster_info : public monster_info_base
 
     monster_info& operator=(const monster_info& p)
     {
-        this->~monster_info();
-        new (this) monster_info(p);
+        if (this != &p)
+        {
+            this->~monster_info();
+            new (this) monster_info(p);
+        }
         return *this;
     }
 
