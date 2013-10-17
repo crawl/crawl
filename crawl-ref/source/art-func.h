@@ -171,7 +171,7 @@ static void _CURSES_melee_effect(item_def* weapon, actor* attacker,
 {
     if (attacker->is_player())
         did_god_conduct(DID_NECROMANCY, 3);
-    if (defender->has_lifeforce() && !mondied)
+    if (!mondied && defender->has_lifeforce())
         _curses_miscast(defender, random2(9), random2(70));
 }
 
