@@ -81,20 +81,6 @@ MAP
 ENDMAP
 
 #################################################
-# a portal vault testing area
-NAME:       pvault_test_a
-ORIENT:     encompass
-TAGS:       pvault_test allow_dup no_rotate
-KFEAT:      A = exit_portal_vault
-MAP
-A...A
-.....
-.....
-.....
-A...A
-ENDMAP
-
-#################################################
 # big doors
 NAME:   gate_test
 WEIGHT: 0
