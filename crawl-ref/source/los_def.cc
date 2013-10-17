@@ -29,8 +29,11 @@ los_def::los_def(const los_def& los)
 
 los_def& los_def::operator=(const los_def& los)
 {
-    init(los.center, *los.opc, los.bds);
-    show = los.show;
+    if (this != &los)
+    {
+        init(los.center, *los.opc, los.bds);
+        show = los.show;
+    }
     return *this;
 }
 
