@@ -1277,6 +1277,9 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     if (!summoned)
         return;
 
+    if (cell_is_solid(mons->pos()))
+        return;
+
     string prefix = " ";
     if (corpse)
     {
