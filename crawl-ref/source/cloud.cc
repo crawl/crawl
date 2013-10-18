@@ -265,6 +265,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             const coord_def p(*ai);
             if (in_bounds(p)
                 && feat_is_watery(grd(p))
+                && !cell_is_solid(p) // mangroves
                 && env.cgrid(p) == EMPTY_CLOUD
                 && one_chance_in(10))
             {
