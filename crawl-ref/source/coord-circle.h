@@ -48,12 +48,12 @@ class circle_def
     // Are we tracking global LOS radius?
     bool los_radius;
 
-    shape_type shape;
-
-    coord_def origin;
-
     // Check against map bounds for containment?
     bool check_bounds;
+
+    shape_type shape:8;
+
+    coord_def origin;
 
     int radius;
     int radius_sq;
