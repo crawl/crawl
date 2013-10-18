@@ -1282,7 +1282,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     case ME_WHACK:
     case ME_ANNOY:
-
         // Orders to withdraw take precedence over interruptions
         if (mon->behaviour == BEH_WITHDRAW)
             break;
@@ -1291,59 +1290,62 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // are BOTH friendly or good neutral AND stupid,
         // or else fleeing anyway.  Hitting someone over
         // the head, of course, always triggers this code.
-        if (event == ME_WHACK
-            || mon->has_ench(ENCH_INSANE)
-            || ((wontAttack != sourceWontAttack || (mons_intel(mon) > I_PLANT))
-                && (!mons_is_fleeing(mon) && !mons_class_flag(mon->type, M_FLEEING))
-                && !mons_is_panicking(mon)))
+        if (event != ME_WHACK
+            && !mon->has_ench(ENCH_INSANE)
+            && (wontAttack == sourceWontAttack && mons_intel(mon) <= I_PLANT
+                || mons_is_fleeing(mon)
+                || mons_class_flag(mon->type, M_FLEEING)
+                || mons_is_panicking(mon)))
         {
-            // Monster types that you can't gain experience from cannot
-            // fight back, so don't bother having them do so.  If you
-            // worship Fedhas, create a ring of friendly plants, and try
-            // to break out of the ring by killing a plant, you'll get
-            // a warning prompt and penance only once.  Without the
-            // hostility check, the plant will remain friendly until it
-            // dies, and you'll get a warning prompt and penance once
-            // *per hit*.  This may not be the best way to address the
-            // issue, though. -cao
-            if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
-                && mon->attitude != ATT_FRIENDLY
-                && mon->attitude != ATT_GOOD_NEUTRAL)
-            {
-                return;
-            }
-
-            mon->foe = src_idx;
-
-            if (mon->asleep() && mons_near(mon))
-                remove_auto_exclude(mon, true);
-
-            // If the monster can't reach its target and can't attack it
-            // either, retreat.
-            try_pathfind(mon);
-            if (mons_intel(mon) > I_REPTILE && !mons_can_attack(mon)
-                && target_is_unreachable(mon))
-            {
-                mon->behaviour = BEH_RETREAT;
-            }
-            else if (!mons_is_cornered(mon) && (mon->hit_points > fleeThreshold))
-                mon->behaviour = BEH_SEEK;
-            else if (mon->asleep())
-                mon->behaviour = BEH_SEEK;
-
-            if (src == &you
-                && !mon->has_ench(ENCH_INSANE)
-                && mon->type != MONS_BATTLESPHERE
-                && mon->type != MONS_SPECTRAL_WEAPON)
-            {
-                mon->attitude = ATT_HOSTILE;
-                breakCharm    = true;
-            }
-
-            // XXX: Somewhat hacky, this being here.
-            if (mons_is_elven_twin(mon))
-                elven_twins_unpacify(mon);
+            break;
         }
+
+        // Monster types that you can't gain experience from cannot
+        // fight back, so don't bother having them do so.  If you
+        // worship Fedhas, create a ring of friendly plants, and try
+        // to break out of the ring by killing a plant, you'll get
+        // a warning prompt and penance only once.  Without the
+        // hostility check, the plant will remain friendly until it
+        // dies, and you'll get a warning prompt and penance once
+        // *per hit*.  This may not be the best way to address the
+        // issue, though. -cao
+        if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            && mon->attitude != ATT_FRIENDLY
+            && mon->attitude != ATT_GOOD_NEUTRAL)
+        {
+            return;
+        }
+
+        mon->foe = src_idx;
+
+        if (mon->asleep() && mons_near(mon))
+            remove_auto_exclude(mon, true);
+
+        // If the monster can't reach its target and can't attack it
+        // either, retreat.
+        try_pathfind(mon);
+        if (mons_intel(mon) > I_REPTILE && !mons_can_attack(mon)
+            && target_is_unreachable(mon))
+        {
+            mon->behaviour = BEH_RETREAT;
+        }
+        else if (!mons_is_cornered(mon) && (mon->hit_points > fleeThreshold))
+            mon->behaviour = BEH_SEEK;
+        else if (mon->asleep())
+            mon->behaviour = BEH_SEEK;
+
+        if (src == &you
+            && !mon->has_ench(ENCH_INSANE)
+            && mon->type != MONS_BATTLESPHERE
+            && mon->type != MONS_SPECTRAL_WEAPON)
+        {
+            mon->attitude = ATT_HOSTILE;
+            breakCharm    = true;
+        }
+
+        // XXX: Somewhat hacky, this being here.
+        if (mons_is_elven_twin(mon))
+            elven_twins_unpacify(mon);
 
         // Now set target so that monster can whack back (once) at an
         // invisible foe.
