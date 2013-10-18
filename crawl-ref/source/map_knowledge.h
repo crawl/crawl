@@ -59,8 +59,7 @@ struct cloud_info
 struct map_cell
 {
     map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _cloud(0), _item(0), _mons(0),
-                 _trap(TRAP_UNASSIGNED)
+                 _trap(TRAP_UNASSIGNED), _cloud(0), _item(0), _mons(0)
     {
     }
 
@@ -292,10 +291,10 @@ public:
 private:
     dungeon_feature_type _feat:8;
     colour_t _feat_colour;
+    trap_type _trap:8;
     cloud_info* _cloud;
     item_info* _item;
     monster_info* _mons;
-    trap_type _trap:8;
 };
 
 void set_terrain_mapped(const coord_def c);
