@@ -954,6 +954,11 @@ dagger
    And fell deid by her side.”
     -English traditional ballad, “Lord Thomas and Fair Annet”, circa 1650.
 %%%%
+dark maul
+
+“This caliber should be appropriate.”
+    -prince Dajmiech, “Kajko i Kokosz: Rozprawa z Dajmiechem”, Janusz Christa
+%%%%
 dart
 
 “Loving the hand that sent it

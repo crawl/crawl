@@ -1093,6 +1093,16 @@ BRAND:    SPARM_JUMPING
 COLOUR:   LIGHTMAGENTA
 STEALTH:  50
 
+NAME:     dark maul
+OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
+TYPE:     maul
+COLOUR:   LIGHTRED
+PLUS:     +6/+6
+BASE_ACC: +2
+BASE_DAM: +27
+BASE_DELAY: +13
+BRAND:    SPWPN_VORPAL
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn

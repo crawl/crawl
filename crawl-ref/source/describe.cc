@@ -1798,6 +1798,10 @@ string get_item_description(const item_def &item, bool verbose,
                     description << "\n";
                 else
                     need_base_desc = false;
+
+                const string quote = getQuoteString(get_artefact_name(item));
+                if (!quote.empty())
+                    description << "\n" << quote;
             }
         }
 
