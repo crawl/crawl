@@ -134,7 +134,7 @@ public:
     void write_message(PRINTF(1, ));
     void finish_message();
     void send_message(PRINTF(1, ));
-    void flush_messages(bool joining_only=false);
+    void flush_messages();
 
     bool has_receivers() { return !m_dest_addrs.empty(); }
     bool is_controlled_from_web() { return m_controlled_from_web; }
