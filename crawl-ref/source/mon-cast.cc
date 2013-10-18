@@ -3048,7 +3048,6 @@ static monster_type _pick_vermin()
                                   2, MONS_TARANTELLA,
                                   1, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER,
-                                  1, MONS_ROCK_WORM,
                                   0);
 }
 
