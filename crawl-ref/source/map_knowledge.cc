@@ -2,6 +2,7 @@
 
 #include "map_knowledge.h"
 
+#include "cloud.h"
 #include "coordit.h"
 #include "dgn-overview.h"
 #include "dgnevent.h"
@@ -24,6 +25,13 @@
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed(const coord_def p)
 {
+    if (cell_is_solid(p))
+    {
+        int cl = env.cgrid(p);
+        if (cl != EMPTY_CLOUD)
+            delete_cloud(cl);
+    }
+
     if (grd(p) == DNGN_SLIMY_WALL)
         env.level_state |= LSTATE_SLIMY_WALL;
 
