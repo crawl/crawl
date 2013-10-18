@@ -2579,7 +2579,8 @@ void bolt::affect_endpoint()
     if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
         || name == "searing blast") // monster and player red draconian breath abilities
     {
-        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
+        if (!cell_is_solid(pos()))
+            place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
     }
 
     if (name == "orb of energy")
