@@ -450,7 +450,7 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
     if (actual)
     {
-        behaviour_event(target, ME_WHACK, agent, agent->pos());
+        behaviour_event(target, ME_ANNOY, agent, agent->pos());
 
         target->hurt(agent, hurted, BEAM_COLD);
 
@@ -2801,7 +2801,7 @@ void toxic_radiance_effect(actor* agent, int mult)
             }
             else
             {
-                behaviour_event(ai->as_monster(), ME_WHACK, agent, agent->pos());
+                behaviour_event(ai->as_monster(), ME_ANNOY, agent, agent->pos());
                 ai->hurt(agent, dam, BEAM_POISON);
                 if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
                     poison_monster(ai->as_monster(), agent, 1);
