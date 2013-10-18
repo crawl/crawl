@@ -4597,7 +4597,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Leave a purple cloud.
     // XXX: If silent is true, this is not an actual teleport, but
     //      the game moving a monster out of the way.
-    if (!silent)
+    if (!silent && !cell_is_solid(oldplace))
         place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
 
     mons->check_redraw(oldplace);
