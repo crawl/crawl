@@ -368,7 +368,8 @@ void tornado_damage(actor *caster, int dur)
             }
             if ((env.cgrid(*dam_i) == EMPTY_CLOUD
                 || env.cloud[env.cgrid(*dam_i)].type == CLOUD_TORNADO)
-                && x_chance_in_y(rpow, 20))
+                && x_chance_in_y(rpow, 20)
+                && !cell_is_solid(*dam_i)) // mangrove
             {
                 place_cloud(CLOUD_TORNADO, *dam_i, 2 + random2(2), caster);
             }
