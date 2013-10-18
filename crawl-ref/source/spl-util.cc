@@ -727,7 +727,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         q[el] = q[q.size() - 1];
         q.pop_back();
 
-        if (place.seen[c] <= 0)
+        if (place.seen[c] <= 0 || cell_is_solid(c))
             continue;
         func(c, pow, spread_rate, ctype, agent, colour, name, tile, excl_rad);
         number--;
