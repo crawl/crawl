@@ -957,7 +957,7 @@ dagger
 dark maul
 
 “This caliber should be appropriate.”
-    -prince Dajmiech, “Kajko i Kokosz: Rozprawa z Dajmiechem”, Janusz Christa
+    -prince Dajmiech, “Kajko and Kokosz: The Battle with Dajmiech”, Janusz Christa
 %%%%
 dart
 
