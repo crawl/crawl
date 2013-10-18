@@ -165,6 +165,7 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
+    ASSERT(!cell_is_solid(p));
 
     // Find slot for cloud.
     for (int ci = 0; ci < MAX_CLOUDS; ci++)
@@ -343,7 +344,10 @@ void manage_clouds()
         if (cloud.type == CLOUD_NONE)
             continue;
 
-        ASSERT(!cell_is_solid(cloud.pos));
+#if ASSERTS
+        if (cell_is_solid(cloud.pos))
+            die("cloud in %s at (%d,%d)", dungeon_feature_name(grd(cloud.pos)), cloud.pos.x, cloud.pos.y);
+#endif
 
         int dissipate = you.time_taken;
 
@@ -558,6 +562,8 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
         return;
+
+    ASSERT(!feat_is_solid(grd(ctarget)));
 
     kill_category whose = KC_OTHER;
     killer_type killer  = KILL_MISC;
