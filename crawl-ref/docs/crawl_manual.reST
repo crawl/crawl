@@ -1717,7 +1717,8 @@ Felids
   Centaurs or Spriggans. Felids advance in levels very slowly. They are skilled
   with many forms of magic, though less so with raw elemental magic.
 
-  The tale of a Felid who had nine lives isn't far from truth, as well.
+  Felids gain extra lives as they increase in levels. Upon death, they will be
+  resurrected in a safe place, losing an experience level in the process.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
@@ -1784,15 +1785,15 @@ Lava Orcs
 
 Gargoyles
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
-  hideous humanoids with an affinity to rock. They are immune to petrification,
-  and their stony weight protects them from being trampled.
+  hideous humanoids with an affinity to rock. They have low health, but large
+  amounts of innate armour which increases further as they gain levels. They
+  eventually gain the ability to fly continuously.
 
-  Gargoyles' partially living form makes them less susceptible to effects of
-  necromancy and cold than most beings. Their metabolisms are slow, and they
-  blend into the dungeon pretty well. Their fangs and talons make them dangerous
-  unarmed fighters, although they're incompetent with weapons other than maces.
-  They can be exceptional earth-based conjurers, although they're bad with all
-  other magic schools besides ice.
+  Gargoyles' partially living form grants them immunity to poison, as well as a
+  slow metabolism, resistance to cold and electricity, and protection from some
+  effects of necromancy. Their fangs and talons make them strong unarmed
+  fighters, and they are capable with blunt weapons. They can also be
+  exceptional earth-based conjurers.
 
 Elves
 ========================================
@@ -1979,7 +1980,7 @@ Chaos Knights
 
 Death Knights
   The Death Knight is a fighter who aligns him or herself with the powers of
-  death and worships Yredelemnul the Dark, who will soon grant the ability to
+  death and worships Yredelemnul the Dark, who grants followers the ability to
   re-animate the dead.
 
 Abyssal Knights
@@ -2001,7 +2002,7 @@ Warpers
 
 Assassins
   An Assassin is a stealthy character who is especially good at killing, using
-  daggers or blowguns.
+  daggers or blowguns. They start with some deadly curare needles.
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
