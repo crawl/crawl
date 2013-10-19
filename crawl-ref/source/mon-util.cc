@@ -1417,16 +1417,16 @@ bool mons_class_can_display_wounds(monster_type mc)
     // wounds.
     if (mons_class_is_zombified(mc) && mc != MONS_SPECTRAL_THING)
     {
-        return true;
+        return false;
     }
 
     switch (mc)
     {
     case MONS_RAKSHASA:
     case MONS_RAKSHASA_FAKE:
-        return true;
-    default:
         return false;
+    default:
+        return true;
     }
 }
 
