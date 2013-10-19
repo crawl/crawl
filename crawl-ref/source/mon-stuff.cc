@@ -4080,6 +4080,7 @@ int mons_usable_missile(monster* mons, item_def **launcher)
     }
 }
 
+// in units of 1/25 hp/turn
 int mons_natural_regen_rate(monster* mons)
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
@@ -4101,6 +4102,18 @@ int mons_natural_regen_rate(monster* mons)
     }
 
     return max(div_rand_round(mons->hit_dice, divider), 1);
+}
+
+// in units of 1/100 hp/turn
+int mons_off_level_regen_rate(monster* mons)
+{
+    if (!mons_can_regenerate(mons))
+        return 0;
+
+    if (mons_class_fast_regen(mons->type) || mons->type == MONS_PLAYER_GHOST)
+        return 100;
+    // Capped at 0.1 hp/turn.
+    return max(mons_natural_regen_rate(mons) * 4, 10);
 }
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
