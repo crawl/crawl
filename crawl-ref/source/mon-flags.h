@@ -86,7 +86,8 @@ const uint64_t M_INSUBSTANTIAL     = 1<<24;
 // wields two weapons at once
 const uint64_t M_TWO_WEAPONS       = 1<<25;
 
-////////////////////////////////// = 1<<26;
+// has extra-fast regeneration
+const uint64_t M_FAST_REGEN        = 1<<26;
 
 // cannot regenerate
 const uint64_t M_NO_REGEN          = 1<<27;

@@ -2840,7 +2840,7 @@ static monsterentry mondata[] =
 
 {
     MONS_HYDRA, 'D', LIGHTGREEN, "hydra",
-    M_COLD_BLOOD,
+    M_COLD_BLOOD | M_FAST_REGEN,
     MR_RES_POISON,
     1800, 11, MONS_HYDRA, MONS_HYDRA, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3421,7 +3421,7 @@ static monsterentry mondata[] =
 
 {
     MONS_SLIME_CREATURE, 'J', GREEN, "slime creature",
-    M_NO_FLAGS | M_HERD,
+    M_FAST_REGEN | M_HERD,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 3, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4034,7 +4034,7 @@ static monsterentry mondata[] =
 // trolls ('T')
 {
     MONS_TROLL, 'T', BROWN, "troll",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_FAST_REGEN,
     MR_NO_FLAGS,
     1500, 10, MONS_TROLL, MONS_TROLL, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15},
@@ -4048,7 +4048,7 @@ static monsterentry mondata[] =
 #if TAG_MAJOR_VERSION == 34
 {
     MONS_ROCK_TROLL, 'T', LIGHTGREY, "rock troll",
-    M_WARM_BLOOD | M_SPEAKS | M_CANT_SPAWN,
+    M_WARM_BLOOD | M_SPEAKS | M_CANT_SPAWN | M_FAST_REGEN,
     MR_NO_FLAGS,
     1600, 11, MONS_TROLL, MONS_ROCK_TROLL, MH_NATURAL, -4,
     { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20},
@@ -4062,7 +4062,7 @@ static monsterentry mondata[] =
 
 {
     MONS_IRON_TROLL, 'T', CYAN, "iron troll",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_FAST_REGEN,
     MR_RES_FIRE | MR_RES_COLD,
     1800, 10, MONS_TROLL, MONS_IRON_TROLL, MH_NATURAL, -5,
     { {AT_BITE, AF_PLAIN, 35}, {AT_CLAW, AF_PLAIN, 25},
@@ -4075,7 +4075,7 @@ static monsterentry mondata[] =
 
 {
     MONS_DEEP_TROLL, 'T', YELLOW, "deep troll",
-    M_WARM_BLOOD | M_SENSE_INVIS | M_SPEAKS,
+    M_WARM_BLOOD | M_SENSE_INVIS | M_SPEAKS | M_FAST_REGEN,
     MR_NO_FLAGS,
     1500, 9, MONS_TROLL, MONS_DEEP_TROLL, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 27}, {AT_CLAW, AF_PLAIN, 20},
@@ -4417,7 +4417,7 @@ static monsterentry mondata[] =
 
 {
     MONS_STARCURSED_MASS, 'X', BLUE, "starcursed mass",
-    M_SEE_INVIS,
+    M_SEE_INVIS | M_FAST_REGEN,
     mrd(MR_RES_POISON, 3),
     0, 12, MONS_STARCURSED_MASS, MONS_STARCURSED_MASS, MH_NONLIVING, -6,
     { {AT_ENGULF, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4867,7 +4867,7 @@ static monsterentry mondata[] =
 
 {
     MONS_KILLER_KLOWN, '@', BLACK, "Killer Klown",
-    M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD,
+    M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD | M_FAST_REGEN,
     MR_NO_FLAGS,
     0, 17, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -6,
     { {AT_HIT, AF_KLOWN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5100,10 +5100,9 @@ static monsterentry mondata[] =
 },
 
 // minor demons: imps, etc. ('5')
-// note: these things regenerate
 {
     MONS_CRIMSON_IMP, '5', RED, "crimson imp",
-    M_SPEAKS,
+    M_SPEAKS | M_FAST_REGEN,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 13, MONS_CRIMSON_IMP, MONS_CRIMSON_IMP, MH_DEMONIC, -9,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5140,7 +5139,7 @@ static monsterentry mondata[] =
 
 {
     MONS_LEMURE, '5', YELLOW, "lemure",
-    M_NO_FLAGS,
+    M_FAST_REGEN,
     MR_RES_POISON,
     0, 10, MONS_LEMURE, MONS_LEMURE, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 3}, {AT_HIT, AF_PLAIN, 3},
@@ -5264,7 +5263,7 @@ static monsterentry mondata[] =
 
 {
     MONS_HELLWING, '4', LIGHTGREY, "hellwing",
-    M_SPELLCASTER,
+    M_SPELLCASTER | M_FAST_REGEN,
     MR_RES_POISON,
     0, 12, MONS_HELLWING, MONS_HELLWING, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 17}, {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK },
@@ -5412,7 +5411,7 @@ static monsterentry mondata[] =
 
 {
     MONS_CACODEMON, '2', YELLOW, "cacodemon",
-    M_SPELLCASTER | M_SEE_INVIS,
+    M_SPELLCASTER | M_SEE_INVIS | M_FAST_REGEN,
     MR_RES_POISON | MR_RES_ELEC,
     0, 17, MONS_CACODEMON, MONS_CACODEMON, MH_DEMONIC, -9,
     { {AT_HIT, AF_PLAIN, 22}, {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK },
@@ -6063,7 +6062,7 @@ static monsterentry mondata[] =
 
 {
     MONS_LERNAEAN_HYDRA, 'D', YELLOW, "the Lernaean hydra",
-    M_UNIQUE | M_COLD_BLOOD,
+    M_UNIQUE | M_COLD_BLOOD | M_FAST_REGEN,
     MR_RES_POISON,
     2100, 11, MONS_HYDRA, MONS_HYDRA, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6284,7 +6283,7 @@ static monsterentry mondata[] =
 {
     MONS_DISSOLUTION, 'J', LIGHTMAGENTA, "Dissolution",
     M_UNIQUE | M_SENSE_INVIS | M_ACID_SPLASH | M_BURROWS | M_PRIEST | M_SPEAKS
-        | M_SPELLCASTER,
+        | M_SPELLCASTER | M_FAST_REGEN,
     MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 60, MONS_JELLY, MONS_JELLY, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
@@ -6551,7 +6550,7 @@ static monsterentry mondata[] =
 {
     // Snorg can go berserk.
     MONS_SNORG, 'T', LIGHTGREEN, "Snorg",
-    M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
+    M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_FAST_REGEN,
     MR_NO_FLAGS,
     1500, 25, MONS_TROLL, MONS_TROLL, MH_NATURAL, -6,
     { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15},
@@ -6564,7 +6563,7 @@ static monsterentry mondata[] =
 
 {
     MONS_PURGY, 'T', GREEN, "Purgy",
-    M_UNIQUE | M_WARM_BLOOD | M_SPEAKS,
+    M_UNIQUE | M_WARM_BLOOD | M_SPEAKS | M_FAST_REGEN,
     MR_NO_FLAGS,
     1100, 10, MONS_TROLL, MONS_TROLL, MH_NATURAL, -2,
     { {AT_BITE, AF_PLAIN, 9}, {AT_CLAW, AF_PLAIN, 4},
@@ -7022,7 +7021,8 @@ static monsterentry mondata[] =
 // over and over.
 {
     MONS_TEST_SPAWNER, 'X', WHITE, "test spawner",
-    M_SPELLCASTER | M_STATIONARY | M_INSUBSTANTIAL | M_NO_POLY_TO,
+    M_SPELLCASTER | M_STATIONARY | M_INSUBSTANTIAL | M_NO_POLY_TO
+        | M_FAST_REGEN,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD
         | MR_RES_ROTTING | MR_RES_ACID, 4) | MR_RES_STICKY_FLAME,
     0, 15, MONS_TEST_SPAWNER, MONS_TEST_SPAWNER, MH_NONLIVING, MAG_IMMUNE,
