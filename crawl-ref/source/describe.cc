@@ -3400,7 +3400,7 @@ static string _monster_stat_description(const monster_info& mi)
     // Unusual regeneration rates.
     if (!mi.can_regenerate())
         result << uppercase_first(pronoun) << " cannot regenerate.\n";
-    else if (monster_descriptor(mi.type, MDSC_REGENERATES))
+    else if (mons_class_fast_regen(mi.type))
         result << uppercase_first(pronoun) << " regenerates quickly.\n";
 
     // Size

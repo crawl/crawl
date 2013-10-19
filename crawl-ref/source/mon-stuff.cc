@@ -317,7 +317,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     // Don't want chunks to show up behind the player.
     los_def ld(where, opc_no_actor);
 
-    if (monster_descriptor(corpse.mon_type, MDSC_LEAVES_HIDE)
+    if (mons_class_leaves_hide(corpse.mon_type)
         && mons_genus(corpse.mon_type) == MONS_DRAGON)
     {
         // Uh... dragon hide is tough stuff and it keeps the monster in
@@ -4164,80 +4164,6 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
                 monster_die(mons, killer, killnum, true);
         }
     }
-}
-
-bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor)
-{
-    if (which_descriptor == MDSC_LEAVES_HIDE)
-    {
-        if (mons_genus(which_class) == MONS_TROLL)
-            return true;
-        switch (which_class)
-        {
-        case MONS_DRAGON:
-        case MONS_ICE_DRAGON:
-        case MONS_STEAM_DRAGON:
-        case MONS_MOTTLED_DRAGON:
-        case MONS_STORM_DRAGON:
-        case MONS_GOLDEN_DRAGON:
-        case MONS_SWAMP_DRAGON:
-        case MONS_PEARL_DRAGON:
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    if (which_descriptor == MDSC_REGENERATES)
-    {
-        switch (which_class)
-        {
-        case MONS_CACODEMON:
-        case MONS_DEEP_TROLL:
-        case MONS_HELLWING:
-        case MONS_CRIMSON_IMP:
-        case MONS_IRON_TROLL:
-        case MONS_LEMURE:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_ROCK_TROLL:
-#endif
-        case MONS_SLIME_CREATURE:
-        case MONS_SNORG:
-        case MONS_PURGY:
-        case MONS_TROLL:
-        case MONS_HYDRA:
-        case MONS_KILLER_KLOWN:
-        case MONS_STARCURSED_MASS:
-        case MONS_LERNAEAN_HYDRA:
-        case MONS_DISSOLUTION:
-        case MONS_TEST_SPAWNER:
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    if (which_descriptor == MDSC_NOMSG_WOUNDS)
-    {
-        // Zombified monsters other than spectral things don't show
-        // wounds.
-        if (mons_class_is_zombified(which_class)
-            && which_class != MONS_SPECTRAL_THING)
-        {
-            return true;
-        }
-
-        switch (which_class)
-        {
-        case MONS_RAKSHASA:
-        case MONS_RAKSHASA_FAKE:
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    return false;
 }
 
 monster* get_current_target()

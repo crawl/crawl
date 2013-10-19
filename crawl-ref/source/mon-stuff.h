@@ -20,13 +20,6 @@ enum mon_dam_level_type
     MDAM_DEAD,
 };
 
-enum mon_desc_type   // things that cross categorical lines {dlb}
-{
-    MDSC_LEAVES_HIDE,                  //    0
-    MDSC_REGENERATES,
-    MDSC_NOMSG_WOUNDS,
-};
-
 enum temperature_level
 {
     TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
@@ -176,7 +169,6 @@ bool swap_places(monster* mons, const coord_def &loc);
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
 void print_wounds(const monster* mons);
-bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor);
 
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();
