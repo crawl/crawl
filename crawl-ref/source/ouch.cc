@@ -643,6 +643,14 @@ bool expose_player_to_element(beam_type flavour, int strength,
         you.slow_down(0, strength);
     }
 
+    if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
+    {
+        mpr("The flames go out!", MSGCH_WARN);
+        you.duration[DUR_LIQUID_FLAMES] = 0;
+        you.props.erase("napalmer");
+        you.props.erase("napalm_aux");
+    }
+
     if (strength <= 0 || !damage_inventory)
         return false;
 
