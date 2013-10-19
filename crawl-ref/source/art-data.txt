@@ -1097,6 +1097,8 @@ NAME:     dark maul
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
 TYPE:     maul
 COLOUR:   LIGHTRED
+TILE:     urand_dark_maul
+TILE_EQ:  dark_maul
 PLUS:     +6/+6
 BASE_ACC: +2
 BASE_DAM: +27
