@@ -1736,53 +1736,6 @@ Octopodes
   knowledge of poisons as well. They are also able to use their tentacles to
   constrict enemies - potentially several at a time!
 
-Djinn
-  Of the same stock as angels or demons, these spirits have been created from
-  smokeless fire by some deranged god. Unlike regular living beings, they draw
-  their sustenance from magic rather than eating or drinking, although for some
-  reason they can still do the latter - probably due to being unintelligently
-  designed by a creator with no knowledge of evolution.
-
-  Magic is literally their life, to the point of their health and magical
-  powers' being one force, called "essence". The Djinn can also withstand more
-  magical contamination than most, and slowly recover from its effects.
-
-  Being spirits of fire, they obviously suffer no harm from any kind of fire,
-  but the same cannot be said of their equipment. Accordingly, cold and water
-  cause them great harm. Fortunately, levitation allows them to cross bodies of
-  liquid, although without external means to power their flight it takes them
-  much effort to do so.
-
-  Djinn make great fire mages (duh). They are competent with air magic,
-  enchantments, magic items and weapons with long reaches that don't require
-  high dexterity. They are terrible with ice, earth, necromancy and poison.
-
-Lava Orcs
-  These strange humanoids are made of living stone, with a unique heat-based
-  metabolism. Ordinarily slow and hardy, when anything puts some stress on them,
-  they literally fire up, turning into fast-moving lava. Outwardly, their shape
-  mostly resembles that of Orcs, thus the name.
-
-  They are unique in their ability to swim in lava: even the Djinn, while immune
-  to fire, can't swim through a treacle of molten rock. In order to be able to
-  use regular equipment, Lava Orcs have invented special fire-proof backpacks;
-  vulnerable items like scrolls or books are not accessible when their owner is
-  too hot.
-
-  Many things can fire up their metabolism: facing multiple and/or dangerous
-  enemies, being badly hurt, suffering fire damage, berserking, and obviously
-  being submerged in lava. As their heat grows, Lava Orcs gain normal speed,
-  become more accustomed to fire, have their stony skin soften, gain extra power
-  when casting fire magic, become vulnerable to cold, speed up even more, and
-  finally cause fire damage to all creatures in their presence.
-
-  Lava Orcs make good melee fighters, preferring axes. They're pretty bad
-  spellcasters, except for transmutations, fire and earth magic.
-
-  Many Orcs feel superior to all other species and beings, and they have formed
-  a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
-  can join Beogh whenever an orc priest is in sight.
-
 Gargoyles
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
   hideous humanoids with an affinity to rock. They have low health, but large
