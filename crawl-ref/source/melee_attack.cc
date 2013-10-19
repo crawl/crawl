@@ -4915,6 +4915,8 @@ void melee_attack::mons_apply_attack_flavour()
                      defender_name().c_str());
             }
         }
+
+        defender->expose_to_element(BEAM_WATER, 0);
         break;
 
     case AF_PURE_FIRE:

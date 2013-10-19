@@ -3038,6 +3038,8 @@ void monster::expose_to_element(beam_type flavour, int strength,
             slow_down(this, strength);
         }
         break;
+    case BEAM_WATER:
+        del_ench(ENCH_STICKY_FLAME);
     default:
         break;
     }
