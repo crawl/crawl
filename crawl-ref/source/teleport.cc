@@ -100,8 +100,11 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         return false;
 
     // Leave a cloud.
-    place_cloud(jump ? CLOUD_DUST_TRAIL : CLOUD_TLOC_ENERGY,
-                oldplace, 1 + random2(3), this);
+    if (!cell_is_solid(oldplace))
+    {
+        place_cloud(jump ? CLOUD_DUST_TRAIL : CLOUD_TLOC_ENERGY,
+                    oldplace, 1 + random2(3), this);
+    }
 
     check_redraw(oldplace);
     apply_location_effects(oldplace);

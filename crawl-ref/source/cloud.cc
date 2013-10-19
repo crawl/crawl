@@ -347,7 +347,10 @@ void manage_clouds()
 
 #if ASSERTS
         if (cell_is_solid(cloud.pos))
-            die("cloud in %s at (%d,%d)", dungeon_feature_name(grd(cloud.pos)), cloud.pos.x, cloud.pos.y);
+        {
+            die("cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
+                dungeon_feature_name(grd(cloud.pos)), cloud.pos.x, cloud.pos.y);
+        }
 #endif
 
         int dissipate = you.time_taken;
