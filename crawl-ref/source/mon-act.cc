@@ -113,7 +113,7 @@ static void _monster_regenerate(monster* mons)
         return;
     }
 
-    if (monster_descriptor(mons->type, MDSC_REGENERATES)
+    if (mons_class_fast_regen(mons->type)
         || (mons->type == MONS_FIRE_ELEMENTAL
             && (grd(mons->pos()) == DNGN_LAVA
                 || cloud_type_at(mons->pos()) == CLOUD_FIRE))

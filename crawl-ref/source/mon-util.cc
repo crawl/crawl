@@ -1406,9 +1406,52 @@ bool mons_can_regenerate(const monster* mon)
     return mons_class_can_regenerate(mon->type);
 }
 
+bool mons_class_fast_regen(monster_type mc)
+{
+    switch (mc)
+    {
+    case MONS_CACODEMON:
+    case MONS_DEEP_TROLL:
+    case MONS_HELLWING:
+    case MONS_CRIMSON_IMP:
+    case MONS_IRON_TROLL:
+    case MONS_LEMURE:
+#if TAG_MAJOR_VERSION == 34
+    case MONS_ROCK_TROLL:
+#endif
+    case MONS_SLIME_CREATURE:
+    case MONS_SNORG:
+    case MONS_PURGY:
+    case MONS_TROLL:
+    case MONS_HYDRA:
+    case MONS_KILLER_KLOWN:
+    case MONS_STARCURSED_MASS:
+    case MONS_LERNAEAN_HYDRA:
+    case MONS_DISSOLUTION:
+    case MONS_TEST_SPAWNER:
+        return true;
+    default:
+        return false;
+    }
+}
+
 bool mons_class_can_display_wounds(monster_type mc)
 {
-    return !monster_descriptor(mc, MDSC_NOMSG_WOUNDS);
+    // Zombified monsters other than spectral things don't show
+    // wounds.
+    if (mons_class_is_zombified(mc) && mc != MONS_SPECTRAL_THING)
+    {
+        return true;
+    }
+
+    switch (mc)
+    {
+    case MONS_RAKSHASA:
+    case MONS_RAKSHASA_FAKE:
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool mons_can_display_wounds(const monster* mon)
@@ -1416,6 +1459,26 @@ bool mons_can_display_wounds(const monster* mon)
     _get_tentacle_head(mon);
 
     return mons_class_can_display_wounds(mon->type);
+}
+
+bool mons_class_leaves_hide(monster_type mc)
+{
+    if (mons_genus(mc) == MONS_TROLL)
+        return true;
+    switch (mc)
+    {
+    case MONS_DRAGON:
+    case MONS_ICE_DRAGON:
+    case MONS_STEAM_DRAGON:
+    case MONS_MOTTLED_DRAGON:
+    case MONS_STORM_DRAGON:
+    case MONS_GOLDEN_DRAGON:
+    case MONS_SWAMP_DRAGON:
+    case MONS_PEARL_DRAGON:
+        return true;
+    default:
+        return false;
+    }
 }
 
 int mons_zombie_size(monster_type mc)
@@ -1980,7 +2043,7 @@ int exper_value(const monster* mon, bool real)
     }
 
     // Let's look at regeneration.
-    if (monster_descriptor(mc, MDSC_REGENERATES))
+    if (mons_class_fast_regen(mc))
         diff += 15;
 
     // Monsters at normal or fast speed with big melee damage.

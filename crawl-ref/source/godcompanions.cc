@@ -149,7 +149,7 @@ bool recall_offlevel_ally(mid_t mid)
         int turns = you.elapsed_time - comp->timestamp;
         if (mons_can_regenerate(mons))
         {
-            if (monster_descriptor(mons->type, MDSC_REGENERATES))
+            if (mons_class_fast_regen(mons->type))
                 mons->heal(turns);
             else
             {

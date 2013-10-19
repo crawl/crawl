@@ -2651,11 +2651,8 @@ void update_level(int elapsedTime)
         // This is the monster healing code, moved here from tag.cc:
         if (mons_can_regenerate(*mi))
         {
-            if (monster_descriptor(mi->type, MDSC_REGENERATES)
-                || mi->type == MONS_PLAYER_GHOST)
-            {
+            if (mons_class_fast_regen(mi->type) || mi->type == MONS_PLAYER_GHOST)
                 mi->heal(turns);
-            }
             else
             {
                 // Set a lower ceiling of 0.1 on the regen rate.
