@@ -1408,31 +1408,7 @@ bool mons_can_regenerate(const monster* mon)
 
 bool mons_class_fast_regen(monster_type mc)
 {
-    switch (mc)
-    {
-    case MONS_CACODEMON:
-    case MONS_DEEP_TROLL:
-    case MONS_HELLWING:
-    case MONS_CRIMSON_IMP:
-    case MONS_IRON_TROLL:
-    case MONS_LEMURE:
-#if TAG_MAJOR_VERSION == 34
-    case MONS_ROCK_TROLL:
-#endif
-    case MONS_SLIME_CREATURE:
-    case MONS_SNORG:
-    case MONS_PURGY:
-    case MONS_TROLL:
-    case MONS_HYDRA:
-    case MONS_KILLER_KLOWN:
-    case MONS_STARCURSED_MASS:
-    case MONS_LERNAEAN_HYDRA:
-    case MONS_DISSOLUTION:
-    case MONS_TEST_SPAWNER:
-        return true;
-    default:
-        return false;
-    }
+    return !mons_class_flag(mc, M_FAST_REGEN);
 }
 
 bool mons_class_can_display_wounds(monster_type mc)
