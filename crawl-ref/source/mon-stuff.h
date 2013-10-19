@@ -187,6 +187,7 @@ int mons_missile_damage(monster* mons, const item_def *launch,
 int mons_usable_missile(monster* mons, item_def **launcher);
 
 int mons_natural_regen_rate(monster* mons);
+int mons_off_level_regen_rate(monster* mons);
 
 void mons_relocated(monster* mons);
 void mons_att_changed(monster* mons);
