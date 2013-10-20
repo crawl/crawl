@@ -110,8 +110,6 @@ private:
     /* Axe cleaving */
     void cleave_setup();
     int cleave_damage_mod(int dam);
-    int jump_damage_mod(int dam);
-    int jump_additional_damage_mod(int dam);
 
     /* Mutation Effects */
     void do_spines();

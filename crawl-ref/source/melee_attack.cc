@@ -1886,8 +1886,7 @@ int melee_attack::player_apply_final_multipliers(int damage)
     //cleave damage modifier
     if (cleaving)
         damage = cleave_damage_mod(damage);
-    else if (jumping_attack)
-        damage = jump_damage_mod(damage);
+
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
     if (you.form == TRAN_STATUE)
@@ -4096,7 +4095,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
  */
 void melee_attack::player_stab_check()
 {
-    if (you.stat_zero[STAT_DEX] || you.confused())
+    if (you.stat_zero[STAT_DEX] || you.confused() || jumping_attack)
     {
         stab_attempt = false;
         stab_bonus = 0;
@@ -4136,9 +4135,6 @@ void melee_attack::player_stab_check()
         stab_bonus = 6;
         break;
     }
-
-    if (stab_bonus && jumping_attack)
-        stab_bonus += 1;
 
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
@@ -5422,12 +5418,6 @@ void melee_attack::cleave_setup()
 int melee_attack::cleave_damage_mod(int dam)
 {
     return div_rand_round(dam * 3, 4);
-}
-
-//  jump attack modifier: 120% of base damage
-int melee_attack::jump_damage_mod(int dam)
-{
-    return div_rand_round(dam * 6, 5);
 }
 
 void melee_attack::chaos_affect_actor(actor *victim)
