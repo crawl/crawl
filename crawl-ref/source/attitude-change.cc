@@ -109,9 +109,7 @@ void slime_convert(monster* mons)
         && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
-        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && you.visible_to(mons) && !mons->asleep()
-        && !mons_is_confused(mons) && !mons->paralysed())
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
         if (!player_under_penance())
@@ -462,6 +460,8 @@ static void _fedhas_neutralise_plant(monster* plant)
 static void _jiyva_convert_slime(monster* slime)
 {
     ASSERT(mons_is_slime(slime));
+
+    behaviour_event(slime, ME_ALERT);
 
     if (you.can_see(slime))
     {
