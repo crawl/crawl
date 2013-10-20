@@ -3896,7 +3896,11 @@ static bool _print_final_god_abil_desc(int god, const string &final_msg,
         // are too long for the screen.
         const int spacesleft =
             get_number_of_cols() - 1 - strwidth(buf) - strwidth(cost);
-        buf += string(spacesleft, ' ');
+        // XXX: should trim by width, not bytes.
+        if (spacesleft < 0)
+            buf = buf.substr(0, buf.length() + spacesleft);
+        else if (spacesleft > 0)
+            buf += string(spacesleft, ' ');
         buf += cost;
     }
 
