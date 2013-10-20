@@ -279,8 +279,9 @@ A vibrating cloak.
 %%%%
 boots of the Assassin
 
-Some soft boots with a concealed dagger inside, specially designed by the
-Assassin's Guild. It makes the wearer more perceptive of potential victims.
+Some soft boots, specially designed by the Assassin's Guild. They make the
+wearer more perceptive of potential victims, and more able to find
+vulnerabilities when attacking unaware opponents.
 %%%%
 Lear's hauberk
 
