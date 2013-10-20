@@ -1393,8 +1393,7 @@ int player_hunger_rate(bool temp)
     if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
         hunger--;
 
-    // Moved here from main.cc... maintaining the >= 40 behaviour.
-    if (temp && you.hunger >= 40)
+    if (temp)
     {
         if (you.duration[DUR_INVIS])
             hunger += 5;
