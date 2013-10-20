@@ -1408,7 +1408,7 @@ bool mons_can_regenerate(const monster* mon)
 
 bool mons_class_fast_regen(monster_type mc)
 {
-    return !mons_class_flag(mc, M_FAST_REGEN);
+    return mons_class_flag(mc, M_FAST_REGEN);
 }
 
 bool mons_class_can_display_wounds(monster_type mc)
