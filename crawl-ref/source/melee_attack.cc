@@ -1902,7 +1902,7 @@ int melee_attack::player_apply_final_multipliers(int damage)
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
-    int modified_wpn_skill = (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
+    int modified_wpn_skill = (player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN)
                               ? SK_SHORT_BLADES : wpn_skill);
 
     if (weapon && weapon->base_type == OBJ_WEAPONS
@@ -2001,14 +2001,6 @@ void melee_attack::set_attack_verb()
             attack_verb = "hit";
         else
             attack_verb = "clumsily bash";
-        return;
-    }
-
-    // Special message for stabs while wearing the Boots of the Assassin.
-    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN) && stab_attempt && stab_bonus > 0)
-    {
-        attack_verb = "stab";
-        verb_degree = "with your concealed dagger";
         return;
     }
 
