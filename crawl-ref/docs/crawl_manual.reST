@@ -1753,9 +1753,9 @@ Djinn
   liquid, although without external means to power their flight it takes them
   much effort to do so.
 
-  Djinn make great fire mages (duh). They are competent with air magic,
-  enchantments, magic items and weapons with long reaches that don't require
-  high dexterity. They are terrible with ice, earth, necromancy and poison.
+  Djinn make great fire mages. They are competent with air magic, enchantments,
+  magic items and weapons with long reaches that don't require high dexterity.
+  They are terrible with ice, earth, necromancy and poison.
 
 Lava Orcs
   These strange humanoids are made of living stone, with a unique heat-based
@@ -1790,10 +1790,10 @@ Gargoyles
   eventually gain the ability to fly continuously.
 
   Gargoyles' partially living form grants them immunity to poison, as well as a
-  slow metabolism, resistance to cold and electricity, and protection from some
-  effects of necromancy. Their fangs and talons make them strong unarmed
-  fighters, and they are capable with blunt weapons. They can also be
-  exceptional earth-based conjurers.
+  slow metabolism, resistance to electricity, and protection from some effects
+  of necromancy. Their fangs and talons make them strong unarmed fighters, and
+  they are capable with blunt weapons. They can also be exceptional earth-based
+  conjurers.
 
 Elves
 ========================================
