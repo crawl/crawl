@@ -785,6 +785,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_FIRE_BREATH:
         beam.name       = "blast of flame";
         beam.aux_source = "blast of fiery breath";
+        beam.short_name = "flames";
         beam.damage     = dice_def(3, (mons->hit_dice * 2));
         beam.colour     = RED;
         beam.hit        = 30;
