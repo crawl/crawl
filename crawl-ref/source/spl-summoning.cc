@@ -1194,6 +1194,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
                                 pow));
         env.markers.clear_need_activate();
         env.grid(point) = DNGN_MALIGN_GATEWAY;
+        set_terrain_changed(point);
 
         noisy(10, point);
         mpr("The dungeon shakes, a horrible noise fills the air, and a portal "
