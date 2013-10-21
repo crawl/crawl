@@ -1781,28 +1781,28 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 {
     int power_level = _get_power_level(power, rarity);
 
-    if (power_level == 1 && you.hp * 2 > you.hp_max)
-        power_level = 0;
+    you.duration[DUR_ELIXIR_HEALTH] = 0;
+    you.duration[DUR_ELIXIR_MAGIC] = 0;
 
     if (power_level == 0)
     {
         if (coinflip())
-            potion_effect(POT_HEAL_WOUNDS, 40); // power doesn't matter
+            you.set_duration(DUR_ELIXIR_HEALTH, 1 + random2(3));
         else
-            cast_regen(random2(power / 4));
+            you.set_duration(DUR_ELIXIR_MAGIC, 3 + random2(5));
     }
     else if (power_level == 1)
     {
-        set_hp(you.hp_max);
-        you.magic_points = 0;
+        if (you.hp * 2 < you.hp_max)
+            you.set_duration(DUR_ELIXIR_HEALTH, 3 + random2(3));
+        else
+            you.set_duration(DUR_ELIXIR_MAGIC, 10);
     }
     else if (power_level >= 2)
     {
-        set_hp(you.hp_max);
-        you.magic_points = you.max_magic_points;
+        you.set_duration(DUR_ELIXIR_HEALTH, 10);
+        you.set_duration(DUR_ELIXIR_MAGIC, 10);
     }
-    you.redraw_hit_points = true;
-    you.redraw_magic_points = true;
 }
 
 static void _battle_lust_card(int power, deck_rarity_type rarity)
