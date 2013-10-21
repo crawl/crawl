@@ -654,6 +654,7 @@ bool MiscastEffect::_malign_gateway()
                                 200));
         env.markers.clear_need_activate();
         env.grid(point) = DNGN_MALIGN_GATEWAY;
+        set_terrain_changed(point);
 
         noisy(10, point);
         all_msg = "The dungeon shakes, a horrible noise fills the air, and a "
