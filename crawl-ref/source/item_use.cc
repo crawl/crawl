@@ -2346,7 +2346,7 @@ static void _rebrand_weapon(item_def& wpn)
     int new_brand = old_brand;
     const string itname = wpn.name(DESC_YOUR);
 
-    // you can't rebrand blessed weapons but trying will get you some cleansing flame
+    // You can't rebrand blessed weapons.
     switch (wpn.sub_type)
     {
         case WPN_BLESSED_FALCHION:
@@ -2358,7 +2358,10 @@ static void _rebrand_weapon(item_def& wpn)
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
+        {
+            mprf("%s cannot be rebranded.", itname.c_str());
             return;
+        }
     }
 
     // now try and find an appropriate brand
@@ -2516,41 +2519,13 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
         }
         break;
 
+    // Un-affixable brands.
     case SPWPN_PAIN:
-        // Can't fix pain brand (balance)...you just get tormented.
-        mprf("%s shrieks out in agony!", itname.c_str());
-
-        torment_monsters(you.pos(), &you, TORMENT_GENERIC);
-        success = false;
-
-        // This is only naughty if you know you're doing it.
-        // XXX: assumes this can only happen from Brand Weapon scroll.
-        did_god_conduct(DID_NECROMANCY, 10,
-                        get_ident_type(OBJ_SCROLLS, SCR_BRAND_WEAPON)
-                        == ID_KNOWN_TYPE);
-        break;
-
     case SPWPN_DISTORTION:
-        // [dshaligram] Attempting to fix a distortion brand gets you a free
-        // distortion effect, and no permabranding. Sorry, them's the breaks.
-        mprf("%s twongs alarmingly.", itname.c_str());
-
-        // from unwield_item
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
-                      "distortion affixation");
-        success = false;
-        break;
-
     case SPWPN_ANTIMAGIC:
-        mprf("%s repels your magic.", itname.c_str());
-        drain_mp(you.species == SP_DJINNI ? 100 : you.magic_points);
-        success = false;
-        break;
-
     case SPWPN_HOLY_WRATH:
-        mprf("%s emits a blast of cleansing flame.", itname.c_str());
-        _explosion(you.pos(), &you, BEAM_HOLY, YELLOW, "cleansing flame",
-                   rebranded ? "holy wrath rebrand" : "holy wrath affixation");
+        if (!rebranded)
+            mpr("This brand cannot be affixed.");
         success = false;
         break;
 
