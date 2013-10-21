@@ -5556,6 +5556,35 @@ void dec_disease_player(int delay)
     }
 }
 
+static void _dec_elixir_hp(int delay)
+{
+    you.duration[DUR_ELIXIR_HEALTH] -= delay;
+    if (you.duration[DUR_ELIXIR_HEALTH] < 0)
+        you.duration[DUR_ELIXIR_HEALTH] = 0;
+
+    int heal = (delay * you.hp_max / 10) / BASELINE_DELAY;
+    if (!you.duration[DUR_DEATHS_DOOR])
+        inc_hp(heal);
+}
+
+static void _dec_elixir_mp(int delay)
+{
+    you.duration[DUR_ELIXIR_MAGIC] -= delay;
+    if (you.duration[DUR_ELIXIR_MAGIC] < 0)
+        you.duration[DUR_ELIXIR_MAGIC] = 0;
+
+    int heal = (delay * you.max_magic_points / 10) / BASELINE_DELAY;
+    inc_mp(heal);
+}
+
+void dec_elixir_player(int delay)
+{
+    if (you.duration[DUR_ELIXIR_HEALTH])
+        _dec_elixir_hp(delay);
+    if (you.duration[DUR_ELIXIR_MAGIC])
+        _dec_elixir_mp(delay);
+}
+
 bool flight_allowed(bool quiet)
 {
     if (you.form == TRAN_TREE)

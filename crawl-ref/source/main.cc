@@ -3046,6 +3046,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_FIRE_VULN, delay,
                           "You feel less vulnerable to fire.");
 
+    dec_elixir_player(delay);
+
     if (!env.sunlight.empty())
         process_sunlights();
 }

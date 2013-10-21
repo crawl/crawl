@@ -40,7 +40,8 @@ enum status_type
     STATUS_LIQUEFIED,
     STATUS_DRAINED,
     STATUS_RAY,
-    STATUS_LAST_STATUS = STATUS_RAY
+    STATUS_ELIXIR,
+    STATUS_LAST_STATUS = STATUS_ELIXIR
 };
 
 struct status_info

@@ -656,6 +656,19 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_ELIXIR:
+        if (you.duration[DUR_ELIXIR_HEALTH] || you.duration[DUR_ELIXIR_MAGIC])
+        {
+            if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
+                inf->light_colour = WHITE;
+            else if (you.duration[DUR_ELIXIR_HEALTH])
+                inf->light_colour = LIGHTBLUE;
+            else
+                inf->light_colour = LIGHTMAGENTA;
+            inf->light_text   = "Elixir";
+        }
+        break;
+
     default:
         if (!found)
         {
