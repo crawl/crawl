@@ -4875,6 +4875,7 @@ void temperature_check()
             const coord_def p(*ai);
             if (in_bounds(p)
                 && env.cgrid(p) == EMPTY_CLOUD
+                && !cell_is_solid(p)
                 && one_chance_in(5))
             {
                 place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
