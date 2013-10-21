@@ -962,23 +962,23 @@ bool direction_chooser::move_is_ok() const
 
         if (looking_at_you())
         {
-            // may_target_self == makes (some) sense to target yourself
-            // (SPFLAG_AREA)
+            // may_target_self == sometimes makes sense to target yourself,
+            // but should still give a prompt (SPFLAG_ALLOW_SELF)
 
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (!may_target_self && restricts != DIR_TARGET_OBJECT
+            if (restricts != DIR_TARGET_OBJECT
                 && (mode == TARG_ENEMY || mode == TARG_HOSTILE
                     || mode == TARG_HOSTILE_SUBMERGED
                     || mode == TARG_HOSTILE_UNDEAD))
             {
-                if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
+                if (!may_target_self && (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL))
                 {
                     mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
                     return false;
                 }
-                else if (Options.allow_self_target == CONFIRM_PROMPT)
+                else if (Options.allow_self_target != CONFIRM_NONE)
                     return yesno("Really target yourself?", false, 'n');
             }
 
