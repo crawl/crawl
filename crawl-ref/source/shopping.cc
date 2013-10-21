@@ -1995,6 +1995,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_FEAR:
+            case SCR_IMMOLATION:
             case SCR_MAGIC_MAPPING:
                 valued += 35;
                 break;
@@ -2014,7 +2015,6 @@ unsigned int item_value(item_def item, bool ident)
 
             case SCR_NOISE:
             case SCR_RANDOM_USELESSNESS:
-            case SCR_IMMOLATION:
                 valued += 10;
                 break;
             }
