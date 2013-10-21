@@ -57,8 +57,10 @@ int identify(int power, int item_slot, string *pre_msg)
     {
         if (item_slot == -1)
         {
-            item_slot = prompt_invent_item("Identify which item?", MT_INVLIST,
-                                           OSEL_UNIDENT, true, true, false);
+            item_slot = prompt_invent_item(
+                "Identify which item? (\\ to view known items)",
+                MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
+                -1, NULL, OPER_ANY, true);
         }
         if (prompt_failed(item_slot))
             return identified;
