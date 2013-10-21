@@ -951,9 +951,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "It warps and distorts space around it. "
                 "Unwielding it can cause banishment or high damage.";
             break;
-        case SPWPN_REACHING:
-            description += "It can be evoked to extend its reach.";
-            break;
         case SPWPN_PENETRATION:
             description += "Ammo fired by it will pass through the "
                 "targets it hits, potentially hitting all targets in "

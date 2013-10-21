@@ -229,7 +229,10 @@ void ghost_demon::init_random_demon()
                || brand == SPWPN_EVASION
                || brand == SPWPN_FLAME
                || brand == SPWPN_FROST
-               || brand == SPWPN_REACHING);
+#if TAG_MAJOR_VERSION == 34
+               || brand == SPWPN_REACHING
+#endif
+               );
     }
 
     // Does demon fly?

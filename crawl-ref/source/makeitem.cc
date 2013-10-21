@@ -1328,9 +1328,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (one_chance_in(3))
-                rc = SPWPN_REACHING;
-
             if (one_chance_in(8))
                 rc = SPWPN_DRAINING;
 
@@ -1459,17 +1456,11 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 
-            if (one_chance_in(5))       // 4.9% whips, 7.3% rest
+            if (one_chance_in(5))       // 7.3%
                 rc = SPWPN_VAMPIRICISM;
 
-            if (one_chance_in(10))      // 2.7% whips, 4.0% rest
+            if (one_chance_in(10))      // 4.0%
                 rc = SPWPN_PAIN;
-
-            if (one_chance_in(3)        // 13.6% of whips
-                && item.sub_type == WPN_DEMON_WHIP)
-            {
-                rc = SPWPN_REACHING;
-            }
 
             if (one_chance_in(5))       // 10.2%
                 rc = SPWPN_DRAINING;
@@ -1526,11 +1517,13 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return false;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (weapon_skill(OBJ_WEAPONS, type) == SK_POLEARMS
         && brand == SPWPN_REACHING)
     {
         return false;
     }
+#endif
 
     if (type == WPN_BLOWGUN)
     {
@@ -1567,7 +1560,9 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_VAMPIRICISM:
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
+#if TAG_MAJOR_VERSION == 34
     case SPWPN_REACHING:
+#endif
     case SPWPN_ANTIMAGIC:
     case SPWPN_REAPING:
 #if TAG_MAJOR_VERSION == 34

@@ -946,18 +946,6 @@ static bool _handle_reaching(monster* mons)
         ASSERT(foe->is_player() || foe->is_monster());
 
         fight_melee(mons, foe);
-
-        if (mons->alive())
-        {
-            // Player saw the item reach.
-            item_def *wpn = mons->weapon(0);
-            if (wpn && !is_artefact(*wpn) && you.can_see(mons)
-                // Don't auto-identify polearm brands
-                && get_weapon_brand(*wpn) == SPWPN_REACHING)
-            {
-                set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
-            }
-        }
     }
 
     return ret;

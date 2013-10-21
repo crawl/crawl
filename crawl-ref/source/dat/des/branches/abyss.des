@@ -1228,7 +1228,7 @@ KITEM:   24d = scroll of curse weapon w:5 q:1 / \
          gold q:1
 KITEM:   13e = rod of striking w:2 / wand of slowing / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / lamp of fire w:2 / \
-         plain deck w:2 / whip not_cursed ego:reaching w:2 / \
+         plain deck w:2 / whip not_cursed w:2 / \
          cap not_cursed mundane race:none w:5
 KITEM:   f = abyssal rune of zot mimic, abyssal rune of zot mimic
 KITEM:   g = abyssal rune of zot mimic, abyssal rune of zot
