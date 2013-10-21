@@ -312,7 +312,7 @@ struct spell_desc
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      6,
      200,
      6, 6,
