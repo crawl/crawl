@@ -1961,8 +1961,6 @@ reach_type weapon_reach(const item_def &item)
 {
     if (weapon_skill(item) == SK_POLEARMS)
         return REACH_TWO;
-    if (get_weapon_brand(item) == SPWPN_REACHING)
-        return REACH_TWO;
     return REACH_NONE;
 }
 
