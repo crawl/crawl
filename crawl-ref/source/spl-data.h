@@ -3207,6 +3207,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SONG_OF_SHIELDING, "Song of Shielding",
      SPTYP_CHARMS,
@@ -3219,6 +3220,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_SPECTRAL_WEAPON, "Spectral Weapon",

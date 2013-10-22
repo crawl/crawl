@@ -139,8 +139,6 @@ static duration_def duration_data[] =
       BLUE, "Infus", "infused", "Your attacks are magically infused."},
     { DUR_SONG_OF_SLAYING, true,
       BLUE, "Slay", "singing", "Your melee attacks are strengthened by your song."},
-    { DUR_SONG_OF_SHIELDING, true,
-      BLUE, "SShield", "shielded", "Your magic is protecting you."},
     { DUR_FLAYED, true,
       RED, "Flay", "flayed", "You are covered in terrible wounds." },
     { DUR_RETCHING, true,
