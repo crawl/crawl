@@ -1917,6 +1917,7 @@ string spell_noise_string(spell_type spell)
         effect_noise = 7;
         break;
 
+    case SPELL_SONG_OF_SLAYING:
     case SPELL_MALIGN_GATEWAY:
         effect_noise = 10;
         break;
