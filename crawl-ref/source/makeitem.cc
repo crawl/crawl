@@ -1517,14 +1517,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (weapon_skill(OBJ_WEAPONS, type) == SK_POLEARMS
-        && brand == SPWPN_REACHING)
-    {
-        return false;
-    }
-#endif
-
     if (type == WPN_BLOWGUN)
     {
         switch ((brand_type)brand)
@@ -1560,14 +1552,10 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_VAMPIRICISM:
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
-#if TAG_MAJOR_VERSION == 34
-    case SPWPN_REACHING:
-#endif
     case SPWPN_ANTIMAGIC:
     case SPWPN_REAPING:
 #if TAG_MAJOR_VERSION == 34
     case SPWPN_ORC_SLAYING:
-    case SPWPN_RETURNING:
 #endif
         if (is_range_weapon(item))
             return false;
@@ -1581,6 +1569,13 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         if (!is_range_weapon(item))
             return false;
         break;
+
+#if TAG_MAJOR_VERSION == 34
+    // Removed brands.
+    case SPWPN_RETURNING:
+    case SPWPN_REACHING:
+        return false;
+#endif
 
     case SPWPN_ACID:
     case SPWPN_CONFUSE:
