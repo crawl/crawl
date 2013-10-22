@@ -193,17 +193,17 @@
 { MUT_SLOW_HEALING,                   3,  3,  true, false, false,
   "slow healing",
 
-  {"You heal slowly.",
-   "You heal very slowly.",
+  {"You heal slowly when monsters are visible.",
+   "You do not heal naturally when monsters are visible.",
    "You do not heal naturally."},
 
-  {"You begin to heal more slowly.",
-   "You begin to heal more slowly.",
+  {"Your natural healing is weakened.",
+   "Your natural healing is weakened.",
    "You stop healing."},
 
-  {"Your rate of healing increases.",
-   "Your rate of healing increases.",
-   "Your rate of healing increases."},
+  {"Your natural healing is strengthened.",
+   "Your natural healing is strengthened.",
+   "Your natural healing is strengthened."},
 
   "slow healing"
 },
