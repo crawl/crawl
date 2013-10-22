@@ -1139,7 +1139,9 @@ static void _debug_acquirement_stats(FILE *ostat)
             "freezing",
             "holy wrath",
             "electrocution",
+#if TAG_MAJOR_VERSION == 34
             "orc slaying",
+#endif
             "dragon slaying",
             "venom",
             "protection",
@@ -1152,16 +1154,22 @@ static void _debug_acquirement_stats(FILE *ostat)
             "pain",
             "antimagic",
             "distortion",
+#if TAG_MAJOR_VERSION == 34
             "reaching",
             "returning",
+#endif
             "chaos",
             "evasion",
             "confusion",
             "penetration",
             "reaping",
             "acid",
+#if TAG_MAJOR_VERSION == 34
+            "confuse",
+#endif
             "debug randart",
         };
+        COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_WEAPONS);
 
         for (int i = 0; i < NUM_SPECIAL_WEAPONS; ++i)
             if (ego_quants[i] > 0)

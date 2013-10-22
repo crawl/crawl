@@ -444,9 +444,6 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_FREEZING: return terse ? " (freeze)" : " of freezing";
     case SPWPN_HOLY_WRATH: return terse ? " (holy)" : " of holy wrath";
     case SPWPN_ELECTROCUTION: return terse ? " (elec)":" of electrocution";
-#if TAG_MAJOR_VERSION == 34
-    case SPWPN_ORC_SLAYING: return terse ? " (slay orc)":" of orc slaying";
-#endif
     case SPWPN_DRAGON_SLAYING: return terse ? " (slay drac)":" of dragon slaying";
     case SPWPN_VENOM: return terse ? " (venom)" : " of venom";
     case SPWPN_PROTECTION: return terse ? " (protect)" : " of protection";
