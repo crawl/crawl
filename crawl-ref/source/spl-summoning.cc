@@ -1175,8 +1175,6 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 {
                     if (player_will_anger_monster(*mi))
                         monster_die(*mi, KILL_RESET, NON_MONSTER);
-                    else if (!scroll) // Only track cap for non-scroll casting
-                        summoned_monster(*mi, &you, SPELL_SHADOW_CREATURES);
                 }
             }
 
@@ -3185,7 +3183,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
     { SPELL_SUMMON_UGLY_THING,          3, 2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
-    { SPELL_SHADOW_CREATURES,           5, 2 },
+    { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },
