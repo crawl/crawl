@@ -1865,9 +1865,9 @@ int monster_die(monster* mons, killer_type killer,
         int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
         // Only certain kinds of threats at different sos levels will increase the bonus
-        if (threat == MTHRT_TRIVIAL && sos_bonus<2
-            || threat == MTHRT_EASY && sos_bonus<4
-            || threat == MTHRT_TOUGH && sos_bonus<6
+        if (threat == MTHRT_TRIVIAL && sos_bonus < 3
+            || threat == MTHRT_EASY && sos_bonus < 5
+            || threat == MTHRT_TOUGH && sos_bonus < 7
             || threat == MTHRT_NASTY)
         {
             you.props["song_of_slaying_bonus"] = sos_bonus + 1;
