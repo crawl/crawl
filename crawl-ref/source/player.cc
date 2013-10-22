@@ -1320,6 +1320,26 @@ static int _player_bonus_regen()
     return rr;
 }
 
+// Slow healing mutation: slows or stops regeneration when monsters are
+// visible at level 1 or 2 respectively, stops regeneration at level 3.
+static int _slow_heal_rate()
+{
+    if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+        return 0;
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (you.can_see(*mi)
+            && !mons_is_firewood(*mi)
+            && !mi->wont_attack()
+            && !mi->neutral())
+        {
+            return (2 - player_mutation_level(MUT_SLOW_HEALING));
+        }
+    }
+    return 2;
+}
+
 int player_regen()
 {
     int rr = you.hp_max / 3;
@@ -1355,14 +1375,12 @@ int player_regen()
         if (you.hp_max < 100)
             rr += (100 - you.hp_max) / 6;
 
-    // Slow heal mutation.  Each level reduces your natural healing by
-    // one third.
+    // Slow heal mutation.
     if (player_mutation_level(MUT_SLOW_HEALING) > 0)
     {
-        rr *= 3 - player_mutation_level(MUT_SLOW_HEALING);
-        rr /= 3;
+        rr *= _slow_heal_rate();
+        rr /= 2;
     }
-
     if (you.stat_zero[STAT_STR])
         rr /= 4;
 
