@@ -1744,7 +1744,7 @@ int monster_die(monster* mons, killer_type killer,
         }
 
         if (mons->type == MONS_FIRE_VORTEX && !wizard && !mons_reset
-            && !submerged && !was_banished)
+            && !submerged && !was_banished && !cell_is_solid(mons->pos()))
         {
             place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
@@ -1761,8 +1761,11 @@ int monster_die(monster* mons, killer_type killer,
             silent = true;
         }
 
-        if (!wizard && !mons_reset && !submerged && !was_banished)
+        if (!wizard && !mons_reset && !submerged && !was_banished
+            && !cell_is_solid(mons->pos()))
+        {
             place_cloud(CLOUD_COLD, mons->pos(), 2 + random2(4), mons);
+        }
 
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
