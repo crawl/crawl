@@ -298,7 +298,8 @@ i-pain BRAND_PAIN
 i-antimagic BRAND_ANTIMAGIC
 %rim 0
 i-distortion BRAND_DISTORTION
-i-reaching BRAND_REACHING
+# Remove when TAG_MAJOR_VERSION > 34
+i-orc_slaying BRAND_REACHING
 # Move i-returning down to missile-only brands when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS

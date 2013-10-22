@@ -3200,6 +3200,8 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_RETURNING)
         item.special = SPWPN_NORMAL;
+    if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_REACHING)
+        item.special = SPWPN_NORMAL;
 #endif
 
     bind_item_tile(item);
