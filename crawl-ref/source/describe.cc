@@ -874,12 +874,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "harm.";
             }
             break;
-#if TAG_MAJOR_VERSION == 34
-        case SPWPN_ORC_SLAYING:
-            description += "It is not especially effective against all of "
-                "orcish descent.";
-            break;
-#endif
         case SPWPN_DRAGON_SLAYING:
             description += "This legendary weapon is deadly to all "
                 "dragonkind.";

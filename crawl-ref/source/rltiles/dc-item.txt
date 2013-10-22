@@ -283,7 +283,7 @@ i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
 i-electrocution BRAND_ELECTROCUTION
 # Remove i-orc_slaying when TAG_MAJOR_VERSION > 34
-i-orc_slaying BRAND_ORC_SLAYING
+i-confusion BRAND_ORC_SLAYING
 i-dragon_slaying BRAND_DRAGON_SLAYING
 i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
@@ -299,7 +299,7 @@ i-antimagic BRAND_ANTIMAGIC
 %rim 0
 i-distortion BRAND_DISTORTION
 # Remove when TAG_MAJOR_VERSION > 34
-i-orc_slaying BRAND_REACHING
+i-confusion BRAND_REACHING
 # Move i-returning down to missile-only brands when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
