@@ -4983,6 +4983,11 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         {
             ;
         }
+        // Chaos effects don't get a resistance check to match melee chaos.
+        else if (real_flavour == BEAM_CHAOS)
+        {
+            ;
+        }
         else
         {
             res_margin = mon->check_res_magic(ench_power);
