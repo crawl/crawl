@@ -540,7 +540,7 @@ PLUS:    +2/+10
 COLOUR:  CYAN
 TILE:    urand_piercer
 TILE_EQ: great_bow
-BRAND:   SPWPN_VORPAL
+BRAND:   SPWPN_PENETRATION
 EV:      -2
 
 ENUM:    BLOWGUN_ASSASSIN
