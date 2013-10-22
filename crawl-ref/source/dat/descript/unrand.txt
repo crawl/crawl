@@ -173,6 +173,7 @@ Elemental Staff
 
 This powerful staff used to belong to the leader of the Guild of Five Elements.
 %%%%
+# TAG_MAJOR_VERSION == 34
 crossbow "Sniper"
 
 A crossbow made of some black material.
