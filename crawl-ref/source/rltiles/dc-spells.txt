@@ -67,7 +67,6 @@ sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE
 infusion INFUSION
 song_of_slaying SONG_OF_SLAYING
-song_of_shielding SONG_OF_SHIELDING
 spectral_weapon SPECTRAL_WEAPON
 discord DISCORD
 

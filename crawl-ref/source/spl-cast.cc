@@ -1724,8 +1724,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SONG_OF_SLAYING:
         return cast_song_of_slaying(powc, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SONG_OF_SHIELDING:
-        return cast_song_of_shielding(powc, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:

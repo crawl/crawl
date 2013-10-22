@@ -883,12 +883,6 @@ Slow spell
 
 Ce sort ralentit les actions d'une créature.
 %%%%
-Song of Shielding spell
-
-Ce sort puise dans votre essence magique pour créer une barrière de protection
-temporaire. Les dégâts reçus seront absorbés par le bouclier, consomant les
-réserve d’énergie magique du lanceur dans le processus.
-%%%%
 Song of Slaying spell
 
 Ce sort conjure des versets antiques de batailles dans votre esprit et vous les

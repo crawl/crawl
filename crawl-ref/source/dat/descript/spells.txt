@@ -995,12 +995,6 @@ Smiting spell
 
 <Smiting ability>
 %%%%
-Song of Shielding spell
-
-This spell draws from your magical essence to create a temporary protective
-barrier. Incoming damage will be absorbed by the shield, decreasing the
-caster's available magic in the process.
-%%%%
 Song of Slaying spell
 
 This spell conjures ancient verses of battle within your mind and makes you
