@@ -81,7 +81,7 @@ void debug_dump_levgen()
     mprf("Level build method = %s, level layout type  = %s, absdepth0 = %d",
          method.c_str(), type.c_str(), env.absdepth0);
 
-    if (!env.level_vault_list.empty())
+    if (!env.level_vaults.empty())
     {
         mpr("Level vaults:");
         for (size_t i = 0; i < env.level_vaults.size(); ++i)

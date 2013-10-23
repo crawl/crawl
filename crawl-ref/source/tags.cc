@@ -1838,7 +1838,9 @@ static void marshall_level_vault_data(writer &th)
 
     marshall_level_map_masks(th);
     marshall_level_map_unique_ids(th);
-    marshallStringVector(th, env.level_vault_list);
+#if TAG_MAJOR_VERSION == 34
+    marshallInt(th, 0);
+#endif
     marshall_level_vault_placements(th);
 }
 
@@ -1851,8 +1853,8 @@ static void unmarshall_level_vault_data(reader &th)
     unmarshall_level_map_unique_ids(th);
 #if TAG_MAJOR_VERSION <= 34
     if (th.getMinorVersion() >= TAG_MINOR_VAULT_LIST) // 33:17 has it
+        unmarshallStringVector(th);
 #endif
-    env.level_vault_list = unmarshallStringVector(th);
     unmarshall_level_vault_placements(th);
 }
 
