@@ -793,38 +793,20 @@ void marshallString(writer &th, const string &data)
         die("trying to marshall too long a string (len=%ld)", (long int)len);
     marshallShort(th, len);
 
-    // put in the actual string -- we'll null terminate on
-    // unmarshall.
     th.write(data.c_str(), len);
-}
-
-// string -- unmarshall length & string data
-static int unmarshallCString(reader &th, char *data, int maxSize)
-{
-    ASSERT(maxSize > 0);
-
-    // Get length.
-    short len = unmarshallShort(th);
-    ASSERT(len >= 0);
-    int copylen = len;
-
-    if (len >= maxSize)
-        copylen = maxSize - 1;
-
-    // Read the actual string and null terminate.
-    th.read(data, copylen);
-    data[copylen] = 0;
-
-    th.advance(len - copylen);
-    return copylen;
 }
 
 string unmarshallString(reader &th)
 {
-    char buffer[SHRT_MAX + 1];
-    const int slen = unmarshallCString(th, buffer, sizeof(buffer));
-    const string res(buffer, slen);
-    return res;
+    char buffer[SHRT_MAX];
+
+    short len = unmarshallShort(th);
+    ASSERT(len >= 0);
+    ASSERT(len <= (ssize_t)sizeof(buffer));
+
+    th.read(buffer, len);
+
+    return string(buffer, len);
 }
 
 // string -- 4 byte length, non-terminated string data.
