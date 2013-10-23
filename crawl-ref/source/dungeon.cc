@@ -1197,7 +1197,6 @@ void dgn_reset_level(bool enable_random_maps)
 {
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
-    env.level_vault_list.clear();
     clear_subvault_stack();
 
     you.unique_creatures = temp_unique_creatures;
@@ -6881,16 +6880,6 @@ static dungeon_feature_type _vault_inspect_glyph(vault_placement &place,
 
 static void _remember_vault_placement(const vault_placement &place, bool extra)
 {
-    // First we store some info on the vault, so that if there's a crash the
-    // crash report can list them all.
-    env.level_vault_list.push_back(
-        make_stringf("%s%s: (%d,%d) (%d,%d) orient: %d",
-                     place.map.name.c_str(),
-                     extra ? " (extra)" : "",
-                     place.pos.x, place.pos.y,
-                     place.size.x, place.size.y,
-                     place.orient));
-
     // Second we setup some info to be saved in the player's properties
     // hash table, so the information can be included in the character
     // dump when the player dies/quits/wins.
