@@ -785,12 +785,9 @@ float unmarshallFloat(reader &th)
 }
 
 // string -- 2 byte length, string data
-void marshallString(writer &th, const string &data, int maxSize)
+void marshallString(writer &th, const string &data)
 {
-    // allow for very long strings (well, up to 32K).
     size_t len = data.length();
-    if (maxSize > 0 && len > (size_t) maxSize)
-        len = maxSize;
     // A limit of 32K.
     if (len > SHRT_MAX)
         die("trying to marshall too long a string (len=%ld)", (long int)len);
@@ -799,12 +796,6 @@ void marshallString(writer &th, const string &data, int maxSize)
     // put in the actual string -- we'll null terminate on
     // unmarshall.
     th.write(data.c_str(), len);
-}
-
-// To pass to marshallMap
-static void marshallStringNoMax(writer &th, const string &data)
-{
-    marshallString(th, data);
 }
 
 // string -- unmarshall length & string data
@@ -828,25 +819,12 @@ static int unmarshallCString(reader &th, char *data, int maxSize)
     return copylen;
 }
 
-string unmarshallString(reader &th, int maxSize)
+string unmarshallString(reader &th)
 {
-    if (maxSize <= 0)
-        return "";
-    char *buffer = new char [maxSize];
-    if (!buffer)
-        return "";
-    *buffer = 0;
-    const int slen = unmarshallCString(th, buffer, maxSize);
-    ASSERT_RANGE(slen, 0, maxSize);
+    char buffer[SHRT_MAX + 1];
+    const int slen = unmarshallCString(th, buffer, sizeof(buffer));
     const string res(buffer, slen);
-    delete [] buffer;
     return res;
-}
-
-// To pass to unmarshallMap
-static string unmarshallStringNoMax(reader &th)
-{
-    return unmarshallString(th);
 }
 
 // string -- 4 byte length, non-terminated string data.
@@ -891,13 +869,13 @@ string make_date_string(time_t in_date)
 
 static void marshallStringVector(writer &th, const vector<string> &vec)
 {
-    marshall_iterator(th, vec.begin(), vec.end(), marshallStringNoMax);
+    marshall_iterator(th, vec.begin(), vec.end(), marshallString);
 }
 
 static vector<string> unmarshallStringVector(reader &th)
 {
     vector<string> vec;
-    unmarshall_vector(th, vec, unmarshallStringNoMax);
+    unmarshall_vector(th, vec, unmarshallString);
     return vec;
 }
 
@@ -1608,13 +1586,13 @@ static void tag_construct_you_dungeon(writer &th)
     marshallMap(th, portals_present,
                 _marshall_level_pos, _marshall_as_int<branch_type>);
     marshallMap(th, portal_notes,
-                _marshall_level_pos, marshallStringNoMax);
+                _marshall_level_pos, marshallString);
     marshallMap(th, level_annotations,
-                marshall_level_id, marshallStringNoMax);
+                marshall_level_id, marshallString);
     marshallMap(th, level_exclusions,
-                marshall_level_id, marshallStringNoMax);
+                marshall_level_id, marshallString);
     marshallMap(th, level_uniques,
-            marshall_level_id, marshallStringNoMax);
+            marshall_level_id, marshallString);
     marshallUniqueAnnotations(th);
 
     marshallPlaceInfo(th, you.global_info);
@@ -1626,9 +1604,9 @@ static void tag_construct_you_dungeon(writer &th)
         marshallPlaceInfo(th, list[k]);
 
     marshall_iterator(th, you.uniq_map_tags.begin(), you.uniq_map_tags.end(),
-                      marshallStringNoMax);
+                      marshallString);
     marshall_iterator(th, you.uniq_map_names.begin(), you.uniq_map_names.end(),
-                      marshallStringNoMax);
+                      marshallString);
     marshallMap(th, you.vault_list, marshall_level_id, marshallStringVector);
 
     write_level_connectivity(th);
@@ -1742,14 +1720,14 @@ static void unmarshall_level_map_masks(reader &th)
 
 static void marshall_level_map_unique_ids(writer &th)
 {
-    marshallSet(th, env.level_uniq_maps, marshallStringNoMax);
-    marshallSet(th, env.level_uniq_map_tags, marshallStringNoMax);
+    marshallSet(th, env.level_uniq_maps, marshallString);
+    marshallSet(th, env.level_uniq_map_tags, marshallString);
 }
 
 static void unmarshall_level_map_unique_ids(reader &th)
 {
-    unmarshallSet(th, env.level_uniq_maps, unmarshallStringNoMax);
-    unmarshallSet(th, env.level_uniq_map_tags, unmarshallStringNoMax);
+    unmarshallSet(th, env.level_uniq_maps, unmarshallString);
+    unmarshallSet(th, env.level_uniq_map_tags, unmarshallString);
 }
 
 static void marshall_subvault_place(writer &th,
@@ -1762,7 +1740,7 @@ static void marshall_mapdef(writer &th, const map_def &map)
     map.write_maplines(th);
     marshallString(th, map.description);
     marshallMap(th, map.feat_renames,
-                _marshall_as_int<dungeon_feature_type>, marshallStringNoMax);
+                _marshall_as_int<dungeon_feature_type>, marshallString);
     marshall_iterator(th,
                       map.subvault_places.begin(),
                       map.subvault_places.end(),
@@ -1787,7 +1765,7 @@ static map_def unmarshall_mapdef(reader &th)
     map.description = unmarshallString(th);
     unmarshallMap(th, map.feat_renames,
                   unmarshall_int_as<dungeon_feature_type>,
-                  unmarshallStringNoMax);
+                  unmarshallString);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_REIFY_SUBVAULTS
         && th.getMinorVersion() != TAG_MINOR_0_11)
@@ -1855,8 +1833,8 @@ static void unmarshall_level_vault_placements(reader &th)
 
 static void marshall_level_vault_data(writer &th)
 {
-    marshallStringNoMax(th, env.level_build_method);
-    marshallSet(th, env.level_layout_types, marshallStringNoMax);
+    marshallString(th, env.level_build_method);
+    marshallSet(th, env.level_layout_types, marshallString);
 
     marshall_level_map_masks(th);
     marshall_level_map_unique_ids(th);
@@ -1866,8 +1844,8 @@ static void marshall_level_vault_data(writer &th)
 
 static void unmarshall_level_vault_data(reader &th)
 {
-    env.level_build_method = unmarshallStringNoMax(th);
-    unmarshallSet(th, env.level_layout_types, unmarshallStringNoMax);
+    env.level_build_method = unmarshallString(th);
+    unmarshallSet(th, env.level_layout_types, unmarshallString);
 
     unmarshall_level_map_masks(th);
     unmarshall_level_map_unique_ids(th);
@@ -2840,13 +2818,13 @@ static void tag_read_you_dungeon(reader &th)
     unmarshallMap(th, portals_present,
                   _unmarshall_level_pos, unmarshall_int_as<branch_type>);
     unmarshallMap(th, portal_notes,
-                  _unmarshall_level_pos, unmarshallStringNoMax);
+                  _unmarshall_level_pos, unmarshallString);
     unmarshallMap(th, level_annotations,
-                  unmarshall_level_id, unmarshallStringNoMax);
+                  unmarshall_level_id, unmarshallString);
     unmarshallMap(th, level_exclusions,
-                  unmarshall_level_id, unmarshallStringNoMax);
+                  unmarshall_level_id, unmarshallString);
     unmarshallMap(th, level_uniques,
-                  unmarshall_level_id, unmarshallStringNoMax);
+                  unmarshall_level_id, unmarshallString);
     unmarshallUniqueAnnotations(th);
 
     PlaceInfo place_info = unmarshallPlaceInfo(th);
@@ -2870,11 +2848,11 @@ static void tag_read_you_dungeon(reader &th)
     unmarshall_container(th, you.uniq_map_tags,
                          (ssipair (string_set::*)(const string &))
                          &string_set::insert,
-                         unmarshallStringNoMax);
+                         unmarshallString);
     unmarshall_container(th, you.uniq_map_names,
                          (ssipair (string_set::*)(const string &))
                          &string_set::insert,
-                         unmarshallStringNoMax);
+                         unmarshallString);
 #if TAG_MAJOR_VERSION <= 34
     if (th.getMinorVersion() >= TAG_MINOR_VAULT_LIST) // 33:17 has it
 #endif
