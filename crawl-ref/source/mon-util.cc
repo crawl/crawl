@@ -716,11 +716,18 @@ bool mons_is_boulder(const monster* mon)
     return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
 }
 
+static bool _mons_class_is_clingy(monster_type type)
+{
+    return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
+        || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
+        || type == MONS_DEMONIC_CRAWLER;
+}
+
 bool mons_can_cling_to_walls(const monster* mon)
 {
-    return mons_class_is_clingy(mon->type)
+    return _mons_class_is_clingy(mon->type)
         || mons_class_is_chimeric(mon->type)
-           && mons_class_is_clingy(get_chimera_legs(mon));
+           && _mons_class_is_clingy(get_chimera_legs(mon));
 }
 
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
@@ -1477,13 +1484,6 @@ bool mons_class_is_hybrid(monster_type mc)
 bool mons_class_is_chimeric(monster_type mc)
 {
     return mc == MONS_CHIMERA;
-}
-
-bool mons_class_is_clingy(monster_type type)
-{
-    return mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
-        || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
-        || type == MONS_DEMONIC_CRAWLER;
 }
 
 bool mons_class_is_animated_weapon(monster_type type)
