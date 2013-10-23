@@ -316,7 +316,7 @@ static bool _is_deadend(const coord_def& pos)
             count_neighbours++;
     }
 
-    return (count_neighbours <= 1);
+    return count_neighbours <= 1;
 }
 
 static coord_def _find_random_deadend(const dgn_region &region)

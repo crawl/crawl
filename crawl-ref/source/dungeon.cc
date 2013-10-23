@@ -585,7 +585,7 @@ bool set_level_flags(uint32_t flags, bool silent)
             "remembering where you've been.", MSGCH_WARN);
     }
 
-    return (old_flags != env.level_flags);
+    return old_flags != env.level_flags;
 }
 
 bool unset_level_flags(uint32_t flags, bool silent)
@@ -615,7 +615,7 @@ bool unset_level_flags(uint32_t flags, bool silent)
             "from remembering where you've been.", MSGCH_RECOVERY);
     }
 
-    return (old_flags != env.level_flags);
+    return old_flags != env.level_flags;
 }
 
 void dgn_set_grid_colour_at(const coord_def &c, int colour)
@@ -697,7 +697,7 @@ static bool _dgn_square_is_passable(const coord_def &c)
     // default) because vaults may choose to create isolated regions,
     // or otherwise cause connectivity issues even if the map terrain
     // is travel-passable.
-    return (!(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c));
+    return !(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c);
 }
 
 static inline void _dgn_point_record_stub(const coord_def &) { }
@@ -954,7 +954,7 @@ static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
         }
     }
 
-    return (nzones - ngood);
+    return nzones - ngood;
 }
 
 int dgn_count_disconnected_zones(bool choose_stairless,
@@ -1156,7 +1156,7 @@ static bool _has_connected_stone_stairs_from(const coord_def &c)
     ff.add_feat(DNGN_STONE_STAIRS_UP_III);
 
     coord_def where = ff.find_first_from(c, env.level_map_mask);
-    return (where.x || !ff.did_leave_vault());
+    return where.x || !ff.did_leave_vault();
 }
 
 static bool _has_connected_downstairs_from(const coord_def &c)
@@ -1168,7 +1168,7 @@ static bool _has_connected_downstairs_from(const coord_def &c)
     ff.add_feat(DNGN_ESCAPE_HATCH_DOWN);
 
     coord_def where = ff.find_first_from(c, env.level_map_mask);
-    return (where.x || !ff.did_leave_vault());
+    return where.x || !ff.did_leave_vault();
 }
 
 static bool _is_level_stair_connected(dungeon_feature_type feat)
@@ -1311,9 +1311,9 @@ static int _num_items_wanted(int absdepth0)
     if (branches[you.where_are_you].branch_flags & BFLAG_NO_ITEMS)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
-        return (10 + random2avg(90, 2)); // rich level!
+        return 10 + random2avg(90, 2); // rich level!
     else
-        return (3 + roll_dice(3, 11));
+        return 3 + roll_dice(3, 11);
 }
 
 static int _num_mons_wanted()
@@ -1438,9 +1438,9 @@ void fixup_misplaced_items()
 // stairs (ZotDef, entry vaults placing multiple stairs).
 static bool _at_top_of_branch()
 {
-    return (your_branch().exit_stairs != NUM_FEATURES
-            && you.depth == 1
-            && player_in_connected_branch());
+    return your_branch().exit_stairs != NUM_FEATURES
+           && you.depth == 1
+           && player_in_connected_branch();
 }
 
 static void _fixup_branch_stairs()
@@ -1837,14 +1837,14 @@ static bool _add_connecting_escape_hatches()
         || (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1))
     {
         // Allow == 0 in case the entire level is one opaque vault.
-        return (dgn_count_disconnected_zones(false) <= 1);
+        return dgn_count_disconnected_zones(false) <= 1;
     }
 
     if (!player_in_connected_branch())
         return true;
 
     if (at_branch_bottom())
-        return (dgn_count_disconnected_zones(true) == 0);
+        return dgn_count_disconnected_zones(true) == 0;
 
     if (!_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN))
         return false;
@@ -1874,7 +1874,7 @@ static bool _branch_entrances_are_connected()
 static bool _branch_needs_stairs()
 {
     // Irrelevant for branches with a single level and all encompass maps.
-    return (you.where_are_you != BRANCH_ZIGGURAT);
+    return you.where_are_you != BRANCH_ZIGGURAT;
 }
 
 static void _dgn_verify_connectivity(unsigned nvaults)
@@ -2637,7 +2637,7 @@ static bool _pan_level()
         ASSERT(vault);
 
         _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
-        return (vault->orient != MAP_ENCOMPASS);
+        return vault->orient != MAP_ENCOMPASS;
     }
 
     for (int i = 0; i < 4; i++)
@@ -2669,7 +2669,7 @@ static bool _pan_level()
         ASSERT(vault);
 
         _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
-        return (vault->orient != MAP_ENCOMPASS);
+        return vault->orient != MAP_ENCOMPASS;
     }
     else
     {
@@ -2948,7 +2948,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
 // block connectivity.
 static bool _passable_square(const coord_def & pos)
 {
-    return (!feat_is_wall(env.grid(pos)) && !(env.level_map_mask(pos) & MMT_VAULT));
+    return !feat_is_wall(env.grid(pos)) && !(env.level_map_mask(pos) & MMT_VAULT);
 }
 
 struct adjacency_test
@@ -2960,7 +2960,7 @@ struct adjacency_test
     FixedArray<int, GXM, GYM> adjacency;
     bool operator()(const coord_def & pos)
     {
-        return (_passable_square(pos) && adjacency(pos) == 0);
+        return _passable_square(pos) && adjacency(pos) == 0;
     }
 };
 
@@ -2988,7 +2988,7 @@ struct label_match
     int target_label;
     bool operator()(const coord_def & pos)
     {
-        return ((*labels)(pos) == target_label);
+        return (*labels)(pos) == target_label;
     }
 };
 
@@ -3173,7 +3173,7 @@ static bool _builder_normal()
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
         // Only place subsequent random vaults on non-encompass maps
         // and not at the branch end
-        return (vault->orient != MAP_ENCOMPASS);
+        return vault->orient != MAP_ENCOMPASS;
     }
 
     if (use_random_maps)
@@ -3189,7 +3189,7 @@ static bool _builder_normal()
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
         // Only place subsequent random vaults on non-encompass maps
         // and not at the branch end
-        return (vault->orient != MAP_ENCOMPASS);
+        return vault->orient != MAP_ENCOMPASS;
     }
 
     vault = random_map_for_tag("layout", true, true);
@@ -3365,11 +3365,11 @@ static inline bool _point_matches_feat(coord_def c,
                                        dungeon_feature_type adjacent_feat,
                                        bool monster_free)
 {
-    return (grd(c) == searchfeat
-            && (!monster_free || !monster_at(c))
-            && !map_masked(c, mapmask)
-            && (adjacent_feat == DNGN_UNSEEN ||
-                dgn_has_adjacent_feat(c, adjacent_feat)));
+    return grd(c) == searchfeat
+           && (!monster_free || !monster_at(c))
+           && !map_masked(c, mapmask)
+           && (adjacent_feat == DNGN_UNSEEN ||
+               dgn_has_adjacent_feat(c, adjacent_feat));
 }
 
 // Returns a random point in map bounds matching the given search feature,
@@ -3932,8 +3932,8 @@ static bool _connect_vault_exit(const coord_def& exit)
 
 static bool _grid_needs_exit(const coord_def& c)
 {
-    return (!cell_is_solid(c)
-            || feat_is_closed_door(grd(c)));
+    return !cell_is_solid(c)
+           || feat_is_closed_door(grd(c));
 }
 
 static bool _map_feat_is_on_edge(const vault_placement &place,
@@ -4119,7 +4119,7 @@ const vault_placement *dgn_safe_place_map(const map_def *mdef,
 vault_placement *dgn_vault_at(coord_def p)
 {
     const int map_index = env.level_map_ids(p);
-    return (map_index == INVALID_MAP_INDEX ? NULL : env.level_vaults[map_index]);
+    return map_index == INVALID_MAP_INDEX ? NULL : env.level_vaults[map_index];
 }
 
 void dgn_seen_vault_at(coord_def p)
@@ -4981,38 +4981,38 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
-    return ((glyph == 'x') ? DNGN_ROCK_WALL :
-            (glyph == 'X') ? DNGN_PERMAROCK_WALL :
-            (glyph == 'c') ? DNGN_STONE_WALL :
-            (glyph == 'v') ? DNGN_METAL_WALL :
-            (glyph == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
-            (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
-            (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
-            (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-            (glyph == 't') ? DNGN_TREE :
-            (glyph == '+') ? DNGN_CLOSED_DOOR :
-            (glyph == '=') ? DNGN_RUNED_DOOR :
-            (glyph == 'w') ? DNGN_DEEP_WATER :
-            (glyph == 'W') ? DNGN_SHALLOW_WATER :
-            (glyph == 'l') ? DNGN_LAVA :
-            (glyph == '>') ? DNGN_ESCAPE_HATCH_DOWN :
-            (glyph == '<') ? DNGN_ESCAPE_HATCH_UP :
-            (glyph == '}') ? DNGN_STONE_STAIRS_DOWN_I :
-            (glyph == '{') ? DNGN_STONE_STAIRS_UP_I :
-            (glyph == ')') ? DNGN_STONE_STAIRS_DOWN_II :
-            (glyph == '(') ? DNGN_STONE_STAIRS_UP_II :
-            (glyph == ']') ? DNGN_STONE_STAIRS_DOWN_III :
-            (glyph == '[') ? DNGN_STONE_STAIRS_UP_III :
-            (glyph == 'A') ? DNGN_STONE_ARCH :
-            (glyph == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
-            (glyph == 'I') ? DNGN_ORCISH_IDOL :
-            (glyph == 'G') ? DNGN_GRANITE_STATUE :
-            (glyph == 'T') ? DNGN_FOUNTAIN_BLUE :
-            (glyph == 'U') ? DNGN_FOUNTAIN_SPARKLING :
-            (glyph == 'V') ? DNGN_DRY_FOUNTAIN :
-            (glyph == 'Y') ? DNGN_FOUNTAIN_BLOOD :
-            (glyph == '\0')? DNGN_ROCK_WALL
-                           : DNGN_FLOOR); // includes everything else
+    return (glyph == 'x') ? DNGN_ROCK_WALL :
+           (glyph == 'X') ? DNGN_PERMAROCK_WALL :
+           (glyph == 'c') ? DNGN_STONE_WALL :
+           (glyph == 'v') ? DNGN_METAL_WALL :
+           (glyph == 'b') ? DNGN_GREEN_CRYSTAL_WALL :
+           (glyph == 'm') ? DNGN_CLEAR_ROCK_WALL :
+           (glyph == 'n') ? DNGN_CLEAR_STONE_WALL :
+           (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
+           (glyph == 't') ? DNGN_TREE :
+           (glyph == '+') ? DNGN_CLOSED_DOOR :
+           (glyph == '=') ? DNGN_RUNED_DOOR :
+           (glyph == 'w') ? DNGN_DEEP_WATER :
+           (glyph == 'W') ? DNGN_SHALLOW_WATER :
+           (glyph == 'l') ? DNGN_LAVA :
+           (glyph == '>') ? DNGN_ESCAPE_HATCH_DOWN :
+           (glyph == '<') ? DNGN_ESCAPE_HATCH_UP :
+           (glyph == '}') ? DNGN_STONE_STAIRS_DOWN_I :
+           (glyph == '{') ? DNGN_STONE_STAIRS_UP_I :
+           (glyph == ')') ? DNGN_STONE_STAIRS_DOWN_II :
+           (glyph == '(') ? DNGN_STONE_STAIRS_UP_II :
+           (glyph == ']') ? DNGN_STONE_STAIRS_DOWN_III :
+           (glyph == '[') ? DNGN_STONE_STAIRS_UP_III :
+           (glyph == 'A') ? DNGN_STONE_ARCH :
+           (glyph == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
+           (glyph == 'I') ? DNGN_ORCISH_IDOL :
+           (glyph == 'G') ? DNGN_GRANITE_STATUE :
+           (glyph == 'T') ? DNGN_FOUNTAIN_BLUE :
+           (glyph == 'U') ? DNGN_FOUNTAIN_SPARKLING :
+           (glyph == 'V') ? DNGN_DRY_FOUNTAIN :
+           (glyph == 'Y') ? DNGN_FOUNTAIN_BLOOD :
+           (glyph == '\0')? DNGN_ROCK_WALL
+                          : DNGN_FLOOR; // includes everything else
 }
 
 dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
@@ -5280,7 +5280,7 @@ void dgn_replace_area(const coord_def& p1, const coord_def& p2,
 
 bool map_masked(const coord_def &c, unsigned mask)
 {
-    return (mask && (env.level_map_mask(c) & mask));
+    return mask && (env.level_map_mask(c) & mask);
 }
 
 struct coord_comparator
@@ -5496,7 +5496,7 @@ static dungeon_feature_type _pick_an_altar()
 
 static bool _need_varied_selection(shop_type shop)
 {
-    return (shop == SHOP_BOOK);
+    return shop == SHOP_BOOK;
 }
 
 void place_spec_shop(const coord_def& where,
@@ -5750,15 +5750,17 @@ static object_class_type _item_in_shop(shop_type shop_type)
 static bool _spotty_seed_ok(const coord_def& p)
 {
     const int margin = 4;
-    return (p.x >= margin && p.y >= margin
-            && p.x < GXM - margin && p.y < GYM - margin);
+    return p.x >= margin && p.y >= margin
+           && p.x < GXM - margin && p.y < GYM - margin;
 }
 
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 {
-    return (feat_is_water(feat) || feat_is_lava(feat) || feat_is_wall(feat)
-            || feat == DNGN_FLOOR
-            || (player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE));
+    return feat_is_water(feat)
+           || feat_is_lava(feat)
+           || feat_is_wall(feat)
+           || feat == DNGN_FLOOR
+           || player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE;
 }
 
 // Connect vault exit "from" to dungeon floor by growing a spotty chamber.
@@ -6262,9 +6264,9 @@ bool dgn_region::overlaps(const dgn_region &other) const
     return (between(pos.x, other.pos.x, other.pos.x + other.size.x - 1)
                || between(pos.x + size.x - 1, other.pos.x,
                           other.pos.x + other.size.x - 1))
-            && (between(pos.y, other.pos.y, other.pos.y + other.size.y - 1)
-                || between(pos.y + size.y - 1, other.pos.y,
-                           other.pos.y + other.size.y - 1));
+           && (between(pos.y, other.pos.y, other.pos.y + other.size.y - 1)
+               || between(pos.y + size.y - 1, other.pos.y,
+                          other.pos.y + other.size.y - 1));
 }
 
 bool dgn_region::overlaps_any(const dgn_region_list &regions) const
@@ -6820,7 +6822,7 @@ bool vault_placement::is_space(const coord_def &c)
         return NUM_FEATURES;
 
     const int feat = map.map.glyph(c);
-    return (feat == ' ');
+    return feat == ' ';
 }
 bool vault_placement::is_exit(const coord_def &c)
 {
@@ -6829,7 +6831,7 @@ bool vault_placement::is_exit(const coord_def &c)
         return NUM_FEATURES;
 
     const int feat = map.map.glyph(c);
-    return (feat == '@');
+    return feat == '@';
 }
 static dungeon_feature_type _vault_inspect(vault_placement &place,
                         int vgrid, keyed_mapspec *mapsp)

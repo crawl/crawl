@@ -1918,9 +1918,7 @@ void monster::apply_enchantments()
     // like berserk time out before their parts.
     for (int i = 0; i < NUM_ENCHANTMENTS; ++i)
         if (ec[i] && has_ench(static_cast<enchant_type>(i)))
-        {
             apply_enchantment(enchantments.find(static_cast<enchant_type>(i))->second);
-        }
 }
 
 // Used to adjust time durations in calc_duration() for monster speed.
@@ -1929,7 +1927,7 @@ static inline int _mod_speed(int val, int speed)
     if (!speed)
         speed = 10;
     const int modded = (speed ? (val * 10) / speed : val);
-    return (modded? modded : 1);
+    return modded? modded : 1;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -2018,8 +2016,8 @@ mon_enchant::operator string () const
 
 const char *mon_enchant::kill_category_desc(kill_category k) const
 {
-    return (k == KC_YOU ?      " you" :
-            k == KC_FRIENDLY ? " pet" : "");
+    return k == KC_YOU ?      " you" :
+           k == KC_FRIENDLY ? " pet" : "";
 }
 
 void mon_enchant::merge_killer(kill_category k, mid_t m)
@@ -2064,14 +2062,14 @@ mon_enchant mon_enchant::operator + (const mon_enchant &other) const
 
 killer_type mon_enchant::killer() const
 {
-    return (who == KC_YOU      ? KILL_YOU :
-            who == KC_FRIENDLY ? KILL_MON
-                               : KILL_MISC);
+    return who == KC_YOU      ? KILL_YOU :
+           who == KC_FRIENDLY ? KILL_MON
+                              : KILL_MISC;
 }
 
 int mon_enchant::kill_agent() const
 {
-    return (who == KC_FRIENDLY ? ANON_FRIENDLY_MONSTER : 0);
+    return who == KC_FRIENDLY ? ANON_FRIENDLY_MONSTER : 0;
 }
 
 actor* mon_enchant::agent() const
@@ -2169,14 +2167,14 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_SPORE_PRODUCTION:
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
-        return (random_range(475, 525) * 10);
+        return random_range(475, 525) * 10;
 
     case ENCH_PREPARING_RESURRECT:
         // A timer. When it runs out, the creature will cast resurrect.
-        return (random_range(4, 7) * 10);
+        return random_range(4, 7) * 10;
 
     case ENCH_EXPLODING:
-        return (random_range(3,7) * 10);
+        return random_range(3, 7) * 10;
 
     case ENCH_PORTAL_PACIFIED:
         // Must be set by spell.
@@ -2219,7 +2217,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 10 * (4 + random2(4)) / _mod_speed(10, mons->speed);
         break;
     case ENCH_INNER_FLAME:
-        return (random_range(25, 35) * 10);
+        return random_range(25, 35) * 10;
     case ENCH_BERSERK:
         return (16 + random2avg(13, 2)) * 10;
     case ENCH_ROLLING:

@@ -111,7 +111,7 @@ map_section_type vault_main(vault_placement &place, const map_def *vault,
     // level, except for branch entry vaults where dungeon.cc just
     // rejects the vault and places a vanilla entry.
 
-    return (_write_vault(const_cast<map_def&>(*vault), place, check_place));
+    return _write_vault(const_cast<map_def&>(*vault), place, check_place);
 }
 
 static map_section_type _write_vault(map_def &mdef,
@@ -404,7 +404,7 @@ static bool _is_portal_place(const coord_def &c)
     if (!marker)
         return false;
 
-    return (marker->property("portal") != "");
+    return marker->property("portal") != "";
 }
 
 static bool _map_safe_vault_place(const map_def &map,
@@ -641,7 +641,7 @@ static map_section_type _apply_vault_definition(
         return MAP_NONE;
 
     const map_section_type orient = def.orient;
-    return (orient == MAP_NONE ? MAP_NORTH : orient);
+    return orient == MAP_NONE ? MAP_NORTH : orient;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -736,7 +736,7 @@ public:
 
     bool valid() const
     {
-        return (sel == TAG || place.is_valid());
+        return sel == TAG || place.is_valid();
     }
 
     static map_selector by_place(const level_id &_place, bool _mini)
@@ -795,17 +795,17 @@ public:
 
 bool map_selector::depth_selectable(const map_def &mapdef) const
 {
-    return (mapdef.is_usable_in(place)
-            // Some tagged levels cannot be selected as random
-            // maps in a specific depth:
-            && !mapdef.has_tag_suffix("entry")
-            && !mapdef.has_tag("unrand")
-            && !mapdef.has_tag("place_unique")
-            && !mapdef.has_tag("tutorial")
-            && (!mapdef.has_tag_prefix("temple_")
-                || mapdef.has_tag_prefix("uniq_altar_"))
-            && _map_matches_species(mapdef)
-            && (!check_layout || _map_matches_layout_type(mapdef)));
+    return mapdef.is_usable_in(place)
+           // Some tagged levels cannot be selected as random
+           // maps in a specific depth:
+           && !mapdef.has_tag_suffix("entry")
+           && !mapdef.has_tag("unrand")
+           && !mapdef.has_tag("place_unique")
+           && !mapdef.has_tag("tutorial")
+           && (!mapdef.has_tag_prefix("temple_")
+               || mapdef.has_tag_prefix("uniq_altar_"))
+           && _map_matches_species(mapdef)
+           && (!check_layout || _map_matches_layout_type(mapdef));
 }
 
 bool map_selector::accept(const map_def &mapdef) const
@@ -819,38 +819,38 @@ bool map_selector::accept(const map_def &mapdef) const
         {
             return false;
         }
-        return (mapdef.is_minivault() == mini
-                && mapdef.place.is_usable_in(place)
-                && _map_matches_layout_type(mapdef)
-                && !mapdef.map_already_used());
+        return mapdef.is_minivault() == mini
+               && mapdef.place.is_usable_in(place)
+               && _map_matches_layout_type(mapdef)
+               && !mapdef.map_already_used();
 
     case DEPTH:
     {
         const map_chance chance(mapdef.chance(place));
-        return (mapdef.is_minivault() == mini
-                && (!chance.valid() || chance.dummy_chance())
-                && depth_selectable(mapdef)
-                && !mapdef.map_already_used());
+        return mapdef.is_minivault() == mini
+               && (!chance.valid() || chance.dummy_chance())
+               && depth_selectable(mapdef)
+               && !mapdef.map_already_used();
     }
 
     case DEPTH_AND_CHANCE:
     {
         const map_chance chance(mapdef.chance(place));
         // Only vaults with valid chance
-        return (chance.valid()
-                && !chance.dummy_chance()
-                && depth_selectable(mapdef)
-                && !mapdef.map_already_used());
+        return chance.valid()
+               && !chance.dummy_chance()
+               && depth_selectable(mapdef)
+               && !mapdef.map_already_used();
     }
 
     case TAG:
-        return (mapdef.has_tag(tag)
-                && (!check_depth
-                    || !mapdef.has_depth()
-                    || mapdef.is_usable_in(place))
-                && _map_matches_species(mapdef)
-                && _map_matches_layout_type(mapdef)
-                && !mapdef.map_already_used());
+        return mapdef.has_tag(tag)
+               && (!check_depth
+                   || !mapdef.has_depth()
+                   || mapdef.is_usable_in(place))
+               && _map_matches_species(mapdef)
+               && _map_matches_layout_type(mapdef)
+               && !mapdef.map_already_used();
 
     default:
         return false;
@@ -1201,10 +1201,10 @@ static bool verify_file_version(const string &file, time_t mtime)
         const int8_t word = unmarshallByte(inf);
         const int64_t t = unmarshallSigned(inf);
         fclose(fp);
-        return (major == TAG_MAJOR_VERSION
-                && minor <= TAG_MINOR_VERSION
-                && word == WORD_LEN
-                && t == mtime);
+        return major == TAG_MAJOR_VERSION
+               && minor <= TAG_MINOR_VERSION
+               && word == WORD_LEN
+               && t == mtime;
     }
     catch (short_read_exception &E)
     {
@@ -1554,7 +1554,7 @@ static bool _weighted_map_more_likely(
     const weighted_map_name &a,
     const weighted_map_name &b)
 {
-    return (a.second > b.second);
+    return a.second > b.second;
 }
 
 static void _mg_report_random_vaults(
