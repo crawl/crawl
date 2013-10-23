@@ -174,7 +174,6 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
-polymorph POLYMORPH
 beastly_appendage BEASTLY_APPENDAGE
 
 # rod spells
@@ -259,6 +258,7 @@ error MISLEAD
 error NOXIOUS_CLOUD
 error PETRIFYING_CLOUD
 %sdir gui/spells/monster
+polymorph POLYMORPH
 porkalator PORKALATOR
 %sdir misc
 error PRIMAL_WAVE

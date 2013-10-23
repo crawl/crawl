@@ -4995,7 +4995,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
-    case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
     case SPELL_DRAGON_FORM:              return TILEG_DRAGON_FORM;
     case SPELL_NECROMUTATION:            return TILEG_NECROMUTATION;
@@ -5089,6 +5088,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MISLEAD:                  return TILEG_MISLEAD;
     case SPELL_NOXIOUS_CLOUD:            return TILEG_NOXIOUS_CLOUD;
     case SPELL_PETRIFYING_CLOUD:         return TILEG_PETRIFYING_CLOUD;
+    case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
     case SPELL_PORKALATOR:               return TILEG_PORKALATOR;
     case SPELL_PRIMAL_WAVE:              return TILEG_PRIMAL_WAVE;
     case SPELL_QUICKSILVER_BOLT:         return TILEG_QUICKSILVER_BOLT;
