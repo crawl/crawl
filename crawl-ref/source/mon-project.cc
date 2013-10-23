@@ -152,6 +152,9 @@ static bool _in_front(float vx, float vy, float dx, float dy, float angle)
 
 static void _iood_stop(monster& mon, bool msg = true)
 {
+    if (!mon.alive())
+        return;
+
     if (mons_is_boulder(&mon))
     {
         // Deduct the energy first - the move they made that just stopped
