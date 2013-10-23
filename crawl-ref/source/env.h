@@ -39,7 +39,6 @@ struct crawl_environment
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
     string_set                               level_layout_types;
-    vector<string>                           level_vault_list;
 
     string                                   level_build_method;
 
