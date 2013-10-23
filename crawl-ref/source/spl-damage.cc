@@ -1935,30 +1935,27 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
     if (target == you.pos())
     {
-        const bool petrifying = you.petrifying();
-        const bool petrified = you.petrified();
+        const bool petrified = (you.petrified() || you.petrifying());
 
         if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
         {
-            beam.ex_size    = 2;
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
             beam.damage.num = you.form == TRAN_STATUE ? 3 : 2;
             return true;
         }
-        else if (petrifying || petrified)
+        else if (petrified)
         {
-            beam.ex_size    = petrifying ? 1 : 2;
             beam.name       = "blast of petrified fragments";
             beam.colour     = mons_class_colour(player_mons(true));
-            beam.damage.num = petrifying ? 2 : 3;
+            beam.damage.num = 3;
             return true;
         }
         else if (you.form == TRAN_ICE_BEAST) // blast of ice
         {
             beam.name       = "icy blast";
             beam.colour     = WHITE;
-            beam.damage.num = 2;
+            beam.damage.num = 3;
             beam.flavour    = BEAM_ICE;
             return true;
         }
@@ -1972,7 +1969,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         switch (mon->type)
         {
         case MONS_TOENAIL_GOLEM:
-            beam.damage.num = 2;
+            beam.damage.num = 3;
             beam.name       = "blast of toenail fragments";
             beam.colour     = RED;
             break;
@@ -1990,7 +1987,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         case MONS_STONE_GOLEM:
         case MONS_STATUE:
         case MONS_GARGOYLE:
-            beam.ex_size    = 2;
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
             beam.damage.num = 3;
@@ -2025,23 +2021,21 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             break;
 
         default:
-            const bool petrifying = mon->petrifying();
-            const bool petrified = mon->petrified();
+            const bool petrified = (mon->petrified() || mon->petrifying());
 
             // Petrifying or petrified monsters can be exploded.
-            if (petrifying || petrified)
+            if (petrified)
             {
-                beam.ex_size    = petrifying ? 1 : 2;
                 beam.name       = "blast of petrified fragments";
                 beam.colour     = mons_class_colour(mon->type);
-                beam.damage.num = petrifying ? 2 : 3;
+                beam.damage.num = 3;
                 break;
             }
             else if (mon->is_icy()) // blast of ice
             {
                 beam.name       = "icy blast";
                 beam.colour     = WHITE;
-                beam.damage.num = 2;
+                beam.damage.num = 3;
                 beam.flavour    = BEAM_ICE;
                 break;
             }
@@ -2049,7 +2043,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             {
                 beam.name   = "blast of bone shards";
                 beam.colour = LIGHTGREY;
-                beam.damage.num = 2;
+                beam.damage.num = 3;
                 break;
             }
             // Targeted monster not shatterable, try the terrain instead.
@@ -2174,7 +2168,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
-        beam.damage.num = 2;
+        beam.damage.num = 3;
         break;
 
     default:
@@ -2264,13 +2258,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         if (you.see_cell(target))
             mprf("%s shatters!", mon->name(DESC_THE).c_str());
 
-        if ((mons_is_statue(mon->type) || mon->is_skeletal())
-             && x_chance_in_y(pow / 5, 50)) // potential insta-kill
-        {
-            monster_die(mon, caster);
-            beam.damage.num += 2;
-        }
-        else if (caster->is_player())
+        if (caster->is_player())
         {
             if (_player_hurt_monster(*mon, beam.damage.roll(),
                                      BEAM_DISINTEGRATION))
