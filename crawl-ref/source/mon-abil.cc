@@ -3731,6 +3731,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 //  behaviour_event(mons, ME_CORNERED);
                     simple_monster_message(mons, " curls into a ball and rolls away!");
                     boulder_start(mons, &beem);
+                    used = true;
                 }
             }
             // Normal check - don't roll at adjacent targets
@@ -3739,6 +3740,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             {
                 simple_monster_message(mons, " curls into a ball and starts rolling!");
                 boulder_start(mons, &beem);
+                used = true;
             }
         }
         break;
