@@ -36,6 +36,7 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-chimera.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
@@ -6149,5 +6150,7 @@ bool monster::is_projectile() const
 
 bool monster::is_jumpy() const
 {
-    return mons_is_jumpy(this);
+    return type == MONS_JUMPING_SPIDER
+        || mons_class_is_chimeric(type)
+            && get_chimera_legs(this) == MONS_JUMPING_SPIDER;
 }

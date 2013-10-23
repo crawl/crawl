@@ -716,13 +716,6 @@ bool mons_is_boulder(const monster* mon)
     return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
 }
 
-bool mons_is_jumpy(const monster* mon)
-{
-    return mons_class_is_jumpy(mon->type)
-        || (mons_class_is_chimeric(mon->type)
-            && mons_class_is_jumpy(get_chimera_legs(mon)));
-}
-
 bool mons_can_cling_to_walls(const monster* mon)
 {
     return mons_class_is_clingy(mon->type)
@@ -1484,11 +1477,6 @@ bool mons_class_is_hybrid(monster_type mc)
 bool mons_class_is_chimeric(monster_type mc)
 {
     return mc == MONS_CHIMERA;
-}
-
-bool mons_class_is_jumpy(monster_type mc)
-{
-    return mc == MONS_JUMPING_SPIDER;
 }
 
 bool mons_class_is_clingy(monster_type type)
