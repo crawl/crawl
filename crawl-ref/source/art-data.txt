@@ -543,6 +543,7 @@ TILE_EQ: great_bow
 BRAND:   SPWPN_PENETRATION
 EV:      -2
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
@@ -551,7 +552,7 @@ COLOUR:  WHITE
 TILE:    urand_blowgun
 TILE_EQ: blowgun
 STEALTH: 60
-BOOL:    inv, tilerim
+BOOL:    inv, tilerim, nogen
 
 NAME:    lance "Wyrmbane"
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
