@@ -623,7 +623,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                if (!wizard_tele)
+                if (!wizard_tele && !cell_is_solid(old_pos))
                     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 move_player_to_grid(pos, false, true);
@@ -698,7 +698,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         }
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+        if (!cell_is_solid(old_pos))
+            place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
     }
