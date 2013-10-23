@@ -574,7 +574,7 @@ MONS: orc high priest / orc sorcerer / wizard / necromancer band
 SHUFFLE: +d / +d / d+
 SUBST: w = w t:5 T:5
 SUBST: d = c
-SHUFFLE: c = ccx
+SUBST: c = ccx
 KFEAT: T = mangrove
 KPROP: w = no_rtele_into
 MAP
