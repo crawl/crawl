@@ -3076,7 +3076,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 
     marshallShort(th, item.orig_place);
     marshallShort(th, item.orig_monnum);
-    marshallString(th, item.inscription.c_str(), 80);
+    marshallString(th, item.inscription.c_str());
 
     item.props.write(th);
 }
@@ -3120,7 +3120,7 @@ void unmarshallItem(reader &th, item_def &item)
     if (th.getMinorVersion() < TAG_MINOR_ORIG_MONNUM && item.orig_monnum > 0)
         item.orig_monnum--;
 #endif
-    item.inscription = unmarshallString(th, 80);
+    item.inscription = unmarshallString(th);
 
     item.props.clear();
     item.props.read(th);
@@ -4019,7 +4019,7 @@ void unmarshallMonster(reader &th, monster& m)
 #endif
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
-    m.mname           = unmarshallString(th, 100);
+    m.mname           = unmarshallString(th);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);
     m.hit_dice        = unmarshallByte(th);
@@ -4530,7 +4530,7 @@ static void unmarshallSpells(reader &th, monster_spells &spells)
 
 static void marshallGhost(writer &th, const ghost_demon &ghost)
 {
-    marshallString(th, ghost.name.c_str(), 20);
+    marshallString(th, ghost.name.c_str());
 
     marshallShort(th, ghost.species);
     marshallShort(th, ghost.job);
@@ -4560,7 +4560,7 @@ static ghost_demon unmarshallGhost(reader &th)
 {
     ghost_demon ghost;
 
-    ghost.name             = unmarshallString(th, 20);
+    ghost.name             = unmarshallString(th);
     ghost.species          = static_cast<species_type>(unmarshallShort(th));
     ghost.job              = static_cast<job_type>(unmarshallShort(th));
     ghost.religion         = static_cast<god_type>(unmarshallByte(th));
