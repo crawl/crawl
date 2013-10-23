@@ -625,6 +625,11 @@ Targets made from rock, stone, ice or bone will cause a small or medium-sized
 explosion. Metal targets will cause a small but particularly damaging
 explosion, and targets made from crystal will cause a large and extremely
 damaging explosion.
+
+At high power, this spell is capable of destroying some walls: rock, stone or
+metal walls have a chance of being destroyed with at least 5, 6 or 7 bars of
+power. Crystal walls are particularly brittle and have a chance of being
+destroyed at any power level.
 %%%%
 Lehudib's Crystal Spear spell
 

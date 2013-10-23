@@ -2097,16 +2097,16 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         if ((grid == DNGN_ORCISH_IDOL
              || grid == DNGN_GRANITE_STATUE
              || grid == DNGN_GRATE
-             || pow >= 40 && grid == DNGN_ROCK_WALL
+             || pow >= 35 && grid == DNGN_ROCK_WALL
                  && (allow_random && one_chance_in(3)
                      || !allow_random && get_max_distance)
-             || pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
+             || pow >= 35 && grid == DNGN_CLEAR_ROCK_WALL
                  && (allow_random && one_chance_in(3)
                      || !allow_random && get_max_distance)
-             || pow >= 60 && grid == DNGN_STONE_WALL
+             || pow >= 50 && grid == DNGN_STONE_WALL
                  && (allow_random && one_chance_in(10)
                      || !allow_random && get_max_distance)
-             || pow >= 60 && grid == DNGN_CLEAR_STONE_WALL
+             || pow >= 50 && grid == DNGN_CLEAR_STONE_WALL
                  && (allow_random && one_chance_in(10)
                      || !allow_random && get_max_distance)))
         {
@@ -2126,7 +2126,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
 
-        if (pow >= 80 && (allow_random && x_chance_in_y(pow / 5, 500)
+        if (pow >= 75 && (allow_random && x_chance_in_y(pow / 5, 500)
                           || !allow_random && get_max_distance)
             || grid == DNGN_GRATE)
         {
