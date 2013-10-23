@@ -639,10 +639,10 @@ bool unnotice_feature(const level_pos &pos)
 {
     StashTrack.remove_shop(pos);
     shopping_list.forget_pos(pos);
-    return (_unnotice_portal(pos)
-            || _unnotice_altar(pos)
-            || _unnotice_shop(pos)
-            || _unnotice_stair(pos));
+    return _unnotice_portal(pos)
+        || _unnotice_altar(pos)
+        || _unnotice_shop(pos)
+        || _unnotice_stair(pos);
 }
 
 void display_overview()
@@ -866,7 +866,7 @@ bool level_annotation_has(string find, level_id li)
 {
     string str = get_level_annotation(li);
 
-    return (str.find(find) != string::npos);
+    return str.find(find) != string::npos;
 }
 
 void annotate_level()

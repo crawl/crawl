@@ -70,12 +70,12 @@ int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_featu
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat)
 {
-    return (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER);
+    return feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER;
 }
 
 bool feat_is_wall(dungeon_feature_type feat)
 {
-    return (feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL);
+    return feat >= DNGN_MINWALL && feat <= DNGN_MAXWALL;
 }
 
 bool feat_is_stone_stair(dungeon_feature_type feat)
@@ -106,22 +106,23 @@ bool feat_is_staircase(dungeon_feature_type feat)
     if (feat == DNGN_EXIT_DUNGEON)
         return true;
 
-    return (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
-            || feat >= DNGN_RETURN_FROM_FIRST_BRANCH
-               && feat <= DNGN_RETURN_FROM_LAST_BRANCH);
+    return feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
+           || feat >= DNGN_RETURN_FROM_FIRST_BRANCH
+              && feat <= DNGN_RETURN_FROM_LAST_BRANCH;
 }
 
 bool feat_is_portal(dungeon_feature_type feat)
 {
-    return (feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_EXIT_PORTAL_VAULT
-            || feat == DNGN_MALIGN_GATEWAY);
+    return feat == DNGN_ENTER_PORTAL_VAULT
+        || feat == DNGN_EXIT_PORTAL_VAULT
+        || feat == DNGN_MALIGN_GATEWAY;
 }
 
 // Returns true if the given dungeon feature is a stair, i.e., a level
 // exit.
 bool feat_is_stair(dungeon_feature_type gridc)
 {
-    return (feat_is_travelable_stair(gridc) || feat_is_gate(gridc));
+    return feat_is_travelable_stair(gridc) || feat_is_gate(gridc);
 }
 
 // Returns true if the given dungeon feature is a travelable stair, i.e.,
@@ -306,12 +307,12 @@ command_type feat_stair_direction(dungeon_feature_type feat)
 
 bool feat_is_opaque(dungeon_feature_type feat)
 {
-    return (feat <= DNGN_MAXOPAQUE);
+    return feat <= DNGN_MAXOPAQUE;
 }
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
-    return (feat <= DNGN_MAXSOLID);
+    return feat <= DNGN_MAXSOLID;
 }
 
 bool cell_is_solid(const coord_def &c)
@@ -321,71 +322,70 @@ bool cell_is_solid(const coord_def &c)
 
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
-    return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER
-            && feat != DNGN_LAVA);
+    return !feat_is_solid(feat) && feat != DNGN_DEEP_WATER
+           && feat != DNGN_LAVA;
 }
 
 bool feat_has_dry_floor(dungeon_feature_type feat)
 {
-    return (feat_has_solid_floor(feat) && feat != DNGN_SHALLOW_WATER);
+    return feat_has_solid_floor(feat) && feat != DNGN_SHALLOW_WATER;
 }
 
 bool feat_is_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
-            || feat == DNGN_OPEN_DOOR || feat == DNGN_SEALED_DOOR);
+    return feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
+           || feat == DNGN_OPEN_DOOR || feat == DNGN_SEALED_DOOR;
 }
 
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
-            || feat == DNGN_SEALED_DOOR);
+    return feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
+           || feat == DNGN_SEALED_DOOR;
 }
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
 {
-    return (feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE);
+    return feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
 }
 
 bool feat_is_rock(dungeon_feature_type feat)
 {
-    return (feat == DNGN_ORCISH_IDOL
-            || feat == DNGN_GRANITE_STATUE
-            || feat >= DNGN_ROCK_WALL
-               && feat <= DNGN_CLEAR_PERMAROCK_WALL);
+    return feat == DNGN_ORCISH_IDOL
+           || feat == DNGN_GRANITE_STATUE
+           || feat >= DNGN_ROCK_WALL
+              && feat <= DNGN_CLEAR_PERMAROCK_WALL;
 }
 
 bool feat_is_permarock(dungeon_feature_type feat)
 {
-    return (feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL);
+    return feat == DNGN_PERMAROCK_WALL || feat == DNGN_CLEAR_PERMAROCK_WALL;
 }
 
 bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
 {
-    return (feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_TELEPORT
-            || feat == DNGN_TRAP_ALARM   || feat == DNGN_TRAP_ZOT
-            || feat == DNGN_PASSAGE_OF_GOLUBRIA // FIXME
-            || feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_WEB
-            || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP);
+    return feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_TELEPORT
+           || feat == DNGN_TRAP_ALARM   || feat == DNGN_TRAP_ZOT
+           || feat == DNGN_PASSAGE_OF_GOLUBRIA // FIXME
+           || feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_WEB
+           || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP;
 }
 
 bool feat_is_water(dungeon_feature_type feat)
 {
-    return (feat == DNGN_SHALLOW_WATER
-            || feat == DNGN_DEEP_WATER
-            || feat == DNGN_OPEN_SEA
-            || feat == DNGN_MANGROVE);
+    return feat == DNGN_SHALLOW_WATER
+           || feat == DNGN_DEEP_WATER
+           || feat == DNGN_OPEN_SEA
+           || feat == DNGN_MANGROVE;
 }
 
 bool feat_is_watery(dungeon_feature_type feat)
 {
-    return (feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE);
+    return feat_is_water(feat) || feat == DNGN_FOUNTAIN_BLUE;
 }
 
 bool feat_is_lava(dungeon_feature_type feat)
 {
-    return (feat == DNGN_LAVA
-            || feat == DNGN_LAVA_SEA);
+    return feat == DNGN_LAVA || feat == DNGN_LAVA_SEA;
 }
 
 // Returns GOD_NO_GOD if feat is not an altar, otherwise returns the
@@ -393,7 +393,7 @@ bool feat_is_lava(dungeon_feature_type feat)
 god_type feat_altar_god(dungeon_feature_type feat)
 {
     if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
-        return (static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1));
+        return static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1);
 
     return GOD_NO_GOD;
 }
@@ -405,53 +405,53 @@ dungeon_feature_type altar_for_god(god_type god)
     if (god == GOD_NO_GOD || god >= NUM_GODS)
         return DNGN_FLOOR;  // Yeah, lame. Tell me about it.
 
-    return (static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1));
+    return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
 }
 
 // Returns true if the dungeon feature supplied is an altar.
 bool feat_is_altar(dungeon_feature_type grid)
 {
-    return (feat_altar_god(grid) != GOD_NO_GOD);
+    return feat_altar_god(grid) != GOD_NO_GOD;
 }
 
 bool feat_is_player_altar(dungeon_feature_type grid)
 {
     // An ugly hack, but that's what religion.cc does.
-    return (!you_worship(GOD_NO_GOD)
-            && feat_altar_god(grid) == you.religion);
+    return !you_worship(GOD_NO_GOD) && feat_altar_god(grid) == you.religion;
 }
 
 bool feat_is_branch_stairs(dungeon_feature_type feat)
 {
-    return ((feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
-            || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
+    return feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
+        || feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS;
 }
 
 bool feat_is_branchlike(dungeon_feature_type feat)
 {
-    return (feat_is_branch_stairs(feat)
-            || feat == DNGN_ENTER_HELL || feat == DNGN_ENTER_ABYSS
-            || feat == DNGN_EXIT_THROUGH_ABYSS
-            || feat == DNGN_ENTER_PANDEMONIUM);
+    return feat_is_branch_stairs(feat)
+        || feat == DNGN_ENTER_HELL
+        || feat == DNGN_ENTER_ABYSS
+        || feat == DNGN_EXIT_THROUGH_ABYSS
+        || feat == DNGN_ENTER_PANDEMONIUM;
 }
 
 bool feat_is_tree(dungeon_feature_type feat)
 {
-    return (feat == DNGN_TREE || feat == DNGN_MANGROVE);
+    return feat == DNGN_TREE || feat == DNGN_MANGROVE;
 }
 
 bool feat_is_metal(dungeon_feature_type feat)
 {
-    return (feat == DNGN_METAL_WALL || feat == DNGN_GRATE);
+    return feat == DNGN_METAL_WALL || feat == DNGN_GRATE;
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
 {
-    return (get_feature_dchar(feat) == DCHAR_ARCH
-            && feat_stair_direction(feat) != CMD_NO_CMD
-            && feat != DNGN_ENTER_ZOT
-            && feat != DNGN_RETURN_FROM_ZOT
-            && feat != DNGN_EXIT_HELL);
+    return get_feature_dchar(feat) == DCHAR_ARCH
+           && feat_stair_direction(feat) != CMD_NO_CMD
+           && feat != DNGN_ENTER_ZOT
+           && feat != DNGN_RETURN_FROM_ZOT
+           && feat != DNGN_EXIT_HELL;
 }
 
 bool feat_is_fountain(dungeon_feature_type feat)
@@ -678,8 +678,8 @@ static coord_def _dgn_find_nearest_square(
 static bool _item_safe_square(const coord_def &pos, void *item)
 {
     const dungeon_feature_type feat = grd(pos);
-    return (feat_is_traversable(feat) &&
-            !feat_destroys_item(feat, *static_cast<item_def *>(item)));
+    return feat_is_traversable(feat)
+           && !feat_destroys_item(feat, *static_cast<item_def *>(item));
 }
 
 // Moves an item on the floor to the nearest adjacent floor-space.
@@ -697,17 +697,17 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
 
 bool is_critical_feature(dungeon_feature_type feat)
 {
-    return (feat_stair_direction(feat) != CMD_NO_CMD
-            || feat_altar_god(feat) != GOD_NO_GOD
-            || feat == DNGN_MALIGN_GATEWAY);
+    return feat_stair_direction(feat) != CMD_NO_CMD
+           || feat_altar_god(feat) != GOD_NO_GOD
+           || feat == DNGN_MALIGN_GATEWAY;
 }
 
 bool is_valid_border_feat(dungeon_feature_type feat)
 {
-    return (feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
-            || (feat_is_tree(feat)
-                || feat == DNGN_OPEN_SEA
-                || feat == DNGN_LAVA_SEA);
+    return feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL
+        || feat_is_tree(feat)
+        || feat == DNGN_OPEN_SEA
+        || feat == DNGN_LAVA_SEA;
 }
 
 // This is for randomly generated mimics.
@@ -763,7 +763,7 @@ bool feat_cannot_be_mimic(dungeon_feature_type feat)
 
 static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
-    return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
+    return grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos);
 }
 
 // Moves everything at src to dst. This is not a swap operation: src
@@ -2016,5 +2016,5 @@ bool plant_forbidden_at(const coord_def &p, bool connectivity_only)
     //      This would be an info leak (that at least one ? is not a wall)
     //      were it not for the previous check.
 
-    return (passable <= 1 && !connectivity_only);
+    return passable <= 1 && !connectivity_only;
 }

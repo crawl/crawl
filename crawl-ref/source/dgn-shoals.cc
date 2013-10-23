@@ -130,20 +130,20 @@ static int _shoals_feature_sequence_number(dungeon_feature_type feat)
 // Returns true if the given feature can be affected by Shoals tides.
 static inline bool _shoals_tide_susceptible_feat(dungeon_feature_type feat)
 {
-    return (feat_is_water(feat) || feat == DNGN_FLOOR);
+    return feat_is_water(feat) || feat == DNGN_FLOOR;
 }
 
 // Return true if tide effects can propagate through this square.
 // NOTE: uses RNG!
 static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
 {
-    return (feat_is_watery(feat)
-            // The Shoals tide can sometimes lap past the doorways of rooms
-            // near the water. Note that the actual probability of the tide
-            // getting through a doorway is this probability * 0.5 --
-            // see _shoals_apply_tide.
-            || feat == DNGN_OPEN_DOOR
-            || (feat == DNGN_CLOSED_DOOR && one_chance_in(3)));
+    return feat_is_watery(feat)
+           // The Shoals tide can sometimes lap past the doorways of rooms
+           // near the water. Note that the actual probability of the tide
+           // getting through a doorway is this probability * 0.5 --
+           // see _shoals_apply_tide.
+           || feat == DNGN_OPEN_DOOR
+           || feat == DNGN_CLOSED_DOOR && one_chance_in(3);
 }
 
 static void _shoals_init_heights()
@@ -474,7 +474,7 @@ static void _shoals_make_plant_at(coord_def p)
 
 static bool _shoals_plantworthy_feat(dungeon_feature_type feat)
 {
-    return (feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR);
+    return feat == DNGN_SHALLOW_WATER || feat == DNGN_FLOOR;
 }
 
 static void _shoals_make_plant_near(coord_def c, int radius,
@@ -1065,7 +1065,7 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
     if (pos.abs() > sqr(TIDE_CALL_RADIUS) + 1)
         return base_tide;
 
-    return (base_tide + max(0, tide_called_peak - pos.range() * 3));
+    return base_tide + max(0, tide_called_peak - pos.range() * 3);
 }
 
 static vector<coord_def> _shoals_extra_tide_seeds()
@@ -1255,7 +1255,7 @@ static void _shoals_change_tide_granularity(int newval)
 
 static int _tidemod_keyfilter(int &c)
 {
-    return (c == '+' || c == '-'? -1 : 1);
+    return c == '+' || c == '-'? -1 : 1;
 }
 
 static void _shoals_force_tide(CrawlHashTable &props, int increment)
