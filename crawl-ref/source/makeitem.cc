@@ -3706,7 +3706,16 @@ void makeitem_tests()
         if (coinflip())
             item.special = SPWPN_NORMAL;
         else
-            item.special = random2(MAX_PAN_LORD_BRANDS);
+            item.special = random2(NUM_REAL_SPECIAL_WEAPONS);
+#if TAG_MAJOR_VERSION == 34
+        if (item.special == SPWPN_ORC_SLAYING
+            || item.special == SPWPN_REACHING
+            || item.special == SPWPN_RETURNING
+            || item.special == SPWPN_CONFUSE)
+        {
+            item.special = SPWPN_FORBID_BRAND;
+        }
+#endif
         _generate_weapon_item(item,
                               coinflip(),
                               coinflip() ? OBJ_RANDOM : random2(NUM_WEAPONS),
