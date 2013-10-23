@@ -186,7 +186,7 @@ static int _missile_colour(const item_def &item)
         break;
     case NUM_SPECIAL_MISSILES:
     case NUM_REAL_SPECIAL_MISSILES:
-        die("invalid missile brand");
+        die("invalid missile type");
     }
     return item_colour;
 }
