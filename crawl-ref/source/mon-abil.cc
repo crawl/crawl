@@ -1784,6 +1784,9 @@ static bool _flay_creature(monster* mon, actor* victim)
     if (victim->holiness() != MH_NATURAL)
         return false;
 
+    if (is_sanctuary(mon->pos()) || is_sanctuary(victim->pos()))
+        return false;
+
     if (victim->is_player())
     {
         dam = (6 + (you.hp * 18 / you.hp_max)) * you.hp_max / 100;
