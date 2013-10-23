@@ -2765,6 +2765,8 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 1:
+            if (cell_is_solid(target->pos()))
+                break;
             you_msg        = "Noxious gasses pour from your @hands@!";
             mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
                              "@hands@!";
