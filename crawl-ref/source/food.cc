@@ -2727,7 +2727,7 @@ void handle_starvation()
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
-        if (you.hunger <= 100)
+        if (you.hunger <= HUNGER_DEAD)
         {
             mpr("You have starved to death.", MSGCH_FOOD);
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);

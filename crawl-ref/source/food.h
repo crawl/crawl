@@ -9,6 +9,8 @@
 
 #define BERSERK_NUTRITION     700
 
+// For historical reasons, hunger values are based at 100.
+#define HUNGER_DEAD           100
 #define HUNGER_STARVING      1000
 #define HUNGER_NEAR_STARVING 1533
 #define HUNGER_VERY_HUNGRY   2066
