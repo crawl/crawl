@@ -120,7 +120,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
 
             while (you.magic_points < you.max_magic_points && you.hp > minhp
                    && (you.is_undead != US_SEMI_UNDEAD
-                       || you.hunger - food >= 7000))
+                       || you.hunger - food >= HUNGER_SATIATED))
             {
                 fail_check();
                 success = true;
