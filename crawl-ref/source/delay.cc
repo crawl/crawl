@@ -607,7 +607,7 @@ bool already_learning_spell(int spell)
 // more amused the hungrier you are.
 static void _xom_check_corpse_waste()
 {
-    const int food_need = max(7000 - you.hunger, 0);
+    const int food_need = max(HUNGER_SATIATED - you.hunger, 0);
     xom_is_stimulated(50 + (151 * food_need / 6000));
 }
 

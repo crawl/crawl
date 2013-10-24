@@ -1369,7 +1369,7 @@ static bool _check_ability_possible(const ability_def& abil,
         }
     }
     // Don't insta-starve the player.
-    // (Happens at 100, losing consciousness possible from 500 downward.)
+    // (Losing consciousness possible from 400 downward.)
     if (hungerCheck && !you.is_undead)
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
@@ -1377,7 +1377,7 @@ static bool _check_ability_possible(const ability_def& abil,
             dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
                  you.hunger, abil.food_cost * 2, expected_hunger);
         // Safety margin for natural hunger, mutations etc.
-        if (expected_hunger <= 150)
+        if (expected_hunger <= 50)
         {
             if (!quiet)
                 canned_msg(MSG_TOO_HUNGRY);
