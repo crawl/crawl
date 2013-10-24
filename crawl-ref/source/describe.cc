@@ -4394,11 +4394,11 @@ static void _detailed_god_description(god_type which_god)
 
     cgotoxy(1, bottom_line);
     formatted_string::parse_string(
-        "Press '<w>!</w>'"
+        "Press '<w>!</w>' or '<w>^</w>'"
 #ifdef USE_TILE_LOCAL
         " or <w>Right-click</w>"
 #endif
-        " to toggle between the overview and the more detailed "
+        " to toggle between the overview and the detailed "
         "description.").display();
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -4411,7 +4411,7 @@ static void _detailed_god_description(god_type which_god)
         you.nemelex_sacrificing.set(num, !you.nemelex_sacrificing[num]);
         _detailed_god_description(which_god);
     }
-    else if (keyin == '!' || keyin == CK_MOUSE_CMD)
+    else if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
         describe_god(which_god, true);
 }
 
@@ -4706,16 +4706,16 @@ void describe_god(god_type which_god, bool give_title)
     cgotoxy(1, bottom_line);
     textcolor(LIGHTGREY);
     formatted_string::parse_string(
-        "Press '<w>!</w>'"
+        "Press '<w>!</w>' or '<w>^</w>'"
 #ifdef USE_TILE_LOCAL
         " or <w>Right-click</w>"
 #endif
-        " to toggle between the overview and the more detailed "
+        " to toggle between the overview and the detailed "
         "description.").display();
 
     mouse_control mc(MOUSE_MODE_MORE);
     const int keyin = getchm();
-    if (keyin == '!' || keyin == CK_MOUSE_CMD)
+    if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
         _detailed_god_description(which_god);
 }
 
