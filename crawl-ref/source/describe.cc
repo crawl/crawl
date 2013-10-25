@@ -3893,13 +3893,7 @@ static bool _print_final_god_abil_desc(int god, const string &final_msg,
     {
         // XXX: Handle the display better when the description and cost
         // are too long for the screen.
-        const int spacesleft =
-            get_number_of_cols() - 1 - strwidth(buf) - strwidth(cost);
-        // XXX: should trim by width, not bytes.
-        if (spacesleft < 0)
-            buf = buf.substr(0, buf.length() + spacesleft);
-        else if (spacesleft > 0)
-            buf += string(spacesleft, ' ');
+        buf = chop_string(buf, get_number_of_cols() - 1 - strwidth(cost));
         buf += cost;
     }
 
