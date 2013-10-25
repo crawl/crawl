@@ -1407,10 +1407,6 @@ int player_hunger_rate(bool temp)
     if (temp && you.duration[DUR_REGENERATION] && you.hp < you.hp_max)
         hunger += 4;
 
-    // If Cheibriados has slowed your life processes, you will hunger less.
-    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
-        hunger--;
-
     if (temp)
     {
         if (you.duration[DUR_INVIS])
@@ -1487,6 +1483,10 @@ int player_hunger_rate(bool temp)
         for (int s = you.wearing(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
             hunger = (3*hunger)/5;
     }
+
+    // If Cheibriados has slowed your life processes, you will hunger less.
+    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
+        hunger = hunger * 3 / 4;
 
     if (hunger < 1)
         hunger = 1;
