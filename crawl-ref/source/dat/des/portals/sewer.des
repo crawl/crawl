@@ -45,7 +45,7 @@ function sewer_portal(e)
         feat_tile = "dngn_portal_sewer_rusted",
         msg = messager })
   e.tags("uniq_sewer no_monster_gen chance_sewer")
-  e.chance("8%")
+  e.chance(800)
   e.kfeat("O = enter_portal_vault")
   e.kfeat("1 = W")
   e.colour("O = lightgreen")

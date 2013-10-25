@@ -121,7 +121,7 @@ function wizlab_portal (e)
     e.kfeat("O = enter_portal_vault")
     e.tile("O = no_random dngn_portal_wizard_lab")
     e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
-    e.chance("5%")
+    e.chance(500)
 end
 
 -- Destinations:

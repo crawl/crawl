@@ -84,7 +84,7 @@ function volcano_portal (e)
         feat_tile = "dngn_portal_volcano_gone",
         msg = messager })
     e.tags("uniq_volcano chance_volcano")
-    e.chance("5%")
+    e.chance(500)
     e.kfeat("O = enter_portal_vault")
     e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
