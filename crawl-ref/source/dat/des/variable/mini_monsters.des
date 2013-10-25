@@ -2161,20 +2161,6 @@ x111x
 xx+xx
 ENDMAP
 
-NAME:    minmay_room_of_horrors
-DEPTH:   D:16-
-MONS:    small abomination, large abomination, unseen horror / chaos spawn
-KFEAT:   _ = enter_abyss
-SHUFFLE: 1234
-MAP
-xxxxxx
-x3113x
-+1221x
-x1221x
-x311_x
-xxxxxx
-ENDMAP
-
 # The Horrible House of Horrid Horrors (by Mu.)
 # XXX: Undiggable glass has been converted to statues.
 NAME:   horrible_house_mu
