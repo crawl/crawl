@@ -144,7 +144,8 @@ One's gift to a worshipper.
 %%%%
 crossbow "Hellfire"
 
-A flaming crossbow, forged in the fires of the Hells.
+A flaming crossbow, forged in the fires of the Hells; it imbues bolts it fires
+with the raw power of its namesake.
 %%%%
 sword of the Doom Knight
 
