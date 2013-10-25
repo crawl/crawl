@@ -2826,6 +2826,80 @@ xttttttttttZWWWx.....x
 xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   dk_noncrumbling_1
+DEPTH:  D, Elf
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxGxGxGxGxGxGxGxGxGxGxx
+x*.....................+
+xxxGxGxGxGxGxGxGxGxGxGxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   dk_noncrumbling_2
+DEPTH:  D, Elf
+MAP
+       xx+xx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+xxxxxxxxx.xxxxxxxxxxx
+xxGxGxGxx.xxGxGxGxGxx
++........*..........+
+xxGxGxGxx.xxGxGxGxGxx
+xxxxxxxxx.xxxxxxxxxxx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xx+xx
+ENDMAP
+
+NAME:   dk_noncrumbling_3
+DEPTH:  D, Elf
+MAP
+    xx+xx
+   xx...xx
+  xx.....xx
+ xx.G...G.xx
+xx.G.....G.xx
+x...G...G...x
++.....*.....+
+x...G...G...x
+xx.G.....G.xx
+ xx.G...G.xx
+  xx.....xx
+   xx...xx
+    xx+xx
+ENDMAP
+
+NAME:   dk_noncrumbling_4
+DEPTH:  D, Elf
+MAP
+    xx+xx
+   xxG.Gxx
+  xxG...Gxx
+ xxG.....Gxx
+xxG.......Gxx
+xG.........Gx
++.....*.....+
+xG.........Gx
+xxG.......Gxx
+ xxG.....Gxx
+  xxG...Gxx
+   xxG.Gxx
+    xx+xx
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.

@@ -30,4 +30,12 @@ function callback.cloud_trap_stepped(data, triggerable, triggerer, marker, ev)
   -- do nothing
 end
 
+function callback.dk_crumbling_pickup(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.dk_crumbling_turn(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
 }}
