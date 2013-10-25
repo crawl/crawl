@@ -478,10 +478,11 @@ xx....@
  xxxxx.
 ENDMAP
 
-# This is the "large" one. You might get a clear path, but then again...
 NAME:       enter_volcano_4
 KPROP:      .SLO = no_rtele_into
-NSUBST:     L = 8:. / *:l
+SHUFFLE:    JKL
+SUBST:      JK = l
+SUBST:      L = .
 :           volcano_portal(_G)
 MAP
  xxxxx
@@ -491,12 +492,12 @@ xxSSSxx
 xxxSxxx
  xxx.xx
   xxx.x
-   xxLxx
-  xxLlLxx
- xxLlllLxx
- xLlllllLx
- xxLlllLxx
-  xxLlLxx
+   xx.xx
+  xxJKLxx
+ xxJlKlLxx
+ xJllKllLx
+ xxJlKlLxx
+  xxJKLxx
    x.@.x
 ENDMAP
 

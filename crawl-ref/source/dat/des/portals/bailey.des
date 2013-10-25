@@ -508,9 +508,6 @@ NAME:   bailey_axe_3
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
-SUBST:  ' : +".
-SUBST:  " : wW"
-SUBST:  " = wwW
 SUBST:  v : ccv
 ITEM:   any good_item
 KFEAT:  _ = altar_trog / altar_okawaru / altar_makhleb
@@ -529,8 +526,8 @@ xxxxxxxxxx...A...xxxxxxxxxx
 xxxxxxxxxx.......xxxxxxxxxx
 xxxxxxxxxxx..<..xxxxxxxxxxx
 xxxxxxxxxxxc+++cxxxxxxxxxxx
-xxxxxxxxxxxc"""cxxxxxxxxxxx
-xxxxxxxxcccc'''ccccxxxxxxxx
+xxxxxxxxxxxc...cxxxxxxxxxxx
+xxxxxxxxcccc...ccccxxxxxxxx
 xxxxxxxccw.......wccxxxxxxx
 xxxcccccww.......wwcccccxxx
 xxxc.+1+ww.......ww+1+.cxxx
@@ -564,7 +561,7 @@ ENDMAP
 ############################################################################
 # River.
 #
-# There will be either a ring of flight or about three potions.
+# There will be either a ring of flight or three potions.
 # Loots consists of six good items.
 #
 NAME:    bailey_axe_4
@@ -577,7 +574,6 @@ ITEM:    potion of flight ident:type
 ITEM:    ring of flight ident:type
 SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
-SUBST:   e = e..
 SHUFFLE: EB / XY / XY / XY
 SUBST:   X = c, Y = +
 NSUBST:  E = 1:+ / *:c
@@ -614,15 +610,15 @@ cwwwwwwwwwwwW1.1..c1.cccc+cccc.1c1Wwwwwwwwxxxxxxxxx
 xwwwxxxwwwwwwwwwW1cncc..2.2..ccncwwwwwwxxxxxxxxxxxx
 xxxxxxxxx....Wwwwwww1c.2.2.2.c1wwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxx......Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx...e...Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.......Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxx........WwwwwwwwWxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx...e.........xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx...e..<..xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx....e..xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxx.e.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx.e...xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxx....A....xxxxxxxxxxxxxxxx
