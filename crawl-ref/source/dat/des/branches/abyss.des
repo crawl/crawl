@@ -23,20 +23,63 @@ function init_abyss_exit(e, glyph)
     e.kfeat(glyph .. " = exit_abyss w:6 / abyssal_stair w:4")
   end
 end
+
+function abyss_entry(e, glyph)
+  e.tags("extra luniq_enter_abyss chance_enter_abyss")
+  e.depth_chance("D:21-24", 3333)
+  e.depth_chance("D:25",    10000)
+  e.depth_chance("D:26-",   3333)
+  if you.where() == 'D:25' then
+    e.kfeat(glyph .. ' = enter_abyss no_mimic')
+  else
+    e.kfeat(glyph .. ' = enter_abyss')
+  end
+end
 }}
 
+###############################################################################
+# Abyss entries.
 # 1/3 chance to appear on D:21-27, and guaranteed on D:25.
+###############################################################################
+
+# This one is the backup and the one used in encompass vaults.
 NAME: abyss_entry
-TAGS: extra allow_dup can_overwrite replace_portal transparent
+TAGS: allow_dup can_overwrite replace_portal transparent
 DEPTH: D:21-
-CHANCE: 100% (D:25), 3333
-: if you.where() == 'D:25' then
-KFEAT: O = enter_abyss no_mimic
-: else
-KFEAT: O = enter_abyss
-: end
+WEIGHT: 50
+: abyss_entry(_G, 'O')
 MAP
 O
+ENDMAP
+
+NAME:    minmay_room_of_horrors
+TAGS:    nolayout_encompass
+DEPTH:   D:16-
+MONS:    small abomination, large abomination, unseen horror / chaos spawn
+: abyss_entry(_G, '_')
+SHUFFLE: 1234
+MAP
+xxxxxx
+x3113x
++1221x
+x1221x
+x311_x
+xxxxxx
+ENDMAP
+
+NAME:  marbit_kobold_abyss_entry
+DEPTH: D:21-26
+TAGS:  no_monster_gen nolayout_encompass
+MONS:  big kobold ; dart ego:dispersal, kobold demonologist
+: abyss_entry(_G, '_')
+MAP
+xxxxxxxxxxxxxxx
+xxlllxx<.xlll.x
+xlllllxx.lll..x
+@x.llll..lll2_x
+x.xl1lllllll.>x
+xlllxlllx1lll.x
+xxxxxxxxxxxxxxx
 ENDMAP
 
 ###############################################################################
