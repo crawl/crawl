@@ -4215,6 +4215,9 @@ _build_vault_impl(const map_def *vault,
 
     const bool is_layout = place.map.is_overwritable_layout();
 
+    if (placed_vault_orientation == MAP_ENCOMPASS && !is_layout)
+        env.level_layout_types.insert("encompass");
+
     if (!build_only
         && (placed_vault_orientation == MAP_ENCOMPASS || is_layout)
         && place.map.border_fill_type != DNGN_ROCK_WALL)
