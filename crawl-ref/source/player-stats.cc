@@ -179,10 +179,6 @@ void jiyva_stat_action()
 
             int weight = you.skills[sk];
 
-            // Anyone can get Spellcasting 1. Doesn't prove anything.
-            if (sk == SK_SPELLCASTING && weight >= 1)
-                weight--;
-
             if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
                 magic_weights += weight;
             else
