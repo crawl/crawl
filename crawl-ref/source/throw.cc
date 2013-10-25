@@ -1096,6 +1096,9 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.can_see_invis = agent->can_see_invisible();
 
+    beam.name = item.name(DESC_PLAIN, false, false, false);
+    ammo_name = item.name(DESC_PLAIN);
+
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
         ? get_unrand_entry(launcher->special) : NULL;
 
@@ -1143,8 +1146,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 #endif
 
     ASSERT(!exploding || !is_artefact(item));
-
-    beam.name = item.name(DESC_PLAIN, false, false, false);
 
     // Note that bow_brand is known since the bow is equipped.
 
@@ -1202,8 +1203,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     if (beam_changed)
         beam.name = item.name(DESC_PLAIN, false, false, false);
-
-    ammo_name = item.name(DESC_PLAIN);
 
     ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
 
