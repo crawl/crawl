@@ -49,7 +49,7 @@ function ice_cave_portal(e)
         feat_tile = "dngn_portal_ice_cave_gone",
         msg = messager })
   e.tags("uniq_ice_cave chance_icecave")
-  e.chance("5%")
+  e.chance(500)
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
   e.tile("O = dngn_portal_ice_cave")

@@ -49,7 +49,7 @@ function bailey_portal(e, ptype, trowel)
         msg = messager })
   if not trowel then
     e.tags("uniq_bailey chance_bailey")
-    e.chance("5%")
+    e.chance(500)
   end
 
   e.kfeat("O = enter_portal_vault")

@@ -167,7 +167,7 @@ function trove.portal(e)
         }
     end
     e.tags("uniq_trove no_monster_gen chance_trove")
-    e.chance("5%")
+    e.chance(500)
     e.lua_marker("O", stair)
     e.kfeat("O = enter_portal_vault")
     e.colour(".O = blue")
@@ -262,8 +262,7 @@ G.O.G
 ENDMAP
 
 NAME:   enter_trove_3
-TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
-CHANCE: 5%
+TAGS:   uniq_trove no_monster_gen no_wall_fixup
 : trove.portal(_G)
 COLOUR: .c = blue
 FTILE:  .cO = floor_marble
