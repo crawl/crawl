@@ -479,7 +479,6 @@ xx....@
 ENDMAP
 
 NAME:       enter_volcano_4
-KPROP:      .SLO = no_rtele_into
 SHUFFLE:    JKL
 SUBST:      JK = l
 SUBST:      L = .
