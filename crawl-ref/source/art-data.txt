@@ -449,14 +449,14 @@ BOOL:     life
 
 NAME:    crossbow "Hellfire"
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
-PLUS:    +6/+9
+PLUS:    +6/+6
 COLOUR:  ETC_FIRE
 TILE:    urand_hellfire
 TILE_EQ: crossbow_fire
-BRAND:   SPWPN_FLAME
 FIRE:    2
 COLD:    -1
 MAGIC:   40
+BOOL:    evil
 
 NAME:    sword of the Doom Knight
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD

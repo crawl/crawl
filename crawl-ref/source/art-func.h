@@ -857,3 +857,33 @@ static void _SPIDER_unequip(item_def *item, bool *show_msgs)
 {
     you.check_clinging(false);
 }
+
+///////////////////////////////////////////////////
+
+static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "Your hands smoulder for a moment.");
+}
+
+static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
+                                           string* ammo_name, bool* returning)
+{
+    ASSERT(beam->item
+           && beam->item->base_type == OBJ_MISSILES
+           && !is_artefact(*(beam->item)));
+    beam->item->special = SPMSL_EXPLODING; // so that it mulches
+
+    beam->flavour = BEAM_HELLFIRE;
+    beam->name    = "hellfire bolt";
+    *ammo_name    = "a hellfire bolt";
+    beam->colour  = LIGHTRED;
+    beam->glyph   = DCHAR_FIRED_ZAP;
+
+    bolt *expl   = new bolt(*beam);
+    expl->is_explosion = true;
+    expl->damage = dice_def(2, 5);
+    expl->name   = "hellfire";
+
+    beam->special_explosion = expl;
+    return SM_FINISHED;
+}
