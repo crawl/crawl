@@ -649,17 +649,24 @@ static map_section_type _apply_vault_definition(
 
 static bool _map_matches_layout_type(const map_def &map)
 {
-    if (env.level_layout_types.empty() || !map.has_tag_prefix("layout_"))
+    bool permissive = false;
+    if (env.level_layout_types.empty()
+        || (!map.has_tag_prefix("layout_")
+            && !(permissive = map.has_tag_prefix("nolayout_"))))
+    {
         return true;
+    }
 
     for (string_set::const_iterator i = env.level_layout_types.begin();
          i != env.level_layout_types.end(); ++i)
     {
         if (map.has_tag("layout_" + *i))
             return true;
+        else if (map.has_tag("nolayout_" + *i))
+            return false;
     }
 
-    return false;
+    return permissive;
 }
 
 static bool _map_matches_species(const map_def &map)
