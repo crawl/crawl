@@ -549,7 +549,10 @@ namespace arena
         if (orig_a != faction_a.active_members
             || orig_b != faction_b.active_members)
         {
-            mpr("Book-keeping error in faction member count.", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Book-keeping error in faction member count: "
+                              "%d:%d instead of %d:%d",
+                              orig_a, orig_b,
+                              faction_a.active_members, faction_b.active_members);
 
             if (faction_a.active_members > 0
                 && faction_b.active_members <= 0)

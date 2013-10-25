@@ -377,7 +377,7 @@ static monster* _do_split(monster* thing, coord_def & target)
 
     // Create a new slime.
     mgen_data new_slime_data = mgen_data(thing->type,
-                                         thing->behaviour,
+                                         SAME_ATTITUDE(thing),
                                          0,
                                          0,
                                          0,
@@ -401,6 +401,7 @@ static monster* _do_split(monster* thing, coord_def & target)
     // Inflict the new slime with any enchantments on the parent.
     _split_ench_durations(thing, new_slime);
     new_slime->attitude = thing->attitude;
+    new_slime->behaviour = thing->behaviour;
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
     new_slime->summoner = thing->summoner;
