@@ -1369,41 +1369,6 @@ xxxxx"x........x+xxxxx........x"xxxxx
 ..................@..................
 ENDMAP
 
-###############################################################################
-# Tagged "extra" because I find it too small to take the full vault slot.
-#
-NAME: lightli_too_deep
-DEPTH: D:17-
-TAGS: no_monster_gen extra
-ORIENT: northeast
-MONS: balrug
-MONS: sun demon
-KFEAT: H = enter_hell
-SUBST: y = x..
-SUBST: ; = %A.....l
-KITEM: % = dwarf skeleton
-: dgn.delayed_decay(_G, '%', 'dwarf skeleton')
-KITEM: A = any weapon race:dwarven w:20 /  chain mail race:dwarven w:60 / \
-           plate armour race:dwarven w:19 / \
-           crystal plate armour race:dwarven w:1
-MAP
-xxxxxxxxxxxxxxx
-xxxxcccccccxxxx
-xxxxcA;H;Acxxxx
-xxxxc;;1;;cxxxx
-xxxxc;2|2;cxxxx
-xxxxc;;;;;cxxxx
-xxxxccc.cccxxxx
-xxxxxxy.yxxxxxx
-xxxxxxy.yxxxxxx
-xxxxxxy.yxxxxxx
-xxxxxxy.yxxxxxx
-xxxxxy%yxxxxxxx
-xxxxxy.yxxxxxxx
-xxxxxy.yxxxxxxx
-xxxxy...yxxxxxx
-xxxy.%...yxxxxx
-ENDMAP
 
 ###############################################################################
 NAME:    grunt_house_of_mirrors

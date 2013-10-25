@@ -4,21 +4,30 @@
 #           dis.des, geh.des, coc.des, or tar.des.
 ##############################################################################
 
+{{
+function hell_entry(e, glyph)
+    e.tags("extra luniq_enter_hell chance_enter_hell")
+    e.depth_chance("D:21-", 10000)
+    if you.where() == 'D:21' then
+        e.kfeat(glyph .. " = enter_hell no_mimic")
+    else
+        e.kfeat(glyph .. " = enter_hell")
+    end
+end
+}}
 
 ##############################################################################
 # Vestibule entries
 ##############################################################################
 
-# This replaces the hardcoded placement of a hell entrance on D:21-27.
+# This replaces the hardcoded placement of a hell entrance on D:21-27;
+# it also acts as the backup entrance and the entrance for encompass vault
+# placements.
 NAME:   hell_entry
-TAGS:   extra allow_dup luniq can_overwrite replace_portal transparent
+TAGS:   allow_dup can_overwrite replace_portal transparent
 DEPTH:  D:21-
-CHANCE: 100%
-: if you.where() == 'D:21' then
-KFEAT: O = enter_hell no_mimic
-: else
-KFEAT: O = enter_hell
-: end
+WEIGHT: 50
+: hell_entry(_G, 'O')
 MAP
 O
 ENDMAP
@@ -29,7 +38,8 @@ default-depth: D:14-26
 # Hellmouth (Lemuel)
 # note that most threats here can't fly
 NAME:   hellmouth_1
-TAGS:   no_rotate
+ORIENT: float
+TAGS:   no_rotate nolayout_encompass
 MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
         red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
@@ -37,9 +47,8 @@ ITEM:   good_item demon blade / good_item demon whip /\
 ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
         grand grimoire / scroll of torment ident:type
 KFEAT:  A = enter_hell
-ORIENT: float
 SUBST:  d=de, ?:?.l, ?=l.
-
+: hell_entry(_G, 'A')
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxxlllxxxxxxxx
@@ -65,8 +74,8 @@ ENDMAP
 # Hellmouth 2 (Lemuel)
 # note that most threats here can't fly
 NAME:   hellmouth_2
-TAGS:   no_monster_gen no_rotate transparent
 ORIENT: float
+TAGS:   no_monster_gen no_rotate transparent nolayout_encompass
 MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
@@ -75,9 +84,9 @@ ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
         grand grimoire / scroll of torment ident:type
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
-KFEAT:  A = enter_hell
 SUBST:  d=de, ?:?.l, ?=l.
 SUBST:  b : b:30 c v .
+: hell_entry(_G, 'A')
 MAP
 ..........................
 .......bbbbbbbbbbbb.......
@@ -104,13 +113,13 @@ ENDMAP
 ##############################################################################
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
-TAGS:   transparent
+ORIENT: float
+TAGS:   transparent nolayout_encompass
 MONS:   weight:50 crimson imp / quasit / shadow imp / iron imp / lemure, hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / nothing
-ORIENT: float
-KFEAT:  A = enter_hell
 SUBST:  ? : . l ?:40, ?=l.
+: hell_entry(_G, 'A')
 MAP
               ..??..      ....
    .....     .......     ..??.
@@ -132,6 +141,87 @@ MAP
 ....      ........??..
 ENDMAP
 
+##############################################################################
+
+NAME:   grunt_hell_entry_demonic_statue
+ORIENT: float
+DEPTH:  D:16-26
+TAGS:   no_monster_gen no_rtele_into nolayout_encompass
+MONS:   blue devil / orange demon / red devil / w:5 iron devil / \
+        w:35 nothing
+MONS:   ice devil / sun demon / soul eater / w:30 nothing
+MONS:   shadow demon / blizzard demon / hell beast
+ITEM:   skeleton
+KFEAT:  b = .
+KMONS:  A = silver statue
+MARKER: A = lua:fog_machine { cloud_type = "grey smoke", \
+            pow_min = 20, pow_max = 30, delay = 50, \
+            size = 1, walk_dist = 3, start_clouds = 1 }
+KMONS:  b = w:100 nothing / w:5 crimson imp / w:2 white imp / w:2 iron imp \
+            / w:1 shadow imp
+KPROP:  b = nothing / w:5 bloody
+KITEM:  b = nothing / w:1 gold
+MARKER: H = lua:props_marker { stop_explore = "statue" }
+KFEAT:  HI = G
+: hell_entry(_G, 'A')
+MAP
+      xxxxxxx
+    xxxbbbbbxxx
+  xxxbbbbbbbbbxxx
+  xbbbbGbbbGbbbbx
+ xxbG1bbbbbbd1Gbxx
+ xdb2bb2bGb2bb2bbx
+xxbbbbGbbbbbGbbbbxx
+xbbGb2bbd3*bb2bGbbx
+xbbbbbb%**d*bbbbdbx
+xbd1bGb%*A*%bGb1bbx
+xb%bbbb%*d*dbbbbbbx
+xbbGbbbd%b*bbbbGbbx
+xxbbbbGbbbbbGdbbbxx
+ xbb1bb2bGd2bb1bbx
+ xxbG1bbbbbbb1Gbxx
+  xbbbbG1b1Gbbbbx
+  xxxbbbbb%bbbxxx
+    xxxbdbbbxxx
+    xxxv===vxxx
+    xxxH...Ixxx
+    xx@@@@@@@xx
+ENDMAP
+
+###############################################################################
+#
+NAME: lightli_too_deep
+DEPTH: D:17-
+TAGS: no_monster_gen nolayout_encompass
+ORIENT: northeast
+MONS: balrug
+MONS: sun demon
+: hell_entry(_G, 'H')
+SUBST: y = x..
+SUBST: ; = %A.....l
+KITEM: % = dwarf skeleton
+: dgn.delayed_decay(_G, '%', 'dwarf skeleton')
+KITEM: A = any weapon race:dwarven w:20 /  chain mail race:dwarven w:60 / \
+           plate armour race:dwarven w:19 / \
+           crystal plate armour race:dwarven w:1
+MAP
+xxxxxxxxxxxxxxx
+xxxxcccccccxxxx
+xxxxcA;H;Acxxxx
+xxxxc;;1;;cxxxx
+xxxxc;2|2;cxxxx
+xxxxc;;;;;cxxxx
+xxxxccc.cccxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxxy.yxxxxxx
+xxxxxy%yxxxxxxx
+xxxxxy.yxxxxxxx
+xxxxxy.yxxxxxxx
+xxxxy...yxxxxxx
+xxxy.%...yxxxxx
+ENDMAP
 
 ##############################################################################
 # Vestibule of Hell and Geryon
