@@ -2874,11 +2874,9 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity(burden_state_type bs)
 {
-    // Yuck.  We need this for gameplay - it nerfs small forms too much
-    // otherwise - but there's no good way to rationalize here...  --sorear
-    const int used_weight = max(you.body_weight(), you.body_weight(true));
-
-    int cap = 2 * used_weight + you.strength() * 250 + 1000;
+    // Use untransformed body weight, to prevent transformations
+    // causing frequent large changes in carrying capacity.
+    int cap = 2 * you.body_weight(true) + you.strength() * 250 + 1000;
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
 
