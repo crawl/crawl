@@ -1918,13 +1918,10 @@ static void _make_faerie_armour(item_def &item)
             continue;
         }
 
-        // These make little sense for a casting mon.
-        if (artefact_wpn_property(doodad, ARTP_BERSERK)
-            || artefact_wpn_property(doodad, ARTP_ANGRY)
-            || artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
-            || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION)
-            || artefact_wpn_property(doodad, ARTP_PREVENT_TELEPORTATION)
-            || artefact_wpn_property(doodad, ARTP_MUTAGENIC))
+        // -CAST makes no sense on someone called "the Enchantress",
+        // +TELE is not implemented for monsters yet.
+        if (artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
+            || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION))
         {
             continue;
         }
@@ -1946,7 +1943,7 @@ static void _make_faerie_armour(item_def &item)
     doodad.props[ARTEFACT_APPEAR_KEY].get_string()
         = item.props[ARTEFACT_APPEAR_KEY].get_string();
     item.props = doodad.props;
-    item.plus = 2 + random2(5);
+    item.plus = random2(6) + random2(6) - 2;
 }
 
 static jewellery_type octoring_types[8] =
