@@ -42,10 +42,11 @@ end
 # 1/3 chance to appear on D:21-27, and guaranteed on D:25.
 ###############################################################################
 
+default-depth: D:21-
+
 # This one is the backup and the one used in encompass vaults.
 NAME: abyss_entry
 TAGS: allow_dup can_overwrite replace_portal transparent
-DEPTH: D:21-
 WEIGHT: 50
 : abyss_entry(_G, 'O')
 MAP
@@ -82,9 +83,71 @@ xlllxlllx1lll.x
 xxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:    abyss_entry_small_statue_room
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+MAP
+xxxxx
+xGOGx
+xx+xx
+ENDMAP
+
+NAME:    abyss_entry_crystal
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+SHUFFLE: AB
+SUBST:   A : .:50 G:50 T U V Y t
+SUBST:   B : .:100 G
+MAP
+  xxxxx
+ xxbbbxx
+xxbbObbxx
+xbbA.Abbx
+xbB...Bbx
+xb.....bx
+ENDMAP
+
+NAME:    abyss_entry_glasseish
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+KPROP:   T = no_rtele_into
+SUBST:   m : nm
+SUBST:   T : T l 1 2 A X
+MONS:    tentacled starspawn / starcursed mass / wretched star
+MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
+KFEAT:   X : malign_gateway
+MAP
+mmm mmm
+mTm.mTm
+mmm.mmm
+ ..O..
+mmm.mmm
+mTm.mTm
+mmm mmm
+ENDMAP
+
+NAME:    abyss_entry_flame_altar
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+SUBST:   A : deG
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0, excl_rad = 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "seething chaos", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0, excl_rad = 0 }
+KFEAT:   _ = altar_lugonu
+MAP
+ bbb
+bbObb
+bA_Ab
+ENDMAP
+
 ###############################################################################
 # abyss random vaults
 ###############################################################################
+
+default-depth:
 
 ###############################################################################
 # Dummy vaults
