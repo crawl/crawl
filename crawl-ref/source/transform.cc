@@ -26,6 +26,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mutation.h"
+#include "newgame.h"
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
@@ -1269,8 +1270,11 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_LICH:
-        mpr("You feel yourself come back to life.", MSGCH_DURATION);
-        you.is_undead = US_ALIVE;
+        you.is_undead = get_undead_state(you.species);
+        if (you.is_undead == US_ALIVE)
+            mpr("You feel yourself come back to life.", MSGCH_DURATION);
+        else
+            mpr("You feel your undeath return to normal.", MSGCH_DURATION);
         break;
 
     case TRAN_PIG:
