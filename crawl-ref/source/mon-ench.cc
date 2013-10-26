@@ -1926,7 +1926,7 @@ static inline int _mod_speed(int val, int speed)
 {
     if (!speed)
         speed = 10;
-    const int modded = speed ? val * 10 / speed : val;
+    const int modded = val * 10 / speed;
     return modded? modded : 1;
 }
 
