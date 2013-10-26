@@ -3227,7 +3227,7 @@ static int _xom_colour_smoke_trail(bool debug = false)
 
 static int _xom_draining_torment_effect(int sever, bool debug = false)
 {
-    // Drains stats or experience, or torments the player.
+    // Drains stats or skills, or torments the player.
     const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
     const string aux = "the vengeance of Xom";
@@ -3262,18 +3262,14 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     }
     else if (coinflip())
     {
-        // XP drain effect (25%).
+        // Draining effect (25%).
         if (player_prot_life() < 3)
         {
             if (debug)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, 75);
-            if (random2(sever) > 3)
-                drain_exp(true, 75);
-            if (random2(sever) > 3)
-                drain_exp(true, 75);
+            drain_exp(true, 100);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
