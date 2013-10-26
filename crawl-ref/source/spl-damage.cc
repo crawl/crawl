@@ -2508,6 +2508,9 @@ void forest_damage(const actor *mon)
         if (!foe || mons_aligned(foe, mon))
             continue;
 
+        if (is_sanctuary(foe->pos()))
+            continue;
+
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
             {
