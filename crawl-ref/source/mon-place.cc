@@ -773,29 +773,35 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - env.absdepth0 * 117);
 }
 
-static string _abyss_monster_creation_message(const monster* mon)
+static void _abyss_monster_creation_message(const monster* mon)
 {
     if (mon->type == MONS_DEATH_COB)
     {
-        return coinflip() ?
-            " appears in a burst of microwaves!" : " pops from nullspace!";
+        mprf(coinflip() ? "%s appears in a burst of microwaves!"
+                        : "%s pops from nullspace!",
+             mon->name(DESC_A).c_str()); // always "a death cob"
+        return;
     }
 
-    string messages[] =
-    {
-        " appears in a shower of "
-            + string(one_chance_in(3) ? "translocational energy." : "sparks."),
-        " materialises.",
-        string(" emerges from ") + (one_chance_in(3) ? "chaos." : "the beyond."),
-        " assembles " + string(mon->pronoun(PRONOUN_REFLEXIVE)) + "!",
-        (one_chance_in(3) ? " erupts" : " bursts") + string(" from nowhere!"),
-        string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
-        string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething")
-            + string(" chaos."),
-        string(" punctures the fabric of ") + (one_chance_in(5) ? "time!" : "the universe."),
-        string(" manifests") + (silenced(you.pos()) ? "!" : " with a bang!")
-    };
-    return messages[min(random2(9), random2(9))];
+    mprf(random_choose_weighted(
+         17, "%s appears in a shower of translocational energy.",
+         34, "%s appears in a shower of sparks.",
+         45, "%s materialises.",
+         13, "%s emerges from chaos.",
+         26, "%s emerges from the beyond.",
+         33, "%s assembles %s!",
+          9, "%s erupts from nowhere!",
+         18, "%s bursts from nowhere!",
+          7, "%s is cast out of space!",
+         14, "%s is cast out of reality!",
+          5, "%s coalesces out of pure chaos.",
+         10, "%s coalesces out of seething chaos.",
+          2, "%s punctures the fabric of time!",
+          7, "%s punctures the fabric of the universe.",
+          3, "%s manifests%3$s!",
+          0),
+         mon->name(DESC_A).c_str(), mon->pronoun(PRONOUN_REFLEXIVE).c_str(),
+         silenced(you.pos()) ? "" : " with a bang");
 }
 
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
@@ -1042,52 +1048,32 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     // Message to player from stairwell/gate/abyss appearance.
-    if (!crawl_state.generating_level && you.see_cell(mg.pos)
-        && (mg.proximity == PROX_NEAR_STAIRS
-            || (player_in_branch(BRANCH_ABYSS)
-                && !mg.summoner && !mons_is_mimic(mon->type)
-                && !crawl_state.is_god_acting())))
+    if (shoved)
     {
-        string msg;
-        bool is_visible = mon->visible_to(&you);
-        if (is_visible)
-            msg = mon->name(DESC_A);
-        else if (shoved)
-            msg = "Something";
-
-        if (mg.proximity == PROX_NEAR_STAIRS)
+        mprf("%s shoves you out of the %s!",
+             mon->visible_to(&you) ? mon->name(DESC_A).c_str() : "Something",
+             stair_type == DCHAR_ARCH ? "gateway" : "stairwell");
+    }
+    else if (mg.proximity == PROX_NEAR_STAIRS && you.can_see(mon))
+    {
+        const char *msg = nullptr;
+        switch (stair_type)
         {
-            if (shoved)
-            {
-                msg += " shoves you out of the ";
-                if (stair_type == DCHAR_ARCH)
-                    msg += "gateway!";
-                else
-                    msg += "stairwell!";
-                mpr(msg.c_str());
-            }
-            else if (!msg.empty())
-            {
-                if (stair_type == DCHAR_STAIRS_DOWN)
-                    msg += " comes up the stairs.";
-                else if (stair_type == DCHAR_STAIRS_UP)
-                    msg += " comes down the stairs.";
-                else if (stair_type == DCHAR_ARCH)
-                    msg += " comes through the gate.";
-                else
-                    msg = "";
-            }
+        case DCHAR_STAIRS_DOWN: msg = "up the stairs."; break;
+        case DCHAR_STAIRS_UP:   msg = "down the stairs."; break;
+        case DCHAR_ARCH:        msg = "through the gate."; break;
+        default: ;
         }
-        else if (player_in_branch(BRANCH_ABYSS) && !msg.empty()
-                 && !(mon->flags & MF_WAS_IN_VIEW))
-        {
-            msg += _abyss_monster_creation_message(mon);
-        }
-        if (!msg.empty())
-            mpr(msg.c_str());
-        // Special case: must update the view for monsters created
-        // in player LOS.
-        viewwindow();
+        if (msg)
+            mprf("%s comes %s", mon->name(DESC_A).c_str(), msg);
+    }
+    else if (player_in_branch(BRANCH_ABYSS) && you.can_see(mon)
+             && !crawl_state.generating_level
+             && !mg.summoner && !mons_is_mimic(mon->type)
+             && !crawl_state.is_god_acting()
+             && !(mon->flags & MF_WAS_IN_VIEW)) // is this possible?
+    {
+        _abyss_monster_creation_message(mon);
     }
 
     // Now, forget about banding if the first placement failed, or there are

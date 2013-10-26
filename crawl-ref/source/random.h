@@ -92,6 +92,8 @@ T random_choose_weighted(int weight, T first, ...)
     return chosen;
 }
 
+const char* random_choose_weighted(int weight, const char* first, ...);
+
 struct dice_def
 {
     int num;
