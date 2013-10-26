@@ -2489,8 +2489,8 @@ void bolt::affect_endpoint()
 {
     if (special_explosion)
     {
-        special_explosion->refine_for_explosion();
         special_explosion->target = pos();
+        special_explosion->refine_for_explosion();
         special_explosion->explode();
 
         // XXX: we're significantly overcounting here.
@@ -2505,8 +2505,8 @@ void bolt::affect_endpoint()
 
     if (is_explosion)
     {
-        refine_for_explosion();
         target = pos();
+        refine_for_explosion();
         explode();
         return;
     }
