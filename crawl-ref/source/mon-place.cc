@@ -1080,8 +1080,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
                     msg = "";
             }
         }
-        else if (player_in_branch(BRANCH_ABYSS) && !(mon->flags & MF_WAS_IN_VIEW))
+        else if (player_in_branch(BRANCH_ABYSS) && !msg.empty()
+                 && !(mon->flags & MF_WAS_IN_VIEW))
+        {
             msg += _abyss_monster_creation_message(mon, is_visible);
+        }
         if (!msg.empty())
             mpr(msg.c_str());
         // Special case: must update the view for monsters created
