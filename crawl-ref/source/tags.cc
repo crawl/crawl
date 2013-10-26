@@ -1142,6 +1142,7 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.abyss_speed);
 
     marshallInt(th, you.disease);
+    ASSERT(you.hp > 0 || you.dead);
     marshallShort(th, you.dead ? 0 : you.hp);
 
     marshallShort(th, you.hunger);
