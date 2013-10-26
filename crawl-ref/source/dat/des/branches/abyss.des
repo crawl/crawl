@@ -111,19 +111,18 @@ NAME:    abyss_entry_glasseish
 TAGS:    nolayout_encompass
 : abyss_entry(_G, 'O')
 KPROP:   T = no_rtele_into
-SUBST:   m : nm
 SUBST:   T : T l 1 2 A X
 MONS:    tentacled starspawn / starcursed mass / wretched star
 MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
 KFEAT:   X : malign_gateway
 MAP
-mmm mmm
-mTm.mTm
-mmm.mmm
+nnn nnn
+nTn.nTn
+nnn.nnn
  ..O..
-mmm.mmm
-mTm.mTm
-mmm mmm
+nnn.nnn
+nTn.nTn
+nnn nnn
 ENDMAP
 
 NAME:    abyss_entry_flame_altar
@@ -141,6 +140,7 @@ MAP
  bbb
 bbObb
 bA_Ab
+  @
 ENDMAP
 
 ###############################################################################
