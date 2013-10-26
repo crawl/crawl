@@ -1,6 +1,6 @@
 Stone Soup 0.14 (up to 0.14-a0-385-gada9c99)
 --------------------------------------------
-* Two new races: Lava Orcs and Djinni.
+* Two new races: Lava Orcs and Djinn.
 * A new branch: the Enchanted Forest.
 
 Branches, environment
@@ -13,7 +13,7 @@ Character
 * New races:
     - Lava Orcs heat up and cool down in response to their surroundings, with
       their abilities changing as a result;
-    - Djinni draw both health and magic from a shared Essence pool, and have
+    - Djinn draw both health and magic from a shared Essence pool, and have
       complete immunity to all forms of fire;
 * Felids have an innate jump attack ability, allowing them to jump over
   other monsters to attack their target.
@@ -72,7 +72,7 @@ Items
 
 Cards
 -----
-* The Elixir card now heals over time instad of instantly.
+* The Elixir card now heals over time instead of instantly.
 
 Gods
 ----
