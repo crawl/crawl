@@ -222,7 +222,7 @@ void tile_colour::change_lum(int lum_percent)
 
     if (min_rgb == max_rgb)
     {
-        int rgb_change = (lum_percent * 255) / 100;
+        int rgb_change = lum_percent * 255 / 100;
 
         min_rgb += rgb_change;
         max_rgb += rgb_change;

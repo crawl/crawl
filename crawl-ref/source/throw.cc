@@ -641,12 +641,12 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
     }
     else if (victim->is_player() && mutated > 0)
     {
-        int multiplier = 100 + (mutated * 5);
+        int multiplier = 100 + mutated * 5;
 
         if (multiplier > 175)
             multiplier = 175;
 
-        dmg = (dmg * multiplier) / 100;
+        dmg = dmg * multiplier / 100;
     }
     else
         return false;
@@ -789,7 +789,7 @@ static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
 {
     if (victim->undead_or_demonic())
     {
-        dmg += 1 + (random2(dmg * 15) / 10);
+        dmg += 1 + random2(dmg * 15) / 10;
 
         if (!beam.is_tracer && you.can_see(victim))
            dmg_msg = victim->name(DESC_THE) + " "

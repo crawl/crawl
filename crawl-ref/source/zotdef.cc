@@ -169,9 +169,9 @@ static void _zotdef_fill_from_list(monster_type mlist[], int chance, int power)
         while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
             monster_type mon_type = mlist[random2(ls)];
-            if (random2((power * 3) / 2) > _mon_strength(mon_type))
+            if (random2(power * 3 / 2) > _mon_strength(mon_type))
                 continue;        // bias away from weaker critters
-            if (random2((power * 3) / 2) > _mon_strength(mon_type))
+            if (random2(power * 3 / 2) > _mon_strength(mon_type))
                 env.mons_alloc[i] = mon_type;
             if (one_chance_in(100))
                 env.mons_alloc[i] = mon_type;      // occasional random pick
@@ -587,7 +587,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
 
         // get default level
         int lev_mons = (place.branch == NUM_BRANCHES)
-                       ? ((strength * 3) / 2)
+                       ? strength * 3 / 2
                        : mons_depth(mon_type, place.branch)
                          + absdungeon_depth(place.branch, 0);
 

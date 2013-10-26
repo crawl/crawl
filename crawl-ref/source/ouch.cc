@@ -291,7 +291,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         else if (rhe == 0)
             hurted /= 2;
         else if (rhe < -1)
-            hurted = (hurted * 3) / 2;
+            hurted = hurted * 3 / 2;
 
         if (hurted == 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
