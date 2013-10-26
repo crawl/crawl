@@ -1983,6 +1983,11 @@ static void tag_read_you(reader &th)
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
     ASSERT_RANGE(you.form, TRAN_NONE, LAST_FORM + 1);
 #if TAG_MAJOR_VERSION == 34
+    // Fix the effects of #7668 (Vampire lose undead trait once coming back
+    // from lich form).
+    if (you.species == SP_VAMPIRE && you.form != TRAN_LICH)
+        you.is_undead = US_SEMI_UNDEAD;
+
     if (you.form == TRAN_NONE)
         you.transform_uncancellable = false;
 #else
