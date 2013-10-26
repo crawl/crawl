@@ -773,23 +773,21 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - env.absdepth0 * 117);
 }
 
-static string _abyss_monster_creation_message(const monster* mon, bool visible)
+static string _abyss_monster_creation_message(const monster* mon)
 {
     if (mon->type == MONS_DEATH_COB)
     {
-        if (visible)
-            return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
-        // XXX: What if the player can't smell?
-        return " smells like butter!";
+        return coinflip() ?
+            " appears in a burst of microwaves!" : " pops from nullspace!";
     }
 
     string messages[] =
     {
-        (visible ? " appears" : " flickers") + string(" in a shower of ")
-            + (one_chance_in(3) ? "translocational energy." : "sparks."),
+        " appears in a shower of "
+            + string(one_chance_in(3) ? "translocational energy." : "sparks."),
         " materialises.",
         string(" emerges from ") + (one_chance_in(3) ? "chaos." : "the beyond."),
-        " assembles " + string(mon->pronoun(PRONOUN_REFLEXIVE, visible)) + "!",
+        " assembles " + string(mon->pronoun(PRONOUN_REFLEXIVE)) + "!",
         (one_chance_in(3) ? " erupts" : " bursts") + string(" from nowhere!"),
         string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
         string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething")
@@ -1083,7 +1081,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         else if (player_in_branch(BRANCH_ABYSS) && !msg.empty()
                  && !(mon->flags & MF_WAS_IN_VIEW))
         {
-            msg += _abyss_monster_creation_message(mon, is_visible);
+            msg += _abyss_monster_creation_message(mon);
         }
         if (!msg.empty())
             mpr(msg.c_str());
