@@ -788,7 +788,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // Catch some conditions which prevent transformation.
     if (you.is_undead
         && (you.species != SP_VAMPIRE
-            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED))
+            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED
+            || which_trans == TRAN_LICH))
     {
         if (!involuntary)
             mpr("Your unliving flesh cannot be transformed in this way.");
