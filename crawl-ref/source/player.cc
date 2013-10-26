@@ -1481,7 +1481,7 @@ int player_hunger_rate(bool temp)
 
         // sustenance affects things at the end, because it is multiplicative
         for (int s = you.wearing(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
-            hunger = (3*hunger)/5;
+            hunger = hunger * 3 / 5;
     }
 
     // If Cheibriados has slowed your life processes, you will hunger less.
@@ -2884,9 +2884,9 @@ int carrying_capacity(burden_state_type bs)
         cap /= 2;
 
     if (bs == BS_UNENCUMBERED)
-        return ((cap * 5) / 6);
+        return cap * 5 / 6;
     else if (bs == BS_ENCUMBERED)
-        return ((cap * 11) / 12);
+        return cap * 11 / 12;
     else
         return cap;
 }

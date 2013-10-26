@@ -157,7 +157,7 @@ int get_skill_progress(skill_type sk, int level, int points, int scale)
     // A scale as small as 92 would overflow with 31 bits if skill_rdiv()
     // is involved: needed can be 91985, skill_rdiv() multiplies by 256.
     const int64_t amt_done = points - prev_needed;
-    int prog = (amt_done * scale) / (needed - prev_needed);
+    int prog = amt_done * scale / (needed - prev_needed);
 
     ASSERT(prog >= 0);
 

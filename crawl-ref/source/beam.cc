@@ -352,7 +352,7 @@ class tohit_calculator : public tohit_deducer
 public:
     int operator()(int pow) const
     {
-        return adder + (pow * mult_num) / mult_denom;
+        return adder + pow * mult_num / mult_denom;
     }
 };
 
@@ -364,7 +364,7 @@ class dicedef_calculator : public dam_deducer
 public:
     dice_def operator()(int pow) const
     {
-        return dice_def(numdice, adder + (pow * mult_num) / mult_denom);
+        return dice_def(numdice, adder + pow * mult_num / mult_denom);
     }
 };
 
@@ -374,7 +374,7 @@ class calcdice_calculator : public dam_deducer
 public:
     dice_def operator()(int pow) const
     {
-        return calc_dice(numdice, adder + (pow * mult_num) / mult_denom);
+        return calc_dice(numdice, adder + pow * mult_num / mult_denom);
     }
 };
 
@@ -1685,7 +1685,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         else if (rhe == 0)
             hurted /= 2;
         else if (rhe < -1)
-            hurted = (hurted * 3) / 2;
+            hurted = hurted * 3 / 2;
 
         if (doFlavouredEffects)
         {

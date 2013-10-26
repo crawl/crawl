@@ -427,8 +427,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         map_radius = 5;
 
     // now gradually weaker with distance:
-    const int pfar     = dist_range((map_radius * 7) / 10);
-    const int very_far = dist_range((map_radius * 9) / 10);
+    const int pfar     = dist_range(map_radius * 7 / 10);
+    const int very_far = dist_range(map_radius * 9 / 10);
 
     bool did_map = false;
     int  num_altars        = 0;

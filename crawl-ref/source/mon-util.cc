@@ -1950,7 +1950,7 @@ int exper_value(const monster* mon, bool real)
     if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
         return hd * 15;
 
-    x_val = (16 + maxhp) * (hd * hd) / 10;
+    x_val = (16 + maxhp) * hd * hd / 10;
 
     // Let's calculate a simple difficulty modifier. - bwr
     int diff = 0;

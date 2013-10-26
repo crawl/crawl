@@ -1349,30 +1349,30 @@ static int _award_modified_experience()
     int result = 0;
 
     if (xp <= 250000)
-        return ((xp * 7) / 10);
+        return xp * 7 / 10;
 
-    result += (250000 * 7) / 10;
+    result += 250000 * 7 / 10;
     xp -= 250000;
 
     if (xp <= 750000)
     {
-        result += (xp * 4) / 10;
+        result += xp * 4 / 10;
         return result;
     }
 
-    result += (750000 * 4) / 10;
+    result += 750000 * 4 / 10;
     xp -= 750000;
 
     if (xp <= 2000000)
     {
-        result += (xp * 2) / 10;
+        result += xp * 2 / 10;
         return result;
     }
 
-    result += (2000000 * 2) / 10;
+    result += 2000000 * 2 / 10;
     xp -= 2000000;
 
-    result += (xp / 10);
+    result += xp / 10;
 
     return result;
 }

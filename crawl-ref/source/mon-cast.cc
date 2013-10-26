@@ -458,7 +458,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_BOLT_OF_INACCURACY:
         beam.name     = "narrow beam of energy";
-        beam.damage   = calc_dice(12, 40 + (3 * power)/ 2);
+        beam.damage   = calc_dice(12, 40 + 3 * power / 2);
         beam.colour   = YELLOW;
         beam.flavour  = BEAM_ENERGY;
         beam.hit      = 1;

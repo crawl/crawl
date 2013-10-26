@@ -498,7 +498,7 @@ static string _get_desc_quantity(const int quant, const int total)
         return "One of your";
     else if (quant == 2)
         return "Two of your";
-    else if (quant >= (total * 3) / 4)
+    else if (quant >= total * 3 / 4)
         return "Most of your";
     else
         return "Some of your";
