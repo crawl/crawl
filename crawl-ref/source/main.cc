@@ -950,7 +950,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_LOOK_AROUND:
     case CMD_INSPECT_FLOOR:
     case CMD_SHOW_TERRAIN:
-    case CMD_EXAMINE_OBJECT:
     case CMD_LIST_ARMOUR:
     case CMD_LIST_JEWELLERY:
     case CMD_LIST_EQUIPMENT:
@@ -1003,7 +1002,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
-    case CMD_DESTROY_ITEM:
     case CMD_FIX_WAYPOINT:
     case CMD_CLEAR_MAP:
     case CMD_INSCRIBE_ITEM:
@@ -1955,7 +1953,6 @@ void process_command(command_type cmd)
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;
     case CMD_DISPLAY_SPELLS:       inspect_spells();         break;
     case CMD_EAT:                  eat_food();               break;
-    case CMD_EXAMINE_OBJECT:       examine_object();         break;
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;

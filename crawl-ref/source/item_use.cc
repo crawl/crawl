@@ -3438,20 +3438,6 @@ void read_scroll(int slot)
     }
 }
 
-void examine_object(void)
-{
-    int item_slot = prompt_invent_item("Examine which item?",
-                                        MT_INVLIST, -1,
-                                        true, true, true, 0, -1, NULL,
-                                        OPER_EXAMINE);
-    if (prompt_failed(item_slot))
-        return;
-
-    describe_item(you.inv[item_slot], true);
-    redraw_screen();
-    mesclr();
-}
-
 bool stasis_blocks_effect(bool calc_unid,
                           bool identify,
                           const char *msg, int noise,
