@@ -3733,62 +3733,26 @@ static void _handle_accidental_death(const int orig_hp,
     god_speaks(GOD_XOM, _get_xom_speech(speech_type).c_str());
     god_speaks(GOD_XOM, _get_xom_speech("resurrection").c_str());
 
+    int pre_mut_hp = you.hp;
     if (you.hp <= 0)
+        you.hp = 9999; // avoid spurious recursive deaths if heavily rotten
+
+    // If any mutation has changed, death was because of it.
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (orig_mutation[i] > you.mutation[i])
+            mutate((mutation_type)i, "Xom's lifesaving", true, true, true);
+        else if (orig_mutation[i] > you.mutation[i])
+            delete_mutation((mutation_type)i, "Xom's lifesaving", true, true, true);
+    }
+
+    if (pre_mut_hp <= 0)
         you.hp = min(orig_hp, you.hp_max);
-
-    // MUT_THIN_SKELETON can statkill you by str, undo it if necessary
-    /*while (you.strength() <= 0 && you.mutation[MUT_THIN_SKELETON] > orig_mutation[MUT_THIN_SKELETON])
-        delete_mutation(MUT_THIN_SKELETON, true, true, true);*/
-
-    // MUT_ROUGH_BLACK_SCALES can statkill you by dex, undo it if necessary
-    while (you.dex() <= 0 && you.mutation[MUT_ROUGH_BLACK_SCALES] > orig_mutation[MUT_ROUGH_BLACK_SCALES])
-    {
-        delete_mutation(MUT_ROUGH_BLACK_SCALES, "Xom's lifesaving",
-                        true, true, true);
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    while (you.dex() <= 0
-           && you.mutation[MUT_FLEXIBLE_WEAK] <
-                  orig_mutation[MUT_FLEXIBLE_WEAK])
-    {
-        mutate(MUT_FLEXIBLE_WEAK, "Xom's lifesaving", true, true, true);
-    }
-
-    while (you.strength() <= 0
-           && you.mutation[MUT_FLEXIBLE_WEAK] >
-                  orig_mutation[MUT_FLEXIBLE_WEAK])
-    {
-        delete_mutation(MUT_FLEXIBLE_WEAK, "Xom's lifesaving", true, true, true);
-    }
-    while (you.strength() <= 0
-           && you.mutation[MUT_STRONG_STIFF] <
-                  orig_mutation[MUT_STRONG_STIFF])
-    {
-        mutate(MUT_STRONG_STIFF, "Xom's lifesaving", true, true, true);
-    }
-#endif
-
-    mutation_type bad_muts[3]  = {MUT_WEAK, MUT_DOPEY, MUT_CLUMSY};
-    mutation_type good_muts[3] = {MUT_STRONG, MUT_CLEVER, MUT_AGILE};
 
     for (int i = 0; i < 3; ++i)
     {
-        while (you.stat(static_cast<stat_type>(i)) <= 0)
-        {
-            mutation_type good = good_muts[i];
-            mutation_type bad  = bad_muts[i];
-            if (you.mutation[bad] > orig_mutation[bad]
-                || you.mutation[good] < orig_mutation[good])
-            {
-                mutate(good, "Xom's lifesaving", true, true, true);
-            }
-            else
-            {
-                you.stat_loss[i] = orig_stat_loss[i];
-                break;
-            }
-        }
+        if (you.stat(static_cast<stat_type>(i)) <= 0)
+            you.stat_loss[i] = orig_stat_loss[i];
     }
 
     if (is_feat_dangerous(feat) && !crawl_state.game_is_sprint())
