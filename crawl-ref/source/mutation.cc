@@ -1666,6 +1666,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case MUT_HIGH_MAGIC:
         calc_mp();
         break;
+
     case MUT_PASSIVE_MAPPING:
         add_daction(DACT_REAUTOMAP);
         break;
@@ -1734,6 +1735,12 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         you.attribute[ATTR_TEMP_MUTATIONS]++;
         you.attribute[ATTR_TEMP_MUT_XP] =
                 min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
+    }
+
+    if (you.hp <= 0)
+    {
+        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+             make_stringf("gaining the %s mutation", mutation_name(mutat)).c_str());
     }
 
 #ifdef USE_TILE_LOCAL
@@ -1818,6 +1825,12 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     if (!transient)
         take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+
+    if (you.hp <= 0)
+    {
+        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+             make_stringf("losing the %s mutation", mutation_name(mutat)).c_str());
+    }
 
     return true;
 }

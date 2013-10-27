@@ -975,6 +975,8 @@ static void _wizard_restore_life()
 {
     if (you.hp_max <= 0)
         unrot_hp(9999);
+    while (you.hp_max <= 0)
+        you.hp_max_perm++, calc_hp();
     if (you.hp <= 0)
         set_hp(you.hp_max);
 }
