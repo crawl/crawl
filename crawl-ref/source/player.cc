@@ -6031,6 +6031,8 @@ void player::init()
     shield_blocks       = 0;
 
     abyss_speed         = 0;
+    for (int i = 0; i < NUM_SEEDS; i++)
+        game_seeds[i] = random_int();
 
     old_hunger          = hunger;
     transit_stair       = DNGN_UNSEEN;
