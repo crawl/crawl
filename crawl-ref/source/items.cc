@@ -2199,10 +2199,7 @@ bool drop_item(int item_dropped, int quant_drop)
     if (you.swimming())
         quiet = true;
 
-    if (feat_destroys_item(my_grid, you.inv[item_dropped], !quiet))
-        ;
-    else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
-        StashTrack.add_stash();
+    feat_destroys_item(my_grid, you.inv[item_dropped], !quiet);
 
     if (is_blood_potion(you.inv[item_dropped])
         && you.inv[item_dropped].quantity != quant_drop)
