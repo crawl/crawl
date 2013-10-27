@@ -1791,9 +1791,9 @@ Gargoyles
 
   Gargoyles' partially living form grants them immunity to poison, as well as a
   slow metabolism, resistance to electricity, and protection from some effects
-  of necromancy. Their fangs and talons make them strong unarmed fighters, and
-  they are capable with blunt weapons. They can also be exceptional earth-based
-  conjurers.
+  of necromancy. Their fangs and talons make them strong melee fighters, and
+  they are naturally skilled with blunt weapons and in unarmed combat. They can
+  also be exceptional earth-based conjurers.
 
 Elves
 ========================================
@@ -3096,10 +3096,6 @@ commands:
   Ignore this item in all listings on the ground (it can still be picked up if
   all items on the ground have this inscription).
 
-=s
-  If stash tracking is explicit, then dropping this item will cause a stash to
-  automatically be marked.
-
 =f
   Exclude this item from automatic quivering.
 
@@ -3280,8 +3276,8 @@ MP+3
 HP+3
   hit point modifier
 
-cTele
-  controlled teleport
++cTele
+  can evoke for controlled teleport (from the 'a'bilities menu)
 
 SInv
   see invisible
