@@ -3138,7 +3138,14 @@ static void _place_chance_vaults()
         {
             dprf("Placing CHANCE vault: %s (%s)",
                  map->name.c_str(), map->chance(lid).describe().c_str());
-            _build_secondary_vault(map);
+            if (!_build_secondary_vault(map))
+            {
+                if (map->chance(lid).chance == CHANCE_ROLL)
+                {
+                    throw dgn_veto_exception("Failed to place 100% chance "
+                                             "vault " + map->name);
+                }
+            }
         }
     }
 }
