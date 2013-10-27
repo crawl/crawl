@@ -177,6 +177,7 @@ static void _initialize()
 #ifdef USE_TILE
         init_player_doll();
 #endif
+        dgn_reset_level();
         crawl_state.show_more_prompt = false;
         run_tests(true);
         // Superfluous, just to make it clear that this is the end of
