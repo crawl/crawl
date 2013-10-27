@@ -705,8 +705,8 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    ASSERT(HUNGER_STARVING - 100 + BERSERK_NUTRITION < 2066);
-    if (hunger <= 2066)
+    ASSERT(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
+    if (hunger <= HUNGER_VERY_HUNGRY)
     {
         if (verbose)
             mpr("You're too hungry to go berserk.");
