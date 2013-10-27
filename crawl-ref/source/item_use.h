@@ -20,8 +20,6 @@ void drink(int slot = -1);
 
 bool safe_to_remove(const item_def &item, bool quiet = false);
 
-void examine_object(void);
-
 bool puton_ring(int slot = -1);
 
 void read_scroll(int slot = -1);
