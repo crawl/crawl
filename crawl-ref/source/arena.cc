@@ -1227,10 +1227,7 @@ void arena_monster_died(monster* mons, killer_type killer,
              && arena::faction_b.active_members <= 0)
     {
         if (mons->flags & MF_HARD_RESET && !MON_KILL(killer))
-        {
-            // It's a tie.
             mpr("Last arena monster was dismissed.");
-        }
         // If all monsters are dead, and the last one to die is a giant
         // spore or ball lightning, then that monster's faction is the
         // winner, since self-destruction is their purpose.  But if a
