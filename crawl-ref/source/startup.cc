@@ -178,10 +178,8 @@ static void _initialize()
 #endif
         dgn_reset_level();
         crawl_state.show_more_prompt = false;
-        run_tests(true);
-        // Superfluous, just to make it clear that this is the end of
-        // the line.
-        end(0, false);
+        run_tests();
+        // doesn't return
 #else
         end(1, false, "Non-debug Crawl cannot run tests. "
             "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
