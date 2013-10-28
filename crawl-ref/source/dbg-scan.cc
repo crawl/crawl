@@ -412,6 +412,10 @@ void debug_mons_scan()
         if (feat_is_wall(grd(pos)) && mons_primary_habitat(m) != HT_ROCK
             && mons_primary_habitat(m) != HT_INCORPOREAL)
         {
+#if defined(DEBUG_FATAL)
+            // if we're going to dump, point out the culprit
+            env.pgrid(pos) |= FPROP_HIGHLIGHT;
+#endif
             mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
                  m->full_name(DESC_PLAIN, true).c_str(),
                  dungeon_feature_name(grd(pos)),
