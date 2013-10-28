@@ -57,6 +57,7 @@ enum extra_monster_index_type
 {
     MAX_MONSTERS = 700,                  // max size of monster array {dlb}
     ANON_FRIENDLY_MONSTER = MAX_MONSTERS,// unknown/dead ally, for actor blaming
+    YOU_FAULTLESS,                       // full xp but no penalty (reflection)
     NON_MONSTER  = NON_ENTITY,           // no monster
 
     MHITNOT = NON_MONSTER,

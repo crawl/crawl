@@ -274,6 +274,7 @@ typedef uint32_t mid_t;
 // the numbers are meaningless, there's just plenty of space for gods, env,
 // and whatever else we want to have, while keeping all monster ids smaller.
 #define MID_ANON_FRIEND ((mid_t)0xffff0000)
+#define MID_YOU_FAULTLESS ((mid_t)0xffff0001)
 
 static inline monster_type operator++(monster_type &x)
 {
