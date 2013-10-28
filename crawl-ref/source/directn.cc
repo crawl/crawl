@@ -2144,63 +2144,46 @@ void terse_describe_square(const coord_def &c, bool in_range)
         _describe_cell(c, in_range);
 }
 
-void get_square_desc(const coord_def &c, describe_info &inf,
-                     bool examine_mons, bool show_floor)
+void get_square_desc(const coord_def &c, describe_info &inf)
 {
     // NOTE: Keep this function in sync with full_describe_square.
 
-    // Don't give out information for things outside LOS
-    if (!you.see_cell(c))
-        return;
-
-    const monster* mons = monster_at(c);
-    const int oid = you.visible_igrd(c);
     const dungeon_feature_type feat = env.map_knowledge(c).feat();
 
-    if (mons && mons->visible_to(&you))
+    if (const monster_info *mi = env.map_knowledge(c).monsterinfo())
     {
-        monster_info mi(mons);
         // First priority: monsters.
-        if (examine_mons)
-        {
-            // If examine_mons is true (currently only for the Tiles
-            // mouse-over information), set monster's
-            // equipment/woundedness/enchantment description as title.
-            string desc = uppercase_first(get_monster_equipment_desc(mi))
-                        + ".\n";
-            const string wounds = mi.wounds_description_sentence();
-            if (!wounds.empty())
-                desc += uppercase_first(wounds) + "\n";
-            const string constrictions = mi.constriction_description();
-            if (!constrictions.empty())
-                desc += "It is " + constrictions + ".\n";
-            desc += _get_monster_desc(mi);
+        string desc = uppercase_first(get_monster_equipment_desc(*mi))
+                    + ".\n";
+        const string wounds = mi->wounds_description_sentence();
+        if (!wounds.empty())
+            desc += uppercase_first(wounds) + "\n";
+        const string constrictions = mi->constriction_description();
+        if (!constrictions.empty())
+            desc += "It is " + constrictions + ".\n";
+        desc += _get_monster_desc(*mi);
 
-            inf.title = desc;
-        }
+        inf.title = desc;
 
         bool temp = false;
-        get_monster_db_desc(mi, inf, temp);
+        get_monster_db_desc(*mi, inf, temp);
     }
-    else if (oid != NON_ITEM)
+    else if (const item_info *obj = env.map_knowledge(c).item())
     {
         // Second priority: objects.
-        // If examine_mons is true, use terse descriptions.
-        if (mitm[oid].defined())
-            get_item_desc(mitm[oid], inf, examine_mons);
+        get_item_desc(*obj, inf);
     }
-    else if (show_floor || feat != DNGN_FLOOR
-                           && !feat_is_wall(feat)
-                           && !feat_is_tree(feat))
+    else if (feat != DNGN_UNSEEN && feat != DNGN_FLOOR
+             && !feat_is_wall(feat) && !feat_is_tree(feat))
     {
         // Third priority: features.
         get_feature_desc(c, inf);
     }
 
-    const int cloudidx = env.cgrid(c);
-    if (cloudidx != EMPTY_CLOUD)
+    const cloud_type cloud = env.map_knowledge(c).cloud();
+    if (cloud != CLOUD_NONE)
     {
-        inf.prefix = "There is a cloud of " + cloud_name_at_index(cloudidx)
+        inf.prefix = "There is a cloud of " + cloud_type_name(cloud)
                      + " here.\n\n";
     }
 }
@@ -2209,23 +2192,15 @@ void full_describe_square(const coord_def &c)
 {
     // NOTE: Keep this function in sync with get_square_desc.
 
-    // Don't give out information for things outside LOS
-    if (!you.see_cell(c))
-        return;
-
-    const monster* mons = monster_at(c);
-    const int oid = you.visible_igrd(c);
-
-    if (mons && mons->visible_to(&you))
+    if (const monster_info *mi = env.map_knowledge(c).monsterinfo())
     {
-        monster_info mi(mons);
         // First priority: monsters.
-        describe_monsters(mi);
+        describe_monsters(*mi);
     }
-    else if (oid != NON_ITEM)
+    else if (item_info *obj = env.map_knowledge(c).item())
     {
         // Second priority: objects.
-        describe_item(mitm[oid]);
+        describe_item(*obj);
     }
     else
     {
@@ -3316,12 +3291,14 @@ string feature_description_at(const coord_def& where, bool covering,
                               description_level_type dtype, bool add_stop,
                               bool base_desc)
 {
+    dungeon_feature_type grid = env.map_knowledge(where).feat();
+
     string marker_desc = env.markers.property_at(where, MAT_ANY,
                                                  "feature_description");
 
     string covering_description = "";
 
-    if (covering)
+    if (covering && you.see_cell(where))
     {
         if (is_bloodcovered(where))
             covering_description = ", spattered with blood";
@@ -3331,14 +3308,14 @@ string feature_description_at(const coord_def& where, bool covering,
             covering_description = ", covered with mold";
     }
 
+    // FIXME: remove desc markers completely; only Zin walls are left.
+    // They suffer, among other problems, from an information leak.
     if (!marker_desc.empty())
     {
         marker_desc += covering_description;
 
         return thing_do_grammar(dtype, add_stop, false, marker_desc);
     }
-
-    dungeon_feature_type grid = grd(where);
 
     if (grid == DNGN_OPEN_DOOR || feat_is_closed_door(grid))
     {

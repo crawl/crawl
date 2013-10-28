@@ -288,8 +288,7 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
 void full_describe_square(const coord_def &c);
-void get_square_desc(const coord_def &c, describe_info &inf,
-                     bool examine_mons = false, bool show_floor = false);
+void get_square_desc(const coord_def &c, describe_info &inf);
 
 void describe_floor();
 string get_monster_equipment_desc(const monster_info& mi,
