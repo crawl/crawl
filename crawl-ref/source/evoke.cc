@@ -1208,7 +1208,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
                 }
                 else //Try to find an alternate route to push
                 {
-                    for (distance_iterator di(newpos, false, true, 1 ); di; ++di)
+                    for (adjacent_iterator di(newpos); di; ++di)
                     {
                         if (di->distance_from(agent->pos())
                                 == newpos.distance_from(agent->pos())
