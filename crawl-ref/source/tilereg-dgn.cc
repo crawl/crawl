@@ -1299,7 +1299,7 @@ bool DungeonRegion::update_alt_text(string &alt)
     describe_info inf;
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
     if (you.see_cell(gc))
-        get_square_desc(gc, inf, true, false);
+        get_square_desc(gc, inf);
     else if (feat != DNGN_FLOOR && !feat_is_wall(feat) && !feat_is_tree(feat))
         get_feature_desc(gc, inf);
     else

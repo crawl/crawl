@@ -2175,7 +2175,7 @@ string get_item_description(const item_def &item, bool verbose,
 
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
-    dungeon_feature_type feat = grd(pos);
+    dungeon_feature_type feat = env.map_knowledge(pos).feat();
 
     string desc      = feature_description_at(pos, false, DESC_A, false);
     string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc;
@@ -2199,7 +2199,8 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     const string marker_desc =
         env.markers.property_at(pos, MAT_ANY, "feature_description_long");
 
-    if (!marker_desc.empty())
+    // suppress this if the feature changed out of view
+    if (!marker_desc.empty() && grd(pos) == feat)
         long_desc += marker_desc;
 
     inf.body << long_desc;
@@ -2259,11 +2260,11 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
         describe_feature_wide(pos, !show_quote);
 }
 
-void get_item_desc(const item_def &item, describe_info &inf, bool terse)
+void get_item_desc(const item_def &item, describe_info &inf)
 {
-    // Don't use verbose descriptions if terse and the item contains spells,
+    // Don't use verbose descriptions if the item contains spells,
     // so we can actually output these spells if space is scarce.
-    const bool verbose = !terse || !item.has_spells();
+    const bool verbose = !item.has_spells();
     inf.body << get_item_description(item, verbose, false,
                                      crawl_state.game_is_hints_tutorial());
 }
