@@ -4240,7 +4240,7 @@ static void tag_read_level_monsters(reader &th)
 
     // how many monsters?
     count = unmarshallShort(th);
-    ASSERT_RANGE(count, 0, MAX_MONSTERS + 1);
+    ASSERT_RANGE(count, 0, MAX_MONSTERS);
 
     for (i = 0; i < count; i++)
     {

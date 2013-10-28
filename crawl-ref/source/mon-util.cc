@@ -4606,6 +4606,8 @@ monster *monster_by_mid(mid_t m)
 {
     if (m == MID_ANON_FRIEND)
         return &menv[ANON_FRIENDLY_MONSTER];
+    if (m == MID_YOU_FAULTLESS)
+        return &menv[YOU_FAULTLESS];
 
     map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.find(m);
     if (mc != env.mid_cache.end())
@@ -4667,6 +4669,13 @@ void init_anon()
     mon.mid = MID_ANON_FRIEND;
     mon.attitude = ATT_FRIENDLY;
     mon.hit_points = mon.max_hit_points = 1000;
+
+    monster &yf = menv[YOU_FAULTLESS];
+    yf.reset();
+    yf.type = MONS_PROGRAM_BUG;
+    yf.mid = MID_YOU_FAULTLESS;
+    yf.attitude = ATT_FRIENDLY; // higher than this, actually
+    yf.hit_points = mon.max_hit_points = 1000;
 }
 
 actor *find_agent(mid_t m, kill_category kc)

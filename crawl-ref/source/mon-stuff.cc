@@ -737,7 +737,7 @@ int exp_rate(int killer)
         return 2;
     }
 
-    if (killer == MHITYOU)
+    if (killer == MHITYOU || killer == YOU_FAULTLESS)
         return 2;
 
     if (_is_pet_kill(KILL_MON, killer))

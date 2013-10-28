@@ -2017,6 +2017,7 @@ mon_enchant::operator string () const
                         duration,
                         kill_category_desc(who),
                         source == MID_ANON_FRIEND ? "anon friend" :
+                        source == MID_YOU_FAULTLESS ? "you w/o fault" :
                             a ? a->name(DESC_PLAIN, true).c_str() : "N/A");
 }
 

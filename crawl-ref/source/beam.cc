@@ -132,7 +132,7 @@ void bolt::emit_message(msg_channel_type chan, const char* m)
 
 kill_category bolt::whose_kill() const
 {
-    if (YOU_KILL(thrower))
+    if (YOU_KILL(thrower) || beam_source == YOU_FAULTLESS)
         return KC_YOU;
     else if (MON_KILL(thrower))
     {
@@ -6052,8 +6052,8 @@ actor* bolt::agent(bool ignore_reflection) const
     // If the beam was reflected report a different point of origin
     if (reflections > 0 && !ignore_reflection)
     {
-        if (reflector == NON_MONSTER)
-            nominal_ktype = KILL_YOU_MISSILE;
+        if (reflector == NON_MONSTER || beam_source == NON_MONSTER)
+            return &menv[YOU_FAULTLESS];
         nominal_source = reflector;
     }
     if (YOU_KILL(nominal_ktype))

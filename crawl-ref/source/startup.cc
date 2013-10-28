@@ -98,6 +98,7 @@ static void _initialize()
     info[0] = 0;
 
     reset_all_monsters();
+    init_anon();
 
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
