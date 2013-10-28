@@ -2710,7 +2710,7 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
     {
         bolt tracer;
         tracer.foe_ratio = 60;
-        for (actor_iterator ai(agent); ai; ++ai)
+        for (actor_iterator ai(agent->get_los()); ai; ++ai)
         {
             if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
                 && _toxic_can_affect(*ai))
