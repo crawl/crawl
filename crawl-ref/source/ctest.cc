@@ -99,6 +99,13 @@ static void _init_test_bindings()
 
 static bool _is_test_selected(const string &testname)
 {
+    if (crawl_state.test_list)
+    {
+        ASSERT(ends_with(testname, ".lua"));
+        printf("%s\n", testname.substr(0, testname.length() - 4).c_str());
+        return false;
+    }
+
     if (crawl_state.tests_selected.empty() && !starts_with(testname, "big/"))
         return true;
     for (int i = 0, size = crawl_state.tests_selected.size();
@@ -140,6 +147,9 @@ static bool _has_test(const string& test)
 
 static void _run_test(const string &name, void (*func)(void))
 {
+    if (crawl_state.test_list)
+        return (void)printf("%s\n", name.c_str());
+
     if (!_has_test(name))
         return;
 
@@ -178,6 +188,7 @@ void run_tests()
         const vector<string> tests(
             get_dir_files_recursive(crawl_state.script? script_dir : test_dir,
                               ".lua"));
+
         for_each(tests.begin(), tests.end(), run_test);
 
         if (failures.empty() && !ntests && crawl_state.script)
@@ -191,6 +202,8 @@ void run_tests()
                                          ", ")));
     }
 
+    if (crawl_state.test_list)
+        end(0);
     cio_cleanup();
     for (int i = 0, size = failures.size(); i < size; ++i)
     {

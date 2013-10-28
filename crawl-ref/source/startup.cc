@@ -161,10 +161,12 @@ static void _initialize()
     }
 #endif
 
-    if (!crawl_state.io_inited)
-        cio_init();
-
-    clrscr();
+    if (!crawl_state.test_list)
+    {
+        if (!crawl_state.io_inited)
+            cio_init();
+        clrscr();
+    }
 
     if (crawl_state.test)
     {
