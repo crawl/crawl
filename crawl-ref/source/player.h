@@ -439,7 +439,7 @@ public:
     reach_type reach_range() const;
 
     bool see_cell(const coord_def& p) const;
-    const los_base* get_los();
+    const los_base* get_los() const;
 
     // Is c in view but behind a transparent wall?
     bool trans_wall_blocking(const coord_def &c) const;

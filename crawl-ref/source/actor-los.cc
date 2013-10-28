@@ -49,13 +49,13 @@ bool player::trans_wall_blocking(const coord_def &p) const
     return (see_cell(p) && !see_cell_no_trans(p));
 }
 
-const los_base* actor::get_los()
+const los_base* actor::get_los() const
 {
     los = los_glob(pos(), LOS_DEFAULT);
     return &los;
 }
 
-const los_base* player::get_los()
+const los_base* player::get_los() const
 {
     if (crawl_state.game_is_arena() && is_player())
     {
@@ -74,7 +74,7 @@ const los_base* player::get_los()
         return actor::get_los();
 }
 
-const los_base* actor::get_los_no_trans()
+const los_base* actor::get_los_no_trans() const
 {
     los_no_trans = los_glob(pos(), LOS_NO_TRANS);
     return &los_no_trans;

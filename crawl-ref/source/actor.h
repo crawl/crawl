@@ -181,8 +181,8 @@ public:
     virtual bool see_cell(const coord_def &c) const;
     virtual bool see_cell_no_trans(const coord_def &c) const;
 
-    virtual const los_base* get_los();
-    virtual const los_base* get_los_no_trans();
+    virtual const los_base* get_los() const;
+    virtual const los_base* get_los_no_trans() const;
 
     // Can the actor actually see the target?
     virtual bool can_see(const actor *target) const;
@@ -444,8 +444,8 @@ protected:
                           bool quiet);
 
     // These are here for memory management reasons...
-    los_glob los;
-    los_glob los_no_trans;
+    mutable los_glob los;
+    mutable los_glob los_no_trans;
 };
 
 bool actor_slime_wall_immune(const actor *actor);
