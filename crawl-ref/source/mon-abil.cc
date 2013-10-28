@@ -967,26 +967,22 @@ static void _starcursed_scream(monster* mon, actor* target)
 
 static bool _will_starcursed_scream(monster* mon)
 {
-    vector<monster*> chorus;
+    int n = 0;
 
-    for (actor_iterator ai(mon->get_los()); ai; ++ai)
+    for (monster_iterator mi(mon->get_los()); mi; ++mi)
     {
-        if (ai->is_monster())
-        {
-            monster* m = ai->as_monster();
-            if (m->type == MONS_STARCURSED_MASS)
-            {
-                //Don't scream if any part of the chorus has a scream timeout
-                //(This prevents it being staggered into a bunch of mini-screams)
-                if (m->has_ench(ENCH_SCREAMED))
-                    return false;
-                else
-                    chorus.push_back(m);
-            }
-        }
+        if (mi->type != MONS_STARCURSED_MASS)
+            continue;
+
+        // Don't scream if any part of the chorus has a scream timeout
+        // (This prevents it being staggered into a bunch of mini-screams)
+        if (mi->has_ench(ENCH_SCREAMED))
+            return false;
+        else
+            n++;
     }
 
-    return x_chance_in_y(1, chorus.size() + 1);
+    return x_chance_in_y(1, n);
 }
 
 // Returns true if you resist the siren's call.
