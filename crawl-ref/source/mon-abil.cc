@@ -2198,54 +2198,47 @@ bool apply_grasping_roots(monster* mons)
     bool found_hostile = false;
     for (actor_iterator ai(mons); ai; ++ai)
     {
-        if (!mons_aligned(mons, *ai))
+        if (mons_aligned(mons, *ai) || ai->is_insubstantial())
+            continue;
+
+        found_hostile = true;
+
+        // Roots don't work in water (even shallow) or lava, but they wait
+        // nearby without expiring.
+        if (!feat_has_dry_floor(grd(ai->pos())))
+            continue;
+
+        // Some messages are suppressed for monsters, to reduce message spam.
+        if (ai->flight_mode())
         {
-            // Cannot grasp insubstancial creatures
-            if (ai->is_monster() && ai->as_monster()->is_insubstantial()
-                || ai->is_player() && you.form == TRAN_WISP)
+            if (x_chance_in_y(3, 5))
+                continue;
+
+            if (x_chance_in_y(10, 50 - ai->melee_evasion(NULL)))
             {
+                if (ai->is_player())
+                    mpr("Roots rise up to grasp you, but you nimbly evade.");
                 continue;
             }
 
-            found_hostile = true;
-
-            // Only applies over land, not water or lava.
-            if (!feat_has_dry_floor(grd(ai->pos())))
-                continue;
-
-            // (Some messages are suppressed for monsters, to reduce message spam)
-            if (ai->flight_mode() && x_chance_in_y(2, 5))
+            if (you.can_see(*ai))
             {
-                if (x_chance_in_y(10, 50 - ai->melee_evasion(NULL)))
-                {
-                    if (ai->is_player())
-                        mpr("Roots rise up to grasp you, but you nimbly evade.");
-                }
-                else
-                {
-                    if (you.can_see(*ai))
-                    {
-                        mprf("Roots rise up from beneath %s and drag %s%s"
-                                "to the ground.", ai->name(DESC_THE).c_str(),
-                                ai->is_monster() ? "it" : "you",
-                                ai->is_monster() ? " " : " back");
-                    }
-                    _entangle_actor(*ai);
-                }
-            }
-            else if (!ai->flight_mode())
-            {
-                if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
-                {
-                    mprf("Roots grasp at your %s, making movement difficult.",
-                        you.foot_name(true).c_str());
-                }
-                _entangle_actor(*ai);
+                mprf("Roots rise up from beneath %s and drag %s%s"
+                        "to the ground.", ai->name(DESC_THE).c_str(),
+                        ai->is_monster() ? "it" : "you",
+                        ai->is_monster() ? " " : " back");
             }
         }
+        else if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
+        {
+            mprf("Roots grasp at your %s, making movement difficult.",
+                 you.foot_name(true).c_str());
+        }
+
+        _entangle_actor(*ai);
     }
 
-    return (found_hostile);
+    return found_hostile;
 }
 
 void check_grasping_roots(actor* act, bool quiet)
