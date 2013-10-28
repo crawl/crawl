@@ -533,7 +533,9 @@ static void _show_commandline_options_help()
     puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
 #ifdef DEBUG_DIAGNOSTICS
     puts("");
-    puts("  -test            run test cases in ./test");
+    puts("  -test            run all test cases in test/ except test/big/");
+    puts("  -test foo,bar    run only tests \"foo\" and \"bar\"");
+    puts("  -test list       list available tests");
     puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
     puts("");

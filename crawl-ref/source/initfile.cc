@@ -4304,7 +4304,8 @@ bool parse_args(int argc, char **argv, bool rc_only)
             crawl_state.test = true;
             if (next_is_param)
             {
-                crawl_state.tests_selected = split_string(",", next_arg);
+                if (!(crawl_state.test_list = !strcmp(next_arg, "list")))
+                    crawl_state.tests_selected = split_string(",", next_arg);
                 nextUsed = true;
             }
             break;
