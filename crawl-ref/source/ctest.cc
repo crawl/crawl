@@ -37,9 +37,6 @@
 
 static const string test_dir = "test";
 static const string script_dir = "scripts";
-static const string test_player_name = "Superbug99";
-static const species_type test_player_species = SP_HUMAN;
-static const job_type test_player_job = JOB_FIGHTER;
 static const char *activity = "test";
 
 static int ntests = 0;
@@ -53,9 +50,9 @@ static void _reset_test_data()
     ntests = 0;
     nsuccess = 0;
     failures.clear();
-    you.your_name = test_player_name;
-    you.species = test_player_species;
-    you.char_class = test_player_job;
+    you.your_name = "Superbug99";
+    you.species = SP_HUMAN;
+    you.char_class = JOB_FIGHTER;
 }
 
 static int crawl_begin_test(lua_State *ls)
