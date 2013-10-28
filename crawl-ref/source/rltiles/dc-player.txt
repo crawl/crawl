@@ -139,6 +139,10 @@ deep_dwarf_m DEEP_DWARF
 deep_dwarf_f
 gargoyle_m GARGOYLE
 gargoyle_f
+gargoyle_red_m
+gargoyle_red_f
+gargoyle_brown_m
+gargoyle_brown_f
 %sdir player/felids
 %rim 0
 cat1 FELID
