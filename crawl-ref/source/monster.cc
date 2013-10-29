@@ -456,7 +456,7 @@ brand_type monster::damage_brand(int which_attack)
         return SPWPN_NORMAL;
     }
 
-    return (!is_range_weapon(*mweap) ?
+    return (!is_range_weapon(*mweap) && !suppressed() ?
             static_cast<brand_type>(get_weapon_brand(*mweap)) : SPWPN_NORMAL);
 }
 
