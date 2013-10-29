@@ -446,6 +446,7 @@ STEALTH:  -50
 BOOL:     life
 
 NAME:    crossbow "Hellfire"
+INSCRIP: hellfire,
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +6/+6
 COLOUR:  ETC_FIRE
