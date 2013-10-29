@@ -338,12 +338,12 @@ bool actor::warding(bool calc_unid, bool items) const
                      || wearing(EQ_STAFF, STAFF_SUMMONING, calc_unid));
 }
 
-bool actor::archmagi(bool calc_unid, bool items) const
+int actor::archmagi(bool calc_unid, bool items) const
 {
-    if (suppressed())
-        items = false;
+    if (suppressed() || !items)
+        return 0;
 
-    return items && wearing_ego(EQ_BODY_ARMOUR, SPARM_ARCHMAGI, calc_unid);
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid);
 }
 
 bool actor::no_cast(bool calc_unid, bool items) const

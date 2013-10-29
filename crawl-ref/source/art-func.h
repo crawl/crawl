@@ -887,3 +887,14 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
     beam->special_explosion = expl;
     return SM_FINISHED;
 }
+
+///////////////////////////////////////////////////
+
+static void _HIGH_COUNCIL_world_reacts(item_def *item)
+{
+    if (silenced(you.pos()) || !one_chance_in(20))
+        return;
+
+    string msg = getSpeakString("hat of the High Council");
+    item_noise(*item, msg);
+}

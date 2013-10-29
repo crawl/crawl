@@ -14,6 +14,7 @@
 #include "options.h"
 
 #include "areas.h"
+#include "art-enum.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -375,6 +376,9 @@ int spell_fail(spell_type spell)
 
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
 
+    if (player_equip_unrand(UNRAND_HIGH_COUNCIL) && !you.suppressed())
+        chance2 += 7;
+
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
@@ -504,8 +508,7 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    if (you.archmagi())
-        enhanced++;
+    enhanced += you.archmagi();
 
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
         && (typeflags & SPTYP_FIRE) && (typeflags & SPTYP_EARTH))
