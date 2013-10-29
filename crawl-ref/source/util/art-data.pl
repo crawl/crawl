@@ -53,6 +53,7 @@ my %field_type = (
     NOISES   => "bool",
     NOSPELL  => "bool",
     NOTELEP  => "bool",
+    NO_UPGRADE => "bool",
     POISON   => "bool",
     RANDAPP  => "bool",
     REGEN    => "num",
@@ -494,7 +495,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "\n",
+    "RMSL", "FOG", "REGEN", "NO_UPGRADE", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",

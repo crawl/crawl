@@ -187,7 +187,7 @@ COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
 VALUE:   700
-BOOL:    special
+BOOL:    special, no_upgrade
 BRAND:   SPWPN_CHAOS
 
 NAME:    Glaive of Prune
@@ -207,7 +207,7 @@ COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   1000
-BOOL:    special
+BOOL:    special, no_upgrade
 
 NAME:    Staff of Olgreb
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -216,7 +216,7 @@ COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
-BOOL:    poison
+BOOL:    poison, no_upgrade
 
 NAME:    Staff of Wucad Mu
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -312,9 +312,7 @@ PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
 TILE_EQ: faerie_dragon_armour
-BOOL:    nogen, unided
-
-##################### End of old fixed arts.
+BOOL:    nogen, unided, no_upgrade
 
 NAME:    demon blade "Bloodbane"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -564,7 +562,7 @@ TILE_EQ: wyrmbane
 BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
-BOOL:    poison, berserk
+BOOL:    poison, berserk, no_upgrade
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -1058,7 +1056,7 @@ EV:       1
 STR:      1
 INT:      1
 DEX:      1
-BOOL:     unided
+BOOL:     unided, no_upgrade
 
 # Meatsprint only. The type is adjusted to the biggest two-handed axe the
 # player's species can wield (exec or broad).
@@ -1069,7 +1067,7 @@ OBJ:      OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
 COLOUR:   ETC_BLOOD
 TILE:     urand_axe_of_woe
 TILE_EQ:  axe_of_woe
-BOOL:     nogen
+BOOL:     nogen, no_upgrade
 
 NAME:     moon troll leather armour
 OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR

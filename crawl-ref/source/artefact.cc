@@ -1172,6 +1172,9 @@ void setup_unrandart(item_def &item)
     CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     const unrandart_entry *unrand = _seekunrandart(item);
 
+    if (unrand->prpty[ARTP_NO_UPGRADE] && item.props.exists(ARTEFACT_NAME_KEY))
+        return; // don't mangle mutable items
+
     for (int i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(unrand->prpty[i]);
 
