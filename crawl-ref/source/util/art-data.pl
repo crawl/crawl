@@ -11,6 +11,7 @@ my @errors        = ();
 my @all_artefacts = ();
 my %used_names    = ();
 my %used_appears  = ();
+my %used_inscrips = ();
 my %used_enums    = ();
 my %found_funcs   = ();
 
@@ -39,6 +40,7 @@ my %field_type = (
     FOG      => "bool",
     FIRE     => "num",
     HOLY     => "bool",
+    INSCRIP  => "str",
     INT      => "num",
     INV      => "bool",
     FLY      => "bool",
@@ -461,6 +463,16 @@ sub process_line
         }
         $used_appears{$value} = $line_num;
     }
+    elsif ($field eq "INSCRIP")
+    {
+        if (exists($used_inscrips{$value}))
+        {
+            error($artefact, "Name '$value' already used at line " .
+                             $used_inscrips{$value});
+            return;
+        }
+        $used_inscrips{$value} = $line_num;
+    }
     elsif ($field eq "ENUM")
     {
         if (exists($artefact->{NAME}))
@@ -485,7 +497,7 @@ sub process_line
 }
 
 my @art_order = (
-    "NAME", "APPEAR", "TYPE", "\n",
+    "NAME", "APPEAR", "TYPE", "INSCRIP", "\n",
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 

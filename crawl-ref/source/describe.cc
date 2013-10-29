@@ -292,6 +292,13 @@ static vector<string> _randart_propnames(const item_def& item,
         }
     }
 
+    if (is_unrandom_artefact(item))
+    {
+        const unrandart_entry *entry = get_unrand_entry(item.special);
+        if (entry && entry->inscrip != NULL)
+            propnames.push_back(entry->inscrip);
+     }
+
     for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
     {
         if (known_proprt(propanns[i].prop))
