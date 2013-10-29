@@ -891,7 +891,7 @@ void map_selector::announce(const map_def *vault) const
 #endif
 }
 
-static string _vault_chance_tag(const map_def &map)
+string vault_chance_tag(const map_def &map)
 {
     if (map.has_tag_prefix("chance_"))
     {
@@ -935,7 +935,7 @@ static bool _vault_chance_new(const map_def &map,
         // CHANCE, and a common chance_xxx tag. Pick the
         // first such vault for the chance roll. Note that
         // at this point we ignore chance_priority.
-        const string tag = _vault_chance_tag(map);
+        const string tag = vault_chance_tag(map);
         if (chance_tags.find(tag) == chance_tags.end())
         {
             if (!tag.empty())
@@ -991,7 +991,7 @@ private:
 static const map_def *_resolve_chance_vault(const map_selector &sel,
                                             const map_def *map)
 {
-    const string chance_tag = _vault_chance_tag(*map);
+    const string chance_tag = vault_chance_tag(*map);
     // If this map has a chance_ tag, convert the search into
     // a lookup for that tag.
     if (!chance_tag.empty())

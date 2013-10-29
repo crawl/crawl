@@ -3138,7 +3138,23 @@ static void _place_chance_vaults()
         {
             dprf("Placing CHANCE vault: %s (%s)",
                  map->name.c_str(), map->chance(lid).describe().c_str());
-            _build_secondary_vault(map);
+            if (!_build_secondary_vault(map))
+            {
+                const string chance_tag = vault_chance_tag(*map);
+                if (!chance_tag.empty())
+                {
+                    const string fallback_tag =
+                        "fallback_" + chance_tag.substr(7); // "chance_"
+                    const map_def *fallback =
+                        random_map_for_tag(fallback_tag, true);
+                    if (fallback)
+                    {
+                        dprf("Found fallback vault %s for chance tag %s",
+                             fallback->name.c_str(), chance_tag.c_str());
+                        _build_secondary_vault(fallback);
+                    }
+                }
+            }
         }
     }
 }

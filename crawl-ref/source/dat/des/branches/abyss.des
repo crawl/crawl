@@ -46,7 +46,7 @@ default-depth: D:21-
 
 # This one is the backup and the one used in encompass vaults.
 NAME: abyss_entry
-TAGS: allow_dup can_overwrite replace_portal transparent
+TAGS: allow_dup can_overwrite replace_portal transparent fallback_enter_abyss
 WEIGHT: 50
 : abyss_entry(_G, 'O')
 MAP
