@@ -513,15 +513,14 @@ MAGIC:   30
 
 NAME:     Elemental Staff
 OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
-PLUS:     +3/+1
+PLUS:     +3/+3
 COLOUR:   DARKGREY
 TILE:     urand_elemental
 TILE_EQ:  elemental_staff
-BRAND:    SPWPN_PROTECTION
 FIRE:     2
 COLD:     2
 MAGIC:    60
-METAB:    2
+AC:       5
 BOOL:     noises, elec
 
 # TAG_MAJOR_VERSION == 34
