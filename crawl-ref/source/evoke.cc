@@ -1210,7 +1210,8 @@ void wind_blast(actor* agent, int pow, coord_def target)
                 {
                     for (adjacent_iterator di(newpos); di; ++di)
                     {
-                        if (di->distance_from(agent->pos())
+                        if (adjacent(*di, act_list[i]->pos())
+                            && di->distance_from(agent->pos())
                                 == newpos.distance_from(agent->pos())
                             && !actor_at(*di) && !feat_is_solid(grd(*di))
                             && act_list[i]->can_pass_through(*di)
