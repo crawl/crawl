@@ -3415,82 +3415,71 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     const int pow = min(mons->hit_dice * 18, 200);
 
-    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    if (mons->can_see(&you) && !mons->wont_attack())
     {
-        if (ai->is_player())
+        if (you.holiness() != MH_NATURAL)
         {
-            if (mons->pacified() || mons->friendly())
-                continue;
+            if (actual)
+                canned_msg(MSG_YOU_UNAFFECTED);
+        }
+        else if (you.check_res_magic(pow) > 0)
+        {
+            if (actual)
+                canned_msg(MSG_YOU_RESIST);
+        }
+        else if (actual && you.add_fearmonger(mons))
+        {
+            retval = 1;
 
-            if (you.holiness() != MH_NATURAL)
-            {
-                if (actual)
-                    canned_msg(MSG_YOU_UNAFFECTED);
-                continue;
-            }
+            you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
 
-            if (you.check_res_magic(pow) > 0)
-            {
-                if (actual)
-                    canned_msg(MSG_YOU_RESIST);
-                continue;
-            }
-
-            retval = 0;
-
-            if (actual && you.add_fearmonger(mons))
-            {
-                retval = 1;
-
-                you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
-
-                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                    mons->add_ench(ENCH_FEAR_INSPIRING);
-            }
+            if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                mons->add_ench(ENCH_FEAR_INSPIRING);
         }
         else
+          retval = 0;
+    }
+
+    for (monster_iterator mi(mons->get_los()); mi; ++mi)
+    {
+        if (*mi == mons)
+            continue;
+
+        // Magic-immune, unnatural and "firewood" monsters are
+        // immune to being scared. Same-aligned monsters are
+        // never affected, even though they aren't immune.
+        if (mons_immune_magic(*mi)
+            || mi->holiness() != MH_NATURAL
+            || mons_is_firewood(*mi)
+            || mons_atts_aligned(mi->attitude, mons->attitude))
         {
-            monster* m = ai->as_monster();
+            continue;
+        }
 
-            if (m == mons)
-                continue;
+        retval = 0;
 
-            // Magic-immune, unnatural and "firewood" monsters are
-            // immune to being scared. Same-aligned monsters are
-            // never affected, even though they aren't immune.
-            if (mons_immune_magic(m)
-                || m->holiness() != MH_NATURAL
-                || mons_is_firewood(m)
-                || mons_atts_aligned(m->attitude, mons->attitude))
-            {
-                continue;
-            }
+        // It's possible to scare this monster. If its magic
+        // resistance fails, do so.
+        int res_margin = mi->check_res_magic(pow);
+        if (res_margin > 0)
+        {
+            if (actual)
+                simple_monster_message(*mi, mons_resist_string(*mi, res_margin));
+            continue;
+        }
 
-            retval = 0;
+        if (actual
+            && mi->add_ench(mon_enchant(ENCH_FEAR, 0, mons)))
+        {
+            retval = 1;
 
-            // It's possible to scare this monster. If its magic
-            // resistance fails, do so.
-            int res_margin = m->check_res_magic(pow);
-            if (res_margin > 0)
-            {
-                if (actual)
-                    simple_monster_message(m, mons_resist_string(m, res_margin));
-                continue;
-            }
+            if (you.can_see(*mi))
+                simple_monster_message(*mi, " looks frightened!");
 
-            if (actual
-                && m->add_ench(mon_enchant(ENCH_FEAR, 0, mons)))
-            {
-                retval = 1;
+            behaviour_event(*mi, ME_SCARE, mons);
 
-                if (you.can_see(m))
-                    simple_monster_message(m, " looks frightened!");
-
-                behaviour_event(m, ME_SCARE, mons);
-
-                if (!mons->has_ench(ENCH_FEAR_INSPIRING))
-                    mons->add_ench(ENCH_FEAR_INSPIRING);
-            }
+            if (!mons->has_ench(ENCH_FEAR_INSPIRING))
+                mons->add_ench(ENCH_FEAR_INSPIRING);
         }
     }
 
@@ -3506,50 +3495,45 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 
     const int pow = min(mons->hit_dice * 8, 200);
 
-    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    if (mons->can_see(&you) && !mons->wont_attack())
     {
-        if (ai->is_player())
-        {
-            if (mons->pacified() || mons->friendly())
-                continue;
+        retval = 0;
 
-            retval = 0;
-
+        if (actual)
             if (you.check_res_magic(pow) > 0)
+                canned_msg(MSG_YOU_RESIST);
+            else
             {
-                if (actual)
-                    canned_msg(MSG_YOU_RESIST);
-                continue;
+                you.confuse(mons, 2 + random2(5));
+                retval = 1;
             }
-        }
-        else
+    }
+
+    for (monster_iterator mi(mons->get_los()); mi; ++mi)
+    {
+        if (*mi == mons)
+            continue;
+
+        if (mons_immune_magic(*mi)
+            || mons_is_firewood(*mi)
+            || mons_atts_aligned(mi->attitude, mons->attitude))
         {
-            monster* m = ai->as_monster();
+            continue;
+        }
 
-            if (m == mons)
-                continue;
+        retval = 0;
 
-            if (mons_immune_magic(m)
-                || mons_is_firewood(m)
-                || mons_atts_aligned(m->attitude, mons->attitude))
-            {
-                continue;
-            }
-
-            retval = 0;
-
-            int res_margin = m->check_res_magic(pow);
-            if (res_margin > 0)
-            {
-                if (actual)
-                    simple_monster_message(m, mons_resist_string(m, res_margin));
-                continue;
-            }
+        int res_margin = mi->check_res_magic(pow);
+        if (res_margin > 0)
+        {
+            if (actual)
+                simple_monster_message(*mi, mons_resist_string(*mi, res_margin));
+            continue;
         }
         if (actual)
         {
             retval = 1;
-            ai->confuse(mons, 2 + random2(5));
+            mi->confuse(mons, 2 + random2(5));
         }
     }
 
