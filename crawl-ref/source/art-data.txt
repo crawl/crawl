@@ -1107,6 +1107,18 @@ BASE_DAM: +27
 BASE_DELAY: +13
 BRAND:    SPWPN_VORPAL
 
+ENUM:    HIGH_COUNCIL
+NAME:    hat of the High Council
+INSCRIP: Wiz- Noisy
+OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
+COLOUR:  LIGHTGREEN
+TILE:    urand_high_council
+TILE_EQ: wizard_lightgreen
+PLUS:    +2
+BRAND:   SPARM_ARCHMAGI
+STEALTH: -20
+BOOL:    mutate
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn

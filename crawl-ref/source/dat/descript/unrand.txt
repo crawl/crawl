@@ -499,6 +499,13 @@ maul's head is so heavy it takes forever to lift it up for another swing.
 The maul is sized for a human, so ogres may want to use their customary
 clubs instead, them being less unwieldy in their large hands.
 %%%%
+hat of the High Council
+
+A relic of some ancient wizarding war. Centuries later, it still crackles
+with effects from the residual hexes and magical energies it was once
+subjected to on a daily basis; spellcasters able to get a handle on its
+power, however, will find it enhances their spell power.
+%%%%
 milk chocolate
 
 This item is a debugging aid, granting a vast array of mostly beneficial

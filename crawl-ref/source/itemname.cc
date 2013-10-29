@@ -1424,8 +1424,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
 
-        // When asking for the base item name, randartism is ignored.
-        if (is_artefact(*this) && !basename && !dbname)
+        if (is_artefact(*this) && !dbname)
         {
             buff << get_artefact_name(*this);
             break;

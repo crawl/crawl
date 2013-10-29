@@ -11,6 +11,7 @@
 # Contents:
 # - Shield of the Gong
 # - Elemental Staff
+# - the hat of the High Council
 # - Noisy randarts
 # - The Singing Sword
 
@@ -56,6 +57,16 @@ There's a crackling sound coming from @your_weapon@.
 
 @Your_weapon@ rumbles like falling rocks.
 
+%%%%
+hat of the High Council
+
+@Your_weapon@ crackles loudly.
+
+@Your_weapon@ sparks briefly.
+
+VISUAL:@Your_weapon@ shines more brightly than normal for a moment.
+
+VISUAL:@Your_weapon@ vibrates violently.
 
 ###############################################################################
 ###############################################################################
