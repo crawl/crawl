@@ -1197,6 +1197,11 @@ static BOOL WINAPI console_handler(DWORD sig)
         if (crawl_state.seen_hups++)
             return true;
 
+        // SAVE CORRUPTING BUG!!!  We're in a sort-of-a-signal-handler here,
+        // unlike Unix which processes signals as an interrupt, Windows spawns
+        // a new thread to handle them.  This function will try to save the
+        // game when it is likely to be in an inconsistent state -- and even
+        // worse, the main thread is actively changing data structures.
         sighup_save_and_exit();
         return true;
     }
@@ -1243,6 +1248,11 @@ static void handle_hangup(int)
     // before the disconnected game is saved, thus (for example) preventing
     // the hack of avoiding excomunication consesquences because of the
     // more() after "You have lost your religion!"
+
+    // SAVE CORRUPTING BUG!!!  We're in a signal handler, calling free()
+    // when closing the FILE object is likely to lead to lock-ups, and even
+    // if it were a plain kernel-side descriptor, calling functions such
+    // as select() or read() is undefined behaviour.
     fclose(stdin);
 }
 # endif

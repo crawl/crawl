@@ -699,6 +699,11 @@ int TilesFramework::getch_ck()
                 // close it
                 if (/*event.active.state == 0x04 SDL_APPACTIVE &&*/ event.active.gain == 0)
                 {
+                    // SAVE-CORRUPTING BUG!!! We're likely in a place that may
+                    // have an inconsistent state, or at least allows cheating
+                    // by forcing a save in the middle of some processing.
+                    // This must set a flag, kill all waits then continue
+                    // until a graceful shutdown.
                     if (crawl_state.need_save)
                         save_game(true);
                     exit(0);
@@ -819,6 +824,8 @@ int TilesFramework::getch_ck()
                 break;
 
             case WME_QUIT:
+                // SAVE-CORRUPTING BUG!!! This must not save here, but set
+                // a flag, disable all waits and allow a graceful shutdown.
                 if (crawl_state.need_save)
                     save_game(true);
                 exit(0);
