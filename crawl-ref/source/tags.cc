@@ -3175,6 +3175,18 @@ void unmarshallItem(reader &th, item_def &item)
     }
 #endif
 
+    if (is_unrandom_artefact(item)
+        && item.special != UNRAND_VARIABILITY
+        && item.special != UNRAND_POWER
+        && item.special != UNRAND_OLGREB
+        && item.special != UNRAND_FAERIE
+        && item.special != UNRAND_WYRMBANE
+        && item.special != UNRAND_OCTOPUS_KING_RING
+        && item.special != UNRAND_WOE)
+    {
+        setup_unrandart(item);
+    }
+
     bind_item_tile(item);
 }
 

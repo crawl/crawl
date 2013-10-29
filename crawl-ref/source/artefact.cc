@@ -1166,23 +1166,35 @@ static bool _init_artefact_book(item_def &book)
     return book_good;
 }
 
+void setup_unrandart(item_def &item)
+{
+    ASSERT(is_unrandom_artefact(item));
+    CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
+    const unrandart_entry *unrand = _seekunrandart(item);
+
+    for (int i = 0; i < ART_PROPERTIES; i++)
+        rap[i] = static_cast<short>(unrand->prpty[i]);
+
+    item.base_type = unrand->base_type;
+    item.sub_type  = unrand->sub_type;
+    item.plus      = unrand->plus;
+    item.plus2     = unrand->plus2;
+    item.colour    = unrand->colour;
+}
+
 static bool _init_artefact_properties(item_def &item)
 {
     ASSERT(is_artefact(item));
 
+    if (is_unrandom_artefact(item))
+    {
+        setup_unrandart(item);
+        return true;
+    }
+
     CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(0);
-
-    if (is_unrandom_artefact(item))
-    {
-        const unrandart_entry *unrand = _seekunrandart(item);
-
-        for (int i = 0; i < ART_PROPERTIES; i++)
-            rap[i] = static_cast<short>(unrand->prpty[i]);
-
-        return true;
-    }
 
     if (item.base_type == OBJ_BOOKS)
         return _init_artefact_book(item);
@@ -1982,11 +1994,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     item.special = unrand_index;
 
     const unrandart_entry *unrand = &unranddata[unrand_index - UNRAND_START];
-    item.base_type = unrand->base_type;
-    item.sub_type  = unrand->sub_type;
-    item.plus      = unrand->plus;
-    item.plus2     = unrand->plus2;
-    item.colour    = unrand->colour;
 
     item.flags |= ISFLAG_UNRANDART;
     _artefact_setup_prop_vectors(item);
