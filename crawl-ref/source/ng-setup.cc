@@ -108,31 +108,6 @@ static void _species_stat_init(species_type which_species)
     you.base_stats[STAT_DEX] = db + 2;
 }
 
-static void _give_last_paycheck(job_type which_job)
-{
-    switch (which_job)
-    {
-    case JOB_HEALER:
-        you.gold = 100;
-        break;
-
-    case JOB_WANDERER:
-    case JOB_WARPER:
-    case JOB_ARCANE_MARKSMAN:
-    case JOB_ASSASSIN:
-        you.gold = 50;
-        break;
-
-    default:
-        you.gold = 20;
-        break;
-
-    case JOB_MONK:
-        you.gold = 0;
-        break;
-    }
-}
-
 // Randomly boost stats a number of times.
 static void _wanderer_assign_remaining_stats(int points_left)
 {
@@ -1351,7 +1326,6 @@ static void _setup_generic(const newgame_def& ng)
     update_vision_range();
 
     _jobs_stat_init(you.char_class);
-    _give_last_paycheck(you.char_class);
 
     unfocus_stats();
 
