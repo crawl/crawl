@@ -10,6 +10,7 @@
 
 # Contents:
 # - Shield of the Gong
+# - Elemental Staff
 # - Noisy randarts
 # - The Singing Sword
 
@@ -37,6 +38,23 @@ BONNNG!
 
 # scraping hit
 SHROANNG!
+
+%%%%
+elemental staff
+
+VISUAL:@Your_weapon@ glows a a yellowish red shade.
+
+VISUAL:Electric sparks appear around @your_weapon@.
+
+VISUAL:There's an icy sheen around @your_weapon@.
+
+VISUAL:@Your_weapon@ gains a layer of dirt.
+
+@Your_weapon@ whistles like the wind.
+
+There's a crackling sound coming from @your_weapon@.
+
+@Your_weapon@ rumbles like falling rocks.
 
 
 ###############################################################################
