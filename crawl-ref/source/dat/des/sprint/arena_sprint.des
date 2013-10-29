@@ -797,7 +797,7 @@ function arena_sprint_init_boss_table()
     -- Final (and tenth) boss
     bs[10] = {"pandemonium lord",
               "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta \
-              spells:fire_storm;fire_storm;ice_storm;miasma;teleport_self", "demonic rune of zot"}
+              spells:fire_storm;fire_storm;ice_storm;miasma_breath;teleport_self", "demonic rune of zot"}
     return bs
 end
 
