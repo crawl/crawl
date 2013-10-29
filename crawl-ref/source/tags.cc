@@ -1416,6 +1416,7 @@ static void tag_construct_you(writer &th)
     marshallInt(th, abyssal_state.seed);
     marshallInt(th, abyssal_state.depth);
     marshallFloat(th, abyssal_state.phase);
+    marshall_level_id(th, abyssal_state.level);
 
     _marshall_constriction(th, &you);
 
@@ -2544,6 +2545,19 @@ static void tag_read_you(reader &th)
     }
 #endif
     abyssal_state.phase = unmarshallFloat(th);
+
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_ABYSS_BRANCHES)
+    {
+        abyssal_state.level = unmarshall_level_id(th);
+    }
+    else
+    {
+        abyssal_state.level.branch = BRANCH_MAIN_DUNGEON;
+        abyssal_state.level.depth = 19;
+    }
+#endif
 
     _unmarshall_constriction(th, &you);
 
