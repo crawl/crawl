@@ -594,6 +594,7 @@ TILE:     urand_undeadhunter
 TILE_EQ:  undeadhunter
 BOOL:     life
 
+# TAG_MAJOR_VERSION == 34
 NAME:    whip "Snakebite"
 OBJ:     OBJ_WEAPONS/WPN_WHIP
 PLUS:    +5/+10
@@ -601,7 +602,7 @@ COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
-BOOL:    poison, tilerim
+BOOL:    poison, tilerim, nogen
 
 # TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
