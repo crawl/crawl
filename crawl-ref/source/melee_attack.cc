@@ -132,7 +132,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
         && !attacker->confused();
 
     if (weapon && is_unrandom_artefact(*weapon)
-        && weapon->special == UNRAND_ELEMENTAL_STAFF)
+        && weapon->special == UNRAND_ELEMENTAL_STAFF
+        && !attk->suppressed())
     {
         damage_brand = random_choose(SPWPN_FLAMING, SPWPN_FREEZING,
             SPWPN_ELECTROCUTION, SPWPN_VORPAL, -1);
