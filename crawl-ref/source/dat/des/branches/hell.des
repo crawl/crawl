@@ -24,7 +24,7 @@ end
 # it also acts as the backup entrance and the entrance for encompass vault
 # placements.
 NAME:   hell_entry
-TAGS:   allow_dup can_overwrite replace_portal transparent
+TAGS:   allow_dup can_overwrite replace_portal transparent fallback_enter_hell
 DEPTH:  D:21-
 WEIGHT: 50
 : hell_entry(_G, 'O')
