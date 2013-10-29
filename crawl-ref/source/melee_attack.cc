@@ -123,12 +123,20 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attack_occurred = false;
     weapon          = attacker->weapon(attack_number);
     damage_brand    = attacker->damage_brand(attack_number);
-   wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
+
+    wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     if (_form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
     to_hit          = calc_to_hit();
     can_cleave = !jumping_attack && wpn_skill == SK_AXES && attacker != defender
         && !attacker->confused();
+
+    if (weapon && is_unrandom_artefact(*weapon)
+        && weapon->special == UNRAND_ELEMENTAL_STAFF)
+    {
+        damage_brand = random_choose(SPWPN_FLAMING, SPWPN_FREEZING,
+            SPWPN_ELECTROCUTION, SPWPN_VORPAL, -1);
+    }
 
     if (jumping_attack)
         attack_position = attack_pos;

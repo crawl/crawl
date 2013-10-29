@@ -81,8 +81,8 @@
 # * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
-# * noises:   Weapon makes noises.  Can be given its own set of noises by
-#             making an entry in dat/database/wpnnoise.txt, with the
+# * noises:   Weapon makes noises.  Should  be given its own set of noises
+#             by making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
 #             lowercase.
 # * nospell:  Prevents wearer from casting spells.
@@ -522,7 +522,7 @@ FIRE:     2
 COLD:     2
 MAGIC:    60
 METAB:    2
-BOOL:     noises
+BOOL:     noises, elec
 
 # TAG_MAJOR_VERSION == 34
 NAME:    crossbow "Sniper"
