@@ -1083,6 +1083,7 @@ REGEN:    40
 ENUM:     FINGER_AMULET
 NAME:     macabre finger necklace
 OBJ:      OBJ_JEWELLERY/AMU_WARDING
+TILE:     urand_finger
 COLOUR:   ETC_BONE
 
 ENUM:     SPIDER
