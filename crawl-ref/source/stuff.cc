@@ -603,6 +603,9 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         // if there is no safe answer, then just save-and-exit immediately,
         // since there's no way to know if it would be better to return
         // true or false.
+
+        // CHEAT-ALLOWING (OR WORSE) BUG: we should never allow aborting
+        // the game from an arbitrary point.
         if (crawl_state.seen_hups && !safeanswer)
             sighup_save_and_exit();
 

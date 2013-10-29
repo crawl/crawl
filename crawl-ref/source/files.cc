@@ -2337,6 +2337,7 @@ vector<string> get_title_files()
     return titles;
 }
 
+// Every single use of this function is a save-corrupting bug.
 void sighup_save_and_exit()
 {
     if (crawl_state.seen_hups == 0)
