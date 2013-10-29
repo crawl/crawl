@@ -224,6 +224,70 @@ xxxy.%...yxxxxx
 ENDMAP
 
 ##############################################################################
+# Otherwise known as grunt_what_the_hellephant.
+NAME: grunt_hell_horde
+TAGS: nolayout_encompass mini_float
+DEPTH: D:21-
+: hell_entry(_G, 'O')
+: if crawl.coinflip() then
+NSUBST: + = 1:+ / *:x
+: else
+NSUBST: + = 2:+ / *:x
+: end
+KMONS: O = hellephant
+MONS: hell hog / hell hound, hell hound / nothing
+MAP
+ xxx+xxx
+xxl2.2lxx
+xl2...2lx
+x2.1.1.2x
++...O...+
+x2.1.1.2x
+xl2...2lx
+xxl2.2lxx
+ xxx+xxx
+ENDMAP
+
+NAME: grunt_metal_band
+TAGS: nolayout_encompass
+DEPTH: D:21-
+: hell_entry(_G, 'O')
+KMONS: O = Margery band, hell knight band
+MAP
+ xxxxxxx
+xx..O..xx
+x.......x
+x.......x
+@...G...@
+ .......
+   .@.
+ENDMAP
+
+NAME: grunt_mini_vestibule
+TAGS: nolayout_encompass no_monster_gen
+DEPTH: D:21-
+: hell_entry(_G, 'O')
+KMONS: O = hell beast
+MONS: place:Coc:1 band, place:Dis:1 band, place:Geh:1 band, place:Tar:1 band
+MAP
+  .....@.....
+ ..ccnc+cncc..
+..cc.......cc..
+.cccc..1..cccc.
+.c.ccc...ccc.c.
+.n..ccc+ccc..n.
+.c...c...c...c.
+@+.4.+.O.+.2.+@
+.c...c...c...c.
+.n..ccc+ccc..n.
+.c.ccc...ccc.c.
+.cccc..3..cccc.
+..cc.......cc..
+ ..ccnc+cncc..
+  .....@.....
+ENDMAP
+
+##############################################################################
 # Vestibule of Hell and Geryon
 ##############################################################################
 
