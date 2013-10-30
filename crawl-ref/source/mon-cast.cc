@@ -2273,36 +2273,29 @@ static bool _wall_of_brambles(monster* mons)
 
 static bool _should_tornado(monster* agent)
 {
-    if (agent->has_ench(ENCH_TORNADO)
-        || agent->has_ench(ENCH_TORNADO_COOLDOWN))
-    {
+    if (agent->has_ench(ENCH_TORNADO) || agent->has_ench(ENCH_TORNADO_COOLDOWN))
         return false;
-    }
 
     bolt tracer;
     tracer.foe_ratio = 80;
-    for (actor_iterator ai(agent->get_los()); ai; ++ai)
+    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (agent == *ai)
+        if (agent == *ai || ai->res_wind() || !ai->visible_to(agent))
             continue;
 
-        if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
-            && !ai->res_wind())
+        if (mons_aligned(agent, *ai))
         {
-           if (mons_aligned(agent, *ai))
-            {
-                tracer.friend_info.count++;
-                tracer.friend_info.power +=
-                        ai->is_player() ? you.experience_level
-                                        : ai->as_monster()->hit_dice;
-            }
-            else
-            {
-                tracer.foe_info.count++;
-                tracer.foe_info.power +=
-                        ai->is_player() ? you.experience_level
-                                        : ai->as_monster()->hit_dice;
-            }
+            tracer.friend_info.count++;
+            tracer.friend_info.power +=
+                    ai->is_player() ? you.experience_level
+                                    : ai->as_monster()->hit_dice;
+        }
+        else
+        {
+            tracer.foe_info.count++;
+            tracer.foe_info.power +=
+                    ai->is_player() ? you.experience_level
+                                    : ai->as_monster()->hit_dice;
         }
     }
     return mons_should_fire(tracer);

@@ -644,8 +644,8 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     bool affects_you = false;
     vector<monster *> affected_monsters;
 
-    for (actor_iterator ai(agent ? agent->get_los_no_trans()
-                                 : you.get_los_no_trans()); ai; ++ai)
+    for (actor_near_iterator ai((agent ? agent : &you)->pos(), LOS_NO_TRANS);
+         ai; ++ai)
     {
         if ((*vulnerable)(agent, *ai))
         {
@@ -2710,25 +2710,24 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
     {
         bolt tracer;
         tracer.foe_ratio = 60;
-        for (actor_iterator ai(agent->get_los()); ai; ++ai)
+        for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         {
-            if (cell_see_cell(agent->pos(), ai->pos(), LOS_NO_TRANS)
-                && _toxic_can_affect(*ai))
+            if (!_toxic_can_affect(*ai))
+                continue;
+
+            if (mons_aligned(agent, *ai))
             {
-                if (mons_aligned(agent, *ai))
-                {
-                    tracer.friend_info.count++;
-                    tracer.friend_info.power +=
-                            ai->is_player() ? you.experience_level
-                                            : ai->as_monster()->hit_dice;
-                }
-                else
-                {
-                    tracer.foe_info.count++;
-                    tracer.foe_info.power +=
-                            ai->is_player() ? you.experience_level
-                                            : ai->as_monster()->hit_dice;
-                }
+                tracer.friend_info.count++;
+                tracer.friend_info.power +=
+                        ai->is_player() ? you.experience_level
+                                        : ai->as_monster()->hit_dice;
+            }
+            else
+            {
+                tracer.foe_info.count++;
+                tracer.foe_info.power +=
+                        ai->is_player() ? you.experience_level
+                                        : ai->as_monster()->hit_dice;
             }
         }
 
@@ -2768,42 +2767,42 @@ void toxic_radiance_effect(actor* agent, int mult)
 
     bool break_sanctuary = (agent->is_player() && is_sanctuary(you.pos()));
 
-    for (actor_iterator ai(agent->get_los_no_trans()); ai; ++ai)
+    for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
-        if (_toxic_can_affect(*ai))
+        if (!_toxic_can_affect(*ai))
+            continue;
+
+        int dam = roll_dice(1, 3 + pow / 25) * mult
+                  * 3 / (2 + ai->pos().distance_from(agent->pos()));
+        dam = resist_adjust_damage(*ai, BEAM_POISON, ai->res_poison(),
+                                   dam, true);
+
+        if (ai->is_player())
         {
-            int dam = roll_dice(1, 3 + pow / 25) * mult
-                      * 3 / (2 + ai->pos().distance_from(agent->pos()));
-            dam = resist_adjust_damage(*ai, BEAM_POISON, ai->res_poison(),
-                                       dam, true);
-
-            if (ai->is_player())
+            // We take direct damage only if we're not the agent, but we
+            // still get poisoned
+            if (!agent->is_player())
             {
-                // We take direct damage only if we're not the agent, but we
-                // still get poisoned
-                if (!agent->is_player())
-                {
-                    ouch(dam, agent->as_monster()->mindex(), KILLED_BY_BEAM,
-                        "by Olgreb's Toxic Radiance", true,
-                        agent->as_monster()->name(DESC_A).c_str());
-                }
-                // Wielding the Staff of Olgreb grants immunity to our own OTR
-                if (!agent->is_player() || !player_equip_unrand_effect(UNRAND_OLGREB))
-                {
-                    poison_player(1, agent->name(DESC_A),
-                                  "toxic radiance", agent->is_player());
-                }
+                ouch(dam, agent->as_monster()->mindex(), KILLED_BY_BEAM,
+                    "by Olgreb's Toxic Radiance", true,
+                    agent->as_monster()->name(DESC_A).c_str());
             }
-            else
+            // Wielding the Staff of Olgreb grants immunity to our own OTR
+            if (!agent->is_player() || !player_equip_unrand_effect(UNRAND_OLGREB))
             {
-                behaviour_event(ai->as_monster(), ME_ANNOY, agent, agent->pos());
-                ai->hurt(agent, dam, BEAM_POISON);
-                if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
-                    poison_monster(ai->as_monster(), agent, 1);
-
-                if (agent->is_player() && is_sanctuary(ai->pos()))
-                    break_sanctuary = true;
+                poison_player(1, agent->name(DESC_A),
+                              "toxic radiance", agent->is_player());
             }
+        }
+        else
+        {
+            behaviour_event(ai->as_monster(), ME_ANNOY, agent, agent->pos());
+            ai->hurt(agent, dam, BEAM_POISON);
+            if (coinflip() || !ai->as_monster()->has_ench(ENCH_POISON))
+                poison_monster(ai->as_monster(), agent, 1);
+
+            if (agent->is_player() && is_sanctuary(ai->pos()))
+                break_sanctuary = true;
         }
     }
 
