@@ -459,12 +459,32 @@ Heal Other spell
 
 Ce sort permet au lanceur pour guérir un allié proche.
 %%%%
+Hellfire Burst spell
+
+Ce pouvoir fait soudainement apparaître des flammes infernales sous la cible
+choisie. Il n'existe pas de protection contre ce feu maudit — il traverse
+directement l'armure. Seules certaines créatures, typiquement celles de feu, y
+sont immunisées.
+%%%%
 Holy Breath spell
 
 Cette créature peut cracher un large souffle de nuages de flammes bénie,
 brillante de la gloire des dieux bienveillants. Ces flammes sont
 particulièrement dangereuses pour ceux qui remplissent la définition du mal
 selon L’Étincelant.
+%%%%
+Holy Flames spell
+
+Ce sort permet de piéger un ennemi au milieu d'un cercle de flammes sacrées.
+S'il décide de le traverser, il subira des dommages supplémentaires, notamment
+si ce dernier est infernal ou maudit. Les créatures bénies peuvent le traverser
+sans subir plus de maux.
+%%%%
+Holy Light spell
+
+Ce sort permet à son lanceur de tirer un faisceau d'énergie sacrée. Tous les
+personnages non bénis subissent des dégâts, avec un bonus conséquent contre les
+impies.
 %%%%
 Ice Form spell
 
@@ -587,6 +607,12 @@ Malign Offering spell
 Ce sort permet au lanceur de vider un ennemi de son énergie vitale, et
 guérissant ainsi les alliés à proximité.
 %%%%
+Malmutate spell
+
+Ce sort entraîne une mutation de la cible. Cette mutation est presque tout le
+temps nuisible. Cela n'affecte pas les être artificiels et fait se décomposer
+les morts-vivants.
+%%%%
 Mara Summon spell
 
 Mara, le seigneur des rakshasas, aime tisser des illusions de lui-même.
@@ -625,11 +651,21 @@ du sorcier, ralentissant toutes les créatures non immunisées au froid. Il
 contourne la résistance à la magie, cependant les monstres les plus coriaces ne
 seront pas ralentis aussi longtemps que les autres.
 %%%%
+Metal Splinters spell
+
+Ce pouvoir envoie un jet de tranchants éclats métalliques, généralement en un
+souffle.
+%%%%
 Miasma Breath spell
 
 Uh oh, parlons d'un méchant cas d'halitose. Ce n'est pas un rot d'ogre
 ordinaire, ces vapeurs nocives peuvent faire pourrir et détacher votre chair de
 vos os.
+%%%%
+Might Other spell
+
+Ce sort augmente considérablement les capacités de mêlé du personnage ciblé. Il
+est évidemment à utiliser sur les alliés.
 %%%%
 Minor Healing spell
 
@@ -823,6 +859,11 @@ et lui fournit de la puissance magique (en attendant en place et en ne faisant
 pas d'autres actions), le rayon va grandir en force jusqu'à ce qu'il devienne
 un faisceau flambée capable de déchirer et traverser les rangs des ennemis du
 lanceur.
+%%%%
+Sentinel's Mark spell
+
+Ce sort place un marqueur sur un ennemi. La présence et la localisation de ce
+personnage sont ainsi connues pour tout le monde à ce niveau du donjon.
 %%%%
 Shadow Creatures spell
 

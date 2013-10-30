@@ -153,7 +153,7 @@ A metal wall
 Un muro de un metal azul grisáceo. Como cualquier electricista del calabozo
 bien sabe, esta pared actúa como un punto de tierra.
 %%%%
-A floor
+The floor
 
 Suelo de calabozo.
 %%%%

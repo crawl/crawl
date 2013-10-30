@@ -48,6 +48,10 @@ A gateway to the decaying netherworld of Tartarus
 
 To miejsce zdaje się promieniować negatywną energią
 %%%%
+A shaft
+
+Głęboka dziura. Kto wie dokąd byś doleciał, gdybyś do niej wpadł.
+%%%%
 A staircase back to the Crypt
 
 Te schody prowadzą z powrotem do Krypty.
@@ -120,6 +124,10 @@ A glistening fountain
 
 Jedyną rzeczą, której brakuje jest woda.
 %%%%
+A rose-covered archway
+
+Róże wyglądają pięknie!
+%%%%
 A crumbling stone wall
 
 Wygląda na antyczne.
@@ -180,6 +188,10 @@ Zamrożona podłoga. Miło chrupie pod stopami
 A silver wall
 
 Ta ściana jest zbudowana z czystego srebra.
+%%%%
+A sarcophagus
+
+Starożytny sarkofag. Wygląda na pusty
 %%%%
 An adventurer's gravestone
 

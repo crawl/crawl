@@ -613,7 +613,7 @@ ist dank des dicken Rauchs nicht besonders weit.
 Im Gegensatz zu kleinen Lavabacken, über die man fliegen oder schweben kann,
 ist ein Flug über dieses Inferno eine todsichere Möglichkeit, dich zu grillen.
 %%%%
-A floor
+The floor
 
 Ein ausgetretener Steinflur, gemacht aus genau passenden Granitplatten, die vor
 langer Zeit von lange vergessenen Händen dort eingesetzt wurden.
