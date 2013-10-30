@@ -520,7 +520,7 @@ FIRE:     2
 COLD:     2
 MAGIC:    60
 AC:       5
-BOOL:     noises, elec
+BOOL:     elec
 
 # TAG_MAJOR_VERSION == 34
 NAME:    crossbow "Sniper"
