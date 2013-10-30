@@ -2826,7 +2826,8 @@ void TextItem::render()
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
         textcolor(m_fg_colour);
         textbackground(m_bg_colour);
-        cprintf("%s", m_render_text.substr(newline_pos, endline_pos).c_str());
+        cprintf("%s", m_render_text.substr(newline_pos,
+                endline_pos - newline_pos).c_str());
         if (endline_pos != string::npos)
             newline_pos = endline_pos + 1;
         else
