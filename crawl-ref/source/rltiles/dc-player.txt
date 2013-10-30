@@ -1039,9 +1039,10 @@ taiso_yellow
 taiso_red
 taiso_white
 
-## Unrand caps
+## Unrand caps and hats
 bear BEAR
 dyrovepreva DYROVEPREVA
+wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.
 iron1 HELM_IRON HELM_OFS
