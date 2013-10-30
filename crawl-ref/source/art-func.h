@@ -891,17 +891,6 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
 
 ///////////////////////////////////////////////////
 
-static void _HIGH_COUNCIL_world_reacts(item_def *item)
-{
-    if (silenced(you.pos()) || !one_chance_in(20))
-        return;
-
-    string msg = getSpeakString("hat of the High Council");
-    item_noise(*item, msg);
-}
-
-///////////////////////////////////////////////////
-
 static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
                                         actor* defender, bool mondied, int dam)
 {

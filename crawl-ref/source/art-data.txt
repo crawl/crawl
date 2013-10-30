@@ -1109,7 +1109,7 @@ BRAND:    SPWPN_VORPAL
 
 ENUM:    HIGH_COUNCIL
 NAME:    hat of the High Council
-INSCRIP: Wiz- Noisy
+INSCRIP: Wiz-
 OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
 COLOUR:  LIGHTGREEN
 TILE:    urand_high_council
