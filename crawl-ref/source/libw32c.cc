@@ -270,6 +270,22 @@ static void _set_string_input(bool value)
     FlushConsoleInputBuffer(inbuf);
 }
 
+// Fake the user pressing Esc to break out of wait-for-input loops.
+// Just one should be enough as we check the seen_hups flag, we just
+// need to interrupt the syscall.
+void w32_insert_escape()
+{
+    INPUT_RECORD esc;
+    esc.EventType = KEY_EVENT;
+    esc.Event.KeyEvent.bKeyDown = TRUE;
+    esc.Event.KeyEvent.wRepeatCount = 1;
+    esc.Event.KeyEvent.wVirtualKeyCode = VK_ESCAPE;
+    // .wVirtualScanCode ?
+    esc.Event.KeyEvent.uChar.UnicodeChar = ESCAPE;
+    esc.Event.KeyEvent.dwControlKeyState = 0;
+    WriteConsoleInputW(inbuf, &esc, 1, nullptr);
+}
+
 #ifdef TARGET_COMPILER_MINGW
 static void install_sighandlers()
 {
@@ -779,6 +795,9 @@ int getch_ck(void)
     bool waiting_for_event = true;
     while (waiting_for_event)
     {
+        if (crawl_state.seen_hups)
+            return ESCAPE;
+
         if (ReadConsoleInputW(inbuf, &ir, 1, &nread) == 0)
             fputs("Error in ReadConsoleInputW()!", stderr);
         if (nread > 0)
@@ -830,6 +849,9 @@ int getchk(void)
 
 bool kbhit()
 {
+    if (crawl_state.seen_hups)
+        return 1;
+
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
     PeekConsoleInputW(inbuf, ir, ARRAYSZ(ir), &read_count);
