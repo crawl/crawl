@@ -23,6 +23,7 @@
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "effects.h"       // For Sceptre of Torment tormenting
 #include "env.h"           // For storm bow env.cgrid
+#include "fight.h"
 #include "food.h"          // For evokes
 #include "godconduct.h"    // did_god_conduct
 #include "misc.h"
@@ -897,4 +898,50 @@ static void _HIGH_COUNCIL_world_reacts(item_def *item)
 
     string msg = getSpeakString("hat of the High Council");
     item_noise(*item, msg);
+}
+
+///////////////////////////////////////////////////
+
+static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
+                                        actor* defender, bool mondied, int dam)
+{
+    int evoc = attacker->skill(SK_EVOCATIONS, 27);
+
+    if (mondied || !(x_chance_in_y(evoc, 729) || x_chance_in_y(evoc, 729)))
+        return;
+
+    int d = 10 + random2(15);
+
+    const char *verb;
+    switch (random2(4))
+    {
+    case 0:
+        d = resist_adjust_damage(defender, BEAM_FIRE,
+                                 defender->res_fire(), d);
+        verb = "burn";
+        break;
+    case 1:
+        d = resist_adjust_damage(defender, BEAM_COLD,
+                                 defender->res_cold(), d);
+        verb = "freeze";
+        break;
+    case 2:
+        d = resist_adjust_damage(defender, BEAM_ELECTRICITY,
+                                 defender->res_elec(), d);
+        verb = "electrocute";
+        break;
+    case 3:
+        d = defender->apply_ac(d);
+        verb = "crush";
+        break;
+    }
+
+    if (!d)
+        return;
+
+    mprf("%s %s %s.",
+         attacker->name(DESC_THE).c_str(),
+         attacker->is_player() ? verb : pluralise(verb).c_str(),
+         defender->name(DESC_THE).c_str());
+    defender->hurt(attacker, d);
 }
