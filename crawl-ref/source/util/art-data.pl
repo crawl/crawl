@@ -11,7 +11,6 @@ my @errors        = ();
 my @all_artefacts = ();
 my %used_names    = ();
 my %used_appears  = ();
-my %used_inscrips = ();
 my %used_enums    = ();
 my %found_funcs   = ();
 
@@ -462,16 +461,6 @@ sub process_line
             return;
         }
         $used_appears{$value} = $line_num;
-    }
-    elsif ($field eq "INSCRIP")
-    {
-        if (exists($used_inscrips{$value}))
-        {
-            error($artefact, "Name '$value' already used at line " .
-                             $used_inscrips{$value});
-            return;
-        }
-        $used_inscrips{$value} = $line_num;
     }
     elsif ($field eq "ENUM")
     {
