@@ -77,7 +77,7 @@ you to fall to your death.
 Jump Attack ability
 
 An ability that borrows a creature's kinetic energy to power a high-speed melee
-jump attack, landing you safely nearby.  You cannot jump over flying enemies and
+jump attack, landing you safely nearby. You cannot jump over flying enemies and
 can only leap giant enemies submerged in lava or deep water. Standing or
 swimming in water, lava, or liquefied ground will also prevent you from using
 this ability. Felids are natural jumpers and will become more skilled at
@@ -142,7 +142,7 @@ Evoke Flight ability
 Evoke Jump Attack ability
 
 An ability that borrows a creature's kinetic energy to power a high-speed melee
-jump attack, landing you safely nearby.  You cannot jump over flying enemies and
+jump attack, landing you safely nearby. You cannot jump over flying enemies and
 can only leap giant enemies submerged in lava or deep water. Standing or
 swimming in water, lava, or liquefied ground will also prevent you from using
 this ability.
