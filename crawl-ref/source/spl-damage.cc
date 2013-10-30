@@ -450,13 +450,16 @@ static int _refrigerate_monster(actor* agent, monster* target, int pow, int avg,
 
     if (actual)
     {
-        behaviour_event(target, ME_ANNOY, agent, agent->pos());
+        behaviour_event(target, ME_ANNOY, agent,
+                        agent ? agent->pos() : coord_def(0, 0));
 
         target->hurt(agent, hurted, BEAM_COLD);
 
         if (agent && agent->is_player()
             && (is_sanctuary(you.pos()) || is_sanctuary(target->pos())))
+        {
             remove_sanctuary(true);
+        }
 
         // Cold-blooded creatures can be slowed.
         if (target->alive())
