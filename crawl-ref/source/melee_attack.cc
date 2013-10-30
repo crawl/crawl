@@ -131,14 +131,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     can_cleave = !jumping_attack && wpn_skill == SK_AXES && attacker != defender
         && !attacker->confused();
 
-    if (weapon && is_unrandom_artefact(*weapon)
-        && weapon->special == UNRAND_ELEMENTAL_STAFF
-        && !attacker->suppressed())
-    {
-        damage_brand = random_choose(SPWPN_FLAMING, SPWPN_FREEZING,
-            SPWPN_ELECTROCUTION, SPWPN_VORPAL, -1);
-    }
-
     if (jumping_attack)
         attack_position = attack_pos;
     else
