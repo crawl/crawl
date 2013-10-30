@@ -1195,14 +1195,11 @@ static BOOL WINAPI console_handler(DWORD sig)
     case CTRL_LOGOFF_EVENT:
     case CTRL_SHUTDOWN_EVENT:
         if (crawl_state.seen_hups++)
-            return true;
+            return true; // abort immediately
 
-        // SAVE CORRUPTING BUG!!!  We're in a sort-of-a-signal-handler here,
-        // unlike Unix which processes signals as an interrupt, Windows spawns
-        // a new thread to handle them.  This function will try to save the
-        // game when it is likely to be in an inconsistent state -- and even
-        // worse, the main thread is actively changing data structures.
-        sighup_save_and_exit();
+        w32_insert_escape();
+
+        Sleep(15000); // allow 15 seconds for shutdown, then kill -9
         return true;
     }
 }
