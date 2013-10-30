@@ -1155,10 +1155,9 @@ void wind_blast(actor* agent, int pow, coord_def target)
 
     int radius = min(7, 5 + div_rand_round(pow, 60));
 
-    for (actor_iterator ai(agent->get_los()); ai; ++ai)
+    for (actor_near_iterator ai(agent->pos(), LOS_SOLID); ai; ++ai)
     {
         if (ai->is_stationary()
-            || !cell_see_cell(agent->pos(), ai->pos(), LOS_SOLID)
             || ai->pos().distance_from(agent->pos()) > radius
             || ai->pos() == agent->pos() // so it's never aimed_at_feet
             || !target.origin()

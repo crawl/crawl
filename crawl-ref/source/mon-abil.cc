@@ -904,14 +904,10 @@ static void _starcursed_scream(monster* mon, actor* target)
     //Gather the chorus
     vector<monster*> chorus;
 
-    for (actor_iterator ai(target->get_los()); ai; ++ai)
+    for (monster_iterator mi(target); mi; ++mi)
     {
-        if (ai->is_monster())
-        {
-            monster* m = ai->as_monster();
-            if (m->type == MONS_STARCURSED_MASS)
-                chorus.push_back(m);
-        }
+        if (mi->type == MONS_STARCURSED_MASS)
+            chorus.push_back(*mi);
     }
 
     int n = chorus.size();
@@ -2192,7 +2188,7 @@ bool apply_grasping_roots(monster* mons)
     }
 
     bool found_hostile = false;
-    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    for (actor_near_iterator ai(mons); ai; ++ai)
     {
         if (mons_aligned(mons, *ai) || ai->is_insubstantial()
             || !ai->visible_to(mons))
@@ -4112,7 +4108,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         bool see_friend = false;
         bool see_foe = false;
 
-        for (actor_iterator ai(mons->get_los_no_trans()); ai; ++ai)
+        for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
         {
             if (ai->is_monster() && mons_aligned(*ai, mons))
             {
