@@ -627,7 +627,7 @@ Contrairement aux petites coulées de lave où le vol ou la lévitation peuvent
 permettre de courts trajets, flotter au-dessus de cet enfer vous ferait cuire
 en un temps record à cause de la convection extrême.
 %%%%
-A floor
+The floor
 
 Un sol en pierre usagé faite de dalles de granit étroitement intégrés qui ont
 été taillés et fixés il y a des temps immémoriaux par des mains oubliées depuis

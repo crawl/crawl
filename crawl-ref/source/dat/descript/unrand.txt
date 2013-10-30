@@ -493,18 +493,18 @@ dark maul
 
 This large iron-shod maul is just the tool you need, if you had some bridge
 stakes to drive in. It is made for dealing massing blows — we're not talking
-about a mere concussion, but about remnants of a helmet standing on shoes,
-or perhaps an outright wet stain. Alas, such power comes at a price: the
-maul's head is so heavy it takes forever to lift it up for another swing.
-The maul is sized for a human, so ogres may want to use their customary
-clubs instead, them being less unwieldy in their large hands.
+about a mere concussion, but about remnants of a helmet standing on shoes, or
+perhaps an outright wet stain. Alas, such power comes at a price: the maul's
+head is so heavy it takes forever to lift it up for another swing. The maul is
+sized for a human, so ogres may want to use their customary clubs instead, them
+being less unwieldy in their large hands.
 %%%%
 hat of the High Council
 
-A relic of some ancient wizarding war. Centuries later, it still crackles
-with effects from the residual hexes and magical energies it was once
-subjected to on a daily basis; spellcasters able to get a handle on its
-power, however, will find it enhances their spell power.
+A relic of some ancient wizarding war. Centuries later, it still crackles with
+effects from the residual hexes and magical energies it was once subjected to
+on a daily basis; spellcasters able to get a handle on its power, however, will
+find it enhances their spell power.
 %%%%
 milk chocolate
 
