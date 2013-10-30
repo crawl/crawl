@@ -495,7 +495,7 @@ static int _drain_player(actor* agent, int pow, int avg,
 {
     if (actual)
     {
-        monster* mons = agent->as_monster();
+        monster* mons = agent ? agent->as_monster() : 0;
         ouch(avg, mons ? mons->mindex() : NON_MONSTER,
              KILLED_BY_BEAM, "by drain life");
     }
@@ -508,13 +508,14 @@ static int _drain_monster(actor* agent, monster* target, int pow, int avg,
 {
     if (actual)
     {
-        if (agent->is_player())
+        if (agent && agent->is_player())
         {
             mprf("You draw life from %s.",
                  target->name(DESC_THE).c_str());
         }
 
-        behaviour_event(target, ME_WHACK, agent, agent->pos());
+        behaviour_event(target, ME_ANNOY, agent,
+                        agent ? agent->pos() : coord_def(0, 0));
 
         target->hurt(agent, avg);
 
@@ -536,14 +537,14 @@ static void _post_drain_life(actor* agent, bool player,
 
     total_damage = min(pow * 2, total_damage);
 
-    if (total_damage)
+    if (total_damage && agent)
     {
         if (agent->is_player())
         {
             mpr("You feel life flooding into your body.");
             inc_hp(total_damage);
         }
-        else if (agent)
+        else
         {
             monster* mons = agent->as_monster();
             ASSERT(mons);
