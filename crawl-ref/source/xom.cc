@@ -1509,7 +1509,8 @@ static int _xom_swap_weapons(bool debug = false)
     {
         if (!wpn || mi->wont_attack() || mi->is_summoned()
             || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
-            || (mi->flags & MF_HARD_RESET))
+            || (mi->flags & MF_HARD_RESET)
+            || !feat_has_solid_floor(grd(mi->pos())))
         {
             continue;
         }
