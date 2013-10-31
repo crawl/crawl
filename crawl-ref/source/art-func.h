@@ -901,7 +901,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
 
     int d = 10 + random2(15);
 
-    const char *verb;
+    const char *verb = "hit";
     switch (random2(4))
     {
     case 0:
