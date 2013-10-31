@@ -1527,8 +1527,7 @@ bool mons_class_can_use_stairs(monster_type mc)
            && mc != MONS_PLAYER_GHOST
            && mc != MONS_GERYON
            && mc != MONS_ROYAL_JELLY
-           && mc != MONS_MOTH_OF_SUPPRESSION
-           && mc != MONS_POLYMOTH;
+           && mc != MONS_MOTH_OF_SUPPRESSION;
 }
 
 bool mons_can_use_stairs(const monster* mon)

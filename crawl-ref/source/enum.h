@@ -2743,10 +2743,10 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_SPECTRAL_WEAPON,
 #endif
-
     MONS_ELEMENTAL_WELLSPRING,
-
+#if TAG_MAJOR_VERSION == 34
     MONS_POLYMOTH,
+#endif
 
     MONS_DEATHCAP,
 

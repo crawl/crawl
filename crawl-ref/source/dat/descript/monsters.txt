@@ -2092,10 +2092,6 @@ A large and very strong bear covered in glistening white fur, habituated to
 cold conditions. Like all ursines, the polar bear will become enraged if badly
 hurt or frightened.
 %%%%
-polymoth
-
-A brilliant little moth. A hateful mutagenic dust rolls off its wings.
-%%%%
 porcupine
 
 A vicious rodent with a coat of sharp quills and a painful bite.
