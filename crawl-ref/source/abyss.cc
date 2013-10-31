@@ -1342,11 +1342,8 @@ static void _initialize_abyss_state()
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random_int() & 0x7FFFFFFF;
     abyssal_state.nuke_all = false;
-    level_id level;
     // TODO: Select this rather than setting it to a fixed value.
-    level.branch = BRANCH_MAIN_DUNGEON;
-    level.depth = 19;
-    abyssal_state.level = level;
+    abyssal_state.level = level_id(BRANCH_MAIN_DUNGEON, 19);
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 
