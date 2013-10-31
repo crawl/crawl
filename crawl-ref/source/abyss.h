@@ -25,6 +25,8 @@ struct abyss_state
     bool nuke_all;
 };
 
+extern abyss_state abyssal_state;
+
 void abyss_morph(double duration);
 void push_features_to_abyss();
 

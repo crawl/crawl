@@ -432,7 +432,11 @@ void spawn_random_monsters()
         return;
     }
 
-    mons_place(mgen_data(WANDERING_MONSTER));
+    mgen_data mg(WANDERING_MONSTER);
+    if (player_in_branch(BRANCH_ABYSS) && one_chance_in(3))
+        mg.place = abyssal_state.level;
+
+    mons_place(mg);
     viewwindow();
 }
 
