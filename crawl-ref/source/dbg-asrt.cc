@@ -113,10 +113,12 @@ static void _dump_level_info(FILE* file)
                       "    seed = 0x%" PRIx32 "\n"
                       "    depth = %" PRIu32 "\n"
                       "    phase = %g\n"
-                      "    nuke_all = %d\n",
+                      "    nuke_all = %d\n"
+                      "    level = (%d : %d)\n",
                 abyssal_state.major_coord.x, abyssal_state.major_coord.y,
                 abyssal_state.seed, abyssal_state.depth, abyssal_state.phase,
-                abyssal_state.nuke_all);
+                abyssal_state.nuke_all,
+                abyssal_state.level.branch, abyssal_state.level.depth);
     }
 
     debug_dump_levgen();
