@@ -714,6 +714,23 @@ void down_stairs(dungeon_feature_type force_stair)
         _maybe_destroy_trap(you.pos());
     }
 
+    if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == RUNE_LOCK_DEPTH)
+    {
+        bool has_rune = false;
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+            {
+                has_rune = true;
+                break;
+            }
+
+        if (!has_rune)
+        {
+            mpr("You need a rune to go deeper.");
+            return;
+        }
+    }
+
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
     {
         vector<int> runes;
