@@ -1656,6 +1656,7 @@ int monster_die(monster* mons, killer_type killer,
 
     // Kills by the spectral weapon are considered as kills by the player instead
     if (killer == KILL_MON
+        && !invalid_monster_index(killer_index)
         && menv[killer_index].type == MONS_SPECTRAL_WEAPON
         && menv[killer_index].summoner == MID_PLAYER)
     {
