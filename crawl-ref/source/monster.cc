@@ -3087,7 +3087,8 @@ void monster::banish(actor *agent, const string &)
     }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
+    if (!cell_is_solid(old_pos))
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
         if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
             && coinflip())
