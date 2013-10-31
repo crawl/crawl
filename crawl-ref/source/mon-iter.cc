@@ -13,24 +13,6 @@ monster_iterator::monster_iterator()
     advance(true);
 }
 
-monster_iterator::monster_iterator(const circle_def* circle_)
-    : restr(R_CIRC), curr_mid(0), circle(circle_)
-{
-    advance(true);
-}
-
-monster_iterator::monster_iterator(const los_base* los_)
-    : restr(R_LOS), curr_mid(0), los(los_)
-{
-    advance(true);
-}
-
-monster_iterator::monster_iterator(const actor* act_)
-    : restr(R_ACT), curr_mid(0), act(act_)
-{
-    advance(true);
-}
-
 monster_iterator::operator bool() const
 {
     return (curr_mid < MAX_MONSTERS);

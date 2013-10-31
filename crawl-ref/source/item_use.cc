@@ -8,6 +8,7 @@
 #include "item_use.h"
 
 #include "abl-show.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
@@ -36,7 +37,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "options.h"
@@ -3243,7 +3243,7 @@ void read_scroll(int slot)
     case SCR_IMMOLATION:
     {
         bool had_effect = false;
-        for (monster_iterator mi(you.get_los()); mi; ++mi)
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (mons_immune_magic(*mi) || mi->is_summoned())
                 continue;

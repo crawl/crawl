@@ -7,6 +7,7 @@
 #include <math.h>
 #include "mon-stuff.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "arena.h"
 #include "art-enum.h"
@@ -588,7 +589,7 @@ static void _beogh_spread_experience(int exp)
 {
     int total_hd = 0;
 
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you); mi; ++mi)
     {
         if (is_orcish_follower(*mi))
             total_hd += mi->hit_dice;
@@ -596,7 +597,7 @@ static void _beogh_spread_experience(int exp)
 
     if (total_hd > 0)
     {
-        for (monster_iterator mi(&you); mi; ++mi)
+        for (monster_near_iterator mi(&you); mi; ++mi)
         {
             if (is_orcish_follower(*mi))
             {
@@ -2793,7 +2794,7 @@ void alert_nearby_monsters(void)
     // alert monsters that aren't sleeping.  For cases where an
     // event should wake up monsters and alert them, I'd suggest
     // calling noisy() before calling this function. - bwr
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
         if (!mi->asleep())
              behaviour_event(*mi, ME_ALERT, &you);
 }

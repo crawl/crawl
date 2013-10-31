@@ -476,18 +476,18 @@ void apply_control_winds(const monster* mon)
     }
 
     // Now give a ranged accuracy boost to nearby allies
-    for (monster_iterator mi(mon); mi; ++mi)
+    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
     {
-        if (distance2(mon->pos(), mi->pos()) < 33 && mons_aligned(mon, *mi))
+        if (distance2(mon->pos(), mi->pos()) >= 33 || !mons_aligned(mon, *mi))
+            continue;
+
+        if (!mi->has_ench(ENCH_WIND_AIDED))
+            mi->add_ench(mon_enchant(ENCH_WIND_AIDED, 1, mon, 20));
+        else
         {
-            if (!mi->has_ench(ENCH_WIND_AIDED))
-                mi->add_ench(mon_enchant(ENCH_WIND_AIDED, 1, mon, 20));
-            else
-            {
-                mon_enchant aid = mi->get_ench(ENCH_WIND_AIDED);
-                aid.duration = 20;
-                mi->update_ench(aid);
-            }
+            mon_enchant aid = mi->get_ench(ENCH_WIND_AIDED);
+            aid.duration = 20;
+            mi->update_ench(aid);
         }
     }
 }

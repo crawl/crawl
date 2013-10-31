@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "acquire.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -36,7 +37,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -1148,7 +1148,7 @@ static int _xom_do_potion(bool debug = false)
 static int _xom_confuse_monsters(int sever, bool debug = false)
 {
     bool rc = false;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (mi->wont_attack()
             || !mons_class_is_confusable(mi->type)
@@ -1506,7 +1506,7 @@ static int _xom_swap_weapons(bool debug = false)
     }
 
     vector<monster* > mons_wpn;
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
         if (!wpn || mi->wont_attack() || mi->is_summoned()
             || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
@@ -1638,7 +1638,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
         return XOM_DID_NOTHING;
 
     vector<monster* > mons;
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
         mons.push_back(*mi);
 
     if (mons.empty())
@@ -1723,7 +1723,7 @@ static int _xom_random_stickable(const int HD)
 static int _xom_snakes_to_sticks(int sever, bool debug = false)
 {
     bool action = false;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (mi->attitude != ATT_HOSTILE)
             continue;
@@ -1781,7 +1781,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
 static int _xom_animate_monster_weapon(int sever, bool debug = false)
 {
     vector<monster* > mons_wpn;
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack() || mi->is_summoned()
             || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
@@ -2213,7 +2213,7 @@ static int _xom_change_scenery(bool debug = false)
 static int _xom_inner_flame(int sever, bool debug = false)
 {
     bool rc = false;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (mi->wont_attack()
             || mons_immune_magic(*mi)
@@ -2933,7 +2933,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         bool mons_too = false;
         if (coinflip())
         {
-            for (monster_iterator mi(you.get_los()); mi; ++mi)
+            for (monster_near_iterator mi(you.pos()); mi; ++mi)
             {
                 if (!mons_class_is_confusable(mi->type)
                     || one_chance_in(20))
@@ -3481,7 +3481,7 @@ static int _xom_blink_monsters(bool debug = false)
     // Sometimes blink towards the player, sometimes randomly. It might
     // end up being helpful instead of dangerous, but Xom doesn't mind.
     const bool blink_to_player = _xom_feels_nasty() || coinflip();
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (blinks >= 5)
             break;

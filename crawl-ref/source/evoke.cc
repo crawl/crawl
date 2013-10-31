@@ -1438,7 +1438,7 @@ static bool _stone_of_tremors()
     delay(200);
 
     // Possibly shaft some monsters.
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (grd(mi->pos()) == DNGN_FLOOR
             && !mi->airborne() && is_valid_shaft_level()

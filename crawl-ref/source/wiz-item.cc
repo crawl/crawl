@@ -10,6 +10,7 @@
 #include <errno.h>
 
 #include "acquire.h"
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "coordit.h"
@@ -30,7 +31,6 @@
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
-#include "mon-util.h"
 #include "options.h"
 #include "output.h"
 #include "player-equip.h"
@@ -798,7 +798,7 @@ void wizard_unidentify_pack()
     // Forget things that nearby monsters are carrying, as well.
     // (For use with the "give monster an item" wizard targetting
     // command.)
-    for (monster_iterator mon(you.get_los()); mon; ++mon)
+    for (monster_near_iterator mon(&you); mon; ++mon)
     {
         for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
         {

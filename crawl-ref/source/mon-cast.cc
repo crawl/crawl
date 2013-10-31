@@ -186,7 +186,7 @@ static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
 
     const monster_type caster_genus = mons_genus(caster->type);
 
-    for (monster_iterator targ(caster); targ; ++targ)
+    for (monster_near_iterator targ(caster, LOS_NO_TRANS); targ; ++targ)
     {
         if (*targ == caster)
             continue;
@@ -1660,7 +1660,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
         const coord_def foepos = mon->get_foe()->pos();
 
-        for (monster_iterator mi(mon); mi; ++mi)
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
         {
             if (_valid_encircle_ally(mon, *mi, foepos))
                 return false; // We found at least one valid ally; that's enough.
@@ -1677,7 +1677,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     else // To account for multiple dryads in range of each other
     {
         int count = 0;
-        for (monster_iterator mi(mon); mi; ++mi)
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
         {
             if (mi->type == MONS_SNAPLASHER_VINE)
                 ++count;
@@ -1694,7 +1694,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         return !foe || !feat_is_water(grd(foe->pos()));
 
     case SPELL_HASTE_PLANTS:
-        for (monster_iterator mi(mon); mi; ++mi)
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
         {
             // Isn't useless if there's a single viable target for it
             if (mons_aligned(*mi, mon)
@@ -3433,7 +3433,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
           retval = 0;
     }
 
-    for (monster_iterator mi(mons->get_los()); mi; ++mi)
+    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
     {
         if (*mi == mons)
             continue;
@@ -3502,7 +3502,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
             }
     }
 
-    for (monster_iterator mi(mons->get_los()); mi; ++mi)
+    for (monster_near_iterator mi(mons->pos()); mi; ++mi)
     {
         if (*mi == mons)
             continue;
@@ -3580,7 +3580,7 @@ static void _blink_allies_encircle(const monster* mon)
     vector<monster*> allies;
     const coord_def foepos = mon->get_foe()->pos();
 
-    for (monster_iterator mi(mon); mi; ++mi)
+    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
     {
         if (_valid_encircle_ally(mon, *mi, foepos))
             allies.push_back(*mi);
@@ -4859,7 +4859,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         simple_monster_message(mons,
             make_stringf(" begins to accept %s allies' injuries.",
                          mons->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
-        for (monster_iterator mi(mons->get_los_no_trans()); mi; ++mi)
+        // FIXME: allies preservers vs the player
+        for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
         {
             if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
                 && *mi != mons)
@@ -4919,7 +4920,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_HASTE_PLANTS:
     {
         int num = 2 + random2(3);
-        for (monster_iterator mi(mons); mi && num > 0; ++mi)
+        for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi && num > 0; ++mi)
         {
             if (mons_aligned(*mi, mons)
                 && _is_hastable_plant(*mi)

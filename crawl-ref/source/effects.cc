@@ -19,6 +19,7 @@
 #include "options.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -904,7 +905,7 @@ static bool _follows_orders(monster* mon)
 // If allow_patrol is true, patrolling monsters get MHITNOT instead.
 static void _set_friendly_foes(bool allow_patrol = false)
 {
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;
@@ -915,7 +916,7 @@ static void _set_friendly_foes(bool allow_patrol = false)
 
 static void _set_allies_patrol_point(bool clear = false)
 {
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;
@@ -933,7 +934,7 @@ static void _set_allies_withdraw(const coord_def &target)
     float mult = float(LOS_RADIUS * 2) / (float)max(abs(delta.x), abs(delta.y));
     coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;

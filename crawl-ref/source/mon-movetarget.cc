@@ -940,7 +940,8 @@ static bool _herd_ok(monster * mon)
     bool intermediate_range = false;
     int intermediate_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
 
-    for (monster_iterator mit(mon); mit; ++mit)
+    // herdlings magically know others even out of LOS
+    for (monster_iterator mit; mit; ++mit)
     {
         if (mit->mindex() == mon->mindex())
             continue;

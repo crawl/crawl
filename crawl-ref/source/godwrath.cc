@@ -9,6 +9,7 @@
 
 #include "externs.h"
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "database.h"
@@ -23,7 +24,6 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "terrain.h"
@@ -1383,7 +1383,7 @@ static bool _ely_holy_revenge(const monster *victim)
     mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
 
     vector<monster*> targets;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->friendly())
             targets.push_back(*mi);
