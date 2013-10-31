@@ -2227,4 +2227,16 @@
       }
     },
 
+    {  MST_IGNIS,
+      {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+
 #endif
