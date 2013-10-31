@@ -1495,7 +1495,8 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
-        if (mon->no_tele(true, false))
+        // Prefer to keep a tornado going rather than blink.
+        if (mon->no_tele(true, false) || mon->has_ench(ENCH_TORNADO))
             ret = true;
         break;
 
