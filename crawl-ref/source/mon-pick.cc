@@ -100,7 +100,10 @@ monster_type pick_monster_by_hash(branch_type branch, uint32_t hash)
 
 monster_type pick_monster(level_id place, mon_pick_vetoer veto)
 {
-    ASSERT(place.is_valid());
+#ifdef ASSERTS
+    if (!place.is_valid())
+        die("trying to pick a monster from %s", place.describe().c_str());
+#endif
     return pick_monster_from(population[place.branch].pop, place.depth, veto);
 }
 
