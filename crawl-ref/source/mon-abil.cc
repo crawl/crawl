@@ -904,7 +904,7 @@ static void _starcursed_scream(monster* mon, actor* target)
     //Gather the chorus
     vector<monster*> chorus;
 
-    for (monster_iterator mi(target); mi; ++mi)
+    for (monster_near_iterator mi(target->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->type == MONS_STARCURSED_MASS)
             chorus.push_back(*mi);
@@ -965,7 +965,7 @@ static bool _will_starcursed_scream(monster* mon)
 {
     int n = 0;
 
-    for (monster_iterator mi(mon->get_los()); mi; ++mi)
+    for (monster_near_iterator mi(mon->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->type != MONS_STARCURSED_MASS)
             continue;
@@ -1197,7 +1197,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
     {
         const int level = chief->hit_dice > 12? 2 : 1;
         vector<monster* > seen_affected;
-        for (monster_iterator mi(chief); mi; ++mi)
+        for (monster_near_iterator mi(chief, LOS_NO_TRANS); mi; ++mi)
         {
             if (*mi != chief
                 && _is_battlecry_compatible(*mi, type)
@@ -1343,7 +1343,7 @@ static bool _moth_incite_monsters(monster* mon)
     // Only things both in LOS of the moth and within radius 4.
     const int radius_sq = 4 * 4 + 1;
     int goaded = 0;
-    for (monster_iterator mi(mon->get_los_no_trans()); mi; ++mi)
+    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
     {
         if (*mi == mon || !mi->needs_berserk())
             continue;
@@ -1372,8 +1372,7 @@ static bool _queen_incite_worker(const monster* queen)
         return false;
 
     int goaded = 0;
-    circle_def c(queen->pos(), 4, C_ROUND);
-    for (monster_iterator mi(&c); mi; ++mi)
+    for (monster_near_iterator mi(queen, LOS_NO_TRANS); mi; ++mi)
     {
         // Only goad killer bees
         if (mi->type != MONS_KILLER_BEE)
@@ -1382,7 +1381,7 @@ static bool _queen_incite_worker(const monster* queen)
         if (*mi == queen || !mi->needs_berserk())
             continue;
 
-        if (is_sanctuary(mi->pos()))
+        if (is_sanctuary(mi->pos()) || distance2(queen->pos(), mi->pos()) > 17)
             continue;
 
         if (_make_monster_angry(queen, *mi) && !one_chance_in(3 * ++goaded))
@@ -1956,7 +1955,7 @@ static bool _lost_soul_teleport(monster* mons)
 static bool _worthy_sacrifice(monster* soul, const monster* target)
 {
     int count = 0;
-    for (monster_iterator mi(soul->get_los_no_trans()); mi; ++mi)
+    for (monster_near_iterator mi(soul, LOS_NO_TRANS); mi; ++mi)
     {
         if (_lost_soul_affectable(*mi))
             ++count;
@@ -1974,7 +1973,7 @@ bool lost_soul_revive(monster* mons)
     if (!_lost_soul_affectable(mons))
         return false;
 
-    for (monster_iterator mi(mons->get_los_no_trans()); mi; ++mi)
+    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
         {
@@ -2012,7 +2011,7 @@ bool lost_soul_spectralize(monster* mons)
     if (!_lost_soul_affectable(mons))
         return false;
 
-    for (monster_iterator mi(mons); mi; ++mi)
+    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
         {
@@ -2184,7 +2183,7 @@ bool apply_grasping_roots(monster* mons)
 void check_grasping_roots(actor* act, bool quiet)
 {
     bool source = false;
-    for (monster_iterator mi(act->get_los()) ; mi; ++mi)
+    for (monster_near_iterator mi(act->pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(act, *mi) && mi->has_ench(ENCH_GRASPING_ROOTS_SOURCE))
         {
@@ -3385,13 +3384,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
         }
 
-        c = circle_def(mons->pos(), 4, C_CIRCLE);
-        for (monster_iterator targ(&c); targ; ++targ)
+        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ))
+            if (mons_aligned(mons, *targ) || distance2(mons->pos(), targ->pos()) > 4)
                 continue;
 
-            if (mons->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
+            if (!feat_is_solid(grd(targ->pos())))
             {
                 mons->suicide();
                 used = true;
@@ -4210,10 +4208,13 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             int briar_count = 0;
             c = circle_def(mons->pos(), 4, C_ROUND);
-            for (monster_iterator mi(&c); mi; ++mi)
+            for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
             {
-                if (mi->type == MONS_BRIAR_PATCH)
+                if (mi->type == MONS_BRIAR_PATCH
+                    && distance2(mons->pos(), mi->pos()) > 17)
+                {
                     briar_count++;
+                }
             }
             if (briar_count < 4) // Probably no solid wall here
             {
@@ -4322,56 +4323,53 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_FIREFLY:
-        if (one_chance_in(7) && !mons->friendly() && !mons->confused())
+        if (!one_chance_in(7) || mons->friendly() || mons->confused()
+            || mons->has_ench(ENCH_INVIS))
         {
-            // In the odd case we're invisible somehow
-            mons->del_ench(ENCH_INVIS);
-            simple_monster_message(mons, " flashes a warning beacon!",
-                                   MSGCH_MONSTER_SPELL);
+            break;
+        }
 
-            circle_def range(mons->pos(), 13, C_ROUND);
-            for (monster_iterator mi(&range); mi; ++mi)
+        simple_monster_message(mons, " flashes a warning beacon!",
+                               MSGCH_MONSTER_SPELL);
+
+        for (monster_near_iterator mi(mons); mi; ++mi)
+        {
+            // Fireflies (and their riders) are attuned enough to the light
+            // to wake in response, while other creatures sleep through it
+            if (mi->asleep() && (mi->type == MONS_FIREFLY
+                                 || mi->type == MONS_SPRIGGAN_RIDER))
             {
-                // Fireflies (and their riders) are attuned enough to the light
-                // to wake in response, while other creatures sleep through it
-                if (mi->asleep() && (mi->type == MONS_FIREFLY
-                                     || mi->type == MONS_SPRIGGAN_RIDER))
-                {
-                    behaviour_event(*mi, ME_DISTURB, mons->get_foe(), mons->pos());
+                behaviour_event(*mi, ME_DISTURB, mons->get_foe(), mons->pos());
 
-                    // Give riders a chance to shout and alert their companions
-                    // (this won't otherwise happen if the player is still out
-                    // of their sight)
-                    if (mi->behaviour == BEH_WANDER && coinflip())
-                        handle_monster_shouts(*mi);
-                }
+                // Give riders a chance to shout and alert their companions
+                // (this won't otherwise happen if the player is still out
+                // of their sight)
+                if (mi->behaviour == BEH_WANDER && coinflip())
+                    handle_monster_shouts(*mi);
+            }
 
-                if (!mi->asleep())
+            if (!mi->asleep())
+            {
+                // We consider the firefly's foe to be the 'source' of the
+                // light here so that monsters wandering around for the player
+                // will be alerted by fireflies signaling in response to the
+                // player, but ignore signals in response to other monsters
+                // if they're already in pursuit of the player.
+                behaviour_event(*mi, ME_ALERT, mons->get_foe(), mons->pos());
+                if (mi->target == mons->pos())
                 {
-                    // We consider the firefly's foe to be the 'source' of the
-                    // light here so that monsters wandering around for the player
-                    // will be alerted by fireflies signaling in response to the
-                    // player, but ignore signals in response to other monsters
-                    // if they're already in pursuit of the player.
-                    behaviour_event(*mi, ME_ALERT, mons->get_foe(), mons->pos());
-                    if (mi->target == mons->pos())
+                    monster_pathfind mp;
+                    if (mp.init_pathfind(*mi, mons->pos()))
                     {
-                        monster_pathfind mp;
-                        if (mp.init_pathfind(*mi, mons->pos()))
+                        mi->travel_path = mp.calc_waypoints();
+                        if (!mi->travel_path.empty())
                         {
-                            mi->travel_path = mp.calc_waypoints();
-                            if (!mi->travel_path.empty())
-                            {
-                                mi->target = mi->travel_path[0];
-                                mi->travel_target = MTRAV_PATROL;
-                            }
+                            mi->target = mi->travel_path[0];
+                            mi->travel_target = MTRAV_PATROL;
                         }
                     }
                 }
             }
-
-            if (!you.see_cell(mons->pos()) && range.contains(you.pos()))
-                mpr("You see a distant pulse of light.");
         }
         break;
 

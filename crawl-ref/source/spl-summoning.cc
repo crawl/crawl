@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -2393,7 +2394,7 @@ spret_type cast_mass_abjuration(int pow, bool fail)
 {
     fail_check();
     mpr("Send 'em back where they came from!");
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         _abjuration(pow, *mi);
 
     return SPRET_SUCCESS;

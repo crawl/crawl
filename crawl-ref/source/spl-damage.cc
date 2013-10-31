@@ -729,12 +729,9 @@ void sonic_damage(bool scream)
     // First build the message.
     counted_monster_list affected_monsters;
 
-    for (monster_iterator mi(&you); mi; ++mi)
-        if (cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
-            && !silenced(mi->pos()))
-        {
+    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
+        if (!silenced(mi->pos()))
             affected_monsters.add(*mi);
-        }
 
     /* dpeg sez:
        * damage applied to everyone but the wielder (reasoning: the sword
@@ -759,13 +756,10 @@ void sonic_damage(bool scream)
     }
 
     // Now damage the creatures.
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
     {
-        if (!cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
-            || silenced(mi->pos()))
-        {
+        if (silenced(mi->pos()))
             continue;
-        }
         int hurt = (random2(2) + 1) * (random2(2) + 1) * (random2(3) + 1)
                  + (random2(3) + 1) + 1;
         if (scream)

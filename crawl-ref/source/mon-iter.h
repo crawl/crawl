@@ -24,9 +24,6 @@ class monster_iterator
 {
 public:
     monster_iterator();
-    monster_iterator(const circle_def* circle_);
-    monster_iterator(const los_base* los_);
-    explicit monster_iterator(const actor* act_);
 
     operator bool() const;
     monster* operator*() const;

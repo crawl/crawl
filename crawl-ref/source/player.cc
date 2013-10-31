@@ -16,6 +16,7 @@
 #include <sstream>
 #include <algorithm>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -53,7 +54,6 @@
 #include "misc.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "mon-iter.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
@@ -1327,14 +1327,13 @@ static int _slow_heal_rate()
     if (player_mutation_level(MUT_SLOW_HEALING) == 3)
         return 0;
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(&you); mi; ++mi)
     {
-        if (you.can_see(*mi)
-            && !mons_is_firewood(*mi)
+        if (!mons_is_firewood(*mi)
             && !mi->wont_attack()
             && !mi->neutral())
         {
-            return (2 - player_mutation_level(MUT_SLOW_HEALING));
+            return 2 - player_mutation_level(MUT_SLOW_HEALING);
         }
     }
     return 2;
@@ -8058,13 +8057,12 @@ bool player::made_nervous_by(const coord_def &p)
     monster* mons = monster_at(p);
     if (mons && !mons_is_firewood(mons))
         return false;
-    for (monster_iterator mi(get_los()); mi; ++mi)
+    for (monster_near_iterator mi(&you); mi; ++mi)
     {
         if (!mons_is_wandering(*mi)
             && !mi->asleep()
             && !mi->confused()
             && !mi->cannot_act()
-            && you.can_see(*mi)
             && !mons_is_firewood(*mi)
             && !mi->wont_attack()
             && !mi->neutral())

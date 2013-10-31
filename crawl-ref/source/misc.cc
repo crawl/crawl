@@ -22,6 +22,7 @@
 #include "misc.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "clua.h"
@@ -55,7 +56,6 @@
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "ng-setup.h"
 #include "notes.h"
@@ -1715,21 +1715,21 @@ static void monster_threat_values(double *general, double *highest,
     double sum = 0;
     int highest_xp = -1;
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if (!mi->friendly())
+        if (mi->friendly())
+            continue;
+
+        const int xp = exper_value(*mi);
+        const double log_xp = log((double)xp);
+        sum += log_xp;
+        if (xp > highest_xp)
         {
-            const int xp = exper_value(*mi);
-            const double log_xp = log((double)xp);
-            sum += log_xp;
-            if (xp > highest_xp)
-            {
-                highest_xp = xp;
-                *highest   = log_xp;
-            }
-            if (!you.can_see(*mi))
-                *invis = true;
+            highest_xp = xp;
+            *highest   = log_xp;
         }
+        if (!mi->visible_to(&you))
+            *invis = true;
     }
 
     *general = sum;

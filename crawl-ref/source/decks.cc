@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "act-iter.h"
 #include "beam.h"
 #include "cio.h"
 #include "coordit.h"
@@ -35,7 +36,6 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mon-util.h"
@@ -2557,7 +2557,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
     if (power_level >= 1)
     {
         // A chance to convert opponents.
-        for (monster_iterator mi(you.get_los()); mi; ++mi)
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (mi->friendly()
                || mi->holiness() != MH_NATURAL

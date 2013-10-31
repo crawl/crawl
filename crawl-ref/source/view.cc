@@ -14,12 +14,7 @@
 #include <algorithm>
 #include <memory>
 
-#include "externs.h"
-
-#include "map_knowledge.h"
-#include "viewchar.h"
-#include "showsymb.h"
-
+#include "act-iter.h"
 #include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
@@ -51,6 +46,7 @@
 #include "output.h"
 #include "player.h"
 #include "random.h"
+#include "showsymb.h"
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
@@ -58,6 +54,7 @@
 #include "tilemcache.h"
 #include "traps.h"
 #include "travel.h"
+#include "viewchar.h"
 #include "viewmap.h"
 #include "xom.h"
 
@@ -121,7 +118,7 @@ void seen_monsters_react()
     if (you.duration[DUR_TIME_STEP] || crawl_state.game_is_arena())
         return;
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
             && check_awaken(*mi)

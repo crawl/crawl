@@ -28,4 +28,26 @@ protected:
     void advance();
 };
 
+class monster_near_iterator
+{
+public:
+    monster_near_iterator(coord_def c, los_type los = LOS_DEFAULT);
+    monster_near_iterator(const actor* a, los_type los = LOS_DEFAULT);
+
+    operator bool() const;
+    monster* operator*() const;
+    monster* operator->() const;
+    monster_near_iterator& operator++();
+    monster_near_iterator operator++(int);
+
+protected:
+    const coord_def center;
+    los_type _los;
+    const actor* viewer;
+    int i;
+
+    bool valid(const monster* a) const;
+    void advance();
+};
+
 #endif

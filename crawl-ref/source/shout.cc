@@ -615,9 +615,11 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)
 {
-    circle_def c(where, range, C_CIRCLE);
-    for (monster_iterator mi(&c); mi; ++mi)
+    for (monster_iterator mi; mi; ++mi)
     {
+        if (distance2(mi->pos(), where))
+            continue;
+
         switch (sense)
         {
         case SENSE_SMELL_BLOOD:
