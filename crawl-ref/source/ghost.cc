@@ -7,6 +7,7 @@
 
 #include "ghost.h"
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "colour.h"
 #include "database.h"
@@ -15,7 +16,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "mon-iter.h"
 #include "ng-input.h"
 #include "random.h"
 #include "skills2.h"

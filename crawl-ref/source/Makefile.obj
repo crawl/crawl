@@ -143,7 +143,6 @@ mon-ench.o \
 mon-gear.o \
 mon-grow.o \
 mon-info.o \
-mon-iter.o \
 mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \

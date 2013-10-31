@@ -9,6 +9,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "coord.h"
 #include "coordit.h"
@@ -22,7 +23,6 @@
 #include "macro.h"
 #include "mon-act.h"
 #include "mon-death.h"
-#include "mon-iter.h"
 #include "mon-movetarget.h"
 #include "mon-pathfind.h"
 #include "mon-speak.h"

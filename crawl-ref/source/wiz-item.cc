@@ -29,7 +29,6 @@
 #include "makeitem.h"
 #include "mapdef.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "output.h"

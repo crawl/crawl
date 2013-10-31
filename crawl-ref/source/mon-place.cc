@@ -11,6 +11,7 @@
 #include "mgen_data.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "arena.h"
 #include "branch.h"
@@ -33,7 +34,6 @@
 #include "mon-chimera.h"
 #include "mon-death.h"
 #include "mon-gear.h"
-#include "mon-iter.h"
 #include "mon-pick.h"
 #include "mon-stuff.h"
 #include "place.h"

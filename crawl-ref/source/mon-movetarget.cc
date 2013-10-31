@@ -2,6 +2,7 @@
 
 #include "mon-movetarget.h"
 
+#include "act-iter.h"
 #include "branch.h"
 #include "coord.h"
 #include "coordit.h"
@@ -11,7 +12,6 @@
 #include "losglobal.h"
 #include "libutil.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-stuff.h"

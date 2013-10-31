@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "act-iter.h"
 #include "branch.h"
 #include "acquire.h"
 #include "areas.h"
@@ -53,7 +54,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mgen_data.h"

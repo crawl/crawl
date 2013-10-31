@@ -9,6 +9,7 @@
 #include "spl-other.h"
 #include "externs.h"
 
+#include "act-iter.h"
 #include "coord.h"
 #include "delay.h"
 #include "env.h"
@@ -22,7 +23,6 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"

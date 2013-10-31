@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 
+#include "act-iter.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -17,7 +18,6 @@
 #include "maps.h"
 #include "message.h"
 #include "mgen_data.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "random.h"

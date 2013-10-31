@@ -132,3 +132,53 @@ void monster_near_iterator::advance()
              return;
     while (!valid(**this));
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+monster_iterator::monster_iterator()
+    : i(0)
+{
+    while (i < MAX_MONSTERS && !menv[i].alive())
+        i++;
+}
+
+monster_iterator::operator bool() const
+{
+    return i < MAX_MONSTERS && (*this)->alive();
+}
+
+monster* monster_iterator::operator*() const
+{
+    if (i < MAX_MONSTERS)
+        return &menv[i];
+    else
+        return nullptr;
+}
+
+monster* monster_iterator::operator->() const
+{
+    return **this;
+}
+
+monster_iterator& monster_iterator::operator++()
+{
+    while (++i < MAX_MONSTERS)
+        if (menv[i].alive())
+            break;
+    return *this;
+}
+
+monster_iterator monster_iterator::operator++(int)
+{
+    monster_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
+void monster_iterator::advance()
+{
+    do
+         if (++i >= MAX_MONSTERS)
+             return;
+    while (!(*this)->alive());
+}

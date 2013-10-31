@@ -7,6 +7,7 @@
 
 #include <queue>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -34,7 +35,6 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"

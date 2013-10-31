@@ -222,7 +222,6 @@
 		7B09F5D81133D6AB004F149D /* mon-gear.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402D10BD494400A99626 /* mon-gear.cc */; };
 		7B09F5D91133D6AB004F149D /* mon-grow.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402F10BD494400A99626 /* mon-grow.cc */; };
 		7B09F5DA1133D6AB004F149D /* mon-info.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403110BD494400A99626 /* mon-info.cc */; };
-		7B09F5DB1133D6AB004F149D /* mon-iter.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403310BD494400A99626 /* mon-iter.cc */; };
 		7B09F5DC1133D6AB004F149D /* mon-movetarget.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403510BD494400A99626 /* mon-movetarget.cc */; };
 		7B09F5DD1133D6AB004F149D /* mon-pathfind.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403710BD494400A99626 /* mon-pathfind.cc */; };
 		7B09F5DE1133D6AB004F149D /* mon-pick.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403910BD494400A99626 /* mon-pick.cc */; };
@@ -577,7 +576,6 @@
 		E5D6412C10BD494500A99626 /* mon-gear.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402D10BD494400A99626 /* mon-gear.cc */; };
 		E5D6412D10BD494500A99626 /* mon-grow.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402F10BD494400A99626 /* mon-grow.cc */; };
 		E5D6412E10BD494500A99626 /* mon-info.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403110BD494400A99626 /* mon-info.cc */; };
-		E5D6412F10BD494500A99626 /* mon-iter.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403310BD494400A99626 /* mon-iter.cc */; };
 		E5D6413010BD494500A99626 /* mon-movetarget.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403510BD494400A99626 /* mon-movetarget.cc */; };
 		E5D6413110BD494500A99626 /* mon-pathfind.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403710BD494400A99626 /* mon-pathfind.cc */; };
 		E5D6413210BD494500A99626 /* mon-pick.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6403910BD494400A99626 /* mon-pick.cc */; };
@@ -1460,8 +1458,6 @@
 		E5D6403010BD494400A99626 /* mon-grow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-grow.h"; sourceTree = "<group>"; };
 		E5D6403110BD494400A99626 /* mon-info.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-info.cc"; sourceTree = "<group>"; };
 		E5D6403210BD494400A99626 /* mon-info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-info.h"; sourceTree = "<group>"; };
-		E5D6403310BD494400A99626 /* mon-iter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-iter.cc"; sourceTree = "<group>"; };
-		E5D6403410BD494400A99626 /* mon-iter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-iter.h"; sourceTree = "<group>"; };
 		E5D6403510BD494400A99626 /* mon-movetarget.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-movetarget.cc"; sourceTree = "<group>"; };
 		E5D6403610BD494400A99626 /* mon-movetarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mon-movetarget.h"; sourceTree = "<group>"; };
 		E5D6403710BD494400A99626 /* mon-pathfind.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-pathfind.cc"; sourceTree = "<group>"; };
@@ -2044,8 +2040,6 @@
 				E5D6403010BD494400A99626 /* mon-grow.h */,
 				E5D6403110BD494400A99626 /* mon-info.cc */,
 				E5D6403210BD494400A99626 /* mon-info.h */,
-				E5D6403310BD494400A99626 /* mon-iter.cc */,
-				E5D6403410BD494400A99626 /* mon-iter.h */,
 				E5D6403510BD494400A99626 /* mon-movetarget.cc */,
 				E5D6403610BD494400A99626 /* mon-movetarget.h */,
 				1F909B38148B244F00084E83 /* mon-mst.h */,
@@ -3072,7 +3066,6 @@
 				7B09F5D81133D6AB004F149D /* mon-gear.cc in Sources */,
 				7B09F5D91133D6AB004F149D /* mon-grow.cc in Sources */,
 				7B09F5DA1133D6AB004F149D /* mon-info.cc in Sources */,
-				7B09F5DB1133D6AB004F149D /* mon-iter.cc in Sources */,
 				7B09F5DC1133D6AB004F149D /* mon-movetarget.cc in Sources */,
 				7B09F5DD1133D6AB004F149D /* mon-pathfind.cc in Sources */,
 				7B09F5DE1133D6AB004F149D /* mon-pick.cc in Sources */,
@@ -3320,7 +3313,6 @@
 				E5D6412C10BD494500A99626 /* mon-gear.cc in Sources */,
 				E5D6412D10BD494500A99626 /* mon-grow.cc in Sources */,
 				E5D6412E10BD494500A99626 /* mon-info.cc in Sources */,
-				E5D6412F10BD494500A99626 /* mon-iter.cc in Sources */,
 				E5D6413010BD494500A99626 /* mon-movetarget.cc in Sources */,
 				E5D6413110BD494500A99626 /* mon-pathfind.cc in Sources */,
 				E5D6413210BD494500A99626 /* mon-pick.cc in Sources */,

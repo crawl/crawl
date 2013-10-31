@@ -8,6 +8,7 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "act-iter.h"
 #include "beam.h"
 #include "branch.h"
 #include "chardump.h"
@@ -20,7 +21,6 @@
 #include "los.h"
 #include "message.h"
 #include "mon-act.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "place.h"

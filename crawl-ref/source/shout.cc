@@ -7,6 +7,7 @@
 
 #include "shout.h"
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
@@ -23,7 +24,6 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-chimera.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-stuff.h"

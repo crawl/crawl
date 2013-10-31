@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 #include "mon-act.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "arena.h"
 #include "artefact.h"
@@ -36,7 +37,6 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mgen_data.h"

@@ -11,6 +11,7 @@
 #include <queue>
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "branch.h"
@@ -34,7 +35,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
-#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-pick.h"
 #include "mon-place.h"

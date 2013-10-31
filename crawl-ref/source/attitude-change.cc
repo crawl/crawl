@@ -9,6 +9,7 @@
 
 #include <sstream>
 
+#include "act-iter.h"
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
@@ -18,7 +19,6 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "mon-stuff.h"

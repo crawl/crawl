@@ -7,13 +7,13 @@
 
 #include "dactions.h"
 
+#include "act-iter.h"
 #include "coordit.h"
 #include "decks.h"
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
 #include "mon-util.h"

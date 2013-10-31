@@ -7,6 +7,7 @@
 
 #include "arena.h"
 
+#include "act-iter.h"
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
@@ -22,7 +23,6 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-place.h"
