@@ -224,6 +224,7 @@ const int ANTITRAIN_PENALTY = 2;
 #define TORNADO_RADIUS 6
 
 #define NUMBER_OF_RUNES_NEEDED    3
+#define RUNE_LOCK_DEPTH 14
 
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 100
