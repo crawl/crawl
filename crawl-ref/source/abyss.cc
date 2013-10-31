@@ -963,17 +963,25 @@ static bool _in_wastes(const coord_def &p)
     return (p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF);
 }
 
-static level_id _get_real_level()
+// XXX: This does two things: picks a random level for monster generation,
+// and picks a random existing level for layouts.
+// The signature of this function might be overly complex, but perhaps it
+// will be used for more in the future?
+static level_id _get_random_level(bool existing, bool connected)
 {
     vector<level_id> levels;
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
-        if (i == BRANCH_SHOALS || i == BRANCH_ABYSS)
+        if (i == BRANCH_ABYSS
+            || (existing && i == BRANCH_SHOALS)
+            || (connected && !is_connected_branch(static_cast<branch_type>(i))))
+        {
             continue;
+        }
         for (int j = 0; j < brdepth[i]; ++j)
         {
             const level_id id(static_cast<branch_type>(i), j);
-            if (is_existing_level(id))
+            if (!existing || is_existing_level(id))
                 levels.push_back(id);
         }
     }
@@ -1034,7 +1042,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 
     if (abyssLayout == NULL)
     {
-        const level_id lid = _get_real_level();
+        const level_id lid = _get_random_level(true, false);
         levelLayout = new LevelLayout(lid, 5, rivers);
         complex_vec[0] = levelLayout;
         complex_vec[1] = &rivers; // const
@@ -1345,8 +1353,7 @@ static void _initialize_abyss_state()
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random_int() & 0x7FFFFFFF;
     abyssal_state.nuke_all = false;
-    // TODO: Select this rather than setting it to a fixed value.
-    abyssal_state.level = level_id(BRANCH_MAIN_DUNGEON, 19);
+    abyssal_state.level = _get_random_level(false, true);
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 
