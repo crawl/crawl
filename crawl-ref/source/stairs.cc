@@ -716,7 +716,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
     if (player_in_branch(BRANCH_MAIN_DUNGEON)
         && you.depth == RUNE_LOCK_DEPTH
-        && feat_is_travelable_stair(stair_find))
+        && (feat_is_stone_stair(stair_find) || feat_is_escape_hatch(stair_find)))
     {
         bool has_rune = false;
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
