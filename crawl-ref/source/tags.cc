@@ -2552,7 +2552,7 @@ static void tag_read_you(reader &th)
     {
         abyssal_state.level = unmarshall_level_id(th);
     }
-    else
+    if (!abyssal_state.level.is_valid())
     {
         abyssal_state.level.branch = BRANCH_MAIN_DUNGEON;
         abyssal_state.level.depth = 19;
