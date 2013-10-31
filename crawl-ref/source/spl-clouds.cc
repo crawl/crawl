@@ -24,7 +24,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"

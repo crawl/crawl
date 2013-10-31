@@ -49,7 +49,6 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "notes.h"

@@ -1935,14 +1935,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\mon-iter.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\mon-iter.h"
-			>
-		</File>
-		<File
 			RelativePath="..\mon-movetarget.cc"
 			>
 		</File>

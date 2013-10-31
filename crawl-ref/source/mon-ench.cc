@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "act-iter.h"
 #include "actor.h"
 #include "areas.h"
 #include "cloud.h"
@@ -25,7 +26,6 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "religion.h"
 #include "spl-clouds.h"

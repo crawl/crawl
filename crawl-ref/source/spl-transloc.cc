@@ -13,6 +13,7 @@
 #include "externs.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
 #include "coord.h"
@@ -31,7 +32,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "orb.h"

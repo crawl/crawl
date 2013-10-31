@@ -9,6 +9,7 @@
 
 #include "mon-info.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "coord.h"
@@ -22,7 +23,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-chimera.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"

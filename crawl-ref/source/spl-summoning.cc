@@ -35,7 +35,6 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"

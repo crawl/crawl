@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
@@ -24,7 +25,6 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"

@@ -37,7 +37,6 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "mon-chimera.h"
-#include "mon-iter.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mgen_data.h"

@@ -50,4 +50,20 @@ protected:
     void advance();
 };
 
+class monster_iterator
+{
+public:
+    monster_iterator();
+
+    operator bool() const;
+    monster* operator*() const;
+    monster* operator->() const;
+    monster_iterator& operator++();
+    monster_iterator operator++(int);
+
+protected:
+    int i;
+    void advance();
+};
+
 #endif

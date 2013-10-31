@@ -16,6 +16,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "cio.h"
@@ -35,7 +36,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-place.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
