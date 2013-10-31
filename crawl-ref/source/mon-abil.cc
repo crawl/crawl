@@ -1335,61 +1335,6 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     return true;
 }
 
-static bool _moth_polymorph(const monster* mon)
-{
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
-        return false;
-
-    circle_def c(mon->pos(), 4, C_ROUND);
-    for (monster_iterator mi(&c); mi; ++mi)
-    {
-        if (is_sanctuary(mi->pos()))
-            continue;
-
-        if (!you.see_cell(mi->pos()))
-            continue;
-
-        if (!mon->can_see(*mi))
-            continue;
-
-        if (mi->type == MONS_POLYMOTH)
-            continue;
-
-        // Decrease the chances of repeatedly polymorphing high HD monsters.
-        if (mi->flags & MF_POLYMORPHED)
-        {
-          int skip_chance = 1 + pow(mi->hit_dice, 0.5);
-          if (!one_chance_in(skip_chance))
-              continue;
-        }
-
-        // No ally scumming.
-        if (mon->friendly() || mi->friendly() || mi->neutral())
-            continue;
-
-        // Polymorphing firewood is very, very bad.
-        if (mons_is_firewood(*mi))
-            continue;
-
-        if (one_chance_in(2))
-        {
-            const string targ_name = (mi->visible_to(&you)) ? mi->name(DESC_THE)
-                                                            : "something";
-
-            if (you.can_see(*mi))
-            {
-                mprf("%s irradiates %s!",
-                    mon->name(DESC_THE).c_str(),
-                    targ_name.c_str());
-            }
-            monster_polymorph(*mi, RANDOM_TOUGHER_MONSTER);
-            return true;
-        }
-    }
-
-    return false;
-}
-
 static bool _moth_incite_monsters(monster* mon)
 {
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
@@ -3598,11 +3543,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MOTH_OF_WRATH:
         if (one_chance_in(3))
             used = _moth_incite_monsters(mons);
-        break;
-
-    case MONS_POLYMOTH:
-        if (one_chance_in(3))
-            used = _moth_polymorph(mons);
         break;
 
     case MONS_QUEEN_BEE:

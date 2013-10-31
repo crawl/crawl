@@ -137,7 +137,6 @@ ghost_moth MONS_GHOST_MOTH
 moth_of_wrath MONS_MOTH_OF_WRATH
 moth_of_suppression MONS_MOTH_OF_SUPPRESSION
 %rim 0
-polymoth MONS_POLYMOTH
 
 ## Aquatics (';')
 big_fish MONS_BIG_FISH
