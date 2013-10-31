@@ -2773,6 +2773,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         case MONS_SPECTRAL_WEAPON:
         {
+            if (!mon.inv[MSLOT_WEAPON].get())
+                return TILEP_MONS_SPECTRAL_SBL;
+
             // Tiles exist for each class of weapon.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
             switch (weapon_skill(item))
