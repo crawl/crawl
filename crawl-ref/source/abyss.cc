@@ -881,9 +881,12 @@ static void _abyss_generate_monsters(int nmonsters)
     mgen_data mg;
     mg.proximity = PROX_ANYWHERE;
 
+    level_id level = one_chance_in(3)
+        ? abyssal_state.level
+        : level_id::current();
     for (int mcount = 0; mcount < nmonsters; mcount++)
     {
-        mg.cls = pick_random_monster(level_id::current());
+        mg.cls = pick_random_monster(level);
         if (!invalid_monster_type(mg.cls))
             mons_place(mg);
     }
