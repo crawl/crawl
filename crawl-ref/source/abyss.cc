@@ -978,7 +978,7 @@ static level_id _get_random_level(bool existing, bool connected)
         {
             continue;
         }
-        for (int j = 0; j < brdepth[i]; ++j)
+        for (int j = 1; j < brdepth[i]; ++j)
         {
             const level_id id(static_cast<branch_type>(i), j);
             if (!existing || is_existing_level(id))
