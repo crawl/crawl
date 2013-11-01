@@ -712,7 +712,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         stop_delay(true);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+        if (!cell_is_solid(you.pos()))
+            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
         canned_msg(MSG_YOU_BLINK);
         move_player_to_grid(pos, false, true);
@@ -727,7 +728,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
+        if (!cell_is_solid(you.pos()))
+            place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
 
         mon->apply_location_effects(oldpos);
         mon->check_redraw(oldpos);

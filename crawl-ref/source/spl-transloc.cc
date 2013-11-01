@@ -342,7 +342,8 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         move_player_to_grid(target, false, true);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
+        if (!cell_is_solid(origin))
+            place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
     }
 }
 
@@ -766,7 +767,8 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // If we got this far, we're teleporting the player.
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+    if (!cell_is_solid(old_pos))
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
     bool large_change = you.see_cell(where);
 
@@ -1037,7 +1039,8 @@ static bool _quadrant_blink(coord_def dir, int pow)
     move_player_to_grid(target, false, true);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
+    if (!cell_is_solid(origin))
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
     return true;
 }
