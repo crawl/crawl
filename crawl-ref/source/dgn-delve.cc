@@ -99,14 +99,14 @@ static bool _diggable(map_lines *map, coord_def c)
 {
     if (map)
         return (*map)(c) == 'x';
-    return (grd(c) == DNGN_ROCK_WALL) && !map_masked(c, MMT_VAULT);
+    return grd(c) == DNGN_ROCK_WALL && !map_masked(c, MMT_VAULT);
 }
 
 static bool _dug(map_lines *map, coord_def c)
 {
     if (map)
         return strchr(traversable_glyphs, (*map)(c));
-    return (grd(c) == DNGN_FLOOR);
+    return grd(c) == DNGN_FLOOR;
 }
 
 static void _digcell(map_lines *map, store_type& store, coord_def c)

@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "acquire.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -36,7 +37,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -409,7 +409,7 @@ static int _exploration_estimate(bool seen_only = false, bool debug = false)
         }
 
         bool open = true;
-        if (feat_is_solid(grd(pos)) && !feat_is_closed_door(grd(pos)))
+        if (cell_is_solid(pos) && !feat_is_closed_door(grd(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
@@ -799,7 +799,8 @@ static int _xom_give_item(int power, bool debug = false)
         if (debug)
             return XOM_GOOD_ACQUIREMENT;
 
-        const object_class_type types[] = {
+        const object_class_type types[] =
+        {
             OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
             OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_FOOD,  OBJ_GOLD,
             OBJ_MISSILES
@@ -1147,7 +1148,7 @@ static int _xom_do_potion(bool debug = false)
 static int _xom_confuse_monsters(int sever, bool debug = false)
 {
     bool rc = false;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (mi->wont_attack()
             || !mons_class_is_confusable(mi->type)
@@ -1505,11 +1506,12 @@ static int _xom_swap_weapons(bool debug = false)
     }
 
     vector<monster* > mons_wpn;
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
         if (!wpn || mi->wont_attack() || mi->is_summoned()
             || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
-            || (mi->flags & MF_HARD_RESET))
+            || (mi->flags & MF_HARD_RESET)
+            || !feat_has_solid_floor(grd(mi->pos())))
         {
             continue;
         }
@@ -1636,7 +1638,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
         return XOM_DID_NOTHING;
 
     vector<monster* > mons;
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
         mons.push_back(*mi);
 
     if (mons.empty())
@@ -1694,7 +1696,8 @@ static int _xom_random_stickable(const int HD)
     // XXX: Unify this with the list in spl-summoning:_snakable_weapon().
     // It has everything but demon tridents and bardiches, and puts the
     // giant club types at the end as special cases.
-    static const int arr[] = {
+    static const int arr[] =
+    {
         WPN_CLUB,    WPN_SPEAR,      WPN_TRIDENT,      WPN_HALBERD,
         WPN_SCYTHE,  WPN_GLAIVE,     WPN_QUARTERSTAFF,
         WPN_BLOWGUN, WPN_BOW,        WPN_LONGBOW,      WPN_GIANT_CLUB,
@@ -1720,7 +1723,7 @@ static int _xom_random_stickable(const int HD)
 static int _xom_snakes_to_sticks(int sever, bool debug = false)
 {
     bool action = false;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (mi->attitude != ATT_HOSTILE)
             continue;
@@ -1778,7 +1781,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
 static int _xom_animate_monster_weapon(int sever, bool debug = false)
 {
     vector<monster* > mons_wpn;
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack() || mi->is_summoned()
             || mons_itemuse(*mi) < MONUSE_STARTING_EQUIPMENT
@@ -2210,7 +2213,7 @@ static int _xom_change_scenery(bool debug = false)
 static int _xom_inner_flame(int sever, bool debug = false)
 {
     bool rc = false;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (mi->wont_attack()
             || mons_immune_magic(*mi)
@@ -2263,15 +2266,22 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
 
     if (helpful) // To the player, not the monster.
     {
-        beam_type enchantments[] = {
-            BEAM_PETRIFY, BEAM_SLOW, BEAM_PARALYSIS, BEAM_ENSLAVE,
+        beam_type enchantments[] =
+        {
+            BEAM_PETRIFY,
+            BEAM_SLOW,
+            BEAM_PARALYSIS,
+            BEAM_ENSLAVE,
         };
         ench = RANDOM_ELEMENT(enchantments);
     }
     else
     {
-        beam_type enchantments[] = {
-            BEAM_HASTE, BEAM_MIGHT, BEAM_INVISIBILITY
+        beam_type enchantments[] =
+        {
+            BEAM_HASTE,
+            BEAM_MIGHT,
+            BEAM_INVISIBILITY,
         };
         ench = RANDOM_ELEMENT(enchantments);
     }
@@ -2923,7 +2933,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         bool mons_too = false;
         if (coinflip())
         {
-            for (monster_iterator mi(you.get_los()); mi; ++mi)
+            for (monster_near_iterator mi(you.pos()); mi; ++mi)
             {
                 if (!mons_class_is_confusable(mi->type)
                     || one_chance_in(20))
@@ -3218,7 +3228,7 @@ static int _xom_colour_smoke_trail(bool debug = false)
 
 static int _xom_draining_torment_effect(int sever, bool debug = false)
 {
-    // Drains stats or experience, or torments the player.
+    // Drains stats or skills, or torments the player.
     const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
     const string aux = "the vengeance of Xom";
@@ -3253,18 +3263,14 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     }
     else if (coinflip())
     {
-        // XP drain effect (25%).
+        // Draining effect (25%).
         if (player_prot_life() < 3)
         {
             if (debug)
                 return XOM_BAD_DRAINING;
             god_speaks(GOD_XOM, speech.c_str());
 
-            drain_exp(true, 75);
-            if (random2(sever) > 3)
-                drain_exp(true, 75);
-            if (random2(sever) > 3)
-                drain_exp(true, 75);
+            drain_exp(true, 100);
 
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "draining"), true);
             return XOM_BAD_DRAINING;
@@ -3475,7 +3481,7 @@ static int _xom_blink_monsters(bool debug = false)
     // Sometimes blink towards the player, sometimes randomly. It might
     // end up being helpful instead of dangerous, but Xom doesn't mind.
     const bool blink_to_player = _xom_feels_nasty() || coinflip();
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (blinks >= 5)
             break;
@@ -3728,62 +3734,26 @@ static void _handle_accidental_death(const int orig_hp,
     god_speaks(GOD_XOM, _get_xom_speech(speech_type).c_str());
     god_speaks(GOD_XOM, _get_xom_speech("resurrection").c_str());
 
+    int pre_mut_hp = you.hp;
     if (you.hp <= 0)
+        you.hp = 9999; // avoid spurious recursive deaths if heavily rotten
+
+    // If any mutation has changed, death was because of it.
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (orig_mutation[i] > you.mutation[i])
+            mutate((mutation_type)i, "Xom's lifesaving", true, true, true);
+        else if (orig_mutation[i] > you.mutation[i])
+            delete_mutation((mutation_type)i, "Xom's lifesaving", true, true, true);
+    }
+
+    if (pre_mut_hp <= 0)
         you.hp = min(orig_hp, you.hp_max);
-
-    // MUT_THIN_SKELETON can statkill you by str, undo it if necessary
-    /*while (you.strength() <= 0 && you.mutation[MUT_THIN_SKELETON] > orig_mutation[MUT_THIN_SKELETON])
-        delete_mutation(MUT_THIN_SKELETON, true, true, true);*/
-
-    // MUT_ROUGH_BLACK_SCALES can statkill you by dex, undo it if necessary
-    while (you.dex() <= 0 && you.mutation[MUT_ROUGH_BLACK_SCALES] > orig_mutation[MUT_ROUGH_BLACK_SCALES])
-    {
-        delete_mutation(MUT_ROUGH_BLACK_SCALES, "Xom's lifesaving",
-                        true, true, true);
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    while (you.dex() <= 0
-           && you.mutation[MUT_FLEXIBLE_WEAK] <
-                  orig_mutation[MUT_FLEXIBLE_WEAK])
-    {
-        mutate(MUT_FLEXIBLE_WEAK, "Xom's lifesaving", true, true, true);
-    }
-
-    while (you.strength() <= 0
-           && you.mutation[MUT_FLEXIBLE_WEAK] >
-                  orig_mutation[MUT_FLEXIBLE_WEAK])
-    {
-        delete_mutation(MUT_FLEXIBLE_WEAK, "Xom's lifesaving", true, true, true);
-    }
-    while (you.strength() <= 0
-           && you.mutation[MUT_STRONG_STIFF] <
-                  orig_mutation[MUT_STRONG_STIFF])
-    {
-        mutate(MUT_STRONG_STIFF, "Xom's lifesaving", true, true, true);
-    }
-#endif
-
-    mutation_type bad_muts[3]  = {MUT_WEAK, MUT_DOPEY, MUT_CLUMSY};
-    mutation_type good_muts[3] = {MUT_STRONG, MUT_CLEVER, MUT_AGILE};
 
     for (int i = 0; i < 3; ++i)
     {
-        while (you.stat(static_cast<stat_type>(i)) <= 0)
-        {
-            mutation_type good = good_muts[i];
-            mutation_type bad  = bad_muts[i];
-            if (you.mutation[bad] > orig_mutation[bad]
-                || you.mutation[good] < orig_mutation[good])
-            {
-                mutate(good, "Xom's lifesaving", true, true, true);
-            }
-            else
-            {
-                you.stat_loss[i] = orig_stat_loss[i];
-                break;
-            }
-        }
+        if (you.stat(static_cast<stat_type>(i)) <= 0)
+            you.stat_loss[i] = orig_stat_loss[i];
     }
 
     if (is_feat_dangerous(feat) && !crawl_state.game_is_sprint())

@@ -94,7 +94,7 @@
   local vile =
     "molten gargoyle hp:7000 hd:80 name:vile n_rpl n_des n_spe never_corpse \
     col:lightred generate_awake perm_ench:haste \
-    spells:dig;confuse;confuse;miasma;hellfire_burst"
+    spells:dig;confuse;confuse;miasma_breath;hellfire_burst"
 
   -- Uniques --
   local servant =

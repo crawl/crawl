@@ -233,7 +233,7 @@ void debug_item_scan(void)
 #ifdef DEBUG_MONS_SCAN
 static void _announce_level_prob(bool warned)
 {
-    if (!warned && Generating_Level)
+    if (!warned && crawl_state.generating_level)
     {
         mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
         mpr("mgrd problem occurred during level generation", MSGCH_ERROR);
@@ -266,6 +266,31 @@ static vector<string> _in_vaults(const coord_def &pos)
         const vault_placement &vault = Temp_Vaults[i];
         if (_inside_vault(vault, pos))
             out.push_back(vault.map.name);
+    }
+
+    return out;
+}
+
+static string _vault_desc(const coord_def pos)
+{
+    int mi = env.level_map_ids(pos);
+    if (mi == INVALID_MAP_INDEX)
+        return "";
+
+    string out;
+
+    for (unsigned int i = 0; i < env.level_vaults.size(); ++i)
+    {
+        const vault_placement &vp = *env.level_vaults[i];
+        if (_inside_vault(vp, pos))
+        {
+            coord_def br = vp.pos + vp.size - 1;
+            out += make_stringf(" [vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
+                        vp.map_name_at(pos).c_str(),
+                        vp.pos.x, vp.pos.y,
+                        br.x, br.y,
+                        vp.size.x, vp.size.y);
+        }
     }
 
     return out;
@@ -383,6 +408,20 @@ void debug_mons_scan()
                 }
             }
         } // if (mgrd(m->pos()) != i)
+
+        if (feat_is_wall(grd(pos)) && mons_primary_habitat(m) != HT_ROCK
+            && mons_primary_habitat(m) != HT_INCORPOREAL)
+        {
+#if defined(DEBUG_FATAL)
+            // if we're going to dump, point out the culprit
+            env.pgrid(pos) |= FPROP_HIGHLIGHT;
+#endif
+            mprf(MSGCH_ERROR, "Monster %s in %s at (%d, %d)%s",
+                 m->full_name(DESC_PLAIN, true).c_str(),
+                 dungeon_feature_name(grd(pos)),
+                 pos.x, pos.y,
+                 _vault_desc(pos).c_str());
+        }
 
         for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
         {
@@ -517,7 +556,7 @@ void debug_mons_scan()
 
     // If this wasn't the result of generating a level then there's nothing
     // more to report.
-    if (!Generating_Level)
+    if (!crawl_state.generating_level)
     {
         // Force the dev to notice problems. :P
         more();

@@ -15,6 +15,7 @@ local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
 AUTOFIGHT_STOP = 30
+AUTOFIGHT_CAUGHT = false
 AUTOFIGHT_THROW = false
 AUTOFIGHT_THROW_NOMOVE = true
 AUTOFIGHT_FIRE_STOP = false
@@ -230,6 +231,10 @@ local function set_stop_level(key, value, mode)
   AUTOFIGHT_STOP = tonumber(value)
 end
 
+local function set_af_caught(key, value, mode)
+  AUTOFIGHT_CAUGHT = string.lower(value) ~= "false"
+end
+
 local function set_af_throw(key, value, mode)
   AUTOFIGHT_THROW = string.lower(value) ~= "false"
 end
@@ -253,7 +258,12 @@ function attack(allow_movement)
   if you.confused() then
     crawl.mpr("You are too confused!")
   elseif caught then
-    crawl.mpr("You are " .. caught .. "!")
+    if AUTOFIGHT_CAUGHT then
+      crawl.process_keys(delta_to_vi(1, 0)) -- Direction doesn't matter.
+    else
+      crawl.mpr("You are " .. caught .. "!")
+    end
+  elseif caught then
   elseif hp_is_low() then
     crawl.mpr("You are too injured to fight recklessly!")
   elseif info == nil then
@@ -289,6 +299,7 @@ function toggle_autothrow()
 end
 
 chk_lua_option.autofight_stop = set_stop_level
+chk_lua_option.autofight_caught = set_af_caught
 chk_lua_option.autofight_throw = set_af_throw
 chk_lua_option.autofight_throw_nomove = set_af_throw_nomove
 chk_lua_option.autofight_fire_stop = set_af_fire_stop

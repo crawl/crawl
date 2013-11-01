@@ -179,7 +179,7 @@ struct spell_desc
 {
     SPELL_POLYMORPH, "Polymorph",
      SPTYP_TRANSMUTATION | SPTYP_HEXES,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -312,7 +312,7 @@ struct spell_desc
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_AREA,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      6,
      200,
      6, 6,
@@ -770,7 +770,7 @@ struct spell_desc
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     7,
+     8,
      200,
      -1, -1,
      0,
@@ -896,7 +896,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FRENZY, "Frenzy",
      SPTYP_CHARMS,
@@ -909,7 +908,7 @@ struct spell_desc
      false,
      false
 },
-#endif
+
 
 {
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
@@ -2931,6 +2930,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_TWISTER, "Summon Twister",
      SPTYP_SUMMONING | SPTYP_AIR,
@@ -2943,6 +2943,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_DAZZLING_SPRAY, "Dazzling Spray",
@@ -3210,7 +3211,7 @@ struct spell_desc
      SPTYP_CHARMS,
      SPFLAG_BATTLE,
      2,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
@@ -3218,6 +3219,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SONG_OF_SHIELDING, "Song of Shielding",
      SPTYP_CHARMS,
@@ -3230,6 +3232,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_SPECTRAL_WEAPON, "Spectral Weapon",

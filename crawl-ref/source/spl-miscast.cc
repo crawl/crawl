@@ -654,6 +654,7 @@ bool MiscastEffect::_malign_gateway()
                                 200));
         env.markers.clear_need_activate();
         env.grid(point) = DNGN_MALIGN_GATEWAY;
+        set_terrain_changed(point);
 
         noisy(10, point);
         all_msg = "The dungeon shakes, a horrible noise fills the air, and a "
@@ -2764,6 +2765,8 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 1:
+            if (cell_is_solid(target->pos()))
+                break;
             you_msg        = "Noxious gasses pour from your @hands@!";
             mon_msg_seen   = "Noxious gasses pour from @the_monster@'s "
                              "@hands@!";

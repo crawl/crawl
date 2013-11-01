@@ -247,10 +247,6 @@ cloak of Flash
 
 Ein vibrierender Umhang.
 %%%%
-boots of the Assassin
-
-Ein Paar weiche Stiefel, die speziell von der Assassinengilde entworfen wurden.
-%%%%
 skin of Zhor
 
 Eine stinkende Haus von einem fremdartigen Tier.

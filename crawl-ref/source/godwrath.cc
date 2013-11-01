@@ -9,6 +9,7 @@
 
 #include "externs.h"
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "database.h"
@@ -23,7 +24,6 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "terrain.h"
@@ -974,13 +974,21 @@ static bool _jiyva_retribution()
     }
     else
     {
-        const monster_type slimes[] = {
-                MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
-                MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES,
-                MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
-                MONS_JELLY, MONS_BROWN_OOZE, MONS_ACID_BLOB, MONS_AZURE_JELLY,
-                MONS_DEATH_OOZE, MONS_SLIME_CREATURE
-            };
+        const monster_type slimes[] =
+        {
+            MONS_GIANT_EYEBALL,
+            MONS_EYE_OF_DRAINING,
+            MONS_EYE_OF_DEVASTATION,
+            MONS_GREAT_ORB_OF_EYES,
+            MONS_SHINING_EYE,
+            MONS_GIANT_ORANGE_BRAIN,
+            MONS_JELLY,
+            MONS_BROWN_OOZE,
+            MONS_ACID_BLOB,
+            MONS_AZURE_JELLY,
+            MONS_DEATH_OOZE,
+            MONS_SLIME_CREATURE,
+        };
 
         int how_many = 1 + (you.experience_level / 10) + random2(3);
         bool success = false;
@@ -1375,7 +1383,7 @@ static bool _ely_holy_revenge(const monster *victim)
     mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
 
     vector<monster*> targets;
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->friendly())
             targets.push_back(*mi);

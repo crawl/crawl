@@ -67,7 +67,6 @@ sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE
 infusion INFUSION
 song_of_slaying SONG_OF_SLAYING
-song_of_shielding SONG_OF_SHIELDING
 spectral_weapon SPECTRAL_WEAPON
 discord DISCORD
 
@@ -175,7 +174,6 @@ shroud_of_golubria SHROUD_OF_GOLUBRIA
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
-polymorph POLYMORPH
 beastly_appendage BEASTLY_APPENDAGE
 
 # rod spells
@@ -260,6 +258,7 @@ error MISLEAD
 error NOXIOUS_CLOUD
 error PETRIFYING_CLOUD
 %sdir gui/spells/monster
+polymorph POLYMORPH
 porkalator PORKALATOR
 %sdir misc
 error PRIMAL_WAVE
@@ -289,7 +288,6 @@ summon_mushrooms SUMMON_MUSHROOMS
 %sdir misc
 error SUMMON_SPECTRAL_ORCS
 %sdir gui/spells/monster
-summon_twister SUMMON_TWISTER
 summon_ufetubus SUMMON_UFETUBUS
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN

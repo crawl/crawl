@@ -624,7 +624,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
-    "mirror_damage", "spines",
+    "mirror_damage", "spines", "frailty",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1349,30 +1349,30 @@ static int _award_modified_experience()
     int result = 0;
 
     if (xp <= 250000)
-        return ((xp * 7) / 10);
+        return xp * 7 / 10;
 
-    result += (250000 * 7) / 10;
+    result += 250000 * 7 / 10;
     xp -= 250000;
 
     if (xp <= 750000)
     {
-        result += (xp * 4) / 10;
+        result += xp * 4 / 10;
         return result;
     }
 
-    result += (750000 * 4) / 10;
+    result += 750000 * 4 / 10;
     xp -= 750000;
 
     if (xp <= 2000000)
     {
-        result += (xp * 2) / 10;
+        result += xp * 2 / 10;
         return result;
     }
 
-    result += (2000000 * 2) / 10;
+    result += 2000000 * 2 / 10;
     xp -= 2000000;
 
-    result += (xp / 10);
+    result += xp / 10;
 
     return result;
 }
@@ -1485,27 +1485,82 @@ void scorefile_entry::init(time_t dt)
     }
 
     // Note active status effects.
-    const int statuses[] = {
-        DUR_AGILITY, DUR_BERSERK, DUR_BRILLIANCE, DUR_CONF,
-        DUR_CONFUSING_TOUCH, DUR_CONTROL_TELEPORT, DUR_DEATH_CHANNEL,
-        DUR_DIVINE_STAMINA, DUR_DIVINE_VIGOUR, DUR_EXHAUSTED,
-        DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_LIQUID_FLAMES,
-        DUR_LOWERED_MR, DUR_MAGIC_SHIELD, DUR_MIGHT, DUR_MISLED,
-        DUR_PARALYSIS, DUR_PETRIFIED, DUR_PETRIFYING, DUR_RESISTANCE,
-        DUR_SLAYING, DUR_SLIMIFY, DUR_SLEEP, DUR_STONESKIN, DUR_SWIFTNESS,
-        DUR_TELEPATHY, DUR_TELEPORT, DUR_DEATHS_DOOR, DUR_PHASE_SHIFT,
-        DUR_QUAD_DAMAGE, DUR_SILENCE, DUR_STEALTH, DUR_AFRAID,
-        DUR_MIRROR_DAMAGE, DUR_SCRYING, DUR_TORNADO, DUR_LIQUEFYING,
-        DUR_HEROISM, DUR_FINESSE, DUR_LIFESAVING, DUR_DARKNESS,
-        DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION, DUR_SENTINEL_MARK,
-        STATUS_AIRBORNE, STATUS_BEHELD, STATUS_BURDEN, STATUS_CONTAMINATION,
-        STATUS_BACKLIT, STATUS_UMBRA, STATUS_SUPPRESSED, STATUS_NET,
-        STATUS_HUNGER, STATUS_REGENERATION, STATUS_SICK, STATUS_SPEED,
-        DUR_INVIS, DUR_POISONING, STATUS_MISSILES, DUR_SURE_BLADE,
-        DUR_TRANSFORMATION, STATUS_CONSTRICTED, STATUS_SILENCE, STATUS_RECALL,
-        DUR_WEAK, DUR_DIMENSION_ANCHOR, DUR_ANTIMAGIC, DUR_SPIRIT_HOWL,
-        DUR_FLAYED, DUR_WATER_HOLD, STATUS_DRAINED, DUR_TOXIC_RADIANCE,
-        DUR_FIRE_VULN
+    const int statuses[] =
+    {
+        DUR_AGILITY,
+        DUR_BERSERK,
+        DUR_BRILLIANCE,
+        DUR_CONF,
+        DUR_CONFUSING_TOUCH,
+        DUR_CONTROL_TELEPORT,
+        DUR_DEATH_CHANNEL,
+        DUR_DIVINE_STAMINA,
+        DUR_DIVINE_VIGOUR,
+        DUR_EXHAUSTED,
+        DUR_FIRE_SHIELD,
+        DUR_ICY_ARMOUR,
+        DUR_LIQUID_FLAMES,
+        DUR_LOWERED_MR,
+        DUR_MAGIC_SHIELD,
+        DUR_MIGHT,
+        DUR_MISLED,
+        DUR_PARALYSIS,
+        DUR_PETRIFIED,
+        DUR_PETRIFYING,
+        DUR_RESISTANCE,
+        DUR_SLAYING,
+        DUR_SLIMIFY,
+        DUR_SLEEP,
+        DUR_STONESKIN,
+        DUR_SWIFTNESS,
+        DUR_TELEPATHY,
+        DUR_TELEPORT,
+        DUR_DEATHS_DOOR,
+        DUR_PHASE_SHIFT,
+        DUR_QUAD_DAMAGE,
+        DUR_SILENCE,
+        DUR_STEALTH,
+        DUR_AFRAID,
+        DUR_MIRROR_DAMAGE,
+        DUR_SCRYING,
+        DUR_TORNADO,
+        DUR_LIQUEFYING,
+        DUR_HEROISM,
+        DUR_FINESSE,
+        DUR_LIFESAVING,
+        DUR_DARKNESS,
+        DUR_SHROUD_OF_GOLUBRIA,
+        DUR_DISJUNCTION,
+        DUR_SENTINEL_MARK,
+        STATUS_AIRBORNE,
+        STATUS_BEHELD,
+        STATUS_BURDEN,
+        STATUS_CONTAMINATION,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
+        STATUS_SUPPRESSED,
+        STATUS_NET,
+        STATUS_HUNGER,
+        STATUS_REGENERATION,
+        STATUS_SICK,
+        STATUS_SPEED,
+        DUR_INVIS,
+        DUR_POISONING,
+        STATUS_MISSILES,
+        DUR_SURE_BLADE,
+        DUR_TRANSFORMATION,
+        STATUS_CONSTRICTED,
+        STATUS_SILENCE,
+        STATUS_RECALL,
+        DUR_WEAK,
+        DUR_DIMENSION_ANCHOR,
+        DUR_ANTIMAGIC,
+        DUR_SPIRIT_HOWL,
+        DUR_FLAYED,
+        DUR_WATER_HOLD,
+        STATUS_DRAINED,
+        DUR_TOXIC_RADIANCE,
+        DUR_FIRE_VULN,
     };
 
     status_info inf;
@@ -1636,7 +1691,8 @@ string scorefile_entry::strip_article_a(const string &s) const
 
 string scorefile_entry::terse_missile_name() const
 {
-    const string pre_post[][2] = {
+    const string pre_post[][2] =
+    {
         { "Shot with a", " by " },
         { "Hit by a",    " thrown by " }
     };
@@ -2367,6 +2423,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     case KILLED_BY_MIRROR_DAMAGE:
         desc += terse ? "mirror damage" : "Killed by mirror damage";
         needs_damage = true;
+        break;
+
+    case KILLED_BY_FRAILTY:
+        desc += terse ? "frailty" : "Became unviable by " + auxkilldata;
         break;
 
     default:

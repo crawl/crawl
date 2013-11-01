@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -34,7 +35,6 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
@@ -236,7 +236,8 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        const monster_type swarmers[] = {
+        const monster_type swarmers[] =
+        {
             MONS_KILLER_BEE,     MONS_KILLER_BEE,    MONS_KILLER_BEE,
             MONS_SCORPION,       MONS_WORM,          MONS_VAMPIRE_MOSQUITO,
             MONS_GOLIATH_BEETLE, MONS_SPIDER,        MONS_BUTTERFLY,
@@ -1112,8 +1113,6 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 {
                     if (player_will_anger_monster(*mi))
                         monster_die(*mi, KILL_RESET, NON_MONSTER);
-                    else if (!scroll) // Only track cap for non-scroll casting
-                        summoned_monster(*mi, &you, SPELL_SHADOW_CREATURES);
                 }
             }
 
@@ -1193,6 +1192,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
                                 pow));
         env.markers.clear_need_activate();
         env.grid(point) = DNGN_MALIGN_GATEWAY;
+        set_terrain_changed(point);
 
         noisy(10, point);
         mpr("The dungeon shakes, a horrible noise fills the air, and a portal "
@@ -2393,7 +2393,7 @@ spret_type cast_mass_abjuration(int pow, bool fail)
 {
     fail_check();
     mpr("Send 'em back where they came from!");
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         _abjuration(pow, *mi);
 
     return SPRET_SUCCESS;
@@ -2792,7 +2792,7 @@ bool fire_battlesphere(monster* mons)
             for (distance_iterator di(mons->pos(), true, true, 2); di; ++di)
             {
                 if (*di == beam.target || actor_at(*di)
-                    || feat_is_solid(grd(*di))
+                    || cell_is_solid(*di)
                     || !agent->see_cell(*di))
                 {
                     continue;
@@ -3122,7 +3122,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
     { SPELL_SUMMON_UGLY_THING,          3, 2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
-    { SPELL_SHADOW_CREATURES,           5, 2 },
+    { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },

@@ -15,6 +15,9 @@
 
 char_choice_restriction job_allowed(species_type speci, job_type job)
 {
+    if (!is_species_valid_choice(speci) || !is_job_valid_choice(job))
+        return CC_BANNED;
+
     switch (job)
     {
     case JOB_FIGHTER:
@@ -565,7 +568,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         default:
             return CC_UNRESTRICTED;
         }
-
     case JOB_WANDERER:
         return CC_RESTRICTED;
 

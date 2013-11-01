@@ -537,7 +537,8 @@ static int monster_get(lua_State *ls)
     return 0;
 }
 
-static const char *_monster_behaviour_names[] = {
+static const char *_monster_behaviour_names[] =
+{
     "sleep",
     "wander",
     "seek",
@@ -546,7 +547,7 @@ static const char *_monster_behaviour_names[] = {
     "panic",
     "lurk",
     "retreat",
-    "withdraw"
+    "withdraw",
 };
 
 static const char* _behaviour_name(beh_type beh)

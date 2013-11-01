@@ -368,6 +368,15 @@ book of the tempests
 ページの間に稲光が走り、詠唱者の顔に向けて一陣の突風が吹き、
 本全体が激しく震える。
 %%%%
+book of the warp
+
+熟練の転移術師のための転移術の魔導書だ。
+揺らめくページは複数の次元に同時に存在しており、
+通常の配置の法則に従わないページも存在する。あるページは捲られたときに消滅し、
+他のものは何もないところから出現し、あるいは他のページを通過するページがあり、
+通過されるページがある。あるページには面が3つあり、あるいは面が1つしかない。
+角の数が分数のページもある。その効果には当惑させられるだろう。
+%%%%
 book of transfigurations
 
 これは常に変化する素材で書かれた高等な変異術の呪文書だ。
@@ -404,6 +413,12 @@ bow
 湾曲した木材と弦からなり、矢を射るのに用いる。
 戦闘において大きなダメージを与えることを期待でき、
 とりわけ熟練者が手にした場合は恐るべき威力を持つ。
+%%%%
+box of beasts
+
+堕落した魔術師が行なった魔術的実験の奇怪な残滓で満ちている箱だ。
+この箱を開くことで友好的なキメラを解放するかもしれない。
+キメラは3つの別々の獣を混ぜ合わせた神話的な混成体である。
 %%%%
 bread ration
 
@@ -451,13 +466,6 @@ cloak
 
 布製のクロークだ。
 %%%%
-club
-
-重い木の一部だ。一端に握る場所があり、もう一端にほとんど重みがかかってるため、
-敵対者に向けて振り回したり投げたりするのに適している。
-棍棒は相当に原始的な武器ではあるが、ある者の頭蓋骨を打ち壊すことは、
-依然として論争を解決するための非常に効果的で人気の手法である。
-%%%%
 corpse
 
 これは死体だ。あなたはこれを捌いて食用の肉片を作ることができる。
@@ -478,22 +486,82 @@ crystal plate armour
 
 信じ難いほどの重さだが、極めて防御力の高い結晶質の鎧だ。
 %%%%
-dagger
-
-遠くから投げることができる、先端が尖った両刃の戦闘用ナイフだ。
-ある者は最後の手段のための劣った武器として見なし、
-またある者は暗殺に最適な道具として認めている。
-%%%%
 dart
 
 手で投げることを意図した、小さくて羽根のついた鋭く尖っている投射物だ。
+%%%%
+deck of changes
+
+魔法のカードの一組だ。使用者もしくはその環境の変化を引き起こす。
+
+デッキに含まれうるカードは以下の通り：the Elixir, Battlelust, Metamorphosis,
+the Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
+Experience, Wild Magic, the Helix, the Sage, the Alchemist, Water,
+Vitrification, Dowsing, Trowel, the Minefield.
+%%%%
+deck of defence
+
+魔法のカードの一組だ。様々な方法で使用者を損害から防御する。
+
+デッキに含まれうるカードは以下の通り：the Tomb, the Banshee, Damnation,
+Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
+the Blade, the Shadow, the Mercenary.
+%%%%
+deck of destruction
+
+魔法のカードの一組だ。その大半が死と破壊を敵に向かって解き放つ。(あるいは、
+不幸にも使用者に向かって解き放たれる。)
+
+デッキに含まれうるカードは以下の通り：Vitriol, Flame, Frost, Venom, the Spark,
+the Hammer, Pain, the Orb.
+%%%%
+deck of dungeons
+
+魔法のカードの一組だ。ダンジョンの姿形を取り扱う。
+
+デッキに含まれうるカードは以下の通り：Water, Vitrification, Dowsing, Trowel,
+the Minefield.
+%%%%
+deck of escape
+
+魔法のカードの一組だ。主に様々な方法での逃走を取り扱う。不用意に使用すれば、
+フライパンの上に居る者を火に焼べる結果となるだろう！
+
+デッキに含まれうるカードは以下の通り：the Portal, the Warp, Swap, Velocity, the
+Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
+%%%%
+deck of punishment
+
+魔法のカードのデッキで、使用者に大惨事を引き起こす。
+
+デッキに含まれうるカードは以下の通り：the Wraith, Wild Magic, Wrath, Xom,
+Famine, the Curse, the Tomb, Damnation, the Portal, the Minefield, the Swine,
+Torment.
 %%%%
 deck of summonings
 
 魔法のカードの一組だ。奇怪で驚くべき生物が描かれている。
 
-It may contain the following cards: the Crusade, the Herd, the Pentagram, the
+デッキに含まれうるカードは以下の通り：he Crusade, the Herd, the Pentagram, the
 Dance, Foxfire, the Bones, Repulsiveness.
+%%%%
+deck of war
+
+魔法のカードの一組だ。戦闘中または戦闘前に有用だ。
+
+デッキに含まれうるカードは以下の通り：the Portal, the Warp, Swap, Velocity, the
+Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir,
+Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Mercenary, the
+Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
+Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain.
+%%%%
+deck of wonders
+
+魔法のカードの一組だ。このデッキに含まれるカードは非常に神秘的で、
+使用者の肉体と精神を良くも悪くも変化させうる。
+
+デッキに含まれうるカードは以下の通り：the Potion, Focus, Shuffle, Experience,
+Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 
@@ -611,12 +679,6 @@ hammer
 
 金属で補強された中程度の柄の上に棘が付いた頭部で構成されている。
 この鈍器は鎧さえ突き抜けるかなりの打撃力を与える。
-%%%%
-hand axe
-
-木や肉の繊維を引き裂くための道具だ。小さいが、
-速く正確な扱いができるよう精巧に作られており、
-必要であれば安定して投げることもできる。
 %%%%
 helmet
 

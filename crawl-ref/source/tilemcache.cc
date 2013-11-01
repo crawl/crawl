@@ -678,9 +678,8 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const uint32_t seed = hash32(&mon.mname[0], mon.mname.size());
-    rng_save_excursion exc;
-    seed_rng(seed);
+    const uint32_t seed = hash32(&mon.mname[0], mon.mname.size())
+                        ^ hash32(&mon.u.ghost, sizeof(mon.u.ghost));
 
     tilep_race_default(mon.u.ghost.species, 0, &m_doll);
     tilep_job_default(mon.u.ghost.job, &m_doll);
@@ -689,13 +688,13 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     {
         if (m_doll.parts[p] == TILEP_SHOW_EQUIP)
         {
-            int part_offset = random2(tile_player_part_count[p]);
+            int part_offset = hash_rand(tile_player_part_count[p], seed, p);
             m_doll.parts[p] = tile_player_part_start[p] + part_offset;
         }
     }
 
     int ac = mon.u.ghost.ac;
-    ac *= (5 + random2(11));
+    ac *= (5 + hash_rand(11, seed, 1000));
     ac /= 10;
 
     if (ac > 25)
@@ -711,7 +710,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 
     int sk = mon.u.ghost.best_skill;
     int dam = mon.u.ghost.damage;
-    dam *= (5 + random2(11));
+    dam *= (5 + hash_rand(11, seed, 1001));
     dam /= 10;
 
     switch (sk)
@@ -825,16 +824,16 @@ mcache_demon::mcache_demon(const monster_info& minf)
     ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
 
     const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
-    rng_save_excursion exc;
-    seed_rng(seed);
 
-    m_demon.head = TILEP_DEMON_HEAD + random2(tile_player_count(TILEP_DEMON_HEAD));
-    m_demon.body = TILEP_DEMON_BODY + random2(tile_player_count(TILEP_DEMON_BODY));
+    m_demon.head = TILEP_DEMON_HEAD
+                   + hash_rand(tile_player_count(TILEP_DEMON_HEAD), seed, 1);
+    m_demon.body = TILEP_DEMON_BODY
+                   + hash_rand(tile_player_count(TILEP_DEMON_BODY), seed, 2);
 
     if (minf.fly)
     {
         m_demon.wings = TILEP_DEMON_WINGS
-                        + random2(tile_player_count(TILEP_DEMON_WINGS));
+                        + hash_rand(tile_player_count(TILEP_DEMON_WINGS), seed, 3);
     }
     else
         m_demon.wings = 0;

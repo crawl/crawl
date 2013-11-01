@@ -1989,7 +1989,7 @@ static void _stash_filter_useless(const vector<stash_search_result> &in,
             tmp.count++;
         }
 
-        if(tmp.count > 0)
+        if (tmp.count > 0)
             out.push_back(tmp);
     }
 }

@@ -2435,21 +2435,6 @@ MAP
 .....
 ENDMAP
 
-NAME:    treasure_zot_lemuel
-DEPTH:   D:10-, Elf, Crypt
-TAGS:    allow_dup
-NSUBST:  Z = 4=. / z
-KFEAT:   z = zot trap
-SUBST:   *: *$
-WEIGHT:  3
-MAP
-xxxxxxcccc
-xxxxxxc**c
-@ZZZZZ+**c
-xxxxxxc**c
-xxxxxxcccc
-ENDMAP
-
 NAME:   water_maze_lemuel
 TAGS:   no_pool_fixup uniq_water_maze_lemuel
 WEIGHT: 5
@@ -2496,20 +2481,6 @@ wwd*dwwc*cww
 wwxdxwwxcxww
  wwwwwwwwww
   wwwwwwww
-ENDMAP
-
-NAME:  minmay_trapped_gold
-TAGS:  extra no_monster_gen
-DEPTH: D:16-, Crypt
-KFEAT: a = spear trap / bolt trap
-KFEAT: b = blade trap
-KFEAT: c = zot trap
-MAP
-   xxxxx
-xxxx$$$x
-@abc$$$x
-xxxx$$$x
-   xxxxx
 ENDMAP
 
 # Transporter accident (mumra)
@@ -2853,6 +2824,84 @@ xttTPPPTTP'''QZx....sx
 xtttTTTttTP''WWx.....+
 xttttttttttZWWWx.....x
 xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   dk_noncrumbling_1
+TAGS:   extra decor
+DEPTH:  D, Elf
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxGxGxGxGxGxGxGxGxGxGxx
+x*.....................+
+xxxGxGxGxGxGxGxGxGxGxGxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   dk_noncrumbling_2
+TAGS:   extra decor
+DEPTH:  D, Elf
+MAP
+       xx+xx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+xxxxxxxxx.xxxxxxxxxxx
+xxGxGxGxx.xxGxGxGxGxx
++........*..........+
+xxGxGxGxx.xxGxGxGxGxx
+xxxxxxxxx.xxxxxxxxxxx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xG.Gx
+       xx.xx
+       xx+xx
+ENDMAP
+
+NAME:   dk_noncrumbling_3
+TAGS:   extra decor
+DEPTH:  D, Elf
+MAP
+    xx+xx
+   xx...xx
+  xx.....xx
+ xx.G...G.xx
+xx.G.....G.xx
+x...G...G...x
++.....*.....+
+x...G...G...x
+xx.G.....G.xx
+ xx.G...G.xx
+  xx.....xx
+   xx...xx
+    xx+xx
+ENDMAP
+
+NAME:   dk_noncrumbling_4
+TAGS:   extra decor
+DEPTH:  D, Elf
+MAP
+    xx+xx
+   xxG.Gxx
+  xxG...Gxx
+ xxG.....Gxx
+xxG.......Gxx
+xG.........Gx
++.....*.....+
+xG.........Gx
+xxG.......Gxx
+ xxG.....Gxx
+  xxG...Gxx
+   xxG.Gxx
+    xx+xx
 ENDMAP
 
 ##########################################################################

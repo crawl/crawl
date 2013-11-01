@@ -7,6 +7,7 @@
 
 #include <queue>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -34,7 +35,6 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"
@@ -1528,7 +1528,7 @@ bool trog_burn_spellbooks()
 
             // If a grid is blocked, books lying there will be ignored.
             // Allow bombing of monsters.
-            if (feat_is_solid(grd(*ri))
+            if (cell_is_solid(*ri)
                 || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
             {
                 totalblocked++;
@@ -2165,7 +2165,7 @@ bool fedhas_sunlight()
 
     for (adjacent_iterator ai(base, false); ai; ++ai)
     {
-        if (!in_bounds(*ai) || feat_is_solid(grd(*ai)))
+        if (!in_bounds(*ai) || cell_is_solid(*ai))
             continue;
 
         for (size_t i = 0; i < env.sunlight.size(); ++i)
@@ -2896,7 +2896,7 @@ bool fedhas_evolve_flora()
     // This is a little sloppy, but cancel early if nothing useful is in
     // range.
     bool in_range = false;
-    for (radius_iterator rad(you.get_los()); rad; ++rad)
+    for (radius_iterator rad(you.get_los(), true); rad; ++rad)
     {
         const monster* temp = monster_at(*rad);
         if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,
@@ -2922,6 +2922,7 @@ bool fedhas_evolve_flora()
     args.range = LOS_RADIUS;
     args.needs_path = false;
     args.may_target_monster = false;
+    args.cancel_at_self = true;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
 

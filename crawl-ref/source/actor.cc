@@ -344,12 +344,12 @@ bool actor::warding(bool calc_unid, bool items) const
                      || wearing(EQ_STAFF, STAFF_SUMMONING, calc_unid));
 }
 
-bool actor::archmagi(bool calc_unid, bool items) const
+int actor::archmagi(bool calc_unid, bool items) const
 {
-    if (suppressed())
-        items = false;
+    if (suppressed() || !items)
+        return 0;
 
-    return items && wearing_ego(EQ_BODY_ARMOUR, SPARM_ARCHMAGI, calc_unid);
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid);
 }
 
 bool actor::no_cast(bool calc_unid, bool items) const
@@ -391,6 +391,14 @@ int actor::evokable_flight(bool calc_unid) const
     return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
            + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
            + scan_artefacts(ARTP_FLY, calc_unid);
+}
+
+int actor::evokable_jump(bool calc_unid) const
+{
+    if (suppressed())
+        return 0;
+
+    return wearing_ego(EQ_ALL_ARMOUR, SPARM_JUMPING, calc_unid);
 }
 
 int actor::spirit_shield(bool calc_unid, bool items) const

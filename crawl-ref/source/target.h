@@ -12,6 +12,7 @@ enum aff_type // sign and non-zeroness matters
     AFF_YES,         // intended/likely to affect
     // If you want to extend this to pass the probability somehow, feel free to,
     // just keep AFF_YES the minimal "bright" value.
+    AFF_LANDING,     // Valid jump attack landing site
 };
 
 class targetter
@@ -30,6 +31,7 @@ public:
     virtual bool can_affect_walls();
 
     virtual aff_type is_affected(coord_def loc) = 0;
+    virtual bool has_additional_sites(coord_def a);
 protected:
     bool anyone_there(coord_def loc);
 };
@@ -187,5 +189,39 @@ private:
     int _range;
     int range2;
 };
+
+enum jump_block_reason
+{
+    BLOCKED_NONE,
+    BLOCKED_OCCUPIED,
+    BLOCKED_FLYING,
+    BLOCKED_GIANT,
+    BLOCKED_MOVE,
+    BLOCKED_PATH,
+};
+
+class targetter_jump : public targetter
+{
+public:
+    targetter_jump(const actor* act, int range);
+
+    bool valid_aim(coord_def a);
+    bool set_aim(coord_def a);
+    bool jump_is_blocked;
+    aff_type is_affected(coord_def loc);
+    bool has_additional_sites(coord_def a);
+    set<coord_def> additional_sites;
+    coord_def landing_site;
+private:
+    void set_additional_sites(coord_def a);
+    void get_additional_sites(coord_def a);
+    bool valid_landing(coord_def a, bool check_invis = true);
+    jump_block_reason no_landing_reason;
+    jump_block_reason blocked_landing_reason;
+    set<coord_def> temp_sites;
+    int range2;
+};
+
+
 
 #endif

@@ -9,6 +9,7 @@
 
 #include <sstream>
 
+#include "act-iter.h"
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
@@ -18,7 +19,6 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "mon-stuff.h"
@@ -109,9 +109,7 @@ void slime_convert(monster* mons)
         && !mons->is_shapeshifter()
         && !mons->neutral()
         && !mons->friendly()
-        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && you.visible_to(mons) && !mons->asleep()
-        && !mons_is_confused(mons) && !mons->paralysed())
+        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT))
     {
         mons->flags |= MF_ATT_CHANGE_ATTEMPT;
         if (!player_under_penance())
@@ -425,9 +423,6 @@ void beogh_convert_orc(monster* orc, bool emergency,
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_NO_REWARD;
 
-    mons_make_god_gift(orc, GOD_BEOGH);
-    add_companion(orc);
-
     if (orc->is_patrolling())
     {
         // Make orcs stop patrolling and forget their patrol point,
@@ -437,6 +432,9 @@ void beogh_convert_orc(monster* orc, bool emergency,
 
     if (!orc->alive())
         orc->hit_points = min(random_range(1, 4), orc->max_hit_points);
+
+    mons_make_god_gift(orc, GOD_BEOGH);
+    add_companion(orc);
 
     // Avoid immobile "followers".
     behaviour_event(orc, ME_ALERT);
@@ -462,6 +460,8 @@ static void _fedhas_neutralise_plant(monster* plant)
 static void _jiyva_convert_slime(monster* slime)
 {
     ASSERT(mons_is_slime(slime));
+
+    behaviour_event(slime, ME_ALERT);
 
     if (you.can_see(slime))
     {

@@ -46,7 +46,7 @@ function ossuary_portal(e)
         feat_tile = "dngn_portal_ossuary_gone",
         msg = messager })
   e.tags("uniq_ossuary no_monster_gen chance_ossuary")
-  e.chance("5%")
+  e.chance(500)
   e.kfeat("O = enter_portal_vault")
   e.colour("O = brown")
   e.colour("' = yellow")

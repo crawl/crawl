@@ -350,6 +350,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
                 you.inv[missile].flags |= ISFLAG_SUMMONED;
                 beam.target = mon.pos();
                 beam.animate = false;
+                beam.dont_stop_player = true;
                 if (throw_it(beam, missile, false, DEBUG_COOKIE))
                     hits++;
                 you.inv[missile].flags &= ~ISFLAG_SUMMONED;

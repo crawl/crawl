@@ -6,13 +6,13 @@
 #include "AppHdr.h"
 #include "mislead.h"
 
+#include "act-iter.h"
 #include "enum.h"
 #include "env.h"
 #include "hints.h"
 #include "message.h"
 #include "misc.h"
 #include "monster.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #ifdef USE_TILE_LOCAL
  #include "tilepick.h"

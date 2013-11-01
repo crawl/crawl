@@ -283,7 +283,7 @@ i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
 i-electrocution BRAND_ELECTROCUTION
 # Remove i-orc_slaying when TAG_MAJOR_VERSION > 34
-i-orc_slaying BRAND_ORC_SLAYING
+i-confusion BRAND_ORC_SLAYING
 i-dragon_slaying BRAND_DRAGON_SLAYING
 i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
@@ -298,7 +298,8 @@ i-pain BRAND_PAIN
 i-antimagic BRAND_ANTIMAGIC
 %rim 0
 i-distortion BRAND_DISTORTION
-i-reaching BRAND_REACHING
+# Remove when TAG_MAJOR_VERSION > 34
+i-confusion BRAND_REACHING
 # Move i-returning down to missile-only brands when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
 i-chaos BRAND_CHAOS
@@ -621,7 +622,8 @@ i-archmagi BRAND_ARM_ARCHMAGI
 i-preservation BRAND_ARM_PRESERVATION
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
-i-archery BRAND_ARM_ARCHERY BRAND_ARM_LAST
+i-archery BRAND_ARM_ARCHERY
+i-jumping BRAND_ARM_JUMPING BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand

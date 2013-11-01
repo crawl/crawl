@@ -9,8 +9,6 @@
   #include <SDL_image.h>
 #endif
 
-FILE *logfile = 0;
-
 tile::tile() : m_width(0), m_height(0), m_pixels(NULL), m_shrink(true)
 {
 }
@@ -472,9 +470,6 @@ bool tile::load(const string &new_filename)
     SDL_FreeSurface(img);
 
     replace_colour(tile_colour::background, tile_colour::transparent);
-
-    if (logfile)
-        fprintf(logfile, "%s\n", new_filename.c_str());
 #else
     FILE* fp = fopen(new_filename.c_str(), "r");
     if (!fp)

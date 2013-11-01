@@ -117,7 +117,9 @@ static void _update_feat_at(const coord_def &gp)
     if (!you.see_cell(gp))
         return;
 
-    dungeon_feature_type feat = grid_appearance(gp);
+    dungeon_feature_type feat = grd(gp);
+    if (feat == DNGN_UNDISCOVERED_TRAP)
+        feat = DNGN_FLOOR;
     unsigned colour = env.grid_colours(gp);
     trap_type trap = TRAP_UNASSIGNED;
     if (feat_is_trap(feat))
@@ -186,7 +188,7 @@ static void _update_feat_at(const coord_def &gp)
             env.map_knowledge(gp).flags |= MAP_GLOWING_MOLDY;
     }
 
-    if (slime_wall_neighbour(gp))
+    if (env.level_state & LSTATE_SLIMY_WALL && slime_wall_neighbour(gp))
         env.map_knowledge(gp).flags |= MAP_CORRODING;
 
     if (emphasise(gp))

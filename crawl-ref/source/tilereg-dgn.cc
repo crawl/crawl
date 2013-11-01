@@ -1297,14 +1297,11 @@ bool DungeonRegion::update_alt_text(string &alt)
         return false;
 
     describe_info inf;
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
     if (you.see_cell(gc))
-        get_square_desc(gc, inf, true, false);
-    else if (grid_appearance(gc) != DNGN_FLOOR
-             && !feat_is_wall(grid_appearance(gc))
-             && !feat_is_tree(grid_appearance(gc)))
-    {
+        get_square_desc(gc, inf);
+    else if (feat != DNGN_FLOOR && !feat_is_wall(feat) && !feat_is_tree(feat))
         get_feature_desc(gc, inf);
-    }
     else
     {
         // For plain floor, output the stash description.

@@ -475,15 +475,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         force_item = true; // guaranteed reaching
         item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_WHIP,    WPN_WHIP,   WPN_SPEAR,
-                                       WPN_HALBERD, WPN_GLAIVE, -1);
-        if (weapon_skill(item.base_type, item.sub_type) == SK_POLEARMS)
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
-        else
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
+        item.sub_type  = random_choose_weighted(3, WPN_SPEAR,
+                                                1, WPN_HALBERD,
+                                                1, WPN_GLAIVE,
+                                                0);
         item.plus  += -2 + random2(4);
         item.plus2 += -1 + random2(2);
-        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CRAZY_YIUF:

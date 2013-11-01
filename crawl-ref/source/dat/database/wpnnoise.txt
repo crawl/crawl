@@ -10,6 +10,7 @@
 
 # Contents:
 # - Shield of the Gong
+# - Elemental Staff
 # - Noisy randarts
 # - The Singing Sword
 
@@ -37,7 +38,6 @@ BONNNG!
 
 # scraping hit
 SHROANNG!
-
 
 ###############################################################################
 ###############################################################################

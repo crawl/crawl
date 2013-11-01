@@ -59,6 +59,21 @@ function grunt_ministairs_setup(e, hatches)
 end
 }}
 
+{{
+function random_stair(e, symbol)
+  local valid;
+  if you.depth() > 1 then
+    valid = "([{"
+  else
+    valid = "{"
+  end
+  if you.depth_fraction() < 1 then
+    valid = valid .. ")]}"
+  end
+  e.subst(symbol .. " = " .. valid)
+end
+}}
+
 default-depth: D:9-, Elf
 
 ###############################################################################
@@ -872,24 +887,6 @@ xxxxbbbMNOwwwx
    xxbbMNOwwxx
     xxxMNOxxx
       xxxxx
-ENDMAP
-
-# The dragon can be ood, but it can only get out if you let it chase you. A
-# window provides ample warning.
-NAME:   evilmike_quicksilver_bait
-TAGS:   no_monster_gen
-DEPTH:  D:16-
-{{
-  local gold = 1 + crawl.random2avg(25,2) + crawl.random2avg(25,2) + crawl.random2(you.absdepth())
-  kitem("1 = gold q:" .. gold .. ", superb_item, acquire any")
-}}
-KMONS:  1 = patrolling quicksilver dragon
-MAP
- ccccccccccccc
-@llllllllllllc
- cnccccccccclc
- c1llllllllllc
- ccccccccccccc
 ENDMAP
 
 NAME:    hangedman_aviary
@@ -2208,20 +2205,6 @@ x111x
 xx+xx
 ENDMAP
 
-NAME:    minmay_room_of_horrors
-DEPTH:   D:16-
-MONS:    small abomination, large abomination, unseen horror / chaos spawn
-KFEAT:   _ = enter_abyss
-SHUFFLE: 1234
-MAP
-xxxxxx
-x3113x
-+1221x
-x1221x
-x311_x
-xxxxxx
-ENDMAP
-
 # The Horrible House of Horrid Horrors (by Mu.)
 # XXX: Undiggable glass has been converted to statues.
 NAME:   horrible_house_mu
@@ -2271,22 +2254,22 @@ ENDMAP
 NAME:   bh_circular_ruins
 DEPTH:  D:9-14
 KMONS:  1 = human simulacrum
-KITEM:  1 = book of dreams ident:all
+KITEM:  O = book of dreams ident:all
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
-                              pow_max = 10, delay = 30, size = 1, \
+                              pow_max = 10, delay = 15, size = 2, \
                               walk_dist = 1, excl_rad = 1}
 MAP
   ..
  .xx.  ...
-.xx....xxx.
-.xO.....Oxx.
+.xx1...xxx.
+.x.......xx.
  ....xx...x.
   ..xx....x.
-  ..x.1.x..
+  ..x.O.x..
  .x....xx..
  .x...xx....
- .xxO.....Ox.
-  .xxx....xx.
+ .xx.......x.
+  .xxx...1xx.
    ...  .xx.
          ..
 ENDMAP
@@ -4047,7 +4030,7 @@ NAME:    st_stairs_8
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 1 = 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x
 .......
@@ -4062,7 +4045,7 @@ NAME:    st_stairs_9
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 2:0 / 2 = .:3 0:1 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x
 .........
@@ -4079,7 +4062,7 @@ NAME:    st_stairs_10
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 2 = 0:19 .:1 / 4 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x
 ...........
@@ -4098,7 +4081,7 @@ NAME:    st_stairs_11
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 3 = 0:19 .:1 / 5 = 0:1 .:9 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x.x.x.x
 .................
@@ -4117,7 +4100,7 @@ NAME:    st_stairs_12
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 1 : 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x.x.x.x
 .................
@@ -4132,7 +4115,7 @@ NAME:    st_stairs_13
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Lair, Elf, Crypt
 NSUBST:  . = 1:> / 1 : 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = ([{}])
+: random_stair(_G, ">")
 MAP
 x.x.x.x.x.x.x.x.x.x.x
 .....................
@@ -4145,7 +4128,7 @@ NAME:    st_stairs_14
 TAGS:    extra transparent allow_dup mini_float luniq_st_stairs
 DEPTH:   D, Zot, Snake, Elf, Crypt
 NSUBST:  . = 1 : 0:19 .:1 / 2 = 0:1 .:4 / *:.
-SUBST:   > = }])
+: random_stair(_G, ">")
 SHUFFLE: abc / bab / cbb / bcb
 SUBST:   a=x, b=., c:Gx
 MAP
@@ -5006,24 +4989,24 @@ ENDMAP
 # Robustness
 #
 NAME:   minmay_guarded_unrand_robustness
-DEPTH:  D:10-, Vaults
+DEPTH:  D:16-, Vaults
 TAGS:   no_monster_gen no_item_gen
 WEIGHT: 3, 1 (Vaults)
-# Iron golems are speed 7, so even a naga can outrun them.
-MONS:   patrolling iron golem, patrolling metal gargoyle
-ITEM:   ring of protection unrand:ring_of_robustness
+MONS:   patrolling iron troll
+KMONS:  d = patrolling iron dragon
+KITEM:  d = ring of protection unrand:ring_of_robustness no_pickup
 MAP
 ...............
 .vvvvv.@.vvvvv.
 .v1.........1v.
 .v.vvvvvvvvv.v.
-.v.v2..2..2v.v.
+.v.v1.....1v.v.
 .v.v.vv.vv.v.v.
-.v...v1.1v...v.
-.v.2.v.d.v.2.v.
-.v...v1.1v...v.
+.v...v...v...v.
+.v...v.d.v...v.
+.v...v...v...v.
 .v.v.vv.vv.v.v.
-.v.v2..2..2v.v.
+.v.v1.....1v.v.
 .v.vvvvvvvvv.v.
 .v1.........1v.
 .vvvvv.@.vvvvv.
@@ -5042,7 +5025,7 @@ MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
 : else
 MONS:   place:D:18 zombie / place:D:18 skeleton, bone dragon
 : end
-ITEM:   long sword unrand:sword_of_zonguldrok
+ITEM:   double sword unrand:sword_of_zonguldrok no_pickup
 MAP
 ...............
 .cc+cccccccccc.
@@ -5096,7 +5079,7 @@ DEPTH:  D:14-
 WEIGHT: 3
 MONS:   patrolling crystal golem name:crystal_guardian n_rpl n_des spells:bolt_of_fire;bolt_of_cold
 MONS:   orange crystal statue
-ITEM:   cap unrand:crown_of_dyrovepreva
+ITEM:   cap unrand:crown_of_dyrovepreva no_pickup
 KPROP:  12d' = no_rtele_into
 SUBST:  ' = .
 MAP
@@ -5113,14 +5096,14 @@ MAP
 ..bbbbb'''bbb'''bbb'''bbbbb..
 ...bbbbb'bbbbbbbbbbb'bbbbb...
 ....bbb''.bbb'''bbb'''bbb....
-.....b'''''b'1'1'b'''''b.....
-.....b1''''b''d''b''''1b.....
+.....b'''''b''1''b'''''b.....
+.....b'''''b''d''b'''''b.....
 .....b'''''b''1''b'''''b.....
 ....bbb'''bbb'''bbb'''bbb....
-...bbbbb'bbbbb2bbbbb'bbbbb...
+...bbbbb'bbbbb'bbbbb'bbbbb...
 ..bbbbb'''bbb'''bbb'''bbbbb..
 ..bbbb'''''b'''''b'''''bbbb..
-...bbb'''''1'''''1'''''bbb...
+...bbb''''1'''''''1''''bbb...
  ...bb'''''b'''''b'''''bb...
   ...bb'''bbb'''bbb'''bb...
    ...bbbbbbbbbbbbbbbbb...
@@ -5171,7 +5154,7 @@ DEPTH:  D:16-
 WEIGHT: 3
 MONS:   wizard, orange crystal statue / silver statue
 KMONS:  3 = lich / ancient lich
-KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage
+KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage no_pickup
 KPROP:  32' = no_tele_into
 SUBST:  ' = .
 MAP
@@ -5286,7 +5269,7 @@ MONS:   blue devil / iron devil / orange demon / red devil / rotting devil / \
 KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb
 KFEAT:  - = altar_makhleb
-KITEM:  - = broad axe unrand:obsidian_axe
+KITEM:  - = broad axe unrand:obsidian_axe no_pickup
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0}

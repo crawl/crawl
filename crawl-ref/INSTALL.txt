@@ -54,8 +54,8 @@ usually available as MinGW; and as of version 0.13, compilation with MSVC
 There's no reason Crawl shouldn't work on other modern systems, especially
 Unixy ones, although some porting may be needed.
 
-Windows 9X and ME are no longer supported but you may probably build for
-them with relatively minor changes.
+Windows 9X and ME are no longer supported; you might have some luck using
+cygwin but a native build is probably a lost cause.
 
 
 Source Code Checkout

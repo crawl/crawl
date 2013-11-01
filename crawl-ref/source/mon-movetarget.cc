@@ -2,6 +2,7 @@
 
 #include "mon-movetarget.h"
 
+#include "act-iter.h"
 #include "branch.h"
 #include "coord.h"
 #include "coordit.h"
@@ -11,7 +12,6 @@
 #include "losglobal.h"
 #include "libutil.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -940,7 +940,8 @@ static bool _herd_ok(monster * mon)
     bool intermediate_range = false;
     int intermediate_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
 
-    for (monster_iterator mit(mon); mit; ++mit)
+    // herdlings magically know others even out of LOS
+    for (monster_iterator mit; mit; ++mit)
     {
         if (mit->mindex() == mon->mindex())
             continue;

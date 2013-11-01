@@ -144,7 +144,8 @@ One's gift to a worshipper.
 %%%%
 crossbow "Hellfire"
 
-A flaming crossbow, forged in the fires of the Hells.
+A flaming crossbow, forged in the fires of the Hells; it imbues bolts it fires
+with the raw power of its namesake.
 %%%%
 sword of the Doom Knight
 
@@ -173,6 +174,7 @@ Elemental Staff
 
 This powerful staff used to belong to the leader of the Guild of Five Elements.
 %%%%
+# TAG_MAJOR_VERSION == 34
 crossbow "Sniper"
 
 A crossbow made of some black material.
@@ -181,6 +183,7 @@ longbow "Piercer"
 
 An exceptionally large metal longbow.
 %%%%
+# TAG_MAJOR_VERSION == 34
 blowgun of the Assassin
 
 It is designed for easy concealment, but still packs a nasty punch.
@@ -279,8 +282,9 @@ A vibrating cloak.
 %%%%
 boots of the Assassin
 
-Some soft boots with a concealed dagger inside, specially designed by the
-Assassin's Guild. It makes the wearer more perceptive of potential victims.
+Some soft boots, specially designed by the Assassin's Guild. They make the
+wearer more perceptive of potential victims, and more able to find
+vulnerabilities when attacking unaware opponents.
 %%%%
 Lear's hauberk
 
@@ -480,6 +484,27 @@ occasional expense of the wearer's magic power, however, is hard to dispute.
 macabre finger necklace
 
 This dangling finger would look better with a ring on it.
+%%%%
+boots of the spider
+
+A novel pair of boots invented by a suitor of Arachne.
+%%%%
+dark maul
+
+This large iron-shod maul is just the tool you need, if you had some bridge
+stakes to drive in. It is made for dealing massing blows — we're not talking
+about a mere concussion, but about remnants of a helmet standing on shoes, or
+perhaps an outright wet stain. Alas, such power comes at a price: the maul's
+head is so heavy it takes forever to lift it up for another swing. The maul is
+sized for a human, so ogres may want to use their customary clubs instead, them
+being less unwieldy in their large hands.
+%%%%
+hat of the High Council
+
+A relic of some ancient wizarding war. Centuries later, it still crackles with
+effects from the residual hexes and magical energies it was once subjected to
+on a daily basis; spellcasters able to get a handle on its power, however, will
+find it enhances their spell power.
 %%%%
 milk chocolate
 

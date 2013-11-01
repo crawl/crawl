@@ -23,7 +23,7 @@ struct crawl_environment
     colour_t floor_colour;
 
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
-    FixedVector< monster, MAX_MONSTERS+1 >   mons;  // monster list, plus anon
+    FixedVector< monster, MAX_MONSTERS+2 >   mons;  // monster list, plus anon
 
     feature_grid                             grid;  // terrain grid
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
@@ -39,7 +39,6 @@ struct crawl_environment
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
     string_set                               level_layout_types;
-    vector<string>                           level_vault_list;
 
     string                                   level_build_method;
 

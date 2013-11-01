@@ -398,6 +398,8 @@ ruler
 ban
 
 magnate
+
+gentle{{ return you.genus() }}
 %%%%
 _hostile_imp_
 

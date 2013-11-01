@@ -23,6 +23,7 @@
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "effects.h"       // For Sceptre of Torment tormenting
 #include "env.h"           // For storm bow env.cgrid
+#include "fight.h"
 #include "food.h"          // For evokes
 #include "godconduct.h"    // did_god_conduct
 #include "misc.h"
@@ -59,8 +60,8 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
  * Unrand functions.
  *******************/
 
-static void _ASMODEUS_melee_effect(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+static void _ASMODEUS_melee_effects(item_def* weapon, actor* attacker,
+                                    actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
@@ -117,8 +118,8 @@ static bool _ASMODEUS_evoke(item_def *item, int* pract, bool* did_work,
 }
 
 ////////////////////////////////////////////////////
-static void _CEREBOV_melee_effect(item_def* weapon, actor* attacker,
-                                  actor* defender, bool mondied, int dam)
+static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
@@ -166,19 +167,19 @@ static void _CURSES_world_reacts(item_def *item)
         curse_an_item();
 }
 
-static void _CURSES_melee_effect(item_def* weapon, actor* attacker,
-                                 actor* defender, bool mondied, int dam)
+static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
+                                  actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
         did_god_conduct(DID_NECROMANCY, 3);
-    if (defender->has_lifeforce() && !mondied)
+    if (!mondied && defender->has_lifeforce())
         _curses_miscast(defender, random2(9), random2(70));
 }
 
 /////////////////////////////////////////////////////
 
-static void _DISPATER_melee_effect(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+static void _DISPATER_melee_effects(item_def* weapon, actor* attacker,
+                                    actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
         did_god_conduct(DID_UNHOLY, 3);
@@ -187,7 +188,7 @@ static void _DISPATER_melee_effect(item_def* weapon, actor* attacker,
 static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
-    if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true))
+    if (!enough_hp(11, true))
     {
         mpr("You're too close to death to use this item.");
         *unevokable = true;
@@ -266,23 +267,29 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
         return false;
 
-    dec_mp(4);
-    make_hungry(50, false, true);
-    *pract    = 1;
     *did_work = true;
 
     int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
 
-    your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false);
+    // Allow aborting (for example if friendlies are nearby).
+    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false) == SPRET_ABORT)
+    {
+        *unevokable = true;
+        return false;
+    }
 
     if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2000))
         your_spells(SPELL_VENOM_BOLT, power, false);
 
+    dec_mp(4);
+    make_hungry(50, false, true);
+    *pract    = 1;
+
     return false;
 }
 
-static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
-                                 actor* defender, bool mondied, int dam)
+static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
+                                  actor* defender, bool mondied, int dam)
 {
     int skill = attacker->skill(SK_POISON_MAGIC, 100);
     if (defender->alive()
@@ -420,8 +427,8 @@ static void _TORMENT_world_reacts(item_def *item)
     }
 }
 
-static void _TORMENT_melee_effect(item_def* weapon, actor* attacker,
-                                  actor* defender, bool mondied, int dam)
+static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
 {
     if (!coinflip())
         return;
@@ -547,8 +554,8 @@ static void _ZONGULDROK_world_reacts(item_def *item)
     did_god_conduct(DID_CORPSE_VIOLATION, 1);
 }
 
-static void _ZONGULDROK_melee_effect(item_def* weapon, actor* attacker,
-                                     actor* defender, bool mondied, int dam)
+static void _ZONGULDROK_melee_effects(item_def* weapon, actor* attacker,
+                                      actor* defender, bool mondied, int dam)
 {
     if (attacker->is_player())
     {
@@ -571,8 +578,8 @@ static void _STORM_BOW_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
-static void _GONG_melee_effect(item_def* item, actor* wearer,
-                               actor* attacker, bool dummy, int dam)
+static void _GONG_melee_effects(item_def* item, actor* wearer,
+                                actor* attacker, bool dummy, int dam)
 {
     if (silenced(wearer->pos()))
         return;
@@ -610,8 +617,8 @@ static void _RCLOUDS_equip(item_def *item, bool *show_msgs, bool unmeld)
 
 ///////////////////////////////////////////////////
 
-static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
-                                    actor* defender, bool mondied, int dam)
+static void _DEMON_AXE_melee_effects(item_def* item, actor* attacker,
+                                     actor* defender, bool mondied, int dam)
 {
     if (one_chance_in(10))
         cast_summon_demon(50+random2(100));
@@ -681,8 +688,8 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
                             : "You feel an overwhelming desire to slay dragons!");
 }
 
-static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
-                                   actor* defender, bool mondied, int dam)
+static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
+                                    actor* defender, bool mondied, int dam)
 {
     if (!mondied || !defender || !is_dragonkind(defender)
         || defender->is_summoned()
@@ -720,8 +727,8 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _UNDEADHUNTER_melee_effect(item_def* item, actor* attacker,
-                                       actor* defender, bool mondied, int dam)
+static void _UNDEADHUNTER_melee_effects(item_def* item, actor* attacker,
+                                        actor* defender, bool mondied, int dam)
 {
     if (defender->holiness() == MH_UNDEAD && !one_chance_in(3) && !mondied)
     {
@@ -731,6 +738,7 @@ static void _UNDEADHUNTER_melee_effect(item_def* item, actor* attacker,
         defender->hurt(attacker, random2avg((1 + (dam * 3)), 3));
     }
 }
+
 
 ///////////////////////////////////////////////////
 static void _BRILLIANCE_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -750,8 +758,8 @@ static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 }
 
 
-static void _DEVASTATOR_melee_effect(item_def* item, actor* attacker,
-                                     actor* defender, bool mondied, int dam)
+static void _DEVASTATOR_melee_effects(item_def* item, actor* attacker,
+                                      actor* defender, bool mondied, int dam)
 {
     if (dam)
         shillelagh(attacker, defender->pos(), dam);
@@ -796,8 +804,9 @@ static void _plutonium_sword_miscast(actor* victim, int power, int fail)
                   "the plutonium sword", NH_NEVER);
 }
 
-static void _PLUTONIUM_SWORD_melee_effect(item_def* weapon, actor* attacker,
-                                          actor* defender, bool mondied, int dam)
+static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon, actor* attacker,
+                                           actor* defender, bool mondied,
+                                           int dam)
 {
     if (!mondied && one_chance_in(5))
     {
@@ -811,8 +820,8 @@ static void _PLUTONIUM_SWORD_melee_effect(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _WOE_melee_effect(item_def* weapon, actor* attacker,
-                              actor* defender, bool mondied, int dam)
+static void _WOE_melee_effects(item_def* weapon, actor* attacker,
+                               actor* defender, bool mondied, int dam)
 {
     const char *verb = "bugger", *adv = "";
     switch (random2(8))
@@ -835,4 +844,93 @@ static void _WOE_melee_effect(item_def* weapon, actor* attacker,
 
     if (!mondied)
         defender->hurt(attacker, defender->stat_hp());
+}
+
+///////////////////////////////////////////////////
+
+static void _SPIDER_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The boots cling to your feet.");
+    you.check_clinging(false);
+}
+
+static void _SPIDER_unequip(item_def *item, bool *show_msgs)
+{
+    you.check_clinging(false);
+}
+
+///////////////////////////////////////////////////
+
+static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "Your hands smoulder for a moment.");
+}
+
+static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
+                                           string* ammo_name, bool* returning)
+{
+    ASSERT(beam->item
+           && beam->item->base_type == OBJ_MISSILES
+           && !is_artefact(*(beam->item)));
+    beam->item->special = SPMSL_EXPLODING; // so that it mulches
+
+    beam->flavour = BEAM_HELLFIRE;
+    beam->name    = "hellfire bolt";
+    *ammo_name    = "a hellfire bolt";
+    beam->colour  = LIGHTRED;
+    beam->glyph   = DCHAR_FIRED_ZAP;
+
+    bolt *expl   = new bolt(*beam);
+    expl->is_explosion = true;
+    expl->damage = dice_def(2, 5);
+    expl->name   = "hellfire";
+
+    beam->special_explosion = expl;
+    return SM_FINISHED;
+}
+
+///////////////////////////////////////////////////
+
+static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
+                                        actor* defender, bool mondied, int dam)
+{
+    int evoc = attacker->skill(SK_EVOCATIONS, 27);
+
+    if (mondied || !(x_chance_in_y(evoc, 729) || x_chance_in_y(evoc, 729)))
+        return;
+
+    int d = 10 + random2(15);
+
+    const char *verb = "hit";
+    switch (random2(4))
+    {
+    case 0:
+        d = resist_adjust_damage(defender, BEAM_FIRE,
+                                 defender->res_fire(), d);
+        verb = "burn";
+        break;
+    case 1:
+        d = resist_adjust_damage(defender, BEAM_COLD,
+                                 defender->res_cold(), d);
+        verb = "freeze";
+        break;
+    case 2:
+        d = resist_adjust_damage(defender, BEAM_ELECTRICITY,
+                                 defender->res_elec(), d);
+        verb = "electrocute";
+        break;
+    case 3:
+        d = defender->apply_ac(d);
+        verb = "crush";
+        break;
+    }
+
+    if (!d)
+        return;
+
+    mprf("%s %s %s.",
+         attacker->name(DESC_THE).c_str(),
+         attacker->is_player() ? verb : pluralise(verb).c_str(),
+         defender->name(DESC_THE).c_str());
+    defender->hurt(attacker, d);
 }

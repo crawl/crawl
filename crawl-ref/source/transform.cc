@@ -26,6 +26,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mutation.h"
+#include "newgame.h"
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
@@ -575,10 +576,6 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     if (form_can_fly(which_trans) || _flying_in_new_form(which_trans))
         return false;
 
-    // ... or hover our butts up if need arises.
-    if (you.species == SP_DJINNI)
-        return false;
-
     // We can only cling for safety if we're already doing so.
     if (which_trans == TRAN_SPIDER && you.is_wall_clinging())
         return false;
@@ -789,7 +786,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     // Catch some conditions which prevent transformation.
     if (you.is_undead
         && (you.species != SP_VAMPIRE
-            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED))
+            || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED
+            || which_trans == TRAN_LICH))
     {
         if (!involuntary)
             mpr("Your unliving flesh cannot be transformed in this way.");
@@ -1271,8 +1269,11 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_LICH:
-        mpr("You feel yourself come back to life.", MSGCH_DURATION);
-        you.is_undead = US_ALIVE;
+        you.is_undead = get_undead_state(you.species);
+        if (you.is_undead == US_ALIVE)
+            mpr("You feel yourself come back to life.", MSGCH_DURATION);
+        else
+            mpr("You feel your undeath return to normal.", MSGCH_DURATION);
         break;
 
     case TRAN_PIG:

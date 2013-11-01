@@ -16,6 +16,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "cio.h"
@@ -35,7 +36,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-place.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
@@ -53,7 +53,8 @@
 
 static int _body_covered();
 
-static const mutation_def mut_data[] = {
+static const mutation_def mut_data[] =
+{
 #include "mutation-data.h"
 };
 
@@ -115,22 +116,20 @@ void init_mut_index()
     }
 }
 
-static const mutation_def* _seek_mutation(mutation_type mut)
+const mutation_def& get_mutation_def(mutation_type mut)
 {
     ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
-    if (mut_index[mut] == -1)
-        return NULL;
-    else
-        return &mut_data[mut_index[mut]];
+    ASSERT(mut_index[mut] != -1);
+    return *&mut_data[mut_index[mut]];
 }
 
-bool is_valid_mutation(mutation_type mut)
+static bool _is_valid_mutation(mutation_type mut)
 {
-    return (mut >= 0 && mut < NUM_MUTATIONS
-            && _seek_mutation(mut));
+    return (mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1);
 }
 
-static const mutation_type _all_scales[] = {
+static const mutation_type _all_scales[] =
+{
     MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
     MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
     MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
@@ -157,12 +156,6 @@ bool is_body_facet(mutation_type mut)
     }
 
     return false;
-}
-
-const mutation_def& get_mutation_def(mutation_type mut)
-{
-    ASSERT(is_valid_mutation(mut));
-    return *_seek_mutation(mut);
 }
 
 mutation_activity_type mutation_activity_level(mutation_type mut)
@@ -543,19 +536,6 @@ string describe_mutations(bool center_title)
 
         col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
         result += "<" + col + ">You have stony skin.</" + col + ">\n";
-
-        if (temperature_effect(LORC_FAST_MOVE))
-        {
-            // Fast move
-            col = "lightred";
-            result += "<" + col + ">You cover ground quickly.</" + col + ">\n";
-        }
-        else
-        {
-            // Slow or normal move
-            col = (temperature_effect(LORC_SLOW_MOVE)) ? "lightgrey" : "darkgrey";
-            result += "<" + col + ">You cover ground slowly.</" + col + ">\n";
-        }
 
         // Fire res
         col = (temperature_effect(LORC_FIRE_RES_III)) ? "lightred" :
@@ -1057,7 +1037,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
 
 static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 {
-    if (!is_valid_mutation(mutat))
+    if (!_is_valid_mutation(mutat))
         return false;
 
     if (physiology_mutation_conflict(mutat))
@@ -1079,7 +1059,8 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 
 static mutation_type _get_random_slime_mutation()
 {
-    const mutation_type slime_muts[] = {
+    const mutation_type slime_muts[] =
+    {
         MUT_GELATINOUS_BODY, MUT_EYEBALLS, MUT_TRANSLUCENT_SKIN,
         MUT_PSEUDOPODS, MUT_ACIDIC_BITE, MUT_TENDRILS,
         MUT_JELLY_GROWTH, MUT_JELLY_MISSILE
@@ -1119,7 +1100,8 @@ static bool _is_slime_mutation(mutation_type m)
 
 static mutation_type _get_random_xom_mutation()
 {
-    const mutation_type bad_muts[] = {
+    const mutation_type bad_muts[] =
+    {
         MUT_WEAK,          MUT_DOPEY,
         MUT_CLUMSY,        MUT_DEFORMED,      MUT_SCREAM,
         MUT_DETERIORATION, MUT_BLURRY_VISION, MUT_FRAIL
@@ -1186,7 +1168,8 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                                          const string &reason,
                                          bool temp = false)
 {
-    const int conflict[][3] = {
+    const int conflict[][3] =
+    {
         { MUT_REGENERATION,        MUT_SLOW_METABOLISM,  0},
         { MUT_REGENERATION,        MUT_SLOW_HEALING,     0},
         { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,    0},
@@ -1597,7 +1580,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         break;
     }
 
-    if (!is_valid_mutation(mutat))
+    if (!_is_valid_mutation(mutat))
         return false;
 
     // [Cha] don't allow teleportitis in sprint
@@ -1785,6 +1768,12 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
     }
 
+    if (you.hp <= 0)
+    {
+        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+             make_stringf("gaining the %s mutation", mutation_name(mutat)).c_str());
+    }
+
 #ifdef USE_TILE_LOCAL
     if (your_talents(false).size() != old_talents)
     {
@@ -1867,6 +1856,12 @@ static bool _delete_single_mutation_level(mutation_type mutat,
 
     if (!transient)
         take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
+
+    if (you.hp <= 0)
+    {
+        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+             make_stringf("losing the %s mutation", mutation_name(mutat)).c_str());
+    }
 
     return true;
 }
@@ -2007,7 +2002,7 @@ bool delete_temp_mutation()
 
 const char* mutation_name(mutation_type mut)
 {
-    if (!is_valid_mutation(mut))
+    if (!_is_valid_mutation(mut))
         return nullptr;
 
     return get_mutation_def(mut).wizname;
@@ -2422,7 +2417,7 @@ void roll_demonspawn_mutations()
 
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
 {
-    ASSERT(is_valid_mutation(which_mut));
+    ASSERT(_is_valid_mutation(which_mut));
 
     int cap = get_mutation_def(which_mut).levels;
     how_much = min(how_much, cap);

@@ -11,6 +11,7 @@
 #include <queue>
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "branch.h"
@@ -34,7 +35,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
-#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-pick.h"
 #include "mon-place.h"
@@ -199,7 +199,7 @@ static bool _abyss_place_map(const map_def *mdef)
 {
     // This is to prevent the player position from being updated by vaults
     // until after everything is done.
-    unwind_bool gen(Generating_Level, true);
+    unwind_bool gen(crawl_state.generating_level, true);
 
     const bool did_place = dgn_safe_place_map(mdef, true, false, INVALID_COORD);
     if (did_place)
@@ -401,7 +401,7 @@ static bool _abyss_check_place_feat(coord_def p,
     // Don't place features in bubbles.
     int wall_count = 0;
     for (adjacent_iterator ai(p); ai; ++ai)
-        wall_count += feat_is_solid(grd(p));
+        wall_count += cell_is_solid(p);
     if (wall_count > 6)
         return false;
 
@@ -591,7 +591,8 @@ static void _push_items()
         for (distance_iterator di(item.pos); di; ++di)
             if (!_pushy_feature(grd(*di)))
             {
-                move_item_to_grid(&i, *di, true);
+                int j = i;
+                move_item_to_grid(&j, *di, true);
                 break;
             }
     }
@@ -880,9 +881,12 @@ static void _abyss_generate_monsters(int nmonsters)
     mgen_data mg;
     mg.proximity = PROX_ANYWHERE;
 
+    level_id level = one_chance_in(3)
+        ? abyssal_state.level
+        : level_id::current();
     for (int mcount = 0; mcount < nmonsters; mcount++)
     {
-        mg.cls = pick_random_monster(level_id::current());
+        mg.cls = pick_random_monster(level);
         if (!invalid_monster_type(mg.cls))
             mons_place(mg);
     }
@@ -959,18 +963,25 @@ static bool _in_wastes(const coord_def &p)
     return (p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF);
 }
 
-static level_id _get_real_level()
+// XXX: This does two things: picks a random level for monster generation,
+// and picks a random existing level for layouts.
+// The signature of this function might be overly complex, but perhaps it
+// will be used for more in the future?
+static level_id _get_random_level(bool existing, bool connected)
 {
-    rng_save_excursion rngstate(abyssal_state.seed);
     vector<level_id> levels;
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
-        if (i == BRANCH_SHOALS || i == BRANCH_ABYSS)
+        if (i == BRANCH_ABYSS
+            || (existing && i == BRANCH_SHOALS)
+            || (connected && !is_connected_branch(static_cast<branch_type>(i))))
+        {
             continue;
-        for (int j = 0; j < brdepth[i]; ++j)
+        }
+        for (int j = 1; j <= brdepth[i]; ++j)
         {
             const level_id id(static_cast<branch_type>(i), j);
-            if (is_existing_level(id))
+            if (!existing || is_existing_level(id))
                 levels.push_back(id);
         }
     }
@@ -979,8 +990,8 @@ static level_id _get_real_level()
         // Let this fail later on.
         return level_id(static_cast<branch_type>(BRANCH_MAIN_DUNGEON), 1);
     }
-    int pick = random2(levels.size());
-    return levels[pick];
+
+    return levels[hash_rand(levels.size(), abyssal_state.seed)];
 }
 
 /**************************************************************/
@@ -1031,7 +1042,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 
     if (abyssLayout == NULL)
     {
-        const level_id lid = _get_real_level();
+        const level_id lid = _get_random_level(true, false);
         levelLayout = new LevelLayout(lid, 5, rivers);
         complex_vec[0] = levelLayout;
         complex_vec[1] = &rivers; // const
@@ -1152,6 +1163,12 @@ static void _update_abyss_terrain(const coord_def &p,
             int cloud_life = (_in_wastes(abyssal_state.major_coord) ? 5 : 2) + random2(2);
             if (cloud != CLOUD_NONE)
                 check_place_cloud(_cloud_from_feat(currfeat), rp, cloud_life, 0, 3);
+        }
+        else if (feat_is_solid(feat))
+        {
+            int cloud = env.cgrid(rp);
+            if (cloud != EMPTY_CLOUD)
+                delete_cloud(cloud);
         }
         monster* mon = monster_at(rp);
         if (mon && !monster_habitable_grid(mon, feat))
@@ -1336,6 +1353,7 @@ static void _initialize_abyss_state()
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random_int() & 0x7FFFFFFF;
     abyssal_state.nuke_all = false;
+    abyssal_state.level = _get_random_level(false, true);
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 

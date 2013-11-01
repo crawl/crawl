@@ -8,6 +8,7 @@
 #include "wiz-mon.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "cio.h"
@@ -29,7 +30,6 @@
 #include "mapdef.h"
 #include "message.h"
 #include "mgen_data.h"
-#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-speak.h"

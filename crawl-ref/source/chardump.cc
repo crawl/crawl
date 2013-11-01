@@ -119,7 +119,8 @@ struct dump_params
     }
 };
 
-static dump_section_handler dump_handlers[] = {
+static dump_section_handler dump_handlers[] =
+{
     { "header",         _sdump_header        },
     { "stats",          _sdump_stats         },
     { "location",       _sdump_location      },
@@ -1360,13 +1361,51 @@ void dump_map(FILE *fp, bool debug, bool dist)
 {
     if (debug)
     {
+#ifdef COLOURED_DUMPS
+        // Usage: make EXTERNAL_DEFINES="-DCOLOURED_DUMPS"
+        // To read the dumps, cat them or use less -R.
+        // ansi2html can be used to make html.
+
+        fprintf(fp, "Vaults used:\n");
+        for (size_t i = 0; i < env.level_vaults.size(); ++i)
+        {
+            const vault_placement &vp(*env.level_vaults[i]);
+            fprintf(fp, "  \e[3%dm%s\e[0m at (%d,%d) size (%d,%d)\n",
+                    6 - (int)i % 6, vp.map.name.c_str(),
+                    vp.pos.x, vp.pos.y, vp.size.x, vp.size.y);
+        }
+        fprintf(fp, "  (bright = stacked, \e[37;1mwhite\e[0m = not in level_map_ids)\n");
+        size_t last_nv = 0;
+        int    last_v = 0;
+#endif
         // Write the whole map out without checking for mappedness. Handy
         // for debugging level-generation issues.
         for (int y = 0; y < GYM; ++y)
         {
             for (int x = 0; x < GXM; ++x)
             {
-                if (you.pos() == coord_def(x, y))
+#ifdef COLOURED_DUMPS
+                size_t nv = 0;
+                for (size_t i = 0; i < env.level_vaults.size(); ++i)
+                    if (env.level_vaults[i]->map.in_map(coord_def(x, y)
+                           - env.level_vaults[i]->pos))
+                    {
+                        nv++;
+                    }
+                int v = env.level_map_ids[x][y];
+                if (v == INVALID_MAP_INDEX)
+                    v = -1;
+                if (nv != last_nv || v != last_v)
+                {
+                    if (nv)
+                        fprintf(fp, "\e[%d;3%dm", nv != 1, 6 - v % 6);
+                    else
+                        fprintf(fp, "\e[0m");
+                    last_nv = nv;
+                    last_v = v;
+                }
+#endif
+                if (dist && you.pos() == coord_def(x, y))
                     fputc('@', fp);
                 else if (testbits(env.pgrid[x][y], FPROP_HIGHLIGHT))
                     fputc('?', fp);
@@ -1376,6 +1415,8 @@ void dump_map(FILE *fp, bool debug, bool dist)
                 {
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
+                else if (grd[x][y] >= NUM_FEATURES)
+                    fputc('!', fp);
                 else
                 {
                     fputs(OUTS(stringize_glyph(
@@ -1383,7 +1424,13 @@ void dump_map(FILE *fp, bool debug, bool dist)
                 }
             }
             fputc('\n', fp);
+#ifdef COLOURED_DUMPS
+            last_v = 0; // force a colour code, because of less+libvte
+#endif
         }
+#ifdef COLOURED_DUMPS
+        fprintf(fp, "\e[0m");
+#endif
     }
     else
     {

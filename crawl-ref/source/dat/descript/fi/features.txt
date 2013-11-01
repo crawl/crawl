@@ -44,7 +44,7 @@ A gateway to the freezing wastes of Cocytus
 
 Palelluttavilta mailta tuleva kylmyys koskettaa sieluasi.
 %%%%
-A floor
+The floor
 
 Luolaston lattiaa.
 %%%%

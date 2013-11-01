@@ -1656,6 +1656,37 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         return retval;
     }
+    // The Orb is also handled specially.
+    if (item_is_orb(it))
+    {
+        // Take a note!
+        _check_note_item(it);
+
+        mpr("You pick up the Orb of Zot!", MSGCH_ORB);
+        you.char_direction = GDT_ASCENDING;
+        burden_change();
+
+        env.orb_pos = you.pos(); // can be wrong in wizmode
+        orb_pickup_noise(you.pos(), 30);
+
+        mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
+
+        if (you_worship(GOD_CHEIBRIADOS))
+            simple_god_message(" tells them not to hurry.");
+
+        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
+
+        xom_is_stimulated(200, XM_INTRIGUED);
+        invalidate_agrid(true);
+
+        dungeon_events.fire_position_event(
+            dgn_event(DET_ITEM_PICKUP, you.pos(), 0, obj, -1), you.pos());
+
+        dec_mitm_item_quantity(obj, quant_got);
+        you.turn_is_over = true;
+
+        return retval;
+    }
 
     const int unit_mass = item_mass(it);
     if (quant_got > it.quantity || quant_got <= 0)
@@ -1744,27 +1775,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     int freeslot = find_free_slot(it);
     ASSERT(freeslot >= 0 && freeslot < ENDOFPACK);
     ASSERT(!you.inv[freeslot].defined());
-
-    if (it.base_type == OBJ_ORBS
-        && you.char_direction == GDT_DESCENDING)
-    {
-        // Take a note!
-        _check_note_item(it);
-
-        env.orb_pos = you.pos(); // can be wrong in wizmode
-        orb_pickup_noise(you.pos(), 30);
-
-        mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
-
-        if (you_worship(GOD_CHEIBRIADOS))
-            simple_god_message(" tells them not to hurry.");
-
-        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
-
-        you.char_direction = GDT_ASCENDING;
-        xom_is_stimulated(200, XM_INTRIGUED);
-        invalidate_agrid(true);
-    }
 
     coord_def p = it.pos;
     // If moving an item directly from a monster to the player without the
@@ -2131,12 +2141,6 @@ bool drop_item(int item_dropped, int quant_drop)
         return false;
     }
 
-    if (you.inv[item_dropped].base_type == OBJ_ORBS)
-    {
-        mpr("You don't feel like leaving the orb behind!");
-        return false;
-    }
-
     if (item_dropped == you.equip[EQ_WEAPON]
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
         && you.inv[item_dropped].cursed())
@@ -2199,10 +2203,7 @@ bool drop_item(int item_dropped, int quant_drop)
     if (you.swimming())
         quiet = true;
 
-    if (feat_destroys_item(my_grid, you.inv[item_dropped], !quiet))
-        ;
-    else if (strstr(you.inv[item_dropped].inscription.c_str(), "=s") != 0)
-        StashTrack.add_stash();
+    feat_destroys_item(my_grid, you.inv[item_dropped], !quiet);
 
     if (is_blood_potion(you.inv[item_dropped])
         && you.inv[item_dropped].quantity != quant_drop)
@@ -3311,7 +3312,8 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         trim_string(type_str);
     }
 
-    misc_item_type types[] = {
+    misc_item_type types[] =
+    {
         MISC_DECK_OF_ESCAPE,
         MISC_DECK_OF_DESTRUCTION,
         MISC_DECK_OF_DUNGEONS,
@@ -3373,7 +3375,8 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         }
     }
 
-    const char* rarities[] = {
+    const char* rarities[] =
+    {
         "plain",
         "ornate",
         "legendary",
@@ -4042,6 +4045,9 @@ static const object_class_type _mimic_item_classes[] =
     OBJ_BOOKS,
     OBJ_STAVES,
     OBJ_RODS,
+    OBJ_FOOD,
+    OBJ_MISCELLANY,
+    OBJ_JEWELLERY,
 };
 
 object_class_type get_random_item_mimic_type()

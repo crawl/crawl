@@ -8,6 +8,7 @@
 #include "item_use.h"
 
 #include "abl-show.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
@@ -36,7 +37,6 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mutation.h"
 #include "options.h"
@@ -172,22 +172,15 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
+    bool id_brand = false;
+
     if (you.undead_or_demonic() && is_holy_item(*weapon)
         && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
             mpr("This weapon is holy and will not allow you to wield it.");
-            // If it's a standard weapon, you know its ego now.
-            if (!is_artefact(*weapon) && !is_blessed(*weapon)
-                && !item_type_known(*weapon))
-            {
-                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-                if (in_inventory(*weapon))
-                    mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
-            }
-            else if (is_artefact(*weapon) && !item_type_known(*weapon))
-                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+            id_brand = true;
         }
         return false;
     }
@@ -203,18 +196,34 @@ bool can_wield(item_def *weapon, bool say_reason,
         if (say_reason)
         {
             mpr("As you grasp it, you feel a great hunger. Being not satiated, you stop.");
-            // If it's a standard weapon, you know its ego now.
-            if (!is_artefact(*weapon) && !is_blessed(*weapon)
-                && !item_type_known(*weapon))
-            {
-                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-                if (in_inventory(*weapon))
-                    mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
-            }
-            else if (is_artefact(*weapon) && !item_type_known(*weapon))
-                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+            id_brand = true;
         }
         return false;
+    }
+
+    if (you.species == SP_DJINNI
+        && get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC
+        && (item_type_known(*weapon) || !only_known))
+    {
+        if (say_reason)
+        {
+            mpr("As you grasp it, you feel your magic disrupted. Quickly, you stop.");
+            id_brand = true;
+        }
+        return false;
+    }
+
+    if (id_brand)
+    {
+        if (!is_artefact(*weapon) && !is_blessed(*weapon)
+            && !item_type_known(*weapon))
+        {
+            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+            if (in_inventory(*weapon))
+                mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
+        }
+        else if (is_artefact(*weapon) && !item_type_known(*weapon))
+            artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
     }
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
@@ -1253,7 +1262,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
 }
 
 // Checks whether removing an item would cause flight to end and the
-// player to fall to their death.
+// player to fall to their death.  Same for clinging.
 bool safe_to_remove(const item_def &item, bool quiet)
 {
     item_info inf = get_item_info(item);
@@ -1262,13 +1271,15 @@ bool safe_to_remove(const item_def &item, bool quiet)
          inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT
          || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
          || is_artefact(inf)
-            && artefact_known_wpn_property(inf, ARTP_FLY);
+            && (artefact_known_wpn_property(inf, ARTP_FLY)
+                || inf.special == UNRAND_SPIDER);
 
     // assumes item can't grant flight twice
-    const bool removing_ends_flight =
-        you.flight_mode()
-        && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-        && (you.evokable_flight() == 1);
+    const bool removing_ends_flight = you.flight_mode()
+          && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+          && (you.evokable_flight() == 1)
+        || you.is_wall_clinging() && !you.flight_mode()
+          && is_artefact(inf) && inf.special == UNRAND_SPIDER;
 
     const dungeon_feature_type feat = grd(you.pos());
 
@@ -1763,7 +1774,6 @@ void zap_wand(int slot)
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_HOSTILE;
 
-    beam.obvious_effect = false;
     beam.beam_source = MHITYOU;
 
     if (inv_count() < 1)
@@ -1817,7 +1827,6 @@ void zap_wand(int slot)
     }
 
     const bool alreadyknown = item_type_known(wand);
-    const bool alreadytried = item_type_tried(wand);
           bool invis_enemy  = false;
     const bool dangerous    = player_in_a_dangerous_place(&invis_enemy);
     targetter *hitfunc      = 0;
@@ -1976,8 +1985,8 @@ void zap_wand(int slot)
     if (wand.plus2 >= 0)
         wand.plus2++;
 
-    // Identify if necessary.
-    if (!alreadyknown && (beam.obvious_effect || type_zapped == ZAP_FIREBALL))
+    // Identify if unknown.
+    if (!alreadyknown)
     {
         set_ident_type(wand, ID_KNOWN_TYPE);
         if (wand.sub_type == WAND_RANDOM_EFFECTS)
@@ -1985,8 +1994,6 @@ void zap_wand(int slot)
 
         mpr_nocap(wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
-    else
-        set_ident_type(wand, ID_TRIED_TYPE);
 
     if (item_type_known(wand)
         && (item_ident(wand, ISFLAG_KNOW_PLUSES)
@@ -2011,7 +2018,7 @@ void zap_wand(int slot)
     count_action(CACT_EVOKE, EVOC_WAND);
     alert_nearby_monsters();
 
-    if (!alreadyknown && !alreadytried && risky)
+    if (!alreadyknown && risky)
     {
         // Xom loves it when you use an unknown wand and there is a
         // dangerous monster nearby...
@@ -2350,7 +2357,7 @@ static void _rebrand_weapon(item_def& wpn)
     int new_brand = old_brand;
     const string itname = wpn.name(DESC_YOUR);
 
-    // you can't rebrand blessed weapons but trying will get you some cleansing flame
+    // You can't rebrand blessed weapons.
     switch (wpn.sub_type)
     {
         case WPN_BLESSED_FALCHION:
@@ -2362,7 +2369,10 @@ static void _rebrand_weapon(item_def& wpn)
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
+        {
+            mprf("%s cannot be rebranded.", itname.c_str());
             return;
+        }
     }
 
     // now try and find an appropriate brand
@@ -2520,41 +2530,13 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
         }
         break;
 
+    // Un-affixable brands.
     case SPWPN_PAIN:
-        // Can't fix pain brand (balance)...you just get tormented.
-        mprf("%s shrieks out in agony!", itname.c_str());
-
-        torment_monsters(you.pos(), &you, TORMENT_GENERIC);
-        success = false;
-
-        // This is only naughty if you know you're doing it.
-        // XXX: assumes this can only happen from Brand Weapon scroll.
-        did_god_conduct(DID_NECROMANCY, 10,
-                        get_ident_type(OBJ_SCROLLS, SCR_BRAND_WEAPON)
-                        == ID_KNOWN_TYPE);
-        break;
-
     case SPWPN_DISTORTION:
-        // [dshaligram] Attempting to fix a distortion brand gets you a free
-        // distortion effect, and no permabranding. Sorry, them's the breaks.
-        mprf("%s twongs alarmingly.", itname.c_str());
-
-        // from unwield_item
-        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
-                      "distortion affixation");
-        success = false;
-        break;
-
     case SPWPN_ANTIMAGIC:
-        mprf("%s repels your magic.", itname.c_str());
-        drain_mp(you.species == SP_DJINNI ? 100 : you.magic_points);
-        success = false;
-        break;
-
     case SPWPN_HOLY_WRATH:
-        mprf("%s emits a blast of cleansing flame.", itname.c_str());
-        _explosion(you.pos(), &you, BEAM_HOLY, YELLOW, "cleansing flame",
-                   rebranded ? "holy wrath rebrand" : "holy wrath affixation");
+        if (!rebranded)
+            mpr("This brand cannot be affixed.");
         success = false;
         break;
 
@@ -3279,7 +3261,7 @@ void read_scroll(int slot)
     case SCR_IMMOLATION:
     {
         bool had_effect = false;
-        for (monster_iterator mi(you.get_los()); mi; ++mi)
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         {
             if (mons_immune_magic(*mi) || mi->is_summoned())
                 continue;
@@ -3472,20 +3454,6 @@ void read_scroll(int slot)
         // since there are no *really* bad scrolls, merely useless ones).
         xom_is_stimulated(bad_effect ? 100 : 50);
     }
-}
-
-void examine_object(void)
-{
-    int item_slot = prompt_invent_item("Examine which item?",
-                                        MT_INVLIST, -1,
-                                        true, true, true, 0, -1, NULL,
-                                        OPER_EXAMINE);
-    if (prompt_failed(item_slot))
-        return;
-
-    describe_item(you.inv[item_slot], true);
-    redraw_screen();
-    mesclr();
 }
 
 bool stasis_blocks_effect(bool calc_unid,

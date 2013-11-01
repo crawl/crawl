@@ -59,8 +59,8 @@ war.
 # deck of battle -> changes, defence, war
 the Elixir card
 
-This card heals you and may also drain or restore your magical energy in the
-process. It is usually found in decks of changes, defence and war.
+This card restores your health or magic, or both at high power levels. It is
+usually found in decks of changes, defence and war.
 %%%%
 Battlelust card
 

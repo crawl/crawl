@@ -45,6 +45,7 @@ struct unrandart_entry
     const char *name;        // true name of unrandart
     const char *unid_name;   // un-id'd name of unrandart
     const char *type_name;   // custom item type
+    const char *inscrip;     // extra inscription
 
     object_class_type base_type;
     uint8_t           sub_type;
@@ -125,6 +126,7 @@ void reveal_randapp_artefact(item_def &item);
 
 bool make_item_randart(item_def &item, bool force_mundane = false);
 bool make_item_unrandart(item_def &item, int unrand_index);
+void setup_unrandart(item_def &item);
 
 bool randart_is_bad(const item_def &item);
 bool randart_is_bad(const item_def &item, artefact_properties_t &proprt);

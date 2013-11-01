@@ -29,6 +29,8 @@ const map_def *map_by_index(int index);
 void strip_all_maps();
 int map_count();
 
+string vault_chance_tag(const map_def &map);
+
 const map_def *find_map_by_name(const string &name);
 const map_def *random_map_for_place(const level_id &place, bool minivault);
 const map_def *random_map_in_depth(const level_id &lid,

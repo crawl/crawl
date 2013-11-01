@@ -81,8 +81,8 @@
 # * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
-# * noises:   Weapon makes noises.  Can be given its own set of noises by
-#             making an entry in dat/database/wpnnoise.txt, with the
+# * noises:   Weapon makes noises.  Should  be given its own set of noises
+#             by making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
 #             lowercase.
 # * nospell:  Prevents wearer from casting spells.
@@ -187,7 +187,7 @@ COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
 VALUE:   700
-BOOL:    special
+BOOL:    special, no_upgrade
 BRAND:   SPWPN_CHAOS
 
 NAME:    Glaive of Prune
@@ -207,7 +207,7 @@ COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   1000
-BOOL:    special
+BOOL:    special, no_upgrade
 
 NAME:    Staff of Olgreb
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -216,7 +216,7 @@ COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
-BOOL:    poison
+BOOL:    poison, no_upgrade
 
 NAME:    Staff of Wucad Mu
 OBJ:     OBJ_WEAPONS/WPN_STAFF
@@ -312,9 +312,7 @@ PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
 TILE_EQ: faerie_dragon_armour
-BOOL:    nogen, unided
-
-##################### End of old fixed arts.
+BOOL:    nogen, unided, no_upgrade
 
 NAME:    demon blade "Bloodbane"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
@@ -448,15 +446,16 @@ STEALTH:  -50
 BOOL:     life
 
 NAME:    crossbow "Hellfire"
+INSCRIP: hellfire,
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
-PLUS:    +6/+9
+PLUS:    +6/+6
 COLOUR:  ETC_FIRE
 TILE:    urand_hellfire
 TILE_EQ: crossbow_fire
-BRAND:   SPWPN_FLAME
 FIRE:    2
 COLD:    -1
 MAGIC:   40
+BOOL:    evil
 
 NAME:    sword of the Doom Knight
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
@@ -512,18 +511,18 @@ STR:     2
 MAGIC:   30
 
 NAME:     Elemental Staff
-OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
-PLUS:     +3/+1
+OBJ:      OBJ_WEAPONS/WPN_STAFF
+PLUS:     +3/+3
 COLOUR:   DARKGREY
 TILE:     urand_elemental
 TILE_EQ:  elemental_staff
-BRAND:    SPWPN_PROTECTION
 FIRE:     2
 COLD:     2
 MAGIC:    60
-METAB:    2
-BOOL:     noises
+AC:       5
+BOOL:     elec
 
+# TAG_MAJOR_VERSION == 34
 NAME:    crossbow "Sniper"
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +10/+0
@@ -531,7 +530,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_sniper
 TILE_EQ: sniper
 BRAND:   SPWPN_VENOM
-BOOL:    seeinv
+BOOL:    seeinv, nogen
 
 NAME:    longbow "Piercer"
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
@@ -539,9 +538,10 @@ PLUS:    +2/+10
 COLOUR:  CYAN
 TILE:    urand_piercer
 TILE_EQ: great_bow
-BRAND:   SPWPN_VORPAL
+BRAND:   SPWPN_PENETRATION
 EV:      -2
 
+# TAG_MAJOR_VERSION == 34
 ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
@@ -550,7 +550,7 @@ COLOUR:  WHITE
 TILE:    urand_blowgun
 TILE_EQ: blowgun
 STEALTH: 60
-BOOL:    inv, tilerim
+BOOL:    inv, tilerim, nogen
 
 NAME:    lance "Wyrmbane"
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
@@ -563,7 +563,7 @@ TILE_EQ: wyrmbane
 BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
-BOOL:    poison, berserk
+BOOL:    poison, berserk, no_upgrade
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
@@ -595,6 +595,7 @@ TILE:     urand_undeadhunter
 TILE_EQ:  undeadhunter
 BOOL:     life
 
+# TAG_MAJOR_VERSION == 34
 NAME:    whip "Snakebite"
 OBJ:     OBJ_WEAPONS/WPN_WHIP
 PLUS:    +5/+10
@@ -602,7 +603,7 @@ COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
-BOOL:    poison, tilerim
+BOOL:    poison, tilerim, nogen
 
 # TAG_MAJOR_VERSION == 34
 NAME:     knife of Accuracy
@@ -1057,7 +1058,7 @@ EV:       1
 STR:      1
 INT:      1
 DEX:      1
-BOOL:     unided
+BOOL:     unided, no_upgrade
 
 # Meatsprint only. The type is adjusted to the biggest two-handed axe the
 # player's species can wield (exec or broad).
@@ -1068,7 +1069,7 @@ OBJ:      OBJ_WEAPONS/WPN_EXECUTIONERS_AXE
 COLOUR:   ETC_BLOOD
 TILE:     urand_axe_of_woe
 TILE_EQ:  axe_of_woe
-BOOL:     nogen
+BOOL:     nogen, no_upgrade
 
 NAME:     moon troll leather armour
 OBJ:      OBJ_ARMOUR/ARM_TROLL_LEATHER_ARMOUR
@@ -1083,7 +1084,40 @@ REGEN:    40
 ENUM:     FINGER_AMULET
 NAME:     macabre finger necklace
 OBJ:      OBJ_JEWELLERY/AMU_WARDING
+TILE:     urand_finger
 COLOUR:   ETC_BONE
+
+ENUM:     SPIDER
+NAME:     boots of the spider
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+PLUS:     +3
+BRAND:    SPARM_JUMPING
+COLOUR:   LIGHTMAGENTA
+STEALTH:  50
+
+NAME:     dark maul
+OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
+TYPE:     maul
+COLOUR:   LIGHTRED
+TILE:     urand_dark_maul
+TILE_EQ:  dark_maul
+PLUS:     +6/+6
+BASE_ACC: +2
+BASE_DAM: +27
+BASE_DELAY: +13
+BRAND:    SPWPN_VORPAL
+
+ENUM:    HIGH_COUNCIL
+NAME:    hat of the High Council
+INSCRIP: Wiz-
+OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
+COLOUR:  LIGHTGREEN
+TILE:    urand_high_council
+TILE_EQ: wizard_lightgreen
+PLUS:    +2
+BRAND:   SPARM_ARCHMAGI
+STEALTH: -20
+BOOL:    mutate
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are

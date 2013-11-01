@@ -86,7 +86,6 @@ bool slime_wall_neighbour(const coord_def& c);
 
 void get_door_description(int door_size, const char** adjective,
                           const char** noun);
-dungeon_feature_type grid_appearance(const coord_def &gc);
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
 bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
 

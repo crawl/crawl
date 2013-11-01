@@ -57,6 +57,7 @@ enum kill_method_type
     KILLED_BY_ROLLING,
     KILLED_BY_MIRROR_DAMAGE,
     KILLED_BY_SPINES,
+    KILLED_BY_FRAILTY,
 
     NUM_KILLBY
 };
@@ -79,8 +80,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 void lose_level(int death_source, const char* aux);
 bool drain_exp(bool announce_full = true, int power = 25);
 
-bool expose_items_to_element(beam_type flavour, const coord_def& where,
-                             int strength = 0);
 bool expose_player_to_element(beam_type flavour, int strength = 0,
                               bool damage_inventory = true,
                               bool slow_dracs = true);

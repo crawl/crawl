@@ -1319,9 +1319,9 @@
        SPELL_ICE_STORM,
        SPELL_CONJURE_BALL_LIGHTNING,
        SPELL_MAJOR_HEALING,
+       SPELL_TORNADO,
        SPELL_BLINK_RANGE,
-       SPELL_BLINK_RANGE,
-       SPELL_ICE_STORM
+       SPELL_TORNADO
       }
     },
 
@@ -2248,5 +2248,17 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_IGNIS,
+      {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
 
 #endif

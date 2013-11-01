@@ -6,7 +6,6 @@ local FAILMAP = map .. ".map"
 
 debug.flush_map_memory()
 debug.goto_place("D:2")
-dgn.load_des_file("test/des/monster-plant-pathfind.des")
 dgn.reset_level()
 assert(dgn.place_map(dgn.map_by_name(map), true, true),
        "Could not place " .. map)

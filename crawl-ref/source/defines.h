@@ -57,6 +57,7 @@ enum extra_monster_index_type
 {
     MAX_MONSTERS = 700,                  // max size of monster array {dlb}
     ANON_FRIENDLY_MONSTER = MAX_MONSTERS,// unknown/dead ally, for actor blaming
+    YOU_FAULTLESS,                       // full xp but no penalty (reflection)
     NON_MONSTER  = NON_ENTITY,           // no monster
 
     MHITNOT = NON_MONSTER,
@@ -225,6 +226,7 @@ const int ANTITRAIN_PENALTY = 2;
 #define TORNADO_RADIUS 6
 
 #define NUMBER_OF_RUNES_NEEDED    3
+#define RUNE_LOCK_DEPTH 14
 
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 100

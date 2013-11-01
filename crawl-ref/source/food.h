@@ -9,17 +9,18 @@
 
 #define BERSERK_NUTRITION     700
 
-#define HUNGER_STARVING      1000
-#define HUNGER_NEAR_STARVING 1533
-#define HUNGER_VERY_HUNGRY   2066
-#define HUNGER_HUNGRY        2600
-#define HUNGER_SATIATED      7000
-#define HUNGER_FULL          9000
-#define HUNGER_VERY_FULL    11000
-#define HUNGER_ENGORGED     40000
+#define HUNGER_FAINTING       400
+#define HUNGER_STARVING       900
+#define HUNGER_NEAR_STARVING 1433
+#define HUNGER_VERY_HUNGRY   1966
+#define HUNGER_HUNGRY        2500
+#define HUNGER_SATIATED      6900
+#define HUNGER_FULL          8900
+#define HUNGER_VERY_FULL    10900
+#define HUNGER_ENGORGED     39900
 
-#define HUNGER_DEFAULT       6000
-#define HUNGER_MAXIMUM      12000
+#define HUNGER_DEFAULT       5900
+#define HUNGER_MAXIMUM      11900
 
 int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);

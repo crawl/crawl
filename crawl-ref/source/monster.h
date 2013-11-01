@@ -301,6 +301,7 @@ public:
     void attacking(actor *other);
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
+    bool can_jump() const;
     void go_berserk(bool intentional, bool potion = false);
     bool go_frenzy(actor *source);
     bool berserk() const;
@@ -520,7 +521,7 @@ private:
     void id_if_worn(mon_inv_type mslot, object_class_type base_type,
                     int sub_type) const;
 
-    bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
+    bool decay_enchantment(enchant_type en, bool decay_degree = true);
 
     bool wants_weapon(const item_def &item) const;
     bool wants_armour(const item_def &item) const;

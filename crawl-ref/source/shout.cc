@@ -7,6 +7,7 @@
 
 #include "shout.h"
 
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
@@ -23,7 +24,6 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-chimera.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-stuff.h"
@@ -615,9 +615,11 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
 
 void check_monsters_sense(sense_type sense, int range, const coord_def& where)
 {
-    circle_def c(where, range, C_CIRCLE);
-    for (monster_iterator mi(&c); mi; ++mi)
+    for (monster_iterator mi; mi; ++mi)
     {
+        if (distance2(mi->pos(), where))
+            continue;
+
         switch (sense)
         {
         case SENSE_SMELL_BLOOD:

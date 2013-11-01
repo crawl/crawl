@@ -2,95 +2,183 @@
 
 #include "act-iter.h"
 
-#include "coord-circle.h"
-#include "mon-iter.h"
-#include "monster.h"
-#include "player.h"
+#include "env.h"
+#include "losglobal.h"
 
-actor_iterator::actor_iterator()
-    : restr(R_NONE), did_you(false), mi()
+actor_near_iterator::actor_near_iterator(coord_def c, los_type los)
+    : center(c), _los(los), viewer(nullptr), i(-1)
 {
-    advance(true);
+    if (!valid(&you))
+        advance();
 }
 
-actor_iterator::actor_iterator(const circle_def* circle_)
-    : restr(R_CIRC), circle(circle_), did_you(false), mi(circle_)
+actor_near_iterator::actor_near_iterator(const actor* a, los_type los)
+    : center(a->pos()), _los(los), viewer(a), i(-1)
 {
-    advance(true);
+    if (!valid(&you))
+        advance();
 }
 
-actor_iterator::actor_iterator(const los_base* los_)
-    : restr(R_LOS), los(los_), did_you(false), mi(los_)
+actor_near_iterator::operator bool() const
 {
-    advance(true);
+    return valid(**this);
 }
 
-actor_iterator::actor_iterator(const actor* act_)
-    : restr(R_ACT), act(act_), did_you(false), mi(act_)
+actor* actor_near_iterator::operator*() const
 {
-    advance(true);
-}
-
-actor_iterator::operator bool() const
-{
-    return (!did_you || mi);
-}
-
-actor* actor_iterator::operator*() const
-{
-    if (!did_you)
+    if (i == -1)
         return &you;
+    else if (i < MAX_MONSTERS)
+        return &menv[i];
     else
-        return *mi;
+        return nullptr;
 }
 
-actor* actor_iterator::operator->() const
+actor* actor_near_iterator::operator->() const
 {
     return **this;
 }
 
-actor_iterator& actor_iterator::operator++()
+actor_near_iterator& actor_near_iterator::operator++()
 {
     advance();
     return *this;
 }
 
-actor_iterator actor_iterator::operator++(int)
+actor_near_iterator actor_near_iterator::operator++(int)
 {
-    actor_iterator copy = *this;
+    actor_near_iterator copy = *this;
     ++(*this);
     return copy;
 }
 
-bool actor_iterator::valid(const actor* a) const
+bool actor_near_iterator::valid(const actor* a) const
 {
-    if (!a->alive())
+    if (!a || !a->alive())
         return false;
-    switch (restr)
-    {
-    case R_CIRC:
-        return circle->contains(a->pos());
-    case R_LOS:
-        return los->see_cell(a->pos());
-    case R_ACT:
-        return act->can_see(a);
-    default:
-        return true;
-    }
+    if (viewer && !a->visible_to(a))
+        return false;
+    return cell_see_cell(center, a->pos(), _los);
 }
 
-void actor_iterator::raw_advance()
+void actor_near_iterator::advance()
 {
-    if (!did_you)
-        did_you = true;
+    do
+         if (++i >= MAX_MONSTERS)
+             return;
+    while (!valid(**this));
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+monster_near_iterator::monster_near_iterator(coord_def c, los_type los)
+    : center(c), _los(los), viewer(nullptr), i(0)
+{
+    if (!valid(&menv[0]))
+        advance();
+}
+
+monster_near_iterator::monster_near_iterator(const actor *a, los_type los)
+    : center(a->pos()), _los(los), viewer(a), i(0)
+{
+    if (!valid(&menv[0]))
+        advance();
+}
+
+monster_near_iterator::operator bool() const
+{
+    return valid(**this);
+}
+
+monster* monster_near_iterator::operator*() const
+{
+    if (i < MAX_MONSTERS)
+        return &menv[i];
     else
-        ++mi;
+        return nullptr;
 }
 
-void actor_iterator::advance(bool may_stay)
+monster* monster_near_iterator::operator->() const
 {
-    if (!may_stay)
-        raw_advance();
-    while (*this && !valid(**this))
-        raw_advance();
+    return **this;
+}
+
+monster_near_iterator& monster_near_iterator::operator++()
+{
+    advance();
+    return *this;
+}
+
+monster_near_iterator monster_near_iterator::operator++(int)
+{
+    monster_near_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
+bool monster_near_iterator::valid(const monster* a) const
+{
+    if (!a || !a->alive())
+        return false;
+    if (viewer && !a->visible_to(a))
+        return false;
+    return cell_see_cell(center, a->pos(), _los);
+}
+
+void monster_near_iterator::advance()
+{
+    do
+         if (++i >= MAX_MONSTERS)
+             return;
+    while (!valid(**this));
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+monster_iterator::monster_iterator()
+    : i(0)
+{
+    while (i < MAX_MONSTERS && !menv[i].alive())
+        i++;
+}
+
+monster_iterator::operator bool() const
+{
+    return i < MAX_MONSTERS && (*this)->alive();
+}
+
+monster* monster_iterator::operator*() const
+{
+    if (i < MAX_MONSTERS)
+        return &menv[i];
+    else
+        return nullptr;
+}
+
+monster* monster_iterator::operator->() const
+{
+    return **this;
+}
+
+monster_iterator& monster_iterator::operator++()
+{
+    while (++i < MAX_MONSTERS)
+        if (menv[i].alive())
+            break;
+    return *this;
+}
+
+monster_iterator monster_iterator::operator++(int)
+{
+    monster_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
+void monster_iterator::advance()
+{
+    do
+         if (++i >= MAX_MONSTERS)
+             return;
+    while (!(*this)->alive());
 }

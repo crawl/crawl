@@ -9,6 +9,7 @@
 #include <signal.h>
 
 #include "abyss.h"
+#include "chardump.h"
 #include "clua.h"
 #include "coord.h"
 #include "coordit.h"
@@ -112,10 +113,12 @@ static void _dump_level_info(FILE* file)
                       "    seed = 0x%" PRIx32 "\n"
                       "    depth = %" PRIu32 "\n"
                       "    phase = %g\n"
-                      "    nuke_all = %d\n",
+                      "    nuke_all = %d\n"
+                      "    level = (%d : %d)\n",
                 abyssal_state.major_coord.x, abyssal_state.major_coord.y,
                 abyssal_state.seed, abyssal_state.depth, abyssal_state.phase,
-                abyssal_state.nuke_all);
+                abyssal_state.nuke_all,
+                abyssal_state.level.branch, abyssal_state.level.depth);
     }
 
     debug_dump_levgen();
@@ -727,8 +730,16 @@ void do_crash_dump()
 #endif
 
     // Now a screenshot
-    fprintf(file, "\nScreenshot:\n");
-    fprintf(file, "%s\n", screenshot().c_str());
+    if (crawl_state.generating_level)
+    {
+        fprintf(file, "\nMap:\n");
+        dump_map(file, true);
+    }
+    else
+    {
+        fprintf(file, "\nScreenshot:\n");
+        fprintf(file, "%s\n", screenshot().c_str());
+    }
 
     // If anything has screwed up the Lua runtime stacks then trying to
     // print those stacks will likely crash, so do this after the others.

@@ -137,6 +137,12 @@ Ce sortilège est assez puissant pour littéralement extirper quelqu'un des
 griffes de la mort, malgré qu'il choquera le sorcier au point de le rendre
 incapable d'agir pendant un moment.
 %%%%
+Brain Feed spell
+
+Ce sort permet de diminuer une partie de l'intelligence de l'ennemi. Une telle
+perte n'est que temporaire, et les anneaux de soutien de facultés peuvent
+prévenir ou réduire considérablement cet effet.
+%%%%
 Call Canine Familiar spell
 
 Ce sort fait apparaitre un canidé pour venir en aide au sorcier.
@@ -335,6 +341,11 @@ Enslavement spell
 
 Ce sort force une créature hostile à se battre à vos côtés pour un moment.
 %%%%
+Ensnare spell
+
+Ce sortilège provoque l'envoie, à partir du lanceur de sort, d'une substance
+blanche et collante qui forme immédiatement une toile d'araignée.
+%%%%
 Ensorcelled Hibernation spell
 
 Ce sort tente de réduire le rythme métabolique de la cible, induisant une
@@ -357,6 +368,13 @@ Fire Storm spell
 Ce sort invoque une puissante et furieuse tempête de flammes directement sur la
 cible, causant des dégâts de feu partiellement irrésistibles sur une large zone
 et laissant derrière elle d'éphémères vortex de feu.
+%%%%
+Fire Summon spell
+
+En évoquant son sceptre, Asmodeus peut invoquer ses sbires. Contrairement à
+vous, Asmodeus est si craint que les démons appelés de cette façon savent qu'il
+vaut mieux ne pas se retourner contre lui, et ils étaient dans son équipe en
+premier.
 %%%%
 Fireball spell
 
@@ -398,6 +416,35 @@ le relâche après un court moment dans une violente explosion arcanique. Soyez
 conscient que le prisme est extrêmement fragile et que tout dommage lui étant
 causé peut entraîner prématurément sa détonation!
 %%%%
+Ghostly Fireball spell
+
+Ce sort permet à l'utilisateur de lancer une boule explosive d'énergie
+nécromantique. Ça  ressemble en quelque sorte à d'étranges flammes verdâtres,
+mais n'a rien de commun avec le feu si ce n'est l'apparence. Ce sortilège peut
+être combattu en utilisant de la protection contre l’énergie négative, et non
+seulement il ne fait aucun dégâts aux morts-vivants, mais il peut même les
+guérir.
+%%%%
+Ghostly Flames spell
+
+Ce sort permet à l'utilisateur de lancer une boule explosive d'énergie
+nécromantique. Ça  ressemble en quelque sorte à d'étranges flammes verdâtres,
+mais n'a rien de commun avec le feu si ce n'est l'apparence. L'impacte directe
+et la flamme résiduelle font des dégâts aux êtres vivants et guérissent les
+morts-vivants. L'énergie tend à se fondre en morts-vivants spectraux de sa
+propre volontés.
+%%%%
+Haste Other spell
+
+Ce sort permet au lanceur d'accélérer toutes les actions d'un allié proche.
+%%%%
+Haste Plants spell
+
+Ce sort permet au lanceur d'accélérer un tas de plantes à proximité. Bien sûr,
+cela ne sert à rien quand il est utilisé sur les mauvaises herbes ou des
+arbustes immobiles, mais les plantes pouvant faire des dommages en
+bénéficieront.
+%%%%
 Haste spell
 
 Ce sort accélère la vitesse d'exécution des actions d'une créature. Lancer ce
@@ -408,12 +455,36 @@ Haunt spell
 Ce sort convoque des esprits et fantômes pour hanter la cible du sorcier. Faire
 ainsi appel aux morts-vivants extrait une portion de la vitalité du sorcier.
 %%%%
+Heal Other spell
+
+Ce sort permet au lanceur pour guérir un allié proche.
+%%%%
+Hellfire Burst spell
+
+Ce pouvoir fait soudainement apparaître des flammes infernales sous la cible
+choisie. Il n'existe pas de protection contre ce feu maudit — il traverse
+directement l'armure. Seules certaines créatures, typiquement celles de feu, y
+sont immunisées.
+%%%%
 Holy Breath spell
 
 Cette créature peut cracher un large souffle de nuages de flammes bénie,
 brillante de la gloire des dieux bienveillants. Ces flammes sont
 particulièrement dangereuses pour ceux qui remplissent la définition du mal
 selon L’Étincelant.
+%%%%
+Holy Flames spell
+
+Ce sort permet de piéger un ennemi au milieu d'un cercle de flammes sacrées.
+S'il décide de le traverser, il subira des dommages supplémentaires, notamment
+si ce dernier est infernal ou maudit. Les créatures bénies peuvent le traverser
+sans subir plus de maux.
+%%%%
+Holy Light spell
+
+Ce sort permet à son lanceur de tirer un faisceau d'énergie sacrée. Tous les
+personnages non bénis subissent des dégâts, avec un bonus conséquent contre les
+impies.
 %%%%
 Ice Form spell
 
@@ -439,6 +510,11 @@ Ce sort insuffle la magie aux attaques de mêlée du lanceur en puisant dans ses
 réserves d'énergie magique, et ce, afin d'infliger des dégâts supplémentaires à
 chaque fois qu'un ennemi est touché. Il n'a aucun effet si la magie du lanceur
 est épuisée.
+%%%%
+Injury Bond spell
+
+Ce sort permet au lanceur de protéger ses alliés, redirigeant vers lui la
+moitié de tous les dommages qu'ils subissent.
 %%%%
 Ink Cloud spell
 
@@ -526,6 +602,17 @@ auto-alimenté mais heureusement temporaire. Quels ignobles habitants de cet
 ailleurs choisira de lancer leurs appendices tentaculaires au travers, personne
 ne sait mais, très certainement personne ne veut être à côté pour le savoir.
 %%%%
+Malign Offering spell
+
+Ce sort permet au lanceur de vider un ennemi de son énergie vitale, et
+guérissant ainsi les alliés à proximité.
+%%%%
+Malmutate spell
+
+Ce sort entraîne une mutation de la cible. Cette mutation est presque tout le
+temps nuisible. Cela n'affecte pas les être artificiels et fait se décomposer
+les morts-vivants.
+%%%%
 Mara Summon spell
 
 Mara, le seigneur des rakshasas, aime tisser des illusions de lui-même.
@@ -564,11 +651,21 @@ du sorcier, ralentissant toutes les créatures non immunisées au froid. Il
 contourne la résistance à la magie, cependant les monstres les plus coriaces ne
 seront pas ralentis aussi longtemps que les autres.
 %%%%
+Metal Splinters spell
+
+Ce pouvoir envoie un jet de tranchants éclats métalliques, généralement en un
+souffle.
+%%%%
 Miasma Breath spell
 
 Uh oh, parlons d'un méchant cas d'halitose. Ce n'est pas un rot d'ogre
 ordinaire, ces vapeurs nocives peuvent faire pourrir et détacher votre chair de
 vos os.
+%%%%
+Might Other spell
+
+Ce sort augmente considérablement les capacités de mêlé du personnage ciblé. Il
+est évidemment à utiliser sur les alliés.
 %%%%
 Minor Healing spell
 
@@ -763,6 +860,11 @@ pas d'autres actions), le rayon va grandir en force jusqu'à ce qu'il devienne
 un faisceau flambée capable de déchirer et traverser les rangs des ennemis du
 lanceur.
 %%%%
+Sentinel's Mark spell
+
+Ce sort place un marqueur sur un ennemi. La présence et la localisation de ce
+personnage sont ainsi connues pour tout le monde à ce niveau du donjon.
+%%%%
 Shadow Creatures spell
 
 Ce sort tisse une créature à partir des ombres et des murmures de matière
@@ -822,12 +924,6 @@ Slow spell
 
 Ce sort ralentit les actions d'une créature.
 %%%%
-Song of Shielding spell
-
-Ce sort puise dans votre essence magique pour créer une barrière de protection
-temporaire. Les dégâts reçus seront absorbés par le bouclier, consomant les
-réserve d’énergie magique du lanceur dans le processus.
-%%%%
 Song of Slaying spell
 
 Ce sort conjure des versets antiques de batailles dans votre esprit et vous les
@@ -871,11 +967,15 @@ avec une arme qu'à mains nues. Le sorcier avec un corps de pierre est isolé au
 effets électriques et gagne une résistance au poison, à la décomposition et aux
 énergies négatives.
 %%%%
+Steam Ball spell
+
+Cette créature peut dégager une boule de vapeur chaude et la lancer vers un
+ennemi.
+%%%%
 Sticks to Snakes spell
 
-Ce sort utilise des objets de bois tenus en main comme matière première pour
-une puissant transmutation. Notez que les artéfacts magiques ne seront pas
-affectés.
+Ce sort utilise des projectiles en bois (flèches ou javelots) tenus en main
+comme matière première pour une puissant transmutation.
 %%%%
 Sticky Flame spell
 
@@ -1017,11 +1117,6 @@ Summon Swarm spell
 
 Ce sort convoque un essaim pestilentiel.
 %%%%
-Summon Twister spell
-
-Un papillon du chaos peut engendrer une tornade à l'autre bout du monde d'un
-simple battement de ses ailes.
-%%%%
 Summon Ufetubus spell
 
 Ce sort convoque plein d'ufetubi, petits démons ennuyeux se pressant autour de
@@ -1143,6 +1238,10 @@ l'effet inverse sur le sorcier.
 Venom Bolt spell
 
 Ce sort projette un missile de poison.
+%%%%
+Volley of Thorns spell
+
+Ce pouvoir permet de lancer une petite pluie d'épines acérées.
 %%%%
 Warp Weapon spell
 

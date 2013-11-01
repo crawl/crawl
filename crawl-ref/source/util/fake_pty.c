@@ -27,7 +27,7 @@ static void slurp_output()
     pfd.fd     = crawl;
     pfd.events = POLLIN;
 
-    while (poll(&pfd, 1, 60000) > 0) // 60 seconds with no output -> kesim
+    while (poll(&pfd, 1, 60000) > 0) // 60 seconds with no output -> die die die!
     {
         if (read(tty, buf, sizeof(buf)) <= 0)
             break;

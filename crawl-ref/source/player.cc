@@ -16,6 +16,7 @@
 #include <sstream>
 #include <algorithm>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "branch.h"
@@ -53,7 +54,6 @@
 #include "misc.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
-#include "mon-iter.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
@@ -128,7 +128,8 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
-static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
+bool check_moveto_cloud(const coord_def& p, const string &move_verb,
+                        bool *prompted)
 {
     const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD && !you.confused())
@@ -152,6 +153,8 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
                     return true;
             }
 
+            if (prompted)
+                *prompted = true;
             string prompt = make_stringf("Really %s into that cloud of %s?",
                                          move_verb.c_str(),
                                          cloud_name_at_index(cloud).c_str());
@@ -167,7 +170,8 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
     return true;
 }
 
-static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
+bool check_moveto_trap(const coord_def& p, const string &move_verb,
+                       bool *prompted)
 {
     // If there's no trap, let's go.
     trap_def* trap = find_trap(p);
@@ -176,25 +180,44 @@ static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
 
     if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        string prompt = make_stringf(
-            "Do you really want to %s into the Zot trap",
-            move_verb.c_str());
+        string msg = (move_verb == "jump-attack"
+                      ? "Do you really want to %s when you might land in "
+                      "the Zot trap"
+                      : "Do you really want to %s into the Zot trap");
+        string prompt = make_stringf(msg.c_str(), move_verb.c_str());
 
+        if (prompted)
+            *prompted = true;
         if (!yes_or_no("%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
-            return false;
+                return false;
         }
     }
     else if (!trap->is_safe() && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        string prompt = make_stringf(
-            "Really %s %s that %s?",
-            move_verb.c_str(),
-            (trap->type == TRAP_ALARM || trap->type == TRAP_PLATE) ? "onto"
-                                                                   : "into",
-            feature_description_at(p, false, DESC_BASENAME, false).c_str());
+        string prompt;
 
+        if (prompted)
+            *prompted = true;
+        if (move_verb == "jump-attack")
+        {
+            prompt = make_stringf("Really jump when you might land on that %s?",
+                                  feature_description_at(p, false,
+                                                         DESC_BASENAME,
+                                                         false).c_str());
+        }
+        else
+        {
+            prompt = make_stringf("Really %s %s that %s?",
+                                  move_verb.c_str(),
+                                  (trap->type == TRAP_ALARM
+                                   || trap->type == TRAP_PLATE) ? "onto"
+                                  : "into",
+                                  feature_description_at(p, false,
+                                                         DESC_BASENAME,
+                                                         false).c_str());
+        }
         if (!yesno(prompt.c_str(), true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -206,6 +229,7 @@ static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
 
 static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
                                     bool cling = true)
+
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
         || you.airborne() || cling && you.can_cling_to(p)
@@ -225,26 +249,27 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
     }
     else
         canned_msg(MSG_UNTHINKING_ACT);
-
     return false;
 }
 
-static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
-                                  const string &msg)
+bool check_moveto_terrain(const coord_def& p, const string &move_verb,
+                          const string &msg, bool *prompted)
 {
     if (you.is_wall_clinging()
         && (move_verb == "blink" || move_verb == "passwall"))
     {
         return _check_moveto_dangerous(p, msg, false);
     }
+    else if (!_check_moveto_dangerous(p, msg))
+        return false;
 
     if (!need_expiration_warning() && need_expiration_warning(p)
         && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
-        if (!_check_moveto_dangerous(p, msg))
-            return false;
-
         string prompt;
+
+        if (prompted)
+            *prompted = true;
 
         if (msg != "")
             prompt = msg + " ";
@@ -259,28 +284,8 @@ static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
         prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
 
         prompt += need_expiration_warning(DUR_FLIGHT, p)
-                      ? " while you are losing your buoyancy?"
-                      : " while your transformation is expiring?";
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-
-    return _check_moveto_dangerous(p, msg);
-}
-
-static bool _check_moveto_exclusion(const coord_def& p, const string &move_verb)
-{
-    if (is_excluded(p)
-        && !is_stair_exclusion(p)
-        && !is_excluded(you.pos())
-        && !crawl_state.disables[DIS_CONFIRMATIONS])
-    {
-        string prompt = make_stringf("Really %s into a travel-excluded area?",
-                                     move_verb.c_str());
+            ? " while you are losing your buoyancy?"
+            : " while your transformation is expiring?";
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -291,13 +296,36 @@ static bool _check_moveto_exclusion(const coord_def& p, const string &move_verb)
     return true;
 }
 
-bool check_moveto(const coord_def& p, const string &move_verb,
-                  const string &msg)
+bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
+                            bool *prompted)
 {
-    return (_check_moveto_terrain(p, move_verb, msg)
-            && _check_moveto_cloud(p, move_verb)
-            && _check_moveto_trap(p, move_verb)
-            && _check_moveto_exclusion(p, move_verb));
+    string prompt;
+
+    if (is_excluded(p)
+        && !is_stair_exclusion(p)
+        && !is_excluded(you.pos())
+        && !crawl_state.disables[DIS_CONFIRMATIONS])
+    {
+        if (prompted)
+            *prompted = true;
+        prompt = make_stringf("Really %s into a travel-excluded area?",
+                              move_verb.c_str());
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+    return true;
+}
+
+bool check_moveto(const coord_def& p, const string &move_verb, const string &msg)
+{
+    return (check_moveto_terrain(p, move_verb, msg)
+            && check_moveto_cloud(p, move_verb)
+            && check_moveto_trap(p, move_verb)
+            && check_moveto_exclusion(p, move_verb));
 }
 
 static void _splash()
@@ -409,11 +437,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
     }
-    else if (you.species == SP_DJINNI && !feat_has_dry_floor(new_grid)
-             && feat_has_dry_floor(old_feat))
-    {
-        mprf("You heave yourself high above the %s.", feat_type_name(new_grid));
-    }
 
     const bool was_clinging = you.is_wall_clinging();
     const bool is_clinging = stepped && you.check_clinging(stepped);
@@ -468,11 +491,8 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
                        bool ignore_items)
 {
-    if (you.permanent_flight() || you.species == SP_DJINNI
-        || you.airborne() && !permanently)
-    {
+    if (you.permanent_flight() || you.airborne() && !permanently)
         return false;
-    }
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
              || grid == DNGN_LAVA && !player_likes_lava(permanently))
     {
@@ -658,6 +678,10 @@ void update_vision_range()
 // ---------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
+    // Amulet provides another slot
+    if (eq == EQ_RING_AMULET && player_equip_unrand(UNRAND_FINGER_AMULET))
+        return true;
+
     if (you.species == SP_FELID)
         return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
 
@@ -669,13 +693,6 @@ bool you_can_wear(int eq, bool special_armour)
         else
             return (eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
                     || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
-    }
-
-    // Amulet provides another slot
-    if (player_equip_unrand(UNRAND_FINGER_AMULET))
-    {
-        if (eq == EQ_RING_AMULET)
-            return true;
     }
 
     switch (eq)
@@ -760,8 +777,12 @@ bool you_can_wear(int eq, bool special_armour)
         }
         return true;
 
+    case EQ_WEAPON:
+    case EQ_STAFF:
+        return true; // kittehs were handled earlier
+
     default:
-        return true;
+        return false;
     }
 }
 
@@ -1297,6 +1318,25 @@ static int _player_bonus_regen()
     return rr;
 }
 
+// Slow healing mutation: slows or stops regeneration when monsters are
+// visible at level 1 or 2 respectively, stops regeneration at level 3.
+static int _slow_heal_rate()
+{
+    if (player_mutation_level(MUT_SLOW_HEALING) == 3)
+        return 0;
+
+    for (monster_near_iterator mi(&you); mi; ++mi)
+    {
+        if (!mons_is_firewood(*mi)
+            && !mi->wont_attack()
+            && !mi->neutral())
+        {
+            return 2 - player_mutation_level(MUT_SLOW_HEALING);
+        }
+    }
+    return 2;
+}
+
 int player_regen()
 {
     int rr = you.hp_max / 3;
@@ -1332,14 +1372,12 @@ int player_regen()
         if (you.hp_max < 100)
             rr += (100 - you.hp_max) / 6;
 
-    // Slow heal mutation.  Each level reduces your natural healing by
-    // one third.
+    // Slow heal mutation.
     if (player_mutation_level(MUT_SLOW_HEALING) > 0)
     {
-        rr *= 3 - player_mutation_level(MUT_SLOW_HEALING);
-        rr /= 3;
+        rr *= _slow_heal_rate();
+        rr /= 2;
     }
-
     if (you.stat_zero[STAT_STR])
         rr /= 4;
 
@@ -1366,12 +1404,7 @@ int player_hunger_rate(bool temp)
     if (temp && you.duration[DUR_REGENERATION] && you.hp < you.hp_max)
         hunger += 4;
 
-    // If Cheibriados has slowed your life processes, you will hunger less.
-    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
-        hunger--;
-
-    // Moved here from main.cc... maintaining the >= 40 behaviour.
-    if (temp && you.hunger >= 40)
+    if (temp)
     {
         if (you.duration[DUR_INVIS])
             hunger += 5;
@@ -1445,8 +1478,12 @@ int player_hunger_rate(bool temp)
 
         // sustenance affects things at the end, because it is multiplicative
         for (int s = you.wearing(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
-            hunger = (3*hunger)/5;
+            hunger = hunger * 3 / 5;
     }
+
+    // If Cheibriados has slowed your life processes, you will hunger less.
+    if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
+        hunger = hunger * 3 / 4;
 
     if (hunger < 1)
         hunger = 1;
@@ -2334,12 +2371,6 @@ int player_movement_speed(bool ignore_burden)
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 5;
 
-    // Lava orc heat-based speed. -2 when cold; 0 when normal; +2 when hot.
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_SLOW_MOVE))
-        mv += 2;
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_FAST_MOVE))
-        mv -= 2;
-
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
     if (player_mutation_level(MUT_FAST) > 0 && !you.swimming())
@@ -2398,9 +2429,6 @@ int player_speed(void)
         ps *= 15;
         ps /= 10;
     }
-
-    if (is_hovering())
-        ps = ps * 3 / 2;
 
     if (you.form == TRAN_TREE)
     {
@@ -2844,11 +2872,9 @@ int player_sust_abil(bool calc_unid)
 
 int carrying_capacity(burden_state_type bs)
 {
-    // Yuck.  We need this for gameplay - it nerfs small forms too much
-    // otherwise - but there's no good way to rationalize here...  --sorear
-    const int used_weight = max(you.body_weight(), you.body_weight(true));
-
-    int cap = 2 * used_weight + you.strength() * 250 + 1000;
+    // Use untransformed body weight, to prevent transformations
+    // causing frequent large changes in carrying capacity.
+    int cap = 2 * you.body_weight(true) + you.strength() * 250 + 1000;
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
 
@@ -2856,9 +2882,9 @@ int carrying_capacity(burden_state_type bs)
         cap /= 2;
 
     if (bs == BS_UNENCUMBERED)
-        return ((cap * 5) / 6);
+        return cap * 5 / 6;
     else if (bs == BS_ENCUMBERED)
-        return ((cap * 11) / 12);
+        return cap * 11 / 12;
     else
         return cap;
 }
@@ -2867,7 +2893,9 @@ int burden_change(void)
 {
     const burden_state_type old_burdenstate = you.burden_state;
 
-    you.burden = 0;
+    // XXX: the 600 here is the weight of the Orb.
+    // TODO: make this use a dummy item or similar?
+    you.burden = (you.char_direction == GDT_ASCENDING) ? 600 : 0;
 
     for (int bu = 0; bu < ENDOFPACK; bu++)
     {
@@ -2938,7 +2966,7 @@ void forget_map(bool rot)
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         const coord_def &p = *ri;
-        if (you.see_cell(p) || !env.map_knowledge(p).known())
+        if (!env.map_knowledge(p).known() || you.see_cell(p))
             continue;
 
         if (rot)
@@ -2949,6 +2977,9 @@ void forget_map(bool rot)
             if (x_chance_in_y(chance, scalar))
                 continue;
         }
+
+        if (you.see_cell(p))
+            continue;
 
         env.map_knowledge(p).clear();
         if (env.map_forgotten.get())
@@ -3620,8 +3651,10 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 }
 
                 if (you.experience_level == 6 || you.experience_level == 12)
+                {
                     perma_mutate(MUT_SHAGGY_FUR, 1, "growing up");
-
+                    perma_mutate(MUT_JUMP, 1, "growing up");
+                }
                 _felid_extra_life();
                 break;
 
@@ -4082,7 +4115,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
-    case DUR_SONG_OF_SHIELDING:
         return (10 * BASELINE_DELAY);
 
     // These get no messages when they "flicker".
@@ -4308,7 +4340,8 @@ void display_char_status()
     if (you.species == SP_VAMPIRE)
         _display_vampire_status();
 
-    static int statuses[] = {
+    static int statuses[] =
+    {
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
         DUR_PETRIFYING,
         DUR_TRANSFORMATION,
@@ -4359,7 +4392,6 @@ void display_char_status()
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
         STATUS_CLINGING,
-        STATUS_HOVER,
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         STATUS_BACKLIT,
@@ -4378,7 +4410,6 @@ void display_char_status()
         DUR_DIMENSION_ANCHOR,
         DUR_SPIRIT_HOWL,
         DUR_INFUSION,
-        DUR_SONG_OF_SHIELDING,
         DUR_SONG_OF_SLAYING,
         STATUS_DRAINED,
         DUR_TOXIC_RADIANCE,
@@ -4693,9 +4724,22 @@ void drain_mp(int loss)
                                       1000); // so it goes away after one '5'
 }
 
-bool enough_hp(int minimum, bool suppress_msg)
+bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
 {
     ASSERT(!crawl_state.game_is_arena());
+
+    if (you.duration[DUR_DEATHS_DOOR])
+    {
+        if (!suppress_msg)
+            mpr("You cannot pay life while functionally dead.");
+
+        if (abort_macros)
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
+        return false;
+    }
 
     // We want to at least keep 1 HP. -- bwr
     if (you.hp < minimum + 1)
@@ -4707,15 +4751,19 @@ bool enough_hp(int minimum, bool suppress_msg)
                 "You haven't enough essence at the moment.");
         }
 
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        if (abort_macros)
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
         return false;
     }
 
     return true;
 }
 
-bool enough_mp(int minimum, bool suppress_msg, bool include_items)
+bool enough_mp(int minimum, bool suppress_msg,
+               bool abort_macros, bool include_items)
 {
     if (you.species == SP_DJINNI)
         return enough_hp(minimum * DJ_MP_RATE, suppress_msg);
@@ -4731,13 +4779,17 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items)
             else
                 mpr("You haven't enough magic at the moment.");
         }
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        if (abort_macros)
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
         return false;
     }
 
     return true;
 }
+
 
 bool enough_zp(int minimum, bool suppress_msg)
 {
@@ -4901,6 +4953,7 @@ void set_mp(int new_amount)
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_magic_points = true;
 }
+
 
 // If trans is true, being berserk and/or transformed is taken into account
 // here. Else, the base hp is calculated. If rotted is true, calculate the
@@ -5330,7 +5383,7 @@ bool napalm_player(int amount, string source, string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_sticky_flame() || amount <= 0)
+    if (player_res_sticky_flame() || amount <= 0 || you.duration[DUR_WATER_HOLD])
         return false;
 
     const int old_value = you.duration[DUR_LIQUID_FLAMES];
@@ -5561,6 +5614,35 @@ void dec_disease_player(int delay)
     }
 }
 
+static void _dec_elixir_hp(int delay)
+{
+    you.duration[DUR_ELIXIR_HEALTH] -= delay;
+    if (you.duration[DUR_ELIXIR_HEALTH] < 0)
+        you.duration[DUR_ELIXIR_HEALTH] = 0;
+
+    int heal = (delay * you.hp_max / 10) / BASELINE_DELAY;
+    if (!you.duration[DUR_DEATHS_DOOR])
+        inc_hp(heal);
+}
+
+static void _dec_elixir_mp(int delay)
+{
+    you.duration[DUR_ELIXIR_MAGIC] -= delay;
+    if (you.duration[DUR_ELIXIR_MAGIC] < 0)
+        you.duration[DUR_ELIXIR_MAGIC] = 0;
+
+    int heal = (delay * you.max_magic_points / 10) / BASELINE_DELAY;
+    inc_mp(heal);
+}
+
+void dec_elixir_player(int delay)
+{
+    if (you.duration[DUR_ELIXIR_HEALTH])
+        _dec_elixir_hp(delay);
+    if (you.duration[DUR_ELIXIR_MAGIC])
+        _dec_elixir_mp(delay);
+}
+
 bool flight_allowed(bool quiet)
 {
     if (you.form == TRAN_TREE)
@@ -5638,21 +5720,6 @@ bool land_player(bool quiet)
     return true;
 }
 
-bool is_hovering()
-{
-    return you.species == SP_DJINNI
-           && !feat_has_dry_floor(grd(you.pos()))
-           && !you.airborne()
-           && !you.is_wall_clinging();
-}
-
-bool djinni_floats()
-{
-    return you.species == SP_DJINNI
-           && you.form != TRAN_TREE
-           && (you.form != TRAN_SPIDER || !you.is_wall_clinging());
-}
-
 static void _end_water_hold()
 {
     you.duration[DUR_WATER_HOLD] = 0;
@@ -5724,18 +5791,11 @@ player::player(const player &other)
     : kills(0), m_quiver(0)
 {
     init();
-
-    // why doesn't this do a copy_from?
-    player_quiver* saved_quiver = m_quiver;
-    delete kills;
-    *this = other;
-    m_quiver = saved_quiver;
-
-    kills = new KillMaster(*(other.kills));
-    *m_quiver = *(other.m_quiver);
+    copy_from(other);
 }
 
-// why is this not called "operator="?
+// Not called operator= because it is implemented in terms of the
+// default operator=
 void player::copy_from(const player &other)
 {
     if (this == &other)
@@ -5744,6 +5804,8 @@ void player::copy_from(const player &other)
     KillMaster *saved_kills = kills;
     player_quiver* saved_quiver = m_quiver;
 
+    // Rather than trying (and failing) to include explicit assignments
+    // for every member at this point, we use the default operator=.
     *this = other;
 
     kills  = saved_kills;
@@ -6000,6 +6062,8 @@ void player::init()
     shield_blocks       = 0;
 
     abyss_speed         = 0;
+    for (int i = 0; i < NUM_SEEDS; i++)
+        game_seeds[i] = random_int();
 
     old_hunger          = hunger;
     transit_stair       = DNGN_UNSEEN;
@@ -6106,10 +6170,11 @@ player::~player()
 flight_type player::flight_mode() const
 {
     // Might otherwise be airborne, but currently stuck to the ground
-    if (you.duration[DUR_GRASPING_ROOTS])
+    if (you.duration[DUR_GRASPING_ROOTS] || you.form == TRAN_TREE)
         return FL_NONE;
 
     if (duration[DUR_FLIGHT]
+        || you.species == SP_DJINNI
         || attribute[ATTR_PERM_FLIGHT]
         || form == TRAN_WISP
         // dragon and bat should be FL_WINGED, but we don't want paralysis
@@ -7048,14 +7113,15 @@ bool player::cancellable_flight() const
 
 bool player::permanent_flight() const
 {
-    return attribute[ATTR_PERM_FLIGHT];
+    return attribute[ATTR_PERM_FLIGHT] || species == SP_DJINNI;
 }
 
 bool player::racial_permanent_flight() const
 {
-    return (species == SP_TENGU && experience_level >= 15
-            || species == SP_BLACK_DRACONIAN && experience_level >= 14
-            || species == SP_GARGOYLE && experience_level >= 14);
+    return species == SP_TENGU && experience_level >= 15
+        || species == SP_BLACK_DRACONIAN && experience_level >= 14
+        || species == SP_GARGOYLE && experience_level >= 14
+        || species == SP_DJINNI;
 }
 
 bool player::tengu_flight() const
@@ -7688,8 +7754,12 @@ bool player::can_bleed(bool allow_tran) const
         }
     }
 
-    if (is_lifeless_undead() || holiness() == MH_NONLIVING)
+    if (is_lifeless_undead()
+        || holiness() == MH_NONLIVING
+        || you.species == SP_DJINNI)
+    {   // demonspawn and demigods have a mere drop of taint
         return false;
+    }
 
     return true;
 }
@@ -8092,13 +8162,12 @@ bool player::made_nervous_by(const coord_def &p)
     monster* mons = monster_at(p);
     if (mons && !mons_is_firewood(mons))
         return false;
-    for (monster_iterator mi(get_los()); mi; ++mi)
+    for (monster_near_iterator mi(&you); mi; ++mi)
     {
         if (!mons_is_wandering(*mi)
             && !mi->asleep()
             && !mi->confused()
             && !mi->cannot_act()
-            && you.can_see(*mi)
             && !mons_is_firewood(*mi)
             && !mi->wont_attack()
             && !mi->neutral())

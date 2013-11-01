@@ -506,14 +506,6 @@ cloak
 
 Ein Stoffumhang.
 %%%%
-club
-
-Ein schweres Stück Holz, mit einem Platz, auf einem Ende und dem grössten Teil
-seines Gewichts am anderen zu packen, es passend machend, um zu schwingen oder
-an einem Feind zu werfen. Während Klubs ziemlich primitive Waffen sind,
-jemandes Schädel mit einhauend, bleibt man ein sehr populäres und wirksames
-Mittel der Streitentschlossenheit.
-%%%%
 corpse
 
 Eine Leiche. Du kannst sie schlachten, um essbare Fleischstücke zu erhalten.
@@ -536,12 +528,6 @@ vorteilhaftesten zu finden
 crystal plate armour
 
 Ein unglaublich schwere aber extrem effektive kristalline Rüstung.
-%%%%
-dagger
-
-Ein zweischneidiges kämpfendes Messer mit einem scharfen Punkt, der von fern
-geworfen werden kann. Gesehen von einigen als eine schwache Waffe des letzten
-Auswegs schätzen andere es als ein vollkommenes Werkzeug für Morde.
 %%%%
 dart
 
@@ -777,12 +763,6 @@ hammer
 Aus einem Hammerhai mit Spitzen auf einem mittleren durch langets verstärkten
 Heft bestehend, kann diese stumpfe Waffe bedeutende bemerkenswerte Kraft
 liefern und sogar durch die Rüstung eindringen.
-%%%%
-hand axe
-
-Ein Werkzeug, um einzeln die Fasern von Holz oder Fleisch zu zerreißen. Klein
-und gefertigt für das schnelle, genaue Berühren wird es auch solch erwogen,
-dass es nötigenfalls geworfen werden kann.
 %%%%
 helmet
 
@@ -1546,13 +1526,6 @@ geformt ist. Als Munition sind diese effektiver als einfache Steine.
 snozzcumber
 
 Eine widerwärtige gurkenförmige Frucht.
-%%%%
-spear
-
-Eine Jagdwaffe, die aus einer erwogenen Holzwelle mit einem spitzen einem Ende
-befestigten Metallkopf besteht. Kürzer als anderer polearms kann es mit einer
-oder zwei Händen ausgeübt werden und ist auch leicht genug, um geworfen zu
-werden.
 %%%%
 staff of conjuration
 

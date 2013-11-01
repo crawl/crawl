@@ -485,13 +485,6 @@ cloak
 
 En stofkappe.
 %%%%
-club
-
-Et tungt stykke træ med et greb i den ene ende og det meste af sin vægt i den
-anden, hvilket gør den velegnet til at slå eller kaste med. Køller er ganske
-primitive våben, men at slå nogens pandebrask ind med dem forbliver alligevel
-en meget populær og effektiv måde at løse konflikter på.
-%%%%
 corpse
 
 Et kadaver. Du kan slagte det for at få spiselige kødklumper.
@@ -511,11 +504,6 @@ mest nyttig, når den bruges, mens du er tæt på dit fulde potentiale.
 crystal plate armour
 
 En utroligt tung, men ekstremt effektiv krystallinsk rustning.
-%%%%
-dagger
-
-En tveægget, spids kampkniv, som kan kastes. Nogle ser det som et svagt våben,
-en sidste udvej, men for andre er det det perfekte værktøj til snigmord.
 %%%%
 dart
 
@@ -741,12 +729,6 @@ hammer
 Dette stumpe våben består af et hammerhoved med en spidshakke på et mellemlangt
 skaft, som er forstærket med skinner, og kan levere betragtelig slagkraft og
 gennembore rustning.
-%%%%
-hand axe
-
-Et værktøj, som kan adskille fibrene i træ, eller kød. Lille og lavet til
-hurtig, præcis håndtering, men også balanceret så den kan kastes, hvis det
-bliver nødvendigt
 %%%%
 helmet
 
@@ -1130,6 +1112,13 @@ ring of evasion
 
 Denne ring gør enten sin ejer bedre eller dårligere til at undgå angreb,
 afhængigt af hvor meget, den er fortryllet.
+%%%%
+ring of fire
+
+Denne ring bringer sin bærer i tættere kontakt med ildens kræfter. Han eller
+hun opnår modstandskraft over for varme og bliver bedre til at bruge ildmagi,
+på bekostning af ringere evner inden for ismagi og større sårbarhed over for
+kulde.
 %%%%
 ring of hunger
 
@@ -1519,12 +1508,6 @@ er en mere effektiv form for ammunition end gemene sten.
 snozzcumber
 
 En frastødende, agurkeformet grøntsag.
-%%%%
-spear
-
-Et jagtvåben, som består af et afbalanceret træskaft med et spidst metalhoved,
-som er fæstnet i den ene ende. Det er kortere end andre stagevåben og kan
-bruges med en eller to hænder. Det er endda let nok til at man kan kaste det.
 %%%%
 staff of conjuration
 

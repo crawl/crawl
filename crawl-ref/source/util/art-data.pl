@@ -39,6 +39,7 @@ my %field_type = (
     FOG      => "bool",
     FIRE     => "num",
     HOLY     => "bool",
+    INSCRIP  => "str",
     INT      => "num",
     INV      => "bool",
     FLY      => "bool",
@@ -53,6 +54,7 @@ my %field_type = (
     NOISES   => "bool",
     NOSPELL  => "bool",
     NOTELEP  => "bool",
+    NO_UPGRADE => "bool",
     POISON   => "bool",
     RANDAPP  => "bool",
     REGEN    => "num",
@@ -72,23 +74,18 @@ my %field_type = (
 
     flags     => "flags",
 
-    equip_func        => "func",
-    unequip_func      => "func",
-    world_reacts_func => "func",
-    fight_func_func   => "func",
-    melee_effect_func => "func",
-    launch_func       => "func",
-    evoke_func        => "func",
+    equip_func         => "func",
+    unequip_func       => "func",
+    world_reacts_func  => "func",
+    fight_func_func    => "func",
+    melee_effects_func => "func",
+    launch_func        => "func",
+    evoke_func         => "func",
 
     plus      => "num",
     plus2     => "num",
     base_type => "enum",
     sub_type  => "enum",
-);
-
-my %union_name = (
-    melee_effect => "fight_func",
-    launch       => "fight_func",
 );
 
 my @field_list = keys(%field_type);
@@ -182,8 +179,7 @@ sub finish_art
         $funcs = {};
     }
 
-    foreach my $func_name ("equip", "unequip", "world_reacts", "fight_func",
-                           "evoke")
+    foreach my $func_name ("equip", "unequip", "world_reacts", "evoke")
     {
         my $val;
         if ($funcs->{$func_name})
@@ -195,6 +191,16 @@ sub finish_art
             $val = "NULL";
         }
         $artefact->{"${func_name}_func"} = $val;
+    }
+
+    $artefact->{"fight_func_func"} = "NULL";
+    foreach my $func_name ("melee_effects", "launch")
+    {
+        if ($funcs->{$func_name})
+        {
+            $artefact->{"fight_func_func"} =
+                $func_name . ": _${enum}_" . $funcs->{$func_name};
+        }
     }
 
     # Default values.
@@ -480,7 +486,7 @@ sub process_line
 }
 
 my @art_order = (
-    "NAME", "APPEAR", "TYPE", "\n",
+    "NAME", "APPEAR", "TYPE", "INSCRIP", "\n",
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
@@ -490,7 +496,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "\n",
+    "RMSL", "FOG", "REGEN", "NO_UPGRADE", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",
@@ -548,7 +554,8 @@ sub art_to_str
         {
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
-            $str .= ($part eq "TYPE" && $temp eq "") ? "NULL" : "\"$temp\"";
+            $str .= (($part eq "TYPE" || $part eq "INSCRIP") && $temp eq "")
+	        ? "NULL" : "\"$temp\"";
         }
         else
         {
@@ -775,7 +782,7 @@ sub write_tiles
 HEADER_END
 
     # Output the tile definitions sorted by type (and thus path).
-    foreach my $type (keys %art_by_type)
+    foreach my $type (sort keys %art_by_type)
     {
         print TILES "%sdir item/$type/artefact\n";
 
@@ -972,11 +979,12 @@ HEADER_END
 }
 
 my %valid_func = (
-    equip        => 1,
-    unequip      => 1,
-    world_reacts => 1,
-    melee_effect => 1,
-    evoke        => 1
+    equip         => 1,
+    unequip       => 1,
+    world_reacts  => 1,
+    melee_effects => 1,
+    launch        => 1,
+    evoke         => 1
 );
 
 sub read_funcs
@@ -1003,8 +1011,7 @@ sub read_funcs
             $found_funcs{$enum} ||= {};
             my $func_list = $found_funcs{$enum};
 
-            my $key = $union_name{$func} || $func;
-            $func_list->{$key} = $func;
+            $func_list->{$func} = $func;
         }
     }
     close(INPUT);

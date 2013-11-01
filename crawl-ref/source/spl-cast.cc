@@ -14,6 +14,7 @@
 #include "options.h"
 
 #include "areas.h"
+#include "art-enum.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -164,6 +165,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                               text_only);
     string titlestring = make_stringf("%-25.25s", title.c_str());
+    string hungerstring = you.species == SP_DJINNI ? "Glow  " : "Hunger";
 #ifdef USE_TILE_LOCAL
     {
         // [enne] - Hack.  Make title an item so that it's aligned.
@@ -172,7 +174,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                 " " + titlestring + "         Type          "
                 "                Failure   Level",
                 " " + titlestring + "         Power         "
-                "Range           Hunger    Level",
+                "Range           " + hungerstring + "    Level",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
@@ -183,7 +185,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             " " + titlestring + "         Type          "
             "                Failure   Level",
             " " + titlestring + "         Power         "
-            "Range           Hunger    Level",
+            "Range           " + hungerstring + "    Level",
             MEL_TITLE));
 #endif
     spell_menu.set_highlighter(NULL);
@@ -340,9 +342,15 @@ int spell_fail(spell_type spell)
     default: chance += 750; break;
     }
 
+    int64_t contam = you.magic_contamination;
+    // Just +25 on the edge of yellow glow, +200 in the middle of yellow,
+    // forget casting when in orange.
+    chance += contam * contam * contam / 5000000000;
+
     int chance2 = chance;
 
-    const int chance_breaks[][2] = {
+    const int chance_breaks[][2] =
+    {
         {45, 45}, {42, 43}, {38, 41}, {35, 40}, {32, 38}, {28, 36},
         {22, 34}, {16, 32}, {10, 30}, {2, 28}, {-7, 26}, {-12, 24},
         {-18, 22}, {-24, 20}, {-30, 18}, {-38, 16}, {-46, 14},
@@ -373,6 +381,9 @@ int spell_fail(spell_type spell)
     }
 
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
+
+    if (player_equip_unrand(UNRAND_HIGH_COUNCIL) && !you.suppressed())
+        chance2 += 7;
 
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
@@ -503,8 +514,7 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    if (you.archmagi())
-        enhanced++;
+    enhanced += you.archmagi();
 
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
         && (typeflags & SPTYP_FIRE) && (typeflags & SPTYP_EARTH))
@@ -706,8 +716,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (spell_mana(spell) > (you.species != SP_DJINNI ? you.magic_points
-        : (you.hp - 1) / DJ_MP_RATE))
+    if (!enough_mp(spell_mana(spell), true))
     {
         mpr("You don't have enough magic to cast that spell.");
         crawl_state.zero_turns_taken();
@@ -1726,8 +1735,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SONG_OF_SLAYING:
         return cast_song_of_slaying(powc, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SONG_OF_SHIELDING:
-        return cast_song_of_shielding(powc, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:
@@ -1919,6 +1931,7 @@ string spell_noise_string(spell_type spell)
         effect_noise = 7;
         break;
 
+    case SPELL_SONG_OF_SLAYING:
     case SPELL_MALIGN_GATEWAY:
         effect_noise = 10;
         break;
@@ -1957,7 +1970,8 @@ string spell_noise_string(spell_type spell)
 
     const int noise = max(casting_noise, effect_noise);
 
-    const char* noise_descriptions[] = {
+    const char* noise_descriptions[] =
+    {
         "Silent", "Almost silent", "Quiet", "A bit loud", "Loud", "Very loud",
         "Extremely loud", "Deafening"
     };

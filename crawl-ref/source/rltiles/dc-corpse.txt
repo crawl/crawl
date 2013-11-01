@@ -114,7 +114,6 @@ red_wasp CORPSE_RED_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
 moth_of_suppression CORPSE_MOTH_OF_SUPPRESSION
-polymoth CORPSE_POLYMOTH
 
 ## Aquatics (';')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4

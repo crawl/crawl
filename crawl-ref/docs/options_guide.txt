@@ -56,7 +56,8 @@ The contents of this text are:
                 confirm_butcher, easy_eat_chunks, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
-                autofight_throw, autofight_throw_nomove, autofight_fire_stop
+                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
+                autofight_caught
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -1253,6 +1254,10 @@ autofight_fire_stop = false
         continuing past. Note that this setting may be decidedly suboptimal
         for missiles of penetration.
 
+autofight_caught = false
+        If true, autofight will attempt to escape webs or nets that are
+        holding you, even if no enemies are in view.
+
 
 3-i     Messages and Display Enhancements.
 ------------------------------------------
@@ -1548,7 +1553,7 @@ fire_items_start = a
         missiles to fire. The default is a.
 
 fire_order  = launcher, return
-fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
+fire_order += javelin / tomahawk / dart / stone / rock / net
 fire_order += inscribed
         (Ordered list option)
         Controls the order of items autoselected for firing. Items

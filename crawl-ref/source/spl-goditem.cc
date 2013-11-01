@@ -57,8 +57,10 @@ int identify(int power, int item_slot, string *pre_msg)
     {
         if (item_slot == -1)
         {
-            item_slot = prompt_invent_item("Identify which item?", MT_INVLIST,
-                                           OSEL_UNIDENT, true, true, false);
+            item_slot = prompt_invent_item(
+                "Identify which item? (\\ to view known items)",
+                MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
+                -1, NULL, OPER_ANY, true);
         }
         if (prompt_failed(item_slot))
             return identified;
@@ -392,7 +394,8 @@ int cast_healing(int pow, int max_pow, bool divine_ability,
 // not as direct as falling into deep water) -- bwr
 void antimagic()
 {
-    duration_type dur_list[] = {
+    duration_type dur_list[] =
+    {
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
         DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
         DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
@@ -791,7 +794,8 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
-    const dungeon_feature_type safe_tiles[] = {
+    const dungeon_feature_type safe_tiles[] =
+    {
         DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
     };
 
@@ -836,7 +840,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             proceed = false;
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
             {
-                if (feat_is_solid(grd(*ai)) && !feat_is_opaque(grd(*ai)))
+                if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
                 {
                     success = false;
                     none_vis = false;
@@ -879,7 +883,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
         }
-        else if (zin && !feat_is_solid(grd(*ai)))
+        else if (zin && !cell_is_solid(*ai))
             proceed = true;
 
         if (proceed)

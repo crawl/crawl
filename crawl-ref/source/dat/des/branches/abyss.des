@@ -23,25 +23,131 @@ function init_abyss_exit(e, glyph)
     e.kfeat(glyph .. " = exit_abyss w:6 / abyssal_stair w:4")
   end
 end
+
+function abyss_entry(e, glyph)
+  e.tags("extra luniq_enter_abyss chance_enter_abyss")
+  e.depth_chance("D:21-24", 3333)
+  e.depth_chance("D:25",    10000)
+  e.depth_chance("D:26-",   3333)
+  if you.where() == 'D:25' then
+    e.kfeat(glyph .. ' = enter_abyss no_mimic')
+  else
+    e.kfeat(glyph .. ' = enter_abyss')
+  end
+end
 }}
 
+###############################################################################
+# Abyss entries.
 # 1/3 chance to appear on D:21-27, and guaranteed on D:25.
+###############################################################################
+
+default-depth: D:21-
+
+# This one is the backup and the one used in encompass vaults.
 NAME: abyss_entry
-TAGS: extra allow_dup can_overwrite replace_portal transparent
-DEPTH: D:21-
-CHANCE: 100% (D:25), 3333
-: if you.where() == 'D:25' then
-KFEAT: O = enter_abyss no_mimic
-: else
-KFEAT: O = enter_abyss
-: end
+TAGS: allow_dup can_overwrite replace_portal transparent fallback_enter_abyss
+WEIGHT: 50
+: abyss_entry(_G, 'O')
 MAP
 O
+ENDMAP
+
+NAME:    minmay_room_of_horrors
+TAGS:    nolayout_encompass
+DEPTH:   D:16-
+MONS:    small abomination, large abomination, unseen horror / chaos spawn
+: abyss_entry(_G, '_')
+SHUFFLE: 1234
+MAP
+xxxxxx
+x3113x
++1221x
+x1221x
+x311_x
+xxxxxx
+ENDMAP
+
+NAME:  marbit_kobold_abyss_entry
+DEPTH: D:21-26
+TAGS:  no_monster_gen nolayout_encompass
+MONS:  big kobold ; dart ego:dispersal, kobold demonologist
+: abyss_entry(_G, '_')
+MAP
+xxxxxxxxxxxxxxx
+xxlllxx<.xlll.x
+xlllllxx.lll..x
+@x.llll..lll2_x
+x.xl1lllllll.>x
+xlllxlllx1lll.x
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    abyss_entry_small_statue_room
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+MAP
+xxxxx
+xGOGx
+xx+xx
+ENDMAP
+
+NAME:    abyss_entry_crystal
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+SHUFFLE: AB
+SUBST:   A : .:50 G:50 T U V Y t
+SUBST:   B : .:100 G
+MAP
+  xxxxx
+ xxbbbxx
+xxbbObbxx
+xbbA.Abbx
+xbB...Bbx
+xb.....bx
+ENDMAP
+
+NAME:    abyss_entry_glasseish
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+KPROP:   T = no_rtele_into
+SUBST:   T : T l 1 2 A X
+MONS:    tentacled starspawn / starcursed mass / wretched star
+MONS:    plant col:random name:demonic name_adjective tile:mons_demonic_plant
+KFEAT:   X : malign_gateway
+MAP
+nnn nnn
+nTn.nTn
+nnn.nnn
+ ..O..
+nnn.nnn
+nTn.nTn
+nnn nnn
+ENDMAP
+
+NAME:    abyss_entry_flame_altar
+TAGS:    nolayout_encompass
+: abyss_entry(_G, 'O')
+SUBST:   A : deG
+MARKER:  d = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0, excl_rad = 0 }
+MARKER:  e = lua:fog_machine { cloud_type = "seething chaos", \
+             pow_min = 10, pow_max = 10, delay = 10, \
+             size = 1, walk_dist = 0, spread_rate= 0, excl_rad = 0 }
+KFEAT:   _ = altar_lugonu
+MAP
+ bbb
+bbObb
+bA_Ab
+  @
 ENDMAP
 
 ###############################################################################
 # abyss random vaults
 ###############################################################################
+
+default-depth:
 
 ###############################################################################
 # Dummy vaults
@@ -1228,7 +1334,7 @@ KITEM:   24d = scroll of curse weapon w:5 q:1 / \
          gold q:1
 KITEM:   13e = rod of striking w:2 / wand of slowing / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / lamp of fire w:2 / \
-         plain deck w:2 / whip not_cursed ego:reaching w:2 / \
+         plain deck w:2 / whip not_cursed w:2 / \
          cap not_cursed mundane race:none w:5
 KITEM:   f = abyssal rune of zot mimic, abyssal rune of zot mimic
 KITEM:   g = abyssal rune of zot mimic, abyssal rune of zot

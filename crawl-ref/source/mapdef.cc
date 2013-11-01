@@ -50,7 +50,8 @@
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 
-static const char *map_section_names[] = {
+static const char *map_section_names[] =
+{
     "",
     "north",
     "south",
@@ -93,7 +94,7 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     int weight = strip_number_tag(s, "weight:");
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
-    return (weight == TAG_UNFOUND ? defweight : weight);
+    return weight == TAG_UNFOUND ? defweight : weight;
 }
 
 void clear_subvault_stack(void)
@@ -111,11 +112,11 @@ void map_register_flag(const string &flag)
 
 static bool _map_tag_is_selectable(const string &tag)
 {
-    return (Map_Flag_Names.find(tag) == Map_Flag_Names.end()
-            && tag.find("luniq_") != 0
-            && tag.find("uniq_") != 0
-            && tag.find("ruin_") != 0
-            && tag.find("chance_") != 0);
+    return Map_Flag_Names.find(tag) == Map_Flag_Names.end()
+           && tag.find("luniq_") != 0
+           && tag.find("uniq_") != 0
+           && tag.find("ruin_") != 0
+           && tag.find("chance_") != 0;
 }
 
 string mapdef_split_key_item(const string &s, string *key, int *separator,
@@ -251,7 +252,7 @@ string level_range::str_depth_range() const
         return ":$";
 
     if (deepest == BRANCH_END)
-        return (shallowest == 1? "" : make_stringf("%d-", shallowest));
+        return shallowest == 1? "" : make_stringf("%d-", shallowest);
 
     if (shallowest == deepest)
         return make_stringf(":%d", shallowest);
@@ -398,30 +399,32 @@ bool level_range::matches(const level_id &lid) const
     if (branch == NUM_BRANCHES)
         return matches(absdungeon_depth(lid.branch, lid.depth));
     else
-        return (branch == lid.branch
-                && (lid.depth >= shallowest
-                    || shallowest == BRANCH_END && lid.depth == brdepth[branch])
-                && lid.depth <= deepest);
+    {
+        return branch == lid.branch
+               && (lid.depth >= shallowest
+                   || shallowest == BRANCH_END && lid.depth == brdepth[branch])
+               && lid.depth <= deepest;
+    }
 }
 
 bool level_range::matches(int x) const
 {
     // [ds] The level ranges used by the game are zero-based, adjust for that.
     ++x;
-    return (x >= shallowest && x <= deepest);
+    return x >= shallowest && x <= deepest;
 }
 
 bool level_range::operator == (const level_range &lr) const
 {
-    return (deny == lr.deny
-            && (shallowest == lr.shallowest
-                && deepest == lr.deepest
-                && branch == lr.branch));
+    return deny == lr.deny
+           && shallowest == lr.shallowest
+           && deepest == lr.deepest
+           && branch == lr.branch;
 }
 
 bool level_range::valid() const
 {
-    return (shallowest > 0 && deepest >= shallowest);
+    return shallowest > 0 && deepest >= shallowest;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -469,32 +472,32 @@ rectangle_iterator map_lines::get_iter() const
 
 char map_lines::operator () (const coord_def &c) const
 {
-    return (lines[c.y][c.x]);
+    return lines[c.y][c.x];
 }
 
 char& map_lines::operator () (const coord_def &c)
 {
-    return (lines[c.y][c.x]);
+    return lines[c.y][c.x];
 }
 
 char map_lines::operator () (int x, int y) const
 {
-    return (lines[y][x]);
+    return lines[y][x];
 }
 
 char& map_lines::operator () (int x, int y)
 {
-    return (lines[y][x]);
+    return lines[y][x];
 }
 
 bool map_lines::in_bounds(const coord_def &c) const
 {
-    return (c.x >= 0 && c.y >= 0 && c.x < width() && c.y < height());
+    return c.x >= 0 && c.y >= 0 && c.x < width() && c.y < height();
 }
 
 bool map_lines::in_map(const coord_def &c) const
 {
-    return (in_bounds(c) && lines[c.y][c.x] != ' ');
+    return in_bounds(c) && lines[c.y][c.x] != ' ';
 }
 
 map_lines &map_lines::operator = (const map_lines &map)
@@ -986,8 +989,8 @@ string map_lines::add_nsubst(const string &s)
         err = parse_nsubst_spec(ns, spec);
         if (!err.empty())
         {
-            return (make_stringf("Bad NSUBST spec: %s (%s)",
-                                 s.c_str(), err.c_str()));
+            return make_stringf("Bad NSUBST spec: %s (%s)",
+                                s.c_str(), err.c_str());
         }
         substs.push_back(spec);
     }
@@ -1089,8 +1092,8 @@ int map_lines::glyph(const coord_def &c) const
 
 bool map_lines::is_solid(int gly) const
 {
-    return (gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v' || gly == 't'
-         || gly == 'X');
+    return gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v' || gly == 't'
+           || gly == 'X';
 }
 
 void map_lines::check_borders()
@@ -1484,7 +1487,7 @@ string map_lines::block_shuffle(const string &s)
 {
     vector<string> segs = split_string("/", s);
     shuffle_array(segs);
-    return (comma_separated_line(segs.begin(), segs.end(), "/", "/"));
+    return comma_separated_line(segs.begin(), segs.end(), "/", "/");
 }
 
 string map_lines::shuffle(string s)
@@ -1864,7 +1867,7 @@ bool map_lines::find_bounds(int gly, coord_def &tl, coord_def &br) const
         br.y = max(br.y, mc.y);
     }
 
-    return (br.x >= 0);
+    return br.x >= 0;
 }
 
 bool map_lines::find_bounds(const char *str, coord_def &tl, coord_def &br) const
@@ -1893,7 +1896,7 @@ bool map_lines::find_bounds(const char *str, coord_def &tl, coord_def &br) const
         }
     }
 
-    return (br.x >= 0);
+    return br.x >= 0;
 }
 
 bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
@@ -2064,7 +2067,7 @@ void map_lines::iterator::advance()
 
 map_lines::iterator::operator bool() const
 {
-    return (p.y < maplines.height());
+    return p.y < maplines.height();
 }
 
 coord_def map_lines::iterator::operator *() const
@@ -2189,7 +2192,7 @@ void depth_ranges::add_depths(const depth_ranges &other_depths)
 
 string depth_ranges::describe() const
 {
-    return (comma_separated_line(depths.begin(), depths.end(), ", ", ", "));
+    return comma_separated_line(depths.begin(), depths.end(), ", ", ", ");
 }
 
 ///////////////////////////////////////////////
@@ -2270,44 +2273,44 @@ void map_def::reinit()
 
 bool map_def::map_already_used() const
 {
-    return (you.uniq_map_names.find(name) != you.uniq_map_names.end()
-            || (env.level_uniq_maps.find(name) !=
-                env.level_uniq_maps.end())
-            || (env.new_used_subvault_names.find(name) !=
-                env.new_used_subvault_names.end())
-            || has_any_tag(you.uniq_map_tags.begin(),
-                           you.uniq_map_tags.end())
-            || has_any_tag(env.level_uniq_map_tags.begin(),
-                           env.level_uniq_map_tags.end())
-            || has_any_tag(env.new_used_subvault_tags.begin(),
-                           env.new_used_subvault_tags.end()));
+    return you.uniq_map_names.find(name) != you.uniq_map_names.end()
+           || env.level_uniq_maps.find(name) !=
+               env.level_uniq_maps.end()
+           || env.new_used_subvault_names.find(name) !=
+               env.new_used_subvault_names.end()
+           || has_any_tag(you.uniq_map_tags.begin(),
+                          you.uniq_map_tags.end())
+           || has_any_tag(env.level_uniq_map_tags.begin(),
+                          env.level_uniq_map_tags.end())
+           || has_any_tag(env.new_used_subvault_tags.begin(),
+                          env.new_used_subvault_tags.end());
 }
 
 bool map_def::valid_item_array_glyph(int gly)
 {
-    return (gly >= 'd' && gly <= 'k');
+    return gly >= 'd' && gly <= 'k';
 }
 
 int map_def::item_array_glyph_to_slot(int gly)
 {
     ASSERT(map_def::valid_item_array_glyph(gly));
-    return (gly - 'd');
+    return gly - 'd';
 }
 
 bool map_def::valid_monster_glyph(int gly)
 {
-    return (gly >= '0' && gly <= '9');
+    return gly >= '0' && gly <= '9';
 }
 
 bool map_def::valid_monster_array_glyph(int gly)
 {
-    return (gly >= '1' && gly <= '7');
+    return gly >= '1' && gly <= '7';
 }
 
 int map_def::monster_array_glyph_to_slot(int gly)
 {
     ASSERT(map_def::valid_monster_array_glyph(gly));
-    return (gly - '1');
+    return gly - '1';
 }
 
 bool map_def::in_map(const coord_def &c) const
@@ -2340,7 +2343,7 @@ string map_def::name_at(const coord_def &c) const
 
 string map_def::desc_or_name() const
 {
-    return (description.empty()? name : description);
+    return description.empty()? name : description;
 }
 
 void map_def::write_full(writer& outf) const
@@ -2773,10 +2776,10 @@ string map_def::validate_map_placeable()
         }
     }
 
-    return (has_selectable_tag? "" :
-            make_stringf("Map '%s' has no DEPTH, no PLACE and no "
-                         "selectable tag in '%s'",
-                         name.c_str(), tags.c_str()));
+    return has_selectable_tag? "" :
+           make_stringf("Map '%s' has no DEPTH, no PLACE and no "
+                        "selectable tag in '%s'",
+                        name.c_str(), tags.c_str());
 }
 
 string map_def::validate_map_def(const depth_ranges &default_depths)
@@ -3158,7 +3161,8 @@ void map_def::rotate(bool clock)
         map.rotate(clock);
 
         // Orientation shifts for clockwise rotation:
-        const map_section_type clockrotate_orients[][2] = {
+        const map_section_type clockrotate_orients[][2] =
+        {
             { MAP_NORTH,        MAP_EAST        },
             { MAP_NORTHEAST,    MAP_SOUTHEAST   },
             { MAP_EAST,         MAP_SOUTH       },
@@ -3371,7 +3375,7 @@ string map_def::apply_subvault(string_spec &spec)
 
         const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
-            return (make_stringf("No vault found for tag '%s'", tag.c_str()));
+            return make_stringf("No vault found for tag '%s'", tag.c_str());
 
         map_def vault = *orig;
 
@@ -3405,13 +3409,13 @@ string map_def::apply_subvault(string_spec &spec)
     // Failure, drop subvault registrations.
     _reset_subvault_stack(reg_stack);
 
-    return (make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
-                         tag.c_str(), tl.x, tl.y, br.x, br.y));
+    return make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
+                        tag.c_str(), tl.x, tl.y, br.x, br.y);
 }
 
 bool map_def::is_subvault() const
 {
-    return (svmask != NULL);
+    return svmask != NULL;
 }
 
 void map_def::apply_subvault_mask()
@@ -4436,9 +4440,9 @@ void item_spec::release_corpse_monster_spec()
 
 bool item_spec::corpselike() const
 {
-    return ((base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
-                                          || sub_type == CORPSE_SKELETON))
-            || (base_type == OBJ_FOOD && sub_type == FOOD_CHUNK));
+    return base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
+                                        || sub_type == CORPSE_SKELETON)
+           || base_type == OBJ_FOOD && sub_type == FOOD_CHUNK;
 }
 
 const mons_spec &item_spec::corpse_monster_spec() const
@@ -4463,13 +4467,13 @@ void item_list::clear()
 
 item_spec item_list::random_item()
 {
-    if (items.size() <= 0)
+    if (items.empty())
     {
         const item_spec none;
         return none;
     }
 
-    return (get_item(random2(size())));
+    return get_item(random2(size()));
 }
 
 typedef pair<item_spec, int> item_pair;
@@ -4604,6 +4608,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "reflection",
         "spirit_shield",
         "archery",
+        "jumping",
         NULL
     };
     COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_REAL_SPECIAL_ARMOURS);
@@ -4629,8 +4634,8 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "pain",
         "anti-magic",
         "distortion",
-        "reaching",
 #if TAG_MAJOR_VERSION == 34
+        "reaching",
         "returning",
 #endif
         "chaos",
@@ -4701,7 +4706,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
     for (int i = 0; allowed[i] != NULL; i++)
     {
         if (ego_str == allowed[i])
-            return (i + 1);
+            return i + 1;
     }
 
     // Incompatible or non-existent ego type

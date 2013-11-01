@@ -165,6 +165,7 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
+    ASSERT(!cell_is_solid(p));
 
     // Find slot for cloud.
     for (int ci = 0; ci < MAX_CLOUDS; ci++)
@@ -191,7 +192,7 @@ static int _spread_cloud(const cloud_struct &cloud)
 
         if (!in_bounds(*ai)
             || env.cgrid(*ai) != EMPTY_CLOUD
-            || feat_is_solid(grd(*ai))
+            || cell_is_solid(*ai)
             || is_sanctuary(*ai) && !is_harmless_cloud(cloud.type))
         {
             continue;
@@ -264,6 +265,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             const coord_def p(*ai);
             if (in_bounds(p)
                 && feat_is_watery(grd(p))
+                && !cell_is_solid(p) // mangroves
                 && env.cgrid(p) == EMPTY_CLOUD
                 && one_chance_in(10))
             {
@@ -343,6 +345,14 @@ void manage_clouds()
         if (cloud.type == CLOUD_NONE)
             continue;
 
+#if ASSERTS
+        if (cell_is_solid(cloud.pos))
+        {
+            die("cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
+                dungeon_feature_name(grd(cloud.pos)), cloud.pos.x, cloud.pos.y);
+        }
+#endif
+
         int dissipate = you.time_taken;
 
         // Fire clouds dissipate faster over water,
@@ -359,7 +369,6 @@ void manage_clouds()
             _handle_ghostly_flame(cloud);
 
         _cloud_interacts_with_terrain(cloud);
-        expose_items_to_element(_cloud2beam(cloud.type), cloud.pos, 2);
 
         _dissipate_cloud(i, dissipate);
     }
@@ -557,6 +566,8 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
     if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
         return;
+
+    ASSERT(!cell_is_solid(ctarget));
 
     kill_category whose = KC_OTHER;
     killer_type killer  = KILL_MISC;

@@ -7,6 +7,7 @@
 #include <math.h>
 #include "mon-stuff.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "arena.h"
 #include "art-enum.h"
@@ -48,7 +49,6 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "notes.h"
@@ -317,7 +317,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     // Don't want chunks to show up behind the player.
     los_def ld(where, opc_no_actor);
 
-    if (monster_descriptor(corpse.mon_type, MDSC_LEAVES_HIDE)
+    if (mons_class_leaves_hide(corpse.mon_type)
         && mons_genus(corpse.mon_type) == MONS_DRAGON)
     {
         // Uh... dragon hide is tough stuff and it keeps the monster in
@@ -366,7 +366,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
         dprf("Cell is visible...");
 
-        if (feat_is_solid(grd(cp)) || actor_at(cp))
+        if (cell_is_solid(cp) || actor_at(cp))
             continue;
 
         --nchunks;
@@ -588,7 +588,7 @@ static void _beogh_spread_experience(int exp)
 {
     int total_hd = 0;
 
-    for (monster_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(&you); mi; ++mi)
     {
         if (is_orcish_follower(*mi))
             total_hd += mi->hit_dice;
@@ -596,7 +596,7 @@ static void _beogh_spread_experience(int exp)
 
     if (total_hd > 0)
     {
-        for (monster_iterator mi(&you); mi; ++mi)
+        for (monster_near_iterator mi(&you); mi; ++mi)
         {
             if (is_orcish_follower(*mi))
             {
@@ -737,7 +737,7 @@ int exp_rate(int killer)
         return 2;
     }
 
-    if (killer == MHITYOU)
+    if (killer == MHITYOU || killer == YOU_FAULTLESS)
         return 2;
 
     if (_is_pet_kill(KILL_MON, killer))
@@ -1227,7 +1227,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
+            if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD
                 && !one_chance_in(5))
             {
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), agent);
@@ -1275,6 +1275,9 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     }
 
     if (!summoned)
+        return;
+
+    if (cell_is_solid(mons->pos()))
         return;
 
     string prefix = " ";
@@ -1656,6 +1659,7 @@ int monster_die(monster* mons, killer_type killer,
 
     // Kills by the spectral weapon are considered as kills by the player instead
     if (killer == KILL_MON
+        && !invalid_monster_index(killer_index)
         && menv[killer_index].type == MONS_SPECTRAL_WEAPON
         && menv[killer_index].summoner == MID_PLAYER)
     {
@@ -1741,7 +1745,7 @@ int monster_die(monster* mons, killer_type killer,
         }
 
         if (mons->type == MONS_FIRE_VORTEX && !wizard && !mons_reset
-            && !submerged && !was_banished)
+            && !submerged && !was_banished && !cell_is_solid(mons->pos()))
         {
             place_cloud(CLOUD_FIRE, mons->pos(), 2 + random2(4), mons);
         }
@@ -1758,8 +1762,11 @@ int monster_die(monster* mons, killer_type killer,
             silent = true;
         }
 
-        if (!wizard && !mons_reset && !submerged && !was_banished)
+        if (!wizard && !mons_reset && !submerged && !was_banished
+            && !cell_is_solid(mons->pos()))
+        {
             place_cloud(CLOUD_COLD, mons->pos(), 2 + random2(4), mons);
+        }
 
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
@@ -1862,9 +1869,9 @@ int monster_die(monster* mons, killer_type killer,
         int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
         // Only certain kinds of threats at different sos levels will increase the bonus
-        if (threat == MTHRT_TRIVIAL && sos_bonus<2
-            || threat == MTHRT_EASY && sos_bonus<4
-            || threat == MTHRT_TOUGH && sos_bonus<6
+        if (threat == MTHRT_TRIVIAL && sos_bonus < 3
+            || threat == MTHRT_EASY && sos_bonus < 5
+            || threat == MTHRT_TOUGH && sos_bonus < 7
             || threat == MTHRT_NASTY)
         {
             you.props["song_of_slaying_bonus"] = sos_bonus + 1;
@@ -2786,7 +2793,7 @@ void alert_nearby_monsters(void)
     // alert monsters that aren't sleeping.  For cases where an
     // event should wake up monsters and alert them, I'd suggest
     // calling noisy() before calling this function. - bwr
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
         if (!mi->asleep())
              behaviour_event(*mi, ME_ALERT, &you);
 }
@@ -2866,15 +2873,15 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
     switch (power)
     {
     case PPT_LESS:
-        return (tgt_pow > src_pow - 3 + (relax * 3) / 2)
-                || (power == PPT_LESS && (tgt_pow < src_pow - (relax / 2)));
+        return (tgt_pow > src_pow - 3 + relax * 3 / 2)
+                || (power == PPT_LESS && (tgt_pow < src_pow - relax / 2));
     case PPT_MORE:
         return (tgt_pow < src_pow + 2 - relax)
                 || (power == PPT_MORE && (tgt_pow > src_pow + relax));
     default:
     case PPT_SAME:
         return (tgt_pow < src_pow - relax)
-                || (tgt_pow > src_pow + (relax * 3) / 2);
+                || (tgt_pow > src_pow + relax * 3 / 2);
     }
 }
 
@@ -3076,9 +3083,8 @@ void change_monster_type(monster* mons, monster_type targetc)
     if (mons_class_flag(mons->type, M_INVIS))
         mons->add_ench(ENCH_INVIS);
 
-    mons->hit_points = mons->max_hit_points
-                                * ((old_hp * 100) / old_hp_max) / 100
-                                + random2(mons->max_hit_points);
+    mons->hit_points = mons->max_hit_points * old_hp / old_hp_max
+                       + random2(mons->max_hit_points);
 
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
@@ -4077,6 +4083,7 @@ int mons_usable_missile(monster* mons, item_def **launcher)
     }
 }
 
+// in units of 1/25 hp/turn
 int mons_natural_regen_rate(monster* mons)
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
@@ -4098,6 +4105,18 @@ int mons_natural_regen_rate(monster* mons)
     }
 
     return max(div_rand_round(mons->hit_dice, divider), 1);
+}
+
+// in units of 1/100 hp/turn
+int mons_off_level_regen_rate(monster* mons)
+{
+    if (!mons_can_regenerate(mons))
+        return 0;
+
+    if (mons_class_fast_regen(mons->type) || mons->type == MONS_PLAYER_GHOST)
+        return 100;
+    // Capped at 0.1 hp/turn.
+    return max(mons_natural_regen_rate(mons) * 4, 10);
 }
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
@@ -4161,80 +4180,6 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
                 monster_die(mons, killer, killnum, true);
         }
     }
-}
-
-bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor)
-{
-    if (which_descriptor == MDSC_LEAVES_HIDE)
-    {
-        if (mons_genus(which_class) == MONS_TROLL)
-            return true;
-        switch (which_class)
-        {
-        case MONS_DRAGON:
-        case MONS_ICE_DRAGON:
-        case MONS_STEAM_DRAGON:
-        case MONS_MOTTLED_DRAGON:
-        case MONS_STORM_DRAGON:
-        case MONS_GOLDEN_DRAGON:
-        case MONS_SWAMP_DRAGON:
-        case MONS_PEARL_DRAGON:
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    if (which_descriptor == MDSC_REGENERATES)
-    {
-        switch (which_class)
-        {
-        case MONS_CACODEMON:
-        case MONS_DEEP_TROLL:
-        case MONS_HELLWING:
-        case MONS_CRIMSON_IMP:
-        case MONS_IRON_TROLL:
-        case MONS_LEMURE:
-#if TAG_MAJOR_VERSION == 34
-        case MONS_ROCK_TROLL:
-#endif
-        case MONS_SLIME_CREATURE:
-        case MONS_SNORG:
-        case MONS_PURGY:
-        case MONS_TROLL:
-        case MONS_HYDRA:
-        case MONS_KILLER_KLOWN:
-        case MONS_STARCURSED_MASS:
-        case MONS_LERNAEAN_HYDRA:
-        case MONS_DISSOLUTION:
-        case MONS_TEST_SPAWNER:
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    if (which_descriptor == MDSC_NOMSG_WOUNDS)
-    {
-        // Zombified monsters other than spectral things don't show
-        // wounds.
-        if (mons_class_is_zombified(which_class)
-            && which_class != MONS_SPECTRAL_THING)
-        {
-            return true;
-        }
-
-        switch (which_class)
-        {
-        case MONS_RAKSHASA:
-        case MONS_RAKSHASA_FAKE:
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    return false;
 }
 
 monster* get_current_target()
@@ -4594,7 +4539,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     // Leave a purple cloud.
     // XXX: If silent is true, this is not an actual teleport, but
     //      the game moving a monster out of the way.
-    if (!silent)
+    if (!silent && !cell_is_solid(oldplace))
         place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
 
     mons->check_redraw(oldplace);
@@ -4802,7 +4747,8 @@ void mons_att_changed(monster* mon)
 void debuff_monster(monster* mon)
 {
     // List of magical enchantments which will be dispelled.
-    const enchant_type lost_enchantments[] = {
+    const enchant_type lost_enchantments[] =
+    {
         ENCH_SLOW,
         ENCH_HASTE,
         ENCH_SWIFT,
@@ -4932,6 +4878,7 @@ void temperature_check()
             const coord_def p(*ai);
             if (in_bounds(p)
                 && env.cgrid(p) == EMPTY_CLOUD
+                && !cell_is_solid(p)
                 && one_chance_in(5))
             {
                 place_cloud(CLOUD_STEAM, *ai, 2 + random2(5), &you);
@@ -4986,10 +4933,6 @@ void temperature_changed(float change)
 
     // For INCREMENTS:
 
-    // Warmed up enough to lose slow movement.
-    if (change > pos_threshold && temperature_tier(TEMP_COOL))
-        mpr("Your movements quicken.", MSGCH_DURATION);
-
     // Check these no-nos every turn.
     if (you.temperature >= TEMP_WARM)
     {
@@ -5033,10 +4976,6 @@ void temperature_changed(float change)
             you.redraw_armour_class = true;
     }
 
-    // Cooled down enough for slow movement.
-    if (change < neg_threshold && temperature_tier(TEMP_COOL))
-        mpr("Your movements slow.", MSGCH_DURATION);
-
     // If we're in this function, temperature changed, anyways.
     you.redraw_temperature = true;
 
@@ -5072,8 +5011,6 @@ bool temperature_effect(int which)
     {
         case LORC_FIRE_RES_I:
             return true; // 1-15
-        case LORC_SLOW_MOVE:
-            return (temperature() < TEMP_COOL); // 1-4
         case LORC_STONESKIN:
             return (temperature() < TEMP_WARM); // 1-8
 //      case nothing, right now:
@@ -5086,7 +5023,6 @@ bool temperature_effect(int which)
         case LORC_FIRE_BOOST:
         case LORC_COLD_VULN:
             return (temperature() >= TEMP_HOT); // 11-15
-        case LORC_FAST_MOVE:
         case LORC_PASSIVE_HEAT:
             return (temperature() >= TEMP_FIRE); // 13-15
         case LORC_HEAT_AURA:
@@ -5128,13 +5064,13 @@ string temperature_text(int temp)
         case TEMP_MIN:
             return "rF+";
         case TEMP_COOL:
-            return "Normal movement speed";
+            return "";
         case TEMP_WARM:
             return "rF++; lava magic boost; Stoneskin melts";
         case TEMP_HOT:
             return "rF+++; rC-; fire magic boost";
         case TEMP_FIRE:
-            return "Fast movement speed; burn attackers";
+            return "Burn attackers";
         case TEMP_MAX:
             return "Burn surroundings; cannot read scrolls";
         default:

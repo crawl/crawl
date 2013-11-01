@@ -506,7 +506,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         if (this_trap_type==TRAP_WEB) {*/
 
         // Determine web connectivity on all sides
-        const coord_def neigh[4] = {
+        const coord_def neigh[4] =
+        {
             coord_def(gc.x, gc.y - 1),
             coord_def(gc.x + 1, gc.y),
             coord_def(gc.x, gc.y + 1),
@@ -965,7 +966,7 @@ static tileidx_t _mon_clamp(tileidx_t tile, int offset)
 static tileidx_t _mon_random(tileidx_t tile)
 {
     int count = tile_player_count(tile);
-    return (tile + random2(count));
+    return (tile + ui_random(count));
 }
 
 // actually, a triangle wave, but it's up to the actual tiles
@@ -1039,8 +1040,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_RAVEN;
     case MONS_PHOENIX:
         return TILEP_MONS_PHOENIX;
-    case MONS_CHAOS_BUTTERFLY:
-        return _mon_random(TILEP_MONS_CHAOS_BUTTERFLY);
 
     // centaurs ('c')
     case MONS_CENTAUR:
@@ -1392,8 +1391,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_MOTH_OF_WRATH;
     case MONS_MOTH_OF_SUPPRESSION:
         return TILEP_MONS_MOTH_OF_SUPPRESSION;
-    case MONS_POLYMOTH:
-        return TILEP_MONS_POLYMOTH;
 
     // small zombies, etc. ('z')
     case MONS_ZOMBIE:
@@ -2780,6 +2777,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 
         case MONS_SPECTRAL_WEAPON:
         {
+            if (!mon.inv[MSLOT_WEAPON].get())
+                return TILEP_MONS_SPECTRAL_SBL;
+
             // Tiles exist for each class of weapon.
             const item_def& item = *mon.inv[MSLOT_WEAPON];
             switch (weapon_skill(item))
@@ -2913,6 +2913,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_BLIND;
     if (mons.is(MB_SUMMONED))
         ch |= TILE_FLAG_SUMMONED;
+    if (mons.is(MB_PERM_SUMMON))
+        ch |= TILE_FLAG_PERM_SUMMON;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
@@ -3950,8 +3952,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_MOTH_OF_WRATH;
     case MONS_MOTH_OF_SUPPRESSION:
         return TILE_CORPSE_MOTH_OF_SUPPRESSION;
-    case MONS_POLYMOTH:
-        return TILE_CORPSE_POLYMOTH;
 
     // beetles ('B')
     case MONS_GOLIATH_BEETLE:
@@ -4416,7 +4416,7 @@ tileidx_t tileidx_item(const item_def &item)
             return _tileidx_corpse(item);
 
     case OBJ_ORBS:
-        return TILE_ORB + random2(tile_main_count(TILE_ORB));
+        return TILE_ORB + ui_random(tile_main_count(TILE_ORB));
 
     case OBJ_MISCELLANY:
         return _tileidx_misc(item);
@@ -4644,7 +4644,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch = (dur == 0 ? TILE_CLOUD_MUTAGENIC_0 :
                       dur == 1 ? TILE_CLOUD_MUTAGENIC_1
                                : TILE_CLOUD_MUTAGENIC_2);
-                ch += random2(tile_main_count(ch));
+                ch += ui_random(tile_main_count(ch));
                 break;
 
             case CLOUD_MIST:
@@ -4652,7 +4652,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 break;
 
             case CLOUD_RAIN:
-                ch = TILE_CLOUD_RAIN + random2(tile_main_count(TILE_CLOUD_RAIN));
+                ch = TILE_CLOUD_RAIN + ui_random(tile_main_count(TILE_CLOUD_RAIN));
                 break;
 
             case CLOUD_MAGIC_TRAIL:
@@ -4682,12 +4682,12 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 
             case CLOUD_PETRIFY:
                 ch = TILE_CLOUD_PETRIFY;
-                ch += random2(tile_main_count(ch));
+                ch += ui_random(tile_main_count(ch));
                 break;
 
             case CLOUD_CHAOS:
                 ch = TILE_CLOUD_CHAOS;
-                ch += random2(tile_main_count(ch));
+                ch += ui_random(tile_main_count(ch));
                 break;
 
             case CLOUD_FOREST_FIRE:
@@ -4816,7 +4816,7 @@ tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
     case TILE_BOLT_STING:
         return tile + dist % tile_main_count(tile);
     case TILE_BOLT_FLAME:
-        return tile + random2(tile_main_count(tile));
+        return tile + ui_random(tile_main_count(tile));
     default:
         return tile;
     }
@@ -4938,7 +4938,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_INFUSION:                 return TILEG_INFUSION;
     case SPELL_SONG_OF_SLAYING:          return TILEG_SONG_OF_SLAYING;
     case SPELL_SPECTRAL_WEAPON:          return TILEG_SPECTRAL_WEAPON;
-    case SPELL_SONG_OF_SHIELDING:        return TILEG_SONG_OF_SHIELDING;
     case SPELL_DISCORD:                  return TILEG_DISCORD;
 
     // Translocation
@@ -5003,7 +5002,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SPIDER_FORM:              return TILEG_SPIDER_FORM;
     case SPELL_ICE_FORM:                 return TILEG_ICE_FORM;
     case SPELL_BLADE_HANDS:              return TILEG_BLADE_HANDS;
-    case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
     case SPELL_STATUE_FORM:              return TILEG_STATUE_FORM;
     case SPELL_DRAGON_FORM:              return TILEG_DRAGON_FORM;
     case SPELL_NECROMUTATION:            return TILEG_NECROMUTATION;
@@ -5097,6 +5095,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MISLEAD:                  return TILEG_MISLEAD;
     case SPELL_NOXIOUS_CLOUD:            return TILEG_NOXIOUS_CLOUD;
     case SPELL_PETRIFYING_CLOUD:         return TILEG_PETRIFYING_CLOUD;
+    case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
     case SPELL_PORKALATOR:               return TILEG_PORKALATOR;
     case SPELL_PRIMAL_WAVE:              return TILEG_PRIMAL_WAVE;
     case SPELL_QUICKSILVER_BOLT:         return TILEG_QUICKSILVER_BOLT;
@@ -5116,7 +5115,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SUMMON_MINOR_DEMON:       return TILEG_SUMMON_MINOR_DEMON;
     case SPELL_SUMMON_MUSHROOMS:         return TILEG_SUMMON_MUSHROOMS;
     case SPELL_SUMMON_SPECTRAL_ORCS:     return TILEG_SUMMON_SPECTRAL_ORCS;
-    case SPELL_SUMMON_TWISTER:           return TILEG_SUMMON_TWISTER;
     case SPELL_SUMMON_UFETUBUS:          return TILEG_SUMMON_UFETUBUS;
     case SPELL_SUMMON_UNDEAD:            return TILEG_SUMMON_UNDEAD;
     case SPELL_SUMMON_VERMIN:            return TILEG_SUMMON_VERMIN;
@@ -5343,6 +5341,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_SPIT_ACID;
     case ABIL_BLINK:
         return TILEG_ABILITY_BLINK;
+    case ABIL_JUMP:
+        return TILEG_ABILITY_JUMP;
 
     // Others
     case ABIL_DELAYED_FIREBALL:
@@ -5390,6 +5390,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
     case ABIL_EVOKE_FLIGHT:
         return TILEG_ABILITY_EVOKE_FLIGHT;
+    case ABIL_EVOKE_JUMP:
+        return TILEG_ABILITY_EVOKE_JUMP;
     case ABIL_EVOKE_FOG:
         return TILEG_ABILITY_EVOKE_FOG;
 

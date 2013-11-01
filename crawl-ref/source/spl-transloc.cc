@@ -13,6 +13,7 @@
 #include "externs.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
 #include "coord.h"
@@ -31,7 +32,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "orb.h"
@@ -264,10 +264,10 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
 
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.
-        if (wizard_blink && feat_is_solid(grd(beam.target)))
+        if (wizard_blink && cell_is_solid(beam.target))
             grd(beam.target) = DNGN_FLOOR;
 
-        if (feat_is_solid(grd(beam.target)) || monster_at(beam.target))
+        if (cell_is_solid(beam.target) || monster_at(beam.target))
         {
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
@@ -342,7 +342,8 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         move_player_to_grid(target, false, true);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
+        if (!cell_is_solid(origin))
+            place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
     }
 }
 
@@ -623,7 +624,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                if (!wizard_tele)
+                if (!wizard_tele && !cell_is_solid(old_pos))
                     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 move_player_to_grid(pos, false, true);
@@ -698,7 +699,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         }
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+        if (!cell_is_solid(old_pos))
+            place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
     }
@@ -765,7 +767,8 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // If we got this far, we're teleporting the player.
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+    if (!cell_is_solid(old_pos))
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
     bool large_change = you.see_cell(where);
 
@@ -1002,7 +1005,7 @@ static bool _quadrant_blink(coord_def dir, int pow)
     // walls nearby.
     coord_def target;
     bool found = false;
-    for (int i = 0; i < (pow*pow) / 500 + 1; ++i)
+    for (int i = 0; i < pow*pow / 500 + 1; ++i)
     {
         // Find a space near our base point...
         // First try to find a random square not adjacent to the basepoint,
@@ -1036,7 +1039,8 @@ static bool _quadrant_blink(coord_def dir, int pow)
     move_player_to_grid(target, false, true);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
+    if (!cell_is_solid(origin))
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
     return true;
 }

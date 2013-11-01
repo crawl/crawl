@@ -79,7 +79,10 @@ static int _crash_signal    = 0;
 static int _recursion_depth = 0;
 static mutex_t crash_mutex;
 
-static void _crash_signal_handler(int sig_num)
+// Make this non-static so stack traces are easier to follow
+void crash_signal_handler(int sig_num);
+
+void crash_signal_handler(int sig_num)
 {
     // We rely on mutexes ignoring locks held by the same thread.
     // On some platforms, this must be explicitly enabled (which we do).
@@ -148,7 +151,7 @@ static void _crash_signal_handler(int sig_num)
     tiles.shutdown();
 #endif
 
-#ifdef DGAMELAUNCH
+#ifdef WATCHDOG
     /* Infinite loop protection.
 
        Not tickling the watchdog for 60 seconds of user CPU time (not wall
@@ -244,7 +247,7 @@ void init_crash_handler()
             continue;
 #endif
 
-        signal(i, _crash_signal_handler);
+        signal(i, crash_signal_handler);
     }
 
 #endif // if defined(USE_UNIX_SIGNALS)
@@ -367,14 +370,19 @@ void disable_other_crashes()
 #endif
 }
 
-#ifdef DGAMELAUNCH
 void watchdog()
 {
+#ifdef UNIX
     struct itimerval t;
     t.it_interval.tv_sec = 0;
     t.it_interval.tv_usec = 0;
     t.it_value.tv_sec = 60;
     t.it_value.tv_usec = 0;
     setitimer(ITIMER_VIRTUAL, &t, 0);
-}
+#else
+    // Real time rather than CPU time.
+    // This will break DGL, but it makes no sense on Windows anyway.
+    // Mapstat is cool with this.
+    alarm(60);
 #endif
+}
