@@ -951,8 +951,9 @@ bool player_wearing_slot(int eq);
 bool you_tran_can_wear(const item_def &item);
 bool you_tran_can_wear(int eq, bool check_mutation = false);
 
-bool enough_hp(int minimum, bool suppress_msg);
-bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
+bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
+bool enough_mp(int minimum, bool suppress_msg,
+               bool abort_macros = true, bool include_items = true);
 bool enough_zp(int minimum, bool suppress_msg);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);

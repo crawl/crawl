@@ -4706,7 +4706,7 @@ void drain_mp(int loss)
                                       1000); // so it goes away after one '5'
 }
 
-bool enough_hp(int minimum, bool suppress_msg)
+bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4715,8 +4715,11 @@ bool enough_hp(int minimum, bool suppress_msg)
         if (!suppress_msg)
             mpr("You cannot pay life while functionally dead.");
 
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        if (abort_macros)
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
         return false;
     }
 
@@ -4730,15 +4733,19 @@ bool enough_hp(int minimum, bool suppress_msg)
                 "You haven't enough essence at the moment.");
         }
 
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        if (abort_macros)
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
         return false;
     }
 
     return true;
 }
 
-bool enough_mp(int minimum, bool suppress_msg, bool include_items)
+bool enough_mp(int minimum, bool suppress_msg,
+               bool abort_macros, bool include_items)
 {
     if (you.species == SP_DJINNI)
         return enough_hp(minimum * DJ_MP_RATE, suppress_msg);
@@ -4754,8 +4761,11 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items)
             else
                 mpr("You haven't enough magic at the moment.");
         }
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        if (abort_macros)
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
         return false;
     }
 
