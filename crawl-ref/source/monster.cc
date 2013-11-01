@@ -187,6 +187,7 @@ void monster::init_with(const monster& mon)
     experience        = mon.experience;
     number            = mon.number;
     colour            = mon.colour;
+    summoner          = mon.summoner;
     foe_memory        = mon.foe_memory;
     god               = mon.god;
     props             = mon.props;
