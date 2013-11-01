@@ -7691,8 +7691,12 @@ bool player::can_bleed(bool allow_tran) const
         }
     }
 
-    if (is_lifeless_undead() || holiness() == MH_NONLIVING)
+    if (is_lifeless_undead()
+        || holiness() == MH_NONLIVING
+        || you.species == SP_DJINNI)
+    {   // demonspawn and demigods have a mere drop of taint
         return false;
+    }
 
     return true;
 }
