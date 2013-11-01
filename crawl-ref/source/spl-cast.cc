@@ -165,6 +165,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                               text_only);
     string titlestring = make_stringf("%-25.25s", title.c_str());
+    string hungerstring = you.species == SP_DJINNI ? "Glow  " : "Hunger";
 #ifdef USE_TILE_LOCAL
     {
         // [enne] - Hack.  Make title an item so that it's aligned.
@@ -173,7 +174,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                 " " + titlestring + "         Type          "
                 "                Failure   Level",
                 " " + titlestring + "         Power         "
-                "Range           Hunger    Level",
+                "Range           " + hungerstring + "    Level",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
@@ -184,7 +185,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
             " " + titlestring + "         Type          "
             "                Failure   Level",
             " " + titlestring + "         Power         "
-            "Range           Hunger    Level",
+            "Range           " + hungerstring + "    Level",
             MEL_TITLE));
 #endif
     spell_menu.set_highlighter(NULL);
