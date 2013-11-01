@@ -1230,7 +1230,7 @@ static int _shatter_player_dice()
         return 6;  // reduced later
     // Same order as for monsters -- petrified flyers get hit hard, skeletal
     // flyers get no extra damage.
-    else if (you.airborne() || djinni_floats())
+    else if (you.airborne())
         return 1;
     else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
         return 6;

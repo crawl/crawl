@@ -1553,9 +1553,8 @@ bool activate_talent(const talent& tal)
     // Doing these would outright kill the player.
     if (tal.which == ABIL_STOP_FLYING)
     {
-        if ((grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
-             || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
-            && !djinni_floats())
+        if (grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
+            || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
         {
             mpr("Stopping flight right now would be fatal!");
             crawl_state.zero_turns_taken();
@@ -3180,7 +3179,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if ((you.species == SP_TENGU && you.experience_level >= 5
          || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()
-        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
+        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
+           && you.species != SP_DJINNI)
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).

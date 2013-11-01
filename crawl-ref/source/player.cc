@@ -437,11 +437,6 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
         }
     }
-    else if (you.species == SP_DJINNI && !feat_has_dry_floor(new_grid)
-             && feat_has_dry_floor(old_feat))
-    {
-        mprf("You heave yourself high above the %s.", feat_type_name(new_grid));
-    }
 
     const bool was_clinging = you.is_wall_clinging();
     const bool is_clinging = stepped && you.check_clinging(stepped);
@@ -496,11 +491,8 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
                        bool ignore_items)
 {
-    if (you.permanent_flight() || you.species == SP_DJINNI
-        || you.airborne() && !permanently)
-    {
+    if (you.permanent_flight() || you.airborne() && !permanently)
         return false;
-    }
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
              || grid == DNGN_LAVA && !player_likes_lava(permanently))
     {
@@ -2367,10 +2359,6 @@ int player_movement_speed(bool ignore_burden)
         mv -= 2;
 
     if (you.duration[DUR_GRASPING_ROOTS])
-        mv += 5;
-
-    // Unpowered djinn flight is cumbersome.
-    if (is_hovering())
         mv += 5;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
@@ -4381,7 +4369,6 @@ void display_char_status()
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
         STATUS_CLINGING,
-        STATUS_HOVER,
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         STATUS_BACKLIT,
@@ -5698,21 +5685,6 @@ bool land_player(bool quiet)
     return true;
 }
 
-bool is_hovering()
-{
-    return you.species == SP_DJINNI
-           && !feat_has_dry_floor(grd(you.pos()))
-           && !you.airborne()
-           && !you.is_wall_clinging();
-}
-
-bool djinni_floats()
-{
-    return you.species == SP_DJINNI
-           && you.form != TRAN_TREE
-           && (you.form != TRAN_SPIDER || !you.is_wall_clinging());
-}
-
 static void _end_water_hold()
 {
     you.duration[DUR_WATER_HOLD] = 0;
@@ -6161,10 +6133,11 @@ player::~player()
 flight_type player::flight_mode() const
 {
     // Might otherwise be airborne, but currently stuck to the ground
-    if (you.duration[DUR_GRASPING_ROOTS])
+    if (you.duration[DUR_GRASPING_ROOTS] || you.form == TRAN_TREE)
         return FL_NONE;
 
     if (duration[DUR_FLIGHT]
+        || you.species == SP_DJINNI
         || attribute[ATTR_PERM_FLIGHT]
         || form == TRAN_WISP
         // dragon and bat should be FL_WINGED, but we don't want paralysis
@@ -7100,14 +7073,15 @@ bool player::cancellable_flight() const
 
 bool player::permanent_flight() const
 {
-    return attribute[ATTR_PERM_FLIGHT];
+    return attribute[ATTR_PERM_FLIGHT] || species == SP_DJINNI;
 }
 
 bool player::racial_permanent_flight() const
 {
-    return (species == SP_TENGU && experience_level >= 15
-            || species == SP_BLACK_DRACONIAN && experience_level >= 14
-            || species == SP_GARGOYLE && experience_level >= 14);
+    return species == SP_TENGU && experience_level >= 15
+        || species == SP_BLACK_DRACONIAN && experience_level >= 14
+        || species == SP_GARGOYLE && experience_level >= 14
+        || species == SP_DJINNI;
 }
 
 bool player::tengu_flight() const

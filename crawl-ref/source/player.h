@@ -1009,8 +1009,6 @@ bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
-bool is_hovering();
-bool djinni_floats();
 
 void dec_disease_player(int delay);
 

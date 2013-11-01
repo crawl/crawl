@@ -3497,8 +3497,6 @@ void god_pitch(god_type which_god)
          you.species == SP_NAGA  ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
          you.species == SP_FELID ? "sit before" :
-         // duplicated because of forms
-         you.species == SP_DJINNI ? "hover solemnly before" :
                                    "kneel at",
          god_name(which_god).c_str());
     }

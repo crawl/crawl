@@ -518,16 +518,6 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case STATUS_HOVER:
-        if (is_hovering())
-        {
-            inf->light_colour = RED;
-            inf->light_text   = "Hover";
-            inf->short_text   = "hovering above liquid";
-            inf->long_text    = "You are exerting yourself to hover high above the liquid.";
-        }
-        break;
-
     case STATUS_STR_ZERO:
         _describe_stat_zero(inf, STAT_STR);
         break;
