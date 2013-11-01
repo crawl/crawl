@@ -153,14 +153,14 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     if (arm == ARM_HELMET
         && (!you_can_wear(EQ_HELMET)
             || you.mutation[MUT_HORNS]
-            || (you.mutation[MUT_ANTENNAE] && you.species != SP_FORMICID)))
+            || you.mutation[MUT_ANTENNAE] && you.species != SP_FORMICID))
     {
         // Check for Horns 3 & Antennae 3 - Don't give a cap if those mutation
         // levels have been reached.
         if (you.mutation[MUT_HORNS] <= 2 || you.mutation[MUT_ANTENNAE] <= 2)
-          result = coinflip() ? ARM_CAP : ARM_WIZARD_HAT;
+            result = coinflip() ? ARM_CAP : ARM_WIZARD_HAT;
         else
-          result = NUM_ARMOURS;
+            result = NUM_ARMOURS;
     }
 
     return result;

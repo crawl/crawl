@@ -3646,9 +3646,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 }
 
                 if (!(you.experience_level % 4))
-                {
                     modify_stat(STAT_STR, 1, false, "level gain");
-                }
                 break;
 
             case SP_GARGOYLE:

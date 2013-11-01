@@ -370,9 +370,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         if (one_chance_in(4))
-        {
             item.sub_type = coinflip() ? WPN_GIANT_CLUB : WPN_GIANT_SPIKED_CLUB;
-        }
         else
         {
             item.sub_type = random_choose_weighted(10, WPN_HAND_AXE,   15, WPN_GLAIVE,
@@ -386,9 +384,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.plus  += random2(3);
             item.plus2 += random2(3);
             if (one_chance_in(20))
-            {
                 level = MAKE_GOOD_ITEM;
-            }
         }
         break;
 

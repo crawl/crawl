@@ -903,9 +903,7 @@ void bolt::digging_wall_effect()
                 continue;
 
             if (in_bounds(c))
-            {
                 _dig_single_wall(c, *this);
-            }
         }
     }
 }

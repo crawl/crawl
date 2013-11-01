@@ -1923,9 +1923,7 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
         else
-        {
             zapping(ZAP_DIG, power, beam);
-        }
         break;
     }
 

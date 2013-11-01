@@ -892,8 +892,7 @@ void handle_delay()
             break;
 
         case DELAY_SHAFT_SELF:
-            mpr("You continue digging a shaft.",
-                MSGCH_MULTITURN_ACTION);
+            mpr("You continue digging a shaft.", MSGCH_MULTITURN_ACTION);
             break;
 
         case DELAY_MULTIDROP:
@@ -1091,10 +1090,8 @@ static void _finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_SHAFT_SELF:
-    {
         you.do_shaft_ability();
         break;
-    }
 
     case DELAY_BUTCHER:
     case DELAY_BOTTLE_BLOOD:
@@ -1858,7 +1855,7 @@ static const char *delay_names[] =
     "recite",
 #endif
     "run", "rest", "travel", "macro",
-    "macro_process_key", "interruptible", "uninterruptible", "shaft self"
+    "macro_process_key", "interruptible", "uninterruptible", "shaft self",
 };
 
 // Gets a delay given its name.

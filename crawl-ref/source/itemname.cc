@@ -3279,13 +3279,13 @@ bool is_useless_item(const item_def &item, bool temp)
                             || temp && you.hunger_state <= HS_SATIATED)));
 
         case AMU_STASIS:
-            return (you.stasis(false, false));
+            return you.stasis(false, false);
 
         case AMU_CLARITY:
-            return (you.clarity(false, false));
+            return you.clarity(false, false);
 
         case AMU_RESIST_CORROSION:
-            return (you.res_corr(false, false));
+            return you.res_corr(false, false);
 
         case AMU_THE_GOURMAND:
             return (player_likes_chunks(true) == 3
@@ -3321,7 +3321,7 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.hunger_state == HS_STARVING);
 
         case RING_SEE_INVISIBLE:
-            return (you.can_see_invisible(false, false));
+            return you.can_see_invisible(false, false);
 
         case RING_POISON_RESISTANCE:
             return (player_res_poison(false, temp, false) > 0

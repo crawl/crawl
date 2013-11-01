@@ -4666,9 +4666,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHAFT_SELF:
     {
         if (is_valid_shaft_level())
-        {
             mons->do_shaft();
-        }
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
