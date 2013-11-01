@@ -392,17 +392,3 @@ MAP
 ..1..
 .....
 ENDMAP
-
-NAME:  jiyva_altar_2
-DEPTH: D:2-20
-KFEAT: _ = altar_jiyva
-KITEM: 1 = dart
-KMONS: 1 = jelly
-ITEM:  dart
-MAP
-xxxxx
-xdddx
-x<_1x
-xdddx
-xxxxx
-ENDMAP
