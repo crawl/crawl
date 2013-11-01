@@ -5011,8 +5011,6 @@ bool temperature_effect(int which)
     {
         case LORC_FIRE_RES_I:
             return true; // 1-15
-        case LORC_SLOW_MOVE:
-            return (temperature() < TEMP_COOL); // 1-4
         case LORC_STONESKIN:
             return (temperature() < TEMP_WARM); // 1-8
 //      case nothing, right now:
@@ -5025,7 +5023,6 @@ bool temperature_effect(int which)
         case LORC_FIRE_BOOST:
         case LORC_COLD_VULN:
             return (temperature() >= TEMP_HOT); // 11-15
-        case LORC_FAST_MOVE:
         case LORC_PASSIVE_HEAT:
             return (temperature() >= TEMP_FIRE); // 13-15
         case LORC_HEAT_AURA:
