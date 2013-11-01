@@ -19,7 +19,6 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -96,6 +95,96 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     }
 }
 
+static void _actor_areas(actor *a)
+{
+    int r;
+
+    if ((r = a->silence_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_SILENCE, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE); ri; ++ri)
+            _set_agrid_flag(*ri, APROP_SILENCE);
+        no_areas = false;
+    }
+
+    // Just like silence, suppression goes through walls
+    if ((r = a->suppression_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_SUPPRESSION, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE); ri; ++ri)
+            _set_agrid_flag(*ri, APROP_SUPPRESSION);
+        no_areas = false;
+    }
+
+    if ((r = a->halo_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_HALO, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_HALO);
+        }
+        no_areas = false;
+    }
+
+    if ((r = a->liquefying_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_LIQUID, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
+             ri; ++ri)
+        {
+            dungeon_feature_type f = grd(*ri);
+
+            _set_agrid_flag(*ri, APROP_LIQUID);
+
+            if (feat_has_solid_floor(f) && !feat_is_water(f))
+                _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
+        }
+        no_areas = false;
+    }
+
+    if ((r = a->umbra_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_UMBRA, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_UMBRA);
+        }
+        no_areas = false;
+    }
+
+
+    if ((r = a->soul_aura_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_SOUL_AURA, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_SOUL_AURA);
+        }
+        no_areas = false;
+    }
+
+    if ((r = a->heat_radius2()) >= 0)
+    {
+        _agrid_centres.push_back(area_centre(AREA_HOT, a->pos(), r));
+
+        for (radius_iterator ri(a->pos(),r, C_CIRCLE, a->get_los());
+            ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_HOT);
+        }
+        no_areas = false;
+    }
+}
+
 static void _update_agrid()
 {
     if (no_areas)
@@ -109,104 +198,16 @@ static void _update_agrid()
 
     no_areas = true;
 
-    for (actor_iterator ai; ai; ++ai)
-    {
-        int r;
-
-        if ((r = ai->silence_radius2()) >= 0)
-        {
-            _agrid_centres.push_back(area_centre(AREA_SILENCE, ai->pos(), r));
-
-            for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
-                _set_agrid_flag(*ri, APROP_SILENCE);
-            no_areas = false;
-        }
-
-        // Just like silence, suppression goes through walls
-        if ((r = ai->suppression_radius2()) >= 0)
-        {
-            _agrid_centres.push_back(area_centre(AREA_SUPPRESSION, ai->pos(), r));
-
-            for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
-                _set_agrid_flag(*ri, APROP_SUPPRESSION);
-            no_areas = false;
-        }
-
-        if ((r = ai->halo_radius2()) >= 0)
-        {
-            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
-
-            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
-                 ri; ++ri)
-            {
-                _set_agrid_flag(*ri, APROP_HALO);
-            }
-            no_areas = false;
-        }
-
-        if ((r = ai->liquefying_radius2()) >= 0)
-        {
-            _agrid_centres.push_back(area_centre(AREA_LIQUID, ai->pos(), r));
-
-            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
-                 ri; ++ri)
-            {
-                dungeon_feature_type f = grd(*ri);
-
-                _set_agrid_flag(*ri, APROP_LIQUID);
-
-                if (feat_has_solid_floor(f) && !feat_is_water(f))
-                    _set_agrid_flag(*ri, APROP_ACTUAL_LIQUID);
-            }
-            no_areas = false;
-        }
-
-        if ((r = ai->umbra_radius2()) >= 0)
-        {
-            _agrid_centres.push_back(area_centre(AREA_UMBRA, ai->pos(), r));
-
-            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
-                 ri; ++ri)
-            {
-                _set_agrid_flag(*ri, APROP_UMBRA);
-            }
-            no_areas = false;
-        }
-
-
-        if ((r = ai->soul_aura_radius2()) >= 0)
-        {
-            _agrid_centres.push_back(area_centre(AREA_SOUL_AURA, ai->pos(), r));
-
-            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
-                 ri; ++ri)
-            {
-                _set_agrid_flag(*ri, APROP_SOUL_AURA);
-            }
-            no_areas = false;
-        }
-
-        if ((r = ai->heat_radius2()) >= 0)
-        {
-            _agrid_centres.push_back(area_centre(AREA_HOT, ai->pos(), r));
-
-            for (radius_iterator ri(ai->pos(),r, C_CIRCLE, ai->get_los());
-                ri; ++ri)
-            {
-                _set_agrid_flag(*ri, APROP_HOT);
-            }
-            no_areas = false;
-        }
-    }
+    _actor_areas(&you);
+    for (monster_iterator mi; mi; ++mi)
+        _actor_areas(*mi);
 
     if (you.char_direction == GDT_ASCENDING && !you.pos().origin())
     {
-        ASSERT(env.orb_pos == you.pos());
-
         const int r = 5;
-        _agrid_centres.push_back(area_centre(AREA_ORB, env.orb_pos, r));
-        los_glob los(env.orb_pos, LOS_DEFAULT);
-        for (radius_iterator ri(env.orb_pos, r, C_CIRCLE, &los);
+        _agrid_centres.push_back(area_centre(AREA_ORB, you.pos(), r));
+        los_glob los(you.pos(), LOS_DEFAULT);
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE, &los);
              ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_ORB);

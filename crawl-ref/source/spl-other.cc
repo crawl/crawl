@@ -9,6 +9,7 @@
 #include "spl-other.h"
 #include "externs.h"
 
+#include "act-iter.h"
 #include "coord.h"
 #include "delay.h"
 #include "env.h"
@@ -22,7 +23,6 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"
@@ -103,22 +103,24 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("A conflicting enchantment prevents the spell from "
                 "coming into effect.");
         }
-        else if (you.species == SP_DJINNI)
-            mpr("Draw from your essence to power your essence... yeah right.");
-        else if (!you.can_bleed(false))
+        else if (!you.can_bleed())
         {
-            mpr("You don't have enough blood to draw power from your "
-                "own body.");
+            if (you.species == SP_VAMPIRE)
+                mpr("You don't have enough blood to draw power from your own body.");
+            else
+                mpr("Your body is bloodless.");
         }
         else if (!enough_hp(2, true))
             mpr("Your attempt to draw power from your own body fails.");
         else
         {
             int food = 0;
+            // Take at most 90% of currhp.
+            const int minhp = max(div_rand_round(you.hp, 10), 1);
 
-            while (you.magic_points < you.max_magic_points && you.hp > 1
+            while (you.magic_points < you.max_magic_points && you.hp > minhp
                    && (you.is_undead != US_SEMI_UNDEAD
-                       || you.hunger - food >= 7000))
+                       || you.hunger - food >= HUNGER_SATIATED))
             {
                 fail_check();
                 success = true;
@@ -129,7 +131,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
                 if (you.is_undead == US_SEMI_UNDEAD)
                     food += 15;
 
-                for (int loopy = 0; loopy < (you.hp > 1 ? 3 : 0); ++loopy)
+                for (int loopy = 0; loopy < (you.hp > minhp ? 3 : 0); ++loopy)
                     if (x_chance_in_y(6, pow))
                         dec_hp(1, false);
 
@@ -215,7 +217,7 @@ void start_recall(int type)
     if (type > 0 && branch_allows_followers(you.where_are_you))
         populate_offlevel_recall_list(rlist);
 
-    if (rlist.size() > 0)
+    if (!rlist.empty())
     {
         // Sort the recall list roughly by HD, randomizing a little
         for (unsigned int i = 0; i < rlist.size(); ++i)
@@ -381,7 +383,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     // player, so we don't make the spell abort (return true).
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
-    else if (feat_is_solid(grd(dest)))
+    else if (cell_is_solid(dest))
         mpr("Something is blocking your path through the rock.");
     else if (walls > maxrange)
         mpr("This rock feels extremely deep.");

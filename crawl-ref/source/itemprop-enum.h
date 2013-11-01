@@ -99,8 +99,8 @@ enum brand_type // item_def.special
     SPWPN_PAIN,
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
-    SPWPN_REACHING,
 #if TAG_MAJOR_VERSION == 34
+    SPWPN_REACHING,
     SPWPN_RETURNING,
 #endif
     SPWPN_CHAOS,
@@ -184,7 +184,6 @@ enum jewellery_type
     RING_FIRE,
     RING_ICE,
     RING_TELEPORT_CONTROL,
-
     NUM_RINGS,                         //   keep as last ring; should not overlap
                                        //   with amulets!
     // RINGS after num_rings are for unique types for artefacts
@@ -362,6 +361,7 @@ enum special_armour_type
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,
     SPARM_ARCHERY,
+    SPARM_JUMPING,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };

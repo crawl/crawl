@@ -178,6 +178,7 @@ define(function () {
     fg_flags.flags.BLIND        = [0, 0x2000];
     fg_flags.flags.ANIM_WEP     = [0, 0x4000];
     fg_flags.flags.SUMMONED     = [0, 0x8000];
+    fg_flags.flags.PERM_SUMMON  = [0, 0x10000];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
@@ -239,7 +240,7 @@ define(function () {
     bg_flags.flags.ELDRITCH_NE = [0, 0x04];
     bg_flags.flags.ELDRITCH_SE = [0, 0x08];
     bg_flags.flags.ELDRITCH_SW = [0, 0x10];
-
+    bg_flags.flags.LANDING     = [0, 0x200];
     bg_flags.mask              = 0x0000FFFF;
 
     exports.prepare_fg_flags = function (tileidx)

@@ -45,7 +45,7 @@ protected:
 
 int element_colour_calc::rand(bool non_random)
 {
-    return non_random ? 0 : random2(120);
+    return non_random ? 0 : ui_random(120);
 }
 
 int element_colour_calc::get(const coord_def& loc, bool non_random)
@@ -157,6 +157,10 @@ static int _etc_elven_brick(int, const coord_def& loc)
 
 static int _etc_waves(int, const coord_def& loc)
 {
+    // Shouldn't have this outside of Shoals, but it can happen.
+    // See !lg lakren crash 8 .
+    if (!env.heightmap.get())
+        return CYAN;
     short height = dgn_height_at(loc);
     int cycle_point = you.num_turns % 20;
     int min_height = -90 + 5 * cycle_point,

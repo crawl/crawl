@@ -139,8 +139,6 @@ static duration_def duration_data[] =
       BLUE, "Infus", "infused", "Your attacks are magically infused."},
     { DUR_SONG_OF_SLAYING, true,
       BLUE, "Slay", "singing", "Your melee attacks are strengthened by your song."},
-    { DUR_SONG_OF_SHIELDING, true,
-      BLUE, "SShield", "shielded", "Your magic is protecting you."},
     { DUR_FLAYED, true,
       RED, "Flay", "flayed", "You are covered in terrible wounds." },
     { DUR_RETCHING, true,
@@ -520,16 +518,6 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case STATUS_HOVER:
-        if (is_hovering())
-        {
-            inf->light_colour = RED;
-            inf->light_text   = "Hover";
-            inf->short_text   = "hovering above liquid";
-            inf->long_text    = "You are exerting yourself to hover high above the liquid.";
-        }
-        break;
-
     case STATUS_STR_ZERO:
         _describe_stat_zero(inf, STAT_STR);
         break;
@@ -653,6 +641,19 @@ bool fill_status_info(int status, status_info* inf)
         {
             inf->light_colour = WHITE;
             inf->light_text   = "Ray";
+        }
+        break;
+
+    case STATUS_ELIXIR:
+        if (you.duration[DUR_ELIXIR_HEALTH] || you.duration[DUR_ELIXIR_MAGIC])
+        {
+            if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
+                inf->light_colour = WHITE;
+            else if (you.duration[DUR_ELIXIR_HEALTH])
+                inf->light_colour = LIGHTBLUE;
+            else
+                inf->light_colour = LIGHTMAGENTA;
+            inf->light_text   = "Elixir";
         }
         break;
 

@@ -621,7 +621,7 @@ bool InventoryRegion::update_alt_text(string &alt)
         inf.title = "Previous page";
     }
     else
-        get_item_desc(*item, inf, true);
+        get_item_desc(*item, inf);
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
     process_description<alt_desc_proc>(proc, inf);

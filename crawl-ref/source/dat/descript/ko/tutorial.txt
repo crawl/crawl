@@ -289,6 +289,11 @@ tutorial3 scroll_noautopickup
 <w>[clicking]</w> 하거나 </localtiles> 몬스터와 싸워 무찌른 뒤에 주울 수
 있습니다.
 %%%%
+tutorial3 battle
+
+만약 당신이 성공적으로 적을 독에 중독시켰다면, 독의 효과를 극대화 하기 위해
+후퇴하십시오. 만약 필요하다면 회복을 위해서 후퇴하는 것도 좋은 선택입니다.
+%%%%
 tutorial3 downstairs
 
 잘 싸우셨습니다! 만약 필요하다면, <w>[$cmd[CMD_REST]]</w>키로 쉬거나,
@@ -455,6 +460,21 @@ tutorial4 spell_success
 실패 확률을 감소시켜주는 기능을 가지고 있습니다. 지팡이를 착용해보시고, 실패
 확률이 낮아진 것을 확인해보세요.
 %%%%
+tutorial4 mephitic_cloud
+
+악취 구름은 레벨 3의 주문이기 때문에, 당신은 아직 그 주문을 익힐 수 없습니다.
+여기 빠른 레벨 업을 위한 훈련용 모형이 더 있습니다 - 이번에는 돌을 던지지
+않아도 됩니다.
+
+레벨 3이 되면, 당신의 스탯 중 하나를 올릴 수 있습니다. 지능 -
+<input>I</input>ntelligence - 을 선택하면 당신의 주문 시전에 더 도움이 됩니다.
+%%%%
+tutorial4 meph_reminder
+
+새로 얻을 수 있게 된 주문을 익히는 것을 잊지 마세요!
+<input>$cmd[CMD_MEMORISE_SPELL]</input>키를 누르거나, 우측 소지품창의 마법서
+아이콘을 <input>마우스 왼쪽 클릭</input>한 후, 원하는 주문을 선택하면 됩니다.
+%%%%
 tutorial4 aiming_clouds
 
 악취 구름은 영창하였을때 한 구역을 유독한 가스로 뒤덮습니다. 그리고 당신이
@@ -574,6 +594,13 @@ tutorial5 berserk
 강해보이는 적을 만났을 때에는, <w>$cmd[CMD_USE_ABILITY]</w> 키나<localtiles>
 <w>명령어 모음</w></localtiles>을(를) 이용하여 트로그의 광폭화 권능을 사용할 수
 있습니다. 앞에 있는 적은 지금 상태로는 이기기 어려우므로, 권능을 사용해보세요.
+%%%%
+tutorial5 exhaustion
+
+광폭화는 강력하지만, 그 후유증도 심합니다. 광폭화의 후유증으로 속도가 느려지는
+'감속' 상태, 잠시 동안 광폭화를 다시 사용할 수 없는 '탈진' 상태가 걸렸습니다.
+<input>$cmd[CMD_REST]</input> 키<localtiles> (혹은 <w>명령어
+모음</w>)</localtiles>을 이용해서 후유증에서 벗어나는 것이 좋습니다.
 %%%%
 tutorial5 hunger
 

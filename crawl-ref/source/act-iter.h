@@ -6,33 +6,64 @@
 #ifndef ACT_ITER_H
 #define ACT_ITER_H
 
-#include "mon-iter.h"
-
-class actor_iterator
+class actor_near_iterator
 {
 public:
-    actor_iterator();
-    actor_iterator(const circle_def* circle_);
-    actor_iterator(const los_base* los_);
-    actor_iterator(const actor* act_);
+    actor_near_iterator(coord_def c, los_type los = LOS_DEFAULT);
+    actor_near_iterator(const actor* a, los_type los = LOS_DEFAULT);
 
     operator bool() const;
     actor* operator*() const;
     actor* operator->() const;
-    actor_iterator& operator++();
-    actor_iterator operator++(int);
+    actor_near_iterator& operator++();
+    actor_near_iterator operator++(int);
 
 protected:
-    restr_type restr;
-    const circle_def* circle;
-    const los_base* los;
-    const actor* act;
-    bool did_you;
-    monster_iterator mi;
+    const coord_def center;
+    los_type _los;
+    const actor* viewer;
+    int i;
 
     bool valid(const actor* a) const;
-    void raw_advance();
-    void advance(bool may_stay=false);
+    void advance();
+};
+
+class monster_near_iterator
+{
+public:
+    monster_near_iterator(coord_def c, los_type los = LOS_DEFAULT);
+    monster_near_iterator(const actor* a, los_type los = LOS_DEFAULT);
+
+    operator bool() const;
+    monster* operator*() const;
+    monster* operator->() const;
+    monster_near_iterator& operator++();
+    monster_near_iterator operator++(int);
+
+protected:
+    const coord_def center;
+    los_type _los;
+    const actor* viewer;
+    int i;
+
+    bool valid(const monster* a) const;
+    void advance();
+};
+
+class monster_iterator
+{
+public:
+    monster_iterator();
+
+    operator bool() const;
+    monster* operator*() const;
+    monster* operator->() const;
+    monster_iterator& operator++();
+    monster_iterator operator++(int);
+
+protected:
+    int i;
+    void advance();
 };
 
 #endif

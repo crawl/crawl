@@ -81,7 +81,8 @@ struct command_name
     const char*  name;
 };
 
-static command_name _command_name_list[] = {
+static command_name _command_name_list[] =
+{
 #include "cmd-name.h"
 };
 
@@ -94,7 +95,8 @@ struct default_binding
     command_type  cmd;
 };
 
-static default_binding _default_binding_list[] = {
+static default_binding _default_binding_list[] =
+{
 #include "cmd-keys.h"
 };
 

@@ -74,6 +74,15 @@ Start flying. During flight you can safely cross water and similar obstacles.
 Be warned, though, that flight may time out at inopportune moments and cause
 you to fall to your death.
 %%%%
+Jump Attack ability
+
+An ability that borrows a creature's kinetic energy to power a high-speed melee
+jump attack, landing you safely nearby. You cannot jump over flying enemies and
+can only leap giant enemies submerged in lava or deep water. Standing or
+swimming in water, lava, or liquefied ground will also prevent you from using
+this ability. Felids are natural jumpers and will become more skilled at
+pouncing upon reaching experience levels 6 and 12.
+%%%%
 Hellfire ability
 
 Blast your enemies with hellfire. This ball of unholy flames explodes on
@@ -140,6 +149,14 @@ Turn visible again.
 Evoke Flight ability
 
 <Fly ability>
+%%%%
+Evoke Jump Attack ability
+
+An ability that borrows a creature's kinetic energy to power a high-speed melee
+jump attack, landing you safely nearby. You cannot jump over flying enemies and
+can only leap giant enemies submerged in lava or deep water. Standing or
+swimming in water, lava, or liquefied ground will also prevent you from using
+this ability.
 %%%%
 Stop Flying ability
 

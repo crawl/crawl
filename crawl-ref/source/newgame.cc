@@ -152,20 +152,6 @@ static void _print_character_info(const newgame_def* ng)
     cprintf("%s\n", _welcome(ng).c_str());
 }
 
-// Determines if a species is a valid choice for a new game.
-static bool _is_species_valid_choice(species_type species)
-{
-    if ((species == SP_LAVA_ORC || species == SP_DJINNI)
-        && Version::ReleaseType != VER_ALPHA)
-    {
-        return false;
-    }
-
-    // Non-base draconians cannot be selected either.
-    return is_valid_species(species)
-        && !(species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN);
-}
-
 #ifdef ASSERTS
 static bool _species_is_undead(const species_type speci)
 {
@@ -230,7 +216,7 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
             // any valid species will do
             do
                 ng->species = get_species(random2(ng_num_species()));
-            while (!_is_species_valid_choice(ng->species));
+            while (!is_species_valid_choice(ng->species));
         }
         else
         {
@@ -334,7 +320,7 @@ static string _highlight_pattern(const newgame_def* ng)
     for (int i = 0; i < ng_num_species(); ++i)
     {
         const species_type species = get_species(i);
-        if (!_is_species_valid_choice(species))
+        if (!is_species_valid_choice(species))
             continue;
 
         if (is_good_combination(species, ng->job, true))
@@ -555,8 +541,11 @@ static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
  */
 static const int COLUMN_WIDTH = 25;
 static const int X_MARGIN = 4;
-static const int CHAR_DESC_START_Y = 17;
-static const int SPECIAL_KEYS_START_Y = CHAR_DESC_START_Y + 3;
+static const int CHAR_DESC_START_Y = 16;
+static const int CHAR_DESC_HEIGHT = 3;
+static const int SPECIAL_KEYS_START_Y = CHAR_DESC_START_Y
+                                        + CHAR_DESC_HEIGHT + 1;
+
 static void _construct_species_menu(const newgame_def* ng,
                                     const newgame_def& defaults,
                                     MenuFreeform* menu)
@@ -564,7 +553,7 @@ static void _construct_species_menu(const newgame_def* ng,
     ASSERT(menu != NULL);
     int items_in_column = 0;
     for (int i = 0; i < NUM_SPECIES; ++i)
-        if (_is_species_valid_choice((species_type)i))
+        if (is_species_valid_choice((species_type)i))
             items_in_column++;
     items_in_column = (items_in_column + 2) / 3;
     // Construct the menu, 3 columns
@@ -576,7 +565,7 @@ static void _construct_species_menu(const newgame_def* ng,
     for (int i = 0, pos = 0; i < ng_num_species(); ++i, ++pos)
     {
         const species_type species = get_species(i);
-        if (!_is_species_valid_choice(species))
+        if (!is_species_valid_choice(species))
         {
             --pos;
             continue;
@@ -802,7 +791,8 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     _construct_species_menu(ng, defaults, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
     descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
-                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 2),
+                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y
+                                                     + CHAR_DESC_HEIGHT),
                      "descriptor");
     menu.attach_object(descriptor);
 

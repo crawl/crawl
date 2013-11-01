@@ -87,7 +87,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         if (!magic)
             return;
 
-        contaminate_player(4 * hunger_amount, true);
+        contaminate_player(hunger_amount * 4 / 3, true);
         return;
     }
 
@@ -2708,14 +2708,15 @@ int you_min_hunger()
 
     // Vampires can never starve to death.  Ghouls will just rot much faster.
     if (you.is_undead)
-        return 701;
+        return 601;
 
     return 0;
 }
 
 void handle_starvation()
 {
-    if (!you_foodless() && !you.duration[DUR_DEATHS_DOOR] && you.hunger <= 500)
+    if (!you_foodless() && !you.duration[DUR_DEATHS_DOOR]
+        && you.hunger <= HUNGER_FAINTING)
     {
         if (!you.cannot_act() && one_chance_in(40))
         {
@@ -2727,7 +2728,7 @@ void handle_starvation()
                 xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
-        if (you.hunger <= 100)
+        if (you.hunger <= 0)
         {
             mpr("You have starved to death.", MSGCH_FOOD);
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);

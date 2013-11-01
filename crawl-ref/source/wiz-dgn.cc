@@ -7,6 +7,7 @@
 
 #include "wiz-dgn.h"
 
+#include "act-iter.h"
 #include "branch.h"
 #include "cio.h"
 #include "coord.h"
@@ -26,7 +27,6 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "options.h"
 #include "place.h"
 #include "player.h"

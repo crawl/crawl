@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
@@ -24,7 +25,6 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -401,11 +401,8 @@ void up_stairs(dungeon_feature_type force_stair)
         you.depth = 0;
         mpr("You have escaped!");
 
-        for (int i = 0; i < ENDOFPACK; i++)
-        {
-            if (you.inv[i].defined() && you.inv[i].base_type == OBJ_ORBS)
-                ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
-        }
+        if (player_has_orb())
+            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
 
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LEAVING);
     }
@@ -715,6 +712,25 @@ void down_stairs(dungeon_feature_type force_stair)
         // Shafts are one-time-use.
         mpr("The shaft crumbles and collapses.");
         _maybe_destroy_trap(you.pos());
+    }
+
+    if (player_in_branch(BRANCH_MAIN_DUNGEON)
+        && you.depth == RUNE_LOCK_DEPTH
+        && (feat_is_stone_stair(stair_find) || feat_is_escape_hatch(stair_find)))
+    {
+        bool has_rune = false;
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+            {
+                has_rune = true;
+                break;
+            }
+
+        if (!has_rune)
+        {
+            mpr("You need a rune to go deeper.");
+            return;
+        }
     }
 
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
@@ -1068,6 +1084,9 @@ static void _update_level_state()
     for (monster_iterator mon_it; mon_it; ++mon_it)
         if (mons_allows_beogh(*mon_it))
             env.level_state |= LSTATE_BEOGH;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (grd(*ri) == DNGN_SLIMY_WALL)
+            env.level_state |= LSTATE_SLIMY_WALL;
 
     env.orb_pos = orb_position();
     if (player_has_orb())

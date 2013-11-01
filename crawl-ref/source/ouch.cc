@@ -291,7 +291,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         else if (rhe == 0)
             hurted /= 2;
         else if (rhe < -1)
-            hurted = (hurted * 3) / 2;
+            hurted = hurted * 3 / 2;
 
         if (hurted == 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
@@ -622,80 +622,6 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     return true;
 }
 
-bool expose_items_to_element(beam_type flavour, const coord_def& where,
-                             int strength)
-{
-    int num_dest = 0;
-
-    const int target_class = _get_target_class(flavour);
-    if (target_class == OBJ_UNASSIGNED)
-        return false;
-
-    // Beams fly *over* water and lava.
-    if (grd(where) == DNGN_LAVA || grd(where) == DNGN_DEEP_WATER)
-        return false;
-
-    for (stack_iterator si(where); si; ++si)
-    {
-        if (!si->defined())
-            continue;
-
-        if (si->base_type == target_class
-            || target_class == OBJ_FOOD && si->base_type == OBJ_CORPSES)
-        {
-            for (int j = 0; j < si->quantity; ++j)
-            {
-                if (x_chance_in_y(strength, 100))
-                {
-                    num_dest++;
-                    if (!dec_mitm_item_quantity(si->index(), 1)
-                        && is_blood_potion(*si))
-                    {
-                       remove_oldest_blood_potion(*si);
-                    }
-                }
-            }
-        }
-    }
-
-    if (!num_dest)
-        return false;
-
-    if (flavour == BEAM_DEVOUR_FOOD)
-        return true;
-
-    if (you.see_cell(where))
-    {
-        switch (target_class)
-        {
-        case OBJ_SCROLLS:
-            mprf("You see %s of smoke.",
-                 (num_dest > 1) ? "some puffs" : "a puff");
-            break;
-
-        case OBJ_POTIONS:
-            mprf("You see %s shatter.",
-                 (num_dest > 1) ? "some glass" : "glass");
-            break;
-
-        case OBJ_FOOD:
-            mprf("You see %s of spores.",
-                 (num_dest > 1) ? "some clouds" : "a cloud");
-            break;
-
-        default:
-            mprf("%s on the floor %s destroyed!",
-                 (num_dest > 1) ? "Some items" : "An item",
-                 (num_dest > 1) ? "were" : "was");
-            break;
-        }
-    }
-
-    xom_is_stimulated((num_dest > 1) ? 25 : 12);
-
-    return true;
-}
-
 // Handle side-effects for exposure to element other than damage.  This
 // function exists because some code calculates its own damage instead
 // of using check_your_resists() and we want to isolate all the special
@@ -715,6 +641,14 @@ bool expose_player_to_element(beam_type flavour, int strength,
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
+    }
+
+    if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
+    {
+        mpr("The flames go out!", MSGCH_WARN);
+        you.duration[DUR_LIQUID_FLAMES] = 0;
+        you.props.erase("napalmer");
+        you.props.erase("napalm_aux");
     }
 
     if (strength <= 0 || !damage_inventory)
@@ -1041,6 +975,8 @@ static void _wizard_restore_life()
 {
     if (you.hp_max <= 0)
         unrot_hp(9999);
+    while (you.hp_max <= 0)
+        you.hp_max_perm++, calc_hp();
     if (you.hp <= 0)
         set_hp(you.hp_max);
 }
@@ -1117,26 +1053,12 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
     {
-        if (you.duration[DUR_SONG_OF_SHIELDING] && you.magic_points > 0)
-        {
-            if (dam > you.magic_points)
-            {
-                dam = dam - you.magic_points;
-                dec_mp(you.magic_points);
-            }
-            else
-            {
-                dec_mp(dam);
-                dam = 0;
-                return;
-            }
-        }
         if (you.spirit_shield() && death_type != KILLED_BY_POISON
             && !(aux && strstr(aux, "flay_damage")))
         {
             // round off fairly (important for taking 1 damage at a time)
             int mp = div_rand_round(dam * you.magic_points,
-                                    you.hp + you.magic_points);
+                                    max(you.hp + you.magic_points, 1));
             // but don't kill the player with round-off errors
             mp = max(mp, dam + 1 - you.hp);
             mp = min(mp, you.magic_points);

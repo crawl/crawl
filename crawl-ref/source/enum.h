@@ -54,7 +54,6 @@ enum ability_type
     ABIL_BREATHE_MEPHITIC,
     ABIL_SPIT_ACID,
     ABIL_BLINK,
-
     // Others
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
@@ -74,6 +73,8 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
+    // Felids
+    ABIL_JUMP,
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
@@ -92,7 +93,8 @@ enum ability_type
 #endif
     ABIL_EVOKE_FOG,
     ABIL_EVOKE_TELEPORT_CONTROL,
-    ABIL_MAX_EVOKE = ABIL_EVOKE_TELEPORT_CONTROL,
+    ABIL_EVOKE_JUMP,
+    ABIL_MAX_EVOKE = ABIL_EVOKE_JUMP,
 
     // Divine abilities
     // Zin
@@ -696,7 +698,6 @@ enum command_type
     CMD_INSPECT_FLOOR,
     CMD_SHOW_TERRAIN,
     CMD_FULL_VIEW,
-    CMD_EXAMINE_OBJECT,
     CMD_EVOKE,
     CMD_EVOKE_WIELDED,
     CMD_WIELD_WEAPON,
@@ -727,7 +728,6 @@ enum command_type
     CMD_LOOK_AROUND,
     CMD_WAIT,
     CMD_SHOUT,
-    CMD_DISARM_TRAP,
     CMD_CHARACTER_DUMP,
     CMD_DISPLAY_COMMANDS,
     CMD_DISPLAY_INVENTORY,
@@ -750,7 +750,6 @@ enum command_type
     CMD_SUSPEND_GAME,
     CMD_QUIT,
     CMD_WIZARD,
-    CMD_DESTROY_ITEM,
 
     CMD_SEARCH_STASHES,
     CMD_EXPLORE,
@@ -1158,9 +1157,9 @@ enum level_state_type
 
     LSTATE_GOLUBRIA       = (1 << 0), // A Golubria trap exists.
     LSTATE_GLOW_MOLD      = (1 << 1), // Any glowing mold exists.
-
     LSTATE_DELETED        = (1 << 2), // The level won't be saved.
     LSTATE_BEOGH          = (1 << 3), // Possibly an orcish priest around.
+    LSTATE_SLIMY_WALL     = (1 << 4), // Any slime walls exist.
 };
 
 // NOTE: The order of these is very important to their usage!
@@ -1550,12 +1549,16 @@ enum duration_type
     DUR_SPIRIT_HOWL,
     DUR_INFUSION,
     DUR_SONG_OF_SLAYING,
+#if TAG_MAJOR_VERSION == 34
     DUR_SONG_OF_SHIELDING,
+#endif
     DUR_TOXIC_RADIANCE,
     DUR_RECITE,
     DUR_GRASPING_ROOTS,
     DUR_SLEEP_IMMUNITY,
     DUR_FIRE_VULN,
+    DUR_ELIXIR_HEALTH,
+    DUR_ELIXIR_MAGIC,
     DUR_ANTENNAE_EXTEND,
     NUM_DURATIONS
 };
@@ -1666,6 +1669,7 @@ enum enchant_type
     ENCH_GRASPING_ROOTS,
     ENCH_IOOD_CHARGED,
     ENCH_FIRE_VULN,
+    ENCH_TORNADO_COOLDOWN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2677,7 +2681,9 @@ enum monster_type                      // menv[].type
     MONS_STARSPAWN_TENTACLE_SEGMENT,
 
     MONS_SPATIAL_MAELSTROM,
+#if TAG_MAJOR_VERSION == 34
     MONS_CHAOS_BUTTERFLY,
+#endif
 
     MONS_JORGRUN,
     MONS_LAMIA,
@@ -2744,13 +2750,13 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_SPECTRAL_WEAPON,
 #endif
-
     MONS_ELEMENTAL_WELLSPRING,
-
+#if TAG_MAJOR_VERSION == 34
     MONS_POLYMOTH,
+#endif
 
     MONS_DEATHCAP,
-
+    MONS_IGNIS,
     MONS_FORMICID,
     MONS_FORMICID_DRONE,
     MONS_FORMICID_VENOM_MAGE,
@@ -2890,6 +2896,7 @@ enum mutation_type
     MUT_HEAT_RESISTANCE,
     MUT_HERBIVOROUS,
     MUT_HURL_HELLFIRE,
+
     MUT_FAST,
     MUT_FAST_METABOLISM,
 #if TAG_MAJOR_VERSION == 34
@@ -2956,6 +2963,7 @@ enum mutation_type
     MUT_CLING,
 #endif
     MUT_FUMES,
+    MUT_JUMP,
     MUT_EXOSKELETON,
     NUM_MUTATIONS,
 
@@ -3003,7 +3011,6 @@ enum operation_types
     OPER_READ     = 'r',
     OPER_MEMORISE = 'M',
     OPER_ZAP      = 'Z',
-    OPER_EXAMINE  = 'x',
     OPER_FIRE     = 'f',
     OPER_PRAY     = 'p',
     OPER_EVOKE    = 'v',
@@ -3130,6 +3137,7 @@ enum artefact_prop_type
     ARTP_FOG,
 #endif
     ARTP_REGENERATION,
+    ARTP_NO_UPGRADE,
     ARTP_NUM_PROPERTIES
 };
 
@@ -3590,10 +3598,10 @@ enum spell_type
     SPELL_SUMMON_MINOR_DEMON,
     SPELL_DISJUNCTION,
     SPELL_CHAOS_BREATH,
-#if TAG_MAJOR_VERSION == 34
     SPELL_FRENZY,
-#endif
+#if TAG_MAJOR_VERSION == 34
     SPELL_SUMMON_TWISTER,
+#endif
     SPELL_BATTLESPHERE,
     SPELL_FULMINANT_PRISM,
     SPELL_DAZZLING_SPRAY,
@@ -3619,7 +3627,9 @@ enum spell_type
     SPELL_INFUSION,
     SPELL_SONG_OF_SLAYING,
     SPELL_SPECTRAL_WEAPON,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SONG_OF_SHIELDING,
+#endif
     SPELL_SUMMON_VERMIN,
     SPELL_MALIGN_OFFERING,
     SPELL_SEARING_RAY,
@@ -3650,6 +3660,7 @@ enum targetting_type
     DIR_TARGET,        // smite targetting
     DIR_DIR,           // needs a clear line to target
     DIR_TARGET_OBJECT, // targets items
+    DIR_JUMP,          // a jump target
 };
 
 enum torment_source_type
@@ -3913,6 +3924,13 @@ enum uncancellable_type
     UNC_MERCENARY,             // arg is mid of the monster
 };
 
+// game-wide random seeds
+enum seed_type
+{
+    SEED_PASSIVE_MAP,          // determinist magic mapping
+    NUM_SEEDS
+};
+
 // Tiles stuff.
 
 enum screen_mode
@@ -3983,6 +4001,8 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_BLIND      = 0x200000000000ULL,
     TILE_FLAG_ANIM_WEP   = 0x400000000000ULL,
     TILE_FLAG_SUMMONED   = 0x800000000000ULL,
+    TILE_FLAG_PERM_SUMMON= 0x1000000000000ULL,
+
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,
@@ -4046,6 +4066,10 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_STARSPAWN_SW = 0x10000000000ULL,
 
     //// General
+
+    // Should go up with RAY/RAY_OOR, but they need to be exclusive for those
+    // flags and there's no room.
+    TILE_FLAG_LANDING     = 0x20000000000ULL,
 
     // Mask for the tile index itself.
     TILE_FLAG_MASK       = 0x0000FFFFULL,

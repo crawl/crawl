@@ -121,7 +121,7 @@ function wizlab_portal (e)
     e.kfeat("O = enter_portal_vault")
     e.tile("O = no_random dngn_portal_wizard_lab")
     e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
-    e.chance("5%")
+    e.chance(500)
 end
 
 -- Destinations:
@@ -181,31 +181,15 @@ function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
 
   local count = 0
 
-  if crawl.one_chance_in(5) then
-    -- Fruit!
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and crawl.one_chance_in(3) then
-        dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
-                          .. "/ banana / strawberry q:4 / lemon / rambutan "
-                          .. "/ grape q:7 / sultana q:9 / lychee")
-        count = count + 1
-      end
+  for spot in iter.adjacent_iterator() do
+    if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
+       and not crawl.one_chance_in(3) then
+      dgn.create_monster(spot.x, spot.y, "toadstool")
+      count = count + 1
     end
-    if count > 0 then
-      crawl.mpr("Fruit sprouts up around you!")
-    end
-  else
-    for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-         and not crawl.one_chance_in(3) then
-        dgn.create_monster(spot.x, spot.y, "toadstool")
-        count = count + 1
-      end
-    end
-    if count > 0 then
-      crawl.mpr("Toadstools sprout up around you!")
-    end
+  end
+  if count > 0 then
+    crawl.mpr("Toadstools sprout up around you!")
   end
 end
 
@@ -734,7 +718,7 @@ KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other
 KITEM:      9 = scroll of acquirement
 :           set_feature_name("clear_rock_wall", "crystal clear mirror")
 :           set_feature_name("granite_statue", "strange machine")
-:           set_feature_name("dry_fountain_blue", "glistening fountain")
+:           set_feature_name("dry_fountain", "glistening fountain")
 :           set_feature_name("stone_wall", "black marble wall")
 :           set_feature_name("floor", "marble floor")
 :           set_random_mon_list("dancing weapon")

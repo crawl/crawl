@@ -59,8 +59,7 @@ struct cloud_info
 struct map_cell
 {
     map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _cloud(0), _item(0), _mons(0),
-                 _trap(TRAP_UNASSIGNED)
+                 _trap(TRAP_UNASSIGNED), _cloud(0), _item(0), _mons(0)
     {
     }
 
@@ -120,7 +119,10 @@ struct map_cell
 
     dungeon_feature_type feat() const
     {
-        return _feat;
+        // Ugh; MSVC makes the bit field signed even though that means it can't
+        // actually hold all the enum values. That seems to be in contradiction
+        // of the standard (§9.6 [class.bit] paragraph 4) but what can you do?
+        return dungeon_feature_type(uint8_t(_feat));
     }
 
     unsigned feat_colour() const
@@ -289,31 +291,17 @@ public:
 private:
     dungeon_feature_type _feat:8;
     colour_t _feat_colour;
+    trap_type _trap:8;
     cloud_info* _cloud;
     item_info* _item;
     monster_info* _mons;
-    trap_type _trap:8;
 };
 
-void set_terrain_mapped(int x, int y);
-static inline void set_terrain_mapped(const coord_def& c)
-{
-    set_terrain_mapped(c.x,c.y);
-}
+void set_terrain_mapped(const coord_def c);
+void set_terrain_seen(const coord_def c);
+void set_terrain_changed(const coord_def c);
 
-void set_terrain_seen(int x, int y);
-static inline void set_terrain_seen(const coord_def& c)
-{
-    set_terrain_seen(c.x, c.y);
-}
-
-void set_terrain_changed(int x, int y);
-static inline void set_terrain_changed(const coord_def &c)
-{
-    set_terrain_changed(c.x, c.y);
-}
-
-void set_terrain_visible(const coord_def &c);
+void set_terrain_visible(const coord_def c);
 void clear_terrain_visibility();
 
 int count_detected_mons(void);

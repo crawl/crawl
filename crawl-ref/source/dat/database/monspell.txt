@@ -432,10 +432,6 @@ angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
 %%%%
-chaos butterfly cast
-
-@The_monster@ flaps its wings furiously.
-%%%%
 dragon cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.

@@ -71,7 +71,7 @@ zip-app-bundle:
 create-bundle-directory: $(BUNDLE_DIRNAME)
 
 $(BUNDLE_DIRNAME):
-	mkdir -p "$@"/Contents/{MacOS,Resources}
+	mkdir -p "$@"/Contents/{MacOS/contrib,Resources}
 
 # The console Crawl bundle has a shell script launcher that uses the
 # real executable from Contents/Resources, so an extra copy for the wrapper+
@@ -83,6 +83,9 @@ ifndef TILE_APP
 endif
 
 copy-resources:
+ifdef TILE_APP
+	cp -r $(CRAWL_SRC)/contrib/fonts $(BUNDLE_DIRNAME)/Contents/MacOS/contrib
+endif
 	cp $(CRAWL_SRC)/mac/Crawl.icns $(RESOURCES)
 	cp -r $(CRAWL_BASE)/settings $(RESOURCES)
 	cp -r $(CRAWL_SRC)/dat $(RESOURCES)

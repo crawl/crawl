@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 #include "mon-death.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -20,7 +21,6 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"

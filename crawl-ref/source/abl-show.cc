@@ -40,6 +40,7 @@
 #include "evoke.h"
 #include "macro.h"
 #include "maps.h"
+#include "melee_attack.h"
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
@@ -111,6 +112,7 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 static string _zd_mons_description_for_ability(const ability_def &abil);
 static monster_type _monster_for_ability(const ability_def& abil);
+static bool _jump_player(int jump_range);
 
 /**
  * This all needs to be split into data/util/show files
@@ -225,6 +227,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_JUMP, "Jump Attack", 0, 0, 125, 0, 0, ABFLAG_EXHAUSTION},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
 
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
@@ -255,6 +258,7 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_EVOKE_JUMP, "Evoke Jump Attack", 2, 0, 125, 0, 0, ABFLAG_EXHAUSTION},
     { ABIL_EVOKE_FLIGHT, "Evoke Flight", 1, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_FOG, "Evoke Fog", 2, 0, 250, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_TELEPORT_CONTROL, "Evoke Teleport Control", 4, 0, 200, 0, 0, ABFLAG_NONE},
@@ -917,7 +921,6 @@ talent get_talent(ability_type ability, bool check_confused)
         if (you.form == TRAN_DRAGON)
             failure -= 20;
         break;
-
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
     case ABIL_SPIT_ACID:
@@ -936,6 +939,10 @@ talent get_talent(ability_type ability, bool check_confused)
 
         if (you.form == TRAN_DRAGON)
             failure -= 20;
+        break;
+
+    case ABIL_JUMP:
+        failure = 25 - you.experience_level;
         break;
 
     case ABIL_FLY:
@@ -991,7 +998,9 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_EVOKE_BLINK:
         failure = 40 - you.skill(SK_EVOCATIONS, 2);
         break;
-
+    case ABIL_EVOKE_JUMP:
+        failure = 30 - you.skill(SK_EVOCATIONS, 2);
+        break;
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_FOG:
     case ABIL_EVOKE_TELEPORT_CONTROL:
@@ -1367,7 +1376,7 @@ static bool _check_ability_possible(const ability_def& abil,
         }
     }
     // Don't insta-starve the player.
-    // (Happens at 100, losing consciousness possible from 500 downward.)
+    // (Losing consciousness possible from 400 downward.)
     if (hungerCheck && !you.is_undead)
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
@@ -1375,7 +1384,7 @@ static bool _check_ability_possible(const ability_def& abil,
             dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
                  you.hunger, abil.food_cost * 2, expected_hunger);
         // Safety margin for natural hunger, mutations etc.
-        if (expected_hunger <= 150)
+        if (expected_hunger <= 50)
         {
             if (!quiet)
                 canned_msg(MSG_TOO_HUNGRY);
@@ -1556,9 +1565,8 @@ bool activate_talent(const talent& tal)
     // Doing these would outright kill the player.
     if (tal.which == ABIL_STOP_FLYING)
     {
-        if ((grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
-             || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
-            && !djinni_floats())
+        if (grd(you.pos()) == DNGN_DEEP_WATER && !player_likes_water()
+            || grd(you.pos()) == DNGN_LAVA && !player_likes_lava())
         {
             mpr("Stopping flight right now would be fatal!");
             crawl_state.zero_turns_taken();
@@ -1596,6 +1604,13 @@ bool activate_talent(const talent& tal)
 
     if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
         && !you.can_go_berserk(true))
+    {
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    if ((tal.which == ABIL_EVOKE_JUMP || tal.which == ABIL_JUMP)
+        && !you.can_jump())
     {
         crawl_state.zero_turns_taken();
         return false;
@@ -1644,7 +1659,7 @@ bool activate_talent(const talent& tal)
     // Note that mutation shenanigans might leave us with negative MP,
     // so don't fail in that case if there's no MP cost.
     if (abil.mp_cost > 0
-        && !enough_mp(abil.mp_cost, false, !(abil.flags & ABFLAG_PERMANENT_MP)))
+        && !enough_mp(abil.mp_cost, false, true, !(abil.flags & ABFLAG_PERMANENT_MP)))
     {
         crawl_state.zero_turns_taken();
         return false;
@@ -1904,7 +1919,15 @@ static bool _do_ability(const ability_def& abil)
 
         break;
     }
+    case ABIL_JUMP:
+    {
+        if (!_jump_player(player_mutation_level(MUT_JUMP) + 2))
+            return false;
 
+        you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
+                              + random2(30 - you.experience_level));
+        break;
+    }
     case ABIL_RECHARGING:
         if (recharge_wand() <= 0)
             return false; // fail message is already given
@@ -2196,7 +2219,15 @@ static bool _do_ability(const ability_def& abil)
         else
             fly_player(you.skill(SK_EVOCATIONS, 2) + 30);
         break;
+    case ABIL_EVOKE_JUMP:
+    {
+        if (!_jump_player(3))
+            return false;
 
+        you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
+                              + random2(30 - you.skill(SK_EVOCATIONS, 1)));
+        break;
+    }
     case ABIL_EVOKE_FOG:     // cloak of the Thief
         mpr("With a swish of your cloak, you release a cloud of fog.");
         big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
@@ -3156,6 +3187,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
     }
 
+    if (player_mutation_level(MUT_JUMP))
+        _add_talent(talents, ABIL_JUMP, check_confused);
+
     // Spit Poison. Nagas can upgrade to Breathe Poison.
     if (you.species == SP_NAGA)
     {
@@ -3202,7 +3236,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if ((you.species == SP_TENGU && you.experience_level >= 5
          || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()
-        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
+        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
+           && you.species != SP_DJINNI)
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
@@ -3300,6 +3335,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                     _add_talent(talents, ABIL_STOP_FLYING, check_confused);
             }
         }
+
+        if (you.evokable_jump())
+            _add_talent(talents, ABIL_EVOKE_JUMP, check_confused);
 
         if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
             && !crawl_state.game_is_sprint())
@@ -3574,4 +3612,36 @@ int generic_cost::cost() const
 int scaling_cost::cost(int max) const
 {
     return (value < 0) ? (-value) : ((value * max + 500) / 1000);
+}
+
+
+bool _jump_player(int jump_range)
+{
+    coord_def landing;
+    direction_chooser_args args;
+    targetter_jump tgt(&you, jump_range);
+    dist jdirect;
+
+    args.restricts = DIR_JUMP;
+    args.mode = TARG_HOSTILE;
+    args.just_looking = false;
+    args.needs_path = true;
+    args.may_target_monster = true;
+    args.may_target_self = false;
+    args.target_prefix = NULL;
+    args.top_prompt = "Aiming: <white>Jump Attack</white>";
+    args.behaviour = NULL;
+    args.cancel_at_self = true;
+    args.hitfunc = &tgt;
+    args.range = jump_range;
+    direction(jdirect, args);
+    if (!jdirect.isValid)
+    {
+        // Check for user cancel.
+        canned_msg(MSG_OK);
+        return false;
+    }
+    return fight_jump(&you, actor_at(jdirect.target), jdirect.target,
+                      tgt.landing_site, tgt.additional_sites,
+                      tgt.jump_is_blocked);
 }

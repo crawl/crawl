@@ -1,0 +1,225 @@
+%%%%
+A closed door
+
+Drewniane drzwi. Aby je otworzyć, po prostu do nich podejdź, lub wciśnij 'O'
+%%%%
+A dart trap
+
+Ta pułapka strzela lekkimi metalowymi kolcami. Sama raczej nikogo nie zabije,
+ale może być wystarczająco silna, by poradzić sobie z kimś ledwo żywym
+uciekającym przed potworami.
+%%%%
+A detected altar
+
+To jakiś ołtarz. Musisz podejść bliżej, jeśli chcesz poznać jakiemu bóstwu jest
+poświęcone.
+%%%%
+A dry fountain
+
+Wysuszona fontanna, która najlepsze dni ma już za sobą.
+%%%%
+A fountain of clear blue water
+
+Wciśnij 'q' by napić się z tego źródła. Nie, żeby to miało jakikolwiek efekt...
+%%%%
+A fountain of blood
+
+Wciśnij 'q' jeśli chcesz napić się z tego źródła, jeśli tak bardzo tego
+pragniesz.
+%%%%
+A fountain of sparkling water
+
+Wciśnij 'q' aby napić się z tego magicznego źródła. Spodziewaj się magicznych
+efektów.
+%%%%
+A gate leading back out of here
+
+Ta brama zdaje się odprowadzić cię do miejsca, z którego przybyłeś.
+%%%%
+A gate leading back out of this place
+
+Ta brama prowadzi z powrotem do lochów.
+%%%%
+A gate leading out of Pandemonium
+
+Nareszcie, brama prowadząca z powrotem do lochów.
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+To miejsce zdaje się promieniować negatywną energią
+%%%%
+A shaft
+
+Głęboka dziura. Kto wie dokąd byś doleciał, gdybyś do niej wpadł.
+%%%%
+A staircase back to the Crypt
+
+Te schody prowadzą z powrotem do Krypty.
+%%%%
+A staircase back to the Vaults
+
+Te schody prowadzą do potężnych Skarbców.
+%%%%
+A stone staircase leading down
+
+Te schody prowadzą dalej w dół.
+%%%%
+A stone staircase leading up
+
+Te schody prowadzą w górę.
+%%%%
+A short-range portal
+
+Wejście w ten teleporter przeniesie cię do innego pokoju
+%%%%
+A teleport trap
+
+Ta magiczna pułapka przeniesie każdego, kto na niej stanie - a nawet przeleci
+nad nią - do losowego miejsca na tym samym poziomie lochów.
+%%%%
+A translucent unnaturally hard rock wall
+
+Ta ściana jest nasycona magią, która sprawia, że nie tylko jest niezniszczalna
+ale i przeźroczysta niczym szkło.
+%%%%
+A web
+
+Pająk, który pozostawił tą sieć musiał być ogromny, wygląda bardziej na
+stworzoną do łapania {{ return you.genus(true) }} niż zwykłych much.
+%%%%
+An abandoned shop
+
+Ten sklep został opuszczony
+%%%%
+An alarm trap
+
+Ta pułapka nie zadaje obrażeń, lecz jej silne odgłosy mogą sprowadzić kogoś,
+kto te obrażenia może zadać. Oczywiście ty tego kogoś także możesz zranić.
+%%%%
+An ancient bone altar of Kikubaaqudgha
+
+Starożytne kości zostały tutaj powbijane tworzą ołtarz dla okropnego
+Boga-Demona Kikubaaqudgha.
+%%%%
+An iron altar of Okawaru
+
+Ołtarz z żelaza i stali poświęcony Bogowi Wojny Okawaru. Krawędzie są
+zadziwiająco ostre.
+%%%%
+An iron grate
+
+Ta żelazna krata wygląda na podrdzewiałą, można by ją rozkruszyć przy pomocy
+zaklęcia lub różdżki. Wciąż jednak jest zbyt silna, żeby zniszczyć ją gołymi
+rękami.
+%%%%
+An orcish idol
+
+Figurka boga orków Beogha. Zniszczenie jej może go rozgniewać
+%%%%
+An empty arch of stone
+
+To portal, którym tutaj przybyłeś; wygląda na całkowicie pozbawiony magii
+%%%%
+A glistening fountain
+
+Jedyną rzeczą, której brakuje jest woda.
+%%%%
+A rose-covered archway
+
+Róże wyglądają pięknie!
+%%%%
+A crumbling stone wall
+
+Wygląda na antyczne.
+%%%%
+Viscous fluid
+
+Ta lepka substancja zdaje się wydobywać z pobliskich ścian. Wygląda obrzydliwie
+%%%%
+A thin membrane
+
+Ta dziwna błona jest na tyle cienka, by widzieć przez nią.
+%%%%
+Zonguldrok's gravestone
+
+Nagrobek. Imię 'Zonguldrok' jest wygrawerowane złotymi literami.
+%%%%
+A gravestone
+
+Bezimienny grób. Pozostaje pytanie: czy to grób jest bezimienny, czy osoba,
+która w nim leży?
+%%%%
+The ground
+
+Nie widać tutaj oznak życia. Jest całkowicie wymarłe.
+%%%%
+A carved rock wall
+
+Jest udekorowany obrazami śmierci i zniszczenia.
+%%%%
+A dead tree
+
+To drzewo jest tak samo martwe jak wszystko wokół.
+%%%%
+An iron statue
+
+Posąg nie ma ust. Straszne!
+%%%%
+Ashen ground
+
+Każdy twój krok stawiasz na popiele. Jest ciepły i nawet przyjemny
+%%%%
+A tempered metal wall
+
+Te metalowe ściany emitują ciepło
+%%%%
+An ice-covered rock wall
+
+Skalny mur pokryty cienką warstwą lodu.
+%%%%
+An ice-covered stone wall
+
+Kamienny mur pokryty cienką warstwą lodu
+%%%%
+Frost-covered floor
+
+Zamrożona podłoga. Miło chrupie pod stopami
+%%%%
+A silver wall
+
+Ta ściana jest zbudowana z czystego srebra.
+%%%%
+A sarcophagus
+
+Starożytny sarkofag. Wygląda na pusty
+%%%%
+An adventurer's gravestone
+
+Grób podróżnika, który był już blisko zwycięztwa.
+%%%%
+An ice choked empty arch of ancient stone
+
+Wygląda na to, że portal, którym tutaj przybyłeś był nieużywany przez wieki.
+Nie tylko wygląda na stary i bezużyteczny, ale jest prawie całkowicie pokryty
+grubą warstwą lodu.
+
+Na szczęście widzisz inny portal niedaleko.
+%%%%
+Some ice crusted deep water
+
+Lód jest tutaj popękany na kawałki a woda, na której się unosi nie jest zbyt
+zachęcająca.
+%%%%
+An elephant-shaped statue
+
+Ten podniszczony posąg przedstawia strażnika pod postacią słonia.
+%%%%
+A weirdly glowing ball
+
+Ta unosząca się kula promieniuje migającym światłem
+%%%%
+A flickering gateway to a bazaar
+
+Świecący portal do bazaru, gdzie wędrowni kupcy zbierają się, by sprzedać swój
+towar. Nie zostają na długo w jednym miejscu.
+%%%%

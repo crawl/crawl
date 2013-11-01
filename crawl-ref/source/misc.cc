@@ -22,6 +22,7 @@
 #include "misc.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "clua.h"
@@ -55,7 +56,6 @@
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "ng-setup.h"
 #include "notes.h"
@@ -130,7 +130,7 @@ static void _create_monster_hide(const item_def corpse)
 
 void maybe_drop_monster_hide(const item_def corpse)
 {
-    if (monster_descriptor(corpse.mon_type, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+    if (mons_class_leaves_hide(corpse.mon_type) && !one_chance_in(3))
         _create_monster_hide(corpse);
 }
 
@@ -498,7 +498,7 @@ static string _get_desc_quantity(const int quant, const int total)
         return "One of your";
     else if (quant == 2)
         return "Two of your";
-    else if (quant >= (total * 3) / 4)
+    else if (quant >= total * 3 / 4)
         return "Most of your";
     else
         return "Some of your";
@@ -1668,7 +1668,8 @@ bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
                                  require_visible).empty());
 }
 
-static const char *shop_types[] = {
+static const char *shop_types[] =
+{
     "weapon",
     "armour",
     "antique weapon",
@@ -1714,21 +1715,21 @@ static void monster_threat_values(double *general, double *highest,
     double sum = 0;
     int highest_xp = -1;
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if (!mi->friendly())
+        if (mi->friendly())
+            continue;
+
+        const int xp = exper_value(*mi);
+        const double log_xp = log((double)xp);
+        sum += log_xp;
+        if (xp > highest_xp)
         {
-            const int xp = exper_value(*mi);
-            const double log_xp = log((double)xp);
-            sum += log_xp;
-            if (xp > highest_xp)
-            {
-                highest_xp = xp;
-                *highest   = log_xp;
-            }
-            if (!you.can_see(*mi))
-                *invis = true;
+            highest_xp = xp;
+            *highest   = log_xp;
         }
+        if (!mi->visible_to(&you))
+            *invis = true;
     }
 
     *general = sum;
@@ -2226,17 +2227,33 @@ int speed_to_duration(int speed)
     return div_rand_round(100, speed);
 }
 
-bool bad_attack(const monster *mon, string& adj, string& suffix)
+bool bad_attack(const monster *mon, string& adj, string& suffix,
+                coord_def attack_pos, bool check_landing_only)
 {
     ASSERT(!crawl_state.game_is_arena());
+    bool bad_landing = false;
+
     if (!you.can_see(mon))
         return false;
+
+    if (attack_pos == coord_def(0, 0))
+        attack_pos = you.pos();
 
     adj.clear();
     suffix.clear();
 
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+    if (!check_landing_only
+        && (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos)))
+    {
         suffix = ", despite your sanctuary";
+    }
+    else if (check_landing_only && is_sanctuary(attack_pos))
+    {
+        suffix = ", when you might land in your sanctuary";
+        bad_landing = true;
+    }
+    if (check_landing_only)
+        return bad_landing;
 
     if (mon->friendly())
     {
@@ -2269,13 +2286,13 @@ bool bad_attack(const monster *mon, string& adj, string& suffix)
     {
         return true;
     }
-
-    return !adj.empty() || !suffix.empty();
+    return (!adj.empty() || !suffix.empty());
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first,
-                        bool *prompted)
+                        bool *prompted, coord_def attack_pos,
+                        bool check_landing_only)
 {
     if (prompted)
         *prompted = false;
@@ -2287,7 +2304,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         return false;
 
     string adj, suffix;
-    if (!bad_attack(mon, adj, suffix))
+    if (!bad_attack(mon, adj, suffix, attack_pos, check_landing_only))
         return false;
 
     // Listed in the form: "your rat", "Blork the orc".
@@ -2334,7 +2351,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 }
 
 bool stop_attack_prompt(targetter &hitfunc, string verb,
-                        bool (*affects)(const actor *victim))
+                        bool (*affects)(const actor *victim), bool *prompted)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])
         return false;
@@ -2379,6 +2396,8 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
     snprintf(info, INFO_SIZE, "Really %s %s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());
 
+    if (prompted)
+        *prompted = true;
     if (yesno(info, false, 'n'))
         return false;
     else

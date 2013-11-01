@@ -1,7 +1,49 @@
 #include "AppHdr.h"
 
 #include <math.h>
+#include "asg.h"
 #include "random.h"
+#include "syscalls.h"
+
+#ifdef UNIX
+// for times()
+#include <sys/times.h>
+#endif
+
+// for getpid()
+#include <sys/types.h>
+#ifndef TARGET_COMPILER_VC
+# include <unistd.h>
+#else
+# include <process.h>
+#endif
+
+void seed_rng(uint32_t seed)
+{
+    uint32_t sarg[1] = { seed };
+    seed_asg(sarg, 1);
+}
+
+void seed_rng()
+{
+    /* Use a 160-bit wide seed */
+    uint32_t seed_key[5];
+    read_urandom((char*)(&seed_key), sizeof(seed_key));
+
+#ifdef UNIX
+    struct tms buf;
+    seed_key[0] += times(&buf);
+#endif
+    seed_key[1] += getpid();
+    seed_key[2] += time(NULL);
+
+    seed_asg(seed_key, 5);
+}
+
+uint32_t random_int()
+{
+    return get_uint32();
+}
 
 // [low, high]
 int random_range(int low, int high)
@@ -45,6 +87,30 @@ const char* random_choose<const char*>(const char* first, ...)
     return chosen;
 }
 
+const char* random_choose_weighted(int weight, const char* first, ...)
+{
+    va_list args;
+    va_start(args, first);
+    const char* chosen = first;
+    int cweight = weight, nargs = 100;
+
+    while (nargs-- > 0)
+    {
+        const int nweight = va_arg(args, int);
+        if (!nweight)
+            break;
+
+        const char* choice = va_arg(args, const char*);
+        if (random2(cweight += nweight) < nweight)
+            chosen = choice;
+    }
+
+    va_end(args);
+    ASSERT(nargs > 0);
+
+    return chosen;
+}
+
 #ifndef UINT32_MAX
 #define UINT32_MAX ((uint32_t)(-1))
 #endif
@@ -59,7 +125,25 @@ int random2(int max)
 
     while (true)
     {
-        uint32_t bits = random_int();
+        uint32_t bits = get_uint32();
+        uint32_t val  = bits / partn;
+
+        if (val < (uint32_t)max)
+            return ((int)val);
+    }
+}
+
+// [0, max), separate RNG state
+int ui_random(int max)
+{
+    if (max <= 1)
+        return 0;
+
+    uint32_t partn = UINT32_MAX / max;
+
+    while (true)
+    {
+        uint32_t bits = get_uint32();
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
@@ -257,13 +341,13 @@ int binomial_generator(unsigned n_trials, unsigned trial_prob)
 // range [0, 1.0)
 double random_real()
 {
-    return random_int() / 4294967296.0;
+    return get_uint32() / 4294967296.0;
 }
 
 // range [0, 1.0]
 double random_real_inc()
 {
-    return random_int() / 4294967295.0;
+    return get_uint32() / 4294967295.0;
 }
 
 // range [0, 1.0], weighted to middle with multiple rolls
@@ -332,7 +416,7 @@ bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
     do
     {
         if (index == int(bits.size()))
-            bits.push_back(random_int());
+            bits.push_back(get_uint32());
 
         uint64_t expn_rand_1 = uint64_t(bits[index++]) * y;
         uint64_t expn_rand_2 = expn_rand_1 + y;
@@ -355,7 +439,7 @@ int defer_rand::random2(int maxp1)
         return 0;
 
     if (bits.empty())
-        bits.push_back(random_int());
+        bits.push_back(get_uint32());
 
     uint64_t expn_rand_1 = uint64_t(bits[0]) * maxp1;
     uint64_t expn_rand_2 = expn_rand_1 + maxp1;

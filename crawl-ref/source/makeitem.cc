@@ -186,7 +186,7 @@ static int _missile_colour(const item_def &item)
         break;
     case NUM_SPECIAL_MISSILES:
     case NUM_REAL_SPECIAL_MISSILES:
-        die("invalid missile brand");
+        die("invalid missile type");
     }
     return item_colour;
 }
@@ -802,22 +802,40 @@ static weapon_type _determine_weapon_subtype(int item_level)
 {
     weapon_type rc = WPN_UNKNOWN;
 
-    const weapon_type common_subtypes[] = {
+    const weapon_type common_subtypes[] =
+    {
         WPN_SLING,
-        WPN_SPEAR, WPN_HAND_AXE, WPN_MACE,
-        WPN_DAGGER, WPN_DAGGER, WPN_CLUB,
-        WPN_WHIP, WPN_SHORT_SWORD
+        WPN_SPEAR,
+        WPN_HAND_AXE,
+        WPN_MACE,
+        WPN_DAGGER, WPN_DAGGER,
+        WPN_CLUB,
+        WPN_WHIP,
+        WPN_SHORT_SWORD
     };
 
-    const weapon_type good_common_subtypes[] = {
-        WPN_QUARTERSTAFF, WPN_FALCHION, WPN_LONG_SWORD, WPN_WAR_AXE,
-        WPN_TRIDENT, WPN_FLAIL, WPN_SABRE
+    const weapon_type good_common_subtypes[] =
+    {
+        WPN_QUARTERSTAFF,
+        WPN_FALCHION,
+        WPN_LONG_SWORD,
+        WPN_WAR_AXE,
+        WPN_TRIDENT,
+        WPN_FLAIL,
+        WPN_SABRE,
     };
 
-    const weapon_type rare_subtypes[] = {
-        WPN_LAJATANG, WPN_DEMON_WHIP, WPN_DEMON_BLADE,
-        WPN_DEMON_TRIDENT, WPN_DOUBLE_SWORD, WPN_EVENINGSTAR,
-        WPN_EXECUTIONERS_AXE, WPN_QUICK_BLADE, WPN_TRIPLE_SWORD,
+    const weapon_type rare_subtypes[] =
+    {
+        WPN_LAJATANG,
+        WPN_DEMON_WHIP,
+        WPN_DEMON_BLADE,
+        WPN_DEMON_TRIDENT,
+        WPN_DOUBLE_SWORD,
+        WPN_EVENINGSTAR,
+        WPN_EXECUTIONERS_AXE,
+        WPN_QUICK_BLADE,
+        WPN_TRIPLE_SWORD,
     };
 
     if (item_level > 6 && one_chance_in(30)
@@ -1310,9 +1328,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (one_chance_in(3))
-                rc = SPWPN_REACHING;
-
             if (one_chance_in(8))
                 rc = SPWPN_DRAINING;
 
@@ -1441,17 +1456,11 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 
-            if (one_chance_in(5))       // 4.9% whips, 7.3% rest
+            if (one_chance_in(5))       // 7.3%
                 rc = SPWPN_VAMPIRICISM;
 
-            if (one_chance_in(10))      // 2.7% whips, 4.0% rest
+            if (one_chance_in(10))      // 4.0%
                 rc = SPWPN_PAIN;
-
-            if (one_chance_in(3)        // 13.6% of whips
-                && item.sub_type == WPN_DEMON_WHIP)
-            {
-                rc = SPWPN_REACHING;
-            }
 
             if (one_chance_in(5))       // 10.2%
                 rc = SPWPN_DRAINING;
@@ -1508,12 +1517,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         return false;
     }
 
-    if (weapon_skill(OBJ_WEAPONS, type) == SK_POLEARMS
-        && brand == SPWPN_REACHING)
-    {
-        return false;
-    }
-
     if (type == WPN_BLOWGUN)
     {
         switch ((brand_type)brand)
@@ -1549,13 +1552,8 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_VAMPIRICISM:
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
-    case SPWPN_REACHING:
     case SPWPN_ANTIMAGIC:
     case SPWPN_REAPING:
-#if TAG_MAJOR_VERSION == 34
-    case SPWPN_ORC_SLAYING:
-    case SPWPN_RETURNING:
-#endif
         if (is_range_weapon(item))
             return false;
         break;
@@ -1568,6 +1566,14 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         if (!is_range_weapon(item))
             return false;
         break;
+
+#if TAG_MAJOR_VERSION == 34
+    // Removed brands.
+    case SPWPN_RETURNING:
+    case SPWPN_REACHING:
+    case SPWPN_ORC_SLAYING:
+        return false;
+#endif
 
     case SPWPN_ACID:
     case SPWPN_CONFUSE:
@@ -2230,13 +2236,14 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_NAGA_BARDING:
     case ARM_CENTAUR_BARDING:
     {
-        const int tmp = random2(600) + 200 * (item.sub_type != ARM_BOOTS);
+        const int tmp = random2(800) + 400 * (item.sub_type != ARM_BOOTS);
 
         rc = (tmp < 200) ? SPARM_RUNNING :
-             (tmp < 400) ? SPARM_FLYING :
-             (tmp < 600) ? SPARM_STEALTH :
-             (tmp < 700) ? SPARM_COLD_RESISTANCE
-                         : SPARM_FIRE_RESISTANCE;
+             (tmp < 400) ? SPARM_JUMPING :
+             (tmp < 600) ? SPARM_FLYING :
+             (tmp < 800) ? SPARM_STEALTH :
+             (tmp < 1000) ? SPARM_COLD_RESISTANCE
+                          : SPARM_FIRE_RESISTANCE;
         break;
     }
 
@@ -2306,11 +2313,11 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         // deliberate fall-through
     case SPARM_RUNNING:
     case SPARM_STEALTH:
+    case SPARM_JUMPING:
         return (slot == EQ_BOOTS);
 
     case SPARM_ARCHMAGI:
-        return (strict ? (type == ARM_ROBE)
-                       : (slot == EQ_BODY_ARMOUR));
+        return (!strict || type == ARM_ROBE);
 
     case SPARM_PONDEROUSNESS:
         return true;
@@ -2363,7 +2370,6 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_SPIRIT_SHIELD:
         return (type == ARM_CAP || slot == EQ_SHIELD || !strict);
-
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
@@ -3530,9 +3536,6 @@ static armour_type _get_random_armour_type(int item_level)
                                            ARM_CHAIN_MAIL };
 
         armtype = RANDOM_ELEMENT(lowarmours);
-
-        if (one_chance_in(4))
-            armtype = ARM_ANIMAL_SKIN;
     }
 
     if (x_chance_in_y(11 + item_level, 60))
@@ -3562,8 +3565,7 @@ static armour_type _get_random_armour_type(int item_level)
     {
         // Animal skins and high-level armours, including the rest of
         // the dragon armours.
-        const armour_type morehiarmours[] = { ARM_ANIMAL_SKIN,
-                                              ARM_STEAM_DRAGON_HIDE,
+        const armour_type morehiarmours[] = { ARM_STEAM_DRAGON_HIDE,
                                               ARM_STEAM_DRAGON_ARMOUR,
                                               ARM_MOTTLED_DRAGON_HIDE,
                                               ARM_MOTTLED_DRAGON_ARMOUR,
@@ -3578,7 +3580,7 @@ static armour_type _get_random_armour_type(int item_level)
 
         armtype = RANDOM_ELEMENT(morehiarmours);
 
-        if (armtype == ARM_ANIMAL_SKIN && one_chance_in(20))
+        if (one_chance_in(200))
             armtype = ARM_CRYSTAL_PLATE_ARMOUR;
     }
 
@@ -3703,7 +3705,16 @@ void makeitem_tests()
         if (coinflip())
             item.special = SPWPN_NORMAL;
         else
-            item.special = random2(MAX_PAN_LORD_BRANDS);
+            item.special = random2(NUM_REAL_SPECIAL_WEAPONS);
+#if TAG_MAJOR_VERSION == 34
+        if (item.special == SPWPN_ORC_SLAYING
+            || item.special == SPWPN_REACHING
+            || item.special == SPWPN_RETURNING
+            || item.special == SPWPN_CONFUSE)
+        {
+            item.special = SPWPN_FORBID_BRAND;
+        }
+#endif
         _generate_weapon_item(item,
                               coinflip(),
                               coinflip() ? OBJ_RANDOM : random2(NUM_WEAPONS),

@@ -803,12 +803,6 @@ Gliding
 # potential previous owners of books
 # __NONE is parsed to the empty string
 # First, combinations.
-Air Conjuration owner
-
-Nikola
-
-__NONE
-%%%%
 highlevel Conjuration Earth owner
 
 Dispater
@@ -828,34 +822,11 @@ Asmodeus
 Cerebov
 
 w:5
-@Conjuration Fire owner@
-%%%%
-Conjuration Fire owner
-
-Azrael
-
-Margery
-
 __NONE
 %%%%
 highlevel Conjuration Necromancy owner
 
 Ereshkigal
-
-@Conjuration Necromancy owner@
-%%%%
-Conjuration Necromancy owner
-
-Boris
-
-Nergalle
-
-__NONE
-%%%%
-Conjuration Poison owner
-
-w:5
-Aizul
 
 __NONE
 %%%%
@@ -866,19 +837,6 @@ Asmodeus
 Dispater
 
 w:5
-__NONE
-%%%%
-Conjuration Translocation owner
-
-w:5
-Louise
-
-__NONE
-%%%%
-highlevel Conjuration Translocation owner
-
-Lom Lobon
-
 __NONE
 %%%%
 Earth Transmutation owner
@@ -912,14 +870,6 @@ Cigotuvi
 __NONE
 %%%%
 # Single spell schools.
-Air owner
-
-Nikola
-
-Sojobo
-
-__NONE
-%%%%
 highlevel Conjuration owner
 
 Asmodeus
@@ -944,18 +894,6 @@ Lee
 Lehudib
 
 Iskenderun
-
-Erolcha
-
-Louise
-
-Boris
-
-Nergalle
-
-Josephine
-
-Frederick
 %%%%
 highlevel Earth owner
 
@@ -974,58 +912,17 @@ Roxanne
 
 __NONE
 %%%%
-Charms owner
-
-Nessos
-
-Gastronok
-
-Maurice
-
-__NONE
-%%%%
-rare Hexes owner
-
-Sigmund
-
-w:2
-Gastronok
-%%%%
-Hexes owner
-
-Norris
-
-Kirke
-
-w:2
-@rare Hexes owner@
-
-__NONE
-%%%%
 highlevel Fire owner
 
 Asmodeus
 
 Cerebov
 
-w:20
-@Fire owner@
-%%%%
-Fire owner
-
-Azrael
-
-Margery
-
 __NONE
 %%%%
 Ice owner
 
 Ozocubu
-
-Fannar
-
-Ilsuiw
 
 __NONE
 %%%%
@@ -1043,14 +940,6 @@ Necromancy owner
 Borgnjor
 
 Cigotuvi
-
-Boris
-
-Murray
-
-Nergalle
-
-Menkaure
 
 Khufu
 %%%%
@@ -1076,25 +965,11 @@ Dispater
 
 Mnoleg
 
-@Summoning owner@
-%%%%
-Summoning owner
-
-w:5
-Eustachio
-
 __NONE
 %%%%
 highlevel Translocation owner
 
 Lom Lobon
-
-@Translocation owner@
-%%%%
-Translocation owner
-
-w:5
-Maurice
 
 __NONE
 %%%%

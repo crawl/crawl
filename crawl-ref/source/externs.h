@@ -274,6 +274,7 @@ typedef uint32_t mid_t;
 // the numbers are meaningless, there's just plenty of space for gods, env,
 // and whatever else we want to have, while keeping all monster ids smaller.
 #define MID_ANON_FRIEND ((mid_t)0xffff0000)
+#define MID_YOU_FAULTLESS ((mid_t)0xffff0001)
 
 static inline monster_type operator++(monster_type &x)
 {
@@ -517,7 +518,9 @@ struct item_def
 {
     object_class_type base_type:8; // basic class (ie OBJ_WEAPON)
     uint8_t        sub_type;       // type within that class (ie WPN_DAGGER)
+#pragma pack(push,2)
     union { short plus; monster_type mon_type:16; }; // +to hit, charges, corpse mon id
+#pragma pack(pop)
     short          plus2;          // +to dam, sub-sub type for boots/helms
     int            special;        // special stuff
     colour_t       colour;         // item colour

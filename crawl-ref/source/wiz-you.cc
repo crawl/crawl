@@ -35,10 +35,17 @@
 #include "xom.h"
 
 #ifdef WIZARD
+static void _swap_equip(equipment_type a, equipment_type b)
+{
+    swap(you.equip[a], you.equip[b]);
+    bool tmp = you.melded[a];
+    you.melded.set(a, you.melded[b]);
+    you.melded.set(b, tmp);
+}
+
 void wizard_change_species(void)
 {
     char specs[80];
-    int i;
 
     msgwin_get_line("What species would you like to be now? " ,
                     specs, sizeof(specs));
@@ -49,7 +56,7 @@ void wizard_change_species(void)
 
     species_type sp = SP_UNKNOWN;
 
-    for (i = 0; i < NUM_SPECIES; ++i)
+    for (int i = 0; i < NUM_SPECIES; ++i)
     {
         const species_type si = static_cast<species_type>(i);
         const string sp_name = lowercase_string(species_name(si));
@@ -76,19 +83,20 @@ void wizard_change_species(void)
     }
 
     // Re-scale skill-points.
-    for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
         you.skill_points[i] *= species_apt_factor(sk, sp)
                                / species_apt_factor(sk);
     }
 
+    species_type old_sp = you.species;
     you.species = sp;
     you.is_undead = get_undead_state(sp);
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
-    for (i = 0; i < NUM_MUTATIONS; ++i)
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (you.innate_mutations[i] > 0)
         {
@@ -102,7 +110,7 @@ void wizard_change_species(void)
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
-    for (i = 0; i < NUM_MUTATIONS; ++i)
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         if (prev_muts[i] > you.innate_mutations[i])
             you.innate_mutations[i] = 0;
@@ -149,7 +157,7 @@ void wizard_change_species(void)
     case SP_DEMONSPAWN:
     {
         roll_demonspawn_mutations();
-        for (i = 0; i < int(you.demonic_traits.size()); ++i)
+        for (int i = 0; i < int(you.demonic_traits.size()); ++i)
         {
             mutation_type m = you.demonic_traits[i].mutation;
 
@@ -181,6 +189,26 @@ void wizard_change_species(void)
     default:
         break;
     }
+
+    if ((old_sp == SP_OCTOPODE) != (sp == SP_OCTOPODE))
+    {
+        _swap_equip(EQ_LEFT_RING, EQ_RING_ONE);
+        _swap_equip(EQ_RIGHT_RING, EQ_RING_TWO);
+        // All species allow exactly one amulet.  When (and knowing you guys,
+        // that's "when" not "if") ettins go in, you'll need handle the Macabre
+        // Finger Necklace on neck 2 here.
+    }
+
+    // FIXME: this checks only for valid slots, not for suitability of the
+    // item in question.  This is enough to make assertions happy, though.
+    for (int i = 0; i < NUM_EQUIP; ++i)
+        if (!you_can_wear(i, true) && you.equip[i] != -1)
+        {
+            mprf("%s falls away.", you.inv[you.equip[i]].name(DESC_YOUR).c_str());
+            // Unwear items without the usual processing.
+            you.equip[i] = -1;
+            you.melded.set(i, false);
+        }
 
     // Sanitize skills.
     fixup_skills();
@@ -285,9 +313,10 @@ void wizard_heal(bool super_heal)
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
+    you.duration[DUR_EXHAUSTED] = 0;
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
-    set_hunger(10999, true);
+    set_hunger(HUNGER_VERY_FULL + 100, true);
     you.redraw_hit_points = true;
 }
 
@@ -309,10 +338,10 @@ void wizard_set_hunger_state()
     switch (c)
     {
     case 't': you.hunger = HUNGER_STARVING / 2;   break;
-    case 'n': you.hunger = 1200;  break;
-    case 'h': you.hunger = 2400;  break;
-    case 's': you.hunger = 5000;  break;
-    case 'f': you.hunger = 8000;  break;
+    case 'n': you.hunger = 1100;  break;
+    case 'h': you.hunger = 2300;  break;
+    case 's': you.hunger = 4900;  break;
+    case 'f': you.hunger = 7900;  break;
     case 'e': you.hunger = HUNGER_MAXIMUM; break;
     default:  canned_msg(MSG_OK); break;
     }
@@ -812,12 +841,16 @@ static const char* dur_names[] =
     "spirit howl",
     "infused",
     "song of slaying",
+#if TAG_MAJOR_VERSION == 34
     "song of shielding",
+#endif
     "toxic radiance",
     "reciting",
     "grasping roots",
     "sleep immunity",
     "fire vulnerability",
+    "elixir health",
+    "elixir magic",
     "antennae extend",
 };
 

@@ -192,7 +192,7 @@ KMONS: 1 = ball python
 KMONS: 2 = adder
  : dgn.delayed_decay(_G,'a', 'human skeleton')
 KFEAT: abAB=floor
-KITEM: b = whip w:50 / cursed whip w:10 / whip ego:reaching w:1
+KITEM: b = whip w:50 / cursed whip w:10
 MAP
    xxxxx
   xx222xx

@@ -7,6 +7,7 @@
 
 #include "ghost.h"
 
+#include "act-iter.h"
 #include "artefact.h"
 #include "colour.h"
 #include "database.h"
@@ -15,7 +16,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "mon-iter.h"
 #include "ng-input.h"
 #include "random.h"
 #include "skills2.h"
@@ -37,7 +37,8 @@ vector<ghost_demon> ghosts;
 
 // Order for looking for conjurations for the 1st & 2nd spell slots,
 // when finding spells to be remembered by a player's ghost.
-static spell_type search_order_conj[] = {
+static spell_type search_order_conj[] =
+{
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_FIRE_STORM,
     SPELL_ICE_STORM,
@@ -77,7 +78,8 @@ static spell_type search_order_conj[] = {
 
 // Order for looking for summonings and self-enchants for the 3rd spell
 // slot.
-static spell_type search_order_third[] = {
+static spell_type search_order_third[] =
+{
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
@@ -112,7 +114,8 @@ static spell_type search_order_third[] = {
 // Order for looking for enchants for the 4th & 5th spell slots.  If
 // this fails, go through conjurations.  Note: Dig must be in misc2
 // (5th) position to work.
-static spell_type search_order_misc[] = {
+static spell_type search_order_misc[] =
+{
     SPELL_SHATTER,
     SPELL_AGONY,
     SPELL_BANISHMENT,
@@ -220,13 +223,14 @@ void ghost_demon::init_random_demon()
 #if TAG_MAJOR_VERSION == 34
                || brand == SPWPN_ORC_SLAYING
                || brand == SPWPN_RETURNING
+               || brand == SPWPN_REACHING
 #endif
                || brand == SPWPN_DRAGON_SLAYING
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_EVASION
                || brand == SPWPN_FLAME
                || brand == SPWPN_FROST
-               || brand == SPWPN_REACHING);
+               );
     }
 
     // Does demon fly?

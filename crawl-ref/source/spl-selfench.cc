@@ -350,19 +350,9 @@ spret_type cast_song_of_slaying(int pow, bool fail)
     else
         mpr("You start singing a song of slaying.");
 
-    you.increase_duration(DUR_SONG_OF_SLAYING, 20 + pow / 3, 20 + pow / 3);
-
-    noisy(10, you.pos());
+    you.set_duration(DUR_SONG_OF_SLAYING, 20 + random2avg(pow, 2));
 
     you.props["song_of_slaying_bonus"] = 0;
-    return SPRET_SUCCESS;
-}
-
-spret_type cast_song_of_shielding(int pow, bool fail)
-{
-    fail_check();
-    you.increase_duration(DUR_SONG_OF_SHIELDING, 10 + random2(pow) / 3, 40);
-    mpr("You are being protected by your magic.");
     return SPRET_SUCCESS;
 }
 

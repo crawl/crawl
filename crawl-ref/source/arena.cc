@@ -7,12 +7,14 @@
 
 #include "arena.h"
 
+#include "act-iter.h"
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
 #include "dungeon.h"
 #include "env.h"
 #include "externs.h"
+#include "food.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
 #include "libutil.h"
@@ -21,7 +23,6 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-place.h"
@@ -244,7 +245,7 @@ namespace arena
             for (int y = 0; y < GYM; ++y)
                 grd[x][y] = DNGN_ROCK_WALL;
 
-        unwind_bool gen(Generating_Level, true);
+        unwind_bool gen(crawl_state.generating_level, true);
 
         typedef unwind_var< set<string> > unwind_stringset;
 
@@ -549,7 +550,10 @@ namespace arena
         if (orig_a != faction_a.active_members
             || orig_b != faction_b.active_members)
         {
-            mpr("Book-keeping error in faction member count.", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Book-keeping error in faction member count: "
+                              "%d:%d instead of %d:%d",
+                              orig_a, orig_b,
+                              faction_a.active_members, faction_b.active_members);
 
             if (faction_a.active_members > 0
                 && faction_b.active_members <= 0)
@@ -816,7 +820,7 @@ namespace arena
                 viewwindow();
                 you.time_taken = 10;
                 // Make sure we don't starve.
-                you.hunger = 10999;
+                you.hunger = HUNGER_MAXIMUM;
                 //report_foes();
                 world_reacts();
                 do_miscasts();
@@ -1223,7 +1227,7 @@ void arena_monster_died(monster* mons, killer_type killer,
              && arena::faction_b.active_members <= 0)
     {
         if (mons->flags & MF_HARD_RESET && !MON_KILL(killer))
-            game_ended_with_error("Last arena monster was dismissed.");
+            mpr("Last arena monster was dismissed.");
         // If all monsters are dead, and the last one to die is a giant
         // spore or ball lightning, then that monster's faction is the
         // winner, since self-destruction is their purpose.  But if a

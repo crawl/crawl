@@ -962,9 +962,9 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     const int spending_limit = min(MAX_SPENDING_LIMIT, max_exp);
     if (cost > spending_limit)
     {
-        int frac = (spending_limit * 10) / cost;
+        int frac = spending_limit * 10 / cost;
         cost = spending_limit;
-        skill_inc = (skill_inc * frac) / 10;
+        skill_inc = skill_inc * frac / 10;
     }
 
     if (skill_inc <= 0)

@@ -145,7 +145,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
     if (!env.map_knowledge(where).known() && !you.see_cell(where))
         return false;
 
-    dungeon_feature_type grid = grid_appearance(where);
+    dungeon_feature_type grid = env.map_knowledge(where).feat();
 
     switch (feature)
     {

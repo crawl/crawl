@@ -36,6 +36,7 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-chimera.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
@@ -187,6 +188,7 @@ void monster::init_with(const monster& mon)
     experience        = mon.experience;
     number            = mon.number;
     colour            = mon.colour;
+    summoner          = mon.summoner;
     foe_memory        = mon.foe_memory;
     god               = mon.god;
     props             = mon.props;
@@ -455,7 +457,7 @@ brand_type monster::damage_brand(int which_attack)
         return SPWPN_NORMAL;
     }
 
-    return (!is_range_weapon(*mweap) ?
+    return (!is_range_weapon(*mweap) && !suppressed() ?
             static_cast<brand_type>(get_weapon_brand(*mweap)) : SPWPN_NORMAL);
 }
 
@@ -3054,6 +3056,8 @@ void monster::expose_to_element(beam_type flavour, int strength,
             slow_down(this, strength);
         }
         break;
+    case BEAM_WATER:
+        del_ench(ENCH_STICKY_FLAME);
     default:
         break;
     }
@@ -3084,9 +3088,10 @@ void monster::banish(actor *agent, const string &)
     }
     monster_die(this, KILL_BANISHED, NON_MONSTER);
 
-    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
+    if (!cell_is_solid(old_pos))
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
     for (adjacent_iterator ai(old_pos); ai; ++ai)
-        if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
+        if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD
             && coinflip())
         {
             place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
@@ -4209,7 +4214,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead, bool attacker_effects)
 {
     if (mons_is_projectile(type) || mindex() == ANON_FRIENDLY_MONSTER
-        || type == MONS_DIAMOND_OBELISK)
+        || mindex() == YOU_FAULTLESS || type == MONS_DIAMOND_OBELISK)
     {
         return 0;
     }
@@ -4681,7 +4686,9 @@ void monster::scale_hp(int num, int den)
 
 kill_category monster::kill_alignment() const
 {
-    return (friendly() ? KC_FRIENDLY : KC_OTHER);
+    if (mid == MID_YOU_FAULTLESS)
+        return KC_YOU;
+    return friendly() ? KC_FRIENDLY : KC_OTHER;
 }
 
 bool monster::sicken(int amount, bool unused, bool quiet)
@@ -4823,6 +4830,23 @@ bool monster::can_go_frenzy() const
 bool monster::can_go_berserk() const
 {
     return (holiness() == MH_NATURAL) && can_go_frenzy();
+}
+
+bool monster::can_jump() const
+{
+    if (mons_intel(this) == I_PLANT)
+        return false;
+
+    if (swimming())
+        return false;
+
+    if (paralysed() || petrified() || petrifying() || asleep())
+        return false;
+
+    if (has_ench(ENCH_FATIGUE))
+        return false;
+
+    return true;
 }
 
 bool monster::berserk() const
@@ -5496,7 +5520,8 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
         if (heal(5 + random2(7)))
             simple_monster_message(this, " is healed!");
 
-        const enchant_type cured_enchants[] = {
+        const enchant_type cured_enchants[] =
+        {
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
         };
 
@@ -6156,5 +6181,7 @@ bool monster::is_projectile() const
 
 bool monster::is_jumpy() const
 {
-    return mons_is_jumpy(this);
+    return type == MONS_JUMPING_SPIDER
+        || mons_class_is_chimeric(type)
+            && get_chimera_legs(this) == MONS_JUMPING_SPIDER;
 }

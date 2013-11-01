@@ -356,11 +356,6 @@ cloak
 
 Una capa de tela.
 %%%%
-club
-
-Un pesado trozo de madera que puede ser lanzado o empuñado. Golpear a alguien
-en la cabeza mientras que duerme, parece una gran idea.
-%%%%
 corpse
 
 Un cadáver. Puedes descuartizarlo para conseguir trozos de carne comestible.
@@ -382,11 +377,6 @@ mágicas.
 crystal plate armour
 
 Una armadura de cristal, increíblemente pesada, pero extremadamente efectiva.
-%%%%
-dagger
-
-Un largo cuchillo, o pequeña espada, que puede ser empuñada o lanzada. Causa un
-daño enorme cuando se usa para apuñalar a alguien.
 %%%%
 dart
 
@@ -601,10 +591,6 @@ Una larga garrocha con una prominente hacha en su extremo.
 hammer
 
 La cosa con la que clavas puntillas, modificada para el combate.
-%%%%
-hand axe
-
-Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser arrojada.
 %%%%
 helmet
 
@@ -1191,10 +1177,6 @@ efectivo como munición que las piedras. Pueden tener varios encantamientos.
 snozzcumber
 
 Un vegetal repulsivo en forma de pepino.
-%%%%
-spear
-
-Un palo largo con una punta de metal en un extremo, para ser asido o lanzado.
 %%%%
 staff of conjuration
 

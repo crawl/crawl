@@ -174,6 +174,7 @@ public:
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
     virtual reach_type reach_range() const = 0;
+    virtual bool can_jump() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
@@ -182,8 +183,8 @@ public:
     virtual bool see_cell(const coord_def &c) const;
     virtual bool see_cell_no_trans(const coord_def &c) const;
 
-    virtual const los_base* get_los();
-    virtual const los_base* get_los_no_trans();
+    virtual const los_base* get_los() const;
+    virtual const los_base* get_los_no_trans() const;
 
     // Can the actor actually see the target?
     virtual bool can_see(const actor *target) const;
@@ -311,7 +312,7 @@ public:
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
     virtual bool faith(bool calc_unid = true, bool items = true) const;
     virtual bool warding(bool calc_unid = true, bool items = true) const;
-    virtual bool archmagi(bool calc_unid = true, bool items = true) const;
+    virtual int archmagi(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;
 
     virtual bool rmut_from_item(bool calc_unid = true) const;
@@ -320,6 +321,7 @@ public:
 
     // Return an int so we know whether an item is the sole source.
     virtual int evokable_flight(bool calc_unid = true) const;
+    virtual int evokable_jump(bool calc_unid = true) const;
     virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
     virtual flight_type flight_mode() const = 0;
@@ -444,8 +446,8 @@ protected:
                           bool quiet);
 
     // These are here for memory management reasons...
-    los_glob los;
-    los_glob los_no_trans;
+    mutable los_glob los;
+    mutable los_glob los_no_trans;
 };
 
 bool actor_slime_wall_immune(const actor *actor);

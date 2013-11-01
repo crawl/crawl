@@ -98,6 +98,7 @@ static void _initialize()
     info[0] = 0;
 
     reset_all_monsters();
+    init_anon();
 
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
@@ -144,11 +145,6 @@ static void _initialize()
     if (crawl_state.build_db)
         end(0);
 
-    if (!crawl_state.io_inited)
-        cio_init();
-
-    // System initialisation stuff.
-    textbackground(0);
 #ifdef USE_TILE_LOCAL
     if (!Options.tile_skip_title && crawl_state.title_screen)
     {
@@ -157,15 +153,21 @@ static void _initialize()
     }
 #endif
 
-    clrscr();
-
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
     {
+        release_cli_signals();
         generate_map_stats();
         end(0, false);
     }
 #endif
+
+    if (!crawl_state.test_list)
+    {
+        if (!crawl_state.io_inited)
+            cio_init();
+        clrscr();
+    }
 
     if (crawl_state.test)
     {
@@ -177,11 +179,10 @@ static void _initialize()
 #ifdef USE_TILE
         init_player_doll();
 #endif
+        dgn_reset_level();
         crawl_state.show_more_prompt = false;
-        run_tests(true);
-        // Superfluous, just to make it clear that this is the end of
-        // the line.
-        end(0, false);
+        run_tests();
+        // doesn't return
 #else
         end(1, false, "Non-debug Crawl cannot run tests. "
             "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "

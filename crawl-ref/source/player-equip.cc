@@ -289,10 +289,9 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     // For evokable stuff, check whether other equipped items yield
     // the same ability.  If not, and if the ability granted hasn't
     // already been discovered, give a message.
-    if (unknown_proprt(ARTP_FLY)
-        && !items_give_ability(item.link, ARTP_FLY))
+    if (unknown_proprt(ARTP_FLY))
     {
-        if (msg)
+        if (msg && !items_give_ability(item.link, ARTP_FLY))
         {
             if (you.airborne())
                 mpr("You feel vaguely more buoyant than before.");
@@ -309,18 +308,16 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         artefact_wpn_learn_prop(item, ARTP_INVISIBLE);
     }
 
-    if (unknown_proprt(ARTP_BERSERK)
-        && !items_give_ability(item.link, ARTP_BERSERK))
+    if (unknown_proprt(ARTP_BERSERK))
     {
-        if (msg)
+        if (msg && !items_give_ability(item.link, ARTP_BERSERK))
             mpr("You feel a brief urge to hack something to bits.");
         artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
-    if (unknown_proprt(ARTP_BLINK)
-        && !items_give_ability(item.link, ARTP_BLINK))
+    if (unknown_proprt(ARTP_BLINK))
     {
-        if (msg)
+        if (msg && !items_give_ability(item.link, ARTP_BLINK))
             mpr("You feel jittery for a moment.");
         artefact_wpn_learn_prop(item, ARTP_BLINK);
     }
@@ -944,6 +941,10 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             mpr("You feel rather light.");
             break;
 
+        case SPARM_JUMPING:
+            mpr("You feel more sure on your feet.");
+            break;
+
         case SPARM_MAGIC_RESISTANCE:
             mpr("You feel resistant to hostile enchantments.");
             break;
@@ -1113,6 +1114,11 @@ static void _unequip_armour_effect(item_def& item, bool meld)
             you.duration[DUR_FLIGHT] = 0;
             land_player();
         }
+        break;
+
+    case SPARM_JUMPING:
+        if (!you.evokable_jump())
+            mpr("You feel less sure on your feet.");
         break;
 
     case SPARM_MAGIC_RESISTANCE:

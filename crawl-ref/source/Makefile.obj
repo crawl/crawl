@@ -73,6 +73,7 @@ godmenu.o \
 godpassive.o \
 godprayer.o \
 godwrath.o \
+hash.o \
 hints.o \
 hiscores.o \
 initfile.o \
@@ -142,7 +143,6 @@ mon-ench.o \
 mon-gear.o \
 mon-grow.o \
 mon-info.o \
-mon-iter.o \
 mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
@@ -180,7 +180,6 @@ random.o \
 random-var.o \
 ray.o \
 religion.o \
-rng.o \
 shopping.o \
 shout.o \
 show.o \

@@ -109,31 +109,6 @@ static void _species_stat_init(species_type which_species)
     you.base_stats[STAT_DEX] = db + 2;
 }
 
-static void _give_last_paycheck(job_type which_job)
-{
-    switch (which_job)
-    {
-    case JOB_HEALER:
-        you.gold = 100;
-        break;
-
-    case JOB_WANDERER:
-    case JOB_WARPER:
-    case JOB_ARCANE_MARKSMAN:
-    case JOB_ASSASSIN:
-        you.gold = 50;
-        break;
-
-    default:
-        you.gold = 20;
-        break;
-
-    case JOB_MONK:
-        you.gold = 0;
-        break;
-    }
-}
-
 // Randomly boost stats a number of times.
 static void _wanderer_assign_remaining_stats(int points_left)
 {
@@ -314,7 +289,6 @@ void give_basic_mutations(species_type speci)
     case SP_GARGOYLE:
         you.mutation[MUT_PETRIFICATION_RESISTANCE]   = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
-        you.mutation[MUT_SHOCK_RESISTANCE]           = 1;
         you.mutation[MUT_FANGS]                      = 1;
         you.mutation[MUT_TALONS]                     = 2;
         you.mutation[MUT_SLOW_METABOLISM]            = 1;
@@ -348,6 +322,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_FAST]            = 1;
         you.mutation[MUT_CARNIVOROUS]     = 3;
         you.mutation[MUT_SLOW_METABOLISM] = 1;
+        you.mutation[MUT_JUMP]            = 1;
         break;
     case SP_OCTOPODE:
         you.mutation[MUT_CAMOUFLAGE]      = 1;
@@ -488,13 +463,15 @@ static void _update_weapon(const newgame_def& ng)
                               4 + plus);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_LARGE_ROCK);
+            autopickup_starting_ammo(MI_THROWING_NET);
         }
         else if (species_size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
         {
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1,
                               8 + 2 * plus);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-            autopickup_starting_ammo(MI_DART);
+            autopickup_starting_ammo(MI_TOMAHAWK);
+            autopickup_starting_ammo(MI_THROWING_NET);
         }
         else
         {
@@ -502,6 +479,7 @@ static void _update_weapon(const newgame_def& ng)
                               5 + plus);
             newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
             autopickup_starting_ammo(MI_JAVELIN);
+            autopickup_starting_ammo(MI_THROWING_NET);
         }
         break;
     case WPN_BOW:
@@ -584,9 +562,15 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Small species get tomahawks, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
+        {
             newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 6);
+            autopickup_starting_ammo(MI_TOMAHAWK);
+        }
         else
+        {
             newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
+            autopickup_starting_ammo(MI_THROWING_NET);
+        }
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -749,6 +733,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
 
+        // Plain darts are maybe too weak for autopickup.
+        // autopickup_starting_ammo(MI_DART);
+
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
         you.skills[SK_DODGING]        = 2;
@@ -805,6 +792,9 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 12);
+
+        // Plain darts are maybe too weak for autopickup.
+        // autopickup_starting_ammo(MI_DART);
 
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
@@ -1346,7 +1336,6 @@ static void _setup_generic(const newgame_def& ng)
     update_vision_range();
 
     _jobs_stat_init(you.char_class);
-    _give_last_paycheck(you.char_class);
 
     unfocus_stats();
 

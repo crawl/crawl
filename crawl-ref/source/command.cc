@@ -63,7 +63,8 @@ static void _adjust_item(void);
 static void _adjust_spell(void);
 static void _adjust_ability(void);
 
-static const char *features[] = {
+static const char *features[] =
+{
 #ifdef CLUA_BINDINGS
     "Lua user scripts",
 #endif
@@ -537,12 +538,8 @@ void list_jewellery(void)
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
     {
-        if ((you.species != SP_OCTOPODE && i > EQ_AMULET
-            || you.species == SP_OCTOPODE && i < EQ_AMULET)
-            && i != EQ_RING_AMULET)
-        {
+        if (!you_can_wear(i))
             continue;
-        }
 
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;
@@ -727,7 +724,8 @@ struct help_file
     bool auto_hotkey;
 };
 
-static help_file help_files[] = {
+static help_file help_files[] =
+{
     { "crawl_manual.txt",  '*', true },
     { "../README.txt",     '!', false },
     { "aptitudes.txt",     '%', false },

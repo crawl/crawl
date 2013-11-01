@@ -364,9 +364,7 @@ int spell_hunger(spell_type which_spell, bool rod)
 
     const int level = spell_difficulty(which_spell);
 
-    const int basehunger[] = {
-        50, 95, 160, 250, 350, 550, 700, 850, 1000
-    };
+    const int basehunger[] = { 50, 95, 160, 250, 350, 550, 700, 850, 1000 };
 
     int hunger;
 
@@ -729,7 +727,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         q[el] = q[q.size() - 1];
         q.pop_back();
 
-        if (place.seen[c] <= 0)
+        if (place.seen[c] <= 0 || cell_is_solid(c))
             continue;
         func(c, pow, spread_rate, ctype, agent, colour, name, tile, excl_rad);
         number--;
@@ -1094,8 +1092,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     if (transient)
     {
         if (you.duration[DUR_CONF] > 0
-            || spell_mana(spell) > (you.species != SP_DJINNI ? you.magic_points
-                                    : (you.hp - 1) / DJ_MP_RATE)
+            || !enough_mp(spell_mana(spell), true, false)
             || spell_no_hostile_in_range(spell))
         {
             return true;

@@ -291,6 +291,9 @@ public:
   // A list of allies awaiting an active recall
   vector<mid_t> recall_list;
 
+  // Hash seeds for deterministic stuff.
+  FixedVector<uint32_t, NUM_SEEDS> game_seeds;
+
   // -------------------
   // Non-saved UI state:
   // -------------------
@@ -436,7 +439,7 @@ public:
     reach_type reach_range() const;
 
     bool see_cell(const coord_def& p) const;
-    const los_base* get_los();
+    const los_base* get_los() const;
 
     // Is c in view but behind a transparent wall?
     bool trans_wall_blocking(const coord_def &c) const;
@@ -565,6 +568,8 @@ public:
     bool can_go_berserk() const;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false) const;
+    bool can_jump() const;
+    bool can_jump(bool quiet) const;
     void go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool has_lifeforce() const;
@@ -801,6 +806,16 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
 bool check_moveto(const coord_def& p, const string &move_verb = "step",
                   const string &msg = "");
+bool check_moveto_terrain(const coord_def& p, const string &move_verb,
+                          const string &msg = "", bool *prompted = nullptr);
+bool check_moveto_cloud(const coord_def& p, const string &move_verb = "step",
+                        bool *prompted = nullptr);
+bool check_moveto_exclusion(const coord_def& p,
+                            const string &move_verb = "step",
+                            bool *prompted = nullptr);
+bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
+        bool *prompted = nullptr);
+
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool is_map_persistent(void);
@@ -944,8 +959,9 @@ bool player_wearing_slot(int eq);
 bool you_tran_can_wear(const item_def &item);
 bool you_tran_can_wear(int eq, bool check_mutation = false);
 
-bool enough_hp(int minimum, bool suppress_msg);
-bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
+bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
+bool enough_mp(int minimum, bool suppress_msg,
+               bool abort_macros = true, bool include_items = true);
 bool enough_zp(int minimum, bool suppress_msg);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
@@ -996,12 +1012,11 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
+void dec_elixir_player(int delay);
 bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
-bool is_hovering();
-bool djinni_floats();
 
 void dec_disease_player(int delay);
 

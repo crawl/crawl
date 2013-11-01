@@ -5,6 +5,7 @@
 #include "tile_page.h"
 #include <string>
 #include <vector>
+#include <stdio.h>
 
 class tile_list_processor
 {

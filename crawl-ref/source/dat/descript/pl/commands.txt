@@ -1,0 +1,179 @@
+%%%%
+CMD_REST verbose
+
+Poświęć do 100 tur na zregenerowanie życia oraz/lub odnowienie magii.
+Odpoczynek zostanie przerwany w momencie pojawienia się wroga
+%%%%
+CMD_EXPLORE
+
+Automatycznie eksploruj bieżący poziom
+%%%%
+CMD_PRAY
+
+Módl się do swojego boga
+%%%%
+CMD_REPLAY_MESSAGES
+
+Przeczytaj ostatnie wiadomości
+%%%%
+CMD_RESISTS_SCREEN
+
+Pokaż menu postaci
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Pokaż informacje na temat odporności, umiejętności, statystyk ekwipunku, itp.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Pokaż pełną mapę lochów.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Pokaż status wiary
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Pokaż mutacje
+%%%%
+CMD_DISPLAY_SKILLS
+
+Zarządzaj umiejętnościami
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Pokaż status postaci
+%%%%
+CMD_SAVE_GAME_NOW
+
+Zapisz i wyjdź
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Pomoc
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Lista komend, opcje, itp.
+%%%%
+CMD_AUTOFIGHT
+
+Zaatakuj najbliższego przeciwnika.
+%%%%
+CMD_AUTOFIGHT verbose
+
+Idź do najbliższego przeciwnika i zaatakuj go bronią, którą w tym momencie
+używasz.
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Atakuj wroga stojącego przy tobie
+%%%%
+CMD_WAIT
+
+Poczekaj jedną turę
+%%%%
+CMD_WAIT verbose
+
+Poświęć jedną turę czekając i odpoczywając
+%%%%
+CMD_DISPLAY_INVENTORY
+
+Pokaż zawartość ekwipunku
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Pokaż zawartość ekwipunku.
+%%%%
+CMD_CAST_SPELL
+
+Rzuć zaklęcie
+%%%%
+CMD_CAST_SPELL verbose
+
+Rzuć czar
+%%%%
+CMD_BUTCHER
+
+Porżnij ciało
+%%%%
+CMD_BUTCHER verbose
+
+Porżnij ciało na kawałki.
+%%%%
+CMD_MEMORISE_SPELL
+
+Zapamiętaj zaklęcie
+%%%%
+CMD_DROP
+
+Wyrzuć sprzęt
+%%%%
+CMD_DISPLAY_MAP
+
+Wejdź w tryb mapy
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Dodaj cel podróży
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Ustaw cel podróży na miejscu, w którym teraz się znajdujesz.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Jeden poziom niżej
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Zbadaj następny niżej poziom
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Jeden poziom wyżej
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Zbadaj następny poziom wyżej
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Znajdź schody na górę
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Znajdź schody na dół
+%%%%
+CMD_MAP_FIND_YOU
+
+Znajdź mnie
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Znajdź sklepy i portale
+%%%%
+CMD_MAP_FIND_TRAP
+
+Znajdź pułapki
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Znajdź ołtarze
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Znajdź cel podróży
+%%%%
+CMD_MAP_FIND_STASH
+
+Znajdź schowek
+%%%%
+CMD_ZOOM_IN
+
+Przybliż
+%%%%
+CMD_ZOOM_OUT
+
+Oddal
+%%%%

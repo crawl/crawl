@@ -1,4 +1,12 @@
 %%%%
+No ability ability
+
+Jeśli widzisz ten napis, jest to bug.
+%%%%
+Spit Poison ability
+
+Opluj trucizną wyznaczonego przeciwnika.
+%%%%
 Breathe Fire ability
 
 Uwalnia uderzenie ognia w zaznaczony cel, możliwe jest pozostawienie płonącej
@@ -37,9 +45,23 @@ Na poziomie doświadczenia 6 bądź wyżej. Wampiry mogą zabutelkować krew z n
 zepsutych i posiadających krew zwłok nad którymi stoją. By tego dokonać
 wymagana jest umiejętność noszenia noża by móc pociąć zwłoki.
 %%%%
+Spit Acid ability
+
+Opluj kwasem zaznaczonego przeciwnika.
+%%%%
+Fly ability
+
+Lataj. W czasie lotu możesz bezpiecznie przelecieć nad wodą i innymi podobnymi
+przeszkodami. Pamiętaj jednak, że czas lotu może skończyć się w najmniej
+spodziewanym momencie doprowadzając do twojej śmierci.
+%%%%
 Hellfire ability
 
 Niszczy wrogów  piekielnym ogniem.
+%%%%
+Stop Singing ability
+
+Przestań śpiewać Pieśń Mordowania
 %%%%
 Device Recharging ability
 
@@ -53,6 +75,14 @@ Evoke Invisibility ability
 
 Stajesz się niewidzialny na pewien okres czasu. Włączenie niewidzialności
 zwiększa twoje magiczne zanieczyszczenie i może spowodować świecenie.
+%%%%
+Turn Visible ability
+
+Powróć do bycia widocznym.
+%%%%
+Stop Flying ability
+
+Przestań latać
 %%%%
 End Transformation ability
 
@@ -104,6 +134,11 @@ pojamna.
 Animate Remains or Dead ability
 
 Jeśli otrzymałeś ten opis, gdzieś wystąpił błąd.
+%%%%
+Heroism ability
+
+Chwilowo podnieś poziom wszystkich swoich umiejętności bojowych, włącznie z
+umiejętnością skradania się.
 %%%%
 Finesse ability
 
@@ -176,6 +211,11 @@ Draw One ability
 
 Wybierz dowolny zestaw ze swojego ekwipunku i wyciągnij z niego kartę.
 %%%%
+Triple Draw ability
+
+Wyciągnij trzy karty z jakiejkolwiek talii w ekwipunku, obejrzyj je po czym
+zostaw tylko jedną niszcząc dwie pozostałe.
+%%%%
 Bend Time ability
 
 Usiłuje spowolnić wszystkich w twoim sąsiedztwie. Wysoki poziom tej
@@ -185,7 +225,19 @@ Cure Bad Mutation ability
 
 Oczyszcza losowo z wybranej złej mutacji.
 %%%%
+Transfer Knowledge ability
+
+Poświęć część jednej ze swoich umiejętności ulepszając inną
+%%%%
 End Transfer Knowledge ability
 
 Przerwij trwający transfer umiejętności.
+%%%%
+Make altar ability
+
+Stwórz ołtarz wybranemu bogu w twojej lokacji.
+%%%%
+Make bazaar ability
+
+Stwórz portal prowadzący do bazaru w miejscu, w którym się znajdujesz.
 %%%%

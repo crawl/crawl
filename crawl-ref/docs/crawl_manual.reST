@@ -1717,7 +1717,8 @@ Felids
   Centaurs or Spriggans. Felids advance in levels very slowly. They are skilled
   with many forms of magic, though less so with raw elemental magic.
 
-  The tale of a Felid who had nine lives isn't far from truth, as well.
+  Felids gain extra lives as they increase in levels. Upon death, they will be
+  resurrected in a safe place, losing an experience level in the process.
 
 Octopodes
   These land-capable relatives of common octopuses can move about as fast as
@@ -1752,9 +1753,9 @@ Djinn
   liquid, although without external means to power their flight it takes them
   much effort to do so.
 
-  Djinn make great fire mages (duh). They are competent with air magic,
-  enchantments, magic items and weapons with long reaches that don't require
-  high dexterity. They are terrible with ice, earth, necromancy and poison.
+  Djinn make great fire mages. They are competent with air magic, enchantments,
+  magic items and weapons with long reaches that don't require high dexterity.
+  They are terrible with ice, earth, necromancy and poison.
 
 Lava Orcs
   These strange humanoids are made of living stone, with a unique heat-based
@@ -1805,15 +1806,15 @@ Formicids
 
 Gargoyles
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
-  hideous humanoids with an affinity to rock. They are immune to petrification,
-  and their stony weight protects them from being trampled.
+  hideous humanoids with an affinity to rock. They have low health, but large
+  amounts of innate armour which increases further as they gain levels. They
+  eventually gain the ability to fly continuously.
 
-  Gargoyles' partially living form makes them less susceptible to effects of
-  necromancy and cold than most beings. Their metabolisms are slow, and they
-  blend into the dungeon pretty well. Their fangs and talons make them dangerous
-  unarmed fighters, although they're incompetent with weapons other than maces.
-  They can be exceptional earth-based conjurers, although they're bad with all
-  other magic schools besides ice.
+  Gargoyles' partially living form grants them immunity to poison, as well as a
+  slow metabolism, resistance to electricity, and protection from some effects
+  of necromancy. Their fangs and talons make them strong melee fighters, and
+  they are naturally skilled with blunt weapons and in unarmed combat. They can
+  also be exceptional earth-based conjurers.
 
 Elves
 ========================================
@@ -2000,7 +2001,7 @@ Chaos Knights
 
 Death Knights
   The Death Knight is a fighter who aligns him or herself with the powers of
-  death and worships Yredelemnul the Dark, who will soon grant the ability to
+  death and worships Yredelemnul the Dark, who grants followers the ability to
   re-animate the dead.
 
 Abyssal Knights
@@ -2022,7 +2023,7 @@ Warpers
 
 Assassins
   An Assassin is a stealthy character who is especially good at killing, using
-  daggers or blowguns.
+  daggers or blowguns. They start with some deadly curare needles.
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
@@ -3116,10 +3117,6 @@ commands:
   Ignore this item in all listings on the ground (it can still be picked up if
   all items on the ground have this inscription).
 
-=s
-  If stash tracking is explicit, then dropping this item will cause a stash to
-  automatically be marked.
-
 =f
   Exclude this item from automatic quivering.
 
@@ -3300,8 +3297,8 @@ MP+3
 HP+3
   hit point modifier
 
-cTele
-  controlled teleport
++cTele
+  can evoke for controlled teleport (from the 'a'bilities menu)
 
 SInv
   see invisible

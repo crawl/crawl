@@ -389,9 +389,9 @@ Forlader Afgrunden til fordel for der, hvor du kom fra.
 %%%%
 Bend Space ability
 
-Bøjer rummets vævning omkring dig, hvilket øjeblikkeligt translokerer dig en
-kort afstand. Translokerer og beskadiger muligvis også uhyrer i nærheden af
-dig.
+Du kan bøje materiens struktur omkring dig så du øjeblikkeligt translokerer en
+kort distance. Du translokerer og beskadiger somme tider også uhyrer i nærheden
+af dig.
 %%%%
 Banish ability
 

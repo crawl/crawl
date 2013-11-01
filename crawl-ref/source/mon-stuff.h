@@ -20,13 +20,6 @@ enum mon_dam_level_type
     MDAM_DEAD,
 };
 
-enum mon_desc_type   // things that cross categorical lines {dlb}
-{
-    MDSC_LEAVES_HIDE,                  //    0
-    MDSC_REGENERATES,
-    MDSC_NOMSG_WOUNDS,
-};
-
 enum temperature_level
 {
     TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
@@ -44,11 +37,9 @@ enum temperature_effect
     LORC_LAVA_BOOST,
     LORC_FIRE_BOOST,
     LORC_STONESKIN,
-    LORC_SLOW_MOVE,
     LORC_COLD_VULN,
     LORC_PASSIVE_HEAT,
     LORC_HEAT_AURA,
-    LORC_FAST_MOVE,
     LORC_NO_SCROLLS,
     LORC_FIRE_RES_I,
     LORC_FIRE_RES_II,
@@ -176,7 +167,6 @@ bool swap_places(monster* mons, const coord_def &loc);
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
 void print_wounds(const monster* mons);
-bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor);
 
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();
@@ -195,6 +185,7 @@ int mons_missile_damage(monster* mons, const item_def *launch,
 int mons_usable_missile(monster* mons, item_def **launcher);
 
 int mons_natural_regen_rate(monster* mons);
+int mons_off_level_regen_rate(monster* mons);
 
 void mons_relocated(monster* mons);
 void mons_att_changed(monster* mons);

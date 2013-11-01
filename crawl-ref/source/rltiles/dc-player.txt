@@ -143,6 +143,10 @@ deep_dwarf_m DEEP_DWARF
 deep_dwarf_f
 gargoyle_m GARGOYLE
 gargoyle_f
+gargoyle_red_m
+gargoyle_red_f
+gargoyle_brown_m
+gargoyle_brown_f
 %sdir player/felids
 %rim 0
 cat1 FELID
@@ -499,6 +503,7 @@ undeadhunter UNDEADHUNTER
 eos EOS
 snakebite SNAKEBITE
 shillelagh SHILLELAGH
+dark_maul DARK_MAUL
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
@@ -1038,9 +1043,10 @@ taiso_yellow
 taiso_red
 taiso_white
 
-## Unrand caps
+## Unrand caps and hats
 bear BEAR
 dyrovepreva DYROVEPREVA
+wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.
 iron1 HELM_IRON HELM_OFS

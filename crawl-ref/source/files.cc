@@ -32,6 +32,7 @@
 #include "externs.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "chardump.h"
@@ -63,7 +64,6 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
@@ -389,7 +389,8 @@ string canonicalise_file_separator(const string &path)
 
 static vector<string> _get_base_dirs()
 {
-    const string rawbases[] = {
+    const string rawbases[] =
+    {
 #ifdef DATA_DIR_PATH
         DATA_DIR_PATH,
 #else
@@ -404,7 +405,8 @@ static vector<string> _get_base_dirs()
 #endif
     };
 
-    const string prefixes[] = {
+    const string prefixes[] =
+    {
         string("dat") + FILE_SEPARATOR,
 #ifdef USE_TILE_LOCAL
         string("dat/tiles") + FILE_SEPARATOR,
@@ -1545,11 +1547,17 @@ static void _save_level(const level_id& lid)
     _write_tagged_chunk(lid.describe(), TAG_LEVEL);
 }
 
-#define SAVEFILE(file, savefn) \
-    do                        \
-    {                         \
-        writer w(you.save, file);           \
-        savefn(w);                \
+#if TAG_MAJOR_VERSION == 34
+# define CHUNK(short, long) short
+#else
+# define CHUNK(short, long) long
+#endif
+
+#define SAVEFILE(short, long, savefn)           \
+    do                                          \
+    {                                           \
+        writer w(you.save, CHUNK(short, long)); \
+        savefn(w);                              \
     } while (false)
 
 // Stack allocated string's go in separate function, so Valgrind doesn't
@@ -1557,33 +1565,33 @@ static void _save_level(const level_id& lid)
 static void _save_game_base()
 {
     /* Stashes */
-    SAVEFILE("st", StashTrack.save);
+    SAVEFILE("st", "stashes", StashTrack.save);
 
 #ifdef CLUA_BINDINGS
     /* lua */
-    SAVEFILE("lua", clua.save);
+    SAVEFILE("lua", "lua", clua.save);
 #endif
 
     /* kills */
-    SAVEFILE("kil", you.kills->save);
+    SAVEFILE("kil", "kills", you.kills->save);
 
     /* travel cache */
-    SAVEFILE("tc", travel_cache.save);
+    SAVEFILE("tc", "travel_cache", travel_cache.save);
 
     /* notes */
-    SAVEFILE("nts", save_notes);
+    SAVEFILE("nts", "notes", save_notes);
 
     /* tutorial/hints mode */
     if (crawl_state.game_is_hints_tutorial())
-        SAVEFILE("tut", save_hints);
+        SAVEFILE("tut", "tutorial", save_hints);
 
     /* messages */
-    SAVEFILE("msg", save_messages);
+    SAVEFILE("msg", "messages", save_messages);
 
     /* tile dolls (empty for ASCII)*/
 #ifdef USE_TILE
     // Save the current equipment into a file.
-    SAVEFILE("tdl", save_doll_file);
+    SAVEFILE("tdl", "tiles_doll", save_doll_file);
 #endif
 
     _write_tagged_chunk("you", TAG_YOU);
@@ -1834,9 +1842,9 @@ static bool _restore_game(const string& filename)
 
     const int minorVersion = crawl_state.minorVersion;
 
-    if (you.save->has_chunk("st"))
+    if (you.save->has_chunk(CHUNK("st", "stashes")))
     {
-        reader inf(you.save, "st", minorVersion);
+        reader inf(you.save, CHUNK("st", "stashes"), minorVersion);
         StashTrack.load(inf);
     }
 
@@ -1851,35 +1859,35 @@ static bool _restore_game(const string& filename)
     }
 #endif
 
-    if (you.save->has_chunk("kil"))
+    if (you.save->has_chunk(CHUNK("kil", "kills")))
     {
-        reader inf(you.save, "kil", minorVersion);
+        reader inf(you.save, CHUNK("kil", "kills"),minorVersion);
         you.kills->load(inf);
     }
 
-    if (you.save->has_chunk("tc"))
+    if (you.save->has_chunk(CHUNK("tc", "travel_cache")))
     {
-        reader inf(you.save, "tc", minorVersion);
+        reader inf(you.save, CHUNK("tc", "travel_cache"), minorVersion);
         travel_cache.load(inf, minorVersion);
     }
 
-    if (you.save->has_chunk("nts"))
+    if (you.save->has_chunk(CHUNK("nts", "notes")))
     {
-        reader inf(you.save, "nts", minorVersion);
+        reader inf(you.save, CHUNK("nts", "notes"), minorVersion);
         load_notes(inf);
     }
 
     /* hints mode */
-    if (you.save->has_chunk("tut"))
+    if (you.save->has_chunk(CHUNK("tut", "tutorial")))
     {
-        reader inf(you.save, "tut", minorVersion);
+        reader inf(you.save, CHUNK("tut", "tutorial"), minorVersion);
         load_hints(inf);
     }
 
     /* messages */
-    if (you.save->has_chunk("msg"))
+    if (you.save->has_chunk(CHUNK("msg", "messages")))
     {
-        reader inf(you.save, "msg", minorVersion);
+        reader inf(you.save, CHUNK("msg", "messages"), minorVersion);
         load_messages(inf);
     }
 
@@ -2329,6 +2337,7 @@ vector<string> get_title_files()
     return titles;
 }
 
+// Every single use of this function is a save-corrupting bug.
 void sighup_save_and_exit()
 {
     if (crawl_state.seen_hups == 0)

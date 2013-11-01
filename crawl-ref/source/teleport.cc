@@ -48,7 +48,8 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     const coord_def origin = pos();
     move_player_to_grid(dest, false, true);
 
-    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
+    if (!cell_is_solid(origin))
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
 
     return true;
 }
@@ -100,8 +101,11 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
         return false;
 
     // Leave a cloud.
-    place_cloud(jump ? CLOUD_DUST_TRAIL : CLOUD_TLOC_ENERGY,
-                oldplace, 1 + random2(3), this);
+    if (!cell_is_solid(oldplace))
+    {
+        place_cloud(jump ? CLOUD_DUST_TRAIL : CLOUD_TLOC_ENERGY,
+                    oldplace, 1 + random2(3), this);
+    }
 
     check_redraw(oldplace);
     apply_location_effects(oldplace);

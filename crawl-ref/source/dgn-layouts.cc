@@ -1120,7 +1120,7 @@ static bool _may_overwrite_pos(coord_def c)
 
     // Don't overwrite feature if there's a monster or item there.
     // Otherwise, items/monsters might end up stuck in deep water.
-    return (!monster_at(c) && igrd(c) == NON_ITEM);
+    return !monster_at(c) && igrd(c) == NON_ITEM;
 }
 
 static void _build_river(dungeon_feature_type river_type) //mv

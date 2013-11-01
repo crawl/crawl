@@ -179,10 +179,6 @@ void jiyva_stat_action()
 
             int weight = you.skills[sk];
 
-            // Anyone can get Spellcasting 1. Doesn't prove anything.
-            if (sk == SK_SPELLCASTING && weight >= 1)
-                weight--;
-
             if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
                 magic_weights += weight;
             else
@@ -209,7 +205,8 @@ void jiyva_stat_action()
         for (int y = 0; y < 3; ++y)
         {
             if (x != y && cur_stat[y] > 1
-                && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y])
+                && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y]
+                && cur_stat[x] < 72)
             {
                 choices++;
                 if (one_chance_in(choices))
@@ -243,7 +240,8 @@ static kill_method_type _statloss_killtype(stat_type stat)
     }
 }
 
-static const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
+static const char* descs[NUM_STATS][NUM_STAT_DESCS] =
+{
     { "strength", "weakened", "weaker", "stronger" },
     { "intelligence", "dopey", "stupid", "clever" },
     { "dexterity", "clumsy", "clumsy", "agile" }

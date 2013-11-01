@@ -193,17 +193,17 @@
 { MUT_SLOW_HEALING,                   3,  3,  true, false, false,
   "slow healing",
 
-  {"You heal slowly.",
-   "You heal very slowly.",
+  {"You heal slowly when monsters are visible.",
+   "You do not heal naturally when monsters are visible.",
    "You do not heal naturally."},
 
-  {"You begin to heal more slowly.",
-   "You begin to heal more slowly.",
+  {"Your natural healing is weakened.",
+   "Your natural healing is weakened.",
    "You stop healing."},
 
-  {"Your rate of healing increases.",
-   "Your rate of healing increases.",
-   "Your rate of healing increases."},
+  {"Your natural healing is strengthened.",
+   "Your natural healing is strengthened.",
+   "Your natural healing is strengthened."},
 
   "slow healing"
 },
@@ -415,6 +415,24 @@
    "A chill runs up and down your throat."},
 
   "breathe flames"
+},
+
+{ MUT_JUMP,                 0,  3, false, false, false,
+  "jump",
+
+  {"You can jump attack at a short distance.",
+   "You can jump attack at a medium distance.",
+   "You can jump attack at a long distance."},
+
+  {"You feel more sure on your feet.",
+   "You feel more sure on your feet.",
+   "You feel more sure on your feet."},
+
+  {"You feel less sure on your feet.",
+   "You feel less sure on your feet.",
+   "You feel less sure on your feet."},
+
+  "jump"
 },
 
 { MUT_BLINK,                          3,  3, false, false, false,

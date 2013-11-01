@@ -578,12 +578,14 @@ static string pow_in_words(int pow)
 
 static string tens_in_words(unsigned num)
 {
-    static const char *numbers[] = {
+    static const char *numbers[] =
+    {
         "", "one", "two", "three", "four", "five", "six", "seven",
         "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen",
         "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
     };
-    static const char *tens[] = {
+    static const char *tens[] =
+    {
         "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy",
         "eighty", "ninety"
     };
@@ -1195,6 +1197,11 @@ static BOOL WINAPI console_handler(DWORD sig)
         if (crawl_state.seen_hups++)
             return true;
 
+        // SAVE CORRUPTING BUG!!!  We're in a sort-of-a-signal-handler here,
+        // unlike Unix which processes signals as an interrupt, Windows spawns
+        // a new thread to handle them.  This function will try to save the
+        // game when it is likely to be in an inconsistent state -- and even
+        // worse, the main thread is actively changing data structures.
         sighup_save_and_exit();
         return true;
     }
@@ -1206,6 +1213,11 @@ void init_signals()
     // For GUI programs there's no controlling terminal, but there's no hurt in
     // blindly trying -- this way, we support Cygwin.
     SetConsoleCtrlHandler(console_handler, true);
+}
+
+void release_cli_signals()
+{
+    SetConsoleCtrlHandler(nullptr, false);
 }
 
 void text_popup(const string& text, const wchar_t *caption)
@@ -1236,6 +1248,11 @@ static void handle_hangup(int)
     // before the disconnected game is saved, thus (for example) preventing
     // the hack of avoiding excomunication consesquences because of the
     // more() after "You have lost your religion!"
+
+    // SAVE CORRUPTING BUG!!!  We're in a signal handler, calling free()
+    // when closing the FILE object is likely to lead to lock-ups, and even
+    // if it were a plain kernel-side descriptor, calling functions such
+    // as select() or read() is undefined behaviour.
     fclose(stdin);
 }
 # endif
@@ -1273,6 +1290,14 @@ void init_signals()
         lim.rlim_cur = RLIM_INFINITY;
         setrlimit(RLIMIT_CORE, &lim);
     }
+#endif
+}
+
+void release_cli_signals()
+{
+#ifdef USE_UNIX_SIGNALS
+    signal(SIGQUIT, SIG_DFL);
+    signal(SIGINT, SIG_DFL);
 #endif
 }
 

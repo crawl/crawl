@@ -226,11 +226,8 @@ bool trap_def::is_safe(actor* act) const
         act = &you;
 
     // Shaft and mechanical traps are safe when flying or clinging.
-    if ((act->airborne() || act->can_cling_to(pos) || you.species == SP_DJINNI)
-        && ground_only())
-    {
+    if ((act->airborne() || act->can_cling_to(pos)) && ground_only())
         return true;
-    }
 
     // TODO: For now, just assume they're safe; they don't damage outright,
     // and the messages get old very quickly
@@ -926,7 +923,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             actor* targ = NULL;
             if (m->wont_attack() || crawl_state.game_is_arena())
                 targ = m;
-            else if (in_sight && one_chance_in(5))
+            else if (you.see_cell_no_trans(pos) && one_chance_in(5))
                 targ = &you;
 
             // Give the player a chance to figure out what happened
@@ -1659,6 +1656,9 @@ bool is_valid_shaft_level(const level_id &place)
     if (!is_connected_branch(place))
         return false;
 
+    if (place == BRANCH_MAIN_DUNGEON && you.depth == RUNE_LOCK_DEPTH)
+        return false;
+
     // Shafts are now allowed on the first two levels, as they have a
     // good chance of being detected. You'll also fall less deep.
     /* if (place == BRANCH_MAIN_DUNGEON && you.depth < 3)
@@ -1706,6 +1706,8 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 
     int curr_depth = lid.depth;
     int max_depth = brdepth[lid.branch];
+    if (lid.branch == BRANCH_MAIN_DUNGEON and curr_depth < RUNE_LOCK_DEPTH)
+        max_depth = RUNE_LOCK_DEPTH;
 
     // Shaft traps' behavior depends on whether it is entered intentionally.
     // Knowingly entering one is more likely to drop you 1 level.
@@ -1934,7 +1936,7 @@ void place_webs(int num, bool is_second_phase)
                 {
                     // Solid wall?
                     float solid_weight = 0;
-                    if (feat_is_solid(grd(*ai)))
+                    if (cell_is_solid(*ai))
                         solid_weight = 1;
                     // During play, adjacent webs also count slightly
                     else if (is_second_phase

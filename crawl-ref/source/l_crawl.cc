@@ -721,7 +721,8 @@ static int crawl_worley_diff(lua_State *ls)
 static int crawl_split_bytes(lua_State *ls)
 {
     uint32_t val = lua_tonumber(ls,1);
-    uint8_t bytes[4] = {
+    uint8_t bytes[4] =
+    {
         (uint8_t)(val >> 24),
         (uint8_t)(val >> 16),
         (uint8_t)(val >> 8),

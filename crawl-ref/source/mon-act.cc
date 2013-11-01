@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 #include "mon-act.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "arena.h"
 #include "artefact.h"
@@ -36,7 +37,6 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mgen_data.h"
@@ -74,7 +74,8 @@ static void _shedu_movement_clamp(monster* mons);
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
 
-static const coord_def mon_compass[8] = {
+static const coord_def mon_compass[8] =
+{
     coord_def(-1,-1), coord_def(0,-1), coord_def(1,-1), coord_def(1,0),
     coord_def(1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
 };
@@ -112,7 +113,7 @@ static void _monster_regenerate(monster* mons)
         return;
     }
 
-    if (monster_descriptor(mons->type, MDSC_REGENERATES)
+    if (mons_class_fast_regen(mons->type)
         || (mons->type == MONS_FIRE_ELEMENTAL
             && (grd(mons->pos()) == DNGN_LAVA
                 || cloud_type_at(mons->pos()) == CLOUD_FIRE))
@@ -475,7 +476,7 @@ static void _tweak_wall_mmov(const monster* mons, bool move_trees = false)
 
     // If we're already moving into a shielded spot, don't adjust move
     // (this leads to zig-zagging)
-    if (feat_is_solid(grd(mons->pos() + mmov)))
+    if (cell_is_solid(mons->pos() + mmov))
         return;
 
     int dir = _compass_idx(mmov);
@@ -488,7 +489,7 @@ static void _tweak_wall_mmov(const monster* mons, bool move_trees = false)
     int range = 1;
     if (mons->target == mons->pos() + mmov)
     {
-        if (feat_is_solid(grd(mons->pos())))
+        if (cell_is_solid(mons->pos()))
             return;
         else
         {
@@ -945,18 +946,6 @@ static bool _handle_reaching(monster* mons)
         ASSERT(foe->is_player() || foe->is_monster());
 
         fight_melee(mons, foe);
-
-        if (mons->alive())
-        {
-            // Player saw the item reach.
-            item_def *wpn = mons->weapon(0);
-            if (wpn && !is_artefact(*wpn) && you.can_see(mons)
-                // Don't auto-identify polearm brands
-                && get_weapon_brand(*wpn) == SPWPN_REACHING)
-            {
-                set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
-            }
-        }
     }
 
     return ret;
@@ -1780,6 +1769,13 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
+    if (mons->summoner && mons->is_summoned())
+    {
+        const actor * const summoner = actor_by_mid(mons->summoner);
+        if ((!summoner || !summoner->alive()) && mons->del_ench(ENCH_ABJ))
+            return;
+    }
+
     if (mons->type == MONS_SNAPLASHER_VINE
         && mons->props.exists("vine_awakener"))
     {
@@ -2012,7 +2008,8 @@ void handle_monster_move(monster* mons)
     if (!mons->alive())
         return;
 
-    slime_wall_damage(mons, speed_to_duration(mons->speed));
+    if (env.level_state & LSTATE_SLIMY_WALL)
+        slime_wall_damage(mons, speed_to_duration(mons->speed));
     if (!mons->alive())
         return;
 
@@ -2168,6 +2165,8 @@ void handle_monster_move(monster* mons)
         }
     }
     mon_nearby_ability(mons);
+    if (!mons->alive())
+        return;
 
     // XXX: A bit hacky, but stores where we WILL move, if we don't take
     //      another action instead (used for decision-making)
@@ -2401,19 +2400,12 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);
 
-    if  (mons->type == MONS_ASMODEUS
-         || mons->type == MONS_CHAOS_BUTTERFLY)
+    if  (mons->type == MONS_ASMODEUS)
     {
-        cloud_type ctype;
-        switch (mons->type)
-        {
-            case MONS_ASMODEUS:         ctype = CLOUD_FIRE;          break;
-            case MONS_CHAOS_BUTTERFLY:  ctype = CLOUD_RAIN;          break;
-            default:                    ctype = CLOUD_NONE;          break;
-        }
+        cloud_type ctype = CLOUD_FIRE;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!feat_is_solid(grd(*ai))
+            if (!cell_is_solid(*ai)
                 && (env.cgrid(*ai) == EMPTY_CLOUD
                     || env.cloud[env.cgrid(*ai)].type == ctype))
             {
@@ -3142,8 +3134,8 @@ static int _count_adjacent_slime_walls(const coord_def &pos)
 static bool _check_slime_walls(const monster *mon,
                                const coord_def &targ)
 {
-    if (!player_in_branch(BRANCH_SLIME_PITS) || mons_is_slime(mon)
-        || actor_slime_wall_immune(mon) || mons_intel(mon) <= I_REPTILE)
+    if (mons_is_slime(mon) || actor_slime_wall_immune(mon)
+        || mons_intel(mon) <= I_REPTILE)
     {
         return false;
     }
@@ -3176,10 +3168,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (!in_bounds(targ))
         return false;
 
-    // No monster may enter the open sea.
-    if (grd(targ) == DNGN_OPEN_SEA || grd(targ) == DNGN_LAVA_SEA)
-        return false;
-
     // Non-friendly and non-good neutral monsters won't enter
     // sanctuaries.
     if (!mons->wont_attack()
@@ -3196,36 +3184,28 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     const dungeon_feature_type target_grid = grd(targ);
     const habitat_type habitat = mons_primary_habitat(mons);
 
+    // No monster may enter the open sea.
+    if (target_grid == DNGN_OPEN_SEA || target_grid == DNGN_LAVA_SEA)
+        return false;
+
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (mons_base_type(mons) == MONS_KRAKEN
-        && target_grid == DNGN_SHALLOW_WATER)
-    {
+    if (target_grid == DNGN_SHALLOW_WATER && mons_base_type(mons) == MONS_KRAKEN)
         return false;
-    }
-    bool no_water = false;
 
     const int targ_cloud_num = env.cgrid(targ);
     if (mons_avoids_cloud(mons, targ_cloud_num))
         return false;
 
-    if (_check_slime_walls(mons, targ))
+    if (env.level_state & LSTATE_SLIMY_WALL && _check_slime_walls(mons, targ))
         return false;
 
-    const bool burrows = mons_class_flag(mons->type, M_BURROWS);
-    const bool digs = _mons_can_cast_dig(mons, false)
-                      || _mons_can_zap_dig(mons);
-    const bool flattens_trees = mons_flattens_trees(mons);
-    if (((burrows || digs) && (target_grid == DNGN_ROCK_WALL
-                               || target_grid == DNGN_CLEAR_ROCK_WALL))
-        || (flattens_trees && feat_is_tree(target_grid)))
+    if ((target_grid == DNGN_ROCK_WALL || target_grid == DNGN_CLEAR_ROCK_WALL)
+        && (mons_class_flag(mons->type, M_BURROWS)
+            || _mons_can_cast_dig(mons, false) || _mons_can_zap_dig(mons))
+        || feat_is_tree(target_grid) && mons_flattens_trees(mons))
     {
-        // Don't burrow out of bounds.
-        if (!in_bounds(targ))
-            return false;
     }
-    else if (no_water && feat_is_water(target_grid))
-        return false;
     else if (!mons_can_traverse(mons, targ, false)
              && !monster_habitable_grid(mons, target_grid))
     {
@@ -3247,14 +3227,10 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         || (mons->type == MONS_LURKING_HORROR
             && mons->foe_distance() > random2(LOS_RADIUS + 1)))
     {
-        if (!mons->wont_attack()
-            && is_sanctuary(mons->pos()))
-        {
+        if (!mons->wont_attack() && is_sanctuary(mons->pos()))
             return true;
-        }
 
-        if (!mons->friendly()
-                && you.see_cell(targ)
+        if (!mons->friendly() && you.see_cell(targ)
             || mon_enemies_around(mons))
         {
             return false;

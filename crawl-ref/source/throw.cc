@@ -324,11 +324,6 @@ static bool _fire_validate_item(int slot, string &err)
         err = "You are wearing that object!";
         return false;
     }
-    else if (you.inv[slot].base_type == OBJ_ORBS)
-    {
-        err = "You don't feel like leaving the orb behind!";
-        return false;
-    }
     return true;
 }
 
@@ -641,12 +636,12 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
     }
     else if (victim->is_player() && mutated > 0)
     {
-        int multiplier = 100 + (mutated * 5);
+        int multiplier = 100 + mutated * 5;
 
         if (multiplier > 175)
             multiplier = 175;
 
-        dmg = (dmg * multiplier) / 100;
+        dmg = dmg * multiplier / 100;
     }
     else
         return false;
@@ -717,7 +712,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         stop_delay(true);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+        if (!cell_is_solid(you.pos()))
+            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
         canned_msg(MSG_YOU_BLINK);
         move_player_to_grid(pos, false, true);
@@ -732,7 +728,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
+        if (!cell_is_solid(you.pos()))
+            place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
 
         mon->apply_location_effects(oldpos);
         mon->check_redraw(oldpos);
@@ -789,7 +786,7 @@ static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
 {
     if (victim->undead_or_demonic())
     {
-        dmg += 1 + (random2(dmg * 15) / 10);
+        dmg += 1 + random2(dmg * 15) / 10;
 
         if (!beam.is_tracer && you.can_see(victim))
            dmg_msg = victim->name(DESC_THE) + " "
@@ -1096,6 +1093,9 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.can_see_invis = agent->can_see_invisible();
 
+    beam.name = item.name(DESC_PLAIN, false, false, false);
+    ammo_name = item.name(DESC_PLAIN);
+
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
         ? get_unrand_entry(launcher->special) : NULL;
 
@@ -1143,8 +1143,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 #endif
 
     ASSERT(!exploding || !is_artefact(item));
-
-    beam.name = item.name(DESC_PLAIN, false, false, false);
 
     // Note that bow_brand is known since the bow is equipped.
 
@@ -1202,8 +1200,6 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     if (beam_changed)
         beam.name = item.name(DESC_PLAIN, false, false, false);
-
-    ammo_name = item.name(DESC_PLAIN);
 
     ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
 

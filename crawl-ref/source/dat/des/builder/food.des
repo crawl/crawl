@@ -1,10 +1,28 @@
 ##########################################################################
+# Helper function to weight the secondary food vaults properly.
+# We want each level in the range to have a roughly even chance of placing
+# the vault.
+# The uppermost level we place it on is D:7, and the lowermost is D:14;
+# thus the first level, D:7, has a 1 in 8 chance of placing it. If it
+# doesn't place on D:7, D:8 has a 1 in 7 chance of placing it; D:9 has a
+# 1 in 6 chance, etc. up until D:14 has a 100% chance.
+# If the levels are traversed in order, there is therefore an even
+# distribution of where the food vault is placed.
+##########################################################################
+{{
+function food_weight(e, top)
+  for i = 14, top, -1 do
+    e.depth_weight("D:" .. i, 10000 / (15 - i))
+  end
+end
+}}
+##########################################################################
 # Guarantee at least some really minimal food supply.
 ##########################################################################
 
 NAME:   first_bread
 DEPTH:  D:2-5
-CHANCE: 100% (D:5), 25%
+CHANCE: 2500, 3333 (D:3), 5000 (D:4), 10000 (D:5)
 TAGS:   uniq_first_food extra transparent
 ITEM:   bread ration
 MAP
@@ -23,7 +41,12 @@ ENDMAP
 # 17.6k/26.6k/0
 NAME:   the_bakery
 DEPTH:  D:7-14
-CHANCE: 100% (D:14), 15%
+# Previously this was a 25% CHANCE; I'm assuming this was meant to weight this
+# higher than the other food vaults, which mostly had a 15% CHANCE, but
+# placing by chance tag doesn't work that way. Hence, there's also a WEIGHT
+# tag to give it more weight than other food vaults.
+: food_weight(_G, 7)
+WEIGHT: 25
 TAGS:   uniq_second_food extra chance_second_food
 ITEM:   bread ration q:2
 : if crawl.one_chance_in(8) then
@@ -44,7 +67,8 @@ ENDMAP
 # 18.6k, min 14k
 NAME:   david_nohive_1
 DEPTH:  D:8-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 8)
+WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
 ITEM:   w:2 honeycomb / w:1 royal jelly
@@ -69,7 +93,8 @@ ENDMAP
 # 20.6k/46.5k/0
 NAME:     blue_anna_alchemist
 DEPTH:    D:8-14
-CHANCE:   100% (D:14), 15%
+: food_weight(_G, 8)
+WEIGHT: 15
 TAGS:     uniq_second_food extra chance_second_food mini_float
 SUBVAULT: Z : fruiting_plant
 SUBVAULT: Y : fruiting_plant
@@ -101,7 +126,8 @@ ENDMAP
 # 23.2k/19.9k/13k
 NAME:   hangedman_fish_farm
 DEPTH:  D:7-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 7)
+WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_pool_fixup \
         patrolling
 KMONS:  A = merfolk ; spear
@@ -121,7 +147,8 @@ ENDMAP
 # 18k/18.8k/16.6k (min 18k/12k/12k), plus perishable 6k/6k/0
 NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 8)
+WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / brain worm w:5 / goliath beetle / giant centipede
 MONS:   yellow wasp w:7 / rock worm w:5 / boring beetle / soldier ant w:13 / giant slug
@@ -138,7 +165,8 @@ ENDMAP
 # 25k (min 20k)
 NAME:   hangedman_little_slice_of_home
 DEPTH:  D:8-14
-CHANCE: 100% (D:14), 10%
+: food_weight(_G, 8)
+WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food
 KMONS:  A = jelly
 KMONS:  B = ooze
@@ -161,7 +189,8 @@ ENDMAP
 # 22.3k/18.8k/19k (min 9.6k)
 NAME:     hangedman_ranch
 DEPTH:    D:8-14
-CHANCE:   100% (D:14), 10%
+: food_weight(_G, 8)
+WEIGHT:   10
 TAGS:     uniq_second_food extra chance_second_food no_monster_gen patrolling
 SUBVAULT: Z : fruiting_plant
 KMONS:    A = three-headed hydra / w:5 two-headed hydra
@@ -191,7 +220,8 @@ ENDMAP
 # 15.3k/34.2k/0
 NAME:   hangedman_tree_tricks
 DEPTH:  D:8-14
-CHANCE: 100% (D:14), 10%
+: food_weight(_G, 8)
+WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen
 NSUBST: T = 1:. / 1:t
 KMONS:  1 = wandering mushroom
@@ -213,7 +243,8 @@ ENDMAP
 # 16.8k/21.3/8k
 NAME:   hangedman_tell_no_tales
 DEPTH:  D:9-14
-CHANCE: 100% (D:14), 10%
+: food_weight(_G, 9)
+WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
@@ -251,7 +282,8 @@ ENDMAP
 # 20.6k/23k/12.5k (min 18k/6k/0)
 NAME:    hangedman_stone_soup
 DEPTH:   D:8-14
-CHANCE:  100% (D:14), 10%
+: food_weight(_G, 8)
+WEIGHT:  10
 TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirror
 # Branch representatives working together to cook some soup:
 # D, Orc, Elf, Snake, Shoals, Vaults, Crypt, Hells, Zot.
@@ -291,7 +323,8 @@ ENDMAP
 # A couple of tengu have staked out a little piece of the dungeon.
 NAME:   grunt_tengu_nest
 DEPTH:  D:9-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 9)
+WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   tengu ; war axe | scimitar | long sword, plant
 NSUBST: 2 : 3:2 / *:.
@@ -313,13 +346,20 @@ ENDMAP
 # An ogre roasts intruders over his little campfire.
 NAME:   grunt_ogre_cave
 DEPTH:  D:7-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 7)
+WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
 {{
   local twochance = you.absdepth() - 8
   local onechance = 7 - twochance
-  mons("ogre w:" .. onechance .. " / two-headed ogre w:" .. twochance)
+  if twochance <= 0 then
+    mons("ogre")
+  elseif onechance <= 0 then
+    mons("two-headed ogre")
+  else
+    mons("ogre w:" .. onechance .. " / two-headed ogre w:" .. twochance)
+  end
   dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
                              .. ' / dwarf skeleton')
 }}
@@ -346,7 +386,8 @@ ENDMAP
 # (Ideally the cashier would have a silly cap, but they can't wear caps.)
 NAME:   grunt_pizzeria
 DEPTH:  D:8-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 8)
+WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
 MONS:   deep elf fighter ; sabre race:elven | falchion race:elven / \
@@ -373,7 +414,8 @@ ENDMAP
 # 21.6k/21.6k/21.6k
 NAME:   grunt_rat_hole
 DEPTH:  D:7-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 7)
+WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
 MONS:   rat, grey rat, green rat, orange rat
@@ -401,7 +443,8 @@ ENDMAP
 # 22.6k/22.6k/15k (+ perishable up to 16k, avg 6k)
 NAME:   grunt_livestock
 DEPTH:  D:7-14
-CHANCE: 100% (D:14), 15%
+: food_weight(_G, 7)
+WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
 MONS:   human hd:5 ; animal skin . hand axe

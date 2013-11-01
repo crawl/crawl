@@ -299,7 +299,8 @@ string replace_name_parts(const string &name_in, const item_def& item)
 // Functions defined in art-func.h are referenced in art-data.h
 #include "art-func.h"
 
-static const unrandart_entry unranddata[] = {
+static const unrandart_entry unranddata[] =
+{
 #include "art-data.h"
 };
 
@@ -1165,23 +1166,38 @@ static bool _init_artefact_book(item_def &book)
     return book_good;
 }
 
+void setup_unrandart(item_def &item)
+{
+    ASSERT(is_unrandom_artefact(item));
+    CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
+    const unrandart_entry *unrand = _seekunrandart(item);
+
+    if (unrand->prpty[ARTP_NO_UPGRADE] && item.props.exists(ARTEFACT_NAME_KEY))
+        return; // don't mangle mutable items
+
+    for (int i = 0; i < ART_PROPERTIES; i++)
+        rap[i] = static_cast<short>(unrand->prpty[i]);
+
+    item.base_type = unrand->base_type;
+    item.sub_type  = unrand->sub_type;
+    item.plus      = unrand->plus;
+    item.plus2     = unrand->plus2;
+    item.colour    = unrand->colour;
+}
+
 static bool _init_artefact_properties(item_def &item)
 {
     ASSERT(is_artefact(item));
 
+    if (is_unrandom_artefact(item))
+    {
+        setup_unrandart(item);
+        return true;
+    }
+
     CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(0);
-
-    if (is_unrandom_artefact(item))
-    {
-        const unrandart_entry *unrand = _seekunrandart(item);
-
-        for (int i = 0; i < ART_PROPERTIES; i++)
-            rap[i] = static_cast<short>(unrand->prpty[i]);
-
-        return true;
-    }
 
     if (item.base_type == OBJ_BOOKS)
         return _init_artefact_book(item);
@@ -1915,13 +1931,10 @@ static void _make_faerie_armour(item_def &item)
             continue;
         }
 
-        // These make little sense for a casting mon.
-        if (artefact_wpn_property(doodad, ARTP_BERSERK)
-            || artefact_wpn_property(doodad, ARTP_ANGRY)
-            || artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
-            || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION)
-            || artefact_wpn_property(doodad, ARTP_PREVENT_TELEPORTATION)
-            || artefact_wpn_property(doodad, ARTP_MUTAGENIC))
+        // -CAST makes no sense on someone called "the Enchantress",
+        // +TELE is not implemented for monsters yet.
+        if (artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
+            || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION))
         {
             continue;
         }
@@ -1943,7 +1956,7 @@ static void _make_faerie_armour(item_def &item)
     doodad.props[ARTEFACT_APPEAR_KEY].get_string()
         = item.props[ARTEFACT_APPEAR_KEY].get_string();
     item.props = doodad.props;
-    item.plus = 2 + random2(5);
+    item.plus = random2(6) + random2(6) - 2;
 }
 
 static jewellery_type octoring_types[8] =
@@ -1982,11 +1995,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     item.special = unrand_index;
 
     const unrandart_entry *unrand = &unranddata[unrand_index - UNRAND_START];
-    item.base_type = unrand->base_type;
-    item.sub_type  = unrand->sub_type;
-    item.plus      = unrand->plus;
-    item.plus2     = unrand->plus2;
-    item.colour    = unrand->colour;
 
     item.flags |= ISFLAG_UNRANDART;
     _artefact_setup_prop_vectors(item);

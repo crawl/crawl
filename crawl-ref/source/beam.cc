@@ -48,7 +48,6 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -132,7 +131,7 @@ void bolt::emit_message(msg_channel_type chan, const char* m)
 
 kill_category bolt::whose_kill() const
 {
-    if (YOU_KILL(thrower))
+    if (YOU_KILL(thrower) || beam_source == YOU_FAULTLESS)
         return KC_YOU;
     else if (MON_KILL(thrower))
     {
@@ -352,7 +351,7 @@ class tohit_calculator : public tohit_deducer
 public:
     int operator()(int pow) const
     {
-        return adder + (pow * mult_num) / mult_denom;
+        return adder + pow * mult_num / mult_denom;
     }
 };
 
@@ -364,7 +363,7 @@ class dicedef_calculator : public dam_deducer
 public:
     dice_def operator()(int pow) const
     {
-        return dice_def(numdice, adder + (pow * mult_num) / mult_denom);
+        return dice_def(numdice, adder + pow * mult_num / mult_denom);
     }
 };
 
@@ -374,7 +373,7 @@ class calcdice_calculator : public dam_deducer
 public:
     dice_def operator()(int pow) const
     {
-        return calc_dice(numdice, adder + (pow * mult_num) / mult_denom);
+        return calc_dice(numdice, adder + pow * mult_num / mult_denom);
     }
 };
 
@@ -395,7 +394,8 @@ struct zap_info
     int hit_loudness;
 };
 
-static const zap_info zap_data[] = {
+static const zap_info zap_data[] =
+{
 #include "zap-data.h"
 };
 
@@ -804,18 +804,18 @@ void bolt::bounce()
 
     do
         ray.regress();
-    while (feat_is_solid(grd(ray.pos())));
+    while (cell_is_solid(ray.pos()));
 
     extra_range_used += range_used(true);
     bounce_pos = ray.pos();
     bounces++;
     reflect_grid rg;
     for (adjacent_iterator ai(ray.pos(), false); ai; ++ai)
-        rg(*ai - ray.pos()) = feat_is_solid(grd(*ai));
+        rg(*ai - ray.pos()) = cell_is_solid(*ai);
     ray.bounce(rg);
     extra_range_used += 2;
 
-    ASSERT(!feat_is_solid(grd(ray.pos())));
+    ASSERT(!cell_is_solid(ray.pos()));
     _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
 }
 
@@ -1124,7 +1124,7 @@ bool bolt::need_regress() const
     //      others obsolete.
     return ((is_explosion && !in_explosion_phase)
             || drop_item
-            || feat_is_solid(grd(pos())) && !can_affect_wall(grd(pos()))
+            || cell_is_solid(pos()) && !can_affect_wall(grd(pos()))
             || origin_spell == SPELL_PRIMAL_WAVE);
 }
 
@@ -1143,7 +1143,7 @@ bool bolt::hit_wall()
         && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
         && bounces == 0 && reflections == 0 && you.see_cell(target)
-        && !feat_is_solid(grd(target)))
+        && !cell_is_solid(target))
     {
         // Okay, with all those tests passed, this is probably an instance
         // of the player manually targetting something whose line of fire
@@ -1210,7 +1210,7 @@ void bolt::affect_cell()
     fake_flavour();
 
     const coord_def old_pos = pos();
-    const bool was_solid = feat_is_solid(grd(pos()));
+    const bool was_solid = cell_is_solid(pos());
 
     if (was_solid)
     {
@@ -1263,7 +1263,7 @@ void bolt::affect_cell()
         }
     }
 
-    if (!feat_is_solid(grd(pos())))
+    if (!cell_is_solid(pos()))
         affect_ground();
 }
 
@@ -1401,7 +1401,7 @@ void bolt::do_fire()
         // through find_ray and setup_retrace, but they didn't
         // always in the past, and we don't want to crash
         // if they accidentally pass through a corner.
-        ASSERT(!feat_is_solid(grd(pos()))
+        ASSERT(!cell_is_solid(pos())
                || is_tracer && can_affect_wall(grd(pos()))
                || affects_nothing); // returning weapons
 
@@ -1713,7 +1713,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         else if (rhe == 0)
             hurted /= 2;
         else if (rhe < -1)
-            hurted = (hurted * 3) / 2;
+            hurted = hurted * 3 / 2;
 
         if (doFlavouredEffects)
         {
@@ -2204,7 +2204,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
     if (!mons->alive())
         return false;
 
-    if (mons->res_sticky_flame() || levels <= 0)
+    if (mons->res_sticky_flame() || levels <= 0 || mons->has_ench(ENCH_WATER_HOLD))
         return false;
 
     const mon_enchant old_flame = mons->get_ench(ENCH_STICKY_FLAME);
@@ -2408,12 +2408,8 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     if (!agent || damage < 1)
         return;
 
-    // The position might be trashed if the damage kills the victim,
-    // so obtain the LOS now.  The LOS is stored in the monster for
-    // memory management reasons, but is not cleared by monster_cleanup,
-    // so is still safe to use until invalidated by the next call to
-    // get_los_no_trans on that monster.
-    const los_base * const victim_los = victim->get_los_no_trans();
+    // The victim may die.
+    coord_def c = victim->pos();
 
     mprf("%s life force is offered up.", victim->name(DESC_ITS).c_str());
     damage = victim->hurt(agent, damage, BEAM_NEG);
@@ -2421,7 +2417,7 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     // Actors that had LOS to the victim (blocked by glass, clouds, etc),
     // even if they couldn't actually see each other because of blindness
     // or invisibility.
-    for (actor_iterator ai(victim_los); ai; ++ai)
+    for (actor_near_iterator ai(c, LOS_NO_TRANS); ai; ++ai)
     {
         if (mons_aligned(agent, *ai) && ai->holiness() != MH_NONLIVING)
         {
@@ -2518,8 +2514,8 @@ void bolt::affect_endpoint()
 {
     if (special_explosion)
     {
-        special_explosion->refine_for_explosion();
         special_explosion->target = pos();
+        special_explosion->refine_for_explosion();
         special_explosion->explode();
 
         // XXX: we're significantly overcounting here.
@@ -2534,8 +2530,8 @@ void bolt::affect_endpoint()
 
     if (is_explosion)
     {
-        refine_for_explosion();
         target = pos();
+        refine_for_explosion();
         explode();
         return;
     }
@@ -2607,7 +2603,8 @@ void bolt::affect_endpoint()
     if ((name == "fiery breath" && you.species == SP_RED_DRACONIAN)
         || name == "searing blast") // monster and player red draconian breath abilities
     {
-        place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
+        if (!cell_is_solid(pos()))
+            place_cloud(CLOUD_FIRE, pos(), 5 + random2(5), agent());
     }
 
     if (name == "orb of energy")
@@ -2721,9 +2718,6 @@ void bolt::affect_ground()
             }
         }
     }
-
-    if (affects_items && is_explosion)
-        expose_items_to_element(flavour, pos(), 5);
 
     affect_place_clouds();
 }
@@ -5013,7 +5007,8 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         {
             ;
         }
-        else
+        // Chaos effects don't get a resistance check to match melee chaos.
+        else if (real_flavour != BEAM_CHAOS)
         {
             res_margin = mon->check_res_magic(ench_power);
             if (res_margin > 0)
@@ -5429,7 +5424,7 @@ bool bolt::knockback_actor(actor *act)
     if (newpos == oldpos
         || actor_at(newpos)
         || act->is_stationary()
-        || feat_is_solid(grd(newpos))
+        || cell_is_solid(newpos)
         || !act->can_pass_through(newpos)
         || !act->is_habitable(newpos)
         // Save is based on target's body weight.
@@ -6081,8 +6076,8 @@ actor* bolt::agent(bool ignore_reflection) const
     // If the beam was reflected report a different point of origin
     if (reflections > 0 && !ignore_reflection)
     {
-        if (reflector == NON_MONSTER)
-            nominal_ktype = KILL_YOU_MISSILE;
+        if (reflector == NON_MONSTER || beam_source == NON_MONSTER)
+            return &menv[YOU_FAULTLESS];
         nominal_source = reflector;
     }
     if (YOU_KILL(nominal_ktype))

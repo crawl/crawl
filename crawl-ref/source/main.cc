@@ -32,6 +32,7 @@
 #include "abl-show.h"
 #include "abyss.h"
 #include "acquire.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
@@ -92,7 +93,6 @@
 #include "mon-act.h"
 #include "mon-abil.h"
 #include "mon-cast.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"
 #include "mon-util.h"
@@ -533,7 +533,9 @@ static void _show_commandline_options_help()
     puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
 #ifdef DEBUG_DIAGNOSTICS
     puts("");
-    puts("  -test            run test cases in ./test");
+    puts("  -test            run all test cases in test/ except test/big/");
+    puts("  -test foo,bar    run only tests \"foo\" and \"bar\"");
+    puts("  -test list       list available tests");
     puts("  -script <name>   run script matching <name> in ./scripts");
 #endif
     puts("");
@@ -950,7 +952,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_LOOK_AROUND:
     case CMD_INSPECT_FLOOR:
     case CMD_SHOW_TERRAIN:
-    case CMD_EXAMINE_OBJECT:
     case CMD_LIST_ARMOUR:
     case CMD_LIST_JEWELLERY:
     case CMD_LIST_EQUIPMENT:
@@ -1003,7 +1004,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
-    case CMD_DESTROY_ITEM:
     case CMD_FIX_WAYPOINT:
     case CMD_CLEAR_MAP:
     case CMD_INSCRIBE_ITEM:
@@ -1307,8 +1307,10 @@ static void _input()
                 clua.callfn("ready", 0, 0);
         }
 
+#ifdef WATCHDOG
         // We're not in an infinite loop, reset the timer.
         watchdog();
+#endif
 
         // Flush messages and display message window.
         msgwin_new_cmd();
@@ -1953,7 +1955,6 @@ void process_command(command_type cmd)
     case CMD_CAST_SPELL:           do_cast_spell_cmd(false); break;
     case CMD_DISPLAY_SPELLS:       inspect_spells();         break;
     case CMD_EAT:                  eat_food();               break;
-    case CMD_EXAMINE_OBJECT:       examine_object();         break;
     case CMD_FIRE:                 fire_thing();             break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
@@ -2964,11 +2965,6 @@ static void _decrement_durations()
             0,
             "Your song is almost over.");
 
-    _decrement_a_duration(DUR_SONG_OF_SHIELDING, delay,
-            "Your magic is no longer protecting you.",
-            0,
-            "You are feeling less protected by your magic.");
-
     _decrement_a_duration(DUR_SENTINEL_MARK, delay,
                           "The sentinel's mark upon you fades away.");
 
@@ -3066,6 +3062,8 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_FIRE_VULN, delay,
                           "You feel less vulnerable to fire.");
+
+    dec_elixir_player(delay);
 
     if (!env.sunlight.empty())
         process_sunlights();
@@ -3298,7 +3296,8 @@ static void _player_reacts()
 
     actor_apply_cloud(&you);
 
-    slime_wall_damage(&you, you.time_taken);
+    if (env.level_state & LSTATE_SLIMY_WALL)
+        slime_wall_damage(&you, you.time_taken);
 
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
@@ -3333,7 +3332,6 @@ static void _player_reacts()
     }
 
     _regenerate_hp_and_mp(capped_time);
-
     recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.

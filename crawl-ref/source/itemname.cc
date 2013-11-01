@@ -444,9 +444,6 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_FREEZING: return terse ? " (freeze)" : " of freezing";
     case SPWPN_HOLY_WRATH: return terse ? " (holy)" : " of holy wrath";
     case SPWPN_ELECTROCUTION: return terse ? " (elec)":" of electrocution";
-#if TAG_MAJOR_VERSION == 34
-    case SPWPN_ORC_SLAYING: return terse ? " (slay orc)":" of orc slaying";
-#endif
     case SPWPN_DRAGON_SLAYING: return terse ? " (slay drac)":" of dragon slaying";
     case SPWPN_VENOM: return terse ? " (venom)" : " of venom";
     case SPWPN_PROTECTION: return terse ? " (protect)" : " of protection";
@@ -455,7 +452,6 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_SPEED: return terse ? " (speed)" : " of speed";
     case SPWPN_PAIN: return terse ? " (pain)" : " of pain";
     case SPWPN_DISTORTION: return terse ? " (distort)" : " of distortion";
-    case SPWPN_REACHING: return terse ? " (reach)" : " of reaching";
 
     case SPWPN_VAMPIRICISM:
         return terse ? " (vamp)" : ""; // non-terse already handled
@@ -523,6 +519,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_INTELLIGENCE:      return "intelligence";
         case SPARM_PONDEROUSNESS:     return "ponderousness";
         case SPARM_FLYING:            return "flying";
+        case SPARM_JUMPING:           return "jumping";
         case SPARM_MAGIC_RESISTANCE:  return "magic resistance";
         case SPARM_PROTECTION:        return "protection";
         case SPARM_STEALTH:           return "stealth";
@@ -552,6 +549,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_INTELLIGENCE:      return " {Int+3}";
         case SPARM_PONDEROUSNESS:     return " {ponderous}";
         case SPARM_FLYING:            return " {Fly}";
+        case SPARM_JUMPING:            return " {Jump}";
         case SPARM_MAGIC_RESISTANCE:  return " {MR+}";
         case SPARM_PROTECTION:        return " {AC+3}";
         case SPARM_STEALTH:           return " {Stlth+}";
@@ -1426,8 +1424,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
             buff << "pair of ";
 
-        // When asking for the base item name, randartism is ignored.
-        if (is_artefact(*this) && !basename && !dbname)
+        if (is_artefact(*this) && !dbname)
         {
             buff << get_artefact_name(*this);
             break;
@@ -1562,14 +1559,16 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             const int pqual   = PQUAL(plus);
             const int pcolour = PCOLOUR(plus);
 
-            static const char *potion_qualifiers[] = {
+            static const char *potion_qualifiers[] =
+            {
                 "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",
                 "smoky ", "glowing ", "sedimented ", "metallic ", "murky ",
-                "gluggy ", "oily ", "slimy ", "emulsified "
+                "gluggy ", "oily ", "slimy ", "emulsified ",
             };
             COMPILE_CHECK(ARRAYSZ(potion_qualifiers) == PDQ_NQUALS);
 
-            static const char *potion_colours[] = {
+            static const char *potion_colours[] =
+            {
 #if TAG_MAJOR_VERSION == 34
                 "clear",
 #endif
@@ -2386,12 +2385,14 @@ void check_item_knowledge(bool unknown_items)
             }
         }
         // Misc.
-        static const object_class_type misc_list[] = {
+        static const object_class_type misc_list[] =
+        {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
             OBJ_BOOKS, OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
             OBJ_MISCELLANY, OBJ_MISCELLANY
         };
-        static const int misc_ST_list[] = {
+        static const int misc_ST_list[] =
+        {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_HONEYCOMB,
             NUM_BOOKS, BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
             NUM_MISCELLANY
@@ -3118,6 +3119,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
+        if (you.species == SP_DJINNI && get_weapon_brand(item) == SPWPN_ANTIMAGIC)
+            return true;
+
         return false;
 
     case OBJ_MISSILES:
@@ -3218,13 +3222,13 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
-            return (you.species == SP_FORMICID
-                    || (you.is_undead
-                        && (you.species != SP_VAMPIRE
-                            || temp && you.hunger_state <= HS_SATIATED)));
-
+            return you.is_undead
+                   && (you.species != SP_VAMPIRE
+                       || temp && you.hunger_state <= HS_SATIATED)
+                   || you.species == SP_DJINNI
+                   || you.species == SP_FORMICID;
         case POT_SPEED:
-            return (you.species == SP_FORMICID);
+            return you.species == SP_FORMICID;
 
         case POT_CURE_MUTATION:
 #if TAG_MAJOR_VERSION == 34
@@ -3273,10 +3277,11 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case AMU_RAGE:
-            return (you.species == SP_FORMICID
-                    || (you.is_undead
-                        && (you.species != SP_VAMPIRE
-                            || temp && you.hunger_state <= HS_SATIATED)));
+            return you.is_undead
+                   && (you.species != SP_VAMPIRE
+                       || temp && you.hunger_state <= HS_SATIATED)
+                   || you.species == SP_DJINNI
+                   || you.species == SP_FORMICID;
 
         case AMU_STASIS:
             return you.stasis(false, false);

@@ -1,3 +1,5 @@
+# Misc maps used by the testsuite.
+
 # A random set of walls for unpredictable ray bouncing.
 NAME: bounce_test
 TAGS: bounce_test
@@ -20,4 +22,19 @@ XxxxxxxxxxxxxxxxX
 XxxxxxxxxxxxxxxxX
 XxxxxxxxxxxxxxxxX
 XXXXXXXXXXXXXXXXX
+ENDMAP
+
+# In the buggy case, the monster oscillates between 1 and 2.
+NAME: monster_plant_pathfind
+ORIENT: encompass
+MONS: generate_awake hippogriff, nothing
+KMONS: P = plant
+# Just to shut up level compiler sanity checks.
+TAGS: monster_plant_pathfind
+MAP
+xxxxx
+xxP{x
+x2PPx
+x.1xx
+xxxxx
 ENDMAP

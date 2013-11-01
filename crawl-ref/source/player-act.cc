@@ -26,6 +26,7 @@
 #include "monster.h"
 #include "spl-damage.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -161,7 +162,7 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (airborne() || species == SP_DJINNI)
         return true;
 
-    if (actual_grid == DNGN_LAVA
+    if (actual_grid == DNGN_LAVA && species != SP_LAVA_ORC
         || actual_grid == DNGN_DEEP_WATER && !can_swim())
     {
         return false;
@@ -686,6 +687,14 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
+    if (you.species == SP_DJINNI)
+    {
+        if (verbose)
+            mpr("Only creatures of flesh and blood can berserk.");
+
+        return false;
+    }
+
     if (is_lifeless_undead())
     {
         if (verbose)
@@ -717,8 +726,8 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    ASSERT(HUNGER_STARVING - 100 + BERSERK_NUTRITION < 2066);
-    if (hunger <= 2066)
+    COMPILE_CHECK(HUNGER_STARVING - 100 + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
+    if (hunger <= HUNGER_VERY_HUNGRY)
     {
         if (verbose)
             mpr("You're too hungry to go berserk.");
@@ -728,6 +737,52 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
     return true;
 }
 
+bool player::can_jump(bool quiet) const
+{
+    if (duration[DUR_EXHAUSTED])
+    {
+        if (!quiet)
+            mpr("You're too exhausted to jump.");
+        return false;
+    }
+
+    if (in_water())
+    {
+        if (!quiet)
+            mpr("You can't jump while in water.");
+        return false;
+    }
+    if (feat_is_lava(grd(pos())))
+    {
+        if (!quiet)
+            mpr("You can't jump while standing in lava.");
+        return false;
+    }
+    if (liquefied_ground())
+    {
+        if (!quiet)
+            mpr("You can't jump while stuck in this mess.");
+        return false;
+    }
+    if (is_constricted())
+    {
+        if (!quiet)
+            mpr("You can't jump while being constricted.");
+        return false;
+    }
+    if (form == TRAN_TREE || form == TRAN_WISP)
+    {
+        if (!quiet)
+            canned_msg(MSG_PRESENT_FORM);
+        return false;
+    }
+    return true;
+}
+
+bool player::can_jump() const
+{
+    return can_jump(false);
+}
 bool player::berserk() const
 {
     return duration[DUR_BERSERK];
@@ -735,7 +790,7 @@ bool player::berserk() const
 
 bool player::can_cling_to_walls() const
 {
-    return form == TRAN_SPIDER;
+    return form == TRAN_SPIDER || player_equip_unrand(UNRAND_SPIDER);
 }
 
 bool player::is_web_immune() const

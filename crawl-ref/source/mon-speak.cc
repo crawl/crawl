@@ -396,7 +396,10 @@ bool mons_speaks(monster* mons)
 {
     ASSERT(!invalid_monster_type(mons->type));
 
-    // Monsters always talk on death, even if invisible/silenced/etc.
+    if (mons->asleep() || mons->cannot_act())
+        return false;
+
+    // Monsters talk on death even if invisible/silenced/etc.
     int duration = 1;
     const bool force_speak = !mons->alive()
         || (mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS)

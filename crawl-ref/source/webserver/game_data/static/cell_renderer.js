@@ -662,6 +662,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                     this.draw_dngn(dngn.RAY, x, y);
                 else if (bg.RAY_OOR)
                     this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
+                else if (bg.LANDING)
+                    this.draw_dngn(dngn.LANDING, x, y);
+
             }
         },
 
@@ -846,6 +849,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 this.draw_icon(icons.ANIMATED_WEAPON, x, y);
             if (fg.SUMMONED)
                 this.draw_icon(icons.SUMMONED, x, y);
+            if (fg.PERM_SUMMON)
+                this.draw_icon(icons.PERM_SUMMON, x, y);
 
             if (bg.UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MESH, x, y);

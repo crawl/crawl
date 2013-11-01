@@ -19,7 +19,8 @@
 
 static dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 {
-    static dungeon_feature_type features[] = {
+    static dungeon_feature_type features[] =
+    {
         DNGN_STONE_WALL,
         DNGN_STONE_WALL,
         DNGN_STONE_WALL,
@@ -239,7 +240,7 @@ LevelLayout::LevelLayout(level_id id, uint32_t _seed, const ProceduralLayout &_l
 
         uint32_t solid_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            solid_count += feat_is_solid(grd(*ai));
+            solid_count += cell_is_solid(*ai);
         coord_def p = *ri;
         uint64_t base = hash3(p.x, p.y, seed);
         int div = base % 2 ? 12 : 11;

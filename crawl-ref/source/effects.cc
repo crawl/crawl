@@ -19,6 +19,7 @@
 #include "options.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -53,7 +54,6 @@
 #include "mislead.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
-#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-project.h"
@@ -601,7 +601,7 @@ void direct_effect(monster* source, spell_type spell,
             simple_monster_message(def, " is struck by the twisting air!");
         else
         {
-            if (you.flight_mode() || djinni_floats())
+            if (you.flight_mode())
                 mpr("The air twists around and violently strikes you in flight!");
             else
                 mpr("The air twists around and strikes you!");
@@ -904,7 +904,7 @@ static bool _follows_orders(monster* mon)
 // If allow_patrol is true, patrolling monsters get MHITNOT instead.
 static void _set_friendly_foes(bool allow_patrol = false)
 {
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;
@@ -915,7 +915,7 @@ static void _set_friendly_foes(bool allow_patrol = false)
 
 static void _set_allies_patrol_point(bool clear = false)
 {
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;
@@ -933,7 +933,7 @@ static void _set_allies_withdraw(const coord_def &target)
     float mult = float(LOS_RADIUS * 2) / (float)max(abs(delta.x), abs(delta.y));
     coord_def rally_point = clamp_in_bounds(coord_def(delta.x * mult, delta.y * mult) + you.pos());
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;
@@ -1234,7 +1234,7 @@ bool vitrify_area(int radius)
         if (newgrid != grid)
         {
             grd(*ri) = newgrid;
-            set_terrain_changed(ri->x, ri->y);
+            set_terrain_changed(*ri);
             something_happened = true;
         }
     }
@@ -2093,7 +2093,7 @@ static void _handle_magic_contamination()
         added_contamination += 20;
 
     if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI)
-        added_contamination += 30;
+        added_contamination += 20;
 
     // The Orb halves dissipation (well a bit more, I had to round it),
     // but won't cause glow on its own -- otherwise it'd spam the player
@@ -2115,10 +2115,7 @@ static void _handle_magic_contamination()
 static void _magic_contamination_effects()
 {
     // [ds] Move magic contamination effects closer to b26 again.
-    const bool glow_effect = you.species == SP_DJINNI ?
-        get_contamination_level() > 2
-            && x_chance_in_y(you.magic_contamination, 24000):
-        get_contamination_level() > 1
+    const bool glow_effect = get_contamination_level() > 1
             && x_chance_in_y(you.magic_contamination, 12000);
 
     if (glow_effect && is_sanctuary(you.pos()))
@@ -2386,9 +2383,6 @@ void handle_time()
             if (evol)
                 more();
         }
-
-    if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
-        place_webs(random2(3 * you.depth), true);
 }
 
 // Move monsters around to fake them walking around while player was
@@ -2648,22 +2642,7 @@ void update_level(int elapsedTime)
         // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
         // const bool healthy = (mi->hit_points * 2 > mi->max_hit_points);
 
-        // This is the monster healing code, moved here from tag.cc:
-        if (mons_can_regenerate(*mi))
-        {
-            if (monster_descriptor(mi->type, MDSC_REGENERATES)
-                || mi->type == MONS_PLAYER_GHOST)
-            {
-                mi->heal(turns);
-            }
-            else
-            {
-                // Set a lower ceiling of 0.1 on the regen rate.
-                const int regen_rate = max(mons_natural_regen_rate(*mi) * 2, 5);
-
-                mi->heal(div_rand_round(turns * regen_rate, 50));
-            }
-        }
+        mi->heal(div_rand_round(turns * mons_off_level_regen_rate(*mi), 100));
 
         // Handle nets specially to remove the trapping property of the net.
         if (mi->caught())

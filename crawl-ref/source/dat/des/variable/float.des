@@ -2644,56 +2644,6 @@ ENDMAP
 
 ##############################################################################
 
-NAME:   grunt_hell_entry_demonic_statue
-TAGS:   no_monster_gen no_rtele_into
-ORIENT: float
-DEPTH:  D:16-21
-MONS:   blue devil / orange demon / red devil / w:5 iron devil
-MONS:   ice devil / sun demon / soul eater
-MONS:   shadow demon / blizzard demon / hell beast
-ITEM:   skeleton
-KFEAT:  b = .
-: if you.absdepth() > 18 then
-KFEAT:  A = enter_hell
-: else
-KFEAT:  A = stone_arch
-: end
-KMONS:  A = silver statue
-MARKER: A = lua:fog_machine { cloud_type = "grey smoke", \
-            pow_min = 20, pow_max = 30, delay = 50, \
-            size = 1, walk_dist = 3, start_clouds = 1 }
-KMONS:  b = w:100 nothing / w:5 crimson imp / w:2 white imp / w:2 iron imp \
-            / w:1 shadow imp
-KPROP:  b = nothing / w:5 bloody
-KITEM:  b = nothing / w:1 gold
-MARKER: H = lua:props_marker { stop_explore = "statue" }
-KFEAT:  HI = G
-MAP
-      xxxxxxx
-    xxxbbbbbxxx
-  xxxbbbbbbbbbxxx
-  xbbbbGbbbGbbbbx
- xxbG1bbbbbbd1Gbxx
- xdb2bb2bGb2bb2bbx
-xxbbbbGbbbbbGbbbbxx
-xbbGb2bbd3*bb2bGbbx
-xbbbbbb%**d*bbbbdbx
-xbd1bGb%*A*%bGb1bbx
-xb%bbbb%*d*dbbbbbbx
-xbbGbbbd%b*bbbbGbbx
-xxbbbbGbbbbbGdbbbxx
- xbb1bb2bGd2bb1bbx
- xxbG1bbbbbbb1Gbxx
-  xbbbbG1b1Gbbbbx
-  xxxbbbbb%bbbxxx
-    xxxbdbbbxxx
-    xxxv===vxxx
-    xxxH...Ixxx
-    xx@@@@@@@xx
-ENDMAP
-
-##############################################################################
-
 NAME:   wad_pebble_path
 DEPTH:  D:2-26
 ORIENT: float

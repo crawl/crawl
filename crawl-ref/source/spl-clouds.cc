@@ -236,6 +236,7 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                const coord_def& where, int pow, int size, int spread_rate,
                int colour, string name, string tile)
 {
+    // The starting point _may_ be a place no cloud can be placed on.
     apply_area_cloud(_make_a_normal_cloud, where, pow, size,
                      cl_type, agent, spread_rate, colour, name, tile,
                      -1);
@@ -289,7 +290,7 @@ void manage_fire_shield(int delay)
 
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
+        if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD)
             place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
 }
 
@@ -356,7 +357,7 @@ int holy_flames(monster* caster, actor* defender)
     {
         if (!in_bounds(*ai)
             || env.cgrid(*ai) != EMPTY_CLOUD
-            || feat_is_solid(grd(*ai))
+            || cell_is_solid(*ai)
             || is_sanctuary(*ai)
             || monster_at(*ai))
         {
@@ -382,7 +383,7 @@ struct dist2_sorter
 
 static bool _safe_cloud_spot(const monster* mon, coord_def p)
 {
-    if (feat_is_solid(grd(p)) || env.cgrid(p) != EMPTY_CLOUD)
+    if (cell_is_solid(p) || env.cgrid(p) != EMPTY_CLOUD)
         return false;
 
     if (actor_at(p) && mons_aligned(mon, actor_at(p)))
@@ -474,18 +475,18 @@ void apply_control_winds(const monster* mon)
     }
 
     // Now give a ranged accuracy boost to nearby allies
-    for (monster_iterator mi(mon); mi; ++mi)
+    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
     {
-        if (distance2(mon->pos(), mi->pos()) < 33 && mons_aligned(mon, *mi))
+        if (distance2(mon->pos(), mi->pos()) >= 33 || !mons_aligned(mon, *mi))
+            continue;
+
+        if (!mi->has_ench(ENCH_WIND_AIDED))
+            mi->add_ench(mon_enchant(ENCH_WIND_AIDED, 1, mon, 20));
+        else
         {
-            if (!mi->has_ench(ENCH_WIND_AIDED))
-                mi->add_ench(mon_enchant(ENCH_WIND_AIDED, 1, mon, 20));
-            else
-            {
-                mon_enchant aid = mi->get_ench(ENCH_WIND_AIDED);
-                aid.duration = 20;
-                mi->update_ench(aid);
-            }
+            mon_enchant aid = mi->get_ench(ENCH_WIND_AIDED);
+            aid.duration = 20;
+            mi->update_ench(aid);
         }
     }
 }

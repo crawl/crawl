@@ -44,6 +44,7 @@
 #include "religion.h"
 #include "stairs.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
@@ -247,7 +248,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
             || grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_SHAFT)
         {
-            return you.permanent_flight() || you.species == SP_DJINNI;
+            return you.permanent_flight();
         }
 
         // You can't open doors in bat form.
@@ -262,8 +263,12 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
 // Ignores swimming, flying, and travel_avoid_terrain.
 bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
 {
-    if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
+    if (feat_is_trap(feat) && feat != DNGN_PASSAGE_OF_GOLUBRIA)
+    {
+        if (ignore_player_traversability)
+            return !(feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_TELEPORT);
         return false;
+    }
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
     else if (feat >= DNGN_MINWALK || feat == DNGN_RUNED_DOOR
@@ -1001,10 +1006,11 @@ command_type travel()
 
         if (you.running < 0 && (*move_x || *move_y))
         {
-            const int delta_to_dir[9] = {
+            const int delta_to_dir[9] =
+            {
                 7,  0, 1,
                 6, -1, 2,
-                5,  4, 3
+                5,  4, 3,
             };
             prev_travel_moves[prev_travel_index] =
                 delta_to_dir[(*move_x + 1) + 3 * (*move_y + 1)];
@@ -1294,11 +1300,16 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
     if (runmode == RMODE_CONNECTIVITY)
         ignore_player_traversability = true;
-    else if (runmode == RMODE_EXPLORE_GREEDY)
-    {
-        autopickup = can_autopickup();
-        sacrifice = god_likes_items(you.religion, true);
-        need_for_greed = (autopickup || sacrifice);
+    else {
+        ASSERTM(crawl_state.need_save,
+                "Pathfind with mode %d without a game?", runmode);
+
+        if (runmode == RMODE_EXPLORE_GREEDY)
+        {
+            autopickup = can_autopickup();
+            sacrifice = god_likes_items(you.religion, true);
+            need_for_greed = (autopickup || sacrifice);
+        }
     }
 
     if (!ls && (annotate_map || need_for_greed))
@@ -4512,9 +4523,12 @@ void do_interlevel_travel()
 const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
 const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
 
-const int cmd_array[8] = {CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT,
-                          CMD_MOVE_LEFT, CMD_MOVE_RIGHT,
-                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT};
+const int cmd_array[8] =
+{
+    CMD_MOVE_DOWN_LEFT,  CMD_MOVE_DOWN,  CMD_MOVE_DOWN_RIGHT,
+    CMD_MOVE_LEFT,                       CMD_MOVE_RIGHT,
+    CMD_MOVE_UP_LEFT,    CMD_MOVE_UP,    CMD_MOVE_UP_RIGHT,
+};
 
 
 static int _adjacent_cmd(const coord_def &gc, bool force)

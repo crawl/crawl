@@ -1339,7 +1339,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_FLAME:
             case SPWPN_FROST:
             case SPWPN_HOLY_WRATH:
-            case SPWPN_REACHING:
                 valued *= 50;
                 break;
 
@@ -1696,6 +1695,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_SEE_INVISIBLE:
             case SPARM_INTELLIGENCE:
             case SPARM_FLYING:
+            case SPARM_JUMPING:
             case SPARM_PRESERVATION:
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
@@ -1994,6 +1994,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_FEAR:
+            case SCR_IMMOLATION:
             case SCR_MAGIC_MAPPING:
                 valued += 35;
                 break;
@@ -2013,7 +2014,6 @@ unsigned int item_value(item_def item, bool ident)
 
             case SCR_NOISE:
             case SCR_RANDOM_USELESSNESS:
-            case SCR_IMMOLATION:
                 valued += 10;
                 break;
             }
@@ -2185,6 +2185,8 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_BOOKS:
         valued = 150;
+        if (item.sub_type == BOOK_DESTRUCTION)
+            break;
 
         if (item_type_known(item))
         {

@@ -810,12 +810,6 @@ centaur warrior
 Un puissant centaure, vétéran de nombreuses batailles, et qui porte une arme de
 qualité et tout à fait capable d'en tirer le meilleur.
 %%%%
-chaos butterfly
-
-Un particulièrement large papillon, aux couleurs criardes, apparemment
-chatoyant au milieu des nuages d'orage diluviens qui le suivent partout où il
-va.
-%%%%
 chaos spawn
 
 Un être de pur chaos, sa forme varie constamment, se faisant pousser puis
@@ -2208,11 +2202,6 @@ polar bear
 Un gros ours très fort et couvert d'un pelage d'un blanc brillant, habitué aux
 conditions climatiques basses. Comme tout les ursidés, l'ours polaire deviendra
 enragé s'il est grièvement blessé ou apeuré.
-%%%%
-polymoth
-
-Un petit papillon brillant. Une poussière mutagènes détestable tombe de ses
-ailes.
 %%%%
 porcupine
 

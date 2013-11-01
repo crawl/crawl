@@ -220,9 +220,11 @@ static int pending = 0;
 
 int getchk()
 {
+#ifdef WATCHDOG
     // If we have (or wait for) actual keyboard input, it's not an infinite
     // loop.
     watchdog();
+#endif
 
     if (pending)
     {

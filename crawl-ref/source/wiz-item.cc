@@ -10,6 +10,7 @@
 #include <errno.h>
 
 #include "acquire.h"
+#include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "coordit.h"
@@ -28,9 +29,7 @@
 #include "makeitem.h"
 #include "mapdef.h"
 #include "misc.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
-#include "mon-util.h"
 #include "options.h"
 #include "output.h"
 #include "player-equip.h"
@@ -246,7 +245,8 @@ void wizard_create_spec_object()
     }
 }
 
-static const char* _prop_name[] = {
+static const char* _prop_name[] =
+{
     "Brand",
     "AC",
     "EV",
@@ -289,13 +289,17 @@ static const char* _prop_name[] = {
     "+Fog",
 #endif
     "Regen",
+#if TAG_MAJOR_VERSION == 34
+    "Unused",
+#endif
 };
 
 #define ARTP_VAL_BOOL 0
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-static int8_t _prop_type[] = {
+static int8_t _prop_type[] =
+{
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION
@@ -338,6 +342,9 @@ static int8_t _prop_type[] = {
     ARTP_VAL_BOOL, //FOG
 #endif
     ARTP_VAL_BOOL, //REGEN
+#if TAG_MAJOR_VERSION == 34
+    ARTP_VAL_BOOL, //UNUSED
+#endif
 };
 
 static void _tweak_randart(item_def &item)
@@ -790,7 +797,7 @@ void wizard_unidentify_pack()
     // Forget things that nearby monsters are carrying, as well.
     // (For use with the "give monster an item" wizard targetting
     // command.)
-    for (monster_iterator mon(you.get_los()); mon; ++mon)
+    for (monster_near_iterator mon(&you); mon; ++mon)
     {
         for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
         {
@@ -1124,13 +1131,16 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         fprintf(ostat, "Egos (including artefacts):\n");
 
-        const char* names[] = {
+        const char* names[] =
+        {
             "normal",
             "flaming",
             "freezing",
             "holy wrath",
             "electrocution",
+#if TAG_MAJOR_VERSION == 34
             "orc slaying",
+#endif
             "dragon slaying",
             "venom",
             "protection",
@@ -1143,16 +1153,22 @@ static void _debug_acquirement_stats(FILE *ostat)
             "pain",
             "antimagic",
             "distortion",
+#if TAG_MAJOR_VERSION == 34
             "reaching",
             "returning",
+#endif
             "chaos",
             "evasion",
             "confusion",
             "penetration",
             "reaping",
             "acid",
+#if TAG_MAJOR_VERSION == 34
+            "confuse",
+#endif
             "debug randart",
         };
+        COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_WEAPONS);
 
         for (int i = 0; i < NUM_SPECIAL_WEAPONS; ++i)
             if (ego_quants[i] > 0)
@@ -1171,7 +1187,8 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         fprintf(ostat, "Egos (excluding artefacts):\n");
 
-        const char* names[] = {
+        const char* names[] =
+        {
             "normal",
             "running",
             "fire resistance",
@@ -1194,6 +1211,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reflection",
             "spirit shield",
             "archery",
+            "jumping",
         };
 
         const int non_art = acq_calls - num_arts;
@@ -1213,7 +1231,8 @@ static void _debug_acquirement_stats(FILE *ostat)
         {
             fprintf(ostat, "Primary disciplines/levels of randart books:\n");
 
-            const char* names[] = {
+            const char* names[] =
+            {
                 "none",
                 "conjuration",
                 "enchantment",
@@ -1340,7 +1359,8 @@ static void _debug_rap_stats(FILE *ostat)
     }
 
     // -1 = always bad, 1 = always good, 0 = depends on value
-    const int good_or_bad[] = {
+    const int good_or_bad[] =
+    {
          1, //ARTP_BRAND
          0, //ARTP_AC
          0, //ARTP_EVASION
@@ -1490,7 +1510,8 @@ static void _debug_rap_stats(FILE *ostat)
             max_balance_props,
             (float) total_balance_props / (float) num_randarts);
 
-    const char* rap_names[] = {
+    const char* rap_names[] =
+    {
         "ARTP_BRAND",
         "ARTP_AC",
         "ARTP_EVASION",

@@ -235,6 +235,10 @@ Although his new form includes a number of large razor-sharp blades growing
 from his demonic appendages, he kept his favourite axe and is eager to let you
 test its edge.
 %%%%
+ignis
+
+A tiny ball of light that flits and flickers at the edge of your vision.
+%%%%
 Ijyb
 
 A small and twisted goblin, wearing some ugly blue rags. He claims dominion
@@ -770,11 +774,6 @@ centaur warrior
 
 A muscular centaur, a veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
-%%%%
-chaos butterfly
-
-A particularly large, garishly coloured butterfly, seemingly shimmering amidst
-the torrential storm clouds that follow it wherever it goes.
 %%%%
 chaos spawn
 
@@ -2104,10 +2103,6 @@ polar bear
 A large and very strong bear covered in glistening white fur, habituated to
 cold conditions. Like all ursines, the polar bear will become enraged if badly
 hurt or frightened.
-%%%%
-polymoth
-
-A brilliant little moth. A hateful mutagenic dust rolls off its wings.
 %%%%
 porcupine
 

@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "abl-show.h"
+#include "act-iter.h"
 #include "branch.h"
 #include "acquire.h"
 #include "areas.h"
@@ -53,7 +54,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mgen_data.h"
@@ -1675,11 +1675,13 @@ static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed
 static void _beogh_blessing_reinforcements()
 {
     // Possible reinforcement.
-    const monster_type followers[] = {
+    const monster_type followers[] =
+    {
         MONS_ORC, MONS_ORC, MONS_ORC_WIZARD, MONS_ORC_PRIEST
     };
 
-    const monster_type high_xl_followers[] = {
+    const monster_type high_xl_followers[] =
+    {
         MONS_ORC_PRIEST, MONS_ORC_WARRIOR, MONS_ORC_KNIGHT
     };
 
@@ -3495,8 +3497,6 @@ void god_pitch(god_type which_god)
          you.species == SP_NAGA  ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
          you.species == SP_FELID ? "sit before" :
-         // duplicated because of forms
-         you.species == SP_DJINNI ? "hover solemnly before" :
                                    "kneel at",
          god_name(which_god).c_str());
     }
@@ -4496,11 +4496,8 @@ static void _place_delayed_monsters()
 
         if (mon)
         {
-            if (you_worship(GOD_YREDELEMNUL)
-                || you_worship(GOD_BEOGH))
-            {
+            if (you_worship(GOD_YREDELEMNUL) || you_worship(GOD_BEOGH))
                 add_companion(mon);
-            }
             placed++;
         }
 

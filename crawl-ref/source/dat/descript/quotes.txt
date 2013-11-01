@@ -283,6 +283,12 @@ Stay These Messengers About Their Sacred Business. Do Not Ask Us About
 Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol.”
     -Anghammarad, “Going Postal”, Terry Pratchett.
 %%%%
+ignis
+
+“When Alexander the Great addressed him with greetings, and asked if he
+wanted anything, Diogenes replied "Yes, stand a little out of my sunshine.."”
+    -Plutarch, _Alexander_. 75.
+%%%%
 Ilsuiw
 
 “We have lingered in the chambers of the sea
@@ -329,8 +335,8 @@ the ways of gods. This is not the answer.”
 Mass Confusion spell
 
 “Go to, let us go down, and there confound their language, that they may not
-understand one another's speech.  So the LORD scattered them abroad from
-thence upon the face of all the earth: and they left off to build the city.”
+understand one another's speech.  So the LORD scattered them abroad from thence
+upon the face of all the earth: and they left off to build the city.”
     -KJV Bible, Genesis 11:7-8.
 %%%%
 Maurice
@@ -953,6 +959,12 @@ dagger
  Then strake the dagger untill his heart,
    And fell deid by her side.”
     -English traditional ballad, “Lord Thomas and Fair Annet”, circa 1650.
+%%%%
+dark maul
+
+“This caliber should be appropriate.”
+    -prince Dajmiech, “Kajko and Kokosz: The Battle with Dajmiech”, Janusz
+Christa
 %%%%
 dart
 
@@ -1996,11 +2008,6 @@ and have sometimes been with much difficulty repelled.”
     -George Shaw, _General Zoology, or, Systematic Natural History_, vol. I,
      p. 2. 1800.
 %%%%
-polymoth
-
-“All those moments will be lost in time, like tears in the rain.”
-    -Roy Batty, “Blade Runner”
-%%%%
 potion
 
 “Then gave I her, — so tutor’d by my art, —
@@ -2718,6 +2725,11 @@ black, and red. They kept and showed it to the doctor, who said he had never
 seen anything of the sort before...”
     -Benvenuto Cellini, _Autobiography_. 1563.
      trans. John Addington Symonds, 1187.
+%%%%
+spriggan assassin
+
+“I never stabbed anything that didn't stop being an immediate problem.”
+    -Jillian Zamussels, Erfworld, Rob Balder
 %%%%
 staff
 

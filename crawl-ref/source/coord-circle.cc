@@ -27,15 +27,15 @@ rectangle_iterator rect_def::iter() const
 }
 
 circle_def::circle_def()
-    : los_radius(true), origin(coord_def(0,0)), check_bounds(false)
+    : los_radius(true), check_bounds(false), origin(coord_def(0,0))
 {
     // Set up bounding box and shape.
     init(LOS_RADIUS, C_ROUND);
 }
 
 circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
-    : los_radius(bds.los_radius), shape(bds.shape),
-      origin(origin_), check_bounds(true),
+    : los_radius(bds.los_radius), check_bounds(true),
+      shape(bds.shape), origin(origin_),
       radius(bds.radius), radius_sq(bds.radius_sq)
 {
     // Set up bounding box.
@@ -43,14 +43,14 @@ circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
 }
 
 circle_def::circle_def(int param, circle_type ctype)
-    : los_radius(false), origin(coord_def(0,0)), check_bounds(false)
+    : los_radius(false), check_bounds(false), origin(coord_def(0,0))
 {
     init(param, ctype);
 }
 
 circle_def::circle_def(const coord_def &origin_, int param,
                        circle_type ctype)
-    : los_radius(false), origin(origin_), check_bounds(true)
+    : los_radius(false), check_bounds(true), origin(origin_)
 {
     init(param, ctype);
 }

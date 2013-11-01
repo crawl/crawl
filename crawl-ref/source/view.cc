@@ -14,12 +14,7 @@
 #include <algorithm>
 #include <memory>
 
-#include "externs.h"
-
-#include "map_knowledge.h"
-#include "viewchar.h"
-#include "showsymb.h"
-
+#include "act-iter.h"
 #include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
@@ -43,7 +38,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
@@ -51,6 +45,7 @@
 #include "output.h"
 #include "player.h"
 #include "random.h"
+#include "showsymb.h"
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
@@ -58,6 +53,7 @@
 #include "tilemcache.h"
 #include "traps.h"
 #include "travel.h"
+#include "viewchar.h"
 #include "viewmap.h"
 #include "xom.h"
 
@@ -121,7 +117,7 @@ void seen_monsters_react()
     if (you.duration[DUR_TIME_STEP] || crawl_state.game_is_arena())
         return;
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
             && check_awaken(*mi)
@@ -380,26 +376,27 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     static FixedArray<uint8_t, GXM, GYM> cache;
     static int cache_seed = -1;
 
-    int seed = random ? -1 :
-        (static_cast<int>(you.where_are_you) << 8) + you.depth - 1731813538;
-
-    if (seed == cache_seed && !random)
-        return cache;
-
-    if (!random)
+    if (random)
     {
-        push_rng_state();
-        seed_rng(cache_seed);
+        cache_seed = -1;
+        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+            for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
+                cache[x][y] = random2(100);
+        return cache;
     }
+
+    // must not produce the magic value (-1)
+    int seed = (static_cast<int>(you.where_are_you) << 8) + you.depth
+             ^ you.game_seeds[SEED_PASSIVE_MAP] & 0x7fffffff;
+
+    if (seed == cache_seed)
+        return cache;
 
     cache_seed = seed;
 
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-            cache[x][y] = random2(100);
-
-    if (!random)
-        pop_rng_state();
+            cache[x][y] = hash_rand(100, seed, y * GXM + x);
 
     return cache;
 }
@@ -426,8 +423,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         map_radius = 5;
 
     // now gradually weaker with distance:
-    const int pfar     = dist_range((map_radius * 7) / 10);
-    const int very_far = dist_range((map_radius * 9) / 10);
+    const int pfar     = dist_range(map_radius * 7 / 10);
+    const int very_far = dist_range(map_radius * 9 / 10);
 
     bool did_map = false;
     int  num_altars        = 0;

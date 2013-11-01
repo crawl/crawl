@@ -90,7 +90,8 @@ static void _add_overlay(int tileidx, packed_cell *cell)
 
 typedef bool (*map_predicate) (const coord_def&);
 
-static coord_def overlay_directions[] = {
+static coord_def overlay_directions[] =
+{
     coord_def(0, -1),
     coord_def(1, 0),
     coord_def(0, 1),

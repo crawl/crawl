@@ -371,7 +371,7 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
 
 static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int value = -1)
 {
-    ASSERT(candidates.size() > 0);
+    ASSERT(!candidates.empty());
 
     int total = 0;
     for (unsigned int i = 0; i < candidates.size(); ++i)
@@ -972,10 +972,16 @@ void tile_place_ray(const coord_def &gc, aff_type in_range)
 
 void tile_draw_rays(bool reset_count)
 {
+    tileidx_t flag;
+
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
-        tileidx_t flag = tile_ray_vec[i].in_range > AFF_MAYBE ? TILE_FLAG_RAY
-                                                           : TILE_FLAG_RAY_OOR;
+        if (tile_ray_vec[i].in_range < AFF_YES)
+            flag = TILE_FLAG_RAY_OOR;
+        else if (tile_ray_vec[i].in_range == AFF_YES)
+            flag = TILE_FLAG_RAY;
+        else if (tile_ray_vec[i].in_range == AFF_LANDING)
+            flag = TILE_FLAG_LANDING;
         env.tile_bg(tile_ray_vec[i].ep) |= flag;
     }
 

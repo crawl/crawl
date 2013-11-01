@@ -9,6 +9,7 @@
 
 #include "mon-info.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "coord.h"
@@ -22,7 +23,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-chimera.h"
-#include "mon-iter.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
@@ -183,6 +183,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_GRASPING_ROOTS;
     case ENCH_FIRE_VULN:
         return MB_FIRE_VULN;
+    case ENCH_TORNADO:
+        return MB_TORNADO;
+    case ENCH_TORNADO_COOLDOWN:
+        return MB_TORNADO_COOLDOWN;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1088,7 +1092,7 @@ string monster_info::mimic_name() const
         else if (item->base_type == OBJ_ORBS)
             s += "orb";
         else
-            s += item->name(DESC_BASENAME);
+            s += item->name(DESC_DBNAME);
     }
 
     if (!s.empty())
@@ -1560,6 +1564,10 @@ vector<string> monster_info::attributes() const
         v.push_back("movement impaired by roots");
     if (is(MB_FIRE_VULN))
         v.push_back("more vulnerable to fire");
+    if (is(MB_TORNADO))
+        v.push_back("surrounded by raging winds");
+    if (is(MB_TORNADO_COOLDOWN))
+        v.push_back("surrounded by restless winds");
     return v;
 }
 

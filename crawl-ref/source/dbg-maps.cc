@@ -9,6 +9,7 @@
 
 #include "branch.h"
 #include "chardump.h"
+#include "crash.h"
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
@@ -74,6 +75,8 @@ static bool mg_do_build_level(int niters)
          mg_build_attempts, mg_vetoes,
          mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
 
+    watchdog();
+
     no_messages mx;
     for (int i = 0; i < niters; ++i)
     {
@@ -127,7 +130,7 @@ static bool mg_do_build_level(int niters)
                     level_id::current().describe().c_str(),
                     vaults.c_str());
 
-            dump_map(fp);
+            dump_map(fp, true);
             fclose(fp);
 
             mprf(MSGCH_ERROR,

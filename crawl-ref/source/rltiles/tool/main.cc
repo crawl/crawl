@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 #include "tile_list_processor.h"
 
 #ifdef USE_TILE
@@ -8,7 +7,7 @@
 
 static void _usage(const char *fname)
 {
-    fprintf(stderr, "Usage: %s [-i] [-c] [-l] (tile_list.txt)\n", fname);
+    fprintf(stderr, "Usage: %s [-i] [-c] (tile_list.txt)\n", fname);
 }
 
 int main(int argc, char **argv)
@@ -27,25 +26,6 @@ int main(int argc, char **argv)
         }
         switch (argv[arg][1])
         {
-        case 'l':
-#ifndef USE_TILE
-            fprintf(stderr, "Can't record used tiles in console builds.\n");
-            return -1;
-#endif
-
-            logfile = fopen("used_tiles.log", "a");
-            if (!logfile)
-            {
-                fprintf(stderr, "Can't write to used_tiles.log\n");
-                return -1;
-            }
-            // Line buffering, for poor man's near-atomicity.  The string is
-            // always small enough to fit in one syscall, which keeps them whole
-            // in most cases (non-NFS) but is not guaranteed by any standard.
-            //
-            // This is ok because regular builds don't use "-l".
-            setvbuf(logfile, 0, _IOLBF, 0);
-            break;
         case 'i':
             image = true;
             break;
