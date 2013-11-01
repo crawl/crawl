@@ -188,7 +188,7 @@ static void _DISPATER_melee_effects(item_def* weapon, actor* attacker,
 static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
-    if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true))
+    if (!enough_hp(11, true))
     {
         mpr("You're too close to death to use this item.");
         *unevokable = true;
