@@ -770,7 +770,7 @@ struct spell_desc
     SPELL_BORGNJORS_REVIVIFICATION, "Borgnjor's Revivification",
      SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     7,
+     8,
      200,
      -1, -1,
      0,
