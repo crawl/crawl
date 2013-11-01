@@ -341,6 +341,11 @@ int spell_fail(spell_type spell)
     default: chance += 750; break;
     }
 
+    int64_t contam = you.magic_contamination;
+    // Just +25 on the edge of yellow glow, +200 in the middle of yellow,
+    // forget casting when in orange.
+    chance += contam * contam * contam / 5000000000;
+
     int chance2 = chance;
 
     const int chance_breaks[][2] =
