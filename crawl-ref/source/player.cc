@@ -2369,6 +2369,10 @@ int player_movement_speed(bool ignore_burden)
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 5;
 
+    // Unpowered djinn flight is cumbersome.
+    if (is_hovering())
+        mv += 5;
+
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
     if (player_mutation_level(MUT_FAST) > 0 && !you.swimming())
@@ -2427,9 +2431,6 @@ int player_speed(void)
         ps *= 15;
         ps /= 10;
     }
-
-    if (is_hovering())
-        ps = ps * 3 / 2;
 
     if (you.form == TRAN_TREE)
     {
