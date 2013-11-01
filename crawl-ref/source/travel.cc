@@ -248,7 +248,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
             || grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_SHAFT)
         {
-            return you.permanent_flight() || you.species == SP_DJINNI;
+            return you.permanent_flight();
         }
 
         // You can't open doors in bat form.

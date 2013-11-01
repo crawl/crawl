@@ -574,10 +574,6 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     if (form_can_fly(which_trans) || _flying_in_new_form(which_trans))
         return false;
 
-    // ... or hover our butts up if need arises.
-    if (you.species == SP_DJINNI)
-        return false;
-
     // We can only cling for safety if we're already doing so.
     if (which_trans == TRAN_SPIDER && you.is_wall_clinging())
         return false;
