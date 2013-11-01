@@ -3216,9 +3216,10 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_BERSERK_RAGE:
-            return (you.is_undead
-                        && (you.species != SP_VAMPIRE
-                            || temp && you.hunger_state <= HS_SATIATED));
+            return you.is_undead
+                   && (you.species != SP_VAMPIRE
+                       || temp && you.hunger_state <= HS_SATIATED)
+                   || you.species == SP_DJINNI;
 
         case POT_CURE_MUTATION:
 #if TAG_MAJOR_VERSION == 34
@@ -3267,9 +3268,10 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case AMU_RAGE:
-            return (you.is_undead
-                        && (you.species != SP_VAMPIRE
-                            || temp && you.hunger_state <= HS_SATIATED));
+            return you.is_undead
+                   && (you.species != SP_VAMPIRE
+                       || temp && you.hunger_state <= HS_SATIATED)
+                   || you.species == SP_DJINNI;
 
         case AMU_CLARITY:
             return (you.clarity(false, false));
