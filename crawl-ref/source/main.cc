@@ -2387,15 +2387,13 @@ static void _decrement_durations()
                     autotoggle_autopickup(false);
                 mpr("Your antennae are now fully extended.");
             }
-            #ifdef USE_TILE
-                init_player_doll();
-            #endif
+#ifdef USE_TILE
+            init_player_doll();
+#endif
         }
     }
     else
-    {
         you.duration[DUR_ANTENNAE_EXTEND] = 0;
-    }
 
     if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
     {

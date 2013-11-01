@@ -1032,9 +1032,9 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
         mpr("Your antennae retract into your head.");
         start_delay(DELAY_UNINTERRUPTIBLE, 2);
         you.duration[DUR_ANTENNAE_EXTEND] = 0;
-        #ifdef USE_TILE
-            init_player_doll();
-        #endif
+#ifdef USE_TILE
+        init_player_doll();
+#endif
     }
 
     you.redraw_armour_class = true;

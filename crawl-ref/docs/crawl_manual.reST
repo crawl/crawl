@@ -1777,7 +1777,7 @@ Lava Orcs
 
   Lava Orcs make good melee fighters, preferring axes. They're pretty bad
   spellcasters, except for transmutations, fire and earth magic.
-  
+
   Many Orcs feel superior to all other species and beings, and they have formed
   a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
   can join Beogh whenever an orc priest is in sight.

@@ -1012,9 +1012,7 @@ static void _give_items_skills(const newgame_def& ng)
 
     // Formicids get curing potions to offset their poison weakness.
     if (you.species == SP_FORMICID)
-    {
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
-    }
 
     // Zotdef: everyone gets bonus two potions of curing.
 
