@@ -171,22 +171,15 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
+    bool id_brand = false;
+
     if (you.undead_or_demonic() && is_holy_item(*weapon)
         && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
             mpr("This weapon is holy and will not allow you to wield it.");
-            // If it's a standard weapon, you know its ego now.
-            if (!is_artefact(*weapon) && !is_blessed(*weapon)
-                && !item_type_known(*weapon))
-            {
-                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-                if (in_inventory(*weapon))
-                    mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
-            }
-            else if (is_artefact(*weapon) && !item_type_known(*weapon))
-                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+            id_brand = true;
         }
         return false;
     }
@@ -202,18 +195,22 @@ bool can_wield(item_def *weapon, bool say_reason,
         if (say_reason)
         {
             mpr("As you grasp it, you feel a great hunger. Being not satiated, you stop.");
-            // If it's a standard weapon, you know its ego now.
-            if (!is_artefact(*weapon) && !is_blessed(*weapon)
-                && !item_type_known(*weapon))
-            {
-                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-                if (in_inventory(*weapon))
-                    mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
-            }
-            else if (is_artefact(*weapon) && !item_type_known(*weapon))
-                artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+            id_brand = true;
         }
         return false;
+    }
+
+    if (id_brand)
+    {
+        if (!is_artefact(*weapon) && !is_blessed(*weapon)
+            && !item_type_known(*weapon))
+        {
+            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+            if (in_inventory(*weapon))
+                mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
+        }
+        else if (is_artefact(*weapon) && !item_type_known(*weapon))
+            artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
     }
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
