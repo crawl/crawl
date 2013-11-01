@@ -2614,6 +2614,14 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = random_range(2, 3);
         break;
 
+    case MONS_THRASHING_HORROR:
+    {
+        int depth = min(brdepth[BRANCH_ABYSS], you.depth);
+        band = BAND_THRASHING_HORRORS;
+        band_size = random2(depth);
+        break;
+    }
+
     default: ;
     }
 
@@ -3003,6 +3011,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_WATER_ELEMENTALS:
         return MONS_WATER_ELEMENTAL;
+
+    case BAND_THRASHING_HORRORS:
+        return MONS_THRASHING_HORROR;
 
     default:
         die("unhandled band type %d", band);
