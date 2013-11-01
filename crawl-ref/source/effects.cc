@@ -2093,7 +2093,7 @@ static void _handle_magic_contamination()
         added_contamination += 20;
 
     if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI)
-        added_contamination += 30;
+        added_contamination += 10;
 
     // The Orb halves dissipation (well a bit more, I had to round it),
     // but won't cause glow on its own -- otherwise it'd spam the player
@@ -2115,10 +2115,7 @@ static void _handle_magic_contamination()
 static void _magic_contamination_effects()
 {
     // [ds] Move magic contamination effects closer to b26 again.
-    const bool glow_effect = you.species == SP_DJINNI ?
-        get_contamination_level() > 2
-            && x_chance_in_y(you.magic_contamination, 24000):
-        get_contamination_level() > 1
+    const bool glow_effect = get_contamination_level() > 1
             && x_chance_in_y(you.magic_contamination, 12000);
 
     if (glow_effect && is_sanctuary(you.pos()))

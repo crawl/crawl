@@ -87,7 +87,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         if (!magic)
             return;
 
-        contaminate_player(4 * hunger_amount, true);
+        contaminate_player(hunger_amount * 4 / 3, true);
         return;
     }
 
