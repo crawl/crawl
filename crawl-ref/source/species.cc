@@ -535,7 +535,6 @@ int species_mp_modifier(species_type species)
         return -2;
     case SP_CENTAUR:
     case SP_GHOUL:
-    case SP_FORMICID:
         return -1;
     default:
         return 0;
