@@ -2388,7 +2388,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_OKAWARU_FINESSE:
         if (you.species == SP_FORMICID)
         {
-            mpr("You cannot use finnese because of your stasis.");
+            mpr("You cannot use finesse because of your stasis.");
             return false;
         }
         if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
