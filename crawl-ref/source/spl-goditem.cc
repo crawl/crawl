@@ -840,7 +840,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             proceed = false;
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
             {
-                if (feat_is_solid(grd(*ai)) && !feat_is_opaque(grd(*ai)))
+                if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
                 {
                     success = false;
                     none_vis = false;
@@ -883,7 +883,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
         }
-        else if (zin && !feat_is_solid(grd(*ai)))
+        else if (zin && !cell_is_solid(*ai))
             proceed = true;
 
         if (proceed)

@@ -904,7 +904,7 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
         {
             coord_def jitter = clamp_in_bounds(target + coord_def(random_range(-2, 2),
                                                                   random_range(-2, 2)));
-            if (jitter == target || jitter == source || feat_is_solid(grd(jitter)))
+            if (jitter == target || jitter == source || cell_is_solid(jitter))
                 continue;
 
             trace_beam.target = jitter;
@@ -930,7 +930,7 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
         coord_def jitter = clamp_in_bounds(mid + coord_def(random_range(-3, 3),
                                                            random_range(-3, 3)));
         if (jitter == mid || jitter.distance_from(mid) < 2 || jitter == source
-            || feat_is_solid(grd(jitter))
+            || cell_is_solid(jitter)
             || !cell_see_cell(source, jitter, LOS_NO_TRANS)
             || !cell_see_cell(target, jitter, LOS_NO_TRANS))
         {
@@ -1198,7 +1198,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
             if (wind_beam.path_taken[j] == act_list[i]->pos())
             {
                 coord_def newpos = wind_beam.path_taken[j+1];
-                if (!actor_at(newpos) && !feat_is_solid(grd(newpos))
+                if (!actor_at(newpos) && !cell_is_solid(newpos)
                     && act_list[i]->can_pass_through(newpos)
                     && act_list[i]->is_habitable(newpos))
                 {
@@ -1213,7 +1213,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
                         if (adjacent(*di, act_list[i]->pos())
                             && di->distance_from(agent->pos())
                                 == newpos.distance_from(agent->pos())
-                            && !actor_at(*di) && !feat_is_solid(grd(*di))
+                            && !actor_at(*di) && !cell_is_solid(*di)
                             && act_list[i]->can_pass_through(*di)
                             && act_list[i]->is_habitable(*di))
                         {
@@ -1272,7 +1272,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
             if (env.cgrid(wind_beam.path_taken[j]) == cloud_list[i])
             {
                 coord_def newpos = wind_beam.path_taken[j+1];
-                if (!feat_is_solid(grd(newpos))
+                if (!cell_is_solid(newpos)
                     && env.cgrid(newpos) == EMPTY_CLOUD)
                 {
                     swap_clouds(newpos, wind_beam.path_taken[j]);
@@ -1286,7 +1286,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
                         if (di->distance_from(agent->pos())
                                 == newpos.distance_from(agent->pos())
                             && *di != agent->pos() // never aimed_at_feet
-                            && !feat_is_solid(grd(*di))
+                            && !cell_is_solid(*di)
                             && env.cgrid(*di) == EMPTY_CLOUD)
                         {
                             swap_clouds(*di, wind_beam.path_taken[j]);
@@ -1336,7 +1336,7 @@ static void _fan_of_gales_elementals()
     for (radius_iterator ri(you.pos(), radius, C_ROUND, NULL, true); ri; ++ri)
     {
         if (ri->distance_from(you.pos()) >= 3 && !monster_at(*ri)
-            && !feat_is_solid(grd(*ri))
+            && !cell_is_solid(*ri)
             && cell_see_cell(you.pos(), *ri, LOS_NO_TRANS))
         {
             elementals.push_back(*ri);

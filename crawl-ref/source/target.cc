@@ -191,11 +191,11 @@ aff_type targetter_beam::is_affected(coord_def loc)
     if (max_expl_rad > 0 && (loc - c).rdist() <= 9)
     {
         maybe_bool aff_wall = beam.affects_wall(grd(loc));
-        if (!feat_is_solid(grd(loc)) || aff_wall != MB_FALSE)
+        if (!cell_is_solid(loc) || aff_wall != MB_FALSE)
         {
             coord_def centre(9,9);
             if (exp_map_min(loc - c + centre) < INT_MAX)
-                return (!feat_is_solid(grd(loc)) || aff_wall == MB_TRUE)
+                return (!cell_is_solid(loc) || aff_wall == MB_TRUE)
                        ? AFF_YES : AFF_MAYBE;
             if (exp_map_max(loc - c + centre) < INT_MAX)
                 return AFF_MAYBE;
@@ -326,7 +326,7 @@ bool targetter_smite::valid_aim(coord_def a)
     }
     if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
-    if (!affects_walls && feat_is_solid(grd(a)))
+    if (!affects_walls && cell_is_solid(a))
         return notify_fail(_wallmsg(a));
     return true;
 }
@@ -520,7 +520,7 @@ targetter_cloud::targetter_cloud(const actor* act, int range,
 static bool _cloudable(coord_def loc)
 {
     return in_bounds(loc)
-           && !feat_is_solid(grd(loc))
+           && !cell_is_solid(loc)
            && env.cgrid(loc) == EMPTY_CLOUD;
 }
 
@@ -538,7 +538,7 @@ bool targetter_cloud::valid_aim(coord_def a)
             return notify_fail("There's something in the way.");
         return notify_fail("You cannot see that place.");
     }
-    if (feat_is_solid(grd(a)))
+    if (cell_is_solid(a))
         return notify_fail(_wallmsg(a));
     if (agent)
     {
@@ -907,7 +907,7 @@ bool targetter_jump::valid_aim(coord_def a)
         else
             return notify_fail("You cannot see that place.");
     }
-    else if (feat_is_solid(grd(a)))
+    else if (cell_is_solid(a))
         return notify_fail("There's something in the way.");
     else if (!find_ray(agent->pos(), a, ray, opc_solid_see))
         return notify_fail("There's something in the way.");

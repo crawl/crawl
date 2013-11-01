@@ -651,7 +651,7 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
     for (int i = 0; i < 3; ++i)
     {
         atk_vector = rotate_adjacent(atk_vector, dir);
-        if (feat_is_solid(grd(atk + atk_vector)))
+        if (cell_is_solid(atk + atk_vector))
             break;
 
         actor * target = actor_at(atk + atk_vector);
@@ -663,7 +663,7 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
 void get_all_cleave_targets(const actor* attacker, const coord_def& def,
                             list<actor*> &targets)
 {
-    if (feat_is_solid(grd(def)))
+    if (cell_is_solid(def))
         return;
 
     int dir = coinflip() ? -1 : 1;

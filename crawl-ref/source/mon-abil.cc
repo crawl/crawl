@@ -3388,7 +3388,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons_aligned(mons, *targ) || distance2(mons->pos(), targ->pos()) > 4)
                 continue;
 
-            if (!feat_is_solid(grd(targ->pos())))
+            if (!cell_is_solid(targ->pos()))
             {
                 mons->suicide();
                 used = true;

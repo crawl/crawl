@@ -290,7 +290,7 @@ void manage_fire_shield(int delay)
 
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
+        if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD)
             place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
 }
 
@@ -357,7 +357,7 @@ int holy_flames(monster* caster, actor* defender)
     {
         if (!in_bounds(*ai)
             || env.cgrid(*ai) != EMPTY_CLOUD
-            || feat_is_solid(grd(*ai))
+            || cell_is_solid(*ai)
             || is_sanctuary(*ai)
             || monster_at(*ai))
         {
@@ -383,7 +383,7 @@ struct dist2_sorter
 
 static bool _safe_cloud_spot(const monster* mon, coord_def p)
 {
-    if (feat_is_solid(grd(p)) || env.cgrid(p) != EMPTY_CLOUD)
+    if (cell_is_solid(p) || env.cgrid(p) != EMPTY_CLOUD)
         return false;
 
     if (actor_at(p) && mons_aligned(mon, actor_at(p)))

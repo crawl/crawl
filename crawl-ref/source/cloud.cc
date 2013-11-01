@@ -192,7 +192,7 @@ static int _spread_cloud(const cloud_struct &cloud)
 
         if (!in_bounds(*ai)
             || env.cgrid(*ai) != EMPTY_CLOUD
-            || feat_is_solid(grd(*ai))
+            || cell_is_solid(*ai)
             || is_sanctuary(*ai) && !is_harmless_cloud(cloud.type))
         {
             continue;
@@ -567,7 +567,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (cl_type == CLOUD_INK && !feat_is_watery(grd(ctarget)))
         return;
 
-    ASSERT(!feat_is_solid(grd(ctarget)));
+    ASSERT(!cell_is_solid(ctarget));
 
     kill_category whose = KC_OTHER;
     killer_type killer  = KILL_MISC;

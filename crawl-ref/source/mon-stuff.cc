@@ -366,7 +366,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
         dprf("Cell is visible...");
 
-        if (feat_is_solid(grd(cp)) || actor_at(cp))
+        if (cell_is_solid(cp) || actor_at(cp))
             continue;
 
         --nchunks;
@@ -1227,7 +1227,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
+            if (!cell_is_solid(*ai) && env.cgrid(*ai) == EMPTY_CLOUD
                 && !one_chance_in(5))
             {
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), agent);

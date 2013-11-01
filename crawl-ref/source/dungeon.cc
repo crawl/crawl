@@ -2506,7 +2506,7 @@ static void _check_doors()
         int solid_count = 0;
 
         for (orth_adjacent_iterator rai(*ri); rai; ++rai)
-            if (feat_is_solid(grd(*rai)))
+            if (cell_is_solid(*rai))
                 solid_count++;
 
         if (solid_count < 2)
@@ -3669,7 +3669,7 @@ static void _place_aquatic_monsters_weighted()
         if (feat_is_water(grd(*ri)))
         {
             if (!actor_at(*ri) && !(env.level_map_mask(*ri) & MMT_NO_MONS)
-                && !feat_is_solid(grd(*ri)) && grd(*ri) != DNGN_OPEN_SEA)
+                && !cell_is_solid(*ri) && grd(*ri) != DNGN_OPEN_SEA)
             {
                 water.push_back(*ri);
             }

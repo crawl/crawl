@@ -1939,7 +1939,7 @@ void place_webs(int num, bool is_second_phase)
                 {
                     // Solid wall?
                     float solid_weight = 0;
-                    if (feat_is_solid(grd(*ai)))
+                    if (cell_is_solid(*ai))
                         solid_weight = 1;
                     // During play, adjacent webs also count slightly
                     else if (is_second_phase

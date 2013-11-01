@@ -409,7 +409,7 @@ static int _exploration_estimate(bool seen_only = false, bool debug = false)
         }
 
         bool open = true;
-        if (feat_is_solid(grd(pos)) && !feat_is_closed_door(grd(pos)))
+        if (cell_is_solid(pos) && !feat_is_closed_door(grd(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)

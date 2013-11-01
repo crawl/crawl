@@ -383,7 +383,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     // player, so we don't make the spell abort (return true).
     if (!in_bounds(dest))
         mpr("You sense an overwhelming volume of rock.");
-    else if (feat_is_solid(grd(dest)))
+    else if (cell_is_solid(dest))
         mpr("Something is blocking your path through the rock.");
     else if (walls > maxrange)
         mpr("This rock feels extremely deep.");

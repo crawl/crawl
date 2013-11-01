@@ -804,18 +804,18 @@ void bolt::bounce()
 
     do
         ray.regress();
-    while (feat_is_solid(grd(ray.pos())));
+    while (cell_is_solid(ray.pos()));
 
     extra_range_used += range_used(true);
     bounce_pos = ray.pos();
     bounces++;
     reflect_grid rg;
     for (adjacent_iterator ai(ray.pos(), false); ai; ++ai)
-        rg(*ai - ray.pos()) = feat_is_solid(grd(*ai));
+        rg(*ai - ray.pos()) = cell_is_solid(*ai);
     ray.bounce(rg);
     extra_range_used += 2;
 
-    ASSERT(!feat_is_solid(grd(ray.pos())));
+    ASSERT(!cell_is_solid(ray.pos()));
     _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
 }
 
@@ -1095,7 +1095,7 @@ bool bolt::need_regress() const
     //      others obsolete.
     return ((is_explosion && !in_explosion_phase)
             || drop_item
-            || feat_is_solid(grd(pos())) && !can_affect_wall(grd(pos()))
+            || cell_is_solid(pos()) && !can_affect_wall(grd(pos()))
             || origin_spell == SPELL_PRIMAL_WAVE);
 }
 
@@ -1114,7 +1114,7 @@ bool bolt::hit_wall()
         && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
         && bounces == 0 && reflections == 0 && you.see_cell(target)
-        && !feat_is_solid(grd(target)))
+        && !cell_is_solid(target))
     {
         // Okay, with all those tests passed, this is probably an instance
         // of the player manually targetting something whose line of fire
@@ -1181,7 +1181,7 @@ void bolt::affect_cell()
     fake_flavour();
 
     const coord_def old_pos = pos();
-    const bool was_solid = feat_is_solid(grd(pos()));
+    const bool was_solid = cell_is_solid(pos());
 
     if (was_solid)
     {
@@ -1234,7 +1234,7 @@ void bolt::affect_cell()
         }
     }
 
-    if (!feat_is_solid(grd(pos())))
+    if (!cell_is_solid(pos()))
         affect_ground();
 }
 
@@ -1372,7 +1372,7 @@ void bolt::do_fire()
         // through find_ray and setup_retrace, but they didn't
         // always in the past, and we don't want to crash
         // if they accidentally pass through a corner.
-        ASSERT(!feat_is_solid(grd(pos()))
+        ASSERT(!cell_is_solid(pos())
                || is_tracer && can_affect_wall(grd(pos()))
                || affects_nothing); // returning weapons
 
@@ -5395,7 +5395,7 @@ bool bolt::knockback_actor(actor *act)
     if (newpos == oldpos
         || actor_at(newpos)
         || act->is_stationary()
-        || feat_is_solid(grd(newpos))
+        || cell_is_solid(newpos)
         || !act->can_pass_through(newpos)
         || !act->is_habitable(newpos)
         // Save is based on target's body weight.

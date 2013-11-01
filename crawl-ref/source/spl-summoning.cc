@@ -2792,7 +2792,7 @@ bool fire_battlesphere(monster* mons)
             for (distance_iterator di(mons->pos(), true, true, 2); di; ++di)
             {
                 if (*di == beam.target || actor_at(*di)
-                    || feat_is_solid(grd(*di))
+                    || cell_is_solid(*di)
                     || !agent->see_cell(*di))
                 {
                     continue;

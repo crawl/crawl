@@ -2376,7 +2376,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
     coord_def p;
     for (distance_iterator di(you.pos(), true, false); di; ++di)
     {
-        if (feat_is_solid(grd(*di)) || is_critical_feature(grd(*di)))
+        if (cell_is_solid(*di) || is_critical_feature(grd(*di)))
             continue;
         p = *di;
         break;
