@@ -3119,6 +3119,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
+        if (you.species == SP_DJINNI && get_weapon_brand(item) == SPWPN_ANTIMAGIC)
+            return true;
+
         return false;
 
     case OBJ_MISSILES:
