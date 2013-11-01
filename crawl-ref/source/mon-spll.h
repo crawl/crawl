@@ -1798,17 +1798,6 @@
       }
     },
 
-    {  MST_THRASHING_HORROR,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_MIGHT
-      }
-    },
-
     {  MST_JORGRUN,
       {
        SPELL_LRD,

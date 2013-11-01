@@ -98,6 +98,7 @@ enum band_type
     BAND_SPIRIT_WOLVES,
     BAND_PHANTASMAL_WARRIORS,
     BAND_WATER_ELEMENTALS,
+    BAND_THRASHING_HORRORS,
     NUM_BANDS                   // always last
 };
 
