@@ -2093,7 +2093,7 @@ static void _handle_magic_contamination()
         added_contamination += 20;
 
     if (you.duration[DUR_REGENERATION] && you.species == SP_DJINNI)
-        added_contamination += 10;
+        added_contamination += 20;
 
     // The Orb halves dissipation (well a bit more, I had to round it),
     // but won't cause glow on its own -- otherwise it'd spam the player
