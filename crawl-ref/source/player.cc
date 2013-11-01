@@ -4710,6 +4710,16 @@ bool enough_hp(int minimum, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    if (you.duration[DUR_DEATHS_DOOR])
+    {
+        if (!suppress_msg)
+            mpr("You cannot pay life while functionally dead.");
+
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+
     // We want to at least keep 1 HP. -- bwr
     if (you.hp < minimum + 1)
     {
