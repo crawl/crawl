@@ -896,7 +896,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FRENZY, "Frenzy",
      SPTYP_CHARMS,
@@ -909,7 +908,7 @@ struct spell_desc
      false,
      false
 },
-#endif
+
 
 {
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
