@@ -580,26 +580,29 @@ static void _print_stats_contam(int x, int y)
     if (you.species != SP_DJINNI)
         return;
 
-    const int max_contam = 16000;
+    const int max_contam = 8000;
     int contam = min(you.magic_contamination, max_contam);
 
     // Calculate colour
-    int contam_level = get_contamination_level();
-
-    if (contam_level > 3)
+    if (you.magic_contamination > 15000)
     {
         Contam_Bar.m_default = RED;
         Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
     }
-    else if (contam_level > 2)
+    else if (you.magic_contamination > 5000) // harmful
     {
         Contam_Bar.m_default = LIGHTRED;
         Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = RED;
     }
-    else if (contam_level > 1)
+    else if (you.magic_contamination > 3333)
     {
         Contam_Bar.m_default = YELLOW;
         Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = BROWN;
+    }
+    else if (you.magic_contamination > 1666)
+    {
+        Contam_Bar.m_default = LIGHTGREY;
+        Contam_Bar.m_change_pos = Contam_Bar.m_change_neg = DARKGREY;
     }
     else
     {
