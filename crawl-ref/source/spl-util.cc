@@ -1092,8 +1092,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     if (transient)
     {
         if (you.duration[DUR_CONF] > 0
-            || spell_mana(spell) > (you.species != SP_DJINNI ? you.magic_points
-                                    : (you.hp - 1) / DJ_MP_RATE)
+            || !enough_mp(spell_mana(spell), true, false)
             || spell_no_hostile_in_range(spell))
         {
             return true;

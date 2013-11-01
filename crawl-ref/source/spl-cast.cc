@@ -715,8 +715,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (spell_mana(spell) > (you.species != SP_DJINNI ? you.magic_points
-        : (you.hp - 1) / DJ_MP_RATE))
+    if (!enough_mp(spell_mana(spell), true))
     {
         mpr("You don't have enough magic to cast that spell.");
         crawl_state.zero_turns_taken();
