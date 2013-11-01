@@ -670,6 +670,14 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
+    if (you.species == SP_DJINNI)
+    {
+        if (verbose)
+            mpr("Only creatures of flesh and blood can berserk.");
+
+        return false;
+    }
+
     if (is_lifeless_undead())
     {
         if (verbose)
