@@ -2422,7 +2422,7 @@ static command_type _get_action(int key, vector<command_type> actions)
 // _actions_prompt
 //
 // print a list of actions to be performed on the item
-static bool _actions_prompt(item_def &item, bool allow_inscribe)
+static bool _actions_prompt(item_def &item, bool allow_inscribe, bool do_prompt)
 {
 #ifdef USE_TILE_LOCAL
     PrecisionMenu menu;
@@ -2551,7 +2551,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     prompt += " the " + item.name(DESC_BASENAME) + ".";
 
     prompt = "<cyan>" + prompt + "</cyan>";
-    formatted_string::parse_string(prompt).display();
+    if (do_prompt)
+        formatted_string::parse_string(prompt).display();
 
 #ifdef TOUCH_UI
 
@@ -2667,13 +2668,15 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     if (allow_inscribe && crawl_state.game_is_tutorial())
         allow_inscribe = false;
 
-    // Don't ask if there aren't enough rows left (or if we're dead).
-    if (wherey() <= get_number_of_lines() - 2 && in_inventory(item)
-        && crawl_state.prev_cmd != CMD_RESISTS_SCREEN
+    // Don't ask if we're dead.
+    if (in_inventory(item) && crawl_state.prev_cmd != CMD_RESISTS_SCREEN
         && !(you.dead || crawl_state.updating_scores))
     {
-        cgotoxy(1, wherey() + 2);
-        return _actions_prompt(item, allow_inscribe);
+        // Don't draw the prompt if there aren't enough rows left.
+        const bool do_prompt = wherey() <= get_number_of_lines() - 2;
+        if (do_prompt)
+            cgotoxy(1, wherey() + 2);
+        return _actions_prompt(item, allow_inscribe, do_prompt);
     }
     else
         getchm();
