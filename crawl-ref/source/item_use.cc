@@ -200,6 +200,18 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
+    if (you.species == SP_DJINNI
+        && get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC
+        && (item_type_known(*weapon) || !only_known))
+    {
+        if (say_reason)
+        {
+            mpr("As you grasp it, you feel your magic disrupted. Quickly, you stop.");
+            id_brand = true;
+        }
+        return false;
+    }
+
     if (id_brand)
     {
         if (!is_artefact(*weapon) && !is_blessed(*weapon)
