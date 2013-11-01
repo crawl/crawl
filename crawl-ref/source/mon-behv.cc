@@ -240,7 +240,7 @@ static void _set_curse_skull_lurk_pos(monster* mon)
     vector<coord_def> spots;
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        if (!feat_is_solid(grd(*ai)) || feat_is_door(grd(*ai)))
+        if (!cell_is_solid(*ai) || feat_is_door(grd(*ai)))
             spots.push_back(*ai);
     }
 

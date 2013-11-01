@@ -591,7 +591,7 @@ static vector<coord_def> _shoals_windshadows(grid_bool &windy)
             next += wi;
 
         const coord_def nextp(_int_coord(next));
-        if (in_bounds(nextp) && !windy(nextp) && !feat_is_solid(grd(nextp)))
+        if (in_bounds(nextp) && !windy(nextp) && !cell_is_solid(nextp))
         {
             windy(nextp) = true;
             wind_points.push_back(next);

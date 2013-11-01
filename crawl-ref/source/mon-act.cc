@@ -476,7 +476,7 @@ static void _tweak_wall_mmov(const monster* mons, bool move_trees = false)
 
     // If we're already moving into a shielded spot, don't adjust move
     // (this leads to zig-zagging)
-    if (feat_is_solid(grd(mons->pos() + mmov)))
+    if (cell_is_solid(mons->pos() + mmov))
         return;
 
     int dir = _compass_idx(mmov);
@@ -489,7 +489,7 @@ static void _tweak_wall_mmov(const monster* mons, bool move_trees = false)
     int range = 1;
     if (mons->target == mons->pos() + mmov)
     {
-        if (feat_is_solid(grd(mons->pos())))
+        if (cell_is_solid(mons->pos()))
             return;
         else
         {
@@ -2405,7 +2405,7 @@ static void _post_monster_move(monster* mons)
         cloud_type ctype = CLOUD_FIRE;
 
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-            if (!feat_is_solid(grd(*ai))
+            if (!cell_is_solid(*ai)
                 && (env.cgrid(*ai) == EMPTY_CLOUD
                     || env.cloud[env.cgrid(*ai)].type == ctype))
             {

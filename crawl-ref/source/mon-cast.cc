@@ -2239,7 +2239,7 @@ static bool _wall_of_brambles(monster* mons)
     {
         if (di.radius() == rad || di.radius() == rad - 1)
         {
-            if (!actor_at(*di) && !feat_is_solid(grd(*di)))
+            if (!actor_at(*di) && !cell_is_solid(*di))
             {
                 if (defensive && _angle_between(targ_pos, aim_pos, *di) <= PI/4.0
                     || (!defensive

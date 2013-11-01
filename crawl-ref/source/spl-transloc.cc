@@ -264,10 +264,10 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
 
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.
-        if (wizard_blink && feat_is_solid(grd(beam.target)))
+        if (wizard_blink && cell_is_solid(beam.target))
             grd(beam.target) = DNGN_FLOOR;
 
-        if (feat_is_solid(grd(beam.target)) || monster_at(beam.target))
+        if (cell_is_solid(beam.target) || monster_at(beam.target))
         {
             mpr("Oops! Maybe something was there already.");
             random_blink(false);

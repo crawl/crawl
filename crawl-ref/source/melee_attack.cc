@@ -5397,7 +5397,7 @@ bool melee_attack::do_knockback(bool trample)
 // stopped by solid features. Allies are passed through without harm.
 void melee_attack::cleave_setup()
 {
-    if (feat_is_solid(grd(defender->pos())))
+    if (cell_is_solid(defender->pos()))
         return;
 
     // Don't cleave on a self-attack.

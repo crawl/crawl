@@ -1528,7 +1528,7 @@ bool trog_burn_spellbooks()
 
             // If a grid is blocked, books lying there will be ignored.
             // Allow bombing of monsters.
-            if (feat_is_solid(grd(*ri))
+            if (cell_is_solid(*ri)
                 || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
             {
                 totalblocked++;
@@ -2165,7 +2165,7 @@ bool fedhas_sunlight()
 
     for (adjacent_iterator ai(base, false); ai; ++ai)
     {
-        if (!in_bounds(*ai) || feat_is_solid(grd(*ai)))
+        if (!in_bounds(*ai) || cell_is_solid(*ai))
             continue;
 
         for (size_t i = 0; i < env.sunlight.size(); ++i)
