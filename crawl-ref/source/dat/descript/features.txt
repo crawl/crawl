@@ -345,17 +345,9 @@ A spear trap
 
 This trap shoots long sharp poles that can skewer tresspassers.
 %%%%
-A staircase back to the Crypt
-
-These stairs lead back up to the Crypt.
-%%%%
 A staircase back to the Dungeon
 
 These stairs lead back up to the familiarity of the dungeon.
-%%%%
-A staircase back to the Forest
-
-These stairs lead back to the relative safety of the Forest.
 %%%%
 A staircase back to the Lair
 
@@ -376,6 +368,10 @@ of stuff. Also taxes and whatever else you ran from.
 
 Climbing these stairs will end your quest, whether you carry the Orb with you
 or not.
+%%%%
+A staircase out of the Tomb
+
+These stairs lead back out of this accursed place.
 %%%%
 A staircase to the Crypt
 
