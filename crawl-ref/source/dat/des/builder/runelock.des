@@ -34,7 +34,7 @@ NAME: grunt_runelock_giant_problem
 ORIENT: float
 PLACE: D:14
 SUBST: L = l.
-KMONS: O = stone giant
+KMONS: O = patrolling stone giant
 KFEAT: O = }
 MAP
   ....@....
