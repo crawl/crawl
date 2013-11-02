@@ -1099,10 +1099,10 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
         ? get_unrand_entry(launcher->special) : NULL;
 
-    if (entry && entry->fight_func.launch)
+    if (entry && entry->launch)
     {
         setup_missile_type sm =
-            entry->fight_func.launch(launcher, &beam, &ammo_name,
+            entry->launch(launcher, &beam, &ammo_name,
                                      &returning);
 
         switch (sm)
