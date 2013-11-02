@@ -130,15 +130,14 @@ NSUBST: a = 1:1 / *:.
 NSUBST: b = 1:1 / *:.
 NSUBST: c = 1:1 / *:.
 NSUBST: d = 1:1 / *:.
-KFEAT:  X = known bolt trap
 KFEAT:  O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xx?xxx?xxx?xxx?xxxxxxx
 xaaaxbbbxcccxdddx.lllx
-.aaaabbbbccccdddx.Xllx
-@aaaabbbbccccddd+.XOlx
-.aaaabbbbccccdddx.Xllx
+.aaaabbbbccccdddx.$llx
+@aaaabbbbccccddd+.$Olx
+.aaaabbbbccccdddx.$llx
 xaaaxbbbxcccxdddx.lllx
 xx?xxx?xxx?xxx?xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
