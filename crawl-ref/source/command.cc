@@ -2672,6 +2672,7 @@ int list_wizard_commands(bool do_redraw_screen)
 #ifdef DEBUG_DIAGNOSTICS
                        "<w>Ctrl-Q</w> : make some debug messages quiet\n"
 #endif
+                       "<w>Ctrl-C</w> : force a crash\n"
                        "\n"
                        "<yellow>Other wizard commands</yellow>\n"
                        "(not prefixed with <w>&</w>!)\n"
