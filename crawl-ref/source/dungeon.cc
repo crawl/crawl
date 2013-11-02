@@ -1529,9 +1529,7 @@ static void _fixup_branch_stairs()
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             if (grd(*ri) >= start && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
-            {
                 _set_grd(*ri, feat);
-            }
         }
     }
 }
