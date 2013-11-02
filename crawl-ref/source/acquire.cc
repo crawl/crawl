@@ -273,9 +273,6 @@ static armour_type _acquirement_armour_subtype(bool divine)
 
                 if (x_chance_in_y(you.skills[SK_ARMOUR], 150))
                     result = ARM_CRYSTAL_PLATE_ARMOUR;
-
-                if (one_chance_in(12))
-                    result = ARM_ANIMAL_SKIN;
             }
             else
             {
