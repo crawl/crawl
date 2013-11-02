@@ -1095,6 +1095,8 @@ static void _grab_followers()
             continue;
         if (mons->type == MONS_BATTLESPHERE)
             end_battlesphere(mons, false);
+        if (mons->type == MONS_SPECTRAL_WEAPON)
+            end_spectral_weapon(mons, false);
         mons->flags &= ~MF_TAKING_STAIRS;
     }
 }
