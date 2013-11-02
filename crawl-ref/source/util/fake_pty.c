@@ -78,7 +78,13 @@ int main(int argc, char * const *argv)
         close(slave);
         slurp_output();
         if (waitpid(crawl, &ret, 0) != crawl)
-            ret = 1; // can't happen
-        return ret;
+            return 1; // can't happen
+        if (WIFEXITED(ret))
+            return WEXITSTATUS(ret);
+        if (WIFSIGNALED(ret))
+            return 128 + WTERMSIG(ret);
+        // Neither exited nor signaled?  Did the process eat mushrooms meant
+        // fo the mother-in-law or what?
+        return 1;
     }
 }
