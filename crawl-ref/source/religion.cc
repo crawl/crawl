@@ -751,7 +751,6 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_YREDELEMNUL:
         likes.push_back("your undead slaves kill holy beings");
-        likes.push_back("you desecrate holy remains");
         break;
 
     case GOD_KIKUBAAQUDGHA:

@@ -122,16 +122,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_DESECRATE_HOLY_REMAINS:
-            if (you_worship(GOD_YREDELEMNUL))
-            {
-                simple_god_message(" appreciates your desecration of holy "
-                                   "remains.");
-                retval = true;
-                piety_change = 1;
-                break;
-            }
-            // deliberate fall through
-
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
