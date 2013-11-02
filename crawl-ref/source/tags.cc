@@ -2553,9 +2553,7 @@ static void tag_read_you(reader &th)
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_ABYSS_BRANCHES)
-    {
         abyssal_state.level = unmarshall_level_id(th);
-    }
     if (!abyssal_state.level.is_valid())
     {
         abyssal_state.level.branch = BRANCH_MAIN_DUNGEON;

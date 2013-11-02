@@ -1300,7 +1300,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
 
     if (runmode == RMODE_CONNECTIVITY)
         ignore_player_traversability = true;
-    else {
+    else
+    {
         ASSERTM(crawl_state.need_save,
                 "Pathfind with mode %d without a game?", runmode);
 

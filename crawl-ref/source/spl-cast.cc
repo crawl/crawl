@@ -804,10 +804,9 @@ bool cast_a_spell(bool check_range, spell_type spell)
     {
         // These spells have replenished essence to full.
         inc_mp(cost, true);
-    } else {
-      // Redraw MP
-      flush_mp();
     }
+    else // Redraw MP
+        flush_mp();
 
     if (!staff_energy && you.is_undead != US_UNDEAD)
     {
