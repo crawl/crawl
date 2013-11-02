@@ -893,7 +893,7 @@ bool melee_attack::handle_phase_killed()
     // artefact would be overkill, so here we call it by hand:
     if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
     {
-        unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
+        unrand_entry->melee_effects(weapon, attacker, defender,
                                                true, special_damage);
     }
 
@@ -1284,16 +1284,12 @@ bool melee_attack::check_unrand_effects()
     if (attacker->suppressed())
         return false;
 
-    // If bashing the defender with a wielded unrandart launcher, don't use
-    // unrand_entry->fight_func, since that's the function used for
-    // launched missiles.
-    if (unrand_entry && unrand_entry->fight_func.melee_effects
-        && weapon && fires_ammo_type(*weapon) == MI_NONE)
+    if (unrand_entry && unrand_entry->melee_effects && weapon)
     {
         // Recent merge added damage_done to this method call
-        unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
-                                               !defender->alive(), damage_done);
-        return (!defender->alive());
+        unrand_entry->melee_effects(weapon, attacker, defender,
+                                    !defender->alive(), damage_done);
+        return !defender->alive();
     }
 
     return false;

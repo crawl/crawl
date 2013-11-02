@@ -77,7 +77,6 @@ my %field_type = (
     equip_func         => "func",
     unequip_func       => "func",
     world_reacts_func  => "func",
-    fight_func_func    => "func",
     melee_effects_func => "func",
     launch_func        => "func",
     evoke_func         => "func",
@@ -179,7 +178,7 @@ sub finish_art
         $funcs = {};
     }
 
-    foreach my $func_name ("equip", "unequip", "world_reacts", "evoke")
+    foreach my $func_name (qw(equip unequip world_reacts evoke melee_effects launch))
     {
         my $val;
         if ($funcs->{$func_name})
@@ -191,16 +190,6 @@ sub finish_art
             $val = "NULL";
         }
         $artefact->{"${func_name}_func"} = $val;
-    }
-
-    $artefact->{"fight_func_func"} = "NULL";
-    foreach my $func_name ("melee_effects", "launch")
-    {
-        if ($funcs->{$func_name})
-        {
-            $artefact->{"fight_func_func"} =
-                ".$func_name = _${enum}_$funcs->{$func_name}";
-        }
     }
 
     # Default values.
@@ -499,8 +488,8 @@ my @art_order = (
     "RMSL", "FOG", "REGEN", "NO_UPGRADE", "\n",
     "}",
 
-    "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",
-    "evoke_func"
+    "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",
+    "launch_func", "evoke_func",
 );
 
 sub art_to_str

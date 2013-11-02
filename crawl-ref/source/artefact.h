@@ -61,15 +61,10 @@ struct unrandart_entry
     void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
     void (*unequip_func)(item_def* item, bool* show_msgs);
     void (*world_reacts_func)(item_def* item);
-    // An item can't be a melee weapon and launcher at the same time, so have
-    // the functions relevant to those item types share a union.
-    union
-    {
-        void (*melee_effects)(item_def* item, actor* attacker,
-                              actor* defender, bool mondied, int damage);
-        setup_missile_type (*launch)(item_def* item, bolt* beam,
-                                     string* ammo_name, bool* returning);
-    } fight_func;
+    void (*melee_effects)(item_def* item, actor* attacker,
+                          actor* defender, bool mondied, int damage);
+    setup_missile_type (*launch)(item_def* item, bolt* beam,
+                                 string* ammo_name, bool* returning);
     bool (*evoke_func)(item_def *item, int* pract, bool* did_work,
                        bool* unevokable);
 };
