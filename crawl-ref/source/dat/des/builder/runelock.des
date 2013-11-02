@@ -87,6 +87,99 @@ bb...1...bb
   bbb+bbb
 ENDMAP
 
+NAME: gammafunk_runelock_forms
+ORIENT: float
+PLACE: D:14
+MONS: boggart band w:20 / giant orange brain, shapeshifter w:5 / rakshasa
+MAP
+  bbb
+ bb.bb
+ b...b   bbbb
+ b...bb bb..bb
+bb....bbb....bb
+b}.1..+...2...+@
+bb....bbb....bb
+ b...bb bb..bb
+ b...b   bbbb
+ bb.bb
+  bbb
+ENDMAP
+
+NAME: gammafunk_runelock_critters
+ORIENT: float
+PLACE: D:14
+MONS: giant amoeba / brain worm / spiny worm w:5, slime creature band
+NSUBST: . = 2:1 / *:.
+MAP
+ xxx xxxx xxx
+xx xxx..xxx xx
+x............x
+xx....xx....xx
+ x...xx....xx
+ xx2.xx....x
+xx...xxx...xx
+x...xxxx....x
+xx}xxxxxx..+x
+ xxxx   xxxx@
+ENDMAP
+
+NAME: gammafunk_runelock_grave
+ORIENT: float
+TAGS: patrolling
+PLACE: D:14
+NSUBST: . = 1:2 / 4:1 / *:.
+SUBST: . = .....--__tG
+KMONS: t = w:2 col:darkgrey plant name:withered name_adjective \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant
+TILE: G = dngn_gravestone
+COLOUR: G = white
+FTILE: - = floor_pebble_brown
+FTILE: _ = floor_pebble_darkgray
+MONS:  w:2 guardian mummy / w:8 mummy / w:20 zombie / w:2 plague shambler
+MONS:  skeletal warrior band
+KFEAT: O = }
+KMONS: O = vampire mage / necromancer band
+: set_feature_name("granite_statue", "a gravestone")
+MAP
+  ....@....
+ ...........
+.............
+.............
+.............
+.............
+@.....O.....@
+.............
+.............
+.............
+.............
+ ...........
+  ....@....
+ENDMAP
+
+NAME: gammafunk_runelock_ironcross
+ORIENT: float
+TAGS: patrolling
+PLACE: D:14
+MONS: vault guard, ironbrand convoker, vault sentinel
+SHUFFLE: 123
+MAP
+    vvvvv
+    v...v
+    v...v
+    v.1.v
+vvvvv...vvvvv
+v...........v
+v..2..}..3..v
+v...........v
+vvvvv...vvvvv
+    v...v
+    v...v
+    v...v
+    vv+vv
+      @
+ENDMAP
+
 ##########################################################################
 # Vaults holding pre-identified shafts on D:14.
 # This is a very crude way to allow players to bypass the rune lock on D:14
