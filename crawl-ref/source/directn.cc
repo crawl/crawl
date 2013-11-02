@@ -3180,9 +3180,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_RETURN_FROM_ELVEN_HALLS:
         return "staircase back to the Mines";
     case DNGN_RETURN_FROM_TOMB:
-        if (parent_branch(BRANCH_TOMB) == BRANCH_FOREST)
-            return "staircase back to the Forest";
-        return "staircase back to the Crypt";
+        return "staircase out of the Tomb";
     case DNGN_RETURN_FROM_ZOT:
         return "gate leading back out of this place";
 
