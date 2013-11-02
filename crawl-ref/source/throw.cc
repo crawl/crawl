@@ -728,7 +728,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         mon->move_to_pos(pos);
 
         // Leave a purple cloud.
-        if (!cell_is_solid(you.pos()))
+        if (!cell_is_solid(oldpos))
             place_cloud(CLOUD_TLOC_ENERGY, oldpos, 1 + random2(3), victim);
 
         mon->apply_location_effects(oldpos);
