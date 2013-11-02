@@ -45,7 +45,8 @@ struct Branch
 };
 
 extern const Branch branches[NUM_BRANCHES];
-extern FixedVector<int, NUM_BRANCHES> startdepth, brdepth;
+extern FixedVector<level_id, NUM_BRANCHES> brentry;
+extern FixedVector<int, NUM_BRANCHES> brdepth;
 extern branch_type root_branch;
 
 const Branch& your_branch();

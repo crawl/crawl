@@ -51,7 +51,7 @@ LUAFN(debug_goto_place)
             lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
         you.goto_place(id);
         if (bind_entrance != -1)
-            startdepth[you.where_are_you] = bind_entrance;
+            brentry[you.where_are_you].depth = bind_entrance;
     }
     catch (const string &err)
     {

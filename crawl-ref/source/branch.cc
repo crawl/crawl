@@ -8,7 +8,8 @@
 #include "travel.h"
 #include "branch-data.h"
 
-FixedVector<int, NUM_BRANCHES> startdepth, brdepth;
+FixedVector<level_id, NUM_BRANCHES> brentry;
+FixedVector<int, NUM_BRANCHES> brdepth;
 branch_type root_branch;
 
 const Branch& your_branch()
@@ -86,10 +87,7 @@ bool branch_is_unfinished(branch_type branch)
 
 branch_type parent_branch(branch_type branch)
 {
-    if (branch == BRANCH_TOMB && startdepth[BRANCH_CRYPT] == -1)
-        return BRANCH_FOREST;
-    else if (branch == root_branch)
-        return NUM_BRANCHES;
-
-    return branches[branch].parent_branch;
+    if (brentry[branch].is_valid())
+        return brentry[branch].branch;
+    return NUM_BRANCHES;
 }

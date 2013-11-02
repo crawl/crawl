@@ -2299,7 +2299,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 
         // If this is the real branch entry, don't mimic it.
         if (feat_is_branch_stairs(feat)
-            && you.depth == startdepth[get_branch_at(pos)])
+            && level_id::current() == brentry[get_branch_at(pos)])
         {
             continue;
         }
@@ -3546,7 +3546,7 @@ static void _place_branch_entrances(bool use_vaults)
 
         if (b->entry_stairs != NUM_FEATURES
             && player_in_branch(parent_branch((branch_type)i))
-            && (you.depth == startdepth[i] || mimic))
+            && (level_id::current() == brentry[i] || mimic))
         {
             // Placing a stair.
             dprf("Placing stair to %s", b->shortname);

@@ -556,9 +556,9 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
         }
         else if (branches[i].exit_stairs == feat)
         {
-            place = level_id(parent_branch((branch_type)i), startdepth[i]);
-            // This can happen in wizmode with random spawns on the
-            // first floor of a branch that didn't generate naturally
+            place = brentry[i];
+            // This can happen on D:1 and in wizmode with random spawns on the
+            // first floor of a branch that didn't generate naturally.
             if (!place.is_valid())
                 return false;
             break;
