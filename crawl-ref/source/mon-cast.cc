@@ -1426,7 +1426,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_FRENZY:
-        if (mon->has_ench(ENCH_HASTE) && mon->has_ench(ENCH_MIGHT))
+        if (!mon->can_go_frenzy())
             ret = true;
         break;
 
