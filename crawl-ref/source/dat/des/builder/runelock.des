@@ -1,0 +1,88 @@
+##########################################################################
+# Vaults holding the stair from D:14 to D:15.
+# D:15 is intended to be a considerable change of pace from earlier (even
+# if it isn't at all at time of writing); there is a single point of entry
+# / exit between the two levels.
+# These vaults hold the stair to D:15 and some enemies representative of
+# later in the dungeon to make it clear what to expect.
+##########################################################################
+
+NAME: grunt_runelock_snipers
+TAGS: no_pool_fixup
+ORIENT: float
+PLACE: D:14
+KMONS: O = vault guard
+KFEAT: O = }
+MONS: centaur warrior, yaktaur
+MAP
+ccccccccc
+c.+...+.c
+c.c.O.c.c
+c.c...c.c
+c+cc+cc+c
+c.w...w.c
+c.w...w.c
+c1w...w2c
+c.w...w.c
+c.w...w.c
+ccc.@.ccc
+ENDMAP
+
+# The idea here is to keep the stone giant on the island until the player is
+# ready to deal with it, and therefore proceed to the rest of D.
+NAME: grunt_runelock_giant_problem
+ORIENT: float
+PLACE: D:14
+SUBST: L = l.
+KMONS: O = stone giant
+KFEAT: O = }
+MAP
+  ....@....
+ ..LLLLLLL..
+..LLlllllLL.,
+.LLlllllllLL.
+.LlllLLLlllL.
+.ll.L...LllL.
+@l.l..O.LllL@
+..llL...LllL.
+.llllLLLlllL.
+.LLlllllllLL.
+..LLlllllLL..
+ ..LLLLLLL..
+  ....@....
+ENDMAP
+
+NAME: grunt_runelock_hoard
+ORIENT: float
+PLACE: D:14
+MONS: dragon / ice dragon
+MAP
+  cccccc
+ cc$$$$ccc
+cc.......ccccc
+c}..1........cc
+cc.......cc...cc
+ cc$$$$cccc.G..cc
+  cccccccc.@.@..c
+ENDMAP
+
+NAME: grunt_runelock_magical_seal
+ORIENT: float
+PLACE: D:14
+KMONS: O = ogre mage band / necromancer band
+KFEAT: O = }
+MONS: wizard / deep elf mage / orc sorcerer / kobold demonologist / \
+      naga mage
+MAP
+  bbbbbbb
+ bb..1..bb
+bb.......bb
+b..bb+bb..b
+b..b...b..b
+b.1b.O.b1.b
+b..b...b..b
+b..bbbbb..b
+bb...1...bb
+ bb.....bb
+  bbb+bbb
+ENDMAP
