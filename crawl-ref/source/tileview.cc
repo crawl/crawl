@@ -972,7 +972,7 @@ void tile_place_ray(const coord_def &gc, aff_type in_range)
 
 void tile_draw_rays(bool reset_count)
 {
-    tileidx_t flag;
+    tileidx_t flag = 0;
 
     for (unsigned int i = 0; i < num_tile_rays; i++)
     {
