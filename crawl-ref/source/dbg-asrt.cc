@@ -625,6 +625,7 @@ void do_crash_dump()
 
         dump_crash_info(stderr);
         write_stack_trace(stderr, 0);
+        call_gdb(stderr);
 
         return;
     }
@@ -647,7 +648,7 @@ void do_crash_dump()
         fprintf(stderr, "\n%s", _assert_msg.c_str());
     fprintf(stderr, "\nWriting crash info to %s\n", name);
     errno = 0;
-    FILE* file = crawl_state.test ? stderr : freopen(name, "w+", stderr);
+    FILE* file = crawl_state.test ? stderr : freopen(name, "a+", stderr);
 
     // The errno values are only relevant when the function in
     // question has returned a value indicating (possible) failure, so
@@ -679,7 +680,9 @@ void do_crash_dump()
     // might themselves cause crashes.
     dump_crash_info(file);
     write_stack_trace(file, 0);
+    fprintf(file, "\n");
 
+    call_gdb(file);
     fprintf(file, "\n");
 
     // Next information on how the binary was compiled
