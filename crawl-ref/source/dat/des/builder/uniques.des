@@ -120,7 +120,7 @@ DEPTH:  D:4-9, Orc:1
 # multiple uniq_boris TAG'd maps, ensure that you add the relevant line to
 # remove the tag in monstuff.cc:monster_die.
 NAME:   uniq_boris
-DEPTH:  D:20-, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:20-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Boris")
 
 NAME:   uniq_donald
@@ -153,7 +153,7 @@ DEPTH:  D:17-, Elf:2-, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, 
 : place_unique(_G, "Frances")
 
 NAME:   uniq_frederick
-DEPTH:  D:20-, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:20-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Frederick")
 
 NAME:   uniq_fannar
@@ -190,7 +190,7 @@ DEPTH:  D:17-, Elf:2-, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, 
 : place_unique(_G, "Jorgrun")
 
 NAME:   uniq_jory
-DEPTH:  D:20-, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:20-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Jory")
 
 NAME:   uniq_joseph
@@ -210,7 +210,7 @@ DEPTH:  D:14-19, Elf, Swamp:1-4, Snake:1-4, Shoals:1-4, Spider:1-4, Vaults:1-3
 : place_unique(_G, "Louise")
 
 NAME:   uniq_margery
-DEPTH:  D:20-, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:20-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Margery band")
 
 NAME:   uniq_maud
@@ -313,12 +313,12 @@ DEPTH:  D:17-, Elf:2-, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, 
 : place_unique(_G, "Wiglaf")
 
 NAME:   uniq_xtahua
-DEPTH:  D:20-, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:20-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Xtahua")
 
 NAME:   uniq_mennas
 # would be cool to get him wandering around Pan too
-DEPTH:  D:20-, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:20-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Mennas")
 
 
@@ -392,7 +392,7 @@ WEIGHT: 50
 : place_unique(_G, "Lamia")
 
 NAME:   uniq_sojobo
-DEPTH:  D:20-, Swamp:$, Snake:$, Shoals:$, Spider:$, Vaults:2-, Crypt, Forest, Blade, Tomb
+DEPTH:  D:20-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Sojobo band")
 
 ###############################################################################
