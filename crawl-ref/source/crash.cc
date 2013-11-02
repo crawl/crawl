@@ -10,6 +10,11 @@
 #include <sys/time.h>
 #endif
 
+#ifndef TARGET_OS_WINDOWS
+# include <errno.h>
+# include <sys/wait.h>
+#endif
+
 #if defined(UNIX)
 #include <unistd.h>
         #define BACKTRACE_SUPPORTED
@@ -359,6 +364,54 @@ void write_stack_trace(FILE* file, int ignore_count)
     fprintf(file, "%s", msg);
 }
 #endif
+
+void call_gdb(FILE *file)
+{
+#ifndef TARGET_OS_WINDOWS
+    fprintf(file, "Trying to run gdb.\n");
+    fflush(file); // so we can use fileno()
+
+    char pid[12];
+    snprintf(pid, sizeof(pid), "%d", getpid());
+
+    switch (int gdb = fork())
+    {
+    case -1:
+        return (void)fprintf(file, "Couldn't fork: %s\n", strerror(errno));
+    case 0:
+        {
+            int fd = fileno(file);
+            dup2(fd, 1);
+            dup2(fd, 2);
+            close(fd);
+
+            char exe[2048];
+            ssize_t len = readlink("/proc/self/exe", exe, sizeof(exe) - 1);
+            if (len == -1)
+                strcpy(exe, "./crawl");
+            else
+                exe[len] = 0; // readlink() doesn't null-terminate
+
+            const char* argv[] =
+            {
+                "gdb",
+                "-p",
+                pid,
+                "-batch",
+                "-ex",
+                "bt full",
+                exe,
+                0
+            };
+            execv("/usr/bin/gdb", (char* const*)argv);
+            fprintf(file, "%s\n", strerror(errno));
+        }
+        return;
+    default:
+        waitpid(gdb, 0, 0);
+    }
+#endif
+}
 
 void disable_other_crashes()
 {
