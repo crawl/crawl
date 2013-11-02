@@ -1434,13 +1434,18 @@ void fixup_misplaced_items()
     }
 }
 
-// count_root is present to allow the root branch to keep placing three
-// stairs (ZotDef, entry vaults placing multiple stairs).
+static bool _at_rune_lock(bool below)
+{
+    return player_in_branch(BRANCH_MAIN_DUNGEON)
+           && you.depth == RUNE_LOCK_DEPTH + 1 * below;
+}
+
 static bool _at_top_of_branch()
 {
     return your_branch().exit_stairs != NUM_FEATURES
            && you.depth == 1
-           && player_in_connected_branch();
+           && player_in_connected_branch()
+           || _at_rune_lock(true);
 }
 
 static void _fixup_branch_stairs()
@@ -1457,7 +1462,9 @@ static void _fixup_branch_stairs()
         // random.
         vector<coord_def> vault_stairs, normal_stairs;
         dungeon_feature_type exit = your_branch().exit_stairs;
-        if (you.where_are_you == root_branch) // ZotDef
+        if (_at_rune_lock(true))
+            exit = DNGN_STONE_STAIRS_UP_I;
+        else if (you.where_are_you == root_branch) // ZotDef
             exit = DNGN_EXIT_DUNGEON;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
@@ -1513,12 +1520,15 @@ static void _fixup_branch_stairs()
     // Bottom level of branch - wipes out down stairs and hatches
     dungeon_feature_type feat = DNGN_FLOOR;
 
-    if (at_branch_bottom())
+    if (at_branch_bottom() || _at_rune_lock(false))
     {
+        // XXX: could this logic be cleaner?
+        const dungeon_feature_type start =
+            _at_rune_lock(false) ? DNGN_ESCAPE_HATCH_DOWN
+                                 : DNGN_STONE_STAIRS_DOWN_I;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
-                && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
+            if (grd(*ri) >= start && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
             {
                 _set_grd(*ri, feat);
             }
@@ -1585,6 +1595,8 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 
             if (at_branch_bottom())
                 needed_stairs = 0;
+            else if (_at_rune_lock(false))
+                needed_stairs = 1;
             else
                 needed_stairs = 3;
         }
@@ -1843,7 +1855,7 @@ static bool _add_connecting_escape_hatches()
     if (!player_in_connected_branch())
         return true;
 
-    if (at_branch_bottom())
+    if (at_branch_bottom() || _at_rune_lock(false))
         return dgn_count_disconnected_zones(true) == 0;
 
     if (!_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN))
@@ -6647,7 +6659,7 @@ static bool _fixup_interlevel_connectivity()
     }
 
     // At the branch bottom, all up stairs must be connected.
-    if (at_branch_bottom())
+    if (at_branch_bottom() || _at_rune_lock(false))
     {
         for (int i = 0; i < up_region_max; i++)
             if (!region_connected[up_region[i]])
