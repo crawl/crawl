@@ -1887,20 +1887,12 @@ void find_travel_pos(const coord_def& youpos,
     }
 }
 
-// Given a branch id, returns the parent branch. If the branch id is not found,
-// returns BRANCH_MAIN_DUNGEON.
-// XXX: is this really necessary any longer?
-static branch_type _find_parent_branch(branch_type br)
-{
-    return parent_branch(br);
-}
-
 extern map<branch_type, set<level_id> > stair_level;
 
 static void _find_parent_branch(branch_type br, int depth,
                                 branch_type *pb, int *pd)
 {
-    *pb = _find_parent_branch(br);   // Check depth before using *pb.
+    *pb = parent_branch(br);   // Check depth before using *pb.
     if (stair_level.find(br) == stair_level.end())
         *pd = 0;
     else
@@ -2059,7 +2051,7 @@ static int _get_nearest_level_depth(uint8_t branch)
             || player_in_branch(BRANCH_GEHENNA)))
     {
         // BUG: hell gates in the Lair
-        return you.hell_exit;
+        return brentry[BRANCH_VESTIBULE_OF_HELL].depth;
     }
 
     level_id id = level_id::current();
@@ -2220,7 +2212,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
             return (allow_updown ? ID_DOWN : ID_CANCEL);
         case CONTROL('P'):
             {
-                const branch_type parent = _find_parent_branch(curr.branch);
+                const branch_type parent = parent_branch(curr.branch);
                 if (parent < NUM_BRANCHES)
                     return parent;
             }
@@ -2249,7 +2241,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                     const Branch &target = branches[br[i]];
                     string msg;
 
-                    if (startdepth[br[i]] == -1
+                    if (!brentry[br[i]].is_valid()
                         && is_random_subbranch((branch_type)i)
                         && you.wizard) // don't leak mimics
                     {
@@ -2299,10 +2291,7 @@ level_id find_up_level(level_id curr, bool up_branch)
             if (parent.depth > 0)
                 return parent;
             else if (curr.branch == BRANCH_VESTIBULE_OF_HELL)
-            {
-                parent = level_id(you.hell_branch, you.hell_exit);
-                return parent;
-            }
+                return brentry[BRANCH_VESTIBULE_OF_HELL];
         }
         return level_id();
     }
@@ -2312,7 +2301,7 @@ level_id find_up_level(level_id curr, bool up_branch)
 
 static level_id _find_up_level()
 {
-    return (find_up_level(level_id::current()));
+    return find_up_level(level_id::current());
 }
 
 level_id find_down_level(level_id curr)

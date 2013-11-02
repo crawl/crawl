@@ -219,9 +219,6 @@ public:
   uint8_t normal_vision;        // how far the species gets to see
   uint8_t current_vision;       // current sight radius (cells)
 
-  branch_type   hell_branch;          // which branch the player goes to on hell exit
-  uint8_t       hell_exit;            // which level player goes to on hell exit
-
   int           real_time;            // real time played (in seconds)
   int           num_turns;            // number of turns taken
   int           exploration;          // levels explored (16.16 bit real number)

@@ -55,31 +55,8 @@ void initialise_branch_depths()
 {
     root_branch = BRANCH_MAIN_DUNGEON;
 
-    for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
-    {
-        const Branch *b = &branches[branch];
-        if (branch_is_unfinished(b->id))
-            startdepth[branch] = -1;
-        else
-            startdepth[branch] = random_range(b->mindepth, b->maxdepth);
-    }
-
-    // You will get one of Shoals/Swamp and one of Spider/Snake.
-    // This way you get one "water" branch and one "poison" branch.
-    branch_type disabled_branch[] =
-    {
-        random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
-        random_choose(BRANCH_SNAKE_PIT, BRANCH_SPIDER_NEST, -1),
-        random_choose(BRANCH_CRYPT, BRANCH_FOREST, -1),
-    };
-    if (Version::ReleaseType != VER_ALPHA)
-        disabled_branch[2] = BRANCH_FOREST;
-
-    for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
-    {
-        dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
-        startdepth[disabled_branch[i]] = -1;
-    }
+    for (int br = 0; br < NUM_BRANCHES; ++br)
+        brentry[br].clear();
 
     if (crawl_state.game_is_sprint())
     {
@@ -96,6 +73,36 @@ void initialise_branch_depths()
         brdepth[BRANCH_BAZAAR] = 1;
         return;
     }
+
+    for (int branch = 0; branch < NUM_BRANCHES; ++branch)
+    {
+        const Branch *b = &branches[branch];
+        ASSERT(b->id == branch);
+        if (!branch_is_unfinished(b->id) && b->parent_branch != NUM_BRANCHES)
+        {
+            brentry[branch] = level_id(b->parent_branch,
+                                       random_range(b->mindepth, b->maxdepth));
+        }
+    }
+
+    // You will get one of Shoals/Swamp and one of Spider/Snake.
+    // This way you get one "water" branch and one "poison" branch.
+    branch_type disabled_branch[] =
+    {
+        random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
+        random_choose(BRANCH_SNAKE_PIT, BRANCH_SPIDER_NEST, -1),
+        random_choose(BRANCH_CRYPT, BRANCH_FOREST, -1),
+    };
+    if (Version::ReleaseType != VER_ALPHA)
+        disabled_branch[2] = BRANCH_FOREST;
+
+    for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
+    {
+        dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
+        brentry[disabled_branch[i]].clear();
+    }
+    if (brentry[BRANCH_FOREST].is_valid())
+        brentry[BRANCH_TOMB].branch = BRANCH_FOREST;
 
     for (int i = 0; i < NUM_BRANCHES; i++)
         brdepth[i] = branches[i].numlevels;

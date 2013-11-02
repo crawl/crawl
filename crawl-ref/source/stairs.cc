@@ -524,14 +524,15 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             feat = DNGN_EXIT_PORTAL_VAULT; // silly Labyrinths
         else if (parent_branch(you.where_are_you) < NUM_BRANCHES)
         {
-            level_id lev = level_id(parent_branch(you.where_are_you),
-                                    startdepth[you.where_are_you]);
-            if (lev.depth == -1)
+            level_id lev = brentry[you.where_are_you];
+            if (!lev.is_valid())
             {
                 // Wizmode, the branch wasn't generated this game.
                 // Pick the middle of the range instead.
-                lev.depth = (branches[you.where_are_you].mindepth
-                             + branches[you.where_are_you].maxdepth) / 2;
+                lev = level_id(branches[you.where_are_you].parent_branch,
+                               (branches[you.where_are_you].mindepth
+                                + branches[you.where_are_you].maxdepth) / 2);
+                ASSERT(lev.is_valid());
             }
 
             return lev;
@@ -553,8 +554,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         return level_id(you.where_are_you, you.depth - 1);
 
     case DNGN_EXIT_HELL:
-        if (you.hell_exit)
-            return level_id(you.hell_branch, you.hell_exit);
+        // If set, it would be found as a branch exit.
         if (you.wizard)
         {
             if (for_real)
@@ -599,10 +599,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 
     case DNGN_ENTER_HELL:
         if (for_real && !player_in_hell())
-        {
-            you.hell_branch = you.where_are_you;
-            you.hell_exit = you.depth;
-        }
+            brentry[BRANCH_VESTIBULE_OF_HELL] = level_id::current();
         return level_id(BRANCH_VESTIBULE_OF_HELL);
 
     case DNGN_EXIT_ABYSS:

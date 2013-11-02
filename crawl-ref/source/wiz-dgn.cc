@@ -340,11 +340,10 @@ void wizard_list_branches()
     {
         if (parent_branch((branch_type)i) == NUM_BRANCHES)
             continue;
-        else if (startdepth[i] != -1)
+        else if (brentry[i].is_valid())
         {
-            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
-                 i, branches[i].longname, startdepth[i],
-                 branches[parent_branch((branch_type)i)].abbrevname);
+            mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on %s",
+                 i, branches[i].longname, brentry[i].describe().c_str());
         }
         else if (is_random_subbranch((branch_type)i))
         {

@@ -47,7 +47,6 @@ LUAFN(dgn_br_depth)
 
 LUAFN(dgn_br_exists)
 {
-    bool exists = false;
     branch_type brn = you.where_are_you;
     if (lua_gettop(ls) == 1)
     {
@@ -57,10 +56,9 @@ LUAFN(dgn_br_exists)
             luaL_argerror(ls, 1, "No such branch");
     }
 
-    if (parent_branch(brn) == NUM_BRANCHES || startdepth[brn] != -1)
-        exists = true;
-
-    PLUARET(boolean, exists);
+    PLUARET(boolean, brn == root_branch
+                     || !is_connected_branch(brn)
+                     || brentry[brn].is_valid());
 }
 
 static void _push_level_id(lua_State *ls, const level_id &lid)
@@ -83,8 +81,7 @@ LUAFN(dgn_br_entrance)
             luaL_argerror(ls, 1, "No such branch");
     }
 
-    _push_level_id(ls, level_id(parent_branch(brn),
-                                startdepth[brn]));
+    _push_level_id(ls, brentry[brn]);
     return 1;
 }
 

@@ -176,7 +176,7 @@ static bool mg_build_dungeon()
         you.depth = lid.depth;
 
         // An unholy hack, FIXME!
-        if (startdepth[BRANCH_FOREST] == -1
+        if (!brentry[BRANCH_FOREST].is_valid()
             && lid.branch == BRANCH_FOREST && lid.depth == 5)
         {
             you.unique_creatures.set(MONS_THE_ENCHANTRESS, false);
