@@ -199,7 +199,7 @@ sub finish_art
         if ($funcs->{$func_name})
         {
             $artefact->{"fight_func_func"} =
-                $func_name . ": _${enum}_" . $funcs->{$func_name};
+                ".$func_name = _${enum}_$funcs->{$func_name}";
         }
     }
 
