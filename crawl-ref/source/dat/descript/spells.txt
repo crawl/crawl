@@ -468,6 +468,11 @@ Freezing Cloud spell
 
 This spell conjures up a large cloud of lethally cold vapour.
 %%%%
+Frenzy spell
+
+This ability allows the creature using it to go into a mad thrashing rage,
+which, while akin to berserk, doesn't allow telling friend from foe.
+%%%%
 Fulminant Prism spell
 
 This spell conjures a prism which channels magical energy from its surroundings
