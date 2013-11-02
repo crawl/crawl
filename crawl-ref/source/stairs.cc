@@ -691,6 +691,18 @@ void down_stairs(dungeon_feature_type force_stair)
 
     if (shaft)
     {
+        if (player_in_branch(BRANCH_MAIN_DUNGEON)
+            && you.depth == RUNE_LOCK_DEPTH)
+        {
+            mpr("If you take this shaft, you won't be able to return to this "
+                "depth without first obtaining a rune of Zot!", MSGCH_WARN);
+            if (!yesno("Take the shaft anyway?", false, 'n', true, false))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+        }
+
         if (!is_valid_shaft_level())
         {
             if (known_shaft)
