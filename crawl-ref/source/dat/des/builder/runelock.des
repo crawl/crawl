@@ -86,3 +86,21 @@ bb...1...bb
  bb.....bb
   bbb+bbb
 ENDMAP
+
+##########################################################################
+# Vaults holding pre-identified shafts on D:14.
+# This is a very crude way to allow players to bypass the rune lock on D:14
+# and may be done completely differently in the future. For now, it's simple. 
+##########################################################################
+
+NAME: dpeg_runelock_shaft_generic
+ORIENT: float
+PLACE: D:14
+KFEAT: ^ = known shaft trap
+MAP
+.....
+.bbb.
+.b^+.
+.bbb.
+.....
+ENDMAP
