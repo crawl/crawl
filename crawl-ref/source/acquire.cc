@@ -332,11 +332,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
     return result;
 }
 
-// If armour acquirement turned up a non-ego non-artefact armour item,
-// see whether the player has any unfilled equipment slots.  If so,
-// hand out a plain (possibly enchanted) item of that
-// type.  Otherwise, keep the original armour.
-static bool _try_give_plain_armour(item_def &arm)
+static armour_type _pick_unseen_armour()
 {
     static const equipment_type armour_slots[] =
         {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
@@ -382,25 +378,7 @@ static bool _try_give_plain_armour(item_def &arm)
             picked = result;
     }
 
-    // All available secondary slots already filled.
-    if (picked == NUM_ARMOURS)
-        return false;
-
-    arm.clear();
-    arm.quantity = 1;
-    arm.base_type = OBJ_ARMOUR;
-    arm.sub_type = picked;
-    arm.plus = random2(5) - 2;
-
-    const int max_ench = armour_max_enchant(arm);
-    if (arm.plus > max_ench)
-        arm.plus = max_ench;
-    else if (arm.plus < -max_ench)
-        arm.plus = -max_ench;
-    item_colour(arm);
-
-    ASSERT(arm.is_valid());
-    return true;
+    return picked;
 }
 
 // Write results into arguments.
@@ -1275,14 +1253,13 @@ int acquirement_create_item(object_class_type class_wanted,
                  || get_armour_slot(doodad) == EQ_BODY_ARMOUR && coinflip())
                 && _armour_slot_seen((armour_type)doodad.sub_type))
             {
-                if (_try_give_plain_armour(doodad))
+                armour_type at = _pick_unseen_armour();
+                if (at != NUM_ARMOURS)
                 {
-                    origin_acquired(doodad, agent);
-                    // Only Xom gives negatively enchanted items (75% if not 0).
-                    if (doodad.plus < 0 && agent != GOD_XOM)
-                        doodad.plus = 0;
-                    else if (doodad.plus > 0 && agent == GOD_XOM && coinflip())
-                        doodad.plus *= -1;
+                    destroy_item(thing_created, true);
+                    thing_created = items(true, OBJ_ARMOUR, at, true,
+                               ITEM_LEVEL, MAKE_ITEM_RANDOM_RACE,
+                               0, 0, agent);
                 }
                 else if (agent != GOD_XOM && one_chance_in(3))
                 {
