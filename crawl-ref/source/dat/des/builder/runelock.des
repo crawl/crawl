@@ -93,10 +93,11 @@ ENDMAP
 # and may be done completely differently in the future. For now, it's simple. 
 ##########################################################################
 
-NAME: dpeg_runelock_shaft_generic
+NAME:   dpeg_runelock_shaft_generic
 ORIENT: float
-PLACE: D:14
-KFEAT: ^ = known shaft trap
+DEPTH:  D:14
+CHANCE: 100%
+KFEAT:  ^ = known shaft trap
 MAP
 .....
 .bbb.
