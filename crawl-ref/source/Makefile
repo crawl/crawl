@@ -1008,6 +1008,7 @@ ifndef V
         QUIET_COPY     = @echo '   ' COPY $@;
         QUIET_DEPEND   = @echo '   ' DEPEND $@;
         QUIET_WINDRES  = @echo '   ' WINDRES $@;
+        QUIET_HOSTCC   = @echo '   ' HOSTCC $@;
         QUIET_PNGCRUSH = @echo '   ' $(PNGCRUSH_LABEL) $@;
         QUIET_ADVPNG   = @echo '   ' ADVPNG $@;
         export V
@@ -1673,7 +1674,7 @@ test-%: $(GAME) util/fake_pty builddb
 	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c
-	$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil
+	$(QUIET_HOSTCC)$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil
 
 # Should be not needed, but the race condition in bug #6509 is hard to fix.
 builddb: $(GAME)
