@@ -64,8 +64,6 @@ enum store_flag_type
 };
 
 
-// Can't just cast everything into a void pointer, since a float might
-// not fit into a pointer on all systems.
 typedef union StoreUnion StoreUnion;
 union StoreUnion
 {
@@ -108,8 +106,10 @@ public:
     CrawlStoreValue &operator = (const CrawlStoreValue &other);
 
 protected:
-    store_val_type type;
+    // These first two fields need to match those in CrawlVector
+    store_val_type type:8;
     store_flags    flags;
+
     StoreUnion     val;
 
 public:
@@ -349,8 +349,10 @@ public:
     typedef vector_type::const_iterator const_iterator;
 
 protected:
-    store_val_type type;
+    // These first two fields need to match those in CrawlStoreValue
+    store_val_type type:8;
     store_flags    default_flags;
+
     vec_size       max_size;
     vector_type    vec;
 
