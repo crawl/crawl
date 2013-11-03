@@ -3,8 +3,6 @@
 #include "sprint.h"
 
 #include "externs.h"
-#include "maps.h"
-#include "mon-util.h"
 #include "monster.h"
 #include "mpr.h"
 #include "player.h"

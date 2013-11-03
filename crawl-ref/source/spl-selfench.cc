@@ -9,7 +9,6 @@
 #include "externs.h"
 
 #include "areas.h"
-#include "delay.h"
 #include "env.h"
 #include "godconduct.h"
 #include "hints.h"
@@ -18,7 +17,6 @@
 #include "misc.h"
 #include "options.h"
 #include "religion.h"
-#include "shout.h"
 #include "spl-cast.h"
 #include "spl-transloc.h"
 #include "spl-util.h"

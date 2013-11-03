@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include <sstream>
 
 #include "wiz-mon.h"
 
@@ -15,7 +16,6 @@
 #include "colour.h"
 #include "dbg-util.h"
 #include "delay.h"
-#include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
@@ -38,7 +38,6 @@
 #include "output.h"
 #include "religion.h"
 #include "shout.h"
-#include "showsymb.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"

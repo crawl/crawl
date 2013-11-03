@@ -13,7 +13,6 @@
 #include "delay.h"
 #include "env.h"
 #include "fprop.h"
-#include "item_use.h"
 #include "los.h"
 #include "losglobal.h"
 #include "monster.h"

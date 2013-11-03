@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "l_libs.h"

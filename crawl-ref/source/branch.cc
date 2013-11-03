@@ -2,9 +2,7 @@
 
 #include "branch.h"
 #include "externs.h"
-#include "files.h"
 #include "player.h"
-#include "traps.h"
 #include "travel.h"
 #include "branch-data.h"
 

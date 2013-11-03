@@ -7,8 +7,6 @@
 #include "coordit.h"
 #include "env.h"
 #include "fight.h"
-#include "godabil.h"
-#include "itemprop.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "player.h"

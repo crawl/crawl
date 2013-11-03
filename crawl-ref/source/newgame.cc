@@ -30,7 +30,6 @@
 #include "species.h"
 #include "state.h"
 #include "stuff.h"
-#include "version.h"
 
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"

@@ -15,7 +15,6 @@
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
-// #include "mon-util.h"
 #include "monster.h"
 #include "player.h"
 #include "religion.h"

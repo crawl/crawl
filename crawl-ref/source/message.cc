@@ -19,7 +19,6 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
-#include "showsymb.h"
 #include "stash.h"
 #include "state.h"
 #include "areas.h"

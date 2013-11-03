@@ -6,7 +6,6 @@
 #include "AppHdr.h"
 #include <vector>
 
-#include "coord.h"
 #include "mapdef.h"
 #include "random.h"
 #include "dgn-irregular-box.h"

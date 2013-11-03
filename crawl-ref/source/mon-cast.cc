@@ -21,7 +21,6 @@
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
-#include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"

@@ -12,7 +12,6 @@
 #include "godconduct.h"
 #include "libutil.h"
 #include "los.h"
-#include "losglobal.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "ouch.h"

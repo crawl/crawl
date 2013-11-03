@@ -27,7 +27,6 @@
 #include "monster.h"
 #include "options.h"
 #include "religion.h"
-#include "showsymb.h"
 #include "skills2.h"
 #include "spl-summoning.h"
 #include "state.h"

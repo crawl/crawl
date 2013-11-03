@@ -49,7 +49,6 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
-#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"

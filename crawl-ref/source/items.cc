@@ -33,7 +33,6 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
-#include "evoke.h"
 #include "food.h"
 #include "godpassive.h"
 #include "godprayer.h"

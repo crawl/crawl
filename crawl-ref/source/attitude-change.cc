@@ -15,7 +15,6 @@
 #include "env.h"
 #include "godcompanions.h"
 #include "goditem.h"
-#include "itemprop.h"
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"

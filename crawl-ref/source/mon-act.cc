@@ -29,7 +29,6 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
-#include "map_knowledge.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"

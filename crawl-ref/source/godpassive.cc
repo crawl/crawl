@@ -9,7 +9,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "defines.h"
-#include "describe.h"
 #include "env.h"
 #include "files.h"
 #include "food.h"

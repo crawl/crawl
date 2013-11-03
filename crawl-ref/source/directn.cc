@@ -18,7 +18,6 @@
 #include "externs.h"
 #include "options.h"
 
-#include "branch.h"
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
@@ -34,7 +33,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
-#include "l_defs.h"
 #include "libutil.h"
 #include "los.h"
 #include "losglobal.h"

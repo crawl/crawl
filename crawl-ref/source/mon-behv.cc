@@ -18,7 +18,6 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
-#include "itemprop.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "mon-act.h"

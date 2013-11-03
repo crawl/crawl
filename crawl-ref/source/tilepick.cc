@@ -21,7 +21,6 @@
 #include "options.h"
 #include "player.h"
 #include "shopping.h"
-#include "showsymb.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"

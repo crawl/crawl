@@ -29,7 +29,6 @@
  #include "tilefont.h"
  #include "tilereg-crt.h"
  #include "tilereg-menu.h"
- #include "tilereg-popup.h"
 #endif
 #ifdef USE_TILE
  #include "mon-stuff.h"

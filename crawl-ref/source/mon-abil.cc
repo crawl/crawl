@@ -46,7 +46,6 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-miscast.h"
-#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -58,7 +57,6 @@
 #include "ouch.h"
 #include "target.h"
 #include "items.h"
-#include "mapmark.h"
 #include "teleport.h"
 
 #include <algorithm>

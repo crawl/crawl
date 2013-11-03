@@ -2,14 +2,11 @@
 
 #include "map_knowledge.h"
 
-#include "cloud.h"
 #include "coordit.h"
 #include "dgn-overview.h"
-#include "dgnevent.h"
 #include "directn.h"
 #include "env.h"
 #include "feature.h"
-#include "los.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "options.h"

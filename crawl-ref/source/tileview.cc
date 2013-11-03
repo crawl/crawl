@@ -15,7 +15,6 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
-#include "showsymb.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"

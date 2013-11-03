@@ -4,10 +4,10 @@
 **/
 
 #include "AppHdr.h"
+#include <sstream>
+#include <math.h>
 
 #include "throw.h"
-
-#include <math.h>
 
 #include "externs.h"
 
@@ -16,7 +16,6 @@
 #include "colour.h"
 #include "command.h"
 #include "delay.h"
-#include "describe.h"
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"

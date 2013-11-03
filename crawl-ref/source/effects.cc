@@ -47,7 +47,6 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "map_knowledge.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"

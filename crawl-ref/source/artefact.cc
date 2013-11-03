@@ -21,7 +21,6 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
-#include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"

@@ -16,7 +16,6 @@
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coordit.h"
 #include "command.h"
 #include "database.h"
 #include "decks.h"

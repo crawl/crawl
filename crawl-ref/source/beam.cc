@@ -29,7 +29,6 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dungeon.h"
-#include "dgnevent.h"
 #include "effects.h"
 #include "env.h"
 #include "enum.h"

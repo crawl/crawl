@@ -1,11 +1,11 @@
 #include "AppHdr.h"
+#include <sstream>
 
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attack.h"
 #include "coord.h"
-#include "describe.h"
 #include "env.h"
 #include "fprop.h"
 #include "itemprop.h"

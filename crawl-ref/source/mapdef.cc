@@ -26,7 +26,6 @@
 #include "dgn-height.h"
 #include "exclude.h"
 #include "files.h"
-#include "ghost.h"
 #include "initfile.h"
 #include "invent.h"
 #include "l_defs.h"
