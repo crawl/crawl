@@ -9,7 +9,7 @@
 
 NAME:   serial_co_window_serial
 TAGS:   allow_dup extra luniq_serial decor
-DEPTH:  D, Elf, Crypt
+DEPTH:  D, Depths, Elf, Crypt
 CHANCE: 1%
 {{
   local s = 5 + crawl.random2(3)*crawl.random2(3)

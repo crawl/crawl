@@ -640,13 +640,13 @@ void check_map_validity()
 {
 #ifdef ASSERTS
     dungeon_feature_type portal = DNGN_UNSEEN;
-    if (you.where_are_you == BRANCH_DUNGEON)
+    if (you.where_are_you == BRANCH_DEPTHS)
     {
-        if (you.depth == 24)
+        if (you.depth == 3)
             portal = DNGN_ENTER_PANDEMONIUM;
-        else if (you.depth == 25)
+        else if (you.depth == 4)
             portal = DNGN_ENTER_ABYSS;
-        else if (you.depth == 21)
+        else if (you.depth == 2)
             portal = DNGN_ENTER_HELL;
     }
 

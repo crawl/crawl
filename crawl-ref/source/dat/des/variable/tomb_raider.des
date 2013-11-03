@@ -35,7 +35,7 @@ end
 }}
 
 NAME:   ragdoll_tomb_raider
-DEPTH:  D:14-26, Crypt:1-4
+DEPTH:  Depths, Crypt:1-4
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen
 KITEM:  $ = ring of regeneration unrand:ring_of_vitality / acquire any

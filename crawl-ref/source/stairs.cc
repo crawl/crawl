@@ -286,7 +286,7 @@ static void _update_travel_cache(const level_id& old_level,
         // to Hell as shortcuts between dungeon levels, which won't work,
         // and will confuse the dickens out of the player (well, it confused
         // the dickens out of me when it happened).
-        if (new_level_id == BRANCH_DUNGEON
+        if ((new_level_id == BRANCH_DUNGEON || new_level_id == BRANCH_DEPTHS)
             && old_level == BRANCH_VESTIBULE)
         {
             old_level_info.clear_stairs(DNGN_EXIT_HELL);
@@ -711,9 +711,7 @@ void down_stairs(dungeon_feature_type force_stair)
         _maybe_destroy_trap(you.pos());
     }
 
-    if (player_in_branch(BRANCH_DUNGEON)
-        && you.depth == RUNE_LOCK_DEPTH
-        && (feat_is_stone_stair(stair_find) || feat_is_escape_hatch(stair_find)))
+    if (stair_find == DNGN_ENTER_DEPTHS)
     {
         bool has_rune = false;
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
@@ -725,7 +723,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
         if (!has_rune)
         {
-            mpr("You need a rune to go deeper.");
+            mpr("You need a rune to enter this place.");
             return;
         }
     }

@@ -13,7 +13,7 @@
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
 NAME:   layout_layer_cave
-DEPTH:  D:10-26,Lair,Snake
+DEPTH:  D:10-, Depths, !Depths:$, Lair, Snake
 WEIGHT: 15, 20(Lair)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_caves
@@ -102,7 +102,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_caves
 #       * Snake should have domain distortion every time (use the one from Halls)
 #       * It should be possible to fold most of these effects into layer_cave
 NAME:   layout_cave_shapes
-DEPTH:  D:15-25,Lair,Snake
+DEPTH:  Depths, !Depths:$, Lair, Snake
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_caverns
@@ -215,7 +215,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
 # produces the same kind of symmetries. It could be an alternate algorithm there but
 # ... it just looks more cave-like.
 NAME:   layout_waterfall
-DEPTH:  D:10-25,Tar
+DEPTH:  D:10-, Depths, !Depths:$, Tar
 WEIGHT: 5, 50(Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_caverns
@@ -308,7 +308,7 @@ ENDMAP
 NAME: layout_cave_town
 WEIGHT: 8
 ORIENT: encompass
-DEPTH: D:15-26, Snake, Lair:1-3
+DEPTH: Depths, !Depths:$, Snake, Lair:1-3
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
 TAGS: no_hmirror no_vmirror chance_d layout_type_cave_town
 {{

@@ -264,7 +264,7 @@ end
 NAME:    serial_aquarium
 TAGS:    allow_dup extra luniq_serial decor
 TAGS:    layout_rooms layout_misc
-DEPTH:   D, Elf
+DEPTH:   D, Depths, Elf
 CHANCE:  1%
 {{
   if crawl.random2(6) < 2 then

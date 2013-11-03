@@ -40,7 +40,7 @@ end
 }}
 
 NAME:   serial_ice
-DEPTH:  D:8-16, Coc
+DEPTH:  D:8-, Coc
 TAGS:   extra luniq_serial allow_dup
 CHANCE: 1% (D), 3% (Coc)
 {{

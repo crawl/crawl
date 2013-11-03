@@ -3145,6 +3145,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "hole to the Spider Nest";
     case DNGN_ENTER_FOREST:
         return "staircase to the Enchanted Forest";
+    case DNGN_ENTER_DEPTHS:
+        return "gate to the Depths";
     case DNGN_ENTER_PORTAL_VAULT:
         // The bazaar description should be set in the bazaar marker; this
         // is the description for a portal of unknown type.
@@ -3180,6 +3182,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_RETURN_FROM_TOMB:
         return "staircase out of the Tomb";
     case DNGN_RETURN_FROM_ZOT:
+    case DNGN_RETURN_FROM_DEPTHS:
         return "gate leading back out of this place";
 
     // altars

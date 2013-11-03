@@ -98,7 +98,7 @@ end
 
 NAME:    trap_god_xom
 TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:4-
+DEPTH:   D:4-, Depths
 KITEM:   d = wand of teleportation / wand of digging / w:1 wand of random effects
 KFEAT:   B = altar_xom
 KPROP:   ^X.Bd|m = no_rtele_into

@@ -202,6 +202,8 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_TRANSIT_PANDEMONIUM:
+        case DNGN_ENTER_DEPTHS:
+        case DNGN_RETURN_FROM_DEPTHS:
         case DNGN_ENTER_ZOT:
         case DNGN_RETURN_FROM_ZOT:
             return true;
@@ -302,6 +304,7 @@ static bool _is_feature_fudged(ucs_t feature, const coord_def& where)
         case DNGN_EXIT_PORTAL_VAULT:
         case DNGN_EXIT_ABYSS:
         case DNGN_EXIT_PANDEMONIUM:
+        case DNGN_RETURN_FROM_DEPTHS:
         case DNGN_RETURN_FROM_ZOT:
             return true;
         default:
@@ -317,6 +320,7 @@ static bool _is_feature_fudged(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_COCYTUS:
         case DNGN_ENTER_TARTARUS:
         case DNGN_TRANSIT_PANDEMONIUM:
+        case DNGN_ENTER_DEPTHS:
         case DNGN_ENTER_ZOT:
             return true;
         default:

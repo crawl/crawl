@@ -10,7 +10,7 @@
 # home of a local deep dwarf to ensure random teleporters can escape. If
 # all else fails there is an escape hatch in the mall's washroom.
 
-default-depth:  D:18-26
+default-depth:  Depths, !Depths:$
 
 NAME:   grated_community_mu
 TAGS:   no_rotate no_monster_gen no_item_gen

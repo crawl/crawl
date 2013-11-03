@@ -1,18 +1,24 @@
+##############################################################################
+# depths.des: Depths entry vaults.
+#             At time of writing, depths vaults are shared with D and
+#             tend to go in variable/*.des.
+##############################################################################
+
 ##########################################################################
-# Vaults holding the stair from D:14 to D:15.
-# D:15 is intended to be a considerable change of pace from earlier (even
+# Depths entries.
+# U:1 is intended to be a considerable change of pace from earlier (even
 # if it isn't at all at time of writing); there is a single point of entry
 # / exit between the two levels.
-# These vaults hold the stair to D:15 and some enemies representative of
+# These vaults hold the stair to U:1 and some enemies representative of
 # later in the dungeon to make it clear what to expect.
 ##########################################################################
 
-NAME: grunt_runelock_snipers
+NAME: grunt_enter_depths_snipers
 TAGS: no_pool_fixup
 ORIENT: float
-PLACE: D:14
+PLACE: D:$
 KMONS: O = vault guard
-KFEAT: O = }
+KFEAT: O = enter_depths
 MONS: centaur warrior, yaktaur
 MAP
 ccccccccc
@@ -29,15 +35,15 @@ ccc.@.ccc
 ENDMAP
 
 # The idea here is to keep the stone giant on the island until the player is
-# ready to deal with it, and therefore proceed to the rest of D.
-NAME: grunt_runelock_giant_problem
+# ready to deal with it, and therefore proceed to the Depths.
+NAME: grunt_enter_depths_giant_problem
 # Don't generate lava monsters:
 TAGS: no_monster_gen
 ORIENT: float
-PLACE: D:14
+PLACE: D:$
 SUBST: L = l.
 KMONS: O = patrolling stone giant
-KFEAT: O = }
+KFEAT: O = enter_depths
 MAP
   ....@....
  ..LLLLLLL..
@@ -54,25 +60,26 @@ MAP
   ....@....
 ENDMAP
 
-NAME: grunt_runelock_hoard
+NAME: grunt_enter_depths_hoard
 ORIENT: float
-PLACE: D:14
+PLACE: D:$
+KFEAT: O = enter_depths
 MONS: fire dragon / ice dragon
 MAP
   cccccc
  cc$$$$ccc
 cc.......ccccc
-c}..1........cc
+cO..1........cc
 cc.......cc...cc
  cc$$$$cccc.G..cc
   cccccccc.@.@..c
 ENDMAP
 
-NAME: grunt_runelock_magical_seal
+NAME: grunt_enter_depths_magical_seal
 ORIENT: float
-PLACE: D:14
+PLACE: D:$
 KMONS: O = ogre mage band / necromancer band
-KFEAT: O = }
+KFEAT: O = enter_depths
 MONS: wizard / deep elf mage / orc sorcerer / kobold demonologist / \
       naga mage
 MAP
@@ -89,9 +96,10 @@ bb...1...bb
   bbb+bbb
 ENDMAP
 
-NAME: gammafunk_runelock_forms
+NAME: gammafunk_enter_depths_forms
 ORIENT: float
-PLACE: D:14
+PLACE: D:$
+KFEAT: O = enter_depths
 MONS: boggart band w:20 / giant orange brain, shapeshifter w:5 / rakshasa
 MAP
   bbb
@@ -99,7 +107,7 @@ MAP
  b...b   bbbb
  b...bb bb..bb
 bb....bbb....bb
-b}.1..+...2...+@
+bO.1..+...2...+@
 bb....bbb....bb
  b...bb bb..bb
  b...b   bbbb
@@ -107,9 +115,10 @@ bb....bbb....bb
   bbb
 ENDMAP
 
-NAME: gammafunk_runelock_critters
+NAME: gammafunk_enter_depths_critters
 ORIENT: float
-PLACE: D:14
+PLACE: D:$
+KFEAT: O = enter_depths
 MONS: giant amoeba / brain worm / spiny worm w:5, slime creature band
 NSUBST: . = 2:1 / *:.
 MAP
@@ -121,14 +130,14 @@ xx....xx....xx
  xx2.xx....x
 xx...xxx...xx
 x...xxxx....x
-xx}xxxxxx..+x
+xxOxxxxxx..+x
  xxxx   xxxx@
 ENDMAP
 
-NAME: gammafunk_runelock_grave
+NAME: gammafunk_enter_depths_grave
 ORIENT: float
 TAGS: patrolling
-PLACE: D:14
+PLACE: D:$
 NSUBST: . = 1:2 / 4:1 / *:.
 SUBST: . = .....--__tG
 KMONS: t = w:2 col:darkgrey plant name:withered name_adjective \
@@ -140,7 +149,7 @@ FTILE: - = floor_pebble_brown
 FTILE: _ = floor_pebble_darkgray
 MONS:  w:2 guardian mummy / w:8 mummy / w:20 zombie / w:2 plague shambler
 MONS:  skeletal warrior band
-KFEAT: O = }
+KFEAT: O = enter_depths
 KMONS: O = vampire mage / necromancer band
 : set_feature_name("granite_statue", "a gravestone")
 MAP
@@ -159,10 +168,11 @@ MAP
   ....@....
 ENDMAP
 
-NAME: gammafunk_runelock_ironcross
+NAME: gammafunk_enter_depths_ironcross
 ORIENT: float
 TAGS: patrolling
-PLACE: D:14
+PLACE: D:$
+KFEAT: O = enter_depths
 MONS: vault guard, ironbrand convoker, vault sentinel
 SHUFFLE: 123
 MAP
@@ -172,7 +182,7 @@ MAP
     v.1.v
 vvvvv...vvvvv
 v...........v
-v..2..}..3..v
+v..2..O..3..v
 v...........v
 vvvvv...vvvvv
     v...v

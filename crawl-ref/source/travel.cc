@@ -2041,7 +2041,7 @@ static int _get_nearest_level_depth(uint8_t branch)
 
     // Hell needs special treatment, because we can't walk up
     // Hell and its branches to the main dungeon.
-    if (branch == BRANCH_DUNGEON
+    if (branch == BRANCH_DEPTHS
         && (player_in_branch(BRANCH_VESTIBULE)
             || player_in_branch(BRANCH_COCYTUS)
             || player_in_branch(BRANCH_TARTARUS)
@@ -3337,7 +3337,7 @@ void LevelInfo::update_stair(const coord_def& stairpos, const level_pos &p,
         si->guessed_pos = guess;
 
         if (!guess && p.id.branch == BRANCH_VESTIBULE
-            && id.branch == BRANCH_DUNGEON)
+            && id.branch == BRANCH_DEPTHS)
         {
             travel_hell_entry = p;
         }
@@ -3504,7 +3504,7 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             si.grid     = grd(si.position);
             si.destination.id = level_id::get_next_level_id(s[i]);
             if (si.destination.id.branch == BRANCH_VESTIBULE
-                && id.branch == BRANCH_DUNGEON
+                && id.branch == BRANCH_DEPTHS
                 && travel_hell_entry.is_valid())
             {
                 si.destination = travel_hell_entry;
@@ -3641,7 +3641,7 @@ void LevelInfo::load(reader& inf, int minorVersion)
 void LevelInfo::fixup()
 {
     // The only fixup we do now is for the hell entry.
-    if (id.branch != BRANCH_DUNGEON || !travel_hell_entry.is_valid())
+    if (id.branch != BRANCH_DEPTHS || !travel_hell_entry.is_valid())
         return;
 
     for (int i = 0, count = stairs.size(); i < count; ++i)

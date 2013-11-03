@@ -122,7 +122,7 @@
 }}
 
 NAME:   layout_big_grid
-DEPTH:  D:5-, Lair
+DEPTH:  D:5-, Depths, Lair
 WEIGHT: 3
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
@@ -151,7 +151,7 @@ TAGS: no_hmirror no_vmirror layout_type_open layout_type_big_grid
 }}
 
 NAME:   layout_small_grid
-DEPTH:  D:3-, Lair
+DEPTH:  D:3-, Depths, Lair
 WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
@@ -179,7 +179,7 @@ TAGS: no_hmirror no_vmirror layout_type_corridors layout_type_small_grid
 }}
 
 NAME:   layout_long_grid
-DEPTH:  D:3-, Lair
+DEPTH:  D:3-, Depths, Lair
 WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
@@ -237,7 +237,7 @@ TAGS: no_hmirror no_vmirror layout_type_corridors layout_type_long_grid
 # forbidden_donut but with a randomly-placed hole. At its most complex
 # it does all kinds of interesting things.
 NAME: layout_layered_grid
-DEPTH:  D, Crypt, Lair
+DEPTH:  D, Depths, Crypt, Lair
 WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
@@ -380,7 +380,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_open
 # up rooms until all original cells are connected.
 # TODO: Fortify edges; randomise door positions; something unique in Pan; maybe an Elf version
 NAME:   layout_grid_maze
-DEPTH:  D:8-, Lair, Tar, Pan
+DEPTH:  D:8-, Depths, Lair, Tar, Pan
 WEIGHT: 5, 80(Tar), 10 (Pan)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_maze

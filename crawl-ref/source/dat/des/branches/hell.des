@@ -7,8 +7,8 @@
 {{
 function hell_entry(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
-    e.depth_chance("D:21-", 10000)
-    if you.where() == 'D:21' then
+    e.depth_chance("Depths", 10000)
+    if you.where() == 'Depths:2' then
         e.kfeat(glyph .. " = enter_hell no_mimic")
     else
         e.kfeat(glyph .. " = enter_hell")
@@ -25,14 +25,14 @@ end
 # placements.
 NAME:   hell_entry
 TAGS:   allow_dup can_overwrite replace_portal transparent fallback_enter_hell
-DEPTH:  D:21-
+DEPTH:  Depths
 WEIGHT: 50
 : hell_entry(_G, 'O')
 MAP
 O
 ENDMAP
 
-default-depth: D:14-26
+default-depth: Depths
 
 ##############################################################################
 # Hellmouth (Lemuel)
@@ -145,7 +145,6 @@ ENDMAP
 
 NAME:   grunt_hell_entry_demonic_statue
 ORIENT: float
-DEPTH:  D:16-26
 TAGS:   no_monster_gen no_rtele_into nolayout_encompass
 MONS:   blue devil / orange demon / red devil / w:5 iron devil / \
         w:35 nothing
@@ -191,7 +190,6 @@ ENDMAP
 ###############################################################################
 #
 NAME: lightli_too_deep
-DEPTH: D:17-
 TAGS: no_monster_gen nolayout_encompass
 ORIENT: northeast
 MONS: balrug
@@ -227,7 +225,6 @@ ENDMAP
 # Otherwise known as grunt_what_the_hellephant.
 NAME: grunt_hell_horde
 TAGS: nolayout_encompass mini_float
-DEPTH: D:21-
 : hell_entry(_G, 'O')
 : if crawl.coinflip() then
 NSUBST: + = 1:+ / *:x
@@ -250,7 +247,6 @@ ENDMAP
 
 NAME: grunt_metal_band
 TAGS: nolayout_encompass
-DEPTH: D:21-
 : hell_entry(_G, 'O')
 KMONS: O = Margery band, hell knight band
 MAP
@@ -265,7 +261,6 @@ ENDMAP
 
 NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen
-DEPTH: D:21-
 : hell_entry(_G, 'O')
 KMONS: O = hell beast
 MONS: place:Coc:1 band, place:Dis:1 band, place:Geh:1 band, place:Tar:1 band
@@ -495,7 +490,7 @@ NAME:   vestibule_tar_nicolae_necropolis
 TAGS:   vestibule_tar
 MARKER: T = feat:enter_tartarus
 SUBST:  T = A, d = ccc., z = zzz..
-KMONS:  z = place:D:20 zombie / lost soul
+KMONS:  z = place:Depths:1 zombie / lost soul
 KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
            curse skull
 TILE:   c = dngn_stone_dark

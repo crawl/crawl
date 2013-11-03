@@ -12,7 +12,7 @@ const Branch branches[NUM_BRANCHES] =
     //  has_uniques, floor colour, rock colour
     //  travel shortcut, dangerous branch end, ambient noise level
 
-    { BRANCH_DUNGEON, NUM_BRANCHES, 0, 0, 27, 0,
+    { BRANCH_DUNGEON, NUM_BRANCHES, 0, 0, 16, 0,
       0, 0,
       NUM_FEATURES, DNGN_EXIT_DUNGEON,
       "Dungeon", "the Dungeon", "D",
@@ -102,7 +102,7 @@ const Branch branches[NUM_BRANCHES] =
       true, GREEN, BROWN,
       'M', true, -5 },
 
-    { BRANCH_VAULTS, BRANCH_DUNGEON, 15, 20, 5, 19,
+    { BRANCH_VAULTS, BRANCH_DEPTHS, 2, 5, 5, 19,
       0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
       "Vaults", "the Vaults", "Vaults",
@@ -174,7 +174,7 @@ const Branch branches[NUM_BRANCHES] =
       false, MAGENTA, MAGENTA,
       'Y', true, 0 },
 
-    { BRANCH_ZOT, BRANCH_DUNGEON, 27, 27, 5, 27,
+    { BRANCH_ZOT, BRANCH_DEPTHS, 6, 6, 5, 27,
       0, 0,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",
@@ -286,13 +286,11 @@ const Branch branches[NUM_BRANCHES] =
       false, LIGHTGREY, BROWN, // set per-map
       '8', false, 0 },
 
-#if TAG_MAJOR_VERSION == 34
-    { BRANCH_UNUSED, NUM_BRANCHES, -1, -1, 0, 0,
-      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
-      "Void", "a void", "Void",
+    { BRANCH_DEPTHS, BRANCH_DUNGEON, 16, 16, 6, 16,
+      0, 0,
+      DNGN_ENTER_DEPTHS, DNGN_RETURN_FROM_DEPTHS,
+      "Depths", "the Depths", "Depths",
       NULL,
-      false, LIGHTGREY, BROWN,
-      '9', false, 0 },
-#endif
+      true, LIGHTGREY, BROWN,
+      'U', false, 0 },
 };

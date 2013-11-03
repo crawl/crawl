@@ -72,7 +72,7 @@ ENDMAP
 # Minivaults
 #
 NAME: mini_dummy
-DEPTH: 1-50, !D, !Abyss
+DEPTH: 1-50, !D, !Depths, !Abyss
 TAGS: dummy
 WEIGHT: 90
 MAP

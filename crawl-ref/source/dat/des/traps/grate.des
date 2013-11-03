@@ -67,7 +67,7 @@ end
 ###############################################################################
 # Stair grate traps. Total weight: 30
 NAME:   basic_stair_grate_trap
-DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
+DEPTH:  D:9-, Depths:2-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 ORIENT: float
 TAGS:   allow_dup extra luniq_grate_trap layout_rooms layout_caves
 : place_grate_trap(_G, '^', 'm')
@@ -78,7 +78,7 @@ xxxx
 ENDMAP
 
 NAME:   stair_cage_open
-DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-, Vaults:2-
+DEPTH:  D:9-, Depths:2-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-, Vaults:2-
 TAGS:   extra luniq_grate_trap no_monster_gen mini_float
 TAGS:   vaults_room_7_spin_up1
 WEIGHT: 2
@@ -97,7 +97,7 @@ MAP
 ENDMAP
 
 NAME:   stair_cage_cross
-DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
+DEPTH:  D:9-, Depths:2-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 TAGS:   extra luniq_grate_trap
 WEIGHT: 5
 : place_grate_trap(_G, '^', 'm')
@@ -114,7 +114,7 @@ xxxx@xxxx
 ENDMAP
 
 NAME:   stair_cage_line
-DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
+DEPTH:  D:9-, Depths:2-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 TAGS:   allow_dup extra luniq_grate_trap
 : place_grate_trap(_G, '^', 'm')
 MAP
@@ -126,7 +126,7 @@ xxxxxxx
 ENDMAP
 
 NAME:   stair_cage_wide
-DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
+DEPTH:  D:9-, Depths:2-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 TAGS:   allow_dup extra luniq_grate_trap
 WEIGHT: 3
 : place_grate_trap(_G, '^', 'm')
@@ -142,7 +142,8 @@ ENDMAP
 # Other grate traps. Make sure there is an escape route.
 
 NAME:   basic_loot_grate_trap
-DEPTH:  D:8-26, Crypt:1-4, Elf:1-4, Snake:1-4, Zot:1-4
+DEPTH:  D:8-, !D:$, Depths, !Depths:$, Crypt, !Crypt:$, Snake, !Snake:$, \
+        Elf, !Elf:$, Zot, !Zot:$
 TAGS:   extra luniq_grate_trap
 : place_grate_trap(_G, '^', 'm')
 MAP

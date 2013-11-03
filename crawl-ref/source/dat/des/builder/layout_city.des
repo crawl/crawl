@@ -48,7 +48,7 @@
 # - Differentiate in D a little
 # - Add decor in rooms if enough space - pillars, statues, whatever.
 NAME:   layout_stronghold
-DEPTH:  D:10-,Dis:1-6,Lair,Pan
+DEPTH:  D:10-, Depths, Dis:1-6, Lair, Pan
 WEIGHT: 5, 20(Dis), 10(Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
@@ -236,7 +236,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 #  many as 5000, although 4000 is more likely.
 #
 NAME: layout_irregular_city
-DEPTH: D:10-, Dis:1-6, Pan
+DEPTH: D:10-, Depths, Dis:1-6, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror

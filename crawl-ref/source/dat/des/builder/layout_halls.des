@@ -76,7 +76,7 @@
 }}
 
 NAME:   layout_hall_layers
-DEPTH:  D:12-,Zot,Lair,Elf
+DEPTH:  D:12-, Depths, Zot, Lair, Elf
 WEIGHT: 5, 10 (Zot), 5 (Lair), 20 (Elf)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand central layout_type_halls

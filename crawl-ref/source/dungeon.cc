@@ -1430,11 +1430,6 @@ void fixup_misplaced_items()
     }
 }
 
-static bool _at_rune_lock()
-{
-    return player_in_branch(BRANCH_DUNGEON) && you.depth == RUNE_LOCK_DEPTH;
-}
-
 static bool _at_top_of_branch()
 {
     return your_branch().exit_stairs != NUM_FEATURES
@@ -1512,16 +1507,15 @@ static void _fixup_branch_stairs()
     // Bottom level of branch - wipes out down stairs and hatches
     dungeon_feature_type feat = DNGN_FLOOR;
 
-    if (at_branch_bottom() || _at_rune_lock())
+    if (at_branch_bottom())
     {
-        // XXX: could this logic be cleaner?
-        const dungeon_feature_type start =
-            _at_rune_lock() ? DNGN_ESCAPE_HATCH_DOWN
-                            : DNGN_STONE_STAIRS_DOWN_I;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
-            if (grd(*ri) >= start && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
+            if (grd(*ri) >= DNGN_STONE_STAIRS_DOWN_I
+                && grd(*ri) <= DNGN_ESCAPE_HATCH_DOWN)
+            {
                 _set_grd(*ri, feat);
+            }
         }
     }
 }
@@ -1585,8 +1579,6 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
 
             if (at_branch_bottom())
                 needed_stairs = 0;
-            else if (_at_rune_lock())
-                needed_stairs = 1;
             else
                 needed_stairs = 3;
         }
@@ -1845,7 +1837,7 @@ static bool _add_connecting_escape_hatches()
     if (!player_in_connected_branch())
         return true;
 
-    if (at_branch_bottom() || _at_rune_lock())
+    if (at_branch_bottom())
         return dgn_count_disconnected_zones(true) == 0;
 
     if (!_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN))
@@ -3201,6 +3193,7 @@ static bool _builder_normal()
     // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
     // can still be placed in other branches as secondary vaults.
     if (vault && (player_in_branch(BRANCH_DUNGEON)
+                  || player_in_branch(BRANCH_DEPTHS)
                   || vault->orient == MAP_ENCOMPASS))
     {
         env.level_build_method += " random_map_in_depth";
@@ -6642,7 +6635,7 @@ static bool _fixup_interlevel_connectivity()
     }
 
     // At the branch bottom, all up stairs must be connected.
-    if (at_branch_bottom() || _at_rune_lock())
+    if (at_branch_bottom())
     {
         for (int i = 0; i < up_region_max; i++)
             if (!region_connected[up_region[i]])

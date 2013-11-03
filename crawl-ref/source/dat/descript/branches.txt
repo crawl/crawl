@@ -8,7 +8,7 @@ its origin, this deep cavern is filled with riches unheard of as well as with
 ample dangers to any intruder. Few have escaped alive, and even fewer have kept
 some sliver of sanity sufficient to tell the tale.
 
-The dungeon is 27 levels deep, but, honestly, this is only the beginning.
+The dungeon is 15 levels deep, but, honestly, this is only the beginning.
 %%%%
 Temple
 
@@ -102,8 +102,8 @@ great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
 The Vaults are five levels deep and contain the silver rune, as well as the
-entrances to two more branches. The entrance can be found between levels 15 and
-20 of the main dungeon.
+entrances to two more branches. The entrance can be found between levels 2 and
+5 of the Depths.
 %%%%
 Hall of Blades
 
@@ -315,4 +315,13 @@ laboratories still exist, filled with the results of their experiments. Those
 willing to explore these laboratories may find powerful magical treasure, but
 be warned: the wizards to whom these labs belonged to deserved their
 reputations.
+%%%%
+Depths
+
+The Depths are the deepest part of the dungeon proper, subject to the
+corrupting influence of the Realm of Zot without being considered a part
+of it.
+
+The Depths are six levels deep and can be entered from the lowest floor of
+the Dungeon while carrying at least one rune of Zot.
 %%%%

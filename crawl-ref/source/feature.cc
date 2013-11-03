@@ -513,6 +513,15 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_ENTER_DEPTHS:
+            f.colour      = LIGHTGREEN;
+            f.dchar       = DCHAR_ARCH;
+            f.flags      |= FFT_NOTABLE;
+            f.map_colour  = LIGHTGREY;
+            f.seen_colour = LIGHTGREEN;
+            f.minimap     = MF_STAIR_BRANCH;
+            break;
+
         case DNGN_ENTER_ZOT:
             f.colour      = MAGENTA;
             f.dchar       = DCHAR_ARCH;
@@ -551,6 +560,14 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.dchar       = DCHAR_STAIRS_UP;
             f.map_colour  = GREEN;
             f.seen_colour = YELLOW;
+            f.minimap     = MF_STAIR_BRANCH;
+            break;
+
+        case DNGN_RETURN_FROM_DEPTHS:
+            f.colour      = LIGHTGREEN;
+            f.dchar       = DCHAR_ARCH;
+            f.map_colour  = LIGHTGREY;
+            f.seen_colour = LIGHTGREEN;
             f.minimap     = MF_STAIR_BRANCH;
             break;
 

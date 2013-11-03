@@ -99,9 +99,14 @@ bool feat_is_staircase(dungeon_feature_type feat)
     if (feat_is_stone_stair(feat))
         return true;
 
-    // All branch entries/exits are staircases, except for Zot.
-    if (feat == DNGN_ENTER_ZOT || feat == DNGN_RETURN_FROM_ZOT)
+    // All branch entries/exits are staircases, except for the Depths and Zot.
+    if (feat == DNGN_ENTER_DEPTHS
+        || feat == DNGN_RETURN_FROM_DEPTHS
+        || feat == DNGN_ENTER_ZOT
+        || feat == DNGN_RETURN_FROM_ZOT)
+    {
         return false;
+    }
 
     if (feat == DNGN_EXIT_DUNGEON)
         return true;
@@ -164,6 +169,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_SPIDER_NEST:
     case DNGN_ENTER_FOREST:
+    case DNGN_ENTER_DEPTHS:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARVEN_HALL:
 #endif
@@ -182,6 +188,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_SHOALS:
     case DNGN_RETURN_FROM_SPIDER_NEST:
     case DNGN_RETURN_FROM_FOREST:
+    case DNGN_RETURN_FROM_DEPTHS:
         return true;
     default:
         return false;
@@ -224,6 +231,8 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
+    case DNGN_ENTER_DEPTHS:
+    case DNGN_RETURN_FROM_DEPTHS:
         return true;
     default:
         return false;
@@ -257,6 +266,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_SHOALS:
     case DNGN_RETURN_FROM_SPIDER_NEST:
     case DNGN_RETURN_FROM_FOREST:
+    case DNGN_RETURN_FROM_DEPTHS:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
     case DNGN_EXIT_PORTAL_VAULT:
@@ -298,6 +308,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_SPIDER_NEST:
     case DNGN_ENTER_FOREST:
+    case DNGN_ENTER_DEPTHS:
         return CMD_GO_DOWNSTAIRS;
 
     default:
@@ -451,7 +462,9 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
            && feat_stair_direction(feat) != CMD_NO_CMD
            && feat != DNGN_ENTER_ZOT
            && feat != DNGN_RETURN_FROM_ZOT
-           && feat != DNGN_EXIT_HELL;
+           && feat != DNGN_EXIT_HELL
+           && feat != DNGN_ENTER_DEPTHS
+           && feat != DNGN_RETURN_FROM_DEPTHS;
 }
 
 bool feat_is_fountain(dungeon_feature_type feat)
@@ -1605,7 +1618,7 @@ static const char *dngn_feature_names[] =
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
 "enter_swamp", "enter_shoals", "enter_spider_nest",
-"enter_forest", "",
+"enter_forest", "enter_depths",
 
 #if TAG_MAJOR_VERSION == 34
 "return_from_dwarven_hall",
@@ -1617,7 +1630,7 @@ static const char *dngn_feature_names[] =
 "return_from_temple", "return_from_snake_pit",
 "return_from_elven_halls", "return_from_tomb",
 "return_from_swamp", "return_from_shoals", "return_from_spider_nest",
-"return_from_forest", "",
+"return_from_forest", "return_from_depths",
 
 "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
