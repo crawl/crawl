@@ -404,7 +404,7 @@ void call_gdb(FILE *file)
                 0
             };
             execv("/usr/bin/gdb", (char* const*)argv);
-            fprintf(file, "Failed to start gdb: %s\n", strerror(errno));
+            printf("Failed to start gdb: %s\n", strerror(errno));
             _exit(0);
         }
         return;
