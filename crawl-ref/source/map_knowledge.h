@@ -299,7 +299,6 @@ private:
 
 void set_terrain_mapped(const coord_def c);
 void set_terrain_seen(const coord_def c);
-void set_terrain_changed(const coord_def c);
 
 void set_terrain_visible(const coord_def c);
 void clear_terrain_visibility();
