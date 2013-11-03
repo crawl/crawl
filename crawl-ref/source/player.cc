@@ -7806,8 +7806,6 @@ vector<PlaceInfo> player::get_all_place_info(bool visited_only,
 
 bool player::do_shaft()
 {
-    dungeon_feature_type force_stair = DNGN_UNSEEN;
-
     if (!is_valid_shaft_level())
         return false;
 
@@ -7824,19 +7822,17 @@ bool player::do_shaft()
         case DNGN_TRAP_NATURAL:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
+            if (!ground_level() || total_weight() == 0)
+                return true;
             break;
 
         default:
             return false;
         }
 
-        if (!ground_level() || total_weight() == 0)
-            return true;
-
-        force_stair = DNGN_TRAP_NATURAL;
     }
 
-    down_stairs(force_stair);
+    down_stairs(DNGN_TRAP_NATURAL);
 
     return true;
 }
