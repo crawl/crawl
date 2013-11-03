@@ -371,7 +371,7 @@ void call_gdb(FILE *file)
     fprintf(file, "Trying to run gdb.\n");
     fflush(file); // so we can use fileno()
 
-    char pid[12];
+    char pid[12] = {};
     snprintf(pid, sizeof(pid), "%d", getpid());
 
     switch (int gdb = fork())
