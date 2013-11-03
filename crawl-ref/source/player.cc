@@ -1598,9 +1598,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_FIRE_SHIELD])
             rf += 2;
 
-        if (you.duration[DUR_FIRE_VULN])
-            rf--;
-
         // transformations:
         switch (you.form)
         {
@@ -1628,10 +1625,12 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         }
     }
 
+    if (rf > 3)
+        rf = 3;
+    if (temp && you.duration[DUR_FIRE_VULN])
+        rf--;
     if (rf < -3)
         rf = -3;
-    else if (rf > 3)
-        rf = 3;
 
     return rf;
 }
