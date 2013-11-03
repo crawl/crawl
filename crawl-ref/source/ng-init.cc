@@ -53,7 +53,7 @@ static uint8_t _random_potion_description()
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
-    root_branch = BRANCH_MAIN_DUNGEON;
+    root_branch = BRANCH_DUNGEON;
 
     for (int br = 0; br < NUM_BRANCHES; ++br)
         brentry[br].clear();
@@ -61,15 +61,15 @@ void initialise_branch_depths()
     if (crawl_state.game_is_sprint())
     {
         brdepth.init(-1);
-        brdepth[BRANCH_MAIN_DUNGEON] = 1;
+        brdepth[BRANCH_DUNGEON] = 1;
         return;
     }
 
     if (crawl_state.game_is_zotdef())
     {
-        root_branch = BRANCH_HALL_OF_ZOT;
+        root_branch = BRANCH_ZOT;
         brdepth.init(-1);
-        brdepth[BRANCH_HALL_OF_ZOT] = 1;
+        brdepth[BRANCH_ZOT] = 1;
         brdepth[BRANCH_BAZAAR] = 1;
         return;
     }
@@ -90,7 +90,7 @@ void initialise_branch_depths()
     branch_type disabled_branch[] =
     {
         random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
-        random_choose(BRANCH_SNAKE_PIT, BRANCH_SPIDER_NEST, -1),
+        random_choose(BRANCH_SNAKE, BRANCH_SPIDER, -1),
         random_choose(BRANCH_CRYPT, BRANCH_FOREST, -1),
     };
     if (Version::ReleaseType != VER_ALPHA)
@@ -136,7 +136,7 @@ void initialise_temples()
 {
     //////////////////////////////////////////
     // First determine main temple map to use.
-    level_id ecumenical(BRANCH_ECUMENICAL_TEMPLE, 1);
+    level_id ecumenical(BRANCH_TEMPLE, 1);
 
     map_def *main_temple = NULL;
     for (int i = 0; i < 10; i++)
@@ -237,7 +237,7 @@ void initialise_temples()
                  map != maps.end(); map++)
             {
                 // XXX: this should handle level depth better
-                chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
+                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
                                                   MAX_OVERFLOW_LEVEL));
             }
             overflow_weights[i] = chance;
@@ -287,7 +287,7 @@ multi_overflow:
             for (mapref_vector::iterator map = maps.begin(); map != maps.end();
                  map++)
             {
-                chance += (*map)->weight(level_id(BRANCH_MAIN_DUNGEON,
+                chance += (*map)->weight(level_id(BRANCH_DUNGEON,
                                                   MAX_OVERFLOW_LEVEL));
             }
             if (!x_chance_in_y(chance, overflow_weights[num] + chance))

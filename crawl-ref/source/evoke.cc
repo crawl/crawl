@@ -261,7 +261,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
         mpr("You can't produce a sound!");
         return false;
     }
-    else if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+    else if (player_in_branch(BRANCH_VESTIBULE))
     {
         mpr("You produce a weird and mournful sound.");
 

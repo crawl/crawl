@@ -85,9 +85,9 @@ static bool _is_noteworthy_dlevel(unsigned short place)
         return true;
 
     return (lev == _dungeon_branch_depth(branch)
-            || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
-            || branch == BRANCH_MAIN_DUNGEON && lev == RUNE_LOCK_DEPTH + 1
-            || branch != BRANCH_MAIN_DUNGEON && lev == 1);
+            || branch == BRANCH_DUNGEON && (lev % 5) == 0
+            || branch == BRANCH_DUNGEON && lev == RUNE_LOCK_DEPTH + 1
+            || branch != BRANCH_DUNGEON && lev == 1);
 }
 
 // Is a note worth taking?

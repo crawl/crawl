@@ -283,7 +283,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_ABYSS:
         return TILE_DNGN_EXIT_ABYSS;
     case DNGN_STONE_ARCH:
-        if (you.where_are_you == BRANCH_VESTIBULE_OF_HELL)
+        if (you.where_are_you == BRANCH_VESTIBULE)
             return TILE_DNGN_STONE_ARCH_HELL;
         return TILE_DNGN_STONE_ARCH;
     case DNGN_ENTER_PANDEMONIUM:
@@ -452,7 +452,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     switch (feat)
     {
     case DNGN_FLOOR:
-        if (player_in_branch(BRANCH_SLIME_PITS))
+        if (player_in_branch(BRANCH_SLIME))
         {
             bool slimy = false;
             for (adjacent_iterator ai(gc); ai; ++ai)

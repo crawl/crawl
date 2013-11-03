@@ -64,7 +64,7 @@ LUAFN(debug_enter_dungeon)
 {
     init_level_connectivity();
 
-    you.where_are_you = BRANCH_MAIN_DUNGEON;
+    you.where_are_you = BRANCH_DUNGEON;
     you.depth = 1;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_START_GAME, level_id());

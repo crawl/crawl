@@ -925,7 +925,7 @@ static void _jiyva_died()
 
     add_daction(DACT_REMOVE_JIYVA_ALTARS);
 
-    if (!player_in_branch(BRANCH_SLIME_PITS))
+    if (!player_in_branch(BRANCH_SLIME))
         return;
 
     if (silenced(you.pos()))
@@ -2818,7 +2818,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     // suggests.
     if (mons_genus(new_mclass) == MONS_DRACONIAN
         && new_mclass != MONS_DRACONIAN
-        && !player_in_branch(BRANCH_HALL_OF_ZOT)
+        && !player_in_branch(BRANCH_ZOT)
         && !one_chance_in(10))
     {
         return false;

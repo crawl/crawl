@@ -1908,9 +1908,9 @@ static void _find_parent_branch(branch_type br, int depth,
 //   Stairs to snake pit on lair:5
 //
 // If level 3 of the snake pit is the level we want to track back from,
-// we'd call _trackback(vec, BRANCH_SNAKE_PIT, 3), and the resulting vector will
+// we'd call _trackback(vec, BRANCH_SNAKE, 3), and the resulting vector will
 // look like:
-// { BRANCH_SNAKE_PIT, 3 }, { BRANCH_LAIR, 5 }, { BRANCH_MAIN_DUNGEON, 11 }
+// { BRANCH_SNAKE, 3 }, { BRANCH_LAIR, 5 }, { BRANCH_DUNGEON, 11 }
 // (Assuming, of course, that the vector started out empty.)
 //
 static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
@@ -1935,7 +1935,7 @@ static void _trackback(vector<level_id> &vec, branch_type branch, int subdepth)
 static void _track_intersect(vector<level_id> &cur, vector<level_id> &targ,
                              level_id *cx)
 {
-    cx->branch = BRANCH_MAIN_DUNGEON;
+    cx->branch = BRANCH_DUNGEON;
     cx->depth  = -1;
 
     int us = int(cur.size()) - 1, them = int(targ.size()) - 1;
@@ -2044,15 +2044,15 @@ static int _get_nearest_level_depth(uint8_t branch)
 
     // Hell needs special treatment, because we can't walk up
     // Hell and its branches to the main dungeon.
-    if (branch == BRANCH_MAIN_DUNGEON
-        && (player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+    if (branch == BRANCH_DUNGEON
+        && (player_in_branch(BRANCH_VESTIBULE)
             || player_in_branch(BRANCH_COCYTUS)
             || player_in_branch(BRANCH_TARTARUS)
             || player_in_branch(BRANCH_DIS)
             || player_in_branch(BRANCH_GEHENNA)))
     {
         // BUG: hell gates in the Lair
-        return brentry[BRANCH_VESTIBULE_OF_HELL].depth;
+        return brentry[BRANCH_VESTIBULE].depth;
     }
 
     level_id id = level_id::current();
@@ -2085,7 +2085,7 @@ static bool _is_known_branch_id(branch_type branch)
 
     // The Vestibule is special: there are no stairs to it, just a
     // portal.
-    if (branch == BRANCH_VESTIBULE_OF_HELL)
+    if (branch == BRANCH_VESTIBULE)
         return overview_knows_portal(branch);
 
     // If the overview knows the stairs to this branch, we know the branch.
@@ -2123,7 +2123,7 @@ static bool _is_disconnected_branch(const Branch &br)
 
 static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
 {
-    int branch = BRANCH_MAIN_DUNGEON;     // Default
+    int branch = BRANCH_DUNGEON;     // Default
     vector<branch_type> br =
         _get_branches(
             (prompt_flags & TPF_SHOW_ALL_BRANCHES) ? _is_valid_branch :
@@ -2250,7 +2250,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                     }
 
                     if (target.entry_stairs == NUM_FEATURES
-                        && br[i] != BRANCH_MAIN_DUNGEON)
+                        && br[i] != BRANCH_DUNGEON)
                     {
                         msg += "Branch has no entry stairs. ";
                     }
@@ -2284,15 +2284,15 @@ level_id find_up_level(level_id curr, bool up_branch)
 
     if (curr.depth < 1)
     {
-        if (curr.branch != BRANCH_MAIN_DUNGEON && curr.branch != root_branch)
+        if (curr.branch != BRANCH_DUNGEON && curr.branch != root_branch)
         {
             level_id parent;
             _find_parent_branch(curr.branch, curr.depth,
                                 &parent.branch, &parent.depth);
             if (parent.depth > 0)
                 return parent;
-            else if (curr.branch == BRANCH_VESTIBULE_OF_HELL)
-                return brentry[BRANCH_VESTIBULE_OF_HELL];
+            else if (curr.branch == BRANCH_VESTIBULE)
+                return brentry[BRANCH_VESTIBULE];
         }
         return level_id();
     }
@@ -2443,7 +2443,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
             return _parse_travel_target(buf, target);
 
         if (key_is_escape(response))
-            return travel_target(level_id(BRANCH_MAIN_DUNGEON, 0));
+            return travel_target(level_id(BRANCH_DUNGEON, 0));
 
         _travel_depth_munge(response, buf, target);
     }
@@ -3339,8 +3339,8 @@ void LevelInfo::update_stair(const coord_def& stairpos, const level_pos &p,
         si->destination = p;
         si->guessed_pos = guess;
 
-        if (!guess && p.id.branch == BRANCH_VESTIBULE_OF_HELL
-            && id.branch == BRANCH_MAIN_DUNGEON)
+        if (!guess && p.id.branch == BRANCH_VESTIBULE
+            && id.branch == BRANCH_DUNGEON)
         {
             travel_hell_entry = p;
         }
@@ -3506,8 +3506,8 @@ void LevelInfo::correct_stair_list(const vector<coord_def> &s)
             si.position = s[i];
             si.grid     = grd(si.position);
             si.destination.id = level_id::get_next_level_id(s[i]);
-            if (si.destination.id.branch == BRANCH_VESTIBULE_OF_HELL
-                && id.branch == BRANCH_MAIN_DUNGEON
+            if (si.destination.id.branch == BRANCH_VESTIBULE
+                && id.branch == BRANCH_DUNGEON
                 && travel_hell_entry.is_valid())
             {
                 si.destination = travel_hell_entry;
@@ -3616,8 +3616,8 @@ void LevelInfo::load(reader& inf, int minorVersion)
         si.load(inf);
         stairs.push_back(si);
 
-        if (id.branch == BRANCH_MAIN_DUNGEON
-            && si.destination.id.branch == BRANCH_VESTIBULE_OF_HELL
+        if (id.branch == BRANCH_DUNGEON
+            && si.destination.id.branch == BRANCH_VESTIBULE
             && !travel_hell_entry.is_valid()
             && si.destination.is_valid())
         {
@@ -3644,13 +3644,13 @@ void LevelInfo::load(reader& inf, int minorVersion)
 void LevelInfo::fixup()
 {
     // The only fixup we do now is for the hell entry.
-    if (id.branch != BRANCH_MAIN_DUNGEON || !travel_hell_entry.is_valid())
+    if (id.branch != BRANCH_DUNGEON || !travel_hell_entry.is_valid())
         return;
 
     for (int i = 0, count = stairs.size(); i < count; ++i)
     {
         stair_info &si = stairs[i];
-        if (si.destination.id.branch == BRANCH_VESTIBULE_OF_HELL
+        if (si.destination.id.branch == BRANCH_VESTIBULE
             && !si.destination.is_valid())
         {
             si.destination = travel_hell_entry;
@@ -4270,7 +4270,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (feat_is_altar(feat)
              && ES_altar
-             && !player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+             && !player_in_branch(BRANCH_TEMPLE))
     {
         const named_thing<int> altar(cleaned_feature_description(pos), 1);
         if (!merge_feature(altars, altar))

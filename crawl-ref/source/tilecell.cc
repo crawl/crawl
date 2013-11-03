@@ -464,7 +464,7 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     else
         _pack_default_waves(gc, cell);
 
-    if (player_in_branch(BRANCH_SLIME_PITS) &&
+    if (player_in_branch(BRANCH_SLIME) &&
         env.map_knowledge(gc).feat() != DNGN_SLIMY_WALL)
     {
         _add_directional_overlays(gc, cell, TILE_SLIME_OVERLAY,

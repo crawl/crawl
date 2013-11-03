@@ -191,7 +191,7 @@ static string _portals_description_string()
 {
     string disp;
     level_id    last_id;
-    for (branch_type cur_portal = BRANCH_MAIN_DUNGEON; cur_portal < NUM_BRANCHES;
+    for (branch_type cur_portal = BRANCH_DUNGEON; cur_portal < NUM_BRANCHES;
          cur_portal = static_cast<branch_type>(cur_portal + 1))
     {
         last_id.depth = 10000;
@@ -280,7 +280,7 @@ static string _get_seen_branches(bool display)
             }
 
             // "D" is a little too short here.
-            const char *brname = (branch == BRANCH_MAIN_DUNGEON
+            const char *brname = (branch == BRANCH_DUNGEON
                                   ? branches[branch].shortname
                                   : branches[branch].abbrevname);
 
@@ -339,7 +339,7 @@ static string _get_unseen_branches()
                     && seen_vaults_branches >= 1))
             continue;
 
-        if (i == BRANCH_VESTIBULE_OF_HELL || !is_connected_branch(branch))
+        if (i == BRANCH_VESTIBULE || !is_connected_branch(branch))
             continue;
 
         if (branch_is_unfinished(branch))

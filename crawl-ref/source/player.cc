@@ -5902,7 +5902,7 @@ void player::init()
         delete kills;
     kills = new KillMaster();
 
-    where_are_you    = BRANCH_MAIN_DUNGEON;
+    where_are_you    = BRANCH_DUNGEON;
     depth            = 1;
 
     branch_stairs.init(0);

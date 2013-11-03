@@ -65,14 +65,14 @@ static branch_type _zotdef_random_branch()
         bool ok = true;
         switch (pb)
         {
-            case BRANCH_MAIN_DUNGEON:
+            case BRANCH_DUNGEON:
                 ok = true;
                 // reduce freq at high levels
                 if (wavenum > 40)
                     ok = coinflip();
                 break;
 
-            case BRANCH_SNAKE_PIT:
+            case BRANCH_SNAKE:
                 ok = wavenum > 10;
                 // reduce freq at high levels
                 if (wavenum > 40 && !coinflip())
@@ -80,16 +80,16 @@ static branch_type _zotdef_random_branch()
                 break;
 
             default:
-            case BRANCH_ECUMENICAL_TEMPLE:
+            case BRANCH_TEMPLE:
             case BRANCH_VAULTS:
-            case BRANCH_VESTIBULE_OF_HELL:
+            case BRANCH_VESTIBULE:
                 ok = false;
                 break;                // vaults/vestibule same as dungeon
 
-            case BRANCH_ORCISH_MINES:
+            case BRANCH_ORC:
                 ok = wavenum < 30;                 // <6K turns only
                 break;
-            case BRANCH_ELVEN_HALLS:
+            case BRANCH_ELF:
                 ok = wavenum > 10 && wavenum < 60; // 2.2-12K turns
                 break;
             case BRANCH_LAIR:
@@ -104,10 +104,10 @@ static branch_type _zotdef_random_branch()
             case BRANCH_CRYPT:
                 ok = wavenum > 13;                 // 2.8K-
                 break;
-            case BRANCH_SLIME_PITS:
+            case BRANCH_SLIME:
                 ok = wavenum > 20 && coinflip();   // 4K-
                 break;        // >4K turns only
-            case BRANCH_HALL_OF_BLADES:
+            case BRANCH_BLADE:
                 ok = wavenum > 30;                 // 6K-
                 break;
             case BRANCH_TOMB:
@@ -119,12 +119,12 @@ static branch_type _zotdef_random_branch()
             case BRANCH_GEHENNA:
                 ok = wavenum > 40 && one_chance_in(3);
                 break;
-            case BRANCH_HALL_OF_ZOT:               // 10K-
+            case BRANCH_ZOT:               // 10K-
                 ok = wavenum > 50;
                 break;
         }
         if (ok)
-            return (one_chance_in(4) ? BRANCH_MAIN_DUNGEON : pb);
+            return (one_chance_in(4) ? BRANCH_DUNGEON : pb);
             // strong bias to main dungeon
     }
 }
@@ -597,7 +597,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
 
         // adjust level based on strength, as weak monsters with high
         // level pop up on some branches and we want to allow them
-        if (place.branch != BRANCH_MAIN_DUNGEON
+        if (place.branch != BRANCH_DUNGEON
             && lev_mons > power
             && lev_mons > strength * 3)
         {
@@ -702,7 +702,7 @@ void zotdef_set_wave()
     // Early waves are all DUNGEON
     if (you.num_turns < ZOTDEF_CYCLE_LENGTH * 4)
     {
-        _zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
+        _zotdef_set_branch_wave(BRANCH_DUNGEON, power);
         return;
     }
 
@@ -710,14 +710,14 @@ void zotdef_set_wave()
     {
     case 0:
     case 1:
-        _zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
+        _zotdef_set_branch_wave(BRANCH_DUNGEON, power);
         break;
     case 2:
     case 3:
     {
         branch_type b = _zotdef_random_branch();
         // HoB branch waves v. rare before 10K turns
-        if (b == BRANCH_HALL_OF_BLADES && you.num_turns / ZOTDEF_CYCLE_LENGTH < 50)
+        if (b == BRANCH_BLADE && you.num_turns / ZOTDEF_CYCLE_LENGTH < 50)
             b = _zotdef_random_branch();
         _zotdef_set_branch_wave(b, power);
         break;
@@ -786,7 +786,7 @@ monster* zotdef_spawn(bool boss)
     mg.flags |= MG_PERMIT_BANDS;
 
     // Hack: emulate old mg.power
-    mg.place = level_id(BRANCH_MAIN_DUNGEON, you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3) + 1);
+    mg.place = level_id(BRANCH_DUNGEON, you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3) + 1);
     // but only for item generation/etc., not for actual monster selection.
     ASSERT(mt != RANDOM_MONSTER);
 

@@ -387,7 +387,7 @@ public:
     static level_id get_next_level_id(const coord_def &pos);
 
     level_id()
-        : branch(BRANCH_MAIN_DUNGEON), depth(-1)
+        : branch(BRANCH_DUNGEON), depth(-1)
     {
     }
     level_id(branch_type br, int dep = 1)
@@ -403,7 +403,7 @@ public:
 
     void clear()
     {
-        branch = BRANCH_MAIN_DUNGEON;
+        branch = BRANCH_DUNGEON;
         depth  = -1;
     }
 

@@ -911,7 +911,7 @@ static vector<string> _get_branch_keys()
 {
     vector<string> names;
 
-    for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; i++)
+    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; i++)
     {
         branch_type which_branch = static_cast<branch_type>(i);
         const Branch &branch     = branches[which_branch];
