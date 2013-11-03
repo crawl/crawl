@@ -146,9 +146,6 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARVEN_HALL:
-#endif
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
@@ -159,14 +156,12 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_TEMPLE:
     case DNGN_ENTER_SNAKE_PIT:
     case DNGN_ENTER_ELVEN_HALLS:
+    case DNGN_ENTER_ELF_PASSAGE:
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_SPIDER_NEST:
     case DNGN_ENTER_FOREST:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARVEN_HALL:
-#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -177,6 +172,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_ELF_PASSAGE:
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
@@ -239,9 +235,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_DUNGEON:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARVEN_HALL:
-#endif
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
@@ -252,6 +245,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_ELF_PASSAGE:
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
@@ -280,9 +274,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARVEN_HALL:
-#endif
     case DNGN_ENTER_ORCISH_MINES:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
@@ -293,6 +284,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_TEMPLE:
     case DNGN_ENTER_SNAKE_PIT:
     case DNGN_ENTER_ELVEN_HALLS:
+    case DNGN_ENTER_ELF_PASSAGE:
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
@@ -1597,20 +1589,14 @@ static const char *dngn_feature_names[] =
 "teleporter", "enter_portal_vault", "exit_portal_vault",
 "expired_portal",
 
-#if TAG_MAJOR_VERSION == 34
-"enter_dwarven_hall",
-#endif
-"enter_orcish_mines", "enter_lair",
+"enter_elf_passage", "enter_orcish_mines", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
 "enter_swamp", "enter_shoals", "enter_spider_nest",
 "enter_forest", "",
 
-#if TAG_MAJOR_VERSION == 34
-"return_from_dwarven_hall",
-#endif
-"return_from_orcish_mines",
+"return_from_elf_passage", "return_from_orcish_mines",
 "return_from_lair", "return_from_slime_pits",
 "return_from_vaults", "return_from_crypt",
 "return_from_hall_of_blades", "return_from_zot",

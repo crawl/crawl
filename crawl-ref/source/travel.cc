@@ -2153,9 +2153,11 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         {
             int linec = 0;
             string line;
-            for (int i = 0, count = br.size(); i < count; ++i, ++linec)
+            for (int i = 0, count = br.size(); i < count; ++i)
             {
-                if (linec == 4)
+                if (!branches[br[i]].travel_shortcut)
+                    continue;
+                if (linec++ == 4)
                 {
                     linec = 0;
                     mpr(line.c_str());

@@ -567,6 +567,14 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         else
             die("hell exit without return destination");
 
+    // TODO: make all "return from foo" just do it instead of caring about
+    // where are you.
+    case DNGN_RETURN_FROM_ELF_PASSAGE:
+        return brentry[BRANCH_ELF_PASSAGE];
+
+    case DNGN_ENTER_ELF_PASSAGE:
+        return level_id(BRANCH_ELF);
+
     case DNGN_ABYSSAL_STAIR:
         ASSERT(you.where_are_you == BRANCH_ABYSS);
         push_features_to_abyss();

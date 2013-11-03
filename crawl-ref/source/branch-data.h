@@ -44,15 +44,13 @@ const Branch branches[NUM_BRANCHES] =
       true, WHITE, ETC_ELVEN_BRICK,
       'E', true, 0 },
 
-#if TAG_MAJOR_VERSION == 34
-    { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
+    { BRANCH_ELF_PASSAGE, BRANCH_VAULTS, 1, 2, 0, 15,
       0, 0,
-      DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
-      "Dwarven Hall", "the Dwarven Hall", "Dwarf",
+      DNGN_ENTER_ELF_PASSAGE, DNGN_RETURN_FROM_ELF_PASSAGE,
+      "Elven Halls", "the Elven Halls", "Elf", // must come after real Elf
       NULL,
-      true, BROWN, BROWN,
-      'K', false, 0 },
-#endif
+      true, WHITE, ETC_ELVEN_BRICK,
+      0, false, 0 },
 
     { BRANCH_LAIR, BRANCH_DUNGEON, 8, 13, 8, 10,
       0, 0,

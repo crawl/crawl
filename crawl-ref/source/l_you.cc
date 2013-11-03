@@ -630,21 +630,14 @@ LUAFN(you_in_branch)
             || strcasecmp(name, branches[i].longname) == 0
             || strcasecmp(name, branches[i].abbrevname) == 0)
         {
-            if (br != NUM_BRANCHES)
-            {
-                string err = make_stringf(
-                    "'%s' matches both branch '%s' and '%s'",
-                    name, branches[br].abbrevname,
-                    branches[i].abbrevname);
-                return luaL_argerror(ls, 1, err.c_str());
-            }
             br = i;
+            break;
         }
     }
 
     if (br == NUM_BRANCHES)
     {
-        string err = make_stringf("'%s' matches no branches.", name);
+        string err = make_stringf("'%s' matches no branch.", name);
         return luaL_argerror(ls, 1, err.c_str());
     }
 

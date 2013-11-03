@@ -216,9 +216,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
         case DNGN_EXIT_DUNGEON:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_RETURN_FROM_DWARVEN_HALL:
-#endif
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
@@ -228,6 +225,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_RETURN_FROM_TEMPLE:
         case DNGN_RETURN_FROM_SNAKE_PIT:
         case DNGN_RETURN_FROM_ELVEN_HALLS:
+        case DNGN_RETURN_FROM_ELF_PASSAGE:
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
@@ -246,9 +244,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
         case DNGN_ABYSSAL_STAIR:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_DWARVEN_HALL:
-#endif
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
@@ -258,6 +253,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_TEMPLE:
         case DNGN_ENTER_SNAKE_PIT:
         case DNGN_ENTER_ELVEN_HALLS:
+        case DNGN_ENTER_ELF_PASSAGE:
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:

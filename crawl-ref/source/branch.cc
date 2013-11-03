@@ -79,7 +79,7 @@ branch_type get_branch_at(const coord_def& pos)
 bool branch_is_unfinished(branch_type branch)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (branch == BRANCH_UNUSED || branch == BRANCH_DWARF)
+    if (branch == BRANCH_UNUSED)
         return true;
 #endif
     return false;
