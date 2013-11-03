@@ -87,8 +87,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
          || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
-         || act->suppression_radius2() > -1 || act->heat_radius2() > -1)
-         || act->soul_aura_radius2() > -1)
+         || act->suppression_radius2() > -1 || act->heat_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -152,18 +151,6 @@ static void _actor_areas(actor *a)
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_UMBRA);
-        }
-        no_areas = false;
-    }
-
-
-    if ((r = a->soul_aura_radius2()) >= 0)
-    {
-        _agrid_centres.push_back(area_centre(AREA_SOUL_AURA, a->pos(), r));
-
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
-        {
-            _set_agrid_flag(*ri, APROP_SOUL_AURA);
         }
         no_areas = false;
     }
@@ -800,32 +787,6 @@ bool actor::suppressed() const
 }
 
 int player::suppression_radius2() const
-{
-    return -1;
-}
-
-/////////////
-// Soul aura (currently just a marker for reference)
-
-bool soul_aura(const coord_def& p)
-{
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, APROP_SOUL_AURA);
-}
-
-int monster::soul_aura_radius2() const
-{
-    if (type == MONS_LOST_SOUL)
-        return LOS_RADIUS_SQ;
-    else
-        return -1;
-}
-
-int player::soul_aura_radius2() const
 {
     return -1;
 }

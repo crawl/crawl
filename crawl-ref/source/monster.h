@@ -378,11 +378,10 @@ public:
     bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
-    int liquefying_radius2 () const;
-    int umbra_radius2 () const;
-    int suppression_radius2 () const;
-    int soul_aura_radius2 () const;
-    int heat_radius2 () const;
+    int liquefying_radius2() const;
+    int umbra_radius2() const;
+    int suppression_radius2() const;
+    int heat_radius2() const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;

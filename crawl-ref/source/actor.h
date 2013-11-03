@@ -363,11 +363,10 @@ public:
     // Squared silence radius.
     virtual int silence_radius2() const = 0;
     // Squared liquefying radius
-    virtual int liquefying_radius2 () const = 0;
-    virtual int umbra_radius2 () const = 0;
-    virtual int suppression_radius2 () const = 0;
-    virtual int soul_aura_radius2 () const = 0;
-    virtual int heat_radius2 () const = 0;
+    virtual int liquefying_radius2() const = 0;
+    virtual int umbra_radius2() const = 0;
+    virtual int suppression_radius2() const = 0;
+    virtual int heat_radius2() const = 0;
 
     virtual bool glows_naturally() const = 0;
 
