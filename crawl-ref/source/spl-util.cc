@@ -1244,7 +1244,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     case SPELL_HOLY_BREATH:
     {
         targetter_cloud tgt(&you, range);
-        for (radius_iterator ri(you.pos(), range, C_ROUND, you.get_los());
+        for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_NO_TRANS);
              ri; ++ri)
         {
             if (!tgt.valid_aim(*ri))
@@ -1317,7 +1317,7 @@ bool spell_no_hostile_in_range(spell_type spell)
 #ifdef DEBUG_DIAGNOSTICS
         beam.quiet_debug = true;
 #endif
-        for (radius_iterator ri(you.pos(), range, C_ROUND, you.get_los());
+        for (radius_iterator ri(you.pos(), range, C_ROUND, LOS_DEFAULT);
              ri; ++ri)
         {
             tempbeam = beam;

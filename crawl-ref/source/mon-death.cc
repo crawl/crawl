@@ -687,7 +687,7 @@ void shedu_do_actual_resurrection(monster* mons)
     if (mons->number == 0)
         return;
 
-    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND, mons->get_los()); ri; ++ri)
+    for (radius_iterator ri(mons->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         for (stack_iterator si(*ri); si; ++si)
             if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY

@@ -43,7 +43,7 @@ bool yred_can_animate_dead();
 void yred_animate_remains_or_dead();
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
-bool kiku_receive_corpses(int pow, coord_def where);
+bool kiku_receive_corpses(int pow);
 bool kiku_take_corpse();
 
 bool fedhas_passthrough_class(const monster_type mc);

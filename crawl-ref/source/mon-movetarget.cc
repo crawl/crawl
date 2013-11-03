@@ -865,7 +865,7 @@ static bool _band_wander_target(monster * mon)
 
     vector<coord_def> positions;
 
-    for (radius_iterator r_it(mon->get_los_no_trans(), mon); r_it; ++r_it)
+    for (radius_iterator r_it(mon->pos(), LOS_NO_TRANS, true); r_it; ++r_it)
     {
         if (!in_bounds(*r_it))
             continue;
@@ -907,7 +907,7 @@ static bool _herd_wander_target(monster * mon)
     if (friends.empty())
         return true;
 
-    for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
+    for (radius_iterator r_it(mon->pos(), LOS_NO_TRANS, true); r_it; ++r_it)
     {
         if (!in_bounds(*r_it))
             continue;

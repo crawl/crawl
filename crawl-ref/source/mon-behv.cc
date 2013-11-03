@@ -121,14 +121,13 @@ static void _set_firing_pos(monster* mon, coord_def target)
     int best_distance_to_ideal_range = INT_MAX;
     coord_def best_pos(0, 0);
 
-    const los_base *los = mon->get_los();
     for (distance_iterator di(mon->pos(), true, true, LOS_RADIUS);
          di; ++di)
     {
         const coord_def p(*di);
         const int range = p.distance_from(target);
 
-        if (!los->see_cell(*di))
+        if (!mon->see_cell(*di))
             continue;
 
         if (!in_bounds(p) || range > max_range
@@ -185,14 +184,13 @@ static coord_def _furthest_aim_spot(monster* mon, coord_def target)
     int best_distance = 0;
     coord_def best_pos(0, 0);
 
-    const los_base *los = mon->get_los();
     for (distance_iterator di(mon->pos(), false, false, LOS_RADIUS);
          di; ++di)
     {
         const coord_def p(*di);
         const int range = p.distance_from(target);
 
-        if (!los->see_cell(*di))
+        if (!cell_see_cell(mon->pos(), *di, LOS_NO_TRANS))
             continue;
 
         if (!in_bounds(p) || range > LOS_RADIUS - 1

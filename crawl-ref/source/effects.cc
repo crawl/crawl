@@ -186,10 +186,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
              attacker->conj_verb("speak").c_str());
     }
 
-    // We could use actor.get_los(), but maybe it's NULL.
-    los_def los(where);
-    los.update();
-    for (radius_iterator ri(&los); ri; ++ri)
+    for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
         holy_word_monsters(*ri, pow, source, attacker);
 }
 

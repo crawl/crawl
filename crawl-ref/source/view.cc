@@ -866,7 +866,7 @@ static void player_view_update()
 {
     vector<coord_def> update_excludes;
     bool need_update = false;
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         int flags = player_view_update_at(*ri);
         if (flags & UF_AFFECT_EXCLUDES)
