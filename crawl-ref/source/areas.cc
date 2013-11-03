@@ -122,8 +122,7 @@ static void _actor_areas(actor *a)
     {
         _agrid_centres.push_back(area_centre(AREA_HALO, a->pos(), r));
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
-             ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_HALO);
         }
@@ -134,8 +133,7 @@ static void _actor_areas(actor *a)
     {
         _agrid_centres.push_back(area_centre(AREA_LIQUID, a->pos(), r));
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
-             ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_SOLID); ri; ++ri)
         {
             dungeon_feature_type f = grd(*ri);
 
@@ -151,8 +149,7 @@ static void _actor_areas(actor *a)
     {
         _agrid_centres.push_back(area_centre(AREA_UMBRA, a->pos(), r));
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
-             ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_UMBRA);
         }
@@ -164,8 +161,7 @@ static void _actor_areas(actor *a)
     {
         _agrid_centres.push_back(area_centre(AREA_SOUL_AURA, a->pos(), r));
 
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE, a->get_los());
-             ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_SOUL_AURA);
         }
@@ -176,8 +172,7 @@ static void _actor_areas(actor *a)
     {
         _agrid_centres.push_back(area_centre(AREA_HOT, a->pos(), r));
 
-        for (radius_iterator ri(a->pos(),r, C_CIRCLE, a->get_los());
-            ri; ++ri)
+        for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_HOT);
         }
