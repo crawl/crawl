@@ -2798,7 +2798,7 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
     if (!has_depth() && !lc_default_depths.empty())
         depths.add_depths(lc_default_depths);
 
-    if (place.is_usable_in(level_id(BRANCH_ECUMENICAL_TEMPLE))
+    if (place.is_usable_in(level_id(BRANCH_TEMPLE))
         || has_tag_prefix("temple_overflow_"))
     {
         err = validate_temple_map();

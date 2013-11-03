@@ -92,7 +92,7 @@ public:
 
 public:
     level_range(const raw_range &range);
-    level_range(branch_type br = BRANCH_MAIN_DUNGEON, int s = -1, int d = -1);
+    level_range(branch_type br = BRANCH_DUNGEON, int s = -1, int d = -1);
 
     void set(int s, int d = -1);
     void set(const string &branch, int s, int d) throw (string);

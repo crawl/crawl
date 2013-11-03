@@ -148,7 +148,7 @@ static vector<level_id> mg_dungeon_places()
 {
     vector<level_id> places;
 
-    for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
+    for (int br = BRANCH_DUNGEON; br < NUM_BRANCHES; ++br)
     {
         if (brdepth[br] == -1)
             continue;
@@ -283,7 +283,7 @@ static void _write_mapgen_stats()
     }
 
     vector<level_id> mapless;
-    for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
+    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; ++i)
     {
         if (brdepth[i] == -1)
             continue;

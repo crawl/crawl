@@ -1822,7 +1822,7 @@ bool is_boring_terrain(dungeon_feature_type feat)
         return true;
 
     // Altars in the temple are boring.
-    if (feat_is_altar(feat) && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+    if (feat_is_altar(feat) && player_in_branch(BRANCH_TEMPLE))
         return true;
 
     // Only note the first entrance to the Abyss/Pan/Hell

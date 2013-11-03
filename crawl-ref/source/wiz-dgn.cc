@@ -62,11 +62,11 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         else if (depth == 0)
         {
             // Special cases
-            if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+            if (player_in_branch(BRANCH_VESTIBULE))
                 return DNGN_EXIT_HELL;
             else if (player_in_branch(BRANCH_ABYSS))
                 return DNGN_EXIT_ABYSS;
-            else if (player_in_branch(BRANCH_MAIN_DUNGEON))
+            else if (player_in_branch(BRANCH_DUNGEON))
                 return DNGN_STONE_STAIRS_UP_I;
 
             dungeon_feature_type stairs = your_branch().exit_stairs;
@@ -158,7 +158,7 @@ static void _wizard_go_to_level(const level_pos &pos)
         stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
     if (pos.id.branch != you.where_are_you && pos.id.depth == 1
-        && pos.id.branch != BRANCH_MAIN_DUNGEON)
+        && pos.id.branch != BRANCH_DUNGEON)
     {
         stair_taken = branches[pos.id.branch].entry_stairs;
     }
@@ -849,7 +849,7 @@ void wizard_recreate_level()
     level_id lev = level_id::current();
     dungeon_feature_type stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
-    if (lev.depth == 1 && lev != BRANCH_MAIN_DUNGEON)
+    if (lev.depth == 1 && lev != BRANCH_DUNGEON)
         stair_taken = branches[lev.branch].entry_stairs;
 
     leaving_level_now(stair_taken);

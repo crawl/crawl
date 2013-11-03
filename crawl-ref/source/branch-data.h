@@ -12,7 +12,7 @@ const Branch branches[NUM_BRANCHES] =
     //  has_uniques, floor colour, rock colour
     //  travel shortcut, dangerous branch end, ambient noise level
 
-    { BRANCH_MAIN_DUNGEON, NUM_BRANCHES, 0, 0, 27, 0,
+    { BRANCH_DUNGEON, NUM_BRANCHES, 0, 0, 27, 0,
       0, 0,
       NUM_FEATURES, DNGN_EXIT_DUNGEON,
       "Dungeon", "the Dungeon", "D",
@@ -20,7 +20,7 @@ const Branch branches[NUM_BRANCHES] =
       true, LIGHTGREY, BROWN,
       'D', false, 0 },
 
-    { BRANCH_ECUMENICAL_TEMPLE, BRANCH_MAIN_DUNGEON, 4, 7, 1, 5,
+    { BRANCH_TEMPLE, BRANCH_DUNGEON, 4, 7, 1, 5,
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_TEMPLE, DNGN_RETURN_FROM_TEMPLE,
       "Temple", "the Ecumenical Temple", "Temple",
@@ -28,7 +28,7 @@ const Branch branches[NUM_BRANCHES] =
       false, LIGHTGREY, BROWN,
       'T', false, 0 },
 
-    { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON, 6, 11, 4, 8,
+    { BRANCH_ORC, BRANCH_DUNGEON, 6, 11, 4, 8,
       0, 0,
       DNGN_ENTER_ORCISH_MINES, DNGN_RETURN_FROM_ORCISH_MINES,
       "Orcish Mines", "the Orcish Mines", "Orc",
@@ -36,7 +36,7 @@ const Branch branches[NUM_BRANCHES] =
       true, BROWN, BROWN,
       'O', false, 4 },
 
-    { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 3, 4, 3, 15,
+    { BRANCH_ELF, BRANCH_ORC, 3, 4, 3, 15,
       0, 0,
       DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
       "Elven Halls", "the Elven Halls", "Elf",
@@ -45,7 +45,7 @@ const Branch branches[NUM_BRANCHES] =
       'E', true, 0 },
 
 #if TAG_MAJOR_VERSION == 34
-    { BRANCH_DWARVEN_HALL, BRANCH_ELVEN_HALLS, -1, -1, 0, 17,
+    { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
       0, 0,
       DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
@@ -54,7 +54,7 @@ const Branch branches[NUM_BRANCHES] =
       'K', false, 0 },
 #endif
 
-    { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 8, 13, 8, 10,
+    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 13, 8, 10,
       0, 0,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
@@ -78,7 +78,7 @@ const Branch branches[NUM_BRANCHES] =
       true, BROWN, BROWN,
       'A', true, 3 },
 
-    { BRANCH_SNAKE_PIT, BRANCH_LAIR, 3, 6, 5, 15,
+    { BRANCH_SNAKE, BRANCH_LAIR, 3, 6, 5, 15,
       0, 0,
       DNGN_ENTER_SNAKE_PIT, DNGN_RETURN_FROM_SNAKE_PIT,
       "Snake Pit", "the Snake Pit", "Snake",
@@ -86,7 +86,7 @@ const Branch branches[NUM_BRANCHES] =
       true, LIGHTGREEN, YELLOW,
       'P', true, 0 },
 
-    { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 15,
+    { BRANCH_SPIDER, BRANCH_LAIR, 3, 6, 5, 15,
       0, 0,
       DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
       "Spider Nest", "the Spider Nest", "Spider",
@@ -94,7 +94,7 @@ const Branch branches[NUM_BRANCHES] =
       true, BROWN, YELLOW,
       'N', true, 0 },
 
-    { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 8, 6, 17,
+    { BRANCH_SLIME, BRANCH_LAIR, 6, 8, 6, 17,
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
       "Slime Pits", "the Pits of Slime", "Slime",
@@ -102,7 +102,7 @@ const Branch branches[NUM_BRANCHES] =
       true, GREEN, BROWN,
       'M', true, -5 },
 
-    { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 15, 20, 5, 19,
+    { BRANCH_VAULTS, BRANCH_DUNGEON, 15, 20, 5, 19,
       0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
       "Vaults", "the Vaults", "Vaults",
@@ -110,7 +110,7 @@ const Branch branches[NUM_BRANCHES] =
       true, LIGHTGREY, BROWN,
       'V', true, 0 },
 
-    { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 3, 4, 1, 21,
+    { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_HALL_OF_BLADES, DNGN_RETURN_FROM_HALL_OF_BLADES,
       "Hall of Blades", "the Hall of Blades", "Blade",
@@ -134,7 +134,7 @@ const Branch branches[NUM_BRANCHES] =
       true, BROWN, BROWN,
       'W', true, -10 },
 
-    { BRANCH_VESTIBULE_OF_HELL, NUM_BRANCHES, 27, 27, 1, 27,
+    { BRANCH_VESTIBULE, NUM_BRANCHES, 27, 27, 1, 27,
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_HELL, DNGN_EXIT_HELL,
       "Hell", "the Vestibule of Hell", "Hell",
@@ -142,7 +142,7 @@ const Branch branches[NUM_BRANCHES] =
       true, LIGHTGREY, LIGHTRED,
       'U', false, 0 },
 
-    { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
+    { BRANCH_DIS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_DIS, DNGN_ENTER_HELL,
       "Dis", "the Iron City of Dis", "Dis",
@@ -150,7 +150,7 @@ const Branch branches[NUM_BRANCHES] =
       false, CYAN, BROWN,
       'I', true, 0 },
 
-    { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
+    { BRANCH_GEHENNA, BRANCH_VESTIBULE, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL,
       "Gehenna", "Gehenna", "Geh",
@@ -158,7 +158,7 @@ const Branch branches[NUM_BRANCHES] =
       false, BROWN, RED,
       'G', true, 0 },
 
-    { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
+    { BRANCH_COCYTUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL,
       "Cocytus", "Cocytus", "Coc",
@@ -166,7 +166,7 @@ const Branch branches[NUM_BRANCHES] =
       false, LIGHTBLUE, LIGHTCYAN,
       'X', true, 0 },
 
-    { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, 28,
+    { BRANCH_TARTARUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_TARTARUS, DNGN_ENTER_HELL,
       "Tartarus", "Tartarus", "Tar",
@@ -174,7 +174,7 @@ const Branch branches[NUM_BRANCHES] =
       false, MAGENTA, MAGENTA,
       'Y', true, 0 },
 
-    { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 27, 27, 5, 27,
+    { BRANCH_ZOT, BRANCH_DUNGEON, 27, 27, 5, 27,
       0, 0,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",

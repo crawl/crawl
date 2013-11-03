@@ -654,7 +654,7 @@ static void _sdump_notes(dump_params &par)
  //---------------------------------------------------------------
 static void _sdump_location(dump_params &par)
 {
-    if (you.depth == 0 && player_in_branch(BRANCH_MAIN_DUNGEON))
+    if (you.depth == 0 && player_in_branch(BRANCH_DUNGEON))
         par.text += "You escaped";
     else if (par.se)
         par.text += "You were " + prep_branch_level_name();

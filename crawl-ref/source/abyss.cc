@@ -970,7 +970,7 @@ static bool _in_wastes(const coord_def &p)
 static level_id _get_random_level(bool existing, bool connected)
 {
     vector<level_id> levels;
-    for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
+    for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; ++i)
     {
         if (i == BRANCH_ABYSS
             || (existing && i == BRANCH_SHOALS)
@@ -988,7 +988,7 @@ static level_id _get_random_level(bool existing, bool connected)
     if (levels.empty())
     {
         // Let this fail later on.
-        return level_id(static_cast<branch_type>(BRANCH_MAIN_DUNGEON), 1);
+        return level_id(static_cast<branch_type>(BRANCH_DUNGEON), 1);
     }
 
     return levels[hash_rand(levels.size(), abyssal_state.seed)];

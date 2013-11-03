@@ -25,11 +25,11 @@ int branch_ood_cap(branch_type branch)
 
     switch (branch)
     {
-    case BRANCH_MAIN_DUNGEON:
+    case BRANCH_DUNGEON:
         return 31;
     case BRANCH_VAULTS:
         return 12;
-    case BRANCH_ELVEN_HALLS:
+    case BRANCH_ELF:
         return 7;
     case BRANCH_TOMB:
         return 5;

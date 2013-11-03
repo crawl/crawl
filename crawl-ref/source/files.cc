@@ -1258,7 +1258,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.turns_on_level = -1;
 
         if (you.char_direction == GDT_GAME_START
-            && player_in_branch(BRANCH_MAIN_DUNGEON))
+            && player_in_branch(BRANCH_DUNGEON))
         {
             // If we're leaving the Abyss for the first time as a Chaos
             // Knight of Lugonu (who start out there), enable normal monster
@@ -1284,7 +1284,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (!crawl_state.game_is_tutorial()
             && !crawl_state.game_is_zotdef()
             && !player_in_branch(BRANCH_ABYSS)
-            && (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 2)
+            && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
             && one_chance_in(3))
         {
             load_ghost(true);
@@ -2194,8 +2194,8 @@ void save_ghost(bool force)
 #endif // BONES_DIAGNOSTICS
 
     // No ghosts on D:1, D:2, or the Temple.
-    if (!force && (you.depth < 3 && player_in_branch(BRANCH_MAIN_DUNGEON)
-                   || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)))
+    if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
+                   || player_in_branch(BRANCH_TEMPLE)))
     {
         return;
     }

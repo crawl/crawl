@@ -251,8 +251,8 @@ static bool _is_spawn_scaled_area(const level_id &here)
 {
     return (is_connected_branch(here.branch)
             && !is_hell_subbranch(here.branch)
-            && here.branch != BRANCH_VESTIBULE_OF_HELL
-            && here.branch != BRANCH_HALL_OF_ZOT);
+            && here.branch != BRANCH_VESTIBULE
+            && here.branch != BRANCH_ZOT);
 }
 
 // Scale monster generation parameter with time spent on level. Note:
@@ -283,7 +283,7 @@ static void _apply_ood(level_id &place)
     // OODs do not apply to any portal vaults, any 1-level branches, Zot and
     // hells.  What with newnewabyss?
     if (!is_connected_branch(place)
-        || place.branch == BRANCH_HALL_OF_ZOT
+        || place.branch == BRANCH_ZOT
         || is_hell_subbranch(place.branch)
         || brdepth[place.branch] <= 1)
     {
@@ -296,7 +296,7 @@ static void _apply_ood(level_id &place)
     // for each monster at level generation, and the chances of
     // moderate OODs go up to 100% after a ramp-up period.
 
-    if (place.branch == BRANCH_MAIN_DUNGEON
+    if (place.branch == BRANCH_DUNGEON
         && (place.depth == 1 && env.turns_on_level < 701
          || place.depth == 2 && (env.turns_on_level < 584 || one_chance_in(4))))
     {
@@ -380,7 +380,7 @@ void spawn_random_monsters()
         return;
     }
 
-    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+    if (player_in_branch(BRANCH_VESTIBULE))
         rate = _vestibule_spawn_rate();
 
     rate = (you.char_direction == GDT_DESCENDING) ?
@@ -621,7 +621,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             if (_find_mon_place_near_stairs(pos, stair_type, *place))
             {
                 // No monsters spawned in the Temple.
-                if (branches[place->branch].id == BRANCH_ECUMENICAL_TEMPLE)
+                if (branches[place->branch].id == BRANCH_TEMPLE)
                     proximity = PROX_AWAY_FROM_PLAYER;
             }
             else
@@ -1387,7 +1387,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         if (mg.place == BRANCH_ABYSS && !one_chance_in(7))
             mon->god = GOD_LUGONU;
-        else if ((mg.place == BRANCH_VESTIBULE_OF_HELL || player_in_hell())
+        else if ((mg.place == BRANCH_VESTIBULE || player_in_hell())
                  && !one_chance_in(7))
         {
             mon->god = GOD_MAKHLEB;
@@ -1835,14 +1835,14 @@ monster_type pick_local_zombifiable_monster(level_id place,
 {
     if (crawl_state.game_is_zotdef())
     {
-        place = level_id(BRANCH_MAIN_DUNGEON,
+        place = level_id(BRANCH_DUNGEON,
                          you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH) + 6);
     }
     else if (place.branch == BRANCH_ZIGGURAT)
     {
         // Get Zigs something reasonable to work with, if there's no place
         // explicitly defined.
-        place = level_id(BRANCH_MAIN_DUNGEON, 31 - (27 - place.depth) / 3);
+        place = level_id(BRANCH_DUNGEON, 31 - (27 - place.depth) / 3);
     }
     else
     {
@@ -2133,7 +2133,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
             band_size = random2(3);
         break;
     case MONS_GNOLL:
-        if (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 1)
+        if (!player_in_branch(BRANCH_DUNGEON) || you.depth > 1)
         {
             band = BAND_GNOLLS;
             band_size = (coinflip() ? 3 : 2);

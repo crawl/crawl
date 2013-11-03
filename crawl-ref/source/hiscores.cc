@@ -906,7 +906,7 @@ void scorefile_entry::init_with_fields()
         indirectkiller = death_source_name;
     killerpath        = fields->str_field("kpath");
 
-    branch     = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
+    branch     = str_to_branch(fields->str_field("br"), BRANCH_DUNGEON);
     dlvl       = fields->int_field("lvl");
     absdepth   = fields->int_field("absdepth");
 
@@ -1306,7 +1306,7 @@ void scorefile_entry::reset()
     killerpath.clear();
     dlvl                 = 0;
     absdepth             = 1;
-    branch               = BRANCH_MAIN_DUNGEON;
+    branch               = BRANCH_DUNGEON;
     map.clear();
     mapdesc.clear();
     final_hp             = -1;

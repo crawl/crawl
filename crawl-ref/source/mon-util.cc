@@ -785,10 +785,10 @@ bool mons_is_native_in_branch(const monster* mons,
 {
     switch (branch)
     {
-    case BRANCH_ELVEN_HALLS:
+    case BRANCH_ELF:
         return mons_genus(mons->type) == MONS_ELF;
 
-    case BRANCH_ORCISH_MINES:
+    case BRANCH_ORC:
         return mons_genus(mons->type) == MONS_ORC;
 
     case BRANCH_SHOALS:
@@ -797,14 +797,14 @@ bool mons_is_native_in_branch(const monster* mons,
                || mons_genus(mons->type) == MONS_MERMAID
                || mons->type == MONS_HARPY;
 
-    case BRANCH_SLIME_PITS:
+    case BRANCH_SLIME:
         return mons_genus(mons->type) == MONS_JELLY;
 
-    case BRANCH_SNAKE_PIT:
+    case BRANCH_SNAKE:
         return mons_genus(mons->type) == MONS_NAGA
                || mons_genus(mons->type) == MONS_ADDER;
 
-    case BRANCH_HALL_OF_ZOT:
+    case BRANCH_ZOT:
         return mons_genus(mons->type) == MONS_DRACONIAN
                || mons->type == MONS_ORB_GUARDIAN
                || mons->type == MONS_ORB_OF_FIRE
@@ -816,7 +816,7 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_TOMB:
         return mons_genus(mons->type) == MONS_MUMMY;
 
-    case BRANCH_SPIDER_NEST:
+    case BRANCH_SPIDER:
         return mons_genus(mons->type) == MONS_SPIDER;
 
     case BRANCH_FOREST:
@@ -826,7 +826,7 @@ bool mons_is_native_in_branch(const monster* mons,
                || mons_genus(mons->type) == MONS_SATYR
                || mons_genus(mons->type) == MONS_DRYAD;
 
-    case BRANCH_HALL_OF_BLADES:
+    case BRANCH_BLADE:
         return mons->type == MONS_DANCING_WEAPON;
 
     case BRANCH_ABYSS:

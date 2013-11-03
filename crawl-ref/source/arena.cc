@@ -133,7 +133,7 @@ namespace arena
     static uint32_t cycle_random_pos = 0;
 
     static FILE *file = NULL;
-    static level_id place(BRANCH_MAIN_DUNGEON, 20);
+    static level_id place(BRANCH_DUNGEON, 20);
 
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
@@ -919,7 +919,7 @@ namespace arena
         uniques_list.clear();
         memset(banned_glyphs, 0, sizeof(banned_glyphs));
         arena_type = "";
-        place = level_id(BRANCH_MAIN_DUNGEON, 20);
+        place = level_id(BRANCH_DUNGEON, 20);
 
         // [ds] Turning off view_lock crashes arena.
         Options.view_lock_x = Options.view_lock_y = true;

@@ -398,7 +398,7 @@ int zin_tithe(item_def& item, int quant, bool quiet, bool converting)
         }
         else
         {
-            if (player_in_branch(BRANCH_ORCISH_MINES) && !converting)
+            if (player_in_branch(BRANCH_ORC) && !converting)
             {
                 // Another special case: Orc gives simply too much compared to
                 // other branches.

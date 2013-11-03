@@ -1556,7 +1556,7 @@ static void tag_construct_you_dungeon(writer &th)
         marshall_level_id(th, brentry[j]);
     }
 
-    // Root of the dungeon; usually BRANCH_MAIN_DUNGEON.
+    // Root of the dungeon; usually BRANCH_DUNGEON.
     marshallInt(th, root_branch);
 
     marshallMap(th, stair_level,
@@ -2380,7 +2380,7 @@ static void tag_read_you(reader &th)
         int depth = unmarshallByte(th);
         branch_type br = static_cast<branch_type>(unmarshallByte(th));
         ASSERT(br < NUM_BRANCHES);
-        brentry[BRANCH_VESTIBULE_OF_HELL] = level_id(br, depth);
+        brentry[BRANCH_VESTIBULE] = level_id(br, depth);
     }
 #endif
 
@@ -2556,7 +2556,7 @@ static void tag_read_you(reader &th)
         abyssal_state.level = unmarshall_level_id(th);
     if (!abyssal_state.level.is_valid())
     {
-        abyssal_state.level.branch = BRANCH_MAIN_DUNGEON;
+        abyssal_state.level.branch = BRANCH_DUNGEON;
         abyssal_state.level.depth = 19;
     }
 #endif
@@ -2784,26 +2784,26 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
 static branch_type old_entries[] =
 {
     /* D */      NUM_BRANCHES,
-    /* Temple */ BRANCH_MAIN_DUNGEON,
-    /* Orc */    BRANCH_MAIN_DUNGEON,
-    /* Elf */    BRANCH_ORCISH_MINES,
-    /* Dwarf */  BRANCH_ELVEN_HALLS,
-    /* Lair */   BRANCH_MAIN_DUNGEON,
+    /* Temple */ BRANCH_DUNGEON,
+    /* Orc */    BRANCH_DUNGEON,
+    /* Elf */    BRANCH_ORC,
+    /* Dwarf */  BRANCH_ELF,
+    /* Lair */   BRANCH_DUNGEON,
     /* Swamp */  BRANCH_LAIR,
     /* Shoals */ BRANCH_LAIR,
     /* Snake */  BRANCH_LAIR,
     /* Spider */ BRANCH_LAIR,
     /* Slime */  BRANCH_LAIR,
-    /* Vaults */ BRANCH_MAIN_DUNGEON,
+    /* Vaults */ BRANCH_DUNGEON,
     /* Blade */  BRANCH_VAULTS,
     /* Crypt */  BRANCH_VAULTS,
     /* Tomb */   BRANCH_CRYPT, // or Forest
     /* Hell */   NUM_BRANCHES,
-    /* Dis */    BRANCH_VESTIBULE_OF_HELL,
-    /* Geh */    BRANCH_VESTIBULE_OF_HELL,
-    /* Coc */    BRANCH_VESTIBULE_OF_HELL,
-    /* Tar */    BRANCH_VESTIBULE_OF_HELL,
-    /* Zot */    BRANCH_MAIN_DUNGEON,
+    /* Dis */    BRANCH_VESTIBULE,
+    /* Geh */    BRANCH_VESTIBULE,
+    /* Coc */    BRANCH_VESTIBULE,
+    /* Tar */    BRANCH_VESTIBULE,
+    /* Zot */    BRANCH_DUNGEON,
     /* Forest */ BRANCH_VAULTS,
     /* Abyss */  NUM_BRANCHES,
     /* Pan */    NUM_BRANCHES,
@@ -2837,7 +2837,7 @@ static void tag_read_you_dungeon(reader &th)
         if (th.getMinorVersion() < TAG_MINOR_BRANCH_ENTRY)
         {
             int depth = unmarshallInt(th);
-            if (j != BRANCH_VESTIBULE_OF_HELL)
+            if (j != BRANCH_VESTIBULE)
                 brentry[j] = level_id(old_entries[j], depth);
         }
         else
@@ -2853,7 +2853,7 @@ static void tag_read_you_dungeon(reader &th)
 
     ASSERT(you.depth <= brdepth[you.where_are_you]);
 
-    // Root of the dungeon; usually BRANCH_MAIN_DUNGEON.
+    // Root of the dungeon; usually BRANCH_DUNGEON.
     root_branch = static_cast<branch_type>(unmarshallInt(th));
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_BRANCH_ENTRY)
