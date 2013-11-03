@@ -682,6 +682,12 @@ the Duchess
 
 the Doge
 
+the Ban
+
+the Castellan
+
+the Komtur
+
 the Rabble
 
 the Prince
