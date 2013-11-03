@@ -93,7 +93,7 @@ dgn.set_branch_epilogue("Bazaar", "fixup_bazaar")
 
 }}
 
-default-depth: D:11-, Orc:$, Elf, Snake, Shoals, Vaults:1-4
+default-depth: D:11-, Depths, Orc:$, Elf, Snake, Shoals, Vaults:1-4
 
 ###############################################################################
 # Entries.

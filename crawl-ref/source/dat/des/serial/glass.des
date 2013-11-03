@@ -9,7 +9,7 @@
 
 NAME:   serial_glass
 TAGS:   allow_dup extra luniq_serial decor
-DEPTH:  D, Elf, Vaults, Crypt
+DEPTH:  D, Depths, Elf, Vaults, Crypt
 CHANCE: 1%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)

@@ -28,7 +28,7 @@
     end
 }}
 
-default-depth: D:12-26
+default-depth: D:12-, Depths, !Depths:$
 
 ###############################################################################
 # The River Lethe
@@ -42,7 +42,7 @@ default-depth: D:12-26
 NAME:    lemuel_river_lethe
 ORIENT:  encompass
 TAGS:    no_rotate uniq_d_encompass
-DEPTH:   D:16-26
+DEPTH:   Depths, !Depths:$
 SUBST:   . = .:100 !:1 6:4
 SUBST:   ; = .:200 !:1 1:3
 SUBST:   1 = 1:20 .
@@ -156,7 +156,7 @@ ENDMAP
 NAME:    minmay_sea_of_fire
 TAGS:    no_rotate uniq_d_encompass
 ORIENT:  encompass
-DEPTH:   D:16-24
+DEPTH:   Depths, !Depths:$
 MONS:    hell hound / nothing
 MONS:    lindwurm
 MONS:    fire drake / steam dragon w:1
@@ -258,7 +258,7 @@ ENDMAP
 # The New Box Level (dp)
 #
 NAME:    box_level_dp
-DEPTH:   D:21-26
+DEPTH:   Depths, !Depths:$
 ORIENT:  encompass
 TAGS:    no_pool_fixup no_rotate uniq_d_encompass
 NSUBST:  A = 1:+ / *:b
@@ -372,7 +372,7 @@ ENDMAP
 # A mockup of the Forest branch (1KB)
 #
 NAME:    spriggan_forest
-DEPTH:   D:19-26
+DEPTH:   Depths, !Depths:$
 ORIENT:  encompass
 TAGS:    no_pool_fixup uniq_d_encompass
 MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
@@ -478,7 +478,7 @@ ENDMAP
 NAME:    hangedman_slaughterboxes
 TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling uniq_d_encompass
 ORIENT:  encompass
-DEPTH:   D:16-26
+DEPTH:   Depths, !Depths:$
 MONS:    butterfly, plant
 KMONS:   S = 0 band
 KMONS:   # = 9 band
@@ -577,9 +577,9 @@ default-depth:
 
 NAME: grunt_profane_halls
 TAGS: no_monster_gen uniq_d_encompass
-PLACE: D:$
-DEPTH: D:21-
-WEIGHT: 2 (D:$), 10
+PLACE: Depths:$
+DEPTH: Depths
+WEIGHT: 2 (Depths:$), 10
 ORIENT: encompass
 SHUFFLE: {[(<
 : if you.absdepth() == 27 then
@@ -914,7 +914,7 @@ ENDMAP
 #
 NAME:    hangedman_spin_cycle
 TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling uniq_d_encompass
-DEPTH:   D:16-26
+DEPTH:   Depths, !Depths:$
 ORIENT:  encompass
 KMONS:   - = plant
 KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
@@ -1071,7 +1071,7 @@ ENDMAP
 #
 NAME:    hangedman_crystal_crosses_colossus
 TAGS:    no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
-DEPTH:   D:16-26
+DEPTH:   Depths, !Depths:$
 ORIENT:  encompass
 MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
          centaur warrior w:8 ; bow ego:flame | bow ego:frost . arrow / \
@@ -1243,9 +1243,9 @@ default-depth:
 
 NAME: grunt_runaround
 TAGS: no_monster_gen uniq_d_encompass
-PLACE: D:$
-DEPTH: D:16-
-WEIGHT: 2 (D:$), 10
+PLACE: Depths:$
+DEPTH: Depths
+WEIGHT: 2 (Depths), 10
 ORIENT: encompass
 SUBVAULT: B : grunt_runaround_doors_1
 SUBVAULT: C : grunt_runaround_doors_2
@@ -1577,9 +1577,9 @@ ENDMAP
 NAME:    hangedman_pleasuredromes
 TAGS:    no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
-PLACE:   D:$
-DEPTH:   D:16-
-WEIGHT:  2 (D:$), 10
+PLACE:   Depths:$
+DEPTH:   Depths
+WEIGHT:  2 (Depths:$), 10
 MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
          mottled dragon w:8 / giant firefly w:3 / boulder beetle w:5 / \
          red wasp / tarantella w:2 / redback w:3 / wolf spider / \

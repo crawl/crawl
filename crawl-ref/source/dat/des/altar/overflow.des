@@ -61,7 +61,7 @@ function altar_check(e)
 end
 }}
 
-default-depth: D
+default-depth: D, Depths
 
 # These must feature one of the temple_overflow_* TAGs (see header).
 # Altars are sorted alphabetically by god, with the Shining One coming
@@ -143,7 +143,7 @@ ENDMAP
 NAME:    cheibriados_altar_2
 TAGS:    uniq_altar_cheibriados temple_overflow_1 temple_overflow_cheibriados
 TAGS:    decor
-DEPTH:   D:2-20
+DEPTH:   D:2-
 WEIGHT:  1
 KPROP:   1 = no_rtele_into
 KFEAT:   _ = altar_cheibriados
@@ -252,7 +252,7 @@ ENDMAP
 
 NAME:   elyvilon_altar_1
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_elyvilon
 SUBST:  X : T G t 1 2 3
 MONS:   plant, bush, fungus
@@ -281,7 +281,7 @@ ENDMAP
 NAME:   elyvilon_altar_2
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
 TAGS:   no_pool_fixup no_monster_gen decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_elyvilon
 NSUBST: W = 1:Z / *:W
 KMONS:  Z = big fish att:good_neutral
@@ -298,7 +298,7 @@ ENDMAP
 NAME:   elyvilon_altar_3
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
 TAGS:   no_pool_fixup decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_elyvilon
 KMASK:  wW = no_monster_gen
 MONS:   butterfly
@@ -326,7 +326,7 @@ ENDMAP
 NAME:   elyvilon_altar_4
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon
 TAGS:   no_monster_gen decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_elyvilon
 MONS:   patrolling quokka att:good_neutral
 : interest_check(_G)
@@ -344,7 +344,7 @@ ENDMAP
 
 NAME:   elyvilon_altar_5
 TAGS:   uniq_altar_elyvilon temple_overflow_1 temple_overflow_elyvilon decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_elyvilon
 KMASK:  T = no_monster_gen
 : interest_check(_G)
@@ -365,7 +365,7 @@ ENDMAP
 
 NAME:   fedhas_altar_1
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_fedhas
 MONS:   plant
 : interest_check(_G)
@@ -379,7 +379,7 @@ ENDMAP
 
 NAME:   fedhas_altar_2
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_fedhas
 NSUBST: w = 2:W / *:w
 SUBST:  . = ..wW
@@ -395,7 +395,7 @@ ENDMAP
 
 NAME:   fedhas_altar_3
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_fedhas
 NSUBST: b = 1:. / *:1
 MONS:   plant w:5 / fungus / nothing w:3
@@ -411,7 +411,7 @@ ENDMAP
 NAME:   fedhas_altar_4
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas mini_float
 TAGS:   decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_fedhas
 FTILE:  . = floor_moss
 FTILE:  t = floor_moss
@@ -435,7 +435,7 @@ ENDMAP
 NAME:    tgw_fedhas
 TAGS:    no_item_gen no_monster_gen
 TAGS:    temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas
-DEPTH:   Lair, D:2-20
+DEPTH:   Lair, D:2-
 KFEAT:   _ = altar_fedhas
 KPROP:   xzd3P = no_rtele_into
 MONS:    plant, fungus, oklob plant, big fish, bush, toadstool col:random
@@ -509,7 +509,7 @@ ENDMAP
 NAME:   fedhas_altar_fruit_tree
 TAGS:   uniq_altar_fedhas temple_overflow_1 temple_overflow_fedhas mini_float
 TAGS:   no_item_gen no_rotate no_vmirror decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 NSUBST: g = 4:f/*:.
 NSUBST: f = 5:A/*:.
 NSUBST: w = 2:4 / *:w
@@ -586,7 +586,7 @@ ENDMAP
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
-DEPTH:  D:2-18, Crypt
+DEPTH:  D:2-, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
 TAGS:   temple_overflow_kikubaaqudgha
 KFEAT:  _ = altar_kikubaaqudgha
@@ -607,7 +607,7 @@ ENDMAP
 NAME:   lemuel_mausoleum_altar_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha temple_overflow_1
 TAGS:   temple_overflow_kikubaaqudgha uniq_mausoleum_altar
-DEPTH:  D:7-20, Crypt
+DEPTH:  D:7-, Crypt
 MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
 MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
         w:5 troll skeleton
@@ -731,7 +731,7 @@ ENDMAP
 
 NAME:  makhleb_altar_promises_db
 TAGS:  uniq_altar_makhleb temple_overflow_1 temple_overflow_makhleb
-DEPTH: D:2-20
+DEPTH: D:2-
 KFEAT: _ = altar_makhleb
 MONS:  executioner / balrug / green death / cacodemon / blizzard demon
 MONS:  orange demon / ynoxinul / neqoxec / hellwing / smoke demon
@@ -842,7 +842,7 @@ ENDMAP
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
 NAME:   nemelex_altar_shiori
-DEPTH:  D, Elf, Vaults
+DEPTH:  D, Depths, Elf, Vaults
 TAGS:   temple_overflow_1 temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling no_rotate
@@ -1127,7 +1127,7 @@ ENDMAP
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
-DEPTH:  D:2-18, Elf, Vaults
+DEPTH:  D:2-, Elf, Vaults
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_sif_muna
 TAGS:   uniq_altar_sif_muna decor
 COLOUR: . = blue
@@ -1143,7 +1143,7 @@ xxxxxxxxxxxxxx
 ENDMAP
 
 NAME:       tgw_sif
-DEPTH:      D:3-18, Elf
+DEPTH:      D:3-, Elf
 TAGS:       no_item_gen no_monster_gen no_pool_fixup decor
 TAGS:       temple_overflow_1 temple_overflow_sif_muna uniq_altar_sif_muna
 KFEAT:      _ = altar_sif_muna
@@ -1236,7 +1236,7 @@ ENDMAP
 
 NAME:   trog_ov_bears_minmay
 TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
-DEPTH:  D:6-18
+DEPTH:  D:6-
 : if you.absdepth() < 10 then
 MONS:   black bear
 : else
@@ -1477,7 +1477,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
-DEPTH:  D:2-
+DEPTH:  D:2-, Depths
 TAGS:   no_item_gen no_monster gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom
 KFEAT:  _ = altar_xom
@@ -1519,7 +1519,7 @@ MAP
 ENDMAP
 
 NAME:    xom_obstacle_run
-DEPTH:   D:2-20
+DEPTH:   D:2-
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG
@@ -1554,7 +1554,7 @@ ENDMAP
 
 NAME:    xom_shifter_show
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
-DEPTH:   D:7-20
+DEPTH:   D:7-
 KFEAT:   _ = altar_xom
 FTILE:   ._ = floor_pebble
 COLOUR:  . = random
@@ -1638,7 +1638,7 @@ ENDMAP
 NAME:   yredelemnul_altar_generic
 TAGS:   uniq_altar_yredelemnul temple_overflow_1 temple_overflow_yredelemnul
 TAGS:   decor
-DEPTH:  D:2-20
+DEPTH:  D:2-
 KFEAT:  C = altar_yredelemnul
 KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective               \
             tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
@@ -1653,7 +1653,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_zombie_altar_yredelemnul
-DEPTH:  D:2-18, Crypt
+DEPTH:  D:2-, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
 TAGS:   temple_overflow_yredelemnul
 KFEAT:  _ = altar_yredelemnul
@@ -1674,7 +1674,7 @@ ENDMAP
 NAME:   lemuel_mausoleum_altar_yredelemnul
 TAGS:   uniq_altar_yredelemnul temple_overflow_1 temple_overflow_yredelemnul
 TAGS:   uniq_mausoleum_altar decor
-DEPTH:  D:7-20, Crypt
+DEPTH:  D:7-, Crypt
 MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
 MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
         w:5 troll skeleton
@@ -1949,7 +1949,7 @@ ENDMAP
 # they get tags temple_overflow_N and temple_overflow_<god>.
 
 NAME:    good_gods_temple_1
-DEPTH:   D:2-, Lair
+DEPTH:   D:2-, Depths, Lair
 TAGS:    temple_overflow_3 temple_overflow_elyvilon
 TAGS:    temple_overflow_zin temple_overflow_the_shining_one
 TAGS:    no_monster_gen no_trap_gen uniq_good_god_temple
@@ -1974,7 +1974,7 @@ tt...1...tt
 ENDMAP
 
 NAME:    good_gods_mini_temple
-DEPTH:   D:2-, Lair
+DEPTH:   D:2-, Depths, Lair
 TAGS:    temple_overflow_3 temple_overflow_elyvilon
 TAGS:    temple_overflow_zin temple_overflow_the_shining_one
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup uniq_good_god_temple
@@ -2258,7 +2258,7 @@ ENDMAP
 
 # General overflow vault, can be used for all gods.
 NAME:     general_overflow_altar
-DEPTH:    D:2-16
+DEPTH:    D:2-
 WEIGHT:   10
 TAGS:     no_monster_gen no_pool_fixup temple_overflow_generic_1
 SHUFFLE:  xXY / xXY / xXY / abc
@@ -2280,7 +2280,7 @@ MAP
 ENDMAP
 
 NAME:    old_standard_altar
-DEPTH:   D
+DEPTH:   D, Depths
 TAGS:    transparent mini_float allow_dup decor temple_overflow_generic_1
 SHUFFLE: cvxxxx
 : altar_check(_G)
@@ -2299,7 +2299,7 @@ MAP
 ENDMAP
 
 NAME:    lemuel_round_altar
-DEPTH:   D
+DEPTH:   D, Depths
 TAGS:    allow_dup decor temple_overflow_generic_1
 SHUFFLE: cvxx
 SUBST:   X:x.
@@ -2317,7 +2317,7 @@ MAP
 ENDMAP
 
 NAME:  lemuel_crystal_altar
-DEPTH: D
+DEPTH: D, Depths
 TAGS:  transparent allow_dup decor temple_overflow_generic_1
 : altar_check(_G)
 MAP
@@ -2328,7 +2328,7 @@ ENDMAP
 
 NAME:    lemuel_doored_altar
 TAGS:    transparent mini_float decor temple_overflow_generic_1
-DEPTH:   D:1-18, Vaults, Lair, Elf, Crypt
+DEPTH:   D:1-, Vaults, Lair, Elf, Crypt
 SHUFFLE: XY
 SUBST:   X = .
 SUBST:   Y = +
@@ -2347,7 +2347,7 @@ ENDMAP
 
 NAME:   lemuel_coloured_pillars_altar
 TAGS:   no_rotate decor temple_overflow_generic_1
-DEPTH:  D:2-18, Vaults, Elf
+DEPTH:  D:2-, Vaults, Elf
 COLOUR: c = blue / yellow / red / cyan
 : altar_check(_G)
 MAP

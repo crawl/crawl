@@ -398,7 +398,7 @@ end
 
 }}
 
-default-depth: D:22-, Elf, Crypt, Vaults:1-4
+default-depth: Depths, Elf, Crypt, Vaults:1-4
 
 ###############################################################################
 # Portal entrances.
@@ -421,7 +421,7 @@ wwbm..O..mbww
 ENDMAP
 
 NAME:       mu_enter_wizlab_2
-DEPTH:      D:22-, Elf, Crypt, Vaults:1-4
+DEPTH:      Depths, Elf, Crypt, Vaults:1-4
 SHUFFLE:    tU
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
@@ -569,7 +569,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_glasses
-DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
+DEPTH:    Depths, Elf, Crypt, Vaults:1-4
 FTILE:    GO_ = floor_rough_magenta
 TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
@@ -587,7 +587,7 @@ MAP
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_water
-DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
+DEPTH:    Depths, Elf, Crypt, Vaults:1-4
 FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
@@ -608,7 +608,7 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
-DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
+DEPTH:    Depths, Elf, Crypt, Vaults:1-4
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \
@@ -961,10 +961,10 @@ KMONS:      | = hell sentinel / brimstone fiend / shadow fiend /\
 :               "chaos spawn / soul eater / sun demon / " ..
 :               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
-KMONS:      0% = place:D:20 zombie / guardian mummy w:4
+KMONS:      0% = place:Depths:1 zombie / guardian mummy w:4
 KMONS:      * = zombie / mummy priest w:6
 KMONS:      | = ancient lich / greater mummy
-:           set_random_mon_list("place:D:20 zombie / zombie / guardian mummy")
+:           set_random_mon_list("place:Depths:1 zombie / zombie / guardian mummy")
 :           end
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.

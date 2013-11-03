@@ -537,9 +537,7 @@ enum branch_type                // you.where_are_you
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_WIZLAB,
-#if TAG_MAJOR_VERSION == 34
-        BRANCH_UNUSED,
-#endif
+    BRANCH_DEPTHS,
     NUM_BRANCHES
 };
 
@@ -1363,8 +1361,8 @@ enum dungeon_feature_type
     DNGN_ENTER_SHOALS,
     DNGN_ENTER_SPIDER_NEST,
     DNGN_ENTER_FOREST,
-        DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_FOREST,
-    DNGN_UNUSED_ENTER_BRANCH_1,
+    DNGN_ENTER_DEPTHS,
+        DNGN_ENTER_LAST_BRANCH = DNGN_ENTER_DEPTHS,
 
     // Exits from various branches
     // Order must be the same as above
@@ -1387,8 +1385,8 @@ enum dungeon_feature_type
     DNGN_RETURN_FROM_SHOALS,
     DNGN_RETURN_FROM_SPIDER_NEST,
     DNGN_RETURN_FROM_FOREST,
-        DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_FOREST,
-    DNGN_UNUSED_RETURN_BRANCH_1,
+    DNGN_RETURN_FROM_DEPTHS,
+        DNGN_RETURN_FROM_LAST_BRANCH = DNGN_RETURN_FROM_DEPTHS,
 
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_ZIN,

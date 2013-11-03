@@ -164,10 +164,10 @@ end
 
 function pan_entry(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
-    e.depth("D:21-")
-    e.depth_chance("D:24", 10000)
+    e.depth("Depths")
+    e.depth_chance("Depths:3", 10000)
     e.chance(2500)
-    if you.where() == 'D:24' then
+    if you.where() == 'Depths:3' then
         e.kfeat(glyph .. " = enter_pandemonium no_mimic")
     else
         e.kfeat(glyph .. " = enter_pandemonium")
@@ -181,7 +181,7 @@ end
 # Entry portals to Pan
 ##############################################################################
 
-default-depth: D:21-
+default-depth: Depths
 
 # The generic entry; this is the one that should place in encompass vaults.
 # Has a higher weight than everything else.

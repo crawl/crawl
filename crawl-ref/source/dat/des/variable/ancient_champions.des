@@ -32,7 +32,7 @@ end
 }}
 
 NAME:    mu_ancient_champions
-DEPTH:   D:15-26, Crypt:1-4
+DEPTH:   Depths, Crypt:1-4
 ORIENT:  float
 TAGS:    no_item_gen no_monster_gen
 KFEAT:   ABCDEFG = metal_wall

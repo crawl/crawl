@@ -86,7 +86,6 @@ static bool _is_noteworthy_dlevel(unsigned short place)
 
     return (lev == _dungeon_branch_depth(branch)
             || branch == BRANCH_DUNGEON && (lev % 5) == 0
-            || branch == BRANCH_DUNGEON && lev == RUNE_LOCK_DEPTH + 1
             || branch != BRANCH_DUNGEON && lev == 1);
 }
 
@@ -435,7 +434,6 @@ void Note::check_milestone() const
                                "entered " + branch + ".", "parent");
             }
             else if (dep == _dungeon_branch_depth(br)
-                     || dep == RUNE_LOCK_DEPTH + 1
                      || br == BRANCH_ZIGGURAT)
             {
                 string level = place_name(packed_place, true, true);
@@ -444,8 +442,7 @@ void Note::check_milestone() const
 
                 ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
-                mark_milestone(br == BRANCH_ZIGGURAT ? "zig" :
-                               dep == RUNE_LOCK_DEPTH + 1 ? "br.mid" : "br.end",
+                mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",
                                branch_finale.str());
             }
         }

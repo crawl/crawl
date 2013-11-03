@@ -161,7 +161,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_round
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 SUBST:  = = nnn+
 SUBST:  c: c:70 v:20 b:10
@@ -202,7 +202,7 @@ ENDMAP
 # Sorry, no wand of wishing in this one
 NAME:   evilmike_zot_entry_castle
 TAGS:   no_monster_gen zot_entry layout_city
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^.
@@ -250,7 +250,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_gauntlet
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 SUBST:  b: v.., v: c.
 TILE:   X = wall_zot_magenta
@@ -317,7 +317,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_argh
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 # Grey dracs can escape from the islands if they have water. This is intentional.
@@ -365,7 +365,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_hall
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 TILE:   X = wall_zot_magenta
@@ -398,7 +398,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_basic
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 TILE:   c = wall_zot_magenta
@@ -424,7 +424,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_diamond
 TAGS:   no_monster_gen zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 KFEAT:  A = stone_arch
@@ -460,7 +460,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_hairpin
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: ABC-_ = magenta
@@ -489,7 +489,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_funnels
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: 123c+. = magenta
@@ -523,7 +523,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_pinwheel
 TAGS:   no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 KFEAT:  A = stone_arch
@@ -557,7 +557,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_bicorn
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: 123c+_ = magenta
@@ -588,7 +588,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_tricorne
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: ABC-_ = magenta
@@ -628,7 +628,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_gee_three
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: ABC-_ = magenta
@@ -674,7 +674,7 @@ ENDMAP
 
 NAME:   grunt_zot_entry_alcove
 TAGS:   transparent no_monster_gen patrolling zot_entry
-PLACE:  D:$
+PLACE:  Depths:$
 ORIENT: float
 KFEAT:  O = enter_zot
 COLOUR: 1C-_ = magenta

@@ -2569,8 +2569,8 @@ static void tag_read_you(reader &th)
         abyssal_state.level = unmarshall_level_id(th);
     if (!abyssal_state.level.is_valid())
     {
-        abyssal_state.level.branch = BRANCH_DUNGEON;
-        abyssal_state.level.depth = 19;
+        abyssal_state.level.branch = BRANCH_DEPTHS;
+        abyssal_state.level.depth = 1;
     }
 #endif
 
@@ -2825,6 +2825,7 @@ static branch_type old_entries[] =
     /* various portal branches */ NUM_BRANCHES,
     NUM_BRANCHES, NUM_BRANCHES, NUM_BRANCHES, NUM_BRANCHES, NUM_BRANCHES,
     NUM_BRANCHES, NUM_BRANCHES, NUM_BRANCHES, NUM_BRANCHES, NUM_BRANCHES,
+    NUM_BRANCHES,
 };
 #endif
 

@@ -14,8 +14,9 @@ end
 
 NAME: serial_shops
 TAGS: allow_dup extra luniq
-DEPTH: D:4-, Orc, Elf, Shoals, Snake, Vaults
+DEPTH: D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 CHANCE: 20% (D)
+CHANCE: 20% (Depths)
 CHANCE: 30% (Orc)
 CHANCE: 40% (Elf, Vaults)
 CHANCE: 20% (Shoals, Snake)
@@ -90,7 +91,7 @@ ENDMAP
 # Custom venom shop Vault
 NAME:    guppyfry_shop_venom
 TAGS:    no_monster_gen
-DEPTH:   D:4-
+DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          w:25 potion of poison | w:5 potion of strong poison | \
@@ -115,7 +116,7 @@ ENDMAP
 # Custom earth shop Vault
 NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen
-DEPTH:   D:11-
+DEPTH:   D:11-, Depths
 KMONS:   1 = gargoyle / boulder beetle / boring beetle / earth elemental / cyclops
 KMONS:   2 = stone giant / earth elemental / catoblepas / deep troll earth mage / stone golem
 KMONS:   3 = boring beetle
@@ -146,7 +147,7 @@ ENDMAP
 # Custom blood shop Vault
 NAME:    guppyfry_shop_blood
 TAGS:    no_monster_gen
-DEPTH:   D:12-
+DEPTH:   D:12-, Depths
 KMONS:   1 = vampire / bat
 KMONS:   2 = vampire / vampire mage / vampire knight
 ITEM:    potion of blood ident:type
@@ -168,7 +169,7 @@ ENDMAP
 #####################################################
 # Off-brand ammo
 NAME:  nicolae_offbrand_ammo
-DEPTH:  D:5-, Orc
+DEPTH:  D:5-, Depths, Orc
 WEIGHT: 1
 TAGS:  no_hmirror no_vmirror mini_float
 KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
@@ -197,7 +198,7 @@ ENDMAP
 #####################################################
 # Evocable jewellery, magical staves, and miscellaneous items.
 NAME: nicolae_hardware_store
-DEPTH: D:4-
+DEPTH: D:4-, Depths
 WEIGHT: 5
 TAGS: transparent
 SUBST: m = mb
@@ -222,7 +223,7 @@ ENDMAP
 NAME: nicolae_evil_shop
 WEIGHT: 2
 TAGS: transparent
-DEPTH: D:6-
+DEPTH: D:6-, Depths
 SUBST: G : YlG
 # I couldn't decide on just one alliterative name.
 : local shopname = util.random_from({"type:Blasphemy suffix:Boutique",
@@ -249,7 +250,7 @@ ENDMAP
 # Items related to the good gods thematically; healing, silver, holy wrath, etc.
 NAME: nicolae_good_shop
 WEIGHT: 2
-DEPTH: D:6-
+DEPTH: D:6-, Depths
 TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
@@ -272,7 +273,7 @@ ENDMAP
 #####################################################
 # All bardings, all the time.
 NAME: nicolae_barding_shop
-DEPTH: D:8-, Snake, !Snake:$
+DEPTH: D:8-, Depths, Snake, !Snake:$
 WEIGHT: 1
 TAGS: transparent
 : if you.branch() == "Snake" then
@@ -296,7 +297,7 @@ ENDMAP
 #####################################################
 # Sells conjurations-heavy books, destructive wands and rods, etc.
 NAME: nicolae_blasting_shop
-DEPTH: D:8-
+DEPTH: D:8-, Depths
 TAGS: no_trap_gen no_monster_gen no_item_gen
 MARKER: s = lua:fog_machine { cloud_type = "flame", \
              pow_min = 3, pow_max = 5, delay_min = 50, delay_max = 90, \
@@ -328,7 +329,7 @@ ENDMAP
 # associated with one of each of the four elemental schools.
 NAME: nicolae_elemental_shop
 TAGS: no_monster_gen no_trap_gen no_item_gen no_pool_fixup
-DEPTH: D:4-
+DEPTH: D:4-, Depths
 SHUFFLE: AB
 NSUBST: A = a / l / w / x
 SUBST: B = .

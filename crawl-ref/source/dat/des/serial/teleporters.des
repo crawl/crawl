@@ -81,7 +81,7 @@
 NAME:     serial_teleporters
 TAGS:     extra luniq_serial allow_dup
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 CHANCE:   1%
 {{
   --  2 - 8 teleport traps (non-uniform)
@@ -143,7 +143,7 @@ NAME:     serial_teleporters_wizard_statue_box
 WEIGHT:   5
 TAGS:     serial_teleporters_simple allow_dup luniq_teleport_statue
 TAGS:     layout_rooms layout_basic layout_misc transparent mini_float
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 MONS:     statue tile:mons_statue_mage name:wizard n_adj; \
           spells:.;teleport_other;.;.;.;.
 MAP
@@ -156,7 +156,7 @@ NAME:     serial_teleporters_wizard_statue_star
 WEIGHT:   3
 TAGS:     serial_teleporters_simple luniq_teleport_statue transparent
 TAGS:     layout_rooms layout_basic layout_misc mini_float
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 MONS:     statue tile:mons_statue_mage name:wizard n_adj; \
           spells:.;teleport_other;.;.;.;.
 MAP
@@ -177,7 +177,7 @@ NAME:     serial_teleporters_wizard_statue_spiral
 WEIGHT:   2
 TAGS:     serial_teleporters_simple luniq_teleport_statue no_pool_fixup
 TAGS:     layout_rooms layout_basic layout_misc transparent mini_float
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 SUBST:    d : ddef
 ITEM:     any scroll / scroll of blinking / scroll of teleportation
 ITEM:     any scroll q:2 / scroll of blinking q:2 / scroll of teleportation q:2
@@ -201,7 +201,7 @@ NAME:     serial_teleporters_loot_1
 WEIGHT:   10
 TAGS:     serial_teleporters_simple allow_dup luniq_teleporters_item
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 KPROP:    *Pp. = no_rtele_into
 : teleporter_serial_init(_G, 'P', 'p', 11)
 : standard_loot(_G)
@@ -215,7 +215,7 @@ NAME:     serial_teleporters_loot_2
 WEIGHT:   5
 TAGS:     serial_teleporters_simple allow_dup luniq_teleporters_item
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 KPROP:    *PpQq. = no_rtele_into
 : teleporter_serial_init(_G, 'P', 'p', 21)
 : teleporter_serial_init(_G, 'Q', 'q', 22)
@@ -230,7 +230,7 @@ NAME:     serial_teleporters_loot_3
 WEIGHT:   2
 TAGS:     serial_teleporters_simple allow_dup luniq_teleporters_item
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 KPROP:    *PpQq. = no_rtele_into
 : teleporter_serial_init(_G, 'P', 'p', 31)
 : teleporter_serial_init(_G, 'Q', 'q', 32)
@@ -250,7 +250,7 @@ NAME:     serial_teleporters_loot_4
 WEIGHT:   2
 TAGS:     serial_teleporters_simple allow_dup luniq_teleporters_item
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 KPROP:    *PpQq. = no_rtele_into
 : teleporter_serial_init(_G, 'P', 'p', 41)
 : teleporter_serial_init(_G, 'Q', 'q', 42)
@@ -267,7 +267,7 @@ NAME:     serial_teleporters_loot_5
 WEIGHT:   1
 TAGS:     serial_teleporters_simple allow_dup luniq_teleporters_item
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 KPROP:    *PpQqRrSs. = no_rtele_into
 : teleporter_serial_init(_G, 'P', 'p', 51)
 : teleporter_serial_init(_G, 'Q', 'q', 52)
@@ -294,7 +294,7 @@ NAME:     serial_teleporters_passwall_1
 WEIGHT:   10
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 SUBST:    m : xm
 : teleporter_serial_init(_G, 'P', 'p', 101)
 MAP
@@ -307,7 +307,7 @@ NAME:     serial_teleporters_passwall_2
 WEIGHT:   10
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 SHUFFLE:  Pq
 SUBST:    o : xm
 SUBST:    n : xm
@@ -324,7 +324,7 @@ NAME:     serial_teleporters_passwall_3
 WEIGHT:   5
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 SUBST:    m : xm
 : teleporter_serial_init(_G, 'P', 'p', 121)
 : teleporter_serial_init(_G, 'Q', 'q', 122)
@@ -338,7 +338,7 @@ NAME:     serial_teleporters_passwall_4
 WEIGHT:   3
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 SUBST:    m : xm
 : teleporter_serial_init(_G, 'P', 'p', 131)
 : teleporter_serial_init(_G, 'Q', 'q', 132)
@@ -356,7 +356,7 @@ NAME:     serial_teleporters_passwall_5
 WEIGHT:   2
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 SUBST:    m : xm
 : teleporter_serial_init(_G, 'P', 'p', 141)
 : teleporter_serial_init(_G, 'Q', 'q', 142)
@@ -373,7 +373,7 @@ NAME:     serial_teleporters_dummy
 WEIGHT:   10
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 : teleporter_serial_init(_G, 'P', 'p', 201)
 MAP
 xxxxxx
@@ -386,7 +386,7 @@ NAME:     serial_teleporters_loop2A_master
 WEIGHT:   5
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 {{
   hook("post_place", function()
     dgn.place_maps{tag="serial_teleporters_loop2A_1", count=1}
@@ -407,7 +407,7 @@ NAME:     serial_teleporters_loop2B_master
 WEIGHT:   5
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 {{
   hook("post_place", function()
     dgn.place_maps{tag="serial_teleporters_loop2B_1", count=1}
@@ -428,7 +428,7 @@ NAME:     serial_teleporters_loop2C_master
 WEIGHT:   5
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 {{
   hook("post_place", function()
     dgn.place_maps{tag="serial_teleporters_loop2C_1", count=1}
@@ -449,7 +449,7 @@ NAME:     serial_teleporters_loop3_master
 WEIGHT:   5
 TAGS:     serial_teleporters_simple allow_dup luniq
 TAGS:     layout_rooms layout_basic layout_misc
-DEPTH:    D:6-, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
+DEPTH:    D:6-, Depths, Elf, !Elf:$, Crypt, !Crypt:$, Zot, !Zot:$
 {{
   hook("post_place", function()
     dgn.place_maps{tag="serial_teleporters_loop3_1", count=1}

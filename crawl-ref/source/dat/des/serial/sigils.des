@@ -16,7 +16,7 @@ function init_sigils(e)
 end
 }}
 
-default-depth: D:16-, Elf, Crypt
+default-depth: Depths, Elf, Crypt
 
 NAME:   serial_sigils
 TAGS:   luniq_serial decor

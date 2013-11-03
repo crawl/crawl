@@ -9,7 +9,7 @@
 # vaults.des.
 ###############################################################################
 
-default-depth: D:12-26
+default-depth: D:12-, !D:$, Depths, !Depths:$
 # be careful to adapt these numbers for new vaults (using DEPTH)
 
 ###############################################################################
@@ -97,7 +97,7 @@ ENDMAP
 #
 NAME:    statuecave_lemuel
 ORIENT:  northeast
-DEPTH:   D:7-18, Lair, Crypt:1-4
+DEPTH:   D:7-, Lair, Crypt:1-4
 MONS:    ice statue / orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
@@ -177,7 +177,7 @@ ENDMAP
 #
 NAME:    dragon1_lemuel
 ORIENT:  northeast
-DEPTH:   D:9-20, Lair
+DEPTH:   D:9-, Lair
 MONS:    patrolling fire dragon, patrolling ice dragon
 ITEM:    potion of flight / scroll of teleportation
 SUBST:   ! : ?x
@@ -207,7 +207,7 @@ ENDMAP
 # Steading of the Giant Chief
 #
 NAME:    giant_chief_lemuel
-DEPTH:   D:11-22, Orc:3-
+DEPTH:   D:11-, Orc:3-
 ORIENT:  north
 MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    hill giant, cyclops
@@ -254,7 +254,7 @@ ENDMAP
 
 NAME:   minmay_smoke_and_mirrors
 ORIENT: northwest
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 MONS:   wizard / rakshasa / vapour / nothing
 MARKER: F = lua:fog_machine { cloud_type="purple smoke", \
             pow_min = 5, pow_max = 15, delay_min = 10,   \
@@ -293,7 +293,7 @@ ENDMAP
 NAME:   minmay_elf_outpost
 TAGS:   no_rotate
 ORIENT: northwest
-DEPTH:  D:12-20
+DEPTH:  D:12-
 MONS:   deep elf fighter / nothing, deep elf knight
 MONS:   deep elf conjurer / deep elf mage / deep elf summoner / nothing
 MAP
@@ -326,7 +326,7 @@ ENDMAP
 NAME:   minmay_ice_pillars
 TAGS:   no_rotate no_pool_fixup no_monster_gen
 ORIENT: north
-DEPTH:  D:16-24
+DEPTH:  Depths, !Depths:$
 MONS:   ice beast / nothing w:3, ice statue, ice dragon / nothing
 SUBST:  y : y:48 w:1 W:1, Y : Y:48 W:1 .:1, y = wwW, Y = WW.
 MAP
@@ -351,7 +351,7 @@ ENDMAP
 NAME:   minmay_skeleton_keep
 TAGS:   no_monster_gen
 ORIENT: northwest
-DEPTH:  D:18-, Crypt
+DEPTH:  Depths, Crypt
 MONS:   flying skull / nothing w:30, skeleton w:20 / nothing
 MONS:   skeletal warrior band / bone dragon w:1 / lich w:1 / curse skull w:1
 SUBST:  G : GGccV.
@@ -377,7 +377,7 @@ ENDMAP
 NAME:   minmay_spriggan_fort
 TAGS:   no_rotate
 ORIENT: northwest
-DEPTH:  D:18-
+DEPTH:  Depths
 MONS:   plant, bush
 MONS:   spriggan w:70 / spriggan druid / spriggan berserker / spriggan rider
 MONS:   spriggan defender
@@ -417,7 +417,7 @@ ENDMAP
 
 NAME:   minmay_haunted_quarter
 ORIENT: northwest
-DEPTH:  D:14-22
+DEPTH:  Depths, !Depths:$
 KMONS:  w = wraith / freezing wraith / shadow wraith / phantasmal warrior / \
             flayed ghost / nothing w:950
 KFEAT:  w = w
@@ -458,7 +458,7 @@ ENDMAP
 NAME:   orc_temple
 ORIENT: southwest
 TAGS:   no_rotate
-DEPTH:  D:14-26, Orc:2-
+DEPTH:  Depths, !Depths:$, Orc:2-
 MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
 MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
 KFEAT:  C = altar_beogh
@@ -493,7 +493,7 @@ ENDMAP
 #
 NAME:   fort_yaktaur
 ORIENT: southeast
-DEPTH:  D:14-26
+DEPTH:  Depths, !Depths:$
 MONS:   yaktaur, death yak, minotaur, random
 MONS:   yak, gnoll, random
 MAP
@@ -530,7 +530,7 @@ ENDMAP
 # Rubicon
 #
 NAME:    erik_rubicon_a
-DEPTH:   D:10-16
+DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon
 WEIGHT:  6
@@ -561,7 +561,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    erik_rubicon_b
-DEPTH:   D:10-16
+DEPTH:   D:10-, !D:$
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon
 WEIGHT:  4
@@ -597,7 +597,7 @@ ENDMAP
 NAME:   gold_lair_mu
 ORIENT: southeast
 TAGS:   no_monster_gen
-DEPTH:  D:20-26
+DEPTH:  Depths, !Depths:$
 MONS:   golden dragon, any draconian, fungus, plant, oklob plant
 KMONS:  6 = fire drake / swamp drake / lindwurm
 KMONS:  D = fire drake w:5 / swamp drake w:5 / death drake / lindwurm w:5
@@ -649,7 +649,7 @@ ENDMAP
 # creators.
 #
 NAME:   golem_gauntlet_mu
-DEPTH:  D:16-26
+DEPTH:  Depths, !Depths:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: east
 MARKER: m = lua:fog_machine { \
@@ -703,7 +703,7 @@ ENDMAP
 #
 NAME:   minmay_goldmine
 ORIENT: southeast
-DEPTH:  D:8-16, Orc
+DEPTH:  D:8-, Orc
 MONS:   orc / orc wizard w:3 / orc priest w:2 / orc warrior w:2
 SUBST:  X = xxxZ
 KPROP:  Z = no_rtele_into
@@ -729,7 +729,7 @@ ENDMAP
 NAME:   minmay_crystal_thing
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: west
-DEPTH:  D:16-
+DEPTH:  Depths, !Depths:$
 MONS:   crystal golem, orange crystal statue
 ITEM:   any magical staff / any rod w:2 / any book / any jewellery w:15 / \
         any scroll w:20 / potion of magic / potion of brilliance / \
@@ -805,7 +805,7 @@ ENDMAP
 
 NAME:   minmay_twisted_water
 ORIENT: north
-DEPTH:  D:9-20
+DEPTH:  D:9-
 SUBST:  W = wW
 MONS:   ice statue, patrolling ice dragon, patrolling frost giant, ice beast
 KMONS:  w = w:490 nothing / ice beast
@@ -856,7 +856,7 @@ ENDMAP
 NAME:   due_jory_tower
 ORIENT: southwest
 TAGS:   no_rotate no_monster_gen no_item_gen
-DEPTH:  D:19-
+DEPTH:  Depths, !Depths:$
 MONS:   flayed ghost w:5 / phantasmal warrior w:5 / phantom / shadow / shadow wraith
 MONS:   ghost moth, Jory, vampire knight
 MONS:   raven
@@ -923,7 +923,7 @@ ENDMAP
 #
 NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
-DEPTH:  D:17-, Crypt:1-4
+DEPTH:  Depths, !Depths:$, Crypt:1-4
 ORIENT: southeast
 SUBST:  ~ = ~:2 .:3
 SUBST:  . = ~:1 .:9
@@ -989,7 +989,7 @@ ENDMAP
 #
 NAME:   evilmike_makhleb_hellhole
 ORIENT: southeast
-DEPTH:  D:17-
+DEPTH:  Depths, !Depths:$
 TAGS:   no_monster_gen
 COLOUR: v = lightred
 COLOUR: = = lightred
@@ -1057,7 +1057,7 @@ ENDMAP
 #
 NAME:   evilmike_library_of_no_secrets
 ORIENT: southeast
-DEPTH:  D:11-
+DEPTH:  D:11-, Depths
 TAGS:   no_pool_fixup no_monster_gen
 TILE:   c = DNGN_STONE_WALL_BLUE
 COLOUR: c" = lightblue
@@ -1124,7 +1124,7 @@ ENDMAP
 NAME:   evilmike_iron_armoury
 ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-
+DEPTH:  D:11-, Depths
 KFEAT:  _ = altar_okawaru
 SUBST:  = = nv
 FTILE:  '+Gvc12345_defghijk = floor_hall
@@ -1190,7 +1190,7 @@ ENDMAP
 #
 NAME:   evilmike_halls_of_destruction
 ORIENT: northeast
-DEPTH:  D:16-
+DEPTH:  Depths
 TAGS:   no_monster_gen
 COLOUR: v'4! = red
 COLOUR: = = red
@@ -1255,7 +1255,7 @@ ENDMAP
 #
 NAME:   evilmike_negative_zone
 ORIENT: southeast
-DEPTH:  D:15-
+DEPTH:  Depths
 TAGS:   no_monster_gen
 #
 # gives a 50% chance of there being at least one shortcut in this vault
@@ -1315,7 +1315,7 @@ ENDMAP
 
 ###############################################################################
 NAME:    spider_temple_joshua
-DEPTH:   D:20-26
+DEPTH:   Depths, !Depths:$
 ORIENT:  north
 MONS:    naga mage / naga w:5 / naga skeleton w:2
 MONS:    wolf spider w:7 / giant mite w:3
@@ -1373,7 +1373,7 @@ ENDMAP
 ###############################################################################
 NAME:    grunt_house_of_mirrors
 TAGS:    no_rtele_into
-DEPTH:   D:15-
+DEPTH:   Depths, !Depths:$
 ORIENT:  north
 SHUFFLE: AB / BA / BB, CD / DC / DD, EF / FE / FF
 SHUFFLE: GH / HG / HH, IJ / JI / JJ, KL / LK / LL
@@ -1476,7 +1476,7 @@ ENDMAP
 # Hopefully the changes for it to fit in D make it more interesting than Hive.
 NAME:    hangedman_what_comes_after_a
 TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:12-19
+DEPTH:   D:12-
 ORIENT:  north
 MONS:    killer bee, queen bee, oklob plant
 KFEAT:   X = x

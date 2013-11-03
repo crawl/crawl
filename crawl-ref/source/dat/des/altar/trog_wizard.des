@@ -43,7 +43,7 @@ end
 NAME:   trog_wizard
 TAGS:   uniq_altar_trog temple_overflow_trog generate_awake
 TAGS:   no_item_gen no_monster_gen no_trap_gen
-DEPTH:  D:3-17
+DEPTH:  D:3-
 KFEAT:  _ = altar_trog
 {{
 local tm = TriggerableFunction:new{func="callback.trog_wizard_convert_wizard",

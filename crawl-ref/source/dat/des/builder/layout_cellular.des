@@ -198,7 +198,7 @@ ENDMAP
 
 # A bit similar to stronghold but better architecture.
 NAME:   layout_gridville
-DEPTH:  D:15-, Snake, Dis:1-6, Pan
+DEPTH:  Depths, Snake, Dis:1-6, Pan
 WEIGHT: 10, 20(Dis)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_city
@@ -286,8 +286,8 @@ ENDMAP
 
 # A bit similar to roguey but better architecture.
 NAME:   layout_gridlike
-DEPTH:  D:10-, Lair, Crypt, Snake, Elf, Pan
-WEIGHT: 20, 50(D), 100(Elf), 50(Crypt)
+DEPTH:  D:10-, Depths, Lair, Crypt, Snake, Elf, Pan
+WEIGHT: 20, 50(D), 50(Depths), 100(Elf), 50(Crypt)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 TAGS: layout_type_rooms

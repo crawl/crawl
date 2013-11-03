@@ -66,8 +66,8 @@ end
 }}
 
 NAME:   ldierk_geyser
-DEPTH:  D:4-, Lair, Swamp, Shoals
-WEIGHT: 1 (D), 5 (Lair), 10
+DEPTH:  D:4-, Depths, Lair, Swamp, Shoals
+WEIGHT: 1 (D), 1 (Depths), 5 (Lair), 10
 TAGS:   extra allow_dup
 SUBST:  - = .#
 SUBST:  ; = ..#

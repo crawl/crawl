@@ -69,7 +69,7 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  D:4-22, Lair:1-7, Pan
+DEPTH:  D:4-, Lair:1-7, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -146,7 +146,7 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   D:4-22, Lair:1-7
+DEPTH:   D:4-, Lair:1-7
 WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand layout_type_cross
@@ -214,7 +214,7 @@ ENDMAP
 # are generally all grouped together.
 #
 NAME: layout_big_octagon
-DEPTH:   D:4-22, Lair:1-7, Pan
+DEPTH:   D:4-, Lair:1-7, Pan
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -381,7 +381,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: D, Lair, Snake, Elf, Crypt, Zot, Pan
+DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_rooms
@@ -465,7 +465,7 @@ ENDMAP
 # ruination makes it basically indistinguishable from a big
 # open room
 NAME:   layout_city
-DEPTH:  D:15-, Lair:1-2, Snake, Crypt:1-4, Dis:1-6
+DEPTH:  Depths, Lair:1-2, Snake, Crypt:1-4, Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
@@ -674,7 +674,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: D, Lair, Snake, Elf, Crypt, Zot, Pan
+DEPTH: Depths, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_misc
@@ -715,7 +715,7 @@ ENDMAP
 # walls.
 #
 NAME: layout_caves
-DEPTH: D:9-22, Orc, Slime
+DEPTH: D:9-, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
 WEIGHT: 10
 ORIENT: encompass
@@ -763,7 +763,7 @@ ENDMAP
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
-DEPTH: D:5-
+DEPTH: D:5-, Depths
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_delve
@@ -783,7 +783,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 ##############################################################
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: D:2-, Lair, Snake, Elf
+DEPTH: D:2-, Depths, Lair, Snake, Elf
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
@@ -1544,7 +1544,7 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: D, Lair, Snake, Elf, Crypt, Zot
+DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
@@ -1556,7 +1556,7 @@ ENDMAP
 
 # XXX: Disabled until we can annoy the player less with water monsters.
 NAME: layout_bigger_room
-DEPTH: D:9-22, Lair:1-7
+DEPTH: D:9-, Lair:1-7
 WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_open
@@ -1567,7 +1567,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: D:4-, Lair:1-3, Snake, Crypt:1-4, Dis, Pan
+DEPTH: D:4-, Depths, Lair:1-3, Snake, Crypt:1-4, Dis, Pan
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_city

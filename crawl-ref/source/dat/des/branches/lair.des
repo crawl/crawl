@@ -1191,7 +1191,7 @@ ENDMAP
 # in D.
 NAME:   wad_woods_pond
 TAGS:   uniq_wad_woods_large
-DEPTH:  Lair, Forest, D:2-16
+DEPTH:  Lair, Forest, D:2-
 ORIENT: float
 WEIGHT: 1, 10 (Forest)
 KFEAT:  t  = mangrove
@@ -1239,7 +1239,7 @@ ENDMAP
 
 NAME:   wad_woods_settlement
 TAGS:   uniq_wad_woods_large
-DEPTH:  Lair, Forest, D:2-16
+DEPTH:  Lair, Forest, D:2-
 ORIENT: float
 WEIGHT: 1, 10 (Forest)
 KFEAT:  q  = tree
@@ -1282,7 +1282,7 @@ ENDMAP
 
 NAME:   wad_woods_tower
 TAGS:   uniq_wad_woods_med
-DEPTH:  Lair, Forest, D:2-16
+DEPTH:  Lair, Forest, D:2-
 ORIENT: float
 WEIGHT: 1, 10 (Forest)
 KFEAT:  q  = tree
@@ -1313,7 +1313,7 @@ ENDMAP
 
 NAME:   wad_woods_stonehenge
 TAGS:   uniq_wad_woods_med
-DEPTH:  Lair, Forest, D:2-16
+DEPTH:  Lair, Forest, D:2-
 ORIENT: float
 WEIGHT: 1, 10 (Forest)
 KFEAT:  q  = tree
@@ -1488,7 +1488,7 @@ xxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   wad_woods_river_01
-DEPTH:  Lair, Forest, D:2-16
+DEPTH:  Lair, Forest, D:2-
 ORIENT: float
 WEIGHT: 1, 10 (Forest)
 FTILE:  t+*q123C0%I. = floor_woodground
@@ -1567,7 +1567,7 @@ ENDMAP
 
 NAME:   wad_woods_river_04
 TAGS:   no_vmirror no_rotate mini_float extra
-DEPTH:  D, Lair, Forest
+DEPTH:  D, Depths, Lair, Forest
 WEIGHT: 1, 10 (Forest)
 FTILE:  t+*q1203C%I. = floor_woodground
 TILE:   X = wall_brick_dark_leak
@@ -1729,7 +1729,7 @@ ENDMAP
 
 NAME:   wad_woods_minihive
 TAGS:   no_monster_gen
-DEPTH:  Lair, Forest, D:8-16
+DEPTH:  Lair, Forest, D:8-
 ORIENT: float
 WEIGHT: 5, 10 (Forest)
 KFEAT:  O = mangrove
@@ -1765,7 +1765,7 @@ ENDMAP
 
 NAME:   wad_woods_structure_01
 TAGS:   no_monster_gen
-DEPTH:  Lair, Forest, D:10-20
+DEPTH:  Lair, Forest, D:10-
 ORIENT: float
 WEIGHT: 5, 10 (Forest)
 FTILE:  "2T = floor_grass

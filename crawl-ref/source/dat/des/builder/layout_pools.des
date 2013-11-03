@@ -131,7 +131,7 @@
 #  chance of lava pools instead of water pools (never mixed).
 #
 NAME:   layout_pools
-DEPTH:  D:9-
+DEPTH:  D:9-, Depths
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
@@ -179,7 +179,7 @@ ENDMAP
 #  by doors and sometimes just by holes in the wall.
 #
 NAME:   layout_honeycomb
-DEPTH:  D:12-, Snake:1-4, Tar
+DEPTH:  D:12-, Depths, Snake:1-4, Tar
 WEIGHT: 10, 80(Tar)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror

@@ -32,14 +32,15 @@ end
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particularly
 # easy or tough vaults. Also, exclude unthemely branches with !Lair etc.
-default-depth: D:12-26
+default-depth: D:12-, Depths, !Depths:$
 
 ##############################################################################
 # Elevator
 #
 NAME:    lemuel_elevator
 TAGS:    allow_dup extra luniq_staircase
-DEPTH:   D:2-26, Elf:2, Crypt:2-4, Zot:2-4, Tar:2-6, Dis:2-6, Geh:2-6, Coc:2-6
+DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$, \
+         Tar:2-, !Tar:$, Dis:2-, !Dis:$, Geh:2-, !Geh:$, Coc:2-, !Coc:$
 ORIENT:  float
 SUBST:   m:mn
 SHUFFLE: ]}), [{(
@@ -144,7 +145,7 @@ ENDMAP
 # Statue pair
 #
 NAME:    minmay_separated_statues
-DEPTH:   D:8-16
+DEPTH:   D:8-
 ORIENT:  float
 MONS:    silver statue, orange crystal statue, ice statue
 SHUFFLE: 123
@@ -187,7 +188,7 @@ ENDMAP
 # Stone golems
 #
 NAME:   minmay_stone_box
-DEPTH:  D:10-16
+DEPTH:  D:10-
 ORIENT: float
 KMONS:  " = stone golem
 KITEM:  " = any scroll / any potion
@@ -241,7 +242,7 @@ ENDMAP
 #
 NAME:    minmay_two_paths
 ORIENT:  float
-DEPTH:   D:12-26
+DEPTH:   D:12-, Depths, !Depths:$
 MAP
 cccccccccccccccc
 c.9.c......c.9.c
@@ -266,7 +267,7 @@ ENDMAP
 #
 NAME:   minmay_skeletal_surprise
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:18-26
+DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   skeletal warrior
 KMONS:  $ = skeletal warrior / skeleton / bone dragon w:1 / nothing w:40
@@ -289,7 +290,7 @@ ENDMAP
 
 NAME:   firewood_loft
 TAGS:   extra
-DEPTH:  D:1-26
+DEPTH:  D, !D:$, Depths, !Depths:$
 ORIENT: float
 : if you.absdepth() > 8 then
 KITEM:  " = club, quarterstaff, quarterstaff good_item
@@ -309,7 +310,7 @@ ENDMAP
 #
 NAME:    minmay_staircase_windowed_small
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 WEIGHT:  5
 SHUFFLE: )]}([{
@@ -331,7 +332,7 @@ ENDMAP
 
 NAME:    minmay_staircase_windowed_large
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 WEIGHT:  5
 SHUFFLE: )]}([{
@@ -356,7 +357,7 @@ ENDMAP
 
 NAME:    minmay_staircase_statues
 TAGS:    transparent extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 WEIGHT:  5
 SHUFFLE: )]}([{
@@ -368,7 +369,7 @@ ENDMAP
 
 NAME:    minmay_staircase_statues_hall_small
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 WEIGHT:  3
 SHUFFLE: )]}([{
@@ -389,7 +390,7 @@ ENDMAP
 
 NAME:    minmay_staircase_statues_hall_large
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: )]}([{, AB
@@ -419,7 +420,7 @@ ENDMAP
 
 NAME:    minmay_staircase_bubble
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT:  float
 SUBST:   m = mmmm.
 MAP
@@ -437,7 +438,7 @@ ENDMAP
 NAME:    infiniplex_staircase_squiggle
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SHUFFLE: }]){[(
 MAP
@@ -452,7 +453,7 @@ ENDMAP
 NAME:    infiniplex_staircase_zigzag_1
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D: 2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
 SHUFFLE: })]{([
@@ -471,7 +472,7 @@ ENDMAP
 NAME:    infiniplex_staircase_zigzag_2
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SHUFFLE: })]{([
 MAP
@@ -487,7 +488,7 @@ ENDMAP
 NAME:    infiniplex_staircase_zigzag_3
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SHUFFLE: })]{([
 MAP
@@ -504,7 +505,7 @@ ENDMAP
 NAME:    infiniplex_staircase_zigzag_4
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
 SHUFFLE: })]{([
@@ -525,7 +526,7 @@ ENDMAP
 NAME:    infiniplex_staircase_zigzag_5
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 NSUBST:  @ 1:@ / *:x
 SHUFFLE: })]{([
@@ -548,7 +549,7 @@ ENDMAP
 NAME:    infiniplex_staircase_spiral
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SHUFFLE: })]{([
 MAP
@@ -566,7 +567,7 @@ ENDMAP
 NAME:    infiniplex_staircase_spiral_double
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SHUFFLE: })]{([
 SUBST:   m : mxxxx
@@ -587,7 +588,7 @@ ENDMAP
 NAME:    infiniplex_staircase_x
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SUBST:   D : .x
 SHUFFLE: }]){[(
@@ -606,7 +607,7 @@ ENDMAP
 NAME:    infiniplex_staircase_split_hallway
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SHUFFLE: })]{([
 MAP
@@ -628,7 +629,7 @@ ENDMAP
 NAME:    infiniplex_staircase_trident
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 NSUBST:  } = 1:} / *:.
 SHUFFLE: })]{([
@@ -651,7 +652,7 @@ ENDMAP
 NAME:    infiniplex_staircase_hallway_doors
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase decor
-DEPTH:   D: 2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SHUFFLE: DEHJK
 SUBST:   D : +
@@ -678,7 +679,7 @@ ENDMAP
 NAME:    infiniplex_staircase_diamond
 ORIENT:  float
 TAGS:    extra luniq_staircase allow_dup decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
 NSUBST:  ! = 1:+ / *:!
@@ -699,7 +700,7 @@ ENDMAP
 NAME:    infiniplex_staircase_star
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SUBST:   D : .x
 SUBST:   x : x:40 c:5 m:4 b:1
@@ -723,7 +724,7 @@ ENDMAP
 NAME:    infiniplex_staircase_door_maze
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 NSUBST:  D = 1:+ / *:x
 NSUBST:  E = 1:+ / *:x
@@ -744,7 +745,7 @@ ENDMAP
 NAME:    infiniplex_staircase_9_rooms
 ORIENT:  float
 TAGS:    extra luniq_staircase no_monster_gen decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  2
 # Room contents
 NSUBST:  } = 1:} / *:0
@@ -776,7 +777,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pillars_1
 ORIENT:  float
 TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
 SHUFFLE: }p/)q/]r
@@ -800,7 +801,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pillars_2
 ORIENT:  float
 TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
 SHUFFLE: }p/)q/]r
@@ -830,7 +831,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pillars_3a
 ORIENT:  float
 TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 SUBST:   c : x:45 .:15 c:10 m:5
 SHUFFLE: }p/)q/]r
@@ -865,7 +866,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pillars_3b
 ORIENT:  float
 TAGS:    extra luniq_staircase uniq_infiniplex_staircase_pillars decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  2
 SUBST:   c : x:45 .:15 c:10 m:5
 SHUFFLE: }p/)q/]r
@@ -895,7 +896,7 @@ ENDMAP
 NAME:    infiniplex_staircase_river
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 NSUBST:  D = 1:W / *:w
 NSUBST:  E = 1:W / *:w
@@ -920,7 +921,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pool_1
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase no_pool_fixup no_monster_gen decor
-DEPTH:   D:2-26
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$
 WEIGHT:  3
 # Water
 SUBST:   D = WW.
@@ -948,7 +949,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pool_2
 ORIENT:  float
 TAGS:    transparent extra luniq_staircase no_monster_gen decor
-DEPTH:   D:2-26, Lair, Swamp
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$, Lair, Swamp
 WEIGHT:  3 (D), 10 (Swamp)
 # Water
 SUBST:   D = WW.
@@ -978,7 +979,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pool
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:2-20, Lair, Swamp
+DEPTH:   D, !D:$, Lair, Swamp
 WEIGHT:  2 (D), 20 (Swamp)
 SUBST:   D = ww.
 SUBST:   E = w..
@@ -1003,7 +1004,7 @@ ENDMAP
 NAME:    infiniplex_staircase_pool_lava
 ORIENT:  float
 TAGS:    extra luniq_staircase decor
-DEPTH:   D:21-26
+DEPTH:   Depths
 WEIGHT:  2
 SUBST:   D = ll.
 SUBST:   E = l..
@@ -1149,7 +1150,7 @@ ENDMAP
 # be escaped.
 #
 NAME:   lemuel_slime
-DEPTH:  D:6-16, Lair
+DEPTH:  D:6-, Lair
 ORIENT: float
 MONS:   w:20 ooze / jelly / fungus
 MONS:   slime creature / giant amoeba / oklob plant
@@ -1168,7 +1169,7 @@ ENDMAP
 #
 NAME:    lemuel_MiniTomb
 ORIENT:  float
-DEPTH:   D:15-26, Crypt
+DEPTH:   Depths, !Depths:$, Crypt
 MONS:    zombie / nothing
 MONS:    mummy, patrolling guardian mummy, patrolling greater mummy
 MONS:    zombie
@@ -1196,7 +1197,7 @@ ENDMAP
 # An old-fashioned vault, by Lemuel
 #
 NAME:  lemuel_traditional_vault
-DEPTH: D:12-
+DEPTH: D:12-, Depths
 ORIENT: float
 SUBST: 9 = 9 0 8:2
 SUBST: 0 = 0 .
@@ -1278,7 +1279,7 @@ ENDMAP
 # Troll bridge (Lemuel)
 #
 NAME:   lemuel_troll_bridge
-DEPTH:  D:9-18
+DEPTH:  D:9-, Depths
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
 KPROP:  1 = no_rtele_into
@@ -1311,7 +1312,7 @@ NAME:    lemuel_ice_statue
 MONS:    ice statue
 TAGS:    no_pool_fixup
 ORIENT:  float
-DEPTH:   D:7-20, Elf
+DEPTH:   D:7-, Elf, Depths
 SUBST:   * : *$
 SUBST:   * = |:5 * .
 SUBST:   T = TU
@@ -1341,7 +1342,7 @@ ENDMAP
 #
 NAME:   lemuel_bear_cage
 ORIENT: float
-DEPTH:  D:7-21
+DEPTH:  D:7-
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
@@ -1366,7 +1367,7 @@ ENDMAP
 #
 NAME:    lemuel_vampire_tower
 ORIENT:  float
-DEPTH:   D:12-26, Crypt
+DEPTH:   D:12-, Depths, !Depths:$, Crypt
 MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
@@ -1409,7 +1410,7 @@ ENDMAP
 # average of 2.3 oklobs, and at most 5 of them
 #
 NAME:    dpeg_oklob_gauntlet
-DEPTH:   D:18-26, Lair, Snake, Elf
+DEPTH:   Depths, !Depths:$, Lair, Snake, Elf
 MONS:    plant, oklob plant
 ORIENT:  float
 SHUFFLE: ]}) / def
@@ -1441,7 +1442,7 @@ ENDMAP
 # and the walls are always diggable then.
 #
 NAME:    dpeg_oklob_shooting_range
-DEPTH:   D:18-26, Lair:2-, Elf:2-
+DEPTH:   Depths, !Depths:$, Lair:2-, Elf:2-
 WEIGHT:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'
@@ -1477,7 +1478,7 @@ ENDMAP
 #
 NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   D:16-21, Lair:6-, Snake:1-4
+DEPTH:   Depths, !Depths:$, Lair:6-, Snake:1-4
 ORIENT:  float
 SHUFFLE: AB@
 SUBST:   x = .:30 W x:4
@@ -1560,7 +1561,7 @@ ENDMAP
 NAME:    gargoyle_guard
 ORIENT:  float
 TAGS:    patrolling no_monster_gen
-DEPTH:   D:10-18
+DEPTH:   D:10-, !D:$
 # you should be able to arrive both via stairs and via corridor
 SUBST:   { = {([)]}
 MONS:    gargoyle, metal gargoyle / gargoyle
@@ -1587,7 +1588,7 @@ ENDMAP
 #
 NAME:    lemuel_ogre_cave
 ORIENT:  float
-DEPTH:   D:9-15, Orc
+DEPTH:   D:9-, !D:$, Orc
 TAGS:    no_pool_fixup
 MONS:    ogre, two-headed ogre, ogre mage / Erolcha, plant / fungus
 MONS:    ogre zombie, two-headed ogre zombie
@@ -1628,7 +1629,7 @@ ENDMAP
 # of opening the doors so animals can go for a walk, that's intended.
 #
 NAME:   slaughterhouse
-DEPTH:  Lair:7-, D:11-18
+DEPTH:  Lair:7-, D:11-
 TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
@@ -1673,7 +1674,7 @@ NAME:    abrahamwl_protected_by_tso_1
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 ORIENT:  float
 WEIGHT:  4
-DEPTH:   D:23-
+DEPTH:   Depths
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 : init_protected_by_tso(_G)
 MAP
@@ -1706,7 +1707,7 @@ NAME:    abrahamwl_protected_by_tso_2
 ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 WEIGHT:  4
-DEPTH:   D:18-
+DEPTH:   Depths
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1751,7 +1752,7 @@ ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup
 TAGS:    uniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   D:18-
+DEPTH:   Depths
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1796,7 +1797,7 @@ ENDMAP
 # Eyes! by Minmay
 #
 NAME:   minmay_eyes
-DEPTH:  D:14-24
+DEPTH:  Depths
 ORIENT: float
 KFEAT:  m = iron_grate
 MONS:   eye of devastation / great orb of eyes w:2
@@ -1844,7 +1845,7 @@ ENDMAP
 # Elemental Laboratory (by Mu.)
 #
 NAME:   mu_elemental_laboratory
-DEPTH:  D:13-26, Elf:1-4
+DEPTH:  Depths, Elf, !Elf:$
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 MARKER: ! = lua:fog_machine { \
@@ -1934,7 +1935,7 @@ ENDMAP
 #
 NAME:    nrook_guardian_serpent_snake_passage
 ORIENT:  float
-DEPTH:   D:9-
+DEPTH:   D:9-, Depths, Snake
 TAGS:    no_monster_gen no_rotate
 MONS:    patrolling guardian serpent
 SHUFFLE: yY/zZ
@@ -2087,7 +2088,7 @@ ENDMAP
 #
 NAME:    lemuel_ice_spiral_2
 ORIENT:  float
-DEPTH:   D:5-
+DEPTH:   D:5-, Depths
 TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
 MONS:    nothing
 ITEM:    nothing, nothing
@@ -2114,7 +2115,7 @@ ENDMAP
 # Flame loot (Lemuel)
 #
 NAME:   lemuel_Flame_loot_2
-DEPTH:  D:9-
+DEPTH:  D:9-, Depths
 ORIENT: float
 ITEM:   nothing
 SUBST:  * = |**...
@@ -2151,7 +2152,7 @@ ENDMAP
 # Firewalk (Lemuel)
 #
 NAME:    lemuel_firewalk_3
-DEPTH:   D:16-, Abyss
+DEPTH:   Depths, Abyss
 TAGS:    uniq_firewalk ruin_abyss
 WEIGHT:  2
 ORIENT:  float
@@ -2197,15 +2198,13 @@ ENDMAP
 NAME:   mu_elephants_graveyard
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
-DEPTH:  D:13-26, Lair:1-7
+DEPTH:  Depths, Lair:1-7
 
   # next: we generate more dire elephants at greater depths
   # we also turn the shallow water into deep water at the lowest depths,
   # just in case elephants are ever allowed to drown the unwary
-: if you.absdepth() < 18 then
+: if you.branch == "Lair" then
 MONS:   elephant, fungus, plant
-: elseif you.absdepth() < 22 then
-MONS:   elephant / dire elephant, fungus, plant
 : else
 MONS:   w:1 elephant / dire elephant, fungus, plant
 SUBST: W : w
@@ -2257,7 +2256,7 @@ ENDMAP
 # outer ring contains 10 to 30 monsters, mean of 16.7
 #
 NAME:   evilmike_marble_ring
-DEPTH:  D:14-
+DEPTH:  Depths
 ORIENT: float
 COLOUR: b-+89*| = white
 FTILE:  b-+89*| = FLOOR_MARBLE
@@ -2300,7 +2299,7 @@ ENDMAP
 # evilmike's hourglass vault
 #
 NAME:   evilmike_hourglass
-DEPTH:  D:14-
+DEPTH:  Depths
 ORIENT: float
 NSUBST: . = 7:0 / 2:9 / 1:8 / *:.
 NSUBST: ' = 7:0 / 2:9 / 1:8 / *:.
@@ -2331,7 +2330,7 @@ ENDMAP
 # Inaccessible box (evilmike)
 #
 NAME:   evilmike_inaccessible_box
-DEPTH:  D:14-
+DEPTH:  Depths
 ORIENT: float
 SUBST:  x : xxxm
 NSUBST: 9 = 6:. / *:9
@@ -2366,7 +2365,7 @@ ENDMAP
 # Path along pillars (evilmike)
 #
 NAME:   evilmike_pillar_path
-DEPTH:  D:14-
+DEPTH:  Depths
 ORIENT: float
 SUBST:  c: cvxbwl.t
 MAP
@@ -2397,7 +2396,7 @@ ENDMAP
 # Boring beetle workplace (evilmike)
 #
 NAME:   evilmike_boring_beetle
-DEPTH:  D:14-
+DEPTH:  Depths
 ORIENT: float
 NSUBST: m = 4:| / 4:* / 9:0 / 4:9 / 2:8 / 10:. / 150:x / *:m
 SUBST:  n = m
@@ -2428,7 +2427,7 @@ ENDMAP
 # Cross vault (evilmike)
 #
 NAME:   evilmike_cross
-DEPTH:  D:14-
+DEPTH:  Depths
 ORIENT: float
 MAP
 ...................
@@ -2457,7 +2456,7 @@ ENDMAP
 # Has mostly lava and sometimes water, a bit sewer-like.
 #
 NAME:   evilmike_lava_path
-DEPTH:  D:14-
+DEPTH:  Depths
 ORIENT: float
 TAGS:   no_pool_fixup
 SUBST:  w: wlll
@@ -2554,7 +2553,7 @@ ENDMAP
 NAME:    hangedman_screamer
 ORIENT:  float
 TAGS:    no_monster_gen
-DEPTH:   D:9-, Crypt
+DEPTH:   D:9-, Depths, Crypt
 MONS:    patrolling flying skull
 MONS:    zombie / skeleton
 : if you.absdepth() > 19 then
@@ -2596,7 +2595,7 @@ ENDMAP
 
 NAME:    hangedman_arrow_trap
 ORIENT:  float
-DEPTH:   D:12-26
+DEPTH:   D:12-, !D:$, Depths, !Depths:$
 SHUFFLE: [( / ]) / [] / []
 MAP
 xxxxxxxxxxxxxxxxxx
@@ -2618,8 +2617,8 @@ NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen
 ORIENT: float
 MONS:   centaur, centaur warrior
-DEPTH:  D:6-20
-: if you.absdepth() < 13 then
+DEPTH:  D, Depths
+: if you.branch() == "Dungeon" then
 SUBST:  1 = ..1
 SUBST:  2 = 1
 : end
@@ -2645,7 +2644,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   wad_pebble_path
-DEPTH:  D:2-26
+DEPTH:  D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE: ' = floor_pebble
@@ -2673,7 +2672,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   wad_lake_hut
-DEPTH:  D:2-26
+DEPTH:  D:2-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE: ' = floor_pebble
@@ -2716,7 +2715,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   wad_guarded_room
-DEPTH:  D:6-26
+DEPTH:  D:6-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE: ' = floor_pebble
@@ -2759,7 +2758,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   wad_statue_garden
-DEPTH:  D:8-26
+DEPTH:  D:8-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE: ' = floor_pebble
@@ -2793,7 +2792,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   wad_bat_island
-DEPTH:  D:8-16
+DEPTH:  D:8-, !D:$
 ORIENT: float
 WEIGHT: 4
 FTILE: >.12t = floor_grass
@@ -2863,7 +2862,7 @@ ENDMAP
 
 NAME: wad_river_or_something
 ORIENT: float
-DEPTH:  D:2-16
+DEPTH:  D:2-, !D:$
 WEIGHT: 4
 MAP
 xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -2890,7 +2889,7 @@ ENDMAP
 ##############################################################################
 
 NAME: wad_crossroads
-DEPTH:  D:2-15
+DEPTH:  D:2-, !D:$
 ORIENT: float
 WEIGHT: 4
 FTILE: 'G = floor_pebble
@@ -2918,7 +2917,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   wad_arrow_thing
-DEPTH:  D:8-26
+DEPTH:  D:8-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE:  ' = floor_pebble
@@ -2951,7 +2950,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   wad_cavern_with_rooms
-DEPTH:  D:8-26
+DEPTH:  D:8-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE: ' = floor_pebble
@@ -2978,7 +2977,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   wad_courtyard
-DEPTH:  D:12-26
+DEPTH:  Depths, !Depths:$
 ORIENT: float
 WEIGHT: 4
 FTILE:  "+ = floor_pebble
@@ -3023,7 +3022,7 @@ ENDMAP
 NAME:    hangedman_surveillance_ring
 TAGS:    no_monster_gen no_item_gen transparent patrolling
 ORIENT:  float
-DEPTH:   D:16-25
+DEPTH:   Depths, !Depths:$
 WEIGHT:  3
 MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
 MONS:    generate_awake golden eye, slime creature, brown ooze
@@ -3061,7 +3060,7 @@ ENDMAP
 NAME:    hangedman_cross_stitches
 ORIENT:  float
 TAGS:    transparent no_monster_gen
-DEPTH:   D:5-, Elf, Snake
+DEPTH:   D:5-, !D:$, Depths, !Depths:$, Elf, Snake
 WEIGHT:  5 (Elf, Snake), 10
 KMONS:   " = 0
 KMONS:   ` = 9
@@ -3093,7 +3092,7 @@ ENDMAP
 NAME:    hangedman_cross_veins
 ORIENT:  float
 TAGS:    transparent no_monster_gen no_pool_fixup
-DEPTH:   D:8-, Elf, Snake, Abyss
+DEPTH:   D:8-, Depths, !Depths:$, Elf, Snake, Abyss
 WEIGHT:  5 (Elf, Snake), 10
 KMONS:   12 = 0
 KMONS:   34 = 9
@@ -3140,7 +3139,7 @@ ENDMAP
 
 NAME:   hangedman_cross_cluster
 TAGS:   patrolling transparent no_monster_gen
-DEPTH:  D:8-
+DEPTH:  D:8-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  C = CTUV, y : xc, z : ccvb, 1 = 0''
 KMASK:  ' = !no_monster_gen
@@ -3188,7 +3187,7 @@ ENDMAP
 
 NAME:    hangedman_stitches_corridor
 TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:14-
+DEPTH:   Depths, !Depths:$
 ORIENT:  float
 KFEAT:   ~ : needle trap / dart trap / . w:80
 KFEAT:   " : shallow_water / . w:90
@@ -3225,7 +3224,7 @@ ENDMAP
 NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
-DEPTH:   D:14-26
+DEPTH:   Depths, !Depths:$
 MONS:    spriggan rider ; wand of frost . crossbow ego:flame . bolt q:25 / \
          spriggan rider ; wand of flame . crossbow ego:frost . bolt q:25
 MONS:    two-headed ogre ; giant club ego:holy_wrath . \
@@ -3316,7 +3315,7 @@ ENDMAP
 
 NAME:   evilmike_silver_temple
 TAGS:   no_monster_gen
-DEPTH:  D:20-
+DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
 : if you.absdepth() > 24 then
@@ -3366,7 +3365,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   evilmike_horseshoe
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths, !Depths:$
 ORIENT: float
 MAP
    xxxxxxxxxxxxxxxxxxxxx
@@ -3403,7 +3402,7 @@ ENDMAP
 
 NAME:   grunt_deathspiral_large
 TAGS:   patrolling uniq_deathspiral
-DEPTH:  D:16-26
+DEPTH:  Depths, !Depths:$
 ORIENT: centre
 SHUFFLE: )]}>
 SUBST:  } = }>
@@ -3455,8 +3454,9 @@ ENDMAP
 
 NAME: grunt_deathspiral_small
 TAGS: patrolling uniq_deathspiral
-DEPTH: D:16-26, Crypt:1-4, Dis:1-6, Geh:1-6, Tar:1-6, Coc:1-6, \
-       Zot:1-4
+DEPTH: Depths, !Depths:$, Crypt, !Crypt:$, \
+       Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
+       Zot, !Zot:$
 ORIENT: centre
 SHUFFLE: )]}>
 SUBST:  } = }>
@@ -3525,7 +3525,7 @@ ENDMAP
 
 NAME:    hangedman_box_tower
 TAGS:    no_monster_gen no_item_gen no_pool_fixup transparent
-DEPTH:   D:16-26
+DEPTH:   Depths, !Depths:$
 ORIENT:  float
 KMONS:   1 = patrolling 0 w:40 / nothing
 KMONS:   4 = 9 w:40 / 0 band
@@ -3584,7 +3584,7 @@ ENDMAP
 ###############################################################################
 
 NAME:   minmay_spiral_squares
-DEPTH:  D:12-26
+DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 0., 9 = 9.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -3624,7 +3624,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@x
 ENDMAP
 
 NAME:   minmay_five_octagons
-DEPTH:  D:12-26
+DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
 KPROP:  8 = no_rtele_into
 SUBST:  8 = .:130 8 |, 0 = 0 .:240
@@ -3664,7 +3664,7 @@ xxxxxxx@xxxxxxxxxxxxxxxx@xxxxxxx
 ENDMAP
 
 NAME:   minmay_imperfect_grid
-DEPTH:  D:8-26
+DEPTH:  D:8-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 0., 9 = 9.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -3705,7 +3705,7 @@ ENDMAP
 
 NAME:  minmay_weird_star
 TAGS:  no_pool_fixup no_monster_gen
-DEPTH: D:12-20
+DEPTH:  D:8-, !D:$
 ORIENT: float
 MONS:  plant
 SUBST: x : x:9 c:1
@@ -3739,7 +3739,7 @@ xxxxxxxxxxx@..@xxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_quarter_circles
-DEPTH:  D:8-26
+DEPTH:  D:8-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 0., 9 = 99.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -3771,7 +3771,7 @@ xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_ornate_pinched
-DEPTH:  D:8-26
+DEPTH:  D:8-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 0., 9 = 99.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -3808,7 +3808,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_split_circle
-DEPTH:  D:16-26
+DEPTH:  Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 01., 9 = 91.
 SUBST:  c : cv b:1
@@ -3848,7 +3848,7 @@ ccccccccccccccc@ccccccccccccccc
 ENDMAP
 
 NAME:   minmay_quantized_circle
-DEPTH:  D:8-26
+DEPTH:  Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 0., 9 = 9., c : ccb, t : ttm, x : xxxxvb
 MAP
@@ -3886,7 +3886,7 @@ xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_four_partial_circles
-DEPTH:  D:8-18
+DEPTH:  D:8-, !D:$
 ORIENT: float
 WEIGHT: 7
 SUBST:  ? : . x:8 b:1 v:1, ! : . x:2, 0 = 00.
@@ -3919,7 +3919,7 @@ xx......xx    xx......xx
 ENDMAP
 
 NAME:   minmay_eight_partial_circles
-DEPTH:  D:12-26
+DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
 WEIGHT: 3
 SUBST:  ? : . x:5 G:2 b:1 c:1 T:1, 0 = 0., 9 = 99., 8 = 8.
@@ -3956,7 +3956,7 @@ xx.....xx xx.....xx xx.....xx
 ENDMAP
 
 NAME:   minmay_swirls_squares
-DEPTH:  D:12-26
+DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  9 = 999.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -3995,7 +3995,7 @@ MAP
 ENDMAP
 
 NAME:    minmay_big_diamond_grid
-DEPTH:   D:12-26
+DEPTH:   D:12-, !D:$, Depths, !Depths:$
 ORIENT:  float
 SHUFFLE: ABC
 SUBST:   A = ., B = ., C = x, 0 = 0., 9 = 9.
@@ -4028,7 +4028,7 @@ x@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@x
 ENDMAP
 
 NAME:   minmay_blocking_statues
-DEPTH:  D:12-26
+DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: float
 SUBST:  0 = 0., 9 = 99.
 MAP
@@ -4086,7 +4086,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_four_inscribed_fans
-DEPTH:  D:16-
+DEPTH:  Depths
 ORIENT: float
 SUBST:  x : x:7 c:1 v:1 b:1
 SUBST:  9 = 999.
@@ -4134,7 +4134,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_concentric_multi
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 NSUBST: A = 1:+ / *:+xx, B = 1:+ / *:+xx, C = 1:+ / *:+xx
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -4176,7 +4176,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_diamond_stairs
-DEPTH:  D:8-26
+DEPTH:  D:8-, !D:$, Depths:2-, !Depths:$
 ORIENT: float
 SUBST:  x : x:7 c:1 v:1 b:1
 SUBST:  F : .:40 GTUb
@@ -4202,7 +4202,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_octo_star
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  x : x:7 c:1 v:1 b:1
 SUBST:  9 = 999.
@@ -4241,7 +4241,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_central_circle
-DEPTH:  D:16-
+DEPTH:  Depths
 ORIENT: float
 SUBST:  x : x:8 c:1 v:1
 SUBST:  9 = 999., 8 = 888.
@@ -4282,7 +4282,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_strange_plus
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  9 = 999., 8 = 888.
 MAP
@@ -4318,7 +4318,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_cut_squares
-DEPTH:  D:8-
+DEPTH:  D:8-, Depths
 ORIENT: float
 SUBST:  9 = 9.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -4349,7 +4349,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_bad_star
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  9 = 9., 8 = 8.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -4419,7 +4419,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_tri_box
-DEPTH:  D:8-
+DEPTH:  D:8-, Depths
 ORIENT: float
 SUBST:  9 = 9.
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -4450,7 +4450,7 @@ xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   minmay_dotted_concentric_squares
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  9 = 9....
 SUBST:  x : x:7 c:1 v:1 b:1
@@ -4486,7 +4486,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_textured_paths
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  8 = 888., 9 = 9.
 SUBST:  ? = .:70 GTUVm<>
@@ -4522,7 +4522,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_distorted_concentric_squares
-DEPTH:  D:8-
+DEPTH:  D:8-, Depths
 ORIENT: float
 SUBST:  9 = 9., 0 = 0.
 SUBST:  x : x:27 c:1 v:1 b:1
@@ -4549,7 +4549,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_containers
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  C : B C:5
 SUBST:  B : A B:5
@@ -4585,7 +4585,7 @@ xxxxxxxxxxxxxxxxxxxxxxx@
 ENDMAP
 
 NAME:   minmay_curly_fans
-DEPTH:  D:8-
+DEPTH:  D:8-, Depths
 ORIENT: float
 SUBST:  x : x:7 c:1 v:1 b:1
 SUBST:  9 = 9.
@@ -4612,7 +4612,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_crescents
-DEPTH:  D:12-
+DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  x : x:7 c:1 v:1 b:1
 SUBST:  G = .GTU
@@ -4646,7 +4646,7 @@ xxxx*99..xxx@xxx..99*xxxx
 ENDMAP
 
 NAME:    minmay_nine_rooms
-DEPTH:   D:16-
+DEPTH:   Depths
 ORIENT:  float
 SHUFFLE: ABCDE
 SUBST:   A : c:7 x:1 b:1 v:1
@@ -4690,7 +4690,7 @@ ENDMAP
 
 NAME:    hangedman_six_sided_sadism
 TAGS:    patrolling no_monster_gen no_item_gen
-DEPTH:   D:15-
+DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
          deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
@@ -4758,7 +4758,7 @@ ENDMAP
 NAME:    hangedman_arch_fort
 TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
 ORIENT:  float
-DEPTH:   D:19-26
+DEPTH:   Depths, !Depths:$
 SUBST:   Y : y:8 b:2, y : c:9 b:1, z : Z:16 x:1 b:2 ":1, Z : x:9 b:1
 SUBST:   X = .:19 x:1, G : G:12 c:1 b:1 v:1, w : w:3 l:1 .:1
 SUBST:   + : +:24 W:1, " : .:24 W:1, 9 = 990, % = %%.
@@ -4791,7 +4791,7 @@ ENDMAP
 NAME:    hangedman_decor_cross_pass
 TAGS:    transparent extra decor no_pool_fixup
 ORIENT:  float
-DEPTH:   D:8-, Elf
+DEPTH:   D:8-, Depths, Elf
 SHUFFLE: _- / _- / -_, '" / '" / "', !? / !? / !?
 SHUFFLE: HIJK / HIJK / IHKJ, LMNO / LMNO / MLON, PQRS / PQRS / QPSR
 SUBST:   HJLNPR = ., I : z:6 .:1, K : z., M : z:6 .:1, O : z., Q : z:6 .:1, S : z.
@@ -4833,7 +4833,7 @@ ENDMAP
 NAME:    hangedman_hanging_gardens
 TAGS:    no_monster_gen no_pool_fixup allow_dup
 ORIENT:  float
-DEPTH:   D:19-
+DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hound
 MONS:    death yak / griffon / catoblepas / dire elephant
@@ -4886,7 +4886,7 @@ ENDMAP
 
 NAME: lightli_eight_chambers
 ORIENT: float
-DEPTH: D:20-
+DEPTH: Depths
 TAGS: no_monster_gen
 SHUFFLE: PFIEMONLSAKRVCTHD
 KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
@@ -4946,7 +4946,7 @@ ENDMAP
 
 NAME:   minmay_rotating_shell
 ORIENT: float
-DEPTH:  D:16-
+DEPTH:  Depths
 WEIGHT: 3
 # 27 / 3 items!
 KITEM:  d = |,|,|,|,|,|,|,|,|
@@ -5049,8 +5049,8 @@ ENDMAP
 # (Arguably doesn't work as well in Zot / entering Zot, but moths of wrath...)
 NAME:   grunt_twist_and_shout
 ORIENT: centre
-DEPTH:  D:16-, Zot, !Zot:$
-PLACE:  D:$
+DEPTH:  Depths, Zot, !Zot:$
+PLACE:  Depths:$
 {{
   if you.branch() == "Zot" then
      kmons("1 = draconian annihilator band")
@@ -5110,22 +5110,9 @@ ENDMAP
 
 NAME:   grunt_double_whammy
 ORIENT: float
-DEPTH:  D:17-26
-{{
-  local ettin_weight = you.absdepth() - 16
-  local ogre_weight  = 5 - ettin_weight
-  if ogre_weight <= 0 then
-    local elf_weight = you.absdepth() - 21
-    ettin_weight = 6 - elf_weight
-    mons("ettin / nothing")
-    mons("ettin w:" .. ettin_weight ..
-         "/ deep elf blademaster w:" .. elf_weight)
-  else
-    mons("two-headed ogre w:" .. ogre_weight ..
-         " / ettin w:" .. ettin_weight .. " / nothing w:5")
-    mons("ettin")
-  end
-}}
+DEPTH:  Depths, !Depths:$
+MONS:   ettin / two-headed ogre
+MONS:   deep elf blademaster / ettin
 MAP
    cccccccc     cccccccc
   cc|*2...ccccccc......cc
@@ -5148,7 +5135,7 @@ NAME: lightli_tower_of_babel
 ORIENT: float
 # Random interlopers look badly out of place here.
 TAGS: no_monster_gen no_item_gen
-DEPTH: Dis:1-6, D:24-26
+DEPTH: Dis, !D:$, Depths, !Depths:$
 : if you.branch() == "D" then
 # A more worthy adversary badly wanted.
 # What about an obvious up-HD rename of hell knight? *duck*
@@ -5192,8 +5179,8 @@ MAP
 ENDMAP
 
 NAME:   grunt_crosshair
-DEPTH:  D:16-
-PLACE:  D:$
+DEPTH:  Depths
+PLACE:  Depths:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
@@ -5231,8 +5218,8 @@ xxx0xc|8|cx0xxx
 ENDMAP
 
 NAME:   grunt_x_marks_the_spot
-DEPTH:  D:16-
-PLACE:  D:$
+DEPTH:  Depths
+PLACE:  Depths:$
 ORIENT: centre
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS:  8 = golden dragon / shadow dragon / storm dragon / bone dragon \
@@ -5284,10 +5271,13 @@ ENDMAP
 NAME:    grunt_bruiser_brothers
 ORIENT:  centre
 TAGS:    transparent no_monster_gen no_item_gen
-DEPTH:   D:24-26, Geh, !Geh:$
+DEPTH:   Depths, Geh, !Geh:$
+PLACE:   Depths:$
 # Spell set is Hell Knight II; it has the more powerful ranged spell.
 MONS:    hell knight spells:pain;bolt_of_fire;.;.;.;blink
-: if you.branch() == "D" then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+MONS:    base draconian
+: elseif you.branch() == "Depths" then
 MONS:    deep troll
 : else
 # hell beast perm_ench:invis is too gimmicky.
@@ -5298,6 +5288,11 @@ ITEM:    crossbow, bolt, potion of curing, potion of heal wounds
 ITEM:    potion of invisibility
 KFEAT:   - = open_door
 SHUFFLE: })]>
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KFEAT: } = enter_zot
+KMONS: )]> = nonbase draconian w:30 / \
+             shadow dragon / golden dragon / storm dragon
+: end
 MARKER:  O = lua:fog_machine { cloud_type = 'flame', pow_min=10, pow_max=10, \
                                delay=10, size=1, excl_rad=0 }
 MAP

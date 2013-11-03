@@ -39,7 +39,7 @@ function castle_lemuel_subvault_setup(e)
             e.mons("jackal")
             e.mons("gnoll")
             e.mons("jackal")
-         elseif you.absdepth() < 16 then
+         elseif you.branch() == "D" then
             e.subst("*:*$")
             e.subst("|:*$")
             e.mons("orc");
@@ -48,7 +48,7 @@ function castle_lemuel_subvault_setup(e)
             e.mons("warg")
             e.mons("orc")
             e.mons("warg")
-         elseif you.absdepth() < 25 then
+         elseif you.branch() == "Depths" and you.depth() <= 4 then
             e.subst("*:*$")
             e.subst("|=|.")
             e.mons("deep elf fighter / deep elf mage w:4")
@@ -170,8 +170,8 @@ ENDMAP
 ############################################################################
 NAME:     lemuel_castle_with_subvaults
 TAGS:     layout_city
-DEPTH:    D:3-
-PLACE:    D:$
+DEPTH:    D:3-, Depths
+PLACE:    Depths:$
 ORIENT:   northwest
 : castle_lemuel_subvault_setup(_G)
 SUBVAULT: A : lemuel_castle_interior
