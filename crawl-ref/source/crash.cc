@@ -143,7 +143,7 @@ void crash_signal_handler(int sig_num)
     // internally.
     // There's no reliable way to ensure such things won't happen.  A pragmatic
     // solution is to abort the crash dump.
-    alarm(5);
+    alarm(120);
 
     // In case the crash dumper is unable to open a file and has to dump
     // to stderr.
