@@ -140,7 +140,7 @@ const Branch branches[NUM_BRANCHES] =
       "Hell", "the Vestibule of Hell", "Hell",
       NULL,
       true, LIGHTGREY, LIGHTRED,
-      'U', false, 0 },
+      'H', false, 0 },
 
     { BRANCH_DIS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       BFLAG_ISLANDED | BFLAG_NO_ITEMS, 0,
