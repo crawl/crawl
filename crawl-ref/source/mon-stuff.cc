@@ -881,6 +881,15 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
     return false;
 }
 
+static bool _lost_soul_nearby(const coord_def pos)
+{
+    for (monster_near_iterator mi(pos, LOS_NO_TRANS); mi; ++mi)
+        if (mi->type == MONS_LOST_SOUL)
+            return true;
+
+    return false;
+}
+
 static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 {
     if (mons->max_hit_points <= 0 || mons->hit_dice < 1)
@@ -889,10 +898,10 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
     // Before the hp check since this should not care about the power of the
     // finishing blow
     if (mons->holiness() == MH_UNDEAD && !mons_is_zombified(mons)
-        && soul_aura(mons->pos())
         && killer != KILL_RESET
         && killer != KILL_DISMISSED
-        && killer != KILL_BANISHED)
+        && killer != KILL_BANISHED
+        && _lost_soul_nearby(mons->pos()))
     {
         if (lost_soul_revive(mons))
             return true;
@@ -2631,10 +2640,11 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Done before items are dropped so that we can clone them
-    if (soul_aura(mons->pos()) && mons->holiness() == MH_NATURAL
+    if (mons->holiness() == MH_NATURAL
         && killer != KILL_RESET
         && killer != KILL_DISMISSED
-        && killer != KILL_BANISHED)
+        && killer != KILL_BANISHED
+        && _lost_soul_nearby(mons->pos()))
     {
         lost_soul_spectralize(mons);
     }
