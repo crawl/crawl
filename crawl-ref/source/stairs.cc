@@ -35,7 +35,6 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
-#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "stash.h"
 #include "state.h"

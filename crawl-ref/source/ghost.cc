@@ -23,7 +23,6 @@
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "player.h"
-#include "religion.h"
 
 #include <vector>
 

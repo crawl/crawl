@@ -32,7 +32,6 @@
 #include "player.h"
 #include "religion.h"
 #include "skills.h"
-#include "spl-book.h"
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"

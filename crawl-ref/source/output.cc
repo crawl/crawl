@@ -52,7 +52,6 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "showsymb.h"
-#include "spl-transloc.h"
 
 #ifndef USE_TILE_LOCAL
 #include "directn.h"

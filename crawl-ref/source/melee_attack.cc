@@ -39,7 +39,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-abil.h"
-#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-clone.h"

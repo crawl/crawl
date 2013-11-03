@@ -4,7 +4,6 @@
 
 #include <cmath>
 
-#include "areas.h"
 #include "artefact.h"
 #include "coordit.h"
 #include "database.h"
@@ -25,11 +24,10 @@
 #include "misc.h"
 #include "monster.h"
 #include "notes.h"
-#include "options.h"
 #include "random.h"
 #include "religion.h"
+#include "shopping.h"
 #include "skills2.h"
-#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"

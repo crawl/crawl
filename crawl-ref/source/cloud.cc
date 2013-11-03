@@ -20,7 +20,6 @@
 #include "env.h"
 #include "fprop.h"
 #include "godconduct.h"
-#include "los.h"
 #include "losglobal.h"
 #include "mapmark.h"
 #include "melee_attack.h"

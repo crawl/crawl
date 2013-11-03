@@ -6,8 +6,8 @@
 #include "AppHdr.h"
 
 #include <queue>
+#include <sstream>
 
-#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -17,7 +17,6 @@
 #include "database.h"
 #include "delay.h"
 #include "dactions.h"
-#include "describe.h"
 #include "effects.h"
 #include "env.h"
 #include "files.h"

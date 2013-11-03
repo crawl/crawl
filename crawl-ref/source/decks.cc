@@ -8,6 +8,7 @@
 #include "decks.h"
 
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 
 #include "externs.h"
@@ -18,7 +19,6 @@
 #include "coordit.h"
 #include "database.h"
 #include "dactions.h"
-#include "describe.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"

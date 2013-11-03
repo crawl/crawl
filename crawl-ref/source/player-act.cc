@@ -18,7 +18,6 @@
 #include "food.h"
 #include "goditem.h"
 #include "hints.h"
-#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"

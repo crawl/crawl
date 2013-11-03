@@ -6,7 +6,6 @@
 #include "areas.h"
 #include "artefact.h"
 #include "delay.h"
-#include "describe.h"
 #include "food.h"
 #include "goditem.h"
 #include "godpassive.h"

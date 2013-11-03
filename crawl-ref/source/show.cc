@@ -25,7 +25,6 @@
 #include "monster.h"
 #include "options.h"
 #include "random.h"
-#include "showsymb.h"
 #include "state.h"
 #include "areas.h"
 #include "terrain.h"

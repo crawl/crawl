@@ -5,17 +5,17 @@
 
 #include "AppHdr.h"
 
+#include <sstream>
+
 #include "act-iter.h"
 #include "actor.h"
 #include "areas.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
-#include "describe.h"
 #include "dgn-shoals.h"
 #include "env.h"
 #include "fight.h"
-#include "fprop.h"
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"

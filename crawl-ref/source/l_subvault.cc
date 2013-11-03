@@ -6,9 +6,9 @@
 #include "AppHdr.h"
 
 #include "cluautil.h"
+#include "libutil.h"
 #include "l_libs.h"
 #include "mapdef.h"
-#include "mon-ench.h"
 
 static int dgn_is_subvault(lua_State *ls)
 {

@@ -7,11 +7,9 @@
 
 #include "menu.h"
 #include "macro.h"
-#include "options.h"
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "cio.h"
-#include "process_desc.h"
 
 PopupRegion::PopupRegion(ImageManager *im, FontWrapper *entry) :
     MenuRegion(im, entry),

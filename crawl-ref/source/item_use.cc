@@ -59,6 +59,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
+#include "terrain.h"
 #include "throw.h"
 #include "transform.h"
 #include "uncancel.h"

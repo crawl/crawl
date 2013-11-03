@@ -5,7 +5,6 @@
 #include "colour.h"
 #include "format.h"
 #include "libutil.h"
-#include "showsymb.h"
 #include "lang-fake.h"
 #include "unicode.h"
 #include "viewchar.h"

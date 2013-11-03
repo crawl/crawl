@@ -29,7 +29,6 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "tilepick.h"
 #include "tutorial.h"
 
 #define MIN_START_STAT       3
