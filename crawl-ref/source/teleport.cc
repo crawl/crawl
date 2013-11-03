@@ -123,8 +123,7 @@ typedef pair<coord_def, int> coord_weight;
 // because of a memory problem described below. (isn't this fixed now? -rob)
 static coord_def random_space_weighted(actor* moved, actor* target,
                                        bool close, bool keep_los = true,
-                                       bool allow_sanct = true,
-                                       bool path_solid = false)
+                                       bool allow_sanct = true)
 {
     vector<coord_weight> dests;
     const coord_def tpos = target->pos();
@@ -133,8 +132,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     {
         if (!moved->is_habitable(*ri) || actor_at(*ri)
             || keep_los && !target->see_cell_no_trans(*ri)
-            || !allow_sanct && is_sanctuary(*ri)
-            || path_solid && !cell_see_cell(moved->pos(), *ri, LOS_SOLID))
+            || !allow_sanct && is_sanctuary(*ri))
         {
             continue;
         }
@@ -177,8 +175,7 @@ bool blink_away(monster* mon, actor* caster, bool from_seen, bool self_cast)
     if (from_seen && !mon->can_see(caster))
         return false;
     bool jumpy = self_cast && mon->is_jumpy();
-    coord_def dest = random_space_weighted(mon, caster, false, false, true,
-                                           jumpy);
+    coord_def dest = random_space_weighted(mon, caster, false, false, true);
     if (dest.origin())
         return false;
     bool success = mon->blink_to(dest, false, jumpy);
@@ -217,8 +214,7 @@ void blink_close(monster* mon)
     actor* foe = mon->get_foe();
     if (!foe || !mon->can_see(foe))
         return;
-    coord_def dest = random_space_weighted(mon, foe, true, true, true,
-                                           mon->is_jumpy());
+    coord_def dest = random_space_weighted(mon, foe, true, true, true);
     if (dest.origin())
         return;
     bool success = mon->blink_to(dest, false);
