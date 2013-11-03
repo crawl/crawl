@@ -1332,7 +1332,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     return true;
 }
 
-static bool _moth_incite_monsters(monster* mon)
+static bool _moth_incite_monsters(const monster* mon)
 {
     if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
         return false;
