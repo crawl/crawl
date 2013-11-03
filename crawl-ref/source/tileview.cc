@@ -83,7 +83,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
     {
     case BRANCH_MAIN_DUNGEON:
         flv.wall  = TILE_WALL_NORMAL;
-        flv.floor = TILE_FLOOR_NORMAL;
+        flv.floor = (you.depth <= 14) ? TILE_FLOOR_NORMAL : TILE_FLOOR_GREY_DIRT_B;
         return;
 
     case BRANCH_VAULTS:
@@ -319,6 +319,8 @@ void tile_init_flavour()
         tile_init_flavour(*ri);
 }
 
+// 11111333333   55555555
+//   222222444444   6666666666
 static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
     if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
@@ -326,27 +328,30 @@ static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
         t.push_back(TILE_WALL_CATACOMBS);
         return;
     }
-    if (depth <= 6)
+    if (depth <= 5)
         t.push_back(TILE_WALL_BRICK_DARK_1);
-    if (depth > 3 && depth <= 9)
+    if (depth > 2 && depth <= 8)
     {
         t.push_back(TILE_WALL_BRICK_DARK_2);
         t.push_back(TILE_WALL_BRICK_DARK_2_TORCH);
     }
-    if (depth > 6 && depth <= 14)
+    if (depth > 5 && depth <= 11)
         t.push_back(TILE_WALL_BRICK_DARK_3);
-    if (depth > 9 && depth <= 20)
+    if (depth > 8 && depth <= 14)
     {
         t.push_back(TILE_WALL_BRICK_DARK_4);
         t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
     }
+    if (depth == 14)
+        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);  // torches are more common on D:14...
     if (depth > 14)
-        t.push_back(TILE_WALL_BRICK_DARK_5);
-    if (depth > 20)
-    {
-        t.push_back(TILE_WALL_BRICK_DARK_6);
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);
-    }
+    if (depth > 14 && depth <= 22)
+        t.push_back(TILE_WALL_BRICK_DARK_5);
+    if (depth > 18)
+        t.push_back(TILE_WALL_BRICK_DARK_6);
+    if (depth == 27)
+        t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on D:27
 }
 
 static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
