@@ -1811,7 +1811,7 @@ static bool _flay_creature(monster* mon, actor* victim)
     CrawlVector &new_blood = victim->props["flay_blood"].get_vector();
 
     // Find current blood splatters
-    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    for (radius_iterator ri(victim->pos(), LOS_SOLID); ri; ++ri)
     {
         if (env.pgrid(*ri) & FPROP_BLOODY)
             old_blood.push_back(*ri);
@@ -1821,7 +1821,7 @@ static bool _flay_creature(monster* mon, actor* victim)
 
     // Compute and store new blood splatters
     unsigned int i = 0;
-    for (radius_iterator ri(victim->get_los()); ri; ++ri)
+    for (radius_iterator ri(victim->pos(), LOS_SOLID); ri; ++ri)
     {
         if (env.pgrid(*ri) & FPROP_BLOODY)
         {

@@ -1763,7 +1763,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
          !force_hostile ? "is now yours" : "fights you");
 }
 
-bool kiku_receive_corpses(int pow, coord_def where)
+bool kiku_receive_corpses(int pow)
 {
     // pow = necromancy * 4, ranges from 0 to 108
     dprf("kiku_receive_corpses() power: %d", pow);
@@ -1776,8 +1776,8 @@ bool kiku_receive_corpses(int pow, coord_def where)
     // We should get the same number of corpses
     // in a hallway as in an open room.
     int spaces_for_corpses = 0;
-    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            you.get_los(), true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_ROUND,
+                            LOS_NO_TRANS, true); ri; ++ri)
     {
         if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
             spaces_for_corpses++;
@@ -1791,14 +1791,14 @@ bool kiku_receive_corpses(int pow, coord_def where)
 
     int corpses_created = 0;
 
-    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_ROUND,
+                            LOS_NO_TRANS); ri; ++ri)
     {
         bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
-        bool square_is_player_square = (*ri == where);
+        bool square_is_player_square = (*ri == you.pos());
         bool square_gets_corpse =
-            (random2(100) < percent_chance_a_square_receives_extra_corpse)
-            || (square_is_player_square && random2(100) < 97);
+            random2(100) < percent_chance_a_square_receives_extra_corpse
+            || square_is_player_square && random2(100) < 97;
 
         if (!square_is_walkable || !square_gets_corpse)
             continue;
@@ -2895,7 +2895,7 @@ bool fedhas_evolve_flora()
     // This is a little sloppy, but cancel early if nothing useful is in
     // range.
     bool in_range = false;
-    for (radius_iterator rad(you.get_los(), true); rad; ++rad)
+    for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad; ++rad)
     {
         const monster* temp = monster_at(*rad);
         if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,

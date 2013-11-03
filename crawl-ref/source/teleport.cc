@@ -128,7 +128,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     vector<coord_weight> dests;
     const coord_def tpos = target->pos();
 
-    for (radius_iterator ri(moved->get_los_no_trans()); ri; ++ri)
+    for (radius_iterator ri(moved->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (!moved->is_habitable(*ri) || actor_at(*ri)
             || keep_los && !target->see_cell_no_trans(*ri)

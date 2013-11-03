@@ -1667,10 +1667,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     int number_seen   = 0;
     int motions       = 0;
 
-    radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
-                       caster->get_los_no_trans());
-
-    for (; ri; ++ri)
+    for (radius_iterator ri(caster->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         // There may be many corpses on the same spot.
         while (animate_remains(*ri, CORPSE_BODY, beha, hitting, as, nas, god,
@@ -2088,10 +2085,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     int seen_lost = 0;
     int seen_lost_piles = 0;
 
-    radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
-                       caster->get_los_no_trans());
-
-    for (; ri; ++ri)
+    for (radius_iterator ri(caster->pos(), LOS_NO_TRANS); ri; ++ri)
     {
         int num_corpses = 0;
         int total_mass = 0;

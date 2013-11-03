@@ -2298,7 +2298,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
-        kiku_receive_corpses(you.skill(SK_NECROMANCY, 4), you.pos());
+        kiku_receive_corpses(you.skill(SK_NECROMANCY, 4));
         break;
 
     case ABIL_KIKU_TORMENT:

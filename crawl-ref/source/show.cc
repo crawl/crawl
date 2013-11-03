@@ -497,7 +497,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 void show_init(bool terrain_only)
 {
     clear_terrain_visibility();
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
         show_update_at(*ri, terrain_only);
 }
 
