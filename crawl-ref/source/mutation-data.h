@@ -829,8 +829,8 @@
   "tentacle spike"
 },
 
-// Naga only; getting it is special-cased.
-{ MUT_BREATHE_POISON,                 0,  1, false, false,  false,
+// Naga only
+{ MUT_BREATHE_POISON,                 4,  1, false, false,  false,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},
