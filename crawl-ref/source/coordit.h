@@ -88,6 +88,11 @@ public:
     radius_iterator(const los_base* los,
                     bool exclude_center = false);
 
+    radius_iterator(const coord_def center, int param, circle_type ctype,
+                    los_type los, bool exclude_center = false);
+    radius_iterator(const coord_def center, los_type los,
+                    bool exclude_center = false);
+
     operator bool() const PURE;
     coord_def operator *() const PURE;
     const coord_def *operator->() const PURE;
@@ -103,6 +108,7 @@ private:
     circle_iterator iter;
     bool exclude_center;
     const los_base* los;  // restrict to the los if not NULL
+    unique_ptr<los_base> used_los;
     coord_def current;    // storage for operator->
 };
 

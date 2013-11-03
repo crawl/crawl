@@ -212,6 +212,32 @@ radius_iterator::radius_iterator(const los_base* los_,
     advance(true);
 }
 
+radius_iterator::radius_iterator(const coord_def _center,
+                                 los_type _los,
+                                 bool _exclude_center)
+    : circle(_center, you.current_vision, C_ROUND),
+      iter(circle.iter()),
+      exclude_center(_exclude_center)
+{
+    used_los.reset(new los_glob(_center, _los));
+    los = used_los.get();
+    advance(true);
+}
+
+radius_iterator::radius_iterator(const coord_def _center,
+                                 int param,
+                                 circle_type ctype,
+                                 los_type _los,
+                                 bool _exclude_center)
+    : circle(_center, param, ctype),
+      iter(circle.iter()),
+      exclude_center(_exclude_center)
+{
+    used_los.reset(new los_glob(_center, _los));
+    los = used_los.get();
+    advance(true);
+}
+
 void radius_iterator::advance(bool may_stay)
 {
     if (!may_stay)
