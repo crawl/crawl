@@ -1079,12 +1079,10 @@ int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
 void set_random_slime_target(monster* mon)
 {
     // Strictly neutral slimes will go for the nearest item.
-    const coord_def pos = mon->pos();
-    int mindist = LOS_RADIUS_SQ + 1;
-    for (radius_iterator ri(mon->get_los()); ri; ++ri)
+    for (distance_iterator ri(mon->pos(), true, false, you.current_vision);
+                              ri; ++ri)
     {
-        // XXX: an iterator that spirals out would be nice.
-        if (!in_bounds(*ri) || distance2(pos, *ri) >= mindist)
+        if (!in_bounds(*ri) || !mon->see_cell(*ri))
             continue;
         if (testbits(env.pgrid(*ri), FPROP_NO_JIYVA))
             continue;
@@ -1095,12 +1093,11 @@ void set_random_slime_target(monster* mon)
             if (is_item_jelly_edible(item))
             {
                 mon->target = *ri;
-                mindist = distance2(pos, *ri);
-                break;
+                goto end;
             }
         }
     }
-
+end:
     if (mon->target == mon->pos() || mon->target == you.pos())
         set_random_target(mon);
 }
