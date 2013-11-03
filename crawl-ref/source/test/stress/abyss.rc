@@ -68,16 +68,6 @@ function ready()
                    "debug.disable('death')" .. eol ..
                    "debug.disable('hunger')" .. eol ..
                    "debug.disable('afflictions')" .. eol .. esc)
-    crawl.call_dlua("dgn.set_random_mon_list('place:Abyss:$ /" ..
-                       "place:D:13 / place:D:20 / place:D:27 /" ..
-                       "place:Orc:$ / place:Elf:$ / place:Lair:$ /" ..
-                       "place:Swamp:$ / place:Shoals:$ / place:Snake:$ /" ..
-                       "place:Spider:$ / place:Slime:$ / place:Vaults:$ /" ..
-                       "place:Blade:$ w:1 / place:Crypt w:50 /" ..
-                       "place:Forest:$ w:100 / place:Tomb:$ w:3 /" ..
-                       "place:Hell w:5 / place:Coc:$ w:5 / place:Tar:$ w:5 /" ..
-                       "place:Dis:$ w:5 / place:Geh:$ w:5 / place:Zot w:20 /" ..
-                       "place:Pan')")
   end
   if you.turns() ~= last_turn then
     command = 1
