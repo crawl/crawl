@@ -1304,6 +1304,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
         return true;
     }
 
+    // Naga poison spit can be upgraded to breathe poison instead.
+    if (you.species == SP_NAGA && mutat == MUT_SPIT_POISON)
+        return true;
+
     // Only Nagas can get this upgrade.
     if (you.species != SP_NAGA && mutat == MUT_BREATHE_POISON)
         return true;
@@ -1563,23 +1567,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     if (mutat == MUT_TELEPORT && crawl_state.game_is_sprint())
         return false;
 
-    if (you.species == SP_NAGA)
-    {
-        // gdl: Spit poison 'upgrades' to breathe poison.  Why not...
-        if (mutat == MUT_SPIT_POISON)
-        {
-            if (coinflip())
-                return false;
-
-            mutat = MUT_BREATHE_POISON;
-
-            // Breathe poison replaces spit poison (so it takes the slot).
-            for (int i = 0; i < 52; ++i)
-                if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
-                    you.ability_letter_table[i] = ABIL_BREATHE_POISON;
-        }
-    }
-
     if (physiology_mutation_conflict(mutat))
         return false;
 
@@ -1638,6 +1625,18 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             mpr(replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
                             arms).c_str(), MSGCH_MUTATION);
             gain_msg = false;
+        }
+        break;
+
+    case MUT_BREATHE_POISON:
+        if (you.species == SP_NAGA)
+        {
+            // Breathe poison replaces spit poison (so it takes the slot).
+            for (int i = 0; i < 52; ++i)
+            {
+                if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
+                    you.ability_letter_table[i] = ABIL_BREATHE_POISON;
+            }
         }
         break;
 
@@ -1786,7 +1785,6 @@ static bool _delete_single_mutation_level(mutation_type mutat,
         break;
 
     case MUT_BREATHE_POISON:
-        // can't be removed yet, but still covered:
         if (you.species == SP_NAGA)
         {
             // natural ability to spit poison retakes the slot
