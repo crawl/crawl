@@ -21,6 +21,18 @@ grey_dirt6
 %weight 1
 grey_dirt7
 
+%weight 6
+grey_dirt_b_0 FLOOR_GREY_DIRT_B
+grey_dirt_b_1
+grey_dirt_b_2
+grey_dirt_b_3
+grey_dirt_b_4
+grey_dirt_b_5
+%weight 3
+grey_dirt_b_6
+%weight 1
+grey_dirt_b_7
+
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
