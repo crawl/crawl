@@ -3780,62 +3780,55 @@ bool choose_any_monster(const monster* mon)
 // If prefer_priest is true, priestly monsters (including uniques) are
 // twice as likely to get chosen compared to non-priestly ones.
 monster* choose_random_nearby_monster(int weight,
-                                       bool (*suitable)(const monster* mon),
-                                       bool in_sight, bool prefer_named,
-                                       bool prefer_priest)
+                                      bool (*suitable)(const monster* mon),
+                                      bool prefer_named_or_priest)
 {
-    return choose_random_monster_on_level(weight, suitable, in_sight, true,
-                                          prefer_named, prefer_priest);
+    monster* chosen = NULL;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+        if (!mon || !suitable(mon))
+            continue;
+
+        // FIXME: if the intent is to favour monsters
+        // named by $DEITY, we should set a flag on the
+        // monster (something like MF_DEITY_PREFERRED) and
+        // use that instead of checking the name, given
+        // that other monsters can also have names.
+
+        // True, but it's currently only used for orcs, and
+        // Blork and Urug also being preferred to non-named orcs
+        // is fine, I think. Once more gods name followers (and
+        // prefer them) that should be changed, of course. (jpeg)
+        int mon_weight = 1;
+
+        if (prefer_named_or_priest)
+            mon_weight += mon->is_named() + mon->is_priest();
+
+        if (x_chance_in_y(mon_weight, weight += mon_weight))
+            chosen = mon;
+    }
+
+    return chosen;
 }
 
 monster* choose_random_monster_on_level(int weight,
-                                         bool (*suitable)(const monster* mon),
-                                         bool in_sight, bool near_by,
-                                         bool prefer_named, bool prefer_priest)
+                                        bool (*suitable)(const monster* mon))
 {
     monster* chosen = NULL;
 
-    // A radius_iterator with radius == max(GXM, GYM) will sweep the
-    // whole level.
-    radius_iterator ri(you.pos(), near_by ? 9 : max(GXM, GYM), true, in_sight);
-
-    for (; ri; ++ri)
+    for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (in_sight)
-        {
-            // Seeing through glass/trees is not enough.
-            if (!you.see_cell_no_trans(*ri))
-                continue;
-        }
+        monster* mon = monster_at(*ri);
+        if (!mon || !suitable(mon))
+            continue;
 
-        if (monster* mon = monster_at(*ri))
-        {
-            if (suitable(mon))
-            {
-                // FIXME: if the intent is to favour monsters
-                // named by $DEITY, we should set a flag on the
-                // monster (something like MF_DEITY_PREFERRED) and
-                // use that instead of checking the name, given
-                // that other monsters can also have names.
+        // Named or priestly monsters have doubled chances.
+        int mon_weight = 1
+                       + mon->is_named() + mon->is_priest();
 
-                // True, but it's currently only used for orcs, and
-                // Blork and Urug also being preferred to non-named orcs
-                // is fine, I think. Once more gods name followers (and
-                // prefer them) that should be changed, of course. (jpeg)
-
-                // Named or priestly monsters have doubled chances.
-                int mon_weight = 1;
-
-                if (prefer_named && mon->is_named())
-                    mon_weight++;
-
-                if (prefer_priest && mon->is_priest())
-                    mon_weight++;
-
-                if (x_chance_in_y(mon_weight, (weight += mon_weight)))
-                    chosen = mon;
-            }
-        }
+        if (x_chance_in_y(mon_weight, weight += mon_weight))
+            chosen = mon;
     }
 
     return chosen;

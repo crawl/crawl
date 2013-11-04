@@ -1747,43 +1747,32 @@ bool bless_follower(monster* follower,
 
         // Choose a random follower in LOS, preferably a named or
         // priestly one (10% chance).
-        follower = choose_random_nearby_monster(0, suitable, true, true, true);
+        follower = choose_random_nearby_monster(0, suitable, true);
 
         if (!follower)
         {
             if (coinflip())
                 return false;
 
-            // Try again, without the LOS restriction (5% chance).
-            follower = choose_random_nearby_monster(0, suitable, false, true,
-                                                    true);
+            // Try *again*, on the entire level (2.5% chance).
+            follower = choose_random_monster_on_level(0, suitable);
 
             if (!follower)
             {
+                // If no follower was found, attempt to send
+                // reinforcements.
+                _beogh_blessing_reinforcements();
+
+                // Possibly send more reinforcements.
                 if (coinflip())
-                    return false;
-
-                // Try *again*, on the entire level (2.5% chance).
-                follower = choose_random_monster_on_level(0, suitable, false,
-                                                          false, true, true);
-
-                if (!follower)
-                {
-                    // If no follower was found, attempt to send
-                    // reinforcements.
                     _beogh_blessing_reinforcements();
 
-                    // Possibly send more reinforcements.
-                    if (coinflip())
-                        _beogh_blessing_reinforcements();
+                _delayed_monster_done("Beogh blesses you with "
+                                      "reinforcements.", "");
 
-                    _delayed_monster_done("Beogh blesses you with "
-                                          "reinforcements.", "");
-
-                    // Return true, even though the reinforcements might
-                    // not be placed.
-                    return true;
-                }
+                // Return true, even though the reinforcements might
+                // not be placed.
+                return true;
             }
         }
     }
