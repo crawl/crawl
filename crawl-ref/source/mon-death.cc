@@ -827,10 +827,48 @@ static void _jiyva_died()
     }
 }
 
+/**
+ * The branch ruled by a given hell lord.
+ */
+static branch_type _branch_ruled_by(monster_type lord_type)
+{
+    switch (lord_type)
+    {
+    case MONS_ANTAEUS: return BRANCH_COCYTUS;
+    case MONS_ASMODEUS: return BRANCH_GEHENNA;
+    case MONS_DISPATER: return BRANCH_DIS;
+    case MONS_ERESHKIGAL: return BRANCH_TARTARUS;
+    default: return NUM_BRANCHES;
+    }
+}
+
 void fire_monster_death_event(monster* mons,
                               killer_type killer,
                               int i, bool polymorph)
 {
+
+    // XXX: Can this logic be simplified?
+    if ((mons_species((monster_type)mons->type) == MONS_HELL_LORD
+         || mons->type == MONS_ANTAEUS)
+        && mons->type != MONS_GERYON
+        && !polymorph && killer != KILL_BANISHED)
+    {
+        if (player_in_branch(_branch_ruled_by(mons->type)))
+        {
+            mprf(MSGCH_HELL_EFFECT,
+                 "With %s, the power tormenting this place vanishes!",
+                 silenced(you.pos()) ? "an infernal shudder"
+                 : "infernal noise");
+        }
+        else
+        {
+            mprf(MSGCH_HELL_EFFECT,
+                 "From the depths, you feel a foul shudder,"
+                 " and then stillness.");
+        }
+        return;
+    }
+
     int type = mons->type;
 
     // Treat whatever the Royal Jelly polymorphed into as if it were still
