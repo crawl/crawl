@@ -190,12 +190,11 @@ void circle_iterator::operator++(int)
 
 radius_iterator::radius_iterator(const coord_def& center, int param,
                                  circle_type ctype,
-                                 const los_base* _los,
                                  bool _exclude_center)
     : circle(center, param, ctype),
       iter(circle.iter()),
       exclude_center(_exclude_center),
-      los(_los)
+      los(NULL)
 {
     advance(true);
 }

@@ -1332,7 +1332,7 @@ static void _fan_of_gales_elementals()
     int radius = min(7, 5 + you.skill_rdiv(SK_EVOCATIONS, 1, 6));
 
     vector<coord_def> elementals;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND, NULL, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_ROUND, true); ri; ++ri)
     {
         if (ri->distance_from(you.pos()) >= 3 && !monster_at(*ri)
             && !cell_is_solid(*ri)

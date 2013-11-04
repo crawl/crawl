@@ -493,7 +493,7 @@ void timeout_phoenix_markers(int duration)
             coord_def place_at;
             bool from_inventory = false;
 
-            for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, NULL, false); ri; ++ri)
+            for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, false); ri; ++ri)
             {
                 for (stack_iterator si(*ri); si; ++si)
                     if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
