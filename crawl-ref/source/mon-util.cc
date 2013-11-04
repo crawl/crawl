@@ -4548,7 +4548,6 @@ bool mons_landlubbers_in_reach(const monster* mons)
     for (radius_iterator ai(mons->pos(),
                             mons->reach_range(),
                             C_CIRCLE,
-                            NULL,
                             true);
                          ai; ++ai)
         if ((act = actor_at(*ai)) && !mons_aligned(mons, act))

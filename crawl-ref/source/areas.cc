@@ -188,12 +188,8 @@ static void _update_agrid()
     {
         const int r = 5;
         _agrid_centres.push_back(area_centre(AREA_ORB, you.pos(), r));
-        los_glob los(you.pos(), LOS_DEFAULT);
-        for (radius_iterator ri(you.pos(), r, C_CIRCLE, &los);
-             ri; ++ri)
-        {
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
             _set_agrid_flag(*ri, APROP_ORB);
-        }
         no_areas = false;
     }
 

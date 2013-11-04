@@ -1137,8 +1137,8 @@ LUAFN(dgn_remove_isolated_glyphs)
             {
                 bool do_replace = true;
                 for (radius_iterator ri(coord_def(x, y), 1,
-                                        (boxy ? C_SQUARE : C_POINTY),
-                                        NULL, true);                 ri; ++ri)
+                                        (boxy ? C_ROUND : C_POINTY),
+                                        true); ri; ++ri)
                 {
                     if (_valid_coord(ls, lines, ri->x, ri->y, false))
                         if (strchr(find, lines(*ri)))
@@ -1196,8 +1196,8 @@ LUAFN(dgn_widen_paths)
             {
                 int neighbour_count = 0;
                 for (radius_iterator ri(coord_def(x, y), 1,
-                                        (boxy ? C_SQUARE : C_POINTY),
-                                        NULL, true);                 ri; ++ri)
+                                        (boxy ? C_ROUND : C_POINTY),
+                                        true); ri; ++ri)
                 {
                     if (_valid_coord(ls, lines, ri->x, ri->y, false))
                         if (strchr(passable, lines(*ri)))
@@ -1543,7 +1543,7 @@ LUAFN(dgn_spotty_map)
                && strchr(replace, lines(x, y+2)));
 
         for (radius_iterator ai(coord_def(x, y), boxy ? 2 : 1, C_CIRCLE,
-                                NULL, false); ai; ++ai)
+                                false); ai; ++ai)
         {
             if (strchr(replace, lines(*ai)))
                 lines(*ai) = fill;

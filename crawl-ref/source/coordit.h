@@ -78,7 +78,6 @@ public:
     // General constructor.
     radius_iterator(const coord_def& center, int param,
                     circle_type ctype,
-                    const los_base* los = NULL,
                     bool exclude_center = false);
     // Legacy constructor -- use above instead.
     radius_iterator(const coord_def& center, int radius,
@@ -115,7 +114,7 @@ class adjacent_iterator : public radius_iterator
 public:
     explicit adjacent_iterator(const coord_def& pos,
                                bool _exclude_center = true) :
-    radius_iterator(pos, 1, C_SQUARE, NULL, _exclude_center) {}
+    radius_iterator(pos, 1, C_SQUARE, _exclude_center) {}
 };
 
 class orth_adjacent_iterator : public radius_iterator
@@ -123,7 +122,7 @@ class orth_adjacent_iterator : public radius_iterator
 public:
     explicit orth_adjacent_iterator(const coord_def& pos,
                                     bool _exclude_center = true) :
-    radius_iterator(pos, 1, C_POINTY, NULL, _exclude_center) {}
+    radius_iterator(pos, 1, C_POINTY, _exclude_center) {}
 };
 
 /* @class distance_iterator

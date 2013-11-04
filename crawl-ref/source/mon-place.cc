@@ -3479,7 +3479,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
 
     int good_count = 0;
 
-    for (radius_iterator ri(where, radius, C_ROUND, NULL, !allow_centre);
+    for (radius_iterator ri(where, radius, C_ROUND, !allow_centre);
          ri; ++ri)
     {
         bool success = false;
