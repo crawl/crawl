@@ -864,8 +864,17 @@ static int player_view_update_at(const coord_def &gc)
 
 static void player_view_update()
 {
+    if (crawl_state.game_is_arena())
+    {
+        for (rectangle_iterator ri(crawl_view.vgrdc, LOS_MAX_RANGE); ri; ++ri)
+            player_view_update_at(*ri);
+        // no need to do excludes on the arena
+        return;
+    }
+
     vector<coord_def> update_excludes;
     bool need_update = false;
+
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         int flags = player_view_update_at(*ri);

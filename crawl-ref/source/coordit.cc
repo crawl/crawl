@@ -22,6 +22,15 @@ rectangle_iterator::rectangle_iterator(const coord_def& corner1,
     current = topleft;
 }
 
+rectangle_iterator::rectangle_iterator(const coord_def& center, int halfside)
+{
+    topleft.x = center.x - halfside;
+    topleft.y = center.y - halfside;
+    bottomright.x = center.x + halfside;
+    bottomright.y = center.y + halfside;
+    current = topleft;
+}
+
 rectangle_iterator::rectangle_iterator(int x_border_dist, int y_border_dist)
 {
     if (y_border_dist < 0)
