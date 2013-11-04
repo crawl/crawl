@@ -2022,64 +2022,14 @@ cccyy..yycc
      @@
 ENDMAP
 
-NAME:  bh_abyss_bestiary
-TAGS:  abyss no_rtele_into
-MONS:  thrashing horror
-MONS:  wretched star
-MONS:  lurking horror
-MONS:  tentacled starspawn
-: init_abyss_exit(_G, "0")
-MAP
-    @
-xxxx.xxxx
-x1.n.n.4x
-x.nn.nn.x
-xxn...nxx
-x0.......@
-xxn...nxx
-x.nn.nn.x
-x2.x.x.3x
-xxxx.xxxx
-    @
-ENDMAP
-
 NAME:   bh_silent_lugonu_exit
 TAGS:   abyss allow_dup
 MONS:   silent spectre
 KFEAT:   _ = altar_lugonu
 MAP
-...         xxx
-._.         x1x
-...         xx+
-ENDMAP
-
-NAME:  bh_abyss_fiendish_exit
-TAGS:  abyss_exit no_monster_gen
-KMONS: F = patrolling hell sentinel
-KFEAT: F = floor
-KFEAT: 0 = exit_abyss
-KFEAT: % = floor
-KFEAT: B = floor
-KITEM: % = human skeleton / elf skeleton / dwarf skeleton / orc skeleton
-SUBST: c = ccvm
-SUBST: S = %%.
-SUBST: B = BB.
-SUBST: b = B..
-KPROP: B = bloody
-KPROP: F = bloody
-: init_abyss_exit(_G, "0")
-MAP
-     .
-    ...
-   ..c..
-  ..bSb..
- ..bBBBb..
-..cSF0FSc..
- ..bBBBb..
-  ..bSb..
-   ..c..
-    ...
-     .
+...       xxx
+._.       x1x
+...       xx+
 ENDMAP
 
 NAME:  guppyfry_abyss_exit_glass_guarded
@@ -2194,7 +2144,20 @@ ll.......ll
   ...@....
 ENDMAP
 
-NAME:   bh_abyss_negative_1
+NAME:  bh_abyss_exit_choice
+DEPTH: Abyss:1-4
+TAGS:  abyss_exit transparent
+KFEAT: <: exit_abyss
+KFEAT: >: abyssal_stair
+MAP
+xxxxxxxxxxx
+x00........
+x<0......>.
+x00........
+xxxxxxxxxxx
+ENDMAP
+
+NAME:   bh_abyss_negative
 TAGS:   abyss allow_dup decor
 MAP
 ....      ....
@@ -2212,82 +2175,4 @@ MAP
 .....     .....
 .....     .....
  ....      ....
-ENDMAP
-
-NAME:   bh_abyss_negative_2
-TAGS:   abyss allow_dup decor
-MAP
-  .......
- .... ....
-....   ....
-.. .. .. ..
-.   ...   .
-.. .. .. ..
-....   ....
- .... ....
-  .......
-ENDMAP
-
-NAME:   bh_abyss_negative_3
-TAGS:   abyss allow_dup decor
-MAP
-....   ....   ....   ....
- ....   ....   ....   ....
-  ...    ...    ...    ...
- ....   ....   ....   ....
- ...    ...    ...    ...
- ....   ....   ....   ....
-  ....   ....   ....   ....
-ENDMAP
-
-NAME:   bh_abyss_negative_4
-TAGS:   abyss allow_dup decor
-MAP
-...    ...    ...    ...
- ...    ...    ...    ...
-  ...    ...    ...    ..
-   ...    ...    ...    .
-    ...    ...    ...
-.    ...    ...    ...
-..    ...    ...    ...
-...    ...    ...    ...
- ...    ...    ...    ...
-ENDMAP
-
-NAME:   bh_abyss_negative_5
-TAGS:   abyss allow_dup decor
-MAP
-................
-................
-..            ..
-..            ..
-..  ........  ..
-..  ........  ..
-..  ..    ..  ..
-..  .. .. ..  ..
-..  .. .. ..  ..
-..  ..    ..  ..
-..  ........  ..
-..  ........  ..
-..            ..
-..            ..
-................
-................
-ENDMAP
-
-NAME:   bh_abyss_negative_6
-TAGS:   abyss allow_dup decor
-MAP
- ..........
-............
-............
-.....  .....
-....    ....
-...      ...
-...      ...
-....    ....
-.....  .....
-............
-............
- ..........
 ENDMAP
