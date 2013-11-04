@@ -182,35 +182,30 @@ bool can_wield(item_def *weapon, bool say_reason,
             mpr("This weapon is holy and will not allow you to wield it.");
             id_brand = true;
         }
-        return false;
     }
-
-    if (!ignore_temporary_disability
-        && you.hunger_state < HS_FULL
-        && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
-        && !crawl_state.game_is_zotdef()
-        && !you.is_undead
-        && !you_foodless()
-        && (item_type_known(*weapon) || !only_known))
+    else if (!ignore_temporary_disability
+             && you.hunger_state < HS_FULL
+             && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
+             && !crawl_state.game_is_zotdef()
+             && !you.is_undead
+             && !you_foodless()
+             && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
             mpr("As you grasp it, you feel a great hunger. Being not satiated, you stop.");
             id_brand = true;
         }
-        return false;
     }
-
-    if (you.species == SP_DJINNI
-        && get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC
-        && (item_type_known(*weapon) || !only_known))
+    else if (you.species == SP_DJINNI
+             && get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC
+             && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
             mpr("As you grasp it, you feel your magic disrupted. Quickly, you stop.");
             id_brand = true;
         }
-        return false;
     }
 
     if (id_brand)
@@ -224,6 +219,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         }
         else if (is_artefact(*weapon) && !item_type_known(*weapon))
             artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
+        return false;
     }
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
