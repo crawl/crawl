@@ -114,7 +114,7 @@ class adjacent_iterator : public radius_iterator
 public:
     explicit adjacent_iterator(const coord_def& pos,
                                bool _exclude_center = true) :
-    radius_iterator(pos, 1, C_SQUARE, _exclude_center) {}
+    radius_iterator(pos, 1, C_ROUND, _exclude_center) {}
 };
 
 class orth_adjacent_iterator : public radius_iterator

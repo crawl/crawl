@@ -320,7 +320,7 @@ bool remove_sanctuary(bool did_attack)
 
     const int radius = 5;
     bool seen_change = false;
-    for (radius_iterator ri(env.sanctuary_pos, radius, C_SQUARE); ri; ++ri)
+    for (rectangle_iterator ri(env.sanctuary_pos, radius); ri; ++ri)
         if (is_sanctuary(*ri))
         {
             _remove_sanctuary_property(*ri);
@@ -367,7 +367,7 @@ void decrease_sanctuary_radius()
         stop_running();
     }
 
-    for (radius_iterator ri(env.sanctuary_pos, size+1, C_SQUARE); ri; ++ri)
+    for (rectangle_iterator ri(env.sanctuary_pos, size+1); ri; ++ri)
     {
         int dist = distance2(*ri, env.sanctuary_pos);
 
