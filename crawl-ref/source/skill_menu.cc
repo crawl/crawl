@@ -8,6 +8,7 @@
 #include "skill_menu.h"
 
 #include "cio.h"
+#include "clua.h"
 #include "command.h"
 #include "describe.h"
 #include "evoke.h"
@@ -1472,6 +1473,15 @@ void skill_menu(int flag, int exp)
     clrscr();
     skm.init(flag);
     int keyn;
+
+    // Calling a user lua function here to let players automatically accept
+    // the given skill distribution for a potion or card of experience.
+    if (skm.is_set(SKMF_EXPERIENCE)
+        && clua.callbooleanfn(false, "auto_experience", NULL)
+        && skm.exit())
+    {
+        return;
+    }
 
     while (true)
     {
