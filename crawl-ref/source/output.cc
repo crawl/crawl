@@ -29,6 +29,7 @@
 #include "godabil.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "items.h"
 #include "lang-fake.h"
 #include "libutil.h"
 #include "menu.h"
@@ -2897,6 +2898,12 @@ static string _status_mut_abilities(int sw)
     //----------------------------
 
     text += print_abilities();
+
+    //--------------
+    // print the Orb
+    //--------------
+    if (player_has_orb())
+        text += "\n<w>0:</w> Orb of Zot";
 
     //--------------
     // print runes

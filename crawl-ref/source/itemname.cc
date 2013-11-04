@@ -2478,7 +2478,22 @@ void check_item_knowledge(bool unknown_items)
 
 void display_runes()
 {
+    const bool has_orb = player_has_orb();
     vector<const item_def*> items;
+
+    if (has_orb)
+    {
+        item_def* orb = new item_def;
+        if (orb != 0)
+        {
+            orb->base_type = OBJ_ORBS;
+            orb->sub_type  = ORB_ZOT;
+            orb->quantity  = 1;
+            item_colour(*orb);
+            items.push_back(orb);
+        }
+    }
+
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
     {
         if (!you.runes[i])
@@ -2505,7 +2520,8 @@ void display_runes()
     InvMenu menu;
 
     menu.set_title(make_stringf("Runes of Zot: %d/%d",
-                                (int)items.size(),
+                                has_orb ? (int)items.size() - 1
+                                        : (int)items.size(),
                                 you.obtainable_runes));
     menu.set_flags(MF_NOSELECT);
     menu.set_type(MT_RUNES);
