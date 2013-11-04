@@ -653,9 +653,7 @@ void stop_running()
 static bool _is_valid_explore_target(const coord_def& where)
 {
     // If a square in LOS is unmapped, it's valid.
-    los_def los(where);
-    los.update();
-    for (radius_iterator ri(&los, true); ri; ++ri)
+    for (radius_iterator ri(where, LOS_DEFAULT, true); ri; ++ri)
         if (!env.map_knowledge(*ri).seen())
             return true;
 
@@ -1578,9 +1576,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             {
                 // This point is unexplored but unreachable. Let's find a
                 // place from where we can see it.
-                los_def los(dc);
-                los.update();
-                for (radius_iterator ri(&los, true); ri; ++ri)
+                for (radius_iterator ri(dc, LOS_DEFAULT, true); ri; ++ri)
                 {
                     const int dist = point_distance[ri->x][ri->y];
                     if (dist > 0

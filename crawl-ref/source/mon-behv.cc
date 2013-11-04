@@ -48,9 +48,7 @@ static void _guess_invis_foe_pos(monster* mon)
 
     // NOTE: This depends on ignoring clouds, so that cells hidden by
     // opaque clouds are included as a possibility for the foe's location.
-    los_def los(mon->pos(), opc_fullyopaque, circle_def(guess_radius, C_ROUND));
-    los.update();
-    for (radius_iterator ri(&los); ri; ++ri)
+    for (radius_iterator ri(mon->pos(), guess_radius, C_ROUND, LOS_SOLID); ri; ++ri)
     {
         if (foe->is_habitable(*ri))
             possibilities.push_back(*ri);

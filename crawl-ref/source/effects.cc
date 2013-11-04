@@ -327,15 +327,9 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
 
 int torment(actor *attacker, int taux, const coord_def& where)
 {
-    los_def los(where);
-    los.update();
     int r = 0;
-    for (radius_iterator ri(&los); ri; ++ri)
-    {
-        if (attacker && !attacker->see_cell_no_trans(*ri))
-            continue;
+    for (radius_iterator ri(where, LOS_NO_TRANS); ri; ++ri)
         r += torment_monsters(*ri, attacker, taux);
-    }
     return r;
 }
 

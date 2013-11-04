@@ -216,16 +216,6 @@ radius_iterator::radius_iterator(const coord_def& _center, int _radius,
     advance(true);
 }
 
-radius_iterator::radius_iterator(const los_base* los_,
-                                 bool _exclude_center)
-    : circle(los_->get_bounds()),
-      iter(circle.iter()),
-      exclude_center(_exclude_center),
-      los(los_)
-{
-    advance(true);
-}
-
 radius_iterator::radius_iterator(const coord_def _center,
                                  los_type _los,
                                  bool _exclude_center)
