@@ -34,6 +34,7 @@
 #include "tiledef-main.h"
 #include "traps.h"
 #include "travel.h"
+#include "viewgeom.h"
 #include "viewmap.h"
 
 show_type::show_type()
@@ -497,6 +498,13 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 void show_init(bool terrain_only)
 {
     clear_terrain_visibility();
+    if (crawl_state.game_is_arena())
+    {
+        for (rectangle_iterator ri(crawl_view.vgrdc, LOS_MAX_RANGE); ri; ++ri)
+            show_update_at(*ri, terrain_only);
+        return;
+    }
+
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
         show_update_at(*ri, terrain_only);
 }
