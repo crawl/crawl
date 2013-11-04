@@ -778,7 +778,7 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
     mask->reset();
 
     set<int> affected_vault_indexes;
-    for (radius_iterator ri(source, radius, C_SQUARE); ri; ++ri)
+    for (rectangle_iterator ri(source, radius); ri; ++ri)
     {
         if (!map_bounds_with_margin(*ri, MAPGEN_BORDER))
             continue;
