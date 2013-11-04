@@ -35,7 +35,7 @@ circle_def::circle_def()
 
 circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
     : los_radius(bds.los_radius), check_bounds(true),
-      shape(bds.shape), origin(origin_),
+      origin(origin_),
       radius(bds.radius), radius_sq(bds.radius_sq)
 {
     // Set up bounding box.
@@ -59,22 +59,15 @@ void circle_def::init(int param, circle_type ctype)
 {
     switch (ctype)
     {
-    case C_SQUARE:
-        shape = SH_SQUARE;
-        radius = param;
-        break;
     case C_CIRCLE:
-        shape = SH_CIRCLE;
         radius_sq = param;
         radius = isqrt_ceil(radius_sq);
         break;
     case C_ROUND:
-        shape = SH_CIRCLE;
         radius = param;
         radius_sq = radius * radius + 1;
         break;
     case C_POINTY:
-        shape = SH_CIRCLE;
         radius = param;
         radius_sq = radius * radius;
     }
@@ -108,16 +101,7 @@ bool circle_def::contains(const coord_def &p) const
 {
     if (!bbox.contains(p))
         return false;
-    switch (shape)
-    {
-    case SH_SQUARE:
-        return ((p - origin).rdist() <= radius);
-    case SH_CIRCLE:
-    {
-        int r_sq = los_radius ? get_los_radius_sq() : radius_sq;
-        return ((p - origin).abs() <= r_sq);
-    }
-    default:
-        return false;
-    }
+
+    int r_sq = los_radius ? get_los_radius_sq() : radius_sq;
+    return ((p - origin).abs() <= r_sq);
 }
