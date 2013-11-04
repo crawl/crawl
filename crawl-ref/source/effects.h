@@ -35,10 +35,10 @@ int place_ring(vector<coord_def>& ring_points,
                int& seen_count);
 
 class los_base;
-// Collect lists of points that are within LOS (under the given losgrid),
-// unoccupied, and not solid (walls/statues).
+// Collect lists of points that are within LOS, unoccupied, and not solid
+// (walls/statues).
 void collect_radius_points(vector<vector<coord_def> > &radius_points,
-                           const coord_def &origin, const los_base* los);
+                           const coord_def &origin, los_type los);
 
 void random_uselessness(int scroll_slot = -1);
 
