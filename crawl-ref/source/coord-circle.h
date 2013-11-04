@@ -1,18 +1,8 @@
 #ifndef COORD_CIRCLE_H
 #define COORD_CIRCLE_H
 
-
-// Internal to circle_def.
-enum shape_type
-{
-    SH_SQUARE,     // square around an origin
-    SH_CIRCLE,     // circle around an origin
-};
-
-// External interface to circle_def shapes.
 enum circle_type
 {
-    C_SQUARE,
     C_CIRCLE,      // circle specified by pre-squared radius
     C_POINTY,      // circle with square radius r*r
     C_ROUND,       // circle with square radius r*r+1
@@ -51,8 +41,6 @@ class circle_def
     // Check against map bounds for containment?
     bool check_bounds;
 
-    shape_type shape:8;
-
     coord_def origin;
 
     int radius;
@@ -67,9 +55,9 @@ public:
     circle_def(const coord_def &origin_, const circle_def &bds);
     // Circle around (0,0) of specified shape and size.
     // No bounds checking.
-    explicit circle_def(int param, circle_type ctype = C_SQUARE);
+    explicit circle_def(int param, circle_type ctype);
     // Circle around given origin of specified shape and size.
-    circle_def(const coord_def &origin_, int param, circle_type ctype = C_SQUARE);
+    circle_def(const coord_def &origin_, int param, circle_type ctype);
 
     bool contains(const coord_def &p) const PURE;
     const rect_def& get_bbox() const PURE;
