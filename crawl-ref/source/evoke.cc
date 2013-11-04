@@ -437,7 +437,7 @@ bool disc_of_storms(bool drac_breath)
 
         if (!drac_breath)
         {
-            for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
+            for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
             {
                 if (!in_bounds(*ri) || cell_is_solid(*ri))
                     continue;
@@ -805,7 +805,7 @@ static bool _sack_of_spiders(item_def &sack)
     {
         // Also generate webs
         int rad = LOS_RADIUS / 2 + 2;
-        for (radius_iterator ri(you.pos(), rad, false, true, true); ri; ++ri)
+        for (radius_iterator ri(you.pos(), rad, C_ROUND, LOS_SOLID, true); ri; ++ri)
         {
             if (grd(*ri) == DNGN_FLOOR)
             {

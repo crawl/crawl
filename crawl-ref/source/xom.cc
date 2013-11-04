@@ -1908,7 +1908,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
 
     // Make sure there's at least one enemy within the lightning radius.
     bool found_hostile = false;
-    for (radius_iterator ri(you.pos(), 2, true, true, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 2, C_ROUND, LOS_SOLID, true); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {

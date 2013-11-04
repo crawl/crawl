@@ -1639,7 +1639,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     const int radius = power_level * 2 + 2;
-    for (radius_iterator ri(you.pos(), radius, false, false, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_ROUND, LOS_SOLID); ri; ++ri)
     {
         if (*ri == you.pos())
             continue;
@@ -1674,7 +1674,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
 
     vector<coord_def> stairs_avail;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, false, true, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT, true); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD
@@ -2235,7 +2235,7 @@ void sage_card(int power, deck_rarity_type rarity)
 
 void create_pond(const coord_def& center, int radius, bool allow_deep)
 {
-    for (radius_iterator ri(center, radius, false); ri; ++ri)
+    for (radius_iterator ri(center, radius, C_ROUND, LOS_DEFAULT); ri; ++ri)
     {
         const coord_def p = *ri;
         if (p != you.pos() && coinflip())
@@ -2257,7 +2257,7 @@ void create_pond(const coord_def& center, int radius, bool allow_deep)
 
 static void _deepen_water(const coord_def& center, int radius)
 {
-    for (radius_iterator ri(center, radius, false); ri; ++ri)
+    for (radius_iterator ri(center, radius, C_ROUND, LOS_DEFAULT); ri; ++ri)
     {
         // FIXME: The iteration shouldn't affect the later squares in the
         // same iteration, i.e., a newly-flooded square shouldn't count
@@ -2299,7 +2299,7 @@ static void _water_card(int power, deck_rarity_type rarity)
 
         // Flood all visible squares.
         vector<coord_def> vis;
-        for (radius_iterator ri(you.pos(), LOS_RADIUS, false); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
             vis.push_back(*ri);
 
         // Killing a monster can trigger events that change visibility,

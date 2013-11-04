@@ -167,7 +167,7 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
     bool inkn = false, inks = false, inke = false, inkw = false,
          inkne = false, inknw = false, inkse = false, inksw = false;
 
-    for (radius_iterator ri(gc, 1, true, false, true); ri; ++ri)
+    for (adjacent_iterator ri(gc, true); ri; ++ri)
     {
         if (!env.map_knowledge(*ri).seen() && !env.map_knowledge(*ri).mapped())
             continue;

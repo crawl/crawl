@@ -657,7 +657,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     bool found_eligible = false;
     recite_counts count(0);
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         const monster *mon = monster_at(*ri);
         if (!mon || !you.can_see(mon))
@@ -1515,7 +1515,7 @@ bool trog_burn_spellbooks()
     int totalblocked = 0;
     vector<coord_def> mimics;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         const unsigned short cloud = env.cgrid(*ri);
         int count = 0;
@@ -1622,7 +1622,7 @@ void jiyva_paralyse_jellies()
     you.duration[DUR_JELLY_PRAYER] = 200;
 
     int jelly_count = 0;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
 
@@ -1962,7 +1962,7 @@ int fedhas_fungal_bloom()
     int processed_count = 0;
     bool kills = false;
 
-    for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
+    for (radius_iterator i(you.pos(), LOS_NO_TRANS); i; ++i)
     {
         monster* target = monster_at(*i);
         if (!can_spawn_mushrooms(*i))
@@ -2388,7 +2388,7 @@ static void _point_point_distance(const vector<coord_def>& origins,
 // the distances in question.
 bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
 {
-    radius_iterator los_it(target, LOS_RADIUS, true, true, true);
+    radius_iterator los_it(target, LOS_NO_TRANS, true);
 
     vector<coord_def> mons_positions;
     // collect hostile monster positions in LOS
@@ -2608,7 +2608,7 @@ int fedhas_rain(const coord_def &target)
     int spawned_count = 0;
     int processed_count = 0;
 
-    for (radius_iterator rad(target, LOS_RADIUS, true, true, true); rad; ++rad)
+    for (radius_iterator rad(target, LOS_NO_TRANS, true); rad; ++rad)
     {
         // Adjust the shape of the rainfall slightly to make it look
         // nicer.  I want a threshold of 2.5 on the euclidean distance,
@@ -2709,7 +2709,7 @@ int fedhas_corpse_spores(beh_type attitude, bool interactive)
     int count = 0;
     vector<stack_iterator> positions;
 
-    for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true); rad;
+    for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad;
          ++rad)
     {
         if (actor_at(*rad))
@@ -3339,7 +3339,7 @@ bool can_convert_to_beogh()
     if (silenced(you.pos()))
         return false;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         const monster * const mon = monster_at(*ri);
         if (mons_allows_beogh_now(mon))
@@ -3361,7 +3361,7 @@ void spare_beogh_convert()
     set<mid_t> witnesses;
 
     you.religion = GOD_NO_GOD;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         const monster *mon = monster_at(*ri);
         // An invis player converting is ok, for simplicity.
@@ -3377,7 +3377,7 @@ void spare_beogh_convert()
         // as well.
         if (mons_allows_beogh(mon))
         {
-            for (radius_iterator pi(you.pos(), LOS_RADIUS); pi; ++pi)
+            for (radius_iterator pi(you.pos(), LOS_DEFAULT); pi; ++pi)
             {
                 const monster *orc = monster_at(*pi);
                 if (!orc || !cell_see_cell(*ri, *pi, LOS_DEFAULT))

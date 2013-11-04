@@ -526,9 +526,8 @@ int apply_area_visible(cell_func cf, int power, actor *agent)
 {
     int rv = 0;
 
-    for (radius_iterator ri(agent->pos(), you.current_vision); ri; ++ri)
-        if (agent->see_cell_no_trans(*ri))
-            rv += cf(*ri, power, 0, agent);
+    for (radius_iterator ri(agent->pos(), LOS_NO_TRANS); ri; ++ri)
+        rv += cf(*ri, power, 0, agent);
 
     return rv;
 }

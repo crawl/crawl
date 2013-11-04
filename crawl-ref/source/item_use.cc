@@ -2936,7 +2936,7 @@ static void _vulnerability_scroll()
     mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 40);
 
     // Go over all creatures in LOS.
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (monster* mon = monster_at(*ri))
         {

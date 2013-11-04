@@ -21,7 +21,7 @@
 #include "traps.h"
 
 // If a monster can see but not directly reach the target, and then fails to
-// find a path to get there, mark all surrounding (in a radius of 2) monsters
+// find a path to get there, mark all surrounding (in a radius of √8) monsters
 // of the same (or greater) movement restrictions as also being unable to
 // find a path, so we won't need to calculate again.
 // Should there be a direct path to the target for a monster thus marked, it
@@ -38,7 +38,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
     const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
     const habitat_type habit = mons_primary_habitat(mon);
 
-    for (radius_iterator ri(mon->pos(), 2, true, false); ri; ++ri)
+    for (radius_iterator ri(mon->pos(), 8, C_CIRCLE); ri; ++ri)
     {
         if (*ri == mon->pos())
             continue;
@@ -339,7 +339,7 @@ bool find_siren_water_target(monster* mon)
     while (true)
     {
         int best_num = 0;
-        for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false);
+        for (radius_iterator ri(mon->pos(), LOS_NO_TRANS);
              ri; ++ri)
         {
             if (!feat_is_water(grd(*ri)))
@@ -455,7 +455,7 @@ bool find_wall_target(monster* mon)
     bool      best_closer_to_player = false;
     coord_def best_target;
 
-    for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false);
+    for (radius_iterator ri(mon->pos(), you.current_vision, C_ROUND);
          ri; ++ri)
     {
         if (!cell_is_solid(*ri)
@@ -669,13 +669,11 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     }
 
     int count_grids = 0;
-    for (radius_iterator ri(mon->patrol_point, LOS_RADIUS, true, false);
+    // Don't bother for the current position. If everything fails,
+    // we'll stay here anyway.
+    for (radius_iterator ri(mon->patrol_point, you.current_vision, C_ROUND, true);
          ri; ++ri)
     {
-        // Don't bother for the current position. If everything fails,
-        // we'll stay here anyway.
-        if (*ri == mon->pos())
-            continue;
 
         if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
             continue;

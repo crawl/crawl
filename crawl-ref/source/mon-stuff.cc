@@ -4347,11 +4347,8 @@ int dismiss_monsters(string pattern)
 // applied to new games.
 void zap_los_monsters(bool items_also)
 {
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_SOLID); ri; ++ri)
     {
-        if (!cell_see_cell(you.pos(), *ri, LOS_SOLID))
-            continue;
-
         if (items_also)
         {
             int item = igrd(*ri);
