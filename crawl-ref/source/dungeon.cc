@@ -5931,7 +5931,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
         to_place.push_back(*ri);
         for (int i = 1; i < clump_radius; ++i)
         {
-            for (radius_iterator rad(*ri, i, C_SQUARE); rad; ++rad)
+            for (radius_iterator rad(*ri, i, C_ROUND); rad; ++rad)
             {
                 if (grd(*rad) != DNGN_FLOOR)
                     continue;
