@@ -838,8 +838,8 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
             }
 
             add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
-            items_in_class.clear();
         }
+        items_in_class.clear();
 
         InvEntry *forced_first = NULL;
         for (int j = 0, count = mitems.size(); j < count; ++j)
