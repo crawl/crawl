@@ -210,7 +210,7 @@ static bool _abyss_place_map(const map_def *mdef)
 static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
                                       const string &tag)
 {
-    const map_def *map = random_map_for_tag(tag, false, true);
+    const map_def *map = random_map_for_tag(tag, true, true);
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
@@ -1294,7 +1294,7 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
     int tries = 0;
     while (vaults_placed < maxvaults)
     {
-        const map_def *map = random_map_for_tag("abyss", false, true);
+        const map_def *map = random_map_for_tag("abyss", true, true);
         if (!map)
             break;
 
