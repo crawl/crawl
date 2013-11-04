@@ -2151,8 +2151,8 @@ ENDMAP
 # Firewalk (Lemuel)
 #
 NAME:    lemuel_firewalk_3
-DEPTH:   D:16-
-TAGS:    uniq_firewalk abyss ruin_abyss
+DEPTH:   D:16-, Abyss
+TAGS:    uniq_firewalk ruin_abyss
 WEIGHT:  2
 ORIENT:  float
 ITEM:    nothing, nothing, nothing
@@ -3092,8 +3092,8 @@ ENDMAP
 
 NAME:    hangedman_cross_veins
 ORIENT:  float
-TAGS:    transparent no_monster_gen no_pool_fixup abyss
-DEPTH:   D:8-, Elf, Snake
+TAGS:    transparent no_monster_gen no_pool_fixup
+DEPTH:   D:8-, Elf, Snake, Abyss
 WEIGHT:  5 (Elf, Snake), 10
 KMONS:   12 = 0
 KMONS:   34 = 9

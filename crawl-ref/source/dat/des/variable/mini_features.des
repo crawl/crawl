@@ -146,9 +146,9 @@ ENDMAP
 
 # Small intersection with statues (Eino)
 NAME:    small_statue_intersection
-DEPTH:   D:2-26, Elf, Crypt, Lair
+DEPTH:   D:2-26, Elf, Crypt, Lair, Abyss
 TAGS:    transparent mini_float allow_dup no_hmirror no_vmirror extra
-TAGS:    ruin_lair abyss ruin_abyss decor
+TAGS:    ruin_lair ruin_abyss decor
 MAP
 xx.xx
 xG.Gx
@@ -216,8 +216,8 @@ MAP
 ENDMAP
 
 NAME:  patterned_corridor
-DEPTH: D, Elf, Lair
-TAGS:  transparent abyss ruin_abyss ruin_lair decor
+DEPTH: D, Elf, Lair, Abyss
+TAGS:  transparent ruin_abyss ruin_lair decor
 SUBST: x : xxccv
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -1757,7 +1757,7 @@ A..BzB..A.A..BzB..A.
 ENDMAP
 
 NAME:    hangedman_decor_lopped
-TAGS:    abyss transparent extra decor no_pool_fixup
+TAGS:    transparent extra decor no_pool_fixup
 DEPTH:   D, Abyss
 WEIGHT:  5 (D:1-3), 10
 SHUFFLE: CD / CD / CD / DC / DC, EF / EF / EF / FE / FE
@@ -1860,7 +1860,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_decor_riveting
-TAGS:    abyss transparent extra decor no_pool_fixup
+TAGS:    transparent extra decor no_pool_fixup
 DEPTH:   D, Abyss
 WEIGHT:  5 (D:1-3), 10
 SHUFFLE: ABCDEFG
@@ -1891,7 +1891,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_decor_points
-TAGS:    abyss transparent extra decor no_pool_fixup
+TAGS:    transparent extra decor no_pool_fixup
 DEPTH:   D, Abyss
 SHUFFLE: ABC
 SUBST:   A : z.., B : zxx, C : zxx
@@ -1921,7 +1921,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_decor_peaks_small
-TAGS:    abyss transparent extra decor
+TAGS:    transparent extra decor
 DEPTH:   D, Abyss
 WEIGHT:  5 (D:1-3), 10
 SHUFFLE: BCD
@@ -2574,8 +2574,8 @@ xxxx
 ENDMAP
 
 NAME:   eino_small_chamber_without_monster
-TAGS:   mini_float allow_dup extra ruin_lair abyss ruin_abyss
-DEPTH:  D:4-, Lair
+TAGS:   mini_float allow_dup extra ruin_lair ruin_abyss
+DEPTH:  D:4-, Lair, Abyss
 MAP
  xxxxx
 xx...xx
@@ -2917,8 +2917,8 @@ ENDMAP
 ##########################################################################
 
 NAME:   lemuel_flamethrower_3
-DEPTH:  D:12-, Elf, Geh
-TAGS:   allow_dup abyss ruin_abyss
+DEPTH:  D:12-, Elf, Geh, Abyss
+TAGS:   allow_dup ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
             size = 2, walk_dist = 0, spread_rate= 75 }
@@ -2938,8 +2938,8 @@ cc.cc
 ENDMAP
 
 NAME:   lemuel_flamethrower_2
-DEPTH:  D:5-, Elf, Geh
-TAGS:   abyss ruin_abyss
+DEPTH:  D:5-, Elf, Geh, Abyss
+TAGS:   ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
             size = 2, walk_dist = 0, spread_rate= 75 }
@@ -3205,8 +3205,8 @@ ENDMAP
 
 # No item generation for the sake of autoexplore.
 NAME:   lemuel_flamethrower_hall
-DEPTH:  D:9-, Elf, Geh
-TAGS:   layout_rooms layout_city no_item_gen abyss ruin_abyss
+DEPTH:  D:9-, Elf, Geh, Abyss
+TAGS:   layout_rooms layout_city no_item_gen ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 25, pow_max = 50, delay = 150, \
             size = 3, walk_dist = 0, spread_rate= 40 }
@@ -3236,8 +3236,8 @@ ENDMAP
 # mutations -- certainly not worth most of the loot. With rMut,
 # it's still a gamble.
 NAME:  kilobyte_mutagenic_chamber
-DEPTH: D:15-, Elf
-TAGS:  abyss ruin_abyss
+DEPTH: D:15-, Elf, Abyss
+TAGS:  ruin_abyss
 MARKER:     U = lua:fog_machine { cloud_type = "mutagenic fog", \
                 pow_min = 10, pow_max = 30, delay = 5, \
                 size = 4, walk_dist = 0, spread_rate= 0 }
@@ -3305,8 +3305,8 @@ ENDMAP
 #######################################################################
 
 NAME:  minivault_1
-TAGS:  transparent mini_float allow_dup extra abyss ruin_abyss
-DEPTH: D:4-
+TAGS:  transparent mini_float allow_dup extra ruin_abyss
+DEPTH: D:4-, Abyss
 MAP
 ............
 ..xxxx+xxx..
@@ -3322,8 +3322,9 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_4
-TAGS: transparent mini_float allow_dup extra abyss ruin_abyss decor
+NAME:  minivault_4
+TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+DEPTH: D, Elf, Crypt, Abyss
 MAP
 ............
 ....xwxx....
@@ -3339,8 +3340,9 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_5
-TAGS: transparent allow_dup extra abyss ruin_abyss
+NAME:  minivault_5
+TAGS:  transparent allow_dup extra ruin_abyss
+DEPTH: D, Elf, Crypt, Abyss
 MAP
 ............
 .x.xxxxxxxx.
@@ -3376,8 +3378,8 @@ ENDMAP
 
 # Multicoloured onion
 NAME:    minivault_11
-DEPTH:   D, Elf, Crypt, Lair
-TAGS:    transparent mini_float extra abyss ruin_abyss ruin_lair decor
+DEPTH:   D, Elf, Crypt, Lair, Abyss
+TAGS:    transparent mini_float extra ruin_abyss ruin_lair decor
 SHUFFLE: bcv
 MAP
 ............
@@ -3412,8 +3414,9 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_19
-TAGS: transparent mini_float allow_dup extra abyss ruin_abyss decor
+NAME:  minivault_19
+TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
 .xx......xx.
@@ -3448,8 +3451,8 @@ MAP
 ENDMAP
 
 NAME:  minivault_22
-TAGS:  transparent mini_float allow_dup extra abyss ruin_abyss
-DEPTH: D:6-26
+TAGS:  transparent mini_float allow_dup extra ruin_abyss
+DEPTH: D:6-26, Abyss
 SUBST: $ : $ *:5
 SUBST: ~ : . +:2
 MAP
@@ -3467,8 +3470,9 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_23
-TAGS: transparent mini_float allow_dup extra abyss ruin_abyss decor
+NAME:  minivault_23
+TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 x.x.x.x.x.x.
 .x.x.x.x.x.x
@@ -3484,8 +3488,9 @@ x.x.x.x.x.x.
 .x.x.x.x.x.x
 ENDMAP
 
-NAME: minivault_24
-TAGS: transparent mini_float allow_dup extra abyss ruin_abyss decor
+NAME:  minivault_24
+TAGS:  transparent mini_float allow_dup extra ruin_abyss decor
+DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
 ....xxxx....
@@ -3501,10 +3506,11 @@ MAP
 ............
 ENDMAP
 
-NAME: minivault_25
-TAGS: transparent mini_float allow_dup extra abyss ruin_abyss decor
+NAME:    minivault_25
+TAGS:    transparent mini_float allow_dup extra ruin_abyss decor
+DEPTH:   D, Elf, Crypt, Lair, Abyss
 SHUFFLE: XY
-SUBST: X=x, Y=+
+SUBST:   X=x, Y=+
 MAP
 ............
 .xxXxxxxxxx.
@@ -3521,7 +3527,8 @@ MAP
 ENDMAP
 
 NAME: minivault_26
-TAGS: transparent mini_float allow_dup extra abyss ruin_abyss decor
+TAGS: transparent mini_float allow_dup extra ruin_abyss decor
+DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 c..........c
 .c...cc...c.
@@ -3538,7 +3545,8 @@ c..........c
 ENDMAP
 
 NAME: minivault_27
-TAGS: transparent mini_float allow_dup extra abyss ruin_abyss decor
+TAGS: transparent mini_float allow_dup extra ruin_abyss decor
+DEPTH: D, Elf, Crypt, Lair, Abyss
 MAP
 ............
 .x.xxxxxxxx.

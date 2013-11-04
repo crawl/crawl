@@ -252,8 +252,9 @@ L.   Abyss Vaults
 Abyssal vaults have more limitations than vaults in the regular
 dungeon, because the Abyss is constantly shifting under the player.
 
-The abyss picks vaults by tag, using vaults tagged "abyss" as general
-decoration, and "abyss_rune" for abyssal rune vaults.
+Normal abyss vaults can be assigned a DEPTH tag as with other branches; it
+picks vaults tagged "abyss_rune" for abyssal rune vaults and vaults tagged
+"abyss_exit" for abyssal stairs and exits.
 
 When designing abyssal vaults, keep in mind that:
 
