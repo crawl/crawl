@@ -26,7 +26,7 @@ ENDMAP
 # And always in Vaults - needs to be done through layouts. ~Grunt
 NAME: primary_mini_dummy
 TAGS: dummy
-DEPTH: 1-100, Pan, Abyss
+DEPTH: 1-100, Pan, !Abyss
 CHANCE: 0 : 10000 (Vaults), 0 : 5000
 MAP
 x
@@ -58,7 +58,7 @@ ENDMAP
 # Regular vaults for non-dungeon branches.
 #
 NAME: dummy_balancer_other
-DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider
+DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider, Abyss
 # Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
 # by depth.
 TAGS: dummy
@@ -72,7 +72,7 @@ ENDMAP
 # Minivaults
 #
 NAME: mini_dummy
-DEPTH: 1-50, !D
+DEPTH: 1-50, !D, !Abyss
 TAGS: dummy
 WEIGHT: 90
 MAP

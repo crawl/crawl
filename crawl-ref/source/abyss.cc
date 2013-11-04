@@ -1290,13 +1290,21 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
 
     int vaults_placed = 0;
 
+    bool mini = false;
     const int maxvaults = 6;
     int tries = 0;
     while (vaults_placed < maxvaults)
     {
-        const map_def *map = random_map_for_tag("abyss", true, true);
+        const map_def *map = random_map_in_depth(level_id::current(), mini);
         if (!map)
+        {
+            if (!mini)
+            {
+                mini = true;
+                continue;
+            }
             break;
+        }
 
         if (!_abyss_place_map(map) || map->has_tag("extra"))
         {
@@ -1305,6 +1313,8 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
 
             continue;
         }
+
+        mini = true;
 
         if (!one_chance_in(2 + (++vaults_placed)))
             break;

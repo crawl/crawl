@@ -226,8 +226,8 @@ ENDMAP
 ##############################################################################
 
 NAME:    hangedman_elemental_corridor
-TAGS:    no_monster_gen no_pool_fixup allow_dup abyss
-DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$
+TAGS:    no_monster_gen no_pool_fixup allow_dup
+DEPTH:   Geh, Coc, Zot, !Geh:$, !Coc:$, !Zot:$, Abyss
 SHUFFLE: 123456, }] / }] / {[ / **
 :  if you.branch() == "Geh" then
 MONS:    brimstone fiend / balrug / hellion, sun demon / smoke demon / \
