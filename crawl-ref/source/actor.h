@@ -2,7 +2,6 @@
 #define ACTOR_H
 
 #include "itemprop-enum.h"
-#include "los_def.h"
 
 enum ev_ignore_type
 {

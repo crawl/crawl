@@ -46,6 +46,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
@@ -1013,12 +1014,10 @@ static void _orient_wall_blood(const coord_def& where, coord_def from,
 
     coord_def closer = INVALID_COORD;
     int dist = INT_MAX;
-    los_def ld(from, opc_solid);
-    ld.update();
-
     for (orth_adjacent_iterator ai(where); ai; ++ai)
     {
-        if (in_bounds(*ai) && !cell_is_solid(*ai) && ld.see_cell(*ai)
+        if (in_bounds(*ai) && !cell_is_solid(*ai)
+            && cell_see_cell(from, *ai, LOS_SOLID)
             && (distance2(*ai, from) < dist
                 || distance2(*ai, from) == dist && coinflip()))
         {
@@ -1123,10 +1122,6 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
 {
-    los_def ld(origin, opc_solid);
-
-    ld.update();
-
     int tries = 0;
     for (int i = 0; i < level; ++i)
     {
@@ -1142,7 +1137,7 @@ void blood_spray(const coord_def& origin, monster_type montype, int level)
             bloody.x += random_range(-range, range);
             bloody.y += random_range(-range, range);
 
-            if (in_bounds(bloody) && ld.see_cell(bloody))
+            if (in_bounds(bloody) && cell_see_cell(origin, bloody, LOS_SOLID))
             {
                 bleed_onto_floor(bloody, montype, 99, false, true, origin);
                 break;
