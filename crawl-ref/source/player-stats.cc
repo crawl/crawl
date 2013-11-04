@@ -104,17 +104,29 @@ bool attribute_increase()
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
-    // Calling a user-defined lua function here to let players reply to the
-    // prompt automatically.
-    clua.callfn("choose_stat_gain", 0, 0);
 
+    bool tried_lua = false;
+    int keyin;
     while (true)
     {
+        // Calling a user-defined lua function here to let players reply to
+        // the prompt automatically. Either returning a string or using
+        // crawl.sendkeys will work.
+        if (!tried_lua && clua.callfn("choose_stat_gain", 0, 1))
+        {
+            string result;
+            clua.fnreturns(">s", &result);
+            keyin = result[0];
+        }
+        else
+        {
 #ifdef TOUCH_UI
-        const int keyin = pop->pop();
+            keyin = pop->pop();
 #else
-        const int keyin = getchm();
+            keyin = getchm();
 #endif
+        }
+        tried_lua = true;
 
         switch (keyin)
         {
