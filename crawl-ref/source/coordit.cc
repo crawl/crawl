@@ -9,6 +9,7 @@
 
 #include "coord-circle.h"
 #include "coord.h"
+#include "los_def.h"
 #include "random.h"
 #include "player.h"
 

@@ -20,6 +20,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "los.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-chimera.h"

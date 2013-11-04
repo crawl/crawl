@@ -8,6 +8,7 @@
 #include "env.h"
 #include "fight.h"
 #include "libutil.h"
+#include "los_def.h"
 #include "losglobal.h"
 #include "player.h"
 #include "spl-damage.h"

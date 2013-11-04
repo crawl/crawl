@@ -29,6 +29,7 @@
 #include "files.h"
 #include "hints.h"
 #include "libutil.h"
+#include "los.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
