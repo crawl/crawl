@@ -46,6 +46,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -2734,7 +2735,7 @@ int place_ring(vector<coord_def> &ring_points,
 // Collect lists of points that are within LOS (under the given env map),
 // unoccupied, and not solid (walls/statues).
 void collect_radius_points(vector<vector<coord_def> > &radius_points,
-                           const coord_def &origin, const los_base* los)
+                           const coord_def &origin, los_type los)
 {
     radius_points.clear();
     radius_points.resize(LOS_RADIUS);
@@ -2789,7 +2790,7 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
             coord_dist temp(*i, current.second);
 
             // If the grid is out of LOS, skip it.
-            if (!los->see_cell(temp.first))
+            if (!cell_see_cell(origin, temp.first, los))
                 continue;
 
             coord_def local = temp.first - origin;
@@ -2822,9 +2823,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
 
     vector<vector<coord_def> > radius_points;
 
-    los_def los(corpse.pos, opc_solid);
-
-    collect_radius_points(radius_points, corpse.pos, &los);
+    collect_radius_points(radius_points, corpse.pos, LOS_SOLID);
 
     // So what we have done so far is collect the set of points at each radius
     // reachable from the origin with (somewhat constrained) 8 connectivity,

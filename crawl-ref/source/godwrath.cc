@@ -1067,8 +1067,7 @@ static bool _fedhas_retribution()
         // We are going to spawn some oklobs but first we need to find
         // out a little about the situation.
         vector<vector<coord_def> > radius_points;
-        collect_radius_points(radius_points, you.pos(),
-                              you.get_los_no_trans());
+        collect_radius_points(radius_points, you.pos(), LOS_NO_TRANS);
 
         unsigned free_thresh = 24;
 
