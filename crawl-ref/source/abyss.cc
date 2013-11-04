@@ -465,7 +465,7 @@ private:
     {
         // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
-        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
             if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
                 return true;
 
@@ -475,7 +475,7 @@ private:
     bool abyss_rune_nearness() const
     {
         // See above comment about env.map_knowledge().known().
-        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
             if (env.map_knowledge(*ri).seen() && _abyssal_rune_at(*ri))
                 return true;
         return false;

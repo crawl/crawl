@@ -2611,7 +2611,8 @@ int handle_pbd_corpses(bool do_rot)
     int corpse_count = 0;
 
     for (radius_iterator ri(you.pos(),
-         player_mutation_level(MUT_POWERED_BY_DEATH) * 3); ri; ++ri)
+         player_mutation_level(MUT_POWERED_BY_DEATH) * 3, C_ROUND, LOS_DEFAULT);
+         ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)
         {

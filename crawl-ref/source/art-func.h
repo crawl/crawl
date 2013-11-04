@@ -571,7 +571,7 @@ static void _STORM_BOW_world_reacts(item_def *item)
     if (!one_chance_in(300))
         return;
 
-    for (radius_iterator ri(you.pos(), 2); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 2, C_ROUND, LOS_SOLID); ri; ++ri)
         if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD && one_chance_in(5))
             place_cloud(CLOUD_RAIN, *ri, random2(20), &you, 3);
 }
@@ -602,7 +602,7 @@ static void _RCLOUDS_world_reacts(item_def *item)
     else
         cloud = CLOUD_MIST;
 
-    for (radius_iterator ri(you.pos(), 2); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 2, C_ROUND, LOS_SOLID); ri; ++ri)
         if (!cell_is_solid(*ri) && env.cgrid(*ri) == EMPTY_CLOUD
                 && one_chance_in(20))
         {

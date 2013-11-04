@@ -542,7 +542,7 @@ void full_describe_view()
     vector<coord_def> list_features;
 
     // Grab all items known (or thought) to be in the stashes in view.
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         if (feat_stair_direction(grd(*ri)) != CMD_NO_CMD
             || feat_is_altar(grd(*ri)))
@@ -1173,7 +1173,7 @@ void direction_chooser::draw_beam_if_needed()
 #endif
             return;
         }
-        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
             if (aff_type aff = hitfunc->is_affected(*ri))
             {
 #ifdef USE_TILE
@@ -2509,7 +2509,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 
     if (hitfunc->set_aim(where))
     {
-        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
         {
             mons = monster_at(*ri);
             if (mons && hitfunc->is_affected(*ri) == AFF_YES)

@@ -75,16 +75,8 @@ class los_base;
 class radius_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
-    // General constructor.
-    radius_iterator(const coord_def& center, int param,
-                    circle_type ctype,
+    radius_iterator(const coord_def center, int param, circle_type ctype,
                     bool exclude_center = false);
-    // Legacy constructor -- use above instead.
-    radius_iterator(const coord_def& center, int radius,
-                    bool roguelike_metric = true,
-                    bool require_los = true,
-                    bool exclude_center = false);
-
     radius_iterator(const coord_def center, int param, circle_type ctype,
                     los_type los, bool exclude_center = false);
     radius_iterator(const coord_def center, los_type los,

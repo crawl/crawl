@@ -2410,7 +2410,7 @@ actor* forest_near_enemy(const actor *mon)
 {
     const coord_def pos = mon->pos();
 
-    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(pos, LOS_NO_TRANS); ri; ++ri)
     {
         actor* foe = actor_at(*ri);
         if (!foe || mons_aligned(foe, mon))
@@ -2427,10 +2427,9 @@ actor* forest_near_enemy(const actor *mon)
 // Print a message only if you can see any affected trees.
 void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
 {
-    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(pos, LOS_DEFAULT); ri; ++ri)
         if (feat_is_tree(grd(*ri))
-            && cell_see_cell(you.pos(), *ri, LOS_DEFAULT)
-            && cell_see_cell(pos, *ri, LOS_DEFAULT))
+            && cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
         {
             mpr(msg, ch);
             return;
@@ -2451,7 +2450,7 @@ void forest_damage(const actor *mon)
             "Tree limbs sway around you.",
             0), MSGCH_TALK_VISUAL);
 
-    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(pos, LOS_NO_TRANS); ri; ++ri)
     {
         actor* foe = actor_at(*ri);
         if (!foe || mons_aligned(foe, mon))
@@ -2461,7 +2460,7 @@ void forest_damage(const actor *mon)
             continue;
 
         for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_NO_TRANS))
             {
                 int evnp = foe->melee_evasion(mon, EV_IGNORE_PHASESHIFT);
                 int dmg = 0;
