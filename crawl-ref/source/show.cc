@@ -505,7 +505,7 @@ void show_init(bool terrain_only)
         return;
     }
 
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
         show_update_at(*ri, terrain_only);
 }
 
