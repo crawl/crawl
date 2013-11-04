@@ -49,37 +49,6 @@ bool player::trans_wall_blocking(const coord_def &p) const
     return (see_cell(p) && !see_cell_no_trans(p));
 }
 
-const los_base* actor::get_los() const
-{
-    los = los_glob(pos(), LOS_DEFAULT);
-    return &los;
-}
-
-const los_base* player::get_los() const
-{
-    if (crawl_state.game_is_arena() && is_player())
-    {
-        // env.show.init iterates over these bounds for arena
-        los = los_glob(crawl_view.vgrdc, LOS_ARENA,
-                       circle_def(LOS_MAX_RANGE, C_SQUARE));
-        return &los;
-    }
-    else if (xray_vision)
-    {
-        los = los_glob(pos(), LOS_ARENA,
-                       circle_def(current_vision, C_ROUND));
-        return &los;
-    }
-    else
-        return actor::get_los();
-}
-
-const los_base* actor::get_los_no_trans() const
-{
-    los_no_trans = los_glob(pos(), LOS_NO_TRANS);
-    return &los_no_trans;
-}
-
 bool player::can_see(const actor* a) const
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)

@@ -206,8 +206,13 @@ radius_iterator::radius_iterator(const coord_def& _center, int _radius,
     : circle(_center, _radius, roguelike ? C_SQUARE : C_POINTY),
       iter(circle.iter()),
       exclude_center(_exclude_center),
-      los(_require_los ? you.get_los() : NULL)
+      los(NULL)
 {
+    if (_require_los)
+    {
+        used_los.reset(new los_glob(you.pos(), LOS_DEFAULT));
+        los = used_los.get();
+    }
     advance(true);
 }
 

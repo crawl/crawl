@@ -181,9 +181,6 @@ public:
     virtual bool see_cell(const coord_def &c) const;
     virtual bool see_cell_no_trans(const coord_def &c) const;
 
-    virtual const los_base* get_los() const;
-    virtual const los_base* get_los_no_trans() const;
-
     // Can the actor actually see the target?
     virtual bool can_see(const actor *target) const;
 
@@ -441,10 +438,6 @@ public:
 protected:
     void end_constriction(constricting_t::iterator i, bool intentional,
                           bool quiet);
-
-    // These are here for memory management reasons...
-    mutable los_glob los;
-    mutable los_glob los_no_trans;
 };
 
 bool actor_slime_wall_immune(const actor *actor);
