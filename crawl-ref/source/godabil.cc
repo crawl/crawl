@@ -872,10 +872,13 @@ bool zin_recite_to_single_monster(const coord_def& where,
             {
                 if (one_chance_in(3))
                     effect = ZIN_BLIND;
-                else if (coinflip())
-                    effect = ZIN_SILVER_CORONA;
-                else
+                else if (mon->can_use_spells() && !mon->is_priest()
+                         && !mons_class_flag(mon->type, M_FAKE_SPELLS))
+                {
                     effect = ZIN_ANTIMAGIC;
+                }
+                else
+                    effect = ZIN_SILVER_CORONA;
             }
             else if (check < 15)
             {
