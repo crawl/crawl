@@ -3742,7 +3742,7 @@ static void _handle_accidental_death(const int orig_hp,
     {
         if (orig_mutation[i] > you.mutation[i])
             mutate((mutation_type)i, "Xom's lifesaving", true, true, true);
-        else if (orig_mutation[i] > you.mutation[i])
+        else if (orig_mutation[i] < you.mutation[i])
             delete_mutation((mutation_type)i, "Xom's lifesaving", true, true, true);
     }
 
