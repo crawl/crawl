@@ -3154,10 +3154,6 @@ sickly siren
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
 %%%%
-strange machine
-
-A glistening silver machine.
-%%%%
 succubus
 
 A female demon who uses her charms to seduce humanoid males. If you wish to
