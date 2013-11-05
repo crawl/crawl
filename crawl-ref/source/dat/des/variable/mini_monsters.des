@@ -3436,7 +3436,7 @@ ENDMAP
 NAME:   minmay_evil_grid
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
-NSUBST: B = 1:= / 1:n / *:c
+NSUBST: B = 1:+ / 1:n / *:c
 NSUBST: C = 1:+ / *:c
 SUBST:  * = *|
 MAP
