@@ -215,8 +215,60 @@ mcache_monster::mcache_monster(const monster_info& mon)
 
     const item_info* mon_weapon = mon.inv[MSLOT_WEAPON].get();
     m_equ_tile = (mon_weapon != NULL) ? tilep_equ_weapon(*mon_weapon) : 0;
-    const item_info* mon_shield = mon.inv[MSLOT_SHIELD].get();
-    m_shd_tile = (mon_shield != NULL) ? tilep_equ_shield(*mon_shield) : 0;
+    if (mons_class_wields_two_weapons(mon.type))
+    {
+        const item_info* mon_weapon2 = mon.inv[MSLOT_ALT_WEAPON].get();
+        if (mon_weapon2)
+        {
+            switch (tilep_equ_weapon(*mon_weapon2))
+            {
+                case TILEP_HAND1_DAGGER:
+                    m_shd_tile = TILEP_HAND2_DAGGER;
+                    break;
+                case TILEP_HAND1_SABRE:
+                    m_shd_tile = TILEP_HAND2_SABRE;
+                    break;
+                default:
+                case TILEP_HAND1_SHORT_SWORD_SLANT:
+                    m_shd_tile = TILEP_HAND2_SHORT_SWORD_SLANT;
+                    break;
+                case TILEP_HAND1_GREAT_FLAIL:
+                    m_shd_tile = TILEP_HAND2_GREAT_FLAIL;
+                    break;
+                case TILEP_GREAT_FLAIL_1:
+                    m_shd_tile = TILEP_HAND2_GREAT_FLAIL_1;
+                    break;
+                case TILEP_HAND1_GREAT_MACE:
+                    m_shd_tile = TILEP_HAND2_GREAT_MACE;
+                    break;
+                case TILEP_GREAT_MACE_1:
+                    m_shd_tile = TILEP_HAND2_GREAT_MACE_1;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_SLANT:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_SLANT;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_SPIKE:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_SPIKE;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_SPIKE_SLANT;
+                    break;
+                case TILEP_HAND1_GIANT_CLUB_PLAIN:
+                    m_shd_tile = TILEP_HAND2_GIANT_CLUB_PLAIN;
+                    break;
+            };
+        }
+        else
+            m_shd_tile = 0;
+    }
+    else
+    {
+        const item_info* mon_shield = mon.inv[MSLOT_SHIELD].get();
+        m_shd_tile = (mon_shield != NULL) ? tilep_equ_shield(*mon_shield) : 0;
+    }
 }
 
 // Returns the amount of pixels necessary to shift a wielded weapon
@@ -536,6 +588,7 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_HUMAN:
+    case TILEP_MONS_DEEP_ELF_BLADEMASTER: // second weapon
     case TILEP_MONS_LOUISE:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
@@ -549,6 +602,16 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_DONALD:
         *ofs_x = -1;
         *ofs_y = -1;
+        break;
+
+    case TILEP_MONS_TWO_HEADED_OGRE: // second weapon
+        *ofs_x = 0;
+        *ofs_y = 2;
+        break;
+
+    case TILEP_MONS_ETTIN: // second weapon
+        *ofs_x = -2;
+        *ofs_y = 1;
         break;
 
     case TILEP_MONS_SPRIGGAN:
@@ -593,28 +656,7 @@ int mcache_monster::info(tile_draw_info *dinfo) const
     if (m_equ_tile && get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y))
         dinfo[count++].set(m_equ_tile, ofs_x, ofs_y);
 
-    // In some cases, overlay a second weapon tile...
-    if (m_mon_tile == TILEP_MONS_DEEP_ELF_BLADEMASTER)
-    {
-        tileidx_t eq2;
-        switch (m_equ_tile)
-        {
-            case TILEP_HAND1_DAGGER:
-                eq2 = TILEP_HAND2_DAGGER;
-                break;
-            case TILEP_HAND1_SABRE:
-                eq2 = TILEP_HAND2_SABRE;
-                break;
-            default:
-            case TILEP_HAND1_SHORT_SWORD_SLANT:
-                eq2 = TILEP_HAND2_SHORT_SWORD_SLANT;
-                break;
-        };
-
-        if (eq2)
-            dinfo[count++].set(eq2, -ofs_x, ofs_y);
-    }
-    else if (m_shd_tile && get_shield_offset(m_mon_tile, &ofs_x, &ofs_y))
+    if (m_shd_tile && get_shield_offset(m_mon_tile, &ofs_x, &ofs_y))
         dinfo[count++].set(m_shd_tile, ofs_x, ofs_y);
 
     return count;

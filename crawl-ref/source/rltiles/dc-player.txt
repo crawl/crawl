@@ -866,9 +866,20 @@ torch2 TORCH2
 
 bladehands BLADEHAND
 
+# The 1-2 "typos" are intentional; the equivalent tiles above have no
+# enums and become TILEP_GREAT_FLAIL_1 and TILEP_GREAT_MACE_1 respectively.
 dagger DAGGER
 sabre SABRE
 short_sword_slant SHORT_SWORD_SLANT
+flail_great GREAT_FLAIL
+flail_great2 GREAT_FLAIL_1
+great_mace GREAT_MACE
+great_mace2 GREAT_MACE_1
+giant_club GIANT_CLUB
+giant_club_slant GIANT_CLUB_SLANT
+giant_club_spike GIANT_CLUB_SPIKE
+giant_club_spike_slant GIANT_CLUB_SPIKE_SLANT
+giant_club_plain GIANT_CLUB_PLAIN
 %end_ctg
 
 ###Hair
