@@ -342,6 +342,10 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #endif
 #endif
 
+#ifdef DEBUG_DIAGNOSTICS
+    #define DEBUG_TESTS
+#endif
+
 // =========================================================================
 //  Lua user scripts (NOTE: this may also be enabled in your makefile!)
 // =========================================================================
