@@ -406,7 +406,7 @@ ENDMAP
 # Baited teleport trap - this is evil!
 NAME:    labyrinth_baited_teleportation_trap
 TAGS:    lab allow_dup
-KFEAT:   Y = teleport trap / zot trap / .
+KFEAT:   Y = known teleport trap / known zot trap / .
 KITEM:   Y = any good_item
 SHUFFLE: cxv
 WEIGHT:  1
