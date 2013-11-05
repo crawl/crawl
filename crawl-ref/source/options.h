@@ -217,6 +217,7 @@ public:
     FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table;
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
+    bool        want_gdb;
 
 #ifdef WIZARD
     int            wiz_mode;   // no, never, start in wiz mode

@@ -963,6 +963,11 @@ void game_options::reset_options()
     terp_files.clear();
     no_save              = false;
 #endif
+#ifdef DEBUG_DIAGNOSTICS
+    want_gdb             = false;
+#else
+    want_gdb             = !access("/usr/bin/gdb", 1);
+#endif
 
 #ifdef USE_TILE
     tile_show_items      = "!?/%=([)x}:|\\";
@@ -3804,6 +3809,7 @@ enum commandline_option_type
     CLO_TUTORIAL,
     CLO_WIZARD,
     CLO_NO_SAVE,
+    CLO_GDB,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -3820,6 +3826,7 @@ static const char *cmd_ops[] =
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "zotdef", "tutorial", "wizard", "no-save",
+    "gdb",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection",
 #endif
@@ -4329,6 +4336,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (next_is_param)
                 return false;
             crawl_state.build_db = true;
+            break;
+
+        case CLO_GDB:
+            Options.want_gdb = true;
             break;
 
         case CLO_MACRO:
