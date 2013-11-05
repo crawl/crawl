@@ -148,4 +148,7 @@ private:
     void push_neigh(coord_def from, int dx, int dy);
 };
 
+# ifdef DEBUG_TESTS
+void coordit_tests();
+# endif
 #endif

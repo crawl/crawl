@@ -19,6 +19,7 @@
 
 #include "clua.h"
 #include "cluautil.h"
+#include "coordit.h"
 #include "dlua.h"
 #include "errors.h"
 #include "files.h"
@@ -178,6 +179,7 @@ void run_tests()
     _run_test("zotdef_wave", debug_waves);
     _run_test("mon-pick", debug_monpick);
     _run_test("mon-data", debug_mondata);
+    _run_test("coordit", coordit_tests);
 
     // Get a list of Lua files in test. Order of execution of
     // tests should be irrelevant.

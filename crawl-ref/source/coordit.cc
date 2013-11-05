@@ -9,6 +9,7 @@
 
 #include "coord-circle.h"
 #include "coord.h"
+#include "libutil.h"
 #include "los_def.h"
 #include "random.h"
 
@@ -384,3 +385,46 @@ int distance_iterator::radius() const
 {
     return r;
 }
+
+#ifdef DEBUG_TESTS
+void coordit_tests()
+{
+    // bounding box of our playground
+    #define BC   16
+    #define BBOX 32
+    ASSERT(los_radius2 < sqr(BC - 2));
+    coord_def center(BC, BC);
+
+    FixedBitArray<BBOX, BBOX> seen;
+
+    for (int r = 0; r <= los_radius2; ++r)
+    {
+        seen.reset();
+
+        for (radius_iterator ri(center, r, C_CIRCLE); ri; ++ri)
+        {
+            if (seen(*ri))
+                die("radius_iterator(C%d): %d,%d seen twice", r, ri->x, ri->y);
+            seen.set(*ri);
+        }
+
+        for (int x = 0; x < BBOX; x++)
+            for (int y = 0; y < BBOX; y++)
+            {
+                bool in = sqr(x - BC) + sqr(y - BC) <= r;
+                if (seen(coord_def(x, y)) != in)
+                {
+                    die("radius_iterator(C%d) mismatch at %d,%d: %d != %d",
+                        r, x, y, seen(coord_def(x, y)), in);
+                }
+            }
+    }
+
+    for (radius_iterator ri(coord_def(2, 2), 5, C_ROUND); ri; ++ri)
+        if (!map_bounds(*ri))
+            die("radius_iterator(R5) out of bounds at %d, %d", ri->x, ri->y);
+    for (radius_iterator ri(coord_def(GXM + 1, GYM + 1), 7, C_ROUND); ri; ++ri)
+        if (!map_bounds(*ri))
+            die("radius_iterator(R7) out of bounds at %d, %d", ri->x, ri->y);
+}
+#endif
