@@ -326,8 +326,9 @@ memory to learn others.
 Burn Spellbooks ability
 
 Set all spellbooks within your field of vision on fire. The fire is fuelled by
-Trog's hatred, and Trog likes it most when you don't even care which books of
-madness burst into flames.
+Trog's hatred, and it burns hotter than mere parchment would — which can be
+useful if you throw the book under someone's feet first. Obviously, Trog
+greatly appreciates using this ability.
 %%%%
 Berserk ability
 
