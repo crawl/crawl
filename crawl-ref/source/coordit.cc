@@ -11,7 +11,6 @@
 #include "coord.h"
 #include "los_def.h"
 #include "random.h"
-#include "player.h"
 
 rectangle_iterator::rectangle_iterator(const coord_def& corner1,
                                         const coord_def& corner2)
@@ -203,7 +202,7 @@ radius_iterator::radius_iterator(const coord_def center, int param,
 radius_iterator::radius_iterator(const coord_def _center,
                                  los_type _los,
                                  bool _exclude_center)
-    : circle(_center, you.current_vision, C_ROUND),
+    : circle(_center, los_radius2, C_CIRCLE),
       iter(circle.iter()),
       exclude_center(_exclude_center)
 {

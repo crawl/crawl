@@ -102,6 +102,6 @@ bool circle_def::contains(const coord_def &p) const
     if (!bbox.contains(p))
         return false;
 
-    int r_sq = los_radius ? get_los_radius_sq() : radius_sq;
+    int r_sq = los_radius ? los_radius2 : radius_sq;
     return ((p - origin).abs() <= r_sq);
 }
