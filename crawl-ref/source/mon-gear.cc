@@ -231,11 +231,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     item.base_type = OBJ_UNASSIGNED;
 
-    if (mon->type == MONS_DANCING_WEAPON
-        && player_in_branch(BRANCH_BLADE))
-    {
+    if (mon->type == MONS_DANCING_WEAPON)
         level = MAKE_GOOD_ITEM;
-    }
 
     // moved setting of quantity here to keep it in mind {dlb}
     item.quantity = 1;
