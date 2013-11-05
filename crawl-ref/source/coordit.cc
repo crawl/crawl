@@ -410,8 +410,8 @@ static void _test_ai(const coord_def c, bool exc, size_t expected)
 
     if (seen.size() != expected)
     {
-        die("adjacent_iterator(%d,%d): seen %lu, expected %lu",
-            c.x, c.y, seen.size(), expected);
+        die("adjacent_iterator(%d,%d): seen %d, expected %d",
+            c.x, c.y, (int)seen.size(), (int)expected);
     }
 }
 
