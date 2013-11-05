@@ -963,7 +963,9 @@ void game_options::reset_options()
     terp_files.clear();
     no_save              = false;
 #endif
-#ifdef DEBUG_DIAGNOSTICS
+#ifdef TARGET_OS_WINDOWS
+    want_gdb             = false;
+#elif defined DEBUG_DIAGNOSTICS
     want_gdb             = false;
 #else
     want_gdb             = !access("/usr/bin/gdb", 1);
