@@ -1209,6 +1209,9 @@ static void _input()
         redraw_screen();
     }
 
+    // Unhandled things that should have caused death.
+    ASSERT(you.hp > 0);
+
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
     {
