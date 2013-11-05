@@ -540,6 +540,9 @@ static void _show_commandline_options_help()
     puts("");
     puts("Miscellaneous options:");
     puts("  -dump-maps       write map Lua to stderr when parsing .des files");
+#ifndef TARGET_OS_WINDOWS
+    puts("  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)");
+#endif
 
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
