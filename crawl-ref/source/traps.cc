@@ -1656,10 +1656,8 @@ bool is_valid_shaft_level(const level_id &place)
     if (!is_connected_branch(place))
         return false;
 
-    // Enable shafts on D:14 again, to allow bypassing the rune lock.
-    // They will always be known to the player, so no accidents. --dpeg
-    //    if (place == BRANCH_DUNGEON && you.depth == RUNE_LOCK_DEPTH)
-    //        return false;
+    if (place == BRANCH_DUNGEON && you.depth == RUNE_LOCK_DEPTH)
+        return false;
 
     // Shafts are now allowed on the first two levels, as they have a
     // good chance of being detected. You'll also fall less deep.
@@ -1708,8 +1706,6 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
 
     int curr_depth = lid.depth;
     int max_depth = brdepth[lid.branch];
-    if (lid.branch == BRANCH_DUNGEON and curr_depth == RUNE_LOCK_DEPTH)
-        max_depth = RUNE_LOCK_DEPTH + 1;
     if (lid.branch == BRANCH_DUNGEON and curr_depth < RUNE_LOCK_DEPTH)
         max_depth = RUNE_LOCK_DEPTH;
 
