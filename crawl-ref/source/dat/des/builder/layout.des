@@ -181,6 +181,9 @@ TAGS:    overwritable layout allow_dup unrand layout_type_cross
     fill_area{fill = border}
     fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = wall}
 
+    -- don't spam clouds if the outside is lava
+    kprop("l = no_cloud_gen")
+
     -- create window
     if window then
         local clear = 'm'
