@@ -122,22 +122,16 @@ void clear_rays_on_exit()
 }
 
 // Pre-squared LOS radius.
-static int _los_radius_sq = LOS_RADIUS_SQ;
+int los_radius2 = LOS_RADIUS_SQ;
 
 static void _handle_los_change();
 
 void set_los_radius(int r)
 {
     ASSERT(r <= LOS_RADIUS);
-    _los_radius_sq = r * r + 1;
+    los_radius2 = r * r + 1;
     invalidate_los();
     _handle_los_change();
-}
-
-// XXX: just for monster_los
-int get_los_radius_sq()
-{
-    return _los_radius_sq;
 }
 
 bool double_is_zero(const double x)

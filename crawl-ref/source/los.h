@@ -17,7 +17,7 @@ struct ray_def;
 bool double_is_zero(const double x);
 
 void set_los_radius(int r);
-int get_los_radius_sq(); // XXX
+extern int los_radius2;
 
 // Default bounds that tracks global LOS radius.
 #define BDS_DEFAULT (circle_def())
