@@ -1447,7 +1447,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool beneficial,
             bool demonspawn, bool no_rot, bool temporary)
 {
-    if (which_mutation == RANDOM_BAD_MUTATION
+    if (which_mutation == RANDOM_BAD_MUTATION && !temporary
         && crawl_state.disables[DIS_AFFLICTIONS])
     {
         return true; // no fallbacks
