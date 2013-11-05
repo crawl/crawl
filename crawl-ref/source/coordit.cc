@@ -386,6 +386,35 @@ int distance_iterator::radius() const
     return r;
 }
 
+/********************/
+/* regression tests */
+/********************/
+static void _test_ai(const coord_def c, bool exc, size_t expected)
+{
+    set<coord_def> seen;
+
+    for (adjacent_iterator ai(c, exc); ai; ++ai)
+    {
+        if (seen.count(*ai))
+            die("adjacent_iterator: %d,%d seen twice", ai->x, ai->y);
+        seen.insert(*ai);
+
+        if (c == *ai && !exc)
+            continue;
+        if ((c - *ai).range() != 1)
+        {
+            die("adjacent_iterator: %d,%d not adjacent to %d,%d",
+                ai->x, ai->y, c.x, c.y);
+        }
+    }
+
+    if (seen.size() != expected)
+    {
+        die("adjacent_iterator(%d,%d): seen %lu, expected %lu",
+            c.x, c.y, seen.size(), expected);
+    }
+}
+
 #ifdef DEBUG_TESTS
 void coordit_tests()
 {
@@ -451,5 +480,14 @@ void coordit_tests()
                     x, y, seen(coord_def(x, y)), in);
             }
         }
+
+    _test_ai(center, false, 9);
+    _test_ai(center, true, 8);
+    _test_ai(coord_def(3, 0), false, 6);
+    _test_ai(coord_def(3, 0), true, 5);
+    _test_ai(coord_def(0, 0), false, 4);
+    _test_ai(coord_def(0, 0), true, 3);
+    _test_ai(coord_def(GXM, GYM), false, 1);
+    _test_ai(coord_def(GXM, GYM), true, 1);
 }
 #endif
