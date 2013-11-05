@@ -3166,43 +3166,6 @@ MAP
 .............
 ENDMAP
 
-#################################################################
-# Flame stairs (Lemuel)
-#
-NAME:    lemuel_flame_stairs_1
-DEPTH:   D:9-26, Elf:2-4, Zot:1-4
-ITEM:    nothing
-SHUFFLE: {[ / ]}
-MARKER:  d = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 10, pow_max = 10, delay = 10, \
-             size = 2, walk_dist = 0, spread_rate= 0 }
-MAP
-ccccccccccc
-cccccc...{c
-@.........c
-@..d......c
-@.........c
-cccccc...[c
-ccccccccccc
-ENDMAP
-
-NAME:    lemuel_freeze_stairs_1
-DEPTH:   D:9-26, Elf:2-4, Zot:1-4
-ITEM:    nothing
-SHUFFLE: {[ / ]}
-MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 10, pow_max = 10, delay = 10, \
-             size = 2, walk_dist = 0, spread_rate= 0 }
-MAP
-ccccccccccccc
-cccccccc...{c
-@...........c
-@..d........c
-@...........c
-cccccccc...[c
-ccccccccccccc
-ENDMAP
-
 # No item generation for the sake of autoexplore.
 NAME:   lemuel_flamethrower_hall
 DEPTH:  D:9-, Elf, Geh, Abyss

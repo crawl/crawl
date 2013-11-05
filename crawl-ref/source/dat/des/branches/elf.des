@@ -252,49 +252,6 @@ xxxxxxxxxxxxx...xxxxxx.....xxx
 xxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
 ENDMAP
 
-###########################################################################
-# Two arrival vaults by Lemuel, using fog generators.
-
-NAME:   elf_arrival_freeze
-PLACE:  Elf:1
-ORIENT: float
-ITEM:   nothing
-MARKER: d = lua:fog_machine { cloud_type = "freezing vapour", \
-             pow_min = 10, pow_max = 10, delay = 10, \
-             size = 2, walk_dist = 0, spread_rate= 0 }
-MAP
-xx@@@xx
-xx...xx
-xx...xx
-xx.d.xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx.{.xx
-xxxxxxx
-ENDMAP
-
-NAME:   elf_arrival_flame
-PLACE:  Elf:1
-ORIENT: float
-ITEM:   nothing
-MARKER: d = lua:fog_machine { cloud_type = "flame", \
-             pow_min = 10, pow_max = 10, delay = 10, \
-             size = 2, walk_dist = 0, spread_rate= 0 }
-MAP
-xxxxxxxxxxxxx
-xxxxxxxxxxxxx
-@...........x
-@..d.......{x
-@...........x
-xxxxxxxxxxxxx
-xxxxxxxxxxxxx
-ENDMAP
-
 NAME:   minmay_elf_arrival_circle
 ORIENT: float
 PLACE:  Elf:1
