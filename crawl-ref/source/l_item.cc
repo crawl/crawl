@@ -633,6 +633,58 @@ IDEF(god_gift)
     return 1;
 }
 
+IDEF(fully_identified)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, fully_identified(*item));
+
+    return 1;
+}
+
+IDEF(plus)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (item_ident(*item, ISFLAG_KNOW_PLUSES)
+        && (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_ARMOUR
+            || item->base_type == OBJ_WANDS
+            || item->base_type == OBJ_JEWELLERY
+               && (item->sub_type == RING_PROTECTION
+                   || item->sub_type == RING_STRENGTH
+                   || item->sub_type == RING_SLAYING
+                   || item->sub_type == RING_EVASION
+                   || item->sub_type == RING_DEXTERITY
+                   || item->sub_type == RING_INTELLIGENCE)))
+    {
+        lua_pushnumber(ls, item->plus);
+    }
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
+IDEF(plus2)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    if (item_ident(*item, ISFLAG_KNOW_PLUSES)
+        && (item->base_type == OBJ_WEAPONS
+            || item->base_type == OBJ_JEWELLERY
+               && item->sub_type == RING_SLAYING))
+    {
+        lua_pushnumber(ls, item->plus2);
+    }
+    else
+        lua_pushnil(ls);
+
+    return 1;
+}
+
 // DLUA-only functions
 static int l_item_do_pluses(lua_State *ls)
 {
@@ -1051,6 +1103,9 @@ static ItemAccessor item_attrs[] =
     { "branded",           l_item_branded },
     { "snakable",          l_item_snakable },
     { "god_gift",          l_item_god_gift },
+    { "fully_identified",  l_item_fully_identified },
+    { "plus",              l_item_plus },
+    { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
     { "cursed",            l_item_cursed },
