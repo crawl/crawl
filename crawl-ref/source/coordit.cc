@@ -426,5 +426,30 @@ void coordit_tests()
     for (radius_iterator ri(coord_def(GXM + 1, GYM + 1), 7, C_ROUND); ri; ++ri)
         if (!map_bounds(*ri))
             die("radius_iterator(R7) out of bounds at %d, %d", ri->x, ri->y);
+
+    seen.reset();
+    int rd = 0;
+    for (distance_iterator di(center, true, false, BC - 1); di; ++di)
+    {
+        if (seen(*di))
+            die("distance_iterator: %d,%d seen twice", di->x, di->y);
+        seen.set(*di);
+
+        int rc = (center - *di).range();
+        if (rc < rd)
+            die("distance_iterator went backwards");
+        rd = rc;
+    }
+
+    for (int x = 0; x < BBOX; x++)
+        for (int y = 0; y < BBOX; y++)
+        {
+            bool in = sqr(x - BC) + sqr(y - BC) <= dist_range(BC - 1);
+            if (seen(coord_def(x, y)) != in)
+            {
+                die("distance_iterator mismatch at %d,%d: %d != %d",
+                    x, y, seen(coord_def(x, y)), in);
+            }
+        }
 }
 #endif
