@@ -72,6 +72,7 @@ static list<monster*> displaced_monsters;
 
 static void abyss_area_shift(void);
 static void _push_items(void);
+static void _push_displaced_monster(monster* mon);
 
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.  Returns the chosen location, or INVALID_COORD if it
@@ -123,6 +124,7 @@ static void _write_abyssal_features()
     if (abyssal_features.empty())
         return;
 
+    dprf(DIAG_ABYSS, "Writing a mock-up of old level.");
     const int count = abyssal_features.size();
     ASSERT(count == 213);
     const int scalar = 0xFF;
@@ -146,6 +148,8 @@ static void _write_abyssal_features()
                     {
                         grd(p) = abyssal_features[index];
                         env.level_map_mask(p) = MMT_VAULT;
+                        if (monster* mon = monster_at(p))
+                            _push_displaced_monster(mon);
                     }
                 }
                 else
@@ -1529,6 +1533,7 @@ retry:
     _abyss_apply_terrain(abyss_genlevel_mask);
 
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
+    _place_displaced_monsters();
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         ASSERT(grd(*ri) > DNGN_UNSEEN);
