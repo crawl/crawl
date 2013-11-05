@@ -776,7 +776,8 @@ KITEM:    P = ring of strength not_cursed ident:all plus:6, \
           ring of flight not_cursed ident:all
 KITEM:    R = broad axe unrand:obsidian_axe ident:all, \
               shield unrand:shield_of_the_gong ident:all, \
-              plate armour unrand:maxwells_patent_armour ident:all
+              plate armour unrand:maxwells_patent_armour ident:all, \
+              great mace unrand:dark_maul ident:all
 KITEM:    T = longbow unrand:piercer ident:all, \
               long sword unrand:singing_sword ident:all, \
               great mace unrand:mace_of_variability ident:all, \
