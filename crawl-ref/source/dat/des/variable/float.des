@@ -170,17 +170,17 @@ DEPTH:   D:8-
 ORIENT:  float
 MONS:    orange crystal statue / silver statue / ice statue
 MAP
-       xxx            xxx            xxx
-       x1x            x1x            x1x
-       x*x            x|x            x*x
-      xx.xx          xx.xx          xx.xx
-      x...x          x...x          x...x
-     xx...xx        xx...xx        xx...xx
-   xxx.....xxx    xxx.....xxx    xxx.....xxx
-xxxx.........xxxxxx.........xxxxxx.........xxxx
-@.............................................@
-...............................................
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+           xxx
+           x1x
+           x|x
+          xx.xx
+          x...x
+         xx...xx
+       xxx.....xxx
+xxxxxxxx.........xxxxxxxx
+@.......................@
+.........................
+xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
