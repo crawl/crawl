@@ -705,16 +705,10 @@ TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
 COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
-KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
-                    blink_other;blink_other name:strange_machine \
-                    name_replace name_descriptor hd:13 hp:120 \
-                    tile:mons_statue_guardian
+SHUFFLE:    89
+KMONS:      89 = dancing weapon
 # please make sure this is the book with Tukima's Dance
 KITEM:      8 = book of enchantments
-KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
-                    blink_other;blink_other name:strange_machine \
-                    name_replace name_descriptor hd:13 hp:120 \
-                    tile:mons_statue_guardian
 KITEM:      9 = scroll of acquirement
 :           set_feature_name("clear_rock_wall", "crystal clear mirror")
 :           set_feature_name("granite_statue", "strange machine")
@@ -741,10 +735,10 @@ MAP
          cm...mcm.....mcm...mc
          cm...mcm..1..mcm...mc
          cc...cccc...cccc...cc
-         ccc.cccccc+cccccc.ccc
+         ccc.cccccc.cccccc.ccc
           cc+ccccm...mcccc+cc
          ccm.mccm.....mccm.mcc
-         cm.1..+...V...+..1.mc
+         cm.1......V......1.mc
         ccXm.mccm.....mccm.mYcc
       cccxccmlcccm...mcccrmccycc
       ccm.mcccLcccm.mcccRcccm.mcc
