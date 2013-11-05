@@ -260,7 +260,6 @@ KPROP:  O-X = no_tele_into
 SUBST:  X = c
 SUBST:  - = ., D = +
 KFEAT:  O = enter_zot
-KFEAT:  + = runed_door
 # easy: 1, 2
 : if crawl.coinflip() then
 MONS:   pale draconian, steam dragon
