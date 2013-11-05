@@ -13,7 +13,7 @@
 
 #include "AppHdr.h"
 
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+#ifdef DEBUG_TESTS
 
 #include "ctest.h"
 
@@ -213,4 +213,4 @@ void run_tests()
         ntests, activity, nsuccess, (int)failures.size());
 }
 
-#endif // DEBUG_DIAGNOSTICS
+#endif // DEBUG_TESTS
