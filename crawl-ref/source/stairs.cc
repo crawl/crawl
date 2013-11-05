@@ -351,25 +351,6 @@ void up_stairs(dungeon_feature_type force_stair)
             return down_stairs(force_stair);
     }
 
-    if (player_in_branch(BRANCH_DUNGEON)
-        && you.depth == RUNE_LOCK_DEPTH + 1
-        && (feat_is_stone_stair(stair_find) || feat_is_escape_hatch(stair_find)))
-    {
-        bool has_rune = false;
-        for (int i = 0; i < NUM_RUNE_TYPES; i++)
-            if (you.runes[i])
-            {
-                has_rune = true;
-                break;
-            }
-
-        if (!has_rune)
-        {
-            mpr("You need a rune to go back up.");
-            return;
-        }
-    }
-
     // Only check the current position for a legal stair traverse.
     if (!force_stair && !_check_stairs(stair_find))
         return;
