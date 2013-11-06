@@ -12,7 +12,6 @@
 #include "env.h"
 #include "godconduct.h"
 #include "hints.h"
-#include "item_use.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -193,9 +192,10 @@ spret_type cast_swiftness(int power, bool fail)
         return SPRET_ABORT;
     }
 
-    if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.", 20,
-                             "%s makes your neck tingle."))
+    if (you.in_water() || you.liquefied_ground())
     {
+        mprf("The %s foams!", you.in_water() ? "water"
+                                             : "liquid ground");
         return SPRET_ABORT;
     }
 
