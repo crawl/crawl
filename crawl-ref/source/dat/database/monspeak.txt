@@ -436,9 +436,6 @@ VISUAL:@The_monster@ summons a swarm of flies.
 _hell_lord_taunt_
 
 @The_monster@ @says@ @to_foe@, "@demon_taunt@"
-
-w:1
-@The_monster@ proclaims, "For the glory of @my_God@!"
 %%%%
 _demon_taunt_
 
