@@ -200,7 +200,7 @@ static int l_you_genus(lua_State *ls)
 
 static int you_floor_items(lua_State *ls)
 {
-    lua_push_floor_items(ls, env.igrid(you.pos()));
+    lua_push_floor_items(ls, you.visible_igrd(you.pos()));
     return 1;
 }
 
