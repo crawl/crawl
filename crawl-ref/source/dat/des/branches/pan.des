@@ -2040,6 +2040,93 @@ MAP
       ccccc
 ENDMAP
 
+###################################
+
+NAME:    grunt_pan_in_and_out
+TAGS:    pan allow_dup no_trap_gen
+MONS:    greater demon, common demon
+KMONS:   d = pandemonium lord
+: pan_demonic_rune(_G, 'e')
+MAP
+............
+.c+cccccc+c.
+.c.c.de.c.c.
+.c2c....c2c.
+.c.c.11.c.c.
+.c2c....c2c.
+.c.cc++cc.c.
+.c2cc..cc2c.
+.c.cc..cc.c.
+.c2..11..2c.
+.cccccccccc.
+............
+ENDMAP
+
+NAME:    grunt_pan_spiral
+TAGS:    pan allow_dup no_trap_gen
+MONS:    greater demon, common demon
+KMONS:   d = pandemonium lord
+: pan_demonic_rune(_G, 'e')
+MAP
+............
+.c+cccccccc.
+.c.cc2.2..+.
+.c.c.cccccc.
+.c2c1c.1.cc.
+.c.c.decc2c.
+.c2ccfg.c.c.
+.cc.1.c1c2c.
+.cccccc.c.c.
+.+..2.2cc.c.
+.cccccccc+c.
+............
+ENDMAP
+
+NAME:    grunt_pan_zigzag
+TAGS:    pan allow_dup no_trap_gen
+MONS:    greater demon, common demon
+KMONS:   d = pandemonium lord
+: pan_demonic_rune(_G, 'e')
+MAP
+............
+.cccccccccc.
+.c..2..2..+.
+.c.2.cccccc.
+.cc.1.cc....
+..cc.d1cc...
+...cc1e.cc..
+....cc.1.cc.
+.cccccc.2.c.
+.+..2..2..c.
+.cccccccccc.
+............
+ENDMAP
+
+NAME: grunt_pan_pentagram
+TAGS: pan allow_dup no_trap_gen
+: pan_demonic_rune(_G, 'P', true)
+MONS: greater demon, common demon
+MAP
+    ...........
+  ...cccc+cccc...
+ ..ccc.......ccc..
+ .cc.cc..2..cc.cc.
+..c...+cc.cc+...c..
+.c+...c.ccc.c...+c.
+.c..2.c1ccc1c.2..c.
+.c....cc+.+cc....c.
+.c..cccc.P.cccc..c.
+.c.cc.1+...+1.cc.c.
+.cc+ccccc+ccccc+cc.
+.c......c1c......c.
+.cc..2..c.c..2..cc.
+..cc....c+c....cc..
+ ..+c....c....c+..
+  ..ccc..c..ccc..
+   ...ccccccc...
+     .........
+ENDMAP
+
 #############################################################################
 # Pandemonium lesser demon vaults: standalone.
 #############################################################################
@@ -2137,6 +2224,29 @@ x.x3xl.2.lx3x.x
 x2xxxl2.2lxxx2x
 x....2.2.2....x
 xxxxxxxxxxxxxxx
+ENDMAP
+
+###################################
+
+NAME:  grunt_pan_frozen_over
+TAGS:  pan no_pool_fixup no_monster_gen
+SUBST: W = wWW.
+KMONS: O = ice statue
+KITEM: O = demonic rune of Zot
+KMONS: P = pandemonium lord
+MONS:  blizzard demon, ice devil / blue devil w:20
+: set_random_mon_list("blizzard demon / ice devil / blue devil")
+MAP
+ccccccccccccccccccc
+.WwcwW1.1O1.1WwcwW.
+2WwcwW.1.P.1.WwcwW2
+.WwccwW.1.1.WwccwW.
+ .WwccwW.1.WwccwW.
+ .WwwccwWWWwccwwW.
+  2WWwWWwwwWWwWW2
+   ..WWwwwwwWW.
+     ..WWWWW..
+       .2.2.
 ENDMAP
 
 #############################################################################
