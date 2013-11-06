@@ -1559,7 +1559,9 @@ enum duration_type
     DUR_FIRE_VULN,
     DUR_ELIXIR_HEALTH,
     DUR_ELIXIR_MAGIC,
+#if TAG_MAJOR_VERSION == 34
     DUR_ANTENNAE_EXTEND,
+#endif
     NUM_DURATIONS
 };
 

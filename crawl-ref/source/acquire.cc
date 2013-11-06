@@ -153,7 +153,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     if (arm == ARM_HELMET
         && (!you_can_wear(EQ_HELMET)
             || you.mutation[MUT_HORNS]
-            || you.mutation[MUT_ANTENNAE] && you.species != SP_FORMICID))
+            || you.mutation[MUT_ANTENNAE]))
     {
         // Check for Horns 3 & Antennae 3 - Don't give a cap if those mutation
         // levels have been reached.

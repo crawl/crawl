@@ -780,7 +780,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (player_mutation_level(MUT_ANTENNAE) == 3 && you.species != SP_FORMICID)
+        if (player_mutation_level(MUT_ANTENNAE) == 3)
         {
             if (verbose)
                 mpr("You can't wear any headgear with your large antennae!");
@@ -804,7 +804,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (player_mutation_level(MUT_ANTENNAE) && you.species != SP_FORMICID)
+            if (player_mutation_level(MUT_ANTENNAE))
             {
                 if (verbose)
                     mpr("You can't wear that with your antennae!");

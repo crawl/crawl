@@ -851,7 +851,9 @@ static const char* dur_names[] =
     "fire vulnerability",
     "elixir health",
     "elixir magic",
+#if TAG_MAJOR_VERSION == 34
     "antennae extend",
+#endif
 };
 
 void wizard_edit_durations(void)
