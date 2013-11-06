@@ -25,8 +25,7 @@ LUAFN(view_feature_at)
     if (!map_bounds(p))
         return 1;
     dungeon_feature_type f = env.map_knowledge(p).feat();
-    if (f != DNGN_UNSEEN)
-        lua_pushstring(ls, dungeon_feature_name(f));
+    lua_pushstring(ls, dungeon_feature_name(f));
     return 1;
 }
 
