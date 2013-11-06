@@ -70,7 +70,7 @@ static void _zin_saltify(monster* mon);
 string zin_recite_text(const int seed, const int prayertype, int step)
 {
     // 'prayertype':
-    // This is in enum.h; there are currently five prayers.
+    // This is in enum.h; there are currently four prayers.
 
     // 'step':
     // -1: We're either starting or stopping, so we just want the passage name.
@@ -523,6 +523,11 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         eligibility[RECITE_IMPURE] = 0;
     }
 
+    // Don't allow against enemies that are already affected by an
+    // earlier recite type.
+    if (eligibility[RECITE_CHAOTIC] > 0)
+        eligibility[RECITE_IMPURE] = 0;
+
     // Anti-unholy prayer
 
     // Hits demons and incorporeal undead.
@@ -530,6 +535,14 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         || holiness == MH_DEMONIC)
     {
         eligibility[RECITE_UNHOLY]++;
+    }
+
+    // Don't allow against enemies that are already affected by an
+    // earlier recite type.
+    if (eligibility[RECITE_CHAOTIC] > 0
+        || eligibility[RECITE_IMPURE] > 0)
+    {
+        eligibility[RECITE_UNHOLY] = 0;
     }
 
     // Anti-heretic prayer
@@ -551,24 +564,18 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         if (mon->type == MONS_DEMIGOD)
             eligibility[RECITE_HERETIC]++;
 
-        // ...but chaotic gods are worse...
-        if (is_chaotic_god(mon->god))
-            eligibility[RECITE_HERETIC]++;
-
-        // ...as are evil gods.
+        // ...but evil gods are worse.
         if (is_evil_god(mon->god) || is_unknown_god(mon->god))
             eligibility[RECITE_HERETIC]++;
 
         // (The above mean that worshipers will be treated as
         // priests for reciting, even if they aren't actually.)
 
-        // Sanity check: monsters that you can't convert anyway don't get
-        // recited against.  Merely behaving evil doesn't get you off.
-        if ((mon->is_unclean(false)
-             || mon->is_chaotic()
-             || mon->is_evil(false)
-             || mon->is_unholy(false))
-            && eligibility[RECITE_HERETIC] <= 1)
+        // Don't allow against enemies that are already affected by an
+        // earlier recite type.
+        if (eligibility[RECITE_CHAOTIC] > 0
+            || eligibility[RECITE_IMPURE] > 0
+            || eligibility[RECITE_UNHOLY] > 0)
         {
             eligibility[RECITE_HERETIC] = 0;
         }
@@ -627,10 +634,10 @@ bool zin_check_able_to_recite(bool quiet)
 
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
 {
-    "Abominations (harms the forces of chaos and mutation)",
-    "Ablutions (harms the unclean and corporeal undead)",
-    "Apostates (harms the faithless and heretics)",
-    "Anathema (harms demons and incorporeal undead)",
+    "Chaotic (affects the forces of chaos and mutation)",
+    "Impure (affects the unclean and corporeal undead)",
+    "Heretic (affects non-believers)",
+    "Unholy (affects demons and incorporeal undead)",
 };
 
 int zin_check_recite_to_monsters(recite_type *prayertype)
@@ -691,7 +698,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     // But often, you'll have multiple options...
     mesclr();
 
-    mpr("Recite a passage from which book of the Axioms of Law?", MSGCH_PROMPT);
+    mpr("Recite against which type of sinner?", MSGCH_PROMPT);
 
     int menu_cnt = 0;
     recite_type letters[NUM_RECITE_TYPES];
