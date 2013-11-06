@@ -1053,7 +1053,7 @@ calling upon the trees to defend against incursions.
 %%%%
 formicid
 
-A sentient ant that walks upright and is competant at digging.
+A sentient ant that walks upright and is competent at digging.
 %%%%
 formicid drone
 
