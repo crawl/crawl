@@ -617,7 +617,7 @@ ITEM:     (list of items, separated by comma)
           99) with the "rotting" property:
 
           ITEM: rotting griffon corpse
-          
+
           Corpses may still rot away before the player finds your vault.
           To prevent corpses from decaying, you can define them using a
           "never_decay" property as:
@@ -627,7 +627,7 @@ ITEM:     (list of items, separated by comma)
           Or combining the two, for a corpse that starts out rotten but
           never rots away:
 
-          ITEM: rotting never_decay griffon corpse 
+          ITEM: rotting never_decay griffon corpse
 
           However, direct use of "never_decay" is not recommended,
           since such items will not behave as the player expects.

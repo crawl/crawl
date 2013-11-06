@@ -13,6 +13,7 @@ genus_type species_genus(species_type species);
 int species_has_claws(species_type species, bool mut_level = false);
 bool species_likes_water(species_type species);
 bool species_likes_lava(species_type species);
+bool species_can_throw_large_rocks(species_type species);
 size_type species_size(species_type species,
                        size_part_type psize = PSIZE_TORSO);
 

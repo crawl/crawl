@@ -32,6 +32,11 @@ Draconian
 Draconians are versatile hybrids. They mature when reaching level 7 and develop
 a colour.
 %%%%
+Formicid
+
+Formicids are humanoid ants adept at digging. Their limbs are exceptionally
+strong and they live in a natural stasis.
+%%%%
 Felid
 
 These many-lived cats possess sentience, but are incapable of advanced item

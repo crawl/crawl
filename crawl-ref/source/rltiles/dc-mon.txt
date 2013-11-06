@@ -11,6 +11,11 @@ giant_cockroach MONS_GIANT_COCKROACH
 worker_ant MONS_WORKER_ANT
 soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
+%sdir mon
+formicid MONS_FORMICID
+formicid_drone MONS_FORMICID_DRONE
+formicid_venom_mage MONS_FORMICID_VENOM_MAGE
+%sdir mon/animals
 
 ## Batty monsters ('b')
 bat MONS_BAT

@@ -12,6 +12,7 @@
 #include "env.h"
 #include "godconduct.h"
 #include "hints.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -189,6 +190,12 @@ spret_type cast_swiftness(int power, bool fail)
     if (you.form == TRAN_TREE)
     {
         canned_msg(MSG_CANNOT_MOVE);
+        return SPRET_ABORT;
+    }
+
+    if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.", 20,
+                             "%s makes your neck tingle."))
+    {
         return SPRET_ABORT;
     }
 

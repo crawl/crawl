@@ -74,6 +74,10 @@ octopode5
 djinni_f DJINNI
 djinni_m
 %rim 1
+formicid0 FORMICID
+formicid1
+formicid2
+formicid3
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST

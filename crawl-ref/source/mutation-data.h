@@ -1552,6 +1552,24 @@
 },
 #endif
 
+{ MUT_EXOSKELETON,                         0,  2, false,  true,  true,
+  "exoskeleton",
+
+  {"Your body is surrounded by an exoskeleton. (HP +5, AC +1)",
+   "Your body is surrounded by a tough exoskeleton. (HP +20, AC +2)",
+   ""},
+
+  {"Your exoskeleton hardens.",
+   "Your exoskeleton hardens into an exoskeleton.",
+   ""},
+
+  {"Your exoskeleton softens.",
+   "Your exoskeleton softens.",
+   ""},
+
+  "exoskeleton"
+},
+
 { MUT_FUMES,            0,  2, false, false, false,
   "fuming",
 

@@ -61,6 +61,12 @@ bool actor::stand_on_solid_ground() const
            && !feat_is_water(grd(pos()));
 }
 
+// Give hands required to wield weapon.
+hands_reqd_type actor::hands_reqd(const item_def &item) const
+{
+    return basic_hands_reqd(item, body_size());
+}
+
 /**
  * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
  * @param item May be NULL, in which case a dummy item will be passed in.

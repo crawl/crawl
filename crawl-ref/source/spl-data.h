@@ -3077,6 +3077,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SHAFT_SELF, "Shaft Self",
+     SPTYP_EARTH,
+     SPFLAG_ESCAPE,
+     1,
+     0,
+     -1, -1,
+     100,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_AWAKEN_VINES, "Awaken Vines",
      SPTYP_HEXES,
      SPFLAG_AREA | SPFLAG_MONSTER,

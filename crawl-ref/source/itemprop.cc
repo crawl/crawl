@@ -1442,17 +1442,14 @@ int single_damage_type(const item_def &item)
     return ret;
 }
 
-hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
-                           size_type size)
+size_type weapon_size(const item_def &item)
 {
-    item_def item;
-    item.base_type = base_type;
-    item.sub_type  = sub_type;
-    return hands_reqd(item, size);
+    return Weapon_prop[Weapon_index[item.sub_type]].fit_size;
 }
 
 // Give hands required to wield weapon for a torso of "size".
-hands_reqd_type hands_reqd(const item_def &item, size_type size)
+// Not adjusted by species or anything, which is why it's "basic".
+hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
 {
     hands_reqd_type ret = HANDS_ONE;
 
@@ -1467,11 +1464,12 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
 
     case OBJ_WEAPONS:
         ret = Weapon_prop[ Weapon_index[item.sub_type] ].hands;
+
         // Adjust handedness only for small races using melee weapons
         // that are larger than they are.
         if (!is_range_weapon(item)
             && size < SIZE_MEDIUM
-            && Weapon_prop[Weapon_index[item.sub_type]].fit_size > size)
+            && weapon_size(item) > size)
         {
             ret = HANDS_TWO;
         }
@@ -1494,6 +1492,14 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         break;
     }
     return ret;
+}
+
+hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type)
+{
+    item_def item;
+    item.base_type = base_type;
+    item.sub_type  = sub_type;
+    return ac->hands_reqd(item);
 }
 
 bool is_giant_club_type(int wpn_type)
@@ -1917,12 +1923,8 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 
     if (!force)
     {
-        if ((bodysize < SIZE_LARGE
-                || !actor->can_throw_large_rocks())
-            && wpn.sub_type == MI_LARGE_ROCK)
-        {
-            return false;
-        }
+        if (wpn.sub_type == MI_LARGE_ROCK)
+            return actor->can_throw_large_rocks();
 
         if (bodysize < SIZE_MEDIUM
             && (wpn.sub_type == MI_JAVELIN
@@ -2800,7 +2802,7 @@ bool is_shield(const item_def &item)
             && get_armour_slot(item) == EQ_SHIELD);
 }
 
-// Returns true if the given item cannot be wielded with the given shield.
+// Returns true if the given item cannot be wielded _by you_ with the given shield.
 // The currently equipped shield is used if no shield is passed in.
 bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
 {
@@ -2808,7 +2810,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
     if (!shield && !(shield = you.shield()))
         return false;
 
-    hands_reqd_type hand = hands_reqd(weapon, you.body_size());
+    hands_reqd_type hand = you.hands_reqd(weapon);
     return (hand == HANDS_TWO && !is_range_weapon(weapon));
 }
 

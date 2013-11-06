@@ -3161,11 +3161,11 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case MI_LARGE_ROCK:
-            return (you.body_size(PSIZE_BODY, !temp) < SIZE_LARGE
-                    || !you.can_throw_large_rocks());
+            return (!you.can_throw_large_rocks());
         case MI_JAVELIN:
         case MI_THROWING_NET:
-            return (you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM);
+            return (you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM
+                    && !you.can_throw_large_rocks());
         }
 
         return false;
@@ -3189,7 +3189,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
             return true;
         case SCR_TELEPORTATION:
-            return crawl_state.game_is_sprint();
+            return (you.species == SP_FORMICID
+                    || crawl_state.game_is_sprint());
+        case SCR_BLINKING:
+            return (you.species == SP_FORMICID);
         case SCR_AMNESIA:
             return you_worship(GOD_TROG);
         case SCR_RECHARGING:
@@ -3238,7 +3241,10 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.is_undead
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED)
-                   || you.species == SP_DJINNI;
+                   || you.species == SP_DJINNI
+                   || you.species == SP_FORMICID;
+        case POT_SPEED:
+            return you.species == SP_FORMICID;
 
         case POT_CURE_MUTATION:
 #if TAG_MAJOR_VERSION == 34
@@ -3290,13 +3296,17 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.is_undead
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED)
-                   || you.species == SP_DJINNI;
+                   || you.species == SP_DJINNI
+                   || you.species == SP_FORMICID;
+
+        case AMU_STASIS:
+            return you.stasis(false, false);
 
         case AMU_CLARITY:
-            return (you.clarity(false, false));
+            return you.clarity(false, false);
 
         case AMU_RESIST_CORROSION:
-            return (you.res_corr(false, false));
+            return you.res_corr(false, false);
 
         case AMU_THE_GOURMAND:
             return (player_likes_chunks(true) == 3
@@ -3332,7 +3342,7 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.hunger_state == HS_STARVING);
 
         case RING_SEE_INVISIBLE:
-            return (you.can_see_invisible(false, false));
+            return you.can_see_invisible(false, false);
 
         case RING_POISON_RESISTANCE:
             return (player_res_poison(false, temp, false) > 0
@@ -3351,10 +3361,12 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
-            return crawl_state.game_is_zotdef();
+            return (you.species == SP_FORMICID
+                    || crawl_state.game_is_zotdef());
 
         case RING_TELEPORTATION:
-            return crawl_state.game_is_sprint();
+            return (you.species == SP_FORMICID
+                    || crawl_state.game_is_sprint());
 
         case RING_INVISIBILITY:
             return _invisibility_is_useless(temp);

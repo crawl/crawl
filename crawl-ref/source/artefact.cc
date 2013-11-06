@@ -1584,12 +1584,10 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
                && (aclass != OBJ_WEAPONS
                    || weapon_skill(entry->base_type, atype) !=
                       weapon_skill(entry->base_type, entry->sub_type)
-                   || hands_reqd(entry->base_type,
-                                 atype,
-                                 you.body_size()) !=
-                      hands_reqd(entry->base_type,
-                                 entry->sub_type,
-                                 you.body_size())))
+                   || hands_reqd(&you, entry->base_type,
+                                 atype) !=
+                      hands_reqd(&you, entry->base_type,
+                                 entry->sub_type)))
         {
             continue;
         }

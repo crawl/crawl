@@ -483,7 +483,7 @@ static int _launcher_shield_slowdown(const item_def &launcher,
                                      const item_def *shield)
 {
     int speed_adjust = 100;
-    if (!shield || hands_reqd(launcher, you.body_size()) == HANDS_ONE)
+    if (!shield || you.hands_reqd(launcher) == HANDS_ONE)
         return speed_adjust;
 
     const int shield_type = shield->sub_type;
