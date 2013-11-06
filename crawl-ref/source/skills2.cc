@@ -477,10 +477,13 @@ void init_skill_order(void)
 
 void calc_hp()
 {
+    int oldhp = you.hp, oldmax = you.hp_max;
     you.hp_max = get_real_hp(true, false);
     if (you.species == SP_DJINNI)
         you.hp_max += get_real_mp(true);
     deflate_hp(you.hp_max, false);
+    if (oldhp != you.hp || oldmax != you.hp_max)
+        dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
 }
 
 void calc_mp()
