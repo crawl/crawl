@@ -1744,8 +1744,8 @@ Djinn
   designed by a creator with no knowledge of evolution.
 
   Magic is literally their life, to the point of their health and magical
-  powers' being one force, called "essence". The Djinn can also withstand more
-  magical contamination than most, and slowly recover from its effects.
+  powers' being one force, called "essence". The Djinn are hampered by magical
+  contamination more than most, but can slowly recover from its long-term effects.
 
   Being spirits of fire, they obviously suffer no harm from any kind of fire,
   but the same cannot be said of their equipment. Accordingly, cold and water
