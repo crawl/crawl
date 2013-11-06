@@ -827,39 +827,38 @@ void bolt::fake_flavour()
         flavour = _chaos_beam_flavour();
 }
 
-static bool _dig_single_wall(coord_def c, bolt& b)
+void bolt::digging_wall_effect()
 {
-    dungeon_feature_type feat = grd(c);
+    const dungeon_feature_type feat = grd(pos());
     switch (feat)
     {
     case DNGN_ROCK_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_SLIMY_WALL:
     case DNGN_GRATE:
-        nuke_wall(c);
-
-        if (!b.msg_generated)
+        nuke_wall(pos());
+        if (!msg_generated)
         {
-            if (!you.see_cell(c))
+            if (!you.see_cell(pos()))
             {
                 if (!silenced(you.pos()))
                 {
                     mpr("You hear a grinding noise.", MSGCH_SOUND);
-                    b.obvious_effect = true; // You may still see the caster.
-                    b.msg_generated = true;
+                    obvious_effect = true; // You may still see the caster.
+                    msg_generated = true;
                 }
-                return true;
+                break;
             }
 
-            b.obvious_effect = true;
-            b.msg_generated = true;
+            obvious_effect = true;
+            msg_generated = true;
 
             string wall;
             if (feat == DNGN_GRATE)
             {
                 // XXX: should this change for monsters?
                 mpr("The damaged grate falls apart.");
-                return true;
+                return;
             }
             else if (feat == DNGN_SLIMY_WALL)
                 wall = "slime";
@@ -869,42 +868,14 @@ static bool _dig_single_wall(coord_def c, bolt& b)
                 wall = "rock";
 
             mprf("%s %s shatters into small pieces.",
-                 b.agent() && b.agent()->is_player() ? "The" : "Some",
+                 agent() && agent()->is_player() ? "The" : "Some",
                  wall.c_str());
         }
-        return true;
+        break;
 
     default:
         if (feat_is_wall(feat))
-            return false;
-    }
-    return true;
-}
-
-void bolt::digging_wall_effect()
-{
-    if (!_dig_single_wall(pos(), *this))
-        finish_beam();
-
-    // Carve-out rock adjacent to the digger.
-    if (grid_distance(pos(), source) <= 1)
-    {
-        for (int x = -1; x <= 1; ++x)
-        for (int y = -1; y <= 1; ++y)
-        {
-            if (x == 0 && y == 0)
-                continue;
-
-            coord_def c = pos();
-            c.x += x;
-            c.y += y;
-
-            if (grid_distance(c, source) > grid_distance(pos(), source))
-                continue;
-
-            if (in_bounds(c))
-                _dig_single_wall(c, *this);
-        }
+            finish_beam();
     }
 }
 
