@@ -227,7 +227,7 @@ struct zap_info
     false,
     true,
     false,
-    12
+    4
 },
 
 {
