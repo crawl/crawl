@@ -2175,7 +2175,7 @@ static bool _do_ability(const ability_def& abil)
         break;
     case ABIL_EVOKE_JUMP:
     {
-        if (!_jump_player(3))
+        if (!_jump_player(4))
             return false;
 
         you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
