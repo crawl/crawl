@@ -598,11 +598,8 @@ static missile_type _acquirement_missile_subtype()
             if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
                 missile_weights.push_back(make_pair(MI_NEEDLE, 100));
 
-            if (you.can_throw_large_rocks()
-                || you.body_size() >= SIZE_MEDIUM)
-            {
+            if (you.body_size() >= SIZE_MEDIUM)
                 missile_weights.push_back(make_pair(MI_JAVELIN, 100));
-            }
 
             if (you.can_throw_large_rocks())
                 missile_weights.push_back(make_pair(MI_LARGE_ROCK, 100));
