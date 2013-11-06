@@ -2861,13 +2861,6 @@ storm dragon hide
 
 <steam dragon hide>
 %%%%
-strange machine
-
-“The machine had stood there a long time. It was several
- hundred feet long and could run on a thimbleful of earth or
- water. It had been working seven and a half million years.”
-    -Sweet Their Blood and Sticky, Albert Teichner
-%%%%
 strawberry
 
 “A Samurai was out walking when a large tiger began to chase him. The samurai
