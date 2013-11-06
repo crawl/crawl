@@ -1919,22 +1919,21 @@ static bool _do_ability(const ability_def& abil)
 
         break;
     }
+
     case ABIL_JUMP:
-    {
         if (!_jump_player(player_mutation_level(MUT_JUMP) + 2))
             return false;
 
         you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
                               + random2(30 - you.experience_level));
         break;
-    }
+
     case ABIL_RECHARGING:
         if (recharge_wand() <= 0)
             return false; // fail message is already given
         break;
 
     case ABIL_DIG:
-    {
         power = 0;
         beam.range = LOS_RADIUS;
 
@@ -1948,10 +1947,8 @@ static bool _do_ability(const ability_def& abil)
         else
             zapping(ZAP_DIG, power, beam);
         break;
-    }
 
     case ABIL_SHAFT_SELF:
-    {
         if (you.can_do_shaft_ability())
         {
             if (yesno("Are you sure you want to shaft yourself? It is not instant."))
@@ -1965,7 +1962,6 @@ static bool _do_ability(const ability_def& abil)
             return false;
         }
         break;
-    }
 
     case ABIL_DELAYED_FIREBALL:
     {
@@ -2051,7 +2047,6 @@ static bool _do_ability(const ability_def& abil)
             return false;
 
     case ABIL_BREATHE_LIGHTNING: // not targeted
-
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
