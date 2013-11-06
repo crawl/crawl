@@ -333,6 +333,69 @@ MAP
 ............
 ENDMAP
 
+###################################
+# More entries based on panlord vaults.
+
+NAME:  grunt_pan_entry_in_and_out
+TAGS:  patrolling no_monster_gen mini_float transparent nolayout_encompass
+MONS:  common demon, lesser demon
+KMONS: d = any demon
+: pan_entry(_G, 'e')
+MAP
+............
+.x+xxxxxx+x.
+.x.x.de.x.x.
+.x2x....x2x.
+.x.x.11.x.x.
+.x2x....x2x.
+.x.xx++xx.x.
+.x2xx..xx2x.
+.x.xx..xx.x.
+.x2..11..2x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
+NAME:  grunt_pan_entry_spiral
+TAGS:  patrolling no_monster_gen mini_float transparent nolayout_encompass
+MONS:  common demon, lesser demon
+KMONS: d = any demon
+: pan_entry(_G, 'e')
+MAP
+............
+.x+xxxxxxxx.
+.x.xx2.2..+.
+.x.x.xxxxxx.
+.x2x1x.1.xx.
+.x.x.dexx2x.
+.x2xxfg.x.x.
+.xx.1.x1x2x.
+.xxxxxx.x.x.
+.+..2.2xx.x.
+.xxxxxxxx+x.
+............
+ENDMAP
+
+NAME:  grunt_pan_entry_zigzag
+TAGS:  patrolling no_monster_gen mini_float transparent nolayout_encompass
+MONS:  common demon, lesser demon
+KMONS: d = any demon
+: pan_entry(_G, 'e')
+MAP
+............
+.xxxxxxxxxx.
+.x..2..2..+.
+.x.2.xxxxxx.
+.xx.1.xx....
+..xx.d1xx...
+...xx1e.xx..
+....xx.1.xx.
+.xxxxxx.2.x.
+.+..2..2..x.
+.xxxxxxxxxx.
+............
+ENDMAP
+
 ##############################################################################
 # Random unguarded exits
 ##############################################################################
