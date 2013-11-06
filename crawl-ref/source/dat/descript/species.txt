@@ -35,7 +35,7 @@ a colour.
 Formicid
 
 Formicids are humanoid ants adept at digging. Their limbs are exceptionally
-strong and they have a permanent sense of stasis.
+strong and they live in a natural stasis.
 %%%%
 Felid
 
