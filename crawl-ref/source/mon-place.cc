@@ -1350,10 +1350,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Yiuf is a faithful Xommite.
     else if (mg.cls == MONS_CRAZY_YIUF)
         mon->god = GOD_XOM;
-    // The hell lords, Grinder and Ignacio belong to Makhleb.
-    else if (mons_species(mg.cls) == MONS_HELL_LORD
-             || mg.cls == MONS_ANTAEUS
-             || mg.cls == MONS_GRINDER
+    // Grinder and Ignacio belong to Makhleb.
+    else if (mg.cls == MONS_GRINDER
              || mg.cls == MONS_IGNACIO)
     {
         mon->god = GOD_MAKHLEB;
@@ -1374,18 +1372,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mon->god = GOD_SHINING_ONE;
         else
             mon->god = GOD_XOM;
-    }
-    // 6 out of 7 demons in the Abyss belong to Lugonu, and 6 out of 7
-    // demons in hell belong to Makhleb.
-    else if (mons_class_holiness(mg.cls) == MH_DEMONIC)
-    {
-        if (mg.place == BRANCH_ABYSS && !one_chance_in(7))
-            mon->god = GOD_LUGONU;
-        else if ((mg.place == BRANCH_VESTIBULE || player_in_hell())
-                 && !one_chance_in(7))
-        {
-            mon->god = GOD_MAKHLEB;
-        }
     }
 
     // Holy monsters need their halo!
