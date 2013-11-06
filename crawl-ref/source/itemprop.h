@@ -89,9 +89,10 @@ int weapon_rarity(int w_type) IMMUTABLE;
 int   cmp_weapon_size(const item_def &item, size_type size) PURE;
 bool  check_weapon_wieldable_size(const item_def &item, size_type size) PURE;
 
-hands_reqd_type hands_reqd(const item_def &item, size_type size) PURE;
-hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
-                           size_type size) IMMUTABLE;
+size_type weapon_size(const item_def &item) PURE;
+
+hands_reqd_type basic_hands_reqd(const item_def &item, size_type size) PURE;
+hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub_type);
 
 bool is_giant_club_type(int wpn_type) IMMUTABLE;
 

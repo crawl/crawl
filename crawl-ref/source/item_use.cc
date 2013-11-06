@@ -141,9 +141,9 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
-    // Only ogres and trolls can wield giant clubs (>= 30 aum)
+    // Only ogres, trolls, and formicids can wield giant clubs (>= 30 aum)
     // and large rocks (60 aum).
-    if (you.body_size() < SIZE_LARGE
+    if ((you.body_size() < SIZE_LARGE && you.species != SP_FORMICID)
         && (item_mass(*weapon) >= 500
             || weapon->base_type == OBJ_WEAPONS
                && item_mass(*weapon) >= 300))
@@ -166,6 +166,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     // Small species wielding large weapons...
     if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM
+        && you.species != SP_FORMICID
         && !check_weapon_wieldable_size(*weapon, you.body_size(PSIZE_BODY)))
     {
         SAY(mpr("That's too large for you to wield."));
@@ -779,7 +780,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (player_mutation_level(MUT_ANTENNAE) == 3)
+        if (player_mutation_level(MUT_ANTENNAE) == 3 && you.species != SP_FORMICID)
         {
             if (verbose)
                 mpr("You can't wear any headgear with your large antennae!");
@@ -803,7 +804,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 return false;
             }
 
-            if (player_mutation_level(MUT_ANTENNAE))
+            if (player_mutation_level(MUT_ANTENNAE) && you.species != SP_FORMICID)
             {
                 if (verbose)
                     mpr("You can't wear that with your antennae!");
@@ -879,6 +880,8 @@ bool do_wear_armour(int item, bool quiet)
         {
             if (you.species == SP_OCTOPODE)
                 mpr("You need the rest of your tentacles for walking.");
+            else if (you.species == SP_FORMICID)
+                mprf("You'd need six %s to do that!", you.hand_name(true).c_str());
             else
                 mprf("You'd need three %s to do that!", you.hand_name(true).c_str());
         }
@@ -1886,7 +1889,10 @@ void zap_wand(int slot)
         if (wand.sub_type == WAND_TELEPORTATION
             && you.no_tele(false, false))
         {
-            mpr("You cannot teleport right now.");
+            if (you.species == SP_FORMICID)
+                mpr("You cannot teleport.");
+            else
+                mpr("You cannot teleport right now.");
             return;
         }
         else if (wand.sub_type == WAND_INVISIBILITY
@@ -3053,7 +3059,10 @@ void read_scroll(int slot)
         case SCR_TELEPORTATION:
             if (you.no_tele(false, false, which_scroll == SCR_BLINKING))
             {
-                mpr("You cannot teleport right now.");
+                if (you.species == SP_FORMICID)
+                    mpr("You cannot teleport.");
+                else
+                    mpr("You cannot teleport right now.");
                 return;
             }
             break;
@@ -3453,30 +3462,39 @@ bool stasis_blocks_effect(bool calc_unid,
     {
         item_def *amulet = you.slot_item(EQ_AMULET, false);
 
-        // Just in case a non-amulet stasis source is added.
+        // For non-amulet sources of stasis.
         if (amulet && amulet->sub_type != AMU_STASIS)
             amulet = 0;
 
         if (msg)
         {
-            const string name(amulet? amulet->name(DESC_YOUR) : "Something");
-            const string message = make_stringf(msg, name.c_str());
-
-            if (noise)
-            {
-                if (!noisy(noise, you.pos(), message.c_str())
-                    && silenced_msg)
-                {
-                    mprf(silenced_msg, name.c_str());
-                }
-            }
+            // Override message for formicids
+            if (you.species == SP_FORMICID)
+                mpr("Your stasis keeps you stable.");
             else
-                mpr(message.c_str());
+            {
+                const string name(amulet? amulet->name(DESC_YOUR) : "Something");
+                const string message = make_stringf(msg, name.c_str());
+
+                if (noise)
+                {
+                    if (!noisy(noise, you.pos(), message.c_str())
+                        && silenced_msg)
+                    {
+                        mprf(silenced_msg, name.c_str());
+                    }
+                }
+                else
+                    mpr(message.c_str());
+            }
         }
 
-        // In all cases, the amulet auto-ids if requested.
-        if (amulet && identify && !item_type_known(*amulet))
+        // The amulet auto-ids if requested.
+        if (you.species != SP_FORMICID
+            && amulet && identify && !item_type_known(*amulet))
+        {
             wear_id_type(*amulet);
+        }
         return true;
     }
     return false;

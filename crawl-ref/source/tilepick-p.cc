@@ -669,6 +669,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_OCTOPODE;
     case SP_DJINNI:
         return TILEP_BASE_DJINNI;
+    case SP_FORMICID:
+        return TILEP_BASE_FORMICID;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -797,6 +799,20 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_SPRIGGAN:
             hair = 0;
             beard = TILEP_BEARD_MEDIUM_GREEN;
+            break;
+        case SP_FORMICID:
+            hair = 0;
+            // Three levels of antennae retraction
+            // and one with no antennae.
+            if (player_wearing_slot(EQ_HELMET))
+                result = TILEP_BASE_FORMICID;
+            else
+            {
+                result = TILEP_BASE_FORMICID
+                         + you.duration[DUR_ANTENNAE_EXTEND]
+                           * player_mutation_level(MUT_ANTENNAE)
+                           / ANTENNAE_EXTEND_TIME;
+            }
             break;
         case SP_DJINNI:
             hair = TILEP_HAIR_DJINN2;

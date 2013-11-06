@@ -362,6 +362,29 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         break;
 
+    case MONS_FORMICID:
+    case MONS_FORMICID_DRONE:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        if (one_chance_in(4))
+            item.sub_type = coinflip() ? WPN_GIANT_CLUB : WPN_GIANT_SPIKED_CLUB;
+        else
+        {
+            item.sub_type = random_choose_weighted(10, WPN_HAND_AXE,   15, WPN_GLAIVE,
+                                                   10, WPN_MACE,       15, WPN_FLAIL,
+                                                    5, WPN_GREAT_SWORD, 5, WPN_GREAT_MACE,
+                                                    5, WPN_BATTLEAXE,   0);
+        }
+        if (coinflip())
+        {
+            force_item  = true;
+            item.plus  += random2(3);
+            item.plus2 += random2(3);
+            if (one_chance_in(20))
+                level = MAKE_GOOD_ITEM;
+        }
+        break;
+
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
         item_race = MAKE_ITEM_DWARVEN;
@@ -484,9 +507,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_ORC_PRIEST:
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {gdl}
-
     case MONS_DRACONIAN:
     case MONS_DRACONIAN_ZEALOT:
+    case MONS_FORMICID_VENOM_MAGE:
         if (!one_chance_in(5))
         {
             item.base_type = OBJ_WEAPONS;
@@ -1752,8 +1775,8 @@ static void _give_shield(monster* mon, int level)
     // If the monster is already wielding/carrying a two-handed weapon,
     // it doesn't get a shield.  (Monsters always prefer raw damage to
     // protection!)
-    if (main_weap && hands_reqd(*main_weap, mon->body_size()) == HANDS_TWO
-        || alt_weap && hands_reqd(*alt_weap, mon->body_size()) == HANDS_TWO)
+    if (main_weap && mon->hands_reqd(*main_weap) == HANDS_TWO
+        || alt_weap && mon->hands_reqd(*alt_weap) == HANDS_TWO)
     {
         return;
     }
@@ -1906,6 +1929,19 @@ static void _give_shield(monster* mon, int level)
             if (get_armour_ego_type(*shield) == SPARM_ARCHERY)
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_NORMAL);
             shield->plus2 = TGLOV_DESC_GAUNTLETS;
+        }
+        break;
+
+    case MONS_FORMICID:
+        if (!one_chance_in(4))
+            break;
+    case MONS_FORMICID_DRONE:
+        if (one_chance_in(3))
+        {
+            armour_type shield_type = coinflip() ? ARM_BUCKLER : ARM_SHIELD;
+
+            shield = make_item_for_monster(mon, OBJ_ARMOUR, shield_type,
+                                           level, MAKE_ITEM_NO_RACE);
         }
         break;
     default:
@@ -2108,11 +2144,23 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_UNBORN:
         if (one_chance_in(6))
             level = MAKE_GOOD_ITEM;
+
     // deliberate fall through
+    case MONS_FORMICID_VENOM_MAGE:
     case MONS_HELLBINDER:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
+        break;
+
+    case MONS_FORMICID:
+    case MONS_FORMICID_DRONE:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = random_choose_weighted(5, ARM_SCALE_MAIL,
+                                                3, ARM_CHAIN_MAIL,
+                                                1, ARM_PLATE_ARMOUR,
+                                                0);
         break;
 
     case MONS_DWARF:

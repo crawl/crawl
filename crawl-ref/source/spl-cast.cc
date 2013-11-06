@@ -1054,7 +1054,10 @@ static bool _spellcasting_aborted(spell_type spell,
 
     if (is_prevented_teleport(spell))
     {
-        mpr("You cannot teleport right now.");
+        if (you.species == SP_FORMICID)
+            mpr("You cannot teleport.");
+        else
+            mpr("You cannot teleport right now.");
         return true;
     }
 

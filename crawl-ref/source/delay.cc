@@ -20,6 +20,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "exercise.h"
 #include "enum.h"
 #include "fprop.h"
@@ -55,6 +56,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "transform.h"
+#include "traps.h"
 #include "travel.h"
 #include "hints.h"
 #include "view.h"
@@ -353,6 +355,14 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         if (stop_stair_travel)
         {
             mpr("Your meditation is interrupted.");
+            _pop_delay();
+        }
+        break;
+
+    case DELAY_SHAFT_SELF:
+        if (stop_stair_travel)
+        {
+            mpr("You stop digging.");
             _pop_delay();
         }
         break;
@@ -682,6 +692,10 @@ void handle_delay()
             mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
             break;
 
+        case DELAY_SHAFT_SELF:
+            mpr("You begin to dig a shaft.", MSGCH_MULTITURN_ACTION);
+            break;
+
         default:
             break;
         }
@@ -872,6 +886,10 @@ void handle_delay()
         case DELAY_PASSWALL:
             mpr("You continue meditating on the rock.",
                 MSGCH_MULTITURN_ACTION);
+            break;
+
+        case DELAY_SHAFT_SELF:
+            mpr("You continue digging a shaft.", MSGCH_MULTITURN_ACTION);
             break;
 
         case DELAY_MULTIDROP:
@@ -1067,6 +1085,10 @@ static void _finish_delay(const delay_queue_item &delay)
         }
         break;
     }
+
+    case DELAY_SHAFT_SELF:
+        you.do_shaft_ability();
+        break;
 
     case DELAY_BUTCHER:
     case DELAY_BOTTLE_BLOOD:
@@ -1830,7 +1852,7 @@ static const char *delay_names[] =
     "recite",
 #endif
     "run", "rest", "travel", "macro",
-    "macro_process_key", "interruptible", "uninterruptible"
+    "macro_process_key", "interruptible", "uninterruptible", "shaft self",
 };
 
 // Gets a delay given its name.

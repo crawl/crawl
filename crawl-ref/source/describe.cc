@@ -774,13 +774,19 @@ static string _handedness_string(const item_def &item)
 {
     string description;
 
-    switch (hands_reqd(item, you.body_size()))
+    switch (you.hands_reqd(item))
     {
     case HANDS_ONE:
-        description += "It is a one handed weapon.";
+        if (you.species == SP_FORMICID)
+            description += "It is a weapon for one hand-pair.";
+        else
+            description += "It is a one handed weapon.";
         break;
     case HANDS_TWO:
-        description += "It is a two handed weapon.";
+        if (you.species == SP_FORMICID)
+            description += "It is a weapon for two hand-pairs.";
+        else
+            description += "It is a two handed weapon.";
         break;
     }
 
@@ -3835,6 +3841,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
     case SP_NAGA:
     case SP_MUMMY:
     case SP_GHOUL:
+    case SP_FORMICID:
         str += 10;
         break;
 

@@ -78,6 +78,7 @@ static void _species_stat_init(species_type which_species)
 
     case SP_MERFOLK:            sb =  6; ib =  5; db =  7;      break;  // 18
     case SP_TENGU:              sb =  6; ib =  6; db =  7;      break;  // 19
+    case SP_FORMICID:           sb = 10; ib =  5; db =  4;      break;  // 19
 
     case SP_KOBOLD:             sb =  5; ib =  4; db =  8;      break;  // 17
     case SP_HALFLING:           sb =  3; ib =  6; db =  9;      break;  // 18
@@ -326,6 +327,10 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_CAMOUFLAGE]      = 1;
         you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;
+    case SP_FORMICID:
+        you.mutation[MUT_ANTENNAE]    = 1;
+        you.mutation[MUT_EXOSKELETON] = 1;
+        break;
     case SP_DJINNI:
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         break;
@@ -451,7 +456,7 @@ static void _update_weapon(const newgame_def& ng)
     switch (ng.weapon)
     {
     case WPN_THROWN:
-        if (species_size(ng.species, PSIZE_TORSO) >= SIZE_LARGE)
+        if (species_can_throw_large_rocks(ng.species))
         {
             newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1,
                               4 + plus);
@@ -994,7 +999,12 @@ static void _give_items_skills(const newgame_def& ng)
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
 
+    // Formicids get curing potions to offset their poison weakness.
+    if (you.species == SP_FORMICID)
+        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
+
     // Zotdef: everyone gets bonus two potions of curing.
+
     if (crawl_state.game_is_zotdef())
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
 

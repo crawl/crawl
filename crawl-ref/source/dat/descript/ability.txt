@@ -108,6 +108,17 @@ Device Recharging ability
 
 At the permanent loss of one magic point recharge a wand or rod.
 %%%%
+Dig ability
+
+Tunnels through rock walls in a straight line. Noisy.
+%%%%
+Shaft Self ability
+
+Sends you to a random position one to three floors down,
+as if you fell through a shaft trap. It takes time to dig the shaft
+and the landing is noisy. It may even attract monsters from deep
+within the dungeon to your floor.
+%%%%
 Evoke Teleportation ability
 
 Teleport yourself to a random location on the level.

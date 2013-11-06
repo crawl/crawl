@@ -1355,7 +1355,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
             text += "claws";
             break;
         case WPN_THROWN:
-            if (species_size(ng->species, PSIZE_TORSO) >= SIZE_LARGE)
+            if (species_can_throw_large_rocks(ng->species))
                 text += "large rocks";
             else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
                 text += "tomahawks";

@@ -525,6 +525,8 @@ public:
     int       has_usable_pseudopods(bool allow_tran = true) const;
     int       has_tentacles(bool allow_tran = true) const;
     int       has_usable_tentacles(bool allow_tran = true) const;
+    int       has_antennae(bool allow_tran = true) const;
+    bool      has_usable_antennae(bool allow_tran = true) const;
 
     int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const;
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
@@ -533,6 +535,8 @@ public:
 
     item_def *weapon(int which_attack = -1) const;
     item_def *shield() const;
+
+    hands_reqd_type hands_reqd(const item_def &item) const;
 
     bool      can_wield(const item_def &item,
                         bool ignore_curse = false,
@@ -642,6 +646,7 @@ public:
     bool gourmand(bool calc_unid = true, bool items = true) const;
     bool res_corr(bool calc_unid = true, bool items = true) const;
     bool clarity(bool calc_unid = true, bool items = true) const;
+    bool stasis(bool calc_unid = true, bool items = true) const;
 
     flight_type flight_mode() const;
     bool cancellable_flight() const;
@@ -707,6 +712,9 @@ public:
     int  skill(skill_type skill, int scale =1, bool real = false) const;
 
     bool do_shaft();
+
+    bool can_do_shaft_ability() const;
+    bool do_shaft_ability();
 
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,

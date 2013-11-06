@@ -73,8 +73,12 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
+    // Felids
     ABIL_JUMP,
-    ABIL_MAX_INTRINSIC = ABIL_JUMP,
+    // Formicids
+    ABIL_DIG,
+    ABIL_SHAFT_SELF,
+    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -1084,6 +1088,8 @@ enum delay_type
     DELAY_INTERRUPTIBLE,                // simple interruptible delay
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
 
+    DELAY_SHAFT_SELF, // Formicid ability
+
     NUM_DELAYS
 };
 
@@ -1553,6 +1559,7 @@ enum duration_type
     DUR_FIRE_VULN,
     DUR_ELIXIR_HEALTH,
     DUR_ELIXIR_MAGIC,
+    DUR_ANTENNAE_EXTEND,
     NUM_DURATIONS
 };
 
@@ -2749,8 +2756,10 @@ enum monster_type                      // menv[].type
 #endif
 
     MONS_DEATHCAP,
-
     MONS_IGNIS,
+    MONS_FORMICID,
+    MONS_FORMICID_DRONE,
+    MONS_FORMICID_VENOM_MAGE,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -2955,6 +2964,7 @@ enum mutation_type
 #endif
     MUT_FUMES,
     MUT_JUMP,
+    MUT_EXOSKELETON,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3309,7 +3319,8 @@ enum species_type
     SP_DJINNI,
     SP_LAVA_ORC,
     SP_GARGOYLE,
-      LAST_VALID_SPECIES = SP_GARGOYLE,
+    SP_FORMICID,
+    LAST_VALID_SPECIES = SP_FORMICID,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
@@ -3622,6 +3633,7 @@ enum spell_type
     SPELL_MALIGN_OFFERING,
     SPELL_SEARING_RAY,
     SPELL_DISCORD,
+    SPELL_SHAFT_SELF,
     NUM_SPELLS
 };
 

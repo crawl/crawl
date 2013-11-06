@@ -1141,6 +1141,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLINK_ALLIES_ENCIRCLE:
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
+    case SPELL_SHAFT_SELF:
     case SPELL_AWAKEN_VINES:
     case SPELL_CONTROL_WINDS:
     case SPELL_WALL_OF_BRAMBLES:
@@ -1798,6 +1799,7 @@ static bool _ms_useful_fleeing_out_of_sight(const monster* mon,
     case SPELL_MAJOR_HEALING:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
+    case SPELL_SHAFT_SELF:
         return true;
 
     default:
@@ -1882,6 +1884,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_CONTROLLED_BLINK:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
+    case SPELL_SHAFT_SELF:
         return true;
     case SPELL_NO_SPELL:
         return false;
@@ -4709,6 +4712,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                                 mon_index));
             env.markers.clear_need_activate(); // doesn't need activation
         }
+        return;
+    }
+    case SPELL_SHAFT_SELF:
+    {
+        if (is_valid_shaft_level())
+            mons->do_shaft();
         return;
     }
     case SPELL_CHAIN_LIGHTNING:

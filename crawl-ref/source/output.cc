@@ -2657,6 +2657,14 @@ static string _status_mut_abilities(int sw)
         mutations.push_back(_dragon_abil("breathe steam"));
         break;
 
+    case SP_FORMICID:
+        mutations.push_back("permanent stasis");
+        mutations.push_back("dig shafts and tunnels");
+        mutations.push_back("four strong arms");
+        mutations.push_back("poison weakness");
+        mutations.push_back("retractable antennae");
+        break;
+
     case SP_GARGOYLE:
         AC_change += 2 + you.experience_level * 2 / 5
                        + max(0, you.experience_level - 7) * 2 / 5;
@@ -2791,6 +2799,11 @@ static string _status_mut_abilities(int sw)
                  snprintf(info, INFO_SIZE, "+%d accuracy", level*2+1);
                  current = info;
                  break;
+            case MUT_EXOSKELETON:
+                snprintf(info, INFO_SIZE, "+%d hp", 5 * level * level);
+                AC_change += level;
+                current = info;
+                break;
 
             // scales -> calculate sum of AC bonus
             case MUT_DISTORTION_FIELD:
