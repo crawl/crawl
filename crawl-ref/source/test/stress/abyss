@@ -22,7 +22,7 @@
 
 GAME=${1:-$$}
 
-while ./crawl -name "Abyss-$GAME" -rc test/stress/abyss.rc -seed "$GAME"
+while ./crawl -name "Abyss-$GAME" -rc test/stress/abyss.rc -seed "$GAME" -gdb
   do
     # ^Q to exit the loop, &^C to crash and retain the save
     if ! [ -f "saves/Abyss-$GAME.cs" ]
