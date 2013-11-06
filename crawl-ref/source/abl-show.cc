@@ -86,7 +86,7 @@ enum ability_flag_type
 {
     ABFLAG_NONE           = 0x00000000,
     ABFLAG_BREATH         = 0x00000001, // ability uses DUR_BREATH_WEAPON
-    ABFLAG_UNUSED_1       = 0x00000002, // was ABFLAG_DELAY
+    ABFLAG_DELAY          = 0x00000002, // ability has its own delay
     ABFLAG_PAIN           = 0x00000004, // ability must hurt player (ie torment)
     ABFLAG_PIETY          = 0x00000008, // ability has its own piety cost
     ABFLAG_EXHAUSTION     = 0x00000010, // fails if you.exhausted
@@ -238,7 +238,7 @@ static const ability_def Ability_List[] =
       1, 0, 0, 0, 0, ABFLAG_PERMANENT_MP},
 
     { ABIL_DIG, "Dig", 0, 0, 75, 0, 0, ABFLAG_NONE},
-    { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_NONE},
+    { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_DELAY},
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -683,6 +683,9 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & ABFLAG_BREATH)
         ret += ", Breath";
 
+    if (abil.flags & ABFLAG_DELAY)
+        ret += ", Delay";
+
     if (abil.flags & ABFLAG_PAIN)
         ret += ", Pain";
 
@@ -779,6 +782,9 @@ static const string _detailed_cost_description(ability_type ability)
 
     if (abil.flags & ABFLAG_BREATH)
         ret << "\nYou must catch your breath between uses of this ability.";
+
+    if (abil.flags & ABFLAG_DELAY)
+        ret << "\nIt takes some time before being effective.";
 
     if (abil.flags & ABFLAG_PAIN)
         ret << "\nUsing this ability will hurt you.";
@@ -1951,7 +1957,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_SHAFT_SELF:
         if (you.can_do_shaft_ability())
         {
-            if (yesno("Are you sure you want to shaft yourself? It is not instant."))
+            if (yesno("Are you sure you want to shaft yourself?"))
                 start_delay(DELAY_SHAFT_SELF, 1);
             else
                 return false;
