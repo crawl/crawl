@@ -3179,7 +3179,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.species == SP_FORMICID)
     {
         _add_talent(talents, ABIL_DIG, check_confused);
-        _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
+        if ((!crawl_state.game_is_sprint() || brdepth[you.where_are_you] > 1)
+            && !crawl_state.game_is_zotdef())
+        {
+            _add_talent(talents, ABIL_SHAFT_SELF, check_confused);
+        }
     }
 
     if (player_mutation_level(MUT_JUMP))
