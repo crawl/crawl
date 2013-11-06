@@ -498,6 +498,12 @@ void do_curse_item(item_def &item, bool quiet)
         {
             mprf("Your %s glows black briefly, but repels the curse.",
                  item.name(DESC_PLAIN).c_str());
+            if (is_artefact(item))
+                artefact_wpn_learn_prop(item, ARTP_BRAND);
+            else
+                set_ident_flags(item, ISFLAG_KNOW_TYPE);
+
+            mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
         }
         return;
     }
