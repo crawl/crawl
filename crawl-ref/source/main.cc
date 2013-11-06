@@ -2378,29 +2378,6 @@ static void _decrement_durations()
     else
         you.duration[DUR_GOURMAND] = 0;
 
-    // Retractable antennae
-    if (you.species == SP_FORMICID && !player_wearing_slot(EQ_HELMET))
-    {
-        if (form_keeps_mutations()
-            && you.duration[DUR_ANTENNAE_EXTEND] < ANTENNAE_EXTEND_TIME)
-        {
-            you.duration[DUR_ANTENNAE_EXTEND] += delay;
-            if (you.duration[DUR_ANTENNAE_EXTEND] >= ANTENNAE_EXTEND_TIME)
-            {
-                you.duration[DUR_ANTENNAE_EXTEND] = ANTENNAE_EXTEND_TIME;
-                // sinv comes back.
-                if (you.has_antennae() >= 3)
-                    autotoggle_autopickup(false);
-                mpr("Your antennae are now fully extended.");
-            }
-#ifdef USE_TILE
-            init_player_doll();
-#endif
-        }
-    }
-    else
-        you.duration[DUR_ANTENNAE_EXTEND] = 0;
-
     if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
     {
         if (delay > you.duration[DUR_ICEMAIL_DEPLETED])
@@ -3359,7 +3336,7 @@ static void _player_reacts_to_monsters()
         manage_fire_shield(you.time_taken);
 
     // penance checked there (as you can have antennae too)
-    if (you.has_antennae(true)
+    if (player_mutation_level(MUT_ANTENNAE)
         || you.religion == GOD_ASHENZARI
         || player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN))
     {

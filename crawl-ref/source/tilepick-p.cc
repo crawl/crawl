@@ -802,17 +802,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             break;
         case SP_FORMICID:
             hair = 0;
-            // Three levels of antennae retraction
-            // and one with no antennae.
-            if (player_wearing_slot(EQ_HELMET))
-                result = TILEP_BASE_FORMICID;
-            else
-            {
-                result = TILEP_BASE_FORMICID
-                         + you.duration[DUR_ANTENNAE_EXTEND]
-                           * player_mutation_level(MUT_ANTENNAE)
-                           / ANTENNAE_EXTEND_TIME;
-            }
             break;
         case SP_DJINNI:
             hair = TILEP_HAIR_DJINN2;

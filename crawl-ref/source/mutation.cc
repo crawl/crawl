@@ -584,7 +584,6 @@ string describe_mutations(bool center_title)
         result += "You can dig through walls and to a lower floor.\n";
         result += "Your four strong arms can wield any weapon, most with a shield.\n";
         result += "You are susceptible to poison.\n";
-        result += "The antennae on your head can retract.\n";
         have_any = true;
         break;
 
@@ -1712,10 +1711,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         // Horns & Antennae 3 removes all headgear.  Same algorithm as with
         // glove removal.
 
-        // Formicids can keep wearing helmets.
-        if (mutat == MUT_ANTENNAE && you.species == SP_FORMICID)
-            break;
-
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
             remove_one_equip(EQ_HELMET, false, true);
         // Intentional fall-through
@@ -1727,6 +1722,11 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         {
             remove_one_equip(EQ_HELMET, false, true);
         }
+        break;
+
+    case MUT_ACUTE_VISION:
+        // We might have to turn autopickup back on again.
+        autotoggle_autopickup(false);
         break;
 
     case MUT_NIGHTSTALKER:
@@ -1743,15 +1743,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     default:
         break;
-    }
-
-    // We might have to turn autopickup back on again.
-    // Check it after removing helmets because they could be suppressed
-    // for Formicids.
-    if (mutat == MUT_ACUTE_VISION
-        || (mutat == MUT_ANTENNAE && you.has_antennae() >= 3))
-    {
-        autotoggle_autopickup(false);
     }
 
     // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
@@ -2572,7 +2563,7 @@ void check_demonic_guardian()
 
 void check_antennae_detect()
 {
-    int radius = you.has_antennae(true) * 2;
+    int radius = player_mutation_level(MUT_ANTENNAE) * 2;
 
     if (player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN))
         radius = max(radius, 4);

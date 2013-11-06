@@ -752,8 +752,7 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_HELMET:
         // No caps or hats with Horns 3 or Antennae 3.
         if (player_mutation_level(MUT_HORNS, false) == 3
-            || (player_mutation_level(MUT_ANTENNAE, false) == 3
-                && you.species != SP_FORMICID))
+            || player_mutation_level(MUT_ANTENNAE, false) == 3)
         {
             return false;
         }
@@ -762,8 +761,7 @@ bool you_can_wear(int eq, bool special_armour)
             return true;
         if (player_mutation_level(MUT_HORNS, false)
             || player_mutation_level(MUT_BEAK, false)
-            || (player_mutation_level(MUT_ANTENNAE, false)
-                && you.species != SP_FORMICID))
+            || player_mutation_level(MUT_ANTENNAE, false))
         {
             return false;
         }
@@ -867,9 +865,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return false;
 
-        if (eq == EQ_HELMET
-            && player_mutation_level(MUT_ANTENNAE) == 3
-            && you.species != SP_FORMICID)
+        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) == 3)
         {
             return false;
         }
@@ -5911,8 +5907,6 @@ void player::init()
     temperature = 1; // 1 is min; 15 is max.
     temperature_last = 1;
 
-    duration[DUR_ANTENNAE_EXTEND] = ANTENNAE_EXTEND_TIME;
-
     xray_vision = false;
 
     init_skills();
@@ -7533,34 +7527,6 @@ int player::has_usable_tentacles(bool allow_tran) const
     return has_tentacles(allow_tran);
 }
 
-int player::has_antennae(bool allow_tran) const
-{
-    if (allow_tran)
-    {
-        // Most forms suppress antennae.
-        if (!form_keeps_mutations())
-            return 0;
-    }
-
-    if (you.species == SP_FORMICID)
-    {
-        if (player_wearing_slot(EQ_HELMET))
-            return 0;
-
-        return (you.duration[DUR_ANTENNAE_EXTEND]
-                * player_mutation_level(MUT_ANTENNAE, allow_tran))
-               / ANTENNAE_EXTEND_TIME;
-    }
-
-    return player_mutation_level(MUT_ANTENNAE, allow_tran);
-}
-
-bool player::has_usable_antennae(bool allow_tran) const
-{
-    // Assumes that armour cannot be placed over normal antennae.
-    return has_antennae(allow_tran);
-}
-
 bool player::sicken(int amount, bool allow_hint, bool quiet)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -7612,7 +7578,7 @@ bool player::can_see_invisible(bool calc_unid, bool items) const
     }
 
     // antennae give sInvis at 3
-    if (has_antennae(true) == 3)
+    if (player_mutation_level(MUT_ANTENNAE) == 3)
         return true;
 
     if (player_mutation_level(MUT_EYEBALLS) == 3)

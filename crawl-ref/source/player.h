@@ -525,8 +525,6 @@ public:
     int       has_usable_pseudopods(bool allow_tran = true) const;
     int       has_tentacles(bool allow_tran = true) const;
     int       has_usable_tentacles(bool allow_tran = true) const;
-    int       has_antennae(bool allow_tran = true) const;
-    bool      has_usable_antennae(bool allow_tran = true) const;
 
     int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const;
     int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
