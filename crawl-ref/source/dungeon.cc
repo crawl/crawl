@@ -3872,15 +3872,6 @@ static void _builder_monsters()
 
     int mon_wanted = _num_mons_wanted();
 
-    if (player_in_branch(BRANCH_PANDEMONIUM))
-    {
-        dprf("Generating Pan monsters, set:%s", zotdef_debug_wave_desc().c_str());
-        // TODO: allow regular generation to handle this
-        while (mon_wanted-- > 0)
-            pandemonium_mons();
-        return;
-    }
-
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
     if (in_shoals)
         dgn_shoals_generate_flora();

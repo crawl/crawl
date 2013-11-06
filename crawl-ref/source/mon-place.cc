@@ -420,17 +420,16 @@ void spawn_random_monsters()
         return;
     }
 
-    // Pandemonium doesn't yet use the standard way.
-    if (player_in_branch(BRANCH_PANDEMONIUM))
-    {
-        pandemonium_mons();
-        viewwindow();
-        return;
-    }
-
     mgen_data mg(WANDERING_MONSTER);
     if (player_in_branch(BRANCH_ABYSS) && one_chance_in(3))
         mg.place = abyssal_state.level;
+    else if (player_in_branch(BRANCH_PANDEMONIUM)
+             && !env.properties.exists("vault_mon_weights")
+             && !one_chance_in(40))
+    {
+        mg.cls = env.mons_alloc[random2(PAN_MONS_ALLOC)];
+        mg.flags |= MG_PERMIT_BANDS;
+    }
 
     mons_place(mg);
     viewwindow();
@@ -3759,9 +3758,6 @@ void setup_vault_mon_list()
         {
             vault_mon_types[i] = list[i].type;
             vault_mon_bases[i] = list[i].monbase;
-            // hack for Pandemonium
-            if (i < 10)
-                env.mons_alloc[i] = (monster_type)list[i].type;
         }
         vault_mon_bands[i] = list[i].band;
         vault_mon_weights[i] = list[i].genweight;
