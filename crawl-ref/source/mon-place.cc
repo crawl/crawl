@@ -3498,8 +3498,45 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
     return (good_count > 0);
 }
 
+static void _get_vault_mon_list(vector<mons_spec> &list);
+
 monster_type summon_any_demon(monster_type dct)
 {
+    if (player_in_branch(BRANCH_PANDEMONIUM) && !one_chance_in(40))
+    {
+        monster_type typ = MONS_0;
+        int count = 0;
+        vector<mons_spec> list;
+        _get_vault_mon_list(list);
+        const bool major = !list.empty();
+        const int max = major ? list.size() : PAN_MONS_ALLOC;
+        for (int i = 0; i < max; i++)
+        {
+            const monster_type cur = major ? list[i].monbase
+                                           : env.mons_alloc[i];
+            if (invalid_monster_type(cur))
+                continue;
+            const monsterentry *mentry = get_monster_data(cur);
+            if (dct == RANDOM_DEMON && mons_class_holiness(cur) != MH_DEMONIC
+                || dct == RANDOM_DEMON_LESSER && mentry->basechar != '5'
+                || dct == RANDOM_DEMON_COMMON
+                   && mentry->basechar != '4'
+                   && mentry->basechar != '3'
+                || dct == RANDOM_DEMON_GREATER
+                   && mentry->basechar != '2'
+                   && mentry->basechar != '1')
+            {
+                continue;
+            }
+            const int weight = major ? list[i].genweight : 1;
+            count += weight;
+            if (x_chance_in_y(weight, count))
+                typ = cur;
+        }
+        if (count)
+            return typ;
+    }
+
     if (dct == RANDOM_DEMON)
         dct = static_cast<monster_type>(RANDOM_DEMON_LESSER + random2(3));
 
