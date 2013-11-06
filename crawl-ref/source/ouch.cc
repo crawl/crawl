@@ -1065,7 +1065,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             dam -= mp;
             dec_mp(mp);
-            if (dam <= 0)
+            if (dam <= 0 && you.hp > 0)
                 return;
         }
 
