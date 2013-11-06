@@ -3473,7 +3473,7 @@ bool stasis_blocks_effect(bool calc_unid,
         {
             // Override message for formicids
             if (you.species == SP_FORMICID)
-                mpr("Your sense of stasis keeps you stable.");
+                mpr("Your stasis keeps you stable.");
             else
             {
                 const string name(amulet? amulet->name(DESC_YOUR) : "Something");
