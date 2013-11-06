@@ -36,17 +36,17 @@ function pan_lord_setup(_G, name)
     -- Set level monsters.
     -- needs exactly 10 monsters, weights are not supported yet
     local monsters = {
-        Mnoleg = "large abomination / large abomination / large abomination / " ..
-                 "neqoxec / neqoxec / chaos spawn / chaos spawn / " ..
-                 "cacodemon / cacodemon / cacodemon",
-        ['Lom Lobon'] = "hellwing / hellwing / hellwing / sixfirhy / " ..
-                 "smoke demon / smoke demon / smoke demon / blizzard demon / " ..
-                 "green death / green death",
-        Cerebov = "efreet / efreet / orange demon / orange demon / " ..
-                 "sun demon / sun demon / ynoxinul / ynoxinul / balrug / balrug",
-        ['Gloorx Vloq'] = "skeleton / skeleton / skeleton / skeleton / " ..
-                 "soul eater / soul eater / lorocyproca / " ..
-                 "executioner / executioner / executioner"
+        Mnoleg = "large abomination w:20 / " ..
+                 "neqoxec w:20 / chaos spawn w:20 / " ..
+                 "cacodemon w:30",
+        ['Lom Lobon'] = "hellwing w:30 / sixfirhy / " ..
+                 "smoke demon w:30 / blizzard demon / " ..
+                 "green death w:20",
+        Cerebov = "efreet w:20 / orange demon w:20 / " ..
+                 "sun demon w:20 / ynoxinul w:20 / balrug w:20",
+        ['Gloorx Vloq'] = "skeleton w:40 / " ..
+                 "soul eater w:20 / lorocyproca / " ..
+                 "executioner w:30"
     }
 
     _G.set_random_mon_list(monsters[name])
