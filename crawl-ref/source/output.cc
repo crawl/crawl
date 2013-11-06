@@ -2800,7 +2800,7 @@ static string _status_mut_abilities(int sw)
                  current = info;
                  break;
             case MUT_EXOSKELETON:
-                snprintf(info, INFO_SIZE, "+%d hp", exoskeleton_hp());
+                snprintf(info, INFO_SIZE, "+%d hp", 5 * level * level);
                 AC_change += level;
                 current = info;
                 break;

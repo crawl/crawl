@@ -2684,9 +2684,3 @@ int augmentation_amount()
 
     return amount;
 }
-
-int exoskeleton_hp()
-{
-    const int level = player_mutation_level(MUT_EXOSKELETON);
-    return 5 * level * level;
-}

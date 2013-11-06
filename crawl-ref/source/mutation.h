@@ -101,7 +101,6 @@ int handle_pbd_corpses(bool do_rot);
 equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
-int exoskeleton_hp();
 
 bool delete_temp_mutation();
 

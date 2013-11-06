@@ -4979,7 +4979,7 @@ int get_real_hp(bool trans, bool rotted)
                 - (player_mutation_level(MUT_FRAIL) * 10);
 
     // Mutations that increase HP by a fixed value
-    hitp += 100 * exoskeleton_hp();
+    hitp += 500 * sqr(player_mutation_level(MUT_EXOSKELETON));
 
     hitp /= 100;
 
