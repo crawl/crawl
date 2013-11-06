@@ -2223,7 +2223,7 @@ static bool _do_ability(const ability_def& abil)
         }
         else
         {
-            mpr("That recitation seems somehow inappropriate.");
+            canned_msg(MSG_OK);
             return false;
         }
         break;
