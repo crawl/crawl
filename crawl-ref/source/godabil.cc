@@ -410,7 +410,6 @@ string zin_recite_text(const int seed, const int prayertype, int step)
                           (prayertype == RECITE_IMPURE)   ?  "Ablutions"     :
                           (prayertype == RECITE_HERETIC)  ?  "Apostates"     :
                           (prayertype == RECITE_UNHOLY)   ?  "Anathema"      :
-                          (prayertype == RECITE_ALLY)     ?  "Alliances"     :
                                                              "Bugginess";
         ostringstream numbers;
         numbers << chapter;
@@ -534,7 +533,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     }
 
     // Anti-heretic prayer
-    // Pro-ally prayer
 
     // Sleeping or paralyzed monsters will wake up or still perceive their
     // surroundings, respectively.  So, you can still recite to them.
@@ -584,21 +582,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         // holy gods aren't heretics.
         if (mon->is_holy() || is_good_god(mon->god))
             eligibility[RECITE_HERETIC] = 0;
-
-        // Any friendly that meets the above requirements is counted as an ally.
-        if (mon->friendly())
-            eligibility[RECITE_ALLY]++;
-
-        // Holy friendlies get a boost.
-        if ((mon->is_holy() || is_good_god(mon->god))
-            && eligibility[RECITE_ALLY] > 0)
-        {
-            eligibility[RECITE_ALLY]++;
-        }
-
-        // Worshipers of Zin get another boost.
-        if (mon->god == GOD_ZIN && eligibility[RECITE_ALLY] > 0)
-            eligibility[RECITE_ALLY]++;
     }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -648,7 +631,6 @@ static const char* zin_book_desc[NUM_RECITE_TYPES] =
     "Ablutions (harms the unclean and corporeal undead)",
     "Apostates (harms the faithless and heretics)",
     "Anathema (harms demons and incorporeal undead)",
-    "Alliances (blesses intelligent allies)",
 };
 
 int zin_check_recite_to_monsters(recite_type *prayertype)
@@ -716,7 +698,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
 
     for (int i = 0; i < NUM_RECITE_TYPES; i++)
     {
-        if (count[i] > 0 && i != RECITE_ALLY) // no ally recite yet
+        if (count[i] > 0)
         {
             mprf("    [%c] - %s", 'a' + menu_cnt, zin_book_desc[i]);
             letters[menu_cnt++] = (recite_type)i;
@@ -817,10 +799,6 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     switch (prayertype)
     {
-    case RECITE_ALLY:
-        // Stub. Not implemented yet.
-        break;
-
     case RECITE_HERETIC:
         if (degree == 1)
         {

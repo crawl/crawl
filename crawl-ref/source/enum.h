@@ -3021,7 +3021,6 @@ enum recite_type
     RECITE_IMPURE,
     RECITE_HERETIC,
     RECITE_UNHOLY,
-    RECITE_ALLY,
     NUM_RECITE_TYPES
 };
 
