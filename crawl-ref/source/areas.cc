@@ -122,9 +122,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.push_back(area_centre(AREA_HALO, a->pos(), r));
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
-        {
             _set_agrid_flag(*ri, APROP_HALO);
-        }
         no_areas = false;
     }
 
@@ -149,9 +147,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.push_back(area_centre(AREA_UMBRA, a->pos(), r));
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_DEFAULT); ri; ++ri)
-        {
             _set_agrid_flag(*ri, APROP_UMBRA);
-        }
         no_areas = false;
     }
 
@@ -160,9 +156,7 @@ static void _actor_areas(actor *a)
         _agrid_centres.push_back(area_centre(AREA_HOT, a->pos(), r));
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE, LOS_NO_TRANS); ri; ++ri)
-        {
             _set_agrid_flag(*ri, APROP_HOT);
-        }
         no_areas = false;
     }
 }

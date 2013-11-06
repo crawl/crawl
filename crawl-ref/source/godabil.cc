@@ -819,9 +819,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
             // This branch can't hit sleeping monsters - until they wake up.
 
             if (check < 5)
-            {
                 effect = ZIN_DAZE;
-            }
             else if (check < 10)
             {
                 if (coinflip())
@@ -830,9 +828,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                     effect = ZIN_DAZE;
             }
             else if (check < 15)
-            {
                 effect = ZIN_CONFUSE;
-            }
             else
             {
                 if (one_chance_in(3))
