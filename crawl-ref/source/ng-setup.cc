@@ -999,10 +999,6 @@ static void _give_items_skills(const newgame_def& ng)
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
 
-    // Formicids get curing potions to offset their poison weakness.
-    if (you.species == SP_FORMICID)
-        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
-
     // Zotdef: everyone gets bonus two potions of curing.
 
     if (crawl_state.game_is_zotdef())
