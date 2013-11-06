@@ -2995,11 +2995,13 @@ bool is_bad_item(const item_def &item, bool temp)
 
         switch (item.sub_type)
         {
-        case POT_CONFUSION:
         case POT_SLOWING:
+        case POT_PARALYSIS:
+            if (you.species == SP_FORMICID)
+                return false;
+        case POT_CONFUSION:
         case POT_DEGENERATION:
         case POT_DECAY:
-        case POT_PARALYSIS:
             return true;
         case POT_STRONG_POISON:
             return player_res_poison(false, temp) < 3;
@@ -3276,6 +3278,9 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_res_poison(false, temp) > 0;
         case POT_STRONG_POISON:
             return player_res_poison(false, temp) >= 3;
+        case POT_SLOWING:
+        case POT_PARALYSIS:
+            return you.species == SP_FORMICID;
 
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
