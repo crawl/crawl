@@ -1249,6 +1249,10 @@ int player_teleport(bool calc_unid)
     if (crawl_state.game_is_sprint())
         return 0;
 
+    // Short-circuit rings of teleport to prevent spam.
+    if (you.species == SP_FORMICID)
+        return 0;
+
     int tp = 0;
 
     // All effects negated by magical suppression should go in here.

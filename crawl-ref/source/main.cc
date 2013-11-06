@@ -3290,7 +3290,7 @@ static void _player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == TRAN_WISP)
+        else if (you.form == TRAN_WISP && !you.stasis())
             random_blink(false);
     }
 
