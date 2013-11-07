@@ -1382,38 +1382,39 @@ MONS:   orb spider / nothing, trapdoor spider / nothing
 NSUBST: 7 = 3:1 / 1:2
 SUBST:  W = W..
 SUBST:  - = ....WWW^
-KFEAT:  ^ = web
+KFEAT:  ^ = known web trap
 TILE:   c = wall_vines
 MAP
-cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcx
-cxxxxxxxxxxxwwxWxxxxxxxxwwxxxxxxwxxxwxxxxxxxxxxxxcx
-cxxxxxxxxx.W..4..x..x........x..4.--.-wxxxxxxxxxxcx
-cxxxxxxxw.4....x......4.xx....5WxW.4..xxxxxxxxxxxcx
-cxxxxxxx..4.xcxxx.xxxxxxxxxxxwxxxwxx...Wxxxxxxxxxcx
-cxxxxxxW4W.4WcccxxxccxxxccccxxxcxxxxxW..--xxxxxxxcx
-cxxxxxx...4W6W6ccccWWccccWWcccccccccxxxx4.-xxxxxxcx
-cxxxxxW54.x6W6WcWWW.4..........444.ccccxx..Wxxxxxcx
-cxxxxxwW.xcccW666....W5.W....WWWWW..cccxx.W.xxxxxcx
-cxxxxxx4Wxcc66..wwwwcccccccc..444....cccxx...Wxxxcx
-cxxxxx.WxxcW-..wwcccc--575dccccc..-.-.cccxx..-xxxcx
-cxxxxx..xxcW-4.wcc-.575dwww4.--ccc.-..cccxx.4-xxxcx
-cxxxxx.4WxcW-..5cd4wwwww3Oww474-3c..W5cccxxxW.xxxcx
-cxxxxw..xxccW.4.c-74.wwwwwww4..ccc6-.Wcccxx..Wxxxcx
-cxxxxx.4.xxccW4Wcccc...4...4---6-6-6ccccxx..-xxxxcx
-cxxxxxx...xxcW45..-cccc-3cc-66-6-ccccxxxx4.Wxxxxxcx
-cxxxxxxxW..xcccW-...44cccc6-6-6-ccxxxxxx..Wxxxxxxcx
-cxxxxxxxwW4xxxcccccc4.....-6-ccccxxWWxx.Wxxxxxxxxcx
-cxxxxxxxxx-..xxxxxxccc-----cccxxxx..4..Wxxxxxxxxxcx
-cxxxxxxxxxx-.W..--xxxcccccccxxx6x4.xxwwxxxxxxxxxxcx
-cxxxxxxxxxxxx-.4..--xxxxxxxxx-6-66xxxxxxxxxxxxxxxcx
-cxxxxxxxxxxxxxxx-.4.W.x..xxx-6-w-xxxxxxxxxxxxxxxxcx
-cxxxxxxxxxxxxxxxxxxx-...4....xx-4.xxxxxxxxxxxxxxxcx
-cxxxxxxxxxxxxxxxxxxxx--xx-W-xxxx.4xxxxxxxxxxxxxxxcx
-cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4xxxxxxxxxxxxxxcx
-cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4.xxxxxxxxxxxxxxcx
-ccccccccccccccccccccccccccccccxx4.4.xxccccccccccccx
-cccccccccccccccccccccccccccccxx..4.4.xxcccccccccccx
-ccccccccccccccccccccccccccccxx........xxccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcx
+xxxxxxxxxxxxwwxWxxxxxxxxwwxxxxxxwxxxwxxxxxxxxxxxxcx
+xxxxxxxxxx.W..4..x..x........x..4.--.-wxxxxxxxxxxcx
+xxxxxxxxw.4....x......4.xx....5WxW.4..xxxxxxxxxxxcx
+xxxxxxxx..4.xcxxx.xxxxxxxxxxxwxxxwxx...Wxxxxxxxxxcx
+xxxxxxxW4W.4WcccxxxccxxxccccxxxcxxxxxW..--xxxxxxxcx
+xxxxxxx...4W6W6ccccWWccccWWcccccccccxxxx4.-xxxxxxcx
+xxxxxxW54.x6W6WcWWW.4..........444.ccccxx..Wxxxxxcx
+xxxxxxwW.xcccW666....W5.W....WWWWW..cccxx.W.xxxxxcx
+xxxxxxx4Wxcc66..wwwwcccccccc..444....cccxx...Wxxxcx
+xxxxxx.WxxcW-..wwcccc--575dccccc..-.-.cccxx..-xxxcx
+xxxxxx..xxcW-4.wcc-.575dwww4.--ccc.-..cccxx.4-xxxcx
+xxxxxx.4WxcW-..5cd4wwwww3Oww474-3c..W5cccxxxW.xxxcx
+xxxxxw..xxccW.4.c-74.wwwwwww4..ccc6-.Wcccxx..Wxxxcx
+xxxxxx.4.xxccW4Wcccc...4...4---6-6-6ccccxx..-xxxxcx
+xxxxxxx...xxcW45..-cccc-3cc-66-6-ccccxxxx4.Wxxxxxcx
+xxxxxxxxW..xcccW-...44cccc6-6-6-ccxxxxxx..Wxxxxxxcx
+xxxxxxxxwW4xxxcccccc4.....-6-ccccxxWWxx.Wxxxxxxxxcx
+xxxxxxxxxx-..xxxxxxccc-----cccxxxx..4..Wxxxxxxxxxcx
+xxxxxxxxxxx-.W..--xxxcccccccxxx6x4.xxwwxxxxxxxxxxcx
+xxxxxxxxxxxxx-.4..--xxxxxxxxx-6-66xxxxxxxxxxxxxxxcx
+xxxxxxxxxxxxxxxx-.4.W.x..xxx-6-w-xxxxxxxxxxxxxxxxcx
+xxxxxxxxxxxxxxxxxxxx-...4....xx-4.xxxxxxxxxxxxxxxcx
+xxxxxxxxxxxxxxxxxxxxx--xx-W-xxxx.4xxxxxxxxxxxxxxxcx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.4xxxxxxxxxxxxxxcx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx4.xxxxxxxxxxxxxxcx
+xcccccccccccccccccccccccccccccxx4.4.xxccccccccccccx
+xccccccccccccccccccccccccccccxx..4.4.xxcccccccccccx
+xcccccccccccccccccccccccccccxx........xxccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@@@@@@@@xxxxxxxxxxxxx
 ENDMAP
 
@@ -1423,46 +1424,43 @@ TAGS:   no_pool_fixup
 ORIENT: southwest
 KITEM:  O = gossamer rune of zot
 KMONS:  O = ghost moth
-ITEM:   piece of ambrosia
-KITEM:  * = piece of ambrosia
+KITEM:  *d = piece of ambrosia
 KMONS:  * = emperor scorpion
-MONS:   moth of wrath / ghost moth, ghost moth
+MONS:   ghost moth, moth of wrath
 MONS:   yellow wasp / red wasp / w:5 nothing
 MONS:   w:2 demonic crawler / w:3 emperor scorpion / w:1 nothing
 MONS:   tarantella / w:20 wolf spider / jumping spider / w:5 demonic crawler / \
         w:5 brain worm / w:7 nothing
 MONS:   trapdoor spider / nothing
 MONS:   orb spider
-KMONS:  8 = orb spider
-NSUBST: 8 = 2:c / *:8
-SUBST:  - = .....WWW^
-KFEAT:  ^ = web
-SUBST:  = = +.
+NSUBST: 8 = 2:c / *:7, C = 1:. / 1:c. / *:c
+SUBST:  - = .....WWW^, 2 = 12
+KFEAT:  ^ = known web trap
 SHUFFLE: O12*
 MAP
 xxxxxxxxxxxxxxxxxxx@@@@@@@@@@xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx......xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxx
-xxxxxxxxxxccccccccccccc==cccccccccccccxxxxxx
-xxxxxxxxxxcccccccccccc-.--ccccccccccccxxxxxxx
-xxxxxxxxxxc6Wccccccccc.x.-cccccccccW6cxxxxxxxx
-xxxxxxxxxxc6......ccccx.-xccccc.....6cxxxxxxxx
-xxxxxxxxxxcW--..cc45Oc6--6c154.c..--Wcxxxxxxxx
-xxxxxxxxxxcc.--ccc55ccx.-xcc55ccc--.ccxxxxxxxx
-xxxxxxxxxxcccW--cccccc.---cccccc--Wcccxxxxxxxx
-xxxxxxxxxxcccc.--cccccx.-xccccc--.ccccxxxxxxxx
-xxxxxxxxxxccccxW--c8cc--.-cc8c--Wxccccxxxxxxxx
+xxxxxxxxxxccccccccccccc..cccccccccccccxxxxxx
+xxxxxxxxxxcccccccccccc-..-ccccccccccccxxxxxxx
+xxxxxxxxxxc6Wccccccccc-x.-cccccccccW6cxxxxxxxx
+xxxxxxxxxxc6..c...ccccx..xccccc..c..6cxxxxxxxx
+xxxxxxxxxxcW.-..c.45Oc6..6c154.c..-.Wcxxxxxxxx
+xxxxxxxxxxcc..-cCc55ccx..xcc55cCc-..ccxxxxxxxx
+xxxxxxxxxxcccW.-cccccc-..-cccccc-.Wcccxxxxxxxx
+xxxxxxxxxxcccc..-cccccx.-xccccc-..ccccxxxxxxxx
+xxxxxxxxxxccccxW.-c8cc--.-cc8c-.Wxccccxxxxxxxx
 xxxxxxxxxxcccc-.-xx--x-xx.x--xx-.-ccccxxxxxxxx
 xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
 xxxxxxxxxxccc.333.-.-.5445.-.-.333.cccxxxxxxxx
 xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
-xxxxxxxxxxcccc-.-xx^-x.xx-x--xx-.-ccccxxxxxxxx
-xxxxxxxxxxccccxW--c8cc-.--cc8c--Wxccccxxxxxxxx
-xxxxxxxxxxcccc.--cccccx-.xccccc--.ccccxxxxxxxx
-xxxxxxxxxxcccW--cccccc---.cccccc--Wcccxxxxxxxx
-xxxxxxxxxxcc.--ccc55ccx-.xcc55ccc--.ccxxxxxxxx
-xxxxxxxxxxcW--..c.45*c7--7c254.c..--Wcxxxxxxxx
-xxxxxxxxxxc6.....ccccccddcccccc.....6cxxxxxxxx
+xxxxxxxxxxcccc-.-xx--x.xx-x--xx-.-ccccxxxxxxxx
+xxxxxxxxxxccccxW.-c8cc-.--cc8c-.Wxccccxxxxxxxx
+xxxxxxxxxxcccc..-cccccx-.xccccc-..ccccxxxxxxxx
+xxxxxxxxxxcccW.-cccccc-...cccccc-.Wcccxxxxxxxx
+xxxxxxxxxxcc..-cCc55ccx-.xcc55cCc-..ccxxxxxxxx
+xxxxxxxxxxcW.-..c.45*c7--7c254.c..-.Wcxxxxxxxx
+xxxxxxxxxxc6..c..ccccccddcccccc..c..6cxxxxxxxx
 xxxxxxxxxxc6WccccccccccccccccccccccW6cxxxxxxxx
 xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1471,111 +1469,116 @@ ENDMAP
 NAME:   grunt_spider_rune_parallel
 PLACE:  Spider:$
 ORIENT: east
-NSUBST: H = 1:O / *:P
+NSUBST: O = 1:O / *:P
 KITEM:  O = gossamer rune of Zot
 KITEM:  P = piece of ambrosia
-MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
-MONS:   wolf spider / redback / tarantella / jumping spider / w:30 nothing
-MONS:   orb spider / nothing, trapdoor spider / nothing
-SUBST:  " = ^.6
-SUBST:  - = ...WW^^^
-SUBST:  . = ...W
-KFEAT:  ^ = web
-SUBST:  c : cx
-SUBST:  C : c
+MONS:   ghost moth, moth of wrath, emperor scorpion
+MONS:   wolf spider w:11 / redback / tarantella / jumping spider
+MONS:   orb spider / red wasp, trapdoor spider
+NSUBST: 1 = 2:1 / 1:1.. / *:4, 4 = 20:4 / 16:. / * = 4..
+SUBST:  2 = 12, " = ^^...6, - = .....w^^
+KFEAT:  ^ = known web trap
+SUBST:  C : cx
 TILE:   c = wall_vines
+KMASK:  w = no_monster_gen
 MAP
-                        xxxxxxxxxxx
-                xxxxxxxxxxxxxxxxxxxxxxxx
-     xxxxxxxxxxxxxxxxxxxccccccccccxxxxxxxx
-xxxxxxxxxxxxxxxxxcccccccc--------ccccccxxxxxx
-xxxxxxxccccccccccc--------...4..------CCCCCxxxxx
-cccccccc-----------..."""".5..4.4.4...----CCCxxxxx
----------.............""""".1..4.4...."""---CCCxxxx
-."""""........4.4......""""5..4.4.4.."""...---CCxxxx
-@"""""5......4.4......"""""-------.4.""".....--CCxxx
-@""""".......4..4......""---CCCCC------...3.4.--CCxx
-@.-----------------....---CCC---CC-CCC-..4..4..--Cxx
-@.-CCCCCCCCCCCCCCC------CCC---.--CCC---.4..44...HCxx
-@.---------------CCCCCCCC---.4.4-----"""4..4...H-Cxx
-@"""".......4...----------....4.4..."""..3.4.4.2HCxx
-@""""5.....4.4....""""".5..4.4.4....."""4..4...H-Cxx
-@"""".....4.4.....""""".1...4...4..-----4..44...-Cxx
-@.----------.4..."""""..5....4------CCC-.4..4.--CCxx
-@.-CCCCCCCC-----..""""".-------CCCCCC---..3..--CCxxx
-@"--------CCCCC---------CCCCCCCC-----."""""---CCxxx
-@"""""5..-----CCCCCCCCCCCC-------......"""--CCCxxxx
-"""""".....4.--------------..4.4........"--CCxxxxxx
---------....4.4.4......""".5..4.4......---CCxxxxxx
-ccccccc-----.4.4......"""""..4.4.....---CCCxxxxxxx
-xxxxxxccccc-----......."""""1.4.4...--CCCxxxxxxxx
-xxxxxxxxxxccccc---....."""""...4.4.--ccxxxxxxxxx
-  xxxxxxxxxxxxccc-------""".5-------ccxxxxxxxxx
-      xxxxxxxxxxccccccc-------cccccccxxxxxxx
-           xxxxxxxxxxxcccccccccxxxxxxxxx
-               xxxxxxxxxxxxxxxxxxxxxxx
-                  xxxxxxxxxxxxxxxxx
+                      xxxxxxxxxxx
+              xxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxCCCCCCCCCCxxxxxxxx
+xxxxxxxxxxxxxxxCCCCCCCC--------CCCCCcxxxxxx
+xxxxxCCCCCCCCCCC--C-----...4..------cccccxxxxx
+CCCCCC-----------.C......5.4.4.4...----cccxxxxx
+-------...........C.""""...1.4.4...."""---cccxxxx
+."""........4.4...CCP"""..5.4.4.4.."""...---ccxxxx
+@"""5......4.4.....C"""".-------.4.""".....--ccxxx
+@..........4..4....CC..---ccccc-.----...3.4.--ccxx
+@-------------......CC--ccc---cc--cc-..4..4..--cxx
+@-ccccccccccc--------cccc---.--cc----.4..44....cxx
+@--------------cccccccc---.4.4----.......4...O-cxx
+@"".......4...----------....4.4........3.4.412Ocxx
+@""5.....4.4....""""".5x.4.4.4...........4...O-cxx
+@"".....4.4.....""""".1...4...4...----4..44...-cxx
+@---------.4..."""""..5x...4-------cc-.4..4.--ccxx
+@-ccccccc-----..""""".-------ccccc----..3..--ccxxx
+@-------ccccc---------cccccccc-----."""""---ccxxx
+@"""5..--------ccccccccc-------4....."""--cccxxxx
+.""".....4....--------C--..4.4.4....."--ccxxxxxx
+------....4.4.4......CC...5..4.4.....---ccxxxxxx
+CCCCC-----.4.4......CC""""..4.4....---cccxxxxxxx
+xxxxCCCCC-----.....CCP"""".1.4.4..--CCCxxxxxxxx
+xxxxxxxxCCCCC---...C.."""".......--CCxxxxxxxxx
+ xxxxxxxxxxxCCC---.C---....-------CCxxxxxxxxx
+    xxxxxxxxxxCCCCCCC-------CCCCCCCxxxxxxx
+         xxxxxxxxxxxCCCCCCCCCxxxxxxxxx
+             xxxxxxxxxxxxxxxxxxxxxxx
+                xxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   grunt_spider_rune_island
-PLACE:  Spider:$
-ORIENT: north
-NSUBST: d = 1:O / 3:d / *:.
-KITEM:  O = gossamer rune of Zot
-ITEM:   piece of ambrosia
-MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
-MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
-MONS:   orb spider / w:5 nothing, trapdoor spider / nothing
-NSUBST: 7 = 3:1 / 1:2
-SUBST:  + = ...+
-SUBST:  " = ....^
-SUBST:  - = ...WW^^^
-SUBST:  . = ...W
-KFEAT:  ^ = web
-SUBST:  c : cx
-SUBST:  C : cccccx
-TILE:   c = wall_vines
+NAME:    grunt_spider_rune_island
+TAGS:    no_monster_gen
+PLACE:   Spider:$
+ORIENT:  north
+NSUBST:  d = 1:O / 3:d / *:.
+KITEM:   O = gossamer rune of Zot
+ITEM:    piece of ambrosia
+MONS:    ghost moth, moth of wrath, emperor scorpion
+MONS:    red wasp / yellow wasp w:2, orb spider
+MONS:    wolf spider, redback / tarantella
+KMONS:   8 = jumping spider / demonic crawler
+SHUFFLE: efgh, ijk
+NSUBST:  e = 2:6 / 2:. / * = 78., f = 2:7 / 2:. / * = 68
+NSUBST:  g = 2:8 / 2:. / * = 67, h = 2:6 / 3:. / * = 78
+NSUBST:  i = 1:3 / 1:. / * = 678, j = 1:9 / 1:. / * = 678
+NSUBST:  k = 1:9 / 1:. / * = 678.
+NSUBST:  5 = 5:5 / * = 5.., 9 = 3:1 / 1:12 / * = 4.
+SUBST:   0 = 4678..
+SUBST:   + = ^^^+
+SUBST:   " = ...xxW^
+SUBST:   - = ...cWW^^^
+KFEAT:   ^ = known web trap
+SUBST:   c : cx
+SUBST:   C : c
+TILE:    c = wall_vines
 MAP
-                  xxxxxxxxxxxx
-               xxxxxxxxxxxxxxxx
-          xxxxxxxxxxccccccccxxxx
-         xxxxxxxccccc------cccxxx
-       xxxxcccccc------...---cxxxx
-      xxxxcc------..........-ccxxxx
-     xxxxcc--...............--ccxxxx
-    xxxccc--.....4.4.........--cxxxxxx
-   xxxcc---.....4...4.........-cccxxxxx
-  xxxcc-.........4.4........4.---ccxxxx
- xxxcc--.4.4...............4....--cccxxxx
- xxcc--.....4........"....4......---ccxxxx
- xxc--.......4......"""..4....5....--ccxxx
-xxxc-..5..........."""""..........""--cxxxx
-xxcc-..........WWWWW"""WWWWW...."""""-ccxxx
-xxc--"""""....WWwwww"""wwwwWW..""""..--ccxxx
-xxc-."""""".WWWwwwwww.wwwwwwWW""".....--cxxx
-xxc-..""""""WwwwwwCCC+CCCwwwwW"........-ccxx
-xxc-........WwwwwCC--3--CCwwwW.........--cxx
-xxc-........WwwCCC--4.4--CCwwW..........-cxx
-xxc-..4.4...WwwC---3.7.3--CwwW..........-cxx
-xxc-.4...4..WwwC-.4.4d4.4-CwwW.4..4..4..-cxx
-xxc-..4.4...WwwC--.7ddd7.-CwwW..4..4..4.-cxx
-xxc-........WwwCC---5d5.--CwwW..........-cxx
-xxc-........WwwwCCC--7.4-CCwwW.........--cxx
-xxc--..5....WwwwwwCC-----CwwwW.........-ccxx
-xxcc-...."""WWwwwwwCCC--CCwwwW.....5...-cxx
-xxxc-..""""..WWWwwwwwCCCCwwwWW"........-cxx
-xxxc--""".....WWWwwwwwwwwwwwW""""""...--cxx
- xxcc-""........WWWwwwwwwwwWW.."""""""-ccxx
- xxxc-............WWWWWWWWWW......""""-cxxx
- xxxc--.............................."-cxx
-  xxcc-..............................--cxx
-  xxxc--.............................-ccxx
-  xxxcc--......4....4..4..4...4....--ccxxx
-  xxxxcc-........5...44.44..5.....--ccxxxx
-   xxxxc--...4..................4.-ccxxxxx
-    xxxcc---"""""""""""""""""""""--cxxxxxx
-     xxxccc--"""""""""""""""""""--ccxxxxx
-      xxxxcc----"""""""""""""""--ccxxxxx
-       xxxxcccc----............-ccxxxxx
-        xxxxxxcccc-...@@@@@....-cxxxxx
+               xxxxxxxxxxx
+             xxxxxxxxxxxxxxxxxx
+           xxxxxxcccccccccxxxxxxxxxxx
+          xxxxcccc-------cccccccccxxxx
+        xxxxccc--.....e.....-----cxxxxxx
+       xxxxcc---.....e.e....."""-ccxxxxxx
+       xxxcc--".......x...5..""..-ccxxxxx
+      xxxxc--""......e.e.....""..--cccxxx
+     xxxccc-."""......e....."""...---cccx
+   xxxxxc--..."""...........""......--"cx
+  xxxxccc-...5.""...........""......-"---
+ xxxxcc---..5..."".........""......f-"-.@
+xxxccc--k........WWWWWWWWWWW"....f..-"-.@
+xxxc---..k......WWwwwwwwwwwWWW....5.-"-..
+xxcc-.....k....WWwwwwwwwwwwwwWW..f..-"-..
+xxc--......k..WWwwwCCCCCCwwwwwW...f.-"-.x
+xxc-k.........WwwwCC----CCCwwwW...g.-"-.x
+xxc-..........WwwCC--0.---CwwwW.....-"-.x
+xxc-....j....-WwwC--3.9..-CCwwW..0..-"-.x
+xxc--..j.j..-"-"wC-0.0d0.--CwwW.....-"-..
+xxc--......-"---.+3.9ddd9-CCwwW...f.-"-..
+xxcc-..j.j..-"-"wC-0.0d0--CwwwW...g.-"-.@
+xxxc-...j...."WwwC--3.9--CCwwwW..g..-"-.@
+xxxc-.........WwwCC--0.-CCwwwWW.....-"---
+ xxc--........WwwwCC----CwwwwW....5.-"--x
+ xxcc-........WwwwwCCCCCCwwwWW...g..-"--x
+ xxxc-........WWwwwwwwwwwwwWW......g-"--x
+  xxc-i.....i...WwwwwwwwwwWW........-"-cx
+  xxc--....i....WWWWWWWWWWW.........---cx
+  xxcc--..i......"........".........--ccx
+  xxxcc--i......""........""........-ccxx
+   xxxcc-.i.....""........"".......--cxxx
+    xxxc-...5.."""...h.....""....---ccxxx
+    xxxcc--..5."""..h.h..5."""...-cccxxx
+     xxxcc--...""....x......"".--ccxxxx
+      xxxcc--..""...h.h.....----ccxxxx
+       xxxcc----.....h...----ccccxxxx
+        xxxcccc-----------ccccxxxxxx
+         xxxxxcccccccccccccxxxxxxxx
+          xxxxxxxxxxxxxxxxxxxxxx
+             xxxxxxxxxxxxxxxx
 ENDMAP
