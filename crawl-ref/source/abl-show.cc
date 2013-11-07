@@ -1955,7 +1955,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_SHAFT_SELF:
-        if (you.can_do_shaft_ability())
+        if (you.can_do_shaft_ability(false))
         {
             if (yesno("Are you sure you want to shaft yourself?"))
                 start_delay(DELAY_SHAFT_SELF, 1);
@@ -1963,10 +1963,7 @@ static bool _do_ability(const ability_def& abil)
                 return false;
         }
         else
-        {
-            mpr("You can't shaft here.");
             return false;
-        }
         break;
 
     case ABIL_DELAYED_FIREBALL:

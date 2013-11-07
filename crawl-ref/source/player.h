@@ -711,7 +711,7 @@ public:
 
     bool do_shaft();
 
-    bool can_do_shaft_ability() const;
+    bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
 
     void apply_location_effects(const coord_def &oldpos,
