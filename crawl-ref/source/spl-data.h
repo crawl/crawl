@@ -3076,6 +3076,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SHAFT_SELF, "Shaft Self",
      SPTYP_EARTH,
@@ -3088,6 +3089,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_AWAKEN_VINES, "Awaken Vines",
