@@ -609,6 +609,8 @@ World's End
 
 Ragnarok
 
+Fimbulwinter
+
 Annihilation
 
 the End of Times
@@ -621,6 +623,8 @@ Pestilence
 Plague
 
 Famine
+
+War
 %%%%
 _chaos_name_
 
@@ -1314,6 +1318,8 @@ Hard Scrabble
 Red Wine
 
 Undoing
+
+the Unkillable
 
 # akrasiac patch
 Irrepressible Laughter
