@@ -476,7 +476,6 @@ MONS:    bat / fire bat / vampire bat, butterfly, raven
 MONS:    spatial vortex, vapour, harpy, unseen horror
 KMONS:   8 = phoenix w:9 / harpy w:1
 KITEM:   8 = acquire any / any good_item / stone q:1 w:5
-KFEAT:   = = runed_door
 NSUBST:  A = 2:2 / 1:2 / 2 = 1122., B = 1:3 / 1:4 / 1:1334. / 1:12334.
 NSUBST:  C = 1:556 / 1:6 / 1:7 / 1:66777. / 1:1234567.
 SUBST:   x = x:25 c:14 v:6 b:4 G:1 n:2, y = c:3 v:1 b:1, z = x:2 c:1 v:1 b:1 .:1
@@ -486,8 +485,8 @@ xx x x x x.x
 x x0x x.x.x
 xx0x.x1x.x.x
 x x.x1x.x.x.
-xx x1==xyyyy
-x x.x=xAzCzy
+xx x1++xyyyy
+x x.x+xAzCzy
 xx1x.xAAABCy
 x x.xyzACBzy
 xx.x.yCBB8zy
@@ -2178,20 +2177,19 @@ NAME:   bh_abyssal_stair
 DEPTH:  Abyss:3-4
 WEIGHT:  1
 MONS:   hydra-thrashing horror-yaktaur chimera
-KFEAT:  = = runed_door
 KFEAT:  >: abyssal_stair
 MAP
       @
-  xxxx=xxxx
+  xxxx+xxxx
  xx   .   xx
  x    .ll  x
  x ll..>l  x
  x l>.>1.  x
-@=...>l>...=@
+@+...>l>...+@
  x  .1>.>l x
  x  l>..ll x
  x  ll.    x
  xx   .   xx
-  xxxx=xxx
+  xxxx+xxx
       @
 ENDMAP
