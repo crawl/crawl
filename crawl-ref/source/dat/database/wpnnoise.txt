@@ -134,6 +134,19 @@ _rare_chatter_
 @Your_weapon@ asks, "Did you take a vow of silence?"
 
 @Your_weapon@ says, "You can tell me everything! I can keep a secret!"
+
+@Your_weapon@ asks, "Do you need to see the manual?"
+
+@Your_weapon@ asks, "Have you heard of the Orb of Zot?"
+
+@Your_weapon@ moans, "I feel dizzy."
+
+@Your_weapon@ says, "We'll split the gold! Fifty-fifty!"
+
+@Your_weapon@ says, "You're pretty alright, for @a_player_genus@."
+
+@Your_weapon@ sighs, "I'm going to miss you when you're dead, @player_nam@."
+
 ###############################################################################
 # Weapon noises.
 ###############################################################################
@@ -147,7 +160,7 @@ w:50
 @Your_weapon@ [coughs|swears|yawns][| loudly| noisily].
 
 w:40
-@Your_weapon@ [burps|cheers|hollers|yelps][| loudly]!
+@Your_weapon@ [burps|cheers|hollers|yelps|sneezes][| loudly]!
 
 w:30
 @Your_weapon@ makes a [horrible|deep, guttural|tutting] noise.
@@ -309,6 +322,10 @@ the wailing of sirens.
 a flourish of trumpets!
 
 a strangely pleasant explosion.
+
+distant weeping.
+
+a muffled joke.
 
 ###############################################################################
 ###############################################################################
@@ -914,6 +931,11 @@ return "@_godless_sorter_@"; else return "@player_god@"; end }} sort them out!"
 
 @The_weapon@ @_screams_@, "Among all these lost souls, we reign supreme!"
 
+@The_weapon@ shouts, "Die. Die. Die!"
+
+# After Rimbaud
+@The_weapon@ shouts, "You shall lie beneath the ground but I, I will glint in the sun!"
+
 w:1
 @The_weapon@ shouts, "Born from this womb, sliced by this blade!"
 
@@ -1014,6 +1036,9 @@ _SCREAM_
 @The_weapon@ @_screams_@, "I AM THE FIFTH HORSEMAN! THE TIME IS NOW!"
 
 @The_weapon@ @_screams_@, "I AM BECOME DEATH, [DESTROYER|DEFILER|DISMEMBERER] OF [WORLDS|GODS|CHAMPIONS|HEROES|LEGIONS|NATIONS|MILLIONS]!"
+
+# John 11:25
+@The_weapon@ @_screams_@, "I AM THE RESURRECTION AND THE LIFE!"
 
 # R.E.M.
 @The_weapon@ @_screams_@, "THIS IS THE END OF THE WORLD AS YOU KNOW IT!!!"
@@ -1135,6 +1160,9 @@ w:1
 
 w:40
 @The_weapon@ @_screams_@, "I AM [AN ANGEL|AN ARTIST|AN AVATAR|A HARBINGER|AN INSTRUMENT|A POET|A PROPHET|A SERVANT|A SLAVE|THE LORD|THE MASTER] OF [BLOOD|DANCE|DEATH|DESOLATION|DESPAIR|DESTRUCTION|DOOM|GORE|MADNESS|MUSIC|PAIN|RUIN|SLAUGHTER|SONG|STEEL|WAR]!"
+
+# The Wizard People
+@The_weapon@ @_screams@, "I AM A BEAUTIFUL ANIMAL!"
 
 # Immortal Defense, Courage Point quote
 @The_weapon@ @_screams_@, "EVERYTHING FAILS! EVERYTHING!!!"
