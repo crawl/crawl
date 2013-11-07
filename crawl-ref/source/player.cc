@@ -7993,9 +7993,6 @@ bool player::do_shaft_ability()
         down_stairs(DNGN_TRAP_SHAFT);
         mpr("The earth vibrates loudly upon landing!");
         fake_noisy(20, pos());
-        // Make it more likely for OOD to spawn
-        env.turns_on_level *= 4 + experience_level / 9;
-        env.turns_on_level /= 3;
         return true;
     }
     else
