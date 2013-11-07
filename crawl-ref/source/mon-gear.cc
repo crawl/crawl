@@ -460,10 +460,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_PIKEL:
-        force_item = true; // guaranteed flaming or elec
+        force_item = true;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_WHIP;
-        set_item_ego_type(item, OBJ_WEAPONS, coinflip() ? SPWPN_ELECTROCUTION : SPWPN_FLAMING);
+        set_item_ego_type(item, OBJ_WEAPONS,
+                          random_choose_weighted(2, SPWPN_FLAMING,
+                                                 2, SPWPN_FREEZING,
+                                                 1, SPWPN_ELECTROCUTION,
+                                                 0));
         item.plus  += random2(3);
         item.plus2 += random2(3);
         break;
