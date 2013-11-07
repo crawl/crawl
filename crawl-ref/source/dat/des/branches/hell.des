@@ -8,7 +8,8 @@
 function hell_entry(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
     e.depth_chance("Depths", 10000)
-    if you.where() == 'Depths:2' then
+    e.depth_chance("D:21-", 10000)
+    if you.where() == 'Depths:2' or you.where() == 'D:21' then
         e.kfeat(glyph .. " = enter_hell no_mimic")
     else
         e.kfeat(glyph .. " = enter_hell")
