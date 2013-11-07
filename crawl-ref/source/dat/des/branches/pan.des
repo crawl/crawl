@@ -164,10 +164,11 @@ end
 
 function pan_entry(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
-    e.depth("Depths")
+    e.depth("Depths, D:21-")
     e.depth_chance("Depths:3", 10000)
+    e.depth_chance("D:24", 10000)
     e.chance(2500)
-    if you.where() == 'Depths:3' then
+    if you.where() == 'Depths:3' or you.where() == 'D:24' then
         e.kfeat(glyph .. " = enter_pandemonium no_mimic")
     else
         e.kfeat(glyph .. " = enter_pandemonium")
