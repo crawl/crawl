@@ -38,7 +38,7 @@ bool is_hell_subbranch(branch_type branch)
 
 bool is_random_subbranch(branch_type branch)
 {
-    return (parent_branch(branch) == BRANCH_LAIR
+    return (branches[branch].parent_branch == BRANCH_LAIR
             && branch != BRANCH_SLIME)
            || branch == BRANCH_CRYPT
            || branch == BRANCH_FOREST;
