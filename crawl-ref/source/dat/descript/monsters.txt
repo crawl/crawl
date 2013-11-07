@@ -1061,7 +1061,7 @@ An ant-like soldier trained in combat and ready to defend its home.
 %%%%
 formicid venom mage
 
-A practitioner of its greatest fear. It knows how to create and cleanse poison.
+A practitioner of its greatest fear, adept with poison magic.
 %%%%
 dwarf
 
