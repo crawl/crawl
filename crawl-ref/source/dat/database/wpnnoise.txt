@@ -145,7 +145,7 @@ _rare_chatter_
 
 @Your_weapon@ says, "You're pretty alright, for @a_player_genus@."
 
-@Your_weapon@ sighs, "I'm going to miss you when you're dead, @player_nam@."
+@Your_weapon@ sighs, "I'm going to miss you when you're dead, @player_name@."
 
 ###############################################################################
 # Weapon noises.
