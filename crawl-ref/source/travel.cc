@@ -1890,10 +1890,11 @@ static void _find_parent_branch(branch_type br, int depth,
                                 branch_type *pb, int *pd)
 {
     *pb = parent_branch(br);   // Check depth before using *pb.
-    if (stair_level.find(br) == stair_level.end())
+    map<branch_type, set<level_id> >::iterator i = stair_level.find(br);
+    if (i == stair_level.end() || i->second.size() == 0)
         *pd = 0;
     else
-        *pd = stair_level[br].begin()->depth;
+        *pd = i->second.begin()->depth;
 }
 
 // Appends the passed in branch/depth to the given vector, then attempts to
