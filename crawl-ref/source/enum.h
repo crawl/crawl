@@ -3638,7 +3638,9 @@ enum spell_type
     SPELL_MALIGN_OFFERING,
     SPELL_SEARING_RAY,
     SPELL_DISCORD,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SHAFT_SELF,
+#endif
     NUM_SPELLS
 };
 

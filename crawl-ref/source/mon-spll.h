@@ -2113,7 +2113,7 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_DIG,
-       SPELL_SHAFT_SELF,
+       SPELL_NO_SPELL,
       }
     },
 
@@ -2124,7 +2124,7 @@
        SPELL_CANTRIP,
        SPELL_STONE_ARROW,
        SPELL_DIG,
-       SPELL_SHAFT_SELF,
+       SPELL_NO_SPELL,
       }
     },
 

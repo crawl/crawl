@@ -942,10 +942,6 @@ in the caster's immediate vicinity. The spell even creates appropriate
 equipment for the creature, which are given a lasting substance by their firm
 contact with reality.
 %%%%
-Shaft Self spell
-
-<Shaft Self ability>
-%%%%
 Shatter spell
 
 This spell causes a burst of concussive force around the caster, which will
