@@ -116,8 +116,7 @@ Shaft Self ability
 
 Sends you to a random position one to three floors down,
 as if you fell through a shaft trap. It takes time to dig the shaft
-and the landing is noisy. It may even attract monsters from deep
-within the dungeon to your floor.
+and the landing is noisy.
 %%%%
 Evoke Teleportation ability
 
