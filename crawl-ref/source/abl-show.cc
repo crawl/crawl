@@ -1500,6 +1500,18 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
+    case ABIL_OKAWARU_FINESSE:
+        if (you.species == SP_FORMICID)
+        {
+            mpr("You cannot use finesse because of your stasis.");
+            return false;
+        }
+        if (stasis_blocks_effect(false, false, "%s makes your neck tingle."))
+        {
+            return false;
+        }
+        return true;
+
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
@@ -2413,15 +2425,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_OKAWARU_FINESSE:
-        if (you.species == SP_FORMICID)
-        {
-            mpr("You cannot use finesse because of your stasis.");
-            return false;
-        }
         if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
                                  20, "%s makes your neck tingle."))
         {
-            return false;
+            // Identify the amulet and spend costs - finesse will be aborted
+            // for free with an identified amulet.
+            break;
         }
 
         mprf(MSGCH_DURATION, you.duration[DUR_FINESSE]
