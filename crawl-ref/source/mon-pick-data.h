@@ -1228,6 +1228,17 @@ static const pop_entry pop_water_d[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_water_depths[] =
+{ // Depths water monsters
+  {  1,  6,   200, DOWN, MONS_SHARK },
+  {  1,  6,   600, FLAT, MONS_WATER_ELEMENTAL },
+  {  1,  6,   300,   UP, MONS_ELEMENTAL_WELLSPRING },
+  {  1,  6,    50, FLAT, MONS_OCTOPODE },
+  {  1,  6,    25, FLAT, MONS_MERFOLK_IMPALER },
+  {  1,  6,    25, FLAT, MONS_MERFOLK_JAVELINEER },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const pop_entry pop_water_forest[] =
 { // Forest water monsters
   {  1,   5,   35, FLAT, MONS_BIG_FISH },

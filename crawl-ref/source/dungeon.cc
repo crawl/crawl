@@ -3652,8 +3652,9 @@ static int _place_uniques()
 
 static void _place_aquatic_monsters_weighted()
 {
-    const pop_entry* pop = (player_in_branch(BRANCH_FOREST) ? pop_water_forest
-                                                            : pop_water_d);
+    const pop_entry* pop = player_in_branch(BRANCH_FOREST) ? pop_water_forest :
+                           player_in_branch(BRANCH_DEPTHS) ? pop_water_depths
+                                                           : pop_water_d;
     int level = level_id::current().depth;
 
     vector<coord_def> water;
@@ -3776,8 +3777,12 @@ static void _place_aquatic_monsters()
                                        + (random2(lava_spaces) / 10), 15));
     }
 
-    if (player_in_branch(BRANCH_DUNGEON) || player_in_branch(BRANCH_FOREST))
+    if (player_in_branch(BRANCH_DUNGEON)
+        || player_in_branch(BRANCH_DEPTHS)
+        || player_in_branch(BRANCH_FOREST))
+    {
         _place_aquatic_monsters_weighted();
+    }
     else if (water_spaces > 49)
     {
         // This can probably be done in a better way with something
