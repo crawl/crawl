@@ -7970,24 +7970,41 @@ bool player::do_shaft()
     return true;
 }
 
-bool player::can_do_shaft_ability() const
+bool player::can_do_shaft_ability(bool quiet) const
 {
+    if (you.attribute[ATTR_HELD])
+    {
+        if (!quiet)
+            mprf("You can't shaft yourself while %s.", held_status());
+        return false;
+    }
+
     switch (grd(pos()))
     {
     case DNGN_FLOOR:
     case DNGN_OPEN_DOOR:
-        return is_valid_shaft_level();
+        if (!is_valid_shaft_level())
+        {
+            if (!quiet)
+                mpr("You can't shaft yourself on this level.");
+            return false;
+        }
+        break;
 
     default:
+        if (!quiet)
+            mpr("You can't shaft yourself on this terrain.");
         return false;
     }
+
+    return true;
 }
 
 // Like do_shaft, but forced by the player.
 // It has a slightly different set of rules.
 bool player::do_shaft_ability()
 {
-    if (can_do_shaft_ability())
+    if (can_do_shaft_ability(true))
     {
         mpr("A shaft appears beneath you!");
         down_stairs(DNGN_TRAP_SHAFT);
