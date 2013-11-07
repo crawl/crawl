@@ -937,44 +937,53 @@ WEIGHT: 8
 : shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,7))
 
 ################################################################################
-# Shoal huts.
-
+# Shoal hut with rune inside.
+#
+# This hut is also used for the decoy huts, with the rune replaced with a good
+# item.
+#
 NAME:      shoalhut_rune
 TAGS:      shoal_rune_simple water_ok no_dump mini_float transparent
-NSUBST:    A = 1:+ / 1 = x:19 +:1 / *:x
+SHUFFLE:   ABCD
+SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.
 SUBST:     e = e.
 KMONS:     ge = merfolk impaler / merfolk javelineer / merfolk aquamancer
-LROCKTILE: wall_vines
+LROCKTILE:  wall_vines
 KITEM:     O = barnacled rune of Zot
-KPROP:     O = no_tide
 MAP
- xxAxx
+ xxCxx
 xx.0.xx
 xe0g0ex
-A0gOg0A
+B0gOg0D
 xe0g0ex
 xx.0.xx
  xxAxx
 ENDMAP
 
+################################################################################
 # Shoal decoy hut
+#
 NAME:      shoalhut
 TAGS:      shoal_hut_simple water_ok no_dump allow_dup mini_float transparent
-NSUBST:    A = 1 = x:9 +:1 / *:x
+SHUFFLE:   ABCD
+SUBST:     A:x, B:x, C:x, D=+
 SUBST:     0 = 0.
+LROCKTILE:  wall_vines
 MAP
+ xxCxx
+xx.0.xx
+x.0.0.x
+B0.|.0D
+x.0.0.x
+xx.0.xx
  xxAxx
-xx.0.xx
-x.0.0.x
-A0.|.0A
-x.0.0.x
-xx.0.xx
- xx+xx
 ENDMAP
 
+################################################################################
 # Shoal hangout of Ilsuiw.
 # The hut itself may not contain Ilsuiw if she had other engagements.
+
 NAME:    shoal_ilsuiw
 TAGS:    shoal_guardian
 KMONS:   1 = Ilsuiw band, siren
@@ -982,6 +991,7 @@ KMONS:   2 = merfolk impaler / merfolk javelineer
 SUBST:   3 = 33w
 KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
 KFEAT:   123 = w
+LROCKTILE:  wall_vines
 MAP
  wxwxw
 wxw2wxw
@@ -1041,30 +1051,4 @@ xw0.xw..C.x
 xxW...DC.x@
  xxW....x..
   xxxxxx@.
-ENDMAP
-
-# Deliberately seperated from the styles of branch end;
-# it's good randomization and balancing material.
-NAME:    shoals_ilsuiw_alternative
-TAGS:    shoal_guardian water_ok
-WEIGHT:  8
-KMONS:   1 = Ilsuiw band, siren
-KMONS:   2 = merfolk impaler / merfolk javelineer
-KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
-KFEAT:   123 = w
-SHUFFLE: AB / AB / BA, CD / CD / DC
-SUBST:   AC = x, B = w, D = ., 3 = 33w
-LROCKTILE: wall_vines
-MAP
-  .@xxxx
- .x....xx
-.x.CD..2xx
-@.C..wxw3xx
-x.D.wAwx..x
-x..wA1Bw..x
-x..xwBw.D.x
-xx3wxw..C.@
- xx2..DC.x.
-  xx....x.
-   xxxx@.
 ENDMAP

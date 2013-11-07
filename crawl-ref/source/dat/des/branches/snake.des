@@ -822,14 +822,14 @@ ENDMAP
 
 ################################################################################
 # Snake Pit: the hunt
-# XXX: Fix occasional isolated doors embedded in rock.
+#
 NAME:    snake_hunt
 PLACE:   Snake:$
 WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  northwest
-KFEAT:   Z = known teleport trap w:2 / .
-KFEAT:   z = teleport trap / Zot trap / . w:20
+KFEAT:   Z = weight:2 teleport trap / .
+KFEAT:   z = teleport trap / Zot trap / weight:20 .
 MONS:    naga / nothing
 MONS:    greater naga / nothing
 MONS:    guardian serpent / nothing
@@ -843,9 +843,8 @@ SUBST:   ' = .:250 1 2 3 4:15 5:5
 SUBST:   " = .:250 1 2 3 4:5  5:15
 SUBST:   X=xc..++, Y=xc++
 SUBST:   T : T U V .:30 b
-SUBST:   _ : ....!x, ! = x .:2
-SHUFFLE: 123, 45
-NSUBST:  { = 1:{ / *:.
+SUBST:   _:.!, !:!.x, !=x .:2
+SHUFFLE: 123, 45, ([<
 KITEM:   O = serpentine rune of Zot
 #
 validate {{ return glyphs_connected('{', 'O') }}
@@ -879,13 +878,13 @@ xxxxxx!..2....x.........{.........x....1...!
 xxxxxx!.......x....T...(.[...T.............@
 xxxxxx!..2....x.......ZZZZZ.......x....1...!
 xxxxxxx!..2..._x.................x_...1..!xx
-xxxxxxx!...2..._xx....T...T....xx_...1...!xx
+xxxxxxx!...2..._xx....T.}.T....xx_...1...!xx
 xxxxxxx!........._xx.........xx_.........!xx
 xxxxxxxx!.........._xxx...xxx_..........!xxx
 xxxxxxxxx!.............x.x.............!xxxx
 xxxxxxxxxx!!.........................!!xxxxx
 xxxxxxxxxxxx!!!.....3.......3.....!!!xxxxxxx
-xxxxxxxxxxxxxxx!!!!!..3.{.3..!!!!!xxxxxxxxxx
+xxxxxxxxxxxxxxx!!!!!..3...3..!!!!!xxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx!!!...!!!xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxx!@!xxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -898,40 +897,42 @@ PLACE:  Snake:$
 WEIGHT: 20
 ORIENT: southwest
 TAGS:   no_rotate
-MONS:   greater naga, naga, naga mage, naga warrior
-SUBST:  C = c .:1
-SUBST:  v = x .:1
-NSUBST: 1 = 3:1 / 2:. / * = 1., 3 = 16:3 / 8:. / * = 3..
-NSUBST: 4 = 5:4 / 5:. / * = 4.
+MONS:   greater naga / nothing
+MONS:   naga
+MONS:   naga mage / nothing
+MONS:   naga warrior / nothing
+SUBST:  c = c .:1
+SUBST:  v = v .:1
+SUBST:  v = x
 KITEM:  O = serpentine rune of Zot
 MAP
-xxxxxxxxxxxxxxxxxccc.@2cc2@.ccccxxxxxxxx
-xxxxxxxxxxxxcccccc.............ccccxxxxx
-xxxxxxxxxxccc....v.............v..cccxxx
-xxxxxxxxxcc...2..v.............v..2.cxxx
-xxxxxxxxxc....2..v....v.....v..v..33ccxx
-xxxxxxxxxc....22.v.............vv..2.cxx
-xxxxxxxxcc.......vv..v........vv..33.cxx
-xxxxxxxxc....23x3.vv....T...vvv.4444.ccx
-xxxxxxxxc.....4444.v.........v..333...cx
-xxxxxxxxc.....334v....v........x44....cx
-xxxxxxxxc......334......v.......4333..cx
-xxxxxxxcc..C...........4.4..v......C..cx
-xxxxxxxc...CC...........1.........CC..cx
-xxxxxxxc..3CC..........4.4........CC.3cx
-xxxxxxxc..3CC.......v........2....CC.3cx
-xxxxxxxc..1CC.........1...1......CC..1cx
-xxxxxxxcc..CC.....1.....1.....1.CCC..ccx
-xxxxxxxxc...CCC......3333333....CC...cxx
-xxxxxxxxc....CCCC....3333333....CC...cxx
-xxxxxxxxc.....CCCCCC...........CC....cxx
-xxxxxxxxc........CCCC...O....CCC.....cxx
-xxxxxxxxcc........CC.CcccccCC.CC....ccxx
-xxxxxxxxxc..........CCCcccCCCC......cxxx
-xxxxxxxxxccc.....3..............3..ccxxx
-xxxxxxxxxxxcccc..13............31cccxxxx
-xxxxxxxxxxxxxxcccccc.......cccccccxxxxxx
-xxxxxxxxxxxxxxxxxxxcccccccccxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.............xxxxxxxx
+xxxxxxxxxxxxxx....v.............v..xxxxx
+xxxxxxxxxxxx....2.v.............v.2..xxx
+xxxxxxxxxxx.....2.v....v.....v..v.33.xxx
+xxxxxxxxxxx.....22v.............vv.2..xx
+xxxxxxxxxxx.......vv..v........vv.33..xx
+xxxxxxxxxx.....x233vv....T...vvv4444..xx
+xxxxxxxxxx......4444v.........v.333....x
+xxxxxxxxxx......33v4...v.......4x4.....x
+xxxxxxxxxx.......334.....v.....4333....x
+xxxxxxxxxx..c......3.3..4.4..v.......c.x
+xxxxxxxxx...cc.....1...1.1.1...133..cc.x
+xxxxxxxxx...cc....3.....4.4.........cc.x
+xxxxxxxxx...cc...3...v........2.....cc.x
+xxxxxxxxx...cc.........1...1.......cc..x
+xxxxxxxxxx..cc.....1.....1.....1..ccc.xx
+xxxxxxxxxx...ccc......3333333.....cc..xx
+xxxxxxxxxx....cccc....3333333.....cc..xx
+xxxxxxxxxx.....cccccc............cc...xx
+xxxxxxxxxx........ccccc..O....cccc....xx
+xxxxxxxxxxx........cccccccccccccc....xxx
+xxxxxxxxxxx..........ccccccccccc.....xxx
+xxxxxxxxxxxxx.......................xxxx
+xxxxxxxxxxxxxxxx..................xxxxxx
+xxxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -944,63 +945,60 @@ ENDMAP
 ################################################################################
 # Snake Pit: Coiled (minmay)
 #
-NAME:    minmay_snake_end_coiled_edited
+NAME:    minmay_snake_end_coiled
 PLACE:   Snake:$
 TAGS:    no_rotate
 ORIENT:  southwest
 MONS:    naga, naga warrior, naga mage, greater naga
-SUBST:   c : c:20 v:5, 1 = 11.
-NSUBST:  2 = 6 = 23 / 6:. / * = 23..
-NSUBST:  4 = 3:4 / 4 = 12233 / 6:. / * = 44123....
-NSUBST:  X = 4:x / 2:. / * = x..
+SUBST:   1 = 11., 2 = 23., 4 = 444123..
+SUBST:   c : c:20 v:5
 KITEM:   O = serpentine rune of Zot
 MAP
-xxxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxc....cxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxcc....ccxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc......cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxc...2..cxxxccccccccxxxxxx
-xxxxxxxxxxxxcccccc......ccccc......cccxxxx
-xxxxxxxxccccc...2.......2.......1....ccccc
-xxxxxcccc...........4............1........
-xxxccc...........2..X..2.........2.......@
-xxcc...............2.2..........1.........
-xxc....4.....ccccc......cccccc......cccccc
-xcc.......ccccxxxc......cxxxxccccccccxxxxx
-xc...1...ccxxxxxxc..1.1.cxxxxxxxxxxxxxxxxx
-xc....X..cxxxxxxxc...X..cxxxxxxxxxxxxxxxxx
-xc...4...ccxxxxxxc...2..cxxxxxxxxxxxxxxxxx
-xcc.......ccccxxxc......cxxxxxxxxxxxxxxxxx
-xxc....1.....ccccc......ccccccxxxxxxxxxxxx
-xxcc.........................cccccxxxxxxxx
-xxxccc.....4.....................ccccxxxxx
-xxxxxcccc...1......4X...............cccxxx
-xxxxxxxxccccc........X4........1......ccxx
-xxxxxxxxxxxxcccccc......ccccc..........cxx
-xxxxxxxxxxxxxxxxxc......cxxxcccc..1....ccx
-xxxxxxxxxxxxxxxxxc..1...cxxxxxxcc.......cx
-xxxxxxxxxxxxxxxxxc..X21.cxxxxxxxc..X4...cx
-xxxxxxxxxxxxxxxxxc..1...cxxxxxxcc.......cx
-xxxxxxxxxxxxxxxxxc......cxxxcccc..1....ccx
-xxxxxxxxxxxxcccccc......ccccc..........cxx
-xxxxxxxxccccc........4.........4......ccxx
-xxxxxcccc...........1X.......2......cccxxx
-xxxccc...............4...........ccccxxxxx
-xxcc.........................cccccxxxxxxxx
-xxc....1.2...ccccc......ccccccxxxxxxxxxxxx
-xcc.......ccccxxxc...1..cxxxxxxxxxxxxxxxxx
-xc...4...ccxxxxxxc..1...cxxxxxxxxxxxxxxxxx
-xc.1..X..cxxxxxxxc...2..cxxxxxxxxxxxxxxxxx
-xc...4...ccxxxxxxc..1X..cxxxxxxxxxxxxxxxxx
-xcc.......ccccxxxc...1..cxxxxxxxxxxxxxxxxx
-xxc....1.2...ccccc..2...ccccccxxxxxxxxxxxx
-xxcc.................1.....4.cccccxxxxxxxx
-xxxccc........1.....4........1...ccccxxxxx
-xxxxxcccc..4.2X4.....1......12.4....cccxxx
-xxxxxxxxccccc.1.....2........1....4..Ocxxx
-xxxxxxxxxxxxcccccccccccccccccccccccccccxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc....cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcc....ccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc......cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc...21.cxxxccccccccxxxxxx
+xxxxxxxxxxxcccccc......ccccc......cccxxxx
+xxxxxxxccccc...2........2.....1.....ccccc
+xxxxcccc............4....................
+xxccc.....4.....2.....2.......2.1.......@
+xcc...............2.2........1...........
+xc..........ccccc......cccccc......cccccc
+cc..1....ccccxxxc......cxxxxccccccccxxxxx
+c.......ccxxxxxxc....1.cxxxxxxxxxxxxxxxxx
+c...4...cxxxxxxxc......cxxxxxxxxxxxxxxxxx
+c.......ccxxxxxxc.1.2..cxxxxxxxxxxxxxxxxx
+cc....1..ccccxxxc......cxxxxxxxxxxxxxxxxx
+xc..........ccccc......ccccccxxxxxxxxxxxx
+xcc......4..................cccccxxxxxxxx
+xxccc...........................ccccxxxxx
+xxxxcccc..1....4...........1.......cccxxx
+xxxxxxxccccc.........4...............ccxx
+xxxxxxxxxxxcccccc......ccccc.....1....cxx
+xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...4...cx
+xxxxxxxxxxxxxxxxc...21.cxxxxxxxc.......cx
+xxxxxxxxxxxxxxxxc..1...cxxxxxxcc...1...cx
+xxxxxxxxxxxxxxxxc......cxxxcccc.......ccx
+xxxxxxxxxxxcccccc..4...ccccc..........cxx
+xxxxxxxccccc.........................ccxx
+xxxxcccc2.......1.......2.....4....cccxxx
+xxccc........1....4.............ccccxxxxx
+xcc.......4.................cccccxxxxxxxx
+xc.....1....ccccc......ccccccxxxxxxxxxxxx
+cc.......ccccxxxc....1.cxxxxxxxxxxxxxxxxx
+c....1..ccxxxxxxc.1....cxxxxxxxxxxxxxxxxx
+c.......cxxxxxxxc....2.cxxxxxxxxxxxxxxxxx
+c...4...ccxxxxxxc..1...cxxxxxxxxxxxxxxxxx
+cc.......ccccxxxc2...1.cxxxxxxxxxxxxxxxxx
+xc......2...ccccc......ccccccxxxxxxxxxxxx
+xcc..1............1.......4.cccccxxxxxxxx
+xxccc..........1.....4......1...ccccxxxxx
+xxxxcccc.4...2..4..........12.4....cccxxx
+xxxxxxxccccc..1.....2..1....1....4..Ocxxx
+xxxxxxxxxxxcccccccccccccccccccccccccccxxx
 ENDMAP
 
 ################################################################################
@@ -1008,56 +1006,57 @@ ENDMAP
 # by popular request
 #
 NAME:   snake_pit_salamanders_mu
-TAGS:   no_monster_gen
 PLACE:  Snake:$
 ORIENT: north
 TAGS:   no_rotate
-MONS:   naga, naga mage, naga warrior, greater naga, guardian serpent
+MONS:   naga
+MONS:   naga mage / nothing
+MONS:   naga warrior / nothing
+MONS:   greater naga / nothing
+MONS:   guardian serpent / nothing
 MONS:   w:7 anaconda / black mamba / nothing
 KITEM:  O = serpentine rune of Zot
-KMONS:  OS = guardian serpent
+KMONS:  O = guardian serpent
+KMONS:  S = guardian serpent
 KFEAT:  7 = lava
-KMONS:  7 = salamander
-KMONS:  8 = lindwurm
-SUBST:  5 = 5.
-NSUBST: 7 = 4:8 / * = l, l = 3:7 / 3 = 7l / *:l, . = 6:1 / *:.
-NSUBST: 2 = 12:2 / 10:. / * = 2.., 3 = 5:3 / 5:. / * = 3..
-NSUBST: 4 = 4:4 / 6 = . / * = 4..
+KMONS:  7 = salamander / w:5 lava snake / nothing
+KMASK:  l7 = no_monster_gen
+NSUBST: l = 8:7
+NSUBST: . = 6:1 / .
 MAP
-              xxxxxx
               cccccc
             ccc2452ccc
            cc..2232..cc
           cc..llllll..cc
-          c..7llllll7..c  ccccc
-   ccccc cc.llllllllll.cccc666cc
+          c..llllllll..c  ccccc
+   ccccc cc.ll7llll7ll.cccc666cc
   cc...ccc..llllllllll..cc66666cc
  cc.222.cc.llllllllllll.+666S666c
- c..443..c3llllllllllll.+666O666c
- c.4243..+5llllllllllll.+666S666c
- c.4332..c3llllllllllll.cc66666cc
+ c..444..c3llllllllllll.+666O666c
+ c.42443.+5llllllllllll.+666S666c
+ c.43323.c3llllllllllll.cc66666cc
  cc.....cc..llllllllll..ccc666cc
- @cc...c+cc.llllllllll.ccccccccccc
-c+ccccc+..c..7llllll7..c...+.....c
+ @cc...+ccc.ll7llll7ll.ccccccccccc
+c+cccccc..c..llllllll..c...+.....c
 c..lllc.3.cc..llllll..cc...cl.33.c
 c.3lllcc...cc..2232..cc...ccll...c
 cc..lllcc...ccc2452ccc...cclll..cc
  cc..l7lcc....cccccc....ccl7l..cc
-  cc..lllcc.....42.....cclll..cc
-   cc..lllcc....5.....cclll..cc
-    cc..lllccc..42..ccclll..cc
+  cc..lllcc.....44.....cclll..cc
+   cc..lllcc....54....cclll..cc
+    cc..lllccc..44..ccclll..cc
      cc...lllcccccccclll...cc
       cc...llllllllllll...cc
-       cc..llllllllllll..cc
-        c....7llllll7....c
+       cc..lllll77lllll..cc
+        c....llllllll....c
         c......llll......c
         c.2242..ll..2452.c
         c.3222..ll..2223.c
         c......llll......c
         cccc+cllllllc+cccc
-         c....llllll....c
+         c....ll77ll....c
          cc.3.llllll.3.cc
-          cc..4l77l4..cc
+          cc..4llll4..cc
            cc..4224..cc
             cc......cc
              cccccccc
@@ -1080,18 +1079,18 @@ MAP
    ccc.....2.....ccc c....c   cc.....3.....cc
   cc.......1.......ccc....c  cc......2......cc
   c1....ccccccc....1cc....c  c1....cccccc..51c
- cc.51ccc..2..cc..5..c....cxcc.2.ccc....cc12.cc
- c...cc...23...cc1........cxc.5.1c.......cc...c
-cc...c2....2....cc........cxc...cc.......4c...cc
-c...cc52..ccc..22cc....32.cxc232c......4..cc...c
-c...c...2ccccc25..cc......cxc...c.4.O.4c.2.c...c
+ cc.51ccc..2..cc..5..c....c cc.2.ccc....cc12.cc
+ c...cc...23...cc1........c c.5.1c.......cc...c
+cc...c2....2....cc........c c...cc.......4c...cc
+c...cc52..ccc..22cc....32.c c232c......4..cc...c
+c...c...2ccccc25..cc......c c...c.4.O.4c.2.c...c
 c232c...cc.5.cc...ccc..5..ccc...cc.....c323c...c
 c...c323c.....cc...ccc..5..ccc...cc.5.cc...c232c
-c...c.2.c4.O.4.c...cxc......cc..52ccccc2...c...c
-c...cc..4......c232cxc.23....cc22..ccc..25cc...c
-cc...c4.......cc...cxc........cc....2....2c...cc
- c...cc.......c1.5.cxc........1cc...32...cc...c
- cc.21cc....ccc.2.ccxc....c..5..cc..2..ccc15.cc
+c...c.2.c4.O.4.c...c c......cc..52ccccc2...c...c
+c...cc..4......c232c c.23....cc22..ccc..25cc...c
+cc...c4.......cc...c c........cc....2....2c...cc
+ c...cc.......c1.5.c c........1cc...32...cc...c
+ cc.21cc....ccc.2.cc c....c..5..cc..2..ccc15.cc
   c15..cccccc....1c  c....cc1....ccccccc....1c
   cc......2......cc  c....ccc.......1.......cc
    cc.....3.....cc   c....c ccc.....2.....ccc
@@ -1103,45 +1102,50 @@ ENDMAP
 
 NAME: grunt_snake_rune_pools
 PLACE: Snake:$
-TAGS: no_trap_gen no_monster_gen
+TAGS: no_trap_gen
 ORIENT: north
-MONS: greater naga, guardian serpent, naga warrior, naga mage, naga
-MONS: guardian serpent / w:20 anaconda / w:20 black mamba
-SUBST: 4 = 45, 3 = 35, 1 = 13, 2 = 21
-KMONS: 7 = sea snake
-KFEAT: 7 = deep_water
-NSUBST: 7 = 7:7 / 7:w / * = 7wwww
+MONS: greater naga / naga warrior
+MONS: greater naga / guardian serpent
+MONS: naga warrior / naga
+MONS: naga mage / naga
+MONS: naga
+
+KMONS: 6 = sea snake / nothing w:20
+KFEAT: 6 = deep_water
+KMASK: 6w = no_monster_gen
+
+KMONS: S = guardian serpent / w:20 anaconda / w:30 black mamba
+
 KITEM: O = serpentine rune of zot
 MAP
-          xxxxxxxxx
           ccccccccc
-       cccc.7w7w7.cccc
-      cc..5..www..5..cc
+        ccc.6w6w6.ccc
+      ccc.5..www..5.ccc
       c4.www1.2.1www.4c
-   ccccw.w7ww.O.ww7w.wccc
-  cccwwwSww7w212w7wwSwwwccc
- cc...ww.wwwww.wwwww.ww...cc
-cc......3.w7ww4ww7w.3......cc
-c..cccwww.ww7w4w7ww.wwwccc..c
-c..cxcc7w..2.5.5.2..w7ccxc..c
-c..ccxcwwwwwcccccwwwwwcxcc..c
-cc15cccww7wcc7w7ccw7wwccc51cc
- cc34ccccwcc.w7w.ccwcccc43cc
-  c..cc.ccc4..1..4ccc.cc..c
-  c....c..5..6.6..5..c....c
-  cc.....c.3..2..3.c.....cc
-   cc..c..5.......5..c..cc
-    ccc.cc.........cc.ccc
-      ccccccc+c+cccccccc
+   ccccw.w6w..O..ww6.wcccc
+ ccc.w6wS6www212www6Sw6w.ccc
+ c.+.www.wwwwwwwwwww.www.+.c
+cc.+....3w6www6ww6ww3....+.cc
+c..cccwww.ww6www6ww.wwwccc..c
+c..cxcc6w..2.5.5.2..w6ccxc..c
+c..ccxcwwwwwnnnnnwwwwwcxcc..c
+cc15cccww6wnn666nnw6wwccc51cc
+ cc34cccwwnn.w6w.nnwwccc43cc
+  c..ccccnn4.2.2.4nncccc..c
+  c...cc..5..S.S..5..cc...c
+  cc...+...3..1..3...+...cc
+   cc..+..5.......5..+..cc
+    cccccc.........cccccc
+         cccc+++cccc
          ccc4...4ccc
         cc...www...cc
-        c6c3.w7w.3c6c
-        c6c.17w72.c6c
-        c6c..w7w..c6c
+        cSn3.w6w.3nSc
+        cSn.16w62.nSc
+        cSn..w6w..nSc
         cc...www...cc
          ccc.....ccc
           ccc+++ccc
-          cc.@.@.cc
+          cc..@..cc
 ENDMAP
 
 ################################################################################
@@ -1157,7 +1161,6 @@ MONS:   naga warrior / naga, naga mage / naga, naga / nothing
 MONS:   anaconda / guardian serpent
 veto {{ return you.uniques("Lamia") }}
 MAP
-     xxxxxxx
      ccccccc
    ccc..O..ccc
   cc4.3...3.4cc
