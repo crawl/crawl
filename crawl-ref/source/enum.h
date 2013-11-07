@@ -98,6 +98,9 @@ enum ability_type
 
     // Divine abilities
     // Zin
+#if TAG_MAJOR_VERSION > 34
+#error "evokable abilities need more breathing room!"
+#endif
     ABIL_ZIN_SUSTENANCE = 50,
     ABIL_ZIN_RECITE,
     ABIL_ZIN_VITALISATION,
