@@ -596,7 +596,6 @@ enum canned_message_type
     MSG_CALL_DEAD,
     MSG_ANIMATE_REMAINS,
     MSG_DECK_EXHAUSTED,
-    MSG_EVOCATION_SUPPRESSED,
     MSG_BEING_WATCHED,
     MSG_CANNOT_MOVE,
 };
@@ -2240,7 +2239,9 @@ enum monster_type                      // menv[].type
     MONS_SCORPION,
     MONS_EMPEROR_SCORPION,
     MONS_MOTH,                  // genus
+#if TAG_MAJOR_VERSION == 34
     MONS_MOTH_OF_SUPPRESSION,
+#endif
     MONS_GHOST_MOTH,
     MONS_MOTH_OF_WRATH,
     MONS_DEMONIC_CRAWLER,

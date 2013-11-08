@@ -1538,7 +1538,6 @@ void scorefile_entry::init(time_t dt)
         STATUS_CONTAMINATION,
         STATUS_BACKLIT,
         STATUS_UMBRA,
-        STATUS_SUPPRESSED,
         STATUS_NET,
         STATUS_HUNGER,
         STATUS_REGENERATION,

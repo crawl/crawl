@@ -230,7 +230,7 @@ brand_type player::damage_brand(int)
 
     if (wpn != -1 && !melded[EQ_WEAPON])
     {
-        if (!is_range_weapon(inv[wpn]) && !suppressed())
+        if (!is_range_weapon(inv[wpn]))
             ret = get_weapon_brand(inv[wpn]);
     }
     else if (duration[DUR_CONFUSING_TOUCH])
@@ -670,7 +670,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
-    if (beheld() && !player_equip_unrand_effect(UNRAND_DEMON_AXE))
+    if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
     {
         if (verbose)
             mpr("You are too mesmerised to rage.");

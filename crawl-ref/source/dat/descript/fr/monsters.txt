@@ -1943,14 +1943,6 @@ moth
 Même si cette phalène est inhabituellement grosse et agressive, elle est plutôt
 banale comparée aux autres papillons de nuit trouvables dans le donjon.
 %%%%
-moth of suppression
-
-Une phalène à l'air graisseuse et malade, voletant tristement dans l'air.
-L'atmosphère qui l'entoure semble chatoyer avec une brume grise et
-poussiéreuse. Vues comme une nuisance, ces créatures furent chassée de la
-surface à cause de leur effet inhibiteur naturel sur les objets magiques à leur
-proximité.
-%%%%
 moth of wrath
 
 Une espèce rare de phalène, éradiquée de la surface depuis des siècles à cause

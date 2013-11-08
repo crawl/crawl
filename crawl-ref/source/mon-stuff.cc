@@ -1692,7 +1692,7 @@ int monster_die(monster* mons, killer_type killer,
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
         }
-        else if (player_equip_unrand_effect(UNRAND_BLOODLUST))
+        else if (player_equip_unrand(UNRAND_BLOODLUST))
         {
             if (coinflip())
             {
@@ -1701,8 +1701,7 @@ int monster_die(monster* mons, killer_type killer,
                 mpr("The necklace of Bloodlust glows a violent red.");
             }
         }
-        else if (!you.suppressed()
-                 && you.wearing(EQ_AMULET, AMU_RAGE)
+        else if (you.wearing(EQ_AMULET, AMU_RAGE)
                  && one_chance_in(30))
         {
             const int bonus = (2 + random2(4)) / 2;
@@ -2633,7 +2632,6 @@ int monster_die(monster* mons, killer_type killer,
     // Likewise silence and umbras
     if (mons->type == MONS_SILENT_SPECTRE
         || mons->type == MONS_PROFANE_SERVITOR
-        || mons->type == MONS_MOTH_OF_SUPPRESSION
         || mons->type == MONS_LOST_SOUL)
     {
         invalidate_agrid();

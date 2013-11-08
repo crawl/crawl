@@ -1160,7 +1160,7 @@ bool spell_is_useless(spell_type spell, bool transient)
 #endif
     case SPELL_REPEL_MISSILES:
         if (player_mutation_level(MUT_DISTORTION_FIELD) == 3
-            || !you.suppressed() && you.scan_artefacts(ARTP_RMSL, true))
+            || you.scan_artefacts(ARTP_RMSL, true))
         {
             return true;
         }

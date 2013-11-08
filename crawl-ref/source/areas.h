@@ -10,7 +10,6 @@ enum area_centre_type
     AREA_LIQUID,
     AREA_ORB,
     AREA_UMBRA,
-    AREA_SUPPRESSION,
     AREA_QUAD,
     AREA_DISJUNCTION,
     AREA_HOT,
@@ -46,8 +45,6 @@ bool disjunction_haloed(const coord_def& p);
 
 // ...or endarkened by an umbra?
 bool umbraed(const coord_def& p);
-
-bool suppressed(const coord_def& p);
 
 // ...or is the area hot?
 bool heated(const coord_def& p);

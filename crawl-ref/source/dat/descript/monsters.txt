@@ -1862,13 +1862,6 @@ moth
 Although this moth is unusually large and aggressive, it is quite mundane
 compared to most moths found in the dungeon.
 %%%%
-moth of suppression
-
-An ill, greasy-looking moth, fluttering wanly in the stale air. The atmosphere
-in its vicinity seems to shimmer with a dull, dusty haze. Regarded as a
-nuisance, these creatures were driven from the surface centuries ago due to
-their naturally inhibitive effect on magical items in their vicinity.
-%%%%
 moth of wrath
 
 A rare species of moth, eradicated from the surface centuries ago due to its

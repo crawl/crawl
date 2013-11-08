@@ -1085,42 +1085,6 @@ xxxxx^....xxxxxxxxh...^..xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME: nicolae_suppression_spiral
-DEPTH: Spider
-ORIENT: float
-MONS: moth of suppression, ghost moth
-SHUFFLE: ])}
-SUBST: . = .:300 x:100 ^
-KFEAT: ^ = web
-validate {{ return has_exit_from_glyph('2') }}
-MAP
-          xxxxx
-       xxxxxxxxxxx
-     xxxxxxxxxxxxxxx
-    xx..............@
-   xx...............@@
-  xx..0xxxxxxxxxxxxxxxx
-  x...xx............xxx
- xx..xx..............xxx
- xx..x..0xxxxxxxxxx0..xx
- xx..x..xx........xx..xx
-xxx..x..x.0......0.x..xxx
-xxx..x..x..xxxxxx..x..xxx
-xxx..x..x..x1m])x..x..xxx
-xxx..x..x..xxx..x..x..xxx
-xxx..x..x.0...2.x..x..xxx
- xx..x..xx.....xx..x..xx
- xx..x..0xxxxxxx0..x..xx
- xx..xx...........xx..xx
-  x..0xx.........xx...x
-  xx...xxxxxxxxxxx0..xx
-   xx...............xx
-    xx.............xx
-     xxxxxxxxxxxxxxx
-       xxxxxxxxxxx
-          xxxxx
-ENDMAP
-
 NAME: nicolae_spider_circle_web
 TAGS: mini_float transparent extra
 DEPTH: Spider
@@ -1289,7 +1253,7 @@ NAME: nicolae_spider_hall_of_the_moth_king
 DEPTH: Spider
 ORIENT: west
 TAGS: transparent
-KMONS: M = moth of wrath / ghost moth / moth of suppression w:3 / butterfly w:1
+KMONS: M = moth of wrath / ghost moth / butterfly w:1
 SHUFFLE: AB, CD
 SUBST: B : ....c, D : ....c, AC : ., G : GGGc, G = GGGG., c : ccccx, \
        & = @...., 0 = 00., 0 = 0009

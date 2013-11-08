@@ -372,17 +372,14 @@ static int _strength_modifier()
 
     result += chei_stat_boost();
 
-    if (!you.suppressed())
-    {
-        // ego items of strength
-        result += 3 * count_worn_ego(SPARM_STRENGTH);
+    // ego items of strength
+    result += 3 * count_worn_ego(SPARM_STRENGTH);
 
-        // rings of strength
-        result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
+    // rings of strength
+    result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
 
-        // randarts of strength
-        result += you.scan_artefacts(ARTP_STRENGTH);
-    }
+    // randarts of strength
+    result += you.scan_artefacts(ARTP_STRENGTH);
 
     // mutations
     result += 2 * (player_mutation_level(MUT_STRONG)
@@ -418,17 +415,14 @@ static int _int_modifier()
 
     result += chei_stat_boost();
 
-    if (!you.suppressed())
-    {
-        // ego items of intelligence
-        result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+    // ego items of intelligence
+    result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
-        // rings of intelligence
-        result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+    // rings of intelligence
+    result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
-        // randarts of intelligence
-        result += you.scan_artefacts(ARTP_INTELLIGENCE);
-    }
+    // randarts of intelligence
+    result += you.scan_artefacts(ARTP_INTELLIGENCE);
 
     // mutations
     result += 2 * (player_mutation_level(MUT_CLEVER)
@@ -449,17 +443,14 @@ static int _dex_modifier()
 
     result += chei_stat_boost();
 
-    if (!you.suppressed())
-    {
-        // ego items of dexterity
-        result += 3 * count_worn_ego(SPARM_DEXTERITY);
+    // ego items of dexterity
+    result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
-        // rings of dexterity
-        result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
+    // rings of dexterity
+    result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
 
-        // randarts of dexterity
-        result += you.scan_artefacts(ARTP_DEXTERITY);
-    }
+    // randarts of dexterity
+    result += you.scan_artefacts(ARTP_DEXTERITY);
 
     // mutations
     result += 2 * (player_mutation_level(MUT_AGILE)

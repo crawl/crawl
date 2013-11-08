@@ -1360,9 +1360,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_SILENCED)
         cell.is_silenced = true;
 
-    if (mc.flags & MAP_SUPPRESSED)
-        cell.is_suppressed = true;
-
     if (feat == DNGN_MANGROVE)
         cell.mangrove_water = true;
 

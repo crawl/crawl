@@ -253,7 +253,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("place:Lair:$ w:85 / catoblepas w:6 / dire elephant w:6 / " ..
                 "hellephant w:3", { weight = 5 }),
      "place:Spider:$ w:110 / ghost moth w:15 / red wasp / " ..
-                "orb spider / moth of suppression w:5",
+                "orb spider",
      "place:Crypt:$ w:180 / vampire knight w:14 / lich w:3 / " ..
                 "unborn w:2 / curse toe w:1",
      "place:Forest:$ w:180 / satyr / tengu reaver w:5 / " ..

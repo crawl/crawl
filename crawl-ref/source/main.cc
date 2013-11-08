@@ -3343,7 +3343,7 @@ static void _player_reacts_to_monsters()
     // penance checked there (as you can have antennae too)
     if (player_mutation_level(MUT_ANTENNAE)
         || you.religion == GOD_ASHENZARI
-        || player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN))
+        || player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
     {
         check_antennae_detect();
     }
@@ -3384,31 +3384,6 @@ static void _player_reacts_to_monsters()
     _decrement_petrification(you.time_taken);
     if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
         you.awake();
-
-    // Entering/leaving a suppression aura needs to redraw player stats
-    // and generally recalculate some things that aren't generally recalc'd
-    // with every step. This is how we detect crossing the threshold.
-    if (you.props.exists("exists_if_suppressed") != you.suppressed())
-    {
-        // HP and MP generally aren't recalculated each step, so we do it now
-        calc_hp_artefact();  // different from calc_hp()
-        calc_mp();
-
-        // Redraw everything that suppression might affect
-        you.redraw_hit_points = true;
-        you.redraw_magic_points = true;
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
-        you.redraw_stats[STAT_STR] = true;
-        you.redraw_stats[STAT_DEX] = true;
-        you.redraw_stats[STAT_INT] = true;
-        notify_stat_change("suppression");
-
-        if (you.suppressed())
-            you.props["exists_if_suppressed"] = true;
-        else
-           you.props.erase("exists_if_suppressed");
-    }
 }
 
 static void _update_golubria_traps()

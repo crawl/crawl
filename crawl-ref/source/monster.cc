@@ -458,8 +458,8 @@ brand_type monster::damage_brand(int which_attack)
         return SPWPN_NORMAL;
     }
 
-    return (!is_range_weapon(*mweap) && !suppressed() ?
-            static_cast<brand_type>(get_weapon_brand(*mweap)) : SPWPN_NORMAL);
+    return (!is_range_weapon(*mweap) ? static_cast<brand_type>(get_weapon_brand(*mweap))
+                                     : SPWPN_NORMAL);
 }
 
 int monster::damage_type(int which_attack)
@@ -4908,8 +4908,6 @@ bool monster::can_see_invisible() const
         return ghost->see_invis;
     else if (mons_class_flag(type, M_SEE_INVIS))
         return true;
-    else if (suppressed())
-        return false;
     else if (scan_artefacts(ARTP_EYESIGHT) > 0)
         return true;
     else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
@@ -5386,7 +5384,7 @@ int monster::action_energy(energy_use_type et) const
         if (has_ench(ENCH_SWIFT))
             move_cost -= 2;
 
-        if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS) && !suppressed())
+        if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
             move_cost += 2;
 
         if (run())

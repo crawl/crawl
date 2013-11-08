@@ -1589,12 +1589,6 @@ bool evoke_item(int slot)
     if (!item_is_evokable(item, true, false, false, true))
         return false;
 
-    if (you.suppressed() && weapon_reach(item) <= 2)
-    {
-        canned_msg(MSG_EVOCATION_SUPPRESSED);
-        return false;
-    }
-
     int pract = 0; // By how much Evocations is practised.
     bool did_work   = false;  // Used for default "nothing happens" message.
     bool unevokable = false;

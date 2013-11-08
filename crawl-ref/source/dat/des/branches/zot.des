@@ -2381,27 +2381,27 @@ TAGS: no_pool_fixup no_monster_gen
 DEPTH: Zot, !Zot:$
 ORIENT: north
 SUBST: l : lw
-SHUFFLE: ]})>, 123
-MONS: ghost moth, moth of wrath, moth of suppression
+SHUFFLE: ]})>, 12
+MONS: ghost moth, moth of wrath
 MONS: any base draconian
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx......xxxxxxxxx......xxx
-xx.4.]....xxx}xxx....).4.xx
+xx.3.]....xxx}xxx....).3.xx
 x...llll...x...x...llll...x
-x..llllll.1..2..3.llllll..x
+x..llllll.1..2..1.llllll..x
 x..llllll.........llllll..x
 x...llll...........llll...x
-xx...........4...........xx
-xxx......4.......4......xxx
-xxxx..4.............4..xxxx
+xx...........3...........xx
+xxx......3.......3......xxx
+xxxx..3.............3..xxxx
 xxxxx.................xxxxx
 xxxx...................xxxx
 xxx.....................xxx
 xx...lll...........lll...xx
 xx..lllll..x...x..lllll..xx
 xx...lll...x...x...lll...xx
-xxx...4...xx...xx...4...xxx
+xxx...3...xx...xx...3...xxx
 xxxx.....xxx...xxx.....xxxx
 xxxxxxxxxxx@@@@@xxxxxxxxxxx
 ENDMAP

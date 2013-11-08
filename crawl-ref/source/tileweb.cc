@@ -1059,9 +1059,6 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.is_silenced != current_pc.is_silenced)
             json_write_bool("silenced", next_pc.is_silenced);
 
-        if (next_pc.is_suppressed != current_pc.is_suppressed)
-            json_write_bool("suppressed", next_pc.is_suppressed);
-
         if (next_pc.halo != current_pc.halo)
             json_write_int("halo", next_pc.halo);
 

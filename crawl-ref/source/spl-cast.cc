@@ -389,7 +389,7 @@ int spell_fail(spell_type spell)
 
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
 
-    if (player_equip_unrand(UNRAND_HIGH_COUNCIL) && !you.suppressed())
+    if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
 
     // Apply the effects of Vehumet and items of wizardry.

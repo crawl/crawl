@@ -40,11 +40,10 @@ enum areaprop_flag
     APROP_ACTUAL_LIQUID = (1 << 5),
     APROP_ORB           = (1 << 6),
     APROP_UMBRA         = (1 << 7),
-    APROP_SUPPRESSION   = (1 << 8),
-    APROP_QUAD          = (1 << 9),
-    APROP_DISJUNCTION   = (1 << 10),
-    APROP_SOUL_AURA     = (1 << 11),
-    APROP_HOT           = (1 << 12),
+    APROP_QUAD          = (1 << 8),
+    APROP_DISJUNCTION   = (1 << 9),
+    APROP_SOUL_AURA     = (1 << 10),
+    APROP_HOT           = (1 << 11),
 };
 
 struct area_centre
@@ -87,7 +86,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
          || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
-         || act->suppression_radius2() > -1 || act->heat_radius2() > -1))
+         || act->heat_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -104,16 +103,6 @@ static void _actor_areas(actor *a)
 
         for (radius_iterator ri(a->pos(), r, C_CIRCLE); ri; ++ri)
             _set_agrid_flag(*ri, APROP_SILENCE);
-        no_areas = false;
-    }
-
-    // Just like silence, suppression goes through walls
-    if ((r = a->suppression_radius2()) >= 0)
-    {
-        _agrid_centres.push_back(area_centre(AREA_SUPPRESSION, a->pos(), r));
-
-        for (radius_iterator ri(a->pos(), r, C_CIRCLE); ri; ++ri)
-            _set_agrid_flag(*ri, APROP_SUPPRESSION);
         no_areas = false;
     }
 
@@ -240,8 +229,6 @@ static area_centre_type _get_first_area(const coord_def& f)
         return AREA_HALO;
     if (a & APROP_UMBRA)
         return AREA_UMBRA;
-    if (a & APROP_SUPPRESSION)
-        return AREA_SUPPRESSION;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
@@ -582,8 +569,6 @@ int player::halo_radius2() const
         size = min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
-    // Can't check suppression because this function is called from
-    // _update_agrid()---we'd get an infinite recursion.
     if (player_equip_unrand(UNRAND_BRILLIANCE))
         size = max(size, 9);
 
@@ -748,37 +733,6 @@ int monster::umbra_radius2() const
     default:
         return -1;
     }
-}
-
-/////////////
-// Suppression
-
-bool suppressed(const coord_def& p)
-{
-    if (!map_bounds(p))
-        return false;
-    if (!_agrid_valid)
-        _update_agrid();
-
-    return _check_agrid_flag(p, APROP_SUPPRESSION);
-}
-
-int monster::suppression_radius2() const
-{
-    if (type == MONS_MOTH_OF_SUPPRESSION)
-        return 150;
-    else
-        return -1;
-}
-
-bool actor::suppressed() const
-{
-    return ::suppressed(pos());
-}
-
-int player::suppression_radius2() const
-{
-    return -1;
 }
 
 /////////////
