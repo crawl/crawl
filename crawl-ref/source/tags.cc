@@ -810,6 +810,18 @@ string unmarshallString(reader &th)
     return string(buffer, len);
 }
 
+// This one must stay with a 16 bit signed big-endian length tag, to allow
+// older versions to browse and list newer saves.
+static void marshallString2(writer &th, const string &data)
+{
+    marshallString(th, data);
+}
+
+static string unmarshallString2(reader &th)
+{
+    return unmarshallString(th);
+}
+
 // string -- 4 byte length, non-terminated string data.
 void marshallString4(writer &th, const string &data)
 {
@@ -1098,27 +1110,27 @@ static void tag_construct_char(writer &th)
 
     // Appending fields is fine.
 
-    marshallString(th, you.your_name);
-    marshallString(th, Version::Long);
+    marshallString2(th, you.your_name);
+    marshallString2(th, Version::Long);
 
     marshallByte(th, you.species);
     marshallByte(th, you.char_class);
     marshallByte(th, you.experience_level);
-    marshallString(th, you.class_name);
+    marshallString2(th, you.class_name);
     marshallByte(th, you.religion);
-    marshallString(th, you.jiyva_second_name);
+    marshallString2(th, you.jiyva_second_name);
 
     marshallByte(th, you.wizard);
 
     marshallByte(th, crawl_state.type);
     if (crawl_state.game_is_tutorial())
-        marshallString(th, crawl_state.map);
+        marshallString2(th, crawl_state.map);
 
-    marshallString(th, species_name(you.species));
-    marshallString(th, you.religion ? god_name(you.religion) : "");
+    marshallString2(th, species_name(you.species));
+    marshallString2(th, you.religion ? god_name(you.religion) : "");
 
     // separate from the tutorial so we don't have to bump TAG_CHR_FORMAT
-    marshallString(th, crawl_state.map);
+    marshallString2(th, crawl_state.map);
 }
 
 static void tag_construct_you(writer &th)
@@ -1894,29 +1906,29 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 {
     // Important: values out of bounds are good here, the save browser needs to
     // be forward-compatible.  We validate them only on an actual restore.
-    you.your_name         = unmarshallString(th);
-    you.prev_save_version = unmarshallString(th);
+    you.your_name         = unmarshallString2(th);
+    you.prev_save_version = unmarshallString2(th);
     dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
 
     you.species           = static_cast<species_type>(unmarshallUByte(th));
     you.char_class        = static_cast<job_type>(unmarshallUByte(th));
     you.experience_level  = unmarshallByte(th);
-    you.class_name        = unmarshallString(th);
+    you.class_name        = unmarshallString2(th);
     you.religion          = static_cast<god_type>(unmarshallUByte(th));
-    you.jiyva_second_name = unmarshallString(th);
+    you.jiyva_second_name = unmarshallString2(th);
 
     you.wizard            = unmarshallBoolean(th);
 
     crawl_state.type = (game_type) unmarshallUByte(th);
     if (crawl_state.game_is_tutorial())
-        crawl_state.map = unmarshallString(th);
+        crawl_state.map = unmarshallString2(th);
     else
         crawl_state.map = "";
 
     if (major > 32 || major == 32 && minor > 26)
     {
-        you.species_name = unmarshallString(th);
-        you.god_name     = unmarshallString(th);
+        you.species_name = unmarshallString2(th);
+        you.god_name     = unmarshallString2(th);
     }
     else
     {
@@ -1931,7 +1943,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     }
 
     if (major > 34 || major == 34 && minor >= 29)
-        crawl_state.map = unmarshallString(th);
+        crawl_state.map = unmarshallString2(th);
 }
 
 static void tag_read_you(reader &th)
