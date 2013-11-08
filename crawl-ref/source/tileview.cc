@@ -3,6 +3,7 @@
 #include "tileview.h"
 
 #include "areas.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
@@ -81,9 +82,13 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
     switch (br)
     {
     case BRANCH_DUNGEON:
-    case BRANCH_DEPTHS: //TODO?
         flv.wall  = TILE_WALL_NORMAL;
-        flv.floor = (you.depth <= 14) ? TILE_FLOOR_NORMAL : TILE_FLOOR_GREY_DIRT_B;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
+
+    case BRANCH_DEPTHS:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_GREY_DIRT_B;
         return;
 
     case BRANCH_VAULTS:
@@ -334,21 +339,24 @@ static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
     }
     if (depth > 5 && depth <= 11)
         t.push_back(TILE_WALL_BRICK_DARK_3);
-    if (depth > 8 && depth <= 14)
+    if (depth > 8)
     {
         t.push_back(TILE_WALL_BRICK_DARK_4);
         t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
     }
-    if (depth == 14)
+    if (depth == brdepth[BRANCH_DUNGEON])
         t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);  // torches are more common on D:14...
-    if (depth > 14)
-        t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);
-    if (depth > 14 && depth <= 22)
+}
+
+static void _get_depths_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
+{
+    t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);
+    if (depth <= 3)
         t.push_back(TILE_WALL_BRICK_DARK_5);
-    if (depth > 18)
+    if (depth > 3)
         t.push_back(TILE_WALL_BRICK_DARK_6);
-    if (depth == 27)
-        t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on D:27
+    if (depth == brdepth[BRANCH_DEPTHS])
+        t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);  // ...and on Depths:$
 }
 
 static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
@@ -427,7 +435,10 @@ void tile_init_flavour(const coord_def &gc)
             && env.tile_default.wall == TILE_WALL_NORMAL)
         {
             vector<tileidx_t> tile_candidates;
-            _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
+            if (player_in_branch(BRANCH_DEPTHS))
+                _get_depths_wall_tiles_by_depth(you.depth, tile_candidates);
+            else
+                _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
             env.tile_flv(gc).wall = _pick_random_dngn_tile_multi(tile_candidates);
         }
         else
