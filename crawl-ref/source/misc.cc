@@ -24,6 +24,7 @@
 #include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "clua.h"
 #include "cloud.h"
@@ -1418,6 +1419,12 @@ bool go_berserk(bool intentional, bool potion)
         // This will get sqrt'd later, so.
         you.temperature = TEMP_MAX;
     }
+
+    if (player_equip_unrand(UNRAND_JIHAD))
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+            if (mi->friendly())
+                mi->go_berserk(intentional);
+
     return true;
 }
 
