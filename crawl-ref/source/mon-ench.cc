@@ -448,7 +448,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SLOW:
-        if (!quiet && !liquefied_ground())
+        if (!quiet)
             simple_monster_message(this, " is no longer moving slowly.");
         calc_speed();
         break;
