@@ -711,10 +711,12 @@ void down_stairs(dungeon_feature_type force_stair)
         _maybe_destroy_trap(you.pos());
     }
 
-    if (stair_find == DNGN_ENTER_DEPTHS)
+    if (stair_find == DNGN_ENTER_DEPTHS
+        && !is_existing_level(level_id(BRANCH_DEPTHS, 1)))
     {
         bool has_rune = false;
-        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        int i = 0;
+        for (; i < NUM_RUNE_TYPES; i++)
             if (you.runes[i])
             {
                 has_rune = true;
@@ -726,6 +728,13 @@ void down_stairs(dungeon_feature_type force_stair)
             mpr("You need a rune to enter this place.");
             return;
         }
+
+        mprf("You insert the %s rune into the lock.", rune_type_name(i));
+        if (silenced(you.pos()))
+            mpr("The gate opens wide!");
+        else
+            mpr("With a loud hiss the gate opens wide!");
+        more();
     }
 
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
