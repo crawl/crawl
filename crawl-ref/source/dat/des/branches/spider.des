@@ -1426,7 +1426,7 @@ KITEM:  O = gossamer rune of zot
 KMONS:  O = ghost moth
 KITEM:  *d = piece of ambrosia
 KMONS:  * = emperor scorpion
-MONS:   ghost moth, moth of wrath
+MONS:   ghost moth, ghost moth / moth of wrath
 MONS:   yellow wasp / red wasp / w:5 nothing
 MONS:   w:2 demonic crawler / w:3 emperor scorpion / w:1 nothing
 MONS:   tarantella / w:20 wolf spider / jumping spider / w:5 demonic crawler / \
@@ -1434,7 +1434,7 @@ MONS:   tarantella / w:20 wolf spider / jumping spider / w:5 demonic crawler / \
 MONS:   trapdoor spider / nothing
 MONS:   orb spider
 NSUBST: 8 = 2:c / *:7, C = 1:. / 1:c. / *:c
-SUBST:  - = .....WWW^, 2 = 12
+SUBST:  - = .....WWW^
 KFEAT:  ^ = known web trap
 SHUFFLE: O12*
 MAP
