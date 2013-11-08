@@ -482,6 +482,9 @@ enter_slime DNGN_ENTER_SLIME_PITS
 exit_slime DNGN_EXIT_SLIME_PITS
 enter_vaults DNGN_ENTER_VAULTS
 exit_vaults DNGN_EXIT_VAULTS
+enter_depths_closed DNGN_ENTER_DEPTHS_CLOSED
+enter_depths_open DNGN_ENTER_DEPTHS_OPEN
+return_depths DNGN_RETURN_DEPTHS
 enter_crypt DNGN_ENTER_CRYPT
 exit_crypt DNGN_EXIT_CRYPT
 enter_tomb DNGN_ENTER_TOMB

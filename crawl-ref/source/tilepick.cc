@@ -11,6 +11,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "env.h"
+#include "files.h"
 #include "food.h"
 #include "ghost.h"
 #include "itemname.h"
@@ -317,6 +318,10 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ENTER_SHOALS;
     case DNGN_ENTER_SLIME_PITS:
         return TILE_DNGN_ENTER_SLIME_PITS;
+    case DNGN_ENTER_DEPTHS:
+        if (is_existing_level(level_id(BRANCH_DEPTHS, 1)))
+            return TILE_DNGN_ENTER_DEPTHS_OPEN;
+        return TILE_DNGN_ENTER_DEPTHS_CLOSED;
     case DNGN_ENTER_VAULTS:
         return TILE_DNGN_ENTER_VAULTS;
     case DNGN_ENTER_CRYPT:
@@ -353,6 +358,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_EXIT_SHOALS;
     case DNGN_RETURN_FROM_SLIME_PITS:
         return TILE_DNGN_EXIT_SLIME_PITS;
+    case DNGN_RETURN_FROM_DEPTHS:
+        return TILE_DNGN_RETURN_DEPTHS;
     case DNGN_RETURN_FROM_VAULTS:
         return TILE_DNGN_EXIT_VAULTS;
     case DNGN_RETURN_FROM_CRYPT:
