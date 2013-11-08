@@ -432,10 +432,11 @@ int species_exp_modifier(species_type species)
 {
     switch (species) // table: Experience
     {
+    case SP_FORMICID:
+        return 2;
     case SP_HUMAN:
     case SP_HALFLING:
     case SP_KOBOLD:
-    case SP_FORMICID:
         return 1;
     case SP_HILL_ORC:
     case SP_OGRE:
