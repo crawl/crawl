@@ -148,8 +148,8 @@ TAGS:   layout_type_caves
     local pool_contents = {}
     pool_contents["."] = 40
     pool_contents["x"] = 40 - you.absdepth()
-    if crawl.coinflip() then
-        if you.absdepth() >= 19 + crawl.random2(8) then
+    if you.branch() == "Depths" then
+        if you.depth() >= crawl.random2(8) then
             pool_contents["l"] = you.absdepth() * crawl.random2(100) / 100
         else
             pool_contents["w"] = you.absdepth() * crawl.random2(100) / 100
@@ -179,7 +179,7 @@ ENDMAP
 #  by doors and sometimes just by holes in the wall.
 #
 NAME:   layout_honeycomb
-DEPTH:  D:12-, Depths, Snake:1-4, Tar
+DEPTH:  Depths, Snake:1-4, Tar
 WEIGHT: 10, 80(Tar)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
