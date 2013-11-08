@@ -458,10 +458,9 @@ liquefaction1 LIQUEFACTION
 liquefaction2
 
 %sdir dngn/gateways
-%rim 1
+%rim 0
 enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 enter_zot_open DNGN_ENTER_ZOT_OPEN
-%rim 0
 return_zot DNGN_RETURN_ZOT
 enter_temple DNGN_ENTER_TEMPLE
 exit_temple DNGN_EXIT_TEMPLE
