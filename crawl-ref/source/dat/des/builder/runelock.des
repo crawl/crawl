@@ -31,6 +31,8 @@ ENDMAP
 # The idea here is to keep the stone giant on the island until the player is
 # ready to deal with it, and therefore proceed to the rest of D.
 NAME: grunt_runelock_giant_problem
+# Don't generate lava monsters:
+TAGS: no_monster_gen
 ORIENT: float
 PLACE: D:14
 SUBST: L = l.
