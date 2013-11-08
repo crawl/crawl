@@ -140,7 +140,8 @@ According to legend he was lost somewhere in the Dungeon.
 sword of Jihad
 
 A long sword made of one huge piece of crystal. Legend says it was the Shining
-One's gift to a worshipper.
+One's gift to a worshipper. This blade is notorious for inducing
+bloodthirsty rage in both the wielder and all of his or her mortal followers.
 %%%%
 crossbow "Hellfire"
 
