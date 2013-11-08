@@ -328,7 +328,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;
     case SP_FORMICID:
-        you.mutation[MUT_ANTENNAE]    = 1;
+        you.mutation[MUT_ANTENNAE]    = 3;
         you.mutation[MUT_EXOSKELETON] = 1;
         break;
     case SP_DJINNI:
