@@ -637,8 +637,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                         this.draw_dngn(dngn.HEAT_AURA + cell.heat_aura - 1, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
-                    if (cell.suppressed)
-                        this.draw_dngn(dngn.SUPPRESSED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
                         this.draw_dngn(dngn.HALO_RANGE, x, y);
                     if (cell.halo == enums.HALO_UMBRA)

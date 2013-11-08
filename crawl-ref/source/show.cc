@@ -133,9 +133,6 @@ static void _update_feat_at(const coord_def &gp)
     if (umbraed(gp))
         env.map_knowledge(gp).flags |= MAP_UMBRAED;
 
-    if (suppressed(gp))
-        env.map_knowledge(gp).flags |= MAP_SUPPRESSED;
-
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
 

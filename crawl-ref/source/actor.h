@@ -352,8 +352,6 @@ public:
     virtual bool haloed() const;
     // Within an umbra?
     virtual bool umbraed() const;
-    // Magically suppressed?
-    virtual bool suppressed() const;
     // Being heated by a heat aura?
     virtual bool heated() const;
     // Squared halo radius.
@@ -363,7 +361,6 @@ public:
     // Squared liquefying radius
     virtual int liquefying_radius2() const = 0;
     virtual int umbra_radius2() const = 0;
-    virtual int suppression_radius2() const = 0;
     virtual int heat_radius2() const = 0;
 
     virtual bool glows_naturally() const = 0;

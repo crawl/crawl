@@ -394,7 +394,7 @@ function arena_sprint_get_monster_set(round, boss)
                     merfolk aquamancer",
                 "place:Swamp:$ / hydra / swamp dragon / w:5 green death",
                 "place:Spider:$ / wolf spider / orb spider / w:5 emperor scorpion /\
-                    w:5 ghost moth / w:3 moth of suppression",
+                    w:5 ghost moth",
                 "place:Snake:$ / naga mage / naga warrior / greater naga /\
                     guardian serpent / anaconda",
                 "place:Slime:$",
@@ -464,7 +464,7 @@ function arena_sprint_get_monster_set(round, boss)
                     merfolk aquamancer",
                 "hydra / swamp dragon / green death / death drake",
                 "place:Spider:$ w:5 / wolf spider / orb spider / emperor scorpion /\
-                    ghost moth / moth of wrath / w:5 moth of suppression",
+                    ghost moth / moth of wrath",
                 "place:Snake:$ w:5 / naga mage / naga warrior / w:20 greater naga /\
                     guardian serpent / w:5 anaconda",
                 "place:Slime:$ / acid blob / azure jelly / great orb of eyes",
@@ -520,8 +520,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ghost moth / w:30 lorocyproca / eye of draining",
                 "giant eyeball w:5 / ettin",
                 "executioner / w:1 ignacio",
-                "ghost moth / moth of wrath / moth of suppression /\
-                    w:15 vampire mosquito / w:15 giant firefly"
+                "ghost moth / moth of wrath / w:15 vampire mosquito / w:15 giant firefly"
             }
         elseif round <= 36 then
             mon_set = {
@@ -540,7 +539,7 @@ function arena_sprint_get_monster_set(round, boss)
                     merfolk aquamancer",
                 "green death / death drake",
                 "place:Spider:$ w:5 / orb spider w:5 / emperor scorpion /\
-                    ghost moth / moth of wrath / w:5 moth of suppression",
+                    ghost moth / moth of wrath",
                 "place:Snake:$ w:2 / w:40 greater naga / guardian serpent / w:5 anaconda",
                 "place:Slime:$ / w:30 acid blob / azure jelly / giant eyeball /\
                     eye of draining",
@@ -588,8 +587,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ghost moth / w:30 lorocyproca / eye of draining",
                 "giant eyeball w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
-                "ghost moth / moth of wrath / moth of suppression /\
-                    w:5 vampire mosquito / w:5 giant firefly",
+                "ghost moth / moth of wrath / w:5 vampire mosquito / w:5 giant firefly",
                 -- Aaaarggghhhhh!
                 "daeva / w:15 angel",
                 "greater mummy / mummy priest / guardian mummy",
@@ -617,8 +615,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "merfolk javelineer / merfolk impaler / merfolk aquamancer /\
                     blizzard demon / ice fiend",
                 "green death / death drake w:15",
-                "orb spider / emperor scorpion / ghost moth / moth of wrath /\
-                    moth of suppression",
+                "orb spider / emperor scorpion / ghost moth / moth of wrath",
                 "w:40 greater naga / guardian serpent / w:5 anaconda",
                 "w:30 acid blob / azure jelly / giant eyeball / eye of draining",
                 "dancing weapon ; bardiche ego:speed",

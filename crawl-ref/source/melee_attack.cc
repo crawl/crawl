@@ -1237,9 +1237,6 @@ void melee_attack::adjust_noise()
 
 void melee_attack::check_autoberserk()
 {
-    if (attacker->suppressed())
-        return;
-
     if (attacker->is_player())
     {
         for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
@@ -1281,9 +1278,6 @@ void melee_attack::check_autoberserk()
 
 bool melee_attack::check_unrand_effects()
 {
-    if (attacker->suppressed())
-        return false;
-
     if (unrand_entry && unrand_entry->melee_effects && weapon)
     {
         // Recent merge added damage_done to this method call
@@ -1897,7 +1891,7 @@ int melee_attack::player_apply_final_multipliers(int damage)
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
-    int modified_wpn_skill = (player_equip_unrand_effect(UNRAND_BOOTS_ASSASSIN)
+    int modified_wpn_skill = (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
                               ? SK_SHORT_BLADES : wpn_skill);
 
     if (weapon && weapon->base_type == OBJ_WEAPONS
@@ -3659,7 +3653,7 @@ int melee_attack::staff_damage(skill_type skill)
 
 void melee_attack::apply_staff_damage()
 {
-    if (!weapon || attacker->suppressed())
+    if (!weapon)
         return;
 
     if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_STRIKING)

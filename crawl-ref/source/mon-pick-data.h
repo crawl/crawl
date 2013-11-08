@@ -415,7 +415,6 @@ static const pop_entry pop_spider[] =
   {  1,  5,   52, UP,   MONS_FORMICID_VENOM_MAGE },
   {  0, 10,  763, SEMI, MONS_DEMONIC_CRAWLER },
   {  2, 10,   89, PEAK, MONS_GHOST_MOTH },
-  {  2, 10,   89, PEAK, MONS_MOTH_OF_SUPPRESSION },
   {  3,  9,   52, SEMI, MONS_MOTH_OF_WRATH },
   { 0,0,0,FLAT,MONS_0 }
 };

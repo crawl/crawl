@@ -517,9 +517,6 @@ void canned_msg(canned_message_type which_message)
     case MSG_DECK_EXHAUSTED:
         mpr("The deck of cards disappears in a puff of smoke.");
         break;
-    case MSG_EVOCATION_SUPPRESSED:
-        mpr("You may not evoke while suppressed!");
-        break;
     case MSG_BEING_WATCHED:
         mpr("You feel you are being watched by something.");
         break;

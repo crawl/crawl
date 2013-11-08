@@ -662,7 +662,6 @@ public:
     int silence_radius2() const;
     int liquefying_radius2() const;
     int umbra_radius2() const;
-    int suppression_radius2() const;
     int heat_radius2() const;
     bool glows_naturally() const;
     bool petrifying() const;
@@ -821,7 +820,6 @@ static inline bool player_in_branch(int branch)
 };
 
 bool berserk_check_wielded_weapon(void);
-bool player_equip_unrand_effect(int unrand_index);
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
 bool player_can_hear(const coord_def& p, int hear_distance = 999);

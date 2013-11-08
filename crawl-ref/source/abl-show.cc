@@ -3305,60 +3305,57 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
 
     // Evocations from items.
-    if (!you.suppressed())
+    if (you.scan_artefacts(ARTP_BLINK))
+        _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
+
+    if (you.scan_artefacts(ARTP_FOG))
+        _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
+
+    if (you.evokable_berserk())
+        _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
+
+    if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
     {
-        if (you.scan_artefacts(ARTP_BLINK))
-            _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
-
-        if (you.scan_artefacts(ARTP_FOG))
-            _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
-
-        if (you.evokable_berserk())
-            _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
-
-        if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
-        {
-            // Now you can only turn invisibility off if you have an
-            // activatable item.  Wands and potions will have to time
-            // out. -- bwr
-            if (you.duration[DUR_INVIS])
-                _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
-            else
-                _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
-        }
-
-        if (you.evokable_flight())
-        {
-            // Has no effect on permanently flying Tengu.
-            if (!you.permanent_flight() || !you.racial_permanent_flight())
-            {
-                // You can still evoke perm flight if you have temporary one.
-                if (!you.flight_mode()
-                    || !you.attribute[ATTR_PERM_FLIGHT]
-                       && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-                {
-                    _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
-                }
-                // Now you can only turn flight off if you have an
-                // activatable item.  Potions and spells will have to time
-                // out.
-                if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
-                    _add_talent(talents, ABIL_STOP_FLYING, check_confused);
-            }
-        }
-
-        if (you.evokable_jump())
-            _add_talent(talents, ABIL_EVOKE_JUMP, check_confused);
-
-        if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
-            && !crawl_state.game_is_sprint())
-        {
-            _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
-        }
-
-        if (you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL))
-            _add_talent(talents, ABIL_EVOKE_TELEPORT_CONTROL, check_confused);
+        // Now you can only turn invisibility off if you have an
+        // activatable item.  Wands and potions will have to time
+        // out. -- bwr
+        if (you.duration[DUR_INVIS])
+            _add_talent(talents, ABIL_EVOKE_TURN_VISIBLE, check_confused);
+        else
+            _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
+
+    if (you.evokable_flight())
+    {
+        // Has no effect on permanently flying Tengu.
+        if (!you.permanent_flight() || !you.racial_permanent_flight())
+        {
+            // You can still evoke perm flight if you have temporary one.
+            if (!you.flight_mode()
+                || !you.attribute[ATTR_PERM_FLIGHT]
+                   && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
+            {
+                _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
+            }
+            // Now you can only turn flight off if you have an
+            // activatable item.  Potions and spells will have to time
+            // out.
+            if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
+                _add_talent(talents, ABIL_STOP_FLYING, check_confused);
+        }
+    }
+
+    if (you.evokable_jump())
+        _add_talent(talents, ABIL_EVOKE_JUMP, check_confused);
+
+    if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
+        && !crawl_state.game_is_sprint())
+    {
+        _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
+    }
+
+    if (you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL))
+        _add_talent(talents, ABIL_EVOKE_TELEPORT_CONTROL, check_confused);
 
     // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)

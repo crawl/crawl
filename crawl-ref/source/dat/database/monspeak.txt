@@ -6231,12 +6231,6 @@ VISUAL:@The_monster@ skips for a moment.
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
 %%%%
-################## Moth of suppression######################
-moth of suppression
-
-w:1
-VISUAL:@The_monster@ undresses you with its eyes!
-%%%%
 ################## Moth of wrath ###########################
 moth of wrath
 

@@ -133,8 +133,6 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = BLUE;
         else if (cell.flags & MAP_DISJUNCT)
             colour = ETC_DISJUNCTION;
-        else if (cell.flags & MAP_SUPPRESSED)
-            colour = LIGHTGREEN;
         else if (cell.flags & MAP_HOT)
             colour = ETC_FIRE;
     }

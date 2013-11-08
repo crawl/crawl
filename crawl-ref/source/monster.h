@@ -384,7 +384,6 @@ public:
     int silence_radius2() const;
     int liquefying_radius2() const;
     int umbra_radius2() const;
-    int suppression_radius2() const;
     int heat_radius2() const;
     bool glows_naturally() const;
     bool petrified() const;
