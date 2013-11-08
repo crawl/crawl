@@ -1812,18 +1812,6 @@ static void _pre_monster_move(monster* mons)
     reset_battlesphere(mons);
     reset_spectral_weapon(mons);
 
-    // This seems to need to go here to actually get monsters to slow down.
-    // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
-    if (mons->liquefied_ground())
-    {
-        mon_enchant me = mon_enchant(ENCH_SLOW, 0, 0, 20);
-        if (mons->has_ench(ENCH_SLOW))
-            mons->update_ench(me);
-        else
-            mons->add_ench(me);
-        mons->calc_speed();
-    }
-
     fedhas_neutralise(mons);
 
     // Monster just summoned (or just took stairs), skip this action.
