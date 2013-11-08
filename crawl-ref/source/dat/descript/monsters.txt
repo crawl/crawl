@@ -1040,12 +1040,6 @@ draconian zealot
 This draconian derives its hellish powers and demonic allies from the worship
 of dark gods unknown to men, dwarves, elves or orcs.
 %%%%
-dragon
-
-A great reptilian beast with powerful claws on its limbs, covered in thick
-green scales and with two huge bat-like wings. Little trails of smoke spill
-from its toothy maw.
-%%%%
 dryad
 
 A spirit of nature, bound to the forest in which it resides. It is capable of
@@ -1166,6 +1160,12 @@ fire crab
 These crabs are prized for their brilliantly jewelled shells. The rarity of
 these shells is only enhanced by the vicious, fiery nature of the animal, and
 their almost supernatural ability to expel massive quantities of flames.
+%%%%
+fire dragon
+
+A great reptilian beast with powerful claws on its limbs, covered in thick
+green scales and with two huge bat-like wings. Little trails of smoke spill
+from its toothy maw.
 %%%%
 fire elemental
 
