@@ -3671,9 +3671,9 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     || (you.experience_level == 16))
                 {
                     perma_mutate(MUT_ANTENNAE, 1, "level up");
-                    #ifdef USE_TILE
-                        init_player_doll();
-                    #endif
+#ifdef USE_TILE
+                    init_player_doll();
+#endif
                 }
 
                 if (!(you.experience_level % 4))
