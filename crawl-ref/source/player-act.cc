@@ -709,7 +709,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
     if (stasis(false))
     {
         if (verbose)
-            mprf("You cannot go berserk while under stasis");
+            mprf("You cannot go berserk while under stasis.");
         return false;
     }
 
