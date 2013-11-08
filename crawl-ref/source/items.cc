@@ -3998,6 +3998,16 @@ item_info get_item_info(const item_def& item)
             ii.props[copy_props[i]] = item.props[copy_props[i]];
     }
 
+    const char* copy_ident_props[] = {"spell_list"};
+    if (item_ident(item, ISFLAG_KNOW_TYPE))
+    {
+        for (unsigned i = 0; i < ARRAYSZ(copy_ident_props); ++i)
+        {
+            if (item.props.exists(copy_ident_props[i]))
+                ii.props[copy_ident_props[i]] = item.props[copy_ident_props[i]];
+        }
+    }
+
     if (item.props.exists(ARTEFACT_PROPS_KEY))
     {
         CrawlVector props = item.props[ARTEFACT_PROPS_KEY].get_vector();
