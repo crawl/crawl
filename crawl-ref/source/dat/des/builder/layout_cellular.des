@@ -286,7 +286,7 @@ ENDMAP
 
 # A bit similar to roguey but better architecture.
 NAME:   layout_gridlike
-DEPTH:  D:10-, Depths, Lair, Crypt, Snake, Elf, Pan
+DEPTH:  D:10-, Lair, Crypt, Snake, Elf, Pan
 WEIGHT: 20, 50(D), 50(Depths), 100(Elf), 50(Crypt)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
