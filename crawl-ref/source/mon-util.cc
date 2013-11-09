@@ -3451,7 +3451,8 @@ static gender_type _mons_class_gender(monster_type mc)
         || mc == MONS_QUEEN_ANT
         || mc == MONS_QUEEN_BEE
         || mc == MONS_HARPY
-        || mc == MONS_SPHINX)
+        || mc == MONS_SPHINX
+        || mc == MONS_WATER_NYMPH)
     {
         gender = GENDER_FEMALE;
     }
