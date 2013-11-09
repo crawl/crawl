@@ -79,6 +79,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_MUMMY:
         case SP_OCTOPODE:
         case SP_DJINNI:
+        case SP_FORMICID:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
@@ -98,7 +99,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_VAMPIRE:
         case SP_OCTOPODE:
         case SP_DJINNI:
-        case SP_FORMICID:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
