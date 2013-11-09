@@ -4525,8 +4525,8 @@ static void _move_player(coord_def move)
     string verb;
     if (you.flight_mode())
         verb = "fly";
-    else if (you.is_wall_clinging())
-        verb = "cling";
+    else if (you.form == TRAN_SPIDER)
+        verb = "crawl";
     else if (you.species == SP_NAGA && !form_changed_physiology())
         verb = "slither";
     else
