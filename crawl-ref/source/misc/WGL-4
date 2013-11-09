@@ -1,0 +1,88 @@
+This is the WGL-4 character set, which is Microsoft's recommendation for
+what any general-purpose font should include.  Apple's equivalent is nearly
+a superset, Unix terminals either can borrow glyphs from other installed
+fonts or use X11 fonts with a wide coverage.  Thus, you can safely assume
+any default font can display any glyph in this file.
+
+The only exception is Windows console, which in bitmap font mode loses any
+Unicode capabilities and uses an 8 bit "code page" (despite using an UCS-2
+API).  Crawl sets the code page to CP437.
+
+When using this file, note that any comments are within WGL-4 as well, thus
+you don't need to filter them out.  This is a /glyph/ list, thus control
+characters are out of scope (and this file includes only newlines).
+
+
+Basic ASCII
+! " # $ % & ' ( ) * + , - . /
+0 1 2 3 4 5 6 7 8 9 : ; < = > ?
+@ A B C D E F G H I J K L M N O
+P Q R S T U V W X Y Z [ \ ] ^ _
+` a b c d e f g h i j k l m n o
+p q r s t u v w x y z { | } ~
+Latin 1
+¡ ¢ £ ¤ ¥ ¦ § ¨ © ª « ¬ - ® ¯
+° ± ² ³ ´ µ ¶ · ¸ ¹ º » ¼ ½ ¾ ¿
+À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï
+Ð Ñ Ò Ó Ô Õ Ö × Ø Ù Ú Û Ü Ý Þ ß
+à á â ã ä å æ ç è é ê ë ì í î ï
+ð ñ ò ó ô õ ö ÷ ø ù ú û ü ý þ ÿ
+Latin Extended A
+Ā ā Ă ă Ą ą Ć ć Ĉ ĉ Ċ ċ Č č Ď ď
+Đ đ Ē ē Ĕ ĕ Ė ė Ę ę Ě ě Ĝ ĝ Ğ ğ
+Ġ ġ Ģ ģ Ĥ ĥ Ħ ħ Ĩ ĩ Ī ī Ĭ ĭ Į į
+İ ı Ĳ ĳ Ĵ ĵ Ķ ķ ĸ Ĺ ĺ Ļ ļ Ľ ľ Ŀ
+ŀ Ł ł Ń ń Ņ ņ Ň ň ŉ Ŋ ŋ Ō ō Ŏ ŏ
+Ő ő Œ œ Ŕ ŕ Ŗ ŗ Ř ř Ś ś Ŝ ŝ Ş ş
+Š š Ţ ţ Ť ť Ŧ ŧ Ũ ũ Ū ū Ŭ ŭ Ů ů
+Ű ű Ų ų Ŵ ŵ Ŷ ŷ Ÿ Ź ź Ż ż Ž ž ſ
+Latin Extended B
+ƒ Ǻ ǻ Ǽ ǽ Ǿ ǿ
+Spacing modifier letters
+ˆ ˇ ˉ ˘ ˙ ˚ ˛ ˜ ˝
+Greek
+; ΄ ΅ Ά · Έ Ή Ί Ό Ύ Ώ
+ΐ Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο
+Π Ρ Σ Τ Υ Φ Χ Ψ Ω Ϊ Ϋ ά έ ή ί
+ΰ α β γ δ ε ζ η θ ι κ λ μ ν ξ ο
+π ρ ς σ τ υ φ χ ψ ω ϊ ϋ ό ύ ώ
+Ѐ Ё Ђ Ѓ Є Ѕ І Ї Ј Љ Њ Ћ Ќ Ѝ Ў Џ
+Cyrillic
+А Б В Г Д Е Ж З И Й К Л М Н О П
+Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я
+а б в г д е ж з и й к л м н о п
+р с т у ф х ц ч ш щ ъ ы ь э ю я
+ѐ ё ђ ѓ є ѕ і ї ј љ њ ћ ќ ѝ ў џ
+Ґ ґ
+Latin extended additional
+Ẁ ẁ Ẃ ẃ Ẅ ẅ Ỳ ỳ
+General punctuation
+– — ― ‗ ‘ ’ ‚ ‛ “ ” „ † ‡ • …
+‰ ′ ″ ‹ › ‼ ‾ ⁄
+Super/subscript
+ⁿ
+Currency symbols
+₣ ₤ ₧ €
+Letterlike symbols
+℅ ℓ № ™ Ω ℮
+Number forms
+⅛ ⅜ ⅝ ⅞
+Arrows
+← ↑ → ↓ ↔ ↕ ↨
+Mathematical operators
+∂ ∆ ∏ ∑ − ∕ ∙ √ ∞ ∟ ∩ ∫
+≈ ≠ ≡ ≤ ≥
+Miscallenous technical
+⌂ ⌐ ⌠ ⌡
+Box drawing characters
+─ │ ┌ ┐ └ ┘ ├  ┤ ┬  ┴ ┼
+═ ║ ╒ ╓ ╔ ╕ ╖ ╗ ╘ ╙ ╚ ╛ ╜ ╝ ╞ ╟
+╠ ╡ ╢ ╣ ╤ ╥ ╦ ╧ ╨ ╩ ╪ ╫ ╬
+Block elements
+▀ ▄ █ ▌ ▐ ░ ▒ ▓
+Geometric shapes
+■ □ ▪ ▫ ▬ ▲ ► ▼ ◄ ◊ ○ ● ◘ ◙ ◦
+Miscellaneous symbols
+☺ ☻ ☼ ♀ ♂ ♠ ♣ ♥ ♦ ♪ ♫
+Alphabetic presentation forms
+ﬁ ﬂ
