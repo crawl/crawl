@@ -3062,20 +3062,6 @@ void reset_spectral_weapon(monster* mons)
         mons->props.erase(SW_TARGET_MID);
 }
 
-/* Checks if the spectral weapon is targetting the given position.
- *
- * Checks that the defender is our actual target.
- */
-bool check_target_spectral_weapon(const actor* mons, const actor *defender)
-{
-    if (mons->props.exists(SW_TARGET_MID))
-    {
-        mid_t target_mid = mons->props[SW_TARGET_MID].get_int();
-        return (target_mid == defender->mid);
-    }
-    return false;
-}
-
 /* Confirms the spectral weapon can and will attack the given defender.
  *
  * Checks the target, and that we haven't attacked yet.
@@ -3086,7 +3072,9 @@ bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
     // No longer tracking towards the target.
     mons->props.erase(SW_TRACKING);
 
-    if (check_target_spectral_weapon(mons, defender)
+    // Is the defender our target?
+    if (mons->props.exists(SW_TARGET_MID)
+        && (mid_t)mons->props[SW_TARGET_MID].get_int() == defender->mid
         && mons->props.exists(SW_READIED))
     {
         // Consume our ready state and attack

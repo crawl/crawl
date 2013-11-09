@@ -104,7 +104,6 @@ monster* find_spectral_weapon(const actor* agent);
 spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail);
 void end_spectral_weapon(monster* mons, bool killed, bool quiet = false);
 bool trigger_spectral_weapon(actor* agent, const actor* target);
-bool check_target_spectral_weapon(const actor* mons, const actor *defender);
 bool confirm_attack_spectral_weapon(monster* mons, const actor *defender);
 void reset_spectral_weapon(monster* mons);
 
