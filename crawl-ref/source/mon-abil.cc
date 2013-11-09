@@ -4993,11 +4993,30 @@ void waterport_touch(monster* nymph, actor* target)
         {
             if (feat_is_water(grd(*ai)) && !actor_at(*ai))
             {
+                string nymph_name = nymph->name(DESC_THE, true);
+                string victim_name = target->name(DESC_THE, true);
+                string pronoun = nymph->pronoun(PRONOUN_POSSESSIVE, true);
+
+                const bool could_see_nymph = you.can_see(nymph);
+                const bool could_see_victim = you.can_see(target);
                 nymph->move_to_pos(*ai);
                 target->move_to_pos(best_spot);
-                mprf("%s draws %s back to her home.",
-                        nymph->name(DESC_THE).c_str(),
-                        target->name(DESC_THE).c_str());
+                const bool can_see_nymph = you.can_see(nymph);
+                const bool can_see_victim = you.can_see(target);
+
+                if (could_see_nymph || can_see_nymph)
+                {
+                    if (!could_see_victim && !can_see_victim)
+                        victim_name = "something";
+
+                    mprf("%s draws %s back to %s home.", nymph_name.c_str(),
+                         victim_name.c_str(), pronoun.c_str());
+                }
+                else if (could_see_victim)
+                    mprf("%s disappears!", victim_name.c_str());
+                else if (can_see_victim)
+                    mprf("%s appears with a splash!", victim_name.c_str());
+
                 return;
             }
         }
