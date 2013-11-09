@@ -276,14 +276,14 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
-                "dragon / fire giant / orb of fire", { weight = 2 }),
+                "fire dragon / fire giant / orb of fire", { weight = 2 }),
      with_props("ice beast / polar bear / freezing wraith / ice dragon / " ..
                 "frost giant / ice devil / ice fiend / simulacrum w:20 / " ..
                 "blizzard demon", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
                 "storm dragon / electric golem / spriggan air mage", { weight = 2 }),
      with_props("swamp drake / fire drake / death drake / steam dragon / " ..
-                "swamp dragon / dragon / ice dragon / storm dragon / " ..
+                "swamp dragon / fire dragon / ice dragon / storm dragon / " ..
                 "iron dragon / shadow dragon / quicksilver dragon / " ..
                 "golden dragon / mottled dragon / wyvern / hydra", { weight = 2 }),
      with_props("centaur / yaktaur / centaur warrior / yaktaur captain / " ..
