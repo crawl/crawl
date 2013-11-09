@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 #include "bitary.h"
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
@@ -3051,6 +3052,14 @@ void monster::go_berserk(bool intentional, bool /* potion */)
     if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
         xom_is_stimulated(friendly() ? 25 : 100);
+
+    if (const item_def* w = weapon())
+    {
+        if (is_unrandom_artefact(*w) && w->special == UNRAND_JIHAD)
+            for (actor_near_iterator mi(pos(), LOS_NO_TRANS); mi; ++mi)
+                if (mons_aligned(this, *mi))
+                    mi->go_berserk(false);
+    }
 }
 
 void monster::expose_to_element(beam_type flavour, int strength,
