@@ -13,6 +13,7 @@
 #define DEAD_ARE_FLYING 4
 #define DEAD_ARE_SLITHERING 8
 #define DEAD_ARE_HOPPING 16
+#define DEAD_ARE_CRAWLING 32
 
 
 // Properties set for active summons
