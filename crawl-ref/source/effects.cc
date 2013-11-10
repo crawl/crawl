@@ -3211,7 +3211,17 @@ void recharge_elemental_evokers(int exp)
     for (int item = 0; item < ENDOFPACK; ++item)
     {
         if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus2 > 0)
-            evokers.push_back(&you.inv[item]);
+        {
+            // Only recharge one of each type of evoker at a time.
+            bool duplicate = false;
+            for (unsigned int i = 0; i < evokers.size(); ++i)
+            {
+                if (evokers[i]->sub_type == you.inv[item].sub_type)
+                    duplicate = true;
+            }
+            if (!duplicate)
+                evokers.push_back(&you.inv[item]);
+        }
     }
 
     int xp_factor = max(min((int)exp_needed(you.experience_level+1, 0) * 2 / 7,
