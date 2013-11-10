@@ -65,7 +65,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ROCK_WALL:
-        case DNGN_PERMAROCK_WALL:
             f.dchar        = DCHAR_WALL;
             f.colour       = ETC_ROCK;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
@@ -86,10 +85,23 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WALL;
             break;
 
+        case DNGN_PERMAROCK_WALL:
+            f.dchar        = DCHAR_PERMAWALL;
+            f.colour       = ETC_ROCK;
+            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            f.minimap      = MF_WALL;
+            break;
+
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_CLEAR_STONE_WALL:
-        case DNGN_CLEAR_PERMAROCK_WALL:
             f.dchar        = DCHAR_WALL;
+            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            f.colour       = LIGHTCYAN;
+            f.minimap      = MF_WALL;
+            break;
+
+        case DNGN_CLEAR_PERMAROCK_WALL:
+            f.dchar        = DCHAR_PERMAWALL;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             f.colour       = LIGHTCYAN;
             f.minimap      = MF_WALL;
