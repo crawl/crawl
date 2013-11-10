@@ -4305,7 +4305,10 @@ mon_body_shape get_mon_shape(const monster_type mc)
     switch (mons_base_char(mc))
     {
     case 'a': // ants
-        return MON_SHAPE_INSECT;
+        if (mons_genus(mc) == MONS_FORMICID)
+            return MON_SHAPE_HUMANOID;
+        else
+            return MON_SHAPE_INSECT;
     case 'b': // bats and butterflies
         if (mc == MONS_BUTTERFLY)
             return MON_SHAPE_INSECT_WINGED;
