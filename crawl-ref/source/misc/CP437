@@ -1,0 +1,17 @@
+This is the subset of CP437 that the default Windows console is capable
+of displaying correctly: all of it except for characters 16 and 17, ie
+U+25B6 BLACK RIGHT-POINTING TRIANGLE and U+25C0 BLACK LEFT-POINTING
+TRIANGLE, which incidentally are also the only characters not in WGL-4.
+
+Without #ifdefing, all default glyphs must come from this set.  If win32
+console is excluded, it should be safe to use WGL-4 instead, as no one
+sane can expected to run a ttyrec viewer or a ssh client from there.
+
+ ☺☻♥♦♣♠•◘○◙♂♀♪♫☼  ↕‼¶§▬↨↑↓→←∟↔▲▼
+ !"#$%&'()*+,-./0123456789:;<=>?
+@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_
+`abcdefghijklmnopqrstuvwxyz{|}~⌂
+ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒ
+áíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐
+└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀
+αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ 
