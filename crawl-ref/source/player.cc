@@ -1912,7 +1912,8 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 {
     if (you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
             : you.is_undead && (temp || you.form != TRAN_LICH)
-              || you.is_artificial())
+        || you.is_artificial()
+        || you.duration[DUR_DIVINE_STAMINA])
     {
         return 3;
     }
@@ -5237,15 +5238,15 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     if (player_res_poison() > 0)
         maybe_id_resist(BEAM_POISON);
 
-    if (player_res_poison() >= 3)
-    {
-        dprf("Cannot poison, you are immune!");
-        return false;
-    }
-
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
         mpr("Your divine stamina protects you from poison!");
+        return false;
+    }
+
+    if (player_res_poison() >= 3)
+    {
+        dprf("Cannot poison, you are immune!");
         return false;
     }
 
