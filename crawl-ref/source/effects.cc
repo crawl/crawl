@@ -3207,20 +3207,20 @@ void slime_wall_damage(actor* act, int delay)
 
 void recharge_elemental_evokers(int exp)
 {
-    vector<item_def*> evokers;
-    for (int item = 0; item < ENDOFPACK; ++item)
+    FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (is_elemental_evoker(you.inv[item]) && you.inv[item].plus2 > 0)
+        item_def& item(you.inv[i]);
+        if (is_elemental_evoker(item) && item.plus2 > 0)
         {
             // Only recharge one of each type of evoker at a time.
-            bool duplicate = false;
-            for (unsigned int i = 0; i < evokers.size(); ++i)
+            if (evokers[item.sub_type]
+                && evokers[item.sub_type]->plus2 <= item.plus2)
             {
-                if (evokers[i]->sub_type == you.inv[item].sub_type)
-                    duplicate = true;
+                continue;
             }
-            if (!duplicate)
-                evokers.push_back(&you.inv[item]);
+
+            evokers[item.sub_type] = &item;
         }
     }
 
@@ -3229,9 +3229,11 @@ void recharge_elemental_evokers(int exp)
                         you.experience_level*4 + 30)
                     / (3 + you.skill_rdiv(SK_EVOCATIONS, 2, 13));
 
-    for (unsigned int i = 0; i < evokers.size(); ++i)
+    for (int i = 0; i < NUM_MISCELLANY; ++i)
     {
         item_def* evoker = evokers[i];
+        if (!evoker)
+            continue;
         evoker->plus2 -= div_rand_round(exp, xp_factor);
         if (evoker->plus2 <= 0)
         {
