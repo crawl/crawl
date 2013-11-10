@@ -1555,6 +1555,22 @@ bool trog_burn_spellbooks()
     return true;
 }
 
+void trog_do_trogs_hand(int pow)
+{
+    you.increase_duration(DUR_TROGS_HAND,
+                          5 + roll_dice(2, pow / 3 + 1), 100,
+                          "Your skin crawls.");
+    mpr("You feel resistant to hostile enchantments.", MSGCH_DURATION);
+}
+
+void trog_remove_trogs_hand()
+{
+    if (you.duration[DUR_REGENERATION] == 0)
+        mpr("Your skin stops crawling.", MSGCH_DURATION);
+    mpr("You feel less resistant to hostile enchantments.", MSGCH_DURATION);
+    you.duration[DUR_TROGS_HAND] = 0;
+}
+
 bool beogh_water_walk()
 {
     return (you_worship(GOD_BEOGH) && !player_under_penance()

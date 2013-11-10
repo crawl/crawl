@@ -1280,6 +1280,14 @@ static void tag_construct_you(writer &th)
     marshallByte(th, NUM_ATTRIBUTES);
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallInt(th, you.attribute[j]);
+#if TAG_MAJOR_VERSION == 34
+    if (you.attribute[ATTR_DIVINE_REGENERATION])
+    {
+        you.attribute[ATTR_DIVINE_REGENERATION] = 0;
+        you.duration[DUR_TROGS_HAND] = you.duration[DUR_REGENERATION];
+        you.duration[DUR_REGENERATION] = 0;
+    }
+#endif
 
     // Sacrifice values.
     marshallByte(th, NUM_OBJECT_CLASSES);

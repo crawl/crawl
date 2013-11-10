@@ -854,6 +854,7 @@ static const char* dur_names[] =
 #if TAG_MAJOR_VERSION == 34
     "antennae extend",
 #endif
+    "trogs hand",
 };
 
 void wizard_edit_durations(void)

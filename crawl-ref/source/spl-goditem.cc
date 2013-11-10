@@ -405,7 +405,7 @@ void antimagic()
         DUR_SLAYING, DUR_STEALTH,
         DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
         DUR_SHROUD_OF_GOLUBRIA, DUR_DISJUNCTION, DUR_SENTINEL_MARK,
-        DUR_ANTIMAGIC /*!*/,
+        DUR_ANTIMAGIC /*!*/, DUR_REGENERATION,
     };
 
     bool need_msg = false;
@@ -414,14 +414,6 @@ void antimagic()
         && you.duration[DUR_FLIGHT] > 11)
     {
         you.duration[DUR_FLIGHT] = 11;
-        need_msg = true;
-    }
-
-    // Don't dispel divine regeneration.
-    if (you.duration[DUR_REGENERATION] > 0
-        && !you.attribute[ATTR_DIVINE_REGENERATION])
-    {
-        you.duration[DUR_REGENERATION] = 1;
         need_msg = true;
     }
 

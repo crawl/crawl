@@ -1091,8 +1091,8 @@ static void _inc_penance(god_type god, int val)
         // Neither does Trog's regeneration or magic resistance.
         else if (god == GOD_TROG)
         {
-            if (you.attribute[ATTR_DIVINE_REGENERATION])
-                remove_regen(true);
+            if (you.duration[DUR_TROGS_HAND])
+                trog_remove_trogs_hand();
 
             make_god_gifts_disappear(); // only on level
         }
@@ -3062,8 +3062,8 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_TROG:
-        if (you.attribute[ATTR_DIVINE_REGENERATION])
-            remove_regen(true);
+        if (you.duration[DUR_TROGS_HAND])
+            trog_remove_trogs_hand();
 
         add_daction(DACT_ALLY_TROG);
 
