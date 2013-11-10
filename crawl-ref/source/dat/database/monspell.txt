@@ -413,9 +413,9 @@ Minor Healing dryad cast
 
 @The_monster@ draws upon the vitality of nature.
 %%%%
-Summon Water Elementals elemental wellspring cast
+Primal Wave elemental wellspring cast
 
-The water around @The_monster@ rises up and takes form!
+A great wave of water rises up around @The_monster@!
 %%%%
 Cause Fear satyr cast
 
