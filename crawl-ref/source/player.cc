@@ -5237,14 +5237,14 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         return false;
     }
 
-    if (!force && !(amount = _maybe_reduce_poison(amount)))
-        return false;
-
-    if (!force && you.duration[DUR_DIVINE_STAMINA] > 0)
+    if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
         mpr("Your divine stamina protects you from poison!");
         return false;
     }
+
+    if (!force && !(amount = _maybe_reduce_poison(amount)))
+        return false;
 
     const int old_value = you.duration[DUR_POISONING];
     if (player_res_poison() < 0)
