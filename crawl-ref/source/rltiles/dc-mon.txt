@@ -634,6 +634,7 @@ tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
 tengu_warrior MONS_TENGU_WARRIOR
 tengu_reaver MONS_TENGU_REAVER
+vault/hydrataur MONS_HYDRATAUR
 %sdir mon/unique
 sojobo MONS_SOJOBO
 %sdir mon/holy
