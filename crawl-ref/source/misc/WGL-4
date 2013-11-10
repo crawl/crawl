@@ -10,7 +10,8 @@ API).  Crawl sets the code page to CP437.
 
 When using this file, note that any comments are within WGL-4 as well, thus
 you don't need to filter them out.  This is a /glyph/ list, thus control
-characters are out of scope (and this file includes only newlines).
+characters are out of scope (and this file includes only newlines).  Note
+that the list does include ' ' (U+00A0) which is identical to a space.
 
 
 Basic ASCII
@@ -21,7 +22,7 @@ P Q R S T U V W X Y Z [ \ ] ^ _
 ` a b c d e f g h i j k l m n o
 p q r s t u v w x y z { | } ~
 Latin 1
-¡ ¢ £ ¤ ¥ ¦ § ¨ © ª « ¬ - ® ¯
+  ¡ ¢ £ ¤ ¥ ¦ § ¨ © ª « ¬ - ® ¯
 ° ± ² ³ ´ µ ¶ · ¸ ¹ º » ¼ ½ ¾ ¿
 À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï
 Ð Ñ Ò Ó Ô Õ Ö × Ø Ù Ú Û Ü Ý Þ ß
