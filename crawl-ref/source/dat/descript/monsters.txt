@@ -1559,14 +1559,6 @@ lopping a head off, which, considering hydra's unique biology, is not what you
 want unless the blade is hot enough to cauterize the wound. Even a troll's
 claws may be enough to rip hydra heads.
 %%%%
-hydrataur
-
-A savage creature, created by a deranged wizard or god. Its many long necks
-each end with a humanoid torso, which has a neck of its own bearing a nasty
-reptilian head sporting oh so many crooked but sharp teeth. This foul beast
-thrashes violently around. Truly, its creator shouldn't be allowed into an
-insane asylum because of the safety of other patients.
-%%%%
 hyperactive ballistomycete
 
 This ballistomycete is in a state of all-out reproduction. It is constantly
