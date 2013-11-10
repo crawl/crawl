@@ -12,7 +12,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // CSET_DEFAULT
     // It must be limited to stuff present both in CP437 and WGL4.
     {
-        '#', '*', '.', ',', '\'', '+', '^', '>', '<',
+    //       ▓
+        '#', 0x2593, '*', '.', ',', '\'', '+', '^', '>', '<',
     //            ∩       ⌠       ≈
         '#', '_', 0x2229, 0x2320, 0x2248, '8', '{',
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
@@ -34,7 +35,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     },
     // CSET_ASCII
     {
-        '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
+        '#', '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '#', '_', '\\', '}', '~', '8', '{', '{',       // grate .. item detect
         '{', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '|', '}', '%', '$', '"', '0', '7', '^',   // book .. teleporter
@@ -45,12 +46,12 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
 
     // CSET_IBM - this is ANSI 437
     {
-    //  ▒       ░       ∙       ·     '     ■
-        0x2592, 0x2591, 0x2219, 0xb7, '\'', 0x25a0, '^', '>', '<', // wall .. stairs up
+    //  ▒       ▓       ░       ∙       ·     '     ■              // wall .. stairs up
+        0x2592, 0x2593, 0x2591, 0x2219, 0xb7, '\'', 0x25a0, '^', '>', '<',
     //       ▄       ∩       ⌠       ≈
         '#', 0x2584, 0x2229, 0x2320, 0x2248, '8', '{', '{',        // grate .. item detect
     //       φ
-        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',               // orb .. missile
+        '0', 0x03C6, ')', '[', '/', '%', '?', '=', '!', '(',       // orb .. missile
     //  ∞       \                              ♣       Ω
         0x221e, '\\', '}', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
         ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
@@ -62,8 +63,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // CSET_DEC
     // It's better known as "vt100 line drawing characters".
     {
-    //  ▒       ♦       ·          '     ┼
-        0x2592, 0x2666, 0xb7, ':', '\'', 0x253c, '^', '>', '<', // wall .. stairs up
+    //  ▒       █       ♦       ·          '     ┼     // wall .. stairs up
+        0x2592, 0x2588, 0x2666, 0xb7, ':', '\'', 0x253c, '^', '>', '<',
     //       π      ¶     §     »          →       ¨
         '#', 0x3c0, 0xb6, 0xa7, 0xbb, '8', 0x2192, 0xa8,        // grate .. item detect
         '0', '}', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
@@ -83,8 +84,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
        for clouds), but that would require decoupling encoding from charset.
     */
     {
-    //  ▒       ░       ·     ◦       '     ◼
-        0x2592, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
+    //  ▒       ▓       ░       ·     ◦       '     ◼
+        0x2592, 0x2593, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
     //            ∩       ⌠       ≈                 ∆
         '#', '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
         '0', '}', ')', '[', '/', '%', '?', '=', '!', '(',
@@ -102,7 +103,7 @@ dungeon_char_type dchar_by_name(const string &name)
 {
     const char *dchar_names[] =
     {
-        "wall", "wall_magic", "floor", "floor_magic", "door_open",
+        "wall", "permawall", "wall_magic", "floor", "floor_magic", "door_open",
         "door_closed", "trap", "stairs_down", "stairs_up",
         "grate", "altar", "arch", "fountain", "wavy", "statue",
         "invis_exposed", "item_detected",

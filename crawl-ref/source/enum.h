@@ -1172,6 +1172,7 @@ enum level_state_type
 enum dungeon_char_type
 {
     DCHAR_WALL,
+    DCHAR_PERMAWALL,
     DCHAR_WALL_MAGIC,
     DCHAR_FLOOR,
     DCHAR_FLOOR_MAGIC,
