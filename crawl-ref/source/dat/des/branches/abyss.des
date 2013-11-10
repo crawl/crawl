@@ -2172,24 +2172,3 @@ MAP
 .....     .....
  ....      ....
 ENDMAP
-
-NAME:   bh_abyssal_stair
-DEPTH:  Abyss:3-4
-WEIGHT:  1
-MONS:   hydra-thrashing horror-yaktaur chimera tile:mons_hydrataur
-KFEAT:  >: abyssal_stair
-MAP
-      @
-  xxxx+xxxx
- xx   .   xx
- x    .ll  x
- x ll..>l  x
- x l>.>1.  x
-@+...>l>...+@
- x  .1>.>l x
- x  l>..ll x
- x  ll.    x
- xx   .   xx
-  xxxx+xxx
-      @
-ENDMAP
