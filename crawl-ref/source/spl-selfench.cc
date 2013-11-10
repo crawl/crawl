@@ -126,28 +126,12 @@ spret_type deflection(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-void remove_regen(bool divine_ability)
-{
-    mpr("Your skin stops crawling.", MSGCH_DURATION);
-    you.duration[DUR_REGENERATION] = 0;
-    if (divine_ability)
-    {
-        mpr("You feel less resistant to hostile enchantments.", MSGCH_DURATION);
-        you.attribute[ATTR_DIVINE_REGENERATION] = 0;
-    }
-}
-
-spret_type cast_regen(int pow, bool divine_ability, bool fail)
+spret_type cast_regen(int pow, bool fail)
 {
     fail_check();
     you.increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
                           "Your skin crawls.");
 
-    if (divine_ability)
-    {
-        mpr("You feel resistant to hostile enchantments.");
-        you.attribute[ATTR_DIVINE_REGENERATION] = 1;
-    }
     return SPRET_SUCCESS;
 }
 

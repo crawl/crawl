@@ -741,7 +741,8 @@ static void _describe_glow(status_info* inf)
 
 static void _describe_regen(status_info* inf)
 {
-    const bool regen = (you.duration[DUR_REGENERATION] > 0);
+    const bool regen = (you.duration[DUR_REGENERATION] > 0
+                        || you.duration[DUR_TROGS_HAND] > 0);
     const bool no_heal =
             (you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING)
             || (player_mutation_level(MUT_SLOW_HEALING) == 3);
@@ -751,9 +752,12 @@ static void _describe_regen(status_info* inf)
 
     if (regen)
     {
-        inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_REGENERATION));
+        if (you.duration[DUR_REGENERATION] > you.duration[DUR_TROGS_HAND])
+            inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_REGENERATION));
+        else
+            inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_TROGS_HAND));
         inf->light_text   = "Regen";
-        if (you.attribute[ATTR_DIVINE_REGENERATION])
+        if (you.duration[DUR_TROGS_HAND])
             inf->light_text += " MR";
         else if (no_heal)
             inf->light_colour = DARKGREY;

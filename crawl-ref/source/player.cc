@@ -1281,7 +1281,7 @@ static int _player_bonus_regen()
     // Trog's Hand is handled separately so that it will bypass slow healing,
     // and it overrides the spell.
     if (you.duration[DUR_REGENERATION]
-        && !you.attribute[ATTR_DIVINE_REGENERATION])
+        && !you.duration[DUR_TROGS_HAND])
     {
         rr += 100;
     }
@@ -1384,7 +1384,7 @@ int player_regen()
         rr = 0;
 
     // Trog's Hand.  This circumvents the slow healing effect.
-    if (you.attribute[ATTR_DIVINE_REGENERATION])
+    if (you.duration[DUR_TROGS_HAND])
         rr += 100;
 
     return rr;
@@ -1400,8 +1400,13 @@ int player_hunger_rate(bool temp)
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
 
-    if (temp && you.duration[DUR_REGENERATION] && you.hp < you.hp_max)
+    if (temp
+        && (you.duration[DUR_REGENERATION]
+            || you.duration[DUR_TROGS_HAND])
+        && you.hp < you.hp_max)
+    {
         hunger += 4;
+    }
 
     if (temp)
     {
@@ -4098,6 +4103,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_SHROUD_OF_GOLUBRIA:
     case DUR_INFUSION:
     case DUR_SONG_OF_SLAYING:
+    case DUR_TROGS_HAND:
         return (6 * BASELINE_DELAY);
 
     case DUR_FLIGHT:
@@ -5585,7 +5591,7 @@ void dec_disease_player(int delay)
         }
 
         // Trog's Hand.
-        if (you.attribute[ATTR_DIVINE_REGENERATION])
+        if (you.duration[DUR_TROGS_HAND])
             rr += 100;
 
         // Kobolds get a bonus too.
@@ -7053,7 +7059,7 @@ int player_res_magic(bool calc_unid, bool temp)
         rm += 50;
 
     // Trog's Hand
-    if (you.attribute[ATTR_DIVINE_REGENERATION] && temp)
+    if (you.duration[DUR_TROGS_HAND] && temp)
         rm += 70;
 
     // Enchantment effect
