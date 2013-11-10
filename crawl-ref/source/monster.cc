@@ -2410,6 +2410,10 @@ bool monster::need_message(int &near) const
 
 void monster::swap_weapons(int near)
 {
+    // Don't let them swap weapons if berserk. ("You are too berserk!")
+    if (berserk())
+        return;
+
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);
 
@@ -3022,7 +3026,7 @@ bool monster::go_frenzy(actor *source)
     return true;
 }
 
-void monster::go_berserk(bool /* intentional */, bool /* potion */)
+void monster::go_berserk(bool intentional, bool /* potion */)
 {
     if (!can_go_berserk())
         return;
@@ -3038,6 +3042,11 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
                          pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
+
+    // If we're intentionally berserking, use a melee weapon;
+    // we won't be able to swap afterwards.
+    if (intentional)
+        wield_melee_weapon();
 
     add_ench(ENCH_BERSERK);
     if (simple_monster_message(this, " goes berserk!"))
@@ -5600,6 +5609,11 @@ bool monster::should_evoke_jewellery(jewellery_type jtype) const
 // Return the ID status gained.
 item_type_id_state_type monster::evoke_jewellery_effect(jewellery_type jtype)
 {
+    // XXX: this is mostly to prevent a funny message order:
+    // "$foo evokes its amulet. $foo wields a great mace. $foo goes berserk!"
+    if (jtype == AMU_RAGE)
+        wield_melee_weapon();
+
     mprf("%s evokes %s %s.", name(DESC_THE).c_str(),
          pronoun(PRONOUN_POSSESSIVE).c_str(),
          jewellery_is_amulet(jtype) ? "amulet" : "ring");
