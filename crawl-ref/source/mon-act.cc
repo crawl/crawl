@@ -836,6 +836,11 @@ static bool _handle_potion(monster* mons, bolt & beem)
     {
         const bool was_visible = you.can_see(mons);
 
+        // XXX: this is mostly to prevent a funny message order:
+        // "$foo drinks a potion. $foo wields a great mace. $foo goes berserk!"
+        if (ptype == POT_BERSERK_RAGE)
+            mons->wield_melee_weapon();
+
         // Drink the potion.
         const item_type_id_state_type id = mons->drink_potion_effect(ptype);
 
