@@ -83,16 +83,22 @@ KMONS:   k = giant eyeball
 KITEM:   k = potion of experience / any good_item
 NSUBST:  r = 1:+ / *:x
 NSUBST:  R = 1:+ / *:x
+: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+KFEAT:   V = enter_vaults
+: else
+KFEAT:   V = floor
+: end
+MARKER:  O = lua:props_marker { portal=1 }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccxxxxxx
 xxAB.r$xxxwwwxxxxcccccccccccccccccccccccccccxxxxxxxxcc..1....|kcxxxxxx
 xwBB.r$$Rwwwwxxxxc.....+...+...........c***c;;xxxxx;cc.....1.||cxxxxxx
-xw...r$$Rxwwwxxxxc..C..ccccc...........c***c;;;xxx;;cc.1.1...1.cxxxxxx
+xw..Or$$Rxwwwxxxxc..C..ccccc...........c***c;;;xxx;;cc.1.1...1.cxxxxxx
 xww..r$$Rxwwwwxxxc.....cxxxc...........c***c;;;;xx;;;+.....1..1cxxxxxx
 xww..xxxRwwww;xxxc..}..cxxxc...........c...c;;;;xx;;cc..1.111..cxxxxxx
 xwww.xxxwww;;;;xxccccccccxxcc+ccc+ccccccc+cc;;;;xx;;cc.11111...cxxxxxx
-xwwwxxxwwww;;;;;xxxxxxxxxxxc...c...c.......c;;;;x;;;cc..111H..1cxxxxxx
+xwwwxxxwwww;;;;;xxxxxxxxxxxc...c...c.......c;;;;x;;;cc..111O..1cxxxxxx
 xwwwxxxwwwww;;7;;xxxxxxxxxxc...c...c.w.....c;;;;;;;;cc.111111..cxxxxxx
 xwwwxxxwwwww;;;;;;;xxxxxxxxc...+...c.w.....+;;;;;;;;cc..111..1.cxxxxxx
 xwwwxxxwwww;;7;;;;;;;;xxx;;c...c...c.w.....c;;;;;;;;ccccccccccccxxxxxx
@@ -110,8 +116,8 @@ xxxwwwx;cccccc;;;;;;xx;;;;;c$$cccccc+cccccccwww;;;;;;;c.....$$xdd+wwwx
 xxxwwwxcc*4.+;;;;;;xxxx;;;;ccccccccc.....c...www;;ccccc.......xxxxxwwx
 xxxwwwxxcccccc;;;;xxxxx;;;;;;;cccccc.....+...www;;c...c.......xeexxwwx
 xxxwwwxx;cccc;;;;xxxxxx;;;;;;;cccccc.....c...www;cc.66c.......Eee+wwwx
-xxxwwwxx;;;;;;;;xxx5..c;;;;;;;cccccc.....cccwww;;;+.66+.......xxxxxwwx
-xxxwwwxx;;;;;;;;;xx5..c;;;;;;;;;;;;c.....c;wwww;;cc.66c.......Fffxxwwx
+xxxwwwxx;;;;;;;;xxx5..c;;;;;;;cccccc.....cccwww;;;+.66+...O...xxxxxwwx
+xxxwwwxx;;;;;;;;;xx5V.c;;;;;;;;;;;;c.....c;wwww;;cc.66c.......Fffxxwwx
 xxxwwwxx;;;;;;;;;;x5..+;;;;;;;;;;;;cccccccwwww;;;;c...c.......xff+wwwx
 xxxwwwxx;cccc;;;;xxx..c;;;;;;;;;;;;;;;;;wwwwww;;;;ccccc.......xxxxxwwx
 xxxwwwxxcccccc;;;;;xx.c;;;;;;;;;;;;;;;;wwwwwww;;;;;;;;c.....$$xggxxwwx
@@ -169,6 +175,12 @@ SUBST:   ' : l.
 : _G.set_random_mon_list("fire bat w:30 / fire drake / fire dragon / " ..
 :     "hell hound / efreet / fire crab / fire giant w:3 / mottled dragon / " ..
 :     "fire elemental / crimson imp / fire vortex / molten gargoyle")
+: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+KFEAT:   V = enter_vaults
+: else
+KFEAT:   V = floor
+: end
+MARKER:  % = lua:props_marker { portal=1 }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxllllxxxxxxxxxlllllxxxll.3..v$$$$$$$$v......0..vxxxxxx.....xxxxxxx
@@ -210,7 +222,7 @@ xllllllllllllllxxxxlllllll.xxx.xll......xx....llllllllvv.......v...v.......vvlxx
 xllllllxxllllllxxvvvvllll.lxxxl...lll..xx...0..lllllll7v..............v..v.v7lxx
 xxlllllxxxlllllllv00v.l..llllllllllll...0......lllllllvv.......v...v.......vvlxx
 xxlllllllllllllllv00v..lllllllllllllll.........lllllllvv......vv...vv......vvlxx
-xxxllllllllllllllvvv.vvvlllllllllllllll..x....llllllllvv1vvvv1v3...3v.v..v.vvlxx
+xxxllllllllllllllvvvVvvvlllllllllllllll..x....llllllllvv1vvvv1v3...3v.v..v.vvlxx
 xxx...lllllllllllv**v00vlllllllllllllll..0..xlllllllll7v1v**v1v.....v......v7lxx
 xxx1....lllllllllv**v00vllllllllllllllll.....lllllllllvv1....1v.....v4....4vvlxx
 xxxx.x.1.llllllllvvvvvvvllllllllllllllxx...0..lllllllxvvvvvvvvv.....vvvvvvvvvllx
@@ -262,8 +274,11 @@ ITEM:    ring of teleportation
 ITEM:    royal jelly / honeycomb w:20 / nothing w:30
 ITEM:    scroll of teleportation
 ITEM:    amulet of stasis
+NSUBST:  T = 1:. / *:T
 KFEAT:   T = known teleport trap
-KMONS:   w = electric eel / jellyfish / nothing w:120
+KMONS:   w = water elemental / elemental wellspring w:1 / \
+             merfolk javelineer w:2 / merfolk impaler w:2 / \
+             octopode w:3 / nothing w:300
 KFEAT:   w = w
 KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 /\
              nothing w:50
@@ -284,10 +299,17 @@ NSUBST:  * = 1:g / *:*
 SUBST:   * = * % % $ $ f
 SUBST:   ; = 9 0
 SUBST:   !=%$, &=*%
-SUBST:   V = *
+KITEM:   V = *
 COLOUR:  a = yellow
 TILE:    a = wall_wax
 SUBST:   a = x
+: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+KFEAT:   V = enter_vaults
+: else
+KFEAT:   V = floor
+: end
+MARKER:  P = lua:props_marker { portal=1 }
+KFEAT:   P = stone_arch
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.......xccccccxxxxxxx.........................................w"..xxx
@@ -314,23 +336,23 @@ xw"...xxx.......x..w..c^..*...*...*...*...*...*...*...*...c.....x...xx
 xw....x!x..xxx..x..w..c...................................c.....x...xx
 xxx...x+x..x!x..x.....c*..;...;...;...;...;...;...;...;..*c.....xx..xx
 xxx....1..1+!x..x.....c...................................c.....xx...x
-x..........xxx.xx.....c.......bbbbbbbbbb.bbbbbbbbbb.......c.....xx..xx
-x..xxxx........xx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....x...xx
-x..x!!+1..xxxx..x.....c*..;...bTbbbAbbbTbTbbbBbbbTb...;..*c.....x..xxx
-x..xxxx..1+!!x..x.....c.......bTb8...|bTbTb|...8bTb.......c.....xx.xxx
-x.........xxxx..x.....c.......bTA|...|ATbTB|...|BTb.......c.....xx.xxx
-x.......1.......x.....c.......bTb|...8bTbTb8...|bTb.......c.....x...xx
-xxx....121....xxx.....c*..;...bTbbbAbbnTbTnbbBbbbTb...;..*c.....x...xx
-x!x...cc+cc...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xx..xx
-x&+1..c!2!c...xxx.....N........bbbbbbbbbTbbbbbbbbb........N.....x..xxx
-x!x...c&&&c...xxx.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....x..xxx
-xxx...ccccc...xxx.....c*..;...bTbbbDbbnTbTnbbCbbbTb...;..*c.....x.xxxx
-x...............x.....c.......bTb|...8bTbTb|...8bTb.......c.....x.xxxx
-xx...1...xxxx...x.....c.......bTD|...|DTbTC|...|CTb.......c.....x..x.x
-xx..x+x.1+!!x...x.....c.......bTb8...|bTbTb8...|bTb.......c.....xx...x
-x...x!x..xxxx...x.....c*..;...bTbbbDbbbTbTbbbCbbbTb...;..*c.....xxx.xx
-x...xxx.........x.....c.......bTTTTTTTTTbTTTTTTTTTb.......c.....xxx.xx
-x.........xxxxxxx.....c.......bbbbbbbbbb.bbbbbbbbbb.......c.....xxx..x
+x..........xxx.xx.....c.......bbbbbbbbbbTbbbbbbbbbb.......c.....xx..xx
+x..xxxx........xx.....c.......b.........b.........b.......c.....x...xx
+x..x!!+1..xxxx..x.....c*..;...b.bbbAbbb.b.bbbBbbb.b...;..*c.....x..xxx
+x..xxxx..1+!!x..x.....c.......b.b8...|b.b.b|...8b.b.......c.....xx.xxx
+x.........xxxx..x.....c.......b.A|.P.|A.b.B|.P.|B.b.......c.....xx.xxx
+x.......1.......x.....c.......b.b|...8b.b.b8...|b.b.......c.....x...xx
+xxx....121....xxx.....c*..;...b.bbbAbbn.b.nbbBbbb.b...;..*c.....x...xx
+x!x...cc+cc...xxx.....c.......b.........b.........b.......c.....xx..xx
+x&+1..c!2!c...xxx.....N.......Tbbbbbbbbb.bbbbbbbbbT.......N.....x..xxx
+x!x...c&&&c...xxx.....c.......b.........b.........b.......c.....x..xxx
+xxx...ccccc...xxx.....c*..;...b.bbbDbbn.b.nbbCbbb.b...;..*c.....x.xxxx
+x...............x.....c.......b.b|...8b.b.b|...8b.b.......c.....x.xxxx
+xx...1...xxxx...x.....c.......b.D|.P.|D.b.C|.P.|C.b.......c.....x..x.x
+xx..x+x.1+!!x...x.....c.......b.b8...|b.b.b8...|b.b.......c.....xx...x
+x...x!x..xxxx...x.....c*..;...b.bbbDbbb.b.bbbCbbb.b...;..*c.....xxx.xx
+x...xxx.........x.....c.......b.........b.........b.......c.....xxx.xx
+x.........xxxxxxx.....c.......bbbbbbbbbbTbbbbbbbbbb.......c.....xxx..x
 xxxx......+*9*9*+.....c...................................c.....xxxx.x
 xxxx..xx..xxxxxxx.....c*..;...;...;...;...;...;...;...;..*c.....x....x
 x.....xx........x.....c...................................c.....x.xx.x
