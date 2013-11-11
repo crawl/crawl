@@ -9,13 +9,16 @@
 #define TAG_CHR_FORMAT 0
 
 // Let CDO updaters know if the syntax changes.
+#ifndef TAG_MAJOR_VERSION
 #define TAG_MAJOR_VERSION 34
+#endif
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
     TAG_MINOR_INVALID         = -1,
     TAG_MINOR_RESET           = 0, // Minor tags were reset
+#if TAG_MAJOR_VERSION == 34
     TAG_MINOR_BRANCHES_LEFT,       // Note the first time branches are left
     TAG_MINOR_VAULT_LIST,          // Don't try to store you.vault_list as prop
     TAG_MINOR_TRAPS_DETERM,        // Searching for traps is deterministic.
@@ -64,6 +67,7 @@ enum tag_minor_version
     TAG_MINOR_SEEDS,               // Per-game seeds for deterministic stuff.
     TAG_MINOR_ABYSS_BRANCHES,      // Spawn abyss monsters from other branches.
     TAG_MINOR_BRANCH_ENTRY,        // Store branch entry point (rather than just depth).
+#endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
