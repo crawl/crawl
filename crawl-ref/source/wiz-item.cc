@@ -288,9 +288,7 @@ static const char* _prop_name[] =
     "+Fog",
 #endif
     "Regen",
-#if TAG_MAJOR_VERSION == 34
-    "Unused",
-#endif
+    "noupg",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -341,9 +339,7 @@ static int8_t _prop_type[] =
     ARTP_VAL_BOOL, //FOG
 #endif
     ARTP_VAL_BOOL, //REGEN
-#if TAG_MAJOR_VERSION == 34
-    ARTP_VAL_BOOL, //UNUSED
-#endif
+    ARTP_VAL_BOOL, //NO_UPGRADE
 };
 
 static void _tweak_randart(item_def &item)
@@ -1158,11 +1154,14 @@ static void _debug_acquirement_stats(FILE *ostat)
 #endif
             "chaos",
             "evasion",
+#if TAG_MAJOR_VERSION == 34
             "confusion",
+#endif
             "penetration",
             "reaping",
+            "INVALID",
             "acid",
-#if TAG_MAJOR_VERSION == 34
+#if TAG_MAJOR_VERSION != 34
             "confuse",
 #endif
             "debug randart",
@@ -1375,10 +1374,11 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_EYESIGHT
          1, //ARTP_INVISIBLE
          1, //ARTP_FLY
+#if TAG_MAJOR_VERSION != 34
+         1, //ARTP_FOG,
+#endif
          1, //ARTP_BLINK
-         1, //ARTP_CAN_TELEPORT
          1, //ARTP_BERSERK
-         1, //ARTP_UNUSED_1
         -1, //ARTP_NOISES
         -1, //ARTP_PREVENT_SPELLCASTING
         -1, //ARTP_CAUSE_TELEPORTATION
@@ -1397,10 +1397,13 @@ static void _debug_rap_stats(FILE *ostat)
          0, //ARTP_BASE_ACC
          0, //ARTP_BASE_DAM
          1, //ARTP_RMSL
+#if TAG_MAJOR_VERSION == 34
          1, //ARTP_FOG
+#endif
          1, //ARTP_REGENERATION
-         -1
+         0, //ARTP_NO_UPGRADE
     };
+    COMPILE_CHECK(ARRAYSZ(good_or_bad) == ARTP_NUM_PROPERTIES);
 
     // No bounds checking to speed things up a bit.
     int all_props[ARTP_NUM_PROPERTIES];
@@ -1526,6 +1529,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_EYESIGHT",
         "ARTP_INVISIBLE",
         "ARTP_FLY",
+#if TAG_MAJOR_VERSION != 34
+        "ARTP_FOG",
+#endif
         "ARTP_BLINK",
         "ARTP_BERSERK",
         "ARTP_NOISES",
@@ -1545,10 +1551,14 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CLARITY",
         "ARTP_BASE_ACC",
         "ARTP_BASE_DAM",
-        "ARTP_RMSL"
+        "ARTP_RMSL",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_FOG",
+#endif
         "ARTP_REGENERATION",
+        "ARTP_NO_UPGRADE",
     };
+    COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 
     fprintf(ostat, "                            All    Good   Bad\n");
     fprintf(ostat, "                           --------------------\n");
