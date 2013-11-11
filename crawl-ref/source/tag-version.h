@@ -9,6 +9,9 @@
 #define TAG_CHR_FORMAT 0
 
 // Let CDO updaters know if the syntax changes.
+// Really, really, REALLY _never_ ever bump this and clean up old #ifdefs
+// in a single commit, please.  Making clean-up and actual code changes,
+// especially of this size, separated is vital for sanity.
 #ifndef TAG_MAJOR_VERSION
 #define TAG_MAJOR_VERSION 34
 #endif
