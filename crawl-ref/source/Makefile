@@ -1437,7 +1437,7 @@ endif
 # Plain old compilation
 #
 
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(CONTRIB_LIBS)
+$(OBJECTS:%.o=%.cc): $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
@@ -1452,7 +1452,7 @@ $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 %.o: %.m .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
-%.o: %.cc %.d .cflags | $(GENERATED_HEADERS) $(TILEDEFHDRS)
+%.o: %.cc %.d .cflags $(CC_DEP) | $(GENERATED_HEADERS) $(TILEDEFHDRS)
 ifdef NO_INLINE_DEPGEN
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
