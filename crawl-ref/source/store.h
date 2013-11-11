@@ -25,12 +25,12 @@ class monster;
 
 #include "tags.h"
 
-typedef uint8_t hash_size;
-typedef uint8_t vec_size;
+typedef uint16_t hash_size;
+typedef uint16_t vec_size;
 typedef uint8_t store_flags;
 
-#define VEC_MAX_SIZE  255
-#define HASH_MAX_SIZE 255
+#define VEC_MAX_SIZE  0xFFFF
+#define HASH_MAX_SIZE 0xFFFF
 
 // NOTE: Changing the ordering of these enums will break savefile
 // compatibility.

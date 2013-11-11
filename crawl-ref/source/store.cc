@@ -1285,11 +1285,11 @@ void CrawlHashTable::write(writer &th) const
     ASSERT_VALIDITY();
     if (empty())
     {
-        marshallByte(th, 0);
+        marshallUnsigned(th, 0);
         return;
     }
 
-    marshallByte(th, size());
+    marshallUnsigned(th, size());
 
     CrawlHashTable::hash_map_type::const_iterator i = hash_map->begin();
 
@@ -1308,7 +1308,15 @@ void CrawlHashTable::read(reader &th)
 
     ASSERT(empty());
 
-    hash_size _size = (hash_size) unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    hash_size _size;
+    if (th.getMinorVersion() < TAG_MINOR_16_BIT_TABLE)
+        _size = (hash_size) unmarshallByte(th);
+    else
+        _size = (hash_size) unmarshallUnsigned(th);
+#else
+    hash_size _size = (hash_size) unmarshallUnsigned(th);
+#endif
 
     if (_size == 0)
         return;
@@ -1584,8 +1592,8 @@ void CrawlVector::write(writer &th) const
         return;
     }
 
-    marshallByte(th, (char) size());
-    marshallByte(th, (char) max_size);
+    marshallUnsigned(th, (char) size());
+    marshallUnsigned(th, (char) max_size);
     marshallByte(th, static_cast<char>(type));
     marshallByte(th, (char) default_flags);
 
@@ -1607,12 +1615,25 @@ void CrawlVector::read(reader &th)
     ASSERT(default_flags == 0);
     ASSERT(max_size == VEC_MAX_SIZE);
 
-    vec_size _size = (vec_size) unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    vec_size _size;
+    if (th.getMinorVersion() < TAG_MINOR_16_BIT_TABLE)
+        _size = (vec_size) unmarshallByte(th);
+    else
+        _size = (vec_size) unmarshallUnsigned(th);
+#else
+    vec_size _size = (vec_size) unmarshallUnsigned(th);
+#endif
 
     if (_size == 0)
         return;
 
-    max_size      = static_cast<vec_size>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_16_BIT_TABLE)
+        max_size = static_cast<vec_size>(unmarshallByte(th));
+    else
+#endif
+    max_size      = static_cast<vec_size>(unmarshallUnsigned(th));
     type          = static_cast<store_val_type>(unmarshallByte(th));
     default_flags = static_cast<store_flags>(unmarshallByte(th));
 
