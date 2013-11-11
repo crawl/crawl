@@ -67,6 +67,7 @@ enum tag_minor_version
     TAG_MINOR_SEEDS,               // Per-game seeds for deterministic stuff.
     TAG_MINOR_ABYSS_BRANCHES,      // Spawn abyss monsters from other branches.
     TAG_MINOR_BRANCH_ENTRY,        // Store branch entry point (rather than just depth).
+    TAG_MINOR_16_BIT_TABLE,        // Increase the limit for CrawlVector/HashTable to 65535.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
