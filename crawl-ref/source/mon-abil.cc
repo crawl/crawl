@@ -4993,9 +4993,7 @@ void waterport_touch(monster* nymph, actor* target)
         {
             if (feat_is_water(grd(*ai)) && !actor_at(*ai))
             {
-                string nymph_name = nymph->name(DESC_THE, true);
                 string victim_name = target->name(DESC_THE, true);
-                string pronoun = nymph->pronoun(PRONOUN_POSSESSIVE, true);
 
                 const bool could_see_nymph = you.can_see(nymph);
                 const bool could_see_victim = you.can_see(target);
@@ -5009,14 +5007,22 @@ void waterport_touch(monster* nymph, actor* target)
                     if (!could_see_victim && !can_see_victim)
                         victim_name = "something";
 
-                    mprf("%s draws %s back to %s home.", nymph_name.c_str(),
-                         victim_name.c_str(), pronoun.c_str());
+                    mprf("%s draws %s back to %s home.",
+                         nymph->name(DESC_THE, true).c_str(),
+                         victim_name.c_str(),
+                         nymph->pronoun(PRONOUN_POSSESSIVE, true).c_str());
                 }
-                else if (could_see_victim)
-                    mprf("%s disappears!", victim_name.c_str());
-                else if (can_see_victim)
-                    mprf("%s appears with a splash!", victim_name.c_str());
-
+                else if (target->is_player())
+                {
+                    mprf("You are drawn back into the water.");
+                }
+                else
+                {
+                    if (could_see_victim)
+                        mprf("%s disappears!", victim_name.c_str());
+                    if (can_see_victim)
+                        mprf("%s appears with a splash!", victim_name.c_str());
+                }
                 return;
             }
         }
