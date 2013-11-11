@@ -1495,7 +1495,8 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
         if (all_skills_maxed(true))
         {
-            mpr("You have nothing more to learn.");
+            if (!quiet)
+                mpr("You have nothing more to learn.");
             return false;
         }
         return true;
@@ -1503,10 +1504,12 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_OKAWARU_FINESSE:
         if (you.species == SP_FORMICID)
         {
-            mpr("You cannot use finesse because of your stasis.");
+            if (!quiet)
+                mpr("You cannot use finesse because of your stasis.");
             return false;
         }
-        if (stasis_blocks_effect(false, false, "%s makes your neck tingle."))
+        if (stasis_blocks_effect(false, false,
+                                 quiet ? NULL : "%s makes your neck tingle."))
         {
             return false;
         }
@@ -1554,7 +1557,8 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_EVOKE_FOG:
         if (env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
-            mpr("It's too cloudy to do that here.");
+            if (!quiet)
+                mpr("It's too cloudy to do that here.");
             return false;
         }
         return true;
