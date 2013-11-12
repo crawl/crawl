@@ -52,6 +52,6 @@ local function run_los_tests(depth, nlevels, tests_per_level)
   end
 end
 
-for depth = 1, 27 do
+for depth = 1, 16 do
   run_los_tests(depth, 1, 1)
 end
