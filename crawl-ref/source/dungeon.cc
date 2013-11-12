@@ -20,6 +20,7 @@
 #include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "defines.h"
 #include "dgn-delve.h"
@@ -5175,6 +5176,9 @@ static void _vault_grid(vault_placement &place,
         _vault_grid_mapspec(place, where, *mapsp);
     else
         _vault_grid_glyph(place, where, vgrid);
+
+    if (cell_is_solid(where))
+        delete_cloud_at(where);
 }
 
 static void _vault_grid_glyph_mons(vault_placement &place,
