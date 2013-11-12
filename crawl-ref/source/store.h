@@ -25,12 +25,10 @@ class monster;
 
 #include "tags.h"
 
-typedef uint16_t hash_size;
 typedef uint16_t vec_size;
 typedef uint8_t store_flags;
 
 #define VEC_MAX_SIZE  0xFFFF
-#define HASH_MAX_SIZE 0xFFFF
 
 // NOTE: Changing the ordering of these enums will break savefile
 // compatibility.
@@ -308,7 +306,7 @@ public:
     { return get_value(string(key)); }
 
     // std::map style interface
-    hash_size size() const;
+    unsigned int size() const;
     bool      empty() const;
 
     void      erase(const string key);

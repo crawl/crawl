@@ -1309,13 +1309,13 @@ void CrawlHashTable::read(reader &th)
     ASSERT(empty());
 
 #if TAG_MAJOR_VERSION == 34
-    hash_size _size;
+    unsigned int _size;
     if (th.getMinorVersion() < TAG_MINOR_16_BIT_TABLE)
-        _size = (hash_size) unmarshallByte(th);
+        _size = unmarshallByte(th);
     else
-        _size = (hash_size) unmarshallUnsigned(th);
+        _size = unmarshallUnsigned(th);
 #else
-    hash_size _size = (hash_size) unmarshallUnsigned(th);
+    unsigned int _size = unmarshallUnsigned(th);
 #endif
 
     if (_size == 0)
@@ -1323,7 +1323,7 @@ void CrawlHashTable::read(reader &th)
 
     init_hash_map();
 
-    for (hash_size i = 0; i < _size; i++)
+    for (unsigned int i = 0; i < _size; i++)
     {
         string           key = unmarshallString(th);
         CrawlStoreValue &val = (*this)[key];
@@ -1467,7 +1467,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 
 ///////////////////////////
 // std::map style interface
-hash_size CrawlHashTable::size() const
+unsigned int CrawlHashTable::size() const
 {
     if (hash_map == NULL)
         return 0;
