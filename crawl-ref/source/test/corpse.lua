@@ -4,7 +4,7 @@
 
 local p = dgn.point(20, 20)
 
-debug.goto_place("D:20")
+debug.goto_place("Depths:2")
 
 local function ok(corpse, pattern)
   dgn.reset_level()
