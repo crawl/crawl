@@ -1,12 +1,16 @@
-Stone Soup 0.14 (up to 0.14-a0-816-ge4a7683)
+Stone Soup 0.14 (up to 0.14-a0-831-g318680c)
 --------------------------------------------
+* The lower half of D is now a new branch, the Depths; a rune is required for
+  entry.
 * Three new races: Lava Orcs, Djinn, and Formicids.
-* Rune lock - a rune is enter to enter D:15.
 * A new branch: the Enchanted Forest.
 
 Branches, environment
 ---------------------
-* A rune is required to enter D:15.
+* The main Dungeon is now sixteen levels.
+* A new branch: the Depths; entered from the end of Dungeon, it is six levels
+  long and contains the entrances to the Vaults and the Realm of Zot. It
+  requires a rune to enter.
 * A new branch: the Enchanted Forest, alternating with Crypt; five levels
   long, and contains the entrance to Tomb where it exists.
 * The Abyss randomly draws monsters from elsewhere in the Dungeon.
