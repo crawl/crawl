@@ -1180,6 +1180,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         move_player_to_grid(you.pos(), false, true);
     }
 
+    if (you.hp <= 0)
+    {
+        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+             make_stringf("gaining the %s transforation", form_names[which_trans]).c_str());
+    }
+
+
     return true;
 }
 
@@ -1382,6 +1389,12 @@ void untransform(bool skip_wielding, bool skip_move)
             you.hp = you.hp_max;
     }
     calc_hp();
+
+    if (you.hp <= 0)
+    {
+        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+             make_stringf("losing the %s form", form_names[old_form]).c_str());
+    }
 
     // Stop being constricted if we are now too large.
     if (you.is_constricted())
