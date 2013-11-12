@@ -3485,9 +3485,12 @@ static void _place_branch_entrances(bool use_vaults)
         if (!could_be_placed
             && !branch_is_unfinished(branches[i].id)
             && !is_hell_subbranch(branches[i].id)
-            && you.depth >= branches[i].mindepth
-            && you.depth <= branches[i].maxdepth)
+            && ((you.depth >= branches[i].mindepth
+                 && you.depth <= branches[i].maxdepth)
+                || level_id::current() == brentry[i]))
+        {
             could_be_placed = true;
+        }
     }
 
     // If there's nothing to be placed, don't bother.
