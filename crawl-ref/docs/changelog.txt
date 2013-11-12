@@ -22,7 +22,7 @@ Character
       their abilities changing as a result;
     - Djinn draw both health and magic from a shared Essence pool, and have
       complete immunity to all forms of fire;
-    - Formicids possess four strong arms to use many weapons together with
+    - Formicids possess four strong arms to use large weapons together with
       shields, in addition to strong natural digging abilities and a permanent
       stasis effect.
 * Felids have an innate jump attack ability, allowing them to jump over
