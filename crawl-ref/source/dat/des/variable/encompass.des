@@ -1132,13 +1132,13 @@ NSUBST:  "~ = 1:{ / 1:[ / 1:( / 1:} / 1:] / 1:) / 1:<<. / 1:>>. / 3:T
 NSUBST:  A = 1:A / 1:F / *:1, B = 1:B / 1:G / *:1
 NSUBST:  C = 1:CC1 / 1:H / *:1, D = 1:D / 1:II1 / *:1
 MARKER:  T = lua:props_marker { portal=1 }
-: _G.set_random_mon_list("place:D:" .. you.absdepth() .. " w:150 / " ..
+: _G.set_random_mon_list("place:" .. you.where() .. " w:150 / " ..
 :   "fire giant / frost giant / base draconian w:5 / rakshasa w:5 / " ..
 :   "glowing shapeshifter w:8 / simulacrum w:5 / dancing weapon w:2 / " ..
 :   "fire crab w:5 / boulder beetle / chaos spawn w:5 / very ugly thing band w:5")
 :  else
 NSUBST:  A = 1:A / *:1, B = 1:B / *:1, C = 1:C / *:1, D = 1:DD3 / *:1
-: _G.set_random_mon_list("place:D:" .. you.absdepth() .. " w:130 / " ..
+: _G.set_random_mon_list("place:" .. you.where() .. " w:130 / " ..
 :   "deep elf conjurer / deep elf knight w:5 / rakshasa w:5 / " ..
 :   "shapeshifter w:5 / simulacrum w:5 / air elemental w:5 / " ..
 :   "lindwurm w:5 / boulder beetle w:5 / chaos spawn / ugly thing band")
