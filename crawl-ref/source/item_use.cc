@@ -2307,26 +2307,6 @@ static bool _drink_fountain()
     return true;
 }
 
-static void _explosion(coord_def where, actor *agent, beam_type flavour,
-                       int colour, string name, string cause)
-{
-    bolt beam;
-    beam.is_explosion = true;
-    beam.aux_source = cause;
-    beam.source = where;
-    beam.target = where;
-    beam.set_agent(agent);
-    beam.range = 0;
-    beam.damage = dice_def(5, 8);
-    beam.ex_size = 5;
-    beam.flavour = flavour;
-    beam.colour = colour;
-    beam.hit = AUTOMATIC_HIT;
-    beam.name = name;
-    beam.loudness = 10;
-    beam.explode(true, false);
-}
-
 // XXX: Only checks brands that can be rebranded to,
 // there's probably a nicer way of doing this.
 static bool _god_hates_brand(const int brand)
@@ -2423,10 +2403,10 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
     // If there's no brand, make it vorpal.
     if (get_weapon_brand(wpn) == SPWPN_NORMAL)
     {
-        alert_nearby_monsters();
         mprf("%s emits a brilliant flash of light!",
              wpn.name(DESC_YOUR).c_str());
         set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
+        flash_view_delay(YELLOW, 300);
         return;
     }
 
@@ -2441,6 +2421,7 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
     // There's a temporary or new brand, attempt to make it permanent.
     const string itname = wpn.name(DESC_YOUR);
     bool success = true;
+    colour_t flash_colour = BLACK;
 
     switch (get_weapon_brand(wpn))
     {
@@ -2449,11 +2430,12 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
     case SPWPN_EVASION:
         if (rebranded)
         {
-            alert_nearby_monsters();
+            flash_colour = YELLOW;
             mprf("%s emits a brilliant flash of light!",itname.c_str());
         }
         else // should be VORPAL only
         {
+            flash_colour = YELLOW;
             if (get_vorpal_type(wpn) != DVORP_CRUSHING)
                 mprf("%s's sharpness seems more permanent.", itname.c_str());
             else
@@ -2463,68 +2445,38 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
 
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
-        mprf("%s is engulfed in an explosion of fire!", itname.c_str());
-        immolation(10, IMMOLATION_AFFIX, alreadyknown);
+        flash_colour = RED;
+        mprf("%s is engulfed in flames!", itname.c_str());
         break;
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
+        flash_colour = LIGHTCYAN;
         mprf("%s is covered with a thin layer of ice!", itname.c_str());
-        cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, 60,
-                              (alreadyknown) ? &you : NULL,
-                              true, false, false, false);
         break;
 
     case SPWPN_DRAINING:
     case SPWPN_VAMPIRICISM:
+        flash_colour = DARKGREY;
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
-        drain_exp(true, 100);
         break;
 
     case SPWPN_VENOM:
+        flash_colour = GREEN;
         if (rebranded)
             mprf("%s drips with poison.", itname.c_str());
         else
             mprf("%s seems more permanently poisoned.", itname.c_str());
-        toxic_radiance_effect(&you, 1);
         break;
 
     case SPWPN_ELECTROCUTION:
-        mprf("%s releases a massive orb of lightning.", itname.c_str());
-        _explosion(you.pos(), &you, BEAM_ELECTRICITY, LIGHTCYAN, "electricity",
-                   "electrocution affixation");
+        flash_colour = LIGHTCYAN;
+        mprf("%s crackles with electricity.", itname.c_str());
         break;
 
     case SPWPN_CHAOS:
-        mprf("%s erupts in a glittering mayhem of all colours.", itname.c_str());
-        // need to affix it immediately, otherwise transformation will break it
-        you.duration[DUR_WEAPON_BRAND] = 0;
-        xom_is_stimulated(200);
-        _explosion(you.pos(), &you, BEAM_CHAOS, BLACK, "chaos eruption", "chaos affixation");
-        switch (random2(coinflip() ? 2 : 4))
-        {
-        case 3:
-            if (transform(50, coinflip() ? TRAN_PIG :
-                              coinflip() ? TRAN_DRAGON :
-                                           TRAN_BAT))
-            {
-                // after getting possibly banished, we don't want you to just
-                // say "end transformation" immediately
-                you.transform_uncancellable = true;
-                break;
-            }
-        case 2:
-            if (you.can_safely_mutate())
-            {
-                // not funny on the undead
-                mutate(RANDOM_MUTATION, "chaos affixation");
-                break;
-            }
-        case 1:
-            xom_acts(coinflip(), HALF_MAX_PIETY, 0); // ignore tension
-        default:
-            break;
-        }
+        flash_colour = random_colour();
+        mprf("%s erupts in a glittering mayhem of colour.", itname.c_str());
         break;
 
     // Un-affixable brands.
@@ -2551,6 +2503,7 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
         you.redraw_evasion = true;
         // Might be removing antimagic.
         calc_mp();
+        flash_view_delay(flash_colour, 300);
     }
     return;
 }
