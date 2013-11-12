@@ -248,18 +248,10 @@ protected:
 };
 
 
-// A hash table can have a maximum of 255 key/value pairs.  If you
-// want more than that you can use nested hash tables.
-//
 // By default a hash table's value data types are heterogeneous.  To
 // make it homogeneous (which causes dynamic type checking) you have
 // to give a type to the hash table constructor; once it's been
 // created its type (or lack of type) is immutable.
-//
-// An empty hash table will take up only 1 byte in the savefile.  A
-// non-empty hash table will have an overhead of 3 bytes for the hash
-// table overall and 2 bytes per key/value pair, over and above the
-// number of bytes needed to store the keys and values themselves.
 class CrawlHashTable
 {
 public:
