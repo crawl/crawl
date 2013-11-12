@@ -1843,7 +1843,6 @@ enum hunger_state_t                    // you.hunger_state
 enum immolation_source_type
 {
     IMMOLATION_SCROLL,
-    IMMOLATION_AFFIX,  // effect when fixing fire brand
     IMMOLATION_TOME,   // a Tome of Destruction effect
 };
 

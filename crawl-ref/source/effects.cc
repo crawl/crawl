@@ -347,10 +347,6 @@ void immolation(int pow, immolation_source_type source, bool known)
         aux = "a scroll of immolation";
         break;
 
-    case IMMOLATION_AFFIX:
-        aux = "a fiery explosion";
-        break;
-
     case IMMOLATION_TOME:
         aux = "an exploding Tome of Destruction";
         break;
