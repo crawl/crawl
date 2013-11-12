@@ -1,12 +1,15 @@
-Stone Soup 0.14 (up to 0.14-a0-385-gada9c99)
+Stone Soup 0.14 (up to 0.14-a0-816-ge4a7683)
 --------------------------------------------
-* Two new races: Lava Orcs and Djinn.
+* Three new races: Lava Orcs, Djinn, and Formicids.
+* Rune lock - a rune is enter to enter D:15.
 * A new branch: the Enchanted Forest.
 
 Branches, environment
 ---------------------
+* A rune is required to enter D:15.
 * A new branch: the Enchanted Forest, alternating with Crypt; five levels
   long, and contains the entrance to Tomb where it exists.
+* The Abyss randomly draws monsters from elsewhere in the Dungeon.
 
 Character
 ---------
@@ -15,6 +18,9 @@ Character
       their abilities changing as a result;
     - Djinn draw both health and magic from a shared Essence pool, and have
       complete immunity to all forms of fire;
+    - Formicids possess four strong arms to use many weapons together with
+      shields, in addition to strong natural digging abilities and a permanent
+      stasis effect.
 * Felids have an innate jump attack ability, allowing them to jump over
   other monsters to attack their target.
     - There must be a safe, unoccupied landing spot next to the target.
@@ -29,6 +35,10 @@ Character
 Monsters
 --------
 * Summoned creatures are dismissed upon the death of their summoner.
+* Lom Lobon can now cast Tornado.
+* The plain "dragon" is now known as "fire dragon".
+* New monster: the ignis, an abyssal monster that coronas the player.
+* Moths of suppression are no more.
 
 Spells
 ------
@@ -43,8 +53,11 @@ Spells
 
 Items
 -----
+* The Orb of Zot no longer takes up an inventory slot.
 * Weapons are identified immediately on wield.
 * Wands are identified immediately on zapping.
+* Elemental evokers now recharge one at a time, with the one closest to
+  full recharging charging first.
 * Items on the ground are no longer subject to item destruction.
 * The reaching brand for whips is no more.
 * Large rocks now crash through monsters / the player, i.e. implicitly have
@@ -63,12 +76,17 @@ Items
   allow short-blade-quality stabbing with any weapon (or unarmed).
 * Hellfire now shoots hellfire bolts, dealing hellfire-branded damage and
   exploding.
+* The Elemental Staff is reworked considerably - it grants rElec, rF++,
+  rC++, MR++, AC+5, and randomly deals elemental-branded attacks based
+  on the user's Evocations skill.
 * New unrand: "macabre finger necklace" - gives warding and an extra ring slot.
 * New unrand: "boots of the spider" - gives clinging, trample immunity, and
   jump attack.
 * New unrand: "dark maul" - a very large, very slow two-handed weapon using
   the Maces and Flails skill.
-* Sniper and the Blowgun of the Assassin have been removed.
+* New unrand: "hat of the High Council" - spellpower at the expense of
+  spell success rates.
+* Sniper, the Blowgun of the Assassin, and Snakebite have been removed.
 
 Cards
 -----
@@ -83,6 +101,7 @@ Gods
 Interface
 ---------
 * Different types of magical trap are coloured differently.
+* Unnaturally hard rock walls have a new default glyph.
 
 Stone Soup 0.13 (20131011)
 --------------------------
