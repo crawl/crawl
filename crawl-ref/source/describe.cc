@@ -2840,7 +2840,7 @@ static int _get_spell_description(const spell_type spell,
     if (const int limit = summons_limit(spell))
     {
         description += "You can sustain at most " + number_in_words(limit)
-                       + " creatures summoned by this spell.";
+                       + " creatures summoned by this spell.\n";
     }
 
     const bool rod = item && item->base_type == OBJ_RODS;
