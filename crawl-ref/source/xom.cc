@@ -3674,7 +3674,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
 
 static void _handle_accidental_death(const int orig_hp,
     const FixedVector<int8_t, NUM_STATS> orig_stat_loss,
-    const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation)
+    const FixedVector<uint8_t, NUM_MUTATIONS> &orig_mutation,
+    const transformation_type orig_form)
 {
     // Did ouch() return early because the player died from the Xom
     // effect, even though neither is the player under penance nor is
@@ -3755,6 +3756,13 @@ static void _handle_accidental_death(const int orig_hp,
             you.stat_loss[i] = orig_stat_loss[i];
     }
 
+    if (orig_form != you.form)
+    {
+        dprf("Trying emergency untransformation.");
+        you.transform_uncancellable = false;
+        transform(10, orig_form, true);
+    }
+
     if (is_feat_dangerous(feat) && !crawl_state.game_is_sprint())
         you_teleport_now(false);
 }
@@ -3828,6 +3836,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const int  orig_hp       = you.hp;
+    const transformation_type orig_form = you.form;
     const FixedVector<int8_t, NUM_STATS> orig_stat_loss = you.stat_loss;
 
     const FixedVector<uint8_t, NUM_MUTATIONS> orig_mutation
@@ -3896,7 +3905,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
             return result;
     }
 
-    _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
+    _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation, orig_form);
 
     if (you_worship(GOD_XOM) && one_chance_in(5))
     {
