@@ -838,7 +838,8 @@ static int _blowgun_duration_roll(bolt &beam, const actor* victim,
                 return 5 + random2(5);
         }
     }
-    else return (5 + random2(base_power + blowgun->plus));
+    else
+        return (5 + random2(base_power + blowgun->plus));
 }
 
 static bool _blowgun_check(bolt &beam, actor* victim, special_missile_type type,
