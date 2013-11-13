@@ -68,7 +68,7 @@ syn keyword desDeclarator LFLOORTILE: LROCKTILE: FTILE: RTILE: TILE: SUBVAULT: F
 syn keyword desOrientation north south east west northwest northeast southwest southeast encompass float centre
 
 " DEPTH | PLACE
-syn keyword desOrientation Temple Orc Elf Lair Swamp Shoals Snake Spider Slime Vaults Blade Crypt Tomb
+syn keyword desOrientation Depths Temple Orc Elf Lair Swamp Shoals Snake Spider Slime Vaults Blade Crypt Tomb
 "Note: `Zot` totally highlights in e.g. the items `rune of Zot` and `Orb of Zot`. Not worth fixing.
 syn keyword desOrientation Hell Dis Geh Coc Tar Zot Forest Abyss Pan Zig Lab Bazaar Trove Sewer Ossuary
 syn keyword desOrientation Bailey IceCv Volcano WizLab
@@ -78,7 +78,7 @@ syn match desBranch contained /d\|temple\|orc\|elf\|lair\|swamp\|shoals\|snake\|
 syn match desBranch contained /hell\|dis\|geh\|coc\|tar\|zot\|forest\|abyss\|pan\|zig\|lab\|bazaar\|trove\|sewer\|ossuary/
 syn match desBranch contained /bailey\|icecv\|volcano\|wizlab/
 
-syn match desBranchname contained /dungeon\|temple\|orcish_mines\|elven_halls\|lair\|swamp\|shoals/
+syn match desBranchname contained /dungeon\|depths\|temple\|orcish_mines\|elven_halls\|lair\|swamp\|shoals/
 syn match desBranchname contained /snake_pit\|spider_nest\|slime_pits\|vaults\|hall_of_blades\|crypt\|tomb/
 syn match desBranchname contained /hell\|dis\|gehenna\|cocytus\|tartarus\|zot\|forest\|abyss\|pandemonium/
 "Note: zig and bazaar--wizlab all use the generic `portal_vault` name - lab does not!
@@ -125,10 +125,11 @@ syn keyword desOrientation name_descriptor  name_species  name_zombie  name_noco
 syn keyword desColour contained blue      green      cyan      red      magenta      brown  darkgrey
 syn keyword desColour contained lightblue lightgreen lightcyan lightred lightmagenta yellow lightgrey white
 " Elemental
-syn keyword desColour contained fire ice earth electricity air poison water magic mutagenic warp enchant heal
-syn keyword desColour contained holy dark death necro unholy vehumet beogh crystal blood smoke slime jewel
-syn keyword desColour contained elven dwarven orcish gila kraken floor rock stone mist shimmer_blue decay
-syn keyword desColour contained silver gold iron bone elven_brick waves tree random
+syn keyword desColour contained fire ice earth electricity air poison water magic mutagenic warp enchant
+syn keyword desColour contained heal holy dark death unholy vehumet beogh crystal blood smoke slime jewel
+syn keyword desColour contained elven dwarven orcish flash kraken floor rock mist shimmer_blue decay
+syn keyword desColour contained silver gold iron bone elven_brick waves tree mangrove tornado liquefied
+syn keyword desColour contained orb_glow disjunction random
 
 " TILE
 syn keyword desOrientation no_random
@@ -155,9 +156,10 @@ syn region desAttribute start=/\</ end=/:/ contained oneline
 
 syn match desEntry "\<\w*_entry\>" contains=desBranch
 syn match desEntry "\<serial_\w*\>"
-syn match desEntry "\<layout_\w*\>"
+syn match desEntry "\<\(no\)\=layout_\w*\>"
 syn match desEntry "\<l\=uniq_\w*\>"
 syn match desEntry "\<chance_\w*\>"
+syn match desEntry "\<fallback_\w*\>"
 syn match desEntry "\<altar_\w*\>"           contains=desGod
 syn match desEntry "\<uniq_altar_\w*\>"      contains=desGod
 syn match desEntry "\<temple_overflow_\w*\>" contains=desGod
