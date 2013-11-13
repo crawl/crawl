@@ -357,7 +357,7 @@ void add_element_colour(element_colour_calc *colour)
     else
     {
         ASSERT(!element_colours[colour->type]);
-        ASSERT(element_colours_str.find(colour->name) == element_colours_str.end());
+        ASSERT(!element_colours_str.count(colour->name));
     }
     element_colours[colour->type] = colour;
     element_colours_str[colour->name] = colour;

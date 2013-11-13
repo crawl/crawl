@@ -936,7 +936,7 @@ static bool _vault_chance_new(const map_def &map,
         // first such vault for the chance roll. Note that
         // at this point we ignore chance_priority.
         const string tag = vault_chance_tag(map);
-        if (chance_tags.find(tag) == chance_tags.end())
+        if (!chance_tags.count(tag))
         {
             if (!tag.empty())
                 chance_tags.insert(tag);
@@ -1394,7 +1394,7 @@ static void _write_map_cache(const string &filename, size_t vs, size_t ve,
 static void _parse_maps(const string &s)
 {
     string cache_name = get_cache_name(s);
-    if (map_files_read.find(cache_name) != map_files_read.end())
+    if (map_files_read.count(cache_name))
         return;
 
     map_files_read.insert(cache_name);

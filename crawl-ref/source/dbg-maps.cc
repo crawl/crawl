@@ -259,7 +259,7 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
 
 static void _check_mapless(const level_id &lid, vector<level_id> &mapless)
 {
-    if (mapgen_level_mapsused.find(lid) == mapgen_level_mapsused.end())
+    if (!mapgen_level_mapsused.count(lid))
         mapless.push_back(lid);
 }
 
@@ -314,7 +314,7 @@ static void _write_mapgen_stats()
     for (int i = 0, size = map_count(); i < size; ++i)
     {
         const map_def *map = map_by_index(i);
-        if (mapgen_try_count.find(map->name) == mapgen_try_count.end()
+        if (!mapgen_try_count.count(map->name)
             && !map->has_tag("dummy"))
         {
             unused_maps.push_back(map->name);

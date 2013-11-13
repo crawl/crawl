@@ -3216,7 +3216,7 @@ public:
         }
         if (!feat_compatible(feat_wanted, grd(dc)))
         {
-            if (passable.find(grd(dc)) != passable.end())
+            if (passable.count(grd(dc)))
                 good_square(dc);
             return false;
         }

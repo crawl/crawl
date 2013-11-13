@@ -122,7 +122,7 @@ bool bolt::is_blockable() const
 void bolt::emit_message(msg_channel_type chan, const char* m)
 {
     const string message = m;
-    if (message_cache.find(message) == message_cache.end())
+    if (!message_cache.count(message))
         mpr(m, chan);
 
     message_cache.insert(message);

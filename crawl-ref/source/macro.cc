@@ -953,7 +953,7 @@ void macro_add_query(void)
 
     msgwin_reply(vtostr(key));
 
-    if (mapref.find(key) != mapref.end() && !mapref[key].empty())
+    if (mapref.count(key) && !mapref[key].empty())
     {
         string action = vtostr(mapref[key]);
         action = replace_all(action, "<", "<<");
@@ -1173,7 +1173,7 @@ void init_keybindings()
         command_name &data = _command_name_list[i];
 
         ASSERT(VALID_BIND_COMMAND(data.cmd));
-        ASSERT(_names_to_cmds.find(data.name) == _names_to_cmds.end());
+        ASSERT(!_names_to_cmds.count(data.name));
         ASSERT(_cmds_to_names.find(data.cmd)  == _cmds_to_names.end());
 
         _names_to_cmds[data.name] = data.cmd;
@@ -1197,7 +1197,7 @@ void init_keybindings()
 
         // Only one command per key, but it's okay to have several
         // keys map to the same command.
-        ASSERT(key_map.find(data.key) == key_map.end());
+        ASSERT(!key_map.count(data.key));
 
         key_map[data.key] = data.cmd;
         cmd_map[data.cmd] = data.key;

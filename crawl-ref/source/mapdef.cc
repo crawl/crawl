@@ -111,7 +111,7 @@ void map_register_flag(const string &flag)
 
 static bool _map_tag_is_selectable(const string &tag)
 {
-    return Map_Flag_Names.find(tag) == Map_Flag_Names.end()
+    return !Map_Flag_Names.count(tag)
            && tag.find("luniq_") != 0
            && tag.find("uniq_") != 0
            && tag.find("ruin_") != 0
@@ -2272,7 +2272,7 @@ void map_def::reinit()
 
 bool map_def::map_already_used() const
 {
-    return you.uniq_map_names.find(name) != you.uniq_map_names.end()
+    return you.uniq_map_names.count(name)
            || env.level_uniq_maps.find(name) !=
                env.level_uniq_maps.end()
            || env.new_used_subvault_names.find(name) !=

@@ -646,7 +646,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     // If we already gave an item for this type, just give the player
     // a consumable.
     if ((skill == SK_DODGING || skill == SK_STEALTH)
-        && gift_skills.find(SK_ARMOUR) != gift_skills.end())
+        && gift_skills.count(SK_ARMOUR))
     {
         skill = SK_NONE;
     }
@@ -685,7 +685,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
 
     // Don't give a gift from the same skill twice; just default to
     // a curing potion/teleportation scroll.
-    if (gift_skills.find(skill) != gift_skills.end())
+    if (gift_skills.count(skill))
         skill = SK_NONE;
 
     switch ((int)skill)

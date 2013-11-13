@@ -455,7 +455,7 @@ void dgn_erase_unused_vault_placements()
     const int nvaults = env.level_vaults.size();
     for (int i = nvaults - 1; i >= 0; --i)
     {
-        if (referenced_vault_indexes.find(i) == referenced_vault_indexes.end())
+        if (!referenced_vault_indexes.count(i))
         {
             vault_placement *vp = env.level_vaults[i];
             // Unreferenced vault, blow it away
@@ -2315,7 +2315,7 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             if (!dst.empty())
             {
                 const string tag = "uniq_" + lowercase_string(dst);
-                if (you.uniq_map_tags.find(tag) != you.uniq_map_tags.end())
+                if (you.uniq_map_tags.count(tag))
                     you.uniq_map_tags.erase(tag);
             }
         }
@@ -5820,7 +5820,7 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
             if (grd(*ai) == DNGN_FLOOR)
                 success = true; // Through, but let's remove the others, too.
 
-            if (!overwriteable(grd(*ai)) || flatten.find(*ai) != flatten.end())
+            if (!overwriteable(grd(*ai)) || flatten.count(*ai))
                 continue;
 
             flatten.insert(*ai);
@@ -5828,7 +5828,7 @@ static set<coord_def> _dgn_spotty_connect_path(const coord_def& from,
             {
                 if (!map_masked(*bi, MMT_VAULT)
                     && _spotty_seed_ok(*bi)
-                    && flatten.find(*bi) == flatten.end())
+                    && !flatten.count(*bi))
                 {
                     border.insert(*bi);
                 }
@@ -6932,7 +6932,7 @@ string dump_vault_maps()
     {
         level_id    &lid = levels[i];
 
-        if (you.vault_list.find(lid) == you.vault_list.end())
+        if (!you.vault_list.count(lid))
             continue;
 
         out += lid.describe() + ": " + string(max(8 - int(lid.describe().length()), 0), ' ');

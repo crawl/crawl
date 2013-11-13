@@ -427,7 +427,7 @@ public:
     bool know_stair(const coord_def &c) const;
     bool know_level(const level_id &lev) const
     {
-        return levels.find(lev) != levels.end();
+        return levels.count(lev);
     }
     vector<level_id> known_levels() const;
 

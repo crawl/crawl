@@ -2436,9 +2436,9 @@ struct tentacle_attack_constraints
                 // If we can still feasibly retract (haven't left connect range)
                 if (!temp.departure)
                 {
-                    if (probe->second.find(connect_level) != probe->second.end())
+                    if (probe->second.count(connect_level))
                     {
-                        while (probe->second.find(connect_level + 1) != probe->second.end())
+                        while (probe->second.count(connect_level + 1))
                             connect_level++;
                     }
 
@@ -2506,7 +2506,7 @@ struct tentacle_connect_constraints
                         = connection_constraints->find(temp.pos);
 
             if (probe == connection_constraints->end()
-                || probe->second.find(node.connect_level) == probe->second.end())
+                || !probe->second.count(node.connect_level))
             {
                 continue;
             }
@@ -2536,7 +2536,7 @@ struct tentacle_connect_constraints
                     test_level++;
             }
             */
-            while (probe->second.find(test_level + 1) != probe->second.end())
+            while (probe->second.count(test_level + 1))
                 test_level++;
 
             int max = probe->second.empty() ? INT_MAX : *(probe->second.rbegin());
@@ -2616,7 +2616,7 @@ static bool _tentacle_pathfind(monster* tentacle,
         = attack_constraints.connection_constraints->find(temp.pos);
     ASSERT(probe != attack_constraints.connection_constraints->end());
     temp.connect_level = 0;
-    while (probe->second.find(temp.connect_level + 1) != probe->second.end())
+    while (probe->second.count(temp.connect_level + 1))
         temp.connect_level++;
 
     temp.departure = false;
@@ -2678,7 +2678,7 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     // This condition should never miss
     if (it != connect_costs.connection_constraints->end())
     {
-        while (it->second.find(start_level + 1) != it->second.end())
+        while (it->second.count(start_level + 1))
             start_level++;
     }
 
@@ -2983,7 +2983,7 @@ void move_solo_tentacle(monster* tentacle)
             int escalated = 0;
             map<coord_def, set<int> >::iterator probe = connection_data.find(test);
 
-            while (probe->second.find(escalated + 1) != probe->second.end())
+            while (probe->second.count(escalated + 1))
                 escalated++;
 
 

@@ -569,7 +569,7 @@ bool targetter_cloud::set_aim(coord_def a)
         {
             coord_def c = queue[d1][i];
             for (adjacent_iterator ai(c); ai; ++ai)
-                if (_cloudable(*ai) && seen.find(*ai) == seen.end())
+                if (_cloudable(*ai) && !seen.count(*ai))
                 {
                     unsigned int d2 = d1 + ((*ai - c).abs() == 1 ? 5 : 7);
                     if (d2 >= queue.size())
@@ -782,7 +782,7 @@ bool targetter_thunderbolt::set_aim(coord_def a)
             if (left_of(a1, r) && left_of(r, a2))
             {
                 (p = r) += origin;
-                if (zapped.find(p) == zapped.end())
+                if (!zapped.count(p))
                     arc_length[r.range()]++;
                 if (zapped[p] <= 0 && cell_see_cell(origin, p, LOS_NO_TRANS))
                     zapped[p] = AFF_MAYBE;

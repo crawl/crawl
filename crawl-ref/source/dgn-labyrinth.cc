@@ -244,7 +244,7 @@ static void _place_extra_lab_minivaults()
     while (true)
     {
         const map_def *vault = random_map_for_tag("lab", false);
-        if (!vault || vaults_used.find(vault) != vaults_used.end())
+        if (!vault || vaults_used.count(vault))
             break;
 
         vaults_used.insert(vault);
