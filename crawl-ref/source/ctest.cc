@@ -110,7 +110,7 @@ static bool _is_test_selected(const string &testname)
          i < size; ++i)
     {
         const string &phrase(crawl_state.tests_selected[i]);
-        if (testname.find(phrase) != string::npos)
+        if (testname == phrase || testname == phrase + ".lua")
             return true;
     }
     return false;
