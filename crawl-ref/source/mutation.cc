@@ -1366,11 +1366,13 @@ bool physiology_mutation_conflict(mutation_type mutat)
     {
         // Formicids have stasis and so prevent mutations that would do nothing.
         // Formicids are weak to poison so prevent poison resistance mutation.
+        // Antennae provides SInv, so acute vision is pointless.
         if (mutat == MUT_BERSERK
             || mutat == MUT_BLINK
             || mutat == MUT_TELEPORT
             || mutat == MUT_TELEPORT_CONTROL
-            || mutat == MUT_POISON_RESISTANCE)
+            || mutat == MUT_POISON_RESISTANCE
+            || mutat == MUT_ACUTE_VISION)
         {
             return true;
         }
