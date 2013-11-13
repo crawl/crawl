@@ -1275,7 +1275,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             "bool tile_%s_equal(tileidx_t tile, tileidx_t idx)\n"
             "{\n"
             "    ASSERT(tile >= %s && tile < %s);\n"
-            "    return (idx >= tile && idx < tile + tile_%s_count(tile));\n"
+            "    return idx >= tile && idx < tile + tile_%s_count(tile);\n"
             "}\n\n",
             lcname.c_str(), m_start_value.c_str(), max.c_str(), lcname.c_str());
 
