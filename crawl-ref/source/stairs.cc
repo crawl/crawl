@@ -502,8 +502,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     {
         if (feat == DNGN_ESCAPE_HATCH_UP)
             feat = DNGN_EXIT_PORTAL_VAULT; // silly Labyrinths
-        else if (parent_branch(you.where_are_you) < NUM_BRANCHES
-                 || branches[you.where_are_you].parent_branch < NUM_BRANCHES)
+        else if (parent_branch(you.where_are_you) < NUM_BRANCHES)
         {
             level_id lev = brentry[you.where_are_you];
             if (!lev.is_valid())
