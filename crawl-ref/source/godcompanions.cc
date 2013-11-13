@@ -170,7 +170,7 @@ bool recall_offlevel_ally(mid_t mid)
 
 bool companion_is_elsewhere(mid_t mid, bool must_exist)
 {
-    if (companion_list.find(mid) != companion_list.end())
+    if (companion_list.count(mid))
     {
         return (companion_list[mid].level != level_id::current()
                 || (player_in_branch(BRANCH_PANDEMONIUM)

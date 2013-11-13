@@ -686,7 +686,7 @@ vector<player_save_info> find_all_saved_characters()
             static_cast<game_type>(i));
 
         const string savedir = _get_savefile_directory();
-        if (dirs.find(savedir) != dirs.end())
+        if (dirs.count(savedir))
             continue;
 
         dirs.insert(savedir);

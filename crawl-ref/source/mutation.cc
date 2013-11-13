@@ -2279,7 +2279,7 @@ try_again:
             do
                 next_facet = &RANDOM_ELEMENT(_demon_facets);
             while (!_works_at_tier(*next_facet, tier)
-                   || facets_used.find(next_facet) != facets_used.end()
+                   || facets_used.count(next_facet)
                    || !_slot_is_unique(next_facet->muts, facets_used));
 
             facets_used.insert(next_facet);

@@ -1479,7 +1479,7 @@ void init_feat_desc_cache()
         string               desc = feature_description(feat);
 
         lowercase(desc);
-        if (feat_desc_cache.find(desc) == feat_desc_cache.end())
+        if (!feat_desc_cache.count(desc))
             feat_desc_cache[desc] = feat;
     }
 }

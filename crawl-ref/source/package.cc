@@ -563,7 +563,7 @@ void package::read_directory(plen_t start, uint8_t version)
 
 bool package::has_chunk(const string name)
 {
-    return !name.empty() && directory.find(name) != directory.end();
+    return !name.empty() && directory.count(name);
 }
 
 vector<string> package::list_chunks()
@@ -645,7 +645,7 @@ plen_t package::get_slack()
 plen_t package::get_chunk_fragmentation(const string name)
 {
     load_traces();
-    ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
+    ASSERT(directory.count(name)); // not has_chunk(), "" is valid
     plen_t frags = 0;
     plen_t at = directory[name];
     while (at)
@@ -661,7 +661,7 @@ plen_t package::get_chunk_fragmentation(const string name)
 plen_t package::get_chunk_compressed_length(const string name)
 {
     load_traces();
-    ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
+    ASSERT(directory.count(name)); // not has_chunk(), "" is valid
     plen_t len = 0;
     plen_t at = directory[name];
     while (at)

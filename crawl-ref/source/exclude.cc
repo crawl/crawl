@@ -282,12 +282,12 @@ void exclude_set::recompute_excluded_points(bool recompute_los)
 
 bool exclude_set::is_excluded(const coord_def &p) const
 {
-    return (exclude_points.find(p) != exclude_points.end());
+    return (exclude_points.count(p));
 }
 
 bool exclude_set::is_exclude_root(const coord_def &p) const
 {
-    return (exclude_roots.find(p) != exclude_roots.end());
+    return (exclude_roots.count(p));
 }
 
 travel_exclude* exclude_set::get_exclude_root(const coord_def &p)

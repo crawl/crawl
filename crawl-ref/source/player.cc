@@ -6360,7 +6360,7 @@ int player::skill(skill_type sk, int scale, bool real) const
         level = max(level - min(4 * scale, level / 2), 0);
     else if (religion == GOD_ASHENZARI && piety_rank() > 2)
     {
-        if (skill_boost.find(sk) != skill_boost.end()
+        if (skill_boost.count(sk)
             && skill_boost.find(sk)->second)
         {
             level = ash_skill_boost(sk, scale);
@@ -8119,7 +8119,7 @@ static string _constriction_description()
 void count_action(caction_type type, int subtype)
 {
     pair<caction_type, int> pair(type, subtype);
-    if (you.action_count.find(pair) == you.action_count.end())
+    if (!you.action_count.count(pair))
         you.action_count[pair].init(0);
     you.action_count[pair][you.experience_level - 1]++;
 }

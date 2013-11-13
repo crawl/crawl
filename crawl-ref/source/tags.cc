@@ -4400,13 +4400,13 @@ static void _debug_count_tiles()
         for (int j = 0; j < GYM; j++)
         {
             t = env.tile_bk_bg[i][j];
-            if (found.find(t) == found.end())
+            if (!found.count(t))
                 cnt++, found[t] = true;
             t = env.tile_bk_fg[i][j];
-            if (found.find(t) == found.end())
+            if (!found.count(t))
                 cnt++, found[t] = true;
             t = env.tile_bk_cloud[i][j];
-            if (found.find(t) == found.end())
+            if (!found.count(t))
                 cnt++, found[t] = true;
         }
     dprf("Unique tiles found: %d", cnt);

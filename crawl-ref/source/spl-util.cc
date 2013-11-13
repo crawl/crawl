@@ -569,7 +569,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
     for (adjacent_iterator ai(where, true); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
-        if (mon && affected.find(mon) == affected.end())
+        if (mon && !affected.count(mon))
         {
             rv += mf(mon, power);
             affected.insert(mon);

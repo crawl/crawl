@@ -3678,7 +3678,7 @@ void init_item_name_cache()
                     continue;
                 }
 
-                if (item_names_cache.find(name) == item_names_cache.end())
+                if (!item_names_cache.count(name))
                 {
                     item_kind kind = {base_type, (uint8_t)sub_type,
                                       (int8_t)item.plus, 0};

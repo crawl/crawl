@@ -3387,7 +3387,7 @@ void LevelInfo::sync_all_branch_stairs()
     {
         const stair_info &si = stairs[i];
         if (si.destination.id.branch != id.branch && si.destination.is_valid()
-            && synced.find(si.grid) == synced.end())
+            && !synced.count(si.grid))
         {
             synced.insert(si.grid);
             sync_branch_stairs(&si);

@@ -348,7 +348,7 @@ static void _check_abil_skills()
             you.stop_train.erase(it);
 
         if (abilities[i] == ABIL_TSO_DIVINE_SHIELD
-            && you.stop_train.find(SK_SHIELDS) != you.stop_train.end())
+            && you.stop_train.count(SK_SHIELDS))
         {
             you.stop_train.erase(SK_SHIELDS);
         }

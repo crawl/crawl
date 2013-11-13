@@ -273,7 +273,7 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
 unsigned int FTFontWrapper::map_unicode(ucs_t uchar)
 {
     unsigned int c;  // index in m_glyphs
-    if (m_glyphmap.find(uchar) == m_glyphmap.end())
+    if (!m_glyphmap.count(uchar))
     {
         // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
         if (m_glyphs_top == MAX_GLYPHS)

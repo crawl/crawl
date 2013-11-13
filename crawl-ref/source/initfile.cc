@@ -1870,7 +1870,7 @@ void game_options::add_alias(const string &key, const string &val)
     {
         string name = key.substr(1);
         // Don't alter if it's a constant.
-        if (constants.find(name) != constants.end())
+        if (constants.count(name))
             return;
         variables[name] = val;
     }
@@ -3566,9 +3566,9 @@ void game_options::read_option_line(const string &str, bool runscript)
         _bindkey(field);
     else if (key == "constant")
     {
-        if (variables.find(field) == variables.end())
+        if (!variables.count(field))
             report_error("No variable named '%s' to make constant", field.c_str());
-        else if (constants.find(field) != constants.end())
+        else if (constants.count(field))
             report_error("'%s' is already a constant", field.c_str());
         else
             constants.insert(field);
@@ -3674,7 +3674,7 @@ string game_options::resolve_include(const string &file, const char *type)
 
 bool game_options::was_included(const string &file) const
 {
-    return (included.find(file) != included.end());
+    return (included.count(file));
 }
 
 void game_options::include(const string &rawfilename, bool resolve,

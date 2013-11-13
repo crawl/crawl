@@ -2789,7 +2789,7 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
 
             idx = temp.first.x + temp.first.y * X_WIDTH;
 
-            if (visited_indices.find(idx) == visited_indices.end()
+            if (!visited_indices.count(idx)
                 && in_bounds(temp.first)
                 && !cell_is_solid(temp.first))
             {
@@ -2996,7 +2996,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
 
             int index = temp.x + temp.y * X_WIDTH;
 
-            if (visited_indices.find(index) == visited_indices.end()
+            if (!visited_indices.count(index)
                 && in_bounds(temp)
                 && mons_class_can_pass(MONS_TOADSTOOL, grd(temp)))
             {

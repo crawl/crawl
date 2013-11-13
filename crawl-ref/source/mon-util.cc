@@ -203,7 +203,7 @@ void init_mon_name_cache()
         // insert, depending on which should take precedence.  Mostly we
         // don't care, except looking up "rakshasa" and getting _FAKE
         // breaks ?/M rakshasa.
-        if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
+        if (Mon_Name_Cache.count(name))
         {
             if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE
                 || mon != MONS_SERPENT_OF_HELL

@@ -4080,7 +4080,7 @@ object_class_type get_item_mimic_type()
     mpr("\nWhat kind of item mimic? ", MSGCH_PROMPT);
     const int keyin = toalower(get_ch());
 
-    if (choices.find(keyin) == choices.end())
+    if (!choices.count(keyin))
         return OBJ_UNASSIGNED;
     else if (choices[keyin] == OBJ_RANDOM)
         return get_random_item_mimic_type();

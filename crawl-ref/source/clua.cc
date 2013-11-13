@@ -260,7 +260,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
 int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
                    bool force)
 {
-    if (!force && sourced_files.find(filename) != sourced_files.end())
+    if (!force && sourced_files.count(filename))
         return 0;
 
     sourced_files.insert(filename);

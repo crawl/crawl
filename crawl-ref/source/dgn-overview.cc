@@ -267,7 +267,7 @@ static string _get_seen_branches(bool display)
         const branch_type branch = branches[i].id;
 
         if (branch == root_branch
-            || stair_level.find(branch) != stair_level.end())
+            || stair_level.count(branch))
         {
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
@@ -319,7 +319,7 @@ static string _get_unseen_branches()
         if (!is_random_subbranch(branch))
             continue;
 
-        if (stair_level.find(branch) != stair_level.end())
+        if (stair_level.count(branch))
         {
             if (parent_branch((branch_type)i) == BRANCH_LAIR)
                 seen_lair_branches++;
@@ -345,7 +345,7 @@ static string _get_unseen_branches()
         if (branch_is_unfinished(branch))
             continue;
 
-        if (stair_level.find(branch) == stair_level.end())
+        if (!stair_level.count(branch))
         {
             const branch_type parent = parent_branch((branch_type)i);
             // Root branches.
@@ -589,7 +589,7 @@ static string _get_notes()
 template <typename Z, typename Key>
 static inline bool _find_erase(Z &map, const Key &k)
 {
-    if (map.find(k) != map.end())
+    if (map.count(k))
     {
         map.erase(k);
         return true;
@@ -623,7 +623,7 @@ static bool _unnotice_stair(const level_pos &pos)
         if (branches[i].entry_stairs == feat)
         {
             const branch_type br = static_cast<branch_type>(i);
-            if (stair_level.find(br) != stair_level.end())
+            if (stair_level.count(br))
             {
                 stair_level[br].erase(level_id::current());
                 if (stair_level[br].empty())
