@@ -38,7 +38,7 @@ bool is_hell_subbranch(branch_type branch)
 
 bool is_random_subbranch(branch_type branch)
 {
-    return (branches[branch].parent_branch == BRANCH_LAIR
+    return (parent_branch(branch) == BRANCH_LAIR
             && branch != BRANCH_SLIME)
            || branch == BRANCH_CRYPT
            || branch == BRANCH_FOREST;
@@ -87,5 +87,6 @@ branch_type parent_branch(branch_type branch)
 {
     if (brentry[branch].is_valid())
         return brentry[branch].branch;
-    return NUM_BRANCHES;
+    // If it's not in the game, use the default parent.
+    return branches[branch].parent_branch;
 }
