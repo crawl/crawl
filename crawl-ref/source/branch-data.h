@@ -286,7 +286,7 @@ const Branch branches[NUM_BRANCHES] =
       false, LIGHTGREY, BROWN, // set per-map
       '8', false, 0 },
 
-    { BRANCH_DEPTHS, BRANCH_DUNGEON, 16, 16, 6, 16,
+    { BRANCH_DEPTHS, BRANCH_DUNGEON, 16, 16, 6, 22,
       0, 0,
       DNGN_ENTER_DEPTHS, DNGN_RETURN_FROM_DEPTHS,
       "Depths", "the Depths", "Depths",
