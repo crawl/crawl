@@ -8,7 +8,7 @@ its origin, this deep cavern is filled with riches unheard of as well as with
 ample dangers to any intruder. Few have escaped alive, and even fewer have kept
 some sliver of sanity sufficient to tell the tale.
 
-The dungeon is 15 levels deep, but, honestly, this is only the beginning.
+The dungeon is 16 levels deep, but, honestly, this is only the beginning.
 %%%%
 Temple
 
