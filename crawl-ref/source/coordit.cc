@@ -44,7 +44,7 @@ rectangle_iterator::rectangle_iterator(int x_border_dist, int y_border_dist)
 
 rectangle_iterator::operator bool() const
 {
-    return (current.y <= bottomright.y);
+    return current.y <= bottomright.y;
 }
 
 coord_def rectangle_iterator::operator *() const

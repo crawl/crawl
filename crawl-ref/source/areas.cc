@@ -70,7 +70,7 @@ static void _set_agrid_flag(const coord_def& p, areaprop_flag f)
 
 static bool _check_agrid_flag(const coord_def& p, areaprop_flag f)
 {
-    return (_agrid(p) & f);
+    return _agrid(p) & f;
 }
 
 void invalidate_agrid(bool recheck_new)

@@ -827,7 +827,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
     // Return true even if there are only spells we can't memorise _yet_.
     if (just_check)
-        return (num_low_levels > 0 || num_low_xl > 0);
+        return num_low_levels > 0 || num_low_xl > 0;
 
     unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
 
@@ -902,12 +902,12 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     const int fail_rate_a = failure_rate_to_int(spell_fail(a));
     const int fail_rate_b = failure_rate_to_int(spell_fail(b));
     if (fail_rate_a != fail_rate_b)
-        return (fail_rate_a < fail_rate_b);
+        return fail_rate_a < fail_rate_b;
 
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
-    return (strcasecmp(spell_title(a), spell_title(b)) < 0);
+    return strcasecmp(spell_title(a), spell_title(b)) < 0;
 }
 
 vector<spell_type> get_mem_spell_list(vector<int> &books)
@@ -1435,7 +1435,7 @@ static bool _compare_spells(spell_type a, spell_type b)
     int level_b = spell_difficulty(b);
 
     if (level_a != level_b)
-        return (level_a < level_b);
+        return level_a < level_b;
 
     unsigned int schools_a = get_spell_disciplines(a);
     unsigned int schools_b = get_spell_disciplines(b);
@@ -1456,10 +1456,10 @@ static bool _compare_spells(spell_type a, spell_type b)
         }
         ASSERT(a_type != NULL);
         ASSERT(b_type != NULL);
-        return (strcmp(a_type, b_type) < 0);
+        return strcmp(a_type, b_type) < 0;
     }
 
-    return (strcmp(spell_title(a), spell_title(b)) < 0);
+    return strcmp(spell_title(a), spell_title(b)) < 0;
 }
 
 bool is_memorised(spell_type spell)

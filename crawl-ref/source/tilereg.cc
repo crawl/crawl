@@ -106,7 +106,7 @@ Region::~Region()
 
 bool Region::inside(int x, int y)
 {
-    return (x >= sx && y >= sy && x <= ex && y <= ey);
+    return x >= sx && y >= sy && x <= ex && y <= ey;
 }
 
 bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)

@@ -78,7 +78,7 @@ int random_var::roll() const
 
 int random_var::max() const
 {
-    return (end - 1);
+    return end - 1;
 }
 
 int random_var::min() const

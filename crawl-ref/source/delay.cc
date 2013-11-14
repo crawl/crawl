@@ -93,9 +93,9 @@ static bool _is_parent_delay(delay_type delay)
     // Lua macros can in theory perform any of the other delays,
     // including travel; in practise travel still assumes there can be
     // no parent delay.
-    return (delay_is_run(delay)
-            || delay == DELAY_MACRO
-            || delay == DELAY_MULTIDROP);
+    return delay_is_run(delay)
+           || delay == DELAY_MACRO
+           || delay == DELAY_MULTIDROP;
 }
 
 static int _push_delay(const delay_queue_item &delay)
@@ -111,7 +111,7 @@ static int _push_delay(const delay_queue_item &delay)
         }
     }
     you.delay_queue.push_back(delay);
-    return (you.delay_queue.size() - 1);
+    return you.delay_queue.size() - 1;
 }
 
 static void _pop_delay()
@@ -381,9 +381,9 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
 
 static bool _is_butcher_delay(int delay)
 {
-    return (delay == DELAY_BUTCHER
-            || delay == DELAY_BOTTLE_BLOOD
-            || delay == DELAY_FEED_VAMPIRE);
+    return delay == DELAY_BUTCHER
+           || delay == DELAY_BOTTLE_BLOOD
+           || delay == DELAY_FEED_VAMPIRE;
 }
 
 void stop_butcher_delay()
@@ -521,7 +521,7 @@ delay_type current_delay_action(void)
 
 bool delay_is_run(delay_type delay)
 {
-    return (delay == DELAY_RUN || delay == DELAY_REST || delay == DELAY_TRAVEL);
+    return delay == DELAY_RUN || delay == DELAY_REST || delay == DELAY_TRAVEL;
 }
 
 bool is_being_drained(const item_def &item)
@@ -572,7 +572,7 @@ bool is_vampire_feeding()
         return false;
 
     const delay_queue_item &delay = you.delay_queue.front();
-    return (delay.type == DELAY_FEED_VAMPIRE);
+    return delay.type == DELAY_FEED_VAMPIRE;
 }
 
 bool is_butchering()
@@ -581,7 +581,7 @@ bool is_butchering()
         return false;
 
     const delay_queue_item &delay = you.delay_queue.front();
-    return (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD);
+    return delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD;
 }
 
 bool player_stair_delay()
@@ -590,8 +590,8 @@ bool player_stair_delay()
         return false;
 
     const delay_queue_item &delay = you.delay_queue.front();
-    return (delay.type == DELAY_ASCENDING_STAIRS
-            || delay.type == DELAY_DESCENDING_STAIRS);
+    return delay.type == DELAY_ASCENDING_STAIRS
+           || delay.type == DELAY_DESCENDING_STAIRS;
 }
 
 bool already_learning_spell(int spell)
@@ -1572,8 +1572,8 @@ static bool _should_stop_activity(const delay_queue_item &item,
         return false;
     }
 
-    return (ai == AI_FORCE_INTERRUPT
-            || Options.activity_interrupts[item.type][ai]);
+    return ai == AI_FORCE_INTERRUPT
+           || Options.activity_interrupts[item.type][ai];
 }
 
 static inline bool _monster_warning(activity_interrupt_type ai,

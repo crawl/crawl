@@ -745,7 +745,7 @@ static bool _level_up_check(skill_type sk, bool simu)
 
 bool is_magic_skill(skill_type sk)
 {
-    return (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC);
+    return sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC;
 }
 
 void train_skills(bool simu)
@@ -905,7 +905,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
 
 bool skill_trained(int i)
 {
-    return (you.can_train[i] && you.train[i]);
+    return you.can_train[i] && you.train[i];
 }
 
 void train_skill(skill_type skill, int exp)

@@ -429,7 +429,7 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
 
     bool friendly = target->as_monster()->wont_attack();
 
-    return (friendly == helpful);
+    return friendly == helpful;
 }
 
 static bool _is_appropriate_evokable(const item_def& item,
@@ -647,8 +647,8 @@ static bool _have_appropriate_spell(const actor* target)
 
 static bool _can_fire_item()
 {
-    return (you.species != SP_FELID
-            && you.m_quiver->get_fire_item() != -1);
+    return you.species != SP_FELID
+           && you.m_quiver->get_fire_item() != -1;
 }
 
 static bool _handle_distant_monster(monster* mon, unsigned char mod)
@@ -972,7 +972,7 @@ bool DungeonRegion::on_screen(const coord_def &gc) const
     int x = gc.x - m_cx_to_gx;
     int y = gc.y - m_cy_to_gy;
 
-    return (x >= 0 && x < mx && y >= 0 && y < my);
+    return x >= 0 && x < mx && y >= 0 && y < my;
 }
 
 void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)

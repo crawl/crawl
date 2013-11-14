@@ -615,15 +615,15 @@ void remove_item_stationary(item_def &item)
 
 bool item_is_stationary(const item_def &item)
 {
-    return (item.base_type == OBJ_MISSILES
-            && item.sub_type == MI_THROWING_NET
-            && item.plus2);
+    return item.base_type == OBJ_MISSILES
+           && item.sub_type == MI_THROWING_NET
+           && item.plus2;
 }
 
 static bool _in_shop(const item_def &item)
 {
     // yay the shop hack...
-    return (item.pos.x == 0 && item.pos.y >= 5);
+    return item.pos.x == 0 && item.pos.y >= 5;
 }
 
 static bool _is_affordable(const item_def &item)
@@ -787,12 +787,12 @@ bool fully_identified(const item_def& item)
 //
 iflags_t get_equip_race(const item_def &item)
 {
-    return (item.flags & ISFLAG_RACIAL_MASK);
+    return item.flags & ISFLAG_RACIAL_MASK;
 }
 
 iflags_t get_equip_desc(const item_def &item)
 {
-    return (item.flags & ISFLAG_COSMETIC_MASK);
+    return item.flags & ISFLAG_COSMETIC_MASK;
 }
 
 void set_equip_race(item_def &item, iflags_t flags)
@@ -935,12 +935,12 @@ short get_helmet_desc(const item_def &item)
 
 bool is_helmet(const item_def& item)
 {
-    return (item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET);
+    return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
 }
 
 bool is_hard_helmet(const item_def &item)
 {
-    return (item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET);
+    return item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET;
 }
 
 void set_helmet_random_desc(item_def &item)
@@ -1147,12 +1147,12 @@ bool jewellery_is_amulet(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    return (item.sub_type >= AMU_RAGE);
+    return item.sub_type >= AMU_RAGE;
 }
 
 bool jewellery_is_amulet(int sub_type)
 {
-    return (sub_type >= AMU_RAGE);
+    return sub_type >= AMU_RAGE;
 }
 
 // Returns number of sizes off (0 if fitting).
@@ -1164,9 +1164,9 @@ int fit_armour_size(const item_def &item, size_type size)
     const size_type max = Armour_prop[ Armour_index[item.sub_type] ].fit_max;
 
     if (size < min)
-        return (min - size);    // -'ve means levels too small
+        return min - size;    // -'ve means levels too small
     else if (size > max)
-        return (max - size);    // +'ve means levels too large
+        return max - size;    // +'ve means levels too large
 
     return 0;
 }
@@ -1176,7 +1176,7 @@ bool check_armour_size(const item_def &item, size_type size)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    return (fit_armour_size(item, size) == 0);
+    return fit_armour_size(item, size) == 0;
 }
 
 // Returns whether a wand or rod can be charged.
@@ -1208,9 +1208,9 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
 
         if (item_ident(it, ISFLAG_KNOW_PLUSES))
         {
-            return (it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
-                    || it.plus < it.plus2
-                    || it.special < MAX_WPN_ENCHANT);
+            return it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                   || it.plus < it.plus2
+                   || it.special < MAX_WPN_ENCHANT;
         }
         return true;
     }
@@ -1424,7 +1424,7 @@ int get_damage_type(const item_def &item)
 
 static bool _does_damage_type(const item_def &item, int dam_type)
 {
-    return (get_damage_type(item) & dam_type);
+    return get_damage_type(item) & dam_type;
 }
 
 int single_damage_type(const item_def &item)
@@ -1510,8 +1510,8 @@ hands_reqd_type hands_reqd(const actor* ac, object_class_type base_type, int sub
 
 bool is_giant_club_type(int wpn_type)
 {
-    return (wpn_type == WPN_GIANT_CLUB
-            || wpn_type == WPN_GIANT_SPIKED_CLUB);
+    return wpn_type == WPN_GIANT_CLUB
+           || wpn_type == WPN_GIANT_SPIKED_CLUB;
 }
 
 bool is_demonic(const item_def &item)
@@ -1877,7 +1877,7 @@ bool check_weapon_wieldable_size(const item_def &item, size_type size)
     else if (size > SIZE_LARGE && fit < 0)
         fit++;
 
-    return (fit == 0);
+    return fit == 0;
 }
 
 //
@@ -1893,13 +1893,13 @@ missile_type fires_ammo_type(const item_def &item)
 
 bool is_range_weapon(const item_def &item)
 {
-    return (fires_ammo_type(item) != MI_NONE);
+    return fires_ammo_type(item) != MI_NONE;
 }
 
 const char *ammo_name(missile_type ammo)
 {
-    return (ammo < 0 || ammo >= NUM_MISSILES ? "eggplant"
-            : Missile_prop[ Missile_index[ammo] ].name);
+    return ammo < 0 || ammo >= NUM_MISSILES ? "eggplant"
+           : Missile_prop[ Missile_index[ammo] ].name;
 }
 
 const char *ammo_name(const item_def &bow)
@@ -1912,11 +1912,11 @@ const char *ammo_name(const item_def &bow)
 bool has_launcher(const item_def &ammo)
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
-    return (ammo.sub_type != MI_DART
-            && ammo.sub_type != MI_LARGE_ROCK
-            && ammo.sub_type != MI_JAVELIN
-            && ammo.sub_type != MI_TOMAHAWK
-            && ammo.sub_type != MI_THROWING_NET);
+    return ammo.sub_type != MI_DART
+           && ammo.sub_type != MI_LARGE_ROCK
+           && ammo.sub_type != MI_JAVELIN
+           && ammo.sub_type != MI_TOMAHAWK
+           && ammo.sub_type != MI_THROWING_NET;
 }
 
 // Returns true if item can be reasonably thrown without a launcher.
@@ -1983,27 +1983,27 @@ bool item_is_rune(const item_def &item, rune_type which_rune)
 
 bool item_is_unique_rune(const item_def &item)
 {
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT
-            && item.plus != RUNE_DEMONIC
-            && item.plus != RUNE_ABYSSAL);
+    return item.base_type == OBJ_MISCELLANY
+           && item.sub_type == MISC_RUNE_OF_ZOT
+           && item.plus != RUNE_DEMONIC
+           && item.plus != RUNE_ABYSSAL;
 }
 
 bool item_is_orb(const item_def &item)
 {
-    return (item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT);
+    return item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT;
 }
 
 bool item_is_horn_of_geryon(const item_def &item)
 {
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_HORN_OF_GERYON);
+    return item.base_type == OBJ_MISCELLANY
+           && item.sub_type == MISC_HORN_OF_GERYON;
 }
 
 bool item_is_spellbook(const item_def &item)
 {
-    return (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
-            && item.sub_type != BOOK_DESTRUCTION);
+    return item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL
+           && item.sub_type != BOOK_DESTRUCTION;
 }
 
 //
@@ -2076,8 +2076,8 @@ bool is_blood_potion(const item_def &item)
     if (item.base_type != OBJ_POTIONS)
         return false;
 
-    return (item.sub_type == POT_BLOOD
-            || item.sub_type == POT_BLOOD_COAGULATED);
+    return item.sub_type == POT_BLOOD
+           || item.sub_type == POT_BLOOD_COAGULATED;
 }
 
 bool food_is_meaty(int food_type)
@@ -2152,7 +2152,7 @@ bool is_fruit(const item_def & item)
     if (item.base_type != OBJ_FOOD)
         return false;
 
-    return (Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT);
+    return Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT;
 }
 
 bool food_is_rotten(const item_def &item)
@@ -2793,7 +2793,7 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
         return get_armour_slot(static_cast<armour_type>(sub_type));
 
     case OBJ_JEWELLERY:
-        return (jewellery_is_amulet(sub_type) ? EQ_AMULET : EQ_RINGS);
+        return jewellery_is_amulet(sub_type) ? EQ_AMULET : EQ_RINGS;
 
     default:
         break;
@@ -2804,8 +2804,8 @@ equipment_type get_item_slot(object_class_type type, int sub_type)
 
 bool is_shield(const item_def &item)
 {
-    return (item.base_type == OBJ_ARMOUR
-            && get_armour_slot(item) == EQ_SHIELD);
+    return item.base_type == OBJ_ARMOUR
+           && get_armour_slot(item) == EQ_SHIELD;
 }
 
 // Returns true if the given item cannot be wielded _by you_ with the given shield.
@@ -2824,7 +2824,7 @@ bool shield_reflects(const item_def &shield)
 {
     ASSERT(is_shield(shield));
 
-    return (get_armour_ego_type(shield) == SPARM_REFLECTION);
+    return get_armour_ego_type(shield) == SPARM_REFLECTION;
 }
 
 void ident_reflector(item_def *item)
@@ -2909,5 +2909,5 @@ bool is_elemental_evoker(const item_def &item)
 
 bool evoker_is_charged(const item_def &item)
 {
-    return (item.plus2 == 0);
+    return item.plus2 == 0;
 }

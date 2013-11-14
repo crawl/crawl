@@ -1902,7 +1902,7 @@ static char *copy_text(bool trim_right, int strip_trailing, int strip_leading)
         alloced = true;
         post_proc_text(newstring, trim_right, strip_trailing, strip_leading);
     }
-    return (newstring);
+    return newstring;
 }
 
 static void settext(bool trim_right = false,

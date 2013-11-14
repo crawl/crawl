@@ -142,7 +142,7 @@ public:
 
     bool is_primary_hotkey(int key) const
     {
-        return (hotkeys.size()? hotkeys[0] == key : false);
+        return hotkeys.size()? hotkeys[0] == key : false;
     }
 
     virtual string get_text(const bool unused = false) const
@@ -165,7 +165,7 @@ public:
 
     virtual bool selected() const
     {
-        return (selected_qty > 0 && quantity);
+        return selected_qty > 0 && quantity;
     }
 
     // -1: Invert

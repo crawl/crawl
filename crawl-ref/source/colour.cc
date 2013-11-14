@@ -84,18 +84,18 @@ colour_t random_uncommon_colour()
 
 bool is_low_colour(colour_t colour)
 {
-    return (colour <= 7);
+    return colour <= 7;
 }
 
 bool is_high_colour(colour_t colour)
 {
-    return (colour >= 8 && colour <= 15);
+    return colour >= 8 && colour <= 15;
 }
 
 colour_t make_low_colour(colour_t colour)
 {
     if (is_high_colour(colour))
-        return (colour - 8);
+        return colour - 8;
 
     return colour;
 }
@@ -103,7 +103,7 @@ colour_t make_low_colour(colour_t colour)
 colour_t make_high_colour(colour_t colour)
 {
     if (is_low_colour(colour))
-        return (colour + 8);
+        return colour + 8;
 
     return colour;
 }
@@ -114,7 +114,7 @@ static bool _is_element_colour(int col)
     // stripping any COLFLAGS (just in case)
     col = col & 0x007f;
     ASSERT(col < NUM_COLOURS);
-    return (col >= ETC_FIRE);
+    return col >= ETC_FIRE;
 }
 
 static int _randomized_element_colour(int rand, const coord_def&,

@@ -125,7 +125,7 @@ const mutation_def& get_mutation_def(mutation_type mut)
 
 static bool _is_valid_mutation(mutation_type mut)
 {
-    return (mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1);
+    return mut >= 0 && mut < NUM_MUTATIONS && mut_index[mut] != -1;
 }
 
 static const mutation_type _all_scales[] =
@@ -205,7 +205,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_MOLTEN_SCALES:
         case MUT_SLIMY_GREEN_SCALES:
         case MUT_THIN_METALLIC_SCALES:
-            return (you.mutation[mut] > 2 ? MUTACT_PARTIAL : MUTACT_INACTIVE);
+            return you.mutation[mut] > 2 ? MUTACT_PARTIAL : MUTACT_INACTIVE;
         default:
             break;
         }
@@ -1091,10 +1091,10 @@ static mutation_type _delete_random_slime_mutation()
 
 static bool _is_slime_mutation(mutation_type m)
 {
-    return (m == MUT_GELATINOUS_BODY || m == MUT_EYEBALLS
-            || m == MUT_TRANSLUCENT_SKIN || m == MUT_PSEUDOPODS
-            || m == MUT_ACIDIC_BITE || m == MUT_TENDRILS
-            || m == MUT_JELLY_GROWTH || m == MUT_JELLY_MISSILE);
+    return m == MUT_GELATINOUS_BODY || m == MUT_EYEBALLS
+           || m == MUT_TRANSLUCENT_SKIN || m == MUT_PSEUDOPODS
+           || m == MUT_ACIDIC_BITE || m == MUT_TENDRILS
+           || m == MUT_JELLY_GROWTH || m == MUT_JELLY_MISSILE;
 }
 
 static mutation_type _get_random_xom_mutation()
@@ -1281,7 +1281,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
                 found = true;
         }
 
-        return (!found);
+        return !found;
     }
 
     // Strict 3-scale limit.
@@ -2442,7 +2442,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     }
     you.innate_mutations[which_mut] += levels;
 
-    return (levels > 0);
+    return levels > 0;
 }
 
 bool temp_mutate(mutation_type which_mut, const string &reason)

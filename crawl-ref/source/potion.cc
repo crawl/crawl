@@ -454,5 +454,5 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
     }
 
-    return (!was_known && effect);
+    return !was_known && effect;
 }

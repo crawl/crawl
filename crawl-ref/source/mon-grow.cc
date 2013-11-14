@@ -254,5 +254,5 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
     // by the player, handle it properly.
     player_angers_monster(this);
 
-    return (levels_gained > 0);
+    return levels_gained > 0;
 }

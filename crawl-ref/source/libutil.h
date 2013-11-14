@@ -41,18 +41,18 @@ static inline int unscale_round_up(int number, int scale)
 // Chinese rod numerals are _not_ digits for our purposes.
 static inline bool isadigit(int c)
 {
-    return (c >= '0' && c <= '9');
+    return c >= '0' && c <= '9';
 }
 
 // 'ä' is a letter, but not a valid inv slot/etc.
 static inline bool isalower(int c)
 {
-    return (c >= 'a' && c <= 'z');
+    return c >= 'a' && c <= 'z';
 }
 
 static inline bool isaupper(int c)
 {
-    return (c >= 'A' && c <= 'Z');
+    return c >= 'A' && c <= 'Z';
 }
 
 static inline bool isaalpha(int c)
@@ -131,14 +131,14 @@ string trimmed_string(string s);
 
 static inline bool starts_with(const string &s, const string &prefix)
 {
-    return (s.rfind(prefix, 0) != string::npos);
+    return s.rfind(prefix, 0) != string::npos;
 }
 
 static inline bool ends_with(const string &s, const string &suffix)
 {
     if (s.length() < suffix.length())
         return false;
-    return (s.find(suffix, s.length() - suffix.length()) != string::npos);
+    return s.find(suffix, s.length() - suffix.length()) != string::npos;
 }
 
 // Splits string 's' on the separator 'sep'. If trim == true, trims each

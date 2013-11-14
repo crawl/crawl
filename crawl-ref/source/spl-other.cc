@@ -146,7 +146,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
         }
     }
 
-    return (success ? SPRET_SUCCESS : SPRET_ABORT);
+    return success ? SPRET_SUCCESS : SPRET_ABORT;
 }
 
 spret_type cast_death_channel(int pow, god_type god, bool fail)

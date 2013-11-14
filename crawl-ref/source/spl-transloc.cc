@@ -159,7 +159,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
         // abort still wastes the turn
         if (high_level_controlled_blink && coinflip())
-            return (cast_semi_controlled_blink(pow, false, false) ? 1 : 0);
+            return cast_semi_controlled_blink(pow, false, false) ? 1 : 0;
         random_blink(false);
     }
     else if (!allow_control_teleport(true) && !wizard_blink)
@@ -169,7 +169,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         mpr("A powerful magic interferes with your control of the blink.");
         // FIXME: cancel shouldn't waste a turn here -- need to rework Abyss handling
         if (high_level_controlled_blink)
-            return (cast_semi_controlled_blink(pow, false/*true*/, false) ? 1 : -1);
+            return cast_semi_controlled_blink(pow, false/*true*/, false) ? 1 : -1;
         random_blink(false);
     }
     else
@@ -704,7 +704,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     }
 
     _handle_teleport_update(large_change, old_pos);
-    return (!is_controlled);
+    return !is_controlled;
 }
 
 bool you_teleport_to(const coord_def where_to, bool move_monsters)

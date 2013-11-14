@@ -184,7 +184,7 @@ bool travel_exclude::affects(const coord_def& p) const
              pos.x, pos.y, p.x, p.y);
     }
     if (radius == 0)
-        return (p == pos);
+        return p == pos;
     else if (radius == 1)
         return ((p - pos).rdist() <= 1);
     else

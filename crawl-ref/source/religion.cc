@@ -456,31 +456,31 @@ static void _place_delayed_monsters();
 
 bool is_evil_god(god_type god)
 {
-    return (god == GOD_KIKUBAAQUDGHA
-            || god == GOD_MAKHLEB
-            || god == GOD_YREDELEMNUL
-            || god == GOD_BEOGH
-            || god == GOD_LUGONU);
+    return god == GOD_KIKUBAAQUDGHA
+           || god == GOD_MAKHLEB
+           || god == GOD_YREDELEMNUL
+           || god == GOD_BEOGH
+           || god == GOD_LUGONU;
 }
 
 bool is_good_god(god_type god)
 {
-    return (god == GOD_ZIN
-            || god == GOD_SHINING_ONE
-            || god == GOD_ELYVILON);
+    return god == GOD_ZIN
+           || god == GOD_SHINING_ONE
+           || god == GOD_ELYVILON;
 }
 
 bool is_chaotic_god(god_type god)
 {
-    return (god == GOD_XOM
-            || god == GOD_MAKHLEB
-            || god == GOD_LUGONU
-            || god == GOD_JIYVA);
+    return god == GOD_XOM
+           || god == GOD_MAKHLEB
+           || god == GOD_LUGONU
+           || god == GOD_JIYVA;
 }
 
 bool is_unknown_god(god_type god)
 {
-    return (god == GOD_NAMELESS);
+    return god == GOD_NAMELESS;
 }
 
 bool is_unavailable_god(god_type god)
@@ -1062,8 +1062,8 @@ static bool _need_water_walking()
 
 bool jiyva_is_dead()
 {
-    return (you.royal_jelly_dead
-            && !you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA]);
+    return you.royal_jelly_dead
+           && !you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA];
 }
 
 static void _inc_penance(god_type god, int val)
@@ -2356,7 +2356,7 @@ string god_name(god_type which_god, bool long_name)
     {
         const string shortname = god_name(which_god, false);
         const string longname = getMiscString(shortname + " lastname");
-        return (longname.empty()? shortname : longname);
+        return longname.empty()? shortname : longname;
     }
 
     switch (which_god)
@@ -3296,7 +3296,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
         case GOD_OKAWARU:
             return true;
         case GOD_BEOGH: // added penance to avoid killings for loot
-            return (mons_genus(species) == MONS_ORC);
+            return mons_genus(species) == MONS_ORC;
         case GOD_JIYVA:
             return mons_class_is_slime(species);
         case GOD_FEDHAS:
@@ -3362,8 +3362,8 @@ bool god_likes_item(god_type god, const item_def& item)
                    || you.piety_max[GOD_ELYVILON] < piety_breakpoint(2));
 
     case GOD_BEOGH:
-        return (item.base_type == OBJ_CORPSES
-                && mons_genus(item.mon_type) == MONS_ORC);
+        return item.base_type == OBJ_CORPSES
+               && mons_genus(item.mon_type) == MONS_ORC;
 
     case GOD_NEMELEX_XOBEH:
         return (!is_deck(item)
@@ -3375,8 +3375,8 @@ bool god_likes_item(god_type god, const item_def& item)
                     || item.plus2));
 
     case GOD_ASHENZARI:
-        return (item.base_type == OBJ_SCROLLS
-                && item.sub_type == SCR_REMOVE_CURSE);
+        return item.base_type == OBJ_SCROLLS
+               && item.sub_type == SCR_REMOVE_CURSE;
 
     default:
         return false;
@@ -3813,7 +3813,7 @@ bool god_hates_your_god(god_type god, god_type your_god)
 
 bool god_hates_cannibalism(god_type god)
 {
-    return (is_good_god(god) || god == GOD_BEOGH);
+    return is_good_god(god) || god == GOD_BEOGH;
 }
 
 bool god_hates_killing(god_type god, const monster* mon)
@@ -3852,9 +3852,9 @@ bool god_likes_fresh_corpses(god_type god)
     if (god == GOD_LUGONU)
         return !player_in_branch(BRANCH_ABYSS);
 
-    return (god == GOD_OKAWARU
-            || god == GOD_MAKHLEB
-            || god == GOD_TROG);
+    return god == GOD_OKAWARU
+           || god == GOD_MAKHLEB
+           || god == GOD_TROG;
 }
 
 bool god_likes_spell(spell_type spell, god_type god)
@@ -4160,19 +4160,19 @@ colour_t god_message_altar_colour(god_type god)
         return CYAN;
 
     case GOD_YREDELEMNUL:
-        return (coinflip() ? DARKGREY : RED);
+        return coinflip() ? DARKGREY : RED;
 
     case GOD_BEOGH:
-        return (coinflip() ? BROWN : LIGHTRED);
+        return coinflip() ? BROWN : LIGHTRED;
 
     case GOD_KIKUBAAQUDGHA:
         return DARKGREY;
 
     case GOD_FEDHAS:
-        return (coinflip() ? BROWN : GREEN);
+        return coinflip() ? BROWN : GREEN;
 
     case GOD_XOM:
-        return (random2(15) + 1);
+        return random2(15) + 1;
 
     case GOD_VEHUMET:
         rnd = random2(3);
@@ -4202,7 +4202,7 @@ colour_t god_message_altar_colour(god_type god)
         return LIGHTCYAN;
 
     case GOD_JIYVA:
-        return (coinflip() ? GREEN : LIGHTGREEN);
+        return coinflip() ? GREEN : LIGHTGREEN;
 
     default:
         return YELLOW;
@@ -4553,7 +4553,7 @@ static void _place_delayed_monsters()
 
 static bool _is_god(god_type god)
 {
-    return (god > GOD_NO_GOD && god < NUM_GODS);
+    return god > GOD_NO_GOD && god < NUM_GODS;
 }
 
 static bool _is_temple_god(god_type god)

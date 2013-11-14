@@ -93,7 +93,7 @@ struct mon_energy_usage
 private:
     static uint8_t combine(uint8_t a, uint8_t b, uint8_t def = 10)
     {
-        return (b != def? b : a);
+        return b != def? b : a;
     }
 };
 

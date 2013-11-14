@@ -571,9 +571,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
 tileidx_t tileidx_out_of_bounds(int branch)
 {
     if (branch == BRANCH_SHOALS)
-        return (TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN);
+        return TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN;
     else
-        return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
+        return TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN;
 }
 
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const coord_def& gc)
@@ -960,7 +960,7 @@ static int _bow_offset(const monster_info& mon)
 static tileidx_t _mon_mod(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
-    return (tile + offset % count);
+    return tile + offset % count;
 }
 
 static tileidx_t _mon_clamp(tileidx_t tile, int offset)
@@ -2015,7 +2015,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         case WHITE:         offset = 8; break;
         }
 
-        return (TILEP_MONS_TIAMAT + offset);
+        return TILEP_MONS_TIAMAT + offset;
     }
 
     // elves ('e')
@@ -2392,8 +2392,8 @@ static void _handle_tentacle_overlay(const coord_def pos,
 
 static bool _mons_is_kraken_tentacle(const int mtype)
 {
-    return (mtype == MONS_KRAKEN_TENTACLE
-            || mtype == MONS_KRAKEN_TENTACLE_SEGMENT);
+    return mtype == MONS_KRAKEN_TENTACLE
+           || mtype == MONS_KRAKEN_TENTACLE_SEGMENT;
 }
 
 static tentacle_type _get_tentacle_type(const int mtype)
@@ -2681,8 +2681,8 @@ static bool _tentacle_tile_not_flying(tileidx_t tile)
 {
     // All tiles between these two enums feature tentacles
     // emerging from water.
-    return (tile >= TILEP_FIRST_TENTACLE_IN_WATER
-            && tile <= TILEP_LAST_TENTACLE_IN_WATER);
+    return tile >= TILEP_FIRST_TENTACLE_IN_WATER
+           && tile <= TILEP_LAST_TENTACLE_IN_WATER;
 }
 
 static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
@@ -3006,7 +3006,7 @@ tileidx_t tileidx_draco_base(const monster_info& mon)
     case MONS_WHITE_DRACONIAN:  colour = 9; break;
     }
 
-    return (TILEP_DRACO_BASE + colour);
+    return TILEP_DRACO_BASE + colour;
 }
 
 tileidx_t tileidx_draco_job(const monster_info& mon)
@@ -3027,7 +3027,7 @@ tileidx_t tileidx_draco_job(const monster_info& mon)
 static tileidx_t _tileidx_unrand_artefact(int idx)
 {
     const tileidx_t tile = unrandart_to_tile(idx);
-    return (tile ? tile : TILE_TODO);
+    return tile ? tile : TILE_TODO;
 }
 
 static tileidx_t _tileidx_weapon_base(const item_def &item)
@@ -3650,9 +3650,9 @@ static tileidx_t _tileidx_bone(const item_def &item)
     case MON_SHAPE_HUMANOID_TAILED:
     case MON_SHAPE_HUMANOID_WINGED:
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
-        return (TILE_FOOD_BONE_HUMANOID + cs);
+        return TILE_FOOD_BONE_HUMANOID + cs;
     default:
-        return (TILE_FOOD_BONE + cs);
+        return TILE_FOOD_BONE + cs;
     }
 }
 
@@ -3926,7 +3926,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         if (colour_offset == -1)
             colour_offset = 0;
 
-        return (ugly_corpse_tile + colour_offset);
+        return ugly_corpse_tile + colour_offset;
     }
 
     // worms ('w')
@@ -4540,7 +4540,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         if (get_ident_type(OBJ_POTIONS, type) != ID_KNOWN_TYPE)
             return TILE_UNSEEN_POTION;
         else
-            return (TILE_POTION_OFFSET + desc);
+            return TILE_POTION_OFFSET + desc;
     }
 
     if (label >= TILE_RING_ID_FIRST && label <= TILE_RING_ID_LAST)
@@ -4551,7 +4551,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
             return TILE_UNSEEN_RING;
         else
-            return (TILE_RING_NORMAL_OFFSET + desc);
+            return TILE_RING_NORMAL_OFFSET + desc;
     }
 
     if (label >= TILE_AMU_ID_FIRST && label <= TILE_AMU_ID_LAST)
@@ -4562,7 +4562,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         if (get_ident_type(OBJ_JEWELLERY, type) != ID_KNOWN_TYPE)
             return TILE_UNSEEN_AMULET;
         else
-            return (TILE_AMU_NORMAL_OFFSET + desc);
+            return TILE_AMU_NORMAL_OFFSET + desc;
     }
 
     if (label >= TILE_SCR_ID_FIRST && label <= TILE_SCR_ID_LAST)
@@ -4576,7 +4576,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         if (get_ident_type(OBJ_WANDS, type) != ID_KNOWN_TYPE)
             return TILE_UNSEEN_WAND;
         else
-            return (TILE_WAND_OFFSET + desc);
+            return TILE_WAND_OFFSET + desc;
     }
 
     if (label >= TILE_STAFF_ID_FIRST && label <= TILE_STAFF_ID_LAST)
@@ -4588,7 +4588,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
         if (get_ident_type(OBJ_STAVES, type) != ID_KNOWN_TYPE)
             return TILE_UNSEEN_STAFF;
         else
-            return (TILE_STAFF_OFFSET + desc);
+            return TILE_STAFF_OFFSET + desc;
     }
 
     return 0;
@@ -4722,7 +4722,7 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 
     // XXX: Should be no need for TILE_FLAG_FLYING anymore since clouds are
     // drawn in a separate layer but I'll leave it for now in case anything changes --mumra
-    return (ch | TILE_FLAG_FLYING);
+    return ch | TILE_FLAG_FLYING;
 }
 
 tileidx_t tileidx_bolt(const bolt &bolt)
@@ -4841,7 +4841,7 @@ tileidx_t tileidx_zap(int colour)
     else if (colour > 8)
         colour -= 8;
 
-    return (TILE_SYM_BOLT_OFS - 1 + colour);
+    return TILE_SYM_BOLT_OFS - 1 + colour;
 }
 
 tileidx_t tileidx_spell(spell_type spell)
@@ -5629,13 +5629,13 @@ tileidx_t tileidx_known_brand(const item_def &item)
     {
         const int brand = get_weapon_brand(item);
         if (brand != SPWPN_NORMAL)
-            return (TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1);
+            return TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1;
     }
     else if (item.base_type == OBJ_ARMOUR)
     {
         const int brand = get_armour_ego_type(item);
         if (brand != SPARM_NORMAL)
-            return (TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1);
+            return TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1;
     }
     else if (item.base_type == OBJ_MISSILES)
     {

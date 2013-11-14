@@ -5,18 +5,18 @@ coord_def random_in_bounds();
 
 static inline bool in_bounds_x(int x)
 {
-    return (x > X_BOUND_1 && x < X_BOUND_2);
+    return x > X_BOUND_1 && x < X_BOUND_2;
 }
 
 static inline bool in_bounds_y(int y)
 {
-    return (y > Y_BOUND_1 && y < Y_BOUND_2);
+    return y > Y_BOUND_1 && y < Y_BOUND_2;
 }
 
 // Returns true if inside the area the player can move and dig (ie exclusive).
 static inline bool in_bounds(int x, int y)
 {
-    return (x > X_BOUND_1 && x < X_BOUND_2 && y > Y_BOUND_1 && y < Y_BOUND_2);
+    return x > X_BOUND_1 && x < X_BOUND_2 && y > Y_BOUND_1 && y < Y_BOUND_2;
 }
 
 // Returns true if inside the area the player can map (ie inclusive).
@@ -24,7 +24,7 @@ static inline bool in_bounds(int x, int y)
 // ring of rock to frame the level.
 static inline bool map_bounds(int x, int y)
 {
-    return (x >= X_BOUND_1 && x <= X_BOUND_2 && y >= Y_BOUND_1 && y <= Y_BOUND_2);
+    return x >= X_BOUND_1 && x <= X_BOUND_2 && y >= Y_BOUND_1 && y <= Y_BOUND_2;
 }
 
 static inline bool in_bounds(const coord_def &p)
@@ -47,8 +47,8 @@ bool map_bounds_with_margin(coord_def p, int margin) PURE;
 // Determines if the coordinate is within bounds of an LOS array.
 static inline bool show_bounds(const coord_def &p)
 {
-    return (p.x >= 0 && p.x < ENV_SHOW_DIAMETER
-            && p.y >= 0 && p.y < ENV_SHOW_DIAMETER);
+    return p.x >= 0 && p.x < ENV_SHOW_DIAMETER
+           && p.y >= 0 && p.y < ENV_SHOW_DIAMETER;
 }
 
 int grid_distance(const coord_def& p1, const coord_def& p2) PURE;

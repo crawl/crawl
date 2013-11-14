@@ -93,11 +93,11 @@ bool show_type::operator < (const show_type &other) const
     switch (cls)
     {
     case SH_FEATURE:
-        return (feat < other.feat);
+        return feat < other.feat;
     case SH_ITEM:
-        return (item < other.item);
+        return item < other.item;
     case SH_MONSTER:
-        return (mons < other.mons);
+        return mons < other.mons;
     default:
         return false;
     }
@@ -212,7 +212,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_FOOD:       return SHOW_ITEM_FOOD;
     case OBJ_SCROLLS:    return SHOW_ITEM_SCROLL;
     case OBJ_JEWELLERY:
-        return (jewellery_is_amulet(item) ? SHOW_ITEM_AMULET : SHOW_ITEM_RING);
+        return jewellery_is_amulet(item) ? SHOW_ITEM_AMULET : SHOW_ITEM_RING;
     case OBJ_POTIONS:    return SHOW_ITEM_POTION;
     case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
     case OBJ_STAVES:     return SHOW_ITEM_STAVE;

@@ -881,7 +881,7 @@ bool eat_food(int slot)
     {
         int result = prompt_eat_chunks();
         if (result == 1 || result == -1)
-            return (result > 0);
+            return result > 0;
 
         if (result != -2) // else skip ahead to inventory
         {
@@ -954,7 +954,7 @@ static bool _player_has_enough_food()
     // You have "enough" food if you have, e.g.
     //  1 meat ration + 1 chunk, or 2 chunks for carnivores, or
     //  5 items of fruit, or 1 bread ration and 2 fruit items as a herbivore.
-    return (food_value > 5);
+    return food_value > 5;
 }
 
 static string _how_hungry()
@@ -1229,7 +1229,7 @@ public:
         if (is_bad_food(*food2) && !is_bad_food(*food1))
             return true;
 
-        return (food1->special < food2->special);
+        return food1->special < food2->special;
     }
 };
 
@@ -2256,7 +2256,7 @@ bool is_mutagenic(const item_def &food)
     if (you.species == SP_GHOUL)
         return false;
 
-    return (mons_corpse_effect(food.mon_type) == CE_MUTAGEN);
+    return mons_corpse_effect(food.mon_type) == CE_MUTAGEN;
 }
 
 // Returns true if a food item (or corpse) is contaminated and thus
@@ -2286,7 +2286,7 @@ bool causes_rot(const item_def &food)
     if (you.species == SP_GHOUL)
         return false;
 
-    return (mons_corpse_effect(food.mon_type) == CE_ROT);
+    return mons_corpse_effect(food.mon_type) == CE_ROT;
 }
 
 // Returns true if an item of basetype FOOD or CORPSES cannot currently
@@ -2577,7 +2577,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
 bool chunk_is_poisonous(int chunktype)
 {
-    return (chunktype == CE_POISONOUS || chunktype == CE_POISON_CONTAM);
+    return chunktype == CE_POISONOUS || chunktype == CE_POISON_CONTAM;
 }
 
 // See if you can follow along here -- except for the amulet of the gourmand

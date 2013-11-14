@@ -169,7 +169,7 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
         return !monster.has_ench(ENCH_INVIS);
 
     case BEAM_HEALING:
-        return (monster.hit_points != monster.max_hit_points);
+        return monster.hit_points != monster.max_hit_points;
 
     default:
         return false;
@@ -994,16 +994,16 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
 static bool _los_free_spell(spell_type spell_cast)
 {
-    return (spell_cast == SPELL_HELLFIRE_BURST
-        || spell_cast == SPELL_BRAIN_FEED
-        || spell_cast == SPELL_SMITING
-        || spell_cast == SPELL_HAUNT
-        || spell_cast == SPELL_FIRE_STORM
-        || spell_cast == SPELL_AIRSTRIKE
-        || spell_cast == SPELL_WATERSTRIKE
-        || spell_cast == SPELL_MISLEAD
-        || spell_cast == SPELL_HOLY_FLAMES
-        || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS);
+    return spell_cast == SPELL_HELLFIRE_BURST
+       || spell_cast == SPELL_BRAIN_FEED
+       || spell_cast == SPELL_SMITING
+       || spell_cast == SPELL_HAUNT
+       || spell_cast == SPELL_FIRE_STORM
+       || spell_cast == SPELL_AIRSTRIKE
+       || spell_cast == SPELL_WATERSTRIKE
+       || spell_cast == SPELL_MISLEAD
+       || spell_cast == SPELL_HOLY_FLAMES
+       || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS;
 }
 
 // Set up bolt structure for monster spell casting.
@@ -1157,7 +1157,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (check_validity)
         {
             bolt beam = mons_spell_beam(mons, spell_cast, 1, true);
-            return (beam.flavour != NUM_BEAMS);
+            return beam.flavour != NUM_BEAMS;
         }
         break;
     }
@@ -1254,7 +1254,7 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
         if (msp[i] == spell)
             return false;
 
-    return (msp[5] == spell);
+    return msp[5] == spell;
 }
 
 // Function should return false if friendlies shouldn't animate any dead.
@@ -1330,7 +1330,7 @@ static bool _foe_should_res_negative_energy(const actor* foe)
         }
     }
 
-    return (foe->holiness() != MH_NATURAL);
+    return foe->holiness() != MH_NATURAL;
 }
 
 static bool _valid_encircle_ally(const monster* caster, const monster* target,
@@ -1751,7 +1751,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
                 && mon->props["brothers_count"].get_int() >= 2);
 
     case SPELL_SUMMON_MUSHROOMS:
-        return (mon->get_foe() == NULL);
+        return mon->get_foe() == NULL;
 
     case SPELL_FREEZE:
         return (!foe || !adjacent(mon->pos(), foe->pos()));
@@ -1958,7 +1958,7 @@ static bool _should_recall(monster* caller)
             if (*mi != caller && caller->can_see(*mi) && mons_aligned(caller, *mi))
                 ally_hd += mi->hit_dice;
         }
-        return (25 + roll_dice(2, 22) > ally_hd);
+        return 25 + roll_dice(2, 22) > ally_hd;
     }
     else
         return false;
@@ -2190,7 +2190,7 @@ static bool _already_bramble_wall(const monster* mons, coord_def targ)
             ++briar_count;
     }
 
-    return (briar_count > 1);
+    return briar_count > 1;
 }
 
 static bool _wall_of_brambles(monster* mons)
@@ -2925,7 +2925,7 @@ static int _monster_abjure_square(const coord_def &pos,
     pow = max(20, fuzz_value(pow, 40, 25));
 
     if (!actual)
-        return (pow > 40 || pow >= duration);
+        return pow > 40 || pow >= duration;
 
     // TSO and Trog's abjuration protection.
     bool shielded = false;
@@ -3069,8 +3069,8 @@ static monster_type _pick_random_wraith()
 
 static monster_type _pick_horrible_thing()
 {
-    return (one_chance_in(4) ? MONS_TENTACLED_MONSTROSITY
-                             : MONS_ABOMINATION_LARGE);
+    return one_chance_in(4) ? MONS_TENTACLED_MONSTROSITY
+                            : MONS_ABOMINATION_LARGE;
 }
 
 static monster_type _pick_undead_summon()
@@ -3124,7 +3124,7 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
 // Returns true if a message referring to the player's legs makes sense.
 static bool _legs_msg_applicable()
 {
-    return (you.species != SP_NAGA && !you.fishtail);
+    return you.species != SP_NAGA && !you.fishtail;
 }
 
 void mons_cast_haunt(monster* mons)

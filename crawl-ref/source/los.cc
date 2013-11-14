@@ -257,7 +257,7 @@ static bool _is_better(const cellray& a, const cellray& b)
     else if (a.imbalance > b.imbalance)
         return false;
     else
-        return (a.first_diag && !b.first_diag);
+        return a.first_diag && !b.first_diag;
 }
 
 enum compare_type

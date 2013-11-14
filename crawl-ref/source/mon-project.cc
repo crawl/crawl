@@ -206,7 +206,7 @@ static bool _iood_shielded(monster& mon, actor &victim)
     const int con_block = random2(to_hit + victim.shield_block_penalty());
     const int pro_block = victim.shield_bonus();
     dprf("iood shield: pro %d, con %d", pro_block, con_block);
-    return (pro_block >= con_block);
+    return pro_block >= con_block;
 }
 
 static bool _boulder_hit(monster& mon, const coord_def &pos)

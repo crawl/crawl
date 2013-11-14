@@ -145,7 +145,7 @@ class _inline_layout : public _layout
     int leftover_x() const
     {
         int width = (viewsz.x + hud_gutter + max(hudsz.x, mlistsz.x));
-        return (termsz.x - width);
+        return termsz.x - width;
     }
     int leftover_rightcol_y() const { return termsz.y-hudsz.y-mlistsz.y-msgsz.y; }
     int leftover_leftcol_y() const  { return termsz.y-viewsz.y-msgsz.y; }
@@ -210,13 +210,13 @@ class _mlist_col_layout : public _layout
     int leftover_x() const
     {
         int width = (mlistsz.x + MLIST_GUTTER + viewsz.x + hud_gutter + hudsz.x);
-        return (termsz.x - width);
+        return termsz.x - width;
     }
     int leftover_y() const
     {
         const int top_y = max(max(viewsz.y, hudsz.y), mlistsz.y);
         const int height = top_y + msgsz.y;
-        return (termsz.y - height);
+        return termsz.y - height;
     }
 };
 
@@ -249,7 +249,7 @@ void crawl_view_buffer::resize(const coord_def &sz)
 
 bool crawl_view_buffer::empty() const
 {
-    return (m_size.x * m_size.y <= 0);
+    return m_size.x * m_size.y <= 0;
 }
 
 const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer &rhs)

@@ -774,9 +774,9 @@ char index_to_letter(int the_index)
 int letter_to_index(int the_letter)
 {
     if (the_letter >= 'a' && the_letter <= 'z')
-        return (the_letter - 'a'); // returns range [0-25] {dlb}
+        return the_letter - 'a'; // returns range [0-25] {dlb}
     else if (the_letter >= 'A' && the_letter <= 'Z')
-        return (the_letter - 'A' + 26); // returns range [26-51] {dlb}
+        return the_letter - 'A' + 26; // returns range [26-51] {dlb}
 
     die("slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);
@@ -784,13 +784,13 @@ int letter_to_index(int the_letter)
 
 maybe_bool frombool(bool b)
 {
-    return (b ? MB_TRUE : MB_FALSE);
+    return b ? MB_TRUE : MB_FALSE;
 }
 
 bool tobool(maybe_bool mb)
 {
     ASSERT(mb != MB_MAYBE);
-    return (mb == MB_TRUE);
+    return mb == MB_TRUE;
 }
 
 bool tobool(maybe_bool mb, bool def)
@@ -843,7 +843,7 @@ int prompt_for_int(const char *prompt, bool nonneg)
     msgwin_get_line(prompt, specs, sizeof(specs));
 
     if (specs[0] == '\0')
-        return (nonneg ? -1 : 0);
+        return nonneg ? -1 : 0;
 
     char *end;
     int   ret = strtol(specs, &end, 10);

@@ -1031,9 +1031,9 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
 bool shoptype_identifies_stock(shop_type type)
 {
-    return (type != SHOP_WEAPON_ANTIQUE
-            && type != SHOP_ARMOUR_ANTIQUE
-            && type != SHOP_GENERAL_ANTIQUE);
+    return type != SHOP_WEAPON_ANTIQUE
+           && type != SHOP_ARMOUR_ANTIQUE
+           && type != SHOP_GENERAL_ANTIQUE;
 }
 
 static bool _purchase(int shop, int item_got, int cost, bool id)
@@ -2264,7 +2264,7 @@ unsigned int item_value(item_def item, bool ident)
 
     valued = stepdown_value(valued, 1000, 1000, 10000, 10000);
 
-    return (item.quantity * valued);
+    return item.quantity * valued;
 }
 
 bool is_worthless_consumable(const item_def &item)
@@ -2378,7 +2378,7 @@ shop_struct *get_shop(const coord_def& where)
     ASSERT(env.shop[t].pos == where);
     ASSERT(env.shop[t].type != SHOP_UNASSIGNED);
 
-    return (&env.shop[t]);
+    return &env.shop[t];
 }
 
 string shop_name(const coord_def& where, bool add_stop)
@@ -2583,14 +2583,14 @@ bool ShoppingList::is_on_list(const item_def &item, const level_pos* _pos) const
 {
     SETUP_POS();
 
-    return (find_thing(item, pos) != -1);
+    return find_thing(item, pos) != -1;
 }
 
 bool ShoppingList::is_on_list(string desc, const level_pos* _pos) const
 {
     SETUP_POS();
 
-    return (find_thing(desc, pos) != -1);
+    return find_thing(desc, pos) != -1;
 }
 
 void ShoppingList::del_thing_at_index(int idx)
@@ -3140,7 +3140,7 @@ static bool _compare_shopping_things(const CrawlStoreValue& a,
     const int a_cost = hash_a[SHOPPING_THING_COST_KEY];
     const int b_cost = hash_b[SHOPPING_THING_COST_KEY];
 
-    return (a_cost < b_cost);
+    return a_cost < b_cost;
 }
 
 void ShoppingList::refresh()

@@ -13,12 +13,12 @@ VColour VColour::transparent(0, 0, 0, 0);
 
 bool VColour::operator==(const VColour &vc) const
 {
-    return (r == vc.r && g == vc.g && b == vc.b && a == vc.a);
+    return r == vc.r && g == vc.g && b == vc.b && a == vc.a;
 }
 
 bool VColour::operator!=(const VColour &vc) const
 {
-    return (r != vc.r || g != vc.g || b != vc.b || a != vc.a);
+    return r != vc.r || g != vc.g || b != vc.b || a != vc.a;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -68,15 +68,15 @@ const GLState &GLState::operator=(const GLState &state)
 
 bool GLState::operator==(const GLState &state) const
 {
-    return (array_vertex == state.array_vertex
-            && array_texcoord == state.array_texcoord
-            && array_colour == state.array_colour
-            && blend == state.blend
-            && texture == state.texture
-            && depthtest == state.depthtest
-            && alphatest == state.alphatest
-            && alpharef == state.alpharef
-            && colour == state.colour);
+    return array_vertex == state.array_vertex
+           && array_texcoord == state.array_texcoord
+           && array_colour == state.array_colour
+           && blend == state.blend
+           && texture == state.texture
+           && depthtest == state.depthtest
+           && alphatest == state.alphatest
+           && alpharef == state.alpharef
+           && colour == state.colour;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -88,9 +88,9 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
     switch (mode)
     {
     case GLW_RECTANGLE:
-        return (num_verts % 4 == 0);
+        return num_verts % 4 == 0;
     case GLW_LINES:
-        return (num_verts % 2 == 0);
+        return num_verts % 2 == 0;
     default:
         return false;
     }

@@ -2160,7 +2160,7 @@ static void _magic_contamination_effects()
 static int _div(int num, int denom)
 {
     div_t res = div(num, denom);
-    return (res.rem >= 0 ? res.quot : res.quot - 1);
+    return res.rem >= 0 ? res.quot : res.quot - 1;
 }
 
 // Do various time related actions...
@@ -2660,7 +2660,7 @@ struct greater_second
     // here.
     bool operator()(const T & left, const T & right)
     {
-        return (left.second > right.second);
+        return left.second > right.second;
     }
 };
 

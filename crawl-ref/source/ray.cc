@@ -218,7 +218,7 @@ bool ray_def::advance()
 
     on_corner = _advance_from_non_diamond(&r);
     ASSERT(_valid());
-    return (!on_corner);
+    return !on_corner;
 }
 
 void ray_def::regress()

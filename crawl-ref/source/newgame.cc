@@ -74,12 +74,12 @@ enum MenuOptions
 
 static bool _is_random_species(species_type sp)
 {
-    return (sp == SP_RANDOM || sp == SP_VIABLE);
+    return sp == SP_RANDOM || sp == SP_VIABLE;
 }
 
 static bool _is_random_job(job_type job)
 {
-    return (job == JOB_RANDOM || job == JOB_VIABLE);
+    return job == JOB_RANDOM || job == JOB_VIABLE;
 }
 
 static bool _is_random_choice(const newgame_def& choice)
@@ -96,7 +96,7 @@ static bool _is_random_viable_choice(const newgame_def& choice)
 
 static bool _char_defined(const newgame_def& ng)
 {
-    return (ng.species != SP_UNKNOWN && ng.job != JOB_UNKNOWN);
+    return ng.species != SP_UNKNOWN && ng.job != JOB_UNKNOWN;
 }
 
 static string _char_description(const newgame_def& ng)
@@ -154,7 +154,7 @@ static void _print_character_info(const newgame_def* ng)
 #ifdef ASSERTS
 static bool _species_is_undead(const species_type speci)
 {
-    return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
+    return speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE;
 }
 #endif
 
@@ -380,7 +380,7 @@ static bool _reroll_random(newgame_def* ng)
     char c = getchm();
     if (key_is_escape(c) || toalower(c) == 'q')
         game_ended();
-    return (toalower(c) == 'n');
+    return toalower(c) == 'n';
 }
 
 static void _choose_char(newgame_def* ng, newgame_def* choice,

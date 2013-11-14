@@ -31,9 +31,9 @@ level_id current_level_parent()
 
 bool is_hell_subbranch(branch_type branch)
 {
-    return (branch >= BRANCH_FIRST_HELL
-            && branch <= BRANCH_LAST_HELL
-            && branch != BRANCH_VESTIBULE);
+    return branch >= BRANCH_FIRST_HELL
+           && branch <= BRANCH_LAST_HELL
+           && branch != BRANCH_VESTIBULE;
 }
 
 bool is_random_subbranch(branch_type branch)

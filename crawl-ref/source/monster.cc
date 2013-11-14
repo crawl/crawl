@@ -443,7 +443,7 @@ int monster::total_weight() const
         if (inv[i] != NON_ITEM)
             burden += item_mass(mitm[inv[i]]) * mitm[inv[i]].quantity;
 
-    return (body_weight() + burden);
+    return body_weight() + burden;
 }
 
 brand_type monster::damage_brand(int which_attack)
@@ -496,7 +496,7 @@ int monster::has_claws(bool allow_tran) const
 
 item_def *monster::missiles()
 {
-    return (inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : NULL);
+    return inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : NULL;
 }
 
 int monster::missile_count()
@@ -514,7 +514,7 @@ item_def *monster::launcher()
         return weap;
 
     weap = mslot_item(MSLOT_ALT_WEAPON);
-    return (weap && is_range_weapon(*weap) ? weap : NULL);
+    return weap && is_range_weapon(*weap) ? weap : NULL;
 }
 
 // Does not check whether the monster can dual-wield - that is the
@@ -549,7 +549,7 @@ item_def *monster::weapon(int which_attack) const
         }
     }
 
-    return (weap == NON_ITEM ? NULL : &mitm[weap]);
+    return weap == NON_ITEM ? NULL : &mitm[weap];
 }
 
 // Give hands required to wield weapon.
@@ -739,10 +739,10 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 bool monster::can_throw_large_rocks() const
 {
     monster_type species = mons_species(false); // zombies can't
-    return (species == MONS_STONE_GIANT
-            || species == MONS_CYCLOPS
-            || species == MONS_OGRE
-            || species == MONS_FORMICID);
+    return species == MONS_STONE_GIANT
+           || species == MONS_CYCLOPS
+           || species == MONS_OGRE
+           || species == MONS_FORMICID;
 }
 
 bool monster::can_speak()
@@ -763,7 +763,7 @@ bool monster::can_speak()
 
     // Does it have the proper vocal equipment?
     const mon_body_shape shape = get_mon_shape(this);
-    return (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA);
+    return shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA;
 }
 
 bool monster::has_spell_of_type(unsigned disciplines) const
@@ -1407,13 +1407,13 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
     switch (ammo_brand)
     {
     case SPMSL_FLAME:
-        return (bow_brand != SPWPN_FLAME);
+        return bow_brand != SPWPN_FLAME;
     case SPMSL_FROST:
-        return (bow_brand != SPWPN_FROST);
+        return bow_brand != SPWPN_FROST;
     case SPMSL_CHAOS:
-        return (bow_brand != SPWPN_CHAOS);
+        return bow_brand != SPWPN_CHAOS;
     case SPMSL_PENETRATION:
-        return (bow_brand != SPWPN_PENETRATION);
+        return bow_brand != SPWPN_PENETRATION;
     default:
         return true;
     }
@@ -1461,7 +1461,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
     // Don't pick up items that would interfere with our special ability
     if (mons->type == MONS_RED_DEVIL)
-        return (weapon_skill(weapon) == SK_POLEARMS);
+        return weapon_skill(weapon) == SK_POLEARMS;
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -1476,7 +1476,7 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         // We might allow Sigmund to pick up a better scythe if he finds
         // one...
         if (mons->type == MONS_SIGMUND)
-            return (wtype == WPN_SCYTHE);
+            return wtype == WPN_SCYTHE;
 
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
         // in case that ever changes we don't want him to switch away
@@ -1504,22 +1504,22 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         }
 
         if (mons->type == MONS_AGNES)
-            return (wtype == WPN_LAJATANG);
+            return wtype == WPN_LAJATANG;
 
         if (mons->type == MONS_EDMUND)
-            return (wtype == WPN_FLAIL || wtype == WPN_DIRE_FLAIL);
+            return wtype == WPN_FLAIL || wtype == WPN_DIRE_FLAIL;
 
         // Pikel's got MONUSE_STARTING_EQUIPMENT right now, but,
         // in case that ever changes, we don't want him to switch away
         // from a whip.
         if (mons->type == MONS_PIKEL)
-            return (get_vorpal_type(weapon) == DVORP_SLASHING);
+            return get_vorpal_type(weapon) == DVORP_SLASHING;
 
         if (mons->type == MONS_WIGLAF)
-            return (weapon_skill(weapon) == SK_AXES);
+            return weapon_skill(weapon) == SK_AXES;
 
         if (mons->type == MONS_NIKOLA)
-            return (get_weapon_brand(weapon) == SPWPN_ELECTROCUTION);
+            return get_weapon_brand(weapon) == SPWPN_ELECTROCUTION;
 
         if (mons->type == MONS_DUVESSA)
         {
@@ -1528,23 +1528,23 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         }
 
         if (mons->type == MONS_IGNACIO)
-            return (wtype == WPN_EXECUTIONERS_AXE);
+            return wtype == WPN_EXECUTIONERS_AXE;
 
         if (mons->type == MONS_MENNAS)
-            return (get_weapon_brand(weapon) == SPWPN_HOLY_WRATH);
+            return get_weapon_brand(weapon) == SPWPN_HOLY_WRATH;
 
         if (mons->type == MONS_ARACHNE)
         {
-            return (weapon.base_type == OBJ_STAVES
-                        && weapon.sub_type == STAFF_POISON
-                    || weapon.base_type == OBJ_WEAPONS
-                        && weapon.special == UNRAND_OLGREB);
+            return weapon.base_type == OBJ_STAVES
+                       && weapon.sub_type == STAFF_POISON
+                   || weapon.base_type == OBJ_WEAPONS
+                       && weapon.special == UNRAND_OLGREB;
         }
 
         if (mons->type == MONS_FANNAR)
         {
-            return (weapon.base_type == OBJ_STAVES
-                    && weapon.sub_type == STAFF_COLD);
+            return weapon.base_type == OBJ_STAVES
+                   && weapon.sub_type == STAFF_COLD;
         }
     }
 
@@ -1556,16 +1556,16 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         switch (weapon.special)
         {
         case UNRAND_ASMODEUS:
-            return (mons->type == MONS_ASMODEUS);
+            return mons->type == MONS_ASMODEUS;
 
         case UNRAND_DISPATER:
-            return (mons->type == MONS_DISPATER);
+            return mons->type == MONS_DISPATER;
 
         case UNRAND_CEREBOV:
-            return (mons->type == MONS_CEREBOV);
+            return mons->type == MONS_CEREBOV;
 
         case UNRAND_MORG:
-            return (mons->type == MONS_BORIS);
+            return mons->type == MONS_BORIS;
         }
     }
 
@@ -1587,13 +1587,13 @@ static int _ego_damage_bonus(item_def &item)
 static bool _item_race_matches_monster(const item_def &item, monster* mons)
 {
     if (get_equip_race(item) == ISFLAG_ELVEN)
-        return (mons_genus(mons->type) == MONS_ELF);
+        return mons_genus(mons->type) == MONS_ELF;
 
     if (get_equip_race(item) == ISFLAG_DWARVEN)
-        return (mons_genus(mons->type) == MONS_DWARF);
+        return mons_genus(mons->type) == MONS_DWARF;
 
     if (get_equip_race(item) == ISFLAG_ORCISH)
-        return (mons_genus(mons->type) == MONS_ORC);
+        return mons_genus(mons->type) == MONS_ORC;
 
     return false;
 }
@@ -2467,7 +2467,7 @@ item_def *monster::slot_item(equipment_type eq, bool include_melded) const
 item_def *monster::mslot_item(mon_inv_type mslot) const
 {
     const int mi = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
-    return (mi == NON_ITEM ? NULL : &mitm[mi]);
+    return mi == NON_ITEM ? NULL : &mitm[mi];
 }
 
 item_def *monster::shield() const
@@ -2494,19 +2494,19 @@ static string _invalid_monster_str(monster_type type)
     switch (type)
     {
     case NUM_MONSTERS:
-        return (str + "NUM_MONSTERS");
+        return str + "NUM_MONSTERS";
     case MONS_NO_MONSTER:
-        return (str + "MONS_NO_MONSTER");
+        return str + "MONS_NO_MONSTER";
     case MONS_PLAYER:
-        return (str + "MONS_PLAYER");
+        return str + "MONS_PLAYER";
     case RANDOM_DRACONIAN:
-        return (str + "RANDOM_DRACONIAN");
+        return str + "RANDOM_DRACONIAN";
     case RANDOM_BASE_DRACONIAN:
-        return (str + "RANDOM_BASE_DRACONIAN");
+        return str + "RANDOM_BASE_DRACONIAN";
     case RANDOM_NONBASE_DRACONIAN:
-        return (str + "RANDOM_NONBASE_DRACONIAN");
+        return str + "RANDOM_NONBASE_DRACONIAN";
     case WANDERING_MONSTER:
-        return (str + "WANDERING_MONSTER");
+        return str + "WANDERING_MONSTER";
     default:
         break;
     }
@@ -2633,7 +2633,7 @@ string monster::conj_verb(const string &verb) const
     if (ends_with(verb, "f") || ends_with(verb, "fe")
         || ends_with(verb, "y"))
     {
-        return (verb + "s");
+        return verb + "s";
     }
 
     return pluralise(verb);
@@ -2865,7 +2865,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
         if (rand && coinflip())
             return foot_name(plural, can_plural);
 
-        return (plural ? "feet" : "foot");
+        return plural ? "feet" : "foot";
     }
 
     if (plural && *can_plural)
@@ -3251,7 +3251,7 @@ bool monster::cannot_move() const
 
 bool monster::asleep() const
 {
-    return (behaviour == BEH_SLEEP);
+    return behaviour == BEH_SLEEP;
 }
 
 bool monster::backlit(bool check_haloed, bool self_halo) const
@@ -3307,8 +3307,8 @@ bool monster::friendly() const
 
 bool monster::neutral() const
 {
-    return (attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL
-            || attitude == ATT_STRICT_NEUTRAL);
+    return attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL
+           || attitude == ATT_STRICT_NEUTRAL;
 }
 
 bool monster::good_neutral() const
@@ -3318,7 +3318,7 @@ bool monster::good_neutral() const
 
 bool monster::strict_neutral() const
 {
-    return (attitude == ATT_STRICT_NEUTRAL);
+    return attitude == ATT_STRICT_NEUTRAL;
 }
 
 bool monster::wont_attack() const
@@ -3343,14 +3343,14 @@ int monster::shield_bonus() const
         int shld_c = property(*shld, PARM_AC) + shld->plus;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                             * (shld->sub_type - ARM_LARGE_SHIELD);
-        return (random2avg(shld_c + hit_dice * 4 / 3, 2) / 2);
+        return random2avg(shld_c + hit_dice * 4 / 3, 2) / 2;
     }
     return -100;
 }
 
 int monster::shield_block_penalty() const
 {
-    return (4 * shield_blocks * shield_blocks);
+    return 4 * shield_blocks * shield_blocks;
 }
 
 void monster::shield_block_succeeded(actor *attacker)
@@ -3362,7 +3362,7 @@ void monster::shield_block_succeeded(actor *attacker)
 
 int monster::shield_bypass_ability(int) const
 {
-    return (15 + hit_dice * 2 / 3);
+    return 15 + hit_dice * 2 / 3;
 }
 
 int monster::missile_deflection() const
@@ -3488,7 +3488,7 @@ bool monster::undead_or_demonic() const
 {
     const mon_holy_type holi = holiness();
 
-    return (holi == MH_UNDEAD || holi == MH_DEMONIC || type == MONS_DEMONSPAWN);
+    return holi == MH_UNDEAD || holi == MH_DEMONIC || type == MONS_DEMONSPAWN;
 }
 
 bool monster::is_holy(bool check_spells) const
@@ -4083,7 +4083,7 @@ flight_type monster::flight_mode() const
 
 bool monster::is_banished() const
 {
-    return (!alive() && flags & MF_BANISHED);
+    return !alive() && flags & MF_BANISHED;
 }
 
 monster_type monster::mons_species(bool zombie_base) const
@@ -4126,7 +4126,7 @@ int monster::skill(skill_type sk, int scale, bool real) const
     case SK_EARTH_MAGIC:
     case SK_AIR_MAGIC:
     case SK_SUMMONINGS:
-        return (is_actual_spellcaster() ? hd : hd / 3);
+        return is_actual_spellcaster() ? hd : hd / 3;
 
     // Weapon skills for spectral weapon
     case SK_SHORT_BLADES:
@@ -4162,7 +4162,7 @@ void monster::teleport(bool now, bool, bool)
 
 bool monster::alive() const
 {
-    return (hit_points > 0 && type != MONS_NO_MONSTER);
+    return hit_points > 0 && type != MONS_NO_MONSTER;
 }
 
 god_type monster::deity() const
@@ -4631,7 +4631,7 @@ void monster::load_ghost_spells()
 
 bool monster::has_hydra_multi_attack() const
 {
-    return (mons_genus(mons_base_type(this)) == MONS_HYDRA);
+    return mons_genus(mons_base_type(this)) == MONS_HYDRA;
 }
 
 bool monster::has_multitargetting() const
@@ -4647,27 +4647,27 @@ bool monster::has_multitargetting() const
 
 bool monster::can_use_spells() const
 {
-    return (flags & MF_SPELLCASTER);
+    return flags & MF_SPELLCASTER;
 }
 
 bool monster::is_priest() const
 {
-    return (flags & MF_PRIEST);
+    return flags & MF_PRIEST;
 }
 
 bool monster::is_fighter() const
 {
-    return (flags & MF_FIGHTER);
+    return flags & MF_FIGHTER;
 }
 
 bool monster::is_archer() const
 {
-    return (flags & MF_ARCHER);
+    return flags & MF_ARCHER;
 }
 
 bool monster::is_actual_spellcaster() const
 {
-    return (flags & MF_ACTUAL_SPELLS);
+    return flags & MF_ACTUAL_SPELLS;
 }
 
 bool monster::is_shapeshifter() const
@@ -4808,11 +4808,11 @@ actor *monster::get_foe() const
     if (foe == MHITNOT)
         return NULL;
     else if (foe == MHITYOU)
-        return (friendly() ? NULL : &you);
+        return friendly() ? NULL : &you;
 
     // Must be a monster!
     monster* my_foe = &menv[foe];
-    return (my_foe->alive()? my_foe : NULL);
+    return my_foe->alive()? my_foe : NULL;
 }
 
 int monster::foe_distance() const
@@ -4947,7 +4947,7 @@ bool monster::has_lifeforce() const
 {
     const mon_holy_type holi = holiness();
 
-    return (holi == MH_NATURAL || holi == MH_PLANT);
+    return holi == MH_NATURAL || holi == MH_PLANT;
 }
 
 bool monster::can_mutate() const
@@ -4961,7 +4961,7 @@ bool monster::can_mutate() const
 
     const mon_holy_type holi = holiness();
 
-    return (holi != MH_UNDEAD && holi != MH_NONLIVING);
+    return holi != MH_UNDEAD && holi != MH_NONLIVING;
 }
 
 bool monster::can_safely_mutate() const
@@ -5034,9 +5034,9 @@ bool monster::polymorph(int pow)
 
 static bool _mons_is_icy(int mc)
 {
-    return (mc == MONS_ICE_BEAST
-            || mc == MONS_SIMULACRUM
-            || mc == MONS_ICE_STATUE);
+    return mc == MONS_ICE_BEAST
+           || mc == MONS_SIMULACRUM
+           || mc == MONS_ICE_STATUE;
 }
 
 bool monster::is_icy() const
@@ -5046,17 +5046,17 @@ bool monster::is_icy() const
 
 static bool _mons_is_fiery(int mc)
 {
-    return (mc == MONS_FIRE_VORTEX
-            || mc == MONS_FIRE_ELEMENTAL
-            || mc == MONS_FLAMING_CORPSE
-            || mc == MONS_EFREET
-            || mc == MONS_AZRAEL
-            || mc == MONS_LAVA_WORM
-            || mc == MONS_LAVA_FISH
-            || mc == MONS_LAVA_SNAKE
-            || mc == MONS_SALAMANDER
-            || mc == MONS_MOLTEN_GARGOYLE
-            || mc == MONS_ORB_OF_FIRE);
+    return mc == MONS_FIRE_VORTEX
+           || mc == MONS_FIRE_ELEMENTAL
+           || mc == MONS_FLAMING_CORPSE
+           || mc == MONS_EFREET
+           || mc == MONS_AZRAEL
+           || mc == MONS_LAVA_WORM
+           || mc == MONS_LAVA_FISH
+           || mc == MONS_LAVA_SNAKE
+           || mc == MONS_SALAMANDER
+           || mc == MONS_MOLTEN_GARGOYLE
+           || mc == MONS_ORB_OF_FIRE;
 }
 
 bool monster::is_fiery() const
@@ -5066,14 +5066,14 @@ bool monster::is_fiery() const
 
 static bool _mons_is_skeletal(int mc)
 {
-    return (mc == MONS_SKELETON
-            || mc == MONS_BONE_DRAGON
-            || mc == MONS_SKELETAL_WARRIOR
-            || mc == MONS_ANCIENT_CHAMPION
-            || mc == MONS_REVENANT
-            || mc == MONS_FLYING_SKULL
-            || mc == MONS_CURSE_SKULL
-            || mc == MONS_MURRAY);
+    return mc == MONS_SKELETON
+           || mc == MONS_BONE_DRAGON
+           || mc == MONS_SKELETAL_WARRIOR
+           || mc == MONS_ANCIENT_CHAMPION
+           || mc == MONS_REVENANT
+           || mc == MONS_FLYING_SKULL
+           || mc == MONS_CURSE_SKULL
+           || mc == MONS_MURRAY;
 }
 
 bool monster::is_skeletal() const
@@ -5098,7 +5098,7 @@ int monster::spiny_degree() const
 
 bool monster::has_action_energy() const
 {
-    return (speed_increment >= 80);
+    return speed_increment >= 80;
 }
 
 void monster::check_redraw(const coord_def &old, bool clear_tiles) const
@@ -5468,7 +5468,7 @@ bool monster::can_drink_potion(potion_type ptype) const
                     && holiness() != MH_PLANT);
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return (mons_species() == MONS_VAMPIRE);
+            return mons_species() == MONS_VAMPIRE;
         case POT_BERSERK_RAGE:
             return can_go_berserk();
         case POT_SPEED:
@@ -5496,11 +5496,11 @@ bool monster::should_drink_potion(potion_type ptype) const
                 || has_ench(ENCH_CONFUSION)
                 || has_ench(ENCH_ROT));
     case POT_HEAL_WOUNDS:
-        return (!has_ench(ENCH_DEATHS_DOOR)
-                && hit_points <= max_hit_points / 2);
+        return !has_ench(ENCH_DEATHS_DOOR)
+               && hit_points <= max_hit_points / 2;
     case POT_BLOOD:
     case POT_BLOOD_COAGULATED:
-        return (hit_points <= max_hit_points / 2);
+        return hit_points <= max_hit_points / 2;
     case POT_BERSERK_RAGE:
         // this implies !berserk()
         return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
@@ -6045,7 +6045,7 @@ bool monster::is_web_immune() const
 // Undead monsters have nightvision, as do all followers of Yredelemnul.
 bool monster::nightvision() const
 {
-    return (holiness() == MH_UNDEAD || god == GOD_YREDELEMNUL);
+    return holiness() == MH_UNDEAD || god == GOD_YREDELEMNUL;
 }
 
 bool monster::attempt_escape(int attempts)
@@ -6086,7 +6086,7 @@ bool monster::has_usable_tentacle() const
         return false;
 
     // ignoring monster octopodes with weapons, for now
-    return (num_constricting() < 8);
+    return num_constricting() < 8;
 }
 
 // Move the monster to the nearest valid space.
@@ -6159,13 +6159,13 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
 
 bool monster::is_child_tentacle() const
 {
-    return (type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE);
+    return type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE;
 }
 
 bool monster::is_child_tentacle_segment() const
 {
-    return (type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || type == MONS_STARSPAWN_TENTACLE_SEGMENT);
+    return type == MONS_KRAKEN_TENTACLE_SEGMENT
+           || type == MONS_STARSPAWN_TENTACLE_SEGMENT;
 }
 
 bool monster::is_child_monster() const

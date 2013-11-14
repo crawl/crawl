@@ -55,7 +55,7 @@
 
 bool trap_def::active() const
 {
-    return (type != TRAP_UNASSIGNED);
+    return type != TRAP_UNASSIGNED;
 }
 
 bool trap_def::type_has_ammo() const
@@ -162,10 +162,10 @@ string trap_def::name(description_level_type desc) const
         if (is_vowel(basename[0]))
             prefix += 'n';
         prefix += ' ';
-        return (prefix + basename);
+        return prefix + basename;
     }
     else if (desc == DESC_THE)
-        return (string("the ") + basename);
+        return string("the ") + basename;
     else                        // everything else
         return basename;
 }
@@ -511,7 +511,7 @@ static string _direction_string(coord_def pos, bool fuzz)
         ew="";
     if (abs(dx) > 2 * abs(dy))
         ns="";
-    return (string(ns) + ew);
+    return string(ns) + ew;
 }
 
 void trap_def::trigger(actor& triggerer, bool flat_footed)
@@ -1120,7 +1120,7 @@ trap_def* find_trap(const coord_def& pos)
     ASSERT(env.trap[t].pos == pos);
     ASSERT(env.trap[t].type != TRAP_UNASSIGNED);
 
-    return (&env.trap[t]);
+    return &env.trap[t];
 }
 
 trap_type get_trap_type(const coord_def& pos)
@@ -1137,7 +1137,7 @@ static bool _disarm_is_deadly(trap_def& trap)
     if (trap.type == TRAP_NEEDLE && you.res_poison() <= 0)
         dam += 15; // arbitrary
 
-    return (you.hp <= dam);
+    return you.hp <= dam;
 }
 
 // where *must* point to a valid, discovered trap.

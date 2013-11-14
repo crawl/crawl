@@ -44,7 +44,7 @@ static bool _pattern_match(void *compiled_pattern, const char *text, int length)
                             NULL,
                             text, length, 0, 0,
                             ovector, sizeof(ovector) / sizeof(*ovector));
-    return (pcre_rc >= 0);
+    return pcre_rc >= 0;
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -129,7 +129,7 @@ bool text_pattern::operator== (const text_pattern &tp) const
     if (this == &tp)
         return true;
 
-    return (pattern == tp.pattern && ignore_case == tp.ignore_case);
+    return pattern == tp.pattern && ignore_case == tp.ignore_case;
 }
 
 bool text_pattern::compile() const

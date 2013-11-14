@@ -119,8 +119,8 @@ static void _set_no_path_found(monster* mon)
 
 bool target_is_unreachable(monster* mon)
 {
-    return (mon->travel_target == MTRAV_UNREACHABLE
-            || mon->travel_target == MTRAV_KNOWN_UNREACHABLE);
+    return mon->travel_target == MTRAV_UNREACHABLE
+           || mon->travel_target == MTRAV_KNOWN_UNREACHABLE;
 }
 
 //#define DEBUG_PATHFIND
@@ -959,7 +959,7 @@ static bool _herd_ok(monster * mon)
         }
     }
 
-    return (in_bounds || !intermediate_range);
+    return in_bounds || !intermediate_range;
 }
 
 // Return true if we don't have to do anything to keep within an ok distance

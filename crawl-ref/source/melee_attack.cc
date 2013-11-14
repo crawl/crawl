@@ -551,11 +551,11 @@ bool melee_attack::handle_phase_dodged()
 
 static bool _flavour_triggers_damageless(attack_flavour flavour)
 {
-    return (flavour == AF_CRUSH
-            || flavour == AF_DROWN
-            || flavour == AF_PURE_FIRE
-            || flavour == AF_SHADOWSTAB
-            || flavour == AF_WATERPORT);
+    return flavour == AF_CRUSH
+           || flavour == AF_DROWN
+           || flavour == AF_PURE_FIRE
+           || flavour == AF_SHADOWSTAB
+           || flavour == AF_WATERPORT;
 }
 
 /* An attack has been determined to have hit something
@@ -963,7 +963,7 @@ bool melee_attack::attack()
         return false;
 
     if (attacker != defender && attacker->self_destructs())
-        return (did_hit = perceived_attack = true);
+        return did_hit = perceived_attack = true;
 
     if (can_cleave && !cleaving)
         cleave_setup();
@@ -1713,11 +1713,11 @@ string melee_attack::player_why_missed()
         else if (shield_miss && !armour_miss)
             return "Your shield prevents you from hitting ";
         else
-            return ("Your shield and " + armour_name
-                    + " prevent you from hitting ");
+            return "Your shield and " + armour_name
+                   + " prevent you from hitting ";
     }
 
-    return ("You" + evasion_margin_adverb() + " miss ");
+    return "You" + evasion_margin_adverb() + " miss ";
 }
 
 void melee_attack::player_warn_miss()
@@ -5432,10 +5432,10 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
     case UNAT_PECK:
     case UNAT_HEADBUTT:
     case UNAT_PUNCH:
-        return (you.form == TRAN_ICE_BEAST
-                || you.form == TRAN_DRAGON
-                || you.form == TRAN_SPIDER
-                || you.form == TRAN_BAT);
+        return you.form == TRAN_ICE_BEAST
+               || you.form == TRAN_DRAGON
+               || you.form == TRAN_SPIDER
+               || you.form == TRAN_BAT;
 
     case UNAT_CONSTRICT:
         return !form_keeps_mutations();

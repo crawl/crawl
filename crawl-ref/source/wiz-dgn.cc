@@ -747,7 +747,7 @@ static int _debug_time_explore()
                          pi2.elapsed_interlevel + pi2.elapsed_resting +
                          pi2.elapsed_other);
 
-    return (you.num_turns - start);
+    return you.num_turns - start;
 }
 
 static void _debug_destroy_doors()

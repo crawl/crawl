@@ -59,7 +59,7 @@ unsigned int isqrt(unsigned int a)
         else
             root--;
     }
-    return (root >> 1);
+    return root >> 1;
 }
 
 int isqrt_ceil(int x)
@@ -107,12 +107,12 @@ string apply_description(description_level_type desc, const string &name,
     switch (desc)
     {
     case DESC_THE:
-        return ("the " + name);
+        return "the " + name;
     case DESC_A:
         return (quantity > 1 ? _number_to_string(quantity, in_words) + name
                              : article_a(name, true));
     case DESC_YOUR:
-        return ("your " + name);
+        return "your " + name;
     case DESC_PLAIN:
     default:
         return name;
@@ -124,7 +124,7 @@ string apply_description(description_level_type desc, const string &name,
 bool shell_safe(const char *file)
 {
     int match = strcspn(file, "\\`$*?|><&\n!;");
-    return (match < 0 || !file[match]);
+    return match < 0 || !file[match];
 }
 
 void play_sound(const char *file)
@@ -263,7 +263,7 @@ int ends_with(const string &s, const char *suffixes[])
 
     for (int i = 0; suffixes[i]; ++i)
         if (ends_with(s, suffixes[i]))
-            return (1 + i);
+            return 1 + i;
 
     return 0;
 }
@@ -540,10 +540,10 @@ string apostrophise(const string &name)
         return name;
 
     if (name == "you" || name == "You")
-        return (name + "r");
+        return name + "r";
 
     if (name == "it" || name == "It")
-        return (name + "s");
+        return name + "s";
 
     const char lastc = name[name.length() - 1];
     return (name + (lastc == 's' ? "'" : "'s"));
@@ -600,9 +600,9 @@ static string tens_in_words(unsigned num)
 static string join_strings(const string &a, const string &b)
 {
     if (!a.empty() && !b.empty())
-        return (a + " " + b);
+        return a + " " + b;
 
-    return (a.empty() ? b : a);
+    return a.empty() ? b : a;
 }
 
 static string hundreds_in_words(unsigned num)
@@ -1129,7 +1129,7 @@ static bool _is_aero()
     OSVERSIONINFOEX osvi;
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
     if (GetVersionEx((OSVERSIONINFO *) &osvi))
-        return (osvi.dwMajorVersion >= 6);
+        return osvi.dwMajorVersion >= 6;
     else
         return false;
 }

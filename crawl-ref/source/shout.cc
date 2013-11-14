@@ -765,7 +765,7 @@ noise_cell::noise_cell()
 
 bool noise_cell::can_apply_noise(int _noise_intensity_millis) const
 {
-    return (noise_intensity_millis < _noise_intensity_millis);
+    return noise_intensity_millis < _noise_intensity_millis;
 }
 
 bool noise_cell::apply_noise(int _noise_intensity_millis,
@@ -940,7 +940,7 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
                                   next_pos - current_pos))
             // Return true only if we hadn't already registered this
             // cell as a neighbour (presumably with a lower volume).
-            return (neighbour_old_distance != travel_distance);
+            return neighbour_old_distance != travel_distance;
     }
     return false;
 }

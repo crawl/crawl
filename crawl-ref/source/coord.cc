@@ -50,8 +50,8 @@ bool adjacent(const coord_def& p1, const coord_def& p2)
 
 bool map_bounds_with_margin(coord_def p, int margin)
 {
-    return (p.x >= X_BOUND_1 + margin && p.x <= X_BOUND_2 - margin
-            && p.y >= Y_BOUND_1 + margin && p.y <= Y_BOUND_2 - margin);
+    return p.x >= X_BOUND_1 + margin && p.x <= X_BOUND_2 - margin
+           && p.y >= Y_BOUND_1 + margin && p.y <= Y_BOUND_2 - margin;
 }
 
 coord_def clip(const coord_def &p)

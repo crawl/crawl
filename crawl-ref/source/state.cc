@@ -83,7 +83,7 @@ bool game_state::is_replaying_keys() const
 
 bool game_state::is_repeating_cmd() const
 {
-    return (repeat_cmd != CMD_NO_CMD);
+    return repeat_cmd != CMD_NO_CMD;
 }
 
 void game_state::cancel_cmd_repeat(string reason)
@@ -320,7 +320,7 @@ bool game_state::is_god_acting() const
     ASSERT(!(god_act.depth == 0 && god_act.which_god != GOD_NO_GOD));
     ASSERT(!(god_act.depth == 0 && !god_act_stack.empty()));
 
-    return (god_act.depth > 0);
+    return god_act.depth > 0;
 }
 
 bool game_state::is_god_retribution() const
@@ -401,7 +401,7 @@ vector<god_act_state> game_state::other_gods_acting() const
 
 bool game_state::is_mon_acting() const
 {
-    return (mon_act != NULL);
+    return mon_act != NULL;
 }
 
 monster* game_state::which_mon_acting() const
@@ -539,7 +539,7 @@ void game_state::dump()
 
 bool game_state::player_is_dead() const
 {
-    return (updating_scores && !need_save);
+    return updating_scores && !need_save;
 }
 
 bool game_state::game_standard_levelgen() const
@@ -550,7 +550,7 @@ bool game_state::game_standard_levelgen() const
 bool game_state::game_is_normal() const
 {
     ASSERT(type < NUM_GAME_TYPE);
-    return (type == GAME_TYPE_NORMAL || type == GAME_TYPE_UNSPECIFIED);
+    return type == GAME_TYPE_NORMAL || type == GAME_TYPE_UNSPECIFIED;
 }
 
 bool game_state::game_is_tutorial() const

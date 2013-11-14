@@ -123,12 +123,12 @@ static bool _is_explore_horizon(const coord_def& c)
 #ifndef USE_TILE_LOCAL
 static ucs_t _get_sightmap_char(dungeon_feature_type feat)
 {
-    return (get_feature_def(feat).symbol);
+    return get_feature_def(feat).symbol;
 }
 
 static ucs_t _get_magicmap_char(dungeon_feature_type feat)
 {
-    return (get_feature_def(feat).magic_symbol);
+    return get_feature_def(feat).magic_symbol;
 }
 #endif
 
@@ -150,7 +150,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
     switch (feature)
     {
     case 'E':
-        return (travel_point_distance[where.x][where.y] == PD_EXCLUDED);
+        return travel_point_distance[where.x][where.y] == PD_EXCLUDED;
     case 'F':
     case 'W':
         return is_waypoint(where);
@@ -534,7 +534,7 @@ static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
 // Sort glyphs within a group, for the feature list.
 static bool _comp_glyphs(const cglyph_t& g1, const cglyph_t& g2)
 {
-    return (g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col);
+    return g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col;
 }
 
 #ifndef USE_TILE_LOCAL

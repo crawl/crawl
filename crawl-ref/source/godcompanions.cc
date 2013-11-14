@@ -178,7 +178,7 @@ bool companion_is_elsewhere(mid_t mid, bool must_exist)
                     && !monster_by_mid(mid)));
     }
 
-    return (!must_exist);
+    return !must_exist;
 }
 
 void wizard_list_companions()

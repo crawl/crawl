@@ -105,12 +105,12 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
         if (actual_feat == DNGN_PERMAROCK_WALL
             || actual_feat == DNGN_CLEAR_PERMAROCK_WALL)
         {
-            return (feat_wanted == DNGN_PERMAROCK_WALL
-                    || feat_wanted == DNGN_CLEAR_PERMAROCK_WALL);
+            return feat_wanted == DNGN_PERMAROCK_WALL
+                   || feat_wanted == DNGN_CLEAR_PERMAROCK_WALL;
         }
 
-        return (actual_feat >= DNGN_ROCK_WALL
-                && actual_feat <= DNGN_CLEAR_PERMAROCK_WALL);
+        return actual_feat >= DNGN_ROCK_WALL
+               && actual_feat <= DNGN_CLEAR_PERMAROCK_WALL;
     }
 
     return (feat_wanted == actual_feat
@@ -141,7 +141,7 @@ bool mons_airborne(monster_type mcls, int flies, bool paralysed)
     if (flies == -1)
         flies = mons_class_flies(mcls);
 
-    return (paralysed ? flies == FL_LEVITATE : flies != FL_NONE);
+    return paralysed ? flies == FL_LEVITATE : flies != FL_NONE;
 }
 
 // Can monsters of class monster_class live happily on actual_grid?
@@ -231,10 +231,10 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         case HT_AMPHIBIOUS:
             return feat_is_watery(feat);
         case HT_LAVA:
-            return (feat == DNGN_LAVA);
+            return feat == DNGN_LAVA;
         case HT_LAND:
             // Currently, trapdoor spider and air elemental only.
-            return (feat == DNGN_FLOOR);
+            return feat == DNGN_FLOOR;
         default:
             return false;
         }
@@ -437,9 +437,9 @@ void spawn_random_monsters()
 
 static bool _is_random_monster(monster_type mt)
 {
-    return (mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
-            || mt == RANDOM_COMPATIBLE_MONSTER
-            || mt == WANDERING_MONSTER);
+    return mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
+           || mt == RANDOM_COMPATIBLE_MONSTER
+           || mt == WANDERING_MONSTER;
 }
 
 static bool _is_not_zombifiable(monster_type mt)
@@ -514,7 +514,7 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
 
 bool drac_colour_incompatible(int drac, int colour)
 {
-    return (drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN);
+    return drac == MONS_DRACONIAN_SCORCHER && colour == MONS_WHITE_DRACONIAN;
 }
 
 // Finds a random square as close to a staircase as possible
@@ -769,7 +769,7 @@ static bool _valid_monster_generation_location(mgen_data &mg)
 // OOD packs, based on depth and time spent on-level.
 static bool _in_ood_pack_protected_place()
 {
-    return (env.turns_on_level < 1400 - env.absdepth0 * 117);
+    return env.turns_on_level < 1400 - env.absdepth0 * 117;
 }
 
 static void _abyss_monster_creation_message(const monster* mon)
@@ -1156,7 +1156,7 @@ monster* get_free_monster()
         if (env.mons[i].type == MONS_NO_MONSTER)
         {
             env.mons[i].reset();
-            return (&env.mons[i]);
+            return &env.mons[i];
         }
 
     return NULL;
@@ -1762,7 +1762,7 @@ monster_type pick_random_zombie()
         ASSERT(!zombifiable.empty());
     }
 
-    return (zombifiable[random2(zombifiable.size())]);
+    return zombifiable[random2(zombifiable.size())];
 }
 
 // Check base monster class against zombie type and position if set.
@@ -2925,7 +2925,7 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_DEATH_KNIGHT:
         if (which == 1 && x_chance_in_y(2, 3))
-            return (one_chance_in(3) ? MONS_GHOUL : MONS_FLAYED_GHOST);
+            return one_chance_in(3) ? MONS_GHOUL : MONS_FLAYED_GHOST;
         else
             return random_choose_weighted(5, MONS_WRAITH,
                                           6, MONS_FREEZING_WRAITH,
@@ -2961,7 +2961,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
         if (which == 1 && one_chance_in(3))
-            return (coinflip() ? MONS_SPRIGGAN_ENCHANTER : MONS_SPRIGGAN_ASSASSIN);
+            return coinflip() ? MONS_SPRIGGAN_ENCHANTER : MONS_SPRIGGAN_ASSASSIN;
     case BAND_SPRIGGANS:
         if ((band == BAND_SPRIGGAN_ELITES && which <= 2)
             || one_chance_in(4))
@@ -3480,7 +3480,7 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
             empty = *ri;
     }
 
-    return (good_count > 0);
+    return good_count > 0;
 }
 
 static void _get_vault_mon_list(vector<mons_spec> &list);

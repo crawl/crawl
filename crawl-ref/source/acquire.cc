@@ -890,7 +890,7 @@ static int _book_weight(book_type book)
 
 static bool _is_magic_skill(int skill)
 {
-    return (skill >= SK_SPELLCASTING && skill < SK_INVOCATIONS);
+    return skill >= SK_SPELLCASTING && skill < SK_INVOCATIONS;
 }
 
 static bool _skill_useless_with_god(int skill)
@@ -898,19 +898,19 @@ static bool _skill_useless_with_god(int skill)
     switch (you.religion)
     {
     case GOD_TROG:
-        return (_is_magic_skill(skill) || skill == SK_INVOCATIONS);
+        return _is_magic_skill(skill) || skill == SK_INVOCATIONS;
     case GOD_ZIN:
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
     case GOD_FEDHAS:
-        return (skill == SK_NECROMANCY);
+        return skill == SK_NECROMANCY;
     case GOD_XOM:
     case GOD_NEMELEX_XOBEH:
     case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
     case GOD_ASHENZARI:
     case GOD_NO_GOD:
-        return (skill == SK_INVOCATIONS);
+        return skill == SK_INVOCATIONS;
     default:
         return false;
     }
@@ -1165,7 +1165,7 @@ static bool _is_armour_plain(const item_def &item)
         return false;
     }
 
-    return (get_armour_ego_type(item) == SPARM_NORMAL);
+    return get_armour_ego_type(item) == SPARM_NORMAL;
 }
 
 int acquirement_create_item(object_class_type class_wanted,

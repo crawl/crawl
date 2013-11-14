@@ -969,7 +969,7 @@ int ghost_demon::n_extra_ghosts()
     if (env.absdepth0 < 10)
         return 0;
 
-    return (MAX_GHOSTS - 1);
+    return MAX_GHOSTS - 1;
 }
 
 // Sanity checks for some ghost values.

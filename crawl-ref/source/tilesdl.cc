@@ -515,7 +515,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     finfo.outline = outline;
     m_fonts.push_back(finfo);
 
-    return (m_fonts.size() - 1);
+    return m_fonts.size() - 1;
 }
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                                   const coord_def &gc)

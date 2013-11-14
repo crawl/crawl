@@ -262,7 +262,7 @@ static const struct luaL_reg moninf_lib[] =
 // This uses relative coordinates with origin the player.
 bool in_show_bounds(const coord_def &s)
 {
-    return (s.rdist() <= ENV_SHOW_OFFSET);
+    return s.rdist() <= ENV_SHOW_OFFSET;
 }
 
 LUAFN(mi_get_monster_at)

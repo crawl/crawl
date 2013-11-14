@@ -79,7 +79,7 @@ const char *get_species_abbrev(species_type which_species)
 {
     ASSERT_RANGE(which_species, 0, NUM_SPECIES);
 
-    return (Species_Abbrev_List[which_species]);
+    return Species_Abbrev_List[which_species];
 }
 
 // Needed for debug.cc and hiscores.cc.
@@ -246,20 +246,20 @@ int species_has_claws(species_type species, bool mut_level)
 
 bool species_likes_water(species_type species)
 {
-    return (species == SP_MERFOLK || species == SP_GREY_DRACONIAN
-            || species == SP_OCTOPODE);
+    return species == SP_MERFOLK || species == SP_GREY_DRACONIAN
+           || species == SP_OCTOPODE;
 }
 
 bool species_likes_lava(species_type species)
 {
-    return (species == SP_LAVA_ORC);
+    return species == SP_LAVA_ORC;
 }
 
 bool species_can_throw_large_rocks(species_type species)
 {
-    return (species == SP_OGRE
-            || species == SP_TROLL
-            || species == SP_FORMICID);
+    return species == SP_OGRE
+           || species == SP_TROLL
+           || species == SP_FORMICID;
 }
 
 genus_type species_genus(species_type species)
@@ -408,7 +408,7 @@ monster_type player_species_to_mons_species(species_type species)
 
 bool is_valid_species(species_type species)
 {
-    return (species >= 0 && species <= LAST_VALID_SPECIES);
+    return species >= 0 && species <= LAST_VALID_SPECIES;
 }
 
 bool is_species_valid_choice(species_type species)

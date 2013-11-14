@@ -526,7 +526,7 @@ static bool _hiscore_same_day(time_t t1, time_t t2)
 
     struct tm *d2  = TIME_FN(&t2);
 
-    return (d2->tm_mday == day && d2->tm_mon == mon && d2->tm_year == year);
+    return d2->tm_mday == day && d2->tm_mon == mon && d2->tm_year == year;
 }
 
 static void _hiscore_date_string(time_t time, char buff[INFO_SIZE])
@@ -586,7 +586,7 @@ static bool _hs_read(FILE *scores, scorefile_entry &dest)
 
 static int _val_char(char digit)
 {
-    return (digit - '0');
+    return digit - '0';
 }
 
 static time_t _parse_time(const string &st)
@@ -1784,7 +1784,7 @@ static string _append_sentence_delimiter(const string &sentence,
     if (lastch == '!' || lastch == '.')
         return sentence;
 
-    return (sentence + delimiter);
+    return sentence + delimiter;
 }
 
 string
@@ -1937,7 +1937,7 @@ string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
 static bool _species_is_undead(int sp)
 {
-    return (sp == SP_MUMMY || sp == SP_GHOUL || sp == SP_VAMPIRE);
+    return sp == SP_MUMMY || sp == SP_GHOUL || sp == SP_VAMPIRE;
 }
 
 string scorefile_entry::death_description(death_desc_verbosity verbosity) const

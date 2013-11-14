@@ -283,12 +283,12 @@ bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback)
 
 static const char *_run_mode_name(int runmode)
 {
-    return (runmode == RMODE_TRAVEL         ? "travel" :
-            runmode == RMODE_INTERLEVEL     ? "intertravel" :
-            runmode == RMODE_EXPLORE        ? "explore" :
-            runmode == RMODE_EXPLORE_GREEDY ? "explore_greedy" :
-            runmode > 0                     ? "run"
-                                            : "");
+    return runmode == RMODE_TRAVEL         ? "travel" :
+           runmode == RMODE_INTERLEVEL     ? "intertravel" :
+           runmode == RMODE_EXPLORE        ? "explore" :
+           runmode == RMODE_EXPLORE_GREEDY ? "explore_greedy" :
+           runmode > 0                     ? "run"
+                                           : "";
 }
 
 uint8_t is_waypoint(const coord_def &p)
@@ -397,7 +397,7 @@ bool is_stair_exclusion(const coord_def &p)
     if (feat_stair_direction(env.map_knowledge(p).feat()) == CMD_NO_CMD)
         return false;
 
-    return (get_exclusion_radius(p) == 1);
+    return get_exclusion_radius(p) == 1;
 }
 
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
@@ -412,8 +412,8 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (_travel_safe_grid.get())
     {
         const cell_travel_safety &cell((*_travel_safe_grid)(c));
-        return (ignore_hostile? cell.safe_if_ignoring_hostile_terrain
-                : cell.safe);
+        return ignore_hostile? cell.safe_if_ignoring_hostile_terrain
+               : cell.safe;
     }
 
     if (!env.map_knowledge(c).known())
@@ -559,7 +559,7 @@ static bool _is_branch_stair(const coord_def& pos)
     const level_id curr = level_id::current();
     const level_id next = level_id::get_next_level_id(pos);
 
-    return (next.branch != curr.branch);
+    return next.branch != curr.branch;
 }
 
 // Prompts the user to stop explore if necessary for the given
@@ -1143,8 +1143,8 @@ command_type direction_to_command(int x, int y)
     if (x ==  0 && y == -1) return CMD_MOVE_UP;
     if (x ==  0 && y ==  0)
     {
-        return (you.running == RMODE_EXPLORE_GREEDY ? CMD_INSPECT_FLOOR
-                                                    : CMD_NO_CMD);
+        return you.running == RMODE_EXPLORE_GREEDY ? CMD_INSPECT_FLOOR
+                                                   : CMD_NO_CMD;
     }
     if (x ==  0 && y ==  1) return CMD_MOVE_DOWN;
     if (x ==  1 && y == -1) return CMD_MOVE_UP_RIGHT;
@@ -1262,8 +1262,8 @@ const coord_def travel_pathfind::explore_target() const
 {
     if (unexplored_dist != UNFOUND_DIST && greedy_dist != UNFOUND_DIST)
     {
-        return (unexplored_dist < greedy_dist ? unexplored_place
-                                              : greedy_place);
+        return unexplored_dist < greedy_dist ? unexplored_place
+                                             : greedy_place;
     }
     else if (unexplored_dist != UNFOUND_DIST)
         return unexplored_place;
@@ -2110,7 +2110,7 @@ static vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 
 static bool _is_valid_branch(const Branch &br)
 {
-    return (br.shortname != NULL && brdepth[br.id] != -1);
+    return br.shortname != NULL && brdepth[br.id] != -1;
 }
 
 static bool _is_disconnected_branch(const Branch &br)
@@ -2205,9 +2205,9 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         case '\n': case '\r':
             return ID_REPEAT;
         case '<':
-            return (allow_updown ? ID_UP : ID_CANCEL);
+            return allow_updown ? ID_UP : ID_CANCEL;
         case '>':
-            return (allow_updown ? ID_DOWN : ID_CANCEL);
+            return allow_updown ? ID_DOWN : ID_CANCEL;
         case CONTROL('P'):
             {
                 const branch_type parent = parent_branch(curr.branch);
@@ -4129,7 +4129,7 @@ bool runrest::is_rest() const
 
 bool runrest::is_explore() const
 {
-    return (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY);
+    return runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY;
 }
 
 bool runrest::is_any_travel() const

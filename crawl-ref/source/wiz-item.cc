@@ -561,8 +561,8 @@ void wizard_tweak_object(void)
 // Returns whether an item of this type can be an artefact.
 static bool _item_type_can_be_artefact(int type)
 {
-    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-            || type == OBJ_BOOKS);
+    return type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
+           || type == OBJ_BOOKS;
 }
 
 static bool _make_book_randart(item_def &book)
@@ -737,8 +737,8 @@ void wizard_make_object_randart()
 // Returns whether an item of this type can be cursed.
 static bool _item_type_can_be_cursed(int type)
 {
-    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-            || type == OBJ_STAVES || type == OBJ_RODS);
+    return type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
+           || type == OBJ_STAVES || type == OBJ_RODS;
 }
 
 void wizard_uncurse_item()

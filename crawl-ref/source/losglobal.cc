@@ -120,5 +120,5 @@ bool cell_see_cell(const coord_def& p, const coord_def& q, los_type l)
 
     ASSERT(*flags & (l << LOS_KNOWN));
 
-    return (*flags & l);
+    return *flags & l;
 }

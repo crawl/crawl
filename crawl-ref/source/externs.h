@@ -185,42 +185,42 @@ struct coord_def
     coord_def operator + (const coord_def &other) const
     {
         coord_def copy = *this;
-        return (copy += other);
+        return copy += other;
     }
 
     coord_def operator + (int other) const
     {
         coord_def copy = *this;
-        return (copy += other);
+        return copy += other;
     }
 
     coord_def operator - (const coord_def &other) const
     {
         coord_def copy = *this;
-        return (copy -= other);
+        return copy -= other;
     }
 
     coord_def operator -() const
     {
-        return (coord_def(0, 0) - *this);
+        return coord_def(0, 0) - *this;
     }
 
     coord_def operator - (int other) const
     {
         coord_def copy = *this;
-        return (copy -= other);
+        return copy -= other;
     }
 
     coord_def operator / (int div) const
     {
         coord_def copy = *this;
-        return (copy /= div);
+        return copy /= div;
     }
 
     coord_def operator * (int mul) const
     {
         coord_def copy = *this;
-        return (copy *= mul);
+        return copy *= mul;
     }
 
     coord_def sgn() const
@@ -230,7 +230,7 @@ struct coord_def
 
     int abs() const
     {
-        return (x * x + y * y);
+        return x * x + y * y;
     }
 
     int rdist() const
@@ -240,7 +240,7 @@ struct coord_def
 
     bool origin() const
     {
-        return (!x && !y);
+        return !x && !y;
     }
 
     bool zero() const
@@ -250,7 +250,7 @@ struct coord_def
 
     bool equals(const int xi, const int yi) const
     {
-        return (xi == x && yi == y);
+        return xi == x && yi == y;
     }
 
     int range() const;
@@ -414,12 +414,12 @@ public:
 
     bool is_valid() const
     {
-        return (branch < NUM_BRANCHES && depth > 0);
+        return branch < NUM_BRANCHES && depth > 0;
     }
 
     bool operator == (const level_id &id) const
     {
-        return (branch == id.branch && depth == id.depth);
+        return branch == id.branch && depth == id.depth;
     }
 
     bool operator != (const level_id &id) const
@@ -434,7 +434,7 @@ public:
 
     bool operator == (const branch_type _branch) const
     {
-        return (branch == _branch);
+        return branch == _branch;
     }
 
     bool operator != (const branch_type _branch) const

@@ -720,13 +720,13 @@ static bool _dump_item_origin(const item_def &item)
         && item_type_known(item))
     {
         const int spec_ench = get_armour_ego_type(item);
-        return (spec_ench != SPARM_NORMAL);
+        return spec_ench != SPARM_NORMAL;
     }
 
     if (fs(IODS_EGO_WEAPON) && item.base_type == OBJ_WEAPONS
         && item_type_known(item))
     {
-        return (get_weapon_brand(item) != SPWPN_NORMAL);
+        return get_weapon_brand(item) != SPWPN_NORMAL;
     }
 
     if (fs(IODS_JEWELLERY) && item.base_type == OBJ_JEWELLERY)
@@ -1611,7 +1611,7 @@ static bool _dgl_unknown_timestamp_file(const string &filename)
         reader r(inh);
         const uint32_t file_version = unmarshallInt(r);
         fclose(inh);
-        return (file_version != DGL_TIMESTAMP_VERSION);
+        return file_version != DGL_TIMESTAMP_VERSION;
     }
     return false;
 }

@@ -238,7 +238,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 static bool _valid_weapon_swap(const item_def &item)
 {
     if (is_weapon(item))
-        return (you.species != SP_FELID);
+        return you.species != SP_FELID;
 
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
@@ -445,16 +445,16 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
 
 static const char *shield_base_name(const item_def *shield)
 {
-    return (shield->sub_type == ARM_BUCKLER ? "buckler"
-                                            : "shield");
+    return shield->sub_type == ARM_BUCKLER ? "buckler"
+                                           : "shield";
 }
 
 static const char *shield_impact_degree(int impact)
 {
-    return (impact > 160 ? "severely "      :
-            impact > 130 ? "significantly " :
-            impact > 110 ? ""
-                         : NULL);
+    return impact > 160 ? "severely "      :
+           impact > 130 ? "significantly " :
+           impact > 110 ? ""
+                        : NULL;
 }
 
 static void _warn_launcher_shield_slowdown(const item_def &launcher)
@@ -2917,15 +2917,15 @@ static void _vulnerability_scroll()
 
 bool _is_cancellable_scroll(scroll_type scroll)
 {
-    return (scroll == SCR_IDENTIFY
-            || scroll == SCR_BLINKING
-            || scroll == SCR_RECHARGING
-            || scroll == SCR_ENCHANT_ARMOUR
-            || scroll == SCR_AMNESIA
-            || scroll == SCR_REMOVE_CURSE
-            || scroll == SCR_CURSE_ARMOUR
-            || scroll == SCR_CURSE_JEWELLERY
-            || scroll == SCR_BRAND_WEAPON);
+    return scroll == SCR_IDENTIFY
+           || scroll == SCR_BLINKING
+           || scroll == SCR_RECHARGING
+           || scroll == SCR_ENCHANT_ARMOUR
+           || scroll == SCR_AMNESIA
+           || scroll == SCR_REMOVE_CURSE
+           || scroll == SCR_CURSE_ARMOUR
+           || scroll == SCR_CURSE_JEWELLERY
+           || scroll == SCR_BRAND_WEAPON;
 }
 
 void read_scroll(int slot)

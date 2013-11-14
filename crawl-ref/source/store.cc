@@ -1229,7 +1229,7 @@ int CrawlStoreValue::operator -- (int)
 
 string &CrawlStoreValue::operator += (const string &_val)
 {
-    return (get_string() += _val);
+    return get_string() += _val;
 }
 
 ////////////////////////////////////////////////////////////////////////////

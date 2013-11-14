@@ -531,7 +531,7 @@ bool player_likes_lava(bool permanently)
 
 bool player_can_open_doors()
 {
-    return (you.form != TRAN_BAT && you.form != TRAN_JELLY);
+    return you.form != TRAN_BAT && you.form != TRAN_JELLY;
 }
 
 // TODO: get rid of this.
@@ -540,7 +540,7 @@ bool player_genus(genus_type which_genus, species_type species)
     if (species == SP_UNKNOWN)
         species = you.species;
 
-    return (species_genus(species) == which_genus);
+    return species_genus(species) == which_genus;
 }
 
 // If transform is true, compare with current transformation instead
@@ -554,29 +554,29 @@ bool is_player_same_genus(const monster_type mon, bool transform)
         {
         // Unique monsters.
         case TRAN_BAT:
-            return (mon == MONS_BAT);
+            return mon == MONS_BAT;
         case TRAN_ICE_BEAST:
-            return (mon == MONS_ICE_BEAST);
+            return mon == MONS_ICE_BEAST;
         case TRAN_TREE:
-            return (mon == MONS_ANIMATED_TREE);
+            return mon == MONS_ANIMATED_TREE;
         case TRAN_PORCUPINE:
-            return (mon == MONS_PORCUPINE);
+            return mon == MONS_PORCUPINE;
         case TRAN_WISP:
-            return (mon == MONS_INSUBSTANTIAL_WISP);
+            return mon == MONS_INSUBSTANTIAL_WISP;
         // Compare with monster *species*.
         case TRAN_LICH:
-            return (mons_species(mon) == MONS_LICH);
+            return mons_species(mon) == MONS_LICH;
         // Compare with monster *genus*.
         case TRAN_FUNGUS:
-            return (mons_genus(mon) == MONS_FUNGUS);
+            return mons_genus(mon) == MONS_FUNGUS;
         case TRAN_SPIDER:
-            return (mons_genus(mon) == MONS_SPIDER);
+            return mons_genus(mon) == MONS_SPIDER;
         case TRAN_DRAGON:
-            return (mons_genus(mon) == MONS_DRAGON); // Includes all drakes.
+            return mons_genus(mon) == MONS_DRAGON; // Includes all drakes.
         case TRAN_PIG:
-            return (mons_genus(mon) == MONS_HOG);
+            return mons_genus(mon) == MONS_HOG;
         case TRAN_JELLY:
-            return (mons_genus(mon) == MONS_JELLY);
+            return mons_genus(mon) == MONS_JELLY;
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
@@ -587,7 +587,7 @@ bool is_player_same_genus(const monster_type mon, bool transform)
 
     // Genus would include necrophage and rotting hulk.
     if (you.species == SP_GHOUL)
-        return (mons_species(mon) == MONS_GHOUL);
+        return mons_species(mon) == MONS_GHOUL;
 
     if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
         return true;
@@ -682,7 +682,7 @@ bool you_can_wear(int eq, bool special_armour)
         return true;
 
     if (you.species == SP_FELID)
-        return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
+        return eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET;
 
     // Octopodes can wear soft helmets, eight rings, and an amulet.
     if (you.species == SP_OCTOPODE)
@@ -690,8 +690,8 @@ bool you_can_wear(int eq, bool special_armour)
         if (special_armour && eq == EQ_HELMET)
             return true;
         else
-            return (eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
-                    || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
+            return eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
+                   || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON;
     }
 
     switch (eq)
@@ -806,7 +806,7 @@ bool player_has_feet(bool temp)
 bool player_wearing_slot(int eq)
 {
     ASSERT(you.equip[eq] != -1 || !you.melded[eq]);
-    return (you.equip[eq] != -1 && !you.melded[eq]);
+    return you.equip[eq] != -1 && !you.melded[eq];
 }
 
 bool you_tran_can_wear(const item_def &item)
@@ -936,10 +936,10 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     }
 
     if (you.form == TRAN_FUNGUS)
-        return (eq == EQ_HELMET);
+        return eq == EQ_HELMET;
 
     if (you.form == TRAN_TREE)
-        return (eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_HELMET);
+        return eq == EQ_WEAPON || eq == EQ_SHIELD || eq == EQ_HELMET;
 
     return true;
 }
@@ -1219,7 +1219,7 @@ bool player_can_hit_monster(const monster* mon)
         return false;
 
     const item_def *weapon = you.weapon();
-    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+    return weapon && weapon_skill(*weapon) == SK_POLEARMS;
 }
 
 bool player_can_hear(const coord_def& p, int hear_distance)
@@ -2560,7 +2560,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         {
             const int ev_bonus = min(9 * scale,
                                      max(2 * scale, prescaled_ev / 4));
-            return (prescaled_ev + ev_bonus);
+            return prescaled_ev + ev_bonus;
         }
         break;
 
@@ -2570,7 +2570,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
         {
             const int ev_bonus = min(9 * scale,
                                      max(1 * scale, prescaled_ev / 5));
-            return (prescaled_ev + ev_bonus);
+            return prescaled_ev + ev_bonus;
         }
         break;
 
@@ -2662,7 +2662,7 @@ static int _player_body_armour_racial_spellcasting_bonus(const int scale)
     if (armour_race & player_race)
         armour_racial_spellcasting_bonus += 15;
 
-    return (armour_racial_spellcasting_bonus * scale);
+    return armour_racial_spellcasting_bonus * scale;
 }
 
 // Returns the spellcasting penalty (increase in spell failure) for the
@@ -2679,7 +2679,7 @@ int player_armour_shield_spell_penalty()
                  + 25 * you.adjusted_shield_penalty(scale)
                  - 20 * scale;
 
-    return (max(total_penalty, 0) / scale);
+    return max(total_penalty, 0) / scale;
 }
 
 int player_mag_abil(bool is_weighted)
@@ -3135,7 +3135,7 @@ bool will_gain_life(int lev)
     if (lev < you.attribute[ATTR_LIFE_GAINED] - 2)
         return false;
 
-    return (you.lives + you.deaths < (lev - 1) / 3);
+    return you.lives + you.deaths < (lev - 1) / 3;
 }
 
 static void _felid_extra_life()
@@ -3978,14 +3978,14 @@ int get_expiration_threshold(duration_type dur)
     switch (dur)
     {
     case DUR_PETRIFYING:
-        return (1 * BASELINE_DELAY);
+        return 1 * BASELINE_DELAY;
 
     case DUR_QUAD_DAMAGE:
-        return (3 * BASELINE_DELAY); // per client.qc
+        return 3 * BASELINE_DELAY; // per client.qc
 
     case DUR_FIRE_SHIELD:
     case DUR_SILENCE: // no message
-        return (5 * BASELINE_DELAY);
+        return 5 * BASELINE_DELAY;
 
     case DUR_DEFLECT_MISSILES:
     case DUR_REPEL_MISSILES:
@@ -4004,20 +4004,20 @@ int get_expiration_threshold(duration_type dur)
     case DUR_INFUSION:
     case DUR_SONG_OF_SLAYING:
     case DUR_TROGS_HAND:
-        return (6 * BASELINE_DELAY);
+        return 6 * BASELINE_DELAY;
 
     case DUR_FLIGHT:
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
-        return (10 * BASELINE_DELAY);
+        return 10 * BASELINE_DELAY;
 
     // These get no messages when they "flicker".
     case DUR_BARGAIN:
-        return (15 * BASELINE_DELAY);
+        return 15 * BASELINE_DELAY;
 
     case DUR_CONFUSING_TOUCH:
-        return (20 * BASELINE_DELAY);
+        return 20 * BASELINE_DELAY;
 
     case DUR_ANTIMAGIC:
         return you.hp_max; // not so severe anymore
@@ -4941,7 +4941,7 @@ int get_contamination_level()
     const int glow = you.magic_contamination;
 
     if (glow > 60000)
-        return (glow / 20000 + 3);
+        return glow / 20000 + 3;
     if (glow > 40000)
         return 5;
     if (glow > 25000)
@@ -5106,7 +5106,7 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 
     potion_effect(POT_SLOWING, 2 + random2(4 + amount));
 
-    return (hurted > 0);
+    return hurted > 0;
 }
 
 void paralyse_player(string source, int amount, int factor)
@@ -6250,7 +6250,7 @@ bool player::liquefied_ground() const
 
 int player::shield_block_penalty() const
 {
-    return (5 * shield_blocks * shield_blocks);
+    return 5 * shield_blocks * shield_blocks;
 }
 
 int player::shield_bonus() const
@@ -6264,7 +6264,7 @@ int player::shield_bonus() const
 
 int player::shield_bypass_ability(int tohit) const
 {
-    return (15 + tohit / 2);
+    return 15 + tohit / 2;
 }
 
 void player::shield_block_succeeded(actor *foe)
@@ -6587,7 +6587,7 @@ int player::armour_class() const
     AC += _mut_level(MUT_EXOSKELETON, MUTACT_FULL)
           ? _mut_level(MUT_EXOSKELETON, MUTACT_FULL) * 100 : 0;                // +1, +2
 
-    return (AC / 100);
+    return AC / 100;
 }
  /**
   * Guaranteed damage reduction.
@@ -6760,7 +6760,7 @@ int player::res_cold() const
 
 int player::res_elec() const
 {
-    return (player_res_electricity() * 2);
+    return player_res_electricity() * 2;
 }
 
 int player::res_water_drowning() const
@@ -7344,7 +7344,7 @@ bool player::has_usable_offhand() const
         return false;
 
     const item_def* wp = slot_item(EQ_WEAPON);
-    return (!wp || hands_reqd(*wp) != HANDS_TWO);
+    return !wp || hands_reqd(*wp) != HANDS_TWO;
 }
 
 bool player::has_usable_tentacle() const
@@ -7550,7 +7550,7 @@ bool player::has_lifeforce() const
 {
     const mon_holy_type holi = holiness();
 
-    return (holi == MH_NATURAL || holi == MH_PLANT);
+    return holi == MH_NATURAL || holi == MH_PLANT;
 }
 
 bool player::can_mutate() const
@@ -7563,9 +7563,9 @@ bool player::can_safely_mutate() const
     if (!can_mutate())
         return false;
 
-    return (!is_undead
-            || is_undead == US_SEMI_UNDEAD
-               && hunger_state == HS_ENGORGED);
+    return !is_undead
+           || is_undead == US_SEMI_UNDEAD
+              && hunger_state == HS_ENGORGED;
 }
 
 // Is the player too undead to bleed, rage, and polymorph?
@@ -7672,7 +7672,7 @@ bool player::polymorph(int pow)
 
 bool player::is_icy() const
 {
-    return (form == TRAN_ICE_BEAST);
+    return form == TRAN_ICE_BEAST;
 }
 
 bool player::is_fiery() const
@@ -7714,7 +7714,7 @@ bool player::can_throw_large_rocks() const
 
 bool player::can_smell() const
 {
-    return (species != SP_MUMMY);
+    return species != SP_MUMMY;
 }
 
 void player::hibernate(int)
@@ -7898,7 +7898,7 @@ bool player::do_shaft_ability()
 
 bool player::did_escape_death() const
 {
-    return (escaped_death_cause != NUM_KILLBY);
+    return escaped_death_cause != NUM_KILLBY;
 }
 
 void player::reset_escaped_death()

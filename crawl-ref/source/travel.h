@@ -255,7 +255,7 @@ private:
 
         bool operator == (const named_thing<Z> &other) const
         {
-            return (name == other.name);
+            return name == other.name;
         }
     };
 
@@ -416,7 +416,7 @@ public:
     LevelInfo *find_level_info(const level_id &lev)
     {
         map<level_id, LevelInfo>::iterator i = levels.find(lev);
-        return (i != levels.end()? &i->second : NULL);
+        return i != levels.end()? &i->second : NULL;
     }
 
     void erase_level_info(const level_id& lev)

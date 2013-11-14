@@ -425,7 +425,7 @@ void elven_twins_unpacify(monster* twin)
 **/
 bool mons_is_phoenix(const monster* mons)
 {
-    return (mons->type == MONS_PHOENIX);
+    return mons->type == MONS_PHOENIX;
 }
 
 /**

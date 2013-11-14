@@ -325,8 +325,8 @@ class colour_bar
 
     bool wants_redraw() const
     {
-        return (m_request_redraw_after
-                && you.num_turns >= m_request_redraw_after);
+        return m_request_redraw_after
+               && you.num_turns >= m_request_redraw_after;
     }
 
     void draw(int ox, int oy, int val, int max_val, bool temp = false)
@@ -692,7 +692,7 @@ static short _get_stat_colour(stat_type stat)
     // Check the stat_colour option for warning thresholds.
     for (unsigned int i = 0; i < Options.stat_colour.size(); ++i)
         if (you.stat(stat) <= Options.stat_colour[i].first)
-            return (Options.stat_colour[i].second);
+            return Options.stat_colour[i].second;
 
     // Stat is magically increased.
     if (you.duration[DUR_DIVINE_STAMINA]
@@ -2374,7 +2374,7 @@ string stealth_desc(int stealth)
          (stealth < 400) ? "extraordinarily " :
          (stealth < 520) ? "incredibly "
                          : "uncannily ";
-    return (prefix + "stealthy");
+    return prefix + "stealthy";
 }
 
 string magic_res_adjective(int mr)
@@ -2399,7 +2399,7 @@ string magic_res_adjective(int mr)
 static string _annotate_form_based(string desc, bool suppressed)
 {
     if (suppressed)
-        return ("<darkgrey>(" + desc + ")</darkgrey>");
+        return "<darkgrey>(" + desc + ")</darkgrey>";
     else
         return desc;
 }

@@ -125,7 +125,7 @@ static bool _coords(lua_State *ls, map_lines &lines,
     if (y2 < y1)
         swap(y1, y2);
 
-    return (x1 + border <= x2 - border && y1 + border <= y2 - border);
+    return x1 + border <= x2 - border && y1 + border <= y2 - border;
 }
 
 // Check if a given coordiante is valid for lines.

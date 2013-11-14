@@ -98,8 +98,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_STICKY_FLAME:
         return MB_BURNING;
     case ENCH_HELD:
-        return (get_trapping_net(mons.pos(), true) == NON_ITEM
-                ? MB_WEBBED : MB_CAUGHT);
+        return get_trapping_net(mons.pos(), true) == NON_ITEM
+               ? MB_WEBBED : MB_CAUGHT;
     case ENCH_PETRIFIED:
         return MB_PETRIFIED;
     case ENCH_PETRIFYING:
@@ -1096,7 +1096,7 @@ string monster_info::mimic_name() const
     if (!s.empty())
         s += " ";
 
-    return (s + "mimic");
+    return s + "mimic";
 }
 
 bool monster_info::has_proper_name() const
@@ -1184,7 +1184,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return false;
 
     if (m1.type == MONS_SLIME_CREATURE)
-        return (m1.number > m2.number);
+        return m1.number > m2.number;
 
     if (m1.type == MONS_BALLISTOMYCETE)
         return ((m1.number > 0) > (m2.number > 0));
@@ -1230,7 +1230,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
     }
 
     if (fullname || mons_is_pghost(m1.type))
-        return (m1.mname < m2.mname);
+        return m1.mname < m2.mname;
 
 #if 0 // for now, sort mb together.
     // By descending mb, so no mb sorts to the end

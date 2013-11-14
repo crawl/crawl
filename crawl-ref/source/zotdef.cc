@@ -48,7 +48,7 @@ static int _fuzz_mons_depth(int level)
     if (level > 1 && one_chance_in(7))
     {
         const int fuzz = random2avg(9, 2);
-        return (fuzz > 4 ? level + fuzz - 4 : level);
+        return fuzz > 4 ? level + fuzz - 4 : level;
     }
     return level;
 }
@@ -124,7 +124,7 @@ static branch_type _zotdef_random_branch()
                 break;
         }
         if (ok)
-            return (one_chance_in(4) ? BRANCH_DUNGEON : pb);
+            return one_chance_in(4) ? BRANCH_DUNGEON : pb;
             // strong bias to main dungeon
     }
 }

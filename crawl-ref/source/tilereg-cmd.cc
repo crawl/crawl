@@ -185,7 +185,7 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
     case CMD_REST:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
-        return (!safe);
+        return !safe;
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
     case CMD_PRAY:

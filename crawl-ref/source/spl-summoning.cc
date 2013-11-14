@@ -114,10 +114,10 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
 
 bool item_is_snakable(const item_def& item)
 {
-    return (item.base_type == OBJ_MISSILES
-            && (item.sub_type == MI_ARROW || item.sub_type == MI_JAVELIN)
-            && item.special != SPMSL_SILVER
-            && item.special != SPMSL_STEEL);
+    return item.base_type == OBJ_MISSILES
+           && (item.sub_type == MI_ARROW || item.sub_type == MI_JAVELIN)
+           && item.special != SPMSL_SILVER
+           && item.special != SPMSL_STEEL;
 }
 
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
@@ -2237,7 +2237,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
 {
     if (twisted_resurrection(&you, pow, BEH_FRIENDLY, MHITYOU, god, !fail))
-        return (fail ? SPRET_FAIL : SPRET_SUCCESS);
+        return fail ? SPRET_FAIL : SPRET_SUCCESS;
     else
     {
         mpr("There are no corpses nearby!");

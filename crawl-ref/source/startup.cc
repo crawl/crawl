@@ -525,9 +525,9 @@ static int _find_save(const vector<player_save_info>& chars, const string& name)
 
 static bool _game_defined(const newgame_def& ng)
 {
-    return (ng.type != NUM_GAME_TYPE
-            && ng.species != SP_UNKNOWN
-            && ng.job != JOB_UNKNOWN);
+    return ng.type != NUM_GAME_TYPE
+           && ng.species != SP_UNKNOWN
+           && ng.job != JOB_UNKNOWN;
 }
 
 static const int SCROLLER_MARGIN_X  = 18;

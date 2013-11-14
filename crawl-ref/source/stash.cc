@@ -106,7 +106,7 @@ bool is_stash(const coord_def& c)
     if (ls)
     {
         Stash *s = ls->find_stash(c);
-        return (s && s->enabled);
+        return s && s->enabled;
     }
     return false;
 }
@@ -121,7 +121,7 @@ string get_stash_desc(const coord_def& c)
         {
             const string desc = s->description();
             if (!desc.empty())
-                return ("[Stash: " + desc + "]");
+                return "[Stash: " + desc + "]";
         }
     }
     return "";
@@ -206,7 +206,7 @@ bool Stash::are_items_same(const item_def &a, const item_def &b)
 
 bool Stash::unverified() const
 {
-    return (!verified);
+    return !verified;
 }
 
 bool Stash::pickup_eligible() const
@@ -267,7 +267,7 @@ bool Stash::is_boring_feature(dungeon_feature_type feature)
 
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
-    return (you.visible_igrd(pos) != NON_ITEM);
+    return you.visible_igrd(pos) != NON_ITEM;
 }
 
 static bool _grid_has_perceived_multiple_items(const coord_def& pos)
@@ -277,7 +277,7 @@ static bool _grid_has_perceived_multiple_items(const coord_def& pos)
     for (stack_iterator si(pos, true); si && count < 2; ++si)
         ++count;
 
-    return (count > 1);
+    return count > 1;
 }
 
 void Stash::update()
@@ -1033,7 +1033,7 @@ bool ShopInfo::matches_search(const string &prefix,
     }
 
     activate_notes(note_status);
-    return (match || res.matches);
+    return match || res.matches;
 }
 
 vector<item_def> ShopInfo::inventory() const
@@ -1135,7 +1135,7 @@ Stash *LevelStashes::find_stash(coord_def c)
 
     const int abspos = (GXM * c.y) + c.x;
     stashes_t::iterator st = m_stashes.find(abspos);
-    return (st == m_stashes.end() ? NULL : &st->second);
+    return st == m_stashes.end() ? NULL : &st->second;
 }
 
 const Stash *LevelStashes::find_stash(coord_def c) const
@@ -1146,7 +1146,7 @@ const Stash *LevelStashes::find_stash(coord_def c) const
 
     const int abspos = (GXM * c.y) + c.x;
     stashes_t::const_iterator st = m_stashes.find(abspos);
-    return (st == m_stashes.end() ? NULL : &st->second);
+    return st == m_stashes.end() ? NULL : &st->second;
 }
 
 const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
@@ -1466,13 +1466,13 @@ void LevelStashes::remove_shop(const coord_def& c)
 
 LevelStashes &StashTracker::get_current_level()
 {
-    return (levels[level_id::current()]);
+    return levels[level_id::current()];
 }
 
 LevelStashes *StashTracker::find_level(const level_id &id)
 {
     stash_levels_t::iterator i = levels.find(id);
-    return (i != levels.end()? &i->second : NULL);
+    return i != levels.end()? &i->second : NULL;
 }
 
 LevelStashes *StashTracker::find_current_level()
@@ -1667,7 +1667,7 @@ public:
         if (lhs.player_distance != rhs.player_distance)
         {
             // Sort by increasing distance
-            return (lhs.player_distance < rhs.player_distance);
+            return lhs.player_distance < rhs.player_distance;
         }
         else if (lhs.player_distance == 0)
         {
@@ -1675,18 +1675,18 @@ public:
             const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
             const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
             if (lhs_dist != rhs_dist)
-                return (lhs_dist < rhs_dist);
+                return lhs_dist < rhs_dist;
         }
 
         if (lhs.matches != rhs.matches)
         {
             // Then by decreasing number of matches
-            return (lhs.matches > rhs.matches);
+            return lhs.matches > rhs.matches;
         }
         else if (lhs.match != rhs.match)
         {
             // Then by name.
-            return (lhs.match < rhs.match);
+            return lhs.match < rhs.match;
         }
         else
             return false;
@@ -1703,17 +1703,17 @@ public:
         if (lhs.match != rhs.match)
         {
             // Sort by name
-            return (lhs.match < rhs.match);
+            return lhs.match < rhs.match;
         }
         else if (lhs.player_distance != rhs.player_distance)
         {
             // Then sort by increasing distance
-            return (lhs.player_distance < rhs.player_distance);
+            return lhs.player_distance < rhs.player_distance;
         }
         else if (lhs.matches != rhs.matches)
         {
             // Then by decreasing number of matches
-            return (lhs.matches > rhs.matches);
+            return lhs.matches > rhs.matches;
         }
         else
             return false;
@@ -2230,7 +2230,7 @@ ST_ItemIterator::ST_ItemIterator()
 
 ST_ItemIterator::operator bool() const
 {
-    return (m_item != NULL);
+    return m_item != NULL;
 }
 
 const item_def& ST_ItemIterator::operator *() const

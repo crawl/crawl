@@ -308,7 +308,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     if (fail_reduce < 50)
         fail_reduce = 50;
 
-    return (chance * fail_reduce / 100);
+    return chance * fail_reduce / 100;
 }
 
 int spell_fail(spell_type spell)
@@ -2002,7 +2002,7 @@ static int _power_to_barcount(int power)
         return -1;
 
     const int breakpoints[] = { 10, 15, 25, 35, 50, 75, 100, 150, 200 };
-    return (breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
+    return breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1;
 }
 
 static int _spell_power_bars(spell_type spell, bool rod)

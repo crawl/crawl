@@ -234,7 +234,7 @@ int get_spell_slot_by_letter(char letter)
     if (you.spell_letter_table[ index ] == -1)
         return -1;
 
-    return (you.spell_letter_table[index]);
+    return you.spell_letter_table[index];
 }
 
 static int _get_spell_slot(spell_type spell)
@@ -392,19 +392,19 @@ int spell_hunger(spell_type which_spell, bool rod)
 // Note - this function assumes that the monster is "nearby" its target!
 bool spell_needs_tracer(spell_type spell)
 {
-    return (_seekspell(spell)->ms_needs_tracer);
+    return _seekspell(spell)->ms_needs_tracer;
 }
 
 // Checks if the spell is an explosion that can be placed anywhere even without
 // an unobstructed beam path, such as fire storm.
 bool spell_is_direct_explosion(spell_type spell)
 {
-    return (spell == SPELL_FIRE_STORM || spell == SPELL_HELLFIRE_BURST);
+    return spell == SPELL_FIRE_STORM || spell == SPELL_HELLFIRE_BURST;
 }
 
 bool spell_needs_foe(spell_type spell)
 {
-    return (!_seekspell(spell)->ms_utility);
+    return !_seekspell(spell)->ms_utility;
 }
 
 bool spell_harms_target(spell_type spell)
@@ -437,14 +437,14 @@ bool spell_harms_area(spell_type spell)
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
 {
-    return (_seekspell(which_spell)->level);
+    return _seekspell(which_spell)->level;
 }
 
 // applied in naughties (more difficult = higher level knowledge = worse)
 // and triggers for Sif acting (same reasoning as above, just good) {dlb}
 int spell_difficulty(spell_type which_spell)
 {
-    return (_seekspell(which_spell)->level);
+    return _seekspell(which_spell)->level;
 }
 
 int spell_levels_required(spell_type which_spell)
@@ -467,23 +467,23 @@ int spell_levels_required(spell_type which_spell)
 
 unsigned int get_spell_flags(spell_type which_spell)
 {
-    return (_seekspell(which_spell)->flags);
+    return _seekspell(which_spell)->flags;
 }
 
 const char *get_spell_target_prompt(spell_type which_spell)
 {
-    return (_seekspell(which_spell)->target_prompt);
+    return _seekspell(which_spell)->target_prompt;
 }
 
 bool spell_typematch(spell_type which_spell, unsigned int which_discipline)
 {
-    return (get_spell_disciplines(which_spell) & which_discipline);
+    return get_spell_disciplines(which_spell) & which_discipline;
 }
 
 //jmf: next two for simple bit handling
 unsigned int get_spell_disciplines(spell_type spell)
 {
-    return (_seekspell(spell)->disciplines);
+    return _seekspell(spell)->disciplines;
 }
 
 int count_bits(unsigned int bits)
@@ -510,7 +510,7 @@ bool disciplines_conflict(unsigned int disc1, unsigned int disc2)
 
 const char *spell_title(spell_type spell)
 {
-    return (_seekspell(spell)->title);
+    return _seekspell(spell)->title;
 }
 
 
@@ -896,8 +896,8 @@ static const spell_desc *_seekspell(spell_type spell)
 
 bool is_valid_spell(spell_type spell)
 {
-    return (spell > SPELL_NO_SPELL && spell < NUM_SPELLS
-            && spell_list[spell] != -1);
+    return spell > SPELL_NO_SPELL && spell < NUM_SPELLS
+           && spell_list[spell] != -1;
 }
 
 static bool _spell_range_varies(spell_type spell)
@@ -905,7 +905,7 @@ static bool _spell_range_varies(spell_type spell)
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
 
-    return (minrange < maxrange);
+    return minrange < maxrange;
 }
 
 int spell_power_cap(spell_type spell)

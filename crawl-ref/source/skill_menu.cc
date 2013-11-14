@@ -805,7 +805,7 @@ void SkillMenu::clear_flag(int flag)
 
 bool SkillMenu::is_set(int flag) const
 {
-    return (m_flags & flag);
+    return m_flags & flag;
 }
 
 void SkillMenu::set_flag(int flag)

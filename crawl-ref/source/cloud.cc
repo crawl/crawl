@@ -94,15 +94,15 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
     switch (whose)
     {
         case KC_YOU:
-            return (killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF);
+            return killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF;
 
         case KC_FRIENDLY:
-            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF
-                    || killer == KILL_MON);
+            return killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF
+                   || killer == KILL_MON;
 
         case KC_OTHER:
-            return (killer == KILL_MON_MISSILE || killer == KILL_MISCAST
-                    || killer == KILL_MISC || killer == KILL_MON);
+            return killer == KILL_MON_MISSILE || killer == KILL_MISCAST
+                   || killer == KILL_MISC || killer == KILL_MON;
 
         case KC_NCATEGORIES:
             die("kill category not matching killer type");
@@ -535,10 +535,10 @@ static bool _is_weak_cloud(int cl)
         return true;
 
     cloud_struct& cloud = env.cloud[cl];
-    return (cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
-            || cloud.type == CLOUD_BLACK_SMOKE
-            || cloud.type == CLOUD_MIST
-            || cloud.decay <= 20); // soon gone
+    return cloud.type >= CLOUD_GREY_SMOKE && cloud.type <= CLOUD_STEAM
+           || cloud.type == CLOUD_BLACK_SMOKE
+           || cloud.type == CLOUD_MIST
+           || cloud.decay <= 20; // soon gone
 }
 
 static bool cloud_is_stronger(cloud_type ct, int cl)
@@ -642,7 +642,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
 static bool _is_opaque_cloud(cloud_type ctype)
 {
-    return (ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST);
+    return ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST;
 }
 
 bool is_opaque_cloud(int cloud_idx)
@@ -656,8 +656,8 @@ bool is_opaque_cloud(int cloud_idx)
 cloud_type cloud_type_at(const coord_def &c)
 {
     const int cloudno = env.cgrid(c);
-    return (cloudno == EMPTY_CLOUD ? CLOUD_NONE
-                                   : env.cloud[cloudno].type);
+    return cloudno == EMPTY_CLOUD ? CLOUD_NONE
+                                  : env.cloud[cloudno].type;
 }
 
 cloud_type random_smoke_type()
@@ -712,9 +712,9 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
 static int _cloud_damage_calc(int size, int n_average, int extra,
                               bool maximum_damage)
 {
-    return (maximum_damage?
-            extra + size - 1
-            : random2avg(size, n_average) + extra);
+    return maximum_damage?
+           extra + size - 1
+           : random2avg(size, n_average) + extra;
 }
 
 // Calculates the base damage that the cloud does to an actor without
@@ -1257,9 +1257,9 @@ string cloud_type_name(cloud_type type, bool terse)
     COMPILE_CHECK(ARRAYSZ(_terse_cloud_names) == NUM_CLOUD_TYPES);
     COMPILE_CHECK(ARRAYSZ(_verbose_cloud_names) == NUM_CLOUD_TYPES);
 
-    return (type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES
-            ? "buggy goodness"
-            : (terse? _terse_cloud_names : _verbose_cloud_names)[type]);
+    return type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES
+           ? "buggy goodness"
+           : (terse? _terse_cloud_names : _verbose_cloud_names)[type];
 }
 
 ////////////////////////////////////////////////////////////////////////

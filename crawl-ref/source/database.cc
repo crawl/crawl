@@ -265,7 +265,7 @@ bool TextDB::_needs_update() const
         return false;
     }
 
-    return (ts != timestamp);
+    return ts != timestamp;
 }
 
 void TextDB::_regenerate_db()

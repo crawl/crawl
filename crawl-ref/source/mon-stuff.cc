@@ -479,7 +479,7 @@ int place_monster_corpse(const monster* mons, bool silent,
         }
     }
 
-    return (o == NON_ITEM ? -1 : o);
+    return o == NON_ITEM ? -1 : o;
 }
 
 static void _hints_inspect_kill()
@@ -490,9 +490,9 @@ static void _hints_inspect_kill()
 
 static string _milestone_kill_verb(killer_type killer)
 {
-    return (killer == KILL_BANISHED ? "banished" :
-            killer == KILL_PACIFIED ? "pacified" :
-            killer == KILL_ENSLAVED ? "enslaved" : "killed");
+    return killer == KILL_BANISHED ? "banished" :
+           killer == KILL_PACIFIED ? "pacified" :
+           killer == KILL_ENSLAVED ? "enslaved" : "killed";
 }
 
 void record_monster_defeat(monster* mons, killer_type killer)
@@ -3551,7 +3551,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
         return false;
 
     const item_def *weapon = mons->weapon();
-    return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+    return weapon && weapon_skill(*weapon) == SK_POLEARMS;
 }
 
 // Friendly summons can't attack out of the player's LOS, it's too abusable.
@@ -3577,7 +3577,7 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
         if (mons->props.exists(SW_TARGET_MID))
         {
             actor *target = actor_by_mid(mons->props[SW_TARGET_MID].get_int());
-            return (target && target->pos() == p);
+            return target && target->pos() == p;
         }
         return false;
     }
@@ -3667,7 +3667,7 @@ void print_wounds(const monster* mons)
 static bool _wounded_damaged(mon_holy_type holi)
 {
     // this schema needs to be abstracted into real categories {dlb}:
-    return (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT);
+    return holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT;
 }
 
 // If _mons_find_level_exits() is ever expanded to handle more grid
@@ -4041,7 +4041,7 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
 
 int mons_weapon_damage_rating(const item_def &launcher)
 {
-    return (property(launcher, PWPN_DAMAGE) + launcher.plus2);
+    return property(launcher, PWPN_DAMAGE) + launcher.plus2;
 }
 
 // Returns a rough estimate of damage from firing/throwing missile.
@@ -4284,7 +4284,7 @@ bool shift_monster(monster* mon, coord_def p)
         mgrd(result) = mon->mindex();
     }
 
-    return (count > 0);
+    return count > 0;
 }
 
 // Make all of the monster's original equipment disappear, unless it's a fixed
@@ -5010,25 +5010,25 @@ bool temperature_effect(int which)
         case LORC_FIRE_RES_I:
             return true; // 1-15
         case LORC_STONESKIN:
-            return (temperature() < TEMP_WARM); // 1-8
+            return temperature() < TEMP_WARM; // 1-8
 //      case nothing, right now:
 //            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
         case LORC_LAVA_BOOST:
             return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9-10
         case LORC_FIRE_RES_II:
-            return (temperature() >= TEMP_WARM); // 9-15
+            return temperature() >= TEMP_WARM; // 9-15
         case LORC_FIRE_RES_III:
         case LORC_FIRE_BOOST:
         case LORC_COLD_VULN:
-            return (temperature() >= TEMP_HOT); // 11-15
+            return temperature() >= TEMP_HOT; // 11-15
         case LORC_PASSIVE_HEAT:
-            return (temperature() >= TEMP_FIRE); // 13-15
+            return temperature() >= TEMP_FIRE; // 13-15
         case LORC_HEAT_AURA:
             if (you_worship(GOD_BEOGH))
                 return false;
             // Deliberate fall-through.
         case LORC_NO_SCROLLS:
-            return (temperature() >= TEMP_MAX); // 15
+            return temperature() >= TEMP_MAX; // 15
 
         default:
             return false;

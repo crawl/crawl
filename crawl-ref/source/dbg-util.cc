@@ -395,9 +395,9 @@ string debug_art_val_str(const item_def& item)
 
 int debug_cap_stat(int stat)
 {
-    return (stat <  1  ?   1 :
-            stat > 127 ? 127
-                       : stat);
+    return stat <  1  ?   1 :
+           stat > 127 ? 127
+                      : stat;
 }
 
 #ifdef DEBUG

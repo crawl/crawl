@@ -168,7 +168,7 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
         m_entries.push_back(entry);
     }
 
-    return (TILEP_MCACHE_START + idx);
+    return TILEP_MCACHE_START + idx;
 }
 
 void mcache_manager::clear_nonref()
@@ -900,7 +900,7 @@ int mcache_demon::info(tile_draw_info *dinfo) const
 
 bool mcache_demon::valid(const monster_info& mon)
 {
-    return (mon.type == MONS_PANDEMONIUM_LORD);
+    return mon.type == MONS_PANDEMONIUM_LORD;
 }
 
 #endif

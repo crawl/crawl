@@ -26,7 +26,7 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 static tileidx_t _mon_mod(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
-    return (tile + offset % count);
+    return tile + offset % count;
 }
 
 tileidx_t tilep_equ_weapon(const item_def &item)
@@ -639,7 +639,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_PALE_DRACONIAN:
     {
         const int colour_offset = _draconian_colour(sp, level);
-        return (TILEP_BASE_DRACONIAN + colour_offset * 2);
+        return TILEP_BASE_DRACONIAN + colour_offset * 2;
     }
     case SP_CENTAUR:
         return TILEP_BASE_CENTAUR;
