@@ -102,7 +102,7 @@ const Branch branches[NUM_BRANCHES] =
       true, GREEN, BROWN,
       'M', true, -5 },
 
-    { BRANCH_VAULTS, BRANCH_DEPTHS, 2, 5, 5, 19,
+    { BRANCH_VAULTS, BRANCH_DEPTHS, 1, 3, 5, 19,
       0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
       "Vaults", "the Vaults", "Vaults",
