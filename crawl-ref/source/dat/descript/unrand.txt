@@ -216,10 +216,8 @@ made a number of weapons imbued with magic that could counteract the magic
 holding undead together, inflicting great damage.
 
 Although the lich met his end long ago, his weapons, spreading disruption among
-the undead, are said to have been popular. At least, old tales are full of
-them. However, this mace might be the only one to last — perhaps due to efforts
-of the agents of the Shining One, who say that one should not fight necromancy
-with necromancy.
+the undead, are said to have been popular. However, this mace might be the only
+one remaining.
 %%%%
 whip "Snakebite"
 
