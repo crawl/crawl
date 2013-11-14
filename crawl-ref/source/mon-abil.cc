@@ -5013,9 +5013,7 @@ void waterport_touch(monster* nymph, actor* target)
                          nymph->pronoun(PRONOUN_POSSESSIVE, true).c_str());
                 }
                 else if (target->is_player())
-                {
                     mprf("You are drawn back into the water.");
-                }
                 else
                 {
                     if (could_see_victim)
