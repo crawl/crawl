@@ -11,7 +11,32 @@ for $f (grep /\.(cc|h)$/, split /\n/, `git ls-files`)
     # Should have told you to:
     # for x in *.cc *.h;do unbrace <"$x" >aa && mv aa "$x";done
     # like I always did before...
+    # Eliminate braces around one-line blocks.
     s&^( +(?:if|while|for|do|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
+
+    # return is not a function, eliminate totally enclosing parentheses.
+    # This part handles parenthese-less payloads.
+    while (/^( *)return \(([^()]+)\);/sm)
+    {
+        # Done this roundabout way to properly unindent multiline blocks.
+        my $prev = "$`$1return ";
+        my $next = ";$'";
+        my $cur = $2;
+        $cur =~ s/\n /\n/sg;
+        $_ = "$prev$cur$next";
+    }
+
+    # return (x) where x contains parentheses.
+    # Looks like no one told Larry Wall properties of regular expression,
+    # including the part where they can't do arbitrarily nested parentheses.
+    while (/^(\ *)return\ \( ([^()]++) (\( (?: [^()]++ | (?3) )* \)) ([^()]++)\);/sxm)
+    {
+        my $prev = "$`$1return ";
+        my $next = ";$'";
+        my $cur = "$2$3$4";
+        $cur =~ s/\n /\n/sg;
+        $_ = "$prev$cur$next";
+    }
 
     if ($old ne $_)
     {
