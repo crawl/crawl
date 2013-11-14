@@ -866,9 +866,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
             return false;
 
         if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) == 3)
-        {
             return false;
-        }
 
         if (eq == EQ_BOOTS
             && (you.fishtail

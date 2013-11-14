@@ -1378,9 +1378,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->holiness() == MH_HOLY)
         invalidate_agrid(true);
     if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR)
-    {
         invalidate_agrid(true);
-    }
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
