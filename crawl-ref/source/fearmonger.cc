@@ -52,7 +52,7 @@ bool player::add_fearmonger(const monster* mon)
 bool player::afraid() const
 {
     ASSERT(duration[DUR_AFRAID] > 0 == !fearmongers.empty());
-    return (duration[DUR_AFRAID] > 0);
+    return duration[DUR_AFRAID] > 0;
 }
 
 // Whether player is afraid of the given monster.

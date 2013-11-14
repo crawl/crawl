@@ -2096,7 +2096,7 @@ static bool _read_char_chunk(package *save)
         if (major == 33 && minor == TAG_MINOR_0_11)
             return true;
 #endif
-        return (major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION);
+        return major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION;
     }
     catch (short_read_exception &E)
     {

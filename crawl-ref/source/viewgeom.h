@@ -87,12 +87,12 @@ public:
 
     inline coord_def view2show(const coord_def &pos) const
     {
-        return (pos - vlos1);
+        return pos - vlos1;
     }
 
     inline coord_def show2view(const coord_def &pos) const
     {
-        return (pos + vlos1);
+        return pos + vlos1;
     }
 
     inline coord_def grid2show(const coord_def &pos) const
@@ -107,12 +107,12 @@ public:
 
     inline coord_def screen2view(const coord_def& pos) const
     {
-        return (pos - viewp + termp);
+        return pos - viewp + termp;
     }
 
     inline coord_def view2screen(const coord_def& pos) const
     {
-        return (pos + viewp - termp);
+        return pos + viewp - termp;
     }
 
     inline coord_def screen2grid(const coord_def& pos) const
@@ -132,8 +132,8 @@ public:
 
     bool in_los_bounds_g(const coord_def &c) const
     {
-        return (c.x >= glos1.x && c.x <= glos2.x
-                && c.y >= glos1.y && c.y <= glos2.y);
+        return c.x >= glos1.x && c.x <= glos2.x
+               && c.y >= glos1.y && c.y <= glos2.y;
     }
 
     bool in_los_bounds_v(const coord_def &c) const
@@ -143,8 +143,8 @@ public:
 
     bool in_viewport_v(const coord_def &c) const
     {
-        return (c.x > 0 && c.y > 0
-                && c.x <= viewsz.x && c.y <= viewsz.y);
+        return c.x > 0 && c.y > 0
+               && c.x <= viewsz.x && c.y <= viewsz.y;
     }
 
     bool in_viewport_s(const coord_def &c) const

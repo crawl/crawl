@@ -73,7 +73,7 @@ static int _get_hints_cols()
     return crawl_view.msgsz.x;
 #else
     int ncols = get_number_of_cols();
-    return (ncols > 80 ? 80 : ncols);
+    return ncols > 80 ? 80 : ncols;
 #endif
 }
 
@@ -4362,7 +4362,7 @@ bool hints_monster_interesting(const monster* mons)
         return true;
 
     // Dangerous.
-    return (mons_threat_level(mons) == MTHRT_NASTY);
+    return mons_threat_level(mons) == MTHRT_NASTY;
 }
 
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)

@@ -34,7 +34,7 @@ const int STATZERO_TURN_CAP = 200;
 int player::stat(stat_type s, bool nonneg) const
 {
     const int val = max_stat(s) - stat_loss[s];
-    return (nonneg ? max(val, 0) : val);
+    return nonneg ? max(val, 0) : val;
 }
 
 int player::strength(bool nonneg) const
@@ -261,7 +261,7 @@ static const char* descs[NUM_STATS][NUM_STAT_DESCS] =
 
 const char* stat_desc(stat_type stat, stat_desc_type desc)
 {
-    return (descs[stat][desc]);
+    return descs[stat][desc];
 }
 
 void modify_stat(stat_type which_stat, int amount, bool suppress_msg,

@@ -19,7 +19,7 @@ PlaceInfo::PlaceInfo()
 
 bool PlaceInfo::is_global() const
 {
-    return (branch == NUM_BRANCHES);
+    return branch == NUM_BRANCHES;
 }
 
 void PlaceInfo::assert_validity() const

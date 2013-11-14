@@ -9,5 +9,5 @@ string colour_string(string in, int col)
     if (in.empty())
         return in;
     const string cols = colour_to_str(col);
-    return ("<" + cols + ">" + in + "</" + cols + ">");
+    return "<" + cols + ">" + in + "</" + cols + ">";
 }

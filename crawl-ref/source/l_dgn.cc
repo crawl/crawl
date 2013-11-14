@@ -695,7 +695,7 @@ static int dgn_gly_points(lua_State *ls)
 
     for (int i = 0, size = cs.size(); i < size; ++i)
         dlua_push_coordinates(ls, cs[i]);
-    return (cs.size() * 2);
+    return cs.size() * 2;
 }
 
 static int dgn_original_map(lua_State *ls)

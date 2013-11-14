@@ -224,7 +224,7 @@ static bool _is_true_equipped_item(const item_def &item)
         return is_weapon(item);
 
     // Cursed armour and rings are only truly equipped if *not* wielded.
-    return (item.link != you.equip[EQ_WEAPON]);
+    return item.link != you.equip[EQ_WEAPON];
 }
 
 // Returns whether there's any action you can take with an item in inventory
@@ -259,7 +259,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 
     // Mummies can't do anything with food or potions.
     if (you.species == SP_MUMMY)
-        return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
+        return item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD;
 
     // In all other cases you can use the item in some way.
     return true;
@@ -867,12 +867,12 @@ void InventoryRegion::update()
 bool InventoryRegion::_is_prev_button(int idx)
 {
     // idx is an index in m_items as returned by cursor_index()
-    return (m_grid_page>0 && idx == mx*my*m_grid_page-2*m_grid_page);
+    return m_grid_page>0 && idx == mx*my*m_grid_page-2*m_grid_page;
 }
 
 bool InventoryRegion::_is_next_button(int idx)
 {
     // idx is an index in m_items as returned by cursor_index()
-    return (idx == mx*my*(m_grid_page+1)-1);
+    return idx == mx*my*(m_grid_page+1)-1;
 }
 #endif

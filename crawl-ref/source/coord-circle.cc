@@ -8,7 +8,7 @@
 
 bool rect_def::contains(const coord_def& p) const
 {
-    return (p.x >= min.x && p.x <= max.x && p.y >= min.y && p.y <= max.y);
+    return p.x >= min.x && p.x <= max.x && p.y >= min.y && p.y <= max.y;
 }
 
 rect_def rect_def::intersect(const rect_def& other) const

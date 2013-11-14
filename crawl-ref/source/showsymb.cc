@@ -171,7 +171,7 @@ static monster_type _show_mons_type(const monster_info& mi)
 static int _get_mons_colour(const monster_info& mi)
 {
     if (crawl_state.viewport_monster_hp) // show hp directly on the monster
-        return (dam_colour(mi) | COLFLAG_ITEM_HEAP);
+        return dam_colour(mi) | COLFLAG_ITEM_HEAP;
 
     int col = mi.colour;
 
@@ -470,7 +470,7 @@ cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
 
 ucs_t get_feat_symbol(dungeon_feature_type feat)
 {
-    return (get_feature_def(feat).symbol);
+    return get_feature_def(feat).symbol;
 }
 
 ucs_t get_item_symbol(show_item_type it)

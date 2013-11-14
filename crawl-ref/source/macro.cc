@@ -124,24 +124,24 @@ static int userfunc_index(const keyseq &seq)
 
 bool is_userfunction(int key)
 {
-    return (userfunc_index(key) != -1);
+    return userfunc_index(key) != -1;
 }
 
 static bool is_userfunction(const keyseq &seq)
 {
-    return (userfunc_index(seq) != -1);
+    return userfunc_index(seq) != -1;
 }
 
 string get_userfunction(int key)
 {
     int index = userfunc_index(key);
-    return (index == -1 ? NULL : userfunctions[index]);
+    return index == -1 ? NULL : userfunctions[index];
 }
 
 static string get_userfunction(const keyseq &seq)
 {
     int index = userfunc_index(seq);
-    return (index == -1 ? NULL : userfunctions[index]);
+    return index == -1 ? NULL : userfunctions[index];
 }
 
 static bool userfunc_referenced(int index, const macromap &mm)
@@ -200,7 +200,7 @@ static int userfunc_getindex(const string &fname)
     }
 
     userfunctions.push_back(fname);
-    return (userfunctions.size() - 1);
+    return userfunctions.size() - 1;
 }
 
 // Returns the name of the file that contains macros.
@@ -224,9 +224,9 @@ static string get_macro_file()
     check_mkdir("Macro directory", &dir, true);
 
 #if defined(DGL_NAMED_MACRO_FILE)
-    return (dir + strip_filename_unsafe_chars(you.your_name) + "-macro.txt");
+    return dir + strip_filename_unsafe_chars(you.your_name) + "-macro.txt";
 #else
-    return (dir + "macro.txt");
+    return dir + "macro.txt";
 #endif
 }
 
@@ -267,7 +267,7 @@ static int read_key_code(string s)
     else if (s[0] == '^')
     {
         // ^A = 1, etc.
-        return (1 + toupper(s[1]) - 'A');
+        return 1 + toupper(s[1]) - 'A';
     }
 
     char *tail;
@@ -570,7 +570,7 @@ void macro_clear_buffers()
 
 bool is_processing_macro()
 {
-    return (macro_keys_left >= 0);
+    return macro_keys_left >= 0;
 }
 
 bool has_pending_input()

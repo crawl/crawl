@@ -248,7 +248,7 @@ stack_iterator::stack_iterator(int start_link)
 
 stack_iterator::operator bool() const
 {
-    return (cur_link != NON_ITEM);
+    return cur_link != NON_ITEM;
 }
 
 item_def& stack_iterator::operator*() const
@@ -672,11 +672,11 @@ bool item_is_branded(const item_def& item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        return (get_weapon_brand(item) != SPWPN_NORMAL);
+        return get_weapon_brand(item) != SPWPN_NORMAL;
     case OBJ_ARMOUR:
-        return (get_armour_ego_type(item) != SPARM_NORMAL);
+        return get_armour_ego_type(item) != SPARM_NORMAL;
     case OBJ_MISSILES:
-        return (get_ammo_brand(item) != SPMSL_NORMAL);
+        return get_ammo_brand(item) != SPMSL_NORMAL;
     default:
         return false;
     }
@@ -947,7 +947,7 @@ void pickup_menu(int item_link)
 
 bool origin_known(const item_def &item)
 {
-    return (item.orig_place != 0);
+    return item.orig_place != 0;
 }
 
 void origin_reset(item_def &item)
@@ -1093,7 +1093,7 @@ static string _article_it(const item_def &item)
 
 static bool _origin_is_original_equip(const item_def &item)
 {
-    return (item.orig_place == 0xFFFFU && item.orig_monnum == -IT_SRC_START);
+    return item.orig_place == 0xFFFFU && item.orig_monnum == -IT_SRC_START;
 }
 
 bool origin_is_god_gift(const item_def& item, god_type *god)
@@ -1249,7 +1249,7 @@ bool player_on_single_stack()
     if (o == NON_ITEM)
         return false;
     else
-        return (mitm[o].link == NON_ITEM && mitm[o].quantity > 1);
+        return mitm[o].link == NON_ITEM && mitm[o].quantity > 1;
 }
 
 void pickup(bool partial_quantity)
@@ -1493,7 +1493,7 @@ int find_free_slot(const item_def &i)
                 if (slot + 1 < ENDOFPACK && !you.inv[slot + 1].defined()
                     && !disliked[slot + 1])
                 {
-                    return (slot + 1);
+                    return slot + 1;
                 }
             }
             else
@@ -2107,7 +2107,7 @@ bool multiple_items_at(const coord_def& where)
     for (stack_iterator si(where); si && found_count < 2; ++si)
         ++found_count;
 
-    return (found_count > 1);
+    return found_count > 1;
 }
 
 bool drop_item(int item_dropped, int quant_drop)
@@ -2324,13 +2324,13 @@ static bool _drop_item_order(const SelItem &first, const SelItem &second)
               slot2 = get_equip_slot(&i2);
 
     if (slot1 != -1 && slot2 != -1)
-        return (slot1 < slot2);
+        return slot1 < slot2;
     else if (slot1 != -1 && slot2 == -1)
         return false;
     else if (slot2 != -1 && slot1 == -1)
         return true;
 
-    return (first.slot < second.slot);
+    return first.slot < second.slot;
 }
 
 //---------------------------------------------------------------
@@ -2536,7 +2536,7 @@ static bool _is_option_autopickup(const item_def &item, string &iname)
     {
         const int force = you.force_autopickup[item.base_type][_autopickup_subtype(item)];
         if (force != 0)
-            return (force == 1);
+            return force == 1;
     }
     else
         return false;
@@ -2650,7 +2650,7 @@ static bool _similar_equip(const item_def& pickup_item,
          && pickup_item.sub_type <= WPN_LONGBOW)
              || pickup_item.sub_type == WPN_SLING)
     {
-        return (pickup_item.sub_type != inv_item.sub_type);
+        return pickup_item.sub_type != inv_item.sub_type;
     }
 
     return ((weapon_skill(pickup_item) == weapon_skill(inv_item))
@@ -2712,7 +2712,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         return false;
 
     if (item.base_type == OBJ_GOLD)
-        return (Options.explore_stop & ES_GREEDY_PICKUP_GOLD);
+        return Options.explore_stop & ES_GREEDY_PICKUP_GOLD;
 
     if ((Options.explore_stop & ES_GREEDY_PICKUP_THROWN)
         && (item.flags & ISFLAG_THROWN))
@@ -3021,7 +3021,7 @@ bool item_is_equipped(const item_def &item, bool quiver_too)
 bool item_is_melded(const item_def& item)
 {
     equipment_type eq = item_equip_slot(item);
-    return (eq != EQ_NONE && you.melded[eq]);
+    return eq != EQ_NONE && you.melded[eq];
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -3035,14 +3035,14 @@ bool item_def::has_spells() const
 
 int item_def::book_number() const
 {
-    return (base_type == OBJ_BOOKS  ? sub_type :
-            base_type == OBJ_RODS   ? sub_type + NUM_FIXED_BOOKS
-                                    : -1);
+    return base_type == OBJ_BOOKS  ? sub_type :
+           base_type == OBJ_RODS   ? sub_type + NUM_FIXED_BOOKS
+                                   : -1;
 }
 
 bool item_def::cursed() const
 {
-    return (flags & ISFLAG_CURSED);
+    return flags & ISFLAG_CURSED;
 }
 
 bool item_def::launched_by(const item_def &launcher) const
@@ -3107,7 +3107,7 @@ int item_def::armour_rating() const
     if (!defined() || base_type != OBJ_ARMOUR)
         return 0;
 
-    return (property(*this, PARM_AC) + plus);
+    return property(*this, PARM_AC) + plus;
 }
 
 monster* item_def::holding_monster() const
@@ -3141,7 +3141,7 @@ bool item_def::held_by_monster() const
 //        rules for unused objects might change).
 bool item_def::defined() const
 {
-    return (base_type != OBJ_UNASSIGNED && quantity > 0);
+    return base_type != OBJ_UNASSIGNED && quantity > 0;
 }
 
 bool item_type_has_unidentified(object_class_type base_type)
@@ -3184,10 +3184,10 @@ bool item_def::is_critical() const
     if (base_type == OBJ_ORBS)
         return true;
 
-    return (base_type == OBJ_MISCELLANY
-            && sub_type == MISC_RUNE_OF_ZOT
-            && plus != RUNE_DEMONIC
-            && plus != RUNE_ABYSSAL);
+    return base_type == OBJ_MISCELLANY
+           && sub_type == MISC_RUNE_OF_ZOT
+           && plus != RUNE_DEMONIC
+           && plus != RUNE_ABYSSAL;
 }
 
 // Is item something that no one would usually bother enchanting?

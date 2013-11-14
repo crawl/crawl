@@ -1145,11 +1145,11 @@ static bool _is_battlecry_compatible(monster* mons, battlecry_type type)
     switch(type)
     {
         case BATTLECRY_ORC:
-            return (mons_genus(mons->type) == MONS_ORC);
+            return mons_genus(mons->type) == MONS_ORC;
         case BATTLECRY_CHERUB_HYMN:
-            return (mons->holiness() == MH_HOLY);
+            return mons->holiness() == MH_HOLY;
         case BATTLECRY_SATYR_PIPES:
-            return (mons->holiness() == MH_NATURAL);
+            return mons->holiness() == MH_NATURAL;
         default:
             return false;
     }
@@ -2558,7 +2558,7 @@ struct target_position
     coord_def target;
     bool operator() (const coord_def & pos)
     {
-        return (pos == target);
+        return pos == target;
     }
 
 };
@@ -4607,7 +4607,7 @@ static bool _ballisto_at(const coord_def & target)
 
 static bool _player_at(const coord_def & target)
 {
-    return (you.pos() == target);
+    return you.pos() == target;
 }
 
 static bool _mold_connected(const coord_def & target)

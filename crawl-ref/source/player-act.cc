@@ -177,8 +177,8 @@ size_type player::body_size(size_part_type psize, bool base) const
     else
     {
         size_type tf_size = transform_size(form, psize);
-        return (tf_size == SIZE_CHARACTER ? species_size(species, psize)
-                                          : tf_size);
+        return tf_size == SIZE_CHARACTER ? species_size(species, psize)
+                                         : tf_size;
     }
 }
 
@@ -206,7 +206,7 @@ int player::body_weight(bool base) const
 
 int player::total_weight() const
 {
-    return (body_weight() + burden);
+    return body_weight() + burden;
 }
 
 int player::damage_type(int)
@@ -443,7 +443,7 @@ string player::hand_name(bool plural, bool *can_plural) const
     }
 
     if (str.empty())
-        return (plural ? "hands" : "hand");
+        return plural ? "hands" : "hand";
 
     if (plural && *can_plural)
         str = pluralise(str);
@@ -495,7 +495,7 @@ string player::foot_name(bool plural, bool *can_plural) const
     }
 
     if (str.empty())
-        return (plural ? "feet" : "foot");
+        return plural ? "feet" : "foot";
 
     if (plural && *can_plural)
         str = pluralise(str);

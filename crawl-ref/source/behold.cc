@@ -19,7 +19,7 @@
 
 static bool _mermaid_beholder(const monster* mons)
 {
-    return (mons_genus(mons->type) == MONS_MERMAID);
+    return mons_genus(mons->type) == MONS_MERMAID;
 }
 
 // Add a monster to the list of beholders.
@@ -70,7 +70,7 @@ void player::add_beholder(const monster* mon, bool axe)
 bool player::beheld() const
 {
     ASSERT(duration[DUR_MESMERISED] > 0 == !beholders.empty());
-    return (duration[DUR_MESMERISED] > 0);
+    return duration[DUR_MESMERISED] > 0;
 }
 
 // Whether player is mesmerised by the given monster.

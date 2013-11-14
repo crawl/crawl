@@ -265,7 +265,7 @@ static tileidx_t _random_trousers()
         offset += *name * 4643;
 
     const int range = TILEP_LEG_LAST_NORM - TILEP_LEG_FIRST_NORM + 1;
-    return (TILEP_LEG_FIRST_NORM + offset % range);
+    return TILEP_LEG_FIRST_NORM + offset % range;
 }
 
 void fill_doll_equipment(dolls_data &result)

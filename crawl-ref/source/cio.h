@@ -106,12 +106,12 @@ struct c_mouse_event
 
     bool left_clicked() const
     {
-        return (bstate & BUTTON1);
+        return bstate & BUTTON1;
     }
 
     bool right_clicked() const
     {
-        return (bstate & BUTTON3);
+        return bstate & BUTTON3;
     }
 
     bool scroll_up() const

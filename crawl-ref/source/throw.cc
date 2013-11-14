@@ -568,8 +568,8 @@ static bool _elemental_missile_beam(int launcher_brand, int ammo_brand)
         return true;
     if (ammo_brand != SPMSL_NORMAL)
         return false;
-    return (launcher_brand == SPWPN_CHAOS || launcher_brand == SPWPN_FROST ||
-            launcher_brand == SPWPN_FLAME);
+    return launcher_brand == SPWPN_CHAOS || launcher_brand == SPWPN_FROST ||
+           launcher_brand == SPWPN_FLAME;
 }
 
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)

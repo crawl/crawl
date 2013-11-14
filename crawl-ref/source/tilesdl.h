@@ -266,10 +266,10 @@ protected:
         void reset() { reg = NULL; cx = cy = -1; mode = MOUSE_MODE_MAX; }
         bool operator==(const cursor_loc &rhs) const
         {
-            return (rhs.reg == reg
-                    && rhs.cx == cx
-                    && rhs.cy == cy
-                    && rhs.mode == mode);
+            return rhs.reg == reg
+                   && rhs.cx == cx
+                   && rhs.cy == cy
+                   && rhs.mode == mode;
         }
         bool operator!=(const cursor_loc &rhs) const
         {

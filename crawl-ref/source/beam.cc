@@ -116,7 +116,7 @@ bool bolt::is_blockable() const
     // BEAM_ELECTRICITY is added here because chain lightning is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
-    return (!is_beam && !is_explosion && flavour != BEAM_ELECTRICITY);
+    return !is_beam && !is_explosion && flavour != BEAM_ELECTRICITY;
 }
 
 void bolt::emit_message(msg_channel_type chan, const char* m)
@@ -422,7 +422,7 @@ int zap_power_cap(zap_type z_type)
 {
     const zap_info* zinfo = _seek_zap(z_type);
 
-    return (zinfo ? zinfo->power_cap : 0);
+    return zinfo ? zinfo->power_cap : 0;
 }
 
 void zappy(zap_type z_type, int power, bolt &pbolt)
@@ -1050,7 +1050,7 @@ void bolt::nuke_wall_effect()
 int bolt::range_used(bool leg_only) const
 {
     const int leg_length = pos().range(leg_source());
-    return (leg_only ? leg_length : leg_length + extra_range_used);
+    return leg_only ? leg_length : leg_length + extra_range_used;
 }
 
 void bolt::finish_beam()
@@ -2095,7 +2095,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
     if (agent->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
-    return (hurted > 0);
+    return hurted > 0;
 }
 
 // Actually poisons a monster (with message).
@@ -2128,7 +2128,7 @@ bool poison_monster(monster* mons, const actor *who, int levels,
     if (who && who->is_player())
         did_god_conduct(DID_POISON, 5 + random2(3));
 
-    return (new_pois.duration > old_pois.duration);
+    return new_pois.duration > old_pois.duration;
 }
 
 // Actually poisons, rots, and/or slows a monster with miasma (with
@@ -2190,7 +2190,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
         behaviour_event(mons, ME_WHACK, who);
     }
 
-    return (new_flame.degree > old_flame.degree);
+    return new_flame.degree > old_flame.degree;
 }
 
 //  Used by monsters in "planning" which spell to cast. Fires off a "tracer"
@@ -2583,7 +2583,7 @@ void bolt::affect_endpoint()
 
 bool bolt::stop_at_target() const
 {
-    return (is_explosion || is_big_cloud || aimed_at_spot);
+    return is_explosion || is_big_cloud || aimed_at_spot;
 }
 
 void bolt::drop_object()
@@ -2637,7 +2637,7 @@ bool bolt::found_player() const
                              && you.invisible() && !YOU_KILL(thrower));
     const int dist = needs_fuzz? 2 : 0;
 
-    return (grid_distance(pos(), you.pos()) <= dist);
+    return grid_distance(pos(), you.pos()) <= dist;
 }
 
 void bolt::affect_ground()
@@ -2694,9 +2694,9 @@ void bolt::affect_ground()
 
 bool bolt::is_fiery() const
 {
-    return (flavour == BEAM_FIRE
-            || flavour == BEAM_HELLFIRE
-            || flavour == BEAM_LAVA);
+    return flavour == BEAM_FIRE
+           || flavour == BEAM_HELLFIRE
+           || flavour == BEAM_LAVA;
 }
 
 bool bolt::is_superhot() const
@@ -2704,12 +2704,12 @@ bool bolt::is_superhot() const
     if (!is_fiery() && flavour != BEAM_ELECTRICITY)
         return false;
 
-    return (name == "bolt of fire"
-            || name == "bolt of magma"
-            || name == "fireball"
-            || name == "bolt of lightning"
-            || name.find("hellfire") != string::npos
-               && in_explosion_phase);
+    return name == "bolt of fire"
+           || name == "bolt of magma"
+           || name == "fireball"
+           || name == "bolt of lightning"
+           || name.find("hellfire") != string::npos
+              && in_explosion_phase;
 }
 
 maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
@@ -2723,10 +2723,10 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     }
 
     if (is_fiery() && feat_is_tree(wall))
-        return (is_superhot() ? MB_TRUE : is_beam ? MB_MAYBE : MB_FALSE);
+        return is_superhot() ? MB_TRUE : is_beam ? MB_MAYBE : MB_FALSE;
 
     if (flavour == BEAM_ELECTRICITY && feat_is_tree(wall))
-        return (is_superhot() ? MB_TRUE : MB_MAYBE);
+        return is_superhot() ? MB_TRUE : MB_MAYBE;
 
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
         || flavour == BEAM_NUKE)
@@ -2958,7 +2958,7 @@ bool bolt::fuzz_invis_tracer()
         && mons_sense_invis(beam_src->as_monster()))
     {
         // Monsters that can sense invisible
-        return (dist == 0);
+        return dist == 0;
     }
 
     // Apply fuzz now.
@@ -2998,7 +2998,7 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
 
     dprf(DIAG_BEAM, "Beam new attack: %d, defence: %d", attack, defence);
 
-    return (attack >= defence);
+    return attack >= defence;
 }
 
 string bolt::zapper() const
@@ -3026,31 +3026,31 @@ bool bolt::is_harmless(const monster* mon) const
         return true;
 
     case BEAM_HOLY:
-        return (mon->res_holy_energy(agent()) > 0);
+        return mon->res_holy_energy(agent()) > 0;
 
     case BEAM_STEAM:
-        return (mon->res_steam() >= 3);
+        return mon->res_steam() >= 3;
 
     case BEAM_FIRE:
-        return (mon->res_fire() >= 3);
+        return mon->res_fire() >= 3;
 
     case BEAM_COLD:
-        return (mon->res_cold() >= 3);
+        return mon->res_cold() >= 3;
 
     case BEAM_MIASMA:
         return mon->res_rotting();
 
     case BEAM_NEG:
-        return (mon->res_negative_energy() == 3);
+        return mon->res_negative_energy() == 3;
 
     case BEAM_ELECTRICITY:
-        return (mon->res_elec() >= 3);
+        return mon->res_elec() >= 3;
 
     case BEAM_POISON:
-        return (mon->res_poison() >= 3);
+        return mon->res_poison() >= 3;
 
     case BEAM_ACID:
-        return (mon->res_acid() >= 3);
+        return mon->res_acid() >= 3;
 
     case BEAM_PETRIFY:
         return (mon->res_petrify() || mon->petrified());
@@ -3087,13 +3087,13 @@ bool bolt::harmless_to_player() const
         return is_good_god(you.religion);
 
     case BEAM_STEAM:
-        return (player_res_steam(false) >= 3);
+        return player_res_steam(false) >= 3;
 
     case BEAM_MIASMA:
         return you.res_rotting();
 
     case BEAM_NEG:
-        return (player_prot_life(false) >= 3);
+        return player_prot_life(false) >= 3;
 
     case BEAM_POISON:
         return (player_res_poison(false) >= 3
@@ -5724,7 +5724,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         delay(explode_delay);
     }
 
-    return (cells_seen > 0);
+    return cells_seen > 0;
 }
 
 void bolt::explosion_draw_cell(const coord_def& p)
@@ -5860,13 +5860,13 @@ bool bolt::nasty_to(const monster* mon) const
 {
     // Cleansing flame.
     if (flavour == BEAM_HOLY)
-        return (mon->res_holy_energy(agent()) <= 0);
+        return mon->res_holy_energy(agent()) <= 0;
 
     // The orbs are made of pure disintegration energy.  This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
     if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
-        return (mon->type != MONS_ORB_OF_DESTRUCTION);
+        return mon->type != MONS_ORB_OF_DESTRUCTION;
 
     // Take care of other non-enchantments.
     if (!is_enchantment())
@@ -5894,7 +5894,7 @@ bool bolt::nasty_to(const monster* mon) const
 
     // dispel undead
     if (flavour == BEAM_DISPEL_UNDEAD)
-        return (mon->holiness() == MH_UNDEAD);
+        return mon->holiness() == MH_UNDEAD;
 
     // pain / agony
     if (flavour == BEAM_PAIN)
@@ -5916,8 +5916,8 @@ bool bolt::nice_to(const monster* mon) const
     // (very) ugly thing.
     if (flavour == BEAM_POLYMORPH)
     {
-        return (mon->type == MONS_UGLY_THING
-                || mon->type == MONS_VERY_UGLY_THING);
+        return mon->type == MONS_UGLY_THING
+               || mon->type == MONS_VERY_UGLY_THING;
     }
 
     if (flavour == BEAM_HASTE
@@ -6060,8 +6060,8 @@ actor* bolt::agent(bool ignore_reflection) const
 
 bool bolt::is_enchantment() const
 {
-    return (flavour >= BEAM_FIRST_ENCHANTMENT
-            && flavour <= BEAM_LAST_ENCHANTMENT);
+    return flavour >= BEAM_FIRST_ENCHANTMENT
+           && flavour <= BEAM_LAST_ENCHANTMENT;
 }
 
 string bolt::get_short_name() const

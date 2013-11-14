@@ -54,7 +54,7 @@ static bool _is_bookrod_type(const item_def& item,
 
     // If at least half of the available spells are suitable, the whole
     // spellbook or rod is, too.
-    return (total_liked >= (total / 2) + 1);
+    return total_liked >= (total / 2) + 1;
 }
 
 bool is_holy_item(const item_def& item)
@@ -197,24 +197,24 @@ bool is_evil_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        return (item_brand == SPWPN_DRAINING
-                || item_brand == SPWPN_PAIN
-                || item_brand == SPWPN_VAMPIRICISM
-                || item_brand == SPWPN_REAPING);
+        return item_brand == SPWPN_DRAINING
+               || item_brand == SPWPN_PAIN
+               || item_brand == SPWPN_VAMPIRICISM
+               || item_brand == SPWPN_REAPING;
         }
         break;
     case OBJ_WANDS:
-        return (item.sub_type == WAND_DRAINING);
+        return item.sub_type == WAND_DRAINING;
     case OBJ_POTIONS:
         return is_blood_potion(item);
     case OBJ_SCROLLS:
-        return (item.sub_type == SCR_TORMENT);
+        return item.sub_type == SCR_TORMENT;
     case OBJ_STAVES:
-        return (item.sub_type == STAFF_DEATH);
+        return item.sub_type == STAFF_DEATH;
     case OBJ_BOOKS:
         return _is_bookrod_type(item, is_evil_spell);
     case OBJ_MISCELLANY:
-        return (item.sub_type == MISC_LANTERN_OF_SHADOWS);
+        return item.sub_type == MISC_LANTERN_OF_SHADOWS;
     default:
         return false;
     }
@@ -398,42 +398,42 @@ bool is_unholy_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return (flags & SPFLAG_UNHOLY);
+    return flags & SPFLAG_UNHOLY;
 }
 
 bool is_corpse_violating_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return (flags & SPFLAG_CORPSE_VIOLATING);
+    return flags & SPFLAG_CORPSE_VIOLATING;
 }
 
 bool is_evil_spell(spell_type spell)
 {
     unsigned int disciplines = get_spell_disciplines(spell);
 
-    return (disciplines & SPTYP_NECROMANCY);
+    return disciplines & SPTYP_NECROMANCY;
 }
 
 bool is_unclean_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return (flags & SPFLAG_UNCLEAN);
+    return flags & SPFLAG_UNCLEAN;
 }
 
 bool is_chaotic_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return (flags & SPFLAG_CHAOTIC);
+    return flags & SPFLAG_CHAOTIC;
 }
 
 bool is_hasty_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
 
-    return (flags & SPFLAG_HASTY);
+    return flags & SPFLAG_HASTY;
 }
 
 static bool _your_god_hates_spell(spell_type spell)
@@ -610,7 +610,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
     switch (god)
     {
     case GOD_SHINING_ONE:
-        return (discipline & SPTYP_POISON);
+        return discipline & SPTYP_POISON;
 
     case GOD_ELYVILON:
         return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));

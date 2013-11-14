@@ -1881,7 +1881,7 @@ void game_options::add_alias(const string &key, const string &val)
 string game_options::unalias(const string &key) const
 {
     string_map::const_iterator i = aliases.find(key);
-    return (i == aliases.end()? key : i->second);
+    return i == aliases.end()? key : i->second;
 }
 
 #define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
@@ -4605,7 +4605,7 @@ int game_options::o_colour(const char *name, int def) const
     trim_string(val);
     lowercase(val);
     int col = str_to_colour(val);
-    return (col == -1? def : col);
+    return col == -1? def : col;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -4639,7 +4639,7 @@ menu_sort_condition::menu_sort_condition(const string &s)
 
 bool menu_sort_condition::matches(menu_type mt) const
 {
-    return (mtype == MT_ANY || mtype == mt);
+    return mtype == MT_ANY || mtype == mt;
 }
 
 void menu_sort_condition::set_menu_type(string &s)

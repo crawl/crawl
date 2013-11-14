@@ -166,7 +166,7 @@ int maybe_random2(int x, bool random_factor)
     if (random_factor)
         return random2(x);
     else
-        return (x / 2);
+        return x / 2;
 }
 
 // [0, ceil(nom/denom)]
@@ -175,9 +175,9 @@ int maybe_random_div(int nom, int denom, bool random_factor)
     if (nom <= 0)
         return 0;
     if (random_factor)
-        return (random2(nom + denom) / denom);
+        return random2(nom + denom) / denom;
     else
-        return (nom / 2 / denom);
+        return nom / 2 / denom;
 }
 
 // [num, num*size]
@@ -259,7 +259,7 @@ int div_rand_round(int num, int den)
     if (rem)
         return (num / den + (random2(den) < rem));
     else
-        return (num / den);
+        return num / den;
 }
 
 // [0, max)
@@ -287,7 +287,7 @@ int random2avg(int max, int rolls)
     for (int i = 0; i < (rolls - 1); i++)
         sum += random2(max + 1);
 
-    return (sum / rolls);
+    return sum / rolls;
 }
 
 // biased_random2() takes values in the same range [0, max) as random2() but
@@ -359,7 +359,7 @@ double random_real_avg(int rolls)
     for (int i = 0; i < rolls; i++)
         sum += random_real_inc();
 
-    return (sum / (double)rolls);
+    return sum / (double)rolls;
 }
 
 // range [low, high], weighted to middle with multiple rolls
@@ -381,7 +381,7 @@ bool bernoulli(double n_trials, double trial_prob)
 
 bool one_chance_in(int a_million)
 {
-    return (random2(a_million) == 0);
+    return random2(a_million) == 0;
 }
 
 bool x_chance_in_y(int x, int y)
@@ -392,7 +392,7 @@ bool x_chance_in_y(int x, int y)
     if (x >= y)
         return true;
 
-    return (random2(y) < x);
+    return random2(y) < x;
 }
 
 // [val - lowfuzz, val + highfuzz]
@@ -476,5 +476,5 @@ int defer_rand::random2avg(int max, int rolls)
     for (int i = 0; i < (rolls - 1); i++)
         sum += (*this)[i+1].random2(max + 1);
 
-    return (sum / rolls);
+    return sum / rolls;
 }

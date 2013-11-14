@@ -770,7 +770,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
         string b_name = mons_type_name(b->type, DESC_PLAIN);
         return (lowercase(a_name) < lowercase(b_name));
     }
-    return (a_toughness > b_toughness);
+    return a_toughness > b_toughness;
 }
 
 class DescMenu : public Menu
@@ -950,7 +950,7 @@ static bool _spell_filter(string key, string body)
 
 static bool _item_filter(string key, string body)
 {
-    return (item_kind_by_name(key).base_type == OBJ_UNASSIGNED);
+    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED;
 }
 
 static bool _skill_filter(string key, string body)
@@ -974,7 +974,7 @@ static bool _skill_filter(string key, string body)
 
 static bool _feature_filter(string key, string body)
 {
-    return (feat_by_desc(key) == DNGN_UNSEEN);
+    return feat_by_desc(key) == DNGN_UNSEEN;
 }
 
 static bool _card_filter(string key, string body)

@@ -30,7 +30,7 @@ AsgKISS::get_uint32()
         m_mwcm = t;
     }
 
-    return (m_lcg + m_mwcm + m_xorshift);
+    return m_lcg + m_mwcm + m_xorshift;
 }
 
 AsgKISS::AsgKISS()

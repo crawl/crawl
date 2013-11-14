@@ -59,8 +59,8 @@ static bool _is_highest_skill(int skill)
 
 static bool _is_noteworthy_hp(int hp, int maxhp)
 {
-    return (hp > 0 && Options.note_hp_percent
-            && hp <= (maxhp * Options.note_hp_percent) / 100);
+    return hp > 0 && Options.note_hp_percent
+           && hp <= (maxhp * Options.note_hp_percent) / 100;
 }
 
 static int _dungeon_branch_depth(uint8_t branch)

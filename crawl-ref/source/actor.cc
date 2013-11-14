@@ -109,7 +109,7 @@ bool actor::handle_trap()
     trap_def* trap = find_trap(pos());
     if (trap)
         trap->trigger(*this);
-    return (trap != NULL);
+    return trap != NULL;
 }
 
 int actor::skill_rdiv(skill_type sk, int mult, int div) const
@@ -154,7 +154,7 @@ int actor::check_res_magic(int power)
     dprf("Power: %d, MR: %d, target: %d, roll: %d",
          power, mrs, mrchance, mrch2);
 
-    return (mrchance - mrch2);
+    return mrchance - mrch2;
 }
 
 void actor::set_position(const coord_def &c)

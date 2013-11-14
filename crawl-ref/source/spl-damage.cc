@@ -1319,7 +1319,7 @@ bool mons_shatter(monster* caster, bool actual)
     if (!actual)
         dprf("Shatter foe HD: %d", foes);
 
-    return (foes > 0); // doesn't matter if actual
+    return foes > 0; // doesn't matter if actual
 }
 
 void shillelagh(actor *wielder, coord_def where, int pow)

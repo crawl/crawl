@@ -176,7 +176,7 @@ int get_skill_percentage(const skill_type x)
 
 const char *skill_name(skill_type which_skill)
 {
-    return (skills[which_skill][0]);
+    return skills[which_skill][0];
 }
 
 skill_type str_to_skill(const string &skill)
@@ -212,11 +212,11 @@ static string _stk_genus_short_cap()
 
 static string _stk_walker()
 {
-    return (Skill_Species == SP_NAGA     ? "Slider" :
-            Skill_Species == SP_TENGU    ? "Glider" :
-            Skill_Species == SP_DJINNI   ? "Floater" :
-            Skill_Species == SP_OCTOPODE ? "Wriggler"
-                                         : "Walker");
+    return Skill_Species == SP_NAGA     ? "Slider" :
+           Skill_Species == SP_TENGU    ? "Glider" :
+           Skill_Species == SP_DJINNI   ? "Floater" :
+           Skill_Species == SP_OCTOPODE ? "Wriggler"
+                                        : "Walker";
 }
 
 static string _stk_weight()

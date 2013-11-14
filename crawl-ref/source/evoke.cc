@@ -1362,8 +1362,8 @@ static void _fan_of_gales_elementals()
 
 static bool _is_rock(dungeon_feature_type feat)
 {
-    return (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
-            || feat == DNGN_SLIMY_WALL);
+    return feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
+           || feat == DNGN_SLIMY_WALL;
 }
 
 static bool _is_rubble_source(dungeon_feature_type feat)

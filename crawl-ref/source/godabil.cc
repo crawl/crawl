@@ -2258,7 +2258,7 @@ void process_sunlights(bool future)
 template<typename T>
 static bool less_second(const T & left, const T & right)
 {
-    return (left.second < right.second);
+    return left.second < right.second;
 }
 
 typedef pair<coord_def, int> point_distance;

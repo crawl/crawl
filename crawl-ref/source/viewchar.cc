@@ -145,7 +145,7 @@ void init_char_table(char_set_type set)
 ucs_t dchar_glyph(dungeon_char_type dchar)
 {
     if (dchar >= 0 && dchar < NUM_DCHAR_TYPES)
-        return (Options.char_table[dchar]);
+        return Options.char_table[dchar];
     else
         return 0;
 }
@@ -160,5 +160,5 @@ string stringize_glyph(ucs_t glyph)
 
 dungeon_char_type get_feature_dchar(dungeon_feature_type feat)
 {
-    return (get_feature_def(feat).dchar);
+    return get_feature_def(feat).dchar;
 }

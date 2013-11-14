@@ -589,7 +589,7 @@ namespace arena
         // any inconsistencies.
         count_foes();
 
-        return (faction_a.active_members > 0 && faction_b.active_members > 0);
+        return faction_a.active_members > 0 && faction_b.active_members > 0;
     }
 
     static void dump_messages()
@@ -1304,7 +1304,7 @@ void arena_monster_died(monster* mons, killer_type killer,
 
 static bool _sort_by_age(int a, int b)
 {
-    return (arena::item_drop_times[a] < arena::item_drop_times[b]);
+    return arena::item_drop_times[a] < arena::item_drop_times[b];
 }
 
 #define DESTROY_ITEM(i) \

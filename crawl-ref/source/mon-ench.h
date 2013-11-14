@@ -34,13 +34,13 @@ public:
 
     bool operator < (const mon_enchant &other) const
     {
-        return (ench < other.ench);
+        return ench < other.ench;
     }
 
     bool operator == (const mon_enchant &other) const
     {
         // NOTE: This does *not* check who/degree.
-        return (ench == other.ench);
+        return ench == other.ench;
     }
 
     mon_enchant &operator += (const mon_enchant &other);

@@ -1296,7 +1296,7 @@ int Menu::item_colour(int, const MenuEntry *entry) const
     if (highlighter)
         icol = highlighter->entry_colour(entry);
 
-    return (icol == -1 ? entry->colour : icol);
+    return icol == -1 ? entry->colour : icol;
 }
 
 void Menu::draw_title()
@@ -1349,7 +1349,7 @@ void Menu::write_title()
 
 bool Menu::in_page(int index) const
 {
-    return (index >= first_entry && index < first_entry + pagesize);
+    return index >= first_entry && index < first_entry + pagesize;
 }
 
 void Menu::draw_item(int index) const
@@ -1947,7 +1947,7 @@ bool formatted_scroller::page_down()
             break;
     }
     first_entry = target;
-    return (old_first != first_entry);
+    return old_first != first_entry;
 }
 
 bool formatted_scroller::page_up()
@@ -1969,7 +1969,7 @@ bool formatted_scroller::page_up()
         --first_entry;
     }
 
-    return (old_first != first_entry);
+    return old_first != first_entry;
 }
 
 bool formatted_scroller::line_down()

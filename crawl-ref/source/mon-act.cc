@@ -2696,7 +2696,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             _jelly_divide(mons);
     }
 
-    return (eaten > 0);
+    return eaten > 0;
 }
 
 static bool _monster_eat_single_corpse(monster* mons, item_def& item,
@@ -2743,7 +2743,7 @@ static bool _monster_eat_corpse(monster* mons, bool do_heal, bool nearby)
         }
     }
 
-    return (eaten > 0);
+    return eaten > 0;
 }
 
 static bool _monster_eat_food(monster* mons, bool nearby)
@@ -2796,7 +2796,7 @@ static bool _monster_eat_food(monster* mons, bool nearby)
         }
     }
 
-    return (eaten > 0);
+    return eaten > 0;
 }
 
 //---------------------------------------------------------------
@@ -2868,7 +2868,7 @@ static bool _handle_pickup(monster* mons)
         }
     }
 
-    return (count_pickup > 0);
+    return count_pickup > 0;
 }
 
 // Randomise potential damage.
@@ -3146,7 +3146,7 @@ static bool _check_slime_walls(const monster *mon,
 
     // With enough hit points monsters will consider moving
     // onto more dangerous squares.
-    return (mon->hit_points < mon->max_hit_points / 2);
+    return mon->hit_points < mon->max_hit_points / 2;
 }
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for

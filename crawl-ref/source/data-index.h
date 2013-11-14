@@ -24,7 +24,7 @@ public:
     {
         ASSERT_RANGE(key, 0, NMax);
         check_index();
-        return (index[key] >= 0);
+        return index[key] >= 0;
     }
 
 protected:

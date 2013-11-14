@@ -467,7 +467,7 @@ static bool _is_target_in_range(const coord_def& where, int range,
     if (hitfunc)
         return hitfunc->valid_aim(where);
     // range == -1 means that range doesn't matter.
-    return (range == -1 || distance2(you.pos(), where) <= range*range + 1);
+    return range == -1 || distance2(you.pos(), where) <= range*range + 1;
 }
 
 targetting_behaviour direction_chooser::stock_behaviour;
@@ -899,7 +899,7 @@ static int _mlist_letter_to_index(char ltr)
     if (ltr >= 'l')
         ltr--;
 
-    return (ltr - 'a');
+    return ltr - 'a';
 }
 
 char mlist_index_to_letter(int index)
@@ -1247,7 +1247,7 @@ bool direction_chooser::in_range(const coord_def& p) const
 {
     if (hitfunc)
         return hitfunc->valid_aim(p);
-    return (range < 0 || distance2(p, you.pos()) <= range*range + 1);
+    return range < 0 || distance2(p, you.pos()) <= range*range + 1;
 }
 
 // Cycle to either the next (dir == 1) or previous (dir == -1) object
@@ -2339,14 +2339,14 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (mlist_full_info)
     {
         if (mons_class_is_zombified(mon->type)) // Both monsters are zombies.
-            return (mon->base_type == monl->base_type);
+            return mon->base_type == monl->base_type;
 
         if (mons_genus(mon->base_type) == MONS_HYDRA)
-            return (mon->number == monl->number);
+            return mon->number == monl->number;
     }
 
     if (mons_is_pghost(mon->type))
-        return (mon->mname == monl->mname);
+        return mon->mname == monl->mname;
 
     // Else the two monsters are identical.
     return true;
@@ -2371,7 +2371,7 @@ static bool _find_fprop_unoccupied(const coord_def & where, int mode,
     if (need_path && _blocked_ray(where))
         return false;
 
-    return (env.pgrid(where) & mode);
+    return env.pgrid(where) & mode;
 }
 
 static bool _want_target_monster(const monster *mon, int mode)
@@ -2381,7 +2381,7 @@ static bool _want_target_monster(const monster *mon, int mode)
         return true;
 
     if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
-        return (mons_attitude(mon) == ATT_HOSTILE);
+        return mons_attitude(mon) == ATT_HOSTILE;
 
     if (mode == TARG_FRIEND)
         return mon->friendly();
@@ -2549,7 +2549,7 @@ static bool _find_object(const coord_def& where, int mode,
 static int _next_los(int dir, int los, bool wrap)
 {
     if (los == LS_ANY)
-        return (wrap? los : LS_NONE);
+        return wrap? los : LS_NONE;
 
     bool vis    = los & LS_VISIBLE;
     bool hidden = los & LS_HIDDEN;
@@ -3282,7 +3282,7 @@ string raw_feature_description(const coord_def &where)
 // information? (Yes, this is entirely subjective. --jpeg)
 static bool _interesting_feature(dungeon_feature_type feat)
 {
-    return (get_feature_def(feat).flags & FFT_EXAMINE_HINT);
+    return get_feature_def(feat).flags & FFT_EXAMINE_HINT;
 }
 #endif
 

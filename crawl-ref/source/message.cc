@@ -91,7 +91,7 @@ struct message_item
 
     operator bool() const
     {
-        return (repeats > 0);
+        return repeats > 0;
     }
 
     string pure_text() const
@@ -105,7 +105,7 @@ struct message_item
         string rep = "";
         if (repeats > 1)
             rep = make_stringf(" x%d", repeats);
-        return (text + rep);
+        return text + rep;
     }
 
     // Tries to condense the argument into this message.
@@ -164,7 +164,7 @@ static int _mod(int num, int denom)
 {
     ASSERT(denom > 0);
     div_t res = div(num, denom);
-    return (res.rem >= 0 ? res.rem : res.rem + denom);
+    return res.rem >= 0 ? res.rem : res.rem + denom;
 }
 
 template <typename T, int SIZE>
@@ -369,7 +369,7 @@ class message_window
         if (!Options.clear_messages && !more_enabled())
         {
             scroll(n - space);
-            return (s + n - space);
+            return s + n - space;
         }
         else
         {
@@ -434,12 +434,12 @@ public:
 
     bool first_col_more() const
     {
-        return (use_first_col() && Options.small_more);
+        return use_first_col() && Options.small_more;
     }
 
     bool use_first_col() const
     {
-        return (!Options.clear_messages);
+        return !Options.clear_messages;
     }
 
     void set_starting_line()
@@ -546,7 +546,7 @@ public:
 
     bool any_messages()
     {
-        return (next_line > input_line);
+        return next_line > input_line;
     }
 
     /*
@@ -1535,9 +1535,9 @@ void more(bool user_forced)
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
 {
-    return (channel != MSGCH_EQUIPMENT
-            && channel != MSGCH_DIAGNOSTICS
-            && channel != MSGCH_TUTORIAL);
+    return channel != MSGCH_EQUIPMENT
+           && channel != MSGCH_DIAGNOSTICS
+           && channel != MSGCH_TUTORIAL;
 }
 
 void clear_message_store()

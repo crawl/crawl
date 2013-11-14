@@ -163,7 +163,7 @@ string attack::attack_strength_punctuation()
     if (attacker->is_player())
         return get_exclams(damage_done);
     else
-        return (damage_done < HIT_WEAK ? "." : "!");
+        return damage_done < HIT_WEAK ? "." : "!";
 }
 
 string attack::get_exclams(int dmg)
@@ -317,5 +317,5 @@ int attack::modify_blood_amount(const int damage, const int dam_type)
         break;
     }
 
-    return (damage * factor / 10);
+    return damage * factor / 10;
 }

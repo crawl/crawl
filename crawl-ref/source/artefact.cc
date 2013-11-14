@@ -315,19 +315,19 @@ bool is_known_artefact(const item_def &item)
 
 bool is_artefact(const item_def &item)
 {
-    return (item.flags & ISFLAG_ARTEFACT_MASK);
+    return item.flags & ISFLAG_ARTEFACT_MASK;
 }
 
 // returns true is item is a pure randart
 bool is_random_artefact(const item_def &item)
 {
-    return (item.flags & ISFLAG_RANDART);
+    return item.flags & ISFLAG_RANDART;
 }
 
 // returns true if item in an unrandart
 bool is_unrandom_artefact(const item_def &item)
 {
-    return (item.flags & ISFLAG_UNRANDART);
+    return item.flags & ISFLAG_UNRANDART;
 }
 
 bool is_special_unrandom_artefact(const item_def &item)
@@ -636,7 +636,7 @@ static int _randart_add_one_property(const item_def &item,
     }
     while (false);
 
-    return (negench ? -1 : 1);
+    return negench ? -1 : 1;
 }
 
 // An artefact will pass this check if it has any non-stat properties, and

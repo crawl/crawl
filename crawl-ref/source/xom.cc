@@ -173,7 +173,7 @@ static string _get_xom_speech(const string key)
 
 static bool _xom_is_bored()
 {
-    return (you_worship(GOD_XOM) && !you.gift_timeout);
+    return you_worship(GOD_XOM) && !you.gift_timeout;
 }
 
 static bool _xom_feels_nasty()
@@ -1367,7 +1367,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
         if (mon && (!mons_is_plant(mon) || one_chance_in(6)))
         {
             if (debug)
-                return (helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH);
+                return helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH;
 
             const char* lookup = (helpful ? "good monster polymorph"
                                           : "bad monster polymorph");
@@ -1413,7 +1413,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
                 take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, poly.c_str()),
                           true);
             }
-            return (helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH);
+            return helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH;
         }
     }
 
@@ -1483,7 +1483,7 @@ static bool _art_is_safe(item_def item)
     int prop_int = artefact_wpn_property(item, ARTP_INTELLIGENCE);
     int prop_dex = artefact_wpn_property(item, ARTP_DEXTERITY);
 
-    return (prop_str >= 0 && prop_int >= 0 && prop_dex >= 0);
+    return prop_str >= 0 && prop_int >= 0 && prop_dex >= 0;
 }
 
 static int _xom_swap_weapons(bool debug = false)
@@ -1857,7 +1857,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
     if (you.can_safely_mutate())
     {
         if (debug)
-            return (good ? XOM_GOOD_MUTATION : XOM_BAD_MUTATION);
+            return good ? XOM_GOOD_MUTATION : XOM_BAD_MUTATION;
 
         const char* lookup = (good ? "good mutations" : "random mutations");
         god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
@@ -1896,7 +1896,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
     }
 
     if (rc)
-        return (good ? XOM_GOOD_MUTATION : XOM_BAD_MUTATION);
+        return good ? XOM_GOOD_MUTATION : XOM_BAD_MUTATION;
 
     return XOM_DID_NOTHING;
 }
@@ -2255,7 +2255,7 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
         return XOM_DID_NOTHING;
 
     if (debug)
-        return (helpful ? XOM_GOOD_ENCHANT_MONSTER : XOM_BAD_ENCHANT_MONSTER);
+        return helpful ? XOM_GOOD_ENCHANT_MONSTER : XOM_BAD_ENCHANT_MONSTER;
 
     const char* lookup = (helpful ? "good enchant monster"
                                   : "bad enchant monster");
@@ -2294,7 +2294,7 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, ench_buf),
               true);
 
-    return (helpful ? XOM_GOOD_ENCHANT_MONSTER : XOM_BAD_ENCHANT_MONSTER);
+    return helpful ? XOM_GOOD_ENCHANT_MONSTER : XOM_BAD_ENCHANT_MONSTER;
 }
 
 // The nicer stuff.  Note: these things are not necessarily nice.
@@ -2958,7 +2958,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg.c_str()), true);
     }
 
-    return (rc ? XOM_BAD_CONFUSION : XOM_DID_NOTHING);
+    return rc ? XOM_BAD_CONFUSION : XOM_DID_NOTHING;
 }
 
 static bool _valid_floor_grid(coord_def pos)
@@ -2966,7 +2966,7 @@ static bool _valid_floor_grid(coord_def pos)
     if (!in_bounds(pos))
         return false;
 
-    return (grd(pos) == DNGN_FLOOR);
+    return grd(pos) == DNGN_FLOOR;
 }
 
 bool move_stair(coord_def stair_pos, bool away, bool allow_under)
@@ -3378,7 +3378,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
 static bool _has_min_banishment_level()
 {
-    return (you.experience_level >= 9);
+    return you.experience_level >= 9;
 }
 
 // Rolls whether banishment will be averted.
@@ -3862,7 +3862,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
             take_note(Note(NOTE_MESSAGE, 0, 0, "suppress good act because of "
                            "zero tension"), true);
 #endif
-            return (debug ? XOM_GOOD_NOTHING : XOM_DID_NOTHING);
+            return debug ? XOM_GOOD_NOTHING : XOM_DID_NOTHING;
         }
 
         // Good stuff.
@@ -3894,7 +3894,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
                      tension);
             take_note(Note(NOTE_MESSAGE, 0, 0, info), true);
 #endif
-            return (debug ? XOM_BAD_NOTHING : XOM_DID_NOTHING);
+            return debug ? XOM_BAD_NOTHING : XOM_DID_NOTHING;
         }
 
         // Bad mojo.
@@ -4143,9 +4143,9 @@ static bool _sort_xom_effects(const xom_effect_count &a,
                               const xom_effect_count &b)
 {
     if (a.count == b.count)
-        return (a.effect < b.effect);
+        return a.effect < b.effect;
 
-    return (a.count > b.count);
+    return a.count > b.count;
 }
 
 static const string _xom_effect_to_name(int effect)

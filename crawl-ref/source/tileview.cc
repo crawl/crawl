@@ -1044,9 +1044,9 @@ void tile_wizmap_terrain(const coord_def &gc)
 
 static bool _is_torch(tileidx_t basetile)
 {
-    return (basetile == TILE_WALL_BRICK_DARK_2_TORCH
-            || basetile == TILE_WALL_BRICK_DARK_4_TORCH
-            || basetile == TILE_WALL_BRICK_DARK_6_TORCH);
+    return basetile == TILE_WALL_BRICK_DARK_2_TORCH
+           || basetile == TILE_WALL_BRICK_DARK_4_TORCH
+           || basetile == TILE_WALL_BRICK_DARK_6_TORCH;
 }
 
 // Updates the "flavour" of tiles that are animated.
@@ -1284,9 +1284,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
 static bool _top_item_is_corpse(const map_cell& mc)
 {
     const item_info* item = mc.item();
-    return (item
-            && item->base_type == OBJ_CORPSES
-            && item->sub_type == CORPSE_BODY);
+    return item
+           && item->base_type == OBJ_CORPSES
+           && item->sub_type == CORPSE_BODY;
 }
 
 static uint8_t _get_direction_index(const coord_def& delta)

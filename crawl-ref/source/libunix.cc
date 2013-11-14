@@ -676,7 +676,7 @@ static int curs_fg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return (COLOR_PAIR(pair) | flags);
+    return COLOR_PAIR(pair) | flags;
 }
 
 void textcolor(int col)
@@ -738,7 +738,7 @@ static int curs_bg_attr(int col)
     // figure out which colour pair we want
     const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
 
-    return (COLOR_PAIR(pair) | flags);
+    return COLOR_PAIR(pair) | flags;
 }
 
 void textbackground(int col)
@@ -759,7 +759,7 @@ void gotoxy_sys(int x, int y)
 typedef cchar_t char_info;
 static inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
-    return (a.attr == b.attr && *a.chars == *b.chars);
+    return a.attr == b.attr && *a.chars == *b.chars;
 }
 
 static inline char_info character_at(int y, int x)

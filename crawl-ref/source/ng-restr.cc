@@ -582,9 +582,9 @@ bool is_good_combination(species_type spc, job_type job, bool good)
     const char_choice_restriction restrict = job_allowed(spc, job);
 
     if (good)
-        return (restrict == CC_UNRESTRICTED);
+        return restrict == CC_UNRESTRICTED;
 
-    return (restrict != CC_BANNED);
+    return restrict != CC_BANNED;
 }
 
 // Is the given god restricted for the character defined by ng?

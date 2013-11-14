@@ -33,7 +33,7 @@ int formatted_string::get_colour(const string &tag)
         return WHITE;
 
     const int colour = str_to_colour(tag);
-    return (colour != -1? colour : LIGHTGREY);
+    return colour != -1? colour : LIGHTGREY;
 }
 
 // Display a formatted string without printing literal \n.

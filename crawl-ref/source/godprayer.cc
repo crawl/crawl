@@ -905,5 +905,5 @@ static bool _offer_items()
              you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "unholy or evil ");
     }
 
-    return (num_sacced > 0);
+    return num_sacced > 0;
 }

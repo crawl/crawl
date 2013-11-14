@@ -109,7 +109,7 @@ static void cull_lost_items(i_transit_list &ilist, int how_many)
 m_transit_list *get_transit_list(const level_id &lid)
 {
     monsters_in_transit::iterator i = the_lost_ones.find(lid);
-    return (i != the_lost_ones.end()? &i->second : NULL);
+    return i != the_lost_ones.end()? &i->second : NULL;
 }
 
 void add_monster_to_transit(const level_id &lid, const monster& m)
@@ -437,7 +437,7 @@ static int follower_tag_radius2()
                 return 2;
     }
 
-    return (6 * 6);
+    return 6 * 6;
 }
 
 void tag_followers()

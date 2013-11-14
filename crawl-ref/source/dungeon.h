@@ -93,7 +93,7 @@ class dgn_region
 
     static bool between(int val, int low, int high)
     {
-        return (val >= low && val <= high);
+        return val >= low && val <= high;
     }
 
     bool contains(const coord_def &p) const
@@ -103,14 +103,14 @@ class dgn_region
 
     bool contains(int xp, int yp) const
     {
-        return (xp >= pos.x && xp < pos.x + size.x
-                && yp >= pos.y && yp < pos.y + size.y);
+        return xp >= pos.x && xp < pos.x + size.x
+               && yp >= pos.y && yp < pos.y + size.y;
     }
 
     bool fully_contains(const coord_def &p) const
     {
-        return (p.x > pos.x && p.x < pos.x + size.x - 1
-                && p.y > pos.y && p.y < pos.y + size.y - 1);
+        return p.x > pos.x && p.x < pos.x + size.x - 1
+               && p.y > pos.y && p.y < pos.y + size.y - 1;
     }
 
     bool overlaps(const dgn_region &other) const;

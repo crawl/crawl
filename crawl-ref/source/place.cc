@@ -40,8 +40,8 @@ unsigned short get_packed_place()
 
 bool single_level_branch(branch_type branch)
 {
-    return (branch >= 0 && branch < NUM_BRANCHES
-            && brdepth[branch] == 1);
+    return branch >= 0 && branch < NUM_BRANCHES
+           && brdepth[branch] == 1;
 }
 
 string place_name(unsigned short place, bool long_name, bool include_number)
@@ -86,8 +86,8 @@ string prep_branch_level_name(unsigned short packed_place)
     string place = place_name(packed_place, true, true);
     if (!place.empty() && place != "Pandemonium")
         place[0] = tolower(place[0]);
-    return (place.find("level") == 0 ? "on " + place
-                                     : "in " + place);
+    return place.find("level") == 0 ? "on " + place
+                                    : "in " + place;
 }
 
 // Use current branch and depth
@@ -103,7 +103,7 @@ int absdungeon_depth(branch_type branch, int subdepth)
 
 bool branch_allows_followers(branch_type branch)
 {
-    return (is_connected_branch(branch) || branch == BRANCH_PANDEMONIUM);
+    return is_connected_branch(branch) || branch == BRANCH_PANDEMONIUM;
 }
 
 vector<level_id> all_dungeon_ids()

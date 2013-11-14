@@ -3097,7 +3097,7 @@ bool top_card_is_known(const item_def &deck)
     uint8_t flags;
     get_card_and_flags(deck, -1, flags);
 
-    return (flags & CFLAG_MARKED);
+    return flags & CFLAG_MARKED;
 }
 
 card_type top_card(const item_def &deck)
@@ -3115,9 +3115,9 @@ card_type top_card(const item_def &deck)
 
 bool is_deck(const item_def &item)
 {
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type >= MISC_FIRST_DECK
-            && item.sub_type <= MISC_LAST_DECK);
+    return item.base_type == OBJ_MISCELLANY
+           && item.sub_type >= MISC_FIRST_DECK
+           && item.sub_type <= MISC_LAST_DECK;
 }
 
 bool bad_deck(const item_def &item)

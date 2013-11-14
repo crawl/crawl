@@ -708,9 +708,9 @@ static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
     {
         const int cmp = i->compare(a, b);
         if (cmp)
-            return (cmp < 0);
+            return cmp < 0;
     }
-    return (a->item->link < b->item->link);
+    return a->item->link < b->item->link;
 }
 
 struct menu_entry_comparator
@@ -1159,7 +1159,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return !fully_identified(i) || (is_deck(i) && !top_card_is_known(i));
 
     case OBJ_MISSILES:
-        return (itype == OBJ_MISSILES || itype == OBJ_WEAPONS);
+        return itype == OBJ_MISSILES || itype == OBJ_WEAPONS;
 
     case OSEL_THROWABLE:
     {

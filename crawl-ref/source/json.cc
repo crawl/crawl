@@ -1321,12 +1321,12 @@ static void emit_number(SB *out, double num)
 
 static bool tag_is_valid(unsigned int tag)
 {
-    return (/* tag >= JSON_NULL && */ tag <= JSON_OBJECT);
+    return /* tag >= JSON_NULL && */ tag <= JSON_OBJECT;
 }
 
 static bool number_is_valid(const char *num)
 {
-    return (parse_number(&num, NULL) && *num == '\0');
+    return parse_number(&num, NULL) && *num == '\0';
 }
 
 static bool expect_literal(const char **sp, const char *str)

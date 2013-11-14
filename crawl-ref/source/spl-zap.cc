@@ -116,7 +116,7 @@ int spell_zap_power(spell_type spell, int pow)
     switch (spell)
     {
     case SPELL_CORONA:
-        return (pow + 10);
+        return pow + 10;
     case SPELL_HIBERNATION:
         return stepdown_value(pow * 9 / 10, 5, 35, 45, 50);
     default:

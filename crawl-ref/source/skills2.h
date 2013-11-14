@@ -115,7 +115,7 @@ static const int ndisplayed_skills = ARRAYSZ(skill_display_order);
 
 static inline bool is_invalid_skill(skill_type skill)
 {
-    return (skill < SK_FIRST_SKILL || skill >= NUM_SKILLS);
+    return skill < SK_FIRST_SKILL || skill >= NUM_SKILLS;
 }
 
 #endif

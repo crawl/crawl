@@ -202,7 +202,7 @@ struct position_node
 
     int total_dist() const
     {
-        return (estimate + path_distance);
+        return estimate + path_distance;
     }
 };
 

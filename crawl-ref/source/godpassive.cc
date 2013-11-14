@@ -372,7 +372,7 @@ static bool _jewel_auto_id(const item_def& item)
     switch (item.sub_type)
     {
     case RING_REGENERATION:
-        return (player_mutation_level(MUT_SLOW_HEALING) < 3);
+        return player_mutation_level(MUT_SLOW_HEALING) < 3;
     case RING_PROTECTION:
     case RING_EVASION:
     case RING_STRENGTH:
@@ -382,8 +382,8 @@ static bool _jewel_auto_id(const item_def& item)
     case AMU_FAITH:
         return (!you_worship(GOD_NO_GOD));
     case AMU_THE_GOURMAND:
-        return (you.species != SP_MUMMY
-                && player_mutation_level(MUT_HERBIVOROUS) < 3);
+        return you.species != SP_MUMMY
+               && player_mutation_level(MUT_HERBIVOROUS) < 3;
     case RING_INVISIBILITY:
     case RING_TELEPORTATION:
     case RING_TELEPORT_CONTROL:

@@ -951,7 +951,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (number_built > 0);
+    return number_built > 0;
 }
 
 bool entomb(int pow)

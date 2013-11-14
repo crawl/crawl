@@ -70,8 +70,8 @@ const char* transform_name(transformation_type form)
 
 bool form_can_wield(transformation_type form)
 {
-    return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
-            || form == TRAN_APPENDAGE || form == TRAN_TREE);
+    return form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
+           || form == TRAN_APPENDAGE || form == TRAN_TREE;
 }
 
 bool form_can_wear(transformation_type form)
@@ -83,7 +83,7 @@ bool form_can_fly(transformation_type form)
 {
     if (you.racial_permanent_flight() && you.permanent_flight())
         return true;
-    return (form == TRAN_DRAGON || form == TRAN_BAT || form == TRAN_WISP);
+    return form == TRAN_DRAGON || form == TRAN_BAT || form == TRAN_WISP;
 }
 
 bool form_can_swim(transformation_type form)
@@ -102,7 +102,7 @@ bool form_can_swim(transformation_type form)
     if (size == SIZE_CHARACTER)
         size = you.body_size(PSIZE_BODY, true);
 
-    return (size >= SIZE_GIANT);
+    return size >= SIZE_GIANT;
 }
 
 bool form_likes_water(transformation_type form)
@@ -128,20 +128,20 @@ bool form_likes_lava(transformation_type form)
 
 bool form_can_butcher_barehanded(transformation_type form)
 {
-    return (form == TRAN_BLADE_HANDS || form == TRAN_DRAGON
-            || form == TRAN_ICE_BEAST);
+    return form == TRAN_BLADE_HANDS || form == TRAN_DRAGON
+           || form == TRAN_ICE_BEAST;
 }
 
 // Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation_type form)
 {
-    return (form != TRAN_NONE && form != TRAN_APPENDAGE
-            && form != TRAN_BLADE_HANDS);
+    return form != TRAN_NONE && form != TRAN_APPENDAGE
+           && form != TRAN_BLADE_HANDS;
 }
 
 bool form_can_use_wand(transformation_type form)
 {
-    return (form_can_wield(form) || form == TRAN_DRAGON);
+    return form_can_wield(form) || form == TRAN_DRAGON;
 }
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
@@ -155,7 +155,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
         if (jewellery_is_amulet(item))
             return true;
         // Bats and pigs can't wear rings.
-        return (form != TRAN_BAT && form != TRAN_PIG);
+        return form != TRAN_BAT && form != TRAN_PIG;
     }
 
     // It's not jewellery, and it's worn, so it must be armour.
@@ -179,18 +179,18 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
 
     // And some need more complicated logic.
     case TRAN_BLADE_HANDS:
-        return (eqslot != EQ_SHIELD && eqslot != EQ_GLOVES
-                && item.special != UNRAND_LEAR);
+        return eqslot != EQ_SHIELD && eqslot != EQ_GLOVES
+               && item.special != UNRAND_LEAR;
 
     case TRAN_STATUE:
-        return (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
-                || eqslot == EQ_SHIELD);
+        return eqslot == EQ_CLOAK || eqslot == EQ_HELMET
+               || eqslot == EQ_SHIELD;
 
     case TRAN_FUNGUS:
         return (eqslot == EQ_HELMET && !is_hard_helmet(item));
 
     case TRAN_TREE:
-        return (eqslot == EQ_SHIELD || eqslot == EQ_HELMET);
+        return eqslot == EQ_SHIELD || eqslot == EQ_HELMET;
 
     default:                // Bug-catcher.
         die("Unknown transformation type %d in form_can_wear_item", you.form);
@@ -565,7 +565,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
             sources_removed++;
     }
 
-    return (sources > sources_removed);
+    return sources > sources_removed;
 }
 
 bool feat_dangerous_for_form(transformation_type which_trans,

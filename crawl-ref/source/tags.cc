@@ -844,7 +844,7 @@ void marshallBoolean(writer &th, bool data)
 // boolean (to avoid system-dependent bool implementations)
 bool unmarshallBoolean(reader &th)
 {
-    return (th.readByte() != 0);
+    return th.readByte() != 0;
 }
 
 // Saving the date as a string so we're not reliant on a particular epoch.
@@ -2974,7 +2974,7 @@ static int _last_used_index(const Z &thinglist, int max_things)
 {
     for (int i = max_things - 1; i >= 0; --i)
         if (thinglist[i].defined())
-            return (i + 1);
+            return i + 1;
     return 0;
 }
 

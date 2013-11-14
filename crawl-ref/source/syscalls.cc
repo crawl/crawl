@@ -95,7 +95,7 @@ bool read_urandom(char *buf, int len)
     {
         int res = fread(buf, 1, len, seed_f);
         fclose(seed_f);
-        return (res == len);
+        return res == len;
     }
 
     return false;
@@ -269,7 +269,7 @@ bool dir_exists(const string &dir)
 
 static inline bool _is_good_filename(const string &s)
 {
-    return (s != "." && s != "..");
+    return s != "." && s != "..";
 }
 
 // Returns the names of all files in the given directory. Note that the

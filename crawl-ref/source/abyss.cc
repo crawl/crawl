@@ -278,7 +278,7 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask,
             item_colour(mitm[thing_created]);
         }
         move_item_to_grid(&thing_created, chosen_spot);
-        return (thing_created != NON_ITEM);
+        return thing_created != NON_ITEM;
     }
 
     return false;
@@ -577,7 +577,7 @@ static bool _pushy_feature(dungeon_feature_type feat)
     // Perhaps this should instead be merged with (the complement of)
     // _item_safe_square() in terrain.cc.  Unlike this function, that
     // one treats traps as unsafe, but closed doors as safe.
-    return (feat_is_solid(feat) || feat == DNGN_LAVA);
+    return feat_is_solid(feat) || feat == DNGN_LAVA;
 }
 
 static void _push_items()
@@ -963,7 +963,7 @@ void save_abyss_uniques()
 
 static bool _in_wastes(const coord_def &p)
 {
-    return (p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF);
+    return p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF;
 }
 
 // XXX: This does two things: picks a random level for monster generation,
@@ -1071,7 +1071,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_SLIMY_WALL:
         case DNGN_STONE_WALL:
         case DNGN_PERMAROCK_WALL:
-            return (coinflip() ? CLOUD_BLUE_SMOKE : CLOUD_PURPLE_SMOKE);
+            return coinflip() ? CLOUD_BLUE_SMOKE : CLOUD_PURPLE_SMOKE;
         case DNGN_CLEAR_ROCK_WALL:
         case DNGN_CLEAR_STONE_WALL:
         case DNGN_CLEAR_PERMAROCK_WALL:
@@ -1084,7 +1084,7 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
         case DNGN_DEEP_WATER:
         case DNGN_SHALLOW_WATER:
         case DNGN_FOUNTAIN_BLUE:
-            return (one_chance_in(5) ? CLOUD_RAIN : CLOUD_BLUE_SMOKE);
+            return one_chance_in(5) ? CLOUD_RAIN : CLOUD_BLUE_SMOKE;
         case DNGN_FOUNTAIN_SPARKLING:
             return CLOUD_RAIN;
         default:

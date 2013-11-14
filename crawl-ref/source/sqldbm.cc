@@ -65,7 +65,7 @@ int SQL_DBM::ec(int err)
     else
         error = "Unknown error";
 
-    return (errc = err);
+    return errc = err;
 }
 
 bool SQL_DBM::is_open() const

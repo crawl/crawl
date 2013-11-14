@@ -246,8 +246,8 @@ static bool _inside_vault(const vault_placement& place, const coord_def &pos)
 {
     const coord_def delta = pos - place.pos;
 
-    return (delta.x >= 0 && delta.y >= 0
-            && delta.x < place.size.x && delta.y < place.size.y);
+    return delta.x >= 0 && delta.y >= 0
+           && delta.x < place.size.x && delta.y < place.size.y;
 }
 
 static vector<string> _in_vaults(const coord_def &pos)

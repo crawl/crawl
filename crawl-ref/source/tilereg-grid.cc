@@ -21,7 +21,7 @@ InventoryTile::InventoryTile()
 
 bool InventoryTile::empty() const
 {
-    return (idx == -1);
+    return idx == -1;
 }
 
 GridRegion::GridRegion(const TileRegionInit &init) :

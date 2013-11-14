@@ -529,7 +529,7 @@ bool CLua::callbooleanfn(bool def, const char *fn, const char *params, ...)
 
 bool CLua::proc_returns(const char *par) const
 {
-    return (strchr(par, '>') != NULL);
+    return strchr(par, '>') != NULL;
 }
 
 // Identical to lua_getglobal for simple names, but will look up
@@ -1017,7 +1017,7 @@ lua_call_throttle::~lua_call_throttle()
 CLua *lua_call_throttle::find_clua(lua_State *ls)
 {
     lua_clua_map::iterator i = lua_map.find(ls);
-    return (i != lua_map.end()? i->second : NULL);
+    return i != lua_map.end()? i->second : NULL;
 }
 
 // This function is a replacement for Lua's in-built pcall function. It behaves

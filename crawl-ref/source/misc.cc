@@ -136,7 +136,7 @@ void maybe_drop_monster_hide(const item_def corpse)
 
 int get_max_corpse_chunks(monster_type mons_class)
 {
-    return (mons_weight(mons_class) / 150);
+    return mons_weight(mons_class) / 150;
 }
 
 void turn_corpse_into_skeleton(item_def &item)
@@ -660,7 +660,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             // re-sort timer
             _int_sort(timer2);
 
-            return (rot_count > 0);
+            return rot_count > 0;
         }
     }
 
@@ -687,7 +687,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         if (!knew_coag)
             mpr_nocap(blood.name(DESC_INVENTORY).c_str());
 
-        return (rot_count > 0);
+        return rot_count > 0;
     }
 
     // Else, create new stack in inventory.
@@ -709,7 +709,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         if (!knew_coag)
             mpr_nocap(item.name(DESC_INVENTORY).c_str());
 
-        return (rot_count > 0);
+        return rot_count > 0;
     }
 
     mprf("You can't carry %s right now.", coag_count > 1 ? "them" : "it");
@@ -1744,7 +1744,7 @@ bool player_in_a_dangerous_place(bool *invis)
     double gen_threat = 0.0, hi_threat = 0.0;
     monster_threat_values(&gen_threat, &hi_threat, invis);
 
-    return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
+    return gen_threat > logexp * 1.3 || hi_threat > logexp / 2;
 }
 
 static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
@@ -2414,7 +2414,7 @@ bool is_dragonkind(const actor *act)
     }
 
     if (act->is_player())
-        return (you.form == TRAN_DRAGON);
+        return you.form == TRAN_DRAGON;
 
     // Else the actor is a monster.
     const monster* mon = act->as_monster();
