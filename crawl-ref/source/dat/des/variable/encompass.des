@@ -7,7 +7,7 @@
 # Setups for the below.
 {{
     function grunt_profane_halls_setup(e)
-        if you.absdepth() == 27 then
+        if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
             e.kmons('1 = base draconian / nothing w:20')
             e.kmons('2 = nonbase draconian / base draconian w:20')
             e.kmons('3 = draconian zealot')
@@ -582,7 +582,7 @@ DEPTH: Depths:2-
 WEIGHT: 2 (Depths:$), 10
 ORIENT: encompass
 SHUFFLE: {[(<
-: if you.absdepth() == 27 then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST: }])> = G
 : else
 SHUFFLE: }])>
@@ -593,7 +593,7 @@ SUBVAULT: f : grunt_profane_temple
 SUBVAULT: g : grunt_profane_temple
 NSUBST: D = 1:K / 1:L / 1:M / 1:N
 : grunt_profane_halls_setup(_G)
-: if you.absdepth() == 27 then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KMONS: K = storm dragon
 KMONS: L = shadow dragon
 KMONS: M = quicksilver dragon
@@ -607,7 +607,7 @@ KMONS: N = deep elf sorcerer
 KMONS: 0 = 0 band w:15 / nothing
 KMONS: 9 = 9 band / 0 band
 KMASK: 1290KLMN = !no_monster_gen
-: if you.absdepth() == 27 then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBVAULT: H : grunt_zot_portal
 : else
 SUBVAULT: H : grunt_profane_loot
@@ -1251,7 +1251,7 @@ SUBVAULT: B : grunt_runaround_doors_1
 SUBVAULT: C : grunt_runaround_doors_2
 SUBVAULT: D : grunt_runaround_doors_3
 SUBVAULT: E : grunt_runaround_doors_4
-: if you.absdepth() == 27 then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KFEAT:  Z = stone_wall
 TILE:   Z = wall_zot_magenta
 COLOUR: Z = lightmagenta
@@ -1494,7 +1494,7 @@ TAGS: grunt_runaround_doors_4 allow_dup
 SHUFFLE: ABCDEFGH
 SHUFFLE: IJKLMNOP
 SUBST:   ABCDEFGI : +, HJKLMNOP : Z
-: if you.absdepth() == 27 then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 KFEAT:  Z = stone_wall
 TILE:   Z = wall_zot_magenta
 COLOUR: Z = lightmagenta
@@ -1638,7 +1638,7 @@ SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
 SUBST:   HJOQRm = x, IKNPSl = ., L : xx., M : xx., j : x.., k : x.., n : x.
 SUBST:   b : b:6 v:1 c:1, @ = 114777, ^ = 224999
 : local Z = you.absdepth()
-: if you.absdepth() < 21 then
+: if you.depth() <= 3 then
 :   subst("2 = !:" .. 22 - Z .. " 2:20")
 :   subst("3 = 2:" .. 25 - Z .. " 3:" .. Z + 4)
 :   subst("5 = $:" .. 22 - Z .. " 5:20")
