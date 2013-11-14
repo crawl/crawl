@@ -586,6 +586,9 @@ SHUFFLE: {[(<
 SUBST: }])> = G
 : else
 SHUFFLE: }])>
+:   if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+KFEAT: > = enter_vaults
+:   end
 : end
 SUBVAULT: d : grunt_profane_temple
 SUBVAULT: e : grunt_profane_temple
