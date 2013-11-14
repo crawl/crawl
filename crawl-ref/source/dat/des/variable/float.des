@@ -3318,7 +3318,7 @@ TAGS:   no_monster_gen
 DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
-: if you.absdepth() > 24 then
+: if you.depth() > 3 then
 MONS:   silver star
 : else
 KMONS:  4 = Mennas, angel god:Zin dbname:zin_angel
