@@ -1117,7 +1117,6 @@ TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -20
-BOOL:    mutate
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
