@@ -897,8 +897,7 @@ static void _clear_net_trapping_status(coord_def c)
 
 static bool _shoals_tide_sweep_items_clear(coord_def c)
 {
-    int link = igrd(c);
-    if (link == NON_ITEM)
+    if (igrd(c) == NON_ITEM)
         return true;
 
     for (stack_iterator si(c); si; ++si)
