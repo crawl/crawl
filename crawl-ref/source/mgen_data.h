@@ -155,15 +155,15 @@ struct mgen_data
                || summon_type == SPELL_AWAKEN_VINES);
     }
 
-    bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }
-    bool force_place() const { return (flags & MG_FORCE_PLACE); }
-    bool needs_patrol_point() const { return (flags & MG_PATROLLING); }
+    bool permit_bands() const       { return flags & MG_PERMIT_BANDS; }
+    bool force_place() const        { return flags & MG_FORCE_PLACE; }
+    bool needs_patrol_point() const { return flags & MG_PATROLLING; }
 
     // Is there a valid position set on this struct that we want to use
     // when placing the monster?
     bool use_position() const { return in_bounds(pos); };
 
-    bool summoned() const { return (abjuration_duration > 0); }
+    bool summoned() const { return abjuration_duration > 0; }
 
     void define_chimera(monster_type part1, monster_type part2,
                         monster_type part3);

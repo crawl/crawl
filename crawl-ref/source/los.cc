@@ -221,7 +221,7 @@ struct cellray
     }
 
     // The end-point's index inside ray_coord.
-    int index() const { return (ray.start + end); }
+    int index() const { return ray.start + end; }
 
     // The end-point.
     coord_def target() const { return ray_coords[index()]; }

@@ -29,7 +29,7 @@ struct feature_def
         minimap(MF_UNSEEN)
     {}
 
-    bool is_notable() const { return (flags & FFT_NOTABLE); }
+    bool is_notable() const { return flags & FFT_NOTABLE; }
 };
 
 const feature_def &get_feature_def(show_type object);
