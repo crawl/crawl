@@ -681,6 +681,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('R'): wizard_recreate_level(); break;
     case CONTROL('S'): wizard_abyss_speed(); break;
     case CONTROL('T'): debug_terp_dlua(); break;
+    case CONTROL('U'): debug_terp_dlua(clua); break;
     case CONTROL('V'): wizard_toggle_xray_vision(); break;
     case CONTROL('X'): debug_xom_effects(); break;
 
