@@ -773,7 +773,7 @@ void ghost_demon::init_spectral_weapon(const item_def& weapon,
 
 static bool _know_spell(spell_type spell)
 {
-    return (you.has_spell(spell) && spell_fail(spell) < 50);
+    return you.has_spell(spell) && spell_fail(spell) < 50;
 }
 
 static spell_type search_first_list(int ignore_spell)

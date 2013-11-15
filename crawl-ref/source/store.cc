@@ -1354,7 +1354,7 @@ bool CrawlHashTable::exists(const string &key) const
     ASSERT_VALIDITY();
     hash_map_type::const_iterator i = hash_map->find(key);
 
-    return (i != hash_map->end());
+    return i != hash_map->end();
 }
 
 void CrawlHashTable::assert_validity() const

@@ -1296,17 +1296,17 @@ static bool _is_physiological_spell(spell_type spell)
 // non-beam spells.
 static bool _ms_direct_nasty(spell_type monspell)
 {
-    return (spell_needs_foe(monspell)
-            && !spell_typematch(monspell, SPTYP_SUMMONING));
+    return spell_needs_foe(monspell)
+           && !spell_typematch(monspell, SPTYP_SUMMONING);
 }
 
 // Can be affected by the 'Haste Plants' spell
 static bool _is_hastable_plant(const monster* mons)
 {
-    return (mons->holiness() == MH_PLANT
-            && !mons_is_firewood(mons)
-            && mons->type != MONS_SNAPLASHER_VINE
-            && mons->type != MONS_SNAPLASHER_VINE_SEGMENT);
+    return mons->holiness() == MH_PLANT
+           && !mons_is_firewood(mons)
+           && mons->type != MONS_SNAPLASHER_VINE
+           && mons->type != MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
 // Checks if the foe *appears* to be immune to negative energy.  We
@@ -1336,18 +1336,18 @@ static bool _foe_should_res_negative_energy(const actor* foe)
 static bool _valid_encircle_ally(const monster* caster, const monster* target,
                                  const coord_def foepos)
 {
-    return (mons_aligned(caster, target) && caster != target
-            && !target->no_tele(true, false, true)
-            && target->pos().distance_from(foepos) > 1);
+    return mons_aligned(caster, target) && caster != target
+           && !target->no_tele(true, false, true)
+           && target->pos().distance_from(foepos) > 1;
 }
 
 static bool _valid_druids_call_target(const monster* caller, const monster* callee)
 {
-    return (mons_aligned(caller, callee) && mons_is_beast(callee->type)
-            && !callee->is_shapeshifter()
-            && !caller->see_cell(callee->pos())
-            && mons_habitat(callee) != HT_WATER
-            && mons_habitat(callee) != HT_LAVA);
+    return mons_aligned(caller, callee) && mons_is_beast(callee->type)
+           && !callee->is_shapeshifter()
+           && !caller->see_cell(callee->pos())
+           && mons_habitat(callee) != HT_WATER
+           && mons_habitat(callee) != HT_LAVA;
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
@@ -1385,11 +1385,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     switch (monspell)
     {
     case SPELL_CALL_TIDE:
-        return (!player_in_branch(BRANCH_SHOALS)
-                || mon->has_ench(ENCH_TIDE)
-                || !foe
-                || (grd(mon->pos()) == DNGN_DEEP_WATER
-                    && grd(foe->pos()) == DNGN_DEEP_WATER));
+        return !player_in_branch(BRANCH_SHOALS)
+               || mon->has_ench(ENCH_TIDE)
+               || !foe
+               || (grd(mon->pos()) == DNGN_DEEP_WATER
+                   && grd(foe->pos()) == DNGN_DEEP_WATER);
 
     case SPELL_BRAIN_FEED:
         ret = (!foe || !foe->is_player());
@@ -1747,14 +1747,14 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         return true;
 
     case SPELL_BROTHERS_IN_ARMS:
-        return (mon->props.exists("brothers_count")
-                && mon->props["brothers_count"].get_int() >= 2);
+        return mon->props.exists("brothers_count")
+               && mon->props["brothers_count"].get_int() >= 2;
 
     case SPELL_SUMMON_MUSHROOMS:
         return mon->get_foe() == NULL;
 
     case SPELL_FREEZE:
-        return (!foe || !adjacent(mon->pos(), foe->pos()));
+        return !foe || !adjacent(mon->pos(), foe->pos());
 
     case SPELL_DRUIDS_CALL:
         // Don't cast unless there's at least one valid target
@@ -2040,7 +2040,7 @@ static bool _valid_vine_spot(coord_def p)
         return false;
 
     // Now the connectivity check
-    return (!plant_forbidden_at(p, true));
+    return !plant_forbidden_at(p, true);
 }
 
 static bool _awaken_vines(monster* mon, bool test_only = false)

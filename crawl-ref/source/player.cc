@@ -321,10 +321,10 @@ bool check_moveto_exclusion(const coord_def& p, const string &move_verb,
 
 bool check_moveto(const coord_def& p, const string &move_verb, const string &msg)
 {
-    return (check_moveto_terrain(p, move_verb, msg)
-            && check_moveto_cloud(p, move_verb)
-            && check_moveto_trap(p, move_verb)
-            && check_moveto_exclusion(p, move_verb));
+    return check_moveto_terrain(p, move_verb, msg)
+           && check_moveto_cloud(p, move_verb)
+           && check_moveto_trap(p, move_verb)
+           && check_moveto_exclusion(p, move_verb);
 }
 
 static void _splash()
@@ -518,15 +518,15 @@ bool player_in_connected_branch(void)
 
 bool player_likes_water(bool permanently)
 {
-    return (!permanently && beogh_water_walk()
-            || (species_likes_water(you.species) || !permanently)
-                && form_likes_water());
+    return !permanently && beogh_water_walk()
+           || (species_likes_water(you.species) || !permanently)
+               && form_likes_water();
 }
 
 bool player_likes_lava(bool permanently)
 {
-    return (species_likes_lava(you.species)
-            || (!permanently && form_likes_lava()));
+    return species_likes_lava(you.species)
+           || (!permanently && form_likes_lava());
 }
 
 bool player_can_open_doors()
@@ -600,7 +600,7 @@ bool is_player_same_genus(const monster_type mon, bool transform)
     // * dwarves and deep dwarves
     // * all elf races
     // * all orc races
-    return (mons_genus(mon) == mons_genus(player_mons(false)));
+    return mons_genus(mon) == mons_genus(player_mons(false));
 }
 
 void update_player_symbol()
@@ -821,9 +821,9 @@ bool you_tran_can_wear(const item_def &item)
                                                            : EQ_RINGS);
     case OBJ_ARMOUR:
         if (item.sub_type == ARM_NAGA_BARDING)
-            return (you.species == SP_NAGA && you_tran_can_wear(EQ_BOOTS));
+            return you.species == SP_NAGA && you_tran_can_wear(EQ_BOOTS);
         else if (item.sub_type == ARM_CENTAUR_BARDING)
-            return (you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS));
+            return you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS);
 
         if (fit_armour_size(item, you.body_size()) != 0)
             return false;
@@ -901,8 +901,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // ...but not necessarily in all slots.
     if (eq >= EQ_RING_THREE && eq <= EQ_RING_EIGHT)
     {
-        return (you.species == SP_OCTOPODE
-                && (form_keeps_mutations() || you.form == TRAN_SPIDER));
+        return you.species == SP_OCTOPODE
+               && (form_keeps_mutations() || you.form == TRAN_SPIDER);
     }
 
     // These cannot use anything but jewellery.
@@ -1222,9 +1222,9 @@ bool player_can_hit_monster(const monster* mon)
 
 bool player_can_hear(const coord_def& p, int hear_distance)
 {
-    return (!silenced(p)
-            && !silenced(you.pos())
-            && you.pos().distance_from(p) <= hear_distance);
+    return !silenced(p)
+           && !silenced(you.pos())
+           && you.pos().distance_from(p) <= hear_distance;
 }
 
 int player_teleport(bool calc_unid)
@@ -1843,30 +1843,30 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
 bool player_control_teleport(bool temp)
 {
-    return ((temp && you.duration[DUR_CONTROL_TELEPORT])
-            || crawl_state.game_is_zotdef());
+    return (temp && you.duration[DUR_CONTROL_TELEPORT])
+           || crawl_state.game_is_zotdef();
 }
 
 int player_res_torment(bool, bool temp)
 {
-    return (player_mutation_level(MUT_TORMENT_RESISTANCE)
-            || you.form == TRAN_LICH
-            || you.form == TRAN_FUNGUS
-            || you.form == TRAN_TREE
-            || you.form == TRAN_WISP
-            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
-            || you.petrified()
-            || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
-                && coinflip()));
+    return player_mutation_level(MUT_TORMENT_RESISTANCE)
+           || you.form == TRAN_LICH
+           || you.form == TRAN_FUNGUS
+           || you.form == TRAN_TREE
+           || you.form == TRAN_WISP
+           || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
+           || you.petrified()
+           || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
+               && coinflip());
 }
 
 // Kiku protects you from torment to a degree.
 int player_kiku_res_torment()
 {
-    return (you_worship(GOD_KIKUBAAQUDGHA)
-            && !player_under_penance()
-            && you.piety >= piety_breakpoint(3)
-            && !you.gift_timeout); // no protection during pain branding weapon
+    return you_worship(GOD_KIKUBAAQUDGHA)
+           && !player_under_penance()
+           && you.piety >= piety_breakpoint(3)
+           && !you.gift_timeout; // no protection during pain branding weapon
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.
@@ -2436,8 +2436,8 @@ static int _player_armour_racial_bonus(const item_def& item)
 
 bool is_effectively_light_armour(const item_def *item)
 {
-    return (!item
-            || (abs(property(*item, PARM_EVASION)) < 6));
+    return !item
+           || (abs(property(*item, PARM_EVASION)) < 6);
 }
 
 bool player_effectively_in_light_armour()
@@ -2493,8 +2493,8 @@ static int _player_adjusted_evasion_penalty(const int scale)
             piece_armour_evasion_penalty += penalty;
     }
 
-    return (piece_armour_evasion_penalty * scale +
-            you.adjusted_body_armour_penalty(scale));
+    return piece_armour_evasion_penalty * scale +
+           you.adjusted_body_armour_penalty(scale);
 }
 
 // EV bonuses that work even when helpless.
@@ -2693,7 +2693,7 @@ int player_mag_abil(bool is_weighted)
     // Staves
     ma += 4 * you.wearing(EQ_STAFF, STAFF_WIZARDRY);
 
-    return ((is_weighted) ? ((ma * you.intel()) / 10) : ma);
+    return (is_weighted) ? ((ma * you.intel()) / 10) : ma;
 }
 
 int player_shield_class(void)
@@ -2930,7 +2930,7 @@ int get_exp_progress()
     const int next    = exp_needed(you.experience_level + 1);
     if (next == current)
         return 0;
-    return ((you.experience - current) * 100 / (next - current));
+    return (you.experience - current) * 100 / (next - current);
 }
 
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
@@ -4032,7 +4032,7 @@ bool dur_expiring(duration_type dur)
     if (value <= 0)
         return false;
 
-    return (value <= get_expiration_threshold(dur));
+    return value <= get_expiration_threshold(dur);
 }
 
 static void _output_expiring_message(duration_type dur, const char* msg)
@@ -4164,16 +4164,16 @@ static void _display_tohit()
 
 static string _attack_delay_desc(int attack_delay)
 {
-    return ((attack_delay >= 200) ? "extremely slow" :
-            (attack_delay >= 155) ? "very slow" :
-            (attack_delay >= 125) ? "quite slow" :
-            (attack_delay >= 105) ? "below average" :
-            (attack_delay >=  95) ? "average" :
-            (attack_delay >=  75) ? "above average" :
-            (attack_delay >=  55) ? "quite fast" :
-            (attack_delay >=  45) ? "very fast" :
-            (attack_delay >=  35) ? "extremely fast" :
-                                    "blindingly fast");
+    return (attack_delay >= 200) ? "extremely slow" :
+           (attack_delay >= 155) ? "very slow" :
+           (attack_delay >= 125) ? "quite slow" :
+           (attack_delay >= 105) ? "below average" :
+           (attack_delay >=  95) ? "average" :
+           (attack_delay >=  75) ? "above average" :
+           (attack_delay >=  55) ? "quite fast" :
+           (attack_delay >=  45) ? "very fast" :
+           (attack_delay >=  35) ? "extremely fast" :
+                                   "blindingly fast";
 }
 
 static void _display_attack_delay()
@@ -4962,12 +4962,12 @@ string describe_contamination(int cont)
         return "Your entire body has taken on an eerie glow!";
     else if (cont > 1)
     {
-        return (make_stringf("You are %s with residual magics%s",
-                   (cont == 4) ? "practically glowing" :
-                   (cont == 3) ? "heavily infused" :
-                   (cont == 2) ? "contaminated"
-                                    : "lightly contaminated",
-                   (cont == 4) ? "!" : "."));
+        return make_stringf("You are %s with residual magics%s",
+                  (cont == 4) ? "practically glowing" :
+                  (cont == 3) ? "heavily infused" :
+                  (cont == 2) ? "contaminated"
+                                   : "lightly contaminated",
+                  (cont == 4) ? "!" : ".");
     }
     else if (cont == 1)
         return "You are very lightly contaminated with residual magic.";
@@ -6071,8 +6071,8 @@ bool player::is_banished() const
 
 bool player::in_water() const
 {
-    return (ground_level() && !beogh_water_walk()
-            && feat_is_water(grd(pos())));
+    return ground_level() && !beogh_water_walk()
+           && feat_is_water(grd(pos()));
 }
 
 bool player::in_lava() const
@@ -6217,7 +6217,7 @@ bool player::paralysed() const
 
 bool player::cannot_move() const
 {
-    return (paralysed() || petrified());
+    return paralysed() || petrified();
 }
 
 bool player::confused() const
@@ -6242,8 +6242,8 @@ bool player::petrified() const
 
 bool player::liquefied_ground() const
 {
-    return (liquefied(pos())
-            && ground_level() && !is_insubstantial());
+    return liquefied(pos())
+           && ground_level() && !is_insubstantial();
 }
 
 int player::shield_block_penalty() const
@@ -6314,11 +6314,11 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
     }
 
     // New formula for effect of str on aevp: (2/5) * evp^2 / (str+3)
-    return (2 * base_ev_penalty * base_ev_penalty
-            * (450 - skill(SK_ARMOUR, 10))
-            * scale
-            / (5 * (strength() + 3))
-            / 450);
+    return 2 * base_ev_penalty * base_ev_penalty
+           * (450 - skill(SK_ARMOUR, 10))
+           * scale
+           / (5 * (strength() + 3))
+           / 450;
 }
 
 // The EV penalty to the player for wearing their current shield.
@@ -6630,13 +6630,13 @@ int player::gdr_perc() const
 
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
-    return (player_evasion(evit)
-            - (is_constricted() ? 3 : 0)
-            - ((!act || act->visible_to(this)
-                || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
-            - (you_are_delayed()
-               && !(evit & EV_IGNORE_HELPLESS)
-               && !delay_is_run(current_delay_action())? 5 : 0));
+    return player_evasion(evit)
+           - (is_constricted() ? 3 : 0)
+           - ((!act || act->visible_to(this)
+               || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
+           - (you_are_delayed()
+              && !(evit & EV_IGNORE_HELPLESS)
+              && !delay_is_run(current_delay_action())? 5 : 0);
 }
 
 bool player::heal(int amount, bool max_too)
@@ -6700,7 +6700,7 @@ bool player::is_chaotic() const
 
 bool player::is_artificial() const
 {
-    return (species == SP_GARGOYLE || form == TRAN_STATUE || petrified());
+    return species == SP_GARGOYLE || form == TRAN_STATUE || petrified();
 }
 
 bool player::is_unbreathing() const
@@ -6961,16 +6961,16 @@ bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
     if (form == TRAN_TREE)
         return true;
 
-    return (has_notele_item(calc_unid)
-            || stasis_blocks_effect(calc_unid, permit_id, NULL)
-            || crawl_state.game_is_zotdef() && orb_haloed(pos()));
+    return has_notele_item(calc_unid)
+           || stasis_blocks_effect(calc_unid, permit_id, NULL)
+           || crawl_state.game_is_zotdef() && orb_haloed(pos());
 }
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)
 {
-    return (burden_state == BS_UNENCUMBERED
-            && x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200)
-            && x_chance_in_y(2, 1 + heavy_armour_penalty));
+    return burden_state == BS_UNENCUMBERED
+           && x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200)
+           && x_chance_in_y(2, 1 + heavy_armour_penalty);
 }
 
 bool player::cancellable_flight() const
@@ -6995,13 +6995,13 @@ bool player::racial_permanent_flight() const
 bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
-    return (species == SP_TENGU && flight_mode());
+    return species == SP_TENGU && flight_mode();
 }
 
 bool player::nightvision() const
 {
-    return (is_undead
-            || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2)));
+    return is_undead
+           || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2));
 }
 
 reach_type player::reach_range() const
@@ -7263,7 +7263,7 @@ int player::has_claws(bool allow_tran) const
 
 bool player::has_usable_claws(bool allow_tran) const
 {
-    return (!player_wearing_slot(EQ_GLOVES) && has_claws(allow_tran));
+    return !player_wearing_slot(EQ_GLOVES) && has_claws(allow_tran);
 }
 
 int player::has_talons(bool allow_tran) const
@@ -7277,7 +7277,7 @@ int player::has_talons(bool allow_tran) const
 
 bool player::has_usable_talons(bool allow_tran) const
 {
-    return (!player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran));
+    return !player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran);
 }
 
 int player::has_fangs(bool allow_tran) const
@@ -7474,7 +7474,7 @@ bool player::can_see_invisible() const
 
 bool player::invisible() const
 {
-    return (duration[DUR_INVIS] && !backlit());
+    return duration[DUR_INVIS] && !backlit();
 }
 
 bool player::misled() const
@@ -7488,7 +7488,7 @@ bool player::visible_to(const actor *looker) const
         return false;
 
     if (this == looker)
-        return (can_see_invisible() || !invisible());
+        return can_see_invisible() || !invisible();
 
     const monster* mon = looker->as_monster();
     return (mons_sense_invis(mon) && distance2(pos(), mon->pos()) <= dist_range(4))
@@ -7503,8 +7503,8 @@ bool player::backlit(bool check_haloed, bool self_halo) const
         return true;
     }
     if (check_haloed)
-        return (!umbraed() && haloed()
-                && (self_halo || halo_radius2() == -1));
+        return !umbraed() && haloed()
+               && (self_halo || halo_radius2() == -1);
     return false;
 }
 
@@ -7514,8 +7514,8 @@ bool player::umbra(bool check_haloed, bool self_halo) const
         return false;
 
     if (check_haloed)
-        return (umbraed() && !haloed()
-                && (self_halo || umbra_radius2() == -1));
+        return umbraed() && !haloed()
+               && (self_halo || umbra_radius2() == -1);
     return false;
 }
 
@@ -7702,7 +7702,7 @@ bool player::asleep() const
 
 bool player::cannot_act() const
 {
-    return (asleep() || cannot_move());
+    return asleep() || cannot_move();
 }
 
 bool player::can_throw_large_rocks() const

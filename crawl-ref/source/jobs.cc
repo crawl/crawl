@@ -63,7 +63,7 @@ job_type get_job_by_abbrev(const char *abbrev)
         }
     }
 
-    return ((i < NUM_JOBS) ? static_cast<job_type>(i) : JOB_UNKNOWN);
+    return (i < NUM_JOBS) ? static_cast<job_type>(i) : JOB_UNKNOWN;
 }
 
 const char *get_job_name(int which_job)

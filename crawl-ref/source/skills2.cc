@@ -48,7 +48,7 @@ public:
     static string get(const string &_key)
     {
         skill_op_map::const_iterator i = Skill_Op_Map.find(_key);
-        return (i == Skill_Op_Map.end()? string() : (i->second)());
+        return i == Skill_Op_Map.end()? string() : (i->second)();
     }
 private:
     const char *key;
@@ -183,7 +183,7 @@ skill_type str_to_skill(const string &skill)
 {
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         if (skills[i][0] && skill == skills[i][0])
-            return (static_cast<skill_type>(i));
+            return static_cast<skill_type>(i);
 
     return SK_FIGHTING;
 }
@@ -206,8 +206,8 @@ static string _stk_genus_nocap()
 
 static string _stk_genus_short_cap()
 {
-    return (Skill_Species == SP_DEMIGOD ? "God" :
-            _stk_genus_cap());
+    return Skill_Species == SP_DEMIGOD ? "God" :
+           _stk_genus_cap();
 }
 
 static string _stk_walker()
@@ -296,11 +296,11 @@ static string _replace_skill_keys(const string &text)
 unsigned get_skill_rank(unsigned skill_lev)
 {
     // Translate skill level into skill ranking {dlb}:
-    return ((skill_lev <= 7)  ? 0 :
-                            (skill_lev <= 14) ? 1 :
-                            (skill_lev <= 20) ? 2 :
-                            (skill_lev <= 26) ? 3
-                            /* level 27 */    : 4);
+    return (skill_lev <= 7)  ? 0 :
+                           (skill_lev <= 14) ? 1 :
+                           (skill_lev <= 20) ? 2 :
+                           (skill_lev <= 26) ? 3
+                           /* level 27 */    : 4;
 }
 
 string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
@@ -382,8 +382,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         result = _replace_skill_keys(result);
     }
 
-    return (result.empty() ? string("Invalid Title")
-                           : result);
+    return result.empty() ? string("Invalid Title")
+                          : result;
 }
 
 string skill_title(skill_type best_skill, uint8_t skill_lev,
@@ -540,7 +540,7 @@ int skill_bump(skill_type skill, int scale)
 
 static float _apt_to_factor(int apt)
 {
-    return (1 / exp(log(2) * apt / APT_DOUBLE));
+    return 1 / exp(log(2) * apt / APT_DOUBLE);
 }
 
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
@@ -668,7 +668,7 @@ static int _skill_elemental_preference(skill_type sk, int scale)
     const skill_type sk2 = _get_opposite(sk);
     if (sk2 == SK_NONE)
         return 0;
-    return (you.skill(sk, scale) - you.skill(sk2, scale));
+    return you.skill(sk, scale) - you.skill(sk2, scale);
 }
 
 int elemental_preference(spell_type spell, int scale)
@@ -697,9 +697,9 @@ static bool _compare_skills(skill_type sk1, skill_type sk2)
     else if (is_invalid_skill(sk2))
         return true;
     else
-        return (you.skill(sk1, 10, true) > you.skill(sk2, 10, true)
-                || you.skill(sk1, 10, true) == you.skill(sk2, 10, true)
-                   && you.skill_order[sk1] < you.skill_order[sk2]);
+        return you.skill(sk1, 10, true) > you.skill(sk2, 10, true)
+               || you.skill(sk1, 10, true) == you.skill(sk2, 10, true)
+                  && you.skill_order[sk1] < you.skill_order[sk2];
 }
 
 bool is_antitrained(skill_type sk)
@@ -717,8 +717,8 @@ bool antitrain_other(skill_type sk, bool show_zero)
     if (opposite == SK_NONE)
         return false;
 
-    return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
-            && you.skills[opposite] < 27 && _compare_skills(sk, opposite));
+    return (you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
+           && you.skills[opposite] < 27 && _compare_skills(sk, opposite);
 }
 
 void dump_skills(string &text)

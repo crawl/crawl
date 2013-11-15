@@ -57,14 +57,14 @@ static bool _monster_clone_exists(monster* mons)
 
 static bool _mons_is_illusion(monster* mons)
 {
-    return (mons->type == MONS_PLAYER_ILLUSION
-            || mons->type == MONS_MARA_FAKE
-            || mons->props.exists(clone_slave_key));
+    return mons->type == MONS_PLAYER_ILLUSION
+           || mons->type == MONS_MARA_FAKE
+           || mons->props.exists(clone_slave_key);
 }
 
 static bool _mons_is_illusion_cloneable(monster* mons)
 {
-    return (!_mons_is_illusion(mons) && !_monster_clone_exists(mons));
+    return !_mons_is_illusion(mons) && !_monster_clone_exists(mons);
 }
 
 static bool _player_is_illusion_cloneable()

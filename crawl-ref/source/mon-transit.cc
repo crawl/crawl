@@ -346,10 +346,10 @@ void follower::restore_mons_items(monster& m)
 
 static bool _is_religious_follower(const monster* mon)
 {
-    return ((you_worship(GOD_YREDELEMNUL)
-             || you_worship(GOD_BEOGH)
-             || you_worship(GOD_FEDHAS))
-                 && is_follower(mon));
+    return (you_worship(GOD_YREDELEMNUL)
+            || you_worship(GOD_BEOGH)
+            || you_worship(GOD_FEDHAS))
+                && is_follower(mon);
 }
 
 static bool _tag_follower_at(const coord_def &pos, bool &real_follower)

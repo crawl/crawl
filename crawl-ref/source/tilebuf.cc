@@ -172,7 +172,7 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
     int ret = static_cast<int>(alpha_top * (1.0f - lerp) + alpha_bottom * lerp);
 
     ret = min(max(0, ret), 255);
-    return (static_cast<unsigned char>(ret));
+    return static_cast<unsigned char>(ret);
 }
 
 void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,

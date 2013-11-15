@@ -109,8 +109,8 @@ string apply_description(description_level_type desc, const string &name,
     case DESC_THE:
         return "the " + name;
     case DESC_A:
-        return (quantity > 1 ? _number_to_string(quantity, in_words) + name
-                             : article_a(name, true));
+        return quantity > 1 ? _number_to_string(quantity, in_words) + name
+                            : article_a(name, true);
     case DESC_YOUR:
         return "your " + name;
     case DESC_PLAIN:
@@ -427,13 +427,13 @@ string pluralise(const string &name, const char *qualifiers[],
     if (!name.empty() && name[name.length() - 1] == ')'
         && (pos = name.rfind(" (")) != string::npos)
     {
-        return (pluralise(name.substr(0, pos)) + name.substr(pos));
+        return pluralise(name.substr(0, pos)) + name.substr(pos);
     }
 
     if (!name.empty() && name[name.length() - 1] == ']'
         && (pos = name.rfind(" [")) != string::npos)
     {
-        return (pluralise(name.substr(0, pos)) + name.substr(pos));
+        return pluralise(name.substr(0, pos)) + name.substr(pos);
     }
 
     if (ends_with(name, "us"))
@@ -546,7 +546,7 @@ string apostrophise(const string &name)
         return name + "s";
 
     const char lastc = name[name.length() - 1];
-    return (name + (lastc == 's' ? "'" : "'s"));
+    return name + (lastc == 's' ? "'" : "'s");
 }
 
 string apostrophise_fixup(const string &msg)
@@ -1003,7 +1003,7 @@ static coord_def _cgettopleft(GotoRegion region)
 coord_def cgetpos(GotoRegion region)
 {
     const coord_def where = coord_def(wherex(), wherey());
-    return (where - _cgettopleft(region) + coord_def(1, 1));
+    return where - _cgettopleft(region) + coord_def(1, 1);
 }
 
 static GotoRegion _current_region = GOTO_CRT;

@@ -215,9 +215,9 @@ struct stash_search_result
 
     bool operator < (const stash_search_result &ssr) const
     {
-        return (player_distance < ssr.player_distance
-                   || (player_distance == ssr.player_distance
-                       && matches > ssr.matches));
+        return player_distance < ssr.player_distance
+                  || (player_distance == ssr.player_distance
+                      && matches > ssr.matches);
     }
 
     bool show_menu() const;

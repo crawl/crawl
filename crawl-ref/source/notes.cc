@@ -84,9 +84,9 @@ static bool _is_noteworthy_dlevel(unsigned short place)
     if (!is_connected_branch(static_cast<branch_type>(branch)))
         return true;
 
-    return (lev == _dungeon_branch_depth(branch)
-            || branch == BRANCH_DUNGEON && (lev % 5) == 0
-            || branch != BRANCH_DUNGEON && lev == 1);
+    return lev == _dungeon_branch_depth(branch)
+           || branch == BRANCH_DUNGEON && (lev % 5) == 0
+           || branch != BRANCH_DUNGEON && lev == 1;
 }
 
 // Is a note worth taking?

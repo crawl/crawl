@@ -29,7 +29,7 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
 
 static bool _in_water(const packed_cell &cell)
 {
-    return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
+    return (cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING);
 }
 
 void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)

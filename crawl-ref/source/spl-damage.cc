@@ -356,7 +356,7 @@ static bool _refrigerateable(const actor *agent, const actor *act)
 {
     // Inconsistency: monsters suffer no damage at rC+++, players suffer
     // considerable damage.
-    return (act->is_player() || act->res_cold() < 3);
+    return act->is_player() || act->res_cold() < 3;
 }
 
 static bool _refrigerateable_hitfunc(const actor *act)
@@ -1678,7 +1678,7 @@ static bool maybe_abort_ignite()
             prompt += "in a cloud of ";
             prompt += cloud_type_name(cloud.type, true);
             prompt += "! Ignite poison anyway?";
-            return (!yesno(prompt.c_str(), false, 'n'));
+            return !yesno(prompt.c_str(), false, 'n');
         }
     }
 
@@ -1693,7 +1693,7 @@ static bool maybe_abort_ignite()
             prompt += "over ";
             prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
             prompt += "! Ignite poison anyway?";
-            return (!yesno(prompt.c_str(), false, 'n'));
+            return !yesno(prompt.c_str(), false, 'n');
         }
         else if (item.base_type == OBJ_POTIONS && item_type_known(item))
         {
@@ -1705,7 +1705,7 @@ static bool maybe_abort_ignite()
                 prompt += "over ";
                 prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
                 prompt += "! Ignite poison anyway?";
-                return (!yesno(prompt.c_str(), false, 'n'));
+                return !yesno(prompt.c_str(), false, 'n');
             default:
                 break;
             }
@@ -1717,7 +1717,7 @@ static bool maybe_abort_ignite()
             prompt += "over ";
             prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
             prompt += "! Ignite poison anyway?";
-            return (!yesno(prompt.c_str(), false, 'n'));
+            return !yesno(prompt.c_str(), false, 'n');
         }
         else if (item.base_type == OBJ_FOOD &&
                  item.sub_type == FOOD_CHUNK &&
@@ -1726,7 +1726,7 @@ static bool maybe_abort_ignite()
             prompt += "over ";
             prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
             prompt += "! Ignite poison anyway?";
-            return (!yesno(prompt.c_str(), false, 'n'));
+            return !yesno(prompt.c_str(), false, 'n');
         }
     }
 
@@ -2625,10 +2625,10 @@ static bool _dazzle_can_hit(const actor *act)
         testbeam.thrower = KILL_YOU;
         zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
 
-        return (mons->type != MONS_BATTLESPHERE
-                && mons->type != MONS_ORB_OF_DESTRUCTION
-                && mons_species(mons->type) != MONS_BUSH
-                && !fedhas_shoot_through(testbeam, mons));
+        return mons->type != MONS_BATTLESPHERE
+               && mons->type != MONS_ORB_OF_DESTRUCTION
+               && mons_species(mons->type) != MONS_BUSH
+               && !fedhas_shoot_through(testbeam, mons);
     }
     else
         return false;
@@ -2673,7 +2673,7 @@ static bool _toxic_can_affect(const actor *act)
         return false;
 
     // currently monsters are still immune at rPois 1
-    return (act->res_poison() < (act->is_player() ? 3 : 1));
+    return act->res_poison() < (act->is_player() ? 3 : 1);
 }
 
 spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)

@@ -813,8 +813,8 @@ string monster_info::db_name() const
     {
         iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
         bool     use_inscrip  = false;
-        return (inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
-                          ignore_flags));
+        return inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
+                         ignore_flags);
     }
 
     return get_monster_data(type)->name;
@@ -1187,7 +1187,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return m1.number > m2.number;
 
     if (m1.type == MONS_BALLISTOMYCETE)
-        return ((m1.number > 0) > (m2.number > 0));
+        return (m1.number > 0) > (m2.number > 0);
 
     // Shifters after real monsters of the same type.
     if (m1.is(MB_SHAPESHIFTER) != m2.is(MB_SHAPESHIFTER))
@@ -1762,7 +1762,7 @@ bool monster_info::airborne() const
 
 bool monster_info::ground_level() const
 {
-    return (!airborne() && !is(MB_CLINGING));
+    return !airborne() && !is(MB_CLINGING);
 }
 
 void get_monster_info(vector<monster_info>& mons)

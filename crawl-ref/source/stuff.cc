@@ -399,7 +399,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
 
 int div_round_up(int num, int den)
 {
-    return (num / den + (num % den != 0));
+    return num / den + (num % den != 0);
 }
 
 void canned_msg(canned_message_type which_message)
@@ -768,7 +768,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
 char index_to_letter(int the_index)
 {
     ASSERT_RANGE(the_index, 0, ENDOFPACK);
-    return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
+    return the_index + ((the_index < 26) ? 'a' : ('A' - 26));
 }
 
 int letter_to_index(int the_letter)

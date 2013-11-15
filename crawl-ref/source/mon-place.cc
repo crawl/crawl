@@ -113,10 +113,10 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
                && actual_feat <= DNGN_CLEAR_PERMAROCK_WALL;
     }
 
-    return (feat_wanted == actual_feat
-            || (feat_wanted == DNGN_DEEP_WATER
-                && (actual_feat == DNGN_SHALLOW_WATER
-                    || actual_feat == DNGN_FOUNTAIN_BLUE)));
+    return feat_wanted == actual_feat
+           || (feat_wanted == DNGN_DEEP_WATER
+               && (actual_feat == DNGN_SHALLOW_WATER
+                   || actual_feat == DNGN_FOUNTAIN_BLUE));
 }
 
 // Can this monster survive on actual_grid?
@@ -129,11 +129,11 @@ bool monster_habitable_grid(const monster* mon,
     // Zombified monsters enjoy the same habitat as their original.
     const monster_type mt = mons_base_type(mon);
 
-    return (monster_habitable_grid(mt,
-                                   actual_grid,
-                                   DNGN_UNSEEN,
-                                   mons_flies(mon),
-                                   mon->cannot_move()));
+    return monster_habitable_grid(mt,
+                                  actual_grid,
+                                  DNGN_UNSEEN,
+                                  mons_flies(mon),
+                                  mon->cannot_move());
 }
 
 bool mons_airborne(monster_type mcls, int flies, bool paralysed)
@@ -244,10 +244,10 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
 
 static bool _is_spawn_scaled_area(const level_id &here)
 {
-    return (is_connected_branch(here.branch)
-            && !is_hell_subbranch(here.branch)
-            && here.branch != BRANCH_VESTIBULE
-            && here.branch != BRANCH_ZOT);
+    return is_connected_branch(here.branch)
+           && !is_hell_subbranch(here.branch)
+           && here.branch != BRANCH_VESTIBULE
+           && here.branch != BRANCH_ZOT;
 }
 
 // Scale monster generation parameter with time spent on level. Note:
@@ -262,15 +262,15 @@ static int _scale_spawn_parameter(int base_value,
         return base_value;
 
     const int turns_on_level = env.turns_on_level;
-    return (turns_on_level <= dropoff_start_turns ? base_value :
-            turns_on_level > dropoff_start_turns + dropoff_ramp_turns ?
-            final_value :
+    return turns_on_level <= dropoff_start_turns ? base_value :
+           turns_on_level > dropoff_start_turns + dropoff_ramp_turns ?
+           final_value :
 
-            // Actual scaling, strictly linear at the moment:
-            (base_value +
-             (target_value - base_value)
-             * (turns_on_level - dropoff_start_turns)
-             / dropoff_ramp_turns));
+           // Actual scaling, strictly linear at the moment:
+           (base_value +
+            (target_value - base_value)
+            * (turns_on_level - dropoff_start_turns)
+            / dropoff_ramp_turns);
 }
 
 static void _apply_ood(level_id &place)
@@ -505,8 +505,8 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
         if (_is_random_monster(mon_type))
             return false;
 
-        return (mons_class_flies(mon_type)
-                || get_monster_data(mon_type)->size == SIZE_TINY);
+        return mons_class_flies(mon_type)
+               || get_monster_data(mon_type)->size == SIZE_TINY;
     }
 
     return true;
@@ -3254,7 +3254,7 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
         p = ps;
     }
 
-    return (in_bounds(p) ? p : coord_def(-1, -1));
+    return in_bounds(p) ? p : coord_def(-1, -1);
 }
 
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p)

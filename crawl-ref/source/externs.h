@@ -95,7 +95,7 @@ class ghost_demon;
 
 template <typename Z> static inline Z sgn(Z x)
 {
-    return (x < 0 ? -1 : (x > 0 ? 1 : 0));
+    return x < 0 ? -1 : (x > 0 ? 1 : 0);
 }
 
 static inline int dist_range(int x) { return x*x + 1; };
@@ -716,7 +716,7 @@ struct item_comparator
     }
     int compare(const InvEntry *a, const InvEntry *b) const
     {
-        return (negated? -cmpfn(a, b) : cmpfn(a, b));
+        return negated? -cmpfn(a, b) : cmpfn(a, b);
     }
 };
 typedef vector<item_comparator> item_sort_comparators;

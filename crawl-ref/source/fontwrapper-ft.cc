@@ -33,7 +33,7 @@
 
 FontWrapper* FontWrapper::create()
 {
-    return (new FTFontWrapper());
+    return new FTFontWrapper();
 }
 
 FTFontWrapper::FTFontWrapper() :

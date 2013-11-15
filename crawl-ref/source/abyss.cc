@@ -288,10 +288,10 @@ static bool _abyss_place_rune(const map_bitmask &abyss_genlevel_mask,
 static bool _abyss_square_accepts_items(const map_bitmask &abyss_genlevel_mask,
                                         coord_def p)
 {
-    return (abyss_genlevel_mask(p)
-            && grd(p) == DNGN_FLOOR
-            && igrd(p) == NON_ITEM
-            && !map_masked(p, MMT_VAULT));
+    return abyss_genlevel_mask(p)
+           && grd(p) == DNGN_FLOOR
+           && igrd(p) == NON_ITEM
+           && !map_masked(p, MMT_VAULT);
 }
 
 static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
@@ -1181,7 +1181,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
 static int _abyssal_stair_chance()
 {
-    return (you.char_direction == GDT_GAME_START ? 0 : 2800 - (200 * you.depth / 3));
+    return you.char_direction == GDT_GAME_START ? 0 : 2800 - (200 * you.depth / 3);
 }
 
 static void _nuke_all_terrain(bool vaults)

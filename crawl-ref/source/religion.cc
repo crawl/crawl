@@ -1056,8 +1056,8 @@ void dec_penance(int val)
 
 static bool _need_water_walking()
 {
-    return (you.ground_level() && you.species != SP_MERFOLK
-            && grd(you.pos()) == DNGN_DEEP_WATER);
+    return you.ground_level() && you.species != SP_MERFOLK
+           && grd(you.pos()) == DNGN_DEEP_WATER;
 }
 
 bool jiyva_is_dead()
@@ -1241,11 +1241,11 @@ static bool _need_missile_gift(bool forced)
 {
     const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
-    return ((forced || you.piety >= piety_breakpoint(2)
-                       && random2(you.piety) > 70
-                       && one_chance_in(8))
-            && you.skills[ best_missile_skill ] >= 8
-            && (launcher || best_missile_skill == SK_THROWING));
+    return (forced || you.piety >= piety_breakpoint(2)
+                      && random2(you.piety) > 70
+                      && one_chance_in(8))
+           && you.skills[ best_missile_skill ] >= 8
+           && (launcher || best_missile_skill == SK_THROWING);
 }
 
 void get_pure_deck_weights(int weights[])
@@ -1448,34 +1448,34 @@ void mons_make_god_gift(monster* mon, god_type god)
 
 bool mons_is_god_gift(const monster* mon, god_type god)
 {
-    return ((mon->flags & MF_GOD_GIFT) && mon->god == god);
+    return (mon->flags & MF_GOD_GIFT) && mon->god == god;
 }
 
 bool is_yred_undead_slave(const monster* mon)
 {
-    return (mon->alive() && mon->holiness() == MH_UNDEAD
-            && mon->attitude == ATT_FRIENDLY
-            && mons_is_god_gift(mon, GOD_YREDELEMNUL));
+    return mon->alive() && mon->holiness() == MH_UNDEAD
+           && mon->attitude == ATT_FRIENDLY
+           && mons_is_god_gift(mon, GOD_YREDELEMNUL);
 }
 
 bool is_orcish_follower(const monster* mon)
 {
-    return (mon->alive() && mons_genus(mon->type) == MONS_ORC
-            && mon->attitude == ATT_FRIENDLY
-            && mons_is_god_gift(mon, GOD_BEOGH));
+    return mon->alive() && mons_genus(mon->type) == MONS_ORC
+           && mon->attitude == ATT_FRIENDLY
+           && mons_is_god_gift(mon, GOD_BEOGH);
 }
 
 bool is_fellow_slime(const monster* mon)
 {
-    return (mon->alive() && mons_is_slime(mon)
-            && mon->attitude == ATT_STRICT_NEUTRAL
-            && mons_is_god_gift(mon, GOD_JIYVA));
+    return mon->alive() && mons_is_slime(mon)
+           && mon->attitude == ATT_STRICT_NEUTRAL
+           && mons_is_god_gift(mon, GOD_JIYVA);
 }
 
 static bool _is_plant_follower(const monster* mon)
 {
-    return (mon->alive() && mons_is_plant(mon)
-            && mon->attitude == ATT_FRIENDLY);
+    return mon->alive() && mons_is_plant(mon)
+           && mon->attitude == ATT_FRIENDLY;
 }
 
 static bool _has_jelly()
@@ -1499,7 +1499,7 @@ bool is_follower(const monster* mon)
     else if (you_worship(GOD_FEDHAS))
         return _is_plant_follower(mon);
     else
-        return (mon->alive() && mon->friendly());
+        return mon->alive() && mon->friendly();
 }
 
 static bool _blessing_wpn(monster* mon)
@@ -1951,8 +1951,8 @@ static bool _jiyva_mutate()
 
 bool vehumet_is_offering(spell_type spell)
 {
-    return (find(you.vehumet_gifts.begin(), you.vehumet_gifts.end(), spell)
-            != you.vehumet_gifts.end());
+    return find(you.vehumet_gifts.begin(), you.vehumet_gifts.end(), spell)
+           != you.vehumet_gifts.end();
 }
 
 void vehumet_accept_gift(spell_type spell)
@@ -1974,9 +1974,9 @@ static void _add_to_old_gifts(spell_type spell)
 
 static bool _is_old_gift(spell_type spell)
 {
-    return (find(you.old_vehumet_gifts.begin(),
-                 you.old_vehumet_gifts.end(), spell)
-            != you.old_vehumet_gifts.end());
+    return find(you.old_vehumet_gifts.begin(),
+                you.old_vehumet_gifts.end(), spell)
+           != you.old_vehumet_gifts.end();
 }
 
 static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_spells)
@@ -2349,8 +2349,8 @@ bool do_god_gift(bool forced)
 string god_name(god_type which_god, bool long_name)
 {
     if (which_god == GOD_JIYVA)
-        return (god_name_jiyva(long_name) +
-                (long_name? " the Shapeless" : ""));
+        return god_name_jiyva(long_name) +
+               (long_name? " the Shapeless" : "");
 
     if (long_name)
     {
@@ -2380,8 +2380,8 @@ string god_name(god_type which_god, bool long_name)
     case GOD_BEOGH:         return "Beogh";
     case GOD_JIYVA:
     {
-        return (long_name ? god_name_jiyva(true) + " the Shapeless"
-                          : god_name_jiyva(false));
+        return long_name ? god_name_jiyva(true) + " the Shapeless"
+                         : god_name_jiyva(false);
     }
     case GOD_FEDHAS:        return "Fedhas";
     case GOD_CHEIBRIADOS:   return "Cheibriados";
@@ -2602,7 +2602,7 @@ int piety_scale(int piety)
         return -piety_scale(-piety);
 
     if (you.faith())
-        return (piety + div_rand_round(piety, 3));
+        return piety + div_rand_round(piety, 3);
 
     return piety;
 }
@@ -2926,25 +2926,25 @@ void lose_piety(int pgn)
 // if a friendly one dies they lose piety.
 static bool _fedhas_protects_species(monster_type mc)
 {
-    return (mons_class_is_plant(mc)
-            && mons_class_holiness(mc) == MH_PLANT
-            && mc != MONS_GIANT_SPORE
-            && mc != MONS_SNAPLASHER_VINE
-            && mc != MONS_SNAPLASHER_VINE_SEGMENT);
+    return mons_class_is_plant(mc)
+           && mons_class_holiness(mc) == MH_PLANT
+           && mc != MONS_GIANT_SPORE
+           && mc != MONS_SNAPLASHER_VINE
+           && mc != MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
 bool fedhas_protects(const monster* target)
 {
-    return (target && _fedhas_protects_species(mons_base_type(target)));
+    return target && _fedhas_protects_species(mons_base_type(target));
 }
 
 // Fedhas neutralises most plants and fungi
 bool fedhas_neutralises(const monster* target)
 {
-    return (target && mons_is_plant(target)
-            && target->holiness() == MH_PLANT
-            && target->type != MONS_SNAPLASHER_VINE
-            && target->type != MONS_SNAPLASHER_VINE_SEGMENT);
+    return target && mons_is_plant(target)
+           && target->holiness() == MH_PLANT
+           && target->type != MONS_SNAPLASHER_VINE
+           && target->type != MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
 static string _god_hates_your_god_reaction(god_type god, god_type your_god)
@@ -3342,9 +3342,9 @@ bool god_likes_item(god_type god, const item_def& item)
 
     if (god_likes_fresh_corpses(god))
     {
-        return (item.base_type == OBJ_CORPSES
-                && item.sub_type == CORPSE_BODY
-                && !food_is_rotten(item));
+        return item.base_type == OBJ_CORPSES
+               && item.sub_type == CORPSE_BODY
+               && !food_is_rotten(item);
     }
 
     switch (god)
@@ -3366,13 +3366,13 @@ bool god_likes_item(god_type god, const item_def& item)
                && mons_genus(item.mon_type) == MONS_ORC;
 
     case GOD_NEMELEX_XOBEH:
-        return (!is_deck(item)
-                && !item.is_critical()
-                && !item_is_rune(item)
-                && item.base_type != OBJ_GOLD
-                && (item.base_type != OBJ_MISCELLANY
-                    || item.sub_type != MISC_HORN_OF_GERYON
-                    || item.plus2));
+        return !is_deck(item)
+               && !item.is_critical()
+               && !item_is_rune(item)
+               && item.base_type != OBJ_GOLD
+               && (item.base_type != OBJ_MISCELLANY
+                   || item.sub_type != MISC_HORN_OF_GERYON
+                   || item.plus2);
 
     case GOD_ASHENZARI:
         return item.base_type == OBJ_SCROLLS
@@ -3791,7 +3791,7 @@ int had_gods()
 
 bool god_likes_your_god(god_type god, god_type your_god)
 {
-    return (is_good_god(god) && is_good_god(your_god));
+    return is_good_god(god) && is_good_god(your_god);
 }
 
 bool god_hates_your_god(god_type god, god_type your_god)
@@ -4176,15 +4176,15 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_VEHUMET:
         rnd = random2(3);
-        return ((rnd == 0) ? LIGHTMAGENTA :
-                (rnd == 1) ? LIGHTRED
-                           : LIGHTBLUE);
+        return (rnd == 0) ? LIGHTMAGENTA :
+               (rnd == 1) ? LIGHTRED
+                          : LIGHTBLUE;
 
     case GOD_MAKHLEB:
         rnd = random2(3);
-        return ((rnd == 0) ? RED :
-                (rnd == 1) ? LIGHTRED
-                           : YELLOW);
+        return (rnd == 0) ? RED :
+               (rnd == 1) ? LIGHTRED
+                          : YELLOW;
 
     case GOD_TROG:
         return RED;
@@ -4249,10 +4249,10 @@ int piety_breakpoint(int i)
 bool tso_unchivalric_attack_safe_monster(const monster* mon)
 {
     const mon_holy_type holiness = mon->holiness();
-    return (mons_intel(mon) < I_NORMAL
-            || mon->undead_or_demonic()
-            || mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)
-            || !mon->is_holy() && holiness != MH_NATURAL);
+    return mons_intel(mon) < I_NORMAL
+           || mon->undead_or_demonic()
+           || mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)
+           || !mon->is_holy() && holiness != MH_NATURAL;
 }
 
 int get_monster_tension(const monster* mons, god_type god)
@@ -4576,12 +4576,12 @@ static bool _is_temple_god(god_type god)
 
 static bool _is_nontemple_god(god_type god)
 {
-    return (_is_god(god) && !_is_temple_god(god));
+    return _is_god(god) && !_is_temple_god(god);
 }
 
 static bool _cmp_god_by_name(god_type god1, god_type god2)
 {
-    return (god_name(god1, false) < god_name(god2, false));
+    return god_name(god1, false) < god_name(god2, false);
 }
 
 // Vector of temple gods.

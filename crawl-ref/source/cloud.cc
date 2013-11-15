@@ -526,7 +526,7 @@ static int _steam_cloud_damage(int decay)
     decay = max(decay, 10);
 
     // Damage in range 3 - 16.
-    return ((decay * 13 + 20) / 50);
+    return (decay * 13 + 20) / 50;
 }
 
 static bool _is_weak_cloud(int cl)
@@ -681,7 +681,7 @@ cloud_type random_smoke_type()
 // 1/2, 1/5, 1/10 (normal) and 1/3, 1/6, 1/11 (boolean), respectively.
 int resist_fraction(int resist, int bonus_res)
 {
-    return ((3*resist + 1)/2 + bonus_res);
+    return (3*resist + 1)/2 + bonus_res;
 }
 
 int max_cloud_damage(cloud_type cl_type, int power)
@@ -845,8 +845,8 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
 static bool _mephitic_cloud_roll(const monster* mons)
 {
     const int meph_hd_cap = 21;
-    return (mons->hit_dice >= meph_hd_cap? one_chance_in(50)
-            : !x_chance_in_y(mons->hit_dice, meph_hd_cap));
+    return mons->hit_dice >= meph_hd_cap? one_chance_in(50)
+           : !x_chance_in_y(mons->hit_dice, meph_hd_cap);
 }
 
 // Applies cloud messages and side-effects and returns true if the
@@ -1127,10 +1127,10 @@ int actor_apply_cloud(actor *act)
 static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
                               int maximum_negligible_damage)
 {
-    return (!_actor_cloud_immune(act, cloud)
-            && (_cloud_has_negative_side_effects(cloud.type)
-                || (_actor_cloud_damage(act, cloud, true) >
-                    maximum_negligible_damage)));
+    return !_actor_cloud_immune(act, cloud)
+           && (_cloud_has_negative_side_effects(cloud.type)
+               || (_actor_cloud_damage(act, cloud, true) >
+                   maximum_negligible_damage));
 }
 
 bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
@@ -1326,9 +1326,9 @@ void cloud_struct::set_killer(killer_type _killer)
 string cloud_struct::cloud_name(const string &defname,
                                      bool terse) const
 {
-    return (!name.empty()    ? name :
-            !defname.empty() ? defname :
-                               cloud_type_name(type, terse));
+    return !name.empty()    ? name :
+           !defname.empty() ? defname :
+                              cloud_type_name(type, terse);
 }
 
 void cloud_struct::announce_actor_engulfed(const actor *act,

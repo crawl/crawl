@@ -257,7 +257,7 @@ spell_type get_spell_by_letter(char letter)
 
     const int slot = get_spell_slot_by_letter(letter);
 
-    return ((slot == -1) ? SPELL_NO_SPELL : you.spells[slot]);
+    return (slot == -1) ? SPELL_NO_SPELL : you.spells[slot];
 }
 
 bool add_spell_to_memory(spell_type spell)
@@ -504,8 +504,8 @@ bool disciplines_conflict(unsigned int disc1, unsigned int disc2)
 {
     const unsigned int combined = disc1 | disc2;
 
-    return ((combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
-            || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE));
+    return (combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
+           || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE);
 }
 
 const char *spell_title(spell_type spell)

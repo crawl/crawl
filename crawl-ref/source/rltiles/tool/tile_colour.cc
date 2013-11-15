@@ -159,7 +159,7 @@ void tile_colour::desaturate()
 
 float tile_colour::get_lum() const
 {
-    return ((get_min_rgb() + get_max_rgb()) / (255 * 2.0f));
+    return (get_min_rgb() + get_max_rgb()) / (255 * 2.0f);
 }
 
 float tile_colour::get_sat() const

@@ -1561,8 +1561,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             if (!one_chance_in(3) && !god_gift && !force_mutation)
                 return false;
             else
-                return (delete_mutation(RANDOM_MUTATION, reason, failMsg,
-                                        force_mutation, false));
+                return delete_mutation(RANDOM_MUTATION, reason, failMsg,
+                                       force_mutation, false);
         }
     }
 

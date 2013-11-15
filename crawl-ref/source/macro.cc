@@ -111,7 +111,7 @@ static KeymapContext _context_for_command(command_type cmd);
 static inline int userfunc_index(int key)
 {
     int index = (key <= USERFUNCBASE ? USERFUNCBASE - key : -1);
-    return (index < 0 || index >= (int) userfunctions.size()? -1 : index);
+    return index < 0 || index >= (int) userfunctions.size()? -1 : index;
 }
 
 static int userfunc_index(const keyseq &seq)

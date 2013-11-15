@@ -68,7 +68,7 @@ int random_element_colour_calc::get(const coord_def& loc, bool non_random)
 
 colour_t random_colour(void)
 {
-    return (1 + random2(15));
+    return 1 + random2(15);
 }
 
 colour_t random_uncommon_colour()
@@ -639,7 +639,7 @@ int element_colour(int element, bool no_random, const coord_def& loc)
 
     ASSERT(!_is_element_colour(ret));
 
-    return ((ret == BLACK) ? GREEN : ret);
+    return (ret == BLACK) ? GREEN : ret;
 }
 
 #ifdef USE_TILE

@@ -748,7 +748,7 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 
     string a_name = mons_type_name(a->type, DESC_PLAIN);
     string b_name = mons_type_name(b->type, DESC_PLAIN);
-    return (lowercase(a_name) < lowercase(b_name));
+    return lowercase(a_name) < lowercase(b_name);
 }
 
 // Compare monsters by location-independent level, or by hitdice if
@@ -768,7 +768,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     {
         string a_name = mons_type_name(a->type, DESC_PLAIN);
         string b_name = mons_type_name(b->type, DESC_PLAIN);
-        return (lowercase(a_name) < lowercase(b_name));
+        return lowercase(a_name) < lowercase(b_name);
     }
     return a_toughness > b_toughness;
 }

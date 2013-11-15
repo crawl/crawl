@@ -240,10 +240,10 @@ static bool _can_use_item(const item_def &item, bool equipped)
     // Vampires can drain corpses.
     if (item.base_type == OBJ_CORPSES)
     {
-        return (you.species == SP_VAMPIRE
-                && item.sub_type != CORPSE_SKELETON
-                && !food_is_rotten(item)
-                && mons_has_blood(item.mon_type));
+        return you.species == SP_VAMPIRE
+               && item.sub_type != CORPSE_SKELETON
+               && !food_is_rotten(item)
+               && mons_has_blood(item.mon_type);
     }
 
     if (equipped && item.cursed())

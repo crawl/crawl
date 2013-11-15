@@ -135,12 +135,12 @@ bool player::floundering() const
 bool player::extra_balanced() const
 {
     const dungeon_feature_type grid = grd(pos());
-    return (species == SP_GREY_DRACONIAN
-               || grid == DNGN_SHALLOW_WATER
-                   && (species == SP_NAGA // tails, not feet
-                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
-                   && (form == TRAN_LICH || form == TRAN_STATUE
-                       || !form_changed_physiology()));
+    return species == SP_GREY_DRACONIAN
+              || grid == DNGN_SHALLOW_WATER
+                  && (species == SP_NAGA // tails, not feet
+                      || body_size(PSIZE_BODY) >= SIZE_LARGE)
+                  && (form == TRAN_LICH || form == TRAN_STATUE
+                      || !form_changed_physiology());
 }
 
 int player::get_experience_level() const
@@ -277,7 +277,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded) const
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
         return NULL;
-    return (const_cast<item_def *>(&inv[item]));
+    return const_cast<item_def *>(&inv[item]);
 }
 
 // Returns the item in the player's weapon slot.

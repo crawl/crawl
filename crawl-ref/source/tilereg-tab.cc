@@ -171,7 +171,7 @@ int TabbedRegion::num_tabs() const
 
 bool TabbedRegion::invalid_index(int idx) const
 {
-    return (idx < 0 || (int)m_tabs.size() <= idx);
+    return idx < 0 || (int)m_tabs.size() <= idx;
 }
 
 void TabbedRegion::enable_tab(int idx)
@@ -380,7 +380,7 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
     if (!active_is_valid())
         return 0;
 
-    return (get_tab_region(active_tab())->handle_mouse(event));
+    return get_tab_region(active_tab())->handle_mouse(event);
 }
 
 bool TabbedRegion::update_tab_tip_text(string &tip, bool active)
@@ -400,7 +400,7 @@ bool TabbedRegion::update_tip_text(string &tip)
             return reg->update_tab_tip_text(tip, m_mouse_tab == m_active);
     }
 
-    return (get_tab_region(active_tab())->update_tip_text(tip));
+    return get_tab_region(active_tab())->update_tip_text(tip);
 }
 
 bool TabbedRegion::update_alt_text(string &alt)
@@ -408,7 +408,7 @@ bool TabbedRegion::update_alt_text(string &alt)
     if (!active_is_valid())
         return false;
 
-    return (get_tab_region(active_tab())->update_alt_text(alt));
+    return get_tab_region(active_tab())->update_alt_text(alt);
 }
 
 int TabbedRegion::find_tab(string tab_name) const

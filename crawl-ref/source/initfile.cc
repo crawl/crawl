@@ -3674,7 +3674,7 @@ string game_options::resolve_include(const string &file, const char *type)
 
 bool game_options::was_included(const string &file) const
 {
-    return (included.count(file));
+    return included.count(file);
 }
 
 void game_options::include(const string &rawfilename, bool resolve,

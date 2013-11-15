@@ -102,7 +102,7 @@ item_def* item_mimic_at(const coord_def &c)
 
 bool mimic_at(const coord_def &c)
 {
-    return (feature_mimic_at(c) || item_mimic_at(c));
+    return feature_mimic_at(c) || item_mimic_at(c);
 }
 
 // Monster curses a random player inventory item.
@@ -720,10 +720,10 @@ static bool _is_pet_kill(killer_type killer, int i)
     // makes casualties to this monster collateral kills.
     const mon_enchant me = m->get_ench(ENCH_CONFUSION);
     const mon_enchant me2 = m->get_ench(ENCH_INSANE);
-    return (me.ench == ENCH_CONFUSION
-            && (me.who == KC_YOU || me.who == KC_FRIENDLY)
-            || me2.ench == ENCH_INSANE
-               && (me2.who == KC_YOU || me2.who == KC_FRIENDLY));
+    return me.ench == ENCH_CONFUSION
+           && (me.who == KC_YOU || me.who == KC_FRIENDLY)
+           || me2.ench == ENCH_INSANE
+              && (me2.who == KC_YOU || me2.who == KC_FRIENDLY);
 }
 
 int exp_rate(int killer)
@@ -2895,15 +2895,15 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
 
 static bool _jiyva_slime_target(monster_type targetc)
 {
-    return (you_worship(GOD_JIYVA)
-            && (targetc == MONS_DEATH_OOZE
-               || targetc == MONS_OOZE
-               || targetc == MONS_JELLY
-               || targetc == MONS_BROWN_OOZE
-               || targetc == MONS_SLIME_CREATURE
-               || targetc == MONS_GIANT_AMOEBA
-               || targetc == MONS_ACID_BLOB
-               || targetc == MONS_AZURE_JELLY));
+    return you_worship(GOD_JIYVA)
+           && (targetc == MONS_DEATH_OOZE
+              || targetc == MONS_OOZE
+              || targetc == MONS_JELLY
+              || targetc == MONS_BROWN_OOZE
+              || targetc == MONS_SLIME_CREATURE
+              || targetc == MONS_GIANT_AMOEBA
+              || targetc == MONS_ACID_BLOB
+              || targetc == MONS_AZURE_JELLY);
 
 }
 
@@ -3347,12 +3347,12 @@ bool mon_can_be_slimified(monster* mons)
 {
     const mon_holy_type holi = mons->holiness();
 
-    return (!(mons->flags & MF_GOD_GIFT)
-            && !mons->is_insubstantial()
-            && !mons_is_tentacle_or_tentacle_segment(mons->type)
-            && (holi == MH_UNDEAD
-                 || holi == MH_NATURAL && !mons_is_slime(mons))
-          );
+    return !(mons->flags & MF_GOD_GIFT)
+           && !mons->is_insubstantial()
+           && !mons_is_tentacle_or_tentacle_segment(mons->type)
+           && (holi == MH_UNDEAD
+                || holi == MH_NATURAL && !mons_is_slime(mons))
+         ;
 }
 
 void slimify_monster(monster* mon, bool hostile)
@@ -3884,7 +3884,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     {
     case CLOUD_MIASMA:
         // Even the dumbest monsters will avoid miasma if they can.
-        return (!mons->res_rotting());
+        return !mons->res_rotting();
 
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
@@ -5014,7 +5014,7 @@ bool temperature_effect(int which)
 //      case nothing, right now:
 //            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
         case LORC_LAVA_BOOST:
-            return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9-10
+            return temperature() >= TEMP_WARM && temperature() < TEMP_HOT; // 9-10
         case LORC_FIRE_RES_II:
             return temperature() >= TEMP_WARM; // 9-15
         case LORC_FIRE_RES_III:

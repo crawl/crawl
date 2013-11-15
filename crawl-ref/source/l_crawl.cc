@@ -224,8 +224,8 @@ LUAWRAP(crawl_flush_input, flush_input_buffer(FLUSH_LUA))
 
 static char _lua_char(lua_State *ls, int ndx, char defval = 0)
 {
-    return (lua_isnone(ls, ndx) || !lua_isstring(ls, ndx)? defval
-            : lua_tostring(ls, ndx)[0]);
+    return lua_isnone(ls, ndx) || !lua_isstring(ls, ndx)? defval
+           : lua_tostring(ls, ndx)[0];
 }
 
 /*

@@ -51,7 +51,7 @@
 static bool _abyss_blocks_teleport(bool cblink)
 {
     // Controlled Blink (the spell) works more reliably in the Abyss.
-    return (cblink ? coinflip() : !one_chance_in(3));
+    return cblink ? coinflip() : !one_chance_in(3);
 }
 
 // XXX: can miscast before cancelling.

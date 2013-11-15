@@ -99,8 +99,8 @@ static bool _mon_tries_regain_los(monster* mon)
     }
 
     // Randomize it a bit to make it less predictable.
-    return (mons_intel(mon) == I_NORMAL && !one_chance_in(10)
-            || mons_intel(mon) == I_HIGH && !one_chance_in(20));
+    return mons_intel(mon) == I_NORMAL && !one_chance_in(10)
+           || mons_intel(mon) == I_HIGH && !one_chance_in(20);
 }
 
 // Monster tries to get into a firing position. Among the cells which have
@@ -258,13 +258,13 @@ static void _set_curse_skull_lurk_pos(monster* mon)
 
 static bool _stabber_keep_distance(const monster* mon, const actor* foe)
 {
-    return (mons_class_flag(mon->type, M_STABBER)
-            && !mon->berserk_or_insane()
-            && (mons_has_incapacitating_ranged_attack(mon, foe)
-                || mons_has_incapacitating_spell(mon, foe))
-            && !foe->incapacitated()
-            && !adjacent(mon->pos(), foe->pos())
-            && !mons_aligned(mon, foe));
+    return mons_class_flag(mon->type, M_STABBER)
+           && !mon->berserk_or_insane()
+           && (mons_has_incapacitating_ranged_attack(mon, foe)
+               || mons_has_incapacitating_spell(mon, foe))
+           && !foe->incapacitated()
+           && !adjacent(mon->pos(), foe->pos())
+           && !mons_aligned(mon, foe);
 }
 
 //---------------------------------------------------------------

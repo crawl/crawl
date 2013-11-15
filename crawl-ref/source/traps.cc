@@ -195,9 +195,9 @@ bool trap_def::is_known(const actor* act) const
             // * Lower intelligence requirement for native monsters.
             // * Allied zombies won't fall through shafts. (No herding!)
             // * Highly intelligent monsters never fall through shafts.
-            return (intel >= I_HIGH
-                    || intel > I_PLANT && mons_is_native_in_branch(mons)
-                    || player_knows && mons->wont_attack());
+            return intel >= I_HIGH
+                   || intel > I_PLANT && mons_is_native_in_branch(mons)
+                   || player_knows && mons->wont_attack();
         }
         else
         {
@@ -213,8 +213,8 @@ bool trap_def::is_known(const actor* act) const
             if (crawl_state.game_is_zotdef())
                 return false;
 
-            return (mons_is_native_in_branch(mons)
-                    || intel >= I_HIGH && one_chance_in(3));
+            return mons_is_native_in_branch(mons)
+                   || intel >= I_HIGH && one_chance_in(3);
         }
     }
     die("invalid actor type");
@@ -1678,7 +1678,7 @@ bool is_valid_shaft_level(const level_id &place)
     if (env.turns_on_level == -1 && branch.dangerous_bottom_level)
         min_delta = 2;
 
-    return ((brdepth[place.branch] - place.depth) >= min_delta);
+    return (brdepth[place.branch] - place.depth) >= min_delta;
 }
 
 // Shafts can be generated visible.
@@ -1689,9 +1689,9 @@ bool is_valid_shaft_level(const level_id &place)
 bool shaft_known(int depth, bool randomly_placed)
 {
     if (randomly_placed)
-        return (coinflip() && x_chance_in_y(3, depth));
+        return coinflip() && x_chance_in_y(3, depth);
     else
-        return (coinflip() || x_chance_in_y(3, depth));
+        return coinflip() || x_chance_in_y(3, depth);
 }
 
 static level_id _generic_shaft_dest(level_pos lpos, bool known = false)

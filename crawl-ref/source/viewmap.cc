@@ -1378,8 +1378,8 @@ bool show_map(level_pos &lpos,
 
 bool emphasise(const coord_def& where)
 {
-    return (is_unknown_stair(where)
-            && !player_in_branch(BRANCH_VESTIBULE));
+    return is_unknown_stair(where)
+           && !player_in_branch(BRANCH_VESTIBULE);
 }
 
 #ifndef USE_TILE_LOCAL

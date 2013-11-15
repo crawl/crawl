@@ -49,7 +49,7 @@ uint32_t random_int()
 int random_range(int low, int high)
 {
     ASSERT(low <= high);
-    return (low + random2(high - low + 1));
+    return low + random2(high - low + 1);
 }
 
 // [low, high]
@@ -129,7 +129,7 @@ int random2(int max)
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
-            return ((int)val);
+            return (int)val;
     }
 }
 
@@ -147,14 +147,14 @@ int ui_random(int max)
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
-            return ((int)val);
+            return (int)val;
     }
 }
 
 // [0, 1]
 bool coinflip(void)
 {
-    return (static_cast<bool>(random2(2)));
+    return static_cast<bool>(random2(2));
 }
 
 // Returns random2(x) if random_factor is true, otherwise the mean.
@@ -186,7 +186,7 @@ int maybe_roll_dice(int num, int size, bool random)
     if (random)
         return roll_dice(num, size);
     else
-        return ((num + num * size) / 2);
+        return (num + num * size) / 2;
 }
 
 // [num, num*size]
@@ -257,7 +257,7 @@ int div_rand_round(int num, int den)
 {
     int rem = num % den;
     if (rem)
-        return (num / den + (random2(den) < rem));
+        return num / den + (random2(den) < rem);
     else
         return num / den;
 }
@@ -466,7 +466,7 @@ defer_rand& defer_rand::operator[](int i)
 int defer_rand::random_range(int low, int high)
 {
     ASSERT(low <= high);
-    return (low + random2(high - low + 1));
+    return low + random2(high - low + 1);
 }
 
 int defer_rand::random2avg(int max, int rolls)

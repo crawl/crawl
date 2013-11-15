@@ -148,7 +148,7 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     }
 
     coord_def* choice = random_choose_weighted(dests);
-    return (choice ? *choice : coord_def(0, 0));
+    return choice ? *choice : coord_def(0, 0);
 }
 
 // Blink the victim closer to the monster at target.

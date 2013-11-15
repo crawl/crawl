@@ -1689,8 +1689,8 @@ int menu_colour(const string &text, const string &prefix, const string &tag)
 
 int MenuHighlighter::entry_colour(const MenuEntry *entry) const
 {
-    return (entry->colour != MENU_ITEM_STOCK_COLOUR ? entry->colour
-            : entry->highlight_colour());
+    return entry->colour != MENU_ITEM_STOCK_COLOUR ? entry->colour
+           : entry->highlight_colour();
 }
 
 ///////////////////////////////////////////////////////////////////////

@@ -1079,9 +1079,9 @@ static vector<equipment_type> _current_jewellery_types()
 static bool _ring_change_prohibited_by_gloves(equipment_type eq)
 {
     const item_def* gloves = you.slot_item(EQ_GLOVES, false);
-    return (gloves && gloves->cursed()
-            && (eq == EQ_LEFT_RING
-                || eq == EQ_RIGHT_RING));
+    return gloves && gloves->cursed()
+           && (eq == EQ_LEFT_RING
+               || eq == EQ_RIGHT_RING);
 }
 
 static int _prompt_ring_to_remove(int new_ring)

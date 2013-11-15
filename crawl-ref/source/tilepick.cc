@@ -502,7 +502,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     }
 
     case DNGN_TRAP_MECHANICAL:
-        return (_tileidx_trap(env.map_knowledge(gc).trap()));
+        return _tileidx_trap(env.map_knowledge(gc).trap());
 
     case DNGN_TRAP_WEB:
     {
@@ -966,13 +966,13 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
 static tileidx_t _mon_clamp(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
-    return (tile + min(max(offset, 0), count - 1));
+    return tile + min(max(offset, 0), count - 1);
 }
 
 static tileidx_t _mon_random(tileidx_t tile)
 {
     int count = tile_player_count(tile);
-    return (tile + ui_random(count));
+    return tile + ui_random(count);
 }
 
 // actually, a triangle wave, but it's up to the actual tiles
@@ -988,7 +988,7 @@ static tileidx_t _mon_sinus(tileidx_t tile)
 static tileidx_t _mon_cycle(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
-    return (tile + ((offset + you.frame_no) % count));
+    return tile + ((offset + you.frame_no) % count);
 }
 
 
@@ -2750,9 +2750,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                     + (mon.is(MB_WITHDRAWN) ? 1 : 0);
 
         case MONS_BOULDER_BEETLE:
-            return (mon.is(MB_ROLLING)
-                    ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
-                    : TILEP_MONS_BOULDER_BEETLE);
+            return mon.is(MB_ROLLING)
+                   ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
+                   : TILEP_MONS_BOULDER_BEETLE;
 
         case MONS_INEPT_ITEM_MIMIC:
             return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_INEPT;

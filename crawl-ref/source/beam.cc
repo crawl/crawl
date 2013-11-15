@@ -616,7 +616,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 
 bool bolt::visible() const
 {
-    return (glyph != 0 && !is_enchantment());
+    return glyph != 0 && !is_enchantment();
 }
 
 void bolt::initialise_fire()
@@ -1092,10 +1092,10 @@ bool bolt::need_regress() const
 {
     // XXX: The affects_wall check probably makes some of the
     //      others obsolete.
-    return ((is_explosion && !in_explosion_phase)
-            || drop_item
-            || cell_is_solid(pos()) && !can_affect_wall(grd(pos()))
-            || origin_spell == SPELL_PRIMAL_WAVE);
+    return (is_explosion && !in_explosion_phase)
+           || drop_item
+           || cell_is_solid(pos()) && !can_affect_wall(grd(pos()))
+           || origin_spell == SPELL_PRIMAL_WAVE;
 }
 
 // Returns true if the beam ended due to hitting the wall.
@@ -3053,7 +3053,7 @@ bool bolt::is_harmless(const monster* mon) const
         return mon->res_acid() >= 3;
 
     case BEAM_PETRIFY:
-        return (mon->res_petrify() || mon->petrified());
+        return mon->res_petrify() || mon->petrified();
 
     case BEAM_MEPHITIC:
         return mon->res_poison() > 0 || mon->is_unbreathing();
@@ -3096,18 +3096,18 @@ bool bolt::harmless_to_player() const
         return player_prot_life(false) >= 3;
 
     case BEAM_POISON:
-        return (player_res_poison(false) >= 3
-                || is_big_cloud && player_res_poison(false) > 0);
+        return player_res_poison(false) >= 3
+               || is_big_cloud && player_res_poison(false) > 0;
 
     case BEAM_MEPHITIC:
-        return (player_res_poison(false) > 0 || you.clarity(false)
-                || you.is_unbreathing());
+        return player_res_poison(false) > 0 || you.clarity(false)
+               || you.is_unbreathing();
 
     case BEAM_ELECTRICITY:
         return player_res_electricity(false);
 
     case BEAM_PETRIFY:
-        return (you.res_petrify() || you.petrified());
+        return you.res_petrify() || you.petrified();
 
     // Fire and ice can destroy inventory items, acid damage equipment.
     case BEAM_COLD:
@@ -3132,7 +3132,7 @@ bool bolt::is_reflectable(const item_def *it) const
     if (range_used() > range)
         return false;
 
-    return (it && is_shield(*it) && shield_reflects(*it));
+    return it && is_shield(*it) && shield_reflects(*it);
 }
 
 coord_def bolt::leg_source() const

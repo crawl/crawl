@@ -750,7 +750,7 @@ static bool _dump_item_origin(const item_def &item)
     const int refpr = Options.dump_item_origin_price;
     if (refpr == -1)
         return false;
-    return ((int)item_value(item, false) >= refpr);
+    return (int)item_value(item, false) >= refpr;
 #undef fs
 }
 
@@ -1195,8 +1195,8 @@ static string _describe_action_subtype(caction_type type, int subtype)
                 return uppercase_first(tn);
             subtype = get_unrand_entry(subtype)->sub_type;
         }
-        return ((subtype == -1) ? "Unarmed"
-                : uppercase_first(item_base_name(OBJ_WEAPONS, subtype)));
+        return (subtype == -1) ? "Unarmed"
+               : uppercase_first(item_base_name(OBJ_WEAPONS, subtype));
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:

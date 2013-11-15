@@ -103,5 +103,5 @@ bool circle_def::contains(const coord_def &p) const
         return false;
 
     int r_sq = los_radius ? los_radius2 : radius_sq;
-    return ((p - origin).abs() <= r_sq);
+    return (p - origin).abs() <= r_sq;
 }

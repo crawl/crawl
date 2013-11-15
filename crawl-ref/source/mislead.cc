@@ -22,25 +22,25 @@
 
 bool unsuitable_misled_monster(monster_type mons)
 {
-    return (invalid_monster_type(mons)
-            || mons_is_unique(mons)
-            || mons_is_mimic(mons)
-            || mons_is_ghost_demon(mons)
-            || mons_class_is_stationary(mons)
-            || mons_class_is_zombified(mons)
-            || mons_is_tentacle_or_tentacle_segment(mons)
-            || mons_class_flag(mons, M_NO_POLY_TO | M_CANT_SPAWN)
-            || mons_class_flag(mons, M_UNFINISHED)
-            || mons_genus(mons) == MONS_DRACONIAN
-            || mons == MONS_MANTICORE
-            || mons == MONS_SLIME_CREATURE
-            || mons == MONS_HYDRA
-            || mons == MONS_KRAKEN
-            || mons == MONS_BALLISTOMYCETE
-            || mons == MONS_HYPERACTIVE_BALLISTOMYCETE
-            || mons == MONS_SHAPESHIFTER
-            || mons == MONS_GLOWING_SHAPESHIFTER
-            || mons == MONS_KILLER_KLOWN);
+    return invalid_monster_type(mons)
+           || mons_is_unique(mons)
+           || mons_is_mimic(mons)
+           || mons_is_ghost_demon(mons)
+           || mons_class_is_stationary(mons)
+           || mons_class_is_zombified(mons)
+           || mons_is_tentacle_or_tentacle_segment(mons)
+           || mons_class_flag(mons, M_NO_POLY_TO | M_CANT_SPAWN)
+           || mons_class_flag(mons, M_UNFINISHED)
+           || mons_genus(mons) == MONS_DRACONIAN
+           || mons == MONS_MANTICORE
+           || mons == MONS_SLIME_CREATURE
+           || mons == MONS_HYDRA
+           || mons == MONS_KRAKEN
+           || mons == MONS_BALLISTOMYCETE
+           || mons == MONS_HYPERACTIVE_BALLISTOMYCETE
+           || mons == MONS_SHAPESHIFTER
+           || mons == MONS_GLOWING_SHAPESHIFTER
+           || mons == MONS_KILLER_KLOWN;
 }
 
 static monster_type _get_misled_monster(monster* mons)

@@ -61,8 +61,8 @@ InvTitle::InvTitle(Menu *mn, const string &title, invtitle_annotator tfn)
 
 string InvTitle::get_text(const bool) const
 {
-    return (titlefn ? titlefn(m, MenuEntry::get_text())
-                    : MenuEntry::get_text());
+    return titlefn ? titlefn(m, MenuEntry::get_text())
+                   : MenuEntry::get_text();
 }
 
 InvEntry::InvEntry(const item_def &i, bool show_bg)
@@ -111,31 +111,31 @@ const string &InvEntry::get_fullname() const
 
 bool InvEntry::is_item_cursed() const
 {
-    return (item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed());
+    return item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed();
 }
 
 bool InvEntry::is_item_glowing() const
 {
-    return (!item_ident(*item, ISFLAG_KNOW_TYPE)
-            && (get_equip_desc(*item)
-                || (is_artefact(*item)
-                    && (item->base_type == OBJ_WEAPONS
-                        || item->base_type == OBJ_ARMOUR
-                        || item->base_type == OBJ_BOOKS))));
+    return !item_ident(*item, ISFLAG_KNOW_TYPE)
+           && (get_equip_desc(*item)
+               || (is_artefact(*item)
+                   && (item->base_type == OBJ_WEAPONS
+                       || item->base_type == OBJ_ARMOUR
+                       || item->base_type == OBJ_BOOKS)));
 }
 
 bool InvEntry::is_item_ego() const
 {
-    return (item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
-            && item->special != 0
-            && (item->base_type == OBJ_WEAPONS
-                || item->base_type == OBJ_MISSILES
-                || item->base_type == OBJ_ARMOUR));
+    return item_ident(*item, ISFLAG_KNOW_TYPE) && !is_artefact(*item)
+           && item->special != 0
+           && (item->base_type == OBJ_WEAPONS
+               || item->base_type == OBJ_MISSILES
+               || item->base_type == OBJ_ARMOUR);
 }
 
 bool InvEntry::is_item_art() const
 {
-    return (item_ident(*item, ISFLAG_KNOW_TYPE) && is_artefact(*item));
+    return item_ident(*item, ISFLAG_KNOW_TYPE) && is_artefact(*item);
 }
 
 bool InvEntry::is_item_equipped() const
@@ -639,7 +639,7 @@ bool InvMenu::is_selectable(int index) const
 
 bool InvMenu::allow_easy_exit() const
 {
-    return (type == MT_KNOW || Menu::allow_easy_exit());
+    return type == MT_KNOW || Menu::allow_easy_exit();
 }
 
 template <const string &(InvEntry::*method)() const>
@@ -651,19 +651,19 @@ static int compare_item_str(const InvEntry *a, const InvEntry *b)
 template <typename T, T (*proc)(const InvEntry *a)>
 static int compare_item(const InvEntry *a, const InvEntry *b)
 {
-    return (int(proc(a)) - int(proc(b)));
+    return int(proc(a)) - int(proc(b));
 }
 
 template <typename T, T (InvEntry::*method)() const>
 static int compare_item(const InvEntry *a, const InvEntry *b)
 {
-    return (int((a->*method)()) - int((b->*method)()));
+    return int((a->*method)()) - int((b->*method)());
 }
 
 template <typename T, T (InvEntry::*method)() const>
 static int compare_item_rev(const InvEntry *a, const InvEntry *b)
 {
-    return (int((b->*method)()) - int((a->*method)()));
+    return int((b->*method)()) - int((a->*method)());
 }
 
 template <item_sort_fn cmp>
@@ -696,8 +696,8 @@ bool sort_item_identified(const InvEntry *a)
 
 bool sort_item_charged(const InvEntry *a)
 {
-    return (a->item->base_type != OBJ_WANDS
-            || !item_is_evokable(*(a->item), false, true));
+    return a->item->base_type != OBJ_WANDS
+           || !item_is_evokable(*(a->item), false, true);
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -1147,13 +1147,13 @@ static bool _item_class_selected(const item_def &i, int selector)
                 || is_enchantable_armour(i, true, true));
 
     case OBJ_ARMOUR:
-        return (itype == OBJ_ARMOUR && you_tran_can_wear(i));
+        return itype == OBJ_ARMOUR && you_tran_can_wear(i);
 
     case OSEL_FRUIT:
         return is_fruit(i);
 
     case OSEL_WORN_ARMOUR:
-        return (itype == OBJ_ARMOUR && item_is_equipped(i));
+        return itype == OBJ_ARMOUR && item_is_equipped(i);
 
     case OSEL_UNIDENT:
         return !fully_identified(i) || (is_deck(i) && !top_card_is_known(i));
@@ -1178,11 +1178,11 @@ static bool _item_class_selected(const item_def &i, int selector)
         return item_is_wieldable(i);
 
     case OSEL_BUTCHERY:
-        return (itype == OBJ_WEAPONS && can_cut_meat(i));
+        return itype == OBJ_WEAPONS && can_cut_meat(i);
 
     case OBJ_SCROLLS:
-        return (itype == OBJ_SCROLLS
-                || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL));
+        return itype == OBJ_SCROLLS
+               || (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL);
 
     case OSEL_RECHARGE:
         return item_is_rechargeable(i, true);
@@ -1197,8 +1197,8 @@ static bool _item_class_selected(const item_def &i, int selector)
         return itype == OBJ_FOOD && !is_inedible(i);
 
     case OSEL_VAMP_EAT:
-        return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
-                && !food_is_rotten(i) && mons_has_blood(i.mon_type));
+        return itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
+               && !food_is_rotten(i) && mons_has_blood(i.mon_type);
 
     case OSEL_DRAW_DECK:
         return is_deck(i);
@@ -1220,10 +1220,10 @@ static bool _item_class_selected(const item_def &i, int selector)
                && (&i != you.weapon() || is_weapon(i));
 
     case OSEL_UNCURSED_WORN_ARMOUR:
-        return (!i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR);
+        return !i.cursed() && item_is_equipped(i) && itype == OBJ_ARMOUR;
 
     case OSEL_UNCURSED_WORN_JEWELLERY:
-        return (!i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY);
+        return !i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY;
 
     case OSEL_BRANDABLE_WEAPON:
         return is_brandable_weapon(i, true);
@@ -1238,7 +1238,7 @@ static bool _userdef_item_selected(const item_def &i, int selector)
 #if defined(CLUA_BINDINGS)
     const char *luafn = selector == OSEL_WIELD ? "ch_item_wieldable"
                                                : NULL;
-    return (luafn && clua.callbooleanfn(false, luafn, "i", &i));
+    return luafn && clua.callbooleanfn(false, luafn, "i", &i);
 #else
     return false;
 #endif
@@ -1246,8 +1246,8 @@ static bool _userdef_item_selected(const item_def &i, int selector)
 
 static bool _is_item_selected(const item_def &i, int selector)
 {
-    return (_item_class_selected(i, selector)
-            || _userdef_item_selected(i, selector));
+    return _item_class_selected(i, selector)
+           || _userdef_item_selected(i, selector);
 }
 
 static void _get_inv_items_to_show(vector<const item_def*> &v,
@@ -1677,11 +1677,11 @@ static string _operation_verb(operation_types oper)
 
 static bool _nasty_stasis(const item_def &item, operation_types oper)
 {
-    return (oper == OPER_PUTON
-            && item.base_type == OBJ_JEWELLERY
-            && item.sub_type == AMU_STASIS
-            && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]));
+    return oper == OPER_PUTON
+           && item.base_type == OBJ_JEWELLERY
+           && item.sub_type == AMU_STASIS
+           && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
+               || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]);
 }
 
 static bool _is_wielded(const item_def &item)
@@ -1817,8 +1817,8 @@ bool check_warning_inscriptions(const item_def& item,
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
                          you.duration[DUR_SLOW] ? "slowed" : "hasted");
         prompt += "?";
-        return (yesno(prompt.c_str(), false, 'n')
-                && check_old_item_warning(item, oper));
+        return yesno(prompt.c_str(), false, 'n')
+               && check_old_item_warning(item, oper);
     }
     else
         return check_old_item_warning(item, oper);
@@ -2030,9 +2030,9 @@ bool prompt_failed(int retval, string msg)
 bool item_is_wieldable(const item_def &item)
 {
     const int type = item.base_type;
-    return (is_weapon(item) || is_deck(item)
-            || type == OBJ_MISCELLANY
-               && item.sub_type == MISC_LANTERN_OF_SHADOWS);
+    return is_weapon(item) || is_deck(item)
+           || type == OBJ_MISCELLANY
+              && item.sub_type == MISC_LANTERN_OF_SHADOWS;
 }
 
 /*

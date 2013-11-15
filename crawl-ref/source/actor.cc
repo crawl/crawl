@@ -30,10 +30,10 @@ actor::~actor()
 
 bool actor::will_trigger_shaft() const
 {
-    return (ground_level() && total_weight() > 0 && is_valid_shaft_level()
-            // let's pretend that they always make their saving roll
-            && !(is_monster()
-                 && mons_is_elven_twin(static_cast<const monster* >(this))));
+    return ground_level() && total_weight() > 0 && is_valid_shaft_level()
+           // let's pretend that they always make their saving roll
+           && !(is_monster()
+                && mons_is_elven_twin(static_cast<const monster* >(this)));
 }
 
 level_id actor::shaft_dest(bool known = false) const
@@ -44,7 +44,7 @@ level_id actor::shaft_dest(bool known = false) const
 bool actor::airborne() const
 {
     flight_type fly = flight_mode();
-    return (fly == FL_LEVITATE || fly == FL_WINGED && !cannot_move());
+    return fly == FL_LEVITATE || fly == FL_WINGED && !cannot_move();
 }
 
 /**

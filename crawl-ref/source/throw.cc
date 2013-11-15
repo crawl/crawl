@@ -49,7 +49,7 @@ static bool _fire_validate_item(int selected, string& err);
 
 bool item_is_quivered(const item_def &item)
 {
-    return (item.link == you.m_quiver->get_fire_item());
+    return item.link == you.m_quiver->get_fire_item();
 }
 
 int get_next_fire_item(int current, int direction)
@@ -839,7 +839,7 @@ static int _blowgun_duration_roll(bolt &beam, const actor* victim,
         }
     }
     else
-        return (5 + random2(base_power + blowgun->plus));
+        return 5 + random2(base_power + blowgun->plus);
 }
 
 static bool _blowgun_check(bolt &beam, actor* victim, special_missile_type type,

@@ -180,13 +180,13 @@ bool player::_possible_fearmonger(const monster* mon) const
     if (crawl_state.game_is_arena())
         return false;
 
-    return (mon->alive()
-         && !silenced(pos()) && !silenced(mon->pos())
-         && see_cell(mon->pos()) && mon->see_cell(pos())
-         && !mon->submerged() && !mon->confused()
-         && !mon->asleep() && !mon->cannot_move()
-         && !mon->wont_attack() && !mon->pacified()
-         && !mon->berserk_or_insane()
-         && !mons_is_fleeing(mon)
-         && !is_sanctuary(pos()));
+    return mon->alive()
+        && !silenced(pos()) && !silenced(mon->pos())
+        && see_cell(mon->pos()) && mon->see_cell(pos())
+        && !mon->submerged() && !mon->confused()
+        && !mon->asleep() && !mon->cannot_move()
+        && !mon->wont_attack() && !mon->pacified()
+        && !mon->berserk_or_insane()
+        && !mons_is_fleeing(mon)
+        && !is_sanctuary(pos());
 }

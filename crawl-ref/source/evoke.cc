@@ -1052,7 +1052,7 @@ static bool _fill_flame_trails(coord_def source, coord_def target,
         }
     }
 
-    return (!paths.empty());
+    return !paths.empty();
 }
 
 static bool _lamp_of_fire()

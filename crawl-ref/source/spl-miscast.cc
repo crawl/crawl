@@ -274,9 +274,9 @@ string MiscastEffect::get_default_cause(bool attribute_to_user) const
 
     if (attribute_to_user)
     {
-        return (string(you.can_see(act_source) ? act_source->name(DESC_A)
-                                               : "something")
-                + " miscasting " + spell_title(spell));
+        return string(you.can_see(act_source) ? act_source->name(DESC_A)
+                                              : "something")
+               + " miscasting " + spell_title(spell);
     }
     else
         return string("miscast of ") + spell_title(spell);
@@ -284,7 +284,7 @@ string MiscastEffect::get_default_cause(bool attribute_to_user) const
 
 bool MiscastEffect::neither_end_silenced()
 {
-    return (!silenced(you.pos()) && !silenced(target->pos()));
+    return !silenced(you.pos()) && !silenced(target->pos());
 }
 
 void MiscastEffect::do_miscast()
@@ -763,10 +763,10 @@ static bool _has_hair(actor* target)
     if (target->is_monster())
         return false;
 
-    return (!form_changed_physiology() && you.species != SP_GHOUL
-            && you.species != SP_OCTOPODE
-            && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN)
-            && you.species != SP_GARGOYLE && you.species != SP_LAVA_ORC);
+    return !form_changed_physiology() && you.species != SP_GHOUL
+           && you.species != SP_OCTOPODE
+           && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN)
+           && you.species != SP_GARGOYLE && you.species != SP_LAVA_ORC;
 }
 
 static string _hair_str(actor* target, bool &plural)
@@ -2345,7 +2345,7 @@ void MiscastEffect::_ice(int severity)
 
 static bool _on_floor(actor* target)
 {
-    return (target->ground_level() && grd(target->pos()) == DNGN_FLOOR);
+    return target->ground_level() && grd(target->pos()) == DNGN_FLOOR;
 }
 
 void MiscastEffect::_earth(int severity)

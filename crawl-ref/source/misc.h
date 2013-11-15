@@ -211,7 +211,7 @@ struct path_less
     bool operator()(const set<position_node>::iterator & left,
                     const set<position_node>::iterator & right)
     {
-        return (left->total_dist() > right->total_dist());
+        return left->total_dist() > right->total_dist();
     }
 
 };

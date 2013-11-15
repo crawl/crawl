@@ -283,7 +283,7 @@ struct monster_info : public monster_info_base
 
     bool is_named() const
     {
-        return (!mname.empty() || mons_is_unique(type));
+        return !mname.empty() || mons_is_unique(type);
     }
 
 protected:

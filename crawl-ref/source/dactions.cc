@@ -68,18 +68,18 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     switch (act)
     {
     case DACT_ALLY_HOLY:
-        return (mon->wont_attack() && is_good_god(mon->god));
+        return mon->wont_attack() && is_good_god(mon->god);
     case DACT_ALLY_UNHOLY_EVIL:
-        return (mon->wont_attack() && (mon->is_unholy() || mon->is_evil()));
+        return mon->wont_attack() && (mon->is_unholy() || mon->is_evil());
     case DACT_ALLY_UNCLEAN_CHAOTIC:
-        return (mon->wont_attack() && (mon->is_unclean() || mon->is_chaotic()));
+        return mon->wont_attack() && (mon->is_unclean() || mon->is_chaotic());
     case DACT_ALLY_SPELLCASTER:
-        return (mon->wont_attack() && mon->is_actual_spellcaster());
+        return mon->wont_attack() && mon->is_actual_spellcaster();
     case DACT_ALLY_YRED_SLAVE:
         // Changed: we don't force enslavement of those merely marked.
         return is_yred_undead_slave(mon);
     case DACT_ALLY_BEOGH: // both orcs and demons summoned by high priests
-        return (mon->wont_attack() && mons_is_god_gift(mon, GOD_BEOGH));
+        return mon->wont_attack() && mons_is_god_gift(mon, GOD_BEOGH);
     case DACT_ALLY_SLIME:
         return is_fellow_slime(mon);
     case DACT_ALLY_PLANT:
@@ -89,17 +89,17 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     // Not a stored counter:
     case DACT_ALLY_TROG:
-        return (mon->friendly() && mons_is_god_gift(mon, GOD_TROG));
+        return mon->friendly() && mons_is_god_gift(mon, GOD_TROG);
     case DACT_HOLY_PETS_GO_NEUTRAL:
-        return (mon->friendly()
-                && !mon->has_ench(ENCH_CHARM)
-                && mon->is_holy()
-                && mons_is_god_gift(mon, GOD_SHINING_ONE));
+        return mon->friendly()
+               && !mon->has_ench(ENCH_CHARM)
+               && mon->is_holy()
+               && mons_is_god_gift(mon, GOD_SHINING_ONE);
     case DACT_PIKEL_SLAVES:
-        return (mon->type == MONS_SLAVE
-                && testbits(mon->flags, MF_BAND_MEMBER)
-                && mon->props.exists("pikel_band")
-                && mon->mname != "freed slave");
+        return mon->type == MONS_SLAVE
+               && testbits(mon->flags, MF_BAND_MEMBER)
+               && mon->props.exists("pikel_band")
+               && mon->mname != "freed slave";
 
     case DACT_OLD_ENSLAVED_SOULS_POOF:
         return mons_enslaved_soul(mon);
@@ -111,18 +111,18 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mons_is_slime(mon);
 
     case DACT_KIRKE_HOGS:
-        return ((mon->type == MONS_HOG
-                 || mon->type == MONS_HELL_HOG
-                 || mon->type == MONS_HOLY_SWINE)
-                && !mon->is_shapeshifter()
-                // Must be one of Kirke's original band
-                // *or* another monster that got porkalated
-                && (mon->props.exists("kirke_band")
-                    || mon->props.exists(ORIG_MONSTER_KEY)));
+        return (mon->type == MONS_HOG
+                || mon->type == MONS_HELL_HOG
+                || mon->type == MONS_HOLY_SWINE)
+               && !mon->is_shapeshifter()
+               // Must be one of Kirke's original band
+               // *or* another monster that got porkalated
+               && (mon->props.exists("kirke_band")
+                   || mon->props.exists(ORIG_MONSTER_KEY));
 
     case DACT_END_SPIRIT_HOWL:
-        return (mon->type == MONS_SPIRIT_WOLF
-                && mon->props.exists("howl_called"));
+        return mon->type == MONS_SPIRIT_WOLF
+               && mon->props.exists("howl_called");
 
     default:
         return false;

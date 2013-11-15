@@ -796,12 +796,12 @@ static string _colourize_glyph(int col, unsigned ch)
 
 static bool _mons_is_highlighted(const monster* mons)
 {
-    return (mons->friendly()
-                && Options.friend_brand != CHATTR_NORMAL
-            || mons_looks_stabbable(mons)
-                && Options.stab_brand != CHATTR_NORMAL
-            || mons_looks_distracted(mons)
-                && Options.may_stab_brand != CHATTR_NORMAL);
+    return mons->friendly()
+               && Options.friend_brand != CHATTR_NORMAL
+           || mons_looks_stabbable(mons)
+               && Options.stab_brand != CHATTR_NORMAL
+           || mons_looks_distracted(mons)
+               && Options.may_stab_brand != CHATTR_NORMAL;
 }
 
 static bool _advise_use_wand()
@@ -1028,7 +1028,7 @@ static bool _cant_butcher()
     if (!wpn || wpn->base_type != OBJ_WEAPONS)
         return false;
 
-    return (wpn->cursed() && !can_cut_meat(*wpn));
+    return wpn->cursed() && !can_cut_meat(*wpn);
 }
 
 static string _describe_portal(const coord_def &gc)
@@ -3961,9 +3961,9 @@ void hints_inscription_info(string prompt)
 //        but it's a lot more hit'n'miss now.
 bool hints_pos_interesting(int x, int y)
 {
-    return (cloud_type_at(coord_def(x, y)) != CLOUD_NONE
-            || _water_is_disturbed(x, y)
-            || _hints_feat_interesting(grd[x][y]));
+    return cloud_type_at(coord_def(x, y)) != CLOUD_NONE
+           || _water_is_disturbed(x, y)
+           || _hints_feat_interesting(grd[x][y]);
 }
 
 static bool _hints_feat_interesting(dungeon_feature_type feat)
@@ -4349,7 +4349,7 @@ static bool _water_is_disturbed(int x, int y)
     if (!mon || grd(c) != DNGN_SHALLOW_WATER || !you.see_cell(c))
         return false;
 
-    return (!mon->visible_to(&you) && !mons_flies(mon));
+    return !mon->visible_to(&you) && !mons_flies(mon);
 }
 
 bool hints_monster_interesting(const monster* mons)

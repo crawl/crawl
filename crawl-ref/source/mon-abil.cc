@@ -627,17 +627,17 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 // Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monster* thing)
 {
-    return (thing->asleep() || mons_is_wandering(thing)
-            || thing->foe == MHITNOT);
+    return thing->asleep() || mons_is_wandering(thing)
+           || thing->foe == MHITNOT;
 }
 
 // Slime creatures cannot split or merge under these conditions.
 static bool _disabled_merge(monster* thing)
 {
-    return (!thing
-            || mons_is_fleeing(thing)
-            || mons_is_confused(thing)
-            || thing->paralysed());
+    return !thing
+           || mons_is_fleeing(thing)
+           || mons_is_confused(thing)
+           || thing->paralysed();
 }
 
 // See if there are any appropriate adjacent slime creatures for 'thing'
@@ -757,8 +757,8 @@ static bool _crawling_corpse_merge(monster *crawlie)
 
 static bool _slime_can_spawn(const coord_def target)
 {
-    return (mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
-            && !actor_at(target));
+    return mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
+           && !actor_at(target);
 }
 
 // See if slime creature 'thing' can split, and carry out the split if
@@ -1576,7 +1576,7 @@ static bool _should_force_door_shut(const coord_def& door)
     // open
 
     // Currently won't allow tension to be lowered by more than 33%
-    return (((cur_tension - new_tension) * 3) <= cur_tension);
+    return ((cur_tension - new_tension) * 3) <= cur_tension;
 }
 
 static bool _seal_doors_and_stairs(const monster* warden)
@@ -1875,13 +1875,13 @@ void end_flayed_effect(monster* ghost)
 
 static bool _lost_soul_affectable(const monster* mons)
 {
-    return (((mons->holiness() == MH_UNDEAD
-              && mons->type != MONS_LOST_SOUL
-              && !mons_is_zombified(mons))
-             ||(mons->holiness() == MH_NATURAL
-                && mons_can_be_zombified(mons)))
-            && !mons->is_summoned()
-            && !mons_class_flag(mons->type, M_NO_EXP_GAIN));
+    return ((mons->holiness() == MH_UNDEAD
+             && mons->type != MONS_LOST_SOUL
+             && !mons_is_zombified(mons))
+            ||(mons->holiness() == MH_NATURAL
+               && mons_can_be_zombified(mons)))
+           && !mons->is_summoned()
+           && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
 }
 
 struct hd_sorter
@@ -1960,9 +1960,9 @@ static bool _worthy_sacrifice(monster* soul, const monster* target)
             --count;
     }
 
-    return (count <= -1 || target->hit_dice > 9
-            || x_chance_in_y(target->hit_dice * target->hit_dice * target->hit_dice,
-                             1200));
+    return count <= -1 || target->hit_dice > 9
+           || x_chance_in_y(target->hit_dice * target->hit_dice * target->hit_dice,
+                            1200);
 }
 
 bool lost_soul_revive(monster* mons)
@@ -2742,8 +2742,8 @@ struct complicated_sight_check
     coord_def base_position;
     bool operator()(monster* mons, actor * test)
     {
-        return (test->visible_to(mons)
-                && cell_see_cell(base_position, test->pos(), LOS_SOLID_SEE));
+        return test->visible_to(mons)
+               && cell_see_cell(base_position, test->pos(), LOS_SOLID_SEE);
     }
 };
 
@@ -4394,12 +4394,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
 // Combines code for eyeball-type monsters, etc. to reduce clutter.
 static bool _eyeball_will_use_ability(monster* mons)
 {
-    return (coinflip()
-        && !mons_is_confused(mons)
-        && !mons_is_wandering(mons)
-        && !mons_is_fleeing(mons)
-        && !mons->pacified()
-        && !player_or_mon_in_sanct(mons));
+    return coinflip()
+       && !mons_is_confused(mons)
+       && !mons_is_wandering(mons)
+       && !mons_is_fleeing(mons)
+       && !mons->pacified()
+       && !player_or_mon_in_sanct(mons);
 }
 
 //---------------------------------------------------------------
@@ -4601,8 +4601,8 @@ void ballisto_on_move(monster* mons, const coord_def& position)
 static bool _ballisto_at(const coord_def & target)
 {
     monster* mons = monster_at(target);
-    return (mons && mons->type == MONS_BALLISTOMYCETE
-            && mons->alive());
+    return mons && mons->type == MONS_BALLISTOMYCETE
+           && mons->alive();
 }
 
 static bool _player_at(const coord_def & target)
@@ -4612,7 +4612,7 @@ static bool _player_at(const coord_def & target)
 
 static bool _mold_connected(const coord_def & target)
 {
-    return (is_moldy(target) || _ballisto_at(target));
+    return is_moldy(target) || _ballisto_at(target);
 }
 
 

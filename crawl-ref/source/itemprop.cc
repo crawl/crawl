@@ -465,14 +465,14 @@ void init_properties()
 //
 bool item_known_cursed(const item_def &item)
 {
-    return (_full_ident_mask(item) & ISFLAG_KNOW_CURSE
-            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed());
+    return _full_ident_mask(item) & ISFLAG_KNOW_CURSE
+           && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
 static bool _item_known_uncursed(const item_def &item)
 {
-    return (!(_full_ident_mask(item) & ISFLAG_KNOW_CURSE)
-            || (item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed()));
+    return !(_full_ident_mask(item) & ISFLAG_KNOW_CURSE)
+           || (item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed());
 }
 
 void do_curse_item(item_def &item, bool quiet)
@@ -653,7 +653,7 @@ static bool _is_affordable(const item_def &item)
 //
 bool item_ident(const item_def &item, iflags_t flags)
 {
-    return ((item.flags & flags) == flags);
+    return (item.flags & flags) == flags;
 }
 
 void set_ident_flags(item_def &item, iflags_t flags)
@@ -1302,7 +1302,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return (uncurse && arm.cursed() && !you_worship(GOD_ASHENZARI));
+        return uncurse && arm.cursed() && !you_worship(GOD_ASHENZARI);
 
     return true;
 }
@@ -1560,12 +1560,12 @@ bool is_blessed(const item_def &item)
 
 bool is_blessed_convertible(const item_def &item)
 {
-    return (!is_artefact(item)
-            && (item.base_type == OBJ_WEAPONS
-                && (is_demonic(item)
-                    || item.sub_type == WPN_SACRED_SCOURGE
-                    || item.sub_type == WPN_TRISHULA
-                    || weapon_skill(item) == SK_LONG_BLADES)));
+    return !is_artefact(item)
+           && (item.base_type == OBJ_WEAPONS
+               && (is_demonic(item)
+                   || item.sub_type == WPN_SACRED_SCOURGE
+                   || item.sub_type == WPN_TRISHULA
+                   || weapon_skill(item) == SK_LONG_BLADES));
 }
 
 bool convert2good(item_def &item)
@@ -1781,8 +1781,8 @@ static bool _slot_blocked(const item_def &item)
         return true;
     }
 
-    return (you.equip[eq] != -1
-            && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
+    return you.equip[eq] != -1
+           && !_item_is_swappable(you.inv[you.equip[eq]], eq, false);
 }
 
 bool item_skills(const item_def &item, set<skill_type> &skills)
@@ -1853,8 +1853,8 @@ static int _fit_weapon_wieldable_size(const item_def &item, size_type size)
 {
     const int fit = Weapon_prop[Weapon_index[item.sub_type]].fit_size - size;
 
-    return ((fit < -2) ? fit + 2 :
-            (fit >  1) ? fit - 1 : 0);
+    return (fit < -2) ? fit + 2 :
+           (fit >  1) ? fit - 1 : 0;
 }
 
 // Returns true if weapon is usable as a weapon.
@@ -1976,9 +1976,9 @@ reach_type weapon_reach(const item_def &item)
 //
 bool item_is_rune(const item_def &item, rune_type which_rune)
 {
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT
-            && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune));
+    return item.base_type == OBJ_MISCELLANY
+           && item.sub_type == MISC_RUNE_OF_ZOT
+           && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune);
 }
 
 bool item_is_unique_rune(const item_def &item)
@@ -2500,14 +2500,14 @@ int property(const item_def &item, int prop_type)
             switch (prop_type)
             {
             case PWPN_DAMAGE:
-                return (Weapon_prop[ Weapon_index[item.sub_type] ].dam
-                        + artefact_wpn_property(item, ARTP_BASE_DAM));
+                return Weapon_prop[ Weapon_index[item.sub_type] ].dam
+                       + artefact_wpn_property(item, ARTP_BASE_DAM);
             case PWPN_HIT:
-                return (Weapon_prop[ Weapon_index[item.sub_type] ].hit
-                        + artefact_wpn_property(item, ARTP_BASE_ACC));
+                return Weapon_prop[ Weapon_index[item.sub_type] ].hit
+                       + artefact_wpn_property(item, ARTP_BASE_ACC);
             case PWPN_SPEED:
-                return (Weapon_prop[ Weapon_index[item.sub_type] ].speed
-                        + artefact_wpn_property(item, ARTP_BASE_DELAY));
+                return Weapon_prop[ Weapon_index[item.sub_type] ].speed
+                       + artefact_wpn_property(item, ARTP_BASE_DELAY);
             }
         }
         if (prop_type == PWPN_DAMAGE)
@@ -2771,7 +2771,7 @@ int item_mass(const item_def &item)
         break;
     }
 
-    return ((unit_mass > 0) ? unit_mass : 0);
+    return (unit_mass > 0) ? unit_mass : 0;
 }
 
 equipment_type get_item_slot(const item_def& item)
@@ -2817,7 +2817,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
         return false;
 
     hands_reqd_type hand = you.hands_reqd(weapon);
-    return (hand == HANDS_TWO && !is_range_weapon(weapon));
+    return hand == HANDS_TWO && !is_range_weapon(weapon);
 }
 
 bool shield_reflects(const item_def &shield)
@@ -2900,11 +2900,11 @@ void seen_item(const item_def &item)
 
 bool is_elemental_evoker(const item_def &item)
 {
-    return (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_LAMP_OF_FIRE
-                || item.sub_type == MISC_STONE_OF_TREMORS
-                || item.sub_type == MISC_FAN_OF_GALES
-                || item.sub_type == MISC_PHIAL_OF_FLOODS));
+    return item.base_type == OBJ_MISCELLANY
+           && (item.sub_type == MISC_LAMP_OF_FIRE
+               || item.sub_type == MISC_STONE_OF_TREMORS
+               || item.sub_type == MISC_FAN_OF_GALES
+               || item.sub_type == MISC_PHIAL_OF_FLOODS);
 }
 
 bool evoker_is_charged(const item_def &item)

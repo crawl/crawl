@@ -374,7 +374,7 @@ static bool _missile_brand_is_prefix(special_missile_type brand)
 
 static bool _missile_brand_is_postfix(special_missile_type brand)
 {
-    return (brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand));
+    return brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand);
 }
 
 enum mbn_type
@@ -2984,7 +2984,7 @@ bool is_bad_item(const item_def &item, bool temp)
             if (you.species == SP_FELID)
                 return false;
         case SCR_CURSE_JEWELLERY:
-            return (!you_worship(GOD_ASHENZARI));
+            return !you_worship(GOD_ASHENZARI);
         default:
             return false;
         }
@@ -3011,9 +3011,9 @@ bool is_bad_item(const item_def &item, bool temp)
                    || !temp && you.species == SP_VAMPIRE;
         case POT_MUTATION:
         case POT_BENEFICIAL_MUTATION:
-            return (you.is_undead && (temp || you.form != TRAN_LICH)
-                    && (temp || you.species != SP_VAMPIRE
-                        || you.hunger_state < HS_SATIATED));
+            return you.is_undead && (temp || you.form != TRAN_LICH)
+                   && (temp || you.species != SP_VAMPIRE
+                       || you.hunger_state < HS_SATIATED);
         default:
             return false;
         }
@@ -3101,8 +3101,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
 static bool _invisibility_is_useless(const bool temp)
 {
     // If you're Corona'd or a TSO-ite, this is always useless.
-    return (temp ? you.backlit(true)
-                 : you.haloed() && you_worship(GOD_SHINING_ONE));
+    return temp ? you.backlit(true)
+                : you.haloed() && you_worship(GOD_SHINING_ONE);
 
 }
 
@@ -3167,11 +3167,11 @@ bool is_useless_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case MI_LARGE_ROCK:
-            return (!you.can_throw_large_rocks());
+            return !you.can_throw_large_rocks();
         case MI_JAVELIN:
         case MI_THROWING_NET:
-            return (you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM
-                    && !you.can_throw_large_rocks());
+            return you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM
+                   && !you.can_throw_large_rocks();
         }
 
         return false;
@@ -3195,8 +3195,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
             return true;
         case SCR_TELEPORTATION:
-            return (you.species == SP_FORMICID
-                    || crawl_state.game_is_sprint());
+            return you.species == SP_FORMICID
+                   || crawl_state.game_is_sprint();
         case SCR_BLINKING:
             return you.species == SP_FORMICID;
         case SCR_AMNESIA:
@@ -3318,21 +3318,21 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.res_corr(false, false);
 
         case AMU_THE_GOURMAND:
-            return (player_likes_chunks(true) == 3
-                      && player_mutation_level(MUT_SAPROVOROUS) == 3
-                      && you.species != SP_GHOUL // makes clean chunks
-                                                 // contaminated
-                    || player_mutation_level(MUT_GOURMAND) > 0
-                    || player_mutation_level(MUT_HERBIVOROUS) == 3
-                    || you.is_undead && you.species != SP_GHOUL
-                    || you.species == SP_DJINNI);
+            return player_likes_chunks(true) == 3
+                     && player_mutation_level(MUT_SAPROVOROUS) == 3
+                     && you.species != SP_GHOUL // makes clean chunks
+                                                // contaminated
+                   || player_mutation_level(MUT_GOURMAND) > 0
+                   || player_mutation_level(MUT_HERBIVOROUS) == 3
+                   || you.is_undead && you.species != SP_GHOUL
+                   || you.species == SP_DJINNI;
 
         case AMU_FAITH:
             return you.species == SP_DEMIGOD && !you.religion;
 
         case AMU_GUARDIAN_SPIRIT:
-            return (you.species == SP_DJINNI
-                    || you.spirit_shield(false, false));
+            return you.species == SP_DJINNI
+                   || you.spirit_shield(false, false);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
@@ -3346,36 +3346,36 @@ bool is_useless_item(const item_def &item, bool temp)
                        && you.hunger_state == HS_STARVING;
 
         case RING_REGENERATION:
-            return ((player_mutation_level(MUT_SLOW_HEALING) == 3)
-                    || temp && you.species == SP_VAMPIRE
-                       && you.hunger_state == HS_STARVING);
+            return (player_mutation_level(MUT_SLOW_HEALING) == 3)
+                   || temp && you.species == SP_VAMPIRE
+                      && you.hunger_state == HS_STARVING;
 
         case RING_SEE_INVISIBLE:
             return you.can_see_invisible(false, false);
 
         case RING_POISON_RESISTANCE:
-            return (player_res_poison(false, temp, false) > 0
-                    && (temp || you.species != SP_VAMPIRE));
+            return player_res_poison(false, temp, false) > 0
+                   && (temp || you.species != SP_VAMPIRE);
 
         case RING_PROTECTION_FROM_FIRE:
             return you.species == SP_DJINNI;
 
 #if TAG_MAJOR_VERSION == 34
         case AMU_CONTROLLED_FLIGHT:
-            return (player_genus(GENPC_DRACONIAN)
-                    || (you.species == SP_TENGU && you.experience_level >= 5));
+            return player_genus(GENPC_DRACONIAN)
+                   || (you.species == SP_TENGU && you.experience_level >= 5);
 #endif
 
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
-            return (you.species == SP_FORMICID
-                    || crawl_state.game_is_zotdef());
+            return you.species == SP_FORMICID
+                   || crawl_state.game_is_zotdef();
 
         case RING_TELEPORTATION:
-            return (you.species == SP_FORMICID
-                    || crawl_state.game_is_sprint());
+            return you.species == SP_FORMICID
+                   || crawl_state.game_is_sprint();
 
         case RING_INVISIBILITY:
             return _invisibility_is_useless(temp);

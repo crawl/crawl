@@ -39,7 +39,7 @@ bool bit_vector::get(unsigned long index) const
     ASSERT(index < size);
     int w = index / LONGSIZE;
     int b = index % LONGSIZE;
-    return (data[w] & (1UL << b));
+    return data[w] & (1UL << b);
 }
 
 void bit_vector::set(unsigned long index, bool value)

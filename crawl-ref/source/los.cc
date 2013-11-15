@@ -684,7 +684,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     {
         blocked += opc_solid_see(ray.pos());
         if (blocked >= OPC_OPAQUE)
-            return (env.grid(ray.pos()));
+            return env.grid(ray.pos());
         ray.advance();
     }
     ASSERT(false);
@@ -857,7 +857,7 @@ struct los_param_funcs : public los_param
 
     bool los_bounds(const coord_def& p) const
     {
-        return (map_bounds(p + center) && bounds.contains(p));
+        return map_bounds(p + center) && bounds.contains(p);
     }
 
     opacity_type opacity(const coord_def& p) const

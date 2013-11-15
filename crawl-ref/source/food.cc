@@ -1798,8 +1798,8 @@ static int _chunk_nutrition(int likes_chunks)
 
     if (you.hunger_state < HS_SATIATED + likes_chunks)
     {
-        return (likes_chunks ? nutrition
-                             : _apply_herbivore_nutrition_effects(nutrition));
+        return likes_chunks ? nutrition
+                            : _apply_herbivore_nutrition_effects(nutrition);
     }
 
     const int gourmand = you.gourmand() ? you.duration[DUR_GOURMAND] : 0;
@@ -2229,8 +2229,8 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
 bool is_bad_food(const item_def &food)
 {
-    return (is_poisonous(food) || is_mutagenic(food)
-            || is_forbidden_food(food) || causes_rot(food));
+    return is_poisonous(food) || is_mutagenic(food)
+           || is_forbidden_food(food) || causes_rot(food);
 }
 
 // Returns true if a food item (or corpse) is poisonous AND the player is not
@@ -2270,10 +2270,10 @@ bool is_contaminated(const item_def &food)
     }
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.mon_type);
-    return (chunk_type == CE_CONTAMINATED
-            || (player_res_poison(false) > 0 && chunk_type == CE_POISON_CONTAM)
-            || food_is_rotten(food)
-               && player_mutation_level(MUT_SAPROVOROUS) < 3);
+    return chunk_type == CE_CONTAMINATED
+           || (player_res_poison(false) > 0 && chunk_type == CE_POISON_CONTAM)
+           || food_is_rotten(food)
+              && player_mutation_level(MUT_SAPROVOROUS) < 3;
 }
 
 // Returns true if a food item (or corpse) will cause rotting.

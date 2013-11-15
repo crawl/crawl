@@ -1665,27 +1665,27 @@ int update_monster_pane()
 
 static const char* _itosym1(int stat)
 {
-    return ((stat >= 1) ? "+  " :
-            (stat == 0) ? ".  " :
-                          "x  ");
+    return (stat >= 1) ? "+  " :
+           (stat == 0) ? ".  " :
+                         "x  ";
 }
 
 static const char* _itosym2(int stat)
 {
-    return ((stat >= 2) ? "+ +" :
-            (stat == 1) ? "+ ." :
-                          ". .");
+    return (stat >= 2) ? "+ +" :
+           (stat == 1) ? "+ ." :
+                         ". .";
 }
 
 static const char* _itosym3(int stat)
 {
-    return ((stat >=  3) ? "+ + +" :
-            (stat ==  2) ? "+ + ." :
-            (stat ==  1) ? "+ . ." :
-            (stat ==  0) ? ". . ." :
-            (stat == -1) ? "x . ." :
-            (stat == -2) ? "x x ." :
-                           "x x x");
+    return (stat >=  3) ? "+ + +" :
+           (stat ==  2) ? "+ + ." :
+           (stat ==  1) ? "+ . ." :
+           (stat ==  0) ? ". . ." :
+           (stat == -1) ? "x . ." :
+           (stat == -2) ? "x x ." :
+                          "x x x";
 }
 
 static const char *s_equip_slot_names[] =
@@ -1926,9 +1926,9 @@ static string _overview_screen_title(int sw)
 static string _wiz_god_powers()
 {
     string godpowers = god_name(you.religion);
-    return (make_stringf("%s %d (%d)", god_name(you.religion).c_str(),
-                                       you.piety,
-                                       you.duration[DUR_PIETY_POOL]));
+    return make_stringf("%s %d (%d)", god_name(you.religion).c_str(),
+                                      you.piety,
+                                      you.duration[DUR_PIETY_POOL]);
 }
 #endif
 
@@ -1941,13 +1941,13 @@ static string _god_powers(bool simple)
             godpowers += simple ? "- BORED" : " - BORED";
         else if (you.gift_timeout == 1)
             godpowers += simple ? "- getting BORED" : " - getting BORED";
-        return (simple ? godpowers
-                       : colour_string(godpowers, god_colour(you.religion)));
+        return simple ? godpowers
+                      : colour_string(godpowers, god_colour(you.religion));
     }
     else if (!you_worship(GOD_NO_GOD))
     {
         if (player_under_penance())
-            return (simple ? "*" : colour_string("*" + godpowers, RED));
+            return simple ? "*" : colour_string("*" + godpowers, RED);
         else
         {
             // piety rankings

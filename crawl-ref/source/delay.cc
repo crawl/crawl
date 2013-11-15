@@ -515,8 +515,8 @@ bool you_are_delayed(void)
 
 delay_type current_delay_action(void)
 {
-    return (you_are_delayed() ? you.delay_queue.front().type
-                              : DELAY_NOT_DELAYED);
+    return you_are_delayed() ? you.delay_queue.front().type
+                             : DELAY_NOT_DELAYED;
 }
 
 bool delay_is_run(delay_type delay)

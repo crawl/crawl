@@ -196,12 +196,12 @@ bool Stash::are_items_same(const item_def &a, const item_def &b)
         && a.quantity == b.quantity;
 
     // Account for rotting meat when comparing items.
-    return (same
-            || (a.base_type == b.base_type
-                && (a.base_type == OBJ_CORPSES
-                    || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
-                        && b.sub_type == FOOD_CHUNK))
-                && a.plus == b.plus));
+    return same
+           || (a.base_type == b.base_type
+               && (a.base_type == OBJ_CORPSES
+                   || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
+                       && b.sub_type == FOOD_CHUNK))
+               && a.plus == b.plus);
 }
 
 bool Stash::unverified() const
@@ -388,8 +388,8 @@ void Stash::update()
 
 static bool _is_rottable(const item_def &item)
 {
-    return (item.base_type == OBJ_CORPSES
-            || (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK));
+    return item.base_type == OBJ_CORPSES
+           || (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK);
 }
 
 static short _min_rot(const item_def &item)
@@ -1161,7 +1161,7 @@ const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 bool LevelStashes::shop_needs_visit(const coord_def& c) const
 {
     const ShopInfo *shop = find_shop(c);
-    return (shop && !shop->is_visited());
+    return shop && !shop->is_visited();
 }
 
 bool LevelStashes::needs_visit(const coord_def& c, bool autopickup,
@@ -1180,13 +1180,13 @@ bool LevelStashes::needs_visit(const coord_def& c, bool autopickup,
 bool LevelStashes::needs_stop(const coord_def &c) const
 {
     const Stash *s = find_stash(c);
-    return (s && s->unverified() && s->needs_stop());
+    return s && s->unverified() && s->needs_stop();
 }
 
 bool LevelStashes::sacrificeable(const coord_def &c) const
 {
     const Stash *s = find_stash(c);
-    return (s && s->sacrificeable());
+    return s && s->sacrificeable();
 }
 
 ShopInfo &LevelStashes::get_shop(const coord_def& c)
@@ -1278,7 +1278,7 @@ void LevelStashes::add_stash(int x, int y)
 
 bool LevelStashes::is_current() const
 {
-    return (m_place == level_id::current());
+    return m_place == level_id::current();
 }
 
 string LevelStashes::level_name() const
@@ -1626,7 +1626,7 @@ string StashTracker::stash_search_prompt()
     if (!prompt_qual.empty())
         prompt_qual = " [" + prompt_qual + "]";
 
-    return (make_stringf("Search for what%s? ", prompt_qual.c_str()));
+    return make_stringf("Search for what%s? ", prompt_qual.c_str());
 }
 
 void StashTracker::remove_shop(const level_pos &pos)
