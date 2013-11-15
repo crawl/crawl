@@ -2203,7 +2203,7 @@ DEPTH:  Depths, Lair:1-7
   # next: we generate more dire elephants at greater depths
   # we also turn the shallow water into deep water at the lowest depths,
   # just in case elephants are ever allowed to drown the unwary
-: if you.branch == "Lair" then
+: if you.branch() == "Lair" then
 MONS:   elephant, fungus, plant
 : else
 MONS:   w:1 elephant / dire elephant, fungus, plant
