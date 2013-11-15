@@ -411,8 +411,6 @@ G) Spaces around parenthesis
 Prefer no spaces inside parentheses.
 Put a space before opening parenthesis if it's part of a conditional or preceded by a statement.
 
-    return (inf == CLOUD_STINK && superior == CLOUD_POISON);
-
     if (trap_count > 0)
 
     catch (map_load_exception &mload)
@@ -425,14 +423,8 @@ Put a space before opening parenthesis if it's part of a conditional or preceded
 
 H) Parenthesis around the value of return statement
 ---------------------------------------------------
-Only use them if the value returned is an expression.
-
-    return (prop_str >= 0 && prop_int >= 0 && prop_dex >= 0);
-
-    return (helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH);
-
-For simple scalar values and function calls, the parenthesis serve no purpose
-other than making the statement looks like a function call.
+None. The parenthesis serve no purpose other than making the statement looks
+like a function call.
 
     return true;
 
