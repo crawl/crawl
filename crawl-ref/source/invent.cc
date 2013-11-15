@@ -672,7 +672,7 @@ static int compare_reverse(const InvEntry *a, const InvEntry *b)
     return -cmp(a, b);
 }
 
-// C++ needs anonymous subs already!
+// We need C++11 already!
 // Some prototypes to prevent warnings; we can't make these static because
 // they're used as template parameters.
 int sort_item_qty(const InvEntry *a);
