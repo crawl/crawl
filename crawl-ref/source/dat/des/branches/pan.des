@@ -2304,7 +2304,7 @@ ITEM:   any
 NSUBST: i = 2=ghh / 3=ghhiii / *:i
 MONS:   angel
 MONS:   cherub
-MONS:   nothing
+MONS:   angel
 MONS:   ophan
 MONS:   ophan
 MONS:   shedu band
@@ -2353,7 +2353,7 @@ xxxCddC.A...CCC"""""""""wwwwwwww""0"wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
 xxxCd.+9......+""0"www0"""wwwww""E""wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCCx""""ww"""""wwwww"""wwwwwwwxxxxxxxxxxC.C7CCCC+CCCC7C.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxxx""""""""""wwwww""wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
-xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C3C.C3C.+..Cxxxxxxxxxxx
+xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C.C.C.C.+..Cxxxxxxxxxxx
 xxxxxxxCe.eCxxxxxxx""""xxxxxx""wwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
 xxxxxxxCeeeCxxxxxxxxx"xxxxxx""wwwwwwwxxxxxxxxxxxxxxxCCCCCCCC+CCCCCCCCxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxxxxx"wwwwwwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
@@ -2361,12 +2361,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..wwwwwwwwwwww.xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
 xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
-xCf71......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
+xCf73......Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
 xCCCCCCCC..Cxxxx.......wwwwxxwwww...............xx...................xxxxxxxxxxx
 xxxxxxxCCC.Cxx........wwwwwwwwcccc.............................cccc...xxxxxxxxxx
 xxxxxxxxxC+Cx...xx...wwwwwwwwwc1*ccccccccccccccccccccccccccccccc*1c...xxxxxxxxxx
 xxxxxxxxx......xxx..wwwwwwwww.c*'ccccccccccccccccccccccccccccccc'*c...xxxxxxxxxx
-xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........1.......1..........+ccc...xxxxxxxxxx
+xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........3.......3..........+ccc...xxxxxxxxxx
 xxxxxxxx....xxxxx..wwwwwwwww...cc...............5...............cc...xxxxxxxxxxx
 xxxxxxx....xxxxx...wwwwwwww....cc..www.ccccccccccccccccccc.www..cc...xxxxxxxxxxx
 xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|||cccccccc.wHw..cc....xxxxxxxxxx
@@ -2379,7 +2379,7 @@ xxxx..........wwwwxxwwww..xxx..cc..ccccccw''''c'4'c''''wcccccc..cc........xxxxxx
 xxxx...xxx....wwwxxxwwww.xxx...cc..ccwwcGw''''c'''c''''wGcwwcc..cc.........xxxxx
 xxxxx..xxx...wwwwxxxwww.xxxx...cc..cc22ccw''''''G''''''wcc22cc..cc..........xxxx
 xxxxx...xxx..wwwxxxwww...xx....cc..cc''D'''''''''''''''''D''cc..cc..........xxxx
-xxxxx...xx...wwwwwwww..........cc.3cc''ccw'''''''''''''wcc''cc3.cc.....xx....xxx
+xxxxx...xx...wwwwwwww..........cc..cc''ccw'''''''''''''wcc''cc..cc.....xx....xxx
 xxxx...xxx..wwwwwwww...xx......cc..cc''cGw'''''''''''''wGc''cc..cc....xxxx...xxx
 xxx...xxx..wwwwwww...xxxxxx....cc..cc''ccwwwwwwwwwwwwwwwcc''cc..cc....xxxx...xxx
 xxx........wwwwww...xxxxxxx....cc..cc''cccGcGcGcGcGcGcGccc''cc..cc...xxxx....xxx
@@ -2391,7 +2391,7 @@ xx...wwwwwwwww.....xxxxxxxx....cc..cc''cccccccDcDcDccccccc''cc..cc........xxxxxx
 xx..wwwwwwwww.....xxxxxxxx.....cc..ccwwcccccG'''''''Gcccccwwcc..cc........xxxxxx
 xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''''''cccccccccc..cc...xx....xxxxx
 xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
-xwwwwwww.....xxxx.........x....cc......5........1........5......cc....xx....xxxx
+xwwwwwww.....xxxx.........x....cc......5........3........5......cc....xx....xxxx
 xwwwwww.....xxxx.........xx...ccc+.............................+ccc.........xxxx
 xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
 xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
