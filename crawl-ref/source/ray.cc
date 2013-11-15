@@ -51,8 +51,8 @@ static bool in_diamond_int(const geom::vector &v)
 {
     double d1 = diamonds.ls1.index(v);
     double d2 = diamonds.ls2.index(v);
-    return (!double_is_integral(d1) && !double_is_integral(d2)
-            && (ifloor(d1) + ifloor(d2)) % 2 == 0);
+    return !double_is_integral(d1) && !double_is_integral(d2)
+           && (ifloor(d1) + ifloor(d2)) % 2 == 0;
 }
 
 // Is v on a grid line?
@@ -60,7 +60,7 @@ static bool on_line(const geom::vector &v)
 {
     double d1 = diamonds.ls1.index(v);
     double d2 = diamonds.ls2.index(v);
-    return (double_is_integral(d1) || double_is_integral(d2));
+    return double_is_integral(d1) || double_is_integral(d2);
 }
 
 // Is v an intersection of grid lines?
@@ -68,20 +68,20 @@ static bool is_corner(const geom::vector &v)
 {
     double d1 = diamonds.ls1.index(v);
     double d2 = diamonds.ls2.index(v);
-    return (double_is_integral(d1) && double_is_integral(d2));
+    return double_is_integral(d1) && double_is_integral(d2);
 }
 
 // Is v in a diamond?
 static bool in_diamond(const geom::vector &v)
 {
-    return (in_diamond_int(v) || is_corner(v));
+    return in_diamond_int(v) || is_corner(v);
 }
 
 // Is v in the interiour of a non-diamond?
 static bool in_non_diamond_int(const geom::vector &v)
 {
     // This could instead be done like in_diamond_int.
-    return (!in_diamond(v) && !on_line(v));
+    return !in_diamond(v) && !on_line(v);
 }
 
 static bool _to_grid(geom::ray *r, bool half);
@@ -177,14 +177,14 @@ static bool _advance_from_non_diamond(geom::ray *r)
 // The ray is in a legal state to be passed around externally.
 bool ray_def::_valid() const
 {
-    return (on_corner && is_corner(r.start) && bad_corner(r)
-            || !on_corner && in_diamond_int(r.start));
+    return on_corner && is_corner(r.start) && bad_corner(r)
+           || !on_corner && in_diamond_int(r.start);
 }
 
 static geom::vector _normalize(const geom::vector &v)
 {
     double n = sqrt(v.x*v.x + v.y*v.y);
-    return ((1.0 / n) * v);
+    return (1.0 / n) * v;
 }
 
 // Return true if we didn't hit a corner, hence if this

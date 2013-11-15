@@ -338,8 +338,8 @@ class message_window
     // Whether to show msgwin-full more prompts.
     bool more_enabled() const
     {
-        return (crawl_state.show_more_prompt
-                && (Options.clear_messages || Options.show_more));
+        return crawl_state.show_more_prompt
+               && (Options.clear_messages || Options.show_more);
     }
 
     int make_space(int n)
@@ -418,12 +418,12 @@ public:
 
     unsigned int out_width() const
     {
-        return (width() - (use_first_col() ? 1 : 0));
+        return width() - (use_first_col() ? 1 : 0);
     }
 
     unsigned int out_height() const
     {
-        return (height() - (use_last_line() ? 0 : 1));
+        return height() - (use_last_line() ? 0 : 1);
     }
 
     void clear_lines()

@@ -46,7 +46,7 @@ double intersect(const ray &r, const line &l)
 
 double lineseq::index(const vector &v) const
 {
-    return ((f(v) - offset) / dist);
+    return (f(v) - offset) / dist;
 }
 
 // Find the next intersection of r with a line in ls.
@@ -102,7 +102,7 @@ bool ray::to_next_cell(const grid &g)
 vector reflect(const vector &v, const form &f)
 {
     vector normal = vector(f.a, f.b);
-    return (v - 2 * f(v)/f(normal) * normal);
+    return v - 2 * f(v)/f(normal) * normal;
 }
 
 
@@ -126,7 +126,7 @@ vector vector::operator+(const vector &v) const
 
 vector vector::operator-() const
 {
-    return ((-1) * (*this));
+    return (-1) * (*this);
 }
 
 const vector& vector::operator-=(const vector &v)
@@ -136,7 +136,7 @@ const vector& vector::operator-=(const vector &v)
 
 vector vector::operator-(const vector &v) const
 {
-    return (*this + (-v));
+    return *this + (-v);
 }
 
 vector operator*(double t, const vector &v)

@@ -330,14 +330,14 @@ static dungeon_feature_type _safe_feat(coord_def gc)
     if (!map_bounds(gc))
         return DNGN_UNSEEN;
 
-    return (env.map_knowledge(gc).feat());
+    return env.map_knowledge(gc).feat();
 }
 
 static bool _is_seen_land(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return (feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat));
+    return feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat);
 }
 
 static bool _is_seen_shallow(coord_def gc)

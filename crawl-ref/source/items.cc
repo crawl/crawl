@@ -1077,12 +1077,12 @@ static string _origin_place_desc(const item_def &item)
 
 bool origin_describable(const item_def &item)
 {
-    return (origin_known(item)
-            && item.orig_place != 0xFFFFU
-            && !is_stackable_item(item)
-            && item.quantity == 1
-            && item.base_type != OBJ_CORPSES
-            && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK));
+    return origin_known(item)
+           && item.orig_place != 0xFFFFU
+           && !is_stackable_item(item)
+           && item.quantity == 1
+           && item.base_type != OBJ_CORPSES
+           && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK);
 }
 
 static string _article_it(const item_def &item)
@@ -2304,10 +2304,10 @@ static string _drop_selitem_text(const vector<MenuEntry*> *s)
         }
     }
 
-    return (make_stringf(" (%u%s turn%s)",
-                (unsigned int)s->size(),
-                extraturns? "+" : "",
-                s->size() > 1? "s" : ""));
+    return make_stringf(" (%u%s turn%s)",
+               (unsigned int)s->size(),
+               extraturns? "+" : "",
+               s->size() > 1? "s" : "");
 }
 
 vector<SelItem> items_for_multidrop;
@@ -2614,14 +2614,14 @@ typedef bool (*item_comparer)(const item_def& pickup_item,
 static bool _identical_types(const item_def& pickup_item,
                              const item_def& inv_item)
 {
-    return ((pickup_item.base_type == inv_item.base_type)
-            && (pickup_item.sub_type == inv_item.sub_type));
+    return (pickup_item.base_type == inv_item.base_type)
+           && (pickup_item.sub_type == inv_item.sub_type);
 }
 
 static bool _edible_food(const item_def& pickup_item,
                          const item_def& inv_item)
 {
-    return (inv_item.base_type == OBJ_FOOD && !is_inedible(inv_item));
+    return inv_item.base_type == OBJ_FOOD && !is_inedible(inv_item);
 }
 
 static bool _similar_equip(const item_def& pickup_item,
@@ -2653,8 +2653,8 @@ static bool _similar_equip(const item_def& pickup_item,
         return pickup_item.sub_type != inv_item.sub_type;
     }
 
-    return ((weapon_skill(pickup_item) == weapon_skill(inv_item))
-            && (get_damage_type(pickup_item) == get_damage_type(inv_item)));
+    return (weapon_skill(pickup_item) == weapon_skill(inv_item))
+           && (get_damage_type(pickup_item) == get_damage_type(inv_item));
 }
 
 static bool _similar_wands(const item_def& pickup_item,
@@ -2667,9 +2667,9 @@ static bool _similar_wands(const item_def& pickup_item,
         return false;
 
     // Not similar if wand in inventory is known to be empty.
-    return (inv_item.plus2 != ZAPCOUNT_EMPTY
-            || (item_ident(inv_item, ISFLAG_KNOW_PLUSES)
-                && inv_item.plus > 0));
+    return inv_item.plus2 != ZAPCOUNT_EMPTY
+           || (item_ident(inv_item, ISFLAG_KNOW_PLUSES)
+               && inv_item.plus > 0);
 }
 
 static bool _similar_jewellery(const item_def& pickup_item,
@@ -2684,9 +2684,9 @@ static bool _similar_jewellery(const item_def& pickup_item,
     // For jewellery of the same sub-type, unidentified jewellery is
     // always considered similar, as is identified jewellery whose
     // effect doesn't stack.
-    return (!item_type_known(inv_item)
-            || (!jewellery_is_amulet(inv_item)
-                && !ring_has_stackable_effect(inv_item)));
+    return !item_type_known(inv_item)
+           || (!jewellery_is_amulet(inv_item)
+               && !ring_has_stackable_effect(inv_item));
 }
 
 static bool _item_different_than_inv(const item_def& pickup_item,
@@ -3013,9 +3013,9 @@ equipment_type item_equip_slot(const item_def& item)
 // Includes melded items.
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
-    return (item_equip_slot(item) != EQ_NONE
-            || quiver_too && in_inventory(item)
-               && item.link == you.m_quiver->get_fire_item());
+    return item_equip_slot(item) != EQ_NONE
+           || quiver_too && in_inventory(item)
+              && item.link == you.m_quiver->get_fire_item();
 }
 
 bool item_is_melded(const item_def& item)
@@ -3029,8 +3029,8 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return (item_is_spellbook(*this) && item_type_known(*this)
-            || count_rod_spells(*this, true) > 0);
+    return item_is_spellbook(*this) && item_type_known(*this)
+           || count_rod_spells(*this, true) > 0;
 }
 
 int item_def::book_number() const
@@ -3050,7 +3050,7 @@ bool item_def::launched_by(const item_def &launcher) const
     if (base_type != OBJ_MISSILES)
         return false;
     const missile_type mt = fires_ammo_type(launcher);
-    return (sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET));
+    return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
 }
 
 zap_type item_def::zap() const
@@ -3099,7 +3099,7 @@ zap_type item_def::zap() const
 
 int item_def::index() const
 {
-    return (this - mitm.buffer());
+    return this - mitm.buffer();
 }
 
 int item_def::armour_rating() const
@@ -3130,7 +3130,7 @@ void item_def::set_holding_monster(int midx)
 
 bool item_def::held_by_monster() const
 {
-    return (pos.equals(-2, -2) && !invalid_monster_index(link - NON_ITEM - 1));
+    return pos.equals(-2, -2) && !invalid_monster_index(link - NON_ITEM - 1);
 }
 
 // Note:  This function is to isolate all the checks to see if

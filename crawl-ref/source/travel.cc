@@ -169,7 +169,7 @@ bool deviant_route_warning::warn_continue_travel(
     // If the user says "Yes, shut up and take me there", we won't ask
     // again for that destination. If the user says "No", we will
     // prompt again.
-    return ((warned = yesno(prompt.c_str(), true, 'n', true, false)));
+    return warned = yesno(prompt.c_str(), true, 'n', true, false);
 }
 
 static deviant_route_warning _Route_Warning;
@@ -222,8 +222,8 @@ bool is_unknown_stair(const coord_def &p)
 {
     dungeon_feature_type feat = env.map_knowledge(p).feat();
 
-    return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p)
-            && feat != DNGN_EXIT_DUNGEON);
+    return feat_is_travelable_stair(feat) && !travel_cache.know_stair(p)
+           && feat != DNGN_EXIT_DUNGEON;
 }
 
 // Returns true if the character can cross this dungeon feature, and
@@ -311,10 +311,10 @@ static bool _monster_blocks_travel(const monster_info *mons)
 {
     // [ds] No need to check if the monster is a known mimic, since it
     // won't even be a monster_info if it's an unknown mimic.
-    return (mons
-            && mons_class_is_stationary(mons->type)
-            && !fedhas_passthrough(mons)
-            && !travel_kill_monster(mons->type));
+    return mons
+           && mons_class_is_stationary(mons->type)
+           && !fedhas_passthrough(mons)
+           && !travel_kill_monster(mons->type);
 }
 
 /*
@@ -339,13 +339,13 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
     if (feat_is_wall(grid) || grid == DNGN_MANGROVE)
         return false;
 
-    return (feat_is_water(grid)
-            || grid == DNGN_LAVA
-            || grid == DNGN_RUNED_DOOR
-            || is_trap(c)
-            || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
-            || g_Slime_Wall_Check && slime_wall_neighbour(c)
-            || !_is_safe_cloud(c));
+    return feat_is_water(grid)
+           || grid == DNGN_LAVA
+           || grid == DNGN_RUNED_DOOR
+           || is_trap(c)
+           || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
+           || g_Slime_Wall_Check && slime_wall_neighbour(c)
+           || !_is_safe_cloud(c);
 }
 
 struct cell_travel_safety
@@ -566,8 +566,8 @@ static bool _is_branch_stair(const coord_def& pos)
 // explore-stop condition, returns true if explore should be stopped.
 static bool _prompt_stop_explore(int es_why)
 {
-    return (!(Options.explore_stop_prompt & es_why)
-            || yesno("Stop exploring?", true, 'y', true, false));
+    return !(Options.explore_stop_prompt & es_why)
+           || yesno("Stop exploring?", true, 'y', true, false);
 }
 
 #define ES_item   (Options.explore_stop & ES_ITEM)
@@ -660,8 +660,8 @@ static bool _is_valid_explore_target(const coord_def& where)
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
         LevelStashes *lev = StashTrack.find_current_level();
-        return (lev && lev->needs_visit(where, can_autopickup(),
-                                        god_likes_items(you.religion, true)));
+        return lev && lev->needs_visit(where, can_autopickup(),
+                                       god_likes_items(you.religion, true));
     }
 
     return false;
@@ -904,8 +904,8 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
 static bool _can_sacrifice(const coord_def p)
 {
     const dungeon_feature_type feat = grd(p);
-    return (!you.cannot_speak()
-            && (!feat_is_altar(feat) || feat_is_player_altar(feat)));
+    return !you.cannot_speak()
+           && (!feat_is_altar(feat) || feat_is_player_altar(feat));
 }
 
 static bool _sacrificeable_at(const coord_def& p)
@@ -1205,7 +1205,7 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c, bool autopickup,
                                       bool sacrifice)
 {
-    return (ls && ls->needs_visit(c, autopickup, sacrifice));
+    return ls && ls->needs_visit(c, autopickup, sacrifice);
 }
 
 bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const
@@ -1468,8 +1468,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
         }
     }
 
-    return (runmode == RMODE_TRAVEL ? travel_move()
-                                    : explore_target());
+    return runmode == RMODE_TRAVEL ? travel_move()
+                                   : explore_target();
 }
 
 void travel_pathfind::get_features()
@@ -2086,8 +2086,8 @@ static bool _is_known_branch_id(branch_type branch)
         return overview_knows_portal(branch);
 
     // If the overview knows the stairs to this branch, we know the branch.
-    return (stair_level.find(static_cast<branch_type>(branch))
-            != stair_level.end());
+    return stair_level.find(static_cast<branch_type>(branch))
+           != stair_level.end();
 }
 
 static bool _is_known_branch(const Branch &br)
@@ -2265,7 +2265,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
 
             // Possibly a waypoint number?
             if (allow_waypoints && keyin >= '0' && keyin <= '9')
-                return (-1 - (keyin - '0'));
+                return -1 - (keyin - '0');
 
             return ID_CANCEL;
         }
@@ -2339,7 +2339,7 @@ bool branch_entered(branch_type branch)
 
 static level_id _find_down_level()
 {
-    return (find_down_level(level_id::current()));
+    return find_down_level(level_id::current());
 }
 
 static int _travel_depth_keyfilter(int &c)
@@ -2457,10 +2457,10 @@ bool travel_kill_monster(monster_type mons)
     // Don't auto-kill things with berserkitis or *rage.
     if (player_mutation_level(MUT_BERSERK) || you.angry())
     {
-        return (you.stasis(false)
-                || you.clarity(false)
-                || you.is_undead == US_UNDEAD
-                || you.is_undead == US_HUNGRY_DEAD);
+        return you.stasis(false)
+               || you.clarity(false)
+               || you.is_undead == US_UNDEAD
+               || you.is_undead == US_HUNGRY_DEAD;
     }
 
     return true;
@@ -3246,7 +3246,7 @@ void LevelInfo::set_level_excludes()
 
 bool LevelInfo::empty() const
 {
-    return (stairs.empty() && excludes.empty());
+    return stairs.empty() && excludes.empty();
 }
 
 void LevelInfo::update_excludes()
@@ -3658,7 +3658,7 @@ void LevelInfo::fixup()
 bool TravelCache::know_stair(const coord_def &c) const
 {
     travel_levels_map::const_iterator i = levels.find(level_id::current());
-    return (i == levels.end() ? false : i->second.know_stair(c));
+    return i == levels.end() ? false : i->second.know_stair(c);
 }
 
 void TravelCache::list_waypoints() const
@@ -3960,8 +3960,8 @@ vector<level_id> TravelCache::known_levels() const
 
 bool can_travel_to(const level_id &id)
 {
-    return (is_connected_branch(id) && can_travel_interlevel()
-            || id == level_id::current());
+    return is_connected_branch(id) && can_travel_interlevel()
+           || id == level_id::current();
 }
 
 bool can_travel_interlevel()
@@ -4124,7 +4124,7 @@ void runrest::stop()
 
 bool runrest::is_rest() const
 {
-    return (runmode > 0 && pos.origin());
+    return runmode > 0 && pos.origin();
 }
 
 bool runrest::is_explore() const
@@ -4471,9 +4471,9 @@ bool explore_discoveries::prompt_stop() const
     say_any(apply_quantities(stairs), "stair");
     say_any(apply_quantities(runed_doors), "runed door");
 
-    return ((Options.explore_stop_prompt & es_flags) != es_flags
-            || marker_stop
-            || _prompt_stop_explore(es_flags));
+    return (Options.explore_stop_prompt & es_flags) != es_flags
+           || marker_stop
+           || _prompt_stop_explore(es_flags);
 }
 
 void do_interlevel_travel()

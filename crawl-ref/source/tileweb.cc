@@ -935,7 +935,7 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
 
 static bool _in_water(const packed_cell &cell)
 {
-    return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
+    return (cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING);
 }
 
 static bool _needs_flavour(const packed_cell &cell)

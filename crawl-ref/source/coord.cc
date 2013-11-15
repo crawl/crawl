@@ -35,12 +35,12 @@ int coord_def::range(const coord_def other) const
 
 int grid_distance(const coord_def& p1, const coord_def& p2)
 {
-    return ((p2 - p1).rdist());
+    return (p2 - p1).rdist();
 }
 
 int distance2(const coord_def& p1, const coord_def& p2)
 {
-    return ((p2 - p1).abs());
+    return (p2 - p1).abs();
 }
 
 bool adjacent(const coord_def& p1, const coord_def& p2)
@@ -88,12 +88,12 @@ coord_def random_in_bounds()
 
 coord_def player2grid(const coord_def &pc)
 {
-    return (pc + you.pos());
+    return pc + you.pos();
 }
 
 coord_def grid2player(const coord_def &gc)
 {
-    return (gc - you.pos());
+    return gc - you.pos();
 }
 
 //rotates a coord_def that points to an adjacent square

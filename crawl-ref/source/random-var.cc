@@ -129,7 +129,7 @@ random_var negate(const random_var& x)
 
 random_var operator-(const random_var& x, const random_var& y)
 {
-    return (x + ::negate(y));
+    return x + ::negate(y);
 }
 
 const random_var& operator+=(random_var& x, const random_var& y)

@@ -405,32 +405,32 @@ static void _maybe_set_patrol_route(monster* mons)
 
 static bool _mons_can_cast_dig(const monster* mons, bool random)
 {
-    return (mons->foe != MHITNOT
-            && mons->can_use_spells()
-            && mons->has_spell(SPELL_DIG)
-            && !mons->confused()
-            && !(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
-            && (!mons->has_ench(ENCH_ANTIMAGIC)
-                || (random
-                    && x_chance_in_y(4 * BASELINE_DELAY,
-                                     4 * BASELINE_DELAY
-                                     + mons->get_ench(ENCH_ANTIMAGIC).duration)
-                   || (!random
-                       && 4 * BASELINE_DELAY
-                          >= mons->get_ench(ENCH_ANTIMAGIC).duration))));
+    return mons->foe != MHITNOT
+           && mons->can_use_spells()
+           && mons->has_spell(SPELL_DIG)
+           && !mons->confused()
+           && !(silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
+           && (!mons->has_ench(ENCH_ANTIMAGIC)
+               || (random
+                   && x_chance_in_y(4 * BASELINE_DELAY,
+                                    4 * BASELINE_DELAY
+                                    + mons->get_ench(ENCH_ANTIMAGIC).duration)
+                  || (!random
+                      && 4 * BASELINE_DELAY
+                         >= mons->get_ench(ENCH_ANTIMAGIC).duration)));
 }
 
 static bool _mons_can_zap_dig(const monster* mons)
 {
-    return (mons->foe != MHITNOT
-            && !mons->asleep()
-            && !mons->confused() // they don't get here anyway
-            && !mons->submerged()
-            && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
-            && mons->inv[MSLOT_WAND] != NON_ITEM
-            && mitm[mons->inv[MSLOT_WAND]].base_type == OBJ_WANDS
-            && mitm[mons->inv[MSLOT_WAND]].sub_type == WAND_DIGGING
-            && mitm[mons->inv[MSLOT_WAND]].plus > 0);
+    return mons->foe != MHITNOT
+           && !mons->asleep()
+           && !mons->confused() // they don't get here anyway
+           && !mons->submerged()
+           && mons_itemuse(mons) >= MONUSE_STARTING_EQUIPMENT
+           && mons->inv[MSLOT_WAND] != NON_ITEM
+           && mitm[mons->inv[MSLOT_WAND]].base_type == OBJ_WANDS
+           && mitm[mons->inv[MSLOT_WAND]].sub_type == WAND_DIGGING
+           && mitm[mons->inv[MSLOT_WAND]].plus > 0;
 }
 
 static void _set_mons_move_dir(const monster* mons,
@@ -2979,11 +2979,11 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
     // handle accordingly.  In the arena Zot traps affect all monsters.
     if (mons->wont_attack() || crawl_state.game_is_arena())
     {
-        return (mechanical ? mons_flies(mons)
-                           : !trap.is_known(mons) || trap.type != TRAP_ZOT);
+        return mechanical ? mons_flies(mons)
+                          : !trap.is_known(mons) || trap.type != TRAP_ZOT;
     }
     else
-        return (!mechanical || mons_flies(mons) || !trap.is_known(mons));
+        return !mechanical || mons_flies(mons) || !trap.is_known(mons);
 }
 
 static void _mons_open_door(monster* mons, const coord_def &pos)

@@ -2198,7 +2198,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
     // Monsters shouldn't bother casting Twisted Res for just a single corpse.
     if (!actual)
-        return (num_crawlies >= (caster->is_player() ? 1 : 2));
+        return num_crawlies >= (caster->is_player() ? 1 : 2);
 
     if (num_lost + num_crawlies + num_masses == 0)
         return false;
@@ -2530,14 +2530,14 @@ void end_battlesphere(monster* mons, bool killed)
 
 static bool _battlesphere_can_mirror(spell_type spell)
 {
-    return ((spell_typematch(spell, SPTYP_CONJURATION)
-            && spell_to_zap(spell) != NUM_ZAPS)
-            || spell == SPELL_FREEZE
-            || spell == SPELL_STICKY_FLAME
-            || spell == SPELL_SANDBLAST
-            || spell == SPELL_AIRSTRIKE
-            || spell == SPELL_DAZZLING_SPRAY
-            || spell == SPELL_SEARING_RAY);
+    return (spell_typematch(spell, SPTYP_CONJURATION)
+           && spell_to_zap(spell) != NUM_ZAPS)
+           || spell == SPELL_FREEZE
+           || spell == SPELL_STICKY_FLAME
+           || spell == SPELL_SANDBLAST
+           || spell == SPELL_AIRSTRIKE
+           || spell == SPELL_DAZZLING_SPRAY
+           || spell == SPELL_SEARING_RAY;
 }
 
 bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)

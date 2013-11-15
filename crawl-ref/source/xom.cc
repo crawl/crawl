@@ -180,7 +180,7 @@ static bool _xom_feels_nasty()
 {
     // Xom will only directly kill you with a bad effect if you're under
     // penance from him, or if he's bored.
-    return (you.penance[GOD_XOM] || _xom_is_bored());
+    return you.penance[GOD_XOM] || _xom_is_bored();
 }
 
 bool xom_is_nice(int tension)
@@ -469,8 +469,8 @@ static bool _spell_weapon_check(const spell_type spell)
         // The wielded weapon must be a non-branded non-launcher
         // non-artefact!
         const item_def& weapon = *you.weapon();
-        return (!is_artefact(weapon) && !is_range_weapon(weapon)
-                && get_weapon_brand(weapon) == SPWPN_NORMAL);
+        return !is_artefact(weapon) && !is_range_weapon(weapon)
+               && get_weapon_brand(weapon) == SPWPN_NORMAL;
     }
     default:
         return true;
@@ -822,14 +822,14 @@ static int _xom_give_item(int power, bool debug = false)
 
 static bool _choose_mutatable_monster(const monster* mon)
 {
-    return (mon->alive() && mon->can_safely_mutate()
-            && !mon->submerged());
+    return mon->alive() && mon->can_safely_mutate()
+           && !mon->submerged();
 }
 
 static bool _choose_enchantable_monster(const monster* mon)
 {
-    return (mon->alive() && !mon->wont_attack()
-            && !mons_immune_magic(mon));
+    return mon->alive() && !mon->wont_attack()
+           && !mons_immune_magic(mon);
 }
 
 static bool _is_chaos_upgradeable(const item_def &item,

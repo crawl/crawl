@@ -631,9 +631,9 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 // attacked.
 static bool _dont_harm(const actor* attacker, const actor* defender)
 {
-    return (mons_aligned(attacker, defender)
-            || attacker == &you && defender->wont_attack()
-            || defender == &you && attacker->wont_attack());
+    return mons_aligned(attacker, defender)
+           || attacker == &you && defender->wont_attack()
+           || defender == &you && attacker->wont_attack();
 }
 // Put the potential cleave targets into a list. Up to 3, taken in order by
 // rotating from the def position and stopping at the first solid feature.

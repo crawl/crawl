@@ -4089,7 +4089,7 @@ string mons_list::set_mons(int index, const string &s)
     error.clear();
 
     if (index < 0)
-        return (error = make_stringf("Index out of range: %d", index));
+        return error = make_stringf("Index out of range: %d", index);
 
     mons_spec_slot slotmons = parse_mons_spec(s);
     if (!error.empty())
@@ -4551,7 +4551,7 @@ string item_list::set_item(int index, const string &spec)
 {
     error.clear();
     if (index < 0)
-        return (error = make_stringf("Index %d out of range", index));
+        return error = make_stringf("Index %d out of range", index);
 
     item_spec_slot sp = parse_item_spec(spec);
     if (error.empty())

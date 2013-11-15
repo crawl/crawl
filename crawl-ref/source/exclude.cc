@@ -35,7 +35,7 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 
     // Auto exclusion only makes sense if the monster is still asleep or if it
     // is lurking (discovered mimics).
-    return (mon->asleep() || mons_is_lurking(mon));
+    return mon->asleep() || mons_is_lurking(mon);
 }
 
 // Check whether a given monster is listed in the auto_exclude option.
@@ -65,7 +65,7 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 // when gaining/losing nightstalker.
 static int _get_full_exclusion_radius()
 {
-    return (LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER));
+    return LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER);
 }
 
 // If the monster is in the auto_exclude list, automatically set an
@@ -186,16 +186,16 @@ bool travel_exclude::affects(const coord_def& p) const
     if (radius == 0)
         return p == pos;
     else if (radius == 1)
-        return ((p - pos).rdist() <= 1);
+        return (p - pos).rdist() <= 1;
     else
         return los.see_cell(p);
 }
 
 bool travel_exclude::in_bounds(const coord_def &p) const
 {
-    return (radius == 0 && p == pos
-            || radius == 1 && (p - pos).rdist() <= 1
-            || los.in_bounds(p));
+    return radius == 0 && p == pos
+           || radius == 1 && (p - pos).rdist() <= 1
+           || los.in_bounds(p);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -282,12 +282,12 @@ void exclude_set::recompute_excluded_points(bool recompute_los)
 
 bool exclude_set::is_excluded(const coord_def &p) const
 {
-    return (exclude_points.count(p));
+    return exclude_points.count(p);
 }
 
 bool exclude_set::is_exclude_root(const coord_def &p) const
 {
-    return (exclude_roots.count(p));
+    return exclude_roots.count(p);
 }
 
 travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
@@ -672,8 +672,8 @@ string exclude_set::get_exclusion_desc()
                  desc.size() > 1 ? "s" : "");
         desc_str += info;
     }
-    return (desc_str + comma_separated_line(desc.begin(), desc.end(),
-                                            " and ", ", "));
+    return desc_str + comma_separated_line(desc.begin(), desc.end(),
+                                           " and ", ", ");
 }
 
 

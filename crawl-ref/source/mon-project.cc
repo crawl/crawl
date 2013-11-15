@@ -147,7 +147,7 @@ static void _normalize(float &x, float &y)
 // angle measured in chord length
 static bool _in_front(float vx, float vy, float dx, float dy, float angle)
 {
-    return ((dx-vx)*(dx-vx) + (dy-vy)*(dy-vy) <= (angle*angle));
+    return (dx-vx)*(dx-vx) + (dy-vy)*(dy-vy) <= (angle*angle);
 }
 
 static void _iood_stop(monster& mon, bool msg = true)

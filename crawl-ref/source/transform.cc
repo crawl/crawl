@@ -107,8 +107,8 @@ bool form_can_swim(transformation_type form)
 
 bool form_likes_water(transformation_type form)
 {
-    return (form_can_swim(form) || you.species == SP_GREY_DRACONIAN
-                                   && !form_changed_physiology(form));
+    return form_can_swim(form) || you.species == SP_GREY_DRACONIAN
+                                  && !form_changed_physiology(form);
 }
 
 bool form_has_mouth(transformation_type form)
@@ -122,8 +122,8 @@ bool form_has_mouth(transformation_type form)
 bool form_likes_lava(transformation_type form)
 {
     // Lava orcs can only swim in non-phys-change forms.
-    return (you.species == SP_LAVA_ORC
-            && !form_changed_physiology(form));
+    return you.species == SP_LAVA_ORC
+           && !form_changed_physiology(form);
 }
 
 bool form_can_butcher_barehanded(transformation_type form)
@@ -187,7 +187,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
                || eqslot == EQ_SHIELD;
 
     case TRAN_FUNGUS:
-        return (eqslot == EQ_HELMET && !is_hard_helmet(item));
+        return eqslot == EQ_HELMET && !is_hard_helmet(item);
 
     case TRAN_TREE:
         return eqslot == EQ_SHIELD || eqslot == EQ_HELMET;
@@ -583,7 +583,7 @@ bool feat_dangerous_for_form(transformation_type which_trans,
         return !form_likes_lava(which_trans);
 
     if (feat == DNGN_DEEP_WATER)
-        return (!form_likes_water(which_trans) && !beogh_water_walk());
+        return !form_likes_water(which_trans) && !beogh_water_walk();
 
     return false;
 }

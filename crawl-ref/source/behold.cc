@@ -253,17 +253,17 @@ bool player::possible_beholder(const monster* mon) const
     if (crawl_state.game_is_arena())
         return false;
 
-    return (mon->alive() && !mon->submerged()
-         && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())
-         && !mon->wont_attack() && !mon->pacified()
-         && ((mons_genus(mon->type) == MONS_MERMAID
-              || mon->has_spell(SPELL_MESMERISE))
-             && !silenced(pos()) && !silenced(mon->pos())
-             && !mon->has_ench(ENCH_MUTE)
-             && !mon->confused()
-             && !mon->asleep() && !mon->cannot_move()
-             && !mon->berserk_or_insane()
-             && !mons_is_fleeing(mon)
-             && !is_sanctuary(pos())
-           || player_equip_unrand(UNRAND_DEMON_AXE)));
+    return mon->alive() && !mon->submerged()
+        && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())
+        && !mon->wont_attack() && !mon->pacified()
+        && ((mons_genus(mon->type) == MONS_MERMAID
+             || mon->has_spell(SPELL_MESMERISE))
+            && !silenced(pos()) && !silenced(mon->pos())
+            && !mon->has_ench(ENCH_MUTE)
+            && !mon->confused()
+            && !mon->asleep() && !mon->cannot_move()
+            && !mon->berserk_or_insane()
+            && !mons_is_fleeing(mon)
+            && !is_sanctuary(pos())
+          || player_equip_unrand(UNRAND_DEMON_AXE));
 }

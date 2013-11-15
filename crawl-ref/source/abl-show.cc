@@ -1551,8 +1551,8 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        return (you.can_go_berserk(true, false, true)
-                && (quiet || berserk_check_wielded_weapon()));
+        return you.can_go_berserk(true, false, true)
+               && (quiet || berserk_check_wielded_weapon());
 
     case ABIL_EVOKE_FOG:
         if (env.cgrid(you.pos()) != EMPTY_CLOUD)
@@ -2852,11 +2852,11 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
 {
     // Abilities that have aroused our ire earn 2.5x their classic
     // Crawl piety cost.
-    return ((crawl_state.game_is_sprint()
-             && (abil == ABIL_TROG_BROTHERS_IN_ARMS
-                 || abil == ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB))
-            ? div_rand_round(original_cost * 5, 2)
-            : original_cost);
+    return (crawl_state.game_is_sprint()
+            && (abil == ABIL_TROG_BROTHERS_IN_ARMS
+                || abil == ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB))
+           ? div_rand_round(original_cost * 5, 2)
+           : original_cost;
 }
 
 // We pass in ability ZP cost as it may have changed during the exercise
@@ -3091,7 +3091,7 @@ int choose_ability_menu(const vector<talent>& talents)
         if (abil_menu.menu_action == Menu::ACT_EXAMINE)
             _print_talent_description(talents[selected]);
         else
-            return (*(static_cast<int*>(sel[0]->data)));
+            return *(static_cast<int*>(sel[0]->data));
     }
 }
 
@@ -3618,7 +3618,7 @@ void lose_god_ability(int i)
 
 int generic_cost::cost() const
 {
-    return (base + (add > 0 ? random2avg(add, rolls) : 0));
+    return base + (add > 0 ? random2avg(add, rolls) : 0);
 }
 
 int scaling_cost::cost(int max) const

@@ -1342,7 +1342,7 @@ bool scramble(void)
 
     const int max_carry = carrying_capacity();
     // When highly encumbered, scrambling out is hard to do.
-    return (you.burden < (max_carry / 2) + random2(max_carry / 2));
+    return you.burden < (max_carry / 2) + random2(max_carry / 2);
 }
 
 bool go_berserk(bool intentional, bool potion)
@@ -1499,10 +1499,10 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
 // of distance.
 static bool _mons_is_always_safe(const monster *mon)
 {
-    return (mon->wont_attack()
-            || mon->type == MONS_BUTTERFLY
-            || mon->withdrawn()
-            || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
+    return mon->wont_attack()
+           || mon->type == MONS_BUTTERFLY
+           || mon->withdrawn()
+           || mon->type == MONS_BALLISTOMYCETE && mon->number == 0;
 }
 
 bool mons_is_safe(const monster* mon, const bool want_move,
@@ -1662,9 +1662,9 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
                                bool consider_user_options)
 {
-    return (!get_nearby_monsters(false, true, dangerous_only,
-                                 consider_user_options,
-                                 require_visible).empty());
+    return !get_nearby_monsters(false, true, dangerous_only,
+                                consider_user_options,
+                                require_visible).empty();
 }
 
 static const char *shop_types[] =
@@ -2284,7 +2284,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
     {
         return true;
     }
-    return (!adj.empty() || !suffix.empty());
+    return !adj.empty() || !suffix.empty();
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,

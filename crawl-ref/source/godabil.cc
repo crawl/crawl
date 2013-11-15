@@ -1573,8 +1573,8 @@ void trog_remove_trogs_hand()
 
 bool beogh_water_walk()
 {
-    return (you_worship(GOD_BEOGH) && !player_under_penance()
-            && you.piety >= piety_breakpoint(4));
+    return you_worship(GOD_BEOGH) && !player_under_penance()
+           && you.piety >= piety_breakpoint(4);
 }
 
 void jiyva_paralyse_jellies()
@@ -1630,15 +1630,15 @@ bool jiyva_remove_bad_mutation()
 
 bool yred_injury_mirror()
 {
-    return (you_worship(GOD_YREDELEMNUL) && !player_under_penance()
-            && you.piety >= piety_breakpoint(1)
-            && you.duration[DUR_MIRROR_DAMAGE]);
+    return you_worship(GOD_YREDELEMNUL) && !player_under_penance()
+           && you.piety >= piety_breakpoint(1)
+           && you.duration[DUR_MIRROR_DAMAGE];
 }
 
 bool yred_can_animate_dead()
 {
-    return (you_worship(GOD_YREDELEMNUL) && !player_under_penance()
-            && you.piety >= piety_breakpoint(2));
+    return you_worship(GOD_YREDELEMNUL) && !player_under_penance()
+           && you.piety >= piety_breakpoint(2);
 }
 
 void yred_animate_remains_or_dead()
@@ -1858,29 +1858,29 @@ bool kiku_take_corpse()
 
 bool fedhas_passthrough_class(const monster_type mc)
 {
-    return (you_worship(GOD_FEDHAS)
-            && mons_class_is_plant(mc)
-            && mons_class_is_stationary(mc)
-            && mc != MONS_SNAPLASHER_VINE
-            && mc != MONS_SNAPLASHER_VINE_SEGMENT);
+    return you_worship(GOD_FEDHAS)
+           && mons_class_is_plant(mc)
+           && mons_class_is_stationary(mc)
+           && mc != MONS_SNAPLASHER_VINE
+           && mc != MONS_SNAPLASHER_VINE_SEGMENT;
 }
 
 // Fedhas allows worshipers to walk on top of stationary plants and
 // fungi.
 bool fedhas_passthrough(const monster* target)
 {
-    return (target
-            && fedhas_passthrough_class(target->type)
-            && (mons_species(target->type) != MONS_OKLOB_PLANT
-                || target->attitude != ATT_HOSTILE));
+    return target
+           && fedhas_passthrough_class(target->type)
+           && (mons_species(target->type) != MONS_OKLOB_PLANT
+               || target->attitude != ATT_HOSTILE);
 }
 
 bool fedhas_passthrough(const monster_info* target)
 {
-    return (target
-            && fedhas_passthrough_class(target->type)
-            && (mons_species(target->type) != MONS_OKLOB_PLANT
-                || target->attitude != ATT_HOSTILE));
+    return target
+           && fedhas_passthrough_class(target->type)
+           && (mons_species(target->type) != MONS_OKLOB_PLANT
+               || target->attitude != ATT_HOSTILE);
 }
 
 // Fedhas worshipers can shoot through non-hostile plants, can a
@@ -1907,13 +1907,13 @@ bool fedhas_shoot_through(const bolt& beam, const monster* victim)
         origin_attitude = temp->attitude;
     }
 
-    return (origin_worships_fedhas
-            && fedhas_protects(victim)
-            && !beam.is_enchantment()
-            && !(beam.is_explosion && beam.in_explosion_phase)
-            && beam.name != "lightning arc"
-            && (mons_atts_aligned(victim->attitude, origin_attitude)
-                || victim->neutral()));
+    return origin_worships_fedhas
+           && fedhas_protects(victim)
+           && !beam.is_enchantment()
+           && !(beam.is_explosion && beam.in_explosion_phase)
+           && beam.name != "lightning arc"
+           && (mons_atts_aligned(victim->attitude, origin_attitude)
+               || victim->neutral());
 }
 
 // Turns corpses in LOS into skeletons and grows toadstools on them.

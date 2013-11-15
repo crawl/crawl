@@ -136,8 +136,8 @@ void reader::advance(size_t offset)
 
 bool reader::valid() const
 {
-    return ((_file && !feof(_file)) ||
-            (_pbuf && _read_offset < _pbuf->size()));
+    return (_file && !feof(_file)) ||
+           (_pbuf && _read_offset < _pbuf->size());
 }
 
 static NORETURN void _short_read()

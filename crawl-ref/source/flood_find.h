@@ -102,7 +102,7 @@ bool flood_find<fgrd, bound_check>::has_exit_from(
 {
     want_exit = true;
     set_floodseed(sp);
-    return (pathfind(RMODE_CONNECTIVITY) == coord_def(-1, -1));
+    return pathfind(RMODE_CONNECTIVITY) == coord_def(-1, -1);
 }
 
 template <typename fgrd, typename bound_check>

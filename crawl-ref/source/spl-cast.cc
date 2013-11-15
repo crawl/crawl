@@ -1883,10 +1883,10 @@ double get_miscast_chance(spell_type spell, int severity)
 int failure_rate_colour(spell_type spell)
 {
     double chance = get_miscast_chance(spell);
-    return ((chance < 0.001) ? LIGHTGREY :
-            (chance < 0.005) ? YELLOW    :
-            (chance < 0.025) ? LIGHTRED  :
-                               RED);
+    return (chance < 0.001) ? LIGHTGREY :
+           (chance < 0.005) ? YELLOW    :
+           (chance < 0.025) ? LIGHTRED  :
+                              RED;
 }
 
 //Converts the raw failure rate into a number to be displayed.

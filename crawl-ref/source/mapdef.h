@@ -1291,8 +1291,8 @@ public:
         map_bounds_check(map_def &map_) : map(map_) { }
         bool operator () (const coord_def &c) const
         {
-            return (c.x >= 0 && c.x < map.map.width()
-                    && c.y >= 0 && c.y < map.map.height());
+            return c.x >= 0 && c.x < map.map.width()
+                   && c.y >= 0 && c.y < map.map.height();
         }
     };
 

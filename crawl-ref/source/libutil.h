@@ -35,7 +35,7 @@ bool key_is_escape(int key);
 // Unscales a fixed-point number, rounding up.
 static inline int unscale_round_up(int number, int scale)
 {
-    return ((number + scale - 1) / scale);
+    return (number + scale - 1) / scale;
 }
 
 // Chinese rod numerals are _not_ digits for our purposes.
@@ -198,7 +198,7 @@ int isqrt_ceil(int x);
 
 static inline bool testbits(uint64_t flags, uint64_t test)
 {
-    return ((flags & test) == test);
+    return (flags & test) == test;
 }
 
 coord_def cgetsize(GotoRegion region = GOTO_CRT);

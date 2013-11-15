@@ -128,7 +128,7 @@ int identify(int power, int item_slot, string *pre_msg)
 static bool _mons_hostile(const monster* mon)
 {
     // Needs to be done this way because of friendly/neutral enchantments.
-    return (!mon->wont_attack() && !mon->neutral());
+    return !mon->wont_attack() && !mon->neutral();
 }
 
 // Check whether it is possible at all to pacify this monster.
@@ -382,8 +382,8 @@ int cast_healing(int pow, int max_pow, bool divine_ability,
 {
     pow = min(50, pow);
     max_pow = min(50, max_pow);
-    return (_healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
-                           divine_ability, where, not_self, mode));
+    return _healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
+                          divine_ability, where, not_self, mode);
 }
 
 // Antimagic is sort of an anti-extension... it sets a lot of magical

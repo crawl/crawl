@@ -28,7 +28,7 @@ public:
 #define CLONE(typename) \
     typename* clone() const \
     { \
-        return (new typename(*this)); \
+        return new typename(*this); \
     }
 
 // Default LOS rules.

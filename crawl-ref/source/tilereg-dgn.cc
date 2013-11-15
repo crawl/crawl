@@ -417,8 +417,8 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
         if (flags & SPFLAG_NOT_SELF)
             return false;
 
-        return ((flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY))
-                || !targeted);
+        return (flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY))
+               || !targeted;
     }
 
     if (!targeted)
@@ -512,7 +512,7 @@ static item_def* _get_evokable_item(const actor* target)
     if (sel.empty())
         return NULL;
 
-    return (const_cast<item_def*>(sel[0].item));
+    return const_cast<item_def*>(sel[0].item);
 }
 
 static bool _evoke_item_on_target(actor* target)
@@ -564,7 +564,7 @@ static bool _spell_in_range(spell_type spell, actor* target)
         break;
     }
 
-    return (range >= grid_distance(you.pos(), target->pos()));
+    return range >= grid_distance(you.pos(), target->pos());
 }
 
 static actor* _spell_target = NULL;

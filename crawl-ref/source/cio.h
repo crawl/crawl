@@ -116,12 +116,12 @@ struct c_mouse_event
 
     bool scroll_up() const
     {
-        return (bstate & (BUTTON4 | BUTTON4_DBL | BUTTON_SCRL_UP));
+        return bstate & (BUTTON4 | BUTTON4_DBL | BUTTON_SCRL_UP);
     }
 
     bool scroll_down() const
     {
-        return (bstate & (BUTTON2 | BUTTON2_DBL | BUTTON_SCRL_DN));
+        return bstate & (BUTTON2 | BUTTON2_DBL | BUTTON_SCRL_DN);
     }
 };
 

@@ -84,14 +84,14 @@ static bool _is_random_job(job_type job)
 
 static bool _is_random_choice(const newgame_def& choice)
 {
-    return (_is_random_species(choice.species)
-            && _is_random_job(choice.job));
+    return _is_random_species(choice.species)
+           && _is_random_job(choice.job);
 }
 
 static bool _is_random_viable_choice(const newgame_def& choice)
 {
-    return (_is_random_choice(choice) &&
-            (choice.job == JOB_VIABLE || choice.species == SP_VIABLE));
+    return _is_random_choice(choice) &&
+           (choice.job == JOB_VIABLE || choice.species == SP_VIABLE);
 }
 
 static bool _char_defined(const newgame_def& ng)
@@ -108,15 +108,15 @@ static string _char_description(const newgame_def& ng)
     else if (_is_random_job(ng.job))
     {
         const string j = (ng.job == JOB_RANDOM ? "Random " : "Viable ");
-        return (j + species_name(ng.species));
+        return j + species_name(ng.species);
     }
     else if (_is_random_species(ng.species))
     {
         const string s = (ng.species == SP_RANDOM ? "Random " : "Viable ");
-        return (s + get_job_name(ng.job));
+        return s + get_job_name(ng.job);
     }
     else
-        return (species_name(ng.species) + " " + get_job_name(ng.job));
+        return species_name(ng.species) + " " + get_job_name(ng.job);
 }
 
 static string _welcome(const newgame_def* ng)

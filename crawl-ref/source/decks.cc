@@ -3125,10 +3125,10 @@ bool bad_deck(const item_def &item)
     if (!is_deck(item))
         return false;
 
-    return (!item.props.exists("cards")
-            || item.props["cards"].get_type() != SV_VEC
-            || item.props["cards"].get_vector().get_type() != SV_BYTE
-            || cards_in_deck(item) == 0);
+    return !item.props.exists("cards")
+           || item.props["cards"].get_type() != SV_VEC
+           || item.props["cards"].get_vector().get_type() != SV_BYTE
+           || cards_in_deck(item) == 0;
 }
 
 deck_rarity_type deck_rarity(const item_def &item)

@@ -184,9 +184,9 @@ bool dist::isMe() const
 {
     // We hack the decision as to whether to use delta or target by
     // assuming that we use delta only if target hasn't been touched.
-    return (isValid && !isCancel
-            && (target == you.pos()
-                || (target.origin() && delta.origin())));
+    return isValid && !isCancel
+           && (target == you.pos()
+               || (target.origin() && delta.origin()));
 }
 
 void dist::confusion_fuzz(int range)
@@ -443,14 +443,14 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 // (Unless flying!)
 static bool _mon_exposed_in_water(const monster* mon)
 {
-    return (grd(mon->pos()) == DNGN_SHALLOW_WATER
-            && !mons_flies(mon));
+    return grd(mon->pos()) == DNGN_SHALLOW_WATER
+           && !mons_flies(mon);
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
 {
-    return (is_opaque_cloud(env.cgrid(mon->pos()))
-            && !mon->is_insubstantial());
+    return is_opaque_cloud(env.cgrid(mon->pos()))
+           && !mon->is_insubstantial();
 }
 
 static bool _mon_exposed(const monster* mon)
@@ -458,7 +458,7 @@ static bool _mon_exposed(const monster* mon)
     if (!mon || !you.see_cell(mon->pos()) || mon->visible_to(&you))
         return false;
 
-    return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
+    return _mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon);
 }
 
 static bool _is_target_in_range(const coord_def& where, int range,
@@ -2282,9 +2282,9 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     {
         // ...unless it creates a "disturbance in the water".
         // Since you can't see the monster, assume it's not a friend.
-        return (mode != TARG_FRIEND
-                && _mon_exposed(mon)
-                && i_feel_safe(false, false, true, true, range));
+        return mode != TARG_FRIEND
+               && _mon_exposed(mon)
+               && i_feel_safe(false, false, true, true, range);
     }
 
     return true;
@@ -2334,7 +2334,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
         return false;
 
     if (mon->type != monl->type)
-        return (mons_is_mimic(mon->type) && mons_is_mimic(monl->type));
+        return mons_is_mimic(mon->type) && mons_is_mimic(monl->type);
 
     if (mlist_full_info)
     {
@@ -2387,8 +2387,8 @@ static bool _want_target_monster(const monster *mon, int mode)
         return mon->friendly();
 
     if (mode == TARG_INJURED_FRIEND)
-        return (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
-                || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0);
+        return mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
+               || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0;
 
     if (mode == TARG_EVOLVABLE_PLANTS)
         return mons_is_evolvable(mon);
@@ -2542,8 +2542,8 @@ static bool _find_object(const coord_def& where, int mode,
     if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
         return false;
 
-    return (env.map_knowledge(where).item()
-            || (you.see_cell(where) && top_item_at(where)));
+    return env.map_knowledge(where).item()
+           || (you.see_cell(where) && top_item_at(where));
 }
 
 static int _next_los(int dir, int los, bool wrap)
@@ -2671,9 +2671,9 @@ static bool _find_square(coord_def &mfp, int direction,
             mfp = vyou;
             if (find_targ(you.pos(), mode, need_path, range, hitfunc))
                 return true;
-            return (_find_square(mfp, direction,
-                                 find_targ, need_path, mode, range, hitfunc,
-                                 false, _next_los(direction, los, wrap)));
+            return _find_square(mfp, direction,
+                                find_targ, need_path, mode, range, hitfunc,
+                                false, _next_los(direction, los, wrap));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
         {
@@ -3450,7 +3450,7 @@ static string _stair_destination_description(const coord_def &pos)
     {
         const stair_info *si = linf->get_stair(pos);
         if (si)
-            return (" " + si->describe());
+            return " " + si->describe();
         else if (feat_is_stair(grd(pos)))
             return " (unknown stair)";
     }

@@ -369,7 +369,7 @@ static bool _sort_monster_list(int a, int b)
         if (!m1->alive() || !m2->alive())
             return false;
 
-        return (m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true));
+        return m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true);
     }
 
     const unsigned glyph1 = mons_char(m1->type);

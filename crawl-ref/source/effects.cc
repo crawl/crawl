@@ -374,8 +374,8 @@ void immolation(int pow, immolation_source_type source, bool known)
 static bool _conduct_electricity_affects_actor(const bolt& beam,
                                                const actor* victim)
 {
-    return (victim->alive() && victim->res_elec() <= 0
-            && victim->ground_level());
+    return victim->alive() && victim->res_elec() <= 0
+           && victim->ground_level();
 }
 
 static bool _conduct_electricity_damage(bolt &beam, actor* victim,
@@ -481,7 +481,7 @@ void cleansing_flame(int pow, int caster, coord_def where,
 
 static string _who_banished(const string &who)
 {
-    return (who.empty() ? who : " (" + who + ")");
+    return who.empty() ? who : " (" + who + ")";
 }
 
 void banished(const string &who)
@@ -878,13 +878,13 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
 // Berserking monsters cannot be ordered around.
 static bool _follows_orders(monster* mon)
 {
-    return (mon->friendly()
-            && mon->type != MONS_GIANT_SPORE
-            && mon->type != MONS_BATTLESPHERE
-            && mon->type != MONS_SPECTRAL_WEAPON
-            && !mon->berserk_or_insane()
-            && !mon->is_projectile()
-            && !mon->has_ench(ENCH_HAUNTING));
+    return mon->friendly()
+           && mon->type != MONS_GIANT_SPORE
+           && mon->type != MONS_BATTLESPHERE
+           && mon->type != MONS_SPECTRAL_WEAPON
+           && !mon->berserk_or_insane()
+           && !mon->is_projectile()
+           && !mon->has_ench(ENCH_HAUNTING);
 }
 
 // Sets foe target of friendly monsters.
@@ -1352,10 +1352,10 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
         if (!in_bounds(adjs[i]))
             return false;
 
-    return (feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
-               && feat_has_solid_floor(grd(adjs[2])) && feat_has_solid_floor(grd(adjs[3]))
-            || feat_has_solid_floor(grd(adjs[0])) && feat_has_solid_floor(grd(adjs[1]))
-               && feat_is_wall(grd(adjs[2])) && feat_is_wall(grd(adjs[3])));
+    return feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
+              && feat_has_solid_floor(grd(adjs[2])) && feat_has_solid_floor(grd(adjs[3]))
+           || feat_has_solid_floor(grd(adjs[0])) && feat_has_solid_floor(grd(adjs[1]))
+              && feat_is_wall(grd(adjs[2])) && feat_is_wall(grd(adjs[3]));
 }
 
 // Sometimes if a floor is turned into a wall, a dead-end will be created.

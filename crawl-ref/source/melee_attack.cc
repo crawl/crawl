@@ -194,9 +194,9 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 bool melee_attack::can_reach()
 {
-    return ((attk_type == AT_HIT && weapon && weapon_reach(*weapon))
-            || attk_flavour == AF_REACH
-            || attk_type == AT_REACH_STING);
+    return (attk_type == AT_HIT && weapon && weapon_reach(*weapon))
+           || attk_flavour == AF_REACH
+           || attk_type == AT_REACH_STING;
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -5452,9 +5452,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
         return false;
 
     if (atk == UNAT_CONSTRICT)
-        return (is_uc
-                 || you.species == SP_NAGA && you.experience_level > 12
-                 || you.species == SP_OCTOPODE && you.has_usable_tentacle());
+        return is_uc
+                || you.species == SP_NAGA && you.experience_level > 12
+                || you.species == SP_OCTOPODE && you.has_usable_tentacle();
 
     if (you.strength() + you.dex() <= random2(50))
         return false;
@@ -5462,44 +5462,44 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
     switch (atk)
     {
     case UNAT_KICK:
-        return (is_uc
-                 || player_mutation_level(MUT_HOOVES)
-                 || you.has_usable_talons()
-                 || player_mutation_level(MUT_TENTACLE_SPIKE));
+        return is_uc
+                || player_mutation_level(MUT_HOOVES)
+                || you.has_usable_talons()
+                || player_mutation_level(MUT_TENTACLE_SPIKE);
 
     case UNAT_PECK:
-        return ((is_uc
-                 || player_mutation_level(MUT_BEAK))
-                && !one_chance_in(3));
+        return (is_uc
+                || player_mutation_level(MUT_BEAK))
+               && !one_chance_in(3);
 
     case UNAT_HEADBUTT:
-        return ((is_uc
-                 || player_mutation_level(MUT_HORNS))
-                && !one_chance_in(3));
+        return (is_uc
+                || player_mutation_level(MUT_HORNS))
+               && !one_chance_in(3);
 
     case UNAT_TAILSLAP:
-        return ((is_uc
-                 || you.has_usable_tail())
-                && coinflip());
+        return (is_uc
+                || you.has_usable_tail())
+               && coinflip();
 
     case UNAT_PSEUDOPODS:
-        return ((is_uc
-                 || you.has_usable_pseudopods())
-                && !one_chance_in(3));
+        return (is_uc
+                || you.has_usable_pseudopods())
+               && !one_chance_in(3);
 
     case UNAT_TENTACLES:
-        return ((is_uc
-                 || you.has_usable_tentacles())
-                && !one_chance_in(3));
+        return (is_uc
+                || you.has_usable_tentacles())
+               && !one_chance_in(3);
 
     case UNAT_BITE:
-        return ((is_uc
-                 || you.has_usable_fangs()
-                 || player_mutation_level(MUT_ACIDIC_BITE))
-                && x_chance_in_y(2, 5));
+        return (is_uc
+                || you.has_usable_fangs()
+                || player_mutation_level(MUT_ACIDIC_BITE))
+               && x_chance_in_y(2, 5);
 
     case UNAT_PUNCH:
-        return (is_uc && !one_chance_in(3));
+        return is_uc && !one_chance_in(3);
 
     default:
         return false;
@@ -5987,8 +5987,8 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Don't drink poisonous or mutagenic blood.
-    return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
-            || (chunk_is_poisonous(chunk_type) && player_res_poison()));
+    return chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
+           || (chunk_is_poisonous(chunk_type) && player_res_poison());
 }
 
 int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)

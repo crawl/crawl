@@ -568,7 +568,7 @@ bool mons_near(const monster* mons)
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return true;
-    return (you.see_cell(mons->pos()));
+    return you.see_cell(mons->pos());
 }
 
 bool mon_enemies_around(const monster* mons)
@@ -587,7 +587,7 @@ bool mon_enemies_around(const monster* mons)
     {
         // Additionally, if an ally is nearby and *you* have a foe,
         // consider it as the ally's enemy too.
-        return (mons_near(mons) && there_are_monsters_nearby(true));
+        return mons_near(mons) && there_are_monsters_nearby(true);
     }
     else
     {

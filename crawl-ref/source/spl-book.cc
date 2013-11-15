@@ -905,7 +905,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
         return fail_rate_a < fail_rate_b;
 
     if (spell_difficulty(a) != spell_difficulty(b))
-        return (spell_difficulty(a) < spell_difficulty(b));
+        return spell_difficulty(a) < spell_difficulty(b);
 
     return strcasecmp(spell_title(a), spell_title(b)) < 0;
 }
@@ -1419,7 +1419,7 @@ int rod_spell(int rod)
     you.wield_change = true;
     you.turn_is_over = true;
 
-    return (roll_dice(1, 1 + spell_difficulty(spell) / 2));
+    return roll_dice(1, 1 + spell_difficulty(spell) / 2);
 }
 
 static bool _compare_spells(spell_type a, spell_type b)
@@ -2538,8 +2538,8 @@ bool book_has_title(const item_def &book)
     if (!is_artefact(book))
         return false;
 
-    return (book.props.exists("is_named")
-            && book.props["is_named"].get_bool() == true);
+    return book.props.exists("is_named")
+           && book.props["is_named"].get_bool() == true;
 }
 
 void destroy_spellbook(const item_def &book)

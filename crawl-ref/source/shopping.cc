@@ -1163,7 +1163,7 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_METABOLISM ])
         ret -= (2 * prop[ ARTP_METABOLISM ]);
 
-    return ((ret > 0) ? ret : 0);
+    return (ret > 0) ? ret : 0;
 }
 
 unsigned int item_value(item_def item, bool ident)
@@ -2289,7 +2289,7 @@ bool is_worthless_consumable(const item_def &item)
             return false;
         }
     case OBJ_FOOD:
-        return ((item.sub_type == FOOD_CHUNK) && food_is_rotten(item));
+        return (item.sub_type == FOOD_CHUNK) && food_is_rotten(item);
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {
@@ -2486,15 +2486,15 @@ string shop_name(const coord_def& where)
 
 bool is_shop_item(const item_def &item)
 {
-    return (item.pos.x == 0 && item.pos.y >= 5 && item.pos.y < (MAX_SHOPS + 5));
+    return item.pos.x == 0 && item.pos.y >= 5 && item.pos.y < (MAX_SHOPS + 5);
 }
 
 bool shop_item_unknown(const item_def &item)
 {
-    return (item_type_has_ids(item.base_type)
-            && item_type_known(item)
-            && get_ident_type(item) != ID_KNOWN_TYPE
-            && !is_artefact(item));
+    return item_type_has_ids(item.base_type)
+           && item_type_known(item)
+           && get_ident_type(item) != ID_KNOWN_TYPE
+           && !is_artefact(item);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -2840,7 +2840,7 @@ int ShoppingList::size() const
 bool ShoppingList::items_are_same(const item_def& item_a,
                                   const item_def& item_b)
 {
-    return (item_name_simple(item_a) == item_name_simple(item_b));
+    return item_name_simple(item_a) == item_name_simple(item_b);
 }
 
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
@@ -3248,13 +3248,13 @@ string ShoppingList::get_thing_desc(const CrawlHashTable& thing)
 int ShoppingList::thing_cost(const CrawlHashTable& thing)
 {
     ASSERT(thing.exists(SHOPPING_THING_COST_KEY));
-    return (thing[SHOPPING_THING_COST_KEY].get_int());
+    return thing[SHOPPING_THING_COST_KEY].get_int();
 }
 
 level_pos ShoppingList::thing_pos(const CrawlHashTable& thing)
 {
     ASSERT(thing.exists(SHOPPING_THING_POS_KEY));
-    return (thing[SHOPPING_THING_POS_KEY].get_level_pos());
+    return thing[SHOPPING_THING_POS_KEY].get_level_pos();
 }
 
 string ShoppingList::name_thing(const CrawlHashTable& thing,

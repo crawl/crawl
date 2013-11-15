@@ -237,12 +237,12 @@ bool file_exists(const string &name)
 {
 #ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributesW(OUTW(name));
-    return (lAttr != INVALID_FILE_ATTRIBUTES
-            && !(lAttr & FILE_ATTRIBUTE_DIRECTORY));
+    return lAttr != INVALID_FILE_ATTRIBUTES
+           && !(lAttr & FILE_ATTRIBUTE_DIRECTORY);
 #else
     struct stat st;
     const int err = ::stat(OUTS(name), &st);
-    return (!err && S_ISREG(st.st_mode));
+    return !err && S_ISREG(st.st_mode);
 #endif
 }
 
@@ -251,12 +251,12 @@ bool dir_exists(const string &dir)
 {
 #ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributesW(OUTW(dir));
-    return (lAttr != INVALID_FILE_ATTRIBUTES
-            && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
+    return lAttr != INVALID_FILE_ATTRIBUTES
+           && (lAttr & FILE_ATTRIBUTE_DIRECTORY);
 #elif defined(HAVE_STAT)
     struct stat st;
     const int err = ::stat(OUTS(dir), &st);
-    return (!err && S_ISDIR(st.st_mode));
+    return !err && S_ISDIR(st.st_mode);
 #else
     DIR *d = opendir(OUTS(dir));
     const bool exists = !!d;

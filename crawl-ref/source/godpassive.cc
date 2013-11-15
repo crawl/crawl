@@ -33,7 +33,7 @@ int chei_stat_boost(int piety)
         return 1;
     if (piety >= piety_breakpoint(5))
         return 15;
-    return ((piety - 10) / 10);
+    return (piety - 10) / 10;
 }
 
 // Eat from one random off-level item stack.
@@ -380,7 +380,7 @@ static bool _jewel_auto_id(const item_def& item)
     case RING_INTELLIGENCE:
         return !!item.plus;
     case AMU_FAITH:
-        return (!you_worship(GOD_NO_GOD));
+        return !you_worship(GOD_NO_GOD);
     case AMU_THE_GOURMAND:
         return you.species != SP_MUMMY
                && player_mutation_level(MUT_HERBIVOROUS) < 3;

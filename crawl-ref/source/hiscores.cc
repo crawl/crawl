@@ -95,7 +95,7 @@ static string _score_file_name()
 
 static string _log_file_name()
 {
-    return (Options.shared_dir + "logfile" + crawl_state.game_type_qualifier());
+    return Options.shared_dir + "logfile" + crawl_state.game_type_qualifier();
 }
 
 void hiscores_new_entry(const scorefile_entry &ne)
@@ -748,7 +748,7 @@ xlog_fields scorefile_entry::get_fields() const
     if (!fields.get())
         return xlog_fields();
     else
-        return (*fields.get());
+        return *fields.get();
 }
 
 bool scorefile_entry::parse(const string &line)

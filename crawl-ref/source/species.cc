@@ -97,7 +97,7 @@ species_type get_species_by_abbrev(const char *abbrev)
         }
     }
 
-    return ((i < NUM_SPECIES) ? static_cast<species_type>(i) : SP_UNKNOWN);
+    return (i < NUM_SPECIES) ? static_cast<species_type>(i) : SP_UNKNOWN;
 }
 
 int ng_num_species()
@@ -301,7 +301,7 @@ size_type species_size(species_type species, size_part_type psize)
         return SIZE_LARGE;
     case SP_NAGA:
     case SP_CENTAUR:
-        return ((psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE);
+        return (psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE;
     case SP_HALFLING:
     case SP_KOBOLD:
         return SIZE_SMALL;

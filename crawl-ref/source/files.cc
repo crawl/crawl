@@ -256,12 +256,12 @@ string get_cache_name(const string &filename)
 
 bool is_absolute_path(const string &path)
 {
-    return (!path.empty()
-            && (path[0] == FILE_SEPARATOR
+    return !path.empty()
+           && (path[0] == FILE_SEPARATOR
 #ifdef TARGET_OS_WINDOWS
-                || path.find(':') != string::npos
+               || path.find(':') != string::npos
 #endif
-              ));
+             );
 }
 
 // Concatenates two paths, separating them with FILE_SEPARATOR if necessary.
@@ -298,7 +298,7 @@ string get_path_relative_to(const string &referencefile,
 string change_file_extension(const string &filename, const string &ext)
 {
     const string::size_type pos = filename.rfind('.');
-    return ((pos == string::npos? filename : filename.substr(0, pos)) + ext);
+    return (pos == string::npos? filename : filename.substr(0, pos)) + ext;
 }
 
 time_t file_modtime(const string &file)

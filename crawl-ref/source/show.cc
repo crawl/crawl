@@ -109,7 +109,7 @@ bool show_type::operator < (const show_type &other) const
 // command (^C) is used.
 bool show_type::is_cleanable_monster() const
 {
-    return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
+    return cls == SH_MONSTER && !mons_class_is_stationary(mons);
 }
 
 static void _update_feat_at(const coord_def &gp)

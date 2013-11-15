@@ -20,7 +20,7 @@
 
 static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
 {
-    return (first + mod % (last - first + 1));
+    return first + mod % (last - first + 1);
 }
 
 static tileidx_t _mon_mod(tileidx_t tile, int offset)
@@ -561,8 +561,8 @@ tileidx_t tileidx_player()
 
 bool is_player_tile(tileidx_t tile, tileidx_t base_tile)
 {
-    return (tile >= base_tile
-            && tile < base_tile + tile_player_count(base_tile));
+    return tile >= base_tile
+           && tile < base_tile + tile_player_count(base_tile);
 }
 
 static int _draconian_colour(int race, int level)

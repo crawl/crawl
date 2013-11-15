@@ -77,8 +77,8 @@ void game_state::show_startup_errors()
 
 bool game_state::is_replaying_keys() const
 {
-    return (crawl_state.doing_prev_cmd_again
-            || crawl_state.is_repeating_cmd());
+    return crawl_state.doing_prev_cmd_again
+           || crawl_state.is_repeating_cmd();
 }
 
 bool game_state::is_repeating_cmd() const
@@ -544,7 +544,7 @@ bool game_state::player_is_dead() const
 
 bool game_state::game_standard_levelgen() const
 {
-    return (game_is_normal() || game_is_hints());
+    return game_is_normal() || game_is_hints();
 }
 
 bool game_state::game_is_normal() const
@@ -585,7 +585,7 @@ bool game_state::game_is_hints() const
 
 bool game_state::game_is_hints_tutorial() const
 {
-    return (game_is_hints() || game_is_tutorial());
+    return game_is_hints() || game_is_tutorial();
 }
 
 string game_state::game_type_name() const

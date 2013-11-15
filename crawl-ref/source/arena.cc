@@ -1096,9 +1096,9 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
         }
 
     }
-    return (!arena::allow_bands && !first_band_member
-            || !(mons_char(mg.cls) & !127)
-               && arena::banned_glyphs[mons_char(mg.cls)]);
+    return !arena::allow_bands && !first_band_member
+           || !(mons_char(mg.cls) & !127)
+              && arena::banned_glyphs[mons_char(mg.cls)];
 }
 
 // XXX: Still having some trouble with book-keeping if a slime creature

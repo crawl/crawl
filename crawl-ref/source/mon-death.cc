@@ -41,9 +41,9 @@
 **/
 bool mons_is_pikel(monster* mons)
 {
-    return (mons->type == MONS_PIKEL
-            || (mons->props.exists("original_name")
-                && mons->props["original_name"].get_string() == "Pikel"));
+    return mons->type == MONS_PIKEL
+           || (mons->props.exists("original_name")
+               && mons->props["original_name"].get_string() == "Pikel");
 }
 
 /**
@@ -87,9 +87,9 @@ void pikel_band_neutralise()
 **/
 bool mons_is_kirke(monster* mons)
 {
-    return (mons->type == MONS_KIRKE
-            || (mons->props.exists("original_name")
-                && mons->props["original_name"].get_string() == "Kirke"));
+    return mons->type == MONS_KIRKE
+           || (mons->props.exists("original_name")
+               && mons->props["original_name"].get_string() == "Kirke");
 }
 
 /**
@@ -162,9 +162,9 @@ void hogs_to_humans()
 **/
 bool mons_is_dowan(const monster* mons)
 {
-    return (mons->type == MONS_DOWAN
-            || (mons->props.exists("original_name")
-                && mons->props["original_name"].get_string() == "Dowan"));
+    return mons->type == MONS_DOWAN
+           || (mons->props.exists("original_name")
+               && mons->props["original_name"].get_string() == "Dowan");
 }
 
 /**
@@ -177,9 +177,9 @@ bool mons_is_dowan(const monster* mons)
 **/
 bool mons_is_duvessa(const monster* mons)
 {
-    return (mons->type == MONS_DUVESSA
-            || (mons->props.exists("original_name")
-                && mons->props["original_name"].get_string() == "Duvessa"));
+    return mons->type == MONS_DUVESSA
+           || (mons->props.exists("original_name")
+               && mons->props["original_name"].get_string() == "Duvessa");
 }
 
 /**
@@ -194,7 +194,7 @@ bool mons_is_duvessa(const monster* mons)
 **/
 bool mons_is_elven_twin(const monster* mons)
 {
-    return (mons_is_dowan(mons) || mons_is_duvessa(mons));
+    return mons_is_dowan(mons) || mons_is_duvessa(mons);
 }
 
 /**
@@ -627,9 +627,9 @@ bool shedu_pair_alive(const monster* mons)
 **/
 bool mons_is_shedu(const monster* mons)
 {
-    return (mons->type == MONS_SHEDU
-            || (mons->props.exists("original_name")
-                && mons->props["original_name"].get_string() == "shedu"));
+    return mons->type == MONS_SHEDU
+           || (mons->props.exists("original_name")
+               && mons->props["original_name"].get_string() == "shedu");
 }
 
 /**

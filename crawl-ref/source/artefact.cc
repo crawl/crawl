@@ -332,15 +332,15 @@ bool is_unrandom_artefact(const item_def &item)
 
 bool is_special_unrandom_artefact(const item_def &item)
 {
-    return (item.flags & ISFLAG_UNRANDART
-            && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL));
+    return item.flags & ISFLAG_UNRANDART
+           && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL);
 }
 
 bool is_randapp_artefact(const item_def &item)
 {
-    return (item.flags & ISFLAG_UNRANDART
-            && !(item.flags & ISFLAG_KNOW_TYPE)
-            && (_seekunrandart(item)->flags & UNRAND_FLAG_RANDAPP));
+    return item.flags & ISFLAG_UNRANDART
+           && !(item.flags & ISFLAG_KNOW_TYPE)
+           && (_seekunrandart(item)->flags & UNRAND_FLAG_RANDAPP);
 }
 
 void autoid_unrand(item_def &item)
@@ -1810,8 +1810,8 @@ bool randart_is_bad(const item_def &item, artefact_properties_t &proprt)
         return true;
     }
 
-    return (_randart_is_redundant(item, proprt)
-            || _randart_is_conflicting(item, proprt));
+    return _randart_is_redundant(item, proprt)
+           || _randart_is_conflicting(item, proprt);
 }
 
 bool randart_is_bad(const item_def &item)

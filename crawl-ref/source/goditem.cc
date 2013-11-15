@@ -613,7 +613,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
         return discipline & SPTYP_POISON;
 
     case GOD_ELYVILON:
-        return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
+        return discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING);
 
     default:
         break;

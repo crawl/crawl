@@ -220,9 +220,9 @@ int CLua::execstring(const char *s, const char *context, int nresults)
 bool CLua::is_path_safe(string s, bool trusted)
 {
     lowercase(s);
-    return (s.find("..") == string::npos && shell_safe(s.c_str())
-            // loading dlua stuff would spew tons of error messages
-            && (trusted || s.find("dlua") != 0));
+    return s.find("..") == string::npos && shell_safe(s.c_str())
+           // loading dlua stuff would spew tons of error messages
+           && (trusted || s.find("dlua") != 0);
 }
 
 int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,

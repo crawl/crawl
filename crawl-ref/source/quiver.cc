@@ -609,5 +609,5 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
 
 static bool _items_similar(const item_def& a, const item_def& b, bool force)
 {
-    return (items_similar(a, b) && (force || a.slot == b.slot));
+    return items_similar(a, b) && (force || a.slot == b.slot);
 }

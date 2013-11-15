@@ -41,8 +41,8 @@ struct kill_monster_desc
         bool operator () (const kill_monster_desc &m1,
                           const kill_monster_desc &m2) const
         {
-            return (m1.monnum < m2.monnum
-                    || (m1.monnum == m2.monnum && m1.modifier < m2.modifier));
+            return m1.monnum < m2.monnum
+                   || (m1.monnum == m2.monnum && m1.modifier < m2.modifier);
         }
     };
 };
