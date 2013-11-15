@@ -1691,7 +1691,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                                        : -random2(-lnchHitBonus + 1));
 
         practise(EX_WILL_LAUNCH, launcher_skill);
-        count_action(CACT_FIRE, launcher.sub_type);
+        if (is_unrandom_artefact(launcher)
+            && get_unrand_entry(launcher.special)->type_name)
+        {
+            count_action(CACT_FIRE, launcher.special);
+        }
+        else
+            count_action(CACT_FIRE, launcher.sub_type);
 
         // Removed 2 random2(2)s from each of the learning curves, but
         // left slings because they're hard enough to develop without
