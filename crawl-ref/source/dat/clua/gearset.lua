@@ -81,7 +81,7 @@ function rememberkit()
     return false
 end
 
-function write_array(f, arr, aname)
+function write_array(arr, aname)
     local res = aname .. " = { "
     for i, v in ipairs(arr) do
         res = res .. v .. ", "
