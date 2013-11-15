@@ -29,11 +29,17 @@ for $f (grep /\.(cc|h)$/, split /\n/, `git ls-files`)
     # return (x) where x contains parentheses.
     # Looks like no one told Larry Wall properties of regular expression,
     # including the part where they can't do arbitrarily nested parentheses.
-    while (/^(\ *)return\ \( ([^()]++) (\( (?: [^()]++ | (?3) )* \)) ([^()]++)\);/sxm)
+    while (/^(\s*)return\s+
+            \((
+             (?: [^()]*+
+                 (\( (?: [^()]++ | (?3) )* \))
+             )+
+             [^()]*+
+            )\);/sxm)
     {
         my $prev = "$`$1return ";
         my $next = ";$'";
-        my $cur = "$2$3$4";
+        my $cur = "$2";
         $cur =~ s/\n /\n/sg;
         $_ = "$prev$cur$next";
     }
