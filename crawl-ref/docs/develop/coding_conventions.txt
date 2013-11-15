@@ -423,7 +423,7 @@ Put a space before opening parenthesis if it's part of a conditional or preceded
 
 H) Parenthesis around the value of return statement
 ---------------------------------------------------
-None. The parenthesis serve no purpose other than making the statement looks
+None. The parenthesis serve no purpose other than making the statement look
 like a function call.
 
     return true;
@@ -431,3 +431,5 @@ like a function call.
     return -1;
 
     return coinflip();
+
+    return form_can_wield(form) || form == TRAN_DRAGON;
