@@ -49,7 +49,7 @@ struct show_type
     show_type(show_item_type itemtype);
     show_type(monster_type montype);
 
-    operator bool() const { return (cls != SH_NOTHING); }
+    operator bool() const { return cls != SH_NOTHING; }
 
     bool operator < (const show_type &other) const;
     bool is_cleanable_monster() const;

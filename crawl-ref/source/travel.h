@@ -317,7 +317,7 @@ public:
 
     string describe() const;
 
-    bool can_travel() const { return (type == PHYSICAL); }
+    bool can_travel() const { return type == PHYSICAL; }
 };
 
 // Information on a level that interlevel travel needs.
