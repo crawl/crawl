@@ -947,8 +947,8 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
         monster* beholder = you.get_beholder(a);
         if (beholder)
         {
-            return false;
             blocked_landing_reason = BLOCKED_MOVE;
+            return false;
         }
 
         monster* fearmonger = you.get_fearmonger(a);
