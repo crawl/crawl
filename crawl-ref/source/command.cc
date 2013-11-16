@@ -2666,8 +2666,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-F</w> double scale fsim\n"
                        "<w>Ctrl-I</w> item generation stats\n"
                        "<w>O</w>      measure exploration time\n"
-                       "<w>Ctrl-T</w> enter dungeon Lua interpreter\n"
-                       "<w>Ctrl-U</w> enter client Lua interpreter\n"
+                       "<w>Ctrl-T</w> dungeon (D)Lua interpreter\n"
+                       "<w>Ctrl-U</w> client (C)Lua interpreter\n"
                        "<w>Ctrl-X</w> Xom effect stats\n"
 #ifdef DEBUG_DIAGNOSTICS
                        "<w>Ctrl-Q</w> make some debug messages quiet\n"
