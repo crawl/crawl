@@ -129,6 +129,7 @@ item_kind item_kind_by_name(string name);
 vector<string> item_name_list_for_glyph(unsigned glyph);
 
 const char* rune_type_name(int p);
+const char* misc_type_name(int type, bool known);
 
 bool   is_named_corpse(const item_def &corpse);
 string get_corpse_name(const item_def &corpse, uint64_t *name_type = NULL);

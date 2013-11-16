@@ -557,6 +557,8 @@ enum caction_type    // Primary categorization of counted actions.
     CACT_INVOKE,     // ability_type
     CACT_ABIL,       // ability_type
     CACT_EVOKE,      // evoc_type
+                     //   or item.basetype << 16 | subtype
+                     //   or unrand index
     CACT_USE,        // object_class_type
     CACT_STAB,       // unchivalric_attack_type
     NUM_CACTIONS,
@@ -1120,7 +1122,10 @@ enum evoc_type
     EVOC_WAND,
     EVOC_ROD,
     EVOC_DECK,
+#if TAG_MAJOR_VERSION == 34
     EVOC_MISC,
+#endif
+    EVOC_TOME,
 };
 
 enum game_direction_type
