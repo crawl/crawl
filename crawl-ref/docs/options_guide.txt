@@ -57,7 +57,8 @@ The contents of this text are:
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop,
-                autofight_caught
+                autofight_caught, automagic_enable, automagic_slot,
+                automagic_fight, automagic_stop
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -1273,7 +1274,7 @@ automagic_fight = false
 	the set threshold. If false, a message will appear and no further
 	action is taken.
 
-automagic_stop = 30
+automagic_stop = 0
 	Similar to autofight_stop, if magic points are below this number
 	(percentage of total), casting is prevented. What happens depends
 	on automagic_fight setting.
