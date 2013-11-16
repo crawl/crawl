@@ -1211,7 +1211,7 @@ This spell summons a small creature to the caster's aid.
 %%%%
 Summon Spectral Orcs spell
 
-This spell summons between one and three orc spectres. As such apparitions
+This spell summons between one and three spectral orcs. As such apparitions
 cannot use magic themselves, this spell picks melee specialists, sometimes even
 rivalling the most powerful of live orcs.
 %%%%
