@@ -260,9 +260,10 @@ around themselves, and to banish monsters to the Abyss. Later they will be able
 to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
 through, and to gate themselves directly into this realm of chaos. Lugonu will
 eventually offer to corrupt a follower's weapon, imbuing it with the distorting
-energies of the Abyss. Lugonu expects followers to spread unceasing chaos in
-the overworld, and as such does not grant piety to worshippers while they
-remain in the Abyss itself.
+energies of the Abyss, and will protect the follower from the normally harmful
+effects of unwielding such a weapon.. Lugonu expects followers to spread
+unceasing chaos in the overworld, and as such does not grant piety to
+worshippers while they remain in the Abyss itself.
 %%%%
 Beogh powers
 
