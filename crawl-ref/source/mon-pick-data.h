@@ -1148,7 +1148,7 @@ static const pop_entry pop_depths[] =
   {  1,  7,   50, SEMI, MONS_NAGA_WARRIOR },
   {  1,  7,   25, SEMI, MONS_NAGA_MAGE },
   {  1, 14,  250, PEAK, MONS_GLOWING_SHAPESHIFTER },
-  {  1, 14,  500, PEAK, MONS_TENGU_REAVER },
+  {  1, 14,  100, PEAK, MONS_TENGU_REAVER },
   {  1, 14,   25, SEMI, MONS_SPHINX },
   {  4, 14,  250, SEMI, MONS_TENTACLED_MONSTROSITY },
   {  4, 14,  100, UP,   MONS_STORM_DRAGON },
