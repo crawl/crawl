@@ -920,9 +920,6 @@ static void _place_player_on_stair(branch_type old_branch,
 #if TAG_MAJOR_VERSION == 34
 static void _ensure_entry(branch_type br)
 {
-    if (brentry[br] != level_id::current())
-        return;
-
     dungeon_feature_type entry = branches[br].entry_stairs;
     for (rectangle_iterator ri(1); ri; ++ri)
         if (grd(*ri) == entry)
@@ -948,9 +945,19 @@ static void _ensure_entry(branch_type br)
 
 static void _add_missing_branches()
 {
+    const level_id lc = level_id::current();
+
     // Could do all just in case, but this seems safer:
-    _ensure_entry(BRANCH_VAULTS);
-    _ensure_entry(BRANCH_ZOT);
+    if (brentry[BRANCH_VAULTS] == lc)
+        _ensure_entry(BRANCH_VAULTS);
+    if (brentry[BRANCH_ZOT] == lc)
+        _ensure_entry(BRANCH_ZOT);
+    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 21))
+        _ensure_entry(BRANCH_VESTIBULE);
+    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 24))
+        _ensure_entry(BRANCH_PANDEMONIUM);
+    if (lc == level_id(BRANCH_DEPTHS, 4) || lc == level_id(BRANCH_DUNGEON, 25))
+        _ensure_entry(BRANCH_ABYSS);
 }
 #endif
 
