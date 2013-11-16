@@ -355,7 +355,7 @@ KMONS:   1 = rock worm
 KMONS:   2 = boulder beetle
 KMONS:   3 = trapdoor spider / orb spider w:5
 KMONS:   4 = thrashing horror
-KMONS:   5 = rock worm / rock worm zombie w:14 / rock worm spectre w:1
+KMONS:   5 = rock worm / rock worm zombie w:14 / spectral rock worm w:1
 KITEM:   0.@ = stone no_pickup q:1 w:90 / nothing
 KITEM:   12345 = % w:90 no_pickup / * no_pickup
 SHUFFLE: ABCDEF / ABCDEF / ABCCBA, ABC, 13 / 13 / 31, {`

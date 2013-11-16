@@ -830,8 +830,8 @@ NSUBST: w = 3=Ew / 20=Fw / *:w
 NSUBST: ! = 2:. / *:c
 NSUBST: ? = 2:. / *:c
 NSUBST: ^ = 2:. / *:c
-KMONS:  E = kraken spectre
-KMONS:  F = shark spectre / big fish spectre
+KMONS:  E = spectral kraken
+KMONS:  F = spectral shark / spectral big fish
 KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
 : serpent_of_hell_setup(_G)

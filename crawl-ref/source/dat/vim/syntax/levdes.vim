@@ -111,8 +111,8 @@ syn keyword desOrientation corpse chunk skeleton never_decay
 syn keyword desOrientation fix_slot priest_spells actual_spells god_gift
 syn keyword desOrientation generate_awake patrolling band
 syn keyword desOrientation hostile friendly good_neutral fellow_slime strict_neutral neutral
-"Note: `spectre` mis-catches `silent spectre` about as often as actually used as monster modifier
-syn keyword desOrientation zombie skeleton simulacrum spectre chimera
+"Note: `spectre` removed: mis-catches `silent spectre` but was unused as modifier (`spectral` exists)
+syn keyword desOrientation zombie skeleton simulacrum spectral chimera
 syn keyword desOrientation seen always_corpse never_corpse
 syn keyword desOrientation base nonbase
 syn keyword desOrientation n_suf        n_adj           n_rpl         n_the
