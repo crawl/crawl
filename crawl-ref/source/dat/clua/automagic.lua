@@ -99,7 +99,7 @@ local function move_towards(dx, dy)
   end
 end
 
-local function get_monster_info(dx,dy,no_move)
+local function get_monster_info(dx,dy)
   m = monster.get_monster_at(dx,dy)
   if not m then
     return nil
@@ -138,7 +138,7 @@ local function is_candidate_for_attack(x,y)
   return true
 end
 
-local function get_target(no_move)
+local function get_target()
   local x, y, bestx, besty, best_info, new_info
   bestx = 0
   besty = 0
@@ -146,7 +146,7 @@ local function get_target(no_move)
   for x = -8,8 do
     for y = -8,8 do
       if is_candidate_for_attack(x, y) then
-        new_info = get_monster_info(x, y, no_move)
+        new_info = get_monster_info(x, y)
         if (not best_info) then
           bestx = x
           besty = y
@@ -201,7 +201,7 @@ local function mp_is_low()
 end
 
 function mag_attack(allow_movement)
-  local x, y, info = get_target(not allow_movement)
+  local x, y, info = get_target()
   if info == nil then
     crawl.mpr("No target in view!")
   elseif you.confused() then
@@ -210,19 +210,17 @@ function mag_attack(allow_movement)
     -- If you want to resort to melee, set AUTOMAGIC_FIGHT to true in rc
     -- First check for enough magic points, then check if below threshold
     if AUTOMAGIC_FIGHT then
-      attack(true)
+      attack(allow_movement)
     else
       crawl.mpr("You don't have enough magic to cast " ..
           you.spell_table()[AUTOMAGIC_SPELL_SLOT] .. "!")
     end
   elseif mp_is_low() then
     if AUTOMAGIC_FIGHT then
-      attack(true)
+      attack(allow_movement)
     else
       crawl.mpr("You are too depleted to cast spells recklessly!")
     end
-  elseif info.attack_type == 2 then
-    move_towards(x,y)
   elseif info.attack_type == 1 then
     spell_attack(x,y)
   elseif allow_movement then
@@ -251,10 +249,6 @@ function am_set_spell()
     crawl.mpr("Invalid spell slot.")
     return false
 
-  elseif not you.spell_table()[slot] then
-    crawl.mpr("No spell in slot " .. slot .. ".")
-    return false
-
   else
     message = ""
     -- All conditional checks completed, continue to assign a slot now. If automagic
@@ -264,8 +258,9 @@ function am_set_spell()
       message = " enabled,"
     end
     AUTOMAGIC_SPELL_SLOT = slot
+    spell_name = you.spell_table()[AUTOMAGIC_SPELL_SLOT] or "no spell currently"
     crawl.mpr("Automagic" .. message .. " will cast spell in slot " .. slot .. " (" ..
-        you.spell_table()[AUTOMAGIC_SPELL_SLOT] .. ")" .. ".")
+        spell_name .. ")" .. ".")
     return false
 
   end
