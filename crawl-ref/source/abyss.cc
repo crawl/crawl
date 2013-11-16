@@ -976,7 +976,7 @@ static level_id _get_random_level(bool existing, bool connected)
     for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; ++i)
     {
         if (i == BRANCH_ABYSS
-            || i == BRANCH_DWARF
+            || branch_is_unfinished((branch_type)i)
             || (existing && i == BRANCH_SHOALS)
             || (connected && !is_connected_branch(static_cast<branch_type>(i))))
         {
