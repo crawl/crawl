@@ -61,6 +61,14 @@ Animate Dead cast gestures
 
 @The_monster@ throws @possessive@ @arms@ wide.
 %%%%
+Blinkbolt cast
+
+@The_monster@ bursts into living lightning!
+%%%%
+unseen Blinkbolt cast
+
+Living lightning bursts into view!
+%%%%
 Flame Tongue cast
 
 @The_monster@ issues a gush of flame.

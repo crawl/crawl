@@ -495,6 +495,15 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_BLINKBOLT:
+        beam.name     = "living lightning";
+        beam.damage   = dice_def(2, 10 + power / 17);
+        beam.colour   = LIGHTCYAN;
+        beam.flavour  = BEAM_ELECTRICITY;
+        beam.hit      = 16 + power / 40;
+        beam.is_beam  = true;
+        break;
+
     case SPELL_LIGHTNING_BOLT:
         beam.name     = "bolt of lightning";
         beam.damage   = dice_def(3, 10 + power / 17);

@@ -2260,5 +2260,15 @@
       }
     },
 
+    {  MST_RAIJU,
+      {
+       SPELL_BLINKBOLT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 
 #endif
