@@ -105,11 +105,12 @@ end
 
 local function get_monster_info(dx,dy)
   m = monster.get_monster_at(dx,dy)
+  name = m:name()
   if not m then
     return nil
   end
-
   info = {}
+  info.distance = (abs(dx) > abs(dy)) and -abs(dx) or -abs(dy)
 
   -- Decide what to do for target's range by circleLOS range
   if (dx^2 + dy^2 <= spells.range(you.spell_table()[AUTOMAGIC_SPELL_SLOT])^2+1) then
@@ -119,7 +120,28 @@ local function get_monster_info(dx,dy)
     -- Out of range
     info.attack_type = 2
   end
+  info.can_attack = (info.attack_type == 1) and 1 or 0
+  info.safe = m:is_safe() and -1 or 0
+  info.constricting_you = m:is_constricting_you() and 1 or 0
+  info.injury = m:damage_level()
+  info.threat = m:threat()
+  info.orc_priest_wizard = (name == "orc priest" or name == "orc wizard") and 1 or 0
   return info
+end
+
+local function compare_monster_info(m1, m2)
+  flag_order = automagic_flag_order
+  if flag_order == nil then
+    flag_order = {"can_attack", "safe", "distance", "constricting_you", "injury", "threat", "orc_priest_wizard"}
+  end
+  for i,flag in ipairs(flag_order) do
+    if m1[flag] > m2[flag] then
+      return true
+    elseif m1[flag] < m2[flag] then
+      return false
+    end
+  end
+  return false
 end
 
 local function is_candidate_for_attack(x,y)
@@ -151,7 +173,7 @@ local function get_target()
     for y = -8,8 do
       if is_candidate_for_attack(x, y) then
         new_info = get_monster_info(x, y)
-        if (not best_info) then
+        if (not best_info) or compare_monster_info(new_info, best_info) then
           bestx = x
           besty = y
           best_info = new_info
