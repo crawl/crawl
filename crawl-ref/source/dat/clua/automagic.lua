@@ -13,7 +13,11 @@
 local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
-AUTOMAGIC_SPELL_SLOT = "a"
+if not AUTOMAGIC_SPELL_SLOT then
+  initial_slot = true
+  AUTOMAGIC_SPELL_SLOT = "a"
+end
+
 AUTOMAGIC_STOP = 0
 AUTOMAGIC_FIGHT = false
 
@@ -175,6 +179,13 @@ local function set_fight_behavior(key, value, mode)
   AUTOMAGIC_FIGHT = string.lower(value) ~= "false"
 end
 
+local function set_automagic_spell_slot(key, value, mode)
+  -- need to check for this to make sure we don't overwrite the saved slot
+  if initial_slot then
+    AUTOMAGIC_SPELL_SLOT = value
+  end
+end
+
 local function getkey()
   local key
   while true do
@@ -232,7 +243,7 @@ end
 
 -- Set this as a macro to change which spell is cast, in game!
 function am_set_spell()
-  crawl.mpr("Which spell slot to assign automagic? (Enter to disable, Esc to cancel)", "prompt")
+  crawl.mpr("Which spell slot to assign to automagic? (Enter to disable, Esc to cancel)", "prompt")
   local slot = getkey()
   crawl.mesclr()
 
@@ -266,5 +277,17 @@ function am_set_spell()
   end
 end
 
+local function spell_slot_save()
+  local res = ""
+  if AUTOMAGIC_SPELL_SLOT then
+    res = res .. "AUTOMAGIC_SPELL_SLOT = " .. "'" .. AUTOMAGIC_SPELL_SLOT
+              .. "'\n"
+  end
+  return res
+end
+
+table.insert(chk_lua_save, spell_slot_save)
+
 chk_lua_option.automagic_stop = set_stop_level
 chk_lua_option.automagic_fight = set_fight_behavior
+chk_lua_option.automagic_slot = set_automagic_spell_slot
