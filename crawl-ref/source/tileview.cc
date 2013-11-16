@@ -428,6 +428,8 @@ void tile_init_flavour(const coord_def &gc)
             floor_base = tile_dngn_coloured(floor_base, colour);
         env.tile_flv(gc).floor = _pick_random_dngn_tile(floor_base);
     }
+    else
+        env.tile_flv(gc).floor = _pick_random_dngn_tile(env.tile_flv(gc).floor);
 
     if (!env.tile_flv(gc).wall)
     {
@@ -450,6 +452,8 @@ void tile_init_flavour(const coord_def &gc)
             env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
         }
     }
+    else
+        env.tile_flv(gc).wall = _pick_random_dngn_tile(env.tile_flv(gc).wall);
 
     if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
     {
