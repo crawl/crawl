@@ -1687,13 +1687,14 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    if (!enough_hp(abil.hp_cost.cost(you.hp_max), false))
+    const int hpcost = abil.hp_cost.cost(you.hp_max);
+    if (hpcost > 0 && !enough_hp(hpcost, false))
     {
         crawl_state.zero_turns_taken();
         return false;
     }
 
-    int zpcost = _zp_cost(abil);
+    const int zpcost = _zp_cost(abil);
     if (zpcost)
     {
         if (!enough_zp(zpcost, false))
