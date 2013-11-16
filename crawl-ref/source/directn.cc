@@ -3165,6 +3165,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_DEPTHS:
         return "staircase back to the Dungeon";
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_SNAKE_PIT:
@@ -3182,7 +3183,6 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_RETURN_FROM_TOMB:
         return "staircase out of the Tomb";
     case DNGN_RETURN_FROM_ZOT:
-    case DNGN_RETURN_FROM_DEPTHS:
         return "gate leading back out of this place";
 
     // altars

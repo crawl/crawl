@@ -99,9 +99,8 @@ bool feat_is_staircase(dungeon_feature_type feat)
     if (feat_is_stone_stair(feat))
         return true;
 
-    // All branch entries/exits are staircases, except for the Depths and Zot.
+    // All branch entries/exits are staircases, except for Zot.
     if (feat == DNGN_ENTER_DEPTHS
-        || feat == DNGN_RETURN_FROM_DEPTHS
         || feat == DNGN_ENTER_ZOT
         || feat == DNGN_RETURN_FROM_ZOT)
     {
@@ -232,7 +231,6 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
     case DNGN_ENTER_DEPTHS:
-    case DNGN_RETURN_FROM_DEPTHS:
         return true;
     default:
         return false;
