@@ -478,7 +478,7 @@ void tome_of_power(int slot)
 
     mpr("You find yourself reciting the magical words!");
     practise(EX_WILL_READ_TOME);
-    count_action(CACT_EVOKE, EVOC_MISC);
+    count_action(CACT_EVOKE, EVOC_TOME);
 
     if (x_chance_in_y(7, 50))
     {
@@ -1603,7 +1603,7 @@ bool evoke_item(int slot)
         if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
         {
             if (!unevokable)
-                count_action(CACT_EVOKE, EVOC_MISC);
+                count_action(CACT_EVOKE, item.special);
             return did_work;
         }
     }
@@ -1681,7 +1681,7 @@ bool evoke_item(int slot)
             make_hungry(50, false, true);
             pract = 1;
             did_work = true;
-            count_action(CACT_EVOKE, EVOC_MISC);
+            count_action(CACT_EVOKE, OBJ_STAVES << 16 | STAFF_ENERGY);
         }
         break;
 
@@ -1794,7 +1794,7 @@ bool evoke_item(int slot)
             break;
         }
         if (did_work && !unevokable)
-            count_action(CACT_EVOKE, EVOC_MISC);
+            count_action(CACT_EVOKE, OBJ_MISCELLANY << 16 | item.sub_type);
         break;
 
     default:

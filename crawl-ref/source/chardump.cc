@@ -1203,6 +1203,18 @@ static string _describe_action_subtype(caction_type type, int subtype)
     case CACT_ABIL:
         return ability_name((ability_type)subtype);
     case CACT_EVOKE:
+        if (subtype >= UNRAND_START && subtype <= UNRAND_LAST)
+            return get_unrand_entry(subtype)->name;
+
+        if (subtype >= 1 << 16)
+        {
+            item_def dummy;
+            dummy.base_type = (object_class_type)(subtype >> 16);
+            dummy.sub_type  = subtype & 0xffff;
+            dummy.quantity  = 1;
+            return dummy.name(DESC_PLAIN, true);
+        }
+
         switch ((evoc_type)subtype)
         {
         case EVOC_WAND:
@@ -1211,8 +1223,12 @@ static string _describe_action_subtype(caction_type type, int subtype)
             return "Rod";
         case EVOC_DECK:
             return "Deck";
+#if TAG_MAJOR_VERSION == 34
         case EVOC_MISC:
             return "Miscellaneous";
+#endif
+        case EVOC_TOME:
+            return "tome";
         default:
             return "Error";
         }

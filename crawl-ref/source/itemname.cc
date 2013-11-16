@@ -915,7 +915,7 @@ static const char* deck_rarity_name(deck_rarity_type rarity)
     }
 }
 
-static const char* misc_type_name(int type, bool known)
+const char* misc_type_name(int type, bool known)
 {
     if (!known)
     {
