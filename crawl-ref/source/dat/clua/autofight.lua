@@ -303,7 +303,8 @@ function hit_adjacent()
   elseif AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
     mag_attack(false)
   else
-  attack(false)
+    attack(false)
+  end
 end
 
 function toggle_autothrow()
