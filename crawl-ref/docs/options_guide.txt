@@ -1260,8 +1260,12 @@ autofight_caught = false
 
 automagic_enable = false
 	If true, the autofight function will resort to casting an assigned
-	spell at a target. Default spell slot is a. Can be toggled in game
-	by assigning am_set_spell to a macro.
+	spell at a target. Initial spell slot is a.
+
+automagic_slot = a
+        Setting this changes the initial spell slot for automagic. Can be
+        changed for games in progress in-game by setting a macro to call
+        ===am_set_spell.
 
 automagic_fight = false
 	Setting this to true causes melee combat when trying to cast a spell
