@@ -1600,12 +1600,14 @@ bool evoke_item(int slot)
     {
         ASSERT(item_is_equipped(item));
 
-        if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
-        {
-            if (!unevokable)
-                count_action(CACT_EVOKE, item.special);
+        bool qret = entry->evoke_func(&item, &pract, &did_work, &unevokable);
+
+        if (!unevokable)
+            count_action(CACT_EVOKE, item.special);
+
+        // what even _is_ this return value?
+        if (qret)
             return did_work;
-        }
     }
     else switch (item.base_type)
     {
