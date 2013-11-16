@@ -99,6 +99,7 @@ enum band_type
     BAND_PHANTASMAL_WARRIORS,
     BAND_WATER_ELEMENTALS,
     BAND_THRASHING_HORRORS,
+    BAND_RAIJU,
     NUM_BANDS                   // always last
 };
 

@@ -2775,6 +2775,7 @@ enum monster_type                      // menv[].type
     MONS_FORMICID,
     MONS_FORMICID_DRONE,
     MONS_FORMICID_VENOM_MAGE,
+    MONS_RAIJU,
 
 #if TAG_MAJOR_VERSION == 34
     MONS_DRAGON,                // genus
@@ -3655,6 +3656,7 @@ enum spell_type
 #if TAG_MAJOR_VERSION == 34
     SPELL_SHAFT_SELF,
 #endif
+    SPELL_BLINKBOLT,
     NUM_SPELLS
 };
 

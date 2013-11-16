@@ -164,6 +164,21 @@ struct spell_desc
 },
 
 {
+    SPELL_BLINKBOLT, "Blinkbolt",
+     SPTYP_AIR | SPTYP_TRANSLOCATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     5,
+     200,
+     5, 12,
+     0,
+     NULL,
+     true,
+     false
+},
+
+
+
+{
     SPELL_BOLT_OF_MAGMA, "Bolt of Magma",
      SPTYP_CONJURATION | SPTYP_FIRE | SPTYP_EARTH,
      SPFLAG_DIR_OR_TARGET,

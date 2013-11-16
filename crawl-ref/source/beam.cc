@@ -2556,6 +2556,12 @@ void bolt::affect_endpoint()
         _create_feat_splash(pos(), 2, random_range(3, 12, 2));
     }
 
+    if (origin_spell = SPELL_BLINKBOLT)
+    {
+        agent()->blink_to(pos(), false);
+        return;
+    }
+
     // FIXME: why don't these just have is_explosion set?
     // They don't explode in tracers: why not?
     if  (name == "orb of electricity"
