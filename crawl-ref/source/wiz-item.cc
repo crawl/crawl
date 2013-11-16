@@ -338,7 +338,7 @@ static int8_t _prop_type[] =
 #if TAG_MAJOR_VERSION == 34
     ARTP_VAL_BOOL, //FOG
 #endif
-    ARTP_VAL_BOOL, //REGEN
+    ARTP_VAL_ANY,  //REGENERATION
     ARTP_VAL_BOOL, //NO_UPGRADE
 };
 
