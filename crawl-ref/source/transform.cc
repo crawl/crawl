@@ -1183,7 +1183,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     if (you.hp <= 0)
     {
         ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
-             make_stringf("gaining the %s transforation", form_names[which_trans]).c_str());
+             make_stringf("gaining the %s transformation", form_names[which_trans]).c_str());
     }
 
 
