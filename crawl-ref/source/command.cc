@@ -2655,7 +2655,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>t</w>      tweak object properties\n"
                        "<w>v</w>      show gold value of an item\n"
                        "<w>-</w>      get a god gift\n"
-                       "<w>|</w>      create all predefined artefacts\n"
+                       "<w>|</w>      create all unrand artefacts\n"
                        "<w>+</w>      make randart from item\n"
                        "<w>'</w>      list items\n"
                        "<w>J</w>      Jiyva off-level sacrifice\n"
