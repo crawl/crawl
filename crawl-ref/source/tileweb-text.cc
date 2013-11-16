@@ -77,7 +77,10 @@ void WebTextArea::clear()
 
 void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
 {
-    ASSERT((x < mx) && (y < my) && (x >= 0) && (y >= 0));
+    ASSERT(x < mx);
+    ASSERT(y < my);
+    ASSERT(x >= 0);
+    ASSERT(y >= 0);
     uint8_t col = (fg & 0xf) + (bg << 4);
 
     if ((m_cbuf[x + y * mx] != chr) || (m_abuf[x + y * mx] != col))

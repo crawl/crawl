@@ -1772,7 +1772,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         _fish(it, quant_got);
 
     int freeslot = find_free_slot(it);
-    ASSERT(freeslot >= 0 && freeslot < ENDOFPACK);
+    ASSERT(freeslot >= 0);
+    ASSERT(freeslot < ENDOFPACK);
     ASSERT(!you.inv[freeslot].defined());
 
     coord_def p = it.pos;

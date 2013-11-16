@@ -2629,7 +2629,8 @@ static void _handle_enchant_weapon(int acc, int dam, const char *colour)
 
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 {
-    ASSERT(arm.defined() && arm.base_type == OBJ_ARMOUR);
+    ASSERT(arm.defined());
+    ASSERT(arm.base_type == OBJ_ARMOUR);
 
     ac_change = 0;
 

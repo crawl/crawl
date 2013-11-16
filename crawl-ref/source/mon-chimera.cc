@@ -269,8 +269,10 @@ string monster_info::chimera_part_names() const
 
     monster_type chimtype2 = static_cast<monster_type>(props["chimera_part_2"].get_int());
     monster_type chimtype3 = static_cast<monster_type>(props["chimera_part_3"].get_int());
-    ASSERT(chimtype2 > MONS_PROGRAM_BUG && chimtype2 < NUM_MONSTERS);
-    ASSERT(chimtype3 > MONS_PROGRAM_BUG && chimtype3 < NUM_MONSTERS);
+    ASSERT(chimtype2 > MONS_PROGRAM_BUG);
+    ASSERT(chimtype2 < NUM_MONSTERS);
+    ASSERT(chimtype3 > MONS_PROGRAM_BUG);
+    ASSERT(chimtype3 < NUM_MONSTERS);
 
     ostringstream s;
     s << ", " << get_monster_data(chimtype2)->name

@@ -804,7 +804,8 @@ namespace arena
                 {
                     const int ch = getchm();
                     handle_keypress(ch);
-                    ASSERT(crawl_state.game_is_arena() && !crawl_state.arena_suspended);
+                    ASSERT(crawl_state.game_is_arena());
+                    ASSERT(!crawl_state.arena_suspended);
                     if (contest_cancelled)
                         return;
                 }
