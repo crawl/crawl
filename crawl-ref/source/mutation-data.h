@@ -1560,7 +1560,7 @@
    ""},
 
   {"Your exoskeleton hardens.",
-   "Your exoskeleton hardens into an exoskeleton.",
+   "Your exoskeleton becomes even harder.",
    ""},
 
   {"Your exoskeleton softens.",
