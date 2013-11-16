@@ -556,7 +556,8 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
                   const opacity_func& opc, const circle_def& bds,
                   bool cycle)
 {
-    ASSERT(target.x >= 0 && target.y >= 0);
+    ASSERT(target.x >= 0);
+    ASSERT(target.y >= 0);
     ASSERT(!target.origin());
     if (!bds.contains(target))
         return false;
@@ -717,7 +718,8 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     int     count    = 0;
     int     max_dist = grid_distance(source, target);
 
-    ASSERT(map_bounds(source) && map_bounds(target));
+    ASSERT(map_bounds(source));
+    ASSERT(map_bounds(target));
 
     if (source == target)
         return 0; // XXX: might want to count the cell.

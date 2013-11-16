@@ -54,7 +54,8 @@ void random_var::init()
     for (int v = start; v < end; ++v)
         total += weight(v);
     ASSERT(total > 0);
-    ASSERT(weight(start) > 0 && weight(end - 1) > 0);
+    ASSERT(weight(start) > 0);
+    ASSERT(weight(end - 1) > 0);
 }
 
 int random_var::roll2val(int r) const

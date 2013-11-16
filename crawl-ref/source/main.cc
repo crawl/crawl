@@ -1569,7 +1569,8 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
 
 static void _take_stairs(bool down)
 {
-    ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
+    ASSERT(!crawl_state.game_is_arena());
+    ASSERT(!crawl_state.arena_suspended);
 
     const dungeon_feature_type ygrd = grd(you.pos());
 
@@ -3762,7 +3763,8 @@ static bool _untrap_target(const coord_def move, bool check_confused)
 // direction for the door to be opened (eg if you type ctrl + dir).
 static void _open_door(coord_def move, bool check_confused)
 {
-    ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
+    ASSERT(!crawl_state.game_is_arena());
+    ASSERT(!crawl_state.arena_suspended);
 
     if (you.attribute[ATTR_HELD])
     {

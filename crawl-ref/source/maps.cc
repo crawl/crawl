@@ -346,7 +346,8 @@ static void _fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
     const int Y_1(Y_BOUND_1 + margin);
     const int Y_2(Y_BOUND_2 - margin);
 
-    ASSERT(size.x <= (X_2 - X_1 + 1) && size.y <= (Y_2 - Y_1 + 1));
+    ASSERT(size.x <= (X_2 - X_1 + 1));
+    ASSERT(size.y <= (Y_2 - Y_1 + 1));
 
     if (pos.x < X_1)
         pos.x = X_1;

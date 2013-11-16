@@ -361,7 +361,7 @@ void handle_behaviour(monster* mon)
     }
 
     // Make sure monsters are not targetting the player in arena mode.
-    ASSERT(!(crawl_state.game_is_arena() && mon->foe == MHITYOU));
+    ASSERT(!crawl_state.game_is_arena() || mon->foe != MHITYOU);
 
     if (mons_wall_shielded(mon) && cell_is_solid(mon->pos()))
     {

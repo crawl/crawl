@@ -2128,7 +2128,8 @@ bool make_book_theme_randart(item_def &book,
 
     ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
     ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
-    ASSERT(count_bits(disc1) == 1 && count_bits(disc2) == 1);
+    ASSERT(count_bits(disc1) == 1);
+    ASSERT(count_bits(disc2) == 1);
 
     int disc1_pos = 0, disc2_pos = 0;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)

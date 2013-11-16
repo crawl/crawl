@@ -413,7 +413,8 @@ static geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)
         e = coord_def(1, 0);
     else
         e = coord_def(0, 1);
-    ASSERT(!rg(coord_def(0,0)) && rg(side));
+    ASSERT(!rg(coord_def(0,0)));
+    ASSERT(rg(side));
     // Reflect back by an orthogonal wall...
     coord_def wall = e;
     // unless the wall is clearly diagonal:
