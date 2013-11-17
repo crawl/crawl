@@ -1,3 +1,12 @@
+Stone Soup 0.13.1 (unreleased, up to 0.13.0-58-ga7b73c1)
+----------------------------
+* Several crash fixes.
+* Several message improvements.
+* Spectral weapon and battlespheres don't get confused by stairs.
+* Wind blasts can no longer push monsters through walls.
+* Shadow creatures band members don't count towards the summon cap.
+* Awakened trees and flaying ghosts respect sanctuary.
+
 Stone Soup 0.13 (20131011)
 --------------------------
 
