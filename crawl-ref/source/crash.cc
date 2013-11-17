@@ -368,6 +368,9 @@ void write_stack_trace(FILE* file, int ignore_count)
 void call_gdb(FILE *file)
 {
 #ifndef TARGET_OS_WINDOWS
+    if (Options.no_gdb)
+        return (void)fprintf(file, "%s\n", Options.no_gdb);
+
     fprintf(file, "Trying to run gdb.\n");
     fflush(file); // so we can use fileno()
 

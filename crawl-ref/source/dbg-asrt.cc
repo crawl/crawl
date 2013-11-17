@@ -625,8 +625,7 @@ void do_crash_dump()
 
         dump_crash_info(stderr);
         write_stack_trace(stderr, 0);
-        if (Options.want_gdb)
-            call_gdb(stderr);
+        call_gdb(stderr);
 
         return;
     }
@@ -683,11 +682,8 @@ void do_crash_dump()
     write_stack_trace(file, 0);
     fprintf(file, "\n");
 
-    if (Options.want_gdb)
-    {
-        call_gdb(file);
-        fprintf(file, "\n");
-    }
+    call_gdb(file);
+    fprintf(file, "\n");
 
     // Next information on how the binary was compiled
     _dump_compilation_info(file);
