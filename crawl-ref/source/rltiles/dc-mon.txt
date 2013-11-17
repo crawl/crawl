@@ -50,6 +50,7 @@ jackal MONS_JACKAL
 hound MONS_HOUND
 warg MONS_WARG
 wolf MONS_WOLF
+raiju MONS_RAIJU
 %rim 0
 spirit_wolf MONS_SPIRIT_WOLF
 %rim 1
