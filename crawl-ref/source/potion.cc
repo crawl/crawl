@@ -231,7 +231,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         {
             mprf("You feel %s nauseous.",
                  (pot_eff == POT_POISON) ? "slightly" : "quite");
-            maybe_id_resist(BEAM_POISON);
         }
         else
         {
@@ -256,6 +255,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
             poison_player(amount, "", msg);
             xom_is_stimulated(100 / xom_factor);
         }
+        maybe_id_resist(BEAM_POISON);
         break;
 
     case POT_SLOWING:

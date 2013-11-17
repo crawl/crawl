@@ -381,7 +381,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }                           // end switch
 
-    if (doEffects && hurted != original)
+    if (doEffects)
         maybe_id_resist(flavour);
 
     return hurted;
