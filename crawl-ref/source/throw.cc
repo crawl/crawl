@@ -574,11 +574,8 @@ static bool _elemental_missile_beam(int launcher_brand, int ammo_brand)
 
 static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
 {
-    if (victim->is_player() && victim->res_poison() > 0)
-    {
+    if (victim->is_player())
         maybe_id_resist(BEAM_POISON);
-        return false;
-    }
 
     if (!victim->alive() || victim->res_poison() > 0)
         return false;

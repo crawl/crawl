@@ -5120,8 +5120,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_poison() > 0)
-        maybe_id_resist(BEAM_POISON);
+    maybe_id_resist(BEAM_POISON);
 
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
