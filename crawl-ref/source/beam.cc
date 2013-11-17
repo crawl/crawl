@@ -2558,7 +2558,8 @@ void bolt::affect_endpoint()
 
     if (origin_spell == SPELL_BLINKBOLT)
     {
-        agent()->blink_to(pos(), false);
+        if (agent()->alive())
+            agent()->blink_to(pos(), false);
         return;
     }
 
