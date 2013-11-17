@@ -264,7 +264,11 @@ NAME: grunt_mini_vestibule
 TAGS: nolayout_encompass no_monster_gen
 : hell_entry(_G, 'O')
 KMONS: O = hell beast
-MONS: place:Coc:1 band, place:Dis:1 band, place:Geh:1 band, place:Tar:1 band
+MONS: blue devil / simulacrum w:20 / freezing wraith / ice devil
+MONS: iron devil w:20 / iron troll
+MONS: red devil w:20 / hell hound / flaming corpse / sun demon
+MONS: skeleton / zombie / skeletal warrior band / flying skull band / \
+      ancient champion band w:5 / soul eater
 MAP
   .....@.....
  ..ccnc+cncc..
