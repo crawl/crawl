@@ -111,6 +111,11 @@ Blink spell
 
 This spell randomly translocates the caster a short distance.
 %%%%
+Blinkbolt spell
+
+This spell transforms its caster into a lightning bolt. The caster is
+translocated to the bolt's destination.
+%%%%
 Bolt of Cold spell
 
 This spell hurls a great bolt of ice and frost.
