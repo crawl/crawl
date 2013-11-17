@@ -162,7 +162,7 @@ function pan_demonic_rune(e, glyph, place_lord)
     end
 end
 
-function pan_entry(e, glyph)
+function pan_entry(e, glyph, noboss)
     e.tags("extra luniq_enter_pan chance_enter_pan")
     e.depth("Depths, D:21-")
     e.depth_chance("Depths:3", 10000)
@@ -172,6 +172,11 @@ function pan_entry(e, glyph)
         e.kfeat(glyph .. " = enter_pandemonium no_mimic")
     else
         e.kfeat(glyph .. " = enter_pandemonium")
+    end
+    if not noboss then
+        e.kmons(glyph .. " = green death / blizzard demon / balrug / "
+                      .. "   cacodemon / hell beast / hellion / reaper / "
+                      .. "   lorocyproca / tormentor / shadow demon")
     end
 end
 
@@ -189,7 +194,7 @@ default-depth: Depths
 NAME: pan_entry
 TAGS: allow_dup can_overwrite replace_portal transparent fallback_enter_pan
 WEIGHT: 50
-: pan_entry(_G, 'O')
+: pan_entry(_G, 'O', true)
 MAP
 O
 ENDMAP
@@ -198,7 +203,6 @@ ENDMAP
 NAME:   rand_demon_pan_entry_1
 TAGS:   patrolling no_monster_gen transparent nolayout_encompass
 MONS:   common demon
-KMONS:  O = any demon
 : pan_entry(_G, 'O')
 MAP
 xxxxxxxx@@x
@@ -216,7 +220,6 @@ ENDMAP
 NAME:   rand_demon_pan_entry_3
 TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
 MONS:   common demon
-KMONS:  O = any demon
 : pan_entry(_G, 'O')
 MAP
 ............
@@ -236,7 +239,6 @@ ENDMAP
 NAME:   rand_demon_pan_entry_4
 TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
 MONS:   common demon
-KMONS:  O = any demon
 : pan_entry(_G, 'O')
 MAP
 ...........
@@ -255,7 +257,6 @@ ENDMAP
 NAME:   rand_demon_pan_entry_5
 TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
 MONS:   common demon
-KMONS:  O = any demon
 : pan_entry(_G, 'O')
 MAP
 ............
@@ -275,7 +276,6 @@ ENDMAP
 NAME:   rand_demon_pan_entry_7
 TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
 MONS:   common demon
-KMONS:  O = any demon
 NSUBST: ? = 1:O / 4:1 / *:.
 : pan_entry(_G, 'O')
 MAP
@@ -316,7 +316,6 @@ ENDMAP
 NAME:   rand_demon_pan_entry_9
 TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
 MONS:   common demon
-KMONS:  O = any demon
 NSUBST: ^ = 4:1 / *:.
 : pan_entry(_G, 'O')
 MAP
