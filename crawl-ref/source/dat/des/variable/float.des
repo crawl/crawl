@@ -5136,7 +5136,7 @@ ORIENT: float
 # Random interlopers look badly out of place here.
 TAGS: no_monster_gen no_item_gen
 DEPTH: Dis, !D:$, Depths, !Depths:$
-: if you.branch() == "D" then
+: if you.branch() == "Depths" then
 # A more worthy adversary badly wanted.
 # What about an obvious up-HD rename of hell knight? *duck*
 MONS: fire giant
