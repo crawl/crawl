@@ -852,7 +852,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   89, DOWN, MONS_SIXFIRHY },
   {  1,  5,  129, DOWN, MONS_ORANGE_DEMON },
   {  1,  5,  386, FLAT, MONS_NEQOXEC },
-  {  1,  5,  514, FLAT, MONS_SMOKE_DEMON },
+  {  1,  5,  425, FLAT, MONS_SMOKE_DEMON },
   {  1,  5,  514, FLAT, MONS_YNOXINUL },
   {  1,  5,  192, FLAT, MONS_CHAOS_SPAWN },
   {  1,  5,   22, FLAT, MONS_ICE_DEVIL },
