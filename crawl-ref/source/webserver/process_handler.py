@@ -292,13 +292,18 @@ class CrawlProcessHandlerBase(object):
     def _base_call(self):
         game = self.game_params
 
-        call = [game["crawl_binary"],
-                "-name",   self.username,
-                "-rc",     os.path.join(self.config_path("rcfile_path"),
-                                        self.username + ".rc"),
-                "-macro",  os.path.join(self.config_path("macro_path"),
-                                        self.username + ".macro"),
-                "-morgue", self.config_path("morgue_path")]
+
+        call  = [game["crawl_binary"]]
+
+        if "pre_options" in game:
+            call += game["pre_options"]
+
+        call += ["-name",   self.username,
+                 "-rc",     os.path.join(self.config_path("rcfile_path"),
+                                         self.username + ".rc"),
+                 "-macro",  os.path.join(self.config_path("macro_path"),
+                                         self.username + ".macro"),
+                 "-morgue", self.config_path("morgue_path")]
 
         if "options" in game:
             call += game["options"]
