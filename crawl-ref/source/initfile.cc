@@ -964,11 +964,11 @@ void game_options::reset_options()
     no_save              = false;
 #endif
 #ifdef TARGET_OS_WINDOWS
-    want_gdb             = false;
+    no_gdb               = "Non-UNIX Platform -> not running gdb.";
 #elif defined DEBUG_DIAGNOSTICS
-    want_gdb             = false;
+    no_gdb               = "Debug build -> run gdb yourself.";
 #else
-    want_gdb             = !access("/usr/bin/gdb", 1);
+    no_gdb               = access("/usr/bin/gdb", 1) ? "GDB not installed." : 0;
 #endif
 
 #ifdef USE_TILE
@@ -4343,12 +4343,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_GDB:
-            Options.want_gdb = true;
+            Options.no_gdb = 0;
             break;
 
         case CLO_NO_GDB:
         case CLO_NOGDB:
-            Options.want_gdb = false;
+            Options.no_gdb = "GDB disabled via the command line.";
             break;
 
         case CLO_MACRO:
