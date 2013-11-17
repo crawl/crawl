@@ -142,7 +142,7 @@ static inline bool _shoals_tide_passable_feat(dungeon_feature_type feat)
            // getting through a doorway is this probability * 0.5 --
            // see _shoals_apply_tide.
            || feat == DNGN_OPEN_DOOR
-           || feat == DNGN_CLOSED_DOOR && one_chance_in(3);
+           || feat_is_closed_door(feat) && one_chance_in(3);
 }
 
 static void _shoals_init_heights()
