@@ -2531,11 +2531,6 @@ static string _status_mut_abilities(int sw)
     text += "<w>A:</w> ";
 
     int AC_change  = 0;
-    int EV_change  = 0;
-    int SH_change  = 0;
-    int Str_change = 0;
-    int Int_change = 0;
-    int Dex_change = 0;
 
     vector<string> mutations;
 
@@ -2723,133 +2718,14 @@ static string _status_mut_abilities(int sw)
 
         current = "";
 
-        if (mdef.short_desc)
+        current += mdef.short_desc;
+
+        if (mdef.levels > 1)
         {
-            current += mdef.short_desc;
+            ostringstream ostr;
+            ostr << ' ' << level;
 
-            if (mdef.levels > 1)
-            {
-                ostringstream ostr;
-                ostr << ' ' << level;
-
-                current += ostr.str();
-            }
-        }
-        else if (level)
-        {
-            switch (i)
-            {
-            case MUT_TOUGH_SKIN:
-                AC_change += level;
-                break;
-            case MUT_SHAGGY_FUR:
-                AC_change += level;
-                break;
-            case MUT_STRONG:
-                Str_change += level * 2;
-                break;
-            case MUT_CLEVER:
-                Int_change += level * 2;
-                break;
-            case MUT_AGILE:
-                Dex_change += level * 2;
-                break;
-            case MUT_WEAK:
-                Str_change -= level * 2;
-                break;
-            case MUT_DOPEY:
-                Int_change -= level * 2;
-                break;
-            case MUT_CLUMSY:
-                Dex_change -= level * 2;
-                break;
-#if TAG_MAJOR_VERSION == 34
-            case MUT_STRONG_STIFF:
-                Str_change += level;
-                Dex_change -= level;
-                break;
-            case MUT_FLEXIBLE_WEAK:
-                Str_change -= level;
-                Dex_change += level;
-                break;
-#endif
-            case MUT_FRAIL:
-                snprintf(info, INFO_SIZE, "-%d%% hp", level*10);
-                current = info;
-                break;
-            case MUT_ROBUST:
-                snprintf(info, INFO_SIZE, "+%d%% hp", level*10);
-                current = info;
-                break;
-            case MUT_LOW_MAGIC:
-                snprintf(info, INFO_SIZE, "-%d%% mp", level*10);
-                current = info;
-                break;
-            case MUT_HIGH_MAGIC:
-                snprintf(info, INFO_SIZE, "+%d%% mp", level*10);
-                current = info;
-                break;
-            case MUT_ICEMAIL:
-                AC_change += player_icemail_armour_class();
-                break;
-            case MUT_EYEBALLS:
-                 snprintf(info, INFO_SIZE, "+%d accuracy", level*2+1);
-                 current = info;
-                 break;
-            case MUT_EXOSKELETON:
-                snprintf(info, INFO_SIZE, "+%d hp", 5 * level * level);
-                AC_change += level;
-                current = info;
-                break;
-
-            // scales -> calculate sum of AC bonus
-            case MUT_DISTORTION_FIELD:
-                EV_change += level + 1;
-                if (level == 3)
-                    current = "repel missiles";
-                break;
-            case MUT_ICY_BLUE_SCALES:
-                AC_change += level + (level > 1 ? 1 : 0);
-                EV_change -= level > 1 ? 1 : 0;
-                break;
-            case MUT_IRIDESCENT_SCALES:
-                AC_change += 2*level+2;
-                break;
-            case MUT_LARGE_BONE_PLATES:
-                AC_change += level + 1;
-                SH_change += level * 2;
-                break;
-            case MUT_MOLTEN_SCALES:
-                AC_change += level + (level > 1 ? 1 : 0);
-                EV_change -= level > 1 ? 1 : 0;
-                break;
-            case MUT_ROUGH_BLACK_SCALES:
-                AC_change  += 3*level+1;
-                Dex_change -= level;
-                break;
-            case MUT_RUGGED_BROWN_SCALES:
-                AC_change += level;
-                break;
-            case MUT_SLIMY_GREEN_SCALES:
-                AC_change += level + 1;
-                break;
-            case MUT_THIN_METALLIC_SCALES:
-                AC_change += level + 1;
-                break;
-            case MUT_THIN_SKELETAL_STRUCTURE:
-                Dex_change += 2 * level;
-                Str_change -= (level - 1);
-                break;
-            case MUT_YELLOW_SCALES:
-                AC_change += level + 1;
-                break;
-            case MUT_GELATINOUS_BODY:
-                AC_change += (level == 3) ? 2 : 1;
-                EV_change += level - 1;
-                break;
-            default:
-                die("mutation without a short desc: %d", i);
-            }
+            current += ostr.str();
         }
 
         if (!current.empty())
@@ -2867,31 +2743,6 @@ static string _status_mut_abilities(int sw)
     if (AC_change && you.form != TRAN_STATUE)
     {
         snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
-        mutations.push_back(info);
-    }
-    if (EV_change)
-    {
-        snprintf(info, INFO_SIZE, "EV %s%d", (EV_change > 0 ? "+" : ""), EV_change);
-        mutations.push_back(info);
-    }
-    if (SH_change)
-    {
-        snprintf(info, INFO_SIZE, "SH %s%d", (SH_change > 0 ? "+" : ""), SH_change);
-        mutations.push_back(info);
-    }
-    if (Str_change)
-    {
-        snprintf(info, INFO_SIZE, "Str %s%d", (Str_change > 0 ? "+" : ""), Str_change);
-        mutations.push_back(info);
-    }
-    if (Int_change)
-    {
-        snprintf(info, INFO_SIZE, "Int %s%d", (Int_change > 0 ? "+" : ""), Int_change);
-        mutations.push_back(info);
-    }
-    if (Dex_change)
-    {
-        snprintf(info, INFO_SIZE, "Dex %s%d", (Dex_change > 0 ? "+" : ""), Dex_change);
         mutations.push_back(info);
     }
 
