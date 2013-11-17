@@ -2162,7 +2162,7 @@ A dirty rodent that has grown large and aggressive in the dungeon environment.
 %%%%
 raiju
 
-An eldritch hound, crackling with electric and transolcation energies.
+An eldritch hound, crackling with electric and translocation energies.
 %%%%
 raven
 
