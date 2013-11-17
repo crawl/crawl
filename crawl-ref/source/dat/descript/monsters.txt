@@ -2160,6 +2160,10 @@ rat
 
 A dirty rodent that has grown large and aggressive in the dungeon environment.
 %%%%
+raiju
+
+An eldritch hound, crackling with electric and transolcation energies.
+%%%%
 raven
 
 An opportunistic scavenger bird that is quite proactive in the production of
