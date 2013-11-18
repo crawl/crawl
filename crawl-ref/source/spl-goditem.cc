@@ -829,14 +829,11 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
             // Make sure we have a legitimate tile.
             proceed = false;
-            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+            if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
             {
-                if (cell_is_solid(*ai) && !feat_is_opaque(grd(*ai)))
-                {
-                    success = false;
-                    none_vis = false;
-                    break;
-                }
+                success = false;
+                none_vis = false;
+                break;
             }
         }
 
