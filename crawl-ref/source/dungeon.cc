@@ -3656,6 +3656,9 @@ static int _place_uniques()
 
 static void _place_aquatic_monsters()
 {
+    COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
+    COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);
+
     // [ds] Shoals relies on normal monster generation to place its monsters.
     // Given the amount of water area in the Shoals, placing water creatures
     // explicitly explodes the Shoals' xp budget.
