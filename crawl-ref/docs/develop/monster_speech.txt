@@ -492,7 +492,6 @@ The following variables are hardcoded:
                   or "Orc" instead of "Hill Orc".
 @player_genus_plural@ : pluralised genus form.
 @player_god@    : Player's god name, or "you" if non-religious.
-@Player_god@    : Player's god name, or "You" if non-religious.
 @god_is@        : replaced with "<god name> is" or "you are", if
                   non-religious.
 @God@           : Monster's god name, or "a god" if nameless. [1]
@@ -514,7 +513,7 @@ The following variables are hardcoded:
 @says@          : synonym of "say" that fits monsters' (hardcoded)
                   speech pattern and noise level.
 
-Capitalized forms (@Monster@, @A_something@, @Possessive@, @Pronoun@)
+Capitalized forms (@Monster@, @A_something@, @Possessive@, @My_God@)
 are expanded with capitalized text.
 
 [1] Note that plural body parts such as @hands@, @arms@, and @feet@ may
