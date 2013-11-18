@@ -494,7 +494,7 @@ The following variables are hardcoded:
 @player_god@    : Player's god name, or "you" if non-religious.
 @god_is@        : replaced with "<god name> is" or "you are", if
                   non-religious.
-@God@           : Monster's god name, or "a god" if nameless. [1]
+@a_God@         : Monster's god name, or "a god" if nameless. [1]
 @my_God@        : Monster's god name, or "my God" if nameless. [1]
 @possessive_God@  : Monster's god name, or "its/his/her god" if nameless. [1]
 @surface@       : Whatever the monster is standing on.

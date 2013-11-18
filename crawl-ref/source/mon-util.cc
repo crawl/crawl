@@ -4174,17 +4174,21 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     // if it gets one, it should be used for the last two entries.
     if (mons->god == GOD_NO_GOD)
     {
-        msg = replace_all(msg, "@God@", "NO GOD");
+        msg = replace_all(msg, "@a_God@", "NO GOD");
+        msg = replace_all(msg, "@A_God@", "NO GOD");
         msg = replace_all(msg, "@possessive_God@", "NO GOD");
+        msg = replace_all(msg, "@Possessive_God@", "NO GOD");
 
         msg = replace_all(msg, "@my_God@", "NO GOD");
         msg = replace_all(msg, "@My_God@", "NO GOD");
     }
     else if (mons->god == GOD_NAMELESS)
     {
-        msg = replace_all(msg, "@God@", "a god");
+        msg = replace_all(msg, "@a_God@", "a god");
+        msg = replace_all(msg, "@A_God@", "A god");
         const string possessive = mons->pronoun(PRONOUN_POSSESSIVE) + " god";
-        msg = replace_all(msg, "@possessive_God@", possessive.c_str());
+        msg = replace_all(msg, "@possessive_God@", possessive);
+        msg = replace_all(msg, "@Possessive_God@", uppercase_first(possessive));
 
         msg = replace_all(msg, "@my_God@", "my God");
         msg = replace_all(msg, "@My_God@", "My God");
@@ -4192,11 +4196,14 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     else
     {
         const string godname = god_name(mons->god);
-        msg = replace_all(msg, "@God@", godname);
+        const string godcap = uppercase_first(godname);
+        msg = replace_all(msg, "@a_God@", godname);
+        msg = replace_all(msg, "@A_God@", godcap);
         msg = replace_all(msg, "@possessive_God@", godname);
+        msg = replace_all(msg, "@Possessive_God@", godcap);
 
         msg = replace_all(msg, "@my_God@", godname);
-        msg = replace_all(msg, "@My_God@", uppercase_first(godname).c_str());
+        msg = replace_all(msg, "@My_God@", godcap);
     }
 
     // Replace with species specific insults.
