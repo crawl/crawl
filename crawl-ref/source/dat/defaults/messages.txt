@@ -1,5 +1,7 @@
 ### Highlighting of various messages
 
+# See also "note_messages" in misc.txt
+
 msc := message_colour
 
 # Really important messages
