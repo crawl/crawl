@@ -3654,14 +3654,29 @@ static int _place_uniques()
     return num_placed;
 }
 
-static void _place_aquatic_monsters_weighted()
+static void _place_aquatic_monsters()
 {
+    // [ds] Shoals relies on normal monster generation to place its monsters.
+    // Given the amount of water area in the Shoals, placing water creatures
+    // explicitly explodes the Shoals' xp budget.
+    //
+    // Also disallow water creatures below D:6.
+    //
+    if (player_in_branch(BRANCH_SHOALS)
+        || player_in_branch(BRANCH_ABYSS)
+        || (player_in_branch(BRANCH_DUNGEON)
+            && env.absdepth0 < 5))
+    {
+        return;
+    }
+
     const pop_entry* pop = population_water[you.where_are_you].pop;
 
     int level = level_id::current().depth;
 
     vector<coord_def> water;
-    int water_count = 0;
+    vector<coord_def> lava;
+    int water_count = 0, lava_count = 0;
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
@@ -3674,113 +3689,64 @@ static void _place_aquatic_monsters_weighted()
             }
             ++water_count;
         }
+        else if (grd(*ri) == DNGN_LAVA)
+        {
+            if (!actor_at(*ri) && !(env.level_map_mask(*ri) & MMT_NO_MONS))
+                lava.push_back(*ri);
+            ++lava_count;
+        }
     }
 
-    if (water.size() > 49)
+    // XXX: This is written kind of clumsily, but oh well.
+    vector<coord_def> *places = &water;
+    int count = water_count;
+    bool did_lava = false;
+
+start_again:
+    if (places->size() > 49)
     {
-        int num = min(random2avg(9, 2) + (random2(water_count) / 10), 15);
-        shuffle_array(water);
+        int num = min(random2avg(9, 2) + (random2(count) / 10), 15);
+        shuffle_array(*places);
 
         for (int i = 0; i < num; i++)
         {
             monster_type mon = pick_monster_from(pop, level);
+            if (mon == MONS_0)
+                break;
 
             mgen_data mg;
             mg.behaviour = BEH_SLEEP;
             mg.flags    |= MG_PERMIT_BANDS | MG_FORCE_PLACE;
             mg.map_mask |= MMT_NO_MONS;
             mg.cls = mon;
-            mg.pos = water[i];
+            mg.pos = (*places)[i];
 
             // Amphibious creatures placed with water should hang around it
             if (mons_class_primary_habitat(mon) == HT_LAND)
                 mg.flags |= MG_PATROLLING;
 
+            if (player_in_hell() &&
+                mons_class_can_be_zombified(mg.cls))
+            {
+                static const monster_type lut[3] =
+                    { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
+
+                mg.base_type = mg.cls;
+                int s = mons_skeleton(mg.cls) ? 2 : 0;
+                mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
+            }
+
             place_monster(mg);
         }
     }
-}
 
-static int _place_monster_vector(vector<monster_type> montypes, int num_to_place)
-{
-    int result = 0;
-
-    mgen_data mg;
-    mg.behaviour = BEH_SLEEP;
-    mg.flags    |= MG_PERMIT_BANDS;
-    mg.map_mask |= MMT_NO_MONS;
-
-    for (int i = 0; i < num_to_place; i++)
+    if (!did_lava && lava.size() > 49)
     {
-        mg.cls = montypes[random2(montypes.size())];
-
-        if (player_in_hell() &&
-            mons_class_can_be_zombified(mg.cls))
-        {
-            static const monster_type lut[3] =
-                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
-
-            mg.base_type = mg.cls;
-            int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
-        }
-
-        else
-            mg.base_type = MONS_NO_MONSTER;
-        if (place_monster(mg))
-            ++result;
+        places = &lava;
+        pop = population_lava[you.where_are_you].pop;
+        did_lava = true;
+        goto start_again;
     }
-
-    return result;
-}
-
-
-static void _place_aquatic_monsters()
-{
-    int lava_spaces = 0, water_spaces = 0;
-    vector<monster_type> swimming_things(4u, MONS_NO_MONSTER);
-    int level_number = env.absdepth0;
-
-    // [ds] Shoals relies on normal monster generation to place its monsters.
-    // Given the amount of water area in the Shoals, placing water creatures
-    // explicitly explodes the Shoals' xp budget.
-    //
-    // Also disallow water creatures below D:6.
-    //
-    if (player_in_branch(BRANCH_SHOALS)
-        || player_in_branch(BRANCH_ABYSS)
-        || (player_in_branch(BRANCH_DUNGEON)
-            && level_number < 5))
-    {
-        return;
-    }
-
-    // Count the number of lava and water tiles {dlb}:
-    for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_LAVA)
-            lava_spaces++;
-
-        if (feat_is_water(grd(*ri)))
-            water_spaces++;
-    }
-
-    if (lava_spaces > 49 && level_number > 6)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            swimming_things[i] = static_cast<monster_type>(
-                                     MONS_LAVA_WORM + random2(3));
-
-            if (one_chance_in(30))
-                swimming_things[i] = MONS_SALAMANDER;
-        }
-
-        _place_monster_vector(swimming_things, min(random2avg(9, 2)
-                                       + (random2(lava_spaces) / 10), 15));
-    }
-
-    _place_aquatic_monsters_weighted();
 }
 
 // For Crypt, adds a bunch of skeletons and zombies that do not respect
