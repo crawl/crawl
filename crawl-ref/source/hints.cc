@@ -1099,7 +1099,7 @@ static bool _rare_hints_event(hints_event_type event)
 {
     switch (event)
     {
-    case HINT_FOUND_RUNED_DOOR:
+    case HINT_SEEN_RUNED_DOOR: // The runed door could be opened in one turn.
     case HINT_KILLED_MONSTER:
     case HINT_NEW_LEVEL:
     case HINT_YOU_ENCHANTED:
@@ -1824,7 +1824,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         break;
 
-    case HINT_FOUND_RUNED_DOOR:
+    case HINT_SEEN_RUNED_DOOR:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Runed door", gc);
@@ -4502,8 +4502,10 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(HINT_SEEN_TRAP, gc);
-    else if (feat_is_closed_door(grd(gc)))
+    else if (grd(gc) == DNGN_OPEN_DOOR || grd(gc) == DNGN_CLOSED_DOOR)
         learned_something_new(HINT_SEEN_DOOR, gc);
+    else if (grd(gc) == DNGN_RUNED_DOOR)
+        learned_something_new(HINT_SEEN_RUNED_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
     else if (grd(gc) == DNGN_ENTER_PORTAL_VAULT)
