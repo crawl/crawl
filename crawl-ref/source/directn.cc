@@ -3335,7 +3335,7 @@ string feature_description_at(const coord_def& where, bool covering,
                                     "door_description_veto");
 
         set<coord_def> all_door;
-        find_connected_identical(where, grd(where), all_door);
+        find_connected_identical(where, all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 

@@ -2992,7 +2992,8 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
 
     bool was_seen   = false;
 
-    set<coord_def> all_door = connected_doors(pos);
+    set<coord_def> all_door;
+    find_connected_identical(pos, all_door);
     get_door_description(all_door.size(), &adj, &noun);
 
     for (set<coord_def>::iterator i = all_door.begin();

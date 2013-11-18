@@ -1447,7 +1447,7 @@ bool get_push_space(const coord_def& pos, coord_def& newpos, actor* act,
                 else // Calculate tension with monster at new location
                 {
                     set<coord_def> all_door;
-                    find_connected_identical(pos, grd(pos), all_door);
+                    find_connected_identical(pos, all_door);
                     dungeon_feature_type old_feat = grd(pos);
 
                     act->move_to_pos(*ai);
@@ -1491,7 +1491,7 @@ static bool _can_force_door_shut(const coord_def& door)
 
     set<coord_def> all_door;
     vector<coord_def> veto_spots;
-    find_connected_identical(door, grd(door), all_door);
+    find_connected_identical(door, all_door);
     copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
     for (set<coord_def>::const_iterator i = all_door.begin();
@@ -1538,7 +1538,7 @@ static bool _should_force_door_shut(const coord_def& door)
 
     set<coord_def> all_door;
     vector<coord_def> veto_spots;
-    find_connected_identical(door, grd(door), all_door);
+    find_connected_identical(door, all_door);
     copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
 
     bool player_in_door = false;
@@ -1603,7 +1603,7 @@ static bool _seal_doors_and_stairs(const monster* warden)
 
             set<coord_def> all_door;
             vector<coord_def> veto_spots;
-            find_connected_identical(*ri, grd(*ri), all_door);
+            find_connected_identical(*ri, all_door);
             copy(all_door.begin(), all_door.end(), back_inserter(veto_spots));
             for (set<coord_def>::const_iterator i = all_door.begin();
                  i != all_door.end(); ++i)
@@ -1668,7 +1668,7 @@ static bool _seal_doors_and_stairs(const monster* warden)
         if (grd(*ri) == DNGN_CLOSED_DOOR || grd(*ri) == DNGN_RUNED_DOOR)
         {
             set<coord_def> all_door;
-            find_connected_identical(*ri, grd(*ri), all_door);
+            find_connected_identical(*ri, all_door);
             for (set<coord_def>::const_iterator i = all_door.begin();
                  i != all_door.end(); ++i)
             {

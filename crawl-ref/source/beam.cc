@@ -1017,7 +1017,8 @@ void bolt::nuke_wall_effect()
     case DNGN_RUNED_DOOR:
     case DNGN_SEALED_DOOR:
     {
-        set<coord_def> doors = connected_doors(pos());
+        set<coord_def> doors;
+        find_connected_identical(pos(), doors);
         set<coord_def>::iterator it;
         for (it = doors.begin(); it != doors.end(); ++it)
             nuke_wall(*it);
