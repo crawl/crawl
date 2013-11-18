@@ -356,17 +356,9 @@ A spear trap
 
 Ce piège tire de longues lances aiguisées qui empalent les outrepassants.
 %%%%
-A staircase back to the Crypt
-
-Ces escaliers ramènent à la Crypte.
-%%%%
 A staircase back to the Dungeon
 
 Ces escaliers ramènent à la moiteur familière au donjon.
-%%%%
-A staircase back to the Forest
-
-Ces escaliers ramènent vers la sécurité toute relative de la forêt.
 %%%%
 A staircase back to the Lair
 
@@ -629,8 +621,8 @@ en un temps record à cause de la convection extrême.
 %%%%
 The floor
 
-Un sol en pierre usagé faite de dalles de granit étroitement intégrés qui ont
-été taillés et fixés il y a des temps immémoriaux par des mains oubliées depuis
+Un sol en pierre usagé, fait de dalles de granit bien ajustées qui ont été
+taillées et fixées il y a des temps immémoriaux par des mains oubliées depuis
 longtemps.
 %%%%
 Some deep water

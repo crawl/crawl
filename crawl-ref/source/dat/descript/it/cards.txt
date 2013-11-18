@@ -54,11 +54,6 @@ Questa carta ti aiuta a fuggire trasformandoti, facendoti andare più veloce o
 creando altri mezzi di fuga. È tipicamente trovata nei mazzi della difesa,
 della fuga e della guerra
 %%%%
-the Elixir card
-
-Questa carta ti cura e nel farlo potrebbe anche assorbire o rigenerare la tua
-energia magica. È tipicamente trovata nel mazzo dei cambiamenti.
-%%%%
 Battlelust card
 
 Questa carta ti rende più forte nel combattimento fisico. È tipicamente trovata

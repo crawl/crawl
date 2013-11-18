@@ -134,10 +134,6 @@ sword of Jihad
 Dlouhý meč vytesaný z obrovského kusu krystalu. Podle legendy to byl dar
 Zářícího jednomu ze svých uctívačů.
 %%%%
-crossbow "Hellfire"
-
-Planoucí kuše, kovaná v ohni pekel.
-%%%%
 sword of the Doom Knight
 
 Adamantiový velký meč.

@@ -153,10 +153,6 @@ A metal wall
 Un muro de un metal azul grisáceo. Como cualquier electricista del calabozo
 bien sabe, esta pared actúa como un punto de tierra.
 %%%%
-The floor
-
-Suelo de calabozo.
-%%%%
 A crumbled stone wall
 
 Estos muros, aunque están faltos de reparación, parecen como congelados en el

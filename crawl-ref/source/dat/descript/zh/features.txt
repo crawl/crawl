@@ -286,10 +286,6 @@ A spear trap
 
 这个陷阱会射出长而尖的飞矛来刺穿闯入者。
 %%%%
-A staircase back to the Crypt
-
-这个楼梯会带你回到墓穴中。
-%%%%
 A staircase back to the Dungeon
 
 这个楼梯会带你回到之前的地城楼层上。
@@ -509,10 +505,6 @@ The endless lava
 
 遇到小型的岩浆湖时，你可以通过浮空或飞行来抄近路。但是，由于空气对流的关系，
 如果你敢飞到这片地狱之海上空，没多久就会被烤熟的。
-%%%%
-The floor
-
-地城的地面。
 %%%%
 Some deep water
 

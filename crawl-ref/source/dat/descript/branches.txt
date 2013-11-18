@@ -319,9 +319,8 @@ reputations.
 Depths
 
 The Depths are the deepest part of the dungeon proper, subject to the
-corrupting influence of the Realm of Zot without being considered a part
-of it.
+corrupting influence of the Realm of Zot without being considered a part of it.
 
-The Depths are six levels deep and can be entered from the lowest floor of
-the Dungeon while carrying at least one rune of Zot.
+The Depths are six levels deep and can be entered from the lowest floor of the
+Dungeon while carrying at least one rune of Zot.
 %%%%

@@ -344,17 +344,9 @@ A spear trap
 Diese Falle schießt lange, scharfe Pfähle, die Vorbeikommende aufspießen
 können.
 %%%%
-A staircase back to the Crypt
-
-Diese Treppe führt zurück zu den Grabgewölben.
-%%%%
 A staircase back to the Dungeon
 
 Diese Treppe führt zurück zur Vertrautheit des Verlieses.
-%%%%
-A staircase back to the Forest
-
-Diese Treppe führt zurück in die relative Sicherheit des Waldes.
 %%%%
 A staircase back to the Lair
 

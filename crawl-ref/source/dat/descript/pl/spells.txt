@@ -351,16 +351,6 @@ chodzenie. Rzucający w niewielkim stopniu kontroluje ten czar, pozwalając
 wykonywać czynności inne niż chodzenie bez większego spowolnienia — wszyscy
 wokół nie mają tak dobrze.
 %%%%
-Lee's Rapid Deconstruction spell
-
-Ten czar rozwala na kawałki część ściany lub niektórych kruchych istot,
-zasypując wszystkich wokół odłamkami. Można ten czar użyć na istoty zrobione z
-lodu, odkrytej kości, metalu lub kamienia — łącznie z ofiarami petryfikacji.
-
-Cele zrobione ze skały, kamienia, lodu lub kości rozsiewają odłamki na krótki
-lub średni dystans. Cele z metalu dają krótki zasięg ale większe obrażenia, zaś
-te z kryształu zadają ogromne obrażenia na duży dystans.
-%%%%
 Lehudib's Crystal Spear spell
 
 Ten czar ciska długi i skrajnie ostry pocisk z kryształu.

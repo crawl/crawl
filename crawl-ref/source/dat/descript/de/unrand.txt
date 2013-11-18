@@ -131,10 +131,6 @@ sword of Jihad
 Ein Langschwert, geschaffen aus einem riesigem Stück Kristall. Die Legenden
 sagen es sei ein Geschenk des Shining One an einen Gläubigen gewesen.
 %%%%
-crossbow "Hellfire"
-
-Eine flammende Armbrust, in den Feuern der Hölle geschmiedet.
-%%%%
 sword of the Doom Knight
 
 Ein großes Schwert, hart wie Diamant.

@@ -124,10 +124,6 @@ sword of Jihad
 
 一把用一块巨型水晶制成的长剑。据说，这是光明神赐给一位信徒的赏赐。
 %%%%
-crossbow "Hellfire"
-
-在地狱烈火中制成的一张燃烧的弩弓。
-%%%%
 sword of the Doom Knight
 
 一把精金巨剑。

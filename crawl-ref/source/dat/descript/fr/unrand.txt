@@ -147,7 +147,8 @@ qu'elle aurait été un cadeau accordé par L’Étincelant à un de ses fidèle
 %%%%
 crossbow "Hellfire"
 
-Une arbalète enflammée, forgée dans les feux des Enfers.
+Une arbalète enflammée, forgée dans les feux des Enfers ; elle imprègne les
+carreaux qu'elle tire avec la puissance brute du même nom.
 %%%%
 sword of the Doom Knight
 
@@ -285,9 +286,9 @@ Une cape vibrante.
 %%%%
 boots of the Assassin
 
-Des bottes souples avec un dague dissimulée à l'intérieur, conçue par la Guilde
-des Assassins. Elles permettent au porteur de sentir la présence de victimes
-potentielles.
+Des bottes souples, conçue spécialement par la Guilde des Assassins. Elles
+permettent au porteur de sentir la présence de victimes potentielles et le rend
+plus à même de trouver les points faibles de ses victimes.
 %%%%
 Lear's hauberk
 

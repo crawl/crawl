@@ -139,7 +139,7 @@ sword of Jihad
 %%%%
 crossbow "Hellfire"
 
-지옥의 불꽃으로 제련된, 불타오르는 석궁이다.
+지옥불에서 단조된 타오르는 석궁. 이름처럼 불타는 화살로 가득 차있다.
 %%%%
 sword of the Doom Knight
 
@@ -271,11 +271,6 @@ robe of Misfortune
 cloak of Flash
 
 희미하게 진동이 느껴지는 망토다.
-%%%%
-boots of the Assassin
-
-암살자 길드에서 특수제작한, 접히는 칼날이 들어 있는 푹신한 장화이다. 이 장화는
-착용자가 적을 더욱 잘 파악하게 해 준다.
 %%%%
 Lear's hauberk
 
@@ -482,6 +477,12 @@ macabre finger necklace
 boots of the spider
 
 아라크네에게 구혼을 한 남자가 발명한 신기한 장화.
+%%%%
+hat of the High Council
+
+고대 마법전쟁의 유물. 몇 세기후에도 여전히 한때 매일같이 부여되었던 잔여 마법과
+마법에너지로 타는 듯한 소리가 난다. 그러나 마법사들은 손잡이에서 그들의
+주문력을 상승시켜주는 힘을 얻을 수 있다.
 %%%%
 milk chocolate
 

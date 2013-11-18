@@ -57,8 +57,8 @@ forsvar, flugt og krig.
 %%%%
 the Elixir card
 
-Dette kort helbreder dig og kan også dræne eller styrke din magiske energi. Det
-findes som regel i stakke med forandringer, forsvar og krig.
+Dette kort genvinder dit helbred, din magi eller, på højere kraftniveauer,
+begge dele. Det findes som regel i stakke med forandringer, forsvar og krig.
 %%%%
 Battlelust card
 

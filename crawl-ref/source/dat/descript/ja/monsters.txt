@@ -360,12 +360,6 @@ death yak
 普通のダンジョンヤクより大きくて逞しい近縁種だ。その小さな赤い目は、
 生き物の肉への飢えに輝いている。
 %%%%
-dragon
-
-A great reptilian beast with powerful claws on its limbs, covered in thick
-green 全身が分厚い緑の鱗に覆われ、一対のコウモリに似た翼を持つ。
-牙の並んだ顎からはかすかな煙がたなびいている。
-%%%%
 earth elemental
 
 大地の精霊界から召換された精霊だ。
