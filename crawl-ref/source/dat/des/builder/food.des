@@ -24,7 +24,7 @@ NAME:   first_bread
 DEPTH:  D:2-5
 CHANCE: 2500, 3333 (D:3), 5000 (D:4), 10000 (D:5)
 TAGS:   uniq_first_food extra transparent
-ITEM:   bread ration
+ITEM:   bread ration no_mimic
 MAP
 d
 ENDMAP
@@ -48,7 +48,7 @@ DEPTH:  D:7-14
 : food_weight(_G, 7)
 WEIGHT: 25
 TAGS:   uniq_second_food extra chance_second_food
-ITEM:   bread ration q:2
+ITEM:   bread ration q:2 no_mimic
 : if crawl.one_chance_in(8) then
 :   dgn.delayed_decay(_G, 'e', 'spriggan name:baked n_adj n_spe n_des corpse')
 : else
@@ -71,7 +71,7 @@ DEPTH:  D:8-14
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
-ITEM:   w:2 honeycomb / w:1 royal jelly
+ITEM:   w:2 honeycomb no_mimic / w:1 royal jelly no_mimic
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
@@ -134,7 +134,7 @@ KMONS:  A = merfolk ; spear
 KMONS:  B = big fish / nothing
 KMONS:  C = big fish
 KFEAT:  gBC = shallow_water
-ITEM:   meat ration q:2, bread ration q:3, throwing net
+ITEM:   meat ration q:2 no_mimic, bread ration q:3 no_mimic, throwing net
 :       dgn.delayed_decay(_G, 'g', 'big fish corpse')
 MAP
 xxxxxx
@@ -152,7 +152,8 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / brain worm w:5 / goliath beetle / giant centipede
 MONS:   yellow wasp w:7 / rock worm w:5 / boring beetle / soldier ant w:13 / giant slug
-ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge, honeycomb q:6
+ITEM:   cheese q:3 no_mimic / beef jerky q:3 no_mimic / lemon q:3 no_mimic
+ITEM:   potion of porridge no_mimic, honeycomb q:6 no_mimic
 MAP
 .xxxxxxx
 @xx.x.xcccc
@@ -173,7 +174,7 @@ KMONS:  B = ooze
 : if you.absdepth() > 10 then
 KMONS:  C = slime creature
 : end
-KITEM:  C = royal jelly q:4 / royal jelly q:6
+KITEM:  C = royal jelly q:4 no_mimic / royal jelly q:6 no_mimic
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
 MAP
@@ -199,9 +200,9 @@ KMONS:    C = yak
 KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
-KITEM:    C = cheese q:4
+KITEM:    C = cheese q:4 no_mimic
 KITEM:    E = falchion ego:flaming ident:type / short sword ego:flaming
-KITEM:    H = meat ration q:2
+KITEM:    H = meat ration q:2 no_mimic
 KITEM:    I = sabre
 KFEAT:    EF = shallow_water
 MAP
@@ -226,7 +227,9 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen
 NSUBST: T = 1:. / 1:t
 KMONS:  1 = wandering mushroom
 KMONS:  2 = oklob sapling
-KITEM:  12A_ = apricot q:2 / pear q:2 / apple q:2 / banana q:2 / lemon q:2 / orange q:2
+KITEM:  12A_ = apricot q:2 no_mimic / pear q:2 no_mimic / \
+               apple q:2 no_mimic / banana q:2 no_mimic / \
+               lemon q:2 no_mimic / orange q:2 no_mimic
 KFEAT:  _ = altar_fedhas
 MAP
  tttttttttt
@@ -254,7 +257,7 @@ KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 : else
 KMONS:  A = vapour w:4 / trapdoor spider w:6 / unseen horror / nothing w:2
 : end
-ITEM:  sultana q:1 / grape w:8 q:1
+ITEM:  sultana q:1 no_mimic / grape w:8 q:1 no_mimic
 ITEM:  sultana mimic q:1 w:8 / grape mimic w:8 q:1
 ITEM:  honeycomb q:2, bread ration q:3
 : if crawl.coinflip() then
@@ -297,8 +300,10 @@ KMONS:   G = necrophage
 KMONS:   H = crimson imp
 KMONS:   I = draconian
 KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
-KITEM:   Ya = royal jelly / meat ration / bread ration
-KITEM:   b = honeycomb / cheese / apricot q:2 / apple q:2 / choko q:2
+KITEM:   Ya = royal jelly no_mimic / meat ration no_mimic / \
+              bread ration no_mimic
+KITEM:   b = honeycomb no_mimic / cheese no_mimic / apricot q:2 no_mimic / \
+             apple q:2 no_mimic / choko q:2 no_mimic
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen
 MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
@@ -328,10 +333,12 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   tengu ; war axe | scimitar | long sword, plant
 NSUBST: 2 : 3:2 / *:.
-ITEM:   bread ration / snozzcumber q:3 / orange q:4 w:5 / orange q:5 w:5 / \
-        banana q:4 w:5 / banana q:5 w:5 / lemon q:4 w:5 / lemon q:4 w:5 / \
-        pear q:6 / apple q:6 / apricot q:6 / choko q:7 / rambutan q:7 / \
-        lychee q:7
+ITEM:   bread ration no_mimic / snozzcumber q:3 no_mimic / \
+        orange q:4 w:5 no_mimic / orange q:5 w:5 no_mimic / \
+        banana q:4 w:5 no_mimic / banana q:5 w:5 no_mimic / \
+        lemon q:4 w:5 no_mimic / lemon q:4 w:5 no_mimic / \
+        pear q:6 no_mimic / apple q:6 no_mimic / apricot q:6 no_mimic / \
+        choko q:7 no_mimic / rambutan q:7 no_mimic / lychee q:7 no_mimic
 MAP
  xx+xx
 xx2.2xx
@@ -363,7 +370,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
   dgn.delayed_decay(_G, 'g', 'orc skeleton / human skeleton / elf skeleton'
                              .. ' / dwarf skeleton')
 }}
-ITEM:   bread ration q:3, beef jerky q:3, throwing net
+ITEM:   bread ration q:3 no_mimic, beef jerky q:3 no_mimic, throwing net
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -395,7 +402,7 @@ MONS:   deep elf fighter ; sabre race:elven | falchion race:elven / \
         deep dwarf ; hand axe race:dwarven / \
         orc warrior ; dagger race:orcish / \
         spriggan ; dagger
-ITEM:   slice of pizza q:8, bread ration q:2
+ITEM:   slice of pizza q:8 no_mimic, bread ration q:2 no_mimic
 MARKER: O = lua:fog_machine { cloud_type = "flame", pow_min = 10, \
                               pow_max = 10, delay = 10, size = 1, \
                               walk_dist = 0, excl_rad = 0 }
@@ -419,7 +426,7 @@ WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
 MONS:   rat, grey rat, green rat, orange rat
-ITEM:   cheese q:3
+ITEM:   cheese q:3 no_mimic
 : if you.absdepth() < 11 then
 NSUBST: 4 = 1:4 / *:3
 : else
@@ -456,7 +463,8 @@ MONS:   human hd:5 ; animal skin . hand axe
     mons("sheep w:" .. sheep_weight .. " / hog w:1 / yak w:1")
   end
 }}
-ITEM:   cheese q:9, bread ration q:2, beef jerky q:2
+ITEM:   cheese q:9 no_mimic, bread ration q:2 no_mimic
+ITEM:   beef jerky q:2 no_mimic
 KFEAT:  K = iron_grate
 KFEAT:  - = open_door
 MAP
