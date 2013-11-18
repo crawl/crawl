@@ -562,15 +562,20 @@ lente.
 %%%%
 Lee's Rapid Deconstruction spell
 
-Ce sort fragmente un mur, ou un monstre visible convenablement fragile, en une
-explosion de débris mortels. Il est possible de les utiliser sur les monstres
-de glace, d'os ou de toute substance comparable à celle d'un mur, tout comme
-ceux qui ont été pétrifiés par magie.
+Ce sort fragmente un mur, ou un monstre visible suffisamment fragile, en une
+explosion de débris mortels. Il est possible de l'utiliser sur les monstres de
+glace, d'os ou de toute substance comparable à celle d'un mur, ainsi que ceux
+qui ont été pétrifiés par magie.
 
 Les cibles faite de roche, pierre, glace ou os causeront une explosion de
 petite ou moyenne taille. Les cibles métalliques causeront une petite explosion
-particulièrement puissante enfin, les cibles faites de cristal produiront de
+particulièrement puissante, enfin les cibles faites de cristal produiront de
 larges et puissantes explosions.
+
+À puissance élevée, ce sort est capable de détruire certains murs : les murs de
+roche, de pierre ou de métal ont une chance d'être détruit à partir de 5, 6 ou
+7 barres de puissance. Les murs de cristal sont particulièrement fragiles et
+ont une chance d'être détruits à n'importe quel niveau de puissance.
 %%%%
 Lehudib's Crystal Spear spell
 

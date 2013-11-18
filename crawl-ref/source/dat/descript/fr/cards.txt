@@ -57,9 +57,9 @@ défense, d'évasion et de guerre.
 %%%%
 the Elixir card
 
-Cette carte vous soigne mais peu aussi, drainer ou restaurer votre énergie
-magique dans le processus. On la trouve normalement dans les paquets de
-changements, de défense et de guerre.
+Cette carte rétablie votre santé ou votre énergie magique ou les deux à
+puissance élevée. On la trouve habituellement dans les tarots de changements,
+de défense et de guerre.
 %%%%
 Battlelust card
 

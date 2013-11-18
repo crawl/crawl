@@ -1,7 +1,7 @@
 %%%%
 CMD_REST
 
-Поправить здоровье и осмотреться.
+Поправить здоровье и осмотреться
 %%%%
 CMD_REST verbose
 
@@ -34,7 +34,7 @@ CMD_USE_ABILITY
 %%%%
 CMD_PRAY
 
-Помолиться своему божеству.
+Помолиться своему божеству
 %%%%
 CMD_PRAY verbose
 
@@ -45,7 +45,7 @@ CMD_PRAY verbose
 %%%%
 CMD_SEARCH_STASHES
 
-Поиск вещей/предметов.
+Поиск вещей/предметов
 %%%%
 CMD_SEARCH_STASHES verbose
 
@@ -67,7 +67,7 @@ CMD_RESISTS_SCREEN verbose
 %%%%
 CMD_DISPLAY_OVERMAP
 
-Отображает общую карту подземелья.
+Отображает общую карту подземелья
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
@@ -76,20 +76,20 @@ CMD_DISPLAY_OVERMAP verbose
 %%%%
 CMD_DISPLAY_RELIGION
 
-Отображает уровень вашей религии.
+Отображает уровень вашей религии
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
 Показывает, что любит ваш бог, что ему не нравиться, его отношение, а также
-ваши полученные религиозные преимущества и умения
+ваши полученные религиозные преимущества и умения.
 %%%%
 CMD_DISPLAY_MUTATIONS
 
-Показывает мутации.
+Показывает мутации
 %%%%
 CMD_DISPLAY_SKILLS
 
-Управление умениями.
+Управление умениями
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS
 
@@ -105,7 +105,7 @@ CMD_DISPLAY_KNOWN_OBJECTS
 %%%%
 CMD_SAVE_GAME_NOW
 
-Сохранить и выйти.
+Сохранить и выйти
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
@@ -122,7 +122,7 @@ CMD_EDIT_PLAYER_TILE verbose
 %%%%
 CMD_DISPLAY_COMMANDS
 
-Игровая помощь.
+Игровая помощь
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
@@ -141,7 +141,7 @@ CMD_CHARACTER_DUMP verbose
 %%%%
 CMD_AUTOFIGHT
 
-Атака ближайшего врага.
+Атака ближайшего врага
 %%%%
 CMD_AUTOFIGHT verbose
 
@@ -158,7 +158,7 @@ CMD_AUTOFIGHT_NOMOVE verbose
 %%%%
 CMD_WAIT
 
-Пропустить один ход.
+Пропустить один ход
 %%%%
 CMD_WAIT verbose
 
@@ -327,7 +327,7 @@ CMD_MAP_FIND_EXCLUDED verbose
 %%%%
 CMD_MAP_FIND_WAYPOINT
 
-Искать нав.точку
+Искать точку маршрута
 %%%%
 CMD_MAP_FIND_WAYPOINT verbose
 

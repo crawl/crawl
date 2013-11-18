@@ -140,10 +140,6 @@ sword of Jihad
 Et langsværd, som er lavet af et kæmpemæssigt stykke krystal. Legenderne vil
 vide, at det var Den Strålendes gave til en tilbeder.
 %%%%
-crossbow "Hellfire"
-
-En flammende armbrøst, som er smedet i helvedernes ild.
-%%%%
 sword of the Doom Knight
 
 Et ubrydeligt slagsværd.

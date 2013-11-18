@@ -74,6 +74,16 @@ Begynd at flyve. Mens du flyver kan du trygt krydse vand og lignende
 forhindringer. Men vær dog opmærksom på, at evnen til at flyve kan udløbe på
 uheldige tidspunkter og lade dig styrte i døden.
 %%%%
+Jump Attack ability
+
+Denne evne lader dig låne et væsens kinetiske energi til at udløse et
+lynhurtigt nærkampsspringangreb, hvorefter du lander sikkert i nærheden. Du kan
+ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpestore fjender,
+som er nedsænket i lava eller dybt vand. Du kan heller ikke bruge evnen, hvis
+du står eller svømmer i vand, lave eller flydende jord. Katte er naturlige
+springere og bliver endnu bedre til at springe til angreb når de når
+erfaringsniveau 6 og 12.
+%%%%
 Hellfire ability
 
 Hærger dine fjender med helvedesild.
@@ -118,6 +128,14 @@ være usynlig og kan i sidste ende forårsage gløden.
 Turn Visible ability
 
 Bliv synlig igen.
+%%%%
+Evoke Jump Attack ability
+
+Denne evne lader dig låne et væsens kinetiske energi til at udløse et
+lynhurtigt nærkampsspringangreb, hvorefter du lander sikkert i nærheden. Du kan
+ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpestore fjender,
+som er nedsænket i lava eller dybt vand. Du kan heller ikke bruge evnen, hvis
+du står eller svømmer i vand, lave eller flydende jord.
 %%%%
 Stop Flying ability
 
@@ -423,7 +441,7 @@ det stakken.
 Triple Draw ability
 
 Træk tre kort fra en vilkårlig stak i din oppakning, se på dem og vælg, hvilket
-du vil beholde, og hvilke to, du vil kassere.
+du vil spille, og hvilke to, du vil kassere.
 %%%%
 Deal Four ability
 

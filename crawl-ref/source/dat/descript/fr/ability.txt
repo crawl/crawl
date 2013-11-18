@@ -78,12 +78,11 @@ Jump Attack ability
 
 Un talent qui utilise l'énergie cinétique d'une créature pour déclencher une
 attaque sautée très rapide, qui vous fait atterrir à proximité en toute
-sécurité tout en causant des dégâts accrus si l'attaque est réussie. Vous ne
-pouvez pas sauter sur les ennemis volants et ne pouvez sauter sur des ennemis
-géants que s'ils sont plongés dans la lave ou de l'eau profonde. Être dans
-l'eau profonde, la lave, ou sur un sol liquéfié vous empêcher également
-d'utiliser ce talent. Les Felids sont des sauteurs naturels et bondiront encore
-mieux après avoir atteint les niveaux d'expérience 6 et 12.
+sécurité. Vous ne pouvez pas sauter sur les ennemis volants et ne pouvez sauter
+sur des ennemis géants que s'ils sont plongés dans la lave ou de l'eau
+profonde. Être dans l'eau profonde, la lave, ou sur un sol liquéfié vous
+empêcher également d'utiliser ce talent. Les Felids sont des sauteurs naturels
+et bondiront encore mieux après avoir atteint les niveaux d'expérience 6 et 12.
 %%%%
 Hellfire ability
 
@@ -138,11 +137,10 @@ Evoke Jump Attack ability
 
 Un talent qui utilise l'énergie cinétique d'une créature pour déclencher une
 attaque sautée très rapide, qui vous fait atterrir à proximité en toute
-sécurité tout en causant des dégâts accrus si l'attaque est réussie. Vous ne
-pouvez pas sauter sur les ennemis volants et ne pouvez sauter sur des ennemis
-géants que s'ils sont plongés dans la lave ou de l'eau profonde. Être dans
-l'eau profonde, la lave, ou sur un sol liquéfié vous empêcher également
-d'utiliser ce talent.
+sécurité. Vous ne pouvez pas sauter sur les ennemis volants et ne pouvez sauter
+sur des ennemis géants que s'ils sont plongés dans la lave ou de l'eau
+profonde. Être dans l'eau profonde, la lave, ou sur un sol liquéfié vous
+empêcher également d'utiliser ce talent.
 %%%%
 Stop Flying ability
 

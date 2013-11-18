@@ -62,7 +62,7 @@ A fountain of sparkling water
 %%%%
 A gate leading back out of here
 
-Эти врата могут вернуть вас *?* туда, откуда вы пришли.
+Похоже, эти врата позволят вернуться туда, откуда вы пришли.
 %%%%
 A gate leading back out of this place
 
@@ -216,10 +216,6 @@ A sparkling altar of Nemelex Xobeh
 Этот алтарь сияет огнями ярче любого игорного заведения, приманивая будущих
 последователей Немелекса Ксобеха.
 %%%%
-A staircase back to the Crypt
-
-Эти ступени ведут наверх, обратно в Склеп.
-%%%%
 A staircase back to the Dungeon
 
 Эти ступени ведут наверх, обратно в знакомое Подземелье.
@@ -264,9 +260,21 @@ A staircase to the Orcish Mines
 Вход в Шахты Орков, наполненные орочьим золотом. Шахты обманчивы, и велика
 опасность попасть в западню.
 %%%%
-The floor
+A stone staircase leading down
 
-Пол подземелья.
+Эта лестница ведет вниз.
+%%%%
+A stone staircase leading up
+
+Эта лестница ведет наверх.
+%%%%
+A short-range portal
+
+Ступив в этот телепорт, он отправить вас в другую комнату.
+%%%%
+An abandoned shop
+
+Этот магазин был заброшен.
 %%%%
 A crumbled stone wall
 
@@ -279,7 +287,7 @@ A crystal clear mirror
 %%%%
 A glistening fountain
 
-Ему не хватает только воды.
+Единственное, чего ему не хватает, является вода,
 %%%%
 A black marble wall
 
@@ -338,6 +346,22 @@ A dead tree
 
 Дерево мертво, как и все вокруг.
 %%%%
+An iron statue
+
+У статуи нет рта. Жуть!
+%%%%
+A tempered metal wall
+
+Эти металлические стены излучают тепло.
+%%%%
+An ice-covered rock wall
+
+Скальная стена покрыта толстым слоем льда.
+%%%%
+An ice-covered stone wall
+
+Каменная стена покрыта толстым слоем льда.
+%%%%
 A golden statue
 
 Статуя святого из чистого золота.
@@ -384,6 +408,10 @@ A large window
 A glass window
 
 Щербатое, сверхпрочное стеклянное окно
+%%%%
+An elephant-shaped statue
+
+Эта старая гранитная статуя изображает стоящего на страже слона.
 %%%%
 A sealed sarcophagus
 

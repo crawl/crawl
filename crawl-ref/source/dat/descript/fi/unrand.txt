@@ -28,10 +28,6 @@ dagger of Chilly Death
 
 Yhdestä valtavasta safiirin palasta tehty tikari.
 %%%%
-crossbow "Hellfire"
-
-Helvettien tulissa taottu liekehtivä varsijousi.
-%%%%
 mithril axe "Arga"
 
 Kaunis mithrilkirves, varmaan jäänyt jälkeen joltakin kääpiösankarilta.

@@ -52,10 +52,6 @@ A shaft
 
 Głęboka dziura. Kto wie dokąd byś doleciał, gdybyś do niej wpadł.
 %%%%
-A staircase back to the Crypt
-
-Te schody prowadzą z powrotem do Krypty.
-%%%%
 A staircase back to the Vaults
 
 Te schody prowadzą do potężnych Skarbców.

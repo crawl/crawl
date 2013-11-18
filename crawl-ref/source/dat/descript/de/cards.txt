@@ -56,12 +56,6 @@ Diese Karte hilft beim davonlaufen indem sie dich umwandelt, beschleunigt oder
 andere Wege für die Flucht erzeugt. Man findet sie normalerweise in diesen
 Kartendecks: Verteidigung, Flucht und Krieg,
 %%%%
-the Elixir card
-
-Diese Karte heilt dich und stellt in diesem Prozess deine magische Energie
-wieder her... oder saugt sie ab. Man findet sie normalerweise in diesen
-Kartendecks: Veränderung, Verteidigung und Krieg.
-%%%%
 Battlelust card
 
 Diese Karte macht dich viel stärker im  physikalischem Kampf. Man findet sie

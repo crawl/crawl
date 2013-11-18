@@ -130,10 +130,6 @@ sword of Jihad
 Długi miecz zrobiony z jednego kawałka kryształu. Legendy mówią że był on darem
 Świetlistego dla jednego z wyznawców.
 %%%%
-crossbow "Hellfire"
-
-Płonąca kusza, wykuta w ogniach piekieł.
-%%%%
 sword of the Doom Knight
 
 Wielki miecz z czarnym diamentem w rękojeści.

@@ -33,8 +33,9 @@ Drakonere er alsidige hybrider. De modnes og får en farve, når de når niveau 
 %%%%
 Felid
 
-Disse katte besidder en bevidsthed, men de er ude af stand til at håndtere
-komplicerede genstande eller at bruge rustning eller våben.
+Disse katte besidder ikke bare flere liv, men også en bevidsthed. Til gengæld
+er de ude af stand til at håndtere komplicerede genstande eller at bruge
+rustning eller våben.
 %%%%
 Ghoul
 

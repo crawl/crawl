@@ -44,10 +44,6 @@ A gateway to the freezing wastes of Cocytus
 
 Palelluttavilta mailta tuleva kylmyys koskettaa sieluasi.
 %%%%
-The floor
-
-Luolaston lattiaa.
-%%%%
 A glistening fountain
 
 Ainoa asia mikä siitä puuttuu on vesi.

@@ -54,11 +54,6 @@ Flight card
 Esta carta te ayuda a escapar transformándote, acelerándote o creando algún
 otro medios de huída. Se encuentra en mazos de defensa, huída y guerra.
 %%%%
-the Elixir card
-
-Esta carta te cura y también puede absorber o restaurar tu mana en el proceso.
-Se encuentra en mazos de cambios, de defensa y de guerra.
-%%%%
 Battlelust card
 
 Esta carta te hace más poderoso en el combate físico. Habitualmente se

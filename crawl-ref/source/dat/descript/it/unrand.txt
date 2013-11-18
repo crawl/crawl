@@ -137,10 +137,6 @@ sword of Jihad
 Una lunga spada fatta un singolo pezzo di cristallo. La legenda vuole che fu il
 regalo del Lucente ad un seguace.
 %%%%
-crossbow "Hellfire"
-
-Una balestra fiammeggiante, forgiata fra le fiamme degli Inferni.
-%%%%
 sword of the Doom Knight
 
 Uno spadone adamantino.
