@@ -2519,9 +2519,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     case MONS_TENGU_CONJURER:
     case MONS_TENGU_WARRIOR:
         natural_leader = true;
-    case MONS_TENGU:
-        if (coinflip())
-            break;
         band = BAND_TENGU;
         band_size = 2 + random2(3);
         break;
@@ -2949,6 +2946,8 @@ static monster_type _band_member(band_type band, int which)
         return MONS_FAUN;
 
     case BAND_TENGU:
+        if (which == 1 && coinflip())
+            return coinflip() ? MONS_TENGU_WARRIOR : MONS_TENGU_CONJURER;
         return MONS_TENGU;
 
     case BAND_SOJOBO:
