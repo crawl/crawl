@@ -289,7 +289,7 @@ Dissolution cast
 
 @The_monster@ gurgles deeply, a call to fellow slimes.
 
-@The_monster@ says, "@God@ sees all!"
+@The_monster@ says, "@My_God@ sees all!"
 %%%%
 Gastronok cast
 
@@ -562,15 +562,15 @@ priest cast
 %%%%
 unseen priest cast targeted
 
-You hear @something@ call down the wrath of @God@ upon @target@.
+You hear @something@ call down the wrath of @a_God@ upon @target@.
 
-You hear @something@ mumble some strange prayers to @God@ against @target@.
+You hear @something@ mumble some strange prayers to @a_God@ against @target@.
 
-You hear @something@ invoke the aid of @God@ against @target@.
+You hear @something@ invoke the aid of @a_God@ against @target@.
 %%%%
 unseen priest cast
 
-You hear some strange, mumbled prayers to @God@.
+You hear some strange, mumbled prayers to @a_God@.
 %%%%
 non-humanoid wizard cast targeted
 
