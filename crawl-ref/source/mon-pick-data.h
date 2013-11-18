@@ -1263,6 +1263,14 @@ static const pop_entry pop_water_swamp[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_water_snake[] =
+{ // Snake water monsters
+  {  1,   5,  100, DOWN, MONS_ELECTRIC_EEL },
+  {  1,   5,  100, DOWN, MONS_JELLYFISH },
+  {  1,   5,  200,   UP, MONS_SEA_SNAKE },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const pop_entry pop_water_forest[] =
 { // Forest water monsters
   {  1,   5,   35, FLAT, MONS_BIG_FISH },
@@ -1298,7 +1306,7 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
     POP(water_generic),
     POP(water_swamp),
     POP(water_generic), // Shoals isn't actually used
-    POP(water_generic),
+    POP(water_snake),
     POP(water_generic),
     POP(water_generic),
     POP(water_generic),
@@ -1344,6 +1352,13 @@ static const pop_entry pop_lava_d[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_lava_snake[] =
+{ // Snake lava monsters
+  {  1,   5,  200, FLAT, MONS_LAVA_SNAKE },
+  {  3,   5,   40,   UP, MONS_SALAMANDER },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const struct { const pop_entry *pop; int count; } population_lava[] =
 {
     POP(lava_d),
@@ -1356,7 +1371,7 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_snake),
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),
