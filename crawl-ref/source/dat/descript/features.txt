@@ -682,6 +682,18 @@ A huge runed gate
 
 <A runed door>
 %%%%
+A large sealed door
+
+<A sealed door>
+%%%%
+An sealed gate
+
+<A sealed door>
+%%%%
+A huge sealed door
+
+<A sealed door>
+%%%%
 ########################
 ### Vault redefinitions
 ########################
