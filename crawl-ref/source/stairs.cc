@@ -637,7 +637,7 @@ static void _maybe_destroy_trap(const coord_def &p)
 }
 
 // TODO(Zannick): Fully merge with up_stairs into take_stairs.
-void down_stairs(dungeon_feature_type force_stair)
+void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
 {
     const level_id old_level = level_id::current();
     const dungeon_feature_type old_feat = grd(you.pos());
@@ -647,7 +647,9 @@ void down_stairs(dungeon_feature_type force_stair)
     // Taking a shaft manually
     const bool known_shaft = (!force_stair
                               && get_trap_type(you.pos()) == TRAP_SHAFT
-                              && stair_find != DNGN_UNDISCOVERED_TRAP);
+                              && stair_find != DNGN_UNDISCOVERED_TRAP)
+                             || (force_stair == DNGN_TRAP_SHAFT
+                                 && force_known_shaft);
     // Latter case is falling down a shaft.
     const bool shaft = known_shaft || (force_stair == DNGN_TRAP_SHAFT);
     level_id shaft_dest;
