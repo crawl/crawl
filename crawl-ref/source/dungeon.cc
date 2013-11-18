@@ -3656,9 +3656,8 @@ static int _place_uniques()
 
 static void _place_aquatic_monsters_weighted()
 {
-    const pop_entry* pop = player_in_branch(BRANCH_FOREST) ? pop_water_forest :
-                           player_in_branch(BRANCH_DEPTHS) ? pop_water_depths
-                                                           : pop_water_d;
+    const pop_entry* pop = population_water[you.where_are_you].pop;
+
     int level = level_id::current().depth;
 
     vector<coord_def> water;
@@ -3781,47 +3780,7 @@ static void _place_aquatic_monsters()
                                        + (random2(lava_spaces) / 10), 15));
     }
 
-    if (player_in_branch(BRANCH_DUNGEON)
-        || player_in_branch(BRANCH_DEPTHS)
-        || player_in_branch(BRANCH_FOREST))
-    {
-        _place_aquatic_monsters_weighted();
-    }
-    else if (water_spaces > 49)
-    {
-        // This can probably be done in a better way with something
-        // like water_monster_rarity().
-        for (int i = 0; i < 4; i++)
-        {
-            swimming_things[i] =
-                static_cast<monster_type>(MONS_BIG_FISH + random2(4));
-
-            if (player_in_branch(BRANCH_SWAMP) && !one_chance_in(3))
-                swimming_things[i] = MONS_SWAMP_WORM;
-            else if (player_in_hell())
-            {
-                // Eels are useless when zombified
-                if (swimming_things[i] == MONS_ELECTRIC_EEL)
-                {
-                    swimming_things[i] = one_chance_in(4) ? MONS_KRAKEN :
-                                             MONS_WATER_ELEMENTAL;
-                }
-            }
-        }
-
-        // Don't place sharks in the Swamp.
-        if (!player_in_branch(BRANCH_SWAMP)
-            && level_number >= 9 && one_chance_in(4))
-        {
-            swimming_things[3] = MONS_SHARK;
-        }
-
-        if (level_number >= 25 && one_chance_in(5))
-            swimming_things[0] = MONS_WATER_ELEMENTAL;
-
-        _place_monster_vector(swimming_things, min(random2avg(9, 2)
-                                + (random2(water_spaces) / 10), 15));
-    }
+    _place_aquatic_monsters_weighted();
 }
 
 // For Crypt, adds a bunch of skeletons and zombies that do not respect

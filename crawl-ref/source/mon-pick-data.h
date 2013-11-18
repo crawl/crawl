@@ -1218,6 +1218,16 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(depths),
 };
 
+static const pop_entry pop_water_generic[] =
+{ // Generic water monsters
+  {  1,  27,  150, FLAT, MONS_BIG_FISH },
+  {  1,  27,  150, FLAT, MONS_GIANT_GOLDFISH },
+  {  1,  27,  150, FLAT, MONS_ELECTRIC_EEL },
+  {  1,  27,  150, FLAT, MONS_JELLYFISH },
+  {  1,  27,  200, FLAT, MONS_SHARK },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const pop_entry pop_water_d[] =
 { // Dungeon water monsters
   {  5,  22,   80, FLAT, MONS_BIG_FISH },
@@ -1243,6 +1253,16 @@ static const pop_entry pop_water_depths[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_water_swamp[] =
+{ // Swamp water monsters
+  {  1,  5,   600, FLAT, MONS_SWAMP_WORM },
+  {  1,  5,    75, FLAT, MONS_BIG_FISH },
+  {  1,  5,    75, FLAT, MONS_GIANT_GOLDFISH },
+  {  1,  5,    75, FLAT, MONS_ELECTRIC_EEL },
+  {  1,  5,    75, FLAT, MONS_JELLYFISH },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const pop_entry pop_water_forest[] =
 { // Forest water monsters
   {  1,   5,   35, FLAT, MONS_BIG_FISH },
@@ -1253,4 +1273,56 @@ static const pop_entry pop_water_forest[] =
   {  1,   5,  135, FLAT, MONS_THORN_LOTUS },
   {  1,   9,  120, SEMI, MONS_WATER_NYMPH },
   { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry pop_water_hell[] =
+{ // Hell branch water monsters
+  {  1,  7,   150, FLAT, MONS_BIG_FISH },
+  {  1,  7,   150, FLAT, MONS_GIANT_GOLDFISH },
+  {  1,  7,   113, FLAT, MONS_WATER_ELEMENTAL },
+  {  1,  7,    37, FLAT, MONS_KRAKEN },
+  {  1,  7,   150, FLAT, MONS_JELLYFISH },
+  {  1,  7,   200, FLAT, MONS_SHARK },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const struct { const pop_entry *pop; int count; } population_water[] =
+{
+    POP(water_d),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+#if TAG_MAJOR_VERSION == 34
+    POP(water_generic),
+#endif
+    POP(water_generic),
+    POP(water_swamp),
+    POP(water_generic), // Shoals isn't actually used
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_hell),
+    POP(water_hell),
+    POP(water_hell),
+    POP(water_hell),
+    POP(water_hell),
+    POP(water_generic),
+    POP(water_forest),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_generic),
+    POP(water_depths),
 };
