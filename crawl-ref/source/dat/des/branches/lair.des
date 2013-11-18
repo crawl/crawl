@@ -568,7 +568,7 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  . = d 1 .:50
 MONS:   plant
-ITEM:   choko q:1 / choko q:2 / choko q:3 w:2
+ITEM:   choko q:1 no_mimic / choko q:2 no_mimic / choko q:3 no_mimic w:2
 MAP
 .....
 .....
@@ -591,9 +591,10 @@ SUBST:  . = d .:50
 SUBST:  ' = d .:33
 MONS:   plant
 : if crawl.coinflip() then
-ITEM:   lychee q:1 / lychee q:2 / lychee q:3 w:2
+ITEM:   lychee q:1 no_mimic / lychee q:2 no_mimic / lychee q:3 w:2 no_mimic
 : else
-ITEM:   rambutan q:1 / rambutan q:2 / rambutan q:3 w:2
+ITEM:   rambutan q:1 no_mimic / rambutan q:2 no_mimic / \
+        rambutan q:3 w:2 no_mimic
 : end
 MAP
 .'''.
@@ -617,9 +618,9 @@ SUBST:  . = d .:50
 SUBST:  ' = d .:33
 MONS:   plant
 : if crawl.coinflip() then
-ITEM:   orange q:1 / orange q:2 / orange q:3 w:2
+ITEM:   orange q:1 no_mimic / orange q:2 no_mimic / orange q:3 w:2 no_mimic
 : else
-ITEM:   lemon q:1 / lemon q:2 / lemon q:3 w:2
+ITEM:   lemon q:1 no_mimic / lemon q:2 no_mimic / lemon q:3 w:2 no_mimic
 : end
 MAP
 .'''.
@@ -642,7 +643,7 @@ SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
 MONS:   plant
-ITEM:   apple q:1 / apple q:2 / apple q:3 w:2
+ITEM:   apple q:1 no_mimic / apple q:2 no_mimic / apple q:3 w:2 no_mimic
 MAP
 .'''.
 .'1'.
@@ -664,7 +665,7 @@ SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
 MONS:   plant
-ITEM:   apricot q:1 / apricot q:2 / apricot q:3 w:2
+ITEM:   apricot q:1 no_mimic / apricot q:2 no_mimic / apricot q:3 w:2 no_mimic
 MAP
 .'''.
 .'1'.
@@ -686,7 +687,7 @@ SUBST:  BG = .
 SUBST:  . = d .:50
 SUBST:  ' = d .:33
 MONS:   plant
-ITEM:   pear q:1 / pear q:2 / pear q:3 w:2
+ITEM:   pear q:1 no_mimic / pear q:2 no_mimic / pear q:3 w:2 no_mimic
 MAP
 .'''.
 .'1'.
@@ -707,7 +708,8 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 SUBST:  .= d 1 .:34
 MONS:   plant
-ITEM:   snozzcumber q:1 / snozzcumber q:2 / snozzcumber q:3 w:2
+ITEM:   snozzcumber q:1 no_mimic / snozzcumber q:2 no_mimic / \
+        snozzcumber q:3 w:2 no_mimic
 MAP
 .....
 ..1..
@@ -729,11 +731,13 @@ SUBST:  BG = .
 SUBST:  . = d 1 .:34
 MONS: plant
 : if crawl.coinflip() then
-ITEM:   grape q:1 w:3 / grape q:2 w:5 / grape q:3 / \
-        grape q:4 w:7 / grape q:5 w:5 / grape q:6 w:2
+ITEM:   grape q:1 w:3 no_mimic / grape q:2 w:5 no_mimic / \
+        grape q:3 no_mimic / grape q:4 w:7 no_mimic / \
+        grape q:5 w:5 no_mimic / grape q:6 w:2 no_mimic
 : else
-ITEM:   sultana q:1 w:2 / sultana q:2 w:3 / sultana q:3 / \
-        sultana q:4 w:5 / sultana q:5 w:7 / sultana q:6 w:5
+ITEM:   sultana q:1 w:2 no_mimic / sultana q:2 w:3 no_mimic / \
+        sultana q:3 no_mimic / sultana q:4 w:5 no_mimic / \
+        sultana q:5 w:7 no_mimic / sultana q:6 w:5 no_mimic
 : end
 MAP
 .....
@@ -756,8 +760,9 @@ SUBST:  BG = .
 NSUBST: ' = 1:d / *:.
 NSUBST: . = 1:1 / *=.....1
 MONS:   plant
-ITEM:   banana q:6 w:2 / banana q:7 w:4 / banana q:10 / banana q:12 / \
-        banana q:14 w:4 / banana q:16 w:2
+ITEM:   banana q:6 w:2 no_mimic / banana q:7 w:4 no_mimic / \
+        banana q:10 no_mimic / banana q:12 no_mimic / \
+        banana q:14 w:4 no_mimic / banana q:16 w:2 no_mimic
 MAP
 .....
 .'''.
@@ -777,8 +782,9 @@ FTILE:  B = floor_dirt
 SUBST:  BG = .
 NSUBST: . = 2:1 / *=ddd..1
 MONS:   plant
-ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
-        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
+ITEM:   strawberry q:1 no_mimic / strawberry q:2 w:7 no_mimic / \
+        strawberry q:3 w:3 no_mimic / strawberry q:4 w:1 no_mimic / \
+        strawberry q:5 w:1 no_mimic / strawberry q:6 w:1 no_mimic
 MAP
 .....
 .....
