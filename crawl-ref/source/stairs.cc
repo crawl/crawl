@@ -680,6 +680,10 @@ void down_stairs(dungeon_feature_type force_stair)
         }
 
         shaft_dest = you.shaft_dest(known_shaft);
+    }
+    const int shaft_depth = (shaft ? shaft_dest.depth - you.depth : 1);
+    if (shaft)
+    {
         if (shaft_dest == level_id::current())
         {
             if (known_shaft)
@@ -700,8 +704,12 @@ void down_stairs(dungeon_feature_type force_stair)
 
         handle_items_on_shaft(you.pos(), false);
 
+        string howfar;
+        if (force_stair && (shaft_depth > 1))
+            howfar = make_stringf(" for %d floors", shaft_depth);
+
         if (!you.flight_mode() || force_stair)
-            mpr("You fall through a shaft!");
+            mpr("You fall through a shaft" + howfar + "!");
         else
             mpr("You dive down through the shaft.");
 
@@ -847,7 +855,6 @@ void down_stairs(dungeon_feature_type force_stair)
         you.level_stack.push_back(level_pos::current());
     }
 
-    const int shaft_depth = (shaft ? shaft_dest.depth - you.depth : 1);
     _player_change_level_reset();
     if (shaft)
         you.depth         = shaft_dest.depth;
