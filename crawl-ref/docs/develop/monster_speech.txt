@@ -495,17 +495,36 @@ The following variables are hardcoded:
 @Player_god@    : Player's god name, or "You" if non-religious.
 @god_is@        : replaced with "<god name> is" or "you are", if
                   non-religious.
+@God@           : Monster's god name, or "a god" if nameless. [1]
+@my_God@        : Monster's god name, or "my God" if nameless. [1]
+@possessive_God@  : Monster's god name, or "its/his/her god" if nameless. [1]
 @surface@       : Whatever the monster is standing on.
 @feature@       : The monster's square's feature description.
-@pronoun@       : it, she, he, as appropriate
+@subjective@    : it, she, he, as appropriate
+@objective@     : it, she, he, as appropriate
 @possessive@    : its, her, his, as appropriate
 @imp_taunt@     : imp type insults (see insult.txt)
 @demon_taunt@   : demon type insults (see insult.txt)
+@hand@          : whatever body part serves as the monster's "hand".
+@arm@           : whatever body part serves as the monster's "arm".
+@foot@          : whatever body part serves as the monster's "foot".
+@hands@         : plural of @hand@ [1]
+@arms@          : plural of @arm@ [1]
+@feet@          : plural of @foot@ [1]
 @says@          : synonym of "say" that fits monsters' (hardcoded)
                   speech pattern and noise level.
 
 Capitalized forms (@Monster@, @A_something@, @Possessive@, @Pronoun@)
 are expanded with capitalized text.
+
+[1] Note that plural body parts such as @hands@, @arms@, and @feet@ may
+be inappropriate for some monsters (for example, a fungus's @foot@
+is its stem, and an eyeball's @hand@ is its pupil). In those cases,
+the plural form will expand to a clearly-erroneous string such as
+"NO PLURAL ARMS"; these variables should be used only for monsters
+with known body shape. Likewise, the variables concerning the monster's
+god expand to "NO GOD" if the monster is non-religious, so should be
+used only for monsters known to have religion.
 
 Also, in insult.txt you'll find the hardcoded variables
 @species_insult_adj1@, @species_insult_adj2@, and
