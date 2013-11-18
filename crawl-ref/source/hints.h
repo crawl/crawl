@@ -58,7 +58,7 @@ enum hints_event_type
     HINT_SEEN_ALTAR,
     HINT_SEEN_SHOP,
     HINT_SEEN_DOOR,
-    HINT_FOUND_RUNED_DOOR,
+    HINT_SEEN_RUNED_DOOR,
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
