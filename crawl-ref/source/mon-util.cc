@@ -4507,8 +4507,6 @@ mon_body_shape get_mon_shape(const monster_type mc)
     }
 
     case '7': // trees and tree-like creatures
-        if (mc == MONS_DRYAD)
-            return MON_SHAPE_HUMANOID;
         return MON_SHAPE_MISC;
     case '9': // gargoyles
         return MON_SHAPE_HUMANOID_WINGED_TAILED;
