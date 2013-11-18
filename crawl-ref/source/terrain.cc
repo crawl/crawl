@@ -472,9 +472,10 @@ bool feat_is_reachable_past(dungeon_feature_type feat)
     return feat > DNGN_MAX_NONREACH;
 }
 
-// Find all connected cells containing ft, starting at d.
-void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
-                              set<coord_def>& out)
+// For internal use by find_connected_identical only.
+static void _find_connected_identical(const coord_def &d,
+                                      dungeon_feature_type ft,
+                                      set<coord_def>& out)
 {
     if (grd(d) != ft)
         return;
@@ -483,27 +484,30 @@ void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
 
     if (!prop.empty())
     {
-        // Even if this square is excluded from being a part of connected
-        // cells, add it if it's the starting square.
-        if (out.empty())
-            out.insert(d);
+        // Don't treat this square as connected to anything. Ignore it.
+        // Continue the search in other directions.
         return;
     }
 
     if (out.insert(d).second)
     {
-        find_connected_identical(coord_def(d.x+1, d.y), ft, out);
-        find_connected_identical(coord_def(d.x-1, d.y), ft, out);
-        find_connected_identical(coord_def(d.x, d.y+1), ft, out);
-        find_connected_identical(coord_def(d.x, d.y-1), ft, out);
+        _find_connected_identical(coord_def(d.x+1, d.y), ft, out);
+        _find_connected_identical(coord_def(d.x-1, d.y), ft, out);
+        _find_connected_identical(coord_def(d.x, d.y+1), ft, out);
+        _find_connected_identical(coord_def(d.x, d.y-1), ft, out);
     }
 }
 
-set<coord_def> connected_doors(const coord_def& d)
+
+// Find all connected cells containing ft, starting at d.
+void find_connected_identical(const coord_def &d, set<coord_def>& out)
 {
-    set<coord_def> doors;
-    find_connected_identical(d, grd(d), doors);
-    return doors;
+    string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
+
+    if (!prop.empty())
+        out.insert(d);
+    else
+        _find_connected_identical(d, grd(d), out);
 }
 
 void get_door_description(int door_size, const char** adjective, const char** noun)

@@ -459,7 +459,7 @@ void clear_excludes()
 static void _exclude_gate(const coord_def &p, bool del = false)
 {
     set<coord_def> all_doors;
-    find_connected_identical(p, grd(p), all_doors);
+    find_connected_identical(p, all_doors);
     for (set<coord_def>::const_iterator dc = all_doors.begin();
          dc != all_doors.end(); ++dc)
     {

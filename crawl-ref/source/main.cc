@@ -3651,7 +3651,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 
                 // Check if it's part of a gate. If so, remember all its doors.
                 set<coord_def> all_door;
-                find_connected_identical(*ai, grd(*ai), all_door);
+                find_connected_identical(*ai, all_door);
                 for (set<coord_def>::const_iterator dc = all_door.begin();
                      dc != all_door.end(); ++dc)
                 {
@@ -3881,7 +3881,8 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     // Finally, open the closed door!
-    set<coord_def> all_door = connected_doors(doorpos);
+    set<coord_def> all_door;
+    find_connected_identical(doorpos, all_door);
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
 
@@ -4106,7 +4107,7 @@ static void _close_door(coord_def move)
     if (feat == DNGN_OPEN_DOOR)
     {
         set<coord_def> all_door;
-        find_connected_identical(doorpos, grd(doorpos), all_door);
+        find_connected_identical(doorpos, all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
         const string waynoun_str = make_stringf("%sway", noun);
