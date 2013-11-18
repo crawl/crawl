@@ -702,7 +702,7 @@ void down_stairs(dungeon_feature_type force_stair)
 
         if (!you.flight_mode() || force_stair)
             mpr("You fall through a shaft!");
-        if (you.flight_mode() && !force_stair)
+        else
             mpr("You dive down through the shaft.");
 
         // Shafts are one-time-use.
