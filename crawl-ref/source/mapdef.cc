@@ -4651,7 +4651,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
     const char* missile_brands[] =
     {
         "flame",
-        "ice",
+        "frost",
         "poisoned",
         "curare",
         "returning",
