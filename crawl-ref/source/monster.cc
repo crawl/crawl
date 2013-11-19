@@ -2576,7 +2576,13 @@ string monster::name(description_level_type desc, bool force_vis) const
         return s;
 
     monster_info mi(this, MILEV_NAME);
-    return mi.proper_name(desc);
+    return mi.proper_name(desc)
+#ifdef DEBUG_MONSTERS
+    // This is incredibly spammy, too bad for regular debug builds, but
+    // I keep re-adding this over and over during debugging.
+           + make_stringf("«%d:%d»", mindex(), mid)
+#endif
+    ;
 }
 
 string monster::base_name(description_level_type desc, bool force_vis) const
