@@ -2477,6 +2477,24 @@ w:2
 %%%%
 ############ DONALD ### An adventurer hating competition
 #################################################################### BRANCHES #
+Temple Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I can never find the altar I want in here."
+
+@The_monster@ says, "There are too many gods demanding my worship.  I hate that."
+
+@The_monster@ says, "Why did you bring me all the way here just to see the Temple?"
+
+@The_monster@ says, "There's not enough treasure in here."
+
+@The_monster@ says, "You've already taken the rune from here, haven't you?"
+
+@The_monster@ says, "So-called 'good' gods are just as evil as the rest.  I hate hypocrisy."
+
+%%%%
 Orcish Mines Donald
 
 w:50
