@@ -31,7 +31,9 @@ This was the magical weapon wielded by the mighty wizard Olgreb before he met
 his fate somewhere within these dungeons. It increases the ability of its
 wielder to use venomous magic, and carries magical powers which can be evoked.
 The tales say that Olgreb researched rare venoms that may have some limited
-effect even on creatures immune to all commonly known poisons.
+effect even on creatures immune to all commonly known poisons. For obvious
+reasons, Olgreb has made the staff grant total protection even against his
+own venoms.
 %%%%
 Staff of Wucad Mu
 

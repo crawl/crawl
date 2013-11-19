@@ -2779,12 +2779,8 @@ void toxic_radiance_effect(actor* agent, int mult)
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
             }
-            // Wielding the Staff of Olgreb grants immunity to our own OTR
-            if (!agent->is_player() || !player_equip_unrand(UNRAND_OLGREB))
-            {
-                poison_player(1, agent->name(DESC_A),
-                              "toxic radiance", agent->is_player());
-            }
+            poison_player(1, agent->name(DESC_A),
+                          "toxic radiance", agent->is_player());
         }
         else
         {
