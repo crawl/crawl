@@ -497,7 +497,9 @@ void debug_mons_scan()
         monster* m1 = monster_by_mid(m->mid);
         if (m1 != m)
         {
-            if (m1 && m1->mid == m->mid)
+            if (!m1)
+                die("mid cache bogosity: no monster for %d", m->mid);
+            else if (m1->mid == m->mid)
             {
                 mprf(MSGCH_ERROR,
                      "Error: monster %s(%d) has same mid as %s(%d) (%d)",
@@ -505,7 +507,7 @@ void debug_mons_scan()
                      m1->name(DESC_PLAIN, true).c_str(), m1->mindex(), m->mid);
             }
             else
-                ASSERT(monster_by_mid(m->mid) == m);
+                die("mid cache bogosity: wanted %d got %d", m->mid, m1->mid);
         }
 
         if (you.constricted_by == m->mid && (!m->constricting
@@ -539,7 +541,12 @@ void debug_mons_scan()
     {
         unsigned short idx = mc->second;
         ASSERT(!invalid_monster_index(idx));
-        ASSERT(menv[idx].mid == mc->first);
+        if (menv[idx].mid != mc->first)
+        {
+            monster &m(menv[idx]);
+            die("mid cache bogosity: mid %d points to %s mindex=%d mid=%d",
+                mc->first, m.name(DESC_PLAIN, true).c_str(), m.mindex(), m.mid);
+        }
     }
 
     if (in_bounds(you.pos()))
