@@ -469,7 +469,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 const int speed_delta =
                     cheibriados_monster_player_speed_delta(victim);
-                dprf("Che DID_KILL_FAST: %s speed delta: %d",
+                dprf("Chei DID_KILL_FAST: %s speed delta: %d",
                      victim->name(DESC_PLAIN, true).c_str(),
                      speed_delta);
                 if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))

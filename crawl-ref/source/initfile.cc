@@ -3454,7 +3454,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "additional_macro_file")
     {
-        // TODO: this option could probably be improved.  For new, keep the
+        // TODO: this option could probably be improved.  For now, keep the
         // "= means append" behaviour, and don't allow clearing the list;
         // if we rename to "additional_macro_files" then it could work like
         // other list options.

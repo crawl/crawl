@@ -4579,7 +4579,7 @@ void item_list::set_from_slot(const item_list &list, int slot_index)
     items.push_back(list.items[slot_index]);
 }
 
-// TODO: More checking for innapropriate combinations, like the holy
+// TODO: More checking for inappropriate combinations, like the holy
 // wrath brand on a demonic weapon or the running ego on a helmet.
 // NOTE: Be sure to update the reference in syntax.txt if this gets moved!
 static int _str_to_ego(item_spec &spec, string ego_str)
