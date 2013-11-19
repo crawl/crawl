@@ -37,7 +37,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
 static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
                             bool msg);
 
-void calc_hp_artefact()
+static void _calc_hp_artefact()
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
     // We can reduce errors by a factor of 100 by using partial hp we have.
@@ -346,7 +346,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     }
 
     if (proprt[ARTP_HP])
-        calc_hp_artefact();
+        _calc_hp_artefact();
 
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
@@ -385,7 +385,7 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     if (proprt[ARTP_HP])
-        calc_hp_artefact();
+        _calc_hp_artefact();
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
     {
