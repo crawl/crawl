@@ -1787,6 +1787,58 @@ Arachne
 
 @The_monster@ says @to_foe@, "You can be the slave of me, the spider queen... or food for my pets."
 %%%%
+############ ASTERION ### Minotaur of Makhleb
+Asterion
+
+@_Asterion_common_@
+
+w:5
+@_Asterion_rare_@
+%%%%
+_Asterion_common_
+
+VISUAL:@The_monster@ snorts and paws the ground.
+
+VISUAL:@The_monster@ slowly taps his weapon in his hand.
+
+@The_monster@ says, "Soon your soul will belong to Makhleb." @player_only@
+
+@The_monster@ says, "Makhleb has given me the powers of destruction."
+
+@The_monster@ says, "Your corpse will decorate my castle walls." @player_only@
+
+@The_monster@ says, "In my kingdom, weaklings like you are put to the
+sword." @player_only@
+
+@The_monster@ says, "No maze can contain me."
+
+@The_monster@ screams @at_foe@, "That wizard's curse has only increased my power!"
+
+@The_monster@ chants a prayer to Makhleb.
+
+@The_monster@ says @to_foe@, "Your valuables will do nicely in my
+coffers." @player_only@
+
+%%%%
+_Asterion_rare_
+
+@The_monster@ unleashes a bloodcurdling roar.
+
+WARN:@The_monster@ chants and is briefly shrouded in fire.
+
+WARN:@The_monster@'s eyes glow. You hear demonic laughter.
+
+@The_monster@ says, "{{
+    if you.skill("Hexes") >= 5 then
+      return "Your hexes are useless. I'm stronger than any curse."
+    elseif you.skill("Spellcasting") >= 5 then
+      return "Ah, a wizard! I'll enjoy hearing you beg for you life."
+    else
+      return "You're no warrior. You fight like peasant!"
+    end }}" @player_only@
+
+@The_monster@ screams @at_foe@, "What ORB?! I have an entire kingdom!" @player_only@
+%%%%
 ############ AZRAEL ### efreet
 Azrael
 

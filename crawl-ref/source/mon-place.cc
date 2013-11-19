@@ -1363,6 +1363,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // Wiglaf belongs to Okawaru.
         else if (mg.cls == MONS_WIGLAF)
             mon->god = GOD_OKAWARU;
+        // Asterion belongs to Mahkleb.
+        else if (mg.cls == MONS_ASTERION)
+            mon->god = GOD_MAKHLEB;
         else
         {
             switch (mons_genus(mg.cls))

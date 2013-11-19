@@ -2223,6 +2223,16 @@
        SPELL_NO_SPELL
       }
     },
+    {  MST_ASTERION,
+      {
+       SPELL_MAJOR_DESTRUCTION,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_SPECTRAL_WEAPON,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 
     {  MST_IGNIS,
       {

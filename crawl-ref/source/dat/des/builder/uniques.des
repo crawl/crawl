@@ -390,6 +390,10 @@ NAME:   uniq_sojobo
 DEPTH:  Depths, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Sojobo band")
 
+NAME:   uniq_asterion
+DEPTH:  D:14-16, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
+: place_unique(_G, "Asterion")
+
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.
 NAME:    uniq_crazy_yiuf_cottage

@@ -1618,6 +1618,16 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         break;
 
+    case MONS_ASTERION:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_DEMON_WHIP,
+                                      WPN_DEMON_BLADE,
+                                      WPN_DEMON_TRIDENT,
+                                      -1);
+        level = MAKE_GOOD_ITEM;
+        break;
+
     default:
         break;
     }
@@ -1944,6 +1954,7 @@ static void _give_shield(monster* mon, int level)
     {
     case MONS_DAEVA:
     case MONS_MENNAS:
+    case MONS_ASTERION:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
         break;
@@ -2298,6 +2309,13 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_ANCIENT_CHAMPION:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR, -1);
+        break;
+
+    case MONS_ASTERION:
+        level = MAKE_GOOD_ITEM;
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
         break;
 
     case MONS_VAULT_SENTINEL:
