@@ -5172,8 +5172,17 @@ void dec_poison_player()
         return;
     }
 
-    if (player_res_poison() >= 3)
+    // Transforming into a form with no metabolism merely suspends the poison
+    // but doesn't let your body get rid of it.
+    if (you.is_artificial() || you.is_undead
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state == HS_STARVING))
+    {
         return;
+    }
+
+    // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
+    if (player_res_poison() >= 3)
+        return reduce_poison_player(1);
 
     if (x_chance_in_y(you.duration[DUR_POISONING], 5))
     {
