@@ -2655,7 +2655,7 @@ w:50
 
 @The_monster@ says, "I forgot to wear corrosion-proof armour. Damn, I hate that!"
 
-@The_monster@ says, "Those eyeballs look tasty."
+@The_monster@ says, "Those amoebas look tasty."
 
 @The_monster@ says, "Where's all the loot?"
 
