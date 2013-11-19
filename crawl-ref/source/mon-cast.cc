@@ -292,6 +292,19 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     if (spell_cast == SPELL_DRACONIAN_BREATH)
         real_spell = _draco_type_to_breath(drac_type);
 
+    if (spell_cast == SPELL_MAJOR_DESTRUCTION)
+    {
+        switch (random2(7))
+        {
+        case 0: real_spell = SPELL_BOLT_OF_FIRE;         break;
+        case 1: real_spell = SPELL_FIREBALL;             break;
+        case 2: real_spell = SPELL_LIGHTNING_BOLT;       break;
+        case 3: real_spell = SPELL_STICKY_FLAME;         break;
+        case 4: real_spell = SPELL_IRON_SHOT;            break;
+        case 5: real_spell = SPELL_BOLT_OF_DRAINING;     break;
+        case 6: real_spell = SPELL_ORB_OF_ELECTROCUTION; break;
+        }
+    }
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;

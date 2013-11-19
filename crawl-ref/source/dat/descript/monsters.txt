@@ -61,6 +61,17 @@ Asmodeus
 
 One of the arch-demons who dwell in the depths of Hell, wreathed in fire.
 %%%%
+Asterion
+
+Once a king infamous for waging bloodthirsty campaigns, Asterion was
+transformed into a horrible minotaur by the curse of a clever wizard-for-hire.
+Shunned and exiled from his land, he now wanders the dungeon clothed in
+tattered finery, hoping to establish a new kindgom in its depths by any means
+necessary.
+
+These aspirations are appreciated by Makhleb, who has granted the minotaur
+destructive magic and the aid of demonic weaponry.
+%%%%
 Azrael
 
 A powerful, belligerent efreet. (Is there any other kind?)

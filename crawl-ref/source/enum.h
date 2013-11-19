@@ -2762,6 +2762,9 @@ enum monster_type                      // menv[].type
     MONS_CHUCK,
     MONS_IRON_GIANT,
     MONS_NELLIE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_ASTERION,
+#endif
     MONS_IRON_ELEMENTAL,
 
     // Specials:
@@ -2921,6 +2924,9 @@ enum monster_type                      // menv[].type
     MONS_SALAMANDER_FIREBRAND,
     MONS_SALAMANDER_MYSTIC,
 
+#if TAG_MAJOR_VERSION == 34
+    MONS_ASTERION,
+#endif
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3835,6 +3841,7 @@ enum spell_type
     SPELL_SAP_MAGIC,
     SPELL_CORRUPT_BODY,
     SPELL_REARRANGE_PIECES,
+    SPELL_MAJOR_DESTRUCTION,
     NUM_SPELLS
 };
 

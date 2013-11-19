@@ -3535,6 +3535,19 @@ struct spell_desc
 },
 
 {
+    SPELL_MAJOR_DESTRUCTION, "Major Destruction",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     7,
+     200,
+     7, 7,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
