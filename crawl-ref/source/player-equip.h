@@ -6,7 +6,6 @@
 // times, and to make sure melded flags don't get out of sync.
 
 // XXX: the msg flag isn't implemented in all cases.
-void calc_hp_artefact();
 void equip_item(equipment_type slot, int item_slot, bool msg=true);
 bool unequip_item(equipment_type slot, bool msg=true);
 bool meld_slot(equipment_type slot, bool msg=true);
