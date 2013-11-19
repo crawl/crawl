@@ -231,7 +231,7 @@ function ice_cave_caverns_natural_giant_loot(e)
           crossbow ego:frost good_item no_uniq ident:type / \
           longbow ego:frost good_item no_uniq ident:type / nothing w:20")
   e.item("ring of ice / ring of protection from cold / wand of cold / \
-          arrow ego:ice q:25 / bolt ego:ice q:20 / nothing")
+          arrow ego:frost q:25 / bolt ego:frost q:20 / nothing")
 end
 
 }}
