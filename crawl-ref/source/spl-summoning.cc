@@ -3157,11 +3157,7 @@ bool summoned_monster(monster* mons, actor* caster, spell_type spell)
         int duration = 0;
         int stype    = 0;
         const bool summoned = mi->is_summoned(&duration, &stype);
-        // XXX: This friendly check only works for player summons; if we
-        // wanted the summons cap to apply to monsters we'd need a way
-        // here to check who actually summoned the monster; there's no
-        // easy way to do that right now
-        if (summoned && stype == spell && mi->friendly())
+        if (summoned && stype == spell && caster->mid == mi->summoner)
         {
             count++;
 
