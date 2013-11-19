@@ -5174,8 +5174,9 @@ void dec_poison_player()
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
+    // Hungry vampires are less affected by poison (not at all when bloodless).
     if (you.is_artificial() || you.is_undead
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state == HS_STARVING))
+        && (you.is_undead != US_SEMI_UNDEAD || x_chance_in_y(4 - you.hunger_state, 4)))
     {
         return;
     }
