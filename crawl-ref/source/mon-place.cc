@@ -1819,7 +1819,7 @@ monster_type pick_local_zombifiable_monster(level_id place,
     {
         // Get Zigs something reasonable to work with, if there's no place
         // explicitly defined.
-        place = level_id(BRANCH_DUNGEON, 31 - (27 - place.depth) / 3);
+        place = level_id(BRANCH_DEPTHS, 14 - (27 - place.depth) / 3);
     }
     else
     {
