@@ -3605,7 +3605,7 @@ static void _blink_allies_encircle(const monster* mon)
     }
     shuffle_array(allies);
 
-    int count = 2 + random2(4);
+    int count = min(1, mon->hit_dice / 8 + random2(mon->hit_dice / 4));
 
     for (unsigned int i = 0; i < allies.size() && count; ++i)
     {
