@@ -1374,7 +1374,7 @@ bool go_berserk(bool intentional, bool potion)
 
     if (you_worship(GOD_CHEIBRIADOS))
     {
-        // Che makes berserk not speed you up.
+        // Chei makes berserk not speed you up.
         // Unintentional would be forgiven "just this once" every time.
         // Intentional could work as normal, but that would require storing
         // whether you transgressed to start it -- so we just consider this
