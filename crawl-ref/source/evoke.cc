@@ -453,6 +453,28 @@ bool disc_of_storms(bool drac_breath)
     return rc;
 }
 
+static void _fiery_explosion()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    bolt beam;
+    beam.flavour       = BEAM_FIRE;
+    beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.damage        = dice_def(3, 15);
+    beam.target        = you.pos();
+    beam.name          = "fiery explosion";
+    beam.colour        = RED;
+    beam.aux_source    = "an exploding Tome of Destruction";
+    beam.ex_size       = 2;
+    beam.is_explosion  = true;
+    beam.effect_known  = true;
+    beam.affects_items = true;
+    beam.thrower       = KILL_YOU;
+    beam.beam_source   = NON_MONSTER;
+
+    beam.explode();
+}
+
 void tome_of_power(int slot)
 {
     if (you.form == TRAN_WISP)
@@ -506,8 +528,7 @@ void tome_of_power(int slot)
             dec_inv_item_quantity(slot, 1);
         }
 
-        immolation(15, IMMOLATION_TOME, false);
-
+        _fiery_explosion();
         xom_is_stimulated(200);
     }
     else if (one_chance_in(36))
