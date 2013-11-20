@@ -268,7 +268,7 @@ bool is_chaotic_item(const item_def& item)
     case OBJ_POTIONS:
         retval = item.sub_type == POT_MUTATION
                  || item.sub_type == POT_BENEFICIAL_MUTATION
-                 || item.sub_type == POT_WOOD;
+                 || item.sub_type == POT_LIGNIFY;
         break;
     case OBJ_BOOKS:
     case OBJ_RODS:

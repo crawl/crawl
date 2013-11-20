@@ -452,7 +452,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
         break;
 
-    case POT_WOOD:
+    case POT_LIGNIFY:
         if (transform(30, TRAN_TREE, !was_known))
             you.transform_uncancellable = true;
         else
