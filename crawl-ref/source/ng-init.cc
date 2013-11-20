@@ -339,60 +339,10 @@ multi_overflow:
     }
 }
 
-static int _get_random_porridge_desc()
-{
-    return PDESCQ(PDQ_GLUGGY, one_chance_in(3) ? PDC_BROWN
-                                               : PDC_WHITE);
-}
-
-static int _get_random_coagulated_blood_desc()
-{
-    potion_description_qualifier_type qualifier = PDQ_NONE;
-    while (true)
-    {
-        switch (random2(4))
-        {
-        case 0:
-            qualifier = PDQ_GLUGGY;
-            break;
-        case 1:
-            qualifier = PDQ_LUMPY;
-            break;
-        case 2:
-            qualifier = PDQ_SEDIMENTED;
-            break;
-        case 3:
-            qualifier = PDQ_VISCOUS;
-            break;
-        }
-        potion_description_colour_type colour = (coinflip() ? PDC_RED
-                                                            : PDC_BROWN);
-
-        int desc = PDESCQ(qualifier, colour);
-
-        if (you.item_description[IDESC_POTIONS][POT_BLOOD] != desc)
-            return desc;
-    }
-}
-
-static int _get_random_blood_desc()
-{
-    return PDESCQ(coinflip() ? PDQ_NONE :
-                  coinflip() ? PDQ_VISCOUS
-                             : PDQ_SEDIMENTED, PDC_RED);
-}
-
 void initialise_item_descriptions()
 {
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
-
-    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
-        = _get_random_porridge_desc();
-    you.item_description[IDESC_POTIONS][POT_BLOOD]
-        = _get_random_blood_desc();
-    you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
-        = _get_random_coagulated_blood_desc();
 
     // The order here must match that of IDESC in describe.h
     const int max_item_number[6] = { NUM_WANDS,
