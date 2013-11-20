@@ -306,21 +306,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 break;
 
-            case GOD_ZIN:
-                // Converted allies (marked as TSOites) can be martyrs.
-                if (victim && victim->god == GOD_SHINING_ONE)
-                    break;
-
-                // Zin only cares about the deaths of those with souls.
-                if (thing_done == DID_FRIEND_DIED)
-                    break;
-                // fall through
-
-            case GOD_OKAWARU:
-                piety_change = -level;
-                retval = true;
-                break;
-
             default:
                 break;
             }
