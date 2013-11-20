@@ -581,22 +581,12 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     you.wield_change  = true;
     you.redraw_quiver = true;
 
-    const bool knew_coag  = (get_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED)
-                                == ID_KNOWN_TYPE);
-
     if (!coag_count) // Some potions rotted away, but none coagulated.
     {
         // Only coagulated blood can rot.
         ASSERT(blood.sub_type == POT_BLOOD_COAGULATED);
         _potion_stack_changed_message(blood, rot_count, "rot%s away");
         bool destroyed = dec_inv_item_quantity(blood.link, rot_count);
-
-        if (!knew_coag)
-        {
-            set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
-            if (!destroyed)
-                mpr_nocap(blood.name(DESC_INVENTORY).c_str());
-        }
 
         if (!destroyed)
             _compare_blood_quantity(blood, timer.size());
@@ -607,19 +597,9 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // Coagulated blood cannot coagulate any further...
     ASSERT(blood.sub_type == POT_BLOOD);
 
-    const bool knew_blood = get_ident_type(OBJ_POTIONS, POT_BLOOD)
-                                == ID_KNOWN_TYPE;
-
     _potion_stack_changed_message(blood, coag_count, "coagulate%s");
 
     request_autoinscribe();
-
-    // Identify both blood and coagulated blood, if necessary.
-    if (!knew_blood)
-        set_ident_type(OBJ_POTIONS, POT_BLOOD, ID_KNOWN_TYPE);
-
-    if (!knew_coag)
-        set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
 
     // Now that coagulating is necessary, check inventory for !coagulated blood.
     for (int m = 0; m < ENDOFPACK; m++)
@@ -637,11 +617,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             ASSERT(props2.exists("timer"));
             CrawlVector &timer2 = props2["timer"].get_vector();
             if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
-            {
                 _compare_blood_quantity(blood, timer.size());
-                if (!knew_blood)
-                    mpr_nocap(blood.name(DESC_INVENTORY).c_str());
-            }
 
             // Update timer -> push(pop).
             int val;
@@ -654,8 +630,6 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
             you.inv[m].quantity += coag_count;
             ASSERT(timer2.size() == you.inv[m].quantity);
-            if (!knew_coag)
-                mpr_nocap(you.inv[m].name(DESC_INVENTORY).c_str());
 
             // re-sort timer
             _int_sort(timer2);
@@ -684,9 +658,6 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         // Stack still exists because of coag_count.
         _compare_blood_quantity(blood, timer.size());
 
-        if (!knew_coag)
-            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
-
         return rot_count > 0;
     }
 
@@ -703,11 +674,6 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
         blood.quantity -= coag_count + rot_count;
         _compare_blood_quantity(blood, timer.size());
-
-        if (!knew_blood)
-            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
-        if (!knew_coag)
-            mpr_nocap(item.name(DESC_INVENTORY).c_str());
 
         return rot_count > 0;
     }
@@ -744,8 +710,6 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             ASSERT(timer2.size() == mitm[o].quantity);
             dec_inv_item_quantity(blood.link, rot_count + coag_count);
             _compare_blood_quantity(blood, timer.size());
-            if (!knew_blood)
-                mpr_nocap(blood.name(DESC_INVENTORY).c_str());
 
             return true;
         }
@@ -762,11 +726,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     move_item_to_grid(&o, you.pos());
 
     if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
-    {
         _compare_blood_quantity(blood, timer.size());
-        if (!knew_blood)
-            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
-    }
     return true;
 }
 
