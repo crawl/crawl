@@ -3759,6 +3759,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
 
         if ((mons_genus(mons->type) == MONS_DRAGON
+            || mons_genus(mons->type) == MONS_DRAKE
             || mons_genus(mons->type) == MONS_DRACONIAN)
                 && mons->has_ench(ENCH_BREATH_WEAPON))
         {
@@ -4382,6 +4383,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     if (used)
     {
         if (mons_genus(mons->type) == MONS_DRAGON
+            || mons_genus(mons->type) == MONS_DRAKE
             || mons_genus(mons->type) == MONS_DRACONIAN)
         {
             setup_breath_timeout(mons);
