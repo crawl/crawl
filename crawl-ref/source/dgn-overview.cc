@@ -347,7 +347,7 @@ static string _get_unseen_branches()
 
         if (!stair_level.count(branch))
         {
-            const branch_type parent = parent_branch((branch_type)i);
+            const branch_type parent = branches[branch].parent_branch;
             // Root branches.
             if (parent == NUM_BRANCHES)
                 continue;
