@@ -297,6 +297,14 @@ static bool _prepare_del_ench(monster* mon, const mon_enchant &me)
     if (me.ench != ENCH_SUBMERGED)
         return true;
 
+    // Unbreathing stuff that can't swim stays on the bottom.
+    if (grd(mon->pos()) == DNGN_DEEP_WATER
+        && !mon->can_drown()
+        && !monster_habitable_grid(mon, DNGN_DEEP_WATER))
+    {
+        return false;
+    }
+
     // Lurking monsters only unsubmerge when their foe is in sight if the foe
     // is right next to them.
     if (mons_is_lurking(mon))
@@ -1366,7 +1374,15 @@ void monster::apply_enchantment(const mon_enchant &me)
         const dungeon_feature_type grid = grd(pos());
 
         if (!monster_can_submerge(this, grid))
-            del_ench(ENCH_SUBMERGED); // forced to surface
+        {
+            // unbreathing stuff can stay on the bottom
+            if (grid != DNGN_DEEP_WATER
+                || monster_habitable_grid(this, grid)
+                || can_drown())
+            {
+                del_ench(ENCH_SUBMERGED); // forced to surface
+            }
+        }
         else if (mons_landlubbers_in_reach(this))
         {
             del_ench(ENCH_SUBMERGED);
