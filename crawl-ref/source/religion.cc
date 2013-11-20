@@ -3613,13 +3613,6 @@ void god_pitch(god_type which_god)
     if (you_worship(GOD_ELYVILON))
         you.start_train.insert(SK_INVOCATIONS);
 
-    if (you_worship(GOD_OKAWARU)
-        && player_mutation_level(MUT_DEMONIC_GUARDIAN))
-    {
-        mpr("Your demonic guardian will not assist you as long as you worship "
-            "Okawaru.", MSGCH_GOD);
-    }
-
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
     // you make all non-hostile unclean and chaotic beings hostile; and
