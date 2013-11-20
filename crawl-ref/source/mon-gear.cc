@@ -180,7 +180,7 @@ static void _give_potion(monster* mon, int level)
         if (thing_created == NON_ITEM)
             return;
 
-        mitm[thing_created].flags = 0;
+        mitm[thing_created].flags = ISFLAG_KNOW_TYPE;
         _give_monster_item(mon, thing_created);
     }
     else if (mon->type == MONS_GNOLL_SERGEANT && one_chance_in(3))
