@@ -1215,8 +1215,9 @@ static void _give_basic_spells(job_type which_job)
 // Give knowledge of things that aren't in the starting inventory.
 static void _give_basic_knowledge(job_type which_job)
 {
-    if (you.species == SP_VAMPIRE)
-        set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
+    you.type_ids[OBJ_POTIONS][POT_BLOOD] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_BLOOD_COAGULATED] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_PORRIDGE] = ID_KNOWN_TYPE;
 
     switch (which_job)
     {
