@@ -167,27 +167,3 @@ MAP
  ...........
   ....@....
 ENDMAP
-
-NAME: gammafunk_enter_depths_ironcross
-ORIENT: float
-TAGS: patrolling
-PLACE: D:$
-KFEAT: O = enter_depths
-MONS: vault guard, ironbrand convoker, vault sentinel
-SHUFFLE: 123
-MAP
-    vvvvv
-    v...v
-    v...v
-    v.1.v
-vvvvv...vvvvv
-v...........v
-v..2..O..3..v
-v...........v
-vvvvv...vvvvv
-    v...v
-    v...v
-    v...v
-    vv+vv
-      @
-ENDMAP
