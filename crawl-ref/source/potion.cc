@@ -348,7 +348,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
 #if TAG_MAJOR_VERSION == 34
     case POT_WATER:
-    case POT_FIZZING:
 #endif
     case NUM_POTIONS:
         if (you.species == SP_VAMPIRE)
@@ -451,6 +450,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
     case POT_RESISTANCE:
         mpr("You feel protected.", MSGCH_DURATION);
         you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
+        break;
+
+    case POT_WOOD:
+        if (transform(30, TRAN_TREE, !was_known))
+            you.transform_uncancellable = true;
+        else
+            mpr("You feel woody for a moment.");
         break;
     }
 

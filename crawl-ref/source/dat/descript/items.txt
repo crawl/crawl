@@ -1079,6 +1079,12 @@ potion of beneficial mutation
 
 A potion which gives you a supposedly good mutation.
 %%%%
+potion of wood
+
+A potion which temporarily transforms the imbiber into an animated tree with
+branches capable of holding weapons. Such a tree is quite resilient,
+although cannot retreat in any way.
+%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the
