@@ -314,7 +314,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "bend time to slow others",
+    { "",
       "",
       "warp the flow of time around you",
       "inflict damage on those overly hasty",
@@ -3599,6 +3599,7 @@ void god_pitch(god_type which_god)
         simple_god_message(" begins to support your attributes as your "
                            "movement slows.");
         notify_stat_change("Cheibriados worship");
+        mpr("You can now bend time to slow others.", MSGCH_GOD);
     }
 
     // We disable all magical skills to avoid accidentally angering Trog.
