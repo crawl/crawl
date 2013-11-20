@@ -2371,15 +2371,6 @@ void define_monster(monster* mons)
         col = mons->colour;
         break;
 
-    case MONS_DRACONIAN:
-    case MONS_ELF:
-    case MONS_HUMAN:
-        // These are supposed to only be created by polymorph.
-        hd += random2(10) - 4;
-        ac += random2(5) - 2;
-        ev += random2(5) - 2;
-        break;
-
     case MONS_STARCURSED_MASS:
         monnumber = 12;
         break;
