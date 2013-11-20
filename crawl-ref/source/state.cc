@@ -48,6 +48,13 @@ game_state::game_state()
 {
     reset_cmd_repeat();
     reset_cmd_again();
+#ifdef TARGET_OS_WINDOWS
+    no_gdb = "Non-UNIX Platform -> not running gdb.";
+#elif defined DEBUG_DIAGNOSTICS
+    no_gdb = "Debug build -> run gdb yourself.";
+#else
+    no_gdb = access("/usr/bin/gdb", 1) ? "GDB not installed." : 0;
+#endif
 }
 
 void game_state::add_startup_error(const string &err)
