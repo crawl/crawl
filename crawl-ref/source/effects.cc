@@ -333,44 +333,6 @@ int torment(actor *attacker, int taux, const coord_def& where)
     return r;
 }
 
-void immolation(int pow, immolation_source_type source, bool known)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    const char *aux = "immolation";
-
-    bolt beam;
-
-    switch (source)
-    {
-    case IMMOLATION_SCROLL:
-        aux = "a scroll of immolation";
-        break;
-
-    case IMMOLATION_TOME:
-        aux = "an exploding Tome of Destruction";
-        break;
-
-    default:;
-    }
-
-    beam.flavour       = BEAM_FIRE;
-    beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.damage        = dice_def(3, pow);
-    beam.target        = you.pos();
-    beam.name          = "fiery explosion";
-    beam.colour        = RED;
-    beam.aux_source    = aux;
-    beam.ex_size       = 2;
-    beam.is_explosion  = true;
-    beam.effect_known  = known;
-    beam.affects_items = source == IMMOLATION_TOME;
-    beam.thrower       = KILL_YOU;
-    beam.beam_source   = NON_MONSTER;
-
-    beam.explode();
-}
-
 static bool _conduct_electricity_affects_actor(const bolt& beam,
                                                const actor* victim)
 {
