@@ -1260,6 +1260,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Set pos and link monster into monster grid.
     if (!dont_place && !mon->move_to_pos(fpos))
     {
+        env.mid_cache.erase(mon->mid);
         mon->reset();
         return 0;
     }
@@ -1485,6 +1486,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (!wpn)
         {
             mon->destroy_inventory();
+            env.mid_cache.erase(mon->mid);
             mon->reset();
             mgrd(fpos) = NON_MONSTER;
             return 0;
@@ -1687,6 +1689,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             if (!ghost.init_chimera_for_place(mon, place, mg.cls, fpos))
             {
+                env.mid_cache.erase(mon->mid);
                 mon->reset();
                 return 0;
             }
