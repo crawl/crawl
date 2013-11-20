@@ -1735,14 +1735,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         update_vision_range();
         break;
 
-    case MUT_DEMONIC_GUARDIAN:
-        if (you_worship(GOD_OKAWARU))
-        {
-            mpr("Your demonic guardian will not assist you as long as you "
-                "worship Okawaru.", MSGCH_MUTATION);
-        }
-        break;
-
     default:
         break;
     }
@@ -2517,10 +2509,6 @@ static bool _balance_demonic_guardian()
 // _balance_demonic_guardian()
 void check_demonic_guardian()
 {
-    // Don't spawn guardians with Oka, they're a huge pain.
-    if (you_worship(GOD_OKAWARU))
-        return;
-
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
 
     if (!_balance_demonic_guardian() &&
