@@ -100,7 +100,7 @@ bool feat_is_staircase(dungeon_feature_type feat)
         return true;
 
     // All branch entries/exits are staircases, except for Zot.
-    if (feat == DNGN_ENTER_DEPTHS
+    if (feat == DNGN_ENTER_VAULTS
         || feat == DNGN_ENTER_ZOT
         || feat == DNGN_RETURN_FROM_ZOT)
     {

@@ -3122,7 +3122,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_ENTER_SLIME_PITS:
         return "staircase to the Slime Pits";
     case DNGN_ENTER_VAULTS:
-        return "staircase to the Vaults";
+        return "gate to the Vaults";
     case DNGN_ENTER_CRYPT:
         return "staircase to the Crypt";
     case DNGN_ENTER_HALL_OF_BLADES:
@@ -3146,7 +3146,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_ENTER_FOREST:
         return "staircase to the Enchanted Forest";
     case DNGN_ENTER_DEPTHS:
-        return "gate to the Depths";
+        return "staircase to the Depths";
     case DNGN_ENTER_PORTAL_VAULT:
         // The bazaar description should be set in the bazaar marker; this
         // is the description for a portal of unknown type.

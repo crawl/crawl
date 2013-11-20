@@ -720,8 +720,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
         _maybe_destroy_trap(you.pos());
     }
 
-    if (stair_find == DNGN_ENTER_DEPTHS
-        && !is_existing_level(level_id(BRANCH_DEPTHS, 1)))
+    if (stair_find == DNGN_ENTER_VAULTS
+        && !is_existing_level(level_id(BRANCH_VAULTS, 1)))
     {
         bool has_rune = false;
         int i = 0;
