@@ -185,7 +185,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_FEDHAS_EVOLUTION, ABIL_FEDHAS_SUNLIGHT, ABIL_FEDHAS_PLANT_RING,
       ABIL_FEDHAS_SPAWN_SPORES, ABIL_FEDHAS_RAIN},
     // Cheibriados
-    { ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_DISTORTION,
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_DISTORTION,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
     // Ashenzari
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
@@ -3460,6 +3460,11 @@ void set_god_ability_slots()
         _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_OTHERS,
                                 'a' + num++);
     }
+    if (you_worship(GOD_CHEIBRIADOS))
+    {
+        _set_god_ability_helper(ABIL_CHEIBRIADOS_TIME_BEND,
+                                'a' + num++);
+    }
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
@@ -3552,6 +3557,12 @@ vector<ability_type> get_god_abilities(bool include_unusable)
         abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
     else if (you_worship(GOD_ELYVILON) && (include_unusable || !silenced(you.pos())))
         abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_OTHERS);
+    else if (you_worship(GOD_CHEIBRIADOS) && (include_unusable
+                                              || !(silenced(you.pos())
+                                                   || player_under_penance())))
+    {
+        abilities.push_back(ABIL_CHEIBRIADOS_TIME_BEND);
+    }
     else if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
 
