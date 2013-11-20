@@ -3340,12 +3340,9 @@ static bool _mons_cast_freeze(monster* mons)
 
 void setup_breath_timeout(monster* mons)
 {
-    if (mons_genus(mons->type) != MONS_DRAGON
-        && mons_genus(mons->type) != MONS_DRAKE
-        && mons_genus(mons->type) != MONS_DRACONIAN)
-    {
-        return;
-    }
+    ASSERT(mons_genus(mons->type) == MONS_DRAGON
+           || mons_genus(mons->type) == MONS_DRAKE
+           || mons_genus(mons->type) == MONS_DRACONIAN);
 
     if (mons->has_ench(ENCH_BREATH_WEAPON))
         return;
