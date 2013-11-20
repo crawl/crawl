@@ -671,7 +671,7 @@ static const char* potion_type_name(int potiontype)
     case POT_BLOOD:             return "blood";
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
-    case POT_WOOD:              return "lignification";
+    case POT_LIGNIFY:           return "lignification";
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
     default:                    return "bugginess";
     }
@@ -3264,7 +3264,7 @@ bool is_useless_item(const item_def &item, bool temp)
                 return temp;
             return you.is_undead;
 
-        case POT_WOOD:
+        case POT_LIGNIFY:
             return you.is_undead
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED);
