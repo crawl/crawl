@@ -876,12 +876,8 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     switch (which_god)
     {
-    case GOD_ELYVILON: case GOD_OKAWARU:
+    case GOD_ELYVILON:
         dislikes.push_back("you allow allies to die");
-        break;
-
-    case GOD_ZIN:
-        dislikes.push_back("you allow sentient allies to die");
         break;
 
     default:
