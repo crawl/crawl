@@ -44,6 +44,7 @@ struct game_state
     bool need_save;         // Set to true when game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
+    const char* no_gdb;     // reason for not running gdb
 
     int  seen_hups;         // Set to true if SIGHUP received.
 

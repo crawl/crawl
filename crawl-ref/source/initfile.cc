@@ -963,13 +963,6 @@ void game_options::reset_options()
     terp_files.clear();
     no_save              = false;
 #endif
-#ifdef TARGET_OS_WINDOWS
-    no_gdb               = "Non-UNIX Platform -> not running gdb.";
-#elif defined DEBUG_DIAGNOSTICS
-    no_gdb               = "Debug build -> run gdb yourself.";
-#else
-    no_gdb               = access("/usr/bin/gdb", 1) ? "GDB not installed." : 0;
-#endif
 
 #ifdef USE_TILE
     tile_show_items      = "!?/%=([)x}:|\\";
@@ -4343,12 +4336,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_GDB:
-            Options.no_gdb = 0;
+            crawl_state.no_gdb = 0;
             break;
 
         case CLO_NO_GDB:
         case CLO_NOGDB:
-            Options.no_gdb = "GDB disabled via the command line.";
+            crawl_state.no_gdb = "GDB disabled via the command line.";
             break;
 
         case CLO_MACRO:
