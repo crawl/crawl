@@ -1153,25 +1153,19 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_FIRE_GIANT:
-        force_item = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_GREAT_SWORD;
-        item.plus      = 0;
-        item.plus2     = 0;
         item.flags    |= ISFLAG_KNOW_TYPE;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        item.special   = SPWPN_FLAMING;
         break;
 
     case MONS_FROST_GIANT:
-        force_item = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_BATTLEAXE;
-        item.plus      = 0;
-        item.plus2     = 0;
         item.flags    |= ISFLAG_KNOW_TYPE;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
+        item.special   = SPWPN_FREEZING;
         break;
 
     case MONS_ORC_WIZARD:
@@ -1490,7 +1484,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     // and subtype and create a new item. - bwr
     const int thing_created =
         ((force_item) ? get_mitm_slot() : items(0, xitc, xitt, true,
-                                                level, item_race));
+                                          level, item_race, 0, item.special));
 
     if (thing_created == NON_ITEM)
         return item_race;
@@ -1499,6 +1493,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     // items() won't have done it for us.
     if (force_item)
         mitm[thing_created] = item;
+    else
+        mitm[thing_created].flags |= item.flags;
 
     item_def &i = mitm[thing_created];
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
