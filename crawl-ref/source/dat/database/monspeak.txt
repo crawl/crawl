@@ -376,6 +376,8 @@ elseif you.race() == "Felid" then
     return "pillow-pawed"
 elseif you.race() == "Octopode" then
     return "soft-tentacled"
+elseif you.race() == "Formicid" then
+    return "massive-mandibled"
 else
     return "rosy-lipped"
 end
@@ -1828,6 +1830,8 @@ if you.race() == "Felid" then
     return "paws"
 elseif you.race() == "Octopode" then
     return "tentacles"
+elseif you.race() == "Formicid" then
+    return "limbs"
 else
     return "arms"
 end
