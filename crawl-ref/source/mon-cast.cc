@@ -1359,6 +1359,17 @@ static bool _valid_druids_call_target(const monster* caller, const monster* call
            && mons_habitat(callee) != HT_LAVA;
 }
 
+// If true, this monster's spellcasting should respect the breath timer.
+static bool _is_breath_caster(monster_type mtyp)
+{
+    // Wind drakes breathe as a special ability, not a spell; but they do
+    // "cast" Airstrike by flapping their wings, and that shouldn't respect
+    // the breath timer. All other drakes and dragons have only breath
+    // spells (if you count the refrigeration roar of SoH[Coc]).
+    return mons_genus(mtyp) == MONS_DRAGON
+           || mons_genus(mtyp) == MONS_DRAKE && mtyp != MONS_WIND_DRAKE;
+}
+
 // Checks to see if a particular spell is worth casting in the first place.
 static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 {
@@ -1382,11 +1393,8 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             return true;
     }
 
-    if (mons_genus(mon->type) == MONS_DRAGON
-        && mon->has_ench(ENCH_BREATH_WEAPON))
-    {
+    if (_is_breath_caster(mon->type) && mon->has_ench(ENCH_BREATH_WEAPON))
         return true;
-    }
 
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those
@@ -2859,8 +2867,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons->suicide();
 
         // Dragons now have a time-out on their breath weapons, draconians too!
-        if (mons_genus(mons->type) == MONS_DRAGON
-            || (mons_genus(mons->type) == MONS_DRACONIAN && was_drac_breath))
+        if (_is_breath_caster(mons->type)
+            || mons_genus(mons->type) == MONS_DRACONIAN && was_drac_breath)
         {
             setup_breath_timeout(mons);
         }
@@ -3332,8 +3340,12 @@ static bool _mons_cast_freeze(monster* mons)
 
 void setup_breath_timeout(monster* mons)
 {
-    if (mons_genus(mons->type) != MONS_DRAGON && mons_genus(mons->type) != MONS_DRACONIAN)
+    if (mons_genus(mons->type) != MONS_DRAGON
+        && mons_genus(mons->type) != MONS_DRAKE
+        && mons_genus(mons->type) != MONS_DRACONIAN)
+    {
         return;
+    }
 
     if (mons->has_ench(ENCH_BREATH_WEAPON))
         return;
