@@ -970,11 +970,6 @@ A weirdly glowing ball
 
 This floating ball radiates with shimmering light.
 %%%%
-# ragdoll_tomb_raider
-A sealed sarcophagus
-
-This ancient sarcophagus is sealed shut.
-%%%%
 ###########################
 ### Portal vault entrances
 ###########################
