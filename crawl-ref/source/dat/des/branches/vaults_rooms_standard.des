@@ -251,7 +251,7 @@ MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
         Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
         Wiglaf / Norris / goblin
 KITEM:  ! = any potion / potion of confusion, \
-            any potion / potion of paralysis, any potion / potion of slowing
+            any potion / potion of paralysis, any potion
 KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
 MAP
 vvvvvvvvvvvvv....
