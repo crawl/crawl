@@ -2368,6 +2368,7 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
 bool is_dragonkind(const actor *act)
 {
     if (mons_genus(act->mons_species()) == MONS_DRAGON
+        || mons_genus(act->mons_species()) == MONS_DRAKE
         || mons_genus(act->mons_species()) == MONS_DRACONIAN)
     {
         return true;
@@ -2381,6 +2382,7 @@ bool is_dragonkind(const actor *act)
 
     if (mons_is_zombified(mon)
         && (mons_genus(mon->base_monster) == MONS_DRAGON
+            || mons_genus(mon->base_monster) == MONS_DRAKE
             || mons_genus(mon->base_monster) == MONS_DRACONIAN))
     {
         return true;
