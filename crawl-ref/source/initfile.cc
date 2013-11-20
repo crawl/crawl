@@ -1056,7 +1056,7 @@ void game_options::reset_options()
 #endif
 
     // map each colour to itself as default
-    for (int i = 0; i < 16; ++i)
+    for (int i = 0; i < (int)ARRAYSZ(colour); ++i)
         colour[i] = i;
 
     // map each channel to plain (well, default for now since I'm testing)
