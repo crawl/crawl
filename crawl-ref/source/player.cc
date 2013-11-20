@@ -572,7 +572,7 @@ bool is_player_same_genus(const monster_type mon, bool transform)
         case TRAN_SPIDER:
             return mons_genus(mon) == MONS_SPIDER;
         case TRAN_DRAGON:
-            return mons_genus(mon) == MONS_DRAGON; // Includes all drakes.
+            return mons_genus(mon) == MONS_DRAGON;
         case TRAN_PIG:
             return mons_genus(mon) == MONS_HOG;
         case TRAN_JELLY:
