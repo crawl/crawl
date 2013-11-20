@@ -4180,6 +4180,11 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
             if (!_yred_enslave_soul(mons, killer))
                 monster_die(mons, killer, killnum, true);
         }
+        else
+        {
+            dprf("undrownable in Davy Jones' locker");
+            mons->add_ench(ENCH_SUBMERGED);
+        }
     }
 }
 

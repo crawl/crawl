@@ -259,19 +259,7 @@ bool monster::submerged() const
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
     // Can't find any reference to MF_SUBMERGED anywhere. Don't know what
     // this means. - abrahamwl
-    if (has_ench(ENCH_SUBMERGED))
-        return true;
-
-    if (grd(pos()) == DNGN_DEEP_WATER
-        && (!monster_habitable_grid(this, DNGN_DEEP_WATER)
-            || (mons_genus(type) == MONS_DRACONIAN
-                && draco_subspecies(this) == MONS_GREY_DRACONIAN))
-        && !can_drown())
-    {
-        return true;
-    }
-
-    return false;
+    return has_ench(ENCH_SUBMERGED);
 }
 
 bool monster::extra_balanced_at(const coord_def p) const
