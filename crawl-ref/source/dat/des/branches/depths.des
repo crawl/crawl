@@ -167,3 +167,23 @@ MAP
  ...........
   ....@....
 ENDMAP
+
+NAME: kb_enter_depths_archers
+ORIENT: float
+PLACE: D:$
+KFEAT: O = enter_depths
+MONS:  skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta ;\
+       bow . arrow q:10 . dagger
+SUBST: w : wl
+SUBST: v : vvvvvccb
+MAP
+  vvvvvvv
+ vv.....vv
+ v.vvvvv.v
+ vv+111v.v
+  vvwwwv.v
+ vv..O..vv
+vv.......vv
+v.........v
+v....@....v
+ENDMAP
