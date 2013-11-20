@@ -54,7 +54,7 @@ const Branch branches[NUM_BRANCHES] =
       'K', false, 0 },
 #endif
 
-    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 13, 8, 10,
+    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 8, 10,
       0, 0,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
