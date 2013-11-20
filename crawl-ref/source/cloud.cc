@@ -296,7 +296,7 @@ static void _dissipate_cloud(int cloudidx, int dissipate)
 
 static void _handle_ghostly_flame(const cloud_struct& cloud)
 {
-    if (actor_at(cloud.pos))
+    if (actor_at(cloud.pos) || !actor_by_mid(cloud.source))
         return;
 
     int countn = 0;
@@ -328,11 +328,13 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
     }
 
     monster* agent = monster_by_mid(cloud.source);
-    create_monster(mgen_data(MONS_SPECTRAL_THING,
+    monster *mon = create_monster(mgen_data(MONS_SPECTRAL_THING,
                              (cloud.whose == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY),
                              NULL, 1, SPELL_GHOSTLY_FLAMES, cloud.pos,
                              (agent ? agent->foe : MHITYOU), MG_FORCE_PLACE,
                              GOD_NO_GOD, basetype));
+    if (mon)
+        mon->summoner = cloud.source;
 }
 
 void manage_clouds()
