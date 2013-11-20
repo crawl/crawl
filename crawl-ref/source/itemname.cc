@@ -671,6 +671,7 @@ static const char* potion_type_name(int potiontype)
     case POT_BLOOD:             return "blood";
     case POT_BLOOD_COAGULATED:  return "coagulated blood";
     case POT_RESISTANCE:        return "resistance";
+    case POT_WOOD:              return "wood";
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
     default:                    return "bugginess";
     }
@@ -2295,7 +2296,6 @@ void check_item_knowledge(bool unknown_items)
             // Water is never interesting either. [1KB]
             if (i == OBJ_POTIONS
                 && (j == POT_WATER
-                 || j == POT_FIZZING
                  || j == POT_GAIN_STRENGTH
                  || j == POT_GAIN_DEXTERITY
                  || j == POT_GAIN_INTELLIGENCE))
@@ -3263,6 +3263,11 @@ bool is_useless_item(const item_def &item, bool temp)
             if (you.form == TRAN_LICH)
                 return temp;
             return you.is_undead;
+
+        case POT_WOOD:
+            return you.is_undead
+                   && (you.species != SP_VAMPIRE
+                       || temp && you.hunger_state <= HS_SATIATED);
 
         case POT_FLIGHT:
             return you.permanent_flight();

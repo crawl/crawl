@@ -1866,6 +1866,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_RESTORE_ABILITIES:
             case POT_FLIGHT:
             case POT_MUTATION:
+            case POT_WOOD:
                 valued += 30;
                 break;
 
