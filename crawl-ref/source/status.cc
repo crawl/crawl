@@ -79,7 +79,7 @@ static duration_def duration_data[] =
     { DUR_PETRIFYING, true,
       MAGENTA, "Petr", "petrifying", "You are turning to stone." },
     { DUR_JELLY_PRAYER, false,
-      WHITE, "Pray", "praying", "You are praying." },
+      WHITE, "Pray", "jelly paralyse", "You are paralysing nearby jellies." },
     { DUR_RESISTANCE, true,
       LIGHTBLUE, "Resist", "resistant", "You resist elements." },
     { DUR_SLAYING, false,
