@@ -1640,14 +1640,14 @@ NSUBST:  ] = 1:) / 1:]
 SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
 SUBST:   HJOQRm = x, IKNPSl = ., L : xx., M : xx., j : x.., k : x.., n : x.
 SUBST:   b : b:6 v:1 c:1, @ = 114777, ^ = 224999
-: local Z = you.absdepth()
-: if you.depth() <= 3 then
-:   subst("2 = !:" .. 22 - Z .. " 2:20")
-:   subst("3 = 2:" .. 25 - Z .. " 3:" .. Z + 4)
-:   subst("5 = $:" .. 22 - Z .. " 5:20")
-:   subst("6 = 5:" .. 25 - Z .. " 6:" .. Z + 4)
-:   subst("8 = ?:" .. 22 - Z .. " 8:20")
-:   subst("9 = 8:" .. 24 - Z .. " 9:" .. Z + 5)
+: local Z = you.depth()
+: if Z <= 3 then
+:   subst("2 = !:" .. 6 - Z .. " 2:20")
+:   subst("3 = 2:" .. 8 - Z .. " 3:" .. Z + 21)
+:   subst("5 = $:" .. 6 - Z .. " 5:20")
+:   subst("6 = 5:" .. 8 - Z .. " 6:" .. Z + 21)
+:   subst("8 = ?:" .. 6 - Z .. " 8:20")
+:   subst("9 = 8:" .. 7 - Z .. " 9:" .. Z + 22)
 SUBST:  & = 3:2 6:1 0:4 9:2
 :     if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
 SUBST: y = V
