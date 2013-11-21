@@ -1026,7 +1026,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
-    case ABIL_JIYVA_CALL_JELLY:
     case ABIL_FEDHAS_SUNLIGHT:
     case ABIL_FEDHAS_EVOLUTION:
         invoc = true;
@@ -1040,6 +1039,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
     case ABIL_ASHENZARI_SCRYING:
+    case ABIL_JIYVA_CALL_JELLY:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
     case ABIL_STOP_RECALL:
@@ -1063,6 +1063,11 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = piety_breakpoint(5) - you.piety; // starts at 60%
         break;
 
+    case ABIL_JIYVA_SLIMIFY:
+        invoc = true;
+        failure = 90 - you.piety / 2;
+        break;
+
     case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
         invoc = true;
         break;
@@ -1083,7 +1088,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BEND_SPACE:
-    case ABIL_JIYVA_SLIMIFY:
     case ABIL_FEDHAS_PLANT_RING:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
@@ -2762,8 +2766,7 @@ static bool _do_ability(const ability_def& abil)
                                     : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
-                              you.skill_rdiv(SK_INVOCATIONS, 3, 2) + 3,
-                              100);
+                              random2avg(you.piety / 4, 2) + 3, 100);
         break;
     }
 
