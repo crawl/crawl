@@ -434,7 +434,7 @@ broad axe
 
 A war axe improved with langets, spikes, a lengthed haft and a single-bladed
 crescent head. It can inflict grievous wounds, but is cumbersome to manoeuvre
-with just one hand due to its length and weight.
+with low skill due to its length and weight.
 %%%%
 buckler
 
@@ -1518,9 +1518,8 @@ A repulsive cucumber-shaped vegetable.
 %%%%
 spear
 
-A hunting weapon consisting of a balanced wooden shaft with a pointed metal
-head fastened on one end. Shorter than other polearms, it can be wielded with
-one or two hands.
+A hunting weapon consisting of a wooden shaft with a pointed metal head
+fastened on one end.
 %%%%
 staff of air
 
@@ -1680,7 +1679,6 @@ may be hazardous to you or your surroundings!
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
-Due to the added weight it cannot be thrown effectively.
 %%%%
 triple sword
 
