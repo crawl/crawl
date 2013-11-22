@@ -347,12 +347,16 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
     if (tries < 0)
         return;
 
+    tries = 200;
     // assign begin position
     begin = pos;
 
     // wander
     while (finish < no_corr)
     {
+        if (!(tries--)) // give up after 200 tries
+            return;
+
         dir.reset();
 
         // Put something in to make it go to parts of map it isn't in now.
