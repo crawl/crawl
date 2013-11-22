@@ -710,9 +710,28 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
+    case MONS_MINOTAUR:
+        // Don't pre-equip the Lab minotaur.
+        if (player_in_branch(BRANCH_LABYRINTH) && !(mon->flags & MF_NO_REWARD))
+            break;
+        // Otherwise, give them Lab-ish equipment.
+        if (one_chance_in(25))
+        {
+            item.base_type = OBJ_RODS;
+            do
+            {
+                item.sub_type  = static_cast<rod_type>(random2(NUM_RODS));
+            }
+            while (item.sub_type == ROD_WARDING);
+            break;
+        }
+        // deliberate fall-through
+
     case MONS_TENGU_REAVER:
     case MONS_VAULT_WARDEN:
         item_race = MAKE_ITEM_NO_RACE;
+        // deliberate fall-through
+
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
         // being at the top has its privileges
@@ -728,12 +747,15 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_TENGU_WARRIOR:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
-        // Occasionally get crossbows, or a longbow for tengu.
+        // Occasionally get crossbows, or a longbow for tengu and minotaurs.
         if (!melee_only && mon->type != MONS_TENGU_REAVER && one_chance_in(9))
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = (mon->type == MONS_TENGU_WARRIOR && coinflip())
-                             ? WPN_LONGBOW : WPN_CROSSBOW;
+            item.sub_type  = ((mon->type == MONS_TENGU_WARRIOR
+                               || mon->type == MONS_MINOTAUR)
+                              && coinflip())
+                             ? WPN_LONGBOW
+                             : WPN_CROSSBOW;
             break;
         }
         // deliberate fall-through
@@ -1806,6 +1828,13 @@ static void _give_shield(monster* mon, int level)
                                   level, MAKE_ITEM_ELVEN);
         }
         break;
+
+    case MONS_MINOTAUR:
+        // Don't pre-equip the Lab minotaur.
+        if (player_in_branch(BRANCH_LABYRINTH) && !(mon->flags & MF_NO_REWARD))
+            break;
+        // deliberate fall-through
+
     case MONS_NAGA_WARRIOR:
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
@@ -2096,6 +2125,13 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = ARM_ROBE;
         break;
 
+    case MONS_MINOTAUR:
+        // Don't pre-equip the Lab minotaur.
+        if (player_in_branch(BRANCH_LABYRINTH) && !(mon->flags & MF_NO_REWARD))
+            break;
+        item_race = MAKE_ITEM_NO_RACE;
+        // deliberate fall through
+
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
         // Being at the top has its privileges. :)
@@ -2105,7 +2141,8 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARRIOR:
-        item_race = MAKE_ITEM_ORCISH;
+        if (item_race == MAKE_ITEM_RANDOM_RACE)
+            item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
 
     case MONS_HELL_KNIGHT:
