@@ -502,19 +502,19 @@ MAP
     cc+cc   cc+cc
     c...ccccc...c
     cc...ccc...cc
- ccc cc.3.c.3.cc ccc
- c.cc cc.....cc cc.c
-@+..cc cc.2.cc cc..+@
- c...cc cc+cc cc...c
+ cccxcc.3.c.3.ccxccc
+ c.ccxcc.....ccxcc.c
+@+..ccxcc.2.ccxcc..+@
+ c...ccxcc+ccxcc...c
  cc.3.ccc...ccc.3.cc
   cc...c..1..c...cc
   ccc.2+.1O1.+2.ccc
   cc...c..1..c...cc
  cc.3.ccc...ccc.3.cc
- c...cc cc+cc cc...c
-@+..cc cc.2.cc cc..+@
- c.cc cc.....cc cc.c
- ccc cc.3.c.3.cc ccc
+ c...ccxcc+ccxcc...c
+@+..ccxcc.2.ccxcc..+@
+ c.ccxcc.....ccxcc.c
+ cccxcc.3.c.3.ccxccc
     cc...ccc...cc
     c...ccccc...c
     cc+cc   cc+cc
