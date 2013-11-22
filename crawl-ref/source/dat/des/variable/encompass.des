@@ -1655,19 +1655,19 @@ SUBST: y = V
 SUBST:  yY = T
 : else
 SUBST:  y = Y, & = &:26 0:1
-:   subst("9 = 9:90 0:" .. Z - 11)
-:   subst("8 = 9:" .. Z - 14 .. " 8:20")
-:   subst("5 = 6:" .. Z - 14 .. " 5:20")
-:   subst("2 = 3:" .. Z - 14 .. " 2:20")
+:   subst("9 = 9:90 0:" .. Z + 5)
+:   subst("8 = 9:" .. Z + 2 .. " 8:20")
+:   subst("5 = 6:" .. Z + 2 .. " 5:20")
+:   subst("2 = 3:" .. Z + 2 .. " 2:20")
 :     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  )]} = ., > = <, " = `
 NSUBST: ' = 1:Z / 2 : Z:1 `:4 / *:`
 :     end
 : end
 SUBST:  '" = .
-: subst("1 = 1:" .. math.max(58 - Z * 2, 16) .. " 2:" .. math.max(Z - 15, 1))
-: subst("4 = 4:" .. math.max(58 - Z * 2, 16) .. " 5:" .. math.max(Z - 15, 1))
-: subst("7 = 7:" .. math.max(58 - Z * 2, 16) .. " 8:" .. math.max(Z - 15, 1))
+: subst("1 = 1:" .. math.max(26 - Z * 2, 16) .. " 2:" .. Z + 1)
+: subst("4 = 4:" .. math.max(26 - Z * 2, 16) .. " 5:" .. Z + 1)
+: subst("7 = 7:" .. math.max(26 - Z * 2, 16) .. " 8:" .. Z + 1)
 SUBST:  ! = 1, $ = 4, ? = 7, 7 = 7:499 .:1
 MARKER: Y = lua:props_marker { portal=1 }
 FTILE:  Z` = floor_marble
