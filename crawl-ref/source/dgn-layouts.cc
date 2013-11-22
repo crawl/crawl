@@ -7,6 +7,7 @@
 
 #include "dgn-layouts.h"
 
+#include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "libutil.h"
@@ -325,6 +326,25 @@ static int _trail_random_dir(int pos, int bound, int margin)
     return dir;
 }
 
+static bool _viable_trail_start_location(const coord_def &c)
+{
+    if (grd(c) != DNGN_ROCK_WALL && grd(c) != DNGN_FLOOR
+        || map_masked(c, MMT_VAULT))
+    {
+        return false;
+    }
+    for (orth_adjacent_iterator ai(c); ai; ++ai)
+    {
+        if (in_bounds(*ai)
+            && grd(*ai) == DNGN_ROCK_WALL
+            && !map_masked(*ai, MMT_VAULT))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
                         int intersect_chance, int no_corr,
                         coord_def& begin, coord_def& end)
@@ -341,8 +361,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         pos.x = xs + random2(xr);
         pos.y = ys + random2(yr);
     }
-    while (grd(pos) != DNGN_ROCK_WALL && grd(pos) != DNGN_FLOOR
-           || map_masked(pos, MMT_VAULT) && tries-- > 0);
+    while (!_viable_trail_start_location(pos) && tries-- > 0);
 
     if (tries < 0)
         return;
