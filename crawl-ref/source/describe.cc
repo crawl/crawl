@@ -2236,7 +2236,7 @@ static int _print_toggle_message(const describe_info &inf, int& key)
 #ifdef USE_TILE_LOCAL
             " or <w>Right-click</w>"
 #endif
-            " to toggle between the overview and the extended description.").display();
+            " to toggle between the description and quote.").display();
 
         mouse_control mc(MOUSE_MODE_MORE);
         key = getchm();
