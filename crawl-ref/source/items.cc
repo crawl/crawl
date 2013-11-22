@@ -3742,6 +3742,10 @@ void move_items(const coord_def r, const coord_def p)
     ASSERT_IN_BOUNDS(p);
 
     int it = igrd(r);
+
+    if (it == NON_ITEM)
+        return;
+
     while (it != NON_ITEM)
     {
         mitm[it].pos.x = p.x;
