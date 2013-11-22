@@ -2680,8 +2680,7 @@ static void _generate_potion_item(item_def& item, int force_type,
         do
         {
             // total weight is 10000
-            // fizzing potions are not generated {due jan2011}
-            stype = random_choose_weighted(2330, POT_CURING,
+            stype = random_choose_weighted( 2330, POT_CURING,
                                             1150, POT_HEAL_WOUNDS,
                                              740, POT_RESTORE_ABILITIES,
                                              530, POT_POISON,
@@ -2695,7 +2694,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              280, POT_MAGIC,
                                              280, POT_BERSERK_RAGE,
                                              265, POT_MUTATION,
-                                             265, POT_SLOWING,
+                                             265, POT_LIGNIFY,
                                              265, POT_PARALYSIS,
                                              265, POT_CONFUSION,
                                              230, POT_DEGENERATION,
