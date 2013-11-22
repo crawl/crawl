@@ -230,7 +230,6 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
-    case DNGN_ENTER_DEPTHS:
         return true;
     default:
         return false;
@@ -460,9 +459,7 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
            && feat_stair_direction(feat) != CMD_NO_CMD
            && feat != DNGN_ENTER_ZOT
            && feat != DNGN_RETURN_FROM_ZOT
-           && feat != DNGN_EXIT_HELL
-           && feat != DNGN_ENTER_DEPTHS
-           && feat != DNGN_RETURN_FROM_DEPTHS;
+           && feat != DNGN_EXIT_HELL;
 }
 
 bool feat_is_fountain(dungeon_feature_type feat)
