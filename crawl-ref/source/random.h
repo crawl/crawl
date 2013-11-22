@@ -99,7 +99,8 @@ struct dice_def
     int num;
     int size;
 
-    dice_def(int n = 0, int s = 0) : num(n), size(s) {}
+    dice_def() : num(0), size(0) {}
+    dice_def(int n, int s) : num(n), size(s) {}
     int roll() const;
 };
 
