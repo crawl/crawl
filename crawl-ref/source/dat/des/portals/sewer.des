@@ -1210,3 +1210,51 @@ xxxxxYwwwwwwwwwwwwwwwwwwwwYxxxxxX.2..e..Xxxx
 xxxxxxYwwwwwwYYYYwwwYYYwwYxxxxxxxX.....Xxxxx
 xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
 ENDMAP
+
+NAME: sewer_ribbit_badplayer
+KMONS:   1 = adder w:20 / ball python w:80
+KFEAT:   1 = '
+NSUBST:  1 = 8=1 / *='
+KMONS:   2 = Giant Frog
+KFEAT:   2 = W
+NSUBST:  2 = 2=2 / *=X
+KMONS:   3 = Prince Ribbit, Blink Frog
+KFEAT:   3 = W
+COLOUR:  3 = lightgreen
+KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
+ORIENT:  encompass
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+SUBST:    ' = wW
+SUBST:    " = .wW
+SUBST:    ` = .W
+SUBST:    $ = !?*
+: sewer_setup(_G)
+MAP
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXX'''''111111XX
+XXXXXXXXX2````+.........111111X
+XXXXXX2```````+..........11111X
+XXXXX`````XXXXXXXX.......11111X
+XXXXX```XXX````XXXXX......111XX
+XXXXX``XX$$$$XXWXXXX...."""11XX
+XXXXX``X$$$$XXWWWXXX.....""11XX
+XXXX2``X$$$XXWWWWWXXX....""1XXX
+XXX````X$$XXWWW3WWWXX...."11XXX
+XXX```XX$XXWWWWWWWWWXX""".1XXXX
+XXX``XXXXXWWWWWWWWWWWXX"".1XXXX
+XXX``XXXXWWWWWWWWWWWWWX"".1XXXX
+XXX``XXXXXXX+XXXXX+XXXX"".1XXXX
+XXX``````Xww.......wwX""".1XXXX
+XXX2`````Xww.......wwXX""<XXXXX
+XXXXXX2``Xww...<...wwXX"A"XXXXX
+XXXXXXX``Xww.......wwXXXXXXXXXX
+XXXXXXX``XXww.....wwXXXXXXXXXXX
+XXXXXXX```XXXX++XXXXXXXXXXXXXXX
+XXXXXXX2``````""XXXXXXXXXXXXXXX
+XXXXXXXXX'''''''XXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
