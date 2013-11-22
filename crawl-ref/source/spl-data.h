@@ -497,7 +497,7 @@ struct spell_desc
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
-     6,
+     5,
      200,
      6, 6,
      -3, //the beam is silent
