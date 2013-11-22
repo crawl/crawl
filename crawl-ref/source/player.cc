@@ -2345,12 +2345,6 @@ int player_speed(void)
         ps /= 10;
     }
 
-    if (you.form == TRAN_TREE)
-    {
-        ps *= 15 - you.experience_level / 5;
-        ps /= 10;
-    }
-
     return ps;
 }
 
