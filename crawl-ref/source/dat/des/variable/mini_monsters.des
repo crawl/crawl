@@ -2475,7 +2475,7 @@ xx+xx
 ENDMAP
 
 NAME:    hallowed_hall
-TAGS:    no_monster_gen no_trap_gen
+TAGS:    no_monster_gen no_trap_gen mini_float
 DEPTH:   Depths
 : if you.absdepth() > 21 then
 MONS:    pearl dragon
