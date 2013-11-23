@@ -1492,9 +1492,10 @@ static void _warp_card(int power, deck_rarity_type rarity)
     }
 
     const int control_level = _get_power_level(power, rarity);
-    if (control_level >= 2)
+    if (!you.confused() && control_level >= 2)
         blink(1000, false);
-    else if (control_level == 1 && allow_control_teleport(true))
+    else if (!you.confused() && control_level == 1
+             && allow_control_teleport(true))
         cast_semi_controlled_blink(power / 4, false, false);
     else
         random_blink(false);
@@ -1760,6 +1761,12 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
                         LOS_RADIUS, true, true, false, NULL, prompt.c_str())
         && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam))
     {
+        if (you.confused())
+        {
+            target.confusion_fuzz();
+            beam.set_target(target);
+        }
+
         if (ztype == ZAP_IOOD)
         {
             if (power_level == 1)

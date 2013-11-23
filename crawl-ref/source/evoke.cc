@@ -1086,6 +1086,9 @@ static bool _lamp_of_fire()
                         true, true, false, NULL,
                         "Aim the lamp in which direction?", true, NULL))
     {
+        if (you.confused())
+            target.confusion_fuzz();
+
         mpr("The flames dance!");
 
         vector<bolt> beams;
@@ -1524,6 +1527,11 @@ static bool _phial_of_floods()
                         LOS_RADIUS, true, true, false, NULL,
                         "Aim the phial where?"))
     {
+        if (you.confused())
+        {
+            target.confusion_fuzz();
+            beam.set_target(target);
+        }
         beam.fire();
 
         vector<coord_def> elementals;
