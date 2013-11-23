@@ -1293,7 +1293,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else
         define_monster(mon);
-   
+
     // Must do this early, as init_chimera calls define_monster again.
     if (mons_class_is_chimeric(mon->type))
     {
