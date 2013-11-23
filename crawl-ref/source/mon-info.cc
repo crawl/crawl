@@ -219,7 +219,8 @@ static bool _is_public_key(string key)
      || key == "chimera_part_3"
      || key == "chimera_batty"
      || key == "chimera_wings"
-     || key == "chimera_legs")
+     || key == "chimera_legs"
+     || key == "custom_spells")
     {
         return true;
     }
@@ -675,6 +676,21 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
         u.ghost.ac = quantise(ghost.ac, 5);
         u.ghost.damage = quantise(ghost.damage, 5);
+    }
+
+    // book loading for player ghost and vault monsters
+    spells.init(SPELL_NO_SPELL);
+    if (m->props.exists("custom_spells") || mons_is_pghost(type))
+    {
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+            spells[i] = m->spells[i];
+        // XXX handle here special cases for sources of magic (magic, divine, other)
+        if (m->is_priest())
+            this->props["priest"] = true;
+        else if (m->is_actual_spellcaster())
+            this->props["caster"] = true;
+        else
+            this->props[""] = true;
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
@@ -1726,6 +1742,20 @@ bool monster_info::airborne() const
 bool monster_info::ground_level() const
 {
     return !airborne() && !is(MB_CLINGING);
+}
+
+vector<mon_spellbook_type> monster_info::get_spellbooks() const
+{
+    vector<mon_spellbook_type> books;
+
+    // special case for vault monsters: if they have a custom book,
+    // treat it as MST_GHOST
+    if (this->props.exists("custom_spells"))
+        books.push_back(MST_GHOST);
+    else
+        books = mons_spellbook_list(this->type);
+
+    return books;
 }
 
 void get_monster_info(vector<monster_info>& mons)

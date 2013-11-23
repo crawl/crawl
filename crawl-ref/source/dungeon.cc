@@ -4830,8 +4830,14 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         return 0;
 
     // Spells before items, so e.g. simulacrum casters can be given chunks.
+    // add custom spell prop for spell display
+    // XXX limited to the actual spellbook, won't display all
+    // spellbooks available for vault monsters
     if (mspec.explicit_spells)
+    {
         mons->spells = mspec.spells[random2(mspec.spells.size())];
+        mons->props["custom_spells"] = true;
+    }
 
     if (!mspec.items.empty())
         _dgn_give_mon_spec_items(mspec, mons, type);
