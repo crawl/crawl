@@ -2432,7 +2432,7 @@ static int _player_armour_racial_bonus(const item_def& item)
 bool is_effectively_light_armour(const item_def *item)
 {
     return !item
-           || (abs(property(*item, PARM_EVASION)) < 6);
+           || (abs(property(*item, PARM_EVASION)) < 5);
 }
 
 bool player_effectively_in_light_armour()
