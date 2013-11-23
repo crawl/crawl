@@ -1134,7 +1134,6 @@ TAGS:    no_pool_fixup
 : elf_monsters(_G)
 SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
-SUBST:   l : lww
 SHUFFLE: lww
 SHUFFLE: nN / yY / zZ
 SUBST:   N=@, n=., Y=c, y=c
@@ -1172,8 +1171,8 @@ c6*|*|**|*cc.cc$|$*$|$|.c
 c**|*|||||cc.cc|$|$*$*$.c
 c||*||***|cc.cc$*$*$*$|.c
 c|**|*||7*cc.cc7$|$|$|$2c
-cccccccccccclcccccccccccc
-ccccccccccclllccccccccccc
+cccccccccccc.cccccccccccc
+ccccccccccc...ccccccccccc
 cccccccccc..c..cccccccccc
 Yyyyyyyyyy.ccc.zzzzzzzzzZ
 xxxxxxxxxxNncnNxxxxxxxxxx
