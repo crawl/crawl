@@ -596,7 +596,7 @@ A terrible weapon, woven in the depths of the inferno.
 %%%%
 dire flail
 
-A spiked flail with longer spikes and a heavier head.
+A flail with long spikes and a heavier head.
 %%%%
 disc of storms
 
