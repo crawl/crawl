@@ -74,7 +74,7 @@ spret_type ice_armour(int pow, bool fail)
 {
     if (!player_effectively_in_light_armour())
     {
-        mpr("You are wearing too much armour.");
+        mpr("Your body armour is too heavy.");
         return SPRET_ABORT;
     }
 
