@@ -235,10 +235,6 @@ Although his new form includes a number of large razor-sharp blades growing
 from his demonic appendages, he kept his favourite axe and is eager to let you
 test its edge.
 %%%%
-ignis
-
-A tiny ball of light that flits and flickers at the edge of your vision.
-%%%%
 Ijyb
 
 A small and twisted goblin, wearing some ugly blue rags. He claims dominion
@@ -1593,6 +1589,10 @@ ice statue
 
 An imposing idol of some nameless arctic god, carved in glistening deep blue
 ice. Freezing vapours swirl about it, and a chill pervades the air.
+%%%%
+ignis
+
+A tiny ball of light that flits and flickers at the edge of your vision.
 %%%%
 iguana
 
