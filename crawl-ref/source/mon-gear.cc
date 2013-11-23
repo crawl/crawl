@@ -719,9 +719,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         {
             item.base_type = OBJ_RODS;
             do
-            {
                 item.sub_type  = static_cast<rod_type>(random2(NUM_RODS));
-            }
             while (item.sub_type == ROD_WARDING);
             break;
         }
