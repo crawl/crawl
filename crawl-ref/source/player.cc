@@ -6623,6 +6623,9 @@ int player::gdr_perc() const
     if (body_armour)
         body_base_AC += property(*body_armour, PARM_AC);
 
+    // We take a sqrt here because damage prevented by GDR is
+    // actually proportional to the square of the GDR percentage
+    // (assuming you have enough AC).
     int gdr = 14 * sqrt(max(body_base_AC - 2, 0));
 
     return gdr;
