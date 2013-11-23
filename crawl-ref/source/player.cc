@@ -6609,7 +6609,7 @@ int player::gdr_perc() const
     case TRAN_DRAGON:
         return 34; // base AC 8
     case TRAN_STATUE:
-        return species == SP_GARGOYLE ? 62
+        return species == SP_GARGOYLE ? 50
                                       : 39; // like plate (AC 10)
     case TRAN_TREE:
         return 48;
@@ -6619,14 +6619,11 @@ int player::gdr_perc() const
 
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
 
-    if (!body_armour)
-        return 0;
+    int body_base_AC = (species == SP_GARGOYLE ? 5 : 0);
+    if (body_armour)
+        body_base_AC += property(*body_armour, PARM_AC);
 
-    const int body_base_AC = property(*body_armour, PARM_AC);
     int gdr = 14 * sqrt(max(body_base_AC - 2, 0));
-
-    if (species == SP_GARGOYLE)
-        gdr += 24 - (gdr/6);
 
     return gdr;
 }
