@@ -1204,3 +1204,52 @@ xxxxxYwwwwwwwwwwwwwwwwwwwwYxxxxxX.2..e..Xxxx
 xxxxxxYwwwwwwYYYYwwwYYYwwYxxxxxxxX.....Xxxxx
 xxxxxxxYYYxYYxxxxYYYxxxYYxxxxxxxxxxXXXxxxxxx
 ENDMAP
+
+################################################################################
+# A Prince Ribbit Lair by badplayer.
+#
+NAME: sewer_ribbit_badplayer
+ORIENT:  encompass
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+KMONS:   1 = adder w:20 / ball python w:80
+KMONS:   2 = Giant Frog
+KMONS:   3 = Prince Ribbit, Blink Frog
+KFEAT:   1 = '
+KFEAT:   23 = W
+KPROP:   "' = no_tele_into
+NSUBST:  1 = 8=1 / *='
+NSUBST:  2 = 2=2 / *=x
+COLOUR:  23 = lightgreen
+KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
+         potion of magic / potion of speed w:5 / potion of brilliance w:5
+KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
+         scroll of blinking w:3 / scroll of magic mapping w:3 /\
+         scroll of recharging w:2 / scroll of fog w:3
+SUBST:    ' = wW, " = .wW, ` = .W
+SUBST:    $ = !?*
+: sewer_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx'''''111111xx
+xxxxxxxxx2````+.........111111x
+xxxxxx2```````+..........11111x
+xxxxx`````xxxxxxxx.......11111x
+xxxxx```xxx````xxxxx......111xx
+xxxxx``xx````xxWxxxx...."""11xx
+xxxxx``x$$$`xxWWWxxx.....""11xx
+xxxx2``x$$$xxWWWWWxxx....""1xxx
+xxx````x$$xxWWW3WWWxx...."11xxx
+xxx```xx$xxWWWWWWWWWxx""".1xxxx
+xxx``xxxxxWWWWWWWWWWWxx"".1xxxx
+xxx``xxxxWWWWWWWWWWWWWx"".1xxxx
+xxx``xxxxxxx+xxxxx+xxxx"".1xxxx
+xxx``````xww.......wwx""".1xxxx
+xxx2`````xww.......wwxx""<xxxxx
+xxxxxx2``xww...<...wwxx"A"xxxxx
+xxxxxxx``xww.......wwxxxxxxxxxx
+xxxxxxx``xxww.....wwxxxxxxxxxxx
+xxxxxxx```xxxx++xxxxxxxxxxxxxxx
+xxxxxxx2``````""xxxxxxxxxxxxxxx
+xxxxxxxxx'''''''xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
