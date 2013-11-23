@@ -136,6 +136,7 @@ struct monster_info_base
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;
+    monster_spells spells;
 
     uint32_t client_id;
 };
@@ -285,6 +286,28 @@ struct monster_info : public monster_info_base
     {
         return !mname.empty() || mons_is_unique(type);
     }
+
+    bool is_spellcaster() const
+    {
+        return mons_class_flag(this->type, M_SPELLCASTER) || this->props.exists("custom_spells");
+    }
+
+    bool is_caster() const
+    {
+        return mons_class_flag(this->type, M_ACTUAL_SPELLS) || this->props.exists("caster");
+    }
+
+    bool is_priest() const
+    {
+        return mons_class_flag(this->type, M_PRIEST) || this->props.exists("priest");
+    }
+
+    bool is_natural_caster() const
+    {
+        return mons_class_flag(this->type, M_FAKE_SPELLS) || this->props.exists("fake_spells");
+    }
+
+    vector<mon_spellbook_type> get_spellbooks() const;
 
 protected:
     string _core_name() const;

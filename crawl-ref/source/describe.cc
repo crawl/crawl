@@ -3132,38 +3132,45 @@ static bool _interesting_mons_spell(spell_type spell)
 static string _monster_spells_description(const monster_info& mi)
 {
     // Show monster spells and spell-like abilities.
-    if (!mons_class_flag(mi.type, M_SPELLCASTER))
+    if (!mi.is_spellcaster())
         return "";
 
-    const bool caster = mons_class_flag(mi.type, M_ACTUAL_SPELLS);
-    const bool priest = mons_class_flag(mi.type, M_PRIEST);
-    const bool natural = mons_class_flag(mi.type, M_FAKE_SPELLS);
-    string adj = priest ? "divine" : natural ? "special" : "magical";
-
-    const monsterentry *m = get_monster_data(mi.type);
-    mon_spellbook_type book = (m->sec);
-    const vector<mon_spellbook_type> books = mons_spellbook_list(mi.type);
+    const vector<mon_spellbook_type> books = mi.get_spellbooks();
     const size_t num_books = books.size();
 
-    // If there are really really no spells, print nothing.  Ghosts,
-    // player illusions, and random pan lords don't have consistent
-    // spell lists, and might not even have spells; omit them as well.
-    if (num_books == 0 || books[0] == MST_NO_SPELLS || book == MST_GHOST)
+    // If there are really really no spells, print nothing.
+    // Random pan lords don't display their spells.
+    if (num_books == 0 || books[0] == MST_NO_SPELLS || mi.type == MONS_PANDEMONIUM_LORD)
         return "";
+
+    // Special case for player ghosts: must check if they really have spells.
+    if (books[0] == MST_GHOST)
+    {
+        bool has_spell = false;
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
+            if (mi.spells[i] != SPELL_NO_SPELL)
+                has_spell = true;
+        }
+        if (!has_spell)
+            return "";
+    }
+
+    const bool caster = mi.is_caster();
+    const bool priest = mi.is_priest();
+    string adj = priest ? "divine" : caster ? "magical" : "special";
 
     ostringstream result;
     result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
 
-    // The combination of M_ACTUAL_SPELLS with MST_NO_SPELLS means
-    // multiple spellbooks.  cjo: the division here gets really
-    // arbitrary. For example, wretched stars cast mystic blast, but
-    // are not flagged with M_ACTUAL_SPELLS.  Possibly these should be
-    // combined.
-    if (caster && book == MST_NO_SPELLS)
+    // cjo: the division here gets really arbitrary. For example, wretched
+    // stars cast mystic blast, but are not flagged with M_ACTUAL_SPELLS.
+    // Possibly these should be combined.
+    if (caster && num_books > 1)
         result << " has mastered one of the following spellbooks:\n";
     else if (caster)
         result << " has mastered the following spells: ";
-    else if (book != MST_NO_SPELLS)
+    else if (num_books == 1)
         result << " possesses the following " << adj << " abilities: ";
     else
     {
@@ -3175,11 +3182,15 @@ static string _monster_spells_description(const monster_info& mi)
     for (size_t i = 0; i < num_books; ++i)
     {
         // Create spell list containing no duplicate/irrelevant entries
-        book = books[i];
+        mon_spellbook_type book = books[i];
         vector<spell_type> book_spells;
         for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
         {
-            const spell_type spell = mspell_list[book].spells[j];
+            spell_type spell;
+            if (book == MST_GHOST)
+                spell = mi.spells[j];
+            else
+                spell = mspell_list[book].spells[j];
             bool match = false;
             for (unsigned int k = 0; k < book_spells.size(); ++k)
                 if (book_spells[k] == spell)
