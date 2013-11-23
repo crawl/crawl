@@ -423,7 +423,7 @@ Put a space before opening parenthesis if it's part of a conditional or preceded
 
 H) Parenthesis around the value of return statement
 ---------------------------------------------------
-None. The parenthesis serve no purpose other than making the statement look
+None. The parentheses serve no purpose other than making the statement look
 like a function call.
 
     return true;
