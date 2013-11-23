@@ -793,7 +793,7 @@ This spell envelops the caster's body in a protective layer of ice, the power
 of which depends on his or her skill with ice magic. The caster and the
 caster's equipment will not suffer cold from this layer, yet can be affected by
 other sources of cold normally. The spell will not function for casters already
-wearing heavy armour (any body armour with an encumbrance rating of 6 or more).
+wearing heavy armour (any body armour with an encumbrance rating of 5 or more).
 The effects of this spell are boosted if the caster is in ice form.
 %%%%
 Ozocubu's Refrigeration spell
