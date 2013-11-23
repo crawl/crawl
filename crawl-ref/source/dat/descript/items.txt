@@ -870,9 +870,9 @@ of a well-trained combatant.
 mottled dragon armour
 
 Armour made from the scales of a mottled dragon. Although it does not provide
-its wearer with much protection, unlike the armour made from the scales of some
-larger dragons, it is as light and relatively uncumbersome as leather armour.
-It is also remarkably smooth, letting sticky flames flow down like water.
+its wearer with as much protection as the armour made from the scales of some
+larger dragons, it is somewhat lighter and less encumbering. It is also
+remarkably smooth, letting sticky flames flow off it like water.
 %%%%
 mottled dragon hide
 
