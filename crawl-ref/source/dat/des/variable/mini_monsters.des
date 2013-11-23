@@ -5603,6 +5603,33 @@ MAP
 ...........
 ENDMAP
 
+NAME: sigmund_edmund_badplayer
+TAGS: no_item_gen no_monster_gen no_pool_fixup no_trap_gen
+DEPTH: D:4-7
+ITEM: any food
+KITEM: ( = flail / any armour
+KITEM: s = scythe / robe
+KMONS: S = Sigmund
+KMONS: E = Edmund
+MONS: plant w:25 / bush w:25 / nothing w:50
+NSUBST: d = 1:d / *:.
+NSUBST: S = 1:S / *:.
+NSUBST: E = 1:E / *:.
+SHUFFLE: S / E
+veto {{ return you.uniques("Edmund") or you.uniques("Sigmund") }}
+MAP
+....................
+.xxxxxxxxxxxxxxxx...
+.xEEEExWS....xddx11.
+.x....xWE.......x11.
+.x..xxxxxx.xxx..x11.
+.x.........xsxx.xxx.
+.xx...........xSSSx.
+.x(..............Sx.
+.xxxxxxx..xxxxxxxxx.
+....................
+ENDMAP
+
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS: no_monster_gen layout_basic layout_rooms layout_misc layout_caves
