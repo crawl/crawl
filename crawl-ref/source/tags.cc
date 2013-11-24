@@ -2125,31 +2125,30 @@ static void tag_read_you(reader &th)
     for (i = 0; i < count; i++)
     {
         int a = unmarshallShort(th);
-        ASSERT(a >= -1);
+        ASSERT_RANGE(a, -1, NUM_ABILITIES);
         ASSERT(a != 0);
-        ASSERT(a < NUM_ABILITIES);
-        you.ability_letter_table[i] = static_cast<ability_type>(a);
 #if TAG_MAJOR_VERSION == 34
-        if (you.ability_letter_table[i] == ABIL_FLY
-            || you.ability_letter_table[i] == ABIL_WISP_BLINK // was ABIL_FLY_II
+        if (a == ABIL_FLY
+            || a == ABIL_WISP_BLINK // was ABIL_FLY_II
                && th.getMinorVersion() < TAG_MINOR_0_12)
         {
             if (found_fly)
-                you.ability_letter_table[i] = ABIL_NON_ABILITY;
+                a = ABIL_NON_ABILITY;
             else
-                you.ability_letter_table[i] = ABIL_FLY;
+                a = ABIL_FLY;
             found_fly = true;
         }
-        if (you.ability_letter_table[i] == ABIL_EVOKE_STOP_LEVITATING
-            || you.ability_letter_table[i] == ABIL_STOP_FLYING)
+        if (a == ABIL_EVOKE_STOP_LEVITATING
+            || a == ABIL_STOP_FLYING)
         {
             if (found_stop_flying)
-                you.ability_letter_table[i] = ABIL_NON_ABILITY;
+                a = ABIL_NON_ABILITY;
             else
-                you.ability_letter_table[i] = ABIL_STOP_FLYING;
+                a = ABIL_STOP_FLYING;
             found_stop_flying = true;
         }
 #endif
+        you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
 
 #if TAG_MAJOR_VERSION == 34
