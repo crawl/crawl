@@ -679,11 +679,11 @@ A large sealed door
 
 <A sealed door>
 %%%%
-An sealed gate
+A sealed gate
 
 <A sealed door>
 %%%%
-A huge sealed door
+A huge sealed gate
 
 <A sealed door>
 %%%%
