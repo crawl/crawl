@@ -89,6 +89,37 @@ xxtttt...ttttxx
    xxtt..ttx
 ENDMAP
 
+NAME:    bh_autumn_forest_stairs
+ORIENT:  float
+DEPTH:   Forest
+COLOUR:  t = lightred / red w:3
+SHUFFLE: Aaq / Bbr / Ccs
+SUBST:   q = @
+SUBST:   A = ., bBcCdDrs = t
+COLOUR:  t = lightred / red w:3 / green w:3 / lightgreen w:1
+TILE:    t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+COLOUR:  a = lightred / red / green / lightgreen
+TILE:    a = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow / dngn_tree
+SUBST:   a = t
+MAP
+  aaaa qqq aaaa
+ caaaaaAAAaaaaab
+cccaaaaAAAaaaabbb
+ccc...........bbb
+ccc...........bbb
+ cc..xxxxxxx..bb
+sCC..x.....x..BBr
+sCC..x..{..x..BBr
+sCC..x.....x..BBr
+ cc..xV...Vx..bb
+ccc..xx+++xx..bbb
+ccc...........bbb
+ccc...........bbb
+ccctttttttttttbbb
+ cctttttttttttbb
+  ctttt    tttb
+ENDMAP
+
 ##############################################################################
 # Forest minivaults
 ##############################################################################
