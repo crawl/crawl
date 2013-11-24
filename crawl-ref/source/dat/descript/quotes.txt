@@ -2963,8 +2963,7 @@ battle-cry.”
 %%%%
 toadstool
 
-“Ale Wojski zbierał muchomory.”
- “But the Seneschal gathered the toadstool fly-bane.”
+“But the Seneschal gathered the toadstool fly-bane.”
     -Adam Mickiewicz, _Pan Tadeusz_, III. 1834.
      trans. G.R. Noyes, 1917.
 %%%%
