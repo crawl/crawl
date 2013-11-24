@@ -1,87 +1,90 @@
 ##############################################################################
 # depths.des: Depths entry vaults.
-#             At time of writing, depths vaults are shared with D and
+#             At time of writing, Depths vaults are shared with D and
 #             tend to go in variable/*.des.
 ##############################################################################
 
 ##########################################################################
 # Depths entries.
-# U:1 is intended to be a considerable change of pace from earlier (even
-# if it isn't at all at time of writing); there is a single point of entry
-# / exit between the two levels.
-# These vaults hold the stair to U:1 and some enemies representative of
+# U:1 is intended to be a considerable change of pace from earlier;
+# there is a single point of entry / exit between the two levels.
+# These vaults hold the stair to U:1 and some threats representative of
 # later in the dungeon to make it clear what to expect.
 ##########################################################################
 
+{{
+function depths_entry(e)
+   e.tags("depths_entry uniq_depths_entry chance_depths_entry no_monster_gen")
+   e.place("D:$")
+   e.kfeat("O = enter_depths")
+end
+}}
+
 NAME: grunt_enter_depths_snipers
 TAGS: no_pool_fixup
-ORIENT: float
-PLACE: D:$
-KMONS: O = vault guard
-KFEAT: O = enter_depths
-MONS: centaur warrior, yaktaur
+MONS: centaur warrior, yaktaur / cyclops w:2
+KMONS: O = yaktaur captain / frost giant w:4
+SUBST: - = ++c
+: depths_entry(_G)
 MAP
 ccccccccc
-c.+...+.c
+c1+...+2c
 c.c.O.c.c
 c.c...c.c
-c+cc+cc+c
+c.cc-cc.c
 c.w...w.c
 c.w...w.c
-c1w...w2c
-c.w...w.c
-c.w...w.c
-ccc.@.ccc
+c.w.w.w.c
+c.c.c.c.c
+cw..c..wc
+cww...wwc
+cccc+cccc
 ENDMAP
 
 # The idea here is to keep the stone giant on the island until the player is
 # ready to deal with it, and therefore proceed to the Depths.
+# XXX: Fire giant doesn't run out of ammo and thus encourage scumming.
 NAME: grunt_enter_depths_giant_problem
-# Don't generate lava monsters:
-TAGS: no_monster_gen
-ORIENT: float
-PLACE: D:$
-SUBST: L = l.
-KMONS: O = patrolling stone giant
-KFEAT: O = enter_depths
+WEIGHT: 6
+SHUFFLE: JKLMN
+SUBST: J = l, K : ll., L : l., M : l.., N = .
+KMONS: O = patrolling fire giant
+: depths_entry(_G)
 MAP
   ....@....
- ..LLLLLLL..
-..LLlllllLL..
-.LLlllllllLL.
-.LlllLLLlllL.
-.ll.L...LllL.
-@l.l..O.LllL@
-..llL...LllL.
-.llllLLLlllL.
-.LLlllllllLL.
-..LLlllllLL..
- ..LLLLLLL..
+ ..LJLJLJL..
+..KKllxllKK..
+.LKxlllllxKL.
+.JlllMNMlllJ.
+..l.l...MllL.
+@l.l..O.NlxJ@
+..lll...MllL.
+.JlllMNMlllJ.
+.LKxlllllxKL.
+..KKllxllKK..
+ ..LJLJLJL..
   ....@....
 ENDMAP
 
-NAME: grunt_enter_depths_hoard
-ORIENT: float
-PLACE: D:$
-KFEAT: O = enter_depths
-MONS: fire dragon / ice dragon
+NAME:    grunt_enter_depths_hoard
+MONS:    fire dragon, ice dragon
+ITEM:    $ no_pickup
+SHUFFLE: 12 / 12 / 11 / 22
+: depths_entry(_G)
 MAP
-  cccccc
- cc$$$$ccc
-cc.......ccccc
-cO..1........cc
-cc.......cc...cc
- cc$$$$cccc.G..cc
+  ccccccc
+ ccdddd.cc
+cc...1...ccccc
+cO.ccccc.....cc
+cc...2...cc...cc
+ ccdddd.ccc.G..cc
   cccccccc.@.@..c
 ENDMAP
 
 NAME: grunt_enter_depths_magical_seal
-ORIENT: float
-PLACE: D:$
 KMONS: O = ogre mage band / necromancer band
-KFEAT: O = enter_depths
-MONS: wizard / deep elf mage / orc sorcerer / kobold demonologist / \
-      naga mage
+MONS: wizard / deep elf conjurer / orc sorcerer / naga mage
+: depths_entry(_G)
 MAP
   bbbbbbb
  bb..1..bb
@@ -97,61 +100,43 @@ bb...1...bb
 ENDMAP
 
 NAME: gammafunk_enter_depths_forms
-ORIENT: float
-PLACE: D:$
-KFEAT: O = enter_depths
-MONS: boggart band w:20 / giant orange brain, shapeshifter w:5 / rakshasa
+MONS: very ugly thing w:8 / shapeshifter / rakshasa w:2
+MONS: giant orange brain / boggart band w:6, slime creature band
+MONS: glowing shapeshifter
+NSUBST: . = 4:1 / *:., 3 = 1:2 / 1:3
+: depths_entry(_G)
 MAP
-  bbb
- bb.bb
- b...b   bbbb
- b...bb bb..bb
-bb....bbb....bb
-bO.1..+...2...+@
-bb....bbb....bb
- b...bb bb..bb
- b...b   bbbb
- bb.bb
-  bbb
+ xxxxxx
+xx.x..x bbbb
+x.3...xbb..bb
+xx.xx..b....bb
+x..xxx...1...+
+x....xxb....bb
+xxbb.bbbb..bb
+ bb...bbbbbb
+bb.....bb
+b4.....3b
+bb.....bb
+ bbbObbb
+   bbb
 ENDMAP
 
-NAME: gammafunk_enter_depths_critters
-ORIENT: float
-PLACE: D:$
-KFEAT: O = enter_depths
-MONS: giant amoeba / brain worm / spiny worm w:5, slime creature band
-NSUBST: . = 2:1 / *:.
-MAP
- xxx xxxx xxx
-xx xxx..xxx xx
-x............x
-xx....xx....xx
- x...xx....xx
- xx2.xx....x
-xx...xxx...xx
-x...xxxx....x
-xxOxxxxxx..+x
- xxxx   xxxx@
-ENDMAP
-
-NAME: gammafunk_enter_depths_grave
-ORIENT: float
+NAME: gammafunk_depths_entry_grave
 TAGS: patrolling
-PLACE: D:$
-NSUBST: . = 1:2 / 4:1 / *:.
-SUBST: . = .....--__tG
 KMONS: t = w:2 col:darkgrey plant name:withered name_adjective \
-            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
             name_adjective tile:mons_withered_plant
+MONS: place:Depths:1 skeleton / place:Depths:1 zombie w:20, necromancer
+MONS: skeletal warrior / guardian mummy w:2 / plague shambler w:2
+KMONS: O = vampire mage w:15 / flayed ghost / phantasmal warrior
+NSUBST: . = 4:1 / 1:2 / 2:3 /*:.
+SUBST: . = .....--__tG
 TILE: G = dngn_gravestone
 COLOUR: G = white
 FTILE: - = floor_pebble_brown
 FTILE: _ = floor_pebble_darkgray
-MONS:  w:2 guardian mummy / w:8 mummy / w:20 zombie / w:2 plague shambler
-MONS:  skeletal warrior band
-KFEAT: O = enter_depths
-KMONS: O = vampire mage / necromancer band
 : set_feature_name("granite_statue", "a gravestone")
+: depths_entry(_G)
 MAP
   ....@....
  ...........
@@ -168,22 +153,53 @@ MAP
   ....@....
 ENDMAP
 
-NAME: kb_enter_depths_archers
-ORIENT: float
-PLACE: D:$
-KFEAT: O = enter_depths
-MONS:  skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta ;\
-       bow . arrow q:10 . dagger
-SUBST: w : wl
-SUBST: v : vvvvvccb
+NAME:    hangedman_depths_entry_try_elsewhere_first
+TAGS:    no_pool_fixup
+# Strictly speaking, of these, only harpies don't spawn in Depths.
+MONS:    hydra / very ugly thing w:2, naga / naga mage w:2
+MONS:    wolf spider / redback w:2, octopode / harpy w:2
+MONS:    large slime creature / giant eyeball w:2
+KMONS:   O = tengu conjurer / glowing shapeshifter w:4
+SHUFFLE: 12345, +'X / XX'
+SUBST:   XY = x, '" = .
+: depths_entry(_G)
 MAP
-  vvvvvvv
- vv.....vv
- v.vvvvv.v
- vv+111v.v
-  vvwwwv.v
- vv..O..vv
-vv.......vv
-v.........v
-v....@....v
+xxxx'''x..@
+x1.x.w.X.w.
+x..X...x...
+xxx'Xxx+xXx
+ xxx..2x..'
+ xxx.w.x.w'
+ xcc...X..'
+ xcOcxx'Xxx
+ xcccxxx..x
+ xxxxxxx.3x
+       xxxx
+ENDMAP
+
+NAME:    hangedman_depths_entry_civil_slaughter
+MONS:    orc knight / yaktaur w:4 / hill giant w:4 / tengu warrior w:8 / \
+         deep elf priest w:2
+MONS:    ogre mage w:14 / naga mage w:6 / deep elf knight / centaur warrior
+MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / minotaur w:4
+KMONS:   O = ettin w:14 / yaktaur captain w:2 / orc warlord w:2
+SUBST:   c : c:9 v:2 b:1
+SHUFFLE: 12 / 12 / 21
+: depths_entry(_G)
+MAP
+          .x...
+          ...1.
+      .....x...
+      .cccc.ccc
+      .cO..x...
+ xxxxx.c.....x
+ x2....c...x.x
+ x..x.x.x.x..x
+ x.x...c....2x
+ x...3.c.xxxxx
+...x..Tc.
+ccc.cccc.
+...x.....
+.1...
+...x.
 ENDMAP
