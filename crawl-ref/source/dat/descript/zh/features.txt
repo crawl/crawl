@@ -356,7 +356,7 @@ A staircase to the Tomb
 这里的通道通往古代陵墓。那是一片诅咒之地
 ；那里全是被最肮脏的死灵法术活化的恐怖怪物。
 %%%%
-A staircase to the Vaults
+A gate to the Vaults
 
 这个楼梯通向藏宝库；据说那里藏着无数的财宝。你注意到楼梯上有血的痕迹。
 %%%%

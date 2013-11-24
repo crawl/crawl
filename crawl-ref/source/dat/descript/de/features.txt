@@ -428,7 +428,7 @@ Ein Weg, der in die Grabkammer der Alten führt; ein Platz der Verdammung, voll
 schrecklicher Gestalten, die durch die abscheulichste Nekromantie zum Leben
 erweckt wurden.
 %%%%
-A staircase to the Vaults
+A gate to the Vaults
 
 Diese Treppen führen hinunter zur Gruft, bekannt als die Heimat riesiger
 Schätze. Sie sind mit Blutflecken bespritzt.
