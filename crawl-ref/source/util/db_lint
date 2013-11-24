@@ -144,6 +144,32 @@ sub check_db_locals()
     err("Unused local entry '$_' at $source{$_}\n") for grep /^_.*_$/, keys %keys;
 }
 
+sub check_db_externs(@)
+{
+    my (%externs, %used, %keys);
+    $externs{$_}=1 for @_;
+    $keys{$_}=1 for keys %entries;
+    $used{$_}=1 for grep !/^_/, map /@([^@\n]+)@/g, values %entries;
+    for (sort keys %used)
+    {
+        err("Undefined entry '$_'\n") unless $entries{$_} || $externs{$_};
+        delete $keys{$_};
+    }
+}
+
+sub at_at_replaces($$)
+{
+    my ($file, $func) = @_;
+    open F, '<', $file or die;
+    undef local $/;
+    local $_ = <F>;
+    close F;
+    /^[^ ].* $func\((.*?)^}/sm or die "No $func() in $file.\n";
+    $_ = $1;
+    return /@([A-Za-z0-9_,-]+)@/g;
+}
+
+my @monspeak_at_at = at_at_replaces("mon-util.cc", "do_mon_str_replacements");
 __________________________________________________________________________();
 read_file("descript/unident");
 read_file("descript/gods");
@@ -233,9 +259,11 @@ check_db_locals();
 __________________________________________________________________________();
 read_file("database/$_") for qw(monspeak monspell monflee wpnnoise insult godspeak);
 check_db_locals();
+#check_db_externs(@monspeak_at_at);
 __________________________________________________________________________();
 read_file("database/$_") for qw(shout insult);
 check_db_locals();
+check_db_externs(@monspeak_at_at);
 __________________________________________________________________________();
 read_file("descript/quotes");
 check_desc_links();
