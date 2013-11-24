@@ -440,7 +440,7 @@ A staircase to the Tomb
 Un passage vers la Tombe des Anciens, un lieu de damnation, d'horreurs animées
 par la plus vile des nécromancies.
 %%%%
-A staircase to the Vaults
+A gate to the Vaults
 
 Ces escaliers descendent dans les Caveaux, réputées pour leurs trésors. Ils
 sont tâchés de sang...

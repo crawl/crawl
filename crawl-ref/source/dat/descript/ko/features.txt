@@ -434,7 +434,7 @@ A staircase to the Tomb
 고대 무덤으로 갈 수 있는 계단이다. 가장 사악한 강령술에 의해 다시 일어난 자들이
 지배하는, 지옥과도 같은 곳이다.
 %%%%
-A staircase to the Vaults
+A gate to the Vaults
 
 보물창고로 갈 수 있는 계단이다. 굉장한 보물들이 잠들어있는 곳으로 알려졌지만,
 계단에 가득한 핏자국이 이곳의 위험성을 잘 말해준다.
