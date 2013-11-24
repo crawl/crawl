@@ -2168,8 +2168,8 @@ static vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 15, 28
-    column_composer cols(3, 15, 28);
+    // 3 columns, splits at columns 18, 33
+    column_composer cols(3, 18, 33);
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
@@ -2206,7 +2206,7 @@ static vector<formatted_string> _get_overview_resistances(
     snprintf(buf, sizeof buf, "%s%s %s",
              _determine_colour_string(
                  show_gourm ? 1 : saplevel, show_gourm ? 1 : 3),
-             show_gourm ? "Gourmand"  : "Saprov",
+             show_gourm ? "Gourm "  : "Saprov",
              show_gourm ? _itosym1(1) : _itosym3(saplevel));
 
     cols.add_formatted(0, buf, false);
@@ -2237,32 +2237,17 @@ static vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rward, 1), _itosym1(rward));
     cols.add_formatted(1, buf, false);
 
-    const int no_cast = you.no_cast(calc_unid);
-    const int sil = silenced(you.pos());
-    if (no_cast)
-    {
-        snprintf(buf, sizeof buf, "%sNoCast   %s",
-                 _determine_colour_string(-2, 2), _itosym1(1));
-        cols.add_formatted(1, buf, false);
-    }
-    else if (sil)
-    {
-        snprintf(buf, sizeof buf, "%sSilenced %s",
-                 _determine_colour_string(-sil, 1), _itosym1(1));
-        cols.add_formatted(1, buf, false);
-    }
-
     const int stasis = you.stasis(calc_unid);
     const int notele = you.no_tele(calc_unid);
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sNoTele   %s",
-                 _determine_colour_string(-2, 2), _itosym1(1));
+                 _determine_colour_string(-1, 1), _itosym1(1));
     }
     else if (rrtel && !stasis)
     {
-        snprintf(buf, sizeof buf, "%s*Tele    %s",
+        snprintf(buf, sizeof buf, "%sRndTele  %s",
                  _determine_colour_string(-1, 1), _itosym1(1));
     }
     else
@@ -2271,6 +2256,14 @@ static vector<formatted_string> _get_overview_resistances(
                  _determine_colour_string(stasis, 1), _itosym1(stasis));
     }
     cols.add_formatted(1, buf, false);
+
+    const int no_cast = you.no_cast(calc_unid);
+    if (no_cast)
+    {
+        snprintf(buf, sizeof buf, "%sNoCast   %s",
+                 _determine_colour_string(-1, 1), _itosym1(1));
+        cols.add_formatted(1, buf, false);
+    }
 
     _print_overview_screen_equip(cols, equip_chars, sw);
 
