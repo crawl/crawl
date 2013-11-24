@@ -5019,14 +5019,14 @@ void contaminate_player(int change, bool controlled, bool msg)
     }
 }
 
-bool confuse_player(int amount, bool resistable, bool quiet, bool permit_id)
+bool confuse_player(int amount, bool quiet, bool permit_id)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (amount <= 0)
         return false;
 
-    if (resistable && you.clarity())
+    if (you.clarity())
     {
         if (!quiet)
             mpr("You feel momentarily confused.");
