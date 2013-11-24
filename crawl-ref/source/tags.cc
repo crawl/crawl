@@ -1429,8 +1429,10 @@ static void tag_construct_you(writer &th)
     marshallFloat(th, abyssal_state.phase);
     marshall_level_id(th, abyssal_state.level);
 
+#if TAG_MAJOR_VERSION == 34
     if (abyssal_state.level.branch == BRANCH_DWARF)
         abyssal_state.level = level_id(static_cast<branch_type>(BRANCH_DUNGEON), 19);
+#endif
 
     _marshall_constriction(th, &you);
 
