@@ -872,13 +872,6 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
 
         if (how_many > 0)
         {
-            if (x_chance_in_y(how_many, 8)
-                && !lose_stat(STAT_STR, 1, true, "spawning slimes"))
-            {
-                canned_msg(MSG_NOTHING_HAPPENS);
-                return;
-            }
-
             int count_created = 0;
             for (int i = 0; i < how_many; ++i)
             {
