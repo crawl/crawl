@@ -143,12 +143,6 @@ a son of Earth.”
     -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
 %%%%
-apocalypse crab
-
-“I should have been a pair of ragged claws
- scuttling across the floors of silent seas.”
-    -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. 1915.
-%%%%
 Asmodeus
 
 “For myself, I have other occupations:  I make absurd matches; I marry
@@ -172,6 +166,13 @@ Banishment spell
 “An immense river of oblivion is sweeping us away into a nameless abyss.”
     -Ernest Renan, Souvenirs
 %%%%
+Cause Fear spell
+
+“And when Miranda sang
+ Everyone turned away
+ Used to the noose, they obey”
+    -The Mars Volta, “Miranda That Ghost Just Isn't Holy Anymore”. 2005.
+%%%%
 Cigotuvi's Monster
 
 “I beheld the wretch — the miserable monster whom I had
@@ -180,13 +181,6 @@ Cigotuvi's Monster
  and he muttered some inarticulate sounds, while a grin
  wrinkled his cheeks.”
     -Mary Shelley, “Frankenstein”
-%%%%
-Cause Fear spell
-
-“And when Miranda sang
- Everyone turned away
- Used to the noose, they obey”
-    -The Mars Volta, “Miranda That Ghost Just Isn't Holy Anymore”. 2005.
 %%%%
 Corrupt ability
 
@@ -282,12 +276,6 @@ Ice Storm spell
 Stay These Messengers About Their Sacred Business. Do Not Ask Us About
 Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol.”
     -Anghammarad, “Going Postal”, Terry Pratchett.
-%%%%
-ignis
-
-“When Alexander the Great addressed him with greetings, and asked if he wanted
-anything, Diogenes replied "Yes, stand a little out of my sunshine.."”
-    -Plutarch, _Alexander_. 75.
 %%%%
 Ilsuiw
 
@@ -603,6 +591,12 @@ animal skin
  Why he put the skin side outside,
  Why he turned them inside outside.”
     -Anonymous, in Wells' _A Parody Anthology_, p. 120. 1904.
+%%%%
+apocalypse crab
+
+“I should have been a pair of ragged claws
+ scuttling across the floors of silent seas.”
+    -T.S. Eliot, _The Love Song of J. Alfred Prufrock_. 1915.
 %%%%
 apple
 
@@ -1466,6 +1460,12 @@ ice dragon armour
 ice dragon hide
 
 <steam dragon hide>
+%%%%
+ignis
+
+“When Alexander the Great addressed him with greetings, and asked if he wanted
+anything, Diogenes replied "Yes, stand a little out of my sunshine.."”
+    -Plutarch, _Alexander_. 75.
 %%%%
 iguana
 

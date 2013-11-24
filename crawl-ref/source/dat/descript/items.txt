@@ -9,6 +9,13 @@ amulet of conservation
 This amulet protects some of the possessions of its wearer from outright
 destruction, but not infallibly so.
 %%%%
+amulet of faith
+
+This is a talisman crafted to call the attention of the gods to its wearer.
+This divine attention makes it easier to please your god, but your god is also
+less likely to forgive your transgressions, and the amulet will drain some of
+your divine favour when removed.
+%%%%
 amulet of guardian spirit
 
 This amulet makes its wearer less susceptible to external damage, draining
@@ -33,6 +40,15 @@ amulet of resist mutation
 
 This amulet protects its wearer from mutations, although not infallibly so.
 %%%%
+amulet of stasis
+
+An amulet meticulously constructed with magical wards to block magical and
+physiological effects that would otherwise teleport, slow, haste, or paralyse
+its wearer.
+
+While the amulet is effective against most translocular magic, plane shifts
+such as banishment are beyond its ability to block.
+%%%%
 amulet of the gourmand
 
 This amulet allows its wearer to eat fresh raw meat when not hungry, and
@@ -43,22 +59,6 @@ amulet of warding
 
 This amulet repels some of the attacks of creatures which have been magically
 summoned, and also makes the wearer more resistant to draining attacks.
-%%%%
-amulet of faith
-
-This is a talisman crafted to call the attention of the gods to its wearer.
-This divine attention makes it easier to please your god, but your god is also
-less likely to forgive your transgressions, and the amulet will drain some of
-your divine favour when removed.
-%%%%
-amulet of stasis
-
-An amulet meticulously constructed with magical wards to block magical and
-physiological effects that would otherwise teleport, slow, haste, or paralyse
-its wearer.
-
-While the amulet is effective against most translocular magic, plane shifts
-such as banishment are beyond its ability to block.
 %%%%
 animal skin
 
@@ -251,14 +251,6 @@ written by Olgreb, the infamous Venom Mage, who murdered many of his rivals by
 sending them highly poisonous copies as gifts. Current editions are harmless,
 though often dead bookworms and silverfish are found stuck between the pages.
 %%%%
-book of fixed level
-
-A book of magic spells.
-%%%%
-book of fixed theme
-
-A book of magic spells.
-%%%%
 book of fire
 
 A book, containing advanced spells in the elemental school of Fire. Many Fire
@@ -266,6 +258,14 @@ Elementalists have had their eyebrows and beards singed off by the momentary
 flame that issues forth when the book is first opened, and some have even found
 that, when left unattended for months, it can spontaneously combust,
 occasionally burning down whole libraries in terrible conflagrations.
+%%%%
+book of fixed level
+
+A book of magic spells.
+%%%%
+book of fixed theme
+
+A book of magic spells.
 %%%%
 book of flames
 
@@ -508,6 +508,10 @@ of last resort, others appreciate it as a perfect tool for assassinations.
 dart
 
 A little, fletched, sharply pointed projectile designed to be thrown by hand.
+%%%%
+decaying skeleton
+
+A decaying skeleton.
 %%%%
 deck of changes
 
@@ -949,10 +953,11 @@ A portion of strange substance, produced by ghost moths. Consuming it provides
 magical energy as well as nutrition, at the cost of losing your mental focus
 for a short period.
 %%%%
+plate armour
+
 # Historical note: fully articulated plates came only in the last days of
 # plate armour popularity.  Before then, it had gaps on and under joints,
 # often filled with mail.
-plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. Chainmail covers gaps, allowing movement.
@@ -963,6 +968,10 @@ potion of agility
 
 A magic potion which greatly increases the dexterity and evasiveness of one who
 drinks it.
+%%%%
+potion of beneficial mutation
+
+A potion which gives you a supposedly good mutation.
 %%%%
 potion of berserk rage
 
@@ -1015,6 +1024,10 @@ potion of experience
 
 A truly wonderful and very rare drink.
 %%%%
+potion of flight
+
+A potion which confers great buoyancy on one who consumes it.
+%%%%
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost
@@ -1025,9 +1038,11 @@ potion of invisibility
 
 A potion which hides you from the sight of others.
 %%%%
-potion of flight
+potion of lignification
 
-A potion which confers great buoyancy on one who consumes it.
+A potion which temporarily transforms the imbiber into an animated tree with
+branches capable of holding weapons. Such a tree is quite resilient,
+although cannot retreat in any way.
 %%%%
 potion of magic
 
@@ -1075,16 +1090,6 @@ potion of strong poison
 
 A terribly venomous potion.
 %%%%
-potion of beneficial mutation
-
-A potion which gives you a supposedly good mutation.
-%%%%
-potion of lignification
-
-A potion which temporarily transforms the imbiber into an animated tree with
-branches capable of holding weapons. Such a tree is quite resilient,
-although cannot retreat in any way.
-%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the
@@ -1129,6 +1134,11 @@ gains resistance to heat and can use fire magic more effectively, but becomes
 less effective at the use of ice magic and more vulnerable to the effects of
 cold.
 %%%%
+ring of flight
+
+This ring allows its wearer to fly. The ring's power cannot be evoked while
+airborne, so it's ill-suited for longer trips above deadly liquid.
+%%%%
 ring of hunger
 
 This accursed ring causes its wearer to hunger considerably more quickly.
@@ -1149,11 +1159,6 @@ ring of invisibility
 
 This powerful ring can be activated to hide its wearer from the view of others,
 but increases the speed of his or her metabolism greatly while doing so.
-%%%%
-ring of flight
-
-This ring allows its wearer to fly. The ring's power cannot be evoked while
-airborne, so it's ill-suited for longer trips above deadly liquid.
 %%%%
 ring of magical power
 
@@ -1341,6 +1346,17 @@ This scroll allows its reader to teleport a short distance, with precise
 control. Be wary that controlled teleports will cause the subject to become
 contaminated with magical energy.
 %%%%
+scroll of brand weapon
+
+This scroll enchants a chosen weapon so as to make it far more effective at
+inflicting harm on its wielder's enemies. The scroll can make permanent the
+temporary branding of weapons obtained from some spells, or can be used on a
+weapon that is already permanently branded to randomly select a new brand.
+
+Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
+the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
+let such an opportunity for fun go to waste.
+%%%%
 scroll of curse armour
 
 This scroll places a curse on a worn piece of armour.
@@ -1433,6 +1449,21 @@ scroll of remove curse
 
 Reading this scroll removes curses from the items you are using.
 %%%%
+scroll of silence
+
+This scroll eliminates all sound near the reader. This makes reading scrolls,
+casting spells, praying or yelling in the reader's vicinity impossible. (It
+applies to the reader, too, of course.)
+
+This silence will not hide your presence, since its oppressive, unnatural
+effect will almost certainly alert any living creature that something is very
+wrong. Silence starts out with a radius covering half the normal vision range,
+which will then shrink, eventually covering only the reader, before the effect
+times out.
+
+Note that demons do not need sound to cast spells; certain necromantic fixtures
+have this property as well.
+%%%%
 scroll of summoning
 
 This scroll calls forth several creatures woven from shadow into the shapes of
@@ -1449,38 +1480,12 @@ This scroll calls on the powers of darkness to inflict great pain on any nearby
 creature — including you! This halves the resilience of all living creatures,
 although is never directly fatal.
 %%%%
-scroll of brand weapon
-
-This scroll enchants a chosen weapon so as to make it far more effective at
-inflicting harm on its wielder's enemies. The scroll can make permanent the
-temporary branding of weapons obtained from some spells, or can be used on a
-weapon that is already permanently branded to randomly select a new brand.
-
-Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
-the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
-let such an opportunity for fun go to waste.
-%%%%
 scroll of vulnerability
 
 This scroll cancels all magical enchantments from the reader and from beings in
 the vicinity. Also, the magical resistances of the reader and nearby beings are
 halved for a short duration. The latter effect does not apply to beings fully
 immune to magic.
-%%%%
-scroll of silence
-
-This scroll eliminates all sound near the reader. This makes reading scrolls,
-casting spells, praying or yelling in the reader's vicinity impossible. (It
-applies to the reader, too, of course.)
-
-This silence will not hide your presence, since its oppressive, unnatural
-effect will almost certainly alert any living creature that something is very
-wrong. Silence starts out with a radius covering half the normal vision range,
-which will then shrink, eventually covering only the reader, before the effect
-times out.
-
-Note that demons do not need sound to cast spells; certain necromantic fixtures
-have this property as well.
 %%%%
 scythe
 
@@ -1497,10 +1502,6 @@ short sword
 A small, double-edged blade with a short grip. Robust and easy to handle, this
 weapon is often found in the hands of those who wish to stab their foes
 unaware.
-%%%%
-decaying skeleton
-
-A decaying skeleton.
 %%%%
 slice of pizza
 
@@ -1644,8 +1645,9 @@ swamp dragon armour
 Armour made from the scales of a swamp dragon. It confers resistance to poison
 on its wearer.
 %%%%
-# Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
 swamp dragon hide
+
+# Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
 
 The slimy{{
     if you.can_smell() then
