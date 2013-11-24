@@ -1222,7 +1222,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         if (coinflip())
         {
             mpr("The divine experience confuses you!", MSGCH_WARN);
-            confuse_player(3 + random2(10), false);
+            confuse_player(3 + random2(10));
         }
         else
         {
