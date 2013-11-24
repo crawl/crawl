@@ -5019,7 +5019,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     }
 }
 
-bool confuse_player(int amount, bool quiet, bool permit_id)
+bool confuse_player(int amount, bool quiet)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5030,7 +5030,7 @@ bool confuse_player(int amount, bool quiet, bool permit_id)
     {
         if (!quiet)
             mpr("You feel momentarily confused.");
-        if (permit_id)
+        else
         {
             // Identify the amulet if necessary.
             if (you.wearing(EQ_AMULET, AMU_CLARITY, true))
