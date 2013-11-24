@@ -5027,7 +5027,7 @@ void contaminate_player(int change, bool controlled, bool msg)
     }
 }
 
-bool confuse_player(int amount, bool resistable)
+bool confuse_player(int amount, bool resistable, bool quiet, bool permit_id)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5036,19 +5036,24 @@ bool confuse_player(int amount, bool resistable)
 
     if (resistable && you.clarity())
     {
-        mpr("You feel momentarily confused.");
-        // Identify the amulet if necessary.
-        if (you.wearing(EQ_AMULET, AMU_CLARITY, true))
+        if (!quiet)
+            mpr("You feel momentarily confused.");
+        if (permit_id)
         {
-            item_def* const amu = you.slot_item(EQ_AMULET, false);
-            wear_id_type(*amu);
+            // Identify the amulet if necessary.
+            if (you.wearing(EQ_AMULET, AMU_CLARITY, true))
+            {
+                item_def* const amu = you.slot_item(EQ_AMULET, false);
+                wear_id_type(*amu);
+            }
         }
         return false;
     }
 
     if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
-        mpr("Your divine stamina protects you from confusion!");
+        if (!quiet)
+            mpr("Your divine stamina protects you from confusion!");
         return false;
     }
 
@@ -5059,8 +5064,11 @@ bool confuse_player(int amount, bool resistable)
     {
         you.check_awaken(500);
 
-        mprf(MSGCH_WARN, "You are %sconfused.",
-             old_value > 0 ? "more " : "");
+        if (!quiet)
+        {
+            mprf(MSGCH_WARN, "You are %sconfused.",
+                 old_value > 0 ? "more " : "");
+        }
 
         learned_something_new(HINT_YOU_ENCHANTED);
 
