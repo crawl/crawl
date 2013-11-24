@@ -1788,8 +1788,13 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
-        // This skips over EQ_RING_AMULET, but that's probably okay for now.
-        if (you.species != SP_OCTOPODE && eqslot > EQ_AMULET)
+        if (you.species != SP_OCTOPODE
+            && eqslot >= EQ_RING_ONE && eqslot <= EQ_RING_EIGHT)
+        {
+            continue;
+        }
+
+        if (eqslot == EQ_RING_AMULET && !you_can_wear(eqslot))
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
