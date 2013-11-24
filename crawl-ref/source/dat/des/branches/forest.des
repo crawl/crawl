@@ -90,6 +90,8 @@ xxtttt...ttttxx
 ENDMAP
 
 NAME:    bh_autumn_forest_stairs
+# No threat or loot, so allow another vault.
+TAGS:    extra
 ORIENT:  float
 DEPTH:   Forest
 COLOUR:  t = lightred / red w:3
