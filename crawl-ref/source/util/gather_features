@@ -46,7 +46,7 @@ for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
 }
 
 $features{articled("gleaming silver wall")} = 1;
-for (qw(open closed runed))
+for (qw(open closed runed sealed))
 {
     $features{articled("large $_ door")} = 1;
     $features{articled("$_ gate")} = 1;
