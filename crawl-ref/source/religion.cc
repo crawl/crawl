@@ -3610,8 +3610,8 @@ void god_pitch(god_type which_god)
                 you.train[sk] = 0;
     }
 
-    // Elyvilon gives you invocations immediately.
-    if (you_worship(GOD_ELYVILON))
+    // Elyvilon and Cheibriados give you invocations immediately.
+    if (you_worship(GOD_ELYVILON) || you_worship(GOD_CHEIBRIADOS))
         you.start_train.insert(SK_INVOCATIONS);
 
     // When you start worshipping a good god, you make all non-hostile
