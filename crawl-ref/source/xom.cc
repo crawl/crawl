@@ -2921,7 +2921,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     bool rc = false;
     const bool conf = you.confused();
 
-    if (confuse_player(random2(sever) + 1,
+    if (confuse_player(min(random2(sever) + 1, 20),
                        !_xom_feels_nasty(), true, false))
     {
         god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
