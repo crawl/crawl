@@ -2128,6 +2128,13 @@ static void tag_read_you(reader &th)
         ASSERT_RANGE(a, -1, NUM_ABILITIES);
         ASSERT(a != 0);
 #if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_ABIL_1000)
+        {
+            if (a >= 230)
+                a += 2000 - 230;
+            else if (a >= 50)
+                a += 1000 - 50;
+        }
         if (a == ABIL_FLY
             || a == ABIL_WISP_BLINK // was ABIL_FLY_II
                && th.getMinorVersion() < TAG_MINOR_0_12)
