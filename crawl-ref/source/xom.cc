@@ -2919,12 +2919,15 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         return XOM_BAD_CONFUSION;
 
     bool rc = false;
+    const bool conf = you.confused();
 
-    // Looks like this will *always* succeed?
-    if (confuse_player(random2(sever) + 1, false))
+    if (confuse_player(random2(sever) + 1,
+                       !_xom_feels_nasty(), true, false))
     {
-        // FIXME: Message order is a bit off here.
         god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
+        mprf(MSGCH_WARN, "You are %sconfused.",
+             conf ? "more " : "");
+
         rc = true;
 
         // Sometimes Xom gets carried away and starts confusing
@@ -3248,7 +3251,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
             return XOM_DID_NOTHING;
 
         god_speaks(GOD_XOM, speech.c_str());
-        lose_stat(stat, loss, true, aux.c_str());
+        lose_stat(stat, loss, nasty, aux.c_str());
 
         // Take a note.
         const char* sstr[3] = { "Str", "Int", "Dex" };
