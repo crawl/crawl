@@ -578,7 +578,8 @@ amulet of stasis
 %%%%
 amulet of the gourmand
 
-<amulet>
+“put a knife to thy throat, if thou be a man given to appetite.”
+    -KJV Bible, Proverbs 23:2
 %%%%
 amulet of warding
 
