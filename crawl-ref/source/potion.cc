@@ -454,7 +454,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     case POT_LIGNIFY:
         if (transform(30, TRAN_TREE, !was_known))
+        {
             you.transform_uncancellable = true;
+            did_god_conduct(DID_CHAOS, 10, was_known);
+        }
         else
             mpr("You feel woody for a moment.");
         break;
