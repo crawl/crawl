@@ -983,7 +983,7 @@ void set_mp(int new_amount);
 
 void contaminate_player(int change, bool controlled = false, bool msg = true);
 
-bool confuse_player(int amount, bool quiet = false, bool permit_id = true);
+bool confuse_player(int amount, bool quiet = false);
 
 bool curare_hits_player(int death_source, int amount, const bolt &beam);
 bool poison_player(int amount, string source, string source_aux = "",
