@@ -1767,7 +1767,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
-            || confused() || asleep() || has_ench(ENCH_FEAR))
+            || confused() || asleep() || has_ench(ENCH_FEAR)
+            || has_ench(ENCH_BREATH_WEAPON))
         {
             this->speed_increment += me.duration;
             del_ench(ENCH_WORD_OF_RECALL, true, false);
@@ -1780,7 +1781,14 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
 
         if (decay_enchantment(en))
+        {
             mons_word_of_recall(this, 3 + random2(5));
+            // This is the same delay as vault sentinels.
+            mon_enchant breath_timeout =
+                mon_enchant(ENCH_BREATH_WEAPON, 1, this,
+                            (4 + random2(9)) * BASELINE_DELAY);
+            add_ench(breath_timeout);
+        }
         break;
 
     case ENCH_INJURY_BOND:
