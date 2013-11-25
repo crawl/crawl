@@ -3680,19 +3680,18 @@ static void _place_aquatic_monsters()
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (feat_is_water(grd(*ri)))
+        if (actor_at(*ri) || env.level_map_mask(*ri) & MMT_NO_MONS)
+            continue;
+
+        dungeon_feature_type feat = grd(*ri);
+        if (feat == DNGN_SHALLOW_WATER || feat == DNGN_DEEP_WATER)
         {
-            if (!actor_at(*ri) && !(env.level_map_mask(*ri) & MMT_NO_MONS)
-                && !cell_is_solid(*ri) && grd(*ri) != DNGN_OPEN_SEA)
-            {
-                water.push_back(*ri);
-            }
+            water.push_back(*ri);
             ++water_count;
         }
-        else if (grd(*ri) == DNGN_LAVA)
+        else if (feat == DNGN_LAVA)
         {
-            if (!actor_at(*ri) && !(env.level_map_mask(*ri) & MMT_NO_MONS))
-                lava.push_back(*ri);
+            lava.push_back(*ri);
             ++lava_count;
         }
     }
