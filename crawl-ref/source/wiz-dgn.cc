@@ -300,7 +300,8 @@ bool wizard_create_feature(const coord_def& pos)
     }
 
     if (mimic && !is_valid_mimic_feat(feat)
-        && !yesno("This isn't a valid feature mimic. Create it anyway? "))
+        && !yesno("This isn't a valid feature mimic. Create it anyway? ",
+                  true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;

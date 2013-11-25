@@ -1978,7 +1978,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_SHAFT_SELF:
         if (you.can_do_shaft_ability(false))
         {
-            if (yesno("Are you sure you want to shaft yourself?"))
+            if (yesno("Are you sure you want to shaft yourself?", true, 'n'))
                 start_delay(DELAY_SHAFT_SELF, 1);
             else
                 return false;

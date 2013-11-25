@@ -1508,7 +1508,7 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
     {
         return yesno("An item of great power still resides in this realm, "
                 "and once you leave you can never return. "
-                "Are you sure you want to leave?");
+                "Are you sure you want to leave?", false, 'n');
     }
     return true;
 }
@@ -1536,7 +1536,9 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
         && player_in_branch(BRANCH_ZIGGURAT)
         && you.depth < brdepth[BRANCH_ZIGGURAT])
     {
-        if (!yesno("Are you sure you want to leave this Ziggurat?"))
+        // "unsafe", as often you bail at single-digit hp and a wasted turn to
+        // an overeager prompt cancellation might be nasty.
+        if (!yesno("Are you sure you want to leave this Ziggurat?", false, 'n'))
         {
             canned_msg(MSG_OK);
             return false;
