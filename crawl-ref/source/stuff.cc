@@ -583,18 +583,22 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
     {
-#ifdef TOUCH_UI
-        int tmp = pop->pop();
-#else
-        if (!noprompt)
+        int tmp = ESCAPE;
+        if (!crawl_state.seen_hups)
         {
-            if (message)
-                mpr(prompt.c_str(), MSGCH_PROMPT);
-            else
-                cprintf("%s", prompt.c_str());
-        }
+#ifdef TOUCH_UI
+            tmp = pop->pop();
+#else
+            if (!noprompt)
+            {
+                if (message)
+                    mpr(prompt.c_str(), MSGCH_PROMPT);
+                else
+                    cprintf("%s", prompt.c_str());
+            }
 
-        int tmp = getchm(KMC_CONFIRM);
+            tmp = getchm(KMC_CONFIRM);
+        }
 #endif
 
         // If no safe answer exists, we still need to abort when a HUP happens.
