@@ -1970,10 +1970,10 @@ MAP
    .........
  ....G...G....
  @..xxx=xxx..@
- ...xc1=1cX...
-  ..xc1=1cX..
-    xc1=1cX
-    xc1=1cX
+ ...xc1=1cx...
+  ..xc1=1cx..
+    xc1=1cx
+    xc1=1cx
     xc1=1cx
     ccc=ccc
     c.1.1.c
