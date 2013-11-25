@@ -41,7 +41,7 @@ const char* held_status(actor *act = &you);
 
 bool yes_or_no(PRINTF(0, ));
 typedef map<int, int> explicit_keymap;
-bool yesno(const char * str, bool safe = true, int safeanswer = 0,
+bool yesno(const char * str, bool safe, int safeanswer,
             bool clear_after = true, bool interrupt_delays = true,
             bool noprompt = false,
             const explicit_keymap *map = NULL,
