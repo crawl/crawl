@@ -52,7 +52,7 @@ T random_picker<T, max>::pick(const random_pick_entry<T> *weights, int level,
     int nvalid = 0;
     int totalrar = 0;
 
-    for (const random_pick_entry<T> *pop = weights; pop->value; pop++)
+    for (const random_pick_entry<T> *pop = weights; pop->rarity; pop++)
     {
         if (level < pop->minr || level > pop->maxr)
             continue;
