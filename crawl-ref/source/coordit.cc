@@ -270,6 +270,41 @@ void radius_iterator::operator++(int dummy)
 }
 
 /*
+ *  adjacent iterator
+ */
+extern const struct coord_def Compass[9];
+
+adjacent_iterator::operator bool() const
+{
+    return i >= 0;
+}
+
+coord_def adjacent_iterator::operator *() const
+{
+    return val;
+}
+
+const coord_def* adjacent_iterator::operator->() const
+{
+    return &val;
+}
+
+void adjacent_iterator::operator ++()
+{
+    while (--i >= 0)
+    {
+        val = center + Compass[i];
+        if (map_bounds(val))
+            return;
+    }
+}
+
+void adjacent_iterator::operator++(int dummy)
+{
+    ++(*this);
+}
+
+/*
  *  spiral iterator
  */
 distance_iterator::distance_iterator(const coord_def& _center, bool _fair,

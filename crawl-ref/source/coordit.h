@@ -101,12 +101,22 @@ private:
     coord_def current;    // storage for operator->
 };
 
-class adjacent_iterator : public radius_iterator
+class adjacent_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
-    explicit adjacent_iterator(const coord_def& pos,
-                               bool _exclude_center = true) :
-    radius_iterator(pos, 1, C_ROUND, _exclude_center) {}
+    adjacent_iterator(const coord_def pos, bool _exclude_center = true)
+        : center(pos), i(_exclude_center ? 8 : 9) {++(*this);};
+
+    operator bool() const PURE;
+    coord_def operator *() const PURE;
+    const coord_def *operator->() const PURE;
+
+    void operator ++ ();
+    void operator ++ (int);
+private:
+    coord_def center;
+    coord_def val;
+    int i;
 };
 
 class orth_adjacent_iterator : public radius_iterator
