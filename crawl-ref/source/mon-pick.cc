@@ -218,6 +218,17 @@ bool branch_has_monsters(branch_type branch)
     return population[branch].count;
 }
 
+const pop_entry* fish_population(branch_type br, bool lava)
+{
+    COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
+    COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);
+    ASSERT_RANGE(br, 0, NUM_BRANCHES);
+    if (lava)
+        return population_lava[br].pop;
+    else
+        return population_water[br].pop;
+}
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static bool _not_skeletonable(monster_type mt)
 {

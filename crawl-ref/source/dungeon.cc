@@ -53,7 +53,7 @@
 #include "misc.h"
 #include "mon-chimera.h"
 #include "mon-util.h"
-#include "mon-pick-data.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-pathfind.h"
@@ -3656,9 +3656,6 @@ static int _place_uniques()
 
 static void _place_aquatic_monsters()
 {
-    COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
-    COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);
-
     // [ds] Shoals relies on normal monster generation to place its monsters.
     // Given the amount of water area in the Shoals, placing water creatures
     // explicitly explodes the Shoals' xp budget.
@@ -3673,7 +3670,7 @@ static void _place_aquatic_monsters()
         return;
     }
 
-    const pop_entry* pop = population_water[you.where_are_you].pop;
+    const pop_entry* pop = fish_population(you.where_are_you, false);
 
     int level = level_id::current().depth;
 
@@ -3746,7 +3743,7 @@ start_again:
     if (!did_lava && lava.size() > 49)
     {
         places = &lava;
-        pop = population_lava[you.where_are_you].pop;
+        pop = fish_population(you.where_are_you, true);
         did_lava = true;
         goto start_again;
     }
