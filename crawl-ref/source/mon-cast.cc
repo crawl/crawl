@@ -1959,6 +1959,10 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
 // proportional to how many HD of allies are current nearby)
 static bool _should_recall(monster* caller)
 {
+    // It's a long recitation - if we're winded, we can't use it.
+    if (caller->has_ench(ENCH_BREATH_WEAPON))
+        return false;
+
     int num = 0;
     for (monster_iterator mi; mi; ++mi)
     {
