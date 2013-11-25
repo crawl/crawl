@@ -1197,9 +1197,13 @@ static BOOL WINAPI console_handler(DWORD sig)
         if (crawl_state.seen_hups++)
             return true; // abort immediately
 
+#ifndef USE_TILE_LOCAL
+        // Should never happen in tiles -- if it does (Cygwin?), this will
+        // kill the game without saving.
         w32_insert_escape();
 
         Sleep(15000); // allow 15 seconds for shutdown, then kill -9
+#endif
         return true;
     }
 }
@@ -1207,8 +1211,8 @@ static BOOL WINAPI console_handler(DWORD sig)
 void init_signals()
 {
     // If there's no console, this will return an error, which we ignore.
-    // For GUI programs there's no controlling terminal, but there's no hurt in
-    // blindly trying -- this way, we support Cygwin.
+    // For GUI programs there's no controlling terminal, but there might be
+    // one on Cygwin.
     SetConsoleCtrlHandler(console_handler, true);
 }
 
