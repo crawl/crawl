@@ -14,7 +14,6 @@
 #include "env.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "mon-pick.h"
 #include "random.h"
 
 static colour_t _pan_floor_colour()

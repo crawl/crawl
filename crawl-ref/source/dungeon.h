@@ -10,7 +10,6 @@
 #include "env.h"
 #include "externs.h"
 #include "mapdef.h"
-#include "mon-pick.h"
 
 #include <vector>
 #include <set>
