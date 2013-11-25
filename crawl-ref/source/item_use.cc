@@ -2526,6 +2526,7 @@ static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
         {
             // FIXME: when aborted by a HUP, the scroll shouldn't get lost.
             if (alreadyknown
+                || crawl_state.seen_hups
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
@@ -2824,7 +2825,8 @@ retry:
 
         // FIXME: when interrupted by a HUP, the scroll shouldn't get lost.
         if (item_slot == PROMPT_ABORT
-            && yesno("Really abort (and waste the scroll)?", false, 0))
+            && (crawl_state.seen_hups
+                || yesno("Really abort (and waste the scroll)?", false, 0)))
         {
             canned_msg(MSG_OK);
             return false;
