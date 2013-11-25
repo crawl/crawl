@@ -2386,35 +2386,3 @@ vector<string> get_title_files()
     }
     return titles;
 }
-
-// Every single use of this function is a save-corrupting bug.
-void sighup_save_and_exit()
-{
-    if (crawl_state.seen_hups == 0)
-    {
-        mpr("sighup_save_and_exit() called without a HUP signal; please"
-            "file a bug report", MSGCH_ERROR);
-        return;
-    }
-
-    if (crawl_state.saving_game || crawl_state.updating_scores)
-        return;
-
-    // Set up an alarm to force-kill Crawl if it rudely ignores the
-    // hangup signal.
-    alarm(10);
-
-    interrupt_activity(AI_FORCE_INTERRUPT);
-
-    crawl_state.saving_game = true;
-    if (crawl_state.need_save)
-    {
-        mpr("Received HUP signal, saved and exited game.", MSGCH_ERROR);
-
-        // save_game(true) exits from the game. The "true" is also required
-        // to save changes to the current level.
-        save_game(true, "Received HUP signal, saved game.");
-    }
-    else
-        end(0, false, "Received HUP signal, game already saved.");
-}

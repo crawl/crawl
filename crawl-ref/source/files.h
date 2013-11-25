@@ -80,8 +80,6 @@ bool get_save_version(reader &file, int &major, int &minor);
 bool save_exists(const string& filename);
 bool restore_game(const string& filename);
 
-void sighup_save_and_exit();
-
 bool is_existing_level(const level_id &level);
 
 class level_excursion

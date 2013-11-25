@@ -1241,14 +1241,7 @@ static void handle_hangup(int)
     // still blocking in the main thread when the HUP signal was caught.
     // This should guarantee that the main thread will un-stall and
     // will eventually return to _input() in main.cc, which will then
-    // call sighup_save_and_exit().
-    //
-    // The point to all this is that if a user is playing a game on a
-    // remote server and disconnects at a --more-- prompt, that when
-    // the player reconnects the code behind the more() call will execute
-    // before the disconnected game is saved, thus (for example) preventing
-    // the hack of avoiding excomunication consesquences because of the
-    // more() after "You have lost your religion!"
+    // gracefully save the game.
 
     // SAVE CORRUPTING BUG!!!  We're in a signal handler, calling free()
     // when closing the FILE object is likely to lead to lock-ups, and even
