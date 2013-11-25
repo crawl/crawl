@@ -102,8 +102,9 @@ great treasures. The blood spattered liberally around the entrance suggests
 that there is a certain amount of violence, too.
 
 The Vaults are five levels deep and contain the silver rune, as well as the
-entrances to two more branches. The entrance can be found between levels 14 and
-15 of the main dungeon.
+entrances to two more branches. They can be entered while carrying at least one
+rune of Zot. The entrance can be found between levels 14 and 15 of the main
+dungeon.
 %%%%
 Hall of Blades
 
@@ -322,5 +323,5 @@ The Depths are the deepest part of the dungeon proper, subject to the
 corrupting influence of the Realm of Zot without being considered a part of it.
 
 The Depths are six levels deep and can be entered from the lowest floor of the
-Dungeon while carrying at least one rune of Zot.
+Dungeon.
 %%%%
