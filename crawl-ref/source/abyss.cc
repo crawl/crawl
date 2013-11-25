@@ -1390,7 +1390,7 @@ static level_id _pick_guest_level()
 
     const int brd = max(brdepth[br], 1);
     // On Abyss:1, pick from half of the branch, on Abyss:5 from branch:$.
-    return level_id(br, brd - brd * 4 / (5 - d) / 2);
+    return level_id(br, (brd * (4 + d - 1)/4 + 1) / 2);
 }
 
 static void _initialize_abyss_state()
