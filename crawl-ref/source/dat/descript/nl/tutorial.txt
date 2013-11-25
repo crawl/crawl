@@ -50,33 +50,33 @@ tutorial2 exit
 :nowrap
 <yellow>Wapens<console> <cyan>)</cyan></console></yellow>
 
-  <w>$cmd[CMD_PICKUP]</w>  voorwerp oppakken
-  <w>$cmd[CMD_WIELD_WEAPON]</w>  wapen hanteren
-<localtiles>     Je kunt dit ook doen door in je inventaris op het wapen te <w>klikken</w>.</localtiles>
+  <input>$cmd[CMD_PICKUP]</input>  voorwerp oppakken
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  wapen hanteren
+<localtiles>     Je kunt dit ook doen door in je inventaris op het wapen te <input>klikken</input>.</localtiles>
 
 
 <yellow>Monsters</yellow>
-<localtiles>  <w>mouse-over</w>  monster examineren
-  <w>rechter muisknop</w> gedetailleerde omschrijving lezen</localtiles>
-<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  monster examineren
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> gedetailleerde omschrijving lezen</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  monster examineren
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> gedetailleerde omschrijving lezen</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> munitie op vooraf geselecteerd monster afvuren
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> ander monster selecteren
-<localtiles>  Je kunt ook een voorwerp afvuren door hierop te <w>klikken</w> en het doel te bevestigen met <w>Enter</w>.</localtiles>
+<localtiles>  <input>mouse-over</input>  monster examineren
+  <input>rechter muisknop</input> gedetailleerde omschrijving lezen</localtiles>
+<console>  <input>$cmd[CMD_LOOK_AROUND]</input>  monster examineren
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> gedetailleerde omschrijving lezen</console><webtiles>  <input>$cmd[CMD_LOOK_AROUND]</input>  monster examineren
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> gedetailleerde omschrijving lezen</webtiles>
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> munitie op vooraf geselecteerd monster afvuren
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> ander monster selecteren
+<localtiles>  Je kunt ook een voorwerp afvuren door hierop te <input>klikken</input> en het doel te bevestigen met <input>Enter</input>.</localtiles>
 
 
 <yellow>Rusten</yellow>
-  <w>$cmd[CMD_MOVE_NOWHERE]</w>  een beurt wachten en rusten
-  <w>$cmd[CMD_REST]</w>  tot maximaal 100 beurten wachten en rusten
+  <input>$cmd[CMD_MOVE_NOWHERE]</input>  een beurt wachten en rusten
+  <input>$cmd[CMD_REST]</input>  tot maximaal 100 beurten wachten en rusten
 
 
 <yellow>Lijken<console> <brown>%</brown></console></yellow>
-  <w>$cmd[CMD_BUTCHER]</w>  lijk in stukken vlees hakken
-  <w>$cmd[CMD_EAT]</w>  stuk vlees eten
+  <input>$cmd[CMD_BUTCHER]</input>  lijk in stukken vlees hakken
+  <input>$cmd[CMD_EAT]</input>  stuk vlees eten
 
 
-                                 <cyan>Druk op een <w>toets</w> om dit scherm leeg te maken...</cyan>
+                                 <cyan>Druk op een <input>toets</input> om dit scherm leeg te maken...</cyan>
 %%%%
 tutorial3 start
 
@@ -117,31 +117,31 @@ tutorial3 exit
 
 :nowrap
 <yellow>Voorwerpopdrachten</yellow>
-  <w>$cmd[CMD_PICKUP]</w>  voorwerp oppakken
-  <w>$cmd[CMD_WEAR_ARMOUR]</w>  kledij dragen
-  <w>$cmd[CMD_READ]</w>  perkament lezen
-  <w>$cmd[CMD_WIELD_WEAPON]</w>  wapen hanteren
-  <w>$cmd[CMD_QUAFF]</w>  drankje drinken
-  <w>$cmd[CMD_EVOKE]</w>  staf evoceren
-  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  sieraad dragen
-  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  sieraad verwijderen
-  <w>$cmd[CMD_DROP]</w>  voorwerp laten vallen
+  <input>$cmd[CMD_PICKUP]</input>  voorwerp oppakken
+  <input>$cmd[CMD_WEAR_ARMOUR]</input>  kledij dragen
+  <input>$cmd[CMD_READ]</input>  perkament lezen
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  wapen hanteren
+  <input>$cmd[CMD_QUAFF]</input>  drankje drinken
+  <input>$cmd[CMD_EVOKE]</input>  staf evoceren
+  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  sieraad dragen
+  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  sieraad verwijderen
+  <input>$cmd[CMD_DROP]</input>  voorwerp laten vallen
 
-  <w></w>Daarnaast zijn er gebruiksopdrachten in het inventarismenu (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>) beschikbaar, net als de omschrijvingen van voorwerpen.
-  <localtiles><w></w>En natuurlijk werken ook <white>muisklikken</white>.
+  <input></input>Daarnaast zijn er gebruiksopdrachten in het inventarismenu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>) beschikbaar, net als de omschrijvingen van voorwerpen.
+  <localtiles><input></input>En natuurlijk werken ook <white>muisklikken</white>.
 </localtiles>
 
 <yellow>Overig</yellow>
-  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> opdrachthulp openen
-  <w>$cmd[CMD_RESISTS_SCREEN]</w>  personageoverzicht weergeven
-  <w>$cmd[CMD_USE_ABILITY]</w>  bekwaamheid gebruiken
-  <w>$cmd[CMD_EXPLORE]</w>  automatisch verkennen
-  <w>$cmd[CMD_SEARCH_STASHES]</w>  naar eerder geziene voorwerpen/kenmerken zoeken
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> opdrachthulp openen
+  <input>$cmd[CMD_RESISTS_SCREEN]</input>  personageoverzicht weergeven
+  <input>$cmd[CMD_USE_ABILITY]</input>  bekwaamheid gebruiken
+  <input>$cmd[CMD_EXPLORE]</input>  automatisch verkennen
+  <input>$cmd[CMD_SEARCH_STASHES]</input>  naar eerder geziene voorwerpen/kenmerken zoeken
 
-  <localtiles><w></w>Een aantal van deze opdrachten kan ook worden uitgevoerd door in het <w>opdrachtenvenster</w> te klikken.
+  <localtiles><input></input>Een aantal van deze opdrachten kan ook worden uitgevoerd door in het <input>opdrachtenvenster</input> te klikken.
 </localtiles>
 
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 tutorial4 start
 

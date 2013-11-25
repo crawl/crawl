@@ -41,33 +41,33 @@ tutorial2 exit
 :nowrap
 <yellow>Armi<console> <cyan>)</cyan></console></yellow>
 
-  <w>$cmd[CMD_PICKUP]</w> raccogli un oggetto
-  <w>$cmd[CMD_WIELD_WEAPON]</w> equipaggia un'arma
-<localtiles>    Puoi anche farlo <w>cliccando</w> sull'armanell'inventario.</localtiles>
+  <input>$cmd[CMD_PICKUP]</input> raccogli un oggetto
+  <input>$cmd[CMD_WIELD_WEAPON]</input> equipaggia un'arma
+<localtiles>    Puoi anche farlo <input>cliccando</input> sull'armanell'inventario.</localtiles>
 
 
 <yellow>Mostri</yellow>
-<localtiles>  <w>posiziona il mouse</w>  per esaminare un mostro
-  <w>click destro</w> leggi una descrizione può dettagliata</localtiles>
-<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  esamina un mostro
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> leggi una descrizione più dettagliata</console><webtiles> <w>$cmd[CMD_LOOK_AROUND]</w> esamina un mostro
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> leggi una descrizione più dettagliata</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> fa fuoco su un mostro già puntato
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> punta un altro mostro
-<localtiles>  Puoi anche fare fuoco <w>cliccandoci</w> e confermando il bersagli con <w>Invio</w>.</localtiles>
+<localtiles>  <input>posiziona il mouse</input>  per esaminare un mostro
+  <input>click destro</input> leggi una descrizione può dettagliata</localtiles>
+<console>  <input>$cmd[CMD_LOOK_AROUND]</input>  esamina un mostro
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> leggi una descrizione più dettagliata</console><webtiles> <input>$cmd[CMD_LOOK_AROUND]</input> esamina un mostro
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> leggi una descrizione più dettagliata</webtiles>
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fa fuoco su un mostro già puntato
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> punta un altro mostro
+<localtiles>  Puoi anche fare fuoco <input>cliccandoci</input> e confermando il bersagli con <input>Invio</input>.</localtiles>
 
 
 <yellow>Riposarsi</yellow>
-  <w>$cmd[CMD_MOVE_NOWHERE]</w>  aspetta e riposati per un singolo turno
-  <w>$cmd[CMD_REST]</w>  aspetta e riposati per 100 turni
+  <input>$cmd[CMD_MOVE_NOWHERE]</input>  aspetta e riposati per un singolo turno
+  <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
 
 <yellow>Cadaveri<console> <brown>%</brown></console></yellow>
-  <w>$cmd[CMD_BUTCHER]</w>  macella una cadavere in cosciotti
-  <w>$cmd[CMD_EAT]</w>  mangia un cosciotto di carne
+  <input>$cmd[CMD_BUTCHER]</input>  macella una cadavere in cosciotti
+  <input>$cmd[CMD_EAT]</input>  mangia un cosciotto di carne
 
 
-                         <cyan>Premi un <w>qualunque tasto</w> per liberare questo schermo...</cyan>
+                         <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%
 tutorial3 start
 
@@ -103,31 +103,31 @@ tutorial3 exit
 
 :nowrap
 <yellow>comandi per gli oggetti</yellow>
-  <w>$cmd[CMD_PICKUP]</w>  raccogli un oggetto
-  <w>$cmd[CMD_WEAR_ARMOUR]</w>  indossa una parte d'armatura
-  <w>$cmd[CMD_READ]</w>  leggi una pergamena
-  <w>$cmd[CMD_WIELD_WEAPON]</w>  equipaggia un'arma
-  <w>$cmd[CMD_QUAFF]</w>  bevi una pozione
-  <w>$cmd[CMD_EVOKE]</w>  evoca una bachetta
-  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  indossa gioielleria
-  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  rimuovi gioielleria
-  <w>$cmd[CMD_DROP]</w>  getta un oggetto
+  <input>$cmd[CMD_PICKUP]</input>  raccogli un oggetto
+  <input>$cmd[CMD_WEAR_ARMOUR]</input>  indossa una parte d'armatura
+  <input>$cmd[CMD_READ]</input>  leggi una pergamena
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  equipaggia un'arma
+  <input>$cmd[CMD_QUAFF]</input>  bevi una pozione
+  <input>$cmd[CMD_EVOKE]</input>  evoca una bachetta
+  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  indossa gioielleria
+  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  rimuovi gioielleria
+  <input>$cmd[CMD_DROP]</input>  getta un oggetto
 
-  <w></w>I comandi per l'utilizzo sono anche disponibili anche dal menu dell'inventario (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), assieme alle descrizioni.
-  <localtiles><w></w>Ovviamente, anche i <white>click del mouse</white> funzionano.
+  <input></input>I comandi per l'utilizzo sono anche disponibili anche dal menu dell'inventario (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), assieme alle descrizioni.
+  <localtiles><input></input>Ovviamente, anche i <white>click del mouse</white> funzionano.
 </localtiles>
 
 <yellow>Altro</yellow>
-  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> accedi agli aiuti per i comandi
-  <w>$cmd[CMD_RESISTS_SCREEN]</w>  mostra la scheda del personaggio
-  <w>$cmd[CMD_USE_ABILITY]</w>  usa un'abilità
-  <w>$cmd[CMD_EXPLORE]</w>  esplora automaticamente
-  <w>$cmd[CMD_SEARCH_STASHES]</w>  cerca oggetti e/o peculiarità già viste
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> accedi agli aiuti per i comandi
+  <input>$cmd[CMD_RESISTS_SCREEN]</input>  mostra la scheda del personaggio
+  <input>$cmd[CMD_USE_ABILITY]</input>  usa un'abilità
+  <input>$cmd[CMD_EXPLORE]</input>  esplora automaticamente
+  <input>$cmd[CMD_SEARCH_STASHES]</input>  cerca oggetti e/o peculiarità già viste
 
-  <localtiles><w></w>Alcuni di questi comandi possono essere eseguiti anche cliccando nel <w>pannello dei commandi</w>.
+  <localtiles><input></input>Alcuni di questi comandi possono essere eseguiti anche cliccando nel <input>pannello dei commandi</input>.
 </localtiles>
 
-                         <cyan>Premi un <w>qualunque tasto</w> per liberare questo schermo...</cyan>
+                         <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%
 tutorial4 start
 
@@ -189,18 +189,18 @@ tutorial5 exit
   $cmd[CMD_PRAY]  prega ad un altare per venerare un dio o scrificare un cadavere
   $cmd[CMD_USE_ABILITY]  usa un'abilità divina
   $cmd[CMD_DISPLAY_RELIGION]  guarda il tuo status religioso
-<localtiles>  Anche un <w>click destro</w> sul giocatore farà apparire il menu della religione
+<localtiles>  Anche un <input>click destro</input> sul giocatore farà apparire il menu della religione
 </localtiles>
 
 <yellow>Riposarsi</yellow>
-  <w>$cmd[CMD_MOVE_NOWHERE]</w>  aspetta e riposati per un singolo turno
-  <w>$cmd[CMD_REST]</w>  aspetta e riposati per 100 turni
+  <input>$cmd[CMD_MOVE_NOWHERE]</input>  aspetta e riposati per un singolo turno
+  <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
 
 <yellow>Altri comandi</yellow>
   $cmd[CMD_DISPLAY_OVERMAP]  mostra una visione d'insieme del Dungeon
-  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  cerca nel database delle descrizioni
+  $cmd[CMD_DISPLAY_COMMANDS]<input>/</input>  cerca nel database delle descrizioni
 
 
-                         <cyan>Premi un <w>qualunque tasto</w> per liberare questo schermo...</cyan>
+                         <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%

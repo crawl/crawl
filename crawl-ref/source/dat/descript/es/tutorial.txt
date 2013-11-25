@@ -56,31 +56,31 @@ tutorial3 exit
 
 :nowrap
 <yellow>Comandos para usar objetos</yellow>
-  <w>$cmd[CMD_PICKUP]</w>  recoger un objeto
-  <w>$cmd[CMD_WEAR_ARMOUR]</w>  ponerse una pieza de una armadura
-  <w>$cmd[CMD_READ]</w>  leer un pergamino
-  <w>$cmd[CMD_WIELD_WEAPON]</w>  empuñar un arma
-  <w>$cmd[CMD_QUAFF]</w>  beber una poción
-  <w>$cmd[CMD_EVOKE]</w>  invocar una varita
-  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  ponerse joyería
-  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  quitarse joyería
-  <w>$cmd[CMD_DROP]</w>  depositar un objeto
+  <input>$cmd[CMD_PICKUP]</input>  recoger un objeto
+  <input>$cmd[CMD_WEAR_ARMOUR]</input>  ponerse una pieza de una armadura
+  <input>$cmd[CMD_READ]</input>  leer un pergamino
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  empuñar un arma
+  <input>$cmd[CMD_QUAFF]</input>  beber una poción
+  <input>$cmd[CMD_EVOKE]</input>  invocar una varita
+  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  ponerse joyería
+  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  quitarse joyería
+  <input>$cmd[CMD_DROP]</input>  depositar un objeto
 
-  <w></w>Los comandos para usar objetos también están disponibles en el menú del inventario (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), así como las descripciones de los mismos.
-  <localtiles><w></w>Y por supuesto, <white>los clics con el ratón</white> también funcionan.
+  <input></input>Los comandos para usar objetos también están disponibles en el menú del inventario (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), así como las descripciones de los mismos.
+  <localtiles><input></input>Y por supuesto, <white>los clics con el ratón</white> también funcionan.
 </localtiles>
 
 <yellow>Otros comandos</yellow>
-  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> muestra la ayuda sobre comandos
-  <w>$cmd[CMD_RESISTS_SCREEN]</w>  muestra información acerca del personaje
-  <w>$cmd[CMD_USE_ABILITY]</w>  usar una habilidad
-  <w>$cmd[CMD_EXPLORE]</w>  explorar de forma automatizada
-  <w>$cmd[CMD_SEARCH_STASHES]</w>  buscar objetos o lugares que hayan sido vistos previamente
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> muestra la ayuda sobre comandos
+  <input>$cmd[CMD_RESISTS_SCREEN]</input>  muestra información acerca del personaje
+  <input>$cmd[CMD_USE_ABILITY]</input>  usar una habilidad
+  <input>$cmd[CMD_EXPLORE]</input>  explorar de forma automatizada
+  <input>$cmd[CMD_SEARCH_STASHES]</input>  buscar objetos o lugares que hayan sido vistos previamente
 
-  <localtiles><w></w>Varios de estos comandos también pueden ser ejecutados cliqueando en el <w>panel de comandos</w>.
+  <localtiles><input></input>Varios de estos comandos también pueden ser ejecutados cliqueando en el <input>panel de comandos</input>.
 </localtiles>
 
-                                 <cyan>Presiona <w>cualquier tecla</w> para limpiar esta pantalla...</cyan>
+                                 <cyan>Presiona <input>cualquier tecla</input> para limpiar esta pantalla...</cyan>
 %%%%
 tutorial4 start
 

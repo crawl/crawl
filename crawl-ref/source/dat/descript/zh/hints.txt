@@ -3,7 +3,7 @@ welcome
 
 <white>欢迎你来到Dungeon Crawl的游戏世界！</white>
 
-你的任务是扮演<w>{{ return you.race() }} {{ return you.class() }}</w>
+你的任务是扮演<input>{{ return you.race() }} {{ return you.class() }}</input>
 角色深入地城深处，找到传说中的佐特之球并带着它返回地面。不过，
 在刚开始玩的时候，你只要探索地城就好。尽你所能层层推进，不过要小心
 ：死亡的危险无处不在。
@@ -66,10 +66,11 @@ death random 1
 death random 2
 
 在打完一场战斗后要记得休息，而且最好是在一片已经被清扫完毕的区域。
-游戏中搜索和休息是同时进行的。要搜索一回合，按下 <w>s</w>， <w>.</w>，
-<w>delete</w> 或 <w>小键盘5</w>。按下 <w>5</w> 或 <w>shift+小键盘5</w>
-<tiles>，或 <w>点击属性区域</w></tiles> 会让你休息更长时间
-（你会停下来休息100回合，或是直到完全恢复为止）。
+游戏中搜索和休息是同时进行的。要搜索一回合，按下 <input>s</input>，
+<input>.</input>， <input>delete</input> 或 <input>小键盘5</input>。按下
+<input>5</input> 或 <input>shift+小键盘5</input> <tiles>，或
+<input>点击属性区域</input></tiles> 会让你休息更长时间（你会停下来休息100回合，
+或是直到完全恢复为止）。
 %%%%
 death random 3
 
@@ -89,94 +90,101 @@ death random 5
 finished
 
 恭喜！你成功通过了提示模式——试试别的模式吧。注意，
-现在命令与帮助界面（按<w>$cmd[CMD_DISPLAY_COMMANDS]?</w>呼出
+现在命令与帮助界面（按<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>呼出
 ）界面从现在开始会变得和以前完全不同。这里有最后一条游戏提示：
 %%%%
 finished explored
 
-你可以使用自动探索机能 (<w>$cmd[CMD_EXPLORE]</w>) 来非常方便地探索地城。
+你可以使用自动探索机能 (<input>$cmd[CMD_EXPLORE]</input>)
+来非常方便地探索地城。
 游戏会将你自动移动至有物品的地方以便你拾取你感兴趣的东西。 <tiles>
 
-你也可以在小地图上按下<w>Ctrl</w> + <w>鼠标左键</w> 来自动探索。</tiles>
+你也可以在小地图上按下<input>Ctrl</input> + <input>鼠标左键</input>
+来自动探索。 </tiles>
 %%%%
 finished travel
 
-你可以很方便地在各个楼层间旅行：按下 <w>$cmd[CMD_INTERLEVEL_TRAVEL]</w> 或
-<w>G</w> 然后输入目的地便可。如果你的旅行被打断了，再按下
-<w>$cmd[CMD_INTERLEVEL_TRAVEL] Enter</w> 或 <w>G Enter</w> 就可以继续。
+你可以很方便地在各个楼层间旅行：按下 <input>$cmd[CMD_INTERLEVEL_TRAVEL]</input>
+或 <input>G</input> 然后输入目的地便可。如果你的旅行被打断了，再按下
+<input>$cmd[CMD_INTERLEVEL_TRAVEL] Enter</input> 或 <input>G Enter</input>
+就可以继续。
 %%%%
 finished stashes
 
-按下 <w>$cmd[CMD_SEARCH_STASHES]</w> 命令可以搜索地城中所有存在的物品。
-例如：搜索 <w>$cmd[CMD_SEARCH_STASHES] "小刀"</w> 会显示出所有的小刀。
-你可以选择其中的一个，然后自动移动至那里。你也可以搜索诸如 <w>"商店"</w> 或
-<w>"祭坛"</w> 这样的关键词。
+按下 <input>$cmd[CMD_SEARCH_STASHES]</input> 命令可以搜索地城中所有存在的物品。
+例如：搜索 <input>$cmd[CMD_SEARCH_STASHES] "小刀"</input> 会显示出所有的小刀。
+你可以选择其中的一个，然后自动移动至那里。你也可以搜索诸如
+<input>"商店"</input> 或 <input>"祭坛"</input> 这样的关键词。
 %%%%
 finished random 0
 
-游戏自动会对你的当前角色进行冒险记录。按下 <w>$cmd[CMD_DISPLAY_COMMANDS]:</w>
-来查阅记录。你可以按下 <w>$cmd[CMD_MAKE_NOTE]</w> 输入你想记录的信息。
-一旦你的角色死亡，在 <w>morgue/</w> 文件夹中会保留两个资料文档，其中那个 .txt
+游戏自动会对你的当前角色进行冒险记录。按下
+<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> 来查阅记录。你可以按下
+<input>$cmd[CMD_MAKE_NOTE]</input> 输入你想记录的信息。一旦你的角色死亡，在
+<input>morgue/</input> 文件夹中会保留两个资料文档，其中那个 .txt
 格式的文件就是该角色的游戏记录。在游戏中你可以按下
-<w>$cmd[CMD_CHARACTER_DUMP]</w> 来输出一个缓存记录。
+<input>$cmd[CMD_CHARACTER_DUMP]</input> 来输出一个缓存记录。
 %%%%
 finished random 1
 
-本游戏还可以使用宏命令：按下 <w>~m</w> 首先设定一个触发快捷键（例如 <w>F1</w
->），然后输入一个命令序列，例如 <w>za+.</w>。此后按<w>F1</w>
-键就会对最近的怪物施放 a 键位的法术。你可以输入
-<w>$cmd[CMD_DISPLAY_COMMANDS]~</w> 来查看有关宏命令的详细说明。
+本游戏还可以使用宏命令：按下 <input>~m</input> 首先设定一个触发快捷键（例如
+<input>F1</w >），然后输入一个命令序列，例如
+<input>za+.</input>。此后按<input>F1</input> 键就会对最近的怪物施放 a
+键位的法术。你可以输入 <input>$cmd[CMD_DISPLAY_COMMANDS]~</input>
+来查看有关宏命令的详细说明。
 %%%%
 finished random 2
 
-游戏界面的很多元素都可以自由设定。 <w>docs</w> 文件夹下的
-<w>options_guide.txt</w> 文件介绍了详细的设定方法。你可以通过修改
-<w>init.txt</w> 或 <w>.crawlrc</w>文件来更改设置。
+游戏界面的很多元素都可以自由设定。 <input>docs</input> 文件夹下的
+<input>options_guide.txt</input> 文件介绍了详细的设定方法。你可以通过修改
+<input>init.txt</input> 或 <input>.crawlrc</input>文件来更改设置。
 如果找不到这两个文件中的任何一个，游戏就会弹出提示。
 %%%%
 finished random 3
 
 你可以通过IRC（因特网中继聊天）与其他Crawl玩家进行交流：请移步freenode
-(<w>irc.freenode.net</w>) 上的<w>##crawl</w> 频道。
+(<input>irc.freenode.net</input>) 上的<input>##crawl</input> 频道。
 %%%%
 dissection reminder
 
-如果你不想吃掉尸体，按下 <w>p</w>可以献祭给 {{ return you.god()
-}}<tiles>。你也可以通过点击地上的尸体或者 <w>鼠标左键</w>
+如果你不想吃掉尸体，按下 <input>p</input>可以献祭给 {{ return you.god()
+}}<tiles>。你也可以通过点击地上的尸体或者 <input>鼠标左键</input>
 点击背包中的尸体将其剁碎</tiles
 >。在提示模式中你每遇到一具尸体都可以重读一遍本提示。
 %%%%
 HINT_CONVERT Xom
 
-你选择了信仰
-<w>扫姆</w>。你可以做出好笑的事情来取悦扫姆；千万别让这家伙对你失去兴趣！
+你选择了信仰 <input>扫姆</input>。你可以做出好笑的事情来取悦扫姆；千万别让这家
+伙对你失去兴趣！
 
 如果你一直取悦扫姆，他会把你当成他喜欢的玩具，随他高兴帮助你或者伤害你
 ；要不然他会把你当成他一件讨厌的玩具来玩弄你。
 %%%%
 HINT_CONVERT
 
-你刚刚选择了转而信仰 <w>{{ return you.god()
-}}</w>。你的信仰度会随着时间慢慢降低，如果太低， {{ return you.god() }}
+你刚刚选择了转而信仰 <input>{{ return you.god()
+}}</input>。你的信仰度会随着时间慢慢降低，如果太低， {{ return you.god() }}
 会将你驱逐出教会并惩罚你。不过，只要你一直让 {{ return you.god() }} 高兴，
 这种事就不会发生，而且你还能得到神明赏赐的力量和赐品。不用惊慌
 ：你一开始就有一定信仰度，因此在短时间内没有受驱逐的危险。
 
-按下 <w>^</w> <tiles> (或者在你的人物上按下 <w>Shift</w> + <w>鼠标右键
-</w>)</tiles> 可以查看你信仰的神祗的好恶，
+按下 <input>^</input> <tiles> (或者在你的人物上按下 <input>Shift</input> +
+<input>鼠标右键 </input>)</tiles> 可以查看你信仰的神祗的好恶，
 也可以查看你在神祗眼里的地位和神祗赐给你的神力。
 %%%%
 HINT_SEEN_FIRST_OBJECT
 
-那边<console>那个$1</console>是一个物品，你可以移动过去然后按下 <w>g</w> 或
-<w>,</w> 来拾取它。<console>通常物品会以非字母字符如 <w>%?!"=()[</w>来表示。
-</console><tiles>你也可以在站在物品上之后按下<w>鼠标左键</w>来拾取。 </tiles
->另外，一些物品通常会自动被拾取。<tiles
+那边<console>那个$1</console>是一个物品，你可以移动过去然后按下
+<input>g</input> 或 <input>,</input> 来拾取它。
+<console>通常物品会以非字母字符如 <input>%?!"=()[</input>来表示。
+</console><tiles>你也可以在站在物品上之后按下<input>鼠标左键</input>来拾取。
+</tiles >另外，一些物品通常会自动被拾取。<tiles
 >（图像模式中这类物品周围会有一个绿色的边框。)</tiles>
 
-当拾取进包包之后你可以再次用<tiles><w>Shift</w> + <w>鼠标左键点击</w
->组合键来丢弃这个物品。
-你还可以在一个物品上按<w>鼠标右键</w></tiles><console><w>d键 </w
->来丢弃这个物品。你还可以打开背包界面（<w>i</w>）并选择一个物品</console
+当拾取进包包之后你可以再次用<tiles><input>Shift</input> +
+<input>鼠标左键点击</w >组合键来丢弃这个物品。
+你还可以在一个物品上按<input>鼠标右键</input></tiles><console><input>d键 </w
+>来丢弃这个物品。
+你还可以打开背包界面（<input>i</input>）并选择一个物品</console
 >来查看该物品的详细描述。
 %%%%
