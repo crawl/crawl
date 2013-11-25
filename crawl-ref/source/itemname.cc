@@ -882,14 +882,14 @@ const char* rune_type_name(int p)
     case RUNE_GEHENNA:     return "obsidian";
     case RUNE_COCYTUS:     return "icy";
     case RUNE_TARTARUS:    return "bone";
-    case RUNE_SLIME_PITS:  return "slimy";
+    case RUNE_SLIME:  return "slimy";
     case RUNE_VAULTS:      return "silver";
-    case RUNE_SNAKE_PIT:   return "serpentine";
-    case RUNE_ELVEN_HALLS: return "elven";
+    case RUNE_SNAKE:   return "serpentine";
+    case RUNE_ELF: return "elven";
     case RUNE_TOMB:        return "golden";
     case RUNE_SWAMP:       return "decaying";
     case RUNE_SHOALS:      return "barnacled";
-    case RUNE_SPIDER_NEST: return "gossamer";
+    case RUNE_SPIDER: return "gossamer";
     case RUNE_FOREST:      return "mossy";
 
     // pandemonium and abyss runes:

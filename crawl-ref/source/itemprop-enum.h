@@ -278,10 +278,10 @@ enum missile_type
 enum rune_type
 {
     RUNE_SWAMP,
-    RUNE_SNAKE_PIT,
+    RUNE_SNAKE,
     RUNE_SHOALS,
-    RUNE_SLIME_PITS,
-    RUNE_ELVEN_HALLS, // unused
+    RUNE_SLIME,
+    RUNE_ELF, // unused
     RUNE_VAULTS,
     RUNE_TOMB,
 
@@ -300,7 +300,7 @@ enum rune_type
     RUNE_CEREBOV,
     RUNE_GLOORX_VLOQ,
 
-    RUNE_SPIDER_NEST,
+    RUNE_SPIDER,
     RUNE_FOREST,
     NUM_RUNE_TYPES
 };

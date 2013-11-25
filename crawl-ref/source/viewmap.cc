@@ -219,21 +219,21 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_III:
         case DNGN_EXIT_DUNGEON:
 #if TAG_MAJOR_VERSION == 34
-        case DNGN_RETURN_FROM_DWARVEN_HALL:
+        case DNGN_RETURN_FROM_DWARF:
 #endif
-        case DNGN_RETURN_FROM_ORCISH_MINES:
+        case DNGN_RETURN_FROM_ORC:
         case DNGN_RETURN_FROM_LAIR:
-        case DNGN_RETURN_FROM_SLIME_PITS:
+        case DNGN_RETURN_FROM_SLIME:
         case DNGN_RETURN_FROM_VAULTS:
         case DNGN_RETURN_FROM_CRYPT:
-        case DNGN_RETURN_FROM_HALL_OF_BLADES:
+        case DNGN_RETURN_FROM_BLADE:
         case DNGN_RETURN_FROM_TEMPLE:
-        case DNGN_RETURN_FROM_SNAKE_PIT:
-        case DNGN_RETURN_FROM_ELVEN_HALLS:
+        case DNGN_RETURN_FROM_SNAKE:
+        case DNGN_RETURN_FROM_ELF:
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
-        case DNGN_RETURN_FROM_SPIDER_NEST:
+        case DNGN_RETURN_FROM_SPIDER:
         case DNGN_RETURN_FROM_FOREST:
         case DNGN_EXIT_PORTAL_VAULT:
             return true;
@@ -249,21 +249,21 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_III:
         case DNGN_ABYSSAL_STAIR:
 #if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_DWARVEN_HALL:
+        case DNGN_ENTER_DWARF:
 #endif
-        case DNGN_ENTER_ORCISH_MINES:
+        case DNGN_ENTER_ORC:
         case DNGN_ENTER_LAIR:
-        case DNGN_ENTER_SLIME_PITS:
+        case DNGN_ENTER_SLIME:
         case DNGN_ENTER_VAULTS:
         case DNGN_ENTER_CRYPT:
-        case DNGN_ENTER_HALL_OF_BLADES:
+        case DNGN_ENTER_BLADE:
         case DNGN_ENTER_TEMPLE:
-        case DNGN_ENTER_SNAKE_PIT:
-        case DNGN_ENTER_ELVEN_HALLS:
+        case DNGN_ENTER_SNAKE:
+        case DNGN_ENTER_ELF:
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
-        case DNGN_ENTER_SPIDER_NEST:
+        case DNGN_ENTER_SPIDER:
         case DNGN_ENTER_FOREST:
             return true;
         default:

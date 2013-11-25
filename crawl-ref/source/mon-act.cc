@@ -367,17 +367,17 @@ static bool _mon_on_interesting_grid(monster* mon)
     // Orcs will tend to patrol around altars to Beogh, and guard the
     // stairway from and to the Orcish Mines.
     case DNGN_ALTAR_BEOGH:
-    case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_ENTER_ORC:
+    case DNGN_RETURN_FROM_ORC:
         return mons_is_native_in_branch(mon, BRANCH_ORC);
 
     // Same for elves and the Elven Halls.
-    case DNGN_ENTER_ELVEN_HALLS:
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_ENTER_ELF:
+    case DNGN_RETURN_FROM_ELF:
         return mons_is_native_in_branch(mon, BRANCH_ELF);
 
     // Spiders...
-    case DNGN_ENTER_SPIDER_NEST:
+    case DNGN_ENTER_SPIDER:
         return mons_is_native_in_branch(mon, BRANCH_SPIDER);
 
     // And the forest natives.

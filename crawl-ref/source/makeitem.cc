@@ -665,19 +665,19 @@ void item_colour(item_def &item)
                 break;
 
             case RUNE_TARTARUS:                 // bone
-            case RUNE_SPIDER_NEST:
+            case RUNE_SPIDER:
                 item.colour = ETC_BONE;
                 break;
 
-            case RUNE_SLIME_PITS:               // slimy
+            case RUNE_SLIME:                    // slimy
                 item.colour = ETC_SLIME;
                 break;
 
-            case RUNE_SNAKE_PIT:                // serpentine
+            case RUNE_SNAKE:                    // serpentine
                 item.colour = ETC_POISON;
                 break;
 
-            case RUNE_ELVEN_HALLS:              // elven
+            case RUNE_ELF:                      // elven
                 item.colour = ETC_ELVEN;
                 break;
 
@@ -713,7 +713,7 @@ void item_colour(item_def &item)
                 break;
             }
 
-            case RUNE_ABYSSAL:             // random in abyss
+            case RUNE_ABYSSAL:
                 item.colour = ETC_RANDOM;
                 break;
 
