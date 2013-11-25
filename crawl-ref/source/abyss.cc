@@ -966,26 +966,17 @@ static bool _in_wastes(const coord_def &p)
     return p.x > 0 && p.x < 0x7FFFFFF && p.y > 0 && p.y < 0x7FFFFFF;
 }
 
-// XXX: This does two things: picks a random level for monster generation,
-// and picks a random existing level for layouts.
-// The signature of this function might be overly complex, but perhaps it
-// will be used for more in the future?
-static level_id _get_random_level(bool existing, bool connected)
+static level_id _get_random_level()
 {
     vector<level_id> levels;
     for (int i = BRANCH_DUNGEON; i < NUM_BRANCHES; ++i)
     {
-        if (i == BRANCH_ABYSS
-            || branch_is_unfinished((branch_type)i)
-            || (existing && i == BRANCH_SHOALS)
-            || (connected && !is_connected_branch(static_cast<branch_type>(i))))
-        {
+        if (i == BRANCH_ABYSS || i == BRANCH_SHOALS)
             continue;
-        }
         for (int j = 1; j <= brdepth[i]; ++j)
         {
             const level_id id(static_cast<branch_type>(i), j);
-            if (!existing || is_existing_level(id))
+            if (is_existing_level(id))
                 levels.push_back(id);
         }
     }
@@ -1046,7 +1037,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 
     if (abyssLayout == NULL)
     {
-        const level_id lid = _get_random_level(true, false);
+        const level_id lid = _get_random_level();
         levelLayout = new LevelLayout(lid, 5, rivers);
         complex_vec[0] = levelLayout;
         complex_vec[1] = &rivers; // const
@@ -1359,6 +1350,49 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
     env.density = 0;
 }
 
+#define guest_entry random_pick_entry<branch_type>
+static guest_entry guests[] =
+{
+  { 1, 3, 100, DOWN, BRANCH_DUNGEON },
+  { 1, 2,  10, FLAT, BRANCH_ORC },
+  { 1, 5,  30, FLAT, BRANCH_ELF },
+  { 1, 3, 100, DOWN, BRANCH_LAIR },
+  { 1, 5,  80, DOWN, BRANCH_SWAMP },
+  { 1, 5,  80, DOWN, BRANCH_SHOALS },
+  { 1, 5,  80, DOWN, BRANCH_SNAKE },
+  { 1, 5,  80, DOWN, BRANCH_SPIDER },
+//{ 1, 5, 100, FLAT, BRANCH_SLIME },
+  { 1, 5, 100, FLAT, BRANCH_VAULTS },
+//{ 1, 5, 100, FLAT, BRANCH_BLADE },
+  { 1, 5,  50, FLAT, BRANCH_CRYPT },
+//{ 1, 5, 100, FLAT, BRANCH_TOMB },
+  { 1, 5,  50,   UP, BRANCH_VESTIBULE },
+  { 3, 5,  20,   UP, BRANCH_DIS },
+  { 3, 5,  20,   UP, BRANCH_GEHENNA },
+  { 3, 5,  20,   UP, BRANCH_COCYTUS },
+  { 3, 5,  20,   UP, BRANCH_TARTARUS },
+//{ 1, 5, 100, FLAT, BRANCH_ZOT },
+  { 1, 5, 100, FLAT, BRANCH_FOREST },
+//{ 1, 5, 100, FLAT, BRANCH_ABYSS },
+  { 1, 5, 100,   UP, BRANCH_PANDEMONIUM },
+  { 1, 5,   5, FLAT, BRANCH_ICE_CAVE },
+  { 1, 5,   5, FLAT, BRANCH_VOLCANO },
+  { 1, 5, 100, FLAT, BRANCH_DEPTHS },
+  {0,0,0,FLAT,NUM_BRANCHES},
+};
+
+static level_id _pick_guest_level()
+{
+    const int d = min(you.depth, 5);
+    random_picker<branch_type, NUM_BRANCHES> picker;
+    branch_type br = picker.pick(guests, d, NUM_BRANCHES);
+    ASSERT(br != NUM_BRANCHES);
+
+    const int brd = max(brdepth[br], 1);
+    // On Abyss:1, pick from half of the branch, on Abyss:5 from branch:$.
+    return level_id(br, brd - brd * 4 / (5 - d) / 2);
+}
+
 static void _initialize_abyss_state()
 {
     abyssal_state.major_coord.x = random_int() & 0x7FFFFFFF;
@@ -1367,7 +1401,9 @@ static void _initialize_abyss_state()
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random_int() & 0x7FFFFFFF;
     abyssal_state.nuke_all = false;
-    abyssal_state.level = _get_random_level(false, true);
+    abyssal_state.level = _pick_guest_level();
+    dprf("Guest monsters will come from %s.",
+         abyssal_state.level.describe().c_str());
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 
