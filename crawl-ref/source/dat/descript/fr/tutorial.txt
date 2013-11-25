@@ -2,14 +2,15 @@
 tutorial intro
 
 Vous pouvez relire tous les messages à tout moment avec
-<w>$cmd[CMD_REPLAY_MESSAGES]</w>. Pressez aussi <w>Espace</w> pour nettoyer
-<cyan>--plus--</cyan> de notifications.
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>. Pressez aussi <input>Espace</input>
+pour nettoyer <cyan>--plus--</cyan> de notifications.
 %%%%
 tutorial1 start
 
 Dans cette leçon, vous allez apprendre comment vous déplacer et explorer un
 niveau. Vous pouvez vous déplacer <localtiles>en cliquant quelque part avec
-votre <w>[Souris]</w>, or </localtiles>avec les <w>[flèches du clavier]</w>.
+votre <input>[Souris]</input>, or </localtiles>avec les <input>[flèches du
+clavier]</input>.
 %%%%
 tutorial1 go_on
 
@@ -19,86 +20,88 @@ case bleue suivante.
 tutorial1 diagonal
 
 :nowrap
-Vous pouvez vous déplacer en diagonale grâce au <w>[pavé numérique]</w> (essayez Numlock on/off) ou en utilisant les <w>[touches vi]</w>.
+Vous pouvez vous déplacer en diagonale grâce au <input>[pavé numérique]</input> (essayez Numlock on/off) ou en utilisant les <input>[touches vi]</input>.
 
-<w></w>  Pavé numérique : <w>7 8 9</w>           touches vi :  <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-<w></w>                    \|/                           \|/
-<w></w>                   <w>4</w>-<w>.</w>-<w>6</w>                         <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-<w></w>                    /|\                           /|\
-<w></w>                   <w>1 2 3</w>                         <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<input></input>  Pavé numérique : <input>7 8 9</input>           touches vi :  <input>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</input>
+<input></input>                    \|/                           \|/
+<input></input>                   <input>4</input>-<input>.</input>-<input>6</input>                         <input>$cmd[CMD_MOVE_LEFT]</input>-<input>.</input>-<input>$cmd[CMD_MOVE_RIGHT]</input>
+<input></input>                    /|\                           /|\
+<input></input>                   <input>1 2 3</input>                         <input>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</input>
 
-<localtiles>Vous pouvez aussi vous déplacer en utilisant un <w>[clic desouris]</w>.</localtiles>
+<localtiles>Vous pouvez aussi vous déplacer en utilisant un <input>[clic de souris]</input>.</localtiles>
 %%%%
 tutorial1 shiftmove
 
-Un façon plus rapide de 'courir' au travers un couloir est de presser
-<w>[Shift]</w> en même temps que <w>[pavé numérique]</w> (essayez Numlock
-on/off) ou <w>[touches vi]</w>.
+Une façon plus rapide de 'courir' au travers un couloir est de presser
+<input>[Shift]</input> en même temps que <input>[pavé numérique]</input>
+(essayez Numlock on/off) ou <input>[touches vi]</input>.
 %%%%
 tutorial1 downstairs
 
 Lorsque vous vous trouvez sur un escalier descendant, vous pouvez pénétrer dans
-le niveau suivant avec <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles> ou avec
-<w>[Shift-Click]</w> sur votre personnage</localtiles>.
+le niveau suivant avec <input>[$cmd[CMD_GO_DOWNSTAIRS]]</input><localtiles> ou
+avec <input>[Shift-Click]</input> sur votre personnage</localtiles>.
 %%%%
 tutorial1 levelmap
 
 Qu'est-ce que c'est ? Pour savoir où vous vous trouvez, <tiles>regarder la
-<w>mini-carte</w> à droite de l'écran.</tiles><localtiles> Vous pouvez examiner
-plus attentivement une partie avec <w>[clic droit souris]</w> et aussi vous
-déplacer avec <w>[clic gauche]</w>.</localtiles><webtiles>Vous pouvez passer en
-mode aperçu avec <w>[$cmd[CMD_DISPLAY_MAP]]</w> et ensuite déplacer le curseur
-alentour pour regarder le niveau. Vous pouvez aussi vous déplacer n'importe où
-pointe votre curseur en appuyant sur <w>[.]</w> ou <w>[Entrée]</w>. Pressez
-<w>[Échappe]</w> pour revenir au mode normal du jeu.</webtiles><console>entrez
-le mode mini-carte avec <w>[$cmd[CMD_DISPLAY_MAP]]</w> puis, déplacez votre
-curseur alentour pour découvrir le niveau. Vous pouvez aussi vous déplacer
-n'importe où où pointe votre curseur en pressant <w>[.]</w> ou <w>[Entrée]</w>.
-Pressez <w>[Espace]</w> pour retourner au mode normal du jeu.</console>
+<input>mini-carte</input> à droite de l'écran.</tiles><localtiles> Vous pouvez
+examiner plus attentivement une partie avec <input>[clic droit souris]</input>
+et aussi vous déplacer avec <input>[clic
+gauche]</input>.</localtiles><webtiles>Vous pouvez passer en mode aperçu avec
+<input>[$cmd[CMD_DISPLAY_MAP]]</input> et ensuite déplacer le curseur alentour
+pour regarder le niveau. Vous pouvez aussi vous déplacer n'importe où pointe
+votre curseur en appuyant sur <input>[.]</input> ou <input>[Entrée]</input>.
+Pressez <input>[Échappe]</input> pour revenir au mode normal du
+jeu.</webtiles><console>entrez le mode mini-carte avec
+<input>[$cmd[CMD_DISPLAY_MAP]]</input> puis, déplacez votre curseur alentour
+pour découvrir le niveau. Vous pouvez aussi vous déplacer n'importe où où
+pointe votre curseur en pressant <input>[.]</input> ou <input>[Entrée]</input>.
+Pressez <input>[Espace]</input> pour retourner au mode normal du jeu.</console>
 %%%%
 tutorial1 autoexplore
 
-Explorer manuellement peut devenir ennuyeux après au bout d'un moment, vous
-souhaiterez alors probablement le faire automatiquement. Essayez en appuyant
-sur <w>[$cmd[CMD_EXPLORE]]</w>.
+Explorer manuellement peut rapidement devenir ennuyeux. Au bout d'un moment,
+vous souhaiterez alors probablement le faire automatiquement. Essayez en
+appuyant sur <input>[$cmd[CMD_EXPLORE]]</input>.
 %%%%
 tutorial1 exclusion
 
-Certaines cases dangereuses sont marquées en <w>exclusion</w>. Auto-exploration
-<localtiles>(incluant aussi par <w>[clic de souris] </w>!) </localtiles>ne vous
-fera pas passer par les cases d'exclusion. A la place, vous vous arrêterez
-automatiquement.
+Certaines cases dangereuses sont marquées en <input>exclusion</input>.
+L'auto-exploration <localtiles>(y compris par <input>[clic de souris]
+</input>!) </localtiles>ne vous fera pas passer par les cases d'exclusion. A la
+place, vous vous arrêterez automatiquement.
 
 Toutefois, l'auto-exploration vous déplacera sans danger autour des exclusions
-si vous poursuivez en appuyant sur <w>[$cmd[CMD_EXPLORE]]</w>.
+si vous poursuivez en appuyant sur <input>[$cmd[CMD_EXPLORE]]</input>.
 %%%%
 tutorial1 autoexplore_announce
 
-L'auto-exploration arrêtera de vous annoncer les événements et les objets. Pour
-vous déplacer directement jusqu'à l'escalier, vous pouvez
-<localtiles><w>[cliquer]</w> sur lui ou vous pouvez </localtiles>presser
-<w>[$cmd[CMD_DISPLAY_MAP] << Entrée]</w>.
+L'auto-exploration s'arrêtera pour vous annoncer les événements et les objets.
+Pour vous déplacer directement jusqu'à l'escalier, vous pouvez
+<localtiles><input>[cliquer]</input> sur lui ou vous pouvez
+</localtiles>presser <input>[$cmd[CMD_DISPLAY_MAP] << Entrée]</input>.
 %%%%
 tutorial1 tutorial_end
 
 Félicitations ! Vous avez terminé la première leçon !
 
-Pour quitter ce tutoriel, emprunté simplement l'escalier en appuyant sur
-<w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> ou en <w>[Shift-cliquant]</w> sur
-votre personnage</localtiles>. Confirmez la validation qui est demandée avec la
-majuscule<w>[O]</w>.
+Pour quitter ce tutoriel, empruntez simplement l'escalier en appuyant sur
+<input>[$cmd[CMD_GO_UPSTAIRS]]</input><localtiles> ou en
+<input>[Shift-cliquant]</input> sur votre personnage</localtiles>. Confirmez la
+validation qui est demandée avec la majuscule<input>[O]</input>.
 %%%%
 tutorial1 newlevel
 
 Un nouveau niveau ! Pour commencer, rendez-vous à la porte sur votre droite.
 
 Rappelez-vous également : Vous pouvez relire tous les messages grâce à
-<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
+<input>[$cmd[CMD_REPLAY_MESSAGES]]</input>.
 %%%%
 tutorial1 door
 
 Pour ouvrir les portes fermées, marchez dans sa direction. Pour fermer une
-porte ouverte, pressez <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
+porte ouverte, pressez <input>[$cmd[CMD_CLOSE_DOOR]]</input>.
 %%%%
 tutorial1 close_door
 
@@ -113,42 +116,42 @@ tutorial1 upstairs
 
 Quand vous vous tenez sur un escalier menant au niveau supérieur (ascendant),
 vous pouvez revenir au niveau précédent avec la touche
-<w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> ou en <w>[Shift-cliquant]</w> sur
-votre personnage</localtiles>.
+<input>[$cmd[CMD_GO_UPSTAIRS]]</input><localtiles> ou en
+<input>[Shift-cliquant]</input> sur votre personnage</localtiles>.
 %%%%
 tutorial1 exit
 
 :nowrap
 <yellow>Commandes de mouvement</yellow>
-   Pavé numérique : <w>7 8 9</w>      touches vi : <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+   Pavé numérique : <input>7 8 9</input>      touches vi : <input>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</input>
                      \|/                     \|/
-                    <w>4</w>-<w>.</w>-<w>6</w>                   <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                    <input>4</input>-<input>.</input>-<input>6</input>                   <input>$cmd[CMD_MOVE_LEFT]</input>-<input>.</input>-<input>$cmd[CMD_MOVE_RIGHT]</input>
                      /|\                     /|\
-                    <w>1 2 3</w>                   <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+                    <input>1 2 3</input>                   <input>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</input>
 
-  <w>Shift + direction</w> vous fait vous déplacer de plusieurs cases dans une direction.
+  <input>Shift + direction</input> vous fait vous déplacer de plusieurs cases dans une direction.
 
-  <localtiles>Vous pouvez aussi vous déplacer en <w>cliquant</w> quelque part à portée de vue ou sur la <w>mini-carte</w>.</localtiles>
+  <localtiles>Vous pouvez aussi vous déplacer en <input>cliquant</input> quelque part à portée de vue ou sur la <input>mini-carte</input>.</localtiles>
 
 <yellow>Escaliers</yellow>
-  <w>$cmd[CMD_GO_UPSTAIRS]</w>  pour revenir au niveau précédent
-  <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  pour descendre au niveau suivant
-  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  se déplacer vers l'escalier ascendant/descendent le plus proche
+  <input>$cmd[CMD_GO_UPSTAIRS]</input>  pour revenir au niveau précédent
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  pour descendre au niveau suivant
+  <input>$cmd[CMD_DISPLAY_MAP] <<</input>/<input>></input>  se déplacer vers l'escalier ascendant/descendent le plus proche
 
 
 <yellow>Portes</yellow>
   peuvent être ouvertes en avançant vers elles
-  <w>$cmd[CMD_CLOSE_DOOR]</w>  fermer une porte ouverte
+  <input>$cmd[CMD_CLOSE_DOOR]</input>  fermer une porte ouverte
 
 
 <yellow>Voyager</yellow>
-  <localtiles>clic de souris sur la <w>mini-carte</w>
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  aperçu de la carte du niveau, voyager avec <w>Entrée</w>
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  aperçu de la carte du niveau, voyager avec <w>Entrée</w>
-  </console><w>$cmd[CMD_EXPLORE]</w>  auto-exploration
+  <localtiles>clic de souris sur la <input>mini-carte</input>
+  </localtiles><webtiles><input>$cmd[CMD_DISPLAY_MAP]</input>  aperçu de la carte du niveau, voyager avec <input>Entrée</input>
+  </webtiles><console><input>$cmd[CMD_DISPLAY_MAP]</input>  aperçu de la carte du niveau, voyager avec <input>Entrée</input>
+  </console><input>$cmd[CMD_EXPLORE]</input>  auto-exploration
 
 
-                      <cyan>Pressez <w>n'importe quelle touche</w> pour effacer cet écran...</cyan>
+                      <cyan>Pressez <input>n'importe quelle touche</input> pour effacer cet écran...</cyan>
 %%%%
 tutorial2 start
 
@@ -157,9 +160,11 @@ avons besoin d'une arme ! Allez ramasser celle se trouvant au sol.
 %%%%
 tutorial2 pickup_weapon
 
-Ramassez cette arme avec <w>[$cmd[CMD_PICKUP]]</w> ou <w>[g]</w> et équipez-la
-avec <w>[$cmd[CMD_WIELD_WEAPON]]</w>.<localtiles> Également, vous pouvez faire
-ces actions en <w>[cliquant]</w> dessus dans votre inventaire.</localtiles>
+Ramassez cette arme avec <input>[$cmd[CMD_PICKUP]]</input> ou
+<input>[g]</input> et équipez-la avec
+<input>[$cmd[CMD_WIELD_WEAPON]]</input>.<localtiles> Également, vous pouvez
+faire ces actions en <input>[cliquant]</input> dessus dans votre
+inventaire.</localtiles>
 %%%%
 tutorial2 melee
 
@@ -169,98 +174,102 @@ simplement dans sa direction (quand vous êtes sur des cases adjacentes).
 tutorial2 resting
 
 Parfait ! Vous pouvez regagner vos points de vie perdu en vous reposant avec
-<w>$cmd[CMD_REST]</w>. Cela vous fera vous reposer et chercher jusqu'à 100
-tours, mais cela sera interrompu par n'importe quel événement important.
+<input>$cmd[CMD_REST]</input>. Cela vous fera vous reposer et chercher jusqu'à
+100 tours, mais cela sera interrompu par n'importe quel événement important.
 %%%%
 tutorial2 chop_corpses
 
 Vous pouvez découper des corps en morceaux de viande comestibles avec
-<w>[$cmd[CMD_BUTCHER]]</w> <localtiles>ou <w>[Shift + clic de souris]</w>,
-</localtiles>et ensuite manger les morceaux résultants avec
-<w>[$cmd[CMD_EAT]]</w><localtiles> ou avec <w>[clic de
-souris]</w></localtiles>.
+<input>[$cmd[CMD_BUTCHER]]</input> <localtiles>ou <input>[Shift + clic de
+souris]</input>, </localtiles>et ensuite manger les morceaux résultants avec
+<input>[$cmd[CMD_EAT]]</input><localtiles> ou avec <input>[clic de
+souris]</input></localtiles>.
 %%%%
 tutorial2 rest_and_chop_reminder
 
 N'oubliez pas  de découper les corps pour la nourriture (avec
-<w>[$cmd[CMD_BUTCHER]]</w>), ou de vous reposer (avec <w>[$cmd[CMD_REST]]</w>)
-!
+<input>[$cmd[CMD_BUTCHER]]</input>), ou de vous reposer (avec
+<input>[$cmd[CMD_REST]]</input>) !
 %%%%
 tutorial2 wait
 
 Plutôt que de foncer tête baissée dans une pièce et vous retrouver encerclé par
 des monstres, vous pouvez aussi faire marche arrière et les laisser venir vers
-vous(avec <w>[$cmd[CMD_MOVE_NOWHERE]]</w>).
+vous(avec <input>[$cmd[CMD_MOVE_NOWHERE]]</input>).
 %%%%
 tutorial2 resting_reminder
 
-Rappelez-vous, vous pouvez vous reposer avec <w>[$cmd[CMD_REST]]</w>.
+Rappelez-vous, vous pouvez vous reposer avec <input>[$cmd[CMD_REST]]</input>.
 %%%%
 tutorial2 eat_reminder
 
 Rappelez-vous, vous pouvez découper les créatures avec
-<w>[$cmd[CMD_BUTCHER]]</w> <localtiles>ou <w>[Shift + clic de souris], </w>et
-ensuite manger les morceaux de viande résultant avec
-<w>[$cmd[CMD_EAT]]</w><localtiles> ou <w>[clic de souris]</w></localtiles>.
+<input>[$cmd[CMD_BUTCHER]]</input> <localtiles>ou <input>[Shift + clic de
+souris], </input>et ensuite manger les morceaux de viande résultant avec
+<input>[$cmd[CMD_EAT]]</input><localtiles> ou <input>[clic de
+souris]</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
-Examinez ces monstres (<localtiles>via <w>survol de la
-souris</w></localtiles><console>avec
-<w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></console><webtiles
->avec <w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></webtiles>)
-et comparez leurs descriptions (<localtiles><w>[clic droit de
-souris]</w></localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCR
-IBE]]</w></console><webtiles><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]
-]</w></webtiles>) pour déterminer laquelle de ces cages est la plus évidente
-pour vous frayer un chemin.
+Examinez ces monstres (<localtiles>via <input>survol de la
+souris</input></localtiles><console>avec <input>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_
+TARGET_CYCLE_FORWARD]]</input></console><webtiles >avec <input>[$cmd[CMD_LOOK_A
+ROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</input></webtiles>) et comparez leurs
+descriptions (<localtiles><input>[clic droit de souris]</input></localtiles><co
+nsole><input>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCR IBE]]</input></console
+><webtiles><input>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]
+]</input></webtiles>) pour déterminer laquelle de ces cages est la plus
+évidente pour vous frayer un chemin.
 %%%%
 tutorial2 downstairs
 
 Bien joué ! Après vous être reposé pleinement, continuez vers le niveau suivant
-avec<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w>.
+avec<input>[$cmd[CMD_GO_DOWNSTAIRS]]</input>.
 %%%%
 tutorial2 newlevel
 
 Rappelez-vous : Vous pouvez relire tous les vieux messages avec
-<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
+<input>[$cmd[CMD_REPLAY_MESSAGES]]</input>.
 %%%%
 tutorial2 darts
 
 Maintenant le combat à distance ! Ramassez ces fléchettes avec
-<w>[$cmd[CMD_PICKUP]]</w><localtiles> ou avec un <w>[clic de
-souris]</w>,</localtiles> et continuez.
+<input>[$cmd[CMD_PICKUP]]</input><localtiles> ou avec un <input>[clic de
+souris]</input>,</localtiles> et continuez.
 %%%%
 tutorial2 throwing
 
 Vous pouvez lancer vos fléchettes sur un monstre avec
-<w>[$cmd[CMD_FIRE]]</w><localtiles> ou en <w>[cliquant]</w> sur eux depuis
-votre inventaire</localtiles>. Pour confirmer le monstre automatiquement ciblé,
-pressez <w>[$cmd[CMD_TARGET_SELECT]]</w> or <w>[Entrée]</w>.
+<input>[$cmd[CMD_FIRE]]</input><localtiles> ou en <input>[cliquant]</input> sur
+eux depuis votre inventaire</localtiles>. Pour confirmer le monstre
+automatiquement ciblé, pressez <input>[$cmd[CMD_TARGET_SELECT]]</input> or
+<input>[Entrée]</input>.
 %%%%
 tutorial2 wield_bow
 
-Ramassez l'arc et équipez-le avec <w>[$cmd[CMD_WIELD_WEAPON]]</w><localtiles>
-ou avec un <w>[clic de souris]</w></localtiles>.
+Ramassez l'arc et équipez-le avec
+<input>[$cmd[CMD_WIELD_WEAPON]]</input><localtiles> ou avec un <input>[clic de
+souris]</input></localtiles>.
 %%%%
 tutorial2 firing
 
 Tirez des flèches avec votre arc équipé fonctionne comme le lancer de
-fléchettes : via <w>[$cmd[CMD_FIRE]]</w><localtiles> ou avec un <w>[clic de
-souris]</w>. Vous pouvez changer de cible en pressant
-<w>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w> pendant le mode ciblage. Le ver est
-inoffensif derrière la lave, concentrez-vous donc sur le mannequin
+fléchettes : via <input>[$cmd[CMD_FIRE]]</input><localtiles> ou avec un
+<input>[clic de souris]</input>. Vous pouvez changer de cible en pressant
+<input>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</input> pendant le mode ciblage. Le ver
+est inoffensif derrière la lave, concentrez-vous donc sur le mannequin
 d'entrainement. Encore, confirmez votre choix avec
-<w>[$cmd[CMD_TARGET_SELECT]]</w> ou <w>[Entrée]</w>.
+<input>[$cmd[CMD_TARGET_SELECT]]</input> ou <input>[Entrée]</input>.
 %%%%
 tutorial2 travel_reminder
 
-Rappelez-vous que vous pouvez auto-explorer avec <w>[$cmd[CMD_EXPLORE]]</w>.
+Rappelez-vous que vous pouvez auto-explorer avec
+<input>[$cmd[CMD_EXPLORE]]</input>.
 %%%%
 tutorial2 explore
 
 Trouvez la sortie ! Rappelez-vous que vous pouvez auto-explorer avec
-<w>[$cmd[CMD_EXPLORE]]</w>.
+<input>[$cmd[CMD_EXPLORE]]</input>.
 %%%%
 tutorial2 tutorial_end
 
@@ -271,32 +280,32 @@ tutorial2 exit
 
 :nowrap
 <yellow>Armes<console> <cyan>)</cyan></console></yellow>
-  <w>$cmd[CMD_PICKUP]</w>  ramasser un objet
-  <w>$cmd[CMD_WIELD_WEAPON]</w> équiper une arme<localtiles>  Vous pouvez aussi le faire en <w>cliquant</w> sur l'arme depuis votre inventaire.</localtiles>
+  <input>$cmd[CMD_PICKUP]</input>  ramasser un objet
+  <input>$cmd[CMD_WIELD_WEAPON]</input> équiper une arme<localtiles>  Vous pouvez aussi le faire en <input>cliquant</input> sur l'arme depuis votre inventaire.</localtiles>
 
 
 <yellow>Monstres</yellow>
-<localtiles>  <w>survol de souris</w>  examiner un monstre
-  <w>clic droit</w>  lire une description plus détaillée</localtiles>
-<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  examiner un monstre
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> lire une description plus détaillée</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  examiner un monstre
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> lire une description plus détaillée</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> tirer un projectile sur un monstre pré-ciblé
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> tirer sur un autre monstre
-<localtiles>  Vous pouvez aussi tirer un projectile en <w>cliquant</w> dessus et en confirmant votre cible avec <w>Entrée</w>.</localtiles>
+<localtiles>  <input>survol de souris</input>  examiner un monstre
+  <input>clic droit</input>  lire une description plus détaillée</localtiles>
+<console>  <input>$cmd[CMD_LOOK_AROUND]</input>  examiner un monstre
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lire une description plus détaillée</console> <webtiles>  <input>$cmd[CMD_LOOK_AROUND]</input>  examiner un monstre
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lire une description plus détaillée</webtiles>
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> tirer un projectile sur un monstre pré-ciblé
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> tirer sur un autre monstre
+<localtiles>  Vous pouvez aussi tirer un projectile en <input>cliquant</input> dessus et en confirmant votre cible avec <input>Entrée</input>.</localtiles>
 
 
 <yellow>Repos</yellow>
-  <w>$cmd[CMD_MOVE_NOWHERE]</w>  attendre et se reposer un unique tour
-  <w>$cmd[CMD_REST]</w>  attendre et se reposer jusqu'à 100 tours
+  <input>$cmd[CMD_MOVE_NOWHERE]</input>  attendre et se reposer un unique tour
+  <input>$cmd[CMD_REST]</input>  attendre et se reposer jusqu'à 100 tours
 
 
 <yellow>Corps<console> <brown>%</brown></console></yellow>
-  <w>$cmd[CMD_BUTCHER]</w>  découper un corps en morceaux de viande
-  <w>$cmd[CMD_EAT]</w>  manger un morceau de viande
+  <input>$cmd[CMD_BUTCHER]</input>  découper un corps en morceaux de viande
+  <input>$cmd[CMD_EAT]</input>  manger un morceau de viande
 
 
-                      <cyan>Pressez <w>n'importe quelle touche</w> pour effacer cet écran...</cyan>
+                      <cyan>Pressez <input>n'importe quelle touche</input> pour effacer cet écran...</cyan>
 %%%%
 tutorial3 start
 
@@ -304,9 +313,10 @@ Cette leçon porte sur les objets, et comment les utiliser.
 %%%%
 tutorial3 armour
 
-Ramassez ces bottes avec <w>[$cmd[CMD_PICKUP]]</w> et équipez les avec
-<w>[$cmd[CMD_WEAR_ARMOUR]]</w>.<localtiles> Vous pouvez aussi utiliser le
-<w>[mouseclick]</w> sur elles dans le panneau d'inventaire.</localtiles>
+Ramassez ces bottes avec <input>[$cmd[CMD_PICKUP]]</input> et équipez les avec
+<input>[$cmd[CMD_WEAR_ARMOUR]]</input>.<localtiles> Vous pouvez aussi utiliser
+le <input>[mouseclick]</input> sur elles dans le panneau
+d'inventaire.</localtiles>
 %%%%
 tutorial3 autopickup
 
@@ -317,8 +327,8 @@ tutorial3 scroll
 
 La plupart des objets que vous ramassés ne sont pas identifiés. Une manière de
 déterminer leurs effets est de les utiliser. Essayez de lire ce parchemin avec
-<w>[$cmd[CMD_READ]]</w><localtiles> ou avec un <w>[mouseclick]</w> panneau
-d'inventaire</localtiles>.
+<input>[$cmd[CMD_READ]]</input><localtiles> ou avec un
+<input>[mouseclick]</input> panneau d'inventaire</localtiles>.
 %%%%
 tutorial3 scroll_noautopickup
 
@@ -363,22 +373,23 @@ tutorial3 command_help
 
 Si les nombreuses commandes sont trop confuses, vous pouvez aussi chercher dans
 le panneau d'aide <input>$cmd[CMD_DISPLAY_COMMANDS]</input>. <localtiles>Un
-certain nombre de commandes sont également disponibles en cliquant <w> dans le
-panneau de commande</w> à la droite de l'écran. </localtiles>Relire les anciens
-messages avec <input>$cmd[CMD_REPLAY_MESSAGES]</input> est disponible comme
-d'habitude.
+certain nombre de commandes sont également disponibles en cliquant <input> dans
+le panneau de commande</input> à la droite de l'écran. </localtiles>Relire les
+anciens messages avec <input>$cmd[CMD_REPLAY_MESSAGES]</input> est disponible
+comme d'habitude.
 %%%%
 tutorial3 potion
 
-Vous pouvez avaler une de ces potions avec <w>[$cmd[CMD_QUAFF]]</w><localtiles>
-ou avec <w>[mouseclick]</w></localtiles>.
+Vous pouvez avaler une de ces potions avec
+<input>[$cmd[CMD_QUAFF]]</input><localtiles> ou avec
+<input>[mouseclick]</input></localtiles>.
 %%%%
 tutorial3 artefact_armour
 
-Les objets avec des <w>noms inhabituels </w> sont des artefacts. Les artefacts
-peuvent avoir un certain nombre de propriétés spéciales. Certains articles
-(comme ce manteau) sont connus et sont pré-identifiés, d'autres sont aléatoires
-et ont des propriétés inconnues. Essayez d'équiper cette cape avec
+Les objets avec des <input>noms inhabituels </input> sont des artefacts. Les
+artefacts peuvent avoir un certain nombre de propriétés spéciales. Certains
+articles (comme ce manteau) sont connus et sont pré-identifiés, d'autres sont
+aléatoires et ont des propriétés inconnues. Essayez d'équiper cette cape avec
 <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> ou en <input> cliquant
 </input> dessus dans le panneau d'inventaire</localtiles>.
 %%%%
@@ -440,13 +451,14 @@ tutorial3 autoexplore_reminder
 
 Rappelez-vous, vous pouvez explorer le niveau automatiquement avec
 <input>$cmd[CMD_EXPLORE]</input><localtiles> ou en <input>cliquant </input> le
-bouton d’auto-exploration dans <w>le panneau de commande </w></localtiles>.
+bouton d’auto-exploration dans <input>le panneau de commande
+</input></localtiles>.
 %%%%
 tutorial3 go_shopping
 
 Vous avez maintenant assez d'or pour faire quelques achats sérieux! Le moyen le
 plus rapide pour retourner à la boutique est en la recherchant. Appuyez sur
-<input>$cmd[CMD_SEARCH_STASHES]</input>, puis entrez "<w> shop </w>".
+<input>$cmd[CMD_SEARCH_STASHES]</input>, puis entrez "<input> shop </input>".
 Sélectionnez le résultat pour commencer à voyager.<localtiles> Vous pouvez
 également <input>cliquer </input> sur le bouton de recherche dans le panneau de
 commande, ou utiliser la minicarte pour revenir à la boutique </localtiles>.
@@ -467,31 +479,31 @@ tutorial3 exit
 
 :nowrap
 <yellow>Commandes avec les objets</yellow>
-  <w>$cmd[CMD_PICKUP]</w>  prendre un objet
-  <w>$cmd[CMD_WEAR_ARMOUR]</w>  mettre une partie d'armure
-  <w>$cmd[CMD_READ]</w>  lire un parchemin
-  <w>$cmd[CMD_WIELD_WEAPON]</w>  équiper une arme
-  <w>$cmd[CMD_QUAFF]</w>  boire une potion
-  <w>$cmd[CMD_EVOKE]</w>  utiliser un bâton
-  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  mettre un bijou
-  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  enlever un bijou
-  <w>$cmd[CMD_DROP]</w>  lâcher un objet
+  <input>$cmd[CMD_PICKUP]</input>  prendre un objet
+  <input>$cmd[CMD_WEAR_ARMOUR]</input>  mettre une partie d'armure
+  <input>$cmd[CMD_READ]</input>  lire un parchemin
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  équiper une arme
+  <input>$cmd[CMD_QUAFF]</input>  boire une potion
+  <input>$cmd[CMD_EVOKE]</input>  utiliser un bâton
+  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  mettre un bijou
+  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  enlever un bijou
+  <input>$cmd[CMD_DROP]</input>  lâcher un objet
 
-  <w></w>Les commandes d'utilisation sont aussi disponibles depuis le menu de l'inventaire (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), autant que les descriptions des objets.
-  <localtiles><w></w>Et bien sûr, <white>les clics de souris</white> marchent également.
+  <input></input>Les commandes d'utilisation sont aussi disponibles depuis le menu de l'inventaire (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), autant que les descriptions des objets.
+  <localtiles><input></input>Et bien sûr, <white>les clics de souris</white> marchent également.
 </localtiles>
 
 <yellow>Autres</yellow>
-  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> Accéder à la commande d'aide
-  <w>$cmd[CMD_RESISTS_SCREEN]</w>  Afficher la vue d'ensemble du personnage
-  <w>$cmd[CMD_USE_ABILITY]</w>  Utilisé une habilité
-  <w>$cmd[CMD_EXPLORE]</w>  Explorer automatiquement
-  <w>$cmd[CMD_SEARCH_STASHES]</w>  Chercher les objets/caractéristiques déjà vues
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> Accéder à la commande d'aide
+  <input>$cmd[CMD_RESISTS_SCREEN]</input>  Afficher la vue d'ensemble du personnage
+  <input>$cmd[CMD_USE_ABILITY]</input>  Utilisé une habilité
+  <input>$cmd[CMD_EXPLORE]</input>  Explorer automatiquement
+  <input>$cmd[CMD_SEARCH_STASHES]</input>  Chercher les objets/caractéristiques déjà vues
 
-  <localtiles><w></w>Plusieurs de ces commandes peuvent aussi être executées en cliquant dans le <w>Tableau de Commandes</w>.
+  <localtiles><input></input>Plusieurs de ces commandes peuvent aussi être executées en cliquant dans le <input>Tableau de Commandes</input>.
 </localtiles>
 
-                       <cyan>Appuyez <w>n'importe quelle touche</w> pour sortir de cet écran...</cyan>
+                       <cyan>Appuyez <input>n'importe quelle touche</input> pour sortir de cet écran...</cyan>
 %%%%
 tutorial4 start
 
@@ -569,10 +581,10 @@ et en entraînant l'habilité de lancer des sorts.
 tutorial4 forget_spell
 
 Gagner un niveau d'expérience et faire grimper l'habilité à lancer des sorts
-vous donne des emplacements de sorts. Vous pouvez aussi <w>oublier un sort
-mémorisé</w> afin de faire une place pour un nouveau sort. La manière la plus
-simple pour faire cela est avec un parchemin d'amnésie. Lisez simplement le
-parchemin (avec <input>$cmd[CMD_READ]</input><localtiles> ou en
+vous donne des emplacements de sorts. Vous pouvez aussi <input>oublier un sort
+mémorisé</input> afin de faire une place pour un nouveau sort. La manière la
+plus simple pour faire cela est avec un parchemin d'amnésie. Lisez simplement
+le parchemin (avec <input>$cmd[CMD_READ]</input><localtiles> ou en
 <input>cliquant</input> dessus</localtiles>), et ensuite selectionnez le sort
 que vous souhaitez oublier.
 %%%%
@@ -626,17 +638,17 @@ tutorial4 exit
 
 :nowrap
 <yellow>Commandes de lanceur de sorts</yellow>
-  <w>$cmd[CMD_MEMORISE_SPELL]</w> apprendre un nouveau sort
-  <w>$cmd[CMD_DISPLAY_SPELLS]</w> examiner les sorts connus
-  <w>$cmd[CMD_CAST_SPELL]</w> lancer un sort
-<localtiles>     Vous pouvez aussi apprendre de nouveaux sorts via le <w>tableau de mémorisation</w>.
-     Vous pouvez lancer un sort mémorisé via <w>clic gauche</w>, et lire leur descriptions ainsi qu'examiner votre maitrise des sorts en <w>passant le curseur de souris dessus</w> ou <w>clic droit</w>
+  <input>$cmd[CMD_MEMORISE_SPELL]</input> apprendre un nouveau sort
+  <input>$cmd[CMD_DISPLAY_SPELLS]</input> examiner les sorts connus
+  <input>$cmd[CMD_CAST_SPELL]</input> lancer un sort
+<localtiles>     Vous pouvez aussi apprendre de nouveaux sorts via le <input>tableau de mémorisation</input>.
+     Vous pouvez lancer un sort mémorisé via <input>clic gauche</input>, et lire leur descriptions ainsi qu'examiner votre maitrise des sorts en <input>passant le curseur de souris dessus</input> ou <input>clic droit</input>
 </localtiles>
 
-  <w>$cmd[CMD_READ]</w> lire un livre, pour leurs ou oublier un sort
-  <w>$cmd[CMD_REST]</w> se reposer jusqu’à 100 tours pour regagner ses points de vie et de magie
-  <w>$cmd[CMD_SHOUT]</w> ordres aux alliés
-  <w>$cmd[CMD_REMOVE_ARMOUR]</w> enlever son armure
+  <input>$cmd[CMD_READ]</input> lire un livre, pour leurs ou oublier un sort
+  <input>$cmd[CMD_REST]</input> se reposer jusqu’à 100 tours pour regagner ses points de vie et de magie
+  <input>$cmd[CMD_SHOUT]</input> ordres aux alliés
+  <input>$cmd[CMD_REMOVE_ARMOUR]</input> enlever son armure
 
 
                        <cyan>Appuyer <white>n'importe quelle touche</white> pour effacer cet écran...</cyan>
@@ -649,30 +661,31 @@ utiliser leurs pouvoirs.
 tutorial5 dungeon_overview
 
 Trog est juste un des nombreux dieux. Dans le vrai jeu, vous pressez
-<w>$cmd[CMD_DISPLAY_OVERMAP]</w><localtiles> ou cliquez sur le <w>bouton aperçu
-du donjon</w> dans le panneau de commandes</localtiles> pour obtenir la liste
-de tous les autels et autres choses intéressantes que vous avez trouvés
-jusqu'ici.
+<input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> ou cliquez sur le
+<input>bouton aperçu du donjon</input> dans le panneau de
+commandes</localtiles> pour obtenir la liste de tous les autels et autres
+choses intéressantes que vous avez trouvés jusqu'ici.
 %%%%
 tutorial5 altar
 
-Vous pouvez prié sur un autel avec <w>$cmd[CMD_PRAY]</w><localtiles> (ou en
-cliquant sur le <w>panneau de commandes</w> ou <w>Shift-cliquant</w> sur votre
-personnage)</localtiles> pour avoir une idée de ce que le dieu peut vous offrir
-et, pour rejoindre le rang de ses fidèles. Si vous pressez<w>!</w>
-<localtiles>ou <w>clic droit</w></localtiles> sur l'écran de religion, vous
-pouvez voir une description plus détaillée.
+Vous pouvez prié sur un autel avec <input>$cmd[CMD_PRAY]</input><localtiles>
+(ou en cliquant sur le <input>panneau de commandes</input> ou
+<input>Shift-cliquant</input> sur votre personnage)</localtiles> pour avoir une
+idée de ce que le dieu peut vous offrir et, pour rejoindre le rang de ses
+fidèles. Si vous pressez<input>!</input> <localtiles>ou <input>clic
+droit</input></localtiles> sur l'écran de religion, vous pouvez voir une
+description plus détaillée.
 
-Confirmez votre choix avec la majuscule <w>O</w>.
+Confirmez votre choix avec la majuscule <input>O</input>.
 %%%%
 tutorial5 religion
 
 Jetez un œil sur votre religion actuelle avec
-<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> (ou via le <w>bouton religion</w>
-dans le panneau de commandes, ou en <w>Shift-cliquant droit</w> sur votre
-personnage)</localtiles>. A novueau, pressez <w>!</w><localtiles> ou <w>cliquez
-droit</w></localtiles> vous donnera une description plus détaillée de votre
-dieu.
+<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles> (ou via le <input>bouton
+religion</input> dans le panneau de commandes, ou en <input>Shift-cliquant
+droit</input> sur votre personnage)</localtiles>. A novueau, pressez
+<input>!</input><localtiles> ou <input>cliquez droit</input></localtiles> vous
+donnera une description plus détaillée de votre dieu.
 %%%%
 tutorial5 piety_on_kill
 
@@ -681,28 +694,32 @@ commence !
 %%%%
 tutorial5 sacrificing
 
-Priez au-dessus de corps avec <w>$cmd[CMD_PRAY]</w><localtiles> ou via le
-<w>panneau de commandes</w></localtiles> les sacrifiera à Trog. Essayez !
+Priez au-dessus de corps avec <input>$cmd[CMD_PRAY]</input><localtiles> ou via
+le <input>panneau de commandes</input></localtiles> les sacrifiera à Trog.
+Essayez !
 %%%%
 tutorial5 burn_book
 
 Trog adorera que vous brûliez des livres de sorts (avec
-<w>$cmd[CMD_USE_ABILITY]</w><localtiles> ou via le <w>panneau de
-commandes</w></localtiles>). Parfois, vous voudrez attendre (avec
-<w>$cmd[CMD_MOVE_NOWHERE]</w>) qu'un monstre passe dessus avant de le faire.
+<input>$cmd[CMD_USE_ABILITY]</input><localtiles> ou via le <input>panneau de
+commandes</input></localtiles>). Parfois, vous voudrez attendre (avec
+<input>$cmd[CMD_MOVE_NOWHERE]</input>) qu'un monstre passe dessus avant de le
+faire.
 %%%%
 tutorial5 berserk
 
 Contre des ennemis particulièrement coriaces, vous souhaiterez utiliser le
-pouvoir de berserk de Trog avec <w>$cmd[CMD_USE_ABILITY]</w><localtiles> ou via
-le <w>panneau de commandes</w></localtiles>.
+pouvoir de berserk de Trog avec
+<input>$cmd[CMD_USE_ABILITY]</input><localtiles> ou via le <input>panneau de
+commandes</input></localtiles>.
 %%%%
 tutorial5 exhaustion
 
 Une rage berserk est très fatiguante. Pendant que vous êtes épuisé, vous ne
 pouvez devenir à nouveau berserk et êtes aussi ralenti. Il vaut mieux alors se
-reposer avec <w>$cmd[CMD_REST]</w> <localtiles>(ou via le <w>panneau de
-commandes</w>)</localtiles> jusqu'à ce que vous vous sentiez mieux.
+reposer avec <input>$cmd[CMD_REST]</input> <localtiles>(ou via le
+<input>panneau de commandes</input>)</localtiles> jusqu'à ce que vous vous
+sentiez mieux.
 %%%%
 tutorial5 hunger
 
@@ -729,7 +746,7 @@ tutorial5 exit
   $cmd[CMD_PRAY]  prier sur un autel et rejoindre une religion ou, sacrifier un corps
   $cmd[CMD_USE_ABILITY]  utiliser une aptitude divine
   $cmd[CMD_DISPLAY_RELIGION]  vérifier son statut religieux
-<localtiles>Un <w>clic droit</w> sur un personnage vous amènera aussi à l'écran religion.</localtiles>
+<localtiles>Un <input>clic droit</input> sur un personnage vous amènera aussi à l'écran religion.</localtiles>
 
 
 <yellow>Repos</yellow>
@@ -739,8 +756,8 @@ tutorial5 exit
 
 <yellow>Autres commandes</yellow>
   $cmd[CMD_DISPLAY_OVERMAP]  affiche l'aperçu du donjon
-  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  recherche dans la base de donnée des descriptions
+  $cmd[CMD_DISPLAY_COMMANDS]<input>/</input>  recherche dans la base de donnée des descriptions
 
 
-                      <cyan>Pressez <w>n'importe quelle touche</w> pour effacer cet écran...</cyan>
+                      <cyan>Pressez <input>n'importe quelle touche</input> pour effacer cet écran...</cyan>
 %%%%

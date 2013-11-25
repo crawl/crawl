@@ -3,8 +3,8 @@ welcome
 
 <white>Добро пожаловать в Dungeon Crawl!</white>
 
-Цель в том, чтобы ваш <w>{{ return you.race() }} {{ return you.class()
-}}</w> целым прошел вглубь подземелья и вернул легендарный  Шар Зота на
+Цель в том, чтобы ваш <input>{{ return you.race() }} {{ return you.class()
+}}</input> целым прошел вглубь подземелья и вернул легендарный  Шар Зота на
 поверхность. Тем не менее сначала пусть исследование будет вашей целью.
 Попробуйте забраться так глубоко, как это только возможно, но будьте осторожны:
 смерть подстерегает за каждым углом.
@@ -120,9 +120,9 @@ finished stashes
 
 Вы можете искать среди всех вещей в подземелье, используя команду
 <input>$cmd[CMD_SEARCH_STASHES]</input>. К примеру,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"knife"</w> откроет список всех
-ножей. А затем вы сможете отправиться к любой из этих точек. Возможно даже
-использование таких слов, как <w>"shop"</w> или <w>"altar"</w>.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <input>"knife"</input> откроет список
+всех ножей. А затем вы сможете отправиться к любой из этих точек. Возможно даже
+использование таких слов, как <input>"shop"</input> или <input>"altar"</input>.
 %%%%
 finished random 0
 
@@ -130,9 +130,9 @@ finished random 0
 <input>$cmd[CMD_DISPLAY_COMMANDS]:</input> чтобы прочитать её. Вы можете
 добавлять комментарии вручную, используя команду
 <input>$cmd[CMD_MAKE_NOTE]</input>.  Как только ваш персонаж погибает, в папке
-<w>morgue/</w> создаются два файла. Один из них, с расширением .txt. содержит
-копию истории персонажа. Во время игры вы можете создать дамп-файл с помощью
-команды  <input>$cmd[CMD_CHARACTER_DUMP]</input>.
+<input>morgue/</input> создаются два файла. Один из них, с расширением .txt.
+содержит копию истории персонажа. Во время игры вы можете создать дамп-файл с
+помощью команды  <input>$cmd[CMD_CHARACTER_DUMP]</input>.
 %%%%
 finished random 1
 
@@ -146,14 +146,14 @@ Crawl позволяет использовать макросы: нажмите
 finished random 2
 
 У интерфейса есть множество возможностей настройки. Все опции описаны в файле
-<w>options_guide.txt</w> папки <w>docs</w>. Сами опции устанавливаются в файле
-<w>init.txt</w> или <w>.crawlrc</w>. Если ни один файл не будет найден Crawl
-сам заполнит их.
+<input>options_guide.txt</input> папки <input>docs</input>. Сами опции
+устанавливаются в файле <input>init.txt</input> или <input>.crawlrc</input>.
+Если ни один файл не будет найден Crawl сам заполнит их.
 %%%%
 finished random 3
 
 Вы можете попросить других игроков о помощи на  IRC (Internet Relay Chat)
-канале <w>##crawl</w> на freenode (<w>irc.freenode.net</w>).
+канале <input>##crawl</input> на freenode (<input>irc.freenode.net</input>).
 %%%%
 dissection reminder
 
@@ -165,7 +165,7 @@ dissection reminder
 %%%%
 HINT_CONVERT Xom
 
-Вы только что сменили религию на поклонение <w>Ксому</w>. Вам придется
+Вы только что сменили религию на поклонение <input>Ксому</input>. Вам придется
 постоянно удивлять Ксома, чтобы он оставался счастлив; и вам уж точно не
 хотелось бы, чтобы этот бог заскучал!
 
@@ -175,12 +175,13 @@ HINT_CONVERT Xom
 %%%%
 HINT_CONVERT
 
-You've just converted to worshipping <w>{{ return you.god() }}</w>. Your piety
-(divine favour) will gradually decrease over time, and if it runs out {{ return
-you.god() }} will excommunicate you and punish you. You can prevent this,
-however, and even gain enough piety to get powers and divine gifts, by doing
-things to please {{ return you.god() }}. But don't panic: you start out with a
-decent amount of piety, so any danger of excommunication is far off.
+You've just converted to worshipping <input>{{ return you.god() }}</input>.
+Your piety (divine favour) will gradually decrease over time, and if it runs
+out {{ return you.god() }} will excommunicate you and punish you. You can
+prevent this, however, and even gain enough piety to get powers and divine
+gifts, by doing things to please {{ return you.god() }}. But don't panic: you
+start out with a decent amount of piety, so any danger of excommunication is
+far off.
 
 You can check your god's likes and dislikes, as well as your current standing
 and divine abilities, by typing <input>^</input><localtiles> (alternatively
@@ -190,10 +191,11 @@ HINT_SEEN_FIRST_OBJECT
 
 <console>$1 </console> - это вещь.Чтобы подобрать ее встаньте на эту клетку и
 нажмите <input>$cmd[CMD_PICKUP]</input>.<console>В основном, для обозначения
-вещей используются небуквенные символы <w>%?!"=()[</w>.</console><tiles>Также
-вы можете нажать на ней <input>left mouse button</input>. </tiles> Некоторые
-вещи подбираются автоматически. <tiles>В графической версии такие предметы
-обведены зеленой рамкой.</tiles>
+вещей используются небуквенные символы
+<input>%?!"=()[</input>.</console><tiles>Также вы можете нажать на ней
+<input>left mouse button</input>. </tiles> Некоторые вещи подбираются
+автоматически. <tiles>В графической версии такие предметы обведены зеленой
+рамкой.</tiles>
 
 Вещи из инвентаря вы можете выбросить, нажав
 <tiles><input>Shift-leftclick</input>. Если вы нажмете

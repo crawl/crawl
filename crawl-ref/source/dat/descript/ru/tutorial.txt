@@ -22,11 +22,11 @@ tutorial1 diagonal
 Для передвижения по диагонали используйте <input>number pad</input> (если не
 работает, включите/выключите NumLock) или  <input>vi keys</input>.
 
-<w></w>  Numpad:       <w>7 8 9</w>           vi-keys: <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-<w></w>                 \|/                      \|/
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w>                    <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-<w></w>                 /|\                      /|\
-<w></w>                <w>1 2 3</w>                    <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<input></input>  Numpad:       <input>7 8 9</input>           vi-keys: <input>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</input>
+<input></input>                 \|/                      \|/
+<input></input>                <input>4</input>-<input>.</input>-<input>6</input>                    <input>$cmd[CMD_MOVE_LEFT]</input>-<input>.</input>-<input>$cmd[CMD_MOVE_RIGHT]</input>
+<input></input>                 /|\                      /|\
+<input></input>                <input>1 2 3</input>                    <input>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</input>
 
 <localtiles>Также вы можете передвигаться по <input>mouse clicks</input>.</localtiles>
 %%%%
@@ -44,17 +44,18 @@ tutorial1 downstairs
 %%%%
 tutorial1 levelmap
 
-Что это? Чтобы понять где вы, <tiles>посмотрите на <w>миникарту</w> в правой
-части экрана.</tiles><localtiles> Вы  можете рассмотреть какую-либо часть карты
-поближе по <input>right mouse click</input> а также отправиться туда по
-<input>left click</input>.</localtiles><webtiles>Вы можете открыть общую карту,
-нажав <input>$cmd[CMD_DISPLAY_MAP]</input> а после передвигать курсор, чтобы
-осмотреть уровень. Для перемещения в указанное курсором место вы можете нажать
-<input>.</input> или <input>Enter</input>. Нажмите <input>Escape</input> чтобы
-вернуться в режим игры.</webtiles><console>Вы можете открыть общую карту, нажав
-<input>$cmd[CMD_DISPLAY_MAP]</input> а после. Для перемещения в указанное
-курсором место вы можете нажать <input>.</input> или <input>Enter</input>.
-Нажмите <input>Escape</input>чтобы вернуться в режим игры.</console>
+Что это? Чтобы понять где вы, <tiles>посмотрите на <input>миникарту</input> в
+правой части экрана.</tiles><localtiles> Вы  можете рассмотреть какую-либо
+часть карты поближе по <input>right mouse click</input> а также отправиться
+туда по <input>left click</input>.</localtiles><webtiles>Вы можете открыть
+общую карту, нажав <input>$cmd[CMD_DISPLAY_MAP]</input> а после передвигать
+курсор, чтобы осмотреть уровень. Для перемещения в указанное курсором место вы
+можете нажать <input>.</input> или <input>Enter</input>. Нажмите
+<input>Escape</input> чтобы вернуться в режим игры.</webtiles><console>Вы
+можете открыть общую карту, нажав <input>$cmd[CMD_DISPLAY_MAP]</input> а после.
+Для перемещения в указанное курсором место вы можете нажать <input>.</input>
+или <input>Enter</input>. Нажмите <input>Escape</input>чтобы вернуться в режим
+игры.</console>
 %%%%
 tutorial1 autoexplore
 
@@ -64,9 +65,10 @@ tutorial1 autoexplore
 %%%%
 tutorial1 exclusion
 
-Некоторые опасные участки, отмечены как <w>исключения</w>. Автоисследование
-<localtiles>(включая и переход по <input>mouseclick</input>!) </localtiles>не
-приведет вас в исключенные области. Вместо этого вы остановитесь.
+Некоторые опасные участки, отмечены как <input>исключения</input>.
+Автоисследование <localtiles>(включая и переход по <input>mouseclick</input>!)
+</localtiles>не приведет вас в исключенные области. Вместо этого вы
+остановитесь.
 
 Однако, автоисследование поможет вам безопасно обойти исключения,  вы сможете
 продолжить движение нажав <input>$cmd[CMD_EXPLORE]</input>.
@@ -116,35 +118,35 @@ tutorial1 exit
 
 :nowrap
 <yellow>Команды передвижения</yellow>
-   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+   Numpad:       <input>7 8 9</input>           vi-keys:    <input>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</input>
                   \|/                         \|/
-                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                 <input>4</input>-<input>.</input>-<input>6</input>                       <input>$cmd[CMD_MOVE_LEFT]</input>-<input>.</input>-<input>$cmd[CMD_MOVE_RIGHT]</input>
                   /|\                         /|\
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
-  <w>Shift + направление</w> перемещает вас на несколько клеток в указанном направлении.
-  <localtiles>Также вы можете передвигаться по <w>щелчку</w> где либо в области
-видимости на<w>миникарте</w>.
+                 <input>1 2 3</input>                       <input>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</input>
+  <input>Shift + направление</input> перемещает вас на несколько клеток в указанном направлении.
+  <localtiles>Также вы можете передвигаться по <input>щелчку</input> где либо в области
+видимости на<input>миникарте</input>.
 </localtiles>
 
 <yellow>Лестницы</yellow>
-  <w>$cmd[CMD_GO_UPSTAIRS]</w>  вернуться на предыдущий уровень
-  <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  перейти на следующий уровень
-  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  перейти к ближайшей лестнице (вверх/вниз)
+  <input>$cmd[CMD_GO_UPSTAIRS]</input>  вернуться на предыдущий уровень
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  перейти на следующий уровень
+  <input>$cmd[CMD_DISPLAY_MAP] <<</input>/<input>></input>  перейти к ближайшей лестнице (вверх/вниз)
 
 
 <yellow>Двери</yellow>
   могут быть открыты при передвижении в их направлении
-  <w>$cmd[CMD_CLOSE_DOOR]</w>  закрыть открытую дверь
+  <input>$cmd[CMD_CLOSE_DOOR]</input>  закрыть открытую дверь
 
 
 <yellow>Путешествие</yellow>
-  <localtiles>Щелчок мышью по <w>миникарте</w>
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> открыть карту уровня, перемещение по<w>Enter</w>
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  открыть карту уровня, перемещение по <w>Enter</w>
-  </console><w>$cmd[CMD_EXPLORE]</w>  автоисследование
+  <localtiles>Щелчок мышью по <input>миникарте</input>
+  </localtiles><webtiles><input>$cmd[CMD_DISPLAY_MAP]</input> открыть карту уровня, перемещение по<input>Enter</input>
+  </webtiles><console><input>$cmd[CMD_DISPLAY_MAP]</input>  открыть карту уровня, перемещение по <input>Enter</input>
+  </console><input>$cmd[CMD_EXPLORE]</input>  автоисследование
 
 
-                                 <cyan>Нажмите <w>любую клавишу</w> для очистки экрана...</cyan>
+                                 <cyan>Нажмите <input>любую клавишу</input> для очистки экрана...</cyan>
 %%%%
 tutorial2 start
 
@@ -260,33 +262,33 @@ tutorial2 exit
 
 :nowrap
 <yellow>Оружие<console> <cyan>)</cyan></console></yellow>
-  <w>$cmd[CMD_PICKUP]</w>  поднять предмет
-  <w>$cmd[CMD_WIELD_WEAPON]</w> вооружиться оружием
-<localtiles>  Вы также можете сделать это <w>clicking</w> по оружию в вашем инвентаре.</localtiles>
+  <input>$cmd[CMD_PICKUP]</input>  поднять предмет
+  <input>$cmd[CMD_WIELD_WEAPON]</input> вооружиться оружием
+<localtiles>  Вы также можете сделать это <input>clicking</input> по оружию в вашем инвентаре.</localtiles>
 
 
 <yellow>Монстры</yellow>
-<localtiles>  <w>mouseover</w>  изучить монстра
-  <w>rightclick</w>  прочесть детальное описание</localtiles>
-<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное описание</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  изучить монстра
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> прочесть детальное описание</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  выстрелить в нацеленного монстра
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> прицелиться в другого монстра
-<localtiles>  Вы также можете выстрелить по предмету <w>clicking</w> на нем и подтвердив цель с помощью <w>Enter</w>.</localtiles>
+<localtiles>  <input>mouseover</input>  изучить монстра
+  <input>rightclick</input>  прочесть детальное описание</localtiles>
+<console>  <input>$cmd[CMD_LOOK_AROUND]</input>  изучить монстра
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> прочесть детальное описание</console> <webtiles>  <input>$cmd[CMD_LOOK_AROUND]</input>  изучить монстра
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> прочесть детальное описание</webtiles>
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input>  выстрелить в нацеленного монстра
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> прицелиться в другого монстра
+<localtiles>  Вы также можете выстрелить по предмету <input>clicking</input> на нем и подтвердив цель с помощью <input>Enter</input>.</localtiles>
 
 
 <yellow>Отдых</yellow>
-  <w>$cmd[CMD_MOVE_NOWHERE]</w>  ждать и отдохнуть 1 ход
-  <w>$cmd[CMD_REST]</w>  ждать и отдыхать до 100 ходов
+  <input>$cmd[CMD_MOVE_NOWHERE]</input>  ждать и отдохнуть 1 ход
+  <input>$cmd[CMD_REST]</input>  ждать и отдыхать до 100 ходов
 
 
 <yellow>Трупы<console> <brown>%</brown></console></yellow>
-  <w>$cmd[CMD_BUTCHER]</w>  рубить трупы на куски мяса
-  <w>$cmd[CMD_EAT]</w>  поедать куски мяса
+  <input>$cmd[CMD_BUTCHER]</input>  рубить трупы на куски мяса
+  <input>$cmd[CMD_EAT]</input>  поедать куски мяса
 
 
-                                 <cyan>Нажмите <w>any key</w> ,чтобы очистить этот экран...</cyan>
+                                 <cyan>Нажмите <input>any key</input> ,чтобы очистить этот экран...</cyan>
 %%%%
 tutorial3 start
 
@@ -352,7 +354,7 @@ tutorial3 autoexplore_reminder
 
 Помните, вы можете исследовать уровень автоматически с помощью
 <input>$cmd[CMD_EXPLORE]</input><localtiles> или  <input>clicking</input>
-кнопку автоисследовать в <w>command panel</w></localtiles>.
+кнопку автоисследовать в <input>command panel</input></localtiles>.
 %%%%
 tutorial3 optional_battle
 
@@ -369,33 +371,33 @@ tutorial3 exit
 
 :nowrap
 <yellow>Команды для предметов</yellow>
-<w>$cmd[CMD_PICKUP]</w> поднять предмет
-<w>$cmd[CMD_WEAR_ARMOUR]</w> надеть доспех
-<w>$cmd[CMD_READ]</w> прочитать свиток
-<w>$cmd[CMD_WIELD_WEAPON]</w> взять оружие
-<w>$cmd[CMD_QUAFF]</w> выпить зелье
-<w>$cmd[CMD_EVOKE]</w> использовать палочку
-<w>$cmd[CMD_WEAR_JEWELLERY]</w> надеть драгоценность
-<w>$cmd[CMD_REMOVE_JEWELLERY]</w> снять драгоценность
-<w>$cmd[CMD_DROP]</w> выкинуть предмет
+<input>$cmd[CMD_PICKUP]</input> поднять предмет
+<input>$cmd[CMD_WEAR_ARMOUR]</input> надеть доспех
+<input>$cmd[CMD_READ]</input> прочитать свиток
+<input>$cmd[CMD_WIELD_WEAPON]</input> взять оружие
+<input>$cmd[CMD_QUAFF]</input> выпить зелье
+<input>$cmd[CMD_EVOKE]</input> использовать палочку
+<input>$cmd[CMD_WEAR_JEWELLERY]</input> надеть драгоценность
+<input>$cmd[CMD_REMOVE_JEWELLERY]</input> снять драгоценность
+<input>$cmd[CMD_DROP]</input> выкинуть предмет
 
-<w></w>Использование команд доступно как из меню инвентаря
-(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), так и из экрана описания предмета.
-<localtiles><w></w>И конечно, <white>клик мышкой</white> также действует.
+<input></input>Использование команд доступно как из меню инвентаря
+(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), так и из экрана описания предмета.
+<localtiles><input></input>И конечно, <white>клик мышкой</white> также действует.
 </localtiles>
 
 <yellow>Другие</yellow>
-<w>$cmd[CMD_DISPLAY_COMMANDS]?</w> доступ к командам помощи
-<w>$cmd[CMD_RESISTS_SCREEN]</w> экран обзора характеристик
-<w>$cmd[CMD_USE_ABILITY]</w> использовать способность
-<w>$cmd[CMD_EXPLORE]</w> автоисследование
-<w>$cmd[CMD_SEARCH_STASHES]</w> поиск предметов/возможностей виденных ранее
+<input>$cmd[CMD_DISPLAY_COMMANDS]?</input> доступ к командам помощи
+<input>$cmd[CMD_RESISTS_SCREEN]</input> экран обзора характеристик
+<input>$cmd[CMD_USE_ABILITY]</input> использовать способность
+<input>$cmd[CMD_EXPLORE]</input> автоисследование
+<input>$cmd[CMD_SEARCH_STASHES]</input> поиск предметов/возможностей виденных ранее
 
-<localtiles><w></w>Некоторые из этих команд можно выполнить кликнув по ней в
-<w>панели команд</w>.
+<localtiles><input></input>Некоторые из этих команд можно выполнить кликнув по ней в
+<input>панели команд</input>.
 </localtiles>
 
-<cyan>Нажмите <w>любую клавишу</w> чтобы очистить экран...</cyan>
+<cyan>Нажмите <input>любую клавишу</input> чтобы очистить экран...</cyan>
 %%%%
 tutorial4 start
 
@@ -450,20 +452,21 @@ tutorial5 piety_on_kill
 tutorial5 sacrificing
 
 Помолившись над трупом с помощью <input>$cmd[CMD_PRAY]</input><localtiles> или
-через <w>command panel</w></localtiles> принесете жертву Трогу. Попробуйте!
+через <input>command panel</input></localtiles> принесете жертву Трогу.
+Попробуйте!
 %%%%
 tutorial5 berserk
 
 Против исключительно опасных врагов, вы можете использовать силу Берсерка Трога
-с помощью  <input>$cmd[CMD_USE_ABILITY]</input><localtiles> или <w>command
-panel</w></localtiles>.
+с помощью  <input>$cmd[CMD_USE_ABILITY]</input><localtiles> или <input>command
+panel</input></localtiles>.
 %%%%
 tutorial5 exhaustion
 
 Ярость берсерка  приводит к сильному истощению, во время которого вы не можете
 использовать силу снова, а также замедлены. В это время лучше всего отдохнуть
-при помощи  <input>$cmd[CMD_REST]</input> <localtiles>(либо  <w>command
-panel</w>)</localtiles> до тех пор, пока вы не будете в порядке.
+при помощи  <input>$cmd[CMD_REST]</input> <localtiles>(либо  <input>command
+panel</input>)</localtiles> до тех пор, пока вы не будете в порядке.
 %%%%
 tutorial5 hunger
 

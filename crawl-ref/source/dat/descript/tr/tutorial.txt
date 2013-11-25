@@ -1,8 +1,8 @@
 %%%%
 tutorial intro
 
-Herzaman <w>$cmd[CMD_REPLAY_MESSAGES]</w> ile tüm mesajlarınızı tekrar
-okuyabilirsiniz. Ayrıca <w>Space</w> tuşu ile<cyan>--more--</cyan>
+Herzaman <input>$cmd[CMD_REPLAY_MESSAGES]</input> ile tüm mesajlarınızı tekrar
+okuyabilirsiniz. Ayrıca <input>Space</input> tuşu ile<cyan>--more--</cyan>
 temizleyebilirsiniz.
 %%%%
 tutorial1 go_on
@@ -11,23 +11,23 @@ tutorial1 go_on
 %%%%
 tutorial1 levelmap
 
-Bu nedir ? Nerede olduğunu , <tiles>ekranın sağındaki <w>minimap</w>a bakarak
-bul .</tiles><localtiles> <w>[sağ mouse]</w> ile haritanın bir parçasına
-yakından bakabilirsin ve<w>[sol tuş]</w> ile seyehat
+Bu nedir ? Nerede olduğunu , <tiles>ekranın sağındaki <input>minimap</input>a
+bakarak bul .</tiles><localtiles> <input>[sağ mouse]</input> ile haritanın bir
+parçasına yakından bakabilirsin ve<input>[sol tuş]</input> ile seyehat
 edebilirsin.</localtiles><webtiles> harita üzerinden girişi
-<w>[$cmd[CMD_DISPLAY_MAP]]</w>  ile görüntüleyebilir ve imleci seviye etrafında
-gezindirebilirsiniz. Ayrıca istediğiniz yere <w>[.]</w> yada <w>[Enter]</w>
-basarak seyehat edebilirsiniz normal oyun moduna dönmek için <w>[Escape]</w>
-tuluna basın.</webtiles><console> harita üzerinde
-<w>[$cmd[CMD_DISPLAY_MAP]]</w> ile görüntüle ve ardından imleci seviyenin
-etrafında gezindirin.Ayrıca istediğiniz yere <w>[.]</w> yada <w>[Enter]</w>
-basarak seyehat edebilirsiniz normal oyun moduna dönmek için <w>[Escape]</w>
-tuluna basın</console>
+<input>[$cmd[CMD_DISPLAY_MAP]]</input>  ile görüntüleyebilir ve imleci seviye
+etrafında gezindirebilirsiniz. Ayrıca istediğiniz yere <input>[.]</input> yada
+<input>[Enter]</input> basarak seyehat edebilirsiniz normal oyun moduna dönmek
+için <input>[Escape]</input> tuluna basın.</webtiles><console> harita üzerinde
+<input>[$cmd[CMD_DISPLAY_MAP]]</input> ile görüntüle ve ardından imleci
+seviyenin etrafında gezindirin.Ayrıca istediğiniz yere <input>[.]</input> yada
+<input>[Enter]</input> basarak seyehat edebilirsiniz normal oyun moduna dönmek
+için <input>[Escape]</input> tuluna basın</console>
 %%%%
 tutorial1 door
 
 Kapalı kapıyı içine yürüyerek açabilirsin. Açık kapıyı kapatmak için,
-<w>[$cmd[CMD_CLOSE_DOOR]]</w>  tuşunu kullan.
+<input>[$cmd[CMD_CLOSE_DOOR]]</input>  tuşunu kullan.
 %%%%
 tutorial2 start
 
@@ -37,16 +37,17 @@ ihtiyacımız var ! Git ve kendine bir yatacak yer kap.
 tutorial2 downstairs
 
 Helal ! Tüm canıla dayandıktan sonra "sıradaki seviyeye gir
-<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w> "
+<input>[$cmd[CMD_GO_DOWNSTAIRS]]</input> "
 %%%%
 tutorial2 travel_reminder
 
-<w>[$cmd[CMD_EXPLORE]]</w> kulanarak gezginden faydalanabileceğini unutma.
+<input>[$cmd[CMD_EXPLORE]]</input> kulanarak gezginden faydalanabileceğini
+unutma.
 %%%%
 tutorial2 explore
 
-Çıkışı bul !  <w>[$cmd[CMD_EXPLORE]]</w> kullanarak gezgine ulaşabileceğini
-unutma.
+Çıkışı bul !  <input>[$cmd[CMD_EXPLORE]]</input> kullanarak gezgine
+ulaşabileceğini unutma.
 %%%%
 tutorial2 tutorial_end
 
