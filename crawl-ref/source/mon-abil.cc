@@ -4003,7 +4003,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // This is probably coopting the enchant for something beyond its
             // intended purpose, but the message does match....
             mon_enchant breath_timeout =
-                mon_enchant(ENCH_BREATH_WEAPON, 1, mons, (4 +  random2(9)) * 10);
+                mon_enchant(ENCH_BREATH_WEAPON, 1, mons,
+                            (4 + random2(9)) * BASELINE_DELAY);
             mons->add_ench(breath_timeout);
             used = true;
         }
