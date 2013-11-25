@@ -1192,7 +1192,6 @@ xxxX.xxxx.xxxx....xx.Xxxx
         xxxx     xxxx
 ENDMAP
 
-
 NAME: nicolae_spider_cling_halls
 DEPTH: Spider, !Spider:1, !Spider:$
 ORIENT: float
@@ -1220,7 +1219,6 @@ XxxxxxxxxxxxxxX
  XXXXXXXXXXXXX
 ENDMAP
 
-
 NAME: nicolae_spider_cling_ruins
 DEPTH: Spider, !Spider:1
 ORIENT: float
@@ -1247,7 +1245,6 @@ xX'XwGGGGGwX'Xx
 x'X'wwwwwww'X'x
 xxxX'''''''Xxxx
 ENDMAP
-
 
 NAME: nicolae_spider_hall_of_the_moth_king
 DEPTH: Spider
