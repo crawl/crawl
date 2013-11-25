@@ -597,15 +597,12 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         int tmp = getchm(KMC_CONFIRM);
 #endif
 
-        // Prevent infinite loop if Curses HUP signal handling happens;
-        // if there is no safe answer, then just save-and-exit immediately,
-        // since there's no way to know if it would be better to return
-        // true or false.
-
-        // CHEAT-ALLOWING (OR WORSE) BUG: we should never allow aborting
-        // the game from an arbitrary point.
+        // If no safe answer exists, we still need to abort when a HUP happens.
+        // The caller must handle this case, preferably by issuing an uncancel
+        // event that can restart when the game restarts -- and ignore the
+        // the return value here.
         if (crawl_state.seen_hups && !safeanswer)
-            sighup_save_and_exit();
+            return false;
 
         if (map && map->find(tmp) != map->end())
             tmp = map->find(tmp)->second;

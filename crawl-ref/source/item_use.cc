@@ -2524,8 +2524,9 @@ static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
 
         if (item_slot == PROMPT_ABORT)
         {
+            // FIXME: when aborted by a HUP, the scroll shouldn't get lost.
             if (alreadyknown
-                || yesno("Really abort (and waste the scroll)?"))
+                || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
                 return !alreadyknown;
@@ -2821,8 +2822,9 @@ retry:
         if (item_slot == PROMPT_NOTHING)
             return false;
 
+        // FIXME: when interrupted by a HUP, the scroll shouldn't get lost.
         if (item_slot == PROMPT_ABORT
-            && yesno("Really abort (and waste the scroll)?"))
+            && yesno("Really abort (and waste the scroll)?", false, 0))
         {
             canned_msg(MSG_OK);
             return false;
