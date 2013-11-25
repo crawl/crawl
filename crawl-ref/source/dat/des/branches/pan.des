@@ -1193,11 +1193,11 @@ x..x...cxxxxxxxxxxxxx..X.c...V.xx
 x.V....cxxxxxxxxxxx......c..x..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.x..cccxxxx.............c..V..xx
-x...3c5=.2.........X.X.X.cc..x.xx
+x...3c5+.2.........X.X.X.cc..x.xx
 ....cc5c.................+3.x..xx
 @...cO5c1....2...X.X.X.X.dC..V.xx
 ....cc5c.................+3.x..xx
-x...3c5=.2.........X.X.X.cc..x.xx
+x...3c5+.2.........X.X.X.cc..x.xx
 x.x..cccxxxx.............c..V..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.V....cxxxxxxxxxxx......c..x..xx
@@ -1901,9 +1901,7 @@ TAGS: pan allow_dup
 WEIGHT: 5
 MONS: any demon, common demon, greater demon
 MARKER: + = lua:props_marker { connected_exclude="true" }
-MARKER: + = lua:restrict_door()
 MARKER: - = lua:props_marker { connected_exclude="true" }
-MARKER: - = lua:restrict_door()
 NSUBST: + = 1:P / 2:2 / 2:3 / *:+
 SUBST: - = +
 : pan_demonic_rune(_G, 'P', true)
@@ -1963,7 +1961,6 @@ ENDMAP
 NAME: nicolae_pan_giant_door
 TAGS: pan allow_dup no_trap_gen
 MONS: any demon
-MARKER: = = lua:restrict_door()
 : pan_demonic_rune(_G, 'P', true)
 MAP
      ..@..

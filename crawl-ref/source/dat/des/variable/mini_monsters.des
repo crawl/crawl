@@ -2621,21 +2621,21 @@ DEPTH:  D:9-, Depths, !Depths:$
 MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
 MAP
       .....
-    ...b+b...
+    ...b=b...
   ...bbb.bbb...
   .bbb.....bbb.
- ..b...b=b...b..
+ ..b...b+b...b..
  .bb.bbb.bbb.bb.
 ..b..b.....b..b..
 .bb.bb..*..bb.bb.
-.+..=..*1*..=..+.
+.=..+..*1*..+..=.
 .bb.bb..*..bb.bb.
 ..b..b.....b..b..
  .bb.bbb.bbb.bb.
- ..b...b=b...b..
+ ..b...b+b...b..
   .bbb.....bbb.
   ...bbb.bbb...
-    ...b+b...
+    ...b=b...
       .....
 ENDMAP
 
