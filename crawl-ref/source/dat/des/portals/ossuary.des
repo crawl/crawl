@@ -205,8 +205,7 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    ossuary_tomb_2
-# Generally have rooms full of either monsters or traps. To protect the
-# monsters, all doors are runed, no alarm traps, and mostly needle traps.
+# Generally have rooms full of either monsters or traps.
 WEIGHT:  40
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen no_rotate
@@ -222,16 +221,16 @@ SUBST:   1 = 1:20 2:10 .:20
 SUBST:   ~ = ~:20 .:10
 :end
 SUBST:   z = 1
-NSUBST:  B = 1:= / *:c
-NSUBST:  C = 1:= / *:c
-NSUBST:  D = 1:= / *:c
-NSUBST:  E = 1:= / *:c
-NSUBST:  F = 1:= / *:c
-NSUBST:  G = 1:= / *:c
-NSUBST:  H = 1:= / *:c
-NSUBST:  I = 1:= / *:c
-NSUBST:  J = 1:= / *:c
-NSUBST:  K = 1:= / *:c
+NSUBST:  B = 1:+ / *:c
+NSUBST:  C = 1:+ / *:c
+NSUBST:  D = 1:+ / *:c
+NSUBST:  E = 1:+ / *:c
+NSUBST:  F = 1:+ / *:c
+NSUBST:  G = 1:+ / *:c
+NSUBST:  H = 1:+ / *:c
+NSUBST:  I = 1:+ / *:c
+NSUBST:  J = 1:+ / *:c
+NSUBST:  K = 1:+ / *:c
 # loot: 12 items
 ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
 MONS:    adder zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
@@ -424,7 +423,7 @@ SUBST:  3 = 3.
 MAP
 ccccccccccccccccccccccccc
 c...c..3c..1c~~~ndddc131c
-c.A.c...G...+~~~nd2d=313c
+c.A.c...G...+~~~nd2d+313c
 c...c3......c~~~ndddc131c
 cc+cccG...Gccc+ccccccc+cc
 c...c......3c...c3.1c~~~c
@@ -432,7 +431,7 @@ c.<.+...G...c...G...c~~~c
 c...c...c3..c......3c~~~c
 ccccccccccccccG...Gcc~~~c
 c1.1cdddn~~~c3.....3c~~~c
-c.3.=d2dn~~~+...G...c~~~c
+c.3.+d2dn~~~+...G...c~~~c
 c3.3cdddn~~~c..3c3.1c~~~c
 cc+ccccccc+ccccccccccc+cc
 c1...3c.....c~~~c...c3.1c
@@ -444,7 +443,7 @@ cccG..3..Gccc...c...G...c
 c3.........3c3.3c1.3c3.1c
 c...........cc+ccccccc+cc
 c.....G.....c~~~ndddc3.3c
-c.....c.....+~~~nd2d=.3.c
+c.....c.....+~~~nd2d+.3.c
 c3...3c3...1c~~~ndddc1.1c
 ccccccccccccccccccccccccc
 ENDMAP
@@ -632,9 +631,9 @@ ITEM:    potion of curing / potion of heal wounds / potion of speed / \
          scroll of blinking w:5 / scroll of holy word / \
          scroll of curse armour w:5 / scroll of curse weapon w:5
 # There are three setups than can occur:
-# 10% - part of the loot in the closets, runed doors, bit more loot
-# 45% - doors are runed, traps are nasty, monsters asleep
-# 45% - doors are plain, traps are softer, monsters are awake
+# 10% - part of the loot in the closets, bit more loot
+# 45% - traps are nasty, monsters asleep
+# 45% - traps are softer, monsters are awake
 # TODO: rebalance after secret door removal.
 : if crawl.one_chance_in(10) then
 SUBST:   3 = d
@@ -643,7 +642,6 @@ SUBST:   M = 111.
 : elseif crawl.coinflip() then
 SUBST:   M = 111.
 : else
-SUBST:   = = +
 SUBST:   ~ = T
 SUBST:   3 = 2
 NSUBST:  M = 1:1 / *:.
@@ -657,18 +655,17 @@ KFEAT:   T = alarm trap w:20 / net trap / floor w:70
 KFEAT:   ^ = net trap w:15 / needle trap w:4 / spear trap w:1 / floor w:20
 COLOUR:  ^ = red
 KFEAT:   W = dart trap / floor w:20
-SUBST:   = = +
 : ossuary_setup_features(_G)
 MAP
            cccccccccccccccccccc
    ccccccccc3c3c3c3c3c3c3cddddccc
- ccc.....WWc=c=c=c=c=c=c=c^.....c
+ ccc.....WWc+c+c+c+c+c+c+c^.....c
 cc1.....WW~~~~~~~~~~~~~~~~^.....cc
 c......WWW~~~~~~~~~~~~~~~~^.....Mcc
 c1....AW<W~~~~~~~~~~~~~~~~^.....M<c
 c......WWW~~~~~~~~~~~~~~~~^.....Mcc
 cc1.....WW~~~~~~~~~~~~~~~~^.....cc
- ccc.....WWc=c=c=c=c=c=c=c^.....c
+ ccc.....WWc+c+c+c+c+c+c+c^.....c
    ccccccccc3c3c3c3c3c3c3cddddccc
            cccccccccccccccccccc
 ENDMAP
@@ -681,7 +678,7 @@ TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    orc skeleton / kobold skeleton / gnoll skeleton / orc skeleton
 MONS:    mummy
 MONS:    patrolling guardian mummy
-NSUBST:  = = 1:= / *:c
+NSUBST:  = = 1:+ / *:c
 # Loot: 22-30 items, with early loot!
 ITEM:    any scroll / any potion / nothing
 ITEM:    any scroll / any potion / nothing
@@ -823,7 +820,7 @@ MAP
            cc''cX''cX''cc.^d<<d..cc''Xc''Xc''cc
           cc''cX''cX''cc.^.4dd3^.^cc''Xc''Xc''cc
          cc''cX''cX''cc^..^.dd^.~.~cc''Xc''Xc''cc
-        cc''cX''cX''cccccccccccccc==cc''Xc''Xc''cc
+        cc''cX''cX''cccccccccccccc++cc''Xc''Xc''cc
        cc''cX''cX''''''''''''''''''''cc''Xc''Xc''cc
       cc''cX''cccXcXcXcXcXcXcXcXcXcXcXcc''Xc''Xc''cc
      cc''cX''''''''''''''''''''''''''''''''Xc''Xc''cc
@@ -896,7 +893,7 @@ ENDMAP
 #
 # At the end of the corridor is a second treasure room, this one also
 # containing more flying skeleton alarm traps, plus guardian mummies inside
-# 3x3 rooms with runed doors.
+# 3x3 rooms.
 #
 # The intent is that someone with a relatively high stealth skill (at least
 # for early) will be able to sneak past all of the flying skulls and grab the
@@ -920,11 +917,11 @@ ITEM:    any scroll / any potion / any wand w:4
 KMONS:   V = guardian mummy
 KMONS:   X = flying skull
 SHUFFLE: VX
-SUBST:   x = c:20 o:8
-SUBST:   z = c:20 o:4
-SUBST:   y = c:20 o:1
+SUBST:   x = c:20 n:8
+SUBST:   z = c:20 n:4
+SUBST:   y = c:20 n:1
 SUBST:   $ = 1:10 2:1
-KFEAT:   L = runed_door
+KFEAT:   L = closed_door
 MARKER:  L = lua:message_at_spot ( \
                  "Something ancient and evil stirs ahead...", \
                  "warning" \
@@ -945,7 +942,7 @@ cc.......cc
     cc.cc
    cc.cc                            ccccccccccccccccc
    cc..ccc                          c...............c
-    cc...cc                         c.=cc..xxx..cc=.c
+    cc...cc                         c.+cc..xxx..cc+.c
   ccc...ccc                         c.c4c..x3x..c4c.c
  cc......cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
 cc........cc$c$c$c$c$cc.....cccccVccc...............c
@@ -955,7 +952,7 @@ cc.cc......c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
 cc.c......cc$c$c$c$c$cc.....cccccXccc...............c
 cc.cc....cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
  cc.....cc                          c.c4c..x3x..c4c.c
-  cc...cc                           c.=cc..xxx..cc=.c
+  cc...cc                           c.+cc..xxx..cc+.c
    ccccc                            c...............c
                                     ccccccccccccccccc
 ENDMAP
