@@ -3654,6 +3654,46 @@ static int _place_uniques()
     return num_placed;
 }
 
+static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
+                              int level)
+{
+    if (places.size() < 50)
+        return;
+    int num = min(random2avg(9, 2) + random2(places.size()) / 10, 15);
+    shuffle_array(places);
+
+    for (int i = 0; i < num; i++)
+    {
+        monster_type mon = pick_monster_from(pop, level);
+        if (mon == MONS_0)
+            break;
+
+        mgen_data mg;
+        mg.behaviour = BEH_SLEEP;
+        mg.flags    |= MG_PERMIT_BANDS | MG_FORCE_PLACE;
+        mg.map_mask |= MMT_NO_MONS;
+        mg.cls = mon;
+        mg.pos = places[i];
+
+        // Amphibious creatures placed with water should hang around it
+        if (mons_class_primary_habitat(mon) == HT_LAND)
+            mg.flags |= MG_PATROLLING;
+
+        if (player_in_hell() &&
+            mons_class_can_be_zombified(mg.cls))
+        {
+            static const monster_type lut[3] =
+                { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
+
+            mg.base_type = mg.cls;
+            int s = mons_skeleton(mg.cls) ? 2 : 0;
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
+        }
+
+        place_monster(mg);
+    }
+}
+
 static void _place_aquatic_monsters()
 {
     // [ds] Shoals relies on normal monster generation to place its monsters.
@@ -3664,19 +3704,15 @@ static void _place_aquatic_monsters()
     //
     if (player_in_branch(BRANCH_SHOALS)
         || player_in_branch(BRANCH_ABYSS)
-        || (player_in_branch(BRANCH_DUNGEON)
-            && env.absdepth0 < 5))
+        || player_in_branch(BRANCH_DUNGEON) && you.depth < 6)
     {
         return;
     }
-
-    const pop_entry* pop = fish_population(you.where_are_you, false);
 
     int level = level_id::current().depth;
 
     vector<coord_def> water;
     vector<coord_def> lava;
-    int water_count = 0, lava_count = 0;
 
     for (rectangle_iterator ri(0); ri; ++ri)
     {
@@ -3685,67 +3721,13 @@ static void _place_aquatic_monsters()
 
         dungeon_feature_type feat = grd(*ri);
         if (feat == DNGN_SHALLOW_WATER || feat == DNGN_DEEP_WATER)
-        {
             water.push_back(*ri);
-            ++water_count;
-        }
         else if (feat == DNGN_LAVA)
-        {
             lava.push_back(*ri);
-            ++lava_count;
-        }
     }
 
-    // XXX: This is written kind of clumsily, but oh well.
-    vector<coord_def> *places = &water;
-    int count = water_count;
-    bool did_lava = false;
-
-start_again:
-    if (places->size() > 49)
-    {
-        int num = min(random2avg(9, 2) + (random2(count) / 10), 15);
-        shuffle_array(*places);
-
-        for (int i = 0; i < num; i++)
-        {
-            monster_type mon = pick_monster_from(pop, level);
-            if (mon == MONS_0)
-                break;
-
-            mgen_data mg;
-            mg.behaviour = BEH_SLEEP;
-            mg.flags    |= MG_PERMIT_BANDS | MG_FORCE_PLACE;
-            mg.map_mask |= MMT_NO_MONS;
-            mg.cls = mon;
-            mg.pos = (*places)[i];
-
-            // Amphibious creatures placed with water should hang around it
-            if (mons_class_primary_habitat(mon) == HT_LAND)
-                mg.flags |= MG_PATROLLING;
-
-            if (player_in_hell() &&
-                mons_class_can_be_zombified(mg.cls))
-            {
-                static const monster_type lut[3] =
-                    { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
-
-                mg.base_type = mg.cls;
-                int s = mons_skeleton(mg.cls) ? 2 : 0;
-                mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
-            }
-
-            place_monster(mg);
-        }
-    }
-
-    if (!did_lava && lava.size() > 49)
-    {
-        places = &lava;
-        pop = fish_population(you.where_are_you, true);
-        did_lava = true;
-        goto start_again;
-    }
+    _place_aquatic_in(water, fish_population(you.where_are_you, false), level);
+    _place_aquatic_in(lava, fish_population(you.where_are_you, true), level);
 }
 
 // For Crypt, adds a bunch of skeletons and zombies that do not respect
