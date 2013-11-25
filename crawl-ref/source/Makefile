@@ -201,8 +201,8 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 	endif
-	ifeq ($(shell gcc -v -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
-		EXTRA_LIBS += -static-libgcc -static-libstdc++
+	ifeq ($(shell gcc -v -static -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
+		EXTRA_LIBS += -static -static-libgcc -static-libstdc++
 	endif
 	COPY_FONTS = yes
 endif
