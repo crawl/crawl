@@ -30,7 +30,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_ORC, BRANCH_DUNGEON, 9, 12, 4, 8,
       0, 0,
-      DNGN_ENTER_ORCISH_MINES, DNGN_RETURN_FROM_ORCISH_MINES,
+      DNGN_ENTER_ORC, DNGN_RETURN_FROM_ORC,
       "Orcish Mines", "the Orcish Mines", "Orc",
       NULL,
       true, BROWN, BROWN,
@@ -38,7 +38,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_ELF, BRANCH_ORC, 3, 4, 3, 15,
       0, 0,
-      DNGN_ENTER_ELVEN_HALLS, DNGN_RETURN_FROM_ELVEN_HALLS,
+      DNGN_ENTER_ELF, DNGN_RETURN_FROM_ELF,
       "Elven Halls", "the Elven Halls", "Elf",
       NULL,
       true, WHITE, ETC_ELVEN_BRICK,
@@ -47,7 +47,7 @@ const Branch branches[NUM_BRANCHES] =
 #if TAG_MAJOR_VERSION == 34
     { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
       0, 0,
-      DNGN_ENTER_DWARVEN_HALL, DNGN_RETURN_FROM_DWARVEN_HALL,
+      DNGN_ENTER_DWARF, DNGN_RETURN_FROM_DWARF,
       "Dwarven Hall", "the Dwarven Hall", "Dwarf",
       NULL,
       true, BROWN, BROWN,
@@ -80,7 +80,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SNAKE, BRANCH_LAIR, 3, 6, 5, 15,
       0, 0,
-      DNGN_ENTER_SNAKE_PIT, DNGN_RETURN_FROM_SNAKE_PIT,
+      DNGN_ENTER_SNAKE, DNGN_RETURN_FROM_SNAKE,
       "Snake Pit", "the Snake Pit", "Snake",
       NULL,
       true, LIGHTGREEN, YELLOW,
@@ -88,7 +88,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SPIDER, BRANCH_LAIR, 3, 6, 5, 15,
       0, 0,
-      DNGN_ENTER_SPIDER_NEST, DNGN_RETURN_FROM_SPIDER_NEST,
+      DNGN_ENTER_SPIDER, DNGN_RETURN_FROM_SPIDER,
       "Spider Nest", "the Spider Nest", "Spider",
       NULL,
       true, BROWN, YELLOW,
@@ -96,7 +96,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_SLIME, BRANCH_LAIR, 6, 8, 6, 17,
       BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_SLIME_PITS, DNGN_RETURN_FROM_SLIME_PITS,
+      DNGN_ENTER_SLIME, DNGN_RETURN_FROM_SLIME,
       "Slime Pits", "the Pits of Slime", "Slime",
       NULL,
       true, GREEN, BROWN,
@@ -112,7 +112,7 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_BLADE, BRANCH_VAULTS, 3, 4, 1, 21,
       BFLAG_NO_ITEMS, 0,
-      DNGN_ENTER_HALL_OF_BLADES, DNGN_RETURN_FROM_HALL_OF_BLADES,
+      DNGN_ENTER_BLADE, DNGN_RETURN_FROM_BLADE,
       "Hall of Blades", "the Hall of Blades", "Blade",
       NULL,
       true, LIGHTGREY, BROWN,

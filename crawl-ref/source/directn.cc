@@ -3112,28 +3112,28 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_TRANSIT_PANDEMONIUM:
         return "gate leading to another region of Pandemonium";
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARVEN_HALL:
+    case DNGN_ENTER_DWARF:
         return "staircase to the Dwarven Hall";
 #endif
-    case DNGN_ENTER_ORCISH_MINES:
+    case DNGN_ENTER_ORC:
         return "staircase to the Orcish Mines";
     case DNGN_ENTER_LAIR:
         return "staircase to the Lair";
-    case DNGN_ENTER_SLIME_PITS:
+    case DNGN_ENTER_SLIME:
         return "staircase to the Slime Pits";
     case DNGN_ENTER_VAULTS:
         return "gate to the Vaults";
     case DNGN_ENTER_CRYPT:
         return "staircase to the Crypt";
-    case DNGN_ENTER_HALL_OF_BLADES:
+    case DNGN_ENTER_BLADE:
         return "staircase to the Hall of Blades";
     case DNGN_ENTER_ZOT:
         return "gate to the Realm of Zot";
     case DNGN_ENTER_TEMPLE:
         return "staircase to the Ecumenical Temple";
-    case DNGN_ENTER_SNAKE_PIT:
+    case DNGN_ENTER_SNAKE:
         return "staircase to the Snake Pit";
-    case DNGN_ENTER_ELVEN_HALLS:
+    case DNGN_ENTER_ELF:
         return "staircase to the Elven Halls";
     case DNGN_ENTER_TOMB:
         return "staircase to the Tomb";
@@ -3141,7 +3141,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "staircase to the Swamp";
     case DNGN_ENTER_SHOALS:
         return "staircase to the Shoals";
-    case DNGN_ENTER_SPIDER_NEST:
+    case DNGN_ENTER_SPIDER:
         return "hole to the Spider Nest";
     case DNGN_ENTER_FOREST:
         return "staircase to the Enchanted Forest";
@@ -3159,26 +3159,26 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         // should be set whenever used
         return "collapsed entrance";
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARVEN_HALL:
+    case DNGN_RETURN_FROM_DWARF:
 #endif
-    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_RETURN_FROM_ORC:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_DEPTHS:
         return "staircase back to the Dungeon";
-    case DNGN_RETURN_FROM_SLIME_PITS:
-    case DNGN_RETURN_FROM_SNAKE_PIT:
+    case DNGN_RETURN_FROM_SLIME:
+    case DNGN_RETURN_FROM_SNAKE:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
         return "staircase back to the Lair";
-    case DNGN_RETURN_FROM_SPIDER_NEST:
+    case DNGN_RETURN_FROM_SPIDER:
         return "crawl-hole back to the Lair";
     case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_FOREST:
         return "staircase back to the Vaults";
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_ELF:
         return "staircase back to the Mines";
     case DNGN_RETURN_FROM_TOMB:
         return "staircase out of the Tomb";

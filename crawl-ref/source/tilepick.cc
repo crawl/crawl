@@ -295,29 +295,29 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
     // branch entry stairs
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARVEN_HALL:
+    case DNGN_ENTER_DWARF:
 #endif
-    case DNGN_ENTER_HALL_OF_BLADES:
+    case DNGN_ENTER_BLADE:
     case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
     case DNGN_ENTER_TEMPLE:
         return TILE_DNGN_ENTER_TEMPLE;
-    case DNGN_ENTER_ORCISH_MINES:
-        return TILE_DNGN_ENTER_ORCISH_MINES;
-    case DNGN_ENTER_ELVEN_HALLS:
-        return TILE_DNGN_ENTER_ELVEN_HALLS;
+    case DNGN_ENTER_ORC:
+        return TILE_DNGN_ENTER_ORC;
+    case DNGN_ENTER_ELF:
+        return TILE_DNGN_ENTER_ELF;
     case DNGN_ENTER_LAIR:
         return TILE_DNGN_ENTER_LAIR;
-    case DNGN_ENTER_SNAKE_PIT:
-        return TILE_DNGN_ENTER_SNAKE_PIT;
+    case DNGN_ENTER_SNAKE:
+        return TILE_DNGN_ENTER_SNAKE;
     case DNGN_ENTER_SWAMP:
         return TILE_DNGN_ENTER_SWAMP;
-    case DNGN_ENTER_SPIDER_NEST:
-        return TILE_DNGN_ENTER_SPIDER_NEST;
+    case DNGN_ENTER_SPIDER:
+        return TILE_DNGN_ENTER_SPIDER;
     case DNGN_ENTER_SHOALS:
         return TILE_DNGN_ENTER_SHOALS;
-    case DNGN_ENTER_SLIME_PITS:
-        return TILE_DNGN_ENTER_SLIME_PITS;
+    case DNGN_ENTER_SLIME:
+        return TILE_DNGN_ENTER_SLIME;
     case DNGN_ENTER_DEPTHS:
         if (is_existing_level(level_id(BRANCH_DEPTHS, 1)))
             return TILE_DNGN_ENTER_DEPTHS_OPEN;
@@ -335,29 +335,29 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
     // branch exit stairs
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARVEN_HALL:
+    case DNGN_RETURN_FROM_DWARF:
 #endif
-    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_FOREST:
         return TILE_DNGN_RETURN;
     case DNGN_RETURN_FROM_TEMPLE:
         return TILE_DNGN_EXIT_TEMPLE;
-    case DNGN_RETURN_FROM_ORCISH_MINES:
-        return TILE_DNGN_EXIT_ORCISH_MINES;
-    case DNGN_RETURN_FROM_ELVEN_HALLS:
-        return TILE_DNGN_EXIT_ELVEN_HALLS;
+    case DNGN_RETURN_FROM_ORC:
+        return TILE_DNGN_EXIT_ORC;
+    case DNGN_RETURN_FROM_ELF:
+        return TILE_DNGN_EXIT_ELF;
     case DNGN_RETURN_FROM_LAIR:
         return TILE_DNGN_EXIT_LAIR;
-    case DNGN_RETURN_FROM_SNAKE_PIT:
-        return TILE_DNGN_EXIT_SNAKE_PIT;
+    case DNGN_RETURN_FROM_SNAKE:
+        return TILE_DNGN_EXIT_SNAKE;
     case DNGN_RETURN_FROM_SWAMP:
         return TILE_DNGN_EXIT_SWAMP;
-    case DNGN_RETURN_FROM_SPIDER_NEST:
-        return TILE_DNGN_EXIT_SPIDER_NEST;
+    case DNGN_RETURN_FROM_SPIDER:
+        return TILE_DNGN_EXIT_SPIDER;
     case DNGN_RETURN_FROM_SHOALS:
         return TILE_DNGN_EXIT_SHOALS;
-    case DNGN_RETURN_FROM_SLIME_PITS:
-        return TILE_DNGN_EXIT_SLIME_PITS;
+    case DNGN_RETURN_FROM_SLIME:
+        return TILE_DNGN_EXIT_SLIME;
     case DNGN_RETURN_FROM_DEPTHS:
         return TILE_DNGN_RETURN_DEPTHS;
     case DNGN_RETURN_FROM_VAULTS:
@@ -4195,14 +4195,14 @@ static tileidx_t _tileidx_rune(const item_def &item)
         + ((uint32_t)item.special) % tile_main_count(TILE_MISC_RUNE_DEMONIC);
     case RUNE_ABYSSAL:     return TILE_MISC_RUNE_ABYSS;
 
-    case RUNE_SNAKE_PIT:   return TILE_MISC_RUNE_SNAKE;
-    case RUNE_SPIDER_NEST: return TILE_MISC_RUNE_SPIDER;
-    case RUNE_SLIME_PITS:  return TILE_MISC_RUNE_SLIME;
+    case RUNE_SNAKE:       return TILE_MISC_RUNE_SNAKE;
+    case RUNE_SPIDER:      return TILE_MISC_RUNE_SPIDER;
+    case RUNE_SLIME:       return TILE_MISC_RUNE_SLIME;
     case RUNE_VAULTS:      return TILE_MISC_RUNE_VAULTS;
     case RUNE_TOMB:        return TILE_MISC_RUNE_TOMB;
     case RUNE_SWAMP:       return TILE_MISC_RUNE_SWAMP;
     case RUNE_SHOALS:      return TILE_MISC_RUNE_SHOALS;
-    case RUNE_ELVEN_HALLS: return TILE_MISC_RUNE_ELVEN;
+    case RUNE_ELF:         return TILE_MISC_RUNE_ELVEN;
 
     case RUNE_FOREST:
     default:               return TILE_MISC_RUNE_OF_ZOT;
