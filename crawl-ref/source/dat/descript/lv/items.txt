@@ -61,9 +61,9 @@ dart
 
 Mazs, izgrebts un noasināts šāviņš, kas paredzēts mešanai ar roku.
 %%%%
-dire flail
+decaying skeleton
 
-Kaujas sprigulis ar garākiem asumiem un smagāku uzgali.
+Trūdošs ģindenis.
 %%%%
 glaive
 
@@ -116,10 +116,6 @@ Trakoti indīga dzira.
 ring of protection from cold
 
 Šis gredzens nodrošina aizsardzību pret aukstumu.
-%%%%
-decaying skeleton
-
-Trūdošs ģindenis.
 %%%%
 snozzcumber
 

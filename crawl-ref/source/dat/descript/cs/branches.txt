@@ -8,7 +8,7 @@ v této hluboké jeskyni je plno neslýchaného bohatství, stejně tak mnoho
 nebezpečí čekající na každého vetřelce. Jen málo z nich uniklo živích, a ještě
 méně si jich zachovalo kousek zdravého rozumu a mohlo vyprávět.
 
-žalář je 27 úrovní hluboký, ale upřímně řečeno, to je jen začátek.
+žalář je 16 úrovní hluboký, ale upřímně řečeno, to je jen začátek.
 %%%%
 Temple
 
@@ -94,15 +94,6 @@ hlouběji se nacházíte.
 
 Slizká jáma má pět pater a nachází se zde slizká runa. Vstup lze nalézt mezi
 Doupětem:6 a Doupětem:8.
-%%%%
-Vaults
-
-Pravděpodobně dílo nějakého mocného šílence, Sklepení jsou prý místem mnoha
-velkých pokladů. Soudě dle krve rozstříknuté v hojném množství kolem vstupu zde
-lze narazit také na určité množství násilí.
-
-Sklepení mají pět pater a nachází se zde stříbrná runa a také vstupy do dalších
-dvou částí. Vstup lze najít mezi 15. a 20. patrem hlavní části žaláře.
 %%%%
 Hall of Blades
 

@@ -373,6 +373,10 @@ A staircase leading out of the dungeon
 올라가는 것은, 당신이 모든 임무와 책임을 포기하고 던전에서 도망친다는 것을
 의미합니다.
 %%%%
+A staircase out of the Tomb
+
+이 저주받은 공간에서 나갈 수 있는 계단이다.
+%%%%
 A staircase to the Crypt
 
 납골당으로 갈 수 있는 계단이다. 이곳에 묻힌 것들은, 조용히 죽어있는 것이 시체의
@@ -433,11 +437,6 @@ A staircase to the Tomb
 
 고대 무덤으로 갈 수 있는 계단이다. 가장 사악한 강령술에 의해 다시 일어난 자들이
 지배하는, 지옥과도 같은 곳이다.
-%%%%
-A gate to the Vaults
-
-보물창고로 갈 수 있는 계단이다. 굉장한 보물들이 잠들어있는 곳으로 알려졌지만,
-계단에 가득한 핏자국이 이곳의 위험성을 잘 말해준다.
 %%%%
 A stone staircase leading down
 
@@ -908,10 +907,6 @@ An elephant-shaped statue
 A weirdly glowing ball
 
 공중에 떠있는 구체로, 은은한 빛을 내고 있다.
-%%%%
-A sealed sarcophagus
-
-돌로 만든 고대의 관이다. 단단하게 닫혀있다.
 %%%%
 A flagged portal
 

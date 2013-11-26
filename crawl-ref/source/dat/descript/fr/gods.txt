@@ -9,7 +9,7 @@ Aléatoire (C'est un bug si vous voyez cela.)
 %%%%
 Buggy
 
-Bug (C'est un bug si vous voyez cela.)
+Buggé (C'est un bug si vous voyez cela.)
 %%%%
 Zin
 
@@ -24,51 +24,51 @@ L’Étincelant tout en gardant une partie de leur Piété.
 %%%%
 the Shining One
 
-L’Étincelant est une divinité puissante dans la croisade contre le mal. Ses
-fidèles et leurs alliés peuvent recevoir diverses bénédictions quand ils
-éradiquent sans pitié les êtres démoniaques ou maudits. Les fidèles ne doivent
-jamais utiliser la magie démoniaque ou impie et, doivent prouver leur
-supériorité morale en combattant honorablement. Le Dieu demande à ses suivants
-de parcourir le monde, examinant tous ses habitants à la recherche de traces
-démoniaques qui doivent être éradiquées. Les disciples de L’Étincelant peuvent
-se convertir à Elyvilon ou à Zin tout en gardant une partie de leur Piété.
+L’Étincelant est une divinité puissante en croisade contre le mal. Ses fidèles
+et leurs alliés peuvent recevoir diverses bénédictions quand ils éradiquent
+sans pitié les êtres démoniaques ou maudits. Les fidèles ne doivent jamais
+utiliser la magie démoniaque ou impie et, doivent prouver leur supériorité
+morale en combattant honorablement. Le Dieu demande à ses suivants de parcourir
+le monde, examinant tous ses habitants à la recherche de traces démoniaques qui
+doivent être éradiquées. Les disciples de L’Étincelant peuvent se convertir à
+Elyvilon ou à Zin tout en gardant une partie de leur Piété.
 %%%%
 Kikubaaqudgha
 
 Kikubaaqudgha est un terrible Dieu-Démon servi par ceux qui souhaitent savourer
-les pouvoirs de la mort. Kikubaaqudgha est mauvais, et demande les morts des
+les pouvoirs de la mort. Kikubaaqudgha est maléfique, et demande les morts des
 créatures vivantes et des démons aussi souvent que possible.
 %%%%
 Yredelemnul
 
-Yredelemnul le Sombre est un Dieu mauvais adoré par ceux qui recherche le
-pouvoir sur la mort et les morts-vivants. ses fidèles, qui doivent combattre
-tout ce qui est saint, peuvent soulever des légions de morts-vivants servils,
-et obtenir un certain nombre de pouvoirs utiles (et si déplaisants).
-Yredelemnul apprécie les tueries mais, préfère que les cadavres soient asservis
-plutôt que sacrifiés. Détruire des êtres artificiels est aussi apprécié, car
-ils n'ont jamais été réellement ni vivants, ni morts.
+Yredelemnul le Sombre est un Dieu maléfique adoré par ceux qui recherche à
+dominer la mort et les morts-vivants. Ses fidèles, qui doivent combattre tout
+ce qui est saint, peuvent soulever des légions de morts-vivants serviles, et
+obtenir un certain nombre de pouvoirs utiles (sinon déplaisants pour les
+autres). Yredelemnul apprécie les tueries,  mais préfère que les cadavres
+soient asservis plutôt que sacrifiés. Détruire des êtres artificiels est aussi
+apprécié, car ils n'ont jamais été réellement ni vivants, ni morts.
 %%%%
 Xom
 
-Xom est un Dieu du chaos sauvage et imprévisible qui ne cherchent aucun fidèle
-mais des jouets pour jouer. Beaucoup suivent Xom dans l'espoir de recevoir de
-fabuleuses récompense et de puissants pouvoirs, mais Xom n'est rien sinon
+Xom est un Dieu du chaos sauvage et imprévisible qui ne cherche aucun fidèle
+mais des jouets pour s'amuser. Beaucoup suivent Xom dans l'espoir de recevoir
+de fabuleuses récompense et de puissants pouvoirs, mais Xom n'est rien sinon
 capricieux. De plus, il n'est rien qu'un fidèle puisse faire pour influencer
 l'humeur de Xom.
 %%%%
 Vehumet
 
 Vehumet est le Dieu des pouvoirs magiques destructeurs. Ses fidèles obtiennent
-plusieurs pouvoirs utiles pour augmenter leur pratique des arts hermétiques et,
+plusieurs pouvoirs utiles pour améliorer leur pratique des arts hermétiques et,
 le plus convoité est celui d'avoir accès à des sortilèges effroyables issus de
 la bibliothèque de Vehumet. Sa dévotion à Vehumet peut être prouvé en
-provoquant un maximum de carnage et de destruction que possible.
+provoquant autant de carnage et de destruction que possible.
 %%%%
 Okawaru
 
-Okawaru est un dangereux et puissant Dieu de guerre. Ses fidèles peuvent
-obtenir de lui de nombreux pouvoirs pratiques en combat ainsi que diverses
+Okawaru est un dangereux et puissant Dieu de la guerre. Ses fidèles peuvent
+obtenir de lui de nombreux pouvoirs utiles au combat ainsi que diverses
 récompenses. Mais ils doivent constamment prouver leur valeur au combat et
 sacrifier des corps. Okawaru préfère les joutes héroïques contre des ennemis
 plus puissants et, s'intéresse peu aux victoires faciles. En outre, alors que
@@ -86,24 +86,24 @@ le monde impure et ses fausses lois pour la gloire de ce Dieu mauvais.
 %%%%
 Sif Muna
 
-Sif Muna le Gardien des Arcanes est une divinité contemplative mais puissante
-deity, servie par ceux qui recherchent la connaissance magique. Le Gardien des
-Arcanes apprécie l'apprentissage de toutes les compétences magiques.
+Sif Muna le Gardien des Arcanes est une divinité contemplative mais puissante,
+servie par ceux qui recherchent la connaissance magique. Le Gardien des Arcanes
+apprécie l'apprentissage de toutes les compétences magiques.
 %%%%
 Trog
 
-Trog est un ancien Dieu de la violence et la colère. Ses fidèles doivent tuer
-au nom de Trog et sacrifier les morts. Cela leur octroie en retour de la
+Trog est un ancien Dieu de la violence et de la colère. Ses fidèles doivent
+tuer au nom de Trog et sacrifier les morts pour obtenir en retour de la
 puissance en bataille et occasionnellement des récompenses. Trog hait tous les
 magiciens et, adore voir bruler les livres de sorts. Ses fidèles sont interdits
 de tout usage de magie.
 %%%%
 Nemelex Xobeh
 
-Nemelex est un Dieu Fourbe, étrange et imprévisible. Ses pouvoirs peuvent être
+Nemelex est un Dieu fourbe, étrange et imprévisible. Ses pouvoirs peuvent être
 invoqués au travers de paquets de cartes magiques peints à l'effigie de démons.
 Ses fidèles sont censés sacrifier des objets de grande valeur, dont le type
-affectera la qualité des récompenses. Ses fidèles devraient aussi utiliser le
+affectera la qualité des récompenses. Ses fidèles doivent aussi utiliser le
 plus souvent possible les cartes et prouver ainsi leur confiance en elles. Le
 Fourbe accorde la bonne fortune au audacieux.
 %%%%
@@ -121,13 +121,13 @@ Lugonu
 
 Lugonu l'Informe se révèle dans le chaos des Abysses. Ses fidèles sont envoyés
 dans le monde pour provoquer effusions de sang et corruption. Et ils se doivent
-de le faire inlassablement pour gagner les faveurs de leur Dieu maléfique.
+de le faire sans relâche pour gagner les faveurs de leur Dieu maléfique.
 %%%%
 Beogh
 
 Beogh est la divinité adorée par les orcs des cavernes originaires du donjon.
 Seuls les orcs peuvent se mettre au service de Beogh, et doivent prouver leur
-dévotion via les effusions de sang et la bénédiction des orcs morts. Les
+dévotion via les effusions de sang et la bénédiction des orcs décédés. Les
 fidèles dévoués de Beogh peuvent ébranler leurs ennemis, et les plus fervents
 de Beogh peuvent même gagner des suivants puisque les orcs attendent toujours
 leur Messie.
@@ -136,19 +136,18 @@ Fedhas
 
 Fedhas Madash est le dieu des plantes et de la vie fongique. Fedhas demande a
 ses fidèles d'encourager la décomposition des corps. Fedhas interdit à ses
-disciples de nuire aux autres espèces sous sa protection et, d'utiliser
-n'importe quelle forme de nécromancie sur les corps. En retour, Fedhas accorde
-un certain nombre de capacités qui favorise la croissance des plantes et des
-champignons. Ces aptitudes peuvent s'avérer d'ailleurs très utiles aux
-aventuriers.
+disciples de nuire aux espèces sous sa protection et, d'utiliser n'importe
+quelle forme de nécromancie sur les corps. En retour, Fedhas accorde un certain
+nombre de capacités qui favorise la croissance des plantes et des champignons.
+Ces aptitudes peuvent s'avérer d'ailleurs très utiles aux aventuriers.
 %%%%
 Cheibriados
 
-Cheibriados est un dieu qui médite sur le mystère de la vie. Ceux qui
-choisissent de suivre la voie de ce dieu vont apprendre à rejeter toute hâte
-inutile, ralentir les autres et eux-mêmes et, blesser ceux qui refuse de
-ralentir. Les fidèles particulièrement dévoués pourront même s'extirper du flux
-temporel et de ses perturbations inutiles.
+Cheibriados est un dieu qui médite sur le mystère du temps. Ceux qui
+choisissent de suivre la voie de ce dieu vont apprendre à rejeter toute
+précipitation inutile, ralentir les autres et eux-mêmes et, punir ceux qui
+refuse de ralentir. Les fidèles particulièrement dévoués pourront même
+s'extirper du flux temporel et de ses perturbations inutiles.
 %%%%
 Ashenzari
 

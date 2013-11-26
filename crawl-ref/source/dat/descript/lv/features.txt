@@ -55,7 +55,3 @@ A sarcophagus
 
 Sens sarkofāgs. Tas izskatās tukšs.
 %%%%
-A sealed sarcophagus
-
-Šis senais sarkofāgs ir cieši noslēgts.
-%%%%

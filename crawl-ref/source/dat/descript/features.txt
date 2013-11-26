@@ -126,7 +126,7 @@ get out.
 %%%%
 A staircase to the Depths
 
-These stairs lead to the Depths - the deepest parts of the dungeon, subject to
+These stairs lead to the Depths — the deepest parts of the dungeon, subject to
 the corrupting influence of the Realm of Zot and its denizens.
 %%%%
 A gate to the Realm of Zot

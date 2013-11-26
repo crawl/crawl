@@ -9,6 +9,13 @@ amulet of conservation
 Tämä amuletti suojaa joitakin käyttäjän omistamia tavaroita tuhoutumiselta,
 mutta ei pettämättömästi.
 %%%%
+amulet of faith
+
+Tämä talismaani on luotu kutsumaan jumalten huomiota. Tämä pyhä huomio
+helpottaa jumalten miellyttämistä, mutta jumalasi on myös vähemmän
+anteeksiantava syntejäsi kohtaan, ja amuletin poisottaminen aiheuttaa myös
+suosion laskua.
+%%%%
 amulet of guardian spirit
 
 Tämä amuletti vähentää käyttäjänsä herkkyyttä ulkoiselle vahingolle, kuluttaen
@@ -33,18 +40,6 @@ amulet of resist mutation
 
 Tämä amuletti suojaa käyttäjäänsä muodonmuutoksilta, mutta ei pettämättömästi.
 %%%%
-amulet of warding
-
-Tämä amuletti torjuu taikuudella kutsuttujen olentojen hyökkäyksiä, ja tekee
-käyttäjästään myös puolustuskykyisemmän elinvoimaa imeville hyökkäyksille.
-%%%%
-amulet of faith
-
-Tämä talismaani on luotu kutsumaan jumalten huomiota. Tämä pyhä huomio
-helpottaa jumalten miellyttämistä, mutta jumalasi on myös vähemmän
-anteeksiantava syntejäsi kohtaan, ja amuletin poisottaminen aiheuttaa myös
-suosion laskua.
-%%%%
 amulet of stasis
 
 Huolellisesti taikasuojauksilla varusteltu amuletti, luotu torjumaan fyysisiä
@@ -53,6 +48,11 @@ halvaannuttaisivat sen käyttäjän.
 
 Vaikka amuletti on tehokas useimpia teleportaatiotaikoja vastaan, se ei pysty
 torjumaan ulottuvuudenvaihdoksia, kuten karkoitusta.
+%%%%
+amulet of warding
+
+Tämä amuletti torjuu taikuudella kutsuttujen olentojen hyökkäyksiä, ja tekee
+käyttäjästään myös puolustuskykyisemmän elinvoimaa imeville hyökkäyksille.
 %%%%
 animal skin
 
@@ -243,14 +243,6 @@ lähettämällä heille vahvasti myrkytetyn kirjan lahjana. Nykyiset painokset o
 turvallisia, vaikka sivujen välistä löytyykin usein kuolleita kirja- ja
 sokeritoukkia.
 %%%%
-book of fixed level
-
-Taikoja sisältävä kirja.
-%%%%
-book of fixed theme
-
-Taikoja sisältävä kirja.
-%%%%
 book of fire
 
 Edistyneitä Tulitaikoja sisältävä kirja. Monet Tulielementalistit ovat
@@ -258,6 +250,14 @@ polttaneet kulmakarvansa ja partansa hetkellisen tulen takia, joka syntyy, kun
 kirja avataan ensimmäistä kertaa. Jotkut ovat jopa huomanneet kovemman kautta,
 että kun kirja jätetään huomiotta kuukausiksi, se voi yhtäkkiä syttyä tuleen,
 toisinaan polttaen maan tasalle kokonaisia kirjastoja kamalissa suurpaloissa.
+%%%%
+book of fixed level
+
+Taikoja sisältävä kirja.
+%%%%
+book of fixed theme
+
+Taikoja sisältävä kirja.
 %%%%
 book of flames
 
@@ -414,12 +414,6 @@ taistelussa, ja taitavan käyttäjän käsissä se on erittäin tehokas.
 bread ration
 
 Täyttävä ateria väljähtänyttä, mutta runsasta leipää.
-%%%%
-broad axe
-
-Sotakirves paranneltuna metalliliuskoilla, piikeillä, isommalla kahvalla ja
-yksipuolisella puolikuu-terällä. Se voi aiheuttaa julmia haavoja, mutta sitä on
-kömpelö käyttää yhdellä kädellä sen painon ja pituuden johdosta.
 %%%%
 buckler
 

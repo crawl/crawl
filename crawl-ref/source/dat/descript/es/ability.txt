@@ -277,12 +277,6 @@ Forget Spell ability
 Olvidas cualquier hechizo de los que hayas memorizado, para poder liberar
 memoria para aprender otros.
 %%%%
-Burn Spellbooks ability
-
-Prendes fuego a todos los libros de magia que estén en tu campo de visión. El
-fuego está alimentado por la ira de Trog, y a Trog le gusta más si ni siquiera
-te molestas en saber que locura de libros arden.
-%%%%
 Berserk ability
 
 Te vuelves berserk. Entrar en trance berserk incrementa espectacularmente,

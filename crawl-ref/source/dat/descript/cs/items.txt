@@ -9,6 +9,12 @@ amulet of conservation
 Tento amulet chrání některé předměty nositele před úplným zničením, ale ne
 zcela spolehlivě.
 %%%%
+amulet of faith
+
+Toto je amulet vyrobený k upoutání božské pozornosti k nositeli, následkem níž
+je snazší božstvo potěšit, ale zároveň snižuje toleranci božstva k prohřeškům,
+a při sundání odejme část božské přízně.
+%%%%
 amulet of guardian spirit
 
 Tento amulet snižuje nositelovu náchylnost ke zraněním a namísto toho vysává
@@ -28,22 +34,16 @@ amulet of resist mutation
 
 Tento amulet chrání svého nositele před mutacemi, ale ne zcela spolehlivě.
 %%%%
-amulet of warding
-
-Tento amulet odráží některé z útoků bytostí, které byly vyvolány pomocí magie,
-a rovněž činí nositele více odolným proti útokům, které vysávají životní sílu.
-%%%%
-amulet of faith
-
-Toto je amulet vyrobený k upoutání božské pozornosti k nositeli, následkem níž
-je snazší božstvo potěšit, ale zároveň snižuje toleranci božstva k prohřeškům,
-a při sundání odejme část božské přízně.
-%%%%
 amulet of stasis
 
 Pečlivě vyrobený amulter, který pomocí magických ochran blokuje magické a
 fyziologické vlivy, které by jinak nositele teleportovaly, zpomalily, zrychlily
 či paralyzovaly.
+%%%%
+amulet of warding
+
+Tento amulet odráží některé z útoků bytostí, které byly vyvolány pomocí magie,
+a rovněž činí nositele více odolným proti útokům, které vysávají životní sílu.
 %%%%
 apple
 
@@ -150,6 +150,10 @@ uživatelé, jejichž zásoby magické energie jsou téměř plné.
 crystal plate armour
 
 Neuvěřitelně těžká, ale extrémně efektivní zbroj z křišťálu.
+%%%%
+decaying skeleton
+
+Rozpadající se kostra.
 %%%%
 deck of defence
 
@@ -278,13 +282,6 @@ meat ration
 
 Sytá porce sušené konzervovaného masa různého druhu.
 %%%%
-mottled dragon armour
-
-Zbroj vytvořená ze šupin skvrnitého draka. Ačkoliv neposkytuje vysokou úroveň
-ochrany, oproti zbrojím vytvořených ze šupin větších draků je lehčí a zátěží
-srovnatelná s koženou zbrojí. Je taky pozoruhodně hladká, což způsobuje, že
-lepkavý oheň po ní steče jako voda.
-%%%%
 mottled dragon hide
 
 Šupinatá kůže skvrnitého draka s podivnými vzory. Pomocí magie lze z ní
@@ -345,6 +342,10 @@ potion of agility
 
 Kouzelný lektvar, jehož vypití náramně zvyšuje obratnost a schopnost uhýbat.
 %%%%
+potion of beneficial mutation
+
+Lektvar, který údajně poskytuje dobrou mutaci.
+%%%%
 potion of berserk rage
 
 Lekvar, který je schopen uvrhnout uživatele do bezmyšlenkovitého hněvu.
@@ -380,10 +381,6 @@ Okouzlený nápoj, který urychluje činnost každého, kdo ho vypije.
 potion of strong poison
 
 Nesmírně jedovatý lektvar.
-%%%%
-potion of beneficial mutation
-
-Lektvar, který údajně poskytuje dobrou mutaci.
 %%%%
 quarterstaff
 
@@ -457,10 +454,6 @@ Tento svitek způsobuje velký strach v těch, které vidí ten, kdo ho čte.
 scroll of fog
 
 Tento svitek obklopí čtenáře hustým oblakem mlhy.
-%%%%
-decaying skeleton
-
-Rozpadající se kostra.
 %%%%
 snozzcumber
 

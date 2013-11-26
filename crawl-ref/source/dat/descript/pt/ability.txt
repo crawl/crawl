@@ -75,12 +75,6 @@ Channel Energy ability
 Reabasteça um pouco de sua reserva mágica, dependendo de sua habilidade de
 Invocações.
 %%%%
-Burn Spellbooks ability
-
-Incendeia todos livros de magias no seu campo de visão. O fogo é alimentado
-pelo ódio de Trog, e Trog gosta disso principalmente quando você não se importa
-qualquer livros de loucuras são queimados.
-%%%%
 Brothers in Arms ability
 
 Conjura aliados grandes e nervosos para causar estragos.

@@ -9,7 +9,7 @@ lobių ir didžiulių pavojų bet kuriam įsibrovėliui. Mažai kas iš čia iš
 gyvi, ir dar mažiau tokių, kurie išsaugojo sveiko proto likučius, kad galėtų
 apie tai papasakoti.
 
-Požemis yra 27 lygių gylio, bet, tiesą sakant, tai tik pradžia.
+Požemis yra 16 lygių gylio, bet, tiesą sakant, tai tik pradžia.
 %%%%
 Temple
 
@@ -75,15 +75,6 @@ neturite arachnofobijos, greit turėsite.
 Vorų Lizdas yra penkių lygių gylio ir turi voratinklių runą. Požemyje galima
 rasti tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų arba Vorų Lizdo
 atšakas. Jei yra Vorų Lizdas, įėjimą į jį rasite tarp Irštva:3 ir Irštva:6.
-%%%%
-Vaults
-
-Sakoma, kad Skliautai, galbūt pastatyti kokio nors galingo pamišėlio, yra
-didžių lobių vieta. Kraujo dėmės aplinkui įėjimą byloja, kad čia taip pat bus
-ir tam tikras kiekis smurto.
-
-Skliautai yra aštuonių lygių gylio ir turi sidabrinę runą. Įėjimą į juos rasite
-tarp 14-o ir 19-o pagrindinio požemio lygių.
 %%%%
 Tomb
 

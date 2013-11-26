@@ -9,6 +9,13 @@ amulet of conservation
 Dieses Amulett bewahrt manche Besitztümer seines Trägers vor vollständiger
 Zerstörung, ist aber nicht unfehlbar.
 %%%%
+amulet of faith
+
+Ein Talisman, der die Aufmerksamkeit der Götter auf seinen Träger zu lenken
+vermag. Dies erleichtert es, deiner momentanen Gottheit gefällig zu sein, aber
+Fehltritte wird sie seltener verzeihen. Das Ablegen des Amulett wird deine
+göttliche Gunst deutlich verringern.
+%%%%
 amulet of guardian spirit
 
 Dieses Amulett macht seinen Träger weniger anfällig für externen Schaden, indem
@@ -36,19 +43,6 @@ amulet of resist mutation
 Dieses Amulett schützt den Träger vor Mutationen, allerdings nicht
 unweigerlich.
 %%%%
-amulet of warding
-
-Dieses Amulett wehrt einige Angriffe von Kreaturen, die auf magische Weise
-beschwört wurden, ab und macht den Träger resistenter gegenüber Angriffen mit
-negativer Energie.
-%%%%
-amulet of faith
-
-Ein Talisman, der die Aufmerksamkeit der Götter auf seinen Träger zu lenken
-vermag. Dies erleichtert es, deiner momentanen Gottheit gefällig zu sein, aber
-Fehltritte wird sie seltener verzeihen. Das Ablegen des Amulett wird deine
-göttliche Gunst deutlich verringern.
-%%%%
 amulet of stasis
 
 Ein Amulett mit magischen Stationen sorgfältig konstruiert, um magische und
@@ -57,6 +51,12 @@ lähmen seines Trägers blockieren würde.
 
 Während das Amulett gegen die meiste verlagerte Magie wirksam ist, verschiebt
 es Ebene wie Verbannung sind über ihre Fähigkeit zu blockieren.
+%%%%
+amulet of warding
+
+Dieses Amulett wehrt einige Angriffe von Kreaturen, die auf magische Weise
+beschwört wurden, ab und macht den Träger resistenter gegenüber Angriffen mit
+negativer Energie.
 %%%%
 animal skin
 
@@ -270,14 +270,6 @@ an sie als Geschenke ermordete. Gegenwärtige Auflagen sind harmlos, obwohl oft
 tote Bücherwürmer und Silberfischchen gefunden sind, zwischen den Seiten
 festzustecken.
 %%%%
-book of fixed level
-
-Ein Buch mit Zaubersprüchen.
-%%%%
-book of fixed theme
-
-Ein Buch mit Zaubersprüchen.
-%%%%
 book of fire
 
 Ein Buch, das fortschrittliche Zaubersprüche in der elementaren Schule des
@@ -286,6 +278,14 @@ von der momentanen Flamme spontan combust gesungen gehabt, die austritt, wenn
 das Buch zuerst geöffnet wird und manche sogar festgestellt haben, dass, wenn
 für Monate unbewacht gelassen, es kann, das gelegentlich ganze Bibliotheken in
 schrecklichen Feuersbrünsten niederbrennt.
+%%%%
+book of fixed level
+
+Ein Buch mit Zaubersprüchen.
+%%%%
+book of fixed theme
+
+Ein Buch mit Zaubersprüchen.
 %%%%
 book of flames
 
@@ -461,13 +461,6 @@ bread ration
 
 Eine sättigende Mahlzeit aus abgestandenem, aber herzhaftem Brot.
 %%%%
-broad axe
-
-Eine Kriegsaxt hat sich mit Spitzen, einem langen Heft und einem
-halbmondförmigen Kopf einzelnen mit Halmen verbessert. Es kann schmerzliche
-Wunden zufügen, aber ist beschwerlich, um mit gerade ein zu manövrieren,
-reichen wegen seiner Länge und Gewichts.
-%%%%
 buckler
 
 Ein kleines Stück von Holz und Metall, um auf einem Arm für die Verteidigung
@@ -532,6 +525,10 @@ Ein unglaublich schwere aber extrem effektive kristalline Rüstung.
 dart
 
 Ein kleiner, pfeilartiger und spitz zulaufender Wurfgegenstand.
+%%%%
+decaying skeleton
+
+Ein zerfallendes Skelett.
 %%%%
 deck of changes
 
@@ -624,10 +621,6 @@ Eine schreckliche dreizackige Waffe, geschmiedet aus Feuer und Schwefel.
 demon whip
 
 Eine schreckliche Waffe, hergestellt in den Tiefen des Infernos.
-%%%%
-dire flail
-
-Ein gestachelter Flegel mit längeren Stacheln und einem schwererem Kopf.
 %%%%
 disc of storms
 
@@ -908,14 +901,6 @@ Eine Muskatblüte mit mit einem in kurzen Spitzen bedeckten Kopf. Vergrößerte
 Kraft gegen die nur ein bisschen reduzierte Beweglichkeit tauschend, kann diese
 Waffe in den Händen eines gut erzogenen Kämpfers tödlich sein.
 %%%%
-mottled dragon armour
-
-Rüstung von den Skalen eines gesprenkelten Drachen gemacht. Obwohl es seinen
-Träger mit viel Schutz verschieden von der von den Skalen von einigen größeren
-Drachen gemachten Rüstung nicht versorgt, ist es so leicht und relativ
-unbeschwerlich wie Lederrüstung. Es ist auch bemerkenswert glatt, klebrigen
-Flamme-Fluss wie Wasser herabmindernd.
-%%%%
 mottled dragon hide
 
 Die unheimlich gemusterte schuppige Haut von einem gesprenkelten Drachen. Es
@@ -999,6 +984,10 @@ potion of agility
 Ein zauberhafter Trank, der das Geschick und Ausweichen von eins sehr steigert,
 die es trinkt.
 %%%%
+potion of beneficial mutation
+
+Ein Trank, der dir gibt eine vermeintlich gute Mutation gibt.
+%%%%
 potion of berserk rage
 
 Ein Trank, der einen in eine zusammenhanglose Wut senden kann
@@ -1051,6 +1040,11 @@ potion of experience
 
 Ein wirklich wundervoller und sehr seltenes Getränk.
 %%%%
+potion of flight
+
+Ein Trank, welcher eine große Beschwingtheit, auf denjenigen der ihn trinkt,
+überträgt.
+%%%%
 potion of heal wounds
 
 Eine gesegnete Flüssigkeit, die einige Wunden heilt, räumt den Verstand und
@@ -1060,11 +1054,6 @@ Gesundheit ist, kann es auch leicht permanente Verletzungen reparieren.
 potion of invisibility
 
 Ein Trank der dich vor der Sicht Anderer versteckt.
-%%%%
-potion of flight
-
-Ein Trank, welcher eine große Beschwingtheit, auf denjenigen der ihn trinkt,
-überträgt.
 %%%%
 potion of magic
 
@@ -1114,10 +1103,6 @@ potion of strong poison
 
 Ein schrecklich giftiger Trank.
 %%%%
-potion of beneficial mutation
-
-Ein Trank, der dir gibt eine vermeintlich gute Mutation gibt.
-%%%%
 quad damage
 
 Eine mysteriöse Sache, die einer Rune von irgendeiner Art ähnelt. Sobald
@@ -1156,6 +1141,10 @@ ring of evasion
 Dieser Ring macht seinen Träger irgendeinen mehr oder weniger fähig dazu,
 Angriffe abhängig von seinem Grad des Entzückens zu vermeiden.
 %%%%
+ring of flight
+
+Dieser Ring erlaubt seinem Träger zu fliegen.
+%%%%
 ring of hunger
 
 Dieser verfluchte Ring lässt deinen Träger schneller hungern.
@@ -1170,10 +1159,6 @@ ring of invisibility
 Dieser starke Ring kann aktiviert werden, um seinen Träger vor der Ansicht von
 anderen zu verbergen, aber vergrößert die Geschwindigkeit seines oder ihres
 Metabolismus außerordentlich, während man so tut.
-%%%%
-ring of flight
-
-Dieser Ring erlaubt seinem Träger zu fliegen.
 %%%%
 ring of magical power
 
@@ -1452,6 +1437,21 @@ scroll of remove curse
 
 Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.
 %%%%
+scroll of silence
+
+Diese Schriftrolle umgibt den Leser mit Stille. Das macht das Lesen von
+Schriftrollen, Sprechen von Zaubern, das Beten oder Kreischen in der Umgebung
+des Lesers unmöglichen . (Dieses gilt für den Leser natürlich auch.)
+
+Dieses Schweigen wird Ihre Anwesenheit nicht verbergen, da seine bedrückende,
+unnatürliche Wirkung fast sicher jedes lebende Wesen alarmieren wird dass etwas
+sehr falsch ist. Der Radius der Stille beträgt die Hälfte der normalen Sicht,
+der dann zunehmend kleiner wird und schließlich nur den Leser bedecken wird,
+bevor der Effekt endet.
+
+Bedenke, das Dämonen keinen Ton benötigen, um Zauber zu werfen; bestimmte
+nekromantische Vorrichtungen haben ebenfalls diese Eigenschaft.
+%%%%
 scroll of teleportation
 
 Liest man die Worte auf dieser Schriftrolle wird sie dich nach kurzer Zeit an
@@ -1470,21 +1470,6 @@ Wesen in der Umgebung. Außerdem werden die magischen Widerstände des Lesers un
 der nahe gelegenen Wesen für eine kurze Dauer halbiert. Die letzte Wirkung gilt
 für zur Magie völlig geschützte Wesen nicht.
 %%%%
-scroll of silence
-
-Diese Schriftrolle umgibt den Leser mit Stille. Das macht das Lesen von
-Schriftrollen, Sprechen von Zaubern, das Beten oder Kreischen in der Umgebung
-des Lesers unmöglichen . (Dieses gilt für den Leser natürlich auch.)
-
-Dieses Schweigen wird Ihre Anwesenheit nicht verbergen, da seine bedrückende,
-unnatürliche Wirkung fast sicher jedes lebende Wesen alarmieren wird dass etwas
-sehr falsch ist. Der Radius der Stille beträgt die Hälfte der normalen Sicht,
-der dann zunehmend kleiner wird und schließlich nur den Leser bedecken wird,
-bevor der Effekt endet.
-
-Bedenke, das Dämonen keinen Ton benötigen, um Zauber zu werfen; bestimmte
-nekromantische Vorrichtungen haben ebenfalls diese Eigenschaft.
-%%%%
 scythe
 
 Ein Farm-Werkzeug, das gewöhnlich nur durch ungeschulte Mengen im Kampf
@@ -1501,10 +1486,6 @@ short sword
 Eine kleine, zweischneidige Klinge mit einem kurzen Griff. Robust und leicht,
 zu behandeln, wird diese Waffe häufig in den Händen von denjenigen gefunden,
 die ihre unbewussten Feinde stechen möchten.
-%%%%
-decaying skeleton
-
-Ein zerfallendes Skelett.
 %%%%
 slice of pizza
 
@@ -1645,12 +1626,6 @@ tome of destruction
 
 Ein äußerst starkes, aber unvorhersehbares Buch der wilden Magie. Warnung: Das
 Lesen kann für Sie oder Ihre Umgebungen gefährlich sein!
-%%%%
-trident
-
-Ein Fischenspeer hat sich mit einer längeren Welle und einem dreizackigen
-Metallkopf verbessert. Wegen des zusätzlichen Gewichts kann es nicht effektiv
-geworfen werden.
 %%%%
 triple sword
 

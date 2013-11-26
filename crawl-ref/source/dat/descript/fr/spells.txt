@@ -722,12 +722,12 @@ méfiez-vous !
 %%%%
 Ozocubu's Armour spell
 
-Ce sort enveloppe le corps du sorcier d'une couche protectrice de glace. Sa
+Ce sort enveloppe le corps du sorcier d'une couche protectrice de glace dont la
 résistance dépend de sa compétence en Magie de la Glace. Le sorcier et son
 équipement ne souffriront pas du froid dû à cette protection, cependant, ils
 pourront être affectés par d'autres sources de froid. Le sort ne fonctionne pas
 sur les sorciers portant des armures lourdes (tout armure corporelle ayant un
-taux d'encombrement de 6 ou plus). Les effets de ce sort sont augmenté si le
+taux d'encombrement de 5 ou plus). Les effets de ce sort sont augmentés si le
 sorcier est en Forme de Glace.
 %%%%
 Ozocubu's Refrigeration spell
@@ -1115,8 +1115,8 @@ Ce sort convoque une ou deux petites créatures pour aider le sorcier.
 Summon Spectral Orcs spell
 
 Ce sort convoque entre un et trois orcs spectraux. Comme ces apparitions ne
-peuvent pas utiliser la magie eux-mêmes, ce sort choisi des spécialistes de la
-mêlée, qui rivalisent parfois avec les plus puissant orcs vivants.
+peuvent pas utiliser la magie, ce sort choisi des spécialistes du combat, qui
+rivalisent parfois avec les plus puissant orcs vivants.
 %%%%
 Summon Swarm spell
 

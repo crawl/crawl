@@ -25,15 +25,6 @@ Sword of Power
 
 Es belohnt die Mächtigen mit Macht und die Sanften mit Schwäche.
 %%%%
-Staff of Olgreb
-
-Diese magische Waffe wurde von dem mächtigen Hexenmeister Olgreb getragen,
-bevor er sein Schicksal irgendwo in diesem Verlies fand. Es erhöht die
-Fähigkeit des Trägers, Giftmagie anzuwenden, und beinhaltet magische Kräfte,
-die entfesselt werden können. Die Legende erzählt, das Olgreb seltene Gifte mit
-begrenzten Effekten, welche sogar bei Kreaturen wirkten die gegen bekannte
-Gifte immun waren, erforscht hat.
-%%%%
 Staff of Wucad Mu
 
 Es kann ausgelöst werden, um eine große Menge magischer Energie
@@ -125,11 +116,6 @@ glaive of the Guard
 
 Diese Waffe gehörte einst Gar Dogh, der Wächter eines königlichen Schatzes.
 Laut den Legenden verschwand er irgendwo im Verlies.
-%%%%
-sword of Jihad
-
-Ein Langschwert, geschaffen aus einem riesigem Stück Kristall. Die Legenden
-sagen es sei ein Geschenk des Shining One an einen Gläubigen gewesen.
 %%%%
 sword of the Doom Knight
 

@@ -308,12 +308,6 @@ Forget Spell ability
 Glemmer enhver af de besværgelser, du i øjeblikket kan huske, så du kan få
 hukommelse til at lære andre.
 %%%%
-Burn Spellbooks ability
-
-Sætter ild til alle trolddomsbøger i dit synsfelt. Ilden er næret af Trogs had,
-og det glæder Trog allermest, når du ikke engang er interesseret i, hvad det er
-for galskabsbøger, du sætter i brand.
-%%%%
 Berserk ability
 
 Du går bersærk. Mens du er bersærk er dine livspoint og den skade du forvolder

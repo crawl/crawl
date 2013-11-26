@@ -25,14 +25,6 @@ Sword of Power
 
 Det belønner de magtfulde med magt og de svage med svaghed.
 %%%%
-Staff of Olgreb
-
-Det var dette magiske våben, den mægtig troldmand Olgreb bar, før han mødte sit
-endeligt et sted i disse underjordiske gange. Den øger bærerens evne til at
-bruge giftmagi og bærer magiske kræfter, som kan vækkes. Sagnene vil vide, at
-Olgreb forskede i sjældne gifte, der i begrænset omfang kunne påvirke selv
-væsener, som var immune over for alle almindeligt kendte gifte.
-%%%%
 Staff of Wucad Mu
 
 Den kan vækkes for at genoprette store mængder magisk energi, men risikerer
@@ -135,11 +127,6 @@ glaive of the Guard
 Dette våben har engang tilhørt Gar Dogh, som vogtede en konges skatte. I følge
 legenderne for han vild et sted i de underjordiske gange.
 %%%%
-sword of Jihad
-
-Et langsværd, som er lavet af et kæmpemæssigt stykke krystal. Legenderne vil
-vide, at det var Den Strålendes gave til en tilbeder.
-%%%%
 sword of the Doom Knight
 
 Et ubrydeligt slagsværd.
@@ -198,20 +185,6 @@ plutonium sword
 Et tredobbelt sværd, som er lavet af et sælsomt, glødende metal. Du undrer dig
 over, om det har udviklet de to sideklinger på grund af sin stråling, og om du
 også vil få to ekstra hoveder.
-%%%%
-great mace "Undeadhunter"
-
-Legenderne vil vide, at engang for længe siden eksperimenterede en
-dødningeherre med at skabe bevidste undersåtter i steder for tanketomme
-tjenere. For at sikre sig deres loyalitet smedede han en række våben med evnen
-til at opløse den trolddom, som binder udøde sammen, og dermed at forvolde stor
-skade på dem.
-
-Selvom dødningen gik til grunde for længe siden, siges hans våben at have været
-overordentligt populære for deres evne til at rive udøde fra hinanden. De gamle
-sagn er i hvert fald fulde af dem. Denne stridskølle kunne dog være den sidste,
-der er tilbage, muligvis takket være Den Strålendes agenter, som siger, at man
-ikke skal bekæmpe nekromantik med nekromantik.
 %%%%
 whip "Snakebite"
 

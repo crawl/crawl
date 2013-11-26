@@ -9,6 +9,13 @@ amulet of conservation
 Denne amulet beskytter bærerens ejendele mod ødelæggelse, men er ikke
 ufejlbarlig.
 %%%%
+amulet of faith
+
+Denne talisman er lavet til gøre guderne opmærksomme på den, der bærer den.
+Denne guddommelige opmærksomhed gør det lettere at glæde din gud, men det
+bliver også sværere at blive tilgivet for dine synder. Amuletten dræner noget
+af din guddommelige gunst, når du tager den af.
+%%%%
 amulet of guardian spirit
 
 Denne amulet gør bæreren mindre modtagelig over for fysisk skade, men dræner i
@@ -33,6 +40,15 @@ amulet of resist mutation
 
 Denne amulet beskytter bæreren mod mutationer, men den er ikke ufejlbarlig.
 %%%%
+amulet of stasis
+
+En amulet, som er omhyggeligt konstrueret med magiske værn, som blokerer
+magiske og fysiologiske effekter, der ellers ville have teleporteret, sænket,
+forhastet eller lammet bæreren.
+
+Amuletten virker mod de fleste former for translokativ magi, men planskift som
+forvisning formår den ikke at blokere.
+%%%%
 amulet of the gourmand
 
 Denne amulet lader sin bærer spise friskt, råt kød uden at være sulten og
@@ -43,22 +59,6 @@ amulet of warding
 
 Denne amulet afværger angreb fra væsener, der er magisk fremmanet, og gør
 bæreren mere modstandsdygtig over for drænende angreb.
-%%%%
-amulet of faith
-
-Denne talisman er lavet til gøre guderne opmærksomme på den, der bærer den.
-Denne guddommelige opmærksomhed gør det lettere at glæde din gud, men det
-bliver også sværere at blive tilgivet for dine synder. Amuletten dræner noget
-af din guddommelige gunst, når du tager den af.
-%%%%
-amulet of stasis
-
-En amulet, som er omhyggeligt konstrueret med magiske værn, som blokerer
-magiske og fysiologiske effekter, der ellers ville have teleporteret, sænket,
-forhastet eller lammet bæreren.
-
-Amuletten virker mod de fleste former for translokativ magi, men planskift som
-forvisning formår den ikke at blokere.
 %%%%
 animal skin
 
@@ -261,14 +261,6 @@ mange af sine rivaler ved at begave dem med overordentligt giftige eksemplarer
 af den. De nuværende udgaver er harmløse, men man kan ofte finde døde bogorm og
 sølvfisk mellem siderne.
 %%%%
-book of fixed level
-
-En bog med magiske besværgelser.
-%%%%
-book of fixed theme
-
-En bog med magiske besværgelser.
-%%%%
 book of fire
 
 En bog som indeholder avancerede besværgelser fra ildens elementarskole. Mange
@@ -276,6 +268,14 @@ ildelementalister har fået deres øjenbryn og skæg brændt af af de midlertidi
 flammer, der opstår første gang, man åbner bogen, og der er endda rapporter om,
 at hvis man lader den ligge i månedsvis, kan den selvantænde og brænde hele
 biblioteker ned i forfærdelige brande.
+%%%%
+book of fixed level
+
+En bog med magiske besværgelser.
+%%%%
+book of fixed theme
+
+En bog med magiske besværgelser.
 %%%%
 book of flames
 
@@ -443,12 +443,6 @@ bread ration
 
 Et stort, mættende måltid af tørt brød.
 %%%%
-broad axe
-
-En krigsøkse, som er forbedret med metalbånd, pigge, et forlænget skæfte og et
-halvmåneformet blad. Den kan forårsage frygtelige skader, men er svær at bruge
-med en hånd på grund af længden og vægten.
-%%%%
 buckler
 
 Et lille stykke træ og metal, som spændes på den ene arm til forsvar. Det er
@@ -521,6 +515,10 @@ dart
 
 Et lille, sylespidst projektil med styrefjer som er lavet til at blive kastet
 med håndkraft.
+%%%%
+decaying skeleton
+
+Et rådnende skelet.
 %%%%
 deck of changes
 
@@ -608,10 +606,6 @@ Et grufuldt, tregrenet våben, som er formet af ild og svovl.
 demon whip
 
 Et grufuldt våben, som er vævet i infernoets dybder.
-%%%%
-dire flail
-
-En stridsplejl med længere pigge og et tungere hoved.
 %%%%
 disc of storms
 
@@ -879,14 +873,6 @@ En stridskølle med et hoved, der er dækket af korte pigge. Den kompenserer for
 sin let reducerede manøvredygtighed med øger kraft og er dødbringende i
 hænderne på en veltrænet kombattant.
 %%%%
-mottled dragon armour
-
-Denne rustning er lavet af skællene fra en spættet drage. Selvom den i
-modsætning til rustning, som er lavet af skællene fra visse større drager, ikke
-yder den store beskyttelse, så er den let og lige så relativt smidig som
-læderrustning. Den er også bemærkelsesværdigt glat, så klistrede flammer glider
-af den som vand på en gås.
-%%%%
 mottled dragon hide
 
 En spættet drages skællede skind, som er dækket mystiske mønstre. Det kan
@@ -975,6 +961,10 @@ potion of agility
 En trylledrik, som øger din behændighed og din evne til at undvige
 betragteligt, når du drikker den.
 %%%%
+potion of beneficial mutation
+
+En eliksir, som giver dig en formodentlig god mutation.
+%%%%
 potion of berserk rage
 
 En trylledrik, som bevirker et usammenhængende raserianfald.
@@ -1024,6 +1014,10 @@ potion of experience
 
 En virkeligt vidunderlig og særdeles sjælden drik.
 %%%%
+potion of flight
+
+En drik, som giver stor opdrift til den, der drikker den.
+%%%%
 potion of heal wounds
 
 En helende trylledrik, som får sår til at lukke sig og hele næsten
@@ -1033,10 +1027,6 @@ også reparere permanente skader.
 potion of invisibility
 
 En eliksir, som skjuler dig for andres øjne.
-%%%%
-potion of flight
-
-En drik, som giver stor opdrift til den, der drikker den.
 %%%%
 potion of magic
 
@@ -1085,10 +1075,6 @@ potion of strong poison
 
 En forfærdeligt giftig drik.
 %%%%
-potion of beneficial mutation
-
-En eliksir, som giver dig en formodentlig god mutation.
-%%%%
 quad damage
 
 En mystisk genstand, som ligner en form for rune. Når den aktiveres, får den
@@ -1132,6 +1118,11 @@ hun opnår modstandskraft over for varme og bliver bedre til at bruge ildmagi,
 på bekostning af ringere evner inden for ismagi og større sårbarhed over for
 kulde.
 %%%%
+ring of flight
+
+Denne ring ladere bæreren flyve. Ringens kraft kan ikke vækkes, mens man er i
+luften, så den er ikke egnet til længere rejser over dødbringende væsker.
+%%%%
 ring of hunger
 
 Denne nederdrægtige ring gør sin ejer sulten hurtigere.
@@ -1152,11 +1143,6 @@ ring of invisibility
 
 Denne magtfulde ring kan aktiveres for at skjule sin bærer fra andres øjne, men
 øger hans eller hendes stofskifte betragteligt, mens den gør det.
-%%%%
-ring of flight
-
-Denne ring ladere bæreren flyve. Ringens kraft kan ikke vækkes, mens man er i
-luften, så den er ikke egnet til længere rejser over dødbringende væsker.
 %%%%
 ring of magical power
 
@@ -1346,6 +1332,17 @@ Denne skriftrulle lader læseren teleportere en kort distance med præcis
 kontrol. Vær opmærksom på, at kontrolleret teleportation vil besmitte den
 teleporterede med magisk energi.
 %%%%
+scroll of brand weapon
+
+Denne skriftrulle fortryller et valgfrit våben, så det bliver langt mere
+effektivt til at forvolde skade på dine fjender. Den kan gøre de midlertidige
+præg, som visse besværgelser giver, permanente, eller den kan bruges på et
+permanent præget våben for at vælge et nyt, tilfældigt præg.
+
+Præg som er tæt knyttet til en af guderne (Trog, Lugonu, Kikubaaqudgha, Den
+Strålende) kan ikke fikseres på denne måde. Xom ville på den anden side ikke
+lade så oplagt en mulighed for løjer gå til spilde.
+%%%%
 scroll of curse armour
 
 Denne skriftrulle kaster en forbandelse på et båret stykke rustning.
@@ -1440,6 +1437,21 @@ scroll of remove curse
 Denne skriftrulle fjerner forbandelserne fra de ting, du bruger, når du læser
 den.
 %%%%
+scroll of silence
+
+Denne skriftrulle fjerner alle lyde i nærheden af læseren. Det gør det umuligt
+at læse skriftruller, kaste besværgelser, bede eller råbe i nærheden af
+læseren. (Dette gælder naturligvis også læseren selv.)
+
+Denne stilhed skjuler ikke din tilstedeværelse, da dens trykkende, unaturlige
+effekt næsten med garanti vil gøre ethvert levende væsen opmærksom på, at der
+er noget helt galt. Stilheden starter med en radius på halvdelen af den normale
+synsvidde og skrumper så, indtil den kun dækker læseren, hvorefter effekten
+ophører.
+
+Bemærk, at dæmoner ikke har brug for lyd for at kaste besværgelser. Visse
+nekromantiske effekter opfører sig på samme måde.
+%%%%
 scroll of summoning
 
 Denne skriftrulle hidkalder adskillige væsener, som er vævet af skygger til at
@@ -1456,38 +1468,12 @@ Denne skriftrulle påkalder sig mørkets kræfter for at påføre væsener i næ
 store smerter – inklusive dig! Dette halverer alle levende væseners livskraft,
 men er aldrig decideret dødbringende.
 %%%%
-scroll of brand weapon
-
-Denne skriftrulle fortryller et valgfrit våben, så det bliver langt mere
-effektivt til at forvolde skade på dine fjender. Den kan gøre de midlertidige
-præg, som visse besværgelser giver, permanente, eller den kan bruges på et
-permanent præget våben for at vælge et nyt, tilfældigt præg.
-
-Præg som er tæt knyttet til en af guderne (Trog, Lugonu, Kikubaaqudgha, Den
-Strålende) kan ikke fikseres på denne måde. Xom ville på den anden side ikke
-lade så oplagt en mulighed for løjer gå til spilde.
-%%%%
 scroll of vulnerability
 
 Denne skriftrulle fjerner alle magiske fortryllelser fra læseren og fra væsener
 i nærheden. Magisk modstandskraft hos læseren og andre væsener i nærheden vil
 også blive halveret i en kort periode. Sidstnævnte effekt påvirker dog ikke
 væsener, som er komplet immune over for magi.
-%%%%
-scroll of silence
-
-Denne skriftrulle fjerner alle lyde i nærheden af læseren. Det gør det umuligt
-at læse skriftruller, kaste besværgelser, bede eller råbe i nærheden af
-læseren. (Dette gælder naturligvis også læseren selv.)
-
-Denne stilhed skjuler ikke din tilstedeværelse, da dens trykkende, unaturlige
-effekt næsten med garanti vil gøre ethvert levende væsen opmærksom på, at der
-er noget helt galt. Stilheden starter med en radius på halvdelen af den normale
-synsvidde og skrumper så, indtil den kun dækker læseren, hvorefter effekten
-ophører.
-
-Bemærk, at dæmoner ikke har brug for lyd for at kaste besværgelser. Visse
-nekromantiske effekter opfører sig på samme måde.
 %%%%
 scythe
 
@@ -1504,10 +1490,6 @@ short sword
 En lille, tveægget klinge med et kort greb. Våbnet er robust og let at håndtere
 og findes ofte i hænderne på dem, der gene vil dolke deres fjender i al
 hemmelighed.
-%%%%
-decaying skeleton
-
-Et rådnende skelet.
 %%%%
 slice of pizza
 
@@ -1673,11 +1655,6 @@ tome of destruction
 
 En ekstremt kraftfuld, men uforudsigelig bog med vild magi. Advarsel: Det kan
 være skadeligt for dig eller dine omgivelser at læse den!
-%%%%
-trident
-
-Et fiskespyd, som er forbedret med et længere skaft og et tregrenet metalhoved.
-På grund af den ekstra vægt kan den ikke kastes effektivt.
 %%%%
 triple sword
 

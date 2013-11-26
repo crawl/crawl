@@ -9,7 +9,7 @@ tiefe Höhle ist mit einmaligen Reichtümern und ebenso Gefahren im Überfluss f
 seine Eindringlinge gefüllt. Wenige konnten lebend entkommen, und noch weniger
 behielten etwas Verstand über um die Geschichte zu erzählen.
 
-Das Höhlensystem ist 27 Ebenen tief, aber ehrlich gesagt, das ist erst der
+Das Höhlensystem ist 16 Ebenen tief, aber ehrlich gesagt, das ist erst der
 Anfang.
 %%%%
 Temple
@@ -105,15 +105,6 @@ kaustisch wachsend, wie Sie hinuntersteigen.
 
 Die Schlamm-Gruben sind sechs Niveaus tief und enthalten die schleimige Rune.
 Der Zugang ist zwischen Höhle:6 und Höhle:8.
-%%%%
-Vaults
-
-Möglicherweise von einem mächtigen Geisteskranken erschaffen sollen die Gewölbe
-große Schätze beherbergen. Auch das weiträumig verspritzte Blut im Eingang
-zeugt von einiger Gewalt.
-
-Die Gewölbe sind acht Ebenen tief und beinhalten die Silber Rune. Der Eingang
-kann im Hauptverlies zwischen Ebene 14 und 19 gefunden werden.
 %%%%
 Hall of Blades
 

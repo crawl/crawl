@@ -24,14 +24,6 @@ Sword of Power
 
 Mocné odměňuje mocí, a slabé slabostí.
 %%%%
-Staff of Olgreb
-
-Touto magickou zbraní kdysi vládl mocný mág Olgreb, než skonal někde v chodbách
-toho žaláře. Nositeli usnadňuje používat jedovatou magii, a také má magickou
-sílu, kterou lze vyvolat pomocí evokace. Podle pověstí se Olgreb zabýval
-vzácnými jedy, které měli částečný vliv i na ty stvoření, které jsou vůči
-běžným jedům immuní.
-%%%%
 Staff of Wucad Mu
 
 Pomocí evokace tato hůl dokáže doplnit velké množství magické energie, je zde
@@ -129,11 +121,6 @@ glaive of the Guard
 Tato zbraň kdysi patřila Garu Doghovi, strážci královské poklady. Podle legendy
 byl ztracen někde v žaláři.
 %%%%
-sword of Jihad
-
-Dlouhý meč vytesaný z obrovského kusu krystalu. Podle legendy to byl dar
-Zářícího jednomu ze svých uctívačů.
-%%%%
 sword of the Doom Knight
 
 Adamantiový velký meč.
@@ -185,20 +172,6 @@ plutonium sword
 
 Trojmeč vyrobený z podivně zářícího kovu. Říkáš si, jestli jeho dvě čepele
 dorostly vlivem radiace, a jestli i tobě kvůli ní narostou další dvě hlavy.
-%%%%
-great mace "Undeadhunter"
-
-Podle legendy kdysi byl pán lichů, který prováděl experimenty a chtěl vytvořit
-myslící nemrtvé služebníky namísto nemyslících automatů. Aby si zajistil jejich
-poslušnost, vyrobil řadu zbraní do ních vložil magickou moc, která měla
-schopnost neutralizovat magii, která nemrtvé držela pohromadě a způsobit tak
-nebývalé poškození.
-
-Ačkoliv onen lich již dávno skonal, říká se, že jeho zbraně, které mezi
-nemrtvými šířily chaos, byli velmi oblíbené. Přinejmenším staré příběhy jsou
-jich plné. Zdá se však, že tento palcát může být tou poslední, nejspíše díky
-snaze agentů Zářícícho, kteří tvrdí, že s nekromancií by se nemělo bojovat
-pomocí nekromancie.
 %%%%
 whip "Snakebite"
 
