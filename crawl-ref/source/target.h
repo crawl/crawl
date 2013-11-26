@@ -12,6 +12,7 @@ enum aff_type // sign and non-zeroness matters
     // If you want to extend this to pass the probability somehow, feel free to,
     // just keep AFF_YES the minimal "bright" value.
     AFF_LANDING,     // Valid shadow step landing site
+    AFF_MULTIPLE,    // Passes through multiple times
 };
 
 class targetter

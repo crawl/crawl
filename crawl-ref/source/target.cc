@@ -154,6 +154,7 @@ bool targetter_beam::can_affect_outside_range()
 aff_type targetter_beam::is_affected(coord_def loc)
 {
     bool on_path = false;
+    int visit_count = 0;
     coord_def c;
     aff_type current = AFF_YES;
     for (auto pc : path_taken)
@@ -168,6 +169,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
         c = pc;
         if (c == loc)
         {
+            visit_count++;
             if (max_expl_rad > 0)
                 on_path = true;
             else if (cell_is_solid(pc))
@@ -180,7 +182,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
 
             }
             else
-                return current;
+                continue;
         }
         if (anyone_there(pc)
             && !penetrates_targets
@@ -192,22 +194,30 @@ aff_type targetter_beam::is_affected(coord_def loc)
             current = AFF_MAYBE;
         }
     }
-    if (max_expl_rad > 0 && (loc - c).rdist() <= 9)
+    if (max_expl_rad > 0)
     {
-        bool aff_wall = beam.can_affect_wall(grd(loc));
-        if (!cell_is_solid(loc) || aff_wall)
+        if ((loc - c).rdist() <= 9)
         {
-            coord_def centre(9,9);
-            if (exp_map_min(loc - c + centre) < INT_MAX)
+            bool aff_wall = beam.can_affect_wall(grd(loc));
+            if (!cell_is_solid(loc) || aff_wall)
             {
-                return (!cell_is_solid(loc) || aff_wall)
-                       ? AFF_YES : AFF_MAYBE;
+                coord_def centre(9,9);
+                if (exp_map_min(loc - c + centre) < INT_MAX)
+                {
+                    return (!cell_is_solid(loc) || aff_wall)
+                           ? AFF_YES : AFF_MAYBE;
+                }
+                if (exp_map_max(loc - c + centre) < INT_MAX)
+                    return AFF_MAYBE;
             }
-            if (exp_map_max(loc - c + centre) < INT_MAX)
-                return AFF_MAYBE;
         }
+        else
+            return on_path ? AFF_TRACER : AFF_NO;
     }
-    return on_path ? AFF_TRACER : AFF_NO;
+
+    return visit_count == 0 ? AFF_NO :
+           visit_count == 1 ? AFF_YES :
+                              AFF_MULTIPLE;
 }
 
 targetter_unravelling::targetter_unravelling(const actor *act, int r, int pow)

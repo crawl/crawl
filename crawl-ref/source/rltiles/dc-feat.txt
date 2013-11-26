@@ -613,6 +613,7 @@ effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
 ray RAY
+ray_multi RAY_MULTI
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG

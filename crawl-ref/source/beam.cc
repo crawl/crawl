@@ -1317,8 +1317,7 @@ void bolt::do_fire()
         if (!affects_nothing)
             affect_cell();
 
-        if (path_taken.empty() || pos() != path_taken.back())
-            path_taken.push_back(pos());
+        path_taken.push_back(pos());
 
         if (range_used() > range)
             break;

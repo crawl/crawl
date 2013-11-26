@@ -5019,6 +5019,7 @@ enum tile_flags ENUM_INT64
     // Should go up with RAY/RAY_OOR, but they need to be exclusive for those
     // flags and there's no room.
     TILE_FLAG_LANDING     = 0x20000000000ULL,
+    TILE_FLAG_RAY_MULTI   = 0x40000000000ULL,
 
     // Mask for the tile index itself.
     TILE_FLAG_MASK       = 0x0000FFFFULL,
