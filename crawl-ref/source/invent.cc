@@ -1695,6 +1695,15 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
     if (_has_warning_inscription(item, oper))
         return true;
 
+    // Curses first.
+    if (item_known_cursed(item)
+        && (oper == OPER_WIELD && is_weapon(item) && !_is_wielded(item)
+            || oper == OPER_PUTON || oper == OPER_WEAR))
+    {
+        return true;
+    }
+
+    // Everything else depends on knowing the item subtype/brand.
     if (!item_ident(item, ISFLAG_KNOW_TYPE))
         return false;
 
@@ -1725,15 +1734,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
             return true;
         }
 
-        if (item_known_cursed(item) && !_is_wielded(item))
-            return true;
-
         if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
-            return true;
-    }
-    else if (oper == OPER_PUTON || oper == OPER_WEAR)
-    {
-        if (item_known_cursed(item))
             return true;
     }
 
