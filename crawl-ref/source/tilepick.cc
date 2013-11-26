@@ -319,9 +319,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_SLIME:
         return TILE_DNGN_ENTER_SLIME;
     case DNGN_ENTER_DEPTHS:
-        if (is_existing_level(level_id(BRANCH_DEPTHS, 1)))
-            return TILE_DNGN_ENTER_DEPTHS_OPEN;
-        return TILE_DNGN_ENTER_DEPTHS_CLOSED;
+        return TILE_DNGN_ENTER_DEPTHS;
     case DNGN_ENTER_VAULTS:
         return TILE_DNGN_ENTER_VAULTS;
     case DNGN_ENTER_CRYPT:
