@@ -5216,7 +5216,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_SLEEP:
-        if (mon->has_ench(ENCH_SLEEPY))
+        if (mons_just_slept(mon))
             return MON_UNAFFECTED;
 
         mon->put_to_sleep(agent(), 0);

@@ -2927,6 +2927,11 @@ bool mons_is_fleeing_sanctuary(const monster* m)
            && (m->flags & MF_FLEEING_FROM_SANCTUARY);
 }
 
+bool mons_just_slept(const monster* m)
+{
+    return m->flags & MF_JUST_SLEPT;
+}
+
 // Moving body parts, turning oklob flowers and so on counts as motile here.
 // So does preparing resurrect, struggling against a net, etc.
 bool mons_is_immotile(const monster* mons)

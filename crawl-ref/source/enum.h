@@ -1599,7 +1599,9 @@ enum enchant_type
     ENCH_SHORT_LIVED,
     ENCH_PARALYSIS,
     ENCH_SICK,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SLEEPY,         //   Monster can't wake until this wears off.
+#endif
     ENCH_HELD,           //   Caught in a net.
     ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy.
 #if TAG_MAJOR_VERSION == 34

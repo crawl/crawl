@@ -951,7 +951,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
         case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
-        case ENCH_SLEEPY: case ENCH_PARALYSIS: case ENCH_PETRIFYING:
+        case ENCH_PARALYSIS: case ENCH_PETRIFYING:
         case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
         case ENCH_SILENCE: case ENCH_LOWERED_MR:
         case ENCH_SOUL_RIPE: case ENCH_BLEED: case ENCH_ANTIMAGIC:
@@ -1689,11 +1689,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TP:
         if (decay_enchantment(en, true) && !no_tele(true, false))
             monster_teleport(this, true);
-        break;
-
-    case ENCH_SLEEPY:
-        // deleted separately at end of monster turn; otherwise
-        // other monsters can wake up this one on their moves
         break;
 
     case ENCH_EAT_ITEMS:

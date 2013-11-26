@@ -294,7 +294,7 @@ bool check_awaken(monster* mons)
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
-    if (mons->has_ench(ENCH_SLEEPY))
+    if (mons_just_slept(mons))
         return false;
 
     // Berserkers aren't really concerned about stealth.
@@ -962,7 +962,7 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
     if (monster *mons = monster_at(pos))
     {
         if (mons->alive()
-            && !mons->has_ench(ENCH_SLEEPY)
+            && !mons_just_slept(mons)
             && mons->mindex() != noise.noise_producer_id)
         {
             const coord_def perceived_position =
