@@ -5307,7 +5307,7 @@ void monster::hibernate(int)
 
     stop_constricting_all();
     behaviour = BEH_SLEEP;
-    add_ench(ENCH_SLEEPY);
+    flags |= MF_JUST_SLEPT;
     add_ench(ENCH_SLEEP_WARY);
 }
 
@@ -5318,7 +5318,7 @@ void monster::put_to_sleep(actor *attacker, int strength)
 
     stop_constricting_all();
     behaviour = BEH_SLEEP;
-    add_ench(ENCH_SLEEPY);
+    flags |= MF_JUST_SLEPT;
 }
 
 void monster::weaken(actor *attacker, int pow)
