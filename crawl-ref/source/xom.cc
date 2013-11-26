@@ -1029,33 +1029,22 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     }
 }
 
-static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
+static monster_type _xom_random_demon(int sever)
 {
     const int roll = random2(1000 - (MAX_PIETY - sever) * 5);
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "_xom_random_demon(); sever = %d, roll: %d",
          sever, roll);
 #endif
-    monster_type dct =
-        (roll >= 850) ? RANDOM_DEMON_GREATER :
-        (roll >= 340) ? RANDOM_DEMON_COMMON
-                      : RANDOM_DEMON_LESSER;
+    monster_type dct = (roll >= 340) ? RANDOM_DEMON_COMMON
+                                     : RANDOM_DEMON_LESSER;
 
     monster_type demon = MONS_PROGRAM_BUG;
 
-    // Sometimes, send a holy warrior instead.
-    if (dct == RANDOM_DEMON_GREATER && coinflip())
-        demon = random_choose(MONS_DAEVA, MONS_ANGEL, -1);
+    if (dct == RANDOM_DEMON_COMMON && one_chance_in(10))
+        demon = MONS_CHAOS_SPAWN;
     else
-    {
-        if (dct == RANDOM_DEMON_GREATER && !use_greater_demons)
-            dct = RANDOM_DEMON_COMMON;
-
-        if (dct == RANDOM_DEMON_COMMON && one_chance_in(10))
-            demon = MONS_CHAOS_SPAWN;
-        else
-            demon = summon_any_demon(dct);
-    }
+        demon = summon_any_demon(dct);
 
     return demon;
 }
@@ -1204,19 +1193,6 @@ static int _xom_send_allies(int sever, bool debug = false)
     if (numdemons > maxdemons)
         numdemons = maxdemons;
 
-    int numdifferent = 0;
-
-    // If we have a mix of demons and non-demons, there's a chance
-    // that one or both of the factions may be hostile.
-    int hostiletype = random_choose_weighted(3, 0,  // both friendly
-                                             4, 1,  // one hostile
-                                             4, 2,  // other hostile
-                                             1, 3,  // both hostile
-                                             0);
-
-    vector<bool> is_demonic(numdemons, false);
-    vector<monster*> summons(numdemons);
-
     int num_actually_summoned = 0;
 
     for (int i = 0; i < numdemons; ++i)
@@ -1230,77 +1206,18 @@ static int _xom_send_allies(int sever, bool debug = false)
         // they should still show as Xom's fault if one of them kills you.
         mg.non_actor_summoner = "Xom";
 
-        summons[i] = create_monster(mg);
-
-        if (summons[i])
-        {
+        if (create_monster(mg))
             num_actually_summoned++;
-            is_demonic[i] = (mons_class_holiness(mon_type) == MH_DEMONIC);
-
-            // If it's not a demon, Xom got it someplace else, so use
-            // different messages below.
-            if (!is_demonic[i])
-                numdifferent++;
-        }
     }
 
     if (num_actually_summoned)
     {
-        const bool only_holy    = (numdifferent == num_actually_summoned);
-        const bool only_demonic = (numdifferent == 0);
-
-        if (only_holy)
-        {
-            god_speaks(GOD_XOM,
-                       _get_xom_speech("multiple holy summons").c_str());
-        }
-        else if (only_demonic)
-        {
-            god_speaks(GOD_XOM,
-                       _get_xom_speech("multiple summons").c_str());
-        }
-        else
-        {
-            god_speaks(GOD_XOM,
-                       _get_xom_speech("multiple mixed summons").c_str());
-        }
-
-        // If we have only non-demons, there's a chance that they
-        // may be hostile.
-        if (only_holy && one_chance_in(4))
-            hostiletype = 2;
-        // If we have only demons, they'll always be friendly.
-        else if (only_demonic)
-            hostiletype = 0;
-
-        for (int i = 0; i < numdemons; ++i)
-        {
-            if (!summons[i])
-                continue;
-
-            if (hostiletype != 0)
-            {
-                // Mark factions hostile as appropriate.
-                if (hostiletype == 3
-                    || (is_demonic[i] && hostiletype == 1)
-                    || (!is_demonic[i] && hostiletype == 2))
-                {
-                    summons[i]->attitude = ATT_HOSTILE;
-                    // XXX: Need to reset summon quota here?
-                    behaviour_event(summons[i], ME_ALERT, &you);
-                }
-            }
-
-            player_angers_monster(summons[i]);
-        }
+        god_speaks(GOD_XOM, _get_xom_speech("multiple summons").c_str());
 
         // Take a note.
         static char summ_buf[80];
-        snprintf(summ_buf, sizeof(summ_buf), "summons %d %s%s%s",
+        snprintf(summ_buf, sizeof(summ_buf), "summons %d friendly demon%s",
                  num_actually_summoned,
-                 hostiletype == 0 ? "friendly " :
-                 hostiletype == 3 ? "hostile " : "",
-                 only_demonic ? "demon" : "monster",
                  num_actually_summoned > 1 ? "s" : "");
 
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
@@ -1317,36 +1234,19 @@ static int _xom_send_one_ally(int sever, bool debug = false)
         return XOM_GOOD_SINGLE_ALLY;
 
     const monster_type mon_type = _xom_random_demon(sever);
-    const bool is_demonic = (mons_class_holiness(mon_type) == MH_DEMONIC);
 
-    // If we have a non-demon, Xom got it someplace else, so use
-    // different messages below.
-    bool different = !is_demonic;
-
-    beh_type beha = BEH_FRIENDLY;
-
-    // There's a chance that a non-demon may be hostile.
-    if (different && one_chance_in(4))
-        beha = BEH_HOSTILE;
-
-    mgen_data mg(mon_type, beha, (beha == BEH_FRIENDLY) ? &you : 0, 6,
-                 MON_SUMM_AID, you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
+    mgen_data mg(mon_type, BEH_FRIENDLY, &you, 6, MON_SUMM_AID,
+                 you.pos(), MHITYOU, MG_FORCE_BEH, GOD_XOM);
 
     mg.non_actor_summoner = "Xom";
 
     if (monster *summons = create_monster(mg))
     {
-        if (different)
-            god_speaks(GOD_XOM, _get_xom_speech("single holy summon").c_str());
-        else
-            god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
-
-        player_angers_monster(summons);
+        god_speaks(GOD_XOM, _get_xom_speech("single summon").c_str());
 
         // Take a note.
         static char summ_buf[80];
-        snprintf(summ_buf, sizeof(summ_buf), "summons %s %s",
-                 beha == BEH_FRIENDLY ? "friendly" : "hostile",
+        snprintf(summ_buf, sizeof(summ_buf), "summons friendly %s",
                  summons->name(DESC_PLAIN).c_str());
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, summ_buf), true);
 

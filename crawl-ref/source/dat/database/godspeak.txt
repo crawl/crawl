@@ -50,80 +50,12 @@ Xom single summon
 
 Xom opens a gate.
 %%%%
-Xom single holy summon
-
-"Serve the mortal, my confused child!"
-
-"Serve the toy, my child of exile!"
-
-Xom calls in a curious servant of another god.
-
-Xom lures something onto this plane.
-
-"A toy for the toy!"
-
-"I wonder which toy lasts longer."
-
-Xom opens a gate.
-%%%%
-# higher demonic being
-Xom single major demon summon
-
-Xom grants you a demonic assistant.
-
-Xom grants you a demonic servitor.
-
-Xom opens a gate.
-%%%%
-Xom single major holy summon
-
-Xom grants you an assistant from another god.
-
-Xom beguiles another god's servant into helping you.
-
-"Where'd that come from? Oh, well."
-
-You wonder where Xom got that toy from.
-
-Xom seems to have successfully tricked another god.
-
-Xom opens a gate.
-%%%%
 # several demons
 Xom multiple summons
 
 "Serve the mortal, my children!"
 
 Xom grants you some temporary aid.
-
-Xom momentarily opens a gate.
-%%%%
-# holy beings and demons at the same time
-Xom multiple mixed summons
-
-Xom calls in some mixed company.
-
-"Serve the toy, my motley children!"
-
-Xom sends help from the ranks of the outcast.
-
-"Oh, what a happy playground."
-
-Xom manages to trick several beings into existence.
-
-Xom snickers at the variety.
-
-Xom momentarily opens several gates.
-%%%%
-Xom multiple holy summons
-
-Xom stirs up dislodged servants of other gods.
-
-Xom summons wayward servants of other gods.
-
-Xom tricks other gods for their servants.
-
-"Different god, different toy."
 
 Xom momentarily opens a gate.
 %%%%
