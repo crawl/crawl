@@ -1228,11 +1228,6 @@ static void _give_basic_knowledge(job_type which_job)
 
     switch (which_job)
     {
-    case JOB_ASSASSIN:
-    case JOB_VENOM_MAGE:
-        set_ident_type(OBJ_POTIONS, POT_POISON, ID_KNOWN_TYPE);
-        break;
-
     case JOB_ARTIFICER:
         set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE);
         break;
