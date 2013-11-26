@@ -908,10 +908,6 @@ A weirdly glowing ball
 
 Dieser schwebende Ball verbreitet ein schimmerndes Licht.
 %%%%
-A sealed sarcophagus
-
-Dieser antike Sarkophag ist dicht verschlossen.
-%%%%
 A flagged portal
 
 Dieses Portal führt zu einem verbotenen Verlies der bösen Ritter. Du erkennst

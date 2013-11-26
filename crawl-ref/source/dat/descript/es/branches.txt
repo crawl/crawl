@@ -9,7 +9,7 @@ conocidas así como de enromes peligros para cualquier intruso. Pocos han
 escapado con vida, e incluso menos han conservado algo de cordura para contar
 la historia.
 
-El calabozo tiene 27 niveles de profundidad pero, honestamente, eso es
+El calabozo tiene 16 niveles de profundidad pero, honestamente, eso es
 solamente el principio.
 %%%%
 Temple
@@ -83,15 +83,6 @@ El Nido de las Arañas tiene cinco niveles y contiene la Runa Telaraña. Un
 calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
 Pantano, los Bancos de Arena y el Nido de las Arañas. Si el Nido está presente,
 su entrada se encuentra entre la Guarida:3 y Guarida:6
-%%%%
-Vaults
-
-Posiblemente construidas por algún hombre poderoso y loco, se cuenta de las
-Cámaras que son lugar de grandes tesoros. Las manchas de sangre por toda la
-entrada indican que también hay un cierto grado de violencia.
-
-Las Cámaras tienen ocho niveles y contienen la Runa Plateada. Su entrada se
-puede hallar entre los niveles 14 y 19 del calabozo principal.
 %%%%
 Hall of Blades
 

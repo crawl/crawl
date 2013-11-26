@@ -9,6 +9,13 @@ amulet of conservation
 Este amuleto protege de la destrucción algunas de las pertenencias de su
 portador, aunque no de forma infalible.
 %%%%
+amulet of faith
+
+Este es un talismán creado para reclamar la atención de los dioses. De esta
+forma, será más fácil agradar a tu dios, pero al mismo tiempo, también será más
+difícil que tu dios perdone tus transgresiones. Al quitarte este amuleto,
+perderás una parte del favor divino logrado.
+%%%%
 amulet of guardian spirit
 
 Este amuleto hace que su portador sea un poco menos vulnerable al daño externo.
@@ -35,19 +42,6 @@ amulet of resist mutation
 Este amuleto previene que su portador adquiera mutaciones, aunque no es
 infalible.
 %%%%
-amulet of warding
-
-Este amuleto repele los ataques de criaturas que hayan sido convocadas mediante
-magia, y también hace a su portador más resistente a los ataques basados en
-energías negativas.
-%%%%
-amulet of faith
-
-Este es un talismán creado para reclamar la atención de los dioses. De esta
-forma, será más fácil agradar a tu dios, pero al mismo tiempo, también será más
-difícil que tu dios perdone tus transgresiones. Al quitarte este amuleto,
-perderás una parte del favor divino logrado.
-%%%%
 amulet of stasis
 
 Un amuleto que ha sido elaborado meticulosamente para bloquear los efectos
@@ -56,6 +50,12 @@ paralizar a su portador.
 
 Aunque el amuleto es efectivo contra la mayoría de las magias de translocación,
 los cambios de plano como el destierro están fuera de su alcance.
+%%%%
+amulet of warding
+
+Este amuleto repele los ataques de criaturas que hayan sido convocadas mediante
+magia, y también hace a su portador más resistente a los ataques basados en
+energías negativas.
 %%%%
 animal skin
 
@@ -203,6 +203,10 @@ book of envenomations
 
 Un libro con hechizos mágicos.
 %%%%
+book of fire
+
+Un libro completamente abrasado que contiene hechizos mágicos.
+%%%%
 book of fixed level
 
 Un libro con hechizos mágicos.
@@ -210,10 +214,6 @@ Un libro con hechizos mágicos.
 book of fixed theme
 
 Un libro con hechizos mágicos.
-%%%%
-book of fire
-
-Un libro completamente abrasado que contiene hechizos mágicos.
 %%%%
 book of flames
 
@@ -320,10 +320,6 @@ bread ration
 
 Pan un poco rancio, aunque sustancioso.
 %%%%
-broad axe
-
-Un hacha con una gran cuchilla.
-%%%%
 buckler
 
 Un pequeño escudo.
@@ -381,6 +377,10 @@ Una armadura de cristal, increíblemente pesada, pero extremadamente efectiva.
 dart
 
 Una pequeña arma arrojadiza.
+%%%%
+decaying skeleton
+
+Un esqueleto en descomposición.
 %%%%
 deck of changes
 
@@ -470,10 +470,6 @@ Un arma terrible, moldeada por el fuego y el azufre.
 demon whip
 
 Un arma terrible, fabricada en las profundidades del Hades.
-%%%%
-dire flail
-
-Un flagelo con puntiagudas protuberancias en ambos extremos.
 %%%%
 disc of storms
 
@@ -705,14 +701,6 @@ Una ración nutritiva de carne seca y en conserva.
 morningstar
 
 Una maza cubierta de pinchos.
-%%%%
-mottled dragon armour
-
-Una armadura mágica elaborada a partir de las escamas de un dragón moteado.
-Aunque no proporciona una gran protección mágica, es bastante ligera en
-comparación con las armaduras echas de escamas de dragones más grandes. Es tan
-liviana y cómoda como la armadura de cuero. También es muy suave, de tal forma
-que el fuego adherente se cae como si fuera agua.
 %%%%
 mottled dragon hide
 
@@ -1153,10 +1141,6 @@ llevar y hace algo más lenta la velocidad a la que se puede atacar.
 short sword
 
 Una espada de hoja corta y cortante.
-%%%%
-decaying skeleton
-
-Un esqueleto en descomposición.
 %%%%
 slice of pizza
 

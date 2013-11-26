@@ -140,6 +140,10 @@ book of envenomations
 
 Um livro de magia.
 %%%%
+book of fire
+
+Um livro de magia todo queimado.
+%%%%
 book of fixed level
 
 Um livro de magias.
@@ -147,10 +151,6 @@ Um livro de magias.
 book of fixed theme
 
 Um livro de magias.
-%%%%
-book of fire
-
-Um livro de magia todo queimado.
 %%%%
 book of flames
 
@@ -237,10 +237,6 @@ bread ration
 
 Uma refeição farta de pão dormido mas massudo.
 %%%%
-broad axe
-
-Um machado com uma grande lâmina.
-%%%%
 buckler
 
 Um escudo pequeno.
@@ -281,6 +277,10 @@ dart
 
 Uma pequena arma de arremesso.
 %%%%
+decaying skeleton
+
+Um esqueleto em decomposição.
+%%%%
 demon blade
 
 Uma arma terrível, forjada no fogo do Inferno.
@@ -292,10 +292,6 @@ Uma arma terrível, modelada por fogo e enxofre.
 demon whip
 
 Uma arma terrível, tramada nas profundezas do Inferno.
-%%%%
-dire flail
-
-Um mangual com espinhos em ambos extremos.
 %%%%
 double sword
 
@@ -515,10 +511,6 @@ Uma ferramenta do campo, normalmente inútil em combate.
 short sword
 
 Uma espada com uma lâmina curta e lacerante.
-%%%%
-decaying skeleton
-
-Um esqueleto em decomposição.
 %%%%
 slice of pizza
 

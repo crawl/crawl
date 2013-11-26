@@ -9,7 +9,7 @@ profonda caverna è piena di immense ricchezze ma anche di grandi pericoli per
 qualunque intruso. Pochi sono fuggiti vivi da qui, e pochissimi hanno mantenuto
 la lucidità mentale per poterlo raccontare.
 
-Il Dungeon è profondo 27 livelli, ma, francamente, questo è solo l'inizio.
+Il Dungeon è profondo 16 livelli, ma, francamente, questo è solo l'inizio.
 %%%%
 Temple
 
@@ -101,17 +101,6 @@ va in profondità.
 
 I Fossi dei Protoplasmi sono profondi sei livelli e contengono la runa melmosa.
 L'entrata è fra Antro:6 e Antro:8
-%%%%
-Vaults
-
-Possibilmente costruito da qualche potente pazzoide, si dice che i Sotterranei
-siano casa di grandi tesori. Il sangue abbondantemente schizzato attorno
-all'entrata suggerisce che i vi è anche una certa attività violenta al suo
-interno.
-
-I Sotterranei sono profondi cinque livelli e contengono la runa di argento, e
-hanno anche le entrate ad altre due ramificazioni. L'entrata può essere trovata
-dai livelli 15 a 20 del Dungeon.
 %%%%
 Hall of Blades
 

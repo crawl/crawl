@@ -126,6 +126,11 @@ plus expérimentés peuvent y mourir. Cependant, ces salles contiennent plusieur
 runes et beaucoup d'objets de valeur. Il est beaucoup plus facile d'entrer que
 de sortir.
 %%%%
+A staircase to the Depths
+
+Ces escaliers mènent aux Profondeurs — la partie la plus reculée du donjon,
+sujette à l'influence corruptrice du royaume de Zot et de ses habitants.
+%%%%
 A gate to the Realm of Zot
 
 Cette porte mène au Royaume de Zot, la dernière épreuve de votre quête. Son
@@ -381,6 +386,10 @@ avez fui.
 Monter ces escaliers terminera votre quête, que vous transportiez l'Orbe ou
 non.
 %%%%
+A staircase out of the Tomb
+
+Ces escaliers mènent hors de cet endroit maudit.
+%%%%
 A staircase to the Crypt
 
 Ces escaliers mènent à l'ancienne crypte. Malheureusement, tout ce qui a été
@@ -442,8 +451,8 @@ par la plus vile des nécromancies.
 %%%%
 A gate to the Vaults
 
-Ces escaliers descendent dans les Caveaux, réputées pour leurs trésors. Ils
-sont tâchés de sang...
+Ces escaliers descendent dans les Chambres Fortes, réputées pour leurs trésors.
+Ils sont tâchés de sang...
 %%%%
 A stone staircase leading down
 
@@ -919,10 +928,6 @@ Cette statue en granite usée représente un éléphant montant la garde.
 A weirdly glowing ball
 
 Cette boule flottante irradie d'une lumière chatoyante.
-%%%%
-A sealed sarcophagus
-
-Ce sarcophage antique est hermétiquement fermé.
 %%%%
 A flagged portal
 

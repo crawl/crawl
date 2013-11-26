@@ -24,14 +24,6 @@ Sword of Power
 
 Ricompensa i potenti con potere e i deboli con debolezza.
 %%%%
-Staff of Olgreb
-
-Questa era l'arma magica usata dal grande stregone Olgreb prima che morì da
-qualche parte in questo dungeon. Migliora l'abilità di chi la impugna ad usare
-magia velenosa, e porta con sé poteri magici che possono essere evocati. I miti
-dicono che Olgreb aveva ricercato rari veleni che potevano avere effetti
-limitati anche sulle creature immuni ai veleni comunemente conosciuti.
-%%%%
 Staff of Wucad Mu
 
 Può essere evocata per ripristinare una grande quantità di energia magica, ma
@@ -132,11 +124,6 @@ glaive of the Guard
 Quest'arma era una volta di Gar Dogh, la guarda dei tesori reali. Secondo la
 legenda, lui si perse da qualche parte nel Dungeon.
 %%%%
-sword of Jihad
-
-Una lunga spada fatta un singolo pezzo di cristallo. La legenda vuole che fu il
-regalo del Lucente ad un seguace.
-%%%%
 sword of the Doom Knight
 
 Uno spadone adamantino.
@@ -195,20 +182,6 @@ plutonium sword
 Una spada tripla fatta di uno strano metallo brillante. Ti chiedi se abbia
 cresciuto le due lame laterali per la sua radiazioni, e se anche tu crescerai
 due teste aggiuntive.
-%%%%
-great mace "Undeadhunter"
-
-Le legende dicono che tanto tempo fa, un signore dei lich sperimentava il
-creare servi senzienti piuttosto che macchine senza cervello. Per assicurarsi
-la loro fedeltà, fece una grande quantità di armi potenziate con un magia che
-poteva reagire con la magia che teneva assieme i nonmorti, infliggendo grandi
-danni.
-
-Anche se il lich è morto da tanto tempo, le sue armi, spargendo distruzione fra
-i nonmorti, sono diventate famose. O, almeno, le vecchie storie ne sono piene.
-Comunque, questa mazza potrebbe essere solo l'unica ad essere rimasta - magari
-per gli sforzi degli agenti del Lucente, che sostiene che non si dovrebbe
-combattere la negromanzia con la negromanzia.
 %%%%
 whip "Snakebite"
 

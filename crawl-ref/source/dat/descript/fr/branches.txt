@@ -8,7 +8,7 @@ l'outre-monde. Peu importe en vérité l'origine de cette caverne, elle est
 remplie de richesse autant que de terribles dangers. Peu en sont ressortis
 vivants et encore moins ont gardé suffisamment de santé mentale pour en parler.
 
-Le donjon est profond de 27 niveaux mais honnêtement, c'est seulement le début.
+Le donjon est profond de 16 niveaux mais honnêtement, c'est seulement le début.
 %%%%
 Temple
 
@@ -17,10 +17,10 @@ Il est localisé entre les niveaux 4 et 7 du donjon principal.
 %%%%
 Orcish Mines
 
-Les mines d'or bien exportée des tribus orcs. Ces cavernes tortueuses sont
+Les mines d'or bien exploitée des tribus orcs. Ces cavernes tortueuses sont
 remplis d'Orcs, de leurs ouvriers humanoïdes, et des piles de leur or
-fraîchement extrait. Des commerçants entreprenants ont mis en place des postes
-de traite pour aider à soulager les Orcs de leur fardeau aurique. La manière
+fraîchement extrait. Des commerçants entreprenants ont mis en place des
+échoppes pour aider à soulager les Orcs de leur fardeau aurique. La manière
 désordonnée dont les orcs ont tendance à creuser leur puits de mine a donné
 lieu à un enchevêtrement complexe et dangereux de chambres dans lesquelles il
 est facile de se retrouver piégé.
@@ -39,35 +39,35 @@ Les Halls Elfiques sont profonds de trois niveaux.
 %%%%
 Lair
 
-La plupart des aventuriers considère le Repaire des Bêtes comme un excitant
-changement de climat. En effet, il y aurait des choses à dire sur comment être
-charcuté, dépecé et mangé plutôt que tranché, brulé ou poignardé.
+La plupart des aventuriers considère l'Antre des Bêtes comme un excitant
+changement d’ambiance. Effectivement, ici on charcute, dépèce et mange plutôt
+que de trancher, bruler ou poignarder.
 
-Le Repaire fait huit niveaux de profondeur et contient des escaliers menant à
+L'Antre fait huit niveaux de profondeur et contient des escaliers menant à
 trois autre branches.
 %%%%
 Swamp
 
-Un marécage inhospitalier, plein de limons, de mouches, de sangsues et de
-larges monstres carnivores salivant.
+Un marécage inhospitalier, plein de limons, de mouches, de sangsues et de grand
+monstres carnivores affamés.
 
-Le Marécage est profond de cinq niveaux et contient la rune en décomposition.
-Le donjon ne propose que deux des branches suivantes : la Fossé des Serpents,
-le Marécage, les Côtes et le Nid des Araignées. Si le Marécage est présent, son
-entrée est située entre le Repaire 2 et 5.
+Le Marais est profond de cinq niveaux et contient la rune en décomposition. Le
+donjon ne propose que deux des branches suivantes : la Fosse aux Serpents, le
+Marais, les Côtes et le Nid des Araignées. Si le Marais est présent, son entrée
+est située entre le Repaire 2 et 5.
 %%%%
 Shoals
 
 De loin, vous entendez le bruit des vagues et sentez les embruns salés. En
 atteignant les Côtes, vous êtes impressionné par les plages exotiques dans ses
 souterrains, créant quelques îles dans une vaste mer. Soudainement, un cri
-effroyable déchire l'air suivi d'un glouglou. Avec impatience, vous observez
+effroyable déchire l'air suivi de gargouillis. Avec impatience, vous observez
 les alentours et vous demandez : Qui est le prédateur ? Et qui est la proie ?
 
 Les Côtes sont profondes de cinq niveaux et contiennent la rune écaillée. Deux
 des branches suivantes sont présentes dans le donjon : la Fosse aux Serpents,
-le Marécage, les Côtes et le Nid des Araignées. Si les Côtes sont présentes,
-leur entrée est située entre Repaire 3 et 6.
+le Marais, les Côtes et le Nid des Araignées. Si les Côtes sont présentes, leur
+entrée est située entre Repaire 3 et 6.
 %%%%
 Snake Pit
 
@@ -75,7 +75,7 @@ Habitat des serpent, repaire des nagas.
 
 La Fosse aux Serpents est profonde de cinq niveaux et contient la rune en
 serpentine. Deux des branches suivantes sont présentes dans le donjon : la
-Fosse aux Serpents, le Marécage, les Côtes et le Nid des Araignées. Si la Fosse
+Fosse aux Serpents, le Marais, les Côtes et le Nid des Araignées. Si la Fosse
 aux Serpents est présente, son entrée est située entre Repaire 3 et 6.
 %%%%
 Spider Nest
@@ -85,8 +85,8 @@ n'êtes pas encore arachnophobe, c'est pour bientôt.
 
 Le Nid des Araignées est profond de cinq niveaux et contient la rune
 arachnéenne. Deux des branches suivantes sont présentes dans le donjon : la
-Fosse aux Serpents, le Marécage, les Côtes et le Nid des Araignées. Si le Nid
-des Araignées est présente, son entrée est située entre Repaire 3 et 6.
+Fosse aux Serpents, le Marais, les Côtes et le Nid des Araignées. Si le Nid des
+Araignées est présente, son entrée est située entre Repaire 3 et 6.
 %%%%
 Slime Pits
 
@@ -102,12 +102,14 @@ visqueuse. Son entrée est entre Repaire 6 et 8.
 %%%%
 Vaults
 
-Probablement construite par un puissant fou, les Caveaux sont réputées pour
-garder de grands trésors. Les traces de sang entourant son entrée indiquent
-aussi, qu'elles abritent une grande violence.
+Probablement construite par un puissant fou, les Chambres Fortes sont réputées
+pour garder de grands trésors. Les éclaboussures sanglantes autour de l'entrée
+indiquent que l'on y trouve aussi un certain niveau de violence.
 
-Les Caveaux sont profondes de cinq niveaux et contiennent la rune argentée. Son
-entrée peut être trouvée entre les niveaux 15 et 20 du donjon principal.
+Les Chambres Fortes sont profondes de cinq niveaux et contiennent la rune
+argentée ainsi que les entrées de deux autres branches. Pour y pénétrer, il
+faut posséder au moins une rune de Zot. Son entrée peut être trouvée entre les
+niveaux 14 et 15 du donjon principal.
 %%%%
 Hall of Blades
 
@@ -324,4 +326,9 @@ existent encore, rempli avec les résultats de leurs expériences. Ceux qui sont
 prêts à explorer ces laboratoires peuvent trouver de puissant trésors magique,
 mais attention: les sorciers à qui ces laboratoires appartiennent à mérité leur
 réputation.
+%%%%
+Depths
+
+Les Profondeurs sont la partie la plus reculée du donjon même, sujettes à
+l'influence corruptrice du Royaume de Zot sans vraiment en faire partie.
 %%%%

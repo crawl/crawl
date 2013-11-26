@@ -24,14 +24,6 @@ Sword of Power
 
 Nagradza silnych siłą, a słabych słabością.
 %%%%
-Staff of Olgreb
-
-To była broń potężnego czarodzieja Olgreba zanim dosięgła go zguba gdzieś w
-tych lochach. Jak każdy kij trucizn, wzmaga zdolności swego posiadacza w tej
-dziedzinie magii, lecz także posiada inne moce które można użyć. Ponadto,
-Olgreb prowadził badania nad rzadkimi jadami które działają na stworzenia
-zwykle odporne na wszelkie powszechnie znane trucizny.
-%%%%
 Staff of Wucad Mu
 
 Jego wartość bojowa zmienia się proporcjonalnie do inteligencji swego
@@ -125,11 +117,6 @@ glaive of the Guard
 Ta broń kiedyś należała do Gar Dogha, strażnika królewskich skarbów. Podobno
 stracił ją podczas wyprawy w te lochy.
 %%%%
-sword of Jihad
-
-Długi miecz zrobiony z jednego kawałka kryształu. Legendy mówią że był on darem
-Świetlistego dla jednego z wyznawców.
-%%%%
 sword of the Doom Knight
 
 Wielki miecz z czarnym diamentem w rękojeści.
@@ -182,19 +169,6 @@ plutonium sword
 
 Potrójny miecz z dziwnego świecącego metalu. Ciekawe czy poboczne ostrza
 wyrosły na skutek promieniowania, i czy tobie też wyrosną dwie dodatkowe głowy.
-%%%%
-great mace "Undeadhunter"
-
-Według opowieści, dawno, dawno temu, pewien możny licz spróbował zastąpić
-bezmyślne zombie i szkielety inteligentnymi sługami. Jako że wraz z wolną wolą
-przychodzi możliwość buntu, jako zabezpieczenie ten licz przygotował arsenał
-broni nasyconych magią która może rozproszyć czar podtrzymujący nie-życie
-nieumarłych, czyniąc im wielką szkodę.
-
-Nietrudno zgadnąć jak ów licz skończył. Te bronie rozeszły się po świecie, lecz
-słudzy Świetlistego, twierdząc że użycie nekromancji jest złe nawet wobec
-nieumarłych, zniszczyli wszystkie które wpadły im w ręce. Ta buława może być
-ostatnia.
 %%%%
 whip "Snakebite"
 

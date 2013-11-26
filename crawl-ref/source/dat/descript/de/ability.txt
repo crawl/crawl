@@ -304,12 +304,6 @@ Forget Spell ability
 Vergiss irgendeinen Zauberspruch den du dir momentan eingeprägt hast, damit du
 deinen Verstand frei hast um Andere zu lernen.
 %%%%
-Burn Spellbooks ability
-
-Setze alles Zauberbücher in deinem Sichtfeld in Flammen. Das Feuer ist gefüllt
-mit dem Hass von Trog, und Trog mag es sehr wenn dir egal ist welches Buch des
-Wahnsinns in Flammen aufgeht.
-%%%%
 Berserk ability
 
 Verfalle in Raserei. In Raserei verfallen erhöht, auch wenn es vorübergehend

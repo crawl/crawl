@@ -958,7 +958,6 @@ plate armour
 # Historical note: fully articulated plates came only in the last days of
 # plate armour popularity.  Before then, it had gaps on and under joints,
 # often filled with mail.
-
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. Chainmail covers gaps, allowing movement.
 
@@ -1041,8 +1040,8 @@ A potion which hides you from the sight of others.
 potion of lignification
 
 A potion which temporarily transforms the imbiber into an animated tree with
-branches capable of holding weapons. Such a tree is quite resilient,
-although cannot retreat in any way.
+branches capable of holding weapons. Such a tree is quite resilient, although
+cannot retreat in any way.
 %%%%
 potion of magic
 
@@ -1648,7 +1647,6 @@ on its wearer.
 swamp dragon hide
 
 # Produces "The slimy skin" if you can't smell and "The slimy, smelly skin" if you can smell.
-
 The slimy{{
     if you.can_smell() then
         return ", smelly"

@@ -772,10 +772,6 @@ A weirdly glowing ball
 
 这个悬浮在半空中的球体向四周辐射出微光。
 %%%%
-A sealed sarcophagus
-
-这个古代石棺被封死了。
-%%%%
 A flagged portal
 
 这个传送门前挂着两把交叉成X形的武器，仿佛在向你宣告

@@ -9,12 +9,19 @@ amulet of conservation
 Cette amulette protège de la destruction certaines possessions, mais pas de
 manière infaillible.
 %%%%
+amulet of faith
+
+C'est un talisman façonné pour attirer l'attention des dieux sur son porteur.
+Cette attention divine facilite le contentement de votre dieu, mais celui-ci
+sera aussi moins amène à tolérer vos transgressions, et l'amulette drainera une
+part de vos faveurs divines lorsqu'elle sera retirée.
+%%%%
 amulet of guardian spirit
 
-Cette amulette rend son porteur moins susceptible aux blessures physiques,
-drainant sa puissance magique à la place. Si les réserves magiques viennent à
-être vidées, l'esprit ne pourra apporter sa protection jusqu'à ce que davantage
-de pouvoir soit disponible.
+Cette amulette rend son porteur moins sensible aux attaques physiques, drainant
+sa puissance magique à la place. Si les réserves magiques viennent à être
+vidées, l'esprit ne pourra apporter sa protection jusqu'à ce que davantage de
+pouvoir soit disponible.
 %%%%
 amulet of inaccuracy
 
@@ -36,6 +43,16 @@ amulet of resist mutation
 Cette amulette protège son porteur des mutations, mais pas de manière
 infaillible.
 %%%%
+amulet of stasis
+
+Une amulette fabriquée méticuleusement avec des charmes pour bloquer les effets
+magiques et physiologiques qui pourraient autrement téléporter, ralentir,
+accélérer ou paralyser son porteur.
+
+Bien que l'amulette soit efficace contre la plupart des magies translocatives,
+les changements de plan tels que le bannissement sont au delà des ses capacités
+bloquantes.
+%%%%
 amulet of the gourmand
 
 Cette amulette permet à son porteur de digérer la viande fraîche crue même s'il
@@ -48,23 +65,6 @@ amulet of warding
 Cette amulette repousse une partie des attaques des créatures qui ont été
 convoquées par magie, et rend également le porteur plus résistant aux attaques
 qui drainent la force vitale.
-%%%%
-amulet of faith
-
-C'est un talisman façonné pour attirer l'attention des dieux sur son porteur.
-Cette attention divine facilite le contentement de votre dieu, mais celui-ci
-sera aussi moins amène à tolérer vos transgressions, et l'amulette drainera une
-part de vos faveurs divines lorsqu'elle sera retirée.
-%%%%
-amulet of stasis
-
-Une amulette fabriquée méticuleusement avec des charmes pour bloquer les effets
-magiques et physiologiques qui pourraient autrement téléporter, ralentir,
-accélérer ou paralyser son porteur.
-
-Bien que l'amulette soit efficace contre la plupart des magies translocatives,
-les changements de plan tels que le bannissement sont au delà des ses capacités
-bloquantes.
 %%%%
 animal skin
 
@@ -231,14 +231,6 @@ book of envenomations
 
 Un livre de sortilèges magiques.
 %%%%
-book of fixed level
-
-Un livre de sortilèges magiques.
-%%%%
-book of fixed theme
-
-Un livre de sortilèges magiques.
-%%%%
 book of fire
 
 Un livre, contenant des sorts avancés de l'école élémentaire du Feu. Beaucoup
@@ -247,6 +239,14 @@ jaillissement d'une flamme lors de la première ouverture du livre, et certains
 ont même constaté, que lorsqu'il est laissé sans surveillance pendant des mois,
 il peut alors s'enflammer spontanément, parfois réduisant en cendres des
 bibliothèques entières dans de terribles incendies.
+%%%%
+book of fixed level
+
+Un livre de sortilèges magiques.
+%%%%
+book of fixed theme
+
+Un livre de sortilèges magiques.
 %%%%
 book of flames
 
@@ -370,7 +370,10 @@ Un pain peut être un peu rassis, mais très nourrissant.
 %%%%
 broad axe
 
-Une hache dotée d'un large tranchant.
+Une hache de guerre améliorée avec des renforts métalliques, des pointes, un
+manche allongé et une tête en croissant à simple tranchant. Elle peut infliger
+de graves blessures, mais elle est difficile à manier sans pratique en raison
+de sa longueur et de son poids.
 %%%%
 buckler
 
@@ -447,6 +450,10 @@ d'assassinat.
 dart
 
 Une petite arme de jet.
+%%%%
+decaying skeleton
+
+Un squelette en décomposition.
 %%%%
 deck of changes
 
@@ -913,6 +920,10 @@ potion of agility
 Une potion magique qui augmente considérablement la dextérité et l'esquive de
 celui qui la boit.
 %%%%
+potion of beneficial mutation
+
+Une potion qui vous donne une supposé bonne mutation.
+%%%%
 potion of berserk rage
 
 Une potion qui déclenche une rage incontrolable.
@@ -964,6 +975,10 @@ potion of experience
 
 Une potion aussi rare que merveilleuse.
 %%%%
+potion of flight
+
+Une potion qui confère une grande flottabilité à celui qui la boit.
+%%%%
 potion of heal wounds
 
 Un élixir de guérison magique qui permet aux blessures de se refermer et guérir
@@ -974,9 +989,11 @@ potion of invisibility
 
 Une potion qui vous cache de la vue des autres.
 %%%%
-potion of flight
+potion of lignification
 
-Une potion qui confère une grande flottabilité à celui qui la boit.
+Une potion qui transforme temporairement le buveur en un arbre animé dont les
+branches peuvent manipuler des armes. Un tel arbre est plutôt résistant, mais
+il lui est impossible de se déplacer.
 %%%%
 potion of magic
 
@@ -1024,10 +1041,6 @@ potion of strong poison
 
 Une épouvantable potion empoisonnée.
 %%%%
-potion of beneficial mutation
-
-Une potion qui vous donne une supposé bonne mutation.
-%%%%
 quad damage
 
 Un mystérieux objet qui ressemble à une rune. Une fois évoqué, l'utilisateur
@@ -1073,6 +1086,12 @@ pouvoirs du feu. Il ou elle gagne de la résistance à la chaleur et peut
 utiliser la magie du feu plus efficacement, mais devient moins efficace avec la
 magie de la glace et plus vulnérable aux effets du froid.
 %%%%
+ring of flight
+
+Cet anneau permet son porteur de voler. Le pouvoir de l'anneau ne peut pas être
+utilisé en vol, donc il est peu conseillé pour les longs trajets au-dessus d'un
+liquide mortel.
+%%%%
 ring of hunger
 
 Cet anneau maudit affame son porteur rapidement.
@@ -1094,12 +1113,6 @@ ring of invisibility
 Ce puissant anneau peut être activé pour cacher son porteur de la vue des
 autres, mais augmente grandement la vitesse de son métabolisme en faisant
 ainsi.
-%%%%
-ring of flight
-
-Cet anneau permet son porteur de voler. Le pouvoir de l'anneau ne peut pas être
-utilisé en vol, donc il est peu conseillé pour les longs trajets au-dessus d'un
-liquide mortel.
 %%%%
 ring of magical power
 
@@ -1290,6 +1303,19 @@ Ce parchemin permet à son lecteur de se téléporter sur une courte distance,
 avec un contrôle précis. Méfiez-vous tout de même car ce type de téléportation
 contamine le sujet avec de l'énergie magique résiduelle.
 %%%%
+scroll of brand weapon
+
+Ce parchemin enchante l'arme choisie de façon à la rendre beaucoup plus
+efficaces pour infliger des dommages sur les ennemis de son porteur. Il peut
+aussi rendre permanente la marque temporaire obtenue à partir de certains
+sorts, ou peut être utilisé sur une arme en ayant déjà une provoquant ainsi
+l'effacement de celle ci pour en mettre une nouvelle au hasard.
+
+Les marques qui sont étroitement liés à l'un des dieux (Trog, Lugonu,
+Kikubaaquadgha, L’Étincelant) ne peuvent être apposé de cette façon. Xom,
+d'autre part, ne laisserait pas une telle occasion de s'amuser pour la rendre
+inutile.
+%%%%
 scroll of curse armour
 
 Ce parchemin place une malédiction sur une pièce d'armure équipé.
@@ -1387,6 +1413,21 @@ scroll of remove curse
 Lire ce parchemin permet de libérer les objets que vous utilisez de leurs
 malédictions.
 %%%%
+scroll of silence
+
+Ce parchemin élimine tous les sons à proximité du lecteur. Ceci rend la
+lecture, le lancer des sorts, la prière ou les cries dans les environs du
+lecteur impossible. (Elle s'applique pour le lecteur, aussi, bien sûr.)
+
+Ce silence ne masquera pas votre présence, sa présence est étouffante, et son
+effet surnaturel alertera presque certainement toute les créature vivante que
+quelque chose n'est pas normal. Le silence commence avec un rayon couvrant la
+moitié du champ de vision normale, diminuera ensuite, et à terme ne couvrira
+que le lecteur, avant que l'effet disparaisse.
+
+Notez que les démons n'ont pas besoin de son pour lancer des sorts. Certains
+objets nécromantiques ont aussi cette propriété.
+%%%%
 scroll of summoning
 
 Ce parchemin suscite plusieurs créatures, tissées a partir des ombres et dans
@@ -1404,40 +1445,12 @@ douleur sur toute les créatures à proximité – y compris vous! Ceci traverse
 moitié de la résistance de toutes les créatures vivantes, bien que ce ne soit
 jamais directement fatale.
 %%%%
-scroll of brand weapon
-
-Ce parchemin enchante l'arme choisie de façon à la rendre beaucoup plus
-efficaces pour infliger des dommages sur les ennemis de son porteur. Il peut
-aussi rendre permanente la marque temporaire obtenue à partir de certains
-sorts, ou peut être utilisé sur une arme en ayant déjà une provoquant ainsi
-l'effacement de celle ci pour en mettre une nouvelle au hasard.
-
-Les marques qui sont étroitement liés à l'un des dieux (Trog, Lugonu,
-Kikubaaquadgha, L’Étincelant) ne peuvent être apposé de cette façon. Xom,
-d'autre part, ne laisserait pas une telle occasion de s'amuser pour la rendre
-inutile.
-%%%%
 scroll of vulnerability
 
 Ce parchemin annule tous les enchantements magiques du lecteur et des êtres
 dans le voisinage. En outre, les résistances magiques du lecteur et des êtres
 proches sont réduits de moitié pour une courte durée. Ce dernier effet ne
 s'applique pas aux êtres totalement immunisé à la magie.
-%%%%
-scroll of silence
-
-Ce parchemin élimine tous les sons à proximité du lecteur. Ceci rend la
-lecture, le lancer des sorts, la prière ou les cries dans les environs du
-lecteur impossible. (Elle s'applique pour le lecteur, aussi, bien sûr.)
-
-Ce silence ne masquera pas votre présence, sa présence est étouffante, et son
-effet surnaturel alertera presque certainement toute les créature vivante que
-quelque chose n'est pas normal. Le silence commence avec un rayon couvrant la
-moitié du champ de vision normale, diminuera ensuite, et à terme ne couvrira
-que le lecteur, avant que l'effet disparaisse.
-
-Notez que les démons n'ont pas besoin de son pour lancer des sorts. Certains
-objets nécromantiques ont aussi cette propriété.
 %%%%
 scythe
 
@@ -1455,10 +1468,6 @@ short sword
 Une petit épée à double tranchant avec une poignée courte. Robuste et facile à
 manipuler, cette arme se trouve souvent entre les mains de ceux qui souhaitent
 poignarder leurs ennemis inattentifs.
-%%%%
-decaying skeleton
-
-Un squelette en décomposition.
 %%%%
 slice of pizza
 
@@ -1482,8 +1491,7 @@ Un légume repoussant en forme de concombre.
 spear
 
 Une arme de chasse composée d'un manche en bois avec une tête métallique
-pointue fixée au bout. Plus courte que d'autres armes d'hast, elle peut être
-maniée avec une ou deux mains.
+pointue fixée au bout.
 %%%%
 staff of air
 
@@ -1649,8 +1657,7 @@ Attention : lire ce livre peut s'avérer hasardeux pour vous ou votre entourages
 trident
 
 Une lance de pêche améliorée avec une plus longue hampe et une fourche
-métallique à trois dents au bout. Elle peut être portée à une ou deux mains
-mais, à cause de son poids, elle ne peut être lancée.
+métallique à trois dents au bout.
 %%%%
 triple sword
 
