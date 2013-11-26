@@ -2744,7 +2744,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight: 8303 if depth_mod < 4,
+            // total weight: 8634 if depth_mod < 4,
             //               9334 if 4 <= depth_mod < 7,
             //               9754 if depth_mod >= 7,
             //               and -1133 in sprint
@@ -2766,8 +2766,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  // [Cha] don't generate noise scrolls if in sprint
                  331, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
 
-                 // Don't create ?oImmolation at low levels (encourage read-ID).
-                 331, (item_level < 4 ? NUM_SCROLLS : SCR_IMMOLATION),
+                 331, SCR_IMMOLATION,
 
                  270, SCR_CURSE_WEAPON,
                  270, SCR_CURSE_ARMOUR,
