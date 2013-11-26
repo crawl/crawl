@@ -148,6 +148,8 @@ static void _write_abyssal_features()
                     {
                         grd(p) = abyssal_features[index];
                         env.level_map_mask(p) = MMT_VAULT;
+                        if (cell_is_solid(p))
+                            delete_cloud_at(p);
                         if (monster* mon = monster_at(p))
                             _push_displaced_monster(mon);
                     }
