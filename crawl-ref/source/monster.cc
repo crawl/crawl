@@ -5739,9 +5739,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
 
     if (mons_species(type) == MONS_BUSH
-             && res_fire() < 0
-             && flavour == BEAM_FIRE
-             && damage > 8 && x_chance_in_y(damage, 20))
+        && res_fire() < 0 && flavour == BEAM_FIRE
+        && damage > 8 && x_chance_in_y(damage, 20))
     {
         place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
