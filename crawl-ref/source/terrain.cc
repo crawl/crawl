@@ -565,6 +565,9 @@ static void _precompute_slime_wall_neighbours()
 unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
     : did_compute_mask(false)
 {
+    if (!(env.level_state & LSTATE_SLIMY_WALL))
+        return;
+
     if (docompute && !_slime_wall_precomputed_neighbour_mask.get())
     {
         did_compute_mask = true;
@@ -582,6 +585,9 @@ unwind_slime_wall_precomputer::~unwind_slime_wall_precomputer()
 
 bool slime_wall_neighbour(const coord_def& c)
 {
+    if (!(env.level_state & LSTATE_SLIMY_WALL))
+        return false;
+
     if (_slime_wall_precomputed_neighbour_mask.get())
         return (*_slime_wall_precomputed_neighbour_mask)(c);
 
