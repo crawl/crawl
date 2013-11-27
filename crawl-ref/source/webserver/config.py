@@ -9,6 +9,12 @@ dgl_mode = True
 bind_nonsecure = True # Set to false to only use SSL
 bind_address = ""
 bind_port = 8080
+# Or listen on multiple address/port pairs (overriding the above) with:
+# bind_pairs = (
+#     ("127.0.0.1", 8080),
+#     ("localhost", 8082),
+#     ("", 8180), # All addresses
+# )
 
 logging_config = {
 #    "filename": "webtiles.log",
@@ -104,6 +110,11 @@ ssl_options = None # No SSL
 #}
 ssl_address = ""
 ssl_port = 8081
+# Or listen on multiple address/port pairs (overriding the above) with:
+# ssl_bind_pairs = (
+#     ("127.0.0.1", 8081),
+#     ("localhost", 8083),
+# )
 
 connection_timeout = 600
 max_idle_time = 5 * 60 * 60
