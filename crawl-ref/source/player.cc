@@ -2271,10 +2271,6 @@ int player_movement_speed(bool ignore_burden)
     if (you.tengu_flight())
         mv--;
 
-    // Swiftness doesn't work in liquid.
-    if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_liquid())
-        mv -= 2;
-
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 5;
 
@@ -2296,6 +2292,16 @@ int player_movement_speed(bool ignore_burden)
             mv++;
         else if (you.burden_state == BS_OVERLOADED)
             mv += 3;
+    }
+
+    if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_liquid())
+    {
+        if (you.attribute[ATTR_SWIFTNESS] > 0)
+          mv = div_rand_round(3*mv, 4);
+        else if (mv >= 8)
+          mv = div_rand_round(3*mv, 2);
+        else if (mv == 7)
+          mv = div_rand_round(7*6, 5); // balance for the cap at 6
     }
 
     // We'll use the old value of six as a minimum, with haste this could
@@ -3855,9 +3861,6 @@ int check_stealth(void)
     if (you.confused())
         stealth /= 3;
 
-    if (you.duration[DUR_SWIFTNESS] > 0)
-        stealth /= 2;
-
     const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, false);
     const item_def *cloak = you.slot_item(EQ_CLOAK, false);
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
@@ -4094,7 +4097,10 @@ static void _display_movement_speed()
     const bool swim   = you.swimming();
 
     const bool fly    = you.flight_mode();
-    const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
+    const bool swift  = (you.duration[DUR_SWIFTNESS] > 0
+                         && you.attribute[ATTR_SWIFTNESS] >= 0);
+    const bool antiswift = (you.duration[DUR_SWIFTNESS] > 0
+                            && you.attribute[ATTR_SWIFTNESS] < 0);
 
     mprf("Your %s speed is %s%s%s.",
           // order is important for these:
@@ -4104,10 +4110,13 @@ static void _display_movement_speed()
                     : "movement",
 
           (water && !swim)  ? "uncertain and " :
-          (!water && swift) ? "aided by the wind" : "",
+          (!water && swift) ? "aided by the wind" :
+          (!water && antiswift) ? "hindered by the wind" : "",
 
           (!water && swift) ? ((move_cost >= 10) ? ", but still "
-                                                 : " and ")
+                                                 : " and ") :
+          (!water && antiswift) ? ((move_cost <= 10) ? ", but still "
+                                                     : " and ")
                             : "",
 
           (move_cost <   8) ? "very quick" :

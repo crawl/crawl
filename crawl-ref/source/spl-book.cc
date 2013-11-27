@@ -597,8 +597,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     if (you.species == SP_FORMICID
         && (spell == SPELL_BLINK
          || spell == SPELL_CONTROL_TELEPORT
-         || spell == SPELL_CONTROLLED_BLINK
-         || spell == SPELL_SWIFTNESS))
+         || spell == SPELL_CONTROLLED_BLINK))
     {
         rc = true, form = false;
     }

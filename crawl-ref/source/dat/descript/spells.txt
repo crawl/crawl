@@ -1259,8 +1259,8 @@ making the blade much easier to use.
 Swiftness spell
 
 This spell imbues its caster with the ability to achieve great movement speeds.
-But this speed comes at a price: the caster is less stealthy and more likely to
-blunder into traps while the spell is in effect.
+But this speed comes at a price: the caster's movements will be sluggish for
+a time after the speed ends.
 %%%%
 Symbol of Torment spell
 

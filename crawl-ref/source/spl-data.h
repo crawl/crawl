@@ -1195,7 +1195,7 @@ struct spell_desc
      SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_HASTY,
      2,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
