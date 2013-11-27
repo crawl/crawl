@@ -2421,6 +2421,16 @@ void queue_monster_for_action(monster* mons)
     monster_queue.push(pair<monster *, int>(mons, mons->speed_increment));
 }
 
+static void _clear_monster_flags()
+{
+    // Clear any summoning flags so that lower indiced
+    // monsters get their actions in the next round.
+    // Also clear one-turn deep sleep flag.
+    // XXX: MF_JUST_SLEPT only really works for player-cast hibernation.
+    for (int i = 0; i < MAX_MONSTERS; i++)
+        menv[i].flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
+}
+
 //---------------------------------------------------------------
 //
 // handle_monsters
@@ -2489,12 +2499,7 @@ void handle_monsters(bool with_noise)
     if (with_noise)
         apply_noises();
 
-    // Clear any summoning flags so that lower indiced
-    // monsters get their actions in the next round.
-    // Also clear one-turn deep sleep flag.
-    // XXX: MF_JUST_SLEPT only really works for player-cast hibernation.
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        menv[i].flags &= ~MF_JUST_SUMMONED & ~MF_JUST_SLEPT;
+    _clear_monster_flags();
 }
 
 static bool _jelly_divide(monster* parent)
