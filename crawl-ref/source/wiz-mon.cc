@@ -616,9 +616,10 @@ void debug_stethoscope(int mon)
           (hab == HT_AMPHIBIOUS)                 ? "amphibious" :
           (hab == HT_WATER)                      ? "water" :
           (hab == HT_LAVA)                       ? "lava" :
-          (hab == HT_ROCK)                       ? "rock"
+          (hab == HT_ROCK)                       ? "rock" :
+          (hab == HT_INCORPOREAL)                ? "incorporeal"
                                                  : "unknown"),
-         (mons.asleep()        ? "sleep" :
+         (mons.asleep()                  ? "sleep" :
           mons_is_wandering(&mons)       ? "wander" :
           mons_is_seeking(&mons)         ? "seek" :
           mons_is_fleeing(&mons)         ? "flee" :
