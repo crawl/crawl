@@ -3,30 +3,29 @@ welcome
 
 <white>Bienvenue dans Dungeon Crawl !</white>
 
-Votre objectif est de mener un <input>{{ return you.race() }} {{ return
-you.class()
-}}</input> au plus profond du donjon, récupérer la légendaire Orbe de Zot et
+Votre objectif est de mener un <w>{{ return you.race() }} {{ return you.class()
+}}</w> au plus profond du donjon, récupérer la légendaire Orbe de Zot et
 revenir à la surface. Dans un premier temps, toutefois, l'exploration sera
 votre principal objectif. Essayez de descendre le plus profondément possible,
 mais attention : la mort se cache à chaque coin.
 
 Pour le moment, souvenez-vous des touches suivantes et de leur fonction :
   <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - montre les objets et commandes
-  <input>$cmd[CMD_SAVE_GAME]</input> - sauve la partie pour être continuée plus
-tard (mais notez que la mort est permanente)
-  <input>$cmd[CMD_LOOK_AROUND]</input> - examine quelque chose dans votre champ
-de vision
+  <input>$cmd[CMD_SAVE_GAME]</input>  - sauve la partie pour être continuée
+plus tard (mais notez que la mort est permanente)
+  <input>$cmd[CMD_LOOK_AROUND]</input>  - examine quelque chose dans votre
+champ de vision
 
 Le mode "indice" peut vous aider à jouer à Crawl sans avoir à lire toute la
 documentation. Si vous ne l'avez pas encore fait, vous voudrez probablement
 suivre le tutoriel. De plus, si vous êtes curieux, il y a plus d'informations
 dans les fichiers inclus dans le répertoire docs/ (qui tous peuvent être lu
 depuis le jeu) :
-  <lightblue>quickstart.txt</lightblue> - Un très court guide à Crawl.
-  <lightblue>crawl_manual.txt</lightblue> - Celui-ci contient tous les détails
-sur les races, la magie, les compétences, etc.
-  <lightblue>options_guide.txt</lightblue> - L'interface de Crawl est hautement
-configurable. Ce document en explique toutes les options.
+  <lightblue>quickstart.txt</lightblue>     - Un très court guide à Crawl.
+  <lightblue>crawl_manual.txt</lightblue>   - Celui-ci contient tous les
+détails sur les races, la magie, les compétences, etc.
+  <lightblue>options_guide.txt</lightblue>  - L'interface de Crawl est
+hautement configurable. Ce document en explique toutes les options.
 
 Joyeux Crawl !
 %%%%
@@ -50,12 +49,11 @@ N'oubliez pas de passer berserk quand vous combattez des ennemis
 particulièrement coriaces. C'est risqué mais, vous rend plus rapide et
 endurant.
 {{
-  if you.hunger() < 3
-    then return "Passer berserk est impossible quand vous êtes affamé ou pire,
-" ..
-                "assurez-vous de vous restaurer régulièrement, juste au cas où"
-..
-                "vous avez besoin de devenir berserk." end
+    if you.hunger() < 3 then
+        return "Passer berserk est impossible quand vous êtes affamé ou " ..
+               "pire, assurez-vous de vous restaurer régulièrement, juste " ..
+               "au cas où vous avez besoin de devenir berserk."
+    end
 }}
 %%%%
 death ranger melee
@@ -71,7 +69,7 @@ des monstres en combat rapproché.
 %%%%
 death random 1
 
-Apprenez à fuir ce que vous ne pouvez gérer - c'est vital ! Il est plus sage
+Apprenez à fuir ce que vous ne pouvez gérer — c'est vital ! Il est plus sage
 d'éviter un niveau particulièrement dangereux. Mais ne le faite pas trop
 souvent car les monstres deviennent de plus en plus coriaces à mesure que vous
 descendez.
@@ -105,7 +103,7 @@ Rabattez-vous toujours dans un couloir afin de les obliger à vous combattre un
 %%%%
 finished
 
-Félicitations ! Vous avez survécu jusqu'à la fin du mode "indice" - veuillez à
+Félicitations ! Vous avez survécu jusqu'à la fin du mode "indice" — veuillez à
 essayer les autres aussi. Notez que la commande d'écran d'aide
 (<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) va devenir très différente à
 partir de maintenant. Voici le dernier conseil de jeu :
@@ -131,9 +129,9 @@ finished stashes
 
 Vous pouvez faire une recherche sur tous les objets existant dans le donjon
 avec la commande <input>$cmd[CMD_SEARCH_STASHES]</input>. Par exemple,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <input>"couteau"</input> listera tous
-les couteaux. Vous pouvez alors vous rendre à l'un des objets. Cela est aussi
-possible avec les mots <input>"échoppes"</input> ou <input>"autel"</input>.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dague"</w> listera toutes les
+dagues. Vous pouvez alors vous rendre à l'un des objets. Cela est aussi
+possible avec les mots <w>"échoppes"</w> ou <w>"autel"</w>.
 %%%%
 finished random 0
 
@@ -141,8 +139,8 @@ Le jeu garde un journal de bord automatisé de tous vos personnages. Utilisez
 <input>$cmd[CMD_DISPLAY_COMMANDS]:</input> pour le lire. Vous pouvez entrer
 manuellement des notes avec la commande input>$cmd[CMD_MAKE_NOTE]</input>. Une
 fois votre personnage mort, deux fichiers de morgues sont conservés dans le
-répertoire <input>morgue/</input>. Celui se terminant par .txt contient une
-copie de votre journal de bord. Durant le jeu, vous pouvez créer un fichier de
+répertoire <w>morgue/</w>. Celui se terminant par .txt contient une copie de
+votre journal de bord. Durant le jeu, vous pouvez créer un fichier de
 sauvegarde avec <input>$cmd[CMD_CHARACTER_DUMP]</input>.
 %%%%
 finished random 1
@@ -158,16 +156,16 @@ monstre le plus proche. Pour plus d'informations sur les macros, tapez
 finished random 2
 
 L'interface peut être grandement personnalisée. Toutes les options sont
-expliquées dans le fichier <input>options_guide.txt</input> qui se trouve dans
-le répertoire <input>docs</input>. Les options elles-mêmes sont définies dans
-<input>init.txt</input> ou <input>.crawlrc</input>. Crawl se plaindra s'il ne
-peut pas trouver ses fichiers.
+expliquées dans le fichier <w>options_guide.txt</w> qui se trouve dans le
+répertoire <w>docs</w>. Les options elles-mêmes sont définies dans
+<w>init.txt</w> ou <w>.crawlrc</w>. Crawl se plaindra s'il ne peut pas trouver
+ses fichiers.
 %%%%
 finished random 3
 
 Vous pouvez demander à d'autres joueurs de Crawl des conseils et de l'aide sur
-le canal IRC (Internet Relay Chat) <input>##crawl</input> sur freenode
-(<input>irc.freenode.net</input>).
+le canal IRC (Internet Relay Chat) <w>##crawl</w> sur freenode
+(<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 
@@ -180,9 +178,9 @@ mouse button</input>. </localtiles> Chaque fois que vous voyez un corps en mode
 %%%%
 HINT_CONVERT Xom
 
-Vous venez de vous convertir à la religion de <input>Xom</input>. Vous pouvez
-garder Xom heureux en le maintenant amusé ; vous ne voulez absolument pas que
-ce dieu s'ennuie de vous!
+Vous venez de vous convertir à la religion de <w>Xom</w>. Vous pouvez garder
+Xom heureux en le maintenant amusé ; vous ne voulez absolument pas que ce dieu
+s'ennuie de vous!
 
 Si vous gardez Xom amusé, il vous traitera comme sa chose, vous aidant ou vous
 persécutant aléatoirement pour son propre plaisir ; sinon, il vous traitera
@@ -190,12 +188,11 @@ comme un jouet mal-aimé.
 %%%%
 HINT_CONVERT
 
-Vous venez de vous convertir à la religion de <input>{{ return you.god()
-}}</input>. Votre piété (faveur divine) diminuera graduellement avec le temps,
-et si elle tombe à zéro, {{ return you.god() }} vous excommuniera et vous
-punira. Vous pouvez éviter cela, et même gagner suffisamment piété pour obtenir
-des pouvoirs et récompenses divines, en faisant des choses pour plaire à {{
-return you.god()
+Vous venez de vous convertir à la religion de <w>{{ return you.god() }}</w>.
+Votre piété (faveur divine) diminuera graduellement avec le temps, et si elle
+tombe à zéro, {{ return you.god() }} vous excommuniera et vous punira. Vous
+pouvez éviter cela, et même gagner suffisamment piété pour obtenir des pouvoirs
+et récompenses divines, en faisant des choses pour plaire à {{ return you.god()
 }}. Mais ne paniquez pas : vous commencez avec un montant confortable de piété,
 et tout danger d'excommunication est donc loin.
 
@@ -208,11 +205,10 @@ HINT_SEEN_FIRST_OBJECT
 Ce <console>$1 </console>est un objet. Si vous vous déplacez là et pressez
 <input>$cmd[CMD_PICKUP]</input>, vous ramasserez cet objet.
 <console>Généralement, les objets sont indiqués par des symboles et non des
-lettres, comme <input>%?!"=()[</input>.</console><tiles> Vous pouvez aussi
-ramasser un objet en cliquant sur votre <input>bouton gauche de la
-sourie</input> en étant sur leur case. </tiles> De plus, plusieurs types
-d'objets pourront être ramassés automatiquement. <tiles>Ceux ci ont un pourtour
-vert.</tiles>
+lettres, comme <w>%?!"=()[</w>.</console><tiles> Vous pouvez aussi ramasser un
+objet en cliquant sur votre <input>bouton gauche de la sourie</input> en étant
+sur leur case. </tiles> De plus, plusieurs types d'objets pourront être
+ramassés automatiquement. <tiles>Ceux ci ont un pourtour vert.</tiles>
 
 Une fois dans votre inventaire, vous pouvez le déposer en utilisant <tiles>un
 <input>Shift + clic gauche</input>. Ou en faisant <input>clic droit</input> sur

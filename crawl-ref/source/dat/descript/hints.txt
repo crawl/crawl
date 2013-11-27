@@ -45,10 +45,11 @@ death berserker unberserked
 Don't forget to go berserk when fighting particularly difficult foes. It's
 risky, but makes you faster and beefier.
 {{
-  if you.hunger() < 3
-    then return "Berserking is impossible while very hungry or worse, " ..
-                "so make sure to stay fed at all times, just in case " ..
-                "you need to berserk." end
+    if you.hunger() < 3 then
+        return "Berserking is impossible while very hungry or worse, so " ..
+               "make sure to stay fed at all times, just in case you need " ..
+               "to berserk."
+    end
 }}
 %%%%
 death ranger melee
@@ -118,7 +119,7 @@ finished stashes
 
 You can search among all items existing in the dungeon with the
 <input>$cmd[CMD_SEARCH_STASHES]</input> command. For example,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"knife"</w> will list all knives.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dagger"</w> will list all daggers.
 You can then travel to one of the spots. It is even possible to enter words
 like <w>"shop"</w> or <w>"altar"</w>.
 %%%%
@@ -155,11 +156,11 @@ You can ask other Crawl players for advice and help on the <w>##crawl</w> IRC
 dissection reminder
 
 If you don't want to eat it, consider offering this corpse up under prayer
-(<input>$cmd[CMD_PRAY]</input>) as a sacrifice to
-{{ return you.god() }}. <localtiles>You can also chop up any corpse that shows
-in the floor part of your inventory tiles by clicking on it with your
-<input>left mouse button</input>. </localtiles>Whenever you view a corpse while
-in hint mode you can reread this information.
+(<input>$cmd[CMD_PRAY]</input>) as a sacrifice to {{ return you.god() }}.
+<localtiles>You can also chop up any corpse that shows in the floor part of
+your inventory tiles by clicking on it with your <input>left mouse
+button</input>. </localtiles>Whenever you view a corpse while in hint mode you
+can reread this information.
 %%%%
 HINT_CONVERT Xom
 
