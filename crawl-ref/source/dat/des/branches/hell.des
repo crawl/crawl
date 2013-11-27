@@ -5,7 +5,7 @@
 ##############################################################################
 
 {{
-function hell_entry(e, glyph)
+function hell_entry_feature(e, glyph)
     e.tags("extra luniq_enter_hell chance_enter_hell")
     e.depth_chance("Depths", 10000)
     e.depth_chance("D:21-", 10000)
@@ -13,6 +13,19 @@ function hell_entry(e, glyph)
         e.kfeat(glyph .. " = enter_hell no_mimic")
     else
         e.kfeat(glyph .. " = enter_hell")
+    end
+end
+
+function hell_entry_tier(e, tier)
+    e.tags("nolayout_encompass")
+    if tier == "low" then
+        e.weight(14)
+    else
+        e.tags("luniq_hellpanabyss_threat_entry")
+        if tier == "high" then
+            e.tags("uniq_hell_entry_high")
+            e.weight(6)
+        end
     end
 end
 }}
@@ -28,7 +41,7 @@ NAME:   hell_entry
 TAGS:   allow_dup can_overwrite replace_portal transparent fallback_enter_hell
 DEPTH:  Depths
 WEIGHT: 50
-: hell_entry(_G, 'O')
+: hell_entry_feature(_G, 'O')
 MAP
 O
 ENDMAP
@@ -37,19 +50,18 @@ default-depth: Depths
 
 ##############################################################################
 # Hellmouth (Lemuel)
-# note that most threats here can't fly
 NAME:   hellmouth_1
 ORIENT: float
-TAGS:   no_rotate nolayout_encompass
-MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
-        red devil / hell hound
-ITEM:   good_item demon blade / good_item demon whip /\
+TAGS:   no_rotate
+MONS:   crimson imp / red devil / hellwing / hell hound
+MONS:   hellion / balrug / soul eater / smoke demon
+ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident / wand of draining ident:type
 ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
         grand grimoire / scroll of torment ident:type
-KFEAT:  A = enter_hell
 SUBST:  d=de, ?:?.l, ?=l.
-: hell_entry(_G, 'A')
+: hell_entry_feature(_G, 'A')
+: hell_entry_tier(_G, "mid")
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxxlllxxxxxxxx
@@ -73,12 +85,11 @@ ENDMAP
 
 ##############################################################################
 # Hellmouth 2 (Lemuel)
-# note that most threats here can't fly
 NAME:   hellmouth_2
 ORIENT: float
-TAGS:   no_monster_gen no_rotate transparent nolayout_encompass
-MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
-MONS:   hellion / rotting devil / iron devil / red devil / hell hound
+TAGS:   no_monster_gen transparent
+MONS:   crimson imp / red devil / hellwing / hell hound
+MONS:   hellion / balrug / soul eater w:20 / smoke demon w:20
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining ident:type
 ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
@@ -87,7 +98,8 @@ ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
 SUBST:  d=de, ?:?.l, ?=l.
 SUBST:  b : b:30 c v .
-: hell_entry(_G, 'A')
+: hell_entry_feature(_G, 'A')
+: hell_entry_tier(_G, "high")
 MAP
 ..........................
 .......bbbbbbbbbbbb.......
@@ -115,12 +127,13 @@ ENDMAP
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
 ORIENT: float
-TAGS:   transparent nolayout_encompass
-MONS:   weight:50 crimson imp / quasit / shadow imp / iron imp / lemure, hell hound
-ITEM:   good_item demon blade / good_item demon whip /\
-        good_item demon trident / nothing
+TAGS:   transparent
+MONS:   crimson imp / red devil / hellwing / hell hound
+MONS:   hellion / balrug / soul eater / smoke demon
+ITEM:   demon blade / demon whip / demon trident / nothing
 SUBST:  ? : . l ?:40, ?=l.
-: hell_entry(_G, 'A')
+: hell_entry_feature(_G, 'A')
+: hell_entry_tier(_G, "mid")
 MAP
               ..??..      ....
    .....     .......     ..??.
@@ -146,7 +159,7 @@ ENDMAP
 
 NAME:   grunt_hell_entry_demonic_statue
 ORIENT: float
-TAGS:   no_monster_gen no_rtele_into nolayout_encompass
+TAGS:   no_monster_gen no_rtele_into
 MONS:   blue devil / orange demon / red devil / w:5 iron devil / \
         w:35 nothing
 MONS:   ice devil / sun demon / soul eater / w:30 nothing
@@ -163,7 +176,8 @@ KPROP:  b = nothing / w:5 bloody
 KITEM:  b = nothing / w:1 gold
 MARKER: H = lua:props_marker { stop_explore = "statue" }
 KFEAT:  HI = G
-: hell_entry(_G, 'A')
+: hell_entry_feature(_G, 'A')
+: hell_entry_tier(_G, "high")
 MAP
       xxxxxxx
     xxxbbbbbxxx
@@ -189,20 +203,20 @@ xxbbbbGbbbbbGdbbbxx
 ENDMAP
 
 ###############################################################################
-#
+
 NAME: lightli_too_deep
-TAGS: no_monster_gen nolayout_encompass
+TAGS: no_monster_gen nolayout_encompass uniq_hell_entry_high
 ORIENT: northeast
 MONS: balrug
 MONS: sun demon
-: hell_entry(_G, 'H')
+: hell_entry_feature(_G, 'H')
 SUBST: y = x..
 SUBST: ; = %A.....l
-KITEM: % = dwarf skeleton
 : dgn.delayed_decay(_G, '%', 'dwarf skeleton')
-KITEM: A = any weapon race:dwarven w:20 /  chain mail race:dwarven w:60 / \
+KITEM: A = any weapon race:dwarven w:20 / chain mail race:dwarven w:60 / \
            plate armour race:dwarven w:19 / \
            crystal plate armour race:dwarven w:1
+: hell_entry_tier(_G, "mid")
 MAP
 xxxxxxxxxxxxxxx
 xxxxcccccccxxxx
@@ -225,15 +239,12 @@ ENDMAP
 ##############################################################################
 # Otherwise known as grunt_what_the_hellephant.
 NAME: grunt_hell_horde
-TAGS: nolayout_encompass mini_float
-: hell_entry(_G, 'O')
-: if crawl.coinflip() then
-NSUBST: + = 1:+ / *:x
-: else
-NSUBST: + = 2:+ / *:x
-: end
+TAGS: nolayout_encompass mini_float uniq_hell_entry_high
+: hell_entry_feature(_G, 'O')
+NSUBST: + = 1:+ / 1:+x / *:x
 KMONS: O = hellephant
 MONS: hell hog / hell hound, hell hound / nothing
+: hell_entry_tier(_G, "high")
 MAP
  xxx+xxx
 xxl2.2lxx
@@ -247,9 +258,9 @@ xxl2.2lxx
 ENDMAP
 
 NAME: grunt_metal_band
-TAGS: nolayout_encompass
-: hell_entry(_G, 'O')
-KMONS: O = Margery band, hell knight band
+KMONS: O = Margery band / hell knight band w:4, hell knight band
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "high")
 MAP
  xxxxxxx
 xx..O..xx
@@ -261,14 +272,15 @@ x.......x
 ENDMAP
 
 NAME: grunt_mini_vestibule
-TAGS: nolayout_encompass no_monster_gen
-: hell_entry(_G, 'O')
+TAGS: nolayout_encompass no_monster_gen uniq_hell_entry_high
+: hell_entry_feature(_G, 'O')
 KMONS: O = hell beast
 MONS: blue devil / simulacrum w:20 / freezing wraith / ice devil
 MONS: iron devil w:20 / iron troll
 MONS: red devil w:20 / hell hound / flaming corpse / sun demon
 MONS: skeleton / zombie / skeletal warrior band / flying skull band / \
       ancient champion band w:5 / soul eater
+: hell_entry_tier(_G, "mid")
 MAP
   .....@.....
  ..ccnc+cncc..
@@ -285,6 +297,83 @@ MAP
 ..cc.......cc..
  ..ccnc+cncc..
   .....@.....
+ENDMAP
+
+##############################################################################
+# Large need for non-threat hell entries if there's going to be a chance
+# on every floor of a branch for a hell entry vault, so.
+NAME:    hangedman_geh_valley
+TAGS:    transparent
+KMONS:   O = red devil / crimson imp w:20 / nothing
+SHUFFLE: +- / +- / =+
+NSUBST:  - = 1:+cc / *:c
+SUBST:   = = c
+KMASK:   l = no_monster_gen
+TILE:    c = dngn_stone_wall_red
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+  xxxxxxxxx
+xxxllcccllxxx
+xll.cc.cc.llx
+x...-.O.-...x
+....cc.cc....
+@....c+c....@
+.............
+x.llll.llll.x
+xlxxxxlxxxxlx
+xxx  xxx  xxx
+ENDMAP
+
+NAME:    hangedman_coc_ice_floe
+TAGS:    transparent no_pool_fixup
+KMONS:   O = blue devil / white imp w:20 / nothing
+KFEAT:   A = stone_arch
+SHUFFLE: ab / ab / ba
+SUBST:   a : xww, b = x
+TILE:    x = wall_ice
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+   ..  ..
+ .........
+...wwWww..
+..wwAxxww..
+..wxxxxxw..
+..wxxxxbw..
+ .waxxxaw.
+..wbxxxxw..
+..wxxxxxw..
+..wwxxOww..
+ ..wwWww...
+ .........
+  ..  ..
+ENDMAP
+
+NAME:    hangedman_tar_grid_catacomb
+TAGS:    transparent
+KMONS:   O = rotting devil / shadow imp w:20 / nothing
+KFEAT:   A = stone_arch
+SHUFFLE: o@O& / O&o@
+SUBST:   o = ., & = x
+NSUBST:  O = 1:O / *:A
+TILE:    c = wall_cobalt_stone
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+    x&xxxx&x
+    &.OxxO.&
+    x.cccc.x
+   xx..cc..xx
+  xx..cccc..xx
+ xx....cc....xx
+xx....cccc....xx
+x......cc......x
+xx....cccc....xx
+ xxxx..cc..xxxx
+    x.cccc.x
+    @.oxxo.@
+    x@xxxx@x
 ENDMAP
 
 ##############################################################################

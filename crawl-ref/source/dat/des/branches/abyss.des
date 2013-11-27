@@ -7,11 +7,11 @@
 # vaults will be rejected at compile time, and other orientations will produce
 # weird results.
 
-# Since abyssal stairs don't spawn at the bottom of the Abyss,
-# replace a vault's empty guarded floor with a floor item at the bottom.
-# FIXME: regardless of the abyss exit vault's code, sometimes vaults don't place
-# the exit or stair at all? Only with proper level generation, though, not &L.
 {{
+ -- Since abyssal stairs don't spawn at the bottom of the Abyss,
+ -- replace a vault's empty guarded floor with a floor item at the bottom.
+ -- FIXME: regardless of the abyss exit vault's code, sometimes vaults don't place
+ -- the exit or stair at all? Only with proper level generation, though, not &L.
 function init_abyss_exit(e, glyph)
   if you.depth() == dgn.br_depth(you.branch()) then
     if crawl.random2(10) > 3 then
@@ -57,10 +57,10 @@ O
 ENDMAP
 
 NAME:    minmay_room_of_horrors
-TAGS:    nolayout_encompass
+TAGS:    nolayout_encompass luniq_hellpanabyss_threat_entry
 MONS:    small abomination, large abomination, unseen horror / chaos spawn
+SHUFFLE: 123
 : abyss_entry(_G, '_')
-SHUFFLE: 1234
 MAP
 xxxxxx
 x3113x
@@ -72,6 +72,7 @@ ENDMAP
 
 NAME:  marbit_kobold_abyss_entry
 TAGS:  no_monster_gen nolayout_encompass
+WEIGHT: 5
 MONS:  big kobold ; dart ego:dispersal, kobold demonologist
 : abyss_entry(_G, '_')
 MAP
@@ -110,6 +111,7 @@ ENDMAP
 
 NAME:    abyss_entry_glasseish
 TAGS:    nolayout_encompass
+WEIGHT:  5
 : abyss_entry(_G, 'O')
 KPROP:   T = no_rtele_into
 SUBST:   T : T l 1 2 A X
