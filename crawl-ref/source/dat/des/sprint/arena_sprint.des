@@ -704,34 +704,25 @@ function arena_sprint_init_boss_table()
     if crawl.coinflip() then
         bs[1] = {"place:Snake", "aizul hd:7 hp:120 /\
                  naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:130 /\
-                 anaconda name:giant n_adj n_noc hp:130 col:lightred /\
-                 black mamba name:dark n_adj n_noc col:darkgrey hp:130 /\
-                 naga mage name:naga_archmage n_rpl n_des n_noc col:magenta hp:130",
+                 anaconda name:giant n_adj n_noc hp:130 col:lightred",
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra /\
-                 swamp dragon name:elder n_adj n_noc col:cyan hp:130 /\
-                 swamp drake name:stinky n_adj n_noc col:cyan hp:130 /\
                  wizard name:witch n_rpl n_des n_noc col:green hp:130 \
-                    spells:mephitic_cloud;.;summon_hydra;.;invisibility;teleport_self /\
-                 bog body name:big n_adj n_noc col:blue hp:130",
+                    spells:mephitic_cloud;.;summon_hydra;.;invisibility;teleport_self",
                  "decaying rune of zot"}
     end
 
     if crawl.coinflip() then
         bs[2] = {"place:Spider", "arachne hp:250 /\
                  wolf spider name:dire n_adj n_noc col:blue hp:300 /\
-                 emperor scorpion name:ancient n_adj n_noc hp:250 /\
-                 ghost moth name:greater n_adj n_noc col:lightmagenta hp:200 /\
                  jumping spider name:phase_spider n_rpl n_des never_corpse \
                     col:lightgreen spells:teleport_self hp:300",
                  "gossamer rune of zot"}
     else
         bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 /\
                  siren name:succubus tile:mons_succubus n_rpl n_des n_spe \
-                     col:lightmagenta hp:300 spells:malign_gateway perm_ench:flight /\
-                 harpy name:queen n_suf n_noc col:lightgreen hp:260 /\
-                 manticore name:hardcore n_adj n_noc col:lightred hp:400",
+                     col:lightmagenta hp:300 spells:malign_gateway perm_ench:flight",
                  "barnacled rune of zot"}
     end
 

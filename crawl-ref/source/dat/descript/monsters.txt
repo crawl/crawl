@@ -3231,57 +3231,21 @@ is intended to represent some creature or personage, or is completely abstract.
 One thing is certain: it is profoundly disturbing.
 %%%%
 ### Arena sprint boss renames
-ancient emperor scorpion
-
-<emperor scorpion>
-%%%%
-big bog body
-
-<bog body>
-%%%%
-dark black mamba
-
-<black mamba>
-%%%%
 dire wolf spider
 
 <wolf spider>
-%%%%
-elder swamp dragon
-
-<swamp dragon>
 %%%%
 giant anaconda
 
 <anaconda>
 %%%%
-greater ghost moth
-
-<ghost moth>
-%%%%
 greater orb of eyes
 
 <great orb of eyes>
 %%%%
-hardcore manticore
-
-<manticore>
-%%%%
-harpy queen
-
-<harpy>
-%%%%
-naga archmage
-
-<naga mage>
-%%%%
 naga warlord
 
 <naga warrior>
-%%%%
-stinky swamp drake
-
-<swamp drake>
 %%%%
 sulfuric acid blob
 
