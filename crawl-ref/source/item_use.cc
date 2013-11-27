@@ -2182,9 +2182,6 @@ void drink(int slot)
     count_action(CACT_USE, OBJ_POTIONS);
     you.turn_is_over = true;
 
-    if (you.species != SP_VAMPIRE)
-        lessen_hunger(40, true);
-
     // This got deferred from the it_use2 switch to prevent SIGHUP abuse.
     if (pot_type == POT_EXPERIENCE)
         level_change();
