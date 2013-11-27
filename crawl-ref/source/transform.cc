@@ -1323,15 +1323,24 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
     case TRAN_TREE:
         mpr("You feel less woody.", MSGCH_DURATION);
-        if (grd(you.pos()) == DNGN_DEEP_WATER && you.species == SP_TENGU
-            && you.experience_level >= 5)
+        if (grd(you.pos()) == DNGN_DEEP_WATER)
         {
-            // Flight was disabled, need to turn it back NOW.
-            if (you.experience_level >= 15)
+            if (beogh_water_walk() || species_likes_water(you.species))
+                ; // nothing to do
+            else if (you.racial_permanent_flight()
+                  || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
+            {
                 you.attribute[ATTR_PERM_FLIGHT] = 1;
-            else
+                mpr("You fly out of the water.");
+            }
+            else if (you.species == SP_TENGU
+                     && you.experience_level >= 5)
+            {
                 you.increase_duration(DUR_FLIGHT, 50, 100);
-            mpr("You frantically escape the water.");
+                mpr("You frantically fly out of the water.");
+            }
+            else
+                fall_into_a_pool(you.pos(), true, DNGN_DEEP_WATER);
         }
         notify_stat_change(STAT_STR, -10, true,
                      "losing the tree transformation");
