@@ -2271,4 +2271,58 @@
       }
     },
 
+    {  MST_OGRE_MAGE_I,
+      {
+       SPELL_HASTE_OTHER,
+       SPELL_PARALYSE,
+       SPELL_HASTE,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_CONFUSE,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_OGRE_MAGE_II,
+      {
+       SPELL_HASTE_OTHER,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_INVISIBILITY,
+       SPELL_CONFUSE,
+       SPELL_SLOW,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_OGRE_MAGE_III,
+      {
+       SPELL_HASTE_OTHER,
+       SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+       SPELL_BLINK,
+       SPELL_BOLT_OF_FIRE,
+       SPELL_BOLT_OF_COLD,
+       SPELL_MINOR_HEALING
+      }
+    },
+
+    {  MST_OGRE_MAGE_IV,
+      {
+       SPELL_HASTE_OTHER,
+       SPELL_STING,
+       SPELL_BLINK,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_BANISHMENT,
+       SPELL_MINOR_HEALING
+      }
+    },
+
+    {  MST_OGRE_MAGE_V,
+      {
+       SPELL_HASTE_OTHER,
+       SPELL_THROW_FLAME,
+       SPELL_INVISIBILITY,
+       SPELL_TELEPORT_OTHER,
+       SPELL_FIREBALL,
+       SPELL_TELEPORT_OTHER
+      }
+    },
 #endif
