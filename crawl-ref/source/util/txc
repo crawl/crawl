@@ -234,8 +234,7 @@ class FullWidthTextWrapper(TextWrapper):
         if 'no_space' in kwargs:
             kwargs.pop('no_space')
             # Those languages don't use spaces. Break lines on punctuation.
-            self.wordsep_simple_re = re.compile(r'(\s+|[^\s\w]*\w+[^0-9\W]'
-                                                u'[、。，])')
+            self.wordsep_simple_re = re.compile(u'([\s、。，！：—；）]+)')
         TextWrapper.__init__(self, **kwargs)
 
     def _split(self, text):
