@@ -1451,9 +1451,7 @@ bool undead_mutation_rot(bool is_beneficial_mutation)
 {
     if (you.is_undead == US_SEMI_UNDEAD)
     {
-        // Let beneficial mutation potions work at satiated or higher
-        // for convenience
-        if (is_beneficial_mutation && you.hunger_state >= HS_SATIATED)
+        if (is_beneficial_mutation)
             return false;
         switch (you.hunger_state)
         {
