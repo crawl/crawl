@@ -3,29 +3,28 @@ welcome
 
 <white>Willkommen bei Dungeon Crawl!</white>
 
-Deine Aufgabe ist es einen <input>{{ return you.race() }} {{ return you.class()
-}}</input> sicher durch die Tiefen der Höhlen zu leiten und dabei den
-sagenhaften Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei
-deinen ersten Versuchen sollte entdecken das Hauptziel sein. Versuche so tief
-wie möglich zu erforschen, aber nehm dich in Acht : der Tod schleicht um jede
-Ecke!
+Deine Aufgabe ist es einen <w>{{ return you.race() }} {{ return you.class()
+}}</w> sicher durch die Tiefen der Höhlen zu leiten und dabei den sagenhaften
+Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei deinen ersten
+Versuchen sollte entdecken das Hauptziel sein. Versuche so tief wie möglich zu
+erforschen, aber nehm dich in Acht : der Tod schleicht um jede Ecke!
 
 Für jetzt merke die die folgenden Tasten und Funktionen:
- <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> - zeigt die Gegenstände und die
+ <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - zeigt die Gegenstände und die
 Befehle
- <white>$cmd[CMD_SAVE_GAME]</white> - speichert das Spiel um später
+ <input>$cmd[CMD_SAVE_GAME]</input>  - speichert das Spiel um später
 fortzufahren (aber bedenke das der Tod permanent ist)
- <white>$cmd[CMD_LOOK_AROUND]</white> - untersucht etwas in deiner Nähe
+ <input>$cmd[CMD_LOOK_AROUND]</input>  - untersucht etwas in deiner Nähe
 
 Der Hinweismodus wird dir helfen Crawl zu spielen ohne irgendwelche Handbücher
 zu lesen. Falls du es noch nicht versucht hast möchtest du vielleicht die
 Einführung ausprobieren. Und wenn es dich dann noch interessiert bekommst du
 noch mehr Informationen in den folgenden doks / Verzeichnissen (die man auch
 alle im Spiel selbst lesen kann):
- <lightblue>quickstart.txt</lightblue> - eine Kurzeinführung in Crawl.
- <lightblue>crawl_manual.txt</lightblue> - Beinhaltet alle Details über  Arten,
-Magie, Fähigkeiten, usw.
- <lightblue>options_guide.txt</lightblue> - Crawl's Interface ist sehr gut an
+ <lightblue>quickstart.txt</lightblue>     - eine Kurzeinführung in Crawl.
+ <lightblue>crawl_manual.txt</lightblue>   - Beinhaltet alle Details über
+Arten, Magie, Fähigkeiten, usw.
+ <lightblue>options_guide.txt</lightblue>  - Crawl's Interface ist sehr gut an
 eigene Bedürfnisse anpassbar.  Dieses Dokument erklärt alle Optionen.
 
 Viel Spass beim Crawlen!
@@ -49,12 +48,11 @@ death berserker unberserked
 Vergiss nicht die Berserkerwut zu nutzen wenn du gegen besonders schwierige
 Gegner kämpfst. Das ist zwar riskant, macht dich aber schneller und kräftiger.
 {{
-  if you.hunger() < 3
-    then return "Berserkerwut ist nicht möglich wenn du sehr hungrig oder krank
-bist, " ..
-                "deswegen solltest du jederzeit Satt sein, nur für den Fall "
-..
-                "das du in Raserei verfallen musst." end
+    if you.hunger() < 3 then
+        return "Berserkerwut ist nicht möglich wenn du sehr hungrig oder " ..
+               "krank bist, deswegen solltest du jederzeit Satt sein, nur " ..
+               "für den Fall das du in Raserei verfallen musst."
+    end
 }}
 %%%%
 death ranger melee
@@ -129,10 +127,10 @@ wird ein Druck auf <input>$cmd[CMD_INTERLEVEL_TRAVEL] Eingabe</input> or
 finished stashes
 
 Du kannst unter allen Gegenstände in den Höhlen mit dem Befehl
-<input>$cmd[CMD_SEARCH_STASHES]</input> suchen. Zum
-Beispiel,<input>$cmd[CMD_SEARCH_STASHES] "Messer"</input> listet alle Messer
-auf. Dann kannst du zu einem der Punkte reisen. Es ist genauso möglich Worte
-wie <input>"Shop"</input> oder <input>"Altar"</input> einzugeben.
+<input>$cmd[CMD_SEARCH_STASHES]</input> suchen. Zum Beispiel,
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dolch"</w> listet alle dolche auf.
+Dann kannst du zu einem der Punkte reisen. Es ist genauso möglich Worte wie
+<w>"Shop"</w> oder <w>"Altar"</w> einzugeben.
 %%%%
 finished random 0
 
@@ -140,8 +138,8 @@ Das Spiel legt automatisch ein Logbuch für deine Charaktere an. Benutze
 <input>$cmd[CMD_DISPLAY_COMMANDS]:</input> um es zu lesen. Mit dem
 <input>$cmd[CMD_MAKE_NOTE]</input> Befehl kannst du selbst Notizen hinzufügen.
 Sobald dein Charakter umkommt werden zwei Archiv Dateien im Ordner
-<input>morgue/</input> angelegt. Die Eine mit der Endung .txt enthält eine
-Kopie deines Logbuches. Währen des Spiels kannst du mit
+<w>morgue/</w> angelegt. Die Eine mit der Endung .txt enthält eine Kopie deines
+Logbuches. Währen des Spiels kannst du mit
 <input>$cmd[CMD_CHARACTER_DUMP]</input> ein Dump-File bzw. eine Momentaufnahme
 erzeugen.
 %%%%
@@ -158,16 +156,16 @@ Für mehr Informationen über Makros gebe
 finished random 2
 
 Das Interface kann prima auf eigene Bedürfnisse angepasst werden. Alle Optionen
-werden in der Datei <input>options_guide.txt</input> erklärt, diese findet man
-in dem <input>docs</input> Ordner. Die Optionen selber werden in den
-<input>init.txt</input> oder <input>.crawlrc</input> festgelegt. Crawl wird
-sich schon beklagen wenn es eine dieser Dateien nicht finden kann.
+werden in der Datei <w>options_guide.txt</w> erklärt, diese findet man in dem
+<w>docs</w> Ordner. Die Optionen selber werden in den <w>init.txt</w> oder
+<w>.crawlrc</w> festgelegt. Crawl wird sich schon beklagen wenn es eine dieser
+Dateien nicht finden kann.
 %%%%
 finished random 3
 
 Um Rat und Hilfe fragst du am besten andere Crawl-Spieler auf dem
-<input>##crawl</input> IRC (Internet Relay Chat) Kanal auf freenode
-(<input>irc.freenode.net<input>).
+<w>##crawl</w> IRC (Internet Relay Chat) Kanal auf freenode
+(<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 
@@ -180,9 +178,8 @@ Information erneut lesen.
 %%%%
 HINT_CONVERT Xom
 
-Du bist gerade zur Anbetung von <input>Xom</input> konvertiert. Du kannst Xom
-bei Laune halten indem du absolut nichts tust damit dieser Gott sich an dir
-langweilt.
+Du bist gerade zur Anbetung von <w>Xom</w> konvertiert. Du kannst Xom bei Laune
+halten indem du absolut nichts tust damit dieser Gott sich an dir langweilt.
 
 Wenn du Xom bei Laune hältst dann behandelt er dich wie ein Spielzeug, er wird
 dir zufällig helfen oder schaden, ganz zu seinem Vergnügen; andererseits wird
@@ -190,9 +187,9 @@ er dich wie ein missbilligtes Spielzeug behandeln.
 %%%%
 HINT_CONVERT
 
-Du bist gerade zur Anbetung von <input>{{ return you.god() }}</input>
-konvertiert. Deine Frömmigkeit (Göttliche Gefälligkeit) wird mit der Zeit
-schrittweise abnehmen, und sobald sie verlischt wird dich {{ return you.god()
+Du bist gerade zur Anbetung von <w>{{ return you.god() }}</w> konvertiert.
+Deine Frömmigkeit (Göttliche Gefälligkeit) wird mit der Zeit schrittweise
+abnehmen, und sobald sie verlischt wird dich {{ return you.god()
 }} verbannen und bestrafen. Allerdings kannst du das verhindern und sogar genug
 Frömmigkeit erhalten um Macht und göttliche Gaben zu erlangen indem du Dinge
 tust die {{ return you.god() }} gefallen. Aber keine Panik: du beginnst mit
@@ -209,7 +206,7 @@ HINT_SEEN_FIRST_OBJECT
 <console>$1 </console> ist ein Gegenstand. Wenn du dort hin gehst und
 <input>g</input> oder <input>,</input> drückst wirst du es
 aufsammeln.<console>Normalerweise werden Gegenstände mit Symbolen wie
-<input>%?!"=()[</input> angezeigt. </console><tiles>Du kannst Gegenstände auch
+<w>%?!"=()[</w> angezeigt. </console><tiles>Du kannst Gegenstände auch
 aufsammeln indem du die <input>linke Maustaste</input> drückst wenn du auf dem
 Feld über ihm stehst. </tiles> Außerdem werden einige Dinge normalerweise
 automatisch aufgesammelt.<tiles>(Auf dem Feld werden diese dann grün

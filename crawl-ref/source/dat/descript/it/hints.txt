@@ -3,27 +3,26 @@ welcome
 
 <white>Benvenuto a Dungeon Crawl!</white>
 
-Il tuo obiettivo è condurre un <input>{{ return you.race() }} {{ return
-you.class()
-}}</input> vivo sino alle profondità del dungeon, catturando la Sfera di Zot
-per poi tornare in superficie. All'inizio, però, lascia che sia la scoperta il
-tuo obiettivo principale. Prova a scendere più in basso che puoi ma bada! La
-morte si nasconde dietro ogni angolo.
+Il tuo obiettivo è condurre un <w>{{ return you.race() }} {{ return you.class()
+}}</w> vivo sino alle profondità del dungeon, catturando la Sfera di Zot per
+poi tornare in superficie. All'inizio, però, lascia che sia la scoperta il tuo
+obiettivo principale. Prova a scendere più in basso che puoi ma bada! La morte
+si nasconde dietro ogni angolo.
 
 Per il momento, basta che ti ricordi questi comandi e le loro funzioni:
   <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - mostra gli oggetti e i comandi
-  <input>$cmd[CMD_SAVE_GAME]</input> - salva il gioco, per essere ripreso dopo
+  <input>$cmd[CMD_SAVE_GAME]</input>  - salva il gioco, per essere ripreso dopo
 (ma ricorda che la morte è permanente)
-  <input>$cmd[CMD_LOOK_AROUND]</input> - esamina qualcosa nella tuoi pressi
+  <input>$cmd[CMD_LOOK_AROUND]</input>  - esamina qualcosa nella tuoi pressi
 
 La modalità suggerimenti ti aiuterà a giocare a Crawl senza leggere alcuna
 documentazione. Se ancora non l'hai fatto, leggi il tutorial. Se ti senti
 intrigato, ci sono più informazioni disponibili nei seguenti files dalla
 cartella docs/ (che possono essere tutti letti durante il gioco):
-  <lightblue>quickstart.txt</lightblue> - Una brevissima guida a Crawl.
-  <lightblue>crawl_manual.txt</lightblue> - Questo contiene tutti i dettagli
+  <lightblue>quickstart.txt</lightblue>      - Una brevissima guida a Crawl.
+  <lightblue>crawl_manual.txt</lightblue>    - Questo contiene tutti i dettagli
 sulle specie, magie, abilità, ecc.
-  <lightblue>options_guide.txt</lightblue> - L'interfaccia di Crawl è molto
+  <lightblue>options_guide.txt</lightblue>i  - L'interfaccia di Crawl è molto
 configurabile. Questo documento spiega tutte le opzioni.
 
 Buon Crawling!
@@ -121,10 +120,9 @@ finished stashes
 
 Puoi cercare fra tutti gli oggetti esistenti nel dungeon con il comando
 <input>$cmd[CMD_SEARCH_STASHES]</input>. Per esempio,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <input>"coltello"</input> farà la lista
-di tutti i coltelli. Puoi in seguito viaggiare fino ad uno dei posti indicati.
-È anche possibile scrivere parole come <input>"negozio"</input> o
-<input>"altare"</input>.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"pugnale"</w> farà la lista di tutti
+i pugnali. Puoi in seguito viaggiare fino ad uno dei posti indicati. È anche
+possibile scrivere parole come <w>"negozio"</w> o <w>"altare"</w>.
 %%%%
 finished random 0
 
@@ -132,8 +130,8 @@ Il gioco tiene un diario automatizzato per i tuoi personaggi. Usa
 <input>$cmd[CMD_DISPLAY_COMMANDS]:</input> per leggerlo. Puoi scrivere
 manualmente delle note col comando <input>$cmd[CMD_MAKE_NOTE]</input>. Una
 volta che il tuo personaggio perisce, duo file morgue sono lasciati nella
-cartella <input>morgue/</input>. Quella che finisce in .txt contiene una copia
-del tuo diario. Durante il gioco, puoi creare un file dump con
+cartella <w>morgue/</w>. Quella che finisce in .txt contiene una copia del tuo
+diario. Durante il gioco, puoi creare un file dump con
 <input>$cmd[CMD_CHARACTER_DUMP]</input>.
 %%%%
 finished random 1
@@ -148,16 +146,14 @@ macro, premi <input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
 finished random 2
 
 L'interfaccia può essere altamente personalizzata. Tutte le opzioni sono
-spiegate nel file <input>options_guide.txt</input> che può essere trovato nella
-cartella <input>docs</input>. Le opzioni sono in <input>init.txt</input> o
-<input>.crawlrc</input>. Crawl darà problemi se non potrà trovare uno di questi
-due files.
+spiegate nel file <w>options_guide.txt</w> che può essere trovato nella
+cartella <w>docs</w>. Le opzioni sono in <w>init.txt</w> o <w>.crawlrc</w>.
+Crawl darà problemi se non potrà trovare uno di questi due files.
 %%%%
 finished random 3
 
 Puoi chiedere aiuto e consigli agli altri giocatori di Crawl sul canale di IRC
-(Internet Relay Chat) <input>##crawl</input> sul freenode
-(<input>irc.freenode.net</input>).
+(Internet Relay Chat) <w>##crawl</w> sul freenode (<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 
@@ -170,8 +166,8 @@ informazione.
 %%%%
 HINT_CONVERT Xom
 
-Hai appena iniziato a venerare <input>Xom</input>. Puoi far contento Xom
-facendolo divertire; non devi MAI far annoiare questa divinità!
+Hai appena iniziato a venerare <w>Xom</w>. Puoi far contento Xom facendolo
+divertire; non devi MAI far annoiare questa divinità!
 
 Se fai divertire Xom ti tratterà come un giocattolino, aiutandoti e ferendoti a
 caso per il suo divertimento; in caso contrario ti tratterà come un vecchio
@@ -179,13 +175,13 @@ giocattolo.
 %%%%
 HINT_CONVERT
 
-Hai appena iniziato a venerare <input>{{ return you.god() }}</input>. Il tuo
-favore divino (o pietà divina) decrescerà naturalmente con il tempo, e se
-finisce {{ return you.god() }} ti scomunicherà e ti punirà. Però puoi evitarlo,
-e puoi addirittura ottenere abbastanza favore divino per ottenere poteri
-aggiuntivi e doni divini, tutto ciò soddisfacendo {{ return you.god() }}. Ma
-non preoccuparti: inizi sempre con un ammontare decente di pietà, scacciando
-così il pericolo di scomunica.
+Hai appena iniziato a venerare <w>{{ return you.god() }}</w>. Il tuo favore
+divino (o pietà divina) decrescerà naturalmente con il tempo, e se finisce {{
+return you.god() }} ti scomunicherà e ti punirà. Però puoi evitarlo, e puoi
+addirittura ottenere abbastanza favore divino per ottenere poteri aggiuntivi e
+doni divini, tutto ciò soddisfacendo {{ return you.god() }}. Ma non
+preoccuparti: inizi sempre con un ammontare decente di pietà, scacciando così
+il pericolo di scomunica.
 
 Puoi vedere ciò che piace e non piace alla tua divinità, il tuo rapporto e
 abilità divine premendo <input>^</input><localtiles> (in via alternativa, puoi
@@ -196,10 +192,10 @@ HINT_SEEN_FIRST_OBJECT
 Quel <console>$1 </console> è un oggetto. Se ti ci vai sopra e premi
 <input>$cmd[CMD_PICKUP]</input>, lo raccoglierai. <console> Generalmente, gli
 oggetti sono sono simboleggiati da caratteri che non sono lettere come
-<input>%?!"=()[</input>.</console><tiles> Puoi anche raccogliere un oggetto
-cliccandoci col <input>tasto sinistro del mouse</input> stando sulla sua
-casella.</tiles> Inoltre, diversi tipi di oggetti saranno raccolti
-automaticamente. <tiles>Questi saranno marchiati da un contorno verde.</tiles>
+<w>%?!"=()[</w>.</console><tiles> Puoi anche raccogliere un oggetto cliccandoci
+col <input>tasto sinistro del mouse</input> stando sulla sua casella.</tiles>
+Inoltre, diversi tipi di oggetti saranno raccolti automaticamente.
+<tiles>Questi saranno marchiati da un contorno verde.</tiles>
 
 Una volta nel tuo inventario, puoi buttarlo via con <tiles>a <input>Shift-click
 sinistro</input>. Ogni volta che tu fai <input>click-destro</input> su un
