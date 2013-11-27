@@ -597,7 +597,7 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 {
     if (target->is_player())
     {
-        potion_effect(pot_eff, pot_pow, false, false);
+        potion_effect(pot_eff, pot_pow, nullptr, false);
         return;
     }
 

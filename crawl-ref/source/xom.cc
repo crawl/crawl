@@ -1127,7 +1127,7 @@ static int _xom_do_potion(bool debug = false)
     }
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
 
-    potion_effect(pot, 150, false, false, false);
+    potion_effect(pot, 150, nullptr, false, false);
     level_change(); // potion_effect() doesn't do this anymore
 
     return XOM_GOOD_POTION;

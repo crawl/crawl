@@ -2159,19 +2159,8 @@ void drink(int slot)
                             && you.experience_level > 1);
     potion_type pot_type = (potion_type)potion.sub_type;
 
-    // Identify item and type.
-    if (potion_effect(static_cast<potion_type>(potion.sub_type),
-                      40, true, alreadyknown))
-    {
-        set_ident_flags(potion, ISFLAG_IDENT_MASK);
-        set_ident_type(potion, ID_KNOWN_TYPE);
-        mpr("It was a " + potion.name(DESC_QUALNAME) + ".");
-    }
-    else if (!alreadyknown)
-    {
-        // Because all potions are identified upon quaffing we never come here.
-        set_ident_type(potion, ID_TRIED_TYPE);
-    }
+    potion_effect(static_cast<potion_type>(potion.sub_type),
+                  40, &potion, alreadyknown);
 
     if (!alreadyknown && dangerous)
     {
@@ -2265,7 +2254,7 @@ static bool _drink_fountain()
 
     // Good gods do not punish for bad random effects. However, they do
     // punish drinking from a fountain of blood.
-    potion_effect(fountain_effect, 100, true, feat != DNGN_FOUNTAIN_SPARKLING, true);
+    potion_effect(fountain_effect, 100, nullptr, feat != DNGN_FOUNTAIN_SPARKLING, true);
 
     bool gone_dry = false;
     if (feat == DNGN_FOUNTAIN_BLUE)

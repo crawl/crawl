@@ -20,6 +20,8 @@
 #include "godconduct.h"
 #include "hints.h"
 #include "item_use.h"
+#include "itemname.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -46,20 +48,19 @@
  *
  * @return If the potion was identified.
  */
-bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
+void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_known,
                    bool from_fountain)
 {
-    bool effect = true;  // current behaviour is all potions id on quaffing
-
     pow = min(pow, 150);
 
+    bool drank_it = potion || from_fountain;
     int factor = (you.species == SP_VAMPIRE
                   && you.hunger_state < HS_SATIATED
-                  && drank_it ? 2 : 1);
+                  && potion ? 2 : 1);
 
     // Knowingly drinking bad potions is much less amusing.
     int xom_factor = factor;
-    if (drank_it && was_known)
+    if (potion && was_known)
     {
         xom_factor *= 2;
         if (!player_in_a_dangerous_place())
@@ -279,7 +280,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
             // You can't turn invisible while haloed or glowing
             // naturally, but identify the effect anyway.
             mpr("You briefly turn translucent.");
-            return true;
+            return;
         }
         else if (you.backlit())
         {
@@ -375,7 +376,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
     case POT_MAGIC:
         // Allow repairing rot, disallow going through Death's Door.
         if (you.species == SP_DJINNI)
-            return potion_effect(POT_HEAL_WOUNDS, pow, drank_it, was_known);
+            return potion_effect(POT_HEAL_WOUNDS, pow, potion, was_known, from_fountain);
 
         inc_mp(10 + random2avg(28, 3));
         mpr("Magic courses through your body.");
@@ -463,5 +464,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
     }
 
-    return !was_known && effect;
+    if (potion && !was_known)
+    {
+        set_ident_flags(*potion, ISFLAG_IDENT_MASK);
+        set_ident_type(*potion, ID_KNOWN_TYPE);
+        mpr("It was a " + potion->name(DESC_QUALNAME) + ".");
+    }
 }
