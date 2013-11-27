@@ -121,12 +121,23 @@ def bind_server():
 
     if bind_nonsecure:
         server = tornado.httpserver.HTTPServer(application, **kwargs)
-        server.listen(bind_port, bind_address)
+        try:
+            listens = bind_pairs
+        except NameError:
+            listens = ( (bind_address, bind_port), )
+        for (addr, port) in listens:
+            server.listen(port, addr)
         servers.append(server)
     if ssl_options:
+        # TODO: allow different ssl_options per bind pair
         server = tornado.httpserver.HTTPServer(application,
                                                ssl_options = ssl_options, **kwargs)
-        server.listen(ssl_port, ssl_address)
+        try:
+            listens = ssl_bind_pairs
+        except NameError:
+            listens = ( (ssl_address, ssl_port), )
+        for (addr, port) in listens:
+            server.listen(port, addr)
         servers.append(server)
 
     return servers
