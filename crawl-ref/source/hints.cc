@@ -4540,11 +4540,11 @@ void tutorial_msg(const char *key, bool end)
     text = untag_tiles_console(text);
 
     if (end)
-        screen_end_game(replace_all(text, "\n\n", "\n"));
+        screen_end_game(text);
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
-    vector<string> chunks = split_string("\n", text);
+    vector<string> chunks = split_string("\n", text, false);
     for (size_t i = 0; i < chunks.size(); i++)
         mpr(chunks[i], MSGCH_TUTORIAL);
 
