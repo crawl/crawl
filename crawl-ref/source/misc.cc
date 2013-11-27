@@ -1176,9 +1176,6 @@ void search_around()
     if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         skill += you.piety * 2;
 
-     if (you.duration[DUR_SWIFTNESS])
-        skill = skill / 2;
-
     int farskill = skill;
     if (int mut = you.mutation[MUT_BLURRY_VISION])
         farskill >>= mut;

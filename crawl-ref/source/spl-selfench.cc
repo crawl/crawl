@@ -189,6 +189,12 @@ spret_type cast_swiftness(int power, bool fail)
         return SPRET_ABORT;
     }
 
+    if (you.duration[DUR_SWIFTNESS])
+    {
+        mpr("This spell is already in effect.");
+        return SPRET_ABORT;
+    }
+
     fail_check();
 
     if (you.in_liquid())
@@ -199,12 +205,9 @@ spret_type cast_swiftness(int power, bool fail)
                                              : "liquid ground");
     }
 
-    // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
-    // you're flying, for instance.
-    you.increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
-                          you.in_liquid()
-                              ? "You feel like you could be quicker."
-                              : "You feel quick.");
+    you.set_duration(DUR_SWIFTNESS, 12 + random2(power)/2, 30,
+                     "You feel quick.");
+    you.attribute[ATTR_SWIFTNESS] = you.duration[DUR_SWIFTNESS];
     did_god_conduct(DID_HASTY, 8, true);
 
     return SPRET_SUCCESS;

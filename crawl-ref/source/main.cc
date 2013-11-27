@@ -2568,9 +2568,27 @@ static void _decrement_durations()
                           "You have got your breath back.", 0, NULL,
                           MSGCH_RECOVERY);
 
-    _decrement_a_duration(DUR_SWIFTNESS, delay,
-                          "You feel sluggish.", coinflip(),
-                          "You start to feel a little slower.");
+    if (you.attribute[ATTR_SWIFTNESS] >= 0)
+    {
+        if (_decrement_a_duration(DUR_SWIFTNESS, delay,
+                                  "You feel sluggish.", coinflip(),
+                                  "You start to feel a little slower."))
+        {
+            // Start anti-swiftness.
+            you.duration[DUR_SWIFTNESS] = you.attribute[ATTR_SWIFTNESS];
+            you.attribute[ATTR_SWIFTNESS] = -1;
+        }
+    }
+    else
+    {
+        if (_decrement_a_duration(DUR_SWIFTNESS, delay,
+                                  "You no longer feel sluggish.", coinflip(),
+                                  "You start to feel a little faster."))
+        {
+            you.attribute[ATTR_SWIFTNESS] = 0;
+        }
+    }
+
     _decrement_a_duration(DUR_RESISTANCE, delay,
                           "Your resistance to elements expires.", coinflip(),
                           "You start to feel less resistant.");

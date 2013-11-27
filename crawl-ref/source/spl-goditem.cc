@@ -435,6 +435,9 @@ void antimagic()
         mpr("Your charged fireball dissipates.", MSGCH_DURATION);
     }
 
+    if (you.attribute[ATTR_SWIFTNESS] > 0)
+        you.attribute[ATTR_SWIFTNESS] = 0;
+
     // Post-berserk slowing isn't magic, so don't remove that.
     if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
         you.duration[DUR_SLOW] = max(you.duration[DUR_EXHAUSTED], 1);

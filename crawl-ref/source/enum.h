@@ -308,6 +308,7 @@ enum attribute_type
     ATTR_RECITE_TYPE,          // Recitation type.
     ATTR_RECITE_SEED,          // Recite text seed.
     ATTR_RECITE_HP,            // HP on start of recitation.
+    ATTR_SWIFTNESS,            // Duration of future antiswiftness.
     NUM_ATTRIBUTES
 };
 
