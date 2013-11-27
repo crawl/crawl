@@ -162,7 +162,7 @@ function pan_demonic_rune(e, glyph, place_lord)
     end
 end
 
-function pan_entry(e, glyph, noboss)
+function pan_entry_feature(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
     e.depth("Depths, D:21-")
     e.depth_chance("Depths:3", 10000)
@@ -173,13 +173,22 @@ function pan_entry(e, glyph, noboss)
     else
         e.kfeat(glyph .. " = enter_pandemonium")
     end
-    if not noboss then
+end
+
+function pan_entry_vault_contents(e, glyph)
+    e.tags("patrolling no_monster_gen nolayout_encompass")
+    e.mons("common demon")
+    e.mons("lesser demon")
+    if crawl.x_chance_in_y(you.depth() + 3, you.depth() + 5) then
+        e.tags("luniq_hellpanabyss_threat_entry")
         e.kmons(glyph .. " = green death / blizzard demon / balrug / "
                       .. "   cacodemon / hell beast / hellion / reaper / "
                       .. "   lorocyproca / tormentor / shadow demon")
+    else
+        e.subst("12 = .")
+        e.kmons(glyph .. " = lesser demon")
     end
 end
-
 }}
 
 
@@ -194,16 +203,17 @@ default-depth: Depths
 NAME: pan_entry
 TAGS: allow_dup can_overwrite replace_portal transparent fallback_enter_pan
 WEIGHT: 50
-: pan_entry(_G, 'O', true)
+: pan_entry_feature(_G, 'O', true)
 MAP
 O
 ENDMAP
 
-# Other entries; these ones appear to be derived from rand_demon Pan vaults.
+# Other entries; these ones are derived from rand_demon Pan vaults.
 NAME:   rand_demon_pan_entry_1
-TAGS:   patrolling no_monster_gen transparent nolayout_encompass
+TAGS:   transparent
 MONS:   common demon
-: pan_entry(_G, 'O')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 xxxxxxxx@@x
 x..1...x..x
@@ -218,9 +228,9 @@ x@@xxxxxxxx
 ENDMAP
 
 NAME:   rand_demon_pan_entry_3
-TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:   common demon
-: pan_entry(_G, 'O')
+TAGS:   mini_float transparent
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .x.x.x.x.x..
@@ -237,9 +247,9 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_4
-TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:   common demon
-: pan_entry(_G, 'O')
+TAGS:   mini_float transparent
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ...........
 .xxxxxxxxx.
@@ -255,9 +265,9 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_5
-TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:   common demon
-: pan_entry(_G, 'O')
+TAGS:   mini_float transparent
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 ...xx++xx...
@@ -274,10 +284,10 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_7
-TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:   common demon
+TAGS:   mini_float transparent
 NSUBST: ? = 1:O / 4:1 / *:.
-: pan_entry(_G, 'O')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .xxx....xxx.
@@ -294,10 +304,9 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_8
-TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:   common demon
-KFEAT:  O = enter_pandemonium
-: pan_entry(_G, 'O')
+TAGS:   mini_float transparent
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
  ...........
 ....xxxxxxx.
@@ -314,10 +323,10 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_9
-TAGS:   patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:   common demon
+TAGS:   mini_float transparent
 NSUBST: ^ = 4:1 / *:.
-: pan_entry(_G, 'O')
+: pan_entry_feature(_G, 'O')
+: pan_entry_vault_contents(_G, 'O')
 MAP
 ............
 .xxxxxxxxxx.
@@ -337,10 +346,10 @@ ENDMAP
 # More entries based on panlord vaults.
 
 NAME:  grunt_pan_entry_in_and_out
-TAGS:  patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:  common demon, lesser demon
-KMONS: d = any demon
-: pan_entry(_G, 'e')
+TAGS:  mini_float transparent
+SUBST: d = 112
+: pan_entry_feature(_G, 'e')
+: pan_entry_vault_contents(_G, 'e')
 MAP
 ............
 .x+xxxxxx+x.
@@ -357,10 +366,10 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_spiral
-TAGS:  patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:  common demon, lesser demon
-KMONS: d = any demon
-: pan_entry(_G, 'e')
+TAGS:  mini_float transparent
+SUBST: d = 112
+: pan_entry_feature(_G, 'e')
+: pan_entry_vault_contents(_G, 'e')
 MAP
 ............
 .x+xxxxxxxx.
@@ -377,10 +386,10 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_zigzag
-TAGS:  patrolling no_monster_gen mini_float transparent nolayout_encompass
-MONS:  common demon, lesser demon
-KMONS: d = any demon
-: pan_entry(_G, 'e')
+TAGS:  mini_float transparent
+SUBST: d = 112
+: pan_entry_feature(_G, 'e')
+: pan_entry_vault_contents(_G, 'e')
 MAP
 ............
 .xxxxxxxxxx.
