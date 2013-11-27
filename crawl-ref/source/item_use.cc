@@ -2159,8 +2159,11 @@ void drink(int slot)
                             && you.experience_level > 1);
     potion_type pot_type = (potion_type)potion.sub_type;
 
-    potion_effect(static_cast<potion_type>(potion.sub_type),
-                  40, &potion, alreadyknown);
+    if (!potion_effect(static_cast<potion_type>(potion.sub_type),
+                       40, &potion, alreadyknown))
+    {
+        return;
+    }
 
     if (!alreadyknown && dangerous)
     {

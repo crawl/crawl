@@ -48,7 +48,7 @@
  *
  * @return If the potion was identified.
  */
-void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_known,
+bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_known,
                    bool from_fountain)
 {
     pow = min(pow, 150);
@@ -280,7 +280,7 @@ void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             // You can't turn invisible while haloed or glowing
             // naturally, but identify the effect anyway.
             mpr("You briefly turn translucent.");
-            return;
+            return true;
         }
         else if (you.backlit())
         {
@@ -399,6 +399,9 @@ void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     }
 
     case POT_BERSERK_RAGE:
+        if (potion && was_known && !you.can_go_berserk(true, drank_it, false))
+            return false;
+
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
         {
             mpr("You feel slightly irritated.");
@@ -412,6 +415,12 @@ void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_CURE_MUTATION:
+        if (potion && was_known && undead_mutation_rot(true))
+        {
+            mpr(you.form == TRAN_LICH ? "You cannot mutate at present."
+                                      : "You cannot mutate.");
+            return false;
+        }
         mpr("It has a very clean taste.");
         for (int i = 0; i < 7; i++)
             if (random2(9) >= i)
@@ -419,6 +428,13 @@ void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_MUTATION:
+        if (potion && was_known && undead_mutation_rot(true))
+        {
+            mpr(you.form == TRAN_LICH ? "You cannot mutate at present."
+                                      : "You cannot mutate.");
+            return false;
+        }
+
         mpr("You feel extremely strange.");
         for (int i = 0; i < 3; i++)
             mutate(RANDOM_MUTATION, "potion of mutation", false);
@@ -430,6 +446,13 @@ void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     case POT_BENEFICIAL_MUTATION:
         if (undead_mutation_rot(true))
         {
+            if (potion && was_known)
+            {
+                mpr(you.form == TRAN_LICH ? "You cannot mutate at present."
+                                          : "You cannot mutate.");
+                return false;
+            }
+
             mpr("You feel dead inside.");
             mutate(RANDOM_GOOD_MUTATION, "potion of beneficial mutation",
                 true, false, false, true);
@@ -454,6 +477,12 @@ void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_LIGNIFY:
+        if (potion && was_known && !transform(0, TRAN_TREE, false, true))
+        {
+            mpr("You can't become a tree right now.");
+            return false;
+        }
+
         if (transform(30, TRAN_TREE, !was_known))
         {
             you.transform_uncancellable = true;
@@ -470,4 +499,6 @@ void potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         set_ident_type(*potion, ID_KNOWN_TYPE);
         mpr("It was a " + potion->name(DESC_QUALNAME) + ".");
     }
+
+    return true;
 }
