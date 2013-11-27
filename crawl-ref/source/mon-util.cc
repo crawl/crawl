@@ -2136,13 +2136,20 @@ vector<mon_spellbook_type> mons_spellbook_list(monster_type mon_type)
         break;
 
     case MONS_WIZARD:
-    case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
         books.push_back(MST_WIZARD_I);
         books.push_back(MST_WIZARD_II);
         books.push_back(MST_WIZARD_III);
         books.push_back(MST_WIZARD_IV);
         books.push_back(MST_WIZARD_V);
+        break;
+
+    case MONS_OGRE_MAGE:
+        books.push_back(MST_OGRE_MAGE_I);
+        books.push_back(MST_OGRE_MAGE_II);
+        books.push_back(MST_OGRE_MAGE_III);
+        books.push_back(MST_OGRE_MAGE_IV);
+        books.push_back(MST_OGRE_MAGE_V);
         break;
 
     case MONS_DRACONIAN_KNIGHT:
@@ -2213,10 +2220,6 @@ static void _mons_load_spells(monster* mon)
             break;
         }
     }
-
-    // (Dumb) special casing to give ogre mages Haste Other. -cao
-    if (mon->type == MONS_OGRE_MAGE)
-        mon->spells[0] = SPELL_HASTE_OTHER;
 }
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly

@@ -3218,11 +3218,6 @@ static string _monster_spells_description(const monster_info& mi)
                book_spells.push_back(spell);
        }
 
-       // Special casing for Ogre Mages (they always get their first spell
-       // changed to Haste Other).
-       if (mi.type == MONS_OGRE_MAGE)
-           book_spells[0] = SPELL_HASTE_OTHER;
-
        // Display spells for this book
        if (num_books > 1)
            result << (caster ? " Book " : " Set ") << i+1 << ": ";
