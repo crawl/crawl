@@ -326,7 +326,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         else
         {
             mpr("That potion was really gluggy!");
-            lessen_hunger(6000, true);
+            lessen_hunger(6040, true);
         }
         break;
 
