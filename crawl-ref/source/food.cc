@@ -2096,7 +2096,7 @@ void finished_eating_message(int food_type)
         break;
     case FOOD_AMBROSIA:                       // XXX: could put some more
         mpr("That ambrosia tasted strange."); // inspired messages here --evk
-        potion_effect(POT_CONFUSION, 0, false, false);
+        potion_effect(POT_CONFUSION, 0, nullptr, false);
         you.duration[DUR_AMBROSIA] += 30 + random2(41);
         // It will be converted to mp by normal food use (but not costs).
         break;
