@@ -2308,6 +2308,8 @@ int player_movement_speed(bool ignore_burden)
     // end up as a speed of three, which is about as fast as we want
     // the player to be able to go (since 3 is 3.33x as fast and 2 is 5x,
     // which is a bit of a jump, and a bit too fast) -- bwr
+    // Currently Haste takes 6 to 4, which is 2.5x as fast as delay 10
+    // and still seems plenty fast. -- elliptic
     if (mv < 6)
         mv = 6;
 
