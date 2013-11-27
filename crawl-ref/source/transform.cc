@@ -81,6 +81,8 @@ bool form_can_wear(transformation_type form)
 
 bool form_can_fly(transformation_type form)
 {
+    if (form == TRAN_TREE)
+        return false;
     if (you.racial_permanent_flight() && you.permanent_flight())
         return true;
     return form == TRAN_DRAGON || form == TRAN_BAT || form == TRAN_WISP;
@@ -535,6 +537,9 @@ int form_hp_mod()
 
 static bool _flying_in_new_form(transformation_type which_trans)
 {
+    if (which_trans == TRAN_TREE)
+        return false;
+
     // If our flight is uncancellable (or tenguish) then it's not from evoking
     if (you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
         || you.permanent_flight() && you.racial_permanent_flight())
@@ -583,7 +588,19 @@ bool feat_dangerous_for_form(transformation_type which_trans,
         return !form_likes_lava(which_trans);
 
     if (feat == DNGN_DEEP_WATER)
-        return !form_likes_water(which_trans) && !beogh_water_walk();
+    {
+        if (beogh_water_walk()
+            || species_likes_water(you.species)
+            || you.racial_permanent_flight())
+        {
+            return false;
+        }
+        // Trees are ok with deep water, but you need means of escaping
+        // once the transformation expires.
+        if (which_trans == TRAN_TREE)
+            return !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING);
+        return !form_likes_water(which_trans);
+    }
 
     return false;
 }
