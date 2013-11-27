@@ -71,7 +71,7 @@ public:
                                         int killernum = -1) = 0;
 
     virtual void set_position(const coord_def &c);
-    virtual const coord_def& pos() const { return position; }
+    const coord_def& pos() const { return position; }
 
     virtual bool self_destructs() { return false; }
 
