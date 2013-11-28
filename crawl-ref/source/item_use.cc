@@ -1102,7 +1102,7 @@ static int _prompt_ring_to_remove(int new_ring)
 
     mprf(MSGCH_PROMPT,
          "You're wearing all the rings you can. Remove which one?");
-    mpr("(<w>?</w> for menu, <w>Esc</w> to cancel)", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "(<w>?</w> for menu, <w>Esc</w> to cancel)");
 
     // FIXME: Needs TOUCH_UI version
 

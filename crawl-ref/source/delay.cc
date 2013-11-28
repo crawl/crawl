@@ -863,7 +863,7 @@ void handle_delay()
             break;
 
         case DELAY_BUTCHER:
-            mpr("You continue butchering the corpse.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue butchering the corpse.");
             break;
 
         case DELAY_BOTTLE_BLOOD:
@@ -916,7 +916,7 @@ void handle_delay()
                 stop_delay();
                 return;
             }
-            mpr("You continue drinking.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue drinking.");
             vampire_nutrition_per_turn(corpse, 0);
             break;
         }
@@ -1725,7 +1725,7 @@ void autotoggle_autopickup(bool off)
     else if (Options.autopickup_on < 0) // was turned off automatically
     {
         Options.autopickup_on = 1;
-        mpr("Reactivating autopickup.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "Reactivating autopickup.");
     }
 }
 

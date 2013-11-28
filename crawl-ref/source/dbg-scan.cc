@@ -220,7 +220,7 @@ void debug_item_scan(void)
 
         if (mons.name(DESC_PLAIN, true).find("questionable") != string::npos)
         {
-            mpr("Program bug detected!", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Program bug detected!");
             mprf(MSGCH_ERROR,
                  "Buggy monster detected: monster #%d; position (%d,%d)",
                  i, mons.pos().x, mons.pos().y);

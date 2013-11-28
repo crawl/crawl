@@ -2652,7 +2652,7 @@ static void _gain_piety_point()
         if (!one_chance_in(4) && !you_worship(GOD_JIYVA))
         {
 #ifdef DEBUG_PIETY
-            mpr("Piety slowdown due to gift timeout.", MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
 #endif
             return;
         }

@@ -1051,13 +1051,13 @@ void wizard_give_monster_item(monster* mon)
 
     if ((mon->flags & MF_HARD_RESET) && !(item.flags & ISFLAG_SUMMONED))
     {
-        mpr("WARNING: Monster has MF_HARD_RESET and all its "
-            "items will disappear when it does.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "WARNING: Monster has MF_HARD_RESET and all its "
+             "items will disappear when it does.");
     }
     else if ((item.flags & ISFLAG_SUMMONED) && !mon->is_summoned())
     {
-        mpr("WARNING: Item is summoned and will disappear when "
-            "the monster does.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "WARNING: Item is summoned and will disappear when "
+             "the monster does.");
     }
     // Monster's old item moves to player's inventory.
     if (old_eq != NON_ITEM)
@@ -1065,8 +1065,8 @@ void wizard_give_monster_item(monster* mon)
         mpr("Fetching monster's old item.");
         if (mitm[old_eq].flags & ISFLAG_SUMMONED)
         {
-            mpr("WARNING: Item is summoned and shouldn't really be anywhere "
-                "but in the inventory of a summoned monster.", MSGCH_WARN);
+            mprf(MSGCH_WARN, "WARNING: Item is summoned and shouldn't really "
+                 "be anywhere but in the inventory of a summoned monster.");
         }
         mitm[old_eq].pos.reset();
         mitm[old_eq].link = NON_ITEM;
