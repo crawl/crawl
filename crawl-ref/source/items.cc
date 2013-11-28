@@ -793,14 +793,14 @@ void item_check(bool verbose)
                 out_string += ' ';
             }
         }
-        mpr_nojoin(out_string, MSGCH_FLOOR_ITEMS);
+        mpr_nojoin(MSGCH_FLOOR_ITEMS, out_string);
         done_init_line = true;
     }
 
     if (verbose || items.size() <= msgwin_lines() - 1)
     {
         if (!done_init_line)
-            mpr_nojoin("Things that are here:", MSGCH_FLOOR_ITEMS);
+            mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things that are here:");
         for (unsigned int i = 0; i < items.size(); ++i)
         {
             item_def it(*items[i]);

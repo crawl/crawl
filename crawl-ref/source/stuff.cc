@@ -524,7 +524,7 @@ void canned_msg(canned_message_type which_message)
         mpr("You cannot move.");
         break;
     case MSG_YOU_DIE:
-        mpr_nojoin("You die...");
+        mpr_nojoin(MSGCH_PLAIN, "You die...");
         break;
     }
 }
