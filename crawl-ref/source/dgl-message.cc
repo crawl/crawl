@@ -84,7 +84,7 @@ static void _read_each_message()
 
             if (say_got_msg)
             {
-                mprf(MSGCH_PROMPT, "Your messages:");
+                mpr("Your messages:", MSGCH_PROMPT);
                 say_got_msg = false;
             }
 

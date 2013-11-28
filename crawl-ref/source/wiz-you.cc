@@ -703,7 +703,7 @@ bool wizard_add_mutation()
 void wizard_set_abyss()
 {
     char buf[80];
-    mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
+    mpr("Enter values for X, Y, Z (space separated) or return: ", MSGCH_PROMPT);
     if (!cancellable_get_line_autohist(buf, sizeof buf))
         abyss_teleport(true);
 
@@ -715,7 +715,7 @@ void wizard_set_abyss()
 void wizard_set_stats()
 {
     char buf[80];
-    mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
+    mpr("Enter values for Str, Int, Dex (space separated): ", MSGCH_PROMPT);
     if (cancellable_get_line_autohist(buf, sizeof buf))
         return;
 
@@ -1004,7 +1004,7 @@ static void debug_downtick_xl(int newxl)
 
 void wizard_set_xl()
 {
-    mprf(MSGCH_PROMPT, "Enter new experience level: ");
+    mpr("Enter new experience level: ", MSGCH_PROMPT);
     char buf[30];
     if (cancellable_get_line_autohist(buf, sizeof buf))
     {

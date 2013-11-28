@@ -1552,7 +1552,7 @@ void direction_chooser::print_items_description() const
          get_menu_colour_prefix_tags(*item, DESC_A).c_str());
 
     if (multiple_items_at(target()))
-        mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
+        mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
 }
 
 void direction_chooser::print_floor_description(bool boring_too) const
@@ -1608,7 +1608,7 @@ void direction_chooser::toggle_beam()
 {
     if (!needs_path)
     {
-        mprf(MSGCH_EXAMINE_FILTER, "This spell doesn't need a beam path.");
+        mpr("This spell doesn't need a beam path.", MSGCH_EXAMINE_FILTER);
         return;
     }
 
