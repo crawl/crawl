@@ -4142,7 +4142,7 @@ static void _display_tohit()
 */
 }
 
-static string _attack_delay_desc(int attack_delay)
+static const char* _attack_delay_desc(int attack_delay)
 {
     return (attack_delay >= 200) ? "extremely slow" :
            (attack_delay >= 155) ? "very slow" :
@@ -4174,10 +4174,10 @@ static void _display_attack_delay()
     if (you.duration[DUR_FINESSE])
         avg = max(20, avg / 2);
 
-    string msg = "Your attack speed is " + _attack_delay_desc(avg)
-                 + (you.wizard ? make_stringf(" (%d)", avg) : "") + ".";
-
-    mpr(msg);
+    if (you.wizard)
+        mprf("Your attack speed is %s (%d).", _attack_delay_desc(avg), avg);
+    else
+        mprf("Your attack speed is %s.", _attack_delay_desc(avg));
 }
 
 // forward declaration
@@ -4294,7 +4294,7 @@ void display_char_status()
     for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
     {
         if (fill_status_info(statuses[i], &inf) && !inf.long_text.empty())
-            mpr(inf.long_text);
+            mprf("%s", inf.long_text.c_str());
     }
     string cinfo = _constriction_description();
     if (!cinfo.empty())
@@ -4974,7 +4974,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
 
     if (msg && new_level >= 1 && old_level <= 1 && new_level != old_level)
-        mpr(describe_contamination(new_level));
+        mprf("%s", describe_contamination(new_level).c_str());
     else if (msg && new_level != old_level)
     {
         if (old_level == 1 && new_level == 0)
@@ -7976,10 +7976,9 @@ bool player::attempt_escape(int attempts)
     }
     else
     {
-        string emsg = "Your attempt to break free from ";
-        emsg += themonst->name(DESC_THE, true);
-        emsg += " fails, but you feel that another attempt might succeed.";
-        mpr(emsg);
+        mprf("Your attempt to break free from %s fails, but you feel that "
+             "another attempt might succeed.",
+             themonst->name(DESC_THE, true).c_str());
         turn_is_over = true;
         return false;
     }

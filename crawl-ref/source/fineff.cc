@@ -308,7 +308,7 @@ void starcursed_merge_fineff::fire()
 
 void delayed_action_fineff::fire()
 {
-    if (final_msg.length())
+    if (final_msg)
         mpr(final_msg);
     add_daction(action);
 }

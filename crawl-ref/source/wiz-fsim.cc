@@ -511,7 +511,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
         const string line = make_stringf("        %2d | %s", i,
                                          _fight_string(fdata).c_str());
-        mpr(line);
+        mprf("%s", line.c_str());
         fprintf(o, "%s\n", line.c_str());
         fflush(o);
 

@@ -1764,7 +1764,7 @@ static void _keyhelp_query_descriptions()
 
     viewwindow();
     if (!error.empty())
-        mpr(error);
+        mprf("%s", error.c_str());
 }
 
 static int _keyhelp_keyfilter(int ch)

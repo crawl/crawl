@@ -2064,7 +2064,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
                 return true;
 
             if (msg)
-                mpr(error);
+                mprf("%s", error.c_str());
 
             return false;
         }
@@ -2104,7 +2104,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             if (!wielded)
             {
                 if (msg)
-                    mpr(error);
+                    mprf("%s", error.c_str());
                 return false;
             }
             return true;
@@ -2118,7 +2118,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if (!wielded)
         {
             if (msg)
-                mpr(error);
+                mprf("%s", error.c_str());
             return false;
         }
         return true;
@@ -2131,7 +2131,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             if (!wielded)
             {
                 if (msg)
-                    mpr(error);
+                    mprf("%s", error.c_str());
                 return false;
             }
             return true;
@@ -2146,7 +2146,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             if (!wielded)
             {
                 if (msg)
-                    mpr(error);
+                    mprf("%s", error.c_str());
                 return false;
             }
             return true;

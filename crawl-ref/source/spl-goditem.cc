@@ -638,7 +638,7 @@ static bool _selectively_remove_curse(string *pre_msg)
         }
 
         if (!used && pre_msg)
-            mpr(*pre_msg);
+            mprf("%s", pre_msg->c_str());
 
         do_uncurse_item(item, true, false, false);
         used = true;
@@ -684,7 +684,7 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
     if (success)
     {
         if (pre_msg)
-            mpr(*pre_msg);
+            mprf("%s", pre_msg->c_str());
         mpr("You feel as if something is helping you.");
         learned_something_new(HINT_REMOVED_CURSE);
     }
@@ -693,7 +693,7 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
     else
     {
         if (pre_msg)
-            mpr(*pre_msg);
+            mprf("%s", pre_msg->c_str());
         canned_msg(MSG_NOTHING_HAPPENS);
     }
 
@@ -726,7 +726,7 @@ static bool _selectively_curse_item(bool armour, string *pre_msg)
         }
 
         if (pre_msg)
-            mpr(*pre_msg);
+            mprf("%s", pre_msg->c_str());
         do_curse_item(item, false);
         return true;
     }
@@ -762,7 +762,7 @@ bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
         else
         {
             if (pre_msg)
-                mpr(*pre_msg);
+                mprf("%s", pre_msg->c_str());
             canned_msg(MSG_NOTHING_HAPPENS);
         }
 
@@ -773,7 +773,7 @@ bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
         return _selectively_curse_item(armour, pre_msg);
 
     if (pre_msg)
-        mpr(*pre_msg);
+        mprf("%s", pre_msg->c_str());
     // Make the name before we curse it.
     do_curse_item(you.inv[you.equip[affected]], false);
     learned_something_new(HINT_YOU_CURSED);

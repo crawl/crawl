@@ -2142,9 +2142,8 @@ void process_command(command_type cmd)
     default:
         if (crawl_state.game_is_hints())
         {
-            string msg = "Unknown command. (For a list of commands type "
-                         "<w>?\?<lightgrey>.)";
-            mpr(msg);
+            mpr("Unknown command. (For a list of commands type "
+                "<w>?\?<lightgrey>.)");
         }
         else // well, not examine, but...
             mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");

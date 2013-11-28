@@ -3268,8 +3268,8 @@ void nemelex_death_message()
 {
     const piety_gain_t piety_gain = static_cast<piety_gain_t>
             (min(random2(you.piety) / 30, (int)PIETY_LOTS));
-    mpr(_sacrifice_message(_Sacrifice_Messages[GOD_NEMELEX_XOBEH][piety_gain],
-                           "Your body", you.backlit(), false, piety_gain));
+    mprf("%s", _sacrifice_message(_Sacrifice_Messages[GOD_NEMELEX_XOBEH][piety_gain],
+               "Your body", you.backlit(), false, piety_gain).c_str());
 }
 
 bool god_hates_attacking_friend(god_type god, const actor *fr)
