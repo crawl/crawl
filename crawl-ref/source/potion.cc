@@ -164,6 +164,12 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_SPEED:
+        if (potion && was_known && you.stasis(false))
+        {
+            mpr("This potion can't work under stasis.");
+            return false;
+        }
+
         if (haste_player((40 + random2(pow)) / factor))
             did_god_conduct(DID_HASTY, 10, was_known);
         break;
@@ -230,7 +236,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
     case POT_FLIGHT:
         if (!flight_allowed())
+        {
+            if (potion && was_known)
+                return false;
             break;
+        }
 
         you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
         fly_player(pow);
@@ -287,6 +297,12 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     case POT_INVISIBILITY:
         if (you.haloed() || you.glows_naturally())
         {
+            if (potion && was_known)
+            {
+                mpr("You cannot become invisible while glowing.");
+                return false;
+            }
+
             // You can't turn invisible while haloed or glowing
             // naturally, but identify the effect anyway.
             mpr("You briefly turn translucent.");
