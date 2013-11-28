@@ -67,11 +67,11 @@ void tutorial_init_hint(const char* hintstr)
 void tutorial_death_message()
 {
     canned_msg(MSG_YOU_DIE);
-    mpr_nojoin("In Crawl, death is a sad but common occurrence. "
+    mpr_nojoin(MSGCH_TUTORIAL,
+               "In Crawl, death is a sad but common occurrence. "
                "Note that there's usually something you could have done to "
                "survive, for example by using some kind of item, running away, "
                "resting between fights, or by avoiding combat entirely. "
-               "Keep trying, eventually you'll prevail!",
-               MSGCH_TUTORIAL);
+               "Keep trying, eventually you'll prevail!");
     more();
 }

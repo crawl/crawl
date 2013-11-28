@@ -49,9 +49,9 @@ void mpr(string text)
     _mpr(text);
 }
 
-void mpr_nojoin(string text, msg_channel_type channel, int param)
+void mpr_nojoin(msg_channel_type channel, string text)
 {
-    _mpr(text, channel, param, true);
+    _mpr(text, channel, 0, true);
 }
 
 void mpr_nocap(string text, msg_channel_type channel, int param, bool nojoin)

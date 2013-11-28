@@ -87,7 +87,7 @@ enum diag_type
 msg_colour_type msg_colour(int colour);
 
 void mpr(string text);
-void mpr_nojoin(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0);
+void mpr_nojoin(msg_channel_type channel, string text);
 void mpr_nocap(string text, msg_channel_type channel=MSGCH_PLAIN,
                int param=0, bool nojoin=false);
 
