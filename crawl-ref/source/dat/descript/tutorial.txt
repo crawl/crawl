@@ -23,11 +23,11 @@ tutorial1 diagonal
 :nowrap
 You can move diagonally with the <input>number pad</input> (try Numlock on/off) or the <input>vi keys</input>.
 
-<w></w>  Numpad:       <w>7 8 9</w>           vi-keys: <w>   $cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
-<w></w>                 \|/                         \|/
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w> <w>                      $cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
-<w></w>                 /|\                         /|\
-<w></w>                <w>1 2 3</w> <w>                      $cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+  Numpad:       <w>7 8 9</w>           vi-keys: <w>   $cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+                 \|/                         \|/
+                <w>4</w>-<w>.</w>-<w>6</w> <w>                      $cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                 /|\                         /|\
+                <w>1 2 3</w> <w>                      $cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>You can also move using <input>mouse clicks</input>.</localtiles>
 %%%%
@@ -124,29 +124,25 @@ tutorial1 exit
                   /|\                         /|\
                  <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
-  <w>Shift + direction</w> moves you several squares in this direction.
-<localtiles>  You also can move by <w>clicking</w> somewhere in sight or on the <w>minimap</w>.
-</localtiles>
+  <input>Shift + direction</input> moves you several squares in this direction.<localtiles>
+  You also can move by <input>clicking</input> somewhere in sight or on the <w>minimap</w>.</localtiles>
 
 <yellow>Staircases</yellow>
-  <w>$cmd[CMD_GO_UPSTAIRS]</w>  go back to the previous level
-  <w>$cmd[CMD_GO_DOWNSTAIRS]</w>  enter the next level
-  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w>  travel to the nearest up/downstairs
-
+  <input>$cmd[CMD_GO_UPSTAIRS]</input>  go back to the previous level
+  <input>$cmd[CMD_GO_DOWNSTAIRS]</input>  enter the next level
+  <input>$cmd[CMD_DISPLAY_MAP]></input>/<input>$cmd[CMD_DISPLAY_MAP]<<</input> travel to the nearest up/downstairs
 
 <yellow>Doors</yellow>
   can be opened by walking into them
-  <w>$cmd[CMD_CLOSE_DOOR]</w>  close an open door
-
+  <input>$cmd[CMD_CLOSE_DOOR]</input>  close an open door
 
 <yellow>Travel</yellow>
   <localtiles>mouseclick on the <w>minimap</w>
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w>
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w>
-  </console><w>$cmd[CMD_EXPLORE]</w>  autoexplore
+  </localtiles><webtiles><input>$cmd[CMD_DISPLAY_MAP]</input>  enter the level map, travel with <input>Enter</input>
+  </webtiles><console><input>$cmd[CMD_DISPLAY_MAP]</input>  enter the level map, travel with <input>Enter</input>
+  </console><input>$cmd[CMD_EXPLORE]</input>  autoexplore
 
-
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 2: Monsters and combat        #
@@ -272,34 +268,30 @@ tutorial2 exit
 # FIXME: Duplicated for <console> and <webtiles>.
 :nowrap
 <yellow>Weapons<console> <cyan>)</cyan></console></yellow>
+  <input>$cmd[CMD_PICKUP]</input>  pick up an item
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon<localtiles>
+  You can also do this by <input>clicking</input> on the weapon in your inventory.</localtiles>
 
-  <w>$cmd[CMD_PICKUP]</w>  pick up an item
-  <w>$cmd[CMD_WIELD_WEAPON]</w>  wield a weapon
-<localtiles>     You can also do this by <w>clicking</w> on the weapon in your inventory.</localtiles>
-
-
-<yellow>Monsters</yellow>
-<localtiles>  <w>mouseover</w>  examine a monster
-  <w>rightclick</w> read a more detailed description</localtiles>
-<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed description</console><webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed description</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w> fire ammunition at pre-targeted monster
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> target another monster
-<localtiles>  You can also fire an item by <w>clicking</w> on it and the confirming the target with <w>Enter</w>.</localtiles>
-
+<yellow>Monsters</yellow><localtiles>
+  <input>mouseover</input>  examine a monster
+  <input>rightclick</input> read a more detailed description</localtiles><console>
+  <input>$cmd[CMD_LOOK_AROUND]</input>  examine a monster
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</console><webtiles>
+  <input>$cmd[CMD_LOOK_AROUND]</input>  examine a monster
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</webtiles>
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fire ammunition at pre-targeted monster
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> target another monster<localtiles>
+  You can also fire an item by <input>clicking</input> on it and the confirming the target with <input>Enter</input>.</localtiles>
 
 <yellow>Resting</yellow>
-  <w>$cmd[CMD_MOVE_NOWHERE]</w>  wait and rest a single turn
-  <w>$cmd[CMD_REST]</w>  wait and rest up to 100 turns
-
+  <input>$cmd[CMD_MOVE_NOWHERE]</input>  wait and rest a single turn
+  <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
 
 <yellow>Corpses<console> <brown>%</brown></console></yellow>
-  <w>$cmd[CMD_BUTCHER]</w>  chop a corpse into meat chunks
-  <w>$cmd[CMD_EAT]</w>  eat a chunk of meat
+  <input>$cmd[CMD_BUTCHER]</input>  chop a corpse into meat chunks
+  <input>$cmd[CMD_EAT]</input>  eat a chunk of meat
 
-
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 #######################################
 # Tutorial map 3: Items and Inventory #
@@ -474,31 +466,27 @@ tutorial3 exit
 # A single screen recapping all commands.
 :nowrap
 <yellow>Item commands</yellow>
-  <w>$cmd[CMD_PICKUP]</w>  pick up an item
-  <w>$cmd[CMD_WEAR_ARMOUR]</w>  wear a piece of armour
-  <w>$cmd[CMD_READ]</w>  read a scroll
-  <w>$cmd[CMD_WIELD_WEAPON]</w>  wield a weapon
-  <w>$cmd[CMD_QUAFF]</w>  quaff a potion
-  <w>$cmd[CMD_EVOKE]</w>  evoke a wand
-  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  put on jewellery
-  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  remove jewellery
-  <w>$cmd[CMD_DROP]</w>  drop an item
-
-  <w></w>Usage commands are also available from the inventory menu (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), as are the item descriptions.
-  <localtiles><w></w>And of course, <white>mouseclicks</white> also work.
-</localtiles>
+  <input>$cmd[CMD_PICKUP]</input>  pick up an item
+  <input>$cmd[CMD_WEAR_ARMOUR]</input>  wear a piece of armour
+  <input>$cmd[CMD_READ]</input>  read a scroll
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  wield a weapon
+  <input>$cmd[CMD_QUAFF]</input>  quaff a potion
+  <input>$cmd[CMD_EVOKE]</input>  evoke a wand
+  <input>$cmd[CMD_WEAR_JEWELLERY]</input>  put on jewellery
+  <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  remove jewellery
+  <input>$cmd[CMD_DROP]</input>  drop an item
+  Usage commands are also available from the inventory menu (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), as are the item descriptions.<localtiles>
+  And of course, <input>mouseclicks</input> also work.</localtiles>
 
 <yellow>Other</yellow>
-  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w> access the command help
-  <w>$cmd[CMD_RESISTS_SCREEN]</w>  display character overview
-  <w>$cmd[CMD_USE_ABILITY]</w>  use an ability
-  <w>$cmd[CMD_EXPLORE]</w>  explore automatically
-  <w>$cmd[CMD_SEARCH_STASHES]</w>  search for items/features previously seen
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> access the command help
+  <input>$cmd[CMD_RESISTS_SCREEN]</input>  display character overview
+  <input>$cmd[CMD_USE_ABILITY]</input>  use an ability
+  <input>$cmd[CMD_EXPLORE]</input>  explore automatically
+  <input>$cmd[CMD_SEARCH_STASHES]</input>  search for items/features previously seen<localtiles>
+  Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
 
-  <localtiles><w></w>Several of these commands can also be executed by clicking in the <w>command panel</w>.
-</localtiles>
-
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 4: Magic and Spellcasting     #
@@ -637,20 +625,18 @@ tutorial4 exit
 # A single screen recapping all commands.
 :nowrap
 <yellow>Spellcasting commands</yellow>
-  <w>$cmd[CMD_MEMORISE_SPELL]</w>  learn a new spell
-  <w>$cmd[CMD_DISPLAY_SPELLS]</w>  check spell proficiency
-  <w>$cmd[CMD_CAST_SPELL]</w>  cast a spell
-<localtiles>     You can also learn new spells via the <w>memorisation tab</w>.
-     You can cast memorised spells via <w>leftclick</w>, and read their descriptions and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w>
-</localtiles>
+  <input>$cmd[CMD_MEMORISE_SPELL]</input>  learn a new spell
+  <input>$cmd[CMD_DISPLAY_SPELLS]</input>  check spell proficiency
+  <input>$cmd[CMD_CAST_SPELL]</input>  cast a spell<localtiles>
+  You can also learn new spells via the <w>memorisation tab</w>.
+  You can cast memorised spells via <input>leftclick</input>, and read their descriptions and check your spell proficiency by <input>mouseover</input> or <input>rightclick</input></localtiles>
 
-  <w>$cmd[CMD_READ]</w>  read a book, for descriptions or to forget a spell
-  <w>$cmd[CMD_REST]</w>  rest up to 100 turns to regain magic points and health
-  <w>$cmd[CMD_SHOUT]</w>  order allies
-  <w>$cmd[CMD_REMOVE_ARMOUR]</w>  take off armour
+  <input>$cmd[CMD_READ]</input>  read a book, for descriptions or to forget a spell
+  <input>$cmd[CMD_REST]</input>  rest up to 100 turns to regain magic points and health
+  <input>$cmd[CMD_SHOUT]</input>  order allies
+  <input>$cmd[CMD_REMOVE_ARMOUR]</input>  take off armour
 
-
-                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>
+                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
@@ -741,21 +727,18 @@ tutorial5 exit
 # A single screen recapping all commands.
 :nowrap
 <yellow>Religious commands</yellow>
-  $cmd[CMD_PRAY]  pray at an altar to join a god, or sacrifice a corpse
-  $cmd[CMD_USE_ABILITY]  use a divine ability
-  $cmd[CMD_DISPLAY_RELIGION]  check your religious standing
-<localtiles>  A <w>rightclick</w> on the player tile will also bring up the religion screen.
-</localtiles>
+  <input>$cmd[CMD_PRAY]</input>  pray at an altar to join a god, or sacrifice a corpse
+  <input>$cmd[CMD_USE_ABILITY]</input>  use a divine ability
+  <input>$cmd[CMD_DISPLAY_RELIGION]</input>  check your religious standing<localtiles>
+  A <input>rightclick</input> on the player tile will also bring up the religion screen.</localtiles>
 
 <yellow>Resting</yellow>
-  $cmd[CMD_MOVE_NOWHERE]  wait and rest a single turn
-  $cmd[CMD_REST]  wait and rest up to 100 turns
-
+  <input>$cmd[CMD_MOVE_NOWHERE]</input>  wait and rest a single turn
+  <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
 
 <yellow>Other commands</yellow>
-  $cmd[CMD_DISPLAY_OVERMAP]  display an overview of the dungeon
-  $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  search the description database
+  <input>$cmd[CMD_DISPLAY_OVERMAP]</input>  display an overview of the dungeon
+  <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  search the description database
 
-
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
