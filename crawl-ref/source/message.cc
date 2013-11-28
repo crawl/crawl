@@ -41,6 +41,24 @@
 #include "tileweb.h"
 #endif
 
+static void _mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
+                 bool nojoin=false, bool cap=true);
+
+void mpr(string text)
+{
+    _mpr(text);
+}
+
+void mpr_nojoin(string text, msg_channel_type channel, int param)
+{
+    _mpr(text, channel, param, true);
+}
+
+void mpr_nocap(string text, msg_channel_type channel, int param, bool nojoin)
+{
+    _mpr(text, channel, param, nojoin, false);
+}
+
 static bool _ends_in_punctuation(const string& text)
 {
     switch (text[text.size() - 1])
@@ -981,12 +999,12 @@ static void do_message_print(msg_channel_type channel, int param, bool cap,
     char buff[200];
     size_t len = vsnprintf(buff, sizeof(buff), format, argp);
     if (len < sizeof(buff))
-        mpr(buff, channel, param, false, cap);
+        _mpr(buff, channel, param, false, cap);
     else
     {
         char *heapbuf = (char*)malloc(len + 1);
         vsnprintf(heapbuf, len + 1, format, ap);
-        mpr(heapbuf, channel, param, false, cap);
+        _mpr(heapbuf, channel, param, false, cap);
         free(heapbuf);
     }
     va_end(ap);
@@ -1174,7 +1192,7 @@ void msgwin_clear_temporary()
 
 static int _last_msg_turn = -1; // Turn of last message.
 
-void mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap)
+static void _mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap)
 {
     if (_msg_dump_file != NULL)
         fprintf(_msg_dump_file, "%s\n", text.c_str());
@@ -1255,7 +1273,7 @@ void mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap
 
 static string show_prompt(string prompt)
 {
-    mpr(prompt, MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 
     // FIXME: duplicating mpr code.
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
@@ -1338,7 +1356,7 @@ void mpr_comma_separated_list(const string &prefix,
         else if (i == (size - 1))
             out += ".";
     }
-    mpr(out, channel, param);
+    _mpr(out, channel, param);
 }
 
 
@@ -1667,5 +1685,5 @@ void set_msg_dump_file(FILE* file)
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel, int param)
 {
-    mpr(fs.to_colour_string(), channel, param);
+    _mpr(fs.to_colour_string(), channel, param);
 }
