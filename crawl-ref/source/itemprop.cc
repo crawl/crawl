@@ -500,7 +500,7 @@ void do_curse_item(item_def &item, bool quiet)
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
-            mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
+            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
         }
         return;
     }

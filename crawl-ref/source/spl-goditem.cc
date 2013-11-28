@@ -101,7 +101,7 @@ int identify(int power, int item_slot, string *pre_msg)
         }
 
         // Output identified item.
-        mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 

@@ -2709,7 +2709,7 @@ static void _safe_newline()
 void inscribe_item(item_def &item, bool msgwin)
 {
     if (msgwin)
-        mpr_nocap(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+        mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
 
     const bool is_inscribed = !item.inscription.empty();
     string prompt = is_inscribed ? "Replace inscription with what? "
@@ -2755,7 +2755,7 @@ void inscribe_item(item_def &item, bool msgwin)
 
     if (msgwin)
     {
-        mpr_nocap(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+        mprf_nocap(MSGCH_EQUIPMENT, "%s", item.name(DESC_INVENTORY).c_str());
         you.wield_change  = true;
         you.redraw_quiver = true;
     }

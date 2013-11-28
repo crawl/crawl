@@ -54,11 +54,6 @@ void mpr_nojoin(msg_channel_type channel, string text)
     _mpr(text, channel, 0, true);
 }
 
-void mpr_nocap(string text, msg_channel_type channel, int param, bool nojoin)
-{
-    _mpr(text, channel, param, nojoin, false);
-}
-
 static bool _ends_in_punctuation(const string& text)
 {
     switch (text[text.size() - 1])

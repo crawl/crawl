@@ -3023,7 +3023,7 @@ void start_explore(bool grab_items)
                 mpr_nojoin(MSGCH_FLOOR_ITEMS, "Things which can be sacrificed:");
                 for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
                     if (si->is_greedy_sacrificeable())
-                        mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));
+                        mprf_nocap("%s", get_menu_colour_prefix_tags(*si, DESC_A).c_str());
 
             }
 

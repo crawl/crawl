@@ -804,8 +804,7 @@ void item_check(bool verbose)
         for (unsigned int i = 0; i < items.size(); ++i)
         {
             item_def it(*items[i]);
-            string name = get_menu_colour_prefix_tags(it, DESC_A);
-            mpr_nocap(name);
+            mprf_nocap("%s", get_menu_colour_prefix_tags(it, DESC_A).c_str());
             _maybe_give_corpse_hint(it);
         }
     }
@@ -1817,8 +1816,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     if (!quiet)
     {
-        mpr_nocap(get_menu_colour_prefix_tags(you.inv[freeslot],
-                                              DESC_INVENTORY).c_str());
+        mprf_nocap("%s", get_menu_colour_prefix_tags(you.inv[freeslot],
+                   DESC_INVENTORY).c_str());
     }
     if (crawl_state.game_is_hints())
     {

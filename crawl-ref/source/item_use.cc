@@ -216,7 +216,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         {
             set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
             if (in_inventory(*weapon))
-                mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
+                mprf_nocap("%s", weapon->name(DESC_INVENTORY_EQUIP).c_str());
         }
         else if (is_artefact(*weapon) && !item_type_known(*weapon))
             artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
@@ -429,7 +429,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     equip_item(EQ_WEAPON, item_slot, show_weff_messages);
 
     if (show_wield_msg)
-        mpr_nocap(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("%s", new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
     check_item_hint(new_wpn, old_talents);
 
@@ -1989,7 +1989,7 @@ void zap_wand(int slot)
         if (wand.sub_type == WAND_RANDOM_EFFECTS)
             mpr("You feel that this wand is rather unreliable.");
 
-        mpr_nocap(wand.name(DESC_INVENTORY_EQUIP).c_str());
+        mprf_nocap("%s", wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     if (item_type_known(wand)
