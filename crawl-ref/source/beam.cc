@@ -3244,7 +3244,8 @@ bool bolt::misses_player()
     {
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
-        mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+        if (flavour != BEAM_VISUAL)
+            mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
         return false;
     }
 
