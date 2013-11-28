@@ -337,7 +337,8 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                     || weapon && is_unrandom_artefact(*weapon)
                     && weapon->special == UNRAND_DEVASTATOR))
             {
-                string verb = "jump-attack", junk1, junk2;
+                const char* verb = "jump-attack";
+                string junk1, junk2;
                 if (defender)
                 {
                     verb = (bad_attack(defender->as_monster(),

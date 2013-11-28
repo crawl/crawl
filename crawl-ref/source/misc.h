@@ -123,7 +123,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def attack_pos = coord_def(0, 0),
                         bool check_landing_only = false);
 
-bool stop_attack_prompt(targetter &hitfunc, string verb,
+bool stop_attack_prompt(targetter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim) = 0,
                         bool *prompted = nullptr);
 
