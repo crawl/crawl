@@ -3020,7 +3020,7 @@ void start_explore(bool grab_items)
         {
             if (Options.auto_sacrifice == AS_PROMPT)
             {
-                mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
+                mpr_nojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
                 for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
                     if (si->is_greedy_sacrificeable())
                         mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));

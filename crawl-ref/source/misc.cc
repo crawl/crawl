@@ -1656,7 +1656,7 @@ int str_to_shoptype(const string &s)
 
 void list_shop_types()
 {
-    mprnojoin("Available shop types: ");
+    mpr_nojoin("Available shop types: ");
     for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
         mpr_nocap(shop_types[i]);
 }
