@@ -3632,7 +3632,7 @@ static void _handle_accidental_death(const int orig_hp,
         break;
     }
 
-    mpr("You die...");
+    canned_msg(MSG_YOU_DIE);
     god_speaks(GOD_XOM, _get_xom_speech(speech_type).c_str());
     god_speaks(GOD_XOM, _get_xom_speech("resurrection").c_str());
 
@@ -3997,7 +3997,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
         return false;
 
     // Fake death message.
-    mpr("You die...");
+    canned_msg(MSG_YOU_DIE);
     more();
 
     const string key = _get_death_type_keyword(death_type);

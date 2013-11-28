@@ -1225,7 +1225,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
             save_game(false);
 
-        mpr_nojoin("You die...");
+        canned_msg(MSG_YOU_DIE);
         xom_death_message((kill_method_type) se.get_death_type());
         more();
 
@@ -1315,7 +1315,7 @@ void _end_game(scorefile_entry &se)
         && se.get_death_type() != KILLED_BY_QUITTING
         && se.get_death_type() != KILLED_BY_WINNING)
     {
-        mpr_nojoin("You die...");      // insert player name here? {dlb}
+        canned_msg(MSG_YOU_DIE);
         xom_death_message((kill_method_type) se.get_death_type());
 
         switch (you.religion)
