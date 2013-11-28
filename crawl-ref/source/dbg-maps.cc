@@ -82,7 +82,7 @@ static bool mg_do_build_level(int niters)
     {
         if (kbhit() && key_is_escape(getchk()))
         {
-            mprf(MSGCH_WARN, "User requested cancel");
+            mpr("User requested cancel", MSGCH_WARN);
             return false;
         }
 

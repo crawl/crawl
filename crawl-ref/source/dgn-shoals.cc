@@ -1050,7 +1050,7 @@ static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
         && !you.ground_level()
         && !you.permanent_flight())
     {
-        mprf(MSGCH_WARN, "The tide rushes in under you.");
+        mpr("The tide rushes in under you.", MSGCH_WARN);
     }
 }
 
@@ -1270,7 +1270,7 @@ void wizard_mod_tide()
 {
     if (!player_in_branch(BRANCH_SHOALS) || !env.heightmap.get())
     {
-        mprf(MSGCH_WARN, "Not in Shoals or no heightmap; tide not available.");
+        mpr("Not in Shoals or no heightmap; tide not available.", MSGCH_WARN);
         return;
     }
 

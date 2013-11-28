@@ -335,7 +335,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
 
     if (!item->props.exists("ss_welcome"))
     {
-        mprf(MSGCH_TALK, "The sword says, \"Hi! I'm the Singing Sword!\"");
+        mpr("The sword says, \"Hi! I'm the Singing Sword!\"", MSGCH_TALK);
         item->props["ss_welcome"].get_bool() = true;
     }
     else

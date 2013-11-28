@@ -1115,7 +1115,7 @@ static bool _orange_statue_effects(monster* mons)
         if (you.can_see(foe))
         {
             if (foe->is_player())
-                mprf(MSGCH_WARN, "A hostile presence attacks your mind!");
+                mpr("A hostile presence attacks your mind!", MSGCH_WARN);
             else if (you.can_see(mons))
                 mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
                      mons->name(DESC_THE).c_str(),

@@ -605,12 +605,12 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
     case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
         if (noisy)
-            mprf(MSGCH_SOUND, "You hear a splash.");
+            mpr("You hear a splash.", MSGCH_SOUND);
         return false;
 
     case DNGN_LAVA:
         if (noisy)
-            mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+            mpr("You hear a sizzling splash.", MSGCH_SOUND);
         return true;
 
     default:
@@ -627,17 +627,17 @@ bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &ite
     {
     case DNGN_SHALLOW_WATER:
         if (noisy)
-            mprf(MSGCH_SOUND, "You hear a splash.");
+            mpr("You hear a splash.", MSGCH_SOUND);
         return false;
 
     case DNGN_DEEP_WATER:
         if (noisy)
-            mprf(MSGCH_SOUND, "You hear a splash.");
+            mpr("You hear a splash.", MSGCH_SOUND);
         return true;
 
     case DNGN_LAVA:
         if (noisy)
-            mprf(MSGCH_SOUND, "You hear a sizzling splash.");
+            mpr("You hear a sizzling splash.", MSGCH_SOUND);
         return true;
 
     default:
