@@ -136,7 +136,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     // Don't enchant sticks marked with {!D}.
     if (!check_warning_inscriptions(wpn, OPER_DESTROY))
     {
-        mpr(abort_msg);
+        mprf("%s", abort_msg.c_str());
         return SPRET_ABORT;
     }
 
@@ -149,7 +149,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     if (!item_is_snakable(wpn))
     {
-        mpr(abort_msg);
+        mprf("%s", abort_msg.c_str());
         return SPRET_ABORT;
     }
     else
@@ -183,7 +183,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     if (!count)
     {
-        mpr(abort_msg);
+        mprf("%s", abort_msg.c_str());
         return SPRET_SUCCESS;
     }
 
@@ -1460,8 +1460,10 @@ static void _display_undead_motions(int motions)
     if (motions_list.size() > 3)
         mpr("The dead have arisen!");
     else
-        mpr("The dead are " + comma_separated_line(motions_list.begin(),
-            motions_list.end()) + "!");
+    {
+        mprf("The dead are %s!", comma_separated_line(motions_list.begin(),
+             motions_list.end()).c_str());
+    }
 }
 
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,

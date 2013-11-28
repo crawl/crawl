@@ -1015,7 +1015,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         you.duration[DUR_STONESKIN] = 0;
 
     // Give the transformation message.
-    mpr(msg);
+    mprf("%s", msg.c_str());
 
     // Update your status.
     you.form = which_trans;

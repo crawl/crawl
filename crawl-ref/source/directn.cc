@@ -3999,7 +3999,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #endif
         if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
-            string msg;
+            const char *msg;
 #ifdef USE_TILE_LOCAL
             msg = "(<w>Right-click</w> for more information.)";
 #else

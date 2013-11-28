@@ -1048,7 +1048,7 @@ static bool _spellcasting_aborted(spell_type spell,
     string msg;
     if (!wiz_cast && spell_is_uncastable(spell, msg))
     {
-        mpr(msg);
+        mprf("%s", msg.c_str());
         return true;
     }
 

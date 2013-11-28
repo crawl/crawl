@@ -86,7 +86,7 @@ enum diag_type
 
 msg_colour_type msg_colour(int colour);
 
-void mpr(string text);
+void mpr(const char *text);
 void mpr_nojoin(msg_channel_type channel, string text);
 
 // 4.1-style mpr, currently named mprf for minimal disruption.

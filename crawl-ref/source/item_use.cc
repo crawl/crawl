@@ -3157,7 +3157,7 @@ void read_scroll(int slot)
     case SCR_REMOVE_CURSE:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg);
+            mprf("%s", pre_succ_msg.c_str());
             id_the_scroll = remove_curse(false);
         }
         else
@@ -3304,7 +3304,7 @@ void read_scroll(int slot)
     case SCR_CURSE_JEWELLERY:
         if (!alreadyknown)
         {
-            mpr(pre_succ_msg);
+            mprf("%s", pre_succ_msg.c_str());
             if (curse_item(which_scroll == SCR_CURSE_ARMOUR, false))
                 bad_effect = true;
             else

@@ -560,8 +560,8 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     monster* mons = agent ? agent->as_monster() : NULL;
 
     colour_t flash_colour = BLACK;
-    string player_msg, global_msg, mons_vis_msg, mons_invis_msg,
-           harm_msg = "harm";
+    const char *player_msg = nullptr, *global_msg = nullptr,
+               *mons_vis_msg = nullptr, *mons_invis_msg = nullptr;
     bool (*vulnerable)(const actor *, const actor *) = NULL;
     bool (*vul_hitfunc)(const actor *) = NULL;
     int (*damage_player)(actor *, int, int, bool, bool) = NULL;
@@ -617,7 +617,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         ASSERT(actual);
         targetter_los hitfunc(&you, LOS_NO_TRANS);
         {
-            if (allow_cancel && stop_attack_prompt(hitfunc, harm_msg, vul_hitfunc))
+            if (allow_cancel && stop_attack_prompt(hitfunc, "harm", vul_hitfunc))
                 return SPRET_ABORT;
         }
         fail_check();
@@ -633,7 +633,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         if (!agent)
             mpr(global_msg);
         else if (you.can_see(agent))
-            simple_monster_message(mons, mons_vis_msg.c_str());
+            simple_monster_message(mons, mons_vis_msg);
         else if (you.see_cell(agent->pos()))
             mpr(mons_invis_msg);
 

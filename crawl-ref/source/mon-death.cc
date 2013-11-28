@@ -67,7 +67,7 @@ void pikel_band_neutralise()
             visible_slaves++;
         }
     }
-    string final_msg;
+    const char* final_msg;
     if (visible_slaves == 1)
         final_msg = "With Pikel's spell broken, the former slave thanks you for freedom.";
     else if (visible_slaves > 1)
@@ -129,7 +129,7 @@ void hogs_to_humans()
             human++;
     }
 
-    string final_msg;
+    const char* final_msg;
 
     if (any == 1)
     {
