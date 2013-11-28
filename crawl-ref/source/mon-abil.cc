@@ -1028,7 +1028,7 @@ static bool _siren_movement_effect(const monster* mons)
             if (!do_resist)
             {
                 const coord_def oldpos = you.pos();
-                mprf("The pull of her song draws you forwards.");
+                mpr("The pull of her song draws you forwards.");
 
                 if (swapping)
                 {
@@ -2301,7 +2301,7 @@ static void _establish_connection(int tentacle,
         if (!last_mon)
         {
             // Should be something there, what to do if there isn't?
-            mprf("Error! failed to place monster in tentacle connect change");
+            mpr("Error! failed to place monster in tentacle connect change");
             break;
         }
         int last_mon_idx = last_mon->mindex();
@@ -2809,7 +2809,7 @@ static int _collect_connection_data(monster* start_monster,
         {
             current_mon = &menv[next_idx];
             if (int(current_mon->number) != start_monster->mindex())
-                mprf("link information corruption!!! tentacle in chain doesn't match mindex");
+                mpr("link information corruption!!! tentacle in chain doesn't match mindex");
             if (!retract_found)
             {
                 retract_pos = current_mon->pos();
@@ -4590,7 +4590,7 @@ void ballisto_on_move(monster* mons, const coord_def& position)
                     // Don't leave mold on squares we place ballistos on
                     remove_mold(position);
                     if (you.can_see(plant))
-                        mprf("A ballistomycete grows in the wake of the spore.");
+                        mpr("A ballistomycete grows in the wake of the spore.");
                 }
 
                 mons->number = 40;
@@ -5016,7 +5016,7 @@ void waterport_touch(monster* nymph, actor* target)
                          nymph->pronoun(PRONOUN_POSSESSIVE, true).c_str());
                 }
                 else if (target->is_player())
-                    mprf("You are drawn back into the water.");
+                    mpr("You are drawn back into the water.");
                 else
                 {
                     if (could_see_victim)

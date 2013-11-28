@@ -1491,7 +1491,7 @@ static void _make_spectral_thing(monster* mons, bool quiet)
         // Headless hydras cannot be made spectral hydras, sorry.
         if (spectre_type == MONS_HYDRA && mons->number == 0)
         {
-            mprf("A glowing mist gathers momentarily, then fades.");
+            mpr("A glowing mist gathers momentarily, then fades.");
             return;
         }
 
@@ -2058,7 +2058,7 @@ int monster_die(monster* mons, killer_type killer,
                 if (hp_heal && you.hp < you.hp_max
                     && !you.duration[DUR_DEATHS_DOOR])
                 {
-                    mprf("You feel a little better.");
+                    mpr("You feel a little better.");
                     inc_hp(hp_heal);
                 }
 

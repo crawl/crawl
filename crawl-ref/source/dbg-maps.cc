@@ -191,7 +191,7 @@ static bool mg_build_dungeon()
 static void mg_build_levels(int niters)
 {
     mesclr();
-    mprf("Generating dungeon map stats");
+    mpr("Generating dungeon map stats");
 
     for (int i = 0; i < niters; ++i)
     {

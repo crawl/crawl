@@ -133,7 +133,7 @@ void player::beholders_check_noise(int loudness, bool axe)
 
     if (loudness >= 20 && beheld())
     {
-        mprf("For a moment, your mind becomes perfectly clear!");
+        mpr("For a moment, your mind becomes perfectly clear!");
         clear_beholders();
         _removed_beholder();
     }

@@ -565,7 +565,7 @@ bool debug_make_shop(const coord_def& pos)
 
     place_spec_shop(pos, new_shop_type, representative);
     link_items();
-    mprf("Done.");
+    mpr("Done.");
     return true;
 }
 
