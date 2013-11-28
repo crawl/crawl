@@ -46,7 +46,7 @@
  * @param was_known     Whether the potion was already identified.
  * @param from_fountain Is this from a fountain?
  *
- * @return If the potion was identified.
+ * @return If the potion was used.
  */
 bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_known,
                    bool from_fountain)
@@ -72,6 +72,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     case POT_CURING:
         if (you.duration[DUR_DEATHS_DOOR])
         {
+            if (potion && was_known)
+            {
+                mpr("You can't heal while in Death's door!");
+                return false;
+            }
             mpr("You feel queasy.");
             break;
         }
@@ -95,6 +100,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     case POT_HEAL_WOUNDS:
         if (you.duration[DUR_DEATHS_DOOR])
         {
+            if (potion && was_known)
+            {
+                mpr("You can't heal while in Death's door!");
+                return false;
+            }
             mpr("You feel queasy.");
             break;
         }
