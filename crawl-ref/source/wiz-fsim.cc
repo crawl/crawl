@@ -259,7 +259,7 @@ static monster* _init_fsim()
         mon = create_monster(temp);
         if (!mon)
         {
-            mprf("Failed to create monster.");
+            mpr("Failed to create monster.");
             return NULL;
         }
     }
@@ -277,7 +277,7 @@ static monster* _init_fsim()
     if (!adjacent(mon->pos(), you.pos()))
     {
         monster_die(mon, KILL_DISMISSED, NON_MONSTER);
-        mprf("Could not put monster adjacent to player.");
+        mpr("Could not put monster adjacent to player.");
         return 0;
     }
 
@@ -518,7 +518,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         // kill the loop if the user hits escape
         if (kbhit() && getchk() == 27)
         {
-            mprf("Cancelling simulation.\n");
+            mpr("Cancelling simulation.\n");
             fprintf(o, "Simulation cancelled!\n\n");
             break;
         }
@@ -564,7 +564,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
             // kill the loop if the user hits escape
             if (kbhit() && getchk() == 27)
             {
-                mprf("Cancelling simulation.\n");
+                mpr("Cancelling simulation.\n");
                 fprintf(o, "\nSimulation cancelled!\n\n");
                 return;
             }
@@ -665,7 +665,7 @@ void wizard_fight_sim(bool double_scale)
         set_xl(xl, false);
 
     _uninit_fsim(mon);
-    mprf("Done.");
+    mpr("Done.");
 }
 
 #endif

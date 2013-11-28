@@ -2233,7 +2233,7 @@ void drop_last()
     }
 
     if (items_to_drop.empty())
-        mprf("No item to drop.");
+        mpr("No item to drop.");
     else
     {
         you.last_pickup.clear();

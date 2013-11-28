@@ -123,7 +123,7 @@ void read_messages()
 static void _announce_messages()
 {
     // XXX: We could do a NetHack-like mail daemon here at some point.
-    mprf("Beep! Your pager goes off! Use _ to check your messages.");
+    mpr("Beep! Your pager goes off! Use _ to check your messages.");
 }
 
 void check_messages()

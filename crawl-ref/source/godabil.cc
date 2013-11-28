@@ -3375,7 +3375,7 @@ void spare_beogh_convert()
         mpr("The priest welcomes you and lets you live.");
     else
     {
-        mprf("With a roar of approval, the orcs welcome you as one of their own, "
-             "and spare your life.");
+        mpr("With a roar of approval, the orcs welcome you as one of their own,"
+            " and spare your life.");
     }
 }

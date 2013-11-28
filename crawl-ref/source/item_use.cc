@@ -657,7 +657,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 || player_mutation_level(MUT_CLAWS, false) >= 3)
             {
                 if (verbose)
-                    mprf("The hauberk won't fit your hands.");
+                    mpr("The hauberk won't fit your hands.");
                 return false;
             }
 
@@ -665,7 +665,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 || player_mutation_level(MUT_ANTENNAE, false) >= 3)
             {
                 if (verbose)
-                    mprf("The hauberk won't fit your head.");
+                    mpr("The hauberk won't fit your head.");
                 return false;
             }
         }

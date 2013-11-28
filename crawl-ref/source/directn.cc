@@ -572,7 +572,7 @@ void full_describe_view()
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
-        mprf("No monsters, items or features are visible.");
+        mpr("No monsters, items or features are visible.");
         return;
     }
 

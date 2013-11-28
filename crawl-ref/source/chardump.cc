@@ -1516,7 +1516,7 @@ static bool _write_dump(const string &fname, dump_params &par, bool quiet)
         succeeded = true;
         if (!quiet)
 #ifdef DGAMELAUNCH
-            mprf("Char dumped successfully.");
+            mpr("Char dumped successfully.");
 #else
             mprf("Char dumped to '%s'.", file_name.c_str());
 #endif

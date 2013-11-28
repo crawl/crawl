@@ -5568,7 +5568,7 @@ void float_player()
 {
     if (you.fishtail)
     {
-        mprf("Your tail turns into legs as you fly out of the water.");
+        mpr("Your tail turns into legs as you fly out of the water.");
         merfolk_stop_swimming();
     }
     else if (you.tengu_flight())

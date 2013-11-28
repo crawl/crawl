@@ -1461,7 +1461,7 @@ static bool _check_ability_possible(const ability_def& abil,
             && !player_rotted())
         {
             if (!quiet)
-                mprf("You don't need to restore your stats or hit points!");
+                mpr("You don't need to restore your stats or hit points!");
             return false;
         }
         return true;
@@ -2717,7 +2717,7 @@ static bool _do_ability(const ability_def& abil)
         if (retval <= 0)
         {
             if (retval == 0)
-                mprf("No corpses are in range.");
+                mpr("No corpses are in range.");
             else
                 canned_msg(MSG_OK);
             return false;

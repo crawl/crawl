@@ -2550,7 +2550,7 @@ void bolt::affect_endpoint()
     {
         if (you.see_cell(pos()))
         {
-            mprf("The wave splashes down.");
+            mpr("The wave splashes down.");
             noisy(25, pos());
         }
         else

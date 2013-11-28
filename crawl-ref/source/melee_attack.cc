@@ -308,7 +308,7 @@ bool melee_attack::handle_phase_attempted()
             if (defender && you.can_see(defender))
                 mprf("You jump-attack %s!", defender->name(DESC_THE).c_str());
             else
-                mprf("You jump-attack!");
+                mpr("You jump-attack!");
             if (jump_blocked)
             {
                 mpr("Something unseen blocks your movement!");
