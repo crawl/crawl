@@ -854,18 +854,17 @@ static string _menu_burden_invstatus(const Menu *menu, bool is_pickup = false)
     //TODO: Should somehow colour burdened/overloaded in LIGHTRED/RED
     //      respectively {kittel}
     string newstate =
-        new_burd > carrying_capacity(BS_ENCUMBERED) ? "overloaded)" :
-      new_burd > carrying_capacity(BS_UNENCUMBERED) ? "burdened)"
-                                                    : "unencumbered)";
-
-    string burden = "(Burden: ";
-    burden += Options.show_inventory_weights ?
-                  make_stringf("%.0f%s/%.0f aum)",
-                      you.burden * BURDEN_TO_AUM,
-                      sw.c_str(),
-                      carrying_capacity(BS_UNENCUMBERED) * BURDEN_TO_AUM)
-                : newstate;
-    return burden;
+        new_burd > carrying_capacity(BS_ENCUMBERED) ? "overloaded" :
+      new_burd > carrying_capacity(BS_UNENCUMBERED) ? "burdened"
+                                                    : "unencumbered";
+    if (Options.show_inventory_weights)
+    {
+        newstate = make_stringf("%.0f%s/%.0f aum",
+                       you.burden * BURDEN_TO_AUM,
+                       sw.c_str(),
+                       carrying_capacity(BS_UNENCUMBERED) * BURDEN_TO_AUM);
+    }
+    return make_stringf("(Burden: %s)", newstate.c_str());
 }
 
 static string _pickup_menu_title(const Menu *menu, const string &oldt)
