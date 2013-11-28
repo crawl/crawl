@@ -1,4 +1,4 @@
-Stone Soup 0.13.1 (unreleased, up to 0.13.0-58-ga7b73c1)
+Stone Soup 0.13.1 (20131128)
 ----------------------------
 * Several crash fixes.
 * Several message improvements.
@@ -6,6 +6,14 @@ Stone Soup 0.13.1 (unreleased, up to 0.13.0-58-ga7b73c1)
 * Wind blasts can no longer push monsters through walls.
 * Shadow creatures band members don't count towards the summon cap.
 * Awakened trees and flaying ghosts respect sanctuary.
+* No "monster it is not fully coded".
+* Unfinished monsters shouldn't spawn anymore.
+* You can check \ when reading scrolls of identify.
+* Spectral weapons don't expire one turn after taking stairs anymore.
+* clua/gearset works again.
+* Vampires can't use lich form anymore.
+* A tome of destruction evoke-fest exploit is no more.
+* Monsters can't swap weapons while berserk.
 
 Stone Soup 0.13 (20131011)
 --------------------------
