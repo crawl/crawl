@@ -794,14 +794,14 @@ void item_check(bool verbose)
                 out_string += ' ';
             }
         }
-        mprnojoin(out_string, MSGCH_FLOOR_ITEMS);
+        mpr_nojoin(out_string, MSGCH_FLOOR_ITEMS);
         done_init_line = true;
     }
 
     if (verbose || items.size() <= msgwin_lines() - 1)
     {
         if (!done_init_line)
-            mprnojoin("Things that are here:", MSGCH_FLOOR_ITEMS);
+            mpr_nojoin("Things that are here:", MSGCH_FLOOR_ITEMS);
         for (unsigned int i = 0; i < items.size(); ++i)
         {
             item_def it(*items[i]);

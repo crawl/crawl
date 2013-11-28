@@ -89,8 +89,8 @@ msg_colour_type msg_colour(int colour);
 void mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
          bool nojoin=false, bool cap=true);
 
-static inline void mprnojoin(string text, msg_channel_type channel=MSGCH_PLAIN,
-                             int param=0)
+static inline void mpr_nojoin(string text, msg_channel_type channel=MSGCH_PLAIN,
+                              int param=0)
 {
     mpr(text, channel, param, true);
 }
