@@ -467,7 +467,7 @@ void wizard_tweak_object(void)
 
         while (true)
         {
-            mpr_nocap(you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+            mprf_nocap("%s", you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
             mprf(MSGCH_PROMPT, "a - plus  b - plus2  c - %s  "
                                "d - quantity  e - flags  ESC - exit",
@@ -719,7 +719,7 @@ void wizard_make_object_randart()
     if (eq != EQ_NONE)
         equip_item(eq, invslot);
 
-    mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
+    mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 // Returns whether an item of this type can be cursed.

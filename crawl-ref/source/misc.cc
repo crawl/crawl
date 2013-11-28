@@ -1658,7 +1658,7 @@ void list_shop_types()
 {
     mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");
     for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
-        mpr_nocap(shop_types[i]);
+        mprf_nocap("%s", shop_types[i]);
 }
 
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.

@@ -497,7 +497,7 @@ bool god_id_item(item_def& item, bool silent)
             you.wield_change = true;
 
         if (!silent)
-            mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
+            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 
         seen_item(item);
         return true;
