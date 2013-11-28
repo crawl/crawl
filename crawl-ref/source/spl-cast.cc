@@ -666,12 +666,12 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 }
 
                 if (you.last_cast_spell == SPELL_NO_SPELL)
-                    mpr("Cast which spell? (? or * to list) ", MSGCH_PROMPT);
+                    mprf(MSGCH_PROMPT, "Cast which spell? (? or * to list) ");
                 else
                 {
                     mprf(MSGCH_PROMPT, "Casting: <w>%s</w>",
                          spell_title(you.last_cast_spell));
-                    mpr("Confirm with . or Enter, or press ? or * to list all spells.", MSGCH_PROMPT);
+                    mprf(MSGCH_PROMPT, "Confirm with . or Enter, or press ? or * to list all spells.");
                 }
 
                 keyin = get_ch();
@@ -1200,7 +1200,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         const char *prompt = get_spell_target_prompt(spell);
         if (dir == DIR_DIR)
-            mpr(prompt ? prompt : "Which direction?", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "%s", prompt ? prompt : "Which direction?");
 
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
@@ -1378,7 +1378,7 @@ spret_type your_spells(spell_type spell, int powc,
                  spell_title(spell));
         }
         else
-            mpr("Invalid spell!", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Invalid spell!");
 
         return SPRET_ABORT;
     }

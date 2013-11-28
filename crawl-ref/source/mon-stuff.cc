@@ -1015,7 +1015,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         case MONS_KHUFU:          pow = 15; break;
 
         default:
-            mpr("Unknown mummy type.", MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Unknown mummy type.");
             return;
     }
 
@@ -1053,15 +1053,14 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
             return;
         }
 
-        mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
+        mprf(MSGCH_MONSTER_SPELL, "You feel nervous for a moment...");
         curse_an_item();
     }
     else
     {
         if (index == NON_MONSTER)
         {
-            mpr("You feel extremely nervous for a moment...",
-                MSGCH_MONSTER_SPELL);
+            mprf(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
         }
         else if (you.can_see(target))
         {
@@ -1221,7 +1220,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
         saw = true;
         viewwindow();
         if (is_sanctuary(mons->pos()))
-            mpr(sanct_msg, MSGCH_GOD);
+            mprf(MSGCH_GOD, "%s", sanct_msg);
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s explodes!",
                  mons->full_name(DESC_THE).c_str());
@@ -1689,8 +1688,8 @@ int monster_die(monster* mons, killer_type killer,
 
             you.increase_duration(DUR_BERSERK, bonus);
 
-            mpr("You feel the power of Trog in you as your rage grows.",
-                MSGCH_GOD, GOD_TROG);
+            mprf(MSGCH_GOD, GOD_TROG,
+                 "You feel the power of Trog in you as your rage grows.");
         }
         else if (player_equip_unrand(UNRAND_BLOODLUST))
         {
@@ -1821,10 +1820,9 @@ int monster_die(monster* mons, killer_type killer,
         {
             if (you.can_see(mons))
             {
-                mpr(silenced(mons->pos()) ?
+                mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, silenced(mons->pos()) ?
                     "The tentacle is hauled back through the portal!" :
-                    "With a roar, the tentacle is hauled back through the portal!",
-                    MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+                    "With a roar, the tentacle is hauled back through the portal!");
             }
             silent = true;
         }
@@ -3852,7 +3850,7 @@ bool simple_monster_message(const monster* mons, const char *event,
         if (channel == MSGCH_PLAIN && mons->wont_attack())
             channel = MSGCH_FRIEND_ACTION;
 
-        mpr(msg.c_str(), channel, param);
+        mprf(channel, param, "%s", msg.c_str());
         return true;
     }
 
@@ -4950,32 +4948,32 @@ void temperature_changed(float change)
     // Just reached the temp that kills off stoneskin.
     if (change > pos_threshold && temperature_tier(TEMP_WARM))
     {
-        mpr("Your stony skin melts.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your stony skin melts.");
         you.redraw_armour_class = true;
     }
 
     // Passive heat stuff.
     if (change > pos_threshold && temperature_tier(TEMP_FIRE))
-        mpr("You're getting fired up.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You're getting fired up.");
 
     // Heat aura stuff.
     if (change > pos_threshold && temperature_tier(TEMP_MAX))
     {
-        mpr("You blaze with the fury of an erupting volcano!", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You blaze with the fury of an erupting volcano!");
         invalidate_agrid(true);
     }
 
     // For DECREMENTS (reverse order):
     if (change < neg_threshold && temperature_tier(TEMP_MAX))
-        mpr("The intensity of your heat diminishes.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "The intensity of your heat diminishes.");
 
     if (change < neg_threshold && temperature_tier(TEMP_FIRE))
-        mpr("You're cooling off.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You're cooling off.");
 
     // Cooled down enough for stoneskin to kick in again.
     if (change < neg_threshold && temperature_tier(TEMP_WARM))
     {
-            mpr("Your skin cools and hardens.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your skin cools and hardens.");
             you.redraw_armour_class = true;
     }
 

@@ -2446,7 +2446,7 @@ void god_speaks(god_type god, const char *mesg)
     fake_mon.foe        = MHITYOU;
     fake_mon.mname      = "FAKE GOD MONSTER";
 
-    mpr(do_mon_str_replacements(mesg, &fake_mon).c_str(), MSGCH_GOD, god);
+    mprf(MSGCH_GOD, god, "%s", do_mon_str_replacements(mesg, &fake_mon).c_str());
 
     fake_mon.reset();
     mgrd(you.pos()) = orig_mon;
@@ -3075,8 +3075,7 @@ void excommunication(god_type new_god)
         {
             simple_god_message("'s voice booms out, \"Who do you think you "
                                "are?\"", GOD_BEOGH);
-            mpr("All of your followers decide to abandon you.",
-                MSGCH_MONSTER_ENCHANT);
+            mprf(MSGCH_MONSTER_ENCHANT, "All of your followers decide to abandon you.");
             add_daction(DACT_ALLY_BEOGH);
             remove_all_companions(GOD_BEOGH);
         }
@@ -3154,8 +3153,7 @@ void excommunication(god_type new_god)
 
         if (query_da_counter(DACT_ALLY_SLIME))
         {
-            mpr("All of your fellow slimes turn on you.",
-                MSGCH_MONSTER_ENCHANT);
+            mprf(MSGCH_MONSTER_ENCHANT, "All of your fellow slimes turn on you.");
             add_daction(DACT_ALLY_SLIME);
         }
 
@@ -3165,8 +3163,7 @@ void excommunication(god_type new_god)
     case GOD_FEDHAS:
         if (query_da_counter(DACT_ALLY_PLANT))
         {
-            mpr("The plants of the dungeon turn on you.",
-                MSGCH_MONSTER_ENCHANT);
+            mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon turn on you.");
             add_daction(DACT_ALLY_PLANT);
         }
         _set_penance(old_god, 30);
@@ -3192,7 +3189,7 @@ void excommunication(god_type new_god)
     // all non-hostile holy beings that worship a good god hostile.
     if (!is_good_god(new_god) && query_da_counter(DACT_ALLY_HOLY))
     {
-        mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
+        mprf(MSGCH_MONSTER_ENCHANT, "The divine host forsakes you.");
         add_daction(DACT_ALLY_HOLY);
     }
 
@@ -3260,11 +3257,11 @@ void print_sacrifice_message(god_type god, const item_def &item,
         return;
     }
     const string itname = item.name(your ? DESC_YOUR : DESC_THE);
-    mpr(_sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
+    mprf(MSGCH_GOD, god, "%s",
+         _sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
                            itname.find("glowing") != string::npos,
                            item.quantity > 1,
-                           piety_gain),
-        MSGCH_GOD, god);
+                           piety_gain).c_str());
 }
 
 void nemelex_death_message()
@@ -3432,7 +3429,7 @@ static void _god_welcome_identify_gear()
     if (amulet && amulet->sub_type == AMU_FAITH)
     {
         // The flash happens independent of item id.
-        mpr("Your amulet flashes!", MSGCH_GOD);
+        mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(god_colour(you.religion), 300);
         set_ident_type(*amulet, ID_KNOWN_TYPE);
         set_ident_flags(*amulet, ISFLAG_KNOW_TYPE);
@@ -3599,7 +3596,7 @@ void god_pitch(god_type which_god)
         simple_god_message(" begins to support your attributes as your "
                            "movement slows.");
         notify_stat_change("Cheibriados worship");
-        mpr("You can now bend time to slow others.", MSGCH_GOD);
+        mprf(MSGCH_GOD, "You can now bend time to slow others.");
     }
 
     // We disable all magical skills to avoid accidentally angering Trog.
@@ -3623,40 +3620,37 @@ void god_pitch(god_type which_god)
         && query_da_counter(DACT_ALLY_UNHOLY_EVIL))
     {
         add_daction(DACT_ALLY_UNHOLY_EVIL);
-        mpr("Your unholy and evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+        mprf(MSGCH_MONSTER_ENCHANT, "Your unholy and evil allies forsake you.");
     }
 
     if (you_worship(GOD_ZIN)
         && query_da_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
     {
         add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
-        mpr("Your unclean and chaotic allies forsake you.",
-            MSGCH_MONSTER_ENCHANT);
+        mprf(MSGCH_MONSTER_ENCHANT, "Your unclean and chaotic allies forsake you.");
     }
     else if (you_worship(GOD_TROG)
              && query_da_counter(DACT_ALLY_SPELLCASTER))
     {
         add_daction(DACT_ALLY_SPELLCASTER);
-        mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
+        mprf(MSGCH_MONSTER_ENCHANT, "Your magic-using allies forsake you.");
     }
 
     if (you_worship(GOD_ELYVILON))
     {
-        mpr("You can now call upon Elyvilon to destroy weapons lying on the "
-            "ground.", MSGCH_GOD);
-        mpr("You can now provide lesser healing for others.", MSGCH_GOD);
+        mprf(MSGCH_GOD, "You can now call upon Elyvilon to destroy weapons "
+                        "lying on the ground.");
+        mprf(MSGCH_GOD, "You can now provide lesser healing for others.");
     }
     else if (you_worship(GOD_TROG))
     {
-        mpr("You can now call upon Trog to burn spellbooks in your "
-            "surroundings.", MSGCH_GOD);
+        mprf(MSGCH_GOD, "You can now call upon Trog to burn spellbooks in your "
+            "surroundings.");
     }
     else if (you_worship(GOD_FEDHAS))
     {
-        mpr("You can now call upon Fedhas to speed up the decay of corpses.",
-            MSGCH_GOD);
-        mpr("The plants of the dungeon cease their hostilities.",
-            MSGCH_MONSTER_ENCHANT);
+        mprf(MSGCH_GOD, "You can now call upon Fedhas to speed up the decay of corpses.");
+        mprf(MSGCH_MONSTER_ENCHANT, "The plants of the dungeon cease their hostilities.");
         if (env.forest_awoken_until)
             for (monster_iterator mi; mi; ++mi)
                 mi->del_ench(ENCH_AWAKEN_FOREST);
@@ -3689,7 +3683,7 @@ void god_pitch(god_type which_god)
                                + god_name(you.religion) + ".").c_str(), old_god);
             break;
         default:
-            mpr("Unknown good god.", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Unknown good god.");
         }
         // Give a piety bonus when switching between good gods.
         if (old_piety > piety_breakpoint(0))

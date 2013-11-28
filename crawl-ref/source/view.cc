@@ -301,12 +301,12 @@ void update_monsters_in_view()
         }
 
         if (size == 1)
-            mpr(msgs[0], MSGCH_WARN);
+            mprf(MSGCH_WARN, "%s", msgs[0].c_str());
         else
         {
             while (types.size() > max_msgs && !genera.empty())
                 _genus_factoring(types, genera);
-            mpr(_desc_mons_type_map(types), MSGCH_WARN);
+            mprf(MSGCH_WARN, "%s", _desc_mons_type_map(types).c_str());
         }
 
         bool warning = false;
@@ -342,7 +342,7 @@ void update_monsters_in_view()
             warning_msg += ".";
         }
         if (warning)
-            mpr(warning_msg, MSGCH_GOD);
+            mprf(MSGCH_GOD, "%s", warning_msg.c_str());
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever

@@ -1142,7 +1142,7 @@ static void _mons_fire_wand(monster* mons, item_def &wand, bolt &beem,
     if (!simple_monster_message(mons, " zaps a wand."))
     {
         if (!silenced(you.pos()))
-            mpr("You hear a zap.", MSGCH_SOUND);
+            mprf(MSGCH_SOUND, "You hear a zap.");
     }
 
     // charge expenditure {dlb}
@@ -1182,7 +1182,7 @@ static void _rod_fired_pre(monster* mons)
     if (!simple_monster_message(mons, " zaps a rod.")
         && !silenced(you.pos()))
     {
-        mpr("You hear a zap.", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You hear a zap.");
     }
 }
 
@@ -1938,9 +1938,9 @@ void handle_monster_move(monster* mons)
         mprf(MSGCH_ERROR, "Monster %s became detached from mgrd "
                           "in handle_monster_move() loop",
              mons->name(DESC_PLAIN, true).c_str());
-        mpr("[[[[[[[[[[[[[[[[[[", MSGCH_WARN);
+        mprf(MSGCH_WARN, "[[[[[[[[[[[[[[[[[[");
         debug_mons_scan();
-        mpr("]]]]]]]]]]]]]]]]]]", MSGCH_WARN);
+        mprf(MSGCH_WARN, "]]]]]]]]]]]]]]]]]]");
         monster_was_floating = true;
     }
     else if (monster_was_floating
@@ -1982,7 +1982,7 @@ void handle_monster_move(monster* mons)
                                            MSGCH_WARN);
                 }
                 else
-                    mpr("You hear a loud crackle.", MSGCH_SOUND);
+                    mprf(MSGCH_SOUND, "You hear a loud crackle.");
             }
             // Done this way to keep the detonation timer predictable
             mons->speed_increment -= 10;
@@ -2554,7 +2554,7 @@ static bool _jelly_divide(monster* parent)
     if (!simple_monster_message(parent, " splits in two!")
         && (player_can_hear(parent->pos()) || player_can_hear(child->pos())))
     {
-        mpr("You hear a squelching noise.", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You hear a squelching noise.");
     }
 
     if (crawl_state.game_is_arena())
@@ -3882,9 +3882,9 @@ static bool _monster_move(monster* mons)
             {
                 // Message depends on whether caused by boring beetle or
                 // acid (Dissolution).
-                mpr((mons->type == MONS_BORING_BEETLE) ?
-                    "You hear a grinding noise." :
-                    "You hear a sizzling sound.", MSGCH_SOUND);
+                mprf(MSGCH_SOUND, (mons->type == MONS_BORING_BEETLE) ?
+                     "You hear a grinding noise." :
+                     "You hear a sizzling sound.");
             }
         }
     }

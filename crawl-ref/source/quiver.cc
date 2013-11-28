@@ -336,7 +336,7 @@ void player_quiver::_maybe_fill_empty_slot()
     }
 
 #ifdef DEBUG_QUIVER
-    mpr("Recalculating fire order...", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "Recalculating fire order...");
 #endif
 
     const launch_retval desired_ret =

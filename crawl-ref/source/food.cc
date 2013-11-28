@@ -1007,15 +1007,15 @@ bool food_change(bool initial)
             {
                 if (you.duration[DUR_BERSERK] > 1)
                 {
-                    mpr("Your blood-deprived body can't sustain your rage any "
-                        "longer.", MSGCH_DURATION);
+                    mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
+                                         "your rage any longer.");
                     you.duration[DUR_BERSERK] = 1;
                 }
                 if (you.form != TRAN_NONE && you.form != TRAN_BAT
                     && you.duration[DUR_TRANSFORMATION] > 2 * BASELINE_DELAY)
                 {
-                    mpr("Your blood-deprived body can't sustain your "
-                        "transformation much longer.", MSGCH_DURATION);
+                    mprf(MSGCH_DURATION, "Your blood-deprived body can't sustain "
+                                         "your transformation much longer.");
                     you.set_duration(DUR_TRANSFORMATION, 2);
                 }
             }
@@ -1023,8 +1023,8 @@ bool food_change(bool initial)
                      && you.duration[DUR_TRANSFORMATION] > 5)
             {
                 print_stats();
-                mpr("Your blood-filled body can't sustain your transformation "
-                    "much longer.", MSGCH_WARN);
+                mprf(MSGCH_WARN, "Your blood-filled body can't sustain your "
+                                 "transformation much longer.");
 
                 // Give more time because suddenly stopping flying can be fatal.
                 you.set_duration(DUR_TRANSFORMATION, 5);
@@ -2720,7 +2720,7 @@ void handle_starvation()
     {
         if (!you.cannot_act() && one_chance_in(40))
         {
-            mpr("You lose consciousness!", MSGCH_FOOD);
+            mprf(MSGCH_FOOD, "You lose consciousness!");
             stop_running();
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
@@ -2730,7 +2730,7 @@ void handle_starvation()
 
         if (you.hunger <= 0)
         {
-            mpr("You have starved to death.", MSGCH_FOOD);
+            mprf(MSGCH_FOOD, "You have starved to death.");
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);
             if (!you.dead) // if we're still here...
                 set_hunger(HUNGER_DEFAULT, true);

@@ -1174,7 +1174,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     if (!in_bounds(temp))
     {
-        mpr("swap_features(): No boring squares on level?", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "swap_features(): No boring squares on level?");
         return false;
     }
 

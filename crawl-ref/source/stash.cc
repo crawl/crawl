@@ -131,7 +131,7 @@ void describe_stash(const coord_def& c)
 {
     string desc = get_stash_desc(c);
     if (!desc.empty())
-        mpr(desc.c_str(), MSGCH_EXAMINE_FILTER);
+        mprf(MSGCH_EXAMINE_FILTER, "%s", desc.c_str());
 }
 
 
@@ -1781,7 +1781,7 @@ void StashTracker::search_stashes()
 
     if (!search->valid() && csearch != "*")
     {
-        mpr("Your search expression is invalid.", MSGCH_PLAIN);
+        mprf(MSGCH_PLAIN, "Your search expression is invalid.");
         lastsearch = help;
         return ;
     }
@@ -1790,13 +1790,13 @@ void StashTracker::search_stashes()
 
     if (results.empty())
     {
-        mpr("Can't find anything matching that.", MSGCH_PLAIN);
+        mprf(MSGCH_PLAIN, "Can't find anything matching that.");
         return;
     }
 
     if (results.size() > SEARCH_SPAM_THRESHOLD)
     {
-        mpr("Too many matches; use a more specific search.", MSGCH_PLAIN);
+        mprf(MSGCH_PLAIN, "Too many matches; use a more specific search.");
         return;
     }
 

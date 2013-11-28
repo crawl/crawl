@@ -119,11 +119,11 @@ bool bolt::is_blockable() const
     return !is_beam && !is_explosion && flavour != BEAM_ELECTRICITY;
 }
 
-void bolt::emit_message(msg_channel_type chan, const char* m)
+void bolt::emit_message(const char* m)
 {
     const string message = m;
     if (!message_cache.count(message))
-        mpr(m, chan);
+        mpr(m);
 
     message_cache.insert(message);
 }
@@ -842,7 +842,7 @@ void bolt::digging_wall_effect()
             {
                 if (!silenced(you.pos()))
                 {
-                    mpr("You hear a grinding noise.", MSGCH_SOUND);
+                    mprf(MSGCH_SOUND, "You hear a grinding noise.");
                     obvious_effect = true; // You may still see the caster.
                     msg_generated = true;
                 }
@@ -893,9 +893,9 @@ void bolt::fire_wall_effect()
     // Destroy the wall.
     nuke_wall(pos());
     if (you.see_cell(pos()))
-        emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
+        emit_message("The tree burns like a torch!");
     else if (you.can_smell())
-        emit_message(MSGCH_PLAIN, "You smell burning wood.");
+        emit_message("You smell burning wood.");
     if (whose_kill() == KC_YOU)
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
@@ -914,7 +914,7 @@ void bolt::elec_wall_effect()
 
 static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
 {
-    string msg;
+    const char *msg = nullptr;
     msg_channel_type chan = MSGCH_PLAIN;
     bool hear = player_can_hear(p);
     bool see = you.see_cell(p);
@@ -981,9 +981,9 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         break;
     }
 
-    if (!msg.empty())
+    if (msg)
     {
-        mpr(msg, chan);
+        mprf(chan, "%s", msg);
         return true;
     }
     else
@@ -2791,7 +2791,7 @@ void bolt::affect_place_clouds()
             || (ctype == CLOUD_FIRE && flavour == BEAM_COLD))
         {
             if (player_can_hear(p))
-                mpr("You hear a sizzling sound!", MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "You hear a sizzling sound!");
 
             delete_cloud(cloudidx);
             extra_range_used += 5;
@@ -3227,7 +3227,7 @@ void bolt::tracer_affect_player()
     apply_dmg_funcs(&you, dummy, messages);
 
     for (unsigned int i = 0; i < messages.size(); ++i)
-        mpr(messages[i].c_str(), MSGCH_WARN);
+        mprf(MSGCH_WARN, "%s", messages[i].c_str());
 
     apply_hit_funcs(&you, 0);
     extra_range_used += range_used_on_hit();
@@ -3897,7 +3897,7 @@ void bolt::affect_player()
     if (hurted > 0)
     {
         for (unsigned int i = 0; i < messages.size(); ++i)
-            mpr(messages[i].c_str(), MSGCH_WARN);
+            mprf(MSGCH_WARN, "%s", messages[i].c_str());
     }
 
     internal_ouch(hurted);
@@ -4150,7 +4150,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     if (!is_tracer && final > 0)
     {
         for (unsigned int i = 0; i < messages.size(); ++i)
-            mpr(messages[i].c_str(), MSGCH_MONSTER_DAMAGE);
+            mprf(MSGCH_MONSTER_DAMAGE, "%s", messages[i].c_str());
     }
 
     apply_hit_funcs(mon, final);
@@ -4466,11 +4466,10 @@ bool bolt::handle_statue_disintegration(monster* mon)
         if (!silenced(you.pos()))
         {
             if (!you.see_cell(mon->pos()))
-                mpr("You hear a hideous screaming!", MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "You hear a hideous screaming!");
             else
             {
-                mpr("The statue screams as its substance crumbles away!",
-                    MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "The statue screams as its substance crumbles away!");
             }
         }
         else if (you.see_cell(mon->pos()))
@@ -4742,7 +4741,7 @@ void bolt::affect_monster(monster* mon)
     if (final > 0)
     {
         for (unsigned int i = 0; i < messages.size(); ++i)
-            mpr(messages[i].c_str(), MSGCH_MONSTER_DAMAGE);
+            mprf(MSGCH_MONSTER_DAMAGE, "%s", messages[i].c_str());
     }
 
     // Apply flavoured specials.
@@ -5565,7 +5564,7 @@ void bolt::refine_for_explosion()
             if (!heard)
                 msg_generated = false;
             else
-                mpr(hearMsg, MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "%s", hearMsg);
         }
     }
 }

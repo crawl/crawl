@@ -364,13 +364,13 @@ void spawn_random_monsters()
     }
 
 #ifdef DEBUG_MON_CREATION
-    mpr("in spawn_random_monsters()", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "in spawn_random_monsters()");
 #endif
     int rate = env.spawn_random_rate;
     if (!rate)
     {
 #ifdef DEBUG_MON_CREATION
-        mpr("random monster gen turned off", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "random monster gen turned off");
 #endif
         return;
     }
@@ -806,7 +806,7 @@ static void _abyss_monster_creation_message(const monster* mon)
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
-    mpr("in place_monster()", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "in place_monster()");
 #endif
 
     int tries = 0;
@@ -872,7 +872,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (create_band)
     {
 #ifdef DEBUG_MON_CREATION
-        mpr("Choose band members...", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Choose band members...");
 #endif
         band = _choose_band(mg.cls, band_size, leader);
         band_size++;
@@ -2009,7 +2009,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool &natural_leader)
 {
 #ifdef DEBUG_MON_CREATION
-    mpr("in _choose_band()", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "in _choose_band()");
 #endif
     // Band size describes the number of monsters in addition to
     // the band leader.
@@ -3058,7 +3058,7 @@ static monster_type _pick_zot_exit_defender()
     if (one_chance_in(11))
     {
 #ifdef DEBUG_MON_CREATION
-        mpr("Create a pandemonium lord!", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Create a pandemonium lord!");
 #endif
         for (int i = 0; i < 4; i++)
         {
@@ -3086,7 +3086,7 @@ static monster_type _pick_zot_exit_defender()
 monster* mons_place(mgen_data mg)
 {
 #ifdef DEBUG_MON_CREATION
-    mpr("in mons_place()", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "in mons_place()");
 #endif
     int mon_count = 0;
     for (int il = 0; il < MAX_MONSTERS; il++)
@@ -3099,7 +3099,7 @@ monster* mons_place(mgen_data mg)
             return 0;
 
 #ifdef DEBUG_MON_CREATION
-        mpr("Set class RANDOM_MONSTER", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Set class RANDOM_MONSTER");
 #endif
         mg.cls = RANDOM_MONSTER;
     }
@@ -3114,7 +3114,7 @@ monster* mons_place(mgen_data mg)
         && player_in_connected_branch() && !mg.summoned())
     {
 #ifdef DEBUG_MON_CREATION
-        mpr("Call _pick_zot_exit_defender()", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Call _pick_zot_exit_defender()");
 #endif
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;

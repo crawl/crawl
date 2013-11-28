@@ -327,9 +327,9 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
         else
         {
-            mpr(!you.duration[DUR_INVIS] ? "You fade into invisibility!"
-                                         : "You fade further into invisibility.",
-                MSGCH_DURATION);
+            mprf(MSGCH_DURATION, !you.duration[DUR_INVIS]
+                 ? "You fade into invisibility!"
+                 : "You fade further into invisibility.");
         }
 
         // Now multiple invisiblity casts aren't as good. -- bwr
@@ -413,7 +413,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         bool nothing_happens = true;
         if (you.duration[DUR_BREATH_WEAPON])
         {
-            mpr("You have got your breath back.", MSGCH_RECOVERY);
+            mprf(MSGCH_RECOVERY, "You have got your breath back.");
             you.duration[DUR_BREATH_WEAPON] = 0;
             nothing_happens = false;
         }
@@ -498,7 +498,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
 
     case POT_RESISTANCE:
-        mpr("You feel protected.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel protected.");
         you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
         break;
 

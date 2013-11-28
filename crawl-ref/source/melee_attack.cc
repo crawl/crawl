@@ -867,7 +867,7 @@ bool melee_attack::handle_phase_damaged()
     }
 
     if (shroud_broken)
-        mpr("Your shroud falls apart!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "Your shroud falls apart!");
 
     if (defender->is_player() && you.mutation[MUT_JELLY_GROWTH]
         && x_chance_in_y(damage_done, you.hp_max))
@@ -2532,7 +2532,7 @@ void melee_attack::antimagic_affects_defender()
         int mp_loss = min(you.magic_points, random2(damage_done * 2));
         if (!mp_loss)
             return;
-        mpr("You feel your power leaking away.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You feel your power leaking away.");
         drain_mp(mp_loss);
         obvious_effect = true;
     }
@@ -2927,7 +2927,7 @@ void melee_attack::chaos_affects_attacker()
 
         if (!msg.empty())
         {
-            mpr(msg.c_str(), MSGCH_SOUND);
+            mprf(MSGCH_SOUND, "%s", msg.c_str());
             noisy(15, attack_position, attacker->mindex());
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
             take_note(Note(NOTE_MESSAGE, 0, 0,

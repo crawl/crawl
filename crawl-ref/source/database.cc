@@ -445,7 +445,7 @@ static void _execute_embedded_lua(string &str)
         string::size_type end = str.find("}}", pos + 2);
         if (end == string::npos)
         {
-            mpr("Unbalanced {{, bailing.", MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Unbalanced {{, bailing.");
             break;
         }
 
@@ -652,7 +652,7 @@ static string _getRandomisedStr(TextDB &db, const string &key,
     recursion_depth++;
     if (recursion_depth > MAX_RECURSION_DEPTH)
     {
-        mpr("Too many nested replacements, bailing.", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Too many nested replacements, bailing.");
 
         return "TOO MUCH RECURSION";
     }
@@ -678,14 +678,14 @@ static void _call_recursive_replacement(string &str, TextDB &db,
         num_replacements++;
         if (num_replacements > MAX_REPLACEMENTS)
         {
-            mpr("Too many string replacements, bailing.", MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Too many string replacements, bailing.");
             return;
         }
 
         string::size_type end = str.find("@", pos + 1);
         if (end == string::npos)
         {
-            mpr("Unbalanced @, bailing.", MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Unbalanced @, bailing.");
             break;
         }
 

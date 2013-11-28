@@ -298,7 +298,7 @@ static void _print_good_god_holy_being_speech(bool neutral,
     {
         msg = do_mon_str_replacements(msg, mon);
         strip_channel_prefix(msg, channel);
-        mpr(msg.c_str(), channel);
+        mprf(channel, "%s", msg.c_str());
     }
 }
 
@@ -377,7 +377,7 @@ static void _print_converted_orc_speech(const string key,
     {
         msg = do_mon_str_replacements(msg, mon);
         strip_channel_prefix(msg, channel);
-        mpr(msg.c_str(), channel);
+        mprf(channel, "%s", msg.c_str());
     }
 }
 

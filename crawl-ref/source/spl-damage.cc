@@ -1200,7 +1200,7 @@ spret_type cast_shatter(int pow, bool fail)
     else
     {
         noisy(30, you.pos());
-        mpr("The dungeon rumbles!", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "The dungeon rumbles!");
     }
 
     int rad = 3 + you.skill_rdiv(SK_EARTH_MAGIC, 1, 5);
@@ -1217,7 +1217,7 @@ spret_type cast_shatter(int pow, bool fail)
     }
 
     if (dest && !silence)
-        mpr("Ka-crash!", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "Ka-crash!");
 
     return SPRET_SUCCESS;
 }
@@ -1311,7 +1311,7 @@ bool mons_shatter(monster* caster, bool actual)
     }
 
     if (dest && !silence)
-        mpr("Ka-crash!", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "Ka-crash!");
 
     if (!caster->wont_attack())
         foes *= -1;
@@ -2431,7 +2431,7 @@ void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
         if (feat_is_tree(grd(*ri))
             && cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
         {
-            mpr(msg, ch);
+            mprf(ch, "%s", msg.c_str());
             return;
         }
 }

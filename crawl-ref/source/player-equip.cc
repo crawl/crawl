@@ -596,8 +596,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_ELECTROCUTION:
                     if (!silenced(you.pos()))
                     {
-                        mpr("You hear the crackle of electricity.",
-                            MSGCH_SOUND);
+                        mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
                     }
                     else
                         mpr("You see sparks fly.");
@@ -1345,7 +1344,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     case AMU_FAITH:
         if (!you_worship(GOD_NO_GOD))
         {
-            mpr("You feel a surge of divine interest.", MSGCH_GOD);
+            mprf(MSGCH_GOD, "You feel a surge of divine interest.");
             ident = ID_KNOWN_TYPE;
         }
         break;
@@ -1416,16 +1415,16 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             if (you.duration[DUR_SLOW])
                 dir--;
             if (dir > 0)
-                mpr("You abruptly slow down.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "You abruptly slow down.");
             else if (dir < 0)
-                mpr("Your slowness suddenly goes away.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "Your slowness suddenly goes away.");
             if (you.duration[DUR_TELEPORT])
-                mpr("You feel strangely stable.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "You feel strangely stable.");
             if (you.duration[DUR_BERSERK])
-                mpr("You violently calm down.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "You violently calm down.");
             // my thesaurus says this usage is correct
             if (you.duration[DUR_FINESSE])
-                mpr("Your hands get arrested.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "Your hands get arrested.");
             you.duration[DUR_HASTE] = 0;
             you.duration[DUR_SLOW] = 0;
             you.duration[DUR_TELEPORT] = 0;

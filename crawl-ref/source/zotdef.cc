@@ -209,7 +209,7 @@ static void _zotdef_choose_boss(monster_type mlist[], int power)
 
 static void _zotdef_danger_msg(const char *msg)
 {
-    mpr(msg, MSGCH_DANGER);
+    mprf(MSGCH_DANGER, "%s", msg);
     more();
 }
 

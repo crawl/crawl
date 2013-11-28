@@ -76,9 +76,8 @@ bool check_annotation_exclusion_warning()
         && next_level_id != level_id::current()
         && is_connected_branch(next_level_id))
     {
-        mpr("Warning, next level annotated: " +
-            colour_string(get_level_annotation(next_level_id), YELLOW),
-            MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Warning, next level annotated: <yellow>%s</yellow>",
+             get_level_annotation(next_level_id).c_str());
         might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
     }
@@ -86,7 +85,7 @@ bool check_annotation_exclusion_warning()
              && feat_is_travelable_stair(grd(you.pos()))
              && !strstr(get_exclusion_desc(you.pos()).c_str(), "cloud"))
     {
-        mpr("This staircase is marked as excluded!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "This staircase is marked as excluded!");
         might_be_dangerous = true;
     }
 
@@ -475,7 +474,7 @@ void up_stairs(dungeon_feature_type force_stair)
     seen_monsters_react();
 
     if (!allow_control_teleport(true))
-        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You sense a powerful magical force warping space.");
 
     request_autopickup();
 }
@@ -539,8 +538,8 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         {
             if (for_real)
             {
-                mpr("Error: no Hell exit level, how in the Vestibule did "
-                        "you get here? Let's go to D:1.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Error: no Hell exit level, how in the "
+                                  "Vestibule did you get here? Let's go to D:1.");
             }
             return level_id(BRANCH_DUNGEON, 1);
         }
@@ -593,8 +592,8 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
             {
                 if (for_real)
                 {
-                    mpr("Error: no return path. You did create the exit manually, "
-                        "didn't you? Let's go to D:1.", MSGCH_ERROR);
+                    mprf(MSGCH_ERROR, "Error: no return path. You did create "
+                         "the exit manually, didn't you? Let's go to D:1.");
                 }
                 return level_id(BRANCH_DUNGEON, 1);
             }
@@ -929,7 +928,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     case BRANCH_ABYSS:
         if (old_level.branch == BRANCH_ABYSS)
         {
-            mpr("You plunge deeper into the Abyss.", MSGCH_BANISHMENT);
+            mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
             break;
         }
         if (!force_stair)
@@ -938,8 +937,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
         mpr("To return, you must find a gate leading back.");
         if (you_worship(GOD_CHEIBRIADOS))
         {
-            mpr("You feel Cheibriados slowing down the madness of this place.",
-                MSGCH_GOD, GOD_CHEIBRIADOS);
+            mprf(MSGCH_GOD, GOD_CHEIBRIADOS,
+                 "You feel Cheibriados slowing down the madness of this place.");
         }
 
         // Re-entering the Abyss halves accumulated speed.
@@ -1048,7 +1047,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     you.stop_being_constricted();
 
     if (!allow_control_teleport(true))
-        mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You sense a powerful magical force warping space.");
 
     trackers_init_new_level(true);
     _update_travel_cache(old_level, stair_pos);

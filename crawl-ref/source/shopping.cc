@@ -2326,7 +2326,7 @@ void shop()
 
     if (i == MAX_SHOPS)
     {
-        mpr("Help! Non-existent shop.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Help! Non-existent shop.");
         return;
     }
 
@@ -3110,8 +3110,7 @@ void ShoppingList::display()
             const int index = shopmenu.get_entry_index(sel[0]);
             if (index == -1)
             {
-                mpr("ERROR: Unable to delete thing from shopping list!",
-                    MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "ERROR: Unable to delete thing from shopping list!");
                 more();
                 continue;
             }

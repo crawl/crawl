@@ -1506,7 +1506,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                     && !one_chance_in(temporary ? 2 : 3)))
             {
                 if (failMsg)
-                    mpr("You feel odd for a moment.", MSGCH_MUTATION);
+                    mprf(MSGCH_MUTATION, "You feel odd for a moment.");
                 maybe_id_resist(BEAM_MALMUTATE);
                 return false;
             }
@@ -1533,7 +1533,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             lose_stat(STAT_RANDOM, 1, false, reason);
         else
         {
-            mpr("Your body decomposes!", MSGCH_MUTATION);
+            mprf(MSGCH_MUTATION, "Your body decomposes!");
 
             if (coinflip())
                 lose_stat(STAT_RANDOM, 1, false, reason);
@@ -1645,8 +1645,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 arms = "tentacles";
             else
                 break;
-            mpr(replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
-                            arms).c_str(), MSGCH_MUTATION);
+            mprf(MSGCH_MUTATION, "%s",
+                 replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
+                             arms).c_str());
             gain_msg = false;
         }
         break;
@@ -1673,7 +1674,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     notify_stat_change("gaining a mutation");
 
     if (gain_msg)
-        mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
+        mprf(MSGCH_MUTATION, "%s", mdef.gain[you.mutation[mutat]-1]);
 
     // Do post-mutation effects.
     switch (mutat)
@@ -1824,7 +1825,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     notify_stat_change("losing a mutation");
 
     if (lose_msg)
-        mpr(mdef.lose[you.mutation[mutat]], MSGCH_MUTATION);
+        mprf(MSGCH_MUTATION, "%s", mdef.lose[you.mutation[mutat]]);
 
     // Do post-mutation effects.
     if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
@@ -1873,7 +1874,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                     || coinflip()))
             {
                 if (failMsg)
-                    mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
+                    mprf(MSGCH_MUTATION, "You feel rather odd for a moment.");
                 return false;
             }
         }
@@ -2423,7 +2424,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
             // than zero, and the innate mutation level for the mutation
             // in question is one less than the cap, we are permafying a
             // temporary mutation. This fails to produce any output normally.
-            mpr("Your mutations feel more permanent.", MSGCH_MUTATION);
+            mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
         }
         else if (you.mutation[which_mut] < cap
             && !mutate(which_mut, reason, false, true, false, false, true))
@@ -2489,8 +2490,8 @@ static bool _balance_demonic_guardian()
             && !one_chance_in(3)
             && !mons->has_ench(ENCH_LIFE_TIMER))
         {
-            mpr(mons->name(DESC_THE) + " "
-                + summoned_poof_msg(*mons) + "!", MSGCH_PLAIN);
+            mprf("%s %s!", mons->name(DESC_THE).c_str(),
+                           summoned_poof_msg(*mons).c_str());
             monster_die(*mons, KILL_NONE, NON_MONSTER);
         }
         else

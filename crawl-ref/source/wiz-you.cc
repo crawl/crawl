@@ -238,7 +238,7 @@ void wizard_cast_spec_spell(void)
     char specs[80], *end;
     int spell;
 
-    mpr("Cast which spell? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Cast which spell? ");
     if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
@@ -268,7 +268,7 @@ void wizard_memorise_spec_spell(void)
     char specs[80], *end;
     int spell;
 
-    mpr("Memorise which spell? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Memorise which spell? ");
     if (cancellable_get_line_autohist(specs, sizeof(specs))
         || specs[0] == '\0')
     {
@@ -880,11 +880,11 @@ void wizard_edit_durations(void)
             mprf_nocap(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
                  dur_names[dur], you.duration[dur]);
         }
-        mpr("", MSGCH_PROMPT);
-        mpr("Edit which duration (letter or name)? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "");
+        mprf(MSGCH_PROMPT, "Edit which duration (letter or name)? ");
     }
     else
-        mpr("Edit which duration (name)? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Edit which duration (name)? ");
 
     char buf[80];
 
@@ -906,14 +906,14 @@ void wizard_edit_durations(void)
     {
         if (durs.empty())
         {
-            mpr("No existing durations to choose from.", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "No existing durations to choose from.");
             return;
         }
         choice = buf[0] - 'a';
 
         if (choice < 0 || choice >= (int) durs.size())
         {
-            mpr("Invalid choice.", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "Invalid choice.");
             return;
         }
         choice = durs[choice];
@@ -962,8 +962,7 @@ void wizard_edit_durations(void)
 
     if (num == 0)
     {
-        mpr("Can't set duration directly to 0, setting it to 1 instead.",
-            MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Can't set duration directly to 0, setting it to 1 instead.");
         num = 1;
     }
     you.duration[choice] = num;
@@ -1085,11 +1084,11 @@ void wizard_transform()
                                  transform_name((transformation_type)i));
             if (i % 5 == 4 || i == LAST_FORM)
             {
-                mpr(line, MSGCH_PROMPT);
+                mprf(MSGCH_PROMPT, "%s", line.c_str());
                 line.clear();
             }
         }
-        mpr("Which form (ESC to exit)? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Which form (ESC to exit)? ");
 
         int keyin = toalower(get_ch());
 

@@ -344,7 +344,7 @@ void decrease_sanctuary_radius()
 
     if (you.running && is_sanctuary(you.pos()))
     {
-        mpr("The sanctuary starts shrinking.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "The sanctuary starts shrinking.");
         stop_running();
     }
 
@@ -362,7 +362,7 @@ void decrease_sanctuary_radius()
     {
         _remove_sanctuary_property(env.sanctuary_pos);
         if (you.see_cell(env.sanctuary_pos))
-            mpr("The sanctuary disappears.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "The sanctuary disappears.");
     }
 }
 
@@ -466,27 +466,21 @@ void create_sanctuary(const coord_def& center, int time)
 
     // Messaging.
     if (trap_count > 0)
-    {
-        mpr("By Zin's power, hidden traps are revealed to you.",
-            MSGCH_GOD);
-    }
+        mprf(MSGCH_GOD, "By Zin's power, hidden traps are revealed to you.");
 
     if (cloud_count == 1)
     {
-        mpr("By Zin's power, the foul cloud within the sanctuary is "
-            "swept away.", MSGCH_GOD);
+        mprf(MSGCH_GOD, "By Zin's power, the foul cloud within the sanctuary "
+                        "is swept away.");
     }
     else if (cloud_count > 1)
     {
-        mpr("By Zin's power, all foul fumes within the sanctuary are "
-            "swept away.", MSGCH_GOD);
+        mprf(MSGCH_GOD, "By Zin's power, all foul fumes within the sanctuary "
+                        "are swept away.");
     }
 
     if (blood_count > 0)
-    {
-        mpr("By Zin's power, all blood is cleared from the sanctuary.",
-            MSGCH_GOD);
-    }
+        mprf(MSGCH_GOD, "By Zin's power, all blood is cleared from the sanctuary.");
 
     if (scare_count == 1 && seen_mon != NULL)
         simple_monster_message(seen_mon, " turns to flee the light!");

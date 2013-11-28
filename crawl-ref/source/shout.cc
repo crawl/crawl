@@ -425,7 +425,7 @@ void item_noise(const item_def &item, string msg, int loudness)
     msg = replace_all(msg, "@a_player_genus@",
                           article_a(species_name(you.species, true)));
 
-    mpr(msg.c_str(), channel);
+    mprf(channel, "%s", msg.c_str());
 
     if (channel != MSGCH_TALK_VISUAL)
         noisy(loudness, you.pos());
@@ -532,7 +532,7 @@ bool noisy(int original_loudness, const coord_def& where,
     if (player_distance <= dist && player_can_hear(where))
     {
         if (msg && !fake_noise)
-            mpr(msg, MSGCH_SOUND);
+            mprf(MSGCH_SOUND, "%s", msg);
         return true;
     }
     return false;

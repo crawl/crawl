@@ -89,7 +89,7 @@ static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 
         if (you.mutation[MUT_ICEMAIL])
         {
-            mpr("Your icy envelope dissipates!", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }
@@ -645,7 +645,7 @@ bool expose_player_to_element(beam_type flavour, int strength,
 
     if (flavour == BEAM_WATER && you.duration[DUR_LIQUID_FLAMES])
     {
-        mpr("The flames go out!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "The flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.props.erase("napalmer");
         you.props.erase("napalm_aux");
@@ -665,7 +665,7 @@ static void _lose_level_abilities()
     {
         you.increase_duration(DUR_FLIGHT, 50, 100);
         you.attribute[ATTR_PERM_FLIGHT] = 0;
-        mpr("You feel your flight won't last long.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You feel your flight won't last long.");
     }
 }
 
@@ -1081,14 +1081,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         // Even if we have low HP messages off, we'll still give a
         // big hit warning (in this case, a hit for half our HPs) -- bwr
         if (dam > 0 && you.hp_max <= dam * 2)
-            mpr("Ouch! That really hurt!", MSGCH_DANGER);
+            mprf(MSGCH_DANGER, "Ouch! That really hurt!");
 
         if (you.hp > 0)
         {
             if (Options.hp_warning
                 && you.hp <= (you.hp_max * Options.hp_warning) / 100)
             {
-                mpr("* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER);
+                mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
                 dungeon_events.fire_event(DET_HP_WARNING);
             }
 
@@ -1352,8 +1352,7 @@ void _end_game(scorefile_entry &se)
             else if (se.get_death_type() != KILLED_BY_DISINT
                      && se.get_death_type() != KILLED_BY_LAVA)
             {
-                mpr("Your body rises from the dead as a mindless zombie.",
-                    MSGCH_GOD);
+                mprf(MSGCH_GOD, "Your body rises from the dead as a mindless zombie.");
             }
             // No message if you're not undead and your corpse is lost.
             break;

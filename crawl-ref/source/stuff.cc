@@ -443,7 +443,7 @@ void canned_msg(canned_message_type which_message)
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_OK:
-        mpr("Okay, then.", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Okay, then.");
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_UNTHINKING_ACT:
@@ -466,7 +466,7 @@ void canned_msg(canned_message_type which_message)
         mpr("The spell fizzles.");
         break;
     case MSG_HUH:
-        mpr("Huh?", MSGCH_EXAMINE_FILTER);
+        mprf(MSGCH_EXAMINE_FILTER, "Huh?");
         crawl_state.cancel_cmd_repeat();
         break;
     case MSG_EMPTY_HANDED_ALREADY:
@@ -595,7 +595,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             if (!noprompt)
             {
                 if (message)
-                    mpr(prompt.c_str(), MSGCH_PROMPT);
+                    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
                 else
                     cprintf("%s", prompt.c_str());
             }
@@ -720,7 +720,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
                                         safe, allow_all).c_str());
     while (true)
     {
-        mpr(prompt.c_str(), MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 
         int tmp = getchm(KMC_CONFIRM);
 

@@ -98,10 +98,9 @@ bool attribute_increase()
     me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
     pop->push_entry(me);
 #else
-    mpr("Your experience leads to an increase in your attributes!",
-        MSGCH_INTRINSIC_GAIN);
+    mprf(MSGCH_INTRINSIC_GAIN, "Your experience leads to an increase in your attributes!");
     learned_something_new(HINT_CHOOSE_STAT);
-    mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
 

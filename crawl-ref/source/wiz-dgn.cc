@@ -209,7 +209,7 @@ void wizard_interlevel_travel()
 
 bool wizard_create_portal(const coord_def& pos)
 {
-    mpr("Destination for portal:", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Destination for portal:");
 
     string dummy;
     level_id dest = prompt_translevel_target(TPF_ALLOW_UPDOWN
@@ -240,9 +240,9 @@ bool wizard_create_feature(const coord_def& pos)
     char specs[256];
     dungeon_feature_type feat;
     if (mimic)
-        mpr("Create what kind of feature mimic? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Create what kind of feature mimic? ");
     else
-        mpr("Create which feature? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Create which feature? ");
 
     if (cancellable_get_line(specs, sizeof(specs)) || specs[0] == 0)
     {
@@ -356,8 +356,8 @@ void wizard_list_branches()
     if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
         return;
 
-    mpr("----", MSGCH_DIAGNOSTICS);
-    mpr("Overflow temples: ", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "----");
+    mprf(MSGCH_DIAGNOSTICS, "Overflow temples: ");
 
     CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
 

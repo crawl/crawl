@@ -99,13 +99,10 @@ void wizard_create_spec_object()
 
     do
     {
-        mpr(") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls",
-            MSGCH_PROMPT);
-        mpr("= - jewellery   ! - potions   : - books   | - staves   \\  - rods",
-            MSGCH_PROMPT);
-        mpr("} - miscellany  X - corpses   % - food    $ - gold     0  - the Orb",
-            MSGCH_PROMPT);
-        mpr("ESC - exit", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, ") - weapons     ( - missiles  [ - armour  / - wands    ?  - scrolls");
+        mprf(MSGCH_PROMPT, "= - jewellery   ! - potions   : - books   | - staves   \\  - rods");
+        mprf(MSGCH_PROMPT, "} - miscellany  X - corpses   %% - food    $ - gold     0  - the Orb");
+        mprf(MSGCH_PROMPT, "ESC - exit");
 
         msgwin_prompt("What class of item? ");
 
@@ -349,8 +346,7 @@ static void _tweak_randart(item_def &item)
 
     if (item_is_equipped(item))
     {
-        mpr("You can't tweak the randart properties of an equipped item.",
-            MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "You can't tweak the randart properties of an equipped item.");
         return;
     }
     else
@@ -392,9 +388,9 @@ static void _tweak_randart(item_def &item)
 
         choice_num++;
     }
-    mpr(prompt, MSGCH_PROMPT, 0);
+    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 
-    mpr("Change which field? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Change which field? ");
 
     int keyin = toalower(get_ch());
     unsigned int  choice;
@@ -473,18 +469,11 @@ void wizard_tweak_object(void)
         {
             mpr_nocap(you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
-            if (is_art)
-            {
-                mpr("a - plus  b - plus2  c - art props  d - quantity  "
-                    "e - flags  ESC - exit", MSGCH_PROMPT);
-            }
-            else
-            {
-                mpr("a - plus  b - plus2  c - special  d - quantity  "
-                    "e - flags  ESC - exit", MSGCH_PROMPT);
-            }
+            mprf(MSGCH_PROMPT, "a - plus  b - plus2  c - %s  "
+                               "d - quantity  e - flags  ESC - exit",
+                               is_art ? "art props" : "special");
 
-            mpr("Which field? ", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "Which field? ");
 
             keyin = toalower(get_ch());
 
@@ -571,7 +560,7 @@ static bool _make_book_randart(item_def &book)
 
     do
     {
-        mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Make book fixed [t]heme or fixed [l]evel? ");
         type = toalower(getchk());
     }
     while (type != 't' && type != 'l');
@@ -692,8 +681,7 @@ void wizard_make_object_randart()
         item.props.clear();
     }
 
-    mpr("Fake item as gift from which god (ENTER to leave alone): ",
-        MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Fake item as gift from which god (ENTER to leave alone): ");
     char name[80];
     if (!cancellable_get_line(name, sizeof(name)) && name[0])
     {
@@ -884,8 +872,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     mesclr();
     mpr("[a] Weapons [b] Armours [c] Jewellery      [d] Books");
     mpr("[e] Staves  [f] Wands   [g] Miscellaneous  [h] Food");
-    mpr("What kind of item would you like to get acquirement stats on? ",
-        MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
 
     object_class_type type;
     const int keyin = toalower(get_ch());

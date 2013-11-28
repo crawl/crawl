@@ -1274,7 +1274,7 @@ void msgwin_reply(string reply)
     msgwin_clear_temporary();
     msgwin_set_temporary(false);
     reply = replace_all(reply, "<", "<<");
-    mpr(_prompt + "<lightgrey>" + reply + "</lightgrey>", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>", _prompt.c_str(), reply.c_str());
     msgwin.got_input();
 }
 

@@ -398,7 +398,7 @@ spret_type cast_summon_elemental(int pow, god_type god,
 
     const int dur = min(2 + (random2(pow) / 5), 6);
 
-    mpr("Summon from material in which direction?", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Summon from material in which direction?");
 
     direction_chooser_args args;
     args.restricts = DIR_DIR;
@@ -1195,8 +1195,8 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
         set_terrain_changed(point);
 
         noisy(10, point);
-        mpr("The dungeon shakes, a horrible noise fills the air, and a portal "
-            "to some otherworldly place is opened!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "The dungeon shakes, a horrible noise fills the air, "
+                         "and a portal to some otherworldly place is opened!");
 
         if (one_chance_in(5) && caster->is_player())
         {
@@ -2750,7 +2750,7 @@ bool fire_battlesphere(monster* mons)
         // Sanity check: if we have somehow ended up targeting ourselves, bail
         if (beam.target == mons->pos())
         {
-            mpr("Battlesphere targetting itself? Fixing.", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Battlesphere targetting itself? Fixing.");
             mons->props.erase("firing");
             mons->props.erase("firing_target");
             mons->props.erase("foe");

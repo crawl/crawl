@@ -44,8 +44,8 @@ static void _dump_item(const char *name, int num, const item_def &item,
     string msg = vmake_stringf(format, args);
     va_end(args);
 
-    mpr(msg.c_str(), chan);
-    mpr(name, chan);
+    mprf(chan, "%s", msg.c_str());
+    mprf(chan, "%s", name);
 
     mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
@@ -235,8 +235,8 @@ static void _announce_level_prob(bool warned)
 {
     if (!warned && crawl_state.generating_level)
     {
-        mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
-        mpr("mgrd problem occurred during level generation", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        mprf(MSGCH_ERROR, "mgrd problem occurred during level generation");
 
         debug_dump_levgen();
     }
@@ -331,7 +331,7 @@ void debug_mons_scan()
                      x, y, m->name(DESC_PLAIN, true).c_str(),
                      m->pos().x, m->pos().y);
                 if (!m->alive())
-                    mpr("Additionally, it isn't alive.", MSGCH_WARN);
+                    mprf(MSGCH_WARN, "Additionally, it isn't alive.");
                 warned = true;
             }
             else if (!m->alive())
@@ -483,14 +483,13 @@ void debug_mons_scan()
                 {
                     if (holder->inv[k] == idx)
                     {
-                        mpr("Other monster thinks it's holding the item, too.",
-                            MSGCH_WARN);
+                        mprf(MSGCH_WARN, "Other monster thinks it's holding the item, too.");
                         found = true;
                         break;
                     }
                 }
                 if (!found)
-                    mpr("Other monster isn't holding it, though.", MSGCH_WARN);
+                    mprf(MSGCH_WARN, "Other monster isn't holding it, though.");
             } // if (holder != m)
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
 
@@ -573,7 +572,7 @@ void debug_mons_scan()
     // No vaults to report on?
     if (env.level_vaults.empty() && Temp_Vaults.empty())
     {
-        mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         // Force the dev to notice problems. :P
         more();
         return;
@@ -637,7 +636,7 @@ void debug_mons_scan()
         }
     }
 
-    mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
+    mprf(MSGCH_ERROR, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     // Force the dev to notice problems. :P
     more();
 }

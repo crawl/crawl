@@ -1083,7 +1083,7 @@ void discover_mimic(const coord_def& pos, bool wake)
     monster *mimic = place_monster(mg, true, true);
     if (!mimic)
     {
-        mpr("Too many monsters on level, can't place mimic.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Too many monsters on level, can't place mimic.");
         if (item)
             destroy_item(*item, true);
         return;
@@ -4248,7 +4248,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {
-        mpr("Invalid @says@ type.", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
         msg = replace_all(msg, "@says@", "buggily says");
     }
     else

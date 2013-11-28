@@ -3721,8 +3721,7 @@ void TravelCache::delete_waypoint()
         mesclr();
         mpr("Existing waypoints:");
         list_waypoints();
-        mpr("Delete which waypoint? (* - delete all, Esc - exit) ",
-            MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Delete which waypoint? (* - delete all, Esc - exit) ");
 
         int key = getchm();
         if (key >= '0' && key <= '9')

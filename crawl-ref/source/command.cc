@@ -220,7 +220,7 @@ static void _print_version(void)
 
 void adjust(void)
 {
-    mpr("Adjust (i)tems, (s)pells, or (a)bilities? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Adjust (i)tems, (s)pells, or (a)bilities? ");
 
     const int keyin = toalower(get_ch());
 
@@ -321,7 +321,7 @@ static void _adjust_spell(void)
     }
 
     // Select starting slot
-    mpr("Adjust which spell? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Adjust which spell? ");
 
     int keyin = 0;
     if (Options.auto_list)
@@ -356,7 +356,7 @@ static void _adjust_spell(void)
     keyin = 0;
     while (!isaalpha(keyin))
     {
-        mpr("Adjust to which letter? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Adjust to which letter? ");
         keyin = get_ch();
         if (key_is_escape(keyin))
         {
@@ -398,7 +398,7 @@ static void _adjust_ability(void)
     }
 
     int selected = -1;
-    mpr("Adjust which ability? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Adjust which ability? ");
 
     if (Options.auto_list)
         selected = choose_ability_menu(talents);
@@ -440,7 +440,7 @@ static void _adjust_ability(void)
 
     const int index1 = letter_to_index(talents[selected].hotkey);
 
-    mpr("Adjust to which letter?", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Adjust to which letter?");
 
     const int keyin = get_ch();
 
@@ -526,7 +526,7 @@ void list_armour()
         if (colour == MSGCOL_BLACK)
             colour = menu_colour(estr.str(), "", "equip");
 
-        mpr(estr.str().c_str(), MSGCH_EQUIPMENT, colour);
+        mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
     }
 }
 
@@ -586,7 +586,7 @@ void list_jewellery(void)
         if (split && i > EQ_AMULET && (i - EQ_AMULET) % 2)
             jstr = item + " ";
         else
-            mpr(jstr + item, MSGCH_EQUIPMENT);
+            mprf(MSGCH_EQUIPMENT, "%s%s", jstr.c_str(), item.c_str());
     }
 }
 
@@ -1409,9 +1409,9 @@ static void _find_description(bool *again, string *error_inout)
     redraw_screen();
 
     if (!error_inout->empty())
-        mpr(error_inout->c_str(), MSGCH_PROMPT);
-    mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od, "
-        "(A)bility, (B)ranch, or (C)ard? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "%s", error_inout->c_str());
+    mprf(MSGCH_PROMPT, "Describe a (M)onster, (S)pell, s(K)ill, (I)tem, "
+                       "(F)eature, (G)od, (A)bility, (B)ranch, or (C)ard? ");
     int ch;
     {
         cursor_control con(true);
@@ -1505,7 +1505,7 @@ static void _find_description(bool *again, string *error_inout)
              "Describe a %s; partial names and regexps are fine.%s",
              type.c_str(), extra.c_str());
 
-        mpr("Describe what? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Describe what? ");
         char buf[80];
         if (cancellable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
         {

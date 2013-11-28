@@ -698,7 +698,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     // But often, you'll have multiple options...
     mesclr();
 
-    mpr("Recite against which type of sinner?", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Recite against which type of sinner?");
 
     int menu_cnt = 0;
     recite_type letters[NUM_RECITE_TYPES];
@@ -1225,7 +1225,7 @@ void zin_recite_interrupt()
 {
     if (!you.duration[DUR_RECITE])
         return;
-    mpr("Your recitation is interrupted.", MSGCH_DURATION);
+    mprf(MSGCH_DURATION, "Your recitation is interrupted.");
     mpr("You feel short of breath.");
     you.duration[DUR_RECITE] = 0;
 
@@ -1254,7 +1254,7 @@ bool zin_vitalisation()
 
 void zin_remove_divine_stamina()
 {
-    mpr("Your divine stamina fades away.", MSGCH_DURATION);
+    mprf(MSGCH_DURATION, "Your divine stamina fades away.");
     notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
                 true, "Zin's divine stamina running out");
     notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA],
@@ -1291,7 +1291,7 @@ bool zin_sanctuary()
 
     // Yes, shamelessly stolen from NetHack...
     if (!silenced(you.pos())) // How did you manage that?
-        mpr("You hear a choir sing!", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You hear a choir sing!");
     else
         mpr("You are suddenly bathed in radiance!");
 
@@ -1346,7 +1346,7 @@ void tso_divine_shield()
 
 void tso_remove_divine_shield()
 {
-    mpr("Your divine shield disappears!", MSGCH_DURATION);
+    mprf(MSGCH_DURATION, "Your divine shield disappears!");
     you.duration[DUR_DIVINE_SHIELD] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     you.redraw_armour_class = true;
@@ -1404,7 +1404,7 @@ bool elyvilon_divine_vigour()
 
 void elyvilon_remove_divine_vigour()
 {
-    mpr("Your divine vigour fades away.", MSGCH_DURATION);
+    mprf(MSGCH_DURATION, "Your divine vigour fades away.");
     you.duration[DUR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     calc_hp();
@@ -1560,14 +1560,14 @@ void trog_do_trogs_hand(int pow)
     you.increase_duration(DUR_TROGS_HAND,
                           5 + roll_dice(2, pow / 3 + 1), 100,
                           "Your skin crawls.");
-    mpr("You feel resistant to hostile enchantments.", MSGCH_DURATION);
+    mprf(MSGCH_DURATION, "You feel resistant to hostile enchantments.");
 }
 
 void trog_remove_trogs_hand()
 {
     if (you.duration[DUR_REGENERATION] == 0)
-        mpr("Your skin stops crawling.", MSGCH_DURATION);
-    mpr("You feel less resistant to hostile enchantments.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your skin stops crawling.");
+    mprf(MSGCH_DURATION, "You feel less resistant to hostile enchantments.");
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
@@ -1601,9 +1601,9 @@ void jiyva_paralyse_jellies()
     if (jelly_count > 0)
     {
         if (jelly_count > 1)
-            mpr("The nearby slimes join your prayer.", MSGCH_PRAY);
+            mprf(MSGCH_PRAY, "The nearby slimes join your prayer.");
         else
-            mpr("A nearby slime joins your prayer.", MSGCH_PRAY);
+            mprf(MSGCH_PRAY, "A nearby slime joins your prayer.");
 
         lose_piety(5);
     }

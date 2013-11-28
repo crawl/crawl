@@ -891,7 +891,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
             mpr("It softly glows with a divine radiance!");
             break;
         case SPWPN_ELECTROCUTION:
-            mpr("You hear the crackle of electricity.", MSGCH_SOUND);
+            mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
             break;
         case SPWPN_VENOM:
             mpr("It begins to drip with poison!");
@@ -2961,7 +2961,7 @@ bool monster::fumbles_attack(bool verbose)
                        : " splashes around in the water."));
             }
             else if (player_can_hear(pos(), LOS_RADIUS))
-                mpr("You hear a splashing noise.", MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "You hear a splashing noise.");
         }
 
         return true;
@@ -5834,7 +5834,7 @@ void monster::steal_item_from_player()
         if (!msg.empty() && msg != "__NONE")
         {
             msg = replace_all(msg, "@The_monster@", name(DESC_THE));
-            mpr(msg.c_str(), MSGCH_TALK);
+            mprf(MSGCH_TALK, "%s", msg.c_str());
         }
         return;
     }
@@ -5909,7 +5909,7 @@ void monster::steal_item_from_player()
             {
                 complaint = replace_all(complaint, "@The_monster@",
                                         name(DESC_THE));
-                mpr(complaint.c_str(), MSGCH_TALK);
+                mprf(MSGCH_TALK, "%s", complaint.c_str());
             }
 
             bolt beem;

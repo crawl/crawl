@@ -1565,7 +1565,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 line.clear();
             }
         }
-        mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "What kind of item would you like to acquire? (\\ to view known items)");
 
         const int keyin = toalower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + (int)ARRAYSZ(acq_classes))

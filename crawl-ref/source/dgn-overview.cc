@@ -896,9 +896,8 @@ void do_annotate(level_id& li)
     string old = get_level_annotation(li, true, true);
     if (!old.empty())
     {
-        mpr("Current level annotation: " +
-            colour_string(old, LIGHTGREY),
-            MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Current level annotation: <lightgrey>%s</lightgrey>",
+             old.c_str());
     }
 
     const string prompt = "New annotation for " + li.describe()

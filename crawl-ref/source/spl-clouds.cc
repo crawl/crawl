@@ -275,7 +275,7 @@ void manage_fire_shield(int delay)
 
     if (!you.duration[DUR_FIRE_SHIELD])
     {
-        mpr("Your ring of flames gutters out.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your ring of flames gutters out.");
         return;
     }
 
@@ -283,7 +283,7 @@ void manage_fire_shield(int delay)
 
 
     if (old_dur > threshold && you.duration[DUR_FIRE_SHIELD] < threshold)
-        mpr("Your ring of flames is guttering out.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "Your ring of flames is guttering out.");
 
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
