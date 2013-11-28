@@ -222,7 +222,7 @@ void map_lua_marker::check_register_table()
 {
     if (!lua_istable(dlua, -1))
     {
-        mpr("lua_marker: Expected table, didn't get it.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "lua_marker: Expected table, didn't get it.");
         initialised = false;
         return;
     }
@@ -251,7 +251,7 @@ void map_lua_marker::write(writer &outf) const
     bool init = initialised;
     if (!get_table())
     {
-        mpr("Couldn't find table.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Couldn't find table.");
         init = false;
     }
 

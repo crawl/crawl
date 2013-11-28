@@ -68,7 +68,7 @@ static void _make_all_books()
 void wizard_create_spec_object_by_name()
 {
     char buf[1024];
-    mpr("Enter name of item (or ITEM spec): ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
     if (cancellable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);

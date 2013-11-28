@@ -4124,7 +4124,7 @@ void debug_xom_effects()
     FILE *ostat = fopen("xom_debug.stat", "a");
     if (!ostat)
     {
-        mpr("Can't write 'xom_debug.stat'. Aborting.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Can't write 'xom_debug.stat'. Aborting.");
         return;
     }
 

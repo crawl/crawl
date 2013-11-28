@@ -1308,7 +1308,7 @@ static void _input()
         if (!has_pending_input() && !kbhit())
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
-                mpr("Infinite lua loop detected, aborting.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
             else
                 clua.callfn("ready", 0, 0);
         }
