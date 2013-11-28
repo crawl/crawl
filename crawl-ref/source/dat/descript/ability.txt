@@ -18,8 +18,17 @@ enchantments.
 %%%%
 Breathe Fire ability
 
-Breathe a blast of fire at a targeted monster, possibly leaving fire clouds in
-its wake.
+{{
+    local desc = "Breathe a blast of fire at a targeted monster"
+
+    if you.race() == "Red Draconian" then
+        desc = desc .. ", leaving a cloud of flames at the endpoint"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}}
 %%%%
 Breathe Frost ability
 
