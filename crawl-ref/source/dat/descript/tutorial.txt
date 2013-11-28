@@ -658,7 +658,7 @@ tutorial5 altar
 You can pray on an altar with <input>$cmd[CMD_PRAY]</input><localtiles> (or by
 <input>clicking in the command panel</input> or <input>Shift-clicking</input>
 on your character)</localtiles> to get an idea what a god offers you, and to
-join the faith. If you press <input>!</input> <localtiles>or
+join the faith. If you press <input>!</input><localtiles> or
 <input>rightclick</input></localtiles> on the religion screen, you can see a
 more detailed description.
 
@@ -737,7 +737,7 @@ tutorial5 exit
   <input>$cmd[CMD_REST]</input>  wait and rest up to 100 turns
 
 <yellow>Other commands</yellow>
-  <input>$cmd[CMD_DISPLAY_OVERMAP]</input>  display an overview of the dungeon
+  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> display an overview of the dungeon
   <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  search the description database
 
                                  <cyan>Press <input>any key</input> to clear this screen...</cyan>
