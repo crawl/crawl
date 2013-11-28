@@ -344,7 +344,7 @@ end
 NAME:   ancient_champions_mu
 DEPTH:  D:15-26, Vault, Crypt
 ORIENT: float
-FLAGS:  no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 KFEAT:  ABCDEFG = metal_wall
 ** This vault uses named monsters to differentiate on the monster_dies trigger.
 KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \

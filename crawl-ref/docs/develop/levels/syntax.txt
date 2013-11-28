@@ -457,12 +457,11 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              actual terrain of the vault affects its passability as seen by the
              dungeon builder.
 
-LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
-          (FLAGS just controls how the vault is placed); should only be used
-          for vaults with ORIENT encompass or with PLACE. Causes a level's
-          flags to be set when the level is first created. These flags can
-          later be altered using Lua markers; for examples, look at the slime
-          pit vault in slime.des, and the vaults in hell.des.
+LFLAGS:   Persistent, changeable per-level flags which affect game behaviour;
+          should only be used for vaults with ORIENT encompass or with PLACE.
+          Causes a level's flags to be set when the level is first created.
+          These flags can later be altered using Lua markers; for examples,
+          look at the slime pit vault in slime.des, and the vaults in hell.des.
 
           Valid flags are:
           * no_tele_control - prevents the player from using teleport control
