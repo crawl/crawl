@@ -2305,7 +2305,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     }
 }
 
-bool stop_attack_prompt(targetter &hitfunc, string verb,
+bool stop_attack_prompt(targetter &hitfunc, const char* verb,
                         bool (*affects)(const actor *victim), bool *prompted)
 {
     if (crawl_state.disables[DIS_CONFIRMATIONS])
@@ -2349,7 +2349,7 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
     mon_name = adj + mon_name;
 
     snprintf(info, INFO_SIZE, "Really %s %s%s?",
-             verb.c_str(), mon_name.c_str(), suffix.c_str());
+             verb, mon_name.c_str(), suffix.c_str());
 
     if (prompted)
         *prompted = true;
