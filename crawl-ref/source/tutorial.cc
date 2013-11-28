@@ -13,6 +13,7 @@
 #include "player.h"
 #include "skills.h"
 #include "state.h"
+#include "stuff.h"
 
 void set_tutorial_hunger(int hunger)
 {
@@ -65,7 +66,7 @@ void tutorial_init_hint(const char* hintstr)
 
 void tutorial_death_message()
 {
-    mpr_nojoin("You die...");
+    canned_msg(MSG_YOU_DIE);
     mpr_nojoin("In Crawl, death is a sad but common occurrence. "
                "Note that there's usually something you could have done to "
                "survive, for example by using some kind of item, running away, "
