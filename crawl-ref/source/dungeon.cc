@@ -572,14 +572,14 @@ bool set_level_flags(uint32_t flags, bool silent)
 
     if (could_control && !can_control && !silent)
     {
-        mpr("You sense the appearance of a powerful magical force "
-            "which warps space.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You sense the appearance of a powerful magical force "
+                         "which warps space.");
     }
 
     if (could_map && !can_map && !silent)
     {
-        mpr("A powerful force appears that prevents you from "
-            "remembering where you've been.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "A powerful force appears that prevents you from "
+                         "remembering where you've been.");
     }
 
     return old_flags != env.level_flags;
@@ -600,16 +600,16 @@ bool unset_level_flags(uint32_t flags, bool silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
-        mpr("You sense the disappearance of a powerful magical force "
-            "which warped space.", MSGCH_RECOVERY);
+        mprf(MSGCH_RECOVERY, "You sense the disappearance of a powerful "
+                             "magical force which warped space.");
     }
 
     if (!could_map && can_map && !silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
-        mpr("You sense the disappearance of the force that prevented you "
-            "from remembering where you've been.", MSGCH_RECOVERY);
+        mprf(MSGCH_RECOVERY, "You sense the disappearance of the force that "
+                             "prevented you from remembering where you've been.");
     }
 
     return old_flags != env.level_flags;
@@ -5327,7 +5327,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
             if (crawl_state.map_stat_gen)
                 return DNGN_ALTAR_XOM;
 
-            mpr("Ran out of altars for temple!", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Ran out of altars for temple!");
             return DNGN_FLOOR;
         }
         // Randomized altar list for mini-temples.

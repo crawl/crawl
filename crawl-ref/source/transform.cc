@@ -1051,7 +1051,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             mpr("Your new body is particularly stony.");
         if (you.duration[DUR_ICY_ARMOUR])
         {
-            mpr("Your new body cracks your icy armour.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
             you.duration[DUR_ICY_ARMOUR] = 0;
         }
         break;
@@ -1116,7 +1116,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         // undead cannot regenerate -- bwr
         if (you.duration[DUR_REGENERATION])
         {
-            mpr("You stop regenerating.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You stop regenerating.");
             you.duration[DUR_REGENERATION] = 0;
         }
 
@@ -1230,7 +1230,7 @@ void untransform(bool skip_wielding, bool skip_move)
     switch (old_form)
     {
     case TRAN_SPIDER:
-        mpr("Your transformation has ended.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your transformation has ended.");
         notify_stat_change(STAT_DEX, -5, true,
                      "losing the spider transformation");
         if (!skip_move)
@@ -1238,7 +1238,7 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_BAT:
-        mpr("Your transformation has ended.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your transformation has ended.");
         notify_stat_change(STAT_DEX, -5, true,
                      "losing the bat transformation");
         notify_stat_change(STAT_STR, 5, true,
@@ -1256,10 +1256,10 @@ void untransform(bool skip_wielding, bool skip_move)
         if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
             || you.species == SP_GARGOYLE)
         {
-            mpr("You revert to a slightly less stony form.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You revert to a slightly less stony form.");
         }
         else if (you.species != SP_LAVA_ORC)
-            mpr("You revert to your normal fleshy form.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You revert to your normal fleshy form.");
         notify_stat_change(STAT_DEX, 2, true,
                      "losing the statue transformation");
         notify_stat_change(STAT_STR, -2, true,
@@ -1273,9 +1273,9 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_ICE_BEAST:
         if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
-            mpr("Your icy form melts away into molten rock.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your icy form melts away into molten rock.");
         else
-            mpr("You warm up again.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You warm up again.");
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr
@@ -1284,7 +1284,7 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_DRAGON:
-        mpr("Your transformation has ended.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your transformation has ended.");
         notify_stat_change(STAT_STR, -10, true,
                     "losing the dragon transformation");
         break;
@@ -1292,16 +1292,16 @@ void untransform(bool skip_wielding, bool skip_move)
     case TRAN_LICH:
         you.is_undead = get_undead_state(you.species);
         if (you.is_undead == US_ALIVE)
-            mpr("You feel yourself come back to life.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You feel yourself come back to life.");
         else
-            mpr("You feel your undeath return to normal.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You feel your undeath return to normal.");
         break;
 
     case TRAN_PIG:
     case TRAN_JELLY:
     case TRAN_PORCUPINE:
     case TRAN_WISP:
-        mpr("Your transformation has ended.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your transformation has ended.");
         break;
 
     case TRAN_APPENDAGE:
@@ -1318,11 +1318,11 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_FUNGUS:
-        mpr("You stop sporulating.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You stop sporulating.");
         you.set_duration(DUR_CONFUSING_TOUCH, 0);
         break;
     case TRAN_TREE:
-        mpr("You feel less woody.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel less woody.");
         if (grd(you.pos()) == DNGN_DEEP_WATER)
         {
             if (beogh_water_walk() || species_likes_water(you.species))

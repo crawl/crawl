@@ -466,7 +466,7 @@ void banished(const string &who)
         else
         {
             // On Abyss:5 we can't go deeper; cause a shift to a new area
-            mpr("You are banished to a different region of the Abyss.", MSGCH_BANISHMENT);
+            mprf(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
             abyss_teleport(true);
         }
         return;
@@ -711,7 +711,7 @@ void random_uselessness(int scroll_slot)
         break;
 
     case 6:
-        mpr("You hear the tinkle of a tiny bell.", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You hear the tinkle of a tiny bell.");
         noisy(2, you.pos());
         cast_summon_butterflies(100);
         break;
@@ -973,7 +973,7 @@ void yell(bool force)
         return;
     }
 
-    mpr("What do you say?", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "What do you say?");
     mprf(" t - %s!", cap_shout.c_str());
 
     if (!you.berserk())
@@ -1205,7 +1205,7 @@ static void _hell_effects()
     bool loud = starts_with(msg, "SOUND:");
     if (loud)
         msg.erase(0, 6);
-    mpr(msg.c_str(), MSGCH_HELL_EFFECT);
+    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
     if (loud)
         noisy(15, you.pos());
 
@@ -1530,13 +1530,13 @@ void change_labyrinth(bool msg)
              c1.x, c1.y, c2.x, c2.y);
 
         string path_str = "";
-        mpr("Here's the list of targets: ", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Here's the list of targets: ");
         for (unsigned int i = 0; i < targets.size(); i++)
         {
             snprintf(info, INFO_SIZE, "(%d, %d)  ", targets[i].x, targets[i].y);
             path_str += info;
         }
-        mpr(path_str.c_str(), MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "%s", path_str.c_str());
         mprf(MSGCH_DIAGNOSTICS, "-> #targets = %u", (unsigned int)targets.size());
     }
 
@@ -1580,8 +1580,7 @@ void change_labyrinth(bool msg)
         {
             if (msg)
             {
-                mpr("Something went badly wrong - no path found!",
-                    MSGCH_DIAGNOSTICS);
+                mprf(MSGCH_DIAGNOSTICS, "Something went badly wrong - no path found!");
             }
             continue;
         }
@@ -2069,13 +2068,13 @@ static void _magic_contamination_effects()
 
     if (glow_effect && is_sanctuary(you.pos()))
     {
-        mpr("Your body momentarily shudders from a surge of wild "
-            "energies until Zin's power calms it.", MSGCH_GOD);
+        mprf(MSGCH_GOD, "Your body momentarily shudders from a surge of wild "
+                        "energies until Zin's power calms it.");
     }
     else if (glow_effect)
     {
-        mpr("Your body shudders with the violent release "
-            "of wild energies!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "Your body shudders with the violent release "
+                         "of wild energies!");
 
         // For particularly violent releases, make a little boom.
         if (you.magic_contamination > 10000 && coinflip())
@@ -2211,7 +2210,7 @@ void handle_time()
                  && you.piety >= piety_breakpoint(0)
                  && coinflip()))
         {
-            mpr("Your disease is taking its toll.", MSGCH_WARN);
+            mprf(MSGCH_WARN, "Your disease is taking its toll.");
             lose_stat(STAT_RANDOM, 1, false, "disease");
         }
     }

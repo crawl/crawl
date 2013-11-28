@@ -854,10 +854,10 @@ static void _handle_wizard_command(void)
 
     if (!you.wizard)
     {
-        mpr("WARNING: ABOUT TO ENTER WIZARD MODE!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER WIZARD MODE!");
 
 #ifndef SCORE_WIZARD_CHARACTERS
-        mpr("If you continue, your game will not be scored!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
 #endif
 
         if (!yesno("Do you really want to enter wizard mode?", false, 'n'))
@@ -881,7 +881,7 @@ static void _handle_wizard_command(void)
     }
 
     {
-        mpr("Enter Wizard Command (? - help): ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Enter Wizard Command (? - help): ");
         cursor_control con(true);
         wiz_command = getchm();
         if (wiz_command == '*')
@@ -938,8 +938,7 @@ static void _start_running(int dir, int mode)
         if (env.grid(*ai) == DNGN_SLIMY_WALL
             && (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA]))
         {
-            mpr("You're about to run into the slime covered wall!",
-                MSGCH_WARN);
+            mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
             return;
         }
     }
@@ -1709,8 +1708,8 @@ static void _toggle_friendly_pickup()
     // Toggle pickup mode for friendlies.
     _print_friendly_pickup_setting(false);
 
-    mpr("Change to (d)efault, (n)othing, (f)riend-dropped, (p)layer, "
-        "or (a)ll? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Change to (d)efault, (n)othing, (f)riend-dropped, "
+                       "(p)layer, or (a)ll? ");
 
     int type;
     {
@@ -2148,7 +2147,7 @@ void process_command(command_type cmd)
             mpr(msg);
         }
         else // well, not examine, but...
-            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
+            mprf(MSGCH_EXAMINE_FILTER, "Unknown command.");
 
         break;
     }
@@ -2175,9 +2174,9 @@ static void _prep_input()
     {
         ASSERT(you_worship(GOD_ASHENZARI));
         if (you.seen_portals == 1)
-            mpr("You have a vision of a gate.", MSGCH_GOD);
+            mprf(MSGCH_GOD, "You have a vision of a gate.");
         else
-            mpr("You have a vision of multiple gates.", MSGCH_GOD);
+            mprf(MSGCH_GOD, "You have a vision of multiple gates.");
 
         you.seen_portals = 0;
     }
@@ -2220,7 +2219,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
             if (need_expiration_warning(dur))
                 mprf(MSGCH_DANGER, "Careful! %s", midmsg);
             else
-                mpr(midmsg, chan);
+                mprf(chan, "%s", midmsg);
         }
         you.duration[dur] -= midloss * BASELINE_DELAY;
     }
@@ -2229,7 +2228,7 @@ static bool _decrement_a_duration(duration_type dur, int delay,
     if (you.duration[dur] == 0)
     {
         if (endmsg)
-            mpr(endmsg, chan);
+            mprf(chan, "%s", endmsg);
         return true;
     }
 
@@ -2246,7 +2245,7 @@ static void _decrement_paralysis(int delay)
 
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
-            mpr("You can move again.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You can move again.");
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
                                                    * BASELINE_DELAY;
@@ -2390,7 +2389,7 @@ static void _decrement_durations()
             you.duration[DUR_ICEMAIL_DEPLETED] -= delay;
 
         if (!you.duration[DUR_ICEMAIL_DEPLETED])
-            mpr("Your icy envelope is fully restored.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your icy envelope is fully restored.");
 
         you.redraw_armour_class = true;
     }
@@ -2461,7 +2460,7 @@ static void _decrement_durations()
             if (you.duration[DUR_DIVINE_SHIELD] <= 1)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 1;
-                mpr("Your divine shield starts to fade.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "Your divine shield starts to fade.");
             }
         }
 
@@ -2471,7 +2470,7 @@ static void _decrement_durations()
             if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 0;
-                mpr("Your divine shield fades away.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "Your divine shield fades away.");
             }
         }
     }
@@ -2490,57 +2489,57 @@ static void _decrement_durations()
             const int temp_effect = get_weapon_brand(weapon);
 
             set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-            string msg = weapon.name(DESC_YOUR);
+            const char *msg = nullptr;
 
             switch (temp_effect)
             {
             case SPWPN_VORPAL:
                 if (get_vorpal_type(weapon) == DVORP_SLICING)
-                    msg += " seems blunter.";
+                    msg = " seems blunter.";
                 else
-                    msg += " feels lighter.";
+                    msg = " feels lighter.";
                 break;
             case SPWPN_FLAME:
             case SPWPN_FLAMING:
-                msg += " goes out.";
+                msg = " goes out.";
                 break;
             case SPWPN_FREEZING:
-                msg += " stops glowing.";
+                msg = " stops glowing.";
                 break;
             case SPWPN_FROST:
-                msg += "'s frost melts away.";
+                msg = "'s frost melts away.";
                 break;
             case SPWPN_VENOM:
-                msg += " stops dripping with poison.";
+                msg = " stops dripping with poison.";
                 break;
             case SPWPN_DRAINING:
-                msg += " stops crackling.";
+                msg = " stops crackling.";
                 break;
             case SPWPN_DISTORTION:
-                msg += " seems straighter.";
+                msg = " seems straighter.";
                 break;
             case SPWPN_PAIN:
-                msg += " seems less pained.";
+                msg = " seems less pained.";
                 break;
             case SPWPN_CHAOS:
-                msg += " seems more stable.";
+                msg = " seems more stable.";
                 break;
             case SPWPN_ELECTROCUTION:
-                msg += " stops emitting sparks.";
+                msg = " stops emitting sparks.";
                 break;
             case SPWPN_HOLY_WRATH:
-                msg += "'s light goes out.";
+                msg = "'s light goes out.";
                 break;
             case SPWPN_ANTIMAGIC:
-                msg += " stops repelling magic.";
+                msg = " stops repelling magic.";
                 calc_mp();
                 break;
             default:
-                msg += " seems inexplicably less special.";
+                msg = " seems inexplicably less special.";
                 break;
             }
 
-            mpr(msg.c_str(), MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "%s%s", weapon.name(DESC_YOUR).c_str(), msg);
             you.wield_change = true;
         }
     }
@@ -2756,14 +2755,14 @@ static void _decrement_durations()
             }
             else
             {
-                mpr("You pass out from exhaustion.", MSGCH_WARN);
+                mprf(MSGCH_WARN, "You pass out from exhaustion.");
                 you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
                 you.stop_constricting_all();
             }
         }
 
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
-            mpr("You are exhausted.", MSGCH_WARN);
+            mprf(MSGCH_WARN, "You are exhausted.");
 
         if (you.species == SP_LAVA_ORC)
             mpr("You feel less hot-headed.");
@@ -2797,7 +2796,7 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_CORONA, delay) && !you.backlit())
-        mpr("You are no longer glowing.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You are no longer glowing.");
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
@@ -2811,10 +2810,10 @@ static void _decrement_durations()
         gain_piety(1, 1, true);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
-        mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Piety increases by 1 due to piety pool.");
 
         if (you.duration[DUR_PIETY_POOL] == 0)
-            mpr("Piety pool is now empty.", MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Piety pool is now empty.");
 #endif
     }
 
@@ -2873,7 +2872,7 @@ static void _decrement_durations()
         else if (x_chance_in_y(you.rotting, 20)
                  && !you.duration[DUR_DEATHS_DOOR])
         {
-            mpr("You feel your flesh rotting away.", MSGCH_WARN);
+            mprf(MSGCH_WARN, "You feel your flesh rotting away.");
             rot_hp(1);
             you.rotting--;
         }
@@ -2898,7 +2897,7 @@ static void _decrement_durations()
         if (one_chance_in(resilience))
         {
             dprf("rot rate: 1/%d", resilience);
-            mpr("You feel your flesh rotting away.", MSGCH_WARN);
+            mprf(MSGCH_WARN, "You feel your flesh rotting away.");
             rot_hp(1);
             if (you.rotting > 0)
                 you.rotting--;
@@ -3034,7 +3033,7 @@ static void _decrement_durations()
         }
         if (_decrement_a_duration(DUR_SPIRIT_HOWL, delay))
         {
-            mpr("The howling abruptly ceases.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "The howling abruptly ceases.");
             add_daction(DACT_END_SPIRIT_HOWL);
             you.props["spirit_howl_cooldown"].get_int() =
                 you.elapsed_time + random_range(1500, 3000);
@@ -3085,11 +3084,11 @@ static void _check_banished()
         ASSERT(brdepth[BRANCH_ABYSS] != -1);
         you.banished = false;
         if (!player_in_branch(BRANCH_ABYSS))
-            mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
+            mprf(MSGCH_BANISHMENT, "You are cast into the Abyss!");
         else if (you.depth < brdepth[BRANCH_ABYSS])
-            mpr("You are cast deeper into the Abyss!", MSGCH_BANISHMENT);
+            mprf(MSGCH_BANISHMENT, "You are cast deeper into the Abyss!");
         else
-            mpr("The Abyss bends around you!", MSGCH_BANISHMENT);
+            mprf(MSGCH_BANISHMENT, "The Abyss bends around you!");
         more();
         banished(you.banished_by);
         you.banished_by.clear();
@@ -3284,8 +3283,7 @@ static void _player_reacts()
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
           && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
-            mpr("You are suddenly pulled into a different region of the Abyss!",
-                MSGCH_BANISHMENT);
+            mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
             you_teleport_now(false, true); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
@@ -3421,7 +3419,7 @@ static void _update_golubria_traps()
                 if (you.see_cell(*it))
                     mpr("Your passage of Golubria closes with a snap!");
                 else
-                    mpr("You hear a snapping sound.", MSGCH_SOUND);
+                    mprf(MSGCH_SOUND, "You hear a snapping sound.");
                 trap->destroy();
                 noisy(8, *it);
             }
@@ -3829,7 +3827,7 @@ static void _open_door(coord_def move, bool check_confused)
             door_move.delta = move;
         else
         {
-            mpr("Which direction?", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "Which direction?");
             direction_chooser_args args;
             args.restricts = DIR_DIR;
             direction(door_move, args);
@@ -4088,7 +4086,7 @@ static void _close_door(coord_def move)
             door_move.delta = move;
         else
         {
-            mpr("Which direction?", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "Which direction?");
             direction_chooser_args args;
             args.restricts = DIR_DIR;
             direction(door_move, args);
@@ -4308,13 +4306,13 @@ static void _do_berserk_no_combat_penalty(void)
         switch (you.berserk_penalty)
         {
         case 2:
-            mpr("You feel a strong urge to attack something.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You feel a strong urge to attack something.");
             break;
         case 4:
-            mpr("You feel your anger subside.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You feel your anger subside.");
             break;
         case 6:
-            mpr("Your blood rage is quickly leaving you.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your blood rage is quickly leaving you.");
             break;
         }
 
@@ -4768,7 +4766,7 @@ static int _get_num_and_char_keyfun(int &ch)
 static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
 {
     if (prompt != NULL)
-        mpr(prompt, MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "%s", prompt);
 
     line_reader reader(buf, buf_len);
 
@@ -4841,7 +4839,7 @@ static void _run_input_with_keys(const keyseq& keys)
 
     if (get_macro_buf_size() < old_buf_size)
     {
-        mpr("(Key replay stole keys)", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "(Key replay stole keys)");
         crawl_state.cancel_cmd_all();
     }
 }
@@ -4884,7 +4882,7 @@ static void _do_cmd_repeat()
     c_input_reset(true);
     if (ch == ' ' || ch == CK_ENTER)
     {
-        mpr("Enter command to be repeated: ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Enter command to be repeated: ");
         // Enable the cursor to read input.
         cursor_control con(true);
 
@@ -4964,7 +4962,7 @@ static void _do_prev_cmd_again()
 
     if (crawl_state.doing_prev_cmd_again)
     {
-        mpr("Trying to re-do re-do command, aborting.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Trying to re-do re-do command, aborting.");
         crawl_state.cancel_cmd_all();
         return;
     }

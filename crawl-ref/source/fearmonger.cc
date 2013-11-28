@@ -168,8 +168,7 @@ void player::_removed_fearmonger()
     if (fearmongers.empty())
     {
         duration[DUR_AFRAID] = 0;
-        mpr("You are no longer terrified.",
-            MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You are no longer terrified.");
     }
 }
 

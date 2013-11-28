@@ -50,7 +50,7 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
         show_msgs = &def_show;
 
     if (*show_msgs)
-        mpr(msg, chan);
+        mprf(chan, "%s", msg);
 
     // Caller shouldn't give any more messages.
     *show_msgs = false;
@@ -339,7 +339,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
         item->props["ss_welcome"].get_bool() = true;
     }
     else
-        mpr("The Singing Sword hums in delight!", MSGCH_TALK);
+        mprf(MSGCH_TALK, "The Singing Sword hums in delight!");
 
     *show_msgs = false;
 }
@@ -587,7 +587,7 @@ static void _GONG_melee_effects(item_def* item, actor* wearer,
     string msg = getSpeakString("shield of the gong");
     if (msg.empty())
         msg = "You hear a strange loud sound.";
-    mpr(msg.c_str(), MSGCH_SOUND);
+    mprf(MSGCH_SOUND, "%s", msg.c_str());
 
     noisy(40, wearer->pos());
 }

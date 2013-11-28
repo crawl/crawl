@@ -170,8 +170,7 @@ LUAFN(debug_cull_monsters)
             return 0;
     }
 
-    mpr("menv[] is full, dismissing non-near monsters",
-        MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "menv[] is full, dismissing non-near monsters");
 
     // menv[] is full
     for (monster_iterator mi; mi; ++mi)

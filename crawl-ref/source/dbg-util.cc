@@ -28,7 +28,7 @@ monster_type debug_prompt_for_monster(void)
 {
     char specs[1024];
 
-    mpr("Which monster by name? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Which monster by name? ");
     if (!cancellable_get_line_autohist(specs, sizeof specs))
     {
         if (specs[0] == '\0')
@@ -451,11 +451,11 @@ void wizard_toggle_dprf()
                                  Options.quiet_debug_messages[i] ? "</white>" : "");
             if (i % 5 == 4 || i == NUM_DIAGNOSTICS - 1)
             {
-                mpr(line, MSGCH_PROMPT);
+                mprf(MSGCH_PROMPT, "%s", line.c_str());
                 line.clear();
             }
         }
-        mpr("Toggle which debug class (ESC to exit)? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Toggle which debug class (ESC to exit)? ");
 
         int keyin = toalower(get_ch());
 

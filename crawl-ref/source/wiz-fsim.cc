@@ -238,7 +238,7 @@ static monster* _init_fsim()
         if (mtype == MONS_PROGRAM_BUG)
         {
             char specs[100];
-            mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
             if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
             {
                 canned_msg(MSG_OK);
@@ -599,7 +599,7 @@ void wizard_fight_sim(bool double_scale)
     }
     else
     {
-        mpr("(A)ttack or (D)efense?", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "(A)ttack or (D)efense?");
 
         switch (toalower(getchk()))
         {

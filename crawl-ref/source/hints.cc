@@ -442,7 +442,7 @@ void print_hint(string key, const string arg1, const string arg2)
     // paragraphs by "\n\n", split_string() will ignore the empty line.
     vector<string> chunks = split_string("\n", text);
     for (size_t i = 0; i < chunks.size(); i++)
-        mpr(chunks[i], MSGCH_TUTORIAL);
+        mprf(MSGCH_TUTORIAL, "%s", chunks[i].c_str());
 
     stop_running();
 }
@@ -505,10 +505,10 @@ void hints_death_screen()
 
         print_hint(make_stringf("death random %d", hint));
     }
-    mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
+    mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
     more();
 
-    mpr("See you next game!", MSGCH_TUTORIAL);
+    mprf(MSGCH_TUTORIAL, "See you next game!");
 
     Hints.hints_events.init(false);
 }
@@ -654,7 +654,7 @@ static void _hints_healing_reminder()
                       "hitpoints in the first place. To use your abilities type "
                       "<w>a</w>.";
             }
-            mpr(text, MSGCH_TUTORIAL, 0);
+            mprf(MSGCH_TUTORIAL, "%s", text.c_str());
 
 
             if (is_resting())
@@ -739,7 +739,7 @@ void hints_gained_new_skill(skill_type skill)
     case SK_THROWING:
     case SK_SPELLCASTING:
     {
-        mpr(get_skill_description(skill), MSGCH_TUTORIAL, 0);
+        mprf(MSGCH_TUTORIAL, "%s", get_skill_description(skill).c_str());
         stop_running();
         break;
     }
@@ -942,7 +942,7 @@ void hints_monster_seen(const monster& mon)
             "death by misclicking.";
     }
 
-    mpr(text, MSGCH_TUTORIAL, 0);
+    mprf(MSGCH_TUTORIAL, "%s", text.c_str());
 
     if (Hints.hints_type == HINT_RANGER_CHAR)
     {
@@ -966,7 +966,7 @@ void hints_monster_seen(const monster& mon)
                     "will also let you read its description.</tiles>";
         }
 
-        mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
+        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
     }
     else if (Hints.hints_type == HINT_MAGIC_CHAR)
@@ -977,7 +977,7 @@ void hints_monster_seen(const monster& mon)
                 "this."
                 "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
                 "book in your inventory to read its description.</tiles>";
-        mpr(untag_tiles_console(text), MSGCH_TUTORIAL, 0);
+        mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
 
     }
 }
@@ -3047,7 +3047,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         string output = text.str();
         if (!cmd.empty())
             insert_commands(output, cmd);
-        mpr(output, MSGCH_TUTORIAL);
+        mprf(MSGCH_TUTORIAL, "%s", output.c_str());
 
         stop_running();
     }
@@ -4546,7 +4546,7 @@ void tutorial_msg(const char *key, bool end)
     // paragraphs by "\n\n", split_string() will ignore the empty line.
     vector<string> chunks = split_string("\n", text, false);
     for (size_t i = 0; i < chunks.size(); i++)
-        mpr(chunks[i], MSGCH_TUTORIAL);
+        mprf(MSGCH_TUTORIAL, "%s", chunks[i].c_str());
 
     stop_running();
 }

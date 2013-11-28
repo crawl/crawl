@@ -311,7 +311,7 @@ static bool _evoke_horn_of_geryon(item_def &item)
     }
     else
     {
-        mpr("You produce a hideous howling noise!", MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
         create_monster(
             mgen_data::hostile_at(MONS_HELL_BEAST, "the horn of Geryon",
                 true, 4, 0, you.pos()));
@@ -341,13 +341,13 @@ static bool _efreet_flask(int slot)
 
         if (silenced(you.pos()))
         {
-            mpr(friendly ? "It nods graciously at you."
-                         : "It snaps in your direction!", MSGCH_TALK_VISUAL);
+            mprf(MSGCH_TALK_VISUAL, friendly ? "It nods graciously at you."
+                                             : "It snaps in your direction!");
         }
         else
         {
-            mpr(friendly ? "\"Thank you for releasing me!\""
-                         : "It howls insanely!", MSGCH_TALK);
+            mprf(MSGCH_TALK, friendly ? "\"Thank you for releasing me!\""
+                                      : "It howls insanely!");
         }
     }
     else

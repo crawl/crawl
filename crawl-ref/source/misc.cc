@@ -1611,7 +1611,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         return true;
 
     if (announce)
-        mpr(msg, MSGCH_WARN);
+        mprf(MSGCH_WARN, "%s", msg.c_str());
 
     return false;
 }
@@ -1764,7 +1764,7 @@ static void _drop_tomb(const coord_def& pos, bool premature, bool zin)
         else
         {
             if (!silenced(you.pos()))
-                mpr("You hear a deep rumble.", MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "You hear a deep rumble.");
             else
                 mpr("You feel the ground shudder.");
         }

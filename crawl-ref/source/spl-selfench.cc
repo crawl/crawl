@@ -46,8 +46,7 @@ spret_type cast_deaths_door(int pow, bool fail)
     {
         fail_check();
         mpr("You feel invincible!");
-        mpr("You seem to hear sand running through an hourglass...",
-            MSGCH_SOUND);
+        mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
 
         set_hp(allowed_deaths_door_hp());
         deflate_hp(you.hp_max, false);
@@ -65,7 +64,7 @@ spret_type cast_deaths_door(int pow, bool fail)
 
 void remove_ice_armour()
 {
-    mpr("Your icy armour melts away.", MSGCH_DURATION);
+    mprf(MSGCH_DURATION, "Your icy armour melts away.");
     you.redraw_armour_class = true;
     you.duration[DUR_ICY_ARMOUR] = 0;
 }
@@ -156,7 +155,7 @@ spret_type cast_revivification(int pow, bool fail)
 
         if (you.duration[DUR_DEATHS_DOOR])
         {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your life is in your own hands once again.");
             // XXX: better cause name?
             paralyse_player("Death's Door abortion", 5 + random2(5));
             confuse_player(10 + random2(10));
@@ -264,7 +263,7 @@ int cast_selective_amnesia(string *pre_msg)
     int slot;
 
     // Pick a spell to forget.
-    mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
     keyin = Options.auto_list
             ? list_spells(false, false, false, "Forget which spell?")
             : get_ch();
@@ -297,7 +296,7 @@ int cast_selective_amnesia(string *pre_msg)
         if (spell == SPELL_NO_SPELL)
         {
             mpr("You don't know that spell.");
-            mpr("Forget which spell ([?*] list [ESC] exit)? ", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
             keyin = get_ch();
         }
         else

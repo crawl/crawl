@@ -347,7 +347,7 @@ string direction_chooser::build_targetting_hint_string() const
 void direction_chooser::print_top_prompt() const
 {
     if (!top_prompt.empty())
-        mpr(top_prompt, MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "%s", top_prompt.c_str());
 }
 
 void direction_chooser::print_key_hints() const
@@ -384,7 +384,7 @@ void direction_chooser::print_key_hints() const
     }
 
     // Display the prompt.
-    mpr(prompt, MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "%s", prompt.c_str());
 }
 
 void direction_chooser::describe_cell() const
@@ -949,12 +949,10 @@ bool direction_chooser::move_is_ok() const
         {
             if (you.see_cell(target()))
             {
-                mpr("There's something in the way.",
-                    MSGCH_EXAMINE_FILTER);
+                mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
             }
             else
-                mpr("Sorry, you can't target what you can't see.",
-                    MSGCH_EXAMINE_FILTER);
+                mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target what you can't see.");
             return false;
         }
 
@@ -973,7 +971,7 @@ bool direction_chooser::move_is_ok() const
             {
                 if (!may_target_self && (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL))
                 {
-                    mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
+                    mprf(MSGCH_EXAMINE_FILTER, "That would be overly suicidal.");
                     return false;
                 }
                 else if (Options.allow_self_target != CONFIRM_NONE)
@@ -982,7 +980,7 @@ bool direction_chooser::move_is_ok() const
 
             if (cancel_at_self)
             {
-                mpr("Sorry, you can't target yourself.", MSGCH_EXAMINE_FILTER);
+                mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target yourself.");
                 return false;
             }
         }
@@ -1078,16 +1076,15 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
         {
             // Special colouring in tutorial or hints mode.
             const bool need_hint = Hints.hints_events[HINT_TARGET_NO_FOE];
-            mpr("All monsters which could be auto-targeted are covered by "
+            mprf(need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT,
+                "All monsters which could be auto-targeted are covered by "
                 "a wall or statue which interrupts your line of fire, even "
-                "though it doesn't interrupt your line of sight.",
-                need_hint ? MSGCH_TUTORIAL : MSGCH_PROMPT);
+                "though it doesn't interrupt your line of sight.");
 
             if (need_hint)
             {
-                    mpr("To return to the main mode, press <w>Escape</w>.",
-                        MSGCH_TUTORIAL);
-                    Hints.hints_events[HINT_TARGET_NO_FOE] = false;
+                mprf(MSGCH_TUTORIAL, "To return to the main mode, press <w>Escape</w>.");
+                Hints.hints_events[HINT_TARGET_NO_FOE] = false;
             }
         }
     }
@@ -1314,8 +1311,8 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
 
     if ((restricts == DIR_JUMP || !allow_out_of_range) && !in_range(target()))
     {
-        mpr(hitfunc? hitfunc->why_not : "That is beyond the maximum range.",
-            MSGCH_EXAMINE_FILTER);
+        mprf(MSGCH_EXAMINE_FILTER, "%s",
+             hitfunc? hitfunc->why_not.c_str() : "That is beyond the maximum range.");
         return false;
     }
     moves.isEndpoint = endpoint || (mons && _mon_exposed(mons));
@@ -1332,7 +1329,7 @@ bool direction_chooser::pickup_item()
         ii = env.map_knowledge(target()).item();
     if (!ii || !ii->is_valid(true))
     {
-        mpr("You can't see any item there.", MSGCH_EXAMINE_FILTER);
+        mprf(MSGCH_EXAMINE_FILTER, "You can't see any item there.");
         return false;
     }
     ii->flags |= ISFLAG_THROWN; // make autoexplore greedy
@@ -1361,7 +1358,7 @@ bool direction_chooser::pickup_item()
 
     if (!just_looking) // firing/casting prompt
     {
-        mpr("Marked for pickup.", MSGCH_EXAMINE_FILTER);
+        mprf(MSGCH_EXAMINE_FILTER, "Marked for pickup.");
         return false;
     }
 
@@ -1380,7 +1377,7 @@ bool direction_chooser::handle_signals()
         moves.isValid  = false;
         moves.isCancel = true;
 
-        mpr("Targetting interrupted by HUP signal.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Targetting interrupted by HUP signal.");
         return true;
     }
     return false;
@@ -1403,7 +1400,10 @@ void direction_chooser::print_target_description(bool &did_cloud) const
         print_target_monster_description(did_cloud);
 
     if (!in_range(target()))
-        mpr(hitfunc ? hitfunc->why_not : "Out of range.", MSGCH_EXAMINE_FILTER);
+    {
+        mprf(MSGCH_EXAMINE_FILTER, "%s",
+             hitfunc ? hitfunc->why_not.c_str() : "Out of range.");
+    }
 }
 
 string direction_chooser::target_interesting_terrain_description() const
@@ -1637,7 +1637,7 @@ bool direction_chooser::select_previous_target()
     }
     else
     {
-        mpr("Your target is gone.", MSGCH_EXAMINE_FILTER);
+        mprf(MSGCH_EXAMINE_FILTER, "Your target is gone.");
         flush_prev_message();
         return false;
     }
@@ -2241,7 +2241,7 @@ static void _extend_move_to_edge(dist &moves)
 // cache and noted in the Dungeon (O)verview, names the stair.
 static void _describe_oos_square(const coord_def& where)
 {
-    mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
+    mprf(MSGCH_EXAMINE_FILTER, "You can't see that place.");
 
     if (!in_bounds(where) || !env.map_knowledge(where).seen())
     {
@@ -2866,9 +2866,8 @@ void describe_floor()
 {
     dungeon_feature_type grid = env.map_knowledge(you.pos()).feat();
 
-    string prefix = "There is ";
+    const char* prefix = "There is ";
     string feat;
-    string suffix = " here.";
 
     switch (grid)
     {
@@ -2894,9 +2893,9 @@ void describe_floor()
     if (feat_is_water(grid) || feat_is_lava(grid))
         return;
 
-    mpr((prefix + feat + suffix).c_str(), channel);
+    mprf(channel, "%s%s here.", prefix, feat.c_str());
     if (grid == DNGN_ENTER_LABYRINTH && you.is_undead != US_UNDEAD)
-        mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
+        mprf(MSGCH_EXAMINE, "Beware, for starvation awaits!");
 }
 
 string thing_do_grammar(description_level_type dtype, bool add_stop,
@@ -3645,12 +3644,12 @@ static void _describe_monster(const monster_info& mi)
     const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
         text += " It is" + constriction_desc + ".";
-    mpr(text, MSGCH_EXAMINE);
+    mprf(MSGCH_EXAMINE, "%s", text.c_str());
 
     // Print the rest of the description.
     text = _get_monster_desc(mi);
     if (!text.empty())
-        mpr(text, MSGCH_EXAMINE);
+        mprf(MSGCH_EXAMINE, "%s", text.c_str());
 }
 
 // This method is called in two cases:
@@ -3898,7 +3897,7 @@ static bool _print_item_desc(const coord_def where)
     mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
     if (mitm[ targ_item ].link != NON_ITEM)
-        mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
+        mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
 
     return true;
 }
@@ -3956,7 +3955,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #endif
 
     if (where == you.pos() && !crawl_state.arena_suspended)
-        mpr("You.", MSGCH_EXAMINE_FILTER);
+        mprf(MSGCH_EXAMINE_FILTER, "You.");
 
     if (const monster* mon = monster_at(where))
     {
@@ -3972,13 +3971,11 @@ static void _describe_cell(const coord_def& where, bool in_range)
         {
             if (_mon_exposed_in_water(mon))
             {
-                mpr("There is a strange disturbance in the water here.",
-                    MSGCH_EXAMINE_FILTER);
+                mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the water here.");
             }
             else if (_mon_exposed_in_cloud(mon))
             {
-                mpr("There is a strange disturbance in the cloud here.",
-                    MSGCH_EXAMINE_FILTER);
+                mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the cloud here.");
             }
 
             goto look_clouds;

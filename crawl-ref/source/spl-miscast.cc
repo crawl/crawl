@@ -493,7 +493,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
             msg = replace_all(msg, "'s body", "");
     }
 
-    mpr(msg.c_str(), msg_ch);
+    mprf(msg_ch, "%s", msg.c_str());
 
     if (msg_ch == MSGCH_SOUND)
     {
@@ -682,14 +682,14 @@ bool MiscastEffect::avoid_lethal(int dam)
     if (did_msg)
     {
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
-        mpr("Couldn't avoid lethal miscast: already printed message for this "
-            "miscast.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Couldn't avoid lethal miscast: already printed "
+                          "message for this miscast.");
 #endif
         return false;
     }
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
-    mpr("Avoided lethal miscast.", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "Avoided lethal miscast.");
 #endif
 
     do_miscast();
@@ -1460,7 +1460,7 @@ void MiscastEffect::_divination_you(int severity)
         case 1:
             if (!silenced(you.pos()))
             {
-                mpr("You hear strange voices.", MSGCH_SOUND);
+                mprf(MSGCH_SOUND, "You hear strange voices.");
                 noisy(2, you.pos());
             }
             else
@@ -1524,7 +1524,7 @@ void MiscastEffect::_divination_you(int severity)
             if (you.magic_points > 0 || you.species == SP_DJINNI)
             {
                 drain_mp(3 + random2(10));
-                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             }
             break;
         }
@@ -1540,7 +1540,7 @@ void MiscastEffect::_divination_you(int severity)
             if (you.magic_points > 0 || you.species == SP_DJINNI)
             {
                 drain_mp(5 + random2(20));
-                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             }
             break;
         case 1:
@@ -3055,7 +3055,7 @@ void MiscastEffect::_zot()
             if (you.magic_points > 0)
             {
                 dec_mp(10 + random2(21));
-                mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+                mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             }
             break;
         case 11:

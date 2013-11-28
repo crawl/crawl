@@ -1754,7 +1754,7 @@ bool load_ghost(bool creating_level)
     if (!inf.valid())
     {
         if (wiz_cmd && !creating_level)
-            mpr("No ghost files for this level.", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "No ghost files for this level.");
         return false;                 // no such ghost.
     }
 
@@ -1819,7 +1819,7 @@ bool load_ghost(bool creating_level)
             unplaced_ghosts--;
             if (!mons->alive())
             {
-                mpr("Placed ghost is not alive.", MSGCH_DIAGNOSTICS);
+                mprf(MSGCH_DIAGNOSTICS, "Placed ghost is not alive.");
                 ghost_errors = true;
             }
             else if (mons->type != MONS_PLAYER_GHOST)
@@ -2256,8 +2256,7 @@ void save_ghost(bool force)
     {
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
-            mpr("Ghost file for this level already exists.",
-                MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Ghost file for this level already exists.");
 #endif
         fclose(gfile);
         return;
@@ -2269,8 +2268,7 @@ void save_ghost(bool force)
     {
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
-            mpr("Could not find any ghosts for this level.",
-                MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Could not find any ghosts for this level.");
 #endif
         return;
     }

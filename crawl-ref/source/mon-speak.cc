@@ -862,7 +862,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
         {
             if (you.can_see(mons))
                 handle_seen_interrupt(mons);
-            mpr(line.c_str(), msg_type);
+            mprf(msg_type, "%s", line.c_str());
         }
     }
     return noticed;

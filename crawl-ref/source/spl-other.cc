@@ -447,7 +447,7 @@ spret_type cast_intoxicate(int pow, bool fail)
 
 void remove_condensation_shield()
 {
-    mpr("Your icy shield evaporates.", MSGCH_DURATION);
+    mprf(MSGCH_DURATION, "Your icy shield evaporates.");
     you.duration[DUR_CONDENSATION_SHIELD] = 0;
     you.redraw_armour_class = true;
 }

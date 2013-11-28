@@ -156,7 +156,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     {
         if (pre_msg)
             mpr(pre_msg->c_str());
-        mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
+        mprf(MSGCH_ORB, "The orb interferes with your control of the blink!");
         // abort still wastes the turn
         if (high_level_controlled_blink && coinflip())
             return cast_semi_controlled_blink(pow, false, false) ? 1 : 0;
@@ -356,7 +356,7 @@ bool allow_control_teleport(bool quiet)
     if (!quiet && !retval && player_control_teleport())
     {
         if (orb_haloed(you.pos()))
-            mpr("The orb prevents control of your teleportation!", MSGCH_ORB);
+            mprf(MSGCH_ORB, "The orb prevents control of your teleportation!");
         else if (you.beheld())
             mpr("It is impossible to concentrate on your destination whilst mesmerised.");
         else
@@ -403,7 +403,7 @@ void you_teleport(void)
         }
         else if (orb_haloed(you.pos()))
         {
-            mpr("You feel the orb delaying this translocation!", MSGCH_ORB);
+            mprf(MSGCH_ORB, "You feel the orb delaying this translocation!");
             teleport_delay += 5 + random2(5);
         }
 
@@ -529,8 +529,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             // location, so cancel the teleport.
             if (crawl_state.seen_hups)
             {
-                mpr("Controlled teleport interrupted by HUP signal, "
-                    "cancelling teleport.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Controlled teleport interrupted by HUP signal, "
+                                  "cancelling teleport.");
                 if (!wizard_tele)
                     contaminate_player(1000, true);
                 return false;
@@ -605,7 +605,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             {
                 if (wizard_tele)
                 {
-                    mpr("Even you can't go there right now. Sorry!", MSGCH_WARN);
+                    mprf(MSGCH_WARN, "Even you can't go there right now. Sorry!");
                     return false;
                 }
 
@@ -617,7 +617,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             {
                 is_controlled = false;
                 large_change = false;
-                mpr("A strong magical force throws you back!", MSGCH_WARN);
+                mprf(MSGCH_WARN, "A strong magical force throws you back!");
             }
             else
             {
@@ -634,7 +634,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             // End teleport control.
             if (you.duration[DUR_CONTROL_TELEPORT])
             {
-                mpr("You feel uncertain.", MSGCH_DURATION);
+                mprf(MSGCH_DURATION, "You feel uncertain.");
                 you.duration[DUR_CONTROL_TELEPORT] = 0;
             }
         }
@@ -1052,7 +1052,7 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool end_ctele
 
     while (1)
     {
-        mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Which direction? [ESC to cancel]");
         direction(bmove, args);
 
         if (crawl_state.seen_hups)
@@ -1082,7 +1082,7 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool end_ctele
         // End teleport control if this was a random blink upgraded by cTele.
         if (end_ctele && you.duration[DUR_CONTROL_TELEPORT])
         {
-            mpr("You feel uncertain.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You feel uncertain.");
             you.duration[DUR_CONTROL_TELEPORT] = 0;
         }
     }

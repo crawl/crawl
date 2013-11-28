@@ -420,19 +420,19 @@ void antimagic()
     if (you.duration[DUR_TELEPORT] > 0)
     {
         you.duration[DUR_TELEPORT] = 0;
-        mpr("You feel strangely stable.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel strangely stable.");
     }
 
     if (you.duration[DUR_PETRIFYING] > 0)
     {
         you.duration[DUR_PETRIFYING] = 0;
-        mpr("You feel limber!", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel limber!");
     }
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
     {
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-        mpr("Your charged fireball dissipates.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
     }
 
     if (you.attribute[ATTR_SWIFTNESS] > 0)
@@ -689,7 +689,7 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
         learned_something_new(HINT_REMOVED_CURSE);
     }
     else if (alreadyknown)
-        mpr("None of your equipped items are cursed.", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "None of your equipped items are cursed.");
     else
     {
         if (pre_msg)

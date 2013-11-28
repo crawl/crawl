@@ -173,7 +173,7 @@ static int _cull_items(void)
 
     // XXX: Not the prettiest of messages, but the player
     // deserves to know whenever this kicks in. -- bwr
-    mpr("Too many items on level, removing some.", MSGCH_WARN);
+    mprf(MSGCH_WARN, "Too many items on level, removing some.");
 
     // Rules:
     //  1. Don't cleanup anything nearby the player
@@ -552,8 +552,7 @@ void unlink_item(int dest)
     // Okay, finally warn player if we didn't do anything.
     if (!linked)
     {
-        mpr("BUG WARNING: Item didn't seem to be linked at all.",
-            MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "BUG WARNING: Item didn't seem to be linked at all.");
     }
 #endif
 }
@@ -1660,19 +1659,19 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         // Take a note!
         _check_note_item(it);
 
-        mpr("You pick up the Orb of Zot!", MSGCH_ORB);
+        mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
         you.char_direction = GDT_ASCENDING;
         burden_change();
 
         env.orb_pos = you.pos(); // can be wrong in wizmode
         orb_pickup_noise(you.pos(), 30);
 
-        mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "The lords of Pandemonium are not amused. Beware!");
 
         if (you_worship(GOD_CHEIBRIADOS))
             simple_god_message(" tells them not to hurry.");
 
-        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
+        mprf(MSGCH_ORB, "Now all you have to do is get back out of the dungeon!");
 
         xom_is_stimulated(200, XM_INTRIGUED);
         invalidate_agrid(true);
@@ -3265,11 +3264,11 @@ static void _rune_from_specs(const char* _specs, item_def &item)
             line += make_stringf("[%c] %-10s ", i + 'a', rune_type_name(i));
             if (i % 5 == 4 || i == NUM_RUNE_TYPES - 1)
             {
-                mpr(line, MSGCH_PROMPT);
+                mprf(MSGCH_PROMPT, "%s", line.c_str());
                 line.clear();
             }
         }
-        mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Which rune (ESC to exit)? ");
 
         int keyin = toalower(get_ch());
 
@@ -3347,12 +3346,10 @@ static void _deck_from_specs(const char* _specs, item_def &item)
     {
         while (true)
         {
-            mpr(
-"[a] escape     [b] destruction [c] dungeons [d] summoning [e] wonders",
-                MSGCH_PROMPT);
-            mpr(
-"[f] punishment [g] war         [h] changes  [i] defence",
-                MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT,
+"[a] escape     [b] destruction [c] dungeons [d] summoning [e] wonders");
+            mprf(MSGCH_PROMPT,
+"[f] punishment [g] war         [h] changes  [i] defence");
             mpr("Which deck (ESC to exit)? ");
 
             const int keyin = toalower(get_ch());
@@ -3394,8 +3391,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
     {
         while (true)
         {
-            mpr("[a] plain [b] ornate [c] legendary? (ESC to exit)",
-                MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "[a] plain [b] ornate [c] legendary? (ESC to exit)");
 
             int keyin = toalower(get_ch());
 
@@ -4080,7 +4076,7 @@ object_class_type get_item_mimic_type()
     }
     mprf("[%c] random", letter);
     choices[letter] = OBJ_RANDOM;
-    mpr("\nWhat kind of item mimic? ", MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "\nWhat kind of item mimic? ");
     const int keyin = toalower(get_ch());
 
     if (!choices.count(keyin))

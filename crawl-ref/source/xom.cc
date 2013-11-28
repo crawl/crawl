@@ -1467,7 +1467,7 @@ static int _xom_swap_weapons(bool debug = false)
     unwind_var<int> save_speedinc(mon->speed_increment);
     if (!mon->pickup_item(mitm[index], false, true))
     {
-        mpr("Monster wouldn't take item.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Monster wouldn't take item.");
         mon->inv[MSLOT_WEAPON] = monwpn;
         mon->equip(mitm[monwpn], MSLOT_WEAPON, 0);
         unlink_item(index);
@@ -2934,7 +2934,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     ray_def ray;
     if (!find_ray(begin, towards, ray, opc_solid_see))
     {
-        mpr("Couldn't find ray between player and stairs.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Couldn't find ray between player and stairs.");
         return stairs_moved;
     }
 
@@ -2969,7 +2969,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
             return stairs_moved;
         }
 
-        mpr("Ray didn't cross stairs.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Ray didn't cross stairs.");
     }
 
     if (away && past_stairs <= 0)
@@ -3692,13 +3692,11 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(grd(you.pos())))
         {
-            mpr("Player is standing in deadly terrain, skipping Xom act.",
-                MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Player is standing in deadly terrain, skipping Xom act.");
         }
         else
         {
-            mpr("Player is already dead, skipping Xom act.",
-                MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS, "Player is already dead, skipping Xom act.");
         }
         return XOM_PLAYER_DEAD;
     }

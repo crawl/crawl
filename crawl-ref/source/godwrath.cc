@@ -361,7 +361,7 @@ static bool _cheibriados_retribution()
     case 2:
         if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
         {
-            mpr("You feel the world leave you behind!", MSGCH_WARN);
+            mprf(MSGCH_WARN, "You feel the world leave you behind!");
             you.set_duration(DUR_EXHAUSTED, 200);
             slow_player(100);
         }
@@ -593,7 +593,7 @@ static bool _trog_retribution()
             if (!you.duration[DUR_PARALYSIS])
             {
                 dec_penance(god, 3);
-                mpr("You suddenly pass out!", MSGCH_WARN);
+                mprf(MSGCH_WARN, "You suddenly pass out!");
                 you.duration[DUR_PARALYSIS] = 2 + random2(6);
             }
             break;
@@ -603,7 +603,7 @@ static bool _trog_retribution()
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
                 dec_penance(god, 1);
-                mpr("You suddenly feel exhausted!", MSGCH_WARN);
+                mprf(MSGCH_WARN, "You suddenly feel exhausted!");
                 you.set_duration(DUR_EXHAUSTED, 200);
                 slow_player(100);
             }
@@ -617,7 +617,7 @@ static bool _trog_retribution()
         //    we'll leave this effect in, but we'll remove the wild
         //    fire magic. -- bwr
         dec_penance(god, 2);
-        mpr("You feel Trog's fiery rage upon you!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
         MiscastEffect(&you, -god, SPTYP_FIRE, 8 + you.experience_level,
                       random2avg(98, 3), "the fiery rage of Trog");
     }
@@ -793,7 +793,7 @@ static bool _sif_muna_retribution()
         if (you.magic_points > 0 || you.species == SP_DJINNI)
         {
             drain_mp(100);  // This should zero it.
-            mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
+            mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
         }
         break;
 
@@ -1221,15 +1221,14 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     {
         if (coinflip())
         {
-            mpr("The divine experience confuses you!", MSGCH_WARN);
+            mprf(MSGCH_WARN, "The divine experience confuses you!");
             confuse_player(3 + random2(10));
         }
         else
         {
             if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
             {
-                mpr("The divine experience leaves you feeling exhausted!",
-                     MSGCH_WARN);
+                mprf(MSGCH_WARN, "The divine experience leaves you feeling exhausted!");
 
                 slow_player(random2(20));
             }
@@ -1379,7 +1378,7 @@ static bool _ely_holy_revenge(const monster *victim)
     string msg = getSpeakString("Elyvilon holy");
     if (msg.empty())
         msg = "Elyvilon is displeased.";
-    mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
+    mprf(MSGCH_GOD, GOD_ELYVILON, "%s", msg.c_str());
 
     vector<monster*> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)

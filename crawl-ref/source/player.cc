@@ -2902,9 +2902,9 @@ static void _remove_temp_mutations()
         2 + random2(3)));
 
     if (num_remove >= you.attribute[ATTR_TEMP_MUTATIONS])
-        mpr("You feel the corruption within you wane completely.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel the corruption within you wane completely.");
     else
-        mpr("You feel the corruption within you wane somewhat.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel the corruption within you wane somewhat.");
 
     for (int i = 0; i < num_remove; ++i)
         delete_temp_mutation();
@@ -3055,7 +3055,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         if (you.attribute[ATTR_XP_DRAIN] <= 0)
         {
             you.attribute[ATTR_XP_DRAIN] = 0;
-            mpr("Your life force feels restored.", MSGCH_RECOVERY);
+            mprf(MSGCH_RECOVERY, "Your life force feels restored.");
         }
     }
 }
@@ -3065,53 +3065,44 @@ static void _draconian_scale_colour_message()
     switch (you.species)
     {
     case SP_RED_DRACONIAN:
-        mpr("Your scales start taking on a fiery red colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a fiery red colour.");
         perma_mutate(MUT_HEAT_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_WHITE_DRACONIAN:
-        mpr("Your scales start taking on an icy white colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on an icy white colour.");
         perma_mutate(MUT_COLD_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_GREEN_DRACONIAN:
-        mpr("Your scales start taking on a lurid green colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a lurid green colour.");
         perma_mutate(MUT_POISON_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_YELLOW_DRACONIAN:
-        mpr("Your scales start taking on a golden yellow colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a golden yellow colour.");
         break;
 
     case SP_GREY_DRACONIAN:
-        mpr("Your scales start taking on a dull iron-grey colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a dull iron-grey colour.");
         perma_mutate(MUT_UNBREATHING, 1, "draconian maturity");
         break;
 
     case SP_BLACK_DRACONIAN:
-        mpr("Your scales start taking on a glossy black colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a glossy black colour.");
         perma_mutate(MUT_SHOCK_RESISTANCE, 1, "draconian maturity");
         break;
 
     case SP_PURPLE_DRACONIAN:
-        mpr("Your scales start taking on a rich purple colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a rich purple colour.");
         break;
 
     case SP_MOTTLED_DRACONIAN:
-        mpr("Your scales start taking on a weird mottled pattern.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start taking on a weird mottled pattern.");
         break;
 
     case SP_PALE_DRACONIAN:
-        mpr("Your scales start fading to a pale cyan-grey colour.",
-            MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Your scales start fading to a pale cyan-grey colour.");
         break;
 
     case SP_BASE_DRACONIAN:
@@ -3137,7 +3128,7 @@ static void _felid_extra_life()
         && you.lives < 2)
     {
         you.lives++;
-        mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
+        mprf(MSGCH_INTRINSIC_GAIN, "Extra life!");
         you.attribute[ATTR_LIFE_GAINED] = you.max_level;
         // Should play the 1UP sound from SMB...
     }
@@ -3193,8 +3184,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 
             if (new_exp == 27)
             {
-                mpr("You have reached level 27, the final one!",
-                    MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
             }
             else
             {
@@ -3249,8 +3239,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
                 {
-                    mpr("You feel somewhat more resistant.",
-                        MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "You feel somewhat more resistant.");
                     perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
                 }
 
@@ -3291,14 +3280,13 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             case SP_MUMMY:
                 if (you.experience_level == 13 || you.experience_level == 26)
                 {
-                    mpr("You feel more in touch with the powers of death.",
-                        MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "You feel more in touch with the powers of death.");
                 }
 
                 if (you.experience_level == 13)  // level 13 for now -- bwr
                 {
-                    mpr("You can now infuse your body with magic to restore "
-                        "decomposition.", MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "You can now infuse your body with "
+                                               "magic to restore decomposition.");
                 }
                 break;
 
@@ -3307,19 +3295,18 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 {
                     if (you.hunger_state > HS_SATIATED)
                     {
-                        mpr("If you weren't so full you could now transform "
-                            "into a vampire bat.", MSGCH_INTRINSIC_GAIN);
+                        mprf(MSGCH_INTRINSIC_GAIN, "If you weren't so full you "
+                             "could now transform into a vampire bat.");
                     }
                     else
                     {
-                        mpr("You can now transform into a vampire bat.",
-                            MSGCH_INTRINSIC_GAIN);
+                        mprf(MSGCH_INTRINSIC_GAIN, "You can now transform into "
+                             "a vampire bat.");
                     }
                 }
                 else if (you.experience_level == 6)
                 {
-                    mpr("You can now bottle potions of blood from corpses.",
-                        MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "You can now bottle potions of blood from corpses.");
                 }
                 break;
 
@@ -3329,14 +3316,14 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 
                 if (!(you.experience_level % 3))
                 {
-                    mpr("Your skin feels tougher.", MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "Your skin feels tougher.");
                     you.redraw_armour_class = true;
                 }
 
                 if (you.experience_level == 13)
                 {
-                    mpr("Your tail grows strong enough to constrict"
-                        " your enemies.", MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "Your tail grows strong enough to constrict your enemies.");
                 }
                 break;
 
@@ -3402,7 +3389,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             case SP_PALE_DRACONIAN:
                 if (!(you.experience_level % 3))
                 {
-                    mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "Your scales feel tougher.");
                     you.redraw_armour_class = true;
                 }
 
@@ -3421,7 +3408,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                         break;
                     case SP_BLACK_DRACONIAN:
                         perma_mutate(MUT_BIG_WINGS, 1, "draconian growth");
-                        mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
+                        mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
                         break;
                     default:
                         break;
@@ -3477,10 +3464,8 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                         {
                             if (you.experience_level == level)
                             {
-                                mpr("You feel monstrous as your "
-                                     "demonic heritage exerts itself.",
-                                     MSGCH_MUTATION);
-
+                                mprf(MSGCH_MUTATION, "You feel monstrous as your "
+                                     "demonic heritage exerts itself.");
                                 mark_milestone("monstrous", "is a "
                                                "monstrous demonspawn!");
                             }
@@ -3502,8 +3487,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     {
                         if (!gave_message)
                         {
-                            mpr("Your demonic ancestry asserts itself...",
-                                MSGCH_INTRINSIC_GAIN);
+                            mprf(MSGCH_INTRINSIC_GAIN, "Your demonic ancestry asserts itself...");
 
                             gave_message = true;
                         }
@@ -3528,11 +3512,10 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 
                 if (you.experience_level == 5)
                 {
-                    mpr("You have gained the ability to fly.",
-                        MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "You have gained the ability to fly.");
                 }
                 else if (you.experience_level == 15)
-                    mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
                 break;
 
             case SP_MERFOLK:
@@ -3582,7 +3565,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 if (you.experience_level == 14)
                 {
                     perma_mutate(MUT_BIG_WINGS, 1, "gargoyle growth");
-                    mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
+                    mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
                 }
                 break;
 
@@ -3595,63 +3578,63 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
         if (crawl_state.game_is_zotdef())
         {
             if (you.experience_level == 1)
-                mpr("Your Zot abilities now extend through the making of dart traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of dart traps.");
             if (you.experience_level == 2)
-                mpr("Your Zot abilities now extend through the making of oklob saplings.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob saplings.");
             if (you.experience_level == 3)
-                mpr("Your Zot abilities now extend through the making of arrow traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of arrow traps.");
             if (you.experience_level == 4)
-                mpr("Your Zot abilities now extend through the making of plants.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of plants.");
             if (you.experience_level == 4)
-                mpr("Your Zot abilities now extend through removing curses.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through removing curses.");
             if (you.experience_level == 5)
-                mpr("Your Zot abilities now extend through the making of burning bushes.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of burning bushes.");
             if (you.experience_level == 6)
-                mpr("Your Zot abilities now extend through the making of altars and grenades.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of altars and grenades.");
             if (you.experience_level == 7)
-                mpr("Your Zot abilities now extend through the making of oklob plants.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob plants.");
             if (you.experience_level == 8)
-                mpr("Your Zot abilities now extend through the making of net traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of net traps.");
             if (you.experience_level == 9)
-                mpr("Your Zot abilities now extend through the making of ice statues.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of ice statues.");
             if (you.experience_level == 10)
-                mpr("Your Zot abilities now extend through the making of spear traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of spear traps.");
             if (you.experience_level == 11)
-                mpr("Your Zot abilities now extend through the making of alarm traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of alarm traps.");
             if (you.experience_level == 12)
-                mpr("Your Zot abilities now extend through the making of mushroom circles.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of mushroom circles.");
             if (you.experience_level == 13)
-                mpr("Your Zot abilities now extend through the making of bolt traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of bolt traps.");
             if (you.experience_level == 14)
-                mpr("Your Zot abilities now extend through the making of orange crystal statues.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of orange crystal statues.");
             if (you.experience_level == 15)
-                mpr("Your Zot abilities now extend through the making of needle traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of needle traps.");
             if (you.experience_level == 16)
-                mpr("Your Zot abilities now extend through self-teleportation.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through self-teleportation.");
             if (you.experience_level == 17)
-                mpr("Your Zot abilities now extend through making water.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through making water.");
             if (you.experience_level == 19)
-                mpr("Your Zot abilities now extend through the making of lightning spires.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of lightning spires.");
             if (you.experience_level == 20)
-                mpr("Your Zot abilities now extend through the making of silver statues.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of silver statues.");
             // gold and bazaars gained together
             if (you.experience_level == 21)
-                mpr("Your Zot abilities now extend through the making of bazaars.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of bazaars.");
             if (you.experience_level == 21)
-                mpr("Your Zot abilities now extend through acquiring gold.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through acquiring gold.");
             if (you.experience_level == 22)
-                mpr("Your Zot abilities now extend through the making of oklob circles.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob circles.");
             if (you.experience_level == 23)
-                mpr("Your Zot abilities now extend through invoking Sage effects.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through invoking Sage effects.");
             if (you.experience_level == 24)
-                mpr("Your Zot abilities now extend through acquirement.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through acquirement.");
             if (you.experience_level == 25)
-                mpr("Your Zot abilities now extend through the making of blade traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of blade traps.");
             if (you.experience_level == 26)
-                mpr("Your Zot abilities now extend through the making of curse skulls.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of curse skulls.");
 #if 0
             if (you.experience_level == 27)
-                mpr("Your Zot abilities now extend through the making of teleport traps.", MSGCH_INTRINSIC_GAIN);
+                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of teleport traps.");
 #endif
         }
 
@@ -4573,7 +4556,7 @@ void flush_mp()
           && you.magic_points < (you.max_magic_points
                                  * Options.magic_point_warning) / 100)
       {
-          mpr("* * * LOW MAGIC WARNING * * *", MSGCH_DANGER);
+          mprf(MSGCH_DANGER, "* * * LOW MAGIC WARNING * * *");
       }
 
       take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
@@ -5285,7 +5268,7 @@ bool napalm_player(int amount, string source, string source_aux)
     you.increase_duration(DUR_LIQUID_FLAMES, amount, 100);
 
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
-        mpr("You are covered in liquid flames!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
     you.props["napalmer"] = source;
     you.props["napalm_aux"] = source_aux;
@@ -5300,16 +5283,16 @@ void dec_napalm_player(int delay)
     if (feat_is_watery(grd(you.pos())))
     {
         if (you.ground_level())
-            mpr("The flames go out!", MSGCH_WARN);
+            mprf(MSGCH_WARN, "The flames go out!");
         else
-            mpr("You dip into the water, and the flames go out!", MSGCH_WARN);
+            mprf(MSGCH_WARN, "You dip into the water, and the flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.props.erase("napalmer");
         you.props.erase("napalm_aux");
         return;
     }
 
-    mpr("You are covered in liquid flames!", MSGCH_WARN);
+    mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
     expose_player_to_element(BEAM_NAPALM,
                              div_rand_round(delay * 12, BASELINE_DELAY));
@@ -5392,7 +5375,7 @@ void dec_slow_player(int delay)
     }
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
-        mpr("You feel yourself speed up.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel yourself speed up.");
         you.duration[DUR_SLOW] = 0;
     }
 }
@@ -5410,7 +5393,7 @@ void dec_exhaust_player(int delay)
     }
     if (you.duration[DUR_EXHAUSTED] <= BASELINE_DELAY)
     {
-        mpr("You feel less exhausted.", MSGCH_DURATION);
+        mprf(MSGCH_DURATION, "You feel less exhausted.");
         you.duration[DUR_EXHAUSTED] = 0;
     }
 }
@@ -5463,7 +5446,7 @@ void dec_haste_player(int delay)
         // message if we cross the threshold
         if (old_dur > threshold && you.duration[DUR_HASTE] <= threshold)
         {
-            mpr("Your extra speed is starting to run out.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "Your extra speed is starting to run out.");
             if (coinflip())
                 you.duration[DUR_HASTE] -= BASELINE_DELAY;
         }
@@ -5471,7 +5454,7 @@ void dec_haste_player(int delay)
     else if (you.duration[DUR_HASTE] <= BASELINE_DELAY)
     {
         if (!you.duration[DUR_BERSERK])
-            mpr("You feel yourself slow down.", MSGCH_DURATION);
+            mprf(MSGCH_DURATION, "You feel yourself slow down.");
         you.duration[DUR_HASTE] = 0;
     }
 }
@@ -5505,7 +5488,7 @@ void dec_disease_player(int delay)
             you.disease = 0;
 
         if (you.disease == 0)
-            mpr("You feel your health improve.", MSGCH_RECOVERY);
+            mprf(MSGCH_RECOVERY, "You feel your health improve.");
     }
 }
 
@@ -5656,7 +5639,7 @@ void handle_player_drowning(int delay)
                                 * delay,
                                 BASELINE_DELAY * 10);
             ouch(dam, mons->mindex(), KILLED_BY_WATER);
-            mpr("Your lungs strain for air!", MSGCH_WARN);
+            mprf(MSGCH_WARN, "Your lungs strain for air!");
         }
     }
 }
@@ -7232,7 +7215,7 @@ void player::petrify(actor *who, bool force)
     duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
     redraw_evasion = true;
-    mpr("You are slowing down.", MSGCH_WARN);
+    mprf(MSGCH_WARN, "You are slowing down.");
 }
 
 bool player::fully_petrify(actor *foe, bool quiet)
@@ -8011,7 +7994,7 @@ void player::sentinel_mark(bool trap)
     }
     else
     {
-        mpr("A sentinel's mark forms upon you.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "A sentinel's mark forms upon you.");
         increase_duration(DUR_SENTINEL_MARK, trap ? random_range(35, 55)
                                                   : random_range(50, 80),
                           250);
@@ -8044,9 +8027,9 @@ bool player::made_nervous_by(const coord_def &p)
 void player::weaken(actor *attacker, int pow)
 {
     if (!duration[DUR_WEAK])
-        mpr("You feel yourself grow feeble.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You feel yourself grow feeble.");
     else
-        mpr("You feel as though you will be weak longer.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You feel as though you will be weak longer.");
 
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }

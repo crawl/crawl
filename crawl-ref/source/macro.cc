@@ -710,7 +710,7 @@ static keyseq _getch_mul(int (*rgetch)() = NULL)
     // get new keys from the user.
     if (crawl_state.is_replaying_keys())
     {
-        mpr("(Key replay ran out of keys)", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "(Key replay ran out of keys)");
         crawl_state.cancel_cmd_repeat();
         crawl_state.cancel_cmd_again();
     }
@@ -891,10 +891,9 @@ void macro_add_query(void)
     KeymapContext keymc = KMC_DEFAULT;
 
     mesclr();
-    mpr("(m)acro, (M)acro raw, keymap "
-        "[(k) default, (x) level-map, (t)argetting, (c)onfirm, m(e)nu], "
-        "(s)ave? ",
-        MSGCH_PROMPT);
+    mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
+                       "[(k) default, (x) level-map, (t)argetting, "
+                       "(c)onfirm, m(e)nu], (s)ave? ");
     input = m_getch();
     int low = toalower(input);
 
@@ -958,7 +957,7 @@ void macro_add_query(void)
         string action = vtostr(mapref[key]);
         action = replace_all(action, "<", "<<");
         mprf(MSGCH_WARN, "Current Action: %s", action.c_str());
-        mpr("Do you wish to (r)edefine, (c)lear, or (a)bort? ", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, (c)lear, or (a)bort? ");
 
         input = m_getch();
 
@@ -1327,13 +1326,13 @@ void bind_command_to_key(command_type cmd, int key)
 
     if (is_userfunction(key))
     {
-        mpr("Cannot bind user function keys to a command.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Cannot bind user function keys to a command.");
         return;
     }
 
     if (is_synthetic_key(key))
     {
-        mpr("Cannot bind synthetic keys to a command.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Cannot bind synthetic keys to a command.");
         return;
     }
 

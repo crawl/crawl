@@ -240,9 +240,9 @@ void player::_removed_beholder()
     if (beholders.empty())
     {
         duration[DUR_MESMERISED] = 0;
-        mpr(coinflip() ? "You break out of your daze!"
-                       : "You are no longer entranced.",
-            MSGCH_DURATION);
+        mprf(MSGCH_DURATION,
+             coinflip() ? "You break out of your daze!"
+                        : "You are no longer entranced.");
     }
 }
 

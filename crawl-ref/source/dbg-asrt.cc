@@ -485,10 +485,7 @@ static void _debug_marker_scan()
                      marker->pos.x, marker->pos.y);
 
                 if (!in_bounds(marker->pos))
-                {
-                    mpr("Further, it thinks it's out of bounds.",
-                        MSGCH_ERROR);
-                }
+                    mprf(MSGCH_ERROR, "Further, it thinks it's out of bounds.");
             }
         }
     }

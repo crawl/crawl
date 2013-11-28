@@ -524,14 +524,12 @@ namespace arena
 
         if (orig_a < 0)
         {
-            mpr("Book-keeping says faction_a has negative active members.",
-                MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Book-keeping says faction_a has negative active members.");
         }
 
         if (orig_b < 0)
         {
-            mpr("Book-keeping says faction_b has negative active members.",
-                MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "Book-keeping says faction_b has negative active members.");
         }
 
         faction_a.active_members = 0;
@@ -577,8 +575,7 @@ namespace arena
         {
             if (faction_a.won || faction_b.won)
             {
-                mpr("Both factions alive but one declared the winner.",
-                    MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Both factions alive but one declared the winner.");
                 faction_a.won = false;
                 faction_b.won = false;
             }
@@ -655,8 +652,8 @@ namespace arena
 
         if (faction_a.active_members == 0 || faction_b.active_members == 0)
         {
-            mpr("ERROR: Both sides have spawners, but the active member "
-                "count of one side has been reduced to zero!", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "ERROR: Both sides have spawners, but the active "
+                 "member count of one side has been reduced to zero!");
             return;
         }
 
@@ -848,13 +845,13 @@ namespace arena
         {
             if (faction_a.active_members > 0)
             {
-                mpr("Tie declared, but faction_a won.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Tie declared, but faction_a won.");
                 team_a_wins++;
                 faction_a.won = true;
             }
             else if (faction_b.active_members > 0)
             {
-                mpr("Tie declared, but faction_b won.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Tie declared, but faction_b won.");
                 faction_b.won = true;
             }
             else
@@ -868,21 +865,21 @@ namespace arena
             faction_a.won = false;
             faction_b.won = false;
 
-            mpr("*BOTH* factions won?!", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "*BOTH* factions won?!");
             if (faction_a.active_members > 0)
             {
-                mpr("Faction_a real winner.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Faction_a real winner.");
                 team_a_wins++;
                 faction_a.won = true;
             }
             else if (faction_b.active_members > 0)
             {
-                mpr("Faction_b real winner.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Faction_b real winner.");
                 faction_b.won = true;
             }
             else
             {
-                mpr("Both sides dead.", MSGCH_ERROR);
+                mprf(MSGCH_ERROR, "Both sides dead.");
                 ties++;
                 was_tied = true;
             }

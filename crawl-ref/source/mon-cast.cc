@@ -2972,8 +2972,7 @@ static int _monster_abjure_square(const coord_def &pos,
     else if (is_sanctuary(target->pos()))
     {
         pow = 0;
-        mpr("Zin's power protects your fellow warrior from evil magic!",
-            MSGCH_GOD);
+        mprf(MSGCH_GOD, "Zin's power protects your fellow warrior from evil magic!");
         shielded = true;
     }
 
@@ -3671,8 +3670,7 @@ static void _mons_create_tentacles(monster* head)
     int head_index = head->mindex();
     if (invalid_monster_index(head_index))
     {
-        mpr("Error! Tentacle head is not a part of the current environment!",
-            MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "Error! Tentacle head is not a part of the current environment!");
         return;
     }
 
@@ -4546,7 +4544,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 {
                     slugform = replace_all(slugform, "@The_monster@",
                                            mons->name(DESC_THE));
-                    mpr(slugform.c_str(), channel);
+                    mprf(channel, "%s", slugform.c_str());
                 }
             }
             else if (!friendly && !has_mon_foe)
@@ -4571,7 +4569,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 {
                     slugform = replace_all(slugform, "@The_monster@",
                                            foe->name(DESC_THE));
-                    mpr(slugform.c_str(), MSGCH_MONSTER_ENCHANT);
+                    mprf(MSGCH_MONSTER_ENCHANT, "%s", slugform.c_str());
                 }
             }
         }
@@ -4789,8 +4787,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (!msg.empty())
             {
                 msg = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
-                mpr(msg.c_str(), mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
-                    : MSGCH_MONSTER_ENCHANT);
+                mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
+                     : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
             }
             return;
         }

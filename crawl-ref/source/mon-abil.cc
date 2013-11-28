@@ -909,7 +909,7 @@ static void _starcursed_scream(monster* mon, actor* target)
 
     int n = chorus.size();
     int dam = 0; int stun = 0;
-    string message;
+    const char* message = nullptr;
 
     dprf("Chorus size: %d", n);
 
@@ -946,7 +946,7 @@ static void _starcursed_scream(monster* mon, actor* target)
     }
     else
     {
-        mpr(message, MSGCH_MONSTER_SPELL);
+        mprf(MSGCH_MONSTER_SPELL, "%s", message);
         ouch(dam, mon->mindex(), KILLED_BY_BEAM, "accursed screaming");
     }
 
@@ -2121,11 +2121,11 @@ bool apply_grasping_roots(monster* mons)
 {
     if (you.see_cell(mons->pos()) && one_chance_in(12))
     {
-        mpr(random_choose(
+        mprf(MSGCH_TALK_VISUAL, "%s", random_choose(
                 "Tangled roots snake along the ground.",
                 "The ground creaks as gnarled roots bulge its surface.",
                 "A root reaches out and grasps at passing movement.",
-                0), MSGCH_TALK_VISUAL);
+                0));
     }
 
     bool found_hostile = false;
@@ -3878,15 +3878,15 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 // If you're already mesmerised by an invisible mermaid she
                 // can still prolong the enchantment; otherwise you "resist".
                 if (already_mesmerised)
-                    mpr("You hear a luring song.", MSGCH_SOUND);
+                    mprf(MSGCH_SOUND, "You hear a luring song.");
                 else
                 {
                     if (one_chance_in(4)) // reduce spamminess
                     {
                         if (coinflip())
-                            mpr("You hear a haunting song.", MSGCH_SOUND);
+                            mprf(MSGCH_SOUND, "You hear a haunting song.");
                         else
-                            mpr("You hear an eerie melody.", MSGCH_SOUND);
+                            mprf(MSGCH_SOUND, "You hear an eerie melody.");
 
                         canned_msg(MSG_YOU_RESIST); // flavour only
                     }

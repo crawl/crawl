@@ -685,7 +685,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     if (you.form == TRAN_WISP)
     {
         if (!just_check)
-            mpr("You can't handle any books in this form.", MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "You can't handle any books in this form.");
         return false;
     }
 
@@ -746,18 +746,15 @@ static bool _get_mem_list(spell_list &mem_spells,
         {
             if (num_unknown > 1)
             {
-                mpr("You must pick up those books before reading them.",
-                    MSGCH_PROMPT);
+                mprf(MSGCH_PROMPT, "You must pick up those books before reading them.");
             }
             else if (num_unknown == 1)
             {
-                mpr("You must pick up this book before reading it.",
-                    MSGCH_PROMPT);
+                mprf(MSGCH_PROMPT, "You must pick up this book before reading it.");
             }
             else
             {
-                mpr("You aren't carrying or standing over any spellbooks.",
-                    MSGCH_PROMPT);
+                mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
             }
         }
         return false;
@@ -776,8 +773,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         if (!just_check)
         {
-            mpr("None of the spellbooks you are carrying contain any spells.",
-                MSGCH_PROMPT);
+            mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
         }
         return false;
     }
@@ -831,7 +827,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
 
     if (num_known == total)
-        mpr("You already know all available spells.", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "You already know all available spells.");
     else if (num_race == total || (num_known + num_race) == total)
     {
         const bool lichform = (you.form == TRAN_LICH);
@@ -849,8 +845,8 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
     else
     {
-        mpr("You can't memorise any new spells for an unknown reason; "
-            "please file a bug report.", MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "You can't memorise any new spells for an unknown "
+                           "reason; please file a bug report.");
     }
 
     if (num_unreadable)
@@ -1225,9 +1221,9 @@ bool learn_spell(spell_type specspell)
     double chance = get_miscast_chance(specspell);
 
     if (chance >= 0.025)
-        mpr("This spell is very dangerous to cast!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "This spell is very dangerous to cast!");
     else if (chance >= 0.005)
-        mpr("This spell is quite dangerous to cast!", MSGCH_WARN);
+        mprf(MSGCH_WARN, "This spell is quite dangerous to cast!");
     else if (chance >= 0.001)
         mpr("This spell is slightly dangerous to cast.");
 
@@ -1855,8 +1851,8 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     if (num_discs == 0)
     {
 #ifdef DEBUG
-        mpr("No valid disciplines with which to make a themed randart "
-            "spellbook.", MSGCH_ERROR);
+        mprf(MSGCH_ERROR, "No valid disciplines with which to make a themed "
+                          "randart spellbook.");
 #endif
         // Only happens if !completely_random and the player already knows
         // all available spells. We could simply re-allow all disciplines

@@ -236,7 +236,7 @@ private:
     string zapper() const;
 
     set<string> message_cache;
-    void emit_message(msg_channel_type chan, const char* msg);
+    void emit_message(const char* msg);
     void step();
     bool hit_wall();
 

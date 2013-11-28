@@ -2020,7 +2020,7 @@ bool prompt_failed(int retval, string msg)
             canned_msg(MSG_OK);
     }
     else
-        mpr(msg.c_str(), MSGCH_PROMPT);
+        mprf(MSGCH_PROMPT, "%s", msg.c_str());
 
     crawl_state.cancel_cmd_repeat();
 

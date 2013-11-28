@@ -275,7 +275,7 @@ void ash_check_bondage(bool msg)
     {
         string desc = ash_describe_bondage(flags, you.bondage_level != old_level);
         if (!desc.empty())
-            mpr(desc, MSGCH_GOD);
+            mprf(MSGCH_GOD, "%s", desc.c_str());
     }
 }
 

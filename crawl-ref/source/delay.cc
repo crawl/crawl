@@ -640,11 +640,11 @@ void handle_delay()
         switch (delay.type)
         {
         case DELAY_ARMOUR_ON:
-            mpr("You start putting on your armour.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You start putting on your armour.");
             break;
 
         case DELAY_ARMOUR_OFF:
-            mpr("You start removing your armour.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You start removing your armour.");
             break;
 
         case DELAY_BUTCHER:
@@ -684,16 +684,16 @@ void handle_delay()
                     spell_title(spell));
                 simple_god_message(message.c_str());
             }
-            mpr("You start memorising the spell.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You start memorising the spell.");
             break;
         }
 
         case DELAY_PASSWALL:
-            mpr("You begin to meditate on the wall.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You begin to meditate on the wall.");
             break;
 
         case DELAY_SHAFT_SELF:
-            mpr("You begin to dig a shaft.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You begin to dig a shaft.");
             break;
 
         default:
@@ -785,7 +785,7 @@ void handle_delay()
                     // previously rotten. (special < 100 is the rottenness check).
                     if (delay.parm2 >= 100)
                     {
-                        mpr("The corpse rots.", MSGCH_ROTTEN_MEAT);
+                        mprf(MSGCH_ROTTEN_MEAT, "The corpse rots.");
                         if (you.is_undead != US_UNDEAD
                             && player_mutation_level(MUT_SAPROVOROUS) < 3)
                         {
@@ -880,16 +880,15 @@ void handle_delay()
             break;
 
         case DELAY_MEMORISE:
-            mpr("You continue memorising.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue memorising.");
             break;
 
         case DELAY_PASSWALL:
-            mpr("You continue meditating on the rock.",
-                MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue meditating on the rock.");
             break;
 
         case DELAY_SHAFT_SELF:
-            mpr("You continue digging a shaft.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue digging a shaft.");
             break;
 
         case DELAY_MULTIDROP:
@@ -902,7 +901,7 @@ void handle_delay()
             break;
 
         case DELAY_EAT:
-            mpr("You continue eating.", MSGCH_MULTITURN_ACTION);
+            mprf(MSGCH_MULTITURN_ACTION, "You continue eating.");
             break;
 
         case DELAY_FEED_VAMPIRE:
@@ -911,7 +910,7 @@ void handle_delay()
                                             : mitm[delay.parm2]);
             if (food_is_rotten(corpse))
             {
-                mpr("This corpse has started to rot.", MSGCH_ROTTEN_MEAT);
+                mprf(MSGCH_ROTTEN_MEAT, "This corpse has started to rot.");
                 _xom_check_corpse_waste();
                 stop_delay();
                 return;
@@ -1442,7 +1441,7 @@ void run_macro(const char *macroname)
 #ifdef CLUA_BINDINGS
     if (!clua)
     {
-        mpr("Lua not initialised", MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "Lua not initialised");
         stop_delay();
         return;
     }
@@ -1583,7 +1582,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
 {
     if (ai == AI_SENSE_MONSTER)
     {
-        mpr("You sense a monster nearby.", MSGCH_WARN);
+        mprf(MSGCH_WARN, "You sense a monster nearby.");
         return true;
     }
     if (ai != AI_SEE_MONSTER)
@@ -1688,9 +1687,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             msgs_buf->push_back(text);
         else
         {
-            mpr(text, MSGCH_WARN);
+            mprf(MSGCH_WARN, "%s", text.c_str());
             if (ash_id)
-                mpr(ash_warning, MSGCH_GOD);
+                mprf(MSGCH_GOD, "%s", ash_warning.c_str());
         }
         const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
     }

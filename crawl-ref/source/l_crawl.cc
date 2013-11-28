@@ -81,7 +81,7 @@ static int crawl_mpr(lua_State *ls)
     if (ch < 0 || ch >= NUM_MESSAGE_CHANNELS)
         ch = MSGCH_PLAIN;
 
-    mpr(message, static_cast<msg_channel_type>(ch));
+    mprf(static_cast<msg_channel_type>(ch), "%s", message);
     return 0;
 }
 
@@ -953,7 +953,7 @@ static int crawl_call_dlua(lua_State *ls)
             const char *msg = lua_tostring(dlua, -1);
             if (msg == NULL)
                 msg = "(error object is not a string)";
-            mpr(msg, MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "%s", msg);
         }
 
         lua_settop(dlua, 0); // don't bother unwinding, just nuke the stack
@@ -973,7 +973,7 @@ static int crawl_call_dlua(lua_State *ls)
             lua_pushstring(ls, ret);
         else
         {
-            mpr("call_dlua: cannot pass non-scalars yet (TODO)", MSGCH_ERROR);
+            mprf(MSGCH_ERROR, "call_dlua: cannot pass non-scalars yet (TODO)");
             lua_pushnil(ls);
         }
 

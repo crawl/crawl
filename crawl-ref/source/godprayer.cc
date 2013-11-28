@@ -150,7 +150,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
               wpn.name(DESC_A).c_str(), desc.c_str()));
     wpn.flags |= ISFLAG_NOTED_ID;
 
-    mpr("Your weapon shines brightly!", MSGCH_GOD);
+    mprf(MSGCH_GOD, "Your weapon shines brightly!");
 
     flash_view(colour);
 
@@ -340,11 +340,11 @@ void pray()
     something_happened |= _offer_items();
 
     if (you_worship(GOD_XOM))
-        mpr(getSpeakString("Xom prayer"), MSGCH_GOD);
+        mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
     else if (player_under_penance())
         simple_god_message(" demands penance!");
     else
-        mpr(god_prayer_reaction().c_str(), MSGCH_PRAY, you.religion);
+        mprf(MSGCH_PRAY, you.religion, "%s", god_prayer_reaction().c_str());
 
     if (something_happened)
         you.turn_is_over = true;
