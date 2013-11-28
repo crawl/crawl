@@ -408,11 +408,12 @@ void InvMenu::set_title(const string &s)
         const int cap = carrying_capacity(BS_UNENCUMBERED);
 
         stitle = make_stringf(
-            "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots)",
+            "Inventory: %.0f/%.0f aum (%d%%, %d/%d slots)",
             BURDEN_TO_AUM * you.burden,
             BURDEN_TO_AUM * cap,
             (you.burden * 100) / cap,
-            inv_count());
+            inv_count(),
+            ENDOFPACK);
 
         string prompt = "(_ for help)";
         stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
