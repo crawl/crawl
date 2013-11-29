@@ -1096,8 +1096,8 @@ however, generates far more voltage than its seagoing siblings.
 elemental wellspring
 
 A swirling conflux of elemental water streaming from the elemental plane into
-this one. Floods and the spirits who dwell within them seem to issue from it
-without limit.
+this one. Floods and the spirits who dwell within them seem to issue from
+it.
 %%%%
 elephant
 
