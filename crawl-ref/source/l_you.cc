@@ -97,7 +97,6 @@ LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, number, you.hunger_state)
 LUARET1(you_hunger_name, string, hunger_level())
-LUARET1(you_gold, number, you.gold)
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(false), you.max_dex())
@@ -310,6 +309,21 @@ static int l_you_abil_table(lua_State *ls)
         lua_rawset(ls, -3);
     }
     return 1;
+}
+
+static int you_gold(lua_State *ls)
+{
+    if (lua_gettop(ls) >= 1 && you.wizard)
+    {
+        const int new_gold = luaL_checkint(ls, 1);
+        const int old_gold = you.gold;
+        you.set_gold(max(new_gold, 0));
+        if (new_gold > old_gold)
+            you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
+        else if (old_gold > new_gold)
+            you.attribute[ATTR_MISC_SPENDING] += old_gold - new_gold;
+    }
+    PLUARET(number, you.gold);
 }
 
 static int you_can_consume_corpses(lua_State *ls)
@@ -592,21 +606,6 @@ static int _you_uniques(lua_State *ls)
     return 1;
 }
 
-static int _you_gold_dlua(lua_State *ls)
-{
-    if (lua_gettop(ls) >= 1)
-    {
-        const int new_gold = luaL_checkint(ls, 1);
-        const int old_gold = you.gold;
-        you.set_gold(max(new_gold, 0));
-        if (new_gold > old_gold)
-            you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
-        else if (old_gold > new_gold)
-            you.attribute[ATTR_MISC_SPENDING] += old_gold - new_gold;
-    }
-    PLUARET(number, you.gold);
-}
-
 LUAWRAP(_you_die,ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_SOMETHING))
 
 static int _you_piety(lua_State *ls)
@@ -733,7 +732,6 @@ static const struct luaL_reg you_dlib[] =
 { "see_cell_no_trans",  you_see_cell_no_trans },
 { "random_teleport",    you_random_teleport },
 { "teleport_to",        you_teleport_to },
-{ "gold",               _you_gold_dlua },
 { "uniques",            _you_uniques },
 { "die",                _you_die },
 { "piety",              _you_piety },
