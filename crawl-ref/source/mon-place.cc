@@ -41,6 +41,7 @@
 #include "spl-damage.h"
 #include "state.h"
 #include "env.h"
+#include "spl-summoning.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "traps.h"
@@ -1594,6 +1595,12 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->mark_summoned(mg.abjuration_duration,
                            mark_items,
                            mg.summon_type);
+
+        if (mg.summon_type > 0 && mg.summoner)
+        {
+            summoned_monster(mon, mg.summoner,
+                             static_cast<spell_type>(mg.summon_type));
+        }
     }
 
     // Perm summons shouldn't leave gear either.

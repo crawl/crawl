@@ -70,14 +70,13 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (monster* mons = create_monster(
+        if (create_monster(
                 mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, &you,
                           3, SPELL_SUMMON_BUTTERFLIES,
                           you.pos(), MHITYOU,
                           0, god)))
         {
             success = true;
-            summoned_monster(mons, &you, SPELL_SUMMON_BUTTERFLIES);
         }
     }
 
@@ -98,16 +97,14 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
     else
         mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
 
-    if (monster* mons = create_monster(
+    if (!create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you,
                       3, SPELL_SUMMON_SMALL_MAMMAL,
                       you.pos(), MHITYOU,
                       0, god)))
     {
-        summoned_monster(mons, &you, SPELL_SUMMON_SMALL_MAMMAL);
-    }
-    else
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     return SPRET_SUCCESS;
 }
@@ -204,7 +201,7 @@ spret_type cast_summon_scorpions(int pow, god_type god, bool fail)
     {
         const bool friendly = (random2(pow) > 3);
 
-        if (monster* mons = create_monster(
+        if (create_monster(
                 mgen_data(MONS_SCORPION,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                           3, SPELL_SUMMON_SCORPIONS,
@@ -212,9 +209,6 @@ spret_type cast_summon_scorpions(int pow, god_type god, bool fail)
                           0, god)))
         {
             success = true;
-            // Only friendlies count towards summons cap
-            if (friendly)
-                summoned_monster(mons, &you, SPELL_SUMMON_SCORPIONS);
         }
     }
 
@@ -253,14 +247,13 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
             mon = RANDOM_ELEMENT(swarmers);
         while (player_will_anger_monster(mon));
 
-        if (monster *mons = create_monster(
+        if (create_monster(
                 mgen_data(mon, BEH_FRIENDLY, &you,
                           dur, SPELL_SUMMON_SWARM,
                           you.pos(),
                           MHITYOU,
                           0, god)))
         {
-            summoned_monster(mons, &you, SPELL_SUMMON_SWARM);
             success = true;
         }
     }
@@ -307,17 +300,15 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
 
     const int dur = min(2 + (random2(pow) / 4), 6);
 
-    if (monster* mons = create_monster(
+    if (!create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you,
                       dur, SPELL_CALL_CANINE_FAMILIAR,
                       you.pos(),
                       MHITYOU,
                       0, god)))
     {
-        summoned_monster(mons, &you, SPELL_CALL_CANINE_FAMILIAR);
-    }
-    else
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     return SPRET_SUCCESS;
 }
@@ -486,18 +477,13 @@ spret_type cast_summon_elemental(int pow, god_type god,
 
                         && random2(100) >= unfriendly);
 
-    if (monster* mons = create_monster(
+    if (!create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       dur, SPELL_SUMMON_ELEMENTAL,
                       targ,
                       MHITYOU,
                       0, god)))
-    {
-        if (friendly)
-            summoned_monster(mons, &you, SPELL_SUMMON_ELEMENTAL);
-    }
-    else
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
@@ -516,14 +502,13 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
     fail_check();
     const int dur = min(2 + (random2(pow) / 4), 6);
 
-    if (monster* mons = create_monster(
+    if (create_monster(
             mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, &you,
                       dur, SPELL_SUMMON_ICE_BEAST,
                       you.pos(), MHITYOU,
                       0, god)))
     {
         mpr("A chill wind blows around you.");
-        summoned_monster(mons, &you, SPELL_SUMMON_ICE_BEAST);
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -543,7 +528,7 @@ spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail)
 
     const int dur = min(2 + (random2(pow) / 4), 6);
 
-    if (monster* mons = create_monster(
+    if (create_monster(
             mgen_data(mon,
                       BEH_FRIENDLY, &you,
                       dur, SPELL_SUMMON_UGLY_THING,
@@ -551,7 +536,6 @@ spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail)
                       MHITYOU,
                       0, god)))
     {
-        summoned_monster(mons, &you, SPELL_SUMMON_UGLY_THING);
         mpr((mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears."
                                           : "An ugly thing appears.");
     }
@@ -588,8 +572,6 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     {
         if (you.see_cell(hydra->pos()))
             mpr("A hydra appears.");
-        if (!player_angers_monster(hydra)) // currently no-op
-            summoned_monster(hydra, &you, SPELL_SUMMON_HYDRA);
     }
     else if (caster->is_player())
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -655,9 +637,6 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
         {
             if (you.see_cell(dragon->pos()))
                 mpr("A dragon appears.");
-            // Xom summoning evil dragons if you worship a good god?  Sure!
-            if (!player_angers_monster(dragon))
-                summoned_monster(dragon, &you, SPELL_SUMMON_DRAGON);
             success = true;
         }
     }
@@ -924,7 +903,6 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
         if (!player_angers_monster(imp))
         {
             _monster_greeting(imp, "_friendly_imp_greeting");
-            summoned_monster(imp, &you, SPELL_CALL_IMP);
         }
     }
     else
@@ -961,9 +939,6 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
             {
                _monster_greeting(demon, "_friendly_imp_greeting");
             }
-
-            if (spell > 0 && spell < NUM_SPELLS && god == GOD_NO_GOD)
-                summoned_monster(demon, &you, static_cast<spell_type>(spell));
         }
     }
 
@@ -1101,8 +1076,6 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 mon_enchant me = mon_enchant(ENCH_ABJ, d);
                 me.set_duration(mons, &me);
                 mons->update_ench(me);
-                if (!scroll) // Only track cap for non-scroll casting
-                    summoned_monster(mons, &you, SPELL_SHADOW_CREATURES);
             }
 
             // Remove any band members that would turn hostile
@@ -1253,8 +1226,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
                          MG_FORCE_BEH, god)))
         {
             count++;
-            if (!player_angers_monster(mons))
-                summoned_monster(mons, &you, SPELL_SUMMON_HORRIBLE_THINGS);
+            player_angers_monster(mons);
         }
     }
 
@@ -1267,8 +1239,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
                          MG_FORCE_BEH, god)))
         {
             count++;
-            if (!player_angers_monster(mons))
-                summoned_monster(mons, &you, SPELL_SUMMON_HORRIBLE_THINGS);
+            player_angers_monster(mons);
         }
     }
 
@@ -3119,6 +3090,24 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
+    // Monster spells
+    { SPELL_FAKE_RAKSHASA_SUMMON,       4, 2 },
+    { SPELL_SUMMON_UFETUBUS,            8, 2 },
+    { SPELL_SUMMON_HELL_BEAST,          8, 2 },
+    { SPELL_SUMMON_UNDEAD,              8, 2 },
+    { SPELL_SUMMON_DRAKES,              4, 2 },
+    { SPELL_SUMMON_MUSHROOMS,           8, 2 },
+    { SPELL_SUMMON_EYEBALLS,            4, 2 },
+    { SPELL_WATER_ELEMENTALS,           3, 2 },
+    { SPELL_FIRE_ELEMENTALS,            3, 2 },
+    { SPELL_EARTH_ELEMENTALS,           3, 2 },
+    { SPELL_AIR_ELEMENTALS,             3, 2 },
+    { SPELL_IRON_ELEMENTALS,            3, 2 },
+    { SPELL_SUMMON_SPECTRAL_ORCS,       3, 2 },
+    { SPELL_FIRE_SUMMON,                4, 2 },
+    { SPELL_SUMMON_MINOR_DEMON,         3, 3 },
+    { SPELL_CALL_LOST_SOUL,             3, 2 },
+    { SPELL_SUMMON_VERMIN,              3, 2 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },
     { SPELL_NO_SPELL,                   0, 0 }
@@ -3141,10 +3130,11 @@ int summons_limit(spell_type spell)
 }
 
 // Call when a monster has been summoned to manager this summoner's caps
-bool summoned_monster(monster* mons, actor* caster, spell_type spell)
+void summoned_monster(const monster *mons, const actor *caster,
+                      spell_type spell)
 {
     if (!summons_are_capped(spell))
-        return false;
+        return;
 
     const summons_desc *desc = summonsindex[spell];
 
@@ -3156,6 +3146,9 @@ bool summoned_monster(monster* mons, actor* caster, spell_type spell)
     int count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
+        if (mons == *mi)
+            continue;
+
         int duration = 0;
         int stype    = 0;
         const bool summoned = mi->is_summoned(&duration, &stype);
@@ -3173,6 +3166,7 @@ bool summoned_monster(monster* mons, actor* caster, spell_type spell)
             }
         }
     }
+
     if (oldest_summon && (count > max_this_time))
     {
         // Timeout the oldest summon
@@ -3182,7 +3176,5 @@ bool summoned_monster(monster* mons, actor* caster, spell_type spell)
         // Mark our cap abjuration so we don't keep abduring the same
         // one if creating multiple summons (also, should show a status light).
         oldest_summon->add_ench(ENCH_SUMMON_CAPPED);
-        return true;
     }
-    return false; // Nothing needed capping
 }
