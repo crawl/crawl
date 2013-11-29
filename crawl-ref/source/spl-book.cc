@@ -745,17 +745,11 @@ static bool _get_mem_list(spell_list &mem_spells,
         if (!just_check)
         {
             if (num_unknown > 1)
-            {
                 mprf(MSGCH_PROMPT, "You must pick up those books before reading them.");
-            }
             else if (num_unknown == 1)
-            {
                 mprf(MSGCH_PROMPT, "You must pick up this book before reading it.");
-            }
             else
-            {
                 mprf(MSGCH_PROMPT, "You aren't carrying or standing over any spellbooks.");
-            }
         }
         return false;
     }
@@ -772,9 +766,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     else if (book_hash.empty())
     {
         if (!just_check)
-        {
             mprf(MSGCH_PROMPT, "None of the spellbooks you are carrying contain any spells.");
-        }
         return false;
     }
 

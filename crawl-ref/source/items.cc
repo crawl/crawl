@@ -551,9 +551,7 @@ void unlink_item(int dest)
 
     // Okay, finally warn player if we didn't do anything.
     if (!linked)
-    {
         mprf(MSGCH_ERROR, "BUG WARNING: Item didn't seem to be linked at all.");
-    }
 #endif
 }
 

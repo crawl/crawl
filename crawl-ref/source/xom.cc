@@ -3691,13 +3691,9 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         ASSERT(you.wizard);
         ASSERT(!you.did_escape_death());
         if (is_feat_dangerous(grd(you.pos())))
-        {
             mprf(MSGCH_DIAGNOSTICS, "Player is standing in deadly terrain, skipping Xom act.");
-        }
         else
-        {
             mprf(MSGCH_DIAGNOSTICS, "Player is already dead, skipping Xom act.");
-        }
         return XOM_PLAYER_DEAD;
     }
     else if (_player_is_dead())
