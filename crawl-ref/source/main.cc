@@ -1885,7 +1885,7 @@ void process_command(command_type cmd)
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
     case CMD_AUTOFIGHT_NOMOVE:
-        if (!clua.callfn("hit_adjacent", 0, 0))
+        if (!clua.callfn("hit_closest_nomove", 0, 0))
             mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         break;
 #endif
