@@ -226,9 +226,8 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             monster_info mi(mon);
             set_auto_exclude(mon);
 
-            string text = get_monster_equipment_desc(mi, DESC_WEAPON);
-            text += " comes into view.";
-            mpr(text, MSGCH_WARN);
+            mprf(MSGCH_WARN, "%s comes into view.",
+                 get_monster_equipment_desc(mi, DESC_WEAPON).c_str());
         }
 
         if (crawl_state.game_is_hints())
