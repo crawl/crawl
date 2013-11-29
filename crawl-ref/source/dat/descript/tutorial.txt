@@ -155,7 +155,7 @@ weapon! Go and grab the one lying over there.
 tutorial2 pickup_weapon
 
 Pick up this weapon with <input>$cmd[CMD_PICKUP]</input> or <input>g</input>
-and then wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>. <localtiles>
+and then wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>.<localtiles>
 Alternatively, you can perform either action by <input>clicking</input> on it
 in the inventory panel.</localtiles>
 %%%%
@@ -483,7 +483,7 @@ tutorial3 exit
   <input>$cmd[CMD_RESISTS_SCREEN]</input>  display character overview
   <input>$cmd[CMD_USE_ABILITY]</input>  use an ability
   <input>$cmd[CMD_EXPLORE]</input>  explore automatically
-  <input>$cmd[CMD_SEARCH_STASHES]</input>  search for items/features previously seen<localtiles>
+  <input>$cmd[CMD_SEARCH_STASHES]</input> search for items/features previously seen<localtiles>
   Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
 
                                  <cyan>Press <input>any key</input> to clear this screen...</cyan>
@@ -542,9 +542,9 @@ before and after wielding this staff.
 tutorial4 mephitic_cloud
 
 Mephitic Cloud is a level 3 spell, so you can't memorise it yet. To level up
-quickly, here are more training dummies - without stones to throw this time.
+quickly, here are more training dummies — without stones to throw this time.
 
-At experience level 3, you'll be able to increase one of your stats - choosing
+At experience level 3, you'll be able to increase one of your stats — choosing
 <input>I</input>ntelligence will help your spellcasting even further.
 %%%%
 tutorial4 meph_reminder
