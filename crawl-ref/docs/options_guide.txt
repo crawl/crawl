@@ -1246,8 +1246,9 @@ autofight_throw = false
         launcher (a bow, crossbow, sling or blowgun) will be considered.
 
 autofight_throw_nomove = true
-        This works same as above, except that only for ===hit_adjacent
-        rather than ===hit_closest; this is usually bound to shift-Tab.
+        This works same as above, except that only for
+        ===hit_closest_nomove rather than ===hit_closest; this is usually
+        bound to shift-Tab.
 
 autofight_fire_stop = false
         When firing missiles or throwing objects using autofight, if this

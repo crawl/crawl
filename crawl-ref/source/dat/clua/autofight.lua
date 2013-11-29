@@ -4,7 +4,7 @@
 --
 -- To use this, please bind a key to the following commands:
 -- ===hit_closest         (Tab by default)
--- ===hit_adjacent        (Shift-Tab by default)
+-- ===hit_closest_nomove  (Shift-Tab by default)
 -- ===toggle_autothrow    (not bound by default)
 --
 -- This uses the very incomplete client monster and view bindings, and
@@ -252,7 +252,7 @@ function set_automagic(key, value, mode)
   AUTOMAGIC_ACTIVE = string.lower(value) ~= "false"
 end
 
-local function hp_is_low()
+function af_hp_is_low()
   local hp, mhp = you.hp()
   return (100*hp <= AUTOFIGHT_STOP*mhp)
 end
@@ -260,7 +260,9 @@ end
 function attack(allow_movement)
   local x, y, info = get_target(not allow_movement)
   local caught = you.caught()
-  if you.confused() then
+  if af_hp_is_low() then
+    crawl.mpr("You are too injured to fight recklessly!")
+  elseif you.confused() then
     crawl.mpr("You are too confused!")
   elseif caught then
     if AUTOFIGHT_CAUGHT then
@@ -288,23 +290,35 @@ function attack(allow_movement)
 end
 
 function hit_closest()
-  if hp_is_low() then
-    crawl.mpr("You are too injured to fight recklessly!")
-  elseif AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
+  if AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
     mag_attack(true)
   else
     attack(true)
   end
 end
 
-function hit_adjacent()
-  if hp_is_low() then
-    crawl.mpr("You are too injured to fight recklessly!")
-  elseif AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
+function hit_closest_nomove()
+  if AUTOMAGIC_ACTIVE and you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
     mag_attack(false)
   else
     attack(false)
   end
+end
+
+function hit_nonmagic()
+  attack(true)
+end
+
+function hit_nonmagic_nomove()
+  attack(false)
+end
+
+function hit_magic()
+  mag_attack(true)
+end
+
+function hit_magic_nomove()
+  mag_attack(false)
 end
 
 function toggle_autothrow()
