@@ -3128,26 +3128,28 @@ static void _place_chance_vaults()
     shuffle_array(maps);
     for (int i = 0, size = maps.size(); i < size; ++i)
     {
+        bool check_fallback = true;
         const map_def *map = maps[i];
         if (!map->map_already_used())
         {
             dprf("Placing CHANCE vault: %s (%s)",
                  map->name.c_str(), map->chance(lid).describe().c_str());
-            if (!_build_secondary_vault(map))
+            check_fallback = !_build_secondary_vault(map);
+        }
+        if (check_fallback)
+        {
+            const string chance_tag = vault_chance_tag(*map);
+            if (!chance_tag.empty())
             {
-                const string chance_tag = vault_chance_tag(*map);
-                if (!chance_tag.empty())
+                const string fallback_tag =
+                    "fallback_" + chance_tag.substr(7); // "chance_"
+                const map_def *fallback =
+                    random_map_for_tag(fallback_tag, true);
+                if (fallback)
                 {
-                    const string fallback_tag =
-                        "fallback_" + chance_tag.substr(7); // "chance_"
-                    const map_def *fallback =
-                        random_map_for_tag(fallback_tag, true);
-                    if (fallback)
-                    {
-                        dprf("Found fallback vault %s for chance tag %s",
-                             fallback->name.c_str(), chance_tag.c_str());
-                        _build_secondary_vault(fallback);
-                    }
+                    dprf("Found fallback vault %s for chance tag %s",
+                         fallback->name.c_str(), chance_tag.c_str());
+                    _build_secondary_vault(fallback);
                 }
             }
         }
