@@ -48,7 +48,6 @@
 #include "stuff.h"
 #include "env.h"
 #include "syscalls.h"
-#include "tagstring.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tilepick.h"

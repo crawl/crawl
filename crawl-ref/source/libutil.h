@@ -205,6 +205,7 @@ coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 
 string untag_tiles_console(string s);
+string colour_string(string in, int col);
 
 #ifdef TARGET_OS_WINDOWS
 enum taskbar_pos
