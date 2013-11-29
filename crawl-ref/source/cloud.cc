@@ -314,7 +314,6 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
 
     monster_type basetype = random_choose_weighted(4,   MONS_ANACONDA,
                                                    6,   MONS_HYDRA,
-                                                   8,   MONS_ROCK_WORM,
                                                    3,   MONS_SNAPPING_TURTLE,
                                                    2,   MONS_ALLIGATOR_SNAPPING_TURTLE,
                                                    100, RANDOM_MONSTER,

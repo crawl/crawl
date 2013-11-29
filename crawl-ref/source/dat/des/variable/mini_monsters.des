@@ -319,17 +319,6 @@ MAP
   .... . . . ..
 ENDMAP
 
-NAME:  minmay_rock_worms
-DEPTH: Depths, !Depths:$
-KMONS: 1 = generate_awake rock worm
-KFEAT: 1 = rock_wall
-MAP
-xxxxx
-x111x
-x111x
-xxxxx
-ENDMAP
-
 NAME:   minmay_brainsmasher
 DEPTH:  D:8-, Depths, !Depths:$
 WEIGHT: 3
@@ -351,11 +340,10 @@ NAME:    hangedman_stitches_earthworm
 TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup mini_float
 DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
-KMONS:   1 = rock worm
+# 1 and 5 were rock worms -- compensate?
 KMONS:   2 = boulder beetle
 KMONS:   3 = trapdoor spider / orb spider w:5
 KMONS:   4 = thrashing horror
-KMONS:   5 = rock worm / rock worm zombie w:14 / spectral rock worm w:1
 KITEM:   0.@ = stone no_pickup q:1 w:90 / nothing
 KITEM:   12345 = % w:90 no_pickup / * no_pickup
 SHUFFLE: ABCDEF / ABCDEF / ABCCBA, ABC, 13 / 13 / 31, {`
@@ -1068,7 +1056,7 @@ KMONS:   H = water moccasin
 KMONS:   I = orange rat
 KMONS:   J = unseen horror
 KMONS:   K = alligator
-KMONS:   L = rock worm
+KMONS:   L = lindwurm
 KMONS:   M = brown ooze / slime creature
 KMONS:   N = demonic crawler
 KMONS:   O = hell hound
@@ -3083,11 +3071,9 @@ TAGS:    no_monster_gen patrolling
 DEPTH:   D:12-, Depths, !Depths:$
 : if you.branch() == "D" then
 MONS:    stone golem, cyclops, basilisk, catoblepas
-KMONS:   b = rock worm
 SUBST:   * = %%***, | = *|
 : else
 MONS:    stone golem / earth elemental w:7, stone giant, catoblepas, iron dragon
-KMONS:   bdf = spectral rock worm
 SHUFFLE: ab / cd / ef
 : end
 KFEAT:   abcd = rock_wall

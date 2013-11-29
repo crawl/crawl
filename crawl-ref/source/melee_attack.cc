@@ -288,7 +288,7 @@ bool melee_attack::handle_phase_attempted()
                  && !you.confused()
                  && !crawl_state.game_is_zotdef())
         {
-            // Don't waste a turn hitting a rock worm when you know it
+            // Don't waste a turn hitting a dryad when you know it
             // will do nothing.
             mprf("The %s protects %s from harm.",
                  raw_feature_description(defender->pos()).c_str(),

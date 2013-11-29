@@ -466,11 +466,11 @@ static void _set_mons_move_dir(const monster* mons,
 
 static void _tweak_wall_mmov(const monster* mons, bool move_trees = false)
 {
-    // The rock worm will try to move along through rock for as long as
+    // The dryad will try to move along through trees for as long as
     // possible. If the player is walking through a corridor, for example,
     // moving along in the wall beside him is much preferable to actually
     // leaving the wall.
-    // This might cause the rock worm to take detours but it still
+    // This might cause the dryad to take detours but it still
     // comes off as smarter than otherwise.
 
     // If we're already moving into a shielded spot, don't adjust move

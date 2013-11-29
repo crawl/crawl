@@ -255,7 +255,7 @@ MONS:   fire bat w:12 / bat simulacrum / spectral bat / vampire bat
 MONS:   vampire, vampire knight / vampire mage w:7
 MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf summoner / orc sorcerer w:7
-MONS:   worker ant w:40 / goliath beetle w:20 / rock worm / vampire mosquito
+MONS:   worker ant w:40 / goliath beetle w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
 KMONS:  9 = spiny worm / emperor scorpion w:7
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
@@ -1262,7 +1262,6 @@ ENDMAP
 NAME:   hangedman_abyss_rune_flesh_and_stone
 TAGS:   abyss_rune unrand no_monster_gen no_item_gen no_pool_fixup
 MONS:   catoblepas, stone golem, earth elemental, stone giant
-KMONS:  O = rock worm
 KITEM:  O = abyssal rune of Zot
 KPROP:  l = no_cloud_gen
 SUBST:  5 = 23

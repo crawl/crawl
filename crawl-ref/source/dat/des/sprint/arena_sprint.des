@@ -270,7 +270,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "steam dragon / w:5 air elemental / w:1 vapour / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:5 earth elemental / clay golem / w:5 stone golem / w:5 boulder beetle /\
-                    w:15 iron devil / w:15 iron imp / w:5 rock worm",
+                    w:15 iron devil / w:15 iron imp",
                 "w:20 ice beast / w:20 simulacrum / w:5 water elemental",
                 "wight / wraith / w:15 spectral thing",
                 -- Misc
@@ -312,7 +312,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "steam dragon / air elemental / w:3 vapour / lightning spire /\
                     w:20 sky beast / insubstantial wisp",
                 "earth elemental / w:5 clay golem / w:5 stone golem / boulder beetle /\
-                    iron devil / iron imp / w:5 rock worm / w:5 iron troll",
+                    iron devil / iron imp / w:5 iron troll",
                 "ice beast / ogre simulacrum / water elemental",
                 "wraith w:20 / w:5 eidolon / phantasmal warrior / w:2 nergalle",
                 -- Misc
@@ -358,7 +358,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:1 storm dragon / air elemental / w:5 vapour / w:17 sky beast /\
                     insubstantial wisp",
                 "earth elemental / w:5 iron golem / w:5 stone golem / boulder beetle /\
-                    iron devil / w:5 rock worm / w:5 iron troll / w:1 roxanne /\
+                    iron devil / w:5 iron troll / w:1 roxanne /\
                     w:2 iron dragon / w:3 iron elemental",
                 "ice beast / hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental",

@@ -2211,10 +2211,6 @@ revenant
 A skeletal form wreathed in cold blue fire, standing astride this life and the
 next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
-rock worm
-
-A large worm which moves through rock as if it were air.
-%%%%
 rotten bat
 
 I guess this bat is well past its sell-by date.
