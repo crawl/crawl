@@ -3272,7 +3272,8 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     return in_bounds(p) ? p : coord_def(-1, -1);
 }
 
-coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
+                              const monster* viable_mon)
 {
     coord_def empty;
     coord_def pos(-1, -1);
@@ -3284,7 +3285,7 @@ coord_def find_newmons_square(monster_type mons_class, const coord_def &p)
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water or lava this function would work.  -- bwr
 
-    if (find_habitable_spot_near(p, mons_class, 2, true, empty))
+    if (find_habitable_spot_near(p, mons_class, 2, true, empty, viable_mon))
         pos = empty;
 
     return pos;
@@ -3397,18 +3398,21 @@ bool player_angers_monster(monster* mon)
 
 monster* create_monster(mgen_data mg, bool fail_msg)
 {
+    ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
+
     const monster_type montype = mons_class_is_zombified(mg.cls) ? mg.base_type
                                                                  : mg.cls;
 
     monster *summd = 0;
 
     if (!mg.force_place()
-        || !in_bounds(mg.pos)
         || monster_at(mg.pos)
         || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
         mg.pos = find_newmons_square(montype, mg.pos);
+        if (!in_bounds(mg.pos))
+            return 0; // no valid spot, bail (even no "puff of smoke"?)
 
         // Gods other than Xom will try to avoid placing their monsters
         // directly in harm's way.
@@ -3430,28 +3434,10 @@ monster* create_monster(mgen_data mg, bool fail_msg)
             // ghost_demon setup.
             if (mons_is_ghost_demon(dummy.type))
                 dummy.type = resistless_mon;
-
-            int tries = 0;
-            while (tries++ < 50
-                   && (!in_bounds(mg.pos)
-                       || mons_avoids_cloud(&dummy, env.cgrid(mg.pos), true)))
-            {
-                mg.pos = find_newmons_square(montype, mg.pos);
-            }
-            if (!in_bounds(mg.pos))
-                return 0;
-
-            const int cloud_num = env.cgrid(mg.pos);
-            // Don't place friendly god gift in a damaging cloud created by
-            // you if that would anger the god.
-            if (mons_avoids_cloud(&dummy, cloud_num, true)
-                && mg.behaviour == BEH_FRIENDLY
-                && god_hates_attacking_friend(you.religion, &dummy)
-                && YOU_KILL(env.cloud[cloud_num].killer))
-            {
-                return 0;
-            }
+            mg.pos = find_newmons_square(montype, mg.pos, &dummy);
         }
+        else
+            mg.pos = find_newmons_square(montype, mg.pos);
     }
 
     if (in_bounds(mg.pos))
@@ -3469,7 +3455,8 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 }
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty)
+                              int radius, bool allow_centre, coord_def& empty,
+                              const monster* viable_mon)
 {
     // XXX: A lot of hacks that could be avoided by passing the
     //      monster generation data through.
@@ -3488,6 +3475,8 @@ bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
             continue;
 
         success = monster_habitable_grid(mon_type, grd(*ri));
+        if (success && viable_mon)
+            success = !mons_avoids_cloud(viable_mon, env.cgrid(*ri), true);
 
         if (success && one_chance_in(++good_count))
             empty = *ri;
