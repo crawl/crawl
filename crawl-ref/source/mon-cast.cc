@@ -2924,6 +2924,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 && mons->type == MONS_ELEMENTAL_WELLSPRING)
             {
                 mons->hurt(mons, 5 + random2(15));
+                if (mons->alive())
+                {
+                    create_monster(
+                        mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(mons), mons,
+                        3, spell_cast, mons->pos(), mons->foe, 0));
+                }
             }
         }
     } // end "if (mons->can_use_spells())"
