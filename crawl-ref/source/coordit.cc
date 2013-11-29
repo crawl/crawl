@@ -197,6 +197,7 @@ radius_iterator::radius_iterator(const coord_def center, int param,
       exclude_center(_exclude_center),
       los(NULL)
 {
+    ASSERT(map_bounds(center));
     advance(true);
 }
 
@@ -207,6 +208,7 @@ radius_iterator::radius_iterator(const coord_def _center,
       iter(circle.iter()),
       exclude_center(_exclude_center)
 {
+    ASSERT(map_bounds(_center));
     used_los.reset(new los_glob(_center, _los));
     los = used_los.get();
     advance(true);
@@ -221,6 +223,7 @@ radius_iterator::radius_iterator(const coord_def _center,
       iter(circle.iter()),
       exclude_center(_exclude_center)
 {
+    ASSERT(map_bounds(_center));
     used_los.reset(new los_glob(_center, _los));
     los = used_los.get();
     advance(true);
@@ -487,7 +490,7 @@ void coordit_tests()
     for (radius_iterator ri(coord_def(2, 2), 5, C_ROUND); ri; ++ri)
         if (!map_bounds(*ri))
             die("radius_iterator(R5) out of bounds at %d, %d", ri->x, ri->y);
-    for (radius_iterator ri(coord_def(GXM + 1, GYM + 1), 7, C_ROUND); ri; ++ri)
+    for (radius_iterator ri(coord_def(GXM - 1, GYM - 1), 7, C_ROUND); ri; ++ri)
         if (!map_bounds(*ri))
             die("radius_iterator(R7) out of bounds at %d, %d", ri->x, ri->y);
 
