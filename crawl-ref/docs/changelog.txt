@@ -1,7 +1,6 @@
-Stone Soup 0.14 (up to 0.14-a0-831-g318680c)
---------------------------------------------
-* The lower half of D is now a new branch, the Depths; a rune is required for
-  entry.
+Stone Soup 0.14 (up to 0.14-a0-1169-g4815781)
+---------------------------------------------
+* The lower half of D is now a new branch, the Depths.
 * Three new races: Lava Orcs, Djinn, and Formicids.
 * A new branch: the Enchanted Forest.
 
@@ -9,10 +8,10 @@ Branches, environment
 ---------------------
 * The main Dungeon is now sixteen levels.
 * A new branch: the Depths; entered from the end of Dungeon, it is six levels
-  long and contains the entrances to the Vaults and the Realm of Zot. It
-  requires a rune to enter.
+  long and contains the entrance to the Realm of Zot.
 * A new branch: the Enchanted Forest, alternating with Crypt; five levels
   long, and contains the entrance to Tomb where it exists.
+* The Vaults are now entered from D:14-15 and need a rune to enter.
 * The Abyss randomly draws monsters from elsewhere in the Dungeon.
 
 Character
@@ -35,24 +34,42 @@ Character
   healing when enemies are in sight (half and no healing for those levels
   respectively). Stat regeneration and the third level of the mutation
   are unchanged.
+* Venom Mages and Assassins no longer start with knowledge of potions of
+  poison.
 
 Monsters
 --------
-* Summoned creatures are dismissed upon the death of their summoner.
+* Guardian serpents no longer have Teleport Other; instead they get
+  Word of Recall and Blink Allies Encircle.
 * Lom Lobon can now cast Tornado.
 * The plain "dragon" is now known as "fire dragon".
+* Monsters are subject to summon caps.
+* Summoned creatures are dismissed upon the death of their summoner.
+* Word of Recall is now subject to a breath timer, and can be interrupted
+  by causing a breath timeout (with e.g. curare).
+* Minotaurs appearing naturally outside of labyrinths now come with
+  equipment.
 * New monster: the ignis, an abyssal monster that coronas the player.
-* Moths of suppression are no more.
+* New monster: the raiju, which can attack by transforming itself into
+  a bolt of lightning.
+* Moths of suppression and rock worms are no more.
 
 Spells
 ------
 * Sticks to Snakes only works on missiles (arrows and javelins) now.
 * Conjure Ball Lightning has been reduced from level 7 to 6.
+* Bolt of Draining has been reduced from level 6 to 5.
+* Ozocubu's Armour now has an encumbrance cap of 4, rendering it no longer
+  usable with mottled dragon armour.
 * Song of Slaying has an increased duration and grants more slaying, but
   is subject to a lower power cap.
+* Swiftness now induces a period of sluggishness after it expires, and
+  can't be stacked.
 * Several special cases for LRD damage types have been removed; ice, bone,
   stone and rock (including petrified enemies) all result in the same
   explosion.
+* Orb of Destruction now only appears in the Book of Power (was also in
+  Annihilations).
 * Removed spells: Song of Shielding, Polymorph.
 
 Items
@@ -63,6 +80,9 @@ Items
 * Elemental evokers now recharge one at a time, with the one closest to
   full recharging charging first.
 * Items on the ground are no longer subject to item destruction.
+* Mottled dragon armour now has an encumbrance rating of 5 (was 4).
+* The jumping ego (available only on boots) gives a jump attack ability
+  like that of felids.
 * The reaching brand for whips is no more.
 * Large rocks now crash through monsters / the player, i.e. implicitly have
   the penetration brand.
@@ -73,8 +93,7 @@ Items
   darts and javelins in damage.
     - Small race hunters and arcane marksmen may select tomahawks.
     - Small race gladiators receive tomahawks instead of nets.
-* The jumping ego (available only on boots) gives a jump attack ability
-  like that of felids.
+* New "potion of lignification" - induces tree form.
 * Piercer gets the penetration brand (was vorpal).
 * Boots of the Assassin return in a new form: they now detect monsters and
   allow short-blade-quality stabbing with any weapon (or unarmed).
@@ -91,6 +110,10 @@ Items
 * New unrand: "hat of the High Council" - spellpower at the expense of
   spell success rates.
 * Sniper, the Blowgun of the Assassin, and Snakebite have been removed.
+* Potions of slowing are no more.
+* Potions with known type that would have no effect can no longer be quaffed
+  at all.
+* Potions other than potions of porridge no longer give nutrition.
 
 Cards
 -----
@@ -101,11 +124,21 @@ Gods
 * Gods no longer forgive the player for disliked effects of known wands
   of random effects and weapons of chaos.
 * Trolls of Cheibriados hunger considerably more slowly.
+* Cheibriados' Bend Time is available to all followers (was 1* ability).
+* Zin and Okawaru no longer care about the deaths of allies.
+* Okawaru no longer suppresses the demonic guardian Ds mutation.
+* Xom effects respect clarity and sustain abilities (as long as Xom is not
+  feeling nasty).
+* Xom's confusion now caps at 20 turns.
 
 Interface
 ---------
+* "Automagic" functionality similar to autofight has been added through the
+  options automagic_enable, automagic_stop, and automagic_fight; it can be
+  used to automatically cast spells in a specified slot in combat.
 * Different types of magical trap are coloured differently.
 * Unnaturally hard rock walls have a new default glyph.
+* The % screen has a new layout.
 
 Stone Soup 0.13 (20131011)
 --------------------------
