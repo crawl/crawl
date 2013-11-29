@@ -531,6 +531,8 @@ string pluralise(const string &name, const char *qualifiers[],
         // pluralisation.
         return name + "im";
     }
+    else if (name == "raiju")
+        return name;
 
     return name + "s";
 }
