@@ -2918,6 +2918,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (battlesphere)
                 trigger_battlesphere(mons, beem);
             mons->lose_energy(EUT_SPELL);
+
+            // Wellsprings "cast" from their own hp.
+            if (spell_cast == SPELL_PRIMAL_WAVE
+                && mons->type == MONS_ELEMENTAL_WELLSPRING)
+            {
+                mons->hurt(mons, 5 + random2(15));
+            }
         }
     } // end "if (mons->can_use_spells())"
 
