@@ -23,7 +23,6 @@
 #include "state.h"
 #include "areas.h"
 #include "tags.h"
-#include "tagstring.h"
 #include "travel.h"
 #include "hints.h"
 #include "unwind.h"

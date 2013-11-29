@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "colour.h"
 #include "defines.h"
 #include "itemname.h" // is_vowel()
 #include "libutil.h"
@@ -979,6 +980,14 @@ string untag_tiles_console(string s)
     _untag(s, "<localtiles>", "</localtiles>", false);
 #endif
     return s;
+}
+
+string colour_string(string in, int col)
+{
+    if (in.empty())
+        return in;
+    const string cols = colour_to_str(col);
+    return "<" + cols + ">" + in + "</" + cols + ">";
 }
 
 #ifndef USE_TILE_LOCAL
