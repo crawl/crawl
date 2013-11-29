@@ -313,7 +313,7 @@ static int l_you_abil_table(lua_State *ls)
 
 static int you_gold(lua_State *ls)
 {
-    if (lua_gettop(ls) >= 1 && you.wizard)
+    if (lua_gettop(ls) >= 1 && !CLua::get_vm(ls).managed_vm)
     {
         const int new_gold = luaL_checkint(ls, 1);
         const int old_gold = you.gold;
