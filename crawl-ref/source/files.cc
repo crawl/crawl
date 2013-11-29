@@ -954,6 +954,10 @@ static void _add_missing_branches()
         _ensure_entry(BRANCH_ZOT);
     if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 21))
         _ensure_entry(BRANCH_VESTIBULE);
+
+    // The remaining branch entries close once the orb is taken.
+    if (you.char_direction == GDT_ASCENDING)
+        return;
     if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 24))
         _ensure_entry(BRANCH_PANDEMONIUM);
     if (lc == level_id(BRANCH_DEPTHS, 4) || lc == level_id(BRANCH_DUNGEON, 25))
