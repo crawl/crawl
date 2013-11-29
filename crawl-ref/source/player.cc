@@ -5918,7 +5918,7 @@ void player::init()
     redraw_experience   = false;
     redraw_armour_class = false;
     redraw_evasion      = false;
-    redraw_title        = false;
+    redraw_title        = true;
 
     flash_colour        = BLACK;
     flash_where         = nullptr;

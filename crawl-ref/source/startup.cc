@@ -311,11 +311,6 @@ static void _post_init(bool newc)
     viewwindow();
 
     activate_notes(true);
-
-    // XXX: And run Lua map postludes for D:1. Kinda hacky, it shouldn't really
-    // be here.
-    if (newc)
-        run_map_epilogues();
 }
 
 #ifndef DGAMELAUNCH

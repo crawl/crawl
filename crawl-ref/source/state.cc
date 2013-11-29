@@ -31,7 +31,7 @@ game_state::game_state()
       saving_game(false), updating_scores(false), seen_hups(0),
       map_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), arena_suspended(false),
-      generating_level(false),
+      generating_level(false), loading_level(false), delayed_more(false),
       dump_maps(false), test(false), script(false), build_db(false),
       tests_selected(), show_more_prompt(true),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),

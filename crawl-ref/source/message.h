@@ -23,6 +23,7 @@ void mesclr(bool force = false);
 void flush_prev_message();
 
 void more(bool user_forced = false);
+void pop_delayed_more();
 
 class formatted_string;
 
