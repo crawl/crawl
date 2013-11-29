@@ -1844,6 +1844,13 @@ int monster_die(monster* mons, killer_type killer,
         end_spectral_weapon(mons, true, killer == KILL_RESET);
         silent = true;
     }
+    else if (mons->type == MONS_ELEMENTAL_WELLSPRING
+             && mons->mindex() == killer_index)
+    {
+        if (!silent)
+            simple_monster_message(mons, " exhausts itself and dries up.");
+        silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
