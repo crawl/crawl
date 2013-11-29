@@ -97,6 +97,7 @@ LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, number, you.hunger_state)
 LUARET1(you_hunger_name, string, hunger_level())
+LUARET1(you_gold, number, you.gold)
 LUARET2(you_strength, number, you.strength(false), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(false), you.max_dex())
@@ -422,6 +423,7 @@ static const struct luaL_reg you_clib[] =
     { "genus"       , l_you_genus },
     { "wizard"      , you_wizard },
     { "god"         , you_god },
+    { "gold"        , you_gold },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
     { "hp"          , you_hp },
