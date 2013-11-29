@@ -2588,12 +2588,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
-    case MONS_ELEMENTAL_WELLSPRING:
-        natural_leader = true;
-        band = BAND_WATER_ELEMENTALS;
-        band_size = random_range(2, 3);
-        break;
-
     case MONS_THRASHING_HORROR:
     {
         int depth = min(brdepth[BRANCH_ABYSS], you.depth);
@@ -3000,9 +2994,6 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_PHANTASMAL_WARRIORS:
         return MONS_PHANTASMAL_WARRIOR;
-
-    case BAND_WATER_ELEMENTALS:
-        return MONS_WATER_ELEMENTAL;
 
     case BAND_THRASHING_HORRORS:
         return MONS_THRASHING_HORROR;
