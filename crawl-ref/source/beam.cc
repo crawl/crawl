@@ -4468,9 +4468,7 @@ bool bolt::handle_statue_disintegration(monster* mon)
             if (!you.see_cell(mon->pos()))
                 mprf(MSGCH_SOUND, "You hear a hideous screaming!");
             else
-            {
                 mprf(MSGCH_SOUND, "The statue screams as its substance crumbles away!");
-            }
         }
         else if (you.see_cell(mon->pos()))
         {

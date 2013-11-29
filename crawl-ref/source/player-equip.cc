@@ -595,9 +595,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
                 case SPWPN_ELECTROCUTION:
                     if (!silenced(you.pos()))
-                    {
                         mprf(MSGCH_SOUND, "You hear the crackle of electricity.");
-                    }
                     else
                         mpr("You see sparks fly.");
                     break;

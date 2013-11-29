@@ -3183,9 +3183,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             you.redraw_experience = true;
 
             if (new_exp == 27)
-            {
                 mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
-            }
             else
             {
                 mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
@@ -3279,9 +3277,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 
             case SP_MUMMY:
                 if (you.experience_level == 13 || you.experience_level == 26)
-                {
                     mprf(MSGCH_INTRINSIC_GAIN, "You feel more in touch with the powers of death.");
-                }
 
                 if (you.experience_level == 13)  // level 13 for now -- bwr
                 {
@@ -3305,9 +3301,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     }
                 }
                 else if (you.experience_level == 6)
-                {
                     mprf(MSGCH_INTRINSIC_GAIN, "You can now bottle potions of blood from corpses.");
-                }
                 break;
 
             case SP_NAGA:
@@ -3511,9 +3505,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
                 if (you.experience_level == 5)
-                {
                     mprf(MSGCH_INTRINSIC_GAIN, "You have gained the ability to fly.");
-                }
                 else if (you.experience_level == 15)
                     mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
                 break;

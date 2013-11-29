@@ -1412,9 +1412,7 @@ void debug_miscast(int target_index)
     if (spell != SPELL_NO_SPELL)
         mprf(MSGCH_PROMPT, "Enter spell_power,spell_failure: ");
     else
-    {
         mprf(MSGCH_PROMPT, "Enter miscast_level or spell_power,spell_failure: ");
-    }
 
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {

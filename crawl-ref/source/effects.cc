@@ -1579,9 +1579,7 @@ void change_labyrinth(bool msg)
         if (!success)
         {
             if (msg)
-            {
                 mprf(MSGCH_DIAGNOSTICS, "Something went badly wrong - no path found!");
-            }
             continue;
         }
 

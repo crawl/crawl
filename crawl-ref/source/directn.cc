@@ -948,9 +948,7 @@ bool direction_chooser::move_is_ok() const
         if (!cell_see_cell(you.pos(), target(), LOS_NO_TRANS))
         {
             if (you.see_cell(target()))
-            {
                 mprf(MSGCH_EXAMINE_FILTER, "There's something in the way.");
-            }
             else
                 mprf(MSGCH_EXAMINE_FILTER, "Sorry, you can't target what you can't see.");
             return false;
@@ -3970,13 +3968,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (!mon->visible_to(&you))
         {
             if (_mon_exposed_in_water(mon))
-            {
                 mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the water here.");
-            }
             else if (_mon_exposed_in_cloud(mon))
-            {
                 mprf(MSGCH_EXAMINE_FILTER, "There is a strange disturbance in the cloud here.");
-            }
 
             goto look_clouds;
         }

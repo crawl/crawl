@@ -523,14 +523,10 @@ namespace arena
         int orig_b = faction_b.active_members;
 
         if (orig_a < 0)
-        {
             mprf(MSGCH_ERROR, "Book-keeping says faction_a has negative active members.");
-        }
 
         if (orig_b < 0)
-        {
             mprf(MSGCH_ERROR, "Book-keeping says faction_b has negative active members.");
-        }
 
         faction_a.active_members = 0;
         faction_b.active_members = 0;
