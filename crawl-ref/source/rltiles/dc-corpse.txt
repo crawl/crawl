@@ -33,6 +33,7 @@ warg CORPSE_WARG
 wolf CORPSE_WOLF
 hog CORPSE_HOG
 hell_hound CORPSE_HELL_HOUND
+raiju CORPSE_RAIJU
 hell_hog CORPSE_HELL_HOG
 holy_swine CORPSE_HOLY_SWINE
 %sdir player/felids
