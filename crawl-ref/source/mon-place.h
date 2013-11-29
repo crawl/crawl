@@ -65,7 +65,8 @@ conduct_type player_will_anger_monster(monster* mon);
 bool player_angers_monster(monster* mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty);
+                              int radius, bool allow_centre, coord_def& empty,
+                              const monster* viable_mon = nullptr);
 
 monster_type summon_any_demon(monster_type dct);
 
@@ -87,7 +88,8 @@ bool monster_habitable_grid(
     int flies = -1,
     bool paralysed = false);
 bool monster_can_submerge(const monster* mon, dungeon_feature_type grid);
-coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
+                              const monster* viable_mon = nullptr);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3);
