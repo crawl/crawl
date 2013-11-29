@@ -4029,7 +4029,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
 #endif
-        mpr(feature_desc);
+        mprf("%s", feature_desc.c_str());
     }
     else
     {
@@ -4056,7 +4056,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (feat == DNGN_FLOOR || feat_is_water(feat))
             channel = MSGCH_EXAMINE_FILTER;
 
-        mpr(feature_desc.c_str(), channel);
+        mprf(channel, "%s", feature_desc.c_str());
     }
 #endif
 }
