@@ -2058,8 +2058,6 @@ MONS:   plant
 MONS:   spiny worm, brain worm, worm, giant leech, lindwurm
 KMONS:  7 = fire dragon
 KMONS:  8 = giant firefly
-KMONS:  9 = rock worm
-KFEAT:  9 = rock_wall
 SUBST:  X = x.
 SUBST:  P = 11.
 # Give a hint about the dragon cave.
@@ -2070,21 +2068,21 @@ SUBST:  _ = .
 MAP
             XXXXXxxXXxxXXxxxxXXxxxXXXxxx
  @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- ..PP.XX..Px..xxxxxxxxxxxxxxxxxX4x9xxxxx
+ ..PP.XX..Px..xxxxxxxxxxxxxxxxxX4xXxxxxx
  ..PP.XX..PPxxxxxxxxXX88Xxxxxx4%..xxxxxx
  ...x.....PPP.xxxxxP....8XxxxX44..Xxxxxx
  ..XxX..X.....xxxxxX.....8xxx244..xxxxxx
  .Pxxxxx.x...xxxxxxx....%XxxxxX41.4xxxxx
  xxccccxx..XPPxxxxxP11.XPxxxxxxxXP.xxxxx
 Xxcc$$ccxxXxx..xxxxxX1..xXxxxxXxx.1xxxxx
-Xxc$$$$ccxxx...Xxxxxxx2..x9xxxx...xxxxxx
+Xxc$$$$ccxxx...Xxxxxxx2..xxxxxx...xxxxxx
 xxc$$$$$cxxx..xxxxxxxXx4..xXxx..4xxxxxxx
-xxcc$7$$cxx..x9xxxxxxxxx2P..X...xXxxxxxx
+xxcc$7$$cxx..xxxxxxxxxxx2P..X...xXxxxxxx
 xxxcc$$ccxX..Xxxxxxxxxxx....4.xxxxxxxxxx
 xxxxccc=cX".xxxxxxxxxXx...P.xxxx236xxxxx
-xxxxxxxcP""xxxxxxxxxXx...Xx9Xxx5625%xxxx
+xxxxxxxcP""xxxxxxxxxXx...XxxXxx5625%xxxx
 xxxxxxxX""xxXxxxxXxx...4xxxxxxx%334xxxxx
-xxxxxxxxX.2.xxxx9x....x..xxxxxxxx5.xxxxx
+xxxxxxxxX.2.xxxxxx....x..xxxxxxxx5.xxxxx
 xxxxxxxxxX...xXx...4Xxx2...1xxxx...xxxxx
 xxxxxxxxxxx.......Xxxxxx..........xxxxxx
 xxxxxxxxxxXxx41.xxXxxxxxxxxx....xxxxxxxx

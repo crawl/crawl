@@ -523,10 +523,8 @@ KMONS:   4bB = demonic crawler
 KMONS:   5eE = place:Spider:$ zombie
 KMONS:   6cCfF = spiny worm / emperor scorpion w:8
 KMONS:   0% = crawling corpse hd:3 / nothing
-KMONS:   X = rock worm w:19 / rock worm zombie w:1
 KITEM:   fF = star_item w:8 / superb_item w:2
 KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
-KFEAT:   X = rock_wall
 KFEAT:   12345abcdefABCDEF% = web / shallow_water / . w:30
 KFEAT:   . = . w:39 / web w:1
 KMASK:   ' = !no_monster_gen
@@ -544,16 +542,16 @@ MAP
   .xx1x..x1xx.  ''xx5xxxx.....%xxxxx1xx''
  ''x1xx%%xx1x''  ''xx4x%.........xx1xx''
  ''xx1%%%%1xx''   ''xx...xxx1xxx..%xx''
-  ''xxx00xxx''    ''x...xx`X2x`xx%..x''
+  ''xxx00xxx''    ''x...xx`x2x`xx%..x''
    ''xx..xx''   '''xx.%x4xxxCxxx1x..xx''
 ''''xx..xx''  '''''x.1xxx5xxxxx1xxx..x''
-xxxxx..xx''   'xxx'x11x`xxFx'xAxX`x..x''
+xxxxx..xx''   'xxx'x11x`xxFx'xAxx`x..x''
 x21x..xxxx'' ''x6xxx%3xxxxxx'xxxxxx..xx''
-xxx....12x'''''xX42%%%24Xxx''''x21....xxx
+xxx....12x'''''xx42%%%24xxx''''x21....xxx
 ''xx..xxxxxx'xxxxxx3%xxx6x'' ''xxxx..x12x
- ''x..x`Xxax'xexx`x11x'xxx''  ''xx..xxxxx
+ ''x..x`xxax'xexx`x11x'xxx''  ''xx..xxxxx
  ''x..xxx1xxxxx5xxx1.x'''''  ''xx..xx''''
- ''xx..x1xxxcXxx4x%.xx''    ''xx..xx''
+ ''xx..x1xxxcxxx4x%.xx''    ''xx..xx''
   ''x..%xx`x2x`xx...x''    ''xxx00xxx''
   ''xx%..xxx1xxx...xx''   ''xx1%%%%1xx''
  ''xx1x..........%x4xx''  ''x1xx%%xx1x''

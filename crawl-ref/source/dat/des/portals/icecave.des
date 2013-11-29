@@ -138,7 +138,7 @@ function savage_simulacrum(e)
    savage_ice = "wolf spider simulacrum w:2 / elephant simulacrum w:2 / " ..
                 "polar bear simulacrum w:4 / alligator simulacrum w:2 / " ..
                 "death yak simulacrum w:4 / wolf simulacrum w:4 / " ..
-                "rock worm simulacrum w:1 / swamp dragon simulacrum w:1"
+                "swamp dragon simulacrum w:1"
 end
 
 function cruel_simulacrum(e)

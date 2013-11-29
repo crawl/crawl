@@ -1784,10 +1784,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SALAMANDER:
         return TILEP_MONS_SALAMANDER;
 
-    // monsters moving through rock
-    case MONS_ROCK_WORM:
-        return TILEP_MONS_ROCK_WORM;
-
     // humans ('@')
     case MONS_HUMAN:
         return TILEP_MONS_HUMAN;
@@ -3938,8 +3934,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILE_CORPSE_GIANT_LEECH;
-    case MONS_ROCK_WORM:
-        return TILE_CORPSE_ROCK_WORM;
     case MONS_SPINY_WORM:
         return TILE_CORPSE_SPINY_WORM;
 

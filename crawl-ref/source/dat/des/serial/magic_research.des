@@ -120,14 +120,12 @@ ENDMAP
 NAME:    hangedman_research_geology
 MONS:    basilisk, stone golem / earth elemental
 MONS:    iron golem / crystal golem, catoblepas
-KMONS:   56 = rock worm
 KMONS:   D = iron elemental
-KFEAT:   567 = rock_wall
 KITEM:   D = randbook disc:earth numspells:5 / \
              randbook disc:earth numspells:6, star_item
 COLOUR:  .x012345D = brown
 FTILE:   .+x012345D = FLOOR_PEBBLE_BROWN
-TILE:    56x = WALL_PEBBLE_BROWN
+TILE:    x = WALL_PEBBLE_BROWN
 SHUFFLE: 67
 SUBST:   7 = x
 : init_research(_G)
@@ -136,9 +134,9 @@ MAP
 abcn+ncba
 b...x...b
 c0x1.1x0c
-d.2x5x2.d
-a.x6D6x.a
-b.74347.b
+d.2xxx2.d
+a.xxDxx.a
+b.x434x.b
 cx..x..xc
 dcbadabcd
 ENDMAP

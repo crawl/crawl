@@ -2155,7 +2155,9 @@ enum monster_type                      // menv[].type
     MONS_BLACK_BEAR,
     MONS_WORM,
     MONS_BRAIN_WORM,
+#if TAG_MAJOR_VERSION == 34
     MONS_ROCK_WORM,
+#endif
     MONS_SPINY_WORM,
     MONS_WYVERN,
     MONS_LINDWURM,
@@ -3819,7 +3821,7 @@ enum montravel_target_type
     MTRAV_PLAYER,      // Travelling to reach the player.
     MTRAV_PATROL,      // Travelling to reach the patrol point.
     MTRAV_SIREN,       // Sirens travelling towards deep water.
-    MTRAV_WALL,        // Rock worms travelling towards a wall.
+    MTRAV_WALL,        // Dryads travelling towards a tree.
     MTRAV_UNREACHABLE, // Not travelling because target is unreachable.
     MTRAV_KNOWN_UNREACHABLE, // As above, and the player knows this.
 };

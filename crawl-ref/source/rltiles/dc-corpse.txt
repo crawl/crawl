@@ -104,7 +104,6 @@ worm CORPSE_WORM
 swamp_worm CORPSE_SWAMP_WORM
 spiny_worm CORPSE_SPINY_WORM
 brain_worm CORPSE_BRAIN_WORM
-rock_worm CORPSE_ROCK_WORM
 giant_leech CORPSE_GIANT_LEECH
 
 ## Wasps ('y')

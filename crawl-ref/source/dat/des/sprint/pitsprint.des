@@ -47,7 +47,7 @@ function base_monster_setup(e)
            catoblepas / vampire / wandering mushroom /\
            guardian serpent / rakshasa w:5 / slime creature band w:5 /\
            centaur warrior band w:5 / ugly thing band w:5 / wizard /\
-           simulacrum / rock worm / giant amoeba / ogre mage band w:5 /\
+           simulacrum / giant amoeba / ogre mage band w:5 /\
            wolf spider / yaktaur / air elemental / fire elemental /\
            water elemental / earth elemental / deep elf knight band w:5 /\
            deep elf mage band w:3 / deep elf summoner band w:3 /\

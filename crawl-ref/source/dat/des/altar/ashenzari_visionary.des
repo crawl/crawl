@@ -177,7 +177,6 @@ ENDMAP
 
 NAME: grunt_ashenzari_visionary_spider
 TAGS: grunt_ashenzari_visionary_spider no_trap_gen no_monster_gen unrand
-# Monsters specified here to avoid escaping rock worms.
 MONS: giant cockroach w:15 / giant mite w:15 / scorpion w:35 / spider w:40 / \
       giant centipede w:15 / worm w:20 / \
       yellow wasp w:15 / redback w:55 / trapdoor spider w:75 / \

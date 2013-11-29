@@ -132,7 +132,6 @@ lava_worm MONS_LAVA_WORM
 %rim 1
 spiny_worm MONS_SPINY_WORM
 brain_worm MONS_BRAIN_WORM
-rock_worm MONS_ROCK_WORM
 giant_leech MONS_GIANT_LEECH
 
 ## Flying insects ('y')

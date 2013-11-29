@@ -214,6 +214,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_CHAOS_BUTTERFLY)
     AXED_MON(MONS_POLYMOTH)
     AXED_MON(MONS_MOTH_OF_SUPPRESSION)
+    AXED_MON(MONS_ROCK_WORM)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -4767,19 +4768,6 @@ static monsterentry mondata[] =
     5, 5, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT,
     I_HIGH, HT_LAVA, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
-},
-
-// monsters moving through rock
-{
-    MONS_ROCK_WORM, 'w', BROWN, "rock worm",
-    M_NO_SKELETON,
-    MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
-    850, 12, MONS_WORM, MONS_ROCK_WORM, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 5, 5, 0 },
-    3, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SILENT,
-    I_PLANT, HT_ROCK, FL_NONE, 12, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
 // humans ('@')
