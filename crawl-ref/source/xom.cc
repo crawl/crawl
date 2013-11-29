@@ -3150,7 +3150,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
             return XOM_DID_NOTHING;
 
         god_speaks(GOD_XOM, speech.c_str());
-        lose_stat(stat, loss, nasty, aux.c_str());
+        lose_stat(stat, loss, false, aux.c_str());
 
         // Take a note.
         const char* sstr[3] = { "Str", "Int", "Dex" };
