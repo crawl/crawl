@@ -592,7 +592,7 @@ static int _you_uniques(lua_State *ls)
     return 1;
 }
 
-static int _you_gold(lua_State *ls)
+static int _you_gold_dlua(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
     {
@@ -733,7 +733,7 @@ static const struct luaL_reg you_dlib[] =
 { "see_cell_no_trans",  you_see_cell_no_trans },
 { "random_teleport",    you_random_teleport },
 { "teleport_to",        you_teleport_to },
-{ "gold",               _you_gold },
+{ "gold",               _you_gold_dlua },
 { "uniques",            _you_uniques },
 { "die",                _you_die },
 { "piety",              _you_piety },
