@@ -3121,7 +3121,7 @@ void cheibriados_time_bend(int pow)
             {
                 mprf("%s%s",
                      mon->name(DESC_THE).c_str(),
-                     mons_resist_string(mon, res_margin));
+                     resist_margin_phrase(res_margin));
                 continue;
             }
 
