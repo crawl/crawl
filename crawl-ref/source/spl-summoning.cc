@@ -901,9 +901,7 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
                                      : "A beastly little devil appears in a puff of flame.");
 
         if (!player_angers_monster(imp))
-        {
             _monster_greeting(imp, "_friendly_imp_greeting");
-        }
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
