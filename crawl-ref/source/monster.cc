@@ -2956,8 +2956,8 @@ bool monster::fumbles_attack(bool verbose)
             if (you.can_see(this))
             {
                 mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
-                     ? " becomes momentarily stuck in the liquid earth."
-                     : " splashes around in the water.");
+                     ? "becomes momentarily stuck in the liquid earth."
+                     : "splashes around in the water.");
             }
             else if (player_can_hear(pos(), LOS_RADIUS))
                 mprf(MSGCH_SOUND, "You hear a splashing noise.");
