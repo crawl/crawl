@@ -5,6 +5,10 @@
 
 #include "AppHdr.h"
 
+#ifndef TARGET_OS_WINDOWS
+#include <unistd.h>
+#endif
+
 #include "externs.h"
 
 #include "dbg-util.h"
