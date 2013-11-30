@@ -45,7 +45,7 @@ end
 }}
 
 NAME:   serial_hangedman_research
-TAGS:   extra luniq_serial
+TAGS:   extra luniq_serial nolayout_encompass
 CHANCE: 0.5%
 {{
   local c = 4 + crawl.random2(3)

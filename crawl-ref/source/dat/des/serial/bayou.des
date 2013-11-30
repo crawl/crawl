@@ -7,8 +7,8 @@
 # placing a large number of ponds and lakes with thick vegetation.
 
 NAME:   serial_bayou
-TAGS:   allow_dup extra luniq_serial decor
-DEPTH:  D,, Depths, Snake, Lair
+TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
+DEPTH:  D, Depths, Snake, Lair
 CHANCE: 1%
 {{
   local c = 4 + crawl.random2(3)*crawl.random2(2)
@@ -19,7 +19,7 @@ CHANCE: 1%
 
 NAME:   serial_bayou_pond_a
 TAGS:   coolio_serial_bayou allow_dup extra decor
-DEPTH:  D,, Depths, Snake, Lair
+DEPTH:  D, Depths, Snake, Lair
 MONS:   plant
 SUBST:  ? = .WW2
 SUBST:  1 = 11.t
@@ -37,7 +37,7 @@ ENDMAP
 
 NAME:   serial_bayou_pond_b
 TAGS:   coolio_serial_bayou allow_dup extra decor
-DEPTH:  D,, Depths, Snake, Lair
+DEPTH:  D, Depths, Snake, Lair
 MONS:   plant
 SUBST:  ? = .WW21
 SUBST:  1 = 11.t
@@ -55,7 +55,7 @@ ENDMAP
 NAME:   serial_bayou_pond_c
 #mangrove
 TAGS:   coolio_serial_bayou allow_dup extra decor
-DEPTH:  D,, Depths, Snake, Lair
+DEPTH:  D, Depths, Snake, Lair
 MONS:   plant
 SUBST:  ? = WWtt2
 SUBST:  . = ..W12
@@ -79,7 +79,7 @@ ENDMAP
 NAME:   serial_bayou_pond_d
 #small pond
 TAGS:  coolio_serial_bayou allow_dup extra decor
-DEPTH:  D,, Depths, Snake, Lair
+DEPTH:  D, Depths, Snake, Lair
 SUBST:  1 = 1W.
 SUBST:  W = WWWt
 KFEAT:  t = mangrove
@@ -95,7 +95,7 @@ ENDMAP
 NAME:serial_bayou_pond_e
 #small pond
 TAGS:  coolio_serial_bayou allow_dup extra decor
-DEPTH: D,, Depths, Snake, Lair
+DEPTH: D, Depths, Snake, Lair
 SUBST: W = WWW1.
 SUBST: . = ..t
 KFEAT: t = mangrove
@@ -110,7 +110,7 @@ ENDMAP
 NAME: serial_bayou_ford_a
 #a small pond that can be forded
 TAGS:  coolio_serial_bayou transparent extra decor
-DEPTH: D,, Depths, Snake, Lair
+DEPTH: D, Depths, Snake, Lair
 SUBST: ? = Wt
 SUBST: V = Www
 SUBST: W = WWWW1
@@ -140,7 +140,7 @@ NAME:   serial_bayou_shore_a
 #a shore of a small lake
 TAGS:   coolio_serial_bayou extra decor
 ORIENT: east
-DEPTH:  D,, Depths, Snake, Lair
+DEPTH:  D, Depths, Snake, Lair
 SUBST:  ? = Wt
 SUBST:  V = Www
 SUBST:  W = WWW1
@@ -168,7 +168,7 @@ NAME:   serial_bayou_shore_b
 #a shore of a small pond, duplicable
 TAGS:   coolio_serial_bayou allow_dup extra decor
 ORIENT: east
-DEPTH:  D,, Depths, Snake, Lair
+DEPTH:  D, Depths, Snake, Lair
 SUBST:  ? = Wt
 SUBST:  V = Www
 SUBST:  W = WWW1
@@ -189,7 +189,7 @@ ENDMAP
 NAME:   serial_bayou_lagoon_a
 #mangrove
 TAGS:   coolio_serial_bayou transparent extra decor
-DEPTH:  D,, Depths, Snake, Lair
+DEPTH:  D, Depths, Snake, Lair
 SUBST:  ? = W11.
 SUBST:  w = wwt
 KFEAT:  t = mangrove
@@ -216,7 +216,7 @@ ENDMAP
 NAME:  serial_bayou_lagoon_b
 #a big lagoon with a bridge thingy going through it
 TAGS:  coolio_serial_bayou
-DEPTH: D,, Depths, Snake, Lair
+DEPTH: D, Depths, Snake, Lair
 SUBST: ? = Wt
 SUBST: V = Www
 SUBST: W = WWWW1
@@ -251,7 +251,7 @@ ENDMAP
 NAME:  serial_bayou_lake_a
 #a big lake
 TAGS:  coolio_serial_bayou transparent
-DEPTH: D,, Depths, Snake, Lair
+DEPTH: D, Depths, Snake, Lair
 SUBST: ? = Wt
 SUBST: V = Www
 SUBST: W = WWWW1
@@ -279,7 +279,7 @@ ENDMAP
 NAME:  serial_bayou_crossing
 #mangrove
 TAGS:  coolio_serial_bayou transparent
-DEPTH: D,, Depths, Snake, Lair
+DEPTH: D, Depths, Snake, Lair
 SUBST: ? = W1tt
 SUBST: W = WWW.
 KFEAT: t = mangrove

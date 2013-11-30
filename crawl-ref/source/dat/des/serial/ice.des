@@ -41,7 +41,7 @@ end
 
 NAME:   serial_ice
 DEPTH:  D:8-, Coc
-TAGS:   extra luniq_serial allow_dup
+TAGS:   extra luniq_serial allow_dup nolayout_encompass
 CHANCE: 1% (D), 3% (Coc)
 {{
   local c = 4 + crawl.random2(3) * crawl.random2(4)

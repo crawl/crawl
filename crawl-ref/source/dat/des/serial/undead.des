@@ -39,7 +39,7 @@ end
 
 NAME:   serial_undead
 DEPTH:  D:2-
-TAGS:   extra luniq_serial
+TAGS:   extra luniq_serial nolayout_encompass
 CHANCE: 1%
 {{
   local c = 4 + crawl.random2(3) * crawl.random2(4)

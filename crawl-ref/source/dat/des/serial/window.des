@@ -8,7 +8,7 @@
 # I added a chance to have some additional glass vaults. dpeg
 
 NAME:   serial_co_window_serial
-TAGS:   allow_dup extra luniq_serial decor
+TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
 DEPTH:  D, Depths, Elf, Crypt
 CHANCE: 1%
 {{
