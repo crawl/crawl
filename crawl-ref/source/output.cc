@@ -1693,6 +1693,7 @@ static const char *s_equip_slot_names[] =
     "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
     "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
     "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
+    "Amulet Ring"
 };
 
 const char *equip_slot_to_name(int equip)
