@@ -526,8 +526,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         if (player_genus(GENPC_DRACONIAN))
         {
-            newgame_make_item(1, EQ_GLOVES, OBJ_ARMOUR, ARM_GLOVES, -1, 1, 0,
-                              TGLOV_DESC_GAUNTLETS);
+            newgame_make_item(1, EQ_GLOVES, OBJ_ARMOUR, ARM_GLOVES);
             newgame_make_item(3, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS);
         }
         else

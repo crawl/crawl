@@ -1955,7 +1955,6 @@ static void _give_shield(monster* mon, int level)
         {
             if (get_armour_ego_type(*shield) == SPARM_ARCHERY)
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_NORMAL);
-            shield->plus2 = TGLOV_DESC_GAUNTLETS;
         }
         break;
 

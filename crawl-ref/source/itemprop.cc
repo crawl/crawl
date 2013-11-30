@@ -953,26 +953,6 @@ void set_helmet_random_desc(item_def &item)
         item.plus2 = random2(THELM_DESC_MAX_SOFT + 1);
 }
 
-short get_gloves_desc(const item_def &item)
-{
-    ASSERT(item.base_type == OBJ_ARMOUR);
-    ASSERT(item.sub_type == ARM_GLOVES);
-    return item.plus2;
-}
-
-void set_gloves_random_desc(item_def &item)
-{
-    ASSERT(item.base_type == OBJ_ARMOUR);
-    ASSERT(item.sub_type == ARM_GLOVES);
-
-    item.plus2 = coinflip() ? TGLOV_DESC_GLOVES : TGLOV_DESC_GAUNTLETS;
-    if (get_armour_ego_type(item) == SPARM_ARCHERY)
-    {
-        item.plus2 = TGLOV_DESC_BRACERS;
-        set_ident_flags(item, ISFLAG_KNOW_TYPE);
-    }
-}
-
 //
 // Ego item functions:
 //

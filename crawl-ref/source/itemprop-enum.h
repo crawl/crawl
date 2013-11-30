@@ -151,13 +151,6 @@ enum helmet_desc_type
     THELM_NUM_DESCS
 };
 
-enum gloves_desc_type
-{
-    TGLOV_DESC_GLOVES,
-    TGLOV_DESC_GAUNTLETS,
-    TGLOV_DESC_BRACERS,
-};
-
 enum jewellery_type
 {
     RING_REGENERATION,
