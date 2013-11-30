@@ -12,7 +12,7 @@ NAME:   serial_corexii_hall
 TAGS:   allow_dup extra luniq_serial decor
 #       Fits best in the rooms layout.
 TAGS:   layout_rooms
-DEPTH:  D,, Depths, Elf, Crypt, Snake
+DEPTH:  D, Depths, Elf, Crypt, Snake
 CHANCE: 1%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(3)

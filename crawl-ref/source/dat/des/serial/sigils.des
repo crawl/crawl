@@ -19,7 +19,7 @@ end
 default-depth: Depths, Elf, Crypt
 
 NAME:   serial_sigils
-TAGS:   luniq_serial decor
+TAGS:   luniq_serial decor nolayout_encompass
 CHANCE: 0.5% (D:16-18, Elf:1, Crypt), 1%
 {{
   local c = 4 + crawl.random2(3)

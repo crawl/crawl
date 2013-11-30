@@ -4,10 +4,10 @@
 
 
 NAME:   serial_curves
-TAGS:   allow_dup extra luniq_serial decor
+TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
 #       Suitable for the rooms layout.
 TAGS:   layout_rooms
-DEPTH:  D,, Depths, Snake
+DEPTH:  D, Depths, Snake
 CHANCE: 1%
 {{
   local c = 2 + crawl.random2(3)*crawl.random2(2)
@@ -19,7 +19,7 @@ CHANCE: 1%
 # Simple curved corridors, mainly for the serial_curves serial vault.
 
 NAME:   eino_curves_01
-DEPTH:  D,, Depths, Snake
+DEPTH:  D, Depths, Snake
 WEIGHT: 1
 TAGS:   transparent allow_dup extra serial_curves decor
 MAP
@@ -46,7 +46,7 @@ xxxxxxxxxx...x
 ENDMAP
 
 NAME:   eino_curves_02
-DEPTH:  D,, Depths, Snake
+DEPTH:  D, Depths, Snake
 TAGS:   transparent allow_dup extra serial_curves decor
 WEIGHT: 1
 MAP
@@ -67,7 +67,7 @@ xxxxxx...x
 ENDMAP
 
 NAME:   eino_curves_03
-DEPTH:  D,, Depths, Snake
+DEPTH:  D, Depths, Snake
 TAGS:   transparent allow_dup extra serial_curves decor
 WEIGHT: 1
 MAP
@@ -84,7 +84,7 @@ MAP
 ENDMAP
 
 NAME:   eino_curves_04
-DEPTH:  D,, Depths, Snake
+DEPTH:  D, Depths, Snake
 TAGS:   transparent allow_dup extra serial_curves decor
 WEIGHT: 1
 MAP

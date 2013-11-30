@@ -8,7 +8,7 @@
 # also be used individually.
 
 NAME:   serial_glass
-TAGS:   allow_dup extra luniq_serial decor
+TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
 DEPTH:  D, Depths, Elf, Vaults, Crypt
 CHANCE: 1%
 {{
