@@ -1505,7 +1505,7 @@ static void tag_construct_you_items(writer &th)
     CANARY;
 
     // how many unique items?
-    marshallByte(th, MAX_UNRANDARTS);
+    marshallUByte(th, MAX_UNRANDARTS);
     for (j = 0; j < MAX_UNRANDARTS; ++j)
         marshallByte(th,you.unique_items[j]);
 
