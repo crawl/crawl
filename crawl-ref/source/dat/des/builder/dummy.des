@@ -12,7 +12,7 @@
 # Zot has a 2/3 chance now, to try to make it more interesting. ~Grunt
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab, !Depths
+DEPTH: 1-100, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab, !Depths, !Pan
 ORIENT: float
 CHANCE: 0 : 8333
 CHANCE: 0 : 6666 (Zot)
