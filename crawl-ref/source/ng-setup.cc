@@ -556,18 +556,8 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
         newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
-
-        // Small species get tomahawks, the others nets.
-        if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-        {
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 6);
-            autopickup_starting_ammo(MI_TOMAHAWK);
-        }
-        else
-        {
-            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
-            autopickup_starting_ammo(MI_THROWING_NET);
-        }
+        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
+        autopickup_starting_ammo(MI_THROWING_NET);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;

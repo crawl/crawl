@@ -1933,8 +1933,7 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
             return actor->can_throw_large_rocks();
 
         if (bodysize < SIZE_MEDIUM
-            && (wpn.sub_type == MI_JAVELIN
-                || wpn.sub_type == MI_THROWING_NET))
+            && wpn.sub_type == MI_JAVELIN)
         {
             return false;
         }
