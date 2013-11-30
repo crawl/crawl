@@ -26,7 +26,7 @@ ENDMAP
 # And always in Vaults - needs to be done through layouts. ~Grunt
 NAME: primary_mini_dummy
 TAGS: dummy
-DEPTH: 1-100, Pan, !Abyss
+DEPTH: 1-100, Pan, !Abyss, !Lab
 CHANCE: 0 : 10000 (Vaults), 0 : 5000
 MAP
 x
@@ -72,7 +72,7 @@ ENDMAP
 # Minivaults
 #
 NAME: mini_dummy
-DEPTH: 1-50, !D, !Depths, !Abyss
+DEPTH: 1-50, !D, !Depths, !Abyss, !Lab
 TAGS: dummy
 WEIGHT: 90
 MAP

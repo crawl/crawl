@@ -82,7 +82,8 @@ default-depth: Lab
 #############################################################################
 # Dummy balancer
 NAME: labyrinth_0
-TAGS: minotaur dummy
+TAGS: dummy
+ORIENT: float
 WEIGHT: 20
 MAP
 x
@@ -91,7 +92,8 @@ ENDMAP
 #############################################################################
 # Watery exit
 NAME:    labyrinth_watery
-TAGS:    minotaur generate_loot no_pool_fixup allow_dup
+TAGS:    generate_loot no_pool_fixup allow_dup
+ORIENT:  float
 MONS:    patrolling minotaur
 SHUFFLE: def
 SUBST:   d=~, e=~, f=., b:vvb
@@ -110,7 +112,8 @@ ENDMAP
 #############################################################################
 # Green exit
 NAME:   labyrinth_green
-TAGS:   minotaur generate_loot allow_dup
+TAGS:   generate_loot allow_dup
+ORIENT: float
 MONS:   patrolling minotaur
 WEIGHT: 2
 MAP
@@ -123,10 +126,11 @@ ENDMAP
 
 #############################################################################
 # Spiral exit
-NAME:  labyrinth_spiral
-TAGS:  minotaur generate_loot allow_dup
-MONS:  patrolling minotaur
-SUBST: b : bvz, z = vb
+NAME:   labyrinth_spiral
+TAGS:   generate_loot allow_dup
+ORIENT: float
+MONS:   patrolling minotaur
+SUBST:  b : bvz, z = vb
 MAP
 ............
 .bbbbbbbbbb.
@@ -144,7 +148,8 @@ ENDMAP
 #############################################################################
 # Hidden exit, and trapped loot
 NAME:   labyrinth_hidden_loot
-TAGS:   minotaur generate_loot allow_dup
+TAGS:   generate_loot allow_dup
+ORIENT: float
 MONS:   patrolling minotaur, minotaur zombie
 SUBST:  d = 2%*
 SUBST:  b : bvv
@@ -166,7 +171,8 @@ ENDMAP
 #############################################################################
 # Mini labyrinth exit
 NAME:    labyrinth_mini_lab
-TAGS:    minotaur generate_loot allow_dup
+TAGS:    generate_loot allow_dup
+ORIENT:  float
 SHUFFLE: def, ghi, klm
 SUBST:   d : b, e : ., f : b
 SUBST:   g : b, h : ., i : b
@@ -205,7 +211,8 @@ ENDMAP
 # 5 or less. The chance of all 8 is 0.0006%.
 
 NAME: nicolae_lab_dead_adventurers
-TAGS: minotaur allow_dup
+TAGS: allow_dup
+ORIENT: float
 KMONS: m = patrolling minotaur
 KPROP: ABCD'm = bloody
 KFEAT: ' = floor
@@ -300,7 +307,7 @@ ENDMAP
 ############################################################################
 # Labyrinth dummy decorator
 NAME: lab_dummy
-TAGS: lab dummy
+TAGS: dummy
 WEIGHT: 90
 MAP
 x
@@ -309,7 +316,7 @@ ENDMAP
 ############################################################################
 # Labyrinth furniture
 NAME:    lab_block
-TAGS:    lab allow_dup
+TAGS:    allow_dup
 SHUFFLE: vcx
 MAP
 .....
@@ -322,7 +329,7 @@ ENDMAP
 ############################################################################
 # Labyrinth furniture II
 NAME: lab_fountain
-TAGS: lab allow_dup
+TAGS: allow_dup
 MAP
 .......
 ..b.b..
@@ -336,7 +343,7 @@ ENDMAP
 ############################################################################
 # Labyrinth hedge
 NAME:    lab_hedge
-TAGS:    lab allow_dup
+TAGS:    allow_dup
 SHUFFLE: 1l
 MONS:    plant
 MAP
@@ -354,7 +361,7 @@ ENDMAP
 ############################################################################
 # Labyrinth furniture
 NAME:    lab_statue
-TAGS:    lab allow_dup
+TAGS:    allow_dup
 MAP
 ...
 .G.
@@ -364,7 +371,7 @@ ENDMAP
 ############################################################################
 # Teaser: inaccessible loot
 NAME:  labyrinth_glass_1
-TAGS:  lab allow_dup
+TAGS:  allow_dup
 SUBST: % = %*
 MAP
 ......
@@ -376,7 +383,7 @@ MAP
 ENDMAP
 
 NAME:   labyrinth_glass_2
-TAGS:   lab allow_dup
+TAGS:   allow_dup
 WEIGHT: 1
 MAP
 ......
@@ -390,7 +397,7 @@ ENDMAP
 ############################################################################
 # The other minotaur's lava lair
 NAME: labyrinth_lava_lair
-TAGS: lab allow_dup
+TAGS: allow_dup
 MONS: minotaur zombie
 MAP
 .......
@@ -405,7 +412,7 @@ ENDMAP
 ############################################################################
 # Baited teleport trap - this is evil!
 NAME:    labyrinth_baited_teleportation_trap
-TAGS:    lab allow_dup
+TAGS:    allow_dup
 KFEAT:   Y = known teleport trap / known zot trap / .
 KITEM:   Y = any good_item
 SHUFFLE: cxv
@@ -422,7 +429,7 @@ ENDMAP
 ############################################################################
 # Teaser: fake exit
 NAME:  labyrinth_fake_exit
-TAGS:  lab allow_dup
+TAGS:  allow_dup
 KFEAT: X = exit_through_abyss
 MAP
 ........
@@ -438,7 +445,7 @@ ENDMAP
 ############################################################################
 # A few monsters: Nothing is as it seems.
 NAME:   labyrinth_single_monster
-TAGS:   lab allow_dup generate_awake
+TAGS:   allow_dup generate_awake
 WEIGHT: 20
 KFEAT:  x = .
 KMONS:  x = trapdoor spider / w:2 wandering mushroom
@@ -448,7 +455,7 @@ ENDMAP
 
 # Death by starvation?
 NAME:   labyrinth_hungry_ghost
-TAGS:   lab allow_dup generate_awake
+TAGS:   allow_dup generate_awake
 WEIGHT: 40
 KFEAT:  x = .
 KMONS:  x = hungry ghost
@@ -460,7 +467,7 @@ ENDMAP
 # The remains of a previous adventurer.
 # No items. Maybe the minotaur got them.
 NAME:   labyrinth_skeletal_remains
-TAGS:   lab allow_dup
+TAGS:   allow_dup
 WEIGHT: 40
 KFEAT:  x = .
 : dgn.delayed_decay(_G, 'x', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
@@ -473,7 +480,7 @@ ENDMAP
 # Some basic furniture.
 
 NAME: nicolae_lab_plus
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
   ...
@@ -486,7 +493,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_t_cross
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
   .....
@@ -501,7 +508,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_arrow
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
   ....
@@ -514,7 +521,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_dead_end
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvbx
 MAP
 .......
@@ -527,7 +534,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_very_dead_end
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: ' = ''.
 KPROP: z' = bloody
 : dgn.delayed_decay(_G, 'z', 'human skeleton / elf skeleton / dwarf skeleton')
@@ -543,7 +550,7 @@ ENDMAP
 
 # Maybe it's time to try starting over from someplace else?
 NAME: nicolae_lab_do_over
-TAGS: lab allow_dup
+TAGS: allow_dup
 KFEAT: t = known teleport trap
 MAP
 .....
@@ -554,7 +561,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_lava
-TAGS: lab allow_dup
+TAGS: allow_dup
 MAP
 ....
 .ll.
@@ -563,7 +570,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_garden
-TAGS: lab allow_dup
+TAGS: allow_dup
 MONS: plant w:3 / nothing
 SUBST: w = wW
 MAP
@@ -575,7 +582,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_stuck
-TAGS: lab allow_dup
+TAGS: allow_dup
 : dgn.delayed_decay(_G, 'v', 'human skeleton')
 KITEM: w = wand of digging charges:0 / wand of teleportation charges:0
 KPROP: w'v = no_tele_into
@@ -595,7 +602,7 @@ ENDMAP
 # inside the vault, and all squares in the vault are connected.
 
 NAME: nicolae_lab_checkerboard
-TAGS: lab allow_dup
+TAGS: allow_dup
 MAP
 x.x.x
 .x.x.
@@ -605,7 +612,7 @@ x.x.x
 ENDMAP
 
 NAME: nicolae_lab_starburst
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: m = .xGT
 SUBST: x : cvxb
 MAP
@@ -619,7 +626,7 @@ x..x..x
 ENDMAP
 
 NAME: nicolae_lab_diamond
-TAGS: lab allow_dup
+TAGS: allow_dup
 MONS: plant
 SUBST: x : cvxb1
 MAP
@@ -631,7 +638,7 @@ x...x
 ENDMAP
 
 NAME: nicolae_lab_quarters
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: m = .xGT
 SUBST: x : cvxb
 MAP
@@ -645,7 +652,7 @@ x..x..x
 ENDMAP
 
 NAME: nicolae_lab_blocks
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
 x.xx.xx.x
@@ -660,7 +667,7 @@ x.xx.xx.x
 ENDMAP
 
 NAME: nicolae_lab_grate
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
 .x.x.x.x.x.
@@ -673,7 +680,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_grate_2
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
 x.x...x
@@ -685,7 +692,7 @@ x...x.x
 ENDMAP
 
 NAME: nicolae_lab_statue
-TAGS: lab allow_dup
+TAGS: allow_dup
 MAP
  .
 .G.
@@ -693,7 +700,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lab_x
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
 x.     .x
@@ -708,7 +715,7 @@ x.     .x
 ENDMAP
 
 NAME: nicolae_lab_flowing_pool
-TAGS: lab allow_dup
+TAGS: allow_dup
 SHUFFLE: wP/wP/wT/lA
 KFEAT: P = w
 KFEAT: A = exit_through_abyss
@@ -725,7 +732,7 @@ ww...w.w.
 ENDMAP
 
 NAME: nicolae_lab_hexagon
-TAGS: lab allow_dup
+TAGS: allow_dup
 MONS: plant
 SUBST: m : Gxcvb1wl.
 MAP
@@ -737,7 +744,7 @@ G...G
 ENDMAP
 
 NAME: nicolae_lab_swirl
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
  .x.
@@ -752,7 +759,7 @@ x.. .x.
 ENDMAP
 
 NAME: nicolae_lab_big_swirl
-TAGS: lab allow_dup
+TAGS: allow_dup
 SUBST: x : cvxb
 MAP
   .x.

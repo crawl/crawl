@@ -412,9 +412,6 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
                    this just affects your choice of BAR when using uniq_BAR.)
           * "mnoleg" or the name of some other pandemonium lord. This makes
              the map eligible for said pan lord's lair. See pan.des.
-          * "minotaur" turns this into a labyrinth exit vault.
-            "lab" turns this into an additional labyrinth flavour vault.
-            See lab.des for examples and details.
           * "no_rotate":  Normally, the dungeon builder can, at its whim,
              rotate your vault. This flag tells it, "hey, don't do that to my
              vault!"
