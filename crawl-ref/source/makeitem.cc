@@ -2513,9 +2513,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         do_uncurse_item(item, false);
         item.plus = 0;
     }
-
-    if (item.sub_type == ARM_GLOVES && item.special == SPARM_ARCHERY)
-        item.flags |= ISFLAG_KNOW_TYPE;
 }
 
 static monster_type _choose_random_monster_corpse()

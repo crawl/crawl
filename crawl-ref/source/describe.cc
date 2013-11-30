@@ -1374,7 +1374,7 @@ static string _describe_armour(const item_def &item, bool verbose)
                 "of magical power.";
             break;
 
-        // This is only for bracers (gloves).
+        // This is only for gloves.
         case SPARM_ARCHERY:
             description += "These improve your skills with ranged weaponry "
                 "but interfere slightly with melee combat.";
