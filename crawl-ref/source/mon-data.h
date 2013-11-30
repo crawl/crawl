@@ -1102,7 +1102,7 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
-{   // a dummy monster for recolouring
+{ // a dummy monster for recolouring
     MONS_FELID, 'h', DARKGREY, "felid",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
@@ -1288,7 +1288,7 @@ static monsterentry mondata[] =
 },
 
 // lizards ('l')
-{ // dummy for giant lizard genus
+{ // dummy genus monster
     MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard",
     M_COLD_BLOOD | M_CANT_SPAWN,
     MR_NO_FLAGS,
@@ -1361,7 +1361,7 @@ static monsterentry mondata[] =
 },
 
 // drakes (also 'l', but dragon-like)
-{ // dummy for drake genus
+{ // dummy genus monster
     MONS_DRAKE, 'l', WHITE, "drake",
     M_WARM_BLOOD | M_FLEES | M_CANT_SPAWN,
     MR_RES_POISON,
@@ -1681,9 +1681,7 @@ static monsterentry mondata[] =
 },
 
 // phantoms and ghosts ('p')
-
-// Dummy monster, just for the genus.
-{ // never spawns
+{ // dummy genus monster
     MONS_GHOST, 'p', LIGHTGREY, "ghost",
     M_INSUBSTANTIAL | M_NO_POLY_TO,
     MR_NO_FLAGS,
@@ -2436,7 +2434,7 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
-{   // dummy for moth genus
+{ // dummy genus monster
     MONS_MOTH, 'y', WHITE, "moth",
     M_NO_SKELETON | M_CANT_SPAWN,
     MR_NO_FLAGS,
@@ -2739,7 +2737,7 @@ static monsterentry mondata[] =
 },
 
 // cyclopes and giants ('C')
-{ // dummy for the genus, never spawns
+{ // dummy genus monster
     MONS_GIANT, 'C', LIGHTGREY, "giant",
     M_WARM_BLOOD | M_SPEAKS | M_CANT_SPAWN,
     MR_NO_FLAGS,
@@ -2839,7 +2837,7 @@ static monsterentry mondata[] =
 },
 
 // dragons ('D')
-{   // genus monster
+{ // dummy genus monster
     MONS_DRAGON, 'D', GREEN, "dragon",
     M_WARM_BLOOD | M_CANT_SPAWN,
     MR_RES_POISON | mrd(MR_RES_FIRE, 2) | MR_VUL_COLD,
@@ -3031,7 +3029,7 @@ static monsterentry mondata[] =
 
 
 // elementals (E)
-{ // dummy for the genus, never spawns
+{ // dummy genus monster
     MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental",
     M_CANT_SPAWN,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
@@ -3984,7 +3982,7 @@ static monsterentry mondata[] =
 },
 
 // snakes ('S')
-{   // genus monster
+{ // dummy genus monster
     MONS_SNAKE, 'S', LIGHTGREEN, "snake",
     M_COLD_BLOOD | M_CANT_SPAWN,
     MR_NO_FLAGS,
@@ -4165,7 +4163,7 @@ static monsterentry mondata[] =
 },
 
 // bears ('U')
-{ // dummy for the genus, never spawns
+{ // dummy genus monster
     MONS_BEAR, 'U', LIGHTGREY, "bear",
     M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS | M_CANT_SPAWN,
     MR_NO_FLAGS,
@@ -4915,7 +4913,7 @@ static monsterentry mondata[] =
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-{   // dummy, for now.  Spawns in a single vault.
+{ // dummy, for now.  Spawns in a single vault.
     MONS_DEMONSPAWN, '@', DARKGREY, "demonspawn", // likely to become '6'
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
@@ -4927,7 +4925,7 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-{   // dummy; spawns in a single vault.
+{ // dummy; spawns in a single vault.
     MONS_DEMIGOD, '@', YELLOW, "demigod",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
@@ -4939,7 +4937,7 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-{   // dummy... literally; single vault
+{ // dummy... literally; single vault
     MONS_HALFLING, '@', LIGHTGREY, "halfling",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
@@ -5585,7 +5583,7 @@ static monsterentry mondata[] =
 },
 
 // trees and related creatures ('7')
-{   // dummy for transformed display
+{ // dummy for transformed display
     MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree",
     M_STATIONARY | M_CANT_SPAWN,
     MR_RES_POISON | MR_VUL_FIRE,
@@ -5599,7 +5597,7 @@ static monsterentry mondata[] =
 
 // non-living creatures
 // golems ('8')
-{ // dummy for the genus, never spawns
+{ // dummy genus monster
     MONS_GOLEM, '8', LIGHTGREY, "golem",
     M_SEE_INVIS | M_ARTIFICIAL | M_CANT_SPAWN,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
@@ -5837,7 +5835,7 @@ static monsterentry mondata[] =
 },
 
 // Demon in hell.  Currently only used as genus/species for hell guardians.
-{ // dummy, never spawns
+{ // dummy genus monster
     MONS_HELL_LORD, '&', BLACK, "hell lord",
     M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_CANT_SPAWN,
     MR_RES_POISON,
