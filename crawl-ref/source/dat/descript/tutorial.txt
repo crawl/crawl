@@ -242,12 +242,12 @@ tutorial2 firing
 
 # FIXME: Lengthy because of the hint for choosing target.
 Firing arrows from your wielded bow works exactly the same as throwing darts:
-via <input>$cmd[CMD_FIRE]</input><localtiles> or <input>mouseclick</input>. You
-can change the targeted monster by pressing
-<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> while in target mode. The worm is
-harmless behind the lava, so concentrate on the dummy which can fire at you.
-Again, confirm your choice with <input>$cmd[CMD_TARGET_SELECT]</input> or
-<input>Enter</input>.
+via <input>$cmd[CMD_FIRE]</input><localtiles> or
+<input>mouseclick</input></localtiles>. You can change the targeted monster by
+pressing <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> while in target mode.
+The worm is harmless behind the lava, so concentrate on the dummy which can
+fire at you. Again, confirm your choice with
+<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
 %%%%
 tutorial2 travel_reminder
 
