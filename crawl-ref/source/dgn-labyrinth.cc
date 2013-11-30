@@ -243,7 +243,7 @@ static void _place_extra_lab_minivaults()
     set<const map_def*> vaults_used;
     while (true)
     {
-        const map_def *vault = random_map_for_tag("lab", false);
+        const map_def *vault = random_map_in_depth(level_id::current(), true);
         if (!vault || vaults_used.count(vault))
             break;
 
@@ -508,7 +508,8 @@ void dgn_build_labyrinth_level()
                                            GYM - LABYRINTH_BORDER - 1);
 
     // First decide if we're going to use a Lab minivault.
-    const map_def *vault = random_map_for_tag("minotaur", false);
+    const map_def *vault = random_map_in_depth(level_id::current(), false,
+                                               MB_FALSE);
     vault_placement place;
 
     coord_def end;
