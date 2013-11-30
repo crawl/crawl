@@ -55,6 +55,14 @@ end
 function ossuary_setup_features(e)
   e.kfeat("< = exit_ossuary")
 end
+
+function callback.badplayer_boxes_open_up(data, triggerable, triggerer, marker,
+                                          ev)
+  for slave in iter.slave_iterator("disappearing_wall", 1) do
+    dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+  end
+  crawl.mpr("There is a click, and some walls slide away!", 'warning')
+end
 }}
 
 #### Portal entry vaults.
@@ -1138,4 +1146,67 @@ c2..A.<.+.............+~<~c
 cc......c.............c~~~c
 c2.cccccccc1ccc1ccc1ccccccc
 cccc      ccc ccc ccc
+ENDMAP
+
+NAME:   ossuary_boxes_badplayer
+WEIGHT: 10
+TAGS:   no_item_gen no_monster_gen
+ORIENT: encompass
+MONS:   rat zombie / quokka zombie / adder zombie /\
+        goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
+        big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
+MONS:   mummy
+MONS:   ogre zombie w:45 / centaur zombie w:50 / troll zombie w:5
+KMONS:  N  = mummy
+KMONS:  O  = Menkaure w:5 / mummy, mummy
+KFEAT:  N  = $
+KFEAT:  O  = exit_portal_vault
+KFEAT:  ab = stone_wall
+KITEM:  $  = any scroll w:49 / any potion w:49 / any wand w:1 / any ring w:1
+NSUBST: `  = 2:2 / *:.
+NSUBST: 1  = 25:1 / *:. , 3 = 5:3 / *:.
+NSUBST: a  = 1:+ / *:a , B = 1:+ / *:c , C = 1:+ / *:c , D = 1:+ / *:c
+NSUBST: E  = 1:+ / *:c , F = 1:+ / *:c , G = 1:+ / *:c , H = 1:+ / *:c
+NSUBST: I  = 1:+ / *:c , J = 1:+ / *:c , K = 1:+ / *:c , L = 1:+ / *:c
+NSUBST: M  = 1:+ / *:c
+{{
+lua_marker(":", Triggerable.synchronized_markers(
+  function_at_spot( "callback.badplayer_boxes_open_up", {}, true,
+                    { only_at_slave = true, listen_to_slaves = true})))
+
+lua_marker('ab', props_marker {disappearing_wall = 1})
+}}
+: ossuary_setup_features(_G)
+MAP
+ccccccccccccccccccccccccccccccc
+cA```````````````````````````<c
+c`````````````````````````````c
+c``ccccc+ccc+ccc+ccc+ccc+ccc``c
+c``c111c111c111c111c111c111c``c
+c``c1cGcGGccHHHcIIIccJJcJc1c``c
+c``+1G....c....c....c....J1c``c
+c``ccc....c....c....c....ccc``c
+c``c1G....c....c....c....J1+``c
+c``c1G...3b3...c3...b3...J1c``c
+c``+1ccccbbaaaacaaaabbcccc1c``c
+c``ccc....a:::::::::a....ccc``c
+c``c1F....a:.......:a....K1+``c
+c``c1F....a:..$$$..:a....K1c``c
+c``+1F3...a:.$$N$$.:a3...K1c``c
+c``cccccccc:.$NON$.:cccccccc``c
+c``c1E....a:.$$N$$.:a....L1+``c
+c``c1E....a:..$$$..:a....L1c``c
+c``+1E....a:.......:a....L1c``c
+c``ccc3...a:::::::::a3...ccc``c
+c``c1ccccbbaaaacaaaabbcccc1+``c
+c``c1D....b....c....b....M1c``c
+c``+1D....c....c....c....M1c``c
+c``ccc....c....c....c....ccc``c
+c``c1D3...c3...c3...c3...M1+``c
+c``c1cDcDDccCCCcBBBccMMcMc1c``c
+c``c111c111c111c111c111c111c``c
+c``ccc+ccc+ccc+ccc+ccc+ccccc``c
+c`````````````````````````````c
+c<```````````````````````````Ac
+ccccccccccccccccccccccccccccccc
 ENDMAP
