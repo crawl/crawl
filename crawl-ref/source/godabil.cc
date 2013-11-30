@@ -634,10 +634,7 @@ bool zin_check_able_to_recite(bool quiet)
 
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
 {
-    "Chaotic (affects the forces of chaos and mutation)",
-    "Impure (affects the unclean and corporeal undead)",
-    "Heretic (affects non-believers)",
-    "Unholy (affects demons and incorporeal undead)",
+    "Chaotic", "Impure", "Heretic", "Unholy",
 };
 
 int zin_check_recite_to_monsters(recite_type *prayertype)
@@ -713,21 +710,35 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     {
         if (count[i] > 0)
         {
-            string affected_str;
+            string affected_str = make_stringf("%s (%d: ",
+                                               zin_book_desc[i], count[i]);
 
+            // TODO: merge with _desc_mons_type_map from view.cc?  But we
+            //       probably don't want genus factoring here.
+            // TODO: sort these by something other than name-with-article.
             for (map<string, int>::iterator it = affected_by_type[i].begin();
                  it != affected_by_type[i].end(); it++)
             {
-                if (!affected_str.empty())
+                if (it != affected_by_type[i].begin())
                     affected_str += ", ";
 
                 affected_str += it->first;
                 if (it->second > 1)
                     affected_str += make_stringf(" x%d", it->second);
             }
+            affected_str += ")";
 
-            mprf("    [%c] - %s", 'a' + menu_cnt, zin_book_desc[i]);
-            mprf("%d: %s", count[i], affected_str.c_str());
+            int linect = 0;
+            while (!affected_str.empty())
+            {
+                // -8 for "  [a] - "
+                const string line = wordwrap_line(affected_str,
+                                                  msgwin_line_length() - 8);
+                if (linect++ == 0)
+                    mprf_nojoin("  [%c] - %s", 'a' + menu_cnt, line.c_str());
+                else
+                    mprf("%8s%s", "", line.c_str());
+            }
             letters[menu_cnt++] = (recite_type)i;
         }
     }
