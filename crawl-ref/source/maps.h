@@ -32,13 +32,18 @@ int map_count();
 string vault_chance_tag(const map_def &map);
 
 const map_def *find_map_by_name(const string &name);
-const map_def *random_map_for_place(const level_id &place, bool minivault);
+const map_def *random_map_for_place(const level_id &place,
+                                    bool minivault,
+                                    maybe_bool extra = MB_MAYBE);
 const map_def *random_map_in_depth(const level_id &lid,
-                                   bool want_minivault = false);
+                                   bool want_minivault = false,
+                                   maybe_bool extra = MB_MAYBE);
 const map_def *random_map_for_tag(const string &tag,
                                   bool check_depth = false,
-                                  bool check_chance = false);
-mapref_vector random_chance_maps_in_depth(const level_id &place);
+                                  bool check_chance = false,
+                                  maybe_bool extra = MB_MAYBE);
+mapref_vector random_chance_maps_in_depth(const level_id &place,
+                                          maybe_bool extra = MB_MAYBE);
 
 void dump_map(const map_def &map);
 void add_parsed_map(const map_def &md);

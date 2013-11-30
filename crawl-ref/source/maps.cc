@@ -747,29 +747,35 @@ public:
         return sel == TAG || place.is_valid();
     }
 
-    static map_selector by_place(const level_id &_place, bool _mini)
+    static map_selector by_place(const level_id &_place, bool _mini,
+                                 maybe_bool _extra)
     {
-        return map_selector(map_selector::PLACE, _place, "", _mini, false);
+        return map_selector(map_selector::PLACE, _place, "", _mini, _extra,
+                            false);
     }
 
-    static map_selector by_depth(const level_id &_place, bool _mini)
+    static map_selector by_depth(const level_id &_place, bool _mini,
+                                 maybe_bool _extra)
     {
-        return map_selector(map_selector::DEPTH, _place, "", _mini, true);
+        return map_selector(map_selector::DEPTH, _place, "", _mini, _extra,
+                            true);
     }
 
-    static map_selector by_depth_chance(const level_id &_place)
+    static map_selector by_depth_chance(const level_id &_place,
+                                        maybe_bool _extra)
     {
         return map_selector(map_selector::DEPTH_AND_CHANCE, _place, "", false,
-                            true);
+                            _extra, true);
     }
 
     static map_selector by_tag(const string &_tag,
                                bool _check_depth,
                                bool _check_chance,
+                               maybe_bool _extra,
                                const level_id &_place = level_id::current())
     {
         map_selector msel = map_selector(map_selector::TAG, _place, _tag,
-                                         false, _check_depth);
+                                         false, _extra, _check_depth);
         msel.ignore_chance = !_check_chance;
         return msel;
     }
@@ -777,10 +783,10 @@ public:
 private:
     map_selector(select_type _typ, const level_id &_pl,
                  const string &_tag,
-                 bool _mini, bool _check_depth)
+                 bool _mini, maybe_bool _extra, bool _check_depth)
         : ignore_chance(false), preserve_dummy(false),
           sel(_typ), place(_pl), tag(_tag),
-          mini(_mini), check_depth(_check_depth),
+          mini(_mini), extra(_extra), check_depth(_check_depth),
           check_layout((sel == DEPTH || sel == DEPTH_AND_CHANCE)
                     && place == level_id::current())
     {
@@ -797,6 +803,7 @@ public:
     const level_id place;
     const string tag;
     const bool mini;
+    const maybe_bool extra;
     const bool check_depth;
     const bool check_layout;
 };
@@ -816,6 +823,13 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
            && (!check_layout || _map_matches_layout_type(mapdef));
 }
 
+static bool _is_extra_compatible(maybe_bool want_extra, bool have_extra)
+{
+    return want_extra == MB_MAYBE
+           || (want_extra == MB_TRUE && have_extra)
+           || (want_extra == MB_FALSE && !have_extra);
+}
+
 bool map_selector::accept(const map_def &mapdef) const
 {
     switch (sel)
@@ -828,6 +842,7 @@ bool map_selector::accept(const map_def &mapdef) const
             return false;
         }
         return mapdef.is_minivault() == mini
+               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && mapdef.place.is_usable_in(place)
                && _map_matches_layout_type(mapdef)
                && !mapdef.map_already_used();
@@ -836,6 +851,7 @@ bool map_selector::accept(const map_def &mapdef) const
     {
         const map_chance chance(mapdef.chance(place));
         return mapdef.is_minivault() == mini
+               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && (!chance.valid() || chance.dummy_chance())
                && depth_selectable(mapdef)
                && !mapdef.map_already_used();
@@ -848,6 +864,7 @@ bool map_selector::accept(const map_def &mapdef) const
         return chance.valid()
                && !chance.dummy_chance()
                && depth_selectable(mapdef)
+               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && !mapdef.map_already_used();
     }
 
@@ -1000,6 +1017,7 @@ static const map_def *_resolve_chance_vault(const map_selector &sel,
         map_selector msel = map_selector::by_tag(chance_tag,
                                                  sel.check_depth,
                                                  false,
+                                                 sel.extra,
                                                  sel.place);
         return _random_map_by_selector(msel);
     }
@@ -1108,30 +1126,35 @@ static const map_def *_random_map_by_selector(const map_selector &sel)
 }
 
 // Returns a map for which PLACE: matches the given place.
-const map_def *random_map_for_place(const level_id &place, bool minivault)
-{
-    return _random_map_by_selector(map_selector::by_place(place, minivault));
-}
-
-const map_def *random_map_in_depth(const level_id &place, bool want_minivault)
+const map_def *random_map_for_place(const level_id &place, bool minivault,
+                                    maybe_bool extra)
 {
     return _random_map_by_selector(
-        map_selector::by_depth(place, want_minivault));
+        map_selector::by_place(place, minivault, extra));
 }
 
-mapref_vector random_chance_maps_in_depth(const level_id &place)
+const map_def *random_map_in_depth(const level_id &place, bool want_minivault,
+                                   maybe_bool extra)
 {
-    map_selector sel = map_selector::by_depth_chance(place);
+    return _random_map_by_selector(
+        map_selector::by_depth(place, want_minivault, extra));
+}
+
+mapref_vector random_chance_maps_in_depth(const level_id &place,
+                                          maybe_bool extra)
+{
+    map_selector sel = map_selector::by_depth_chance(place, extra);
     const vault_indices eligible = _eligible_maps_for_selector(sel);
     return _random_chance_maps_in_list(sel, eligible);
 }
 
 const map_def *random_map_for_tag(const string &tag,
                                   bool check_depth,
-                                  bool check_chance)
+                                  bool check_chance,
+                                  maybe_bool extra)
 {
     return _random_map_by_selector(
-        map_selector::by_tag(tag, check_depth, check_chance));
+        map_selector::by_tag(tag, check_depth, check_chance, extra));
 }
 
 int map_count()
@@ -1534,7 +1557,7 @@ static weighted_map_names mg_find_random_vaults(
 
     map_count_t map_counts;
 
-    map_selector sel = map_selector::by_depth(place, wantmini);
+    map_selector sel = map_selector::by_depth(place, wantmini, MB_MAYBE);
     sel.preserve_dummy = true;
 
     no_messages mx;

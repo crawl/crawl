@@ -359,12 +359,15 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "entry": this tag MUST be there for a vault to be pickable as an
              entry vault.
           * "extra": requests that the dungeon builder treat this as
-             an extra vault and try to immediately place another vault of the
-             same type it was trying to place when it placed this vault.
-             "extra" is good to use for things like labyrinth entries
-             that should not affect the chance of other minivaults on the level.
-             If you use "extra", you probably want to use one of the
-             "luniq" tags as well if your map is tagged "allow_dup".
+             an extra vault. This forbids the vault from being placed as
+             a primary vault if it has an ORIENT: tag; instead it will be
+             placed after all other vaults. For minivaults, if the map is
+             selected, the builder will attempt to place another minivault
+             immediately afterwards. "extra" is good to use for things like
+             labyrinth entries that should not affect the chance of other
+             minivaults on the level. If you use "extra" and your map is
+             tagged "allow_dup", it is a good idea to use a "luniq" tag so
+             that the same map does not place more than once on a given level.
           * "generate_awake": Monsters placed (using MONS, KMONS) in this vault
              will be generated awake.
           * "patrolling": Monsters placed (using MONS, KMONS) in this vault
