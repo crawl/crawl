@@ -914,10 +914,6 @@ pair of boots
 
 A pair of boots.
 %%%%
-pair of bracers
-
-A pair of bracers.
-%%%%
 pair of gloves
 
 A pair of gloves.
