@@ -1,7 +1,7 @@
 %%%%
 CMD_REST
 
-Heal and search a bit
+Rest and heal
 %%%%
 CMD_REST verbose
 
