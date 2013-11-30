@@ -2677,10 +2677,10 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
-            const int base_max = mons_avg_hp(mons->type);
+            const int avg_hp = mons_avg_hp(mons->type);
             mons->hit_points += hps_changed;
             mons->hit_points = min(MAX_MONSTER_HP,
-                                   min(base_max * 2, mons->hit_points));
+                                   min(avg_hp * 4, mons->hit_points));
             mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
         }
 
@@ -2707,10 +2707,10 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     const monster_type mt = item.mon_type;
     if (do_heal)
     {
-        const int base_max = mons_avg_hp(mons->type);
+        const int avg_hp = mons_avg_hp(mons->type);
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
         mons->hit_points = min(MAX_MONSTER_HP,
-                               min(base_max * 2, mons->hit_points));
+                               min(avg_hp * 2, mons->hit_points));
         mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
     }
 
@@ -3396,9 +3396,10 @@ static void _jelly_grows(monster* mons)
              mons_near(mons) ? "" : " distant");
     }
 
+    const int avg_hp = mons_avg_hp(mons->type);
     mons->hit_points += 5;
-    // possible with ridiculous farming on a full level
-    mons->hit_points = min(mons->hit_points, MAX_MONSTER_HP);
+    mons->hit_points = min(MAX_MONSTER_HP,
+                           min(avg_hp * 4, mons->hit_points));
 
     // note here, that this makes jellies "grow" {dlb}:
     if (mons->hit_points > mons->max_hit_points)
