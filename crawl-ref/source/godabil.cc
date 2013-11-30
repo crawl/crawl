@@ -646,8 +646,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     bool found_eligible = false;
     recite_counts count(0);
 
-    string affected_monsters_by_recite_type[NUM_RECITE_TYPES];
-    bool too_many_affected_monsters_by_recite_type[NUM_RECITE_TYPES] = {};
+    map<string, int> affected_by_type[NUM_RECITE_TYPES];
 
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
@@ -665,33 +664,12 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
         }
 
         for (int i = 0; i < NUM_RECITE_TYPES; i++)
-        {
-            if (retval[i] <= 0)
-                continue;
-
-            count[i]++, found_eligible = true;
-            if (too_many_affected_monsters_by_recite_type[i])
-                continue;
-
-            string affected_monsters = affected_monsters_by_recite_type[i];
-            int current_length = affected_monsters.length();
-            string monster_name = mon->full_name(DESC_A);
-            int length = current_length + monster_name.length();
-            if (length > 71)
-            { 
-                // 80 chars limit - 2 digits - 2 for ": " - 2 for ", " - 3 for "..."
-                too_many_affected_monsters_by_recite_type[i] = true;
-                affected_monsters += "...";
-            }
-            else
+            if (retval[i] > 0)
             {
-                if (current_length > 0)
-                    affected_monsters += ", ";
-                affected_monsters += monster_name;
+                count[i]++;
+                found_eligible = true;
+                ++affected_by_type[i][mon->full_name(DESC_A)];
             }
-
-            affected_monsters_by_recite_type[i] = affected_monsters;
-        }
     }
 
     if (!found_eligible && !found_ineligible)
@@ -735,8 +713,21 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     {
         if (count[i] > 0)
         {
+            string affected_str;
+
+            for (map<string, int>::iterator it = affected_by_type[i].begin();
+                 it != affected_by_type[i].end(); it++)
+            {
+                if (!affected_str.empty())
+                    affected_str += ", ";
+
+                affected_str += it->first;
+                if (it->second > 1)
+                    affected_str += make_stringf(" x%d", it->second);
+            }
+
             mprf("    [%c] - %s", 'a' + menu_cnt, zin_book_desc[i]);
-            mprf("%d: %s", count[i], affected_monsters_by_recite_type[i].c_str());
+            mprf("%d: %s", count[i], affected_str.c_str());
             letters[menu_cnt++] = (recite_type)i;
         }
     }
