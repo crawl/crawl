@@ -2096,6 +2096,9 @@ enum monster_type                      // menv[].type
     MONS_PROGRAM_BUG,
         MONS_0 = MONS_PROGRAM_BUG,
 
+#if TAG_MAJOR_VERSION > 34
+    MONS_GIANT_LIZARD,          // genus
+#endif
     MONS_GIANT_NEWT,
     MONS_GIANT_GECKO,
     MONS_IGUANA,
@@ -2103,6 +2106,9 @@ enum monster_type                      // menv[].type
     MONS_BASILISK,
     MONS_BAT,
     MONS_FIRE_BAT,
+#if TAG_MAJOR_VERSION > 34
+    MONS_SNAKE,                // genus
+#endif
     MONS_BALL_PYTHON,
     MONS_ADDER,
     MONS_WATER_MOCCASIN,
@@ -2150,6 +2156,9 @@ enum monster_type                      // menv[].type
     MONS_GIANT_FROG,
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
+#if TAG_MAJOR_VERSION > 34
+    MONS_BEAR,                  // genus
+#endif
     MONS_GRIZZLY_BEAR,
     MONS_POLAR_BEAR,
     MONS_BLACK_BEAR,
@@ -2160,10 +2169,16 @@ enum monster_type                      // menv[].type
 #endif
     MONS_SPINY_WORM,
     MONS_WYVERN,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DRAKE,                 // genus
+#endif
     MONS_LINDWURM,
     MONS_FIRE_DRAKE,
     MONS_SWAMP_DRAKE,
     MONS_DEATH_DRAKE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DRAGON,                // genus
+#endif
     MONS_STEAM_DRAGON,
     MONS_MOTTLED_DRAGON,
     MONS_SWAMP_DRAGON,
@@ -2271,6 +2286,9 @@ enum monster_type                      // menv[].type
     MONS_TOENAIL_GOLEM,
     MONS_ELECTRIC_GOLEM, // replacing the guardian robot -- bwr
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
+#if TAG_MAJOR_VERSION > 34
+    MONS_ELEMENTAL,             // genus
+#endif
     MONS_EARTH_ELEMENTAL,
     MONS_FIRE_ELEMENTAL,
     MONS_AIR_ELEMENTAL,
@@ -2679,8 +2697,10 @@ enum monster_type                      // menv[].type
     MONS_CLOUD_MAGE,
     MONS_ANIMATED_TREE,
 
+#if TAG_MAJOR_VERSION == 34
     MONS_BEAR,                  // genus
     MONS_ELEMENTAL,             // genus
+#endif
 
     MONS_FANNAR,
     MONS_APOCALYPSE_CRAB,
@@ -2698,14 +2718,10 @@ enum monster_type                      // menv[].type
     MONS_FULMINANT_PRISM,
     MONS_BATTLESPHERE,
 
+#if TAG_MAJOR_VERSION == 34
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
-
-#if TAG_MAJOR_VERSION == 34
     MONS_ARACHNOID,             // genus
-#endif
-#if TAG_MAJOR_VERSION > 34
-    MONS_DRAGON,                // genus
 #endif
 
     MONS_DEEP_TROLL_EARTH_MAGE,
@@ -2774,8 +2790,8 @@ enum monster_type                      // menv[].type
 
 #if TAG_MAJOR_VERSION == 34
     MONS_DRAGON,                // genus
-#endif
     MONS_SNAKE,                 // genus
+#endif
 
     NUM_MONSTERS,               // used for polymorph
 
