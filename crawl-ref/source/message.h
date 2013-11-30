@@ -56,6 +56,7 @@ void msgwin_prompt(string prompt);
 void msgwin_reply(string reply);
 
 unsigned int msgwin_lines();
+unsigned int msgwin_line_length();
 
 // Tell the message window that previous messages may be considered
 // read, e.g. after reading input from the player.

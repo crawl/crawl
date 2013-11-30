@@ -69,8 +69,6 @@ static bool _ends_in_punctuation(const string& text)
     }
 }
 
-static unsigned int msgwin_line_length();
-
 struct message_item
 {
     msg_channel_type    channel;        // message channel
@@ -1324,7 +1322,7 @@ void msgwin_new_cmd()
     msgwin.new_cmdturn(new_turn);
 }
 
-static unsigned int msgwin_line_length()
+unsigned int msgwin_line_length()
 {
     return msgwin.out_width();
 }
