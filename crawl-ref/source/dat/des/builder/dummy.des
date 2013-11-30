@@ -69,6 +69,18 @@ x
 ENDMAP
 
 ##############################################################################
+# Extra vaults for non-dungeon branches.
+#
+NAME: dummy_balancer_extra
+DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider, Abyss
+TAGS: dummy allow_dup extra
+ORIENT: float
+WEIGHT: 100
+MAP
+x
+ENDMAP
+
+##############################################################################
 # Minivaults
 #
 NAME: mini_dummy
