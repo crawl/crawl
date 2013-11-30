@@ -1886,7 +1886,7 @@ int mons_avg_hp(monster_type mc)
         return 0;
 
     // [ds] XXX: Use monster experience value as a better indicator of diff.?
-    return me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]/2))
+    return me->hpdice[0] * (2 * me->hpdice[1] + me->hpdice[2]) / 2
            + me->hpdice[3];
 }
 
