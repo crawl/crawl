@@ -33,8 +33,8 @@ function pan_lord_epilogue(name)
 end
 
 function pan_lord_setup(_G, name)
-    -- Set level monsters.
-    -- needs exactly 10 monsters, weights are not supported yet
+    _G.tags("unrand")
+
     local monsters = {
         Mnoleg = "large abomination w:200 / " ..
                  "neqoxec w:200 / chaos spawn w:200 / " ..
@@ -408,11 +408,10 @@ ENDMAP
 ##############################################################################
 # Random unguarded exits
 ##############################################################################
-default-depth:
+default-depth: Pan
 
 NAME:   pan_exit
 TAGS:   extra allow_dup transparent no_dump
-DEPTH:  Pan
 CHANCE: 5%
 KFEAT:  O = exit_pandemonium
 MAP
@@ -421,7 +420,6 @@ ENDMAP
 
 NAME:   pan_to_abyss
 TAGS:   extra allow_dup transparent no_dump
-DEPTH:  Pan
 CHANCE: 25%
 KFEAT:  O = exit_through_abyss
 MAP
@@ -1290,9 +1288,10 @@ ENDMAP
 #
 # Of these maps, rand_demon_1 to rand_demon_9 are ancient heritage.
 
-NAME:  rand_demon_1
-TAGS:  pan allow_dup
-MONS:  pandemonium lord, greater demon
+NAME:   rand_demon_1
+TAGS:   allow_dup
+ORIENT: float
+MONS:   pandemonium lord, greater demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1311,9 +1310,10 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_2
-TAGS:  pan allow_dup
-MONS:  greater demon, common demon, common demon
+NAME:   rand_demon_2
+TAGS:   allow_dup
+ORIENT: float
+MONS:   greater demon, common demon, common demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1332,9 +1332,10 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_3
-TAGS:  pan allow_dup
-MONS:  common demon, common demon
+NAME:   rand_demon_3
+TAGS:   allow_dup
+ORIENT: float
+MONS:   common demon, common demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1353,9 +1354,10 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_4
-TAGS:  pan allow_dup
-MONS:  pandemonium lord, any demon, any demon
+NAME:   rand_demon_4
+TAGS:   allow_dup
+ORIENT: float
+MONS:   pandemonium lord, any demon, any demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1374,9 +1376,10 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_5
-TAGS:  pan allow_dup
-MONS:  pandemonium lord, any demon, any demon
+NAME:   rand_demon_5
+TAGS:   allow_dup
+ORIENT: float
+MONS:   pandemonium lord, any demon, any demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1395,9 +1398,10 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_6
-TAGS:  pan allow_dup
-MONS:  pandemonium lord, any demon, any demon
+NAME:   rand_demon_6
+TAGS:   allow_dup
+ORIENT: float
+MONS:   pandemonium lord, any demon, any demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1416,9 +1420,10 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_7
-TAGS:  pan allow_dup
-MONS:  any demon, greater demon
+NAME:   rand_demon_7
+TAGS:   allow_dup
+ORIENT: float
+MONS:   any demon, greater demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1437,9 +1442,10 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_8
-TAGS:  pan allow_dup
-MONS:  pandemonium lord, greater demon, any demon
+NAME:   rand_demon_8
+TAGS:   allow_dup
+ORIENT: float
+MONS:   pandemonium lord, greater demon, any demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1458,10 +1464,11 @@ ENDMAP
 
 ###################################
 
-NAME:  rand_demon_9
-TAGS:  pan allow_dup
+NAME:   rand_demon_9
+TAGS:   allow_dup
+ORIENT: float
 # a crapload of greater demons, you fight them in small sets
-MONS:  pandemonium lord, any demon, greater demon
+MONS:   pandemonium lord, any demon, greater demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1481,7 +1488,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_diamond
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 SUBST:  m : nx, n : mnxx.
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1504,7 +1512,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_thingy
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 MONS:   greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
 MAP
@@ -1528,7 +1537,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_other_thingy
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 SUBST:  d : +x
 SUBST:  X : c., C : ccx
 MONS:   greater demon, common demon, any demon
@@ -1555,7 +1565,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_3x3
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 MONS:   greater demon, common demon, any demon
 NSUBST: 1 = 1:P / 3:1 / 2:2 / 2:3 / 1:|
 SHUFFLE: =A
@@ -1581,7 +1592,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_corridor
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 SUBST:  Y : Xx, X : x., Z : c.
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1600,7 +1612,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_pillars
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 MONS:   greater demon, common demon, any demon, pandemonium lord
 SUBST:  X : x.., Y : x+, C : cx
 : pan_demonic_rune(_G, 'P')
@@ -1625,7 +1638,8 @@ ENDMAP
 # I'm sorry
 NAME:   evilmike_mini_pan_murderfest
 WEIGHT: 2
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 MONS:   greater demon, any demon, pandemonium lord
 NSUBST: | = 1:P / *:|
 SUBST:  + : +., X : =c, c : cccx
@@ -1656,7 +1670,8 @@ ENDMAP
 
 NAME:    evilmike_mini_pan_rooms
 WEIGHT:  3
-TAGS:    pan allow_dup
+TAGS:    allow_dup
+ORIENT:  float
 SUBST:   + : +.
 SHUFFLE: 123|P
 MONS:    any demon, any demon, any demon
@@ -1681,7 +1696,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_layers
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 SUBST:  x = x:9 +:1
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1712,7 +1728,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_corner
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 SUBST:  X : x., Y : c.
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1735,7 +1752,8 @@ ENDMAP
 ###################################
 
 NAME:    evilmike_mini_pan_branches
-TAGS:    pan allow_dup
+TAGS:    allow_dup
+ORIENT:  float
 SHUFFLE: 4A
 SUBST:   A = 1
 MONS:    greater demon, common demon, any demon, pandemonium lord
@@ -1764,10 +1782,11 @@ ENDMAP
 
 ###################################
 
-NAME:  evilmike_mini_pan_T
-TAGS:  pan allow_dup
-SUBST: + : +..
-MONS:  greater demon, common demon, any demon, pandemonium lord
+NAME:   evilmike_mini_pan_T
+TAGS:   allow_dup
+ORIENT: float
+SUBST:  + : +..
+MONS:   greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
 MAP
 xxxxxxxxxxxxxxxx
@@ -1793,7 +1812,8 @@ ENDMAP
 
 # based slightly on rand_demon_3
 NAME:    evilmike_mini_pan_possible_glass
-TAGS:    pan allow_dup
+TAGS:    allow_dup
+ORIENT:  float
 SHUFFLE: mnxcll
 MONS:    greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1816,7 +1836,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_pillars_b
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 SUBST:  X : x.
 SUBST:  Y : mmxxl
 MONS:   greater demon, common demon, any demon, pandemonium lord
@@ -1840,9 +1861,10 @@ ENDMAP
 
 ###################################
 
-NAME: evilmike_mini_pan_doors
-TAGS: pan allow_dup
-MONS: greater demon, common demon, any demon
+NAME:   evilmike_mini_pan_doors
+TAGS:   allow_dup
+ORIENT: float
+MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1862,7 +1884,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_doors_b
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 # The doors are not treated as large gates, but individually:
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = +
@@ -1884,7 +1907,8 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_V
-TAGS:   pan allow_dup
+TAGS:   allow_dup
+ORIENT: float
 MONS:   greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
 MAP
@@ -1906,7 +1930,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_door_chamber
-TAGS: pan allow_dup
+TAGS: allow_dup
+ORIENT: float
 WEIGHT: 5
 MONS: any demon, common demon, greater demon
 MARKER: + = lua:props_marker { connected_exclude="true" }
@@ -1933,7 +1958,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_diamonds
-TAGS: pan allow_dup
+TAGS: allow_dup
+ORIENT: float
 MONS: pandemonium lord, greater demon, any demon
 NSUBST: P = 1:P / *:.
 : pan_demonic_rune(_G, 'P')
@@ -1968,7 +1994,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_giant_door
-TAGS: pan allow_dup no_trap_gen
+TAGS: allow_dup no_trap_gen
+ORIENT: float
 MONS: any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1990,7 +2017,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_hourglass
-TAGS: pan allow_dup
+TAGS: allow_dup
+ORIENT: float
 NSUBST: P = 1:P / *:.
 MONS: common demon, greater demon
 : pan_demonic_rune(_G, 'P', true)
@@ -2021,7 +2049,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_double_arrow
-TAGS: pan allow_dup
+TAGS: allow_dup
+ORIENT: float
 MONS: greater demon, common demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -2059,7 +2088,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_glass_arcs
-TAGS: pan allow_dup
+TAGS: allow_dup
+ORIENT: float
 MONS: any demon, greater demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -2081,7 +2111,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_performance_anxiety
-TAGS: pan allow_dup no_trap_gen
+TAGS: allow_dup no_trap_gen
+ORIENT: float
 WEIGHT: 1
 KPROP: tb = no_rtele_into
 MONS: greater demon, common demon
@@ -2112,7 +2143,8 @@ ENDMAP
 ###################################
 
 NAME:    grunt_pan_in_and_out
-TAGS:    pan allow_dup no_trap_gen
+TAGS:    allow_dup no_trap_gen
+ORIENT:  float
 MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
 : pan_demonic_rune(_G, 'e')
@@ -2132,7 +2164,8 @@ MAP
 ENDMAP
 
 NAME:    grunt_pan_spiral
-TAGS:    pan allow_dup no_trap_gen
+TAGS:    allow_dup no_trap_gen
+ORIENT:  float
 MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
 : pan_demonic_rune(_G, 'e')
@@ -2152,7 +2185,8 @@ MAP
 ENDMAP
 
 NAME:    grunt_pan_zigzag
-TAGS:    pan allow_dup no_trap_gen
+TAGS:    allow_dup no_trap_gen
+ORIENT:  float
 MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
 : pan_demonic_rune(_G, 'e')
@@ -2171,10 +2205,11 @@ MAP
 ............
 ENDMAP
 
-NAME: grunt_pan_pentagram
-TAGS: pan allow_dup no_trap_gen
+NAME:    grunt_pan_pentagram
+TAGS:    allow_dup no_trap_gen
+ORIENT:  float
+MONS:    greater demon, common demon
 : pan_demonic_rune(_G, 'P', true)
-MONS: greater demon, common demon
 MAP
     ...........
   ...cccc+cccc...
@@ -2204,7 +2239,7 @@ ENDMAP
 #
 
 NAME:    lemuel_draining_boxes
-TAGS:    pan
+ORIENT:  float
 MONS:    pandemonium lord, eye of draining, any demon
 SHUFFLE: aA/bB/cC/dD/eE/fF, eE/gG, fF/hH
 SUBST:   a=m, b=m, c=m, d=m, e=m, f=m, g=., h=.
@@ -2240,12 +2275,12 @@ ENDMAP
 
 ###################################
 
-NAME:  lemuel_hellion_island
-TAGS:  pan
-MONS:  hellion
-SUBST: L=l.
-KMONS: O = pandemonium lord
-KITEM: O = demonic rune of Zot
+NAME:   lemuel_hellion_island
+ORIENT: float
+MONS:   hellion
+SUBST:  L=l.
+KMONS:  O = pandemonium lord
+KITEM:  O = demonic rune of Zot
 MAP
     ..LlllL..
   ..LlllllllL..
@@ -2266,7 +2301,7 @@ ENDMAP
 ###################################
 # XXX: Undiggable glass has been converted to grates.
 NAME:    lemuel_hall_of_pain
-TAGS:    pan
+ORIENT:  float
 MONS:    pandemonium lord, any demon
 MONS:    smoke demon / weight:1 brimstone fiend
 SHUFFLE: xc
@@ -2297,13 +2332,14 @@ ENDMAP
 
 ###################################
 
-NAME:  grunt_pan_frozen_over
-TAGS:  pan no_pool_fixup no_monster_gen
-SUBST: W = wWW.
-KMONS: O = ice statue
-KITEM: O = demonic rune of Zot
-KMONS: P = pandemonium lord
-MONS:  blizzard demon, ice devil / blue devil w:20
+NAME:    grunt_pan_frozen_over
+TAGS:    no_pool_fixup no_monster_gen
+ORIENT:  float
+SUBST:   W = wWW.
+KMONS:   O = ice statue
+KITEM:   O = demonic rune of Zot
+KMONS:   P = pandemonium lord
+MONS:    blizzard demon, ice devil / blue devil w:20
 : set_random_mon_list("blizzard demon / ice devil / blue devil")
 MAP
 ccccccccccccccccccc
@@ -2327,7 +2363,6 @@ ENDMAP
 
 NAME:   pan_blood_fountain
 TAGS:   extra allow_dup transparent
-DEPTH:  Pan
 CHANCE: 10%
 SUBST:  ' = '..
 SUBST:  . = " / .:80
@@ -2343,7 +2378,6 @@ ENDMAP
 
 NAME:   pan_blood_fountain_2
 TAGS:   extra allow_dup transparent
-DEPTH:  Pan
 CHANCE: 5%
 SUBST:  Y = YYV
 SUBST:  ' = '..
@@ -2362,7 +2396,6 @@ ENDMAP
 
 NAME:   pan_blood_fountain_small
 TAGS:   extra allow_dup transparent
-DEPTH:  Pan
 CHANCE: 15%
 MAP
 Y
@@ -2371,7 +2404,7 @@ ENDMAP
 ###################################
 
 NAME:   pan_surprise
-TAGS:   pan extra
+TAGS:   extra
 KMONS:  1 = executioner
 # It may be a surprise for the executioner as well if the player has high
 # stealth -- an alarm trap would be found by most chars who dare Pan and thus
@@ -2386,7 +2419,7 @@ ENDMAP
 ###################################
 
 NAME:   pan_captured_pigsty
-TAGS:   pan extra
+TAGS:   extra
 MONS:   red devil, holy swine
 KFEAT:  o = iron_grate
 {{
@@ -2420,7 +2453,7 @@ ENDMAP
 ###################################
 
 NAME:   pan_disco_hall
-TAGS:   pan no_rotate
+TAGS:   no_rotate
 ORIENT: float
 COLOUR: D = random
 COLOUR: .x-0123456789P = disco
@@ -2483,7 +2516,7 @@ ENDMAP
 # portal vault (for pan, even).
 #
 NAME:   evilmike_holy_pan
-TAGS:   pan no_pool_fixup
+TAGS:   no_pool_fixup
 ORIENT: encompass
 NSUBST: . = > / .
 ITEM:   w:5 any / potion of curing
@@ -2610,15 +2643,15 @@ ENDMAP
 # Random vault and minivault balancers for Pan.
 
 NAME: pan_mini_dummy_balancer
-DEPTH: Pan
 TAGS: dummy
 WEIGHT: 100
 MAP
 x
 ENDMAP
 
+# XXX: should we guarantee that all Pan levels place a panlord vault?
+# If so, this should be removed.
 NAME: pan_dummy_balancer
-DEPTH: Pan
 TAGS: dummy
 ORIENT: float
 WEIGHT: 100

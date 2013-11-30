@@ -2669,26 +2669,29 @@ static bool _pan_level()
     }
     else
     {
-        const map_def *vault = random_map_for_tag("pan", true);
-        ASSERT(vault);
-
-        if (vault->orient == MAP_ENCOMPASS)
+        const map_def *vault = random_map_in_depth(level_id::current(),
+                                                   false, MB_FALSE);
+        // vault can be NULL if a dummy vault is selected.
+        if (vault && vault->orient == MAP_ENCOMPASS)
         {
             _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
             return false;
         }
         else
         {
-            const map_def *layout = _pick_layout(vault);
+            const map_def *layout = vault ? _pick_layout(vault)
+                                          : random_map_for_tag("layout", true,
+                                                               true);
 
             {
-                dgn_map_parameters mp(vault->orient == MAP_CENTRE
+                dgn_map_parameters mp(vault && vault->orient == MAP_CENTRE
                                       ? "central" : "layout");
                 _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
             }
 
             dgn_check_connectivity = true;
-            _build_secondary_vault(vault);
+            if (vault)
+                _build_secondary_vault(vault);
             return true;
         }
     }
