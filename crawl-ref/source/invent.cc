@@ -231,16 +231,15 @@ string InvEntry::get_text(bool need_cursor) const
     }
 
     if (Options.show_inventory_weights)
-    {
         max_chars_in_line -= 1;
-        const int w_weight = 10; //length of " (999 aum)"
-        int excess = strwidth(tstr.str()) - colour_tag_adjustment
-                     + text.size() + w_weight - max_chars_in_line;
-        if (excess > 0)
-            tstr << text.substr(0, max<int>(0, text.size() - excess - 2)) << "..";
-        else
-            tstr << text;
-    }
+
+    const int w_weight = Options.show_inventory_weights
+                         ? 10 //length of " (999 aum)"
+                         : 0;
+    const int excess = strwidth(tstr.str()) - colour_tag_adjustment
+                     + strwidth(text) + w_weight - max_chars_in_line;
+    if (excess > 0)
+        tstr << chop_string(text, max(0, strwidth(text) - excess - 2)) << "..";
     else
         tstr << text;
 
