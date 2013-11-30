@@ -2659,7 +2659,8 @@ static bool _pan_level()
     if (which_demon >= 0)
     {
         const map_def *vault =
-            random_map_for_tag(pandemon_level_names[which_demon], false);
+            random_map_for_tag(pandemon_level_names[which_demon], false,
+                               false, MB_FALSE);
 
         ASSERT(vault);
 
@@ -2764,10 +2765,10 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     if (!vault)
         // Pick a normal map
-        vault = random_map_for_place(lid, minivault);
+        vault = random_map_for_place(lid, minivault, MB_FALSE);
 
     if (!vault && lid.branch == root_branch && lid.depth == 1)
-        vault = random_map_for_tag("entry");
+        vault = random_map_for_tag("entry", false, false, MB_FALSE);
 
     return vault;
 }
@@ -3144,7 +3145,7 @@ static void _place_chance_vaults()
                 const string fallback_tag =
                     "fallback_" + chance_tag.substr(7); // "chance_"
                 const map_def *fallback =
-                    random_map_for_tag(fallback_tag, true);
+                    random_map_for_tag(fallback_tag, true, false, MB_FALSE);
                 if (fallback)
                 {
                     dprf("Found fallback vault %s for chance tag %s",
@@ -3190,7 +3191,7 @@ static bool _builder_normal()
     }
 
     if (use_random_maps)
-        vault = random_map_in_depth(level_id::current());
+        vault = random_map_in_depth(level_id::current(), false, MB_FALSE);
 
     // We'll accept any kind of primary vault in the main dungeon, but only
     // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
@@ -3562,23 +3563,27 @@ static void _place_branch_entrances(bool use_vaults)
 
 static void _place_extra_vaults()
 {
+    int tries = 0;
     while (true)
     {
         if (!player_in_branch(BRANCH_DUNGEON) && use_random_maps)
         {
-            const map_def *vault = random_map_in_depth(level_id::current());
+            const map_def *vault = random_map_in_depth(level_id::current(),
+                                                       false, MB_TRUE);
 
             // Encompass vaults can't be used as secondaries.
             if (!vault || vault->orient == MAP_ENCOMPASS)
                 break;
 
-            if (vault && _build_secondary_vault(vault))
+            if (_build_secondary_vault(vault))
             {
                 const map_def &map(*vault);
                 if (map.has_tag("extra"))
                     continue;
                 use_random_maps = false;
             }
+            else if (++tries >= 3)
+                break;
         }
         break;
     }
