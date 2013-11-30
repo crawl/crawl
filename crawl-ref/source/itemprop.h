@@ -44,9 +44,6 @@ short get_helmet_desc(const item_def &item) PURE;
 bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
-short get_gloves_desc(const item_def &item) PURE;
-void  set_gloves_random_desc(item_def &item);
-
 // ego items:
 bool set_item_ego_type(item_def &item, object_class_type item_type,
                        int ego_type);
