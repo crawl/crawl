@@ -5,21 +5,36 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	MAKEFLAGS += -j$(NUMJOBS)
 endif
 
+DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
+
 ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
   ifeq ($(DEB_HOST_ARCH),powerpc)
 	# g++-4.4 has an ICE there.
 	DEB_BUILD_OPTIONS := $(DEB_BUILD_OPTIONS) noopt
   endif
 endif
+
+ifneq (,$(findstring amd64,$(DEB_HOST_ARCH)))
+  LTO=y
+endif
+ifneq (,$(findstring x32,$(DEB_HOST_ARCH)))
+  LTO=y
+endif
+ifneq (,$(findstring i386,$(DEB_HOST_ARCH)))
+  LTO=y
+endif
+
 CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) \
              $(shell dpkg-buildflags --get LDFLAGS) \
              $(shell dpkg-buildflags --get CPPFLAGS)
 GXX = $(DEB_HOST_GNU_TYPE)-g++ -x c++
-ifeq ($(shell $(GXX) /dev/null -flto=jobserver -fwhole-program 2>&1 | grep 'unrecognized command line option'),)
-  CFOPTIMIZE += -flto=jobserver -fwhole-program
-endif
-ifeq ($(shell $(GXX) /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
-  CFOPTIMIZE += -fno-fat-lto-objects
+ifneq ($(LTO),)
+  ifeq ($(shell $(GXX) /dev/null -flto=jobserver -fwhole-program 2>&1 | grep 'unrecognized command line option'),)
+    CFOPTIMIZE += -flto=jobserver -fwhole-program
+  endif
+  ifeq ($(shell $(GXX) /dev/null -fno-fat-lto-objects 2>&1 | grep 'unrecognized command line option'),)
+    CFOPTIMIZE += -fno-fat-lto-objects
+  endif
 endif
 ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) - -o /dev/null -fuse-ld=gold 2>&1))
   CFOPTIMIZE += -fuse-ld=gold
