@@ -3637,7 +3637,7 @@ static void _mons_create_tentacles(monster* head)
     // unoccupied.
     for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
     {
-        if (!monster_at(*adj_it))
+        if (in_bounds(*adj_it) && !monster_at(*adj_it))
             adj_squares.push_back(*adj_it);
     }
 
