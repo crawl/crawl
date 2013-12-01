@@ -211,6 +211,11 @@ void player::update_beholders()
         {
             beholders.erase(beholders.begin() + i);
             removed = true;
+
+            // If that was the last one, clear the duration before
+            // printing any subsequent messages, or a --more-- can
+            // crash (#6547).
+            _removed_beholder(true);
             _removed_beholder_msg(mon);
         }
     }
@@ -235,14 +240,17 @@ void player::update_beholder(const monster* mon)
 
 // Helper function that resets the duration and messages if the player
 // is no longer mesmerised.
-void player::_removed_beholder()
+void player::_removed_beholder(bool quiet)
 {
     if (beholders.empty())
     {
         duration[DUR_MESMERISED] = 0;
-        mprf(MSGCH_DURATION,
-             coinflip() ? "You break out of your daze!"
-                        : "You are no longer entranced.");
+        if (!quiet)
+        {
+            mprf(MSGCH_DURATION,
+                 coinflip() ? "You break out of your daze!"
+                            : "You are no longer entranced.");
+        }
     }
 }
 
