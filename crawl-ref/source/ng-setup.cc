@@ -741,7 +741,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_FIGHTING]             = 1;
         you.skills[range_skill(you.inv[1])] = 2;
         you.skills[SK_DODGING]              = 2;
-        you.skills[SK_SPELLCASTING]         = 2;
+        you.skills[SK_SPELLCASTING]         = 1;
         you.skills[SK_HEXES]                = 3;
         break;
 
@@ -765,7 +765,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS);
 
         you.skills[SK_CONJURATIONS] = 4;
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         break;
@@ -788,7 +788,7 @@ static void _give_items_skills(const newgame_def& ng)
         weap_skill = 1;
         you.skills[SK_THROWING]     = 1;
         you.skills[SK_HEXES]        = 3;
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         break;
@@ -798,7 +798,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
 
         you.skills[SK_SUMMONINGS]   = 4;
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         break;
@@ -807,7 +807,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_NECROMANCY]   = 4;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
@@ -834,7 +834,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_FIRE_MAGIC]   = 3;
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         break;
@@ -845,7 +845,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_ICE_MAGIC]    = 3;
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         break;
@@ -856,7 +856,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_AIR_MAGIC]    = 3;
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         break;
@@ -872,7 +872,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         you.skills[SK_TRANSMUTATIONS] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
-        you.skills[SK_SPELLCASTING]   = 1;
+        you.skills[SK_SPELLCASTING]   = 2;
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_STEALTH]        = 2;
         break;
@@ -884,7 +884,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_YOUNG_POISONERS);
 
         you.skills[SK_POISON_MAGIC] = 4;
-        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
         break;
