@@ -1,3 +1,50 @@
+crawl (2:0.13.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 28 Nov 2013 12:05:56 +0100
+
+crawl (2:0.13.0-2) unstable; urgency=low
+
+  * Fix the tilesheets being out of sync between builds (including arch:all
+    parts vs arch:any). Closes: #729938
+  * Disable LTO on arm{el,hf}, due to binutils bug #712189.
+  * Depend on fonts-dejavu-core rather than ttf-dejavu, keeping the latter as
+    an alternative because of backports.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Tue, 19 Nov 2013 04:02:18 +0100
+
+crawl (2:0.13.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removed source/contrib from upstream tarball.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 18 Nov 2013 14:42:24 +0100
+
+crawl (2:0.12.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Guus Sliepen <guus@debian.org>  Mon, 30 Sep 2013 00:07:28 +0200
+
+crawl (2:0.12.2-1) unstable; urgency=low
+
+  * New upstream bugfix release
+  * Give up and drop LTO on rare architectures, ie, anything but *arm*,
+    *amd64*, *x32*, *i386*. There's apparently always an ICE on at least
+    one arch somewhere among gcc-4.6/4.7/4.8/clang on Debian or Ubuntu.
+  * Drop obsolete DM-Upload-Allowed.
+  * Properly query DEB_HOST_ARCH on new dpkg-dev.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Sat, 08 Jun 2013 04:34:41 +0200
+
+crawl (2:0.12.1-1) unstable; urgency=low
+
+  * New upstream bugfix release
+  * Autodetect LTO, to support backports.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Sun, 05 May 2013 12:20:44 +0200
+
 crawl (2:0.12.0-1) unstable; urgency=low
 
   * New upstream release.
