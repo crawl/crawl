@@ -440,56 +440,56 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL: return "";
-    case SPWPN_FLAMING: return terse ? " (flame)" : " of flaming";
-    case SPWPN_FREEZING: return terse ? " (freeze)" : " of freezing";
-    case SPWPN_HOLY_WRATH: return terse ? " (holy)" : " of holy wrath";
-    case SPWPN_ELECTROCUTION: return terse ? " (elec)":" of electrocution";
-    case SPWPN_DRAGON_SLAYING: return terse ? " (slay drac)":" of dragon slaying";
-    case SPWPN_VENOM: return terse ? " (venom)" : " of venom";
-    case SPWPN_PROTECTION: return terse ? " (protect)" : " of protection";
-    case SPWPN_EVASION: return terse ? " (evade)" : " of evasion";
-    case SPWPN_DRAINING: return terse ? " (drain)" : " of draining";
-    case SPWPN_SPEED: return terse ? " (speed)" : " of speed";
-    case SPWPN_PAIN: return terse ? " (pain)" : " of pain";
-    case SPWPN_DISTORTION: return terse ? " (distort)" : " of distortion";
+    case SPWPN_FLAMING: return terse ? "flame" : " of flaming";
+    case SPWPN_FREEZING: return terse ? "freeze" : " of freezing";
+    case SPWPN_HOLY_WRATH: return terse ? "holy" : " of holy wrath";
+    case SPWPN_ELECTROCUTION: return terse ? "elec":" of electrocution";
+    case SPWPN_DRAGON_SLAYING: return terse ? "slay drac":" of dragon slaying";
+    case SPWPN_VENOM: return terse ? "venom" : " of venom";
+    case SPWPN_PROTECTION: return terse ? "protect" : " of protection";
+    case SPWPN_EVASION: return terse ? "evade" : " of evasion";
+    case SPWPN_DRAINING: return terse ? "drain" : " of draining";
+    case SPWPN_SPEED: return terse ? "speed" : " of speed";
+    case SPWPN_PAIN: return terse ? "pain" : " of pain";
+    case SPWPN_DISTORTION: return terse ? "distort" : " of distortion";
 
     case SPWPN_VAMPIRICISM:
-        return terse ? " (vamp)" : ""; // non-terse already handled
+        return terse ? "vamp" : ""; // non-terse already handled
 
     case SPWPN_VORPAL:
         if (is_range_weapon(item))
-            return terse ? " (velocity)" : " of velocity";
+            return terse ? "velocity" : " of velocity";
         else
         {
             switch (get_vorpal_type(item))
             {
-            case DVORP_CRUSHING: return terse ? " (crush)" :" of crushing";
-            case DVORP_SLICING:  return terse ? " (slice)" : " of slicing";
-            case DVORP_PIERCING: return terse ? " (pierce)":" of piercing";
-            case DVORP_CHOPPING: return terse ? " (chop)" : " of chopping";
-            case DVORP_SLASHING: return terse ? " (slash)" :" of slashing";
-            case DVORP_STABBING: return terse ? " (stab)" : " of stabbing";
-            default:             return terse ? " (buggy vorpal)"
+            case DVORP_CRUSHING: return terse ? "crush" :" of crushing";
+            case DVORP_SLICING:  return terse ? "slice" : " of slicing";
+            case DVORP_PIERCING: return terse ? "pierce":" of piercing";
+            case DVORP_CHOPPING: return terse ? "chop" : " of chopping";
+            case DVORP_SLASHING: return terse ? "slash" :" of slashing";
+            case DVORP_STABBING: return terse ? "stab" : " of stabbing";
+            default:             return terse ? "buggy vorpal"
                                               : " of buggy destruction";
             }
         }
-    case SPWPN_ANTIMAGIC: return terse ? " (antimagic)" : ""; // non-terse
+    case SPWPN_ANTIMAGIC: return terse ? "antimagic" : ""; // non-terse
                                                       // handled elsewhere
 
     // ranged weapon brands
-    case SPWPN_FLAME: return terse ? " (flame)" : " of flame";
-    case SPWPN_FROST: return terse ? " (frost)" : " of frost";
-    case SPWPN_PENETRATION: return terse ? " (penet)" : " of penetration";
-    case SPWPN_REAPING: return terse ? " (reap)" : " of reaping";
+    case SPWPN_FLAME: return terse ? "flame" : " of flame";
+    case SPWPN_FROST: return terse ? "frost" : " of frost";
+    case SPWPN_PENETRATION: return terse ? "penet" : " of penetration";
+    case SPWPN_REAPING: return terse ? "reap" : " of reaping";
 
     // both ranged and non-ranged
-    case SPWPN_CHAOS: return terse ? " (chaos)" : " of chaos";
+    case SPWPN_CHAOS: return terse ? "chaos" : " of chaos";
 
     // buggy brands
 #if TAG_MAJOR_VERSION == 34
-    case SPWPN_CONFUSE: return terse ? " (confuse)" : " of confusion";
+    case SPWPN_CONFUSE: return terse ? "confuse" : " of confusion";
 #endif
-    default: return terse ? " (buggy)" : " of bugginess";
+    default: return terse ? "buggy" : " of bugginess";
     }
 }
 
@@ -538,29 +538,29 @@ const char* armour_ego_name(const item_def& item, bool terse)
         switch (get_armour_ego_type(item))
         {
         case SPARM_NORMAL:            return "";
-        case SPARM_RUNNING:           return " {run}";
-        case SPARM_FIRE_RESISTANCE:   return " {rF+}";
-        case SPARM_COLD_RESISTANCE:   return " {rC+}";
-        case SPARM_POISON_RESISTANCE: return " {rPois}";
-        case SPARM_SEE_INVISIBLE:     return " {SInv}";
-        case SPARM_DARKNESS:          return " {darkness}";
-        case SPARM_STRENGTH:          return " {Str+3}";
-        case SPARM_DEXTERITY:         return " {Dex+3}";
-        case SPARM_INTELLIGENCE:      return " {Int+3}";
-        case SPARM_PONDEROUSNESS:     return " {ponderous}";
-        case SPARM_FLYING:            return " {Fly}";
-        case SPARM_JUMPING:            return " {Jump}";
-        case SPARM_MAGIC_RESISTANCE:  return " {MR+}";
-        case SPARM_PROTECTION:        return " {AC+3}";
-        case SPARM_STEALTH:           return " {Stlth+}";
-        case SPARM_RESISTANCE:        return " {rC+ rF+}";
-        case SPARM_POSITIVE_ENERGY:   return " {rN+}";
-        case SPARM_ARCHMAGI:          return " {Archmagi}";
-        case SPARM_PRESERVATION:      return " {rCorr, Cons}";
-        case SPARM_REFLECTION:        return " {reflect}";
-        case SPARM_SPIRIT_SHIELD:     return " {Spirit}";
-        case SPARM_ARCHERY:           return " {archer}";
-        default:                      return " {buggy}";
+        case SPARM_RUNNING:           return "run";
+        case SPARM_FIRE_RESISTANCE:   return "rF+";
+        case SPARM_COLD_RESISTANCE:   return "rC+";
+        case SPARM_POISON_RESISTANCE: return "rPois";
+        case SPARM_SEE_INVISIBLE:     return "SInv";
+        case SPARM_DARKNESS:          return "darkness";
+        case SPARM_STRENGTH:          return "Str+3";
+        case SPARM_DEXTERITY:         return "Dex+3";
+        case SPARM_INTELLIGENCE:      return "Int+3";
+        case SPARM_PONDEROUSNESS:     return "ponderous";
+        case SPARM_FLYING:            return "Fly";
+        case SPARM_JUMPING:            return "Jump";
+        case SPARM_MAGIC_RESISTANCE:  return "MR+";
+        case SPARM_PROTECTION:        return "AC+3";
+        case SPARM_STEALTH:           return "Stlth+";
+        case SPARM_RESISTANCE:        return "rC+ rF+";
+        case SPARM_POSITIVE_ENERGY:   return "rN+";
+        case SPARM_ARCHMAGI:          return "Archmagi";
+        case SPARM_PRESERVATION:      return "rCorr, Cons";
+        case SPARM_REFLECTION:        return "reflect";
+        case SPARM_SPIRIT_SHIELD:     return "Spirit";
+        case SPARM_ARCHERY:           return "archer";
+        default:                      return "buggy";
         }
     }
 }
@@ -1379,7 +1379,13 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         buff << item_base_name(*this);
 
         if (know_brand)
+        {
+            if (terse)
+                buff << " (";
             buff << weapon_brand_name(*this, terse);
+            if (terse)
+                buff << ")";
+        }
 
         if (know_curse && cursed() && terse)
             buff << " (curse)";
@@ -1498,7 +1504,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             {
                 if (!terse)
                     buff << " of ";
+                else
+                    buff << " {";
                 buff << armour_ego_name(*this, terse);
+                if (terse)
+                    buff << "}";
             }
         }
 
