@@ -144,14 +144,19 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
     string buf = vmake_stringf(s, args);
     va_end(args);
 
+    const GotoRegion region = get_cursor_region();
+    const int max_y = cgetsize(region).y;
     while (!buf.empty())
     {
-        const GotoRegion region = get_cursor_region();
         const coord_def pos = cgetpos(region);
 
-        int avail = wrapcol - pos.x + 1;
+        const int avail = wrapcol - pos.x + 1;
         if (avail > 0)
             cprintf("%s", wordwrap_line(buf, avail).c_str());
+
+        // No room for more lines, quit now.
+        if (pos.y >= max_y)
+            break;
         if (!buf.empty())
             cgotoxy(1, pos.y + 1, region);
     }
