@@ -123,6 +123,7 @@ _         CMD_READ_MESSAGES     (messaging during online play)
 ?         CMD_DISPLAY_COMMANDS
 `         CMD_PREV_CMD_AGAIN
 0         CMD_REPEAT_CMD
+<unbound> CMD_LUA_CONSOLE
 
 Targetting sub-commands
 -----------------------
