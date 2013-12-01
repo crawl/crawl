@@ -2246,6 +2246,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_GUARDIAN_SERPENT:
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
         band = BAND_NAGAS;
