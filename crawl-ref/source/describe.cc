@@ -272,10 +272,7 @@ static vector<string> _randart_propnames(const item_def& item,
             ego = armour_ego_name(item, true);
         if (!ego.empty())
         {
-            // XXX: Ugly hack to remove the brackets...
-            ego = ego.substr(2, ego.length() - 3);
-
-            // ... and another one for adding a comma if needed.
+            // XXX: Ugly hack for adding a comma if needed.
             for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
                 if (known_proprt(propanns[i].prop)
                     && propanns[i].prop != ARTP_BRAND
