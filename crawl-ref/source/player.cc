@@ -4822,7 +4822,7 @@ int get_real_hp(bool trans, bool rotted)
 {
     int hitp;
 
-    hitp  = you.experience_level * 11 / 2;
+    hitp  = you.experience_level * 11 / 2 + 8;
     hitp += you.hp_max_perm;
     // Important: we shouldn't add Heroism boosts here.
     hitp += you.experience_level * you.skill(SK_FIGHTING, 5, true) / 70
@@ -5716,8 +5716,8 @@ void player::init()
     hp_max_temp      = 0;
     hp_max_perm      = 0;
 
-    magic_points       = 0;
-    max_magic_points   = 0;
+    magic_points     = 0;
+    max_magic_points = 0;
     mp_max_temp      = 0;
     mp_max_perm      = 0;
 

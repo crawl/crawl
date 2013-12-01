@@ -2080,6 +2080,10 @@ static void tag_read_you(reader &th)
     you.hp_max_perm               = unmarshallShort(th);
     you.mp_max_temp               = unmarshallShort(th);
     you.mp_max_perm               = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CLASS_HP_0)
+        you.hp_max_perm -= 8;
+#endif
 
     const int x = unmarshallShort(th);
     const int y = unmarshallShort(th);
