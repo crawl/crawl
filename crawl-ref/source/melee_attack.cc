@@ -750,10 +750,6 @@ bool melee_attack::handle_phase_damaged()
         if (damage_done)
             player_exercise_combat_skills();
 
-        // ugh, inspecting attack_verb here is pretty ugly
-        if (damage_done && attack_verb == "trample")
-            do_knockback();
-
         if (defender->alive())
         {
             // Actually apply the bleeding effect, this can come from an
