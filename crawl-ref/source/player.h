@@ -744,10 +744,10 @@ public:
     bool has_usable_tentacle() const;
 
 protected:
-    void _removed_beholder();
+    void _removed_beholder(bool quiet = false);
     bool _possible_beholder(const monster* mon) const;
 
-    void _removed_fearmonger();
+    void _removed_fearmonger(bool quiet = false);
     bool _possible_fearmonger(const monster* mon) const;
 
 };

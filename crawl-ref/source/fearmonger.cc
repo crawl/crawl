@@ -139,6 +139,11 @@ void player::update_fearmongers()
         {
             fearmongers.erase(fearmongers.begin() + i);
             removed = true;
+            
+            // If that was the last one, clear the duration before
+            // printing any subsequent messages, or a --more-- can
+            // crash (#6547).
+            _removed_fearmonger(true);
             _removed_fearmonger_msg(mon);
         }
     }
@@ -163,13 +168,13 @@ void player::update_fearmonger(const monster* mon)
 
 // Helper function that resets the duration and messages if the player
 // is no longer afraid.
-void player::_removed_fearmonger()
+void player::_removed_fearmonger(bool quiet)
 {
     if (fearmongers.empty())
     {
         duration[DUR_AFRAID] = 0;
-        mpr("You are no longer terrified.",
-            MSGCH_DURATION);
+        if (!quiet)
+            mpr("You are no longer terrified.", MSGCH_DURATION);
     }
 }
 
