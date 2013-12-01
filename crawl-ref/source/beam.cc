@@ -2561,7 +2561,17 @@ void bolt::affect_endpoint()
     if (origin_spell == SPELL_BLINKBOLT)
     {
         if (agent()->alive())
-            agent()->blink_to(pos(), false);
+        {
+            for (vector<coord_def>::reverse_iterator citr = path_taken.rbegin();
+                 citr != path_taken.rend(); ++citr)
+            {
+                if (agent()->is_habitable(*citr) &&
+                    agent()->blink_to(*citr, false))
+                {
+                    return;
+                }
+            }
+        }
         return;
     }
 
