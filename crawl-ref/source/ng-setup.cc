@@ -180,8 +180,8 @@ static void _jobs_stat_init(job_type which_job)
     you.base_stats[STAT_INT] += i;
     you.base_stats[STAT_DEX] += d;
 
-    you.hp_max_perm = hp - 2;
-    you.mp_max_perm = mp - 1;
+    you.hp_max_perm = 8;
+    you.mp_max_perm = 0;
 }
 
 // Make sure no stats are unacceptably low
