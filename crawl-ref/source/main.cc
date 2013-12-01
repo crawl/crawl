@@ -1014,6 +1014,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 #ifdef USE_TILE
     case CMD_EDIT_PLAYER_TILE:
 #endif
+    case CMD_LUA_CONSOLE:
         mpr("You can't repeat that command.");
         return false;
 
@@ -2137,6 +2138,10 @@ void process_command(command_type cmd)
         }
         else
             canned_msg(MSG_OK);
+        break;
+
+    case CMD_LUA_CONSOLE:
+        debug_terp_dlua(clua); break;
         break;
 
     case CMD_NO_CMD:

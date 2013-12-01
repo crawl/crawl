@@ -792,7 +792,9 @@ enum command_type
     // Repeat next command a given number of times
     CMD_REPEAT_CMD,
 
-    CMD_MAX_NORMAL = CMD_REPEAT_CMD,
+    CMD_LUA_CONSOLE,
+
+    CMD_MAX_NORMAL = CMD_LUA_CONSOLE,
 
     // overmap commands
     CMD_MAP_CLEAR_MAP,
