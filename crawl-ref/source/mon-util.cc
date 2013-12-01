@@ -1076,8 +1076,9 @@ void discover_mimic(const coord_def& pos, bool wake)
     }
     else
     {
-        mg.colour = get_item_glyph(item).col;
-        mg.props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
+        const cglyph_t glyph = get_item_glyph(item);
+        mg.colour = glyph.col;
+        mg.props["glyph"] = static_cast<int>(glyph.ch);
     }
 
     monster *mimic = place_monster(mg, true, true);
