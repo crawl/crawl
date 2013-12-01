@@ -3544,7 +3544,7 @@ static monsterentry mondata[] =
 
 {
     MONS_ACID_BLOB, 'J', LIGHTCYAN, "acid blob",
-    M_SENSE_INVIS | M_ACID_SPLASH | M_FLEES,
+    M_SENSE_INVIS | M_ACID_SPLASH,
     MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
     0, 12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 42}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
