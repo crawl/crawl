@@ -4825,7 +4825,8 @@ int get_real_hp(bool trans, bool rotted)
     hitp  = you.experience_level * 11 / 2;
     hitp += you.hp_max_perm;
     // Important: we shouldn't add Heroism boosts here.
-    hitp += (you.experience_level * you.skill(SK_FIGHTING, 10, true)) / 80;
+    hitp += you.experience_level * you.skill(SK_FIGHTING, 5, true) / 70
+          + (you.skill(SK_FIGHTING, 3, true) + 1) / 2;
 
     // Racial modifier.
     hitp *= 10 + species_hp_modifier(you.species);
@@ -4864,7 +4865,8 @@ int get_real_mp(bool include_items)
     int enp = you.experience_level + you.mp_max_perm;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
-    int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level, true) / 4;
+    int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level * 3, true) / 14
+                    + you.skill(SK_SPELLCASTING, 1, true);
     int invoc_extra = you.skill(SK_INVOCATIONS, you.experience_level, true) / 6;
     int evoc_extra = you.skill(SK_EVOCATIONS, you.experience_level, true) / 6;
 
