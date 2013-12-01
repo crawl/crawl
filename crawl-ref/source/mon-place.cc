@@ -2247,6 +2247,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_GUARDIAN_SERPENT:
+        band = BAND_GUARDIAN_SERPENT;
+        band_size = 2;
+        break;
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
         band = BAND_NAGAS;
@@ -2802,6 +2805,8 @@ static monster_type _band_member(band_type band, int which)
                                           0);
         break;
 
+    case BAND_GUARDIAN_SERPENT:
+        return coinflip() ? MONS_NAGA_WARRIOR : MONS_NAGA_MAGE;
     case BAND_NAGAS:
         if (which == 1 && coinflip())
             return coinflip() ? MONS_NAGA_WARRIOR : MONS_NAGA_MAGE;
