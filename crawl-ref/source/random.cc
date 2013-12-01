@@ -143,7 +143,7 @@ int ui_random(int max)
 
     while (true)
     {
-        uint32_t bits = get_uint32();
+        uint32_t bits = get_uint32(1);
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
