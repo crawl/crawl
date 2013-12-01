@@ -762,7 +762,6 @@ void item_check(bool verbose)
         for (unsigned int i = 0; i < items.size() && i < 50; ++i)
         {
             cglyph_t g = get_item_glyph(items[i]);
-            get_item_glyph(items[i]);
             item_chars.push_back(g.ch * 0x100 +
                                  (10 - _item_name_specialness(*(items[i]))));
         }
