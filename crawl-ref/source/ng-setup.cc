@@ -683,9 +683,9 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_CURING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
-        you.skills[SK_FIGHTING]       = 2;
+        you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_DODGING]        = 2;
-        you.skills[SK_INVOCATIONS]    = 4;
+        you.skills[SK_INVOCATIONS]    = 3;
         break;
 
     case JOB_SKALD:
