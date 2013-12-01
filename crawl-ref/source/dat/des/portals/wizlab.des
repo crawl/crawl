@@ -1398,7 +1398,7 @@ TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:300 tile:mons_wucad_mu_statue
-KITEM:      8 = staff of energy unrand:staff_of_wucad_mu, book of enchantments
+KITEM:      8 = staff of energy unrand:staff_of_wucad_mu
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -1417,9 +1417,9 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
-ITEM:       potion of experience, manual of fighting / manual of armour / manual of \
-            spellcasting, manual of staves / manual of fighting / manual of dodging,\
-            potion of beneficial mutation
+ITEM:       potion of experience, potion of beneficial mutation, \
+            manual of fighting / manual of armour / manual of spellcasting / \
+            manual of staves / manual of dodging, book of enchantments
 LFLOORCOL:  white
 KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures \
             nas:old_memories tile:mons_human_monk seen / deep troll name:monk n_suf \
