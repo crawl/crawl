@@ -1019,21 +1019,6 @@ static void _give_items_skills(const newgame_def& ng)
     }
 }
 
-// Adjust max_magic_points by species. {dlb}
-static void _give_species_bonus_mp()
-{
-    switch (you.species)
-    {
-    case SP_VAMPIRE:
-    case SP_DEMIGOD:
-        you.mp_max_perm++;
-        break;
-
-    default:
-        break;
-    }
-}
-
 static void _give_starting_food()
 {
     // These undead start with no food.
@@ -1370,8 +1355,6 @@ static void _setup_generic(const newgame_def& ng)
     init_can_train();
     init_train();
     init_training();
-
-    _give_species_bonus_mp();
 
     if (crawl_state.game_is_zotdef())
     {
