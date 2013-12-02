@@ -2303,7 +2303,8 @@ void check_item_knowledge(bool unknown_items)
                 && (j == POT_WATER
                  || j == POT_GAIN_STRENGTH
                  || j == POT_GAIN_DEXTERITY
-                 || j == POT_GAIN_INTELLIGENCE))
+                 || j == POT_GAIN_INTELLIGENCE
+                 || j == POT_SLOWING))
             {
                 continue;
             }
