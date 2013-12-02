@@ -1317,7 +1317,7 @@ static unsigned char _invent_select(const char *title = NULL,
     return menu.getkey();
 }
 
-unsigned char get_invent(int invent_type)
+unsigned char get_invent(int invent_type, bool redraw)
 {
     unsigned char select;
     int flags = MF_SINGLESELECT;
@@ -1341,15 +1341,10 @@ unsigned char get_invent(int invent_type)
             break;
     }
 
-    if (!crawl_state.doing_prev_cmd_again)
+    if (redraw && !crawl_state.doing_prev_cmd_again)
         redraw_screen();
 
     return select;
-}
-
-void browse_inventory()
-{
-    get_invent(OSEL_ANY);
 }
 
 // Reads in digits for a count and apprends then to val, the
