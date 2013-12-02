@@ -3,19 +3,7 @@
 
 #include "los.h"
 
-class los_base
-{
-public:
-    virtual ~los_base() {}
-
-    virtual coord_def get_center() const = 0;
-    virtual circle_def get_bounds() const = 0;
-
-    virtual bool in_bounds(const coord_def& p) const = 0;
-    virtual bool see_cell(const coord_def& p) const = 0;
-};
-
-class los_def : public los_base
+class los_def
 {
     los_grid show;
     coord_def center;
