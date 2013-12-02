@@ -372,12 +372,6 @@ amulet of the Air
 This sky-blue amulet must have been given its many protective properties by a
 powerful air mage. It seems the one thing they lacked was a steady hand.
 %%%%
-ring of Jiyva
-
-A slimy, undulating ring.
-
-Jiyva protects its wearer from mutations.
-%%%%
 ring of Shadows
 
 A black ring that can make its wearer one with the shadows.
