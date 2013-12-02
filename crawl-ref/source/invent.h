@@ -212,8 +212,7 @@ vector<SelItem> prompt_invent_items(
                         Menu::selitem_tfn fn = NULL,
                         const vector<SelItem> *pre_select = NULL);
 
-void browse_inventory();
-unsigned char get_invent(int invent_type);
+unsigned char get_invent(int invent_type, bool redraw = true);
 
 bool in_inventory(const item_def &i);
 
