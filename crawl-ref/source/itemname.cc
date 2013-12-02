@@ -1382,7 +1382,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
         buff << item_base_name(*this);
 
-        if (know_brand)
+        if (know_brand && get_weapon_brand(*this) != SPWPN_NORMAL)
         {
             if (!terse)
                 buff << " of ";
