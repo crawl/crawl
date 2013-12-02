@@ -440,56 +440,56 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL: return "";
-    case SPWPN_FLAMING: return terse ? "flame" : " of flaming";
-    case SPWPN_FREEZING: return terse ? "freeze" : " of freezing";
-    case SPWPN_HOLY_WRATH: return terse ? "holy" : " of holy wrath";
-    case SPWPN_ELECTROCUTION: return terse ? "elec":" of electrocution";
-    case SPWPN_DRAGON_SLAYING: return terse ? "slay drac":" of dragon slaying";
-    case SPWPN_VENOM: return terse ? "venom" : " of venom";
-    case SPWPN_PROTECTION: return terse ? "protect" : " of protection";
-    case SPWPN_EVASION: return terse ? "evade" : " of evasion";
-    case SPWPN_DRAINING: return terse ? "drain" : " of draining";
-    case SPWPN_SPEED: return terse ? "speed" : " of speed";
-    case SPWPN_PAIN: return terse ? "pain" : " of pain";
-    case SPWPN_DISTORTION: return terse ? "distort" : " of distortion";
+    case SPWPN_FLAMING: return terse ? "flame" : "flaming";
+    case SPWPN_FREEZING: return terse ? "freeze" : "freezing";
+    case SPWPN_HOLY_WRATH: return terse ? "holy" : "holy wrath";
+    case SPWPN_ELECTROCUTION: return terse ? "elec" : "electrocution";
+    case SPWPN_DRAGON_SLAYING: return terse ? "slay drac" : "dragon slaying";
+    case SPWPN_VENOM: return terse ? "venom" : "venom";
+    case SPWPN_PROTECTION: return terse ? "protect" : "protection";
+    case SPWPN_EVASION: return terse ? "evade" : "evasion";
+    case SPWPN_DRAINING: return terse ? "drain" : "draining";
+    case SPWPN_SPEED: return terse ? "speed" : "speed";
+    case SPWPN_PAIN: return terse ? "pain" : "pain";
+    case SPWPN_DISTORTION: return terse ? "distort" : "distortion";
 
     case SPWPN_VAMPIRICISM:
         return terse ? "vamp" : ""; // non-terse already handled
 
     case SPWPN_VORPAL:
         if (is_range_weapon(item))
-            return terse ? "velocity" : " of velocity";
+            return terse ? "velocity" : "velocity";
         else
         {
             switch (get_vorpal_type(item))
             {
-            case DVORP_CRUSHING: return terse ? "crush" :" of crushing";
-            case DVORP_SLICING:  return terse ? "slice" : " of slicing";
-            case DVORP_PIERCING: return terse ? "pierce":" of piercing";
-            case DVORP_CHOPPING: return terse ? "chop" : " of chopping";
-            case DVORP_SLASHING: return terse ? "slash" :" of slashing";
-            case DVORP_STABBING: return terse ? "stab" : " of stabbing";
+            case DVORP_CRUSHING: return terse ? "crush" :"crushing";
+            case DVORP_SLICING:  return terse ? "slice" : "slicing";
+            case DVORP_PIERCING: return terse ? "pierce" : "piercing";
+            case DVORP_CHOPPING: return terse ? "chop" : "chopping";
+            case DVORP_SLASHING: return terse ? "slash" :"slashing";
+            case DVORP_STABBING: return terse ? "stab" : "stabbing";
             default:             return terse ? "buggy vorpal"
-                                              : " of buggy destruction";
+                                              : "buggy destruction";
             }
         }
     case SPWPN_ANTIMAGIC: return terse ? "antimagic" : ""; // non-terse
                                                       // handled elsewhere
 
     // ranged weapon brands
-    case SPWPN_FLAME: return terse ? "flame" : " of flame";
-    case SPWPN_FROST: return terse ? "frost" : " of frost";
-    case SPWPN_PENETRATION: return terse ? "penet" : " of penetration";
-    case SPWPN_REAPING: return terse ? "reap" : " of reaping";
+    case SPWPN_FLAME: return terse ? "flame" : "flame";
+    case SPWPN_FROST: return terse ? "frost" : "frost";
+    case SPWPN_PENETRATION: return terse ? "penet" : "penetration";
+    case SPWPN_REAPING: return terse ? "reap" : "reaping";
 
     // both ranged and non-ranged
-    case SPWPN_CHAOS: return terse ? "chaos" : " of chaos";
+    case SPWPN_CHAOS: return terse ? "chaos" : "chaos";
 
     // buggy brands
 #if TAG_MAJOR_VERSION == 34
-    case SPWPN_CONFUSE: return terse ? "confuse" : " of confusion";
+    case SPWPN_CONFUSE: return terse ? "confuse" : "confusion";
 #endif
-    default: return terse ? "buggy" : " of bugginess";
+    default: return terse ? "buggy" : "bugginess";
     }
 }
 
@@ -1229,7 +1229,7 @@ string ego_type_string(const item_def &item, bool terse)
                 return "anti-magic";
         }
         if (get_weapon_brand(item) != SPWPN_NORMAL)
-            return string(weapon_brand_name(item, terse)).substr(terse ? 0 : 4);
+            return weapon_brand_name(item, terse);
         else
             return "";
     case OBJ_MISSILES:
@@ -1384,7 +1384,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
         if (know_brand)
         {
-            if (terse)
+            if (!terse)
+                buff << " of ";
+            else
                 buff << " (";
             buff << weapon_brand_name(*this, terse);
             if (terse)
