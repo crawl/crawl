@@ -27,6 +27,7 @@
 #include "dbg-util.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "food.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "invent.h"
