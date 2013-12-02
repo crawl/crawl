@@ -15,27 +15,6 @@ public:
     virtual bool see_cell(const coord_def& p) const = 0;
 };
 
-class los_glob : public los_base
-{
-    los_type lt;
-    coord_def center;
-    circle_def bds;
-
-public:
-    los_glob() {}
-    los_glob(const coord_def& c, los_type l,
-             const circle_def &b = BDS_DEFAULT)
-        : lt(l), center(c), bds(b) {}
-
-    los_glob& operator=(const los_glob& other);
-
-    coord_def get_center() const;
-    circle_def get_bounds() const;
-
-    bool in_bounds(const coord_def& p) const;
-    bool see_cell(const coord_def& p) const;
-};
-
 class los_def : public los_base
 {
     los_grid show;
