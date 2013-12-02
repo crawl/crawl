@@ -193,7 +193,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         const bool were_brilliant = you.duration[DUR_BRILLIANCE] > 0;
 
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_brilliant ? "clever" : "more clever");
+             were_brilliant ? "more clever" : "clever");
 
         you.increase_duration(DUR_BRILLIANCE,
                               (35 + random2(pow)) / factor, 80);
@@ -208,7 +208,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         const bool were_agile = you.duration[DUR_AGILITY] > 0;
 
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
-             were_agile ? "agile" : "more agile");
+             were_agile ? "more agile" : "agile");
 
         you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
 
