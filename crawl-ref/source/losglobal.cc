@@ -36,17 +36,26 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
 static void _save_los(los_def* los, los_type l)
 {
     const coord_def o = los->get_center();
-    for (radius_iterator ri(o, LOS_MAX_RANGE, C_ROUND); ri; ++ri)
-    {
-        losfield_t* flags = _lookup_globallos(o, *ri);
-        if (!flags)
-            continue;
-        *flags |= l << LOS_KNOWN;
-        if (los->see_cell(*ri))
-            *flags |= l;
-        else
-            *flags &= ~l;
-    }
+    int y1 = o.y - LOS_MAX_RANGE;
+    int y2 = o.y + LOS_MAX_RANGE;
+    int x1 = o.x - LOS_MAX_RANGE;
+    int x2 = o.x + LOS_MAX_RANGE;
+    for (int y = y1; y <= y2; y++)
+        for (int x = x1; x <= x2; x++)
+        {
+            if (sqr(o.x - x) + sqr(o.y - y) > sqr(LOS_MAX_RANGE) + 1)
+                continue;
+
+            coord_def ri(x, y);
+            losfield_t* flags = _lookup_globallos(o, ri);
+            if (!flags)
+                continue;
+            *flags |= l << LOS_KNOWN;
+            if (los->see_cell(ri))
+                *flags |= l;
+            else
+                *flags &= ~l;
+        }
 }
 
 // Opacity at p has changed.
