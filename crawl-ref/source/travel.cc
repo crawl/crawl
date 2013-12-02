@@ -4479,7 +4479,7 @@ void do_interlevel_travel()
     {
         if (you.running.pos == you.pos())
         {
-            mpr("You're already here.");
+            mpr("You're already here!");
             return;
         }
         else if (!you.running.pos.x || !you.running.pos.y)
