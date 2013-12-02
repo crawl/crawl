@@ -65,13 +65,12 @@ public:
 
 /**
  * @class radius_iterator
- * Iterator over coordinates in a more-or-less circular region.
+ * Iterator over coordinates in a circular region.
  *
- * The region can be any circle_def; furthermore, the cells can
- * be restricted to lie within some LOS field (need not be
+ * The region can be a circle of any r²; furthermore, the cells can
+ * be restricted to lie within LOS from the center (of any type)
  * centered at the same point), and to exclude the center.
  */
-class los_base;
 class radius_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
@@ -90,14 +89,12 @@ public:
     void operator ++ (int);
 
 private:
-    void advance(bool may_stay);
-    bool is_valid_square(const coord_def& p) const;
+    enum costate { RI_DONE, RI_START, RI_SE, RI_NE, RI_SW, RI_NW };
+    int x, y, cost_x, cost_y, credit_x, credit_y;
 
-    circle_def circle;
-    circle_iterator iter;
-    bool exclude_center;
-    const los_base* los;  // restrict to the los if not NULL
-    unique_ptr<los_base> used_los;
+    costate state;
+    coord_def center;
+    los_type los;
     coord_def current;    // storage for operator->
 };
 

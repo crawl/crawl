@@ -10,7 +10,8 @@
 #include "coord-circle.h"
 #include "coord.h"
 #include "libutil.h"
-#include "los_def.h"
+#include "los.h"
+#include "losglobal.h"
 #include "random.h"
 
 rectangle_iterator::rectangle_iterator(const coord_def& corner1,
@@ -189,58 +190,63 @@ void circle_iterator::operator++(int)
 }
 
 
-radius_iterator::radius_iterator(const coord_def center, int param,
+radius_iterator::radius_iterator(const coord_def _center, int r,
                                  circle_type ctype,
                                  bool _exclude_center)
-    : circle(center, param, ctype),
-      iter(circle.iter()),
-      exclude_center(_exclude_center),
-      los(NULL)
+    : state(RI_START),
+      center(_center),
+      los(LOS_NONE)
 {
-    ASSERT(map_bounds(center));
-    advance(true);
+    ASSERT(map_bounds(_center));
+    switch(ctype)
+    {
+    case C_CIRCLE: credit_y = r; break;
+    case C_POINTY: credit_y = r * r; break;
+    case C_ROUND:  credit_y = r * r + 1; break;
+    }
+    ++(*this);
+    if (_exclude_center)
+        ++(*this);
 }
 
 radius_iterator::radius_iterator(const coord_def _center,
                                  los_type _los,
                                  bool _exclude_center)
-    : circle(_center, los_radius2, C_CIRCLE),
-      iter(circle.iter()),
-      exclude_center(_exclude_center)
+    : state(RI_START),
+      center(_center),
+      los(_los)
 {
     ASSERT(map_bounds(_center));
-    used_los.reset(new los_glob(_center, _los));
-    los = used_los.get();
-    advance(true);
+    credit_y = los_radius2;
+    ++(*this);
+    if (_exclude_center)
+        ++(*this);
 }
 
 radius_iterator::radius_iterator(const coord_def _center,
-                                 int param,
+                                 int r,
                                  circle_type ctype,
                                  los_type _los,
                                  bool _exclude_center)
-    : circle(_center, param, ctype),
-      iter(circle.iter()),
-      exclude_center(_exclude_center)
+    : state(RI_START),
+      center(_center),
+      los(_los)
 {
     ASSERT(map_bounds(_center));
-    used_los.reset(new los_glob(_center, _los));
-    los = used_los.get();
-    advance(true);
-}
-
-void radius_iterator::advance(bool may_stay)
-{
-    if (!may_stay)
-        ++iter;
-    while (iter && !is_valid_square(*iter))
-        ++iter;
-    current = *iter;
+    switch(ctype)
+    {
+    case C_CIRCLE: credit_y = r; break;
+    case C_POINTY: credit_y = r * r; break;
+    case C_ROUND:  credit_y = r * r + 1; break;
+    }
+    ++(*this);
+    if (_exclude_center)
+        ++(*this);
 }
 
 radius_iterator::operator bool() const
 {
-    return iter;
+    return state;
 }
 
 coord_def radius_iterator::operator *() const
@@ -253,18 +259,55 @@ const coord_def* radius_iterator::operator->() const
     return &current;
 }
 
-bool radius_iterator::is_valid_square(const coord_def &p) const
-{
-    if (exclude_center && p == circle.get_center())
-        return false;
-    if (los && !los->see_cell(p))
-        return false;
-    return true;
-}
+#define coreturn(id) { state = id; return; case id:; }
+#define cobegin(id)  switch(state) { case id:
+#define coend(id)    coreturn(id); }
+#define ret_coord(dx, dy, id) do                                \
+    {                                                           \
+        current.x = center.x + (dx);                            \
+        current.y = center.y + (dy);                            \
+        if (!los || cell_see_cell(center, current, los))        \
+            coreturn(id);                                       \
+    } while (0)
 
 void radius_iterator::operator++()
 {
-    advance(false);
+    cobegin(RI_START);
+
+    y = 0;
+    cost_y = -1;
+
+    do
+    {
+        x = 0;
+        cost_x = -1;
+        credit_x = credit_y;
+
+        do
+        {
+            if (x + center.x < GXM)
+            {
+                if (y + center.y < GYM)
+                    ret_coord( x,  y, RI_SE);
+                if (y && y < center.y)
+                    ret_coord( x, -y, RI_NE);
+            }
+            if (x && x < center.x)
+            {
+                if (y + center.y < GYM)
+                    ret_coord(-x,  y, RI_SW);
+                if (y && y < center.y)
+                    ret_coord(-x, -y, RI_NW);
+            }
+            x++;
+            credit_x -= (cost_x += 2);
+        } while (credit_x >= 0);
+
+        y++;
+        credit_y -= (cost_y += 2);
+    } while (credit_y >= 0);
+
+    coend(RI_DONE);
 }
 
 void radius_iterator::operator++(int dummy)
