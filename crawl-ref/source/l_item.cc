@@ -864,6 +864,18 @@ IDEF(ego_type)
     return 1;
 }
 
+IDEF(ego_type_terse)
+{
+    if (CLua::get_vm(ls).managed_vm && !item_ident(*item, ISFLAG_KNOW_TYPE))
+    {
+        lua_pushstring(ls, "unknown");
+        return 1;
+    }
+
+    lua_pushstring(ls, ego_type_string(*item, true).c_str());
+    return 1;
+}
+
 IDEF(artefact_name)
 {
     ASSERT_DLUA;
@@ -1140,6 +1152,7 @@ static ItemAccessor item_attrs[] =
     { "base_type",         l_item_base_type },
     { "sub_type",          l_item_sub_type },
     { "ego_type",          l_item_ego_type },
+    { "ego_type_terse",    l_item_ego_type_terse },
     { "artefact_name",     l_item_artefact_name },
     { "is_cursed",         l_item_is_cursed },
 };

@@ -1212,25 +1212,29 @@ string sub_type_string(const item_def &item, bool known)
     }
 }
 
-string ego_type_string(const item_def &item)
+string ego_type_string(const item_def &item, bool terse)
 {
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        return armour_ego_name(item, false);
+        return armour_ego_name(item, terse);
     case OBJ_WEAPONS:
-        // this is specialcased out of weapon_brand_name
-        // ("vampiric hand axe", etc)
-        if (get_weapon_brand(item) == SPWPN_VAMPIRICISM)
-            return "vampiricism";
-        else if (get_weapon_brand(item) == SPWPN_ANTIMAGIC)
-            return "anti-magic";
-        else if (get_weapon_brand(item) != SPWPN_NORMAL)
-            return string(weapon_brand_name(item, false)).substr(4);
+        if (!terse)
+        {
+            // this is specialcased out of weapon_brand_name
+            // ("vampiric hand axe", etc)
+            if (get_weapon_brand(item) == SPWPN_VAMPIRICISM)
+                return "vampiricism";
+            else if (get_weapon_brand(item) == SPWPN_ANTIMAGIC)
+                return "anti-magic";
+        }
+        if (get_weapon_brand(item) != SPWPN_NORMAL)
+            return string(weapon_brand_name(item, terse)).substr(terse ? 0 : 4);
         else
             return "";
     case OBJ_MISSILES:
-        return _missile_brand_name(get_ammo_brand(item), MBN_BRAND);
+        return _missile_brand_name(get_ammo_brand(item),
+            terse ? MBN_TERSE : MBN_BRAND);
     default:
         return "";
     }
