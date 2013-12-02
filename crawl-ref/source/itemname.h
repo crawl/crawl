@@ -137,5 +137,5 @@ string base_type_string(const item_def &item, bool known = true);
 
 string sub_type_string(const item_def &item, bool known = true);
 
-string ego_type_string(const item_def &item);
+string ego_type_string(const item_def &item, bool terse = false);
 #endif
