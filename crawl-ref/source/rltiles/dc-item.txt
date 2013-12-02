@@ -858,6 +858,7 @@ i-r-magic RING_PROTECTION_FROM_MAGIC
 i-fire RING_FIRE
 i-ice RING_ICE
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
+i-dex RING_JIYVA
 %rim 1
 
 ###amulets
