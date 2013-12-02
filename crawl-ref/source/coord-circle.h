@@ -27,7 +27,6 @@ public:
 #define RECT_MAP_BOUNDS (rect_def(coord_def(X_BOUND_1, Y_BOUND_1), \
                                   coord_def(X_BOUND_2, Y_BOUND_2)))
 
-class circle_iterator;
 /*
  * Circles of different shapes; see circle_type for these.
  *
@@ -62,8 +61,6 @@ public:
     bool contains(const coord_def &p) const PURE;
     const rect_def& get_bbox() const PURE;
     const coord_def& get_center() const PURE;
-
-    circle_iterator iter() const;
 
 private:
     void init(int param, circle_type ctype);

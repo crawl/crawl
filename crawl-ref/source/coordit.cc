@@ -155,41 +155,9 @@ void random_rectangle_iterator::operator++(int dummy)
     ++(*this);
 }
 
-
 /*
- *  circle iterator
+ *  radius iterator
  */
-
-circle_iterator::circle_iterator(const circle_def &circle_)
-    : circle(circle_), iter(circle_.get_bbox().iter())
-{
-    while (iter && !circle.contains(*iter))
-        ++iter;
-}
-
-circle_iterator::operator bool() const
-{
-    return iter;
-}
-
-coord_def circle_iterator::operator*() const
-{
-    return *iter;
-}
-
-void circle_iterator::operator++()
-{
-    do
-        ++iter;
-    while (iter && !circle.contains(*iter));
-}
-
-void circle_iterator::operator++(int)
-{
-    ++(*this);
-}
-
-
 radius_iterator::radius_iterator(const coord_def _center, int r,
                                  circle_type ctype,
                                  bool _exclude_center)

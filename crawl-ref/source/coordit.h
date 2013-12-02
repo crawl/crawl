@@ -48,21 +48,6 @@ private:
     int current;
 };
 
-class circle_iterator
-{
-    const circle_def &circle;
-    rectangle_iterator iter;
-
-public:
-    circle_iterator(const circle_def &circle_);
-
-    operator bool() const PURE;
-    coord_def operator *() const PURE;
-
-    void operator ++ ();
-    void operator ++ (int);
-};
-
 /**
  * @class radius_iterator
  * Iterator over coordinates in a circular region.
