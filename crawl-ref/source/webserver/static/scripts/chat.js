@@ -50,6 +50,7 @@ define(["jquery", "comm"], function ($, comm) {
                     text: content
                 });
                 $("#chat_input").val("");
+                $('#chat_history_container').scrollTop($('#chat_history_container')[0].scrollHeight);
             }
             return false;
         }
@@ -71,6 +72,7 @@ define(["jquery", "comm"], function ($, comm) {
             new_message_count = 0;
             update_message_count();
             $("#message_count").html("(Esc: back to game)");
+            $('#chat_history_container').scrollTop($('#chat_history_container')[0].scrollHeight);
         }
         else
         {
