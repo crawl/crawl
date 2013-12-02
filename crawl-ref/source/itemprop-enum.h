@@ -182,7 +182,7 @@ enum jewellery_type
                                        //   with amulets!
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
-    RING_JIYVA,
+    // Currently none.
 
     AMU_RAGE = 35,
     AMU_FIRST_AMULET = AMU_RAGE,

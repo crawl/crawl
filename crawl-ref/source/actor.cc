@@ -330,8 +330,7 @@ bool actor::no_cast(bool calc_unid, bool items) const
 
 bool actor::rmut_from_item(bool calc_unid) const
 {
-    return wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid)
-      || (!jiyva_is_dead() && wearing(EQ_RINGS, RING_JIYVA));
+    return wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid);
 }
 
 bool actor::evokable_berserk(bool calc_unid) const
