@@ -34,7 +34,6 @@ int place_ring(vector<coord_def>& ring_points,
                int arc_occupancy,
                int& seen_count);
 
-class los_base;
 // Collect lists of points that are within LOS, unoccupied, and not solid
 // (walls/statues).
 void collect_radius_points(vector<vector<coord_def> > &radius_points,
