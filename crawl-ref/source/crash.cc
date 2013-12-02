@@ -393,6 +393,7 @@ void call_gdb(FILE *file)
                 "gdb",
                 "-p", pid,
                 "-batch",
+                "-iex", "show version",
                 "-ex", "bt full",
                 0
             };
