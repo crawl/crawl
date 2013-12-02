@@ -3,6 +3,7 @@
 
 #include "actor.h"
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "attack.h"
 #include "coord.h"
@@ -330,7 +331,8 @@ bool actor::no_cast(bool calc_unid, bool items) const
 
 bool actor::rmut_from_item(bool calc_unid) const
 {
-    return wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid);
+    return wearing(EQ_AMULET, AMU_RESIST_MUTATION, calc_unid)
+      || player_equip_unrand(UNRAND_JIYVA) && !jiyva_is_dead();
 }
 
 bool actor::evokable_berserk(bool calc_unid) const

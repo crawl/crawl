@@ -1119,6 +1119,13 @@ PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -20
 
+NAME:    slimy ring of Jiyva
+OBJ:     OBJ_JEWELLERY/RING_PROTECTION_FROM_MAGIC
+INSCRIP: rMut
+COLOUR:  ETC_SLIME
+TILE:    urand_jiyva
+BOOL:    mutate
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn
