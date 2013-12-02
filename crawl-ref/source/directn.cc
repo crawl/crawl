@@ -1617,7 +1617,7 @@ void direction_chooser::toggle_beam()
     if (show_beam)
     {
         have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid_see, BDS_DEFAULT);
+                             opc_solid_see, you.current_vision);
     }
 }
 
@@ -1694,7 +1694,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_CYCLE_BEAM:
         show_beam = true;
         have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid_see, BDS_DEFAULT, show_beam);
+                             opc_solid_see, you.current_vision, show_beam);
         need_beam_redraw = true;
         return;
 
@@ -2018,7 +2018,7 @@ bool direction_chooser::do_main_loop()
     if (old_target != target())
     {
         have_beam = show_beam && find_ray(you.pos(), target(), beam,
-                                          opc_solid_see, BDS_DEFAULT);
+                                          opc_solid_see, you.current_vision);
         need_text_redraw   = true;
         need_beam_redraw   = true;
         need_cursor_redraw = true;
@@ -2077,7 +2077,7 @@ bool direction_chooser::choose_direction()
     if (show_beam)
     {
         have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid_see, BDS_DEFAULT);
+                             opc_solid_see, you.current_vision);
         need_beam_redraw = have_beam;
     }
     if (hitfunc)
