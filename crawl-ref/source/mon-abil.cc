@@ -3307,7 +3307,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     spell_type spell = SPELL_NO_SPELL;
 
-    circle_def c;
     switch (mclass)
     {
     case MONS_UGLY_THING:
@@ -4206,7 +4205,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                  && coinflip())
         {
             int briar_count = 0;
-            c = circle_def(mons->pos(), 4, C_ROUND);
             for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
             {
                 if (mi->type == MONS_BRIAR_PATCH
