@@ -61,12 +61,6 @@
 #include "env.h"
 #include "terrain.h"
 
-// This determines which cells are considered out of range during
-// precalculations (only positive quadrant used).
-// For the LOS code to work correctly, any LOS shape that
-// is used needs to be contained in bds_precalc.
-static const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
-
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.
 // XXX: Argue that these values are sufficient.
@@ -173,7 +167,7 @@ struct los_ray : public ray_def
                 break;
             }
             c = copy.pos();
-            if (!bds_precalc.contains(c))
+            if (c.abs() > LOS_RADIUS_SQ)
                 break;
             cs.push_back(c);
             ASSERT((c - old).rdist() == 1);
@@ -562,7 +556,7 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
     if (!bds.contains(target))
         return false;
 
-    ASSERT(bds_precalc.contains(target));
+    ASSERT(target.abs() <= LOS_RADIUS_SQ);
 
     // Ensure the precalculations have been done.
     raycast();
