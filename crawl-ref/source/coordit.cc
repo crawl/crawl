@@ -257,14 +257,14 @@ void radius_iterator::operator++()
             {
                 if (y + center.y < GYM)
                     ret_coord( x,  y, RI_SE);
-                if (y && y < center.y)
+                if (y && y <= center.y)
                     ret_coord( x, -y, RI_NE);
             }
-            if (x && x < center.x)
+            if (x && x <= center.x)
             {
                 if (y + center.y < GYM)
                     ret_coord(-x,  y, RI_SW);
-                if (y && y < center.y)
+                if (y && y <= center.y)
                     ret_coord(-x, -y, RI_NW);
             }
             x++;
