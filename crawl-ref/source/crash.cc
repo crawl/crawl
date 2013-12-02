@@ -391,11 +391,9 @@ void call_gdb(FILE *file)
             const char* argv[] =
             {
                 "gdb",
-                "-p",
-                pid,
+                "-p", pid,
                 "-batch",
-                "-ex",
-                "bt full",
+                "-ex", "bt full",
                 0
             };
             execv("/usr/bin/gdb", (char* const*)argv);
