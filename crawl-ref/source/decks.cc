@@ -3068,14 +3068,14 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_FAMINE:
-        if (you.is_undead == US_UNDEAD)
+        if (you_foodless())
             mpr("You feel rather smug.");
         else
             set_hunger(min(you.hunger, HUNGER_STARVING / 2), true);
         break;
 
     case CARD_FEAST:
-        if (you.is_undead == US_UNDEAD)
+        if (you_foodless())
             mpr("You feel a horrible emptiness.");
         else
             set_hunger(HUNGER_MAXIMUM, true);

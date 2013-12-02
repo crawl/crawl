@@ -786,7 +786,7 @@ void handle_delay()
                     if (delay.parm2 >= 100)
                     {
                         mprf(MSGCH_ROTTEN_MEAT, "The corpse rots.");
-                        if (you.is_undead != US_UNDEAD
+                        if (!you_foodless()
                             && player_mutation_level(MUT_SAPROVOROUS) < 3)
                         {
                             _xom_check_corpse_waste();
