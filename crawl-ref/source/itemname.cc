@@ -1382,15 +1382,19 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         }
         buff << item_base_name(*this);
 
-        if (know_brand && get_weapon_brand(*this) != SPWPN_NORMAL)
+        if (know_brand)
         {
-            if (!terse)
-                buff << " of ";
-            else
-                buff << " (";
-            buff << weapon_brand_name(*this, terse);
-            if (terse)
-                buff << ")";
+            string brand = weapon_brand_name(*this, terse);
+            if (!brand.empty())
+            {
+                if (!terse)
+                    buff << " of ";
+                else
+                    buff << " (";
+                buff << brand;
+                if (terse)
+                    buff << ")";
+            }
         }
 
         if (know_curse && cursed() && terse)
