@@ -952,7 +952,7 @@ NAME:    slimy ring of Jiyva
 OBJ:     OBJ_JEWELLERY/RING_JIYVA
 COLOUR:  ETC_SLIME
 TILE:    urand_jiyva
-MAGIC:   20
+MAGIC:   40
 BOOL:    mutate
 
 NAME:     brooch of Shielding
