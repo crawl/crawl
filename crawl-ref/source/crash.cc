@@ -374,8 +374,8 @@ void call_gdb(FILE *file)
     fprintf(file, "Trying to run gdb.\n");
     fflush(file); // so we can use fileno()
 
-    char pid[12] = {};
-    snprintf(pid, sizeof(pid), "%d", getpid());
+    char attach_cmd[20] = {};
+    snprintf(attach_cmd, sizeof(attach_cmd), "attach %d", getpid());
 
     switch (int gdb = fork())
     {
@@ -391,9 +391,9 @@ void call_gdb(FILE *file)
             const char* argv[] =
             {
                 "gdb",
-                "-p", pid,
                 "-batch",
-                "-iex", "show version",
+                "-ex", "show version", // Too bad -iex needs gdb >=7.5 (jessie)
+                "-ex", attach_cmd,
                 "-ex", "bt full",
                 0
             };
