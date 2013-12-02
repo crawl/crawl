@@ -547,13 +547,12 @@ void cellray::calc_params()
 // opc has been translated for this quadrant.
 // XXX: Allow finding ray of minimum opacity.
 static bool _find_ray_se(const coord_def& target, ray_def& ray,
-                  const opacity_func& opc, const circle_def& bds,
-                  bool cycle)
+                  const opacity_func& opc, int range, bool cycle)
 {
     ASSERT(target.x >= 0);
     ASSERT(target.y >= 0);
     ASSERT(!target.origin());
-    if (!bds.contains(target))
+    if (target.abs() > range * range + 1)
         return false;
 
     ASSERT(target.abs() <= LOS_RADIUS_SQ);
@@ -625,7 +624,7 @@ struct opacity_trans : public opacity_func
 // assume that ray is appropriately filled in, and look for the next
 // ray. We only ever use ray.cycle_idx.
 bool find_ray(const coord_def& source, const coord_def& target,
-              ray_def& ray, const opacity_func& opc, const circle_def &bds,
+              ray_def& ray, const opacity_func& opc, int range,
               bool cycle)
 {
     if (target == source || !map_bounds(source) || !map_bounds(target))
@@ -638,7 +637,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     const coord_def abs = coord_def(absx, absy);
     opacity_trans opc_trans = opacity_trans(opc, source, signx, signy);
 
-    if (!_find_ray_se(abs, ray, opc_trans, bds, cycle))
+    if (!_find_ray_se(abs, ray, opc_trans, range, cycle))
         return false;
 
     if (signx < 0)
@@ -655,10 +654,10 @@ bool find_ray(const coord_def& source, const coord_def& target,
 }
 
 bool exists_ray(const coord_def& source, const coord_def& target,
-                const opacity_func& opc, const circle_def &bds)
+                const opacity_func& opc, int range)
 {
     ray_def ray;
-    return find_ray(source, target, ray, opc, bds);
+    return find_ray(source, target, ray, opc, range);
 }
 
 // Assuming that target is in view of source, but line of
