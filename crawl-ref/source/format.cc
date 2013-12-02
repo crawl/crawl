@@ -136,7 +136,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             continue;
         }
 
-        if (s[tag] != '<' || tag >= length - 2)
+        if (s[tag] != '<' || tag >= length - 1)
         {
             if (!masked)
                 currs += s[tag];
