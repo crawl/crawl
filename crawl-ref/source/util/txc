@@ -4,7 +4,7 @@
 import os, re, sys, codecs, difflib
 from optparse import OptionParser
 from subprocess import Popen, PIPE, call
-from textwrap import TextWrapper
+from textwrap import TextWrapper, _whitespace
 from collections import defaultdict, OrderedDict, Counter
 from platform import system
 from unicodedata import east_asian_width
@@ -26,6 +26,8 @@ parser.add_option("-s", "--source", help="Work on source files (same as -l en)",
                   action="store_true")
 parser.add_option("-t", "--translations", help="Work on translations",
                   action="store_true")
+parser.add_option("-a", "--auto_fix", action="store_true",
+                  help="Apply some automatic fixes to punctuation")
 
 (options, args) = parser.parse_args()
 cmd = args[0] if args else ''
@@ -208,6 +210,18 @@ def change_counter(c):
 
 def wide_char(c):
     return east_asian_width(c) in 'WFA'
+
+def auto_fix(s, lang):
+    """lang is unused for now, but I might add support for replacing ASCII
+    quotes by language specific unicode quotes"""
+    s = auto_fix.re_hyphen.sub(u"\\1—\\2", s)
+    s = auto_fix.re_ns.sub(u" \\1", s)
+    s = auto_fix.re_ns2.sub(u"« ", s)
+    return s
+
+auto_fix.re_hyphen = re.compile("(\s)[-–](\s)") # Replace hyphens by em dashes
+auto_fix.re_ns = re.compile("\s([!?:;»])")
+auto_fix.re_ns2 = re.compile(u"«\s")
 
 """Subclasses to properly handle wrapping fullwidth unicode character which take
 2 columns to be displayed on a terminal
@@ -662,10 +676,18 @@ class TxtFile(ResourceFile):
                 value += ":%s\n" % tag
             else:
                 value += ":%s %s\n" % (tag, tag_value)
-        if entry['nowrap']:
-            value += entry.value
+
+
+        if options.auto_fix:
+            raw_value = auto_fix(entry.value, self.lang())
         else:
-            value += wrap(entry.value, self.eac, self.no_space)
+            raw_value = entry.value
+
+        if entry['nowrap']:
+            value += raw_value
+        else:
+            value += wrap(raw_value, self.eac, self.no_space)
+
         value += "\n"
         ResourceFile.__setitem__(self, key, value)
 
@@ -1218,6 +1240,9 @@ class Menu(OrderedDict):
             self.show_menu()
 
 wrapper = TextWrapper(width = 79, break_on_hyphens = False)
+# Use hardcoded whitespaces instead of \s because the latter matches
+# non-breaking spaces (see textwrap.py:30).
+wrapper.wordsep_simple_re_uni = re.compile(r'([%s]+)' % _whitespace)
 FWwrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False)
 FW_NS_wrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False,
                                      no_space = True)
