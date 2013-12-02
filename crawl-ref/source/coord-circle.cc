@@ -92,11 +92,6 @@ const coord_def& circle_def::get_center() const
     return origin;
 }
 
-circle_iterator circle_def::iter() const
-{
-    return circle_iterator(*this);
-}
-
 bool circle_def::contains(const coord_def &p) const
 {
     if (!bbox.contains(p))
