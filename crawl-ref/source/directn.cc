@@ -2892,7 +2892,7 @@ void describe_floor()
         return;
 
     mprf(channel, "%s%s here.", prefix, feat.c_str());
-    if (grid == DNGN_ENTER_LABYRINTH && you.is_undead != US_UNDEAD)
+    if (grid == DNGN_ENTER_LABYRINTH && !you_foodless())
         mprf(MSGCH_EXAMINE, "Beware, for starvation awaits!");
 }
 
