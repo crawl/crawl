@@ -1389,7 +1389,7 @@ void _end_game(scorefile_entry &se)
         more();
 
     if (!crawl_state.disables[DIS_CONFIRMATIONS])
-        browse_inventory();
+        get_invent(OSEL_ANY);
     textcolor(LIGHTGREY);
 
     // Prompt for saving macros.

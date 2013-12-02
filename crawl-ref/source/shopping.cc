@@ -876,7 +876,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             viewing = !viewing;
         }
         else if (key == '?')
-            browse_inventory();
+            get_invent(OSEL_ANY, false);
         else if (key == '$')
         {
             if (viewing || (num_selected == 0 && num_in_list == 0))
