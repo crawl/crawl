@@ -1668,6 +1668,8 @@ static bool maybe_abort_ignite()
 
     string prompt = "You are standing ";
 
+    // XXX XXX XXX major code duplication (ChrisOelmueller)
+
     const int i = env.cgrid(you.pos());
     if (i != EMPTY_CLOUD)
     {
