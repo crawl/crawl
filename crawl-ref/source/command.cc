@@ -739,8 +739,8 @@ static help_file help_files[] =
 
 static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monster* a = static_cast<monster* >(entry_a->data);
-    monster* b = static_cast<monster* >(entry_b->data);
+    monster_info* a = static_cast<monster_info* >(entry_a->data);
+    monster_info* b = static_cast<monster_info* >(entry_b->data);
 
     if (a->type == b->type)
         return false;
@@ -754,8 +754,8 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
 // levels are equal, or by name if both level and hitdice are equal.
 static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {
-    monster* a = static_cast<monster* >(entry_a->data);
-    monster* b = static_cast<monster* >(entry_b->data);
+    monster_info* a = static_cast<monster_info* >(entry_a->data);
+    monster_info* b = static_cast<monster_info* >(entry_b->data);
 
     if (a->type == b->type)
         return false;
