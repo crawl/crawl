@@ -1,8 +1,11 @@
 define(["jquery", "comm", "client", "./util", "./settings"],
 function ($, comm, client, util, settings) {
+    var HISTORY_SIZE = 10;
+
     var messages = [];
     var more = false;
     var old_scroll_top;
+    var histories = {};
 
     function hide()
     {
@@ -117,6 +120,8 @@ function ($, comm, client, util, settings) {
 
         var prompt = $("#messages .game_message").last();
         var input = $("<input class='text' type='text'>");
+        var history;
+        var historyPosition;
 
         if ("maxlen" in msg)
             input.attr("maxlength", msg.maxlen)
@@ -124,11 +129,27 @@ function ($, comm, client, util, settings) {
             input.attr("size", msg.size)
         if ("prefill" in msg)
             input.val(msg.prefill)
+        if ("historyId" in msg)
+        {
+            if (!histories[msg.historyId])
+                histories[msg.historyId] = [];
+            history = histories[msg.historyId];
+            historyPosition = history.length;
+        }
 
         prompt.append(input);
         input.focus();
 
         function send_input_line(finalChar) {
+            if (history)
+            {
+                if (history.indexOf(input.val()) != -1)
+                    history.splice(history.indexOf(input.val()), 1);
+                history.push(input.val());
+                if (history.length > HISTORY_SIZE)
+                    history.shift();
+            }
+
             var text = input.val() + String.fromCharCode(finalChar);
             // ctrl-u to wipe any pre-fill
             if (msg.tag !== "repeat")
@@ -149,6 +170,15 @@ function ($, comm, client, util, settings) {
                 send_input_line(13);
                 ev.preventDefault();
                 return false;
+            }
+            else if (history && history.length > 0 && (ev.which == 38 || ev.which == 40))
+            {
+                historyPosition += ev.which == 38 ? -1 : 1;
+                if (historyPosition < 0)
+                    historyPosition = history.length - 1;
+                if (historyPosition >= history.length)
+                    historyPosition = 0;
+                input.val(history[historyPosition]);
             }
         });
         input.keypress(function (ev) {

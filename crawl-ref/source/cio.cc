@@ -327,6 +327,8 @@ int line_reader::read_line(bool clear_previous)
         tiles.json_write_string("msg", "get_line");
         if (!tag.empty())
             tiles.json_write_string("tag", tag);
+        if (history)
+            tiles.json_write_string("historyId", make_stringf("%p", history));
         tiles.json_write_string("prefill", buffer);
         tiles.json_write_int("maxlen", (int) bufsz - 1);
         tiles.json_write_int("size", (int) min(bufsz - 1, strlen(buffer) + 15));
