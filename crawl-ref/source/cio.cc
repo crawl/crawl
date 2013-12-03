@@ -163,7 +163,8 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
 }
 
 int cancellable_get_line(char *buf, int len, input_history *mh,
-                        int (*keyproc)(int &ch), const string &fill)
+                        int (*keyproc)(int &ch), const string &fill,
+                        const string &tag)
 {
     flush_prev_message();
 
@@ -171,6 +172,9 @@ int cancellable_get_line(char *buf, int len, input_history *mh,
     line_reader reader(buf, len, get_number_of_cols());
     reader.set_input_history(mh);
     reader.set_keyproc(keyproc);
+#ifdef USE_TILE_WEB
+    reader.set_tag(tag);
+#endif
 
     return reader.read_line(fill);
 }

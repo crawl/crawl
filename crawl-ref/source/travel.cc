@@ -2434,7 +2434,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
         char buf[100];
         const int response =
-            cancellable_get_line(buf, sizeof buf, NULL, _travel_depth_keyfilter);
+            cancellable_get_line(buf, sizeof buf, NULL, _travel_depth_keyfilter, "", "travel_depth");
 
         if (!response)
             return _parse_travel_target(buf, target);
