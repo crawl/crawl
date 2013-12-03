@@ -139,7 +139,7 @@ void player::update_fearmongers()
         {
             fearmongers.erase(fearmongers.begin() + i);
             removed = true;
-            
+
             // If that was the last one, clear the duration before
             // printing any subsequent messages, or a --more-- can
             // crash (#6547).
