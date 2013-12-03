@@ -57,7 +57,8 @@ int cancellable_get_line(char *buf,
                          int len,
                          input_history *mh = NULL,
                          int (*keyproc)(int &c) = NULL,
-                         const string &fill = "");
+                         const string &fill = "",
+                         const string &tag = "");
 
 // Do not use this templated function directly.  Use the macro below instead.
 template<int> static int cancellable_get_line_autohist_temp(char *buf, int len)

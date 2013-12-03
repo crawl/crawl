@@ -163,8 +163,18 @@ function ($, comm, client, util, settings) {
             else if (msg.tag == "repeat")
             {
                 var ch = String.fromCharCode(ev.which);
-                console.log(ch);
-                if (ch != "" && !/^\d$/.test(ch)) {
+                if (ch != "" && !/^\d$/.test(ch))
+                {
+                    send_input_line(ev.which);
+                    ev.preventDefault();
+                    return false;
+                }
+            }
+            else if (msg.tag == "travel_depth")
+            {
+                var ch = String.fromCharCode(ev.which);
+                if ("<>?$^-p".indexOf(ch) != -1)
+                {
                     send_input_line(ev.which);
                     ev.preventDefault();
                     return false;
