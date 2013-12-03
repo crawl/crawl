@@ -153,7 +153,7 @@ function ($, comm, client, util, settings) {
         input.keypress(function (ev) {
             if (msg.tag == "stash_search")
             {
-                if (String.fromCharCode(ev.which) == "?")
+                if (String.fromCharCode(ev.which) == "?" && input.val().length === 0)
                 {
                     ev.preventDefault();
                     comm.send_message("key", { keycode: ev.which });
