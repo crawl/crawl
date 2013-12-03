@@ -184,6 +184,17 @@ function ($, comm, client, util, settings) {
         });
     }
 
+    function messages_key_handler()
+    {
+        var input = $("#messages .game_message input");
+
+        if (!input.is(":visible"))
+            return true;
+
+        input.focus();
+        return false;
+    }
+
     function abort_get_line()
     {
         var input = $("#messages .game_message input");
@@ -219,6 +230,9 @@ function ($, comm, client, util, settings) {
         .on("game_init.messages", function () {
             messages = [];
             more = false;
+            $(document).off("game_keydown.messages game_keypress.messages")
+                .on("game_keydown.messages", messages_key_handler)
+                .on("game_keypress.messages", messages_key_handler);
         });
 
     return {
