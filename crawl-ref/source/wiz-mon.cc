@@ -528,6 +528,16 @@ void wizard_spawn_control()
         canned_msg(MSG_OK);
 }
 
+static const char* ht_names[] =
+{
+    "land",
+    "amphibious",
+    "water",
+    "lava",
+    "rock",
+    "incorporeal",
+};
+
 // Prints a number of useful (for debugging, that is) stats on monsters.
 void debug_stethoscope(int mon)
 {
@@ -609,16 +619,11 @@ void debug_stethoscope(int mon)
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);
 
+    COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s",
-         ((hab == HT_LAND)                       ? "land" :
-          (hab == HT_AMPHIBIOUS)                 ? "amphibious" :
-          (hab == HT_WATER)                      ? "water" :
-          (hab == HT_LAVA)                       ? "lava" :
-          (hab == HT_ROCK)                       ? "rock" :
-          (hab == HT_INCORPOREAL)                ? "incorporeal"
-                                                 : "unknown"),
+         (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
          (mons.asleep()                  ? "sleep" :
           mons_is_wandering(&mons)       ? "wander" :
           mons_is_seeking(&mons)         ? "seek" :
