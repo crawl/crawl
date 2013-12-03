@@ -1271,7 +1271,6 @@ static void _input()
     {
         end_searing_ray();
         handle_delay();
-        pop_delayed_more();
 
         // Some delays reset you.time_taken.
         if (you.time_taken || you.turn_is_over)
@@ -2168,7 +2167,6 @@ static void _prep_input()
 
     set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
     print_stats();
-    pop_delayed_more();
 
     viewwindow();
     maybe_update_stashes();

@@ -564,12 +564,6 @@ public:
      */
     void more(bool full, bool user=false)
     {
-        if (crawl_state.loading_level)
-        {
-            crawl_state.delayed_more = true;
-            return;
-        }
-
         if (_pre_more())
             return;
 
@@ -1564,15 +1558,6 @@ void more(bool user_forced)
     flush_prev_message();
     msgwin.more(false, user_forced);
     mesclr();
-}
-
-void pop_delayed_more()
-{
-    if (!crawl_state.delayed_more)
-        return;
-    ASSERT(!crawl_state.loading_level);
-    crawl_state.delayed_more = false;
-    more();
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
