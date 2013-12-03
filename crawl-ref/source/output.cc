@@ -1698,6 +1698,8 @@ static const char *s_equip_slot_names[] =
 
 const char *equip_slot_to_name(int equip)
 {
+    COMPILE_CHECK(ARRAYSZ(s_equip_slot_names) == NUM_EQUIP);
+
     if (equip == EQ_RINGS
         || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
         || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT
