@@ -391,7 +391,6 @@ int place_monster_corpse(const monster* mons, bool silent,
         return -1;
 
     // Don't attempt to place corpses within walls, either.
-    // Currently, this only applies to (shapeshifter) dryads.
     if (feat_is_wall(grd(mons->pos())))
         return -1;
 

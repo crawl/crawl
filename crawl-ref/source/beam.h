@@ -217,7 +217,6 @@ private:
     bool is_superhot() const;
     bool can_affect_wall(dungeon_feature_type feat) const;
     bool can_affect_wall_actor(const actor *act) const;
-    bool actor_wall_shielded(const actor *act) const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool stop_at_target() const;
     bool has_saving_throw() const;

@@ -281,21 +281,6 @@ bool melee_attack::handle_phase_attempted()
             cancel_attack = true;
             return false;
         }
-
-        if (cell_is_solid(defender->pos())
-                 && mons_wall_shielded(defender->as_monster())
-                 && you.can_see(defender)
-                 && !you.confused()
-                 && !crawl_state.game_is_zotdef())
-        {
-            // Don't waste a turn hitting a dryad when you know it
-            // will do nothing.
-            mprf("The %s protects %s from harm.",
-                 raw_feature_description(defender->pos()).c_str(),
-                 defender->name(DESC_THE).c_str());
-            cancel_attack = true;
-            return false;
-        }
     }
 
     if (attacker->is_player())
@@ -412,48 +397,6 @@ bool melee_attack::handle_phase_attempted()
     {
         mprf("You attempt to attack %s, but flinch away in fear!",
              defender->name(DESC_THE).c_str());
-        return false;
-    }
-
-    // Defending monster protects itself from attacks using the wall
-    // it's in. Zotdef: allow a 5% chance of a hit anyway
-    if (defender->is_monster() && cell_is_solid(defender->pos())
-        && mons_wall_shielded(defender->as_monster())
-        && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
-    {
-        string feat_name = raw_feature_description(defender->pos());
-
-        if (attacker->is_player())
-        {
-            if (you.can_see(defender))
-            {
-                mprf("The %s protects %s from harm.",
-                     feat_name.c_str(),
-                     defender->name(DESC_THE).c_str());
-            }
-            else
-                mprf("You hit the %s.", feat_name.c_str());
-        }
-        else
-        {
-            if (!mons_near(defender->as_monster()))
-            {
-                simple_monster_message(attacker->as_monster(),
-                                       " hits something.");
-            }
-            else if (you.can_see(attacker))
-            {
-                mprf("%s tries to hit %s, but is blocked by the %s.",
-                     attacker->name(DESC_THE).c_str(),
-                     defender->name(DESC_THE).c_str(),
-                     feat_name.c_str());
-            }
-        }
-
-        // Give chaos weapon a chance to affect the attacker
-        if (damage_brand == SPWPN_CHAOS)
-            chaos_affects_attacker();
-
         return false;
     }
 
@@ -5235,7 +5178,6 @@ void melee_attack::do_minotaur_retaliation()
     if (defender->cannot_act()
         || defender->confused()
         || !attacker->alive()
-        || attacker->is_monster() && mons_wall_shielded(attacker->as_monster())
         || defender->is_player() && you.duration[DUR_LIFESAVING])
     {
         return;
