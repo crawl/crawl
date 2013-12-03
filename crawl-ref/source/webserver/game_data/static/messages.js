@@ -134,6 +134,7 @@ function ($, comm, client, util, settings) {
             if (msg.tag !== "repeat")
                 comm.send_message("key", { keycode: 21 });
             comm.send_message("input", { text: text });
+            abort_get_line();
         }
 
         input.keydown(function (ev) {
