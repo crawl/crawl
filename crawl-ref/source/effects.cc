@@ -993,8 +993,7 @@ void yell(bool force)
         mpr("                   r - Retreat!             s - Stop attacking.");
         mpr("                   w - Wait here.           f - Follow me.");
     }
-    mprf(" Anything else - Stay silent%s.",
-         one_chance_in(20) ? " (and be thought a fool)" : "");
+    mpr(" Anything else - Stay silent.");
 
     int keyn = get_ch();
     mesclr();
