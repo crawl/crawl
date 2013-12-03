@@ -33,7 +33,7 @@ You can move diagonally with the <input>number pad</input> (try Numlock on/off) 
 %%%%
 tutorial1 shiftmove
 
-A quicker way to 'run' through a corridor is to press <input>Shift</input>
+A quicker way to “run” through a corridor is to press <input>Shift</input>
 along with the <input>number pad</input> (try Numlock on/off) or <input>vi
 keys</input>.
 %%%%
@@ -493,7 +493,7 @@ tutorial3 exit
 ##############################################
 tutorial4 start
 
-In this lesson you're going to learn how to learn and cast spells.
+In this lesson you're going to learn how to memorize and cast spells.
 %%%%
 tutorial4 spellbook
 
