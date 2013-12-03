@@ -457,60 +457,11 @@ static void _set_mons_move_dir(const monster* mons,
     // Move the monster.
     *dir = delta->sgn();
 
-    if (mons_is_retreating(mons) && mons->travel_target != MTRAV_WALL
+    if (mons_is_retreating(mons)
         && (!mons->friendly() || mons->target != you.pos()))
     {
         *dir *= -1;
     }
-}
-
-static void _tweak_wall_mmov(const monster* mons, bool move_trees = false)
-{
-    // The dryad will try to move along through trees for as long as
-    // possible. If the player is walking through a corridor, for example,
-    // moving along in the wall beside him is much preferable to actually
-    // leaving the wall.
-    // This might cause the dryad to take detours but it still
-    // comes off as smarter than otherwise.
-
-    // If we're already moving into a shielded spot, don't adjust move
-    // (this leads to zig-zagging)
-    if (cell_is_solid(mons->pos() + mmov))
-        return;
-
-    int dir = _compass_idx(mmov);
-    ASSERT(dir != -1);
-
-
-    // If we're already adjacent to our target and shielded, don't shift position.
-    // If we're adjacent and unshielded, widen our search angle to include any
-    // spot adjacent to both us and our target
-    int range = 1;
-    if (mons->target == mons->pos() + mmov)
-    {
-        if (cell_is_solid(mons->pos()))
-            return;
-        else
-        {
-            if (dir % 2 == 1)
-                range = 2;
-        }
-    }
-
-    int count = 0;
-    int choice = dir; // stick with mmov if none are good
-    for (int i = -range; i <= range; ++i)
-    {
-        const int altdir = (dir + i + 8) % 8;
-        const coord_def t = mons->pos() + mon_compass[altdir];
-        const bool good = in_bounds(t)
-                          && (move_trees ? feat_is_tree(grd(t))
-                                         : feat_is_rock(grd(t))
-                                           && !feat_is_permarock(grd(t)));
-        if (good && one_chance_in(++count))
-            choice = altdir;
-    }
-    mmov = mon_compass[choice];
 }
 
 typedef FixedArray< bool, 3, 3 > move_array;
@@ -638,10 +589,6 @@ static void _handle_movement(monster* mons)
 
     move_array good_move;
     _fill_good_move(mons, &good_move);
-
-    // Make rock worms and dryads prefer shielded terrain.
-    if (mons_wall_shielded(mons))
-        _tweak_wall_mmov(mons, mons->type == MONS_DRYAD);
 
     // If the monster is moving in your direction, whether to attack or
     // protect you, or towards a monster it intends to attack, check

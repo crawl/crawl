@@ -362,16 +362,6 @@ void handle_behaviour(monster* mon)
     // Make sure monsters are not targetting the player in arena mode.
     ASSERT(!crawl_state.game_is_arena() || mon->foe != MHITYOU);
 
-    if (mons_wall_shielded(mon) && cell_is_solid(mon->pos()))
-    {
-        // Monster is safe, so its behaviour can be simplified to fleeing.
-        if (mon->behaviour == BEH_CORNERED || mon->behaviour == BEH_PANIC
-            || isScared)
-        {
-            mon->behaviour = BEH_FLEE;
-        }
-    }
-
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
@@ -988,8 +978,6 @@ void handle_behaviour(monster* mon)
                 if (mon->foe == MHITYOU)
                     mon->target = you.pos();
             }
-            else if (mons_wall_shielded(mon) && find_wall_target(mon))
-                ; // Wall target found.
             else if (proxFoe)
             {
                 // Special-cased below so that it will flee *from* the
@@ -1124,16 +1112,6 @@ void handle_behaviour(monster* mon)
             mon->foe_memory = 0;
 
         mon->foe = new_foe;
-    }
-
-    if (mon->travel_target == MTRAV_WALL && cell_is_solid(mon->pos()))
-    {
-        if (mon->behaviour == BEH_FLEE)
-        {
-            // Monster is safe, so stay put.
-            mon->target = mon->pos();
-            mon->foe = MHITNOT;
-        }
     }
 }
 

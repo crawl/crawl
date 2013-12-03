@@ -931,10 +931,14 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 
 spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 {
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_SPELL_FIZZLES);
+        return SPRET_ABORT;
+    }
+
     monster* mons = monster_at(beam.target);
-    if (!mons
-        || mons->submerged()
-        || (cell_is_solid(beam.target) && mons_wall_shielded(mons)))
+    if (!mons || mons->submerged())
     {
         fail_check();
         canned_msg(MSG_SPELL_FIZZLES);

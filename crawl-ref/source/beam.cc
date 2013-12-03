@@ -502,16 +502,9 @@ bool bolt::can_affect_actor(const actor *act) const
     return !act->submerged();
 }
 
-bool bolt::actor_wall_shielded(const actor *act) const
-{
-    return act->is_player()? false :
-           mons_wall_shielded(act->as_monster());
-}
-
 // Affect actor in wall unless it can shield itself using the wall.
 // The wall will always shield the actor if the beam bounces off the
-// wall, and a monster can't use a metal wall to shield itself from
-// electricity.
+// wall.
 bool bolt::can_affect_wall_actor(const actor *act) const
 {
     if (!can_affect_actor(act))
@@ -519,11 +512,6 @@ bool bolt::can_affect_wall_actor(const actor *act) const
 
     if (is_enchantment())
         return true;
-
-    const bool superconductor = (feat_is_metal(grd(act->pos()))
-                                 && flavour == BEAM_ELECTRICITY);
-    if (actor_wall_shielded(act) && !superconductor)
-        return false;
 
     if (!is_explosion && !is_big_cloud)
         return true;
