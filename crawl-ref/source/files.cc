@@ -1183,8 +1183,6 @@ static void _do_lost_items()
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
-    unwind_bool levelgen(crawl_state.loading_level, true);
-
     // Did we get here by popping the level stack?
     bool popped = false;
 
@@ -1468,10 +1466,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.time_taken = div_rand_round(you.time_taken * 2, 3);
 
         dprf("arrival time: %d", you.time_taken);
-    }
 
-    if (just_created_level)
-        run_map_epilogues();
+        if (just_created_level)
+            run_map_epilogues();
+    }
 
     // Save the created/updated level out to disk:
     if (make_changes)
