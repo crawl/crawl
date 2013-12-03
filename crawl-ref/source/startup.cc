@@ -308,6 +308,10 @@ static void _post_init(bool newc)
     }
 
     // This just puts the view up for the first turn.
+    you.redraw_title = true;
+    textcolor(LIGHTGREY);
+    set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
+    print_stats();
     viewwindow();
 
     activate_notes(true);
