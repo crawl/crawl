@@ -239,6 +239,9 @@ public:
 
     void set_input_history(input_history *ih);
     void set_keyproc(keyproc fn);
+#ifdef USE_TILE_WEB
+    void set_tag(const string &tag);
+#endif
 
 protected:
     void cursorto(int newcpos);
@@ -259,7 +262,9 @@ protected:
     keyproc         keyfn;
     int             wrapcol;
 
+#ifdef USE_TILE_WEB
     string          tag; // For identification on the Webtiles client side
+#endif
 
     // These are subject to change during editing.
     char            *cur;
