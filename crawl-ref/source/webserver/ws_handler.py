@@ -535,7 +535,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 super(CrawlWebSocket, self).write_message(msg)
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
-            self.ws_connection._abort()
+            if self.ws_connection != None:
+                self.ws_connection._abort()
 
     def write_message(self, msg, send=True):
         if self.client_closed: return
