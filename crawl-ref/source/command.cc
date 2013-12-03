@@ -1253,6 +1253,9 @@ static int _do_description(string key, string type, const string &suffix,
             && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
         {
             monster_info mi(mon_num);
+            // Avoid slime creature being described as "buggy"
+            if (mi.type == MONS_SLIME_CREATURE)
+                mi.number = 1;
             return describe_monsters(mi, true, footer);
         }
         else
