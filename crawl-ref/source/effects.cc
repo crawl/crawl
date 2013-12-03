@@ -2996,20 +2996,18 @@ int mushroom_prob(item_def & corpse)
 
 bool mushroom_spawn_message(int seen_targets, int seen_corpses)
 {
-    if (seen_targets > 0)
-    {
-        string what  = seen_targets  > 1 ? "Some toadstools"
-                                         : "A toadstool";
-        string where = seen_corpses  > 1 ? "nearby corpses" :
-                       seen_corpses == 1 ? "a nearby corpse"
-                                         : "the ground";
-        mprf("%s grow%s from %s.",
-             what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
+    if (seen_targets <= 0)
+        return false;
 
-        return true;
-    }
+    string what  = seen_targets  > 1 ? "Some toadstools"
+                                     : "A toadstool";
+    string where = seen_corpses  > 1 ? "nearby corpses" :
+                   seen_corpses == 1 ? "a nearby corpse"
+                                     : "the ground";
+    mprf("%s grow%s from %s.",
+         what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
 
-    return false;
+    return true;
 }
 
 //---------------------------------------------------------------
