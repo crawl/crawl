@@ -624,21 +624,21 @@ void debug_stethoscope(int mon)
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
          "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s",
          (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
-         (mons.asleep()                  ? "sleep" :
-          mons_is_wandering(&mons)       ? "wander" :
-          mons_is_seeking(&mons)         ? "seek" :
-          mons_is_fleeing(&mons)         ? "flee" :
-          mons_is_retreating(&mons)      ? "retreat" :
-          mons_is_cornered(&mons)        ? "cornered" :
-          mons_is_panicking(&mons)       ? "panic" :
-          mons_is_lurking(&mons)         ? "lurk" :
-          mons.behaviour == BEH_WITHDRAW ? "withdraw"
-                                         : "unknown"),
+         mons.asleep()                    ? "sleep"
+         : mons_is_wandering(&mons)       ? "wander"
+         : mons_is_seeking(&mons)         ? "seek"
+         : mons_is_fleeing(&mons)         ? "flee"
+         : mons_is_retreating(&mons)      ? "retreat"
+         : mons_is_cornered(&mons)        ? "cornered"
+         : mons_is_panicking(&mons)       ? "panic"
+         : mons_is_lurking(&mons)         ? "lurk"
+         : mons.behaviour == BEH_WITHDRAW ? "withdraw"
+         :                                  "unknown",
          mons.behaviour,
-         ((mons.foe == MHITYOU)                    ? "you" :
-          (mons.foe == MHITNOT)                    ? "none" :
-          (menv[mons.foe].type == MONS_NO_MONSTER) ? "unassigned monster"
-          : menv[mons.foe].name(DESC_PLAIN, true).c_str()),
+         mons.foe == MHITYOU                      ? "you"
+         : mons.foe == MHITNOT                    ? "none"
+         : menv[mons.foe].type == MONS_NO_MONSTER ? "unassigned monster"
+         : menv[mons.foe].name(DESC_PLAIN, true).c_str(),
          mons.foe,
          mons.foe_memory,
          mons.target.x, mons.target.y,
