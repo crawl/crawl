@@ -4777,6 +4777,9 @@ static int _get_num_and_char(const char* prompt, char* buf, int buf_len)
     line_reader reader(buf, buf_len);
 
     reader.set_keyproc(_get_num_and_char_keyfun);
+#ifdef USE_TILE_WEB
+    reader.set_tag("repeat");
+#endif
 
     return reader.read_line(true);
 }

@@ -111,6 +111,8 @@ function ($, comm, client, util, settings) {
         if (client.is_watching != null && client.is_watching())
             return;
 
+        assert(msg.tag !== "repeat" || !msg.prefill);
+
         $("#text_cursor").remove();
 
         var prompt = $("#messages .game_message").last();
@@ -126,10 +128,12 @@ function ($, comm, client, util, settings) {
         prompt.append(input);
         input.focus();
 
-        function restore()
-        {
-            input.blur();
-            input.remove();
+        function send_input_line(finalChar) {
+            var text = input.val() + String.fromCharCode(finalChar);
+            // ctrl-u to wipe any pre-fill
+            if (msg.tag !== "repeat")
+                comm.send_message("key", { keycode: 21 });
+            comm.send_message("input", { text: text });
         }
 
         input.keydown(function (ev) {
@@ -139,13 +143,9 @@ function ($, comm, client, util, settings) {
                 comm.send_message("key", { keycode: 27 }); // Send ESC
                 return false;
             }
-            else if (ev.which == 13)
+            else if (ev.which == 13) // enter
             {
-                var enter = String.fromCharCode(13);
-                var text = input.val() + enter;
-                // ctrl-u to wipe any pre-fill
-                comm.send_message("key", { keycode: 21 });
-                comm.send_message("input", { text: text});
+                send_input_line(13);
                 ev.preventDefault();
                 return false;
             }
@@ -157,6 +157,16 @@ function ($, comm, client, util, settings) {
                 {
                     ev.preventDefault();
                     comm.send_message("key", { keycode: ev.which });
+                    return false;
+                }
+            }
+            else if (msg.tag == "repeat")
+            {
+                var ch = String.fromCharCode(ev.which);
+                console.log(ch);
+                if (ch != "" && !/^\d$/.test(ch)) {
+                    send_input_line(ev.which);
+                    ev.preventDefault();
                     return false;
                 }
             }

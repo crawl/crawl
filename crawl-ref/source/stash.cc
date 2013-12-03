@@ -1645,7 +1645,9 @@ public:
                         int wcol = get_number_of_cols())
         : line_reader(buf, sz, wcol)
     {
+#ifdef USE_TILE_WEB
         tag = "stash_search";
+#endif
     }
 protected:
     int process_key(int ch)

@@ -264,6 +264,13 @@ void line_reader::set_keyproc(keyproc fn)
     keyfn = fn;
 }
 
+#ifdef USE_TILE_WEB
+void line_reader::set_tag(const string &id)
+{
+    tag = id;
+}
+#endif
+
 void line_reader::cursorto(int ncx)
 {
     int x = (start.x + ncx - 1) % wrapcol + 1;
