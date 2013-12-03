@@ -1623,8 +1623,7 @@ static void _find_description(bool *again, string *error_inout)
         true;
 #endif
 
-    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                       MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
+    DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING,
                        doing_mons, text_only);
     desc_menu.set_tag("description");
     list<monster_info> monster_list;
