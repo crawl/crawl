@@ -1753,7 +1753,10 @@ void StashTracker::search_stashes()
 
     mesclr();
     if (!validline || (!*buf && lastsearch.empty()))
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     string csearch = *buf? buf : lastsearch;
     string help = lastsearch;
