@@ -440,9 +440,46 @@ MAP
  111
 ENDMAP
 
+NAME:   ziggurat_pillar_centre_dead_trees
+TAGS:   ziggurat_pillar centered
+SUBST:  T = t.
+COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
+TILE:   t = DNGN_TREE_DEAD
+MAP
+ TTT
+TtttT
+TtttT
+TtttT
+ TTT
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_smoke
+TAGS:  ziggurat_pillar centered
+MARKER:  Z = lua:fog_machine { cloud_type = "black smoke", \
+         pow_min = 25, pow_max = 25, \
+         delay = 30, size = 1, walk_dist = 3 }
+MAP
+ v.v
+vv.vv
+..Z..
+vv.vv
+ v.v
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_lightning
+TAGS:  ziggurat_pillar centered
+MONS:  lightning spire
+MAP
+v...v
+.....
+..1..
+.....
+v...v
+ENDMAP
 
 ########################################################################
 # Ziggurat loot chamber (needs work).
+# Used to stop jellies from devouring all the loot.
 #
 # A reasonably large space to drop loot. Items will be stacked once all
 # free space is occupied by items.
@@ -475,6 +512,30 @@ cc.ccc.cc
  ccc ccc
 ENDMAP
 
+NAME: ziggurat_loot_3
+TAGS: ziggurat_loot_chamber allow_dup no_rotate
+ORIENT: float
+: ziggurat_loot_spot(_G, "X")
+MAP
+ wwwwwwww
+cw......w
+@....U.Xw
+cw......w
+ wwwwwwww
+ENDMAP
+
+NAME: ziggurat_loot_4
+TAGS: ziggurat_loot_chamber allow_dup
+ORIENT: float
+: ziggurat_loot_spot(_G, "X")
+MAP
+ cccc
+cc..cc
+c....c
+c....c
+c...cc
+@cccc
+ENDMAP
 
 # not finished!
 NAME: ziggurat_arena
