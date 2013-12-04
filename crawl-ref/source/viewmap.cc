@@ -716,6 +716,7 @@ static void _unforget_map()
             // Don't overwrite known squares, nor magic-mapped with
             // magic-mapped data -- what was forgotten is less up to date.
             env.map_knowledge(*ri) = old(*ri);
+            env.map_seen.set(*ri);
         }
 }
 
@@ -727,6 +728,7 @@ static void _forget_map()
             continue;
         env.map_knowledge(*ri).flags &= ~MAP_SEEN_FLAG;
         env.map_knowledge(*ri).flags |= MAP_MAGIC_MAPPED_FLAG;
+        env.map_seen.set(*ri, false);
     }
 }
 

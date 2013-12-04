@@ -1225,6 +1225,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.grid_colours.init(BLACK);
     env.map_knowledge.init(map_cell());
     env.map_forgotten.reset();
+    env.map_seen.reset();
 
     // Delete all traps.
     for (int i = 0; i < MAX_TRAPS; i++)

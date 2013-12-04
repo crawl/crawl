@@ -452,7 +452,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         }
 
         if (env.map_knowledge(*ri).changed())
+        {
             env.map_knowledge(*ri).clear();
+            env.map_seen.set(*ri, false);
+        }
 
         if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
             continue;

@@ -3871,6 +3871,7 @@ static void tag_read_level(reader &th)
 
     EAT_CANARY;
 
+    env.map_seen.reset();
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
@@ -3892,6 +3893,8 @@ static void tag_read_level(reader &th)
                 env.map_knowledge[i][j].cloudinfo()->pos = coord_def(i, j);
 
             env.map_knowledge[i][j].flags &= ~MAP_VISIBLE_FLAG;
+            if (env.map_knowledge[i][j].seen())
+                env.map_seen.set(i, j);
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;

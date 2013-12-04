@@ -464,9 +464,8 @@ void up_stairs(dungeon_feature_type force_stair)
 
     _update_travel_cache(old_level, stair_pos);
 
-    env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
-    env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
+    env.map_seen.set(you.pos());
 
     viewwindow();
 
@@ -1051,9 +1050,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     trackers_init_new_level(true);
     _update_travel_cache(old_level, stair_pos);
 
-    env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
-    env.map_shadow(you.pos()).flags |= MAP_SEEN_FLAG;
+    env.map_seen.set(you.pos());
 
     viewwindow();
 

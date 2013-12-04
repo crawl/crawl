@@ -435,9 +435,6 @@ NORETURN static void _launch_game()
     viewwindow();
 #endif
 
-    if (!game_start)
-        env.map_shadow = env.map_knowledge;
-
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
