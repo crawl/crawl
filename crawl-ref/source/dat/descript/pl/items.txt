@@ -303,12 +303,6 @@ book of wizardry
 
 Księga czarów.
 %%%%
-bottled efreet
-
-Jakiś czarodziej schwytał potężnego ifryta i zaklął go w butelkę. Zerwanie laku
-wypuści go na wolność, pozwalając odegrać gniew. A gniew ifryta to rzecz
-straszna, a wdzięczność niepewna.
-%%%%
 bow
 
 Zakrzywiony kawałek drewna i postronek, użyteczny wystrzeliwania strzał. We

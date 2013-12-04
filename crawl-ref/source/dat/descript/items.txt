@@ -410,11 +410,6 @@ spellcaster. Mages of a scholarly nature consider it a point of pride to have
 contributed in some way to this work, though more than a few of them have been
 slain by jealous rivals using their own spells against them.
 %%%%
-bottled efreet
-
-A mighty efreet, captured by some wizard and bound into a bronze flask.
-Breaking the flask's seal will release it to wreak havoc — possibly on you.
-%%%%
 bow
 
 A curved piece of wood and string, for shooting arrows. It does good damage in

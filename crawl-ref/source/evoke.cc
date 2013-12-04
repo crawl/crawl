@@ -319,45 +319,6 @@ static bool _evoke_horn_of_geryon(item_def &item)
     return rc;
 }
 
-static bool _efreet_flask(int slot)
-{
-    bool friendly = x_chance_in_y(300 + you.skill(SK_EVOCATIONS, 10), 600);
-
-    mpr("You open the flask...");
-
-    monster *mons =
-        create_monster(
-            mgen_data(MONS_EFREET,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      &you, 0, 0, you.pos(),
-                      MHITYOU, MG_FORCE_BEH));
-
-    if (mons)
-    {
-        mpr("...and a huge efreet comes out.");
-
-        if (player_angers_monster(mons))
-            friendly = false;
-
-        if (silenced(you.pos()))
-        {
-            mprf(MSGCH_TALK_VISUAL, friendly ? "It nods graciously at you."
-                                             : "It snaps in your direction!");
-        }
-        else
-        {
-            mprf(MSGCH_TALK, friendly ? "\"Thank you for releasing me!\""
-                                      : "It howls insanely!");
-        }
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    dec_inv_item_quantity(slot, 1);
-
-    return true;
-}
-
 static bool _check_crystal_ball()
 {
     if (you.species == SP_DJINNI)
@@ -1731,10 +1692,11 @@ bool evoke_item(int slot)
 
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case MISC_BOTTLED_EFREET:
-            if (_efreet_flask(slot))
-                pract = 2;
-            break;
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return false;
+#endif
 
         case MISC_FAN_OF_GALES:
             if (!evoker_is_charged(item))

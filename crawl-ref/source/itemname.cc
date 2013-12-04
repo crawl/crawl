@@ -946,7 +946,9 @@ static const char* misc_type_name(int type, bool known)
     case MISC_LANTERN_OF_SHADOWS:        return "lantern of shadows";
     case MISC_HORN_OF_GERYON:            return "horn of Geryon";
     case MISC_DISC_OF_STORMS:            return "disc of storms";
-    case MISC_BOTTLED_EFREET:            return "bottled efreet";
+#if TAG_MAJOR_VERSION == 34
+    case MISC_BOTTLED_EFREET:            return "empty flask";
+#endif
     case MISC_STONE_OF_TREMORS:          return "stone of tremors";
     case MISC_QUAD_DAMAGE:               return "quad damage";
     case MISC_PHIAL_OF_FLOODS:           return "phial of floods";

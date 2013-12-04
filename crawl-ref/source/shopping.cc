@@ -2158,7 +2158,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 2000;
             break;
 
-        case MISC_BOTTLED_EFREET:
         case MISC_SACK_OF_SPIDERS:
             valued += 400;
             break;

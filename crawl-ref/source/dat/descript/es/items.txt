@@ -304,12 +304,6 @@ book of wizardry
 
 Un libro con hechizos mágicos.
 %%%%
-bottled efreet
-
-Un poderoso ifrit, capturado por algún mago y sellado en un matraz de bronce.
-Romper el sello del frasco le hará libre para que cause estragos, quizás sobre
-ti.
-%%%%
 bow
 
 Una pieza curva de madera con una cuerda atada entre sus extremos, diseñada

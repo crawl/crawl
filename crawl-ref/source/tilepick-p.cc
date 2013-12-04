@@ -48,7 +48,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     {
         switch (item.sub_type)
         {
+#if TAG_MAJOR_VERSION == 34
         case MISC_BOTTLED_EFREET:             return TILEP_HAND1_BOTTLE;
+#endif
         case MISC_FAN_OF_GALES:               return TILEP_HAND1_FAN;
         case MISC_STONE_OF_TREMORS:           return TILEP_HAND1_STONE;
         case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;

@@ -400,12 +400,6 @@ maagit pitävät tämän kirjaan tekstiin osallistumista ylpeyden asiana, vaikka
 monet heistä ovat tulleet kateellisten kilpailijoiden murhaamiksi heidän omilla
 loitsuillaan.
 %%%%
-bottled efreet
-
-Mahtava efreet, jonka joku velho on kaapannut ja sulkenut pronssiseen pulloon.
-Pullon sinetin rikkominen vapauttaa sen vahingontekoon - mahdollisesti sinun
-päällesi.
-%%%%
 bow
 
 Kaartuva kappale puuta ja jännettä nuolten ampumiseen. Se tekee paljon vahinkoa

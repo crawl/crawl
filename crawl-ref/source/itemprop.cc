@@ -2722,7 +2722,6 @@ int item_mass(const item_def &item)
         }
         switch (item.sub_type)
         {
-        case MISC_BOTTLED_EFREET:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             unit_mass = 150;
             break;

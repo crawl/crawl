@@ -4207,8 +4207,10 @@ static tileidx_t _tileidx_misc(const item_def &item)
 {
     switch (item.sub_type)
     {
+#if TAG_MAJOR_VERSION == 34
     case MISC_BOTTLED_EFREET:
         return TILE_MISC_BOTTLED_EFREET;
+#endif
 
     case MISC_FAN_OF_GALES:
         return TILE_MISC_AIR_ELEMENTAL_FAN;

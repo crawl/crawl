@@ -346,12 +346,6 @@ book of wizardry
 
 Un livre de sortilèges magiques.
 %%%%
-bottled efreet
-
-Un puissant efreet, capturé par quelque magicien et enfermé dans une flasque en
-bronze. Briser le sceau de la flasque le libérera afin qu'il sème la
-destruction — peut-être sur vous.
-%%%%
 bow
 
 Une branche de bois courbée avec une corde pour tirer des flèches. Cela fait de

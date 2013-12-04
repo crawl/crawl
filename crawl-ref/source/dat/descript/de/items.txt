@@ -445,12 +445,6 @@ Punkt des Stolzes, um irgendwie zu dieser Arbeit beigetragen zu haben, obwohl
 mehr als einige von ihnen durch eifersüchtige Rivalen ermordet gewesen sind,
 die ihre eigenen Perioden gegen sie verwenden.
 %%%%
-bottled efreet
-
-Ein mächtiger Flaschengeist, gefangen von irgendeinem Zauberer und gebunden in
-eine Bronzeflasche. Wenn du das Siegel der Flasche brichst, wirst du ihn
-freilassen, und er wird Schaden anrichten – möglicherweise bei dir selbst.
-%%%%
 bow
 
 Ein rundes Stück Holz mit einer Sehne, zum Schießen von Pfeilen. Es verursacht
