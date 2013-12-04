@@ -885,7 +885,7 @@ int SkillMenu::get_line_height()
 
 int SkillMenu::get_raw_skill_level(skill_type sk)
 {
-        return m_skill_backup.skills[sk];
+    return m_skill_backup.skills[sk];
 }
 
 int SkillMenu::get_saved_skill_level(skill_type sk, bool real)

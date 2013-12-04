@@ -1556,7 +1556,7 @@ static void _give_ammo(monster* mon, int level,
                 || (mon->type == MONS_FAUN && one_chance_in(3))
                 || one_chance_in(15)))
         {
-                xitt = MI_SLING_BULLET;
+            xitt = MI_SLING_BULLET;
         }
 
         const int thing_created = items(0, xitc, xitt, true, level, item_race);

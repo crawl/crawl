@@ -4544,15 +4544,15 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
 
 void flush_mp()
 {
-  if (Options.magic_point_warning
-          && you.magic_points < (you.max_magic_points
-                                 * Options.magic_point_warning) / 100)
-      {
-          mprf(MSGCH_DANGER, "* * * LOW MAGIC WARNING * * *");
-      }
+    if (Options.magic_point_warning
+        && you.magic_points < you.max_magic_points
+                              * Options.magic_point_warning / 100)
+    {
+        mprf(MSGCH_DANGER, "* * * LOW MAGIC WARNING * * *");
+    }
 
-      take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-      you.redraw_magic_points = true;
+    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
+    you.redraw_magic_points = true;
 }
 
 void dec_mp(int mp_loss, bool silent)

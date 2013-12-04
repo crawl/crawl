@@ -13,10 +13,10 @@ class monster;
 
 enum jiyva_slurp_results
 {
-        JS_NONE = 0,
-        JS_FOOD = 1,
-        JS_HP   = 2,
-        JS_MP   = 4,
+    JS_NONE = 0,
+    JS_FOOD = 1,
+    JS_HP   = 2,
+    JS_MP   = 4,
 };
 
 int chei_stat_boost(int piety = you.piety);

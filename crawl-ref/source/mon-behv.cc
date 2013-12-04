@@ -472,8 +472,8 @@ void handle_behaviour(monster* mon)
             }
             else
             {
-               // Zotdef - this is all new, for out-of-sight friendlies to do
-               // something useful.  If no current target, get the closest one.
+                // Zotdef - this is all new, for out-of-sight friendlies to do
+                // something useful.  If no current target, get the closest one.
                 _set_nearest_monster_foe(mon);
             }
         }

@@ -70,7 +70,7 @@ class player_quiver
 // that identifies items in inv.
 class preserve_quiver_slots
 {
- public:
+public:
     preserve_quiver_slots();
     ~preserve_quiver_slots();
 

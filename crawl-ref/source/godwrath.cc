@@ -948,29 +948,29 @@ static bool _jiyva_retribution()
     }
     else if (!one_chance_in(3))
     {
-            god_speaks(god, "Mutagenic energy floods into your body!");
-            contaminate_player(random2(you.penance[GOD_JIYVA] * 500));
+        god_speaks(god, "Mutagenic energy floods into your body!");
+        contaminate_player(random2(you.penance[GOD_JIYVA] * 500));
 
-            if (coinflip())
+        if (coinflip())
+        {
+            transformation_type form = TRAN_NONE;
+
+            switch (random2(3))
             {
-                transformation_type form = TRAN_NONE;
-
-                switch (random2(3))
-                {
-                    case 0:
-                        form = TRAN_BAT;
-                        break;
-                    case 1:
-                        form = TRAN_STATUE;
-                        break;
-                    case 2:
-                        form = TRAN_SPIDER;
-                        break;
-                }
-
-                if (transform(random2(you.penance[GOD_JIYVA]) * 2, form, true))
-                    you.transform_uncancellable = true;
+                case 0:
+                    form = TRAN_BAT;
+                    break;
+                case 1:
+                    form = TRAN_STATUE;
+                    break;
+                case 2:
+                    form = TRAN_SPIDER;
+                    break;
             }
+
+            if (transform(random2(you.penance[GOD_JIYVA]) * 2, form, true))
+                you.transform_uncancellable = true;
+        }
     }
     else
     {

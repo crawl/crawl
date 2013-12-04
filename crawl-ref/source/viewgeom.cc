@@ -34,7 +34,7 @@ static void _increment(int& lvalue, int delta, int max_value)
 
 class _layout
 {
- public:
+public:
     _layout(coord_def termsz_, coord_def hudsz_) :
         termp(1,1),    termsz(termsz_),
         viewp(-1,-1),  viewsz(VIEW_MIN_WIDTH, VIEW_MIN_HEIGHT),
@@ -84,7 +84,7 @@ class _layout
 // mmmmmmmmmm
 class _inline_layout : public _layout
 {
- public:
+public:
     _inline_layout(coord_def termsz_, coord_def hudsz_) :
         _layout(termsz_, hudsz_)
     {
@@ -161,7 +161,7 @@ class _inline_layout : public _layout
 // mmmmmmmmmmmmm
 class _mlist_col_layout : public _layout
 {
- public:
+public:
     _mlist_col_layout(coord_def termsz_, coord_def hudsz_)
         : _layout(termsz_, hudsz_)
     { valid = _init(); }

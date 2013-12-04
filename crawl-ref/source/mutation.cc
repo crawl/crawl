@@ -742,41 +742,41 @@ static void _display_vampire_attributes()
     const int lines = 15;
     string column[lines][7] =
     {
-       {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
-        "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
-        "<lightred>Bloodless</lightred>"},
-                                //Alive          Full       Satiated      Thirsty   Near...      Bloodless
-       {"Metabolism           ", "very fast  ", "fast    ", "fast      ", "normal   ", "slow     ", "none  "},
+        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
+         "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
+         "<lightred>Bloodless</lightred>"},
+                                 //Alive          Full       Satiated      Thirsty   Near...      Bloodless
+        {"Metabolism           ", "very fast  ", "fast    ", "fast      ", "normal   ", "slow     ", "none  "},
 
-       {"Regeneration         ", "very fast  ", "fast    ", "normal    ", "slow     ", "slow     ", "none  "},
+        {"Regeneration         ", "very fast  ", "fast    ", "normal    ", "slow     ", "slow     ", "none  "},
 
-       {"Stealth boost        ", "none       ", "none    ", "none      ", "minor    ", "major    ", "large "},
+        {"Stealth boost        ", "none       ", "none    ", "none      ", "minor    ", "major    ", "large "},
 
-       {"Spell hunger         ", "full       ", "full    ", "full      ", "halved   ", "none     ", "none  "},
+        {"Spell hunger         ", "full       ", "full    ", "full      ", "halved   ", "none     ", "none  "},
 
-       {"\n<w>Resistances</w>\n"
-        "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
+        {"\n<w>Resistances</w>\n"
+         "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
 
-       {"Cold resistance      ", "           ", "        ", "          ", " +       ", " ++      ", " ++   "},
+        {"Cold resistance      ", "           ", "        ", "          ", " +       ", " ++      ", " ++   "},
 
-       {"Negative resistance  ", "           ", "        ", " +        ", " ++      ", " +++     ", " +++  "},
+        {"Negative resistance  ", "           ", "        ", " +        ", " ++      ", " +++     ", " +++  "},
 
-       {"Rotting resistance   ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
+        {"Rotting resistance   ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
 
-       {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
+        {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
 
-       {"\n<w>Other effects</w>\n"
-        "Mutation chance      ", "always     ", "often   ", "sometimes ", "never    ", "never    ", "never "},
+        {"\n<w>Other effects</w>\n"
+         "Mutation chance      ", "always     ", "often   ", "sometimes ", "never    ", "never    ", "never "},
 
-       {"Non-physical \n"
-        "mutation effects     ", "full       ", "capped  ", "capped    ", "none     ", "none     ", "none  "},
+        {"Non-physical \n"
+         "mutation effects     ", "full       ", "capped  ", "capped    ", "none     ", "none     ", "none  "},
 
-       {"Potion effects       ", "full       ", "full    ", "full      ", "halved   ", "halved   ", "halved"},
+        {"Potion effects       ", "full       ", "full    ", "full      ", "halved   ", "halved   ", "halved"},
 
-       {"Bat Form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
+        {"Bat Form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
 
-       {"Other transformation \n"
-        "or going berserk     ", "yes        ", "yes     ", "no        ", "no       ", "no       ", "no    "}
+        {"Other transformation \n"
+         "or going berserk     ", "yes        ", "yes     ", "no        ", "no       ", "no       ", "no    "}
     };
 
     int current = 0;

@@ -2579,15 +2579,15 @@ void MiscastEffect::_air(int severity)
         case 8:
             if (silenced(you.pos()))
             {
-               you_msg        = "The wind whips around you!";
-               mon_msg_seen   = "The wind whips around @the_monster@!";
-               mon_msg_unseen = "The wind whips!";
+                you_msg        = "The wind whips around you!";
+                mon_msg_seen   = "The wind whips around @the_monster@!";
+                mon_msg_unseen = "The wind whips!";
             }
             else
             {
-               you_msg        = "The wind howls around you!";
-               mon_msg_seen   = "The wind howls around @the_monster@!";
-               mon_msg_unseen = "The wind howls!";
+                you_msg        = "The wind howls around you!";
+                mon_msg_seen   = "The wind howls around @the_monster@!";
+                mon_msg_unseen = "The wind howls!";
             }
             break;
         case 9:
