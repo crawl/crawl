@@ -46,10 +46,9 @@ struct crawl_environment
 
     unique_ptr<grid_heightmap>               heightmap;
 
+    map_bitmask                              map_seen;
     // Player-remembered terrain and LOS
     MapKnowledge                             map_knowledge;
-    // Previous map knowledge (last step)
-    MapKnowledge                             map_shadow;
     // Forgotten map knowledge (X^F)
     unique_ptr<MapKnowledge>                 map_forgotten;
     set<coord_def> visible;

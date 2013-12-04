@@ -3057,8 +3057,9 @@ void start_explore(bool grab_items)
         }
     }
 
-    // Clone shadow array off map
-    env.map_shadow = env.map_knowledge;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (env.map_knowledge(*ri).seen())
+            env.map_seen.set(*ri);
 
     you.running.pos.reset();
     _start_running();
@@ -4250,8 +4251,8 @@ void explore_discoveries::found_feature(const coord_def &pos,
             // If any neighbours have been seen (and thus announced) before,
             // skip.  For parts seen for the first time this turn, announce
             // only the upper leftmost cell.
-            if (env.map_shadow(*ai).feat() == DNGN_RUNED_DOOR
-                || env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR && *ai < pos)
+            if (env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR
+                && (env.map_seen(*ai) || *ai < pos))
             {
                 return;
             }
@@ -4582,11 +4583,15 @@ bool check_for_interesting_features()
     {
         const coord_def p(*ri);
 
-        if (!env.map_shadow(p).seen() && env.map_knowledge(p).seen())
+        // Find just noticed squares.
+        if (env.map_knowledge(p).flags & MAP_SEEN_FLAG
+            && !env.map_seen(p))
+        {
+            env.map_seen.set(p);
             _check_interesting_square(p, discoveries);
+        }
     }
 
-    env.map_shadow = env.map_knowledge;
     return discoveries.prompt_stop();
 }
 
