@@ -256,6 +256,12 @@ void apply_daction_to_transit(daction_type act)
             monster* mon = &j->mons;
             if (mons_matches_daction(mon, act))
                 apply_daction_to_mons(mon, act, false, true);
+
+            // If that killed the monster, remove it from transit.
+            // Removing this monster invalidates the iterator that
+            // points to it, so decrement the iterator first.
+            if (!mon->alive())
+                m->erase(j--);
         }
     }
 }
