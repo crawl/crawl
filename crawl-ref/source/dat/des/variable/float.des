@@ -33,6 +33,36 @@ function init_protected_by_tso(e)
   e.lua_marker('!', message_at_spot("You almost think you hear a voice: \"Seek not undue power, mortal.\"", "warning"))
   e.subst('- : +')
 end
+
+function grunt_megastairs_setup(e)
+  e.orient("float")
+  e.tags("extra luniq_grunt_megastairs")
+  e.depth("Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
+  e.nsubst("0 = 2:0 / 2:0. / *:.")
+  e.subst("@ = @+")
+  if you.depth() == 1 then
+    e.shuffle("{[(")
+    e.subst("{ = }")
+    e.subst("[ = ]")
+    e.subst("( = )G")
+  elseif you.depth() == dgn.br_depth() then
+    e.shuffle("{[(")
+    e.subst("( = (G")
+  else
+    e.shuffle("{[(}])")
+    e.subst("( = (<")
+    e.subst(") = )>")
+  end
+  if you.branch() == "Dis" then
+    e.subst("x = v")
+  elseif you.branch() == "Depths" then
+    e.subst("x : cccccvvvb")
+  else
+    e.subst("x = c")
+  end
+  e.subst("G : GGGGTTVt")
+  e.kmons("0 = 0 band")
+end
 }}
 
 # Set the default depth for vaults.  Be sure to adapt or specify
@@ -5358,4 +5388,133 @@ xx..xxx...xxxxxxx...xxx..xx
     xxx......0......xxx
       xxx.........xxx
         xxxxx@xxxxx
+ENDMAP
+
+###############################################################################
+# Megastairs vaults.
+# "Mega" is only really in opposition to the ministair vaults (cf.
+# mini_monsters.des).
+# Intended to be generic and placeable in a large variety of locales.
+
+NAME: grunt_megastairs_1
+: grunt_megastairs_setup(_G)
+MAP
+          xxxxx
+         xx.G.xx
+         x.....x
+         xG.{.Gx
+         x.....x
+         xx...xx
+ xxxxxxx xxx+xxx xxxxxxx
+xx..0..xxx.....xxx..0..xx
+x.xxxxx.x.x.0.x.x.xxxxx.x
+@.......x.x...x.x.......@
+x...G.0.+.x.G.x.+.0.G...x
+@...... x.x...x.x.......@
+x.xxxxx.x.x.0.x.x.xxxxx.x
+xx..0..xxx.....xxx..0..xx
+ xxxxxxx xxx+xxx xxxxxxx
+         xx...xx
+         x.....x
+         xG.[.Gx
+         x.....x
+         xx.G.xx
+          xxxxx
+ENDMAP
+
+NAME: grunt_megastairs_2
+: grunt_megastairs_setup(_G)
+MAP
+       xxxxx
+      xx.G.xx
+      x.....x
+      xG.{.Gx
+      x.....x
+      xx...xx
+      xxx+xxx
+    xxx.....xxx
+  xxx....0....xxx
+ xx....xxxxx....xx
+xx..x0xx...xx0x..xx
+x..xx.........xx..x
+x..x...G...G...x..x
+@.0x0....[....0x0.@
+x..x...G...G...x..x
+x..xx.........xx..x
+xx..x0xx...xx0x..xx
+ xx....xxxxx....xx
+  xxx....0....xxx
+    xxx.....xxx
+      xxx@xxx
+ENDMAP
+
+NAME: grunt_megastairs_3
+: grunt_megastairs_setup(_G)
+MAP
+        xxxxx
+       xx.G.xx
+       x.....x
+       xG.{.Gx
+       x.....x
+       xx...xx
+       xxx+xxx
+      xx.....xx
+     xx...G...xx
+    xx.........xx
+   xx..G..[..G..xx
+  xx.............xx
+ xx..0....G....0..xx
+ x.....x..0..x.....x
+xx..G..x.....x..G..xx
+x.....xx..G..xx.....x
+x..0..xx.....xx.....x
+x.....xx..0..xx..0..x
+xx@x@xxx.....xxx@x@xx
+       xx@x@xx
+ENDMAP
+
+NAME: grunt_megastairs_4
+: grunt_megastairs_setup(_G)
+MAP
+xxxxx            xx@xx
+x...xxxx         x...x
+x.{....xxx      xx.G.@
+x........xx     x...xx
+xxxxx..0..xxxxxxx...x
+    xxx..........0.xx
+      xxx..0.G.0..xx
+        xx.......xx
+         x.G.0.G.x
+        xx.......xx
+       xx..0.G.0..xxx
+      xx.0..........xxx
+      x...xxxxxxx..0..xxxxx
+     xx...x     xx........x
+     @.G.xx      xxx....[.x
+     x...x         xxxx...x
+     xx@xx            xxxxx
+ENDMAP
+
+NAME: grunt_megastairs_5
+: grunt_megastairs_setup(_G)
+MAP
+        xxxxx
+      xxx.[.xxx
+     xx.......xx
+    xx.0..G..0.xx
+   xx...xxxxx...xx
+  xx.0.xx   xx.0.xx
+  x...xxxxxxxxx...x
+xxx...xxx...xxx...xxx
+@...................@
+xG..0..G..{..G..0..Gx
+@...................@
+xxx...xxx...xxx...xxx
+  x...xxxxxxxxx...x
+  xx.0.xx   xx.0.xx
+   xx...xxxxx...xx
+    xx.0..G..0.xx
+     xx.......xx
+      xxx.(.xxx
+        xxxxx
 ENDMAP
