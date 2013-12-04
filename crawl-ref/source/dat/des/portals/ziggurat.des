@@ -513,18 +513,6 @@ cc.ccc.cc
 ENDMAP
 
 NAME: ziggurat_loot_3
-TAGS: ziggurat_loot_chamber allow_dup no_rotate
-ORIENT: float
-: ziggurat_loot_spot(_G, "X")
-MAP
- wwwwwwww
-cw......w
-@....U.Xw
-cw......w
- wwwwwwww
-ENDMAP
-
-NAME: ziggurat_loot_4
 TAGS: ziggurat_loot_chamber allow_dup
 ORIENT: float
 : ziggurat_loot_spot(_G, "X")
