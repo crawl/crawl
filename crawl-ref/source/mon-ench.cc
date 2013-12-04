@@ -1164,7 +1164,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DUMB:
     case ENCH_MAD:
     case ENCH_BREATH_WEAPON:
-    case ENCH_DEATHS_DOOR:
     case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_WRETCHED:
     case ENCH_SCREAMED:
@@ -1856,11 +1855,19 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_TORNADO_COOLDOWN:
-       if (decay_enchantment(en))
+        if (decay_enchantment(en))
         {
             remove_tornado_clouds(mindex());
             if (you.can_see(this))
                 mprf("The winds around %s calm down.", name(DESC_THE).c_str());
+        }
+        break;
+
+    case ENCH_DEATHS_DOOR:
+        if (decay_enchantment(en))
+        {
+            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0,
+                                 (1 + random2(3)) * BASELINE_DELAY));
         }
         break;
 

@@ -1644,8 +1644,12 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_DEATHS_DOOR:
         // The caster may be an (undead) enslaved soul.
-        if (mon->holiness() == MH_UNDEAD || mon->has_ench(ENCH_DEATHS_DOOR))
+        if (mon->holiness() == MH_UNDEAD
+            || mon->has_ench(ENCH_DEATHS_DOOR)
+            || mon->has_ench(ENCH_FATIGUE))
+        {
             ret = true;
+        }
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
