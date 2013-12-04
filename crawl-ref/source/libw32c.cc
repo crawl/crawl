@@ -103,22 +103,22 @@ static void _setcursortype_internal(bool curstype);
 static DWORD crawlColorData[16] =
 // BGR data, easier to put in registry
 {
-   0x00000000,  // BLACK
-   0x00ff00cd,  // BLUE
-   0x0046b964,  // GREEN
-   0x00b4b400,  // CYAN
-   0x000085ff,  // RED
-   0x00ee82ee,  // MAGENTA
-   0x005a6fcd,  // BROWN
-   0x00c0c0c0,  // LT GREY
-   0x00808080,  // DK GREY
-   0x00ff8600,  // LT BLUE
-   0x0000ff85,  // LT GREEN
-   0x00ffff00,  // LT CYAN
-   0x000000ff,  // LT RED
-   0x00bf7091,  // LT MAGENTA
-   0x0000ffff,  // YELLOW
-   0x00ffffff   // WHITE
+    0x00000000,  // BLACK
+    0x00ff00cd,  // BLUE
+    0x0046b964,  // GREEN
+    0x00b4b400,  // CYAN
+    0x000085ff,  // RED
+    0x00ee82ee,  // MAGENTA
+    0x005a6fcd,  // BROWN
+    0x00c0c0c0,  // LT GREY
+    0x00808080,  // DK GREY
+    0x00ff8600,  // LT BLUE
+    0x0000ff85,  // LT GREEN
+    0x00ffff00,  // LT CYAN
+    0x000000ff,  // LT RED
+    0x00bf7091,  // LT MAGENTA
+    0x0000ffff,  // YELLOW
+    0x00ffffff   // WHITE
 };
  */
 
@@ -632,15 +632,15 @@ void putwch(ucs_t c)
 #define VKEY_MAPPINGS 11
 static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, control
 {
-   { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT,
-     VK_HOME, VK_UP, VK_PRIOR, VK_INSERT, VK_TAB },
-   { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT,
-     CK_HOME, CK_UP, CK_PGUP , CK_INSERT, CONTROL('I') },
-   { CK_SHIFT_END, CK_SHIFT_DOWN, CK_SHIFT_PGDN, CK_SHIFT_LEFT, CK_SHIFT_CLEAR, CK_SHIFT_RIGHT,
-     CK_SHIFT_HOME, CK_SHIFT_UP, CK_SHIFT_PGUP, CK_SHIFT_INSERT, CK_SHIFT_TAB },
-   { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT,
-     CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT, CK_CTRL_TAB },
-   };
+    { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT,
+      VK_HOME, VK_UP, VK_PRIOR, VK_INSERT, VK_TAB },
+    { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT,
+      CK_HOME, CK_UP, CK_PGUP , CK_INSERT, CONTROL('I') },
+    { CK_SHIFT_END, CK_SHIFT_DOWN, CK_SHIFT_PGDN, CK_SHIFT_LEFT, CK_SHIFT_CLEAR, CK_SHIFT_RIGHT,
+      CK_SHIFT_HOME, CK_SHIFT_UP, CK_SHIFT_PGUP, CK_SHIFT_INSERT, CK_SHIFT_TAB },
+    { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT,
+      CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT, CK_CTRL_TAB },
+};
 
 static int ck_tr[] =
 {

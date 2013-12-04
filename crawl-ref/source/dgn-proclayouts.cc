@@ -96,8 +96,8 @@ WorleyLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 ChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
-   uint64_t base = hash3(p.x, p.y, seed);
-   uint32_t density = baseDensity + seed % 50 + (seed >> 16) % 60;
+    uint64_t base = hash3(p.x, p.y, seed);
+    uint32_t density = baseDensity + seed % 50 + (seed >> 16) % 60;
     if ((base % 1000) < density)
         return ProceduralSample(p, _pick_pseudorandom_wall(base/3), offset + 4096);
     return ProceduralSample(p, DNGN_FLOOR, offset + 4096);

@@ -1162,8 +1162,8 @@ static void _update_place_info()
         }
         else
         {
-           delta.turns_other++;
-           delta.elapsed_other += you.time_taken;
+            delta.turns_other++;
+            delta.elapsed_other += you.time_taken;
         }
 
         if (you.delay_queue.empty()
@@ -2675,8 +2675,8 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_HEROISM, delay,
                           "You feel like a meek peon again."))
     {
-            you.redraw_evasion      = true;
-            you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
+        you.redraw_armour_class = true;
     }
     _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
 

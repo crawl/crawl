@@ -631,7 +631,7 @@ private:
 
 class mons_spec
 {
- public:
+public:
     monster_type type;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
@@ -949,8 +949,8 @@ struct map_chance
 // For the bison parser's token union:
 struct map_chance_pair
 {
-   int priority;
-   int chance;
+    int priority;
+    int chance;
 };
 
 typedef vector<level_range> depth_ranges_v;

@@ -199,42 +199,42 @@ static int _armour_colour(const item_def &item)
 
     switch (item.sub_type)
     {
-      case ARM_CLOAK:
+    case ARM_CLOAK:
         item_colour = WHITE;
         break;
-      case ARM_NAGA_BARDING:
-      case ARM_CENTAUR_BARDING:
+    case ARM_NAGA_BARDING:
+    case ARM_CENTAUR_BARDING:
         item_colour = GREEN;
         break;
-      case ARM_ROBE:
+    case ARM_ROBE:
         item_colour = RED;
         break;
-      case ARM_CAP:
-      case ARM_WIZARD_HAT:
-      case ARM_HELMET:
+    case ARM_CAP:
+    case ARM_WIZARD_HAT:
+    case ARM_HELMET:
         item_colour = MAGENTA;
         break;
-      case ARM_BOOTS:
+    case ARM_BOOTS:
         item_colour = BLUE;
         break;
-      case ARM_GLOVES:
+    case ARM_GLOVES:
         item_colour = LIGHTBLUE;
         break;
-      case ARM_LEATHER_ARMOUR:
+    case ARM_LEATHER_ARMOUR:
         item_colour = BROWN;
         break;
-      case ARM_ANIMAL_SKIN:
+    case ARM_ANIMAL_SKIN:
         item_colour = LIGHTGREY;
         break;
-      case ARM_CRYSTAL_PLATE_ARMOUR:
+    case ARM_CRYSTAL_PLATE_ARMOUR:
         item_colour = WHITE;
         break;
-      case ARM_SHIELD:
-      case ARM_LARGE_SHIELD:
-      case ARM_BUCKLER:
+    case ARM_SHIELD:
+    case ARM_LARGE_SHIELD:
+    case ARM_BUCKLER:
         item_colour = CYAN;
         break;
-      default:
+    default:
         item_colour = LIGHTCYAN;
         break;
     }

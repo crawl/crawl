@@ -30,7 +30,7 @@
 // db, loading, and destroying the DB.
 class TextDB
 {
- public:
+public:
     // db_name is the savedir-relative name of the db file,
     // minus the "db" extension.
     TextDB(const char* db_name, const char* dir, ...);

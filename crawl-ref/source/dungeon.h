@@ -54,7 +54,7 @@ typedef vector<dgn_region> dgn_region_list;
 
 class dgn_region
 {
- public:
+public:
     // pos is top-left corner.
     coord_def pos, size;
 

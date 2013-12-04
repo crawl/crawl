@@ -4978,16 +4978,16 @@ void temperature_changed(float change)
     // Cooled down enough for stoneskin to kick in again.
     if (change < neg_threshold && temperature_tier(TEMP_WARM))
     {
-            mprf(MSGCH_DURATION, "Your skin cools and hardens.");
-            you.redraw_armour_class = true;
+        mprf(MSGCH_DURATION, "Your skin cools and hardens.");
+        you.redraw_armour_class = true;
     }
 
     // If we're in this function, temperature changed, anyways.
     you.redraw_temperature = true;
 
-    #ifdef USE_TILE
-        init_player_doll();
-    #endif
+#ifdef USE_TILE
+    init_player_doll();
+#endif
 
     // Just do this every turn to be safe. Can be fixed later if there
     // any performance issues.

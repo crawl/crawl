@@ -153,18 +153,18 @@ static void _print_hints_menu(hints_types type)
 
     switch (type)
     {
-      case HINT_BERSERK_CHAR:
-          strcpy(desc, "(Melee oriented character with divine support)");
-          break;
-      case HINT_MAGIC_CHAR:
-          strcpy(desc, "(Magic oriented character)");
-          break;
-      case HINT_RANGER_CHAR:
-          strcpy(desc, "(Ranged fighter)");
-          break;
-      default: // no further choices
-          strcpy(desc, "(erroneous character)");
-          break;
+    case HINT_BERSERK_CHAR:
+        strcpy(desc, "(Melee oriented character with divine support)");
+        break;
+    case HINT_MAGIC_CHAR:
+        strcpy(desc, "(Magic oriented character)");
+        break;
+    case HINT_RANGER_CHAR:
+        strcpy(desc, "(Ranged fighter)");
+        break;
+    default: // no further choices
+        strcpy(desc, "(erroneous character)");
+        break;
     }
 
     cprintf("%c - %s %s %s\n",
@@ -650,9 +650,9 @@ static void _hints_healing_reminder()
             if (you.hp < you.hp_max && you_worship(GOD_TROG)
                 && you.can_go_berserk())
             {
-              text += "\nAlso, berserking might help you not to lose so many "
-                      "hitpoints in the first place. To use your abilities type "
-                      "<w>a</w>.";
+                text += "\nAlso, berserking might help you not to lose so many "
+                        "hitpoints in the first place. To use your abilities type "
+                        "<w>a</w>.";
             }
             mprf(MSGCH_TUTORIAL, "%s", text.c_str());
 
@@ -3627,16 +3627,16 @@ void hints_describe_item(const item_def &item)
             }
             if (gives_resistance(item))
             {
-                    ostr << "\n\nThis "
-                         << (item.sub_type < NUM_RINGS ? "ring" : "amulet")
-                         << " offers its wearer protection "
-                            "from certain sources. For an overview of your "
-                            "resistances (among other things) type <w>%</w>"
+                ostr << "\n\nThis "
+                     << (item.sub_type < NUM_RINGS ? "ring" : "amulet")
+                     << " offers its wearer protection "
+                        "from certain sources. For an overview of your "
+                        "resistances (among other things) type <w>%</w>"
 #ifdef USE_TILE
-                            " or click on your avatar with the <w>right mouse "
-                            "button</w>"
+                        " or click on your avatar with the <w>right mouse "
+                        "button</w>"
 #endif
-                            ".";
+                        ".";
                 cmd.push_back(CMD_RESISTS_SCREEN);
             }
             if (gives_ability(item))
@@ -4019,221 +4019,221 @@ static void _hints_describe_feature(int x, int y)
 
     switch (feat)
     {
-       case DNGN_ORCISH_IDOL:
-       case DNGN_GRANITE_STATUE:
-            ostr << "It's just a harmless statue - or is it?\nEven if not "
-                    "a danger by themselves, statues often mark special "
-                    "areas, dangerous ones or ones harbouring treasure.";
-            break;
+    case DNGN_ORCISH_IDOL:
+    case DNGN_GRANITE_STATUE:
+         ostr << "It's just a harmless statue - or is it?\nEven if not "
+                 "a danger by themselves, statues often mark special "
+                 "areas, dangerous ones or ones harbouring treasure.";
+         break;
 
-       case DNGN_TRAP_TELEPORT:
-       case DNGN_TRAP_ALARM:
-       case DNGN_TRAP_ZOT:
-       case DNGN_TRAP_MECHANICAL:
-            ostr << "These nasty constructions can do physical damage (with "
-                    "darts or needles, for example) or have other, more "
-                    "magical effects. ";
+    case DNGN_TRAP_TELEPORT:
+    case DNGN_TRAP_ALARM:
+    case DNGN_TRAP_ZOT:
+    case DNGN_TRAP_MECHANICAL:
+         ostr << "These nasty constructions can do physical damage (with "
+                 "darts or needles, for example) or have other, more "
+                 "magical effects. ";
 
-            if (feat == DNGN_TRAP_MECHANICAL)
-            {
-                ostr << "You can attempt to deactivate the mechanical type by "
-                        "standing next to it and then pressing <w>Ctrl</w> "
-                        "and the direction of the trap. Note that this usually "
-                        "causes the trap to go off, so it can be quite a "
-                        "dangerous task.\n\n"
+         if (feat == DNGN_TRAP_MECHANICAL)
+         {
+             ostr << "You can attempt to deactivate the mechanical type by "
+                     "standing next to it and then pressing <w>Ctrl</w> "
+                     "and the direction of the trap. Note that this usually "
+                     "causes the trap to go off, so it can be quite a "
+                     "dangerous task.\n\n"
 
-                        "You can safely pass over a mechanical trap if "
-                        "you're flying.";
-            }
-            else
-            {
-                ostr << "Magical traps can't be disarmed, and unlike "
-                        "mechanical traps you can't avoid tripping them "
-                        "by flying over them.";
-            }
-            Hints.hints_events[HINT_SEEN_TRAP] = false;
-            break;
+                     "You can safely pass over a mechanical trap if "
+                     "you're flying.";
+         }
+         else
+         {
+             ostr << "Magical traps can't be disarmed, and unlike "
+                     "mechanical traps you can't avoid tripping them "
+                     "by flying over them.";
+         }
+         Hints.hints_events[HINT_SEEN_TRAP] = false;
+         break;
 
-       case DNGN_TRAP_SHAFT:
-            ostr << "The dungeon contains a number of natural obstacles such "
-                    "as shafts, which lead one to three levels down. They "
-                    "can't be disarmed, but once you know the shaft is there, "
-                    "you can safely step over it.\n"
-                    "If you want to jump down there, use <w>></w> to do so. "
-                    "Be warned that getting back here might be difficult.";
-            Hints.hints_events[HINT_SEEN_TRAP] = false;
-            break;
+    case DNGN_TRAP_SHAFT:
+         ostr << "The dungeon contains a number of natural obstacles such "
+                 "as shafts, which lead one to three levels down. They "
+                 "can't be disarmed, but once you know the shaft is there, "
+                 "you can safely step over it.\n"
+                 "If you want to jump down there, use <w>></w> to do so. "
+                 "Be warned that getting back here might be difficult.";
+         Hints.hints_events[HINT_SEEN_TRAP] = false;
+         break;
 
-       case DNGN_TRAP_WEB:
-            ostr << "Some areas of the dungeon, such as Spiders Nest, may "
-                    "be strewn with giant webs that may ensnare you for a short "
-                    "time and notify nearby spiders of your location. "
-                    "You can attempt to clear away the web by "
-                    "standing next to it and then pressing <w>Ctrl</w> "
-                    "and the direction of the web. Note that this often "
-                    "results in just getting entangled anyway, so it can be "
-                    "quite a dangerous task.\n\n"
+    case DNGN_TRAP_WEB:
+         ostr << "Some areas of the dungeon, such as Spiders Nest, may "
+                 "be strewn with giant webs that may ensnare you for a short "
+                 "time and notify nearby spiders of your location. "
+                 "You can attempt to clear away the web by "
+                 "standing next to it and then pressing <w>Ctrl</w> "
+                 "and the direction of the web. Note that this often "
+                 "results in just getting entangled anyway, so it can be "
+                 "quite a dangerous task.\n\n"
 
-                    "Players in Spider Form can safely navigate the webs (as "
-                    "can incorporeal entities and various oozes). ";
-            Hints.hints_events[HINT_SEEN_WEB] = false;
-            break;
+                 "Players in Spider Form can safely navigate the webs (as "
+                 "can incorporeal entities and various oozes). ";
+         Hints.hints_events[HINT_SEEN_WEB] = false;
+         break;
 
-       case DNGN_STONE_STAIRS_DOWN_I:
-       case DNGN_STONE_STAIRS_DOWN_II:
-       case DNGN_STONE_STAIRS_DOWN_III:
-            ostr << "You can enter the next (deeper) level by following them "
-                    "down (<w>></w>). To get back to this level again, "
-                    "press <w><<</w> while standing on the upstairs.";
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+         ostr << "You can enter the next (deeper) level by following them "
+                 "down (<w>></w>). To get back to this level again, "
+                 "press <w><<</w> while standing on the upstairs.";
 #ifdef USE_TILE
-            ostr << " In Tiles, you can achieve the same, in either direction, "
-                    "by clicking the <w>left mouse button</w> while pressing "
-                    "<w>Shift</w>. ";
+         ostr << " In Tiles, you can achieve the same, in either direction, "
+                 "by clicking the <w>left mouse button</w> while pressing "
+                 "<w>Shift</w>. ";
 #endif
 
-            if (is_unknown_stair(where))
-            {
-                ostr << "\n\nYou have not yet passed through this particular "
-                        "set of stairs. ";
-            }
+         if (is_unknown_stair(where))
+         {
+             ostr << "\n\nYou have not yet passed through this particular "
+                     "set of stairs. ";
+         }
 
-            Hints.hints_events[HINT_SEEN_STAIRS] = false;
-            break;
+         Hints.hints_events[HINT_SEEN_STAIRS] = false;
+         break;
 
-       case DNGN_EXIT_DUNGEON:
-            ostr << "These stairs lead out of the dungeon. Following them "
-                    "will end the game. The only way to win is to "
-                    "transport the fabled Orb of Zot outside.";
-            break;
+    case DNGN_EXIT_DUNGEON:
+         ostr << "These stairs lead out of the dungeon. Following them "
+                 "will end the game. The only way to win is to "
+                 "transport the fabled Orb of Zot outside.";
+         break;
 
-       case DNGN_STONE_STAIRS_UP_I:
-       case DNGN_STONE_STAIRS_UP_II:
-       case DNGN_STONE_STAIRS_UP_III:
-            ostr << "You can enter the previous (shallower) level by "
-                    "following these up (<w><<</w>). This is ideal for "
-                    "retreating or finding a safe resting spot, since the "
-                    "previous level will have less monsters and monsters "
-                    "on this level can't follow you up unless they're "
-                    "standing right next to you. To get back to this "
-                    "level again, press <w>></w> while standing on the "
-                    "downstairs.";
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+         ostr << "You can enter the previous (shallower) level by "
+                 "following these up (<w><<</w>). This is ideal for "
+                 "retreating or finding a safe resting spot, since the "
+                 "previous level will have less monsters and monsters "
+                 "on this level can't follow you up unless they're "
+                 "standing right next to you. To get back to this "
+                 "level again, press <w>></w> while standing on the "
+                 "downstairs.";
 #ifdef USE_TILE
-            ostr << " In Tiles, you can perform either action simply by "
-                    "clicking the <w>left mouse button</w> while pressing "
-                    "<w>Shift</w> instead. ";
+         ostr << " In Tiles, you can perform either action simply by "
+                 "clicking the <w>left mouse button</w> while pressing "
+                 "<w>Shift</w> instead. ";
 #endif
-            if (is_unknown_stair(where))
-            {
-                ostr << "\n\nYou have not yet passed through this "
-                        "particular set of stairs. ";
-            }
-            Hints.hints_events[HINT_SEEN_STAIRS] = false;
-            break;
+         if (is_unknown_stair(where))
+         {
+             ostr << "\n\nYou have not yet passed through this "
+                     "particular set of stairs. ";
+         }
+         Hints.hints_events[HINT_SEEN_STAIRS] = false;
+         break;
 
-       case DNGN_ESCAPE_HATCH_DOWN:
-       case DNGN_ESCAPE_HATCH_UP:
-            ostr << "Escape hatches can be used to quickly leave a level with "
-                    "<w><<</w> and <w>></w>, respectively. Note that you will "
-                    "usually be unable to return right away.";
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_ESCAPE_HATCH_UP:
+         ostr << "Escape hatches can be used to quickly leave a level with "
+                 "<w><<</w> and <w>></w>, respectively. Note that you will "
+                 "usually be unable to return right away.";
 
-            Hints.hints_events[HINT_SEEN_ESCAPE_HATCH] = false;
-            break;
+         Hints.hints_events[HINT_SEEN_ESCAPE_HATCH] = false;
+         break;
 
-       case DNGN_ENTER_PORTAL_VAULT:
-            ostr << "This " << _describe_portal(where);
-            Hints.hints_events[HINT_SEEN_PORTAL] = false;
-            break;
+    case DNGN_ENTER_PORTAL_VAULT:
+         ostr << "This " << _describe_portal(where);
+         Hints.hints_events[HINT_SEEN_PORTAL] = false;
+         break;
 
-       case DNGN_CLOSED_DOOR:
-       case DNGN_RUNED_DOOR:
-            if (!Hints.hints_explored)
-            {
-                ostr << "\nTo avoid accidentally opening a door you'd rather "
-                        "remain closed during travel or autoexplore, you can "
-                        "mark it with an exclusion from the map view "
-                        "(<w>X</w>) with <w>ee</w> while your cursor is on the "
-                        "grid in question. Such an exclusion will prevent "
-                        "autotravel from ever entering that grid until you "
-                        "remove the exclusion with another press of <w>Xe</w>.";
-            }
-            break;
+    case DNGN_CLOSED_DOOR:
+    case DNGN_RUNED_DOOR:
+         if (!Hints.hints_explored)
+         {
+             ostr << "\nTo avoid accidentally opening a door you'd rather "
+                     "remain closed during travel or autoexplore, you can "
+                     "mark it with an exclusion from the map view "
+                     "(<w>X</w>) with <w>ee</w> while your cursor is on the "
+                     "grid in question. Such an exclusion will prevent "
+                     "autotravel from ever entering that grid until you "
+                     "remove the exclusion with another press of <w>Xe</w>.";
+         }
+         break;
 
-       default:
-            if (feat_is_altar(feat))
-            {
-                god_type altar_god = feat_altar_god(feat);
+    default:
+         if (feat_is_altar(feat))
+         {
+             god_type altar_god = feat_altar_god(feat);
 
-                // I think right now Sif Muna is the only god for whom
-                // you can find altars early and who may refuse to accept
-                // worship by one of the hint mode characters. (jpeg)
-                if (altar_god == GOD_SIF_MUNA
-                    && !player_can_join_god(altar_god))
-                {
-                    ostr << "As <w>p</w>raying on the altar will tell you, "
-                         << god_name(altar_god) << " only accepts worship from "
-                            "those who have already dabbled in magic. You can "
-                            "find out more about this god by searching the "
-                            "database with <w>?/g</w>.\n"
-                            "For other gods, you'll be able to join the faith "
-                            "by <w>p</w>raying at their altar.";
-                }
-                else if (you_worship(GOD_NO_GOD))
-                {
-                    ostr << "This is your chance to join a religion! In "
-                            "general, the gods will help their followers, "
-                            "bestowing powers of all sorts upon them, but many "
-                            "of them demand a life of dedication, constant "
-                            "tributes or entertainment in return.\n"
-                            "You can get information about <w>"
-                         << god_name(altar_god)
-                         << "</w> by pressing <w>p</w> while standing on the "
-                            "altar. Before taking up the responding faith "
-                            "you'll be asked for confirmation.";
-                }
-                else if (you_worship(altar_god))
-                {
-                    // If we don't have anything to say, return early.
-                    return;
-                }
-                else
-                {
-                    ostr << god_name(you.religion)
-                         << " probably won't like it if you switch allegiance, "
-                            "but having a look won't hurt: to get information "
-                            "on <w>";
-                    ostr << god_name(altar_god);
-                    ostr << "</w>, press <w>p</w> while standing on the "
-                            "altar. Before taking up the responding faith (and "
-                            "abandoning your current one!) you'll be asked for "
-                            "confirmation."
-                            "\nTo see your current standing with "
-                         << god_name(you.religion)
-                         << " press <w>^</w>"
+             // I think right now Sif Muna is the only god for whom
+             // you can find altars early and who may refuse to accept
+             // worship by one of the hint mode characters. (jpeg)
+             if (altar_god == GOD_SIF_MUNA
+                 && !player_can_join_god(altar_god))
+             {
+                 ostr << "As <w>p</w>raying on the altar will tell you, "
+                      << god_name(altar_god) << " only accepts worship from "
+                         "those who have already dabbled in magic. You can "
+                         "find out more about this god by searching the "
+                         "database with <w>?/g</w>.\n"
+                         "For other gods, you'll be able to join the faith "
+                         "by <w>p</w>raying at their altar.";
+             }
+             else if (you_worship(GOD_NO_GOD))
+             {
+                 ostr << "This is your chance to join a religion! In "
+                         "general, the gods will help their followers, "
+                         "bestowing powers of all sorts upon them, but many "
+                         "of them demand a life of dedication, constant "
+                         "tributes or entertainment in return.\n"
+                         "You can get information about <w>"
+                      << god_name(altar_god)
+                      << "</w> by pressing <w>p</w> while standing on the "
+                         "altar. Before taking up the responding faith "
+                         "you'll be asked for confirmation.";
+             }
+             else if (you_worship(altar_god))
+             {
+                 // If we don't have anything to say, return early.
+                 return;
+             }
+             else
+             {
+                 ostr << god_name(you.religion)
+                      << " probably won't like it if you switch allegiance, "
+                         "but having a look won't hurt: to get information "
+                         "on <w>";
+                 ostr << god_name(altar_god);
+                 ostr << "</w>, press <w>p</w> while standing on the "
+                         "altar. Before taking up the responding faith (and "
+                         "abandoning your current one!) you'll be asked for "
+                         "confirmation."
+                         "\nTo see your current standing with "
+                      << god_name(you.religion)
+                      << " press <w>^</w>"
 #ifdef USE_TILE
-                            ", or click with your <w>right mouse button</w> "
-                            "on your avatar while pressing <w>Shift</w>"
+                         ", or click with your <w>right mouse button</w> "
+                         "on your avatar while pressing <w>Shift</w>"
 #endif
-                            ".";
-                }
-                Hints.hints_events[HINT_SEEN_ALTAR] = false;
-                break;
-            }
-            else if (feat >= DNGN_ENTER_FIRST_BRANCH
-                     && feat <= DNGN_ENTER_LAST_BRANCH)
-            {
-                ostr << "An entryway into one of the many dungeon branches in "
-                        "Crawl. ";
-                if (feat != DNGN_ENTER_TEMPLE)
-                    ostr << "Beware, sometimes these can be deadly!";
-                break;
-            }
-            else
-            {
-                // Describe blood-stains even for boring features.
-                if (!is_bloodcovered(where))
-                    return;
-                boring = true;
-            }
+                         ".";
+             }
+             Hints.hints_events[HINT_SEEN_ALTAR] = false;
+             break;
+         }
+         else if (feat >= DNGN_ENTER_FIRST_BRANCH
+                  && feat <= DNGN_ENTER_LAST_BRANCH)
+         {
+             ostr << "An entryway into one of the many dungeon branches in "
+                     "Crawl. ";
+             if (feat != DNGN_ENTER_TEMPLE)
+                 ostr << "Beware, sometimes these can be deadly!";
+             break;
+         }
+         else
+         {
+             // Describe blood-stains even for boring features.
+             if (!is_bloodcovered(where))
+                 return;
+             boring = true;
+         }
     }
 
     if (is_bloodcovered(where))

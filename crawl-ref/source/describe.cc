@@ -3200,33 +3200,33 @@ static string _monster_spells_description(const monster_info& mi)
     // Loop through books and display spells/abilities for each of them
     for (size_t i = 0; i < num_books; ++i)
     {
-       // Create spell list containing no duplicate/irrelevant entries
-       book = books[i];
-       vector<spell_type> book_spells;
-       for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-       {
-           const spell_type spell = mspell_list[book].spells[j];
-           bool match = false;
-           for (unsigned int k = 0; k < book_spells.size(); ++k)
-               if (book_spells[k] == spell)
-                   match = true;
+        // Create spell list containing no duplicate/irrelevant entries
+        book = books[i];
+        vector<spell_type> book_spells;
+        for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
+        {
+            const spell_type spell = mspell_list[book].spells[j];
+            bool match = false;
+            for (unsigned int k = 0; k < book_spells.size(); ++k)
+                if (book_spells[k] == spell)
+                    match = true;
 
-           if (!match && _interesting_mons_spell(spell))
-               book_spells.push_back(spell);
-       }
+            if (!match && _interesting_mons_spell(spell))
+                book_spells.push_back(spell);
+        }
 
-       // Display spells for this book
-       if (num_books > 1)
-           result << (caster ? " Book " : " Set ") << i+1 << ": ";
+        // Display spells for this book
+        if (num_books > 1)
+            result << (caster ? " Book " : " Set ") << i+1 << ": ";
 
-       for (size_t j = 0; j < book_spells.size(); ++j)
-       {
-           const spell_type spell = book_spells[j];
-           if (j > 0)
-               result << ", ";
-           result << spell_title(spell);
-       }
-       result << "\n";
+        for (size_t j = 0; j < book_spells.size(); ++j)
+        {
+            const spell_type spell = book_spells[j];
+            if (j > 0)
+                result << ", ";
+            result << spell_title(spell);
+        }
+        result << "\n";
     }
 
     return result.str();

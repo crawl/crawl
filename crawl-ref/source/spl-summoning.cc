@@ -348,7 +348,7 @@ static monster_type _feature_to_elemental(const coord_def& where,
     if ((any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
         && (grd(where) == DNGN_ROCK_WALL || grd(where) == DNGN_CLEAR_ROCK_WALL))
     {
-            return MONS_EARTH_ELEMENTAL;
+        return MONS_EARTH_ELEMENTAL;
     }
 
     if ((any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
@@ -935,7 +935,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
             if (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
                 || mon == MONS_IRON_IMP || mon == MONS_SHADOW_IMP)
             {
-               _monster_greeting(demon, "_friendly_imp_greeting");
+                _monster_greeting(demon, "_friendly_imp_greeting");
             }
         }
     }

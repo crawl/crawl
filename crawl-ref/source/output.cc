@@ -498,10 +498,10 @@ void update_turn_count()
     textcolor(HUD_VALUE_COLOUR);
     if (Options.show_game_turns)
     {
-       CPRINTF("%.1f (%.1f)%s", you.elapsed_time / 10.0,
-               (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
-               // extra spaces to erase excess if previous output was longer
-               "    ");
+        CPRINTF("%.1f (%.1f)%s", you.elapsed_time / 10.0,
+                (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
+                // extra spaces to erase excess if previous output was longer
+                "    ");
     }
     else
         CPRINTF("%d", you.num_turns);
@@ -1898,17 +1898,17 @@ static string _overview_screen_title(int sw)
     {
         switch (count)
         {
-          case 0:
-              snprintf(species_job, sizeof species_job,
-                       "(%s%s)",
-                       get_species_abbrev(you.species),
-                       get_job_abbrev(you.char_class));
-              break;
-          case 1:
-              strcpy(title, "");
-              break;
-          default:
-              break;
+        case 0:
+            snprintf(species_job, sizeof species_job,
+                     "(%s%s)",
+                     get_species_abbrev(you.species),
+                     get_job_abbrev(you.char_class));
+            break;
+        case 1:
+            strcpy(title, "");
+            break;
+        default:
+            break;
         }
         linelength = strwidth(you.your_name) + strwidth(title)
                      + strwidth(species_job) + strwidth(time_turns);
