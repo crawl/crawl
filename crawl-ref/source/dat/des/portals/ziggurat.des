@@ -515,14 +515,12 @@ ENDMAP
 NAME: ziggurat_loot_3
 TAGS: ziggurat_loot_chamber allow_dup
 ORIENT: float
+KFEAT:   m = iron_grate
 : ziggurat_loot_spot(_G, "X")
 MAP
- cccc
-cc..cc
-c....c
-c....c
-c...cc
-@cccc
+ccc
+@Xc
+ccc
 ENDMAP
 
 # not finished!
