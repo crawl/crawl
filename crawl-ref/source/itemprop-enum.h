@@ -212,7 +212,9 @@ enum launch_retval
 
 enum misc_item_type
 {
+#if TAG_MAJOR_VERSION == 34
     MISC_BOTTLED_EFREET,
+#endif
     MISC_FAN_OF_GALES,
     MISC_LAMP_OF_FIRE,
     MISC_STONE_OF_TREMORS,

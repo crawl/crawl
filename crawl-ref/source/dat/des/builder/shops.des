@@ -205,7 +205,7 @@ SUBST: m = mb
 KFEAT: s = general shop type:Hardware suffix:Store ; any deck | any wand w:90 | any rod | \
    ring of invisibility | ring of flight | ring of teleportation | \
    amulet of rage | staff of energy w:3 | fan of gales w:3 | \
-   bottled efreet w:3 | lamp of fire w:3 | box of beasts w:3 | \
+   lamp of fire w:3 | box of beasts w:3 | \
    stone of tremors w:3 | lantern of shadows w:3 | disc of storms w:3 | \
    crystal ball of energy w:3 | scroll of recharging w:5 | manual of evocations w:2 | \
    ring of teleport control | phial of floods w:3
@@ -234,7 +234,7 @@ SUBST: G : YlG
 :   any weapon ego:vampiricism w:5 | demon blade w:5 | \
 :   demon whip w:5 | demon trident w:5 | wand of draining | scroll of torment | \
 :   staff of death | rod of demonology w:5 | \
-:   bottled efreet w:5 | lantern of shadows w:5 | book of necromancy | book of death | \
+:   lantern of shadows w:5 | book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
 :   grand grimoire w:1 | scythe unrand:scythe_of_curses w:1 | \
 :   long sword unrand:sword_of_zonguldrok w:1 | mace unrand:sceptre_of_torment w:1")

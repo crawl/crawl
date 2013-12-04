@@ -767,8 +767,8 @@ KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
        w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
        w:4 any weapon ego:flaming | w:4 bow ego:flame | w:12 arrow ego:flame | \
        w:7 wand of flame | w:5 wand of fire | w:3 wand of fireball | \
-       w:4 bottled efreet | w:4 staff of fire | w:17 randbook disc:fire | \
-       w:6 robe ego:fire_resistance | w:9 any armour ego:fire_resistance
+       w:4 staff of fire | w:17 randbook disc:fire | w:6 robe ego:fire_resistance | \
+       w:9 any armour ego:fire_resistance
 SUBST: ? = .l1
 SUBST: - = .l
 MAP

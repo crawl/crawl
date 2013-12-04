@@ -111,9 +111,6 @@ bool is_unholy_item(const item_def& item)
     case OBJ_RODS:
         retval = _is_bookrod_type(item, is_unholy_spell);
         break;
-    case OBJ_MISCELLANY:
-        retval = (item.sub_type == MISC_BOTTLED_EFREET);
-        break;
     default:
         break;
     }
