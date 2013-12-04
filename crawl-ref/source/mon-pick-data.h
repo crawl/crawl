@@ -1,5 +1,5 @@
 static const pop_entry pop_d[] =
-{ // Dungeon (OOD cap: 20)
+{ // Dungeon (OOD cap: 27)
   { -3,  7,  514, SEMI, MONS_GIANT_NEWT },
   { -2,  8,  514, SEMI, MONS_GIANT_COCKROACH },
   { -2,  8,  192, PEAK, MONS_BALL_PYTHON },
