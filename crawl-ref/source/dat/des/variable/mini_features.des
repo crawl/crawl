@@ -42,7 +42,7 @@ default-depth: D, Depths, Elf, Crypt
 ############################################################################
 
 NAME:   glass_columns_a
-DEPTH:  D, Depths, Depths, Elf, Crypt
+DEPTH:  D, Depths, Elf, Crypt
 TAGS:   serial_glass transparent mini_float extra allow_dup decor
 WEIGHT: 5
 MAP
