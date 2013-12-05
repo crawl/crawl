@@ -778,84 +778,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     }
 }
 
-static void _init_item(feature_def &f, show_item_type item)
-{
-    f.minimap = MF_ITEM;
-    switch (item)
-    {
-    case SHOW_ITEM_DETECTED:
-        f.dchar   = DCHAR_ITEM_DETECTED;
-        break;
-
-    case SHOW_ITEM_ORB:
-        f.dchar   = DCHAR_ITEM_ORB;
-        break;
-
-    case SHOW_ITEM_RUNE:
-        f.dchar   = DCHAR_ITEM_RUNE;
-        break;
-
-    case SHOW_ITEM_WEAPON:
-        f.dchar   = DCHAR_ITEM_WEAPON;
-        break;
-
-    case SHOW_ITEM_ARMOUR:
-        f.dchar   = DCHAR_ITEM_ARMOUR;
-        break;
-
-    case SHOW_ITEM_WAND:
-        f.dchar   = DCHAR_ITEM_WAND;
-        break;
-
-    case SHOW_ITEM_FOOD:
-        f.dchar   = DCHAR_ITEM_FOOD;
-        break;
-
-    case SHOW_ITEM_SCROLL:
-        f.dchar   = DCHAR_ITEM_SCROLL;
-        break;
-
-    case SHOW_ITEM_RING:
-        f.dchar   = DCHAR_ITEM_RING;
-        break;
-
-    case SHOW_ITEM_POTION:
-        f.dchar   = DCHAR_ITEM_POTION;
-        break;
-
-    case SHOW_ITEM_MISSILE:
-        f.dchar   = DCHAR_ITEM_MISSILE;
-        break;
-
-    case SHOW_ITEM_BOOK:
-        f.dchar   = DCHAR_ITEM_BOOK;
-        break;
-
-    case SHOW_ITEM_STAVE:
-        f.dchar   = DCHAR_ITEM_STAVE;
-        break;
-
-    case SHOW_ITEM_MISCELLANY:
-        f.dchar   = DCHAR_ITEM_MISCELLANY;
-        break;
-
-    case SHOW_ITEM_CORPSE:
-        f.dchar   = DCHAR_ITEM_CORPSE;
-        break;
-
-    case SHOW_ITEM_GOLD:
-        f.dchar   = DCHAR_ITEM_GOLD;
-        break;
-
-    case SHOW_ITEM_AMULET:
-        f.dchar   = DCHAR_ITEM_AMULET;
-        break;
-
-    default:
-        break;
-    }
-}
-
 void init_show_table(void)
 {
     show_type obj;
@@ -875,8 +797,11 @@ void init_show_table(void)
     {
         obj.cls = SH_ITEM;
         obj.item = static_cast<show_item_type>(i);
-
-        _init_item(Features[obj], obj.item);
+        // SHOW_ITEM_NONE is bogus, but "invis exposed" is an ok placeholder
+        COMPILE_CHECK(DCHAR_ITEM_AMULET - DCHAR_ITEM_DETECTED + 2 == NUM_SHOW_ITEMS);
+        Features[obj].minimap = MF_ITEM;
+        Features[obj].dchar = static_cast<dungeon_char_type>(i
+            + DCHAR_ITEM_DETECTED - SHOW_ITEM_DETECTED);
     }
 
     obj.cls = SH_CLOUD;
