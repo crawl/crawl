@@ -48,16 +48,12 @@ tutorial1 levelmap
 Qu'est-ce que c'est ? Pour savoir où vous vous trouvez, <tiles>regardez la
 <w>mini-carte</w> à droite de l'écran.</tiles><localtiles> Faites un
 <input>clic droit</input> pour voir une partie de la carte et déplacer vous
-avec le <input>clic gauche</input>.</localtiles><webtiles> Vous pouvez passer
-en mode aperçu avec <input>$cmd[CMD_DISPLAY_MAP]</input> et ensuite déplacer le
-curseur alentour pour regarder le niveau. Vous pouvez aussi vous déplacer là où
-pointe votre curseur en appuyant sur <input>.</input> ou <input>Entrée</input>.
-Pressez <input>Échappe</input> pour revenir au mode normal du
-jeu.</webtiles><console>entrez dans le mode mini-carte avec
+avec le <input>clic gauche</input>.</localtiles><webtiles> Vous pouvez
+</webtiles><nomouse>entrez dans le mode mini-carte avec
 <input>$cmd[CMD_DISPLAY_MAP]</input> puis, déplacez votre curseur alentour pour
 découvrir le niveau. Vous pouvez aussi vous déplacer là où pointe votre curseur
 en pressant <input>.</input> ou <input>Entrée</input>. Pressez
-<input>Espace</input> pour retourner au mode normal du jeu.</console>
+<input>Espace</input> pour retourner au mode normal du jeu.</nomouse>
 %%%%
 tutorial1 autoexplore
 
@@ -140,11 +136,10 @@ tutorial1 exit
   peuvent être ouvertes en avançant vers elles
   <input>$cmd[CMD_CLOSE_DOOR]</input>  fermer une porte ouverte
 
-<yellow>Voyager</yellow>
-  <localtiles>clic de souris sur la <w>mini-carte</w>
-  </localtiles><webtiles><input>$cmd[CMD_DISPLAY_MAP]</input>  aperçu de la carte du niveau, voyager avec <input>Entrée</input>
-  </webtiles><console><input>$cmd[CMD_DISPLAY_MAP]</input>  aperçu de la carte du niveau, voyager avec <input>Entrée</input>
-  </console><input>$cmd[CMD_EXPLORE]</input>  auto-exploration
+<yellow>Voyager</yellow><localtiles>
+  clic de souris sur la <w>mini-carte</w></localtiles><nomouse>
+  <input>$cmd[CMD_DISPLAY_MAP]</input>  aperçu de la carte du niveau, voyager avec <input>Entrée</input></nomouse>
+  <input>$cmd[CMD_EXPLORE]</input>  auto-exploration
 
                   <cyan>Pressez <input>n'importe quelle touche</input> pour quitter cet écran...</cyan>
 %%%%
@@ -198,15 +193,15 @@ N'oubliez-pas, vous pouvez vous reposer avec <input>$cmd[CMD_REST]</input>.
 tutorial2 eat_reminder
 
 N'oubliez-pas, vous pouvez découper les créatures avec
-<input>$cmd[CMD_BUTCHER]</input> <localtiles>ou <input>Shift + clic de
-souris</input>, et ensuite manger ces morceaux de viande avec
+<input>$cmd[CMD_BUTCHER]</input><localtiles> ou <input>Shift + clic de
+souris</input></localtiles>, et ensuite manger ces morceaux de viande avec
 <input>$cmd[CMD_EAT]</input><localtiles> ou <input>clic de
 souris</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
 :nowrap
-Examinez ces monstres (<localtiles>via <input>survol de la souris</input></localtiles><console>avec <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></console><webtiles>avec <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></webtiles>) et comparez leurs descriptions (<localtiles><input>clic droit de souris</input></localtiles><console><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></console><webtiles><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></webtiles>) pour déterminer laquelle de ces deux cages vous pouvez traverser sans risques.
+Examinez ces monstres (<localtiles>via <input>survol de la souris</input></localtiles><nomouse>avec <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>) et comparez leurs descriptions (<localtiles><input>clic droit de souris</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></nomouse>) pour déterminer laquelle de ces deux cages vous pouvez traverser sans risques.
 %%%%
 tutorial2 downstairs
 
@@ -273,11 +268,9 @@ tutorial2 exit
 
 <yellow>Monstres</yellow><localtiles>
   <input>survol de souris</input> examiner un monstre
-  <input>clic droit</input> lire une description plus détaillée</localtiles><console>
+  <input>clic droit</input> lire une description plus détaillée</localtiles><nomouse>
   <input>$cmd[CMD_LOOK_AROUND]</input>  examiner un monstre
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lire une description plus détaillée</console> <webtiles>
-  <input>$cmd[CMD_LOOK_AROUND]</input>  examiner un monstre
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lire une description plus détaillée</webtiles>
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lire une description plus détaillée</nomouse>
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> tirer un projectile sur un monstre pré-ciblé
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> tirer sur un autre monstre<localtiles>
   Vous pouvez aussi tirer un projectile en <input>cliquant</input> dessus et en confirmant votre cible avec <input>Entrée</input>.</localtiles>
@@ -491,17 +484,18 @@ sorts.
 tutorial4 spellbook
 
 Vous pouvez mémoriser un sort figurant dans un des grimoires que vous possédez
-avec <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> ou en <input>cliquant
-</input> sur l'onglet de mémorisation et en sélectionnant le symbole du
-sort</localtiles>. Au niveau 1 d'expérience, vous n'avez accès qu'aux sorts de
-niveau 1. Cela évoluera à mesure que vous gagnerez de l'expérience.
+avec <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> ou en
+<input>cliquant</input> sur l'onglet de mémorisation et en sélectionnant
+l'icône du sort</localtiles>. Au niveau 1 d'expérience, vous n'avez accès
+qu'aux sorts de niveau 1. Cela évoluera à mesure que vous gagnerez de
+l'expérience.
 %%%%
 tutorial4 spellcasting
 
 Vous pouvez jeter des sorts avec
 <input>$cmd[CMD_CAST_SPELL]</input><localtiles> ou en <input>cliquant</input>
-sur le symbole du sort</localtiles>. Utilisez
-<input>$cmd[CMD_CAST_SPELL]?</input> pour voir la liste de vos sorts.
+sur l'icône du sort</localtiles>. Utilisez <input>$cmd[CMD_CAST_SPELL]?</input>
+pour voir la liste de vos sorts.
 
 Quand que vous n'avez plus de points de magie, repliez vous et reposez vous
 pour les récupérer avec <input>$cmd[CMD_REST]</input><localtiles> ou en
@@ -519,7 +513,7 @@ tutorial4 undead
 Contrairement à la plupart des monstres, les morts-vivants ne se régénèrent pas
 et il est impossible de dire à quel point ils sont blessés.<localtiles> Par
 ailleurs, vous pouvez également lancer des sorts en appuyant sur <input>Ctrl +
-clic droit</input> sur le monstre.</localtiles>
+clic gauche</input> sur le monstre.</localtiles>
 %%%%
 tutorial4 spell_success
 
