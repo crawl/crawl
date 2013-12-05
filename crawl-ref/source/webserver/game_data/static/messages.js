@@ -141,7 +141,7 @@ function ($, comm, client, util, settings) {
         input.focus();
 
         function send_input_line(finalChar) {
-            if (history)
+            if (history && input.val().length > 0)
             {
                 if (history.indexOf(input.val()) != -1)
                     history.splice(history.indexOf(input.val()), 1);
