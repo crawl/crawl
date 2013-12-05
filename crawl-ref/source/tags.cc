@@ -2300,6 +2300,14 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
         }
 #endif
+
+#if TAG_MAJOR_VERSION == 34
+        if (you.innate_mutations[j] + you.temp_mutations[j] > you.mutation[j])
+        {
+            mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
+            you.mutation[j] = you.innate_mutations[j] + you.temp_mutations[j];
+        }
+#endif
     }
 
 #if TAG_MAJOR_VERSION == 34
