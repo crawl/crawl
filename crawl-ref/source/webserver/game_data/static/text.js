@@ -29,7 +29,7 @@ define(["jquery", "comm"], function ($, comm) {
             for (var i = 0; i < lines.length; ++i)
             {
                 if (!(i in data.lines))
-                    lines.eq(i).html("");
+                    lines.eq(i).empty();
             }
         }
         for (var line in data.lines)
