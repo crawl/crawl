@@ -59,716 +59,716 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
 {
     switch (feat)
     {
-        case DNGN_UNSEEN:
-        case DNGN_EXPLORE_HORIZON:
-        default:
-            break;
+    case DNGN_UNSEEN:
+    case DNGN_EXPLORE_HORIZON:
+    default:
+        break;
 
-        case DNGN_ROCK_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = ETC_ROCK;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_ROCK_WALL:
+        f.dchar        = DCHAR_WALL;
+        f.colour       = ETC_ROCK;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_STONE_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = LIGHTGRAY;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_STONE_WALL:
+        f.dchar        = DCHAR_WALL;
+        f.colour       = LIGHTGRAY;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_SLIMY_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = LIGHTGREEN;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_SLIMY_WALL:
+        f.dchar        = DCHAR_WALL;
+        f.colour       = LIGHTGREEN;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_PERMAROCK_WALL:
-            f.dchar        = DCHAR_PERMAWALL;
-            f.colour       = ETC_ROCK;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_PERMAROCK_WALL:
+        f.dchar        = DCHAR_PERMAWALL;
+        f.colour       = ETC_ROCK;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_CLEAR_ROCK_WALL:
-        case DNGN_CLEAR_STONE_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = LIGHTCYAN;
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_CLEAR_ROCK_WALL:
+    case DNGN_CLEAR_STONE_WALL:
+        f.dchar        = DCHAR_WALL;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.colour       = LIGHTCYAN;
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_CLEAR_PERMAROCK_WALL:
-            f.dchar        = DCHAR_PERMAWALL;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = LIGHTCYAN;
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_CLEAR_PERMAROCK_WALL:
+        f.dchar        = DCHAR_PERMAWALL;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.colour       = LIGHTCYAN;
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_GRATE:
-            f.dchar        = DCHAR_GRATE;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = LIGHTBLUE;
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_GRATE:
+        f.dchar        = DCHAR_GRATE;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.colour       = LIGHTBLUE;
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_TREE:
-            f.dchar        = DCHAR_TREE;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = ETC_TREE;
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_TREE:
+        f.dchar        = DCHAR_TREE;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.colour       = ETC_TREE;
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_MANGROVE:
-            f.dchar        = DCHAR_TREE;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = ETC_MANGROVE;
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_MANGROVE:
+        f.dchar        = DCHAR_TREE;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.colour       = ETC_MANGROVE;
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_OPEN_SEA:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = BLUE;
-            f.minimap      = MF_WATER;
-            break;
+    case DNGN_OPEN_SEA:
+        f.dchar        = DCHAR_WALL;
+        f.colour       = BLUE;
+        f.minimap      = MF_WATER;
+        break;
 
-        case DNGN_LAVA_SEA:
-            f.dchar        = DCHAR_WAVY;
-            f.colour       = RED;
-            f.minimap      = MF_LAVA;
-            break;
+    case DNGN_LAVA_SEA:
+        f.dchar        = DCHAR_WAVY;
+        f.colour       = RED;
+        f.minimap      = MF_LAVA;
+        break;
 
-        case DNGN_OPEN_DOOR:
-            f.dchar   = DCHAR_DOOR_OPEN;
-            f.colour  = LIGHTGREY;
-            f.minimap = MF_DOOR;
-            break;
+    case DNGN_OPEN_DOOR:
+        f.dchar   = DCHAR_DOOR_OPEN;
+        f.colour  = LIGHTGREY;
+        f.minimap = MF_DOOR;
+        break;
 
-        case DNGN_CLOSED_DOOR:
-            f.dchar   = DCHAR_DOOR_CLOSED;
-            f.colour  = LIGHTGREY;
-            f.minimap = MF_DOOR;
-            break;
+    case DNGN_CLOSED_DOOR:
+        f.dchar   = DCHAR_DOOR_CLOSED;
+        f.colour  = LIGHTGREY;
+        f.minimap = MF_DOOR;
+        break;
 
-        case DNGN_RUNED_DOOR:
-            f.dchar   = DCHAR_DOOR_CLOSED;
-            f.colour  = LIGHTBLUE;
-            f.minimap = MF_DOOR;
-            f.map_colour = LIGHTBLUE;
-            break;
+    case DNGN_RUNED_DOOR:
+        f.dchar   = DCHAR_DOOR_CLOSED;
+        f.colour  = LIGHTBLUE;
+        f.minimap = MF_DOOR;
+        f.map_colour = LIGHTBLUE;
+        break;
 
-        case DNGN_SEALED_DOOR:
-            f.dchar   = DCHAR_DOOR_CLOSED;
-            f.colour  = LIGHTGREEN;
-            f.minimap = MF_DOOR;
-            f.map_colour = LIGHTGREEN;
-            break;
+    case DNGN_SEALED_DOOR:
+        f.dchar   = DCHAR_DOOR_CLOSED;
+        f.colour  = LIGHTGREEN;
+        f.minimap = MF_DOOR;
+        f.map_colour = LIGHTGREEN;
+        break;
 
-        case DNGN_METAL_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = CYAN;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_METAL_WALL:
+        f.dchar        = DCHAR_WALL;
+        f.colour       = CYAN;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_GREEN_CRYSTAL_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = GREEN;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
+    case DNGN_GREEN_CRYSTAL_WALL:
+        f.dchar        = DCHAR_WALL;
+        f.colour       = GREEN;
+        f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+        f.minimap      = MF_WALL;
+        break;
 
-        case DNGN_ORCISH_IDOL:
-            f.dchar   = DCHAR_STATUE;
-            f.colour  = BROWN; // same as clay golem, I hope that's okay
-            f.minimap = MF_WALL;
-            break;
+    case DNGN_ORCISH_IDOL:
+        f.dchar   = DCHAR_STATUE;
+        f.colour  = BROWN; // same as clay golem, I hope that's okay
+        f.minimap = MF_WALL;
+        break;
 
-        case DNGN_GRANITE_STATUE:
-            f.dchar   = DCHAR_STATUE;
-            f.colour  = DARKGREY;
-            f.minimap = MF_WALL;
-            break;
+    case DNGN_GRANITE_STATUE:
+        f.dchar   = DCHAR_STATUE;
+        f.colour  = DARKGREY;
+        f.minimap = MF_WALL;
+        break;
 
-        case DNGN_LAVA:
-            f.dchar   = DCHAR_WAVY;
-            f.colour  = RED;
-            f.minimap = MF_LAVA;
-            break;
+    case DNGN_LAVA:
+        f.dchar   = DCHAR_WAVY;
+        f.colour  = RED;
+        f.minimap = MF_LAVA;
+        break;
 
-        case DNGN_DEEP_WATER:
-            f.dchar   = DCHAR_WAVY;
-            f.colour  = BLUE;
-            f.minimap = MF_WATER;
-            break;
+    case DNGN_DEEP_WATER:
+        f.dchar   = DCHAR_WAVY;
+        f.colour  = BLUE;
+        f.minimap = MF_WATER;
+        break;
 
-        case DNGN_SHALLOW_WATER:
-            f.dchar   = DCHAR_WAVY;
-            f.colour  = CYAN;
-            f.minimap = MF_WATER;
-            break;
+    case DNGN_SHALLOW_WATER:
+        f.dchar   = DCHAR_WAVY;
+        f.colour  = CYAN;
+        f.minimap = MF_WATER;
+        break;
 
-        case DNGN_FLOOR:
-            f.dchar        = DCHAR_FLOOR;
-            f.colour       = ETC_FLOOR;
-            f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            f.minimap      = MF_FLOOR;
-            break;
+    case DNGN_FLOOR:
+        f.dchar        = DCHAR_FLOOR;
+        f.colour       = ETC_FLOOR;
+        f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
+        f.minimap      = MF_FLOOR;
+        break;
 
-        case DNGN_EXIT_HELL:
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = LIGHTRED;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = LIGHTRED;
-            f.minimap     = MF_STAIR_UP;
-            break;
+    case DNGN_EXIT_HELL:
+        f.dchar       = DCHAR_ARCH;
+        f.colour      = LIGHTRED;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = LIGHTRED;
+        f.minimap     = MF_STAIR_UP;
+        break;
 
-        case DNGN_ENTER_HELL:
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = RED;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = RED;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_HELL:
+        f.dchar       = DCHAR_ARCH;
+        f.colour      = RED;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = RED;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_TELEPORTER:
-            f.dchar       = DCHAR_TELEPORTER;
-            f.colour      = YELLOW;
-            f.map_colour  = YELLOW;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_TELEPORTER:
+        f.dchar       = DCHAR_TELEPORTER;
+        f.colour      = YELLOW;
+        f.map_colour  = YELLOW;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_TRAP_MECHANICAL:
-            f.colour     = LIGHTCYAN;
-            f.dchar      = DCHAR_TRAP;
-            f.map_colour = LIGHTCYAN;
-            f.minimap    = MF_TRAP;
-            break;
+    case DNGN_TRAP_MECHANICAL:
+        f.colour     = LIGHTCYAN;
+        f.dchar      = DCHAR_TRAP;
+        f.map_colour = LIGHTCYAN;
+        f.minimap    = MF_TRAP;
+        break;
 
-        case DNGN_TRAP_TELEPORT:
-            f.colour = f.map_colour = LIGHTBLUE;
-            f.dchar      = DCHAR_TRAP;
-            f.minimap    = MF_TRAP;
-            break;
+    case DNGN_TRAP_TELEPORT:
+        f.colour = f.map_colour = LIGHTBLUE;
+        f.dchar      = DCHAR_TRAP;
+        f.minimap    = MF_TRAP;
+        break;
 
-        case DNGN_TRAP_ALARM:
-            f.colour = f.map_colour = LIGHTRED;
-            f.dchar      = DCHAR_TRAP;
-            f.minimap    = MF_TRAP;
-            break;
+    case DNGN_TRAP_ALARM:
+        f.colour = f.map_colour = LIGHTRED;
+        f.dchar      = DCHAR_TRAP;
+        f.minimap    = MF_TRAP;
+        break;
 
-        case DNGN_TRAP_ZOT:
-            f.colour = f.map_colour = LIGHTMAGENTA;
-            f.dchar      = DCHAR_TRAP;
-            f.minimap    = MF_TRAP;
-            break;
+    case DNGN_TRAP_ZOT:
+        f.colour = f.map_colour = LIGHTMAGENTA;
+        f.dchar      = DCHAR_TRAP;
+        f.minimap    = MF_TRAP;
+        break;
 
-        case DNGN_PASSAGE_OF_GOLUBRIA:
-            f.colour = f.map_colour = GREEN;
-            f.dchar      = DCHAR_TRAP;
-            f.minimap    = MF_TRAP;
-            break;
+    case DNGN_PASSAGE_OF_GOLUBRIA:
+        f.colour = f.map_colour = GREEN;
+        f.dchar      = DCHAR_TRAP;
+        f.minimap    = MF_TRAP;
+        break;
 
-        case DNGN_TRAP_SHAFT:
-            f.colour     = BROWN;
-            f.dchar      = DCHAR_TRAP;
-            f.map_colour = BROWN;
-            f.minimap    = MF_TRAP;
-            break;
+    case DNGN_TRAP_SHAFT:
+        f.colour     = BROWN;
+        f.dchar      = DCHAR_TRAP;
+        f.map_colour = BROWN;
+        f.minimap    = MF_TRAP;
+        break;
 
-        case DNGN_TRAP_WEB:
-            f.colour     = LIGHTGREY;
-            f.dchar      = DCHAR_TRAP;
-            f.map_colour = LIGHTGREY;
-            f.minimap    = MF_TRAP;
-            break;
+    case DNGN_TRAP_WEB:
+        f.colour     = LIGHTGREY;
+        f.dchar      = DCHAR_TRAP;
+        f.map_colour = LIGHTGREY;
+        f.minimap    = MF_TRAP;
+        break;
 
-        case DNGN_UNDISCOVERED_TRAP:
-            f.dchar        = DCHAR_FLOOR;
-            f.colour       = ETC_FLOOR;
-            f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            f.minimap      = MF_FLOOR;
-            break;
+    case DNGN_UNDISCOVERED_TRAP:
+        f.dchar        = DCHAR_FLOOR;
+        f.colour       = ETC_FLOOR;
+        f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
+        f.minimap      = MF_FLOOR;
+        break;
 
-        case DNGN_ENTER_SHOP:
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = YELLOW;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = YELLOW;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ENTER_SHOP:
+        f.dchar       = DCHAR_ARCH;
+        f.colour      = YELLOW;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = YELLOW;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ABANDONED_SHOP:
-            f.colour     = LIGHTGREY;
-            f.dchar      = DCHAR_ARCH;
-            f.map_colour = LIGHTGREY;
-            f.minimap    = MF_FLOOR;
-            break;
+    case DNGN_ABANDONED_SHOP:
+        f.colour     = LIGHTGREY;
+        f.dchar      = DCHAR_ARCH;
+        f.map_colour = LIGHTGREY;
+        f.minimap    = MF_FLOOR;
+        break;
 
-        case DNGN_ENTER_LABYRINTH:
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = CYAN;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = CYAN;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_LABYRINTH:
+        f.dchar       = DCHAR_ARCH;
+        f.colour      = CYAN;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = CYAN;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ENTER_PORTAL_VAULT:
-            f.flags |= FFT_NOTABLE;
-            // fall through
+    case DNGN_ENTER_PORTAL_VAULT:
+        f.flags |= FFT_NOTABLE;
+        // fall through
 
-        case DNGN_EXIT_PORTAL_VAULT:
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = ETC_SHIMMER_BLUE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = ETC_SHIMMER_BLUE;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_EXIT_PORTAL_VAULT:
+        f.dchar       = DCHAR_ARCH;
+        f.colour      = ETC_SHIMMER_BLUE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = ETC_SHIMMER_BLUE;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_MALIGN_GATEWAY:
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = ETC_SHIMMER_BLUE;
-            f.map_colour  = LIGHTGREY;
-            f.colour      = ETC_SHIMMER_BLUE;
-            f.minimap     = MF_STAIR_UP;
-            break;
+    case DNGN_MALIGN_GATEWAY:
+        f.dchar       = DCHAR_ARCH;
+        f.colour      = ETC_SHIMMER_BLUE;
+        f.map_colour  = LIGHTGREY;
+        f.colour      = ETC_SHIMMER_BLUE;
+        f.minimap     = MF_STAIR_UP;
+        break;
 
-        case DNGN_EXPIRED_PORTAL:
-            f.dchar        = DCHAR_FLOOR;
-            f.colour       = BROWN;
-            f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            f.minimap      = MF_FLOOR;
-            break;
+    case DNGN_EXPIRED_PORTAL:
+        f.dchar        = DCHAR_FLOOR;
+        f.colour       = BROWN;
+        f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
+        f.minimap      = MF_FLOOR;
+        break;
 
 
-        case DNGN_ESCAPE_HATCH_DOWN:
-            f.dchar      = DCHAR_STAIRS_DOWN;
-            f.colour     = BROWN;
-            f.map_colour = BROWN;
-            f.minimap    = MF_STAIR_DOWN;
-            break;
+    case DNGN_ESCAPE_HATCH_DOWN:
+        f.dchar      = DCHAR_STAIRS_DOWN;
+        f.colour     = BROWN;
+        f.map_colour = BROWN;
+        f.minimap    = MF_STAIR_DOWN;
+        break;
 
-        case DNGN_STONE_STAIRS_DOWN_I:
-        case DNGN_STONE_STAIRS_DOWN_II:
-        case DNGN_STONE_STAIRS_DOWN_III:
-            f.dchar          = DCHAR_STAIRS_DOWN;
-            f.colour         = RED;
-            f.em_colour      = WHITE;
-            f.map_colour     = RED;
-            f.seen_em_colour = WHITE;
-            f.minimap        = MF_STAIR_DOWN;
-            break;
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+        f.dchar          = DCHAR_STAIRS_DOWN;
+        f.colour         = RED;
+        f.em_colour      = WHITE;
+        f.map_colour     = RED;
+        f.seen_em_colour = WHITE;
+        f.minimap        = MF_STAIR_DOWN;
+        break;
 
-        case DNGN_SEALED_STAIRS_DOWN:
-            f.dchar          = DCHAR_STAIRS_DOWN;
-            f.colour         = LIGHTGREEN;
-            f.map_colour     = LIGHTGREEN;
-            f.minimap        = MF_STAIR_DOWN;
-            break;
+    case DNGN_SEALED_STAIRS_DOWN:
+        f.dchar          = DCHAR_STAIRS_DOWN;
+        f.colour         = LIGHTGREEN;
+        f.map_colour     = LIGHTGREEN;
+        f.minimap        = MF_STAIR_DOWN;
+        break;
 
-        case DNGN_ESCAPE_HATCH_UP:
-            f.dchar      = DCHAR_STAIRS_UP;
-            f.colour     = BROWN;
-            f.map_colour = BROWN;
-            f.minimap    = MF_STAIR_UP;
-            break;
+    case DNGN_ESCAPE_HATCH_UP:
+        f.dchar      = DCHAR_STAIRS_UP;
+        f.colour     = BROWN;
+        f.map_colour = BROWN;
+        f.minimap    = MF_STAIR_UP;
+        break;
 
-        case DNGN_STONE_STAIRS_UP_I:
-        case DNGN_STONE_STAIRS_UP_II:
-        case DNGN_STONE_STAIRS_UP_III:
-            f.dchar          = DCHAR_STAIRS_UP;
-            f.colour         = GREEN;
-            f.map_colour     = GREEN;
-            f.em_colour      = WHITE;
-            f.seen_em_colour = WHITE;
-            f.minimap        = MF_STAIR_UP;
-            break;
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+        f.dchar          = DCHAR_STAIRS_UP;
+        f.colour         = GREEN;
+        f.map_colour     = GREEN;
+        f.em_colour      = WHITE;
+        f.seen_em_colour = WHITE;
+        f.minimap        = MF_STAIR_UP;
+        break;
 
-        case DNGN_SEALED_STAIRS_UP:
-            f.dchar          = DCHAR_STAIRS_UP;
-            f.colour         = LIGHTGREEN;
-            f.map_colour     = LIGHTGREEN;
-            f.minimap        = MF_STAIR_UP;
-            break;
+    case DNGN_SEALED_STAIRS_UP:
+        f.dchar          = DCHAR_STAIRS_UP;
+        f.colour         = LIGHTGREEN;
+        f.map_colour     = LIGHTGREEN;
+        f.minimap        = MF_STAIR_UP;
+        break;
 
-        case DNGN_ENTER_DIS:
-            f.colour      = CYAN;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = CYAN;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_DIS:
+        f.colour      = CYAN;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = CYAN;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ENTER_GEHENNA:
-            f.colour      = RED;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = RED;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_GEHENNA:
+        f.colour      = RED;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = RED;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ENTER_COCYTUS:
-            f.colour      = LIGHTCYAN;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = LIGHTCYAN;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_COCYTUS:
+        f.colour      = LIGHTCYAN;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = LIGHTCYAN;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ENTER_TARTARUS:
-            f.colour      = DARKGREY;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = DARKGREY;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_TARTARUS:
+        f.colour      = DARKGREY;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = DARKGREY;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ENTER_ABYSS:
-        case DNGN_EXIT_THROUGH_ABYSS:
-            f.colour      = ETC_RANDOM;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = ETC_RANDOM;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_THROUGH_ABYSS:
+        f.colour      = ETC_RANDOM;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = ETC_RANDOM;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_EXIT_ABYSS:
-            f.colour     = ETC_RANDOM;
-            f.dchar      = DCHAR_ARCH;
-            f.map_colour = ETC_RANDOM;
-            f.minimap    = MF_STAIR_BRANCH;
-            break;
+    case DNGN_EXIT_ABYSS:
+        f.colour     = ETC_RANDOM;
+        f.dchar      = DCHAR_ARCH;
+        f.map_colour = ETC_RANDOM;
+        f.minimap    = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ABYSSAL_STAIR:
-            f.colour     = LIGHTCYAN;
-            f.dchar      = DCHAR_STAIRS_DOWN;
-            f.map_colour = LIGHTCYAN;
-            f.minimap    = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ABYSSAL_STAIR:
+        f.colour     = LIGHTCYAN;
+        f.dchar      = DCHAR_STAIRS_DOWN;
+        f.map_colour = LIGHTCYAN;
+        f.minimap    = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_STONE_ARCH:
-            f.colour     = LIGHTGREY;
-            f.dchar      = DCHAR_ARCH;
-            f.map_colour = LIGHTGREY;
-            f.minimap    = MF_FLOOR;
-            break;
+    case DNGN_STONE_ARCH:
+        f.colour     = LIGHTGREY;
+        f.dchar      = DCHAR_ARCH;
+        f.map_colour = LIGHTGREY;
+        f.minimap    = MF_FLOOR;
+        break;
 
-        case DNGN_ENTER_PANDEMONIUM:
-            f.colour      = LIGHTBLUE;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = LIGHTBLUE;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_PANDEMONIUM:
+        f.colour      = LIGHTBLUE;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = LIGHTBLUE;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_EXIT_PANDEMONIUM:
-            f.colour      = LIGHTBLUE;
-            f.dchar       = DCHAR_ARCH;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = LIGHTBLUE;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_EXIT_PANDEMONIUM:
+        f.colour      = LIGHTBLUE;
+        f.dchar       = DCHAR_ARCH;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = LIGHTBLUE;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_TRANSIT_PANDEMONIUM:
-            f.colour      = LIGHTGREEN;
-            f.dchar       = DCHAR_ARCH;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = LIGHTGREEN;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
-
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_DWARF:
-#endif
-        case DNGN_ENTER_ORC:
-        case DNGN_ENTER_LAIR:
-        case DNGN_ENTER_SLIME:
-        case DNGN_ENTER_DEPTHS:
-        case DNGN_ENTER_CRYPT:
-        case DNGN_ENTER_BLADE:
-        case DNGN_ENTER_TEMPLE:
-        case DNGN_ENTER_SNAKE:
-        case DNGN_ENTER_ELF:
-        case DNGN_ENTER_TOMB:
-        case DNGN_ENTER_SWAMP:
-        case DNGN_ENTER_SHOALS:
-        case DNGN_ENTER_SPIDER:
-        case DNGN_ENTER_FOREST:
-            f.colour      = YELLOW;
-            f.dchar       = DCHAR_STAIRS_DOWN;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = RED;
-            f.seen_colour = YELLOW;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
-
-        case DNGN_ENTER_VAULTS:
-            f.colour      = LIGHTGREEN;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = LIGHTGREEN;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
-
-        case DNGN_ENTER_ZOT:
-            f.colour      = MAGENTA;
-            f.dchar       = DCHAR_ARCH;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = MAGENTA;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
-
-        case DNGN_EXIT_DUNGEON:
-            f.colour      = LIGHTBLUE;
-            f.dchar       = DCHAR_STAIRS_UP;
-            f.map_colour  = GREEN;
-            f.seen_colour = LIGHTBLUE;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_TRANSIT_PANDEMONIUM:
+        f.colour      = LIGHTGREEN;
+        f.dchar       = DCHAR_ARCH;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = LIGHTGREEN;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
 #if TAG_MAJOR_VERSION == 34
-        case DNGN_RETURN_FROM_DWARF:
+    case DNGN_ENTER_DWARF:
 #endif
-        case DNGN_RETURN_FROM_ORC:
-        case DNGN_RETURN_FROM_LAIR:
-        case DNGN_RETURN_FROM_SLIME:
-        case DNGN_RETURN_FROM_VAULTS:
-        case DNGN_RETURN_FROM_CRYPT:
-        case DNGN_RETURN_FROM_BLADE:
-        case DNGN_RETURN_FROM_TEMPLE:
-        case DNGN_RETURN_FROM_SNAKE:
-        case DNGN_RETURN_FROM_ELF:
-        case DNGN_RETURN_FROM_TOMB:
-        case DNGN_RETURN_FROM_SWAMP:
-        case DNGN_RETURN_FROM_SHOALS:
-        case DNGN_RETURN_FROM_SPIDER:
-        case DNGN_RETURN_FROM_FOREST:
-        case DNGN_RETURN_FROM_DEPTHS:
-            f.colour      = YELLOW;
-            f.dchar       = DCHAR_STAIRS_UP;
-            f.map_colour  = GREEN;
-            f.seen_colour = YELLOW;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_ORC:
+    case DNGN_ENTER_LAIR:
+    case DNGN_ENTER_SLIME:
+    case DNGN_ENTER_DEPTHS:
+    case DNGN_ENTER_CRYPT:
+    case DNGN_ENTER_BLADE:
+    case DNGN_ENTER_TEMPLE:
+    case DNGN_ENTER_SNAKE:
+    case DNGN_ENTER_ELF:
+    case DNGN_ENTER_TOMB:
+    case DNGN_ENTER_SWAMP:
+    case DNGN_ENTER_SHOALS:
+    case DNGN_ENTER_SPIDER:
+    case DNGN_ENTER_FOREST:
+        f.colour      = YELLOW;
+        f.dchar       = DCHAR_STAIRS_DOWN;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = RED;
+        f.seen_colour = YELLOW;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_RETURN_FROM_ZOT:
-            f.colour      = MAGENTA;
-            f.dchar       = DCHAR_ARCH;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = MAGENTA;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+    case DNGN_ENTER_VAULTS:
+        f.colour      = LIGHTGREEN;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = LIGHTGREEN;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ALTAR_ZIN:
-            f.colour      = LIGHTGREY;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = LIGHTGREY;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ENTER_ZOT:
+        f.colour      = MAGENTA;
+        f.dchar       = DCHAR_ARCH;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = MAGENTA;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ALTAR_SHINING_ONE:
-            f.colour      = YELLOW;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = YELLOW;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_EXIT_DUNGEON:
+        f.colour      = LIGHTBLUE;
+        f.dchar       = DCHAR_STAIRS_UP;
+        f.map_colour  = GREEN;
+        f.seen_colour = LIGHTBLUE;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ALTAR_KIKUBAAQUDGHA:
-            f.colour      = DARKGREY;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = DARKGREY;
-            f.minimap     = MF_FEATURE;
-            break;
+#if TAG_MAJOR_VERSION == 34
+    case DNGN_RETURN_FROM_DWARF:
+#endif
+    case DNGN_RETURN_FROM_ORC:
+    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_RETURN_FROM_SLIME:
+    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_RETURN_FROM_BLADE:
+    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_SNAKE:
+    case DNGN_RETURN_FROM_ELF:
+    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_RETURN_FROM_SPIDER:
+    case DNGN_RETURN_FROM_FOREST:
+    case DNGN_RETURN_FROM_DEPTHS:
+        f.colour      = YELLOW;
+        f.dchar       = DCHAR_STAIRS_UP;
+        f.map_colour  = GREEN;
+        f.seen_colour = YELLOW;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ALTAR_YREDELEMNUL:
-            f.colour      = ETC_UNHOLY;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = ETC_UNHOLY;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_RETURN_FROM_ZOT:
+        f.colour      = MAGENTA;
+        f.dchar       = DCHAR_ARCH;
+        f.map_colour  = LIGHTGREY;
+        f.seen_colour = MAGENTA;
+        f.minimap     = MF_STAIR_BRANCH;
+        break;
 
-        case DNGN_ALTAR_XOM:
-            f.colour      = ETC_RANDOM;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = ETC_RANDOM;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_ZIN:
+        f.colour      = LIGHTGREY;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = LIGHTGREY;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_VEHUMET:
-            f.colour      = ETC_VEHUMET;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = ETC_VEHUMET;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_SHINING_ONE:
+        f.colour      = YELLOW;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = YELLOW;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_OKAWARU:
-            f.colour      = CYAN;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = CYAN;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_KIKUBAAQUDGHA:
+        f.colour      = DARKGREY;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = DARKGREY;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_MAKHLEB:
-            f.colour      = ETC_FIRE;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = ETC_FIRE;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_YREDELEMNUL:
+        f.colour      = ETC_UNHOLY;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = ETC_UNHOLY;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_SIF_MUNA:
-            f.colour      = BLUE;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = BLUE;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_XOM:
+        f.colour      = ETC_RANDOM;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = ETC_RANDOM;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_TROG:
-            f.colour      = RED;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = RED;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_VEHUMET:
+        f.colour      = ETC_VEHUMET;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = ETC_VEHUMET;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_NEMELEX_XOBEH:
-            f.colour      = LIGHTMAGENTA;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = LIGHTMAGENTA;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_OKAWARU:
+        f.colour      = CYAN;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = CYAN;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_ELYVILON:
-            f.colour      = WHITE;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = WHITE;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_MAKHLEB:
+        f.colour      = ETC_FIRE;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = ETC_FIRE;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_LUGONU:
-            f.colour      = MAGENTA;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = MAGENTA;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_SIF_MUNA:
+        f.colour      = BLUE;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = BLUE;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_BEOGH:
-            f.colour      = ETC_BEOGH;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = ETC_BEOGH;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_TROG:
+        f.colour      = RED;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = RED;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_JIYVA:
-            f.colour      = ETC_SLIME;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = ETC_SLIME;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_NEMELEX_XOBEH:
+        f.colour      = LIGHTMAGENTA;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = LIGHTMAGENTA;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_FEDHAS:
-            f.colour      = GREEN;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = GREEN;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_ELYVILON:
+        f.colour      = WHITE;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = WHITE;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_CHEIBRIADOS:
-            f.colour      = LIGHTCYAN;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = LIGHTCYAN;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_LUGONU:
+        f.colour      = MAGENTA;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = MAGENTA;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_ALTAR_ASHENZARI:
-            f.colour      = LIGHTRED;
-            f.dchar       = DCHAR_ALTAR;
-            f.flags      |= FFT_NOTABLE;
-            f.map_colour  = DARKGREY;
-            f.seen_colour = LIGHTRED;
-            f.minimap     = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_BEOGH:
+        f.colour      = ETC_BEOGH;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = ETC_BEOGH;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_FOUNTAIN_BLUE:
-            f.colour  = BLUE;
-            f.dchar   = DCHAR_FOUNTAIN;
-            f.minimap = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_JIYVA:
+        f.colour      = ETC_SLIME;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = ETC_SLIME;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_FOUNTAIN_SPARKLING:
-            f.colour  = LIGHTBLUE;
-            f.dchar   = DCHAR_FOUNTAIN;
-            f.minimap = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_FEDHAS:
+        f.colour      = GREEN;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = GREEN;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_FOUNTAIN_BLOOD:
-            f.colour  = RED;
-            f.dchar   = DCHAR_FOUNTAIN;
-            f.minimap = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_CHEIBRIADOS:
+        f.colour      = LIGHTCYAN;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = LIGHTCYAN;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_DRY_FOUNTAIN:
-            f.colour  = LIGHTGREY;
-            f.dchar   = DCHAR_FOUNTAIN;
-            f.minimap = MF_FEATURE;
-            break;
+    case DNGN_ALTAR_ASHENZARI:
+        f.colour      = LIGHTRED;
+        f.dchar       = DCHAR_ALTAR;
+        f.flags      |= FFT_NOTABLE;
+        f.map_colour  = DARKGREY;
+        f.seen_colour = LIGHTRED;
+        f.minimap     = MF_FEATURE;
+        break;
 
-        case DNGN_UNKNOWN_ALTAR:
-            f.colour  = LIGHTGREY;
-            f.dchar   = DCHAR_ALTAR;
-            f.minimap = MF_FEATURE;
-            break;
+    case DNGN_FOUNTAIN_BLUE:
+        f.colour  = BLUE;
+        f.dchar   = DCHAR_FOUNTAIN;
+        f.minimap = MF_FEATURE;
+        break;
 
-        case DNGN_UNKNOWN_PORTAL:
-            f.colour  = LIGHTGREY;
-            f.dchar   = DCHAR_ARCH;
-            f.minimap = MF_FEATURE;
-            break;
+    case DNGN_FOUNTAIN_SPARKLING:
+        f.colour  = LIGHTBLUE;
+        f.dchar   = DCHAR_FOUNTAIN;
+        f.minimap = MF_FEATURE;
+        break;
+
+    case DNGN_FOUNTAIN_BLOOD:
+        f.colour  = RED;
+        f.dchar   = DCHAR_FOUNTAIN;
+        f.minimap = MF_FEATURE;
+        break;
+
+    case DNGN_DRY_FOUNTAIN:
+        f.colour  = LIGHTGREY;
+        f.dchar   = DCHAR_FOUNTAIN;
+        f.minimap = MF_FEATURE;
+        break;
+
+    case DNGN_UNKNOWN_ALTAR:
+        f.colour  = LIGHTGREY;
+        f.dchar   = DCHAR_ALTAR;
+        f.minimap = MF_FEATURE;
+        break;
+
+    case DNGN_UNKNOWN_PORTAL:
+        f.colour  = LIGHTGREY;
+        f.dchar   = DCHAR_ARCH;
+        f.minimap = MF_FEATURE;
+        break;
     }
 
     if (feat == DNGN_ENTER_ORC || feat == DNGN_ENTER_SLIME
@@ -783,76 +783,76 @@ static void _init_item(feature_def &f, show_item_type item)
     f.minimap = MF_ITEM;
     switch (item)
     {
-        case SHOW_ITEM_DETECTED:
-            f.dchar   = DCHAR_ITEM_DETECTED;
-            break;
+    case SHOW_ITEM_DETECTED:
+        f.dchar   = DCHAR_ITEM_DETECTED;
+        break;
 
-        case SHOW_ITEM_ORB:
-            f.dchar   = DCHAR_ITEM_ORB;
-            break;
+    case SHOW_ITEM_ORB:
+        f.dchar   = DCHAR_ITEM_ORB;
+        break;
 
-        case SHOW_ITEM_RUNE:
-            f.dchar   = DCHAR_ITEM_RUNE;
-            break;
+    case SHOW_ITEM_RUNE:
+        f.dchar   = DCHAR_ITEM_RUNE;
+        break;
 
-        case SHOW_ITEM_WEAPON:
-            f.dchar   = DCHAR_ITEM_WEAPON;
-            break;
+    case SHOW_ITEM_WEAPON:
+        f.dchar   = DCHAR_ITEM_WEAPON;
+        break;
 
-        case SHOW_ITEM_ARMOUR:
-            f.dchar   = DCHAR_ITEM_ARMOUR;
-            break;
+    case SHOW_ITEM_ARMOUR:
+        f.dchar   = DCHAR_ITEM_ARMOUR;
+        break;
 
-        case SHOW_ITEM_WAND:
-            f.dchar   = DCHAR_ITEM_WAND;
-            break;
+    case SHOW_ITEM_WAND:
+        f.dchar   = DCHAR_ITEM_WAND;
+        break;
 
-        case SHOW_ITEM_FOOD:
-            f.dchar   = DCHAR_ITEM_FOOD;
-            break;
+    case SHOW_ITEM_FOOD:
+        f.dchar   = DCHAR_ITEM_FOOD;
+        break;
 
-        case SHOW_ITEM_SCROLL:
-            f.dchar   = DCHAR_ITEM_SCROLL;
-            break;
+    case SHOW_ITEM_SCROLL:
+        f.dchar   = DCHAR_ITEM_SCROLL;
+        break;
 
-        case SHOW_ITEM_RING:
-            f.dchar   = DCHAR_ITEM_RING;
-            break;
+    case SHOW_ITEM_RING:
+        f.dchar   = DCHAR_ITEM_RING;
+        break;
 
-        case SHOW_ITEM_POTION:
-            f.dchar   = DCHAR_ITEM_POTION;
-            break;
+    case SHOW_ITEM_POTION:
+        f.dchar   = DCHAR_ITEM_POTION;
+        break;
 
-        case SHOW_ITEM_MISSILE:
-            f.dchar   = DCHAR_ITEM_MISSILE;
-            break;
+    case SHOW_ITEM_MISSILE:
+        f.dchar   = DCHAR_ITEM_MISSILE;
+        break;
 
-        case SHOW_ITEM_BOOK:
-            f.dchar   = DCHAR_ITEM_BOOK;
-            break;
+    case SHOW_ITEM_BOOK:
+        f.dchar   = DCHAR_ITEM_BOOK;
+        break;
 
-        case SHOW_ITEM_STAVE:
-            f.dchar   = DCHAR_ITEM_STAVE;
-            break;
+    case SHOW_ITEM_STAVE:
+        f.dchar   = DCHAR_ITEM_STAVE;
+        break;
 
-        case SHOW_ITEM_MISCELLANY:
-            f.dchar   = DCHAR_ITEM_MISCELLANY;
-            break;
+    case SHOW_ITEM_MISCELLANY:
+        f.dchar   = DCHAR_ITEM_MISCELLANY;
+        break;
 
-        case SHOW_ITEM_CORPSE:
-            f.dchar   = DCHAR_ITEM_CORPSE;
-            break;
+    case SHOW_ITEM_CORPSE:
+        f.dchar   = DCHAR_ITEM_CORPSE;
+        break;
 
-        case SHOW_ITEM_GOLD:
-            f.dchar   = DCHAR_ITEM_GOLD;
-            break;
+    case SHOW_ITEM_GOLD:
+        f.dchar   = DCHAR_ITEM_GOLD;
+        break;
 
-        case SHOW_ITEM_AMULET:
-            f.dchar   = DCHAR_ITEM_AMULET;
-            break;
+    case SHOW_ITEM_AMULET:
+        f.dchar   = DCHAR_ITEM_AMULET;
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 }
 
