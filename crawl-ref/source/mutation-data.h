@@ -848,7 +848,7 @@
 
 // Octopode only
 { MUT_TENTACLE_SPIKE,                10,  3, false,  true,  true,
-  "spike",
+  "tentacle spike",
 
   {"One of your tentacles bears a spike.",
    "One of your tentacles bears a nasty spike.",
@@ -1557,7 +1557,7 @@
 },
 
 { MUT_JELLY_GROWTH,                       0,  1, false,  true, true,
-  "a jelly is attached to you",
+  "jelly sensing items",
 
   {"You have a small jelly attached to you that senses nearby items.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
@@ -1567,7 +1567,7 @@
 },
 
 { MUT_JELLY_MISSILE,                       0,  1, false,  true, true,
-  "absorbing missiles",
+  "jelly absorbing missiles",
 
   {"You have a small jelly attached to you that may absorb incoming projectiles.", "", ""},
   {"Your body partially splits into a small jelly.", "", ""},
