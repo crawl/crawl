@@ -32,7 +32,7 @@ COLOUR:  ABCDEHIJ = lightblue
 FTILE:   ABCDEHIJ = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
-ITEM:    mace ego:none not_cursed
+ITEM:    mace mundane not_cursed
 ITEM:    book of clouds
 MONS:    rat always_corpse
 MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
