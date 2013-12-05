@@ -1645,6 +1645,7 @@ public:
                         int wcol = get_number_of_cols())
         : line_reader(buf, sz, wcol)
     {
+        set_input_history(&search_history);
 #ifdef USE_TILE_WEB
         tag = "stash_search";
 #endif
