@@ -312,7 +312,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     case DNGN_ENTER_LABYRINTH:
         f.dchar       = DCHAR_ARCH;
         f.colour      = CYAN;
-        f.flags      |= FFT_NOTABLE;
+        f.flags      |= FFT_NOTABLE | FFT_EXAMINE_HINT;
         f.map_colour  = LIGHTGREY;
         f.seen_colour = CYAN;
         f.minimap     = MF_STAIR_BRANCH;
@@ -488,12 +488,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         f.minimap     = MF_STAIR_BRANCH;
         break;
 
+    case DNGN_ENTER_ORC:
+    case DNGN_ENTER_SLIME:
+        f.flags |= FFT_EXAMINE_HINT;
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARF:
 #endif
-    case DNGN_ENTER_ORC:
     case DNGN_ENTER_LAIR:
-    case DNGN_ENTER_SLIME:
     case DNGN_ENTER_DEPTHS:
     case DNGN_ENTER_CRYPT:
     case DNGN_ENTER_BLADE:
@@ -769,12 +770,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         f.dchar   = DCHAR_ARCH;
         f.minimap = MF_FEATURE;
         break;
-    }
-
-    if (feat == DNGN_ENTER_ORC || feat == DNGN_ENTER_SLIME
-        || feat == DNGN_ENTER_LABYRINTH)
-    {
-        f.flags |= FFT_EXAMINE_HINT;
     }
 }
 
