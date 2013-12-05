@@ -2239,7 +2239,8 @@ static bool _mimic_at_level()
            && !player_in_branch(BRANCH_SLIME)
            && !player_in_branch(BRANCH_TOMB)
            && !player_in_branch(BRANCH_PANDEMONIUM)
-           && !player_in_hell();
+           && !player_in_hell()
+           && !crawl_state.game_is_tutorial();
 }
 
 static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
