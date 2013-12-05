@@ -24,9 +24,9 @@
 #include "travel.h"
 #include "viewchar.h"
 
-static
-unsigned short _cell_feat_show_colour(const map_cell& cell,
-                                      const coord_def& loc, bool coloured)
+static unsigned short _cell_feat_show_colour(const map_cell& cell,
+                                             const coord_def& loc,
+                                             bool coloured)
 {
     dungeon_feature_type feat = cell.feat();
     unsigned short colour = BLACK;
