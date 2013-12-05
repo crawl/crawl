@@ -21,17 +21,21 @@ function () {
         "white": 15
     };
 
+    function escapeHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
     function formatted_string_to_html(str)
     {
         var other_open = false;
-        return str.replace(/<(\/?[a-z]+)>/ig, function (str, p1) {
+        var filtered = str.replace(/<?<(\/?[a-z]*)>?|>|&/ig, function (str, p1) {
             var closing = false;
             if (p1.match(/^\//))
             {
                 p1 = p1.substr(1);
                 closing = true;
             }
-            if (p1 in cols)
+            if (p1 in cols && !str.match(/^<</) && str.match(/>$/))
             {
                 if (closing)
                     return "</span>";
@@ -45,8 +49,20 @@ function () {
                 }
             }
             else
-                return str;
-        }).replace(/<</g, "<");
+            {
+                if (str.match(/^<</))
+                    return escapeHtml(str.substr(1));
+                else
+                {
+                    if (str !== ">" && str !== "&")
+                        log("WARNING: Unknown tag: " + str);
+                    return escapeHtml(str);
+                }
+            }
+        });
+        if (other_open)
+            filtered += "</span>";
+        return filtered;
     }
 
     return {
