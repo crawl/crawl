@@ -4086,9 +4086,7 @@ static void _ruin_vault(const vault_placement &vp)
 
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
-static
-const vault_placement *
-_build_secondary_vault(const map_def *vault,
+static const vault_placement *_build_secondary_vault(const map_def *vault,
                        bool check_collision, bool no_exits,
                        const coord_def &where)
 {
@@ -4112,9 +4110,7 @@ static const vault_placement *_build_primary_vault(const map_def *vault)
 
 // Builds a vault or minivault. Do not use this function directly: always
 // prefer _build_secondary_vault or _build_primary_vault.
-static
-const vault_placement *
-_build_vault_impl(const map_def *vault,
+static const vault_placement *_build_vault_impl(const map_def *vault,
                   bool build_only, bool check_collisions,
                   bool make_no_exits, const coord_def &where)
 {
