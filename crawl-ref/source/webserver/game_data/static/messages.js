@@ -20,11 +20,11 @@ function ($, comm, client, util, settings) {
     }
 
     var prefix_glyph_classes = "turn_marker command_marker";
-    function set_last_prefix_glyph(html, classes)
+    function set_last_prefix_glyph(text, classes)
     {
         var last_msg_elem = $("#messages .game_message").last();
         var prefix_glyph = last_msg_elem.find(".prefix_glyph");
-        prefix_glyph.html(html);
+        prefix_glyph.text(text);
         prefix_glyph.addClass(classes);
     }
 

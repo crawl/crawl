@@ -177,9 +177,9 @@ function ($, map_knowledge, cr, dungeon_renderer) {
             }
 
             if (monsters.length == 1)
-                group.name_span.html(monsters[0].mon.name);
+                group.name_span.text(monsters[0].mon.name);
             else
-                group.name_span.html(monsters.length + " " + monsters[0].mon.plural);
+                group.name_span.text(monsters.length + " " + monsters[0].mon.plural);
 
             $.each(attitude_classes, function (i, cls) {
                 group.name_span.removeClass(cls);
@@ -214,7 +214,7 @@ function ($, map_knowledge, cr, dungeon_renderer) {
 
     function clear()
     {
-        $list.html("");
+        $list.empty();
         monster_groups = [];
         monsters = {};
     }
