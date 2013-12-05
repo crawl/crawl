@@ -45,20 +45,15 @@ with <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> or with
 %%%%
 tutorial1 levelmap
 
-# Messy, repeating the same things for <console> and <webtiles>
 What's this? To find out where you are, <tiles>have a look at the
 <w>minimap</w> to the right of the screen.</tiles><localtiles> You can have a
 closer look at a part of the map with a <input>right mouse click</input> and
 also can travel there with a <input>left click</input>.</localtiles><webtiles>
-You can enter the overmap view with <input>$cmd[CMD_DISPLAY_MAP]</input> and
-then move the cursor around to look around the level. You also can travel
-wherever your cursor is pointing by pressing <input>.</input> or
-<input>Enter</input>. Press <input>Escape</input> to return to the normal game
-mode.</webtiles><console>enter the overmap view with
+You can </webtiles><nomouse>enter the overmap view with
 <input>$cmd[CMD_DISPLAY_MAP]</input> and then move the cursor around to look
 around the level. You also can travel wherever your cursor is pointing by
 pressing <input>.</input> or <input>Enter</input>. Press <input>Escape</input>
-to return to the normal game mode.</console>
+to return to the normal game mode.</nomouse>
 %%%%
 tutorial1 autoexplore
 
@@ -136,11 +131,10 @@ tutorial1 exit
   can be opened by walking into them
   <input>$cmd[CMD_CLOSE_DOOR]</input>  close an open door
 
-<yellow>Travel</yellow>
-  <localtiles>mouseclick on the <w>minimap</w>
-  </localtiles><webtiles><input>$cmd[CMD_DISPLAY_MAP]</input>  enter the level map, travel with <input>Enter</input>
-  </webtiles><console><input>$cmd[CMD_DISPLAY_MAP]</input>  enter the level map, travel with <input>Enter</input>
-  </console><input>$cmd[CMD_EXPLORE]</input>  autoexplore
+<yellow>Travel</yellow><localtiles>
+  mouseclick on the <w>minimap</w></localtiles><nomouse>
+  <input>$cmd[CMD_DISPLAY_MAP]</input>  enter the level map, travel with <input>Enter</input></nomouse>
+  <input>$cmd[CMD_EXPLORE]</input>  autoexplore
 
                                  <cyan>Press <input>any key</input> to clear this screen...</cyan>
 %%%%
@@ -196,18 +190,18 @@ Remember, you can rest up with <input>$cmd[CMD_REST]</input>.
 %%%%
 tutorial2 eat_reminder
 
-Remember, you can chop creatures up with <input>$cmd[CMD_BUTCHER]</input>
-<localtiles>or <input>Shift + mouseclick</input>, and then eat the resulting
-chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
+Remember, you can chop creatures up with
+<input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
+mouseclick</input></localtiles>, and then eat the resulting chunks with
+<input>$cmd[CMD_EAT]</input><localtiles> or
 <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
 # The keyboard commands are skipped in localtiles for clarity.
-# FIXME: Content repeated for <console> and <webtiles>. :nowrap is used
-# because of line length.
+# :nowrap is used because of line length.
 :nowrap
-Examine these monsters (<localtiles>via <input>mouseover</input></localtiles><console>with <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></console><webtiles>with <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></webtiles>) and compare their descriptions (<localtiles><input>rightmouseclick</input></localtiles><console><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></console><webtiles><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></webtiles>) to find out which of these cages is safer to fight through.
+Examine these monsters (<localtiles>via <input>mouseover</input></localtiles><nomouse>with <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>) and compare their descriptions (<localtiles><input>rightmouseclick</input></localtiles><nomouse><input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input></nomouse>) to find out which of these cages is safer to fight through.
 %%%%
 tutorial2 downstairs
 
@@ -265,7 +259,6 @@ tutorial, simply go down these stairs.
 %%%%
 tutorial2 exit
 
-# FIXME: Duplicated for <console> and <webtiles>.
 :nowrap
 <yellow>Weapons<console> <cyan>)</cyan></console></yellow>
   <input>$cmd[CMD_PICKUP]</input>  pick up an item
@@ -274,11 +267,9 @@ tutorial2 exit
 
 <yellow>Monsters</yellow><localtiles>
   <input>mouseover</input>  examine a monster
-  <input>rightclick</input> read a more detailed description</localtiles><console>
+  <input>rightclick</input> read a more detailed description</localtiles><nomouse>
   <input>$cmd[CMD_LOOK_AROUND]</input>  examine a monster
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</console><webtiles>
-  <input>$cmd[CMD_LOOK_AROUND]</input>  examine a monster
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</webtiles>
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> read a more detailed description</nomouse>
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fire ammunition at pre-targeted monster
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> target another monster<localtiles>
   You can also fire an item by <input>clicking</input> on it and the confirming the target with <input>Enter</input>.</localtiles>
