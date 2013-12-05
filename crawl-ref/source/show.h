@@ -1,9 +1,11 @@
 #ifndef SHOW_H
 #define SHOW_H
 
+// same order as DCHAR_*
 enum show_item_type
 {
     SHOW_ITEM_NONE,
+    SHOW_ITEM_DETECTED,
     SHOW_ITEM_ORB,
     SHOW_ITEM_RUNE,
     SHOW_ITEM_WEAPON,
@@ -20,7 +22,6 @@ enum show_item_type
     SHOW_ITEM_CORPSE,
     SHOW_ITEM_GOLD,
     SHOW_ITEM_AMULET,
-    SHOW_ITEM_DETECTED,
     NUM_SHOW_ITEMS
 };
 
