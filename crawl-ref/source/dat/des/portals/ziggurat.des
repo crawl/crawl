@@ -362,7 +362,7 @@ ENDMAP
 NAME:    ziggurat_pillar_centre_def
 TAGS:    ziggurat_pillar centered
 WEIGHT:  20
-SHUFFLE: y'z / Y'z / y"Z 
+SHUFFLE: y'z / Y'z / y"Z
 SUBST:   xYZ : bcmvxG
 CLEAR:   y'z
 MAP

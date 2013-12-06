@@ -414,7 +414,7 @@ SHUFFLE: ABC, DEFG
 NSUBST:  > = 1 = .:13 >:7 / 1 = .:6 (:4 / *:.
 SUBST:   A : x:9 .:1, B : yy..., C = .
 SUBST:   D : xxxx., E : y.., FG = .
-SUBST:   x : v:3 G:2, y : v, - =  +v 
+SUBST:   x : v:3 G:2, y : v, - =  +v
 : dis_statues(_G)
 MAP
         vvvvv     vvvvv

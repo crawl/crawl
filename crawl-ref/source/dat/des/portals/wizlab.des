@@ -47,11 +47,11 @@
 #                         |                     |autumn trees
 #---------------------------------------------------------------
 #Cigotuvi's Fleshworks    |organic, irregular,  |magenta/red/yellow
-#                         |twisted innards      |flesh/blood tiles 
+#                         |twisted innards      |flesh/blood tiles
 #---------------------------------------------------------------
-#Iskenderun's Mystic Tower|fortress tower with  |tons of magenta  
+#Iskenderun's Mystic Tower|fortress tower with  |tons of magenta
 #                         |statues, cave corners|
-#--------------------------------------------------------------- 
+#---------------------------------------------------------------
 #Zonguldrok's Mausoleum   |tower, graveyard     |piles of darkgray
 #---------------------------------------------------------------
 #Roulette of Golubria     |old-abyss mess,      |mostly green,
@@ -247,7 +247,7 @@ end
 function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                          marker, ev)
     -- Save compat bit.
-    if data.count == nil then 
+    if data.count == nil then
         data.count = 0; data.swcount = 0; data.vpcount = 0; data.account = 0
     end
     if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
@@ -279,7 +279,7 @@ function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                     spawn_zombie(x, y, "generate_awake skeletal warrior")
                 data.swcount = data.swcount + 1
                 end
-            else 
+            else
                 spawn_zombie(x, y, "generate_awake ancient champion")
                 data.account = data.account + 1
             end
@@ -301,7 +301,7 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
     end
 
     data.number_killed = data.number_killed + 1
-    if (#dgn.find_markers_by_prop("grave", 1)) * 2 < data.number_killed * 3 
+    if (#dgn.find_markers_by_prop("grave", 1)) * 2 < data.number_killed * 3
        and #dgn.find_markers_by_prop("grave", 1) < 10 then
         local x, y = marker:pos()
         dgn.tile_feat_changed(x, y, nil)
@@ -729,7 +729,7 @@ KMONS:      789 = statue spells:blink_other;.;.;.;.;blink_other \
 KITEM:      8 = book of enchantments
 KITEM:      9 = acquire any, scroll of blinking q:4 ident:type
 SHUFFLE:    XxLl / HhIi, YyRr / JjKK
-SUBST:      XYik = +, xyIK = ., HJRrLl = c, hj = m 
+SUBST:      XYik = +, xyIK = ., HJRrLl = c, hj = m
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
@@ -814,7 +814,7 @@ LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
 {{
 local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
-                                              repeated = true, 
+                                              repeated = true,
                                               data = { nofruitsyet = true } }
 
 grow_marker:add_triggerer(DgnTriggerer:new { type="turn",
@@ -1238,7 +1238,7 @@ ENDMAP
 NAME:       wizlab_iskenderun
 TAGS:       no_rotate patrolling
 MONS:       deep elf mage spells:magic_dart;iskenderun's_battlesphere;\
-            iskenderun's_mystic_blast;force_lance 
+            iskenderun's_mystic_blast;force_lance
 MONS:       purple draconian
 MONS:       statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
             name:conjurer n_adj
@@ -1255,7 +1255,7 @@ TILE:       v = dngn_metal_wall_magenta
 MARKER:     " = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" }
-NSUBST:     1 = 4 = 1:1 2:19 / 6 = 1:2 2:3 / * = 1:15 . 
+NSUBST:     1 = 4 = 1:1 2:19 / 6 = 1:2 2:3 / * = 1:15 .
 SHUFFLE:    DEF
 LROCKTILE:  wall_zot_magenta
 LROCKCOL:   lightmagenta
@@ -1381,7 +1381,7 @@ LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
 :           set_random_mon_list([[ ogre zombie / troll zombie / hill giant zombie / ]]
 :           .. [[ wight w:20 / vampire w:5 / skeletal warrior w:15 / ]])
-epilogue{{ 
+epilogue{{
             wizlab_milestone(_G, "Zonguldrok's Shrine")
 }}
 MAP
@@ -1556,7 +1556,7 @@ ENDMAP
 # of the Abyss into his own translocations playground, with some nasty and wild
 # security systems built in to defend his many assorted possessions.
 #
-# Teleporter explanations: three sets of three chained rooms each, 
+# Teleporter explanations: three sets of three chained rooms each,
 # rotating the same amount of rooms per direction in the same direction,
 # though distorted by the use of the ninth room and each set rotated.
 NAME:    wizlab_golubria
@@ -1583,7 +1583,7 @@ KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:
               ugly thing w:30 / fire elemental w:5 / air elemental w:5
 KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
               soul eater w:5 / hell knight w:5 / demonic crawler / raiju / \
-              ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \ 
+              ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \
               vapour w:5 / earth elemental w:5 / water elemental / \
               very ugly thing / base draconian / guardian serpent / brain worm / \
               eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
@@ -1769,7 +1769,7 @@ MARKER:     ! = lua:fog_machine { \
                 colour = "white", name = "white fluffiness" \
             }
 ITEM:       w:20 potion of flight / potion of magic / potion of speed / \
-            potion of resistance / gold / potion of agility / potion of brilliance 
+            potion of resistance / gold / potion of agility / potion of brilliance
 ITEM:       wand of lightning / staff of air / ring of flight /\
             gold / scroll of silence / ring of teleport control / \
             quick blade / ring of evasion / ring of see invisible / \
@@ -1915,7 +1915,7 @@ KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
             green death / soul eater w:20 / tormentor w:5
 KMONS:      3u = ice devil / red devil / orange demon / blue devil / \
             iron devil w:5 / ynoxinul / sun demon
-KMONS:      4 = kobold demonologist 
+KMONS:      4 = kobold demonologist
 KMONS:      5 = deep elf demonologist
 KMONS:      6 = balrug / cacodemon / blizzard demon / hellion
 {{
@@ -1930,7 +1930,7 @@ KITEM:      i = rod of demonology / ring of fire / ring of protection from fire 
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / *:i
-SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g 
+SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / ]]
 :                        .. [[white imp / ufetubus / red devil / rotting devil / orange demon / ]])
