@@ -6,25 +6,54 @@
 #include "options.h"
 #include "show.h"
 
-typedef map<show_type, feature_def> feat_map;
-static feat_map Features;
+static FixedVector<feature_def, NUM_FEATURES>   feat_defs;
+static FixedVector<feature_def, NUM_SHOW_ITEMS> item_defs;
+static feature_def invis_fd(DCHAR_INVIS_EXPOSED, MF_MONS_HOSTILE);
+static feature_def cloud_fd(DCHAR_CLOUD, MF_SKIP);
 
 const feature_def &get_feature_def(show_type object)
 {
-    // If this is a monster that is hidden explicitly, show items if
-    // any instead, or the base feature if there are no items.
-    if (object.cls == SH_MONSTER)
-        object.cls = (object.item != SHOW_ITEM_NONE) ? SH_ITEM : SH_FEATURE;
-    return Features[object];
+    switch(object.cls)
+    {
+    case SH_INVIS_EXPOSED:
+        return invis_fd;
+    case SH_CLOUD:
+        return cloud_fd;
+    case SH_ITEM:
+        return item_defs[object.item];
+    case SH_MONSTER:
+        // If this is a monster that is hidden explicitly, show items if
+        // any instead, or the base feature if there are no items.
+        if (object.item != SHOW_ITEM_NONE)
+            return item_defs[object.item];
+    case SH_FEATURE:
+        return feat_defs[object.feat];
+    default:
+        die("invalid show object: class %d", object.cls);
+    }
 }
 
 const feature_def &get_feature_def(dungeon_feature_type feat)
 {
-    ASSERT(feat < NUM_FEATURES);
-    show_type object;
-    object.cls = SH_FEATURE;
-    object.feat = feat;
-    return Features[object];
+    return feat_defs[feat];
+}
+
+static void _fd_symbols(feature_def &f)
+{
+    if (!f.symbol && f.dchar != NUM_DCHAR_TYPES)
+        f.symbol = Options.char_table[f.dchar];
+
+    if (!f.magic_symbol)
+        f.magic_symbol = f.symbol;
+
+    if (f.seen_colour == BLACK)
+        f.seen_colour = f.map_colour;
+
+    if (f.seen_em_colour == BLACK)
+        f.seen_em_colour = f.seen_colour;
+
+    if (f.em_colour == BLACK)
+        f.em_colour = f.colour;
 }
 
 static void _apply_feature_overrides()
@@ -35,7 +64,7 @@ static void _apply_feature_overrides()
          ++fo)
     {
         const feature_def           &ofeat  = fo->second;
-        feature_def                 &feat   = Features[fo->first];
+        feature_def                 &feat   = feat_defs[fo->first];
         ucs_t c;
 
         if (ofeat.symbol && (c = get_glyph_override(ofeat.symbol)))
@@ -778,55 +807,26 @@ void init_show_table(void)
     show_type obj;
     for (int i = 0; i < NUM_FEATURES; i++)
     {
-        obj.cls = SH_FEATURE;
-        obj.feat = static_cast<dungeon_feature_type>(i);
-
-        _init_feat(Features[obj], obj.feat);
+        dungeon_feature_type feat = static_cast<dungeon_feature_type>(i);
+        _init_feat(feat_defs[feat], feat);
     }
-
-    obj.cls = SH_INVIS_EXPOSED;
-    Features[obj].dchar   = DCHAR_INVIS_EXPOSED;
-    Features[obj].minimap = MF_MONS_HOSTILE;
+    _apply_feature_overrides();
+    for (int i = 0; i < NUM_FEATURES; i++)
+        _fd_symbols(feat_defs[i]);
 
     for (int i = 0; i < NUM_SHOW_ITEMS; i++)
     {
-        obj.cls = SH_ITEM;
-        obj.item = static_cast<show_item_type>(i);
+        show_item_type si = static_cast<show_item_type>(i);
         // SHOW_ITEM_NONE is bogus, but "invis exposed" is an ok placeholder
         COMPILE_CHECK(DCHAR_ITEM_AMULET - DCHAR_ITEM_DETECTED + 2 == NUM_SHOW_ITEMS);
-        Features[obj].minimap = MF_ITEM;
-        Features[obj].dchar = static_cast<dungeon_char_type>(i
+        item_defs[si].minimap = MF_ITEM;
+        item_defs[si].dchar = static_cast<dungeon_char_type>(i
             + DCHAR_ITEM_DETECTED - SHOW_ITEM_DETECTED);
+        _fd_symbols(item_defs[si]);
     }
 
-    obj.cls = SH_CLOUD;
-    Features[obj].dchar   = DCHAR_CLOUD;
-    Features[obj].minimap = MF_SKIP;
-
-    for (feat_map::iterator i = Features.begin(); i != Features.end(); ++i)
-    {
-        feature_def &f = i->second;
-        if (f.dchar != NUM_DCHAR_TYPES)
-            f.symbol = Options.char_table[f.dchar];
-    }
-
-    _apply_feature_overrides();
-
-    for (feat_map::iterator i = Features.begin(); i != Features.end(); ++i)
-    {
-        feature_def &f = i->second;
-        if (!f.magic_symbol)
-            f.magic_symbol = f.symbol;
-
-        if (f.seen_colour == BLACK)
-            f.seen_colour = f.map_colour;
-
-        if (f.seen_em_colour == BLACK)
-            f.seen_em_colour = f.seen_colour;
-
-        if (f.em_colour == BLACK)
-            f.em_colour = f.colour;
-    }
+    _fd_symbols(invis_fd);
+    _fd_symbols(cloud_fd);
 }
 
 dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
