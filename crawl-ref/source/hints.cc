@@ -1018,18 +1018,6 @@ void hints_first_item(const item_def &item)
                glyph_to_tagstr(get_item_glyph(&item)));
 }
 
-// If the player is wielding a cursed non-slicing weapon then butchery
-// isn't currently possible.
-static bool _cant_butcher()
-{
-    const item_def *wpn = you.weapon();
-
-    if (!wpn || wpn->base_type != OBJ_WEAPONS)
-        return false;
-
-    return wpn->cursed() && !can_cut_meat(*wpn);
-}
-
 static string _describe_portal(const coord_def &gc)
 {
     const string desc = feature_description_at(gc);
@@ -1405,18 +1393,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
 
         text << " When a corpse is lying on the ground, you "
-                "can <w>%</w>hop it up";
+                "can <w>%</w>hop it up. Once hungry you can "
+                "then <w>%</w>at the resulting chunks.";
         cmd.push_back(CMD_BUTCHER);
-
-        if (_cant_butcher())
-        {
-            text << " (though unfortunately you can't do that right now, "
-                    "since the cursed weapon you're wielding can't slice up "
-                    "meat, and you can't let go of it to wield your pocket "
-                    "knife)";
-        }
-        text << ". Once hungry you can then <w>%</w>at the resulting chunks "
-                "(though they may not be healthful).";
         cmd.push_back(CMD_EAT);
 
         text << "<tiles> With tiles, you can also chop up any corpse that shows up in "
@@ -1709,14 +1688,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << " depicted by " << _colourize_glyph(g.col, '^');
         }
 #endif
-        text << ". They can do physical damage (with darts or needles, for "
-                "example) or have other, more magical effects, like "
-                "teleportation. The mechanical variant can be disarmed with "
-                "<w>Ctrl + direction</w> "
-#ifdef USE_TILE
-                "or with <w>Ctrl + leftclick</w> "
-#endif
-                "while standing next to it.";
+        text << ". They can have a range of effects, such as alerting "
+                "enemies to your presence, causing random teleportation, "
+                "or worse.";
         break;
 
     case HINT_SEEN_ALTAR:
@@ -2020,35 +1994,20 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_YOU_HUNGRY:
         text << "There are two ways to overcome hunger: food you started "
                 "with or found, and self-made chunks from corpses. To get the "
-                "latter, all you need to do is <w>%</w>hop up a corpse. ";
-        cmd.push_back(CMD_BUTCHER);
-
-        if (_cant_butcher())
-        {
-            text << "Unfortunately you can't butcher corpses right now, "
-                    "since the cursed weapon you're wielding can't slice up "
-                    "meat, and you can't let go of it to wield your pocket "
-                    "knife. ";
-        }
-        else
-        {
-            text << "Luckily, all adventurers carry a pocket knife with them "
-                    "which is perfect for butchering. ";
-        }
-
-        text << "Try to dine on chunks in order to save permanent food.";
-
+                "latter, all you need to do is <w>%</w>hop up a corpse. "
+                "Luckily, all adventurers carry a pocket knife with them "
+                "which is perfect for butchering. Try to dine on chunks in "
+                "order to save permanent food.";
         if (Hints.hints_type == HINT_BERSERK_CHAR)
             text << "\nNote that you cannot Berserk while very hungry or worse.";
+        cmd.push_back(CMD_BUTCHER);
         break;
 
     case HINT_YOU_STARVING:
         text << "You are now suffering from terrible hunger. You'll need to "
                 "<w>%</w>at something quickly, or you'll die. The safest "
                 "way to deal with this is to simply eat something from your "
-                "inventory, rather than wait for a monster to leave a corpse. "
-                "In an emergency, potions can also provide a very small amount "
-                "of nutrition.";
+                "inventory, rather than wait for a monster to leave a corpse.";
         cmd.push_back(CMD_EAT);
 
         if (Hints.hints_type == HINT_MAGIC_CHAR)
@@ -2125,19 +2084,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_MAKE_CHUNKS:
         text << "How lucky! That monster left a corpse which you can now "
-                "<w>%</w>hop up";
+                "<w>%</w>hop up. One or more chunks will appear that you can "
+                "then <w>%</w>at. Beware that some chunks may be hazardous. "
+                "You can find out whether that might be the case by ";
         cmd.push_back(CMD_BUTCHER);
-
-        if (_cant_butcher())
-        {
-            text << "(or which you <w>could</w> chop up if it weren't for "
-                    "the fact that you can't let go of your cursed "
-                    "non-chopping weapon)";
-        }
-        text << ". One or more chunks will appear that you can then "
-                "<w>%</w>at. Beware that some chunks may be, sometimes or "
-                "always, hazardous. You can find out whether that might be the "
-                "case by ";
         cmd.push_back(CMD_EAT);
 
 #ifdef USE_TILE
@@ -2248,7 +2198,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_HEALING_POTIONS:
-        text << "Your hit points are getting dangerously low. Retreat and/or "
+        text << "Your hit points are getting dangerously low. Retreating and/or "
                 "quaffing a potion of heal wounds or curing might be a good idea.";
         break;
 
