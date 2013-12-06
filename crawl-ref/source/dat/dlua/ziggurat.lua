@@ -324,7 +324,7 @@ mset(spec_fn(function ()
 mset(spec_fn(function ()
                local d = math.max(1, you.depth() - 11)
                return "place:Vaults:$ 9 w:30 / place:Vaults:$ w:60 / " ..
-                 "titan w:" .. d .. " / golden dragon w:" .. d .. 
+                 "titan w:" .. d .. " / golden dragon w:" .. d ..
                  " / ancient lich w:" .. d
              end))
 

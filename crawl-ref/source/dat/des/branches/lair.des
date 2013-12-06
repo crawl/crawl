@@ -43,7 +43,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     end
     e.kfeat("O = shallow_water")
     if mist then
-        e.lua_marker("O", fog_machine { pow_min = 3, pow_max = 7, delay = delaynum, 
+        e.lua_marker("O", fog_machine { pow_min = 3, pow_max = 7, delay = delaynum,
                           size = sizenum, walk_dist = 1, spread_rate = spreadnum } )
     end
 end
@@ -598,7 +598,7 @@ NAME:   blue_anna_fruit_fields
 TAGS:   fruiting_plant allow_dup extra decor
 DEPTH:  Lair
 MONS:   plant
-ITEM:   apple q:1 no_mimic / apple q:2 no_mimic / apple q:3 w:2 no_mimic 
+ITEM:   apple q:1 no_mimic / apple q:2 no_mimic / apple q:3 w:2 no_mimic
 ITEM:   pear q:1 no_mimic / pear q:2 no_mimic / pear q:3 w:2 no_mimic
 ITEM:   apricot q:1 no_mimic / apricot q:2 no_mimic / apricot q:3 w:2 no_mimic
 : if crawl.coinflip() then
@@ -1844,7 +1844,7 @@ ENDMAP
 NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
-MONS:   black bear / grizzly bear w:12, wolf, giant firefly w:9 / yellow wasp w:1 
+MONS:   black bear / grizzly bear w:12, wolf, giant firefly w:9 / yellow wasp w:1
 MONS:   spriggan, spriggan rider, spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = tt..., E = t_
@@ -2120,7 +2120,7 @@ NSUBST:  % = 10:% / 2 = %" / *:", x = 6:c / * = x
 KMASK:   %*" = no_monster_gen
 : lair_small_ending(_G)
 MAP
-      PPPcccxxcccPPP 
+      PPPcccxxcccPPP
    PPPP.cc%cccc%cc.PPPP
   zz....c8$%**%$8c....zz
  Pzc....cc8$**$8cc....czP
@@ -2145,5 +2145,5 @@ PP.xx....xx....xx....xx.PP
  Pzc.....z......z.....czP
   zz....xx......xx....zz
    PPPP.z..P  P..z.PPPP
-      PPcPP    PPcPP 
+      PPcPP    PPcPP
 ENDMAP
