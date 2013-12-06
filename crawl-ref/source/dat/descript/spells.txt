@@ -161,7 +161,7 @@ Brothers in Arms spell
 %%%%
 Call Canine Familiar spell
 
-This spell summons a canine to the caster's aid.
+This spell summons a solitary canine to the caster's aid.
 %%%%
 Call Imp spell
 
