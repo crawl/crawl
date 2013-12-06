@@ -978,8 +978,10 @@ string untag_tiles_console(string s)
 #endif
 #ifdef USE_TILE_LOCAL
     _untag(s, "<localtiles>", "</localtiles>", true);
+    _untag(s, "<nomouse>", "</nomouse>", false);
 #else
     _untag(s, "<localtiles>", "</localtiles>", false);
+    _untag(s, "<nomouse>", "</nomouse>", true);
 #endif
     return s;
 }
