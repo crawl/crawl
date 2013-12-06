@@ -93,6 +93,10 @@ public:
     static string resolve_include(string including_file, string included_file,
                             const vector<string> *rcdirs = NULL) throw (string);
 
+#ifdef USE_TILE_WEB
+    void write_webtiles_options(const string &name);
+#endif
+
 public:
     string      filename;     // The name of the file containing options.
     string      basefilename; // Base (pathless) file name

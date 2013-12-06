@@ -1,7 +1,8 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
-        "./settings", "./enums", "./messages",
+        "./settings", "./enums", "./messages", "./options",
         "./text", "./menu", "./player"],
-function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, messages) {
+function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
+          messages, options) {
     var layout_parameters = null, ui_state, input_mode;
     var stat_width = 42;
     var msg_height = 6;
@@ -11,6 +12,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     {
         layout_parameters = null;
         ui_state = -1;
+        options.clear();
     }
 
     $(document).on("game_preinit game_cleanup", init);

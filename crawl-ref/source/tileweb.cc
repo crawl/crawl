@@ -153,6 +153,7 @@ bool TilesFramework::initialise()
         _await_connection();
 
     _send_version();
+    _send_options();
 
     m_cursor[CURSOR_MOUSE] = NO_CURSOR;
     m_cursor[CURSOR_TUTORIAL] = NO_CURSOR;
@@ -162,6 +163,11 @@ bool TilesFramework::initialise()
     cgotoxy(1, 1, GOTO_CRT);
 
     return true;
+}
+
+string TilesFramework::get_message()
+{
+    return m_msg_buf;
 }
 
 void TilesFramework::write_message(const char *format, ...)
@@ -329,6 +335,8 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     }
     else if (msgtype == "spectator_joined")
     {
+        flush_messages();
+        _send_options();
         _send_everything();
         flush_messages();
     }
@@ -447,6 +455,15 @@ void TilesFramework::_send_version()
 
     string title = CRAWL " " + string(Version::Long);
     send_message("{\"msg\":\"version\",\"text\":\"%s\"}", title.c_str());
+}
+
+void TilesFramework::_send_options()
+{
+    json_open_object();
+    json_write_string("msg", "options");
+    Options.write_webtiles_options("options");
+    json_close_object();
+    finish_message();
 }
 
 void TilesFramework::push_menu(Menu* m)
