@@ -2739,6 +2739,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_BOTTLE_BLOOD:
+        if (!form_can_wield())
+            return mpr("You can't bottle blood in this form."), false;
         if (!butchery(-1, true))
             return false;
         break;

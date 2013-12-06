@@ -130,11 +130,9 @@ bool form_likes_lava(transformation_type form)
 
 bool form_can_butcher(transformation_type form)
 {
-    return form != TRAN_BAT
-           && form != TRAN_PORCUPINE
-           && form != TRAN_WISP
-           && form != TRAN_JELLY
-           && form != TRAN_FUNGUS;
+    return form != TRAN_WISP
+        && form != TRAN_JELLY
+        && form != TRAN_FUNGUS;
 }
 
 // Used to mark transformations which override species intrinsics.
