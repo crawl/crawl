@@ -29,6 +29,8 @@ function () {
     {
         var other_open = false;
         var filtered = str.replace(/<?<(\/?[a-z]*)>?|>|&/ig, function (str, p1) {
+            if (p1 === undefined)
+                p1 = "";
             var closing = false;
             if (p1.match(/^\//))
             {
