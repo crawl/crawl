@@ -2429,10 +2429,10 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         if (_mimic_at_level())
             _place_feature_mimics(dest_stairs_type);
 
+        _place_traps();
+
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
-
-        _place_traps();
 
         // Place monsters.
         if (!crawl_state.game_is_zotdef())
