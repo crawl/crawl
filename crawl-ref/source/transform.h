@@ -18,7 +18,7 @@ bool form_can_fly(transformation_type form = you.form);
 bool form_can_swim(transformation_type form = you.form);
 bool form_likes_water(transformation_type form = you.form);
 bool form_likes_lava(transformation_type form = you.form);
-bool form_can_butcher_barehanded(transformation_type form = you.form);
+bool form_can_butcher(transformation_type form = you.form);
 bool form_changed_physiology(transformation_type form = you.form);
 bool form_can_use_wand(transformation_type form = you.form);
 bool form_can_wear_item(const item_def& item,

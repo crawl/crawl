@@ -79,10 +79,7 @@ bool is_vampire_feeding();
 bool is_butchering();
 bool player_stair_delay();
 bool already_learning_spell(int spell);
-void stop_butcher_delay();
-void maybe_clear_weapon_swap();
-void handle_interrupted_swap(bool swap_if_safe = false,
-                             bool force_unsafe = false);
+void handle_interrupted_swap();
 
 void clear_macro_process_key_delay();
 

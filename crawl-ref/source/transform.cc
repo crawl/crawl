@@ -128,10 +128,12 @@ bool form_likes_lava(transformation_type form)
            && !form_changed_physiology(form);
 }
 
-bool form_can_butcher_barehanded(transformation_type form)
+bool form_can_butcher(transformation_type form)
 {
-    return form == TRAN_BLADE_HANDS || form == TRAN_DRAGON
-           || form == TRAN_ICE_BEAST;
+    return form != TRAN_BAT
+           && form != TRAN_WISP
+           && form != TRAN_JELLY
+           && form != TRAN_FUNGUS;
 }
 
 // Used to mark transformations which override species intrinsics.
@@ -1375,9 +1377,6 @@ void untransform(bool skip_wielding, bool skip_move)
         init_player_doll();
 #endif
 
-    if (form_can_butcher_barehanded(old_form))
-        stop_butcher_delay();
-
     // If nagas wear boots while transformed, they fall off again afterwards:
     // I don't believe this is currently possible, and if it is we
     // probably need something better to cover all possibilities.  -bwr
@@ -1429,7 +1428,7 @@ void untransform(bool skip_wielding, bool skip_move)
     }
 
     if (!skip_wielding)
-        handle_interrupted_swap(true, false);
+        handle_interrupted_swap();
 
     you.turn_is_over = true;
     if (you.transform_uncancellable)

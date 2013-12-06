@@ -1010,15 +1010,6 @@ bool melee_attack::attack()
 
         do_miscast();
     }
-    else
-    {
-        // Invisible monster might have interrupted butchering.
-        if (you_are_delayed() && defender->is_player()
-            && perceived_attack && !attacker_visible)
-        {
-            handle_interrupted_swap(false, true);
-        }
-    }
 
     adjust_noise();
     // don't crash on banishment

@@ -228,41 +228,6 @@ void weapon_switch(int targ)
     you.turn_is_over = true;
 }
 
-static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
-                              bool wpn_switch)
-{
-    // No preparation necessary.
-    if (can_butcher)
-        return true;
-
-    // At least one of these has to be true, else what are we doing
-    // here?
-    ASSERT(removed_gloves || wpn_switch);
-
-    // If you can butcher by taking off your gloves, don't prompt.
-    if (removed_gloves)
-    {
-        // Actually take off the gloves; this creates a delay.  We
-        // assume later on that gloves have a 1-turn takeoff delay!
-        if (!takeoff_armour(you.equip[EQ_GLOVES]))
-            return false;
-
-        // Ensure that the gloves are taken off by now by finishing the
-        // DELAY_ARMOUR_OFF delay started by takeoff_armour() above.
-        // FIXME: get rid of this hack!
-        finish_last_delay();
-    }
-
-    if (wpn_switch
-        && !wield_weapon(true, SLOT_BARE_HANDS, false, true, false, false))
-    {
-        return false;
-    }
-
-    // Switched to a good butchering tool.
-    return true;
-}
-
 static bool _should_butcher(int corpse_id, bool bottle_blood = false)
 {
     const item_def &corpse = mitm[corpse_id];
@@ -298,7 +263,7 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
     return true;
 }
 
-static bool _corpse_butchery(int corpse_id, int butcher_tool,
+static bool _corpse_butchery(int corpse_id,
                              bool first_corpse = true,
                              bool bottle_blood = false)
 {
@@ -323,26 +288,10 @@ static bool _corpse_butchery(int corpse_id, int butcher_tool,
         dtype = DELAY_BOTTLE_BLOOD;
     }
 
-    start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special,
-                butcher_tool);
+    start_delay(dtype, work_req, corpse_id, mitm[corpse_id].special);
 
     you.turn_is_over = true;
     return true;
-}
-
-static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
-                                int old_weapon, int old_gloves)
-{
-    // Switch weapon back.
-    if (wpn_switch && you.equip[EQ_WEAPON] != old_weapon
-        && (!you.weapon() || !you.weapon()->cursed()))
-    {
-        start_delay(DELAY_WEAPON_SWAP, 1, old_weapon);
-    }
-
-    // Put on the removed gloves.
-    if (removed_gloves && you.equip[EQ_GLOVES] != old_gloves)
-        start_delay(DELAY_ARMOUR_ON, 1, old_gloves, 1);
 }
 
 static int _corpse_badness(corpse_effect_type ce, const item_def &item,
@@ -459,45 +408,9 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    // XXX these restrictions are a huge mess, leading to a lot of
-    // complicated code and very little in the way of actual fun.
-    // We should rip them out once we figure out how. (SamB)
-
-    // Vampires' fangs are optimised for biting, not for tearing flesh.
-    // (Not that they really need to.) Other species with this mutation
-    // might still benefit from it.
-    bool teeth_butcher    = (you.has_usable_fangs() == 3
-                             && you.species != SP_VAMPIRE);
-
-    bool birdie_butcher   = (player_mutation_level(MUT_BEAK)
-                             && player_mutation_level(MUT_TALONS));
-
-    bool barehand_butcher = (form_can_butcher_barehanded(you.form)
-                                 || you.has_claws())
-                             && !player_wearing_slot(EQ_GLOVES);
-
-    bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
-                             && !you.inv[you.equip[EQ_GLOVES]].cursed());
-
-    bool weapon_butcher   = you.weapon() && can_cut_meat(*you.weapon());
-
-    bool knife_butcher    = !weapon_butcher && form_can_wield();
-
-    bool can_butcher      = (teeth_butcher || barehand_butcher
-                             || birdie_butcher
-                             || weapon_butcher
-                             || knife_butcher);
-
-    // It makes more sense that you first find out if there's anything
-    // to butcher, *then* decide to actually butcher it.
-    // The old code did it the other way.
-    if (!can_butcher && you.berserk())
+    if (!form_can_butcher(you.form))
     {
-        // NB: Normally can't get here with bottle_blood == true because it's an
-        // ability and thus also blocked when berserking.  If bottle_blood was
-        // somehow true at the point, the following message would be wrong and
-        // (even worse) bottling success would depend on can_butcher == true.
-        mpr("You are too berserk to search for a butchering tool!");
+        mpr("You can't butcher in your present form.");
         return false;
     }
 
@@ -552,33 +465,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    int old_weapon      = you.equip[EQ_WEAPON];
-    int old_gloves      = you.equip[EQ_GLOVES];
-
-    bool wpn_switch     = false;
-    bool removed_gloves = false;
-
-    if (!can_butcher)
-    {
-        if (you.weapon() && you.weapon()->cursed() && gloved_butcher)
-            removed_gloves = true;
-        else
-            wpn_switch = true;
-    }
-
-    int butcher_tool;
-
-    if (barehand_butcher || removed_gloves)
-        butcher_tool = SLOT_CLAWS;
-    else if (teeth_butcher)
-        butcher_tool = SLOT_TEETH;
-    else if (birdie_butcher)
-        butcher_tool = SLOT_BIRDIE;
-    else if (wpn_switch || knife_butcher)
-        butcher_tool = SLOT_BUTCHERING_KNIFE;
-    else
-        butcher_tool = you.weapon()->link;
-
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
     bool success = false;
     if (prechosen && corpse_id == which_corpse
@@ -593,11 +479,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             return false;
         }
 
-        if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
-            return false;
-
-        success = _corpse_butchery(corpse_id, butcher_tool, true, bottle_blood);
-        _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
+        success = _corpse_butchery(corpse_id, true, bottle_blood);
 
         // Remind player of corpses in pack that could be butchered or
         // bottled.
@@ -608,7 +490,6 @@ bool butchery(int which_corpse, bool bottle_blood)
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
     bool butcher_all   = false;
-    bool did_weap_swap = false;
     bool first_corpse  = true;
 #ifdef TOUCH_UI
     vector<const item_def*> meat;
@@ -634,15 +515,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     for (int i = 0, count = selected.size(); i < count; ++i)
     {
         corpse_id = selected[i].item->index();
-        if (!did_weap_swap)
-        {
-            if (_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
-                did_weap_swap = true;
-            else
-                return false;
-        }
-        if (_corpse_butchery(corpse_id, butcher_tool, first_corpse,
-                             bottle_blood))
+        if (_corpse_butchery(corpse_id, first_corpse, bottle_blood))
         {
             success = true;
             first_corpse = false;
@@ -693,16 +566,6 @@ bool butchery(int which_corpse, bool bottle_blood)
                 case 'c':
                 case 'd':
                 case 'a':
-                    if (!did_weap_swap)
-                    {
-                        if (_prepare_butchery(can_butcher, removed_gloves,
-                                              wpn_switch))
-                        {
-                            did_weap_swap = true;
-                        }
-                        else
-                            return false;
-                    }
                     corpse_id = si->index();
 
                     if (keyin == 'a')
@@ -712,8 +575,6 @@ bool butchery(int which_corpse, bool bottle_blood)
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    _terminate_butchery(wpn_switch, removed_gloves, old_weapon,
-                                        old_gloves);
                     return false;
 
                 case '?':
@@ -732,8 +593,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
         if (corpse_id != -1)
         {
-            if (_corpse_butchery(corpse_id, butcher_tool, first_corpse,
-                                 bottle_blood))
+            if (_corpse_butchery(corpse_id, first_corpse, bottle_blood))
             {
                 success = true;
                 first_corpse = false;
@@ -747,7 +607,6 @@ bool butchery(int which_corpse, bool bottle_blood)
              Options.confirm_butcher == CONFIRM_NEVER ? "suitable" : "else",
              bottle_blood ? "bottle" : "butcher");
     }
-    _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
     if (success)
     {

@@ -2535,9 +2535,6 @@ static void _start_translevel_travel()
 
     if (level_target.p.id.depth > 0)
     {
-        // Forget interrupted butchering.
-        maybe_clear_weapon_swap();
-
         you.running = RMODE_INTERLEVEL;
         you.running.pos.reset();
         last_stair.depth = -1;
@@ -3007,9 +3004,6 @@ void start_explore(bool grab_items)
 
     if (!i_feel_safe(true, true))
         return;
-
-    // Forget interrupted butchering.
-    maybe_clear_weapon_swap();
 
     you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 
