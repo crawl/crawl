@@ -446,7 +446,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if game_id not in config.games: return
 
         game = config.games[game_id]
-        if "no_json_options" in game and game["no_json_options"]: return
+        if not "send_json_options" in game or not game["send_json_options"]:
+            return
 
         call = [game["crawl_binary"], "-rc", self.rcfile_path(game_id)]
         if "options" in game:

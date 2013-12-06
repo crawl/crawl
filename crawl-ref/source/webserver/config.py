@@ -51,7 +51,8 @@ games = OrderedDict([
         inprogress_path = "./rcs/running",
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
-        client_path = "./webserver/game_data/")),
+        client_path = "./webserver/game_data/",
+        send_json_options = True)),
     ("sprint-web-trunk", dict(
         name = "Sprint trunk",
         crawl_binary = "./crawl",
@@ -62,6 +63,7 @@ games = OrderedDict([
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
+        send_json_options = True,
         options = ["-sprint"])),
     ("zd-web-trunk", dict(
         name = "Zot Defense trunk",
@@ -73,6 +75,7 @@ games = OrderedDict([
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
+        send_json_options = True,
         options = ["-zotdef"])),
     ("tut-web-trunk", dict(
         name = "Tutorial trunk",
@@ -84,6 +87,7 @@ games = OrderedDict([
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
+        send_json_options = True,
         options = ["-tutorial"])),
 ])
 
