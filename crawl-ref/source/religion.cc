@@ -2305,6 +2305,11 @@ bool do_god_gift(bool forced)
                         take_note(Note(NOTE_OFFERED_SPELL, *it));
                     }
                     prompt += ".";
+                    if (offers.size() > 1)
+                    {
+                        prompt += " These spells will remain available"
+                                  " as long as you worship Vehumet.";
+                    }
 
                     you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
                     if (gifts >= 5)
