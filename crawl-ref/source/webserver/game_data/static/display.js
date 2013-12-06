@@ -1,7 +1,7 @@
 define(["jquery", "comm", "./map_knowledge", "./view_data", "./monster_list",
-        "./minimap", "./dungeon_renderer"],
+        "./minimap", "./dungeon_renderer", "./options"],
 function ($, comm, map_knowledge, view_data, monster_list, minimap,
-          dungeon_renderer) {
+          dungeon_renderer, options) {
     var overlaid_locs = [];
 
     function invalidate(minimap_too)
@@ -115,6 +115,8 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
     function handle_vgrdc(data)
     {
     }
+
+    options.add_listener(display);
 
     comm.register_handlers({
         "map": handle_map_message,
