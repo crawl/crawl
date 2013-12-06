@@ -270,9 +270,7 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int chance = random2(pow);
-    if (chance < 10)
-        mon = MONS_JACKAL;
-    else if (chance < 15)
+    if (chance < 15)
         mon = MONS_HOUND;
     else
     {
@@ -287,13 +285,8 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
             mon = MONS_WOLF;
             break;
 
-        case 3:
-        case 4:
-            mon = MONS_HOUND;
-            break;
-
         default:
-            mon = MONS_JACKAL;
+            mon = MONS_HOUND;
             break;
         }
     }
@@ -3073,7 +3066,7 @@ static const summons_desc summonsdata[] =
     // Beasts
     { SPELL_SUMMON_BUTTERFLIES,         8, 5 },
     { SPELL_SUMMON_SMALL_MAMMAL,        3, 2 },
-    { SPELL_CALL_CANINE_FAMILIAR,       3, 3 },
+    { SPELL_CALL_CANINE_FAMILIAR,       1, 3 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
     { SPELL_SUMMON_SCORPIONS,           4, 3 },
     { SPELL_SUMMON_HYDRA,               3, 2 },
