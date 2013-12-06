@@ -956,6 +956,51 @@ ccECDEDCEcc
 ccccccccccc
 ENDMAP
 
+NAME:    hangedman_hall_of_fallen_heroes
+TAGS:    no_monster_gen no_item_gen
+DEPTH:   Crypt:2-
+ORIENT:  float
+MONS:    wight band, phantasmal warrior
+MONS:    skeletal warrior ; long sword | war axe | trident | flail . \
+                            chain mail | ring mail | scale mail
+MONS:    patrolling vampire knight, patrolling ancient champion
+ITEM:    any weapon no_pickup / any armour no_pickup w:8 / \
+         gold no_pickup w:3 / any weapon good_item no_pickup w:3
+ITEM:    $ no_pickup, | no_pickup
+SHUFFLE: -_
+SUBST:   z : cvvv, G : GGv, - = ++++., _ = +.
+NSUBST:  C = 3 = ':19 c:1 / 2 = 'cc / *:c
+NSUBST:  Z = 1:. / *:v, G = 1:' / * = G:19 ':1
+MAP
+        ccccccc
+        cccccccccc
+        cc2d.ccccc
+        ccd.z_cccc
+    cccccc.zZ..cccccccc
+    ccccccc_....ccvvvvc
+    cc3d.c....G.evvf5vc
+    ccd.z-.cC....4+vfvc
+cccccc.zZ..CC.....z+vvc
+ccccccc-...........4vccccc
+cc2d.c....G...C.....eccccc
+ccd.z_.cC.............cccc
+cc.zZ..CC...C...c...G..cccc
+ccc_.........c.........-ccc
+cce...G...c...C...CC..cz.cc
+ccc-..............Cc.-z.dcc
+cc.zZ.......C...G....c.d3cc
+ccd.z-............._ccccccc
+cc3d.c........CC..Zz.cccccc
+cccccc+c......Cc._z.dcc
+ ....ez+.........c.d2cc
+  @.c.ecc_..G..-ccccccc
+   .1c.c.zZ...Zz.cccccc
+    ...cd.z_.-z.dcc
+     @.c2d.cec.d3cc
+      .cccccccccccc
+       cccccccccccc
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################

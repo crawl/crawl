@@ -1016,6 +1016,105 @@ MAP
         .
 ENDMAP
 
+NAME:    hangedman_elf_power_crystal
+TAGS:    extra transparent decor
+DEPTH:   Elf
+KMONS:   1 = crystal golem
+SHUFFLE: @ABC, QRST, n1' / n1' / xxx
+SUBST:   A : b:8 .:1 @:1, BC = b, x : b:8 x:1
+SUBST:   Q : b:8 .:1, R : b.., S : b:1 .:8, T = .
+KMASK:   1' = no_trap_gen
+KMASK:   1' = no_item_gen
+KMASK:   1' = no_monster_gen
+KPROP:   1' = no_rtele_into
+TILE:    1' = floor_pebble_green
+COLOUR:  1' = green
+MAP
+          bbbbbbbbAb
+         Bb.b..T..bA
+        Bb...b...b.b
+       bb..R..b.b..b
+    b@bbbbb.bbbb..Sb
+    @b.....bb''bb..b
+    b.b...bb'1'b.b.b
+   bb..b.bb'''nb..bb
+  Cbb...bb'1'bb.Q..b
+ Cb.b..bb'''nb.b..bb
+bb..b.bn'''bb..b.bC
+b..Q.bb'1'bb...bbC
+bb..bn'''bb.b..bb
+b.b.b'1'bb...b.b
+b..bb''bb.....b@
+bS..bbbb.bbbbb@b
+b..b.b..R..bb
+b.b...b...bB
+Ab..T..b.bB
+bAbbbbbbbb
+ENDMAP
+
+NAME:    hangedman_elven_ridges
+TAGS:    extra transparent decor
+DEPTH:   Elf
+MONS:    fungus
+SHUFFLE: ABCD, EF, GHIJKLMN
+SUBST:   A : x.., B : xx., CD = x, E : x.., F : x..
+SUBST:   G : xxx., H : xxx., I : x., J : x., K : x:1 .:9, L : x:1 .:9
+SUBST:   MN = ., c : c:16 b:2 v:1 1:1
+MAP
+   .cxBxc.
+   .H...G.
+   ...x......
+......x......
+cH..F.x.xxCxx
+x.......J...I
+A.xxx.c...x......
+x.........x......
+cG..xJ..E.x.xxDxx
+....x.......L...K
+  ..D.xxx.c...x..
+  ..x.........x......
+  ..xI..xL..F.x.xxAxc
+      ..x.......N...M
+      ..C.xxx.c...x..
+      ..x.........x.
+      ..xK..xN..E.x.
+          ..x.......
+          ..B.xxx.c.
+          ..x.......
+          ..cM.
+ENDMAP
+
+NAME:    hangedman_elven_pyramids
+TAGS:    extra transparent mini_float decor
+DEPTH:   Elf
+SHUFFLE: ABCD, +-_, yz / yz / zy
+SUBST:   A : ZZ., B : Z., C : Z.., D = .
+SUBST:   + : x:9 +:2 .:1, -_ : x:9 z:1
+SUBST:   Z : z:5 c:1 x:1 b:1, z : c:6 x:3 .:1
+MAP
+       ..x..
+      ..x.x..
+     ..x...x..
+    ..x..A..x..
+   ..x...y...x..
+  ..x..xz.zx..x..
+ ..x.x...y...x.x..
+..x...zy.C.yz...x..
+.x..B.yz...zy.D..x..
+x.......x.x.......x..
+xxxx+xxxx-x_xx-xxxx+xxxx
+   ..x.......x.x.......x
+    ..x..D.yz...zy.B..x.
+     ..x...zy.C.yz...x..
+      ..x.x...y...x.x..
+       ..x..xz.zx..x..
+        ..x...y...x..
+         ..x..A..x..
+          ..x...x..
+           ..x.x..
+            ..x..
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

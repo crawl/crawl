@@ -408,6 +408,123 @@ MAP
          ...
 ENDMAP
 
+NAME:    hangedman_dis_decor_blocks_mantle
+TAGS:    extra transparent decor
+SHUFFLE: ABC, DEFG
+NSUBST:  > = 1 = .:13 >:7 / 1 = .:6 (:4 / *:.
+SUBST:   A : x:9 .:1, B : yy..., C = .
+SUBST:   D : xxxx., E : y.., FG = .
+SUBST:   x : v:3 G:2, y : v, - =  +v 
+: dis_statues(_G)
+MAP
+        vvvvv     vvvvv
+        v...v..D..v...v
+        v.>.+.....+.>.v
+        v...v..D..v...v
+    vvvvvv+vv.....vv+vvvvvv
+    v...v.............v...v
+    v.>.+.A...E.E...A.+.>.v
+    v...v.............v...v
+vvvvvv+vv....vv-vv....vv+vvvvvv
+v...v........v...v........v...v
+v.>.+.B....C.+.>.+.C....B.+.>.v
+v...v........v...v........v...v
+vv+vv....vv+vvvvvvv+vv....vv+vv
+ ......G.v...v   v...v.G......
+ F.F.....+.>.v   v.>.+.....F.F
+ ......G.v...v   v...v.G......
+         vvvvv   vvvvv
+ENDMAP
+
+NAME:    hangedman_dis_decor_blocks_talon
+TAGS:    extra transparent decor
+SHUFFLE: ABCD, EFGHIJ
+SUBST:   A : x:9 .:1, B : yyy.., C : z.., D = .
+SUBST:   E : x:9 .:1, F : yy..., GHIJ = .
+SHUFFLE: xyz, -_
+SUBST:   x : v:3 G:2, y : v:3 G:1, z = v, - : ++v, _ : +vv
+NSUBST:  > = 1 = .:13 >:7 / 1 = .:6 {:4 / *:.
+: dis_statues(_G)
+MAP
+                vvvvv
+         .......v...v.E.....
+         .....A.+.>.+....F.F
+         .......v...v.E.....
+         ...vv+vvv+vv...vv+vv
+ .........H.v...v.......v...v
+ ....G.G....+.>.+.B...C.+.>.v
+ .........H.v...v.......v...v
+ ...vv+vv...vv_vv...vv+vvv+vv
+ ...v...v.I.......I.v...v...
+ .D.+.>.-....J.J....-.>.+.D.
+ ...v...v.I.......I.v...v...
+vv+vvv+vv...vv_vv...vv+vv...
+v...v.......v...v.E.........
+v.>.+.C...B.+.>.+....D.D....
+v...v.......v...v.E.........
+vv+vv...vv+vvv+vv...
+ .....E.v...v.......
+ F.F....+.>.+.A.....
+ .....E.v...v.......
+        vvvvv
+ENDMAP
+
+NAME:    hangedman_dis_decor_blocks_crown
+TAGS:    extra transparent decor
+SHUFFLE: '-` / "_<, AB, CDEFG
+SUBST:   '-` = v, " = ., _ = +, < = >, A : xxx., B: y...
+SUBST:   C : xxxx.:1, D : yyy.., E : z.........., FG = .
+SUBST:   x : v:3 G:2, y : v:3 G:1, z = v
+NSUBST:  > = 1 = .:13 >:7 / 1 = .:6 [:4 / *:.
+: dis_statues(_G)
+MAP
+vvvvv       vvvvv
+v'''v.C...D.v...v
+v'`'-.......+.>.v
+v'''v.C...D.v...v
+vv-vv.......vv+vvvvvv
+ ...............v...v
+ C.C....E..E..A.+.>.v
+ ...............v...v
+ .......vv+vv...vv+vv
+ .....E.v...v.......
+ D.D....+.>.+.B..F.F
+ .....E.v...v.......
+vv+vv...vv+vvv+vv...
+v...v.......v...v.G.
+v.>.+.A...B.+.>.+...
+v...v.......v...v.G.
+vvvvvv+vv...vv+vv...
+    v...v.F.........
+    v.>.+....G.G....
+    v...v.F.........
+    vvvvv
+ENDMAP
+
+NAME:    hangedman_dis_decor_tower
+TAGS:    extra transparent decor
+SHUFFLE: AB, CD
+SUBST:   A : v:4 .:1, B : v:1 .:4, C = v, D = .
+MAP
+    .....
+ .....v.......
+ ....CvC......
+ .....v..Dv.....
+....B.v...v.A...
+..C...v.v.v.....
+.vvvvvvvvvvvvv..
+..C...vvvvv..D..
+.....vvvvvvv.....
+ ..D..vvvvv...C..
+ ..vvvvvvvvvvvvv.
+ .....v.v.v...C..
+ ...A.v...v.B....
+ .....vD..v.....
+   ......CvC....
+   .......v.....
+        .....
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions
@@ -825,6 +942,7 @@ ENDMAP
 # Dis Stronghold by HangedMan
 ##############################################################################
 NAME:    dis_hangedman
+TAGS:    no_monster_gen
 ORIENT:  encompass
 MONS:    metal gargoyle w:90 / iron devil
 MONS:    iron troll w:75 / iron troll skeleton / \
@@ -866,11 +984,11 @@ vv.......1v2.........v.....v.....................gg.hh..v......$vvv
 vv......vvvvv........v0....v.....................gg.hh..vvvvvvvvvvv
 vvv.......v.......vv+vvvv-vv...............................v.v...vv
 vvv.......v.......v...0v........v0v.......v.b.a..................vv
-vv................+....v..G....vvvvv.....vvvv.va.....vvlvv.......vv
-vv..........vvv+vvv....-.G.....vvvvvv.....v8........vvvvvvv.....vvv
+vv................+....v..G....vvvvv.....vvvv+va.....vvlvv.......vv
+vv..........vvv+vvv....-.G.....vvvvvv.....v8..+.....vvvvvvv.....vvv
 vv..........v....0v0...v.......kvvvv0....bv.6.vb....0vvvvv0.....vvv
-vvv.........+.....vvv-vv.......vvvvvv........8v.....vvvvvvv......vv
-vvv.........v.....v............vvvvv.....av.vvvv.....vvvvv.......vv
+vvv.........+.....vvv-vv.......vvvvvv.....+..8v.....vvvvvvv......vv
+vvv.........v.....v............vvvvv.....av+vvvv.....vvvvv.......vv
 vv......vv+vv.....-..G..........v0v.......a.b.v.......v0v........vv
 vv......v..0v0....v.G.....ff....................................vvv
 vv......+...vvv-vvv.......fve...................................vvv
@@ -888,15 +1006,15 @@ vvv.........................vv..vvvvvvvvv=vvv=vvvv=vvv=vvvvv=vvvvvv
 vv................................vvvvv....5...................Gvvv
 vv....................................v.............888........Gvvv
 vvv.......v0v.......v.d.c.........v..9=..G.vvvvvvvvvvvvvvvvvvvvvvvv
-vvv......vvvvv.....vvvv.vc...........1v..............8..........vvv
-vv......vvvvvvv.....v8............vvvvv5.v.......v.v6.6v.v......vvv
+vvv......vvvvv.....vvvv+vc...........1v..............8..........vvv
+vv......vvvvvvv.....v8..+.........vvvvv5.v.......v.v6.6v.v......vvv
 vv......0vvvvv0....dv.6.vd............v..v...........8..........vvv
-vvv.....vvvvvvv........8v.........v..9=..v...vvvvvvvvvvvvvvvvv..vvv
-vvv......vvmvv.....cv.vvvv...........1v..v...vvvvvvvvvvvvvvvvv..vvv
+vvv.....vvvvvvv.....+..8v.........v..9=..v...vvvvvvvvvvvvvvvvv..vvv
+vvv......vvmvv.....cv+vvvv...........1v..v...vvvvvvvvvvvvvvvvv..vvv
 vv..................c.d.v..........vvvv..v...vvO.v|v...v$v.$vv.Gvvv
 vv...v.v..............................v..v...vv.v....v......vv..vvv
-vvvvvvvvvvv..jj.jj.................v.9v..v.v.vvv.|v.|v$.$v.vvv..vvv
-vvv$......v..jj.jj.................v.2=..v...vv|.v7.vvv.4$.$vv..vvv
+vvvvvvvvvvv..jj.ii.................v.9v..v.v.vvv.|v.|v$.$v.vvv..vvv
+vvv$......v..jj.ii.................v.2=..v...vv|.v7.vvv.4$.$vv..vvv
 vvv$......v...........................v..v.v.vvv.....v.....vvv..vvv
 vvv$..v...v..ii.jj...v0v...........vvvv.8v.6.vv..|v.....v$..vv..vvv
 vvv$..v...v..ii.jj..vvvvv.............v.8v8.8vv.vvvv...vvvv.vv.Gvvv
