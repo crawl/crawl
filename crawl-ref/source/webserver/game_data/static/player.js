@@ -1,5 +1,6 @@
-define(["jquery", "comm", "./enums", "./map_knowledge", "./messages"],
-function ($, comm, enums, map_knowledge, messages) {
+define(["jquery", "comm", "./enums", "./map_knowledge", "./messages",
+        "./options"],
+function ($, comm, enums, map_knowledge, messages, options) {
     var player = {}, last_time;
 
     var hp_boosters = "divinely vigorous|berserk";
@@ -161,9 +162,10 @@ function ($, comm, enums, map_knowledge, messages) {
         if (player.has_status("lost " + stat))
             return "zero_stat";
 
-        // TODO: stat colour options -- hardcoded for now
-        if (val <= 3)
-            return "low_stat";
+        var limits = options.get("stat_colour")
+        for (var i in limits)
+            if (val <= limits[i].value)
+                return "colour_" + limits[i].colour;
 
         if (player.has_status(stat_boosters[stat]))
             return "boosted_stat";
@@ -186,6 +188,40 @@ function ($, comm, enums, map_knowledge, messages) {
         }
         elem.addClass(stat_class(stat));
         $("#stats_" + stat).html(elem);
+    }
+
+    function percentage_color(name)
+    {
+        var real = false;
+        if (player["real_" + name + "_max"] != player[name + "_max"])
+            real = true;
+
+        $("#stats_" + name).removeClass();
+        $("#stats_" + name + "_separator").removeClass();
+        $("#stats_" + name + "_max").removeClass();
+        if (real)
+            $("#stats_real_" + name + "_max").removeClass();
+
+        if (player.has_status(stat_boosters[name]))
+        {
+            $("#stats_" + name).addClass("boosted_stat");
+            $("#stats_" + name + "_separator").addClass("boosted_stat");
+            $("#stats_" + name + "_max").addClass("boosted_stat");
+            if (real)
+                $("#stats_real_" + name + "_max").addClass("boosted_stat");
+            return;
+        }
+
+        var val = player[name] / player[(real ? "real_" : "") + name + "_max"]
+                  * 100;
+        var limits = options.get(name + "_colour");
+        var colour = null;
+        for (var i in limits)
+            if (val <= limits[i].value)
+                colour = limits[i].colour;
+
+        if (colour)
+            $("#stats_" + name).addClass("colour_" + colour);
     }
 
     var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress", "gold"];
@@ -268,6 +304,8 @@ function ($, comm, enums, map_knowledge, messages) {
         else
             $("#stats_real_hp_max").text("");
 
+        percentage_color("hp");
+        percentage_color("mp");
         update_bar("hp");
         if (do_contam)
             update_bar_contam();
@@ -275,9 +313,6 @@ function ($, comm, enums, map_knowledge, messages) {
             update_bar("mp");
         if (do_temperature)
             update_bar_heat();
-
-        $("#stats_hp").toggleClass("boosted_hp", !!player.has_status(hp_boosters));
-        $("#stats_mp").toggleClass("boosted_mp", !!player.has_status(mp_boosters));
 
         update_defense("ac");
         update_defense("ev");
@@ -342,6 +377,8 @@ function ($, comm, enums, map_knowledge, messages) {
             $("#dungeon").trigger("update_cells", [[player.pos]]);
         }
     }
+
+    options.add_listener(update_stats_pane);
 
     comm.register_handlers({
         "player": handle_player_message,
