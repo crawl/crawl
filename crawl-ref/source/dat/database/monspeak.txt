@@ -4444,6 +4444,8 @@ confused Ijyb
 
 @The_monster@ screams @at_foe@, "Me back to killing you soon!"
 
+@The_monster@ screams @at_foe@, "No nasty magic on me!"
+
 VISUAL:@The_monster@ clutches @possessive@ head and gibbers rapidly, swaying.
 ## END Ijyb ##
 %%%%
