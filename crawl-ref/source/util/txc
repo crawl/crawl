@@ -1239,13 +1239,18 @@ class Menu(OrderedDict):
             self.build_main_menu()
             self.show_menu()
 
-wrapper = TextWrapper(width = 79, break_on_hyphens = False)
+wrapper_args = {
+    'width' : 79,
+    'break_on_hyphens' : False,
+    'break_long_words' : False}
+
+wrapper = TextWrapper(**wrapper_args)
 # Use hardcoded whitespaces instead of \s because the latter matches
 # non-breaking spaces (see textwrap.py:30).
 wrapper.wordsep_simple_re_uni = re.compile(r'([%s]+)' % _whitespace)
-FWwrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False)
-FW_NS_wrapper = FullWidthTextWrapper(width = 79, break_on_hyphens = False,
-                                     no_space = True)
+FWwrapper = FullWidthTextWrapper(**wrapper_args)
+wrapper_args['no_space'] = True
+FW_NS_wrapper = FullWidthTextWrapper(**wrapper_args)
 
 # We initialize the resource index early because we might need it if we have to
 # initialize the transifex configuration.
