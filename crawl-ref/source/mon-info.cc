@@ -295,26 +295,26 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 static void _translate_tentacle_ref(monster_info& mi, const monster* m,
                                     const string &key)
 {
-    if (m->props.exists(key))
+    if (!m->props.exists(key))
+        return;
+
+    const int h_idx = m->props[key].get_int();
+    monster *other = NULL; // previous or next segment
+    if (h_idx != -1)
     {
-        const int h_idx = m->props[key].get_int();
-        monster *other = NULL; // previous or next segment
-        if (h_idx != -1)
+        ASSERT(!invalid_monster_index(h_idx));
+        other = &menv[h_idx];
+        coord_def h_pos = other->pos();
+        // If the tentacle and the other segment are no longer adjacent
+        // (distortion etc.), just treat them as not connected.
+        if (adjacent(m->pos(), h_pos)
+            && other->type != MONS_KRAKEN
+            && other->type != MONS_ZOMBIE
+            && other->type != MONS_SPECTRAL_THING
+            && other->type != MONS_SIMULACRUM
+            && !_tentacle_pos_unknown(other, m->pos()))
         {
-            ASSERT(!invalid_monster_index(h_idx));
-            other = &menv[h_idx];
-            coord_def h_pos = other->pos();
-            // If the tentacle and the other segment are no longer adjacent
-            // (distortion etc.), just treat them as not connected.
-            if (adjacent(m->pos(), h_pos)
-                && other->type != MONS_KRAKEN
-                && other->type != MONS_ZOMBIE
-                && other->type != MONS_SPECTRAL_THING
-                && other->type != MONS_SIMULACRUM
-                && !_tentacle_pos_unknown(other, m->pos()))
-            {
-                mi.props[key] = h_pos - m->pos();
-            }
+            mi.props[key] = h_pos - m->pos();
         }
     }
 }
