@@ -432,24 +432,27 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return os.path.join(path, self.username + ".rc")
 
     def send_json_options(self, game_id):
-        if not self.username: return None
-        if game_id not in config.games: return None
+        def do_send(data, returncode):
+            if returncode != 0:
+                # fail silently for returncode 1 for now, probably just an old
+                # version missing the command line option
+                if returncode != 1:
+                    self.logger.warning("Error while getting JSON options!")
+                return
+            self.write_message('{"msg":"options","options":' + data + '}')
+
+        if not self.username: return
+        if game_id not in config.games: return
 
         game = config.games[game_id]
+        if "no_json_options" in game and game["no_json_options"]: return
+
         call = [game["crawl_binary"], "-rc", self.rcfile_path(game_id)]
         if "options" in game:
             call += game["options"]
         call.append("-print-webtiles-options")
 
-        try:
-            def do_send(data):
-                self.write_message('{"msg":"options","options":'
-                                   + data + '}')
-
-            checkoutput.check_output(call, do_send, self.ioloop)
-        except subprocess.CalledProcessError:
-            self.logger.warning("Error while getting JSON options!",
-                                exc_info=True)
+        checkoutput.check_output(call, do_send, self.ioloop)
 
     def watch(self, username):
         if self.is_running():
