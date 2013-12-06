@@ -1,4 +1,4 @@
-%%%%
+&#65279;%%%%
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
@@ -3158,6 +3158,10 @@ sickly siren
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
+%%%%
+strange machine
+
+A glistening silver machine.
 %%%%
 succubus
 

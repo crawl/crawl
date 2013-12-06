@@ -1,87 +1,75 @@
 ###
-#
 ## Maps from named Wizards, unrand and fixedarts
 #
-# Tukima's Studio
-#    threat: 6 dancing weapons, dancing weapon machine generating up to 5 more
-#    loot:   the weapons, tukima's book and a scroll of acquirement
-#    xp:     14400 or so
-#    layout: mirrors; grey and white
-#
-# Eringya's Formal Garden
-#    crumbling stone walls.
-#    threat: centaurs, oklobs
-#    loot:   a staff and four spellbooks
-#    xp:     10500 or so
-#    layout: formal (French) garden, flowers, crumbling stone walls
-#
-# Doroklohe's Tomb
-#    threat: either Tomb set or demons or golems
-#    loot:   either scrolls or armours or random items
-#    xp:     10000+
-#    layout: lots of tombs with loot and monsters inside
-#    colour: yellow tombs, rest is dark, floor is randomised
-#
-# Wucad Mu's Monastery
-#    threat: "monks", OCS
-#    loot:   books, staff of wucad mu
-#    xp:     9000+
-#    layout: temple-esque!
-#    colour: dark walls, red and orange.
-#
-# Cigotuvi's Fleshworks
-#    threat: lumps, uglies, abominations
-#    loot:   tmut. potions, books, rMut, ?oSumm, \oDeath
-#    xp:     16000+
-#    layout: organic, irregular, twisty, NO SQUARES, NO HARD CORNERS,
-#            NOTHING THAT LOOKS PRETTY
-#    colour: lightred walls, red doors, magenta floor, yellow 'glass'
-#
-# Iskenderun's Mystic Tower
-#    threat: naga mystics, statues with IOOD and IMB, purple draconians
-#    loot:   conjurations-themed randart books
-#    xp:     20000+
-#    layout: weird fortress tower thing with strange corners
-#    colour: purple.
-#
-# Zonguldrok's Mausoleum
-#    threat: zombies, ancient lich, skele warriors
-#    loot:   scrolls, potions, spell books and zonguldrok's sword
-#    xp:     20000+
-#    layout: graveyard
-#    colour: darkgrey, lightgrey
-#
-# The Roulette of Golubria
-#    threat: distortion, tloc-themed monsters, Abyss monsters
-#    loot:   tloc-themed consumables / rings / books, abyss escape aides, cloaks
-#    xp:     20000+
-#    layout: large maw shape with roulette through teeth, old-abyss-esque innards
-#    colour: green floor, green/rarely cyan walls
-#
-## Random maps
-#
-# Cloud Mage's Chambers
-#    threat: cloud mage (random name), vapours, air elementals
-#    loot:   potions, robe of clouds, air-related spells
-#    xp:     20000+
-#    layout: "cloud"-esque, clouds.
-#    colour: white, silver, lightblue
-#
-# Hellbinder's Lair:
-#    threat: demons, Hellbinder
-#    loot:   demonology-related items
-#    xp:     15000+
-#    layout: sigils, triangles and circles
-#    colour: red, darkgrey
-#
+#Wizard    |Threat                  |Loot                    |XP
+#--------------------------------------------------------------------
+#Tukima    |6 dancing weapons,      |weapons, book,          |14400
+#          |weapon generators       |acquirement             |
+#--------------------------------------------------------------------
+#Eringya   |centaurs, fauns,        |books, staves, potions  |19000
+#          |plants, golems          |                        |
+#--------------------------------------------------------------------
+#Doroklohe |golems or demons        |scrolls or armour       |12000
+#          |or top-tier undead      |or random               |
+#--------------------------------------------------------------------
+#Wucad Mu  |sudden "monks",         |potions of experience,  |9000
+#          |summoning OCS           |staff of Wucad Mu       |
+#--------------------------------------------------------------------
+#Cigotuvi  |uglies, lumps,          |tmut potions / books,   |16000
+#          |abominations            |scrolls of summoning    |
+#--------------------------------------------------------------------
+#Iskenderun|DE mages, iood statues, |books, books, books,    |22000
+#          |purple draconians       |robe of the archmagi    |
+#--------------------------------------------------------------------
+#Zonguldrok|skeletal warriors,      |consumables, gold,      |20000++
+#          |zombies, ancient lich   |Zonguldrok's sword      |
+#--------------------------------------------------------------------
+#Golubria  |tloc-themed monsters,   |tloc items, cloaks,     |20000
+#          |Abyss monsters          |abyss-escape aides      |
+#--------------------------------------------------------------------
+#Cloud Mage|air elementals,         |potions, robe of clouds,|16000
+#          |vapours, cloud mage     |speed/air-related misc  |
+#--------------------------------------------------------------------
+#Hellbinder|Demons, summoners,      |fire/summoning/         |17000
+#          |Hellbinder              |demonic items           |
+#---------------------------------------------------------------------
+#Full Name                |Layout               |Colours
+#---------------------------------------------------------------
+#Tukima's Dance Hall      |mirrored hall        |lightgray/white
+#---------------------------------------------------------------
+#Eringya's Formal Garden  |overgrown formal     |green and brown
+#                         |French garden        |
+#---------------------------------------------------------------
+#Doroklohe's Tomb         |densely packed       |yellow walls,
+#                         |collapsing tombs     |dark floor
+#---------------------------------------------------------------
+#Wucad Mu's Monastery     |empty temple         |dark walls,
+#                         |                     |autumn trees
+#---------------------------------------------------------------
+#Cigotuvi's Fleshworks    |organic, irregular,  |magenta/red/yellow
+#                         |twisted innards      |flesh/blood tiles 
+#---------------------------------------------------------------
+#Iskenderun's Mystic Tower|fortress tower with  |tons of magenta  
+#                         |statues, cave corners|
+#--------------------------------------------------------------- 
+#Zonguldrok's Mausoleum   |tower, graveyard     |piles of darkgray
+#---------------------------------------------------------------
+#Roulette of Golubria     |old-abyss mess,      |mostly green,
+#                         |teleport chambers maw|rare white or cyan
+#---------------------------------------------------------------
+#Cloud Mage's Chambers    |"cloud-esque"        |lightgray, white,
+#                         |                     |lightblue
+#---------------------------------------------------------------
+#Hellbinder's Lair        |triangles and circles|red, darkgray,
+#                         |sigils               |yellow sigils
 ##
 #
 # TO-DO:
 #
-# The flavour messages for the portal vault require flavour, while the actual
-# portals themselves could do with an overhaul and some new ones.
-#
-# *MUST* make these look awesome in tiles, too.
+# Actual portals need quite a bit of editing, and some unique tiles.
+# Tiles to fix: Tukima's fountains, Eringya's rock-like stone walls,
+# Doroklohe's plain floor, Cigotuvi's doorways, less generic
+# Iskenderun tiles, Cloud Mage's "white fluffiness" and "sea of clouds".
 #
 ##
 
@@ -121,18 +109,17 @@ function wizlab_portal (e)
     e.kfeat("O = enter_portal_vault")
     e.tile("O = no_random dngn_portal_wizard_lab")
     e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
-    e.chance(500)
+    e.chance("500")
 end
 
 -- Destinations:
 function wizlab_setup (e, wizlab_desc)
+    e.orient("encompass")
+    e.tags("no_item_gen no_monster_gen")
     e.kfeat("< = exit_portal_vault")
     e.tile("< = no_random dngn_portal_wizard_lab")
     -- This is so that the note shows up properly.
     e.set_feature_name("exit_portal_vault", "portal leading out of here")
-    if wizlab_desc ~= "Eringya's Formal Garden" then
-      e.set_feature_name("stone_arch", "empty arch of stone")
-    end
 end
 
 function wizlab_milestone (e, wizlab_desc)
@@ -181,15 +168,37 @@ function wizlab_eringya_grow(data, triggerable, triggerer, marker, ev)
 
   local count = 0
 
-  for spot in iter.adjacent_iterator() do
-    if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
-       and not crawl.one_chance_in(3) then
-      dgn.create_monster(spot.x, spot.y, "toadstool")
-      count = count + 1
+  if data.nofruitsyet and crawl.one_chance_in(5) then
+    -- Fruit! Only once, though: infinite fruit is abusable.
+    for spot in iter.adjacent_iterator() do
+      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
+         and crawl.one_chance_in(3) then
+        dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
+                          .. "/ banana / strawberry q:4 / lemon / rambutan "
+                          .. "/ grape q:7 / sultana q:9 / lychee")
+        count = count + 1
+        data.nofruitsyet = false
+      end
     end
-  end
-  if count > 0 then
-    crawl.mpr("Toadstools sprout up around you!")
+    if count > 0 then
+      crawl.mpr("Fruit sprouts up around you!")
+    end
+  else
+    for spot in iter.adjacent_iterator() do
+      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
+         and not crawl.one_chance_in(3) then
+        if crawl.one_chance_in(9) then
+          dgn.create_monster(spot.x, spot.y, "wandering mushroom")
+          count = count + 1
+        else
+          dgn.create_monster(spot.x, spot.y, "toadstool")
+          count = count + 1
+        end
+      end
+    end
+    if count > 0 then
+      crawl.mpr("Mushrooms sprout up around you!")
+    end
   end
 end
 
@@ -237,17 +246,44 @@ end
 
 function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
                                          marker, ev)
+    -- Save compat bit.
+    if data.count == nil then 
+        data.count = 0; data.swcount = 0; data.vpcount = 0; data.account = 0
+    end
     if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
         return
     end
-
     local graves = dgn.find_markers_by_prop("grave", 1)
     local x, y
     for _, gmarker in ipairs(graves) do
         x, y = gmarker:pos()
         if (you.see_cell(x, y) and crawl.one_chance_in(3)) or
             crawl.one_chance_in(8) then
-            spawn_zombie(x, y, "generate_awake human zombie")
+            if data.count < 9 or data.count < 18 and crawl.one_chance_in(5) then
+                if crawl.coinflip() then
+                    spawn_zombie(x, y, "generate_awake ogre zombie")
+                else
+                    spawn_zombie(x, y, "generate_awake wight")
+                end
+            elseif data.count < 21 or data.count < 26 and crawl.one_chance_in(4) then
+                if data.vpcount > 3 or crawl.coinflip() then
+                    spawn_zombie(x, y, "generate_awake troll zombie")
+                else
+                    spawn_zombie(x, y, "generate_awake vampire")
+                    data.vpcount = data.vpcount + 1
+                end
+            elseif data.count < 28 or data.account > 2 or crawl.one_chance_in(4) then
+                if data.swcount > 5 or crawl.coinflip() then
+                    spawn_zombie(x, y, "generate_awake hill giant zombie")
+                else
+                    spawn_zombie(x, y, "generate_awake skeletal warrior")
+                data.swcount = data.swcount + 1
+                end
+            else 
+                spawn_zombie(x, y, "generate_awake ancient champion")
+                data.account = data.account + 1
+            end
+            data.count = data.count + 1
             gmarker:remove()
         end
     end
@@ -265,7 +301,8 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
     end
 
     data.number_killed = data.number_killed + 1
-    if #dgn.find_markers_by_prop("grave", 1) < data.number_killed then
+    if (#dgn.find_markers_by_prop("grave", 1)) * 2 < data.number_killed * 3 
+       and #dgn.find_markers_by_prop("grave", 1) < 10 then
         local x, y = marker:pos()
         dgn.tile_feat_changed(x, y, nil)
         dgn.terrain_changed(x, y, "closed_door", false, false, false)
@@ -275,8 +312,15 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         else
             crawl.mpr("The walls vibrate.")
         end
+        local gxm, gym = dgn.max_bounds()
+        for p in iter.rect_iterator(dgn.point(1, 1), dgn.point(gxm-1, gym-1)) do
+            if dgn.fprop_at(p.x, p.y, "no_rtele_into") then
+               dgn.fprop_changed(p.x, p.y, "no_rtele_into")
+            end
+        end
     end
 end
+
 
 function wizlab_zonguldrok_awaken_wizard(data, triggerable,
                                          triggerer, marker, ev)
@@ -398,7 +442,7 @@ end
 
 }}
 
-default-depth: Depths, Elf, Crypt, Vaults:1-4
+default-depth: D:$, Depths, Elf, Crypt, Forest, Vaults:1-4
 
 ###############################################################################
 # Portal entrances.
@@ -421,7 +465,6 @@ wwbm..O..mbww
 ENDMAP
 
 NAME:       mu_enter_wizlab_2
-DEPTH:      Depths, Elf, Crypt, Vaults:1-4
 SHUFFLE:    tU
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
@@ -445,6 +488,7 @@ MAP
 ENDMAP
 
 NAME:       mu_enter_wizlab_3
+DEPTH:      D:$, Depths, Elf, Crypt, Vaults:1-4
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 5, \
@@ -498,6 +542,7 @@ w..www
 ENDMAP
 
 NAME:       mu_enter_wizlab_5
+DEPTH:      D:$, Depths, Elf, Crypt, Vaults:1-4
 COLOUR:     U = random
 COLOUR:     W = mutagenic
 KFEAT:      o = granite_statue
@@ -541,6 +586,7 @@ x.x.x.x.x..
 ENDMAP
 
 NAME:   mu_enter_wizlab_7
+DEPTH:  D:$, Depths, Elf, Crypt, Vaults:1-4
 KFEAT:  abcd : floor
 KFEAT:  ABCD : rock_wall
 TILE:   ABCD = floor_rough_white
@@ -569,7 +615,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_glasses
-DEPTH:    Depths, Elf, Crypt, Vaults:1-4
+DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
 FTILE:    GO_ = floor_rough_magenta
 TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
@@ -587,7 +633,6 @@ MAP
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_water
-DEPTH:    Depths, Elf, Crypt, Vaults:1-4
 FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
@@ -608,7 +653,7 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
-DEPTH:    Depths, Elf, Crypt, Vaults:1-4
+DEPTH:    D:$, Depths, Elf, Crypt, Vaults:1-4
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \
@@ -654,14 +699,14 @@ default-depth: WizLab
 # Firstly, we have Tukima's Dance Studio.
 #
 NAME:       wizlab_tukima
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_rotate
 MONS:       dancing weapon
 KFEAT:      M = granite_statue
 TILE:       M = dngn_machine_tukima
 MARKER:     M = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
                                   veto_shatter="veto", slaved_to="tukima"}
 {{
+
 local tukima_marker = TriggerableFunction:new {
     func = "tukima_machine",
     repeated = true,
@@ -669,50 +714,30 @@ local tukima_marker = TriggerableFunction:new {
 }
 
 tukima_marker:add_triggerer(DgnTriggerer:new {
-    type="turn",
-    delay_min=500,
-    delay_max=800
+    type="turn", delay_min=600, delay_max=900
 })
 
 lua_marker('?', tukima_marker)
 
-if crawl.coinflip() then
-  subst("Y = +")
-  subst("y = .")
-  subst("Rr = c")
-else
-  subst("Y = c")
-  subst("y = m")
-  subst("R = .")
-  subst("r = +")
-end
-
-if crawl.coinflip() then
-  subst("X = +")
-  subst("x = .")
-  subst("Ll = c")
-else
-  subst("X = c")
-  subst("x = m")
-  subst("L = .")
-  subst("l = +")
-end
 }}
 SUBST:      ? = .
 COLOUR:     +cA< = darkgrey
+KMONS:      789 = statue spells:blink_other;.;.;.;.;blink_other \
+                  col:silver name:strange_machine n_rpl n_des \
+                  hd:13 hp:100 tile:mons_statue_guardian
+# please make sure this is the book with Tukima's Dance
+KITEM:      8 = book of enchantments
+KITEM:      9 = acquire any, scroll of blinking q:4 ident:type
+SHUFFLE:    XxLl / HhIi, YyRr / JjKK
+SUBST:      XYik = +, xyIK = ., HJRrLl = c, hj = m 
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
 COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
-SHUFFLE:    89
-KMONS:      89 = dancing weapon
-# please make sure this is the book with Tukima's Dance
-KITEM:      8 = book of enchantments
-KITEM:      9 = scroll of acquirement
 :           set_feature_name("clear_rock_wall", "crystal clear mirror")
 :           set_feature_name("granite_statue", "strange machine")
-:           set_feature_name("dry_fountain", "glistening fountain")
+:           set_feature_name("dry_fountain_blue", "glistening fountain")
 :           set_feature_name("stone_wall", "black marble wall")
 :           set_feature_name("floor", "marble floor")
 :           set_random_mon_list("dancing weapon")
@@ -721,34 +746,34 @@ epilogue{{
             wizlab_milestone(_G, "Tukima's Studio")
 }}
 MAP
-                ccccccc
-                ccmmmcc
-            cccccm...mccccc
-           cc...+.A.<.+...cc
-          cc..cccm...mccc..cc
-          cc+cccccm.mccccc+cc
-          cc.cccccc+cccccc.cc
-         cc...cccc...cccc...cc
-         cm...mcm..1..mcm...mc
-         cm...mcm.....mcm...mc
-         cm.V.mcm.....mcm.V.mc
-         cm...mcm.....mcm...mc
-         cm...mcm..1..mcm...mc
-         cc...cccc...cccc...cc
-         ccc.cccccc.cccccc.ccc
-          cc+ccccm...mcccc+cc
-         ccm.mccm.....mccm.mcc
-         cm.1......V......1.mc
-        ccXm.mccm.....mccm.mYcc
-      cccxccmlcccm...mcccrmccycc
-      ccm.mcccLcccm.mcccRcccm.mcc
-     ccm...mLLcccm...mcccRRm...mcc
-    ccm..$..mcccm..?..mcccm..$..mcc
-    cm..$8$..m+m...M...m+m..$9$..mc
-    ccm..$..mcccm.....mcccm..$..mcc
-     ccm...mcc ccm...mcc ccm...mcc
-      ccmmmcc   ccmmmcc   ccmmmcc
-       ccccc     ccccc     ccccc
+            ccccccc
+            ccmmmcc
+        cccccm...mccccc
+       cc.....A.<.....cc
+      cc..ccm.....mcc..cc
+      cc.ccccm...mcccc.cc
+      cc.cccccc7cccccc.cc
+     cc...cccc...cccc...cc
+     cm...mcm..0..mcm...mc
+     cm...mcm.....mcm...mc
+     cm...mcm..V..mcm...mc
+     cm...mcm.....mcm...mc
+     cm...mcm..0..mcm...mc
+     cc...cccc...cccc...cc
+     ccc.cccccc.cccccc.ccc
+      cc.ccccm...mcccc.cc
+     ccm7mccm.....mccm7mcc
+     cm.0......M......4.mc
+    ccXm.mccm..?..mccm.mYcc
+  cccxccmlcccm...mcccrmccycc
+  ccm.mcccLcccm.mcccRcccm.mcc
+ ccm...mLLcccm...mcccRRm...mcc
+ccm..$..mcccm.....mcccm..$..mcc
+cm..$8$..m+m...7...m+m..$9$..mc
+ccm..$..mcccm.....mcccm..$..mcc
+ ccm.0.mcc ccm...mcc ccm.0.mcc
+  ccmmmcc   ccmmmcc   ccmmmcc
+   ccccc     ccccc     ccccc
 ENDMAP
 
 ###############################################################################
@@ -760,37 +785,41 @@ ENDMAP
 #          full link).
 #
 # TODO: Needs vine-covered statues, rose-covered archway.
-#       The map is too static. Some ideas by dpeg: loot behind plants or
-#       bushes, so you'll have to cut/burn your way there. With catastrophic
-#       effects, of course (plants turning into oklobs, fruits turning into
-#       spores or (if possible) animated weapons called like the fruit etc.)
-#       We could add a interesting little sub-game by having ballistos spawn
-#       on their own - and these could be aggressive ballistos, too!
+#       Map was previously said to be too static: while this is still the case,
+#       I think the improvements to terrain and monsters should be more than
+#       enough, though more dynamic lua with e.g. oklobs, spores,
+#       fruit-renamed dancing weapons could still contribute to the theme.
+#
 NAME:       wizlab_eringya
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
-MONS:       centaur, centaur warrior
-MONS:       oklob plant
+TAGS:       no_rotate
+MONS:       generate_awake patrolling centaur
+MONS:       generate_awake patrolling faun
+MONS:       centaur warrior, satyr, thorn hunter
 MONS:       stone golem name:vine_covered name_adjective col:lightgreen \
             tile:mons_vine_golem
-MONS:       toadstool
+MONS:       bush
+ITEM:       any fixed theme book, any fixed level book
+ITEM:       any magical staff / any rod w:2, any potion no_pickup
+KFEAT:      - = stone_arch
+KFEAT:      _ = altar_fedhas
+NSUBST:     1 = 3:2 / * = 1:14 2:1, 3 = 1:4 / * = 3:14 4:1
+NSUBST:     P = 1:7 / *:t, A = 1:A / *:-
 SUBST:      y = ct
+SHUFFLE:    ef / ef / fe
 COLOUR:     G = lightgrey
 TILE:       G = dngn_statue_centaur
-KFEAT:      / = stone_arch
-KFEAT:      _ = altar_fedhas
 MARKER:     A = feat:stone_arch
 TILE:       c = wall_brick_vines
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
-ITEM:       any fixed theme book, any fixed level book, any magical staff / any rod w:2
 {{
-
 local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
-                                              repeated = true }
+                                              repeated = true, 
+                                              data = { nofruitsyet = true } }
 
 grow_marker:add_triggerer(DgnTriggerer:new { type="turn",
         delay_min=500, delay_max=800, })
+
 
 lua_marker("_", grow_marker)
 }}
@@ -810,38 +839,39 @@ ctttttttttttttttttttttttttttttttttttttttttttc
 ctttttttt...........................ttttttttc
 ctttt.....tttttttttttt.tttttttttttt.....ttttc
 cttt..tt.tttttttttt.......tttttttttt.tt..tttc
-ct.1.tGt............<.T.A............tGt.1.tc
+ct.1.tAt............G.<.G............tAt.1.tc
 cttt..tt.tttttttttt.......tttttttttt.tt..tttc
 ctttt.....tttttttttttt.tttttttttttt.....ttttc
 ctttttttt...........................ttttttttc
 cttttttttttttttttttttt.tttttttttttttttttttttc
 ctttttttttyyyttttttty...ytttttttyyytttttttttc
-ctttttttty...yttttty.....yttttty...yttttttttc
-cttttttt..111.........T.........111..tttttttc
-ctttttt...121.tttttc.....cttttt.121...ttttttc
-cttttt.tty...yttttttcc+cctttttty...ytt.tttttc
-ctttt.tttty.yttttttt.....ttttttty.ytttt.ttttc
-cttt.tttttt.tttttttyd232eyttttttt.tttttt.tttc
-cttt.tttttt..tttttttydefyttttttt..tttttt.tttc
-ctttt.tttttt..tttttttytyttttttt..tttttt.ttttc
-cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
+ctttttttty...yt...ty..T..yt...ty...yttttttttc
+cttttttt..1t1..ttt....P....ttt..1t1..tttttttc
+ctttttt....t1.t...tc.....ct...t.1t....ttttttc
+cttttt.tty...yttttttcc-cctttttty...ytt.tttttc
+ctttt.t.ttytyttttttt.....tttttttytytt.t.ttttc
+cttt.t.tttt.ttttttty.353.yttttttt.tttt.t.tttc
+cttt.t.tttt..tttttttyf.fyttttttt..tttt.t.tttc
+ctttt.t.tttt..tttttttytyttttttt..tttt.t.ttttc
+cttttt.t.tttt..ttttttttttttttt..tttt.t.tttttc
+ctttttt.t.tttt..tttttcccttttt..tttt.t.ttttttc
+cttttyyy-yyytt...tttygggyttt...ttyyy-yyyttttc
+cttty.1...1.y.tt..ty..1..yt..tt.y.1...1.ytttc
+ctty...tTt...y.tt....1T1....tt.y...tTt...yttc
+cttty.1.3.1.y.tt..ty..3..yt..tt.y.1.3.1.ytttc
+cttttyyy-yyytt...tttygggyttt...ttyyy-yyyttttc
 ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
-cttttyyy/yyyttt..ttty...yttt..tttyyy/yyyttttc
-cttty...1...yttt..ty..1..yt..ttty...1...ytttc
-ctty...1T1...yttt....1T1....ttty...1T1...yttc
-cttty...1...yttt..ty..2..yt..ttty...1...ytttc
-cttttyyy/yyyttt..ttty...yttt..tttyyy/yyyttttc
-ctttttt.tttttt..tttttcccttttt..tttttt.ttttttc
-cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
-ctttt.tttttt..ttttt.G._.G.ttttt..tttttt.ttttc
-cttt.tttttt..ttttt...4.4...ttttt..tttttt.tttc
-cttt.ttttt..ttttt...........ttttt..ttttt.tttc
-ctttt.ttty/ytttt....cc+cc....tttty/yttt.ttttc
+cttttt.t.tttt..ttttttttttttttt..tttt.t.tttttc
+ctttt.t.tttt..ttttt5G._.G5ttttt..tttt.t.ttttc
+cttt.t.tttt..ttttt...6.6...ttttt..tttt.t.tttc
+cttt.t.ttt..ttttt...........ttttt..ttt.t.tttc
+ctttt.t.tytyttttde..cc+cc..edttttytyt.t.ttttc
 cttttt.ty...yttttttcc...cctttttty...yt.tttttc
-ctttttt./.1./.ttttcc..2..cctttt./.1./.ttttttc
-cttttttty...yt...../.1T1../....ty...ytttttttc
-cttttttttyyyttttttty.....ytttttttyyyttttttttc
-ctttttttttttttttttttyytyytttttttttttttttttttc
+ctttttt.-.1.-.ttttcc..P..cctttt.-.1.-.ttttttc
+cttttttty...yt.t..t-.3T3.-t..t.ty...ytttttttc
+cttttttttyyyttt.tt.y.....y.tt.tttyyyttttttttc
+cttttttttttttttt..ttyytyytt..tttttttttttttttc
+ctttttttttttttttttttttttttttttttttttttttttttc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -857,10 +887,9 @@ ENDMAP
 # The beginning of a horrifying day
 #                                    Impetigo 1992
 #
-# TODO: Tiles.
+# TODO: Floor tiles.
 NAME:       wizlab_doroklohe
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_rotate
 LROCKCOL:   yellow
 KFEAT:      ! = x
 {{
@@ -881,8 +910,6 @@ end
 function box_glyph(findgly, boxgly)
   local glyphs = {gly_points(findgly)}
   for i = 1, #glyphs, 2 do
-    -- This is ugly.  gly_points should return 1-indexed coordinates.
-    -- No longer ugly, as mapgrd is 0-indexed, like gly points.
     make_box(glyphs[i], glyphs[i+1], boxgly)
   end
 end
@@ -923,6 +950,8 @@ NSUBST:     p = 1:p / *:., q = 1:q / *:.
 NSUBST:     r = 1:r / *:., s = 1:s / *:.
 NSUBST:     t = 1:t / *:., u = 1:u / *:.
 #           Of the outer boxes, three are damaged.
+#           TODO: adapt this code for the first box,
+#           instead of manually ruining it.
 SHUFFLE:    bcdefghijklm
 :           box_glyph('b', 'X')
 :           box_glyph('c', 'Y')
@@ -1072,54 +1101,61 @@ ENDMAP
 # "Cigotuvi's Monster".
 #
 # TODO:     * door tile is *really* ugly, fix this?
-#           * Cigotuvi's Monster needs a much bigger buff. Convert to unique?
+#
 NAME:       wizlab_cigotuvi
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_rotate
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
-KMONS:      a = human name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human / \
-            human name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  / \
-            human name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human   / \
-            human name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    / \
-            human name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  / \
-            human name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    / \
+MONS:       human name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human /\
+            human name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  /\
+            human name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human   /\
+            human name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    /\
+            human name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  /\
+            human name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    /\
             human name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_human
-KMONS:      b = elf name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf     / \
-            elf name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      / \
-            elf name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf       / \
-            elf name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        / \
-            elf name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      / \
-            elf name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        / \
+MONS:       elf name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf     /\
+            elf name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      /\
+            elf name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf       /\
+            elf name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        /\
+            elf name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      /\
+            elf name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        /\
             elf name:febrile dbname:deformed_humanoid n_adj n_spe n_noc tile:mons_deformed_elf
-KMONS:      d = orc name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc     / \
-            orc name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      / \
-            orc name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc       / \
-            orc name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        / \
-            orc name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      / \
-            orc name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        / \
+MONS:       orc name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc     /\
+            orc name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      /\
+            orc name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc       /\
+            orc name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        /\
+            orc name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      /\
+            orc name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        /\
             orc name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_orc
-KMONS:      u = ugly thing / w:2 very ugly thing
-KMONS:      U = very ugly thing
-KMONS:      J = pulsating lump
-KMONS:      x = small abomination
-KMONS:      X = large abomination
-KMONS:      e = generate_awake giant eyeball
-SUBST:      " = J:1 / .:6
-KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
+MONS:       ugly thing, very ugly thing
+MONS:       pulsating lump perm_ench:shapeshifter / pulsating lump w:1
+MONS:       small abomination
+KMONS:      8 = large abomination
+KMONS:      9 = generate_awake giant eyeball
+KMONS:      0 = col:red clay golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
-KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
+KMONS:      & = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:250 tile:mons_cigotuvis_monster
+ITEM:       potion of mutation w:60 / potion of beneficial mutation / \
+            potion of cure mutation
+ITEM:       potion of beneficial mutation, potion of cure mutation
+ITEM:       amulet of resist mutation good_item
+ITEM:       randbook disc:transmutation owner:Cigotuvi
+ITEM:       book of transfigurations / randbook disc:transmutation
+ITEM:       staff of death, scroll of summoning
+SHUFFLE:    de / h~ / j^
+NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$, h = 1:h / 2:i / *:., j = 1:j / *:k
+SUBST:      4 = 4 5:2, " = 6:1 .:16, |^~ = .
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 1, size_buildup_amnt = 10, \
                  size_buildup_time = 500, cloud_type = "mutagenic fog", \
-                 excl_rad = -1 }
+                 excl_rad = 0 }
 MARKER:     ? = lua:fog_machine { \
                  pow_max = 20, delay_min = 10, delay_max = 40, \
                  size = 5, size_buildup_amnt = 10, \
                  size_buildup_time = 25, cloud_type = "mutagenic fog", \
-                 excl_rad = -1 }
+                 excl_rad = 0 }
 LFLOORCOL:  magenta
 LFLOORTILE: floor_nerves
 LROCKTILE:  wall_flesh
@@ -1145,19 +1181,6 @@ COLOUR:     W = green
 :           door_verb_open="You part the %s%s.",
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
-KITEM:      $ = w:60 potion of mutation / w:10 potion of beneficial mutation / \
-            w:5 potion of cure mutation
-KITEM:      & = potion of beneficial mutation
-KITEM:      ~ = potion of cure mutation
-NSUBST:     $ = 1:& / 1:~ / *:$
-KITEM:      * = gold
-NSUBST:     % = 1:% / *:*
-KITEM:      % = amulet of resist mutation good_item
-KITEM:      : = randbook disc:transmutation owner:Cigotuvi
-KITEM:      ^ = book of transfigurations / randbook disc:transmutation
-KITEM:      | = staff of death
-KITEM:      l = scroll of summoning
-NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 :           set_random_mon_list("pulsating lump / small abomination / ugly thing / very ugly thing")
 epilogue{{
@@ -1165,41 +1188,41 @@ epilogue{{
 }}
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
-ccLLLcccc.cccccccccccAccccccccccccWWWW.U:cccc
-c.....c.....ccc...ccc+cccccccccccW.....uU^ccc
-c.X.........cc.u...m...m..ccccccW.......uU:cc
-c.M........cc...b..m.x.m.a.cccccW..........cc
-c.X........cc...d..m...m.u..ccccW.........Wcc
-c..........cc.cccccm...mc...ccccc........Wccc
-c.....ccc+ccccc..cccc+cccccccccccc......Wcccc
-ccLLLccc..ccccuuu.cm...m..d..ccccc+cccccccccc
-cccccccc..ccc..!...m.x.m.a..cccccc""ccccccccc
-cc$$cccc..ccc.uuu..m...m...ccccccc""cc**%**cc
-c$$$$cc...cccc....cm...m.cccWccccc""c...c...c
-c$$$$+...cccccc..cccc+cccc...Wcccc""c...c...c
-c$$$$c...ccccccccc.m...m.xx...Wccc""ccc+c+ccc
-cc$ccccc+cccccccc..m.x.m...u..Wccc""c...e...c
-ccccccc...cccc...a.m...m....x.cc%c""c...J...c
-cccc.........c..b..m...mc....cc**c""c..JJJe.c
-c.xJ...ccc...cc..cccc+cccc..ccc+cc""c..JJ..cc
-c...ccccccc+cccccc.m.....cccc.JJJc""+.....ccc
-cc...ccccc'''cccc..m.....ucce.JJJc""ccccccccc
-cc...ccc''''''cc.!.m.....<uce....+"""""""""cc
-c..cccc''''''''cc.......cuccc....cc"""""""""c
+ccjjjcccc|cccccccccccAccccccccccccWWWW~5hcccc
+c|...|c....|ccc...ccc+cccccccccccWh~~~.45hccc
+c|8........|cc.4...m...m..ccccccW~......45hcc
+c.&........cc...2..m.7.m.1.cccccW~........hcc
+c.8........cc...3..m...m.4..ccccW~.......~Wcc
+c|.........cc.cccccm...mc...ccccc.......~Wccc
+c|...|ccc+ccccc..cccc+cccccccccccc.....hWcccc
+ccjjjccc..cccc444.cm...m..3..ccccc+cccccccccc
+cccccccc..ccc..!...m.7.m.1..cccccc""ccccccccc
+cceecccc..ccc.444..m...m...ccccccc""cc$$g$$cc
+ceddecc...cccc....cm...m.cccWccccc""c...c...c
+cedde+...cccccc..cccc+cccc...Wcccc""c...c...c
+ceddec...ccccccccc.m...m.xx...Wccc""ccc+c+ccc
+cceccccc+cccccccc..m.7.m...4..Wccc""c...9...c
+ccccccc...cccc...1.m...m....x.ccgc""c...6...c
+cccc.........c..2..m...mc....cc$$c""c..6669.c
+c.67...ccc...cc..cccc+cccc..ccc+cc""c..66..cc
+c...ccccccc+cccccc.m.....cccc.666c""+.....ccc
+cc...ccccc'''cccc..m.....4cc9.666c""ccccccccc
+cc...ccc''''''cc.!.m.....<4c9....+"""""""""cc
+c..cccc''''''''cc.......c4ccc....cc"""""""""c
 c..ccc'''''''''cccccc+cccccccccccccccccccc""c
 c..cc''''''''''ccccc...ccccccc""""""""""""""c
 c..cc''''''''''ccc.......cccc""""""""""""""cc
 c..c'''''''''''cc.........ccc""cccccccccccccc
 c..c+c+c+c+c+ccc...........cc""""""""""""""cc
-c..cXcXcXcXcXccc...........ccc""""""""""""""c
+c..c8c8c8c8c8ccc...........ccc""""""""""""""c
 c..cccccccccccc.....c.c.....cccccccccccccc""c
-c...xJ........+......?......+"""""ccc"""""""c
-c...xJ........c.....c.c.....c""""""c"""""""cc
+c...76........+......?......+"""""ccc"""""""c
+c...76........c.....c.c.....c""""""c"""""""cc
 ccmmmccccmmmcccc...........cccccc""c""ccccccc
 c.....cc.....cccWW.......WWcc""""""c""""""ccc
-cc.JJccccuuucccccWW..8..WWcc""""""ccc""""""cc
-ccJJ.cccc.a.ccccccWWWWWWWccc""ccccccccccc""cc
-cc.dccccccuuccccccccWWWccccc"""""""""""""""cc
+cc.66cccc444cccccWW..0..WWcc""""""ccc""""""cc
+cc66.cccc.1.ccccccWWWWWWWccc""ccccccccccc""cc
+cc.3cccccc44ccccccccWWWccccc"""""""""""""""cc
 ccccccccccccccccccccccccccccc"""""""""""""ccc
 ccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
@@ -1207,94 +1230,101 @@ ENDMAP
 ###############################################################################
 # Iskenderun's Mystic Tower
 #
-# TODO: Fix up the tiles to make them pretty. It's really quite boring. I've
-#       no idea how it could be improved or made interesting, but I think that
-#       a few boring maps is fine - it means that you don't know exactly what
-#       you're going to get.
+# TODO: Could use more unique tiles.
+#       A previous commit labeled this one as boring, though acceptable;
+#       hopefully emphasizing the orbs and terrain more than previously
+#       should help, though more unique contents could certainly be tried.
+#
 NAME:       wizlab_iskenderun
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup patrolling
-:           wizlab_setup(_G, "Iskenderun's Mystic Tower")
-MONS:       purple draconian / deep elf mage spells:iskenderun's_mystic_blast \
-            / nothing
-MONS:       statue tile:mons_statue_mage spells:iskenderun's_mystic_blast;orb_of\
-            _destruction col:lightmagenta
-KITEM:      D = star_item, star_item / superb_item, star_item
+TAGS:       no_rotate patrolling
+MONS:       deep elf mage spells:magic_dart;iskenderun's_battlesphere;\
+            iskenderun's_mystic_blast;force_lance 
+MONS:       purple draconian
+MONS:       statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
+            name:conjurer n_adj
+KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
 KITEM:      E = randbook disc:conjuration owner:Iskenderun spells:iskenderun's_mystic\
-                _blast, randbook disc:conjuration owner:Iskenderun, any book
+                _blast|iskenderun's_battlesphere, any book, \
+                randbook disc:conjuration owner:Iskenderun
 KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian
 COLOUR:     v = magenta
 COLOUR:     Uc = lightmagenta
-TILE:       c = wall_zot_magenta
+TILE:       c = dngn_stone_wall_magenta
 TILE:       v = dngn_metal_wall_magenta
+MARKER:     " = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 40, \
+                size = 15, cloud_type = "purple smoke" }
+NSUBST:     1 = 4 = 1:1 2:19 / 6 = 1:2 2:3 / * = 1:15 . 
+SHUFFLE:    DEF
+LROCKTILE:  wall_zot_magenta
+LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-MARKER:     R = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 15, cloud_type = "purple smoke" \
-            }
-SUBST:      R = .
-KFEAT:      - = altar_sif_muna
-KFEAT:      _ = altar_vehumet
-SHUFFLE:    DEF
 :           set_random_mon_list("purple draconian / deep elf mage")
+:           wizlab_setup(_G, "Iskenderun's Mystic Tower")
 epilogue{{
             wizlab_milestone(_G, "Iskenderun's Mystic Tower")
 }}
 MAP
-ccccccccccccccccccccccccccccccccccccccccccc
-cAc..c.c.c.c.c.c.c.ccRcc.c.c.c.c.c.c.cc.cRc
-cc.cc<c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.cc.cc
-c.c.ccc.............c.c..............cc.c.c
-c.cc...................................cccc
-cc<c......2.....................2......c.cc
-c.cc.............v.vv.vv.v..............c.c
-cc..............vvv.1R1.vvv..............cc
-c.c............v.v.1vvv1.v.v............c.c
-cc............vvvv1vvEvv1vvvv............cc
-c.c..........v..v1vvv+vvv1v..v..........c.c
-cc..........vv.v1vv.....vv1v.vv..........cc
-c.c........v.vv1vv.......vv1vv.v........c.c
-cccc.......vvv1vvv.......vvv1vvv.......cccc
-cR.....2......RvD+...2...+1+R......2.....Rc
-cccc.......vvv1vvv.......vvv1vvv.......cccc
-c.c........v.vv1vv.......vv1vv.v........c.c
-cc..........vv.v1vv.....vv11.vv..........cc
-c.c..........v..v1vvv+vvv1v..v..........c.c
-cc............vvvv1vvFvv1vvvv............cc
-c.c............v.v.1vvv1.v.v............c.c
-cc..............vvv.1R1.vvv..............cc
-c.c..............v.vv.vv.v..............c.c
-cc.c......2.....................2......c.cc
-cccc...................................cccc
-c.c.cc..............c.c..............cc.c.c
-cc.cc.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.cc.cc
-cRc.cc.c.c.c.c.c.c.ccRcc.c.c.c.c.c.c.cc.cRc
-ccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccc
+cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
+cxxx..x.x.x.x.x.x.xx"xx.x.x.x.x.x.xx.xxxc
+cxx<xxAx.x.x.x.x.x.x.x.x.x.x.x.x.x.xx.xxc
+cx.x"xxx............x.............xx"x.xc
+cx.xx...............................xxxxc
+cxxAx...............3...............x.xxc
+cx.xx................................x.xc
+cxx.......3.......v...v.......3.......xxc
+cx.xx...........v.vv.vv.v............x.xc
+cxx............vvv11.11vvv............xxc
+cx.x..........v.v1vvvvv1v.v..........x.xc
+cxx..........v.v1vvvEvvv1v.v..........xxc
+cx.x........vvv1vvvv+vvvv1vvv........x.xc
+cxx..........v1vvv.....vvv1v..........xxc
+cx.x.......vv1vvv.......vvv1vv.......x.xc
+cxxx........v1vvv.......vvv1v........xxxc
+cx".x...3.....vD+...3...+'+.....3...x."xc
+cxxx........v1vvv.......vvv1v........xxxc
+cx.x.......vv1vvv.......vvv1vv.......x.xc
+cxx..........v1vvv.....vvv1v..........xxc
+cx.x........vvv1vvvv+vvvv1vvv........x.xc
+cxx..........v.v1vvvFvvv1v.v..........xxc
+cx.x..........v.v1vvvvv1v.v..........x.xc
+cxx............vvv11.11vvv............xxc
+cx.x............v.vv.vv.v............x.xc
+cxx.......3.......v...v.......3.......xxc
+cx.x.................................x.xc
+cxx.x...............3...............x.xxc
+cxxxx...............................xxxxc
+cx.x"xx.............x.............xx"x.xc
+cxx.xx.x.x.x.x.x.x.x.x.x.x.x.x.x.x.xx.xxc
+cxxx.xx.x.x.x.x.x.xx"xx.x.x.x.x.x.xx.xxxc
+cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxc
+ccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ###############################################################################
 # Zonguldrok's Shrine
 NAME:       wizlab_zonguldrok
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_rotate
 :           wizlab_setup(_G, "Zonguldrok's Shrine")
 SUBST:      ? = txxx
 SUBST:      ! = t..
-SUBST:      G = G...
-NSUBST:     Z = Z / .
-MONS:       patrolling skeletal warrior
-MONS:       generate_awake ancient lich  col:brown name:antique_lich name_replace \
-            name_descriptor tile:mons_zonguldrok_lich
+NSUBST:     Z = Z / '
+MONS:       patrolling skeletal warrior, patrolling ancient champion
 COLOUR:     t = darkgrey / lightgrey
 TILE:       t = dngn_tree_dead
 LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
-NSUBST:     d = 1:e / *:d
-ITEM:       any scroll / any potion / any book w:2
+NSUBST:     d = 2:e / 1:f / * = d:20 e:2
+ITEM:       any scroll / any potion, any book w:2
 ITEM:       long sword unrand:sword_of_zonguldrok
+KFEAT:      GW = G no_mimic
+KPROP:      12'def$ZL+ = no_rtele_into
 {{
+graves = 28 + crawl.random2(4) + crawl.random2(4)
+nsubst("G = " .. graves .. ":G / *:.")
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("Z", portal_desc { wizard_grave = 1})
 lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
@@ -1302,22 +1332,18 @@ lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
 
 local zombies_appear_marker = TriggerableFunction:new {
     func = "wizlab_zonguldrok_spawn_zombies",
-    repeated = true
+    repeated = true,
+    data = {count = 0, vpcount = 0, swcount = 0, account = 0}
 }
 
 local zombies_killed_marker = TriggerableFunction:new {
-    data = {
-        number_killed = 0,
-        door_appeared = false
-    },
+    data = { number_killed = 0, door_appeared = false },
     func = "wizlab_zonguldrok_killed_zombie",
     repeated = true
 }
 
 local wizard_appear_marker = TriggerableFunction:new {
-    data = {
-        awoke = false
-    },
+    data = { awoke = false },
     func = "wizlab_zonguldrok_awaken_wizard",
     repeated = true,
     props = {listen_to_slaves = true, only_at_slave = true }
@@ -1328,8 +1354,8 @@ wizard_appear_marker:add_triggerer(DgnTriggerer:new {
 
 zombies_appear_marker:add_triggerer(DgnTriggerer:new {
     type = "turn",
-    delay_min = 200,
-    delay_max = 300
+    delay_min = 150,
+    delay_max = 250
 })
 
 zombies_killed_marker:add_triggerer(DgnTriggerer:new {
@@ -1349,13 +1375,13 @@ SUBST:      D = c
 COLOUR:     W = yellow
 TILE:       W = dngn_gravestone_ornate
 TILE:       G = dngn_gravestone
-SUBST:      W = G
-SUBST:      LZ = .
+SUBST:      LZ = '
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
-:           set_random_mon_list("human zombie / skeletal warrior")
-epilogue{{
+:           set_random_mon_list([[ ogre zombie / troll zombie / hill giant zombie / ]]
+:           .. [[ wight w:20 / vampire w:5 / skeletal warrior w:15 / ]])
+epilogue{{ 
             wizlab_milestone(_G, "Zonguldrok's Shrine")
 }}
 MAP
@@ -1366,19 +1392,19 @@ M   xxxxxxxxxxxxxxxxxxx
 xx?!!.G.G.G.G.G.G.G.G.!!?xx
 x?!!.G.G.G.G.G.G.G.G.G.!!?x
 x?!.G.G.GcccccccccG.G.G.!?x
-x?!G.G.G.c.ddcdd.c.G.G.G!?x
-x?!.G.G.ccdd.c.ddcc.G.G.!?x
+x?!G.G.G.c'ddcdd'c.G.G.G!?x
+x?!.G.G.ccdd'c'ddcc.G.G.!?x
 x?!G.Gcccddcc+ccddcccG.G!?x
-x?!.G.c.dd.cLLLc.dd.c.G.!?x
-x?!G.Gc$.ccc...ccc.$cG.G!?x
-x?!.G.c$$c..ZZZ..c$$c.G.!?x
-x?!G.Gcccc..ZWZ..ccccG.G!?x
-x?!.G.c..+..ZZZ..+..c.G.!?x
-x?!G.Gc.1ccc...ccc1.cG.G!?x
-x?!.G.c..1.c...c.1..c.G.!?x
-x?!G.Gccc.1ccccc1.cccG.G!?x
-x?!.G.G.cc.1.c.1.cc.G.G.!?x
-x?!G.G.G.c...c...c.G.G.G!?x
+x?!.G.c'dd'cLLLc'dd'c.G.!?x
+x?!G.Gc$'ccc'''ccc'$cG.G!?x
+x?!.G.c$$c''ZZZ''c$$c.G.!?x
+x?!G.Gcccc''ZWZ''ccccG.G!?x
+x?!.G.c''+''ZZZ''+''c.G.!?x
+x?!G.Gc'2ccc'''ccc1'cG.G!?x
+x?!.G.c''1'c'''c'1''c.G.!?x
+x?!G.Gccc''ccccc1'cccG.G!?x
+x?!.G.G.cc'''c'''cc.G.G.!?x
+x?!G.G.G.c'''c'''c.G.G.G!?x
 x?!.G.G.GccccDccccG.G.G.!?x
 x?!!.G.G.G.GV.VG.G.G.G.!!?x
 xx?!!.G.G.G..<..G.G.G.!!?xx
@@ -1392,9 +1418,9 @@ ENDMAP
 # Wucad Mu's Monastery
 #
 # TODO: I think this is done, apart from not having "alien"-esque statue tiles.
+#       Disintegration as a one-note solution is pretty boring...
 NAME:       wizlab_wucad
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:300 tile:mons_wucad_mu_statue
@@ -1417,9 +1443,11 @@ KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
 LROCKCOL:   darkgrey
-ITEM:       potion of experience, potion of beneficial mutation, \
-            manual of fighting / manual of armour / manual of spellcasting / \
-            manual of staves / manual of dodging, book of enchantments
+ITEM:       potion of experience, potion of beneficial mutation
+ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
+            manual of staves / manual of fighting / manual of dodging
+ITEM:       book of enchantments
+SHUFFLE:    defg
 LFLOORCOL:  white
 KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures \
             nas:old_memories tile:mons_human_monk seen / deep troll name:monk n_suf \
@@ -1477,7 +1505,7 @@ MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
                                   veto_shatter="veto", veto_fire="veto" }
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
 :           set_border_fill_type("tree")
-:           set_random_mon_list("shadow / phantom w:1 / flayed ghost w:1 / hungry ghost w:1")
+:           set_random_mon_list("shadow / flayed ghost w:2 / hungry ghost w:2")
 :           set_feature_name("tree", "autumnal tree")
 :           set_feature_name("stone_wall", "crumbled stone wall")
 :           set_feature_name("granite_statue", "strange statue")
@@ -1496,9 +1524,9 @@ tttT.......cccc77777cccc...........Ttttt
 ttT.......cc..cc777cc..cc......ccc..Tttt
 ttT......cc....cc+cc....cc....cc6cc..Ttt
 ttT.....Tc....G.....G....cT..cc6U6cc.Ttt
-ttT.....ccG.............Gcc...cc6cc..Ttt
-ttT......+.......8.......+.....c+c...Ttt
-ttT.....ccG.............Gcc..........Ttt
+ttT.....cc...............cc...cc6cc..Ttt
+ttT......+.G.....8.....G.+.....c+c...Ttt
+ttT.....cc...............cc..........Ttt
 ttT.....Tc....G.....G....cT..........Ttt
 ttT.c..cTcc.............cccT.........Ttt
 ttTcc++ccccccc.......ccccccc+cc......Ttt
@@ -1528,18 +1556,13 @@ ENDMAP
 # of the Abyss into his own translocations playground, with some nasty and wild
 # security systems built in to defend his many assorted possessions.
 #
-# New explanation of the teleporter transformations: Three teleporter sets of
-# four rooms each, diagonal and (default) clockwise orthogonal rotated, and
-# (default) counter-clockwise orthogonal not. Each set's outward
-# teleporters (would) always rotate the same amount of rooms per direction.
-# However, the center's thirteenth main teleporter pair slightly distorts this,
-# which makes it good and difficult to anticipate landing in the center
-# even when deciphering this (horribly complicated) source.
+# Teleporter explanations: three sets of three chained rooms each, 
+# rotating the same amount of rooms per direction in the same direction,
+# though distorted by the use of the ninth room and each set rotated.
 NAME:    wizlab_golubria
-TAGS:    no_monster_gen no_item_gen allow_dup no_pool_fixup
-ORIENT:  encompass
+TAGS:    no_pool_fixup
 LFLAGS:  no_tele_control
-KMONS:   1 = spatial vortex w:8 / blink frog / insubstantial wisp w:2 / nothing w:5
+KMONS:   1 = spatial vortex w:7 / blink frog / insubstantial wisp w:3 / nothing w:5
 KMONS:   2 = deep elf summoner w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
              rakshasa w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
              boggart ; dart ego:dispersal w:20 | dart w:5 | nothing /  \
@@ -1553,22 +1576,23 @@ KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
              wizard ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
              ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
              spear ego:vorpal w:6 . dart ego:dispersal
-# Disclaimer: the following three sets are all Abyss spawns.
-KMONS:   04 = large abomination w:40 / small abomination w:40 / skeleton w:40 / \
-              chaos spawn w:5 / soul eater / hellwing / orange demon / \
-              rotting devil / hell hound / red devil w:5 / lesser demon w:40 / \
-              flying skull / freezing wraith / octopode w:5 / base draconian w:5 / \
+KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
+              thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
+              hellwing / chaos spawn w:5 / orange demon / blue devil /  \
+              hell hound / red devil w:5 / lesser demon w:25 / octopode w:5 / \
               ugly thing w:30 / fire elemental w:5 / air elemental w:5
-KMONS:   95 = ynoxinul / smoke demon / sun demon w:5 / sixfirhy / efreet w:5 / \
-              hell knight w:5 / demonic crawler / very ugly thing w:5 / \
-              unseen horror / vapour w:5 / stone golem w:5 / \
-              guardian serpent / naga mage w:5 / brain worm / eidolon w:5 / \
-              shadow wraith / anaconda skeleton w:5 / flaming corpse / \
-              great orb of eyes w:5 / giant orange brain w:5
+KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
+              soul eater w:5 / hell knight w:5 / demonic crawler / raiju / \
+              ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \ 
+              vapour w:5 / earth elemental w:5 / water elemental / \
+              very ugly thing / base draconian / guardian serpent / brain worm / \
+              eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
+              flaming corpse / great orb of eyes w:5 / giant orange brain
 KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
-             tormentor w:5 / lorocyproca w:5 / blizzard demon / green death / \
-             reaper / lich w:5 / angel / death drake w:5 / \
-             tentacled monstrosity / draconian shifter w:5 / profane servitor w:5
+             tormentor w:5 / lorocyproca w:5 / blizzard demon / \
+             reaper / lich w:5 / angel / profane servitor w:5 / \
+             death drake w:5 / tentacled monstrosity w:20 / draconian shifter w:20 / \
+             starcursed mass w:30 / apocalypse crab w:20
 KMONS:   7 = eldritch tentacle
 KMONS:   8 = silver statue
 # Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
@@ -1583,61 +1607,57 @@ KITEM:   g = ring of flight / potion of flight q:2 / \
              wand of digging w:5 / lantern of shadows / \
              potion of speed w:5 / scroll of fog / potion of porridge / \
              any wand w:1 / any potion w:1 / any scroll w:1
-KITEM:   ! = pair of boots ego:flying w:9 / pair of boots ego:running w:1 / \
+KITEM:   h = pair of boots ego:flying w:9 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:9 / pair of boots w:1
-KITEM:   $ = wand of disintegration
-KITEM:   % = any level:3, any level:3 / nothing
-KITEM:   * = star_item / any w:5, any w:5 / nothing
+KITEM:   i = wand of disintegration
+KITEM:   j = any level:3, any level:3 / nothing
+KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_flash / \
              cloak unrand:cloak_of_starlight / cloak unrand:cloak_of_the_thief
-KFEAT:   - = rock_wall
-KFEAT:   N = iron_grate
+KFEAT:   m = iron_grate
 KFEAT:   ~ = deep_water
-KFEAT:   D = permarock_wall
 KFEAT:   ^ = known teleport trap
 KFEAT:   8_ = altar_lugonu
-KFEAT:   OPQRSTUVWXYZ&{( = teleporter
-KFEAT:   opqsrtuvwxyz@}) = floor
+KFEAT:   OPQRSTUVW&{( = teleporter
+KFEAT:   opqsrtuvw@}) = floor
 KPROP:   a"_~ = no_rtele_into
-MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy",  \
-             pow_max = 15, delay_min = 30, delay_max = 60, size_min = 2, size_max = 3 }
-SHUFFLE: qS?tViwYJzOl / tViwYJzOKqS? / wYJzOKqS?tVi / zOKqS?tViwYJ
-SHUFFLE: y&KpRmsUHvXj / vXjy&KpRmsUH / sUHvXjy&KpRm / pRmsUHvXjy&K
-SHUFFLE: SMViYJOK / MSiVJYKO, &KRmUHXj / K&mRHUjX, QmThWIZk / mQhTIWkZ
-NSUBST:  @ = 1:@ / 1:P / 1:L / 1:<, 4 = 4:5 / 4:4, ` = 4:d / 3:| / 1:|% / 1:$ / 4:% / *:`
-NSUBST:  a = 1:_ / 1:_" / *:a, + = 2:+ / *:c, ( = 1:} / 1:( / *:<
-NSUBST:  [ = 2:< / *:d, 2 = 1:66699 / 1:66993 / 2:9 / 1:993 / 1:92 / *:2
-NSUBST:  d = 2:* / 2:e / 2:f / 3:g / 1:eegg!!% / 1:gg% / 3:%
+MARKER:  ^ = lua:fog_machine { cloud_type = "translocational energy", pow_max = 25, \
+             delay_min = 30, delay_max = 60, walk_dist = 1, size_min = 2, size_max = 3 }
+SHUFFLE: ozRrIUuLO / uLOozRrIU / rIUuLOozR, pZSsJVvMP / vMPpZSsJV / sJVvMPpZS
+SHUFFLE: zRIULO / RzUIOL, ZSJVMP / SZVJPM, HTKW / THWK
+NSUBST:  @ = 1:w / 1:Y / 1:Q / *:<, 4 = 4:5 / *:4, ` = 4:d / 3:| / 1:|j / 1:i / 4:j / *:`
+NSUBST:  a = 1:_ / 1:_" / *:a, + = 1:+ / *:c, ( = 1:} / 1:( / *:<
+NSUBST:  2 = 1:6 / 2 = 66993 / 2:9 / * = 2:9 3:1 9:2, 1 = 2:0 / *:1, 0 = 2:9 / *:0
+NSUBST:  [ = 1:< / *:d, d = 2:k / 2:e / 2:f / 3:g / 2:eegghhj
 NSUBST:  7 = 1:7 / 1 = 7:4 `:6 / *:`, A = 1:) / 1:< / 1:{ / 1:A
-SUBST:   h = O, H = P, i = Q, I = R, j = S, J = T
-SUBST:   k = U, K = V, l = W, L = X, m = Y, M = Z, ? = &
-SUBST:   a = ':70 -:40 ccCC~, F = ":70 -:40 ccCC~, E = nccCC, c = cccb, C = cb
-SUBST:   B = ccbn..., e = de, % = %%%%g., * = **%, 4 = 444'', 5 = 5555544''
+SUBST:   H = O, I = P, J = Q, K = R, L = S, M = T, Y = U, z = V, Z = W, ? = &
+SUBST:   a = ":70 x:40 ccCC~, - = ':50 x:40 ccCC~, E = nccCC, c = cccb, C = cb
+SUBST:   B = ccbn..., e = de, j = jjjjg., k = kkj
 COLOUR:  n = lightgreen
 COLOUR:  c = white
-COLOUR:  OPQRSTUVWXYZ&{( = warp
-COLOUR:  opqrstuvwxyz@}) = gold
-COLOUR:  D = darkgrey
+COLOUR:  OPQRSTUVW&{( = warp
+COLOUR:  opqrstuvw@}) = gold
+COLOUR:  X = darkgrey
 LFLOORCOL: green
-FTILE:   '"GbcaFn45_+ = floor_demonic_green
+FTILE:   '"Gbca-n45_+ = floor_demonic_green
 FTILE:   .012369AB< = floor_rough_green / floor_pebble_green w:15
 FTILE:   `~78N = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
-FTILE:   defg!$%*| = floor_rough_green
+FTILE:   defghijk| = floor_rough_green
 LROCKTILE: wall_zot_green
 TILE:    b = dngn_crystal_green / dngn_crystal_cyan w:5
 TILE:    c = dngn_stone_wall_green / dngn_stone_wall_cyan w:5
 TILE:    n = dngn_transparent_stone_green / dngn_transparent_stone_cyan w:5
-TILE:    D = dngn_dimension_edge
-FTILE:   OPQRSTUVWXYZ&{( = floor_rough_green
-TILE:    opqrstuvwxyz@}) = floor_black_cobalt
+TILE:    X = dngn_dimension_edge
+FTILE:   OPQRSTUVW&{( = floor_rough_green
+TILE:    opqrstuvw@}) = floor_black_cobalt
 
 {{
 -- This isn't the prettiest way of handling the teleporters, but it guarantees
 -- they behave exactly the same way as in HangedMan's original version. All I've
 -- done is remove some massive code duplication. [evilmike]
 
-local teleporter_glyph = "OPQRSTUVWXYZ&?{("
-local teleport_spot_glyph = "opqrstuvwxyz@!})"
+local teleporter_glyph = "OPQRSTUVW&?{("
+local teleport_spot_glyph = "opqrstuvw@!})"
 local tele_marker = {}
 
 for i = 1, #teleporter_glyph do
@@ -1651,12 +1671,12 @@ for i = 1, #teleporter_glyph do
 end
 
 set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spatial vortex w:15 /
-                    boggart w:5 / blink frog w:5 / shadow wraith w:5 / unseen horror /
-                    ynoxinul / neqoxec / chaos spawn / giant orange brain /
-                    large abomination w:20 / small abomination w:20 / skeleton w:40 /
-                    hellwing w:5 / smoke demon w:5 /
-                    skeletal warrior w:5 / hell hound w:5 / very ugly thing w:5 /
-                    golden eye w:5 / executioner w:2 / shadow demon w:2 / tormentor w:2 / ]])
+                    boggart / blink frog w:5 / shadow wraith w:5 / unseen horror /
+                    raiju / ynoxinul / neqoxec / chaos spawn / giant orange brain /
+                    large abomination w:15 / small abomination w:15 / skeleton w:20 /
+                    hellwing w:5 / smoke demon w:5 / hell hound w:5 / very ugly thing w:5 /
+                    golden eye w:5 / executioner w:3 / shadow demon w:4 / hellion w:3 /
+                    thrashing horror w:25 / tentacled starspawn w:25 / ]])
 
 set_border_fill_type('permarock_wall')
 set_feature_name("permarock_wall", "The dimension's edge")
@@ -1668,59 +1688,57 @@ epilogue{{
             wizlab_milestone(_G, "The Roulette of Golubria")
 }}
 MAP
-               DDDDDDDDDD   DDDDDDDDDD
-    DDDDDD    DDccEEEcccDDDDDcccEEEccDD    DDDDDD
-  DDDccccDDDDDDcc..o...ccccccc...p..ccDDDDDDccccDDD
-  DEEc.lccccccccQ......mcaaacR......MccccccccS.cEED
- DDEz....ccaaaan........naaan........naaaacc....qEDD
- Dcc......caaa"n........n"a"n........n"aaac......ccD
- Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
- DcO..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..?cD
- Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
- DDcc....2.0caaacc1....ccaaacc....1ccaaac1.2....ccDD
-  Dcccc...[.ccaaacc1.[.caaaaac.[.1ccaaacc1[...ccccD
-  Dcaannc11..ccaaacc...caaaaac...ccaaacc...0cnnaacD
-  Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
-  Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
- DDca"aaaaaccc+FFaFF'F'FaaaaaF'F'FaaFF+cccaaaaa"acDD
-DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
-DccK....ccaaaaFF'F'FFFFFF'G'FFFFFF'F'FFaaaacc....TccD
-Dc.......ccaaaaFF4F'FF'F'FFF'F'FF'F4FFaaaacc.......cD
-DE.......1ccaaFF'FGF''C'C'F'C'C''FGF'FFaacc1.......ED
-DEy...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc1..BB...rED
-DE....BBB...cc'FFF'Cn'C^'CnC'^C'nC'FFF'cc...BBB....ED
-Dc....B2..[..+FFFF'C'@C'``n``'C@'C'FFFF+..[..2B....cD
-Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
-Dcc&....0ccccFFFFF'C^'`````````'~C'FFFFFcccc0....hccDDDDDDDD
-DDccnnncccaaaaaFF'CC'````NNN````'CC'FFaaaaacccnnnccDDDnnnnnD
- Dcaa"aaaaaaaaFF'F'CC'``NN7NN``'CC'F'FFaaaaaaaa"aacDDDnA.AnD
- DcaaaaaaaaaaaF4GFF(nn``N787N``nn(FFG4FaaaaaaaaaaacDDDn...nD
- Dcaa"aaaaaaaaFF'F'CC'``NN7NN``'CC'F'FFaaaaaaaa"aacDDDnA.AnD
-DDccnnncccaaaaaFF'CC'````NNN````'CC'FFaaaaacccnnnccDDDnnnnnD
-Dcck....0ccccFFFFF'C^'`````````'^C'FFFFFcccc0....UccDDDDDDDD
-Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
-Dc....B2..[..+FFF'CC'@C'`'n'`'C@'C'FFFF+..[..2B....cD
-DE....BBB...cc'FFF'Cn'C^'CnC'^C'nC'FFF'cc...BBB....ED
-DEx...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc...BB...sED
-DE.......1ccaaFF'FGF''C'C'F'C'C''FGF'FFaacc1.......ED
-Dc.......ccaaaaFF4F'FF'F'FFF'F'FF'F4FFaaaacc1......cD
-DccZ....ccaaaaaF'F'FFFFFF'G'FFFFFF'F'Faaaaacc....HccD
-DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
- DDca"aaaaaccc+FFaFF'F'FaFFFaF'F'FaaFF+cccaaaaa"acDD
-  Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
-  Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
-  Dcaannc0...ccaaacc...caaaaac...ccaaacc..11cnnaacD
-  Dcccc...[1ccaaacc1.[.caaaaac.[.1ccaaacc.[...ccccD
- DDcc....2.1caaacc1....ccaaacc....1ccaaac0.2....ccDD
- Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
- DcJ..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..VcD
- Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
- Dcc......caaa"n........n"a"n........n"aaac......ccD
- DDEw....ccaaaan........naaan........naaaacc....tEDD
-  DEEc.Yccccccccj......XcaaacI......Wcccccccci.cEED
-  DDDccccDDDDDDcc..v...ccccccc...u..ccDDDDDDccccDDD
-    DDDDDD    DDccEEEcccDDDDDcccEEEccDD    DDDDDD
-               DDDDDDDDDD   DDDDDDDDDD
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXcccccccEEccccccccccXXXXXXXXXXXXXXXXX
+XXXXXccccccXXXXccaaacc.o..ccaaaaaaccXXXXccccccXXXXXX
+XXXEEc...Pccccccaaacc......ccaaaaaaccccccZ...cEEXXXX
+XXXEv.....ccaaaaaaacz......Rcaaaaaaaaaacc.....pEXXXX
+XXcc.......naaaaaaan..BBBB..naaaaaaaaaan.......ccXXX
+XXc....B...n"aaaaa"n..0B2...n"aaaaaaaa"n...B....cXXX
+XXc...BBB.1c"aaaaa"c...B....c"aaaaaaaa"c0.BBB...cXXX
+XXc....BB..cccaaaaacc......ccaaaaaaaaccc..BB....cXXX
+XXcM.....2...caaaaaac1.[..1caaaaaaaaac...2.....ScXXX
+XXccc..0..[..caaaaaacc....cc---aaaaaac..[..1..cccXXX
+XXXccnncc..1.ccaaaa--cc..cc-----aaaacc.1..ccnnccXXXX
+XXXcaa""c.....c--a--'-c+cc-''-'--a--c.....c""aacXXXX
+XXXcaaaacccc..c'---'-''-'-'--'-'---'c..ccccaaaacXXXX
+XXccaaaaaaaccc+-'-'------4------'-'-+cccaaaaaaaccXXX
+Xccaaaaaaaaa-'---'------'G'------'---'-aaaaaaaaacXXX
+Xcaaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaacXX
+Xcaaaaaaaaaaa--'-G-''C'C'-'C'C''-G-'--aaaaaaaaaaacXX
+Xcaaaaaaaaaa--'-'--CCCCCC(CCCCCC--'-'--aaaa""aaaacXX
+Xcaaaaaaaaa--'---'Cn'C^'CnC'^C'nC'---'--aaccnnccacXX
+Xcaaaaaaaaa-'----'C'@C'`'n'`'C@'C'----'-ccc...HcccXX
+Xcaaaa""aaa--'--'CCCC`````````CCCC'--'-cc1......ccXX
+Xcaccnnccaa-'----'C^'`````````'^C'---'cc....0B...cXXXXXXXX
+XcccO...ccc-'---'CC'````mmm````'CC'---+..[.BBB..qEXXnnnnnX
+Xcc......1cc-'-'-'CC'``mm7mm```CC'-'-'c.....2B...EXXnA.AnX
+Xc.........cc-4G--(nn``m787m``nn(--G4-cc.........cXXn...nX
+XE...B2.....c'-'-'CC'``mm7mm```CC'-'-'-cc1......ccXXnA.AnX
+XEu..BBB.[..+---'CC'````mmm````'CC'---'-ccc...TcccXXnnnnnX
+Xc...B0....cc'---'C^'`````````'^C'----'-aaccnnccacXXXXXXXX
+Xcc......1cc-'--'CCCC`````````CCCC'--'--aaa""aaaacXX
+XcccL...ccc-'----'C'@C'`'n'`'C@'C'----'-aaaaaaaaacXX
+Xcaccnnccaa--'---'Cn'C^'CnC'^C'nC'---'--aaaaaaaaacXX
+Xcaaaa""aaaa--'-'--CCCCCC(CCCCCC--'-'--aaaaaaaaaacXX
+Xcaaaaaaaaaaa--'-G-''C'C'-'C'C''-G-'--aaaaaaaaaaacXX
+Xcaaaaaaaaaa--'-4-'--'-'---'-'--'-4-'--aaaaaaaaaacXX
+Xccaaaaaaaaa-'---'------'G'------'---'-aaaaaaaaaccXX
+XXccaaaaaaaccc+-'-'------4------'-'-+cccaaaaaaaccXXX
+XXXcaaaaaccc..c'---'-'--'-'-''-'---'c..ccccaaaacXXXX
+XXXcaa""cc....c--a--'-''-cc+c-'--a--c.....c""aacXXXX
+XXXccnncc..1.ccaaaa-----cc..cc--aaaacc.1..ccnnccXXXX
+XXccc..1..[..caaaaaaaaacc....ccaaaaaac..[..0..cccXXX
+XXcW.....2...caaaaaaaaac1..[.1caaaaaac...2.....IcXXX
+XXc....BB..cccaaaaaaaacc......ccaaaaaccc..BB....cXXX
+XXc...BBB.0c"aaaaaaaa"c....B...c"aaaaa"c1.BBB...cXXX
+XXc....B...n"aaaaaaaa"n...2B0..n"aaaaa"n...B....cXXX
+XXcc.......naaaaaaaaaan...BBB..naaaaaaan.......EcXXX
+XXXEt.....ccaaaaaaaaaacV......Jcaaaaaaacc.....rcXXXX
+XXXEEc...Kccccccaaaaaacc......ccaaaccccccU...EcEXXXX
+XXXXXccccccXXXXccaaaaaacc..s.ccaaaccXXXXccccccXXXXXX
+XXXXXXXXXXXXXXXXccccccccccEEcccccccXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 ###############################################################################
@@ -1731,38 +1749,34 @@ ENDMAP
 # Chambers of the Cloud Mage (by Mu.)
 #
 # TODO: Needs an "ocean of clouds" tiles, and fluffy "cotton wool" cloud tiles.
-#       Most everything else is done, except redescriptions.
 NAME:       wizlab_cloud
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_rotate
+MONS:       vapour, air elemental, insubstantial wisp
+KMONS:      4 = twister
 {{
 wizname = crawl.make_name()
 
-kmons ("    1 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wizname, " ", "_")
+kmons ("    5 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wizname, " ", "_")
          .. " ; robe unrand:robe_of_clouds . quick blade ego:electrocution |"
          .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
          .. " | dagger ego:freezing")
 }}
-KMONS:      * = w:5 vapour / w:20 air elemental
-KMONS:      v = twister
-SUBST:      . = .:120 *
+NSUBST:     . = 3:1 / * = .:120 1:2 2:6 3:1
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
+                size = 2, size_buildup_amnt = 4, \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
-KITEM:      % = w:20 potion of flight / \
-            potion of magic / potion of speed / potion of resistance / \
-            gold / potion of agility / potion of brilliance
-KITEM:      ? = randbook disc:air
-KITEM:      $ = wand of lightning / staff of air / ring of flight /\
+ITEM:       w:20 potion of flight / potion of magic / potion of speed / \
+            potion of resistance / gold / potion of agility / potion of brilliance 
+ITEM:       wand of lightning / staff of air / ring of flight /\
             gold / scroll of silence / ring of teleport control / \
             quick blade / ring of evasion / ring of see invisible / \
             book of clouds / any book w:15 / any good_item / any w:20
-KFEAT:      v# = deep_water
-NSUBST:     $ = 2:? / *:$, # = 5:v / 4 = v## / *:#
-SUBST:      $ = $%
+ITEM:       randbook disc:air
+KFEAT:      #4 = deep_water
+NSUBST:     e = 2:f / * = de, # = 5:4 / 4 = 4## / *:#
 COLOUR:     +<bo = white
 LFLOORCOL:  lightblue
 LFLOORTILE: floor_rough_lightblue
@@ -1774,7 +1788,6 @@ COLOUR:     wWv# = silver
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
 :           set_feature_name("floor", "damp floor")
 :           set_feature_name("green_crystal_wall", "wall of white crystal")
-:           set_feature_name("clear_permarock_wall", "wall of transparent white crystal")
 
 epilogue{{
             wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
@@ -1799,11 +1812,11 @@ MAP
 ################o..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..o#############
 ###############oo.wwwwwwbbbbbbbb..b..b..b..b..bbwwwwww.oo############
 ###############o..wwwwwbb.....b.!............!.bwwwwww..o############
-##############oo.wwwwwwbb.$$$.b................bwwwwwww.oo###########
-##############o..wwwwwbbb.$$$.b................bWWWWWWW..o###########
-##############o..wwwwwbbb.$$$.+...1............+.........o###########
-##############o..wwwwwbbb.$$$.b................bWWWWWWW..o###########
-##############oo.wwwwwwbb.$$$.b................bwwwwwww.oo###########
+##############oo.wwwwwwbb.eee.b................bwwwwwww.oo###########
+##############o..wwwwwbbb.eee.b................bWWWWWWW..o###########
+##############o..wwwwwbbb.eee.+...5............+.........o###########
+##############o..wwwwwbbb.eee.b................bWWWWWWW..o###########
+##############oo.wwwwwwbb.eee.b................bwwwwwww.oo###########
 ###############o..wwwwwbb.....b.!............!.bwwwwww..o############
 ###############oo.wwwwwwbbbbbbbb..b..b..b..b..bbwwwwww.oo############
 ################o..wwwwwwwbbbbbbbbbbbbbbbbbbbbbbwwwww..o#############
@@ -1814,7 +1827,7 @@ MAP
 #####################oo.......oo#####ooo#############################
 ####################oo.......oo#####oo.oo############################
 ###################oo.......oo#####oo.!.oo###########################
-###################o!.....!ooo####oo.....ooo#########################
+###################o!......ooo####oo.....ooo#########################
 ###################ooo.......ooo#oo........oo########################
 ####################oooo.......ooo..........oo#######################
 #######################ooo!.....ooo..........o#######################
@@ -1827,11 +1840,11 @@ MAP
 #######################o.bo.....bb.....bb......o#####################
 #######################b+bbbb....bb...bb!.....oo#####################
 #######################o....bo...!bbbbb......oo######################
-#######################o.%%.bo.............oob#######################
-#######################o.%%.boo...........bbbbbbbbb##################
+#######################o.dd.bo.............oob#######################
+#######################o.dd.boo...........bbbbbbbbb##################
 #######################o....b#o..........!...+....o##################
-#######################ooooob#oo........ooooob.%%.o##################
-###############################oo......oo####b.%%.o##################
+#######################ooooob#oo........ooooob.dd.o##################
+###############################oo......oo####b.dd.o##################
 ################################oo.!..oo#####b....o##################
 #################################oooooo######booooo##################
 #####################################################################
@@ -1848,8 +1861,7 @@ ENDMAP
 ###############################################################################
 # Halls of the Hellbinder (by Mu.)
 NAME:       wizlab_demon
-ORIENT:     encompass
-TAGS:       no_item_gen no_monster_gen no_rotate no_hmirror no_vmirror allow_dup
+TAGS:       no_rotate no_hmirror no_vmirror
 LFLOORCOL:  red
 LROCKCOL:   red
 LFLOORTILE: floor_pebble_lightred
@@ -1894,18 +1906,18 @@ FTILE:      M = sigil_straight_N_SW
 FTILE:      N = sigil_straight_E_NW
 FTILE:      P = sigil_straight_W_NE
 RTILE:      x = wall_undead
-SUBST:      u = 3
-MARKER:     f = lua:fog_machine { \
+MARKER:     h = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "flame", \
                 excl_rad = -1 }
-KMONS:      2 = w:1 Lorocyproca / hell beast / reaper /\
-            w:20 blizzard demon / w:20 sun demon / hellion
-KMONS:      3 = ice devil / iron devil / soul eater / neqoxec /\
-            w:5 tormentor / ynoxinul
-KMONS:      4 = kobold demonologist / deep elf demonologist
-KMONS:      5 = balrug / green death / cacodemon
+KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
+            green death / soul eater w:20 / tormentor w:5
+KMONS:      3u = ice devil / red devil / orange demon / blue devil / \
+            iron devil w:5 / ynoxinul / sun demon
+KMONS:      4 = kobold demonologist 
+KMONS:      5 = deep elf demonologist
+KMONS:      6 = balrug / cacodemon / blizzard demon / hellion
 {{
 wizname = crawl.make_name()
 
@@ -1918,8 +1930,10 @@ KITEM:      i = rod of demonology / ring of fire / ring of protection from fire 
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / *:i
-:           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / white imp / ]]
-:                        .. [[ufetubus / red devil / rotting devil / orange demon / ]])
+SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g 
+SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
+:           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / ]]
+:                        .. [[white imp / ufetubus / red devil / rotting devil / orange demon / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
 :           set_feature_name("floor", "hot floor")
 :           set_feature_name("stone_wall", "black wall")
@@ -1938,40 +1952,40 @@ cc..|..u..|....ccccc..c.c..ccccc.....|.3./...c
 cc..|.3Y..|....cccc..cc.cc..cccc......3./....c
 ccc.L.....M.cc.ccc.....4.....ccc.cc....K----cc
 ccc..\.../..cc.cc..cccc.cccc..cc.cc.../.....cc
-cccc..N-P..ccc.+...............+.ccc./.....ccc
+cccc..N-P..ccc.+.......d.......+.ccc./.....ccc
 ccccc.....cccc.ccccccccccccccccc.cccc.....cccc
 ccccccc.cccccc...................cccccc.cccccc
-ccccccc.cccccc.cccccccc.cccccccc.cccccc.cccccc
-ccccccc.ccccccc.cccccc.c.cccccc.ccccccc.cccccc
-ccccccc.cccccccc.cccc.ccc.cccc.cccccccc.cccccc
-ccccccc.ccccccccc.cc.ccccc.cc.ccccccccc.cccccc
+ccccccc.cccccc.cccccccx.xccccccc.cccccc.cccccc
+ccccccc.ccccccx.cccccc.c.cccccc.xcccccc.cccccc
+ccccccc.cccccccx.cccc.ccc.cccc.xccccccc.cccccc
+ccccccc.ccccccccx.cc.ccccc.cc.xcccccccc.cccccc
 ccccccc.cccccccccc..ccccccc..cccccccccc.cccccc
-ccccccc.cccc.5...................5.cccc.cccccc
+ccccccc.cccc.6...................6.cccc.cccccc
 ccccccc.cccc..ccccccccc.ccccccccc..cccc.cccccc
 ccccccc.ccccc..cccc$$$c.c$$$cccc..ccccc.cccccc
 ccccccc.cccccc..ccc$$$+.+$$$ccc..cccccc.cccccc
 ccccccc.cc.cccc..cc$$$c.c$$$cc..cccc.cc.cccccc
-ccccccc......ccc..ccccc.ccccc..ccc..Z...cccccc
-ccccccc...o...ccc..cccc.cccc..ccc../..O.cccccc
+ccccccc......c.x..ccccc.ccccc..x.c..Z...cccccc
+ccccccc...o...x.c..cccc.cccc..c.x../..O.cccccc
 cccccc..\.../..ccc..ccc.ccc..ccc../..OTO.ccccc
-cccccc...\2/...cccc..cc.cc..cccc./2222U..ccccc
-ccccc..\2CXD2/..cccc.......cccc./.........cccc
-cccccc..\|2|/...ccccc.\4/.cccccS--------Zccccc
+cccccc...\3/...cccc..cc.cc..cccc./2.2.U..ccccc
+ccccc..\2CXD2/..cccc.......cccc./..2.3....cccc
+cccccc..\|2|/...ccccc.\7/.cccccS--------Zccccc
 cccccc...Q.R....ccccc..Y..ccccc......../.ccccc
 ccccccc..ETF....ccccc..|..ccccc......./.cccccc
-cccccccc........ccccc.....ccccc......S.ccccccc
+cccccccc........ccccc..f..ccccc......S.ccccccc
 cccccccccc......cccc..ccc..cccc......ccccccccc
 ccccccccccc.....ccc..ccccc..ccc.....cccccccccc
 cccccccccccc.....c...ccccc...c.....ccccccccccc
 cccccccccccc..\./..cc.ccc.cc..\./..ccccccccccc
 ccccccccccccc..V..cccc.c.cccc..W..cccccccccccc
-ccccccccccccc./...cccccfccccc...\.cccccccccccc
+ccccccccccccc./...ccccchccccc...\.cccccccccccc
 cccccccccccccc.....ccc.c.ccc.....ccccccccccccc
 ccccccccccccccc.....c.ccc.c.....cccccccccccccc
 ccccccccccccccccc.....ccc.....cccccccccccccccc
-ccccccccccccccccccc.........cccccccccccccccccc
+ccccccccccccccccccc....0....cccccccccccccccccc
 ccccccccccccccccccccc.....cccccccccccccccccccc
-ccccccccccccccccccccccc+cccccccccccccccccccccc
+cccccccccccccccccccccxc+cxcccccccccccccccccccc
 ccccccccccccccccccccc.....cccccccccccccccccccc
 ccccccccccccccccccc...G"H...cccccccccccccccccc
 ccccccccccccccccc...GP...NH...cccccccccccccccc
@@ -1993,7 +2007,7 @@ ENDMAP
 ###############################################################################
 # Incomplete and TODO work area.
 #
-# See git history for previous versions of Ozocubu, Alistair.
+# See git history for previous versions of Ozocubu, Alistair, Borgnjor.
 #
 # March 2013 note: there isn't the greatest of interest in making
 # the majority of these potential portals, as nice as that would be,
