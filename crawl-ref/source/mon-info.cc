@@ -293,7 +293,7 @@ static bool _tentacle_pos_unknown(const monster *tentacle,
 }
 
 static void _translate_tentacle_ref(monster_info& mi, const monster* m,
-                                    string key)
+                                    const string &key)
 {
     if (m->props.exists(key))
     {
@@ -438,8 +438,11 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     // Translate references to tentacles into just their locations
-    _translate_tentacle_ref(*this, m, "inwards");
-    _translate_tentacle_ref(*this, m, "outwards");
+    if (mons_is_tentacle_or_tentacle_segment(type))
+    {
+        _translate_tentacle_ref(*this, m, "inwards");
+        _translate_tentacle_ref(*this, m, "outwards");
+    }
 
     if (type_known)
     {
