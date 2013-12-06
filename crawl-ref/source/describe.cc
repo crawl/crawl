@@ -3156,9 +3156,10 @@ static string _monster_spells_description(const monster_info& mi)
             return "";
     }
 
-    const bool caster = mi.is_caster();
-    const bool priest = mi.is_priest();
-    string adj = priest ? "divine" : caster ? "magical" : "special";
+    const bool caster  = mi.is_caster();
+    const bool priest  = mi.is_priest();
+    const bool natural = mi.is_natural_caster();
+    string adj = priest ? "divine" : natural ? "special" : "magical";
 
     ostringstream result;
     result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
