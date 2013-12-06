@@ -143,6 +143,12 @@ bool TilesFramework::initialise()
     // Need small maximum message size to avoid crashes in OS X
     m_max_msg_size = 2048;
 
+    struct timeval tv;
+    tv.tv_sec = 1;
+    tv.tv_usec = 0;
+    if (setsockopt(m_sock, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
+        die("Can't set send timeout!");
+
     if (m_await_connection)
         _await_connection();
 
@@ -191,26 +197,42 @@ void TilesFramework::finish_message()
         for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
         {
             int retries = 10;
-            while (sendto(m_sock, fragment_start, fragment_size, 0,
-                          (sockaddr*) &m_dest_addrs[i], sizeof(sockaddr_un)) == -1)
+            ssize_t sent = 0;
+            while (sent < fragment_size)
             {
-                if (--retries <= 0)
-                    die("Socket write error: %s", strerror(errno));
+                ssize_t retval = sendto(m_sock, fragment_start + sent,
+                    fragment_size - sent, 0, (sockaddr*) &m_dest_addrs[i],
+                    sizeof(sockaddr_un));
+                if (retval == -1)
+                {
+                    if (--retries <= 0)
+                        die("Socket write error: %s", strerror(errno));
 
-                if (errno == ECONNREFUSED || errno == ENOENT)
-                {
-                    // the other side is dead
-                    m_dest_addrs.erase(m_dest_addrs.begin() + i);
-                    i--;
-                    break;
+                    if (errno == ECONNREFUSED || errno == ENOENT)
+                    {
+                        // the other side is dead
+                        m_dest_addrs.erase(m_dest_addrs.begin() + i);
+                        i--;
+                        break;
+                    }
+                    else if (errno == ENOBUFS || errno == EAGAIN
+                        || errno == EWOULDBLOCK)
+                    {
+                        // Wait for up to half a second, then try again
+                        usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
+                    }
+                    else
+                        die("Socket write error: %s", strerror(errno));
                 }
-                else if (errno == ENOBUFS)
+                else if (retval <= 0)
                 {
-                    // Wait for up to half a second, then try again
+                    if (--retries <= 0)
+                        die("Socket write error: retval <= 0");
+
                     usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
                 }
                 else
-                    die("Socket write error: %s", strerror(errno));
+                    sent += retval;
             }
         }
 
