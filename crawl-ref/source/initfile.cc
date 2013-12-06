@@ -3811,6 +3811,7 @@ enum commandline_option_type
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
+    CLO_PRINT_WEBTILES_OPTIONS,
 #endif
 
     CLO_NOPS
@@ -3826,7 +3827,7 @@ static const char *cmd_ops[] =
     "print-charset", "zotdef", "tutorial", "wizard", "no-save",
     "gdb", "no-gdb", "nogdb",
 #ifdef USE_TILE_WEB
-    "webtiles-socket", "await-connection",
+    "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
 };
 
@@ -4087,6 +4088,43 @@ static void _edit_save(int argc, char **argv)
     }
 }
 #undef FAIL
+
+#ifdef USE_TILE_WEB
+static void _write_colour_list(const vector<pair<int, int> > variable,
+        const string &name)
+{
+    tiles.json_open_array(name);
+    for (unsigned int i = 0; i < variable.size(); i++)
+    {
+        tiles.json_open_object();
+        tiles.json_write_int("value", variable[i].first);
+        tiles.json_write_string("colour", colour_to_str(variable[i].second));
+        tiles.json_close_object();
+    }
+    tiles.json_close_array();
+}
+
+void game_options::write_webtiles_options(const string& name)
+{
+    tiles.json_open_object(name);
+
+    _write_colour_list(Options.hp_colour, "hp_colour");
+    _write_colour_list(Options.mp_colour, "mp_colour");
+    _write_colour_list(Options.stat_colour, "stat_colour");
+    tiles.json_write_bool("tile_show_minihealthbar",
+                          Options.tile_show_minihealthbar);
+    tiles.json_write_bool("tile_show_minimagicbar",
+                          Options.tile_show_minimagicbar);
+
+    tiles.json_close_object();
+}
+
+static void _print_webtiles_options()
+{
+    Options.write_webtiles_options("");
+    printf("%s\n", tiles.get_message().c_str());
+}
+#endif
 
 static bool _check_extra_opt(char* _opt)
 {
@@ -4506,6 +4544,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_AWAIT_CONNECTION:
             tiles.m_await_connection = true;
+            break;
+
+        case CLO_PRINT_WEBTILES_OPTIONS:
+            if (!rc_only)
+            {
+                _print_webtiles_options();
+                end(0);
+            }
             break;
 #endif
 
