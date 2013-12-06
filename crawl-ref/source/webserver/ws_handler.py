@@ -439,7 +439,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 if returncode != 1:
                     self.logger.warning("Error while getting JSON options!")
                 return
-            self.write_message('{"msg":"options","options":' + data + '}')
+            self.write_message('{"msg":"options","watcher":true,"options":'
+                               + data + '}')
 
         if not self.username: return
         if game_id not in config.games: return
