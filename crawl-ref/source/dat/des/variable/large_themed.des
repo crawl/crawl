@@ -13,45 +13,6 @@ default-depth: D:12-, !D:$, Depths, !Depths:$
 # be careful to adapt these numbers for new vaults (using DEPTH)
 
 ###############################################################################
-# Rats! (Lemuel), slightly easier now
-# There is another, harder version for the Lair.
-#
-NAME:    RatsNest_Dungeon
-ORIENT:  northeast
-TAGS:    uniq_rats_nest
-WEIGHT:  5
-DEPTH:   D:5-8
-SHUFFLE: 23, 34
-MONS:    rat / nothing, grey rat / nothing
-MONS:    green rat / nothing, orange rat / w:40 rat
-ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
-SUBST:   d = d...., e = e., e=d
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.eexxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx343dxx.xxxxxxxxd334433xxxxxxxxx23..exx
-xxd222...xxxxxxxx..224422xxxxxx1111...xxx
-xd.111..xxxxxxxxx..111111.xxx.111...xxxxx
-xx.111..xxxxxxxxxx.11111..x......xxxxxxxx
-xxxx..xx.x.xxxxxx.xx..........xxxxxxxxxxx
-xxxxx.xxx.x..x.xx.x.xx....x.xxxxxxxxxxxxx
-xxxxx...x.xxx.x33xx.xxxx.xxxxxxxxxxxxxxxx
-xxxxxxx.x.xxxx221x.xxx...xxxxxxxxxxxxxxxx
-xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxx..xxx.x.x.xxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxx..x.xx.x.xx.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx..xx.xx.x.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx.xxxx.xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-###############################################################################
 # Castle of kobolds and goblins
 NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
