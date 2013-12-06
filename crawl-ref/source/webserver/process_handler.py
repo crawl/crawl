@@ -497,8 +497,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def connect(self, socketpath, primary = False):
         self.socketpath = socketpath
-        self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath)
+        self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath, self.logger)
         self.conn.message_callback = self._on_socket_message
+        self.conn.close_callback = self._on_socket_close
         self.conn.connect(primary)
 
     def gen_inprogress_lock(self):
@@ -551,8 +552,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.handle_process_end()
 
+    def _on_socket_close(self):
+        self.conn = None
+        self.stop()
+
     def handle_process_end(self):
         if self.conn:
+            self.conn.close_callback = None
             self.conn.close()
             self.conn = None
 

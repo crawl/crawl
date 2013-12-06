@@ -4,18 +4,21 @@ import os, os.path
 import time
 import warnings
 
+from datetime import datetime, timedelta
 from tornado.escape import json_encode
 
 from config import server_socket_path
 
 class WebtilesSocketConnection(object):
-    def __init__(self, io_loop, socketpath):
+    def __init__(self, io_loop, socketpath, logger):
         self.io_loop = io_loop
         self.crawl_socketpath = socketpath
+        self.logger = logger
         self.message_callback = None
         self.socket = None
         self.socketpath = None
         self.open = False
+        self.close_callback = None
 
         self.msg_buffer = None
 
@@ -26,6 +29,7 @@ class WebtilesSocketConnection(object):
             return
 
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+        self.socket.settimeout(10)
 
         # Set close-on-exec
         flags = fcntl.fcntl(self.socket.fileno(), fcntl.F_GETFD)
@@ -54,7 +58,7 @@ class WebtilesSocketConnection(object):
 
         self.open = True
 
-        self.socket.sendto(msg, self.crawl_socketpath)
+        self.send_message(msg)
 
     def _handle_read(self, fd, events):
         if events & self.io_loop.READ:
@@ -81,7 +85,16 @@ class WebtilesSocketConnection(object):
                 self.message_callback(data)
 
     def send_message(self, data):
-        self.socket.sendto(data, self.crawl_socketpath)
+        start = datetime.now()
+        try:
+            self.socket.sendto(data, self.crawl_socketpath)
+        except socket.timeout:
+            self.logger.warning("Game socket send timeout", exc_info=True)
+            self.close()
+            return
+        end = datetime.now()
+        if end - start >= timedelta(seconds=1):
+            self.logger.warning("Slow socket send: " + str(end - start))
 
     def close(self):
         if self.socket:
@@ -89,3 +102,5 @@ class WebtilesSocketConnection(object):
             self.socket.close()
             os.remove(self.socketpath)
             self.socket = None
+        if self.close_callback:
+            self.close_callback()
