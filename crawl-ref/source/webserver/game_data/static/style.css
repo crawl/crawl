@@ -18,6 +18,23 @@ body {
     top: 0px;
 }
 
+.colour_black { color: black; }
+.colour_blue { color: blue; }
+.colour_green { color: green; }
+.colour_cyan { color: cyan; }
+.colour_red { color: red; }
+.colour_magenta { color: magenta; }
+.colour_brown { color: brown; }
+.colour_lightgray { color: lightgray; }
+.colour_darkgray { color: darkgray; }
+.colour_lightblue { color: lightblue; }
+.colour_lightgreen { color: lightgreen; }
+.colour_lightcyan { color: lightcyan; }
+.colour_lightred { color: #EE9090; }
+.colour_lightmagenta { color: #EE90EE; }
+.colour_yellow { color: yellow; }
+.colour_white { color: white; }
+
 #stats {
     display: inline-block;
     position: static;
@@ -62,14 +79,6 @@ body {
 .boosted_defense {
     color: #729fcf; /* lightblue */
 }
-
-.boosted_hp {
-    color: #729fcf; /* lightblue */
-}
-.boosted_mp {
-    color: #729fcf; /* lightblue */
-}
-
 
 .bar span {
     display: inline-block;

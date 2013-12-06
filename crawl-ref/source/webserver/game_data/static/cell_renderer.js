@@ -1,7 +1,8 @@
 define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
         "./tileinfo-icons", "./tileinfo-dngn", "./enums",
-        "./map_knowledge", "./tileinfos", "./player"],
-function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge, tileinfos, player) {
+        "./map_knowledge", "./tileinfos", "./player", "./options"],
+function ($, view_data, main, tileinfo_player, icons, dngn, enums,
+          map_knowledge, tileinfos, player, options) {
     function DungeonCellRenderer()
     {
         this.set_cell_size(32, 32);
@@ -372,18 +373,20 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
         // adapted from DungeonRegion::draw_minibars in tilereg_dgn.cc
         draw_minibars: function(x, y)
         {
+            var show_health = options.get("tile_show_minihealthbar");
+            var show_magic = options.get("tile_show_minimagicbar");
+
             // don't draw if hp and mp is full
-            if (player.hp == player.hp_max
-                && player.mp == player.mp_max)
-            {
+            if ((player.hp == player.hp_max || !show_health) &&
+                (player.mp == player.mp_max || !show_magic))
                 return;
-            }
 
             var bar_height = Math.floor(this.cell_height/16);
             var hp_bar_offset = bar_height;
 
             // TODO: use different colors if heavily wounded, like in the tiles version
-            if (player.mp_max > 0) {
+            if (player.mp_max > 0 && show_magic)
+            {
                 var mp_percent = player.mp / player.mp_max;
                 if (mp_percent < 0) mp_percent = 0;
 
@@ -398,16 +401,19 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
                 hp_bar_offset += bar_height;
             }
 
-            var hp_percent = player.hp / player.hp_max;
-            if (hp_percent < 0) hp_percent = 0;
+            if (show_health)
+            {
+                var hp_percent = player.hp / player.hp_max;
+                if (hp_percent < 0) hp_percent = 0;
 
-            this.ctx.fillStyle = hp_spend;
-            this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
-                              this.cell_width, bar_height);
+                this.ctx.fillStyle = hp_spend;
+                this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
+                                  this.cell_width, bar_height);
 
-            this.ctx.fillStyle = healthy;
-            this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
-                              this.cell_width * hp_percent, bar_height);
+                this.ctx.fillStyle = healthy;
+                this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
+                                  this.cell_width * hp_percent, bar_height);
+            }
         },
 
         render_cell: function()
