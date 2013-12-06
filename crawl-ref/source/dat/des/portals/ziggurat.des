@@ -32,7 +32,7 @@ O
 ENDMAP
 
 ### Deep entry vaults to ziggurats ############################################
-default-depth: Depths
+default-depth: D:21-
 
 NAME:   enter_ziggurat_a
 COLOUR: ; : cyan / lightblue
@@ -119,7 +119,7 @@ MAP
 ENDMAP
 
 ### Shallow entry vaults to ziggurats #########################################
-default-depth: D:3-
+default-depth: D:3-20
 
 NAME:   enter_shallow_ziggurat_a
 COLOUR: ; : cyan / lightblue
@@ -280,27 +280,37 @@ default-depth: Zig
 #   registered as used.
 # - ziggurat pillars cannot use map markers.
 #######################################################################
-NAME: ziggurat_pillar_a
+NAME: ziggurat_pillar_abc
 TAGS: ziggurat_pillar
-SUBST: c : cxvb
+SHUFFLE: dD / eD / eE
+SUBST: ceE : bcmvxG
+CLEAR: dD
 MAP
-c
+dD
+cd
 ENDMAP
 
-NAME: ziggurat_pillar_b
+NAME: ziggurat_pillar_d
 TAGS: ziggurat_pillar
+DEPTH: Zig:18-
 SUBST: c : cxvb
 MAP
-c
+ cc
+ccc
 cc
 ENDMAP
 
-NAME: ziggurat_pillar_c
-TAGS: ziggurat_pillar
-SUBST: c : cxvb
+NAME:  ziggurat_pillar_e
+TAGS:  ziggurat_pillar
+DEPTH: Zig:18-
+WEIGHT: 5
+SUBST: c : bcv
 MAP
-cc
-cc
+ ccc
+ccccc
+ccccc
+ccccc
+ ccc
 ENDMAP
 
 NAME: ziggurat_pillar_centre_a
@@ -324,17 +334,15 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_c
 TAGS: ziggurat_pillar centered
-# This is evil. Monster sets are: summoners (1), evil eyes (2), harmless (3).
+# This is evil. Monster sets are: summoners (1), stares (2), harmless (3).
 # This pillar has tactical implications: you will have to stay away from it,
 # and teleports are more risky.
-MONS: ancient lich / boggart / curse skull
-MONS: eye of draining / eye of devastation / giant eyeball
-MONS: plant col:lightred
+MONS: ancient lich / shadow demon / ironbrand convoker / curse skull
+MONS: eye of draining / eye of devastation / giant eyeball / ghost moth
+MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
-: elseif you.depth() > 15 then
-SUBST: 3 = 12
-: elseif you.depth() > 8 and crawl.coinflip() then
+: elseif you.depth() > 15 or you.depth() > 8 and crawl.coinflip() then
 SUBST: 3 = 12
 : end
 KFEAT: n = iron_grate
@@ -351,44 +359,18 @@ MAP
 1
 ENDMAP
 
-NAME:  ziggurat_pillar_centre_d
-TAGS:  ziggurat_pillar centered
-SUBST: x : bcmvxG
+NAME:    ziggurat_pillar_centre_def
+TAGS:    ziggurat_pillar centered
+WEIGHT:  20
+SHUFFLE: y'z / Y'z / y"Z 
+SUBST:   xYZ : bcmvxG
+CLEAR:   y'z
 MAP
-x.x
-...
-x.x
-ENDMAP
-
-NAME:  ziggurat_pillar_centre_e
-TAGS:  ziggurat_pillar centered
-SUBST: x : bcmvxG
-MAP
-x.x.x
-.....
-x.x.x
-.....
-x.x.x
-ENDMAP
-
-NAME:  ziggurat_pillar_centre_f
-TAGS:  ziggurat_pillar centered
-SUBST: x : bcmvxG
-MAP
-x.x
-.x.
-x.x
-ENDMAP
-
-NAME:  ziggurat_pillar_centre_g
-TAGS:  ziggurat_pillar
-SUBST: x : bcvx
-MAP
- xxx
-xxxxx
-xxxxx
-xxxxx
- xxx
+x.x'z
+.y.''
+x.x'z
+'''''
+z'z'z
 ENDMAP
 
 NAME: ziggurat_pillar_centre_h
@@ -420,13 +402,66 @@ ENDMAP
 
 NAME: ziggurat_pillar_centre_k
 TAGS: ziggurat_pillar centered
-MONS: boring beetle, boulder beetle
+MONS: boring beetle, boulder beetle, orb spider
+SUBST: 2 : 2:19 3:1
 MAP
 xxxxx
 xx2xx
 x212x
 xx2xx
 xxxxx
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_l
+TAGS:    ziggurat_pillar centered
+SHUFFLE: X' / X' / 'X
+SUBST:   xX : bcmvxG, ' = .
+MAP
+  x
+ ...
+xX'Xx
+ ...
+  x
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_m
+TAGS:    ziggurat_pillar centered
+DEPTH:   Zig:18-
+SHUFFLE: X'" / X'" / 'X" / '"X
+SUBST:   x : bcmvxG, X : bcmvxG, '" = .
+MAP
+  x.x
+ .....
+x."...x
+..'X'..
+x...".x
+ .....
+  x.x
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_n
+TAGS:    ziggurat_pillar centered
+DEPTH:   Zig:18-
+WEIGHT:  5
+SUBST:   x : w:40 bcmvxG
+MAP
+ ...
+.wxw.
+.....
+.wxw.
+ ...
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_o
+TAGS:    ziggurat_pillar centered
+WEIGHT:  5
+SUBST:   x : bcmvx
+MAP
+ ...
+..x..
+..+..
+..x..
+ ...
 ENDMAP
 
 NAME: ziggurat_pillar_centre_oklobs
@@ -455,6 +490,7 @@ ENDMAP
 
 NAME:  ziggurat_pillar_centre_smoke
 TAGS:  ziggurat_pillar centered
+WEIGHT: 5
 MARKER:  Z = lua:fog_machine { cloud_type = "black smoke", \
          pow_min = 25, pow_max = 25, \
          delay = 30, size = 1, walk_dist = 3 }
@@ -477,9 +513,44 @@ v...v
 v...v
 ENDMAP
 
+NAME:    ziggurat_pillar_centre_more_plants
+TAGS:    ziggurat_pillar centered
+DEPTH:   Zig:18-
+WEIGHT:  5
+MONS:    plant, bush, patrolling thorn hunter, treant
+SHUFFLE: 1t
+SUBST:   1 : 12, 3 : 34..., x : bcmvxG
+MAP
+  .t.
+ ..t.1
+..1.3..
+tt.x.tt
+..3.1..
+ 1.t..
+  .t.
+ENDMAP
+
+NAME:    ziggurat_pillar_centre_drop
+TAGS:    ziggurat_pillar centered allow_dup
+WEIGHT:  5
+MONS:    generate_awake lost soul
+KFEAT:   ~ = known teleport trap
+SUBST:   9 : 00., x : bcmvx
+: if you.depth() > 18 then
+SUBST:   0 : 011
+: end
+MAP
+  xxx
+ xx0xx
+xx9.9xx
+x0.~.0x
+xx9.9xx
+ xx0xx
+  xxx
+ENDMAP
+
 ########################################################################
 # Ziggurat loot chamber (needs work).
-# Used to stop jellies from devouring all the loot.
 #
 # A reasonably large space to drop loot. Items will be stacked once all
 # free space is occupied by items.
@@ -513,8 +584,9 @@ cc.ccc.cc
 ENDMAP
 
 NAME: ziggurat_loot_3
-TAGS: ziggurat_loot_chamber allow_dup no_rotate
+TAGS: ziggurat_loot_chamber allow_dup
 ORIENT: float
+WEIGHT: 5
 : ziggurat_loot_spot(_G, "X")
 MAP
 ccc
@@ -522,6 +594,7 @@ ccc
 ccc
 ENDMAP
 
+#######################################################################
 # not finished!
 NAME: ziggurat_arena
 # Just to keep the map compiler happy:
@@ -533,7 +606,6 @@ n<..........>n
 n...........An
 nnnnnnnnnnnnnn
 ENDMAP
-
 
 #######################################################################
 

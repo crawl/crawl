@@ -248,21 +248,18 @@ local function mset_if(condition, ...)
   mset(unpack(util.map(util.curry(spec_if, condition), { ... })))
 end
 
-mset(with_props("place:Slime:$", { jelly_protect = true }),
-     "place:Snake:$ w:90 / greater naga w:5 / guardian serpent w:5",
-     with_props("place:Lair:$ w:85 / catoblepas w:6 / dire elephant w:6 / " ..
+mset(with_props("place:Lair:$ w:85 / catoblepas w:6 / dire elephant w:6 / " ..
                 "hellephant w:3", { weight = 5 }),
-     "place:Spider:$ w:110 / ghost moth w:15 / red wasp / " ..
+     with_props("place:Shoals:$ w:125 / merfolk aquamancer /  " ..
+                "merfolk impaler w:5 / merfolk javelineer", { weight = 5 }),
+     "place:Spider:$ w:115 / ghost moth w:15 / red wasp / " ..
                 "orb spider",
-     "place:Crypt:$ w:180 / vampire knight w:14 / lich w:3 / " ..
-                "unborn w:2 / curse toe w:1",
+     "place:Crypt:$ w:250 / curse skull w:5 / profane servitor w:5 / " ..
+                "bone dragon / ancient lich / revenant",
      "place:Forest:$ w:180 / satyr / tengu reaver w:5 / " ..
                 "spriggan defender w:5",
-     "place:Abyss",
-     "place:Swamp:$ w:120 / hydra / swamp dragon / " ..
-                "green death w:6 / death drake w:4",
-     "place:Shoals:$ w:125 / merfolk aquamancer w:15 / merfolk impaler w:4 / " ..
-                "merfolk javelineer w:4 / siren w:2",
+     "place:Abyss:$",
+     with_props("place:Slime:$", { jelly_protect = true }),
      with_props("place:Coc:$ w:460 / Ice Fiend / " ..
                  "blizzard demon w:30", { weight = 5 }),
      with_props("place:Geh:$ w:460 / Brimstone Fiend / " ..
@@ -277,32 +274,58 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "fire dragon / fire giant / orb of fire", { weight = 2 }),
-     with_props("ice beast / polar bear / freezing wraith / ice dragon / " ..
+     with_props("ice beast / freezing wraith / ice dragon / " ..
                 "frost giant / ice devil / ice fiend / simulacrum w:20 / " ..
                 "blizzard demon", { weight = 2 }),
-     with_props("insubstantial wisp / air elemental / vapour / titan / " ..
+     with_props("insubstantial wisp / air elemental / titan / raiju / " ..
                 "storm dragon / electric golem / spriggan air mage", { weight = 2 }),
-     with_props("swamp drake / fire drake / death drake / steam dragon / " ..
+     with_props("swamp drake / fire drake / wind drake w:2 / death drake / " ..
+                "wyvern / hydra / steam dragon / mottled dragon / " ..
                 "swamp dragon / fire dragon / ice dragon / storm dragon / " ..
                 "iron dragon / shadow dragon / quicksilver dragon / " ..
-                "golden dragon / mottled dragon / wyvern / hydra", { weight = 2 }),
+                "golden dragon", { weight = 2 }),
      with_props("centaur / yaktaur / centaur warrior / yaktaur captain / " ..
-                "cyclops / stone giant / merfolk javelineer / " ..
-                "deep elf master archer", { weight = 2 }))
+                "cyclops / stone giant / faun w:1 / satyr w:2 / thorn hunter w:2 / " ..
+                "merfolk javelineer / deep elf master archer", { weight = 2 }))
 
 -- spec_fn can be used to wrap a function that returns a monster spec.
 -- This is useful if you want to adjust monster weights in the spec
--- wrt to depth in the ziggurat. At level-generation time, the spec
--- returned by this function will also be used to init the monster
--- population (with dgn.set_random_mon_list). As an example:
+-- wrt to depth in the ziggurat.
 mset(spec_fn(function ()
-               local d = math.max(0, you.depth() - 12)
-               return "place:Vaults:$ w:60 / ancient lich w:" .. d
+               local d = 310 - 10 * you.depth()
+               local e = math.max(0, you.depth() - 20)
+               return "place:Orc:$ w:" .. d .. " / orc warlord band / " ..
+                 "orc high priest band / orc sorcerer w:5 / stone giant / " ..
+                 "iron troll w:5 / moth of wrath w:" .. e
              end))
 
 mset(spec_fn(function ()
-               local d = math.max(0, you.depth() - 5)
-               return "place:Pan w:45 / pandemonium lord w:" .. d
+               local d = 300 - 10 * you.depth()
+               return "place:Elf:$ w:" .. d .. " / deep elf high priest / " ..
+                 "deep elf blademaster / deep elf master archer / " ..
+                 "deep elf annihilator / deep elf demonologist"
+             end))
+
+mset(spec_fn(function ()
+               local d = math.max(3, you.depth() - 1)
+               local e = math.max(1, you.depth() - 20)
+               return "place:Snake:$ w:65 / guardian serpent w:5 / " ..
+                 "greater naga w:" .. d .. " / quicksilver dragon w:" .. e
+             end))
+
+mset(spec_fn(function ()
+               local d = math.max(120, 280 - 10 * you.depth())
+               local e = math.max(1, you.depth() - 9)
+               return "place:Swamp:$ w:" .. d .. " / hydra / " ..
+                 "swamp dragon / green death w:6 / death drake w:1 / " ..
+                 "golden dragon w:1 / tentacled monstrosity w:" .. e
+             end))
+
+mset(spec_fn(function ()
+               local d = math.max(1, you.depth() - 11)
+               return "place:Vaults:$ 9 w:30 / place:Vaults:$ w:60 / " ..
+                 "titan w:" .. d .. " / golden dragon w:" .. d .. 
+                 " / ancient lich w:" .. d
              end))
 
 mset(spec_fn(function ()
@@ -311,42 +334,31 @@ mset(spec_fn(function ()
              end))
 
 mset(spec_fn(function ()
-               local d = 300 - 10 * you.depth()
-               return "place:Elf:$ w:" .. d .. " / deep elf sorcerer / " ..
-                 "deep elf blademaster / deep elf master archer / " ..
-                 "deep elf annihilator / deep elf demonologist"
+               local d = math.max(0, you.depth() - 5)
+               return "chaos spawn / glowing shapeshifter w:5 / " ..
+                 "shapeshifter w:5 / very ugly thing w:5 / " ..
+                 "ugly thing w:5 / apocalypse crab w:5 / " ..
+                 "killer klown / pandemonium lord w:" .. d
              end))
 
 mset(spec_fn(function ()
-               local d = 310 - 10 * you.depth()
-               local e = math.max(0, you.depth() - 20)
-               return "place:Orc:$ w:" .. d .. " / orc warlord / orc knight / " ..
-                 "orc high priest w:5 / orc sorcerer w:5 / stone giant / " ..
-                 "moth of wrath w:" .. e
+               local d = 41 - you.depth()
+               return "base draconian w:" .. d .. " / nonbase draconian w:40"
              end))
 
-
-local drac_creator = zig_monster_fn("random draconian")
-local function mons_drac_gen(x, y, nth)
-  if nth == 1 then
-    dgn.set_random_mon_list("random draconian")
-  end
-  return drac_creator(x, y)
-end
-
 local pan_lord_fn = zig_monster_fn("pandemonium lord")
-local pan_critter_fn = zig_monster_fn("place:Pan")
+local pan_critter_fn = zig_monster_fn("place:Pan / greater demon w:5")
 
 local function mons_panlord_gen(x, y, nth)
   if nth == 1 then
-    dgn.set_random_mon_list("place:Pan")
+    local d = math.max(1, you.depth() - 11)
+    dgn.set_random_mon_list("place:Pan / greater demon w:5")
     return pan_lord_fn(x, y)
   else
     return pan_critter_fn(x, y)
   end
 end
 
-mset_if(depth_ge(6), mons_drac_gen)
 mset_if(depth_ge(8), mons_panlord_gen)
 
 function ziggurat_monster_creators()
@@ -389,8 +401,7 @@ end
 local dgn_passable = dgn.passable_excluding("closed_door")
 
 local function ziggurat_create_monsters(p, mfn)
-  local hd_pool = you.depth() * (you.depth() + 8)
--- (was depth * (depth + 8) before and too easy)
+  local hd_pool = you.depth() * (you.depth() + 8) + 10
 
   local nth = 1
 
