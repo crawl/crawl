@@ -36,12 +36,6 @@ enum object_selector
 
 #define SLOT_BARE_HANDS      -2
 
-// Only used for butchering messages
-#define SLOT_BUTCHERING_KNIFE -3
-#define SLOT_CLAWS            -4
-#define SLOT_TEETH            -5
-#define SLOT_BIRDIE           -6
-
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
 #define PROMPT_NOTHING       -3

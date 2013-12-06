@@ -178,8 +178,6 @@ void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
     _push_delay(delay);
 }
 
-static void _maybe_interrupt_swap(bool force_unsafe = false);
-
 void stop_delay(bool stop_stair_travel, bool force_unsafe)
 {
     if (you.delay_queue.empty())
@@ -224,8 +222,6 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
              multiple_corpses ? "s" : "");
 
         _pop_delay();
-
-        _maybe_interrupt_swap(force_unsafe);
         break;
     }
     case DELAY_MEMORISE:
@@ -386,19 +382,7 @@ static bool _is_butcher_delay(int delay)
            || delay == DELAY_FEED_VAMPIRE;
 }
 
-void stop_butcher_delay()
-{
-    if (_is_butcher_delay(current_delay_action()))
-        stop_delay();
-}
-
-void maybe_clear_weapon_swap()
-{
-    if (form_can_wield())
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-}
-
-void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
+void handle_interrupted_swap()
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
         || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act() || you.berserk())
@@ -411,7 +395,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
     if (weap == ENDOFPACK)
         weap = -1;
 
-    const bool       safe   = i_feel_safe() && !force_unsafe;
+    const bool       safe   = i_feel_safe();
     const bool       prompt = Options.prompt_for_swap && !safe;
     const delay_type delay  = current_delay_action();
 
@@ -435,7 +419,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
     {
         // Turn is over, set up a delay to do swapping next turn.
         if (prompt && yesno(prompt_str, true, 'n', true, false)
-            || safe && swap_if_safe)
+            || safe)
         {
             if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
                 start_delay(DELAY_WEAPON_SWAP, 1, weap);
@@ -444,25 +428,9 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
         return;
     }
     else if (delay != DELAY_NOT_DELAYED)
-    {
-        // If ATTR_WEAPON_SWAP_INTERRUPTED is set while a corpse is being
-        // butchered/bottled/offered, then fake a weapon swap delay.
-        if (_is_butcher_delay(delay)
-            && (safe || prompt && yesno(prompt_str, true, 'n', true, false)))
-        {
-            if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
-                start_delay(DELAY_WEAPON_SWAP, 1, weap);
-            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-        }
         return;
-    }
 
-    if (safe)
-    {
-        if (!swap_if_safe)
-            return;
-    }
-    else if (!prompt || !yesno(prompt_str, true, 'n', true, false))
+    if (!safe && (!prompt || !yesno(prompt_str, true, 'n', true, false)))
         return;
 
     if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
@@ -471,41 +439,6 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
         print_stats();
     }
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-}
-
-static void _maybe_interrupt_swap(bool force_unsafe)
-{
-    bool butcher_swap_setup  = false;
-    int  butcher_swap_weapon = 0;
-
-    for (unsigned int i = 1; i < you.delay_queue.size(); ++i)
-        if (you.delay_queue[i].type == DELAY_WEAPON_SWAP)
-        {
-            butcher_swap_weapon = you.delay_queue[i].parm1;
-            butcher_swap_setup  = true;
-            break;
-        }
-
-    if (!butcher_swap_setup && delays_cleared[DELAY_WEAPON_SWAP] > 0)
-    {
-        butcher_swap_setup  = true;
-        butcher_swap_weapon = cleared_delays_parm1[DELAY_WEAPON_SWAP];
-    }
-
-    if (butcher_swap_setup)
-    {
-        // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
-        // return false when checking if
-        // you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED].
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-            = (butcher_swap_weapon == -1 ? ENDOFPACK
-                                         : butcher_swap_weapon) + 1;
-
-        // Possibly prompt if user wants to switch back from
-        // butchering tool in order to use their normal weapon to
-        // fight the interrupting monster.
-        handle_interrupted_swap(true, force_unsafe);
-    }
 }
 
 bool you_are_delayed(void)
@@ -660,18 +593,9 @@ void handle_delay()
             }
             else
             {
-                string tool;
-                switch (delay.parm3)
-                {
-                case SLOT_BUTCHERING_KNIFE: tool = "knife"; break;
-                case SLOT_CLAWS:            tool = "claws"; break;
-                case SLOT_TEETH:            tool = "teeth"; break;
-                case SLOT_BIRDIE:           tool = "beak and talons"; break;
-                default: tool = you.inv[delay.parm3].name(DESC_QUALNAME);
-                }
                 mprf(MSGCH_MULTITURN_ACTION,
-                     "You start butchering %s with your %s.",
-                     mitm[delay.parm1].name(DESC_THE).c_str(), tool.c_str());
+                     "You start butchering %s.",
+                     mitm[delay.parm1].name(DESC_THE).c_str());
             }
             break;
 
@@ -1129,8 +1053,7 @@ static void _finish_delay(const delay_queue_item &delay)
             }
             else
             {
-                mprf("You finish %s %s into pieces.",
-                     delay.parm3 <= SLOT_CLAWS ? "ripping" : "chopping",
+                mprf("You finish butchering %s.",
                      mitm[delay.parm1].name(DESC_THE).c_str());
 
                 if (god_hates_cannibalism(you.religion)
@@ -1182,8 +1105,6 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (you.hunger_state > HS_STARVING || you.species == SP_VAMPIRE)
                     autopickup();
             }
-
-            _maybe_interrupt_swap();
         }
         else
         {

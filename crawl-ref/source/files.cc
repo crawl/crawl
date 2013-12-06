@@ -1563,17 +1563,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             }
         }
 
-        // If butchering was interrupted by switching levels (banishment)
-        // then switch back from butchering tool if there's no hostiles
-        // nearby.
-        handle_interrupted_swap(true);
-
-        // Forget about interrupted butchering, since we probably aren't going
-        // to get back to the corpse in time to finish things.
-        // But do not reset the weapon swap if we swapped weapons
-        // because of a transformation.
-        maybe_clear_weapon_swap();
-
         ash_detect_portals(is_map_persistent());
     }
     // Initialize halos, etc.

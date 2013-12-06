@@ -446,8 +446,6 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
             else if (see_cell)
                 behaviour_event(*mi, ME_EVAL);
         }
-
-        handle_interrupted_swap(true);
     }
 
 #ifdef USE_TILE
