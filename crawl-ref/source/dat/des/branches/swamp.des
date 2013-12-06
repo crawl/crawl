@@ -1016,6 +1016,33 @@ ZZTTT''TTZ
    ZZZZZZ
 ENDMAP
 
+NAME:    hangedman_swamp_double_dragon
+TAGS:    no_monster_gen patrolling
+DEPTH:   Swamp:2-
+MONS:    fire dragon, lindwurm / mottled dragon w:8
+MONS:    ice dragon, bog body / hydra simulacrum w:8
+MONS:    swamp dragon, alligator / hydra w:8
+ITEM:    any good_item
+KFEAT:   t = mangrove
+SUBST:   $ = $%%*, * = **d, T = tww
+SHUFFLE: 12 / 12 / 34 / 34 / 56 / 56 / 56
+NSUBST:  2 = 1 : 2:9 .:1 / *:2, 4 = 1 : 4:9 .:1 / *:4, 6 = 1 : 6:9 .:1 / *:6
+NSUBST:  1 = 1 : 1:9 2:1 / *:1, 3 = 1 : 3:9 4:1 / *:3, 5 = 1 : 5:9 6:1 / *:5
+MAP
+   ttttt             ttttt
+  tttt.tt           tt.tttt
+ ttt$t..tt         tt.*t3ttt
+ttt1*%..ttt       ttt..%.tttt
+tt$*1.w..tt       tt.W..$.3tt
+ttt%..w..tt       tt..T..%ttt
+t...wwT..2t       t4...T..*.t
+tt.......tt       ttW...W..tt
+tttt....t.Wt     t.WtW...tttt
+ ttttt2t.t.W     ..tWt4ttttt
+    ttttW2@       @.4tttt
+        tW         .t
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

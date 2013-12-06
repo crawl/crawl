@@ -578,6 +578,48 @@ d.Xx..x..x..x..x..x..x..f
 xgxxxgxgxxxgxcxxxcxcxxxcx
 ENDMAP
 
+NAME:    hangedman_damned_closets
+TAGS:    no_monster_gen
+DEPTH:   Tar, !Tar:$
+ORIENT:  float
+MONS:    shadow w:6 / shadow wraith / wraith w:6
+MONS:    soul eater, tormentor / shadow demon w:12
+MONS:    patrolling lost soul
+KMONS:   56 = flayed ghost
+KMONS:   78 = eidolon
+KMONS:   90 = phantasmal warrior
+KMONS:   AB : spectral titan / spectral ettin
+KMONS:   C = patrolling revenant w:19 / patrolling shadow fiend w:1
+KFEAT:   C = } / ) / ] / > w:30 / floor w:5
+SHUFFLE: 4C / 56 / 78 / 90 / AB, 567890AB, yz / yz / zy, YZ / YZ / ZY
+SUBST:   X : x., y : xxx., z = ., { = {..
+MAP
+    xxxxxxxxxxxxxxxxxxxx
+    cccccccccccccccccccx
+    c.......yz.....1xxcx
+    c.......yz..3...xGcx
+    c.......x.......x4cx
+  @cc..1..x.x...xxx.+Ccx
+  .c...2...x.xxx...xxccx
+  .+......ZY.......xGcxx
+x..+.......YZ......x5cx
+x.cc.......x...2...+6cx
+x.c.xxxx..x.x..1..xxccx
+x{c.....xxX.......xGcxx
+..c.......Xxx.....x7cx
+.cc..1..x.x..xxxx.+8cx
+.+...2...x.......xxccx
+.+......ZY.......xGcxx
+@c.......YZ......x9cx
+cc...xxx.x...2...+0cx
+c.xxx...x.x..1..xxccx
+c.......x.......xGcxx
+c...3..zy.......xAcx
+c1.....zy.......+Bcx
+cccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # Ereshkigal (Tartarus)
 ##############################################################################

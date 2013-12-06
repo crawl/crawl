@@ -816,6 +816,52 @@ xxllllL.a.bc
  xxxxxxxxxx
 ENDMAP
 
+NAME:    hangedman_snake_thin_pillar_pass
+TAGS:    extra transparent decor
+DEPTH:   Snake
+WEIGHT:  6
+SHUFFLE: @' / @' / @' / '@
+SUBST:   A : c.., B : c.., C : c.., D = cccc., E = c...., ' = .
+: local Z = dgn.br_depth(you.branch())
+: if crawl.x_chance_in_y(Z - you.depth(), Z) then
+SUBST: c = x
+: end
+MAP
+x@.xxxxxxxxx.@x
+x......D......x
+xx.cA..c..Ac.xx
+ x.....D.....x
+ xx.cB.c.Cc.xx
+  x.........x
+  xx.cC.Bc.xx
+   x.......x
+   xx.c.c.xx
+    x.....x
+    xx.E.xx
+     x.'.x
+ENDMAP
+
+NAME:    hangedman_snake_wide_pillar_pass
+TAGS:    extra transparent decor
+DEPTH:   Snake
+WEIGHT:  4
+SHUFFLE: @' / @' / @' / '@
+SUBST:   A : c.., B : c.., C : c.., D = cccc., E : c...., F : c...., ' = .
+: local Z = dgn.br_depth(you.branch())
+: if crawl.x_chance_in_y(Z - you.depth(), Z) then
+SUBST: c = x
+: end
+MAP
+x.xxx.@.xxxxxxxxxxxxx.@.xxx.x
+x...x.A......FDF......A.x...x
+xxx...c.B.....c.....C.c...xxx
+  xxx...c.C...c...B.c...xxx
+    xxx...c.E...E.c...xxx
+      xxx...c...c...xxx
+        xxx...D...xxx
+          xxx.'.xxx
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################
