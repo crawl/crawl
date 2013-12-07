@@ -121,7 +121,7 @@ and <w>dropped</w> will find items you have dropped.
 Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
 train that skill. You can also look for <w>melee weapon</w> and <w>ranged weapon</w>.
 
-You can also search by item types such as <w>book</w> or <w>manual</w> or <w>jewellery</w>. 
+You can also search by item types such as <w>book</w> or <w>manual</w> or <w>jewellery</w>.
 For armour slots, use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shield</w>, and <w>body</w>.
 Use <w>armour && !!body</w> to list all armour pieces except for body armour.
 
