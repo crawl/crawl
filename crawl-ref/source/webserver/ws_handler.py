@@ -387,7 +387,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def token_login(self, cookie):
         username, _, token = cookie.partition(' ')
-        token = long(token)
+        try:
+            token = long(token)
+        except ValueError:
+            token = None
         if (token, username) in login_tokens:
             del login_tokens[(token, username)]
             self.logger.info("User %s logged in (via token).", username)
@@ -408,7 +411,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def forget_login_cookie(self, cookie):
         try:
             username, _, token = cookie.partition(' ')
-            token = long(token)
+            try:
+                token = long(token)
+            except ValueError:
+                token = None
             if (token, username) in login_tokens:
                 del login_tokens[(token, username)]
         except ValueError:
