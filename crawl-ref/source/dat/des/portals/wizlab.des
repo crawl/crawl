@@ -1778,7 +1778,7 @@ ITEM:       wand of lightning / staff of air / ring of flight /\
 ITEM:       randbook disc:air
 KFEAT:      #4 = deep_water
 NSUBST:     e = 2:f / * = de, # = 5:4 / 4 = 4## / *:#
-COLOUR:     +<bo = white
+COLOUR:     +<b = white
 LFLOORCOL:  lightblue
 LFLOORTILE: floor_rough_lightblue
 TILE:       o = dngn_transparent_stone_white
