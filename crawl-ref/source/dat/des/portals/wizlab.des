@@ -779,10 +779,8 @@ ENDMAP
 ###############################################################################
 # Eringya's Formal Garden
 #
-# Map was based on this image: http://upload.wikimedia.org/wikipedia/commons/5
-#          /58/Plan_du_ch%C3%A2teau_et_des_jardins_de_Clagny_dessin%C3%A9_par_
-#          Maraine_XVIIe_si%C3%A8cle.jpg (concat it back together to get the
-#          full link).
+# Map was based on this image:
+# https://upload.wikimedia.org/wikipedia/commons/5/58/Plan_du_château_et_des_jardins_de_Clagny_dessiné_par_Maraine_XVIIe_siècle.jpg
 #
 # TODO: Needs vine-covered statues, rose-covered archway.
 #       Map was previously said to be too static: while this is still the case,
