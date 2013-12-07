@@ -1465,15 +1465,6 @@ hands_reqd_type basic_hands_reqd(const item_def &item, size_type size)
         ret = HANDS_TWO;
         break;
 
-    case OBJ_ARMOUR:    // Bardings and body armours are unwieldy.
-        if (item.sub_type == ARM_NAGA_BARDING
-            || item.sub_type == ARM_CENTAUR_BARDING
-            || get_armour_slot(item) == EQ_BODY_ARMOUR)
-        {
-            ret = HANDS_TWO;
-        }
-        break;
-
     default:
         break;
     }
