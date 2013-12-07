@@ -31,17 +31,17 @@ struct feature_def
 
     // FIXME: my kingdom for C++11 !!!
     // Please drop this constructor for a proper initializer in feature.cc then.
-    feature_def(dungeon_char_type dc, ucs_t ms) :
+    feature_def(dungeon_char_type dc, map_feature mf) :
         dchar(dc),
         symbol(0),
-        magic_symbol(ms),
+        magic_symbol(0),
         colour(BLACK),
         map_colour(DARKGREY),
         seen_colour(BLACK),
         em_colour(BLACK),
         seen_em_colour(BLACK),
         flags(FFT_NONE),
-        minimap(MF_UNSEEN)
+        minimap(mf)
     {}
 
     bool is_notable() const { return flags & FFT_NOTABLE; }
