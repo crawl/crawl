@@ -1810,7 +1810,7 @@ SUBST:  . = .:80 W:20 1:4 3:1 4:10
 KFEAT:  W = W
 KMONS:  W = patrolling giant leech / nothing w:1400
 NSUBST: % = 1:d / * = %%*|
-validate {{ return has_exit_from_glyph('|') }}
+validate {{ return has_exit_from_glyph('d') }}
 MAP
           ..............
        ....................
