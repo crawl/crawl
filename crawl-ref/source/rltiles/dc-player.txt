@@ -491,7 +491,7 @@ sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
 spriggans_knife SPRIGGANS_KNIFE
-cutlass CUTLASS
+capt_cutlass CAPT_CUTLASS
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -562,8 +562,8 @@ sword_twist SWORD_TWIST
 knife KNIFE
 sword_seven SWORD_SEVEN
 heavy_sword HEAVY_SWORD
-sabre SABRE
-sabre2
+cutlass CUTLASS
+cutlass2
 sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
@@ -870,7 +870,7 @@ bladehands BLADEHAND
 # The 1-2 "typos" are intentional; the equivalent tiles above have no
 # enums and become TILEP_GREAT_FLAIL_1 and TILEP_GREAT_MACE_1 respectively.
 dagger DAGGER
-sabre SABRE
+cutlass CUTLASS
 short_sword_slant SHORT_SWORD_SLANT
 flail_great GREAT_FLAIL
 flail_great2 GREAT_FLAIL_1

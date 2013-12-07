@@ -682,11 +682,11 @@ KITEM: d = potion of invisibility ident:all q:2, \
        potion of berserk rage ident:all q:2, \
        potion of magic q:2 ident:all
 # The 3rd equipment room
-KITEM: e = sabre plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
-       sabre plus:2 plus2:2 ego:draining ident:all not_cursed /\
-       sabre plus:2 plus2:2 ego:venom ident:all not_cursed /\
-       sabre plus:2 plus2:2 ego:distortion ident:all not_cursed /\
-       sabre plus:2 plus2:2 good_item ident:all not_cursed
+KITEM: e = cutlass plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
+       cutlass plus:2 plus2:2 ego:draining ident:all not_cursed /\
+       cutlass plus:2 plus2:2 ego:venom ident:all not_cursed /\
+       cutlass plus:2 plus2:2 ego:distortion ident:all not_cursed /\
+       cutlass plus:2 plus2:2 good_item ident:all not_cursed
 KITEM: f = war axe plus:2 plus2:3 ego:freezing ident:all not_cursed /\
        war axe plus:2 plus2:3 ego:vorpal ident:all not_cursed /\
        war axe plus:2 plus2:3 good_item ident:all not_cursed w:5 /\

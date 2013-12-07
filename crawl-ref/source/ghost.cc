@@ -695,7 +695,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // Bardiche:          speed 10, 40+20 damage, 20 AC, 40 HP, 15 EV
     // Dagger:            speed 20,  8+ 4 damage,  2 AC,  4 HP, 20 EV
     // Quick blade:       speed 23, 10+ 5 damage,  5 AC, 10 HP, 22 EV
-    // Sabre:             speed 18, 14+ 7 damage,  9 AC, 18 HP, 19 EV
+    // Cutlass:           speed 18, 14+ 7 damage,  9 AC, 18 HP, 19 EV
 
     xl = 15;
 

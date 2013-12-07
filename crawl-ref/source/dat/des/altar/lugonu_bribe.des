@@ -18,7 +18,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
       return
     end
 
-  local weapon = util.random_from({"short sword", "sabre",
+  local weapon = util.random_from({"short sword", "cutlass",
                  "long sword", "scimitar", "glaive", "bardiche",
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})

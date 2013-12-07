@@ -795,7 +795,7 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          sling unrand:punk / longbow unrand:bow_of_krishna_"sharnga"         /\
          crossbow unrand:hellfire / crossbow unrand:sniper                   /\
          longbow unrand:piercer / longbow unrand:storm_bow                   /\
-         long sword unrand:autumn_katana / sabre unrand:captains_cutlass     /\
+         long sword unrand:autumn_katana / cutlass unrand:captains_cutlass     /\
          randart demon blade / blowgun unrand:blowgun_of_the_assassin
 SHUFFLE: def
 : trove.setup_features(_G)

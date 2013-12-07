@@ -488,10 +488,6 @@ rune of zot
 
 Um talismã que permite acesso ao domínio de Zot.
 %%%%
-sabre
-
-Uma espada com lâmina média e lacerante.
-%%%%
 sausage
 
 Uma deliciosa e suculenta fruta.

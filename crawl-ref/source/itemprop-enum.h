@@ -450,7 +450,7 @@ enum weapon_type
     WPN_DAGGER,
     WPN_QUICK_BLADE,
     WPN_SHORT_SWORD,
-    WPN_SABRE,
+    WPN_CUTLASS,
 
     WPN_FALCHION,
     WPN_LONG_SWORD,

@@ -203,7 +203,7 @@ KMONS:    F = plant
 KITEM:    C = cheese q:4 no_mimic
 KITEM:    E = falchion ego:flaming ident:type / short sword ego:flaming
 KITEM:    H = meat ration q:2 no_mimic
-KITEM:    I = sabre
+KITEM:    I = cutlass
 KFEAT:    EF = shallow_water
 MAP
 cccccccccc
@@ -397,8 +397,8 @@ DEPTH:  D:8-14
 WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
-MONS:   deep elf fighter ; sabre race:elven | falchion race:elven / \
-        human hd:5 ; short sword | sabre / \
+MONS:   deep elf fighter ; cutlass race:elven | falchion race:elven / \
+        human hd:5 ; short sword | cutlass / \
         deep dwarf ; hand axe race:dwarven / \
         orc warrior ; dagger race:orcish / \
         spriggan ; dagger

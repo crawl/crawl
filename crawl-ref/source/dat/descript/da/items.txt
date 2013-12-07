@@ -1275,11 +1275,6 @@ rune of zot
 
 En talisman, som lader dig træde ind i Zots domæne.
 %%%%
-sabre
-
-Selvom det egentlig er lavet til at blive brugt fra hesteryg, så fungerer dette
-enæggede, let krumme kortsværd stadig udmærket i hænderne på krigere til fods.
-%%%%
 sack of spiders
 
 En vævet silkepose. Der er noget indeni, der bevæger sig ...

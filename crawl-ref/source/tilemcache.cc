@@ -225,8 +225,8 @@ mcache_monster::mcache_monster(const monster_info& mon)
                 case TILEP_HAND1_DAGGER:
                     m_shd_tile = TILEP_HAND2_DAGGER;
                     break;
-                case TILEP_HAND1_SABRE:
-                    m_shd_tile = TILEP_HAND2_SABRE;
+                case TILEP_HAND1_CUTLASS:
+                    m_shd_tile = TILEP_HAND2_CUTLASS;
                     break;
                 default:
                 case TILEP_HAND1_SHORT_SWORD_SLANT:
@@ -776,7 +776,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 
     case SK_SHORT_BLADES:
         if (dam > 20)
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SABRE;
+            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_CUTLASS;
         else if (dam > 10)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SHORT_SWORD_SLANT;
         else

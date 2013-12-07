@@ -202,11 +202,11 @@ KITEM:    d = wand of fire charges:7 ident:all /\
               wand of cold charges:7 ident:all /\
               wand of draining charges:7 ident:all, \
               staff of energy not_cursed ident:all
-KITEM:    e = sabre plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
-           sabre plus:2 plus2:2 ego:draining ident:all not_cursed /\
-           sabre plus:2 plus2:2 ego:venom ident:all not_cursed /\
-           sabre plus:2 plus2:2 ego:distortion ident:all not_cursed /\
-           sabre plus:2 plus2:2 good_item ident:all not_cursed, \
+KITEM:    e = cutlass plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
+           cutlass plus:2 plus2:2 ego:draining ident:all not_cursed /\
+           cutlass plus:2 plus2:2 ego:venom ident:all not_cursed /\
+           cutlass plus:2 plus2:2 ego:distortion ident:all not_cursed /\
+           cutlass plus:2 plus2:2 good_item ident:all not_cursed, \
            war axe plus:2 plus2:3 ego:freezing ident:all not_cursed /\
            war axe plus:2 plus2:3 ego:vorpal ident:all not_cursed /\
            war axe plus:2 plus2:3 good_item ident:all not_cursed w:5 /\

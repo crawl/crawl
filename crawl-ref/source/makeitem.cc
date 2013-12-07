@@ -824,7 +824,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         WPN_WAR_AXE,
         WPN_TRIDENT,
         WPN_FLAIL,
-        WPN_SABRE,
+        WPN_CUTLASS,
     };
 
     const weapon_type rare_subtypes[] =
@@ -1003,7 +1003,7 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
             break;
 
         case WPN_SHORT_SWORD:
-        case WPN_SABRE:
+        case WPN_CUTLASS:
             if (one_chance_in(3))
                 rc = ISFLAG_ORCISH;
             if (one_chance_in(3))
@@ -1206,7 +1206,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             // **** intentional fall through here ****
 
         case WPN_SHORT_SWORD:
-        case WPN_SABRE:
+        case WPN_CUTLASS:
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 

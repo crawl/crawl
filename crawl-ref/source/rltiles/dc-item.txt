@@ -136,15 +136,15 @@ scimitar2
 scimitar3
 
 %rim 0
-sabre1 WPN_SABRE
-sabre2
-sabre3
-orcish_sabre1 WPN_SABRE_ORC
-orcish_sabre2
-dwarven_sabre1 WPN_SABRE_DWARF
-dwarven_sabre2
-elven_sabre1 WPN_SABRE_ELF
-elven_sabre2
+cutlass1 WPN_CUTLASS
+cutlass2
+cutlass3
+orcish_cutlass1 WPN_CUTLASS_ORC
+orcish_cutlass2
+dwarven_cutlass1 WPN_CUTLASS_DWARF
+dwarven_cutlass2
+elven_cutlass1 WPN_CUTLASS_ELF
+elven_cutlass2
 
 quickblade1 WPN_QUICK_BLADE
 quickblade2

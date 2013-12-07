@@ -1134,10 +1134,6 @@ rune of zot
 
 Talizman który pozwala otworzyć bramę do krainy Zot.
 %%%%
-sabre
-
-Średniej długości lekki miecz o zakrzywionym ostrzu.
-%%%%
 sack of spiders
 
 Torba utkana z czegoś co wygląda jak białawy jedwab. Coś się chyba w środku

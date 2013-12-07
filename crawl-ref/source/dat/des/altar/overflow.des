@@ -1291,7 +1291,7 @@ KMONS:  2 = ogre god:trog ; giant club ego:anti-magic ident:type | w:3 giant clu
         orc warrior god:trog ; halberd ego:anti-magic ident:type | war axe ego:anti-magic ident:type | \
         flail ego:anti-magic ident:type | great mace ego:anti-magic ident:type | any weapon / \
         big kobold god:trog ; short sword ego:anti-magic ident:type | dagger ego:anti-magic ident:type | \
-        sabre ego:anti-magic ident:type | sabre
+        cutlass ego:anti-magic ident:type | cutlass
 : else
 KMONS:  2 = orc god:trog ; spear ego:anti-magic ident:type | hand axe ego:anti-magic ident:type | \
         war axe ego:anti-magic ident:type | any weapon / \
