@@ -9,7 +9,7 @@ tutorial1 start
 
 In dieser Lektion lernst du wie man herumwandert und eine Ebene erkundet. Du
 kannst dich bewegen indem du <localtiles>irgendwo mit der <input>Maus</input>
-klickst, oder </localtiles> mit den <input>Pfeiltasten</input>.
+klickst, oder</localtiles> mit den <input>Pfeiltasten</input>.
 %%%%
 tutorial1 go_on
 
@@ -26,7 +26,7 @@ Num-Block:      <w>7 8 9</w>     Vorg.-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $cm
                  /|\                         /|\
                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
-<localtiles>Du kannst dich auch mit <input>Maus klicks</input>bewegen.</localtiles>
+<localtiles>Du kannst dich auch mit <input>Maus klicks</input> bewegen.</localtiles>
 %%%%
 tutorial1 shiftmove
 
@@ -87,7 +87,7 @@ Glückwunsch! Du hast die erste Lektion beendet!
 
 Um den Übungskurs zu beenden gehe einfach diese Stufen hinauf indem du
 <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> drückst oder mit
-<input>Shift-Klick</input> auf deinen Charakter</localtiles>.  Bestätige dann
+<input>Shift-Klick</input> auf deinen Charakter</localtiles>. Bestätige dann
 die folgende Anzeige mit <input>Y</input>, achte dabei auf die Großschreibung.
 %%%%
 tutorial1 newlevel
@@ -137,11 +137,10 @@ Num-Block:       <w>7 8 9</w>     Vorg.-Tasten:     <w>$cmd[CMD_MOVE_UP_LEFT] $c
   können geöffnet werden indem man in sie hinein läuft
   <input>$cmd[CMD_CLOSE_DOOR]</input>  schließe eine offene Tür
 
-<yellow>Reisen</yellow>
-  <localtiles>Maus-Klick auf die  <w>Mini-Karte</w>
-  </localtiles><webtiles><input>$cmd[CMD_DISPLAY_MAP]</input>  betritt die Karten-Ebene, reise mit <input>Eingabe</input>
-  </webtiles><console><input>$cmd[CMD_DISPLAY_MAP]</input>  betritt die Karten-Ebene, reise mit <input>Eingabe</input>
-  </console><input>$cmd[CMD_EXPLORE]</input>  Auto-Erkunden
+<yellow>Reisen</yellow><localtiles>
+  Maus-Klick auf die  <w>Mini-Karte</w></localtiles><nomouse>
+  <input>$cmd[CMD_DISPLAY_MAP]</input>  betritt die Karten-Ebene, reise mit <input>Eingabe</input></nomouse>
+  <input>$cmd[CMD_EXPLORE]</input>  Auto-Erkunden
 
                    <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
@@ -204,7 +203,7 @@ gebliebenen Stücke mit <input>$cmd[CMD_EAT]</input><localtiles> oder
 tutorial2 compare_monster_desc
 
 :nowrap
-Untersuche diese Monster (<localtiles>mittels <input>Maus-Drüber</input></localtiles><console>mit <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></console><webtiles>mit <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></webtiles>) und vergleiche ihre Beschreibungen mit einem (<localtiles><input>Rechts-Klick</input> </localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</w></console><webtiles><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</w></webtiles>) um heraus zu finden welcher dieser beiden Käfige der Sichere ist, um sich hindurch zu kämpfen.
+Untersuche diese Monster (<localtiles>mittels <input>Maus-Drüber</input></localtiles><nomouse>mit <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]</input></nomouse>) und vergleiche ihre Beschreibungen mit einem (<localtiles><input>Rechts-Klick</input></localtiles><nomouse><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</w></nomouse>) um heraus zu finden welcher dieser beiden Käfige der Sichere ist, um sich hindurch zu kämpfen.
 %%%%
 tutorial2 downstairs
 
@@ -266,16 +265,14 @@ tutorial2 exit
 :nowrap
 <yellow>Waffen<console> <cyan>)</cyan></console></yellow>
   <input>$cmd[CMD_PICKUP]</input>  Gegenstand aufheben
-  <input>$cmd[CMD_WIELD_WEAPON]</input> eine Waffe ausrüsten<localtiles>
+  <input>$cmd[CMD_WIELD_WEAPON]</input>  eine Waffe ausrüsten<localtiles>
   Du kannst dies auch mit einem <input>Klick</input> auf die Waffe in deinem Inventar-Feld ausführen.</localtiles>
 
 <yellow>Monster</yellow><localtiles>
-  <input>'Maus-Drüber'</input>  ein Monster untersuchen
-  <input>Rechts-Klick</input> lies eine detailliertere Beschreibung</localtiles><console>
+  <input>Maus-Drüber</input>  ein Monster untersuchen
+  <input>Rechts-Klick</input> lies eine detailliertere Beschreibung</localtiles><nomouse>
   <input>$cmd[CMD_LOOK_AROUND]</input>  ein Monster untersuchen
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lies eine detailliertere Beschreibung</console><webtiles>
-  <input>$cmd[CMD_LOOK_AROUND]</input> ein Monster untersuchen
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lies eine detailliertere Beschreibung</webtiles>
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> lies eine detailliertere Beschreibung</nomouse>
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> feuere Munition auf ein vorabgewähltes Monster ab
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> visiere ein anderes Monster an<localtiles>
   Du kannst einen Gegenstand auch mit einem <input>klick</input> darauf abfeuern und das Ziel mit <input>Eingabe</input> bestätigen.</localtiles>
@@ -333,9 +330,9 @@ finden was diese sind.
 tutorial3 inventory
 
 Um dir die Beschreibung deiner neuen Waffe anzusehen, finde und wähle sie in
-deinem Inventar aus (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>). <localtiles>
+deinem Inventar aus (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>).<localtiles>
 Das kannst auch mit<input>Mausdrüber</input> und <input>Rechts-Klick</input> in
-deinem Inventar Feld machen. </localtiles>Merke dir, das alle
+deinem Inventar Feld machen.</localtiles> Merke dir, das alle
 Gegenstands-Befehle auch in der Gegenstands-Beschreibung funktionieren.
 %%%%
 tutorial3 battle
@@ -353,17 +350,16 @@ oder mit einem <input>Shift-Klick</input> auf deinen Charakter.</localtiles>.
 tutorial3 command_help
 
 Wenn die ganzen Befehle zu verwirrend sind, kannst du sie dir auch noch mal in
-der Befehls-Hilfe mit <input>$cmd[CMD_DISPLAY_COMMANDS]</input>
-ansehen. <localtiles>Ein Teil der Befehle sind auch in dem klickbaren
+der Befehls-Hilfe mit <input>$cmd[CMD_DISPLAY_COMMANDS]</input> ansehen.
+<localtiles>Ein Teil der Befehle sind auch in dem klickbaren
 <w>Befehls-Feld</w> auf der rechten Seite des Bildschirms verfügbar.
 </localtiles>Ältere Mitteilungen kann man wie immer mit
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> noch einmal lesen.
 %%%%
 tutorial3 potion
 
-Du kannst einen dieser Tränke mit
-<input>$cmd[CMD_QUAFF]</input><localtiles>oder mit einem
-<input>Maus-Klick</input></localtiles> trinken.
+Du kannst einen dieser Tränke mit <input>$cmd[CMD_QUAFF]</input><localtiles>
+oder mit einem <input>Maus-Klick</input></localtiles> trinken.
 %%%%
 tutorial3 artefact_armour
 
@@ -425,8 +421,8 @@ Um das Geschäft zu betreten drücke
 <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> oder
 <input>Shift-Linksklick</input> auf deinen Charakter</localtiles>. Um
 Gegenstände zu kaufen wähle sie über ihre Buchstaben aus, drücke
-<input>Eingabe</input> und bestätige mit <input>[y]</input>es (ja). Du kannst
-in den Beschreibungs-Modus mit <input>!</input> wechseln.
+<input>Eingabe</input> und bestätige mit <input>y</input>es (ja). Du kannst in
+den Beschreibungs-Modus mit <input>!</input> wechseln.
 %%%%
 tutorial3 autoexplore_reminder
 
@@ -467,18 +463,18 @@ tutorial3 exit
   <input>$cmd[CMD_WEAR_JEWELLERY]</input>  Schmuck anlegen
   <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  Schmuck ablegen
   <input>$cmd[CMD_DROP]</input>  einen Gegenstand fallen lassen
-  Anwendungbefehle sind auch über das Gegenstands-Menü verfügbar(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>),so wie auch die Beschreibungen der Gegenstände.<localtiles>
-  Und natürlich funktionierten <input>Mausklicks</input>auch.</localtiles>
+  Anwendungbefehle sind auch über das Gegenstands-Menü verfügbar(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), so wie auch die Beschreibungen der Gegenstände.<localtiles>
+  Und natürlich funktionierten <input>Mausklicks</input> auch.</localtiles>
 
 <yellow>Anderes</yellow>
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input>  betrete den Hilfe Bereich
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> betrete den Hilfe Bereich
   <input>$cmd[CMD_RESISTS_SCREEN]</input>  Charakter Übersicht anzeigen
   <input>$cmd[CMD_USE_ABILITY]</input>  eine Fähigkeit benutzen
   <input>$cmd[CMD_EXPLORE]</input>  Auto-Erforschen
   <input>$cmd[CMD_SEARCH_STASHES]</input> suche nach Gegenständen/Besonderheiten die du vorher gesehen hattest<localtiles>
   Einige dieser Befehle können auch ausgeführt werden indem man sie im <w>Befehls-Feld</w> anklickt.</localtiles>
 
-                   Drücke [irgendeine Taste] um diese Meldung zu löschen...
+                   <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
 tutorial4 start
 
@@ -489,40 +485,40 @@ tutorial4 spellbook
 Sie können sich einen Zauber von getragenem Zauberbuch mit
 <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder durch
 <input>klicken</input> auf dem memorisation Etikett und Auswählen des
-Zauber-Ziegels einprägen</localtiles> . Am Erfahrungsniveau 1 sind nur Zaubern
+Zauber-Ziegels einprägen</localtiles>. Am Erfahrungsniveau 1 sind nur Zaubern
 des Niveaus 1 für Sie verfügbar. Das wird sich ändern, wie Sie Erfahrung
 sammeln.
 %%%%
 tutorial4 spellcasting
 
 Sie können Zauber mit <input>$cmd[CMD_CAST_SPELL]</input><localtiles> oder
-durch Anklicken <input></input> auf den Zauber Fliesen </localtiles> gegossen.
-Drücke <input>$cmd[CMD_CAST_SPELL]?</input>, um eine Liste Eurer Zauber
-erhalten.
+durch Anklicken <input>klicken</input> auf den Zauber Fliesen </localtiles>
+gegossen. Drücke <input>$cmd[CMD_CAST_SPELL]?</input>, um eine Liste Eurer
+Zauber erhalten.
 
-Sobald Sie von Magie Punkte sind, um Rückzug und Ruhe sie mit <input>
-$cmd[CMD_REST]</input><localtiles> oder durch Anklicken <input></input> der
-Rest Icon in der Kommando-Panel </localtiles>.
+Sobald Sie von Magie Punkte sind, um Rückzug und Ruhe sie mit
+<input>$cmd[CMD_REST]</input><localtiles> oder durch Anklicken
+<input>klicken</input> der Rest Icon in der Kommando-Panel </localtiles>.
 %%%%
 tutorial4 ring_power
 
-Setzen Sie diesen Ring auf ,mit
+Setzen Sie diesen Ring auf, mit
 <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> oder durch
-<input>Anklicken</input> es in der Bestandsliste aus </localtiles>, und ruhen
+<input>Anklicken</input> es in der Bestandsliste aus</localtiles>, und ruhen
 Sie sich anschließend bis zu Ihrem neuen volles Potenzial auszuschöpfen.
 %%%%
 tutorial4 undead
 
 Anders als die meisten Monster, Untote nicht regenerieren Gesundheit und es ist
-unmöglich zu sagen, wie sie sind verwundet. <localtiles> Sie können übrigens
-auch zaubern, indem Sie  <input>Strg + Linksklick</input> auf das Monster.
-</localtiles>
+unmöglich zu sagen, wie sie sind verwundet.<localtiles> Sie können übrigens
+auch zaubern, indem Sie <input>Strg + Linksklick</input> auf das
+Monster.</localtiles>
 %%%%
 tutorial4 spell_success
 
 Um Ihre Kenntnisse von Zauber zu überprüfen, drücken Sie
 <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder
-<input>mouseover</input> über Ihre gespeicherten Zauber </localtiles>.
+<input>mouseover</input> über Ihre gespeicherten Zauber</localtiles>.
 Vergleichen Sie Ihre Zauber Erfolgsraten vor und nach schwingt dieses Personal.
 %%%%
 tutorial4 aiming_clouds
@@ -544,7 +540,7 @@ Eine Stufe aufsteigen und das Erhöhen der Zaubern Fertigkeit geben weitere
 Plätze für Zaubersprüche in deinem Gedächtnis frei. Ebenfalls kannst du
 <w>einen gelernten Spruch vergessen</w> um Platz für einen neuen/weiteren zu
 machen. Der einfachste Weg dies zu tun ist mit einer Schriftrolle der Amnesie.
-Lese einfach laut die Schriftrolle  (mit
+Lese einfach laut die Schriftrolle (mit
 <input>$cmd[CMD_READ]</input><localtiles> oder <input>klicke</input> sie
 einfach</localtiles>) und wähle dann den Spruch/Zauber den du vergessen willst.
 %%%%
@@ -572,11 +568,11 @@ tutorial4 heavy_armour
 
 Schwere Rüstung behindert dich sehr beim Zaubern. Lege diese Rüstung und Schild
 an (mit <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> oder indem du auf sie
-<input>klickst</input> </localtiles>) und vergleiche die Erfolgsquote mit
+<input>klickst</input></localtiles>) und vergleiche die Erfolgsquote mit
 <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> oder mit einem
 <input>Mouseover</input> über deine gelernten Zaubersprüche</localtiles>. Deine
 Rüstung kannst du mit <input>$cmd[CMD_REMOVE_ARMOUR]</input> wieder
-ablegen<localtiles> oder, wiederum , via <input>Mausklick</input></localtiles>.
+ablegen<localtiles> oder, wiederum, via <input>Mausklick</input></localtiles>.
 %%%%
 tutorial4 resting_reminder
 
@@ -608,7 +604,7 @@ tutorial4 exit
   <input>$cmd[CMD_SHOUT]</input>  Verbündete rufen
   <input>$cmd[CMD_REMOVE_ARMOUR]</input>  Rüstung ablegen
 
-                   <cyan>Drücke <input>eine beliebige Taste</input> um diesen Bildschirm zu leeren...</cyan>
+                   <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
 tutorial5 start
 
@@ -623,12 +619,13 @@ aller Altare und anderen interessanten Merkmalen anzeigen lassen.
 %%%%
 tutorial5 altar
 
-Beten kannst du an einem Altar mit  <input>$cmd[CMD_PRAY]</input><localtiles>
+Beten kannst du an einem Altar mit <input>$cmd[CMD_PRAY]</input><localtiles>
 (oder wenn du in das <input>Befehls-Feld klickst</input>, oder mit
 <input>Shift-Klick</input> auf deinen Charakter)</localtiles>, womit du dann
 erfährst was dieser Gott dir anbietet und diesem Glauben beizutreten. Wenn du
-<input>!</input><localtiles> oder einen <input>Rechts-Klick</input> im
-Glaubens-Bildschirm ausführst kann du eine noch genauere Beschreibung bekommen.
+<input>!</input><localtiles> oder einen
+<input>Rechts-Klick</input></localtiles> im Glaubens-Bildschirm ausführst kann
+du eine noch genauere Beschreibung bekommen.
 
 Bestätige deine Wahl mit einem <input>Y</input>, denke dabei an die
 Großschreibung.
@@ -639,8 +636,9 @@ Schau dir aktuellen Stand deines Glaubens mit
 <input>$cmd[CMD_DISPLAY_RELIGION]</input> an<localtiles> (oder über den
 <w>Religion Knopf</w> im Befehls-Feld, oder mit einem
 <input>Shift-Rechts-Klick</input> auf deine Spielfigur)</localtiles>. Nochmals,
-wenn du <input>!</input> eingibst oder einen <input>Rechts-Klick</input>
-machst, bekommst du eine detailliertere Beschreibung deines Gottes.
+wenn du <input>!</input><localtiles> eingibst oder einen
+<input>Rechts-Klick</input></localtiles> machst, bekommst du eine
+detailliertere Beschreibung deines Gottes.
 %%%%
 tutorial5 piety_on_kill
 
@@ -671,7 +669,7 @@ tutorial5 exhaustion
 
 Die Wut des Berserkers ist wirklich anstrengend. Wenn du ermüdet bist kannst du
 nicht wieder in Raserei verfallen und wirst langsamer. Am besten ist es dann
-mit <input>$cmd[CMD_REST]</input> <localtiles>(oder über das
+mit <input>$cmd[CMD_REST]</input><localtiles> (oder über das
 <w>Befehls-Feld</w>) zu rasten</localtiles> bis du dich wieder fit genug
 fühlst.
 %%%%
@@ -684,7 +682,7 @@ opferst.
 %%%%
 tutorial5 berserk2
 
-Raserei ist auch sehr sinnvoll gegen mehrere Gegner - solange du dabei nicht
+Raserei ist auch sehr sinnvoll gegen mehrere Gegner — solange du dabei nicht
 die Kraft verlierst.
 %%%%
 tutorial5 tutorial_end
@@ -711,5 +709,5 @@ tutorial5 exit
   <input>$cmd[CMD_DISPLAY_OVERMAP]</input> zeige eine Übersicht des Verlieses
   <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  durchsuche die Datenbank nach Beschreibungen
 
-                   Drücke [irgendeine Taste] um diese Meldung zu löschen...
+                   <cyan>Drücke <input>irgendeine Taste</input> um diese Meldung zu löschen...</cyan>
 %%%%
