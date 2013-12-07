@@ -596,7 +596,9 @@ ENDMAP
 #
 NAME:   blue_anna_fruit_fields
 TAGS:   fruiting_plant allow_dup extra decor
-DEPTH:  Lair
+# Needs to be available in D because it is used as a subvault of some
+# food vaults.
+DEPTH:  Lair, D:7-14
 MONS:   plant
 ITEM:   apple q:1 no_mimic / apple q:2 no_mimic / apple q:3 w:2 no_mimic
 ITEM:   pear q:1 no_mimic / pear q:2 no_mimic / pear q:3 w:2 no_mimic
