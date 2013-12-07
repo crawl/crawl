@@ -1247,12 +1247,6 @@ rune of zot
 
 Un talisman qui permet d'entrer dans de domaine de Zot.
 %%%%
-sabre
-
-Originellement prévue pour trancher depuis le haut d'une monture, cette épée
-courte à simple tranchant et légèrement courbée reste très efficace dans les
-mains d'un fantassin.
-%%%%
 sack of spiders
 
 Un sac de soie tissée. Quelque chose semble se déplacer à l'intérieur ...

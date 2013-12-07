@@ -495,6 +495,13 @@ crystal plate armour
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
+cutlass
+
+A broad curved short sword, akin to a sabre but smaller. It excels at
+close-quarters combat, having decent power yet being wieldy enough to still
+be a good fit for sneak attacks. You feel an urge to swash a buckler, and
+to grab some loot.
+%%%%
 dagger
 
 A double-edged fighting knife with a sharp point. Seen by some as a weak weapon
@@ -1279,12 +1286,6 @@ abilities, in addition to the nutrition it provides.
 rune of zot
 
 A talisman which allows entry into Zot's domain.
-%%%%
-sabre
-
-Though originally designed to slash from a mounted position, this single-edged,
-slightly-curved short sword still works very well in the hands of unmounted
-warriors.
 %%%%
 sack of spiders
 

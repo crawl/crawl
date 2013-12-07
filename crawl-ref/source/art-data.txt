@@ -628,14 +628,14 @@ INT:      3
 BOOL:     nogen
 
 NAME:     captain's cutlass
-OBJ:      OBJ_WEAPONS/WPN_SABRE
+OBJ:      OBJ_WEAPONS/WPN_CUTLASS
 TYPE:     cutlass
 PLUS:     +6/+7
 BASE_ACC: -1
 BASE_DAM: +2
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
-TILE_EQ:  cutlass
+TILE_EQ:  capt_cutlass
 BRAND:    SPWPN_SPEED
 
 NAME:     storm bow

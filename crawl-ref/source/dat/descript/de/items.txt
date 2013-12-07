@@ -1281,12 +1281,6 @@ rune of zot
 
 Ein Talisman, der Eintritt in Zots Reich gewährt.
 %%%%
-sabre
-
-Obwohl ursprünglich entworfen, von einer bestiegenen Position zu hauen,
-arbeitet dieses einzeln-schneidige, ein bisschen gekrümmte kurze Schwert noch
-sehr gut in den Händen von unmontierten Kriegern.
-%%%%
 sack of spiders
 
 Eine gewebte Seidentasche. Etwas scheint sich im Inneren zu bewegen ...

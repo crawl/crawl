@@ -226,7 +226,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,  80,  2,
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 10 },
-    { WPN_SABRE,             "sabre",               7,  4, 12,  90,  2,
+    { WPN_CUTLASS,           "cutlass",             7,  4, 12,  90,  2,
         SK_SHORT_BLADES, HANDS_ONE,    SIZE_LITTLE,  MI_NONE,
         DAMV_SLICING | DAM_PIERCE, 10 },
 
@@ -1307,7 +1307,7 @@ int weapon_rarity(int w_type)
 
     case WPN_BOW:
     case WPN_FLAIL:
-    case WPN_SABRE:
+    case WPN_CUTLASS:
     case WPN_SHORT_SWORD:
     case WPN_SLING:
     case WPN_SPEAR:

@@ -1239,7 +1239,7 @@ unsigned int item_value(item_def item, bool ident)
 
         case WPN_WAR_AXE:
         case WPN_MORNINGSTAR:
-        case WPN_SABRE:
+        case WPN_CUTLASS:
         case WPN_QUARTERSTAFF:
             valued += 40;
             break;

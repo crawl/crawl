@@ -2278,7 +2278,7 @@ MONS:    red devil; spear | trident . ring mail | scale mail
 MONS:    red devil; hand axe | war axe . buckler | nothing . leather armour | \
          ring mail
 MONS:    red devil; flail | demon whip . ring mail | scale mail
-MONS:    red devil; falchion | sabre . shield | buckler | nothing . \
+MONS:    red devil; falchion | cutlass . shield | buckler | nothing . \
          leather armour | ring mail
 MAP
 ...........
@@ -5206,7 +5206,7 @@ SUBST: k = KLMNO
 : end
 KMONS: A = Blork the orc / human; long sword | falchion . chain mail . shield
 KMONS: B = human / human; great sword . chain mail|plate armour
-KMONS: C = Urug / elf; sabre | long sword . leather armour . buckler | nothing
+KMONS: C = Urug / elf; cutlass | long sword . leather armour . buckler | nothing
 KMONS: D = Joseph / elf; long sword | scimitar . chain mail . shield
 KMONS: E = Erica / orc knight
 KMONS: F = Harold / orc knight
@@ -5221,7 +5221,7 @@ KMONS: N = Wiglaf / vault guard
 KMONS: O = Frederick / draconian knight
 KMONS: W = human; short sword . chain mail . large shield
 KMONS: X = human; scimitar . scale mail|chain mail . shield
-KMONS: Y = human; sabre | long sword . robe | leather armour . buckler | nothing
+KMONS: Y = human; cutlass | long sword . robe | leather armour . buckler | nothing
 KMONS: Z = orc; falchion | long sword . ring mail | scale mail . shield | nothing
 KMONS: o = Blork the orc / orc warrior; great sword | long sword . chain mail . shield
 MAP

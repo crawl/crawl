@@ -546,7 +546,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(30, WPN_SHORT_SWORD,
-                                               10, WPN_SABRE,
+                                               10, WPN_CUTLASS,
                                                0);
         break;
 
@@ -583,7 +583,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.sub_type = weap->sub_type;
         else
         {
-            item.sub_type = random_choose_weighted(40, WPN_SABRE,
+            item.sub_type = random_choose_weighted(40, WPN_CUTLASS,
                                                    10, WPN_SHORT_SWORD,
                                                    2,  WPN_QUICK_BLADE,
                                                    0);
@@ -607,7 +607,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_ELVEN;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
-                                       WPN_SHORT_SWORD, WPN_SABRE,
+                                       WPN_SHORT_SWORD, WPN_CUTLASS,
                                        WPN_DAGGER,
                                        -1);
         break;
@@ -618,7 +618,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_DRACONIAN_CALLER:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LONG_SWORD,  WPN_LONG_SWORD,
-                                       WPN_SHORT_SWORD, WPN_SABRE,
+                                       WPN_SHORT_SWORD, WPN_CUTLASS,
                                        WPN_DAGGER,      WPN_WHIP,
                                        -1);
         break;
@@ -896,7 +896,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_MERFOLK_AQUAMANCER:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SABRE;
+        item.sub_type  = WPN_CUTLASS;
         if (coinflip())
             level = MAKE_GOOD_ITEM;
         break;
@@ -1284,14 +1284,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_EUSTACHIO:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = (one_chance_in(3) ? WPN_FALCHION : WPN_SABRE);
+        item.sub_type  = (one_chance_in(3) ? WPN_FALCHION : WPN_CUTLASS);
         break;
 
     case MONS_NIKOLA:
         force_item = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SABRE;
+        item.sub_type  = WPN_CUTLASS;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
         item.plus      = random2(5);
         item.plus2     = random2(5);
@@ -1353,7 +1353,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_WEAPONS;
         // no quick blades for mooks
         item.sub_type  = random_choose(WPN_DAGGER, WPN_SHORT_SWORD,
-                                       WPN_SABRE, -1);
+                                       WPN_CUTLASS, -1);
         break;
 
     case MONS_SPRIGGAN_ASSASSIN:
@@ -1412,8 +1412,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_LAJATANG,    // best spriggan weapon
-                                       WPN_QUICK_BLADE, // overrated
-                                       WPN_SABRE,       // ordinary but popular
+                                       WPN_QUICK_BLADE, // overrated on monsters
+                                       WPN_CUTLASS,     // ordinary but popular
                                        WPN_DEMON_WHIP,  // goodness
                                        WPN_FLAIL,       // best ordinary 1-handed
                                        -1);

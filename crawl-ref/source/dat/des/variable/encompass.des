@@ -384,7 +384,7 @@ KMONS:   R = plant
 KMONS:   Q = bush
 KMONS:   e = bat skeleton
 KMONS:   K = giant firefly
-KITEM:   f = dagger / short sword / sabre / flail / whip / blowgun / bow
+KITEM:   f = dagger / short sword / cutlass / flail / whip / blowgun / bow
 KITEM:   g = robe / cloak / cap / buckler / steam dragon armour w:1
 KMONS:   L = spriggan ; robe . dagger
 KITEM:   h = bread ration q:2
@@ -1119,8 +1119,8 @@ KMONS:   E = deep elf annihilator ; robe randart | mundane ice dragon armour | \
 KMONS:   F = ettin ; great mace ego:flaming ident:type . \
                      great mace ego:freezing ident:type
 KMONS:   G = deep elf blademaster ; mundane crystal plate armour . \
-                                  sabre ego:flaming ident:type . \
-                                  sabre ego:freezing ident:type
+                                  cutlass ego:flaming ident:type . \
+                                  cutlass ego:freezing ident:type
 KMONS:   H = ancient lich w:5 / lich
 KMONS:   I = titan
 KMONS:   J = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \

@@ -324,8 +324,8 @@ MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
 KFEAT:      _ = altar_lugonu
 KFEAT:      P = enter_abyss
 : kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
-:       "w:6 | sabre ego:distortion | short sword ego:distortion / kobold "   ..
-:       "w:80 ; short sword | sabre | quick blade w:3")
+:       "w:6 | cutlass ego:distortion | short sword ego:distortion / kobold "   ..
+:       "w:80 ; short sword | cutlass | quick blade w:3")
 : else
 KFEAT:      _ = altar_xom
 :   if crawl.one_chance_in(4) then
@@ -334,8 +334,8 @@ KMONS:      P = orange crystal statue
 KFEAT:      P = enter_abyss / fountain_sparkling / stone_arch
 :   end
 : kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:chaos " ..
-:       "w:6 | sabre ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
-:       "short sword | sabre | quick blade w:3")
+:       "w:6 | cutlass ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
+:       "short sword | cutlass | quick blade w:3")
 : end
 MAP
   ccccc

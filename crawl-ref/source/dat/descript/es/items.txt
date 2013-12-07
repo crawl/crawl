@@ -1030,12 +1030,6 @@ rune of zot
 
 Un talismán que permite la entrada a los dominios de Zot.
 %%%%
-sabre
-
-Aunque fue originalmente diseñada para provocar heridas desde una montura, esta
-espada corta, levemente curvada y de un solo filo, sigue siendo eficaz en manos
-de guerreros desmontados.
-%%%%
 sacred scourge
 
 Una arma bendita, tejida por los santos en el cielo y odiado por lo impío. Es
