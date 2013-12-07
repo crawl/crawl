@@ -239,7 +239,7 @@ function arena_sprint_get_monster_set(round, boss)
         elseif round <= 5 then
             mon_set = {
                 -- Branches: D, Orc, Elf, Lair, Shoals, Swamp, Spider, Snake, Slime,
-                -- Hive, Dwarf, Crypt, Pan, Tomb
+                -- Hive, Crypt, Pan, Tomb
                 "place:D:6 w:15 / place:D:10 w:15 / w:2 edmund / w:2 maurice /\
                     w:1 psyche / w:1 joseph",
                 "w:30 place:Orc / orc wizard / orc warrior / w:3 orc knight /\
@@ -286,7 +286,7 @@ function arena_sprint_get_monster_set(round, boss)
         elseif round <= 10 then
             mon_set = {
                 -- Branches: D, Orc, Elf, Lair, Shoals, Swamp, Spider, Snake, Slime,
-                -- Hive, Dwarf, Crypt, Pan, Tomb
+                -- Hive, Crypt, Pan, Tomb
                 "place:D:11 w:15 / place:D:14 w:15 / w:2 erica / w:2 harold /\
                     w:1 rupert",
                 "w:20 place:Orc:$ / orc wizard / orc warrior / orc knight /\
@@ -335,9 +335,8 @@ function arena_sprint_get_monster_set(round, boss)
         elseif round <= 15 then
             mon_set = {
                 -- Branches: D, Orc, Elf, Lair, Shoals, Swamp, Spider, Snake, Slime,
-                -- Hive, Dwarf, Crypt, Pan, Tomb
-                "place:D:16 w:12 / place:D:19 w:12 / w:1 louise / w:1 norris /\
-                    w:1 donald / w:1 maud",
+                -- Hive, Crypt, Pan, Tomb
+                "place:D:$ w:24 / w:1 louise / w:1 norris / w:1 donald / w:1 maud",
                 "w:20 place:Orc:$ / orc wizard / orc sorcerer w:3 / orc warrior / orc knight /\
                     orc warlord w:3 / orc priest / orc high priest w:4 / urug w:3",
                 "place:Elf:$",
@@ -383,7 +382,7 @@ function arena_sprint_get_monster_set(round, boss)
         elseif round <= 20 then
             mon_set = {
                 -- Branches: D, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
-                -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
+                -- Blade, Forest, Crypt, Pan, Tomb, Hell
                 "place:D:$ w:30 / w:1 nikola / w:1 frederick",
                 "place:Orc:$ / orc sorcerer w:3 / orc knight / orc warlord w:3 /\
                     iron troll w:5 / stone giant w:5 / orc high priest w:4",
@@ -450,7 +449,7 @@ function arena_sprint_get_monster_set(round, boss)
         elseif round <= 26 then
             mon_set = {
                 -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
-                -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
+                -- Blade, Forest, Crypt, Pan, Tomb, Hell
                 "vault guard w:50 / ancient lich w:5 / lich / yaktaur /\
                     yaktaur captain w:3 / stone giant / shadow dragon /\
                     titan w:5",
@@ -525,7 +524,7 @@ function arena_sprint_get_monster_set(round, boss)
         elseif round <= 36 then
             mon_set = {
                 -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
-                -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
+                -- Blade, Forest, Crypt, Pan, Tomb, Hell
                 "vault guard / ancient lich w:5 / lich / yaktaur /\
                     yaktaur captain w:3 / stone giant / shadow dragon /\
                     titan w:5 / golden dragon / glowing shapeshifter",
@@ -604,7 +603,7 @@ function arena_sprint_get_monster_set(round, boss)
         else -- Because somehow, the above stuff was too easy.
             mon_set = {
                 -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
-                -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
+                -- Blade, Forest, Crypt, Pan, Tomb, Hell
                 "vault guard / ancient lich w:15 / deep elf master archer w:3 /\
                     titan w:15 / golden dragon w:20 / glowing shapeshifter hd:20",
                 "orc sorcerer / orc warlord w:20 / stone giant w:5 /\
