@@ -18,7 +18,7 @@ function coc_setup(e)
    e.colour("c = lightblue")
    e.set_feature_name("rock_wall", "ice-covered rock wall")
    e.set_feature_name("stone_wall", "ice-covered stone wall")
-   e.set_feature_name("floor", "frost-covered floor")
+   e.set_feature_name("floor", "Frost-covered floor")
 end
 
 -- the Serpent should appear in exactly one hell end
