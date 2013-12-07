@@ -1632,7 +1632,7 @@ xxttttt......Xxx                           xxxx
 xttttxx.X..X..Xxx                         xxT.xxx...@
 xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
 xtttxccco.Gc....GccPWWcco..%cccP..ccP....P.G.o.TTxxx.
-xttxcccc...c.P...=P.WwW+...%Qc.....+.....c.c...TTTx..
+xttxcccc...c.P...+P.WwW+...%Qc.....+.....c.c...TTTx..
 xxccccccPc.ccccPGc.WwwS+...%|c.22..c.Pcccc.P.cTTccc..
 xccccccc+c.P.PccccPwwwwco..%cc.22..cccc.P..c+ccccccc.
 xcc1...PPccccP.P.cWwWWPccccccc%...PcP.PPccccPP1..%cc.
@@ -1714,7 +1714,7 @@ SUBST:   X = x., z = x'
 CLEAR:   '
 # Give a hint about the dragon cave.
 NSUBST:  " = 1:GU / *:.
-KPROP:   = = bloody
+KPROP:   + = bloody
 : lair_small_ending(_G)
 MAP
             zzzzzxxzzxxzzxxxxzzxxxzzzxxx
@@ -1730,7 +1730,7 @@ zxc$$$$ccxxx...Xxxxxxx2..x9xxxx...xxxxxx
 xxc$$$$$cxxx..xxxxxxxXx3..xXxx..3xxxxxxx
 xxcc$7$$cxx..xxxxxxxxxxx2P..X...xXxxxxxx
 xxxcc$$ccxX..Xxxxxxxxxxx....3.xxxxxxxxxx
-xxxxccc=cX".xxxxxxxxxXx...P.xxxxCCCxxxxx
+xxxxccc+cX".xxxxxxxxxXx...P.xxxxCCCxxxxx
 xxxxxxxc1""xxxxxxxxxXx...XxxXxx5CCC*xxxx
 xxxxxxxX""xxXxxxxXxx...3xxxxxxx*333xxxxx
 xxxxxxxxX.2.xxxxxx....x..xxxxxxxx..xxxxx
