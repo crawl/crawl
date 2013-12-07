@@ -62,6 +62,12 @@ function ch_stash_search_annotate_item(it)
 
   if it.class(true) == "armour" then
       annot = annot .. "{" .. it.subtype() .. " "
+  elseif it.class(true) == "weapon" then
+      if it.is_ranged then
+        annot = annot .. "{ranged "
+      else
+        annot = annot .. "{melee "
+      end
   else
       annot = annot .. "{"
   end
