@@ -40,34 +40,28 @@ tutorial2 exit
 
 :nowrap
 <yellow>Armi<console> <cyan>)</cyan></console></yellow>
-
   <input>$cmd[CMD_PICKUP]</input> raccogli un oggetto
-  <input>$cmd[CMD_WIELD_WEAPON]</input> equipaggia un'arma
-<localtiles>    Puoi anche farlo <input>cliccando</input> sull'armanell'inventario.</localtiles>
+  <input>$cmd[CMD_WIELD_WEAPON]</input> equipaggia un'arma<localtiles>
+  Puoi anche farlo <input>cliccando</input> sull'armanell'inventario.</localtiles>
 
-
-<yellow>Mostri</yellow>
-<localtiles>  <input>posiziona il mouse</input>  per esaminare un mostro
-  <input>click destro</input> leggi una descrizione può dettagliata</localtiles>
-<console>  <input>$cmd[CMD_LOOK_AROUND]</input>  esamina un mostro
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> leggi una descrizione più dettagliata</console><webtiles> <input>$cmd[CMD_LOOK_AROUND]</input> esamina un mostro
-  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> leggi una descrizione più dettagliata</webtiles>
+<yellow>Mostri</yellow><localtiles>
+  <input>posiziona il mouse</input> per esaminare un mostro
+  <input>click destro</input> leggi una descrizione può dettagliata</localtiles><nomouse>
+  <input>$cmd[CMD_LOOK_AROUND]</input>  esamina un mostro
+  <input>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</input> leggi una descrizione più dettagliata</nomouse>
   <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</input> fa fuoco su un mostro già puntato
-  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> punta un altro mostro
-<localtiles>  Puoi anche fare fuoco <input>cliccandoci</input> e confermando il bersagli con <input>Invio</input>.</localtiles>
-
+  <input>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</input> punta un altro mostro<localtiles>
+  Puoi anche fare fuoco <input>cliccandoci</input> e confermando il bersagli con <input>Invio</input>.</localtiles>
 
 <yellow>Riposarsi</yellow>
   <input>$cmd[CMD_MOVE_NOWHERE]</input>  aspetta e riposati per un singolo turno
   <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
-
 <yellow>Cadaveri<console> <brown>%</brown></console></yellow>
   <input>$cmd[CMD_BUTCHER]</input>  macella una cadavere in cosciotti
   <input>$cmd[CMD_EAT]</input>  mangia un cosciotto di carne
 
-
-                         <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
+                  <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%
 tutorial3 start
 
@@ -75,7 +69,7 @@ In questa lezioni apprenderai sul funzionamento degli oggetti e come usarli.
 %%%%
 tutorial3 autopickup
 
-Alcuni tipi di oggetti <tiles>, marchiati con un contro verde,</tiles> sono
+Alcuni tipi di oggetti<tiles>, marchiati con un contro verde,</tiles> sono
 raccolti automaticamente camminandoci sopra.
 %%%%
 tutorial3 gold
@@ -112,22 +106,18 @@ tutorial3 exit
   <input>$cmd[CMD_WEAR_JEWELLERY]</input>  indossa gioielleria
   <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  rimuovi gioielleria
   <input>$cmd[CMD_DROP]</input>  getta un oggetto
-
-  <input></input>I comandi per l'utilizzo sono anche disponibili anche dal menu dell'inventario (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), assieme alle descrizioni.
-  <localtiles><input></input>Ovviamente, anche i <white>click del mouse</white> funzionano.
-</localtiles>
+  I comandi per l'utilizzo sono anche disponibili anche dal menu dell'inventario (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), assieme alle descrizioni.<localtiles>
+  Ovviamente, anche i <input>click del mouse</input> funzionano.</localtiles>
 
 <yellow>Altro</yellow>
   <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> accedi agli aiuti per i comandi
   <input>$cmd[CMD_RESISTS_SCREEN]</input>  mostra la scheda del personaggio
   <input>$cmd[CMD_USE_ABILITY]</input>  usa un'abilità
   <input>$cmd[CMD_EXPLORE]</input>  esplora automaticamente
-  <input>$cmd[CMD_SEARCH_STASHES]</input>  cerca oggetti e/o peculiarità già viste
+  <input>$cmd[CMD_SEARCH_STASHES]</input> cerca oggetti e/o peculiarità già viste<localtiles>
+  Alcuni di questi comandi possono essere eseguiti anche cliccando nel <w>pannello dei commandi</w>.</localtiles>
 
-  <localtiles><input></input>Alcuni di questi comandi possono essere eseguiti anche cliccando nel <input>pannello dei commandi</input>.
-</localtiles>
-
-                         <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
+                  <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%
 tutorial4 start
 
@@ -137,9 +127,9 @@ tutorial4 mephitic_cloud
 
 Nube Pestilenziale è un incantesimo di livello 3, quindi non puoi ancora
 memorizzarlo. Per passare velocemente di livello, qui ci sono altri manichini
-per allenamento - senza sassi da lanciarti.
+per allenamento — senza sassi da lanciarti.
 
-Al livello d'esperienza 3, potrai aumentare le tue statistiche - scegliendo
+Al livello d'esperienza 3, potrai aumentare le tue statistiche — scegliendo
 <input>I</input>ntelligenza aiuterà ancora di più il tuo lanciare incantesimi.
 %%%%
 tutorial4 aiming_clouds
@@ -172,7 +162,7 @@ cadavere o sacrificarlo a Trog.
 %%%%
 tutorial5 berserk2
 
-La furia è anche molto utile contro tanti nemici - affinché non calmi durante
+La furia è anche molto utile contro tanti nemici — affinché non calmi durante
 la battaglia.
 %%%%
 tutorial5 tutorial_end
@@ -186,21 +176,18 @@ tutorial5 exit
 
 :nowrap
 <yellow>Comandi religiosi</yellow>
-  $cmd[CMD_PRAY]  prega ad un altare per venerare un dio o scrificare un cadavere
-  $cmd[CMD_USE_ABILITY]  usa un'abilità divina
-  $cmd[CMD_DISPLAY_RELIGION]  guarda il tuo status religioso
-<localtiles>  Anche un <input>click destro</input> sul giocatore farà apparire il menu della religione
-</localtiles>
+  <input>$cmd[CMD_PRAY]</input>  prega ad un altare per venerare un dio o scrificare un cadavere
+  <input>$cmd[CMD_USE_ABILITY]</input>  usa un'abilità divina
+  <input>$cmd[CMD_DISPLAY_RELIGION]</input>  guarda il tuo status religioso<localtiles>
+  Anche un <input>click destro</input> sul giocatore farà apparire il menu della religione</localtiles>
 
 <yellow>Riposarsi</yellow>
   <input>$cmd[CMD_MOVE_NOWHERE]</input>  aspetta e riposati per un singolo turno
   <input>$cmd[CMD_REST]</input>  aspetta e riposati per 100 turni
 
-
 <yellow>Altri comandi</yellow>
-  $cmd[CMD_DISPLAY_OVERMAP]  mostra una visione d'insieme del Dungeon
-  $cmd[CMD_DISPLAY_COMMANDS]<input>/</input>  cerca nel database delle descrizioni
+  <input>$cmd[CMD_DISPLAY_OVERMAP]</input> mostra una visione d'insieme del Dungeon
+  <input>$cmd[CMD_DISPLAY_COMMANDS]/</input>  cerca nel database delle descrizioni
 
-
-                         <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
+                  <cyan>Premi un <input>qualunque tasto</input> per liberare questo schermo...</cyan>
 %%%%

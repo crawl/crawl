@@ -65,22 +65,18 @@ tutorial3 exit
   <input>$cmd[CMD_WEAR_JEWELLERY]</input>  ponerse joyería
   <input>$cmd[CMD_REMOVE_JEWELLERY]</input>  quitarse joyería
   <input>$cmd[CMD_DROP]</input>  depositar un objeto
-
-  <input></input>Los comandos para usar objetos también están disponibles en el menú del inventario (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), así como las descripciones de los mismos.
-  <localtiles><input></input>Y por supuesto, <white>los clics con el ratón</white> también funcionan.
-</localtiles>
+  Los comandos para usar objetos también están disponibles en el menú del inventario (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>), así como las descripciones de los mismos.<localtiles>
+  Y por supuesto, <input>los clics con el ratón</input> también funcionan.</localtiles>
 
 <yellow>Otros comandos</yellow>
   <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> muestra la ayuda sobre comandos
   <input>$cmd[CMD_RESISTS_SCREEN]</input>  muestra información acerca del personaje
   <input>$cmd[CMD_USE_ABILITY]</input>  usar una habilidad
   <input>$cmd[CMD_EXPLORE]</input>  explorar de forma automatizada
-  <input>$cmd[CMD_SEARCH_STASHES]</input>  buscar objetos o lugares que hayan sido vistos previamente
+  <input>$cmd[CMD_SEARCH_STASHES]</input>  buscar objetos o lugares que hayan sido vistos previamente<localtiles>
+  Varios de estos comandos también pueden ser ejecutados cliqueando en el <w>panel de comandos</w>.</localtiles>
 
-  <localtiles><input></input>Varios de estos comandos también pueden ser ejecutados cliqueando en el <input>panel de comandos</input>.
-</localtiles>
-
-                                 <cyan>Presiona <input>cualquier tecla</input> para limpiar esta pantalla...</cyan>
+                   <cyan>Presiona <input>cualquier tecla</input> para limpiar esta pantalla...</cyan>
 %%%%
 tutorial4 start
 

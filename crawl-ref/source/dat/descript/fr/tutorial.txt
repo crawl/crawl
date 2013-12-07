@@ -472,7 +472,7 @@ tutorial3 exit
   <input>$cmd[CMD_USE_ABILITY]</input>  Utiliser un pouvoir
   <input>$cmd[CMD_EXPLORE]</input>  Explorer automatiquement
   <input>$cmd[CMD_SEARCH_STASHES]</input> Chercher les objets/lieux déjà vus<localtiles>
-  Certaines de ces commandes peuvent aussi être exécutées en cliquant dans le <input>Panneau de Commandes</input>.</localtiles>
+  Certaines de ces commandes peuvent aussi être exécutées en cliquant dans le <w>Panneau de Commandes</w>.</localtiles>
 
                 <cyan>Pressez <input>n'importe quelle touche</input> pour quitter cet écran...</cyan>
 %%%%
