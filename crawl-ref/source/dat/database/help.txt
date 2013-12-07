@@ -85,9 +85,10 @@ Some examples of search strings:
 <w>D:[2-4]</w>       finds everything on Dungeon levels 2-4. Regexes are allowed!
               Note that D:[3-10] will not work as intended, since [x-y] is a
               regex character range.
-<w>\+3</w>           finds all items with a +3 enchantment
-<w>rC\+\+</w>        finds all items with an rC++ resistance. Note with these that
-              the + symbol had to be escaped as \+ due to Regex syntax.
+<w>rPois</w>         finds all items with an rPois resistance.
+<w>rC\+\+</w>        finds all items with an rC++ resistance.
+<w>\+3</w>           finds all items with a +3 enchantment. Note with these that
+              the + symbol had to be escaped as \+ due to regex syntax.
 <w>Lair.*axe</w> and <w>axe && Lair</w> both show all axes in the Lair.
 
 Some shortcuts:
@@ -105,25 +106,24 @@ The stash search string is case-insensitive.
 
 <h>Searching by item properties:</h>
 
-You can search for spell names (such as <w>Ignite Poison</w>) to find spellbooks
-or rods that contain the spell.
+You can search for spell names (such as <w>Ignite Poison</w>) to find spellbooks or
+rods that contain the spell.
 
 You can search for artefact item properties (such as <w>prevents.*teleport</w>)
 to find artefacts that have the property.
 
-You can also search by some additional item properties: <w>artefact</w> or
-<w>artifact</w> will find identified artefacts, <w>ego</w> or <w>branded</w> will
-find non-artefacts with a brand and unidentified items which may be
-branded, <w>throwable</w> will find things you can throw, <w>stick</w> will
-find items that can be used with Sticks to Snakes, and <w>dropped</w> will
-find items you have dropped.
+You can search by some additional item properties: <w>artefact</w> or <w>artifact</w> will
+find identified artefacts, <w>ego</w> or <w>branded</w> will find non-artefacts with a
+brand and unidentified items which may be branded, <w>throwable</w> will find things
+you can throw, <w>stick</w> will find items that can be used with Sticks to Snakes,
+and <w>dropped</w> will find items you have dropped.
 
-Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all
-weapons that train that skill.
+Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
+train that skill. You can also look for <w>melee weapon</w> and <w>ranged weapon</w>.
 
-You can also search by item types such as <w>book</w> or <w>jewellery</w>. For
-armour slots, you can use <w>helmet</w> (all head gear), <w>gloves</w>,
-<w>shield</w>, and <w>body</w>.
+You can also search by item types such as <w>book</w> or <w>manual</w> or <w>jewellery</w>. 
+For armour slots, use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shield</w>, and <w>body</w>.
+Use <w>armour && !!body</w> to list all armour pieces except for body armour.
 
 <h>Finding Dungeon Features:</h>
 
