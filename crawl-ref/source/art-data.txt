@@ -629,10 +629,7 @@ BOOL:     nogen
 
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
-TYPE:     cutlass
-PLUS:     +6/+7
-BASE_ACC: -1
-BASE_DAM: +2
+PLUS:     +5/+10
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  capt_cutlass
