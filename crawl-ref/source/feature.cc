@@ -8,8 +8,7 @@
 
 static FixedVector<feature_def, NUM_FEATURES>   feat_defs;
 static FixedVector<feature_def, NUM_SHOW_ITEMS> item_defs;
-static feature_def invis_fd(DCHAR_INVIS_EXPOSED, MF_MONS_HOSTILE);
-static feature_def cloud_fd(DCHAR_CLOUD, MF_SKIP);
+static feature_def invis_fd, cloud_fd;
 
 const feature_def &get_feature_def(show_type object)
 {
@@ -825,7 +824,12 @@ void init_show_table(void)
         _fd_symbols(item_defs[si]);
     }
 
+    invis_fd.dchar = DCHAR_INVIS_EXPOSED;
+    invis_fd.minimap = MF_MONS_HOSTILE;
     _fd_symbols(invis_fd);
+
+    cloud_fd.dchar = DCHAR_CLOUD;
+    cloud_fd.minimap = MF_SKIP;
     _fd_symbols(cloud_fd);
 }
 
