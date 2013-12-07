@@ -1382,6 +1382,9 @@ TILE:       c = wall_stone_gray
 epilogue{{
             wizlab_milestone(_G, "Zonguldrok's Shrine")
 }}
+# An "unused" definition for gather_mons and @?? monster
+MONS:       generate_awake ancient lich  col:brown name:antique_lich name_replace \
+            name_descriptor tile:mons_zonguldrok_lich
 MAP
 M   xxxxxxxxxxxxxxxxxxx
    xx?????????????????xx
