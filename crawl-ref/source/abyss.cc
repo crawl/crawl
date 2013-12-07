@@ -1175,11 +1175,6 @@ static void _update_abyss_terrain(const coord_def &p,
     }
 }
 
-static int _abyssal_stair_chance()
-{
-    return you.char_direction == GDT_GAME_START ? 0 : 2500 - (200 * you.depth / 3);
-}
-
 static void _nuke_all_terrain(bool vaults)
 {
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
@@ -1213,9 +1208,6 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     // The chance is reciprocal to these numbers.
     const int exit_chance = you.runes[RUNE_ABYSSAL] ? 1250
                             : 7500 - 1250 * (you.depth - 1);
-
-    // Except for the altar on the starting position, don't place any altars.
-    const int altar_chance = you.char_direction != GDT_GAME_START ? 10000 : 0;
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
@@ -1260,22 +1252,24 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
 
         // Place abyss exits, stone arches, and altars to liven up the scene
         // (only on area creation, not on morphing).
-        (_abyss_check_place_feat(p, exit_chance,
+        _abyss_check_place_feat(p, exit_chance,
                                 &exits_wanted,
                                 &use_abyss_exit_map,
                                 DNGN_EXIT_ABYSS,
                                 abyss_genlevel_mask)
         ||
-        _abyss_check_place_feat(p, altar_chance,
-                                &altars_wanted,
-                                NULL,
-                                _abyss_pick_altar(),
-                                abyss_genlevel_mask)
+        you.char_direction != GDT_GAME_START
+        && _abyss_check_place_feat(p, 10000,
+                                   &altars_wanted,
+                                   NULL,
+                                   _abyss_pick_altar(),
+                                   abyss_genlevel_mask)
         ||
-        (level_id::current().depth < brdepth[BRANCH_ABYSS] &&
-        _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
-                                DNGN_ABYSSAL_STAIR,
-                                abyss_genlevel_mask)));
+        you.char_direction != GDT_GAME_START
+        && level_id::current().depth < brdepth[BRANCH_ABYSS]
+        && _abyss_check_place_feat(p, 2400, NULL, NULL,
+                                   DNGN_ABYSSAL_STAIR,
+                                   abyss_genlevel_mask);
     }
     if (ii)
         dprf(DIAG_ABYSS, "Nuked %d features", ii);
