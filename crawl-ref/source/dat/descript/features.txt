@@ -691,10 +691,6 @@ A huge sealed gate
 ### Vault redefinitions
 ########################
 # wizlabs
-An empty arch of stone
-
-This is the portal you came through; it looks bereft of magic now.
-%%%%
 A portal leading out of here
 
 This shimmering magical gate will lead you out of the wizard's dwelling, back
@@ -832,10 +828,6 @@ A wall of white crystal
 This is lower-grade crystal. It is hardly translucent at all, and its crooked
 faces make things worse. The opalescent gleam still looks pretty nice, though.
 %%%%
-A wall of transparent white crystal
-
-This crystal seems flawless and imperishable. It might be diamond or something
-of this kind — whatever it is, it is beyond your means of breaching it.
 %%%%
 # wizlab: Hellbinder
 A hot floor
