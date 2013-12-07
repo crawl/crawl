@@ -1,4 +1,3 @@
-&#65279;%%%%
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
