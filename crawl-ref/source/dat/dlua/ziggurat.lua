@@ -292,9 +292,9 @@ mset(with_props("place:Lair:$ w:85 / catoblepas w:6 / dire elephant w:6 / " ..
 -- This is useful if you want to adjust monster weights in the spec
 -- wrt to depth in the ziggurat.
 mset(spec_fn(function ()
-               local d = 310 - 10 * you.depth()
+               local d = 290 - 10 * you.depth()
                local e = math.max(0, you.depth() - 20)
-               return "place:Orc:$ w:" .. d .. " / orc warlord band / " ..
+               return "place:Orc:$ w:" .. d .. " / orc warlord / " ..
                  "orc high priest band / orc sorcerer w:5 / stone giant / " ..
                  "iron troll w:5 / moth of wrath w:" .. e
              end))
@@ -334,11 +334,13 @@ mset(spec_fn(function ()
              end))
 
 mset(spec_fn(function ()
-               local d = math.max(0, you.depth() - 5)
-               return "chaos spawn / glowing shapeshifter w:5 / " ..
-                 "shapeshifter w:5 / very ugly thing w:5 / " ..
-                 "ugly thing w:5 / apocalypse crab w:5 / " ..
-                 "killer klown / pandemonium lord w:" .. d
+               local d = math.max(2, math.floor((32 - you.depth()) / 5))
+               local e = math.min(8, math.floor((you.depth()) / 5) + 4)
+               local f = math.max(1, you.depth() - 5)
+               return "chaos spawn w:" .. d .. " / ugly thing w:" .. d ..
+                 " / very ugly thing w:5 / apocalypse crab w:5 / " ..
+                 "shapeshifter hd:16 w:" ..e .. " / glowing shapeshifter w:" .. e ..
+                 " / killer klown / pandemonium lord w:" .. f
              end))
 
 mset(spec_fn(function ()

@@ -1048,7 +1048,6 @@ ORIENT: float
 KFEAT:  M = mangrove
 : wad_woods_setup(_G, "large", 1, true, 21, 2, 36)
 FTILE:  ' = floor_dirt
-WEIGHT: 9999
 MAP
                  .         tt.
              tttt. tt  ttttt...ttt    tt   tt
@@ -1582,6 +1581,125 @@ tcccccccccccccccc+c+ccccccccccccccc+ccccct
 ENDMAP
 
 ###############################################################################
+
+NAME:   kennysheep_rathole
+TAGS:   no_monster_gen
+DEPTH:  Lair
+ORIENT: float
+MONS:   green rat band, orange rat, grey rat / green rat / rat
+KMONS:  P = plant / fungus w:2
+KITEM:  d = cheese / slice of pizza / sausage / bread ration
+NSUBST: W = 1:1 / 2:P / 2:2 / 2:3 / 2:d
+MAP
+ xxxx
+ xxxxxx
+xxd.Wxxxx
+xx..WWWxx
+xxWWW.WWxx
+xxxWWWWWxx
+  xWxW.WWx
+  xxxW...x
+     @  @
+ENDMAP
+
+# contains food and one ok item to make the orange rats a little more worth it
+NAME:   kennysheep_abandoned_house
+TAGS:   ruin
+DEPTH:  Lair
+ORIENT: float
+MONS:   green rat / rat, orange rat, grey rat / rat
+KITEM:  d = cheese / slice of pizza / sausage / bread ration
+SUBST:  d = d123..., 2 = 2.
+NSUBST: 1 = *:1
+MAP
+      .......
+.......ccccc.........
+.ccccccccccccccccccc.
+.cccccccdddccccccccc.
+.ccdddccdddcc..dddcc.
+.ccdddccdddcc..dddcc.
+.cc...cc...+...dddcc.
+.cccc.cccc.ccccccccc.
+.cccc+cccc+ccccccccc.
+.cc.....+...+...ddcc.
+.ccddddcc...cc..ddcc.
+.ccddddcc...cc..ddcc.
+.cccccccc+++cccccccc.
+.ccccccc.....ccccccc.
+.....................
+ENDMAP
+
+# a sealed arena with some loot
+# contains one catoblepas, three other monsters and four items
+# the walls are usually thick enough to make this only accessible from the floor below
+NAME: kennysheep_catoblepas_arena
+DEPTH: Lair:5-7
+TAGS:  no_monster_gen ruin
+MONS:  catoblepas
+NSUBST: d = 4=%* / 3:0 / *:.
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxdd1ddxxxxxxx
+xxxxxcdddddddcxxxxx
+xxxxxdcccccccdxxxxx
+xxxddcdddcdddcddxxx
+xxxddcdddcdddcddxxx
+xxxccdcccdcccdccxxx
+xxx..c...c...c..xxx
+xxx..c...c...c..xxx
+xxxxx.ccc.ccc.xxxxx
+xxxxxc.......cxxxxx
+xxxxxxx..}..xxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# contains up to to 4 basilisks, standing around an item
+NAME:   kennysheep_basilisk_garden
+DEPTH:  Lair:3-
+MONS:   basilisk
+NSUBST: . = 1:1 / 3 = 111.
+SUBST:  . = .........G
+MAP
+   .....
+ ....G....
+ .G.....G.
+.....G.....
+...........
+.G.G.*.G.G.
+...........
+.....G.....
+ .G.....G.
+ ....G....
+   .....
+ENDMAP
+
+# an altar to chei, and a few followers
+NAME:  kennysheep_slug_temple
+DEPTH: Lair
+MONS:  giant slug / agate snail / elephant slug w:2 / nothing
+KFEAT: a = altar_cheibriados
+MAP
+ @
+x.x   xxxxxxxxx
+x.x  xx...1....@
+x.x xx.xxxxxxxx
+x.x x.xxbbbbbbxxxx
+x.xxx.xbbWWWWW...xx
+x.xx.xbbWbbbbbbxx.xxx
+x...1.WWW1a1WWW..1...@
+xxx.xxbbbbbbWbbx.xxxx
+  xx...WWWWWbbx.xx
+   xxxxxbbbbbxx.x
+   xxxxxxxxxxx.xx
+  @.......1...xx
+   xxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
 # Lair endings
 ###############################################################################
 
@@ -1810,7 +1928,6 @@ SUBST:  . = .:80 W:20 1:4 3:1 4:10
 KFEAT:  W = W
 KMONS:  W = patrolling giant leech / nothing w:1400
 NSUBST: % = 1:d / * = %%*|
-validate {{ return has_exit_from_glyph('d') }}
 MAP
           ..............
        ....................

@@ -727,9 +727,10 @@ A crystal clear mirror
 
 A glistening mirror, reflecting everything around it.
 %%%%
-A strange machine
+A strange generator
 
-A mechanical contraption, all hisses and pops. It is highly reflective.
+A mechanical contraption, all hisses and pops, ready to dispense dancing
+weapons at any moment. It is highly reflective.
 %%%%
 A glistening fountain
 
