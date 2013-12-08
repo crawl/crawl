@@ -155,7 +155,7 @@ function tukima_machine (data, triggerable, triggerer, marker, ev)
   data.weapon_count = data.weapon_count + 1
 
   if you.see_cell(x, y) then
-    crawl.mpr("The machine hisses, and spits out a dancing weapon!")
+    crawl.mpr("The generator hisses, and spits out a dancing weapon!")
   else
     crawl.mpr("You hear a distant hissing noise.")
   end
@@ -736,7 +736,7 @@ LFLOORTILE: floor_pebble_white
 COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
 :           set_feature_name("clear_rock_wall", "crystal clear mirror")
-:           set_feature_name("granite_statue", "strange machine")
+:           set_feature_name("granite_statue", "strange generator")
 :           set_feature_name("dry_fountain_blue", "glistening fountain")
 :           set_feature_name("stone_wall", "black marble wall")
 :           set_feature_name("floor", "marble floor")

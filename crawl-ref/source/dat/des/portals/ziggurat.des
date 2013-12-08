@@ -282,6 +282,7 @@ default-depth: Zig
 #######################################################################
 NAME: ziggurat_pillar_abc
 TAGS: ziggurat_pillar
+WEIGHT: 20
 SHUFFLE: dD / eD / eE
 SUBST: ceE : bcmvxG
 CLEAR: dD
@@ -314,7 +315,7 @@ ccccc
 ENDMAP
 
 NAME: ziggurat_pillar_centre_a
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered no_dump
 MAP
 lll
 lGl
@@ -322,7 +323,7 @@ lll
 ENDMAP
 
 NAME: ziggurat_pillar_centre_b
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered no_dump
 SHUFFLE: wb / lb / nb / cb / bx
 MAP
  www
@@ -353,28 +354,28 @@ nnn
 ENDMAP
 
 NAME: ziggurat_pillar_centre_monster
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered no_dump
 MONS: curse skull / ice statue / orange crystal statue / silver statue
 MAP
 1
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_def
-TAGS:    ziggurat_pillar centered
+TAGS:    ziggurat_pillar centered no_dump
 WEIGHT:  20
-SHUFFLE: y'z / Y'z / y"Z
-SUBST:   xYZ : bcmvxG
-CLEAR:   y'z
+SHUFFLE: xy'z / xY'z / "Y"Z
+SUBST:   xYZ : bcmvxG, y" = .
+CLEAR:   'z
 MAP
-x.x'z
-.y.''
-x.x'z
-'''''
+z'z'z
+'x.x'
+z.y.z
+'x.x'
 z'z'z
 ENDMAP
 
 NAME: ziggurat_pillar_centre_h
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered no_dump
 MAP
 ccncc
 c...c
@@ -384,7 +385,7 @@ ccncc
 ENDMAP
 
 NAME: ziggurat_pillar_centre_i
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered no_dump
 MAP
 vlv
 lvl
@@ -392,7 +393,7 @@ vlv
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_j
-TAGS:  ziggurat_pillar centered
+TAGS:  ziggurat_pillar centered no_dump
 SUBST: x : bcmvxG
 MAP
  x
@@ -413,7 +414,7 @@ xxxxx
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_l
-TAGS:    ziggurat_pillar centered
+TAGS:    ziggurat_pillar centered no_dump
 SHUFFLE: X' / X' / 'X
 SUBST:   xX : bcmvxG, ' = .
 MAP
@@ -425,7 +426,7 @@ xX'Xx
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_m
-TAGS:    ziggurat_pillar centered
+TAGS:    ziggurat_pillar centered no_dump
 DEPTH:   Zig:18-
 SHUFFLE: X'" / X'" / 'X" / '"X
 SUBST:   x : bcmvxG, X : bcmvxG, '" = .
@@ -440,7 +441,7 @@ x...".x
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_n
-TAGS:    ziggurat_pillar centered
+TAGS:    ziggurat_pillar centered no_dump
 DEPTH:   Zig:18-
 WEIGHT:  5
 SUBST:   x : w:40 bcmvxG
@@ -453,7 +454,7 @@ MAP
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_o
-TAGS:    ziggurat_pillar centered
+TAGS:    ziggurat_pillar centered no_dump
 WEIGHT:  5
 SUBST:   x : bcmvx
 MAP
@@ -495,15 +496,15 @@ MARKER:  Z = lua:fog_machine { cloud_type = "black smoke", \
          pow_min = 25, pow_max = 25, \
          delay = 30, size = 1, walk_dist = 3 }
 MAP
- v.v
-vv.vv
+ v..
+.v.vv
 ..Z..
-vv.vv
- v.v
+vv.v.
+ ..v
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_lightning
-TAGS:  ziggurat_pillar centered
+TAGS:  ziggurat_pillar centered no_dump
 MONS:  lightning spire
 MAP
 v...v
@@ -517,7 +518,7 @@ NAME:    ziggurat_pillar_centre_more_plants
 TAGS:    ziggurat_pillar centered
 DEPTH:   Zig:18-
 WEIGHT:  5
-MONS:    plant, bush, patrolling thorn hunter, treant
+MONS:    plant, bush, patrolling thorn hunter, patrolling treant
 SHUFFLE: 1t
 SUBST:   1 : 12, 3 : 34..., x : bcmvxG
 MAP
@@ -531,21 +532,22 @@ tt.x.tt
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_drop
-TAGS:    ziggurat_pillar centered allow_dup
+TAGS:    ziggurat_pillar centered generate_awake
+DEPTH:   Zig:10-
 WEIGHT:  5
-MONS:    generate_awake lost soul
+MONS:    lost soul
 KFEAT:   ~ = known teleport trap
-SUBST:   9 : 00., x : bcmvx
+SUBST:   9 : 00., x : bcvx, X : bcnv
 : if you.depth() > 18 then
 SUBST:   0 : 011
 : end
 MAP
   xxx
- xx0xx
+ Xx0xX
 xx9.9xx
 x0.~.0x
 xx9.9xx
- xx0xx
+ Xx0xX
   xxx
 ENDMAP
 
@@ -584,7 +586,7 @@ cc.ccc.cc
 ENDMAP
 
 NAME: ziggurat_loot_3
-TAGS: ziggurat_loot_chamber allow_dup
+TAGS: ziggurat_loot_chamber allow_dup no_rate
 ORIENT: float
 WEIGHT: 5
 : ziggurat_loot_spot(_G, "X")
