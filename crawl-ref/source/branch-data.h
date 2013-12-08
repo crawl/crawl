@@ -259,7 +259,7 @@ const Branch branches[NUM_BRANCHES] =
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Bailey", "a bailey", "Bailey",
       NULL,
-      false, WHITE, LIGHTGREY,
+      false, WHITE, LIGHTRED,
       '5', false, 0 },
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, -1, -1, 1, 15,
