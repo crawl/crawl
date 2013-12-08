@@ -909,7 +909,8 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         mutation_type app = _beastly_appendage();
         if (app == NUM_MUTATIONS)
         {
-            mpr("You have no appropriate body parts free.");
+            if (!involuntary)
+                mpr("You have no appropriate body parts free.");
             return false;
         }
 
