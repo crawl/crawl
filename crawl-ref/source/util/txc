@@ -96,7 +96,7 @@ def merge_ini():
 def setup_transifex():
     """Initialize the transifex config file"""
     
-    os.chdir(os.path.join(git_root, tx_path))
+    os.chdir(tx_abs_path)
     call_tx(['init'])
     tx_set = ['set', '--auto-local', '-s', 'en_AU', '-t', 'INI', '--execute']
     for res in res_index.default_resources:
