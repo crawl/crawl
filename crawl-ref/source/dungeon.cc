@@ -2335,7 +2335,7 @@ static void _place_item_mimics()
         item_def& item(mitm[i]);
         if (!item.defined() || !in_bounds(item.pos)
             || item.flags & ISFLAG_NO_MIMIC
-            || !is_valid_mimic_item(item.base_type)
+            || !is_valid_mimic_item(item)
             || mimic_at(item.pos))
         {
             continue;
