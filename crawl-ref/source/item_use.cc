@@ -2065,7 +2065,7 @@ void drink(int slot)
     if (slot == -1)
     {
         const dungeon_feature_type feat = grd(you.pos());
-        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_FOUNTAIN_BLOOD)
+        if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN)
             if (_drink_fountain())
                 return;
     }
@@ -2191,8 +2191,7 @@ static bool _drink_fountain()
 {
     const dungeon_feature_type feat = grd(you.pos());
 
-    if (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD)
-        return false;
+    ASSERT(feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN);
 
     if (you.berserk())
     {
@@ -2201,13 +2200,10 @@ static bool _drink_fountain()
     }
 
     potion_type fountain_effect = NUM_POTIONS;
+    if (feat == DNGN_DRY_FOUNTAIN)
+        return mpr("This fountain has no liquid!"), false;
     if (feat == DNGN_FOUNTAIN_BLUE)
-    {
-        if (!yesno("Drink from the fountain?", true, 'n'))
-            return false;
-
-        mpr("You drink the pure, clear water.");
-    }
+        return mpr("This fountain contains nothing but water."), false;
     else if (feat == DNGN_FOUNTAIN_BLOOD)
     {
         if (!yesno("Drink from the fountain of blood?", true, 'n'))
