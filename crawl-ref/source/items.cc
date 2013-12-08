@@ -4083,10 +4083,14 @@ object_class_type get_item_mimic_type()
         return choices[keyin];
 }
 
-bool is_valid_mimic_item(object_class_type type)
+bool is_valid_mimic_item(const item_def &item)
 {
+    // Nothing important.
+    if (item_is_orb(item) || item_is_horn_of_geryon(item) || item_is_rune(item))
+        return false;
+
     for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
-        if (type == _mimic_item_classes[i])
+        if (item.base_type == _mimic_item_classes[i])
             return true;
     return false;
 }

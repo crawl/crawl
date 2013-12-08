@@ -148,7 +148,7 @@ bool get_item_by_name(item_def *item, char* specs,
 void move_items(const coord_def r, const coord_def p);
 object_class_type get_random_item_mimic_type();
 object_class_type get_item_mimic_type();
-bool is_valid_mimic_item(object_class_type type);
+bool is_valid_mimic_item(const item_def &item);
 // Returns the Orb's position on the ground, or origin()
 coord_def orb_position();
 
