@@ -86,14 +86,14 @@ agate_snail_shell MONS_AGATE_SNAIL_SHELL
 elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')
+%rim 0
 rat MONS_RAT
-quokka MONS_QUOKKA
 grey_rat MONS_GREY_RAT
 green_rat MONS_GREEN_RAT
 orange_rat MONS_ORANGE_RAT
-%rim 0
 porcupine MONS_PORCUPINE
 %rim 1
+quokka MONS_QUOKKA
 %sdir mon/animals
 
 ## Spiders and insects ('s')
