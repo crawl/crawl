@@ -87,7 +87,7 @@ static inline double log2(double n)
     return log(n) / log(2.0);
 }
 
-//this is targetting for struct member name in store.h, nothing else gets affected as of 0.9.0
+//this is targeting for struct member name in store.h, nothing else gets affected as of 0.9.0
 #define _int64 var_int64
 
 //missing in sys/types.h

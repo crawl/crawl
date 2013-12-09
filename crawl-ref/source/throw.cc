@@ -74,7 +74,7 @@ int get_next_fire_item(int current, int direction)
     return fire_order[next];
 }
 
-class fire_target_behaviour : public targetting_behaviour
+class fire_target_behaviour : public targeting_behaviour
 {
 public:
     fire_target_behaviour()
@@ -86,7 +86,7 @@ public:
         set_prompt();
     }
 
-    // targetting_behaviour API
+    // targeting_behaviour API
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw() const { return need_redraw; }
     virtual void clear_redraw()        { need_redraw = false; }
@@ -211,7 +211,7 @@ void fire_target_behaviour::pick_fire_item_from_inventory()
 
 void fire_target_behaviour::display_help()
 {
-    show_targetting_help();
+    show_targeting_help();
     redraw_screen();
     need_redraw = true;
     set_prompt();
@@ -231,7 +231,7 @@ command_type fire_target_behaviour::get_command(int key)
     case CMD_TARGET_CANCEL: chosen_ammo = false; break;
     }
 
-    return targetting_behaviour::get_command(key);
+    return targeting_behaviour::get_command(key);
 }
 
 vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)

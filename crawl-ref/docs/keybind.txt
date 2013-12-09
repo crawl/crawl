@@ -125,7 +125,7 @@ _         CMD_READ_MESSAGES     (messaging during online play)
 0         CMD_REPEAT_CMD
 <unbound> CMD_LUA_CONSOLE
 
-Targetting sub-commands
+Targeting sub-commands
 -----------------------
 Move cursor one step in a given direction:
 b         CMD_TARGET_DOWN_LEFT
@@ -214,7 +214,7 @@ W         CMD_MAP_FIND_WAYPOINT
 I         CMD_MAP_FIND_STASH
 O         CMD_MAP_FIND_STASH_REVERSE (cycle through stashes, in reverse)
 
-Wiz-mode targetting sub-commands
+Wiz-mode targeting sub-commands
 --------------------------------
 ^C        CMD_TARGET_CYCLE_BEAM
 o         CMD_TARGET_WIZARD_GIVE_ITEM

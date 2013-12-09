@@ -199,7 +199,7 @@ Character
   at level one, improved magic regeneration at level two, and regenerating
   mana in place of health as a function of current magic level at level
   three.
-* Deaths to acid, self-targetting, and sticky flame now credit
+* Deaths to acid, self-targeting, and sticky flame now credit
   the appropriate monster/spell.
 * Draining a stat to zero can no longer directly kill the player; instead,
   further stat drain damages the player. The effects of a stat being at zero
@@ -213,7 +213,7 @@ Monsters
     - Eidolons deal more melee damage and can cast bolt of draining.
     - Phantasmal warriors can temporarily reduce their target's magic
       resistance and can blink closer to their foes.
-    - Flayed ghosts gain a smite-targetted flaying attack, dealing
+    - Flayed ghosts gain a smite-targeted flaying attack, dealing
       temporary damage that scales with XP and goes away when the flayed
       ghost is killed and/or enough time passes.
     - Ancient champions, formerly a vault-specific monster, are now
@@ -640,7 +640,7 @@ Spells
     - Iskenderun's Battlesphere (level 4 Conjuration/Charms). Creates an
       autonomous globe that shoots at enemies in sync with your conjurations.
     - Fulminant Prism (level 5 Conjuration/Hexes). Creates a time bomb at a
-      smite-targetted location.
+      smite-targeted location.
     - Disjunction (level 8 Translocation). Has a duration, during which it
       blinks away nearby monsters. Causes contamination.
 * Conjurers have a new book with non-elemental spells (including the new
@@ -968,7 +968,7 @@ Interface
 * Autopickup settings can now be configured in-game, via the '\' key.
 * Several improvements have been made to the tutorial.
 * Lantern of shadows no longer makes the whole screen dark grey in console mode.
-* Targetting prompts have been massively improved. Almost all area of effect
+* Targeting prompts have been massively improved. Almost all area of effect
   spells are now supported, and bounce paths (e.g. from lightning bolt) are
   displayed.
 * Some added or improved status indicators.
@@ -1366,7 +1366,7 @@ Interface
 * New help for skills screen (m??).
 * Change inventory colours for some potions.
 * Auto-pickup chunks after Animate Skeleton.
-* Allow toggling hit prediction with ':' in new targetting modes.
+* Allow toggling hit prediction with ':' in new targeting modes.
 * Cloud glyph in 7-bit ASCII is '0', not '#' anymore.
 * Prompt before leaving Ziggurat.
 * Better butchering messages, less spam.
@@ -1753,7 +1753,7 @@ Spells
 * While Ring of Flame is active, flame clouds are removed when you step on them.
 * Make LOS-affecting spells work through transparent walls.
 * Boost LRD damage.
-* Apportation targetting: allow cycling with +/-.
+* Apportation targeting: allow cycling with +/-.
 * When apporting part of a stack, don't destroy the rest of it.
 * Don't rot while under Death's Door.
 * Death channel spectral monsters are not abjurable.
@@ -2462,7 +2462,7 @@ Spells
 * Fulsome Distillation depends only on corpse type - RNG and rotting influence
   has been removed. Also doesn't prompt when only one corpse present.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
-* Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
+* Summon Wraiths is replaced by Haunt, a smite-targeted summoning spell.
 * Directed non-enchantment spells make noise when they hit something.
 * Casting spells is noisy.
 * Spell miscasts and hell effects are noisy.
@@ -2950,7 +2950,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Count chunks and blood towards decks of summoning rather than wonder.
 * Show monsters sensing/seeing invisible in their 'x' description.
 * Self-hit prompts now respect the player's known resistances.
-* 'allow_self_target = no' no longer prevents self-targetting for area spells.
+* 'allow_self_target = no' no longer prevents self-targeting for area spells.
 * Added chunk colour to lua eating prompt.
 * Added PCRE to the source tree.
 
@@ -2965,7 +2965,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed crashes when selecting an item with no appropriate items in inventory.
 * Fixed DOS problems with long file names.
 * Fixed Tiles not working on Windows 2000 and earlier.
-* Fixed targetting prompts being ignored or having the wrong result.
+* Fixed targeting prompts being ignored or having the wrong result.
 * Fixed item quotes causing overlong descriptions.
 * Fixed vampire bat jewellery exploit.
 * Fixed secondary monster attacks being branded according to their weapon.
@@ -3334,7 +3334,7 @@ Interface
   and very full.
 * Added pickup.lua for smarter autopickup
 * Added trap_item_brand for traps hidden by items
-* Added visible beam path for targetting
+* Added visible beam path for targeting
 * Added warning when trying to fight wielding a non-weapon
 * Interlevel travel also allows travelling to entrances of branches
 * Polearms can be used to attack monsters submerged in shallow water using

@@ -1515,7 +1515,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
     {
         int printed = 0;
 
-        // for targetting
+        // for targeting
         if (idx >= 0)
         {
             textcolor(WHITE);
@@ -1635,7 +1635,7 @@ int update_monster_pane()
         // i_mons is incremented by _print_next_monster_desc
         if (i_print >= skip_lines && i_mons < (int) mons.size())
         {
-             int idx = crawl_state.mlist_targetting ? i_print - skip_lines : -1;
+             int idx = crawl_state.mlist_targeting ? i_print - skip_lines : -1;
              _print_next_monster_desc(mons, i_mons, full_info, idx);
         }
         else

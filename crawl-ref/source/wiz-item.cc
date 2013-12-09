@@ -778,7 +778,7 @@ void wizard_unidentify_pack()
     you.redraw_quiver = true;
 
     // Forget things that nearby monsters are carrying, as well.
-    // (For use with the "give monster an item" wizard targetting
+    // (For use with the "give monster an item" wizard targeting
     // command.)
     for (monster_near_iterator mon(&you); mon; ++mon)
     {

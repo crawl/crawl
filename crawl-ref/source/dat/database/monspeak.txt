@@ -4099,7 +4099,7 @@ _gastronok_self_buff_
 
 @The_monster@'s eyestalks stretch out, then return to normal size.
 %%%%
-# When targetting other monsters.
+# When targeting other monsters.
 _gastronok_other_buff_
 
 @The_monster@ wobbles.

@@ -1767,7 +1767,7 @@ void zap_wand(int slot)
     dist zap_wand;
     int item_slot;
 
-    // Unless the character knows the type of the wand, the targetting
+    // Unless the character knows the type of the wand, the targeting
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_HOSTILE;
 

@@ -351,11 +351,11 @@ void DungeonRegion::on_resize()
 
 // FIXME: If the player is targeted, the game asks the player to target
 // something with the mouse, then targets the player anyway and treats
-// mouse click as if it hadn't come during targetting (moves the player
+// mouse click as if it hadn't come during targeting (moves the player
 // to the clicked cell, whatever).
-static void _add_targetting_commands(const coord_def& pos)
+static void _add_targeting_commands(const coord_def& pos)
 {
-    // Force targetting cursor back onto center to start off on a clean
+    // Force targeting cursor back onto center to start off on a clean
     // slate.
     macro_buf_add_cmd(CMD_TARGET_FIND_YOU);
 
@@ -387,7 +387,7 @@ static bool _is_appropriate_spell(spell_type spell, const actor* target)
     ASSERT(is_valid_spell(spell));
 
     const unsigned int flags    = get_spell_flags(spell);
-    const bool         targeted = flags & SPFLAG_TARGETTING_MASK;
+    const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
     // We don't handle grid targeted spells yet.
     if (flags & SPFLAG_GRID)
@@ -540,13 +540,13 @@ static bool _evoke_item_on_target(actor* target)
 
     macro_buf_add_cmd(CMD_EVOKE);
     macro_buf_add(index_to_letter(item->link)); // Inventory letter.
-    _add_targetting_commands(target->pos());
+    _add_targeting_commands(target->pos());
     return true;
 }
 
 static bool _spell_in_range(spell_type spell, actor* target)
 {
-    if (!(get_spell_flags(spell) & SPFLAG_TARGETTING_MASK))
+    if (!(get_spell_flags(spell) & SPFLAG_TARGETING_MASK))
         return true;
 
     int range = calc_spell_range(spell);
@@ -624,8 +624,8 @@ static bool _cast_spell_on_target(actor* target)
     macro_buf_add_cmd(CMD_FORCE_CAST_SPELL);
     macro_buf_add(letter);
 
-    if (get_spell_flags(spell) & SPFLAG_TARGETTING_MASK)
-        _add_targetting_commands(target->pos());
+    if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
+        _add_targeting_commands(target->pos());
 
     return true;
 }
@@ -668,7 +668,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
                      && !mon->wont_attack()))
     {
         macro_buf_add_cmd(CMD_FIRE);
-        _add_targetting_commands(mon->pos());
+        _add_targeting_commands(mon->pos());
         return true;
     }
 
@@ -684,7 +684,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
         if (dist > 2 && weapon && weapon_reach(*weapon) >= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
-            _add_targetting_commands(mon->pos());
+            _add_targeting_commands(mon->pos());
             return true;
         }
     }

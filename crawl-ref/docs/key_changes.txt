@@ -64,7 +64,7 @@ The * Direction and Ctrl-Direction keys now both open and close doors.
                  Ctrl-V      Tiles settings            was Ctrl-Q
                  Ctrl-Q      quit                      was Q
 
-There are additional changes to the targetting interface:
+There are additional changes to the targeting interface:
 The functions of ! and . have been swapped. So firing with . will now stop at
 the target, whereas ! will shoot further if the target was missed (and Enter,
 Del, Space still behave as in 0.3.4).

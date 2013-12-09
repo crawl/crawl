@@ -3077,7 +3077,7 @@ bool mons_should_fire(bolt &beam)
     if (_beneficial_beam_flavour(beam.flavour))
         return _mons_should_fire_beneficial(beam);
 
-    // Friendly monsters shouldn't be targetting you: this will happen
+    // Friendly monsters shouldn't be targeting you: this will happen
     // often because the default behaviour for charmed monsters is to
     // have you as a target.  While foe_ratio will handle this, we
     // don't want a situation where a friendly dragon breathes through

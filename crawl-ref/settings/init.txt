@@ -91,7 +91,7 @@
 # drop_filter += skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
-##### 3-b       Targetting ############################
+##### 3-b       Targeting ############################
 #
 # default_target = false
 # target_unshifted_dirs = true
@@ -212,7 +212,7 @@
 # msg_max_height               = 10
 # mlist_allow_alternate_layout = true
 # messages_at_top              = true
-# mlist_targetting             = true
+# mlist_targeting              = true
 # show_gold_turns              = false
 # show_game_turns              = false
 # show_newturn_mark            = false

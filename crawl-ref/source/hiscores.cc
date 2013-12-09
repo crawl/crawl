@@ -619,7 +619,7 @@ static const char *kill_method_names[] =
     "mon", "pois", "cloud", "beam", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "draining", "starvation", "freezing", "burning",
-    "wild_magic", "xom", "rotting", "targetting", "spore",
+    "wild_magic", "xom", "rotting", "targeting", "spore",
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
@@ -2260,14 +2260,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += " (" + death_source_desc() + ")";
         break;
 
-    case KILLED_BY_TARGETTING:
+    case KILLED_BY_TARGETING:
         if (terse)
             desc += "shot self";
         else
         {
             desc += "Killed themself with ";
             if (auxkilldata.empty())
-                desc += "bad targetting";
+                desc += "bad targeting";
             else
                 desc += "a badly aimed " + auxkilldata;
         }
@@ -2313,7 +2313,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_SELF_AIMED:
         if (terse)
-            desc += "suicidal targetting";
+            desc += "suicidal targeting";
         else
         {
             desc += "Shot themself with ";

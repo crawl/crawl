@@ -853,7 +853,7 @@ enum command_type
 
     CMD_MAX_OVERMAP = CMD_MAP_EXIT_MAP,
 
-    // targetting commands
+    // targeting commands
     CMD_TARGET_DOWN_LEFT,
     CMD_MIN_TARGET = CMD_TARGET_DOWN_LEFT,
     CMD_TARGET_DOWN,
@@ -1951,7 +1951,7 @@ enum KeymapContext
 {
     KMC_DEFAULT,         // For no-arg getchm(), must be zero.
     KMC_LEVELMAP,        // When in the 'X' level map
-    KMC_TARGETTING,      // Only during 'x' and other targetting modes
+    KMC_TARGETING,       // Only during 'x' and other targeting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
 #ifdef USE_TILE
@@ -2087,7 +2087,7 @@ enum targ_mode_type
     TARG_INJURED_FRIEND, // for healing
     TARG_HOSTILE,
     TARG_HOSTILE_SUBMERGED, // Target hostiles including submerged ones
-    TARG_EVOLVABLE_PLANTS,  // Targetting mode for Fedhas' evolution
+    TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
     TARG_HOSTILE_UNDEAD,    // For dispel undead
     TARG_NUM_MODES
 };
@@ -3688,10 +3688,10 @@ enum stat_type
     STAT_RANDOM,
 };
 
-enum targetting_type
+enum targeting_type
 {
     DIR_NONE,
-    DIR_TARGET,        // smite targetting
+    DIR_TARGET,        // smite targeting
     DIR_DIR,           // needs a clear line to target
     DIR_TARGET_OBJECT, // targets items
     DIR_JUMP,          // a jump target

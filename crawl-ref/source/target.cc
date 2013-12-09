@@ -72,7 +72,7 @@ targetter_beam::targetter_beam(const actor *act, int range, zap_type zap,
     beam.attitude = ATT_FRIENDLY;
     zappy(zap, pow, beam);
     beam.is_tracer = true;
-    beam.is_targetting = true;
+    beam.is_targeting = true;
     beam.range = range;
     beam.source = origin;
     beam.target = aim;
