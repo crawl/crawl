@@ -549,7 +549,7 @@ bool yes_or_no(const char* fmt, ...)
     va_end(args);
     buf[sizeof(buf)-1] = 0;
 
-    mprf(MSGCH_PROMPT, "%s? (Confirm with \"yes\".) ", buf);
+    mprf(MSGCH_PROMPT, "%s (Confirm with \"yes\".) ", buf);
 
     if (cancellable_get_line(buf, sizeof buf))
         return false;
