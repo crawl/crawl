@@ -1021,7 +1021,7 @@ void mprf_nocap(msg_channel_type channel, const char *format, ...)
 
 void mprf_nocap(const char *format, ...)
 {
-    va_list  argp;
+    va_list argp;
     va_start(argp, format);
     do_message_print(MSGCH_PLAIN, 0, false, false, format, argp);
     va_end(argp);
@@ -1046,7 +1046,7 @@ void mprf(msg_channel_type channel, const char *format, ...)
 
 void mprf(const char *format, ...)
 {
-    va_list  argp;
+    va_list argp;
     va_start(argp, format);
     do_message_print(MSGCH_PLAIN, 0, true, false, format, argp);
     va_end(argp);
@@ -1063,7 +1063,7 @@ void mprf_nojoin(msg_channel_type channel, const char *format, ...)
 
 void mprf_nojoin(const char *format, ...)
 {
-    va_list  argp;
+    va_list argp;
     va_start(argp, format);
     do_message_print(MSGCH_PLAIN, 0, true, true, format, argp);
     va_end(argp);
@@ -1072,7 +1072,7 @@ void mprf_nojoin(const char *format, ...)
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(const char *format, ...)
 {
-    va_list  argp;
+    va_list argp;
     va_start(argp, format);
     do_message_print(MSGCH_DIAGNOSTICS, 0, false, false, format, argp);
     va_end(argp);
@@ -1083,7 +1083,7 @@ void dprf(diag_type param, const char *format, ...)
     if (Options.quiet_debug_messages[param])
         return;
 
-    va_list  argp;
+    va_list argp;
     va_start(argp, format);
     do_message_print(MSGCH_DIAGNOSTICS, param, false, false, format, argp);
     va_end(argp);
