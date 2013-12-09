@@ -3066,7 +3066,7 @@ static const summons_desc summonsdata[] =
     // Beasts
     { SPELL_SUMMON_BUTTERFLIES,         8, 5 },
     { SPELL_SUMMON_SMALL_MAMMAL,        3, 2 },
-    { SPELL_CALL_CANINE_FAMILIAR,       0, 2 },
+    { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
     { SPELL_SUMMON_SCORPIONS,           4, 3 },
     { SPELL_SUMMON_HYDRA,               3, 2 },
@@ -3134,7 +3134,7 @@ void summoned_monster(const monster *mons, const actor *caster,
     monster* oldest_summon = 0;
     int oldest_duration = 0;
 
-    int count = 0;
+    int count = 1;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mons == *mi)
