@@ -62,7 +62,7 @@
 //     a regular Fireball (monsters act in the middle instead
 //     of at the end).  This is why we allow for the spell
 //     level discount so that Fireball is free with this spell
-//     (so that it only costs 7 levels instead of 13 to have
+//     (so that it only costs 7 levels instead of 12 to have
 //     both).
 //
 // (2) When the fireball is released, it is guaranteed to
