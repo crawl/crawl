@@ -8,9 +8,8 @@ ae := autopickup_exceptions
 
 ### exclusions ###
 
-# Exclude items useless in general (?paper, bad potions unless you know
-# Evaporate) or for your current character (such as inedible food or
-# armour you can't wear).
+# Exclude items useless in general or for your current character (such as
+# inedible food or armour you can't wear).
 ae += useless_item
 
 # Exclude potentially useful items of high risk, like ?torment or
