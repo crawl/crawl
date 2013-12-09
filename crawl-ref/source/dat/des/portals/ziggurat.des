@@ -586,7 +586,7 @@ cc.ccc.cc
 ENDMAP
 
 NAME: ziggurat_loot_3
-TAGS: ziggurat_loot_chamber allow_dup no_rate
+TAGS: ziggurat_loot_chamber allow_dup no_rotate
 ORIENT: float
 WEIGHT: 5
 : ziggurat_loot_spot(_G, "X")
