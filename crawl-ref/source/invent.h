@@ -219,7 +219,7 @@ bool check_warning_inscriptions(const item_def& item, operation_types oper);
 void init_item_sort_comparators(item_sort_comparators &list,
                                 const string &set);
 
-bool prompt_failed(int retval, string msg = "");
+bool prompt_failed(int retval);
 
 bool item_is_wieldable(const item_def &item);
 bool item_is_evokable(const item_def &item, bool reach = true,
