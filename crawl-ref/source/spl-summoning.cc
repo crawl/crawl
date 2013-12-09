@@ -2712,7 +2712,7 @@ bool fire_battlesphere(monster* mons)
         else
             beam.target = mons->props["firing_target"].get_coord();
 
-        // Sanity check: if we have somehow ended up targeting ourselves, bail
+        // Sanity check: if we have somehow ended up targetting ourselves, bail
         if (beam.target == mons->pos())
         {
             mprf(MSGCH_ERROR, "Battlesphere targetting itself? Fixing.");
