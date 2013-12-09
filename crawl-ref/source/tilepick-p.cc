@@ -343,8 +343,8 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_PEARL_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_PEARL;
 
     case ARM_ANIMAL_SKIN:          return TILEP_BODY_ANIMAL_SKIN;
-    case ARM_TROLL_HIDE:
-    case ARM_TROLL_LEATHER_ARMOUR: return TILEP_BODY_TROLL_HIDE;
+    case ARM_TROLL_HIDE:           return TILEP_BODY_TROLL_HIDE;
+    case ARM_TROLL_LEATHER_ARMOUR: return TILEP_BODY_TROLL_LEATHER;
 
     default: return 0;
     }
