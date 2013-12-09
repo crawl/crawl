@@ -221,6 +221,7 @@ mesh_red MESH_RED
 mesh_black MESH_BLACK
 mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
+spider SPIDER
 
 ## Mutations
 hooves HOOVES
