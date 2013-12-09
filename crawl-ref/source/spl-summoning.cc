@@ -3065,7 +3065,7 @@ static const summons_desc summonsdata[] =
 {
     // Beasts
     { SPELL_SUMMON_BUTTERFLIES,         8, 5 },
-    { SPELL_SUMMON_SMALL_MAMMAL,        3, 2 },
+    { SPELL_SUMMON_SMALL_MAMMAL,        4, 2 },
     { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
     { SPELL_SUMMON_SCORPIONS,           6, 3 },
