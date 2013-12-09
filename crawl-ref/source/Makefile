@@ -1127,7 +1127,8 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             denzi_undead_warrior omndra_zot_demon firemage \
             shadyamish_octm denzi_evil_mage denzi_invasion \
             psiweapon_kiku white_noise_entering_the_dungeon \
-            white_noise_grabbing_the_orb pooryurik_knight
+            white_noise_grabbing_the_orb pooryurik_knight \
+            psiweapon_roxanne
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
