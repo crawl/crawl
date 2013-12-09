@@ -56,7 +56,8 @@
 #include "xom.h"
 
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
-                                                  bool rotten_chunk);
+                                                  bool rotten_chunk,
+                                                  bool calc_unid = true);
 static int _contamination_ratio(corpse_effect_type chunk_effect);
 static void _eat_chunk(item_def& food);
 static void _eating(item_def &food);
@@ -442,10 +443,11 @@ bool butchery(int which_corpse, bool bottle_blood)
 
             corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
                                                             si->mon_type),
-                                                            food_is_rotten(*si));
+                                                            food_is_rotten(*si),
+                                                            false);
             int badness = _corpse_badness(ce, *si, wants_any);
             if (ce == CE_POISONOUS)
-                badness += 500;
+                badness += 600;
             else if (ce == CE_MUTAGEN)
                 badness += 1000;
 
@@ -2442,8 +2444,10 @@ bool chunk_is_poisonous(int chunktype)
 // See if you can follow along here -- except for the amulet of the gourmand
 // addition (long missing and requested), what follows is an expansion of how
 // chunks were handled in the codebase up to this date ... {dlb}
+// Added gestion of IDed items. It have sense for chopping and dropping (cedor)
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
-                                                  bool rotten_chunk)
+                                                  bool rotten_chunk,
+                                                  bool calc_unid)
 {
     // Determine the initial effect of eating a particular chunk. {dlb}
     switch (chunktype)
@@ -2455,12 +2459,12 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
         break;
 
     case CE_POISONOUS:
-        if (player_res_poison() > 0)
+        if (player_res_poison(calc_unid) > 0)
             chunktype = CE_CLEAN;
         break;
 
     case CE_POISON_CONTAM:
-        if (player_res_poison() <= 0)
+        if (player_res_poison(calc_unid) <= 0)
         {
             chunktype = CE_POISONOUS;
             break;
@@ -2711,7 +2715,7 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
 
         corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
                                                             item.mon_type),
-                                                        rotten);
+                                                        rotten, false);
         if (ce == CE_MUTAGEN || ce == CE_ROT)
             continue; // no nutrition from those
         // We assume that carrying poisonous chunks means you can swap rPois in.
