@@ -1832,7 +1832,6 @@ SUBST:   X = x., z = x'
 CLEAR:   '
 # Give a hint about the dragon cave.
 NSUBST:  " = 1:GU / *:.
-KPROP:   + = bloody
 : lair_small_ending(_G)
 MAP
             zzzzzxxzzxxzzxxxxzzxxxzzzxxx
@@ -1848,7 +1847,7 @@ zxc$$$$ccxxx...Xxxxxxx2..x9xxxx...xxxxxx
 xxc$$$$$cxxx..xxxxxxxXx3..xXxx..3xxxxxxx
 xxcc$7$$cxx..xxxxxxxxxxx2P..X...xXxxxxxx
 xxxcc$$ccxX..Xxxxxxxxxxx....3.xxxxxxxxxx
-xxxxccc+cX".xxxxxxxxxXx...P.xxxxCCCxxxxx
+xxxxccc=cX".xxxxxxxxxXx...P.xxxxCCCxxxxx
 xxxxxxxc1""xxxxxxxxxXx...XxxXxx5CCC*xxxx
 xxxxxxxX""xxXxxxxXxx...3xxxxxxx*333xxxxx
 xxxxxxxxX.2.xxxxxx....x..xxxxxxxx..xxxxx
