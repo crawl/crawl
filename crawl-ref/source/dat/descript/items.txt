@@ -24,7 +24,7 @@ will fail to provide its protection until more power is available.
 %%%%
 amulet of inaccuracy
 
-This amulet makes its wearer less accurate in melee combat and when targetting
+This amulet makes its wearer less accurate in melee combat and when targeting
 monsters via ranged attacks or spells.
 %%%%
 amulet of rage

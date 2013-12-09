@@ -2974,7 +2974,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     if (tell_card)
     {
-        // These card types will usually give this message in the targetting
+        // These card types will usually give this message in the targeting
         // prompt, and the cases where they don't are handled specially.
         if (which_card != CARD_VITRIOL && which_card != CARD_FLAME
             && which_card != CARD_FROST && which_card != CARD_HAMMER

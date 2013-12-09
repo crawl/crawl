@@ -3903,7 +3903,7 @@ void hints_inscription_info(string prompt)
         formatted_string::parse_string(prompt).display();
 }
 
-// FIXME: With the new targetting system, the hints for interesting monsters
+// FIXME: With the new targeting system, the hints for interesting monsters
 //        and features ("right-click/press v for more information") are no
 //        longer getting displayed.
 //        Players might still end up e'x'aming and particularly clicking on
@@ -4393,7 +4393,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
         {
             ostr << "You can easily mark its square as dangerous to avoid "
                     "accidentally entering into its field of view when using "
-                    "auto-explore or auto-travel. To do so, enter targetting "
+                    "auto-explore or auto-travel. To do so, enter targeting "
                     "mode with <w>x</w> and then press <w>e</w> when your "
                     "cursor is hovering over the monster's grid. Doing so will "
                     "mark this grid and all surrounding ones within a radius "

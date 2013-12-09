@@ -1097,7 +1097,7 @@ bool bolt::hit_wall()
         die("beam::hit_wall yet not solid: %s", dungeon_feature_name(feat));
 #endif
 
-    if (is_tracer && !is_targetting && YOU_KILL(thrower)
+    if (is_tracer && !is_targeting && YOU_KILL(thrower)
         && in_bounds(target) && !passed_target && pos() != target
         && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
@@ -1105,7 +1105,7 @@ bool bolt::hit_wall()
         && !cell_is_solid(target))
     {
         // Okay, with all those tests passed, this is probably an instance
-        // of the player manually targetting something whose line of fire
+        // of the player manually targeting something whose line of fire
         // is blocked, even though its line of sight isn't blocked.  Give
         // a warning about this fact.
         string prompt = "Your line of fire to ";
@@ -2320,7 +2320,7 @@ static void _imb_explosion(bolt *parent, coord_def center)
     beam.is_explosion   = false;
     beam.passed_target  = true; // The centre was the target.
     beam.is_tracer      = parent->is_tracer;
-    beam.is_targetting  = parent->is_targetting;
+    beam.is_targeting   = parent->is_targeting;
     beam.aimed_at_spot  = true;
     if (you.see_cell(center))
         beam.seen = true;
@@ -2756,7 +2756,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
 
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
-        return MB_TRUE; // smite targetting, we don't care
+        return MB_TRUE; // smite targeting, we don't care
 
     return MB_FALSE;
 }
@@ -2939,7 +2939,7 @@ void bolt::internal_ouch(int dam)
             if (aimed_at_feet && effect_known)
                 ouch(dam, NON_MONSTER, KILLED_BY_SELF_AIMED, name.c_str());
             else
-                ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING, name.c_str());
+                ouch(dam, NON_MONSTER, KILLED_BY_TARGETING, name.c_str());
         }
     }
     else if (MON_KILL(thrower) || aux_source == "exploding inner flame")
@@ -5968,7 +5968,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
-               is_targetting(false), aimed_at_feet(false), msg_generated(false),
+               is_targeting(false), aimed_at_feet(false), msg_generated(false),
                noise_generated(false), passed_target(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), nightvision(false), attitude(ATT_HOSTILE), foe_ratio(0),

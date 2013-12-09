@@ -92,10 +92,10 @@ struct game_state
     bool viewport_monster_hp;
 
 #ifndef USE_TILE_LOCAL
-    // Are we currently targetting using the mlist?
+    // Are we currently targeting using the mlist?
     // This is global because the monster pane uses this when
     // drawing.
-    bool mlist_targetting;
+    bool mlist_targeting;
 #else
     bool title_screen;
 #endif

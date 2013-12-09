@@ -154,7 +154,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             || defender->is_banished())
         {
             if (attacker == defender
-               || !attacker->as_monster()->has_multitargetting())
+               || !attacker->as_monster()->has_multitargeting())
             {
                 break;
             }

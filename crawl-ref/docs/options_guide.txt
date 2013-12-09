@@ -26,7 +26,7 @@ The contents of this text are:
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
                 assign_item_slot, drop_mode, pickup_mode, drop_filter,
                 default_friendly_pickup
-3-b     Targetting.
+3-b     Targeting.
                 default_target, target_unshifted_dirs, darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
@@ -67,7 +67,7 @@ The contents of this text are:
                 item_stack_summary_minimum,
                 mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus,
-                mlist_allow_alternate_layout, mlist_targetting,
+                mlist_allow_alternate_layout, mlist_targeting,
                 menu_colour, message_colour, force_more_message,
                 msg_condense_repeats, msg_condense_short, show_travel_trail,
                 monster_list_colour
@@ -562,16 +562,16 @@ default_friendly_pickup = (friend | player | none | all)
         Also, friendly jellies won't ever eat any items, regardless of
         this option.
 
-3-b     Targetting.
+3-b     Targeting.
 -------------------
 
 default_target = true
-        If set to true (the default), targetting will start on either
+        If set to true (the default), targeting will start on either
         your previous target (if it is still visible) or the closest
         monster (if not) rather than on the character. If no monsters
-        are in view, targetting will start on the character regardless.
+        are in view, targeting will start on the character regardless.
 
-        If default_target = false, the targetting cursor will always
+        If default_target = false, the targeting cursor will always
         start aimed at the character.
 
         default_target is mutually exclusive with
@@ -579,18 +579,18 @@ default_target = true
         disable target_unshifted_dirs.
 
 target_unshifted_dirs = false
-        If set to true, targetting will use the old Stone Soup 0.1 /
-        Crawl 4.0 targetting keymap where unshifted direction keys fire
+        If set to true, targeting will use the old Stone Soup 0.1 /
+        Crawl 4.0 targeting keymap where unshifted direction keys fire
         in that direction immediately. The default is to use the new
-        targetting keymap where unshifted direction keys move the
-        targetting cursor (and shifted directions fire in the given
+        targeting keymap where unshifted direction keys move the
+        targeting cursor (and shifted directions fire in the given
         direction immediately).
 
         If you use target_unshifted_dirs, default_target will be
         automatically disabled.
 
 darken_beyond_range = true
-        If set to true, everything beyond range when targetting will be
+        If set to true, everything beyond range when targeting will be
         coloured grey. Setting this to false will also suppress the brief
         flash if there are no visible monsters within range, both for
         ASCII and the Tiles version.
@@ -1034,12 +1034,12 @@ easy_confirm = (none | safe | all)
         questions.
 
 allow_self_target = (yes | no | prompt)
-        Allow targetting yourself with risky magic (e.g., the spell
+        Allow targeting yourself with risky magic (e.g., the spell
         Bolt of Fire or a wand of slowing.)
         When set to 'yes', you are a valid target. When set to 'no',
         you cannot target yourself with such spells. When set to
         'prompt' (the default), you will be required to confirm
-        self-targetting. This option has no effect on area-effect
+        self-targeting. This option has no effect on area-effect
         spells, such as Mephitic Cloud, where you are always a valid target.
 
 confirm_butcher = (always | never | auto)
@@ -1404,9 +1404,9 @@ mlist_allow_alternate_layout = false
         than using the fixed position below the stat area.
         This option is not supported in the tiles build.
 
-mlist_targetting = false
+mlist_targeting = false
         Using the monster list you can directly target monsters in
-        targetting mode. There's a toggle that allows you to turn this
+        targeting mode. There's a toggle that allows you to turn this
         feature on and off. This option controls the initial setting
         at game start or reload.
 
@@ -1720,7 +1720,7 @@ bindkey = [^D] CMD_BUTCHER
         ^X meaning Ctrl-X. After that name the command to be bound to
         that key. You can bind several commands to the same key, as long
         as they take effect in different areas of the game, i.e. one
-        targetting command and one for the main game. Likewise, you can
+        targeting command and one for the main game. Likewise, you can
         bind the same command to different keys.
         For a full list of possible commands, see keybind.txt.
 
@@ -2305,7 +2305,7 @@ background_colour = black
 
 use_fake_cursor = true
         If true, Crawl draws the cursor explicitly on the level-map and
-        targetting screens instead of relying on the term to draw the
+        targeting screens instead of relying on the term to draw the
         cursor. Use this if your term cannot show a cursor over
         darkgrey/black squares.
         On non-Unix builds this option defaults to false.

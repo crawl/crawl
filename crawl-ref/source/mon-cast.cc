@@ -2673,7 +2673,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                     if (_ms_direct_nasty(spell_cast)
                         && mons_aligned(mons, (mons->foe == MHITYOU) ?
                            &you : foe)) // foe=get_foe() is NULL for friendlies
-                    {                   // targetting you, which is bad here.
+                    {                   // targeting you, which is bad here.
                         spellOK = false;
                     }
                     else if (mons->foe == MHITYOU || mons->foe == MHITNOT)
@@ -3797,7 +3797,7 @@ static void _clone_monster(monster* mons, monster_type clone_type,
     // is is leaked to the client
     mons->reset_client_id();
 
-    // Don't leak the real one with the targetting interface.
+    // Don't leak the real one with the targeting interface.
     if (you.prev_targ == mons->mindex())
     {
         you.prev_targ = MHITNOT;
@@ -3909,7 +3909,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     // Targeted spells need a valid target.
     // Wizard-mode cast monster spells may target the boundary (shift-dir).
-    ASSERT(!(flags & SPFLAG_TARGETTING_MASK) || map_bounds(pbolt.target));
+    ASSERT(!(flags & SPFLAG_TARGETING_MASK) || map_bounds(pbolt.target));
 #endif
 
     if (do_noise)
@@ -5244,7 +5244,7 @@ static void _noise_fill_target(string& targ_prep, string& target,
     else if (pbolt.target == mons->pos())
         target = mons->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
-    // if they're targetting themselves.
+    // if they're targeting themselves.
     else if (mons->foe == MHITNOT && !mons_is_confused(mons, true))
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(mons->foe)
@@ -5447,7 +5447,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     int noise = _noise_level(mons, actual_spell, silent, innate);
 
-    const bool targeted = (flags & SPFLAG_TARGETTING_MASK)
+    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
                            && (pbolt.target != mons->pos()
                                || pbolt.visible())
                            // ugh. --Grunt

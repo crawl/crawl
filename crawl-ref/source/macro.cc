@@ -58,7 +58,7 @@ static macromap *all_maps[] =
 {
     &Keymaps[KMC_DEFAULT],
     &Keymaps[KMC_LEVELMAP],
-    &Keymaps[KMC_TARGETTING],
+    &Keymaps[KMC_TARGETING],
     &Keymaps[KMC_CONFIRM],
 
     &Macros,
@@ -876,7 +876,7 @@ static string _macro_type_name(bool keymap, KeymapContext keymc)
     return make_stringf("%s%s",
                         keymap ? (keymc == KMC_DEFAULT    ? "default " :
                                   keymc == KMC_LEVELMAP   ? "level-map " :
-                                  keymc == KMC_TARGETTING ? "targetting " :
+                                  keymc == KMC_TARGETING  ? "targeting " :
                                   keymc == KMC_CONFIRM    ? "confirm " :
                                   keymc == KMC_MENU       ? "menu "
                                   : "buggy") : "",
@@ -892,7 +892,7 @@ void macro_add_query(void)
 
     mesclr();
     mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
-                       "[(k) default, (x) level-map, (t)argetting, "
+                       "[(k) default, (x) level-map, (t)argeting, "
                        "(c)onfirm, m(e)nu], (s)ave? ");
     input = m_getch();
     int low = toalower(input);
@@ -910,7 +910,7 @@ void macro_add_query(void)
     else if (low == 't')
     {
         keymap = true;
-        keymc  = KMC_TARGETTING;
+        keymc  = KMC_TARGETING;
     }
     else if (low == 'c')
     {
@@ -1294,7 +1294,7 @@ static KeymapContext _context_for_command(command_type cmd)
         return KMC_LEVELMAP;
 
     if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
-        return KMC_TARGETTING;
+        return KMC_TARGETING;
 
 #ifdef USE_TILE
     if (cmd >= CMD_MIN_DOLL && cmd <= CMD_MAX_DOLL)

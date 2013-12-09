@@ -108,7 +108,7 @@ void init_spell_descs(void)
         ASSERTM(data.min_range <= data.max_range,
                 "spell '%s' has min_range larger than max_range", data.title);
 
-        ASSERTM(!(data.flags & SPFLAG_TARGETTING_MASK)
+        ASSERTM(!(data.flags & SPFLAG_TARGETING_MASK)
                 || (data.min_range >= 0 && data.max_range > 0),
                 "targeted/directed spell '%s' has invalid range", data.title);
 
@@ -414,7 +414,7 @@ bool spell_harms_target(spell_type spell)
     if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
         return false;
 
-    if (flags & SPFLAG_TARGETTING_MASK)
+    if (flags & SPFLAG_TARGETING_MASK)
         return true;
 
     return false;
@@ -737,7 +737,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 // FIXME: this should accept a direction_chooser_args directly rather
 // than move the arguments into one.
 bool spell_direction(dist &spelld, bolt &pbolt,
-                      targetting_type restrict, targ_mode_type mode,
+                      targeting_type restrict, targ_mode_type mode,
                       int range,
                       bool needs_path, bool may_target_monster,
                       bool may_target_self, const char *target_prefix,
@@ -1306,7 +1306,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         beam.beam_source = MHITYOU;
         beam.range = range;
         beam.is_tracer = true;
-        beam.is_targetting = true;
+        beam.is_targeting = true;
         beam.source  = you.pos();
         beam.dont_stop_player = true;
         beam.friend_info.dont_stop = true;

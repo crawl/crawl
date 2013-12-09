@@ -123,7 +123,7 @@ static bool _find_square_wrapper(coord_def &mfp, int direction,
                                  int range, targetter *hitfunc, bool wrap,
                                  int los = LS_ANY);
 
-static int  _targetting_cmd_to_compass(command_type command);
+static int  _targeting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
 static vector<string> _get_monster_desc_vector(const monster_info& mi);
@@ -247,7 +247,7 @@ bool direction_chooser::choose_compass()
             break;
         }
 
-        const int i = _targetting_cmd_to_compass(key_command);
+        const int i = _targeting_cmd_to_compass(key_command);
         if (i != -1)
             moves.delta = Compass[i];
         else if (key_command == CMD_TARGET_CANCEL)
@@ -265,7 +265,7 @@ bool direction_chooser::choose_compass()
     return moves.isValid;
 }
 
-static int _targetting_cmd_to_compass(command_type command)
+static int _targeting_cmd_to_compass(command_type command)
 {
     switch (command)
     {
@@ -323,7 +323,7 @@ monster* direction_chooser::targeted_monster() const
         return NULL;
 }
 
-string direction_chooser::build_targetting_hint_string() const
+string direction_chooser::build_targeting_hint_string() const
 {
     string hint_string;
 
@@ -365,7 +365,7 @@ void direction_chooser::print_key_hints() const
     }
     else
     {
-        const string hint_string = build_targetting_hint_string();
+        const string hint_string = build_targeting_hint_string();
         switch (restricts)
         {
         case DIR_NONE:
@@ -471,7 +471,7 @@ static bool _is_target_in_range(const coord_def& where, int range,
     return range == -1 || distance2(you.pos(), where) <= range*range + 1;
 }
 
-targetting_behaviour direction_chooser::stock_behaviour;
+targeting_behaviour direction_chooser::stock_behaviour;
 
 void direction(dist &moves, const direction_chooser_args& args)
 {
@@ -845,7 +845,7 @@ void do_look_around(const coord_def &whence)
 //
 //           isValid        a valid target or direction was chosen
 //           isCancel       player hit 'escape'
-//           isTarget       targetting was used
+//           isTarget       targeting was used
 //           choseRay       player wants a specific ray
 //           ray            ...this one
 //           isEndpoint     player wants the ray to stop on the dime
@@ -882,7 +882,7 @@ static void _fill_monster_list(bool full_info)
     }
 }
 
-// Skip all letters that have a special meaning in the targetting interface.
+// Skip all letters that have a special meaning in the targeting interface.
 // FIXME: Probably doesn't work well with redefined keys.
 // XXX: make sure to add exceptions to this and mlist_index_to_letter.
 static int _mlist_letter_to_index(char ltr)
@@ -1008,12 +1008,12 @@ static bool _blocked_ray(const coord_def &where,
 #ifndef USE_TILE_LOCAL
 static void _update_mlist(bool enable)
 {
-    crawl_state.mlist_targetting = enable;
+    crawl_state.mlist_targeting = enable;
     const int full_info = update_monster_pane();
     if (enable && full_info != -1)
         _fill_monster_list(full_info);
     else
-        crawl_state.mlist_targetting = false;
+        crawl_state.mlist_targeting = false;
 }
 #endif
 
@@ -1090,7 +1090,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     return success;
 }
 
-// Find a good square to start targetting from.
+// Find a good square to start targeting from.
 coord_def direction_chooser::find_default_target() const
 {
     coord_def result = you.pos();
@@ -1376,13 +1376,13 @@ bool direction_chooser::handle_signals()
         moves.isValid  = false;
         moves.isCancel = true;
 
-        mprf(MSGCH_ERROR, "Targetting interrupted by HUP signal.");
+        mprf(MSGCH_ERROR, "Targeting interrupted by HUP signal.");
         return true;
     }
     return false;
 }
 
-// Print out the initial prompt when targetting starts.
+// Print out the initial prompt when targeting starts.
 // Prompts might get scrolled off if you have too few lines available;
 // we'll live with that.
 void direction_chooser::show_initial_prompt()
@@ -1578,7 +1578,7 @@ void direction_chooser::reinitialize_move_flags()
     moves.choseRay   = false;
 }
 
-// Returns true if we've completed targetting.
+// Returns true if we've completed targeting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
     if (restricts != DIR_TARGET && restricts != DIR_JUMP)
@@ -1650,7 +1650,7 @@ bool direction_chooser::looking_at_you() const
 void direction_chooser::handle_movement_key(command_type key_command,
                                             bool* loop_done)
 {
-    const int compass_idx = _targetting_cmd_to_compass(key_command);
+    const int compass_idx = _targeting_cmd_to_compass(key_command);
     if (compass_idx != -1)
     {
         const coord_def& delta = Compass[compass_idx];
@@ -1778,7 +1778,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
 void direction_chooser::do_redraws()
 {
-    // Check if our targetting behaviour forces a redraw.
+    // Check if our targeting behaviour forces a redraw.
     if (behaviour->should_redraw())
     {
         need_all_redraw = true;
@@ -1874,7 +1874,7 @@ void direction_chooser::describe_target()
 
 void direction_chooser::show_help()
 {
-    show_targetting_help();
+    show_targeting_help();
     redraw_screen();
     mesclr(true);
     need_all_redraw = true;
@@ -1900,8 +1900,8 @@ bool direction_chooser::do_main_loop()
 
 #ifndef USE_TILE_LOCAL
     case CMD_TARGET_TOGGLE_MLIST:
-        Options.mlist_targetting = !Options.mlist_targetting;
-        _update_mlist(Options.mlist_targetting);
+        Options.mlist_targeting = !Options.mlist_targeting;
+        _update_mlist(Options.mlist_targeting);
         break;
 #endif
 
@@ -2046,7 +2046,7 @@ void direction_chooser::finalize_moves()
 bool direction_chooser::choose_direction()
 {
 #ifndef USE_TILE_LOCAL
-    if (may_target_monster && restricts != DIR_DIR && Options.mlist_targetting)
+    if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
         _update_mlist(true);
 #endif
 
@@ -2490,7 +2490,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
     }
 #endif
 
-    // Only check for explosive targetting at the edge of the range
+    // Only check for explosive targeting at the edge of the range
     if (you.pos().range(where) != range && !hitfunc->can_affect_walls())
         return false;
 
@@ -4057,40 +4057,40 @@ static void _describe_cell(const coord_def& where, bool in_range)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-// targetting_behaviour
+// targeting_behaviour
 
-targetting_behaviour::targetting_behaviour(bool look_around)
+targeting_behaviour::targeting_behaviour(bool look_around)
     : just_looking(look_around), compass(false)
 {
 }
 
-targetting_behaviour::~targetting_behaviour()
+targeting_behaviour::~targeting_behaviour()
 {
 }
 
-int targetting_behaviour::get_key()
+int targeting_behaviour::get_key()
 {
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
     flush_prev_message();
     msgwin_got_input();
-    return unmangle_direction_keys(getchm(KMC_TARGETTING), KMC_TARGETTING,
+    return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
                                    false, false);
 }
 
-command_type targetting_behaviour::get_command(int key)
+command_type targeting_behaviour::get_command(int key)
 {
     if (key == -1)
         key = get_key();
 
-    command_type cmd = key_to_command(key, KMC_TARGETTING);
+    command_type cmd = key_to_command(key, KMC_TARGETING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_PREV_TARGET)
         return cmd;
 
 #ifndef USE_TILE_LOCAL
-    // Overrides the movement keys while mlist_targetting is active.
-    if (crawl_state.mlist_targetting && isalower(key))
+    // Overrides the movement keys while mlist_targeting is active.
+    if (crawl_state.mlist_targeting && isalower(key))
         return static_cast<command_type>(CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 
@@ -4101,7 +4101,7 @@ command_type targetting_behaviour::get_command(int key)
     return cmd;
 }
 
-vector<string> targetting_behaviour::get_monster_desc(const monster_info& mi)
+vector<string> targeting_behaviour::get_monster_desc(const monster_info& mi)
 {
     vector<string> descs;
     if (get_desc_func)

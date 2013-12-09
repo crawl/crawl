@@ -4627,7 +4627,7 @@ bool monster::has_hydra_multi_attack() const
     return mons_genus(mons_base_type(this)) == MONS_HYDRA;
 }
 
-bool monster::has_multitargetting() const
+bool monster::has_multitargeting() const
 {
     if (mons_wields_two_weapons(this))
         return true;

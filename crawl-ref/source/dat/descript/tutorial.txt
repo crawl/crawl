@@ -373,7 +373,7 @@ this cloak with <input>$cmd[CMD_WEAR_ARMOUR]</input><localtiles> or
 %%%%
 tutorial3 wand_fire
 
-# TODO: The wand targetting screen could perhaps use a little context help.
+# TODO: The wand targeting screen could perhaps use a little context help.
 You can evoke a wand with <input>$cmd[CMD_EVOKE]</input><localtiles> or with
 <input>mouseclick</input> in the inventory panel</localtiles>.
 %%%%

@@ -219,7 +219,7 @@ static monster* _init_fsim()
 
     if (mtype == MONS_PROGRAM_BUG && monster_nearby())
     {
-        // get a monster via targetting.
+        // get a monster via targeting.
         dist moves;
         direction_chooser_args args;
         args.needs_path = false;

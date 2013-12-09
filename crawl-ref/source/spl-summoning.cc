@@ -2715,7 +2715,7 @@ bool fire_battlesphere(monster* mons)
         // Sanity check: if we have somehow ended up targetting ourselves, bail
         if (beam.target == mons->pos())
         {
-            mprf(MSGCH_ERROR, "Battlesphere targetting itself? Fixing.");
+            mprf(MSGCH_ERROR, "Battlesphere targeting itself? Fixing.");
             mons->props.erase("firing");
             mons->props.erase("firing_target");
             mons->props.erase("foe");
@@ -2828,7 +2828,7 @@ spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
         return SPRET_ABORT;
     }
 
-    // Note that self-targetting is handled by SPFLAG_NOT_SELF.
+    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
     monster* mons = monster_at(where);
     if (mons)
     {
