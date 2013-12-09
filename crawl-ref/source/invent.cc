@@ -2003,18 +2003,13 @@ int prompt_invent_item(const char *prompt,
     return ret;
 }
 
-bool prompt_failed(int retval, string msg)
+bool prompt_failed(int retval)
 {
     if (retval != PROMPT_ABORT && retval != PROMPT_NOTHING)
         return false;
 
-    if (msg.empty())
-    {
-        if (retval == PROMPT_ABORT)
-            canned_msg(MSG_OK);
-    }
-    else
-        mprf(MSGCH_PROMPT, "%s", msg.c_str());
+    if (retval == PROMPT_ABORT)
+        canned_msg(MSG_OK);
 
     crawl_state.cancel_cmd_repeat();
 
