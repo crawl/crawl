@@ -1088,6 +1088,7 @@ ENUM:     SPIDER
 NAME:     boots of the spider
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
 TILE:     urand_spider
+TILE_EQ:  spider
 PLUS:     +3
 BRAND:    SPARM_JUMPING
 COLOUR:   LIGHTMAGENTA
