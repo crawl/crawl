@@ -561,7 +561,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         {
             special = artefact_wpn_property(item, ARTP_BRAND);
 
-            if (!was_known)
+            if (!was_known && !(item.flags & ISFLAG_NOTED_ID))
             {
                 item.flags |= ISFLAG_NOTED_ID;
 
