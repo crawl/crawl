@@ -324,7 +324,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
  *
  * As twins, pacifying one pacifies the other.
  *
- * @param twin    The orignial monster pacified.
+ * @param twin    The original monster pacified.
 **/
 void elven_twins_pacify(monster* twin)
 {
