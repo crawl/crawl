@@ -756,9 +756,8 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
             int charge_gain = wand_charge_value(wand.sub_type);
 
             const int new_charges =
-                max<int>(
-                    wand.plus,
-                    min(charge_gain * 3,
+                max<int>(wand.plus,
+                         min(charge_gain * 3,
                              wand.plus +
                              1 + random2avg(((charge_gain - 1) * 3) + 1, 3)));
 
@@ -797,7 +796,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
 
             if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
             {
-                wand.plus2 += ROD_CHARGE_MULT * random_range(1,2);
+                wand.plus2 += ROD_CHARGE_MULT * random_range(1, 2);
 
                 if (wand.plus2 > MAX_ROD_CHARGE * ROD_CHARGE_MULT)
                     wand.plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;

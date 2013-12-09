@@ -3007,8 +3007,7 @@ bool fedhas_evolve_flora()
 
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
-        simple_monster_message(plant,
-                               " can now pick up its mycelia and move.");
+        simple_monster_message(plant, " can now pick up its mycelia and move.");
         break;
 
     case MONS_BALLISTOMYCETE:

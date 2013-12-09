@@ -1831,14 +1831,14 @@ bool check_warning_inscriptions(const item_def& item,
 //
 // Note: This function never checks if the item is appropriate.
 int prompt_invent_item(const char *prompt,
-                        menu_type mtype, int type_expect,
-                        bool must_exist, bool allow_auto_list,
-                        bool allow_easy_quit,
-                        const char other_valid_char,
-                        int excluded_slot,
-                        int *const count,
-                        operation_types oper,
-                        bool allow_list_known)
+                       menu_type mtype, int type_expect,
+                       bool must_exist, bool allow_auto_list,
+                       bool allow_easy_quit,
+                       const char other_valid_char,
+                       int excluded_slot,
+                       int *const count,
+                       operation_types oper,
+                       bool allow_list_known)
 {
     if (!any_items_to_select(type_expect, false, excluded_slot)
         && type_expect == OSEL_THROWABLE

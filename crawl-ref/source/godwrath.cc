@@ -886,8 +886,8 @@ static bool _vehumet_retribution()
 
     simple_god_message("'s vengeance finds you.", god);
     MiscastEffect(&you, -god, SPTYP_CONJURATION,
-                   8 + you.experience_level, random2avg(98, 3),
-                   "the wrath of Vehumet");
+                  8 + you.experience_level, random2avg(98, 3),
+                  "the wrath of Vehumet");
     return true;
 }
 
@@ -1138,8 +1138,8 @@ static bool _fedhas_retribution()
             for (; i < radius_points[0].size(); ++i)
             {
                 temp.pos = radius_points[0].at(i);
-                temp.cls = coinflip() ?
-                           MONS_WANDERING_MUSHROOM : MONS_OKLOB_PLANT;
+                temp.cls = coinflip() ? MONS_WANDERING_MUSHROOM
+                                      : MONS_OKLOB_PLANT;
 
                 if (create_monster(temp, false))
                     success = true;
