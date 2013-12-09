@@ -638,7 +638,7 @@ bool liquefied(const coord_def& p, bool check_actual)
     if (feat_is_water(grd(p)))
         return false;
 
-    // "actually" liquified (ie, check for movement)
+    // "actually" liquefied (ie, check for movement)
     if (check_actual)
         return _check_agrid_flag(p, APROP_ACTUAL_LIQUID);
     // just recoloured for consistency

@@ -31,7 +31,7 @@ bool silenced(const coord_def& p);
 // Does the given point lie within a halo?
 bool haloed(const coord_def& p);
 
-// or is the ground there liquified?
+// or is the ground there liquefied?
 bool liquefied(const coord_def& p, bool check_actual = true);
 
 // Is it enlightened by the orb?
