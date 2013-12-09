@@ -181,8 +181,8 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb,
     {
         string msg = (move_verb == "jump-attack"
                       ? "Do you really want to %s when you might land in "
-                      "the Zot trap"
-                      : "Do you really want to %s into the Zot trap");
+                      "the Zot trap?"
+                      : "Do you really want to %s into the Zot trap?");
         string prompt = make_stringf(msg.c_str(), move_verb.c_str());
 
         if (prompted)

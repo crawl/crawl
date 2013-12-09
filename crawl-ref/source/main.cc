@@ -2128,7 +2128,7 @@ void process_command(command_type cmd)
 
     case CMD_QUIT:
         if (crawl_state.disables[DIS_CONFIRMATIONS]
-            || yes_or_no("Are you sure you want to abandon this character and quit the game"))
+            || yes_or_no("Are you sure you want to abandon this character and quit the game?"))
         {
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
         }
