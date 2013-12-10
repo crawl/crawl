@@ -693,6 +693,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     lvl               = se.lvl;
     best_skill        = se.best_skill;
     best_skill_lvl    = se.best_skill_lvl;
+    title             = se.title;
     death_type        = se.death_type;
     death_source      = se.death_source;
     death_source_name = se.death_source_name;
@@ -897,6 +898,7 @@ void scorefile_entry::init_with_fields()
 
     best_skill     = str_to_skill(fields->str_field("sk"));
     best_skill_lvl = fields->int_field("sklev");
+    title          = fields->str_field("title");
 
     death_type        = _str_to_kill_method(fields->str_field("ktyp"));
     death_source_name = fields->str_field("killer");
@@ -983,9 +985,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("xl",    "%d", lvl);
     fields->add_field("sk",    "%s", skill_name(best_skill));
     fields->add_field("sklev", "%d", best_skill_lvl);
-    fields->add_field("title", "%s",
-                      skill_title(best_skill, best_skill_lvl,
-                                  race, str, dex, god).c_str());
+    fields->add_field("title", "%s", title.c_str());
 
     fields->add_field("place", "%s",
                       place_name(get_packed_place(branch, dlvl),
@@ -1298,6 +1298,7 @@ void scorefile_entry::reset()
     race_class_name.clear();
     best_skill           = SK_NONE;
     best_skill_lvl       = 0;
+    title.clear();
     death_type           = KILLED_BY_SOMETHING;
     death_source         = NON_MONSTER;
     death_source_name.clear();
@@ -1465,6 +1466,7 @@ void scorefile_entry::init(time_t dt)
     lvl            = you.experience_level;
     best_skill     = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_lvl = you.skills[ best_skill ];
+    title          = player_title();
 
     // Note all skills at level 27, and also all skills at level >= 15.
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
@@ -1804,10 +1806,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     if (verbose)
     {
         snprintf(buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
-                  points, name.c_str(),
-                  skill_title(best_skill, best_skill_lvl,
-                               race, str, dex, god, piety).c_str(),
-                  lvl);
+                  points, name.c_str(), title.c_str(), lvl);
         desc = buf;
     }
     else
