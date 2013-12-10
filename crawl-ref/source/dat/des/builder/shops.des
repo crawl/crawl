@@ -210,7 +210,7 @@ SUBST: G : YlG
 :   lantern of shadows w:5 | book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
 :   grand grimoire w:1 | scythe unrand:scythe_of_curses w:1 | \
-:   long sword unrand:sword_of_zonguldrok w:1 | mace unrand:sceptre_of_torment w:1")
+:   double sword unrand:sword_of_zonguldrok w:1 | mace unrand:sceptre_of_torment w:1")
 KFEAT: a = altar_kikubaaqudgha / altar_yredelemnul / altar_makhleb / \
            altar_beogh w:1 / altar_lugonu w:1
 MAP

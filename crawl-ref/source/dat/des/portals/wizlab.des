@@ -1317,7 +1317,7 @@ LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 NSUBST:     d = 2:e / 1:f / * = d:20 e:2
 ITEM:       any scroll / any potion, any book w:2
-ITEM:       long sword unrand:sword_of_zonguldrok
+ITEM:       double sword unrand:sword_of_zonguldrok
 KFEAT:      GW = G no_mimic
 KPROP:      12'def$ZL+ = no_rtele_into
 {{
