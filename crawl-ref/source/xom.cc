@@ -1109,6 +1109,9 @@ static int _xom_do_potion(bool debug = false)
     if (pot == POT_BERSERK_RAGE)
         you.berserk_penalty = NO_BERSERK_PENALTY;
 
+    if (pot == POT_INVISIBILITY)
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
+
     // Take a note.
     string potion_msg = "potion effect ";
     switch (pot)
