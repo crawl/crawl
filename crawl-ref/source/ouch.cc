@@ -1084,7 +1084,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         if (dam > 0 && you.hp_max <= dam * 2)
             mprf(MSGCH_DANGER, "Ouch! That really hurt!");
 
-        if (you.hp > 0)
+        if (you.hp > 0 && dam > 0)
         {
             if (Options.hp_warning
                 && you.hp <= (you.hp_max * Options.hp_warning) / 100)
@@ -1114,9 +1114,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
             _powered_by_pain(dam);
-
-            return;
-        } // else hp <= 0
+        }
+        if (you.hp > 0)
+          return;
     }
 
     // Is the player being killed by a direct act of Xom?
