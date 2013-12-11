@@ -244,7 +244,7 @@ bool wizard_create_feature(const coord_def& pos)
     else
         mprf(MSGCH_PROMPT, "Create which feature? ");
 
-    if (cancellable_get_line(specs, sizeof(specs)) || specs[0] == 0)
+    if (cancellable_get_line_autohist(specs, sizeof(specs)) || specs[0] == 0)
     {
         canned_msg(MSG_OK);
         return false;
