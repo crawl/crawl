@@ -1947,17 +1947,14 @@ static bool _jiyva_mutate()
 
 bool vehumet_is_offering(spell_type spell)
 {
-    return find(you.vehumet_gifts.begin(), you.vehumet_gifts.end(), spell)
-           != you.vehumet_gifts.end();
+    return you.vehumet_gifts.count(spell);
 }
 
 void vehumet_accept_gift(spell_type spell)
 {
-    set<spell_type>::iterator it =
-        find(you.vehumet_gifts.begin(), you.vehumet_gifts.end(), spell);
-    if (it != you.vehumet_gifts.end())
+    if (vehumet_is_offering(spell))
     {
-        you.vehumet_gifts.erase(it);
+        you.vehumet_gifts.erase(spell);
         you.seen_spell.set(spell);
         you.duration[DUR_VEHUMET_GIFT] = 0;
     }
@@ -1970,9 +1967,7 @@ static void _add_to_old_gifts(spell_type spell)
 
 static bool _is_old_gift(spell_type spell)
 {
-    return find(you.old_vehumet_gifts.begin(),
-                you.old_vehumet_gifts.end(), spell)
-           != you.old_vehumet_gifts.end();
+    return you.old_vehumet_gifts.count(spell);
 }
 
 static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_spells)
@@ -1998,11 +1993,8 @@ static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_sp
         if (!is_valid_spell(spell))
             continue;
 
-        if (find(excluded_spells.begin(), excluded_spells.end(), spell)
-            != excluded_spells.end())
-        {
+        if (excluded_spells.count(spell))
             continue;
-        }
 
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
