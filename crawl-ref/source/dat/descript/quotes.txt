@@ -114,6 +114,10 @@ A staircase to the Ecumenical Temple
 
 <Temple>
 %%%%
+A staircase to the Shoals
+
+<Shoals>
+%%%%
 A staircase to the Tomb
 
 <Tomb>
@@ -402,6 +406,11 @@ Psyche
  And darkness eke as thrall to him remain.”
     -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
     trans. William Adlington, 1566.
+%%%%
+Shoals
+
+“No man is island, except Lo Wang.”
+    -Shadow Warrior
 %%%%
 Sigmund
 
