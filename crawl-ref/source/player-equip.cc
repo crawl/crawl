@@ -934,7 +934,16 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_FLYING:
-            mpr("You feel rather light.");
+            if (you.airborne())
+            {
+                you.attribute[ATTR_PERM_FLIGHT] = 1;
+                mpr("You feel rather light.");
+            }
+            else
+            {
+                you.attribute[ATTR_PERM_FLIGHT] = 1;
+                float_player();
+            }
             break;
 
         case SPARM_JUMPING:
