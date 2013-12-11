@@ -19,6 +19,7 @@
 #include "describe.h"
 #include "decks.h"
 #include "dgn-overview.h"
+#include "files.h"
 #include "food.h"
 #include "invent.h"
 #include "items.h"
@@ -2837,6 +2838,9 @@ void ShoppingList::item_type_identified(object_class_type base_type,
     if (!crawl_state.need_save)
         return;
 
+    // Only restore the excursion at the very end.
+    level_excursion le;
+
     for (unsigned int i = 0; i < list->size(); i++)
     {
         CrawlHashTable &thing = (*list)[i];
@@ -2849,7 +2853,11 @@ void ShoppingList::item_type_identified(object_class_type base_type,
         if (item.base_type != base_type || item.sub_type != sub_type)
             continue;
 
-        shop_struct *shop = get_shop(thing_pos(thing).pos);
+        const level_pos place = thing_pos(thing);
+
+        le.go_to(place.id);
+        const shop_struct *shop = get_shop(place.pos);
+        ASSERT(shop);
         if (shoptype_identifies_stock(shop->type))
             continue;
 
