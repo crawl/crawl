@@ -3567,7 +3567,7 @@ void tile_item_eat_floor(int idx)
         if (can_ingest(mitm[idx], false)
             && _prompt_eat_bad_food(mitm[idx]))
         {
-            eat_floor_item(idx);
+            eat_item(mitm[idx]);
         }
     }
 }

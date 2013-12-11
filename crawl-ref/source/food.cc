@@ -646,9 +646,9 @@ bool prompt_eat_inventory_item(int slot)
 
     // This conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
+    item_def &item(you.inv[which_inventory_slot]);
     if (you.form == TRAN_JELLY)
     {
-        const item_def &item(you.inv[which_inventory_slot]);
         if (item_is_melded(item))
         {
             // Allowing eating it would be natural, but we don't want to
@@ -659,7 +659,7 @@ bool prompt_eat_inventory_item(int slot)
     }
     else if (you.species != SP_VAMPIRE)
     {
-        if (you.inv[which_inventory_slot].base_type != OBJ_FOOD)
+        if (item.base_type != OBJ_FOOD)
         {
             mpr("You can't eat that!");
             return false;
@@ -667,18 +667,17 @@ bool prompt_eat_inventory_item(int slot)
     }
     else
     {
-        if (you.inv[which_inventory_slot].base_type != OBJ_CORPSES
-            || you.inv[which_inventory_slot].sub_type != CORPSE_BODY)
+        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         {
             mpr("You crave blood!");
             return false;
         }
     }
 
-    if (!can_ingest(you.inv[which_inventory_slot], false))
+    if (!can_ingest(item, false))
         return false;
 
-    eat_inventory_item(which_inventory_slot);
+    eat_item(item);
 
     burden_change();
     you.turn_is_over = true;
@@ -997,52 +996,38 @@ static bool _player_can_eat_rotten_meat(bool need_msg = false)
     return false;
 }
 
-// Should really be merged into function below. -- FIXME
-void eat_inventory_item(int which_inventory_slot)
+bool eat_item(item_def &food)
 {
-    item_def& food(you.inv[which_inventory_slot]);
+    int link;
 
-    if (you.form == TRAN_JELLY)
-        _eating(food);
-    else if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
-    {
-        _vampire_consume_corpse(which_inventory_slot, true);
-        you.turn_is_over = true;
-        return;
-    }
-    else if (food.sub_type == FOOD_CHUNK)
-    {
-        if (food_is_rotten(food) && !_player_can_eat_rotten_meat(true))
-            return;
-
-        _eat_chunk(food);
-    }
+    if (in_inventory(food))
+        link = food.link;
     else
-        _eating(food);
+    {
+        link = item_on_floor(food, you.pos());
+        if (link == NON_ITEM)
+            return false;
+    }
 
-    you.turn_is_over = true;
-    dec_inv_item_quantity(which_inventory_slot, 1);
-}
-
-void eat_floor_item(int item_link)
-{
-    item_def& food(mitm[item_link]);
     if (you.form == TRAN_JELLY)
         _eating(food);
     else if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
     {
         if (you.species != SP_VAMPIRE)
-            return;
+            return false;
 
-        if (_vampire_consume_corpse(item_link, false))
+        if (_vampire_consume_corpse(link, in_inventory(food)))
+        {
             you.turn_is_over = true;
-
-        return;
+            return true;
+        }
+        else
+            return false;
     }
     else if (food.sub_type == FOOD_CHUNK)
     {
         if (food_is_rotten(food) && !_player_can_eat_rotten_meat(true))
-            return;
+            return false;
 
         _eat_chunk(food);
     }
@@ -1051,7 +1036,12 @@ void eat_floor_item(int item_link)
 
     you.turn_is_over = true;
 
-    dec_mitm_item_quantity(item_link, 1);
+    if (in_inventory(food))
+        dec_inv_item_quantity(link, 1);
+    else
+        dec_mitm_item_quantity(link, 1);
+
+    return true;
 }
 
 // Returns which of two food items is older (true for first, else false).
@@ -1114,7 +1104,7 @@ int eat_from_floor(bool skip_chunks)
     item_def wonteat;
     bool found_valid = false;
 
-    vector<const item_def*> food_items;
+    vector<item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (you.form == TRAN_JELLY)
@@ -1189,22 +1179,14 @@ int eat_from_floor(bool skip_chunks)
 
             if (can_ingest(*item, false))
             {
-                int ilink = item_on_floor(*item, you.pos());
-
-                if (ilink != NON_ITEM)
-                {
-                    eat_floor_item(ilink);
-                    return true;
-                }
-                else
-                    return false;
+                return eat_item(*item);
             }
         }
 #else
         sort(food_items.begin(), food_items.end(), compare_by_freshness());
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
-            const item_def *item = food_items[i];
+            item_def *item = food_items[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
@@ -1226,14 +1208,7 @@ int eat_from_floor(bool skip_chunks)
 
                 if (can_ingest(*item, false))
                 {
-                    int ilink = item_on_floor(*item, you.pos());
-
-                    if (ilink != NON_ITEM)
-                    {
-                        eat_floor_item(ilink);
-                        return true;
-                    }
-                    return false;
+                    return eat_item(*item);
                 }
                 need_more = true;
                 break;
@@ -1381,8 +1356,7 @@ bool eat_from_inventory()
             case 'y':
                 if (can_ingest(*item, false))
                 {
-                    eat_inventory_item(item->link);
-                    return true;
+                    return eat_item(*item);
                 }
                 break;
             default:
@@ -1556,22 +1530,10 @@ int prompt_eat_chunks(bool only_auto)
                              item_name.c_str());
                     }
 
-                    if (in_inventory(*item))
-                    {
-                        eat_inventory_item(item->link);
+                    if (eat_item(*item))
                         return 1;
-                    }
                     else
-                    {
-                        int ilink = item_on_floor(*item, you.pos());
-
-                        if (ilink != NON_ITEM)
-                        {
-                            eat_floor_item(ilink);
-                            return 1;
-                        }
                         return 0;
-                    }
                 }
                 break;
             default:
