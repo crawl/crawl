@@ -2299,7 +2299,7 @@ bool do_god_gift(bool forced)
                         take_note(Note(NOTE_OFFERED_SPELL, *it));
                     }
                     prompt += ".";
-                    if (offers.size() > 1)
+                    if (gifts >= NUM_VEHUMET_GIFTS - 1)
                     {
                         prompt += " These spells will remain available"
                                   " as long as you worship Vehumet.";
