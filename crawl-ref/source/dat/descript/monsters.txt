@@ -1,3 +1,4 @@
+%%%%
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
@@ -2161,7 +2162,9 @@ A dirty rodent that has grown large and aggressive in the dungeon environment.
 %%%%
 raiju
 
-An eldritch hound, crackling with electric and translocation energies.
+An profoundly unnatural hound, crackling with electricity. It is distinct in
+how it can transform into living lightning and bolt forth, both harmlessly
+passing by pack mates and painfully piercing prey.
 %%%%
 raven
 
@@ -2431,7 +2434,8 @@ radiates an intense aura of negative force.
 %%%%
 spatial maelstrom
 
-A malevolent rift in reality.
+A malevolent rift in reality, dissolving all terrain it passes by into swirling
+vortexes with an intent of reducing existence to an empty, writhing void.
 %%%%
 spatial vortex
 
