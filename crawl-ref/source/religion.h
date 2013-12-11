@@ -18,6 +18,8 @@
 
 #define MAX_PENANCE    200
 
+#define NUM_VEHUMET_GIFTS 13
+
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
