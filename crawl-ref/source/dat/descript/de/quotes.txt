@@ -775,7 +775,7 @@ robe
 Unsterblichkeit!”
     -William Shakespeare, _Anthonius & Cleopatra_, V, ii. ca. 1605.
 %%%%
-sabre
+cutlass
 
 “Wer hat bloß als erster die schrecklichen Schwerter erfunden?
  Wie grausam und wahrhaft hartherzig war der! ...”

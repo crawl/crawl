@@ -633,11 +633,6 @@ The open sea
 Nichts außer endlosem Wind und Wellen, und kein Leuchtturm in Sicht. Du würdest
 sehr schnell hoffnungslos verloren sein – riskiere es lieber nicht.
 %%%%
-An empty arch of stone
-
-Dies ist das Portal, durch das du hierher kamst; nun scheint es seiner Magie
-beraubt worden zu sein.
-%%%%
 A portal leading out of here
 
 Dieses schimmernde magische Tor wird dich aus der Behausung des Zauberers
@@ -671,11 +666,6 @@ und unzerstörbar zu sein.
 A crystal clear mirror
 
 Ein glitzernder Kristallspiegel, der alles um sich herum reflektiert.
-%%%%
-A strange machine
-
-Ein mechanischer Apparat, der zischt und knallt. Sein Material spiegelt das
-Licht.
 %%%%
 A glistening fountain
 
@@ -767,12 +757,6 @@ A wall of white crystal
 Dies ist minderwertiger Kristall. Er ist kaum durchsichtig, und seine schiefen
 Konturen machen es noch schlimmer. Der schillernde Glanz sieht allerdings immer
 noch ziemlich gut aus.
-%%%%
-A wall of transparent white crystal
-
-Dieser Kristall scheint tadellos und unvergänglich zu sein. Es könnte Diamant
-oder etwas ähnliches sein – was auch immer es ist, du bist nicht dazu in der
-Lage, diese Wand zu durchbrechen.
 %%%%
 A hot floor
 

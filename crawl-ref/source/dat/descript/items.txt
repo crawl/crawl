@@ -498,9 +498,9 @@ An incredibly heavy but extremely effective suit of crystalline armour.
 cutlass
 
 A broad curved short sword, akin to a sabre but smaller. It excels at
-close-quarters combat, having decent power yet being wieldy enough to still
-be a good fit for sneak attacks. You feel an urge to swash a buckler, and
-to grab some loot.
+close-quarters combat, having decent power yet being wieldy enough to still be
+a good fit for sneak attacks. You feel an urge to swash a buckler, and to grab
+some loot.
 %%%%
 dagger
 

@@ -152,8 +152,8 @@ finished random 2
 %%%%
 finished random 3
 
-Вы можете попросить других игроков о помощи на IRC (Internet Relay Chat)
-канале <w>##crawl</w> на freenode (<w>irc.freenode.net</w>).
+Вы можете попросить других игроков о помощи на IRC (Internet Relay Chat) канале
+<w>##crawl</w> на freenode (<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 

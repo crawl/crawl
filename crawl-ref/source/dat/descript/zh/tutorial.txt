@@ -259,7 +259,7 @@ tutorial3 armour
 按<input>$cmd[CMD_PICKUP]</input>来捡起这双靴子，
 并按<input>$cmd[CMD_WEAR_ARMOUR]</input>来穿上它们。
 <localtiles>或者在物品栏内的图标上<input>鼠标点击</input>，也能收到同样的效果。
-</localtiles>
+ </localtiles>
 %%%%
 tutorial3 autopickup
 
@@ -299,7 +299,7 @@ tutorial3 command_help
 
 如果这么多指令让你感觉有点头晕，
 你也可以在指令帮助（<input>$cmd[CMD_DISPLAY_COMMANDS]</input>）中查找各个指令。
-<localtiles>部分指令也可以通过点击屏幕右边的<w>指令面板</w>来实现。
+ <localtiles>部分指令也可以通过点击屏幕右边的<w>指令面板</w>来实现。
 </localtiles>和以前一样，
 你可以按<input>$cmd[CMD_REPLAY_MESSAGES]</input>来查阅过去的信息。
 %%%%

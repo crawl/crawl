@@ -931,14 +931,6 @@ pair of boots
 
 Ein Paar Stiefel.
 %%%%
-pair of bracers
-
-Ein Paar Armschienen.
-%%%%
-pair of gauntlets
-
-Ein Paar Kampfhandschuhe.
-%%%%
 pair of gloves
 
 Ein Paar Handschuhe

@@ -18,8 +18,18 @@ de ces enchantements.
 %%%%
 Breathe Fire ability
 
-Crache un souffle de flammes sur un monstre ciblé, qui laissera probablement un
-nuage enflammé dans son sillage.
+{{
+    local desc = "Crache un souffle de flammes sur un monstre ciblé"
+
+    if you.race() == "Red Draconian" then
+        desc = desc .. ", qui laissera probablement un nuage enflammé à
+l'impact."
+    end
+
+    desc = desc .. "."
+
+    return desc
+}}
 %%%%
 Breathe Frost ability
 
@@ -68,10 +78,9 @@ Crache de l'acide sur un monstre ciblé.
 %%%%
 Fly ability
 
-Commencer à voler. Durant la lévitation, vous pouvez traverser en toute
-sécurité les eaux profondes et les obstacles similaires. soyez conscient que la
-lévitation peut s'achever à un moment inopportun et vous faire tomber vers
-votre mort.
+Commencer à voler. En vol, vous pouvez traverser en toute sécurité les eaux
+profondes et les obstacles similaires. Soyez conscient que le vol peut
+s'achever à un moment inopportun et vous faire chuter vers votre mort.
 %%%%
 Jump Attack ability
 
@@ -157,7 +166,7 @@ Arrêter de voler
 %%%%
 Evoke Fog ability
 
-Relâches un large et épais brouillard pour diminuer la vision.
+Relâches un large et épais brouillard qui diminue le champ de vision.
 %%%%
 Evoke Teleport Control ability
 
@@ -208,8 +217,8 @@ prison est accrue avec la compétence Invocations.
 Sanctuary ability
 
 Pour une courte durée, vous gagnez la sécurité d'un refuge divin. Pendant que
-vous êtes à l'intérieur du sanctuaire, les monstres ne vous attaqueront pas
-mais, la protection disparait immédiatement si vous veniez à briser cette paix
+vous êtes à l'intérieur du sanctuaire, les monstres ne vous attaqueront pas,
+mais la protection disparait immédiatement si vous veniez à briser cette paix
 divine.
 %%%%
 Cure All Mutations ability
@@ -329,15 +338,15 @@ d'Invocations.
 %%%%
 Forget Spell ability
 
-Oubliez n'importe quel sort que vous aviez mémorisé, afin de libérer votre
-mémoire et permettre d'en apprendre de nouveaux.
+Oubliez un des sorts que vous avez mémorisé, afin de libérer votre mémoire et
+vous permettre d'en apprendre de nouveaux.
 %%%%
 Burn Spellbooks ability
 
-Enflamme tous les livres de sorts dans le champ de vision. Le feu est alimenté
-par la haine de Trog, et il est bien plus fort que s'il brûlait de simples
-parchemins — cela peut être fort utile si vous jetez le livre aux pieds de
-quelqu'un. Bien évidemment, Trog apprécie l'utilisation de ce pouvoir.
+Enflamme tous les livres de sorts dans votre champ de vision. Le feu est
+alimenté par la haine de Trog, et il est bien plus fort que s'il brûlait de
+simples parchemins — cela peut être fort utile si vous jetez le livre aux pieds
+de quelqu'un. Bien évidemment, Trog apprécie l'utilisation de ce pouvoir.
 %%%%
 Berserk ability
 
@@ -464,27 +473,27 @@ celui-ci.
 %%%%
 Peek at Two ability
 
-Jeter une carte de n'importe quel paquet de votre inventaire et tirer deux
+Défaussez une carte de n'importe quel paquet de votre inventaire et tirer deux
 cartes de votre paquet, regardez-les, et mélangez les dans le paquet. Le paquet
 sera alors marqué comme contenant ces deux cartes. Si elles sont différentes,
 cela identifiera le paquet.
 %%%%
 Triple Draw ability
 
-Tirer trois cartes de n'importe quel paquet de votre inventaire, regardez-les
+Piochez trois cartes de n'importe quel paquet de votre inventaire, regardez-les
 et, décidez laquelle conserver avant de jeter les deux autres.
 %%%%
 Deal Four ability
 
-Tirer quatre cartes de n'importe quel paquet non marqué, comme si vous ne
-tiriez qu'une seule carte. Le reste du paquet est perdu. Si le paquet ne
-contient pas assez de cartes, Nemelex vous en donnera une  mais, vous pourriez
-ne pas apprécier du tout.
+Sort quatre cartes de n'importe quel paquet non marqué, comme si vous ne tiriez
+qu'une seule carte. Le reste du paquet est perdu. Si le paquet ne contient pas
+assez de cartes, Nemelex vous en donnera une  mais, vous pourriez ne pas
+apprécier du tout.
 %%%%
 Stack Five ability
 
-Tirez cinq cartes de n'importe quel paquet non marqué de votre inventaire,
-perdant le reste du jeu. Regardez les cartes et arrangez-les dans l'ordre que
+Piochez cinq cartes de n'importe quel paquet non marqué de votre inventaire, et
+défaussez le reste du jeu. Regardez les cartes et arrangez-les dans l'ordre que
 vous voulez. Par la suite, vous tirerez les cartes dans l'ordre choisi.
 %%%%
 Smiting ability
@@ -532,9 +541,9 @@ Evolution ability
 
 Transformez les plantes et les champignons en des espèces plus puissantes.
 Améliorer un champignon requière de la piété, améliorer des plantes requière
-des fruits. Les plantes améliorées gagnent un bonus en efficacité d'attaque
-proportionnel à la compétence d'Invocations de l'utilisateur et, les plantes
-oklob pourraient cracher de l'acide avec un haut niveau d'invocations.
+des fruits. Les plantes améliorées gagnent un bonus en précision proportionnel
+à la compétence d'Invocations de l'utilisateur et, les plantes oklob pourraient
+cracher de l'acide avec un haut niveau d'invocations.
 %%%%
 Bend Time ability
 
@@ -543,8 +552,8 @@ rend plus difficile a résister.
 %%%%
 Temporal Distortion ability
 
-Perturbe l'écoulement du temps autour de vous, déplaçant les monstres plus loin
-dans le temps par rapport à vous.
+Perturbe l'écoulement du temps autour de vous, déplaçant les monstres plus
+avant dans le temps par rapport à vous.
 %%%%
 Slouch ability
 
@@ -597,9 +606,9 @@ généralement le met en colère).
 %%%%
 Convert to Beogh ability
 
-Jurez fidélité à Beogh, le dieu des cavernes orcs. Ce dieu exige que tous les
-non-croyants doivent mourir, mais les nouveaux croyants doivent être épargné et
-accepté dans le giron. Attention, les orcs n'ayant pas vu en vous le messie,
+Jurez fidélité à Beogh, le dieu des orcs des cavernes. Ce dieu exige que tous
+les non-croyants perissent, mais les nouveaux croyants doivent être épargné et
+accepté dans son giron. Attention, les orcs n'ayant pas vu en vous le messie
 peuvent être hostile jusqu'à ce que votre réputation soit plus grande!
 
 Tous les autres dieux détestent Beogh, et ne prennent pas à la légère la
@@ -689,8 +698,8 @@ Crée une marre d'eau peu profonde sur votre position.
 %%%%
 Make lightning spire ability
 
-Construit une lance de foudre sur la position ciblée, qui peut tirer des
-éclairs.
+Construit une lance de foudre , qui peut tirer des éclairs, sur la position
+ciblée.
 %%%%
 Make silver statue ability
 
@@ -707,7 +716,7 @@ Obtenir une grande quantité d'or.
 %%%%
 Make oklob circle ability
 
-Crée un cercle de plantes oklob centré autour de la position ciblée
+Crée un cercle de plantes oklob autour de la position ciblée
 %%%%
 Sage ability
 

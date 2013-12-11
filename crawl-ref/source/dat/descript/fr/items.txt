@@ -862,14 +862,6 @@ pair of boots
 
 Une paire de bottes.
 %%%%
-pair of bracers
-
-Une paire de brassards.
-%%%%
-pair of gauntlets
-
-Une paire de gantelets.
-%%%%
 pair of gloves
 
 Une paire de gants

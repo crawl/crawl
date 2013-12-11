@@ -1091,16 +1091,22 @@ draconian zealot
 Ce draconien détourne ses pouvoirs infernaux et ses alliés démoniaques pour le
 culte d'un dieu obscur méconnu des hommes, des nains, des elfes ou des orcs.
 %%%%
-fire dragon
-
-Une gigantesque bête reptilienne avec des griffes puissantes sur ses membres,
-couverte de solides écailles vertes et avec deux grosses ailes de
-chauve-souris. Des trainées de fumée sortent de sa gueule dentée.
-%%%%
 dryad
 
 Un esprit de nature, liée à la forêt dans laquelle il réside. Il est capable de
 faire appel aux arbres pour se défendre contre les incursions.
+%%%%
+formicid
+
+Une fourmi intelligente qui marche debout et est capable de creuser.
+%%%%
+formicid drone
+
+Une fourmi soldat formé au combat et prêt à défendre son territoire.
+%%%%
+formicid venom mage
+
+Un praticien de sa plus grande peur, adepte de la magie des poisons.
 %%%%
 dwarf
 
@@ -1146,8 +1152,7 @@ voltage que ses cousins de mer.
 elemental wellspring
 
 Un confluent tourbillonnant d'eau élémentaire se diffusant du plan élémentaire
-à celui-ci. Les inondations et les esprits qui y habitent semblent sortir sans
-limite.
+à celui-ci. Les inondations et les esprits qui y habitent semblent en sortir.
 %%%%
 elephant
 
@@ -1208,6 +1213,12 @@ fire crab
 Ces crabes sont prisés pour leur brillante carapace empierrée. La rareté de ces
 carapaces est seulement due à la nature vicieuse et ardente de ces animaux, et
 aussi à leur capacité surnaturelle à expulser des quantités massive de flammes.
+%%%%
+fire dragon
+
+Une gigantesque bête reptilienne avec des griffes puissantes sur ses membres,
+couverte de solides écailles vertes et avec deux grosses ailes de
+chauve-souris. Des trainées de fumée sortent de sa gueule dentée.
 %%%%
 fire elemental
 
@@ -1661,6 +1672,10 @@ ice statue
 Une idole imposante de quelque dieu arctique sans nom, gravée dans de la glace
 brillante d'un bleu profond. Des vapeurs glacées tourbillonnent autour d'elle
 et un frisson imprègne l'air.
+%%%%
+ignis
+
+Une petite sphère de lumière qui voltige et danse au bord de votre vision.
 %%%%
 iguana
 
@@ -2260,6 +2275,10 @@ l'illusion, et sont simultanément intelligent et cruels.
 rat
 
 Un rongeur sale qui a grandi dans l'environnement vaste et agressif du donjon.
+%%%%
+raiju
+
+Un chien surnaturel, crépitant d'énergies électriques et de translocations.
 %%%%
 raven
 

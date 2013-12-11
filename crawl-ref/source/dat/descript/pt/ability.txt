@@ -3,11 +3,6 @@ Blink ability
 
 Teleportar aleatoriamente para uma distância curta
 %%%%
-Breathe Fire ability
-
-Esbafora uma rajada de fogo em um monstro alvo, possivelmente deixando nuvens
-de fogo na sua vista.
-%%%%
 Breathe Frost ability
 
 Esbafora uma rajada de gelo em um monstro alvo.

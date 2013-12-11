@@ -96,10 +96,6 @@ są umiejętności.
 Czar ten ma wystarczającą moc aby dosłownie wydrzeć kogoś z Bram Śmierci, ale
 szok tym wywołany powoduje chwilowy paraliż.
 %%%%
-Call Canine Familiar spell
-
-Ten czar przyzywa jakąś odmianę psa.
-%%%%
 Call Imp spell
 
 Ten czar przyzywa pomniejszego demona z piekielnych czeluści.
@@ -699,16 +695,6 @@ Sure Blade spell
 Ten czar tworzy więź pomiędzy rzucającym a krótkim ostrzem trzymanym w dłoni,
 czyniąc to ostrze znacznie łatwiejszym w obsłudze. Wzmaga to celność lecz nie
 zadawane obrażenia.
-%%%%
-Swiftness spell
-
-Czy kiedyś zdawało ci się że wiatr ci zawsze w oczy wieje? Ten czar zapewnia
-wiatr w plecy, znacznie zwiększając szybkość poruszania się (lecz nie inne
-czynności). Niestety, wiatr w środku lochów zdecydowanie nie pomaga w skradaniu
-się, ponadto będąc pchanym wiatrem trudno uważać na pułapki.
-
-Za to, ten czar (poprawnie rzucony) nie powoduje skażenia magią, i może być
-używany łącznie z czarem Przyśpieszenie, dając w sumie ogromną prędkość.
 %%%%
 Teleport Other spell
 

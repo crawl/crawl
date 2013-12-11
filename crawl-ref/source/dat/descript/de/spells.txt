@@ -62,11 +62,6 @@ Bolt of Fire spell
 
 Dieser Zauber verschießt einen großen Strahl aus reinem Feuer.
 %%%%
-Call Canine Familiar spell
-
-Dieser Zauber beschwört ein Tier aus der Famillie der Canidae um dem Zauberer
-zu helfen.
-%%%%
 Call Imp spell
 
 Dieser Zauber beschwört einen niederen Dämon aus den Tiefen der Hölle.

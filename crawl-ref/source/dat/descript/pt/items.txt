@@ -423,10 +423,6 @@ pair of boots
 
 Um par de botas.
 %%%%
-pair of bracers
-
-Um par de braceletes.
-%%%%
 pair of gloves
 
 Um par de luvas.

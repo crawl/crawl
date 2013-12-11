@@ -16,11 +16,6 @@ Breathe Dispelling Energy ability
 Exhalas una descarga de energía al monstruo que apuntes, posiblemente
 eliminando alguno de sus encantamientos.
 %%%%
-Breathe Fire ability
-
-Exhalas una llamarada al monstruo que apuntes, posiblemente dejando nubes en
-llamas tras su paso.
-%%%%
 Breathe Frost ability
 
 Exhalas una ráfaga heladora al monstruo que apuntes.

@@ -1,8 +1,4 @@
 %%%%
-CMD_REST
-
-Trochu se vyléčit a prohledat okolí
-%%%%
 CMD_REST verbose
 
 Hráč stráví až 100 tahů regenerací zdraví a/nebo dobíjením magie, nebo

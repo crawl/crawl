@@ -7,11 +7,6 @@ Spit Poison ability
 
 Opluj trucizną wyznaczonego przeciwnika.
 %%%%
-Breathe Fire ability
-
-Uwalnia uderzenie ognia w zaznaczony cel, możliwe jest pozostawienie płonącej
-chmury.
-%%%%
 Breathe Frost ability
 
 Uwalnia uderzenie mrozu na określony cel.

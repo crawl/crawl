@@ -16,11 +16,6 @@ Breathe Dispelling Energy ability
 Atmen Sie eine Druckwelle der Macht an einem ins Visier genommenen Ungeheuer,
 vielleicht etwas von seinem Entzücken entfernend.
 %%%%
-Breathe Fire ability
-
-Atme eine Feuerwelle auf ein Monster aus, die möglicherweise eine Spur von
-Feuerwolken hinterlässt.
-%%%%
 Breathe Frost ability
 
 Atme eine Frostwelle auf ein Monster aus.

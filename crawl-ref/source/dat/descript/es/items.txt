@@ -731,14 +731,6 @@ pair of boots
 
 Un par de botas.
 %%%%
-pair of bracers
-
-Un par de muñequeras.
-%%%%
-pair of gauntlets
-
-Un par de guanteletes.
-%%%%
 pair of gloves
 
 Un par de guantes.
@@ -1073,6 +1065,13 @@ Este pergamino impone una maldición a uno de los amuletos o anillos equipados.
 scroll of curse weapon
 
 Este pergamino impone una maldición a un arma empuñada.
+%%%%
+scroll of enchant armour
+
+Este pergamino le echa un encantamiento a una pieza de una armadura. La mayoría
+de ellas solo pueden ser encantadas hasta +2, excepto los escudos que pueden
+llegar a +3, y las corazas y bardas que pueden encantarse hasta un valor igual
+a su CA básico.
 %%%%
 scroll of fear
 

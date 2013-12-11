@@ -34,6 +34,12 @@ Draconian
 Les Draconiens sont des hybrides polyvalents. Ils arrivent à maturité au niveau
 7 et prennent une couleur.
 %%%%
+Formicid
+
+Les Formicids sont des fourmis humanoïdes adepte à creuser. Leurs membres sont
+exceptionnellement fort et ils vivent dans un envoronement où l'evolution
+naturel a cessé.
+%%%%
 Felid
 
 Ces chats sont dotés de conscience, mais sont incapables de manipuler des
