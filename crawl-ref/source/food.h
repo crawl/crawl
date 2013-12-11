@@ -50,14 +50,13 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool check_hunger = true, bool rotten = false);
 
 bool chunk_is_poisonous(int chunktype);
-void eat_floor_item(int item_link);
+bool eat_item(item_def &food);
 
 int eat_from_floor(bool skip_chunks = true);
 bool eat_from_inventory();
 int prompt_eat_chunks(bool only_auto = false);
 
 bool food_change(bool initial = false);
-void eat_inventory_item(int which_inventory_slot);
 
 bool prompt_eat_inventory_item(int slot = -1);
 
