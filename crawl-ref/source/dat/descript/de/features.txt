@@ -667,6 +667,11 @@ A crystal clear mirror
 
 Ein glitzernder Kristallspiegel, der alles um sich herum reflektiert.
 %%%%
+A strange machine
+
+Ein mechanischer Apparat, der zischt und knallt. Sein Material spiegelt das
+Licht.
+%%%%
 A glistening fountain
 
 Das Einzige, was hier fehlt, ist Wasser.
