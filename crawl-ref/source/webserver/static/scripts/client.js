@@ -186,6 +186,10 @@ function (exports, $, key_conversion, chat, comm) {
         if (!in_game()) return;
         if ($(document.activeElement).hasClass("text")) return;
 
+        // Fix for FF < 25:
+        // https://developer.mozilla.org/en-US/docs/Web/Reference/Events/keydown#preventDefault%28%29_of_keydown_event
+        if (e.isDefaultPrevented()) return;
+
         if (e.ctrlKey || e.altKey)
         {
             // allow AltGr keys on various non-english keyboard layouts, not
