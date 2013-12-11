@@ -933,6 +933,13 @@ crossbow
     -Friedrich Schiller, _Wilhelm Tell_, IV, iii. 1804.
      trans. Sir Theodore Martin, 1898.
 %%%%
+cutlass
+
+“Who was the first that forged the deadly blade?
+ Of rugged steel his savage soul was made...”
+    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
+     trans. James Grainger, 1822.
+%%%%
 daeva
 
 “Between these twain the Daevas also chose not aright, for infatuation came
@@ -2276,13 +2283,6 @@ rotting devil
  That swathe the minds of men, the sins
  That wrap their rotting souls about.“
     -John Davidson, ”A Ballad of Heaven". Late 19th cent.
-%%%%
-cutlass
-
-“Who was the first that forged the deadly blade?
- Of rugged steel his savage soul was made...”
-    -Albius Tibullus, _Elegies_ I, xi. ca. 25 B.C.
-     trans. James Grainger, 1822.
 %%%%
 salamander
 
