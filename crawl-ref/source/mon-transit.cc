@@ -393,18 +393,9 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
         return false;
     }
 
-    // Monsters that are not directly adjacent are subject to more
-    // stringent checks.
-    if ((pos - you.pos()).abs() > 2)
-    {
-        if (!fol->friendly())
-            return false;
-
-        // Undead will follow Yredelemnul worshippers, orcs will follow
-        // Beogh worshippers, and plants will follow Fedhas worshippers.
-        if (!_is_religious_follower(fol))
-            return false;
-    }
+    // Unfriendly monsters must be directly adjacent to follow.
+    if (!fol->friendly() && (pos - you.pos()).abs() > 2)
+        return false;
 
     // Monsters that can't use stairs can still be marked as followers
     // (though they'll be ignored for transit), so any adjacent real
