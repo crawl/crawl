@@ -553,6 +553,10 @@ A crystal clear mirror
 
 一面闪闪发光的镜子，反射出周围的所有事物。
 %%%%
+A strange machine
+
+这个机械装置发出嘶嘶的响声。它的反光性很好。
+%%%%
 A glistening fountain
 
 这里面什么都有，只是没有水。
