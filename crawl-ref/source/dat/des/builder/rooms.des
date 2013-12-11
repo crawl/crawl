@@ -14,7 +14,7 @@ function fill_special_room(e, mon, lord_mon, pack)
     end
 
     -- Limit the number of monsters.
-    e.nsubst('1 = 24:1 / 3:1. / *:.')
+    e.nsubst('1 = 24:1 / 3 = 1. / *:.')
 
     if lord_mon then
         e.nsubst('1 = 1:2 / *:1')
@@ -120,48 +120,48 @@ function sroom_morgue(e)
 
     local mons = {}
 
-    mons[1] = "zombie w:15 / skeleton w:5"
-    mons[2] = "eidolon w:1 / plague shambler w:1 / vampire w:1 / "
-              .. "guardian mummy w:1 / shadow w:1"
-    mons[3] = "skeletal warrior w:20 ; great mace" .. weap
+    mons[1] = "zombie w:14 / skeleton w:5 / spectral thing w:1"
+    mons[2] = "shadow wraith w:2 / soul eater w:2 / vampire w:2 / "
+              .. "flayed ghost w:2 / shadow w:2"
+    mons[3] = "skeletal warrior w:15 ; great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
     mons[4] = "vampire knight w:5 ; great mace" .. weap
               .. " | glaive" .. weap .. " | battleaxe" .. weap
     if you.branch() == "Geh" then
-        mons[5] = "fire giant zombie w:5 / fire giant skeleton w:5 / "
-                 .. "fire dragon zombie w:5 / fire dragon skeleton w:5"
-        mons[6] = "flaming corpse / flayed ghost w:5"
+        mons[5] = "fire giant zombie w:3 / fire giant skeleton w:3 / "
+                 .. "fire dragon zombie w:2 / fire dragon skeleton w:2"
+        mons[6] = "flaming corpse w:5 / flayed ghost w:5"
         bodies = "fire giant corpse / fire giant skeleton / "
                  .. "fire dragon corpse / fire dragon skeleton / nothing w:60"
     elseif you.branch() == "Coc" then
-        mons[5] = "hydra zombie w:5 / hydra simulacrum w:5 / "
-                 .. "alligator snapping turtle zombie w:5 / "
-                 .. "alligator snapping turtle skeleton w:5"
-        mons[6] = "bog body w:5 / freezing wraith"
+        mons[5] = "hydra zombie w:3 / hydra simulacrum w:3 / "
+                 .. "alligator snapping turtle zombie w:2 / "
+                 .. "alligator snapping turtle skeleton w:2"
+        mons[6] = "freezing wraith w:7 / bog body w:3"
         bodies = "frost giant corpse / frost giant skeleton / "
                  .. "ice dragon corpse / ice dragon skeleton / "
                  .. "alligator snapping turtle corpse / "
                  .. "alligator snapping turtle skeleton / "
                  .. "hydra corpse / hydra skeleton / nothing w:120"
     elseif you.branch() == "Dis" then
-        mons[5] = "iron troll zombie w:5 / iron troll skeleton w:5 / "
-                 .. "iron dragon zombie w:5 / iron dragon skeleton w:5"
-        mons[6] = "guardian mummy w:5 / phantasmal warrior"
+        mons[5] = "iron troll zombie w:2 / iron troll skeleton w:2 / "
+                 .. "iron dragon zombie w:3 / iron dragon skeleton w:3"
+        mons[6] = "ancient champion w:7 / phantasmal warrior w:3"
         bodies = "iron dragon corpse / iron dragon skeleton / "
                  .. "iron troll corpse / iron troll skeleton / nothing w:60"
-    elseif you.branch() == "Tar" then
-        mons[5] = "bone dragon w:5 / ghoul w:5 / soul eater"
-        mons[6] = "plague shambler w:5 / shadow wraith"
+    elseif you.branch() == "Tar" or you.branch() == "Crypt" then
+        mons[5] = "eidolon w:6 / jiangshi w:6 / plague shambler w:2"
+        mons[6] = "mummy priest w:2 / death dwarf death knight w:2 / revenant w:2"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse / nothing w:60"
     else
-        mons[5] = "zombie / skeleton"
-        mons[6] = "necromancer w:5"
+        mons[5] = "necromancer / deep elf death mage w:5"
+        mons[6] = "shadow dragon w:5"
         bodies = "any corpse / any skeleton / nothing w:40"
     end
 
     if you.absdepth() > 27 then
-        mons[7] = "reaper"
+        mons[7] = "reaper w:9 / bone dragon w:1"
     end
 
     if you.absdepth() > 24 or crawl.x_chance_in_y(you.absdepth() - 20, 5) then
@@ -172,13 +172,13 @@ function sroom_morgue(e)
 
     fill_special_room(e, mons, lord_mon, true)
     dgn.delayed_decay(e, '1>.', bodies)
-    if you.absdepth() > 27 then
+    if you.branch() == "Depths" or you.branch() == "Crypt" then
+         e.kitem('2 = randbook disc:necromancy')
+    else
          -- XXX: Any better ways to place the stair?
          e.kfeat('> = stone_stairs_down_i / stone_stairs_down_ii / '
          .. 'stone_stairs_down_iii / escape_hatch_down / floor')
          e.nsubst('1 = 1:> / *:1')
-    else
-         e.kitem('2 = randbook disc:necromancy')
     end
 end
 
@@ -266,7 +266,7 @@ end
 ###########################
 
 NAME:   special_room_kobold
-DEPTH:  D:7-14, Orc:1-3
+DEPTH:  D:7-12, Orc:1-3
 TAGS:   special_room unrand
 WEIGHT: 11
 : sroom_kobold_lair(_G)
@@ -276,7 +276,7 @@ ENDMAP
 NAME:   special_room_orc
 DEPTH:  D:9-, Orc:1-3, Elf, Vaults
 TAGS:   special_room allow_dup unrand
-WEIGHT: 59 (D:8-14, Orc), 40 (D:15-17, Elf:1), 32
+WEIGHT: 59 (D:8-12, Orc), 40 (D:13-, Elf:1), 32
 : sroom_orc_lair(_G)
 MAP
 ENDMAP
@@ -284,7 +284,7 @@ ENDMAP
 NAME:   special_room_bee
 DEPTH:  D:9-, Lair, Orc:1-3, Spider
 TAGS:   special_room allow_dup unrand
-WEIGHT: 30 (D:9-14, Orc, Lair:1-4), 24 (D:15-, Lair:5-7), 20
+WEIGHT: 30 (D:9-12, Orc, Lair:1-4), 24 (D:13-, Lair:5-7), 20
 : sroom_beehive(_G)
 MAP
 ENDMAP
@@ -292,7 +292,7 @@ ENDMAP
 NAME:   special_room_morgue
 DEPTH:  Depths, Crypt, Dis, Tar, Coc, Geh
 TAGS:   special_room allow_dup unrand
-WEIGHT: 26 (D:15-17), 29 (D:18-20), 34
+WEIGHT: 29 (Depths:1-3), 34
 : sroom_morgue(_G)
 MAP
 ENDMAP
@@ -300,15 +300,15 @@ ENDMAP
 NAME:   special_room_jelly
 DEPTH:  Depths, Lair:$, Slime
 TAGS:   special_room allow_dup unrand
-WEIGHT: 9 (Lair:$), 13 (D:18-20), 40
+WEIGHT: 9 (Lair:$), 13 (Depths:1-3), 40
 : sroom_jelly_pit(_G)
 MAP
 ENDMAP
 
 NAME:   special_room_mythical_zoo
-DEPTH:  Depths, Lair:4-, Elf
+DEPTH:  D:14-, Depths, Lair:4-, Elf
 TAGS:   special_room allow_dup unrand
-WEIGHT: 20 (D:14-16, Lair:4-6), 25 (D:17-20, Lair:7-, Elf), 28
+WEIGHT: 20 (D:14-, Lair:4-6), 25 (Depths:1-3, Lair:7-, Elf), 28
 : sroom_mythical_zoo(_G)
 MAP
 ENDMAP
