@@ -39,7 +39,7 @@ lisant à voix haute, mais la nature de ce pouvoir n'est a priori pas apparent.
 %%%%
 staff
 
-Un bâton de combat amélioré avec des pouvoirs obscurs d'origine inconnue.
+Un bâton de combat amélioré avec d'obscurs pouvoirs d'origine inconnue.
 %%%%
 wand
 

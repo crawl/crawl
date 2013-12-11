@@ -1,8 +1,4 @@
 %%%%
-CMD_REST
-
-Gyti ir šiek tiek apieškoti
-%%%%
 CMD_REST verbose
 
 Praleisti iki 100 ėjimų atgauti sveikatai, atsistatyti maną ir/arba paieškai.

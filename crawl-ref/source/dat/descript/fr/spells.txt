@@ -145,11 +145,19 @@ prévenir ou réduire considérablement cet effet.
 %%%%
 Call Canine Familiar spell
 
-Ce sort fait apparaitre un canidé pour venir en aide au sorcier.
+Ce sort convoque un unique canidé pour venir en aide au sorcier.
 %%%%
 Call Imp spell
 
 Ce sort convoque un démon mineur tout droit venu des fosses infernales.
+%%%%
+Cantrip spell
+
+Les cantrips sont des sorts mineurs, visant à essayer d'effrayer les ennemis
+ignorants ou renforcer le moral du lanceur. Ils n'ont pas réellement d'autres
+effets, et un aventurier de votre stature n'a ni besoin, ni peur, de ces tours.
+Ou peut-être, juste pour être sûr, vous devriez frapper trois fois sur le bois
+non peint pour vous protéger contre le mauvais sort.
 %%%%
 Cause Fear spell
 
@@ -672,9 +680,20 @@ Might Other spell
 Ce sort augmente considérablement les capacités de mêlé du personnage ciblé. Il
 est évidemment à utiliser sur les alliés.
 %%%%
+Might spell
+
+Ce pouvoir augmente de manière significative la capacité de mêlée du lanceur,
+tout comme la potion du même nom.
+%%%%
 Minor Healing spell
 
 Ce sort soigne une petite quantité de dégâts au corps du sorcier.
+%%%%
+Mislead spell
+
+Ce sortilège brouille l'esprit d'un ennemi. Les gens ainsi touchés ne peuvent
+pas discerner l'identité des êtres les entourant, bien que certains détailles
+importants restent évident.
 %%%%
 Necromutation spell
 
@@ -912,6 +931,15 @@ Certaines créatures, comme les démons, utilise de la magie sans parler et ne
 seront pas affectées et, celles qui possèdent des capacités innées pourront
 toujours les employer.
 %%%%
+Silver Blast spell
+
+Ce pouvoir envoie une boule de la pureté divine de Zin. Quand elle explose,
+elle endommage sévèrement quiconque étant chaotique ou impur et se faisant
+prendre dans l'explosion. Ceux simplement coupables d'actes chaotiques ou impur
+seront blessés un peu moins, tandis que ceux qui sont infernaux ou maudits
+souffriront encore moins. Les êtres mutants attirent eux aussi la colère de
+Zin, même s'ils ont muté contre leur gré.
+%%%%
 Simulacrum spell
 
 Ce sort utilise un morceau de chair en main pour créer une réplique de
@@ -937,6 +965,12 @@ combat pendant cette récitation améliore temporairement vos compétences de
 mêlée. Votre efficacité ne sera renforcée que pendant la durée de la chanson.
 Lancer ce sort alors que vous la chanter deja débutera une nouvelle chanson, et
 non étendre l'existante.
+%%%%
+Spawn Tentacles spell
+
+Les créatures monstrueuses possédant de grandes tentacules peuvent les étendre
+loin de leur corps, à des fins impliquant presque toujours de frapper un peu
+les casse-croûtes arrogant comme vous avec celles-ci.
 %%%%
 Spectral Weapon spell
 
@@ -981,6 +1015,11 @@ Sticks to Snakes spell
 
 Ce sort utilise des projectiles en bois (flèches ou javelots) tenus en main
 comme matière première pour une puissant transmutation.
+%%%%
+Sticky Flame Range spell
+
+Ce sortilège permet de conjurer une boule de substance collante et flamboyant
+et de la jeter à un ennemi peut-être lointain.
 %%%%
 Sticky Flame spell
 
@@ -1162,9 +1201,9 @@ rendant son utilisation beaucoup plus facile.
 %%%%
 Swiftness spell
 
-Ce sort imprègne le sorcier d'une aptitude à se déplacer plus vite. Mais cela à
-un prix : l'incantateur sera moins discret et moins vigilant aux pièges
-lorsqu'il est sous les effets de ce sortilège.
+Ce sort permet au sorcier de se déplacer à grande vitesse. Mais cela à un
+prix : la vitesse de déplacement de l'incantateur sera très lente pendant un
+moment après l'expiration du sort.
 %%%%
 Symbol of Torment spell
 

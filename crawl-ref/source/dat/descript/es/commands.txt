@@ -1,8 +1,4 @@
 %%%%
-CMD_REST
-
-Descansas un poco y buscas cosas que estén ocultas
-%%%%
 CMD_REST verbose
 
 Pasas hasta 100 turnos para recuperar salud, recargar magia y/o buscar. El

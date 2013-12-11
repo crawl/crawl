@@ -765,14 +765,6 @@ pair of boots
 
 Para butów — nic dodać, nic ująć.
 %%%%
-pair of bracers
-
-Ochraniacz na przedramiona.
-%%%%
-pair of gauntlets
-
-Para rękawic pokryta metalowymi płytkami.
-%%%%
 pair of gloves
 
 Para skórzanych rękawic.

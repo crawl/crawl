@@ -230,8 +230,8 @@ tutorial2 firing
 装備した弓を用いて矢を打ち出すことは投げ矢を投げることと同様に
 <input>$cmd[CMD_FIRE]</input><localtiles> または
 <input>クリック</input></localtiles> から行います。
-ターゲットモード中に<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> を押すことで
-、対象になるモンスターを変更することが出来ます。
+ターゲットモード中に<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> を押すことで、
+対象になるモンスターを変更することが出来ます。
 ワームは溶岩の先にいて無害ですので、
 あなたに攻撃してくるダミーに集中して攻撃しましょう。攻撃を開始するには
 <input>$cmd[CMD_TARGET_SELECT]</input> または <input>Enter</input>
@@ -351,8 +351,8 @@ tutorial3 artefact_armour
 
 <w>珍しい</w> 名前のアイテムはアーティファクトです。
 アーティファクトは多くの特別な能力を持っています。
-例えばこのクロークのようないくらかのアイテムは有名で能力が鑑定済みになりますが
-、一方でランダムな能力を持ち、効果の分からないものも存在します。
+例えばこのクロークのようないくらかのアイテムは有名で能力が鑑定済みになりますが、
+一方でランダムな能力を持ち、効果の分からないものも存在します。
 <input>$cmd[CMD_WEAR_ARMOUR]</input> <localtiles>
 またはインベントリ内で<input>クリック</input></localtiles>
 でこのクロークを装備してみてください。
@@ -374,8 +374,8 @@ tutorial3 amulet
 
 装飾品は <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
 またはインベントリ内で <input>クリック</input>
-</localtiles>で装備することができます。幾つかの装飾品は装備した際に鑑定されます
-。その他の装飾品は別の手段で鑑定しなければなりません。
+</localtiles>で装備することができます。幾つかの装飾品は装備した際に鑑定されます。
+その他の装飾品は別の手段で鑑定しなければなりません。
 %%%%
 tutorial3 scroll_id
 

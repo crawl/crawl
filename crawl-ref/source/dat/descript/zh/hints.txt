@@ -4,13 +4,13 @@ welcome
 <white>欢迎你来到Dungeon Crawl的游戏世界！</white>
 
 你的任务是扮演<w>{{ return you.race() }} {{ return you.class() }}</w>
-角色深入地城深处，找到传说中的佐特之球并带着它返回地面。不过，在刚开始玩的时候
-，你只要探索地城就好。尽你所能层层推进，不过要小心：死亡的危险无处不在。
+角色深入地城深处，找到传说中的佐特之球并带着它返回地面。不过，在刚开始玩的时候，
+你只要探索地城就好。尽你所能层层推进，不过要小心：死亡的危险无处不在。
 
 目前，你只需要记住以下按键的功能：
   <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> - 显示物品及命令
-  <white>$cmd[CMD_SAVE_GAME]</white>  - 保存游戏，以便以后继续目前的进度（注意
-：如果死了，就没法重来了）
+  <white>$cmd[CMD_SAVE_GAME]</white>  - 保存游戏，以便以后继续目前的进度（注意：
+如果死了，就没法重来了）
   <white>$cmd[CMD_LOOK_AROUND]</white>  - 调查附近的某个物体
 
 提示模式可以帮助你进行游戏而不用阅读游戏说明。如果你还没有玩过教程关卡，
@@ -95,11 +95,11 @@ finished
 %%%%
 finished explored
 
-你可以使用自动探索机能 (<input>$cmd[CMD_EXPLORE]</input>) 来非常方便地探索地城
-。游戏会将你自动移动至有物品的地方以便你拾取你感兴趣的东西。 <tiles>
+你可以使用自动探索机能 (<input>$cmd[CMD_EXPLORE]</input>) 来非常方便地探索地城。
+游戏会将你自动移动至有物品的地方以便你拾取你感兴趣的东西。 <tiles>
 
-你也可以在小地图上按下<input>Ctrl</input> + <input>鼠标左键</input> 来自动探索
-。 </tiles>
+你也可以在小地图上按下<input>Ctrl</input> + <input>鼠标左键</input> 来自动探索。
+ </tiles>
 %%%%
 finished travel
 

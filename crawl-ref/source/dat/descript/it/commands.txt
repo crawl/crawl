@@ -1,8 +1,4 @@
 %%%%
-CMD_REST
-
-Ti curi e cerchi un po'
-%%%%
 CMD_REST verbose
 
 Passi fino a 100 turni rigenerando salute e/o ricaricando magia. Il riposo è

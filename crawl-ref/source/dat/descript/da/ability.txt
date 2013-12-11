@@ -16,11 +16,6 @@ Breathe Dispelling Energy ability
 Spyer en strøm af kraft mod det valgte uhyrer, som muligvis fjerner nogle af
 dets fortryllelser.
 %%%%
-Breathe Fire ability
-
-Du kan spy en strøm af ild efter et uhyre som muligvis efterlader ildskyer i
-sit kølvand.
-%%%%
 Breathe Frost ability
 
 Du kan spy en klump frost efter et uhyre.

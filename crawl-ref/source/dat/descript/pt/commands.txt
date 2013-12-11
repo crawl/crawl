@@ -1,8 +1,4 @@
 %%%%
-CMD_REST
-
-Curar-se e olhar em volta um pouco
-%%%%
 CMD_INTERLEVEL_TRAVEL
 
 Viajar para níveis distantes

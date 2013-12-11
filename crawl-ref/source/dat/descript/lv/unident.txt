@@ -1,0 +1,9 @@
+%%%%
+potion
+
+Nemarķēta blašķe ar devu nezināma šķidruma.
+%%%%
+wand
+
+Nūja. Varbūt tai piemīt burvju spējas.
+%%%%

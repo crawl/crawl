@@ -112,10 +112,6 @@ An orcish idol
 
 Figurka boga orków Beogha. Zniszczenie jej może go rozgniewać
 %%%%
-An empty arch of stone
-
-To portal, którym tutaj przybyłeś; wygląda na całkowicie pozbawiony magii
-%%%%
 A glistening fountain
 
 Jedyną rzeczą, której brakuje jest woda.

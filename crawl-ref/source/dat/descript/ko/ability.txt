@@ -16,10 +16,6 @@ Breathe Dispelling Energy ability
 대상에게 마력이 깃든 숨결을 내뿜는다. 이 숨결은 적에게 걸려있는 각종 효과를
 없애버린다.
 %%%%
-Breathe Fire ability
-
-대상에게 화염을 내뿜는다. 화염이 지나간 길의 끝에는 불의 구름이 남는다.
-%%%%
 Breathe Frost ability
 
 대상에게 냉기를 내뿜는다. 날아다니는 적은 그 충격에 뒤로 밀릴 것이다.

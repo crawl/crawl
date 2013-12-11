@@ -310,14 +310,6 @@ pair of boots
 
 Pár bot.
 %%%%
-pair of bracers
-
-Dvojice nátepníků.
-%%%%
-pair of gauntlets
-
-Pár rukavic.
-%%%%
 pair of gloves
 
 Pár rukavic.

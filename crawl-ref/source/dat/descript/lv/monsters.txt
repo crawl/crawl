@@ -26,6 +26,12 @@ Cerebov
 Nežēlīgs un trakojošs dēmons, Cerebovs atgādina milzu cilvēku, kas noklāts
 mirdzošās zelta bruņās, rokās turot milzīgu ieliektu zobenu.
 %%%%
+Crazy Yiuf
+
+Izdilis, vecs gnolls ar garu, sidrabainu bārdu, plecos uzmestu mantiju un nūju
+rokā. Viņš izskatās gluži kā no grāmatas izkāpis pasaku tēls. Paga, vai viņa
+bārdu pie ausīm tur āķi?
+%%%%
 Dowan
 
 Skaists, taču augstprātīgs elfs ar dotībām galvenokārt tikai burvestībās. Viņa
@@ -257,6 +263,18 @@ Executioner
 
 Briesmīgi varens un spējš dēmons, ap kura tēlu šķind izkaptveidīgu asmeņu
 mākonis.
+%%%%
+megabat
+
+Milzīgs melns sikspārnis.
+%%%%
+hellion
+
+Šaušalīgs dēmons, kuru sedz dārdošas pekles liesmas.
+%%%%
+lava worm
+
+Negants sarkans tārps, kas slīd cauri izkusušajiem iežiem.
 %%%%
 ancient champion
 

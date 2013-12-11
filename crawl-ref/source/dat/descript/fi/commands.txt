@@ -1,8 +1,4 @@
 %%%%
-CMD_REST
-
-Paranna ja etsi hetki
-%%%%
 CMD_REST verbose
 
 Käytä korkeintaan 100 vuoroa terveyden ja taikavoiman lataamiseen ja/tai

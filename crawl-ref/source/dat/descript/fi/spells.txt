@@ -32,10 +32,6 @@ Bolt of Fire spell
 
 Tämä taika viskaa suuren liekkiammuksen.
 %%%%
-Call Canine Familiar spell
-
-Tämä taika kutsuu koiraeläimen loitsijan avuksi.
-%%%%
 Call Imp spell
 
 Tällä taialla voi kutsua pienen demonin Helvetin syövereistä.

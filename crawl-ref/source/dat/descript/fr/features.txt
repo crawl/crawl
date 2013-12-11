@@ -659,11 +659,6 @@ Il n'y a rien à part du vent et des vagues, encore et toujours, et pas un seul
 phare en vue. Vous seriez complètement perdu en peu de temps — mieux vaut ne
 pas s'y risquer.
 %%%%
-An empty arch of stone
-
-C'est le portail par lequel vous êtes arrivé ; il semble maintenant dépourvu de
-toute magie.
-%%%%
 A portal leading out of here
 
 Ce passage magique scintillant vous mènera hors de la demeure du magicien, vous
@@ -698,9 +693,10 @@ A crystal clear mirror
 
 Un miroir scintillant qui réfléchit tout ce qui l'entoure.
 %%%%
-A strange machine
+A strange generator
 
-Un engin mécanique, sifflant et claquant. Il semble très réfléchissant.
+Un engin mécanique, qui siffle et craque de partout, prêt à distribuer des
+armes dansantes à tout moment. Il est très réfléchissant.
 %%%%
 A glistening fountain
 
@@ -790,12 +786,6 @@ A wall of white crystal
 C'est du cristal de mauvaise qualité. Il est à peine translucide, et ses faces
 tordues ne font qu'empirer les choses. L'opalescente lueur est cependant assez
 agréable.
-%%%%
-A wall of transparent white crystal
-
-Ce cristal semble parfait et impérissable. Cela doit être du diamant ou quelque
-chose du genre — peu importe ce que c'est, c'est en dehors de vos moyens de
-pouvoir le traverser.
 %%%%
 A hot floor
 

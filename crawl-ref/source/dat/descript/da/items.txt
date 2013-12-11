@@ -903,14 +903,6 @@ pair of boots
 
 Et par støvler.
 %%%%
-pair of bracers
-
-Et par lædermanchetter.
-%%%%
-pair of gauntlets
-
-Et par stridshandsker.
-%%%%
 pair of gloves
 
 Et par handsker.
