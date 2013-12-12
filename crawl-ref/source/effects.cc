@@ -2411,7 +2411,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
     }
 
     bool changed = false;
-    for  (int i = 0; i < range/x; i++)
+    for (int i = 0; i < range/x; i++)
     {
         if (mon->behaviour == BEH_SLEEP)
             break;

@@ -2565,9 +2565,9 @@ void bolt::affect_endpoint()
 
     // FIXME: why don't these just have is_explosion set?
     // They don't explode in tracers: why not?
-    if  (name == "orb of electricity"
-        || name == "metal orb"
-        || name == "great blast of cold")
+    if (name == "orb of electricity"
+       || name == "metal orb"
+       || name == "great blast of cold")
     {
         target = pos();
         refine_for_explosion();
