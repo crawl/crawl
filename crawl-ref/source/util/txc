@@ -233,7 +233,6 @@ def auto_fix(s, lang):
     s = auto_fix.re_hyphen.sub(u"\\1—\\2", s)
     s = auto_fix.re_ns.sub(u" \\1", s)
     s = auto_fix.re_ns2.sub(u"« ", s)
-    s = auto_fix.re_east_asian_punctuation.sub(u"\\1", s)
 
     if s.find('{{') == -1: # Don't mess with lua strings
         s = auto_fix.re_ascii_single_quotes.sub(u"‘\\1’", s)
@@ -251,7 +250,6 @@ def auto_fix(s, lang):
 auto_fix.re_hyphen = re.compile("(\s)[-–](\s)") # Replace hyphens by em dashes
 auto_fix.re_ns = re.compile("\s([!?:;»])")
 auto_fix.re_ns2 = re.compile(u"«\s")
-auto_fix.re_east_asian_punctuation = re.compile(u" *([%s]) *" % east_asian_punctuation)
 auto_fix.re_ascii_single_quotes = re.compile(u"(?<=\s)'(.*?)'(?=\W)", re.S)
 auto_fix.re_ascii_double_quotes = re.compile(u'"(.*?)"', re.S)
 auto_fix.re_english_single_quotes = re.compile(u'‘(.*?)’', re.S)
