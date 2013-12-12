@@ -39,22 +39,24 @@ tutorial1 shiftmove
 tutorial1 downstairs
 
 Если вы стоите на лестнице, ведущей вниз, вы можете перейти на следующий
-уровень подземелья с помощью <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles>
-или же <input>Shift-Click</input> по вашему персонажу</localtiles>.
+уровень подземелья с помощью <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> или же <input>Shift-Click</input> по вашему
+персонажу</localtiles>.
 %%%%
 tutorial1 levelmap
 
 Что это? Чтобы понять где вы, <tiles>посмотрите на <w>миникарту</w> в правой
-части экрана.</tiles><localtiles> Вы  можете рассмотреть какую-либо часть карты
-поближе по <input>right mouse click</input> а также отправиться туда по
-<input>left click</input>.</localtiles><webtiles>Вы можете открыть общую карту,
-нажав <input>$cmd[CMD_DISPLAY_MAP]</input> а после передвигать курсор, чтобы
-осмотреть уровень. Для перемещения в указанное курсором место вы можете нажать
-<input>.</input> или <input>Enter</input>. Нажмите <input>Escape</input> чтобы
-вернуться в режим игры.</webtiles><console>Вы можете открыть общую карту, нажав
-<input>$cmd[CMD_DISPLAY_MAP]</input> а после. Для перемещения в указанное
-курсором место вы можете нажать <input>.</input> или <input>Enter</input>.
-Нажмите <input>Escape</input>чтобы вернуться в режим игры.</console>
+части экрана.</tiles><localtiles> Вы  можете рассмотреть какую-либо часть
+карты поближе по <input>right mouse click</input> а также отправиться туда по
+<input>left click</input>.</localtiles><webtiles>Вы можете открыть общую
+карту, нажав <input>$cmd[CMD_DISPLAY_MAP]</input> а после передвигать курсор,
+чтобы осмотреть уровень. Для перемещения в указанное курсором место вы можете
+нажать <input>.</input> или <input>Enter</input>. Нажмите <input>Escape</input>
+чтобы вернуться в режим игры.</webtiles><console>Вы можете открыть общую
+карту, нажав <input>$cmd[CMD_DISPLAY_MAP]</input> а после. Для перемещения в
+указанное курсором место вы можете нажать <input>.</input> или
+<input>Enter</input>. Нажмите <input>Escape</input>чтобы вернуться в режим
+игры.</console>
 %%%%
 tutorial1 autoexplore
 
@@ -168,8 +170,8 @@ tutorial2 chop_corpses
 Вы можете разделывать трупы на куски мяса, которые можно съесть, по клавише
 <input>$cmd[CMD_BUTCHER]</input> <localtiles>или же по <input>Shift +
 mouseclick</input>, </localtiles>Затем вы можете съесть это мясо, используя
-<input>$cmd[CMD_EAT]</input><localtiles> или же
-<input>mouseclick</input></localtiles>.
+<input>$cmd[CMD_EAT]</input><localtiles> или же <input>mouseclick</input>
+</localtiles>.
 %%%%
 tutorial2 rest_and_chop_reminder
 
@@ -188,10 +190,9 @@ tutorial2 resting_reminder
 %%%%
 tutorial2 eat_reminder
 
-Помните, вы можете рубить существ с помощью
-<input>$cmd[CMD_BUTCHER]</input><localtiles>или <input>Shift +
-mouseclick</input>и потом поедать оставшиеся куски с помощью
-<input>$cmd[CMD_EAT]</input><localtiles> или
+Помните, вы можете рубить существ с помощью <input>$cmd[CMD_BUTCHER]</input>
+<localtiles>или <input>Shift + mouseclick</input>и потом поедать оставшиеся
+куски с помощью <input>$cmd[CMD_EAT]</input><localtiles> или
 <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
@@ -310,9 +311,8 @@ tutorial3 battle
 %%%%
 tutorial3 potion
 
-Вы можете выпить одно из зелий при помощи
-<input>$cmd[CMD_QUAFF]</input><localtiles> либо
-<input>mouseclick</input></localtiles>.
+Вы можете выпить одно из зелий при помощи <input>$cmd[CMD_QUAFF]</input>
+<localtiles> либо <input>mouseclick</input></localtiles>.
 %%%%
 tutorial3 gold
 
@@ -325,11 +325,12 @@ tutorial3 shop
 %%%%
 tutorial3 enter_shop
 
-Чтобы войти в магазин, нажмите <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles>
-или <input>Shift-leftclick</input> на вашем персонаже</localtiles>. Чтобы
-купить предметы, выберите их с по их горячим клавишам, жмите
-<input>Enter</input> и подтвердите с помощью <input>y</input>es. Вы также
-можете переключиться в режим описания с помощью <input>!</input>.
+Чтобы войти в магазин, нажмите <input>$cmd[CMD_GO_UPSTAIRS]</input>
+<localtiles> или <input>Shift-leftclick</input> на вашем
+персонаже</localtiles>. Чтобы купить предметы, выберите их с по их горячим
+клавишам, жмите <input>Enter</input> и подтвердите с помощью
+<input>y</input>es. Вы также можете переключиться в режим описания с помощью
+<input>!</input>.
 %%%%
 tutorial3 autoexplore_reminder
 
@@ -380,9 +381,9 @@ tutorial4 start
 %%%%
 tutorial4 ring_power
 
-Надеть это кольцо можно клавишей
-<input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> или <input>кликнуть</input>
-на него в панели инвентаря </localtiles>, и затем увидеть что оно дает.
+Надеть это кольцо можно клавишей <input>$cmd[CMD_WEAR_JEWELLERY]</input>
+<localtiles> или <input>кликнуть</input> на него в панели инвентаря
+</localtiles>, и затем увидеть что оно дает.
 %%%%
 tutorial4 displace_allies
 
@@ -409,13 +410,12 @@ tutorial5 dungeon_overview
 %%%%
 tutorial5 altar
 
-Вы можете молиться над алтарем с помощью
-<input>$cmd[CMD_PRAY]</input><localtiles> (или щелкнув в <w>command panel</w>
-или <input>Shift-clicking</input> на своем персонаже)</localtiles> чтобы
-получить представление о том, что Бог предлагает вам, и присоединиться к вере.
-Если вы нажмете <input>!</input><localtiles> или
-<input>rightclick</input></localtiles> на экране религии, то увидите более
-детальное описание.
+Вы можете молиться над алтарем с помощью <input>$cmd[CMD_PRAY]</input>
+<localtiles> (или щелкнув в <w>command panel</w> или
+<input>Shift-clicking</input> на своем персонаже)</localtiles> чтобы получить
+представление о том, что Бог предлагает вам, и присоединиться к вере. Если вы
+нажмете <input>!</input><localtiles> или <input>rightclick</input>
+</localtiles> на экране религии, то увидите более детальное описание.
 
 Подтвердите свой выбор с помощью заглавной <input>Y</input>.
 %%%%

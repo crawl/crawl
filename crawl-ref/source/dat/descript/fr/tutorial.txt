@@ -74,8 +74,8 @@ vous pouvez donc appuyer sur <input>$cmd[CMD_EXPLORE]</input> pour continuer.
 tutorial1 autoexplore_announce
 
 L'auto-exploration s'arrête pour annoncer les lieux et les objets. Pour vous
-déplacer directement jusqu'à l'escalier, vous pouvez
-<localtiles><input>cliquer</input> sur lui ou vous pouvez </localtiles>presser
+déplacer directement jusqu'à l'escalier, vous pouvez <localtiles>
+<input>cliquer</input> sur lui ou vous pouvez </localtiles>presser
 <input>$cmd[CMD_DISPLAY_MAP] << Entrée</input>.
 %%%%
 tutorial1 tutorial_end
@@ -111,8 +111,8 @@ profonde.
 tutorial1 upstairs
 
 Quand vous vous tenez sur un escalier montant, vous pouvez revenir au niveau
-précédent avec la touche <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> ou en
-<input>Shift-cliquant</input> sur votre personnage</localtiles>.
+précédent avec la touche <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> ou
+en <input>Shift-cliquant</input> sur votre personnage</localtiles>.
 %%%%
 tutorial1 exit
 
@@ -195,8 +195,8 @@ tutorial2 eat_reminder
 N'oubliez-pas, vous pouvez découper les créatures avec
 <input>$cmd[CMD_BUTCHER]</input><localtiles> ou <input>Shift + clic de
 souris</input></localtiles>, et ensuite manger ces morceaux de viande avec
-<input>$cmd[CMD_EAT]</input><localtiles> ou <input>clic de
-souris</input></localtiles>.
+<input>$cmd[CMD_EAT]</input><localtiles> ou <input>clic de souris</input>
+</localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
@@ -229,9 +229,8 @@ automatiquement ciblé, pressez <input>$cmd[CMD_TARGET_SELECT]</input> ou
 %%%%
 tutorial2 wield_bow
 
-Ramassez cet arc et équipez-le avec
-<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> ou avec un <input>clic de
-souris</input></localtiles>.
+Ramassez cet arc et équipez-le avec <input>$cmd[CMD_WIELD_WEAPON]</input>
+<localtiles> ou avec un <input>clic de souris</input></localtiles>.
 %%%%
 tutorial2 firing
 
@@ -310,18 +309,18 @@ souris</input> dans le panneau d'inventaire</localtiles>.
 tutorial3 scroll_noautopickup
 
 Le ramassage automatique ne fonctionne pas s'il y a un monstre en vue. Vous
-pouvez ramasser ce parchemin maintenant avec
-<input>$cmd[CMD_PICKUP]</input><localtiles> ou en <input>cliquant</input> sur
-votre personnage,</localtiles> ou vous pouvez combattre l'ennemi à proximité et
-le ramasser par la suite.
+pouvez ramasser ce parchemin maintenant avec <input>$cmd[CMD_PICKUP]</input>
+<localtiles> ou en <input>cliquant</input> sur votre personnage,</localtiles>
+ou vous pouvez combattre l'ennemi à proximité et le ramasser par la suite.
 %%%%
 tutorial3 ego_weapon
 
 Un objet décrit comme <lightblue>runique</lightblue> ou
 <lightblue>brillant</lightblue> sera enchanté, ou possèdera des propriétés
 spéciales, ou les deux. Vous devez brandir ce cimeterre (avec
-<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> ou en <input>cliquant</input>
-dessus dans le panneau d'inventaire</localtiles>) pour savoir ce qu'il en est.
+<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> ou en
+<input>cliquant</input> dessus dans le panneau d'inventaire</localtiles>) pour
+savoir ce qu'il en est.
 %%%%
 tutorial3 inventory
 
@@ -341,9 +340,9 @@ replier lorsque vous avez besoin de vous soigner.
 tutorial3 downstairs
 
 Bien joué ! Si nécessaire, reposez vous avec <input>$cmd[CMD_REST]</input>,
-puis descendez l'escalier avec
-<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> ou avec <input>Shift +
-clic</input> sur votre personnage</localtiles>.
+puis descendez l'escalier avec <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> ou avec <input>Shift + clic</input> sur votre
+personnage</localtiles>.
 %%%%
 tutorial3 command_help
 
@@ -356,9 +355,8 @@ toujours possible de relire les anciens messages avec
 %%%%
 tutorial3 potion
 
-Vous pouvez boire une de ces potions avec
-<input>$cmd[CMD_QUAFF]</input><localtiles> ou avec un <input>clic de
-souris</input></localtiles>.
+Vous pouvez boire une de ces potions avec <input>$cmd[CMD_QUAFF]</input>
+<localtiles> ou avec un <input>clic de souris</input></localtiles>.
 %%%%
 tutorial3 artefact_armour
 
@@ -371,9 +369,9 @@ dessus dans le panneau d'inventaire</localtiles>.
 %%%%
 tutorial3 wand_fire
 
-Vous pouvez évoquer une baguette avec
-<input>$cmd[CMD_EVOKE]</input><localtiles> ou avec <input>un clic de
-souris</input> dans le panneau d'inventaire</localtiles>.
+Vous pouvez évoquer une baguette avec <input>$cmd[CMD_EVOKE]</input>
+<localtiles> ou avec <input>un clic de souris</input> dans le panneau
+d'inventaire</localtiles>.
 %%%%
 tutorial3 wand_digging
 
@@ -384,8 +382,8 @@ pour vérifier le type de murs.
 %%%%
 tutorial3 amulet
 
-Les bijoux sont portés avec <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
-ou avec <input>un clic de souris</input> dans le panneau
+Les bijoux sont portés avec <input>$cmd[CMD_WEAR_JEWELLERY]</input>
+<localtiles> ou avec <input>un clic de souris</input> dans le panneau
 d'inventaire</localtiles>. Certains types de bijoux sont identifiés lorsque
 vous les mettez. Pour les autres, vous allez devoir trouver un autre moyen de
 les identifier.
@@ -394,10 +392,10 @@ tutorial3 scroll_id
 
 Le meilleur moyen d'identifier les objets inconnus est de lire les parchemins
 d'identification. Essayez ce parchemin sur votre amulette en le lisant avec
-<input>$cmd[CMD_READ]</input><localtiles> ou en <input>cliquant</input> dans le
-panneau d'inventaire</localtiles>, puis en choisissant l'amulette dans la liste
-d'objets avec la lettre qui lui est assignée<localtiles> ou par un <input>clic
-de souris</input></localtiles>.
+<input>$cmd[CMD_READ]</input><localtiles> ou en <input>cliquant</input> dans
+le panneau d'inventaire</localtiles>, puis en choisissant l'amulette dans la
+liste d'objets avec la lettre qui lui est assignée<localtiles> ou par un
+<input>clic de souris</input></localtiles>.
 %%%%
 tutorial3 drop
 
@@ -416,19 +414,19 @@ Les échoppes ont une offre variée, mais on ne peut rien y vendre.
 %%%%
 tutorial3 enter_shop
 
-Pour entrer dans cette boutique, pressez
-<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> ou <input>Shift + clic
-droit</input> sur votre personnage</localtiles>. Pour acheter des objets,
-sélectionnez-les avec leur raccourci clavier, appuyez sur <input>Entrée</input>
-et confirmez avec <input>y</input>es. Vous pouvez passer en mode de description
-avec <input>!</input>.
+Pour entrer dans cette boutique, pressez <input>$cmd[CMD_GO_UPSTAIRS]</input>
+<localtiles> ou <input>Shift + clic droit</input> sur votre
+personnage</localtiles>. Pour acheter des objets, sélectionnez-les avec leur
+raccourci clavier, appuyez sur <input>Entrée</input> et confirmez avec
+<input>y</input>es. Vous pouvez passer en mode de description avec
+<input>!</input>.
 %%%%
 tutorial3 autoexplore_reminder
 
 Rappelez-vous, vous pouvez explorer le niveau automatiquement avec
 <input>$cmd[CMD_EXPLORE]</input><localtiles> ou en <input>cliquant</input> sur
-le bouton d’auto-exploration dans le <w>le panneau de
-commande</w></localtiles>.
+le bouton d’auto-exploration dans le <w>le panneau de commande</w>
+</localtiles>.
 %%%%
 tutorial3 go_shopping
 
@@ -492,10 +490,9 @@ l'expérience.
 %%%%
 tutorial4 spellcasting
 
-Vous pouvez jeter des sorts avec
-<input>$cmd[CMD_CAST_SPELL]</input><localtiles> ou en <input>cliquant</input>
-sur l'icône du sort</localtiles>. Utilisez <input>$cmd[CMD_CAST_SPELL]?</input>
-pour voir la liste de vos sorts.
+Vous pouvez jeter des sorts avec <input>$cmd[CMD_CAST_SPELL]</input>
+<localtiles> ou en <input>cliquant</input> sur l'icône du sort</localtiles>.
+Utilisez <input>$cmd[CMD_CAST_SPELL]?</input> pour voir la liste de vos sorts.
 
 Quand que vous n'avez plus de points de magie, repliez vous et reposez vous
 pour les récupérer avec <input>$cmd[CMD_REST]</input><localtiles> ou en
@@ -564,10 +561,10 @@ vous souhaitez oublier.
 %%%%
 tutorial4 memorise2
 
-Mémorisez encore un nouveau sort avec
-<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> ou en
-<input>cliquant</input> sur l’icône du sort dans le panneau de
-mémorisation</localtiles>. Et maintenant levez votre armée de morts-vivants !
+Mémorisez encore un nouveau sort avec <input>$cmd[CMD_MEMORISE_SPELL]</input>
+<localtiles> ou en <input>cliquant</input> sur l’icône du sort dans le panneau
+de mémorisation</localtiles>. Et maintenant levez votre armée de
+morts-vivants !
 %%%%
 tutorial4 displace_allies
 
@@ -590,8 +587,8 @@ mettre cette cotte de mailles et ce bouclier (avec
 dessus</localtiles>), et comparez vos taux de réussite de sorts avec
 <input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> ou en <input>passant la
 souris</input> sur vos sorts mémorisés</localtiles>. Vous pouvez retirer votre
-armure avec <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> ou encore via un
-<input>clic de souris</input></localtiles>.
+armure avec <input>$cmd[CMD_REMOVE_ARMOUR]</input><localtiles> ou encore via
+un <input>clic de souris</input></localtiles>.
 %%%%
 tutorial4 resting_reminder
 
@@ -657,8 +654,8 @@ Jetez un œil à votre statut religieux avec
 <input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles> (ou via le <w>bouton
 religion</w> dans le panneau de commandes, ou en <input>Shift-cliquant
 droit</input> sur votre personnage)</localtiles>. A nouveau, pressez
-<input>!</input><localtiles> ou <input>cliquez droit</input></localtiles> pour
-avoir une description plus détaillée de votre dieu.
+<input>!</input><localtiles> ou <input>cliquez droit</input></localtiles>
+pour avoir une description plus détaillée de votre dieu.
 %%%%
 tutorial5 piety_on_kill
 
@@ -681,9 +678,8 @@ faire.
 tutorial5 berserk
 
 Contre des ennemis particulièrement coriaces, vous devriez peut-être utiliser
-le pouvoir de berserk de Trog avec
-<input>$cmd[CMD_USE_ABILITY]</input><localtiles> ou via le <w>panneau de
-commandes</w></localtiles>.
+le pouvoir de berserk de Trog avec <input>$cmd[CMD_USE_ABILITY]</input>
+<localtiles> ou via le <w>panneau de commandes</w></localtiles>.
 %%%%
 tutorial5 exhaustion
 

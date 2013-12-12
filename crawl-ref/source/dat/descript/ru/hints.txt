@@ -195,9 +195,8 @@ HINT_SEEN_FIRST_OBJECT
 вещи подбираются автоматически. <tiles>В графической версии такие предметы
 обведены зеленой рамкой.</tiles>
 
-Вещи из инвентаря вы можете выбросить, нажав
-<tiles><input>Shift-leftclick</input>. Если вы нажмете
-<input>right-click</input> на
+Вещи из инвентаря вы можете выбросить, нажав <tiles>
+<input>Shift-leftclick</input>. Если вы нажмете <input>right-click</input> на
 вещи</tiles><console><input>$cmd[CMD_DROP]</input>. Каждый раз когда вы
 смотрите на вещь в вашем
 инвентаре(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>, будут показаны

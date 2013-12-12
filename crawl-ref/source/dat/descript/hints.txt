@@ -72,8 +72,8 @@ death random 2
 
 Rest between encounters, if possible in an area already explored and cleared of
 monsters. Pressing <input>$cmd[CMD_REST]</input><localtiles>, or
-<input>clicking into the stat area</input></localtiles> will let you rest for a
-moment (you will stop resting after 100 turns, or when fully healed).
+<input>clicking into the stat area</input></localtiles> will let you rest for
+a moment (you will stop resting after 100 turns, or when fully healed).
 %%%%
 death random 3
 
