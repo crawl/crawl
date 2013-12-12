@@ -860,7 +860,7 @@ bool SkillMenu::exit()
 
     if (!enabled_skill && !all_skills_maxed())
     {
-        set_help("You need to enable at least one skill.");
+        set_help("<lightred>You need to enable at least one skill.</lightred>");
         return false;
     }
 
