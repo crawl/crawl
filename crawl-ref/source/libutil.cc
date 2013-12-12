@@ -1125,6 +1125,8 @@ string unwrap_desc(string desc)
     // Indented lines are pre-formatted.
     desc = replace_all(desc, "\n ", "\\n ");
 
+    // Don't add whitespaces between tags
+    desc = replace_all(desc, ">\n<", "><");
     // Newlines are still whitespace.
     desc = replace_all(desc, "\n", " ");
     // Can force a newline with a literal "\n".

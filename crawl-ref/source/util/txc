@@ -144,6 +144,7 @@ def unwrap(text, no_space):
     text = text.replace("\n}}", "\\n}}")
     text = text.replace("\n{{", "\\n{{")
 
+    text = text.replace(">\n<", "><")
     text = text.replace("\n", " ")
     text = text.replace("\\n", "\n")
 
@@ -167,6 +168,8 @@ def wrap(text, eac, no_space):
     lines = []
     for line in text.splitlines():
         if line:
+            # This allows breaking lines between tags
+            line = line.replace("><", ">\f<")
             if no_space:
                 # Need to rstrip the lines because when the wrapper tries to
                 # add a single character to the end of the line, it might fail
@@ -178,6 +181,8 @@ def wrap(text, eac, no_space):
                 lines += wrapper.wrap(line)
         elif not lines or lines[-1] != '': # remove consecutive empty lines
             lines += ['']
+
+    lines[:] = [line.replace(">\f<", "><") for line in lines]
 
     if eac or no_space:
         fixed_lines = []
@@ -1270,7 +1275,8 @@ class Menu(OrderedDict):
 wrapper_args = {
     'width' : 79,
     'break_on_hyphens' : False,
-    'break_long_words' : False}
+    'break_long_words' : False,
+    'replace_whitespace' : False}
 
 wrapper = TextWrapper(**wrapper_args)
 # Use hardcoded whitespaces instead of \s because the latter matches
