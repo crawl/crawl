@@ -2148,7 +2148,7 @@ static monsterentry mondata[] =
 
 {
     MONS_FIRE_CRAB, 't', LIGHTRED, "fire crab",
-    M_NO_SKELETON | M_FLEES,
+    M_NO_SKELETON,
     MR_VUL_POISON | mrd(MR_RES_FIRE, 3),
     320, 25, MONS_FIRE_CRAB, MONS_FIRE_CRAB, MH_NATURAL, -4,
     { {AT_BITE, AF_FIRE, 15}, {AT_CLAW, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK },
@@ -2160,7 +2160,7 @@ static monsterentry mondata[] =
 
 {
     MONS_APOCALYPSE_CRAB, 't', WHITE, "apocalypse crab",
-    M_NO_SKELETON | M_FLEES | M_SEE_INVIS,
+    M_NO_SKELETON | M_SEE_INVIS,
     MR_VUL_POISON | mrd(MR_RES_FIRE | MR_RES_COLD, 2),
     320, 13, MONS_APOCALYPSE_CRAB, MONS_APOCALYPSE_CRAB, MH_DEMONIC, -5,
     { {AT_BITE, AF_CHAOS, 15}, {AT_CLAW, AF_CHAOS, 15}, AT_NO_ATK, AT_NO_ATK },
