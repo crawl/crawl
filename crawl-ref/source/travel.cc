@@ -743,9 +743,15 @@ static void _explore_find_target_square()
     if (whereto.x || whereto.y)
     {
         // Make sure this is a square that is reachable, since we asked
-        // travel_pathfind to give us even unreachable squares.
-        if (travel_point_distance[whereto.x][whereto.y] <= 0)
+        // travel_pathfind to give us even unreachable squares.  The
+        // player's starting position may in some cases not have its
+        // travel_point_distance set, but we know it's reachable, since
+        // we're there.
+        if (travel_point_distance[whereto.x][whereto.y] <= 0
+            && whereto != you.pos())
+        {
             whereto.reset();
+        }
     }
 
     if (whereto.x || whereto.y)
