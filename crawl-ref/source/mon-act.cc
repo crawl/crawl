@@ -2339,7 +2339,7 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);
 
-    if  (mons->type == MONS_ASMODEUS)
+    if (mons->type == MONS_ASMODEUS)
     {
         cloud_type ctype = CLOUD_FIRE;
 

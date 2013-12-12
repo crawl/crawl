@@ -456,7 +456,7 @@ void handle_behaviour(monster* mon)
         && mon->type != MONS_BATTLESPHERE
         && mon->type != MONS_SPECTRAL_WEAPON)
     {
-        if  (!crawl_state.game_is_zotdef())
+        if (!crawl_state.game_is_zotdef())
         {
             if (you.pet_target != MHITNOT)
                 mon->foe = you.pet_target;

@@ -1178,9 +1178,7 @@ int eat_from_floor(bool skip_chunks)
                 break;
 
             if (can_ingest(*item, false))
-            {
                 return eat_item(*item);
-            }
         }
 #else
         sort(food_items.begin(), food_items.end(), compare_by_freshness());
@@ -1207,9 +1205,7 @@ int eat_from_floor(bool skip_chunks)
                     break;
 
                 if (can_ingest(*item, false))
-                {
                     return eat_item(*item);
-                }
                 need_more = true;
                 break;
             case 'i':
@@ -1355,9 +1351,7 @@ bool eat_from_inventory()
             case 'e':
             case 'y':
                 if (can_ingest(*item, false))
-                {
                     return eat_item(*item);
-                }
                 break;
             default:
                 // Else no: try next one.
