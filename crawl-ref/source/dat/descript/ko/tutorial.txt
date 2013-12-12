@@ -63,17 +63,17 @@ tutorial1 autoexplore_announce
 
 자동이동 기능은 시선을 끌 만한 던전의 구성요소나 물건이 있으면 이동을 멈추고
 발견한 것에 대한 메시지를 표시합니다. 계단으로 바로 이동하는 방법에는
-<localtiles>계단을 <input>왼쪽 마우스버튼</input>으로 클릭하거나,
-</localtiles><input>$cmd[CMD_DISPLAY_MAP] << 엔터</input> 키를 순서대로 누르는
-방법이 있습니다.
+<localtiles>계단을 <input>왼쪽 마우스버튼</input>으로 클릭하거나, </localtiles>
+<input>$cmd[CMD_DISPLAY_MAP] << 엔터</input> 키를 순서대로 누르는 방법이
+있습니다.
 %%%%
 tutorial1 tutorial_end
 
 축하합니다! 첫번째 연습과정을 통과하셨습니다!
 
 연습을 끝내려면, <localtiles>캐릭터에 마우스 커서를 대고 <input>시프트+마우스
-클릭</input>을 누르거나, </localtiles><input>$cmd[CMD_GO_UPSTAIRS]</input> 키를
-눌러 계단을 올라가면 됩니다. 던전을 빠져나올 것이냐는 질문이 나오면,
+클릭</input>을 누르거나, </localtiles><input>$cmd[CMD_GO_UPSTAIRS]</input>
+키를 눌러 계단을 올라가면 됩니다. 던전을 빠져나올 것이냐는 질문이 나오면,
 <input>대문자 Y</input> 키를 눌러 답하시면 됩니다.
 %%%%
 tutorial1 newlevel
@@ -183,9 +183,9 @@ tutorial2 newlevel
 %%%%
 tutorial2 darts
 
-이제 원거리 공격을 해볼 시간입니다! <input>$cmd[CMD_PICKUP]</input><localtiles>
-키나 <input>왼쪽 마우스버튼</input></localtiles>을 이용해서 이 다트들을 주운
-다음, 계속 진행하세요.
+이제 원거리 공격을 해볼 시간입니다! <input>$cmd[CMD_PICKUP]</input>
+<localtiles> 키나 <input>왼쪽 마우스버튼</input></localtiles>을 이용해서 이
+다트들을 주운 다음, 계속 진행하세요.
 %%%%
 tutorial2 throwing
 
@@ -299,15 +299,14 @@ tutorial3 command_help
 명령어가 너무 많아서 혼란스럽다면, 명령어 도움말
 <input>$cmd[CMD_DISPLAY_COMMANDS]</input>를 통해 필요한 명령어를 찾을 수
 있습니다. <localtiles>자주 쓰이는 명령어들은 화면 오른쪽의 <w>명령어 패널</w>을
-클릭해서도 사용할 수 있습니다.</localtiles>
+클릭해서도 사용할 수 있습니다. </localtiles>
 <input>$cmd[CMD_REPLAY_MESSAGES]</input>를 써서 예전 메시지들을 보는 것 또한
 가능합니다.
 %%%%
 tutorial3 potion
 
-<input>$cmd[CMD_QUAFF]</input> 명령<localtiles>이나
-<input>mouseclick</input></localtiles>을 통해 이 포션들 중 하나를 마실 수
-있습니다.
+<input>$cmd[CMD_QUAFF]</input> 명령<localtiles>이나 <input>mouseclick</input>
+</localtiles>을 통해 이 포션들 중 하나를 마실 수 있습니다.
 %%%%
 tutorial3 wand_fire
 
@@ -330,9 +329,9 @@ tutorial3 amulet
 %%%%
 tutorial3 drop
 
-이 부적은 쓸모가 없습니다. 이것을 버리고 싶다면
-<input>$cmd[CMD_DROP]</input><localtiles> 하거나 인벤토리 패널의 부적을
-<input>Shift-leftclicking</input> 하여 버리십시오</localtiles>.
+이 부적은 쓸모가 없습니다. 이것을 버리고 싶다면 <input>$cmd[CMD_DROP]</input>
+<localtiles> 하거나 인벤토리 패널의 부적을 <input>Shift-leftclicking</input>
+하여 버리십시오</localtiles>.
 %%%%
 tutorial3 gold
 
@@ -352,9 +351,9 @@ tutorial3 enter_shop
 %%%%
 tutorial3 autoexplore_reminder
 
-기억해 두십시오. <input>$cmd[CMD_EXPLORE]</input><localtiles> 키 또는 <w>명령어
-패널</w>에 있는 자동 탐색 버튼을 <input>clicking</input>함으로써, 당신은
-언제든지 아직 가 보지 않은 던전 내의 장소를 자동으로 탐색할 수
+기억해 두십시오. <input>$cmd[CMD_EXPLORE]</input><localtiles> 키 또는
+<w>명령어 패널</w>에 있는 자동 탐색 버튼을 <input>clicking</input>함으로써,
+당신은 언제든지 아직 가 보지 않은 던전 내의 장소를 자동으로 탐색할 수
 있습니다</localtiles>.
 %%%%
 tutorial3 go_shopping
@@ -560,9 +559,8 @@ tutorial5 religion
 <input>$cmd[CMD_DISPLAY_RELIGION]</input> 키<localtiles> (혹은 명령어 모음의
 <w>신앙</w> 버튼을 클릭하거나, 캐릭터에 <input>시프트+오른쪽
 마우스버튼</input>)</localtiles>을(를) 이용하면 됩니다. 그 화면에서 다시
-<input>!</input> 키<localtiles> 또는 <input>오른쪽
-마우스버튼</input></localtiles>을(를) 누르면 신에 대한 더 자세한 정보가
-나타납니다.
+<input>!</input> 키<localtiles> 또는 <input>오른쪽 마우스버튼</input>
+</localtiles>을(를) 누르면 신에 대한 더 자세한 정보가 나타납니다.
 %%%%
 tutorial5 piety_on_kill
 
@@ -585,9 +583,9 @@ tutorial5 burn_book
 tutorial5 berserk
 
 강해보이는 적을 만났을 때에는, <input>$cmd[CMD_USE_ABILITY]</input>
-키나<localtiles> <w>명령어 모음</w></localtiles>을(를) 이용하여 트로그의 광폭화
-권능을 사용할 수 있습니다. 앞에 있는 적은 지금 상태로는 이기기 어려우므로,
-권능을 사용해보세요.
+키나<localtiles> <w>명령어 모음</w></localtiles>을(를) 이용하여 트로그의
+광폭화 권능을 사용할 수 있습니다. 앞에 있는 적은 지금 상태로는 이기기
+어려우므로, 권능을 사용해보세요.
 %%%%
 tutorial5 exhaustion
 

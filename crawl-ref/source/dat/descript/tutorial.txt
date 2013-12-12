@@ -169,8 +169,8 @@ tutorial2 chop_corpses
 You can chop up corpses into edible meat chunks with
 <input>$cmd[CMD_BUTCHER]</input> <localtiles>or <input>Shift +
 mouseclick</input>, </localtiles>and then eat the resulting chunks with
-<input>$cmd[CMD_EAT]</input><localtiles> or by
-<input>mouseclick</input></localtiles>.
+<input>$cmd[CMD_EAT]</input><localtiles> or by <input>mouseclick</input>
+</localtiles>.
 %%%%
 tutorial2 rest_and_chop_reminder
 
@@ -190,10 +190,9 @@ Remember, you can rest up with <input>$cmd[CMD_REST]</input>.
 %%%%
 tutorial2 eat_reminder
 
-Remember, you can chop creatures up with
-<input>$cmd[CMD_BUTCHER]</input><localtiles> or <input>Shift +
-mouseclick</input></localtiles>, and then eat the resulting chunks with
-<input>$cmd[CMD_EAT]</input><localtiles> or
+Remember, you can chop creatures up with <input>$cmd[CMD_BUTCHER]</input>
+<localtiles> or <input>Shift + mouseclick</input></localtiles>, and then eat
+the resulting chunks with <input>$cmd[CMD_EAT]</input><localtiles> or
 <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
@@ -221,27 +220,26 @@ Now, for ranged combat! Pick up these darts with
 %%%%
 tutorial2 throwing
 
-You can fire your darts at a monster with
-<input>$cmd[CMD_FIRE]</input><localtiles> or by <input>clicking</input> on them
-in the inventory panel</localtiles>. To confirm the auto-targeted monster,
-press <input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
+You can fire your darts at a monster with <input>$cmd[CMD_FIRE]</input>
+<localtiles> or by <input>clicking</input> on them in the inventory
+panel</localtiles>. To confirm the auto-targeted monster, press
+<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
 %%%%
 tutorial2 wield_bow
 
-Pick up this bow and wield it with
-<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> or by
-<input>mouseclick</input></localtiles>.
+Pick up this bow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
+<localtiles> or by <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 firing
 
 # FIXME: Lengthy because of the hint for choosing target.
 Firing arrows from your wielded bow works exactly the same as throwing darts:
-via <input>$cmd[CMD_FIRE]</input><localtiles> or
-<input>mouseclick</input></localtiles>. You can change the targeted monster by
-pressing <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> while in target mode.
-The worm is harmless behind the lava, so concentrate on the dummy which can
-fire at you. Again, confirm your choice with
-<input>$cmd[CMD_TARGET_SELECT]</input> or <input>Enter</input>.
+via <input>$cmd[CMD_FIRE]</input><localtiles> or <input>mouseclick</input>
+</localtiles>. You can change the targeted monster by pressing
+<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> while in target mode. The worm is
+harmless behind the lava, so concentrate on the dummy which can fire at you.
+Again, confirm your choice with <input>$cmd[CMD_TARGET_SELECT]</input> or
+<input>Enter</input>.
 %%%%
 tutorial2 travel_reminder
 
@@ -305,9 +303,9 @@ automatically as you step on them.
 tutorial3 scroll
 
 Many items are unidentified when you find them. One way to find out what they
-do is to use them. Try reading this scroll with
-<input>$cmd[CMD_READ]</input><localtiles> or with <input>mouseclick</input> in
-the inventory panel</localtiles>.
+do is to use them. Try reading this scroll with <input>$cmd[CMD_READ]</input>
+<localtiles> or with <input>mouseclick</input> in the inventory
+panel</localtiles>.
 %%%%
 tutorial3 scroll_noautopickup
 
@@ -321,8 +319,9 @@ tutorial3 ego_weapon
 An item described as <lightblue>runed</lightblue> or
 <lightblue>glowing</lightblue> will always be enchanted, or have special
 properties, or both. You need to wield this scimitar (with
-<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> or by <input>clicking</input>
-on it in the inventory panel</localtiles>) to find out what those are.
+<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> or by
+<input>clicking</input> on it in the inventory panel</localtiles>) to find out
+what those are.
 %%%%
 tutorial3 inventory
 
@@ -356,9 +355,8 @@ of the screen. </localtiles>Rereading old messages with
 %%%%
 tutorial3 potion
 
-You can quaff one of these potions with
-<input>$cmd[CMD_QUAFF]</input><localtiles> or with
-<input>mouseclick</input></localtiles>.
+You can quaff one of these potions with <input>$cmd[CMD_QUAFF]</input>
+<localtiles> or with <input>mouseclick</input></localtiles>.
 %%%%
 tutorial3 artefact_armour
 
@@ -386,19 +384,18 @@ types.
 %%%%
 tutorial3 amulet
 
-Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> or
-with <input>mouseclick</input> in the inventory panel</localtiles>. Some types
-of jewellery are identified when you put them on. For others, you'll need
+Jewellery is put on with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles>
+or with <input>mouseclick</input> in the inventory panel</localtiles>. Some
+types of jewellery are identified when you put them on. For others, you'll need
 another way of identifying them.
 %%%%
 tutorial3 scroll_id
 
 An important way to identify unknown items is by reading scrolls of identify.
-Try this scroll on your amulet by reading it with
-<input>$cmd[CMD_READ]</input><localtiles> or by <input>clicking</input> it in
-the inventory panel</localtiles>, and then choosing the amulet from the item
-list with its assigned letter<localtiles> or by
-<input>mouseclick</input></localtiles>.
+Try this scroll on your amulet by reading it with <input>$cmd[CMD_READ]</input>
+<localtiles> or by <input>clicking</input> it in the inventory
+panel</localtiles>, and then choosing the amulet from the item list with its
+assigned letter<localtiles> or by <input>mouseclick</input></localtiles>.
 %%%%
 tutorial3 drop
 
@@ -511,9 +508,9 @@ rest icon in the command panel</localtiles>.
 %%%%
 tutorial4 ring_power
 
-Put on this ring with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> or by
-<input>clicking</input> it in the inventory panel</localtiles>, and then rest
-up to your new full potential.
+Put on this ring with <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> or
+by <input>clicking</input> it in the inventory panel</localtiles>, and then
+rest up to your new full potential.
 %%%%
 tutorial4 undead
 
@@ -525,10 +522,10 @@ by pressing <input>Ctrl+leftclick</input> on the monster.</localtiles>
 %%%%
 tutorial4 spell_success
 
-To check your spell proficiency, press
-<input>$cmd[CMD_DISPLAY_SPELLS]</input><localtiles> or <input>mouseover</input>
-over your memorised spells</localtiles>. Compare your spell success rates
-before and after wielding this staff.
+To check your spell proficiency, press <input>$cmd[CMD_DISPLAY_SPELLS]</input>
+<localtiles> or <input>mouseover</input> over your memorised
+spells</localtiles>. Compare your spell success rates before and after wielding
+this staff.
 %%%%
 tutorial4 mephitic_cloud
 
@@ -568,10 +565,9 @@ to forget.
 %%%%
 tutorial4 memorise2
 
-Again, memorise a new spell with
-<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
-<input>clicking</input> on the memorisation tab and selecting the spell
-tile</localtiles>. And then raise yourself an undead army!
+Again, memorise a new spell with <input>$cmd[CMD_MEMORISE_SPELL]</input>
+<localtiles> or by <input>clicking</input> on the memorisation tab and
+selecting the spell tile</localtiles>. And then raise yourself an undead army!
 %%%%
 tutorial4 displace_allies
 
@@ -692,7 +688,7 @@ tutorial5 exhaustion
 
 A berserker rage is truly exhausting. While fatigued, you cannot berserk again
 and are also slowed. It's best to rest with <input>$cmd[CMD_REST]</input>
-<localtiles>(or via the <w>command panel</w>) </localtiles>until you feel fit
+<localtiles> (or via the <w>command panel</w>)</localtiles> until you feel fit
 again.
 %%%%
 tutorial5 hunger

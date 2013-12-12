@@ -52,8 +52,8 @@ Zauważ, że możesz przechodzić tylko przez płytką wodę.
 tutorial1 upstairs
 
 Stojąc na schodach prowadzących w górę, możesz powrócić do wcześniejszej
-lokacji, używająć <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> lub klikając
-<input>Shift-clicking</input> na swoją postać</localtiles>.
+lokacji, używająć <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> lub
+klikając <input>Shift-clicking</input> na swoją postać</localtiles>.
 %%%%
 tutorial2 start
 
@@ -101,30 +101,30 @@ W tej lekcji nauczysz się o bogach, i jak używać ich mocy.
 tutorial5 dungeon_overview
 
 Trog jest tylko jednym z wielu bogów. Podczas normalnej gry, możesz wcisnąć
-<input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> lub kliknąć <input>schemat
-lochów</input> w panelu czynności</localtiles> aby obejrzeć listę ołtarzy i
-podobnych interesujących miejsc.
+<input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> lub kliknąć
+<input>schemat lochów</input> w panelu czynności</localtiles> aby obejrzeć
+listę ołtarzy i podobnych interesujących miejsc.
 %%%%
 tutorial5 altar
 
-Możesz pomodlić się na ołtarzu wciskając
-<input>$cmd[CMD_PRAY]</input><localtiles> (lub klikając <input>przycisk
-modlitwy</input> w panelu czynności lub też <input>shift-klikając</input> twą
-postać)</localtiles> aby zobaczyć moce danego boga lub też przyłączyć się do
-tej religii. Jeśli wciśniesz <input>!</input><localtiles> lub klikniesz
-<input>prawym przyciskiem myszy</input></localtiles> na ekranie religii,
-zobaczysz bardziej szczegółowy opis.
+Możesz pomodlić się na ołtarzu wciskając <input>$cmd[CMD_PRAY]</input>
+<localtiles> (lub klikając <input>przycisk modlitwy</input> w panelu czynności
+lub też <input>shift-klikając</input> twą postać)</localtiles> aby zobaczyć
+moce danego boga lub też przyłączyć się do tej religii. Jeśli wciśniesz
+<input>!</input><localtiles> lub klikniesz <input>prawym przyciskiem
+myszy</input></localtiles> na ekranie religii, zobaczysz bardziej szczegółowy
+opis.
 
 Aby potwierdzić ten wybór, należy wcisnąć duże <input>Y</input>.
 %%%%
 tutorial5 religion
 
 Teraz rzuć okiem na swój religijny status wciskając
-<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles> (lub klikając <w>przycisk
-religii</w> w panelu czynności, lub <input>shift-klikając</input> swą
-postać)</localtiles>. Tutaj też, wciskając <input>!</input><localtiles> lub
-<input>prawy przycisk myszy</input></localtiles> możesz obejrzeć szczegółowy
-opis swego boga.
+<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles> (lub klikając
+<w>przycisk religii</w> w panelu czynności, lub <input>shift-klikając</input>
+swą postać)</localtiles>. Tutaj też, wciskając <input>!</input><localtiles>
+lub <input>prawy przycisk myszy</input></localtiles> możesz obejrzeć
+szczegółowy opis swego boga.
 %%%%
 tutorial5 piety_on_kill
 
@@ -132,10 +132,9 @@ Niektórzy bogowie uwielbiają kiedy zabijasz w ich imieniu. Czas na małą rze�
 %%%%
 tutorial5 sacrificing
 
-Modląc się nad zwłokami pokonanych klawiszem
-<input>$cmd[CMD_PRAY]</input><localtiles> lub przyciskiem <w>modlitwy</w> w
-panelu czynności</localtiles>, składasz je w ofierze Trogowi. Spróbuj to
-zrobić!
+Modląc się nad zwłokami pokonanych klawiszem <input>$cmd[CMD_PRAY]</input>
+<localtiles> lub przyciskiem <w>modlitwy</w> w panelu czynności</localtiles>,
+składasz je w ofierze Trogowi. Spróbuj to zrobić!
 %%%%
 tutorial5 burn_book
 

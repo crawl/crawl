@@ -77,8 +77,8 @@ das du <input>$cmd[CMD_EXPLORE]</input> benutzen kannst, um fortzufahren.
 tutorial1 autoexplore_announce
 
 Auto-Erforschen stoppt, um Besonderheiten und Gegenstände anzuzeigen. Wenn du
-direkt zu den Treppen gehen willst, kannst du auf sie
-<localtiles><input>klicken</input> oder du drückst <w>[$cmd[CMD_DISPLAY_MAP] <<
+direkt zu den Treppen gehen willst, kannst du auf sie <localtiles>
+<input>klicken</input> oder du drückst <w>[$cmd[CMD_DISPLAY_MAP] <<
 Eingabe]</w>.
 %%%%
 tutorial1 tutorial_end
@@ -170,11 +170,10 @@ suchen, aber auch durch unzählige Ereignisse unterbrochen werden.
 %%%%
 tutorial2 chop_corpses
 
-Du kannst Leichen in essbare Stücke mit
-<input>$cmd[CMD_BUTCHER]</input><localtiles> oder mit
-<input>Shift-Klick</input></localtiles> zerhacken und die so erhaltenen
-Fleischbrocken mit <input>$cmd[CMD_EAT]</input><localtiles> oder mit einem
-<input>Mausklick</input></localtiles> verspeisen.
+Du kannst Leichen in essbare Stücke mit <input>$cmd[CMD_BUTCHER]</input>
+<localtiles> oder mit <input>Shift-Klick</input></localtiles> zerhacken und
+die so erhaltenen Fleischbrocken mit <input>$cmd[CMD_EAT]</input><localtiles>
+oder mit einem <input>Mausklick</input></localtiles> verspeisen.
 %%%%
 tutorial2 rest_and_chop_reminder
 
@@ -194,11 +193,10 @@ Danke daran, du kannst dich mit <input>$cmd[CMD_REST]</input> ausruhen.
 %%%%
 tutorial2 eat_reminder
 
-Denke daran, du kannst Kreaturen mit
-<input>$cmd[CMD_BUTCHER]</input><localtiles> oder mir
-<input>Shift-Klick</input></localtiles> zerhacken und dann die übrig
-gebliebenen Stücke mit <input>$cmd[CMD_EAT]</input><localtiles> oder
-<input>Maus-Klick</input></localtiles> verspeisen.
+Denke daran, du kannst Kreaturen mit <input>$cmd[CMD_BUTCHER]</input>
+<localtiles> oder mir <input>Shift-Klick</input></localtiles> zerhacken und
+dann die übrig gebliebenen Stücke mit <input>$cmd[CMD_EAT]</input><localtiles>
+oder <input>Maus-Klick</input></localtiles> verspeisen.
 %%%%
 tutorial2 compare_monster_desc
 
@@ -217,9 +215,9 @@ Denke daran : Du kannst alte Mitteilungen mit
 %%%%
 tutorial2 darts
 
-Und nun zum Fernkampf! Hebe diese Darts mit
-<input>$cmd[CMD_PICKUP]</input><localtiles> oder mit einem
-<input>Maus-Klick</input> auf,</localtiles> und fahre fort.
+Und nun zum Fernkampf! Hebe diese Darts mit <input>$cmd[CMD_PICKUP]</input>
+<localtiles> oder mit einem <input>Maus-Klick</input> auf,</localtiles> und
+fahre fort.
 %%%%
 tutorial2 throwing
 
@@ -312,20 +310,19 @@ mit <input>$cmd[CMD_READ]</input><localtiles> oder mit einem
 tutorial3 scroll_noautopickup
 
 Automatisches Einsammeln funktioniert nicht wenn ein Monster in der Nähe ist.
-Du kannst diese Schriftrolle entweder mit
-<input>$cmd[CMD_PICKUP]</input><localtiles> oder durch <input>klicken</input>
-auf deinen Charakter aufheben.</localtiles> Oder du bekämpfst das sich nähernde
-Monster und hebst sie danach auf.
+Du kannst diese Schriftrolle entweder mit <input>$cmd[CMD_PICKUP]</input>
+<localtiles> oder durch <input>klicken</input> auf deinen Charakter
+aufheben.</localtiles> Oder du bekämpfst das sich nähernde Monster und hebst
+sie danach auf.
 %%%%
 tutorial3 ego_weapon
 
 Ein Gegenstand der mit <lightblue>runenhaft</lightblue> oder mit
 <lightblue>leuchtend</lightblue>, oder mit beidem, gekennzeichnet ist, wird
 immer verzaubert sein oder spezielle Eigenschaften haben. Du wirst diesen
-Krummsäbel ausrüsten müssen (mit
-<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles> mit einem
-<input>klick</input> darauf in deinem Inventar</localtiles>), um heraus zu
-finden was diese sind.
+Krummsäbel ausrüsten müssen (mit <input>$cmd[CMD_WIELD_WEAPON]</input>
+<localtiles> mit einem <input>klick</input> darauf in deinem
+Inventar</localtiles>), um heraus zu finden was diese sind.
 %%%%
 tutorial3 inventory
 
@@ -379,14 +376,14 @@ Du kannst die Macht eines Zauberstabes hervorrufen wenn du
 tutorial3 wand_digging
 
 Ein Zauberstag des Grabens kann bestimmte Wände zerstören. Benutze
-<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input>
-<localtiles>oder <input>Maus-Drüber</input>/<input>Rechts-Klick</input>
-</localtiles>um Typ einer Wand zu untersuchen.
+<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input><localtiles>
+oder <input>Maus-Drüber</input>/<input>Rechts-Klick</input></localtiles> um
+Typ einer Wand zu untersuchen.
 %%%%
 tutorial3 amulet
 
-Schmuck wird mit <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> oder einem
-<input>Maus-Klick</input> im Inventar-Feld angelegt</localtiles>. Einige
+Schmuck wird mit <input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> oder
+einem <input>Maus-Klick</input> im Inventar-Feld angelegt</localtiles>. Einige
 Schmucksorten werden identifiziert wenn du sie anlegst. Für Andere brauchst du
 einen anderen Weg sie zu identifizieren.
 %%%%
@@ -417,12 +414,11 @@ Sachen an.
 %%%%
 tutorial3 enter_shop
 
-Um das Geschäft zu betreten drücke
-<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> oder
-<input>Shift-Linksklick</input> auf deinen Charakter</localtiles>. Um
-Gegenstände zu kaufen wähle sie über ihre Buchstaben aus, drücke
-<input>Eingabe</input> und bestätige mit <input>y</input>es (ja). Du kannst in
-den Beschreibungs-Modus mit <input>!</input> wechseln.
+Um das Geschäft zu betreten drücke <input>$cmd[CMD_GO_UPSTAIRS]</input>
+<localtiles> oder <input>Shift-Linksklick</input> auf deinen
+Charakter</localtiles>. Um Gegenstände zu kaufen wähle sie über ihre Buchstaben
+aus, drücke <input>Eingabe</input> und bestätige mit <input>y</input>es (ja).
+Du kannst in den Beschreibungs-Modus mit <input>!</input> wechseln.
 %%%%
 tutorial3 autoexplore_reminder
 
@@ -502,10 +498,10 @@ Sobald Sie von Magie Punkte sind, um Rückzug und Ruhe sie mit
 %%%%
 tutorial4 ring_power
 
-Setzen Sie diesen Ring auf, mit
-<input>$cmd[CMD_WEAR_JEWELLERY]</input><localtiles> oder durch
-<input>Anklicken</input> es in der Bestandsliste aus</localtiles>, und ruhen
-Sie sich anschließend bis zu Ihrem neuen volles Potenzial auszuschöpfen.
+Setzen Sie diesen Ring auf, mit <input>$cmd[CMD_WEAR_JEWELLERY]</input>
+<localtiles> oder durch <input>Anklicken</input> es in der Bestandsliste
+aus</localtiles>, und ruhen Sie sich anschließend bis zu Ihrem neuen volles
+Potenzial auszuschöpfen.
 %%%%
 tutorial4 undead
 
@@ -540,16 +536,15 @@ Eine Stufe aufsteigen und das Erhöhen der Zaubern Fertigkeit geben weitere
 Plätze für Zaubersprüche in deinem Gedächtnis frei. Ebenfalls kannst du
 <w>einen gelernten Spruch vergessen</w> um Platz für einen neuen/weiteren zu
 machen. Der einfachste Weg dies zu tun ist mit einer Schriftrolle der Amnesie.
-Lese einfach laut die Schriftrolle (mit
-<input>$cmd[CMD_READ]</input><localtiles> oder <input>klicke</input> sie
-einfach</localtiles>) und wähle dann den Spruch/Zauber den du vergessen willst.
+Lese einfach laut die Schriftrolle (mit <input>$cmd[CMD_READ]</input>
+<localtiles> oder <input>klicke</input> sie einfach</localtiles>) und wähle
+dann den Spruch/Zauber den du vergessen willst.
 %%%%
 tutorial4 memorise2
 
-Wiederum, lerne einen Spruch mit
-<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder <input>klicke</input>
-auf den Gedächtnis Reiter und wähle eine Zauberkachel</localtiles>. Und dann
-erhebe deine Armee von Untoten!
+Wiederum, lerne einen Spruch mit <input>$cmd[CMD_MEMORISE_SPELL]</input>
+<localtiles> oder <input>klicke</input> auf den Gedächtnis Reiter und wähle
+eine Zauberkachel</localtiles>. Und dann erhebe deine Armee von Untoten!
 %%%%
 tutorial4 displace_allies
 
@@ -578,8 +573,8 @@ tutorial4 resting_reminder
 
 Vergewissere dich das deine Lebens- und Zauberenergie voll ist, bevor du in ein
 neues Gebiet eintrittst. Falls notwendig, pausiere mit
-<input>$cmd[CMD_REST]</input><localtiles> oder <input>mausklicke</input> in das
-Kommandofeld</localtiles>.
+<input>$cmd[CMD_REST]</input><localtiles> oder <input>mausklicke</input> in
+das Kommandofeld</localtiles>.
 
 Außerdem, da Untote nicht atmen kannst du verpestete Wolke werfen ohne deinen
 Verbündeten zu schaden.
@@ -623,9 +618,9 @@ Beten kannst du an einem Altar mit <input>$cmd[CMD_PRAY]</input><localtiles>
 (oder wenn du in das <input>Befehls-Feld klickst</input>, oder mit
 <input>Shift-Klick</input> auf deinen Charakter)</localtiles>, womit du dann
 erfährst was dieser Gott dir anbietet und diesem Glauben beizutreten. Wenn du
-<input>!</input><localtiles> oder einen
-<input>Rechts-Klick</input></localtiles> im Glaubens-Bildschirm ausführst kann
-du eine noch genauere Beschreibung bekommen.
+<input>!</input><localtiles> oder einen <input>Rechts-Klick</input>
+</localtiles> im Glaubens-Bildschirm ausführst kann du eine noch genauere
+Beschreibung bekommen.
 
 Bestätige deine Wahl mit einem <input>Y</input>, denke dabei an die
 Großschreibung.
@@ -648,8 +643,8 @@ das Niedermetzeln beginnen!
 tutorial5 sacrificing
 
 Wenn man über einer Leiche mit <input>$cmd[CMD_PRAY]</input><localtiles> oder
-über das <w>Befehls-Feld</w></localtiles> betest wirst du diese an Trog opfern.
-Versuche es!
+über das <w>Befehls-Feld</w></localtiles> betest wirst du diese an Trog
+opfern. Versuche es!
 %%%%
 tutorial5 burn_book
 

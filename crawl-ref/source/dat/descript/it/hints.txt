@@ -192,10 +192,10 @@ HINT_SEEN_FIRST_OBJECT
 Quel <console>$1 </console> è un oggetto. Se ti ci vai sopra e premi
 <input>$cmd[CMD_PICKUP]</input>, lo raccoglierai. <console> Generalmente, gli
 oggetti sono sono simboleggiati da caratteri che non sono lettere come
-<w>%?!"=()[</w>.</console><tiles> Puoi anche raccogliere un oggetto cliccandoci
-col <input>tasto sinistro del mouse</input> stando sulla sua casella.</tiles>
-Inoltre, diversi tipi di oggetti saranno raccolti automaticamente.
-<tiles>Questi saranno marchiati da un contorno verde.</tiles>
+<w>%?!"=()[</w>.</console><tiles> Puoi anche raccogliere un oggetto
+cliccandoci col <input>tasto sinistro del mouse</input> stando sulla sua
+casella.</tiles> Inoltre, diversi tipi di oggetti saranno raccolti
+automaticamente. <tiles>Questi saranno marchiati da un contorno verde.</tiles>
 
 Una volta nel tuo inventario, puoi buttarlo via con <tiles>a <input>Shift-click
 sinistro</input>. Ogni volta che tu fai <input>click-destro</input> su un

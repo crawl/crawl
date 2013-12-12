@@ -77,10 +77,10 @@ descendez.
 death random 2
 
 Reposez-vous entre deux rencontres, si possible dans une zone déjà explorée et
-nettoyée de ses monstres. Pressez <input>$cmd[CMD_REST]</input><localtiles>, ou
-<input>cliquez dans la zone des stats</input></localtiles> vous laissera vous
-reposer pour un long moment (vous vous arrêterez après 100 tours, ou quand vous
-serez pleinement guéri).
+nettoyée de ses monstres. Pressez <input>$cmd[CMD_REST]</input><localtiles>,
+ou <input>cliquez dans la zone des stats</input></localtiles> vous laissera
+vous reposer pour un long moment (vous vous arrêterez après 100 tours, ou quand
+vous serez pleinement guéri).
 %%%%
 death random 3
 

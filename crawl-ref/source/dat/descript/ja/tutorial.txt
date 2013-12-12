@@ -36,9 +36,9 @@ tutorial1 shiftmove
 %%%%
 tutorial1 downstairs
 
-下り階段の上に立っているとき、
-<input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> を押すか、キャラクターの上で
-<input>Shift+クリック</input> を押すことで次の階層へ移動します。
+下り階段の上に立っているとき、 <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> を押すか、キャラクターの上で <input>Shift+クリック</input>
+を押すことで次の階層へ移動します。
 %%%%
 tutorial1 levelmap
 
@@ -82,10 +82,10 @@ tutorial1 tutorial_end
 
 おめでとう！あなたは最初のレッスンをやり遂げました！
 
-チュートリアルを終了するには、 <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles>
-か、キャラクターの上で
-<input>Shift+クリック</input></localtiles>で階段を上ってください。
-その際に現れる入力プロンプトには大文字の <input>Y</input> を入力してください。
+チュートリアルを終了するには、 <input>$cmd[CMD_GO_UPSTAIRS]</input>
+<localtiles> か、キャラクターの上で <input>Shift+クリック</input>
+</localtiles>で階段を上ってください。その際に現れる入力プロンプトには大文字の
+<input>Y</input> を入力してください。
 %%%%
 tutorial1 newlevel
 
@@ -105,8 +105,8 @@ tutorial1 water
 %%%%
 tutorial1 upstairs
 
-上り階段の上に立っているとき、 <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles>
-を押すか、キャラクターの上で <input>Shift+クリック</input>
+上り階段の上に立っているとき、 <input>$cmd[CMD_GO_UPSTAIRS]</input>
+<localtiles> を押すか、キャラクターの上で <input>Shift+クリック</input>
 を押すことで次の階層へ移動します。
 %%%%
 tutorial1 exit
@@ -228,8 +228,8 @@ tutorial2 wield_bow
 tutorial2 firing
 
 装備した弓を用いて矢を打ち出すことは投げ矢を投げることと同様に
-<input>$cmd[CMD_FIRE]</input><localtiles> または
-<input>クリック</input></localtiles> から行います。
+<input>$cmd[CMD_FIRE]</input><localtiles> または <input>クリック</input>
+</localtiles> から行います。
 ターゲットモード中に<input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> を押すことで、
 対象になるモンスターを変更することが出来ます。
 ワームは溶岩の先にいて無害ですので、
@@ -344,8 +344,8 @@ tutorial3 command_help
 %%%%
 tutorial3 potion
 
-<input>$cmd[CMD_QUAFF]</input><localtiles> または
-<input>クリック</input></localtiles> で薬を飲むことが出来ます。
+<input>$cmd[CMD_QUAFF]</input><localtiles> または <input>クリック</input>
+</localtiles> で薬を飲むことが出来ます。
 %%%%
 tutorial3 artefact_armour
 
@@ -368,7 +368,7 @@ tutorial3 wand_digging
 掘削のワンドは特定の種類の壁を破壊することができます。
 <input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input>
 <localtiles>または <input>マウスオーバー</input>/<input>右クリック</input>
-</localtiles >を使って壁の種類を調べてみましょう。
+</localtiles>を使って壁の種類を調べてみましょう。
 %%%%
 tutorial3 amulet
 
@@ -387,9 +387,9 @@ tutorial3 scroll_id
 %%%%
 tutorial3 drop
 
-この護符は役立たずだ。これを捨てたいのであれば
-<input>$cmd[CMD_DROP]</input><localtiles> またはインベントリ内で
-<input>Shift-クリック</input> </localtiles>を押してください。
+この護符は役立たずだ。これを捨てたいのであれば <input>$cmd[CMD_DROP]</input>
+<localtiles> またはインベントリ内で <input>Shift-クリック</input>
+</localtiles>を押してください。
 %%%%
 tutorial3 gold
 
