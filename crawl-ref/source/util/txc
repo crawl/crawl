@@ -187,13 +187,14 @@ def wrap(text, eac, no_space):
     if eac or no_space:
         fixed_lines = []
         for line in lines:
-            if line and line[0] in east_asian_punctuation and fixed_lines:
+            while line and line[0] in east_asian_punctuation and fixed_lines:
                 fixed_lines[-1] += line[0]
-                if len(line) > 1:
-                    fixed_lines.append(line[1:])
-            else:
-                fixed_lines.append(line)
+                line = line[1:]
+                if not line: break
+
+            fixed_lines.append(line)
         lines = fixed_lines
+
     return "\n".join(lines)
 
 def diff(val, new_val):
@@ -232,7 +233,8 @@ def auto_fix(s, lang):
     """Use with care, it can break things"""
     s = auto_fix.re_hyphen.sub(u"\\1—\\2", s)
     s = auto_fix.re_ns.sub(u" \\1", s)
-    s = auto_fix.re_ns2.sub(u"« ", s)
+    if lang == 'fr': # This one can break languages which use »« for quotes
+        s = auto_fix.re_ns2.sub(u"« ", s)
 
     if s.find('{{') == -1: # Don't mess with lua strings
         s = auto_fix.re_ascii_single_quotes.sub(u"‘\\1’", s)
