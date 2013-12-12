@@ -530,7 +530,6 @@ DEPTH: Dis:1-6
 TAGS: no_item_gen no_monster_gen no_rotate no_vmirror
 ORIENT: float
 MONS: demonic crawler, hell knight, cacodemon
-ITEM: plate armour good_item, acquire weapon
 MAP
  cccccccc      cccccccc
 cc.....cc      cc.....cc
@@ -545,8 +544,8 @@ c......................c
 cccc................cccc
    cc.....v++v.....cc
     c....vv..vv....c
-    c....+.d..+....c
-    c....+..e.+....c
+    c....+....+....c
+    c....+....+....c
     c....vv..vv....c
    cc.....v++v.....cc
 cccc................cccc
