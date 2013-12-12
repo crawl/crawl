@@ -5019,14 +5019,11 @@ bool confuse_player(int amount, bool quiet)
     {
         if (!quiet)
             mpr("You feel momentarily confused.");
-        else
+        // Identify the amulet if necessary.
+        if (you.wearing(EQ_AMULET, AMU_CLARITY, true))
         {
-            // Identify the amulet if necessary.
-            if (you.wearing(EQ_AMULET, AMU_CLARITY, true))
-            {
-                item_def* const amu = you.slot_item(EQ_AMULET, false);
-                wear_id_type(*amu);
-            }
+            item_def* const amu = you.slot_item(EQ_AMULET, false);
+            wear_id_type(*amu);
         }
         return false;
     }
