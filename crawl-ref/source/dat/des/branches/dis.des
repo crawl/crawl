@@ -525,6 +525,44 @@ MAP
         .....
 ENDMAP
 
+NAME: lightli_spidermind
+DEPTH: Dis:1-6
+TAGS: no_item_gen no_monster_gen no_rotate no_vmirror
+ORIENT: float
+MONS: demonic crawler, hell knight, cacodemon
+ITEM: plate armour good_item, acquire weapon
+MAP
+ cccccccc      cccccccc
+cc.....cc      cc.....cc
+c.......c      c.......c
+c..2....c      c....3..c
+c.......c      c.......c
+c.......c      c.......c
+c.......cc    cc.......c
+c........cccccc........c
+c......................c
+c......................c
+cccc................cccc
+   cc.....v++v.....cc
+    c....vv..vv....c
+    c....+.d..+....c
+    c....+..e.+....c
+    c....vv..vv....c
+   cc.....v++v.....cc
+cccc................cccc
+c......................c
+c......................c
+c........c....c........c
+c.......ccc..ccc.......c
+c.......ccc..ccc.......c
+c.......ccc..ccc.......c
+c..3....ccc..ccc....1..c
+c.......ccc..ccc.......c
+cc.....cccc..cccc.....cc
+ cccccccccc..cccccccccc
+         cc..cc
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions
