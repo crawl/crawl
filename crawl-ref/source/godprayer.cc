@@ -844,7 +844,8 @@ static bool _offer_items()
         }
 
         if (god_likes_item(you.religion, item)
-            && (item.inscription.find("=p") != string::npos))
+            && ((item.inscription.find("=p") != string::npos)
+                || item_needs_autopickup(item)))
         {
             const string msg = "Really sacrifice " + item.name(DESC_A) + "?";
 

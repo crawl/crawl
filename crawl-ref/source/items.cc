@@ -3218,6 +3218,7 @@ bool item_def::is_greedy_sacrificeable() const
     if (you_worship(GOD_NEMELEX_XOBEH)
         && !check_nemelex_sacrificing_item_type(*this)
         || flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
+        || item_needs_autopickup(*this)
         || item_is_stationary(*this))
     {
         return false;
