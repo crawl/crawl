@@ -16,7 +16,7 @@ function ($, comm) {
             return null;
         }
 
-        if (!name in options)
+        if (!options.hasOwnProperty(name))
         {
             console.error("Option doesn't exist: " + name);
             return null;
