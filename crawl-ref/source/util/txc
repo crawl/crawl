@@ -245,6 +245,9 @@ def auto_fix(s, lang):
     elif lang == 'de':
         s = auto_fix.re_english_single_quotes.sub(u"‚\\1‘", s)
         s = auto_fix.re_english_double_quotes.sub(u"„\\1“", s)
+    elif lang == 'pl':
+        s = auto_fix.re_english_single_quotes.sub(u"»\\1«", s)
+        s = auto_fix.re_english_double_quotes.sub(u"„\\1”", s)
     return s
 
 auto_fix.re_hyphen = re.compile("(\s)[-–](\s)") # Replace hyphens by em dashes
