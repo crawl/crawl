@@ -999,7 +999,7 @@ static const struct luaL_reg crawl_clib[] =
     { "delay",          crawl_delay },
     { "random2",        crawl_random2 },
     { "one_chance_in",  crawl_one_chance_in },
-    { "random2avg"   ,  crawl_random2avg },
+    { "random2avg",     crawl_random2avg },
     { "coinflip",       crawl_coinflip },
     { "roll_dice",      crawl_roll_dice },
     { "x_chance_in_y",  crawl_x_chance_in_y },

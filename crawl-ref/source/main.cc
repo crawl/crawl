@@ -1504,8 +1504,8 @@ static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
     if (rune && item_is_unique_rune(*rune))
     {
         return yesno("An item of great power still resides in this realm, "
-                "and once you leave you can never return. "
-                "Are you sure you want to leave?", false, 'n');
+                     "and once you leave you can never return. "
+                     "Are you sure you want to leave?", false, 'n');
     }
     return true;
 }

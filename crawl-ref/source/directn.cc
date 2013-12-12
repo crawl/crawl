@@ -329,7 +329,7 @@ string direction_chooser::build_targeting_hint_string() const
 
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
-    const actor*    f_target = targeted_actor();
+    const actor*   f_target = targeted_actor();
     const monster* p_target = get_current_target();
 
     if (f_target && f_target == p_target)
