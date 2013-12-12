@@ -3,13 +3,12 @@ define(["jquery", "comm", "./enums", "./map_knowledge", "./messages",
 function ($, comm, enums, map_knowledge, messages, options) {
     var player = {}, last_time;
 
-    var hp_boosters = "divinely vigorous|berserk";
-    var mp_boosters = "divinely vigorous";
-
     var stat_boosters = {
         "str": "vitalised|mighty|berserk",
         "int": "vitalised|brilliant",
         "dex": "vitalised|agile",
+        "hp": "divinely vigorous|berserk",
+        "mp": "divinely vigorous"
     };
 
     var defense_boosters = {
