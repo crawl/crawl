@@ -2278,7 +2278,9 @@ Un rongeur sale qui a grandi dans l'environnement vaste et agressif du donjon.
 %%%%
 raiju
 
-Un chien surnaturel, crépitant d'énergies électriques et de translocations.
+Un chien surnaturel, crépitant d'électricité. Sa particularité est de pouvoir
+se transformer en foudre vivante et se projeter en avant, traversant la meute
+sans lui faire de mal, tout en foudroyant ses proies.
 %%%%
 raven
 
@@ -2560,7 +2562,8 @@ d'une intense aura de force négative.
 %%%%
 spatial maelstrom
 
-Une breche malveillante dans la réalité.
+Une faille maléfique dans la réalité, dissolvant tout sur son passage en des
+vortex tourbillonnant, avec l'intention de réduire l'existence à néant.
 %%%%
 spatial vortex
 
@@ -3281,6 +3284,10 @@ sickly siren
 
 Une jeune femme avec une queue de poisson en guise de jambes. Elle à l'air
 malade mais est toujours capable de charmer son public.
+%%%%
+strange machine
+
+Une brillante machine argentée.
 %%%%
 succubus
 
