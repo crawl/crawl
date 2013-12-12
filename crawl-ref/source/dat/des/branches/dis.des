@@ -525,43 +525,6 @@ MAP
         .....
 ENDMAP
 
-NAME: lightli_spidermind
-DEPTH: Dis:1-6
-TAGS: no_item_gen no_monster_gen no_rotate no_vmirror
-ORIENT: float
-MONS: demonic crawler, hell knight, cacodemon
-MAP
- cccccccc      cccccccc
-cc.....cc      cc.....cc
-c.......c      c.......c
-c..2....c      c....3..c
-c.......c      c.......c
-c.......c      c.......c
-c.......cc    cc.......c
-c........cccccc........c
-c......................c
-c......................c
-cccc................cccc
-   cc.....v++v.....cc
-    c....vv..vv....c
-    c....+....+....c
-    c....+....+....c
-    c....vv..vv....c
-   cc.....v++v.....cc
-cccc................cccc
-c......................c
-c......................c
-c........c....c........c
-c.......ccc..ccc.......c
-c.......ccc..ccc.......c
-c.......ccc..ccc.......c
-c..3....ccc..ccc....1..c
-c.......ccc..ccc.......c
-cc.....cccc..cccc.....cc
- cccccccccc..cccccccccc
-         cc..cc
-ENDMAP
-
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions
@@ -727,38 +690,44 @@ TILE:   G = dngn_statue_iron_golem
 COLOUR: G = cyan
 KMONS:  8 = iron golem
 KMONS:  9 = metal gargoyle
+ITEM:   plate armour good_item / crystal plate armour good_item w:3
+ITEM:   acquire weapon
+KMONS:  F = Hell Sentinel
+KITEM:  F = |
+KMONS:  E = Hell Sentinel
+KITEM:  E = $
 : serpent_of_hell_setup(_G)
 : dis_castle(_G)
 : dis_statues(_G)
 MAP
 ....................................................................
 ....................................................................
-...............vv9.vv9.vv9.vvvvvvvvvvvvvvvvvvv9.vv9.vv9.vv9.vvvvvv..
-.............vvvvvvvvvvvvvvv.....+$$$v||v....vvvvvvvvvvvvvvvv....v..
-...........vvv.............v.4.5.+$$$v2|v.......vvvvvvvvvv.......v..
-.........vvvvv.G.G.G.G.G.G.v..3..v$2$v$$v..7....vvvvvvvvvv....2..v..
-......vvvvvvvv.............+...4.v|||v$$v.......vvvvvvvvvv.......v..
-......vv.....+......3......+.....vvvvv++vv.......vvvvvvvv.......vv..
-......9v.5.4.+....5...4....vvvvvvv...v4.5v........vvvvvv........v9..
-......vv.....+.............vvvvv.....v.3.v......................v...
-......vv...G.vvvvvv+++vvvvvvvvv..4.9.+..4vvvvv..............vvvvvv..
-.vv...9v.....v.............vvv.......+...vvvvvv............vvvvvvv..
-.vvv++vv...3.v.G.G.....G.G.vv..G.G.G.vvvvvvvvvvv..........vvvvvvv9..
-..v...4v...G.v.............v..4.8....vvvvvvvvvvv...v++v...vvvvvvv...
-..+....+.....v..4....2...5.+.....D...+....2....+...+||+...vvvvvvvv..
-..+....+.....v..5..9.....4.+.....2...+.........+...+||+...vvvvvvvv..
-..v...4v...G.v.............v..4.8....vvvvvvvvvvv...v++v...vvvvvvv...
-.vvv++vv...3.v.G.G.....G.G.vv..G.G.G.vvvvvvvvvvv..........vvvvvvv9..
-.vv...9v.....v.............vvv.......+...vvvvvv............vvvvvvv..
-......vv...G.vvvvvv+++vvvvvvvvv..4.9.+..4vvvvv..............vvvvvv..
-......vv.....+.............vvvvv.....v.3.v......................v...
-......9v.5.4.+....4...5....vvvvvvv...v5.4v........vvvvvv........v9..
-......vv.....+......3......+.....vvvvv++vv.......vvvvvvvv.......vv..
-......vvvvvvvv.............+...4.v$$$v$$v.......vvvvvvvvvv.......v..
-.........vvvvv.G.G.G.G.G.G.v..3..v$$$v$$v..1....vvvvvvvvvv....7..v..
-...........vvv.............v.4.5.+$2$v2|v.......vvvvvvvvvv.......v..
-.............vvvvvvvvvvvvvvv.....+|||v||vO...vvvvvvvvvvvvvvvv....v..
-...............vv9.vv9.vv9.vvvvvvvvvvvvvvvvvvv9.vv9.vv9.vv9.vvvvvv..
+...............vv9.vv9.vv9.vvvvvvvvvvvvvvvvvvvvvv.9v.9v.9vvvvvvvvv..
+.............vvvvvvvvvvvvvvv.....+$$$v||v.......vvvvvvvvvv.......v..
+...........vvv.............v.4.5.+$$$vF|v........vvvvvvvv........v..
+.........vvvvv.G.G.G.G.G.G.v..3..v$E$v$$v..7.....vvvvvvvv.....2..v..
+......vvvvvvvv.............+...4.v|||v$$v........vvvvvvvv........v..
+......vv.....+......3......+.....vvvvv++v........vvvvvvvv........v..
+......9v.5.4.+....5...4....vvvvvvv...v45v.........vvvvvv.........v..
+......vv.....+.............vvvvv.....v.3v........................v..
+......vv...G.vvvvvv+++vvvvvvvvv..4.9.+.4vv......................vv..
+.vv...9v.....v.............vvv.......+..vvvvvv..............vvvvv9..
+.vvv++vv...3.v.G.G.....G.G.vv..G.G.G.vvvvvvvvvv....v++v....vvvvvvv..
+..v...4v...G.v.............v..4.8....vvvvvvvvvv...vv..vv...vvvvvv9..
+..+....+.....v..4....2...5.+.....D...+....2...+...+.d..+...vvvvvvv..
+..+....+.....v..5..9.....4.+.....2...+........+...+..e.+...vvvvvv9..
+..v...4v...G.v.............v..4.8....vvvvvvvvvv...vv..vv...vvvvvvv..
+.vvv++vv...3.v.G.G.....G.G.vv..G.G.G.vvvvvvvvvv....v++v....vvvvvv9..
+.vv...9v.....v.............vvv.......+..vvvvvv..............vvvvvv..
+......vv...G.vvvvvv+++vvvvvvvvv..4.9.+.4vv......................vv..
+......vv.....+.............vvvvv.....v.3v........................v..
+......9v.5.4.+....4...5....vvvvvvv...v54v.........vvvvvv.........v..
+......vv.....+......3......+.....vvvvv++v........vvvvvvvv........v..
+......vvvvvvvv.............+...4.v$$$v$$v........vvvvvvvv........v..
+.........vvvvv.G.G.G.G.G.G.v..3..v$$$v$$v..1.....vvvvvvvv.....7..v..
+...........vvv.............v.4.5.+$E$vF|v........vvvvvvvv........v..
+.............vvvvvvvvvvvvvvv.....+|||v||vO......vvvvvvvvvv.......v..
+...............vv9.vv9.vv9.vvvvvvvvvvvvvvvvvvvvvv.9v.9v.9vvvvvvvvv..
 ....................................................................
 ....................................................................
 ENDMAP
