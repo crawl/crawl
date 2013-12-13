@@ -1,4 +1,111 @@
 %%%%
+__c_suffix
+
+“When Peleus, some distance away, saw him torn apart by the frightful wound he
+shouted: ‘Accept this tribute to the dead, at least, Crantor, dearest of
+youths’, and with his powerful arm, he hurled his ash spear, at full strength,
+at Demoleon. It ruptured the ribcage, and stuck quivering in the bone. The
+centaur pulled out the shaft minus its head (he tried with difficulty to reach
+that also) but the head was caught in his lung. The pain itself strengthened
+his will: wounded, he reared up at his enemy and beat the hero down with his
+hooves. Peleus received the resounding blows on helmet and shield, and
+defending his upper arms, and controlling the weapon he held out, with one blow
+through the arm he pierced the bi-formed breast.”
+    -Ovid, _Metamorphoses_, XII, 330. 8 AD.
+%%%%
+__d_suffix
+
+“Trogdor was a man!
+ I mean, he was a dragon-man!
+ Or... maybe he was just a dragon.
+ ...
+ And the Trogdor comes in the night!”
+    -The Brothers Chaps, “Trogdor”. 2003.
+%%%%
+__r_suffix
+
+HAMLET [Drawing his sword.]: How now! a rat? Dead, for a ducat, dead [Stabs
+through the arras.]
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 4.
+1603.
+%%%%
+__cap-D_suffix
+
+“On the other hand, Confucius is made to say to his disciples, ‘I know how
+birds can fly, how fishes can swim, and how animals can run. But the runner may
+be snared, the swimmer may be hooked, and the flyer may be shot by the arrow.
+But there is the dragon. I cannot tell how he mounts on the wind through the
+clouds, and rises to heaven. Today I have seen Lao-tsze, and can only compare
+him to the dragon.’”
+    -Life of Confucius
+
+“This Dragon had Two furious Wings
+   Each one upon each Shoulder;
+ With a Sting in his Tail as long as a Flail,
+   Which made him bolder and bolder.
+ He had long Claws, and in his Jaws
+   Four and forty Teeth of Iron;
+ With a Hide as tough, as any Buff,
+   Which did him round environ.”
+
+    -“An Excellent Ballad of a most dreadful Combat, fought between Moore of
+Moore-Hall, and the Dragon of Wantley”, retold by Ambrose Philips, _A
+Collection of Old Ballads. Corrected from the Best and Most Ancient Copies
+Extant. With Introductions Historical, Critical, Or Humorous_. 1723.
+%%%%
+__cap-K_suffix
+
+“The Parts Septentrionall are with these Sp’ryts Much haunted.. About the
+places where they dig for Oare. The Greekes and Germans call them Cobali.”
+    -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
+1635.
+%%%%
+__cap-O_suffix
+
+“The little princess, asleep in her cradle, floated on the water, and at last
+she was cast up on the shore of a beautiful country, where, however, very few
+people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live
+there-for they ate up everybody. Ogres are terrible people. When once they have
+tasted raw human flesh they will hardly eat anything else, and Tourmentine
+always knew how to make some body come their way, for she was half a fairy.”
+    -Marie-Catherine Le Jumel de Barneville, Baronne d’Aulnoy, “’Orangier et
+l’Abeille”. 1697.
+
+“NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get
+it? We both have layers.”
+    -Shrek. 2001.
+%%%%
+__cap-S_suffix
+
+“The latter lived in the country, and before his house there was an oak, in
+which there was a lair of snakes. His servants killed the snakes, but Melampus
+gathered wood and burnt the reptiles, and reared the young ones. And when the
+young were full grown, they stood beside him at each of his shoulders as he
+slept, and they purged his ears with their tongues. He started up in a great
+fright, but understood the voices of the birds flying overhead, and from what
+he learned from them he foretold to men what should come to pass.”
+    -Pseudo-Apollodorus , _Library and Epitome_, 1.9.11. circa 150 BC.
+    trans. Sir James George Frazer, 1913.
+
+“A snake, with mottles rare,
+ Surveyed my chamber floor,
+ In feature as the worm before,
+ But ringed with power.”
+    -Emily Dickinson, “In Winter In My Room”. circa 1860.
+%%%%
+__cap-T_suffix
+
+“Buckshank bold and Elfinstone,
+ And more than I can mention here,
+ They caused to be built so stout a ship,
+ And unto Iceland they would steer.
+
+ They launched the ship upon the main,
+ Which bellowed like a wrathful bear;
+ Down to the bottom the vessel sank,
+ A laidly Trold has dragged it there.”
+    -George Borrow, _Lavengro: The Scholar, the Gypsy, the Priest_. 1851.
+%%%%
 A broken pillar
 
 “Now Absalom in his lifetime had taken
@@ -498,19 +605,6 @@ imagination is a mirror, imparting vividness to all ideas, without the power of
 selecting or controlling them; then pray that your grieves may slumber, and the
 brotherhood of remorse not break their chain.”
     -Nathaniel Hawthorne, “The Haunted Mind”. 1835.
-%%%%
-__cap-T_suffix
-
-“Buckshank bold and Elfinstone,
- And more than I can mention here,
- They caused to be built so stout a ship,
- And unto Iceland they would steer.
-
- They launched the ship upon the main,
- Which bellowed like a wrathful bear;
- Down to the bottom the vessel sank,
- A laidly Trold has dragged it there.”
-    -George Borrow, _Lavengro: The Scholar, the Gypsy, the Priest_. 1851.
 %%%%
 agate snail
 
