@@ -14,41 +14,6 @@
 #include "travel.h"
 #include "viewgeom.h"
 
-const VColour map_colours[MAX_MAP_COL] =
-{
-    VColour(  0,   0,   0, 255), // BLACK
-    VColour(128, 128, 128, 255), // DKGREY
-    VColour(160, 160, 160, 255), // MDGREY
-    VColour(192, 192, 192, 255), // LTGREY
-    VColour(255, 255, 255, 255), // WHITE
-
-    VColour(  0,  64, 255, 255), // BLUE  (actually cyan-blue)
-    VColour(128, 128, 255, 255), // LTBLUE
-    VColour(  0,  32, 128, 255), // DKBLUE (maybe too dark)
-
-    VColour(  0, 255,   0, 255), // GREEN
-    VColour(128, 255, 128, 255), // LTGREEN
-    VColour(  0, 128,   0, 255), // DKGREEN
-
-    VColour(  0, 255, 255, 255), // CYAN
-    VColour( 64, 255, 255, 255), // LTCYAN (maybe too pale)
-    VColour(  0, 128, 128, 255), // DKCYAN
-
-    VColour(255,   0,   0, 255), // RED
-    VColour(255, 128, 128, 255), // LTRED (actually pink)
-    VColour(128,   0,   0, 255), // DKRED
-
-    VColour(192,   0, 255, 255), // MAGENTA (actually blue-magenta)
-    VColour(255, 128, 255, 255), // LTMAGENTA
-    VColour( 96,   0, 128, 255), // DKMAGENTA
-
-    VColour(255, 255,   0, 255), // YELLOW
-    VColour(255, 255,  64, 255), // LTYELLOW (maybe too pale)
-    VColour(128, 128,   0, 255), // DKYELLOW
-
-    VColour(165,  91,   0, 255), // BROWN
-};
-
 MapRegion::MapRegion(int pixsz) :
     m_buf(NULL),
     m_dirty(true),
@@ -75,28 +40,28 @@ void MapRegion::init_colours()
 {
     // TODO enne - the options array for colours should be
     // tied to the map feature enumeration to avoid this function.
-    m_colours[MF_UNSEEN]        = (map_colour)Options.tile_unseen_col;
-    m_colours[MF_FLOOR]         = (map_colour)Options.tile_floor_col;
-    m_colours[MF_WALL]          = (map_colour)Options.tile_wall_col;
-    m_colours[MF_MAP_FLOOR]     = (map_colour)Options.tile_floor_col; // TODO enne
-    m_colours[MF_MAP_WALL]      = (map_colour)Options.tile_mapped_wall_col;
-    m_colours[MF_DOOR]          = (map_colour)Options.tile_door_col;
-    m_colours[MF_ITEM]          = (map_colour)Options.tile_item_col;
-    m_colours[MF_MONS_FRIENDLY] = (map_colour)Options.tile_friendly_col;
-    m_colours[MF_MONS_PEACEFUL] = (map_colour)Options.tile_peaceful_col;
-    m_colours[MF_MONS_NEUTRAL]  = (map_colour)Options.tile_neutral_col;
-    m_colours[MF_MONS_HOSTILE]  = (map_colour)Options.tile_monster_col;
-    m_colours[MF_MONS_NO_EXP]   = (map_colour)Options.tile_plant_col;
-    m_colours[MF_STAIR_UP]      = (map_colour)Options.tile_upstairs_col;
-    m_colours[MF_STAIR_DOWN]    = (map_colour)Options.tile_downstairs_col;
-    m_colours[MF_STAIR_BRANCH]  = (map_colour)Options.tile_feature_col;
-    m_colours[MF_FEATURE]       = (map_colour)Options.tile_feature_col;
-    m_colours[MF_WATER]         = (map_colour)Options.tile_water_col;
-    m_colours[MF_LAVA]          = (map_colour)Options.tile_lava_col;
-    m_colours[MF_TRAP]          = (map_colour)Options.tile_trap_col;
-    m_colours[MF_EXCL_ROOT]     = (map_colour)Options.tile_excl_centre_col;
-    m_colours[MF_EXCL]          = (map_colour)Options.tile_excluded_col;
-    m_colours[MF_PLAYER]        = (map_colour)Options.tile_player_col;
+    m_colours[MF_UNSEEN]        = Options.tile_unseen_col;
+    m_colours[MF_FLOOR]         = Options.tile_floor_col;
+    m_colours[MF_WALL]          = Options.tile_wall_col;
+    m_colours[MF_MAP_FLOOR]     = Options.tile_floor_col; // TODO enne
+    m_colours[MF_MAP_WALL]      = Options.tile_mapped_wall_col;
+    m_colours[MF_DOOR]          = Options.tile_door_col;
+    m_colours[MF_ITEM]          = Options.tile_item_col;
+    m_colours[MF_MONS_FRIENDLY] = Options.tile_friendly_col;
+    m_colours[MF_MONS_PEACEFUL] = Options.tile_peaceful_col;
+    m_colours[MF_MONS_NEUTRAL]  = Options.tile_neutral_col;
+    m_colours[MF_MONS_HOSTILE]  = Options.tile_monster_col;
+    m_colours[MF_MONS_NO_EXP]   = Options.tile_plant_col;
+    m_colours[MF_STAIR_UP]      = Options.tile_upstairs_col;
+    m_colours[MF_STAIR_DOWN]    = Options.tile_downstairs_col;
+    m_colours[MF_STAIR_BRANCH]  = Options.tile_feature_col;
+    m_colours[MF_FEATURE]       = Options.tile_feature_col;
+    m_colours[MF_WATER]         = Options.tile_water_col;
+    m_colours[MF_LAVA]          = Options.tile_lava_col;
+    m_colours[MF_TRAP]          = Options.tile_trap_col;
+    m_colours[MF_EXCL_ROOT]     = Options.tile_excl_centre_col;
+    m_colours[MF_EXCL]          = Options.tile_excluded_col;
+    m_colours[MF_PLAYER]        = Options.tile_player_col;
 }
 
 MapRegion::~MapRegion()
@@ -113,24 +78,23 @@ void MapRegion::pack_buffers()
         for (int y = m_min_gy; y <= m_max_gy; y++)
         {
             map_feature f = (map_feature)m_buf[x + y * mx];
-            map_colour c  = m_colours[f];
 
             float pos_x = x - m_min_gx;
             float pos_y = y - m_min_gy;
-            m_buf_map.add(pos_x, pos_y, pos_x + 1, pos_y + 1, map_colours[c]);
+            m_buf_map.add(pos_x, pos_y, pos_x + 1, pos_y + 1, m_colours[f]);
         }
 
     // Draw window box.
     if (m_win_start.x == -1 && m_win_end.x == -1)
         return;
 
-    int c = (int)Options.tile_window_col;
     float pos_sx = (m_win_start.x - m_min_gx);
     float pos_sy = (m_win_start.y - m_min_gy);
     float pos_ex = (m_win_end.x - m_min_gx) - 1 / (float)dx;
     float pos_ey = (m_win_end.y - m_min_gy) - 1 / (float)dy;
 
-    m_buf_lines.add_square(pos_sx, pos_sy, pos_ex, pos_ey, map_colours[c]);
+    m_buf_lines.add_square(pos_sx, pos_sy, pos_ex, pos_ey,
+                           Options.tile_window_col);
 }
 
 void MapRegion::render()

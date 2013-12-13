@@ -5,35 +5,6 @@
 #include "tilebuf.h"
 #include "tilereg.h"
 
-enum map_colour
-{
-    MAP_BLACK,
-    MAP_DKGREY,
-    MAP_MDGREY,
-    MAP_LTGREY,
-    MAP_WHITE,
-    MAP_BLUE,
-    MAP_LTBLUE,
-    MAP_DKBLUE,
-    MAP_GREEN,
-    MAP_LTGREEN,
-    MAP_DKGREEN,
-    MAP_CYAN,
-    MAP_LTCYAN,
-    MAP_DKCYAN,
-    MAP_RED,
-    MAP_LTRED,
-    MAP_DKRED,
-    MAP_MAGENTA,
-    MAP_LTMAGENTA,
-    MAP_DKMAGENTA,
-    MAP_YELLOW,
-    MAP_LTYELLOW,
-    MAP_DKYELLOW,
-    MAP_BROWN,
-    MAX_MAP_COL
-};
-
 class MapRegion : public Region
 {
 public:
@@ -55,7 +26,7 @@ protected:
     void recenter();
     void pack_buffers();
 
-    map_colour m_colours[MF_MAX];
+    VColour m_colours[MF_MAX];
     int m_min_gx, m_max_gx, m_min_gy, m_max_gy;
     coord_def m_win_start;
     coord_def m_win_end;
