@@ -2956,8 +2956,11 @@ tileidx_t tileidx_monster(const monster_info& mons)
         break;
     }
 
+#ifdef USE_TILE_LOCAL
+    // handled on client side in WebTiles
     if (Options.tile_show_demon_tier)
     {
+#endif
         // FIXME: non-linear bits suck, should be a simple addition
         switch (mons_demon_tier(mons.type))
         {
@@ -2977,7 +2980,9 @@ tileidx_t tileidx_monster(const monster_info& mons)
             ch |= TILE_FLAG_DEMON_5;
             break;
         }
+#ifdef USE_TILE_LOCAL
     }
+#endif
 
     return ch;
 }

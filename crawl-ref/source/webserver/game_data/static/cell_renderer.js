@@ -915,16 +915,19 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             else if (fg.MDAM_ADEAD)
                 this.draw_icon(icons.MDAM_ALMOST_DEAD, x, y);
 
-            if (fg.DEMON_1)
-                this.draw_icon(icons.DEMON_NUM1, x, y);
-            else if (fg.DEMON_2)
-                this.draw_icon(icons.DEMON_NUM2, x, y);
-            else if (fg.DEMON_3)
-                this.draw_icon(icons.DEMON_NUM3, x, y);
-            else if (fg.DEMON_4)
-                this.draw_icon(icons.DEMON_NUM4, x, y);
-            else if (fg.DEMON_5)
-                this.draw_icon(icons.DEMON_NUM5, x, y);
+            if (options.get("tile_show_demon_tier") === true)
+            {
+                if (fg.DEMON_1)
+                    this.draw_icon(icons.DEMON_NUM1, x, y);
+                else if (fg.DEMON_2)
+                    this.draw_icon(icons.DEMON_NUM2, x, y);
+                else if (fg.DEMON_3)
+                    this.draw_icon(icons.DEMON_NUM3, x, y);
+                else if (fg.DEMON_4)
+                    this.draw_icon(icons.DEMON_NUM4, x, y);
+                else if (fg.DEMON_5)
+                    this.draw_icon(icons.DEMON_NUM5, x, y);
+            }
         },
 
 
