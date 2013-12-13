@@ -91,7 +91,7 @@ Elle porte la soif sanglante d'un fou inhumain.
 %%%%
 scimitar of Flaming Death
 
-Ça fume !
+Ça fume !
 %%%%
 mace of Brilliance
 
@@ -102,7 +102,7 @@ créatures qui sont invisibles.
 %%%%
 demon blade "Leech"
 
-Elle pousse l'esprit de son porteur à assouvir un but unique : se gaver de
+Elle pousse l'esprit de son porteur à assouvir un but unique : se gaver de
 force vitale drainée.
 %%%%
 dagger of Chilly Death
@@ -150,7 +150,7 @@ qu'à tous ses alliés mortels.
 %%%%
 crossbow "Hellfire"
 
-Une arbalète enflammée, forgée dans les feux des Enfers ; elle imprègne les
+Une arbalète enflammée, forgée dans les feux des Enfers ; elle imprègne les
 carreaux qu'elle tire avec la puissance brute du même nom.
 %%%%
 sword of the Doom Knight
@@ -169,7 +169,7 @@ trident of the Octopus King
 
 Ce trident a été volé il y a plusieurs années dans le jardin du Roi Octopus par
 un homme sans importance et déjà mort. Mais prenez garde à la colère du Roi
-Octopus !
+Octopus !
 %%%%
 mithril axe "Arga"
 
@@ -252,8 +252,8 @@ l'ozone.
 %%%%
 large shield of Ignorance
 
-"Un esprit ouvert est comme une forteresse aux portes non verrouillées et sans
-garde."
+« Un esprit ouvert est comme une forteresse aux portes non verrouillées et sans
+garde. »
 %%%%
 robe of Augmentation
 
@@ -306,7 +306,7 @@ Une armure de cuir confectionné avec la peau d'une salamandre.
 gauntlets of War
 
 Ces gantelets épais en acier ont été la récompense d'Okawaru à un puissant
-seigneur de guerre. Méritez-vous de les porter ?
+seigneur de guerre. Méritez-vous de les porter ?
 %%%%
 shield of Resistance
 
@@ -366,7 +366,7 @@ shield of the gong
 C'est un large gong en bronze qui peut être utilisé comme bouclier. D'après
 certains mystiques, frapper un tel gong accorde une protection spirituelle.
 
-Et très certainement que ce bouclier va se faire entendre !
+Et très certainement que ce bouclier va se faire entendre !
 %%%%
 amulet of the Air
 
@@ -442,7 +442,7 @@ Black Knight's horse barding
 
 Ce caparaçon était porté par le cheval du Chevalier Noir durant son règle de
 terreur. D'un noir profond, il semble être fait non seulement d'un étrange
-acier noir, mais aussi de plaques entières de diamants noirs ! Naturellement,
+acier noir, mais aussi de plaques entières de diamants noirs ! Naturellement,
 un tel poids ne peut que ralentir la monture. Toutefois, il offre non seulement
 une protection contre les coups, mais aussi contre les morts-vivants grâce à un
 enchantement spécifique.
@@ -467,11 +467,11 @@ faiblement.
 %%%%
 ring of the Octopus King
 
-"Une sirène qui aimait chanter,
+« Une sirène qui aimait chanter,
  Insuffla la luxure au roi Octopus.
  Son ondulant prétendant,
  S'efforça de la courtiser,
- Mais elle ne pouvait porter tous ses anneaux."
+ Mais elle ne pouvait porter tous ses anneaux. »
 %%%%
 Axe of Woe
 
@@ -499,7 +499,7 @@ Une paire de bottes originale, inventée par un soupirant d'Arachne.
 dark maul
 
 Ce grand marteau ferré est l'outil dont vous avez besoin, si vous aviez de
-lourds enjeux à entretenir. Il est fait pour porter des coups massifs - et nous
+lourds enjeux à entretenir. Il est fait pour porter des coups massifs — et nous
 ne parlons pas d'une simple commotion cérébrale, mais des restes d'un casque
 debout sur des chaussures , ou peut-être simplement d'une tache humide. Hélas,
 un tel pouvoir a un prix: la tête du marteau est si lourd qu'il faut une

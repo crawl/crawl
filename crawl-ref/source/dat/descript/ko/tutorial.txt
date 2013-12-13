@@ -21,7 +21,7 @@ tutorial1 diagonal
 :nowrap
 <input>숫자 패드</input>, 또는 <input>hjkl 이동방식</input>을 이용해서 대각선 방향으로 이동할 수도 있습니다. (제대로 안되면 Numlock 기능이 제대로 켜져있는지 확인해보세요.)
 
-  숫자 패드 :    <w>7 8 9</w>          hjkl 식 : <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+  숫자 패드 :    <w>7 8 9</w>          hjkl 식 : <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
                   \|/                      \|/
                  <w>4</w>-<w>.</w>-<w>6</w>                    <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
                   /|\                      /|\
@@ -46,7 +46,7 @@ tutorial1 autoexplore
 
 게임 내내 이렇게 직접 이동하는 것은 따분한 일입니다.
 <input>$cmd[CMD_EXPLORE]</input> 키를 눌러, 시선을 끌만한 일이 일어나기 전까지
-자동으로 여행하는 '자동이동 기능'을 써보세요!
+자동으로 여행하는 ‘자동이동 기능’을 써보세요!
 %%%%
 tutorial1 exclusion
 
@@ -119,8 +119,8 @@ tutorial2 pickup_weapon
 %%%%
 tutorial2 melee
 
-무기를 이용해 적을 공격하려면 - 혹은 지금까지의 모든 친절한 설명을 무시한 채 두
-주먹만을 이용해 싸울 것을 결심했다면 - , 적이 있는 방향으로 이동하기만 하면
+무기를 이용해 적을 공격하려면 — 혹은 지금까지의 모든 친절한 설명을 무시한 채 두
+주먹만을 이용해 싸울 것을 결심했다면 — , 적이 있는 방향으로 이동하기만 하면
 됩니다.
 %%%%
 tutorial2 resting
@@ -201,7 +201,7 @@ tutorial2 wield_bow
 %%%%
 tutorial2 firing
 
-화살을 발사하는 것도 조금 전에 다트를 던진 것처럼 하시면 됩니다 ; 즉,
+화살을 발사하는 것도 조금 전에 다트를 던진 것처럼 하시면 됩니다 ; 즉,
 <input>$cmd[CMD_FIRE]</input> 키<localtiles>혹은 소지품 창에 들어있는 화살에
 <input>마우스 왼쪽버튼</input>를 클릭하는 방법</localtiles>을(를) 이용해서 적을
 조준하면 됩니다. 또한, <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> 키를
@@ -360,10 +360,10 @@ tutorial3 go_shopping
 
 이제, 본격적으로 아이템을 구입할 수 있을 정도의 충분한 돈이 모였습니다!
 상점으로 되돌아가는 가장 빠른 방법은 Type
-<input>$cmd[CMD_SEARCH_STASHES]</input> 키를 누른 후, "<w>shop</w>"을 입력하여
-상점의 위치를 검색하는 것입니다. 또한, 명령어 패널에 있는 '찾기'버튼을
-<input>click</input>하는 것으로도 가능합니다. 물론 미니맵에, 상점이 있었던
-지역을 클릭하는 것으로도 이동이 가능합니다.
+<input>$cmd[CMD_SEARCH_STASHES]</input> 키를 누른 후, “<w>shop</w>”을
+입력하여 상점의 위치를 검색하는 것입니다. 또한, 명령어 패널에 있는
+‘찾기’버튼을 <input>click</input>하는 것으로도 가능합니다. 물론 미니맵에,
+상점이 있었던 지역을 클릭하는 것으로도 이동이 가능합니다.
 %%%%
 tutorial3 optional_battle
 
@@ -448,7 +448,7 @@ tutorial4 spell_success
 당신이 익힌 주문들의 세부사항을 확인하고 싶으시다면,
 <input>$cmd[CMD_DISPLAY_SPELLS]</input>키를 누르시거나, 혹은 우측 마법 아이콘에
 <input>마우스 커서를 올리는 것</input>으로, 해당 주문의 대략적인 소개와 만복도
-소모, 마법의 효율, 실패 확률 등을 알 수 있습니다. 이 '마법사의 지팡이'는 주문
+소모, 마법의 효율, 실패 확률 등을 알 수 있습니다. 이 ‘마법사의 지팡이’는 주문
 실패 확률을 감소시켜주는 기능을 가지고 있습니다. 지팡이를 착용해보시고, 실패
 확률이 낮아진 것을 확인해보세요.
 %%%%
@@ -481,13 +481,13 @@ tutorial4 spell_hunger
 %%%%
 tutorial4 forget_spell
 
-캐릭터의 레벨이 오르거나, 혹은 '주문 시전술' 스킬이 오를때마다, 사용 가능한
+캐릭터의 레벨이 오르거나, 혹은 ‘주문 시전술’ 스킬이 오를때마다, 사용 가능한
 마법의 총 레벨(슬롯)도 하나씩 증가합니다. 당신은 <w>배운 주문을 잊어버리는
 것</w>으로 다른 주문을 외울 마법 슬롯을 확보할 수 있습니다. 주문을 잊는 방법 중
-가장 보편적인 방법은 '망각의 마법 두루마리'를 읽는 것입니다. 간단히 두루마리를
-읽은 후 (<input>$cmd[CMD_READ]</input>키<localtiles> 혹은 해당 두루마리
-아이콘을 <input>마우스 왼쪽 클릭</input></localtiles>), 잊고자 하는 주문을
-선택하면 해당 주문이 지워지고, 그 주문만큼의 마법 슬롯이 되돌아오죠.
+가장 보편적인 방법은 ‘망각의 마법 두루마리’를 읽는 것입니다. 간단히
+두루마리를 읽은 후 (<input>$cmd[CMD_READ]</input>키<localtiles> 혹은 해당
+두루마리 아이콘을 <input>마우스 왼쪽 클릭</input></localtiles>), 잊고자 하는
+주문을 선택하면 해당 주문이 지워지고, 그 주문만큼의 마법 슬롯이 되돌아오죠.
 %%%%
 tutorial4 memorise2
 
@@ -590,13 +590,13 @@ tutorial5 berserk
 tutorial5 exhaustion
 
 광폭화는 강력하지만, 그 후유증도 심합니다. 광폭화의 후유증으로 속도가 느려지는
-'감속' 상태, 잠시 동안 광폭화를 다시 사용할 수 없는 '탈진' 상태가 걸렸습니다.
-<input>$cmd[CMD_REST]</input> 키<localtiles> (혹은 <w>명령어
+‘감속’ 상태, 잠시 동안 광폭화를 다시 사용할 수 없는 ‘탈진’ 상태가
+걸렸습니다. <input>$cmd[CMD_REST]</input> 키<localtiles> (혹은 <w>명령어
 모음</w>)</localtiles>을 이용해서 후유증에서 벗어나는 것이 좋습니다.
 %%%%
 tutorial5 hunger
 
-캐릭터가 '매우 배고픔' 혹은 그보다 더 배고픈 상태가 되면 광폭화 권능을 사용할
+캐릭터가 ‘매우 배고픔’ 혹은 그보다 더 배고픈 상태가 되면 광폭화 권능을 사용할
 수 없습니다. 이는 캐릭터가 언제나 먹을거리를 어느 정도 가지고 다니는 것이
 좋다는 것을 의미하며, 또한 시체를 해체해서 먹는 것과 트로그에게 바치는 것의
 균형을 잘 유지해야 한다는 것을 의미합니다.

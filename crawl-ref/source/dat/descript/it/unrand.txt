@@ -116,7 +116,7 @@ frecce speciali che non sono comunemente reperibili.
 %%%%
 giant club "Skullcrusher"
 
-Quest'amabile randello rendere euforico ogni ogre - sia una rissa al bar, un
+Quest'amabile randello rendere euforico ogni ogre — sia una rissa al bar, un
 genocidio o un'unione di entrambi.
 %%%%
 glaive of the Guard
@@ -211,8 +211,8 @@ Quest'arco ha il colore delle nere nubi da pioggia, e l'odore di ozono bagnato.
 %%%%
 large shield of Ignorance
 
-"Una mente aperta è come una fortezza con i suoi cancello spalancati e
-sguarniti."
+“Una mente aperta è come una fortezza con i suoi cancello spalancati e
+sguarniti.”
 %%%%
 robe of Augmentation
 

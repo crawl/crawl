@@ -35,7 +35,7 @@ ils ont été créés.
 Animate Skeleton spell
 
 Ce sort insuffle la non-vie dans une squelette inerte, même si ce squelette est
-encore enfermé dans la chair ! Notez que les squelettes sont incapables de
+encore enfermé dans la chair ! Notez que les squelettes sont incapables de
 quitter le niveau où ils ont été créés.
 %%%%
 Apportation spell
@@ -96,8 +96,8 @@ peut pas être résisté par les moyens habituels de résistance à la magie.
 Blink Range spell
 
 Ce sort translocalise le lanceur sur une courte distance, en essayant de
-s'éloigner d'un ennemi. Contrairement à "Blink Away", il permet de sortir de sa
-vue.
+s'éloigner d'un ennemi. Contrairement à « Blink Away », il permet de sortir de
+sa vue.
 %%%%
 Blink spell
 
@@ -295,7 +295,7 @@ sorcier d'apprendre Boule de feu sans coût additionnel de niveau de sort.
 Demonic Horde spell
 
 Ce sort convoque un essaim de petits démons pour se battre aux côtés du sorcier
-(et parfois entre eux !).
+(et parfois entre eux !).
 %%%%
 Dig spell
 
@@ -580,7 +580,7 @@ petite ou moyenne taille. Les cibles métalliques causeront une petite explosion
 particulièrement puissante, enfin les cibles faites de cristal produiront de
 larges et puissantes explosions.
 
-À puissance élevée, ce sort est capable de détruire certains murs : les murs de
+À puissance élevée, ce sort est capable de détruire certains murs : les murs de
 roche, de pierre ou de métal ont une chance d'être détruit à partir de 5, 6 ou
 7 barres de puissance. Les murs de cristal sont particulièrement fragiles et
 ont une chance d'être détruits à n'importe quel niveau de puissance.
@@ -713,7 +713,7 @@ comme analogie aux os. C'est un mystère.
 Noxious Cloud spell
 
 Ce souffle comprend la même substance que celle utilisée dans le bien connu
-sort de magicien "nuage méphitique". Lorsqu'il est inhalé par une personne ou
+sort de magicien « nuage méphitique ». Lorsqu'il est inhalé par une personne ou
 créature non résistante au poison, il ne fait que des dégâts mineurs mais peut
 causer la confusion et un bon mal de tête.
 %%%%
@@ -737,7 +737,7 @@ dégâts maximum dont elle est capable.
 Il est dit que la plupart des copies de ce sortilège souffrent d'une erreur de
 copistes qui rend les orbes instables au-delà d'une courte portée. Certains
 individus peuvent avoir accès à des livres de sorts sans erreur alors,
-méfiez-vous !
+méfiez-vous !
 %%%%
 Ozocubu's Armour spell
 
@@ -787,7 +787,7 @@ Petrifying Cloud spell
 
 Un  catoblepae peut expirer de la poussière calcifiante, qui transforme toute
 personne touchée en statue pour un bref moment. Accéder à de l'air frais peut
-vous permettre de récupérer - sauf pas si votre statue est cassé en morceaux
+vous permettre de récupérer — sauf pas si votre statue est cassé en morceaux
 par les griffes des Catoblépas en premier.
 %%%%
 Phase Shift spell
@@ -819,7 +819,7 @@ Porkalator spell
 
 Ce sort transforme une victime non consentante en un certain quadrupède rose,
 connu pour ses mauvaises manières à table, ses couinement, et déterrer des
-truffes. Pas même les anges et les démons ne sont à l'abri - conduisant
+truffes. Pas même les anges et les démons ne sont à l'abri — conduisant
 respectivement au plus savoureux et au pire bacon du monde.
 
 Si le sort est jeté à la hâte, la transformation est temporaire; seulement un
@@ -960,7 +960,7 @@ Ce sort ralentit les actions d'une créature.
 Song of Slaying spell
 
 Ce sort conjure des versets antiques de batailles dans votre esprit et vous les
-fait récitez - en beuglant! Chaque ennemi non invoquée que vous tuez dans le
+fait récitez — en beuglant! Chaque ennemi non invoquée que vous tuez dans le
 combat pendant cette récitation améliore temporairement vos compétences de
 mêlée. Votre efficacité ne sera renforcée que pendant la durée de la chanson.
 Lancer ce sort alors que vous la chanter deja débutera une nouvelle chanson, et
@@ -1039,7 +1039,7 @@ Stoneskin spell
 Ce sort durcit la peau à un degré dépendant du niveau de compétence du sorcier
 en Magie de la Terre. Il fonctionne uniquement sur la chair relativement
 normale et donc, n'aidera aucunement les morts-vivants ou les créatures au
-corps transformé. Toutefois, il existe une exception : les effets de ce sort
+corps transformé. Toutefois, il existe une exception : les effets de ce sort
 seront accrus pour les sorciers sous Forme de Statue.
 %%%%
 Strip Resistance spell
@@ -1060,7 +1060,7 @@ Ce sort invoque un ou plusieurs élémentaires d'air.
 %%%%
 Summon Butterflies spell
 
-Ce sort créé une pluie de papillons. Comme c'est joli !
+Ce sort créé une pluie de papillons. Comme c'est joli !
 %%%%
 Summon Demon spell
 
@@ -1084,7 +1084,7 @@ Ce sort invoque un ou plusieurs élémentaires de terre.
 Summon Elemental spell
 
 Ce sort convoque un esprit du plan élémentaire pour aider le sorcier. Une large
-quantité de l'élément désiré est nécessaire ; cela est rarement un problème
+quantité de l'élément désiré est nécessaire ; cela est rarement un problème
 pour la terre et l'air mais, peut l'être pour l'eau ou le feu. L'élémentaire
 sera généralement amical au sorcier – spécialement si le sorcier est compétent
 dans la magie élémentaire concernée.
@@ -1102,7 +1102,7 @@ Summon Greater Demon spell
 
 Ce sort convoque un des démons les plus puissants du Pandémonium pour servir le
 sorcier. Méfiez-vous, le charme liant le démon à votre service pourrait ne pas
-durer aussi longtemps que celui qui retient le démon sur ce plan !
+durer aussi longtemps que celui qui retient le démon sur ce plan !
 %%%%
 Summon Hell Beast spell
 
@@ -1192,7 +1192,7 @@ saines et sauves. Les vampires et les ombres sont connus pour y être
 particulièrement vulnérables.
 
 N'étant pas un missile, ce sort n'est pas affecté par les effets de Renvoie et
-de Déflection - vous voulez être en mesure de voir, n'est-ce pas?
+de Déflection — vous voulez être en mesure de voir, n'est-ce pas?
 %%%%
 Sure Blade spell
 
@@ -1262,7 +1262,7 @@ Tukima's Dance spell
 
 Ce sort anime une arme tenue en main, qui se met à danser dans les airs et
 frappe les ennemis du sorcier. Cela ne fonctionnera pas avec certains artéfacts
-intelligents ; toutes aptitudes nécessitant des compétences d'évocation ne
+intelligents ; toutes aptitudes nécessitant des compétences d'évocation ne
 pourront pas être utilisées non plus.
 %%%%
 Twisted Resurrection spell

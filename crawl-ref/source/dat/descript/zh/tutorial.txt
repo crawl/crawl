@@ -378,7 +378,7 @@ tutorial3 autoexplore_reminder
 tutorial3 go_shopping
 
 你现在有钱去商店买东西啦！要想回到商店，最快捷的方法就是搜索它。
-按下<input>$cmd[CMD_SEARCH_STASHES]</input>然后输入"<w>商店</w>"。
+按下<input>$cmd[CMD_SEARCH_STASHES]</input>然后输入“<w>商店</w>”。
 选中搜索到的结果，然后你就会向目标地点移动。
 <localtiles>你也可以<input>点击</input>指令面板上的搜索按钮，
 或者通过小地图来回到商店。</localtiles>

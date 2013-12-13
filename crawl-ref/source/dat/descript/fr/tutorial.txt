@@ -432,7 +432,7 @@ tutorial3 go_shopping
 
 Vous avez maintenant assez d'or pour faire quelques achats sérieux ! Le moyen
 le plus rapide pour retourner à la boutique est en la recherchant. Appuyez sur
-<input>$cmd[CMD_SEARCH_STASHES]</input>, puis entrez "<w>shop</w>".
+<input>$cmd[CMD_SEARCH_STASHES]</input>, puis entrez « <w>shop</w> ».
 Sélectionnez le résultat pour commencer à voyager.<localtiles> Vous pouvez
 également <input>cliquer</input> sur le bouton de recherche dans le panneau de
 commande, ou utiliser la mini-carte pour revenir à la boutique.</localtiles>
