@@ -242,8 +242,6 @@ void dgn_reset_level(bool enable_random_maps = true);
 const vault_placement *dgn_register_place(const vault_placement &place,
                                           bool register_vault);
 
-void dgn_seen_vault_at(coord_def p);
-
 // Count number of mutually isolated zones. If choose_stairless, only count
 // zones with no stairs in them. If fill is set to anything other than
 // DNGN_UNSEEN, chosen zones will be filled with the provided feature.

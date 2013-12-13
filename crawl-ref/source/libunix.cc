@@ -57,7 +57,12 @@ static struct termios game_term;
     #ifndef _XOPEN_SOURCE_EXTENDED
     #define _XOPEN_SOURCE_EXTENDED
     #endif
+
+    // ncurses has redundant declarations between term.h and curses.h
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wredundant-decls"
     #include <curses.h>
+    #pragma GCC diagnostic pop
 #else
     #include CURSES_INCLUDE_FILE
 #endif

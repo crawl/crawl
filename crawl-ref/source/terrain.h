@@ -56,7 +56,6 @@ bool feat_is_metal(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);
 bool feat_is_travelable_stair(dungeon_feature_type feat);
-bool feat_is_escape_hatch(dungeon_feature_type feat);
 bool feat_is_gate(dungeon_feature_type feat);
 
 string feat_preposition(dungeon_feature_type feat, bool active = false,

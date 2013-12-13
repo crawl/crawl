@@ -46,6 +46,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
+#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 

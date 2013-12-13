@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "exclude.h"
 #include "player.h"
+#include "terrain.h"
 #include "travel.h"
 
 LUAFN(l_set_exclude)
