@@ -72,6 +72,12 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         overlay.height = canvas.height;
         overlay_ctx = overlay.getContext("2d");
 
+        if (cell_x !== 0 || cell_y !== 0)
+        {
+            clear();
+            center();
+        }
+
         $("#minimap, #minimap_overlay").css("display", display);
     }
 

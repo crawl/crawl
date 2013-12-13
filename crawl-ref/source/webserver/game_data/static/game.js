@@ -91,6 +91,13 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
         minimap.update_overlay();
     }
 
+    options.add_listener(function () {
+        if (layout_parameters)
+            layout(layout_parameters, true);
+        display.invalidate(true);
+        display.display();
+    });
+
     function toggle_full_window_dungeon_view(full)
     {
         // Toggles the dungeon view for X map mode
