@@ -321,9 +321,19 @@ function ($, comm, enums, map_knowledge, messages, options) {
         update_stat("int");
         update_stat("dex");
 
-        $("#stats_time").text((player.time / 10.0).toFixed(1));
-        if (player.time_delta)
-            $("#stats_time").append(" (" + (player.time_delta / 10.0).toFixed(1) + ")");
+        if (options.get("show_game_turns") === true)
+        {
+            $("#stats_time_caption").text("Time:");
+            $("#stats_time").text((player.time / 10.0).toFixed(1));
+            if (player.time_delta)
+                $("#stats_time").append(" (" + (player.time_delta / 10.0).toFixed(1) + ")");
+        }
+        else
+        {
+            $("#stats_time_caption").text("Turn:");
+            $("#stats_time").text(player.turn);
+        }
+
         var place_desc = player.place;
         if (player.depth) place_desc += ":" + player.depth;
         $("#stats_place").text(place_desc);

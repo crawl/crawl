@@ -4121,6 +4121,8 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_int("tile_map_pixels", Options.tile_map_pixels);
 
+    tiles.json_write_bool("show_game_turns", Options.show_game_turns);
+
     tiles.json_close_object();
 }
 
