@@ -129,7 +129,7 @@ Copia il progresso del personaggio.
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Copia una grande quantità di informazioni nel file 'playername.txt' nella
+Copia una grande quantità di informazioni nel file ‘playername.txt’ nella
 cartella morgue, da usare a tuo puro piacimento. Tutto ciò include statistiche
 principali, incantesimi, abilità, note, ecc.
 %%%%

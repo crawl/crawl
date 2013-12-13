@@ -160,10 +160,10 @@ Divine Protection ability
 
 Wzywa Elyvilon by ocalić twe życie. Jeśli jesteś śmiertelnie ranny, Uzdrowiciel
 może cofnąć śmiertelne ciosy. Ta forma pomocy jest szczególnie pobożna i wymaga
-w zamian punktów pobożności ( w przeciwieństwie do  jedynie proszenia o
-interwencję,które jest darmowe jednak nie zawsze przyzwie Elyvilon ).
+w zamian punktów pobożności (w przeciwieństwie do  jedynie proszenia o
+interwencję,które jest darmowe jednak nie zawsze przyzwie Elyvilon).
 
-Uważaj : zabicie kogoś podczas proszenia o ocalenie jest  wielkim grzechem !
+Uważaj: zabicie kogoś podczas proszenia o ocalenie jest wielkim grzechem!
 %%%%
 Lesser Self-Healing ability
 

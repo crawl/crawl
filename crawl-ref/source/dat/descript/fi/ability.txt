@@ -37,7 +37,7 @@ Palaa takaisin perusmuotoosi pienellä viiveellä.
 %%%%
 Cure All Mutations ability
 
-Paranna kaikki mutaatiosi - mutta vain kerran.
+Paranna kaikki mutaatiosi — mutta vain kerran.
 %%%%
 Drain Life ability
 

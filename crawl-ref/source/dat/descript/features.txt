@@ -43,7 +43,7 @@ visible in the flames.
 %%%%
 A closed door
 
-A wooden door. To open it, try simply walking into it, or press 'O'.
+A wooden door. To open it, try simply walking into it, or press ‘O’.
 %%%%
 # These should get custom names instead. Currently used by: IceCv, Ossuary,
 # Sewer, Trove, Volcano.
@@ -88,16 +88,16 @@ A dried-up fountain that has seen better days.
 %%%%
 A fountain of clear blue water
 
-Press 'q' to drink from this fountain. Not that it would have any effect,
+Press ‘q’ to drink from this fountain. Not that it would have any effect,
 though...
 %%%%
 A fountain of blood
 
-Press 'q' to drink from this fountain, if you absolutely wish to.
+Press ‘q’ to drink from this fountain, if you absolutely wish to.
 %%%%
 A fountain of sparkling water
 
-Press 'q' to drink from this magic fountain. Expect magical effects, as long as
+Press ‘q’ to drink from this magic fountain. Expect magical effects, as long as
 it's still magic.
 %%%%
 A gate leading back out of here
@@ -287,7 +287,7 @@ A runed door
 
 A door, covered in runic writing. It looks like there is something special
 behind it — perhaps danger, perhaps treasure. You may break the runes and open
-it like any other door (i.e., by walking into it or pressing 'O').
+it like any other door (i.e., by walking into it or pressing ‘O’).
 %%%%
 A sealed door
 
@@ -797,7 +797,7 @@ This slick floor seems to pulse to an unknown beat.
 # wizlab: Zonguldrok
 Zonguldrok's gravestone
 
-A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.
+A gravestone. The name ‘Zonguldrok’ is engraved on it in golden letters.
 %%%%
 A gravestone
 
@@ -828,7 +828,6 @@ A wall of white crystal
 
 This is lower-grade crystal. It is hardly translucent at all, and its crooked
 faces make things worse. The opalescent gleam still looks pretty nice, though.
-%%%%
 %%%%
 # wizlab: Hellbinder
 A hot floor

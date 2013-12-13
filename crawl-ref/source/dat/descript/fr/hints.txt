@@ -1,46 +1,46 @@
 %%%%
 welcome
 
-<white>Bienvenue dans Dungeon Crawl !</white>
+<white>Bienvenue dans Dungeon Crawl !</white>
 
 Votre objectif est de mener un <w>{{ return you.race() }} {{ return you.class()
 }}</w> au plus profond du donjon, récupérer la légendaire Orbe de Zot et
 revenir à la surface. Dans un premier temps, toutefois, l'exploration sera
 votre principal objectif. Essayez de descendre le plus profondément possible,
-mais attention : la mort se cache à chaque coin.
+mais attention : la mort se cache à chaque coin.
 
-Pour le moment, souvenez-vous des touches suivantes et de leur fonction :
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - montre les objets et commandes
-  <input>$cmd[CMD_SAVE_GAME]</input>  - sauve la partie pour être continuée
+Pour le moment, souvenez-vous des touches suivantes et de leur fonction :
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — montre les objets et commandes
+  <input>$cmd[CMD_SAVE_GAME]</input>  — sauve la partie pour être continuée
 plus tard (mais notez que la mort est permanente)
-  <input>$cmd[CMD_LOOK_AROUND]</input>  - examine quelque chose dans votre
+  <input>$cmd[CMD_LOOK_AROUND]</input>  — examine quelque chose dans votre
 champ de vision
 
 Le mode "indice" peut vous aider à jouer à Crawl sans avoir à lire toute la
 documentation. Si vous ne l'avez pas encore fait, vous voudrez probablement
 suivre le tutoriel. De plus, si vous êtes curieux, il y a plus d'informations
 dans les fichiers inclus dans le répertoire docs/ (qui tous peuvent être lu
-depuis le jeu) :
-  <lightblue>quickstart.txt</lightblue>     - Un très court guide à Crawl.
-  <lightblue>crawl_manual.txt</lightblue>   - Celui-ci contient tous les
+depuis le jeu) :
+  <lightblue>quickstart.txt</lightblue>     — Un très court guide à Crawl.
+  <lightblue>crawl_manual.txt</lightblue>   — Celui-ci contient tous les
 détails sur les races, la magie, les compétences, etc.
-  <lightblue>options_guide.txt</lightblue>  - L'interface de Crawl est
+  <lightblue>options_guide.txt</lightblue>  — L'interface de Crawl est
 hautement configurable. Ce document en explique toutes les options.
 
-Joyeux Crawl !
+Joyeux Crawl !
 %%%%
 death
 
-Toutes nos condoléances ! La mort prématurée de votre personnage est triste
+Toutes nos condoléances ! La mort prématurée de votre personnage est triste
 mais une chose si commune dans Crawl. Soyez assuré que rapidement grâce à votre
 expérience de jeu, vos personnages futurs dureront plus longtemps.
 
-Peut-être que les conseils suivants pourront améliorer votre style de jeu :
+Peut-être que les conseils suivants pourront améliorer votre style de jeu :
 %%%%
 death conjurer melee
 
 En tant que Conjurateur votre arme principale devrait être la magie offensive.
-Lancez des sorts plus souvent ! Rappelez-vous de vous reposer quand vos
+Lancez des sorts plus souvent ! Rappelez-vous de vous reposer quand vos
 réserves magiques sont basses.
 %%%%
 death berserker unberserked
@@ -69,7 +69,7 @@ des monstres en combat rapproché.
 %%%%
 death random 1
 
-Apprenez à fuir ce que vous ne pouvez gérer — c'est vital ! Il est plus sage
+Apprenez à fuir ce que vous ne pouvez gérer — c'est vital ! Il est plus sage
 d'éviter un niveau particulièrement dangereux. Mais ne le faite pas trop
 souvent car les monstres deviennent de plus en plus coriaces à mesure que vous
 descendez.
@@ -86,7 +86,7 @@ death random 3
 
 Rappelez-vous d'utiliser les parchemins, potions et baguettes que vous avez
 trouvez. Très souvent, vous ne pourrez espérer identifier chacun avec
-uniquement un parchemin d'identification. Apprenez à improviser : identifiez en
+uniquement un parchemin d'identification. Apprenez à improviser : identifiez en
 utilisant.
 %%%%
 death random 4
@@ -103,10 +103,10 @@ Rabattez-vous toujours dans un couloir afin de les obliger à vous combattre un
 %%%%
 finished
 
-Félicitations ! Vous avez survécu jusqu'à la fin du mode "indice" — veuillez à
-essayer les autres aussi. Notez que la commande d'écran d'aide
+Félicitations ! Vous avez survécu jusqu'à la fin du mode « indice » — veuillez
+à essayer les autres aussi. Notez que la commande d'écran d'aide
 (<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) va devenir très différente à
-partir de maintenant. Voici le dernier conseil de jeu :
+partir de maintenant. Voici le dernier conseil de jeu :
 %%%%
 finished explored
 
@@ -120,7 +120,7 @@ gauche</input> sur la mini-carte.</localtiles>
 %%%%
 finished travel
 
-Il existe un moyen pratique pour se déplacer de plusieurs niveaux : pressez
+Il existe un moyen pratique pour se déplacer de plusieurs niveaux : pressez
 <input>$cmd[CMD_INTERLEVEL_TRAVEL]</input> et entrez la destination désirée. Si
 votre trajet est interrompu, utilisez <input>$cmd[CMD_INTERLEVEL_TRAVEL]
 Enter</input> vous permettra de le reprendre.
@@ -129,9 +129,9 @@ finished stashes
 
 Vous pouvez faire une recherche sur tous les objets existant dans le donjon
 avec la commande <input>$cmd[CMD_SEARCH_STASHES]</input>. Par exemple,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dague"</w> listera toutes les
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>« dague »</w> listera toutes les
 dagues. Vous pouvez alors vous rendre à l'un des objets. Cela est aussi
-possible avec les mots <w>"échoppes"</w> ou <w>"autel"</w>.
+possible avec les mots <w>« échoppes »</w> ou <w>« autel »</w>.
 %%%%
 finished random 0
 
@@ -145,7 +145,7 @@ sauvegarde avec <input>$cmd[CMD_CHARACTER_DUMP]</input>.
 %%%%
 finished random 1
 
-Crawl a une fonction macro en son sein : pressez <input>~m</input> pour définir
+Crawl a une fonction macro en son sein : pressez <input>~m</input> pour définir
 une macro en précisant d'abord une touche de déclenchement (par exemple,
 <input>F1</input>) et une séquence de commande, par exemple
 <input>za+.</input>. Cette dernière fera que la touche <input>F1</input>
@@ -179,11 +179,11 @@ mouse button</input>. </localtiles> Chaque fois que vous voyez un corps en mode
 HINT_CONVERT Xom
 
 Vous venez de vous convertir à la religion de <w>Xom</w>. Vous pouvez garder
-Xom heureux en le maintenant amusé ; vous ne voulez absolument pas que ce dieu
+Xom heureux en le maintenant amusé ; vous ne voulez absolument pas que ce dieu
 s'ennuie de vous!
 
 Si vous gardez Xom amusé, il vous traitera comme sa chose, vous aidant ou vous
-persécutant aléatoirement pour son propre plaisir ; sinon, il vous traitera
+persécutant aléatoirement pour son propre plaisir ; sinon, il vous traitera
 comme un jouet mal-aimé.
 %%%%
 HINT_CONVERT
@@ -193,7 +193,7 @@ Votre piété (faveur divine) diminuera graduellement avec le temps, et si elle
 tombe à zéro, {{ return you.god() }} vous excommuniera et vous punira. Vous
 pouvez éviter cela, et même gagner suffisamment piété pour obtenir des pouvoirs
 et récompenses divines, en faisant des choses pour plaire à {{ return you.god()
-}}. Mais ne paniquez pas : vous commencez avec un montant confortable de piété,
+}}. Mais ne paniquez pas : vous commencez avec un montant confortable de piété,
 et tout danger d'excommunication est donc loin.
 
 Vous pouvez vérifier ce que votre dieu aime ou n'aime pas, ainsi que vos

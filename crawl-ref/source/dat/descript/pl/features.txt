@@ -20,16 +20,16 @@ Wysuszona fontanna, która najlepsze dni ma już za sobą.
 %%%%
 A fountain of clear blue water
 
-Wciśnij 'q' by napić się z tego źródła. Nie, żeby to miało jakikolwiek efekt...
+Wciśnij »q« by napić się z tego źródła. Nie, żeby to miało jakikolwiek efekt...
 %%%%
 A fountain of blood
 
-Wciśnij 'q' jeśli chcesz napić się z tego źródła, jeśli tak bardzo tego
+Wciśnij »q« jeśli chcesz napić się z tego źródła, jeśli tak bardzo tego
 pragniesz.
 %%%%
 A fountain of sparkling water
 
-Wciśnij 'q' aby napić się z tego magicznego źródła. Spodziewaj się magicznych
+Wciśnij »q« aby napić się z tego magicznego źródła. Spodziewaj się magicznych
 efektów.
 %%%%
 A gate leading back out of here
@@ -70,8 +70,8 @@ Wejście w ten teleporter przeniesie cię do innego pokoju
 %%%%
 A teleport trap
 
-Ta magiczna pułapka przeniesie każdego, kto na niej stanie - a nawet przeleci
-nad nią - do losowego miejsca na tym samym poziomie lochów.
+Ta magiczna pułapka przeniesie każdego, kto na niej stanie — a nawet przeleci
+nad nią — do losowego miejsca na tym samym poziomie lochów.
 %%%%
 A translucent unnaturally hard rock wall
 
@@ -134,7 +134,7 @@ Ta dziwna błona jest na tyle cienka, by widzieć przez nią.
 %%%%
 Zonguldrok's gravestone
 
-Nagrobek. Imię 'Zonguldrok' jest wygrawerowane złotymi literami.
+Nagrobek. Imię »Zonguldrok« jest wygrawerowane złotymi literami.
 %%%%
 A gravestone
 

@@ -130,11 +130,11 @@ Predicas a monstruos sobre las Leyes de Zin, lo que puede causar varios
 efectos. Hay cuatro libros sobre los que puedes predicar:
 
 * Libro de las Abominaciones: Este libro trata sobre las cosas más abobinables
-para Zin - el caos en todas sus formas. Estas recitaciones invocarán el castigo
+para Zin — el caos en todas sus formas. Estas recitaciones invocarán el castigo
 más poderoso de Zin.
 
-* Libro de las Abluciones: Los impuros son igualmente aborrecidos por "Quien
-dio las Leyes". Las recitaciones de este libro causarán daño a tales criaturas.
+* Libro de las Abluciones: Los impuros son igualmente aborrecidos por “Quien
+dio las Leyes”. Las recitaciones de este libro causarán daño a tales criaturas.
 
 * Libro de los Apóstatas: Las criaturas inteligentes que no adoran a Zin pero
 que no son de origen maligno son castigadas con menos severidad. Las
@@ -160,7 +160,7 @@ desaparecerá en cuanto se acabe con la paz.
 %%%%
 Cure All Mutations ability
 
-Se curan todas tus mutaciones - pero sólo por una vez.
+Se curan todas tus mutaciones — pero sólo por una vez.
 %%%%
 Divine Shield ability
 

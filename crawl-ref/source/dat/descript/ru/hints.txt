@@ -10,19 +10,19 @@ welcome
 за каждым углом.
 
 Пока же запомните следующие комбинации клавиш и их функционал:
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - показывает вещи и команды
-  <input>$cmd[CMD_SAVE_GAME]</input>  - сохраняет игру, чтобы вы могли
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — показывает вещи и команды
+  <input>$cmd[CMD_SAVE_GAME]</input>  — сохраняет игру, чтобы вы могли
 продолжить ее позднее (помните, смерть — перманентна)
-  <input>$cmd[CMD_LOOK_AROUND]</input>  - осмотреть окружающее пространство
+  <input>$cmd[CMD_LOOK_AROUND]</input>  — осмотреть окружающее пространство
 
 Режим помощи позволит начать играть в Dungeon Crawl без чтения документации.
 Если вы еще не проходили обучение, можете начать с него. Если же вас
 заинтересовали детали, больше информации можно найти в следующих файлах папки
 docs/ (все они доступны и в игре):
-  <lightblue>quickstart.txt</lightblue>     - Очень краткое руководство к игре.
-  <lightblue>crawl_manual.txt</lightblue>   - Этот файл содержит информацию по
+  <lightblue>quickstart.txt</lightblue>     — Очень краткое руководство к игре.
+  <lightblue>crawl_manual.txt</lightblue>   — Этот файл содержит информацию по
 классам, навыкам и умениям.
-  <lightblue>options_guide.txt</lightblue>  - Интерфейс Crawl'а легко
+  <lightblue>options_guide.txt</lightblue>  — Интерфейс Crawl'а легко
 конфигурируется. Этот документ описывает возможные опции.
 
 Удачных приключений!
@@ -120,9 +120,9 @@ finished stashes
 
 Вы можете искать среди всех вещей в подземелье, используя команду
 <input>$cmd[CMD_SEARCH_STASHES]</input>. К примеру,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dagger"</w> откроет список всех
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“dagger”</w> откроет список всех
 ножей. А затем вы сможете отправиться к любой из этих точек. Возможно даже
-использование таких слов, как <w>"shop"</w> или <w>"altar"</w>.
+использование таких слов, как <w>“shop”</w> или <w>“altar”</w>.
 %%%%
 finished random 0
 

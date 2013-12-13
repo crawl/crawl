@@ -7,24 +7,24 @@ Deine Aufgabe ist es einen <w>{{ return you.race() }} {{ return you.class()
 }}</w> sicher durch die Tiefen der Höhlen zu leiten und dabei den sagenhaften
 Orb von Zot zurück zur Oberfläche zu bringen. Wie auch immer, bei deinen ersten
 Versuchen sollte entdecken das Hauptziel sein. Versuche so tief wie möglich zu
-erforschen, aber nehm dich in Acht : der Tod schleicht um jede Ecke!
+erforschen, aber nehm dich in Acht : der Tod schleicht um jede Ecke!
 
 Für jetzt merke die die folgenden Tasten und Funktionen:
- <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - zeigt die Gegenstände und die
+ <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — zeigt die Gegenstände und die
 Befehle
- <input>$cmd[CMD_SAVE_GAME]</input>  - speichert das Spiel um später
+ <input>$cmd[CMD_SAVE_GAME]</input>  — speichert das Spiel um später
 fortzufahren (aber bedenke das der Tod permanent ist)
- <input>$cmd[CMD_LOOK_AROUND]</input>  - untersucht etwas in deiner Nähe
+ <input>$cmd[CMD_LOOK_AROUND]</input>  — untersucht etwas in deiner Nähe
 
 Der Hinweismodus wird dir helfen Crawl zu spielen ohne irgendwelche Handbücher
 zu lesen. Falls du es noch nicht versucht hast möchtest du vielleicht die
 Einführung ausprobieren. Und wenn es dich dann noch interessiert bekommst du
 noch mehr Informationen in den folgenden doks / Verzeichnissen (die man auch
 alle im Spiel selbst lesen kann):
- <lightblue>quickstart.txt</lightblue>     - eine Kurzeinführung in Crawl.
- <lightblue>crawl_manual.txt</lightblue>   - Beinhaltet alle Details über
+ <lightblue>quickstart.txt</lightblue>     — eine Kurzeinführung in Crawl.
+ <lightblue>crawl_manual.txt</lightblue>   — Beinhaltet alle Details über
 Arten, Magie, Fähigkeiten, usw.
- <lightblue>options_guide.txt</lightblue>  - Crawl's Interface ist sehr gut an
+ <lightblue>options_guide.txt</lightblue>  — Crawl's Interface ist sehr gut an
 eigene Bedürfnisse anpassbar.  Dieses Dokument erklärt alle Optionen.
 
 Viel Spass beim Crawlen!
@@ -67,7 +67,7 @@ dich einem Monster im Nahkampf stellst.
 %%%%
 death random 1
 
-Lerne wann du vor Dingen davonlaufen musst die du nicht bewältigen kannst - das
+Lerne wann du vor Dingen davonlaufen musst die du nicht bewältigen kannst — das
 ist sehr wichtig! Es ist oft sehr weise einen teilweise gefährlichen Level zu
 überspringen. Doch übertreibe es dabei nicht, denn die Monster werden immer
 Mächtiger je tiefer du vordringst.
@@ -87,7 +87,7 @@ death random 3
 
 Denke daran von dir gefundene Schriftrollen, Tränke und Stäbe zu benutzen. Du
 wirst sehr häufig nicht alles mit der Schriftrolle identifizieren können. Lerne
-zu improvisieren : finde es durch ausprobieren heraus.
+zu improvisieren : finde es durch ausprobieren heraus.
 %%%%
 death random 4
 
@@ -102,7 +102,7 @@ immer in einen Gang zurück damit sie gezwungen sind dich einzeln zu bekämpfen.
 %%%%
 finished
 
-Glückwunsch! Du hast bis zum Ende des Hilfe-Modus überlebt - sicherlich willst
+Glückwunsch! Du hast bis zum Ende des Hilfe-Modus überlebt — sicherlich willst
 du die anderen auch versuchen. Bitte beachte das der Kommando Hilfe-Schirm
 (<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) von nun an ganz anders aussehen
 wird. Hier noch ein letzter Spieltipp:
@@ -128,9 +128,9 @@ finished stashes
 
 Du kannst unter allen Gegenstände in den Höhlen mit dem Befehl
 <input>$cmd[CMD_SEARCH_STASHES]</input> suchen. Zum Beispiel,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dolch"</w> listet alle dolche auf.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>„dolch“</w> listet alle dolche auf.
 Dann kannst du zu einem der Punkte reisen. Es ist genauso möglich Worte wie
-<w>"Shop"</w> oder <w>"Altar"</w> einzugeben.
+<w>„Shop“</w> oder <w>„Altar“</w> einzugeben.
 %%%%
 finished random 0
 

@@ -15,7 +15,7 @@ Vous sentez un bloc au fond de votre estomac.
 %%%%
 __cap-U_suffix
 
-Si effrayé, ça peut devenir méchant !
+Si effrayé, ça peut devenir méchant !
 %%%%
 __(_suffix_examine
 
@@ -40,7 +40,7 @@ Antaeus
 
 Autrefois un Titan fort et renommé, son arrogance fut sa perte. Corrompu et
 sali, il est devenu un puissant démon, qui règne sur les étendues gelés du
-Cocyte. Son gigantesque corps semble facile à atteindre ; malheureusement il
+Cocyte. Son gigantesque corps semble facile à atteindre ; malheureusement il
 semble aussi que toute attaque, sauf peut-être une très forte, le laisserait
 indemne.
 %%%%
@@ -50,8 +50,7 @@ Autrefois humaine et tisseuse exceptionnelle, Arachne fut maudite et
 transformée en un être mi-femme mi-araignée. Délivrée des contraintes du temps,
 elle a la beauté d'une jeune humaine mais le corps et les pattes d'une
 monstrueuse araignée.
-
-Âgée de milliers d'années, elle a appris la magie et d'autres tours.
+ Âgée de milliers d'années, elle a appris la magie et d'autres tours.
 Préparez-vous à être pris dans ses toiles et ses magies pendant que ses mignons
 vous dissolvent et vous sucent les chairs.
 %%%%
@@ -61,7 +60,7 @@ Un des Archidémons qui règnent sur l'Enfer, enveloppé de feu.
 %%%%
 Azrael
 
-Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
+Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
 %%%%
 Blork the orc
 
@@ -82,14 +81,14 @@ d'une armure dorée étincelante et portant une énorme épée tordue.
 %%%%
 Chuck
 
-Chuck le géant de pierre aimes les rochers, surtout les gros ! Pendant des
+Chuck le géant de pierre aimes les rochers, surtout les gros ! Pendant des
 années, il en a amassé toute une collection, dont certains rares et enchantés.
 %%%%
 Crazy Yiuf
 
 Un vieux gnoll desséché qui porte un longue barbe blanche, un bâton de combat
-et une cape. Une vrai figure de mythologie ! Attendez, est-ce que sa barbe
-tient avec des crochets ?
+et une cape. Une vrai figure de mythologie ! Attendez, est-ce que sa barbe
+tient avec des crochets ?
 %%%%
 Dispater
 
@@ -203,7 +202,7 @@ Gastronok
 Une limace vorace et étonnamment intelligente, dévouée à manger tout ce qui
 passe à sa portée, avec un chapeau pointu qu'il porte en débauché sur le haut
 de sa tête. Il a obtenu ce chapeau de la même manière qu'il a obtenu son
-intelligence et sa connaissance des sorts : en consommant son propriétaire
+intelligence et sa connaissance des sorts : en consommant son propriétaire
 précédant, un magicien puissant.
 %%%%
 Geryon
@@ -229,7 +228,7 @@ Harold
 
 Un chasseur de prime d'âge moyen, anxieux de devoir se retirer de la chasse aux
 primes des suites de son dernier boulot. Il espère s'installer quelque part et
-vivre une vie tranquille avec sa famille, avec l'argent de sa dernière prime :
+vivre une vie tranquille avec sa famille, avec l'argent de sa dernière prime :
 vous.
 %%%%
 Ignacio
@@ -272,7 +271,7 @@ qu'il ne vit plus, il a amélioré ses compétences en combat et en magie, a
 amassé de grosses richesses et beaucoup de possessions, et réside maintenant
 dans la tranquille Tour du Silence. Il ne compte pas laisser de petits
 aventuriers malingre ruiner son dur travail, donc ceux qui le croisent doivent
-se méfier !
+se méfier !
 %%%%
 Joseph
 
@@ -365,7 +364,7 @@ une assez bonne protection. Et distraire les hommes au combat est une qualité.
 Maud
 
 Une mystérieuse princesse guerrière d'un royaume lointain, dans sa quête pour
-retrouver l'épée légendaire 'Entarex'. Nombreux sont ses admirateurs qui,
+retrouver l'épée légendaire “Entarex”. Nombreux sont ses admirateurs qui,
 pensant à Maud, oublient tout autre chose.
 %%%%
 Maurice
@@ -424,7 +423,7 @@ lui arrive de se déphaser de la réalité.
 Norris
 
 Un cultiste détendu avec une voix saine et douce, cherchant la paix dans la
-mort. Il s'en fiche un peu que ça soit vous ou lui qui meure — "les deux"
+mort. Il s'en fiche un peu que ça soit vous ou lui qui meure — « les deux »
 serait probablement la meilleure option.
 %%%%
 Pikel
@@ -487,7 +486,7 @@ aventuriers — de la nourriture facile — qu'elle attire.
 Sonja
 
 Une gracieuse assassin kobolde. Admirez ses belles pirouettes, frissonnez
-devant ses sauts audacieux ! Mais prenez garde à ses couteaux !
+devant ses sauts audacieux ! Mais prenez garde à ses couteaux !
 %%%%
 Sojobo
 
@@ -618,7 +617,7 @@ qu'il porte une armure lourde.
 apis
 
 Un placide taureau sacré de Elyvilon. Prenez garde malfaisants, car il va
-sûrement se retourner contre vous !
+sûrement se retourner contre vous !
 %%%%
 apocalypse crab
 
@@ -818,11 +817,11 @@ corrompt tout ce qu'il touche.
 %%%%
 cherub
 
-Admirez ! Un porteur du trône des Dieux, sa tête est composée de quatre visages
-: l'un d'homme, un de bœuf, un de lion et un d'aigle. C'est l'un des trois
-êtres angéliques qui se tiennent devant les Bons Dieux, chantant les hymnes
-éternels de louange à leur Gloire et Bonté. Évidemment, ces hymnes ont le
-pouvoir d'éveiller la grandeur des cœurs purs.
+Admirez ! Un porteur du trône des Dieux, sa tête est composée de quatre
+visages : l'un d'homme, un de bœuf, un de lion et un d'aigle. C'est l'un des
+trois êtres angéliques qui se tiennent devant les Bons Dieux, chantant les
+hymnes éternels de louange à leur Gloire et Bonté. Évidemment, ces hymnes ont
+le pouvoir d'éveiller la grandeur des cœurs purs.
 %%%%
 chimera
 
@@ -1250,7 +1249,7 @@ dans le donjon, voulant partager son destin avec les autres.
 %%%%
 flayed ghost
 
-Une affreuse créature mort-vivante qui flotte dans les airs ; l'esprit angoissé
+Une affreuse créature mort-vivante qui flotte dans les airs ; l'esprit angoissé
 d'une victime torturée dont la peau lacérée pend du corps décharné. Il parcours
 le donjon sans répit, en infligeant à ceux qui sont toujours vivant l'angoisse
 qu'il a ressentit pendant sa vie.
@@ -1304,7 +1303,7 @@ l'ambroisie, très prisée chez les dieux et les magiciens.
 ghost-faced bat
 
 Est-ce que cette chauve-souris possède le visage d'un fantôme, ou bien C'EST un
-fantôme ?
+fantôme ?
 %%%%
 ghoul
 
@@ -1322,7 +1321,7 @@ protoplasme pour suinter dans tout le donjon à la recherche de nourriture.
 worker ant
 
 Un insecte sans ailes avec des mandibules acérées capable d'injecter un poison
-mortel. C'est une ouvrière, et sa tâche est de récupérer de la nourriture -
+mortel. C'est une ouvrière, et sa tâche est de récupérer de la nourriture —
 n'importe quel être vivant qu'elle rencontre est un repas potentiel.
 %%%%
 bat
@@ -1628,7 +1627,7 @@ aux autres.
 hydra
 
 Un énorme bête lacertilienne et cauchemardesque. Elle à plusieurs têtes et la
-possibilité d'en faire pousser plus !
+possibilité d'en faire pousser plus !
 
 La frapper avec une arme coupante plus grande qu'une dague augmente les risques
 de décapiter une des têtes, ce qui, en considérant la biologie unique de
@@ -1808,8 +1807,8 @@ Killer Klown
 
 Une figure comique pleine de vie et de dérision. Elle a l'air très heureuse de
 vous voir... Mais n'est-ce pas là un stratagème malicieux pour cacher ses
-traits ? Est-ce de la peinture rouge sur son visage ou bien quelque chose de
-moins sympathique ?
+traits ? Est-ce de la peinture rouge sur son visage ou bien quelque chose de
+moins sympathique ?
 %%%%
 kobold
 
@@ -1834,7 +1833,7 @@ kraken
 Un monstre des mers gargantuesque, capable d'avaler des vaisseaux entiers. Il
 les enlace avec ses tentacules et les plonge dans les profondeurs.
 Heureusement, ces tentacules sont trop grosses pour attraper de petites
-créatures comme vous. Attendez, est-ce que je viens de dire "Heureusement" ?
+créatures comme vous. Attendez, est-ce que je viens de dire « Heureusement » ?
 %%%%
 large abomination
 
@@ -2367,7 +2366,7 @@ légendaire.
 satyr
 
 Un parent plus intelligent des fauns, souvent trouvé en leur compagnie, et bien
-plus impitoyable - et dangereux - pour les intrus.
+plus impitoyable — et dangereux — pour les intrus.
 %%%%
 scorpion
 
@@ -2575,7 +2574,7 @@ Une hideuse apparition brillante.
 %%%%
 spectral weapon
 
-Un esprit tirée d'une arme - il ne frappe jamais de lui meme.
+Un esprit tirée d'une arme — il ne frappe jamais de lui meme.
 %%%%
 sphinx
 
@@ -2604,7 +2603,7 @@ spirit wolf
 Une pâle apparition ressemblant a un loup bordé de lumière éthérée. C'est le
 rusé chasseur d'une meute, courant librement avec sa parenté entre les royaumes
 de l’éveille et du rêve. Le son de son hurlement est un présage, il annonce le
-début d'une chasse sauvage - un cri répondu par un autre et un autre jusqu'à ce
+début d'une chasse sauvage — un cri répondu par un autre et un autre jusqu'à ce
 que les voix indépendantes ne se compte plus et semblent remplir l'air dans
 toutes les directions.
 %%%%
@@ -2645,7 +2644,7 @@ perte des non-écologistes.
 %%%%
 spriggan enchanter
 
-Un Spriggan particulièrement habile dans l'art des maléfices et des charmes -
+Un Spriggan particulièrement habile dans l'art des maléfices et des charmes —
 et, apparemment, mortel avec une lame rapide.
 %%%%
 spriggan rider
@@ -3029,7 +3028,8 @@ test spawner
 bug.)
 
 Peut importe ce que c'est, c'est capable de générer des monstres à l'infini en
-lançant le sort "créatures de l'ombre", et il est pratiquement indestructible.
+lançant le sort « créatures de l'ombre », et il est pratiquement
+indestructible.
 
 Pour le détruire, il faut faire descendre le pilier de l’ascenseur central,
 puis envoyer des roquettes dans le trou qui donne sur son cerveau alors exposé
@@ -3232,7 +3232,7 @@ oklob plant annihilator
 
 Il pourrait sembler inconcevable qu'une simple plante puisse atteindre la
 sensibilité et l'usabilité de la magie, mais c'est ce que vous voyez ici.
-Quelle est cette sorcellerie ?
+Quelle est cette sorcellerie ?
 %%%%
 oklob sapling priest
 

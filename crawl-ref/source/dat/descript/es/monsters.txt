@@ -267,7 +267,7 @@ Y distraer a humanoides masculinos también tiene su valor en combate, además.
 Maud
 
 Una misteriosa princesa guerrera de un reino muy lejano, en pos de recuperar la
-legendaria espada 'Entarex'. Incontables han sido los admiradores que, pensando
+legendaria espada ‘Entarex’. Incontables han sido los admiradores que, pensando
 en Maud, olvidaron todo lo demás.
 %%%%
 Maurice
@@ -326,7 +326,7 @@ ahora fluctúa en diferentes fases de la realidad.
 Norris
 
 Un relajado cultista en paz con la muerte, con un saludable bronceado y una voz
-sosegada. No le importa si eres tú o él quien muera - ambos posiblemente sería
+sosegada. No le importa si eres tú o él quien muera — ambos posiblemente sería
 la mejor opción.
 %%%%
 Pikel
@@ -384,7 +384,7 @@ Snorg
 
 Un troll particularmente corpulento con poco temperamento y una importante
 tripa. Sin ningún interés en el Orbe, Snorg se deleita con el sin fin de
-aventureros - esto es, platos fáciles - a los que atrae.
+aventureros — esto es, platos fáciles — a los que atrae.
 %%%%
 Sonja
 
@@ -401,7 +401,7 @@ Terence
 
 Un violento asesino que mata tanto por placer como por interés, Terence se vio
 obligado a esconderse después de que uno de sus trabajos le saliera torcido, y
-no puede permitir que alguien que le haya visto salga vivo del calabazo - hay
+no puede permitir que alguien que le haya visto salga vivo del calabazo — hay
 una recompensa por su cabeza, después de todo.
 %%%%
 Tiamat

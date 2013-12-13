@@ -163,7 +163,7 @@ Zot
 Část žaláře tak hrozivá, plna šílenství, zuřivosti a bláznovství, že byla
 bezpečně uzamčena před vstupem náhodných vetřelců. Jen ti nepomatenější
 dobrodruzi by se opovážili shromáždit požadované klíče, porušit pečeť a
-vstoupit hlouběji - a to vše jen kvůli marnivé naději, že získají bájný
+vstoupit hlouběji — a to vše jen kvůli marnivé naději, že získají bájný
 artefakt, který nikdo nikdy neviděl.
 
 Zotova říše má pět pater a lze vejít pouze když má vstupující u sebe alespoň
@@ -217,7 +217,7 @@ Ziggurat
 Zigurat je zvláštní věž, sestávající ze sedmadvaceti pater neustále se
 zvětšujících bitevních arén, a každá z nich obsahuje více bohatství a nebezpečí
 než ta předchozí. Ať už tuto ohavnost vytvořil kdokoliv, za vstup si žádá
-vysokou cenu. Pozor však, protože zigurat není pro zbabělce - může se stát
+vysokou cenu. Pozor však, protože zigurat není pro zbabělce — může se stát
 hrobem i pro ty nejstatečnější a nejschopnější. A ačkoliv se portál do bezpečí
 nachází na každém patře, po opuštění se již znovu nelze vrátit.
 %%%%
@@ -226,7 +226,7 @@ Labyrinth
 Labyrint je obrovské, složité bludiště, navržené nějakou záludnou, zlovolnou
 duší, z důvodů, které jsou již dávno ztraceny v čase. Staré příběhy říkají, že
 labyrint byl postaven coby vězení pro hrozivého minotaura. Novější historky
-tvrdí, že tam stále je a stráží jediný východ ven - a také kupu pokladů, které
+tvrdí, že tam stále je a stráží jediný východ ven — a také kupu pokladů, které
 vzal bláznivým dobrodruhům, kteří se v bludišti ztratili a zemřeli tam hlady.
 Dávejte si v oněch měnících a klikatících se chodbách pozor, nebo i vaše věci
 skončí na minotaurově hromadě.

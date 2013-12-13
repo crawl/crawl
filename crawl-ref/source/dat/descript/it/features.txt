@@ -7,7 +7,7 @@ vita vegetale.
 A closed door
 
 Una porta di legno. Per aprirla prova semplicemente ad attraversarla, oppure
-premi il tasto 'O'.
+premi il tasto ‘O’.
 %%%%
 A crawl-hole back to the Lair
 

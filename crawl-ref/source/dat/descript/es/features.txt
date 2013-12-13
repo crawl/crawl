@@ -46,16 +46,16 @@ Una fuente reseca que ha visto días mejores.
 %%%%
 A fountain of clear blue water
 
-Pulsa 'q' para beber de esta fuente. Sin embargo, no esperes que vaya a tener
+Pulsa ‘q’ para beber de esta fuente. Sin embargo, no esperes que vaya a tener
 efecto alguno...
 %%%%
 A fountain of blood
 
-Usa 'q' para beber de esta fuente, si deseas tal cosa realmente.
+Usa ‘q’ para beber de esta fuente, si deseas tal cosa realmente.
 %%%%
 A fountain of sparkling water
 
-Usa 'q' para beber de esta fuente mágica. Espera efectos mágicos mientras
+Usa ‘q’ para beber de esta fuente mágica. Espera efectos mágicos mientras
 todavía sea mágica.
 %%%%
 A gate leading back out of here
@@ -80,7 +80,7 @@ Esta puerta lleva al Reino de Zot, la etapa final de tu aventura ya que en su
 nivel más profundo se halla el infame Orbe de Zot. Tanto el Orbe como este
 Reino tienen una temible y cuestionable reputación, pero algo parece ser
 cierto: los monstruos que habitan este área y protegen al Orbe son poderosos y
-extraños - algunos de ellos no se encuentran más que aquí.
+extraños — algunos de ellos no se encuentran más que aquí.
 %%%%
 A gateway leading out of the Abyss
 
@@ -187,7 +187,7 @@ Está recubierto con imágenes horribles y perturbadoras.
 A gravestone
 
 Una lápida anónima. La cuestión es, ¿es la lápida la que no tiene nombre o lo
-es la persona que yace en la tumba ?
+es la persona que yace en la tumba ?
 %%%%
 A damp floor
 

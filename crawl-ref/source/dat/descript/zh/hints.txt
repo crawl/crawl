@@ -8,19 +8,19 @@ welcome
 你只要探索地城就好。尽你所能层层推进，不过要小心：死亡的危险无处不在。
 
 目前，你只需要记住以下按键的功能：
-  <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> - 显示物品及命令
-  <white>$cmd[CMD_SAVE_GAME]</white>  - 保存游戏，以便以后继续目前的进度（注意：
+  <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> — 显示物品及命令
+  <white>$cmd[CMD_SAVE_GAME]</white>  — 保存游戏，以便以后继续目前的进度（注意：
 如果死了，就没法重来了）
-  <white>$cmd[CMD_LOOK_AROUND]</white>  - 调查附近的某个物体
+  <white>$cmd[CMD_LOOK_AROUND]</white>  — 调查附近的某个物体
 
 提示模式可以帮助你进行游戏而不用阅读游戏说明。如果你还没有玩过教程关卡，
 建议你先尝试通过教程关。当然，如果你想对这个游戏有深入的了解，你可以在docs/
 directory
 文件夹中阅读以下文档以获取更加详细的游戏资料（所有这些资料在游戏内也能阅读）：
-  <lightblue>quickstart.txt</lightblue>     - 简短的游戏入门说明。
-  <lightblue>crawl_manual.txt</lightblue>   - 包括种族、魔法、
+  <lightblue>quickstart.txt</lightblue>     — 简短的游戏入门说明。
+  <lightblue>crawl_manual.txt</lightblue>   — 包括种族、魔法、
 技能等等的详细说明。
-  <lightblue>options_guide.txt</lightblue>  - 游戏设置详解。
+  <lightblue>options_guide.txt</lightblue>  — 游戏设置详解。
 Crawl的界面有很多地方是可以让玩家自由设置的。
 
 祝你游戏愉快！
@@ -111,9 +111,9 @@ finished travel
 finished stashes
 
 按下 <input>$cmd[CMD_SEARCH_STASHES]</input> 命令可以搜索地城中所有存在的物品。
-例如：搜索 <input>$cmd[CMD_SEARCH_STASHES] "小刀"</input> 会显示出所有的小刀。
-你可以选择其中的一个，然后自动移动至那里。你也可以搜索诸如 <w>"商店"</w> 或
-<w>"祭坛"</w> 这样的关键词。
+例如：搜索 <input>$cmd[CMD_SEARCH_STASHES] “小刀”</input> 会显示出所有的小刀。
+你可以选择其中的一个，然后自动移动至那里。你也可以搜索诸如 <w>“商店”</w> 或
+<w>“祭坛”</w> 这样的关键词。
 %%%%
 finished random 0
 

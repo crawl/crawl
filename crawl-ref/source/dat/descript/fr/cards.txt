@@ -24,7 +24,7 @@ trouve habituellement dans les paquets d'évasion et de guerre.
 the Tomb card
 
 Cette carte entoure l'aventurier de murs de pierre protecteurs. A bas niveau,
-cette tombe pourra s'avérer imparfaite. A utiliser avec précaution ! On la
+cette tombe pourra s'avérer imparfaite. A utiliser avec précaution ! On la
 trouve en général dans les paquets de défense, d'évasion et de guerre ou, dans
 le paquet de punition de Nemelex Xobeh.
 %%%%
@@ -106,7 +106,7 @@ la trouve communément dans les paquets de changements et de merveilles.
 %%%%
 Shuffle card
 
-Cette carte inter-change vos trois attributs. A utiliser avec modération ! On
+Cette carte inter-change vos trois attributs. A utiliser avec modération ! On
 la trouve communément dans les paquets de changements et de merveilles.
 %%%%
 Experience card

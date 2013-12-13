@@ -14,8 +14,8 @@ Un autel à Yredelemnul le Sombre, taillé dans une colonne de basalte.
 %%%%
 A blade trap
 
-Vous voyez le tranchant d'une énorme lame de faux cachée dans une fente; il y a
-probablement un contrepoids qui agit comme un pendule.
+Vous voyez le tranchant d'une énorme lame de faux cachée dans une fente ; il y
+a probablement un contrepoids qui agit comme un pendule.
 %%%%
 A bloodstained altar of Trog
 
@@ -45,7 +45,7 @@ sont visibles dans les flammes.
 A closed door
 
 Une porte en bois. Pour l'ouvrir avancez simplement dans sa direction, ou
-appuyez sur 'O'.
+appuyez sur “O”.
 %%%%
 A collapsed entrance
 
@@ -89,16 +89,16 @@ Une fontaine asséchée qui a connu des jours meilleurs.
 %%%%
 A fountain of clear blue water
 
-Appuyez sur 'q' pour boire à cette fontaine. Pas que cela soit d'une grande
+Appuyez sur “q” pour boire à cette fontaine. Pas que cela soit d'une grande
 utilité...
 %%%%
 A fountain of blood
 
-Appuyez sur 'q' si vous souhaitez absolument boire à cette fontaine.
+Appuyez sur “q” si vous souhaitez absolument boire à cette fontaine.
 %%%%
 A fountain of sparkling water
 
-Appuyez sur 'q' pour boire à cette fontaine magique. Attendez vous à des
+Appuyez sur “q” pour boire à cette fontaine magique. Attendez vous à des
 réactions magiques tant qu'elle restera magique.
 %%%%
 A gate leading back out of here
@@ -135,13 +135,13 @@ A gate to the Realm of Zot
 
 Cette porte mène au Royaume de Zot, la dernière épreuve de votre quête. Son
 dernier niveau contient la fameuse Orbe de Zot. L'Orbe et ce Royaume ont une
-terrible et peu recommandable réputation, mais une chose semble certaine : les
+terrible et peu recommandable réputation, mais une chose semble certaine : les
 monstres qui y hantent ses couloirs et protège l'Orbe sont puissants et
 étranges — certains ne pouvant être rencontrés qu'en ces lieux.
 %%%%
 A gateway back into the Dungeon
 
-Cet accès permet un exploit que tout le monde pensait impossible : revenir de
+Cet accès permet un exploit que tout le monde pensait impossible : revenir de
 l'Enfer en vie.
 %%%%
 A gateway leading out of the Abyss
@@ -173,7 +173,7 @@ Ce portail mène au Vestibule des Enfers. Peu s'y risquent volontairement.
 %%%%
 A gateway to the Iron City of Dis
 
-Qui survivra à l'épreuve du Fer ?
+Qui survivra à l'épreuve du Fer ?
 %%%%
 A gateway to the decaying netherworld of Tartarus
 
@@ -293,9 +293,9 @@ Un autel de Beogh, indéniablement taillé grossièrement par des artisans orcs.
 A runed door
 
 Une porte, couverte d'écriture runique. Il semble qu'il y ait quelque chose de
-spécial derrière elle - peut-être le danger, peut-être un trésor. Vous pouvez
+spécial derrière elle — peut-être le danger, peut-être un trésor. Vous pouvez
 casser les runes et l'ouvrir comme n'importe quel autre porte (c'est à dire en
-marchant dedans ou en appuyant sur 'O').
+marchant dedans ou en appuyant sur “O”).
 %%%%
 A sealed door
 
@@ -314,12 +314,12 @@ votre chemin à travers elle semble impossible, tant que la magie est en place.
 %%%%
 A shaft
 
-Un trou profond. Qui sait où vous finiriez si vous tombiez dedans ?
+Un trou profond. Qui sait où vous finiriez si vous tombiez dedans ?
 %%%%
 A shattered altar of Ashenzari
 
 Cet autel de cristal s'est brisé lorsque que Ashenzari fut maudit. Néanmoins,
-une force est encore à l'œuvre ici : une sombre aura maintiens les éclats en
+une force est encore à l'œuvre ici : une sombre aura maintiens les éclats en
 cours d'explosion, suspendus dans le temps et l'espace, comme le dieu qu'ils
 représentent.
 %%%%
@@ -428,7 +428,7 @@ tengu, faunes et toutes sortes de malédictions effrayantes.
 %%%%
 A staircase to the Shoals
 
-Et voici les Côtes : plages exotiques souterraines, embruns salés et créatures
+Et voici les Côtes : plages exotiques souterraines, embruns salés et créatures
 qui mordent, poignardent et broient.
 %%%%
 A staircase to the Slime Pits
@@ -582,13 +582,13 @@ An idol of Beogh
     if you.god() == "Beogh" then
         return "Cette statue brute mais majestueuse représente Beogh dans sa "
 ..
-               "gloire. Que tous ces infects non-Orcs soient frappés !";
+               "gloire. Que tous ces infects non-Orcs soient frappés !" ;
     else
         return "Cette statue grossière représente Beogh, le dieu des orcs " ..
                "primitifs vivant ici. Leur religion appelle à assassiner " ..
                "tous les non-croyants. Ça serait un plaisir de détruire " ..
                "cette idole, mais prudence, Beogh est connu pour être " ..
-               "rancunier.";
+               "rancunier." ;
     end
 }}
 %%%%
@@ -638,7 +638,7 @@ Some deep water
 
 Cette eau est aussi profonde que dangereuse. Aucun voyageur sain d'esprit ne
 mettra le pied dedans, excepté ceux qui volent ou nagent. Ceci est un
-avertissement pour vous : de nombreux aventuriers confus ont trouvé la mort
+avertissement pour vous : de nombreux aventuriers confus ont trouvé la mort
 dans ces profondeurs, et une fin prématurée à la lévitation a noyé des
 voyageurs encore plus expérimentés.
 %%%%
@@ -667,7 +667,7 @@ ici, alors assurez-vous d'avoir terminer le pillage avant.
 %%%%
 An autumnal tree
 
-Ces grands arbres semblent être fixées en permanence dans un moment d'automne :
+Ces grands arbres semblent être fixées en permanence dans un moment d'automne :
 les feuilles, de couleur rouge et or, tombent des branches et flottent
 gracieusement vers le sol. Cependant, avant même qu'elles n'atteignent le sol,
 une ombre passe, et quand le chatoiement est parti, les feuilles sont une fois
@@ -681,8 +681,8 @@ arbres, prêts à tomber, mais totalement incapables de le faire.
 A strange statue
 
 Les traits de cette statue sont étranges et exotiques. Est-ce parce que la
-statue est usé et terni qu'elle est devenu tellement méconnaissable ? Ou le
-sujet était il quelque chose de démoniaque et malfaisant ?
+statue est usé et terni qu'elle est devenu tellement méconnaissable ? Ou le
+sujet était il quelque chose de démoniaque et malfaisant ?
 %%%%
 A timeless floor
 
@@ -704,7 +704,7 @@ La seule chose qui manque c'est de l'eau.
 %%%%
 A black marble wall
 
-Le marbre luit et brille. C'est vraiment très beau !
+Le marbre luit et brille. C'est vraiment très beau !
 %%%%
 A marble floor
 
@@ -713,7 +713,7 @@ nuances de rose ici et là.
 %%%%
 A rose-covered archway
 
-Ces roses sont superbes !
+Ces roses sont superbes !
 %%%%
 A vine-covered statue
 
@@ -760,12 +760,12 @@ Ce plancher lisse semble pulser à un rythme inconnu.
 %%%%
 Zonguldrok's gravestone
 
-Une pierre tombale. Le nom 'Zonguldrok' est gravé dessus en lettres d'or.
+Une pierre tombale. Le nom “Zonguldrok” est gravé dessus en lettres d'or.
 %%%%
 A gravestone
 
-Une pierre tombale vierge. Une question demeure : est ce la tombe qui est sans
-nom ou la personne qui repose dedans ?
+Une pierre tombale vierge. Une question demeure : est ce la tombe qui est sans
+nom ou la personne qui repose dedans ?
 %%%%
 The ground
 
@@ -789,7 +789,7 @@ agréable.
 %%%%
 A hot floor
 
-Profond sous le sol brûle un feu plus chaud que tous les autres feux : le feu
+Profond sous le sol brûle un feu plus chaud que tous les autres feux : le feu
 des enfers. Le sol en est brûlant.
 %%%%
 A black wall
@@ -807,7 +807,7 @@ Cet arbre est mort comme tout le reste autour.
 %%%%
 An iron statue
 
-Cette statue n'a pas de bouche. Effrayant !
+Cette statue n'a pas de bouche. Effrayant !
 %%%%
 Ashen ground
 
@@ -841,7 +841,7 @@ A rune carved stone wall
 
 Ce mur de pierre étrangement vierge de slime est couvert sur toute sa surface
 d'un nombre incalculable de runes mystiques. Un groupe de runes qui se répète
-souvent semble faire référence à 'la gelée royale'.
+souvent semble faire référence à “la gelée royale”.
 %%%%
 A sarcophagus
 
@@ -887,7 +887,7 @@ An ice covered rock wall
 
 Cette roche est recouverte d'une épaisse couche de neige et de glace. D'autant
 que vous pouvez voir de l'eau liquide s'écouler par endroit, il est évident que
-cette cave s'est formée de cette manière : l'eau a suinté à travers les
+cette cave s'est formée de cette manière : l'eau a suinté à travers les
 fissures de la roche et ensuite s'est congelée, plongeant lentement l'endroit
 dans lequel vous êtes. Et ainsi cela creuse ce qu'il reste de votre chaleur
 corporelle.
@@ -933,7 +933,7 @@ donjon, d'autres asseyent de gagner leur vie en voyageant d'un endroit à
 l'autre. Les bazars rassemblent un certain nombre de magasins différents et
 souvent mieux achalandés, et parfois même plus abordables. Quand vous entendez
 le son des pièces trébuchantes, hâtez-vous de trouver cette place du marché
-insolite avant que la caravane ne lève le camp !
+insolite avant que la caravane ne lève le camp !
 
  Soyez aussi conscient que leur mode de vie nomade a appris à ces vendeurs à
 s'approprier tous objets abandonnés par un aventurier, puis s'en aller
@@ -946,7 +946,7 @@ donjon, d'autres asseyent de gagner leur vie en voyageant d'un endroit à
 l'autre. Les bazars rassemblent un certain nombre de magasins différents et
 souvent mieux achalandés, et parfois même plus abordables. Quand vous entendez
 le son des pièces trébuchantes, hâtez-vous de trouver cette place du marché
-insolite avant que la caravane ne lève le camp !
+insolite avant que la caravane ne lève le camp !
 
  Soyez aussi conscient que leur mode de vie nomade a appris à ces vendeurs à
 s'approprier tous objets abandonnés par un aventurier, puis s'en aller
@@ -985,7 +985,7 @@ lentement le passage.
 A magical portal
 
 Ce portail a été laissé ouvert par un sorcier négligent. Il pourrait conduire à
-un laboratoire secret, mais méfiez-vous ! Il sera assurément gardé par des
+un laboratoire secret, mais méfiez-vous ! Il sera assurément gardé par des
 monstres et des pièges magiques terribles. On dirait que le portail disparait
 lentement.
 %%%%

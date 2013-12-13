@@ -10,19 +10,19 @@ obiettivo principale. Prova a scendere più in basso che puoi ma bada! La morte
 si nasconde dietro ogni angolo.
 
 Per il momento, basta che ti ricordi questi comandi e le loro funzioni:
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - mostra gli oggetti e i comandi
-  <input>$cmd[CMD_SAVE_GAME]</input>  - salva il gioco, per essere ripreso dopo
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — mostra gli oggetti e i comandi
+  <input>$cmd[CMD_SAVE_GAME]</input>  — salva il gioco, per essere ripreso dopo
 (ma ricorda che la morte è permanente)
-  <input>$cmd[CMD_LOOK_AROUND]</input>  - esamina qualcosa nella tuoi pressi
+  <input>$cmd[CMD_LOOK_AROUND]</input>  — esamina qualcosa nella tuoi pressi
 
 La modalità suggerimenti ti aiuterà a giocare a Crawl senza leggere alcuna
 documentazione. Se ancora non l'hai fatto, leggi il tutorial. Se ti senti
 intrigato, ci sono più informazioni disponibili nei seguenti files dalla
 cartella docs/ (che possono essere tutti letti durante il gioco):
-  <lightblue>quickstart.txt</lightblue>      - Una brevissima guida a Crawl.
-  <lightblue>crawl_manual.txt</lightblue>    - Questo contiene tutti i dettagli
+  <lightblue>quickstart.txt</lightblue>      — Una brevissima guida a Crawl.
+  <lightblue>crawl_manual.txt</lightblue>    — Questo contiene tutti i dettagli
 sulle specie, magie, abilità, ecc.
-  <lightblue>options_guide.txt</lightblue>i  - L'interfaccia di Crawl è molto
+  <lightblue>options_guide.txt</lightblue>i  — L'interfaccia di Crawl è molto
 configurabile. Questo documento spiega tutte le opzioni.
 
 Buon Crawling!
@@ -65,7 +65,7 @@ incantesimi prima di attaccare i nemici da vicino.
 %%%%
 death random 1
 
-Impara quando fuggire dalle cose che non puoi sconfiggere - questo è
+Impara quando fuggire dalle cose che non puoi sconfiggere — questo è
 importante! Spesso è saggio saltare un livello particolarmente pericoloso. Ma
 non esagerare poiché i mostri diventeranno più forti più scendi in profondità.
 %%%%
@@ -95,7 +95,7 @@ corridoio così che puoi costringere i nemici ad attaccarti uno alla volta.
 %%%%
 finished
 
-Congratulazione! Sei sopravvissuto fino alla fine della modalità suggerimenti -
+Congratulazione! Sei sopravvissuto fino alla fine della modalità suggerimenti —
 assicurati di provare anche le altre. Nota che la schermata d'aiuto
 (<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) sarà molto diverso da adesso in
 poi. Eccoti un ultimo suggerimento per giocare
@@ -120,9 +120,9 @@ finished stashes
 
 Puoi cercare fra tutti gli oggetti esistenti nel dungeon con il comando
 <input>$cmd[CMD_SEARCH_STASHES]</input>. Per esempio,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"pugnale"</w> farà la lista di tutti
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“pugnale”</w> farà la lista di tutti
 i pugnali. Puoi in seguito viaggiare fino ad uno dei posti indicati. È anche
-possibile scrivere parole come <w>"negozio"</w> o <w>"altare"</w>.
+possibile scrivere parole come <w>“negozio”</w> o <w>“altare”</w>.
 %%%%
 finished random 0
 

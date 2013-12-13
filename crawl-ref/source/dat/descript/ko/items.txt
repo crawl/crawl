@@ -72,8 +72,8 @@ apple
 %%%%
 apricot
 
-과즙이 풍부한 귤색의 과일이다. 학명은 'prunus armeniaca' 이며, 보통은 '살구'
-라고 부른다.
+과즙이 풍부한 귤색의 과일이다. 학명은 ‘prunus armeniaca’ 이며, 보통은
+‘살구’ 라고 부른다.
 %%%%
 arrow
 
@@ -154,8 +154,8 @@ book of alchemy
 %%%%
 book of annihilations
 
-이 낡을 대로 낡은 책에서는 피 냄새가 끊임없이 새어나오고 있어, 마법의 '마' 자도
-모르는 사람이라도 이 책이 담고 있는 순수한 파괴마법의 힘을 느낄 수 있을
+이 낡을 대로 낡은 책에서는 피 냄새가 끊임없이 새어나오고 있어, 마법의 ‘마’
+자도 모르는 사람이라도 이 책이 담고 있는 순수한 파괴마법의 힘을 느낄 수 있을
 정도이다. 이 책은 모든 마법사들의 염원이며, 이 책을 얻은 자는 간단히 모든
 파괴의 지휘자가 될 수 있다. 하지만 미숙한 마법사가 겁도 없이 이 책을 읽으려
 들면, 파괴의 지휘는 커녕 자신이 파괴에게 지휘 당할 것이다.
@@ -405,7 +405,7 @@ bow
 box of beasts
 
 타락한 마법사의 마법 실험 후에 남겨진 기이한 것들로 차 있는 상자다. 이 상자를
-열면 우호적인 키메라 - 세 마리의 다른 짐승들의 부분을 엮은 신비한 혼종 - 를
+열면 우호적인 키메라 — 세 마리의 다른 짐승들의 부분을 엮은 신비한 혼종 — 를
 풀어놓을 것이다.
 %%%%
 bread ration
@@ -504,7 +504,7 @@ deck of changes
 
 사용자나 사용자 주변을 변화시킬 수 있는 마법 카드로 구성된 덱이다.
 
-들어갈 수 있는 카드 목록은 다음과 같다 : the Elixir, Battlelust, Metamorphosis,
+들어갈 수 있는 카드 목록은 다음과 같다 : the Elixir, Battlelust, Metamorphosis,
 the Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
 Experience, Wild Magic, the Helix, the Sage, Water, Vitrification, the Map,
 Dowsing, the Spade, Trowel, the Minefield.
@@ -513,7 +513,7 @@ deck of defence
 
 다양한 방법으로 사용자를 위험으로부터 지켜내는 마법 카드로 구성된 덱이다.
 
-들어갈 수 있는 카드 목록은 다음과 같다 : the Tomb, the Banshee, Damnation,
+들어갈 수 있는 카드 목록은 다음과 같다 : the Tomb, the Banshee, Damnation,
 Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
 the Blade, the Shadow, the Mercenary.
 %%%%
@@ -522,14 +522,14 @@ deck of destruction
 적에게 죽음과 파괴를 선사하는 마법 카드로 구성된 덱이다. (운이 없다면, 당신에게
 선사 될지도.)
 
-들어갈 수 있는 카드 목록은 다음과 같다 : Vitriol, Flame, Frost, Venom, the
+들어갈 수 있는 카드 목록은 다음과 같다 : Vitriol, Flame, Frost, Venom, the
 Spark, the Hammer, Pain, the Orb.
 %%%%
 deck of dungeons
 
 던전의 구성과 생김새를 바꾸는 마법 카드로 구성된 덱이다.
 
-들어갈 수 있는 카드 목록은 다음과 같다 : Water, Vitrification, the Map,
+들어갈 수 있는 카드 목록은 다음과 같다 : Water, Vitrification, the Map,
 Dowsing, the Spade, Trowel, the Minefield.
 %%%%
 deck of escape
@@ -537,28 +537,28 @@ deck of escape
 다양한 방법으로 도주할 수 있는 마법 카드로 구성된 덱이다. 하지만, 부주의한
 카드의 사용은 설상가상의 상황을 만들 수도 있다!
 
-들어갈 수 있는 카드 목록은 다음과 같다 : the Portal, the Warp, Swap, Velocity,
+들어갈 수 있는 카드 목록은 다음과 같다 : the Portal, the Warp, Swap, Velocity,
 the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
 %%%%
 deck of punishment
 
 사용자에게 엄청난 재앙을 불러일으킬 수 있는 마법 카드로 구성된 덱이다.
 
-들어갈 수 있는 카드 목록은 다음과 같다 : Wrath, the Wraith, the Curse, Xom,
+들어갈 수 있는 카드 목록은 다음과 같다 : Wrath, the Wraith, the Curse, Xom,
 Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
 %%%%
 deck of summonings
 
 불가사의하고 기묘한 존재들이 그려진 마법 카드로 구성된 덱이다.
 
-들어갈 수 있는 카드 목록은 다음과 같다 : the Crusade, the Herd, the Pentagram,
+들어갈 수 있는 카드 목록은 다음과 같다 : the Crusade, the Herd, the Pentagram,
 the Dance, Foxfire, the Bones, Repulsiveness.
 %%%%
 deck of war
 
 전투 전 또는 전투 중에 유용한 마법 카드로 구성된 덱이다.
 
-들어갈 수 있는 카드 목록은 다음과 같다 : the Portal, the Warp, Swap, Velocity,
+들어갈 수 있는 카드 목록은 다음과 같다 : the Portal, the Warp, Swap, Velocity,
 the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir,
 Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Mercenary, the
 Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
@@ -569,7 +569,7 @@ deck of wonders
 사용자의 육체적, 정신적 상태를 좋게도 나쁘게도 만들 수 있는, 굉장히 신비로운
 마법 카드로 구성된 덱이다.
 
-들어갈 수 있는 카드 목록은 다음과 같다 : the Potion, Focus, Shuffle,
+들어갈 수 있는 카드 목록은 다음과 같다 : the Potion, Focus, Shuffle,
 Experience, Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
@@ -716,7 +716,7 @@ halberd
 %%%%
 hammer
 
-자루에 박아놓는 긴 철판인 '랑겟' 으로 보강된 뾰족한 망치로, 적에게 상당한
+자루에 박아놓는 긴 철판인 ‘랑겟’ 으로 보강된 뾰족한 망치로, 적에게 상당한
 피해를 줄 수 있다. 하지만 망치의 원래 용도를 생각해보면, 아무리 개량된 망치라
 해도 그 한계가 보일 것이다.
 %%%%
@@ -981,7 +981,7 @@ potion of confusion
 potion of cure mutation
 
 이 물약은 마신 자의 돌연변이 중 몇 개, 혹은 모든 돌연변이를 없애버린다. 종족
-특유의 타고난 신체적 특성은 '오히려 없는 것이 돌연변이' 이므로, 이 물약으로
+특유의 타고난 신체적 특성은 ‘오히려 없는 것이 돌연변이’ 이므로, 이 물약으로
 없어지지 않는다.
 %%%%
 potion of curing
@@ -1476,10 +1476,10 @@ slice of pizza
 %%%%
 sling
 
-돌을 장전해서 던질 수 있는, 천과 가죽으로 된 투석기다. (정확히는 '기계' 가 아닌
-'도구' 이므로 '투석구' 라고 불러야 한다.) 큰 피해를 주지는 못하지만 방심하면 안
-될 정도의 화력은 가지고 있으며, 다른 투사기기와는 다르게 방패를 사용하더라도
-공격 속도가 떨어지지 않는다.
+돌을 장전해서 던질 수 있는, 천과 가죽으로 된 투석기다. (정확히는 ‘기계’ 가
+아닌 ‘도구’ 이므로 ‘투석구’ 라고 불러야 한다.) 큰 피해를 주지는 못하지만
+방심하면 안 될 정도의 화력은 가지고 있으며, 다른 투사기기와는 다르게 방패를
+사용하더라도 공격 속도가 떨어지지 않는다.
 %%%%
 sling bullet
 
@@ -1647,8 +1647,8 @@ triple sword
 
 굉장히 날카로운 세 개의 날이 달린, 아주 특이한 검이다. 대장장이가 한 기사의
 농담을 듣고 두 개의 날이 달린 검을 만들어줬다는 전설에는 사실 알려지지 않은
-뒷이야기가 있다 : 기사는 이중검을 보고 흡족해하며 유쾌하게 떠들었다. "아, 이거
-굉장한데... 하지만 *삼중* 검은 당신도 만들어내지 못할걸?" 대장장이는 이 무기로
+뒷이야기가 있다 : 기사는 이중검을 보고 흡족해하며 유쾌하게 떠들었다. “아, 이거
+굉장한데... 하지만 *삼중* 검은 당신도 만들어내지 못할걸?” 대장장이는 이 무기로
 답을 했고, 기사는 너무나 놀라서 사중검에 대한 이야기는 할 수조차 없었다고 한다.
 %%%%
 trishula

@@ -78,15 +78,15 @@ A dry fountain
 %%%%
 A fountain of clear blue water
 
-按"q"键饮用这个喷泉中的水。不过，这不会产生任何效果的。
+按“q”键饮用这个喷泉中的水。不过，这不会产生任何效果的。
 %%%%
 A fountain of blood
 
-如果你真的执意要喝这个喷泉中的水的话，按"q"键。
+如果你真的执意要喝这个喷泉中的水的话，按“q”键。
 %%%%
 A fountain of sparkling water
 
-按"q"键饮用这个喷泉中的水。只要这个喷泉中还有魔力剩余，就会有魔法效果出现。
+按“q”键饮用这个喷泉中的水。只要这个喷泉中还有魔力剩余，就会有魔法效果出现。
 %%%%
 A gate leading back out of here
 
