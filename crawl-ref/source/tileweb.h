@@ -65,6 +65,7 @@ struct player_info
     int gold;
     int zot_points;
     int elapsed_time;
+    int num_turns;
     int lives, deaths;
 
     string place;

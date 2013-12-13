@@ -725,7 +725,10 @@ void TilesFramework::_send_player(bool force_full)
     if (crawl_state.game_is_zotdef())
         _update_int(force_full, c.zot_points, you.zot_points, "zp");
     if (you.running == 0) // Don't update during running/resting
+    {
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+        _update_int(force_full, c.num_turns, you.num_turns, "turn");
+    }
 
     const PlaceInfo& place = you.get_place_info();
     string short_name = branches[place.branch].shortname;
