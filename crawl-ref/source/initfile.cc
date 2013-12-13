@@ -4116,6 +4116,8 @@ void game_options::write_webtiles_options(const string& name)
                           Options.tile_show_minihealthbar);
     tiles.json_write_bool("tile_show_minimagicbar",
                           Options.tile_show_minimagicbar);
+    tiles.json_write_bool("tile_show_demon_tier",
+                          Options.tile_show_demon_tier);
 
     tiles.json_write_int("tile_map_pixels", Options.tile_map_pixels);
 
