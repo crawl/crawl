@@ -1015,7 +1015,6 @@ void game_options::reset_options()
     tile_full_screen      = SCREENMODE_AUTO;
     tile_window_width     = -90;
     tile_window_height    = -90;
-    tile_map_pixels       = 0;
     tile_cell_pixels      = 32;
     tile_filter_scaling   = false;
 # ifdef TOUCH_UI
@@ -1031,6 +1030,7 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE
+    tile_map_pixels       = 0;
     tile_force_overlay    = false;
     // delays
     tile_update_rate      = 1000;
@@ -3526,7 +3526,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
     else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
-    else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_filter_scaling);
 #endif // USE_TILE_LOCAL
@@ -3543,6 +3542,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 #endif
 #ifdef USE_TILE
+    else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
@@ -4111,10 +4111,13 @@ void game_options::write_webtiles_options(const string& name)
     _write_colour_list(Options.hp_colour, "hp_colour");
     _write_colour_list(Options.mp_colour, "mp_colour");
     _write_colour_list(Options.stat_colour, "stat_colour");
+
     tiles.json_write_bool("tile_show_minihealthbar",
                           Options.tile_show_minihealthbar);
     tiles.json_write_bool("tile_show_minimagicbar",
                           Options.tile_show_minimagicbar);
+
+    tiles.json_write_int("tile_map_pixels", Options.tile_map_pixels);
 
     tiles.json_close_object();
 }
