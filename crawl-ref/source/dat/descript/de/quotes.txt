@@ -24,7 +24,7 @@ A gateway to Hell
 %%%%
 A gateway to a ziggurat
 
-„Kapitän: Nehmen Sie jeden 'zig' weg!!
+„Kapitän: Nehmen Sie jeden ‚zig‘ weg!!
  Kapitän: Für die große Justiz.“
     -Zero Wing
 %%%%
@@ -114,11 +114,11 @@ als andere Dinge.
 %%%%
 Tartarus
 
-“Dort ist ein trübes, tristeres Gebiet
+„Dort ist ein trübes, tristeres Gebiet
  der Hölle, fernab jeder Dunkelheit;
  ein flach gebeugtes Land von Schatten weit
- umspannt. – Und nichts davon sagt dieses Lied.”
-    -Edward Arlington Robinson, “Die höchste Macht/_Supremacy_”. 1897.
+ umspannt. – Und nichts davon sagt dieses Lied.“
+    -Edward Arlington Robinson, „Die höchste Macht/_Supremacy_“. 1897.
 %%%%
 Temple
 
@@ -130,7 +130,7 @@ Temple
   Des Leichtsinns Denkmal mit verfall'nen Mauern:
  Dort Standen Schänken ... drei, Thortrümmer ... vier,
   Neun Klöster und ... auch Häuschen dort und hier.”
-    -Ignacy Krasicki, “Der Mönche-Krieg(Monachomachia)”, 1778
+    -Ignacy Krasicki, „Der Mönche-Krieg(Monachomachia)“, 1778
      übersetzt von Dr. Alexander Winklewski
 %%%%
 Tomb
@@ -148,11 +148,11 @@ schlummern, und die Bruderschaft von Gewissensbissen nicht bricht ihre Kette.“
 %%%%
 amulet
 
-"Gringoire streckte ihre Hand nach der kleine Tasche aus, aber sie zog sie
-zurück. 'Nicht anfassen! Es ist ein Amulett, und entweder machst du Unfug mit
-dem Zauber, oder es wird dir wehtun.'"
-    -Victor Marie Hugo, _Notre Dame de Paris_, Buch II, Kapitel VII 'A Wedding
-Night'. 1831.
+„Gringoire streckte ihre Hand nach der kleine Tasche aus, aber sie zog sie
+zurück. ‚Nicht anfassen! Es ist ein Amulett, und entweder machst du Unfug mit
+dem Zauber, oder es wird dir wehtun.‘“
+    -Victor Marie Hugo, _Notre Dame de Paris_, Buch II, Kapitel VII ‚A Wedding
+Night‘. 1831.
 %%%%
 animal skin
 
@@ -333,8 +333,8 @@ cloak
 %%%%
 club
 
-„Ich habe immer das westafrikanische Sprichwort geliebt: 'Sprechen Sie weich
-und tragen Sie einen großen Stock; Sie werden weit gehen. ' Wenn ich den großen
+„Ich habe immer das westafrikanische Sprichwort geliebt: ‚Sprechen Sie weich
+und tragen Sie einen großen Stock; Sie werden weit gehen.‘ Wenn ich den großen
 Stock nicht getragen hätte, wäre die Organisation ich nicht zurückgeblieben,
 und wenn ich gebrüllt und, als Pankhurst und die ähnlichen unehrlichen
 gewünschten Wahnsinnigen gebraust hätte, hätte ich zehn Stimmen nicht gehabt.“
@@ -357,6 +357,12 @@ crossbow
  habe ich keine Sekunde, um danach dich zu senden.“
     -Friedrich Schiller, _Wilhelm Tell _, IV, iii. 1804.
      trans. Herr Theodore Martin, 1898.
+%%%%
+cutlass
+
+„Wer hat bloß als erster die schrecklichen Schwerter erfunden?
+ Wie grausam und wahrhaft hartherzig war der! ...“
+    -Albius Tibullus, _Elegies_ I, X v.1-2, ca.  25 n.Chr.
 %%%%
 dagger
 
@@ -408,7 +414,7 @@ Khazad-dûm“. 1954.
 %%%%
 dire flail
 
-„‚Ah! ah! ah!‘ gelacht seine zwei Männer, ,wie die normannischen Bengel
+„‚Ah! ah! ah!‘ gelacht seine zwei Männer, ‚wie die normannischen Bengel
 demütigt werden, wenn sie den Schädel ihres tapferen Ritters sehen, der in
 durch unseren tapferen Landsmann geschlagen ist.’“
     -_Tales der Ritterlichkeit; oder, Risikos durch die Überschwemmung und den
@@ -447,7 +453,7 @@ tanzen muss!‘
  Und der Scharfrichter sagte — ‚Sie wissen wahrscheinlich nicht, wer ich bin?
 Ich habe die Köpfe der schlechten Leute mit meiner Axt abgeschnitten und
 kennzeichne, wie meine Axt klingelt!‘
- ,Streichen meinen Kopf nicht aus,’ hat Karen gesagt, ‚dafür, wenn Sie, ich
+ ‚Streichen meinen Kopf nicht aus,’ hat Karen gesagt, ‚dafür, wenn Sie, ich
 meine Sünde nicht bereuen kann. Aber streichen Sie meine Füße mit den roten
 Schuhen aus?‘
  Und dann hat sie ihre ganze Sünde bekannt, und der Scharfrichter hat ihre Füße
@@ -518,93 +524,93 @@ selbst zu besitzen.“
 %%%%
 great mace
 
-“Es wird einer emporkommen namens Feridoun der deinen Thron erbt und dein
- Schicksal umkehrt, und dich mit einer kuhköpfigen Keule erschlagen wird.”
+„Es wird einer emporkommen namens Feridoun der deinen Thron erbt und dein
+ Schicksal umkehrt, und dich mit einer kuhköpfigen Keule erschlagen wird.“
     -Firdausi, _Schāhnāme_. ca. 1000 n.Chr. übersetzt Helen Zimmern, 1883.
 %%%%
 halberd
 
-“Und Diarmid oh, Diarmid umgekommen in Un-frieden;
+„Und Diarmid oh, Diarmid umgekommen in Un-frieden;
  Sein Kopf wurde auf eine hohe Hellebarde gesetzt;
  Seine Farben sie wurden mit Füßen getreten: er hatte keine Chance zu leben
  Wenn der Herrgott selbst unterstützt!-
- Trauer, oh Trauer!”
+ Trauer, oh Trauer!“
     -James Clarence Mangan , _A Farewell to Patrick Sarsfield, Earl of Lucan_.
 ca. 1840.
 %%%%
 hammer
 
-“Der Hammah den John Henry schwang,
+„Der Hammah den John Henry schwang,
  Er wog über neun Pfund,
  Er brach eine Rippe in seiner linken Seit',
  Und seine intrels fielen zu Grund,
- Und seine intrels fielen zu Grund.”
+ Und seine intrels fielen zu Grund.“
     -Onah L. Spencer, _John Henry_. frühes 20. Jahrh.
 %%%%
 hand axe
 
-“Lizzie Borden nahm eine Axt
+„Lizzie Borden nahm eine Axt
  Und schlug die Mutter vierzig mal.
  Als sie sah, was sie getan,
- Den Vater einundvierzig mal.”
+ Den Vater einundvierzig mal.“
     -A bekannter Springseil Reim, nach 1893.
 %%%%
 javelin
 
-“Angenommen, Sie finden Ihren Bruder im Bett mit ihrer Frau, und stoßen einen
+„Angenommen, Sie finden Ihren Bruder im Bett mit ihrer Frau, und stoßen einen
 Speer durch die Beiden. Sie würden gerichtet werden, und die Beiden würden für
-ihre Sünden zu büßen und in das Reich Gottes aufgenommen werden.”
+ihre Sünden zu büßen und in das Reich Gottes aufgenommen werden.“
     -Brigham Young, _Journal of Discourses_, 3:247. 1856.
 %%%%
 lajatang
 
-“Eine Waffe die zur Ruhe kommt
+„Eine Waffe die zur Ruhe kommt
  Wie Schneeflocken auf das Gras;
  Aber wenn er eines freien Mannes Willen tut,
- Tut er es wie ein Blitz den Willen Gottes.”
-    -John Pierpont, “The Ballot”. ca. 1850.
+ Tut er es wie ein Blitz den Willen Gottes.“
+    -John Pierpont, „The Ballot“. ca. 1850.
 %%%%
 large rock
 
-“Ich laufe an den Felsen und verstecke mein Gesicht
- Der Fels rief aus: 'Kein Versteck in Sicht
- Es gibt kein Versteck hier unten.'”
+„Ich laufe an den Felsen und verstecke mein Gesicht
+ Der Fels rief aus: ‚Kein Versteck in Sicht
+ Es gibt kein Versteck hier unten.‘“
     -Negrospiritual. 19. Jahrh.
 %%%%
 leather armour
 
-“Nichts verformen kann die menschliche Rasse
- Wie der Rüstungen Eisen Spange”
-    -William Blake, “Auguries of Innocence”, 99-100. 1803.
+„Nichts verformen kann die menschliche Rasse
+ Wie der Rüstungen Eisen Spange“
+    -William Blake, „Auguries of Innocence“, 99-100. 1803.
 %%%%
 long sword
 
-"Während wir in den Fängen dieser großen Armee und ihrer schrecklichen
+„Während wir in den Fängen dieser großen Armee und ihrer schrecklichen
 Schwerter (Maquahuitl [aus Obsidian]) waren, schienen unter dem Feind viele der
 Mächtigsten zu entscheiden, ein Pferd zu kapern. Sie begannen mit einem
 wütenden Angriff und legten die Hände auf eine gute Stute, gut sowohl für den
 Sport als auch für den Kampf trainiert. Ihr Reiter, Pedro de Moron, war ein
 feiner Reitersmann, und als er mit drei weiteren Reitern in die feindlichen
-Reihen stürmte - sie waren angewiesen worden zur gegenseitigen Unterstützung
-zusammen zu bleiben - einige von ihnen ergriffen seine Lanze so dass er sie
+Reihen stürmte — sie waren angewiesen worden zur gegenseitigen Unterstützung
+zusammen zu bleiben — einige von ihnen ergriffen seine Lanze so dass er sie
 nicht verwenden konnte, und andere zerschnitten ihn mit ihren Schwertern
 (Maquahuitl) und verletzten ihn schwer. Dann schlitzten sie seine Stute,
 schnitten am Kopf im Nacken, so dass er hing nur an der Haut. Die Stute fiel
 tot um, und wenn seine montierten Genossen nicht zur Rettung von Moron gekommen
-wären, würde er wohl auch getötet worden sein. "
+wären, würde er wohl auch getötet worden sein.“
     Bernal Díaz del-Castillo, _Die Conquest of New Spain_. 1623.
 %%%%
 longbow
 
-“Robyn krümmte einen vollständigen Bogen,
+„Robyn krümmte einen vollständigen Bogen,
  Einen Pfeil er drehte nach Will';
  So traf er den Sheriff den stolzen, ungelogen,
- Im Grunde liegt er noch ganz Still.”
+ Im Grunde liegt er noch ganz Still.“
     -_A Gest of Robyn Hode_ Sixth Fytte, l. 120-123. ca. 1450.
 %%%%
 lychee
 
-“Die Litschi ist die berühmteste einheimische Frucht Chinas. Sie ist fast
+„Die Litschi ist die berühmteste einheimische Frucht Chinas. Sie ist fast
 runde, etwa anderthalb Zentimeter im Durchmesser, die Schale ist hart, aber
 spröde, von einer schokoladenbraunen Farbe und bedeckt mit warzenhaften
 Erhöhungen. Wenn sie frisch ist mit einem weißen fast durchsichtigen, süß,
@@ -613,82 +619,82 @@ Samen liegt gefüllt; das Fruchtfleisch ist von einem köstlichen wenig
 säuerlichem Geschmack, wenn frisch. Die Chinesen trocknen sie, bis sie schwarz
 wie eine Pflaume wird und somit erhalten sie sie für den Einsatz während des
 ganzen Jahres, in diesem Zustand ist sie häufig in den Londoner Obstläden zu
-sehen.”
+sehen.“
     -John Smith, _A Dictionary of Popular Names of the Plants which Furnish the
 Natural and Acquired Wants of Man, in All Matters of Domestic and General
 Economy: Their History, Products, & Uses_. 1882.
 %%%%
 mace
 
-“[My plan] sieht nicht vor Ihren Empfangsbereich mit zankenden Kolonie Agenten
+„[My plan] sieht nicht vor Ihren Empfangsbereich mit zankenden Kolonie Agenten
 zu füllen, die die Zwischenschaltung Ihre Keule zu jedem Zeitpunkt erfordern,
-um den Frieden unter ihnen zu halten.”
-    -Edmund Burke, “On Conciliation with America”, speech in Parliament. 1775.
+um den Frieden unter ihnen zu halten.“
+    -Edmund Burke, „On Conciliation with America“, speech in Parliament. 1775.
 %%%%
 morningstar
 
-“Wenig tat dann sein Pomp Federn beistehen
+„Wenig tat dann sein Pomp Federn beistehen
  Die Azteken, oder glitzernder Stolz von Gold.
  Vor dem gemäßigten Schwert; wenig sein Helm,
  Cay mit seiner gefiederten Krone oder drest
  In eingegrabenem Schrecken, als der Britannier die Hand
  Fuhr durch Helm und Kopf der Morgenstern;
  Oder schwang seine Eisengewichte mit erschütternder Herrschaft.
- Welche, wo sie fielen, zerstörten.”
+ Welche, wo sie fielen, zerstörten.“
     -Robert Southey, _Madoc_. 1805.
 %%%%
 needle
 
-“Ich bete, dass von den Toten erwacht,
+„Ich bete, dass von den Toten erwacht,
  Ich möge stehen in Herrlichkeit-
  Eine Krone, vielleicht, auf meinem Haupt,
- Aber eine Nadel in meiner Hand.”
-    -Eugene Field, “Grandma's Prayer”. spätes 19. Jahrh.
+ Aber eine Nadel in meiner Hand.“
+    -Eugene Field, „Grandma's Prayer“. spätes 19. Jahrh.
 %%%%
 orange
 
-“Orangenschalen konservieren
+„Orangenschalen konservieren
 
 SOBALD sie die Rinde einiger Sevilla Orangen so dünn wie Sie können gerieben
 haben, wiegen Sie sie und für jedes Pfund Orangenschale fügen Sie drei Pfund
 Zucker hinzu. Zerstoßen Sie die Orangenschale gut in einem Marmor-Mörser, und
 mischen Sie den Zucker nach und nach bei. Füllen Sie es in Gläser und binden
-Sie es richtig fest zu, um die Luftzufuhr zu verhindern.”
+Sie es richtig fest zu, um die Luftzufuhr zu verhindern.“
     -Collingwood-Francis, John Woollams, _Der Universal-Koch: Und Stadt und
 Land Haushälterin._ 1792.
 %%%%
 potion
 
-"Da gab ich, so belehrt durch meine Kunst,
+„Da gab ich, so belehrt durch meine Kunst,
  Ihr einen Schlaftrunk; er bewies sich wirksam
  Nach meiner Absicht, denn er goss den Schein
  Des Todes ueber sie.  Indessen schrieb ich
  An Romeo, dass er sich herbegaebe
  Und huelf aus dem erborgten Grab sie holen
  In dieser Schreckensnacht, als um die Zeit,
- Wo jenes Trankes Kraft erloesche."
+ Wo jenes Trankes Kraft erloesche.“
     -William Shakespeare, _Romeo und Julia_
 %%%%
 potion of poison
 
-“‘Gift‘ ist ein hartes Wort. Ich bevorzuge 'Zaubertrank von Halt verdammt noch
-mal die Schnauze!'”
+„‚Gift‘ ist ein hartes Wort. Ich bevorzuge ‚Zaubertrank von Halt verdammt noch
+mal die Schnauze!‘“
     -Oglaf, gesäubert
 %%%%
 quarterstaff
 
-“Dann schnallte Robin seinen Gürtel ab,
+„Dann schnallte Robin seinen Gürtel ab,
  Und legte seinen Bogen zu Boden;
  Er nahm einen Stab von einer anderen Eiche,
  Der war sowohl steif und als auch fest.
- "Aber lassen Sie mich messen", sagte Robin vergnügt,
- "Bevor wir beginnen unser Getümmel;
+ ‚Aber lassen Sie mich messen‘, sagte Robin vergnügt,
+ ‚Bevor wir beginnen unser Getümmel;
  Damit meiner nicht länger sei als deiner,
- Denn das wird als Foul gewertet werden."
- "Ich schaue nicht auf die Länge," antwortete Fett-Arthur
- "Mein Stab ist aus Eiche so frei;
+ Denn das wird als Foul gewertet werden.‘
+ ‚Ich schaue nicht auf die Länge,‘ antwortete Fett-Arthur
+ ‚Mein Stab ist aus Eiche so frei;
  Acht Fuß und ein halber wird er ein Kalb niederschlagen,
- Und ich hoffe, er wird dich niederzuschlagen."
+ Und ich hoffe, er wird dich niederzuschlagen.‘
  Robin konnt's nicht länger ertragen,
  Er gab ihm einen Schlag,
  Schnell und bald kam das Blut,
@@ -700,47 +706,47 @@ quarterstaff
  Und Schlag für Schlag sie behandelten sich hastig,
  Für zwei Stunden gehalten und mehr;
  Das Holz klingelte bei jedem Knall,
- Sie hantierten mit ihrem Werkzeug so schmerzhaft.”
-    -Anonymous, “Robin Hood und das Tanner”.
+ Sie hantierten mit ihrem Werkzeug so schmerzhaft.“
+    -Anonymous, „Robin Hood und das Tanner“.
 %%%%
 quick blade
 
-"Er hat den verhängnisvollen Blitz seines grausamen flinken Schwertes
-losgelassen ..."
-    -Julia Ward Howe, "The Battle Hymn of the Republic".  1861.
+„Er hat den verhängnisvollen Blitz seines grausamen flinken Schwertes
+losgelassen ...“
+    -Julia Ward Howe, „The Battle Hymn of the Republic“.  1861.
 %%%%
 rambutan
 
-"Die Rambutan (_nephelium lappaceum_) ist eine schöne Frucht, auf die ich
+„Die Rambutan (_nephelium lappaceum_) ist eine schöne Frucht, auf die ich
 bereits hingewiesen habe, ähnlich dem Mammut Erdbeerbaum; und Sie vermissen sie
 erst, wenn Sie in einer kleinen Entfernung, ein leckeres Gericht von einer
-tropischen Erdbeere bekommen. Aber Sie finden in den 'Angaben innerhalb' des
+tropischen Erdbeere bekommen. Aber Sie finden in den ‚Angaben innerhalb‘ des
 äußeren Mantels, dass es unterhalb der rot-haarigen Abdeckung ein
 halbdurchlässiges Fruchtfleisch mit angenehm sauren Geschmack, welches einen
 einzigen ovalen und länglich Samen umhüllt. Ich weiß nicht, aber ich habe eine
 eigenartige Erinnerung der schönen Früchte der Meerenge, aber keiner hält sich
 in meiner Erinnerung so süß in ihren angehäuften Schönheiten eines Obst-Tellers
-als die bärtige und rosige rambutan."
+als die bärtige und rosige rambutan.“
     -Fitch-Waterman Taylor, _A Voyage Round the World And Visits to Various
 Foreign Countries, in the United States Frigate Columbia_.  1847.
 %%%%
 ring
 
-“Eine milchweiße Taube, ein Ring von Gold
+„Eine milchweiße Taube, ein Ring von Gold
  Sind Gaben geziem für dich,
  Ein Strick und ein Baum,
- dran er hängen sollt’.”
-    -Oscar Wilde, “Chanson”. 1881.
+ dran er hängen sollt’.“
+    -Oscar Wilde, „Chanson“. 1881.
 %%%%
 ring of fire
 
-"Die Liebe ist ein brennendes Ding
- Und es macht einen feurigen Ring"
-    -June Carter, Merle Kilgore, "Ring of Fire". 1963.
+„Die Liebe ist ein brennendes Ding
+ Und es macht einen feurigen Ring“
+    -June Carter, Merle Kilgore, „Ring of Fire“. 1963.
 %%%%
 ring of ice
 
-“So mancher sagt, die Welt vergeht in Feuer,
+„So mancher sagt, die Welt vergeht in Feuer,
  so mancher sagt, in Eis.
  Nach dem, was ich von Lust gekostet,
  halt ich's mit denen, die das Feuer vorzieh'n.
@@ -748,103 +754,97 @@ ring of ice
  kenn' ich den Hass wohl gut genug,
  zu wissen, dass für die Zerstörung Eis
  auch bestens ist
- und sicher reicht.”
-    -Robert Frost, “Fire and Ice”. 1920.
+ und sicher reicht.“
+    -Robert Frost, „Fire and Ice“. 1920.
 %%%%
 ring of invisibility
 
-“Mit Freudengeschrei stürzten sich die Goblins auf ihn. Ein Anflug von Angst
+„Mit Freudengeschrei stürzten sich die Goblins auf ihn. Ein Anflug von Angst
 und Verlust, wie ein Echo von Gollums Elend, schlug Bilbo, und er vergaß sogar
-sein Schwert zu ziehen, steckte die Hände in die Tasche. Und - da war der Ring
+sein Schwert zu ziehen, steckte die Hände in die Tasche. Und — da war der Ring
 immer noch in seiner linken Tasche, und er rutschte auf seinen Finger. Die
 Goblins stutzten. Sie konnten keine Spur mehr von ihm sehen. Er war
-verschwunden.”
+verschwunden.“
     -J.R.R. Tolkien, _Der Hobbit_. 1937.
 %%%%
 ring of see invisible
 
-"Und hier ist mein Geheimnis", sagte der Fuchs,
- "es ist ganz einfach."
- "Man sieht nur mit dem Herzen gut,
- das Wesentliche ist für die Augen unsichtbar."
+„Und hier ist mein Geheimnis“, sagte der Fuchs,
+ „es ist ganz einfach.“
+ „Man sieht nur mit dem Herzen gut,
+ das Wesentliche ist für die Augen unsichtbar.“
     -Antoine de Saint Exupéry, _Der kleine Prinz_. 1943.
 %%%%
 robe
 
-“CLEOPATRA: Den Mantel gib, setz' mir die Krone auf, Ich fühl' ein Sehnen nach
-Unsterblichkeit!”
+„CLEOPATRA: Den Mantel gib, setz' mir die Krone auf, Ich fühl' ein Sehnen nach
+Unsterblichkeit!“
     -William Shakespeare, _Anthonius & Cleopatra_, V, ii. ca. 1605.
-%%%%
-cutlass
-
-“Wer hat bloß als erster die schrecklichen Schwerter erfunden?
- Wie grausam und wahrhaft hartherzig war der! ...”
-    -Albius Tibullus, _Elegies_ I, X v.1-2, ca.  25 n.Chr.
 %%%%
 scimitar
 
-“Das Museum - Schrank und riesige Bibliothek, die sich die gesamte untere Etage
-anmaßte - dort waren die umstrittenen und unvereinbaren Bücher, die irgendwie
+„Das Museum — Schrank und riesige Bibliothek, die sich die gesamte untere Etage
+anmaßte — dort waren die umstrittenen und unvereinbaren Bücher, die irgendwie
 die Geschichte des neunzehnten Jahrhunderts waren; es gab Krummsäbel aus
 Nishapur, in deren gefrorenen Halbmonde der Wind und die Gewalt des Kampfes
-weiterzuleben schien.”
+weiterzuleben schien.“
     -Jorge Luis Borges, _The Form of the Sword_. 1953.
 %%%%
 scythe
 
-“Es war Instinkt. Unlogisch wie Blitzeinschläge die nicht verletzen. Jeden Tag
+„Es war Instinkt. Unlogisch wie Blitzeinschläge die nicht verletzen. Jeden Tag
 musste das Korn geschnitten werden. Es musste geschnitten werden. Warum? Nun,
 einfach nur der Sache wegen, das war alles. Er lachte über die Sense in seinen
 großen Händen. Dann, pfeifend, nahm er sie zum Lager- und Wartefeld und tat die
 Arbeit. Er hielt sich für ein wenig verrückt. Zur Hölle, es war ein
-durchschnittlich-gewöhnliches Weizenfeld, wirklich, nicht wahr?”
+durchschnittlich-gewöhnliches Weizenfeld, wirklich, nicht wahr?“
     -Ray Bradbury, _The Scythe_/Die Sense. 1943.
 %%%%
 short sword
 
-“Wer hat bloß als erster die schrecklichen Schwerter erfunden?
- Wie grausam und wahrhaft hartherzig war der!”
+„Wer hat bloß als erster die schrecklichen Schwerter erfunden?
+ Wie grausam und wahrhaft hartherzig war der!“
     -Albius Tibullus, _Elegies_ I, xi. ca. 25 v.Chr.
 %%%%
 slice of pizza
 
-“Wenn der Mond deine Augen berührt wie ein Pizzastück, das ist Liebe.”
-    -Jack Brooks, “That’s Amore”. 1952.
+„Wenn der Mond deine Augen berührt wie ein Pizzastück, das ist Liebe.“
+    -Jack Brooks, „That’s Amore“. 1952.
 %%%%
 sling
 
-“Und David tat seine Hand in die Tasche und nahm einen Stein daraus und
+„Und David tat seine Hand in die Tasche und nahm einen Stein daraus und
 schleuderte und traf den Philister an seine Stirn, daß der Stein in seine Stirn
-fuhr und er zur Erde fiel auf sein Angesicht.”
+fuhr und er zur Erde fiel auf sein Angesicht.“
     -King-James-Bibel, 1 Samuel 17:49.
 %%%%
 sling bullet
 
-“Denn wenn die Dinge einmal zur Ausführung kommen, gibt es keine
+„Denn wenn die Dinge einmal zur Ausführung kommen, gibt es keine
 Verschwiegenheit vergleichbar mit der Schnelligkeit, wie die Bewegung einer
-Kugel in der Luft, die so schnell fliegt das sie das Auge überholt.”
-    -Francis Bacon, _Essays_, “Of Delays”. 1625.
+Kugel in der Luft, die so schnell fliegt das sie das Auge überholt.“
+    -Francis Bacon, _Essays_, „Of Delays“. 1625.
 %%%%
 spear
 
-“Auf dem Schlachtfeld ist die Hellebarde dem Speer unterlegen. Mit dem Speer
+„Auf dem Schlachtfeld ist die Hellebarde dem Speer unterlegen. Mit dem Speer
 läßt sich angreifen; die Hellebarde dient lediglich zur Abwehr. In der Hand
-zweier gleich kräftiger Männer ist der Speer die etwas wirkungsvollere Waffe.”
+zweier gleich kräftiger Männer ist der Speer die etwas wirkungsvollere Waffe.“
     -Miyamoto Musashi, _Das Buch der fünf Ringe_. 1645.
 %%%%
 staff
 
-“Bashō Osho sagte zu seinen Jüngern: 'Wenn du eine Dienerschaft hast, gebe ich
-dir Diener. Wenn du keine Dienerschaft hast, werde ich sie von dir nehmen.'
+„Bashō Osho sagte zu seinen Jüngern: ‚Wenn du eine Dienerschaft hast, gebe ich
+dir Diener. Wenn du keine Dienerschaft hast, werde ich sie von dir nehmen.‘
  Kommentar des Mumon
  Es hilft mir, durch einen Fluss zu waten, wenn die Brücke kaputt ist. Es
 geleitet mich in das Dorf, in einer Mondlosen Nacht. Wenn du es einen Diener
-nennst kommst du schnell wie ein Pfeil in die Hölle. ” -Mumon Ekai, _The
-Gateless Gate_, case 44. 1228.
+nennst kommst du schnell wie ein Pfeil in die Hölle.“
+    -Mumon Ekai, _The Gateless Gate_, case 44. 1228.
 %%%%
 staff of death
 
-“'Ich bin Aed Abaid von Ess Ruaid, das heißt, der gute Gott der Zauberei der
+„'Ich bin Aed Abaid von Ess Ruaid, das heißt, der gute Gott der Zauberei der
 Tuatha Dé Danann und die Ruad Rofhessa und Eochaid Ollathair sind meine drei
 Namen.’
  Und so war er, mit Cermait Milbél, einem seiner Söhne, auf dem Rücken, der in
@@ -854,39 +854,39 @@ Myrrhe und Kräuter wurden um den Körper des Cermait gelegt, und er hob Cermait
 auf den Rücken, und Cermait tragend durchsuchte er die Welt, und kam ins große
 Morgenland.
  Er traf drei Männer auf der Straße unterwegs mit den Schätzen ihrer Väter. Der
-Dagda fragte sie nach Neuigkeiten, und sie sagten: ‘Wir sind drei Söhne eines
-Vaters und einer Mutter, und wir teilen unseres Vaters Schätze.’
- ‘Was habt Ihr?’ sagte der Dagda.
- ‘Ein Hemd und einen Stab und einen Mantel,’ sagten sie.
- ‘Welche Tugenden haben diese?’ sagte der Dagda.
- ‘Dieser große Stab den Du siehst,’ sagte er, ‘hat ein glattes Ende und ein
+Dagda fragte sie nach Neuigkeiten, und sie sagten: ‚Wir sind drei Söhne eines
+Vaters und einer Mutter, und wir teilen unseres Vaters Schätze.‘
+ ‚Was habt Ihr?‘ sagte der Dagda.
+ ‚Ein Hemd und einen Stab und einen Mantel,‘ sagten sie.
+ ‚Welche Tugenden haben diese?‘ sagte der Dagda.
+ ‚Dieser große Stab den Du siehst,‘ sagte er, ‚hat ein glattes Ende und ein
 raues Ende. Ein Ende erschlägt die Lebenden, und das andere Ende bringt die
-Toten zum Leben.’”
-    -Osborn Bergin, “How the Dagda Got His Magic Staff”, _Medieval Studies in
+Toten zum Leben.‘“
+    -Osborn Bergin, „How the Dagda Got His Magic Staff“, _Medieval Studies in
 Memory of Gertrude Schoepperle Loomis_. 1927.
 %%%%
 staff of fire
 
-“Der Zauberer erinnerte sich plötzlich an die Worte Gottes. Er erinnerte sich,
+„Der Zauberer erinnerte sich plötzlich an die Worte Gottes. Er erinnerte sich,
 dass von allen Kreaturen die die Erde bevölkern, Feuer das einzige, das von
 seinem Sohn wusste, ein Phantom zu sein. Dieses Wissen, welches ihn auf den
 ersten Blick beruhigte, endete damit ihn zu quälen. Er fürchtete, für den Fall
 dass seinen Sohn über dieses abnorme Privileg meditieren sollte und durch
 einige Mittel heraus fand, dass er nur ein Trugbild sei. Nicht ein Mann zu
-sein, nur eine Projektion des anderen Mannes Träume - welch unvergleichliche
-Demütigung, was für ein Wahnsinn!”
+sein, nur eine Projektion des anderen Mannes Träume — welch unvergleichliche
+Demütigung, was für ein Wahnsinn!“
     -Jorge Luis Borges, _Die kreisförmigen Ruinen_. 1940.
 %%%%
 steam dragon hide
 
-“Prächtig sind seine starken Schilder, fest zusammengeschlossen und versiegelt;
+„Prächtig sind seine starken Schilder, fest zusammengeschlossen und versiegelt;
 einer fügt sich an den andern, daß kein Luftzug dazwischen kommt; sie hängen
-fest zusammen, sind geschlossen und trennen sich nicht.”
+fest zusammen, sind geschlossen und trennen sich nicht.“
     -Schlachter Bibel 1951, Hiob 41:15-17.
 %%%%
 stone
 
-“Wie glücklich ist der kleine Stein,
+„Wie glücklich ist der kleine Stein,
  Der über Wege streift allein
  Und um Erfolg sich kümmert nicht
  Auch kein Verlangen aus ihm spricht – –;
@@ -895,49 +895,49 @@ stone
  Und wie die Sonne frei und rein
  Verbindet und alleine leuchtet,
  das höchste Sein verwirklicht er
- durch schlichte Einfachheit … nichts mehr – –”
-    -Emily Dickinson, “How happy is the little Stone”. ca. 1865.
+ durch schlichte Einfachheit … nichts mehr – –“
+    -Emily Dickinson, „How happy is the little Stone“. ca. 1865.
 %%%%
 strawberry
 
-“Ein Samurai ging spazieren, als ein großer Tiger anfing, ihn zu jagen. Der
+„Ein Samurai ging spazieren, als ein großer Tiger anfing, ihn zu jagen. Der
 Samurai rannte um sein Leben, übersah Klippe zu seinen Füßen. Als er fiel,
 streckte er sich und fing eine Rebe, die nach unten hing. Er blickte nach unten
 und sah einen anderen Tiger unten kreisen, der erste Tiger wartete oben. Die
 Rebe begann nachzugeben. Der Samurai dann sah eine einzige Erdbeere die an der
 Rebe wuchs. Er streckte die Hand aus und aß die Erdbeere. Wie süß sie
-schmeckte!”
+schmeckte!“
     -verschiedenen japanischen buddhistischen Mönchen zugeschrieben.
 %%%%
 sultana
 
-“Ein türkischer Garten gehörte zu den Kuriositäten, in denen die Juden Zugang
+„Ein türkischer Garten gehörte zu den Kuriositäten, in denen die Juden Zugang
 zu Bentham fanden. Es war eine Art von Obstgarten von Reben und anderen Bäumen,
 ohne Ordnung oder scheinbare Anordnung. Von diesem Garten sendete Bentham
 Exemplare der Sultana Rosinen nach England, welche er glaubte die ersten dieser
-Art gewesen waren, die jemals sein Land erreicht hätten.”
+Art gewesen waren, die jemals sein Land erreicht hätten.“
     -John Bowring, _The Works of Jeremy Bentham_. 1839.
 %%%%
 throwing net
 
-“Das Aussehen einer erschreckenden Sache
- Sitzen in einem Netz!”
-    -Edna St. Vincent Millay, “When the Year Grows Old”. 1917.
+„Das Aussehen einer erschreckenden Sache
+ Sitzen in einem Netz!“
+    -Edna St. Vincent Millay, „When the Year Grows Old“. 1917.
 %%%%
 trident
 
-“Da die Beschäftigungen der folgenden zwei Tage in nichts als dem gewöhnlichen
+„Da die Beschäftigungen der folgenden zwei Tage in nichts als dem gewöhnlichen
 Jagdvergnügen des Schießens und des Herumtreibens bestanden, und also für den
 Leser von wenigem Interesse seyn dürften, so gehen wir zu einem andern über,
 das einigermaßen nur Schottland eigen ißt, und das man eine Art Lachsjagd
 nennen kann. Diese Jagd, in welcher der Fisch mit einer langen, bärtigen Gabel,
 oder sogenanntem Stechtrident verfolgt und getötet wird, ißt an der Mündung der
-Esk und einiger anderen Flüsse Schottlands sehr üblich.”
+Esk und einiger anderen Flüsse Schottlands sehr üblich.“
     -Sir Walter Scott, _Guy Mannering oder der Sterndeuter_, Kap. XXVI. 1815.
 %%%%
 troll hide
 
-“Der Dovre-Alte: Hör' nun und nimm Vernunft an, Prinz Peer!
+„Der Dovre-Alte: Hör' nun und nimm Vernunft an, Prinz Peer!
  Du hast Begabung zum Troll. Nicht wahr, er
  Trägt sich nun schon so ziemlich wie ein Troll?
  Und willst doch auch Troll sein?
@@ -958,7 +958,7 @@ troll hide
  Als Bergtroll so umgehn auf Lebenszeit, –
  Niemalen mehr von Euch zurücktreten können, –
  So Troll sein mit all seinem Fühlen und Wollen; –
- Nein, nein; da tu' ich mir Besseres gönnen.”
+ Nein, nein; da tu' ich mir Besseres gönnen.“
     -Henrik Ibsen, _Peer Gynt_ . 1867.
 %%%%
 wand
@@ -970,19 +970,19 @@ is added the Mountain Shepherd's Manual_, Kapitel III. 1837.
 %%%%
 war axe
 
-“'Gott sei mit diesem Kuss,' sagte Max, und Katie seufzt',
- mit andächtigen Handflächen umschliessend, 'Gott sei mit dieser Axt!'”
-    -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
+„‚Gott sei mit diesem Kuss,’ sagte Max, und Katie seufzt',
+ mit andächtigen Handflächen umschliessend, ‚Gott sei mit dieser Axt!‘“
+    -Isabella Valancey Crawford, „Malcolm's Katie: A Love Story“, Part I, _Old
 Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
 %%%%
 whip
 
-“Nicht mit einem Knüppel, wird das Herz gebrochen
- Auch nicht mit einem Stein -
+„Nicht mit einem Knüppel, wird das Herz gebrochen
+ Auch nicht mit einem Stein —
  Eine Peitsche so klein, die man kann nicht sehen
  Ich kenn' Um die magische Kreatur zu peitschen
  Bis sie wird fallen,
  Doch der Peitschen Nam'
- Zu edel ihn zu sagen.”
-    -Emily Dickinson, “Not with a Club, the Heart is broken”. ca. 1865.
+ Zu edel ihn zu sagen.“
+    -Emily Dickinson, „Not with a Club, the Heart is broken“. ca. 1865.
 %%%%

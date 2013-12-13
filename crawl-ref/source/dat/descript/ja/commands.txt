@@ -123,8 +123,7 @@ CMD_CHARACTER_DUMP
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-自由時間に熟読するためmorgueディレクトリー内のファイル ‘playername.txt’
-にあなたのキャラクターに関する膨大な量の情報を出力します。
+自由時間に熟読するためmorgueディレクトリー内のファイル‘playername.txt’にあなたのキャラクターに関する膨大な量の情報を出力します。
 これはメインステータス、装備、呪文、スキル、注意事項などが含まれます。
 %%%%
 CMD_AUTOFIGHT

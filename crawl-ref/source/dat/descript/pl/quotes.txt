@@ -8,12 +8,12 @@ A gateway to Hell
 %%%%
 Killer Klown
 
-“Cały świat kocha klauna.”
-    -Cole Porter, “Być Klaunem”. 1948.
+„Cały świat kocha klauna.”
+    -Cole Porter, „Być Klaunem”. 1948.
 %%%%
 Murray
 
-“Spójrz za siebie! Trzygłowa małpa!”
+„Spójrz za siebie! Trzygłowa małpa!”
     -Guybrush Threepwood, _Tajemnica Wyspy Małp_
 %%%%
 Temple
@@ -26,7 +26,7 @@ Temple
  Stare zamczysko, pustoty ohyda)
  Były trzy karczmy, bram cztery ułomki,
  Klasztorów dziewięć i gdzieniegdzie domki.”
-    -Ignacy Krasicki, “Monachomachia”, 1778
+    -Ignacy Krasicki, „Monachomachia”, 1778
 %%%%
 amulet of the gourmand
 
@@ -51,7 +51,7 @@ butterfly
  myśli spokojne ponad wodami pochyl miłością.”
     -Konstanty Ildefons Gałczyński, „Prośba o wyspy szczęśliwe”
 
-“Rzekła lilia do motyla: – nikt nie patrzy, niech pan zapyla!”
+„Rzekła lilia do motyla: – nikt nie patrzy, niech pan zapyla!”
     -Jan Sztaudynger
 %%%%
 dark maul

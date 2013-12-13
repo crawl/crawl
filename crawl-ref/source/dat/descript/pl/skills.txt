@@ -127,7 +127,7 @@ zaatakowanie drugą ręką jako dodatkowy atak.
 %%%%
 Air Magic
 
-Rozwijając umiejętności magiczne danej "szkoły" łatwiej będzie Ci uczyć się i
+Rozwijając umiejętności magiczne danej „szkoły” łatwiej będzie Ci uczyć się i
 rzucać czary z tejże szkoły . Wiele zaklęć zależy od kombinacji kilku szkół, w
 tym przypadku szansa na udane zaklęcie i jego moc zależeć będą od uśrednionej
 wartości wyszkolenia w tych szkołach.

@@ -57,8 +57,8 @@ tutte le armi di quel tipo e di migliorare la precisione e il danno inflitto
 con esse. È raccomandabile concentrarsi su uno o due tipi di arma per diventare
 più potenti con esse.
 
-Le armi inastate possono essere "evocate" come un oggetto magico con il comando
-'v' per attaccare nemici lontani due spazi da voi.
+Le armi inastate possono essere “evocate” come un oggetto magico con il comando
+‘v’ per attaccare nemici lontani due spazi da voi.
 
 Essere abili con le armi inastate rende più facile imparare l'uso delle asce e
 dei bastoni, e viceversa.
@@ -164,7 +164,7 @@ la fame da incantesimo.
 %%%%
 Conjurations
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -177,7 +177,7 @@ l'aera di effetto.
 %%%%
 Hexes
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -190,7 +190,7 @@ resistenza.
 %%%%
 Charms
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -201,7 +201,7 @@ queste aure.
 %%%%
 Summonings
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -215,7 +215,7 @@ quando uccise, e il loro equipaggiamento è ugualmente effimero.
 %%%%
 Necromancy
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -227,7 +227,7 @@ i non morti a quelli di conferire poteri di guarigione blasfemi.
 %%%%
 Translocations
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -238,7 +238,7 @@ spostare i nemici lontano da sé.
 %%%%
 Transmutations
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -250,7 +250,7 @@ oggetti nei paraggi.
 %%%%
 Fire Magic
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -263,7 +263,7 @@ incantesimi della scuola del ghiaccio.
 %%%%
 Ice Magic
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -277,7 +277,7 @@ incantesimi della scuola del fuoco.
 %%%%
 Air Magic
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -291,7 +291,7 @@ incantesimi della scuola della terra.
 %%%%
 Earth Magic
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
@@ -306,7 +306,7 @@ incantesimi della scuola dell'aria.
 %%%%
 Poison Magic
 
-Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+Conoscere una “scuola” di magia consente di imparare e lanciare incantesimi di
 quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
 di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
 potenza dipenderà dalla media dell'abilità in queste scuole.
