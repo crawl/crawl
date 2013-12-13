@@ -1,8 +1,8 @@
 define(["jquery", "./map_knowledge", "./dungeon_renderer", "./view_data",
         "./tileinfo-player", "./tileinfo-main", "./tileinfo-dngn", "./enums",
-        "./player"],
+        "./player", "./options"],
 function ($, map_knowledge, dungeon_renderer, view_data,
-          tileinfo_player, main, dngn, enums, player) {
+          tileinfo_player, main, dngn, enums, player, options) {
     var minimap_colours = [
         "black",       // MF_UNSEEN
         "darkgrey",    // MF_FLOOR
@@ -61,6 +61,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         block.width(width);
         canvas.width = width;
         cell_w = cell_h = Math.floor(width / gxm);
+        if (options.get("tile_map_pixels") > 0)
+            cell_w = cell_h = Math.min(cell_w, options.get("tile_map_pixels"));
         block.height(gym * cell_h);
         canvas.height = gym * cell_h;
         ctx = canvas.getContext("2d");

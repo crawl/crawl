@@ -434,13 +434,13 @@ public:
     screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;
-    int         tile_map_pixels;
     int         tile_cell_pixels;
     bool        tile_filter_scaling;
     maybe_bool  tile_use_small_layout;
 #endif
-
 #ifdef USE_TILE
+    int         tile_map_pixels;
+
     bool        tile_force_overlay;
     // display settings
     int         tile_update_rate;
