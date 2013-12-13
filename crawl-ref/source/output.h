@@ -47,10 +47,7 @@ string mpr_monster_list(bool past = false);
 int update_monster_pane(void);
 
 const char *equip_slot_to_name(int equip);
-
 int equip_name_to_slot(const char *s);
-
-const char *equip_slot_to_name(int equip);
 
 void print_overview_screen(void);
 
