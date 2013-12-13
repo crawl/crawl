@@ -57,7 +57,7 @@ quickly with all weapons of this type, as well as increasing your accuracy and
 damage with them. It is generally recommended to concentrate your efforts on
 one or two weapon types to become more powerful in them.
 
-Polearms can be evoked with 'v' to attack enemies from two spaces away.
+Polearms can be evoked with ‘v’ to attack enemies from two spaces away.
 
 Being skilled with Polearms makes it easier to become more skilled with Axes or
 Staves, and vice versa.
@@ -157,12 +157,12 @@ Spellcasting
 
 Training Spellcasting makes it easier to learn and cast spells, along with
 increasing your magical reserves. Gaining a level in Spellcasting gives you
-more "spell slots" to spend on new spells. Spellcasting skill and your
+more “spell slots” to spend on new spells. Spellcasting skill and your
 intelligence are the only factors countering spell hunger.
 %%%%
 Conjurations
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -174,7 +174,7 @@ spells, and sometimes affects their range or the size of the area affected.
 %%%%
 Hexes
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -187,7 +187,7 @@ resistance.
 %%%%
 Charms
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -197,7 +197,7 @@ will often increase the duration or effectiveness of these auras.
 %%%%
 Summonings
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -211,7 +211,7 @@ equipment is as ephemeral as they are.
 %%%%
 Necromancy
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -223,7 +223,7 @@ spells granting unholy healing in various forms.
 %%%%
 Translocations
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -234,7 +234,7 @@ transport your enemies away from you.
 %%%%
 Transmutations
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -245,7 +245,7 @@ enemies, or to transform objects around you.
 %%%%
 Fire Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -257,7 +257,7 @@ Being skilled in Fire Magic makes Ice Magic harder to learn, and vice versa.
 %%%%
 Ice Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -269,7 +269,7 @@ Being skilled in Ice Magic makes Fire Magic harder to learn, and vice versa.
 %%%%
 Air Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -283,7 +283,7 @@ Being skilled in Air Magic makes Earth Magic harder to learn, and vice versa.
 %%%%
 Earth Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
@@ -297,7 +297,7 @@ Being skilled in Earth Magic makes Air Magic harder to learn, and vice versa.
 %%%%
 Poison Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of
+Being skilled in a magical “school” makes it easier to learn and cast spells of
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.

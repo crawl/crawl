@@ -57,7 +57,7 @@ rapidement avec toutes les armes de ce type, accroitra votre précision et les
 dégâts occasionnés par elles. Il est généralement recommandé de concentrer vos
 efforts dans un ou deux types d'armes pour devenir plus puissant avec elles.
 
-Une Arme d'Hast peut être évoquée avec 'v' pour attaquer des ennemis à deux
+Une Arme d'Hast peut être évoquée avec “v” pour attaquer des ennemis à deux
 cases de vous.
 
 Être compétent en Armes d'Hast rend plus facile l'apprentissage en Haches et
@@ -165,13 +165,13 @@ Spellcasting
 
 Entrainer la Sorcellerie rend l'apprentissage et le lancement des sorts plus
 faciles, de plus cela accroit votre réserve de magie. Augmenter un niveau en
-Sorcellerie vous octroie plus "d'emplacements de sorts" pour apprendre de
+Sorcellerie vous octroie plus « d'emplacements de sorts » pour apprendre de
 nouveaux sortilèges. La compétence Sorcellerie et votre intelligence sont les
 seuls facteurs contrant la fringale générée par un sort.
 %%%%
 Conjurations
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -185,7 +185,7 @@ taille de la zone d'effet.
 %%%%
 Hexes
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -199,7 +199,7 @@ la résistance aux enchantements hostiles de la victime pour obtenir un effet.
 %%%%
 Charms
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -211,7 +211,7 @@ de ces auras.
 %%%%
 Summonings
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -227,7 +227,7 @@ laissent pas de corps, ne donnent pas d'expérience quand tuées et leur
 %%%%
 Necromancy
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -240,7 +240,7 @@ jusqu'à des régénérations impies sous diverses formes.
 %%%%
 Translocations
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -252,7 +252,7 @@ courtes distances ou pour transporter des ennemis loin de vous.
 %%%%
 Transmutations
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -265,7 +265,7 @@ vous.
 %%%%
 Fire Magic
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -279,7 +279,7 @@ plus difficile, et vice versa.
 %%%%
 Ice Magic
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -294,7 +294,7 @@ plus difficile, et vice versa.
 %%%%
 Air Magic
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -310,7 +310,7 @@ plus difficile, et vice versa.
 %%%%
 Earth Magic
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
@@ -327,7 +327,7 @@ plus difficile, et vice versa.
 %%%%
 Poison Magic
 
-Être compétent dans une "école" de magie rend l'apprentissage et le lancement
+Être compétent dans une « école » de magie rend l'apprentissage et le lancement
 des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces

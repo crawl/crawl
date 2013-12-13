@@ -57,7 +57,7 @@ deinen Schaden und deine Zielsicherheit mit dieser Waffenart. Es wird generell
 empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
 um besser mit ihnen zu werden.
 
-Stangenwaffen können mit 'v' benutzt werden, um Gegner anzugreifen, die zwei
+Stangenwaffen können mit ‚v‘ benutzt werden, um Gegner anzugreifen, die zwei
 Felder entfernt sind.
 
 Erfahrung mit Stangenwaffen erleichtert das Training mit Äxten oder Stäben, und
@@ -117,7 +117,7 @@ Zaubern verursacht.
 %%%%
 Dodging
 
-Erfahrung mit Ausweichen beeinflusst deine Chance, einer Attacke auszuweichen -
+Erfahrung mit Ausweichen beeinflusst deine Chance, einer Attacke auszuweichen —
 sei es Nahkampf, Fernkampf oder Magie. Manchen Arten von Attacken kann man
 allerdings nicht ausweichen, zum Beispiel Verzauberungen (dafür ist
 Magiewiderstand wichtig) und Explosionen.
@@ -167,7 +167,7 @@ Zauberhunger beeinflussen.
 %%%%
 Conjurations
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -180,7 +180,7 @@ Schaden und manchmal die Reichweite oder die Größe des beeinflussten Gebiets.
 %%%%
 Hexes
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -194,7 +194,7 @@ Magieresistenz des Gegners ist. Erfahrung mit Flüchen hilft, diese Resistenz zu
 %%%%
 Charms
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -204,7 +204,7 @@ CHARMS – currently editing!!!
 %%%%
 Summonings
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -218,7 +218,7 @@ das beschworene Wesen dir feindlich gesinnt ist.
 %%%%
 Necromancy
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -231,7 +231,7 @@ bis zu entsetzlichen Heilzaubern erstreckt.
 %%%%
 Translocations
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -243,7 +243,7 @@ kurze Distanz transportieren oder deine Gegner von dir weg teleportieren.
 %%%%
 Transmutations
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -255,7 +255,7 @@ werden, um Gegner oder Objekte in deiner Nähe zu verändern.
 %%%%
 Fire Magic
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -268,7 +268,7 @@ Erfahrung mit Feuermagie erschwert das Lernen von Eismagie, und umgekehrt.
 %%%%
 Ice Magic
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -282,7 +282,7 @@ Erfahrung mit Eismagie erschwert das Lernen von Feuermagie, und umgekehrt.
 %%%%
 Air Magic
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -297,7 +297,7 @@ Erfahrung mit Luftmagie erschwert das Lernen von Erdmagie, und umgekehrt.
 %%%%
 Earth Magic
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
@@ -313,7 +313,7 @@ Erfahrung mit Erdmagie erschwert das Lernen von Luftmagie, und umgekehrt.
 %%%%
 Poison Magic
 
-In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+In einer magischen „Schule“ ausgebildet zu sein, macht es leichter,
 Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
 gehören zu einer Kombination mehrerer Schulen – in diesem Fall bestimmt die
 durchschnittliche Erfahrung in diesen Schulen über die
