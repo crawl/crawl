@@ -1829,12 +1829,12 @@ tile_window_height = 0
         The width and height of the window, in pixels. If set to zero, it
         will auto-size the window.
 
-tile_map_pixels = 3
+tile_map_pixels = 0
         The maximum number of pixels each minimap square should take up. If you
         have a low resolution, and feel like the inventory is too small, you
         can try setting this to 1 to get more space for the inventory. The
         downside is that traveling by clicking on the minimap becomes much
-        harder.
+        harder. If set to zero, it will auto-size the minimap.
 
 tile_cell_pixels = 32
         The width and height of tiles in the dungeon view. If you want
