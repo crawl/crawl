@@ -3542,7 +3542,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 #endif
 #ifdef USE_TILE
-    else INT_OPTION(tile_map_pixels, 1, INT_MAX);
+    else INT_OPTION(tile_map_pixels, 0, INT_MAX);
     else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
