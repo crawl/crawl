@@ -38,4 +38,51 @@ function callback.dk_crumbling_turn(data, triggerable, triggerer, marker, ev)
   -- do nothing
 end
 
+-- I'm keeping the code here in case someone is unfortunate enough to
+-- have this vault present in the game; connectivity might be broken
+-- otherwise.
+-- -- Grunt
+function callback.grunt_zot_stairs_roulette_spawn_doors(data, triggerable,
+                                                        triggerer, marker, ev)
+  if data.triggered then
+    return
+  end
+
+  data.triggered = true
+
+  dgn.persist.grunt_zot_stairs_roulette_doors_spawned = true
+
+  for p in iter.slave_iterator("hidden_door", 1) do
+    dgn.terrain_changed(p.x, p.y, "clear_stone_wall", false, false, false)
+  end
+end
+
+function callback.grunt_zot_stairs_roulette_door_open(data, triggerable,
+                                                      triggerer, marker, ev)
+  if data.triggered then
+    return
+  end
+
+  if dgn.persist.grunt_zot_stairs_roulette_doors_spawned == false then
+    return
+  end
+
+  data.triggered = true
+
+  crawl.mpr("Several panes of glass retract into the floor.")
+  for p in iter.slave_iterator("hidden_door", 1) do
+    dgn.terrain_changed(p.x, p.y, "floor", false, false, false)
+  end
+end
+
+function callback.grunt_zot_stairs_roulette_teleport(data, triggerable,
+                                                     triggerer, marker, ev)
+  slave = dgn.find_marker_positions_by_prop("dest", data.dest)
+  if you.teleport_to(slave[1].x, slave[1].y) then
+      crawl.mpr("Your surroundings suddenly seem different.")
+  else
+      crawl.mpr("There is a strange hissing noise.")
+  end
+end
+
 }}
