@@ -201,7 +201,7 @@ ozónu.
 %%%%
 large shield of Ignorance
 
-"Otevřená mysl je jako pevnost jejíž brány jsou neblokované a nehlídané."
+“Otevřená mysl je jako pevnost jejíž brány jsou neblokované a nehlídané.”
 %%%%
 robe of Augmentation
 
@@ -382,7 +382,7 @@ Tato zbroj chránila oře Černého rytíře během jeho krutovlády. Má barvu
 nejčernější noci a zdá se, že není vyrobena pouze z jakési podivné černé oceli,
 ale také z celých plátů černého diamantu! Takto těžký náklad kovu a kamene
 přirozeně pozitivně nepřispívá k rychlosti daného koně. Neposkytuje však pouze
-běžnou ochranu proti zásahům - tento tvrzený materiál je rovněž očarován, aby
+běžnou ochranu proti zásahům — tento tvrzený materiál je rovněž očarován, aby
 nositele učinil částečně nemrtvým.
 %%%%
 ring of Vitality
@@ -404,11 +404,11 @@ elementálními útoky všeho druhu, ačkoliv ne zcela spolehlivě.
 %%%%
 ring of the Octopus King
 
-"Panna mořská, jenž zpívala ráda,
+“Panna mořská, jenž zpívala ráda,
  v králi chobotnic touhu vyvolala.
  Nápadník její mnoho chapadel měl,
  tuze se snažil a pannu chtěl,
- prsteny jeho všechny však navléct nedokázala."
+ prsteny jeho všechny však navléct nedokázala.”
 %%%%
 Axe of Woe
 

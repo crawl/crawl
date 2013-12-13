@@ -105,7 +105,7 @@ cannot be resisted by usual means of magic resistance.
 Blink Range spell
 
 This spell translocates the caster a short distance, trying to go away from an
-enemy. Unlike "Blink Away", it allows going out of sight.
+enemy. Unlike “Blink Away”, it allows going out of sight.
 %%%%
 Blink spell
 

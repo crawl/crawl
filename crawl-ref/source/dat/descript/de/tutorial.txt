@@ -32,7 +32,7 @@ tutorial1 shiftmove
 
 Es gibt eine schnellere Möglichkeit um durch einen Gang zu „rennen“, indem man
 <input>Shift</input> zusammen mit dem <input>Tastenfeld</input> drückt.
-(probiere es mit 'Numlock' ein/aus) oder mit <input>vi Tasten</input>.
+(probiere es mit ‚Numlock‘ ein/aus) oder mit <input>vi Tasten</input>.
 %%%%
 tutorial1 downstairs
 
@@ -210,7 +210,7 @@ mit der nächsten Ebene mit <input>$cmd[CMD_GO_DOWNSTAIRS]</input>.
 %%%%
 tutorial2 newlevel
 
-Denke daran : Du kannst alte Mitteilungen mit
+Denke daran: Du kannst alte Mitteilungen mit
 <input>$cmd[CMD_REPLAY_MESSAGES]</input> noch einmal lesen.
 %%%%
 tutorial2 darts
@@ -250,7 +250,7 @@ umschalten kannst.
 %%%%
 tutorial2 explore
 
-Finde den Ausgang ! Denke daran, dass du mit <input>$cmd[CMD_EXPLORE]</input>
+Finde den Ausgang! Denke daran, dass du mit <input>$cmd[CMD_EXPLORE]</input>
 auf Auto-Erforschen umschalten kannst.
 %%%%
 tutorial2 tutorial_end
@@ -430,7 +430,7 @@ tutorial3 go_shopping
 
 Du hast genug Gold um ernsthaft einkaufen zu gehen. Der schnellste Weg zurück
 zum Laden ist, indem man nach ihm sucht. Gebe
-<input>$cmd[CMD_SEARCH_STASHES]</input> ein, und dann "<w>shop</w>". Wähle das
+<input>$cmd[CMD_SEARCH_STASHES]</input> ein, und dann „<w>shop</w>“. Wähle das
 Resultat aus und beginne die Reise.<localtiles> Du kannst auch der Suchen-Knopf
 im Befehls-Feld <input>anklicken</input>, oder die Mini-Karte nutzen um zum
 Laden zurück zu gelangen.</localtiles>

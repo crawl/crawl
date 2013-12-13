@@ -31,7 +31,7 @@ Możesz poruszać się po przekątnej naciskając <input>number pad</input> (wł
 %%%%
 tutorial1 shiftmove
 
-Szybszym sposobem "Biegania" przez korytarze jest wcisniecie
+Szybszym sposobem „Biegania” przez korytarze jest wcisniecie
 <input>Shift</input> razem z <input>number pad</input> (sprawdź Numpad) lub
 <input>vi keys</input>.
 %%%%

@@ -434,7 +434,7 @@ tutorial3 go_shopping
 #       viewed.
 You now have enough gold to do some serious shopping! The quickest way back to
 the shop is by searching for it. Type <input>$cmd[CMD_SEARCH_STASHES]</input>,
-and then enter "<w>shop</w>". Select the result to start traveling.<localtiles>
+and then enter “<w>shop</w>”. Select the result to start traveling.<localtiles>
 You can also <input>click</input> on the search button in the command panel, or
 use the minimap to return to the shop.</localtiles>
 %%%%

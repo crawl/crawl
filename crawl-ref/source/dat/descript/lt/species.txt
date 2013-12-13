@@ -83,7 +83,7 @@ vaikščioti.
 %%%%
 Naga
 
-Mišrūnas - žmogus su žvynuotu ir raumeningu liemeniu, pereinančiu į gyvatės
+Mišrūnas — žmogus su žvynuotu ir raumeningu liemeniu, pereinančiu į gyvatės
 uodegą.
 %%%%
 Octopode

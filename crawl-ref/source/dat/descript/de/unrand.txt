@@ -74,7 +74,7 @@ Es trägt die Blutflecken eines unmenschlichen Verrückten.
 %%%%
 scimitar of Flaming Death
 
-Heißes Teil !
+Heißes Teil !
 %%%%
 demon blade "Leech"
 
@@ -195,8 +195,8 @@ Ozons.
 %%%%
 large shield of Ignorance
 
-"Ein offener Geist ist wie eine Festung mit unverschlossenen und unbewachten
-Toren."
+„Ein offener Geist ist wie eine Festung mit unverschlossenen und unbewachten
+Toren.“
 %%%%
 robe of Augmentation
 
@@ -351,10 +351,10 @@ Träger, wenngleich etwas unzuverlässig, vor elementaren Angriffen aller Art.
 %%%%
 ring of the Octopus King
 
-"Das Liebste einer Nixe war ihr Gesang,
+„Das Liebste einer Nixe war ihr Gesang,
  welcher erweckte des Krakenkönigs Drang,
  ihr Verehrer zu werden, und sei es, zu sterben,
  drum tat er sich hartnäckig bei seinem Werben.
  Trotz aller Geschenke, aller Dinge,
- konnte sie nicht tragen all seine Ringe."
+ konnte sie nicht tragen all seine Ringe.“
 %%%%

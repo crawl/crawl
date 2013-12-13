@@ -249,7 +249,7 @@ This bow has the colour of dark rain clouds, and the smell of wet ozone.
 %%%%
 large shield of Ignorance
 
-"An open mind is like a fortress with its gates unbarred and unguarded."
+“An open mind is like a fortress with its gates unbarred and unguarded.”
 %%%%
 robe of Augmentation
 
@@ -462,11 +462,11 @@ from elemental attacks of all kinds, although somewhat unreliably.
 %%%%
 ring of the Octopus King
 
-"A mermaid who fancied to sing,
+“A mermaid who fancied to sing,
  Roused lust in the Octopus King.
  Her squiggly suitor,
  Tried hard to woo her,
- But she couldn't wear all his rings."
+ But she couldn't wear all his rings.”
 %%%%
 Axe of Woe
 
