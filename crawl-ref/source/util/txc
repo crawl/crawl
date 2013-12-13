@@ -64,7 +64,7 @@ cmd_re = re.compile('<(\w)>') # used to find the key in menu command strings
 # Those languages have special wrapping with fullwidth character support
 east_asian_languages = {'ja', 'ko', 'zh'}
 no_space_languages = {'ja', 'zh'}
-east_asian_punctuation = u'、。，！：—；）'
+east_asian_punctuation = u'、。，！：；）'
 
 # This object serves as an intermediate step between txt and ini files.
 # Entries are in a raw format: no wrapping, every new line is significant.
@@ -144,6 +144,7 @@ def unwrap(text, no_space):
     text = text.replace("\n}}", "\\n}}")
     text = text.replace("\n{{", "\\n{{")
 
+    text = text.replace(u"—\n—", u"——")
     text = text.replace(">\n<", "><")
     text = text.replace("\n", " ")
     text = text.replace("\\n", "\n")
@@ -184,15 +185,24 @@ def wrap(text, eac, no_space):
 
     lines[:] = [line.replace(">\f<", "><") for line in lines]
 
+# Languages which have no spaces are split on punctuation which make them
+# sometimes wrapped to the bebinning of the next line. Since it's quite ugly,
+# we manually move them back to the end of the previous line.
     if eac or no_space:
         fixed_lines = []
         for line in lines:
-            while line and line[0] in east_asian_punctuation and fixed_lines:
+            while line and line[0] in east_asian_punctuation and fixed_lines \
+                  and fixed_lines[-1][-1] != line[0]:
                 fixed_lines[-1] += line[0]
                 line = line[1:]
-                if not line: break
+                if line:
+                    line = line.lstrip()
+                else:
+                    line = None
+                    break
 
-            fixed_lines.append(line)
+            if line is not None:
+                fixed_lines.append(line)
         lines = fixed_lines
 
     return "\n".join(lines)
@@ -227,14 +237,15 @@ def change_counter(c):
                      for k in sorted(res_index.changes)])
 
 def wide_char(c):
-    return east_asian_width(c) in 'WFA'
+    return c != u'—' and east_asian_width(c) in 'WFA'
 
 def auto_fix(s, lang):
     """Use with care, it can break things"""
     s = auto_fix.re_hyphen.sub(u"\\1—\\2", s)
     s = auto_fix.re_ns.sub(u" \\1", s)
-    if lang == 'fr': # This one can break languages which use »« for quotes
-        s = auto_fix.re_ns2.sub(u"« ", s)
+    if lang == 'fr': # Those ones can break languages which use »« for quotes
+        s = auto_fix.re_ns_opening_quote.sub(u"« ", s)
+        s = auto_fix.re_ns_closing_quote.sub(u" »", s)
 
     if s.find('{{') == -1: # Don't mess with lua strings
         s = auto_fix.re_ascii_single_quotes.sub(u"‘\\1’", s)
@@ -253,11 +264,12 @@ def auto_fix(s, lang):
     return s
 
 auto_fix.re_hyphen = re.compile("(\s)[-–](\s)") # Replace hyphens by em dashes
-auto_fix.re_ns = re.compile("\s([!?:;»])")
-auto_fix.re_ns2 = re.compile(u"«\s")
-auto_fix.re_ascii_single_quotes = re.compile(u"(?<=\s)'(.*?)'(?=\W)", re.S)
+auto_fix.re_ns = re.compile("\s([!?:;])")
+auto_fix.re_ns_opening_quote = re.compile(u"«\s")
+auto_fix.re_ns_closing_quote = re.compile(u"\s»")
+auto_fix.re_ascii_single_quotes = re.compile(u"(?<=\W)'(.*?)'(?=\W)", re.S)
 auto_fix.re_ascii_double_quotes = re.compile(u'"(.*?)"', re.S)
-auto_fix.re_english_single_quotes = re.compile(u'‘(.*?)’', re.S)
+auto_fix.re_english_single_quotes = re.compile(u'‘([^‚‘’]*?)’', re.S)
 auto_fix.re_english_double_quotes = re.compile(u'“(.*?)”', re.S)
 
 """Subclasses to properly handle wrapping fullwidth unicode character which take
@@ -285,7 +297,7 @@ class FullWidthTextWrapper(TextWrapper):
         if 'no_space' in kwargs:
             kwargs.pop('no_space')
             # Those languages don't use spaces. Break lines on punctuation.
-            self.wordsep_simple_re = re.compile(u'([\s%s]+)' % east_asian_punctuation)
+            self.wordsep_simple_re = re.compile(u'([\s%s]+)|(—)(?=—)' % east_asian_punctuation)
         TextWrapper.__init__(self, **kwargs)
 
     def _split(self, text):
