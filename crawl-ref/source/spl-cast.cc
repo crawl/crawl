@@ -1440,11 +1440,8 @@ static spret_type _do_cast(spell_type spell, int powc,
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_EVAPORATE:
-        mpr("Sorry, this spell is gone!");
-        return SPRET_ABORT;
-
     case SPELL_CIGOTUVIS_DEGENERATION:
-        mpr("Sorry, this spell has degenerated away!");
+        mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif
 
