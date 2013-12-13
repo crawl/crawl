@@ -85,4 +85,18 @@ function callback.grunt_zot_stairs_roulette_teleport(data, triggerable,
   end
 end
 
+function teleporter_serial_action_fn
+                      (data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                data.teleport_spot)
+
+  -- third parameter is whether to teleport whatever is on the reciving pad
+  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, false) then
+    crawl.mpr("Your surroundings suddenly seem different!")
+  else
+    crawl.mpr("There is a strange hissing noise.")
+  end
+end
+
 }}
