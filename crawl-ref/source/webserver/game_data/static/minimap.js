@@ -1,35 +1,11 @@
 define(["jquery", "./map_knowledge", "./dungeon_renderer", "./view_data",
         "./tileinfo-player", "./tileinfo-main", "./tileinfo-dngn", "./enums",
-        "./player", "./options"],
+        "./player", "./options", "./util"],
 function ($, map_knowledge, dungeon_renderer, view_data,
-          tileinfo_player, main, dngn, enums, player, options) {
+          tileinfo_player, main, dngn, enums, player, options, util) {
     "use strict";
 
-    var minimap_colours = [
-        "black",       // MF_UNSEEN
-        "darkgrey",    // MF_FLOOR
-        "grey",        // MF_WALL
-        "darkgrey",    // MF_MAP_FLOOR
-        "blue",        // MF_MAP_WALL
-        "brown",       // MF_DOOR
-        "green",       // MF_ITEM
-        "#EE9090",     // MF_MONS_FRIENDLY
-        "#EE9090",     // MF_MONS_PEACEFUL
-        "red",         // MF_MONS_NEUTRAL
-        "red",         // MF_MONS_HOSTILE
-        "darkgreen",   // MF_MONS_NO_EXP
-        "blue",        // MF_STAIR_UP
-        "magenta",     // MF_STAIR_DOWN
-        "cyan",        // MF_STAIR_BRANCH
-        "cyan",        // MF_FEATURE
-        "grey",        // MF_WATER
-        "grey",        // MF_LAVA
-        "yellow",      // MF_TRAP
-        "darkblue",    // MF_EXCL_ROOT
-        "darkcyan",    // MF_EXCL
-        "white"        // MF_PLAYER
-    ];
-
+    var minimap_colours;
     var overlay;
     var ctx, overlay_ctx;
     var cell_w, cell_h;
@@ -37,12 +13,19 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     var display_x = 0, display_y = 0;
     var enabled = true;
 
+    function vcolour_to_css_colour(colour)
+    {
+        return "rgba(" + colour.r + "," + colour.g + "," + colour.b + ","
+               + (colour.a ? colour.a : 255) + ")";
+    }
+
     function update_overlay()
     {
         // Update the minimap overlay
         var view = dungeon_renderer.view;
         overlay_ctx.clearRect(0, 0, overlay.width, overlay.height);
-        overlay_ctx.strokeStyle = "yellow";
+        overlay_ctx.strokeStyle =
+            vcolour_to_css_colour(options.get("tile_window_col"));
         overlay_ctx.strokeRect(display_x + (view.x - cell_x) * cell_w + 0.5,
                                display_y + (view.y - cell_y) * cell_h + 0.5,
                                dungeon_renderer.cols * cell_w - 1,
@@ -143,6 +126,34 @@ function ($, map_knowledge, dungeon_renderer, view_data,
                      cell_w, cell_h);
     }
 
+    function init_options()
+    {
+        minimap_colours = [
+            options.get("tile_unseen_col"),         // MF_UNSEEN
+            options.get("tile_floor_col"),          // MF_FLOOR
+            options.get("tile_wall_col"),           // MF_WALL
+            options.get("tile_floor_col"),          // MF_MAP_FLOOR
+            options.get("tile_mapped_wall_col"),    // MF_MAP_WALL
+            options.get("tile_door_col"),           // MF_DOOR
+            options.get("tile_item_col"),           // MF_ITEM
+            options.get("tile_friendly_col"),       // MF_MONS_FRIENDLY
+            options.get("tile_peaceful_col"),       // MF_MONS_PEACEFUL
+            options.get("tile_neutral_col"),        // MF_MONS_NEUTRAL
+            options.get("tile_monster_col"),        // MF_MONS_HOSTILE
+            options.get("tile_plant_col"),          // MF_MONS_NO_EXP
+            options.get("tile_upstairs_col"),       // MF_STAIR_UP
+            options.get("tile_downstairs_col"),     // MF_STAIR_DOWN
+            options.get("tile_feature_col"),        // MF_STAIR_BRANCH
+            options.get("tile_feature_col"),        // MF_FEATURE
+            options.get("tile_water_col"),          // MF_WATER
+            options.get("tile_lava_col"),           // MF_LAVA
+            options.get("tile_trap_col"),           // MF_TRAP
+            options.get("tile_excl_centre_col"),    // MF_EXCL_ROOT
+            options.get("tile_excluded_col"),       // MF_EXCL
+            options.get("tile_player_col")          // MF_PLAYER
+        ].map(vcolour_to_css_colour);
+    }
+
     function update(x, y, cell)
     {
         cell = cell || map_knowledge.get(x, y);
@@ -216,6 +227,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     });
 
     return {
+        init_options: init_options,
         fit_to: fit_to,
         update_overlay: update_overlay,
         clear: clear,

@@ -94,6 +94,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
     }
 
     options.add_listener(function () {
+        minimap.init_options();
         if (layout_parameters)
             layout(layout_parameters, true);
         display.invalidate(true);

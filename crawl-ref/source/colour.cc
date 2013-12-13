@@ -673,37 +673,65 @@ int element_colour(int element, bool no_random, const coord_def& loc)
 }
 
 #ifdef USE_TILE
-static string tile_cols[24] =
+static int _hex(char c)
 {
-    "black", "darkgrey", "grey", "lightgrey", "white",
-    "blue", "lightblue", "darkblue",
-    "green", "lightgreen", "darkgreen",
-    "cyan", "lightcyan", "darkcyan",
-    "red", "lightred", "darkred",
-    "magenta", "lightmagenta", "darkmagenta",
-    "yellow", "lightyellow", "darkyellow", "brown"
-};
+    if (c >= '0' && c <= '9')
+        return c - '0';
+    if (c >= 'a' && c <= 'f')
+        return 10 + c - 'a';
+    if (c >= 'A' && c <= 'F')
+        return 10 + c - 'A';
+    return 0;
+}
 
-unsigned int str_to_tile_colour(string colour)
+VColour str_to_tile_colour(string colour)
 {
     if (colour.empty())
-        return 0;
+        return VColour(0, 0, 0);
 
-    lowercase(colour);
-
-    if (colour == "darkgray")
-        colour = "darkgrey";
-    else if (colour == "gray")
-        colour = "grey";
-    else if (colour == "lightgray")
-        colour = "lightgrey";
-
-    for (unsigned int i = 0; i < 24; i++)
+    if (colour[0] == '#' && colour.length() == 7)
     {
-        if (tile_cols[i] == colour)
-            return i;
+        return VColour((_hex(colour[1]) << 4) + _hex(colour[2]),
+                (_hex(colour[3]) << 4) + _hex(colour[4]),
+                (_hex(colour[5]) << 4) + _hex(colour[6]));
     }
-    return 0;
+    else
+    {
+        lowercase(colour);
+
+        if (colour == "darkgray")
+            colour = "darkgrey";
+        else if (colour == "gray")
+            colour = "grey";
+        else if (colour == "lightgray")
+            colour = "lightgrey";
+
+        if (colour == "black")             return VColour(  0,   0,   0);
+        else if (colour == "darkgrey")     return VColour(128, 128, 128);
+        else if (colour == "grey")         return VColour(160, 160, 160);
+        else if (colour == "lightgrey")    return VColour(192, 192, 192);
+        else if (colour == "white")        return VColour(255, 255, 255);
+        else if (colour == "blue")         return VColour(  0,  64, 255);
+        else if (colour == "lightblue")    return VColour(128, 128, 255);
+        else if (colour == "darkblue")     return VColour(  0,  32, 128);
+        else if (colour == "green")        return VColour(  0, 255,   0);
+        else if (colour == "lightgreen")   return VColour(128, 255, 128);
+        else if (colour == "darkgreen")    return VColour(  0, 128,   0);
+        else if (colour == "cyan")         return VColour(  0, 255, 255);
+        else if (colour == "lightcyan")    return VColour( 64, 255, 255);
+        else if (colour == "darkcyan")     return VColour(  0, 128, 128);
+        else if (colour == "red")          return VColour(255,   0,   0);
+        else if (colour == "lightred")     return VColour(255, 128, 128);
+        else if (colour == "darkred")      return VColour(128,   0,   0);
+        else if (colour == "magenta")      return VColour(192,   0, 255);
+        else if (colour == "lightmagenta") return VColour(255, 128, 255);
+        else if (colour == "darkmagenta")  return VColour( 96,   0, 128);
+        else if (colour == "yellow")       return VColour(255, 255,   0);
+        else if (colour == "lightyellow")  return VColour(255, 255,  64);
+        else if (colour == "darkyellow")   return VColour(128, 128,   0);
+        else if (colour == "brown")        return VColour(165,  91,   0);
+        else return VColour(0, 0, 0);
+    }
 }
 #endif
 

@@ -30,9 +30,6 @@
 #include "kills.h"
 #include "files.h"
 #include "defines.h"
-#ifdef USE_TILE_LOCAL
- #include "tilereg-map.h"
-#endif
 #ifdef USE_TILE_WEB
  #include "tileweb.h"
 #endif
@@ -971,32 +968,32 @@ void game_options::reset_options()
     tile_show_items      = "!?/%=([)x}:|\\";
     tile_skip_title      = false;
     tile_menu_icons      = true;
+
+    // minimap colours
+    tile_player_col      = str_to_tile_colour("white");
+    tile_monster_col     = str_to_tile_colour("red");
+    tile_neutral_col     = str_to_tile_colour("red");
+    tile_peaceful_col    = str_to_tile_colour("lightred");
+    tile_friendly_col    = str_to_tile_colour("lightred");
+    tile_plant_col       = str_to_tile_colour("darkgreen");
+    tile_item_col        = str_to_tile_colour("green");
+    tile_unseen_col      = str_to_tile_colour("black");
+    tile_floor_col       = str_to_tile_colour("lightgrey");
+    tile_wall_col        = str_to_tile_colour("darkgrey");
+    tile_mapped_wall_col = str_to_tile_colour("blue");
+    tile_door_col        = str_to_tile_colour("brown");
+    tile_downstairs_col  = str_to_tile_colour("magenta");
+    tile_upstairs_col    = str_to_tile_colour("blue");
+    tile_feature_col     = str_to_tile_colour("cyan");
+    tile_trap_col        = str_to_tile_colour("yellow");
+    tile_water_col       = str_to_tile_colour("grey");
+    tile_lava_col        = str_to_tile_colour("grey");
+    tile_excluded_col    = str_to_tile_colour("darkcyan");
+    tile_excl_centre_col = str_to_tile_colour("darkblue");
+    tile_window_col      = str_to_tile_colour("yellow");
 #endif
 
 #ifdef USE_TILE_LOCAL
-    // minimap colours
-    tile_player_col      = MAP_WHITE;
-    tile_monster_col     = MAP_RED;
-    tile_neutral_col     = MAP_RED;
-    tile_peaceful_col    = MAP_LTRED;
-    tile_friendly_col    = MAP_LTRED;
-    tile_plant_col       = MAP_DKGREEN;
-    tile_item_col        = MAP_GREEN;
-    tile_unseen_col      = MAP_BLACK;
-    tile_floor_col       = MAP_LTGREY;
-    tile_wall_col        = MAP_DKGREY;
-    tile_mapped_wall_col = MAP_BLUE;
-    tile_door_col        = MAP_BROWN;
-    tile_downstairs_col  = MAP_MAGENTA;
-    tile_upstairs_col    = MAP_BLUE;
-    tile_feature_col     = MAP_CYAN;
-    tile_trap_col        = MAP_YELLOW;
-    tile_water_col       = MAP_MDGREY;
-    tile_lava_col        = MAP_MDGREY;
-    tile_excluded_col    = MAP_DKCYAN;
-    tile_excl_centre_col = MAP_DKBLUE;
-    tile_window_col      = MAP_YELLOW;
-
     // font selection
     tile_font_crt_file   = MONOSPACED_FONT;
     tile_font_stat_file  = MONOSPACED_FONT;
@@ -3426,8 +3423,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_show_items = field;
     else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
-#endif
-#ifdef USE_TILE_LOCAL
     else if (key == "tile_player_col")
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
@@ -3468,6 +3463,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_excl_centre_col = str_to_tile_colour(field);
     else if (key == "tile_window_col")
         tile_window_col = str_to_tile_colour(field);
+#endif
+#ifdef USE_TILE_LOCAL
     else if (key == "tile_font_crt_file")
         tile_font_crt_file = field;
     else if (key == "tile_font_msg_file")
@@ -4161,6 +4158,42 @@ static void _write_colour_list(const vector<pair<int, int> > variable,
     tiles.json_close_array();
 }
 
+static void _write_vcolour(const string &name, VColour colour)
+{
+    tiles.json_open_object(name);
+    tiles.json_write_int("r", colour.r);
+    tiles.json_write_int("g", colour.g);
+    tiles.json_write_int("b", colour.b);
+    if (colour.a != 255)
+        tiles.json_write_int("a", colour.a);
+    tiles.json_close_object();
+}
+
+static void _write_minimap_colours()
+{
+    _write_vcolour("tile_player_col", Options.tile_player_col);
+    _write_vcolour("tile_monster_col", Options.tile_monster_col);
+    _write_vcolour("tile_neutral_col", Options.tile_neutral_col);
+    _write_vcolour("tile_peaceful_col", Options.tile_peaceful_col);
+    _write_vcolour("tile_friendly_col", Options.tile_friendly_col);
+    _write_vcolour("tile_plant_col", Options.tile_plant_col);
+    _write_vcolour("tile_item_col", Options.tile_item_col);
+    _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
+    _write_vcolour("tile_floor_col", Options.tile_floor_col);
+    _write_vcolour("tile_wall_col", Options.tile_wall_col);
+    _write_vcolour("tile_mapped_wall_col", Options.tile_mapped_wall_col);
+    _write_vcolour("tile_door_col", Options.tile_door_col);
+    _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
+    _write_vcolour("tile_upstairs_col", Options.tile_upstairs_col);
+    _write_vcolour("tile_feature_col", Options.tile_feature_col);
+    _write_vcolour("tile_trap_col", Options.tile_trap_col);
+    _write_vcolour("tile_water_col", Options.tile_water_col);
+    _write_vcolour("tile_lava_col", Options.tile_lava_col);
+    _write_vcolour("tile_excluded_col", Options.tile_excluded_col);
+    _write_vcolour("tile_excl_centre_col", Options.tile_excl_centre_col);
+    _write_vcolour("tile_window_col", Options.tile_window_col);
+}
+
 void game_options::write_webtiles_options(const string& name)
 {
     tiles.json_open_object(name);
@@ -4195,6 +4228,8 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
 
     tiles.json_write_bool("show_game_turns", Options.show_game_turns);
+
+    _write_minimap_colours();
 
     tiles.json_close_object();
 }

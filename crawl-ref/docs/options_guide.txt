@@ -1758,8 +1758,8 @@ tile_excluded_col    = darkcyan
 tile_excl_centre_col = darkblue
 tile_window_col      = yellow
 
-These options allow configuring the colours used for the minimap of
-the dungeon level.
+These options allow configuring the colours used for the minimap of the dungeon
+level. Using RGB hex codes is also allowed, such as #00ff00 for green.
    tile_player_col       - colour of player position, as well as of
                            map centre during level map mode ('X')
    tile_monster_col      - colour of hostile monsters
