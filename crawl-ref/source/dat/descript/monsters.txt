@@ -344,7 +344,7 @@ slew the ancient dragon from whose hide her strange armour is crafted.
 Maud
 
 A mysterious warrior princess from a far-off kingdom, on a quest to retrieve
-the legendary sword 'Entarex'. Countless have been the admirers who, thinking
+the legendary sword ‘Entarex’. Countless have been the admirers who, thinking
 about Maud, forgot everything else.
 %%%%
 Maurice
@@ -1740,7 +1740,7 @@ kraken
 A gargantuan sea monster, capable of devouring entire ships. It embraces them
 with its tentacles and draws them into the depths. Fortunately, the tentacles
 are too big to embrace a small creature like you. Wait, did I say
-"fortunately"?
+“fortunately”?
 %%%%
 large abomination
 
@@ -2245,7 +2245,7 @@ half-snake creature, whose affinity for fire is legendary.
 satyr
 
 A more intelligent relative of the faun, often found in their company, and far
-more unforgiving of - and dangerous to - interlopers.
+more unforgiving of — and dangerous to — interlopers.
 %%%%
 scorpion
 
@@ -2514,7 +2514,7 @@ who so much as snaps a twig.
 %%%%
 spriggan enchanter
 
-A spriggan particularly skilled in the arts of hexes and charms - and,
+A spriggan particularly skilled in the arts of hexes and charms — and,
 apparently, lethal with a quick blade.
 %%%%
 spriggan rider
@@ -2698,7 +2698,7 @@ spawn of a wizard's breeding experiment. Yuck.
 %%%%
 unborn
 
-A devotee of Yredelemnul that has committed to eternal worship and servitude -
+A devotee of Yredelemnul that has committed to eternal worship and servitude —
 even beyond death.
 %%%%
 unseen horror

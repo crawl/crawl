@@ -62,7 +62,7 @@ Affiche une vue d'ensemble du personnage.
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-Affiche des informations sur le personnage : résistances connues, pouvoirs,
+Affiche des informations sur le personnage : résistances connues, pouvoirs,
 équipements, caractéristiques, etc.
 %%%%
 CMD_DISPLAY_OVERMAP
@@ -135,7 +135,7 @@ Génère un état d'avancement du personnage
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Génère un fichier 'nomdupersonnage.txt' dans le dossier morgue. Vous y
+Génère un fichier “nomdupersonnage.txt” dans le dossier morgue. Vous y
 trouverez une énorme quantité d'information (caractéristiques, inventaire,
 compétences, notes, etc...) et vous pourrez les consulter à loisir.
 %%%%

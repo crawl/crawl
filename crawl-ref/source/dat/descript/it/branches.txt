@@ -175,7 +175,7 @@ Zot
 Una regione del Dungeon che è così terrificante, piene di pazzia, furia e
 follia da essere stata chiusa a chiave per evitare intrusioni. Solo il più
 demente degli avventurieri oserebbe raccogliere le chiavi necessarie, rompere
-il sigillo e irrompere più in profondità - tutto per la vana speranza di
+il sigillo e irrompere più in profondità — tutto per la vana speranza di
 trovare un artefatto favoloso su cui nessuno ha mai posato gli occhi.
 
 Il Regno di Zot è profondo tre livelli e vi si può entrare portando solo tre
@@ -241,7 +241,7 @@ Il Labirinto è un largo, complesso dedalo progettato da menti subdole e
 maliziose oramai dimenticate dalla storia. Vecchi miti dicono che il Labirinto
 è stato costruito come prigione per un minotauro. Altre versioni più recenti
 sostengono che questa bestia abita ancora qui, sorvegliando l'unica uscita del
-Labirinto - e anche l'ammasso di tesori presi dai corpi degli sciocchi
+Labirinto — e anche l'ammasso di tesori presi dai corpi degli sciocchi
 avventurieri morti di fame che si sono persi all'interno. Fa attenzione
 all'interno dei serpeggianti e variabili cunicoli del Labirinto, o anche i tuoi
 beni potrebbero entrare a far parte della pila del minotauro.
@@ -312,8 +312,8 @@ farsi sentire.
 %%%%
 Wizlab
 
-In tempi passati i più potenti maghi - probabilmente avrai sentito parlare di
-alcuni di loro - erano soliti trovare o costruire dei piccoli regni sigillati
+In tempi passati i più potenti maghi — probabilmente avrai sentito parlare di
+alcuni di loro — erano soliti trovare o costruire dei piccoli regni sigillati
 dal resto del mondo, dove potevano isolarsi alla ricerca di un sapere magico
 sempre più grande. I maghi non esistono più da tanto tempo, ma tanti dei loro
 arcani laboratori esistono ancora, colmi con i risultati dei loro esperimenti.

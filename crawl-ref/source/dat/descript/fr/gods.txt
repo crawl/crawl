@@ -1,7 +1,7 @@
 %%%%
 No God
 
-"Dieu est mort." – Nietzsche (C'est un bug si vous voyez cela.)
+« Dieu est mort. » – Nietzsche (C'est un bug si vous voyez cela.)
 %%%%
 random
 
@@ -154,7 +154,7 @@ Ashenzari
 Bien qu'il semble inconcevable que le divin pouvait être enchainé, Ashenzari
 est tout simplement cloué définitivement au ciel pour l'éternité. Le dieu
 immobile voit tout et sait tout. Ses fidèles dévoués sont autorisés à saisir
-des parcelles de sa connaissance et de sa clairvoyance mais, attention : pour
+des parcelles de sa connaissance et de sa clairvoyance mais, attention : pour
 Ashenzari, pouvoir, bénédiction et malédiction sont une seule et même chose.
 %%%%
 Jiyva
@@ -213,16 +213,16 @@ Xom powers
 
 Adorer Xom est une entreprise risquée. Si Xom est de bonne humeur, il pourra
 vous envoyer des cadeaux, alors qu'à d'autres moments, où il sera d'humeur plus
-capricieuse, il pourra décider de "pimenter un peu les choses" et vous envoyer
-à votre mort. Si vous réussissez à vous en sortir tant mieux ; si non, et bien,
-il y aura d'autres jouets...
+capricieuse, il pourra décider de « pimenter un peu les choses » et vous
+envoyer à votre mort. Si vous réussissez à vous en sortir tant mieux ; si non,
+et bien, il y aura d'autres jouets...
 %%%%
 Vehumet powers
 
 Adorer Vehumet vous permettra rapidement de convertir chaque mort en énergie
 magique. Alors que vous gagnerez en faveur, vous obtiendrez divers
 améliorations de vos sortilèges destructeurs – tout d'abord, une aide pour
-lancer de tel sort ; puis un accroissement de la portée ; et enfin, une
+lancer de tel sort ; puis un accroissement de la portée ; et enfin, une
 diminution du coût pour lancer les plus hauts sorts de destruction. Plus tard,
 Vehumet vous offrir de rares grimoires de magie destructive.
 %%%%
@@ -266,7 +266,7 @@ Elyvilon powers
 Le Guérisseur offre à ses fidèles le moyen de se guérir des dégâts reçus comme
 des effets de la maladie. Elyvilon permet aussi la guérison des créatures
 hostiles, afin de les rendre neutre. Elyvilon pourra directement intervenir
-pour sauver la vie de son disciple, spécialement quand il est invoqué ; les
+pour sauver la vie de son disciple, spécialement quand il est invoqué ; les
 plus pieux de ses fidèles sont assurés de son aide.
 %%%%
 Lugonu powers
@@ -318,8 +318,8 @@ Jiyva powers
 Les fidèles de Jiyva peuvent demander des gelées, transformer des monstres en
 slimes, plus tard, supprimer leurs mutations néfastes. Alors que leur piété
 grandit, Jiyva fera apparaitre des gelées, avec une fréquence grandissante,
-dans le donjon ; réorganisera les attributs de ses disciples en fonction de
-leurs compétences, armure et équipement ; accordera des mutations comme
+dans le donjon ; réorganisera les attributs de ses disciples en fonction de
+leurs compétences, armure et équipement ; accordera des mutations comme
 récompense. Les slimes n'attaqueront jamais un fidèle de Jiyva, et Jiyva
 demande la même conduite en retour. Éventuellement, touts les slimes visibles
 se joindront à la prières, les empêchant de se déplacer pour un moment.

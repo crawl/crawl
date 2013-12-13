@@ -126,7 +126,7 @@ Ota vedos hahmon etenemisestä
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Laittaa valtavan määrän tietoa hahmosta tiedostoon 'pelaajanimi.txt'
+Laittaa valtavan määrän tietoa hahmosta tiedostoon ‘pelaajanimi.txt’
 morgue-kansioon, tutkimuksen vuoksi. Tämä sisältää statistiikat, varusteet,
 taiat, taidot, muistiinpanot jne.
 %%%%

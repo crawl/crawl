@@ -127,7 +127,7 @@ Zot
 
 Saugiai užrakintą požemių komplekso dalis, paprastai minima kaip beprotybė,
 siautulys, pamišimas. Tik labiausiai pakvaišę nuotykių ieškotojai drįstų
-sulaužyti antspaudą ir skverbtis gylyn - tuščiai tikintis rasti legendinį
+sulaužyti antspaudą ir skverbtis gylyn — tuščiai tikintis rasti legendinį
 artefaktą, kurio dar niekas niekada nėra matęs.
 
 Zot Karalystė yra penkių lygių gylio. Į ją galima patekti tik turint bent tris
@@ -157,8 +157,8 @@ pagrindinio požemio lygiuose. Turėkite omenyje, kad ištrūkti atgal gali būt
 sunkiau.
 
 Čia galite rasti ne mažiau kaip penkias runas:
- • ugninė - gerai įkaitintoje Cerebovo karalystėje
- • šviečianti - radioaktyvioje Mnolego valdoje
+ • ugninė — gerai įkaitintoje Cerebovo karalystėje
+ • šviečianti — radioaktyvioje Mnolego valdoje
  • magiška saugoma paslaptingų Lom Lobono ir jo pakalikų jėgų
  • tamsioji guli miglotoje Gloorx Vloq buveinėje
  • mažiau žinomi valdovai turi ne vieną demoniškos runos kopiją
@@ -178,7 +178,7 @@ Labirintas yra didelis ir sudėtingas raizginys, sumanytas rafinuotų ir
 piktavalių protų, vedinų jau niekam nebeatmenamų kėslų. Seni padavimai byloja,
 kad labirintas buvo sukonstruotas kaip kalėjimas bauginančiam minotaurui. Kiek
 naujesni pasakojimai sako, kad pabaisa ten vis dar tebegyvena, saugodamas
-vienintelį labirinto išėjimą - kartu su daugybe brangenybių, surinktų nuo
+vienintelį labirinto išėjimą — kartu su daugybe brangenybių, surinktų nuo
 pasiklydusių ir mirusių iš bado nuotykių ieškotojų kūnų. Būkite atsargūs
 nepastoviuose ir vingiuojančiuose šio labirinto praėjimuose, nes jūsų pačių
 nuosavybė irgi gali atsidurti minotauro lobių krūvoje.

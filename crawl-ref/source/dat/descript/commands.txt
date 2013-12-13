@@ -132,7 +132,7 @@ Dump character progress
 CMD_CHARACTER_DUMP verbose
 
 Dump a huge amount of information about your character into a file
-'playername.txt' in the morgue directory, to peruse at your leasure. This
+‘playername.txt’ in the morgue directory, to peruse at your leasure. This
 includes main stats, equipment, spells, skills, notes, etc.
 %%%%
 CMD_AUTOFIGHT

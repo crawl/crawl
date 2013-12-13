@@ -87,16 +87,16 @@ Ein ausgetrockneter Brunnen, der schon bessere Tage gesehen hat.
 %%%%
 A fountain of clear blue water
 
-Drücke "q", um aus diesem Springbrunnen zu trinken. Nicht, dass es irgendeinen
+Drücke „q“, um aus diesem Springbrunnen zu trinken. Nicht, dass es irgendeinen
 Effekt hätte...
 %%%%
 A fountain of blood
 
-Drücke "q", um aus diesem Springbrunnen zu trinken, wenn du unbedingt willst.
+Drücke „q“, um aus diesem Springbrunnen zu trinken, wenn du unbedingt willst.
 %%%%
 A fountain of sparkling water
 
-Drücke "q", um aus diesem magischen Springbrunnen zu trinken. Erwarte magische
+Drücke „q“, um aus diesem magischen Springbrunnen zu trinken. Erwarte magische
 Effekte, solange der Brunnen noch magisch ist.
 %%%%
 A gate leading back out of here
@@ -288,7 +288,7 @@ A runed door
 Eine Tür, überzogen von Runen. Es sieht so aus, als befinde sich dahinter etwas
 besonderes – vielleicht Gefahr, vielleicht Schätze. Du kannst die Runen brechen
 und sie wie jede andere Tür öffnen (zum Beispiel, indem du dagegen läufst oder
-'O' drückst).
+‚O‘ drückst).
 %%%%
 A sealed door
 
@@ -367,7 +367,7 @@ Luft – du weißt schon.  Dazu kommen Steuern und alles andere, wovor du
 weggelaufen bist.
 
 Wenn du diese Treppen hochsteigst, wird deine Suche nach der Kugel beendet sein
-- egal, ob du sie gefunden hast, oder nicht.
+— egal, ob du sie gefunden hast, oder nicht.
 %%%%
 A staircase to the Crypt
 
@@ -730,7 +730,7 @@ Dieser glitschige Boden scheint in einem unbekannten Takt zu pulsieren.
 %%%%
 Zonguldrok's gravestone
 
-Ein Grabstein. Der Name 'Zonguldrok' ist in goldenen Buchstaben eingraviert.
+Ein Grabstein. Der Name ‚Zonguldrok‘ ist in goldenen Buchstaben eingraviert.
 %%%%
 A gravestone
 
@@ -812,7 +812,7 @@ Diese Wand ist aus purem Silber gemacht.
 A rune carved stone wall
 
 In diese komischerweise schleimfreie Steinwand wurden zahllose mystische Runen
-eingeritzt. Ein oft wiederholtes Muster aus Runen scheint von dem 'Geleekönig'
+eingeritzt. Ein oft wiederholtes Muster aus Runen scheint von dem ‚Geleekönig‘
 zu erzählen.
 %%%%
 A sarcophagus
@@ -901,13 +901,13 @@ auf den Boden gesunken ist.
 %%%%
 A flickering gateway to a bazaar
 
-Ein glühendes Portal zu einem Basar [passt "Markt" besser?], auf dem  sich
+Ein glühendes Portal zu einem Basar [passt „Markt“ besser?], auf dem  sich
 umherziehende Händler treffen, um ihre Waren zu verkaufen. Sie bleiben nie
 lange an einem Ort.
 %%%%
 A gateway to a bazaar
 
-Ein glühendes Portal zu einem Basar [passt "Markt" besser?], auf dem  sich
+Ein glühendes Portal zu einem Basar [passt „Markt“ besser?], auf dem  sich
 umherziehende Händler treffen, um ihre Waren zu verkaufen. Sie werden auf dich
 warten, aber sobald du die Chance nutzt, um dir ihre Angebote anzusehen, werden
 sie auch schon wieder abreisen und nach neuen Kunden suchen.

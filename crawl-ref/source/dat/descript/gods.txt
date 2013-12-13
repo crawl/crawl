@@ -1,7 +1,7 @@
 %%%%
 No God
 
-"God is dead." — Nietzsche (It's a bug if you ever see this.)
+“God is dead.” — Nietzsche (It's a bug if you ever see this.)
 %%%%
 random
 
@@ -200,8 +200,8 @@ piety, Yredelemnul will mirror any injury you have to suffer onto the attacker.
 Xom powers
 
 To worship Xom is to live riskily. In a good mood Xom may shower you with
-gifts, while at other times this capricious god could decide to "spice things
-up a little" and send you to your doom. If you prove yourself the stronger, so
+gifts, while at other times this capricious god could decide to “spice things
+up a little” and send you to your doom. If you prove yourself the stronger, so
 much the better; if not, well, there'll be other playthings...
 %%%%
 Vehumet powers

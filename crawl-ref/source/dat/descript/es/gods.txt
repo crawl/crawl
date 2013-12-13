@@ -1,7 +1,7 @@
 %%%%
 No God
 
-"Dios ha muerto." - Nietzsche (Es un bug si alguna vez ves esto).
+“Dios ha muerto.” — Nietzsche (Es un bug si alguna vez ves esto).
 %%%%
 random
 
@@ -74,7 +74,7 @@ de cuerpos. Okawaru menosprecia a quienes hieren a sus aliados.
 %%%%
 Makhleb
 
-Makhleb, "quien destruye", es una terrible deidad de derramamientos de sangre y
+Makhleb, “quien destruye”, es una terrible deidad de derramamientos de sangre y
 mortificación de la carne. Sus seguidores purifican a los demás inflingiéndoles
 sufrimiento y muerte en nombre de Makhleb, y pueden ganar más favor destruyendo
 a los cadáveres recientes. Dedicados seguidores pueden acceder a caóticas
@@ -84,7 +84,7 @@ malvado dios.
 %%%%
 Sif Muna
 
-Sif Muna, "quien posee el conocimiento" es una deidad contemplativa pero
+Sif Muna, “quien posee el conocimiento” es una deidad contemplativa pero
 poderosa, a quien sirven los que buscan conocimiento de la magia. Aprecia el
 entrenamiento de las capacidades para hacer magia.
 %%%%
@@ -107,7 +107,7 @@ que la fortuna favorece a los atrevidos.
 %%%%
 Elyvilon
 
-Elyvilon, "quien sana", acoge a todas las buenas almas que estén preparadas
+Elyvilon, “quien sana”, acoge a todas las buenas almas que estén preparadas
 para ayudar a los demás. Tales individuos pueden esperar ganar poderosas
 habilidades de sanación. Elyvilon prefiere un credo de pacifismo y ayuda a sus
 seguidores a evitar baños de sangre. Elyvilon aprecia la destrucción de armas,
@@ -118,7 +118,7 @@ piedad.
 %%%%
 Lugonu
 
-Lugonu, "informe", se revela en el caos del Abismo. Sus seguidores son enviados
+Lugonu, “informe”, se revela en el caos del Abismo. Sus seguidores son enviados
 para causar masacres y corromper al mundo de arriba, y deben hacerlo sin
 descanso para ganar el favor de Lugonu.
 %%%%
@@ -207,14 +207,14 @@ Xom powers
 
 Adorar a Xom es vivir con riesgo. De buen humor, Xom puede obsequiarte con una
 lluvia de regalos, mientras que en otras ocasiones este dios caprichoso puede
-decidir poner "algo de salsa" y acabar por condenarte. Si te muestras como el
+decidir poner “algo de salsa” y acabar por condenarte. Si te muestras como el
 más fuerte, tanto mejor; si no, bueno, siempre habrá otros con quien jugar...
 %%%%
 Vehumet powers
 
 Los adoradores de Vehumet pronto serán capaces de recuperar su mana matando
 criaturas. A medida que ganen favor, también ganarán varias mejoras en sus
-hechizos destructivos - en primer lugar, asistencia a la hora de recitar tales
+hechizos destructivos — en primer lugar, asistencia a la hora de recitar tales
 hechizos; luego se incrementará la distancia de sus conjuros; y finalmente un
 coste menor para lanzar hechizos destructivos de alto nivel.Con el tiempo,
 Vehumet otorgará a sus seguidores raros libros de magia destructiva.

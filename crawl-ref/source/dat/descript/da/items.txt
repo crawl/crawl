@@ -1642,8 +1642,8 @@ triple sword
 Et magisk våben med tre store, barberbladsskarpe klinger. Legenderne vil vide,
 at en spøgefuld ridder engang spurgte en mestersmed, om han kunne lave et sværd
 med to klinger. Resultatet viste sig at være ganske funktionelt, hvortil
-ridderen gemytligt replicerede: "Ah, udmærket, men kunne De lave et
-*tredobbelt* sværd?" Da svaret viste sig at være ja, var ridderen for chokeret
+ridderen gemytligt replicerede: “Ah, udmærket, men kunne De lave et
+*tredobbelt* sværd?” Da svaret viste sig at være ja, var ridderen for chokeret
 til at spørge om mulighederne for et firedobbelt sværd.
 %%%%
 trishula

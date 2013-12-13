@@ -184,13 +184,13 @@ Revenir à votre forme normale, avec un léger delai.
 Recite ability
 
 Prêchez aux monstres les lois de Zin, ce qui peut amener à différents
-résultats. Il existe quatre livres dont vous pouvez prêcher le contenu :
+résultats. Il existe quatre livres dont vous pouvez prêcher le contenu :
 
-* Livre des Abominations : Ce livre aborde ce qui existe de plus odieux pour
+* Livre des Abominations : Ce livre aborde ce qui existe de plus odieux pour
 Zin – le chaos sous toutes ses formes. La récitation de ces versets invoquera
 le plus puissant des chocs de Zin.
 
-* Livre des Ablutions : Les impurs tiennent une place presque aussi élevée aux
+* Livre des Ablutions : Les impurs tiennent une place presque aussi élevée aux
 yeux du Donneur de Lois. La récitation des versets de ce livre blessera de
 telles créatures.
 
@@ -199,7 +199,7 @@ n'ont pas succombé au mal sont traitées avec moins de véhémence. Les versets
 ce livre provoque la confusion. Mais ceux qui adore un dieu ennemi de Zin
 pourraient être privés de la possibilité de répandre leur foi impie.
 
-* Livre de l'Anathème : Démons et morts-vivants sont haïs de Zin. Ce livre
+* Livre de l'Anathème : Démons et morts-vivants sont haïs de Zin. Ce livre
 donne les moyens de le leur faire comprendre.
 %%%%
 Vitalisation ability
@@ -379,8 +379,8 @@ particulièrement pieux pourront obtenir son aide mais, dans ce cas, chaque
 intervention coûtera de la piété (en opposition aux demandes d'aide standard
 qui sont toujours gratuites)
 
-Attention : tuer les autres alors que vous demandez à être sauver est un pêché
-majeur !
+Attention : tuer les autres alors que vous demandez à être sauver est un pêché
+majeur !
 %%%%
 Lesser Healing ability
 

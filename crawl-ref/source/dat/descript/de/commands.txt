@@ -131,7 +131,7 @@ Speichere den Charakter Fortschritt
 CMD_CHARACTER_DUMP verbose
 
 Speichere eine riesige Menge an Informationen über deinen Charakter in die
-'Spielername.txt' Datei in das Archiv Verzeichnis, um es dir bei Zeiten
+‚Spielername.txt‘ Datei in das Archiv Verzeichnis, um es dir bei Zeiten
 durchzulesen. Diese beinhaltet Haupteigenschaften, Ausrüstung, Sprüche,
 Fähigkeiten, Notizen, usw.
 %%%%

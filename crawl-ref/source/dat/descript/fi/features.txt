@@ -1,16 +1,16 @@
 %%%%
 A fountain of clear blue water
 
-Paina 'q' juodaksesi tästä lähteestä. Ei sillä, että se vaikuttaisi sinuun
+Paina ‘q’ juodaksesi tästä lähteestä. Ei sillä, että se vaikuttaisi sinuun
 mitenkään...
 %%%%
 A fountain of blood
 
-Paina 'q' juodaksesi tästä lähteestä, jos aivan välttämättä haluat.
+Paina ‘q’ juodaksesi tästä lähteestä, jos aivan välttämättä haluat.
 %%%%
 A fountain of sparkling water
 
-Paina 'q' juodaksesi tästä taikalähteestä. Valmistaudu maagisiin seurauksiin.
+Paina ‘q’ juodaksesi tästä taikalähteestä. Valmistaudu maagisiin seurauksiin.
 %%%%
 A gate leading back out of here
 

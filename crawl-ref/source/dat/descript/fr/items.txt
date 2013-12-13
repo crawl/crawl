@@ -169,7 +169,7 @@ accorde une aide magique.
 %%%%
 book of beasts
 
-Un livre de sortilèges magiques. Prenez garde à ne pas vous faire mordre !
+Un livre de sortilèges magiques. Prenez garde à ne pas vous faire mordre !
 %%%%
 book of burglary
 
@@ -776,7 +776,7 @@ Un fruit jaune.
 %%%%
 lightning rod
 
-Ce sceptre tire un éclair continu : la décharge est entretenue et, peut être
+Ce sceptre tire un éclair continu : la décharge est entretenue et, peut être
 redirigée vers une nouvelle cible en évoquant le sceptre les tours suivants
 (échouer à le faire revient à relâcher la gâchette). Il prend un moment pour
 chauffer, crachant quelques étincelles inoffensives. Quand l'éclair est actif,
@@ -1451,7 +1451,7 @@ poignarder leurs ennemis inattentifs.
 %%%%
 slice of pizza
 
-Une part de pizza : de la pâte avec sauce tomate, mozzarella, et basilic.
+Une part de pizza : de la pâte avec sauce tomate, mozzarella, et basilic.
 %%%%
 sling
 
@@ -1507,7 +1507,7 @@ est compétent en magie de la terre.
 %%%%
 staff of energy
 
-Ce bâton permet à son porteur de contrôler l'énergie magique : jeter des sorts
+Ce bâton permet à son porteur de contrôler l'énergie magique : jeter des sorts
 ne donne plus faim et il peut canaliser la magie ambiante.
 %%%%
 staff of fire
@@ -1631,8 +1631,8 @@ est plus petit et plus maniable afin d'optimiser ses propriétés balistiques.
 tome of destruction
 
 Un livre de magie sauvage extrêmement puissant mais, extrêmement imprévisible.
-Attention : lire ce livre peut s'avérer hasardeux pour vous ou votre entourages
-!
+Attention : lire ce livre peut s'avérer hasardeux pour vous ou votre
+entourages !
 %%%%
 trident
 
@@ -1643,8 +1643,8 @@ triple sword
 
 Une arme magique avec trois grandes lames tranchantes comme des rasoirs.
 D'après la légende, un maître forgeron créa un épée à double lame à la demande
-d'un chevalier excentrique qui trouva le résultat plutôt fonctionnel : "Ah,
-très bien, mais pourriez-vous forger une épée *triple* ?" Quand la réponse
+d'un chevalier excentrique qui trouva le résultat plutôt fonctionnel : « Ah,
+très bien, mais pourriez-vous forger une épée *triple* ? » Quand la réponse
 s'avéra être oui, le chevalier était trop choqué pour demander les chances de
 faire une épée quadruple.
 %%%%

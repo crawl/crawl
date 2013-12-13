@@ -1,7 +1,7 @@
 %%%%
 A closed door
 
-Koka durvis. Lai atvērtu, vienkārši uzejiet tām virsū vai nospiediet 'o'.
+Koka durvis. Lai atvērtu, vienkārši uzejiet tām virsū vai nospiediet ‘o’.
 %%%%
 A dry fountain
 

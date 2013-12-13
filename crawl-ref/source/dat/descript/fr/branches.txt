@@ -52,7 +52,7 @@ Un marécage inhospitalier, plein de limons, de mouches, de sangsues et de grand
 monstres carnivores affamés.
 
 Le Marais est profond de cinq niveaux et contient la rune en décomposition. Le
-donjon ne propose que deux des branches suivantes : la Fosse aux Serpents, le
+donjon ne propose que deux des branches suivantes : la Fosse aux Serpents, le
 Marais, les Côtes et le Nid des Araignées. Si le Marais est présent, son entrée
 est située entre le Repaire 2 et 5.
 %%%%
@@ -62,10 +62,10 @@ De loin, vous entendez le bruit des vagues et sentez les embruns salés. En
 atteignant les Côtes, vous êtes impressionné par les plages exotiques dans ses
 souterrains, créant quelques îles dans une vaste mer. Soudainement, un cri
 effroyable déchire l'air suivi de gargouillis. Avec impatience, vous observez
-les alentours et vous demandez : Qui est le prédateur ? Et qui est la proie ?
+les alentours et vous demandez : Qui est le prédateur ? Et qui est la proie ?
 
 Les Côtes sont profondes de cinq niveaux et contiennent la rune écaillée. Deux
-des branches suivantes sont présentes dans le donjon : la Fosse aux Serpents,
+des branches suivantes sont présentes dans le donjon : la Fosse aux Serpents,
 le Marais, les Côtes et le Nid des Araignées. Si les Côtes sont présentes, leur
 entrée est située entre Repaire 3 et 6.
 %%%%
@@ -74,17 +74,17 @@ Snake Pit
 Habitat des serpent, repaire des nagas.
 
 La Fosse aux Serpents est profonde de cinq niveaux et contient la rune en
-serpentine. Deux des branches suivantes sont présentes dans le donjon : la
+serpentine. Deux des branches suivantes sont présentes dans le donjon : la
 Fosse aux Serpents, le Marais, les Côtes et le Nid des Araignées. Si la Fosse
 aux Serpents est présente, son entrée est située entre Repaire 3 et 6.
 %%%%
 Spider Nest
 
-Vous pensiez qu'il suffirait de soulever une botte pour les écraser ? Si vous
+Vous pensiez qu'il suffirait de soulever une botte pour les écraser ? Si vous
 n'êtes pas encore arachnophobe, c'est pour bientôt.
 
 Le Nid des Araignées est profond de cinq niveaux et contient la rune
-arachnéenne. Deux des branches suivantes sont présentes dans le donjon : la
+arachnéenne. Deux des branches suivantes sont présentes dans le donjon : la
 Fosse aux Serpents, le Marais, les Côtes et le Nid des Araignées. Si le Nid des
 Araignées est présente, son entrée est située entre Repaire 3 et 6.
 %%%%
@@ -128,7 +128,7 @@ murs froids et humides. Des os sont éparpillés partout et l'endroit résonne d
 lamentations des âmes torturées des morts sans repos.
 
 La Crypte est profonde de cinq niveaux. Le donjon contient soit la Crypte, soit
-la Forêt ; si la Crypte est présente, elle peut être trouvée entre Chambres
+la Forêt ; si la Crypte est présente, elle peut être trouvée entre Chambres
 Fortes:2 et Chambres Fortes:3 et elle contient l'entrée de la Tombe.
 %%%%
 Tomb
@@ -143,7 +143,7 @@ Hell
 
 L'antichambre des quatre enfers est gardé par Geryon. Les héros qui prouvent
 leur valeur dans le vestibule et soufflent dans la corne de Geryon peuvent
-explorer les différentes régions des enfers : Dis, Gehenna, Cocytus et
+explorer les différentes régions des enfers : Dis, Gehenna, Cocytus et
 Tartarus.
 
 Des portails menant au Vestibule des Enfers peuvent être trouvés en abondance
@@ -151,7 +151,7 @@ dans les parties les plus profondes du donjon principal.
 %%%%
 Dis
 
-La Cité d'Acier de Dis. Qui survivra au test de l'acier ?
+La Cité d'Acier de Dis. Qui survivra au test de l'acier ?
 
 Dis est profonde de sept niveaux et contient la rune d'acier. Elle peut être
 atteinte depuis le Vestibule de l'Enfer.
@@ -182,7 +182,7 @@ atteint depuis le Vestibule de l'Enfer.
 Zot
 
 Une région du donjon qui est complexe, verrouillée par sécurité et à laquelle
-on fait référence avec les mots "folie", "fureur" et "démence". Seuls les
+on fait référence avec les mots « folie », « fureur » et « démence ». Seuls les
 aventuriers les plus fous oseront briser le sceau qui protège son entrée et
 plonger dans ses profondeurs – dans le vain espoir de poser les yeux sur le
 légendaire artéfact.
@@ -198,7 +198,7 @@ puissantes illusions et la magie d’entrave sont la norme plutôt que
 l'exception.
 
 La Forêt Enchantée fait cinq niveau de profondeur. Le donjon contient soit la
-Crypte, soit la Forêt ; si la Forêt est présente, elle peut être trouvée entre
+Crypte, soit la Forêt ; si la Forêt est présente, elle peut être trouvée entre
 Chambres Fortes:2 et Chambres Fortes:3 et elle contient l'entrée de la Tombe.
 %%%%
 Abyss
@@ -241,7 +241,7 @@ Ziggurat
 Une série d'arènes, chacune contenant des richesses plus grandes et d'encore
 plus grands dangers que les précédents. Quelque soit l'entité qui a créé cette
 monstruosité, son entrée à un prix. Méfiez-vous, car un ziggurat n'est pas un
-lieu pour les cœurs faibles : même les plus braves et talentueux ont rencontré
+lieu pour les cœurs faibles : même les plus braves et talentueux ont rencontré
 leur limite ici. Alors qu'un portail permet de sortir à chaque niveau, une fois
 sorti, un ziggurat ne peut être à nouveau visité.
 %%%%
@@ -279,7 +279,7 @@ pour diriger un voyageur vers la chambre contenant les trésors les plus
 adaptées à ses besoins.
 
 Les objets à l'intérieur de ces caches seront très certainement très utiles
-mais attention : le magicien est mort depuis longtemps et, même de son vivant,
+mais attention : le magicien est mort depuis longtemps et, même de son vivant,
 il n'a jamais offert de garantie de remboursement.
 %%%%
 Sewer
@@ -317,8 +317,8 @@ accablante et, le grondement du volcan ne cesse de résonner.
 %%%%
 Wizlab
 
-Dans les siècles passés, les plus puissants mages - vous avez surement entendu
-parler de certains d'entre eux - se seraient fréquemment trouvé ou construit de
+Dans les siècles passés, les plus puissants mages — vous avez surement entendu
+parler de certains d'entre eux — se seraient fréquemment trouvé ou construit de
 petits royaumes isolée du reste du monde, où ils pouvaient s'isoler dans la
 poursuite de plus en plus grande connaissances et puissances magiques . Les
 mages sont partis depuis longtemps, mais beaucoup de leurs laboratoires obscurs

@@ -10,19 +10,19 @@ be your main goal. Try to delve as deeply as possible but beware; death lurks
 around every corner.
 
 For the moment, just remember the following keys and their functions:
-  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> - shows the items and the commands
-  <input>$cmd[CMD_SAVE_GAME]</input>  - saves the game, to be resumed later
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> — shows the items and the commands
+  <input>$cmd[CMD_SAVE_GAME]</input>  — saves the game, to be resumed later
 (but note that death is permanent)
-  <input>$cmd[CMD_LOOK_AROUND]</input>  - examines something in your vicinity
+  <input>$cmd[CMD_LOOK_AROUND]</input>  — examines something in your vicinity
 
 The hint mode will help you play Crawl without reading any documentation. If
 you haven't yet, you might want to try out the tutorial. Also, if you feel
 intrigued, there is more information available in the following files from the
 docs/ directory (all of which can also be read in-game):
-  <lightblue>quickstart.txt</lightblue>     - A very short guide to Crawl.
-  <lightblue>crawl_manual.txt</lightblue>   - This contains all details on
+  <lightblue>quickstart.txt</lightblue>     — A very short guide to Crawl.
+  <lightblue>crawl_manual.txt</lightblue>   — This contains all details on
 species, magic, skills, etc.
-  <lightblue>options_guide.txt</lightblue>  - Crawl's interface is highly
+  <lightblue>options_guide.txt</lightblue>  — Crawl's interface is highly
 configurable. This document explains all the options.
 
 Happy Crawling!
@@ -119,9 +119,9 @@ finished stashes
 
 You can search among all items existing in the dungeon with the
 <input>$cmd[CMD_SEARCH_STASHES]</input> command. For example,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dagger"</w> will list all daggers.
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“dagger”</w> will list all daggers.
 You can then travel to one of the spots. It is even possible to enter words
-like <w>"shop"</w> or <w>"altar"</w>.
+like <w>“shop”</w> or <w>“altar”</w>.
 %%%%
 finished random 0
 

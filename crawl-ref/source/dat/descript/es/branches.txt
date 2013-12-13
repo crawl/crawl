@@ -144,7 +144,7 @@ Zot
 
 Una región del complejo del calabozo, cerrada por seguridad y referida en
 términos de locura, frenesí, trastorno. Solo los aventureros más dementes se
-atreverían a romper el sello y continuar más allá - con la vana esperanza de
+atreverían a romper el sello y continuar más allá — con la vana esperanza de
 encontrar un fabuloso artilugio sobre el que nadie ha puesto sus ojos con
 anterioridad.
 
@@ -177,12 +177,12 @@ Pandemonio es infinito. Hay abundantes portales que llevan a él en las
 profundidades del calabozo. Piensa que regresar puede ser más difícil.
 
 Puedes encontrar cinco runas en el Pandemonio:
- - La Runa Fiera en el caldeado reino de Cerebov.
- - La Runa Brillante en los radioactivos dominios de Mnoleg.
- - La Runa Mágica está custodiada por los poderes arcanos de Lom Lobon y sus
+ — La Runa Fiera en el caldeado reino de Cerebov.
+ — La Runa Brillante en los radioactivos dominios de Mnoleg.
+ — La Runa Mágica está custodiada por los poderes arcanos de Lom Lobon y sus
    secuaces.
- - La Runa Oscura yace en la morada sombría de Gloorx Vloq.
- - La Runa Demoníaca existe en múltiples copias, en posesión de otros
+ — La Runa Oscura yace en la morada sombría de Gloorx Vloq.
+ — La Runa Demoníaca existe en múltiples copias, en posesión de otros
    señores de menos renombre.
 %%%%
 Ziggurat
@@ -201,7 +201,7 @@ El Laberinto es un complejo y vasto lugar diseñado por mentes sutiles y
 maliciosas por razones ya olvidadas en el tiempo. Viejas historias cuentan que
 el laberinto fue construido como prisión para un espantoso minotauro. Historias
 más recientes dicen que esta bestia ronda todavía ahí, guardando la única
-salida del laberinto - así como un buen acopio de tesoros tomados de los
+salida del laberinto — así como un buen acopio de tesoros tomados de los
 cuerpos de los imprudentes aventureros que se perdieron y murieron de hambre.
 Ten cuidado dentro de los cambiantes pasadizos del laberinto, o tus posesiones
 podrían acabar apilados en el tesoro del minotauro.

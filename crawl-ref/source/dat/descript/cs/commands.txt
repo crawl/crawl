@@ -130,8 +130,8 @@ Export informací do souboru
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Exportuje velké množství informací o postavě do souboru 'jmenohrace.txt' ve
-složce 'morgue' k pohodlnému prohlédnutí. Exportováno je vše včetně atributů
+Exportuje velké množství informací o postavě do souboru ‘jmenohrace.txt’ ve
+složce ‘morgue’ k pohodlnému prohlédnutí. Exportováno je vše včetně atributů
 postavy, kouzel, dovedností, poznámek atd.
 %%%%
 CMD_AUTOFIGHT

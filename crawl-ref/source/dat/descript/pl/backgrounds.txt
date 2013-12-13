@@ -6,7 +6,7 @@ zepsucie.
 %%%%
 Air Elementalist
 
-Magowie Powietrza znają czar “Iskra”. Później, Księga Powietrza zapewnia im
+Magowie Powietrza znają czar „Iskra”. Później, Księga Powietrza zapewnia im
 elastyczność.
 %%%%
 Arcane Marksman
