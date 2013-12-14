@@ -1,5 +1,7 @@
 define(["jquery", "comm", "client", "./util", "./settings"],
 function ($, comm, client, util, settings) {
+    "use strict";
+
     var HISTORY_SIZE = 10;
 
     var messages = [];

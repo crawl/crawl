@@ -1,8 +1,10 @@
 define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
-        "./tileinfo-icons", "./tileinfo-dngn", "./enums",
-        "./map_knowledge", "./tileinfos", "./player", "./options"],
+        "./tileinfo-icons", "./tileinfo-dngn", "./enums", "./map_knowledge",
+        "./tileinfos", "./player", "./options", "contrib/jquery.json"],
 function ($, view_data, main, tileinfo_player, icons, dngn, enums,
           map_knowledge, tileinfos, player, options) {
+    "use strict";
+
     function DungeonCellRenderer()
     {
         this.set_cell_size(32, 32);
@@ -72,37 +74,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
     function obj_to_str(o)
     {
-        var parse = function (_o)
-        {
-            var a = [], t;
-
-            for (var p in _o)
-            {
-                if (_o.hasOwnProperty(p))
-                {
-                    t = _o[p];
-
-                    if (t && typeof t == "object")
-                    {
-                        a[a.length]= p + ":{ " + arguments.callee(t).join(", ") + "}";
-                    }
-                    else
-                    {
-                        if (typeof t == "string")
-                        {
-                            a[a.length] = [ p+ ": \"" + t + "\"" ];
-                        }
-                        else
-                        {
-                            a[a.length] = [ p+ ": " + t];
-                        }
-                    }
-                }
-            }
-            return a;
-        }
-        return "{" + parse(o).join(", ") + "}";
-    };
+        return $.toJSON(o);
+    }
 
     $.extend(DungeonCellRenderer.prototype, {
         init: function(element)
@@ -516,6 +489,8 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         // Much of the following is more or less directly copied from tiledgnbuf.cc
         draw_blood_overlay: function(x, y, cell, is_wall)
         {
+            var offset;
+
             if (cell.liquefied && !is_wall)
             {
                 offset = cell.flv.s % dngn.tile_count(dngn.LIQUEFACTION);

@@ -1,5 +1,7 @@
 // TODO: Generate this automatically from enum.h?
 define(function () {
+    "use strict";
+
     var exports = {}, val;
     // Various constants
     exports.gxm = 80;

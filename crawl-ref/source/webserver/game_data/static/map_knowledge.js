@@ -1,4 +1,6 @@
 define(["jquery", "./enums"], function ($, enums) {
+    "use strict";
+
     var k, player_on_level, monster_table, dirty_locs, bounds, bounds_changed;
 
     function init()
