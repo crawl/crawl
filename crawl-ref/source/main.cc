@@ -2142,6 +2142,7 @@ void process_command(command_type cmd)
 
     case CMD_NO_CMD:
     default:
+        // The backslash in ?\? is there so it doesn't start a trigraph.
         if (crawl_state.game_is_hints())
             mpr("Unknown command. (For a list of commands type <w>?\?</w>.)");
         else // well, not examine, but...
