@@ -40,6 +40,8 @@ demon_head_butterfly
 demon_head_hair
 demon_head_skull
 demon_head_cow_skull
+demon_head_bird
+demon_head_fungus
 
 demon_wings_bat DEMON_WINGS
 demon_wings_bones
