@@ -452,7 +452,6 @@ public:
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_tier;
-    bool        tile_force_regenerate_levels;
     bool        tile_water_anim;
     vector<string> tile_layout_priority;
 #endif
