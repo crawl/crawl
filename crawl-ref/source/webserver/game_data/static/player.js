@@ -387,7 +387,10 @@ function ($, comm, enums, map_knowledge, messages, options) {
         }
     }
 
-    options.add_listener(update_stats_pane);
+    options.add_listener(function () {
+        if (player.name !== "")
+            update_stats_pane();
+    });
 
     comm.register_handlers({
         "player": handle_player_message,
