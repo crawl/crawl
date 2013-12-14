@@ -5044,6 +5044,7 @@ tileidx_t tileidx_spell(spell_type spell)
     // Lugonu powers
     case SPELL_BANISHMENT:               return TILEG_BANISHMENT;
     // Trog powers
+    case SPELL_TROGS_HAND:               return TILEG_TROGS_HAND;
     case SPELL_BROTHERS_IN_ARMS:         return TILEG_BROTHERS_IN_ARMS;
     // Yredelemnul powers
     case SPELL_DRAIN_LIFE:               return TILEG_DRAIN_LIFE;
