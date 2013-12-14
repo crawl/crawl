@@ -199,7 +199,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
     $(document).off("settings_changed.game");
     $(document).on("settings_changed.game", function (ev, map) {
         var relayout = false;
-        for (key in renderer_settings)
+        for (var key in renderer_settings)
         {
             if (key in map)
             {
