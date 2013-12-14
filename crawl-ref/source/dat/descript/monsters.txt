@@ -2593,8 +2593,8 @@ A large slimy worm, adept at swimming through the muck of this foul swamp.
 %%%%
 tarantella
 
-A small but greatly-feared spider whose venom causes even resistant victims to
-break into a frenzied dance.
+A small but greatly-feared spider whose attacks causes victims to break into a
+frenzied dance.
 %%%%
 tentacle
 
