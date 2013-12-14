@@ -2649,7 +2649,8 @@ simulacrum
 
 “The simulacrum now hides, not the truth, but the fact that there is none, that
 is to say, the continuation of Nothingness.”
-    -Jean Baudrillard, _La Pensée Radicale_. 1994.
+    -Jean Baudrillard, “Radical Thought”. 1994.
+     trans. François Debrix, 1995.
 %%%%
 siren
 
