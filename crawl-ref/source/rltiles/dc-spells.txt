@@ -58,7 +58,6 @@ confusing_touch CONFUSING_TOUCH
 corona CORONA
 darkness DARKNESS
 enslavement ENSLAVEMENT
-extension EXTENSION
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
