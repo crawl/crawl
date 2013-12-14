@@ -1,17 +1,28 @@
 #!/usr/bin/perl -w
 
 my %defs;
-open IN, "<rltiles/tiledef-player.h" or die "tiledefs must be generated\n";
-while (<IN>)
+
+sub check_defs($$$@)
 {
-    next unless /TILEP_(MONS_[A-Z0-9_]+)/;
-    # multi-tile enums receive _1 _2 _3 automatically.  Could cause problems
-    # if we get such a name written manually.
-    next if $1 =~ /[0-9]$/;
-    $defs{$1} = 1;
+    my ($file, $symbol, $prefix, @ok) = @_;
+    undef %defs;
+    open IN, "<rltiles/tiledef-$file.h" or die "tiledefs must be generated\n";
+    while (<IN>)
+    {
+        next unless /TILE${symbol}_($prefix[A-Z0-9_]+)/;
+        # multi-tile enums receive _1 _2 _3 automatically.  Could cause problems
+        # if we get such a name written manually.
+        next if $1 =~ /[0-9]$/;
+        $defs{$1} = 1;
+    }
+    close IN;
+
+    delete $defs{$_} for @ok;
+
+    return unless %defs;
+    print "Unused $prefix$file tiles (TILE${symbol}_):\n";
+    print "$_\n" for sort keys %defs;
 }
-close IN;
 
-delete $defs{$_} for (map {chomp;$_}`util/gather_tiles_mons`);
-
-print "$_\n" for sort keys %defs;
+check_defs 'player', 'P', 'MONS_', map {chomp;$_}`util/gather_tiles_mons`;
+check_defs 'gui', 'G', '', map {chomp;$_}`util/gather_tiles_gui`;

@@ -1,0 +1,23 @@
+#!/usr/bin/perl -w
+
+for (grep /\.cc$/, `git ls-files`)
+{
+    chomp;
+    open IN, "<", $_ or die "Can't read $_\n";
+    { undef local $/; $_ = <IN>; }
+    close IN;
+
+    for (/\bTILEG_[A-Z_]+\b/g)
+    {
+        s/^TILEG_//;
+        $tile{$_}=1;
+        if (/^([A-Z_]+)_ON$/)
+        {
+            $tile{"${1}_OFF"}  =1;
+            $tile{"${1}_FOCUS"}=1;
+            $tile{"${1}_MAX"}  =1;
+        }
+    }
+}
+
+print "$_\n" for sort keys %tile;
