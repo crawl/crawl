@@ -1203,8 +1203,6 @@ static string _describe_ammo(const item_def &item)
                 "as normal ammo.";
             break;
         }
-
-        need_new_line = false;
     }
 
     if (always_destroyed)
