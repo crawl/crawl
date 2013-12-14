@@ -849,8 +849,8 @@ church0 WALL_CHURCH
 church1
 church2
 church3
-#%weight 1
-#church4
+%weight 4
+church4
 
 %sdir dngn/wall/abyss
 abyss0 WALL_ABYSS WALL_ABYSS_RED
