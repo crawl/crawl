@@ -1093,7 +1093,6 @@ static string _describe_ammo(const item_def &item)
 
     const bool can_launch = has_launcher(item);
     const bool can_throw  = is_throwable(&you, item, true);
-    bool need_new_line    = true;
     bool always_destroyed = false;
 
     if (item.special && item_type_known(item))
@@ -1206,36 +1205,6 @@ static string _describe_ammo(const item_def &item)
         }
 
         need_new_line = false;
-    }
-
-    if (get_equip_race(item) != ISFLAG_NO_RACE)
-    {
-        description += "\n";
-
-        if (need_new_line)
-            description += "\n";
-
-        if (can_throw)
-        {
-            iflags_t race = get_equip_race(item);
-
-            description += "It is more deadly when thrown by ";
-            description += (race == ISFLAG_DWARVEN) ? "dwarves" :
-                           (race == ISFLAG_ELVEN)   ? "elves"
-                                                    : "orcs";
-            description += (can_launch) ? ", and it" : ".";
-            description += " ";
-        }
-
-        if (can_launch)
-        {
-            if (!can_throw)
-                description += "It ";
-
-            description += "is more effective in conjunction with ";
-            description += racial_description_string(item);
-            description += "launchers.";
-        }
     }
 
     if (always_destroyed)
