@@ -1,17 +1,3 @@
-%sdir gui/spells/disciplines
-air SPELL_AIR
-conjuration SPELL_CONJURATION
-divination SPELL_DIVINATION
-earth SPELL_EARTH
-enchantment SPELL_ENCHANTMENT
-fire SPELL_FIRE
-ice SPELL_ICE
-necromancy SPELL_NECROMANCY
-poison SPELL_POISON
-summoning SPELL_SUMMONING
-translocation SPELL_TRANSLOCATION
-transmutation SPELL_TRANSMUTATION
-
 %sdir gui/spells/air
 airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING

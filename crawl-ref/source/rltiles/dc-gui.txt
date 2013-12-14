@@ -16,7 +16,6 @@ dungeon_sprint STARTUP_SPRINT
 zot_defence STARTUP_ZOTDEF
 instructions STARTUP_INSTRUCTIONS
 arena STARTUP_ARENA
-tavern TAVERN
 high_scores STARTUP_HIGH_SCORES
 
 %include dc-spells.txt
