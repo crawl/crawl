@@ -2586,7 +2586,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                 if (needs_damage && !done_damage && damage > 0)
                     desc += " " + damage_string();
 
-                if (needs_damage)
+                if (needs_damage && !done_damage)
                     desc += _hiscore_newline_string();
 
                 if (you.duration[DUR_PARALYSIS])
