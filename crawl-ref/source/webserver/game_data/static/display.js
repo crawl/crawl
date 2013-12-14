@@ -2,6 +2,8 @@ define(["jquery", "comm", "./map_knowledge", "./view_data", "./monster_list",
         "./minimap", "./dungeon_renderer"],
 function ($, comm, map_knowledge, view_data, monster_list, minimap,
           dungeon_renderer) {
+    "use strict";
+
     var overlaid_locs = [];
 
     function invalidate(minimap_too)

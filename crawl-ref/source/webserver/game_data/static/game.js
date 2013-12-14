@@ -3,6 +3,8 @@ define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minima
         "./text", "./menu", "./player"],
 function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
           messages, options) {
+    "use strict";
+
     var layout_parameters = null, ui_state, input_mode;
     var stat_width = 42;
     var msg_height = 6;
@@ -53,7 +55,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
 
         // Determine height of messages area
         old_html = $("#messages").html();
-        old_scroll_top = $("#messages_container").scrollTop();
+        var old_scroll_top = $("#messages_container").scrollTop();
         s = "";
         for (var i = 0; i < msg_height+1; i++)
             s = s + "<br>";

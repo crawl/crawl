@@ -3,6 +3,8 @@ define(["jquery", "./map_knowledge", "./dungeon_renderer", "./view_data",
         "./player", "./options"],
 function ($, map_knowledge, dungeon_renderer, view_data,
           tileinfo_player, main, dngn, enums, player, options) {
+    "use strict";
+
     var minimap_colours = [
         "black",       // MF_UNSEEN
         "darkgrey",    // MF_FLOOR

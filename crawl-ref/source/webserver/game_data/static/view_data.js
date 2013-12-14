@@ -1,4 +1,6 @@
 define(["jquery", "comm"], function ($, comm) {
+    "use strict";
+
     var exports = {};
     exports.flash = 0;
     exports.flash_colour = null;

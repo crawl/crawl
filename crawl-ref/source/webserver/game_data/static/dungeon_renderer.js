@@ -1,5 +1,7 @@
 define(["jquery", "./cell_renderer", "./map_knowledge", "./settings", "./tileinfo-dngn"],
 function ($, cr, map_knowledge, settings, dngn) {
+    "use strict";
+
     var default_size = { w: 32, h: 32 };
     var global_anim_counter = 0;
 

@@ -1,5 +1,7 @@
 define(["jquery", "client", "contrib/jquery.cookie", "contrib/jquery.json"],
 function ($, client) {
+    "use strict";
+
     var settings = {};
     var settings_cookie = "settings";
 
@@ -10,7 +12,7 @@ function ($, client) {
 
     function set_defaults(map)
     {
-        for (key in map)
+        for (var key in map)
         {
             if (!(key in settings))
                 settings[key] = map[key];

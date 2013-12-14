@@ -1,4 +1,6 @@
 define(["jquery", "comm"], function ($, comm) {
+    "use strict";
+
     var line_span = $("<span>");
     line_span.css("white-space", "pre");
 

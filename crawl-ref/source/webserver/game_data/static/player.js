@@ -1,6 +1,8 @@
 define(["jquery", "comm", "./enums", "./map_knowledge", "./messages",
         "./options"],
 function ($, comm, enums, map_knowledge, messages, options) {
+    "use strict";
+
     var player = {}, last_time;
 
     var stat_boosters = {

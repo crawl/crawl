@@ -1,5 +1,7 @@
 define(["jquery", "comm"],
 function ($, comm) {
+    "use strict";
+
     var options = null;
     var listeners = $.Callbacks();
 

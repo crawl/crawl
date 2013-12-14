@@ -1,6 +1,9 @@
 define(["jquery", "client", "./dungeon_renderer", "./minimap",
-        "./monster_list", "./map_knowledge", "./enums", "./display", "exports"],
+        "./monster_list", "./map_knowledge", "./enums", "./display", "exports",
+        "contrib/jquery.json"],
 function ($, c, r, mm, ml, mk, enums, display, exports) {
+    "use strict";
+
     exports.client = c;
     exports.renderer = r;
     exports.$ = $;
@@ -48,35 +51,6 @@ function ($, c, r, mm, ml, mk, enums, display, exports) {
 
     exports.obj_to_str = function (o)
     {
-        var parse = function (_o)
-        {
-            var a = [], t;
-
-            for (var p in _o)
-            {
-                if (_o.hasOwnProperty(p))
-                {
-                    t = _o[p];
-
-                    if (t && typeof t == "object")
-                    {
-                        a[a.length]= p + ":{ " + arguments.callee(t).join(", ") + "}";
-                    }
-                    else
-                    {
-                        if (typeof t == "string")
-                        {
-                            a[a.length] = [ p+ ": \"" + t + "\"" ];
-                        }
-                        else
-                        {
-                            a[a.length] = [ p+ ": " + t];
-                        }
-                    }
-                }
-            }
-            return a;
-        }
-        return "{" + parse(o).join(", ") + "}";
+        return $.toJSON(o);
     }
 });

@@ -1,5 +1,7 @@
 define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer"],
 function ($, map_knowledge, cr, dungeon_renderer) {
+    "use strict";
+
     var monsters, $list, monster_groups, max_rows;
 
     function init()
@@ -153,7 +155,7 @@ function ($, map_knowledge, cr, dungeon_renderer) {
 
             renderer.set_cell_size(dungeon_renderer.cell_width,
                                    dungeon_renderer.cell_height);
-            for (key in dungeon_renderer)
+            for (var key in dungeon_renderer)
             {
                 if (key.match(/^glyph_mode/) || key == "display_mode"
                     || key == "smooth_scaling")

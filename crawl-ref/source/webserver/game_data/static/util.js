@@ -1,5 +1,7 @@
 define([],
 function () {
+    "use strict";
+
     var cols = {
         "black": 0,
         "blue": 1,

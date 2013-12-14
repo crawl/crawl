@@ -1,6 +1,8 @@
 define(["jquery", "comm", "client", "./enums",
         "./dungeon_renderer", "./cell_renderer", "./util"],
 function ($, comm, client, enums, dungeon_renderer, cr, util) {
+    "use strict";
+
     var chunk_size = 50;
 
     // Helpers
