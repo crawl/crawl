@@ -62,7 +62,10 @@ menu += $dangerous:.*dangerous_item.*
 # Defaults for normal items
 menu += lightgrey:tried on uncursed
 menu += green:uncursed
-menu += brown:unidentified.*(potion|scroll|wand)
+menu += lightblue:unidentified.*(potion|scroll|wand|jewellery)
+: if you.god() == "Nemelex Xobeh" then
+    menu += lightblue:deck of cards
+: end
 
 
 # Colouring of autoinscribed god gifts
