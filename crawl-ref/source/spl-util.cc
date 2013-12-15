@@ -710,7 +710,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
     if (number <= 0)
         return;
 
-    targetter_cloud place(0, 0, number, number);
+    targetter_cloud place(agent, GDM, number, number);
     if (!place.set_aim(where))
         return;
     unsigned int dist = 0;
