@@ -20,10 +20,12 @@ function () {
         "lightred": 12,
         "lightmagenta": 13,
         "yellow": 14,
-        "white": 15
+        "h": 14,
+        "white": 15,
+        "w": 15
     };
 
-    function escapeHtml(str) {
+    function escape_html(str) {
         return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
 
@@ -55,12 +57,10 @@ function () {
             else
             {
                 if (str.match(/^<</))
-                    return escapeHtml(str.substr(1));
+                    return escape_html(str.substr(1));
                 else
                 {
-                    if (str !== ">" && str !== "&")
-                        log("WARNING: Unknown tag: " + str);
-                    return escapeHtml(str);
+                    return escape_html(str);
                 }
             }
         });
