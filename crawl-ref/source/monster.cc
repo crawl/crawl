@@ -2534,17 +2534,13 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
     if (desc == DESC_NONE)
         return "";
 
-    monster_type type = mon.type;
-    if (!crawl_state.game_is_arena() && you.misled())
-        type = mon.get_mislead_type();
-
     const bool arena_submerged = crawl_state.game_is_arena() && !force_seen
                                      && mon.submerged();
 
-    if (type == MONS_NO_MONSTER)
+    if (mon.type == MONS_NO_MONSTER)
         return "DEAD MONSTER";
-    else if (invalid_monster_type(type) && type != MONS_PROGRAM_BUG)
-        return _invalid_monster_str(type);
+    else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
+        return _invalid_monster_str(mon.type);
 
     // Handle non-visible case first.
     if (!force_seen && !mon.observable() && !arena_submerged)
@@ -5343,14 +5339,6 @@ const monsterentry *monster::find_monsterentry() const
 {
     return (type == MONS_NO_MONSTER || type == MONS_PROGRAM_BUG) ? NULL
                                                     : get_monster_data(type);
-}
-
-monster_type monster::get_mislead_type() const
-{
-    if (props.exists("mislead_as"))
-        return props["mislead_as"].get_monster().type;
-    else
-        return type;
 }
 
 int monster::action_energy(energy_use_type et) const

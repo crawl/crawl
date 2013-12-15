@@ -152,7 +152,6 @@
     <ClCompile Include="..\message-stream.cc" />
     <ClCompile Include="..\message.cc" />
     <ClCompile Include="..\misc.cc" />
-    <ClCompile Include="..\mislead.cc" />
     <ClCompile Include="..\mon-abil.cc" />
     <ClCompile Include="..\mon-act.cc" />
     <ClCompile Include="..\mon-behv.cc" />
@@ -452,7 +451,6 @@
     <ClInclude Include="..\mgen_data.h" />
     <ClInclude Include="..\mgen_enum.h" />
     <ClInclude Include="..\misc.h" />
-    <ClInclude Include="..\mislead.h" />
     <ClInclude Include="..\mon-abil.h" />
     <ClInclude Include="..\mon-act.h" />
     <ClInclude Include="..\mon-behv.h" />

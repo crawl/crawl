@@ -1517,7 +1517,9 @@ enum duration_type
     DUR_SLIMIFY,
     DUR_TIME_STEP,
     DUR_ICEMAIL_DEPLETED,       // Wait this many turns for full Icemail
+#if TAG_MAJOR_VERSION == 34
     DUR_MISLED,
+#endif
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
     DUR_MIRROR_DAMAGE,
@@ -3565,7 +3567,9 @@ enum spell_type
     SPELL_BLINK_CLOSE,
     SPELL_BLINK_RANGE,
     SPELL_BLINK_AWAY,
+#if TAG_MAJOR_VERSION == 34
     SPELL_MISLEAD,
+#endif
     SPELL_FAKE_MARA_SUMMON,
 #if TAG_MAJOR_VERSION == 34
     SPELL_SUMMON_RAKSHASA,

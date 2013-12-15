@@ -33,7 +33,6 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "terrain.h"
-#include "mislead.h"
 #include "mgen_data.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
@@ -1010,7 +1009,6 @@ static bool _los_free_spell(spell_type spell_cast)
        || spell_cast == SPELL_FIRE_STORM
        || spell_cast == SPELL_AIRSTRIKE
        || spell_cast == SPELL_WATERSTRIKE
-       || spell_cast == SPELL_MISLEAD
        || spell_cast == SPELL_HOLY_FLAMES
        || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS;
 }
@@ -1046,7 +1044,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         switch (spell_cast)
         {
         case SPELL_BRAIN_FEED:
-        case SPELL_MISLEAD:
         case SPELL_SMITING:
         case SPELL_AIRSTRIKE:
         case SPELL_WATERSTRIKE:
@@ -1120,7 +1117,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CHAIN_LIGHTNING:    // the only user is reckless
     case SPELL_SUMMON_EYEBALLS:
     case SPELL_SUMMON_BUTTERFLIES:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_MISLEAD:
+#endif
     case SPELL_CALL_TIDE:
     case SPELL_INK_CLOUD:
     case SPELL_SILENCE:
@@ -1615,12 +1614,6 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
     }
 
-    case SPELL_MISLEAD:
-        if (you.duration[DUR_MISLED] > 10 && one_chance_in(3))
-            ret = true;
-
-        break;
-
     case SPELL_SUMMON_ILLUSION:
         if (!foe || !actor_is_illusion_cloneable(foe))
             ret = true;
@@ -1795,6 +1788,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
+    case SPELL_MISLEAD:
 #endif
     case SPELL_NO_SPELL:
         ret = true;

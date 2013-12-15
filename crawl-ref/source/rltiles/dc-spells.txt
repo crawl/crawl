@@ -239,7 +239,6 @@ miasma_breath MIASMA_BREATH
 %sdir misc
 error MIGHT
 error MIGHT_OTHER
-error MISLEAD
 error NOXIOUS_CLOUD
 error PETRIFYING_CLOUD
 %sdir gui/spells/monster

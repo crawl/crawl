@@ -1855,14 +1855,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\mislead.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\mislead.h"
-			>
-		</File>
-		<File
 			RelativePath="..\mon-abil.cc"
 			>
 		</File>

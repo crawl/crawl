@@ -290,12 +290,7 @@ void update_monsters_in_view()
         map<monster_type, int> genera; // This is the plural for genus!
         for (unsigned int i = 0; i < size; ++i)
         {
-            monster_type type;
-            if (monsters[i]->props.exists("mislead_as") && you.misled())
-                type = monsters[i]->get_mislead_type();
-            else
-                type = monsters[i]->type;
-
+            const monster_type type = monsters[i]->type;
             types[type]++;
             genera[mons_genus(type)]++;
         }

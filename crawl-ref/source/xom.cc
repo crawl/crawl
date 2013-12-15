@@ -1080,7 +1080,7 @@ static int _xom_do_potion(bool debug = false)
         {
         case POT_CURING:
             if (you.duration[DUR_POISONING] || you.rotting || you.disease
-                || you.duration[DUR_CONF] || you.duration[DUR_MISLED])
+                || you.duration[DUR_CONF])
             {
                 break;
             }

@@ -51,7 +51,6 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
-#include "mislead.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-pathfind.h"
@@ -612,13 +611,6 @@ void direct_effect(monster* source, spell_type spell,
         else
             mpr("You sense an evil presence.");
         mons_cast_haunt(source);
-        break;
-
-    case SPELL_MISLEAD:
-        if (!def)
-            mons_cast_mislead(source);
-        else
-            defender->confuse(source, source->hit_dice * 12);
         break;
 
     case SPELL_SUMMON_SPECTRAL_ORCS:

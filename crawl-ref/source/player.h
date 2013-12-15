@@ -426,7 +426,6 @@ public:
     bool is_web_immune() const;
     bool cannot_speak() const;
     bool invisible() const;
-    bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool items = true) const;
     bool visible_to(const actor *looker) const;

@@ -410,13 +410,8 @@ monster_info::monster_info(const monster* m, int milev)
     bool type_known = false;
     bool nomsg_wounds = false;
 
-    if (m->props.exists("mislead_as") && you.misled())
-    {
-        type = m->get_mislead_type();
-        threat = mons_threat_level(&m->props["mislead_as"].get_monster());
-    }
     // friendly fake Rakshasas/Maras are known
-    else if (attitude != ATT_FRIENDLY && m->props.exists("faking"))
+    if (attitude != ATT_FRIENDLY && m->props.exists("faking"))
     {
         type = m->props["faking"].get_monster().type;
         threat = mons_threat_level(&m->props["faking"].get_monster());
@@ -705,7 +700,6 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->submerged())
         mb.set(MB_SUBMERGED);
 
-    // these are excluded as mislead types
     if (mons_is_pghost(type))
     {
         ASSERT(m->ghost.get());

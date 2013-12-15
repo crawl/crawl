@@ -49,7 +49,6 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "misc.h"
-#include "mislead.h"
 #include "mon-info.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-chimera.h"
@@ -3610,12 +3609,6 @@ void marshallMonster(writer &th, const monster& m)
     if (parts & MP_CONSTRICTION)
         _marshall_constriction(th, &m);
 
-    if (m.props.exists("mislead_as"))
-    {
-        ASSERT(!unsuitable_misled_monster(
-            m.props["mislead_as"].get_monster().type));
-    }
-
     m.props.write(th);
 }
 
@@ -4331,16 +4324,6 @@ void unmarshallMonster(reader &th, monster& m)
     {
         if (m.type == MONS_WAR_DOG)
             m.type = MONS_WOLF;
-    }
-
-    // The second part of this is here to deal with saves that have the
-    // invald misled monster problem (#7501).
-    if (m.props.exists("mislead_as")
-        && (!you.misled()
-            || unsuitable_misled_monster(
-                m.props["mislead_as"].get_monster().type)))
-    {
-        m.props.erase("mislead_as");
     }
 #endif
 

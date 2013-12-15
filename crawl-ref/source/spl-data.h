@@ -2475,7 +2475,6 @@ struct spell_desc
      false,
      false
 },
-#endif
 
 {
     SPELL_MISLEAD, "Mislead",
@@ -2489,6 +2488,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_SUMMON_ILLUSION, "Summon Illusion",

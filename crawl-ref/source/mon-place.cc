@@ -28,7 +28,6 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
-#include "mislead.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-gear.h"
@@ -1488,9 +1487,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->props["tornado_since"].get_int() = you.elapsed_time;
         mon->add_ench(mon_enchant(ENCH_TORNADO, 0, 0, INFINITE_DURATION));
     }
-
-    if (!crawl_state.game_is_arena() && you.misled())
-        update_mislead_monster(mon);
 
     mon->flags |= MF_JUST_SUMMONED;
 

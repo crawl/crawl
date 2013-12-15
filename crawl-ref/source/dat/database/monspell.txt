@@ -101,20 +101,6 @@ Greater Healing cast
 
 @The_monster@ briefly glows brightly.
 %%%%
-Mislead cast
-
-@The_monster@ weaves an illusion.
-
-@The_monster@ misleads you.
-
-@The_monster@ clouds your mind.
-%%%%
-unseen Mislead cast
-
-Something tries to mislead you!
-
-Something weaves an illusion around you!
-%%%%
 Mara Summon cast
 
 @The_monster@ weaves an illusion.

@@ -1139,12 +1139,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     if (source_monster)
         killer_map = source_monster->originating_map();
 
-    // Save this here. We don't want to completely remove the status, as that
-    // would look odd in the "screenshot", but having DUR_MISLED as a non-zero
-    // value at his point in time will generate such odities as "killed by a
-    // golden eye, wielding an orcish crossbo [19 damage]", etc. {due}
-    unwind_var<int> misled(you.duration[DUR_MISLED], 0);
-
     // Set the default aux data value...
     // If aux is passed in (ie for a trap), we'll default to that.
     if (aux == NULL)
@@ -1505,7 +1499,6 @@ void scorefile_entry::init(time_t dt)
         DUR_LOWERED_MR,
         DUR_MAGIC_SHIELD,
         DUR_MIGHT,
-        DUR_MISLED,
         DUR_PARALYSIS,
         DUR_PETRIFIED,
         DUR_PETRIFYING,
