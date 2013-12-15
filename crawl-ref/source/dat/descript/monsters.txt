@@ -332,8 +332,8 @@ wanders the halls of the dungeon, seeking other adventurers to share her fate.
 Mara
 
 This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers.
-He is capable of creating intricately detailed illusions, able to mislead even
-the minds of the mightiest and most brilliant spell-casters.
+He is capable of creating intricately detailed illusions, so real they can
+do a good part of what the creature depicted could.
 %%%%
 Margery
 
