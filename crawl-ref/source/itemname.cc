@@ -2972,6 +2972,7 @@ bool is_good_item(const item_def &item)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
+        case POT_BENEFICIAL_MUTATION:
         case POT_EXPERIENCE:
             return true;
         default:
