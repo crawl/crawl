@@ -571,6 +571,9 @@ bool targetter_cloud::set_aim(coord_def a)
             for (adjacent_iterator ai(c); ai; ++ai)
                 if (_cloudable(*ai) && !seen.count(*ai))
                 {
+                    if (agent && !cell_see_cell(*ai, agent->pos(), LOS_NO_TRANS))
+                        continue;
+
                     unsigned int d2 = d1 + ((*ai - c).abs() == 1 ? 5 : 7);
                     if (d2 >= queue.size())
                         queue.resize(d2 + 1);
