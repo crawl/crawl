@@ -85,8 +85,6 @@ void marshallString4 (writer &, const string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &, bool info = false);
 void marshallMonster (writer &, const monster&);
-void marshallMonsterInfo (writer &, const monster_info &);
-void marshallMapCell (writer &, const map_cell &);
 void marshall_level_id(writer& th, const level_id& id);
 void marshallUnsigned(writer& th, uint64_t v);
 void marshallSigned(writer& th, int64_t v);
@@ -144,8 +142,6 @@ void        unmarshallString4 (reader &, string&);
 coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monster& item);
-void        unmarshallMonsterInfo (reader &, monster_info &mi);
-void        unmarshallMapCell (reader &, map_cell& cell);
 level_id    unmarshall_level_id(reader& th);
 
 uint64_t unmarshallUnsigned(reader& th);
