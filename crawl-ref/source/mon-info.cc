@@ -407,7 +407,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     attitude = mons_attitude(m);
 
-    bool type_known = false;
     bool nomsg_wounds = false;
 
     // friendly fake Rakshasas/Maras are known
@@ -420,7 +419,6 @@ monster_info::monster_info(const monster* m, int milev)
     }
     else
     {
-        type_known = true;
         type = m->type;
         threat = mons_threat_level(m);
     }
@@ -441,60 +439,51 @@ monster_info::monster_info(const monster* m, int milev)
         _translate_tentacle_ref(*this, m, "outwards");
     }
 
-    if (type_known)
+    draco_type =
+        mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
+
+    if (!mons_can_display_wounds(m)
+        || !mons_class_can_display_wounds(type))
     {
-        draco_type =
-            mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
+        nomsg_wounds = true;
+    }
 
-        if (!mons_can_display_wounds(m)
-            || !mons_class_can_display_wounds(type))
-        {
-            nomsg_wounds = true;
-        }
+    base_type = m->base_monster;
+    if (base_type == MONS_NO_MONSTER)
+        base_type = type;
 
-        base_type = m->base_monster;
-        if (base_type == MONS_NO_MONSTER)
-            base_type = type;
-
-        // these use number for internal information
-        if (type == MONS_MANTICORE
-            || type == MONS_SIXFIRHY
-            || type == MONS_JIANGSHI
-            || type == MONS_SHEDU
-            || type == MONS_KRAKEN_TENTACLE
-            || type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || type == MONS_ELDRITCH_TENTACLE_SEGMENT
-            || type == MONS_STARSPAWN_TENTACLE
-            || type == MONS_STARSPAWN_TENTACLE_SEGMENT)
-        {
-            number = 0;
-        }
-        else
-            number = m->number;
-        colour = m->colour;
-
-        int stype = 0;
-        if (m->is_summoned(0, &stype))
-        {
-            mb.set(MB_SUMMONED);
-            if (stype > 0 && stype < NUM_SPELLS
-                && summons_are_capped(static_cast<spell_type>(stype)))
-            {
-                mb.set(MB_SUMMONED_NO_STAIRS);
-            }
-        }
-        else if (m->is_perm_summoned())
-            mb.set(MB_PERM_SUMMON);
-
-        if (m->has_ench(ENCH_SUMMON_CAPPED))
-            mb.set(MB_SUMMONED_CAPPED);
+    // these use number for internal information
+    if (type == MONS_MANTICORE
+        || type == MONS_SIXFIRHY
+        || type == MONS_JIANGSHI
+        || type == MONS_SHEDU
+        || type == MONS_KRAKEN_TENTACLE
+        || type == MONS_KRAKEN_TENTACLE_SEGMENT
+        || type == MONS_ELDRITCH_TENTACLE_SEGMENT
+        || type == MONS_STARSPAWN_TENTACLE
+        || type == MONS_STARSPAWN_TENTACLE_SEGMENT)
+    {
+        number = 0;
     }
     else
+        number = m->number;
+    colour = m->colour;
+
+    int stype = 0;
+    if (m->is_summoned(0, &stype))
     {
-        base_type = type;
-        number = 0;
-        colour = mons_class_colour(type);
+        mb.set(MB_SUMMONED);
+        if (stype > 0 && stype < NUM_SPELLS
+            && summons_are_capped(static_cast<spell_type>(stype)))
+        {
+            mb.set(MB_SUMMONED_NO_STAIRS);
+        }
     }
+    else if (m->is_perm_summoned())
+        mb.set(MB_PERM_SUMMON);
+
+    if (m->has_ench(ENCH_SUMMON_CAPPED))
+        mb.set(MB_SUMMONED_CAPPED);
 
     if (mons_is_unique(type))
     {
@@ -543,7 +532,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     // Chimera acting head needed for name
     u.ghost.acting_part = MONS_0;
-    if (type_known && mons_class_is_chimeric(type))
+    if (mons_class_is_chimeric(type))
     {
         ASSERT(m->ghost.get());
         ghost_demon& ghost = *m->ghost;
@@ -552,13 +541,13 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (milev <= MILEV_NAME)
     {
-        if (type_known && type == MONS_DANCING_WEAPON
+        if (type == MONS_DANCING_WEAPON
             && m->inv[MSLOT_WEAPON] != NON_ITEM)
         {
             inv[MSLOT_WEAPON].reset(
                 new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
         }
-        if (type_known && mons_is_item_mimic(type))
+        if (mons_is_item_mimic(type))
         {
             ASSERT(m->inv[MSLOT_MISCELLANY] != NON_ITEM);
             inv[MSLOT_MISCELLANY].reset(
@@ -569,47 +558,16 @@ monster_info::monster_info(const monster* m, int milev)
 
     holi = m->holiness();
 
-    // don't give away mindlessness of monsters you're misled about
-    if (type_known)
-        mintel = mons_intel(m);
-    else
-        mintel = mons_class_intel(type);
-
-    // don't give away resistances of monsters you're misled about
-    if (type_known)
-        mresists = get_mons_resists(m);
-    else
-        mresists = get_mons_class_resists(type);
-
+    mintel = mons_intel(m);
+    mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
-
-    // don't give away base speed of monsters you're misled about
-    if (type_known)
-        mbase_speed = mons_base_speed(m);
-    else
-        mbase_speed = mons_class_base_speed(type);
-
-    // consider randarts too, since flight should be visually obvious
-    if (type_known)
-        fly = mons_flies(m);
-    else
-        fly = mons_class_flies(type);
+    mbase_speed = mons_base_speed(m);
+    fly = mons_flies(m);
 
     if (mons_wields_two_weapons(m))
         mb.set(MB_TWO_WEAPONS);
-
-    // don't give away regeneration of monsters you're misled about
-    if (type_known)
-    {
-        if (!mons_can_regenerate(m))
-            mb.set(MB_NO_REGEN);
-    }
-    else
-    {
-        if (!mons_class_can_regenerate(type))
-            mb.set(MB_NO_REGEN);
-    }
-
+    if (!mons_can_regenerate(m))
+        mb.set(MB_NO_REGEN);
     if (m->haloed() && !m->umbraed())
         mb.set(MB_HALOED);
     if (!m->haloed() && m->umbraed())
