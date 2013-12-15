@@ -173,7 +173,7 @@ ENDMAP
 
 NAME:  lemuel_statue_altar
 TAGS:  transparent decor
-DEPTH: 2-, Vaults, Elf
+DEPTH: D:2-, Orc, Depths, Vaults, Elf, Crypt, Forest
 : if you.absdepth() < 10 then
 SUBST: F = G
 : end
