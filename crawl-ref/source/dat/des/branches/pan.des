@@ -2459,6 +2459,70 @@ x1x@
 xxx
 ENDMAP
 
+##################################
+NAME:   reaver_pan_chaos_star
+TAGS:   extra decor transparent mini_float
+MAP
+        ...
+ ....  ..x..  ....
+ .xx.  .x.x.  .xx.
+ .x... ..x.. ...x.
+ ...x.. .x. ..x...
+   ..x...x...x..
+    ..x.....x..
+ ... ....x.... ...
+..x.....xxx.....x..
+.x.xxx.xxxxx.xxx.x.
+..x.....xxx.....x..
+ ... ....x.... ...
+    ..x.....x..
+   ..x...x...x..
+ ...x.. .x....x...
+ .x... ..x.. ...x.
+ .xx.  .x.x.  .xx.
+ ....  ..x..  ....
+        ...
+ENDMAP
+
+###################################
+NAME: reaver_pan_squares
+TAGS: extra decor transparent mini_float
+MAP
+.......
+.xxxxx.
+.x...x.
+.x...x.
+.x...x.
+.x...x.
+.xxx+x.
+ .x..x.
+ .x..x.
+ .xx+x.
+  .x.x.
+  .x+x.
+  .....
+ENDMAP
+
+###################################
+NAME: reaver_pan_figure_eight
+TAGS: extra decor transparent
+MAP
+    x@x
+   xx.xx
+  xx...xx
+xxx..x..xxx
+@...xxx...@
+xxx..x..xxx
+  xx...xx
+  xx...xx
+xxx..x..xxx
+@...xxx...@
+xxx..x..xxx
+  xx...xx
+   xx.xx
+    x@x
+ENDMAP
+
 ###################################
 
 NAME:   pan_captured_pigsty
