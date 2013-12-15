@@ -5098,7 +5098,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MIASMA_BREATH:            return TILEG_MIASMA_BREATH;
     case SPELL_MIGHT:                    return TILEG_MIGHT;
     case SPELL_MIGHT_OTHER:              return TILEG_MIGHT_OTHER;
-    case SPELL_MISLEAD:                  return TILEG_MISLEAD;
     case SPELL_NOXIOUS_CLOUD:            return TILEG_NOXIOUS_CLOUD;
     case SPELL_PETRIFYING_CLOUD:         return TILEG_PETRIFYING_CLOUD;
     case SPELL_POLYMORPH:                return TILEG_POLYMORPH;

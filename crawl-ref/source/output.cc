@@ -961,7 +961,6 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_LOWERED_MR,
         STATUS_BEHELD,
         DUR_LIQUID_FLAMES,
-        DUR_MISLED,
         DUR_POISONING,
         STATUS_SICK,
         STATUS_ROT,

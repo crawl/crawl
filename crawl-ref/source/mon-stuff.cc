@@ -3598,11 +3598,8 @@ bool summon_can_attack(const monster* mons, const actor* targ)
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
 {
-    if (!mons_can_display_wounds(mons)
-        || !mons_class_can_display_wounds(mons->get_mislead_type()))
-    {
+    if (!mons_can_display_wounds(mons))
         return MDAM_OKAY;
-    }
 
     if (mons->hit_points <= mons->max_hit_points / 5)
         return MDAM_ALMOST_DEAD;

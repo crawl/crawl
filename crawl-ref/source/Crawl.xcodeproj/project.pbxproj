@@ -111,7 +111,6 @@
 		7B09F5471133D63E004F149D /* l_feat.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5411133D63E004F149D /* l_feat.cc */; };
 		7B09F5481133D63E004F149D /* l_spells.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5421133D63E004F149D /* l_spells.cc */; };
 		7B09F5601133D66C004F149D /* mgen_data.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F54D1133D66C004F149D /* mgen_data.cc */; };
-		7B09F5611133D66C004F149D /* mislead.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5501133D66C004F149D /* mislead.cc */; };
 		7B09F5621133D66C004F149D /* mon_resist_def.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5521133D66C004F149D /* mon_resist_def.cc */; };
 		7B09F5631133D66C004F149D /* mon-clone.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5541133D66C004F149D /* mon-clone.cc */; };
 		7B09F5641133D66C004F149D /* mon-death.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5561133D66C004F149D /* mon-death.cc */; };
@@ -212,7 +211,6 @@
 		7B09F5CE1133D6AB004F149D /* message.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402010BD494400A99626 /* message.cc */; };
 		7B09F5CF1133D6AB004F149D /* mgen_data.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F54D1133D66C004F149D /* mgen_data.cc */; };
 		7B09F5D01133D6AB004F149D /* misc.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402210BD494400A99626 /* misc.cc */; };
-		7B09F5D11133D6AB004F149D /* mislead.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F5501133D66C004F149D /* mislead.cc */; };
 		7B09F5D21133D6AB004F149D /* mon-abil.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402410BD494400A99626 /* mon-abil.cc */; };
 		7B09F5D31133D6AB004F149D /* mon-act.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402610BD494400A99626 /* mon-act.cc */; };
 		7B09F5D41133D6AB004F149D /* mon-behv.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6402810BD494400A99626 /* mon-behv.cc */; };
@@ -1030,8 +1028,6 @@
 		7B09F54D1133D66C004F149D /* mgen_data.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mgen_data.cc; sourceTree = "<group>"; };
 		7B09F54E1133D66C004F149D /* mgen_data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mgen_data.h; sourceTree = "<group>"; };
 		7B09F54F1133D66C004F149D /* mgen_enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mgen_enum.h; sourceTree = "<group>"; };
-		7B09F5501133D66C004F149D /* mislead.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mislead.cc; sourceTree = "<group>"; };
-		7B09F5511133D66C004F149D /* mislead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mislead.h; sourceTree = "<group>"; };
 		7B09F5521133D66C004F149D /* mon_resist_def.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mon_resist_def.cc; sourceTree = "<group>"; };
 		7B09F5531133D66C004F149D /* mon_resist_def.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mon_resist_def.h; sourceTree = "<group>"; };
 		7B09F5541133D66C004F149D /* mon-clone.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "mon-clone.cc"; sourceTree = "<group>"; };
@@ -2015,8 +2011,6 @@
 				7B09F54F1133D66C004F149D /* mgen_enum.h */,
 				E5D6402210BD494400A99626 /* misc.cc */,
 				E5D6402310BD494400A99626 /* misc.h */,
-				7B09F5501133D66C004F149D /* mislead.cc */,
-				7B09F5511133D66C004F149D /* mislead.h */,
 				E5D6402410BD494400A99626 /* mon-abil.cc */,
 				E5D6402510BD494400A99626 /* mon-abil.h */,
 				E5D6402610BD494400A99626 /* mon-act.cc */,
@@ -3055,7 +3049,6 @@
 				7B09F5CE1133D6AB004F149D /* message.cc in Sources */,
 				7B09F5CF1133D6AB004F149D /* mgen_data.cc in Sources */,
 				7B09F5D01133D6AB004F149D /* misc.cc in Sources */,
-				7B09F5D11133D6AB004F149D /* mislead.cc in Sources */,
 				7B09F5D21133D6AB004F149D /* mon-abil.cc in Sources */,
 				7B09F5D31133D6AB004F149D /* mon-act.cc in Sources */,
 				7B09F5D41133D6AB004F149D /* mon-behv.cc in Sources */,
@@ -3302,7 +3295,6 @@
 				E5D6412610BD494500A99626 /* message.cc in Sources */,
 				7B09F5601133D66C004F149D /* mgen_data.cc in Sources */,
 				E5D6412710BD494500A99626 /* misc.cc in Sources */,
-				7B09F5611133D66C004F149D /* mislead.cc in Sources */,
 				E5D6412810BD494500A99626 /* mon-abil.cc in Sources */,
 				E5D6412910BD494500A99626 /* mon-act.cc in Sources */,
 				E5D6412A10BD494500A99626 /* mon-behv.cc in Sources */,

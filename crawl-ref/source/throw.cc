@@ -2341,11 +2341,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
 
     _throw_noise(mons, beam, item);
 
-    // Store misled values here, as the setting up of the aux source
-    // will use the wrong monster name.
-    int misled = you.duration[DUR_MISLED];
-    you.duration[DUR_MISLED] = 0;
-
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
     if (projected == LRET_LAUNCHED)
@@ -2360,9 +2355,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
                  (is_vowel(beam.name[0]) ? "n" : ""), beam.name.c_str(),
                  mons->name(DESC_A).c_str());
     }
-
-    // And restore it here.
-    you.duration[DUR_MISLED] = misled;
 
     // Add everything up.
     beam.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;

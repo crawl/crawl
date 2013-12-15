@@ -131,7 +131,6 @@ menu.o \
 message-stream.o \
 message.o \
 misc.o \
-mislead.o \
 mon-abil.o \
 mon-act.o \
 mon-behv.o \

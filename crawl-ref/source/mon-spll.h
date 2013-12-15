@@ -1426,7 +1426,7 @@
 
     {  MST_MARA,
       {
-       SPELL_MISLEAD,
+       SPELL_NO_SPELL,
        SPELL_BOLT_OF_FIRE,
        SPELL_FAKE_MARA_SUMMON,
        SPELL_SUMMON_ILLUSION,
@@ -1437,7 +1437,7 @@
 
     {  MST_MARA_FAKE,
       {
-       SPELL_MISLEAD,
+       SPELL_NO_SPELL,
        SPELL_BOLT_OF_FIRE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,

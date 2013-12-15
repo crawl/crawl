@@ -7466,11 +7466,6 @@ bool player::invisible() const
     return duration[DUR_INVIS] && !backlit();
 }
 
-bool player::misled() const
-{
-    return duration[DUR_MISLED];
-}
-
 bool player::visible_to(const actor *looker) const
 {
     if (crawl_state.game_is_arena())

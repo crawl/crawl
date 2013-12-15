@@ -443,6 +443,7 @@ bool mons_is_immotile(const monster* mons);
 
 int get_dist_to_nearest_monster();
 bool monster_nearby();
+int count_mara_fakes();
 actor *actor_by_mid(mid_t m);
 monster *monster_by_mid(mid_t m);
 bool mons_is_tentacle_head(monster_type mc);

@@ -91,7 +91,6 @@ public:
     bool has_base_name() const;
 
     const monsterentry *find_monsterentry() const;
-    monster_type get_mislead_type() const;
 
     void init_experience();
 

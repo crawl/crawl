@@ -689,12 +689,6 @@ Minor Healing spell
 
 Ce sort soigne une petite quantité de dégâts au corps du sorcier.
 %%%%
-Mislead spell
-
-Ce sortilège brouille l'esprit d'un ennemi. Les gens ainsi touchés ne peuvent
-pas discerner l'identité des êtres les entourant, bien que certains détailles
-importants restent évident.
-%%%%
 Necromutation spell
 
 Ce sort transforme d'abord le sorcier en liche — une puissante créature
