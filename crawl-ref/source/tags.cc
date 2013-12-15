@@ -318,6 +318,11 @@ static ghost_demon unmarshallGhost(reader &th);
 static void marshallSpells(writer &, const monster_spells &);
 static void unmarshallSpells(reader &, monster_spells &);
 
+static void marshallMonsterInfo (writer &, const monster_info &);
+static void unmarshallMonsterInfo (reader &, monster_info &mi);
+static void marshallMapCell (writer &, const map_cell &);
+static void unmarshallMapCell (reader &, map_cell& cell);
+
 template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshal marshal);
