@@ -411,10 +411,12 @@ monster_info::monster_info(const monster* m, int milev)
     bool nomsg_wounds = false;
 
     // friendly fake Rakshasas/Maras are known
-    if (attitude != ATT_FRIENDLY && m->props.exists("faking"))
+    if ((m->type == MONS_RAKSHASA_FAKE || m->type == MONS_MARA_FAKE)
+        && attitude != ATT_FRIENDLY && monster_by_mid(m->summoner))
     {
-        type = m->props["faking"].get_monster().type;
-        threat = mons_threat_level(&m->props["faking"].get_monster());
+        const monster* real = monster_by_mid(m->summoner);
+        type = real->type;
+        threat = mons_threat_level(real);
     }
     else
     {

@@ -3837,8 +3837,8 @@ static void _clone_monster(monster* mons, monster_type clone_type,
         mitm[new_index].flags |= ISFLAG_SUMMONED;
     }
 
+    new_fake->summoner = mons->mid;
     new_fake->props = mons->props;
-    new_fake->props["faking"] = *mons;
 }
 
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
