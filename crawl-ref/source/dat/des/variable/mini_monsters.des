@@ -385,7 +385,7 @@ ENDMAP
 
 NAME: pubby_dwantlair
 DEPTH: D:11-16, Lair:2-
-MONS: patrolling formicid drone, patrolling formicid w:3 / nothing
+MONS: patrolling formicid, patrolling formicid w:3 / nothing
 MAP
 .........
 ..xx.xx..
@@ -400,7 +400,7 @@ ENDMAP
 
 NAME: pubby_dwanthill
 DEPTH: D:13-18, Spider:2-
-MONS: patrolling formicid venom mage, patrolling formicid drone / nothing
+MONS: patrolling formicid venom mage, patrolling formicid / nothing
 MONS: patrolling formicid / nothing , patrolling formicid w:3 / nothing
 MAP
          ....
