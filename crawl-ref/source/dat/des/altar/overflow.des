@@ -683,6 +683,32 @@ MAP
 .........
 ENDMAP
 
+NAME:   kennysheep_vampire_church
+TAGS:   no_monster_gen temple_overflow_1 temple_overflow_kikubaaqudgha
+MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
+KMONS:  . = bat skeleton / bat zombie / nothing w:200
+KFEAT:  A = altar_kikubaaqudgha
+DEPTH:  D:2-9
+MAP
+  xxxxxxxxx
+  xx.V1V.xx
+xxx..1A1..xxx
+xx.x.VdV.x.xx
+x.V.x...x.V.x
+xx.x.x.x.x.xx
+x.x.V.x.V.x.x
+xx.x.x.x.x.xx
+x.V.x.V.x.V.x
+xx.x.x.x.x.xx
+xxx.V.x.V.xxx
+xx.x.X.x.x.xx
+xx..x.V.x..xx
+xx.x.x.x.x.xx
+xxx.V.x.V.xxx
+xxxx.....xxxx
+xxxxx+++xxxxx
+ENDMAP
+
 ### Makhleb overflow altars ###################################################
 
 NAME:    demons_altar
