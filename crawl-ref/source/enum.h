@@ -2788,7 +2788,9 @@ enum monster_type                      // menv[].type
     MONS_DEATHCAP,
     MONS_IGNIS,
     MONS_FORMICID,
+#if TAG_MAJOR_VERSION == 34
     MONS_FORMICID_DRONE,
+#endif
     MONS_FORMICID_VENOM_MAGE,
     MONS_RAIJU,
 
