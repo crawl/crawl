@@ -1255,7 +1255,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     case ME_WHACK:
     case ME_ANNOY:
         // Orders to withdraw take precedence over interruptions
-        if (mon->behaviour == BEH_WITHDRAW)
+        if (mon->behaviour == BEH_WITHDRAW && src != &you)
             break;
 
         // Will turn monster against <src>, unless they
