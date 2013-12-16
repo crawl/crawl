@@ -363,7 +363,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_FORMICID:
-    case MONS_FORMICID_DRONE:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         if (one_chance_in(4))
@@ -1959,9 +1958,6 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_FORMICID:
-        if (!one_chance_in(4))
-            break;
-    case MONS_FORMICID_DRONE:
         if (one_chance_in(3))
         {
             armour_type shield_type = coinflip() ? ARM_BUCKLER : ARM_SHIELD;
@@ -2188,7 +2184,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_FORMICID:
-    case MONS_FORMICID_DRONE:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(5, ARM_SCALE_MAIL,

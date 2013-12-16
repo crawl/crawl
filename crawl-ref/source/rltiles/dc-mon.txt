@@ -13,7 +13,6 @@ soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
 %sdir mon
 formicid MONS_FORMICID
-formicid_drone MONS_FORMICID_DRONE
 formicid_venom_mage MONS_FORMICID_VENOM_MAGE
 %sdir mon/animals
 
