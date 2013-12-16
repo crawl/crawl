@@ -5,6 +5,7 @@
 #include "colour.h"
 #include "options.h"
 #include "show.h"
+#include "terrain.h"
 
 static FixedVector<feature_def, NUM_FEATURES>   feat_defs;
 static FixedVector<feature_def, NUM_SHOW_ITEMS> item_defs;
@@ -83,52 +84,131 @@ static void _apply_feature_overrides()
     }
 }
 
-static void _init_feat(feature_def &f, dungeon_feature_type feat)
+static colour_t _feat_colour(dungeon_feature_type feat)
 {
     switch (feat)
     {
+    case DNGN_ENTER_VAULTS:             return LIGHTGREEN;
+    case DNGN_ENTER_ZOT:                return MAGENTA;
+    case DNGN_ENTER_HELL:               return RED;
+    case DNGN_ENTER_DIS:                return CYAN;
+    case DNGN_ENTER_GEHENNA:            return RED;
+    case DNGN_ENTER_COCYTUS:            return LIGHTCYAN;
+    case DNGN_ENTER_TARTARUS:           return DARKGREY;
+    case DNGN_ENTER_ABYSS:              return ETC_RANDOM;
+    case DNGN_EXIT_THROUGH_ABYSS:       return ETC_RANDOM;
+    case DNGN_ENTER_PANDEMONIUM:        return LIGHTBLUE;
+    case DNGN_ENTER_TROVE:              return BLUE;
+    case DNGN_ENTER_SEWER:              return LIGHTGREEN;
+    case DNGN_ENTER_OSSUARY:            return BROWN;
+    case DNGN_ENTER_BAILEY:             return LIGHTRED;
+    case DNGN_ENTER_ICE_CAVE:           return WHITE;
+    case DNGN_ENTER_VOLCANO:            return RED;
+    case DNGN_EXIT_DUNGEON:             return LIGHTBLUE;
+    case DNGN_RETURN_FROM_ZOT:          return MAGENTA;
+    case DNGN_EXIT_HELL:                return LIGHTRED;
+    case DNGN_EXIT_ABYSS:               return ETC_RANDOM;
+    case DNGN_EXIT_PANDEMONIUM:         return LIGHTBLUE;
+    case DNGN_TRANSIT_PANDEMONIUM:      return LIGHTGREEN;
+    case DNGN_EXIT_TROVE:               return BLUE;
+    case DNGN_EXIT_SEWER:               return DARKGREY;
+    case DNGN_EXIT_OSSUARY:             return BROWN;
+    case DNGN_EXIT_ICE_CAVE:            return WHITE;
+    case DNGN_EXIT_VOLCANO:             return RED;
+
+    case DNGN_ALTAR_ZIN:                return LIGHTGREY;
+    case DNGN_ALTAR_SHINING_ONE:        return YELLOW;
+    case DNGN_ALTAR_KIKUBAAQUDGHA:      return DARKGREY;
+    case DNGN_ALTAR_YREDELEMNUL:        return ETC_UNHOLY;
+    case DNGN_ALTAR_XOM:                return ETC_RANDOM;
+    case DNGN_ALTAR_VEHUMET:            return ETC_VEHUMET;
+    case DNGN_ALTAR_OKAWARU:            return CYAN;
+    case DNGN_ALTAR_MAKHLEB:            return ETC_FIRE;
+    case DNGN_ALTAR_SIF_MUNA:           return BLUE;
+    case DNGN_ALTAR_TROG:               return RED;
+    case DNGN_ALTAR_NEMELEX_XOBEH:      return LIGHTMAGENTA;
+    case DNGN_ALTAR_ELYVILON:           return WHITE;
+    case DNGN_ALTAR_LUGONU:             return MAGENTA;
+    case DNGN_ALTAR_BEOGH:              return ETC_BEOGH;
+    case DNGN_ALTAR_JIYVA:              return ETC_SLIME;
+    case DNGN_ALTAR_FEDHAS:             return GREEN;
+    case DNGN_ALTAR_CHEIBRIADOS:        return LIGHTCYAN;
+    case DNGN_ALTAR_ASHENZARI:          return LIGHTRED;
+    default: return 0;
+    }
+}
+
+static void _init_feat(feature_def &f, dungeon_feature_type feat)
+{
+    f.colour = f.seen_colour = _feat_colour(feat);
+
+    switch (feat)
+    {
     default:
-        if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
+        if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
+                 || feat == DNGN_ENTER_PORTAL_VAULT
+                 || feat == DNGN_ENTER_LABYRINTH
+                 || feat == DNGN_ENTER_HELL
+                 || feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_ABYSS
+                 || feat == DNGN_EXIT_THROUGH_ABYSS
+                 || feat == DNGN_ENTER_VAULTS
+                 || feat == DNGN_ENTER_ZOT)
         {
-            f.colour      = YELLOW;
+            if (!f.colour)
+                f.colour = f.seen_colour = ETC_SHIMMER_BLUE;
+            f.dchar       = DCHAR_ARCH;
+            f.map_colour  = LIGHTGREY;
+            f.minimap     = MF_STAIR_BRANCH;
+            f.flags      |= FFT_NOTABLE;
+            if (feat == DNGN_ENTER_LABYRINTH)
+                f.flags |= FFT_EXAMINE_HINT;
+            break;
+        }
+        else if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL
+                 || feat == DNGN_EXIT_PORTAL_VAULT
+                 || feat == DNGN_EXIT_HELL
+                 || feat == DNGN_EXIT_ABYSS
+                 || feat == DNGN_EXIT_PANDEMONIUM
+                 || feat == DNGN_TRANSIT_PANDEMONIUM
+                 || feat == DNGN_RETURN_FROM_ZOT)
+        {
+            if (!f.colour)
+                f.colour = f.seen_colour = ETC_SHIMMER_BLUE;
+            f.dchar       = DCHAR_ARCH;
+            f.map_colour  = LIGHTGREY;
+            f.minimap     = MF_STAIR_BRANCH;
+            break;
+        }
+        else if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
+        {
+            if (!f.colour)
+                f.colour = f.seen_colour = YELLOW;
             f.dchar       = DCHAR_STAIRS_DOWN;
             f.flags      |= FFT_NOTABLE;
             f.map_colour  = RED;
-            f.seen_colour = YELLOW;
             f.minimap     = MF_STAIR_BRANCH;
             if (feat == DNGN_ENTER_ORC || feat == DNGN_ENTER_SLIME)
                 f.flags  |= FFT_EXAMINE_HINT;
             break;
         }
-        else if (feat >= DNGN_RETURN_FROM_FIRST_BRANCH && feat <= DNGN_RETURN_FROM_LAST_BRANCH)
+        else if (feat >= DNGN_RETURN_FROM_FIRST_BRANCH && feat <= DNGN_RETURN_FROM_LAST_BRANCH
+                 || feat == DNGN_EXIT_DUNGEON)
         {
-            f.colour      = YELLOW;
+            if (!f.colour)
+                f.colour = f.seen_colour = YELLOW;
             f.dchar       = DCHAR_STAIRS_UP;
             f.map_colour  = GREEN;
-            f.seen_colour = YELLOW;
             f.minimap     = MF_STAIR_BRANCH;
             break;
         }
-        else if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
-                 || feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_ENTER_LABYRINTH)
+        else if (feat_is_altar(feat) || feat == DNGN_UNKNOWN_ALTAR)
         {
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = ETC_SHIMMER_BLUE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = ETC_SHIMMER_BLUE;
-            f.minimap     = MF_STAIR_BRANCH;
+            f.dchar       = DCHAR_ALTAR;
             f.flags      |= FFT_NOTABLE;
+            f.map_colour  = DARKGREY;
+            f.minimap     = MF_FEATURE;
             break;
-        }
-        else if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_FIRST_PORTAL
-                 || feat == DNGN_EXIT_PORTAL_VAULT)
-        {
-            f.dchar       = DCHAR_ARCH;
-            f.colour      = ETC_SHIMMER_BLUE;
-            f.map_colour  = LIGHTGREY;
-            f.seen_colour = ETC_SHIMMER_BLUE;
-            f.minimap     = MF_STAIR_BRANCH;
-            break;
+
         }
         break;
     case DNGN_UNSEEN:
@@ -288,23 +368,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         f.minimap      = MF_FLOOR;
         break;
 
-    case DNGN_EXIT_HELL:
-        f.dchar       = DCHAR_ARCH;
-        f.colour      = LIGHTRED;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = LIGHTRED;
-        f.minimap     = MF_STAIR_UP;
-        break;
-
-    case DNGN_ENTER_HELL:
-        f.dchar       = DCHAR_ARCH;
-        f.colour      = RED;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = RED;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
     case DNGN_TELEPORTER:
         f.dchar       = DCHAR_TELEPORTER;
         f.colour      = YELLOW;
@@ -373,34 +436,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         f.minimap     = MF_FEATURE;
         break;
 
-    case DNGN_ABANDONED_SHOP:
-        f.colour     = LIGHTGREY;
-        f.dchar      = DCHAR_ARCH;
-        f.map_colour = LIGHTGREY;
-        f.minimap    = MF_FLOOR;
-        break;
-
-    case DNGN_ENTER_LABYRINTH:
-        f.dchar       = DCHAR_ARCH;
-        f.colour      = CYAN;
-        f.flags      |= FFT_NOTABLE | FFT_EXAMINE_HINT;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = CYAN;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ENTER_PORTAL_VAULT:
-        f.flags |= FFT_NOTABLE;
-        // fall through
-
-    case DNGN_EXIT_PORTAL_VAULT:
-        f.dchar       = DCHAR_ARCH;
-        f.colour      = ETC_SHIMMER_BLUE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = ETC_SHIMMER_BLUE;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
     case DNGN_MALIGN_GATEWAY:
         f.dchar       = DCHAR_ARCH;
         f.colour      = ETC_SHIMMER_BLUE;
@@ -442,6 +477,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         break;
 
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_EXIT_LABYRINTH:
         f.dchar      = DCHAR_STAIRS_UP;
         f.colour     = BROWN;
         f.map_colour = BROWN;
@@ -466,59 +502,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         f.minimap        = MF_STAIR_UP;
         break;
 
-    case DNGN_ENTER_DIS:
-        f.colour      = CYAN;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = CYAN;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ENTER_GEHENNA:
-        f.colour      = RED;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = RED;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ENTER_COCYTUS:
-        f.colour      = LIGHTCYAN;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = LIGHTCYAN;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ENTER_TARTARUS:
-        f.colour      = DARKGREY;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = DARKGREY;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ENTER_ABYSS:
-    case DNGN_EXIT_THROUGH_ABYSS:
-        f.colour      = ETC_RANDOM;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = ETC_RANDOM;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_EXIT_ABYSS:
-        f.colour     = ETC_RANDOM;
-        f.dchar      = DCHAR_ARCH;
-        f.map_colour = ETC_RANDOM;
-        f.minimap    = MF_STAIR_BRANCH;
-        break;
-
     case DNGN_ABYSSAL_STAIR:
         f.colour     = LIGHTCYAN;
         f.dchar      = DCHAR_STAIRS_DOWN;
@@ -531,227 +514,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         f.dchar      = DCHAR_ARCH;
         f.map_colour = LIGHTGREY;
         f.minimap    = MF_FLOOR;
-        break;
-
-    case DNGN_ENTER_PANDEMONIUM:
-        f.colour      = LIGHTBLUE;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = LIGHTBLUE;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_EXIT_PANDEMONIUM:
-        f.colour      = LIGHTBLUE;
-        f.dchar       = DCHAR_ARCH;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = LIGHTBLUE;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_TRANSIT_PANDEMONIUM:
-        f.colour      = LIGHTGREEN;
-        f.dchar       = DCHAR_ARCH;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = LIGHTGREEN;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ENTER_VAULTS:
-        f.colour      = LIGHTGREEN;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = LIGHTGREEN;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ENTER_ZOT:
-        f.colour      = MAGENTA;
-        f.dchar       = DCHAR_ARCH;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = MAGENTA;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_EXIT_DUNGEON:
-        f.colour      = LIGHTBLUE;
-        f.dchar       = DCHAR_STAIRS_UP;
-        f.map_colour  = GREEN;
-        f.seen_colour = LIGHTBLUE;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_RETURN_FROM_ZOT:
-        f.colour      = MAGENTA;
-        f.dchar       = DCHAR_ARCH;
-        f.map_colour  = LIGHTGREY;
-        f.seen_colour = MAGENTA;
-        f.minimap     = MF_STAIR_BRANCH;
-        break;
-
-    case DNGN_ALTAR_ZIN:
-        f.colour      = LIGHTGREY;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = LIGHTGREY;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_SHINING_ONE:
-        f.colour      = YELLOW;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = YELLOW;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_KIKUBAAQUDGHA:
-        f.colour      = DARKGREY;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = DARKGREY;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_YREDELEMNUL:
-        f.colour      = ETC_UNHOLY;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = ETC_UNHOLY;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_XOM:
-        f.colour      = ETC_RANDOM;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = ETC_RANDOM;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_VEHUMET:
-        f.colour      = ETC_VEHUMET;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = ETC_VEHUMET;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_OKAWARU:
-        f.colour      = CYAN;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = CYAN;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_MAKHLEB:
-        f.colour      = ETC_FIRE;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = ETC_FIRE;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_SIF_MUNA:
-        f.colour      = BLUE;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = BLUE;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_TROG:
-        f.colour      = RED;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = RED;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_NEMELEX_XOBEH:
-        f.colour      = LIGHTMAGENTA;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = LIGHTMAGENTA;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_ELYVILON:
-        f.colour      = WHITE;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = WHITE;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_LUGONU:
-        f.colour      = MAGENTA;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = MAGENTA;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_BEOGH:
-        f.colour      = ETC_BEOGH;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = ETC_BEOGH;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_JIYVA:
-        f.colour      = ETC_SLIME;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = ETC_SLIME;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_FEDHAS:
-        f.colour      = GREEN;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = GREEN;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_CHEIBRIADOS:
-        f.colour      = LIGHTCYAN;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = LIGHTCYAN;
-        f.minimap     = MF_FEATURE;
-        break;
-
-    case DNGN_ALTAR_ASHENZARI:
-        f.colour      = LIGHTRED;
-        f.dchar       = DCHAR_ALTAR;
-        f.flags      |= FFT_NOTABLE;
-        f.map_colour  = DARKGREY;
-        f.seen_colour = LIGHTRED;
-        f.minimap     = MF_FEATURE;
         break;
 
     case DNGN_FOUNTAIN_BLUE:
@@ -775,12 +537,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     case DNGN_DRY_FOUNTAIN:
         f.colour  = LIGHTGREY;
         f.dchar   = DCHAR_FOUNTAIN;
-        f.minimap = MF_FEATURE;
-        break;
-
-    case DNGN_UNKNOWN_ALTAR:
-        f.colour  = LIGHTGREY;
-        f.dchar   = DCHAR_ALTAR;
         f.minimap = MF_FEATURE;
         break;
 
