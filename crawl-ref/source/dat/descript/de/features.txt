@@ -582,8 +582,8 @@ An open door
 
 Eine Holztür. Wenn du neben ihr stehst kannst du sie {{
     if crawl.is_tiles() then
-        return "entweder mit einem STRG-Links-Klick auf die Tür oder mit der
-Eingabe von 'C' schließen."
+        return "entweder mit einem STRG-Links-Klick auf die Tür oder mit " ..
+               "der Eingabe von 'C' schließen."
     else
         return "mit der Eingabe von 'C' schließen."
     end
