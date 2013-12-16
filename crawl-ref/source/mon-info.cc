@@ -470,7 +470,8 @@ monster_info::monster_info(const monster* m, int milev)
     colour = m->colour;
 
     int stype = 0;
-    if (m->is_summoned(0, &stype))
+    if (m->is_summoned(0, &stype)
+        && m->type != MONS_RAKSHASA_FAKE && m->type != MONS_MARA_FAKE)
     {
         mb.set(MB_SUMMONED);
         if (stype > 0 && stype < NUM_SPELLS
