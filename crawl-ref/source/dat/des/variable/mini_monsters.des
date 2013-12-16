@@ -4954,6 +4954,32 @@ MAP
 ...........
 ENDMAP
 
+NAME:   kennysheep_kite_vault
+TAGS:   no_item_gen no_monster_gen
+SUBST:  x : xcnvb
+DEPTH:  D:8-, Depths
+MAP
+      ccc
+     cc*cc
+    cc.x.cc
+   cc0xxx0cc
+  cc...x...cc
+  c..x.*.x..c
+ cc.xxx.xxx.cc
+cc.0.x0*0x.0.cc
+c..x.0.x.0.x..+
+c*xxx*xxx*xxx.+
+c..x.0.x.0.x..+
+cc.0.x0*0x...cc
+ cc.xxx.xxx0cc
+  c..x.*.x..c
+  cc...x...cc
+   cc0xxx0cc
+    cc.x.cc
+     cc*cc
+      ccc
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.

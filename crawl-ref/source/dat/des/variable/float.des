@@ -1011,6 +1011,40 @@ xxx...xx-xx........=...SCS...
              x...x
 ENDMAP
 
+NAME:   kennysheep_cross_landing
+ORIENT: centre
+TAGS:   no_pool_fixup extra decor
+SUBST:  c:ccxxbvt
+KFEAT:  t = mangrove
+DEPTH:  D:10-, Depths
+MAP
+          cc+cc
+         ccw.wcc
+        ccww.wwcc
+        cww.9.wwc
+        c...*...c
+        cww...wwc
+        ccww.wwcc
+        cccw.wccc
+  cccccccccc+cccccccccc
+ ccw.wcccccw.wcccccw.wcc
+ccww.wwcccww.wwcccww.wwcc
+cww...wwcww.{.wwcww...wwc
++..9*...+.......+...*9..+
+cww...wwcww(.[wwcww...wwc
+ccww.wwcccww.wwcccww.wwcc
+ ccw.wcccccw.wcccccw.wcc
+  cccccccccc+cccccccccc
+        cccw.wccc
+        ccww.wwcc
+        cww...wwc
+        c...*...c
+        cww.9.wwc
+        ccww.wwcc
+         ccw.wcc
+          cc+cc
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
@@ -2934,6 +2968,47 @@ xxxxxxxx.........xxxxxxxx
 @.......................@
 .........................
 xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   kennysheep_random_hallway
+TAGS:   extra
+ORIENT: float
+SUBST:  c:ccxxb.
+SUBST:  t:ttGGbT.
+SUBST:  w:wwwl.
+DEPTH:  D:10-, Depths
+MAP
+c@@@@@@@@c
+cwt....twc
+cw......wc
+cw......wc
+cw......wc
+cwt.00.twc
+cw..%%..wc
+cw......wc
+cw......wc
+cwt....twc
+cw......wc
+cw......wc
+cw......wc
+cwt....twc
+cw......wc
+cw.9**9.wc
+cw......wc
+cwt....twc
+cw......wc
+cw......wc
+cw......wc
+cwt....twc
+cw......wc
+cw......wc
+cw..%%..wc
+cwt.00.twc
+cw......wc
+cw......wc
+cw......wc
+cwt....twc
+c@@@@@@@@c
 ENDMAP
 
 ##############################################################################

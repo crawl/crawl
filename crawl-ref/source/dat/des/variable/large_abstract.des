@@ -523,6 +523,39 @@ xcccccccbbbbbbbbbbbccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   kennysheep_water_balloons
+ORIENT: northwest
+DEPTH:  D:15-, Depths
+NSUBST: % = 5:|
+SUBST:  % : %$
+MAP
+ccccccccccccccccccccccccc
+cccc............+.wwGww.c
+ccc..wwwww......c..www..c
+cc..wwwwwww....ccc..w..cc
+c..wwwwwwwww..ccccc...cc
+c.wwww%%%wwww.cccccc+cc
+c.www%9%8%www.ccccc...cc
+c.www%%G%%www.cccc..w..cc
+c.www%8%9%www.ccc..www..c
+c.wwww%%%wwww.ccc.ww9ww.c
+c..wwwwwwwww..ccc..www..c
+cc..wwwwwww..ccccc..w..cc
+ccc..wwwww..cc...+c...cc
+cccc.......cc..w..ccccc
+cccccccccccc..www..c
+cccccccccccc.ww9ww.c
+cccccccccccc..www..c
+c..ccccc...cc..w..cc
+cw..ccc..w..+c...cc
+cww..c..www..ccccc
+cGww.+.ww9ww.c
+cww..c..www..c
+cw..ccc..w..cc
+c..cc cc...cc
+c+cc   ccccc
+ENDMAP
+
 NAME:    minmay_open_boxes_in_corner
 ORIENT:  southeast
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
