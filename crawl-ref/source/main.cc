@@ -4468,6 +4468,12 @@ static void _move_player(coord_def move)
 
     dungeon_feature_type targ_grid = grd(targ);
 
+    const string walkverb = you.flight_mode()           ? "fly"
+                          : you.form == TRAN_SPIDER     ? "crawl"
+                          : (you.species == SP_NAGA
+                             && form_keeps_mutations()) ? "slither"
+                                                        : "walk";
+
     monster* targ_monst = monster_at(targ);
     if (fedhas_passthrough(targ_monst))
     {
@@ -4481,7 +4487,7 @@ static void _move_player(coord_def move)
         if (!current || !fedhas_passthrough(current))
         {
             // Probably need a better message. -cao
-            mprf("You walk carefully through the %s.",
+            mprf("You %s carefully through the %s.", walkverb.c_str(),
                  mons_genus(targ_monst->type) == MONS_FUNGUS ? "fungus"
                                                              : "plants");
         }
@@ -4519,16 +4525,6 @@ static void _move_player(coord_def move)
 
     coord_def mon_swap_dest;
 
-    string verb;
-    if (you.flight_mode())
-        verb = "fly";
-    else if (you.form == TRAN_SPIDER)
-        verb = "crawl";
-    else if (you.species == SP_NAGA && !form_changed_physiology())
-        verb = "slither";
-    else
-        verb = "walk";
-
     if (targ_monst && !targ_monst->submerged())
     {
         if (can_swap_places && !beholder && !fmonger)
@@ -4548,7 +4544,7 @@ static void _move_player(coord_def move)
 
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(targ_monst) && !check_moveto(targ, verb))
+            if (!you.can_see(targ_monst) && !check_moveto(targ, walkverb))
             {
                 stop_running();
                 you.turn_is_over = false;
@@ -4617,7 +4613,7 @@ static void _move_player(coord_def move)
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
 
-        if (!you.confused() && !check_moveto(targ, verb))
+        if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
