@@ -309,12 +309,12 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_WEAPONS;
 
         if (one_chance_in(6))
-        {
-            item.sub_type = random_choose(WPN_MORNINGSTAR, WPN_GREAT_MACE,
+        {   // 4.1% each
+            item.sub_type = random_choose(WPN_MORNINGSTAR, WPN_DIRE_FLAIL,
                                           WPN_WAR_AXE,     WPN_TRIDENT,   -1);
         }
         else
-        {
+        {   // 7% each
             item.sub_type = random_choose(
                 WPN_MACE,      WPN_FLAIL,       WPN_FALCHION,
                 WPN_DAGGER,    WPN_SHORT_SWORD, WPN_LONG_SWORD,
@@ -371,8 +371,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         {
             item.sub_type = random_choose_weighted(10, WPN_HAND_AXE,   15, WPN_GLAIVE,
                                                    10, WPN_MACE,       15, WPN_FLAIL,
-                                                    5, WPN_GREAT_SWORD, 5, WPN_GREAT_MACE,
-                                                    5, WPN_BATTLEAXE,   0);
+                                                    5, WPN_GREAT_SWORD, 5, WPN_DIRE_FLAIL,
+                                                    5, WPN_BATTLEAXE,   3, WPN_GREAT_MACE,
+                                                    0);
         }
         if (coinflip())
         {
@@ -656,7 +657,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             10, WPN_SCIMITAR,   10, WPN_BATTLEAXE,
             10, WPN_HAND_AXE,   10, WPN_HALBERD,
             10, WPN_GLAIVE,     10, WPN_MACE,
-            10, WPN_GREAT_MACE, 10, WPN_TRIDENT,
+            10, WPN_DIRE_FLAIL, 10, WPN_TRIDENT,
             9,  WPN_WAR_AXE,    9, WPN_FLAIL,
             1,  WPN_BROAD_AXE,  1, WPN_MORNINGSTAR,
             0);
@@ -826,13 +827,13 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_IRON_GIANT:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
-                                           : WPN_GIANT_CLUB);
+        item.sub_type  = one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
+                                          : WPN_GIANT_CLUB;
 
         if (one_chance_in(10) || mon->type == MONS_ETTIN)
         {
-            item.sub_type = (one_chance_in(10) ? WPN_DIRE_FLAIL
-                                               : WPN_GREAT_MACE);
+            item.sub_type = one_chance_in(10) ? WPN_GREAT_MACE
+                                              : WPN_DIRE_FLAIL;
         }
         break;
 
@@ -863,12 +864,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
                                            : WPN_GIANT_CLUB);
-
-        if (one_chance_in(10))
-        {
-            item.sub_type = (one_chance_in(10) ? WPN_DIRE_FLAIL
-                                               : WPN_GREAT_MACE);
-        }
         break;
 
     case MONS_ILSUIW:
