@@ -362,9 +362,6 @@ static const pop_entry pop_shoals[] =
 static const pop_entry pop_snake[] =
 { // Snake Pit
   { -1,  5,   52, SEMI, MONS_BALL_PYTHON },
-  {  1,  3,   52, DOWN, MONS_KOMODO_DRAGON },
-  { -1,  5,  104, SEMI, MONS_BASILISK },
-  {  1,  9,   52, SEMI, MONS_LINDWURM },
   {  1,  5,  500, DOWN, MONS_ADDER },
   {  1,  5,  500, DOWN, MONS_WATER_MOCCASIN },
   {  1,  9,  999, SEMI, MONS_BLACK_MAMBA },
