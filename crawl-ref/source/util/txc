@@ -246,6 +246,8 @@ def auto_fix(s, lang):
     if lang == 'fr': # Those ones can break languages which use »« for quotes
         s = auto_fix.re_ns_opening_quote.sub(u"« ", s)
         s = auto_fix.re_ns_closing_quote.sub(u" »", s)
+        s = auto_fix.re_missing_space.sub(u" \\1", s)
+        s = auto_fix.re_missing_space2.sub(u"« ", s)
 
     if s.find('{{') == -1: # Don't mess with lua strings
         s = auto_fix.re_ascii_single_quotes.sub(u"‘\\1’", s)
@@ -267,6 +269,9 @@ auto_fix.re_hyphen = re.compile("(\s)[-–](\s)") # Replace hyphens by em dashes
 auto_fix.re_ns = re.compile("\s([!?:;])")
 auto_fix.re_ns_opening_quote = re.compile(u"«\s")
 auto_fix.re_ns_closing_quote = re.compile(u"\s»")
+auto_fix.re_missing_space = re.compile(u"(?<=\w)([!?:;»](?!\d))", re.U)
+auto_fix.re_missing_space2 = re.compile(u"«(?=\w)", re.U)
+
 auto_fix.re_ascii_single_quotes = re.compile(u"(?<=\W)'(.*?)'(?=\W)", re.S)
 auto_fix.re_ascii_double_quotes = re.compile(u'"(.*?)"', re.S)
 auto_fix.re_english_single_quotes = re.compile(u'‘([^‚‘’]*?)’', re.S)
