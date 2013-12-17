@@ -561,7 +561,6 @@ black_sword BLACK_SWORD
 sword_black SWORD_BLACK
 sword_twist SWORD_TWIST
 knife KNIFE
-sword_seven SWORD_SEVEN
 heavy_sword HEAVY_SWORD
 cutlass CUTLASS
 cutlass2
