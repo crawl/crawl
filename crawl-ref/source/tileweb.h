@@ -282,6 +282,9 @@ protected:
 
     void _send_everything();
 
+    bool m_mcache_ref_done;
+    void _mcache_ref(bool inc);
+
     void _send_cursor(cursor_type type);
     void _send_map(bool force_full = false);
     void _send_cell(const coord_def &gc,
