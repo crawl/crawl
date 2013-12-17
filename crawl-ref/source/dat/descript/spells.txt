@@ -742,12 +742,6 @@ Minor Healing spell
 
 This spell heals a small amount of damage to the caster's body.
 %%%%
-Mislead spell
-
-This spell clouds the mind of an enemy. People thus affected cannot discern the
-identities of beings around them, although certain prominent sights remain
-obvious.
-%%%%
 Necromutation spell
 
 This spell first transforms the caster into a lich — a powerful skeletal
