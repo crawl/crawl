@@ -1059,7 +1059,7 @@ dyrovepreva DYROVEPREVA
 wizard_lightgreen WIZARD_LIGHTGREEN
 
 ## All helmets below (HELM_OFS and greater) hide hair.
-iron1 HELM_IRON HELM_OFS
+iron1 HELM_IRON HELM_OFS FIRST_NORM
 helm_red HELM_RED
 horned HELM_HORNED
 helm_gimli HELM_GIMLI
@@ -1090,7 +1090,7 @@ fhelm_horn2 FHELM_HORN2
 horn_evil FHELM_EVIL
 helm_plume FHELM_PLUME
 mummy FHELM_MUMMY
-isildur FHELM_ISILDUR
+isildur FHELM_ISILDUR LAST_NORM
 art_dragonhelm ART_DRAGONHELM
 
 healer FHELM_HEALER

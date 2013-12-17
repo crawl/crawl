@@ -989,6 +989,10 @@ static tileidx_t _mon_cycle(tileidx_t tile, int offset)
     return tile + ((offset + you.frame_no) % count);
 }
 
+static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
+{
+    return first + mod % (last - first + 1);
+}
 
 // This function allows for getting a monster from "just" the type.
 // To avoid needless duplication of a cases in tileidx_monster, some
@@ -3436,19 +3440,7 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
         return TILE_THELM_CAP;
 
     case ARM_HELMET:
-        switch (get_helmet_desc(item))
-        {
-        case THELM_DESC_HORNED:
-            return TILE_THELM_HELM_HORNED;
-        case THELM_DESC_SPIKED:
-            return TILE_THELM_HELM_SPIKED;
-        case THELM_DESC_PLUMED:
-            return TILE_THELM_HELM_PLUMED;
-        case THELM_DESC_WINGED:
-            return TILE_THELM_HELM_WINGED;
-        default:
-            return TILE_THELM_HELM;
-        }
+        return _modrng(item.rnd, TILE_THELM_FIRST, TILE_THELM_LAST);
 
     case ARM_GLOVES:
         return TILE_ARM_GLOVES;
