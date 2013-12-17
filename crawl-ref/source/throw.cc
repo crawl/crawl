@@ -623,8 +623,8 @@ static bool _item_penetrates_victim(const bolt &beam, int &used)
     return true;
 }
 
-static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
-                                   string &dmg_msg)
+bool silver_damages_victim(bolt &beam, actor* victim, int &dmg,
+                           string &dmg_msg)
 {
     int mutated = 0;
 
@@ -1210,7 +1210,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
 
     if (silver)
-        beam.damage_funcs.push_back(_silver_damages_victim);
+        beam.damage_funcs.push_back(silver_damages_victim);
     if (poisoned)
         beam.hit_funcs.push_back(_poison_hit_victim);
     if (penetrating)

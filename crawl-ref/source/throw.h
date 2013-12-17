@@ -34,6 +34,9 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void fire_thing(int item = -1);
 void throw_item_no_quiver(void);
 
+bool silver_damages_victim(bolt &beam, actor* victim, int &dmg,
+                           string &dmg_msg);
+
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);
 
