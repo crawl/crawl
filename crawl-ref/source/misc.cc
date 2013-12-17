@@ -1915,6 +1915,12 @@ void timeout_terrain_changes(int duration, bool force)
         if (marker->duration != INFINITE_DURATION)
             marker->duration -= duration;
 
+        if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+            && grd(marker->pos) != DNGN_SEALED_DOOR)
+        {
+            continue;
+        }
+
         monster* mon_src = monster_by_mid(marker->mon_num);
         if (marker->duration <= 0
             || (marker->mon_num != 0
