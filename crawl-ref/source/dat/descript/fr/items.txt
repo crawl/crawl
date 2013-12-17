@@ -434,6 +434,14 @@ crystal plate armour
 
 Une armure cristalline incroyablement lourde mais extrêmement protectrice.
 %%%%
+cutlass
+
+Une large épée courte incurvée, qui s'apparente à un sabre, mais en plus petit.
+Elle excelle dans les combats rapprochés, ayant une puissance décente, tout en
+étant suffisamment maniable pour être encore un bon choix pour les attaques
+sournoises. Vous avez une soudaine envie de partir à l'aventure et de voler des
+trésors.
+%%%%
 dagger
 
 Un couteau de combat à double tranchant, et à la pointe acérée. Considérée par

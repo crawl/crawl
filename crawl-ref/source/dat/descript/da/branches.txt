@@ -1,4 +1,22 @@
 %%%%
+Temple
+
+Et gudernes tempel, hvor man kan søge ly for de underjordiske ganges galskab.
+Det indeholder som regel altre dedikeret til de fleste af de kendte guder. Det
+er placeret mellem niveau 4 og 7 af de centrale gange.
+%%%%
+Orcish Mines
+
+Orkernes stammers hårdt udpinte guldminer. Disse bugtende huler er fyldt med
+orker, deres humanoide arbejdskraft og bunker af deres nys udgravede guld.
+Driftige handelsfolk har åbnet butikker, der kan lette orkerne for deres gyldne
+byrde. Orkernes noget skødelsløse ingeniørarbejde har resulteret i et indviklet
+og forræderisk virvar af kamre og mineskakter, hvor det er let at komme til at
+sidde fast.
+
+Orkernes miner er fire niveauer dybe og gemmer på indgangen til elverfolkets
+haller.
+%%%%
 Elven Halls
 
 De fleste elverfolk ville aldrig flytte ind i et mørkt, underjordisk kompleks
@@ -6,4 +24,35 @@ som dette, men det gjorde dybelverne. Deres haller er fyldt med rigdomme, men
 forbipasserende bør komme denne arts legendariske kundskab udi magi i hu.
 
 Elverfolkets haller er tre niveauer dybt.
+%%%%
+Lair
+
+De fleste eventyrere synes, at Bæsternes Hule er en spændende luftforandring,
+og man må indrømme, at der er meget godt at sige om at bliver stanget, flænset
+og spist frem for at blive snittet, brændt eller dolket.
+
+Hulen er otte niveauer dyb og indeholder trapper til tre andre forgreninger.
+%%%%
+Swamp
+
+En sumpet ødemark, der flyder med slam, dynd, fluer og store, savlende,
+kødædende uhyrer.
+
+Sumpen er fem niveauer dyb og gemmer på den rådnende rune. Ethvert underjordisk
+kompleks af gange indeholder kun to af Ormegården, Sumpen, Sandbankerne eller
+Edderkoppereden. Hvis Sumpen er en af dem, er indgangen placeret mellem niveau
+2 og 5 af Bæsternes Hule.
+%%%%
+Shoals
+
+I det fjerne kan du høre bølgernes regelmæssige brus, og du kan dufte den salte
+gus. Efter at have nået sandbankerne lader du dig betage af eksotiske,
+underjordiske strande, som udgør nogle få øer i et enormt ocean. Pludselig
+brydes stilheden af et hårrejsende skrig, efterfulgt af en gurglen. Ængstelig
+ser du dig omkring og tænker: Hvem er rovdyret? Og hvem er dets bytte?
+
+Sandbankerne er fem niveauer dybe og gemmer på den andeskællede rune. Ethvert
+underjordisk kompleks af gange indeholder kun to af Ormegården, Sumpen,
+Sandbankerne eller Edderkoppereden. Hvis sandbankerne er en af dem, findes
+indgangen mellem niveau 3 og 6 af Bæsternes Hule.
 %%%%

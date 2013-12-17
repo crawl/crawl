@@ -317,15 +317,15 @@ accablante et, le grondement du volcan ne cesse de résonner.
 %%%%
 Wizlab
 
-Dans les siècles passés, les plus puissants mages — vous avez surement entendu
-parler de certains d'entre eux — se seraient fréquemment trouvé ou construit de
-petits royaumes isolée du reste du monde, où ils pouvaient s'isoler dans la
-poursuite de plus en plus grande connaissances et puissances magiques . Les
-mages sont partis depuis longtemps, mais beaucoup de leurs laboratoires obscurs
-existent encore, rempli avec les résultats de leurs expériences. Ceux qui sont
-prêts à explorer ces laboratoires peuvent trouver de puissant trésors magique,
-mais attention: les sorciers à qui ces laboratoires appartiennent à mérité leur
-réputation.
+Dans les siècles passés, les plus puissants mages — dont vous avez surement
+entendu parler — s'enfermaient souvent dans des univers de poche qu'ils
+trouvaient ou se fabriquaient. Ainsi isolés du reste du monde, ils pouvaient
+alors se consacrer à la recherche de connaissances et de pouvoirs magiques
+toujours plus grands. Les mages ont disparus depuis longtemps, mais nombre de
+leurs laboratoires obscurs existent toujours, grouillant des résultats de leurs
+expériences. Ceux prêts à explorer ces laboratoires pourront y trouver de
+puissant objets magiques, mais attention : les sorciers qui ont bâtis ces
+laboratoires méritaient leurs réputations.
 %%%%
 Depths
 
