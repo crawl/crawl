@@ -1045,10 +1045,6 @@ formicid
 
 A sentient ant that walks upright and is competent at digging.
 %%%%
-formicid drone
-
-An ant-like soldier trained in combat and ready to defend its home.
-%%%%
 formicid venom mage
 
 A practitioner of its greatest fear, adept with poison magic.
@@ -3211,13 +3207,6 @@ form is intact. Its dead body stays here uneaten, as the small creatures that
 would naturally decompose it prefer to stay away. And it looks like this plant
 died many {{ if you.branch() == "Crypt" or you.branch() == "Tomb" then return
 "centuries"; else return "years"; end }} ago.
-%%%%
-wizard statue
-
-In this land of magic, it'd be foolish to assume that a statue of a wizard is
-always an inert piece of rock. This statue's hands and staff have very little
-dust compared to the base, suggesting it is capable of making magical gestures.
-The trap is too obvious, but dealing with it might not be.
 %%%%
 zin angel
 
