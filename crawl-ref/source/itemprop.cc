@@ -206,7 +206,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_EVENINGSTAR,       "eveningstar",        15, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_SMALL,  MI_NONE,
         DAMV_CRUSHING | DAM_PIERCE, 2 },
-    { WPN_GREAT_MACE,        "great mace",         18, -4, 17, 270,  9,
+    { WPN_GREAT_MACE,        "great mace",         17, -4, 17, 270,  9,
         SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CRUSHING, 10 },
     { WPN_GIANT_CLUB,        "giant club",         20, -6, 17, 330, 10,
