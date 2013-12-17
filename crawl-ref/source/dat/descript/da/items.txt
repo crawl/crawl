@@ -437,6 +437,12 @@ bread ration
 
 Et stort, mættende måltid af tørt brød.
 %%%%
+broad axe
+
+En krigsøkse, som er forbedret med metalbånd, pigge, et forlænget skæfte og et
+halvmåneformet blad. Den kan forårsage frygtelige skader, men er svær at bruge
+med lav færdighed på grund af længden og vægten.
+%%%%
 buckler
 
 Et lille stykke træ og metal, som spændes på den ene arm til forsvar. Det er
@@ -499,6 +505,12 @@ mest nyttig, når den bruges, mens du er tæt på dit fulde potentiale.
 crystal plate armour
 
 En utroligt tung, men ekstremt effektiv krystallinsk rustning.
+%%%%
+cutlass
+
+Et bredt, krumt sværd, der minder om en lille sabel. Det er fremragende i
+nærkamp, for det har både anstændig slagkraft og er alligevel behændigt nok til
+snigangreb. Du føler trang til at røve en sø og bytte frit.
 %%%%
 dagger
 
@@ -600,6 +612,10 @@ Et grufuldt, tregrenet våben, som er formet af ild og svovl.
 demon whip
 
 Et grufuldt våben, som er vævet i infernoets dybder.
+%%%%
+dire flail
+
+En stridsplejl med lange pigge og et tungere hoved.
 %%%%
 disc of storms
 
@@ -729,6 +745,12 @@ hammer
 Dette stumpe våben består af et hammerhoved med en spidshakke på et mellemlangt
 skaft, som er forstærket med skinner, og kan levere betragtelig slagkraft og
 gennembore rustning.
+%%%%
+hand axe
+
+Et værktøj der kan adskille fibrene i træ eller kød. Det er måske
+tilstrækkeligt, hvis du primært er interesseret i våbnets vægt, men hvis du vil
+løbe ordentlig grassat, får du brug for noget større.
 %%%%
 helmet
 
@@ -866,6 +888,13 @@ morningstar
 En stridskølle med et hoved, der er dækket af korte pigge. Den kompenserer for
 sin let reducerede manøvredygtighed med øger kraft og er dødbringende i
 hænderne på en veltrænet kombattant.
+%%%%
+mottled dragon armour
+
+Denne rustning er lavet af skællene fra en spættet drage. Selvom den i
+modsætning til rustning, som er lavet af skællene fra visse større drager, ikke
+yder den store beskyttelse, så er den lettere og mere smidig. Den er også
+bemærkelsesværdigt glat, så klistrede flammer glider af den som vand af en gås.
 %%%%
 mottled dragon hide
 
@@ -1013,6 +1042,12 @@ også reparere permanente skader.
 potion of invisibility
 
 En eliksir, som skjuler dig for andres øjne.
+%%%%
+potion of lignification
+
+En eliksir, som forvandler den, der drikker den, til et levende træ med grene,
+der kan holde våben. Sådan et træ er ganske robust, selvom det overhovedet ikke
+kan stikke af.
 %%%%
 potion of magic
 
@@ -1491,6 +1526,11 @@ snozzcumber
 
 En frastødende, agurkeformet grøntsag.
 %%%%
+spear
+
+Et jagtvåben, som består af et træskaft med et spidst metalhoved, som er
+fæstnet i den ene ende.
+%%%%
 staff of air
 
 Denne stav øger brugerens luftbesværgelsers kraft, men mindsker den for
@@ -1632,10 +1672,20 @@ bryde fri hvis de lever længe nok.
     end
 }}
 %%%%
+tomahawk
+
+En økselignende genstand, som er beregnet til at blive kastet. Selvom visse
+større tomahawk-typer ville være passende til nærkamp, så er denne gjort mindre
+og mere lethåndterlig for at optimere dens ballistiske egenskaber.
+%%%%
 tome of destruction
 
 En ekstremt kraftfuld, men uforudsigelig bog med vild magi. Advarsel: Det kan
 være skadeligt for dig eller dine omgivelser at læse den!
+%%%%
+trident
+
+Et fiskespyd, som er forbedret med et længere skaft og et tregrenet metalhoved.
 %%%%
 triple sword
 
