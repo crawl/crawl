@@ -93,11 +93,6 @@ beef jerky
 
 Suszony i solony pasek wycięty z wnętrza ciała martwej krowy lub byka.
 %%%%
-blessed double sword
-
-Magiczny miecz z dwoma bardzo ostrymi ostrzami, pobłogosławiony przez moc
-Świetlistego.
-%%%%
 blessed falchion
 
 Krótki szeroki miecz, pobłogosławiony przez moc Świetlistego.
@@ -471,10 +466,6 @@ disc of storms
 Ten potężny przedmiot potrafi wypuścić niszczące elektryczne wyładowanie,
 zwłaszcza w rękach kogoś kto potrafi dobrze posługiwać się magicznymi
 przedmiotami.
-%%%%
-double sword
-
-Magiczny miecz z dwoma ostrymi ostrzami.
 %%%%
 eggplant
 

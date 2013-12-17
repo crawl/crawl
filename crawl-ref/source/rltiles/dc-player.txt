@@ -539,7 +539,7 @@ short_sword_slant SHORT_SWORD_SLANT
 short_sword_slant2
 short_sword_two SHORT_SWORD2
 sword_thief SWORD_THIEF
-long_sword LONG_SWORD
+bastard_sword BASTARD_SWORD
 long_sword_slant LONG_SWORD_SLANT
 long_sword_slant2
 blessed_blade BLESSED_BLADE
@@ -553,8 +553,6 @@ scimitar SCIMITAR
 scimitar2
 falchion FALCHION
 falchion2
-double_sword DOUBLE_SWORD
-double_sword2
 sword_two SWORD2
 broadsword BROADSWORD
 black_sword BLACK_SWORD

@@ -90,11 +90,6 @@ beef jerky
 
 Una tira de carne seca de vaca o toro.
 %%%%
-blessed double sword
-
-Un arma mágica con dos cuchillas muy afiladas. Ha sido mejorada con el poder de
-El Resplandeciente.
-%%%%
 blessed falchion
 
 Una espada con una amplia cuchilla cortante. Ha sido mejorada con el poder de
@@ -466,10 +461,6 @@ Este objeto extremadamente poderoso es capaz de de desencadenar una destructiva
 tormenta eléctrica. Su efectividad mejora considerablemente cuando está en las
 manos de alguien habilidoso en el uso de dispositivos mágicos, pero es
 imposible su uso por parte de alguien que no sea conductivo.
-%%%%
-double sword
-
-Un arma mágica con dos cuchillas muy afiladas.
 %%%%
 eggplant
 

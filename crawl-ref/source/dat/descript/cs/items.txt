@@ -66,11 +66,6 @@ beef jerky
 
 Proužek konzervované, mrtvé krávy či býka.
 %%%%
-blessed double sword
-
-Magická zbraň se dvěma čepelemi, ostrými jako břitva. Byl vylepšen silou
-Zářícího.
-%%%%
 blessed falchion
 
 Meč s širokou čepelí určenou k sekání. Byl vylepšen silou Zářícího.

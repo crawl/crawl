@@ -61,11 +61,6 @@ beef jerky
 
 Uma tira de carne de vaca, ou boi, seca.
 %%%%
-blessed double sword
-
-Uma arma mágica com duas lâminas afiadíssimas. Ela foi aprimorada pelo poder
-Shining One.
-%%%%
 blessed falchion
 
 Uma espada de lâmina lacerante que foi aprimorada com o pode Shining One.
@@ -292,10 +287,6 @@ Uma arma terrível, modelada por fogo e enxofre.
 demon whip
 
 Uma arma terrível, tramada nas profundezas do Inferno.
-%%%%
-double sword
-
-Uma arma mágica com duas lâminas bem afiadas.
 %%%%
 eggplant
 

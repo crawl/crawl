@@ -730,7 +730,7 @@ KITEM:    G = dagger race:none mundane not_cursed ident:all plus:5 plus2:5, \
               cutlass race:none mundane not_cursed ident:all plus:5 plus2:5, \
               quick blade race:none mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    H = demon blade mundane not_cursed ident:all plus:5 plus2:5, \
-              double sword race:none mundane not_cursed ident:all plus:5 plus2:5, \
+              bastard sword race:none mundane not_cursed ident:all plus:5 plus2:5, \
               great sword race:none mundane not_cursed ident:all plus:5 plus2:5, \
               claymore race:none mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    I = lajatang mundane not_cursed ident:all plus:5 plus2:5
@@ -783,7 +783,7 @@ KITEM:    T = longbow unrand:piercer ident:all, \
               great mace unrand:mace_of_variability ident:all, \
               great sword unrand:sword_of_power ident:all, \
               scythe unrand:scythe_of_curses ident:all, \
-              double sword unrand:sword_of_zonguldrok ident:all, \
+              bastard sword unrand:sword_of_zonguldrok ident:all, \
               spear unrand:wyrmbane ident:all, \
               claymore unrand:plutonium_sword ident:all, \
               club unrand:devastator ident:all

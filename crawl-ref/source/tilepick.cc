@@ -3093,8 +3093,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_SCIMITAR:
         return TILE_WPN_SCIMITAR;
 
-    case WPN_DOUBLE_SWORD:
-        return TILE_WPN_DOUBLE_SWORD;
+    case WPN_BASTARD_SWORD:
+        return TILE_WPN_BASTARD_SWORD;
 
     case WPN_CLAYMORE:
         return TILE_WPN_CLAYMORE;
@@ -3282,8 +3282,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BLESSED_GREAT_SWORD:
         return TILE_WPN_GREAT_SWORD;
 
-    case WPN_BLESSED_DOUBLE_SWORD:
-        return TILE_WPN_DOUBLE_SWORD;
+    case WPN_BLESSED_BASTARD_SWORD:
+        return TILE_WPN_BASTARD_SWORD;
 
     case WPN_BLESSED_CLAYMORE:
         return TILE_WPN_CLAYMORE;

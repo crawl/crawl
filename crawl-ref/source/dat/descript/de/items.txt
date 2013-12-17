@@ -96,11 +96,6 @@ beef jerky
 
 Ein Streifen konservierten Kuh- oder Bullenfleisches.
 %%%%
-blessed double sword
-
-Eine magische Waffe mit zwei großen, rasiermesserscharfen Klingen. Es wurde
-durch die Kraft des Glänzenden verbessert.
-%%%%
 blessed falchion
 
 Ein Schwert mit einer breiten, schlitzenden Klinge. Es wurde durch die Kraft
@@ -616,14 +611,6 @@ disc of storms
 Dieser äußerst starke Artikel kann einen zerstörenden Sturm der Elektrizität
 loslassen. Seine Wirksamkeit verbessert sich außerordentlich in den Händen
 eines erfahrenen im Verwenden magischer Geräte.
-%%%%
-double sword
-
-Eine magische Waffe mit dem doppelten messerscharfen Klingen. Gemäß der Legende
-hat ein Ritter einmal die Idee von einem Schwert doppelten mit Halmen einem
-Master-Schmied als ein Witz vorgeschlagen, aber war angenehm überrascht zu
-finden, dass nicht nur der Schmied dazu fähig war, solch ein Schwert zu machen,
-aber dass die erzeugte Waffe äußerst tödlich war.
 %%%%
 eggplant
 

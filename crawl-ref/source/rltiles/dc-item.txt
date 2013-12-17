@@ -150,7 +150,7 @@ quickblade1 WPN_QUICK_BLADE
 quickblade2
 quickblade3
 
-double_sword WPN_DOUBLE_SWORD
+bastard_sword WPN_BASTARD_SWORD
 claymore WPN_CLAYMORE
 demon_blade WPN_DEMON_BLADE
 %rim 0
