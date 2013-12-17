@@ -573,14 +573,14 @@ cap_jester THELM_CAP_JESTER
 wizard_hat1 THELM_WIZARD_HAT
 wizard_hat2
 
-helmet1_visored THELM_HELM
+helmet1_visored THELM_HELM THELM_FIRST
 helmet2_etched
 helmet3
 helmet4_visor
 helmet_horned THELM_HELM_HORNED
 helmet_spiked THELM_HELM_SPIKED
 helmet_plumed THELM_HELM_PLUMED
-helmet_winged THELM_HELM_WINGED
+helmet_winged THELM_HELM_WINGED THELM_LAST
 
 %sdir item/armour
 ###### GLOVES

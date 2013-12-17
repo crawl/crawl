@@ -386,8 +386,6 @@ tileidx_t tilep_equ_helm(const item_def &item)
         // unhandled artefacts fall through to defaults...
     }
 
-    int etype = enchant_to_int(item);
-    int helmet_desc = get_helmet_desc(item);
     switch (item.sub_type)
     {
         case ARM_CAP:
@@ -399,49 +397,8 @@ tileidx_t tilep_equ_helm(const item_def &item)
                            TILEP_HELM_WHAT_LAST_NORM);
 
         case ARM_HELMET:
-            switch (helmet_desc)
-            {
-                case THELM_DESC_PLAIN:
-                    switch (etype)
-                    {
-                        default:
-                            return TILEP_HELM_CHAIN;
-                        case 1:
-                            return TILEP_HELM_HELM_GIMLI;
-                        case 2:
-                            return TILEP_HELM_HELM_IRON;
-                        case 3:
-                            return TILEP_HELM_FHELM_GRAY2;
-                        case 4:
-                            return TILEP_HELM_FHELM_BLACK;
-                    }
-                case THELM_DESC_WINGED:
-                    return TILEP_HELM_YELLOW_WING;
-                case THELM_DESC_HORNED:
-                    switch (etype)
-                    {
-                        default:
-                            return TILEP_HELM_FHELM_HORN2;
-                        case 1:
-                            return TILEP_HELM_BLUE_HORN_GOLD;
-                        case 2:
-                            return TILEP_HELM_FHELM_HORN_GRAY;
-                        case 3:
-                            return TILEP_HELM_FHELM_HORN_YELLOW;
-                        case 4:
-                            return TILEP_HELM_FHELM_HORN_BLACK;
-                    }
-                case THELM_DESC_CRESTED:
-                    return TILEP_HELM_FHELM_ISILDUR;
-                case THELM_DESC_PLUMED:
-                    return TILEP_HELM_FHELM_PLUME;
-                case THELM_DESC_SPIKED:
-                    return TILEP_HELM_FHELM_EVIL;
-                case THELM_DESC_VISORED:
-                    return TILEP_HELM_FHELM_GRAY3;
-                case THELM_DESC_GOLDEN:
-                    return TILEP_HELM_FULL_GOLD;
-            }
+            return _modrng(item.rnd, TILEP_HELM_FIRST_NORM,
+                           TILEP_HELM_LAST_NORM);
     }
 
     return 0;

@@ -923,16 +923,6 @@ iflags_t get_species_race(species_type sp)
                                         : 0;
 }
 
-//
-// These functions handle the description and subtypes for helmets/caps.
-//
-short get_helmet_desc(const item_def &item)
-{
-    ASSERT(is_helmet(item));
-
-    return item.plus2;
-}
-
 bool is_helmet(const item_def& item)
 {
     return item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET;
@@ -941,16 +931,6 @@ bool is_helmet(const item_def& item)
 bool is_hard_helmet(const item_def &item)
 {
     return item.base_type == OBJ_ARMOUR && item.sub_type == ARM_HELMET;
-}
-
-void set_helmet_random_desc(item_def &item)
-{
-    ASSERT(is_helmet(item));
-
-    if (is_hard_helmet(item))
-        item.plus2 = random2(THELM_NUM_DESCS);
-    else
-        item.plus2 = random2(THELM_DESC_MAX_SOFT + 1);
 }
 
 //

@@ -37,10 +37,6 @@ iflags_t get_equip_race(const item_def &item) PURE;
 iflags_t get_equip_desc(const item_def &item) PURE;
 iflags_t get_species_race(species_type sp) IMMUTABLE;
 
-// helmet functions:
-void  set_helmet_random_desc(item_def &item);
-short get_helmet_desc(const item_def &item) PURE;
-
 bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
