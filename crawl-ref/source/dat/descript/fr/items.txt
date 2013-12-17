@@ -144,9 +144,9 @@ Un carreau d'arbalète.
 book of air
 
 Une introduction à la magie élémentaire de l'Air. Les pages se tournent souvent
-d'elles-mêmes, comme si elles étaient soufflées par une forte brise; à d'autres
-moments, les pages sont collées entre elles par de l'électricité statique et
-projettent de brèves étincelles lorsqu'elles sont séparées.
+d'elles-mêmes, comme si elles étaient soufflées par une forte brise ; à
+d'autres moments, les pages sont collées entre elles par de l'électricité
+statique et projettent de brèves étincelles lorsqu'elles sont séparées.
 %%%%
 book of alchemy
 
@@ -355,8 +355,8 @@ usage.
 box of beasts
 
 Une boîte remplie avec les étranges restes d'expérimentations magiques d'un
-sorcier dépravé. En l'ouvrant peut lâcher une chimère amicale: hybride créature
-mythique composé des parties de trois bêtes séparés.
+sorcier dépravé. En l'ouvrant peut lâcher une chimère amicale : hybride
+créature mythique composé des parties de trois bêtes séparés.
 %%%%
 bread ration
 
@@ -462,7 +462,7 @@ deck of changes
 Un paquet de cartes magiques qui provoque des changement sur l'utilisateur ou
 son environnement.
 
-Il peux contenir les cartes suivantes: the Elixir, Battlelust, Metamorphosis,
+Il peux contenir les cartes suivantes : the Elixir, Battlelust, Metamorphosis,
 the Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
 Experience, Wild Magic, the Helix, the Sage, Water, Vitrification, the Map,
 Dowsing, the Spade, Trowel, the Minefield.
@@ -472,7 +472,7 @@ deck of defence
 Un paquet de cartes magiques, dont la plupart défendent l'utilisateur des
 dangers par divers moyens.
 
-Il peux contenir les cartes suivantes: the Tomb, the Banshee, Damnation,
+Il peux contenir les cartes suivantes : the Tomb, the Banshee, Damnation,
 Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
 the Blade, the Shadow, the Mercenary.
 %%%%
@@ -481,14 +481,14 @@ deck of destruction
 Un paquet de cartes magiques, dont la plupart provoque la mort et la
 destruction des ennemis (ou, par malchance, à soi-même).
 
-Il peux contenir les cartes suivantes: Vitriol, Flame, Frost, Venom, the Spark,
-the Hammer, Pain, the Orb.
+Il peux contenir les cartes suivantes : Vitriol, Flame, Frost, Venom, the
+Spark, the Hammer, Pain, the Orb.
 %%%%
 deck of dungeons
 
 Un paquet de cartes magiques traitant de la modification du donjon.
 
-Il peux contenir les cartes suivantes: Water, Vitrification, the Map, Dowsing,
+Il peux contenir les cartes suivantes : Water, Vitrification, the Map, Dowsing,
 the Spade, Trowel, the Minefield.
 %%%%
 deck of escape
@@ -496,14 +496,14 @@ deck of escape
 Un paquet de cartes magiques, qui proposent différentes formes de fuite. Une
 utilisation imprudente peut conduire l'utilisateur tel une poele sur le feu.
 
-Il peux contenir les cartes suivantes: the Portal, the Warp, Swap, Velocity,
+Il peux contenir les cartes suivantes : the Portal, the Warp, Swap, Velocity,
 the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
 %%%%
 deck of punishment
 
 Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
 
-Il peux contenir les cartes suivantes: Wrath, the Wraith, the Curse, Xom,
+Il peux contenir les cartes suivantes : Wrath, the Wraith, the Curse, Xom,
 Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
 %%%%
 deck of summonings
@@ -511,14 +511,14 @@ deck of summonings
 Un paquet de cartes magiques, représentant un éventail de créatures étranges et
 merveilleux.
 
-Il peux contenir les cartes suivantes: the Crusade, the Herd, the Pentagram,
+Il peux contenir les cartes suivantes : the Crusade, the Herd, the Pentagram,
 the Dance, Foxfire, the Bones, Repulsiveness.
 %%%%
 deck of war
 
 Un paquet de cartes magiques, utile avant et pendant la bataille.
 
-Il peux contenir les cartes suivantes: the Portal, the Warp, Swap, Velocity,
+Il peux contenir les cartes suivantes : the Portal, the Warp, Swap, Velocity,
 the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir,
 Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Mercenary, the
 Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
@@ -529,7 +529,7 @@ deck of wonders
 Un paquet de cartes à la fois magiques et très mystérieuses, qui peut altérer
 l'état physique et mental de l'utilisateur, pour le meilleur ou pour le pire.
 
-Il peux contenir les cartes suivantes: the Potion, Focus, Shuffle, Experience,
+Il peux contenir les cartes suivantes : the Potion, Focus, Shuffle, Experience,
 Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
@@ -903,7 +903,7 @@ perdre sa concentration mentale pour une courte période.
 %%%%
 plate armour
 
-Une tenue complète composé de solide plaque en métal: cuirasse, spalières,
+Une tenue complète composé de solide plaque en métal : cuirasse, spalières,
 brassards, ceinture et jambières. Une cotte de mailles bouche les trous, ceci
 permettant les mouvements.
 
@@ -1262,7 +1262,7 @@ s'agit de l'arme de prédilection des serviteurs de L'Étincelant.
 sausage
 
 Une masse allongée de bas morceaux de viande, cartilages, tripes, et céréales
-enfermée dans un intestin. Miam!
+enfermée dans un intestin. Miam !
 %%%%
 scale mail
 
@@ -1358,7 +1358,7 @@ Ce parchemin plonge le lecteur au sein d'un épais brouillard.
 scroll of holy word
 
 Ce parchemin demande aux puissances des cieux de causer de grands dégâts à
-toute les créatures impie à proximité – y compris vous!
+toute les créatures impie à proximité – y compris vous !
 %%%%
 scroll of identify
 
@@ -1429,7 +1429,7 @@ aléatoire.
 scroll of torment
 
 Ce parchemin appelle les puissances des ténèbres pour infliger une grande
-douleur sur toute les créatures à proximité – y compris vous! Ceci traverse la
+douleur sur toute les créatures à proximité – y compris vous ! Ceci traverse la
 moitié de la résistance de toutes les créatures vivantes, bien que ce ne soit
 jamais directement fatale.
 %%%%

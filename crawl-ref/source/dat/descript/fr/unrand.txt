@@ -70,7 +70,7 @@ Staff of Dispater
 Cet objet légendaire peut déclencher la fureur des Enfers. Les flammes impies
 qu'il évoque peuvent vous coûter une partie de votre vie et de votre âme, mais
 depuis quand ces détails empêchent quiconque de poursuivre leur quête de
-pouvoir?
+pouvoir ?
 %%%%
 Sceptre of Asmodeus
 
@@ -484,7 +484,7 @@ moon troll leather armour
 Cette armure aurait été créé par l'enchantement de la peau d'un troll dont
 l'espèce est désormais éteinte. Que cette armure soit véritablement un vestige
 des légendaires terreurs invisibles du vent ou simplement une appropriation du
-nom pour y ajouter du mysticisme est un mystère; son pouvoir de régénération
+nom pour y ajouter du mysticisme est un mystère ; son pouvoir de régénération
 rapide au détriment occasionnelle de la puissance magique du porteur, est
 cependant difficile a contester.
 %%%%
@@ -502,7 +502,7 @@ Ce grand marteau ferré est l'outil dont vous avez besoin, si vous aviez de
 lourds enjeux à entretenir. Il est fait pour porter des coups massifs — et nous
 ne parlons pas d'une simple commotion cérébrale, mais des restes d'un casque
 debout sur des chaussures , ou peut-être simplement d'une tache humide. Hélas,
-un tel pouvoir a un prix: la tête du marteau est si lourd qu'il faut une
+un tel pouvoir a un prix : la tête du marteau est si lourd qu'il faut une
 éternité pour la soulever et frapper a nouveau. Ce marteau est dimensionné pour
 un humain, donc les ogres peuvent vouloir utiliser leurs matraques coutumières
 à la place, celles-ci étant moins lourd dans leurs grandes mains.
@@ -511,7 +511,7 @@ hat of the High Council
 
 Une relique de certaines anciennes guerre de sorciers. Des siècles plus tard,
 il crépite encore des effets résiduelles des malédictions et des énergies
-magiques auquel il a pendant un temps été soumis sur une base quotidienne; les
+magiques auquel il a pendant un temps été soumis sur une base quotidienne ; les
 lanceurs de sorts capables d'obtenir une poignée sur son pouvoir, cependant,
 obtiendront un renforcement de leur puissance de sorts.
 %%%%
