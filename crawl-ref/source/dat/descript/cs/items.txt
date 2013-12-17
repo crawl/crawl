@@ -88,11 +88,6 @@ blessed scimitar
 
 Dlouhý meč se zakřivenou čepelí. Byl vylepšen silou Zářícího.
 %%%%
-blessed triple sword
-
-Magická zbraň se třemi obrovskými čepelemi, ostrými jako břitva. Byl vylepšen
-silou Zářícího.
-%%%%
 book of fixed level
 
 Kniha kouzel.

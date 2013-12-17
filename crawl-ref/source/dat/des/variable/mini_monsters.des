@@ -5208,7 +5208,7 @@ TAGS:   mini_float patrolling
 DEPTH:  D:5-, Depths, !Depths:$, Vaults, Orc, Elf
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item demon blade /\
-            good_item triple sword / good_item double sword
+            good_item claymore / good_item double sword
 KFEAT:  S = known teleport trap
 NSUBST: n = n/cbn
 : if you.branch() == "Orc" then

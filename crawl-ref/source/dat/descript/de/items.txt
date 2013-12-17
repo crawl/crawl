@@ -121,11 +121,6 @@ blessed scimitar
 Ein langes Schwert mit einer krummen Klinge. Es wurde durch die Kraft des
 Glänzenden verbessert.
 %%%%
-blessed triple sword
-
-Eine magische Waffe mit drei großen, rasiermesserscharfen Klingen. Es wurde
-durch die Kraft des Glänzenden verbessert.
-%%%%
 blowgun
 
 Ein langes, leichtes Rohr, offen an beiden Enden, durch die verschiedene Arten
@@ -1606,16 +1601,6 @@ tome of destruction
 
 Ein äußerst starkes, aber unvorhersehbares Buch der wilden Magie. Warnung: Das
 Lesen kann für Sie oder Ihre Umgebungen gefährlich sein!
-%%%%
-triple sword
-
-Eine magische Waffe mit drei großen messerscharfen Klingen. Gemäß der Legende
-schuf ein Master-Schmied ein Schwert mit zwei Klingen am witzelnden Vorschlag
-eines Ritters, der, findend, dass die resultierende Klinge freundlich ziemlich
-funktionell war, witzelte, „Ah, sehr gut, aber konnten Sie einen *dreifach*
-Schwert machen?“ Als sich die Antwort erwiesen hat zu sein, Ja, wurde der
-Ritter zu erschüttert, nach den Möglichkeiten eines vierfachen Schwertes zu
-fragen.
 %%%%
 trishula
 

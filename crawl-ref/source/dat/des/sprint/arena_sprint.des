@@ -1084,7 +1084,7 @@ KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of poison | staff of death | staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed quick blade | mundane not_cursed demon blade |\
-            mundane not_cursed triple sword | mundane not_cursed broad axe |\
+            mundane not_cursed claymore | mundane not_cursed broad axe |\
             mundane not_cursed executioner's axe | mundane not_cursed demon whip |\
             mundane not_cursed great mace | mundane not_cursed giant spiked club |\
             mundane not_cursed demon trident | mundane not_cursed bardiche |\

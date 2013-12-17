@@ -151,7 +151,7 @@ quickblade2
 quickblade3
 
 double_sword WPN_DOUBLE_SWORD
-triple_sword WPN_TRIPLE_SWORD
+claymore WPN_CLAYMORE
 demon_blade WPN_DEMON_BLADE
 %rim 0
 blessed_blade WPN_BLESSED_BLADE

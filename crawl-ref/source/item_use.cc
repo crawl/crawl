@@ -2328,7 +2328,7 @@ static void _rebrand_weapon(item_def& wpn)
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_BLESSED_CLAYMORE:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
         {

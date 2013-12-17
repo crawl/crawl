@@ -240,10 +240,10 @@ function general_item_setup(e)
     double sword plus:7 plus2:7 randart not_cursed ident:all w:3 /\
     double sword plus:10 plus2:5 randart not_cursed ident:all w:3 /\
     double sword plus:5 plus2:10 randart not_cursed ident:all w:3 /\
-    triple sword plus:7 plus2:7 good_item not_cursed ident:all /\
-    triple sword plus:5 plus2:5 randart not_cursed ident:all w:3 /\
-    triple sword plus:3 plus2:9 randart not_cursed ident:all w:3 /\
-    triple sword plus:9 plus2:3 randart not_cursed ident:all w:3 /\
+    claymore plus:7 plus2:7 good_item not_cursed ident:all /\
+    claymore plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    claymore plus:3 plus2:9 randart not_cursed ident:all w:3 /\
+    claymore plus:9 plus2:3 randart not_cursed ident:all w:3 /\
     demon blade plus:9 plus2:9 good_item not_cursed ident:all /\
     demon blade plus:9 plus2:9 randart not_cursed ident:all w:3 /\
     demon blade plus:13 plus2:7 randart not_cursed ident:all w:3 /\
@@ -309,8 +309,8 @@ function general_item_setup(e)
     demon whip plus:3 plus2:3 good_item not_cursed ident:all /\
     double sword plus:6 plus2:6 ego:none not_cursed ident:all /\
     double sword plus:3 plus2:3 good_item not_cursed ident:all /\
-    triple sword plus:3 plus2:3 ego:none not_cursed ident:all /\
-    triple sword plus:0 plus2:0 good_item not_cursed ident:all /\
+    claymore plus:3 plus2:3 ego:none not_cursed ident:all /\
+    claymore plus:0 plus2:0 good_item not_cursed ident:all /\
     demon blade plus:6 plus2:6 ego:none not_cursed ident:all /\
     demon blade plus:3 plus2:3 good_item not_cursed ident:all /\
     great sword plus:6 plus2:6 ego:none not_cursed ident:all /\
@@ -461,7 +461,7 @@ function armoury_setup(e)
           great sword plus:3 plus2:3 not_cursed ident:all /\
           double sword plus:3 plus2:3 not_cursed ident:all /\
           demon blade plus:3 plus2:3 not_cursed ident:all w:3 /\
-          triple sword plus:1 plus2:1 not_cursed ident:all w:3 /\
+          claymore plus:1 plus2:1 not_cursed ident:all w:3 /\
           lajatang plus:3 plus2:3 not_cursed ident:all /\
           longbow plus:3 plus2:3 not_cursed ident:all /\
           crossbow plus:3 plus2:3 not_cursed ident:all /\

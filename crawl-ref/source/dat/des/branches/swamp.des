@@ -640,7 +640,7 @@ SUBST: w = w:50 t:5 T:5
 SUBST: W = w
 KITEM: O = great sword good_item w:20 / \
            double sword good_item w:2 / \
-           triple sword good_item w:1
+           claymore good_item w:1
 KFEAT: K = deep_water
 KFEAT: T = mangrove
 KPROP: wK = no_rtele_into

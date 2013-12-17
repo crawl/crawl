@@ -115,11 +115,6 @@ blessed scimitar
 Una espada con una cuchilla curvada. Ha sido mejorada con el poder de El
 Resplandeciente.
 %%%%
-blessed triple sword
-
-Un arma mágica con tres cuchillas muy afiladas. Ha sido mejorada con el poder
-de El Resplandeciente.
-%%%%
 blowgun
 
 Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un gran

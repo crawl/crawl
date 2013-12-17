@@ -112,10 +112,6 @@ blessed scimitar
 
 Kaartuvateräinen, pitkä miekka. Se on Hohtavan vahvistama.
 %%%%
-blessed triple sword
-
-Maaginen ase kolmella suurella terällä. Se on Hohtavan vahvistama.
-%%%%
 blowgun
 
 Pitkä, molemmista päistä aukinainen kevyt putki, jonka läpi voi ampua

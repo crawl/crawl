@@ -3096,8 +3096,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_DOUBLE_SWORD:
         return TILE_WPN_DOUBLE_SWORD;
 
-    case WPN_TRIPLE_SWORD:
-        return TILE_WPN_TRIPLE_SWORD;
+    case WPN_CLAYMORE:
+        return TILE_WPN_CLAYMORE;
 
     case WPN_HAND_AXE:
         if (race == ISFLAG_ORCISH)
@@ -3285,8 +3285,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BLESSED_DOUBLE_SWORD:
         return TILE_WPN_DOUBLE_SWORD;
 
-    case WPN_BLESSED_TRIPLE_SWORD:
-        return TILE_WPN_TRIPLE_SWORD;
+    case WPN_BLESSED_CLAYMORE:
+        return TILE_WPN_CLAYMORE;
     }
 
     return TILE_ERROR;
