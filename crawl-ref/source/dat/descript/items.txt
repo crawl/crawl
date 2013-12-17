@@ -97,6 +97,10 @@ beef jerky
 
 A strip of preserved dead cow or bull.
 %%%%
+blessed claymore
+
+A massive sword, enhanced by the Shining One's power.
+%%%%
 blessed double sword
 
 A magical weapon with two razor-sharp blades. It has been enhanced by the
@@ -121,11 +125,6 @@ blessed scimitar
 
 A long sword with a curved blade. It has been enhanced by the Shining One's
 power.
-%%%%
-blessed triple sword
-
-A magical weapon with three great razor-sharp blades. It has been enhanced by
-the Shining One's power.
 %%%%
 blowgun
 
@@ -462,6 +461,12 @@ An almost tasteless green vegetable, which grows on a vine.
 chunk of flesh
 
 A piece of raw meat found in the dungeon. It won't stay fresh for long.
+%%%%
+claymore
+
+A massive sword, that requires two hands to even hold, and great strength
+and skill to use effectively. Needless to say, once a swordsman grows mighty
+enough to comfortably wield it, it is a weapon second to none.
 %%%%
 cloak
 
@@ -1673,15 +1678,6 @@ may be hazardous to you or your surroundings!
 trident
 
 A fishing spear improved with a longer shaft and a three-pronged metal head.
-%%%%
-triple sword
-
-A magical weapon with three great razor-sharp blades. According to legend, a
-master forger created a sword with two blades at the facetious suggestion of a
-knight, who, finding that the resulting blade was quite functional, jovially
-quipped, “Ah, very good, but could you make a *triple* sword?” When the answer
-turned out to be yes, the knight was too shocked to ask about the possibilities
-of a quadruple sword.
 %%%%
 trishula
 

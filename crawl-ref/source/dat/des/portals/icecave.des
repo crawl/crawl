@@ -762,12 +762,12 @@ SUBST:   ` = .
 : item("battleaxe " .. freezeweap .. " / executioner's axe " .. freezeweap ..
 :   " / glaive " .. freezeweap .. " / bardiche " .. freezeweap ..
 :   " / quick blade " .. freezeweap .. " / great sword " .. freezeweap ..
-:   " / triple sword " .. freezeweap .. " / giant spiked club " .. freezeweap ..
+:   " / claymore " .. freezeweap .. " / giant spiked club " .. freezeweap ..
 :   " / demon trident " .. freezeweap)
 : item("battleaxe " .. goodfreezeweap .. " / executioner's axe " .. goodfreezeweap ..
 :   " / glaive " .. goodfreezeweap .. " / halberd " .. goodfreezeweap ..
 :   " / great sword " .. goodfreezeweap .. " / quick blade " .. goodfreezeweap ..
-:   " / triple sword " .. goodfreezeweap .. " / demon trident " .. goodfreezeweap ..
+:   " / claymore " .. goodfreezeweap .. " / demon trident " .. goodfreezeweap ..
 :   " / giant spiked club " .. goodfreezeweap)
 ITEM: demon whip good_item / demon blade good_item / demon trident good_item
 : item("cap " .. coldres .. " / pair of gloves " .. coldres ..

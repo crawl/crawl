@@ -543,9 +543,11 @@ long_sword LONG_SWORD
 long_sword_slant LONG_SWORD_SLANT
 long_sword_slant2
 blessed_blade BLESSED_BLADE
-great_sword GREAT_SWORD
 great_sword_slant GREAT_SWORD_SLANT
 great_sword_slant2
+claymore CLAYMORE
+claymore2
+claymore_blessed CLAYMORE_BLESSED
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
 scimitar2
@@ -553,10 +555,7 @@ falchion FALCHION
 falchion2
 double_sword DOUBLE_SWORD
 double_sword2
-triple_sword TRIPLE_SWORD
-triple_sword2
 sword_two SWORD2
-sword_tri SWORD_TRI
 broadsword BROADSWORD
 black_sword BLACK_SWORD
 sword_black SWORD_BLACK

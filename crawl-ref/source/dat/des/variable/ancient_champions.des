@@ -39,7 +39,7 @@ KFEAT:   ABCDEFG = metal_wall
 KMONS:   1 = ancient champion spells:iron_shot;.;haste;pain;.;. actual_spells \
          ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
          great sword ego:pain | great sword ego:draining | great sword \
-         ego:flaming | w:3 triple sword ego:vorpal
+         ego:flaming | w:3 claymore ego:vorpal
 KMONS:   2 = ancient champion spells:bolt_of_draining;.;haste;throw_frost;.;. \
          actual_spells ; plate armour ego:fire_resistance | plate armour \
          ego:cold_resistance . great mace ego:vorpal | great mace ego:draining
@@ -51,7 +51,7 @@ KMONS:   4 = ancient champion spells:iskenderun's_mystic_blast;slow;haste;.;.;. 
          actual_spells ; plate armour ego:fire_resistance | plate armour \
          ego:cold_resistance . great sword ego:pain | great sword ego:draining \
          | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
-         | triple sword ego:vorpal | executioner's axe ego:vorpal
+         | claymore ego:vorpal | executioner's axe ego:vorpal
 SHUFFLE: 123
 KPROP:   ]v.1234+ABCDEFG!n$wr|" = no_tele_into
 KITEM:   w = acquire weapon

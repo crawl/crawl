@@ -579,7 +579,7 @@ MAGIC:    20
 STEALTH:  50
 
 NAME:    plutonium sword
-OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
+OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
 PLUS:    +12/+16
 COLOUR:  ETC_RANDOM
 TILE:    urand_plutonium

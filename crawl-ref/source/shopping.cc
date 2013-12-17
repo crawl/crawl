@@ -1306,11 +1306,11 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case WPN_DEMON_BLADE:
-        case WPN_TRIPLE_SWORD:
+        case WPN_CLAYMORE:
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_BLESSED_CLAYMORE:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
         case WPN_LAJATANG:

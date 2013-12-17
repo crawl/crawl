@@ -837,7 +837,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         WPN_EVENINGSTAR,
         WPN_EXECUTIONERS_AXE,
         WPN_QUICK_BLADE,
-        WPN_TRIPLE_SWORD,
+        WPN_CLAYMORE,
     };
 
     if (item_level > 6 && one_chance_in(30)
@@ -1249,7 +1249,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             // **** intentional fall through here ****
         case WPN_GREAT_SWORD:
         case WPN_DOUBLE_SWORD:
-        case WPN_TRIPLE_SWORD:
+        case WPN_CLAYMORE:
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 
@@ -1483,7 +1483,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_TRIPLE_SWORD:
+        case WPN_BLESSED_CLAYMORE:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
             rc = SPWPN_HOLY_WRATH;

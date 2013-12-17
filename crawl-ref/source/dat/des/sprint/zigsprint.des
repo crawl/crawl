@@ -732,7 +732,7 @@ KITEM:    G = dagger race:none mundane not_cursed ident:all plus:5 plus2:5, \
 KITEM:    H = demon blade mundane not_cursed ident:all plus:5 plus2:5, \
               double sword race:none mundane not_cursed ident:all plus:5 plus2:5, \
               great sword race:none mundane not_cursed ident:all plus:5 plus2:5, \
-              triple sword race:none mundane not_cursed ident:all plus:5 plus2:5
+              claymore race:none mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    I = lajatang mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    J = crossbow race:none mundane not_cursed ident:all plus:5 plus2:5, \
               bolt q:1000 mundane ident:all, \
@@ -785,7 +785,7 @@ KITEM:    T = longbow unrand:piercer ident:all, \
               scythe unrand:scythe_of_curses ident:all, \
               double sword unrand:sword_of_zonguldrok ident:all, \
               spear unrand:wyrmbane ident:all, \
-              triple sword unrand:plutonium_sword ident:all, \
+              claymore unrand:plutonium_sword ident:all, \
               club unrand:devastator ident:all
 KITEM:    S = disc of storms ident:all, \
               tome of destruction ident:all, tome of destruction ident:all

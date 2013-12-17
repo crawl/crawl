@@ -114,11 +114,6 @@ blessed scimitar
 
 Długi zakrzywiony miecz, pobłogosławiony przez moc Świetlistego.
 %%%%
-blessed triple sword
-
-Magiczny miecz z trzema wielkimi ostrzami, pobłogosławiony przez moc
-Świetlistego.
-%%%%
 blowgun
 
 Długa, lekka rurka. Igły z niej wystrzelone same z siebie nie zadają niemal
@@ -1498,10 +1493,6 @@ czarów.
 trident
 
 Broń drzewcowa z trzema szpikulcami.
-%%%%
-triple sword
-
-Magiczny miecz z trzema wielkimi ostrymi ostrzami.
 %%%%
 trishula
 

@@ -676,7 +676,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         // effects, i.e. no polearms.
         item.sub_type = random_choose_weighted(10, WPN_GREAT_MACE,
                                                6, WPN_GREAT_SWORD,
-                                               2, WPN_TRIPLE_SWORD,
+                                               2, WPN_CLAYMORE,
                                                8, WPN_BATTLEAXE,
                                                2, WPN_EXECUTIONERS_AXE,
                                                0);
@@ -1468,7 +1468,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_SOJOBO:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = one_chance_in(6) ? WPN_TRIPLE_SWORD
+        item.sub_type = one_chance_in(6) ? WPN_CLAYMORE
                                          : WPN_GREAT_SWORD;
         if (x_chance_in_y(2, 3))
         {

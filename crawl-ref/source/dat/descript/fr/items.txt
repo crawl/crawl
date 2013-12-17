@@ -126,11 +126,6 @@ blessed scimitar
 
 Une épée longue à lame courbée. Elle a été améliorée par L'Étincelant.
 %%%%
-blessed triple sword
-
-Une arme magique avec trois grandes lames tranchantes comme des rasoirs. Elle a
-été améliorée par L'Étincelant.
-%%%%
 blowgun
 
 Un tube long et léger, ouvert aux deux bouts, au travers duquel des aiguilles
@@ -1646,15 +1641,6 @@ trident
 
 Une lance de pêche améliorée avec une plus longue hampe et une fourche
 métallique à trois dents au bout.
-%%%%
-triple sword
-
-Une arme magique avec trois grandes lames tranchantes comme des rasoirs.
-D'après la légende, un maître forgeron créa un épée à double lame à la demande
-d'un chevalier excentrique qui trouva le résultat plutôt fonctionnel : « Ah,
-très bien, mais pourriez-vous forger une épée *triple* ? » Quand la réponse
-s'avéra être oui, le chevalier était trop choqué pour demander les chances de
-faire une épée quadruple.
 %%%%
 trishula
 

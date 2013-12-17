@@ -978,6 +978,10 @@ the building: he sprang forward, took the parchment out, and dead clay again
 lay at his feet.”
     -Berthold Auerbach, _Spinoza_. 1882.
 %%%%
+claymore
+
+<demon blade>
+%%%%
 cloak
 
 “O Bell my wife, why dost thou flyte?
@@ -3114,10 +3118,6 @@ chase, in which the fish is pursued and struck with barbed spears, or a sort of
 long shafted trident, called a waster, is much practised at the mouth of the
 Esk, and in the other salmon rivers of Scotland.”
     -Sir Walter Scott, _Guy Mannering_, ch. XXVI. 1815.
-%%%%
-triple sword
-
-<demon blade>
 %%%%
 troll hide
 

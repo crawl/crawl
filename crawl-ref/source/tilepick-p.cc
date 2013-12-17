@@ -157,8 +157,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_DOUBLE_SWORD:
         tile = TILEP_HAND1_DOUBLE_SWORD;
         break;
-    case WPN_TRIPLE_SWORD:
-        tile = TILEP_HAND1_TRIPLE_SWORD;
+    case WPN_CLAYMORE:
+        tile = TILEP_HAND1_CLAYMORE;
         break;
     case WPN_EUDEMON_BLADE:
         tile = TILEP_HAND1_BLESSED_BLADE;
@@ -180,8 +180,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_BLESSED_DOUBLE_SWORD:
         tile = TILEP_HAND1_DOUBLE_SWORD;
         break;
-    case WPN_BLESSED_TRIPLE_SWORD:
-        tile = TILEP_HAND1_TRIPLE_SWORD;
+    case WPN_BLESSED_CLAYMORE:
+        tile = TILEP_HAND1_CLAYMORE_BLESSED;
         break;
 
     // Axe
