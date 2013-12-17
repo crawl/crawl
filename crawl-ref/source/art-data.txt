@@ -1139,6 +1139,13 @@ TILE_EQ:  spellbinder
 MAGIC:    30
 BOOL:     evil
 
+NAME:    lajatang of Order
+OBJ:     OBJ_WEAPONS/WPN_LAJATANG
+TYPE:    tipstaff
+INSCRIP: silver, rMut
+COLOUR:  ETC_SILVER
+PLUS:    7/7
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn
