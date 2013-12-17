@@ -422,7 +422,7 @@ Fulminant Prism spell
 Ce sort évoque un prisme qui canalise l'énergie magique de son environnement et
 le relâche après un court moment dans une violente explosion arcanique. Soyez
 conscient que le prisme est extrêmement fragile et que tout dommage lui étant
-causé peut entraîner prématurément sa détonation!
+causé peut entraîner prématurément sa détonation !
 %%%%
 Ghostly Fireball spell
 
@@ -816,7 +816,7 @@ connu pour ses mauvaises manières à table, ses couinement, et déterrer des
 truffes. Pas même les anges et les démons ne sont à l'abri — conduisant
 respectivement au plus savoureux et au pire bacon du monde.
 
-Si le sort est jeté à la hâte, la transformation est temporaire; seulement un
+Si le sort est jeté à la hâte, la transformation est temporaire ; seulement un
 bon jour de rituel peut donner un effet permanent. Dans les deux cas, la
 disparition du lanceur de sort renverra les victimes dans leurs anciennes
 formes.
@@ -829,7 +829,7 @@ accroissant son efficacité (mais pas ses dégâts).
 Quicksilver Bolt spell
 
 Un certain type de Dragon peut cracher un souffle d'énergie dissipant, parfois
-appelé «vif-argent» à cause de son apparence. Outre les dégâts, il peut
+appelé « vif-argent » à cause de son apparence. Outre les dégâts, il peut
 supprimer certains enchantements, à la fois les bénéfiques et les néfastes.
 %%%%
 Rakshasa Summon spell
@@ -954,7 +954,7 @@ Ce sort ralentit les actions d'une créature.
 Song of Slaying spell
 
 Ce sort conjure des versets antiques de batailles dans votre esprit et vous les
-fait récitez — en beuglant! Chaque ennemi non invoquée que vous tuez dans le
+fait récitez — en beuglant ! Chaque ennemi non invoquée que vous tuez dans le
 combat pendant cette récitation améliore temporairement vos compétences de
 mêlée. Votre efficacité ne sera renforcée que pendant la durée de la chanson.
 Lancer ce sort alors que vous la chanter deja débutera une nouvelle chanson, et
@@ -1186,7 +1186,7 @@ saines et sauves. Les vampires et les ombres sont connus pour y être
 particulièrement vulnérables.
 
 N'étant pas un missile, ce sort n'est pas affecté par les effets de Renvoie et
-de Déflection — vous voulez être en mesure de voir, n'est-ce pas?
+de Déflection — vous voulez être en mesure de voir, n'est-ce pas ?
 %%%%
 Sure Blade spell
 

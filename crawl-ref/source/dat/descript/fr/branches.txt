@@ -227,7 +227,7 @@ Pandémonium est sans fin. Des portails pour vous y rendre se trouve en
 abondance dans les plus profonds niveaux du donjon principal. Notez qu'en
 revenir peut s'avérer très difficile.
 
-Vous pouvez trouver pas moins de 5 runes dans le Pandémonium:
+Vous pouvez trouver pas moins de 5 runes dans le Pandémonium :
  • la rune ardente dans le royaume brûlant de Cerebov
  • la rune éclatante dans le domaine radioactif de Mnoleg
  • la rune magique est gardée par les pouvoirs arcaniques de Lom Lobon et de

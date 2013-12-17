@@ -1642,7 +1642,7 @@ Ce ballistomycete est dans un état de surproduction. Il est complètement ravag
 par l'explosion des spores, détruisant tout autour de lui, et va en fin de
 compte mourir de ses propres spores.
 
-Prenez vos distances!
+Prenez vos distances !
 %%%%
 ice bat
 
@@ -1985,7 +1985,7 @@ errer dans la non-vie pour l'éternité.
 %%%%
 naga
 
-Un hybride qui n'est qu'humain que jusqu'à la taille; en dessous il n'y a
+Un hybride qui n'est qu'humain que jusqu'à la taille ; en dessous il n'y a
 qu'une queue écailleuse et musclée semblable au serpent. Sa bouche bave d'une
 salive venimeuse.
 %%%%
@@ -2051,7 +2051,7 @@ rudimentaire et une mobilité limitée.
 ophan
 
 Une créature des royaumes célestes. Elle consiste d'une roue dans une roue, et
-les deux sont couvertes d'yeux; les flammes étrange d'un feu sacré oscillent
+les deux sont couvertes d'yeux ; les flammes étrange d'un feu sacré oscillent
 tout autour d'elle.
 %%%%
 orange crystal statue
@@ -2060,7 +2060,7 @@ Une idole finement gravée et représentant une divinité sans nom, taillée dan
 un cristal orange translucide. Ses yeux dénués de vie semblent briller d'une
 intelligence malicieuse.
 
-Cette statue est très fragile; elle se désintégrera d'un coup.
+Cette statue est très fragile ; elle se désintégrera d'un coup.
 %%%%
 orange demon
 
@@ -2229,7 +2229,7 @@ pulsating lump
 
 Un blob répugnant de toute sortes de matières organiques – muscle, tripes,
 nerf, viscère, moelle – empilés aléatoirement en une seule masse contorsionnée.
-Sa chair altérée est mutagène au contact; mais sans aucune forme d'agencement
+Sa chair altérée est mutagène au contact ; mais sans aucune forme d'agencement
 structurel de ses parties, il lui manque la coordination nécessaire pour se
 déplacer rapidement.
 %%%%
@@ -2248,7 +2248,7 @@ queen ant
 Une fourmi boursouflée, couverte d'une armure chitineuse et possédant un poison
 puissant. C'est la souveraine de la colonie et, lorsqu'elle n'est pas dérangée,
 elle pond perpétuellement des œufs. Auparavant capable de voler, elle a depuis
-longtemps perdu ses ailes; seul des moignons rudimentaires restent.
+longtemps perdu ses ailes ; seul des moignons rudimentaires restent.
 %%%%
 queen bee
 
@@ -2460,7 +2460,7 @@ silver statue
 Une magnifique statue d'une créature malfaisante inconnue, scintillant d'une
 teinte argentée. Ses yeux brillent d'une lueur d'un autre monde..
 
-Cette statue est très fragile; elle se désintégrera d'un coup.
+Cette statue est très fragile ; elle se désintégrera d'un coup.
 %%%%
 simulacrum
 
@@ -2482,7 +2482,7 @@ résultats plutôt violents.
 %%%%
 skeletal archer
 
-Depuis quand il faut avoir de la chair pour pouvoir être un maître archer? Ces
+Depuis quand il faut avoir de la chair pour pouvoir être un maître archer ? Ces
 compagnons squelettiques peuvent vous transformer en un hérisson sanguinolent
 sans encombre. Les êtres pleins de viande comme vous ne sont bons qu'a fournir
 des tendons pour faire de nouvelles cordes à arc.
@@ -2592,7 +2592,7 @@ ce donjon, elle est quand même aussi grosse qu'un petit chat.
 spiny frog
 
 Ces grenouilles font la taille d'un loup, et sont couvertes de petites épines
-et d'ergots, dégouttant de venin. Qui veut goûter du crapaud?
+et d'ergots, dégouttant de venin. Qui veut goûter du crapaud ?
 %%%%
 spiny worm
 
@@ -2771,7 +2771,7 @@ créatures piégées avec de précises volées de ses propres épines acérées.
 thorn lotus
 
 Un grand et vif floraison dérive tranquillement à la surface de l'eau.
-Méfiez-vous, car sa beauté est trompeuse; maintenu l'intérieur de ses pétales
+Méfiez-vous, car sa beauté est trompeuse ; maintenu l'intérieur de ses pétales
 se trouve une stigmatisation hérissée d'épines aiguille, pleinement capables
 d'empaler les prédateurs et les aventuriers inconscients avant même qu'ils
 soient suffisamment proche pour la menacer.
@@ -2901,7 +2901,7 @@ very ugly thing
 
 Une chose très hideuse. D'après la légende, cette créature mutante très moche
 est le fruit surnaturel d'une expérimentation d'un magicien sur la
-reproduction. Double beurk!
+reproduction. Double beurk !
 %%%%
 wandering mushroom
 
@@ -3093,7 +3093,7 @@ connu sous le nom de Wucad Mu, qui maîtrisa la matière de l'esprit. Prenez
 garde aux pouvoirs de cette statue, vous n'avez aucune chance au combat mental
 contre elle.
 
-Cette statue est très fragile; elle se désintégrera d'un coup.
+Cette statue est très fragile ; elle se désintégrera d'un coup.
 %%%%
 air elementalist statue
 
@@ -3123,7 +3123,7 @@ captured wizard
 
 Avec des yeux sauvages, le sorcier marmonne frénétiquement quelque chose et
 agite ses bras, mais il est incapable de lancer un seul sort. Sa langue a été
-coupée!
+coupée !
 %%%%
 charred statue
 
@@ -3200,11 +3200,11 @@ Un monticule animé de chair difforme.
 frost-covered statue
 
 Une statue maladroitement faite d'un mage. Sa magie continue de fuir, vous
-laissant savoir de quel genre de sorts s'attendre: ceux qui sont froids.
+laissant savoir de quel genre de sorts s'attendre : ceux qui sont froids.
 %%%%
 human monk
 
-Il a l'air d'une piètre représentation d'un moine; rien de plus qu'un souvenir
+Il a l'air d'une piètre représentation d'un moine ; rien de plus qu'un souvenir
 à moité formé.
 %%%%
 iron troll monk
@@ -3237,7 +3237,7 @@ Quelle est cette sorcellerie ?
 %%%%
 oklob sapling priest
 
-Cette jeune plante oklob semble marmonner quelques oraisons... euh, quoi?!?
+Cette jeune plante oklob semble marmonner quelques oraisons... euh, quoi ?!?
 %%%%
 orb of electricity
 
@@ -3293,7 +3293,7 @@ Une brillante machine argentée.
 succubus
 
 Un démon femelle qui utilise ses charmes pour séduire les mâles humanoïdes. Si
-vous souhaitez cependant profiter d'elle, vous allez échouer: elle semble très
+vous souhaitez cependant profiter d'elle, vous allez échouer : elle semble très
 en colère en ce moment et a plus soif de sang que de plaisir.
 %%%%
 water elementalist statue
@@ -3362,7 +3362,7 @@ zot statue
 Cette statue complètement bizarre, taillée dans une simple bout de gabbro noir,
 scintille de petits cristaux. Il est impossible de dire si cette statue devait
 représenter une créature ou une personne, ou alors si elle est totalement
-abstraite. Une seule chose est certaine: elle est profondément dérangeante.
+abstraite. Une seule chose est certaine : elle est profondément dérangeante.
 %%%%
 bag of meat
 

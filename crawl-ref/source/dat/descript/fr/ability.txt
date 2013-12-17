@@ -194,7 +194,7 @@ le plus puissant des chocs de Zin.
 yeux du Donneur de Lois. La récitation des versets de ce livre blessera de
 telles créatures.
 
-* Livres des Apostats: Les créatures intelligentes qui ne suivent pas Zin mais
+* Livres des Apostats : Les créatures intelligentes qui ne suivent pas Zin mais
 n'ont pas succombé au mal sont traitées avec moins de véhémence. Les versets de
 ce livre provoque la confusion. Mais ceux qui adore un dieu ennemi de Zin
 pourraient être privés de la possibilité de répandre leur foi impie.
@@ -609,7 +609,7 @@ Convert to Beogh ability
 Jurez fidélité à Beogh, le dieu des orcs des cavernes. Ce dieu exige que tous
 les non-croyants perissent, mais les nouveaux croyants doivent être épargné et
 accepté dans son giron. Attention, les orcs n'ayant pas vu en vous le messie
-peuvent être hostile jusqu'à ce que votre réputation soit plus grande!
+peuvent être hostile jusqu'à ce que votre réputation soit plus grande !
 
 Tous les autres dieux détestent Beogh, et ne prennent pas à la légère la
 désertion.

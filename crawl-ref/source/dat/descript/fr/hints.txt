@@ -180,7 +180,7 @@ HINT_CONVERT Xom
 
 Vous venez de vous convertir à la religion de <w>Xom</w>. Vous pouvez garder
 Xom heureux en le maintenant amusé ; vous ne voulez absolument pas que ce dieu
-s'ennuie de vous!
+s'ennuie de vous !
 
 Si vous gardez Xom amusé, il vous traitera comme sa chose, vous aidant ou vous
 persécutant aléatoirement pour son propre plaisir ; sinon, il vous traitera
