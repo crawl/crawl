@@ -104,11 +104,6 @@ beef jerky
 
 Une tranche séchée de vache ou de bœuf mort.
 %%%%
-blessed double sword
-
-Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a été
-améliorée par L’Étincelant.
-%%%%
 blessed falchion
 
 Une épée à large tranchant. Elle a été améliorée par L'Étincelant.
@@ -548,14 +543,6 @@ disc of storms
 Cet objet, extrêmement puissant, peut déchaîner des tempêtes d'électricité
 destructrices. Son efficacité est prouvée entre les main d'une personne
 habituée à manipuler les dispositifs magiques.
-%%%%
-double sword
-
-Une arme magique avec deux lames tranchantes comme un rasoir. Selon la légende,
-un chevalier aurait suggéré l'idée d'une épée à double lames, à un maître
-faussaire, pour lui faire une blague, mais a été agréablement surpris de
-constater que non seulement le faussaire était capable de faire une telle épée,
-mais que l'arme produite était extrêmement mortelle.
 %%%%
 eggplant
 

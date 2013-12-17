@@ -97,11 +97,6 @@ beef jerky
 
 Et stykke konserveret, død ko.
 %%%%
-blessed double sword
-
-Et magisk våben med to barberbladsskarpe klinger. Det er blevet forbedret af
-Den Strålendes kraft.
-%%%%
 blessed falchion
 
 Et sværd med en bred, skærende klinge. Det er blevet forbedret af Den
@@ -617,13 +612,6 @@ disc of storms
 Denne ekstremt kraftulde genstand kan udløse en altødelæggende storm af
 elektricitet. Dens effektivitet er langt større i hænderne på en, som er dygtig
 med magiske anordninger.
-%%%%
-double sword
-
-Et magisk våben med to knivskarpe klinger. Legenderne fortæller at en ridder
-engang foreslog idéen om et dobbelt-klinget sværd til en mestersmed som en
-vittighed, men blev behageligt overrasket over at smeden ikke alene kunne skabe
-et sådant sværd, men at resultatet også var utroligt dødbringende.
 %%%%
 eggplant
 

@@ -88,6 +88,14 @@ bardiche
 
 A long pole with an enormous, cleaving blade on one end.
 %%%%
+bastard sword
+
+A long, large sword. A grown-up human or elf can manage to wield it in one
+hand, while anyone of a weaker race will need to grip it with two. In fact,
+it is the heaviest and most damaging weapon anyone other than certain
+humanoid insects can use with a shield. And meeting a sharp blade this long
+spells doom for any opponent.
+%%%%
 battleaxe
 
 A large two-handed war axe with a formidable double-sided head, designed for
@@ -97,14 +105,13 @@ beef jerky
 
 A strip of preserved dead cow or bull.
 %%%%
+blessed bastard sword
+
+A long, large sword, enhanced by the Shining One's power.
+%%%%
 blessed claymore
 
 A massive sword, enhanced by the Shining One's power.
-%%%%
-blessed double sword
-
-A magical weapon with two razor-sharp blades. It has been enhanced by the
-Shining One's power.
 %%%%
 blessed falchion
 
@@ -614,13 +621,6 @@ disc of storms
 This extremely powerful item can unleash a destructive storm of electricity.
 Its effectiveness greatly improves in the hands of one skilled in using magical
 devices.
-%%%%
-double sword
-
-A magical weapon with twin razor-sharp blades. According to legend, a knight
-once suggested the idea of a double-bladed sword to a master forger as a joke,
-but was pleasantly surprised to find that not only was the forger capable of
-making such a sword, but that the weapon produced was extremely deadly.
 %%%%
 eggplant
 

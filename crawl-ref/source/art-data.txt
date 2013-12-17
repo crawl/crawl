@@ -259,7 +259,7 @@ VALUE:   1200
 BOOL:    special, evil
 
 NAME:    Sword of Zonguldrok
-OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
+OBJ:     OBJ_WEAPONS/WPN_BASTARD_SWORD
 PLUS:    +9/+9
 COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok

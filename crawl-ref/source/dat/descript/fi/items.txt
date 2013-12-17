@@ -91,10 +91,6 @@ beef jerky
 
 Suikale säilöttyä lehmää tai sonnia.
 %%%%
-blessed double sword
-
-Maaginen ase kahdella veitsenterävällä terällä. Se on Hohtavan vahvistama.
-%%%%
 blessed falchion
 
 Leveäteräinen miekka. Se on Hohtavan vahvistama.

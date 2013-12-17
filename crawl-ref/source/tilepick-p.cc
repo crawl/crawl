@@ -154,8 +154,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_QUICK_BLADE:
         tile = TILEP_HAND1_DAGGER;
         break;
-    case WPN_DOUBLE_SWORD:
-        tile = TILEP_HAND1_DOUBLE_SWORD;
+    case WPN_BASTARD_SWORD:
+        tile = TILEP_HAND1_BASTARD_SWORD;
         break;
     case WPN_CLAYMORE:
         tile = TILEP_HAND1_CLAYMORE;
@@ -177,8 +177,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_BLESSED_FALCHION:
         tile = TILEP_HAND1_FALCHION;
         break;
-    case WPN_BLESSED_DOUBLE_SWORD:
-        tile = TILEP_HAND1_DOUBLE_SWORD;
+    case WPN_BLESSED_BASTARD_SWORD:
+        tile = TILEP_HAND1_BASTARD_SWORD;
         break;
     case WPN_BLESSED_CLAYMORE:
         tile = TILEP_HAND1_CLAYMORE_BLESSED;

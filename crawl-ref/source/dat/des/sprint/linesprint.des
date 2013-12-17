@@ -404,7 +404,7 @@ KITEM:    b = any weapon level:27 ident:all /\
           giant spiked plus:1 plus2:1 club not_cursed ident:all /\
           quick blade plus:3 plus2:3 not_cursed ident:all /\
           great sword plus:1 plus2:1 not_cursed ident:all /\
-          double sword plus:1 plus2:1 not_cursed ident:all /\
+          bastard sword plus:1 plus2:1 not_cursed ident:all /\
           demon blade plus:1 plus2:1 not_cursed ident:all w:3 /\
           claymore plus:0 plus2:0 not_cursed ident:all w:3 /\
           lajatang plus:1 plus2:1 not_cursed ident:all /\
@@ -590,8 +590,8 @@ KITEM:    b = battleaxe plus:4 plus2:4 ego:none not_cursed ident:all /\
     giant spiked club plus:1 plus2:1 good_item not_cursed ident:all /\
     demon whip plus:4 plus2:4 ego:none not_cursed ident:all /\
     demon whip plus:1 plus2:1 good_item not_cursed ident:all /\
-    double sword plus:4 plus2:4 ego:none not_cursed ident:all /\
-    double sword plus:1 plus2:1 good_item not_cursed ident:all /\
+    bastard sword plus:4 plus2:4 ego:none not_cursed ident:all /\
+    bastard sword plus:1 plus2:1 good_item not_cursed ident:all /\
     claymore plus:2 plus2:2 ego:none not_cursed ident:all /\
     claymore plus:0 plus2:0 good_item not_cursed ident:all /\
     demon blade plus:4 plus2:4 ego:none not_cursed ident:all /\
@@ -823,9 +823,9 @@ KITEM:    b = battleaxe plus:5 plus2:5 good_item not_cursed ident:all /\
     demon whip plus:5 plus2:5 good_item not_cursed ident:all /\
     demon whip plus:5 plus2:5 randart not_cursed ident:all w:3 /\
     demon whip plus:0 plus2:9 randart not_cursed ident:all w:3 /\
-    double sword plus:5 plus2:5 good_item not_cursed ident:all /\
-    double sword plus:5 plus2:5 randart not_cursed ident:all w:3 /\
-    double sword plus:0 plus2:9 randart not_cursed ident:all w:3 /\
+    bastard sword plus:5 plus2:5 good_item not_cursed ident:all /\
+    bastard sword plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    bastard sword plus:0 plus2:9 randart not_cursed ident:all w:3 /\
     claymore plus:5 plus2:5 good_item not_cursed ident:all /\
     claymore plus:5 plus2:5 randart not_cursed ident:all w:3 /\
     claymore plus:0 plus2:7 randart not_cursed ident:all w:3 /\
