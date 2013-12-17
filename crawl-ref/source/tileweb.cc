@@ -1228,6 +1228,28 @@ void TilesFramework::_send_cursor(cursor_type type)
     }
 }
 
+void TilesFramework::_mcache_ref(bool inc)
+{
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
+        {
+            coord_def gc(x, y);
+
+            int fg_idx = m_current_view(gc).tile.fg & TILE_FLAG_MASK;
+            if (fg_idx >= TILEP_MCACHE_START)
+            {
+                mcache_entry *entry = mcache.get(fg_idx);
+                if (entry)
+                {
+                    if (inc)
+                        entry->inc_ref();
+                    else
+                        entry->dec_ref();
+                }
+            }
+        }
+}
+
 void TilesFramework::_send_map(bool force_full)
 {
     map<uint32_t, coord_def> new_monster_locs;
@@ -1327,8 +1349,14 @@ void TilesFramework::_send_map(bool force_full)
     if (force_full)
         _send_cursor(CURSOR_MAP);
 
+    if (m_mcache_ref_done)
+        _mcache_ref(false);
+
     m_current_map_knowledge = env.map_knowledge;
     m_current_view = m_next_view;
+
+    _mcache_ref(true);
+    m_mcache_ref_done = true;
 
     m_monster_locs = new_monster_locs;
 }
@@ -1563,7 +1591,15 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 
 void TilesFramework::redraw()
 {
-    if (!has_receivers()) return;
+    if (!has_receivers())
+    {
+        if (m_mcache_ref_done)
+        {
+            _mcache_ref(false);
+            m_mcache_ref_done = false;
+        }
+        return;
+    }
 
     if (m_last_ui_state != m_ui_state)
     {
