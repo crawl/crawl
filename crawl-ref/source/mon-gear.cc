@@ -942,7 +942,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
-                                               15, WPN_DEMON_TRIDENT,
                                                50, WPN_SPEAR,
                                                30, WPN_FALCHION,
                                                80, WPN_LONG_SWORD,
