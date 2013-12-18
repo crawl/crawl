@@ -81,7 +81,22 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             break;
         }
 
-        inc_hp((5 + random2(7)) / factor);
+        if (you.mutation[MUT_NO_DEVICE_HEAL]
+            && potion && was_known
+            && you.duration[DUR_CONF] == 0 
+            && you.duration[DUR_POISONING] == 0
+            && you.rotting == 0
+            && you.disease == 0)
+        {
+            mpr("You have no ailments to cure.");
+            return false;
+        }
+
+        if (!you.mutation[MUT_NO_DEVICE_HEAL]) 
+        {
+            inc_hp((5 + random2(7)) / factor);
+        }
+
         mpr("You feel better.");
 
         // Only fix rot when healed to full.
@@ -106,6 +121,17 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
                 return false;
             }
             mpr("You feel queasy.");
+            break;
+        }
+
+        if (you.mutation[MUT_NO_DEVICE_HEAL])
+        {
+            if (potion && was_known)
+            {
+                mpr("That would not heal you.");
+                return false;
+            }
+            mpr("That seemed strangely inert.");
             break;
         }
 

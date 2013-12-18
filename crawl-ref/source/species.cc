@@ -25,6 +25,7 @@ static species_type species_order[] =
     SP_DEEP_ELF,       SP_DEEP_DWARF,
     SP_HILL_ORC,       SP_LAVA_ORC,
     SP_MERFOLK,        SP_FORMICID,
+    SP_VINE_STALKER, 
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -67,7 +68,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
-      "Fe", "Op", "Dj", "LO", "Gr", "Fo",
+      "Fe", "Op", "Dj", "LO", "Gr", "Fo", "VS",
       // placeholders
       "El", "HD", "OM", "GE", "Gn", "MD",
 #if TAG_MAJOR_VERSION > 34
@@ -192,17 +193,18 @@ string species_name(species_type speci, bool genus, bool adj)
     default:
         switch (speci)
         {
-        case SP_HUMAN:      res = "Human";                             break;
-        case SP_HALFLING:   res = "Halfling";                          break;
-        case SP_KOBOLD:     res = "Kobold";                            break;
-        case SP_MUMMY:      res = "Mummy";                             break;
-        case SP_NAGA:       res = "Naga";                              break;
-        case SP_CENTAUR:    res = "Centaur";                           break;
-        case SP_SPRIGGAN:   res = "Spriggan";                          break;
-        case SP_MINOTAUR:   res = "Minotaur";                          break;
-        case SP_TENGU:      res = "Tengu";                             break;
-        case SP_GARGOYLE:   res = "Gargoyle";                          break;
-        case SP_FORMICID:   res = "Formicid";                          break;
+        case SP_HUMAN:          res = "Human";                                 break;
+        case SP_HALFLING:       res = "Halfling";                              break;
+        case SP_KOBOLD:         res = "Kobold";                                break;
+        case SP_MUMMY:          res = "Mummy";                                 break;
+        case SP_NAGA:           res = "Naga";                                  break;
+        case SP_CENTAUR:        res = "Centaur";                               break;
+        case SP_SPRIGGAN:       res = "Spriggan";                              break;
+        case SP_MINOTAUR:       res = "Minotaur";                              break;
+        case SP_TENGU:          res = "Tengu";                                 break;
+        case SP_GARGOYLE:       res = "Gargoyle";                              break;
+        case SP_FORMICID:       res = "Formicid";                              break;
+        case SP_VINE_STALKER:   res = "Vine Stalker";                          break;
 
         case SP_DEEP_DWARF:
             res = (adj ? "Dwarven" : genus ? "Dwarf" : "Deep Dwarf");
@@ -437,6 +439,7 @@ int species_exp_modifier(species_type species)
     case SP_HUMAN:
     case SP_HALFLING:
     case SP_KOBOLD:
+    case SP_VINE_STALKER:
         return 1;
     case SP_HILL_ORC:
     case SP_OGRE:
@@ -486,6 +489,7 @@ int species_hp_modifier(species_type species)
     case SP_FELID:
         return -4;
     case SP_SPRIGGAN:
+    case SP_VINE_STALKER:
         return -3;
     case SP_DEEP_ELF:
     case SP_TENGU:
@@ -541,6 +545,7 @@ int species_mp_modifier(species_type species)
         return 0;
     case SP_SLUDGE_ELF:
     case SP_TENGU:
+    case SP_VINE_STALKER:
         return 1;
     case SP_FELID:
     case SP_HIGH_ELF:
