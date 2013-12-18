@@ -1873,11 +1873,6 @@ bool is_boring_terrain(dungeon_feature_type feat)
         return true;
     }
 
-    // There are at least three Zot entrances, and they're always
-    // on D:27, so ignore them.
-    if (feat == DNGN_ENTER_ZOT)
-        return true;
-
     return false;
 }
 
