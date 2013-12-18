@@ -65,6 +65,7 @@
 #include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
@@ -2310,16 +2311,11 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             env.level_map_mask(*ri) |= MMT_MIMIC;
 
             // If we're mimicing a unique portal vault, give a chance for
-            // another one to spawn. FIXME: broken
-            string dst = env.markers.property_at(pos, MAT_ANY, "dstname");
-            if (dst.empty())
-                dst = env.markers.property_at(pos, MAT_ANY, "dst");
-            if (!dst.empty())
-            {
-                const string tag = "uniq_" + lowercase_string(dst);
-                if (you.uniq_map_tags.count(tag))
-                    you.uniq_map_tags.erase(tag);
-            }
+            // another one to spawn.
+            const char* dst = branches[stair_destination(pos).branch].abbrevname;
+            const string tag = "uniq_" + lowercase_string(dst);
+            if (you.uniq_map_tags.count(tag))
+                you.uniq_map_tags.erase(tag);
         }
     }
 }
