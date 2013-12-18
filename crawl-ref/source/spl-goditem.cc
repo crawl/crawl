@@ -381,6 +381,8 @@ int cast_healing(int pow, int max_pow, bool divine_ability,
 {
     pow = min(50, pow);
     max_pow = min(50, max_pow);
+    if (!not_self && !divine_ability && you.mutation[MUT_NO_DEVICE_HEAL])
+        return 0;
     return _healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
                           divine_ability, where, not_self, mode);
 }

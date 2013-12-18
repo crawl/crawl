@@ -1247,6 +1247,26 @@
   "acidic bite"
 },
 
+{ MUT_ANTIMAGIC_BITE,                 0,  1, false,  true,  true,
+  "antimagic bite",
+
+  {"Your bite disrupts and absorbs the magic of your enemies.", "", ""},
+  {"You feel a sudden thirst for magic.", "", ""},
+  {"Your magical appetite wanes.", "", ""},
+
+  "antimagic bite bite"
+},
+
+{ MUT_NO_DEVICE_HEAL,                 0,  1, true,  false,  false,
+  "no device heal",
+
+  {"Potions and wands cannot restore your HP.", "", ""},
+  {"Your system rejects artificial healing.", "", ""},
+  {"Your system accepts artificial healing.", "", ""},
+
+  "no device heal"
+},
+
 // Scale mutations
 { MUT_DISTORTION_FIELD,               2,  3, false, false, false,
   "repulsion field",

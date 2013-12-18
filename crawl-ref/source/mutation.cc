@@ -1193,6 +1193,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,    1},
         { MUT_FAST,                MUT_SLOW,             1},
         { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,       -1},
+        { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,     -1},
         };
 
     // If we have one of the pair, delete all levels of the other,

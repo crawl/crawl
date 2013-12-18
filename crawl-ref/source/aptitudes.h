@@ -1451,6 +1451,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FORMICID,        SK_POISON_MAGIC,    3),
     APT(SP_FORMICID,        SK_INVOCATIONS,     2),
     APT(SP_FORMICID,        SK_EVOCATIONS,      2),
+
+    // SP_VINE_STALKER
+    APT(SP_VINE_STALKER,    SK_FIGHTING,        0),
+    APT(SP_VINE_STALKER,    SK_SHORT_BLADES,    -1),
+    APT(SP_VINE_STALKER,    SK_LONG_BLADES,     -1),
+    APT(SP_VINE_STALKER,    SK_AXES,            -1),
+    APT(SP_VINE_STALKER,    SK_MACES_FLAILS,    -1),
+    APT(SP_VINE_STALKER,    SK_POLEARMS,        -1),
+    APT(SP_VINE_STALKER,    SK_STAVES,          -1),
+    APT(SP_VINE_STALKER,    SK_SLINGS,          -1),
+    APT(SP_VINE_STALKER,    SK_BOWS,            -1),
+    APT(SP_VINE_STALKER,    SK_CROSSBOWS,       -1),
+    APT(SP_VINE_STALKER,    SK_THROWING,        -1),
+    APT(SP_VINE_STALKER,    SK_ARMOUR,          -2),
+    APT(SP_VINE_STALKER,    SK_DODGING,         -2),
+    APT(SP_VINE_STALKER,    SK_STEALTH,         3),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_VINE_STALKER,    SK_STABBING,      -99),
+#endif
+    APT(SP_VINE_STALKER,    SK_SHIELDS,        -1),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_VINE_STALKER,    SK_TRAPS,         -99),
+#endif
+    APT(SP_VINE_STALKER,    SK_UNARMED_COMBAT,  0),
+    APT(SP_VINE_STALKER,    SK_SPELLCASTING,    0),
+    APT(SP_VINE_STALKER,    SK_CONJURATIONS,    0),
+    APT(SP_VINE_STALKER,    SK_HEXES,           0),
+    APT(SP_VINE_STALKER,    SK_CHARMS,          0),
+    APT(SP_VINE_STALKER,    SK_SUMMONINGS,      0),
+    APT(SP_VINE_STALKER,    SK_NECROMANCY,      0),
+    APT(SP_VINE_STALKER,    SK_TRANSLOCATIONS,  0),
+    APT(SP_VINE_STALKER,    SK_TRANSMUTATIONS,  0),
+    APT(SP_VINE_STALKER,    SK_FIRE_MAGIC,      0),
+    APT(SP_VINE_STALKER,    SK_ICE_MAGIC,       0),
+    APT(SP_VINE_STALKER,    SK_AIR_MAGIC,       0),
+    APT(SP_VINE_STALKER,    SK_EARTH_MAGIC,     0),
+    APT(SP_VINE_STALKER,    SK_POISON_MAGIC,    0),
+    APT(SP_VINE_STALKER,    SK_INVOCATIONS,     0),
+    APT(SP_VINE_STALKER,    SK_EVOCATIONS,      0),
 };
 
 #endif

@@ -1788,6 +1788,32 @@ Gargoyles
   skilled with blunt weapons and in unarmed combat. They can also be exceptional
   earth-based conjurers.
 
+Vine Stalkers
+  Limber in shape, Vine Stalkers are anthropomorphic masses of thick vines.
+  They possess a once-humanoid core, parasitized moments before death by the
+  magical vines. Lacking any other discernible features, their faces are
+  dominated by their disproportionate, vicious maw with which they disrupt and
+  devour the magical energies of their foes.
+ 
+  Magic courses freely through their bodies, and they can not only share any
+  damage taken with their magical reserves, but in fact physically regenerate
+  at an alarming rate. However these traits come at a price: the dual nature of
+  their bodies makes them frail to the extreme and they cannot benefit from
+  potions or wands to heal their wounds.
+ 
+  Living examples of adaptation, Vine Stalkers level up quickly and lend well
+  to an all-out offensive style; trusting their stealth to choose their prey
+  and then their regenerating capabilities to power through the wounds they may
+  sustain in battle. Many members of the species however, are seen wielding
+  magic quite competently and then switching to a hybrid style when their
+  reserves start to run low, thus replenishing their shroud of magic and their
+  spells' fuel with each voracious bite.
+
+  Their great offensive capabilities and intrinsic regeneration lead some Vine
+  Stalkers to eschew more traditional defenses such as armour and dodging,
+  although this proves fatally unwise often times when their judgement of their
+  prey fails and they bite more than they can possibly chew.
+
 Orcs
 ========================================
 

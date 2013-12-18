@@ -1237,6 +1237,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     aux_verb.clear();
     damage_brand = SPWPN_NORMAL;
     aux_damage = 0;
+    int str_bite_damage = 0;
 
     switch (atk)
     {
@@ -1325,7 +1326,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
         aux_damage += you.has_usable_fangs() * 2;
-        aux_damage += div_rand_round(max(you.strength()-10, 0), 5);
+        str_bite_damage += div_rand_round(max(you.strength()-10, 0), 5);
+        aux_damage += str_bite_damage;
         noise_factor = 75;
 
         // prob of vampiric bite:
@@ -1337,6 +1339,14 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
                 || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
         {
             damage_brand = SPWPN_VAMPIRICISM;
+        }
+
+        if (player_mutation_level(MUT_ANTIMAGIC_BITE))
+        {
+            //Change formula to fangs_level*3 + str/6
+            aux_damage -= str_bite_damage;
+            aux_damage += div_rand_round(2 * you.get_experience_level(), 3);
+            damage_brand = SPWPN_ANTIMAGIC;
         }
 
         if (player_mutation_level(MUT_ACIDIC_BITE))
@@ -1579,18 +1589,44 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_THE).c_str());
-                 corrode_monster(defender->as_monster(), &you);
+            corrode_monster(defender->as_monster(), &you);
         }
 
         // TODO: remove this? Unarmed poison attacks?
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), &you);
 
+
         // Normal vampiric biting attack, not if already got stabbing special.
         if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
         {
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
+        }
+
+        if (damage_brand == SPWPN_ANTIMAGIC && you.mutation[MUT_ANTIMAGIC_BITE]
+            && damage_done > 0)
+        {
+            bool spell_user = false;
+
+            if (defender->as_monster()->can_use_spells()
+                && !defender->as_monster()->is_priest()
+                && !mons_class_flag(defender->type, M_FAKE_SPELLS))
+            {
+                spell_user = true;
+            }
+
+            antimagic_affects_defender(true);
+            mprf("You drain %s magic.",
+                 defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
+            inc_mp(random2(damage_done) + 1);
+
+            if (spell_user) // The mana drain is more effective on spellcasters
+            {
+                inc_mp(random2(damage_done) + 1);
+            }
+
+            mprf("You feel%sinvigorated.", spell_user ? " very " : " ");
         }
 
         if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN
@@ -2474,7 +2510,7 @@ bool melee_attack::distortion_affects_defender()
     return false;
 }
 
-void melee_attack::antimagic_affects_defender()
+void melee_attack::antimagic_affects_defender(bool amplify_effect = false)
 {
     if (defender->is_player())
     {
@@ -2491,6 +2527,8 @@ void melee_attack::antimagic_affects_defender()
     {
         int dur = div_rand_round(damage_done * 8, defender->as_monster()->hit_dice);
         dur = random2(dur + 1) * BASELINE_DELAY;
+        if (amplify_effect)
+            dur *= 2;
         defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                 attacker, // doesn't matter
                                 dur));
@@ -5425,10 +5463,11 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
                && !one_chance_in(3);
 
     case UNAT_BITE:
-        return (is_uc
+        return ((is_uc
                 || you.has_usable_fangs()
                 || player_mutation_level(MUT_ACIDIC_BITE))
-               && x_chance_in_y(2, 5);
+                && x_chance_in_y(2, 5))
+                || you.mutation[MUT_ANTIMAGIC_BITE];
 
     case UNAT_PUNCH:
         return is_uc && !one_chance_in(3);
