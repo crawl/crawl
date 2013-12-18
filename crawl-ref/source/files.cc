@@ -877,9 +877,12 @@ static int _get_dest_stair_type(branch_type old_branch,
     if (stair_taken >= DNGN_ENTER_DIS && stair_taken <= DNGN_ENTER_TARTARUS)
         return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
 
-    if (stair_taken == DNGN_ENTER_PORTAL_VAULT
-        || stair_taken >= DNGN_ENTER_FIRST_PORTAL
-            && stair_taken <= DNGN_ENTER_LAST_PORTAL)
+    if (
+#if TAG_MAJOR_VERSION == 34
+        stair_taken == DNGN_ENTER_PORTAL_VAULT ||
+#endif
+        stair_taken >= DNGN_ENTER_FIRST_PORTAL
+        && stair_taken <= DNGN_ENTER_LAST_PORTAL)
     {
         return DNGN_STONE_ARCH;
     }
@@ -982,7 +985,9 @@ static void _close_level_gates()
         case DNGN_ENTER_TARTARUS:
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_ENTER_LABYRINTH:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_PORTAL_VAULT:
+#endif
             remove_markers_and_listeners_at(*ri);
             grd(*ri) = DNGN_STONE_ARCH;
         default: ;

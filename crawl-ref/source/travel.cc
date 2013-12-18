@@ -3096,11 +3096,12 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     int gridc = grd(pos);
     level_id id = current();
 
-    if (gridc == branches[id.branch].exit_stairs
-        || gridc == DNGN_ENTER_PORTAL_VAULT)
-    {
+    if (gridc == branches[id.branch].exit_stairs)
         return stair_destination(pos);
-    }
+#if TAG_MAJOR_VERSION == 34
+    if (gridc == DNGN_ENTER_PORTAL_VAULT)
+        return stair_destination(pos);
+#endif
 
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {

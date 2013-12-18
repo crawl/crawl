@@ -146,7 +146,9 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     {
     default:
         if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
+#if TAG_MAJOR_VERSION == 34
                  || feat == DNGN_ENTER_PORTAL_VAULT
+#endif
                  || feat == DNGN_ENTER_LABYRINTH
                  || feat == DNGN_ENTER_HELL
                  || feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_ABYSS
@@ -165,7 +167,9 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
         }
         else if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL
+#if TAG_MAJOR_VERSION == 34
                  || feat == DNGN_EXIT_PORTAL_VAULT
+#endif
                  || feat == DNGN_EXIT_HELL
                  || feat == DNGN_EXIT_ABYSS
                  || feat == DNGN_EXIT_PANDEMONIUM

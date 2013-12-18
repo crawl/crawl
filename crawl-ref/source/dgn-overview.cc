@@ -692,7 +692,9 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
         // hell upstairs are never interesting
         if (player_in_hell())
             break;
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
+#endif
     case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_ABYSS:
     case DNGN_ENTER_PANDEMONIUM:

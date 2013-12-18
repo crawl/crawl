@@ -188,8 +188,10 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_HELL:
         case DNGN_EXIT_HELL:
         case DNGN_ENTER_LABYRINTH:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_PORTAL_VAULT:
         case DNGN_EXIT_PORTAL_VAULT:
+#endif
         case DNGN_ENTER_SHOP:
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:
@@ -235,7 +237,9 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_RETURN_FROM_SHOALS:
         case DNGN_RETURN_FROM_SPIDER:
         case DNGN_RETURN_FROM_FOREST:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_EXIT_PORTAL_VAULT:
+#endif
             return true;
         default:
             return false;
@@ -288,20 +292,24 @@ bool is_feature(ucs_t feature, const coord_def& where)
     }
 }
 
-static bool _is_feature_fudged(ucs_t feature, const coord_def& where)
+static bool _is_feature_fudged(ucs_t feat, const coord_def& where)
 {
     if (!env.map_knowledge(where).known())
         return false;
 
-    if (is_feature(feature, where))
+    if (is_feature(feat, where))
         return true;
 
-    if (feature == '<')
+    if (feat == '<')
     {
+        if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
+            return true;
         switch (grd(where))
         {
         case DNGN_EXIT_HELL:
+#if TAG_MAJOR_VERSION == 34
         case DNGN_EXIT_PORTAL_VAULT:
+#endif
         case DNGN_EXIT_ABYSS:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_RETURN_FROM_DEPTHS:
@@ -311,8 +319,10 @@ static bool _is_feature_fudged(ucs_t feature, const coord_def& where)
             return false;
         }
     }
-    else if (feature == '>')
+    else if (feat == '>')
     {
+        if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL)
+            return true;
         switch (grd(where))
         {
         case DNGN_ENTER_DIS:

@@ -1341,8 +1341,10 @@ enum dungeon_feature_type
     DNGN_ENTER_HELL,
     DNGN_ENTER_LABYRINTH,
     DNGN_TELEPORTER,
+#if TAG_MAJOR_VERSION == 34
     DNGN_ENTER_PORTAL_VAULT,
     DNGN_EXIT_PORTAL_VAULT,
+#endif
     DNGN_EXPIRED_PORTAL,
 
     // Entrances to various branches

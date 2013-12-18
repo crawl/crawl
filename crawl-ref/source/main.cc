@@ -1527,8 +1527,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down)
         return false;
 
     // Exiting Ziggurats early.
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && player_in_branch(BRANCH_ZIGGURAT)
+    if (ygrd == DNGN_EXIT_ZIGGURAT
         && you.depth < brdepth[BRANCH_ZIGGURAT])
     {
         // "unsafe", as often you bail at single-digit hp and a wasted turn to

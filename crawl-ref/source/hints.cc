@@ -1061,7 +1061,7 @@ static string _describe_portal(const coord_def &gc)
     text << "stand over the portal and press <w>></w>. To return find "
             "<tiles>a similar looking portal tile </tiles>"
             "<console>another <w>"
-         << stringize_glyph(get_feat_symbol(DNGN_EXIT_PORTAL_VAULT))
+         << stringize_glyph(get_feat_symbol(DNGN_EXIT_SEWER))
          << "</w> (though NOT the ancient stone arch you'll start "
             "out on) </console>"
             "and press <w><<</w>."
@@ -3942,7 +3942,9 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ESCAPE_HATCH_UP:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
+#endif
         return true;
     default:
         return false;
@@ -4089,10 +4091,12 @@ static void _hints_describe_feature(int x, int y)
          Hints.hints_events[HINT_SEEN_ESCAPE_HATCH] = false;
          break;
 
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
          ostr << "This " << _describe_portal(where);
          Hints.hints_events[HINT_SEEN_PORTAL] = false;
          break;
+#endif
 
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
@@ -4457,7 +4461,11 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_RUNED_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);
+#if TAG_MAJOR_VERSION == 34
     else if (grd(gc) == DNGN_ENTER_PORTAL_VAULT)
+        learned_something_new(HINT_SEEN_PORTAL, gc);
+#endif
+    else if (grd(gc) >= DNGN_ENTER_FIRST_PORTAL && grd(gc) <= DNGN_ENTER_LAST_PORTAL)
         learned_something_new(HINT_SEEN_PORTAL, gc);
 
     const int it = you.visible_igrd(gc);
