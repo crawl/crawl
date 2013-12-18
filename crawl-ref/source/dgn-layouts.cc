@@ -1135,7 +1135,8 @@ static bool _may_overwrite_pos(coord_def c)
     const dungeon_feature_type grid = grd(c);
 
     // Don't overwrite any stairs or branch entrances.
-    if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_EXIT_PORTAL_VAULT
+    if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_TELEPORTER
+        || grid >= DNGN_ENTER_FIRST_PORTAL && grid <= DNGN_EXIT_LAST_PORTAL
         || grid == DNGN_EXIT_HELL)
     {
         return false;

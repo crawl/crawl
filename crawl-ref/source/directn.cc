@@ -3161,8 +3161,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "dark tunnel";
     case DNGN_ENTER_WIZLAB:
         return "magical portal";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
         return "gate leading to a distant place";
+#endif
     case DNGN_MALIGN_GATEWAY:
         return "portal to somewhere";
     case DNGN_EXPIRED_PORTAL:
@@ -3206,7 +3208,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_EXIT_SEWER:
     case DNGN_EXIT_OSSUARY:
     case DNGN_EXIT_BAILEY:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_EXIT_PORTAL_VAULT:
+#endif
         return "gate leading back out of here";
 
     // altars
@@ -3407,11 +3411,14 @@ string feature_description_at(const coord_def& where, bool covering,
     case DNGN_ENTER_SHOP:
         return shop_name(where, add_stop);
 
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
         // Should have been handled at the top of the function.
         return thing_do_grammar(
                    dtype, add_stop, false,
                    "UNAMED PORTAL VAULT ENTRY");
+#endif
+
     case DNGN_FLOOR:
         if (dtype == DESC_A)
             dtype = DESC_THE;

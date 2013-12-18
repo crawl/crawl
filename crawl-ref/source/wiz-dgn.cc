@@ -44,75 +44,57 @@
 #ifdef WIZARD
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
-    if (player_in_connected_branch() || player_in_branch(BRANCH_ABYSS))
-    {
-        int depth = you.depth;
-        if (down)
-            depth++;
-        else
-            depth--;
-
-        // Can't go down from bottom level of a branch.
-        if (depth > brdepth[you.where_are_you])
-        {
-            mpr("Can't go down from the bottom of a branch.");
-            return DNGN_UNSEEN;
-        }
-        // Going up from top level of branch
-        else if (depth == 0)
-        {
-            // Special cases
-            if (player_in_branch(BRANCH_VESTIBULE))
-                return DNGN_EXIT_HELL;
-            else if (player_in_branch(BRANCH_ABYSS))
-                return DNGN_EXIT_ABYSS;
-            else if (player_in_branch(BRANCH_DUNGEON))
-                return DNGN_STONE_STAIRS_UP_I;
-
-            dungeon_feature_type stairs = your_branch().exit_stairs;
-
-            if (stairs < DNGN_RETURN_FROM_FIRST_BRANCH
-                || stairs > DNGN_RETURN_FROM_LAST_BRANCH)
-            {
-                mpr("This branch has no exit stairs defined.");
-                return DNGN_UNSEEN;
-            }
-            return stairs;
-        }
-        // Branch non-edge cases
-        else if (depth >= 1)
-        {
-            if (down)
-                return DNGN_STONE_STAIRS_DOWN_I;
-            else
-                return DNGN_ESCAPE_HATCH_UP;
-        }
-        else
-        {
-            mpr("Bug in determining level exit.");
-            return DNGN_UNSEEN;
-        }
-    }
-
-    switch (you.where_are_you)
-    {
-    case BRANCH_LABYRINTH:
-        if (down)
-        {
-            mpr("Can't go down in the Labyrinth.");
-            return DNGN_UNSEEN;
-        }
-        else
-            return DNGN_ESCAPE_HATCH_UP;
-
-    case BRANCH_PANDEMONIUM:
+    if (you.where_are_you == BRANCH_PANDEMONIUM)
         if (down)
             return DNGN_TRANSIT_PANDEMONIUM;
         else
             return DNGN_EXIT_PANDEMONIUM;
 
-    default:
-        return DNGN_EXIT_PORTAL_VAULT;
+    int depth = you.depth;
+    if (down)
+        depth++;
+    else
+        depth--;
+
+    // Can't go down from bottom level of a branch.
+    if (depth > brdepth[you.where_are_you])
+    {
+        mpr("Can't go down from the bottom of a branch.");
+        return DNGN_UNSEEN;
+    }
+    // Going up from top level of branch
+    else if (depth == 0)
+    {
+        // Special cases
+        if (player_in_branch(BRANCH_VESTIBULE))
+            return DNGN_EXIT_HELL;
+        else if (player_in_branch(BRANCH_ABYSS))
+            return DNGN_EXIT_ABYSS;
+        else if (player_in_branch(BRANCH_DUNGEON))
+            return DNGN_STONE_STAIRS_UP_I;
+
+        dungeon_feature_type stairs = your_branch().exit_stairs;
+
+        if (stairs < DNGN_RETURN_FROM_FIRST_BRANCH
+            || stairs > DNGN_RETURN_FROM_LAST_BRANCH)
+        {
+            mpr("This branch has no exit stairs defined.");
+            return DNGN_UNSEEN;
+        }
+        return stairs;
+    }
+    // Branch non-edge cases
+    else if (depth >= 1)
+    {
+        if (down)
+            return DNGN_STONE_STAIRS_DOWN_I;
+        else
+            return DNGN_ESCAPE_HATCH_UP;
+    }
+    else
+    {
+        mpr("Bug in determining level exit.");
+        return DNGN_UNSEEN;
     }
 }
 

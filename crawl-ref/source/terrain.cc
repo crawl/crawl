@@ -117,9 +117,11 @@ bool feat_is_staircase(dungeon_feature_type feat)
 
 bool feat_is_portal(dungeon_feature_type feat)
 {
-    return feat == DNGN_ENTER_PORTAL_VAULT
+    return feat == DNGN_MALIGN_GATEWAY
+#if TAG_MAJOR_VERSION == 34
+        || feat == DNGN_ENTER_PORTAL_VAULT
         || feat == DNGN_EXIT_PORTAL_VAULT
-        || feat == DNGN_MALIGN_GATEWAY
+#endif
         || feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL
         || feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL;
 }
@@ -260,10 +262,14 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_EXIT_DUNGEON:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_EXIT_PORTAL_VAULT:
+#endif
         return CMD_GO_UPSTAIRS;
 
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
+#endif
     case DNGN_ENTER_HELL:
     case DNGN_ENTER_LABYRINTH:
     case DNGN_STONE_STAIRS_DOWN_I:
@@ -709,7 +715,10 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
 {
     // Don't risk trapping the player inside a portal vault, don't destroy
     // runed doors either.
-    if (feat == DNGN_EXIT_PORTAL_VAULT || feat == DNGN_RUNED_DOOR
+    if (feat == DNGN_RUNED_DOOR
+#if TAG_MAJOR_VERSION == 34
+        || feat == DNGN_EXIT_PORTAL_VAULT
+#endif
         || feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
         return false;
 
@@ -1588,7 +1597,10 @@ static const char *dngn_feature_names[] =
 "stone_arch", "enter_pandemonium", "exit_pandemonium",
 "transit_pandemonium", "exit_dungeon", "exit_through_abyss",
 "exit_hell", "enter_hell", "enter_labyrinth",
-"teleporter", "enter_portal_vault", "exit_portal_vault",
+"teleporter",
+#if TAG_MAJOR_VERSION == 34
+"enter_portal_vault", "exit_portal_vault",
+#endif
 "expired_portal",
 
 #if TAG_MAJOR_VERSION == 34
@@ -1854,10 +1866,6 @@ void set_terrain_changed(const coord_def p)
 bool is_boring_terrain(dungeon_feature_type feat)
 {
     if (!is_notable_terrain(feat))
-        return true;
-
-    // A portal deeper into the Ziggurat is boring.
-    if (feat == DNGN_ENTER_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
         return true;
 
     // Altars in the temple are boring.

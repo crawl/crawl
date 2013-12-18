@@ -228,8 +228,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
 {
     process_sunlights(true);
 
-    if (player_in_branch(BRANCH_ZIGGURAT)
-        && stair_used == DNGN_EXIT_PORTAL_VAULT)
+    if (stair_used == DNGN_EXIT_ZIGGURAT)
     {
         if (you.depth == 27)
             you.zigs_completed++;
@@ -569,6 +568,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     case DNGN_EXIT_THROUGH_ABYSS:
         return level_id(BRANCH_ABYSS);
 
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
         if (dst.empty())
         {
@@ -578,6 +578,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
                 return level_id();
         }
         return level_id::parse_level_id(dst);
+#endif
 
     case DNGN_ENTER_HELL:
         if (for_real && !player_in_hell())
@@ -587,7 +588,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     case DNGN_EXIT_ABYSS:
         if (you.char_direction == GDT_GAME_START)
             return level_id(BRANCH_DUNGEON, 1);
+#if TAG_MAJOR_VERSION == 34
     case DNGN_EXIT_PORTAL_VAULT:
+#endif
     case DNGN_EXIT_PANDEMONIUM:
         if (you.level_stack.empty())
         {
@@ -852,7 +855,9 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
 
     if (stair_find == DNGN_ENTER_LABYRINTH
+#if TAG_MAJOR_VERSION == 34
         || stair_find == DNGN_ENTER_PORTAL_VAULT
+#endif
         || stair_find == DNGN_ENTER_PANDEMONIUM
         || stair_find == DNGN_ENTER_ABYSS
         || stair_find >= DNGN_ENTER_FIRST_PORTAL
