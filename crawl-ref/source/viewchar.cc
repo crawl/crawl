@@ -80,8 +80,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
        the lack of a character in the chosen font, and most popular fonts have a
        quite limited repertoire.  A subset that is reasonably likely to be present
        is https://en.wikipedia.org/wiki/WGL4; we could provide a richer alternate
-       set for those on more capable terminals (including for example Thai 0xEB0
-       for clouds), but that would require decoupling encoding from charset.
+       set for those on more capable terminals under a different name.
     */
     {
     //  ▒       ▓       ░       ·     ◦       '     ◼
