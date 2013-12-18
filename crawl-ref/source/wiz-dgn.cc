@@ -207,33 +207,6 @@ void wizard_interlevel_travel()
     _wizard_go_to_level(pos);
 }
 
-bool wizard_create_portal(const coord_def& pos)
-{
-    mprf(MSGCH_PROMPT, "Destination for portal:");
-
-    string dummy;
-    level_id dest = prompt_translevel_target(TPF_ALLOW_UPDOWN
-        | TPF_SHOW_PORTALS_ONLY, dummy).p.id;
-
-    if (dest.depth < 1 || dest.depth > brdepth[dest.branch])
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
-    marker->set_property("dst", dest.describe());
-    marker->set_property("feature_description",
-                         "wizard portal, dest = " + dest.describe());
-    marker->set_property("feature_description_long",
-                         "It's a multi-use portal.");
-    env.markers.add(marker);
-    env.markers.clear_need_activate();
-    dungeon_terrain_changed(pos, DNGN_ENTER_PORTAL_VAULT, false);
-    mprf("A portal to %s appears before you.", dest.describe().c_str());
-    return true;
-}
-
 bool wizard_create_feature(const coord_def& pos)
 {
     const bool mimic = (pos != you.pos());
@@ -309,9 +282,6 @@ bool wizard_create_feature(const coord_def& pos)
 
     if (feat == DNGN_ENTER_SHOP)
         return debug_make_shop(pos);
-
-    if (feat == DNGN_ENTER_PORTAL_VAULT)
-        return wizard_create_portal(pos);
 
     if (feat_is_trap(feat, true))
         return debug_make_trap(pos);
