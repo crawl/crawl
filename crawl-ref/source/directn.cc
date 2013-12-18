@@ -1656,12 +1656,9 @@ void direction_chooser::handle_movement_key(command_type key_command,
         const coord_def& delta = Compass[compass_idx];
         const bool unshifted = (shift_direction(key_command) != key_command);
         if (unshifted)
-        {
             set_target(target() + delta);
-        } else
-        {
+        else
             *loop_done = select_compass_direction(delta);
-        }
     }
 }
 
