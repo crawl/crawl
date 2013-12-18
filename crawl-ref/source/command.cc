@@ -2598,7 +2598,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "\n"
                        "<yellow>Create level features</yellow>\n"
                        "<w>L</w>      place a vault by name\n"
-                       "<w>p</w>      make a portal\n"
                        "<w>T</w>      make a trap\n"
                        "<w><<</w>/<w>></w>    create up/down staircase\n"
                        "<w>(</w>      turn cell into feature\n"

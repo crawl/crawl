@@ -10,7 +10,6 @@
 
 #include "player.h"
 
-bool wizard_create_portal(const coord_def& pos = you.pos());
 bool wizard_create_feature(const coord_def& pos = you.pos());
 void wizard_list_branches();
 void wizard_reveal_traps();
