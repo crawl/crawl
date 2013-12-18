@@ -317,6 +317,8 @@ void corpse_rot(actor* caster)
 {
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
+    bool saw_rot = caster && (caster->is_player() || you.can_see(caster));
+
     for (radius_iterator ri(center, 6, C_ROUND, LOS_NO_TRANS); ri; ++ri)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
@@ -334,13 +336,16 @@ void corpse_rot(actor* caster)
 
                     place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3),caster);
 
+                    if (!saw_rot && you.see_cell(*ri))
+                        saw_rot = true;
+
                     // Don't look for more corpses here.
                     break;
                 }
     }
 
-    if (you.can_smell() && (!caster || you.can_see(caster)))
-        mpr("You smell decay.");
+    if (saw_rot)
+        mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
 
     // Should make zombies decay into skeletons?
 }
