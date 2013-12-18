@@ -222,7 +222,7 @@ void TilesFramework::finish_message()
                         break;
                     }
                     else if (errno == ENOBUFS || errno == EAGAIN
-                        || errno == EWOULDBLOCK)
+                        || errno == EWOULDBLOCK || errno == EINTR)
                     {
                         // Wait for up to half a second, then try again
                         usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
