@@ -1988,7 +1988,10 @@ static const char *enchant_names[] =
     "confusion", "invis", "poison", "rot", "summon", "abj", "corona",
     "charm", "sticky_flame", "glowing_shapeshifter", "shapeshifter", "tp",
     "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
-    "sleepy", "held", "battle_frenzy",
+#if TAG_MAJOR_VERSION == 34
+    "sleepy",
+#endif
+    "held", "battle_frenzy",
 #if TAG_MAJOR_VERSION == 34
     "temp_pacif",
 #endif
