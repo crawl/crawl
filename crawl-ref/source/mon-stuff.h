@@ -132,7 +132,7 @@ void unawaken_vines(const monster* mons, bool quiet);
 int dismiss_monsters(string pattern);
 void zap_los_monsters(bool items_also);
 
-bool curse_an_item(bool quiet = false);
+bool curse_an_item(bool ignore_holy_wrath = false);
 
 bool is_any_item(const item_def& item);
 void monster_drop_things(

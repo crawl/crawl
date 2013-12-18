@@ -1058,9 +1058,8 @@ void MiscastEffect::_enchantment(int severity)
             contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
             break;
         case 3:
-            do
-                curse_an_item();
-            while (!one_chance_in(3));
+            while (curse_an_item(true) && !one_chance_in(3))
+                ;
             mpr("You sense an overwhelmingly malignant aura!");
             break;
         }
