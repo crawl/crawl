@@ -106,16 +106,13 @@ bool mimic_at(const coord_def &c)
 }
 
 // Monster curses a random player inventory item.
-bool curse_an_item(bool quiet)
+bool curse_an_item(bool ignore_holy_wrath)
 {
     // allowing these would enable mummy scumming
     if (you_worship(GOD_ASHENZARI))
     {
-        if (!quiet)
-        {
-            mprf(MSGCH_GOD, "The curse is absorbed by %s.",
-                 god_name(GOD_ASHENZARI).c_str());
-        }
+        mprf(MSGCH_GOD, "The curse is absorbed by %s.",
+             god_name(GOD_ASHENZARI).c_str());
         return false;
     }
 
@@ -136,6 +133,10 @@ bool curse_an_item(bool quiet)
 
             // Melded items cannot be cursed.
             if (item_is_melded(you.inv[i]))
+                continue;
+
+            if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
+                && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
                 continue;
 
             // Item is valid for cursing, so we'll give it a chance.

@@ -2539,21 +2539,20 @@ static void _curse_card(int power, deck_rarity_type rarity)
     if (power_level >= 2)
     {
         // Curse (almost) everything.
+        // Ignore holy wrath weapons here, to avoid being stuck in a loop
         while (curse_an_item(true) && !one_chance_in(1000))
             ;
     }
     else if (power_level == 1)
     {
         // Curse an average of four items.
-        do
-            curse_an_item();
-        while (!one_chance_in(4));
+        while (curse_an_item(true) && !one_chance_in(4))
+            ;
     }
     else
     {
         // Curse 1.5 items on average.
-        curse_an_item();
-        if (coinflip())
+        if (curse_an_item() && coinflip())
             curse_an_item();
     }
 }
