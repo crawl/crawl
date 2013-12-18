@@ -48,17 +48,17 @@ function ($, comm, enums, map_knowledge, messages, options) {
 
     function update_bar_contam()
     {
-        player.contam_max = 16;
+        player.contam_max = 16000;
         update_bar("contam");
 
         // Calculate level for the colour
         var contam_level = 0;
 
-        if (player.contam > 25)
+        if (player.contam > 25000)
             contam_level = 4;
-        else if (player.contam > 15)
+        else if (player.contam > 15000)
             contam_level = 3;
-        else if (player.contam > 5)
+        else if (player.contam > 5000)
             contam_level = 2;
         else if (player.contam > 0)
             contam_level = 1;
