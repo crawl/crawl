@@ -315,7 +315,9 @@ spret_type cast_corpse_rot(bool fail)
 
 void corpse_rot(actor* caster)
 {
-    for (radius_iterator ri(caster->pos(), 6, C_ROUND, LOS_NO_TRANS); ri; ++ri)
+    // If there is no caster (god wrath), centre the effect on the player.
+    const coord_def center = caster ? caster->pos() : you.pos();
+    for (radius_iterator ri(center, 6, C_ROUND, LOS_NO_TRANS); ri; ++ri)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
             for (stack_iterator si(*ri); si; ++si)
@@ -337,7 +339,7 @@ void corpse_rot(actor* caster)
                 }
     }
 
-    if (you.can_smell() && you.can_see(caster))
+    if (you.can_smell() && (!caster || you.can_see(caster)))
         mpr("You smell decay.");
 
     // Should make zombies decay into skeletons?
