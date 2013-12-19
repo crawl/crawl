@@ -20,6 +20,7 @@ require('dlua/lm_trig.lua')
 require('dlua/lm_pdesc.lua')
 require('dlua/lm_1way.lua')
 require('dlua/lm_timed.lua')
+require('dlua/lm_toll.lua') -- remove upon TAG_MAJOR_VERSION bump
 require('dlua/lm_fog.lua')
 require('dlua/lm_props.lua')
 require('dlua/lm_mon_prop.lua')

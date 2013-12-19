@@ -5,7 +5,6 @@
 
 require('dlua/lm_tmsg.lua')
 require('dlua/lm_1way.lua')
-require('dlua/lm_toll.lua')
 
 TimedMarker = util.subclass(OneWayStair)
 TimedMarker.CLASS = "TimedMarker"
@@ -41,11 +40,6 @@ function TimedMarker:new(props)
     tmarker.dur_short = tmarker.dur
   end
   tmarker.msg = props.msg
-
-  if props.amount and props.amount > 0 then
-    tmarker.toll = TollStair:new(props)
-  end
-
   props.msg = nil
 
   return tmarker
@@ -57,14 +51,10 @@ function TimedMarker:activate(marker, verbose)
   dgn.register_listener(dgn.dgn_event_type('entered_level'), marker)
   dgn.register_listener(dgn.dgn_event_type('player_los'), marker, marker:pos())
   dgn.register_listener(dgn.dgn_event_type('turn'), marker)
-  if self.toll then
-    self.toll:activate(marker, verbose)
-  end
 end
 
 function TimedMarker:property(marker, pname)
-  return ((self.toll and self.toll:property(marker, pname))
-          or self.super.property(self, marker, pname))
+  return self.super.property(self, marker, pname)
 end
 
 function TimedMarker:start()
@@ -141,10 +131,6 @@ function TimedMarker:read(marker, th)
   self.dur = file.unmarshall_number(th)
   self.dur_short = file.unmarshall_number(th)
   self.msg  = lmark.unmarshall_marker(th)
-
-  if self.props.amount then
-    self.toll = TollStair:new(self.props)
-  end
 
   setmetatable(self, TimedMarker)
   return self

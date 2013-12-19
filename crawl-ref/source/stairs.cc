@@ -803,6 +803,20 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
         you.opened_zot = true;
     }
 
+    if (stair_find == DNGN_ENTER_ZIGGURAT)
+    {
+        #define ZIG_RUNES 3
+        int nrune = 0;
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+                nrune++;
+        if (nrune < ZIG_RUNES)
+        {
+            mprf("You need at least %d runes to enter this place.", ZIG_RUNES);
+            return;
+        }
+    }
+
     // Bail if any markers veto the move.
     if (_marker_vetoes_level_change())
         return;
@@ -848,10 +862,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     }
     const coord_def stair_pos = you.pos();
 
-    // XXX: Obsolete, now that labyrinth entrances are only placed via Lua
-    //      with timed markers. Leaving in to reduce the chance of an
-    //      accidental permanent labyrinth entry. [rob]
-    if (stair_find == DNGN_ENTER_LABYRINTH)
+    if (stair_find == DNGN_ENTER_LABYRINTH || stair_find == DNGN_ENTER_ZIGGURAT)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
 
     if (stair_find == DNGN_ENTER_LABYRINTH

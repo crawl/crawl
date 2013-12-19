@@ -157,7 +157,7 @@ A gateway to a ziggurat
 This portal leads to an ancient ziggurat, a place of untold challenges and
 untold riches.
 
-The portal is usable just once, and there's a large monetary fee to be paid.
+The portal is usable just once, and requires three runes of Zot to function.
 %%%%
 A gateway to the ashen valley of Gehenna
 
