@@ -3694,6 +3694,8 @@ bool game_options::set_lang(const char *lc)
 */
     else if (l == "wide" || l == "doublewidth" || l == "fullwidth")
         lang = LANG_WIDE;
+    else if (l == "grunt" || l == "sgrunt" || l == "!!!")
+        lang = LANG_GRUNT;
     else
         return false;
     return true;
