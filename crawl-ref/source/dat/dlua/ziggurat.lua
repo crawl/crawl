@@ -10,11 +10,6 @@
 -- upvalues cannot (yet) be saved.
 ------------------------------------------------------------------------------
 
--- Deepest you can go in a ziggurat - at this point it's beyond
--- obvious that we're not challenging the player, and one could hope
--- she has enough loot by now.
-ZIGGURAT_MAX = 27
-
 function zig()
   if not dgn.persist.ziggurat then
     dgn.persist.ziggurat = { }
@@ -600,7 +595,7 @@ end
 local function ziggurat_stairs(entry, exit)
   zigstair(entry.x, entry.y, "stone_arch", "stone_stairs_up_i")
 
-  if you.depth() < ZIGGURAT_MAX then
+  if you.depth() < dgn.br_depth(you.branch()) then
     zigstair(exit.x, exit.y, "stone_stairs_down_i")
   end
 
