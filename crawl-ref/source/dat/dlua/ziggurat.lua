@@ -10,8 +10,6 @@
 -- upvalues cannot (yet) be saved.
 ------------------------------------------------------------------------------
 
-require("dlua/lm_toll.lua")
-
 -- Deepest you can go in a ziggurat - at this point it's beyond
 -- obvious that we're not challenging the player, and one could hope
 -- she has enough loot by now.
@@ -19,7 +17,7 @@ ZIGGURAT_MAX = 27
 
 function zig()
   if not dgn.persist.ziggurat then
-    dgn.persist.ziggurat = { entry_fee = 0 }
+    dgn.persist.ziggurat = { }
     -- Initialise here to handle ziggurats accessed directly by &P.
     initialise_ziggurat(dgn.persist.ziggurat)
   end
@@ -35,10 +33,6 @@ function ziggurat_wall_colour()
 end
 
 function initialise_ziggurat(z, portal)
-  if portal then
-    z.entry_fee = portal.props.amount
-  end
-
   -- Any given ziggurat will use the same builder for all its levels,
   -- and the same colours for outer walls. Before choosing the builder,
   -- we specify a global excentricity. If zig_exc=0, then the ellipses
@@ -58,20 +52,6 @@ end
 
 -- Common setup for ziggurat entry vaults.
 function ziggurat_portal(e, spawnrange)
-  local d = crawl.roll_dice
-  local entry_fee =
-    10 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
-
-  local function stair()
-    return toll_stair {
-      amount = entry_fee,
-      toll_desc = "to enter a ziggurat",
-      overview_note = "" .. entry_fee .. " gp",
-      floor = "stone_arch",
-      feat_tile = "dngn_portal_ziggurat_gone",
-      onclimb = "callback.ziggurat_initialiser"
-    }
-  end
 
   if spawnrange == "shallow" then
     e.tags("chance_shallow_zig extra")
@@ -84,7 +64,6 @@ function ziggurat_portal(e, spawnrange)
     e.chance("8%")
   end
 
-  e.lua_marker("O", stair)
   e.kfeat("O = enter_ziggurat")
 end
 
@@ -436,7 +415,7 @@ local function ziggurat_create_loot_at(c)
   -- affects the loot randomly (separatedly on each stage).
   local depth = you.depth()
   local nloot = depth
-  nloot = nloot + crawl.random2(math.floor(nloot * zig().entry_fee / 10000))
+  local nloot = depth + crawl.random2(math.floor(nloot * 0.5))
 
   local function find_free_space(nspaces)
     local spaces = { }
