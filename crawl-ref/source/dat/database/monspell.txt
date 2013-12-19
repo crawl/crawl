@@ -339,12 +339,6 @@ unseen Ensnare Arachne cast
 
 A whitish beam shoots out from seemingly nowhere.
 %%%%
-Pan cast
-
-@The_monster@ weaves a haunting melody.
-
-@The_monster@ plays an eerie tune.
-%%%%
 ########################################################################
 # Individual monsters
 ########################################################################
