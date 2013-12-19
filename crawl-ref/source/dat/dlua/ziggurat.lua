@@ -50,23 +50,6 @@ function callback.ziggurat_initialiser(portal)
   initialise_ziggurat(dgn.persist.ziggurat, portal)
 end
 
--- Common setup for ziggurat entry vaults.
-function ziggurat_portal(e, spawnrange)
-
-  if spawnrange == "shallow" then
-    e.tags("chance_shallow_zig extra")
-    e.chance("1%")
-  elseif spawnrange == "deep" then
-    e.tags("chance_zig extra allow_dup luniq_zig")
-    e.chance("5%")
-  elseif spawnrange == "pan" then
-    e.tags("chance_pan_zig extra allow_dup")
-    e.chance("8%")
-  end
-
-  e.kfeat("O = enter_ziggurat")
-end
-
 -- Common setup for ziggurat levels.
 function ziggurat_level(e)
   e.tags("allow_dup")

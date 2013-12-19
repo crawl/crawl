@@ -206,7 +206,7 @@ const Branch branches[NUM_BRANCHES] =
       true, BLACK, BLACK, // set specially
       'R', false, 0 },
 
-    { BRANCH_ZIGGURAT, NUM_BRANCHES, -1, -1, 27, 27,
+    { BRANCH_ZIGGURAT, BRANCH_DEPTHS, 1, 6, 27, 27,
       BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_ZIGGURAT, DNGN_EXIT_ZIGGURAT,
       "Ziggurat", "a ziggurat", "Zig",
