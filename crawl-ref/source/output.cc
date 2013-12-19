@@ -1911,6 +1911,27 @@ static const char* _determine_colour_string(int level, int max_level)
     }
 }
 
+static string _stealth_bar(int sw) {
+    string bar;
+    //no coloring
+    bar += _determine_colour_string(0, 5);
+    bar += "Stlth  ";
+    const int stealth = check_stealth();
+    // here we reflect the log adjectives
+    bar += (stealth >  10) ? "+" : ".";
+    bar += (stealth >  30) ? "+" : ".";
+    bar += (stealth >  60) ? "+" : ".";
+    bar += (stealth >  90) ? "+" : ".";
+    bar += (stealth >  120) ? "+" : ".";
+    bar += (stealth >  160) ? "+" : ".";
+    bar += (stealth >  220) ? "+" : ".";
+    bar += (stealth >  300) ? "+" : ".";
+    bar += (stealth >  400) ? "+" : ".";
+    bar += (stealth >  520) ? "+" : ".";
+    bar += "\n";
+    linebreak_string(bar, sw);
+    return bar;
+}
 static string _status_mut_abilities(int sw);
 
 // helper for print_overview_screen
@@ -2443,7 +2464,8 @@ static char _get_overview_screen_results()
             overview.add_item_formatted_string(blines[i], hotkey);
         }
     }
-
+    
+    overview.add_text(_stealth_bar(get_number_of_cols()));
     overview.add_text(" ");
     overview.add_text(_status_mut_abilities(get_number_of_cols()));
 
