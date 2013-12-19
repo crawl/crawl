@@ -36,6 +36,7 @@ enum lang_t
     LANG_CYRILLIC,
     LANG_FUTHARK,
     LANG_WIDE,
+    LANG_GRUNT
 };
 
 enum ability_type

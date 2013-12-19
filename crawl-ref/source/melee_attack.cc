@@ -1931,6 +1931,10 @@ void melee_attack::set_attack_verb()
 {
     int weap_type = WPN_UNKNOWN;
 
+    int damage_to_display = damage_done;
+    if (Options.lang == LANG_GRUNT)
+        damage_to_display = HIT_STRONG + 1;
+
     if (!weapon)
         weap_type = WPN_UNARMED;
     else if (weapon->base_type == OBJ_STAVES)
@@ -1946,7 +1950,7 @@ void melee_attack::set_attack_verb()
     // All weak hits look the same, except for when the attacker
     // has a non-weapon in hand. - bwr
     // Exception: vampire bats only bite to allow for drawing blood.
-    if (damage_done < HIT_WEAK
+    if (damage_to_display < HIT_WEAK
         && (you.species != SP_VAMPIRE || you.form != TRAN_BAT)
         && you.species != SP_FELID)
     {
@@ -1964,9 +1968,9 @@ void melee_attack::set_attack_verb()
     switch (weapon ? single_damage_type(*weapon) : -1)
     {
     case DAM_PIERCE:
-        if (damage_done < HIT_MED)
+        if (damage_to_display < HIT_MED)
             attack_verb = "puncture";
-        else if (damage_done < HIT_STRONG)
+        else if (damage_to_display < HIT_STRONG)
             attack_verb = "impale";
         else
         {
@@ -1991,9 +1995,9 @@ void melee_attack::set_attack_verb()
         break;
 
     case DAM_SLICE:
-        if (damage_done < HIT_MED)
+        if (damage_to_display < HIT_MED)
             attack_verb = "slash";
-        else if (damage_done < HIT_STRONG)
+        else if (damage_to_display < HIT_STRONG)
             attack_verb = "slice";
         else if (defender_genus == MONS_OGRE)
         {
@@ -2024,9 +2028,9 @@ void melee_attack::set_attack_verb()
         break;
 
     case DAM_BLUDGEON:
-        if (damage_done < HIT_MED)
+        if (damage_to_display < HIT_MED)
             attack_verb = one_chance_in(4) ? "thump" : "sock";
-        else if (damage_done < HIT_STRONG)
+        else if (damage_to_display < HIT_STRONG)
             attack_verb = "bludgeon";
         else if (defender_genus == MONS_SKELETON)
         {
@@ -2047,9 +2051,9 @@ void melee_attack::set_attack_verb()
         break;
 
     case DAM_WHIP:
-        if (damage_done < HIT_MED)
+        if (damage_to_display < HIT_MED)
             attack_verb = "whack";
-        else if (damage_done < HIT_STRONG)
+        else if (damage_to_display < HIT_STRONG)
             attack_verb = "thrash";
         else
         {
@@ -2074,47 +2078,47 @@ void melee_attack::set_attack_verb()
         case TRAN_BAT:
         case TRAN_PIG:
         case TRAN_PORCUPINE:
-            if (damage_done < HIT_WEAK)
+            if (damage_to_display < HIT_WEAK)
                 attack_verb = "hit";
-            else if (damage_done < HIT_STRONG)
+            else if (damage_to_display < HIT_STRONG)
                 attack_verb = "bite";
             else
                 attack_verb = "maul";
             break;
         case TRAN_BLADE_HANDS:
-            if (damage_done < HIT_WEAK)
+            if (damage_to_display < HIT_WEAK)
                 attack_verb = "hit";
-            else if (damage_done < HIT_MED)
+            else if (damage_to_display < HIT_MED)
                 attack_verb = "slash";
-            else if (damage_done < HIT_STRONG)
+            else if (damage_to_display < HIT_STRONG)
                 attack_verb = "slice";
             else
                 attack_verb = "shred";
             break;
         case TRAN_TREE:
-            if (damage_done < HIT_WEAK)
+            if (damage_to_display < HIT_WEAK)
                 attack_verb = "hit";
-            else if (damage_done < HIT_MED)
+            else if (damage_to_display < HIT_MED)
                 attack_verb = "smack";
-            else if (damage_done < HIT_STRONG)
+            else if (damage_to_display < HIT_STRONG)
                 attack_verb = "pummel";
             else
                 attack_verb = "thrash";
             break;
         case TRAN_DRAGON:
-            if (damage_done < HIT_WEAK)
+            if (damage_to_display < HIT_WEAK)
                 attack_verb = "hit";
-            else if (damage_done < HIT_MED)
+            else if (damage_to_display < HIT_MED)
                 attack_verb = "claw";
-            else if (damage_done < HIT_STRONG)
+            else if (damage_to_display < HIT_STRONG)
                 attack_verb = "bite";
             else
                 attack_verb = coinflip() ? "maul" : "trample";
             break;
         case TRAN_WISP:
-            if (damage_done < HIT_WEAK)
+            if (damage_to_display < HIT_WEAK)
                 attack_verb = "touch";
-            else if (damage_done < HIT_MED)
+            else if (damage_to_display < HIT_MED)
                 attack_verb = "hit";
             else
                 attack_verb = "engulf";
@@ -2124,11 +2128,11 @@ void melee_attack::set_attack_verb()
         case TRAN_LICH:
             if (you.has_usable_claws())
             {
-                if (damage_done < HIT_WEAK)
+                if (damage_to_display < HIT_WEAK)
                     attack_verb = "scratch";
-                else if (damage_done < HIT_MED)
+                else if (damage_to_display < HIT_MED)
                     attack_verb = "claw";
-                else if (damage_done < HIT_STRONG)
+                else if (damage_to_display < HIT_STRONG)
                     attack_verb = "mangle";
                 else
                     attack_verb = "eviscerate";
@@ -2136,11 +2140,11 @@ void melee_attack::set_attack_verb()
             }
             else if (you.has_usable_tentacles())
             {
-                if (damage_done < HIT_WEAK)
+                if (damage_to_display < HIT_WEAK)
                     attack_verb = "tentacle-slap";
-                else if (damage_done < HIT_MED)
+                else if (damage_to_display < HIT_MED)
                     attack_verb = "bludgeon";
-                else if (damage_done < HIT_STRONG)
+                else if (damage_to_display < HIT_STRONG)
                     attack_verb = "batter";
                 else
                     attack_verb = "thrash";
@@ -2155,33 +2159,33 @@ void melee_attack::set_attack_verb()
         case TRAN_JELLY: // ?
             if (you.damage_type() == DVORP_CLAWING)
             {
-                if (damage_done < HIT_WEAK)
+                if (damage_to_display < HIT_WEAK)
                     attack_verb = "scratch";
-                else if (damage_done < HIT_MED)
+                else if (damage_to_display < HIT_MED)
                     attack_verb = "claw";
-                else if (damage_done < HIT_STRONG)
+                else if (damage_to_display < HIT_STRONG)
                     attack_verb = "mangle";
                 else
                     attack_verb = "eviscerate";
             }
             else if (you.damage_type() == DVORP_TENTACLE)
             {
-                if (damage_done < HIT_WEAK)
+                if (damage_to_display < HIT_WEAK)
                     attack_verb = "tentacle-slap";
-                else if (damage_done < HIT_MED)
+                else if (damage_to_display < HIT_MED)
                     attack_verb = "bludgeon";
-                else if (damage_done < HIT_STRONG)
+                else if (damage_to_display < HIT_STRONG)
                     attack_verb = "batter";
                 else
                     attack_verb = "thrash";
             }
             else
             {
-                if (damage_done < HIT_WEAK)
+                if (damage_to_display < HIT_WEAK)
                     attack_verb = "hit";
-                else if (damage_done < HIT_MED)
+                else if (damage_to_display < HIT_MED)
                     attack_verb = "punch";
-                else if (damage_done < HIT_STRONG)
+                else if (damage_to_display < HIT_STRONG)
                     attack_verb = "pummel";
                 // XXX: detect this better
                 else if (defender->is_monster()
