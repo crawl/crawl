@@ -798,6 +798,7 @@ orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 %sdir mon/unique
 nessos MONS_NESSOS
 %sdir mon
+%rim 0
 centaur MONS_CENTAUR
 centaur-melee MONS_CENTAUR_MELEE
 centaur_warrior MONS_CENTAUR_WARRIOR
@@ -813,7 +814,6 @@ satyr MONS_SATYR
 %sdir mon/unique
 dowan MONS_DOWAN
 duvessa MONS_DUVESSA
-%rim 0
 fannar MONS_FANNAR
 %rim 1
 %sdir mon
