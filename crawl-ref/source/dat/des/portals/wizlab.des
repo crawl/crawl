@@ -1424,11 +1424,11 @@ COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 # This used to specify dngn_statue_troll as the only middle case, but that tile
 # no longer exists.
-TILE:       G = dngn_granite_statue w:1 / \
-                dngn_statue_angel w:1 / \
-                dngn_statue_imp w:1 / \
-                dngn_statue_ancient_evil w:1 / \
-                dngn_statue_ancient_hero w:1
+TILE:       G = dngn_granite_statue / \
+                dngn_statue_angel / \
+                dngn_statue_imp / \
+                dngn_statue_ancient_evil / \
+                dngn_statue_ancient_hero
 COLOUR:     AG = red
 COLOUR:     < = lightred
 TILE:       c = dngn_stone_dark
