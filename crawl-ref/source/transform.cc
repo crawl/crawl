@@ -94,8 +94,11 @@ bool form_can_swim(transformation_type form)
     if (form == TRAN_ICE_BEAST || form == TRAN_JELLY)
         return true;
 
-    if (you.species == SP_MERFOLK && !form_changed_physiology(form))
+    if ((you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
+        && (!form_changed_physiology(form) || form == TRAN_LICH))
+    {
         return true;
+    }
 
     if (you.species == SP_OCTOPODE && !form_changed_physiology(form))
         return true;
@@ -109,8 +112,21 @@ bool form_can_swim(transformation_type form)
 
 bool form_likes_water(transformation_type form)
 {
-    return form_can_swim(form) || you.species == SP_GREY_DRACONIAN
-                                  && !form_changed_physiology(form);
+    // Grey dracs can't swim, so can't statue form merfolk/octopodes
+    // -- yet they can still survive in water.
+    if (you.species == SP_GREY_DRACONIAN || you.species == SP_MERFOLK
+        || you.species == SP_OCTOPODE)
+    {
+        if (form == TRAN_NONE
+            || form == TRAN_BLADE_HANDS
+            || form == TRAN_APPENDAGE
+            || form == TRAN_LICH
+            || form == TRAN_STATUE)
+        {
+            return true;
+        }
+    }
+    return form_can_swim(form);
 }
 
 bool form_has_mouth(transformation_type form)
