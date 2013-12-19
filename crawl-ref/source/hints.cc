@@ -1020,36 +1020,21 @@ void hints_first_item(const item_def &item)
 
 static string _describe_portal(const coord_def &gc)
 {
-    const string desc = feature_description_at(gc);
+    const dungeon_feature_type feat = grd(gc);
+    string text;
 
-    ostringstream text;
-
-    // Ziggurat entrances can rarely appear as early as DL 3.
-    if (desc.find("zig") != string::npos)
-    {
-        text << "is a portal to a set of special levels filled with very "
-                "tough monsters; you probably shouldn't even think of going "
-                "in here. Additionally, entering a ziggurat costs a lot of "
-                "gold, a lot more than you'd have right now; don't bother "
-                "saving gold up for it, since at this point your gold is "
-                "better spent at shops buying items which can help you "
-                "survive."
-
-                "\n\nIf you <w>still</w> want to enter (and somehow have "
-                "gathered enough gold to do so) ";
-    }
     // For the sake of completeness, though it's very unlikely that a
     // player will find a bazaar entrance before reaching XL 7.
-    else if (desc.find("bazaar") != string::npos)
+    if (feat == DNGN_ENTER_BAZAAR)
     {
-        text << "is a portal to an inter-dimensional bazaar filled with "
+        text =  "is a portal to an inter-dimensional bazaar filled with "
                 "shops. It will disappear if you don't enter it soon, "
                 "so hurry. To enter ";
     }
-    // The sewers can appear from DL 3 to DL 6.
+    // Sewers can appear on D:3-6, ossuaries D:4-8.
     else
     {
-        text << "is a portal to a special level where you'll have to fight "
+        text =  "is a portal to a special level where you'll have to fight "
                 "your way back to the exit through some tougher than average "
                 "monsters (the monsters around the portal should give a "
                 "good indication as to how tough), but with the reward of "
@@ -1058,18 +1043,18 @@ static string _describe_portal(const coord_def &gc)
                 "decide now if you want to risk it. To enter ";
     }
 
-    text << "stand over the portal and press <w>></w>. To return find "
+    text += "stand over the portal and press <w>></w>. To return find "
             "<tiles>a similar looking portal tile </tiles>"
             "<console>another <w>"
-         << stringize_glyph(get_feat_symbol(DNGN_EXIT_SEWER))
-         << "</w> (though NOT the ancient stone arch you'll start "
+          + stringize_glyph(get_feat_symbol(DNGN_EXIT_SEWER))
+          + "</w> (though NOT the ancient stone arch you'll start "
             "out on) </console>"
             "and press <w><<</w>."
             "<tiles>\nAlternatively, clicking on your <w>left mouse button</w> "
             "while pressing the <w>Shift key</w> will let you enter any "
             "portal you're standing on.</tiles>";
 
-    return text.str();
+    return text;
 }
 
 #define DELAY_EVENT \
