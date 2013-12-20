@@ -499,7 +499,8 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         feat = DNGN_EXIT_LABYRINTH;
 #endif
     if (branches[you.where_are_you].exit_stairs == feat
-        && parent_branch(you.where_are_you) < NUM_BRANCHES)
+        && parent_branch(you.where_are_you) < NUM_BRANCHES
+        && feat != DNGN_EXIT_ZIGGURAT)
     {
         level_id lev = brentry[you.where_are_you];
         if (!lev.is_valid())
