@@ -2290,6 +2290,22 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
             continue;
         }
 
+        if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat))
+        {
+            // Don't mimic stairs that are about to get removed.
+            if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
+                && at_branch_bottom())
+            {
+                continue;
+            }
+
+            if (feat_stair_direction(feat) == CMD_GO_UPSTAIRS
+                && you.depth <= 1)
+            {
+                continue;
+            }
+        }
+
         // If it is a branch entry, it's been put there for mimicing.
         if (feat_is_branch_stairs(feat) || one_chance_in(FEATURE_MIMIC_CHANCE))
         {
