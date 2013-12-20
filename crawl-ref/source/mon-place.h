@@ -3,7 +3,6 @@
  * @brief Functions used when placing monsters in the dungeon.
 **/
 
-
 #ifndef MONPLACE_H
 #define MONPLACE_H
 

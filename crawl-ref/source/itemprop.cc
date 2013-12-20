@@ -455,7 +455,6 @@ void init_properties()
         Food_index[ Food_prop[i].id ] = i;
 }
 
-
 // Some convenient functions to hide the bit operations and create
 // an interface layer between the code and the data in case this
 // gets changed again. - bwr

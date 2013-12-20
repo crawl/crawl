@@ -54,7 +54,6 @@ void PopupRegion::place_entries()
     _place_entries(ex / 4, ey / 4, ex / 2);
 }
 
-
 void PopupRegion::run()
 {
     m_retval = getchm(KMC_CONFIRM);

@@ -3927,7 +3927,6 @@ int elyvilon_lifesaving()
     return you.piety > 130 ? 2 : 1;
 }
 
-
 bool god_protects_from_harm()
 {
     if (you.duration[DUR_LIFESAVING])
@@ -4532,7 +4531,6 @@ static void _place_delayed_monsters()
     _delayed_success.clear();
     _delayed_failure.clear();
 }
-
 
 static bool _is_god(god_type god)
 {

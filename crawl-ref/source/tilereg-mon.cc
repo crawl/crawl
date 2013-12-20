@@ -64,7 +64,6 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return 0;
 
-
     unsigned int item_idx = cursor_index();
     const monster_info* mon = get_monster(item_idx);
     if (!mon)

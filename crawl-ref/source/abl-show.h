@@ -3,7 +3,6 @@
  * @brief Functions related to special abilities.
 **/
 
-
 #ifndef ABLSHOW_H
 #define ABLSHOW_H
 

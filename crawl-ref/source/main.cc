@@ -819,7 +819,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("But you're not in Zot Defence!");
         break;
 
-
     default:
         if (!silent_fail)
         {
@@ -1090,7 +1089,6 @@ static void _center_cursor()
     cgotoxy(cwhere.x, cwhere.y, GOTO_DNGN);
 #endif
 }
-
 
 // We have to refresh the SH display if the player's incapacitated state
 // changes (getting confused/paralyzed/etc. sets SH to 0, recovering
@@ -1915,7 +1913,6 @@ void process_command(command_type cmd)
     case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
-
         // Map commands.
     case CMD_CLEAR_MAP:       _do_clear_map();   break;
     case CMD_DISPLAY_OVERMAP: display_overview(); break;
@@ -2083,7 +2080,6 @@ void process_command(command_type cmd)
         break;
     }
 
-
         // Quiver commands.
     case CMD_QUIVER_ITEM:           choose_item_for_quiver(); break;
     case CMD_CYCLE_QUIVER_FORWARD:  _do_cycle_quiver(+1);     break;
@@ -2164,7 +2160,6 @@ static void _prep_input()
     maybe_update_stashes();
     if (check_for_interesting_features() && you.running.is_explore())
             stop_running();
-
 
     if (you.seen_portals)
     {
@@ -4986,7 +4981,6 @@ static void _update_replay_state()
     if (!is_processing_macro())
         repeat_again_rec.clear();
 }
-
 
 static void _compile_time_asserts()
 {

@@ -46,7 +46,6 @@
 #include "throw.h"
 #include "transform.h"
 
-
 static bool _is_random_name_space(char let);
 static bool _is_random_name_vowel(char let);
 
@@ -493,7 +492,6 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     }
 }
 
-
 const char* armour_ego_name(const item_def& item, bool terse)
 {
     if (!terse)
@@ -776,8 +774,6 @@ static const char* ring_secondary_string(int s)
     default: return "";
     }
 }
-
-
 
 static const char* ring_primary_string(int p)
 {
@@ -2138,7 +2134,6 @@ public:
 
         string name;
 
-
         if (item->base_type == OBJ_FOOD)
         {
             switch (item->sub_type)
@@ -2436,7 +2431,6 @@ void check_item_knowledge(bool unknown_items)
         stitle = "Recognised items. (- for unrecognised, select to toggle autopickup)";
     else
         stitle = "You recognise all items. (Select to toggle autopickup)";
-
 
     string prompt = "(_ for help)";
     //TODO: when the menu is opened, the text is not justified properly.

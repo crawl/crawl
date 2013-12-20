@@ -4377,7 +4377,6 @@ unsigned int exp_needed(int lev, int exp_apt)
     //  26      930525    120330   8470
     //  27     1059325    128800   8470
 
-
     switch (lev)
     {
     case 1:
@@ -4650,7 +4649,6 @@ bool enough_mp(int minimum, bool suppress_msg,
     return true;
 }
 
-
 bool enough_zp(int minimum, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -4813,7 +4811,6 @@ void set_mp(int new_amount)
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_magic_points = true;
 }
-
 
 // If trans is true, being berserk and/or transformed is taken into account
 // here. Else, the base hp is calculated. If rotted is true, calculate the
@@ -5684,7 +5681,6 @@ void player::copy_from(const player &other)
     *m_quiver = *(other.m_quiver);
 }
 
-
 // player struct initialization
 void player::init()
 {
@@ -5878,7 +5874,6 @@ void player::init()
     zotdef_wave_name.clear();
     last_mid = 0;
     last_cast_spell = SPELL_NO_SPELL;
-
 
     // Non-saved UI state:
     prev_targ        = MHITNOT;
@@ -7162,7 +7157,6 @@ void player::paralyse(actor *who, int str, string source)
         take_note(Note(NOTE_PARALYSIS, str, 0, source.c_str()));
         props["paralysed_by"] = source;
     }
-
 
     mprf("You %s the ability to move!",
          paralysis ? "still haven't" : "suddenly lose");

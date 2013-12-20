@@ -1238,7 +1238,6 @@ static spell_type _get_draconian_breath_spell(monster* mons)
         }
     }
 
-
     if (draco_breath != SPELL_NO_SPELL)
     {
         // [ds] Check line-of-fire here. It won't happen elsewhere.
@@ -3059,7 +3058,6 @@ static int _monster_abjuration(const monster* caster, bool actual)
     }
     return maffected;
 }
-
 
 static bool _mons_abjured(monster* mons, bool nearby)
 {

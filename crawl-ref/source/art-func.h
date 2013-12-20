@@ -103,7 +103,6 @@ static bool _evoke_sceptre_of_asmodeus()
     return true;
 }
 
-
 static bool _ASMODEUS_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
@@ -739,7 +738,6 @@ static void _UNDEADHUNTER_melee_effects(item_def* item, actor* attacker,
     }
 }
 
-
 ///////////////////////////////////////////////////
 static void _BRILLIANCE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
@@ -756,7 +754,6 @@ static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "Time to lay down the shillelagh law.");
 }
-
 
 static void _DEVASTATOR_melee_effects(item_def* item, actor* attacker,
                                       actor* defender, bool mondied, int dam)

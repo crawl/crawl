@@ -27,7 +27,6 @@
 #include "tilepick.h"
 #include "unwind.h"
 
-
 static void _give_monster_item(monster* mon, int thing,
                                bool force_item = false,
                                bool (monster::*pickupfn)(item_def&, int) = NULL)
@@ -669,7 +668,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                       WPN_GLAIVE, -1);
         level = MAKE_GOOD_ITEM;
         break;
-
 
     case MONS_RUPERT:
         item.base_type = OBJ_WEAPONS;

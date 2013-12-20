@@ -3,10 +3,8 @@
  * @brief Functions for making use of inventory items.
 **/
 
-
 #ifndef ITEM_USE_H
 #define ITEM_USE_H
-
 
 #include <string>
 #include "externs.h"

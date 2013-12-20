@@ -41,7 +41,6 @@ public:
                   int _lethality_margin = 0,
                   string _hand_str = "", bool _can_plural_hand = true);
 
-
     ~MiscastEffect();
 
     void do_miscast();

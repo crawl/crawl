@@ -15,12 +15,10 @@
 #define DEAD_ARE_HOPPING 16
 #define DEAD_ARE_CRAWLING 32
 
-
 // Properties set for active summons
 #define SW_TARGET_MID "sw_target_mid"
 #define SW_READIED "sw_readied"
 #define SW_TRACKING "sw_tracking"
-
 
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);

@@ -252,7 +252,6 @@
     SPELL_NO_SPELL,
 },
 
-
 {   // Book of the Warp
     SPELL_RECALL,
     SPELL_CONTROL_TELEPORT,

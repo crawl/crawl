@@ -59,7 +59,6 @@ void Region::place(int _sx, int _sy, int _ex, int _ey, int margin)
     on_resize();
 }
 
-
 void Region::place(int _sx, int _sy)
 {
     sx = _sx;

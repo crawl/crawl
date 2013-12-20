@@ -1294,7 +1294,6 @@ void monster::apply_enchantment(const mon_enchant &me)
                     damage++;
             }
 
-
             // Extra damage for large (50%) and big (always).
             if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
                 damage++;
@@ -1650,7 +1649,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
     }
     break;
-
 
     case ENCH_SEVERED:
     {

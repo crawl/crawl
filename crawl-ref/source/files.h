@@ -3,7 +3,6 @@
  * @brief Functions used to save and load levels/games.
 **/
 
-
 #ifndef FILES_H
 #define FILES_H
 
@@ -62,7 +61,6 @@ string change_file_extension(const string &file, const string &ext);
 time_t file_modtime(const string &file);
 time_t file_modtime(FILE *f);
 vector<string> get_title_files();
-
 
 class level_id;
 

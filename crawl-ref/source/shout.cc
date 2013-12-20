@@ -945,7 +945,6 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
     return false;
 }
 
-
 void noise_grid::apply_noise_effects(const coord_def &pos,
                                      int noise_intensity_millis,
                                      const noise_t &noise,

@@ -41,7 +41,6 @@
 #include "terrain.h"
 #include "transform.h"
 
-
 struct spell_desc
 {
     int id;
@@ -513,7 +512,6 @@ const char *spell_title(spell_type spell)
     return _seekspell(spell)->title;
 }
 
-
 // FUNCTION APPLICATORS: Idea from Juho Snellman <jsnell@lyseo.edu.ouka.fi>
 //                       on the Roguelike News pages, Development section.
 //                       <URL:http://www.skoardy.demon.co.uk/rlnews/>
@@ -544,7 +542,6 @@ static int _apply_area_square(cell_func cf, const coord_def& where,
 
     return rv;
 }
-
 
 // Applies the effect to the eight squares beside the target.
 // Returns summation of return values from passed in function.

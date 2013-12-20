@@ -4518,7 +4518,6 @@ const int cmd_array[8] =
     CMD_MOVE_UP_LEFT,    CMD_MOVE_UP,    CMD_MOVE_UP_RIGHT,
 };
 
-
 static int _adjacent_cmd(const coord_def &gc, bool force)
 {
     const coord_def dir = gc - you.pos();

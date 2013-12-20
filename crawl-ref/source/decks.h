@@ -3,7 +3,6 @@
  * @brief Functions with decks of cards.
 **/
 
-
 #ifndef DECKS_H
 #define DECKS_H
 

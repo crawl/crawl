@@ -1283,7 +1283,6 @@ static void _handle_run_delays(const delay_queue_item &delay)
             }
         }
 
-
         switch (delay.type)
         {
         case DELAY_REST:

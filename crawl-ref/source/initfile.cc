@@ -449,7 +449,6 @@ static int _read_bool_or_number(const string &field, int def_value,
     return ret;
 }
 
-
 static unsigned curses_attribute(const string &field)
 {
     if (field == "standout")               // probably reverses

@@ -2209,7 +2209,6 @@ static void _ruin_level(Iterator iter,
         }
     }
 
-
     for (vector<coord_def>::const_iterator it = replaced.begin();
          it != replaced.end();
          ++it)
@@ -2814,7 +2813,6 @@ struct map_component
     }
     map_component * min_equivalent;
 
-
     coord_def min_coord;
     coord_def max_coord;
 
@@ -2878,7 +2876,6 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
     coord_def offsets[4] = {coord_def(-1, 0), coord_def(-1, -1), coord_def(0, -1), coord_def(1, -1)};
 
     int next_label = 1;
-
 
     // Pass 1, for each point, check the upper/left adjacent squares for labels
     // if a labels are found, use the min connected label, else assign a new
@@ -3103,7 +3100,6 @@ static void _slime_connectivity_fixup()
             set<position_node> visited;
             search_astar(base_component->seed_position, valid_label,
                          connection_costs, dummy, visited, path);
-
 
             // Did the search, now remove any walls adjacent to squares in
             // the path.
@@ -4690,7 +4686,6 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         mon->swap_weapons(false);
     }
 }
-
 
 monster* dgn_place_monster(mons_spec &mspec, coord_def where,
                            bool force_pos, bool generate_awake, bool patrolling)
@@ -6933,7 +6928,6 @@ unwind_vault_placement_mask::~unwind_vault_placement_mask()
 {
     Vault_Placement_Mask = oldmask;
 }
-
 
 // mark all unexplorable squares, count the rest
 static void _calc_density()

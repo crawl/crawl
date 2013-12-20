@@ -228,7 +228,6 @@ int torment_player(actor *attacker, int taux)
         }
     }
 
-
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");
@@ -2706,7 +2705,6 @@ void collect_radius_points(vector<vector<coord_def> > &radius_points,
             break;
 
         fringe.pop();
-
 
         int idx = current.first.x + current.first.y * X_WIDTH;
         if (!visited_indices.insert(idx).second)

@@ -1117,7 +1117,6 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
     }
 
-
     sw = new SkillMenuSwitch("View", '!');
     m_switches[SKM_VIEW] = sw;
     const bool transferring = !is_invalid_skill(you.transfer_to_skill);

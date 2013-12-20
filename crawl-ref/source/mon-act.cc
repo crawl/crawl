@@ -508,7 +508,6 @@ bool mons_can_move_towards_target(const monster* mon)
     return false;
 }
 
-
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -3016,7 +3015,6 @@ static bool _mons_can_displace(const monster* mpusher,
     const int ipushee = mpushee->mindex();
     if (invalid_monster_index(ipushee))
         return false;
-
 
     if (!mpushee->has_action_energy()
         && !_same_tentacle_parts(mpusher, mpushee))

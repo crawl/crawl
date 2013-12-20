@@ -86,17 +86,14 @@ static void _search_dungeon(const coord_def & start,
     // can have 4-connectivity.
     int compass_idx[] = {0, 2, 4, 6, 1, 3, 5, 7};
 
-
     position_node temp_node;
     temp_node.pos = start;
     temp_node.last = NULL;
-
 
     queue<set<position_node>::iterator > fringe;
 
     set<position_node>::iterator current = visited.insert(temp_node).first;
     fringe.push(current);
-
 
     bool done = false;
     while (!fringe.empty())
@@ -773,7 +770,6 @@ static bool _crawling_corpse_merge(monster *crawlie)
     return false;
 }
 
-
 static bool _slime_can_spawn(const coord_def target)
 {
     return mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(target))
@@ -1287,7 +1283,6 @@ static int _battle_cry(monster* chief, battlecry_type type)
                         }
                     }
                     who = get_monster_data(mon_type)->name;
-
 
                     mprf(channel, messages[type][2].c_str(),
                          chief->friendly() ? "Your" : "The",
@@ -2444,7 +2439,6 @@ struct tentacle_attack_constraints
             map<coord_def, set<int> >::iterator probe
                         = connection_constraints->find(temp.pos);
 
-
             if (probe != connection_constraints->end())
             {
                 int max_val = probe->second.empty() ? INT_MAX : *probe->second.rbegin();
@@ -2466,7 +2460,6 @@ struct tentacle_attack_constraints
                     if (delta)
                         temp.string_distance -= delta;
                 }
-
 
                 if (connect_level < max_val)
                    temp.path_distance = DISCONNECT_DIST;
@@ -2492,7 +2485,6 @@ struct tentacle_attack_constraints
     }
 
 };
-
 
 struct tentacle_connect_constraints
 {
@@ -2530,7 +2522,6 @@ struct tentacle_connect_constraints
                 continue;
             }
 
-
             if (!base_monster->is_habitable(temp.pos)
                 || actor_at(temp.pos))
             {
@@ -2538,8 +2529,6 @@ struct tentacle_connect_constraints
             }
             else
                 temp.path_distance = 1 + node.path_distance;
-
-
 
             //temp.estimate = grid_distance(temp.pos, kraken->pos());
             // Don't bother with an estimate, the search is highly constrained
@@ -2610,7 +2599,6 @@ struct multi_target
         return false;
     }
 
-
 };
 
 // returns pathfinding success/failure
@@ -2645,7 +2633,6 @@ static bool _tentacle_pathfind(monster* tentacle,
                  foe_check, attack_constraints,
                  visited, tentacle_path);
 
-
     bool path_found = false;
     // Did we find a path?
     if (!tentacle_path.empty())
@@ -2655,7 +2642,6 @@ static bool _tentacle_pathfind(monster* tentacle,
 
         const position_node * current = &(*tentacle_path[0]);
         const position_node * last;
-
 
         // The last position in the chain is the base position,
         // so we want to stop at the one before the last.
@@ -2667,7 +2653,6 @@ static bool _tentacle_pathfind(monster* tentacle,
             path_found = true;
         }
     }
-
 
     return path_found;
 }
@@ -2843,7 +2828,6 @@ static int _collect_connection_data(monster* start_monster,
         current_count++;
     }
 
-
 //    mprf("returned count %d", current_count);
     return current_count;
 }
@@ -2873,7 +2857,6 @@ void move_solo_tentacle(monster* tentacle)
 
     base_position = tentacle->props["base_position"].get_coord();
 
-
     if (!severed)
     {
         complicated_sight_check base_sight;
@@ -2881,7 +2864,6 @@ void move_solo_tentacle(monster* tentacle)
         _collect_foe_positions(tentacle, foe_positions, base_sight);
         attack_foe = !foe_positions.empty();
     }
-
 
     coord_def retract_pos;
     map<coord_def, set<int> > connection_data;
@@ -3004,7 +2986,6 @@ void move_solo_tentacle(monster* tentacle)
 
             while (probe->second.count(escalated + 1))
                 escalated++;
-
 
             if (!severed
                 && tentacle->is_habitable(test)
@@ -4002,7 +3983,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-
     case MONS_VAULT_SENTINEL:
         if (mons->has_ench(ENCH_CONFUSION) || mons->friendly())
             break;
@@ -4634,7 +4614,6 @@ static bool _mold_connected(const coord_def & target)
 {
     return is_moldy(target) || _ballisto_at(target);
 }
-
 
 // If 'monster' is a ballistomycete or spore, activate some number of
 // ballistomycetes on the level.

@@ -166,7 +166,6 @@ void DollEditRegion::render()
         m_font_buf.add("Equip", VColour::white, tile_name_x, tile_name_y);
     }
 
-
     set_transform();
     m_shape_buf.draw();
     m_tile_buf.draw();

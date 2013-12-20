@@ -16,7 +16,6 @@
 #include "shout.h"
 #include "skills2.h"
 
-
 // We need to know what brands equate with what missile brands to know if
 // we should disallow temporary branding or not.
 static special_missile_type _convert_to_missile(brand_type which_brand)

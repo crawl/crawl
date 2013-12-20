@@ -123,7 +123,6 @@ tileidx_t tile_fg_store::operator=(tileidx_t tile)
     return m_tile;
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // mcache_manager
 

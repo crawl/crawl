@@ -987,7 +987,6 @@ static int dgn_cloud_at(lua_State *ls)
     return 1;
 }
 
-
 static int lua_dgn_set_branch_epilogue(lua_State *ls)
 {
     const char *branch_name = luaL_checkstring(ls, 1);
@@ -1399,8 +1398,6 @@ static int dgn_place_cloud(lua_State *ls)
 
     return 0;
 }
-
-
 
 // XXX: Doesn't allow for messages or specifying the noise source.
 LUAFN(dgn_noisy)

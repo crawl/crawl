@@ -17,7 +17,6 @@
 #include "cloud.h"
 #include "travel.h"
 
-
 LUAFN(view_feature_at)
 {
     COORDSHOW(s, 1, 2)

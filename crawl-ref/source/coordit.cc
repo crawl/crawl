@@ -74,7 +74,6 @@ void rectangle_iterator::operator++(int dummy)
     ++(*this);
 }
 
-
 random_rectangle_iterator::random_rectangle_iterator(const coord_def& corner1,
                                                      const coord_def& corner2)
 {

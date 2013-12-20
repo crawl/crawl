@@ -83,7 +83,6 @@
 #endif
 #endif
 
-
 static string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)

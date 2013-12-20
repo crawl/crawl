@@ -185,7 +185,6 @@ static const char* _jewellery_base_ability_string(int subtype)
     return "";
 }
 
-
 #define known_proprt(prop) (proprt[(prop)] && known[(prop)])
 
 struct property_annotators
@@ -1053,7 +1052,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
     return description;
 }
 
-
 //---------------------------------------------------------------
 //
 // describe_ammo
@@ -1690,7 +1688,6 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
 
     return false;
 }
-
 
 //---------------------------------------------------------------
 //
@@ -2348,7 +2345,6 @@ static bool _describe_spellbook(item_def &item)
         return true;
     }
 }
-
 
 // it takes a key and a list of commands and it returns
 // the command from the list which corresponds to the key
@@ -3389,7 +3385,6 @@ static string _monster_stat_description(const monster_info& mi)
     }
     else if (sizes[mi.body_size()])
         result << uppercase_first(pronoun) << " is " << sizes[mi.body_size()] << ".\n";
-
 
     result << _monster_spells_description(mi);
     return result.str();

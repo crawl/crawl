@@ -502,7 +502,6 @@ static string _sdump_turns_place_info(PlaceInfo place_info, string name = "")
     unsigned int global_non_interlevel =
         gi.turns_total - gi.turns_interlevel;
 
-
     a = TO_PERCENT(place_info.turns_total, gi.turns_total);
     b = TO_PERCENT(non_interlevel, global_non_interlevel);
     c = TO_PERCENT(place_info.turns_interlevel, place_info.turns_total);
@@ -1581,7 +1580,6 @@ void whereis_record(const char *status)
     }
 }
 #endif
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // Turn timestamps

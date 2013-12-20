@@ -478,7 +478,6 @@ void direction(dist &moves, const direction_chooser_args& args)
     direction_chooser(moves, args).choose_direction();
 }
 
-
 direction_chooser::direction_chooser(dist& moves_,
                                      const direction_chooser_args& args) :
     moves(moves_),
@@ -832,7 +831,6 @@ void do_look_around(const coord_def &whence)
     }
 }
 
-
 //---------------------------------------------------------------
 //
 // direction
@@ -1064,7 +1062,6 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
                                            needs_path, mode, range, hitfunc,
                                            true);
         }
-
 
         // If we couldn't, maybe it was because of line-of-fire issues.
         // Check if that's happening, and inform the user (because it's
@@ -2060,7 +2057,6 @@ bool direction_chooser::choose_direction()
     range_view_annotator rva(hitfunc ? hitfunc :
                              (range >= 0) ? &legacy_range : NULL);
 
-
     // init
     moves.delta.reset();
 
@@ -2465,9 +2461,6 @@ static bool _find_jump_attack_mons(const coord_def& where, int mode, bool need_p
     return hitfunc->has_additional_sites(where);
 }
 
-
-
-
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
                                int range, targetter *hitfunc)
 {
@@ -2773,7 +2766,6 @@ static bool _find_square(coord_def &mfp, int direction,
                     }
                 }
         }                       // end else
-
 
       finished_spiralling:
         x_change *= direction;

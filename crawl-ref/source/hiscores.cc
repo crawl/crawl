@@ -384,7 +384,6 @@ static void _show_morgue(scorefile_entry& se)
 
     clrscr();
 
-
     column_composer cols(2, 40);
     cols.add_formatted(
             0,
@@ -495,7 +494,6 @@ void show_hiscore_table()
         }
     }
 }
-
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
 static const char *_range_type_verb(const char *const aux)
@@ -1767,7 +1765,6 @@ string scorefile_entry::single_cdesc() const
     return make_stringf("%8d %s %s-%02d%s", points, scname.c_str(),
                          race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "");
 }
-
 
 static string _append_sentence_delimiter(const string &sentence,
                                          const string &delimiter)

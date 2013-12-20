@@ -3,7 +3,6 @@
  * @brief Skill menu.
 **/
 
-
 #ifndef SKILLS_MENU_H
 #define SKILLS_MENU_H
 

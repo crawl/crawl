@@ -575,7 +575,6 @@ void textbackground(int c)
     current_color = current_color | (macro_bg << 4);
 }
 
-
 static void cprintf_aux(const char *s)
 {
     // early out -- not initted yet

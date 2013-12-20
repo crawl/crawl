@@ -1074,8 +1074,6 @@ void cscroll(int n, GotoRegion region)
         scroll_message_window(n);
 }
 
-
-
 mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;
 
 size_t strlcpy(char *dst, const char *src, size_t n)

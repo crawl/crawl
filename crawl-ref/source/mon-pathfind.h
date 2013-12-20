@@ -35,7 +35,6 @@ protected:
     void update_pos(coord_def pos, int total);
     bool get_best_position(void);
 
-
     // The monster trying to find a path.
     const monster* mons;
 

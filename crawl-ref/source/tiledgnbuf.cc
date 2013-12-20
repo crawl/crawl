@@ -546,7 +546,6 @@ void DungeonCellBuffer::pack_doll(const dolls_data &doll, int x, int y,
     pack_doll_buf(m_buf_doll, doll, x, y, submerged, ghost);
 }
 
-
 void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
                                     bool submerged)
 {

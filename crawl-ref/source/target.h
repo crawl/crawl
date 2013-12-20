@@ -221,6 +221,4 @@ private:
     int range2;
 };
 
-
-
 #endif

@@ -3,7 +3,6 @@
  * @brief More skill related functions.
 **/
 
-
 #ifndef SKILLS2_H
 #define SKILLS2_H
 

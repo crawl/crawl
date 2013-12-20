@@ -3,7 +3,6 @@
  * @brief Misc abyss specific functions.
 **/
 
-
 #ifndef ABYSS_H
 #define ABYSS_H
 

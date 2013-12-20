@@ -1237,7 +1237,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                         return 1;     // Nothing more to do.
                     }
 
-
                 default:
                     die("bad mutation conflict resulution");
                 }

@@ -311,7 +311,6 @@ char &formatted_string::operator [] (size_t idx)
     die("Invalid index");
 }
 
-
 string formatted_string::tostring(int s, int e) const
 {
     string st;
@@ -557,7 +556,6 @@ static int _tagged_string_printable_length(const string& s)
     }
     return len;
 }
-
 
 // Count the length of the tags in the string.
 int tagged_string_tag_length(const string& s)

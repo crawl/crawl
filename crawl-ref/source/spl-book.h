@@ -3,7 +3,6 @@
  * @brief Spellbook/rod contents array and management functions
 **/
 
-
 #ifndef SPL_BOOK_H
 #define SPL_BOOK_H
 

@@ -667,7 +667,6 @@ static const char *targeting_help_2 =
     "<w>i</w> : choose from Inventory.\n"
 ;
 
-
 // Add the contents of the file fp to the scroller menu m.
 // If first_hotkey is nonzero, that will be the hotkey for the
 // start of the contents of the file.
@@ -714,7 +713,6 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
         is_first = false;
     }
 }
-
 
 struct help_file
 {
@@ -2287,7 +2285,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_OPEN_DOOR, CMD_CLOSE_DOOR, 0);
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : use staircase",
                          CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS, 0);
-
 
     _add_command(cols, 1, CMD_INSPECT_FLOOR, "examine occupied tile and");
     cols.add_formatted(1, "         pickup part of a single stack\n",

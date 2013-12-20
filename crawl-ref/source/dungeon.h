@@ -3,7 +3,6 @@
  * @brief Functions used when building new levels.
 **/
 
-
 #ifndef DUNGEON_H
 #define DUNGEON_H
 

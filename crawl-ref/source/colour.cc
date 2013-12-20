@@ -234,7 +234,6 @@ static int _etc_liquefied(int, const coord_def& loc)
         return phase ? YELLOW : BROWN;
 }
 
-
 static int _etc_tree(int, const coord_def& loc)
 {
     uint32_t h = loc.x;

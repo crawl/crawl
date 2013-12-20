@@ -20,7 +20,6 @@
     - row 8: intel, habitat, flight class, speed, energy_usage
     - row 9: gmon_use class, gmon_eat class, body size
 
-
  - Some further explanations:
 
     - colour: if BLACK, monster uses value of mons_sec
@@ -150,7 +149,6 @@
 #define SPELL_ENERGY(x)    {10, 10, 10, 10,  x, 10, 10, 100}
 #define SWIM_ENERGY(x)     {10,  x, 10, 10, 10, 10, 10, 100}
 
-
 static monsterentry mondata[] =
 {
 
@@ -177,7 +175,6 @@ static monsterentry mondata[] =
     // use type, eat type, body size
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
 },
-
 
 // Use this to replace removed monsters, to retain save compatibility.
 // Please put it in #if (TAG_MAJOR_VERSION <= X), so they will go away
@@ -1509,7 +1506,6 @@ static monsterentry mondata[] =
     I_NORMAL, HT_AMPHIBIOUS, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_MEDIUM
 },
-
 
 // rotting monsters ('n')
 {
@@ -3016,7 +3012,6 @@ static monsterentry mondata[] =
     I_ANIMAL, HT_LAND, FL_WINGED, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_GIANT
 },
-
 
 // elementals (E)
 { // dummy genus monster

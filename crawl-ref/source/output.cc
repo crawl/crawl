@@ -287,7 +287,6 @@ static void _nowrap_eol_cprintf_touchui(const char *format, ...)
 #define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf
 #endif
 
-
 static string _god_powers(bool simple = false);
 
 // Color for captions like 'Health:', 'Str:', etc.

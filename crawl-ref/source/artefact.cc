@@ -1265,7 +1265,6 @@ void artefact_wpn_properties(const item_def &item,
         _get_randart_properties(item, proprt);
 }
 
-
 void artefact_wpn_properties(const item_def &item,
                               artefact_properties_t &proprt)
 {

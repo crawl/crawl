@@ -3,7 +3,6 @@
  * @brief Misc monster related functions.
 **/
 
-
 #ifndef MONUTIL_H
 #define MONUTIL_H
 

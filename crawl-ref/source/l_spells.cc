@@ -45,7 +45,6 @@ void cluaopen_spells(lua_State *ls)
     luaL_openlib(ls, "spells", spells_clib, 0);
 }
 
-
 LUAWRAP(_refrigeration,
         cast_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION,
                               luaL_checkint(ls, 1), NULL, true))

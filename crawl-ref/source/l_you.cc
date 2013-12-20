@@ -419,7 +419,6 @@ LUAFN(you_train_skill)
     PLUARET(number, you.train[sk]);
 }
 
-
 static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },

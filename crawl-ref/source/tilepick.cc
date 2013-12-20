@@ -586,7 +586,6 @@ tileidx_t tileidx_feature(const coord_def &gc)
             else if (player_in_branch(BRANCH_SHOALS))
                 t = TILE_SHOALS_SHALLOW_WATER;
 
-
             if (env.map_knowledge(gc).invisible_monster())
             {
                 // Add disturbance to tile.
@@ -3646,7 +3645,6 @@ static tileidx_t _tileidx_food(const item_def &item)
     return TILE_ERROR;
 }
 
-
 // Returns index of skeleton tiles.
 // Parameter item holds the skeleton.
 static tileidx_t _tileidx_bone(const item_def &item)
@@ -3681,7 +3679,6 @@ static tileidx_t _tileidx_bone(const item_def &item)
         return TILE_FOOD_BONE + cs;
     }
 }
-
 
 // Returns index of corpse tiles.
 // Parameter item holds the corpse.

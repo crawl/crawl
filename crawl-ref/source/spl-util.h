@@ -3,7 +3,6 @@
  * @brief data handlers for player spell list
 **/
 
-
 #ifndef SPL_UTIL_H
 #define SPL_UTIL_H
 

@@ -3,7 +3,6 @@
  * @brief Functions used to create vaults.
 **/
 
-
 #ifndef MAPS_H
 #define MAPS_H
 

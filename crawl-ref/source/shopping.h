@@ -3,7 +3,6 @@
  * @brief Shop keeper functions.
 **/
 
-
 #ifndef SHOPPING_H
 #define SHOPPING_H
 

@@ -496,7 +496,6 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         learned_something_new(HINT_YOU_MUTATED);
         break;
 
-
     case POT_RESISTANCE:
         mprf(MSGCH_DURATION, "You feel protected.");
         you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);

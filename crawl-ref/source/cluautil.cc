@@ -53,7 +53,6 @@ void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
     *de = devent;
 }
 
-
 void luaopen_setmeta(lua_State *ls,
                      const char *global,
                      const luaL_reg *lua_lib,

@@ -3,7 +3,6 @@
  * @brief Misc monster related functions.
 **/
 
-
 #ifndef MONSTUFF_H
 #define MONSTUFF_H
 
@@ -71,7 +70,6 @@ struct level_exit
                                               : BEH_HOSTILE)
 
 #define MONST_INTERESTING(x) (x->flags & MF_INTERESTING)
-
 
 const item_def *give_mimic_item(monster* mimic);
 dungeon_feature_type get_mimic_feat(const monster* mimic);

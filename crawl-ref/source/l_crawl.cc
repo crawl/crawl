@@ -508,7 +508,6 @@ static int crawl_regex(lua_State *ls)
     if (!s)
         return 0;
 
-
     text_pattern **tpudata =
             clua_new_userdata< text_pattern* >(ls, REGEX_METATABLE);
     if (tpudata)

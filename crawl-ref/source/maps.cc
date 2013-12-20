@@ -626,7 +626,6 @@ static bool _apply_vault_grid(map_def &def,
         return false;
     }
 
-
     place.pos  = start;
     place.size = size;
 

@@ -3643,7 +3643,6 @@ int scaling_cost::cost(int max) const
     return (value < 0) ? (-value) : ((value * max + 500) / 1000);
 }
 
-
 bool _jump_player(int jump_range)
 {
     coord_def landing;

@@ -1011,7 +1011,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
         spell_menu.set_maxpagesize(52);
     }
 
-
     for (unsigned int i = 0; i < spells.size(); i++)
     {
         const spell_type spell = spells[i];

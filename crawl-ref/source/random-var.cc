@@ -95,7 +95,6 @@ double random_var::expected() const
     return ev;
 }
 
-
 //////////////////////////////////
 
 random_var constant(int n)

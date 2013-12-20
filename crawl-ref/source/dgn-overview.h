@@ -3,7 +3,6 @@
  * @brief "Overview" functionality
 **/
 
-
 #ifndef OVERMAP_H
 #define OVERMAP_H
 

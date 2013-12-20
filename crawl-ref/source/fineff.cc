@@ -134,7 +134,6 @@ void deferred_damage_fineff::merge(const final_effect &fe)
     damage += ddamfe->damage;
 }
 
-
 void lightning_fineff::fire()
 {
     if (you.see_cell(posn))

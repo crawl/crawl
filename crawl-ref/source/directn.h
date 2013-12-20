@@ -3,7 +3,6 @@
  * @brief Functions used when picking squares.
 **/
 
-
 #ifndef DIRECT_H
 #define DIRECT_H
 

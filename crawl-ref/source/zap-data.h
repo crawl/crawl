@@ -615,7 +615,6 @@ struct zap_info
     7
 },
 
-
 {
     ZAP_BREATHE_FROST,
     "freezing breath",

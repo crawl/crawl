@@ -3,7 +3,6 @@
  * @brief Misc functions.
 **/
 
-
 #ifndef ITEMPROP_H
 #define ITEMPROP_H
 

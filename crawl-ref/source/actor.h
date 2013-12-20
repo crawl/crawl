@@ -432,7 +432,6 @@ public:
 
     string describe_props() const;
 
-
 protected:
     void end_constriction(constricting_t::iterator i, bool intentional,
                           bool quiet);

@@ -202,7 +202,6 @@ int fdatasync(int fd)
 # endif
 #endif
 
-
 // The old school way of doing short delays via low level I/O sync.
 // Good for systems like old versions of Solaris that don't have usleep.
 #ifdef NEED_USLEEP
@@ -231,7 +230,6 @@ void usleep(unsigned long time)
 }
 # endif
 #endif
-
 
 bool file_exists(const string &name)
 {

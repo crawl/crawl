@@ -412,7 +412,6 @@ LUAFN(dgn_count_passable_neighbors)
     return 1;
 }
 
-
 LUAFN(dgn_is_valid_coord)
 {
     LINES(ls, 1, lines);

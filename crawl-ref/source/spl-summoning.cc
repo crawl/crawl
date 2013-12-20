@@ -1179,7 +1179,6 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
     return SPRET_ABORT;
 }
 
-
 spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -2634,7 +2633,6 @@ bool trigger_battlesphere(actor* agent, bolt& beam)
             battlesphere->speed_increment = 100;
             queue_monster_for_action(battlesphere);
         }
-
 
         return true;
     }

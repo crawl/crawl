@@ -518,7 +518,6 @@ static bool _octa_room(dgn_region& region, int oblique_max,
 
     oblique = oblique_max;
 
-
     for (x = tl.x; x < br.x; x++)
     {
         for (y = tl.y + oblique; y < br.y - oblique; y++)

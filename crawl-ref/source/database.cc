@@ -357,7 +357,6 @@ void databaseSystemShutdown()
 ////////////////////////////////////////////////////////////////////////////
 // Main DB functions
 
-
 static datum _database_fetch(DBM *database, const string &key)
 {
     datum result;
@@ -805,7 +804,6 @@ string getGameStartDescription(const string &key)
 {
     return _query_database(GameStartDB, key, true, true);
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 // Shout DB specific functions.

@@ -3,7 +3,6 @@
  * @brief Functions for using some of the wackier inventory items.
 **/
 
-
 #ifndef EVOKE_H
 #define EVOKE_H
 

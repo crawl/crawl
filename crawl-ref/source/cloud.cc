@@ -949,7 +949,6 @@ static bool _actor_apply_cloud_side_effects(actor *act,
             poison_monster(mons, find_agent(cloud.source, cloud.whose));
         return true;
 
-
     case CLOUD_MIASMA:
         if (player)
         {

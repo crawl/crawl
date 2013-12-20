@@ -3,10 +3,8 @@
  * @brief Functions related to ranged attacks.
 **/
 
-
 #ifndef BEAM_H
 #define BEAM_H
-
 
 #include "externs.h"
 #include "random.h"

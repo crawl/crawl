@@ -793,7 +793,6 @@ static void _train_skills(int exp, const int cost, const bool simu)
          you.skill_cost_level, cost, exp);
 #endif
 
-
     // We scale the training array to the amount of XP available in the pool.
     // That gives us the amount of XP available to train each skill.
     for (int i = 0; i < NUM_SKILLS; ++i)

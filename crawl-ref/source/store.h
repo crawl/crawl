@@ -61,7 +61,6 @@ enum store_flag_type
     SFLAG_NO_ERASE   = (1 << 3),
 };
 
-
 typedef union StoreUnion StoreUnion;
 union StoreUnion
 {
@@ -73,7 +72,6 @@ union StoreUnion
     int64_t _int64;
     void* ptr;
 };
-
 
 class CrawlStoreValue
 {
@@ -244,7 +242,6 @@ protected:
     friend class CrawlHashTable;
     friend class CrawlVector;
 };
-
 
 // By default a hash table's value data types are heterogeneous.  To
 // make it homogeneous (which causes dynamic type checking) you have
