@@ -1,7 +1,6 @@
 #ifndef MON_SPLL_H
 #define MON_SPLL_H
 
-
 /* *********************************************************************
 
     This file determines which spells are contained in monster spellbooks.
@@ -22,7 +21,6 @@
     }
 
 ********************************************************************* */
-
 
     {  MST_ORC_WIZARD_I,
       {
@@ -80,7 +78,6 @@
        SPELL_INJURY_MIRROR
       }
     },
-
 
     {  MST_BK_TROG,
       {

@@ -179,7 +179,6 @@ int cancellable_get_line(char *buf, int len, input_history *mh,
     return reader.read_line(fill);
 }
 
-
 /////////////////////////////////////////////////////////////
 // input_history
 //

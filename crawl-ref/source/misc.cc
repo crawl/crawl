@@ -2703,8 +2703,6 @@ string counted_monster_list::describe(description_level_type desc)
     return out;
 }
 
-
-
 bool move_stairs(coord_def orig, coord_def dest)
 {
     const dungeon_feature_type stair_feat = grd(orig);

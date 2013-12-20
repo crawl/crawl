@@ -226,7 +226,6 @@ static int _cull_items(void)
     return first_cleaned;
 }
 
-
 /*---------------------------------------------------------------------*/
 stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 {
@@ -283,7 +282,6 @@ stack_iterator stack_iterator::operator++(int dummy)
     return copy;
 }
 /*---------------------------------------------------------------------*/
-
 
 // Reduce quantity of an inventory item, do cleanup if item goes away.
 //
@@ -547,7 +545,6 @@ void unlink_item(int dest)
                 }
             }
         }
-
 
     // Okay, finally warn player if we didn't do anything.
     if (!linked)
@@ -1969,7 +1966,6 @@ void move_item_stack_to_grid(const coord_def& from, const coord_def& to)
     igrd(to) = igrd(from);
     igrd(from) = NON_ITEM;
 }
-
 
 // Returns false if no items could be dropped.
 bool copy_item_to_grid(const item_def &item, const coord_def& p,

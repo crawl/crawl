@@ -43,7 +43,6 @@ namespace msg
         stream_buffers.clear();
     }
 
-
     setparam::setparam(int param)
     {
         m_param = param;

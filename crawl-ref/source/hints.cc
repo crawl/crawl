@@ -656,7 +656,6 @@ static void _hints_healing_reminder()
             }
             mprf(MSGCH_TUTORIAL, "%s", text.c_str());
 
-
             if (is_resting())
                 stop_running();
         }

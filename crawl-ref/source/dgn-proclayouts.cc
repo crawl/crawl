@@ -64,7 +64,6 @@ DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
     return ProceduralSample(p, DNGN_FLOOR, offset + 4096);
 }
 
-
 static uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
 {
     return max(1, (int) floor((n.distance[1] - n.distance[0]) * scale) - 5);

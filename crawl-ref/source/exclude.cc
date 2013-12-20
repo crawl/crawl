@@ -676,7 +676,6 @@ string exclude_set::get_exclusion_desc()
                                            " and ", ", ");
 }
 
-
 void marshallExcludes(writer& outf, const exclude_set& excludes)
 {
     marshallShort(outf, excludes.size());

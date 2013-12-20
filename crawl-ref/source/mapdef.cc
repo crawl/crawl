@@ -210,7 +210,6 @@ void subvault_place::set_subvault(const map_def &_subvault)
     subvault.reset(new map_def(_subvault));
 }
 
-
 ///////////////////////////////////////////////
 // level_range
 //

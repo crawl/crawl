@@ -1069,7 +1069,6 @@ void macro_init()
     _read_macros_from(get_macro_file().c_str());
 }
 
-
 void macro_userfn(const char *keys, const char *regname)
 {
     // TODO: Implement.
@@ -1104,7 +1103,6 @@ void key_recorder::add_key(int key, bool reverse)
 {
     if (paused)
         return;
-
 
     if (reverse)
         keys.push_front(key);

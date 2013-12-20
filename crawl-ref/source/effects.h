@@ -3,7 +3,6 @@
  * @brief Misc stuff.
 **/
 
-
 #ifndef EFFECTS_H
 #define EFFECTS_H
 

@@ -892,7 +892,6 @@ bool player_control_teleport(bool temp = true);
 
 int player_shield_class(void);
 
-
 int player_spec_air(void);
 int player_spec_cold(void);
 int player_spec_conj(void);

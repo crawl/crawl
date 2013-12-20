@@ -462,7 +462,6 @@ bool TilesFramework::initialise()
     m_region_tab->activate_tab(TAB_ITEM);
 #endif
 
-
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
     m_region_crt  = new CRTRegion(m_fonts[m_crt_font].font);
@@ -1150,7 +1149,6 @@ bool TilesFramework::zoom_from_minimap()
     return true;
 }
 
-
 void TilesFramework::deactivate_tab()
 {
     m_region_tab->deactivate_tab();
@@ -1530,7 +1528,6 @@ void TilesFramework::toggle_inventory_display()
     int idx = m_region_tab->active_tab();
     m_region_tab->activate_tab((idx + 1) % m_region_tab->num_tabs());
 }
-
 
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 {

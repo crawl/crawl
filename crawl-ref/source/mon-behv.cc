@@ -724,7 +724,6 @@ void handle_behaviour(monster* mon)
                     }
                 }
 
-
                 if (mon->foe_memory <= 0
                     && !(mon->friendly() && mon->foe == MHITYOU))
                 {

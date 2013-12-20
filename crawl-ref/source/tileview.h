@@ -42,7 +42,6 @@ void tile_init_flavour(const coord_def &gc);
 // that match target.
 void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
-
 // Tile view related
 void tile_draw_floor();
 void tile_reset_fg(const coord_def &gc);

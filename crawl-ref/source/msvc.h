@@ -48,7 +48,6 @@
 // POSIX deprecation warnings
 #pragma warning(disable : 4996)
 
-
 static inline double round(double x)
 {
     if (x >= 0.0)

@@ -755,7 +755,6 @@ void textbackground(int col)
 #endif
 }
 
-
 void gotoxy_sys(int x, int y)
 {
     move(y - 1, x - 1);
@@ -831,7 +830,6 @@ int wherex()
 {
     return getcurx(stdscr) + 1;
 }
-
 
 int wherey()
 {

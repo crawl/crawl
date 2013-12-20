@@ -963,7 +963,6 @@ static void _place_player_corpse(bool explode)
     move_item_to_grid(&o, you.pos(), !you.in_water());
 }
 
-
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {

@@ -1053,7 +1053,6 @@ bool tile_list_processor::write_data(bool image, bool code)
             fprintf(fp, "    %s_%s_MAX = %s\n};\n\n", m_prefix.c_str(), ucname.c_str(), max_enum.c_str());
         }
 
-
         fprintf(fp, "unsigned int tile_%s_count(tileidx_t idx);\n", lcname.c_str());
         fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx);\n", lcname.c_str());
         fprintf(fp, "int tile_%s_probs(tileidx_t idx);\n",
@@ -1487,7 +1486,6 @@ bool tile_list_processor::write_data(bool image, bool code)
     }
 
     delete[] part_min;
-
 
     // Write "%name.d"
     if (m_abstract.empty())

@@ -479,7 +479,6 @@ static void _find_connected_identical(const coord_def &d,
     }
 }
 
-
 // Find all connected cells containing ft, starting at d.
 void find_connected_identical(const coord_def &d, set<coord_def>& out)
 {
@@ -526,7 +525,6 @@ coord_def get_random_stair()
         return coord_def();        // sanity check: shouldn't happen
     return st[random2(st.size())];
 }
-
 
 static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 

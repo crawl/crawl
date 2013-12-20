@@ -115,7 +115,6 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                               || !(stFileInfo.st_mode & S_IRUSR)) ? "dolls.txt"
                             : dollsTxtString.c_str();
 
-
     if ((fp = fopen_u(dollsTxt, "r")) == NULL)
     {
         // File doesn't exist. By default, use equipment settings.

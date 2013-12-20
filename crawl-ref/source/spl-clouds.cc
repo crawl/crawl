@@ -281,7 +281,6 @@ void manage_fire_shield(int delay)
 
     int threshold = get_expiration_threshold(DUR_FIRE_SHIELD);
 
-
     if (old_dur > threshold && you.duration[DUR_FIRE_SHIELD] < threshold)
         mprf(MSGCH_WARN, "Your ring of flames is guttering out.");
 

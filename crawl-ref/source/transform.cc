@@ -1219,7 +1219,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
              make_stringf("gaining the %s transformation", form_names[which_trans]).c_str());
     }
 
-
     return true;
 }
 

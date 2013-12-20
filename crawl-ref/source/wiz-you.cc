@@ -495,7 +495,6 @@ void wizard_set_skill_level(skill_type skill)
 }
 #endif
 
-
 #ifdef WIZARD
 void wizard_set_all_skills(void)
 {

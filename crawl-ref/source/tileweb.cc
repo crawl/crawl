@@ -48,8 +48,6 @@
 #include <stdarg.h>
 #include <errno.h>
 
-
-
 static unsigned int get_milliseconds()
 {
     // This is Unix-only, but so is Webtiles at the moment.
@@ -58,7 +56,6 @@ static unsigned int get_milliseconds()
 
     return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
-
 
 // Helper for json.h
 struct JsonWrapper
@@ -87,7 +84,6 @@ struct JsonWrapper
 
     static class MalformedException { } malformed;
 };
-
 
 TilesFramework tiles;
 
@@ -864,7 +860,6 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
         current = next;
     }
 }
-
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
@@ -1801,7 +1796,6 @@ void TilesFramework::clear_to_end_of_line()
         m_print_area->put_character(' ', m_print_fg, m_print_bg, x, m_print_y);
 }
 
-
 void TilesFramework::mark_for_redraw(const coord_def& gc)
 {
     mark_dirty(gc);
@@ -1828,7 +1822,6 @@ bool TilesFramework::cell_needs_redraw(const coord_def& gc)
 {
     return m_cells_needing_redraw[gc.y * GXM + gc.x];
 }
-
 
 void TilesFramework::write_message_escaped(const string& s)
 {

@@ -5295,7 +5295,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             mon->props[ORIG_MONSTER_KEY] = orig_mon;
         }
 
-
         return MON_AFFECTED;
     }
 
@@ -5353,7 +5352,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     return MON_AFFECTED;
 }
-
 
 // Extra range used on hit.
 int bolt::range_used_on_hit() const
@@ -5563,7 +5561,6 @@ void bolt::refine_for_explosion()
         seeMsg  = "The beam explodes into a cloud of software bugs!";
         hearMsg = "You hear the sound of one hand!";
     }
-
 
     if (!is_tracer && *seeMsg && *hearMsg)
     {

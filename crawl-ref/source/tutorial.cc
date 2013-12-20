@@ -59,7 +59,6 @@ void tutorial_init_hint(const char* hintstr)
     else if (strcmp(hintstr, "HINT_ROTTEN_FOOD") == 0)
         hint = HINT_ROTTEN_FOOD;
 
-
     if (hint != HINT_EVENTS_NUM)
         Hints.hints_events[hint] = true;
 }

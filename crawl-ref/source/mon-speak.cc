@@ -390,7 +390,6 @@ void maybe_mons_speaks(monster* mons)
     // Okay then, don't speak.
 }
 
-
 // Returns true if something is said.
 bool mons_speaks(monster* mons)
 {

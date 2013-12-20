@@ -27,7 +27,6 @@ void dgn_smooth_height_at(coord_def c, int radius = 1,
                           int max_height = DGN_UNDEFINED_HEIGHT);
 void dgn_smooth_heights(int radius = 1, int npasses = 1);
 
-
 void dgn_island_centred_at(const coord_def &c,
                            // Number of times to raise heights of
                            // points near c.

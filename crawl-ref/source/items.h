@@ -3,7 +3,6 @@
  * @brief Misc (mostly) inventory related functions.
 **/
 
-
 #ifndef ITEMS_H
 #define ITEMS_H
 

@@ -6,7 +6,6 @@
 #ifndef POTION_H
 #define POTION_H
 
-
 #include "externs.h"
 
 // drank_it should be true for real potion effects (as opposed

@@ -2341,7 +2341,6 @@ static void _path_distance(const coord_def& origin,
     }
 }
 
-
 // Find the minimum distance from each point of origin to one of the targets
 // The distance is stored in 'distances', which is the same size as origins.
 static void _point_point_distance(const vector<coord_def>& origins,
@@ -2805,7 +2804,6 @@ struct monster_conversion
     int fruit_cost;
     monster_type new_type;
 };
-
 
 // Given a monster (which should be a plant/fungus), see if
 // fedhas_evolve_flora() can upgrade it, and set up a monster_conversion

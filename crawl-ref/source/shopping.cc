@@ -225,7 +225,6 @@ static void _list_shop_keys(const string &purchasable, bool viewing,
     fs.display();
     tmp->set_visible(true);
 
-
     // ///////// SELECT ITEM TO BUY/EXAMINE //////////
     // set cursor [32 + 16 chars + 5 whitespace]
     cgotoxy(53, numlines - 1, GOTO_CRT);

@@ -48,7 +48,6 @@ extern "C" {
             luaL_error(ls, "Operation forbidden in end-user script");   \
     } while (false)
 
-
 // FIXME: remove one of these.
 void luaopen_setmeta(lua_State *ls,
                      const char *global,
@@ -158,7 +157,6 @@ void push_item(lua_State *ls, item_def *item);
             make_stringf("Point (%d,%d) is out of bounds",      \
                          c.x, c.y).c_str());                    \
     else {};
-
 
 #define COORDS(c, p1, p2)                                \
     GETCOORD(c, p1, p2, in_bounds)

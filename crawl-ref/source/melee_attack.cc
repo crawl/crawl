@@ -3368,7 +3368,6 @@ bool melee_attack::apply_damage_brand()
     return ret;
 }
 
-
 // XXX:
 //  * Noise should probably scale non-linearly with damage_done, and
 //    maybe even non-linearly with noise_factor.
@@ -4068,7 +4067,6 @@ void melee_attack::player_stab_check()
     if (stab_attempt)
         count_action(CACT_STAB, uat);
 }
-
 
 // TODO: Unify this and player_unarmed_speed (if possible), then unify with
 // monster weapon/attack speed

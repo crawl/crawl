@@ -92,7 +92,6 @@ static int bisearch(ucs_t ucs, const struct interval *table, ucs_t max)
     return 0;
 }
 
-
 /* The following two functions define the column width of an ISO 10646
  * character as follows:
  *

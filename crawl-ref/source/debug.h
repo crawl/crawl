@@ -25,7 +25,6 @@
 #endif
 #endif
 
-
 #ifndef _lint
 # if defined(TARGET_COMPILER_VC) || (defined(__cplusplus) && __cplusplus >= 201103)
 // We'd need to enable C++11 mode for nice messages.

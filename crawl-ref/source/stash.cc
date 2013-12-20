@@ -134,7 +134,6 @@ void describe_stash(const coord_def& c)
         mprf(MSGCH_EXAMINE_FILTER, "%s", desc.c_str());
 }
 
-
 vector<item_def> Stash::get_items() const
 {
     return items;
@@ -1482,7 +1481,6 @@ LevelStashes *StashTracker::find_current_level()
     return find_level(level_id::current());
 }
 
-
 bool StashTracker::update_stash(const coord_def& c)
 {
     LevelStashes *lev = find_current_level();
@@ -1905,7 +1903,6 @@ void StashSearchMenu::draw_title()
                  stack_style, sort_style, filtered)), false);
     }
 }
-
 
 bool StashSearchMenu::process_key(int key)
 {

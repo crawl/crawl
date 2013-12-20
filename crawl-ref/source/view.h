@@ -3,7 +3,6 @@
  * @brief Misc function used to render the dungeon.
 **/
 
-
 #ifndef VIEW_H
 #define VIEW_H
 

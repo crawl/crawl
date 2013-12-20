@@ -1368,7 +1368,6 @@ void mpr_comma_separated_list(const string &prefix,
     _mpr(out, channel, param);
 }
 
-
 // Checks whether a given message contains patterns relevant for
 // notes, stop_running or sounds and handles these cases.
 static void mpr_check_patterns(const string& message,
@@ -1689,7 +1688,6 @@ void set_msg_dump_file(FILE* file)
 {
     _msg_dump_file = file;
 }
-
 
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel, int param)

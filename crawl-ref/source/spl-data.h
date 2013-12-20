@@ -176,8 +176,6 @@ struct spell_desc
      false
 },
 
-
-
 {
     SPELL_BOLT_OF_MAGMA, "Bolt of Magma",
      SPTYP_CONJURATION | SPTYP_FIRE | SPTYP_EARTH,
@@ -923,7 +921,6 @@ struct spell_desc
      false,
      false
 },
-
 
 {
     SPELL_DISPEL_UNDEAD, "Dispel Undead",

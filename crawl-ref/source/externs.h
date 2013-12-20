@@ -59,7 +59,6 @@ protected:
     tileidx_t m_tile;
 };
 
-
 #define INFO_SIZE       200          // size of message buffers
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
 #define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
@@ -353,7 +352,6 @@ struct shop_struct
     bool defined() const { return type != SHOP_UNASSIGNED; }
 };
 
-
 struct delay_queue_item
 {
     delay_type  type;
@@ -367,7 +365,6 @@ struct delay_queue_item
 #endif
     size_t      len;
 };
-
 
 // Identifies a level. Should never include virtual methods or
 // dynamically allocated memory (see code to push level_id onto Lua

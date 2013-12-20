@@ -1334,7 +1334,6 @@ void CrawlHashTable::read(reader &th)
     ASSERT_VALIDITY();
 }
 
-
 #ifdef DEBUG_PROPS
 static map<string, int> accesses;
 # define ACCESS(x) ++accesses[x]
@@ -1934,7 +1933,6 @@ CrawlVector::const_iterator CrawlVector::end() const
     ASSERT_VALIDITY();
     return vec.end();
 }
-
 
 #ifdef DEBUG_PROPS
 static bool _cmp(string a, string b)

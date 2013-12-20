@@ -67,7 +67,6 @@ namespace worley
             double at[3], double *F,
             double (*delta)[3], uint32_t *ID);
 
-
     /* The main function! */
     static void _worley(double at[3], int32_t max_order,
             double *F, double (*delta)[3], uint32_t *ID)

@@ -33,7 +33,6 @@ enum feature_property_type
     FPROP_OLD_BLOOD     = (1 << 18),
 };
 
-
 bool is_sanctuary(const coord_def& p);
 bool is_bloodcovered(const coord_def& p);
 bool is_tide_immune(const coord_def &p);

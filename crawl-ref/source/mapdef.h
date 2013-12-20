@@ -800,7 +800,6 @@ struct trap_spec
         : tr_type(static_cast<trap_type>(tr)) { }
 };
 
-
 /**
  * @class feature_spec
  * @ingroup mapdef
@@ -847,7 +846,6 @@ struct map_flags
     static map_flags parse(const string flag_list[],
                            const string &s) throw(string);
 };
-
 
 struct keyed_mapspec
 {
@@ -1195,7 +1193,6 @@ public:
     bool run_hook(const string &hook_name, bool die_on_lua_error = false);
     bool run_postplace_hook(bool die_on_lua_error = false);
     void copy_hooks_from(const map_def &other_map, const string &hook_name);
-
 
     // Returns true if the validation passed.
     bool test_lua_validate(bool croak = false);

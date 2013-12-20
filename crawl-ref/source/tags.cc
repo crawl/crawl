@@ -268,7 +268,6 @@ long writer::tell()
     return _file? ftell(_file) : _pbuf->size();
 }
 
-
 #ifdef DEBUG_GLOBALS
 // Force a conditional jump valgrind may pick up, no matter the optimizations.
 static volatile uint32_t hashroll;
@@ -1672,7 +1671,6 @@ static void marshall_item_list(writer &th, const i_transit_list &ilist)
     }
 }
 
-
 static m_transit_list unmarshall_follower_list(reader &th)
 {
     m_transit_list mlist;
@@ -2022,7 +2020,6 @@ static void tag_read_you(reader &th)
     ASSERT(you.form != TRAN_NONE || !you.transform_uncancellable);
 #endif
     EAT_CANARY;
-
 
     count = unmarshallShort(th);
     ASSERT_RANGE(count, 0, 32768);
@@ -2610,7 +2607,6 @@ static void tag_read_you(reader &th)
     }
 #endif
     abyssal_state.phase = unmarshallFloat(th);
-
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_ABYSS_BRANCHES)

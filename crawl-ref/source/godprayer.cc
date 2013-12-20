@@ -855,7 +855,6 @@ static bool _offer_items()
             }
         }
 
-
         piety_gain_t relative_gain = sacrifice_item_stack(item);
         print_sacrifice_message(you.religion, mitm[i], relative_gain);
         item_was_destroyed(mitm[i]);

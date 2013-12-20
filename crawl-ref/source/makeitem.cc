@@ -82,7 +82,6 @@ static int _exciting_colour()
     }
 }
 
-
 static int _weapon_colour(const item_def &item)
 {
     int item_colour = BLACK;
@@ -3131,7 +3130,6 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
         init_deck(item);
     }
 }
-
 
 // Returns item slot or NON_ITEM if it fails.
 int items(bool allow_uniques,

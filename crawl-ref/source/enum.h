@@ -3,7 +3,6 @@
  * @brief Global (ick) enums.
 **/
 
-
 #ifndef ENUM_H
 #define ENUM_H
 
@@ -4071,7 +4070,6 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_SUMMONED   = 0x800000000000ULL,
     TILE_FLAG_PERM_SUMMON= 0x1000000000000ULL,
 
-
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,
     TILE_FLAG_MDAM_LIGHT = 0x040000000ULL,
@@ -4093,7 +4091,6 @@ enum tile_flags ENUM_INT64
     TILE_FLAG_MIMIC       = 0x4000000000ULL,
     TILE_FLAG_MIMIC_RAVEN = 0x6000000000ULL,
     TILE_FLAG_MIMIC_MASK  = 0x6000000000ULL,
-
 
     //// Background flags
 

@@ -488,7 +488,6 @@ void create_sanctuary(const coord_def& center, int time)
         mpr("The monsters scatter in all directions!");
 }
 
-
 /////////////
 // Silence
 
@@ -645,7 +644,6 @@ bool liquefied(const coord_def& p, bool check_actual)
     else
         return _check_agrid_flag(p, APROP_LIQUID);
 }
-
 
 /////////////
 // Orb's glow

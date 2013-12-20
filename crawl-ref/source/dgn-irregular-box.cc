@@ -10,7 +10,6 @@
 #include "random.h"
 #include "dgn-irregular-box.h"
 
-
 // Adds a simple hollow box to the map with the specified
 //  coordinates, glyphs, and number of doors.  This is the
 //  fallback if we can't place a irregular box.
@@ -415,8 +414,6 @@ static void _fill_outside(vector<vector<char> >& map,
         }
     }
 }
-
-
 
 void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
                         int di_x, int di_y, int in_x, int in_y,

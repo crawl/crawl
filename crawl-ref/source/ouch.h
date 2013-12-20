@@ -3,10 +3,8 @@
  * @brief Functions used when Bad Things happen to the player.
 **/
 
-
 #ifndef OUCH_H
 #define OUCH_H
-
 
 #define DEATH_NAME_LENGTH 10
 

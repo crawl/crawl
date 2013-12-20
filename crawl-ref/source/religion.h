@@ -3,7 +3,6 @@
  * @brief Misc religion related functions.
 **/
 
-
 #ifndef RELIGION_H
 #define RELIGION_H
 

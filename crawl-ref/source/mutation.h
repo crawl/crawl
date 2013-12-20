@@ -3,7 +3,6 @@
  * @brief Functions for handling player mutations.
 **/
 
-
 #ifndef MUTATION_H
 #define MUTATION_H
 

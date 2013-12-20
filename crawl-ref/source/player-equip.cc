@@ -463,7 +463,6 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a poisoned item like this.");
 }
 
-
 static void _wield_cursed(item_def& item, bool known_cursed, bool unmeld)
 {
     if (!item.cursed() || unmeld)

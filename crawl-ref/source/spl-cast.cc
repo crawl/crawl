@@ -1817,7 +1817,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     return SPRET_SUCCESS;
 }
 
-
 // _tetrahedral_number: returns the nth tetrahedral number.
 // This is the number of triples of nonnegative integers with sum < n.
 // Called only by get_true_fail_rate.

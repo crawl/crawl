@@ -202,7 +202,6 @@ static int dgn_mons_at(lua_State *ls)
     return 1;
 }
 
-
 static int dgn_create_monster(lua_State *ls)
 {
     COORDS(c, 1, 2);

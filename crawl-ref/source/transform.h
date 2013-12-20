@@ -3,7 +3,6 @@
  * @brief Misc function related to player transformations.
 **/
 
-
 #ifndef TRANSFOR_H
 #define TRANSFOR_H
 

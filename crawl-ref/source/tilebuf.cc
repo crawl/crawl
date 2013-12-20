@@ -214,7 +214,6 @@ void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,
 /////////////////////////////////////////////////////////////////////////////
 // SubmergedTileBuffer
 
-
 SubmergedTileBuffer::SubmergedTileBuffer(const TilesTexture *tex,
                                          int water_level) :
     m_water_level(water_level),

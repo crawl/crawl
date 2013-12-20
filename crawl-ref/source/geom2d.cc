@@ -105,8 +105,6 @@ vector reflect(const vector &v, const form &f)
     return v - 2 * f(v)/f(normal) * normal;
 }
 
-
-
 //////////////////////////////////////////////////
 // vector space implementation
 

@@ -203,7 +203,6 @@ LUAFN(moninf_get_is_unique)
     return 1;
 }
 
-
 LUAFN(moninf_get_damage_desc)
 {
     MONINF(ls, 1, mi);

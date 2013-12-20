@@ -770,7 +770,6 @@ KILLEXP_ACCESS(monnum, number, monnum)
 KILLEXP_ACCESS(isghost, boolean, monnum == MONS_PLAYER_GHOST)
 KILLEXP_ACCESS(ispandemon, boolean, monnum == MONS_PANDEMONIUM_LORD)
 
-
 static int kill_lualc_modifier(lua_State *ls)
 {
     if (!lua_islightuserdata(ls, 1))

@@ -3,7 +3,6 @@
  * @brief Functions related to clouds.
 **/
 
-
 #ifndef CLOUD_H
 #define CLOUD_H
 

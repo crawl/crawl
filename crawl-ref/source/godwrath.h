@@ -3,7 +3,6 @@
  * @brief Divine retribution.
 **/
 
-
 #ifndef GODWRATH_H
 #define GODWRATH_H
 

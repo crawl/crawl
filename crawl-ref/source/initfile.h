@@ -3,7 +3,6 @@
  * @brief Simple reading of init file.
 **/
 
-
 #ifndef INITFILE_H
 #define INITFILE_H
 

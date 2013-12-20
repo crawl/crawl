@@ -3,7 +3,6 @@
  * @brief Dumps character info out to the morgue file.
 **/
 
-
 #ifndef CHARDUMP_H
 #define CHARDUMP_H
 

@@ -216,7 +216,6 @@ struct path_less
 
 };
 
-
 template<typename cost_T, typename est_T>
 struct simple_connect
 {
@@ -287,7 +286,6 @@ void search_astar(position_node & start,
 
     set<position_node>::iterator current = visited.insert(start).first;
     fringe.push(current);
-
 
     bool done = false;
     while (!fringe.empty())

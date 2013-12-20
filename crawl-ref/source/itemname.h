@@ -3,7 +3,6 @@
  * @brief Misc functions.
 **/
 
-
 #ifndef ITEMNAME_H
 #define ITEMNAME_H
 

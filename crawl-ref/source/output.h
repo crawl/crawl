@@ -3,10 +3,8 @@
  * @brief Functions used to print player related info.
 **/
 
-
 #ifndef OUTPUT_H
 #define OUTPUT_H
-
 
 enum status_redraw_flag_type
 {

@@ -896,7 +896,6 @@ static bool _band_ok(monster * mon)
     return false;
 }
 
-
 void check_wander_target(monster* mon, bool isPacified)
 {
     // default wander behaviour

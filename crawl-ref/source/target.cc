@@ -298,7 +298,6 @@ aff_type targetter_view::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-
 targetter_smite::targetter_smite(const actor* act, int ran,
                                  int exp_min, int exp_max, bool wall_ok,
                                  bool (*affects_pos_func)(const coord_def &)):
@@ -645,7 +644,6 @@ aff_type targetter_splash::is_affected(coord_def loc)
     return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
 }
 
-
 targetter_los::targetter_los(const actor *act, los_type _los,
                              int range, int range_max)
 {
@@ -685,7 +683,6 @@ aff_type targetter_los::is_affected(coord_def loc)
 
     return (loc - origin).abs() > range_max2 ? AFF_MAYBE : AFF_YES;
 }
-
 
 targetter_thunderbolt::targetter_thunderbolt(const actor *act, int r,
                                              coord_def _prev)

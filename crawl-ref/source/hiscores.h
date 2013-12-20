@@ -3,10 +3,8 @@
  * @brief Scorefile manipulation functions
 **/
 
-
 #ifndef HISCORES_H
 #define HISCORES_H
-
 
 class scorefile_entry;
 

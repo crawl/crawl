@@ -1056,7 +1056,6 @@ void discover_mimic(const coord_def& pos, bool wake)
     else if (x_chance_in_y(level - 15, 6))
         mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_FEATURE_MIMIC;
 
-
     if (feature_mimic)
     {
         if (feat_is_stone_stair(feat))

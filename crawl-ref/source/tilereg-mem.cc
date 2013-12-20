@@ -156,5 +156,4 @@ void MemoriseRegion::update()
     }
 }
 
-
 #endif
