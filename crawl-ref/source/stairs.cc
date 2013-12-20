@@ -498,23 +498,21 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     if (feat == DNGN_ESCAPE_HATCH_UP && player_in_branch(BRANCH_LABYRINTH))
         feat = DNGN_EXIT_LABYRINTH;
 #endif
-    if (branches[you.where_are_you].exit_stairs == feat)
+    if (branches[you.where_are_you].exit_stairs == feat
+        && parent_branch(you.where_are_you) < NUM_BRANCHES)
     {
-        if (parent_branch(you.where_are_you) < NUM_BRANCHES)
+        level_id lev = brentry[you.where_are_you];
+        if (!lev.is_valid())
         {
-            level_id lev = brentry[you.where_are_you];
-            if (!lev.is_valid())
-            {
-                // Wizmode, the branch wasn't generated this game.
-                // Pick the middle of the range instead.
-                lev = level_id(branches[you.where_are_you].parent_branch,
-                               (branches[you.where_are_you].mindepth
-                                + branches[you.where_are_you].maxdepth) / 2);
-                ASSERT(lev.is_valid());
-            }
-
-            return lev;
+            // Wizmode, the branch wasn't generated this game.
+            // Pick the middle of the range instead.
+            lev = level_id(branches[you.where_are_you].parent_branch,
+                           (branches[you.where_are_you].mindepth
+                            + branches[you.where_are_you].maxdepth) / 2);
+            ASSERT(lev.is_valid());
         }
+
+        return lev;
     }
 
     if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
