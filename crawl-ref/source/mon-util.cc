@@ -1749,12 +1749,12 @@ static int _mons_damage(monster_type mc, int rt)
 
 const char* resist_margin_phrase(int margin)
 {
-    ASSERT(margin > 0);
-
-    return (margin >= 40) ? " easily resists." :
-           (margin >= 24) ? " resists." :
-           (margin >= 12) ? " resists with some effort."
-                          : " struggles to resist.";
+    return margin >= 30  ? " resists with almost no effort." :
+           margin >= 15  ? " easily resists." :
+           margin >= 0   ? " resists." :
+           margin >= -14 ? " resists with significant effort.":
+           margin >= -30 ? " struggles to resist."
+                         : " strains under the huge effort it takes to resist.";
 }
 
 bool mons_immune_magic(const monster* mon)

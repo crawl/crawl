@@ -3368,8 +3368,22 @@ void bolt::affect_player_enchantment()
             }
         }
         if (need_msg)
-            canned_msg(MSG_YOU_RESIST);
-
+        {
+            // the message reflects the level of difficulty resisting.
+            const int margin = you.res_magic() - ench_power;
+            if (margin >= 30)
+                mpr("You resist with almost no effort.");
+            else if (margin >= 15)
+                mpr("You easily resist.");
+            else if (margin >= 0)
+                mpr("You resist.");
+            else if (margin >= -14)
+                mpr("You resist with significant effort.");
+            else if (margin >= -30)
+                mpr("You struggle to resist.");
+            else
+                mpr("You strain under the huge effort it takes to resist.");
+        }
         // You *could* have gotten a free teleportation in the Abyss,
         // but no, you resisted.
         if (flavour == BEAM_TELEPORT && player_in_branch(BRANCH_ABYSS))
@@ -4967,7 +4981,6 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
     // Early out if the enchantment is meaningless.
     if (!_ench_flavour_affects_monster(flavour, mon))
         return MON_UNAFFECTED;
-
     // Check magic resistance.
     if (has_saving_throw())
     {
@@ -4986,9 +4999,12 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
         // Chaos effects don't get a resistance check to match melee chaos.
         else if (real_flavour != BEAM_CHAOS)
         {
-            res_margin = mon->check_res_magic(ench_power);
-            if (res_margin > 0)
+            if (mon->check_res_magic(ench_power) > 0)
+            {
+                // Note only actually used by messages in this case.
+                res_margin = mon->res_magic() - ench_power;
                 return MON_RESIST;
+            }
         }
     }
 
