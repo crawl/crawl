@@ -520,7 +520,6 @@ static int _count_digits(int val)
 
 static void _print_stats_temperature(int x, int y)
 {
-
     cgotoxy(x, y, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
     cprintf("Temperature: ");

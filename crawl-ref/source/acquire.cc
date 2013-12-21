@@ -860,7 +860,6 @@ static int _spell_weight(spell_type spell)
     int leveldiff = 5 - spell_difficulty(spell);
 
     return max(0, 2 * weight/count + leveldiff);
-
 }
 
 // When randomly picking a book for acquirement, use the sum of the

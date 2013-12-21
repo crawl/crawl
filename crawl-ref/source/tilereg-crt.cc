@@ -10,7 +10,6 @@
 
 CRTRegion::CRTRegion(FontWrapper *font) : TextRegion(font), m_attached_menu(NULL)
 {
-
 }
 
 CRTRegion::~CRTRegion()

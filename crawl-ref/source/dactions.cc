@@ -159,7 +159,6 @@ void add_daction(daction_type act)
 
     // And now to any monsters in transit.
     apply_daction_to_transit(act);
-
 }
 
 void apply_daction_to_mons(monster* mon, daction_type act, bool local,

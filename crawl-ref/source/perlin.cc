@@ -294,7 +294,6 @@ namespace perlin
     // 4D simplex noise, better simplex rank ordering method 2012-03-09
     double noise(double x, double y, double z, double w)
     {
-
         double n0, n1, n2, n3, n4; // Noise contributions from the five corners
         // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
         double s = (x + y + z + w) * F4; // Factor for 4D skewing

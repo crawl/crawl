@@ -888,7 +888,6 @@ bool deck_identify_first(int slot)
 
     mprf("You get a glimpse of the first card. It is %s.", card_name(card));
     return true;
-
 }
 
 // Draw the top four cards of an unmarked deck and play them all.
@@ -1563,7 +1562,6 @@ static void _damnation_card(int power, deck_rarity_type rarity)
         else
             mon_to_banish->banish(&you);
     }
-
 }
 
 static void _warpwright_card(int power, deck_rarity_type rarity)

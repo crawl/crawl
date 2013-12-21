@@ -585,7 +585,6 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     for (radius_iterator ri(mon->patrol_point, you.current_vision, C_ROUND, true);
          ri; ++ri)
     {
-
         if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
             continue;
 

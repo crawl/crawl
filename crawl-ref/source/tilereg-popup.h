@@ -19,7 +19,6 @@ public:
 
 protected:
     int m_retval;
-
 };
 #endif
 #endif

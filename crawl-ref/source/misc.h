@@ -213,7 +213,6 @@ struct path_less
     {
         return left->total_dist() > right->total_dist();
     }
-
 };
 
 template<typename cost_T, typename est_T>
@@ -269,7 +268,6 @@ struct coord_wrapper
 
     coord_wrapper()
     {
-
     }
 };
 

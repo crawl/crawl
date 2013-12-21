@@ -346,7 +346,6 @@ static void _construct_hiscore_table(MenuScroller* scroller)
 
     for (int j=0; j<i; j++)
         _add_hiscore_row(scroller, *hs_list[j], j);
-
 }
 
 static void _show_morgue(scorefile_entry& se)

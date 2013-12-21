@@ -5684,7 +5684,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int shared_damage = damage / 2;
             if (shared_damage > 0)
             {
-
                 if (owner->is_player())
                     mpr("Your spectral weapon shares its damage with you!");
                 else if (owner->alive() && you.can_see(owner))

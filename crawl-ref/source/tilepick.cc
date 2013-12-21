@@ -2859,7 +2859,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
                 && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
             {
-
                 tile += TILEP_MONS_ELDRITCH_TENTACLE_PORTAL_N;
                 tile -= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N;
 

@@ -966,7 +966,6 @@ void display_mutations()
     {
         _display_temperature();
     }
-
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)

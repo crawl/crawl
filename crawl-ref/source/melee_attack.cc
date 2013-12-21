@@ -221,7 +221,6 @@ bool melee_attack::handle_phase_attempted()
                 || (weapon && is_unrandom_artefact(*weapon)
                     && weapon->special == UNRAND_DEVASTATOR)))
         {
-
             if (damage_brand == SPWPN_ELECTROCUTION
                 && adjacent(attack_position, defender->pos())
                 && conduction_affected(attack_position)
@@ -897,7 +896,6 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-
     if (!cleaving && !handle_phase_attempted())
         return false;
 
@@ -2001,7 +1999,6 @@ void melee_attack::set_attack_verb()
         }
         else
         {
-
             const char* pierce_desc[][2] = {{"crush",   "like a grape"},
                                             {"beat",    "like a drum"},
                                             {"hammer",  "like a gong"},

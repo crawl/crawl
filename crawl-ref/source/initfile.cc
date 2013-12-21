@@ -124,7 +124,6 @@ object_class_type item_class_by_sym(ucs_t c)
     default:
         return NUM_OBJECT_CLASSES;
     }
-
 }
 
 template<class A, class B> static void _merge_lists(A &dest, const B &src,

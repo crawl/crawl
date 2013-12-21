@@ -587,7 +587,6 @@ void OGLShapeBuffer::draw(const GLState &state)
         break;
     }
     glDebug("glDrawElements");
-
 }
 
 void OGLShapeBuffer::clear()

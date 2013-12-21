@@ -412,7 +412,6 @@ void console_startup()
 
     if (OutputCP != PREFERRED_CODEPAGE)
         SetConsoleOutputCP(PREFERRED_CODEPAGE);
-
 }
 
 void console_shutdown()

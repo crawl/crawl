@@ -878,7 +878,6 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
              meld ? "your weapon melds" : "you unwield");
         end_spectral_weapon(spectral_weapon, false, true);
     }
-
 }
 
 static void _equip_armour_effect(item_def& arm, bool unmeld)

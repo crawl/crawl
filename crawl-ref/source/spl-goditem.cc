@@ -177,7 +177,6 @@ int is_pacifiable(const monster* mon)
 static int _can_pacify_monster(const monster* mon, const int healed,
                                const int max_healed)
 {
-
     int pacifiable = is_pacifiable(mon);
     if (pacifiable < 0)
         return pacifiable;

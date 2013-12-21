@@ -264,7 +264,6 @@ private:
     bool target_unshifted;      // Do unshifted direction keys fire?
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
-
 };
 
 // Monster equipment description level.

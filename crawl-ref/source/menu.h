@@ -1094,7 +1094,6 @@ class MenuButton : public MenuObject
 public:
 
 protected:
-
 };
 
 /**
