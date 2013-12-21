@@ -730,7 +730,7 @@ COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
 :           set_feature_name("clear_rock_wall", "crystal clear mirror")
 :           set_feature_name("granite_statue", "strange generator")
-:           set_feature_name("dry_fountain_blue", "glistening fountain")
+:           set_feature_name("dry_fountain", "glistening fountain")
 :           set_feature_name("stone_wall", "black marble wall")
 :           set_feature_name("floor", "marble floor")
 :           set_random_mon_list("dancing weapon")
