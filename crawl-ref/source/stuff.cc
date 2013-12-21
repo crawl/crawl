@@ -874,5 +874,4 @@ double prompt_for_float(const char* prompt)
         ret = -1;
 
     return ret;
-
 }

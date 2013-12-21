@@ -515,7 +515,6 @@ direction_chooser::direction_chooser(dist& moves_,
 
     show_items_once = false;
     target_unshifted = Options.target_unshifted_dirs;
-
 }
 
 class view_desc_proc

@@ -343,7 +343,6 @@ void TilesFramework::calculate_default_options()
 #undef AUTO
 
     m_tab_margin = Options.tile_font_lbl_size + 4;
-
 }
 
 bool TilesFramework::initialise()

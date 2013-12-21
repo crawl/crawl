@@ -751,7 +751,6 @@ protected:
 
     void _removed_fearmonger(bool quiet = false);
     bool _possible_fearmonger(const monster* mon) const;
-
 };
 
 #ifdef DEBUG_GLOBALS

@@ -165,7 +165,6 @@ bool SkillMenuEntry::mastered() const
 {
     return (is_set(SKMF_EXPERIENCE) ? skm.get_raw_skill_level(m_sk)
                                     : you.skills[m_sk]) >= 27;
-
 }
 
 void SkillMenuEntry::refresh(bool keep_hotkey)

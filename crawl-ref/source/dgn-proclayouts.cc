@@ -51,7 +51,6 @@ ColumnLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
-
     uint8_t halfCell = w + s;
     uint8_t cellSize = halfCell * 2;
     uint8_t x = abs(abs(p.x) % cellSize - halfCell);
@@ -352,7 +351,6 @@ CityLayout::operator()(const coord_def &p, const uint32_t offset) const
     if (dist == size)
         return ProceduralSample(p, DNGN_ROCK_WALL, offset + 4096);
     return ProceduralSample(p, DNGN_FLOOR, offset + 4096);
-
 }
 
 ProceduralSample

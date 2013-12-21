@@ -981,7 +981,6 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
         const dungeon_feature_type grid = grd(ray.pos());
         if (act && (!check_invis || agent->can_see(act)))
         {
-
             // Can't jump over airborn enemies nor giant enemies not in deep
             // water or lava.
             if (act->airborne())

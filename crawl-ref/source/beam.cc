@@ -4376,7 +4376,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (mon->heal(roll_dice(3, 10)))
             simple_monster_message(mon, " is bolstered by the flame.");
     }
-
 }
 
 void bolt::beam_hits_actor(actor *act)

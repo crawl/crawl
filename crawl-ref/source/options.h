@@ -38,7 +38,6 @@ struct message_filter
             return channel_match;
         return pattern.matches(s);
     }
-
 };
 
 struct sound_mapping

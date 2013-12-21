@@ -304,7 +304,6 @@ static void _split_ench_durations(monster* initial_slime, monster* split_off)
     {
         split_off->add_ench(i->second);
     }
-
 }
 
 // What to do about any enchantments these two creatures may have?
@@ -1400,7 +1399,6 @@ static bool _queen_incite_worker(const monster* queen)
     }
 
     return goaded != 0;
-
 }
 
 static void _set_door(set<coord_def> door, dungeon_feature_type feat)
@@ -2483,7 +2481,6 @@ struct tentacle_attack_constraints
             expansion.push_back(temp);
         }
     }
-
 };
 
 struct tentacle_connect_constraints
@@ -2558,7 +2555,6 @@ struct tentacle_connect_constraints
             expansion.push_back(temp);
         }
     }
-
 };
 
 struct target_position
@@ -2568,7 +2564,6 @@ struct target_position
     {
         return pos == target;
     }
-
 };
 
 struct target_monster
@@ -2598,7 +2593,6 @@ struct multi_target
         }
         return false;
     }
-
 };
 
 // returns pathfinding success/failure

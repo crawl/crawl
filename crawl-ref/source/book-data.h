@@ -51,7 +51,6 @@
     SPELL_SUMMON_UGLY_THING,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
-
 },
 
 {   // Book of Fire

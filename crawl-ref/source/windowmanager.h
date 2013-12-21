@@ -129,7 +129,6 @@ public:
                               unsigned int &orig_height,
                               tex_proc_func proc = NULL,
                               bool force_power_of_two = true) = 0;
-
 };
 
 // Main interface for UI functions

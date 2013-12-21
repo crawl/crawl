@@ -1566,7 +1566,6 @@ static void _give_ammo(monster* mon, int level,
             }
             else if (mon->type == MONS_SPRIGGAN_ASSASSIN)
             {
-
                 special_missile_type brand = random_choose_weighted(5, SPMSL_SLEEP,
                                                               3, SPMSL_CONFUSION,
                                                               2, SPMSL_PARALYSIS,

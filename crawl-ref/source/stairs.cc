@@ -1086,7 +1086,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     // quick-healing stopovers.
     if (crawl_state.game_is_zotdef())
         start_delay(DELAY_UNINTERRUPTIBLE, 5);
-
 }
 
 static bool _any_glowing_mold()

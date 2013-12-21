@@ -2359,7 +2359,6 @@ static void _place_item_mimics()
                  item.name(DESC_BASENAME).c_str(), item.pos.x, item.pos.y);
         }
     }
-
 }
 
 // Apply modifications (ruination, plant clumps) that should happen
@@ -2989,7 +2988,6 @@ struct adjacent_costs
     {
         return (*adjacency)(pos);
     }
-
 };
 
 struct label_match
@@ -6752,7 +6750,6 @@ dungeon_feature_type vault_placement::feature_at(const coord_def &c)
 
     keyed_mapspec *mapsp = map.mapspec_at(c);
     return _vault_inspect(*this, feat, mapsp);
-
 }
 
 bool vault_placement::is_space(const coord_def &c)

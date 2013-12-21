@@ -1852,7 +1852,6 @@ static double _get_true_fail_rate(int raw_fail)
     //The random2avg distribution is symmetric, so the last interval is
     //essentially the same as the first interval.
     return (double) (1020100 - _tetrahedral_number(300 - target)) / 1020100;
-
 }
 
 //Computes the chance of getting a miscast effect of a given severity (or

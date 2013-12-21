@@ -2907,7 +2907,6 @@ static bool _jiyva_slime_target(monster_type targetc)
               || targetc == MONS_GIANT_AMOEBA
               || targetc == MONS_ACID_BLOB
               || targetc == MONS_AZURE_JELLY);
-
 }
 
 void change_monster_type(monster* mons, monster_type targetc)
@@ -4702,7 +4701,6 @@ beh_type attitude_creation_behavior(mon_attitude_type att)
     default:
         return BEH_HOSTILE;
     }
-
 }
 
 // Return the creation behavior type corresponding to the input

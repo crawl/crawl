@@ -221,7 +221,6 @@ struct stash_search_result
     }
 
     bool show_menu() const;
-
 };
 
 class LevelStashes
