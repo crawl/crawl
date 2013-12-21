@@ -299,9 +299,13 @@ show_class get_cell_show_class(const map_cell& cell,
     if (cell.cloud() != CLOUD_NONE)
         return SH_CLOUD;
 
-    if (feat_is_trap(cell.feat())
-     || is_critical_feature(cell.feat())
-     || (cell.feat() && cell.feat() < DNGN_MINMOVE))
+    const dungeon_feature_type feat = cell.feat();
+    if (feat && feat < DNGN_MINMOVE
+        || feat > DNGN_OPEN_DOOR
+           && feat != DNGN_ABANDONED_SHOP
+           && feat != DNGN_STONE_ARCH
+           && feat != DNGN_EXPIRED_PORTAL
+           && (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_DRY_FOUNTAIN))
     {
         return SH_FEATURE;
     }
