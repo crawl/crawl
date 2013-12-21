@@ -208,7 +208,6 @@ static int _get_mons_colour(const monster_info& mi)
     else if (mons_class_is_stationary(mi.type))
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
-            && is_critical_feature(grd(mi.pos))
             && feat_stair_direction(grd(mi.pos)) != CMD_NO_CMD)
         {
             col |= COLFLAG_FEATURE_ITEM;
