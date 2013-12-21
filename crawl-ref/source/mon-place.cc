@@ -97,22 +97,6 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
     if (feat_wanted == DNGN_FLOOR)
         return feat_has_solid_floor(actual_feat);
 
-    if (feat_wanted >= DNGN_ROCK_WALL
-        && feat_wanted <= DNGN_CLEAR_PERMAROCK_WALL)
-    {
-        // A monster can only move through or inhabit permanent rock if that's
-        // exactly what it's asking for.
-        if (actual_feat == DNGN_PERMAROCK_WALL
-            || actual_feat == DNGN_CLEAR_PERMAROCK_WALL)
-        {
-            return feat_wanted == DNGN_PERMAROCK_WALL
-                   || feat_wanted == DNGN_CLEAR_PERMAROCK_WALL;
-        }
-
-        return actual_feat >= DNGN_ROCK_WALL
-               && actual_feat <= DNGN_CLEAR_PERMAROCK_WALL;
-    }
-
     return feat_wanted == actual_feat
            || (feat_wanted == DNGN_DEEP_WATER
                && (actual_feat == DNGN_SHALLOW_WATER
