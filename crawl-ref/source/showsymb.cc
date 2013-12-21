@@ -32,8 +32,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
 
-    // These aren't shown mossy/bloody/slimy.
-    const bool norecolour = is_critical_feature(feat) || feat_is_trap(feat);
+    // These aren't shown mossy/bloody/slimy, nor obey vault recolouring.
+    const bool norecolour = feat > DNGN_OPEN_DOOR
+                            && feat != DNGN_STONE_ARCH
+                            && feat != DNGN_DRY_FOUNTAIN
+                            && feat != DNGN_EXPIRED_PORTAL
+                            // unknown traps won't get here
+                            || feat == DNGN_MALIGN_GATEWAY;
 
     if (is_stair_exclusion(loc))
         colour = Options.tc_excluded;
