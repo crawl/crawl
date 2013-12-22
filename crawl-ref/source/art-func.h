@@ -352,14 +352,14 @@ static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 static void _SINGING_SWORD_world_reacts(item_def *item)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
+    int tier = (tension <= 0) ? 0 : (tension < 40) ? 1 : 2;
     bool silent = silenced(you.pos());
 
     string old_name = get_artefact_name(*item);
     string new_name;
     if (silent)
         new_name = "Sulking Sword";
-    else if (tier < 3)
+    else if (tier < 2)
         new_name = "Singing Sword";
     else
         new_name = "Screaming Sword";
@@ -370,14 +370,14 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     }
 
     // not as spammy at low tension
-    if (!x_chance_in_y(7, (tier == 1) ? 1000 : (tier == 2) ? 100 : 10))
+    if (!x_chance_in_y(7, (tier == 0) ? 1000 : (tier == 1) ? 100 : 10))
         return;
 
     // it will still struggle more with higher tension
     if (silent)
         tier = 0;
 
-    if (tier == 3 && one_chance_in(10))
+    if (tier == 2 && one_chance_in(10))
         tier++; // SCREAM -- double damage
 
     const char *tenname[] =  {"silenced", "no_tension", "low_tension",
@@ -388,13 +388,13 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     msg = maybe_pick_random_substring(msg);
     msg = maybe_capitalise_substring(msg);
 
-    const int loudness[] = {0, 2, 15, 25, 35};
+    const int loudness[] = {0, 15, 25, 35};
     item_noise(*item, msg, loudness[tier]);
 
-    if (tier < 3)
+    if (tier < 2)
         return; // no damage on low tiers
 
-    sonic_damage(tier == 4);
+    sonic_damage(tier == 3);
 }
 
 ////////////////////////////////////////////////////
