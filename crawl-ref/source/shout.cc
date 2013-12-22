@@ -458,7 +458,7 @@ void noisy_equipment()
     msg = maybe_pick_random_substring(msg);
     msg = maybe_capitalise_substring(msg);
 
-    item_noise(*weapon, msg);
+    item_noise(*weapon, msg, 20);
 }
 
 void apply_noises()

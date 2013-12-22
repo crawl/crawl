@@ -335,9 +335,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         artefact_wpn_learn_prop(item, ARTP_CURSED);
     }
 
-    if (proprt[ARTP_NOISES])
-        you.attribute[ATTR_NOISES] = 1;
-
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you use an unknown random artefact and
@@ -400,9 +397,6 @@ static void _unequip_artefact_effect(item_def &item,
                        true);
     notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    !msg, item,
                        true);
-
-    if (proprt[ARTP_NOISES] != 0)
-        you.attribute[ATTR_NOISES] = 0;
 
     if (proprt[ARTP_FLY] != 0 && you.cancellable_flight()
         && !you.evokable_flight())
