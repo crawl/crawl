@@ -345,6 +345,15 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
             break;
 
+        case SK_SHORT_BLADES:
+            if (player_genus(GENPC_ELVEN, static_cast<species_type>(species))
+                && skill_rank == 5)
+            {
+                result = "Blademaster";
+                break;
+            }
+            break;
+
         case SK_INVOCATIONS:
             if (god != GOD_NO_GOD)
                 result = god_title((god_type)god, (species_type)species, piety);
