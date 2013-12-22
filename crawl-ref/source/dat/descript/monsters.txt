@@ -2887,8 +2887,8 @@ Oh wait, wrong game.
 %%%%
 sensed monster
 
-Thanks to your antennae, you know there is some creature there, although you
-know nothing about its identity.
+Thanks to your antennae, you know there is some creature there, and
+that it is not one of your allies.
 %%%%
 trivial sensed monster
 
@@ -2912,8 +2912,14 @@ should be afraid. Very afraid.
 %%%%
 friendly sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that it
-is one of your allies.
+{{
+    if you.god() == "Ashenzari" then
+        return "By the power of Ashenzari,"
+    else
+        return "Thanks to your antennae,"
+    end
+}}
+you know there is some creature there, and that it is one of your allies.
 %%%%
 ##############################################################################
 ### Vault-defined monsters
