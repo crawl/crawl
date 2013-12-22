@@ -446,6 +446,22 @@ static bool _has_tran_unwearable_armour()
     return false;
 }
 
+static bool _has_hand_evokable()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def &item(you.inv[i]);
+
+        if (item.defined()
+            && item_is_evokable(item, true, true, true, false, false)
+            && !item_is_evokable(item, true, true, true, false, true))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static string _no_selectables_message(int item_selector)
 {
     switch (item_selector)
@@ -494,7 +510,10 @@ static string _no_selectables_message(int item_selector)
     case OSEL_BUTCHERY:
         return "You aren't carrying any sharp implements.";
     case OSEL_EVOKABLE:
-        return "You aren't carrying any items that can be evoked.";
+        if (_has_hand_evokable())
+            return "You aren't carrying any items that can be evoked without being wielded.";
+        else
+            return "You aren't carrying any items that can be evoked.";
     case OSEL_FRUIT:
         return "You aren't carrying any fruit.";
     case OSEL_CURSED_WORN:
