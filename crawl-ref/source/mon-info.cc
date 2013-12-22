@@ -774,6 +774,9 @@ string monster_info::db_name() const
                          ignore_flags);
     }
 
+    if (type == MONS_SENSED)
+        return get_monster_data(base_type)->name;
+
     return get_monster_data(type)->name;
 }
 
@@ -793,6 +796,7 @@ string monster_info::_core_name() const
 #endif
     case MONS_SPECTRAL_THING:   case MONS_PILLAR_OF_SALT:
     case MONS_CHIMERA:
+    case MONS_SENSED:
         nametype = base_type;
         break;
 
@@ -910,6 +914,9 @@ string monster_info::common_name(description_level_type desc) const
 
     if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE) && !nocore)
         ss << "spectral ";
+
+    if (type == MONS_SENSED && !mons_is_sensed(base_type))
+        ss << "sensed ";
 
     if (type == MONS_BALLISTOMYCETE)
         ss << (number ? "active " : "");
