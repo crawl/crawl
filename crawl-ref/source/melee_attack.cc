@@ -2710,26 +2710,22 @@ void melee_attack::chaos_affects_defender()
         obvious_effect = you.can_see(defender);
         break;
 
+    // For these, obvious_effect is computed during beam.fire() below.
     case CHAOS_HEAL:
         beam.flavour = BEAM_HEALING;
         break;
-
     case CHAOS_HASTE:
         beam.flavour = BEAM_HASTE;
         break;
-
     case CHAOS_INVIS:
         beam.flavour = BEAM_INVISIBILITY;
         break;
-
     case CHAOS_SLOW:
         beam.flavour = BEAM_SLOW;
         break;
-
     case CHAOS_PARALYSIS:
         beam.flavour = BEAM_PARALYSIS;
         break;
-
     case CHAOS_PETRIFY:
         beam.flavour = BEAM_PETRIFY;
         break;
