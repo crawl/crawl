@@ -1014,6 +1014,15 @@ bool melee_attack::attack()
     if (!defender->pos().origin())
         handle_noise(defender->pos());
 
+    // Noisy weapons.
+    if (attacker->is_player()
+        && weapon
+        && is_artefact(*weapon)
+        && artefact_wpn_property(*weapon, ARTP_NOISES))
+    {
+        noisy_equipment();
+    }
+
     // Allow monster attacks to draw the ire of the defender.  Player
     // attacks are handled elsewhere.
     if (perceived_attack

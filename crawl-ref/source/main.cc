@@ -3238,9 +3238,6 @@ static void _player_reacts()
     if (you.unrand_reacts != 0)
         unrand_reacts();
 
-    if (you.attribute[ATTR_NOISES])
-        noisy_equipment();
-
     // Handle sound-dependent effects that are silenced
     if (silenced(you.pos()))
     {
