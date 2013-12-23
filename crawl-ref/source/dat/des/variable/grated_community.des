@@ -57,7 +57,6 @@ SUBST:  9 = 8
 KFEAT:  8 = granite_statue
 KFEAT:  f = fountain_blue
 KFEAT:  j = fountain_sparkling
-KFEAT:  ^ = known blade trap
 KFEAT:  ~ = closed_door
 KFEAT:  7 = tree
 KFEAT:  A = general shop type:Slaves suffix:and_Accessories count:10 ; \
@@ -93,10 +92,10 @@ cZ==========EE========EE========EE========...===============================EEZc
 cZ==========EE========EE========EE========...==============================EEEZc
 cZ==-------===QQQQQQQ===TTTTTTT===UUUUUUU=...=ccccccccccccccccccccccccccccccE=Zc
 cZ==-W+..'-===QQQQQQQ===TTTTTTT===UUUUUUU=...=ccccccccccccc$ccccccccccccc$cc==Zc
-cZ==---..--===QQQQQQQ===TTTTTTT===UUUUUUU=...=cc4c4c4c4cca.acW.Wc.^.^c.b.bcc==Zc
-cZ==-#-..P-===QQQQQQQ===TTTTTTT===UUUUUUU=...=ccgcgcgcgcc.A.cc>cc^h^.+..B.cc==Zc
-cZ==-5....-===QQQQQQQ===TTTTTTT===UUUUUUU=...=9c...eee..+.a.cW.Wch^h^c.b..cc==Zc
-cZ==-*....-===QQQQQQQ===TTTTTTT===UUUUUUU=...==n....e...cccccc+cc^h^.ccc+ccc==Zc
+cZ==---..--===QQQQQQQ===TTTTTTT===UUUUUUU=...=cc4c4c4c4cca.acW.Wc....c.b.bcc==Zc
+cZ==-#-..P-===QQQQQQQ===TTTTTTT===UUUUUUU=...=ccgcgcgcgcc.A.cc>cc.h..+..B.cc==Zc
+cZ==-5....-===QQQQQQQ===TTTTTTT===UUUUUUU=...=9c...eee..+.a.cW.Wch.h.c.b..cc==Zc
+cZ==-*....-===QQQQQQQ===TTTTTTT===UUUUUUU=...==n....e...cccccc+cc.h..ccc+ccc==Zc
 cZ==---n-+-===QQQQQQQ===TTTTTTT===UUUUUUU=.....~................ccnncc....cc==Zc
 cZ..........e.......Q.e.......T.e.......U......~.......eee.......e........cc==Zc
 cZ...=7=7=.efe.=7=7=.efe.=7=7=.ife.=7=7=.....==n.......eee.......ee.i...e.cc==Zc

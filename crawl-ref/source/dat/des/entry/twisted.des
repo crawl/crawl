@@ -169,11 +169,6 @@ ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=x , D=x
 SUBST:   = = +
-NSUBST:  T = 1=T... / *=.
-KFEAT:   T = net trap
-# Seemingly pointless, since there are no active foes here... but
-# it had an unnerving effect on me the one time it happened by chance
-# ("Ack! Now I'm trapped too! Help!") so I coded it in. ^.^
 NSUBST:  M = 2=E / *=M E:2
 KFEAT:   E = teleport trap
 KFEAT:   MNOQ = shallow_water
@@ -208,9 +203,9 @@ MAP
 xxxxxxxxxxxxxx     xxxxxxxxx
 xxxxxxxxMxMxMxxxxxxxMxMxMxMx
 xxxxxxxxmxmxmxMxMxMxmxmxmxmxxxx@x
-xxxxxxx......xmxmxmx.....T.mMxx=xx
-xxxxxx{..............xmxmxTxmx...xxx
-xxxxxxx..........xmxmxMxMm.T.T.>.mMx
+xxxxxxx......xmxmxmx.......mMxx=xx
+xxxxxx{..............xmxmx.xmx...xxx
+xxxxxxx..........xmxmxMxMm.....>.mMx
 xxxxxxxxmxmxmxmxmxMxMxxxxxmxmx...xxx
 xxxxxxxxMxMxMxMxMxxxxx   xMxMxxAxx
 xxxxxxxxxxxxxxxxxx       xxxxxxBx

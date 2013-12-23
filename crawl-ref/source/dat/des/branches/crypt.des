@@ -527,7 +527,7 @@ NAME:  weyrava_lich_vault
 DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen
 ITEM:  gold
-KFEAT: Z = blade trap / needle trap / bolt trap / w:8 zot trap / w:25 floor
+KFEAT: Z = w:5 alarm trap / w:8 zot trap / w:50 floor
 KMONS: Y = Boris / ancient lich, ancient lich
 MONS:  w:3 zombie / lich / w:3 skeleton / w:3 bone dragon
 MONS:  skeleton / zombie
@@ -1288,12 +1288,10 @@ KMONS:  ! = skeletal warrior ; w:2 dagger ego:pain | short sword ego:draining |\
                                w:2 cutlass ego:pain | w:1 quick blade ego:pain
 KFEAT:  o = granite_statue
 KFEAT:  _ = altar_kikubaaqudgha
-KFEAT:  ~ = bolt trap / blade trap / needle trap
 SUBST:  B = b %
 KITEM:  b = any book
 SUBST:  ? = $ % * |:1
 SUBST:  u = U Y
-SUBST:  ; = ....~
 KMONS:  8 = iron golem
 ####### NW monsters (chapel).
 KMONS:  A = ancient lich / w:2 mummy priest
@@ -1341,41 +1339,41 @@ NSUBST: . = 8:0 / *:.
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vccccccccccccccccccccccccc......"...Bvvvvvvvvvvvvvvvvvvvvvv
-vc..D..c.....c....Bc;;+;;c.ffff.vvvBDvvvvvvvvvvvvvvvvvvvvvv
-vc.c.c.+.....+....cc;;+;;c.ffFf.vvvv"vvvvvvvvvvvvvnP+.....v
-vc.._..+...D.c....Bc;;c;;m.ffFf.v????||$$$.vvvvv..nPn|????v
+vc..D..c.....c....Bc..+..c.ffff.vvvBDvvvvvvvvvvvvvvvvvvvvvv
+vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnP+.....v
+vc.._..+...D.c....Bc..c..m.ffFf.v????||$$$.vvvvv..nPn|????v
 vc.c.c.c.....c....cc..c..c.ffff.v$$$$$$$$$.vvvv...nPn$$$$$v
 vc.....ccc+ccc....Bc..cGGc.ffff.vnnnnnnnnn+vvv..H.nPn$$$$$v
-vc.....c.....c....cc..c..c.ffff.v;;;;;;;;;;vv.....nPn$$$$$v
-vc.....c?....c..A.Bc..c..m..fff.v;;;;;;;;;;vv.uvu.nPn$$$$$v
-vc.....c|?...c....cc..c..c...ff.v;;vvvvvvvvv..vvv.nPnnnnnnv
-vc.....c||?EEcBcBcc...c..c....f.v;;;;;;;;;;+..uvu.nPPPPPPPv
-vc++cccccccccccccc...cc..c......v;;;;;;;;;;+......nnnnnnn+v
+vc.....c.....c....cc..c..c.ffff.v..........vv.....nPn$$$$$v
+vc.....c?....c..A.Bc..c..m..fff.v..........vv.uvu.nPn$$$$$v
+vc.....c|?...c....cc..c..c...ff.v..vvvvvvvvv..vvv.nPnnnnnnv
+vc.....c||?EEcBcBcc...c..c....f.v..........+..uvu.nPPPPPPPv
+vc++cccccccccccccc...cc..c......v..........+......nnnnnnn+v
 vc.....G............cc...m..G...vvvvvvvvvvvv.H............v
 vc.....G...........cc...cc......v....vvvvvvv..............v
 vccccccccccccccccccc...cc...ff..v.JJ...vvvvvv....v..v..v..v
-vc.....;;;;;;.........cc..fffff.v.......vvvvv.............v
-vc......;;;;.........ccE..fffff.vv+vv....vvvvv...v..v..v..v
+vc....................cc..fffff.v.......vvvvv.............v
+vc...................ccE..fffff.vv+vv....vvvvv...v..v..v..v
 vccmcccmm++mmcccmcccmc...fffff..v...vvv...vvvvv...........v
 v.......f..f............fffffff.v.....vv...vvvvv..........v
 v....ffff..ffff.........fffFfff.v......v...vvvvvvvvvvvv++vv
-v.G.ffff...ffff...G....ffffffff.v......vv...v;..;.I;..;..;v
-v...ffff...fffff.......fffffff..v.......v...+.;..;..;..;..v
-v....ffff....ffff.......f.ffff..v.......v...+..;..;..;..;.v
-v......f.f....ffff..............v.......v...v;..;.I;..;..;v
+v.G.ffff...ffff...G....ffffffff.v......vv...v.....I.......v
+v...ffff...fffff.......fffffff..v.......v...+.............v
+v....ffff....ffff.......f.ffff..v.......v...+.............v
+v......f.f....ffff..............v.......v...v.....I.......v
 vvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvv....v??llv??llv??llvvvvvvo.ovvvWWWWWWW.......v
-vvvvvlllvvvvv....v?.tlv?.tlv?.tlvvvv.......vvWWWWWWZ.mmmm;v
+vvvvvlllvvvvv....v?.tlv?.tlv?.tlvvvv.......vvWWWWWWZ.mmmm.v
 vvv.......vvv....v....v....v....vvv.........vvWWWWWWWm*|m.v
-vv.........vv....v....v....v....vv...........vWWWWWWWW*|m;v
+vv.........vv....v....v....v....vv...........vWWWWWWWW*|m.v
 v..ccc.ccc..vv++vvv++vvv++vvv++vvv...R.Q.R...vvWWWWmWW%|m.v
-v...lc.cl...v...................vo...........ovWWWWmmmmmm;v
-v..t.c.c.t..+.;;;;;;;;;;;;;;;;;.+......U......+...........v
+v...lc.cl...v...................vo...........ovWWWWmmmmmm.v
+v..t.c.c.t..+...................+......U......+...........v
 v...........v...................vo...........ov...........v
 v.cccc.cccc.vvvvvvvvvKvvvvvvvvvvvv.........vvvvvvvvvvvvvvvv
-v.cll...llc.v??......<vvvvvvvvvvvv.........+..;+..........v
-v.clt...tlc.K???.....Kvvvvvvvvvvvvv........+.;.vvvvvvvvvv.v
-v.c...X...c.v????|KKvvwwwwwwwwvvvvvv.......v;...vvvW.R.%v.v
+v.cll...llc.v??......<vvvvvvvvvvvv.........+...+..........v
+v.clt...tlc.K???.....Kvvvvvvvvvvvvv........+...vvvvvvvvvv.v
+v.c...X...c.v????|KKvvwwwwwwwwvvvvvv.......v....vvvW.R.%v.v
 v...........vRRRRKvwwwwwwwwwwwwwwvvvvvo.ovvv+v...vvW...%v.v
 v..ccc.ccc..vRRKvvwwwwwwwwwwwwwwwwvvvvv+vvvv.vv...vv...$v.v
 v..lc...cl..vvvvwwwwwwwwwwwwwwwwwwwwvvv<v....vvv...vvv+vv.v
@@ -1388,20 +1386,20 @@ vvvv++vvvvvvvwwwwwww..8..wwwwwwwwwwwwwwvv.v.v...WvRWvv...vv
 v........+tvwwwwww.........wwwwwwwwwwwwwv.v+v+vvvv+vvvv...v
 v...ll...v+vwwwww...........wwwwwwwwwwwwv............vvv..v
 v...ll...+tvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
-v...ll...v+vwwww.............wwww..;;.;;+.;;.....R......v.v
-v...ll...+tvwww...............ww...;;.;;+.;;.V.S.R.V....v.v
-v.llllll.v+vwww...................wwwwwwv.;;...S........v.v
-v.llllll.+tvwww8.............8...wwwwwwwv.;;.V.S.R.V....v.v
-v...ll...v+vwww.................wwwwwwwwv.;;.....R......v.v
+v...ll...v+vwwww.............wwww.......+........R......v.v
+v...ll...+tvwww...............ww........+....V.S.R.V....v.v
+v.llllll.v+vwww...................wwwwwwv......S........v.v
+v.llllll.+tvwww8.............8...wwwwwwwv....V.S.R.V....v.v
+v...ll...v+vwww.................wwwwwwwwv........R......v.v
 v.t.ll...vtvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v
-v.t.ll...v.*vwww.{...........wwwwwwwwwwv...;...'o$.....vv.v
-v...ll...v.%vwww..[..........wwwwwwwwwwv....;..v$;....vvv.v
-v........+.*vvwww..(........wwwwwwwwwwvv..W..;.v..;..vvv..v
-vvvvvvvvvvvvvvvwww.........wwwwwwwwwwvv..SW...;v.S.;vvv.S.v
-vvvvvvvvvvvvvvvwwwww..8..wwwwwwwwwwwwv;.WWWWW..'...vvv;...v
-vvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwvv.;..W....v..vvv..;..v
-vvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvvo..;.W....v+vvv....;$v
-vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!+....;..R..'........$ov
+v.t.ll...v.*vwww.{...........wwwwwwwwwwv.......'o$.....vv.v
+v...ll...v.%vwww..[..........wwwwwwwwwwv.......v$.....vvv.v
+v........+.*vvwww..(........wwwwwwwwwwvv..W....v.....vvv..v
+vvvvvvvvvvvvvvvwww.........wwwwwwwwwwvv..SW....v.S..vvv.S.v
+vvvvvvvvvvvvvvvwwwww..8..wwwwwwwwwwwwv..WWWWW..'...vvv....v
+vvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwvv....W....v..vvv.....v
+vvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvvo....W....v+vvv.....$v
+vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!+.......R..'........$ov
 vvvvvvvvvvvvvvvvvvvvvvwwwwwwwwvvvvvvvovvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP

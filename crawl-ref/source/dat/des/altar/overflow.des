@@ -1549,13 +1549,11 @@ DEPTH:   D:2-
 TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG
-KFEAT:   A = net trap
-KFEAT:   B = needle trap
 KFEAT:   C = shaft trap
 MARKER:  E = lua:fog_machine { cloud_type = "flame", \
                pow_min = 5, pow_max = 8, delay_min = 80, delay_max = 150, \
                size = 2, walk_dist = 0, spread_rate= 0 }
-SUBST:   D = 1, EFG = .
+SUBST:   D = 1, ABEFG = .
 MONS:    kobold; dagger ego:chaos / gnoll; spear ego:chaos / orc; short sword ego:chaos
 : interest_check(_G)
 MAP

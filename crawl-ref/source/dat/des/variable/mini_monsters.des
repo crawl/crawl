@@ -924,7 +924,7 @@ KFEAT:  78 = W
 KFEAT:  B = w
 KFEAT:  ' = known shaft trap
 KFEAT:  ~ = alarm trap / floor
-KFEAT:  ` = needle trap / web / floor w:30
+KFEAT:  ` = web / floor w:30
 KMONS:  6 = water moccasin
 KMONS:  7 = spider
 KMONS:  8 = giant centipede
@@ -1367,7 +1367,6 @@ SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
 : dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
 KMONS:   5 = halfling att:neutral
-KFEAT:   6 = net trap
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10000, pow_max = 10000, delay = 1, \
@@ -1384,7 +1383,7 @@ xtttttttttttxxxx
 xtyyWWWyyyyytttx
 xyy.....y3yyyttx
 xy..s1s..m'5yytx
-@...1P1..m65'ytx
+@...1P1..m'5'ytx
 xy..s17..m'5yytx
 xyy.....y2yyyttx
 xtyyWWWyyyyyttxx
@@ -3780,7 +3779,7 @@ DEPTH:   D, Depths, Orc, Elf, Crypt, Snake, Shoals, Geh, Coc, Dis, Tar, Zot
 WEIGHT:  10 (D), 1 (Geh, Coc, Dis, Tar, Zot), 4
 KFEAT:   A = stone_arch
 KFEAT:   D = any shop
-KFEAT:   ^ : known blade trap / known teleport trap / known shaft trap
+KFEAT:   ^ : known teleport trap / known shaft trap
 KFEAT:   Z = known zot trap
 SUBST:   A : C:20 D:20 ATVY^{[(<>, b : c:30 G:20 bvwtdGG123, 0 : 0:3 9:2 ':1
 SUBST:   .' : .:99 W:1, [ : [], ( : ()

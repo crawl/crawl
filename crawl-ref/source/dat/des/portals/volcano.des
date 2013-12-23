@@ -949,10 +949,6 @@ NSUBST:  X = 1:= / *:v
 NSUBST:  Y = 1:+ / *:c
 NSUBST:  t = 1:! / *:.
 KFEAT:   ! = alarm trap
-NSUBST:  r = 2:r / *:.
-NSUBST:  s = 2:s / *:.
-KFEAT:   r = bolt trap
-KFEAT:   s = spear trap
 #        The monsters.
 MONS:    mummy / vampire
 MONS:    manticore skeleton / ogre skeleton / spriggan skeleton / centaur skeleton / \
@@ -971,15 +967,15 @@ xccc......ccccc..$X$$$vxxx
 cc1.........3....$X$$$vxxx
 cccc.c2.c.ccccc..$X...vxxx
 ...+...2..cxxxccccvv+vvxxx
-cccc.c2.c.ccccc..$Xsssvxxx
-cc1.........3....$Xsssvxxx
-xccc......ccccc..$Xsssvxxx
+cccc.c2.c.ccccc..$X2.2vxxx
+cc1.........3....$X.2.vxxx
+xccc......ccccc..$X...vxxx
 xxxcc.cc.ccddeccYvvvv+vxxx
 xxxxc3cc3c1eeg+!.+4Yttvvvx
 xxccc.cc.cccccccYvvvtt+1vx
-xxc...cc...crrrc..3v+vvvvx
-xxc...cc...crrr+.1.vffvxxx
-xxc$$$cc$$$+rrrc3..+fgvxxx
+xxc...cc...c...c..3v+vvvvx
+xxc...cc...c...+.1.vffvxxx
+xxc$$$cc$$$+$$$c3..+fgvxxx
 xxcccccccccccccccccvvvvxxx
 ENDMAP
 
