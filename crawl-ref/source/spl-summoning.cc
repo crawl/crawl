@@ -1536,7 +1536,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
     else if (mons_class_flies(zombie_type))
         *motions_r |= DEAD_ARE_FLYING;
-    else if (mons_genus(zombie_type)    == MONS_ADDER
+    else if (mons_genus(zombie_type)    == MONS_SNAKE
              || mons_genus(zombie_type) == MONS_NAGA
              || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
              || mons_genus(zombie_type) == MONS_GIANT_SLUG
