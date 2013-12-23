@@ -1235,13 +1235,13 @@ static const item_def* _find_missile_launcher(int skill)
 
 static bool _need_missile_gift(bool forced)
 {
-    const int best_missile_skill = best_skill(SK_SLINGS, SK_THROWING);
-    const item_def *launcher = _find_missile_launcher(best_missile_skill);
+    const skill_type sk = best_skill(SK_SLINGS, SK_THROWING);
+    if (sk != SK_THROWING && !_find_missile_launcher(sk))
+        return false;
     return (forced || you.piety >= piety_breakpoint(2)
                       && random2(you.piety) > 70
                       && one_chance_in(8))
-           && you.skills[ best_missile_skill ] >= 8
-           && (launcher || best_missile_skill == SK_THROWING);
+           && you.skills[sk] /* no skill boosts */ >= 8;
 }
 
 void get_pure_deck_weights(int weights[])
