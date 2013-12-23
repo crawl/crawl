@@ -157,30 +157,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
     case 'I':
         return is_stash(where);
     case '_':
-        switch (grid)
-        {
-        case DNGN_ALTAR_ZIN:
-        case DNGN_ALTAR_SHINING_ONE:
-        case DNGN_ALTAR_KIKUBAAQUDGHA:
-        case DNGN_ALTAR_YREDELEMNUL:
-        case DNGN_ALTAR_XOM:
-        case DNGN_ALTAR_VEHUMET:
-        case DNGN_ALTAR_OKAWARU:
-        case DNGN_ALTAR_MAKHLEB:
-        case DNGN_ALTAR_SIF_MUNA:
-        case DNGN_ALTAR_TROG:
-        case DNGN_ALTAR_NEMELEX_XOBEH:
-        case DNGN_ALTAR_ELYVILON:
-        case DNGN_ALTAR_LUGONU:
-        case DNGN_ALTAR_BEOGH:
-        case DNGN_ALTAR_JIYVA:
-        case DNGN_ALTAR_FEDHAS:
-        case DNGN_ALTAR_CHEIBRIADOS:
-        case DNGN_ALTAR_ASHENZARI:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_altar(grid);
     case '\t':
     case '\\':
         switch (grid)
