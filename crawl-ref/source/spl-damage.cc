@@ -970,7 +970,8 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     fail_check();
     set_attack_conducts(conducts, mons);
 
-    mprf("The air twists around and strikes %s!",
+    mprf("The air twists around and %sstrikes %s!",
+         mons->flight_mode() ? "violently " : "",
          mons->name(DESC_THE).c_str());
     noisy(4, beam.target);
 
@@ -983,7 +984,10 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
+
+    const int preac = hurted;
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
+    dprf("preac: %d, postac: %d", preac, hurted);
 
     mons->hurt(&you, hurted);
     if (mons->alive())
