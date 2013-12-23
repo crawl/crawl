@@ -308,15 +308,12 @@ NSUBST:  e = 1:1 / *:e
 NSUBST:  $ = 1:1 / *:$
 SUBST:   2 = 2 3:1 .:1
 SUBST:   3 = 3 2:1 .:1
-SUBST:   f = ~
 ITEM:    any scroll, any potion
 MONS:    mummy
 MONS:    rat zombie / jackal zombie / quokka zombie / adder zombie / \
          goblin zombie / hobgoblin zombie / kobold zombie
 MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
          human zombie / elf zombie / centaur zombie
-KFEAT:   ~ = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
-KFEAT:   f = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
 : ossuary_setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
@@ -324,18 +321,18 @@ x........<..A........x
 x....................x
 x......cccccccc......x
 x...cccc3223+ecccc...x
-x~~cc.~~....ceec2cc~~x
+x..cc.......ceec2cc..x
 x..c<.ccccc.cccc..+..x
-x~~cc.+dddc...~~2cc~~x
+x..cc.+dddc.....2cc..x
 x..2ccccddc...cccc2..x
 x2.....cccccccc.....2x
 x..2....2.3.2.....2..x
 x..2.....2.3.2....2..x
 x2.....cccccccc.....2x
 x..2cccc3+ffc3cccc2..x
-x~~cc2.2.cccc.c$$cc~~x
-x..+.....~~~~.+$$<c..x
-x~~cc2.2.cccc.c$$cc~~x
+x..cc2.2.cccc.c$$cc..x
+x..+..........+$$<c..x
+x..cc2.2.cccc.c$$cc..x
 x...cccc3+ffc3cccc...x
 x......cccccccc......x
 x.......2.3.2........x
