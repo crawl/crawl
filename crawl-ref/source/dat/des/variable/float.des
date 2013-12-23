@@ -3963,32 +3963,31 @@ NAME:    hangedman_stitches_corridor
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
-KFEAT:   ~ : needle trap / dart trap / . w:80
 KFEAT:   " : shallow_water / . w:90
 KFEAT:   ^ : alarm trap / . w:190
-KMASK:   '~ = !no_monster_gen
+KMASK:   ' = !no_monster_gen
 SUBST:   1 = 0.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx"x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x@
+xx"x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x@
 x"""''''''''''''''''''''''''''''''''@
 xx"xx'G'xxxxxxxxxxxxx'G'xxxxxxxxxxxxx
-x~'xcccccx"x.x.x.x"xcccccx"x~x~x~x"xx
+x''xcccccx"x.x.x.x"xcccccx"x'x'x'x"xx
 xx''c$0.c"""....."""c%0%c"""'''''"""x
-x~'xc0%1+x"xx.G.xx"x+0%9cx"xx'G'xx"xx
-xx''ccccc..xcccccx..ccccc..xcccccx'~x
-x~'mmmmmmm..c*9$c..xxxxxxx..c.0$c''xx
-xx''ccccc..xc9*$+x^.ccccc..x+1%0cx'~x
-x~'xc0%1+x..ccccc.^x+$*9cx..ccccc''xx
-xx''c$0.c..xxxxxxx..c$9*c..mmmmmmm'~x
-x~'xcccccx..ccccc..xcccccx..ccccc''xx
-xx"xx'G'xx"xc9%0+x"xx'G'xx"x+1%0cx'~x
+x''xc0%1+x"xx.G.xx"x+0%9cx"xx'G'xx"xx
+xx''ccccc..xcccccx..ccccc..xcccccx''x
+x''mmmmmmm..c*9$c..xxxxxxx..c.0$c''xx
+xx''ccccc..xc9*$+x^.ccccc..x+1%0cx''x
+x''xc0%1+x..ccccc.^x+$*9cx..ccccc''xx
+xx''c$0.c..xxxxxxx..c$9*c..mmmmmmm''x
+x''xcccccx..ccccc..xcccccx..ccccc''xx
+xx"xx'G'xx"xc9%0+x"xx'G'xx"x+1%0cx''x
 x"""'''''"""c%0%c"""....."""c.0$c''xx
-xx"x~x~x~x"xcccccx"x.x.x.x"xcccccx'~x
+xx"x'x'x'x"xcccccx"x.x.x.x"xcccccx''x
 xxxxxxxxxxxxx'G'xxxxxxxxxxxxx'G'xx"xx
 @''''''''''''''''''''''''''''''''"""x
-@x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x~x"xx
+@x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x"xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

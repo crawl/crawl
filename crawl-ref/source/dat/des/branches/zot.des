@@ -162,9 +162,9 @@ TAGS:   no_monster_gen zot_entry layout_city
 PLACE:  Depths:$
 ORIENT: float
 NSUBST: O = 1:O / *:n
-SUBST:  ^ = ^.
+SUBST:  ^ = ^..
 SUBST:  s = ccc=
-KFEAT:  ^ = alarm trap / blade trap / bolt trap
+KFEAT:  ^ = alarm trap / shaft trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
 FTILE:  "OnDx = floor_marble
@@ -1108,9 +1108,6 @@ MONS:   ice statue / silver statue / orange crystal statue / \
 SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
-SUBST:  . = .:9 ~:1
-KFEAT:  ~ = dart trap / arrow trap / bolt trap / blade trap / \
-            needle trap / spear trap / net trap
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 MAP
         xxxxxxxxx

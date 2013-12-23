@@ -1715,11 +1715,10 @@ MAP
 '.;.;.;.;;";;.;.;.;.'
 ENDMAP
 
-NAME: wad_floor_pattern_trapped
+NAME: wad_floor_pattern_untrapped
 TAGS: transparent mini_float extra decor
 WEIGHT: 4
-KFEAT:  ~ = known blade trap
-KPROP:  ~ = no_tele_into
+KFEAT:  ~ = floor
 FTILE:  GT = floor_pebble_darkgray
 FTILE:  ;" = floor_pebble_brown
 COLOUR: "~ = brown

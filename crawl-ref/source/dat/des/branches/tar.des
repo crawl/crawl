@@ -791,7 +791,7 @@ ORIENT:   encompass
 TAGS:     tar_mu_maze no_rotate no_hmirror no_vmirror unrand
 : tar_dig_maze(_G, 0, 0)
 NSUBST:   L = 5:M / 5:N / 5:P / 5:V / 1:L / *:.
-NSUBST:   . = 5:Q / 5:R / *:.
+NSUBST:   . = 5:Q / *:.
 KFEAT:    L = teleport trap
 KMONS:    M = shadow fiend / nothing
 KFEAT:    N = floor
@@ -801,7 +801,6 @@ KFEAT:    P = floor
 KITEM:    P = star_item
 KMONS:    P = patrolling reaper / nothing
 KMONS:    Q = generate_awake unseen horror
-KFEAT:    R = blade trap / floor
 SUBST:    V = V / .
 MAP
 ccccccccccccccccccccccccccc
