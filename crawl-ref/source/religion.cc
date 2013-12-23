@@ -2373,15 +2373,11 @@ string god_name(god_type which_god, bool long_name)
     case GOD_ELYVILON:      return "Elyvilon";
     case GOD_LUGONU:        return "Lugonu";
     case GOD_BEOGH:         return "Beogh";
-    case GOD_JIYVA:
-    {
-        return long_name ? god_name_jiyva(true) + " the Shapeless"
-                         : god_name_jiyva(false);
-    }
     case GOD_FEDHAS:        return "Fedhas";
     case GOD_CHEIBRIADOS:   return "Cheibriados";
     case GOD_XOM:           return "Xom";
     case GOD_ASHENZARI:     return "Ashenzari";
+    case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
     return "";
