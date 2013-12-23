@@ -546,15 +546,15 @@ void game_options::set_default_activity_interrupts()
 
     const char *default_activity_interrupts[] =
     {
-        "interrupt_armour_on = hp_loss, monster_attack",
+        "interrupt_armour_on = hp_loss, monster_attack, monster",
         "interrupt_armour_off = interrupt_armour_on",
         "interrupt_drop_item = interrupt_armour_on",
         "interrupt_jewellery_on = interrupt_armour_on",
-        "interrupt_memorise = interrupt_armour_on, stat",
-        "interrupt_butcher = interrupt_armour_on, teleport, stat, monster",
+        "interrupt_memorise = hp_loss, monster_attack, stat",
+        "interrupt_butcher = interrupt_armour_on, teleport, stat",
         "interrupt_bottle_blood = interrupt_butcher",
         "interrupt_vampire_feed = interrupt_butcher",
-        "interrupt_multidrop = interrupt_armour_on, teleport, stat",
+        "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
         "interrupt_travel = interrupt_butcher, statue, hungry, "
                             "burden, hit_monster, sense_monster",
