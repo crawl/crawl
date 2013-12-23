@@ -164,7 +164,7 @@ ORIENT: float
 NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^..
 SUBST:  s = ccc=
-KFEAT:  ^ = alarm trap / shaft trap
+KFEAT:  ^ = alarm trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
 FTILE:  "OnDx = floor_marble
