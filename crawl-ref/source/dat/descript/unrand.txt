@@ -4,6 +4,14 @@ Singing Sword
 This enchanted weapon loves nothing more than to sing to its owner, whether
 they want it to or not.
 %%%%
+Sulking Sword
+
+<Singing Sword>
+%%%%
+Screaming Sword
+
+<Singing Sword>
+%%%%
 Wrath of Trog
 
 This was the favourite weapon of the old god Trog, before it was lost one day.
