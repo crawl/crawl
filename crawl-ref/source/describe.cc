@@ -902,7 +902,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 "life of those it strikes.";
             break;
         case SPWPN_SPEED:
-            description += "Attacks with this weapon take half as long, "
+            description += "Attacks with this weapon are significantly faster, "
                 "but cause slightly less damage.";
             break;
         case SPWPN_VORPAL:
