@@ -1116,7 +1116,7 @@ SUBST: u=x, v=x, w=x, y=x, z=x
 SUBST: U=x, V=x, W=x, Y=x, Z=x
 #
 SUBST: 1 = 1:20 ., 2=2., 3=23, 4=24
-MONS:  jackal/hound, human, Edmund/Jessica/Sigmund, Ijyb/Psyche
+MONS:  jackal/hound, human, Edmund/Jessica/Satan Claus, Ijyb/Psyche
 MONS:  sheep/nothing
 MAP
          xSxxxxx    xxxxxxxxxxUx
@@ -1317,7 +1317,7 @@ ORIENT: float
 DEPTH:  D:7-
 MONS:   black bear / grizzly bear / polar bear
 MONS:   hippogriff / griffon
-MONS:   yak / sheep / weight:3 death yak
+MONS:   reindeer / sheep / weight:3 red-nosed reindeer
 MONS:   hound / wolf w:5 / hog
 SUBST:  1 = 1:30 2 3 4 .
 MAP
@@ -1541,7 +1541,7 @@ MARKER: F = lua:fog_machine { \
                 size = 4, size_buildup_amnt = 4, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" \
             }
-MONS:   death yak w:5 / sheep w:3 / yak w:7
+MONS:   red-nosed reindeer w:5 / sheep w:3 / reindeer w:7
 MONS:   generate_awake human ; dagger | hand axe
 SUBST:  F=d, 2=2.
 ITEM:   meat ration w:5 / sausage / nothing
@@ -2464,7 +2464,7 @@ ORIENT:  float
 DEPTH:   Depths
 MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hound
-MONS:    death yak / griffon / catoblepas / dire elephant
+MONS:    red-nosed reindeer / griffon / catoblepas / dire elephant
 MONS:    hydra / anaconda / red wasp w:2 / redback w:3 / wolf spider w:5 / harpy
 MONS:    spriggan druid, spriggan rider, sphinx / phoenix / hell beast
 ITEM:    pear q:1 / apple q:1 / choko q:1 / apricot q:1 / \
@@ -2529,7 +2529,7 @@ KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
 KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
            deep elf summoner / deep elf sorcerer
-KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
+KMONS: L = red-nosed reindeer / catoblepas w:5 / basilisk / lindwurm / blink frog
 KMONS: S = swamp dragon / hydra w:5 / vapour / large slime creature / alligator
 KMONS: A = alligator snapping turtle w:5 / siren / merfolk aquamancer / \
            merfolk impaler / harpy

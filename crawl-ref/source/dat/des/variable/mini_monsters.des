@@ -1178,13 +1178,13 @@ xx.....xx
   xx+xx
 ENDMAP
 
-# Sigmund has been educating the oppressed masses in guerrilla warfare.
+# Satan Claus has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:2-6
 TAGS:    extra
 MONS:    gnoll;scythe.robe, hobgoblin;scythe.robe, orc;scythe.robe
 SUBST:   n = 1:20 n:5
-KMONS:   n = Sigmund, gnoll;scythe.robe / hobgoblin;scythe.robe / orc;scythe.robe
+KMONS:   n = Satan Claus, gnoll;scythe.robe / hobgoblin;scythe.robe / orc;scythe.robe
 SHUFFLE: x+1 / x+1 / x+1 /y-5
 SUBST:   -=y, y=5, 5=1..
 SHUFFLE: 123444
@@ -5634,14 +5634,14 @@ DEPTH: D:4-7
 ITEM: any food
 KITEM: ( = flail / any armour
 KITEM: s = scythe / robe
-KMONS: S = Sigmund
+KMONS: S = Satan Claus
 KMONS: E = Edmund
 MONS: plant w:25 / bush w:25 / nothing w:50
 NSUBST: d = 1:d / *:.
 NSUBST: S = 1:S / *:.
 NSUBST: E = 1:E / *:.
 SHUFFLE: S / E
-veto {{ return you.uniques("Edmund") or you.uniques("Sigmund") }}
+veto {{ return you.uniques("Edmund") or you.uniques("Satan Claus") }}
 MAP
 ....................
 .xxxxxxxxxxxxxxxx...

@@ -246,8 +246,8 @@ function arena_sprint_get_monster_set(round, boss)
                     orc priest / orc high priest w:1 / blork the orc w:3 / urug w:1",
                 "w:2 place:Elf / deep elf fighter / deep elf priest /\
                     w:2 deep elf conjurer / w:2 deep elf summoner",
-                "place:Lair / sheep / w:5 yak / w:5 crocodile / w:3 basilisk /\
-                    w:1 death yak / green rat / orange rat / porcupine",
+                "place:Lair / sheep / w:5 reindeer / w:5 crocodile / w:3 basilisk /\
+                    w:1 red-nosed reindeer / green rat / orange rat / porcupine",
                 "w:20 merfolk / w:5 mermaid / hippogriff / centaur / w:5 griffon /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
@@ -415,7 +415,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "hydra simulacrum / stone giant simulacrum /\
                     golden dragon simulacrum / spriggan simulacrum / water elemental /\
                     ice devil / merfolk aquamancer / frost giant",
-                "death cob / death yak / death drake w:5 / deep elf death mage /\
+                "death cob / red-nosed reindeer / death drake w:5 / deep elf death mage /\
                     deep dwarf death knight / death ooze / green death",
                 -- Misc
                 "centaur / centaur warrior",
@@ -427,7 +427,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 titan",
                 "fire dragon / ice dragon / storm dragon / w:5 shadow dragon /\
                     w:5 golden dragon / w:1 xtahua",
-                "yak / sheep / death yak / apis / catoblepas",
+                "reindeer / sheep / red-nosed reindeer / apis / catoblepas",
                 "glowing shapeshifter",
                 "hell knight / w:5 necromancer / w:1 margery",
                 "wraith / wight / phantasmal warrior / plague shambler / skeletal warrior /\
