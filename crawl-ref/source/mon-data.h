@@ -4461,7 +4461,7 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
 },
 
-// yaks, sheep and elephants ('Y')
+// reindeers, sheep and elephants ('Y')
 {
     MONS_SHEEP, 'Y', LIGHTGREY, "sheep",
     M_WARM_BLOOD | M_HERD,
@@ -4475,7 +4475,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_YAK, 'Y', BROWN, "yak",
+    MONS_YAK, 'Y', BROWN, "reindeer",
     M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     1200, 9, MONS_YAK, MONS_YAK, MH_NATURAL, -3,
@@ -4487,7 +4487,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEATH_YAK, 'Y', YELLOW, "death yak",
+    MONS_DEATH_YAK, 'Y', YELLOW, "red-nosed reindeer",
     M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     1500, 8, MONS_YAK, MONS_DEATH_YAK, MH_NATURAL, -5,

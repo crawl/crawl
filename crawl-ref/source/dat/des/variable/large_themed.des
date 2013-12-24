@@ -454,8 +454,8 @@ ENDMAP
 NAME:   fort_yaktaur
 ORIENT: southeast
 DEPTH:  Depths, !Depths:$
-MONS:   yaktaur, death yak, minotaur, random
-MONS:   yak, gnoll, random
+MONS:   yaktaur, red-nosed reindeer, minotaur, random
+MONS:   reindeer, gnoll, random
 MAP
 .........@....wwwwwwwwwwwwwwwwwxx
 .ccccc.......ww....wwww....wwwwxx

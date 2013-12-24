@@ -2198,10 +2198,20 @@ red wasp
 A huge red wasp with a viciously barbed stinger. Potent paralytic poison drips
 from its tip.
 %%%%
+red-nosed reindeer
+
+This reindeer has a red nose, bloodshot eyes and a look of absolute hatred.
+It might be simply inebriated, but you wouldn't want to see a drunken rage
+of a creature like this.
+%%%%
 redback
 
 A vicious black spider with a splash of red on its swollen abdomen. Its
 mandibles drip with lethal poison.
+%%%%
+reindeer
+
+Your average Xmas cliche caribou.
 %%%%
 revenant
 

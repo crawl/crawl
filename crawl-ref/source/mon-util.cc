@@ -4442,7 +4442,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
             return MON_SHAPE_HUMANOID;
     case 'X': // large abominations
         return MON_SHAPE_MISC;
-    case 'Y': // yaks, sheep and elephants
+    case 'Y': // reindeers, sheep and elephants
         if (mc == MONS_SHEEP)
             return MON_SHAPE_QUADRUPED_TAILLESS;
         else

@@ -388,7 +388,7 @@ KITEM:   f = dagger / short sword / cutlass / flail / whip / blowgun / bow
 KITEM:   g = robe / cloak / cap / buckler / steam dragon armour w:1
 KMONS:   L = spriggan ; robe . dagger
 KITEM:   h = bread ration q:2
-KMONS:   M = yak
+KMONS:   M = reindeer
 KMONS:   N = spriggan ; robe . quarterstaff
 KITEM:   i = cheese q:3
 COLOUR:  "MN = green
@@ -1583,7 +1583,7 @@ ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
 WEIGHT:  2 (Depths:$), 10
-MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
+MONS:    lindwurm / red-nosed reindeer / elephant / griffon / polar bear w:5 / \
          mottled dragon w:8 / giant firefly w:3 / boulder beetle w:5 / \
          red wasp / tarantella w:2 / redback w:3 / wolf spider / \
          sea snake w:5 / alligator / hell hound w:2
