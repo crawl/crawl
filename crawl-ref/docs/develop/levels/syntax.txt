@@ -36,9 +36,9 @@ Terrain
  W - shallow water
  w - deep water - can be randomly turned into shallow water by the
      level-builder; you can prevent this conversion with the no_pool_fixup TAG.
-     Also, water may automatically receive water creatures! For entry
-     vaults, avoid this with the no_monster_gen TAG or KMASK.
- l - lava - again, use the no_monster_gen TAG or KMASK for entry vaults!
+     Also, water may automatically receive water creatures! You can avoid this
+     with the no_monster_gen TAG or KMASK.
+ l - lava - again, use the no_monster_gen TAG or KMASK whe appropriate!
 
 Features
 --------
@@ -53,7 +53,7 @@ Features
 
  }{ - Stone stairs - You must be able to reach these from each other. The
       { upstair is also the stair on which the player will enter the
-      dungeon for entry vaults.
+      dungeon for arrival vaults.
  )( - Stone stairs, set 2.
  ][ - Stone stairs, set 3 - minivaults often fail to get this pair if
       the level isn't very interconnected or if any larger vaults are using
@@ -96,9 +96,10 @@ NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
       KITEM: R = w:2 honeycomb / w:1 royal jelly
 
       The O symbol has been removed. It used to either place an appropriate
-      rune, or an appropriate substitution for a rune (a staircase into a branch
-      in branch entry vaults, a portal in portal entry vaults). This behaviour
-      can be produced with appropriate KITEM and KFEAT lines, for example:
+      rune, or an appropriate substitution for a rune (a staircase/portal into
+      a branch in branch entry vaults, a portal in portal entry vaults). This
+      behaviour can be produced with appropriate KITEM and KFEAT lines, for
+      example:
       KITEM: O = decaying rune of Zot
       KFEAT: O = enter_swamp
       KFEAT: O = enter_portal_vault
@@ -356,8 +357,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
              same depth / place.
-          * "entry": this tag MUST be there for a vault to be pickable as an
-             entry vault.
+          * "arrival": this tag MUST be there for a vault to be pickable as a
+             D:1 arrival vault.
           * "extra": requests that the dungeon builder treat this as
              an extra vault. This forbids the vault from being placed as
              a primary vault if it has an ORIENT: tag; instead it will be
@@ -382,7 +383,7 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              for floating vaults. Has no effect if the minivault has explicitly
              defined exits (the @ glyph).
           * "no_monster_gen": Prevents random monster generation at the time of
-             the vault's creation. Highly advised for entry vaults with a
+             the vault's creation. Highly advised for arrival vaults with a
              player-hostile geography, MUST-HAVE for those with water/lava.
              Can be applied only to particular symbols with KMASK.
           * "no_pool_fixup": prevents water squares next to land from being
@@ -702,9 +703,9 @@ MONS:     (list of monsters)
           builder sees a "1" in the vault definition, the second for "2,"
           etc. Note that if, for example, you place a 3 on the map, but your
           MONS: line has no third position, the 3 will be filled with
-          RANDOM_MONSTER. Also note that for entry vaults (D:1), all monsters
-          in sight of the hero are removed. This does not hold for plants.
-          You can use weights as for ITEM: lines.
+          RANDOM_MONSTER. Also note that for arrival vaults (D:1), all
+          monsters in sight of the hero are removed. This does not hold for
+          plants. You can use weights as for ITEM: lines.
 
           A hydra can be given a specific number of heads by calling it
           an "n-headed hydra" (with a maximum of 20 heads):
@@ -1379,8 +1380,7 @@ KMASK:    Z = no_monster_gen
           * "no_item_gen":   Prevents random item on that symbol. Items
              explicitly placed on that symbol aren't affected.
           * "no_monster_gen": Prevents random monster generation on that
-             symbol. MUST-HAVE for those with water/lava symbols in
-             entry vaults.
+             symbol.
           * "no_trap_gen": Prevents random trap generation on that symbol.
           * "no_pool_fixup": prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.

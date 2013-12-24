@@ -2783,7 +2783,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         vault = random_map_for_place(lid, minivault, MB_FALSE);
 
     if (!vault && lid.branch == root_branch && lid.depth == 1)
-        vault = random_map_for_tag("entry", false, false, MB_FALSE);
+        vault = random_map_for_tag("arrival", false, false, MB_FALSE);
 
     return vault;
 }

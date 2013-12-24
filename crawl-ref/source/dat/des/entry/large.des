@@ -8,8 +8,8 @@
 ##############################################################
 # 35 x 19
 # Ruined Dwarven Fortress Basement
-NAME:    elethiomel_entry_fortress_basement
-TAGS:    entry no_monster_gen no_rotate
+NAME:    elethiomel_arrival_fortress_basement
+TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
@@ -41,8 +41,8 @@ ENDMAP
 
 ##############################################################
 # 46 x 14
-NAME:    elethiomel_entry_Infinity_Welcomes_Careful_Drivers
-TAGS:    entry no_rotate
+NAME:    elethiomel_arrival_Infinity_Welcomes_Careful_Drivers
+TAGS:    arrival no_rotate
 ORIENT:  northwest
 SUBST:   ' : . x ':40, '=x.
 SUBST:   c : cxxx
@@ -65,8 +65,8 @@ ENDMAP
 
 ##############################################################################
 # 33 x 25
-NAME:    dpeg_entry_central
-TAGS:    entry
+NAME:    dpeg_arrival_central
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: @ABC
 SUBST:   A=@x, B=@x, C=@x
@@ -100,8 +100,8 @@ ENDMAP
 
 ##############################################################################
 # 29 x 22
-NAME:    dpeg_entry_castle
-TAGS:    entry no_monster_gen no_rotate
+NAME:    dpeg_arrival_castle
+TAGS:    arrival no_monster_gen no_rotate
 ITEM:    stone, nothing, nothing
 ORIENT:  float
 SHUFFLE: ]def
@@ -139,7 +139,7 @@ ENDMAP
 #############################################################################
 # 42x28
 NAME:    dpeg_cavernosity
-TAGS:    entry no_monster_gen no_rotate
+TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 MONS:    fungus
 SHUFFLE: {[(, UVW, XYZ
@@ -179,8 +179,8 @@ ENDMAP
 ##############################################################
 # 30x25
 # The Diamond Age, or A Young Lady's Illustrated Primer
-NAME:    elethiomel_entry_diamonds
-TAGS:    entry no_monster_gen no_rotate
+NAME:    elethiomel_arrival_diamonds
+TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  west
 WEIGHT:  2
 MONS:    rat, goblin, bat, kobold
@@ -216,8 +216,8 @@ ENDMAP
 
 ##############################################################################
 # 30x25
-NAME:   erik_entry_gehennom
-TAGS:   entry no_monster_gen no_rotate
+NAME:   erik_arrival_gehennom
+TAGS:   arrival no_monster_gen no_rotate
 ORIENT: float
 ITEM:   stone
 MONS:   rat, goblin, kobold, ooze
@@ -250,8 +250,8 @@ ENDMAP
 # 29x23
 # Morbid curiosity
 # Monsters are easier. Made it harder for them to get out.
-NAME:    dpeg_entry_morbid_curiosity
-TAGS:    entry no_rotate no_monster_gen
+NAME:    dpeg_arrival_morbid_curiosity
+TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  float
 MONS:    goblin ; stone
 MONS:    hobgoblin ; stone
@@ -288,8 +288,8 @@ ENDMAP
 
 ##############################################################################
 # 29 x 21
-NAME:    matt_entry_debris
-TAGS:    entry
+NAME:    matt_arrival_debris
+TAGS:    arrival
 ORIENT:  float
 WEIGHT:  2
 SHUFFLE: {[(
@@ -324,8 +324,8 @@ ENDMAP
 # 43 x 26 -- but it feels smaller because it's not open and
 #            starts in a corner and is diagonally shaped
 # There's a forest outside the dungeon
-NAME:   kilobyte_entry_exit_the_forest
-TAGS:   entry no_rotate no_pool_fixup
+NAME:   kilobyte_arrival_exit_the_forest
+TAGS:   arrival no_rotate no_pool_fixup
 ORIENT: northwest
 MONS:   plant
 FTILE:  .t1 = floor_moss
@@ -361,8 +361,8 @@ ENDMAP
 
 #############################################################################
 # 33 x 23
-NAME:   dpeg_entry_circle_labyrinth_a
-TAGS:   entry no_monster_gen no_rotate
+NAME:   dpeg_arrival_circle_labyrinth_a
+TAGS:   arrival no_monster_gen no_rotate
 WEIGHT: 3
 ORIENT: float
 NSUBST: . = 1:d / *:.
@@ -394,8 +394,8 @@ xx...xx....x=x.....x=x....xx...xx
           xxxxxxxxxxxxx
 ENDMAP
 
-NAME:   dpeg_entry_circle_labyrinth_b
-TAGS:   entry no_monster_gen no_rotate
+NAME:   dpeg_arrival_circle_labyrinth_b
+TAGS:   arrival no_monster_gen no_rotate
 WEIGHT: 1
 ORIENT: float
 NSUBST: . = 1:d / *:.
@@ -426,8 +426,8 @@ xx...xx....xxx.....xxx....xx...xx
           xxxxxxxxxxxxx
 ENDMAP
 
-NAME:    dpeg_entry_circle_labyrinth_c
-TAGS:    entry no_monster_gen no_rotate
+NAME:    dpeg_arrival_circle_labyrinth_c
+TAGS:    arrival no_monster_gen no_rotate
 WEIGHT:  6
 ORIENT:  float
 NSUBST:  X = 1:adgj / *:x
@@ -464,9 +464,9 @@ ENDMAP
 
 ##############################################################
 # 35 x 20
-# Zaba's second entry vault ever
-NAME:    entry_zaba_pyramid
-TAGS:    entry
+# Zaba's second arrival vault ever
+NAME:    arrival_zaba_pyramid
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: ([{>
 SUBST:   ([ = d
@@ -497,9 +497,9 @@ ENDMAP
 ##############################################################
 # 23x17
 # The large aboretum
-NAME:   minmay_entry_arboretum_large
+NAME:   minmay_arrival_arboretum_large
 WEIGHT: 2
-TAGS:   entry no_monster_gen no_item_gen
+TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
 MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
@@ -536,9 +536,9 @@ ENDMAP
 
 ##############################################################
 # 32x29
-NAME:    minmay_entry_shoal_huts
+NAME:    minmay_arrival_shoal_huts
 WEIGHT:  5
-TAGS:    entry
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   ([ = .
@@ -578,8 +578,8 @@ ENDMAP
 
 ##############################################################################
 # 25x25
-NAME:   co_entry_hexagon_in_a_hexagon
-TAGS:   entry
+NAME:   co_arrival_hexagon_in_a_hexagon
+TAGS:   arrival
 ORIENT: float
 WEIGHT: 1
 MONS:   plant
@@ -606,8 +606,8 @@ xxxxxxxxx1.....1xxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:   co_entry_hall_of_pillars
-TAGS:   entry
+NAME:   co_arrival_hall_of_pillars
+TAGS:   arrival
 ORIENT: float
 WEIGHT: 1
 SUBST:  c : cccccvvb
@@ -644,7 +644,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    roderic_lyre
-TAGS:    entry no_monster_gen no_item_gen no_trap_gen no_rotate
+TAGS:    arrival no_monster_gen no_item_gen no_trap_gen no_rotate
 ORIENT:  float
 WEIGHT:  1
 SHUFFLE: EF
@@ -678,8 +678,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    sevenhm_entry_forest_fort_large_1
-TAGS:    entry no_monster_gen no_pool_fixup no_rotate
+NAME:    sevenhm_arrival_forest_fort_large_1
+TAGS:    arrival no_monster_gen no_pool_fixup no_rotate
 ORIENT:  southeast
 WEIGHT:  3
 SUBST:   z = W., I = IG, r : cccvt., E = wW, ' : @x', ' = @x
@@ -710,8 +710,8 @@ EwW.1..Wwr.{.................tttxxx
 ENDMAP
 
 ##############################################################################
-NAME:    sevenhm_entry_forest_fort_large_2
-TAGS:    entry no_rotate no_monster_gen
+NAME:    sevenhm_arrival_forest_fort_large_2
+TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  northwest
 SUBST:   T : TTTV, p = tt., G = GGGG., z = ...T
 SHUFFLE: {[
@@ -735,8 +735,8 @@ xxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    sevenhm_entry_forest_fort_large_3
-TAGS:    entry
+NAME:    sevenhm_arrival_forest_fort_large_3
+TAGS:    arrival
 ORIENT:  float
 WEIGHT:  3
 SUBST:   T : TTTV, p = tt., G = GGG.
@@ -770,8 +770,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    sevenhm_entry_forest_fort_large_4
-TAGS:    entry
+NAME:    sevenhm_arrival_forest_fort_large_4
+TAGS:    arrival
 ORIENT:  northwest
 SUBST:   p = 11., G = G..
 NSUBST:  { = { / ., [ = [ / .
@@ -805,8 +805,8 @@ ENDMAP
 ##############################################################################
 # Crop circle vaults (Roderic)
 # Season indicated by colouring. Something special for tiles wanted? --dpeg
-NAME:   roderic_crop_circles_entry_small
-TAGS:   entry  no_item_gen no_trap_gen
+NAME:   roderic_crop_circles_arrival_small
+TAGS:   arrival  no_item_gen no_trap_gen
 ORIENT: float
 MONS:   col:green plant, col:yellow plant, col:brown plant
 SUBST:  '=111.
@@ -839,8 +839,8 @@ MAP
 ENDMAP
 
 # This vault has over 400 monsters (as plants) -- can this be too many? --dpeg
-NAME:   roderic_crop_circles_entry_large
-TAGS:   entry no_item_gen no_trap_gen
+NAME:   roderic_crop_circles_arrival_large
+TAGS:   arrival no_item_gen no_trap_gen
 ORIENT: float
 WEIGHT: 1
 MONS:   col:green plant, col:yellow plant, col:brown plant
@@ -882,9 +882,9 @@ MAP
 ENDMAP
 
 ##############################################################################
-# entry octogonal star
+# arrival octogonal star
 NAME:   roderic_octagonal_star
-TAGS:   entry
+TAGS:   arrival
 ORIENT: float
 MAP
    xxxx+xxxxxxx+xxxx
@@ -914,9 +914,9 @@ ENDMAP
 
 ##############################################################################
 
-NAME:   lightli_hangedman_entry_farm
+NAME:   lightli_hangedman_arrival_farm
 ORIENT: float
-TAGS:   no_monster_gen entry
+TAGS:   no_monster_gen arrival
 MONS:   plant
 SUBST:  1 = 1:2 t:2 .:1
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
@@ -947,9 +947,9 @@ ENDMAP
 
 ##############################################################################
 
-NAME: nicolae_entry_somewhat_less_tricky_entry
+NAME: nicolae_arrival_somewhat_less_tricky_arrival
 ORIENT: float
-TAGS: entry no_item_gen no_monster_gen no_trap_gen
+TAGS: arrival no_item_gen no_monster_gen no_trap_gen
 SHUFFLE: GTt, ab, cd, ef, gh, ij, kl
 SUBST: acegik = ., bdfhjl = x
 MAP

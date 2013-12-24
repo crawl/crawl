@@ -1,10 +1,10 @@
 ###############################################################################
-# entry.des - guidelines and contents for D:1 entry vaults.
+# arrival.des - guidelines and contents for D:1 arrival vaults.
 ###############################################################################
 
 # Entry vaults should provide atmosphere and nice starting points. The idea
 # is neither to get a grip on most of D:1 nor to hand out some starting gear.
-# Playing Crawl a bit will show you a number of entry vaults. :)
+# Playing Crawl a bit will show you a number of arrival vaults. :)
 
 # The actual maps can be found in the files
 # -----------------------------------------
@@ -19,13 +19,13 @@
 # Naming conventions
 # ------------------
 # Entry vaults should be NAMEd as follows:
-#    NAME:  nick_entry_name
+#    NAME:  nick_arrival_name
 # where "nick" is the name/nick of the vault designer and "name" is a somewhat
 # descriptive label for the vault. Avoid numbers, please.
 
-# We need more entry vaults!
+# We need more arrival vaults!
 # --------------------------
-# We love new entry vaults, and it is easy to make new ones. Coding abilities
+# We love new arrival vaults, and it is easy to make new ones. Coding abilities
 # are not required. If you are completely new to making maps, have a look at
 # simple.des. After that, glimpse through (ignore the other files)
 # docs/develop/levels/introduction.txt
@@ -35,7 +35,7 @@
 # check the various .des files for what is going on. New maps are always
 # welcome.
 #
-# Some guidelines for entry vault creators:
+# Some guidelines for arrival vault creators:
 # - Try to come up with small maps.
 # - Avoid placing guaranteed items.
 # - The same holds for any features which might trigger start-scumming,
