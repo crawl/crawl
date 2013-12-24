@@ -4314,23 +4314,23 @@ static void _do_berserk_no_combat_penalty(void)
 // otherwise cancel
 static void _do_searing_ray()
 {
-    if (you.attribute[ATTR_SEARING_RAY] != 0)
-    {
-        // Convert prepping value into stage one value (so it can fire next turn)
-        if (you.attribute[ATTR_SEARING_RAY] == -1)
-        {
-            you.attribute[ATTR_SEARING_RAY] = 1;
-            return;
-        }
+    if (you.attribute[ATTR_SEARING_RAY] == 0)
+        return;
 
-        if (crawl_state.prev_cmd == CMD_WAIT
-            || crawl_state.prev_cmd == CMD_MOVE_NOWHERE)
-        {
-            handle_searing_ray();
-        }
-        else
-            end_searing_ray();
+    // Convert prepping value into stage one value (so it can fire next turn)
+    if (you.attribute[ATTR_SEARING_RAY] == -1)
+    {
+        you.attribute[ATTR_SEARING_RAY] = 1;
+        return;
     }
+
+    if (crawl_state.prev_cmd == CMD_WAIT
+        || crawl_state.prev_cmd == CMD_MOVE_NOWHERE)
+    {
+        handle_searing_ray();
+    }
+    else
+        end_searing_ray();
 }
 
 // Called when the player moves by walking/running. Also calls attack
