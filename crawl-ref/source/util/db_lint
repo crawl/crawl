@@ -194,6 +194,8 @@ if (read_file("descript/features"))
 
 if (read_file("descript/unrand"))
 {
+    delete $keys{'Screaming Sword'};
+    delete $keys{'Sulking Sword'};
     check_desc_needed("unrand", grep {!/^DUMMY/} map {s/^NAME:\s+// && $_}
         `grep ^NAME: art-data.txt`)
 }
