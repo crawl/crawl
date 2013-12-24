@@ -11,8 +11,8 @@
 
 ##############################################################################
 # 37 x 22 -- this one is huge and twisted, but it's also old...
-NAME:   dpeg_entry_water_fire
-TAGS:   entry no_monster_gen no_pool_fixup no_rotate
+NAME:   dpeg_arrival_water_fire
+TAGS:   arrival no_monster_gen no_pool_fixup no_rotate
 ORIENT: float
 : local rnd = crawl.random2(12)
 : if rnd == 0 then
@@ -44,9 +44,9 @@ NSUBST: z = 1:+ / *:x
 : else
 SUBST:  Zz=., V=x
 : end
-MARKER: { = lua:props_marker { entry_stairs=1 }
+MARKER: { = lua:props_marker { arrival_stairs=1 }
 veto {{
-  local slave = dgn.find_marker_positions_by_prop( "entry_stairs", 1 )
+  local slave = dgn.find_marker_positions_by_prop( "arrival_stairs", 1 )
   if slave == nil then return false end
   if slave[1] == nil then return false end
   crawl.mpr("(".. slave[1].x .. "," .. slave[1].y .. ")")
@@ -79,8 +79,8 @@ ENDMAP
 
 #########################################
 # Representatives of all player genuses, locked up.
-NAME:    kb_entry_jail
-TAGS:    entry no_monster_gen no_item_gen
+NAME:    kb_arrival_jail
+TAGS:    arrival no_monster_gen no_item_gen
 ORIENT:  north
 SHUFFLE: ABCDEFGHIJKLMNOPQRSTUV
 KFEAT:   ABCDEFGHIJKLMNOPQRSTUV = floor
@@ -137,8 +137,8 @@ ccc+ccc
 ENDMAP
 
 ##############################################################
-NAME:    minmay_entry_shattered_statue
-TAGS:    entry
+NAME:    minmay_arrival_shattered_statue
+TAGS:    arrival
 ORIENT:  float
 ITEM:    stone q:4 / stone q:2 / nothing
 ITEM:    stone q:3 w:5 / stone q:1 / nothing
@@ -163,8 +163,8 @@ ENDMAP
 
 #########################################
 # A horror show for the beginning adventurer
-NAME:    shiori_entry_whats_in_store_for_you
-TAGS:    entry no_monster_gen no_pool_fixup no_item_gen
+NAME:    shiori_arrival_whats_in_store_for_you
+TAGS:    arrival no_monster_gen no_pool_fixup no_item_gen
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=x , D=x
@@ -215,8 +215,8 @@ ENDMAP
 # I am the great and powerful Oz! Pay no attention to the man behind
 # the curtain! ...if you stick close to the wall, you are always able
 # to avoid the flame clouds.
-NAME:   shiori_entry_oz
-TAGS:   entry
+NAME:   shiori_arrival_oz
+TAGS:   arrival
 ORIENT: float
 MONS:   kobold / goblin / hobgoblin / nothing
 MARKER: # = lua:fog_machine { \
@@ -248,8 +248,8 @@ bbbb+b+bbbb
 ENDMAP
 
 ############################################################################
-NAME:    dpeg_entry_concentric_ovals
-TAGS:    entry no_monster_gen no_rotate
+NAME:    dpeg_arrival_concentric_ovals
+TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 SUBST:   ' : Wlncxxxv, " : Wlncxxxv
 MAP
@@ -277,8 +277,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_solitude
-TAGS:    entry no_monster_gen
+NAME:    dpeg_arrival_solitude
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: C{! / B(' / V["
 SUBST:   ([ = .
@@ -308,8 +308,8 @@ xxxxxxxxxxxxxxxxxxx....@
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_connections
-TAGS:    entry
+NAME:    dpeg_arrival_connections
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
 SUBST:   ([ = .
@@ -330,9 +330,9 @@ ENDMAP
 
 ###################################################
 # A simple little maze-like thing
-NAME:    shiori_entry_maze
+NAME:    shiori_arrival_maze
 ORIENT:  float
-TAGS:    entry no_monster_gen
+TAGS:    arrival no_monster_gen
 SHUFFLE: [{(
 NSUBST:  A= 2= + / 2= +x / *= x
 NSUBST:  B= 2= + / 2= +x / *= x
@@ -355,8 +355,8 @@ ENDMAP
 ##############################################################################
 # 41 x 20 -- this one is huge and twisted, but hopefully worth it.
 # From cave/forest to hall.
-NAME:     erik_entry_cave_to_civilisation
-TAGS:     entry no_rotate
+NAME:     erik_arrival_cave_to_civilisation
+TAGS:     arrival no_rotate
 WEIGHT:   20
 ORIENT:   float
 SHUFFLE:  {[(
@@ -384,7 +384,7 @@ xCCCCCCCCCCCCCCCCCCCCCCCCCCxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    erik_entry_cave_to_hall
+NAME:    erik_arrival_cave_to_hall
 TAGS:    cave_to_hall_subvault no_rotate
 SHUFFLE: TTGGVY
 SUBST:   X : cX
@@ -405,7 +405,7 @@ cXc%Xc......
   .........
 ENDMAP
 
-NAME:    erik_entry_cave_to_temple
+NAME:    erik_arrival_cave_to_temple
 # Intentionally higher chances for the non-Temple gods.
 TAGS:    cave_to_temple_subvault no_rotate
 SUBST:   X : nnG
@@ -459,9 +459,9 @@ ENDMAP
 
 ###########################################################
 # Basic island, with variations
-NAME:   enne_entry_octagon_isle
+NAME:   enne_arrival_octagon_isle
 ORIENT: float
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 FTILE:  '{ = floor_sand
 SUBST:  ' = .
 {{
@@ -503,8 +503,8 @@ ENDMAP
 # may delegate it to another branch, where less caution measures are
 # demanded. But I'd like to keep it on D:1 (dp).
 # Edited: translucent walls are less fun, but perfectly safe.
-NAME:    shiori_entry_elements
-TAGS:    entry no_monster_gen no_item_gen no_rtele_into
+NAME:    shiori_arrival_elements
+TAGS:    arrival no_monster_gen no_item_gen no_rtele_into
 ORIENT:  float
 MARKER:  A = lua:fog_machine { \
              pow_max = 10, delay_min = 50, delay_max = 300, \
@@ -568,9 +568,9 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Three entry vaults containing the same river.
-NAME:    lemuel_entry_river_bridge
-TAGS:    entry no_monster_gen
+# Three arrival vaults containing the same river.
+NAME:    lemuel_arrival_river_bridge
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: {}, XXT
 COLOUR:  ' : brown / white
@@ -602,8 +602,8 @@ xxxxx.........xxxxx
 xxxxx....@....xxxxx
 ENDMAP
 
-NAME:    lemuel_entry_river_ford
-TAGS:    entry no_monster_gen
+NAME:    lemuel_arrival_river_ford
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 WEIGHT:  6
 SHUFFLE: {}, XYZ
@@ -635,8 +635,8 @@ xxxxx.........xxxxx
 xxxxx....@....xxxxx
 ENDMAP
 
-NAME:    lemuel_entry_river_passageway
-TAGS:    entry no_monster_gen
+NAME:    lemuel_arrival_river_passageway
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: {}, ABC
 SUBST:   A:+, B:x, C:x
@@ -663,8 +663,8 @@ xxxxx.........xxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_caged_fury
-TAGS:    entry no_rotate
+NAME:    dpeg_arrival_caged_fury
+TAGS:    arrival no_rotate
 MONS:    w:30 nothing / giant cockroach / w:2 worm
 MONS:    w:30 nothing / ooze
 MONS:    w:20 nothing / jackal / rat
@@ -694,8 +694,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_pits
-TAGS:    entry no_monster_gen no_rotate no_pool_fixup
+NAME:    dpeg_arrival_pits
+TAGS:    arrival no_monster_gen no_rotate no_pool_fixup
 WEIGHT:  20
 ORIENT:  float
 : if crawl.one_chance_in(4) then
@@ -730,8 +730,8 @@ ENDMAP
 
 ###############################################################################
 
-NAME: nicolae_entry_kraken_aquarium_a
-TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake
+NAME: nicolae_arrival_kraken_aquarium_a
+TAGS: arrival no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake
 ORIENT: float
 WEIGHT: 1
 KMONS: K = kraken att:neutral
@@ -759,8 +759,8 @@ ENDMAP
 
 ###############################################################################
 
-NAME: nicolae_entry_kraken_aquarium_b
-TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen
+NAME: nicolae_arrival_kraken_aquarium_b
+TAGS: arrival no_monster_gen no_pool_fixup no_trap_gen no_item_gen
 ORIENT: float
 WEIGHT: 1
 KMONS: K = kraken att:neutral
@@ -788,8 +788,8 @@ ENDMAP
 
 ###############################################################################
 
-NAME:    nagdon_entry_double_spiral
-TAGS:    entry no_monster_gen no_trap_gen no_pool_fixup
+NAME:    nagdon_arrival_double_spiral
+TAGS:    arrival no_monster_gen no_trap_gen no_pool_fixup
 ORIENT:  float
 MONS:    plant, toadstool
 : if crawl.coinflip() then
@@ -839,8 +839,8 @@ ENDMAP
 
 ###############################################################################
 
-NAME:    nagdon_entry_zigzag_paths
-TAGS:    entry no_trap_gen no_monster_gen
+NAME:    nagdon_arrival_zigzag_paths
+TAGS:    arrival no_trap_gen no_monster_gen
 ORIENT:  float
 MONS:    plant, toadstool
 ITEM:    orc skeleton / kobold skeleton / goblin skeleton / place:D:1 skeleton

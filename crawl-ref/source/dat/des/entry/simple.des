@@ -1,13 +1,13 @@
 ##############################################################################
-# Simple maps for D:1 entry vaults.
-# See entry_guide.txt for where your new entry vault belongs.
+# Simple maps for D:1 arrival vaults.
+# See arrival_guide.txt for where your new arrival vault belongs.
 #
 # Please do not rearrange the vaults. The order is chosen so that readers are
 # introduced to new features one by one.
 ##############################################################################
 
-NAME:   minmay_entry_doors
-TAGS:   entry no_monster_gen
+NAME:   minmay_arrival_doors
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
      x+x
@@ -26,8 +26,8 @@ xxxxx...xxxxx
 ENDMAP
 
 ##############################################################
-NAME:    minmay_entry_three_doors
-TAGS:    entry
+NAME:    minmay_arrival_three_doors
+TAGS:    arrival
 ORIENT:  float
 MAP
 x+xxxx+xxxx+x
@@ -37,8 +37,8 @@ xxxxxx{xxxxxx
 ENDMAP
 
 ##############################################################
-NAME:   minmay_entry_diagonal_passages
-TAGS:   entry
+NAME:   minmay_arrival_diagonal_passages
+TAGS:   arrival
 ORIENT: float
 MAP
    @xxxxx@
@@ -57,8 +57,8 @@ x.xxx.x.xxx.x
 ENDMAP
 
 ##############################################################
-NAME:    minmay_entry_wavy_path
-TAGS:    entry no_monster_gen
+NAME:    minmay_arrival_wavy_path
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
@@ -76,8 +76,8 @@ xxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    matt_entry_spirals
-TAGS:    entry
+NAME:    matt_arrival_spirals
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   [=., (=.
@@ -100,8 +100,8 @@ xxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###########################################################
-NAME:    eino_entry_druids_welcome
-TAGS:    entry no_monster_gen
+NAME:    eino_arrival_druids_welcome
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 MONS:    plant
 MAP
@@ -119,8 +119,8 @@ x1......@......1x
 ENDMAP
 
 ###########################################################
-NAME:   eino_entry_water_cross
-TAGS:   entry no_monster_gen
+NAME:   eino_arrival_water_cross
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MONS:   plant
 MAP
@@ -134,8 +134,8 @@ MAP
 ENDMAP
 
 ###########################################################
-NAME:   eino_entry_water_star
-TAGS:   entry no_monster_gen no_rotate
+NAME:   eino_arrival_water_star
+TAGS:   arrival no_monster_gen no_rotate
 ORIENT: float
 MAP
 ..xxxxxxx@xxxxxxx..
@@ -156,8 +156,8 @@ x.....x..W..x.....x
 ENDMAP
 
 ###########################################################
-NAME:    eino_entry_tree_alley
-TAGS:    entry no_monster_gen
+NAME:    eino_arrival_tree_alley
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 MONS:    plant
 SHUFFLE: 1t
@@ -170,8 +170,8 @@ xxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:   lemuel_entry_funnel
-TAGS:   entry no_monster_gen
+NAME:   lemuel_arrival_funnel
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SUBST:  c : ccccwlx.
 MAP
@@ -195,8 +195,8 @@ ENDMAP
 
 ##############################################################
 # Reduced weight because of size and shape.
-NAME:    minmay_entry_pointy
-TAGS:    entry no_monster_gen
+NAME:    minmay_arrival_pointy
+TAGS:    arrival no_monster_gen
 WEIGHT:  4
 ORIENT:  float
 MAP
@@ -217,8 +217,8 @@ xx.xx                 xx.xx
 ENDMAP
 
 ##############################################################
-NAME:    minmay_entry_up_and_down
-TAGS:    entry
+NAME:    minmay_arrival_up_and_down
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: )]}
 MAP
@@ -234,8 +234,8 @@ ccccccccc
 ENDMAP
 
 ##############################################################
-NAME:    onia_entry_pyramid
-TAGS:    entry no_rotate no_monster_gen
+NAME:    onia_arrival_pyramid
+TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  float
 SHUFFLE: xxxcvlw
 MAP
@@ -256,8 +256,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    lemuel_entry_cross
-TAGS:    entry no_monster_gen
+NAME:    lemuel_arrival_cross
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: >d
 ITEM:    stone / dart
@@ -281,8 +281,8 @@ xxxxxxx.xxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:   lemuel_entry_lava_pool
-TAGS:   entry no_monster_gen
+NAME:   lemuel_arrival_lava_pool
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
     xxxxxxx
@@ -304,8 +304,8 @@ x@.....@.....@x
 ENDMAP
 
 ##############################################################
-NAME:    minmay_entry_four_houses
-TAGS:    entry no_monster_gen
+NAME:    minmay_arrival_four_houses
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: xcvb, {[(>
 SUBST:   [=., (=.
@@ -326,8 +326,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_radiant
-TAGS:    entry no_rotate
+NAME:    dpeg_arrival_radiant
+TAGS:    arrival no_rotate
 ORIENT:  float
 NSUBST:  ' = 1:@ / *=.x
 MAP
@@ -343,8 +343,8 @@ x.xxxxxx.xxxxxx.x
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_rooms_with_view
-TAGS:    entry no_monster_gen no_pool_fixup
+NAME:    dpeg_arrival_rooms_with_view
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 SHUFFLE: {[, lw
 SUBST:   [=.
@@ -365,15 +365,15 @@ x......x.....x.
 ENDMAP
 
 ##############################################################################
-NAME:   dpeg_entry_tiny_a
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_a
+TAGS:   arrival
 ORIENT: float
 MAP
 {
 ENDMAP
 
-NAME:   dpeg_entry_tiny_b
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_b
+TAGS:   arrival
 WEIGHT: 2
 ORIENT: float
 MAP
@@ -382,8 +382,8 @@ xxx
 xxx
 ENDMAP
 
-NAME:   dpeg_entry_tiny_c
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_c
+TAGS:   arrival
 WEIGHT: 4
 ORIENT: float
 MAP
@@ -393,8 +393,8 @@ MAP
 xxxxx
 ENDMAP
 
-NAME:   dpeg_entry_tiny_d
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_d
+TAGS:   arrival
 WEIGHT: 4
 ORIENT: float
 MAP
@@ -405,8 +405,8 @@ MAP
 .....
 ENDMAP
 
-NAME:   dpeg_entry_tiny_e
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_e
+TAGS:   arrival
 WEIGHT: 1
 ORIENT: float
 MAP
@@ -417,8 +417,8 @@ x...x
 xxxxx
 ENDMAP
 
-NAME:   dpeg_entry_tiny_f
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_f
+TAGS:   arrival
 WEIGHT: 3
 ORIENT: float
 MAP
@@ -430,8 +430,8 @@ xx...xx
 xxxxxxx
 ENDMAP
 
-NAME:   dpeg_entry_tiny_g
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_g
+TAGS:   arrival
 WEIGHT: 3
 ORIENT: float
 MAP
@@ -443,8 +443,8 @@ xx...x
 xxxxxx
 ENDMAP
 
-NAME:   dpeg_entry_tiny_h
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_h
+TAGS:   arrival
 WEIGHT: 3
 ORIENT: float
 MAP
@@ -456,8 +456,8 @@ xx...x.
 xxxxxx@
 ENDMAP
 
-NAME:   dpeg_entry_tiny_i
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_i
+TAGS:   arrival
 WEIGHT: 4
 ORIENT: float
 MAP
@@ -466,8 +466,8 @@ xxxxx
 xxxxx
 ENDMAP
 
-NAME:   dpeg_entry_tiny_j
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_j
+TAGS:   arrival
 WEIGHT: 3
 ORIENT: float
 SUBST:  v : vcbxxx
@@ -479,8 +479,8 @@ xvvvx
 xxxxx
 ENDMAP
 
-NAME:   dpeg_entry_tiny_k
-TAGS:   entry
+NAME:   dpeg_arrival_tiny_k
+TAGS:   arrival
 WEIGHT: 3
 ORIENT: float
 MAP
@@ -490,8 +490,8 @@ xxxx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_windows_large_door
-TAGS:    entry no_monster_gen no_rotate
+NAME:    dpeg_arrival_windows_large_door
+TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 MAP
 .......
@@ -505,8 +505,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_chamrin_entry_tetris
-TAGS:    entry
+NAME:    dpeg_chamrin_arrival_tetris
+TAGS:    arrival
 ORIENT:  float
 MAP
           x.@.x
@@ -532,8 +532,8 @@ xx...xxxxxx.b.xxxxxx...xx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_boxorama
-TAGS:    entry
+NAME:    dpeg_arrival_boxorama
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: {[(<
 SUBST:   [=., (=.
@@ -557,8 +557,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_boxes_within_box
-TAGS:    entry
+NAME:    dpeg_arrival_boxes_within_box
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   [=., (=.
@@ -582,8 +582,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_shelter
-TAGS:    entry
+NAME:    dpeg_arrival_shelter
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: cvxxxx
 MAP
@@ -599,8 +599,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_triangle_fractal
-TAGS:    entry no_monster_gen no_rotate
+NAME:    dpeg_arrival_triangle_fractal
+TAGS:    arrival no_monster_gen no_rotate
 WEIGHT:  2
 ORIENT:  float
 MAP
@@ -620,8 +620,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_long_road
-TAGS:    entry
+NAME:    dpeg_arrival_long_road
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   [=., (=.
@@ -640,8 +640,8 @@ xxx....xx@.[
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_ternary
-TAGS:    entry
+NAME:    dpeg_arrival_ternary
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: cv
 MAP
@@ -658,8 +658,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:   erik_entry_triangle_small
-TAGS:   entry
+NAME:   erik_arrival_triangle_small
+TAGS:   arrival
 WEIGHT: 4
 ORIENT: float
 MAP
@@ -672,9 +672,9 @@ MAP
         x@xxx@xxx@x
 ENDMAP
 
-NAME:   erik_entry_triangle_medium
+NAME:   erik_arrival_triangle_medium
 WEIGHT: 3
-TAGS:   entry
+TAGS:   arrival
 ORIENT: float
 MAP
             xxx
@@ -688,8 +688,8 @@ MAP
       x@xxx@xxx@xxx@x
 ENDMAP
 
-NAME:   erik_entry_triangle_large
-TAGS:   entry
+NAME:   erik_arrival_triangle_large
+TAGS:   arrival
 WEIGHT: 2
 ORIENT: float
 MAP
@@ -706,8 +706,8 @@ MAP
     x@xxx@xxx@xxx@xxx@x
 ENDMAP
 
-NAME:   erik_entry_triangle_huge
-TAGS:   entry
+NAME:   erik_arrival_triangle_huge
+TAGS:   arrival
 WEIGHT: 1
 ORIENT: float
 MAP
@@ -727,8 +727,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    erik_entry_blinker_ship
-TAGS:    entry
+NAME:    erik_arrival_blinker_ship
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: cxxx
 MAP
@@ -754,8 +754,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:   matt_entry_refuge
-TAGS:   entry no_monster_gen
+NAME:   matt_arrival_refuge
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxx@xxxxxxxx@xxxx
@@ -778,8 +778,8 @@ xxxx@xxxxxxxx@xxxxx
 ENDMAP
 
 ##############################################################################
-NAME:   matt_entry_los_fun
-TAGS:   entry no_monster_gen
+NAME:   matt_arrival_los_fun
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
         x+x
@@ -808,8 +808,8 @@ xxx.x.x.....x.x.xxx
 ENDMAP
 
 ##############################################################
-NAME:   minmay_entry_open_corners
-TAGS:   entry no_monster_gen
+NAME:   minmay_arrival_open_corners
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SUBST:  x : x:10 c:2 v:1 m:1
 MAP
@@ -831,8 +831,8 @@ xxx...xxx...xxx
 ENDMAP
 
 ##############################################################
-NAME:    minmay_entry_plants_in_alcoves
-TAGS:    entry
+NAME:    minmay_arrival_plants_in_alcoves
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: 11123t
 MONS:    plant, fungus, bush
@@ -847,8 +847,8 @@ xxxxxxxxxxx
 ENDMAP
 
 ##############################################################
-NAME:    minmay_entry_radiant_lines
-TAGS:    entry no_rotate
+NAME:    minmay_arrival_radiant_lines
+TAGS:    arrival no_rotate
 ORIENT:  float
 SHUFFLE: xX
 SUBST:   X:xxxX, X:.lw, x:xxxvc
@@ -877,8 +877,8 @@ MAP
 ENDMAP
 
 ##############################################################
-NAME:   noname_entry_rooms_in_the_neighbourhood
-TAGS:   entry no_monster_gen
+NAME:   noname_arrival_rooms_in_the_neighbourhood
+TAGS:   arrival no_monster_gen
 RTILE:  x = wall_hall
 FTILE:  .([{ = floor_hall
 SUBST:   [=., (=.
@@ -899,8 +899,8 @@ xx...xx   xx+xx   xx...xx
 ENDMAP
 
 ##############################################################
-NAME:    onia_entry_mini_spirals
-TAGS:    entry
+NAME:    onia_arrival_mini_spirals
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: ({[<, GT, vcxxxx
 SUBST:   [=., (=., <=.
@@ -916,8 +916,8 @@ vvvv.@.vvvv
 ENDMAP
 
 ###########################################################
-NAME:    dpeg_entry_line_fractal
-TAGS:    entry no_monster_gen no_rotate
+NAME:    dpeg_arrival_line_fractal
+TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 WEIGHT:  8
 SHUFFLE: cv
@@ -932,8 +932,8 @@ xxxxxxxxxx{}xxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_rooms_a
-TAGS:    entry no_monster_gen
+NAME:    dpeg_arrival_rooms_a
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: cvb
 MAP
@@ -952,8 +952,8 @@ ENDMAP
 
 ############################################################################
 # A spiral sometimes made entirely of glass
-NAME:    zelgadis_glass_entry_small
-TAGS:    entry
+NAME:    zelgadis_glass_arrival_small
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: mvvcccxxxx
 MAP
@@ -970,8 +970,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:   dpeg_entry_snail
-TAGS:   entry no_monster_gen no_rotate
+NAME:   dpeg_arrival_snail
+TAGS:   arrival no_monster_gen no_rotate
 ORIENT: float
 NSUBST: . = 1:d / *:.
 ITEM:   stone / dart
@@ -998,8 +998,8 @@ x....@.....xxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_three_smaller_balls
-TAGS:    entry no_rotate
+NAME:    dpeg_arrival_three_smaller_balls
+TAGS:    arrival no_rotate
 ORIENT:  float
 WEIGHT:  5
 MAP
@@ -1023,8 +1023,8 @@ xx.......xx.xx.......xx
     xxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    dpeg_entry_three_bigger_balls
-TAGS:    entry no_rotate no_monster_gen
+NAME:    dpeg_arrival_three_bigger_balls
+TAGS:    arrival no_rotate no_monster_gen
 ORIENT:  float
 WEIGHT:  5
 SHUFFLE: }>
@@ -1054,8 +1054,8 @@ xx.......xx+xx.......xx
 ENDMAP
 
 ##############################################################################
-NAME:    matt_entry_grand_opening
-TAGS:    entry
+NAME:    matt_arrival_grand_opening
+TAGS:    arrival
 ORIENT:  float
 SHUFFLE: TV
 KMASK:   T = no_monster_gen
@@ -1080,8 +1080,8 @@ xxxxxxxxxx@xxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-NAME:   co_entry_two_rings
-TAGS:   entry
+NAME:   co_arrival_two_rings
+TAGS:   arrival
 ORIENT: float
 WEIGHT: 1
 SUBST:  c : ccb
@@ -1107,8 +1107,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:   co_entry_square_in_a_square_in_a_square
-TAGS:   entry
+NAME:   co_arrival_square_in_a_square_in_a_square
+TAGS:   arrival
 ORIENT: float
 MAP
 x@xxxxxxxxxxxxxxx@x
@@ -1134,7 +1134,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   roderic_dead_forest
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SUBST:  T : t.TTTTT
 SUBST:  T = t:66 .:33 >:1
@@ -1165,7 +1165,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    roderic_crossed_star
-TAGS:    entry no_mons_gen
+TAGS:    arrival no_mons_gen
 ORIENT:  float
 SHUFFLE: ?', !"
 SUBST:   ?:.x , ':. , !:.x, ":.
@@ -1188,8 +1188,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:   roderic_chinese_lattice_entry
-TAGS:   entry no_monster_gen
+NAME:   roderic_chinese_lattice_arrival
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
     x.xxx.x
@@ -1212,8 +1212,8 @@ ENDMAP
 ##############################################################################
 # denvon's houses (hot, water, plant)
 
-NAME:    denvon_entry_planthouse
-TAGS:    entry no_monster_gen
+NAME:    denvon_arrival_planthouse
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 WEIGHT:  6
 MONS:    plant
@@ -1240,8 +1240,8 @@ MAP
         ... ...
 ENDMAP
 
-NAME:    denvon_entry_waterhouse
-TAGS:    entry no_monster_gen no_pool_fixup
+NAME:    denvon_arrival_waterhouse
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 WEIGHT:  3
 SHUFFLE: {[
@@ -1269,8 +1269,8 @@ MAP
              .....
 ENDMAP
 
-NAME:    denvon_entry_hothouse
-TAGS:    entry no_monster_gen no_pool_fixup
+NAME:    denvon_arrival_hothouse
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 WEIGHT:  1
 SHUFFLE: {[
@@ -1299,7 +1299,7 @@ ENDMAP
 
 ##############################################################################
 NAME:   ncdulo_lavacross
-TAGS:   entry no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen no_trap_gen
 ORIENT: float
 MAP
 xx+xxx+xx
@@ -1314,7 +1314,7 @@ xx+xxx+xx
 ENDMAP
 
 NAME:   ncdulo_wetmaze
-TAGS:   entry no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen no_trap_gen
 ORIENT: float
 MAP
 xxxx+xxxx
@@ -1330,7 +1330,7 @@ x+xxxxxxx
 ENDMAP
 
 NAME:   ncdulo_watergridlock
-TAGS:   entry no_monster_gen no_pool_fixup
+TAGS:   arrival no_monster_gen no_pool_fixup
 ORIENT: float
 MAP
 x.x.x.x.x.x.x
@@ -1345,7 +1345,7 @@ x.x.x.x.x.x.x
 ENDMAP
 
 NAME:   ncdulo_smallfort
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxxxxxx
@@ -1359,7 +1359,7 @@ xxxxxxx+x
 ENDMAP
 
 NAME:   ncdulo_halloftheorcs
-TAGS:   entry
+TAGS:   arrival
 ORIENT: float
 MAP
      ccc+ccc
@@ -1379,7 +1379,7 @@ ENDMAP
 # ldierk's gardens
 
 NAME:    ldierk_walled_garden
-TAGS:    entry no_monster_gen no_pool_fixup
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 SHUFFLE: 123t
 SUBST:   W : wW
@@ -1402,7 +1402,7 @@ xxxxxx@xxxxxx
 ENDMAP
 
 NAME:    ldierk_walled_garden_2
-TAGS:    entry no_monster_gen no_pool_fixup
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 SHUFFLE: 123t
 SUBST:   W : wW
@@ -1422,7 +1422,7 @@ xxW3...tWxx
 ENDMAP
 
 NAME:    ldierk_water_garden
-TAGS:    entry no_monster_gen no_pool_fixup
+TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
 SHUFFLE: 123t
 SUBST:   W : wW
@@ -1443,7 +1443,7 @@ ENDMAP
 # tarquinn's gardens
 
 NAME:   tarquinn_simple_flora_water_a
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SHUFFLE: ({[
 MONS:   plant
@@ -1460,7 +1460,7 @@ ttttttttt
 ENDMAP
 
 NAME:   tarquinn_simple_flora_water_b
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MONS:   plant
 MAP
@@ -1482,7 +1482,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:   tarquinn_simple_flora_water_c
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SHUFFLE: ([{ABC
 SUBST:  A = }11
@@ -1500,7 +1500,7 @@ xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   tarquinn_simple_flora_water_d
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MONS:   plant, fungus
 MAP
@@ -1514,7 +1514,7 @@ xxxxxxxxxx
 ENDMAP
 
 NAME:   tarquinn_simple_flora_water_e
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 FTILE:  1 = floor_grass
 MONS:   plant
@@ -1529,7 +1529,7 @@ xxx.xx
 ENDMAP
 
 NAME:   tarquinn_simple_flora_water_f
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SHUFFLE: 123wwttt
 MONS:   plant, bush, fungus
@@ -1545,8 +1545,8 @@ ENDMAP
 ##############################################################################
 # Saegor's simple entries
 
-NAME:   saegor_entry_simple_A
-TAGS:   entry
+NAME:   saegor_arrival_simple_A
+TAGS:   arrival
 ORIENT: float
 MAP
 ccc
@@ -1554,8 +1554,8 @@ c{c
 .@.
 ENDMAP
 
-NAME:   saegor_entry_simple_B
-TAGS:   entry
+NAME:   saegor_arrival_simple_B
+TAGS:   arrival
 ORIENT: float
 MAP
 ttttt
@@ -1565,8 +1565,8 @@ xG.Gx
 xx+xx
 ENDMAP
 
-NAME:   saegor_entry_simple_C
-TAGS:   entry no_monster_gen
+NAME:   saegor_arrival_simple_C
+TAGS:   arrival no_monster_gen
 ORIENT: float
 SHUFFLE: {([
 MAP
@@ -1578,8 +1578,8 @@ xG+++Gx
 xxv@vxx
 ENDMAP
 
-NAME:   saegor_entry_simple_D
-TAGS:   entry no_monster_gen
+NAME:   saegor_arrival_simple_D
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxcccxxx
@@ -1593,8 +1593,8 @@ xxwt.twxx
 xxxx+xxxx
 ENDMAP
 
-NAME:   saegor_entry_simple_E
-TAGS:   entry no_monster_gen
+NAME:   saegor_arrival_simple_E
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxxxxxxx
@@ -1607,8 +1607,8 @@ xxx.{.xx.x
   xxx++xxx
 ENDMAP
 
-NAME:   saegor_entry_simple_F
-TAGS:   entry
+NAME:   saegor_arrival_simple_F
+TAGS:   arrival
 ORIENT: float
 MAP
   xxx
@@ -1626,8 +1626,8 @@ ENDMAP
 
 ##############################################################################
 
-NAME:   scummos_entry_simple_fountains
-TAGS:   entry no_monster_gen transparent
+NAME:   scummos_arrival_simple_fountains
+TAGS:   arrival no_monster_gen transparent
 ORIENT: float
 MAP
 .......
@@ -1639,8 +1639,8 @@ MAP
 .......
 ENDMAP
 
-NAME:   scummos_entry_simple_crosswalls
-TAGS:   entry no_monster_gen transparent
+NAME:   scummos_arrival_simple_crosswalls
+TAGS:   arrival no_monster_gen transparent
 ORIENT: float
 MAP
 ...........
@@ -1656,8 +1656,8 @@ MAP
 ...........
 ENDMAP
 
-NAME:   scummos_entry_hexagon
-TAGS:   entry no_monster_gen no_rotate transparent
+NAME:   scummos_arrival_hexagon
+TAGS:   arrival no_monster_gen no_rotate transparent
 ORIENT: float
 MAP
     .......
@@ -1671,8 +1671,8 @@ MAP
     .......
 ENDMAP
 
-NAME:   scummos_entry_star
-TAGS:   entry no_monster_gen no_rotate transparent
+NAME:   scummos_arrival_star
+TAGS:   arrival no_monster_gen no_rotate transparent
 ORIENT: float
 MAP
        ...
@@ -1691,8 +1691,8 @@ MAP
        ...
 ENDMAP
 
-NAME:   scummos_entry_forest
-TAGS:   entry no_monster_gen no_rotate transparent
+NAME:   scummos_arrival_forest
+TAGS:   arrival no_monster_gen no_rotate transparent
 ORIENT: float
 MAP
 ...............
@@ -1706,8 +1706,8 @@ MAP
 ...............
 ENDMAP
 
-NAME:   scummos_entry_gate
-TAGS:   entry no_monster_gen no_item_gen
+NAME:   scummos_arrival_gate
+TAGS:   arrival no_monster_gen no_item_gen
 ORIENT: float
 KFEAT:  y = floor
 FTILE:  y = floor_sandstone
@@ -1726,8 +1726,8 @@ xtxtttx...llll...x
 xxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   scummos_entry_checkerplants
-TAGS:   entry no_monster_gen no_item_gen transparent
+NAME:   scummos_arrival_checkerplants
+TAGS:   arrival no_monster_gen no_item_gen transparent
 ORIENT: float
 KMONS:  b = fungus
 MAP
@@ -1748,7 +1748,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   lightli_molten_gateway
-TAGS:   entry no_monster_gen
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxxxx++xxxxxxx
@@ -1771,8 +1771,8 @@ ENDMAP
 
 ##############################################################################
 
-NAME:   mrwooster_entry_arrow
-TAGS:   entry no_monster_gen
+NAME:   mrwooster_arrival_arrow
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxxxxxxxxxx
@@ -1790,8 +1790,8 @@ xxxxx...xxxxx
      x+x
 ENDMAP
 
-NAME:   mrwooster_entry_statue
-TAGS:   entry no_monster_gen
+NAME:   mrwooster_arrival_statue
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxxxxxxxxxx
@@ -1802,8 +1802,8 @@ xx.........xx
 .............
 ENDMAP
 
-NAME:   mrwooster_entry_statue_2
-TAGS:   entry no_monster_gen
+NAME:   mrwooster_arrival_statue_2
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxxxxxxxxxx
@@ -1816,8 +1816,8 @@ xx.........xx
 .............
 ENDMAP
 
-NAME:   mrwooster_entry_statue_3
-TAGS:   entry no_monster_gen
+NAME:   mrwooster_arrival_statue_3
+TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
 xxxxxxxxxxxxx
@@ -1833,8 +1833,8 @@ ENDMAP
 
 ##############################################################################
 
-NAME: lightli_entry_statue_moat
-TAGS: entry no_monster_gen
+NAME: lightli_arrival_statue_moat
+TAGS: arrival no_monster_gen
 ORIENT: float
 MAP
 xxxx.xxxx
@@ -1849,8 +1849,8 @@ xxx.{.xxx
 xxxxxxxxx
 ENDMAP
 
-NAME: lightli_entry_chessboard
-TAGS: entry no_monster_gen
+NAME: lightli_arrival_chessboard
+TAGS: arrival no_monster_gen
 ORIENT: float
 MAP
 .c.c.c.c
@@ -1864,7 +1864,7 @@ c.c.c.c.
 ENDMAP
 
 NAME: lightli_iron_boxes
-TAGS: entry no_monster_gen
+TAGS: arrival no_monster_gen
 ORIENT: float
 MAP
 ..vv..vv..
@@ -1879,9 +1879,9 @@ vv..vv..vv
 ..vv..vv..
 ENDMAP
 
-NAME: lightli_entry_maybe_door_vault
+NAME: lightli_arrival_maybe_door_vault
 ORIENT: float
-TAGS: entry
+TAGS: arrival
 MARKER: + = lua: props_marker { connected_exclude="true" }
 MAP
    @@
@@ -1895,9 +1895,9 @@ MAP
 ENDMAP
 
 ##############################################################
-NAME:    grunt_entry_crossed_arrows
+NAME:    grunt_arrival_crossed_arrows
 ORIENT:  float
-TAGS:    entry no_monster_gen transparent
+TAGS:    arrival no_monster_gen transparent
 MAP
 ....G....
 .xx...xx.
@@ -1915,9 +1915,9 @@ MAP
 ENDMAP
 
 # Come back for the item later if you want it.
-NAME:    grunt_entry_lava_bath
+NAME:    grunt_arrival_lava_bath
 ORIENT:  float
-TAGS:    entry no_monster_gen
+TAGS:    arrival no_monster_gen
 MAP
     .@...xxxxx
    ....G.ccccx

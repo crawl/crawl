@@ -15,8 +15,8 @@ Contents:  A. Introduction
 
 This document explains some basics of vault making. For actual vault work,
 you will need to look at syntax.txt. However, by simply looking at the
-example provided here and looking through entry.des, you should be able to
-make changes or small vaults on your own.
+example provided here and looking through arrival.des, you should be able
+to make changes or small vaults on your own.
 
 
 A.   Introduction
@@ -81,8 +81,8 @@ folders of the dat/des directory. If you are interested in adding some vaults,
 say, start with the existing ones and modify them. If you are new to vault
 making, look at the following files:
 
-  dat/des/entry
-    simple.des - particularly simple entry vaults; they are ordered with
+  dat/des/arrival
+    simple.des - particularly simple arrival vaults; they are ordered with
                  learning the mapsyntax in mind (all games use a premade
                  map like these for the vicinity of the entrance)
 
@@ -107,10 +107,10 @@ D.   Kinds of Vaults
 
 The different kinds of vaults used by Crawl are described below.
 
-Entry vault:
+Arrival vault:
     A map designed for D:1, which (usually) contains the primary upstair {
-and is always tagged "entry". A player starting a new game will usually land
-in an entry vault.
+and is always tagged "arrival". A player starting a new game will usually
+land in an entry vault.
 
 Branch entry vault, or branch portal vault:
     A map containing the entry to a branch - either a branch stair (such as
@@ -227,17 +227,18 @@ F.   Principles of vault making
 
 Small is good!
 --------------
-This applies mostly to entry vaults and minivaults. Especially entry vaults
-should be rather small. Their intention is to provide some atmosphere for
-the starting room, not to get a grip on the whole of D:1. Minivaults should
-be rather small, as well, in order to increase the chances they may actually
-be chosen during level generation.
+
+This applies mostly to arrival vaults and minivaults. Especially arrival
+vaults should be rather small. Their intention is to provide some
+atmosphere for the starting room, not to get a grip on the whole of D:1.
+Minivaults should be rather small, as well, in order to increase the chances
+they may actually be chosen during level generation.
 
 Randomise!
 ----------
 The level making syntax is very supportive for making a single map appear
 in many versions. Use the SHUFFLE: and SUBST: and NSUBST: directives and
-look at the existing entry vaults. Besides reducing tedium, this avoids
+look at the existing arrival vaults. Besides reducing tedium, this avoids
 giving veterans a spoiled edge. As an example, if a secret chamber with
 loot is always at the same place, it's a no-brainer for those who know.
 The same goes for traps. This is much less so if there are several places
@@ -254,7 +255,7 @@ loot.
 
 Not too much loot!
 ------------------
-For example, entry vaults should in general have very little loot - in
+For example, arrival vaults should in general have very little loot - in
 particular no good_xxx or '*' items lest they might give incentive for
 start-scumming. For random vaults, there needn't be loot at all and, in
 any case, there shouldn't be too much of it. Compare with the branch ends
@@ -267,7 +268,7 @@ give in to that temptation.
 Have a theme.
 -------------
 It is often worthwhile (for me at least) to have a theme in mind before
-making the actual level. For entry vaults, something simple like 'forest'
+making the actual level. For arrival vaults, something simple like 'forest'
 or 'fortress' may be enough. For later (or larger) maps, try to think of
 distinguishing features your map may have. Being cool can be good enough,
 but possessing some gameplay value (for example by being easier for
@@ -276,11 +277,11 @@ necromancy) is even better.
 
 Testing your maps.
 ------------------
-This is easy for entry vaults. Temporarily introducing either
+This is easy for arrival vaults. Temporarily introducing either
     WEIGHT: 50000   or
     PLACE:  D:1
 will make your entry appear almost always. For other vaults, you can
-for the moment declare them as entry vaults with a huge WEIGHT: as
+for the moment declare them as arrival vaults with a huge WEIGHT: as
 above (and preferably in wizard mode).
 
 In wizmode, you can use the following commands
@@ -306,10 +307,10 @@ to use orcish knights for an entry to the Orcish Mines.
 Phrased more generally, do not use OOD (out-of-depth) monsters unless you
 really know what you want.
 
-Be especially fair when creating entry vaults. If your entry is too hard,
-it might get just trashed. Keep in mind that your vault will be played
-very very often, so even small chances of something stupid happening
-(like creation of a really nasty monster) will kick in often enough.
+Be especially fair when creating arrival vaults. If your vaukt is too hard,
+it might get just trashed. Keep in mind that your vault will be played very
+very often, so even small chances of something stupid happening (like
+creation of a really nasty monster) will kick in often enough.
 
 Glass, colours, names: use sparingly!
 -------------------------------------
