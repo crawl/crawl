@@ -66,7 +66,7 @@ and summon monsters with the Shadow Creatures spell:
     crawl -arena "test spawner v test spawner"
 
 If you want a *specific* set of monsters to fight each other endlessly,
-you can use the "respawn" tag, which will cause the initally placed
+you can use the "respawn" tag, which will cause the initially placed
 monsters to be replaced when they die. For example,
 
     crawl -arena "respawn rat v rat"

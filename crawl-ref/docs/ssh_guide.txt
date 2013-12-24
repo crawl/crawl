@@ -42,7 +42,7 @@ Oh look! somebody has - done just that! Great, then let's get started.
 Firstly you will need a means of accessing the server. The easiest
 and most common method is by using an SSH (Secure SHell) connection,
 we are going to learn here how to use the 'PuTTY' terminal to do this.
-In laymans terms PuTTY is simply a small programme that acts as your
+In layman's terms PuTTY is simply a small programme that acts as your
 interface between you (the player) and the server (the host).
 
 In order to download PuTTY, simply click on the following link:
