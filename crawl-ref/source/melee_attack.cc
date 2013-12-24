@@ -2777,9 +2777,10 @@ void melee_attack::chaos_affects_defender()
 
         beam.ench_power = beam.damage.num;
 
+        const bool you_could_see = you.can_see(defender);
         beam.fire();
 
-        if (you.can_see(defender))
+        if (you_could_see)
             obvious_effect = beam.obvious_effect;
     }
 
