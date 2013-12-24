@@ -357,7 +357,7 @@ abbreviation with dgn.set_set_level_name_abbrev().
 
 Known portal vault entries will be displayed on the overmap. By default
 the name shown on the overmap will be the "dstname" parameter, or if
-that isn't present the "dst" paremeter. It can be set to something else
+that isn't present the "dst" parameter. It can be set to something else
 with the "overmap" parameter. A note can be made to accompany the
 portal's position on the overmap with the "overmap_note" parameter.
 
@@ -840,7 +840,7 @@ dungeon cell which they are on:
 * veto_disintegrate: If this property is set to "veto" then the cell
       will be immune to disintegration.
 
-* veto_fragmentation: If this proprety is set to "veto" then the cell
+* veto_fragmentation: If this property is set to "veto" then the cell
       will be unaffected by fragmentation (Lee's Rapid Deconstruction
       spell).
 
@@ -853,7 +853,7 @@ dungeon cell which they are on:
 Special monster-related Lua marker properties
 ---------------------------------------------
 
-Using the MonPropsMarker allows you to permanantly alter or mark a monster that
+Using the MonPropsMarker allows you to permanently alter or mark a monster that
 the marker is placed upon. The options currently available are:
 
 * description: If this property is set, the monster's full description (accessed
