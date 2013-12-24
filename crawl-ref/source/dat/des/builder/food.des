@@ -196,7 +196,7 @@ TAGS:     uniq_second_food extra chance_second_food no_monster_gen patrolling
 SUBVAULT: Z : fruiting_plant
 KMONS:    A = three-headed hydra / w:5 two-headed hydra
 KMONS:    B = sheep
-KMONS:    C = yak
+KMONS:    C = reindeer
 KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
@@ -458,9 +458,9 @@ MONS:   human hd:5 ; animal skin . hand axe
 {{
   local sheep_weight = 14 - you.absdepth()
   if sheep_weight <= 0 then
-    mons("hog / yak")
+    mons("hog / reindeer")
   else
-    mons("sheep w:" .. sheep_weight .. " / hog w:1 / yak w:1")
+    mons("sheep w:" .. sheep_weight .. " / hog w:1 / reindeer w:1")
   end
 }}
 ITEM:   cheese q:9 no_mimic, bread ration q:2 no_mimic

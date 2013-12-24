@@ -24,7 +24,7 @@ function base_monster_setup(e)
            white imp / ufetubus / fire bat / rotting devil")
   e.kmons("B = goliath beetle / steam dragon / crocodile / hippogriff /\
            killer bee band / yellow wasp / eye of draining / manticore /\
-           wyvern / troll / two-headed ogre / yak band /\
+           wyvern / troll / two-headed ogre / reindeer band /\
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
            trapdoor spider / basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
@@ -36,7 +36,7 @@ function base_monster_setup(e)
            orc sorcerer band w:5 / orc knight band / grizzly bear /\
            redback / phantasmal warrior / spiny frog / orange rat /\
            black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
-           elephant / death yak / wolf band / sheep band /\
+           elephant / red-nosed reindeer / wolf band / sheep band /\
            raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / mermaid w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler / plague shambler /\
@@ -56,7 +56,7 @@ function base_monster_setup(e)
            harpy band w:5 / fire crab / redback band /\
            vapour / deep elf priest band w:3 / shapeshifter / zombie /\
            skeleton / deep dwarf death knight / eidolon / elephant band w:5 /\
-           death yak band w:5 / insubstantial wisp band w:5 / swamp dragon /\
+           red-nosed reindeer band w:5 / insubstantial wisp band w:5 / swamp dragon /\
            siren / alligator snapping turtle / anaconda / greater naga /\
            merfolk javelineer band w:5 / merfolk impaler band w:5 /\
            merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
@@ -104,7 +104,7 @@ function base_monster_setup(e)
            orc / worker ant / giant eyeball / skeleton /\
            zombie / giant centipede / brain worm / giant mite /\
            green rat / lemure / ufetubus")
-  e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
+  e.kmons("H = Satan Claus / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
            Prince Ribbit")
   e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\

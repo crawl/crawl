@@ -4461,7 +4461,7 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
 },
 
-// yaks, sheep and elephants ('Y')
+// reindeers, sheep and elephants ('Y')
 {
     MONS_SHEEP, 'Y', LIGHTGREY, "sheep",
     M_WARM_BLOOD | M_HERD,
@@ -4475,7 +4475,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_YAK, 'Y', BROWN, "yak",
+    MONS_YAK, 'Y', BROWN, "reindeer",
     M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     1200, 9, MONS_YAK, MONS_YAK, MH_NATURAL, -3,
@@ -4487,7 +4487,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEATH_YAK, 'Y', YELLOW, "death yak",
+    MONS_DEATH_YAK, 'Y', YELLOW, "red-nosed reindeer",
     M_WARM_BLOOD | M_HERD,
     MR_NO_FLAGS,
     1500, 8, MONS_YAK, MONS_DEATH_YAK, MH_NATURAL, -5,
@@ -6716,13 +6716,13 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_SIGMUND, '@', YELLOW, "Sigmund",
+    MONS_SIGMUND, '@', LIGHTRED, "Satan Claus",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     550, 20, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 0, 0, 30 },
-    0, 11, MST_ORC_WIZARD_II, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
+    0, 11, MST_SATAN_CLAUS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },

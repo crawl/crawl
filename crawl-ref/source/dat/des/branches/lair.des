@@ -26,7 +26,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     else
         if you.branch() == "Lair" then
            e.mons("spriggan")
-           e.mons("wolf / black bear w:4 / yak w:2")
+           e.mons("wolf / black bear w:4 / reindeer w:2")
         else
             if you.absdepth() >= 14 then
                 e.mons("centaur warrior / hill giant")
@@ -83,7 +83,7 @@ ENDMAP
 NAME:    david_lair_generic
 TAGS:    lair_entry
 MONS:    crocodile / sheep, agate snail / elephant slug / nothing
-MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
+MONS:    nothing / reindeer / weight:2 red-nosed reindeer, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
 ORIENT:  float
@@ -128,7 +128,7 @@ NAME:    dpeg_lair_monsters
 TAGS:    lair_entry
 ORIENT:  float
 MONS:    w:50 nothing / w:30 giant slug / w:30 agate snail
-MONS:    w:100 nothing / w:40 yak / sheep / death yak
+MONS:    w:100 nothing / w:40 reindeer / sheep / red-nosed reindeer
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          komodo dragon / basilisk w:5
 MONS:    green rat / porcupine / orange rat / quokka / rat
@@ -210,7 +210,7 @@ TAGS:   lair_entry
 ORIENT: float
 MONS:   plant / bush w:2 / fungus w:2
 MONS:   crocodile / basilisk w:5 / agate snail w:5 / giant slug w:5
-MONS:   yak
+MONS:   reindeer
 MONS:   sheep
 MONS:   rat w:2 / porcupine / green rat / quokka w:1
 SUBST:  . = .:400 tt111123355
@@ -344,7 +344,7 @@ NAME:   due_lair_maze_entry_diamond
 TAGS:   lair_entry
 MONS:   plant / fungus
 MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile /\
-        yak / nothing
+        reindeer / nothing
 ORIENT: float
 SUBST:  . = G:20 B:15 .
 SUBST:  1 = 1:60 .
@@ -383,7 +383,7 @@ NAME:   grunt_lair_entry_elf_guard_hut
 ORIENT: float
 TAGS:   lair_entry transparent
 MONS:   plant / fungus / nothing
-MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / yak / w:20 nothing
+MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / reindeer / w:20 nothing
 MONS:   patrolling deep elf fighter
 KFEAT:  O = enter_lair
 SUBST:  D = 1:5 2:2 .
@@ -809,13 +809,13 @@ xxx....xxx
 ENDMAP
 
 ##############################################################################
-# Stranded yaks
+# Stranded reindeers
 # consolidated vault for _a and _b of
-NAME:   Lemuel_yak_island
+NAME:   Lemuel_reindeer_island
 TAGS:   no_pool_fixup
 DEPTH:  Lair, Swamp, Shoals
 WEIGHT: 5
-MONS:   yak / w:5 sheep / w:3 death yak
+MONS:   reindeer / w:5 sheep / w:3 red-nosed reindeer
 : if you.branch() == "Lair" then
 SUBST:  ' = ., ; : .wW
 : else
@@ -2014,8 +2014,8 @@ FTILE:  d|*$1c- = floor_cobble_blood
 COLOUR: d|*$1c- = lightgrey
 ITEM:   acquire any
 MONS:   patrolling catoblepas
-MONS:   death yak / w:5 yak, death yak w:5 / yak
-MONS:   sheep / yak / death yak
+MONS:   red-nosed reindeer / w:5 reindeer, red-nosed reindeer w:5 / reindeer
+MONS:   sheep / reindeer / red-nosed reindeer
 NSUBST: 3 = 1:1 / *:2
 # These are still living plants for all intents and purposes...
 MONS:   plant perm_ench:petrified dbname:petrified_plant col:lightgrey tile:mons_withered_plant / nothing
@@ -2117,9 +2117,9 @@ KMONS:   D = agate snail
 KMONS:   E = boring beetle
 KMONS:   F = boulder beetle
 KMONS:   G = sheep
-KMONS:   H = yak
+KMONS:   H = reindeer
 KMONS:   I = elephant
-KMONS:   J = death yak
+KMONS:   J = red-nosed reindeer
 KMONS:   K = crocodile
 KMONS:   L = wolf
 KMONS:   M = giant slug
@@ -2173,7 +2173,7 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
 PLACE:   Lair:$
 ORIENT:  northeast
 MONS:    deep troll shaman, dire elephant / hydra / lindwurm
-MONS:    catoblepas, death yak band
+MONS:    catoblepas, red-nosed reindeer band
 MONS:    elephant, wolf, black bear / grizzly bear
 KMONS:   P = plant / fungus w:2 / bush w:1 / nothing w:13
 SHUFFLE: 567

@@ -1460,10 +1460,10 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         weapon_type wtype = (weapon.base_type == OBJ_WEAPONS) ?
             (weapon_type)weapon.sub_type : NUM_WEAPONS;
 
-        // We might allow Sigmund to pick up a better scythe if he finds
+        // We might allow Satan Claus to pick up a better qstaff if he finds
         // one...
         if (mons->type == MONS_SIGMUND)
-            return wtype == WPN_SCYTHE;
+            return wtype == WPN_QUARTERSTAFF;
 
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
         // in case that ever changes we don't want him to switch away
