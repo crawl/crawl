@@ -151,7 +151,7 @@ function sroom_morgue(e)
                  .. "iron troll corpse / iron troll skeleton / nothing w:60"
     elseif you.branch() == "Tar" or you.branch() == "Crypt" then
         mons[5] = "eidolon w:6 / jiangshi w:6 / plague shambler w:2"
-        mons[6] = "mummy priest w:2 / death dwarf death knight w:2 / revenant w:2"
+        mons[6] = "mummy priest w:2 / deep dwarf death knight w:2 / revenant w:2"
         bodies = "shadow dragon corpse / base draconian corpse / "
                  .. "dire elephant corpse / nothing w:60"
     else
