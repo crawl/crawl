@@ -2239,7 +2239,7 @@ static void tag_read_you(reader &th)
 
     // how many durations?
     count = unmarshallUByte(th);
-    COMPILE_CHECK(NUM_DURATIONS <= 256);
+    COMPILE_CHECK(NUM_DURATIONS < 256);
     for (j = 0; j < count && j < NUM_DURATIONS; ++j)
         you.duration[j] = unmarshallInt(th);
     for (j = NUM_DURATIONS; j < count; ++j)
@@ -2251,7 +2251,7 @@ static void tag_read_you(reader &th)
 
     // how many attributes?
     count = unmarshallUByte(th);
-    COMPILE_CHECK(NUM_ATTRIBUTES <= 256);
+    COMPILE_CHECK(NUM_ATTRIBUTES < 256);
     for (j = 0; j < count && j < NUM_ATTRIBUTES; ++j)
     {
 #if TAG_MAJOR_VERSION == 34
