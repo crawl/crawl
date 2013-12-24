@@ -1002,7 +1002,7 @@ string monster_info::common_name(description_level_type desc) const
     }
 
     string s;
-    // only respect unqualified if nothing was added ("Sigmund" or "The spectral Sigmund")
+    // only respect unqualified if nothing was added ("Satan Claus" or "The spectral Satan Claus")
     if (!is(MB_NAME_UNQUALIFIED) || has_proper_name() || ss.str() != core)
         s = _apply_adjusted_description(desc, ss.str());
     else

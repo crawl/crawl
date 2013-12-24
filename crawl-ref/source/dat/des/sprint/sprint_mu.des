@@ -810,7 +810,7 @@ SUBST: P = PPPPPPPPP.
 
 : local d2rnd = crawl.random2(4)
 : if d2rnd == 0 then
-KMONS: a = patrolling Sigmund hd:15 hp:100 \
+KMONS: a = patrolling Satan Claus hd:15 hp:100 \
  spells:bolt_of_fire;confuse;invisibility;iskenderun's_mystic_blast \
  ; scythe ego:distortion
 KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \

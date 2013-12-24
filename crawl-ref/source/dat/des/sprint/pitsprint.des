@@ -104,7 +104,7 @@ function base_monster_setup(e)
            orc / worker ant / giant eyeball / skeleton /\
            zombie / giant centipede / brain worm / giant mite /\
            green rat / lemure / ufetubus")
-  e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
+  e.kmons("H = Satan Claus / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
            Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
            Prince Ribbit")
   e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\

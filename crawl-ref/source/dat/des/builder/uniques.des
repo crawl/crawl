@@ -290,7 +290,7 @@ DEPTH:  Orc:$, Depths, Elf:2-, Swamp:2-, Snake:2-, Shoals:2-, Vaults, Crypt, For
 
 NAME:   uniq_sigmund
 DEPTH:  D:2-7
-: place_unique(_G, "Sigmund")
+: place_unique(_G, "Satan Claus")
 
 NAME:   uniq_snorg
 DEPTH:  D:14-16, Lair:3-, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3

@@ -190,7 +190,7 @@ function choose_mset_1(e)
     e.kmons("1 = shapeshifter hd:5 / ugly thing w:5")
 -- Uniques
   else
-    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+    e.kmons("1 = Satan Claus, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
@@ -285,7 +285,7 @@ function choose_mset_2(e)
     e.kmons("1 = shapeshifter / ugly thing w:5 / neqoxec w:5 / shining eye w:2")
 -- Uniques
   else
-    e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
+    e.kmons("1 = Satan Claus, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
                Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
@@ -409,7 +409,7 @@ function choose_mset_3(e)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
+               Prince Ribbit / Psyche / Purgy / Satan Claus / Sonja / Terence / Urug/\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
                Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Wiglaf")
@@ -543,7 +543,7 @@ local rnd = crawl.random2(142)
     e.kmons("1 = Blork the orc / Crazy Yiuf / Dowan / Duvessa / Edmund / Erica / Erolcha /\
                Eustachio / Gastronok / Grum / Grinder / Harold / Ijyb / Jessica /\
                Joseph / Josephine / Maurice / Menkaure / Pikel /\
-               Prince Ribbit / Psyche / Purgy / Sigmund / Sonja / Terence / Urug/\
+               Prince Ribbit / Psyche / Purgy / Satan Claus / Sonja / Terence / Urug/\
                Agnes / Aizul / Azrael / Donald / Frances / Kirke / Louise / Maud /\
                Nergalle / Nessos / Nikola / Norris / Polyphemus / Roxanne /\
                Rupert / Saint Roka / Snorg / Wiglaf / Antaeus / Asmodeus /\
