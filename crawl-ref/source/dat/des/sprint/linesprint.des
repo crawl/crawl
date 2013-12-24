@@ -296,7 +296,7 @@ ENDMAP
 NAME:     lair_end
 TAGS:     lair_end
 KMONS:    1 = wolf w:15 / warg / hell hound w:8
-KMONS:    2 = yak / death yak w:15 / catoblepas w:5
+KMONS:    2 = reindeer / red-nosed reindeer w:15 / catoblepas w:5
 KMONS:    3 = worm w:15 / spiny worm / lindwurm / giant firefly / brain worm
 KMONS:    4 = black bear / grizzly bear / polar bear
 KMONS:    5 = spiny frog / blink frog / vampire mosquito / giant frog /\

@@ -440,7 +440,7 @@ DEPTH: Forest
 SUBST: T = t / t / P / .
 COLOUR: "MN = green
 KMONS: P = plant
-MONS:  yak, spriggan ; robe . quarterstaff
+MONS:  reindeer, spriggan ; robe . quarterstaff
 ITEM:  cheese q:3
 MAP
 ttttttt@t
@@ -968,7 +968,7 @@ KFEAT:   D = t
 TILE:    D = dngn_tree_dead
 : dgn.delayed_decay(_G, 'e', 'wolf spider corpse')
 : dgn.delayed_decay(_G, 'f', 'dire elephant corpse')
-: dgn.delayed_decay(_G, 'g', 'death yak corpse')
+: dgn.delayed_decay(_G, 'g', 'red-nosed reindeer corpse')
 : dgn.delayed_decay(_G, 'h', 'minotaur corpse')
 : dgn.delayed_decay(_G, 'i', 'grizzly bear corpse')
 : dgn.delayed_decay(_G, 'j', 'ancient bear corpse')
