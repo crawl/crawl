@@ -675,11 +675,11 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\abl-show.cc"
+			RelativePath="..\ability.cc"
 			>
 		</File>
 		<File
-			RelativePath="..\abl-show.h"
+			RelativePath="..\ability.h"
 			>
 		</File>
 		<File

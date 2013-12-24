@@ -16,7 +16,7 @@
 
 #include "externs.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "act-iter.h"
 #include "branch.h"
 #include "acquire.h"

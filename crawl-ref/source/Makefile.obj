@@ -1,5 +1,5 @@
 OBJECTS = \
-abl-show.o \
+ability.o \
 abyss.o \
 acquire.o \
 act-iter.o \

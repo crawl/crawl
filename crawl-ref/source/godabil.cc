@@ -1316,7 +1316,7 @@ bool zin_remove_all_mutations()
 bool zin_sanctuary()
 {
     // Casting is disallowed while previous sanctuary in effect.
-    // (Checked in abl-show.cc.)
+    // (Checked in ability.cc.)
     if (env.sanctuary_time)
         return false;
 

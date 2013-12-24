@@ -7,7 +7,7 @@
 
 #include "item_use.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"

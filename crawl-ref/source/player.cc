@@ -3566,7 +3566,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             }
         }
 
-        // zot defence abilities; must also be updated in abl-show.cc when these levels are changed
+        // zot defence abilities; must also be updated in ability.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
         {
             if (you.experience_level == 1)

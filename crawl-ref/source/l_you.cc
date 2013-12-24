@@ -3,7 +3,7 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "abyss.h"
 #include "areas.h"
 #include "branch.h"
