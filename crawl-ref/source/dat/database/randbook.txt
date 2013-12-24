@@ -31,9 +31,9 @@
 # god (if gifted), a name depending on school(s) as defined in this file,
 # a random name, or an appropriate god (if not a god gift).
 # The school dependent names consist of uniques or spell names that have a
-# strong connection to one or more schools. Pandemonium or hell lords' names
-# may only get used if a book is "highlevel", i.e. contains at least one
-# spell of level 6 or higher.
+# strong connection to one or more schools. As these books are "ancient
+# artefact", uniques of short-lived species shouldn't be used, while those
+# who are rulers rather than scholars should probably be avoided as well.
 # If the first and second school are different the two names are tested in
 # combination, in alphabetical order. If this is not the case or nothing is
 # found (or "__NONE" == the empty string was returned) and all spells match
@@ -803,63 +803,15 @@ Gliding
 # potential previous owners of books
 # __NONE is parsed to the empty string
 # First, combinations.
-highlevel Conjuration Earth owner
-
-Dispater
-
-@Conjuration Earth owner@
-%%%%
 Conjuration Earth owner
 
 Lee
 
 Lehudib
 %%%%
-highlevel Conjuration Fire owner
-
-Asmodeus
-
-Cerebov
-
-w:5
-__NONE
-%%%%
-highlevel Conjuration Necromancy owner
-
-Ereshkigal
-
-__NONE
-%%%%
-highlevel Conjuration Summoning owner
-
-Asmodeus
-
-Dispater
-
-w:5
-__NONE
-%%%%
 Earth Transmutation owner
 
 Roxanne
-
-__NONE
-%%%%
-highlevel Earth Summoning owner
-
-Dispater
-
-__NONE
-%%%%
-highlevel Fire Summoning owner
-
-Asmodeus
-
-__NONE
-%%%%
-highlevel Necromancy Poison owner
-
-Gloorx Vloq
 
 __NONE
 %%%%
@@ -871,16 +823,6 @@ __NONE
 %%%%
 # Single spell schools.
 highlevel Conjuration owner
-
-Asmodeus
-
-Ereshkigal
-
-Dispater
-
-Cerebov
-
-Lom Lobon
 
 Lehudib
 
@@ -895,13 +837,6 @@ Lehudib
 
 Iskenderun
 %%%%
-highlevel Earth owner
-
-Dispater
-
-w:30
-@Earth owner@
-%%%%
 Earth owner
 
 Lehudib
@@ -912,28 +847,11 @@ Roxanne
 
 __NONE
 %%%%
-highlevel Fire owner
-
-Asmodeus
-
-Cerebov
-
-__NONE
-%%%%
 Ice owner
 
 Ozocubu
 
 __NONE
-%%%%
-highlevel Necromancy owner
-
-Ereshkigal
-
-Gloorx Vloq
-
-w:40
-@Necromancy owner@
 %%%%
 Necromancy owner
 
@@ -943,33 +861,11 @@ Cigotuvi
 
 Khufu
 %%%%
-highlevel Poison owner
-
-Gloorx Vloq
-
-@Poison owner@
-%%%%
 Poison owner
 
 Olgreb
 
 Alistair
-
-__NONE
-%%%%
-highlevel Summoning owner
-
-Asmodeus
-
-Dispater
-
-Mnoleg
-
-__NONE
-%%%%
-highlevel Translocation owner
-
-Lom Lobon
 
 __NONE
 %%%%
