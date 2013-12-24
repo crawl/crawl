@@ -30,7 +30,7 @@ The simplest way is in-game: Press either the '~' key or Ctrl-D, select
 'm' to define a macro, then choose a key to assign for your macro and
 enter the command sequence. For some keys (or key combinations), Crawl
 will display a strange number (for example \{13} for the Return key).
-These numbers are the key codes for certain non-alpanumeric keys and
+These numbers are the key codes for certain non-alphanumeric keys and
 can vary between different systems.
 
 By default, most upper- and lowercase alphanumeric keys are already
@@ -73,7 +73,7 @@ with the above key (for example "zap" for zapping the spell in slot a
 at the previous target). Individual macro definitions should be
 separated by empty lines.
 
-For keymaps just replace the "M:" on the first line of the definiton
+For keymaps just replace the "M:" on the first line of the definition
 with one of the following:
 "K:"  default,
 "K1:" level-map,

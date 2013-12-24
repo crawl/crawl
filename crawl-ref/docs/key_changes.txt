@@ -3,7 +3,7 @@
 
 Command key changes introduced in 0.5
 -------------------------------------
-There have been some command key changes in 0.5. There is no macrofile this
+There have been some command key changes in 0.5. There is no macro file this
 time; you may have to resort to macros on your own. (This is probably only
 needed to interchange the Z and V commands if you refuse to learn that wands
 are nowadays activated with V.)

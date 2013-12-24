@@ -780,8 +780,8 @@ travel_delay = 20 (defaults to -1 for online servers)
 explore_delay = -1
         How long auto-explore waits after each move (milliseconds). Depends on
         platform. In particular, setting travel_delay = -1 and
-        explore_delay = 20 means you will see the invividual moves of
-        autoexplore, but not the invidivual moves of other forms of travel.
+        explore_delay = 20 means you will see the individual moves of
+        autoexplore, but not the individual moves of other forms of travel.
         Setting to -1 means the auto-explore delay will be the same as
         travel_delay.
 
@@ -962,7 +962,7 @@ runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
         activity if the distance between you and the monster is less than the
         specified number. E.g. with
              runrest_ignore_monster ^= fish:3
-        all of big fish, jellyfish, giant goldfish and lavafish will be
+        all of big fish, jellyfish, giant goldfish and lava fish will be
         considered safe for travel, explore and resting as long as the
         distance is at least 3. If a monster matches multiple expressions,
         its distance is compared with the first match.
@@ -1072,7 +1072,7 @@ auto_drop_chunks = (never | rotten | yes)
 prompt_for_swap = true
         If true, then if an auto-switch butchery is interrupted by a
         hostile monster, the game will ask if you wish to switch back to
-        your weapon. It will also prompt you if after butchery is interupted
+        your weapon. It will also prompt you if after butchery is interrupted
         you teleport or change levels and find yourself near hostile monsters.
 
 easy_quit_item_prompts = true
@@ -1833,7 +1833,7 @@ tile_map_pixels = 0
         The maximum number of pixels each minimap square should take up. If you
         have a low resolution, and feel like the inventory is too small, you
         can try setting this to 1 to get more space for the inventory. The
-        downside is that traveling by clicking on the minimap becomes much
+        downside is that travelling by clicking on the minimap becomes much
         harder. If set to zero, it will auto-size the minimap.
 
 tile_cell_pixels = 32
@@ -1844,7 +1844,7 @@ tile_cell_pixels = 32
         the screen.
 
 tile_filter_scaling = false
-        Used in conjonction with tile_cell_pixels. Setting it to true filter
+        Used in conjunction with tile_cell_pixels. Setting it to true filter
         the textures resulting in a smoother but blurrier image.
 
 tile_force_overlay = false
@@ -2380,7 +2380,7 @@ autopickup = $?+"/
 autopickup = $?+"/!%
 : end
 
-Options can be rerefenced by lua via "options.option_name". For
+Options can be referenced by lua via "options.option_name". For
 example:
 
 :if string.find(options.autopickup, "!") then

@@ -1,6 +1,6 @@
 
 Note: If you are experiencing significant slowdown and lags with the Tiles
-version of Dungeon Crawl Stonesoup, scroll down to the end of this file.
+version of Dungeon Crawl Stone Soup, scroll down to the end of this file.
 
 
 Tiles specific commands
@@ -50,7 +50,7 @@ hostile monsters in sight.
 Getting information
 -------------------
 
-Doing a rightclick with your mouse on any feature, monster or item on the
+Doing a right-click with your mouse on any feature, monster or item on the
 main map or in the tiled control panels will display the description of
 said feature, monster or item on a separate screen.
 
@@ -106,7 +106,7 @@ main map will tell you how to interact with them.
 Character status
 ----------------
 
-Doing a rightclick on the player tile will display a character overview
+Doing a right-click on the player tile will display a character overview
 screen listing equipment, resistances and stats.
 
 More detailed screens on specific aspects of your characters can be
