@@ -2282,6 +2282,8 @@ static void tag_read_you(reader &th)
                                            you.duration[DUR_REGENERATION]);
         you.duration[DUR_REGENERATION] = 0;
     }
+    if (you.attribute[ATTR_SEARING_RAY] > 3)
+        you.attribute[ATTR_SEARING_RAY] = 0;
 #endif
 
     count = unmarshallByte(th);
