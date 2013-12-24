@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "abl-show.h"
+#include "ability.h"
 
 #include <sstream>
 #include <iomanip>

@@ -1,11 +1,11 @@
 #!/usr/bin/perl -w
 
 undef $/;
-open IN, "util/cpp_version abl-show.cc|" or die "Can't read abl-show.cc\n";
+open IN, "util/cpp_version ability.cc|" or die "Can't read ability.cc\n";
 $_ = <IN>;
 close IN;
 
 s/.*Ability_List\[\] =\n{\n(.*?)};.*/$1/s
-    or die "Can't find Ability_List[] in abl-show.cc\n";
+    or die "Can't find Ability_List[] in ability.cc\n";
 
 print join("\n", sort /ABIL_[A-Z0-9_]+\s*,\s*"([*-Za-z0-9 '-]+)"/sg), "\n";

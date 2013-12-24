@@ -5,7 +5,7 @@
 #include "tilereg-cmd.h"
 #include "process_desc.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "cio.h"
 #include "command.h"
 #include "process_desc.h"

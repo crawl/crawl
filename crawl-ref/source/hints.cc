@@ -12,7 +12,7 @@
 
 #include "hints.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"

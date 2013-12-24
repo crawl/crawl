@@ -15,7 +15,7 @@
 
 #include "externs.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "act-iter.h"
 #include "art-enum.h"
 #include "artefact.h"

@@ -2,7 +2,7 @@
 
 #include "ng-setup.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "decks.h"
 #include "dungeon.h"
 #include "files.h"

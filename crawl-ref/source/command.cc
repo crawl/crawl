@@ -15,7 +15,7 @@
 #include "externs.h"
 #include "options.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"

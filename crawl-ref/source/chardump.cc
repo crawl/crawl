@@ -21,7 +21,7 @@
 #include "externs.h"
 #include "options.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"

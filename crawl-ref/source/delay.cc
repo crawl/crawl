@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "abl-show.h"
+#include "ability.h"
 #include "artefact.h"
 #include "clua.h"
 #include "command.h"

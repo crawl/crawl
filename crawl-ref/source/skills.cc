@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "abl-show.h"
+#include "ability.h"
 #include "evoke.h"
 #include "exercise.h"
 #include "externs.h"

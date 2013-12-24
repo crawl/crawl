@@ -29,7 +29,7 @@
 
 #include "externs.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "abyss.h"
 #include "acquire.h"
 #include "act-iter.h"

@@ -8,7 +8,7 @@
 
 #include "externs.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "coord.h"

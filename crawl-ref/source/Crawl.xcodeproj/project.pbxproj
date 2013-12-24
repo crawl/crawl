@@ -399,7 +399,7 @@
 		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
 		7BDE8444116D247D00974D63 /* player-equip.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE8442116D247D00974D63 /* player-equip.cc */; };
 		7BDE8445116D247D00974D63 /* player-equip.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE8442116D247D00974D63 /* player-equip.cc */; };
-		7BDE8447116D24B300974D63 /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5D10BD494300A99626 /* abl-show.cc */; };
+		7BDE8447116D24B300974D63 /* ability.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5D10BD494300A99626 /* ability.cc */; };
 		7BDE8448116D24B300974D63 /* abyss.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5F10BD494300A99626 /* abyss.cc */; };
 		7BDE8449116D24B300974D63 /* actor-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6110BD494300A99626 /* actor-los.cc */; };
 		7BDE844A116D24B300974D63 /* actor.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6210BD494300A99626 /* actor.cc */; };
@@ -470,7 +470,7 @@
 		D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
 		D2F272350DA1C5AD00445FE9 /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
 		D2F2725B0DA1C61600445FE9 /* docs in Resources */ = {isa = PBXBuildFile; fileRef = D2F2723F0DA1C61600445FE9 /* docs */; };
-		E5D640BE10BD494500A99626 /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5D10BD494300A99626 /* abl-show.cc */; };
+		E5D640BE10BD494500A99626 /* ability.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5D10BD494300A99626 /* ability.cc */; };
 		E5D640BF10BD494500A99626 /* abyss.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5F10BD494300A99626 /* abyss.cc */; };
 		E5D640C010BD494500A99626 /* actor-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6110BD494300A99626 /* actor-los.cc */; };
 		E5D640C110BD494500A99626 /* actor.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6210BD494300A99626 /* actor.cc */; };
@@ -1257,8 +1257,8 @@
 		D2F271F60DA1C58C00445FE9 /* Dungeon Crawl Stone Soup - ASCII.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dungeon Crawl Stone Soup - ASCII.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F271FE0DA1C5AD00445FE9 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = "<group>"; };
 		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
-		E5D63F5D10BD494300A99626 /* abl-show.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "abl-show.cc"; sourceTree = "<group>"; };
-		E5D63F5E10BD494300A99626 /* abl-show.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "abl-show.h"; sourceTree = "<group>"; };
+		E5D63F5D10BD494300A99626 /* ability.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ability.cc"; sourceTree = "<group>"; };
+		E5D63F5E10BD494300A99626 /* ability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ability.h"; sourceTree = "<group>"; };
 		E5D63F5F10BD494300A99626 /* abyss.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = abyss.cc; sourceTree = "<group>"; };
 		E5D63F6010BD494300A99626 /* abyss.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = abyss.h; sourceTree = "<group>"; };
 		E5D63F6110BD494300A99626 /* actor-los.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "actor-los.cc"; sourceTree = "<group>"; };
@@ -1751,8 +1751,8 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				E5D63F5D10BD494300A99626 /* abl-show.cc */,
-				E5D63F5E10BD494300A99626 /* abl-show.h */,
+				E5D63F5D10BD494300A99626 /* ability.cc */,
+				E5D63F5E10BD494300A99626 /* ability.h */,
 				E5D63F5F10BD494300A99626 /* abyss.cc */,
 				E5D63F6010BD494300A99626 /* abyss.h */,
 				1F909ABD148B23BC00084E83 /* acquire.cc */,
@@ -2916,7 +2916,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7BDE8447116D24B300974D63 /* abl-show.cc in Sources */,
+				7BDE8447116D24B300974D63 /* ability.cc in Sources */,
 				7BDE8448116D24B300974D63 /* abyss.cc in Sources */,
 				1F909C24148B466700084E83 /* acquire.cc in Sources */,
 				7B51659511859CFA005B23ED /* act-iter.cc in Sources */,
@@ -3159,7 +3159,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E5D640BE10BD494500A99626 /* abl-show.cc in Sources */,
+				E5D640BE10BD494500A99626 /* ability.cc in Sources */,
 				E5D640BF10BD494500A99626 /* abyss.cc in Sources */,
 				1F909AE1148B23BC00084E83 /* acquire.cc in Sources */,
 				7B51659411859CFA005B23ED /* act-iter.cc in Sources */,

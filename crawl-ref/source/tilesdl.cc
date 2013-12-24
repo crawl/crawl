@@ -2,7 +2,7 @@
 
 #ifdef USE_TILE_LOCAL
 
-#include "abl-show.h"
+#include "ability.h"
 #include "artefact.h"
 #include "cio.h"
 #include "command.h"

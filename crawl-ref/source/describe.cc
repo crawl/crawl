@@ -19,7 +19,7 @@
 #include "options.h"
 #include "species.h"
 
-#include "abl-show.h"
+#include "ability.h"
 #include "artefact.h"
 #include "cio.h"
 #include "clua.h"
