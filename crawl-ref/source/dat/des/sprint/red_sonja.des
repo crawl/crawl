@@ -33,7 +33,7 @@ MARKER: H = lua:fog_machine { \
              pow_min = 2, pow_max = 3, delay = 4, \
              size = 10, walk_dist = 6, spread_rate= 4, \
              cloud_type= "foul pestilence" }
-MONS:   Ijyb, ogre, Sigmund, jelly, centaur warrior, Sonja, deep troll
+MONS:   Ijyb, ogre, Satan Claus, jelly, centaur warrior, Sonja, deep troll
 SUBST:  r = r.
 SUBST:  r = ~.
 KITEM:  I = potion of curing

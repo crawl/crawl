@@ -55,6 +55,17 @@
       }
     },
 
+    {  MST_SATAN_CLAUS,
+      {
+       SPELL_THROW_FROST,
+       SPELL_CONFUSE,
+       SPELL_THROW_FROST,
+       SPELL_THROW_FROST,
+       SPELL_NO_SPELL,
+       SPELL_CONFUSE
+      }
+    },
+
 #if TAG_MAJOR_VERSION == 34
     {  MST_DEEP_DWARF_NECROMANCER,
       {

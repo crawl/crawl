@@ -1116,7 +1116,7 @@ SUBST: u=x, v=x, w=x, y=x, z=x
 SUBST: U=x, V=x, W=x, Y=x, Z=x
 #
 SUBST: 1 = 1:20 ., 2=2., 3=23, 4=24
-MONS:  jackal/hound, human, Edmund/Jessica/Sigmund, Ijyb/Psyche
+MONS:  jackal/hound, human, Edmund/Jessica/Satan Claus, Ijyb/Psyche
 MONS:  sheep/nothing
 MAP
          xSxxxxx    xxxxxxxxxxUx
