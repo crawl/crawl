@@ -3121,3 +3121,28 @@ WWGWWWWGWW
 WGWWllWWGW
 WWWllllWWW
 ENDMAP
+
+##############################################################################
+
+NAME: lightli_entry_quake
+## No, door choice does not affect difficulty. Game is stuck on Nightmare as
+## it is.
+ORIENT: float
+TAGS: no_rotate no_hmirror no_vmirror entry no_monster_gen
+MAP
+cc+ccc+ccc+cc
+c...c...c...c
+c...cw.wc..lc
+c...cw.wc.llc
+c...cw.wclllc
+c...cw.wcll.c
+c...cw.wcl..c
+c...c...c...c
+c...........c
+c...........c
+c...........c
+c...........c
+c.....(.....c
+c...........c
+ccccccccccccc
+ENDMAP
