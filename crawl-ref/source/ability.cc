@@ -100,7 +100,7 @@ enum ability_flag_type
     ABFLAG_TLOC_MISCAST   = 0x00001000, // severity 3 translocation miscast
     ABFLAG_NECRO_MISCAST_MINOR = 0x00002000, // severity 2 necro miscast
     ABFLAG_NECRO_MISCAST  = 0x00004000, // severity 3 necro miscast
-    ABFLAG_TMIG_MISCAST   = 0x00008000, // severity 3 transmigration miscast
+    ABFLAG_TRMT_MISCAST   = 0x00008000, // severity 3 transmutation miscast
     ABFLAG_LEVEL_DRAIN    = 0x00010000, // drains 2 levels
     ABFLAG_STAT_DRAIN     = 0x00020000, // stat drain
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
@@ -2926,7 +2926,7 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
         MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 10, 90,
                       "power out of control");
     }
-    if (abil.flags & ABFLAG_TMIG_MISCAST)
+    if (abil.flags & ABFLAG_TRMT_MISCAST)
     {
         MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSMUTATION, 10, 90,
                       "power out of control");
