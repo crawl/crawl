@@ -83,7 +83,7 @@ making, look at the following files:
 
   dat/des/arrival
     simple.des - particularly simple arrival vaults; they are ordered with
-                 learning the mapsyntax in mind (all games use a premade
+                 learning the map syntax in mind (all games use a premade
                  map like these for the vicinity of the entrance)
 
   dat/des/variable
@@ -164,7 +164,7 @@ which are not present in the vault will be randomly placed outside it.
 
 Also generally try to avoid rooms with no exit (you can use > or < to
 make it possible for players to get away, although there are other,
-more elaborate options like teleporation traps, etc.). However, unless
+more elaborate options like teleportation traps, etc.). However, unless
 needed for the purpose, escape hatches are generally not interesting.
 If you do use them, > is almost always better than <.
 

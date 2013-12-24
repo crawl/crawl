@@ -38,7 +38,7 @@ Terrain
      level-builder; you can prevent this conversion with the no_pool_fixup TAG.
      Also, water may automatically receive water creatures! You can avoid this
      with the no_monster_gen TAG or KMASK.
- l - lava - again, use the no_monster_gen TAG or KMASK whe appropriate!
+ l - lava - again, use the no_monster_gen TAG or KMASK when appropriate!
 
 Features
 --------
@@ -500,7 +500,7 @@ ITEM:     (list of items, separated by comma)
           Positions can contain multiple possibilities, one of which the
           builder will choose randomly. Separate such multiple possibilities
           using a slash. Note that "nothing" (without the quotes) is a valid
-          possibility. The random choice is done for each individual occurence
+          possibility. The random choice is done for each individual occurrence
           of the letter. You can also give possibilities a "weight," which
           affects their chance of being picked. The default weight is 10. You
           can abbreviate "weight:30" by "w:30". The chance to pick a
@@ -544,7 +544,7 @@ ITEM:     (list of items, separated by comma)
           * "useful" tries to select an item usable by the player, but may
             give an useless one if it has trouble finding one
           * "star_item" by itself makes an item equivalent to the "*" glyph.
-          * "superb_item" by itself makes an item equivallent to the "|" glyph.
+          * "superb_item" by itself makes an item equivalent to the "|" glyph.
           * "any book", "any misc" etc. gives a random item of that class.
             Valid item class names are: gold, weapon, missile, armour, wand,
             food, scroll, jewellery, potion, book, magical staff, orb, misc,
@@ -740,7 +740,7 @@ MONS:     (list of monsters)
 
           In tiles version, this would create a monster that uses the
           'mons_giant_bat' tile, but is otherwise identical to a rat.
-          Obviously, this substition of one monster onto another should
+          Obviously, this substitution of one monster onto another should
           never be used, but it can be useful for customised vault monsters
           if an alternate tile exists. In ASCII mode, this will do nothing.
 
@@ -1159,7 +1159,7 @@ SHUFFLE:  def, 12/3?
           two ways:
 
           SHUFFLE: 123w     (i.e. list of glyphs, NOT slash-separated)
-          could, for example, swap all occurences of "1" with "2", as well as
+          could, for example, swap all occurrences of "1" with "2", as well as
           swapping all "3" with "w" (or any other of the 24 possibilities).
 
           SHUFFLE: 12/3w    (i.e. list of slash-separated blocks of same size)
@@ -1440,7 +1440,7 @@ KPROP:    x = bloody
           * "no_cloud_gen": Prevents clouds from being generated over this
              feature (usually lava). Does not stop fog generators or clouds
              entering from nearby squares.
-          * "no_rtele_into": Prevents random teleport from chosing to use this
+          * "no_rtele_into": Prevents random teleport from choosing to use this
              square. Use this to prevent nasty situations like the player
              ending up in a closet (for example, because your map randomises
              wall/floor so much that closets may occur) or an extremely dense
