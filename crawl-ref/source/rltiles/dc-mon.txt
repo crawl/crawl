@@ -478,8 +478,8 @@ norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
-sigmund MONS_SIGMUND
 %rim 1
+santa MONS_SIGMUND
 terence MONS_TERENCE
 wiglaf MONS_WIGLAF
 
