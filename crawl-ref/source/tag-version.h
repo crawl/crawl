@@ -73,6 +73,7 @@ enum tag_minor_version
     TAG_MINOR_16_BIT_TABLE,        // Increase the limit for CrawlVector/HashTable to 65535.
     TAG_MINOR_ABIL_1000,           // Start god ability enums at 1000.
     TAG_MINOR_CLASS_HP_0,          // Base class maxhp at 0.
+    TAG_MINOR_NOISES,              // Save incompat recovery wrt ATTR_NOISES.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
