@@ -307,7 +307,7 @@ to use orcish knights for an entry to the Orcish Mines.
 Phrased more generally, do not use OOD (out-of-depth) monsters unless you
 really know what you want.
 
-Be especially fair when creating arrival vaults. If your vaukt is too hard,
+Be especially fair when creating arrival vaults. If your vault is too hard,
 it might get just trashed. Keep in mind that your vault will be played very
 very often, so even small chances of something stupid happening (like
 creation of a really nasty monster) will kick in often enough.
