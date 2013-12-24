@@ -822,13 +822,6 @@ Cigotuvi
 __NONE
 %%%%
 # Single spell schools.
-highlevel Conjuration owner
-
-Lehudib
-
-w:30
-@Conjuration owner@
-%%%%
 Conjuration owner
 
 w:2
