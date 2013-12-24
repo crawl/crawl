@@ -2260,6 +2260,12 @@ static void tag_read_you(reader &th)
             unmarshallInt(th); // ATTR_UNUSED_1
             count--;
         }
+        if (j == ATTR_NOISES && th.getMinorVersion() == TAG_MINOR_CLASS_HP_0
+            && count == 40)
+        {
+            dprf("recovering ATTR_NOISES");
+            j++, count++;
+        }
 #endif
         you.attribute[j] = unmarshallInt(th);
     }

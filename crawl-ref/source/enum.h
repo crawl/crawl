@@ -278,6 +278,7 @@ enum attribute_type
     ATTR_MISC_SPENDING,        // Spending for things like ziggurats.
 #if TAG_MAJOR_VERSION == 34
     ATTR_UNUSED1,              // was ATTR_RND_LVL_BOOKS
+    ATTR_NOISES,
 #endif
     ATTR_SHADOWS,              // Lantern of shadows effect.
 #if TAG_MAJOR_VERSION == 34
