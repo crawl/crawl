@@ -4303,8 +4303,6 @@ mons_spec mons_list::drac_monspec(string name) const
 
 mons_spec mons_list::mons_by_name(string name) const
 {
-    lowercase(name);
-
     name = replace_all_of(name, "_", " ");
     name = replace_all(name, "random", "any");
 
@@ -4990,8 +4988,6 @@ item_spec item_list::parse_single_spec(string s)
 
     string ego_str  = strip_tag_prefix(s, "ego:");
     string race_str = strip_tag_prefix(s, "race:");
-    lowercase(ego_str);
-    lowercase(race_str);
 
     if (race_str == "elven")
         result.race = MAKE_ITEM_ELVEN;
@@ -5008,7 +5004,6 @@ item_spec item_list::parse_single_spec(string s)
     }
 
     string id_str = strip_tag_prefix(s, "ident:");
-    lowercase(id_str);
     if (id_str == "all")
         result.props["ident"].get_int() = ISFLAG_IDENT_MASK;
     else if (!id_str.empty())
