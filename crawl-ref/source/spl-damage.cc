@@ -985,7 +985,9 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
 
+#ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
+#endif
     hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
     dprf("preac: %d, postac: %d", preac, hurted);
 
