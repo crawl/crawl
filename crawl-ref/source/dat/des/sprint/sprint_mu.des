@@ -186,8 +186,8 @@ KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
 SUBST: T = t.
 
 MAP
-[<x*$+...TTttttt.
-{.x*$x..3.TTtttt.
+{.x*$+...TTttttt.
+..x*$x..3.TTtttt.
 x+xxxx....TTtttT.
 .....x....WTtttT.
 1...1x...WWTTTTT.
@@ -218,7 +218,7 @@ KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation / potion of decay / potion of strong poison
 
 MAP
-[{<x%..xxxxxxxxx.
+{..x%..xxxxxxxxx.
 ...x......xxxxx..
 ..xx.......x**x..
 xx.xx.xx..2x$$x..

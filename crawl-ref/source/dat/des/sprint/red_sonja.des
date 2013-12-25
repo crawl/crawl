@@ -77,8 +77,8 @@ KITEM:  Z = Orb of Zot
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
-xxxc{[x.1+..x.3+$$xCCx$$+..Dx**xL$$f+gggggg+i$c~~+$$$$c|||$$$$$$cxxx
-xxxc(.+..x.2+..x$$+r#+$$x.E.xx+x$xxxxggLggcc$E+~~x$$$$cc||$$$$$$cxxx
+xxxc{.x.1+..x.3+$$xCCx$$+..Dx**xL$$f+gggggg+i$c~~+$$$$c|||$$$$$$cxxx
+xxxc..+..x.2+..x$$+r#+$$x.E.xx+x$xxxxggLggcc$E+~~x$$$$cc||$$$$$$cxxx
 xxxc..xxxxx+xxxxx+xCCccccD..+RRx$x*xxxgggccccccc+x$$j$$ccccc$$$$cxxx
 xxxc..xxxx$$c$$$c*cccc**ccccxRR+$x=x$xxx+c|**cc..x$$$$$c$$$c$$$$cxxx
 xxxc..xC.xxxc$$cc*cWWW.5c$$cc+cccc~.$mbc.cc$$$c..xx$$$$c*Y*c$$$$cxxx
