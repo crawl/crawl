@@ -283,8 +283,6 @@ static bool _valid_weapon_swap(const item_def &item)
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                   bool force, bool show_unwield_msg, bool show_wield_msg)
 {
-    const bool was_barehanded = you.equip[EQ_WEAPON] == -1;
-
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
@@ -395,6 +393,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (!can_wield(&new_wpn, true) || !_safe_to_remove_or_wear(new_wpn, false))
         return false;
 
+    // Really ensure wieldable, even unknown brand
+    if (!can_wield(&new_wpn, true, false, false, false))
+        return false;
+
     // Unwield any old weapon.
     if (you.weapon())
     {
@@ -405,22 +407,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         }
         else
             return false;
-    }
-
-    // Really ensure wieldable, even unknown brand
-    if (!can_wield(&new_wpn, true, false, false, false))
-    {
-        if (!was_barehanded)
-        {
-            canned_msg(MSG_EMPTY_HANDED_NOW);
-
-            // Switching to bare hands is extra fast.
-            you.turn_is_over = true;
-            you.time_taken *= 3;
-            you.time_taken /= 10;
-        }
-
-        return false;
     }
 
     const unsigned int old_talents = your_talents(false).size();
