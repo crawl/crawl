@@ -219,10 +219,10 @@ function arena_sprint_get_monster_set(round, boss)
 
         -- First two rounds have a more limited, less lethal set.
         if round == 1 and crawl.coinflip() then
-            return {"place:D:2 / place:D:4 / w:4 sigmund / w:2 jessica / w:2 terence"}
+            return {"place:D:2 / place:D:4 / w:4 Satan Claus / w:2 jessica / w:2 terence"}
         elseif round <= 2 then
             mon_set = {
-                "place:D:3 / place:D:5 / w:4 sigmund / w:2 jessica / w:2 terence",
+                "place:D:3 / place:D:5 / w:4 Satan Claus / w:2 jessica / w:2 terence",
                 "goblin / hobgoblin / kobold / big kobold / ijyb w:6 / pikel w:4",
                 "rat / quokka / grey rat / green rat / porcupine / w:2 orange rat / w:6 purgy",
                 "ball python / adder w:15 / water moccasin w:5",
