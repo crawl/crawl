@@ -1630,7 +1630,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
         if (mi->attitude != ATT_HOSTILE)
             continue;
 
-        if (mons_genus(mi->type) == MONS_ADDER)
+        if (mons_genus(mi->type) == MONS_SNAKE)
         {
             if (!action)
             {
