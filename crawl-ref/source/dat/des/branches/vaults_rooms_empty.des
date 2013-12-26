@@ -1439,3 +1439,52 @@ xAxBx...
 ..B.F.(.
 ..xxx...
 ENDMAP
+
+# 100 gold total
+NAME: nicolae_vaults_gold_heap
+TAGS: vaults_empty no_item_gen
+WEIGHT: 3
+ITEM: gold q:1, gold q:2, gold q:4, gold q:8, gold q:16
+MAP
+defed
+efgfe
+fghgf
+efgfe
+defed
+ENDMAP
+
+NAME: nicolae_vaults_circle_grid_a
+TAGS: vaults_empty allow_dup
+MAP
+    xx.xx
+   .x...x.
+  ....(....
+ ...x...x...
+xx.xxx.xxx.xx
+x...x...x...x
+..(...(...(..
+x...x...x...x
+xx.xxx.xxx.xx
+ ...x...x...
+  ....(....
+   .x...x.
+    xx.xx
+ENDMAP
+
+NAME: nicolae_vaults_circle_grid_b
+TAGS: vaults_empty allow_dup
+MAP
+    .....
+   ...x...
+  xx.xxx.xx
+ .x...x...x.
+....(...(....
+..x...x...x..
+.xxx.xxx.xxx.
+..x...x...x..
+....(...(....
+ .x...x...x.
+  xx.xxx.xx
+   ...x...
+    .....
+ENDMAP

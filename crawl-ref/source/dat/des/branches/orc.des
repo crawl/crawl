@@ -1146,6 +1146,191 @@ xxcccDcccxx
    xxxxx
 ENDMAP
 
+NAME: nicolae_orc_bridge_out
+TAGS: extra decor no_pool_fixup
+DEPTH: Orc
+KPROP: L = no_rtele_into
+SUBST: L = lll., X = xx., Z = llx, l : lw
+MAP
+       xxxx
+    xxxxxxxxx
+  xxxxZZxxxxxx
+ xxxxZllZZxX.@
+xxxxllllllx..@
+xxX..LLLL....x
+xX...LLLL..Xxx
+@..xllllllxxx
+@.XxZlllZxxxx
+xxxxxZZZxxxx
+   xxxxxxx
+      xxxx
+ENDMAP
+
+NAME: nicolae_orc_damp_corner
+TAGS: transparent decor extra
+DEPTH: Orc
+SUBST: E = 1X, ' = ...WW11, X = xx.
+KMONS: 1 = fungus / nothing w:3
+KFEAT: 1 = W / . w:20
+MAP
+  x@@xx
+  x..Xxxx
+ xxX...Xxxxxxxx
+ xxxXX...Xxxxxxxx
+xxxxxxXX...'EExxxx
+xxxxxxxxxX''''Exxxx
+xxxxxxxxxx'''''Exxx
+xxxxxxXXXX''''Exxx
+ xxxXX....''EExxx
+ xxX...XXxxxxxxx
+  x..Xxxxxxxx
+  x..Xxxxx
+   @@xx
+ENDMAP
+
+NAME: nicolae_orc_flooded_monolith
+TAGS: extra decor transparent
+DEPTH: Orc
+SUBST: W = w., c : ccccbv
+MAP
+  .......
+ ..WWWWW..
+..WWwwwWW..
+.WWwwwwwWW.
+.WwwcccwwW.
+.WwwcccwwW.
+.WwwcccwwW.
+.WWwwwwwWW.
+..WWwwwWW..
+ ..WWWWW..
+  .......
+ENDMAP
+
+# http://www.youtube.com/watch?v=-w-58hQ9dLk
+NAME: nicolae_orc_jurassic_orc
+TAGS: transparent extra decor no_rotate no_vmirror
+WEIGHT: 1
+DEPTH: Orc
+MAP
+      .........xxx
+    ......cc....xxxx
+  .....ccc.cc.c..xxxx
+ ...ccc..c.ccc.c.xxxxx
+..cc.c...cc.ccc.cxxxxx
+..cccccccccccccc.cxxxx
+..c.c.c.c.ccc.cccxxxxx
+@..c.c.c.ccc...ccxxxx
+...cccccccc.....cxxxx
+...............xxxxx
+ .............xxxxx
+    .........xxxxx
+       ....xxxx
+ENDMAP
+
+NAME: nicolae_orc_lava_tube
+TAGS: extra decor transparent
+DEPTH: Orc
+SUBST: X = xx., L = ll., Z = lx
+MAP
+                 xxxx@@@xx
+           xxxxxxxxxZ...xxx
+       xxxxxxxxxxxxxx...lZxx
+    xxxxxZZZZxxxxxxxZ...llZx
+  xxxxxxXLllllxxxxxZ...LllZx
+ xxxxXXX...LLXXxxxxX...LlZxx
+xxxxX....X.....XZxX...XXxxx
+xZllL...XxZxx........Xxxxx
+xZll...XxxxxllL.....Xxxxx
+xZll..XXxxxxlllxZXXXxxx
+xxxX...XxxxxZZxxxxxxxx
+ xxxX...Zxxxxxxxxxxx
+ xxxX...XXxxxxxxxx
+  xxxZ...Xxxxxxx
+   xxx@@@xxxx
+ENDMAP
+
+NAME: nicolae_orc_pool_cavern
+TAGS: extra decor transparent
+DEPTH: Orc
+SUBST: W = ww., X = x:80 .:40 w
+PLACE: Orc:3
+MAP
+       xxx@@x
+    xxxxxx..xx
+   xxxxxxX..Xxx
+  xxxxxxX...Xxxx
+ xxxxXXX..Xxxxxx
+ xxxX.......Xxxxx
+xxxX..WWWW..Xxxxx
+xxxX..WwwW.Xxxxxx
+xxxX..WwwW.Xxxxxx
+xxxX..WWWW..Xxxx
+@.xX.........Xxx
+@......XX.....Xxx
+x.....XxxXX...Xxx
+xxxxXXxxxxxX....@
+ xxxxxxxxxxxX...@
+   xxxxxxxxxxxxxx
+      xxxxxxxxx
+ENDMAP
+
+NAME: nicolae_orc_rockfall
+TAGS: transparent extra decor no_item_gen
+DEPTH: Orc
+: dgn.delayed_decay(_G, 'o', 'orc corpse, stone q:1 / nothing, large rock q:1')
+KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
+KITEM: R = stone q:1 / stone q:2 / large rock q:1 w:5
+MAP
+ .....
+..rrr..
+.rRRRr.
+.rRoRr.
+.rRRRr.
+..rrr..
+ .....
+ENDMAP
+
+NAME: nicolae_orc_sculptors_studio
+TAGS: extra decor no_item_gen
+DEPTH: Orc
+NSUBST: r = 1:H / 1:C / *:r
+SUBST: G = GGGI
+KITEM: H = hammer race:orcish
+# There's no chisel item, so
+KITEM: C = dagger race:orcish
+KITEM: r = stone q:1 / nothing w:5
+MAP
+...xxxxxx
+.G.x..rrx
+...x.rrrx
+.G.+.rrGx
+...x.rrrx
+.G.x..rrx
+...xxxxxx
+ENDMAP
+
+NAME: nicolae_orc_stony_grotto
+TAGS: extra decor transparent
+DEPTH: Orc
+SUBST: X = xxxc...., C = xc, D = ...c
+MAP
+  @Cxxxx
+ @..xCcxxxx
+ Cx...xxxxxxx
+ xxC...CXXxxxx
+ xxX..xx..DXxxx
+xxxC..xD.c..XCxx
+xxxX....cccD.Xxxx
+xxC.c....c..ccxxx
+xxXccc..D...ccXxx
+xxxxc.Dcc.....Cxx
+xxxxX..cc..C..XCx
+ xxxxX....CC...xx
+   xxxxXXXxxx..C
+     xxxxxxxC..@
+         xxxxC@
+ENDMAP
+
 ############################################################################
 # Orc endings.
 #

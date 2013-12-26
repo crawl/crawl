@@ -146,6 +146,115 @@ MAP
 .............
 ENDMAP
 
+NAME: nicolae_ossuary_entry_catacombs
+FTILE: O1s+ABC = floor_sandstone
+COLOUR: 1s = yellow
+NSUBST: A = + / c, B = + / c, C = + / c, s = 1:O / 4:1 / *:1.....
+KMONS: O1 = orc skeleton / orc zombie w:5 / elf skeleton / elf zombie w:5 / \
+            human skeleton / human zombie w:5
+: ossuary_portal(_G)
+MAP
+ccccccccc
++'1'csAsc
+ccc+c+cAc
+cs+'''+sc
+ccc'''ccc
+cs+'''+sc
+cCc+c+cBc
+csCscsBsc
+ccccccccc
+ENDMAP
+
+NAME: nicolae_ossuary_entry_false_entrances
+NSUBST: O = O / >
+SHUFFLE: AB/AB/AB/BA
+SUBST: A = m, B = c
+FTILE: Om> = floor_sandstone
+: ossuary_portal(_G)
+MAP
+   xxxxx
+ +ccccccc+
+ c'''c'''c
+xc'O'A'O'cx
+xc'''B'''cx
+xccABBBAccx
+xc'''B'''cx
+xc'O'A'O'cx
+ c'''c'''c
+ +ccccccc+
+   xxxxx
+ENDMAP
+
+NAME: nicolae_ossuary_entry_giza
+NSUBST: M = 1:O / *:z
+KMONS: O = mummy
+KMONS: z = goblin zombie / hobgoblin zombie / kobold zombie / orc zombie
+FTILE: Oz = floor_sandstone
+COLOUR: z = yellow
+: ossuary_portal(_G)
+MAP
+          .
+         ...
+        ..c..
+       ..ccc..
+      ..ccMcc..
+     ..ccc+ccc..
+    ..c.......c..
+   ..ccc.....ccc..
+  ..ccMcc...ccMcc..
+ ..ccc+ccc.ccc+ccc..
+.....................
+ENDMAP
+
+NAME: nicolae_ossuary_entry_monument
+TAGS: transparent
+FTILE: G = floor_sandstone
+SUBST: - = '.
+: ossuary_portal(_G)
+MAP
+..G..
+.'''.
+G'O'G
+.'''.
+..G..
+ENDMAP
+
+NAME: nicolae_ossuary_entry_plus
+TAGS: transparent
+: if crawl.coinflip() then
+SUBST: Dd = +, o = O, p = '
+: else
+SUBST: d = +, D = c, o = '
+NSUBST: p = O / '
+: end
+FTILE: + = floor_sandstone
+: ossuary_portal(_G)
+MAP
+.........
+...cDc...
+..'cpc'..
+.ccc'ccc.
+.Dp'o''d.
+.ccc'ccc.
+..'cpc'..
+...cDc...
+.........
+ENDMAP
+
+NAME: nicolae_ossuary_entry_ruins
+TAGS: transparent
+FTILE: GO = floor_sandstone
+SUBST: c = -c, - = ''., ^ = '..
+: ossuary_portal(_G)
+MAP
+.......
+.cc-cc.
+.c---c.
+.--O--.
+.c---c.
+.cc-cc.
+.......
+ENDMAP
 
 #### The portal vaults ####################################
 
