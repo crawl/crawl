@@ -1,0 +1,438 @@
+# c: outer vault walls
+# x: inner vault walls (could be see-through blocks, or not there at all)
+# t: doodads. fountains, statues or the more decorative walls. Sometimes get replaced by normal walls
+# w: water or lava or trees. or nothing
+# D/F opposite/adjacent vault entrances, that may or may not be there
+# E/H placed in front of the alternate doors. become w tiles if there's no door there
+{{
+function ks_random_setup(e, norandomexits)
+    e.tags("no_pool_fixup")
+    --1/2 chance the adjacent door is there, followed by a 1/2 chance every side has a door
+    if norandomexits == nil then
+        if crawl.one_chance_in(2) then
+            e.tags("transparent")
+            e.subst("D:+")
+            e.subst("E:.")
+            if crawl.one_chance_in(2) then
+                e.subst("F:+")
+                e.subst("H:.")
+            else
+                e.subst("F:c")
+                e.subst("H:w")
+            end
+        else
+            e.subst("DF:c")
+            e.subst("EH:w")
+        end
+    end
+
+    --rooms have a 1/2 chance of being bordered by water or trees
+    --q is used as a placeholder for trees to keep them from being
+    -- re-selected in the next step.  M is for mangrove
+    e.subst("w:w.")
+    e.subst("w:wwwWWqM")
+
+    --room setups:
+    --0 : doodads replaced with walls
+    --1 : walls replaced with water/lava or removed. doodads may or may not be walls
+    --2 : doodads picked from more obvious vault decorations
+    selected = crawl.random2(3)
+    if selected == 0 then
+        e.subst("t:x")
+        e.subst("x:cvbtmM")
+    elseif selected == 1 then
+        e.subst("x:..wW")
+        e.subst("t:.MTmbtwG")
+    elseif selected == 2 then
+        e.subst("t:.TtGM")
+        e.subst("x:cvbtM")
+    end
+
+    --turn q into t for tree borders
+    e.subst("q:t")
+
+    --the outer walls are probably stone or rock, but can be metal or crystal
+    e.subst("c:ccccxxxxvb")
+    --one chance in three of turning all water on the floor into lava
+    --tree and fountain tiles are changed so the vault looks normal
+    if crawl.one_chance_in(3) then
+        e.subst("WwtM:l")
+        e.subst("T:V")
+    else
+        e.kfeat("M=mangrove")
+    end
+end
+}}
+
+###########################################################
+NAME:   kennysheep_small_circle
+TAGS:   extra allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+:if crawl.coinflip() then
+SUBST:  *:%
+SUBST:  %=%$..
+:else
+SUBST:  *:.
+SUBST:  %:{}OB
+KFEAT:  O = any shop
+:end
+SUBST:  0=0.
+MAP
+  ccDcc
+ ccwEwcc
+ccww0wwcc
+cwwt*twwc
+FH0*%*0HF
+cwwt*twwc
+ccww0wwcc
+ ccw.wcc
+  cc+cc
+ENDMAP
+
+###########################################################
+NAME:   kennysheep_small_square
+TAGS:   extra allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+:if crawl.coinflip() then
+SUBST:  *:%
+SUBST:  %=%$..
+:else
+SUBST:  *:.
+SUBST:  %:{}O
+KFEAT:  O = any shop
+:end
+SUBST:  0=0.
+MAP
+ccccDcccc
+cwwwEwwwc
+cwt.0.twc
+cw..*..wc
+FH0*%*0HF
+cw..*..wc
+cwt.0.twc
+cwww.wwwc
+cccc+cccc
+ENDMAP
+
+###########################################################
+NAME:   kennysheep_inner_square
+TAGS:   extra
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+NSUBST: %: 1:|
+SUBST:  %=*
+SUBST:  9=9911.
+MAP
+   ccccDcccc
+  ccwwwEwwwcc
+ ccww..x..wwcc
+ccww..xtx..wwcc
+cww..x.x.x..wwc
+cw..xtx.xtx..wc
+cw.x.x9%9x.x.wc
+FHxtx.%%%.xtxHF
+cw.x.x9%9x.x.wc
+cw..xtx.xtx..wc
+cww..x.x.x..wwc
+ccww..xtx..wwcc
+ ccww..x..wwcc
+  ccwww.wwwcc
+   cccc+cccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_little_box
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+KFEAT:  O = any shop
+SUBST:  {={}OB....
+MAP
+cccDccc
+cwwEwwc
+cwt.twc
+FH.{.HF
+cwt.twc
+cww.wwc
+ccc+ccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_mini
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+KFEAT:  O = any shop
+SUBST:  {={}OCB
+MAP
+cDc
+F{F
+c+c
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_mini_moat
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+SUBST:  .:@
+KFEAT:  O = any shop
+SUBST:  {={}OCB
+MAP
+wwEww
+wcDcw
+HF{FH
+wc+cw
+ww@ww
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_two_boxes
+TAGS:   extra
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+NSUBST: %: 1:|
+SUBST:  %=*
+SUBST:  9=9911.
+MAP
+ccccccDcccccc
+ctwwwwEwwwwtc
+cw.........wc
+cw.xxx.xxx.wc
+cw.xtwEwtx.wc
+cw.xw9%9wx.wc
+FH..H%t%H..HF
+cw.xw9%9wx.wc
+cw.xtw.wtx.wc
+cw.xxx.xxx.wc
+cw.........wc
+ctwwww.wwwwtc
+cccccc+cccccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_diamond
+TAGS:   extra
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+:if crawl.coinflip() then
+SUBST:  *:%
+SUBST:  %=%$..
+:else
+SUBST:  *:.
+SUBST:  %:{}OCB
+KFEAT:  O = any shop
+:end
+SUBST:  0=0.
+MAP
+       ccDcc
+      ccwEwcc
+     ccww.wwcc
+    ccww.t.wwcc
+   ccww.xxx.wwcc
+  ccww.xxtxx.wwcc
+ ccww.xxw.wxx.wwcc
+ccww.xxw.0.wxx.wwcc
+cww.xxw..*..wxx.wwc
+FH.....0*%*0.....HF
+cww.xxw..*..wxx.wwc
+ccww.xxw.0.wxx.wwcc
+ ccww.xxw.wxx.wwcc
+  ccww.xxtxx.wwcc
+   ccww.xxx.wwcc
+    ccww.t.wwcc
+     ccww.wwcc
+      ccw.wcc
+       cc+cc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_windowed_goal
+TAGS:   extra decor
+DEPTH:  D, Depths, !D:$, !Depths:$
+:if crawl.coinflip() then
+SUBST:  O:0
+:else
+KFEAT:  O = any shop
+SUBST:  }:0
+:end
+:if crawl.coinflip() then
+SUBST:  w:.
+:else
+SUBST:  t:w
+:end
+:ks_random_setup(_G, true)
+MAP
+  ccccc
+ ccwwwcc
+ccw...wcc
++....}..m@
++..}O...m@
++....}..m@
+ccw...wcc
+ ccwwwcc
+  ccccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_blocked_goal
+TAGS:   extra decor no_rtele_into
+DEPTH:  D, Depths, !D:$, !Depths:$
+:if crawl.coinflip() then
+SUBST:  O:0
+NSUBST: } = 2:.
+:else
+KFEAT:  O = any shop
+SUBST:  }:0
+:end
+:if crawl.coinflip() then
+SUBST:  w:.
+:else
+SUBST:  t:w
+:end
+:ks_random_setup(_G, true)
+MAP
+  .......
+ ..xxxxx..
+..xxwwwxx..
+.xxw...wxx.
+.xw...}..m.
+.xw.}O...m.
+.xw...}..m.
+.xxw...wxx.
+..xxwwwxx..
+ ..xxxxx..
+  .......
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_bubble_arena
+TAGS:   no_item_gen no_trap_gen
+ORIENT: float
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+NSUBST: % = 5:|
+SUBST:  % : %$
+:ks_random_setup(_G, true)
+MAP
+    ccccccccc
+   ccwwwwwwwcc
+  ccww.....wwcc
+ ccwwt.....twwcc
+ccww.........wwcc
+cww....xtx....wwc
+cwt....8x8....twc
+cw...x9x%x9x...wc
+cw...tx%%%xt...wc
+cw...x%x%x%x...wc
+cwt....%x%....twc
+cww....xtx....wwc
+ccww.........wwcc
+ ccwwt.....twwcc
+  ccww.....wwcc
+   ccw.....wcc
+    cc+++++cc
+   ccw.....wcc
+  ccww.9.9.wwcc
+  cww...x...wwc
+  cwt..%x%..twc
+  cw...xtx...wc
+  cwt..%x%..twc
+  cww...x...wwc
+  ccww.....wwcc
+   ccww...wwcc
+    ccc+++ccc
+     cc...cc
+    ccw.9.wcc
+    cww...wwc
+    cwt...twc
+    cww...wwc
+    ccw...wcc
+     cc...cc
+      c+++c
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_flooded_box
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths
+SUBST:  B:BTV
+:ks_random_setup(_G)
+MAP
+ cccDccc
+ccwwEwwcc
+cwwwEwwwc
+cwwwEwwwc
+FHHHBHHHF
+cwww.wwwc
+cwww.wwwc
+ccww.wwcc
+ ccc+ccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_pointless_box
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths
+:ks_random_setup(_G)
+MAP
+FccccccccccD
+cHwwwwwwwwEc
+cw........wc
+cw.txxxxt.wc
+cw.xxxxxx.wc
+cw.xxccxx.wc
+cw.xxccxx.wc
+cw.xxxxxx.wc
+cw.txxxxt.wc
+cw........wc
+c.wwwwwwwwHc
++ccccccccccF
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_crisscross
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths
+:ks_random_setup(_G, true)
+MAP
+ .x.x.x.x.x.x.
+.t...t...t...t.
+x.x.x.x.x.x.x.x
+...t...t...t...
+x.x.x.x.x.x.x.x
+.t...t...t...t.
+x.x.x.x.x.x.x.x
+...t...t...t...
+x.x.x.x.x.x.x.x
+.t...t...t...t.
+x.x.x.x.x.x.x.x
+...t...t...t...
+x.x.x.x.x.x.x.x
+.t...t...t...t.
+ .x.x.x.x.x.x.
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_doodads
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths
+:ks_random_setup(_G, true)
+MAP
+      .x.
+    ..xtx..
+   .x..x..x.
+ ..xtx...xtx..
+.x..x..x..x..x.
+xtx...xtx...xtx
+.x..x..x..x..x.
+...xtx...xtx...
+.x..x..x..x..x.
+xtx...xtx...xtx
+.x..x..x..x..x.
+ ..xtx...xtx..
+   .x..x..x.
+    ..xtx..
+      .x.
+ENDMAP
