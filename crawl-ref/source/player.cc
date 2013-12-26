@@ -8026,9 +8026,9 @@ void player::weaken(actor *attacker, int pow)
  * @param p the coordinates of the cell to check. Defaults to player position.
  * @return whether the player is in immediate danger.
  */
-bool need_expiration_warning(duration_type dur, coord_def p)
+bool need_expiration_warning(duration_type dur, dungeon_feature_type feat)
 {
-    if (!is_feat_dangerous(env.grid(p), true) || !dur_expiring(dur))
+    if (!is_feat_dangerous(feat, true) || !dur_expiring(dur))
         return false;
 
     if (dur == DUR_FLIGHT)
@@ -8041,10 +8041,20 @@ bool need_expiration_warning(duration_type dur, coord_def p)
     return false;
 }
 
+bool need_expiration_warning(duration_type dur, coord_def p)
+{
+    need_expiration_warning(dur, env.grid(p));
+}
+
+bool need_expiration_warning(dungeon_feature_type feat)
+{
+    return need_expiration_warning(DUR_FLIGHT, feat)
+           || need_expiration_warning(DUR_TRANSFORMATION, feat);
+}
+
 bool need_expiration_warning(coord_def p)
 {
-    return need_expiration_warning(DUR_FLIGHT, p)
-           || need_expiration_warning(DUR_TRANSFORMATION, p);
+    need_expiration_warning(env.grid(p));
 }
 
 static string _constriction_description()

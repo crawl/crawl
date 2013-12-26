@@ -1019,6 +1019,8 @@ bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
+bool need_expiration_warning(duration_type dur, dungeon_feature_type feat);
+bool need_expiration_warning(dungeon_feature_type feat);
 bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
 bool need_expiration_warning(coord_def p = you.pos());
 
