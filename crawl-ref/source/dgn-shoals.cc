@@ -931,8 +931,13 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
 static bool _shoals_tide_sweep_actors_clear(coord_def c)
 {
     actor *victim = actor_at(c);
-    if (!victim || !victim->ground_level() || victim->swimming())
+    if (!victim
+        || (victim->swimming() || !victim->ground_level())
+            && (!victim->is_player()
+                || !need_expiration_warning(DNGN_DEEP_WATER)))
+    {
         return true;
+    }
 
     if (victim->is_monster())
     {
