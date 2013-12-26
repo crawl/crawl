@@ -694,6 +694,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     death_type        = se.death_type;
     death_source      = se.death_source;
     death_source_name = se.death_source_name;
+    death_source_flags = se.death_source_flags;
     auxkilldata       = se.auxkilldata;
     indirectkiller    = se.indirectkiller;
     killerpath        = se.killerpath;
@@ -899,6 +900,7 @@ void scorefile_entry::init_with_fields()
 
     death_type        = _str_to_kill_method(fields->str_field("ktyp"));
     death_source_name = fields->str_field("killer");
+    // XXX: death_source_flags not loaded
     auxkilldata       = fields->str_field("kaux");
     indirectkiller    = fields->str_field("ikiller");
     if (indirectkiller.empty())
@@ -1052,6 +1054,14 @@ void scorefile_entry::set_score_fields() const
 
     const string killer = death_source_desc();
     fields->add_field("killer", "%s", killer.c_str());
+    if (!death_source_flags.empty())
+    {
+        const string kflags = comma_separated_line(
+            death_source_flags.begin(),
+            death_source_flags.end(),
+            " ", " ");
+        fields->add_field("killer_flags", "%s", kflags.c_str());
+    }
     fields->add_field("dam", "%d", damage);
     fields->add_field("sdam", "%d", source_damage);
     fields->add_field("tdam", "%d", turn_damage);
@@ -1211,6 +1221,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
         if (mons->type == MONS_PANDEMONIUM_LORD)
             death_source_name += " the pandemonium lord";
+
+        if (mons_is_unique(mons->type))
+            death_source_flags.insert("unique");
 
         if (mons->props.exists("blame"))
         {
