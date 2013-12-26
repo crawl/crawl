@@ -405,6 +405,25 @@ MAP
 ............
 ENDMAP
 
+NAME:  grunt_pan_entry_sceptre
+SUBST: d = 112
+: pan_entry_feature(_G, 'e')
+: pan_entry_vault_contents(_G, 'e')
+MAP
+ @........@
+@2.xxxxxx.2@
+..xx.de.xx..
+x+x......x+x
+x.x.1..1.x.x
+x.x......x.x
+x.x..22..x.x
+x2xx....xx2x
+x..xx++xx..x
+xx..2..2..xx
+ xxx.11.xxx
+   xxxxxx
+ENDMAP
+
 ##############################################################################
 # Random unguarded exits
 ##############################################################################
@@ -2229,6 +2248,27 @@ MAP
   ..ccc..c..ccc..
    ...ccccccc...
      .........
+ENDMAP
+
+NAME:    grunt_pan_sceptre
+TAGS:    allow_dup no_trap_gen
+ORIENT:  float
+MONS:    greater demon, common demon
+KMONS:   d = pandemonium lord
+: pan_demonic_rune(_G, 'e')
+MAP
+ @........@
+@2.cccccc.2@
+..cc.de.cc..
+c+c......c+c
+c.c.1..1.c.c
+c.c......c.c
+c.c..22..c.c
+c2cc....cc2c
+c..cc++cc..c
+cc..2..2..cc
+ ccc.11.ccc
+   cccccc
 ENDMAP
 
 #############################################################################

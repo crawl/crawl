@@ -5592,3 +5592,44 @@ xxx...xxx...xxx...xxx
       xxx.(.xxx
         xxxxx
 ENDMAP
+
+###############################################################################
+
+NAME:   grunt_arcs
+ORIENT: float
+DEPTH:  Depths
+KMONS:  0 = 0 band
+KMONS:  9 = 9 band
+KMONS:  8 = 8 band
+MAP
+       ..................
+      ..ccccc......ccccc..
+     ...ccccccc..ccccccc...
+     .......cccccccc.......
+    ..cccc....cccc....cccc..
+    .c+cc+c..cccccc..c+cc+c.
+    .cc.0cc.c+c**c+c.cc0.cc.
+    .cc0%ccccc.99.ccccc%0cc.
+    .c+cccccccc..cccccccc+c.
+   ...ccccccccc++ccccccccc...
+  ........cccc....cccc........
+ ........cccc..99..cccc........
+..cccc...ccc........ccc...cccc..
+.c+cc+c..cc$..8..8..$cc..c+cc+c.
+.cc%0cc..cc|...||...|cc..cc0%cc.
+.cc%0cc..cc|...||...|cc..cc0%cc.
+.c+cc+c..cc$..8..8..$cc..c+cc+c.
+..cccc...ccc........ccc...cccc..
+ ........cccc..99..cccc........
+  ........cccc....cccc........
+   ...ccccccccc++ccccccccc...
+    .c+cccccccc..cccccccc+c.
+    .cc0%ccccc.99.ccccc%0cc.
+    .cc.0cc.c+c**c+c.cc0.cc.
+    .c+cc+c..cccccc..c+cc+c.
+    ..cccc....cccc....cccc..
+     .......cccccccc.......
+     ...ccccccc..ccccccc...
+      ..ccccc......ccccc..
+       ..................
+ENDMAP

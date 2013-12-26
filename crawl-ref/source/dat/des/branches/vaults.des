@@ -1778,6 +1778,71 @@ xO.9.........+.........9.*x
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 20 *, 14 monsters
+NAME: vaults_grunt_end_bulge
+TAGS: vaults_end_quadrant
+NSUBST: O = 1:O / *:*
+SUBST: 9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx.
+xxxxxx*9..................
+xxxxxx*....9..........xx...
+xxxxxx*9...........9xxxxx.x
+xxxxxxx.........xxx.xxxxx.x
+x**O*xxxx....xxxxxx+xxxx..x
+x.....xxxx9.xxxxx....+.9..x
+x..9..*xxxxxxx....9..xx...x
+x9...9.Oxxxxx.......xxx...x
+x......xxxx....9...xxx....x
+x.....*xxx..9......xx.....x
+x.....xxx.........xxx.....x
+x..9.xxx......9..xxx....9.x
+x....xxx...9....xxx9......x
+x....xx........xxxx.......x
+x.9.xx..9....xxxxxxx......x
+x....+.....xxxxOxxxxx.9..9x
+x..xxxx+xxxxxx*..*xxxx****x
+x.xxxxx.xxx.....9...xxxxxxx
+x.xxxxx...........9.*xxxxxx
+x9Oxx.......9...9...Oxxxxxx
+x.9.....9...........*xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 18 *, 12 monsters
+NAME:  vaults_end_grunt_zigzag
+TAGS:  vaults_end_quadrant
+SUBST: 9 = 8 9 .:20
+: vaults_end_loot(_G)
+: vaults_end_rune(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx.
+xxx9***9xxx9***9xxx....9..
+xx...9.xxx......xx..xxxx9..
+x.....xx...xx..xx..xx*Ox.9x
+x....xx..xxx..xx..xx***x..x
+x.x.xx..xx...xx..xx9**xx..x
+x.x....xx..xxx..xx.9xxx...x
+x.x9.xxx..xx...xx..xx...xxx
+x.x.xx...xx..xxx..xx..xxx9x
+x.xxx..xxx..xx...xx..xx..*x
+x.xx..xx...xx..xxx..xx...*x
+x.x..xx..xxx9.xx...xx..x.*x
+x.x.xx..xx...xx..xxx..xx.9x
+x.x....xx..xxx..xx...xx..xx
+x.x.9.xx..xx...xx..xxx..xxx
+x.xx.xx..xx..xxx..xx...xxxx
+x9.xxx..xx..xx...xx..xxx.9x
+x...x..xx..xx..xxx..xx...*x
+x...9.xx..xx..xx...xx...9*x
+xx.9..xx.9...xx..9....xx.*x
+xxx....xxxxxxxxxxxxxxxx..9x
+xxxx..9..................xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # Vaults:$ prize quadrants
 ###############################################################################
