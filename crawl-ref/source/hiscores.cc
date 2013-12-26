@@ -900,7 +900,10 @@ void scorefile_entry::init_with_fields()
 
     death_type        = _str_to_kill_method(fields->str_field("ktyp"));
     death_source_name = fields->str_field("killer");
-    // XXX: death_source_flags not loaded
+    const vector<string> kflags =
+        split_string(" ", fields->str_field("killer_flags"));
+    death_source_flags = set<string>(kflags.begin(), kflags.end());
+
     auxkilldata       = fields->str_field("kaux");
     indirectkiller    = fields->str_field("ikiller");
     if (indirectkiller.empty())
