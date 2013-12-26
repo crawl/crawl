@@ -492,6 +492,121 @@ xxxSxxx
    x.@.x
 ENDMAP
 
+NAME: nicolae_volcano_entry_batcave
+SUBST: s = Xs, Z = Xx, Y = x.
+MONS: patrolling fire bat
+: volcano_portal(_G)
+MAP
+      xxxx
+   xxxxYYxxx
+ xxxZYY..YYxxx
+ xXZs.1.....Yxx
+xxXXS........Yxx
+xxXOS..1........@
+xxXXS........Yxx
+ xXZs.1.....Yxx
+ xxxZYY..YYxxx
+   xxxxYYxxx
+      xxxx
+ENDMAP
+
+NAME: nicolae_volcano_entry_hallway
+SUBST: L = xl, Z = XXXXl, _ = _xx
+TAGS: transparent
+CLEAR: _
+: volcano_portal(_G)
+MAP
+  _xx@@xx_
+ _xxx..xxx_
+_xxXX..Lxxx_
+_xxXZ..llLx_
+_xxXO..llLx_
+_xxXZ..llLx_
+_xxXX..Lxxx_
+ _xxx..xxx_
+  _xx@@xx_
+ENDMAP
+
+NAME: nicolae_volcano_entry_lava_flow
+NSUBST: V = 3:X / 1:XS / 1:lS / *:S, A = 2:X / 2:. / *:S, B = 2:X / 2:. / *:S, \
+        C = 2:X / 2:. / *:S, D = 2:X / 2:. / *:S, E = 2:X / 2:. / *:S, \
+        F = 2:X / 2:. / *:S
+SHUFFLE: abcdef
+SUBST: ab = S, cde = l, f : .l, ' = ..S, _ = .._
+CLEAR: _
+: volcano_portal(_G)
+MAP
+    _____
+   _'''''_
+  _'AAAAb'_
+ _'aAAAAbB'_
+_'FFaAAbBBB'_
+'FFFaAAbBBBB'_
+'ffFFVVVBBcc'_
+'fEfFVOVccCC._
+'EEffVVVCCCC'_
+'EEEEEedCCCC'_
+_'EEeeDDdCC'_
+ _'eDDDDdd'_
+  _'DDDDD'_
+   _'''''_
+    _____
+ENDMAP
+
+NAME: nicolae_volcano_entry_s_turn
+SUBST: Z = xx.
+: volcano_portal(_G)
+MAP
+    xxxxxx
+  xxxZZZZxxx..@..x
+ xxZ.....Zxxz...xx
+xxZ....Z..ZxZ...x
+xx...xZ...ZxZ..Zx
+xxSSSxZ....Z...Zx
+xxXOXxZ...Z...Zxx
+xxXXXxxZZ...ZZxx
+ xxxxxxxxZZZxxx
+    xxxxxxxxx
+ENDMAP
+
+NAME: nicolae_volcano_entry_two_sided
+SUBST: s = S., z = Xx, L = lX, q = lS, y = x.
+: volcano_portal(_G)
+MAP
+    xxxxx
+  xxxxxxxxx
+ xxxXXXXxxxx
+yyxzXLLXXXzxy
+..sSSqlLXSSs..
+@.sSSqllOSSs.@
+..szXXLLXSSs..
+ yxxxXXXXXzzy
+   xxxxxxxxxx
+    xxxxxx
+ENDMAP
+
+NAME: nicolae_volcano_entry_vermiform
+NSUBST: A = l / ., B = l / ., C = l / ., D = l / .
+NSUBST: l = 3:2 / *:l
+SHUFFLE: 1V'/Ov-
+SUBST: Y = xxxx., y = ....x, v = X, V = x, - = S, ' = ., _ = xxxx_
+KMONS: 1 = patrolling lindwurm
+KMONS: 2 = lava worm
+KFEAT: 2 = l
+CLEAR: _
+: volcano_portal(_G)
+MAP
+ __xxxxxx________xxx
+xxxxYYYYxxxxxxxxxxYxx
+xvv--....YYxxxYYx...x
+xvO-AlllB...y....yx..
+xXlllA.BlllC.Dllllx.@
+xV1'''....ClllD..yx..
+xVVxxYYYYy......x...x
+xxxxxxxxxxYYYYYxxxYxx
+ ________xxxxxxx_xxx
+ENDMAP
+
 ###############################################################################
 
 default-depth: Volcano

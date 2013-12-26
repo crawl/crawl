@@ -48,7 +48,6 @@ ENDMAP
 
 NAME:   shop_fountains
 TAGS:   allow_dup extra shop transparent
-WEIGHT: 10
 KFEAT:  O = any shop
 MAP
 T.T
@@ -58,7 +57,6 @@ ENDMAP
 
 NAME:   shop_statue
 TAGS:   allow_dup extra shop no_rtele_into
-WEIGHT: 10
 KFEAT:  O = any shop
 MAP
 .G..O..G.
@@ -85,6 +83,130 @@ MAP
 ddd
 dOd
 ddd
+ENDMAP
+
+NAME: nicolae_shop_behind_doors
+TAGS: allow_dup extra shop transparent
+KFEAT: O = any shop
+MAP
+x+x
++O+
+x+x
+ENDMAP
+
+NAME: nicolae_shop_crystal
+TAGS: allow_dup extra shop transparent
+KFEAT: O = any shop
+MAP
+b.b
+.O.
+b.b
+ENDMAP
+
+NAME: nicolae_shop_statue_plus
+TAGS: allow_dup extra shop no_rtele_into
+KFEAT: O = any shop
+MAP
+   .
+   G
+   .
+.G.O.G.
+   .
+   G
+   .
+ENDMAP
+
+NAME: nicolae_shop_stone
+TAGS: allow_dup extra shop transparent
+KFEAT: O = any shop
+MAP
+  c
+ ...
+c.O.c
+ ...
+  c
+ENDMAP
+
+NAME: nicolae_shop_trees
+TAGS: allow_dup extra shop transparent
+KFEAT: O = any shop
+MAP
+  t
+t.O.t
+  t
+ENDMAP
+
+NAME: nicolae_shop_waterfront
+TAGS: allow_dup extra shop no_pool_fixup
+KFEAT: O = any shop
+SUBST: v = wW
+MAP
+ www
+wwvvW
+wwO.@
+wwvvW
+ www
+ENDMAP
+
+NAME: nicolae_shop_overgrown_old_shop
+TAGS: allow_dup extra shop transparent
+WEIGHT: 5
+KFEAT: O = antiques shop / antique weapon shop w:5 / antique armour shop w:5
+NSUBST: 1 = . / 1
+MONS: plant / nothing w:3
+MAP
+.....
+.111.
+.1O1.
+.111.
+.....
+ENDMAP
+
+NAME: nicolae_shop_with_dummies
+TAGS: allow_dup extra shop transparent
+WEIGHT: 5
+KFEAT: O = weapon shop / antique weapon shop w:5
+MONS: training dummy
+MAP
+1.1
+.O.
+1.1
+ENDMAP
+
+# A shop owner has copied a temple entry for their shop. Is nothing sacred?
+# (minmay_temple_entry_statues_fountains)
+NAME: nicolae_shop_temple_entry_statues_fountains
+TAGS: allow_dup extra shop transparent
+WEIGHT: 5
+SUBST: T = TV
+KFEAT: O = any shop
+MAP
+G.G.G
+.T.T.
+G.O.G
+.T.T.
+G.G.G
+ENDMAP
+
+NAME: nicolae_shop_window_shopping
+TAGS: allow_dup extra shop
+WEIGHT: 5
+KFEAT: O = any shop
+MAP
+xxm.
++Om@
+xxm.
+ENDMAP
+
+NAME: nicolae_shop_competitors_out_of_business
+TAGS: allow_dup extra shop transparent
+WEIGHT: 3
+KFEAT: O = any shop
+KFEAT: A = abandoned_shop
+MAP
+O.A
+...
+A.A
 ENDMAP
 
 #####################################################

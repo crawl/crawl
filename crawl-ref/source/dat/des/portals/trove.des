@@ -309,6 +309,105 @@ ccc+ccc
    @
 ENDMAP
 
+NAME: nicolae_trove_entry_columns
+: trove.portal(_G)
+MAP
+cccccccccccc
+c.........cc
+c.c.c.c.c.cc
++.........Oc
+c.c.c.c.c.cc
+c.........cc
+cccccccccccc
+ENDMAP
+
+
+NAME: nicolae_trove_entry_crossroad
+TAGS: transparent
+: trove.portal(_G)
+COLOUR: @ = blue
+FTILE: @ = floor_marble
+MAP
+cc@cc
+c...c
+@.O.@
+c...c
+cc@cc
+ENDMAP
+
+NAME: nicolae_trove_entry_crystal
+: trove.portal(_G)
+FTILE: b = floor_marble
+MAP
+ccccccccccc
+cc.c.c.cccc
+c.......bbc
++.......Obc
+c.......bbc
+cc.c.c.cccc
+ccccccccccc
+ENDMAP
+
+NAME: nicolae_trove_entry_diagonal
+: trove.portal(_G)
+MAP
+   c
+  ccc
+ ccccc
+cccO.cc
+ cc...cc
+  cc...cc
+   cc...cc
+    cc...cc
+     cc...cc
+      cc.+c
+       ccc@
+        c
+ENDMAP
+
+NAME: nicolae_trove_entry_free_sample
+: trove.portal(_G)
+COLOUR: % = blue
+FTILE: % = floor_marble
+MAP
+%.%
+.O.
+%.%
+ENDMAP
+
+NAME: nicolae_trove_entry_isolated
+TAGS: no_pool_fixup
+KPROP: .O = no_rtele_into
+KFEAT: ' = .
+: trove.portal(_G)
+MAP
+'''''''
+'wwwww'
+'w...w'
+'w.O.w'
+'w...w'
+'wwwww'
+'''''''
+ENDMAP
+
+NAME: nicolae_trove_entry_path_of_doom
+KMONS: O = patrolling guardian mummy
+KMONS: m = patrolling guardian mummy / nothing w:20
+: trove.portal(_G)
+COLOUR: $m = blue
+FTILE: $m = floor_marble
+MAP
+  ccccc
+ cc.O.cc
+cc.....cc
+c$.G.G.$c
+c$..m..$c
+c$.G.G.$c
+cc.....cc
+ cc...cc
+  cc+cc
+ENDMAP
+
 NAME:   trove_entry_trowel
 TAGS:   transparent trowel_portal unrand can_overwrite uniq_trove
 DEPTH:  *, !Trove

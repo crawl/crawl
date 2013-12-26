@@ -2498,6 +2498,547 @@ xxxx.........................---------------_..4.x
    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+###################################
+
+NAME: nicolae_pan_sigil_obb
+TAGS: transparent extra decor allow_dup luniq_pan_sigil
+SHUFFLE: ef
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : ., g : .x, h : .x, \
+       i : .x, j : .x, k : .x, l : .x, m : .x, n : .x, o : .x
+MAP
+...........................
+..nl.j....fe.d.ef....j.ln..
+.oc.g.h.bkaxxxxxakb.h.g.co.
+.m.x...x..fe.x.ef..x...x.m.
+..g.x.x.h....x....h.x.x.g..
+.i...xxxxxxxxxxxxxxxxx...i.
+..g.x.x.h....x....h.x.x.g..
+.m.x...x..fe.x.ef..x...x.m.
+.oc.g.h.bkaxxxxxakb.h.g.co.
+..nl.j....fe.d.ef....j.ln..
+...........................
+ENDMAP
+
+NAME: nicolae_pan_sigil_nadil
+TAGS: transparent extra decor allow_dup luniq_pan_sigil
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, h : .x, \
+       i : .x, j : .x, k : .x, l : .x, m : .x, n : .x
+MAP
+..........
+.cc.dd.b...
+.cxxxxx.....
+..xx...a.l...
+.dx.x.e...j...
+.dx..x.f..i....
+..x.e.x..xxx.k..
+.b.a.f.xx.n.xxk..
+.......x..m..x....
+...l..x..ghg..x....
+ ...jixnmhxhmnxij...
+  ....x..ghg..x..l...
+   ....x..m..x.......
+    ..kxx.n.xx.f.a.b.
+     ..k.xxx..x.e.x..
+      ....i..f.x..xd.
+       ...j...e.x.xd.
+        ...l.a...xx..
+         .....xxxxxc.
+          ...b.dd.cc.
+           ..........
+ENDMAP
+
+NAME: nicolae_pan_sigil_itan
+TAGS: transparent extra decor allow_dup luniq_pan_sigil
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, \
+       h : .x, i : .x, j : .x, k : .x, l : .x, m : .x, n : .x, \
+       o : .x, p : .x, q : .x
+MAP
+...................
+....b.c.d.d.c.b....
+.....bcd.g.dcb.....
+....aaxee.eexaa....
+.p.k...x.f.x...k.p.
+...k..q.x.x.q..k...
+.llx.....x.....xll.
+....x.h..x..h.x....
+.o...x...x...x...o.
+..n..x..ixi..x..n..
+...m.xj..x..jx.m...
+..n..x..ixi..x..n..
+.o...x...x...x...o.
+....x.h..x..h.x....
+.llx.....x.....xll.
+...k..q.x.x.q..k...
+.p.k...x.f.x...k.p.
+....aaxee.eexaa....
+.....bcd.g.dcb.....
+....b.c.d.d.c.b....
+...................
+ENDMAP
+
+NAME: nicolae_pan_sigil_eeng
+TAGS: transparent extra decor allow_dup luniq_pan_sigil
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, h : .x, i : .x, \
+       j : .x, k : .x, l : .x, m : .x, n : .x
+MAP
+       .........
+      .....j.....
+      ..i.xxx.i..
+     ....x.x.x....
+    ..l.x..x..x.l..
+   ..k.cxbaxabxc.k..
+ ...l.n...m.m...n.l...
+.....c.h...d...h.c.....
+..i.xx..g.exe.g..xx.i..
+...x.b...f.x.f...b.x...
+..x..am.e..x..e.ma..x..
+.jxxxx.dxxxxxxxd.xxxxj.
+..x..am.e..x..e.ma..x..
+...x.b...f.x.f...b.x...
+..i.xx..g.exe.g..xx.i..
+.....c.h...d...h.c.....
+ ...l.n...m.m...n.l...
+   ..k.cxbaxabxc.k..
+    ..l.x..x..x.l..
+     ....x.x.x....
+      ..i.xxx.i..
+      .....j.....
+       .........
+ENDMAP
+
+NAME: nicolae_pan_sigil_uleosi
+TAGS: transparent extra decor allow_dup luniq_pan_sigil
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, f : .x, g : .x, h : .x, i : .x, \
+       j : .x, k : .x, l : .x, m : .x, n : .x, o : .x, p : .x, q : .x, r : .x, \
+       s : .x, t : .x, u : .x, v : .x, w : .x, y : .x
+MAP
+                 ..........
+       ....................
+     ..............e...b...
+    ....tuv....y..fxd.cxa..
+   ......j....w....x...x...
+  ...q..xxx..s...onx.g.xno.
+ .....px.k.xr......x...x...
+ .....x.....x......xxxxx...
+ ....x...i...x...i...x.....
+....lx..ihi.mxm.ihi..xl....
+.....x...i...x...i...x....
+...xxxxx......x.....x.....
+...x...x......rx.k.xp.....
+.onx.g.xno...s..xxx..q...
+...x...x....w....j......
+..axc.dxf..y....vut....
+...b...e..............
+....................
+..........
+ENDMAP
+
+NAME: nicolae_pan_mnolegish_1
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: AB, DG/CH, EI/FJ
+SUBST: ACEHI : c, BDF : ., GI : @
+TILE: c = dngn_stone_wall_yellow
+MAP
+ccc.@.ccccccccc
+ccAA...ccc.cccD
+cAAAc...c...cDG
+.AAccc.......DD
+@.ccccc...c...c
+.BBccc...ccc.CC
+cBBBc.....cccCH
+ccBB...c...cccC
+ccc...ccc...ccc
+cc...ccccc...cc
+c...ccccc...ccc
+...ccccc...cccc
+@.cccccEE.FFccc
+.cccccEEEcFFFcc
+cccccEIEcccFJFc
+ENDMAP
+
+NAME: nicolae_pan_mnolegish_2
+TAGS: extra decor allow_dup luniq_decor_lord
+SHUFFLE: Aa/Bb, Dd/Ee, Ff/Gg, Hh/Ii, jklm
+SUBST: ADFH = @, adfh = ., BbEeGgIi = c, j : ., k : .c, l : .c, m : .c
+TILE: c = dngn_stone_wall_yellow
+MAP
+cccdDdccceEeccc
+ccccdddceeecccc
+cccccdd.eeccccc
+accccc...cccccf
+Aacccjj.kkcccfF
+aaacjjjckkkcfff
+caa.jjccckk.ffc
+cc...ccccc...cc
+cbb.mmcccll.ggc
+bbbcmmmclllcggg
+Bbcccmm.llcccgG
+bccccc...cccccg
+cccccii.hhccccc
+cccciiichhhcccc
+ccciIiccchHhccc
+ENDMAP
+
+NAME: nicolae_pan_mnolegish_3
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: ABC
+SUBST: ' = @..., AB = ., C = c, D : .c, E : .c, F : .c
+TILE: c = dngn_stone_wall_yellow
+MAP
+cccccc'ccccccc
+ccccc...cccEcc
+ccccBB.CCcEEEc
+ccc.BBcCC.EEcc
+cc...ccc...ccc
+c...cccAA...cc
+'..ccc.AAc...c
+c...c...ccc..'
+cc.....ccc...c
+ccc...ccc...cc
+ccDD.ccc...Fcc
+cDDDccc...FFFc
+ccDccc...ccFcc
+ccccc.@.cccccc
+ENDMAP
+
+NAME: nicolae_pan_mnolegish_4
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: AB, CD, EFGH, IJKL, MN, OP, QR, ST
+SUBST: ACEI = ., BDFGHJKLNPRT = c, MOQS = @
+TILE: c = dngn_stone_wall_yellow
+MAP
+cMMcccccccccNNc
+T..BBB...FFF..O
+T..BB...FFF...O
+cAAc...ccc...Ic
+cAA...HHc...IIc
+cA...cHH...cIIc
+c...GGc...ccI.c
+c..cGG...KKc..c
+c.Ecc...cKK...c
+cEEc...LLc...Cc
+cEE...cLL...CCc
+cE...ccc...cCCc
+S...JJJ...DD..P
+S..JJJ...DDD..P
+cRRcccccccccQQc
+ENDMAP
+
+NAME: nicolae_pan_mnolegish_5
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: ABCDEF
+SUBST: A : .c, B : .c, CDEF : ., G : .c, H : .c, I : .c
+TILE: c = dngn_stone_wall_yellow
+MAP
+...............
+.cccccccAAAccc.
+.cGGGccAAAccHc.
+.cGGGc.AAccHHc.
+.cGcc...ccHHHc.
+.cccBB.CCccHHc.
+.ccBBBcCCCccHc.
+.cBBBcccCC.Hcc.
+..BBccccc...cc.
+...cccccDD.FFc.
+..EEcccDDDcFFF.
+.cEEEcDDDcccFF.
+.ccEE.DDccIccF.
+.ccc...ccIIIcc.
+...............
+ENDMAP
+
+NAME: nicolae_pan_lom_lobonic_1
+TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+SHUFFLE: BQ/BQ/''
+SUBST: ' = ., Q = b, B : wb
+COLOUR: x = white
+TILE: x = wall_hall_white
+MAP
+@.xxxxxxxxxxx.@
+...wwwwwwwww...
+x...wbbbbbw...x
+xw...b...b...wx
+xww.........wwx
+xwbb..BBB..bbwx
+xwb..BQQQB..bwx
+xwb..BQQQB..bwx
+xwb..BQQQB..bwx
+xwbb..BBB..bbwx
+xww.........wwx
+xw...b...b...wx
+x...wbbbbbw...x
+...wwwwwwwww...
+@.xxxxxxxxxxx.@
+ENDMAP
+
+NAME: nicolae_pan_lom_lobonic_2
+TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+SHUFFLE: Dd/Ee
+SUBST: A : .w, B : .w, C : .w, D = ., d = w, Ee = b, W = .w
+COLOUR: x = white
+TILE: x = wall_hall_white
+MAP
+   xxxxx..@..
+ xxxwwwww...bb
+ xwwwwwwww...bb
+xxwwbbbbbw...Ab
+xwwbbBBBbb...Ab
+xwbb.........bb
+xwb........bbb
+xwb..WwwDDddwbb
+xwb..wwwwwwwwwb
+xwb..wwwWWWwwwb
+xwb...w.....wW.
+xwww..........@
+xxwww...bbb....
+ xxw...bb bbCCC
+  x..@bb   bbb
+ENDMAP
+
+NAME: nicolae_pan_lom_lobonic_3
+TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+SUBST: - = ..w, B = bw, X = ..x, p = ..b
+COLOUR: x = white
+TILE: x = wall_hall_white
+MAP
+        bbbbb
+   xx  bbwwBbb
+@.xxxxbb--wwBbb
+..xxxxbp..-wwBbb
+..XxxXp....-wwBb
+............-wwb
+@...........-wwb
+............-wwb
+..XxxXp....-wwBb
+..xxxxbp..-wwBbb
+@.xxxxbb--wwBbb
+   xx  bbwwBbb
+        bbbbb
+ENDMAP
+
+NAME: nicolae_pan_lom_lobonic_4
+TAGS: transparent extra decor allow_dup no_pool_fixup luniq_decor_lord
+SHUFFLE: IJKL
+SUBST: A : .w, B : .w, C : .w, D : .w, E : .w, F : .w, G : .w, H : .w, \
+       I : .b, JKL : .
+COLOUR: x = white
+TILE: x = wall_hall_white
+MAP
+   bbbbbb
+   bCCCCbbbb
+  @....CbFFbb
+bb.....bbFFEbb
+bD..BB.K..EEEb
+bD..BBBK..EEEb
+bD...BBbbIbbEb
+bDDbLLbbA..bbb
+bbbb..bAAA..b
+ bGG..J.AA..b
+ bGGHHb.....b
+ bbHHHbb...@
+  bbHHHbbbb
+   bbbbb
+ENDMAP
+
+NAME: nicolae_pan_cerebovesque_1
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SUBST: A : .lv, B : .lv, C : .lv
+TILE: v = dngn_metal_wall_brown
+MAP
+...............
+.vvvvv...vvvvv.
+.vAAAv...vBBBv.
+.vAAAvv+vvBBBv.
+.vAAA.....BBBv.
+.vvv.......vvv.
+...v..CCC..v...
+...+..CCC..+...
+...v..CCC..v...
+.vvv.......vvv.
+.vBBB.....AAAv.
+.vBBBvv+vvAAAv.
+.vBBBv...vAAAv.
+.vvvvv...vvvvv.
+...............
+ENDMAP
+
+NAME: nicolae_pan_cerebovesque_2
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: Aa/Bb, CD
+SUBST: Bb : v, a : ., A : .lv, C : +, D : v+, E : .v, F : .v, L : .l, V : .v
+TILE: v = dngn_metal_wall_brown
+MAP
+  ..........
+  .vvv..vvv.
+  .vAvCCvAv.
+  .vva..avv.
+....D....D....
+.Evvv....vvvE.
+.FvV..LL..VvF.
+.FvV..LL..VvF.
+.Evvv....vvvE.
+....D....D....
+  .vva..avv.
+  .vAvCCvAv.
+  .vvv..vvv.
+  ..........
+ENDMAP
+
+NAME: nicolae_pan_cerebovesque_3
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: EFG, HIJ
+SUBST: GJ = v, EFHI = +
+TILE: v = dngn_metal_wall_brown
+MAP
+@....vvvv....@
+.vvv.v..v.vvv.
+.vvv.H..H.vvv.
+.vvv.vIIv.vvv.
+.....J..J.....
+vvEvGv..vGvEvv
+v..F......F..v
+v..F......F..v
+vvEvGv..vGvEvv
+.....J..J.....
+.vvv.vIIv.vvv.
+.vvv.H..H.vvv.
+.vvv.v..v.vvv.
+@....vvvv....@
+ENDMAP
+
+NAME: nicolae_pan_cerebovesque_4
+TAGS: extra decor allow_dup luniq_decor_lord
+SHUFFLE: AB/GH, CD, EF
+SUBST: A : .l, B = l, G : .v, CEH : v, DF : +
+TILE: v = dngn_metal_wall_brown
+MAP
+     .@@.vvvvvvv
+     ....D..v..v
+     ....C..E..v
+     ....vvvvFvv
+     ....ABBA..@
+.........ABBA..@
+...vDDvAAvvvv...
+...C..vBBv..C...
+...C..vBBv..C...
+...vvvvAAvDDv...
+@..ABBA.........
+@..ABBA....
+vvFvvvv....
+v..E..C....
+v..v..D....
+vvvvvvv.@@.
+ENDMAP
+
+NAME: nicolae_pan_gloorx_vloqian_1
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: Aa/Bb, de, DE
+SUBST: aD = x, be = ., A = +, B = c, d : .x, E : .x
+COLOUR: x = blue
+TILE: x = wall_hall_darkgray
+TILE: c = dngn_stone_wall_darkgray
+MAP
+xxxxxx.@.xxxxxx
+x..d.e.d.e.d..x
+x.D.E.D.E.D.E.x
+xd.e.d...d.e.dx
+x.E.ccABAcc.D.x
+xe.dcababacd.ex
+..D.Aba.abA.E..
+@d..Ba...aB..d@
+..E.Aba.abA.D..
+xe.dcababacd.ex
+x.D.ccABAcc.E.x
+xd.e.d...d.e.dx
+x.E.D.E.D.E.D.x
+x..d.e.d.e.d..x
+xxxxxx.@.xxxxxx
+ENDMAP
+
+NAME: nicolae_pan_gloorx_vloqian_2
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SUBST: A : .x, B : .x, C : .x, D : .x, E : .x, F : .x, G : Hc, H : ..c
+COLOUR: x = blue
+TILE: x = wall_hall_darkgray
+TILE: c = dngn_stone_wall_darkgray
+MAP
+...............
+.A.B..D.D..B.A.
+..x....x....x..
+.B.C..E.E..C.B.
+....F.....F....
+.....ccHcc.....
+.D.E.cGGGc.E.D.
+..x..HGGGH..x..
+.D.E.cGGGc.E.D.
+.....ccHcc.....
+....F.....F....
+.B.C..E.E..C.B.
+..x....x....x..
+.A.B..D.D..B.A.
+...............
+ENDMAP
+
+NAME: nicolae_pan_gloorx_vloqian_3
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: abfg/dehi
+: if crawl.coinflip() then
+SUBST: d = a, e = b, h = f, i = g
+: end
+SUBST: dehi = .
+SHUFFLE: ab/gf
+: if crawl.coinflip() then
+SUBST: f = b, g = a
+: end
+SUBST: fg = .
+SHUFFLE: ab
+SUBST: a = x, b = .
+COLOUR: x = blue
+TILE: x = wall_hall_darkgray
+TILE: c = dngn_stone_wall_darkgray
+MAP
+    ccccccc
+   ccabdeacc
+  @.ifghifg.@
+ c..bdeabde..c
+ccifghifghifgcc
+cabdeabdeabdeac
+cfghifghifghifc
+cdeabdeabdeabdc
+chifghifghifghc
+cabdeabdeabdeac
+ccghifghifghicc
+ c..bdeabde..c
+  @.ghifghi.@
+   ccabdeacc
+    ccccccc
+ENDMAP
+
+NAME: nicolae_pan_gloorx_vloqian_4
+TAGS: transparent extra decor allow_dup luniq_decor_lord
+SHUFFLE: ab, de, fg
+SUBST: a = x, b = ., df = c, e : .ccc, g : .ccc
+COLOUR: x = blue
+TILE: x = wall_hall_darkgray
+TILE: c = dngn_stone_wall_darkgray
+MAP
+...............
+.ababababababa.
+.b...........b.
+.a.ccdcecdcc.a.
+.b.c.......c.b.
+.a.c.cc.cc.c.a.
+.b.c.f...f.c.b.
+.a...g...g...a.
+.b.c.f...f.c.b.
+.a.c.cc.cc.c.a.
+.b.c.......c.b.
+.a.ccdcecdcc.a.
+.b...........b.
+.ababababababa.
+...............
+ENDMAP
+
 ### Holy Pan Level ############################################################
 #
 # The angels have gained a foothold in pandemonium.
