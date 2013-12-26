@@ -5276,6 +5276,10 @@ bool melee_attack::do_knockback(bool trample)
         if (actor_at(new_pos))
             break;
 
+        // Prevent trample/drown combo when flight is expiring
+        if (defender->is_player() && need_expiration_warning(new_pos))
+            break;
+
         if (needs_message)
         {
             mprf("%s %s backwards!",
