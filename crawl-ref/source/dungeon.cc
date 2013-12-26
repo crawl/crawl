@@ -2643,7 +2643,7 @@ static bool _pan_level()
             find_map_by_name(you.props["force_map"].get_string());
         ASSERT(vault);
 
-        _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+        _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
         return vault->orient != MAP_ENCOMPASS;
     }
 
@@ -2676,7 +2676,7 @@ static bool _pan_level()
 
         ASSERT(vault);
 
-        _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
+        _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
         return vault->orient != MAP_ENCOMPASS;
     }
     else
@@ -2698,7 +2698,7 @@ static bool _pan_level()
             {
                 dgn_map_parameters mp(vault && vault->orient == MAP_CENTRE
                                       ? "central" : "layout");
-                _dgn_ensure_vault_placed(_build_primary_vault(layout), true);
+                _dgn_ensure_vault_placed(_build_primary_vault(layout), false);
             }
 
             dgn_check_connectivity = true;
