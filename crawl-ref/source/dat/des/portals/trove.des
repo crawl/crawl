@@ -409,6 +409,21 @@ cc.....cc
   cc+cc
 ENDMAP
 
+NAME: trove_entry_hex_spiral
+: trove.portal(_G)
+MAP
+             @cc
+    ccccccccc..cc
+   cc.......cc..cc
+  cc..ccccc..cc..cc
+ cc..cc..Occ..cc..cc
+cc..cc..ccc..cc..cc
+ cc..cc.....cc..cc
+  cc..ccccccc..cc
+   cc.........cc
+    ccccccccccc
+ENDMAP
+
 NAME:   trove_entry_trowel
 TAGS:   transparent trowel_portal unrand can_overwrite uniq_trove
 DEPTH:  *, !Trove
