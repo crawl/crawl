@@ -167,6 +167,7 @@ function trove.portal(e)
     e.chance(500)
     e.lua_marker("O", stair)
     e.kfeat("O = enter_trove")
+    e.colour(". = blue")
     e.ftile(".OcG+ = floor_marble")
     e.tile("c = wall_stone_dark")
 end
