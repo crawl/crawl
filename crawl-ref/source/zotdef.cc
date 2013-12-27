@@ -416,15 +416,15 @@ static void _giant_wave(int power)
     _zotdef_danger_msg("The stamp of enormous boots can be heard in the distance.");
 }
 
-static void _reindeer_wave(int power)
+static void _yak_wave(int power)
 {
     wave_name("YAK WAVE");
-    monster_type reindeers[] = {MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
+    monster_type yaks[] = {MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_SHEEP, MONS_YAK, MONS_DEATH_YAK,
                 MONS_CYCLOPS, END};
     monster_type boss[] = {MONS_POLYPHEMUS, MONS_CYCLOPS, END};
-    _zotdef_fill_from_list(reindeers, 0, power); // full
+    _zotdef_fill_from_list(yaks, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Bleats and roars echo around!");
 }
@@ -510,7 +510,7 @@ static void _zotdef_set_special_wave(int power)
             case 13: wave_fn = _bear_wave; wpow = 6; break;
             case 14: wave_fn = _wraith_wave; wpow = 8; break;
             case 15: wave_fn = _giant_wave; wpow = 16; break;
-            case 16: wave_fn = _reindeer_wave; wpow = 12; break; // lots of bands
+            case 16: wave_fn = _yak_wave; wpow = 12; break; // lots of bands
             case 17: wave_fn = _insect_wave; wpow = 4; break;
             case 18: wave_fn = _pan_wave; wpow = 24; break;
             // extra copies of fire and cold at higher power

@@ -882,7 +882,7 @@ static void _choose_arena_teams(newgame_def* choice,
         cprintf("Enter - %s\n", defaults.arena_teams.c_str());
     cprintf("\n");
     cprintf("Examples:\n");
-    cprintf("  Satan Claus v Jessica\n");
+    cprintf("  Sigmund v Jessica\n");
     cprintf("  99 orc v the royal jelly\n");
     cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming\n");
     cgotoxy(1, 2);

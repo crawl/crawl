@@ -1770,7 +1770,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_TEST_SPAWNER:
         return TILEP_MONS_TEST_SPAWNER;
 
-    // reindeers, sheep and elephants ('Y')
+    // yaks, sheep and elephants ('Y')
     case MONS_SHEEP:
         return TILEP_MONS_SHEEP;
     case MONS_YAK:
@@ -4144,7 +4144,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_KRAKEN:
         return TILE_CORPSE_KRAKEN;
 
-    // reindeers, sheep and elephants ('Y')
+    // yaks, sheep and elephants ('Y')
     case MONS_SHEEP:
         return TILE_CORPSE_SHEEP;
     case MONS_YAK:

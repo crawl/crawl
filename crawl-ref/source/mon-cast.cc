@@ -310,8 +310,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_THROW_FROST:
         beam.colour   = WHITE;
         beam.name     = "puff of frost";
-        if (mons->type == MONS_SIGMUND)
-            beam.name = "snowball";
         beam.damage   = dice_def(3, 5 + (power / 40));
         beam.hit      = 25 + power / 40;
         beam.flavour  = BEAM_COLD;

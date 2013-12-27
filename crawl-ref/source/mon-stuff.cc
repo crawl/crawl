@@ -3064,7 +3064,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     mons->props.erase("speech_prefix");
 
     // Keep spells for named monsters, but don't override innate ones
-    // for dragons and the like. This means that Satan Claus polymorphed
+    // for dragons and the like. This means that Sigmund polymorphed
     // into a goblin will still cast spells, but if he ends up as a
     // swamp drake he'll breathe fumes and, if polymorphed further,
     // won't remember his spells anymore.

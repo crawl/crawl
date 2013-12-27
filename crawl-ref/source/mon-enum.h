@@ -223,7 +223,7 @@ enum shout_type
     S_SHOUT2,               // shout twice (e.g. two-headed ogres)
     S_ROAR,                 // roar
     S_SCREAM,               // scream
-    S_BELLOW,               // bellow (reindeers)
+    S_BELLOW,               // bellow (yaks)
     S_TRUMPET,              // trumpets (elephants)
     S_SCREECH,              // screech
     S_BUZZ,                 // buzz

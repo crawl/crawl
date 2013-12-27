@@ -837,13 +837,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_REAPER:
         level = MAKE_GOOD_ITEM;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SCYTHE;
-        break;
-
+        // intentional fall-through...
     case MONS_SIGMUND:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_QUARTERSTAFF;
+        item.sub_type  = WPN_SCYTHE;
         break;
 
     case MONS_BALRUG:

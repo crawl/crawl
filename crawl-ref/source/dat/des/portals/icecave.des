@@ -127,7 +127,7 @@ end
 function savage_simulacrum(e)
    savage_ice = "wolf spider simulacrum w:2 / elephant simulacrum w:2 / " ..
                 "polar bear simulacrum w:4 / alligator simulacrum w:2 / " ..
-                "red-nosed reindeer simulacrum w:4 / wolf simulacrum w:4 / " ..
+                "death yak simulacrum w:4 / wolf simulacrum w:4 / " ..
                 "swamp dragon simulacrum w:1"
 end
 
@@ -141,7 +141,7 @@ end
 -- Some random monster lists are the same for multiple destination caves.
 -- : ice_cave_random_monster_list_natural_giant(_G)
 function ice_cave_random_monster_list_natural_giant(e)
-  e.set_random_mon_list("wolf w:35 / reindeer w:35 / polar bear w:15 / red-nosed reindeer / \
+  e.set_random_mon_list("wolf w:35 / yak w:35 / polar bear w:15 / death yak / \
                          frost giant w:5")
 end
 
@@ -182,11 +182,11 @@ end
 
 -- : ice_cave_caverns_natural_giant_monster_set(_G)
 function ice_cave_caverns_natural_giant_monster_set(e)
-  e.mons("wolf w:5 / reindeer w:3 / nothing w:1")
+  e.mons("wolf w:5 / yak w:3 / nothing w:1")
   e.mons("polar bear / nothing w:5")
   e.mons("ice statue")
-  e.mons("polar bear / red-nosed reindeer w:5")
-  e.mons("polar bear / reindeer")
+  e.mons("polar bear / death yak w:5")
+  e.mons("polar bear / yak")
   e.mons("wolf / nothing w:3")
   e.mons("patrolling frost giant / patrolling white draconian w:1")
 end
@@ -301,8 +301,8 @@ NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   patrolling no_monster_gen
 DEPTH:  D:14-, Lair:6-, Orc:$, Elf
 : ice_cave_portal(_G)
-MONS:   wolf / reindeer / nothing w:1
-MONS:   reindeer / polar bear w:5 / nothing w:1
+MONS:   wolf / yak / nothing w:1
+MONS:   yak / polar bear w:5 / nothing w:1
 MONS:   polar bear / nothing w:2
 MONS:   ice dragon w:8 / nothing w:2
 MAP
@@ -495,11 +495,11 @@ SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_appearance(_G)
 : ice_cave_random_monster_list_natural_giant(_G)
-MONS:    reindeer / wolf / polar bear w:4
+MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
 MONS:    frost giant / white draconian w:1
 MONS:    polar bear w:3 generate_awake / wolf generate_awake / \
-         reindeer generate_awake
+         yak generate_awake
 MONS:    ice statue
 SHUFFLE: defg
 ITEM:    giant club / giant spiked club / great mace w:9 / \
