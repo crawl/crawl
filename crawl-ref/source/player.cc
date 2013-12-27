@@ -6432,7 +6432,9 @@ int player::armour_class() const
         // (This includes nagas and centaurs.)
         if (eq == EQ_BODY_ARMOUR && (player_mutation_level(MUT_DEFORMED)
             || player_mutation_level(MUT_PSEUDOPODS)))
+        {
             AC -= ac_value / 2;
+        }
     }
 
     AC += wearing(EQ_RINGS_PLUS, RING_PROTECTION) * 100;
