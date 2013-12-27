@@ -85,6 +85,13 @@ static void _append_value(string & description, int valu, bool plussed)
     description += value_str;
 }
 
+static void _append_value(string & description, float fvalu, bool plussed)
+{
+    char value_str[80];
+    sprintf(value_str, plussed ? "%+.1f" : "%.1f", fvalu);
+    description += value_str;
+}
+
 int count_desc_lines(const string &_desc, const int width)
 {
     string desc = get_linebreak_string(_desc, width);
@@ -731,8 +738,7 @@ void append_weapon_stats(string &description, const item_def &item)
     description += "   ";
 
     description += "Base attack delay: ";
-    _append_value(description, property(item, PWPN_SPEED) * 10, false);
-   description += "%";
+    _append_value(description, property(item, PWPN_SPEED) / 10.0f, false);
 }
 
 static string _corrosion_resistance_string(const item_def &item)
