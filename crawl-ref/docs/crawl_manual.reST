@@ -2975,8 +2975,9 @@ Pois
 Drain
   Your skills have been drained by negative energy, and are less effective.
   This status will not wear off by waiting; gain more experience to remove
-  it. This status has multiple levels, and you can see just how much you have
-  been drained by looking at the skills screen.
+  it; or, alternatively, quaff a potion of restore abilities. This status
+  has multiple levels, and you can see just how much you have been drained
+  by looking at the skills screen.
 
 Encumbered
   Your load is heavy enough to slow you down. You also need more food when
