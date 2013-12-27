@@ -521,7 +521,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
         int sust = player_sust_abil();
         stat_loss >>= sust;
 
-        if (sust && !stat_loss && !player_sust_abil(false))
+        if (sust && !player_sust_abil(false))
         {
             item_def *ring = get_only_unided_ring();
             if (ring && !is_artefact(*ring)
@@ -533,7 +533,8 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
     }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
-         "You feel %s%s.",
+         "You feel %s%s%s.",
+         stat_loss > 0 && player_sust_abil(false) ? "somewhat " : "",
          stat_desc(which_stat, SD_LOSS),
          stat_loss > 0 ? "" : " for a moment");
 
