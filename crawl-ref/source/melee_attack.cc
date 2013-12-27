@@ -4082,22 +4082,8 @@ random_var melee_attack::player_weapon_speed()
         attack_delay = constant(property(*weapon, PWPN_SPEED));
         attack_delay -= div_rand_round(constant(you.skill(wpn_skill, 10)), 20);
 
-        min_delay = property(*weapon, PWPN_SPEED) / 2;
-
-        // Short blades can get up to at least unarmed speed.
-        if (wpn_skill == SK_SHORT_BLADES && min_delay > 5)
-            min_delay = 5;
-
-        // All weapons have min delay 7 or better
-        if (min_delay > 7)
-            min_delay = 7;
-
-        // never go faster than speed 3 (ie 3.33 attacks per round)
-        if (min_delay < 3)
-            min_delay = 3;
-
         // apply minimum to weapon skill modification
-        attack_delay = rv::max(attack_delay, min_delay);
+        attack_delay = rv::max(attack_delay, weapon_min_delay(*weapon));
 
         if (weapon->base_type == OBJ_WEAPONS
             && damage_brand == SPWPN_SPEED)

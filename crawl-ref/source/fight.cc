@@ -692,6 +692,25 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
     }
 }
 
+int weapon_min_delay(const item_def &weapon)
+{
+    int min_delay = property(weapon, PWPN_SPEED) / 2;
+
+    // Short blades can get up to at least unarmed speed.
+    if (weapon_skill(weapon) == SK_SHORT_BLADES && min_delay > 5)
+        min_delay = 5;
+
+    // All weapons have min delay 7 or better
+    if (min_delay > 7)
+        min_delay = 7;
+
+    // never go faster than speed 3 (ie 3.33 attacks per round)
+    if (min_delay < 3)
+        min_delay = 3;
+
+    return min_delay;
+}
+
 int finesse_adjust_delay(int delay)
 {
     if (you.duration[DUR_FINESSE])
