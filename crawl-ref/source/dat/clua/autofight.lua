@@ -314,11 +314,19 @@ function hit_nonmagic_nomove()
 end
 
 function hit_magic()
-  mag_attack(true)
+  if you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
+    mag_attack(true)
+  else
+    crawl.mpr("No spell in slot " .. AUTOMAGIC_SPELL_SLOT .. "!")
+  end
 end
 
 function hit_magic_nomove()
-  mag_attack(false)
+  if you.spell_table()[AUTOMAGIC_SPELL_SLOT] then
+    mag_attack(false)
+  else
+    crawl.mpr("No spell in slot " .. AUTOMAGIC_SPELL_SLOT .. "!")
+  end
 end
 
 function toggle_autothrow()
