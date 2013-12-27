@@ -2122,12 +2122,21 @@ potion
 %%%%
 potion of poison
 
-“‘poison’ is a harsh word. I prefer ‘potion of shut the hell up’”
-    -Oglaf, bowdlerized
+“If when you say "whiskey" you mean the devil's brew, the poison
+ scourge, the bloody mosnter, that defiles innocence, dethrones
+ reason, destroys the home, creates misery and poverty, yea,
+ literally takes the bread from the mouths of little children...
+ then certainly I am against it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 potion of strong poison
 
-<potion of poison>
+“But if when you say "whiskey" you mean the oil of conversation,
+ the philosophic wine, the ale that is consumed when good fellows
+ get together, that puts a song in their hearts and laughter on
+ their lips, and the warm glow of contentment in their eyes...
+ then certainly I am for it.”
+    -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
 profane servitor
 
