@@ -3353,8 +3353,9 @@ bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe)
                 // Not actually incapacitating, but marked as such so that
                 // assassins will prefer using it while ammo remains
                 case SPMSL_CURARE:
-                    if (!foe->res_poison())
+                    if (foe->res_poison() <= 0)
                         return true;
+                    break;
 
                 case SPMSL_SLEEP:
                     if (foe->can_sleep())
