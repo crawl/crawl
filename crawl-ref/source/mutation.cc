@@ -1960,15 +1960,27 @@ bool delete_temp_mutation()
 {
     if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
     {
-        mutation_type mutat;
+        mutation_type mutat = NUM_MUTATIONS;
 
-        while (true)
+        int count = 0;
+        for (int i = 0; i < NUM_MUTATIONS; i++)
+            if (you.temp_mutations[i] > 0 && one_chance_in(++count))
+                mutat = static_cast<mutation_type>(i);
+
+#if TAG_MAJOR_VERSION == 34
+        // We had a brief period (between 0.14-a0-1589-g48c4fed and
+        // 0.14-a0-1604-g40af2d8) where we corrupted attributes in transferred
+        // games.
+        if (mutat == NUM_MUTATIONS)
         {
-            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
-
-            if (you.temp_mutations[mutat] > 0)
-                break;
+            mprf(MSGCH_ERROR, "Found no temp mutations, clearing.");
+            you.attribute[ATTR_TEMP_MUTATIONS] = 0;
+            return false;
         }
+#else
+        ASSERTM(mutat != NUM_MUTATIONS, "Found no temp mutations, expected %d",
+                                        you.attribute[ATTR_TEMP_MUTATIONS]);
+#endif
 
         if (_delete_single_mutation_level(mutat, "temp mutation expiry", true))
         {
