@@ -418,6 +418,12 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             nothing_happens = false;
         }
 
+        if (you.attribute[ATTR_XP_DRAIN])
+        {
+            you.attribute[ATTR_XP_DRAIN] = 0;
+            mprf(MSGCH_RECOVERY, "Your life force feels restored.");
+        }
+
         // Give a message if no message otherwise.
         if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
             mpr("You feel refreshed.");

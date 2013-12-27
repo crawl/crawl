@@ -1073,8 +1073,9 @@ A potion which grants you temporary resistance to the elements and poison.
 %%%%
 potion of restore abilities
 
-A potion which restores the abilities of one who drinks it. It also allows to
-use a breath weapon again, cancelling the delay.
+A potion which restores the abilities of and alleviates draining in one
+who drinks it. It also allows to use a breath weapon again, cancelling
+the delay.
 %%%%
 potion of slowing
 
