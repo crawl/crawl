@@ -1587,8 +1587,11 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
 {
-    lang = LANG_EN; // FIXME: obtain from gettext
+    lang = LANG_EN;
     lang_name = 0;
+    set_lang(getenv("LC_ALL"))
+    || set_lang(getenv("LC_MESSAGES"))
+    || set_lang(getenv("LANG"));
     reset_options();
 }
 
@@ -2328,72 +2331,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "language")
     {
-        // FIXME: should talk to gettext/etc instead
-        if (field == "en" || field == "english")
-            lang = LANG_EN, lang_name = 0; // disable the db
-        else if (field == "cs" || field == "czech" || field == "český" || field == "cesky")
-            lang = LANG_CS, lang_name = "cs";
-        else if (field == "da" || field == "danish" || field == "dansk")
-            lang = LANG_DA, lang_name = "da";
-        else if (field == "de" || field == "german" || field == "deutsch")
-            lang = LANG_DE, lang_name = "de";
-        else if (field == "el" || field == "greek" || field == "ελληνικά" || field == "ελληνικα")
-            lang = LANG_EL, lang_name = "el";
-        else if (field == "es" || field == "spanish" || field == "español" || field == "espanol")
-            lang = LANG_ES, lang_name = "es";
-        else if (field == "fi" || field == "finnish" || field == "suomi")
-            lang = LANG_FI, lang_name = "fi";
-        else if (field == "fr" || field == "french" || field == "français" || field == "francais")
-            lang = LANG_FR, lang_name = "fr";
-        else if (field == "hu" || field == "hungarian" || field == "magyar")
-            lang = LANG_HU, lang_name = "hu";
-        else if (field == "it" || field == "italian" || field == "italiano")
-            lang = LANG_IT, lang_name = "it";
-        else if (field == "ja" || field == "japanese" || field == "日本人")
-            lang = LANG_JA, lang_name = "ja";
-        else if (field == "ko" || field == "korean" || field == "한국의")
-            lang = LANG_KO, lang_name = "ko";
-        else if (field == "lt" || field == "lithuanian" || field == "lietuvos")
-            lang = LANG_LT, lang_name = "lt";
-        else if (field == "lv" || field == "latvian" || field == "lettish"
-                 || field == "latvijas" || field == "latviešu"
-                 || field == "latvieshu" || field == "latviesu")
-        {
-            lang = LANG_LV, lang_name = "lv";
-        }
-        else if (field == "nl" || field == "dutch" || field == "nederlands")
-            lang = LANG_NL, lang_name = "nl";
-        else if (field == "pl" || field == "polish" || field == "polski")
-            lang = LANG_PL, lang_name = "pl";
-        else if (field == "pt" || field == "portuguese" || field == "português" || field == "portugues")
-            lang = LANG_PT, lang_name = "pt";
-        else if (field == "ru" || field == "russian" || field == "русский" || field == "русскии")
-            lang = LANG_RU, lang_name = "ru";
-        else if (field == "zh" || field == "chinese" || field == "中国的" || field == "中國的")
-            lang = LANG_ZH, lang_name = "zh";
-        // Fake languages do not reset lang_name, allowing a translated
-        // database in an actual language.  This is probably pointless for
-        // most fake langs, though.
-        else if (field == "dwarven" || field == "dwarf")
-            lang = LANG_DWARVEN;
-        else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin"
-                 || field == "jaeger" || field == "jaegerkin")
-        {
-            lang = LANG_JAGERKIN;
-        }
-        // Due to a conflict with actual "de", this uses slang names for the
-        // option.  Let's try to keep to less rude ones, though.
-        else if (field == "kraut" || field == "jerry" || field == "fritz")
-            lang = LANG_KRAUT;
-        else if (field == "futhark" || field == "runes" || field == "runic")
-            lang = LANG_FUTHARK;
-/*
-        else if (field == "cyr" || field == "cyrillic" || field == "commie" || field == "кириллица")
-            lang = LANG_CYRILLIC;
-*/
-        else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
-            lang = LANG_WIDE;
-        else
+        if (!set_lang(field.c_str()))
             report_error("No translations for language: %s\n", field.c_str());
     }
     else if (key == "default_autopickup")
@@ -3592,6 +3530,84 @@ void game_options::read_option_line(const string &str, bool runscript)
             named_options[key] = orig_field;
         }
     }
+}
+
+bool game_options::set_lang(const char *lc)
+{
+    if (!lc)
+        return false;
+
+    if (lc[0] && lc[1] && lc[2] == '_')
+        return set_lang(string(lc, 2).c_str());
+
+    const string &l(lc);
+    if (l == "en" || l == "english")
+        lang = LANG_EN, lang_name = 0; // disable the db
+    else if (l == "cs" || l == "czech" || l == "český" || l == "cesky")
+        lang = LANG_CS, lang_name = "cs";
+    else if (l == "da" || l == "danish" || l == "dansk")
+        lang = LANG_DA, lang_name = "da";
+    else if (l == "de" || l == "german" || l == "deutsch")
+        lang = LANG_DE, lang_name = "de";
+    else if (l == "el" || l == "greek" || l == "ελληνικά" || l == "ελληνικα")
+        lang = LANG_EL, lang_name = "el";
+    else if (l == "es" || l == "spanish" || l == "español" || l == "espanol")
+        lang = LANG_ES, lang_name = "es";
+    else if (l == "fi" || l == "finnish" || l == "suomi")
+        lang = LANG_FI, lang_name = "fi";
+    else if (l == "fr" || l == "french" || l == "français" || l == "francais")
+        lang = LANG_FR, lang_name = "fr";
+    else if (l == "hu" || l == "hungarian" || l == "magyar")
+        lang = LANG_HU, lang_name = "hu";
+    else if (l == "it" || l == "italian" || l == "italiano")
+        lang = LANG_IT, lang_name = "it";
+    else if (l == "ja" || l == "japanese" || l == "日本人")
+        lang = LANG_JA, lang_name = "ja";
+    else if (l == "ko" || l == "korean" || l == "한국의")
+        lang = LANG_KO, lang_name = "ko";
+    else if (l == "lt" || l == "lithuanian" || l == "lietuvos")
+        lang = LANG_LT, lang_name = "lt";
+    else if (l == "lv" || l == "latvian" || l == "lettish"
+             || l == "latvijas" || l == "latviešu"
+             || l == "latvieshu" || l == "latviesu")
+    {
+        lang = LANG_LV, lang_name = "lv";
+    }
+    else if (l == "nl" || l == "dutch" || l == "nederlands")
+        lang = LANG_NL, lang_name = "nl";
+    else if (l == "pl" || l == "polish" || l == "polski")
+        lang = LANG_PL, lang_name = "pl";
+    else if (l == "pt" || l == "portuguese" || l == "português" || l == "portugues")
+        lang = LANG_PT, lang_name = "pt";
+    else if (l == "ru" || l == "russian" || l == "русский" || l == "русскии")
+        lang = LANG_RU, lang_name = "ru";
+    else if (l == "zh" || l == "chinese" || l == "中国的" || l == "中國的")
+        lang = LANG_ZH, lang_name = "zh";
+    // Fake languages do not reset lang_name, allowing a translated
+    // database in an actual language.  This is probably pointless for
+    // most fake langs, though.
+    else if (l == "dwarven" || l == "dwarf")
+        lang = LANG_DWARVEN;
+    else if (l == "jäger" || l == "jägerkin" || l == "jager" || l == "jagerkin"
+             || l == "jaeger" || l == "jaegerkin")
+    {
+        lang = LANG_JAGERKIN;
+    }
+    // Due to a conflict with actual "de", this uses slang names for the
+    // option.  Let's try to keep to less rude ones, though.
+    else if (l == "kraut" || l == "jerry" || l == "fritz")
+        lang = LANG_KRAUT;
+    else if (l == "futhark" || l == "runes" || l == "runic")
+        lang = LANG_FUTHARK;
+/*
+    else if (l == "cyr" || l == "cyrillic" || l == "commie" || l == "кириллица")
+        lang = LANG_CYRILLIC;
+*/
+    else if (l == "wide" || l == "doublewidth" || l == "fullwidth")
+        lang = LANG_WIDE;
+    else
+        return false;
+    return true;
 }
 
 // Checks an include file name for safety and resolves it to a readable path.

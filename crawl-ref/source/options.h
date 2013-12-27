@@ -516,6 +516,7 @@ private:
     cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &);
     void set_option_fragment(const string &s);
+    bool set_lang(const char *s);
 
     static const string interrupt_prefix;
 };
