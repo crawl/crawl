@@ -644,7 +644,7 @@ static string _describe_demon(const string& name, flight_type fly)
         " and a huge, slobbery tongue",
         " who is covered in oozing lacerations",
         " and the head of a frog",
-        " and the head of a reindeer",
+        " and the head of a yak",
         " and eyes out on stalks",
     };
 

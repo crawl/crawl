@@ -339,12 +339,6 @@ unseen Ensnare Arachne cast
 
 A whitish beam shoots out from seemingly nowhere.
 %%%%
-Throw Frost Satan Claus cast
-
-@The_monster@ throws a snowball at @target@.
-
-@The_monster@ conjures a ball of snow at @target@.
-%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

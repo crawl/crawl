@@ -2831,7 +2831,7 @@ SUBST:  " : +, ' : . , - : ccc.
 : else
 SUBST:  "'- : c
 : end
-MONS:   giant frog / spiny frog / reindeer / red-nosed reindeer w:1 / elephant / grizzly bear
+MONS:   giant frog / spiny frog / yak / death yak w:1 / elephant / grizzly bear
 MAP
           xxxxxxxxx
        xxxxtccccctxxxx
@@ -2864,7 +2864,7 @@ SUBST:   w : wwwwwwtt.
 SUBST:   r : x
 NSUBST:  y = { / ...cc> / .
 KMASK:   W = no_monster_gen
-MONS:    anaconda / red-nosed reindeer / black mamba / elephant / hydra
+MONS:    anaconda / death yak / black mamba / elephant / hydra
 MAP
   xxxxxx
  xxccccxx

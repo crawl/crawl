@@ -192,10 +192,8 @@ ancient_bear MONS_ANCIENT_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
-%rim 1
-reindeer MONS_YAK
-red-nosed_reindeer MONS_DEATH_YAK
-%rim 0
+yak MONS_YAK
+death_yak MONS_DEATH_YAK
 catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
@@ -478,8 +476,8 @@ norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
+sigmund MONS_SIGMUND
 %rim 1
-santa MONS_SIGMUND
 terence MONS_TERENCE
 wiglaf MONS_WIGLAF
 

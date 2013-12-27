@@ -5725,10 +5725,6 @@ w:5
 ## END Saint Roka ##
 %%%%
 ############ SIGMUND ### Mad old wizard
-Satan Claus
-
-@The_monster@ says, "Ho ho ho."
-%%%%
 Sigmund
 
 @_Sigmund_common_@

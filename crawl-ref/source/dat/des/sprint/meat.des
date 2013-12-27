@@ -105,7 +105,7 @@
     ident:all no_pickup"
 
   local captor =
-    "Satan Claus hp:850 hd:40 name:The_Captor n_rpl col:lightcyan \
+    "sigmund hp:850 hd:40 name:The_Captor n_rpl col:lightcyan \
     generate_awake never_corpse \
     spells:sentinel's_mark;haste;ensnare \
     ; ring of slaying plus:27000 plus2:200 not_cursed ident:all \

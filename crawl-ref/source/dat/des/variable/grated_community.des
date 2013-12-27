@@ -165,7 +165,7 @@ FTILE:  123456cw#+%*.8$n~ = floor_grey_dirt
 KITEM:  % = animal skin / nothing
 MARKER: + = lua:restrict_door()
 KFEAT:  ~ = closed_door
-: dgn.delayed_decay(_G, '*', 'human skeleton / reindeer skeleton / elf skeleton /\
+: dgn.delayed_decay(_G, '*', 'human skeleton / yak skeleton / elf skeleton /\
 :                            gnome skeleton / elephant skeleton /\
 :                            sheep skeleton / manticore skeleton /\
 :                            w:2 nothing, animal skin')

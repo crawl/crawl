@@ -16,8 +16,8 @@ function init_ice(e)
                   ice dragon w:5 / ice dragon simulacrum w:5 / \
                   w:2000 nothing')
   else
-    e.kmons('.- = simulacrum w:20 / red-nosed reindeer w:1 / \
-                  wolf  / reindeer / polar bear / white imp w:20 / \
+    e.kmons('.- = simulacrum w:20 / death yak w:1 / \
+                  wolf  / yak / polar bear / white imp w:20 / \
                   ufetubus / ice beast w:15 / w:2000 nothing')
   end
   e.subst("- = --.")

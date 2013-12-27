@@ -13,7 +13,7 @@
 #   -> D:7-9   deep water, giant goldfish, big fish, jellyfish
 #   -> D:10-12 deep water, giant goldfish, big fish, jellyfish
 #   -> D:13-15 deep water, electric eel, shark, sea snake, snapping turtle
-#   -> D:16-18 ice, polar bear, reindeer, red-nosed reindeer, wolf
+#   -> D:16-18 ice, polar bear, yak, death yak, wolf
 #   -> D:19-21 ice, ice beast, simulacrum, freezing clouds
 #   -> D:22-24 lava, fire vortex, lava fish, lava snake, salamander
 #   -> D:25-27 lava, fire vortex, fire bat, lava worm, fire elemental
@@ -139,7 +139,7 @@ function init_aquarium(e)
     e.ftile('_ = floor_ice')
     e.kmons('_ = w:' .. nothing_weight .. [[ nothing /
                  w:3  generate_awake polar bear /
-                 w:8  generate_awake reindeer /
+                 w:8  generate_awake yak /
                  w:4  generate_awake wolf]] )
   elseif you.absdepth() <= 21 then
     -- to show off ontoclasm's new (May 2012) simulacrum tiles

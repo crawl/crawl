@@ -1824,7 +1824,7 @@ MONS:   orc knight, orc high priest, orc sorcerer
 MONS:   orc warrior, orc priest, orc wizard, orc
 MARKER: O = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
                               delay = 10, size = 1, excl_rad = 0 }
-: dgn.delayed_decay(_G, 'd', 'reindeer skeleton')
+: dgn.delayed_decay(_G, 'd', 'yak skeleton')
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
 KFEAT:  A = any shop
 MAP
