@@ -694,6 +694,9 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
 
 int weapon_min_delay(const item_def &weapon)
 {
+    if (is_range_weapon(weapon))
+        return range_skill(weapon) == SK_BOWS ? 6 : 7;
+
     const int base = property(weapon, PWPN_SPEED);
     int min_delay = base/2;
 

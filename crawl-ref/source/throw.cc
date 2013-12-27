@@ -510,12 +510,8 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield, bool 
     const int bow_brand = get_weapon_brand(launcher);
 
     int speed_base = 10 * property(launcher, PWPN_SPEED);
-    int speed_min = 70;
+    int speed_min = 10 * weapon_min_delay(launcher);
     int speed_stat = str_weight * you.strength() + dex_weight * you.dex();
-
-    // Reduce runaway bow overpoweredness.
-    if (launcher_skill == SK_BOWS)
-        speed_min = 60;
 
     if (shield)
     {
