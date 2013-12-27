@@ -295,7 +295,7 @@ static void _sdump_transform(dump_params &par)
             }
             break;
         case TRAN_FUNGUS:
-            text += "You " + verb + " an sentient fungus.";
+            text += "You " + verb + " a sentient fungus.";
             break;
         case TRAN_TREE:
             text += "You " + verb + " an animated tree.";
