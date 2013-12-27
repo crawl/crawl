@@ -1589,9 +1589,15 @@ game_options::game_options()
 {
     lang = LANG_EN;
     lang_name = 0;
+#ifndef TARGET_OS_WINDOWS
     set_lang(getenv("LC_ALL"))
     || set_lang(getenv("LC_MESSAGES"))
     || set_lang(getenv("LANG"));
+#else
+    char ln[30];
+    if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
+        set_lang(ln);
+#endif
     reset_options();
 }
 
@@ -3540,7 +3546,7 @@ bool game_options::set_lang(const char *lc)
     if (lc[0] && lc[1] && lc[2] == '_')
         return set_lang(string(lc, 2).c_str());
 
-    const string &l(lc);
+    const string l = lowercase_string(lc); // Windows returns it capitalized.
     if (l == "en" || l == "english")
         lang = LANG_EN, lang_name = 0; // disable the db
     else if (l == "cs" || l == "czech" || l == "český" || l == "cesky")
