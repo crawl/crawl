@@ -27,6 +27,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "directn.h"
+#include "fight.h"
 #include "food.h"
 #include "ghost.h"
 #include "goditem.h"
@@ -729,16 +730,20 @@ static string _describe_demon(const string& name, flight_type fly)
 
 void append_weapon_stats(string &description, const item_def &item)
 {
-    description += "\nAccuracy rating: ";
+    description += "\nBase accuracy: ";
     _append_value(description, property(item, PWPN_HIT), true);
-    description += "    ";
+    description += "  ";
 
-    description += "Damage rating: ";
+    description += "Base damage: ";
     _append_value(description, property(item, PWPN_DAMAGE), false);
-    description += "   ";
+    description += "  ";
 
     description += "Base attack delay: ";
     _append_value(description, property(item, PWPN_SPEED) / 10.0f, false);
+    description += "  ";
+
+    description += "Minimum delay: ";
+    _append_value(description, weapon_min_delay(item) / 10.0f, false);
 }
 
 static string _corrosion_resistance_string(const item_def &item)
