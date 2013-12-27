@@ -6431,7 +6431,7 @@ int player::armour_class() const
         // The deformed don't fit into body armour very well.
         // (This includes nagas and centaurs.)
         if (eq == EQ_BODY_ARMOUR && (player_mutation_level(MUT_DEFORMED)
-            || player_mutation_level(MUT_PSEUDOPODS)))
+                                     || player_mutation_level(MUT_PSEUDOPODS)))
         {
             AC -= ac_value / 2;
         }
