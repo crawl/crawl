@@ -253,9 +253,10 @@ They grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or using appropriate artefacts or abilities.
 
 If any one of these drops to zero for some reason, you will experience very
-unpleasant side-effects, up to and including death, which will persist for
-a short while even after the attribute is restored (though once the attribute
-is restored you are no longer at risk of dying from it.)
+unpleasant side-effects, up to and direct damage from further attribute loss,
+which will persist for a short while even after the attribute is restored
+(though once the attribute is restored you do not take damage for losing it
+again, while it is still above 0).
 
 Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
 species gain additional attributes at some levels, with the frequency and the
@@ -3080,9 +3081,8 @@ Clumsy
 Collapse
   One of your attributes (Intelligence, Dexterity, or Strength, respectively)
   has fallen to 0. You suffer extreme penalties to most actions related to
-  the specific attribute. If this status persists without raising the attribute
-  above 0, you may die. Increasing the attribute will cause the status to go away
-  in a few turns.
+  the specific attribute. Increasing the attribute above 0 will cause the status
+  to go away in a few turns.
 
 There are several more enchantment messages for various spells. The description
 of the spell causing the enchantment will explain these.
@@ -3327,11 +3327,8 @@ Contam
 Noisy
   makes noises on hit
 
-Hunger+
+Hunger, Hunger+
   increased rate of hunger
-
-Hunger
-  highly increased rate of hunger
 
 Curse
   chance of self-cursing when equipped
@@ -3361,7 +3358,7 @@ HP+3
   hit point modifier
 
 +cTele
-  can evoke for controlled teleport (from the 'a'bilities menu)
+  can evoke for temporary teleport control (from the 'a'bilities menu)
 
 SInv
   see invisible
