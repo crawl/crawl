@@ -138,16 +138,17 @@ species-dependent:
 
 Major:
 
-- Your rate of level advancement
+- The amount of hit points you get each level
 - Your rate of skill advancement
 - Your initial primary attributes (this also depends on background)
 - Various special abilities, powers and limitations
 
 Minor:
 
+- Your rate of level advancement
 - Occasional bonus points added to some primary attributes
-- The amount of hit points you get each level
 - The amount of magic points you get each level
+- Your innate resistance to hostile enchantments
 - Your initial equipment (this also depends on background)
 
 .. note:: Humans are the average to which all other species are compared.
@@ -252,8 +253,9 @@ They grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or using appropriate artefacts or abilities.
 
 If any one of these drops to zero for some reason, you will experience very
-unpleasant side-effects, which will persist for a short while even after the
-attribute is restored.
+unpleasant side-effects, up to and including death, which will persist for
+a short while even after the attribute is restored (though once the attribute
+is restored you are no longer at risk of dying from it.)
 
 Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
 species gain additional attributes at some levels, with the frequency and the
@@ -714,7 +716,7 @@ polearms. Each type of weapon does a different amount of damage, has a different
 chance of hitting its target, and takes a different amount of time to swing.
 There are several weapon skills (press 'm' to show a list of those that you are
 training) like Short Blades, Long Blades, Axes, etc. These skills affect damage,
-accuracy, and speed. (The same goes for Unarmed Combat.)
+accuracy, and speed (up to a point). (The same goes for Unarmed Combat.)
 
 Weapons can be enchanted; when they you first wield or otherwise identify them,
 you reveal values which tell you how much more effective they are than an
@@ -2146,7 +2148,8 @@ Fighting is the basic skill used in hand-to-hand combat, and applies no matter
 which weapon your character is wielding (if any). Fighting is also the skill
 that determines the number of hit points your character gets as they increase in
 levels (note that this is calculated so that you don't get a long run advantage
-by starting out with a high Fighting skill).
+by starting out with a high Fighting skill). Unlike the specific weapon skill,
+Fighting does not change the speed with which you make your attacks.
 
 Weapon skills affect your ability to fight with specific melee weapons. Weapon
 skills include:
@@ -2173,9 +2176,13 @@ is marked with a green asterisk. Similar types of weapons are:
   * Staves and Maces &amp; Flails
 
 Being good at a specific weapon improves the speed with which you can use it by
-about 1 aut every two skill levels, up to a limit. Although lighter weapons are
+aboout 1/10 of the time it takes to walk one square every two skill levels, up
+to a limit. Both the base speed and the best (lowest) possible speed are
+displayed in the inventory entry for a weapon. Although lighter weapons are
 easier to use initially, as they strike quickly and accurately, heavier weapons
 increase in damage potential very quickly as you improve your skill with them.
+You can check the current delay of your weapon by swinging it at air (using
+ctrl-direction) and looking at the number in parentheses next to your turncount.
 
 Some weapon types have special abilities. Axes are able to cleave through
 multiple enemies in a single swing, hitting enemies in an arc around the
@@ -2187,7 +2194,11 @@ command to target a specific monster with a reaching attack, or use Autofight
 Unarmed Combat is a special fighting skill. It allows your character to make a
 powerful attack when unarmed and also to punch with the off hand as an
 additional melee attack. Unarmed combat is particularly difficult to use in
-combination with heavy armour or shields.
+combination with heavy armour or shields. The Unarmed Combat skill continues to
+increase your attack speed while unarmed until it can be raised no more.
+
+Note that auxiliary attacks (such as a centaur's kick or a minotuar's headbutt)
+are totally unaffected by the Unarmed Combat skill!
 
 Ranged combat skills
 ========================================
@@ -2289,8 +2300,8 @@ Evocations
   This skill lets you use wands much more effectively, in terms of both damage
   and precision. Furthermore, with high Evocations, you can easily deduce the
   number of charges in a wand through usage. Similarly, all other items that
-  have certain powers (such as crystal balls, decks of cards, or lamps of fire)
-  work better for characters trained in this skill.
+  have certain powers (such as crystal balls, decks of cards, or elemental
+  summoners) work better for characters trained in this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The
@@ -3064,6 +3075,15 @@ Howl
   wolves out of nowhere to fight you. Eventually the howling should end after
   a time.
 
+Brainless
+Clumsy
+Collapse
+  One of your attributes (Intelligence, Dexterity, or Strength, respectively)
+  has fallen to 0. You suffer extreme penalties to most actions related to
+  the specific attribute. If this status persists without raising the attribute
+  above 0, you may die. Increasing the attribute will cause the status to go away
+  in a few turns.
+
 There are several more enchantment messages for various spells. The description
 of the spell causing the enchantment will explain these.
 
@@ -3305,12 +3325,12 @@ Contam
   causes high magical contamination when unequipped
 
 Noisy
-  makes noises
-
-Hunger
-  increased rate of hunger
+  makes noises on hit
 
 Hunger+
+  increased rate of hunger
+
+Hunger
   highly increased rate of hunger
 
 Curse
