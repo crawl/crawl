@@ -2138,6 +2138,11 @@ potion of strong poison
  then certainly I am for it.”
     -Noah S. Sweat, Jr. “If By Whiskey”. 1952
 %%%%
+potion of restore abilities
+
+“With the easy taste that goes down good.”
+   - Mr.PiBB slogan
+%%%%
 profane servitor
 
 “A spell was cast and the sky turned red
