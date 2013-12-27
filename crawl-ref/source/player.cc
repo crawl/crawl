@@ -8043,7 +8043,7 @@ bool need_expiration_warning(duration_type dur, dungeon_feature_type feat)
 
 bool need_expiration_warning(duration_type dur, coord_def p)
 {
-    need_expiration_warning(dur, env.grid(p));
+    return need_expiration_warning(dur, env.grid(p));
 }
 
 bool need_expiration_warning(dungeon_feature_type feat)
@@ -8054,7 +8054,7 @@ bool need_expiration_warning(dungeon_feature_type feat)
 
 bool need_expiration_warning(coord_def p)
 {
-    need_expiration_warning(env.grid(p));
+    return need_expiration_warning(env.grid(p));
 }
 
 static string _constriction_description()
