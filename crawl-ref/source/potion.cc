@@ -125,7 +125,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         if (you.species == SP_VAMPIRE)
         {
             // No healing anymore! (jpeg)
-            int value = 800;
+            int value = 840;
             if (pot_eff == POT_BLOOD)
             {
                 mpr("Yummy - fresh blood!");
@@ -138,7 +138,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
         else
         {
-            const int value = 200;
+            const int value = pot_eff == POT_BLOOD ? 1040 : 840;
             const int herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
             if (herbivorous < 3 && player_likes_chunks())
