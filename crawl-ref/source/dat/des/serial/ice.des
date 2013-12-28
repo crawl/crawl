@@ -24,7 +24,7 @@ function init_ice(e)
   e.rtile("x = wall_zot_cyan")
   e.colour("x = white")
 
-  e.colour(".@G! = white")
+  e.colour(".@! = white")
   e.ftile(".xA@G! = floor_ice")
   e.kfeat("A = stone_arch")
   e.kfeat(".-! = floor")
