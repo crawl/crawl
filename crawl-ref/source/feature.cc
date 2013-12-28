@@ -152,6 +152,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
                  || feat == DNGN_ENTER_LABYRINTH
                  || feat == DNGN_ENTER_HELL
                  || feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_ABYSS
+                 || feat == DNGN_ENTER_PANDEMONIUM
                  || feat == DNGN_EXIT_THROUGH_ABYSS
                  || feat == DNGN_ENTER_VAULTS
                  || feat == DNGN_ENTER_ZOT)
