@@ -259,6 +259,7 @@ KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    sling bullet ego:silver w:2 | amulet of faith w:2 | potion of cure mutation | \
    ring of positive energy w:5 | any armour ego:positive_energy w:5
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
+KPROP: 1 = no_rtele_into
 MONS: angel
 MAP
 nnn
