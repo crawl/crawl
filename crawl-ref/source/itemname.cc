@@ -2994,8 +2994,9 @@ bool is_bad_item(const item_def &item, bool temp)
                 return false;
         case POT_CONFUSION:
         case POT_DEGENERATION:
-        case POT_DECAY:
             return true;
+        case POT_DECAY:
+            return you.species != SP_GARGOYLE;
         case POT_STRONG_POISON:
             return player_res_poison(false, temp) < 3;
         case POT_POISON:
