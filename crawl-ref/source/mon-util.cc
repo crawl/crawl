@@ -1958,7 +1958,6 @@ int exper_value(const monster* mon, bool real)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
-            case SPELL_SUMMON_GREATER_DEMON:
             case SPELL_SUMMON_EYEBALLS:
             case SPELL_HELLFIRE_BURST:
             case SPELL_HELLFIRE:
@@ -1971,12 +1970,13 @@ int exper_value(const monster* mon, bool real)
                 diff += 25;
                 break;
 
+            case SPELL_SUMMON_GREATER_DEMON:
+                diff += 20;
+                break;
+
             case SPELL_LIGHTNING_BOLT:
             case SPELL_STICKY_FLAME_RANGE:
             case SPELL_DISINTEGRATE:
-            case SPELL_HAUNT:
-            case SPELL_SUMMON_DRAGON:
-            case SPELL_SUMMON_HORRIBLE_THINGS:
             case SPELL_BANISHMENT:
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_IRON_SHOT:
@@ -1986,6 +1986,12 @@ int exper_value(const monster* mon, bool real)
             case SPELL_AGONY:
             case SPELL_LRD:
                 diff += 10;
+                break;
+
+            case SPELL_HAUNT:
+            case SPELL_SUMMON_DRAGON:
+            case SPELL_SUMMON_HORRIBLE_THINGS:
+                diff += 7;
                 break;
 
             default:
