@@ -515,6 +515,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         break;
 
     case DNGN_STONE_ARCH:
+    case DNGN_ABANDONED_SHOP:
         f.colour     = LIGHTGREY;
         f.dchar      = DCHAR_ARCH;
         f.map_colour = LIGHTGREY;
