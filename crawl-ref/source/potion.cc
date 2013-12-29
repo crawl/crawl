@@ -422,9 +422,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         {
             you.attribute[ATTR_XP_DRAIN] = max(0, you.attribute[ATTR_XP_DRAIN] / 2 - 25);
             if (!you.attribute[ATTR_XP_DRAIN])
-            {
                 mprf(MSGCH_RECOVERY, "Your life force feels restored.");
-            }
         }
 
         // Give a message if no message otherwise.
