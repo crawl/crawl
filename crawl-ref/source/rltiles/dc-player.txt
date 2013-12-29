@@ -540,6 +540,9 @@ short_sword_slant2
 short_sword_two SHORT_SWORD2
 sword_thief SWORD_THIEF
 bastard_sword BASTARD_SWORD
+bastard_sword2
+bastard_sword3
+bastard_sword_blessed BASTARD_SWORD_BLESSED
 long_sword_slant LONG_SWORD_SLANT
 long_sword_slant2
 blessed_blade BLESSED_BLADE
