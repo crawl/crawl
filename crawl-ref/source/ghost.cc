@@ -355,10 +355,10 @@ static int _player_ghost_base_movement_speed()
 {
     int speed = 10;
 
-    if (player_mutation_level(MUT_FAST, false))
-        speed += player_mutation_level(MUT_FAST, false) + 1;
-    if (player_mutation_level(MUT_SLOW, false))
-        speed -= player_mutation_level(MUT_SLOW, false) + 1;
+    if (int fast = player_mutation_level(MUT_FAST, false))
+        speed += fast + 1;
+    if (int slow = player_mutation_level(MUT_SLOW, false))
+        speed -= slow + 1;
 
     if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
         speed += 2;

@@ -319,7 +319,7 @@
   "magic resistance"
 },
 
-{ MUT_FAST,                           1,  3, false, false,  true,
+{ MUT_FAST,                           0,  3, false, false,  true,
   "speed",
 
   {"You cover ground quickly.",
@@ -337,7 +337,7 @@
   "fast"
 },
 
-{ MUT_SLOW,                           3,  3,  true, false,  true,
+{ MUT_SLOW,                           0,  3,  true, false,  true,
   "slowness",
 
   {"You cover ground slowly.",
