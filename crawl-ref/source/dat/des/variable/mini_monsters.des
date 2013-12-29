@@ -3752,7 +3752,7 @@ SHUFFLE: ABCDEF
 NSUBST:  A = 1:> / *=.%
 NSUBST:  B = 6:0 / *:., C = 6=$0 / *:., D = 6=%0 / *:.
 NSUBST:  E = 1:98 / 1:*| / *:., F = 1:90 / 1:$ / *:.
-SUBST:   x = c, ' = .
+SUBST:   ' = .
 MAP
 ccccc@'''''''@ccccc
 cAAAcwwwwwwwwwcBBBc

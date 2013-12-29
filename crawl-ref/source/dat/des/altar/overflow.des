@@ -454,7 +454,6 @@ SUBST:   T = xt, U = xx
 SUBST:   " = .....6
 COLOUR:  . = green / none
 COLOUR:  ' = green
-COLOUR:  x = green / none w:30
 NSUBST:  w = 2:4 / *:w
 
 MAP
