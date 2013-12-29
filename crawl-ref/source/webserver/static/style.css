@@ -169,6 +169,7 @@ body {
     padding: 5px;
     border: 1px solid #626262;
 
+    overflow-x: hidden;
     z-index: 3000;
 }
 
