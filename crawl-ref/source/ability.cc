@@ -826,6 +826,10 @@ static ability_type _fixup_ability(ability_type ability)
         if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
 
+    case ABIL_OKAWARU_FINESSE:
+        if (you.species == SP_FORMICID)
+            return ABIL_NON_ABILITY;
+
     default:
         return ability;
     }
@@ -1506,12 +1510,6 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_OKAWARU_FINESSE:
-        if (you.species == SP_FORMICID)
-        {
-            if (!quiet)
-                mpr("You cannot use finesse because of your stasis.");
-            return false;
-        }
         if (stasis_blocks_effect(false, false,
                                  quiet ? NULL : "%s makes your neck tingle."))
         {
