@@ -3319,7 +3319,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_BASTARD_SWORD;
 
     case WPN_BLESSED_CLAYMORE:
-        return TILE_WPN_CLAYMORE;
+        return TILE_WPN_BLESSED_CLAYMORE;
     }
 
     return TILE_ERROR;

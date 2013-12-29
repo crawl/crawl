@@ -152,6 +152,8 @@ quickblade3
 
 bastard_sword WPN_BASTARD_SWORD
 claymore WPN_CLAYMORE
+claymore2
+claymore3 WPN_BLESSED_CLAYMORE
 demon_blade WPN_DEMON_BLADE
 %rim 0
 blessed_blade WPN_BLESSED_BLADE
