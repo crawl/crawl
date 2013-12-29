@@ -178,7 +178,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_FALCHION;
         break;
     case WPN_BLESSED_BASTARD_SWORD:
-        tile = TILEP_HAND1_BASTARD_SWORD;
+        tile = TILEP_HAND1_BASTARD_SWORD_BLESSED;
         break;
     case WPN_BLESSED_CLAYMORE:
         tile = TILEP_HAND1_CLAYMORE_BLESSED;

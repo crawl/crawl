@@ -151,6 +151,9 @@ quickblade2
 quickblade3
 
 bastard_sword WPN_BASTARD_SWORD
+bastard_sword2
+bastard_sword3
+bastard_sword_blessed WPN_BLESSED_BASTARD_SWORD
 claymore WPN_CLAYMORE
 claymore2
 claymore3 WPN_BLESSED_CLAYMORE
