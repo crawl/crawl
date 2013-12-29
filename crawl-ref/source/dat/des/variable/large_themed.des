@@ -824,7 +824,7 @@ NSUBST: A = 3:v / *:+, B = 3:v / *:+
 NSUBST: C = 2:v / *:+, D = 2:v / *:+
 # Colouring
 COLOUR: G = cyan
-COLOUR: I5M% = white
+COLOUR: 5M% = white
 # Making things other things.
 SUBST:  I = G
 # Markers:

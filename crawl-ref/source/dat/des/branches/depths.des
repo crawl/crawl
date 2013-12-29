@@ -132,7 +132,6 @@ KMONS: O = vampire mage w:15 / flayed ghost / phantasmal warrior
 NSUBST: . = 4:1 / 1:2 / 2:3 /*:.
 SUBST: . = .....--__tG
 TILE: G = dngn_gravestone
-COLOUR: G = white
 FTILE: - = floor_pebble_brown
 FTILE: _ = floor_pebble_darkgray
 : set_feature_name("granite_statue", "a gravestone")
