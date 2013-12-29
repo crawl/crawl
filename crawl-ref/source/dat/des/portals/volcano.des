@@ -101,7 +101,6 @@ function volcano_setup (e)
     e.subst("y : yyy.x")
     e.subst("y = xxx.")
     e.colour("c = lightred")
-    e.colour("G = lightred")
     e.colour("= = lightred")
     e.set_feature_name("stone_arch", "rock-blocked tunnel")
 end

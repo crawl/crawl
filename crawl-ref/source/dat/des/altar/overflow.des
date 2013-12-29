@@ -1210,7 +1210,7 @@ KFEAT:  _ = altar_sif_muna
 KFEAT:  d = escape_hatch_down
 KITEM:  d = randbook owner:Sif_Muna numspells:1 slevels:1
 MONS:   orc wizard
-COLOUR: .@+1G = blue
+COLOUR: .@+1 = blue
 FTILE:  .@+1G_ = floor_marble
 : interest_check(_G)
 MAP
