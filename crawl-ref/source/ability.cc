@@ -827,6 +827,11 @@ static ability_type _fixup_ability(ability_type ability)
             return ABIL_STOP_RECALL;
 
     case ABIL_OKAWARU_FINESSE:
+    case ABIL_BLINK:
+    case ABIL_WISP_BLINK:
+    case ABIL_EVOKE_BLINK:
+    case ABIL_EVOKE_BERSERK:
+    case ABIL_TROG_BERSERK:
         if (you.species == SP_FORMICID)
             return ABIL_NON_ABILITY;
 
