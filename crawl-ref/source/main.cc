@@ -2831,9 +2831,7 @@ static void _decrement_durations()
     {
         if (!you.permanent_flight())
         {
-            if (_decrement_a_duration(DUR_FLIGHT, delay,
-                                      0,
-                                      random2(6),
+            if (_decrement_a_duration(DUR_FLIGHT, delay, nullptr, random2(6),
                                       "You are starting to lose your buoyancy."))
             {
                 land_player();
