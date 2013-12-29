@@ -2275,13 +2275,12 @@ int player_movement_speed(bool ignore_burden)
         mv += 5;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
-    // Not when swimming, since it is "cover the ground quickly".
-    if (player_mutation_level(MUT_FAST) > 0 && !you.swimming())
-        mv -= player_mutation_level(MUT_FAST) + 1;
+    if (int fast = player_mutation_level(MUT_FAST))
+        mv -= fast + 1;
 
-    if (player_mutation_level(MUT_SLOW) > 0 && !you.swimming())
+    if (int slow = player_mutation_level(MUT_SLOW))
     {
-        mv *= 10 + player_mutation_level(MUT_SLOW) * 2;
+        mv *= 10 + slow * 2;
         mv /= 10;
     }
 

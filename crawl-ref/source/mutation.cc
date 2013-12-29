@@ -1000,7 +1000,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_DOPEY:
     case MUT_CLUMSY:
     case MUT_TELEPORT:
-    case MUT_FAST:
     case MUT_DEFORMED:
     case MUT_SPIT_POISON:
     case MUT_BREATHE_FLAMES:
@@ -1021,7 +1020,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_STINGER:
     case MUT_BIG_WINGS:
     case MUT_LOW_MAGIC:
-    case MUT_SLOW:
     case MUT_EVOLUTION:
         amusement *= 2; // funny!
         break;

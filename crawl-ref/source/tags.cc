@@ -2368,6 +2368,8 @@ static void tag_read_you(reader &th)
                 you.temp_mutations[mut] = 0;
         }
     }
+    you.mutation[MUT_FAST] = you.innate_mutations[MUT_FAST];
+    you.mutation[MUT_SLOW] = you.innate_mutations[MUT_SLOW];
 #endif
 
     for (j = count; j < NUM_MUTATIONS; ++j)
