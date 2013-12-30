@@ -1027,9 +1027,10 @@ void SkillMenu::init_flags()
 
     for (unsigned int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (you.skill(skill_type(i)) > you.skills[i])
+        skill_type type = skill_type(i);
+        if (you.skill(type, 10) > you.skill(type, 10, true))
             set_flag(SKMF_ENHANCED);
-        else if (you.skill(skill_type(i)) < you.skills[i])
+        else if (you.skill(type, 10) < you.skill(type, 10, true))
             set_flag(SKMF_REDUCED);
     }
 }
