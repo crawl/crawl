@@ -530,6 +530,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         set_ident_flags(*potion, ISFLAG_IDENT_MASK);
         set_ident_type(*potion, ID_KNOWN_TYPE);
         mprf("It was a %s.", potion->name(DESC_QUALNAME).c_str());
+        identify_healing_pots();
     }
 
     return true;

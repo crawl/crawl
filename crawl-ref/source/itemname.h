@@ -114,6 +114,7 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
                      bool force = false);
 void set_ident_type(object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
+void identify_healing_pots();
 
 string item_prefix(const item_def &item, bool temp = true);
 string get_menu_colour_prefix_tags(const item_def &item,

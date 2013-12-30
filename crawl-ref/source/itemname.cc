@@ -2077,6 +2077,21 @@ void set_ident_type(object_class_type basetype, int subtype,
     }
 }
 
+void identify_healing_pots()
+{
+    int ident_count = (you.type_ids[OBJ_POTIONS][POT_CURING] == ID_KNOWN_TYPE)
+                    + (you.type_ids[OBJ_POTIONS][POT_HEAL_WOUNDS] == ID_KNOWN_TYPE);
+    int tried_count = (you.type_ids[OBJ_POTIONS][POT_CURING] == ID_MON_TRIED_TYPE)
+                    + (you.type_ids[OBJ_POTIONS][POT_HEAL_WOUNDS] == ID_MON_TRIED_TYPE);
+
+    if (ident_count == 1 && tried_count == 1)
+    {
+        set_ident_type(OBJ_POTIONS, POT_CURING, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_POTIONS, POT_HEAL_WOUNDS, ID_KNOWN_TYPE);
+        mpr("You have identified the last healing potion.");
+    }
+}
+
 item_type_id_state_type get_ident_type(const item_def &item)
 {
     if (is_artefact(item))

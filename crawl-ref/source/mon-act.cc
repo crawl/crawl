@@ -792,7 +792,10 @@ static bool _handle_potion(monster* mons, bolt & beem)
 
         // Give ID if necessary.
         if (was_visible && id != ID_UNKNOWN_TYPE)
+        {
             set_ident_type(OBJ_POTIONS, ptype, id);
+            identify_healing_pots();
+        }
 
         // Remove it from inventory.
         if (dec_mitm_item_quantity(potion_idx, 1))
