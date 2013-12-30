@@ -252,11 +252,11 @@ Dexterity
 They grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or using appropriate artefacts or abilities.
 
-If any one of these drops to zero for some reason, you will experience very
-unpleasant side-effects, up to and direct damage from further attribute loss,
-which will persist for a short while even after the attribute is restored
-(though once the attribute is restored you do not take damage for losing it
-again, while it is still above 0).
+If any one of these drops to zero for some reason, you will experience
+very unpleasant side-effects, up to and including direct damage from
+further attribute loss, which will persist for a short while even
+after the attribute is restored (though once the attribute is restored
+you do not take damage for losing it again, while it is still above 0).
 
 Upon gaining levels 3, 6, 9, etc., you may choose an attribute to raise. Most
 species gain additional attributes at some levels, with the frequency and the
@@ -719,7 +719,7 @@ There are several weapon skills (press 'm' to show a list of those that you are
 training) like Short Blades, Long Blades, Axes, etc. These skills affect damage,
 accuracy, and speed (up to a point). (The same goes for Unarmed Combat.)
 
-Weapons can be enchanted; when they you first wield or otherwise identify them,
+Weapons can be enchanted; when you first wield or otherwise identify them,
 you reveal values which tell you how much more effective they are than an
 unenchanted version. The first number is the enchantment to-hit, which affects
 the weapon's accuracy, and the second is its damage enchantment; weapons which
