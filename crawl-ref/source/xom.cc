@@ -1536,7 +1536,7 @@ static int _xom_swap_weapons(bool debug = false)
 // hostile monsters around.
 static int _xom_rearrange_pieces(int sever, bool debug = false)
 {
-    if (player_stair_delay())
+    if (player_stair_delay() || monster_at(you.pos()))
         return XOM_DID_NOTHING;
 
     vector<monster* > mons;
