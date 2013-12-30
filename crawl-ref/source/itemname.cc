@@ -3231,7 +3231,9 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.mutation[MUT_NO_DEVICE_HEAL]
             && item_type_known(item)
             && item.sub_type == WAND_HEAL_WOUNDS)
+        {
             return true;
+        }
 
         if (item.sub_type == WAND_INVISIBILITY
             && item_type_known(item)
