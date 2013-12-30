@@ -1096,7 +1096,11 @@ void tag_read(reader &inf, tag_type tag_id)
         // We have to do this here because tag_read_level_tiles() can
         // call into Lua, which can look at the items ...
         link_items();
-        check_map_validity();
+        // The Abyss needs to visit other levels during level gen, before
+        // all cells have been filled; generate_abyss will check_map_validity
+        // itself after the grid is fully populated.
+        if (you.where_are_you != BRANCH_ABYSS)
+            check_map_validity();
         tag_read_level_tiles(th);
         break;
     case TAG_GHOST:
