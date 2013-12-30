@@ -583,7 +583,10 @@ string describe_mutations(bool center_title)
         result += "Your are under a permanent stasis effect.\n";
         result += "You can dig through walls and to a lower floor.\n";
         result += "Your four strong arms can wield any weapon, most with a shield.\n";
-        result += "You are susceptible to poison.\n";
+        // form_changed_physiology rather than !form_keeps_mutations because
+        // statue and lich form both override this with full immunity.
+        result += _annotate_form_based("You are susceptible to poison.",
+                                       form_changed_physiology());
         have_any = true;
         break;
 
