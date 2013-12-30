@@ -182,7 +182,7 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
     }
 
     //XXX: there should be a better way to specify beam cloud types
-    switch(cty)
+    switch (cty)
     {
         case CLOUD_POISON:
             beam.flavour = BEAM_POISON;

@@ -809,7 +809,7 @@ LUAFN(dgn_make_box_doors)
             lines(x, y) = door;
             for (int i = 1; i < thickness; i++)
             {
-                switch(side)
+                switch (side)
                 {
                 case 0: y++;  break;
                 case 1: y--;  break;
@@ -1044,7 +1044,7 @@ LUAFN(dgn_make_round_box)
         for (int x = 0; x < size_x; x++)
             for (int y = 0; y < size_y; y++)
             {
-                switch(new_glyphs[x][y])
+                switch (new_glyphs[x][y])
                 {
                 // leave existing glyphs on OUTSIDE
                 case WALL:  lines(x1 + x, y1 + y) = wall;  break;

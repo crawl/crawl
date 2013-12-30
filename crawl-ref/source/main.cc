@@ -393,7 +393,7 @@ static void _launch_game_loop()
         {
             end(1, false, "%s", fe.msg.c_str());
         }
-        catch(short_read_exception &E)
+        catch (short_read_exception &E)
         {
             end(1, false, "Error: truncation inside the save file.\n");
         }

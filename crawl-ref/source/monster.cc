@@ -5071,7 +5071,7 @@ bool monster::is_skeletal() const
 
 int monster::spiny_degree() const
 {
-    switch(type)
+    switch (type)
     {
         case MONS_PORCUPINE:
             return 3;

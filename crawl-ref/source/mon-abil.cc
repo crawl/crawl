@@ -1156,7 +1156,7 @@ enum battlecry_type
 
 static bool _is_battlecry_compatible(monster* mons, battlecry_type type)
 {
-    switch(type)
+    switch (type)
     {
         case BATTLECRY_ORC:
             return mons_genus(mons->type) == MONS_ORC;
