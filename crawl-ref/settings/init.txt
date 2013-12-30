@@ -87,7 +87,7 @@
 # assign_item_slot = (forward | backward)
 #
 # drop_mode = (multi | single)
-# pickup_mode = (single | multi | auto:5)
+# pickup_menu = false
 # drop_filter += skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
