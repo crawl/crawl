@@ -2123,7 +2123,7 @@ potion
 potion of poison
 
 “If when you say "whiskey" you mean the devil's brew, the poison
- scourge, the bloody mosnter, that defiles innocence, dethrones
+ scourge, the bloody monster, that defiles innocence, dethrones
  reason, destroys the home, creates misery and poverty, yea,
  literally takes the bread from the mouths of little children...
  then certainly I am against it.”
