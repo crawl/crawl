@@ -25,7 +25,7 @@ static species_type species_order[] =
     SP_DEEP_ELF,       SP_DEEP_DWARF,
     SP_HILL_ORC,       SP_LAVA_ORC,
     SP_MERFOLK,        SP_FORMICID,
-    SP_VINE_STALKER, 
+    SP_VINE_STALKER,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
