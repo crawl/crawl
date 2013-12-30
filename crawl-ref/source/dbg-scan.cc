@@ -694,7 +694,7 @@ void check_map_validity()
             exit = DNGN_UNSEEN;
     }
 
-    if (portal)
+    if (portal && you.char_direction != GDT_ASCENDING)
     {
 #ifdef DEBUG_DIAGNOSTICS
         dump_map("missing_portal.map", true);
