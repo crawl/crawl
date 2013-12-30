@@ -924,54 +924,6 @@ static void _place_player_on_stair(branch_type old_branch,
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
 }
 
-#if TAG_MAJOR_VERSION == 34
-static void _ensure_entry(branch_type br)
-{
-    dungeon_feature_type entry = branches[br].entry_stairs;
-    for (rectangle_iterator ri(1); ri; ++ri)
-        if (grd(*ri) == entry)
-            return;
-
-    // Find primary upstairs.
-    for (rectangle_iterator ri(1); ri; ++ri)
-        if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
-        {
-            for (distance_iterator di(*ri); di; ++di)
-                if (in_bounds(*di) && grd(*di) == DNGN_FLOOR)
-                {
-                    grd(*di) = entry; // No need to update LOS, etc.
-                    // Announce the repair even in non-debug builds.
-                    mprf(MSGCH_ERROR, "Placing missing branch entry: %s.",
-                         dungeon_feature_name(entry));
-                    return;
-                }
-            die("no floor to place a branch entrance");
-        }
-    die("no upstairs on %s???", level_id::current().describe().c_str());
-}
-
-static void _add_missing_branches()
-{
-    const level_id lc = level_id::current();
-
-    // Could do all just in case, but this seems safer:
-    if (brentry[BRANCH_VAULTS] == lc)
-        _ensure_entry(BRANCH_VAULTS);
-    if (brentry[BRANCH_ZOT] == lc)
-        _ensure_entry(BRANCH_ZOT);
-    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 21))
-        _ensure_entry(BRANCH_VESTIBULE);
-
-    // The remaining branch entries close once the orb is taken.
-    if (you.char_direction == GDT_ASCENDING)
-        return;
-    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 24))
-        _ensure_entry(BRANCH_PANDEMONIUM);
-    if (lc == level_id(BRANCH_DEPTHS, 4) || lc == level_id(BRANCH_DUNGEON, 25))
-        _ensure_entry(BRANCH_ABYSS);
-}
-#endif
-
 static void _close_level_gates()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -1358,10 +1310,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         dprf("Loading old level '%s'.", level_name.c_str());
         _restore_tagged_chunk(you.save, level_name, TAG_LEVEL, "Level file is invalid.");
 
-        // POST-LOAD tasks :
-#if TAG_MAJOR_VERSION == 34
-        _add_missing_branches();
-#endif
         _redraw_all();
     }
 

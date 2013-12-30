@@ -994,6 +994,55 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
                    } while (0)
 #endif
 
+#if TAG_MAJOR_VERSION == 34
+static void _ensure_entry(branch_type br)
+{
+    dungeon_feature_type entry = branches[br].entry_stairs;
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (grd(*ri) == entry)
+            return;
+
+    // Find primary upstairs.
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
+        {
+            for (distance_iterator di(*ri); di; ++di)
+                if (in_bounds(*di) && grd(*di) == DNGN_FLOOR)
+                {
+                    grd(*di) = entry; // No need to update LOS, etc.
+                    // Announce the repair even in non-debug builds.
+                    mprf(MSGCH_ERROR, "Placing missing branch entry: %s.",
+                         dungeon_feature_name(entry));
+                    return;
+                }
+            die("no floor to place a branch entrance");
+        }
+    die("no upstairs on %s???", level_id::current().describe().c_str());
+}
+
+static void _add_missing_branches()
+{
+    const level_id lc = level_id::current();
+
+    // Could do all just in case, but this seems safer:
+    if (brentry[BRANCH_VAULTS] == lc)
+        _ensure_entry(BRANCH_VAULTS);
+    if (brentry[BRANCH_ZOT] == lc)
+        _ensure_entry(BRANCH_ZOT);
+    if (lc == level_id(BRANCH_DEPTHS, 2) || lc == level_id(BRANCH_DUNGEON, 21))
+        _ensure_entry(BRANCH_VESTIBULE);
+
+    // The remaining branch entries close once the orb is taken.
+    if (you.char_direction == GDT_ASCENDING)
+        return;
+    if (lc == level_id(BRANCH_DEPTHS, 3) || lc == level_id(BRANCH_DUNGEON, 24))
+        _ensure_entry(BRANCH_PANDEMONIUM);
+    if (lc == level_id(BRANCH_DEPTHS, 4) || lc == level_id(BRANCH_DUNGEON, 25))
+        _ensure_entry(BRANCH_ABYSS);
+}
+#endif
+
+
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
 void tag_write(tag_type tagID, writer &outf)
@@ -1096,8 +1145,12 @@ void tag_read(reader &inf, tag_type tag_id)
         // We have to do this here because tag_read_level_tiles() can
         // call into Lua, which can look at the items ...
         link_items();
+#if TAG_MAJOR_VERSION == 34
+        _add_missing_branches();
+#endif
         // The Abyss needs to visit other levels during level gen, before
-        // all cells have been filled; generate_abyss will check_map_validity
+        // all cells have been filled. We mustn't crash when it returns
+        // from those excursions, and generate_abyss will check_map_validity
         // itself after the grid is fully populated.
         if (you.where_are_you != BRANCH_ABYSS)
             check_map_validity();
