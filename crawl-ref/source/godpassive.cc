@@ -710,7 +710,7 @@ int ash_skill_boost(skill_type sk, int scale)
 
     unsigned int skill_points = you.skill_points[sk];
     skill_points += (you.skill_boost[sk] * 2 + 1) * piety_rank()
-                    * you.skill(sk, 10, true) * species_apt_factor(sk);
+                    * max(you.skill(sk, 10, true), 1) * species_apt_factor(sk);
 
     int level = you.skills[sk];
     while (level < 27 && skill_points >= skill_exp_needed(level + 1, sk))
