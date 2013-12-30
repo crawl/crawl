@@ -577,7 +577,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     beam.beam_source = (mons) ? mons->mindex() : MHITNOT;
     beam.foe_ratio = 80;
 
-    switch(spell)
+    switch (spell)
     {
         case SPELL_OZOCUBUS_REFRIGERATION:
             player_msg = "The heat is drained from your surroundings.";

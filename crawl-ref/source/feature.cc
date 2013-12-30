@@ -13,7 +13,7 @@ static feature_def invis_fd, cloud_fd;
 
 const feature_def &get_feature_def(show_type object)
 {
-    switch(object.cls)
+    switch (object.cls)
     {
     case SH_INVIS_EXPOSED:
         return invis_fd;

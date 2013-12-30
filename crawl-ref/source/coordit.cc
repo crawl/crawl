@@ -165,7 +165,7 @@ radius_iterator::radius_iterator(const coord_def _center, int r,
       los(LOS_NONE)
 {
     ASSERT(map_bounds(_center));
-    switch(ctype)
+    switch (ctype)
     {
     case C_CIRCLE: credit_y = r; break;
     case C_POINTY: credit_y = r * r; break;
@@ -200,7 +200,7 @@ radius_iterator::radius_iterator(const coord_def _center,
       los(_los)
 {
     ASSERT(map_bounds(_center));
-    switch(ctype)
+    switch (ctype)
     {
     case C_CIRCLE: credit_y = r; break;
     case C_POINTY: credit_y = r * r; break;
@@ -227,7 +227,7 @@ const coord_def* radius_iterator::operator->() const
 }
 
 #define coreturn(id) { state = id; return; case id:; }
-#define cobegin(id)  switch(state) { case id:
+#define cobegin(id)  switch (state) { case id:
 #define coend(id)    coreturn(id); }
 #define ret_coord(dx, dy, id) do                                \
     {                                                           \

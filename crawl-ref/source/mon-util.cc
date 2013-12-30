@@ -3260,7 +3260,7 @@ bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
-            switch(mon->spells[i])
+            switch (mon->spells[i])
             {
                 case SPELL_SLEEP:
                     if (foe->can_sleep())
