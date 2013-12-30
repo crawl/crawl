@@ -1619,14 +1619,17 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             antimagic_affects_defender(true);
             mprf("You drain %s magic.",
                  defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str());
-            inc_mp(random2(damage_done) + 1);
 
-            if (spell_user) // The mana drain is more effective on spellcasters
+            if (!defender->as_monster()->is_summoned()
+                && !mons_is_firewood(defender->as_monster()))
             {
                 inc_mp(random2(damage_done) + 1);
-            }
 
-            mprf("You feel%sinvigorated.", spell_user ? " very " : " ");
+                if (spell_user) // The mana drain is more effective on spellcasters
+                    inc_mp(random2(damage_done) + 1);
+
+                mprf("You feel%sinvigorated.", spell_user ? " very " : " ");
+            }
         }
 
         if (atk == UNAT_TAILSLAP && you.species == SP_GREY_DRACONIAN
