@@ -1362,7 +1362,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 #if TAG_MAJOR_VERSION == 34
         _add_missing_branches();
 #endif
-        link_items();
         _redraw_all();
     }
 
