@@ -1909,7 +1909,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp++;
 
     // Formicids are vulnerable, but can make up for it with 2 rPois sources.
-    if (you.species == SP_FORMICID)
+    if (you.species == SP_FORMICID && form_keeps_mutations())
         rp--;
 
     if (temp)
