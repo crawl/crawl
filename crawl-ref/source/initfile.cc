@@ -908,11 +908,7 @@ void game_options::reset_options()
     dump_book_spells       = true;
 
     drop_mode              = DM_MULTI;
-#ifdef TOUCH_UI
-    pickup_mode            = 0;
-#else
-    pickup_mode            = -1;
-#endif
+    pickup_menu            = true;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -3378,15 +3374,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             drop_mode = DM_SINGLE;
     }
-    else if (key == "pickup_mode")
-    {
-        if (field.find("multi") != string::npos)
-            pickup_mode = 0;
-        else if (field.find("single") != string::npos)
-            pickup_mode = -1;
-        else
-            pickup_mode = _read_bool_or_number(field, pickup_mode, "auto:");
-    }
+    else BOOL_OPTION(pickup_menu);
     else if (key == "additional_macro_file")
     {
         // TODO: this option could probably be improved.  For now, keep the

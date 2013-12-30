@@ -337,8 +337,7 @@ public:
 
     int         drop_mode;          // Controls whether single or multidrop
                                     // is the default.
-    int         pickup_mode;        // -1 for single, 0 for menu,
-                                    // X for 'if at least X items present'
+    bool        pickup_menu;        // false for single, true for menu
 
     bool        easy_exit_menu;     // Menus are easier to get out of
 

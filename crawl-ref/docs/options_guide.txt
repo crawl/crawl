@@ -24,7 +24,7 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
-                assign_item_slot, drop_mode, pickup_mode, drop_filter,
+                assign_item_slot, drop_mode, pickup_menu, drop_filter,
                 default_friendly_pickup
 3-b     Targeting.
                 default_target, target_unshifted_dirs, darken_beyond_range
@@ -505,15 +505,12 @@ drop_mode = (multi | single)
         the inventory listing, but equipped items will be dropped last,
         and may be dropped out of order.
 
-pickup_mode = (multi | single | auto:X)
-        Single is the classical behaviour (and default): when picking up
-        items, you are prompted for them one by one. Multi makes a menu
-        appear, where you can choose which items to pick up. Note that
-        no matter how many items you choose, picking up will always take
-        one turn.
-        If pickup_mode is auto:X, where X is some number (for example,
-        auto:5), then pickup will give a menu if there are at least X
-        items on your square, and will prompt one by one otherwise.
+pickup_menu = true
+        When true (the default), makes a menu appear, where you can
+        choose which items to pick up. Note that no matter how many
+        items you choose, picking up will always take one turn.
+        Setting this to false invokes the classical behaviour: when
+        picking up items, you are prompted for them one by one.
 
 drop_filter += <regex>, <regex>, ...
         (List option)
