@@ -74,6 +74,8 @@ static int _handle_enchant_armour(int item_slot = -1,
 static bool _is_cancellable_scroll(scroll_type scroll);
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
                                     bool quiet = false);
+static bool _two_targeted_scrolls_identified();
+static bool _one_targeted_scroll_tried();
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -1242,6 +1244,22 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         return false;
     }
     return true;
+}
+
+static bool _two_targeted_scrolls_identified()
+{
+    int ident_count = (you.type_ids[OBJ_SCROLLS][SCR_RECHARGING] == ID_KNOWN_TYPE)
+                    + (you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_ARMOUR] == ID_KNOWN_TYPE)
+                    + (you.type_ids[OBJ_SCROLLS][SCR_IDENTIFY] == ID_KNOWN_TYPE);
+
+    return ident_count == 2;
+}
+
+static bool _one_targeted_scroll_tried()
+{
+    return (you.type_ids[OBJ_SCROLLS][SCR_RECHARGING] ==  ID_TRIED_ITEM_TYPE
+            || (you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_ARMOUR] == ID_TRIED_ITEM_TYPE)
+            || (you.type_ids[OBJ_SCROLLS][SCR_IDENTIFY] == ID_TRIED_ITEM_TYPE));
 }
 
 // Checks whether removing an item would cause flight to end and the
@@ -3371,6 +3389,18 @@ void read_scroll(int slot)
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
              scroll_name.c_str());
+    }
+
+    if (_two_targeted_scrolls_identified()
+        && _one_targeted_scroll_tried()
+        && (which_scroll == SCR_IDENTIFY
+            || which_scroll == SCR_RECHARGING
+            || which_scroll == SCR_ENCHANT_ARMOUR))
+    {
+        set_ident_type(OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR, ID_KNOWN_TYPE);
+        mpr("You have identified the last targeted scroll.");
     }
 
     if (!alreadyknown && dangerous)
