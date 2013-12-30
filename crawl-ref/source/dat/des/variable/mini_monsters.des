@@ -1370,7 +1370,7 @@ KMONS:   5 = halfling att:neutral
 KFEAT:   m = iron_grate
 MARKER:  P = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10000, pow_max = 10000, delay = 1, \
-             size = 1, walk_dist = 0, start_clouds = 1 }
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
 MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
              pow_min = 3, pow_max = 3, delay = 100, \
              size = 1, walk_dist = 1, start_clouds = 1 }
