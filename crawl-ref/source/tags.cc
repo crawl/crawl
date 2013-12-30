@@ -35,6 +35,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "describe.h"
+#include "dbg-scan.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "enum.h"
@@ -1092,6 +1093,10 @@ void tag_read(reader &inf, tag_type tag_id)
         EAT_CANARY;
         tag_read_level_monsters(th);
         EAT_CANARY;
+        // We have to do this here because tag_read_level_tiles() can
+        // call into Lua, which can look at the items ...
+        link_items();
+        check_map_validity();
         tag_read_level_tiles(th);
         break;
     case TAG_GHOST:
