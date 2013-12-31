@@ -1254,7 +1254,7 @@
   {"You feel a sudden thirst for magic.", "", ""},
   {"Your magical appetite wanes.", "", ""},
 
-  "antimagic bite bite"
+  "antimagic bite"
 },
 
 { MUT_NO_DEVICE_HEAL,                 0,  1, true,  false,  false,
