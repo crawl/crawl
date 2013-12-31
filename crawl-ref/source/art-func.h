@@ -940,3 +940,23 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
          defender->name(DESC_THE).c_str());
     defender->hurt(attacker, d);
 }
+
+///////////////////////////////////////////////////
+
+static void _ARC_BLADE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The arc blade crackles to life.");
+}
+
+static void _ARC_BLADE_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The arc blade stops crackling.");
+}
+
+static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
+                                     actor* defender, bool mondied,
+                                     int dam)
+{
+    if (!mondied && one_chance_in(3))
+        cast_discharge(75 + random2avg(75, 2), false);
+}
