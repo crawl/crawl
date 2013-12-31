@@ -1745,8 +1745,8 @@ MARKER: o = lua:monster_on_death { \
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx
-xxxxXt....PPXxx
-xxttttt......Xxx                           xxxx
+xxxxX.....PPXxx
+xxtt.........Xxx                           xxxx
 xttttxx.X..X..Xxx                         xxT.xxx...@
 xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
 xtttxccco.Gc....GccPWWcco..%cccP..ccP....P.G.o.TTxxx.
