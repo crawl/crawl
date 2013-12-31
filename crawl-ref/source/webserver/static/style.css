@@ -199,6 +199,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     text-overflow: ellipsis;
+    word-wrap: break-word;
 }
 
 #chat_history {
