@@ -1343,7 +1343,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
         {
-            //Change formula to fangs_level*2 + str/6
+            //Change formula to fangs_level*2 + 2*XL/3
             aux_damage -= str_bite_damage;
             aux_damage += div_rand_round(2 * you.get_experience_level(), 3);
             damage_brand = SPWPN_ANTIMAGIC;
@@ -1624,10 +1624,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             if (!defender->as_monster()->is_summoned()
                 && !mons_is_firewood(defender->as_monster()))
             {
-                inc_mp(random2(damage_done) + 1);
+                //1dDamage, halve that, cast to int.
+                inc_mp((int)((random2(damage_done) + 1)/2));
 
                 if (spell_user) // The mana drain is more effective on spellcasters
-                    inc_mp(random2(damage_done) + 1);
+                    inc_mp((int)((random2(damage_done) + 1)/2));
 
                 mprf("You feel%sinvigorated.", spell_user ? " very " : " ");
             }
