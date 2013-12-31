@@ -642,7 +642,7 @@ void debug_mons_scan()
 }
 #endif
 
-void check_map_validity(bool check_monsters)
+void check_map_validity()
 {
 #ifdef ASSERTS
     dungeon_feature_type portal = DNGN_UNSEEN;
@@ -711,7 +711,6 @@ void check_map_validity(bool check_monsters)
 
     // And just for good measure:
     debug_item_scan();
-    if (check_monsters)
-        debug_mons_scan();
+    debug_mons_scan();
 #endif
 }
