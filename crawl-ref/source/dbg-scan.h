@@ -8,6 +8,6 @@
 
 void debug_item_scan();
 void debug_mons_scan();
-void check_map_validity();
+void check_map_validity(bool check_monsters = true);
 
 #endif
