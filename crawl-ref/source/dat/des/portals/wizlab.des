@@ -1234,8 +1234,8 @@ MONS:       purple draconian
 MONS:       statue hd:12 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
             name:conjurer n_adj
 KITEM:      D = robe ego:archmagi ident:type, star_item / superb_item, star_item
-KITEM:      E = randbook disc:conjuration owner:Iskenderun spells:iskenderun's_mystic\
-                _blast|iskenderun's_battlesphere, any book, \
+KITEM:      E = any book, randbook disc:conjuration owner:Iskenderun \
+                spells:iskenderun's_mystic_blast|iskenderun's_battlesphere, \
                 randbook disc:conjuration owner:Iskenderun
 KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian
