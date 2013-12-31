@@ -523,6 +523,12 @@ arc blade
 A cutlass somehow crafted from pure electricity. Striking an enemy with it
 occasionally unleashes a static discharge.
 %%%%
+demon whip "Spellbinder"
+
+A weapon said to have once been used to keep unruly imprisoned wizards in
+line; it violently disrupts their ability to use magic, inflicting wild and
+unpredictable residual magical effects on those it strikes.
+%%%%
 milk chocolate
 
 This item is a debugging aid, granting a vast array of mostly beneficial

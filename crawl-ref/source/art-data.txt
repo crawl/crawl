@@ -1126,6 +1126,15 @@ PLUS:     +3/+5
 COLOUR:   ETC_ELECTRICITY
 BOOL:     elec
 
+ENUM:     SPELLBINDER
+NAME:     demon whip "Spellbinder"
+OBJ:      OBJ_WEAPONS/WPN_DEMON_WHIP
+BRAND:    SPWPN_ANTIMAGIC
+PLUS:     +3/+6
+COLOUR:   ETC_ENCHANT
+MAGIC:    30
+BOOL:     evil
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn
