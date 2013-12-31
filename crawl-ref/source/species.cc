@@ -443,7 +443,6 @@ int species_exp_modifier(species_type species)
     case SP_HUMAN:
     case SP_HALFLING:
     case SP_KOBOLD:
-    case SP_VINE_STALKER:
         return 1;
     case SP_HILL_ORC:
     case SP_OGRE:
@@ -454,6 +453,7 @@ int species_exp_modifier(species_type species)
     case SP_OCTOPODE:
     case SP_TENGU:
     case SP_GARGOYLE:
+    case SP_VINE_STALKER:
         return 0;
     case SP_SPRIGGAN:
     case SP_DEEP_DWARF:
