@@ -1574,10 +1574,10 @@ static void _take_stairs(bool down)
     if (!_can_take_stairs(ygrd, down, shaft))
         return;
 
-    if (!you.attempt_escape()) // false means constricted and don't escape
+    if (!_prompt_stairs(ygrd, down))
         return;
 
-    if (!_prompt_stairs(ygrd, down))
+    if (!you.attempt_escape()) // false means constricted and don't escape
         return;
 
     you.clear_clinging();
@@ -4598,15 +4598,15 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (!you.attempt_escape()) // false means constricted and did not escape
-            return;
-
         if (!you.confused() && !check_moveto(targ, walkverb))
         {
             stop_running();
             you.turn_is_over = false;
             return;
         }
+
+        if (!you.attempt_escape()) // false means constricted and did not escape
+            return;
 
         if (you.duration[DUR_WATER_HOLD])
         {
