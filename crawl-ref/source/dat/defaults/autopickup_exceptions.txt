@@ -25,7 +25,7 @@ ae += forbidden
 ae += amulet of (inaccuracy|the gourmand|warding)
 ae += amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasis)
 # Rings of teleportation are not redundant -- double *Tele is pretty good in
-# the Abyss.  Still, they're more in line with bone lanterns, so you can
+# the Abyss. Still, they're more in line with lanterns of shadow, so you can
 # pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
 ae += ring of (invisibility|teleport control)

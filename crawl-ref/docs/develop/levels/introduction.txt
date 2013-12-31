@@ -301,8 +301,8 @@ which des file it found the syntax error, making for easier debugging.
 Be fair!
 --------
 Crawl is hard but try to balance your monsters. While it is true that Orc:1
-can show an orcish knight, this is very rare. Hence it's probably a bad idea
-to use orcish knights for an entry to the Orcish Mines.
+can show an orc knight, this is very rare. Hence it's probably a bad idea
+to use orc knights for an entry to the Orcish Mines.
 
 Phrased more generally, do not use OOD (out-of-depth) monsters unless you
 really know what you want.
