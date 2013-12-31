@@ -1152,8 +1152,10 @@ void tag_read(reader &inf, tag_type tag_id)
         // all cells have been filled. We mustn't crash when it returns
         // from those excursions, and generate_abyss will check_map_validity
         // itself after the grid is fully populated.
+        // Don't do the monster scan, because the player's position might
+        // not be reasonable during an excursion.
         if (you.where_are_you != BRANCH_ABYSS)
-            check_map_validity();
+            check_map_validity(false);
         tag_read_level_tiles(th);
         break;
     case TAG_GHOST:
