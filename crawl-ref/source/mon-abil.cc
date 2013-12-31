@@ -2171,10 +2171,10 @@ bool apply_grasping_roots(monster* mons)
 
             if (you.can_see(*ai))
             {
-                mprf("Roots rise up from beneath %s and drag %s%s"
-                        "to the ground.", ai->name(DESC_THE).c_str(),
-                        ai->is_monster() ? "it" : "you",
-                        ai->is_monster() ? " " : " back");
+                mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
+                     ai->name(DESC_THE).c_str(),
+                     ai->is_monster() ? "it" : "you",
+                     ai->is_monster() ? "" : "back ");
             }
         }
         else if (ai->is_player() && !you.duration[DUR_GRASPING_ROOTS])
