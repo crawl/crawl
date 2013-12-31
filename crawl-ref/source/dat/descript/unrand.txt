@@ -518,6 +518,11 @@ effects from the residual hexes and magical energies it was once subjected to
 on a daily basis; spellcasters able to get a handle on its power, however, will
 find it enhances their spell power.
 %%%%
+arc blade
+
+A cutlass somehow crafted from pure electricity. Striking an enemy with it
+occasionally unleashes a static discharge.
+%%%%
 milk chocolate
 
 This item is a debugging aid, granting a vast array of mostly beneficial
