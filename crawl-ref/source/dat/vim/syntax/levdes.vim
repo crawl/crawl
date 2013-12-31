@@ -81,15 +81,17 @@ syn match desBranch contained /bailey\|icecv\|volcano\|wizlab/
 syn match desBranchname contained /dungeon\|depths\|temple\|orcish_mines\|elven_halls\|lair\|swamp\|shoals/
 syn match desBranchname contained /snake_pit\|spider_nest\|slime_pits\|vaults\|hall_of_blades\|crypt\|tomb/
 syn match desBranchname contained /hell\|dis\|gehenna\|cocytus\|tartarus\|zot\|forest\|abyss\|pandemonium/
-"Note: zig and bazaar--wizlab all use the generic `portal_vault` name - lab does not!
-syn match desBranchname contained /labyrinth\|portal_vault/
+syn match desBranchname contained /ziggurat\|labyrinth\|bazaar\|trove\|sewer\|ossuary/
+syn match desBranchname contained /bailey\|ice_cave\|volcano\|wizlab/
 
 " TAGS
 " in decks.cc and dgn-labyrinth.cc (without `minotaur` because monster)
 syn keyword desOrientation trowel_portal lab generate_loot
+" from dlua.ziggurat
+syn keyword desOrientation ziggurat_pillar centered
 " map building in dungeon.cc (`transparent` is handled later)
 "Note: `dummy` mis-catches `training dummy` about half as often as actually used as tag
-syn keyword desOrientation dummy entry mini_float extra ruin layout pan decor
+syn keyword desOrientation dummy arrival mini_float extra ruin layout pan decor
 syn keyword desOrientation allow_dup uniq luniq
 syn keyword desOrientation no_hmirror no_vmirror no_rotate
 syn keyword desOrientation no_dump
@@ -149,8 +151,9 @@ syn keyword desOrientation bloody highlight mold no_cloud_gen no_rtele_into no_c
 syn match desComment "^\s*#.*$"
 
 "Note: `;` and `|` are necessary due to monster/randbook `spells:`,
-" `-` and `$` are used in depth definitions (but `,` should not match there).
-syn match desProperty /\w*:[[:alnum:]-_;|\$]\+/ contains=desAttribute
+" `.` can be an empty spell slot and `'` is contained in certain spell names,
+" `$` and `-` are used in depth definitions (but `,` should not match there).
+syn match desProperty /\w*:[[:alnum:]_\.';|\$-]\+/ contains=desAttribute
 " Without `oneline` this wraps around and matches e.g. some SUBST: on the next line
 syn region desAttribute start=/\</ end=/:/ contained oneline
 
