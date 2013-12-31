@@ -392,6 +392,8 @@ monster_type player_species_to_mons_species(species_type species)
         return MONS_DJINNI;
     case SP_FORMICID:
         return MONS_FORMICID;
+    case SP_VINE_STALKER:
+        return MONS_VINE_STALKER;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
