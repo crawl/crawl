@@ -76,6 +76,7 @@
 #endif
 #include "transform.h"
 #include "travel.h"
+#include "unwind.h"
 #include "version.h"
 
 // defined in dgn-overview.cc
@@ -1153,7 +1154,10 @@ void tag_read(reader &inf, tag_type tag_id)
         // from those excursions, and generate_abyss will check_map_validity
         // itself after the grid is fully populated.
         if (you.where_are_you != BRANCH_ABYSS)
+        {
+            unwind_var<coord_def> you_pos(you.position, coord_def());
             check_map_validity();
+        }
         tag_read_level_tiles(th);
         break;
     case TAG_GHOST:
