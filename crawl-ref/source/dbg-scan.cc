@@ -409,8 +409,7 @@ void debug_mons_scan()
             }
         } // if (mgrd(m->pos()) != i)
 
-        if (feat_is_wall(grd(pos)) && mons_primary_habitat(m) != HT_ROCK
-            && mons_primary_habitat(m) != HT_INCORPOREAL)
+        if (feat_is_wall(grd(pos)))
         {
 #if defined(DEBUG_FATAL)
             // if we're going to dump, point out the culprit

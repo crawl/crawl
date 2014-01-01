@@ -104,9 +104,6 @@ static habitat_type _grid2habitat(dungeon_feature_type grid)
     if (feat_is_watery(grid))
         return HT_WATER;
 
-    if (feat_is_rock(grid) && !feat_is_permarock(grid))
-        return HT_ROCK;
-
     switch (grid)
     {
     case DNGN_LAVA:
@@ -125,8 +122,6 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return DNGN_DEEP_WATER;
     case HT_LAVA:
         return DNGN_LAVA;
-    case HT_ROCK:
-        return DNGN_ROCK_WALL;
     case HT_LAND:
     case HT_AMPHIBIOUS:
     default:
@@ -2761,10 +2756,6 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
     habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
-    else if (ht == HT_ROCK)
-        ht = HT_LAND;
-    else if (ht == HT_INCORPOREAL)
-        ht = HT_ROCK;
     return ht;
 }
 
@@ -3678,16 +3669,6 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
     {
         return mc == MONS_ELDRITCH_TENTACLE
                || mc == MONS_ELDRITCH_TENTACLE_SEGMENT;
-    }
-
-    if (_mons_class_habitat(mc) == HT_INCORPOREAL)
-        return !feat_is_permarock(grid);
-
-    if (_mons_class_habitat(mc) == HT_ROCK)
-    {
-        // Permanent walls can't be passed through.
-        return !feat_is_solid(grid)
-               || feat_is_rock(grid) && !feat_is_permarock(grid);
     }
 
     return !feat_is_solid(grid);
