@@ -1262,29 +1262,19 @@ KMONS:  1  = rat w:80 / grey rat w:20
 KMONS:  4  = rat w:75 / grey rat w:15 / green rat w:8 / orange rat w:2
 KMONS:  23 = big kobold spells:animate_dead name:necromancer n_suf \
              col:white ; dagger | club . robe
-KITEM:  %  = never_decay rat skeleton w:40 / never_decay rat corpse w:20 /\
-             rotting never_decay rat corpse w:20 /\
-             never_decay grey rat skeleton w:10 /\
-             never_decay grey rat corpse w:5 /\
-             rotting never_decay grey rat corpse w:5
-KITEM:  ^  = never_decay rat skeleton w:16 /\
-             never_decay rat corpse w:8 /\
-             never_decay rotting rat corpse w:8 /\
-             never_decay grey rat skeleton w:24 /\
-             never_decay grey rat corpse w:12 /\
-             rotting never_decay grey rat corpse w:12 /\
-             never_decay green rat skeleton w:10 /\
-             never_decay green rat corpse w:5 /\
-             rotting never_decay green rat corpse w:5
-KITEM:  &  = never_decay grey rat skeleton w:36 /\
-             never_decay grey rat corpse w:18 /\
-             never_decay rotting grey rat corpse w:18 /\
-             never_decay green rat skeleton w:24 /\
-             never_decay green rat corpse w:12 /\
-             never_decay rotting green rat corpse w:12 /\
-             never_decay orange rat skeleton w:2 /\
-             never_decay orange rat corpse w:1 /\
-             never_decay rotting orange rat corpse w:1
+: dgn.delayed_decay(_G, '%', 'rat skeleton w:40 / rat corpse w:20 /' ..
+:    'rotting rat corpse w:20 / grey rat skeleton w:10 /' ..
+:    'grey rat corpse w:5 / rotting grey rat corpse w:5')
+: dgn.delayed_decay(_G, '^', 'rat skeleton w:16 / rat corpse w:8 /' ..
+:    'rotting rat corpse w:8 / grey rat skeleton w:24 /' ..
+:    'grey rat corpse w:12 / rotting grey rat corpse w:12 /' ..
+:    'green rat skeleton w:10 / green rat corpse w:5 /' ..
+:    'rotting green rat corpse w:5')
+: dgn.delayed_decay(_G, '&', 'grey rat skeleton w:36 /' ..
+:    'grey rat corpse w:18 / rotting grey rat corpse w:18 /' ..
+:    'green rat skeleton w:24 / green rat corpse w:12 /' ..
+:    'rotting green rat corpse w:12 / orange rat skeleton w:2 /' ..
+:    'orange rat corpse w:1 / rotting orange rat corpse w:1')
 KITEM:  ?  = potion of curing / potion of heal wounds / potion of might /\
              potion of magic / potion of speed w:5 /\
              potion of brilliance w:5
