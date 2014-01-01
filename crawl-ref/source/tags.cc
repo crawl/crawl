@@ -1096,6 +1096,31 @@ void tag_write(tag_type tagID, writer &outf)
     outf.write(&buf[0], buf.size());
 }
 
+static void _shunt_monsters_out_of_walls()
+{
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monster &m(menv[i]);
+        if (m.alive() && in_bounds(m.pos()) && cell_is_solid(m.pos()))
+            for (distance_iterator di(m.pos()); di; ++di)
+                if (!actor_at(*di) && !cell_is_solid(*di))
+                {
+#if TAG_MAJOR_VERSION == 34
+                    // Could have been a rock worm or a dryad.
+                    if (m.type != MONS_GHOST)
+#endif
+                    mprf(MSGCH_ERROR, "Error: monster %s in %s at (%d,%d)",
+                         m.name(DESC_PLAIN, true).c_str(),
+                         dungeon_feature_name(grd(m.pos())),
+                         m.pos().x, m.pos().y);
+                    env.mgrid(m.pos()) = NON_ENTITY;
+                    m.position = *di;
+                    env.mgrid(*di) = i;
+                    break;
+                }
+    }
+}
+
 // Read a piece of data from inf into memory, then run the appropriate reader.
 //
 // minorVersion is available for any sub-readers that need it
@@ -1149,6 +1174,7 @@ void tag_read(reader &inf, tag_type tag_id)
 #if TAG_MAJOR_VERSION == 34
         _add_missing_branches();
 #endif
+        _shunt_monsters_out_of_walls();
         // The Abyss needs to visit other levels during level gen, before
         // all cells have been filled. We mustn't crash when it returns
         // from those excursions, and generate_abyss will check_map_validity
