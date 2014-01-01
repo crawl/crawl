@@ -5835,7 +5835,7 @@ static monsterentry mondata[] =
 // explodey things / orb of fire ('*')
 {
     MONS_BALL_LIGHTNING, '*', LIGHTCYAN, "ball lightning",
-    M_CONFUSED | M_INSUBSTANTIAL | M_GLOWS_LIGHT,
+    M_INSUBSTANTIAL | M_GLOWS_LIGHT,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD, 3),
     0, 20, MONS_BALL_LIGHTNING, MONS_BALL_LIGHTNING, MH_NONLIVING, MAG_IMMUNE,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

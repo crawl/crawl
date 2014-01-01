@@ -834,7 +834,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
     // Restricted so that the situation doesn't get too gross.  Each of
     // these will explode for 3d20 damage. -- bwr
-    const int how_many = min(8, 3 + random2(2 + pow / 50));
+    const int how_many = min(8, 3 + random2avg(2 + pow / 50, 2));
 
     for (int i = 0; i < how_many; ++i)
     {
@@ -861,6 +861,9 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
         {
             success = true;
             ball->add_ench(ENCH_SHORT_LIVED);
+            ball->flags |= MF_ATT_CHANGE_ATTEMPT;
+            ball->foe = MHITNOT;
+            ball->behaviour = BEH_WANDER;
         }
     }
 

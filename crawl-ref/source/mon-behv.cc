@@ -453,6 +453,7 @@ void handle_behaviour(monster* mon)
         && !mon->berserk_or_insane()
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
+        && mon->type != MONS_BALL_LIGHTNING
         && mon->type != MONS_BATTLESPHERE
         && mon->type != MONS_SPECTRAL_WEAPON)
     {
@@ -482,7 +483,9 @@ void handle_behaviour(monster* mon)
     // Instead, berserkers attack nearest monsters.
     if (mon->behaviour != BEH_SLEEP
         && (mon->has_ench(ENCH_INSANE)
-            || ((mon->berserk() || mon->type == MONS_GIANT_SPORE)
+            || ((mon->berserk()
+                 || mon->type == MONS_GIANT_SPORE
+                 || mon->type == MONS_BALL_LIGHTNING)
                 && (mon->foe == MHITNOT
                     || isFriendly && mon->foe == MHITYOU))))
     {
@@ -620,7 +623,8 @@ void handle_behaviour(monster* mon)
                     || !proxPlayer && !isFriendly
                     || isNeutral && !mon->has_ench(ENCH_INSANE)
                     || patrolling
-                    || mon->type == MONS_GIANT_SPORE)
+                    || mon->type == MONS_GIANT_SPORE
+                    || mon->type == MONS_BALL_LIGHTNING)
                 {
                     if (mon->behaviour != BEH_LURK)
                         new_beh = BEH_WANDER;
@@ -1338,9 +1342,13 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (mon->behaviour == BEH_WITHDRAW)
             break;
 
-        // Avoid moving friendly giant spores out of BEH_WANDER.
-        if (mon->friendly() && mon->type == MONS_GIANT_SPORE)
+        // Avoid moving friendly explodey things out of BEH_WANDER.
+        if (mon->friendly()
+            && (mon->type == MONS_GIANT_SPORE
+                || mon->type == MONS_BALL_LIGHTNING))
+        {
             break;
+        }
 
         // [ds] Neutral monsters don't react to your presence.
         // XXX: Neutral monsters are a tangled mess of arbitrary logic.

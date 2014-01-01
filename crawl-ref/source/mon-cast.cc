@@ -4339,7 +4339,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_CONJURE_BALL_LIGHTNING:
     {
-        const int n = 2 + random2(mons->hit_dice / 4);
+        const int n = min(8, 2 + random2avg(mons->hit_dice / 4, 2));
         for (int i = 0; i < n; ++i)
         {
             create_monster(
