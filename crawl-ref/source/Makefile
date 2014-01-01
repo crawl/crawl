@@ -373,7 +373,7 @@ SAVEDIR := ~/.crawl
 endif
 
 
-INCLUDES_L += -Icontrib/install/$(ARCH)/include
+INCLUDES_L += -isystem contrib/install/$(ARCH)/include
 LIBS += -Lcontrib/install/$(ARCH)/lib
 
 INCLUDES_L += -Iutil -I.
@@ -604,14 +604,14 @@ ifndef BUILD_LUA
   ifndef LUA_PACKAGE
     LUA_PACKAGE = lua5.1
   endif
-  INCLUDES_L += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-I)
+  INCLUDES_L += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-I | sed -e 's/-I/-isystem /')
   CFLAGS_L  += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-other)
   LIBS += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --libs)
 endif
 
 ifndef BUILD_SQLITE
   ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
-    INCLUDES_L += -I$(SQLITE_INCLUDE_DIR)
+    # INCLUDES_L += -isystem $(SQLITE_INCLUDE_DIR)
     LIBS += $(SQLITE_LIB)
     ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
       DEFINES_L += -DANCIENT_SQLITE
@@ -649,10 +649,10 @@ DEFINES_L += -DTOUCH_UI
 endif
 
 ifdef BUILD_SDL
-INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
+INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL
 endif
 ifdef BUILD_FREETYPE
-INCLUDES_L += -Icontrib/install/$(ARCH)/include/freetype2
+INCLUDES_L += -isystem contrib/install/$(ARCH)/include/freetype2
 endif
 
 DEFINES_L += -DUSE_SDL -DUSE_GL -DUSE_FT
@@ -667,11 +667,11 @@ ifndef NO_PKGCONFIG
 # the contributing libraries are located.
 #
 
-FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I)
+FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I | sed -e 's/-I/-isystem /' )
 FREETYPE_CFLAGS  := $(shell $(PKGCONFIG) freetype2 --cflags-only-other)
 FREETYPE_LDFLAGS := $(shell $(PKGCONFIG) freetype2 --libs-only-L) $(shell $(PKGCONFIG) freetype2 --libs-only-l)
 
-SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I)
+SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I | sed -e 's/-I/-isystem /')
 SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl --libs-only-L) $(shell $(PKGCONFIG) sdl --libs-only-l)
 
@@ -943,7 +943,7 @@ NC_LIB = ncursesw
 NC_INCLUDE = $(NC_PREFIX)/include/ncursesw
 endif
 
-INCLUDES_L += -I$(NC_INCLUDE)
+INCLUDES_L += -isystem $(NC_INCLUDE)
 
 ifndef TILES
 LIBS += -L$(NC_PREFIX)/lib -l$(NC_LIB)
