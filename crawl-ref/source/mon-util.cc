@@ -3256,35 +3256,35 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 // (such as an amulet of clarity or stasis)
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe)
 {
-    if (mon->can_use_spells())
+    if (!mon->can_use_spells())
+        return false;
+
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        switch (mon->spells[i])
         {
-            switch (mon->spells[i])
-            {
-                case SPELL_SLEEP:
-                    if (foe->can_sleep())
-                        return true;
-                    break;
+        case SPELL_SLEEP:
+            if (foe->can_sleep())
+                return true;
+            break;
 
-                case SPELL_HIBERNATION:
-                    if (foe->can_hibernate(false, true))
-                        return true;
-                    break;
+        case SPELL_HIBERNATION:
+            if (foe->can_hibernate(false, true))
+                return true;
+            break;
 
-                case SPELL_CONFUSE:
-                case SPELL_MASS_CONFUSION:
-                case SPELL_PARALYSE:
-                    return true;
+        case SPELL_CONFUSE:
+        case SPELL_MASS_CONFUSION:
+        case SPELL_PARALYSE:
+            return true;
 
-                case SPELL_PETRIFY:
-                    if (foe->res_petrify())
-                        return true;
-                    break;
+        case SPELL_PETRIFY:
+            if (foe->res_petrify())
+                return true;
+            break;
 
-                default:
-                    break;
-            }
+        default:
+            break;
         }
     }
 
@@ -3345,36 +3345,36 @@ bool mons_has_ranged_attack(const monster* mon)
 
 bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe)
 {
-    if (_mons_has_usable_ranged_weapon(mon))
+    if (!_mons_has_usable_ranged_weapon(mon))
+        return false;
+
+    monster* mnc = const_cast<monster* >(mon);
+    const item_def *missile = mnc->missiles();
+
+    if (missile && missile->sub_type == MI_THROWING_NET)
+        return true;
+    else if (missile && missile->sub_type == MI_NEEDLE)
     {
-        monster* mnc = const_cast<monster* >(mon);
-        const item_def *missile = mnc->missiles();
-
-        if (missile && missile->sub_type == MI_THROWING_NET)
-            return true;
-        else if (missile && missile->sub_type == MI_NEEDLE)
+        switch (get_ammo_brand(*missile))
         {
-            switch (get_ammo_brand(*missile))
-            {
-                // Not actually incapacitating, but marked as such so that
-                // assassins will prefer using it while ammo remains
-                case SPMSL_CURARE:
-                    if (foe->res_poison() <= 0)
-                        return true;
-                    break;
+        // Not actually incapacitating, but marked as such so that
+        // assassins will prefer using it while ammo remains
+        case SPMSL_CURARE:
+            if (foe->res_poison() <= 0)
+                return true;
+            break;
 
-                case SPMSL_SLEEP:
-                    if (foe->can_sleep())
-                        return true;
-                    break;
+        case SPMSL_SLEEP:
+            if (foe->can_sleep())
+                return true;
+            break;
 
-                case SPMSL_CONFUSION:
-                case SPMSL_PARALYSIS:
-                    return true;
+        case SPMSL_CONFUSION:
+        case SPMSL_PARALYSIS:
+            return true;
 
-                default:
-                    break;
-            }
+        default:
+            break;
         }
     }
 
