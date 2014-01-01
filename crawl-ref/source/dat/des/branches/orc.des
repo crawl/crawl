@@ -1277,7 +1277,7 @@ ENDMAP
 NAME: nicolae_orc_rockfall
 TAGS: transparent extra decor no_item_gen
 DEPTH: Orc
-: dgn.delayed_decay(_G, 'o', 'orc corpse, stone q:1 / nothing, large rock q:1')
+: dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1 / nothing, large rock q:1')
 KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
 KITEM: R = stone q:1 / stone q:2 / large rock q:1 w:5
 MAP

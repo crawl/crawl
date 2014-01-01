@@ -760,10 +760,10 @@ NSUBST: p = 4:p / *:., ' = o / '
 SUBST:  ' = '''B, . = ....b
 KPROP:  Bbop = bloody
 SUBST:  B = ', b = .
-: dgn.delayed_decay(_G, 'o', 'orc corpse, hand axe race:orcish / ' ..
+: dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'hand axe race:orcish / ' ..
 :    'broad axe race:orcish, leather armour race:orcish / ' ..
 :    'pair of gloves race:orcish, mundane quarterstaff ')
-: dgn.delayed_decay(_G, 'p', 'orc corpse, hand axe race:orcish / ' ..
+: dgn.delayed_decay_extra(_G, 'p', 'orc corpse', 'hand axe race:orcish / ' ..
 :    'broad axe race:orcish, leather armour race:orcish / pair of gloves race:orcish ')
 KITEM:  w = mundane quarterstaff
 KITEM:  s = meat ration / bread ration

@@ -165,10 +165,12 @@ FTILE:  123456cw#+%*.8$n~ = floor_grey_dirt
 KITEM:  % = animal skin / nothing
 MARKER: + = lua:restrict_door()
 KFEAT:  ~ = closed_door
-: dgn.delayed_decay(_G, '*', 'human skeleton / yak skeleton / elf skeleton /\
-:                            gnome skeleton / elephant skeleton /\
-:                            sheep skeleton / manticore skeleton /\
-:                            w:2 nothing, animal skin')
+SUBST: * = *:35 -:1
+KITEM: - = animal skin
+: dgn.delayed_decay_extra(_G, '*', 'human skeleton / yak skeleton /\
+:                            elf skeleton / gnome skeleton /\
+:                            elephant skeleton / sheep skeleton /\
+:                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
             w:5 altar_beogh / w:1 altar_makhleb / w:4 floor
 KITEM:  $ = q:5 meat ration, giant spiked club, q:2 sausage
@@ -305,7 +307,7 @@ NAME: grated_community_mu_troll_home
 TAGS: grated_community_mu_home grated_community_mu_home5 unrand
 MONS: patrolling iron troll / patrolling deep troll
 FTILE:   1.c~+#$%& = floor_dirt
-: dgn.delayed_decay(_G, '%', 'w:20 any skeleton / w:5 any chunk, any / nothing')
+: dgn.delayed_decay_extra(_G, '%', 'w:20 any skeleton / w:5 any chunk', 'any / nothing')
 KITEM:   $ = animal skin
 NSUBST:  . = 7:% / 2:$ / *:.
 KFEAT:   ~ = floor
