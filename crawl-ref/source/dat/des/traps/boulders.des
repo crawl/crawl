@@ -190,7 +190,7 @@ SUBST: 2 = x 1 2
 SUBST: 1 = 1 2 .:5
 KMONS: 1 = ball python
 KMONS: 2 = adder
- : dgn.delayed_decay(_G,'a', 'human skeleton')
+: dgn.delayed_decay(_G,'a', 'human skeleton')
 KFEAT: abAB=floor
 KITEM: b = whip w:50 / cursed whip w:10
 MAP

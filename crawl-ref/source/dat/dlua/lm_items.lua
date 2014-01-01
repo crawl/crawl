@@ -7,8 +7,13 @@ function dgn.activate_item_decay(data, triggerable, trigger, marker, ev)
   end
 end
 
-function dgn.delayed_decay(e, key, itemdesc)
-  e.kitem(key .. " = never_decay " .. itemdesc)
+function dgn.delayed_decay_extra(e, key, itemdesc, more_items)
+  -- Add never_decay to each sub-part of the itemdef
+  local def = "never_decay " .. itemdesc:gsub("([,/])", "%1 never_decay ")
+  if more_items then
+    def = def .. ", " .. more_items
+  end
+  e.kitem(key .. " = " .. def) 
   -- [ds] Use an anonymous function so that we create a new
   -- triggerable for each square instead of reusing one across all
   -- squares.
@@ -17,4 +22,8 @@ function dgn.delayed_decay(e, key, itemdesc)
                  return function_in_los("dgn.activate_item_decay", nil,
                                         false, nil)
                end)
+end
+
+function dgn.delayed_decay(e, key, itemdesc)
+  dgn.delayed_decay_extra(e, key, itemdesc, nil)
 end

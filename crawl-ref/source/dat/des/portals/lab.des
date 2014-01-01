@@ -222,66 +222,66 @@ KFEAT: < = exit_labyrinth
 SHUFFLE: bxvc, ABCDEFHIJKLM
 {{
  -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.
-dgn.delayed_decay(_G, 'A', 'dwarf skeleton, battleaxe race:dwarven / '
+dgn.delayed_decay_extra(_G, 'A', 'dwarf skeleton', 'battleaxe race:dwarven / '
    .. "eveningstar race:dwarven / executioner's axe race:dwarven w:2 / "
    .. 'great mace race:dwarven w:2, helmet good_item / '
    .. 'pair of gloves good_item / pair of boots good_item, '
    .. 'plate armour race:dwarven / crystal plate armour w:2' )
 
  -- Elf caster. 4 items.
-dgn.delayed_decay(_G, 'B', 'elf skeleton, robe race:elven, randbook, '
+dgn.delayed_decay_extra(_G, 'B', 'elf skeleton', 'robe race:elven, randbook, '
    .. 'any magical staff, any jewellery' )
 
  -- Spriggan stabber. 4 items.
-dgn.delayed_decay(_G, 'C', 'spriggan skeleton, dagger good_item / '
+dgn.delayed_decay_extra(_G, 'C', 'spriggan skeleton', 'dagger good_item / '
    .. 'quick blade w:1, bread ration, cloak, randbook disc:hexes / any book' )
 
  -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
-dgn.delayed_decay(_G, 'D', 'centaur skeleton, bow good_item / longbow w:2, '
+dgn.delayed_decay_extra(_G, 'D', 'centaur skeleton', 'bow good_item / longbow w:2, '
    .. 'arrow good_item, apple / orange / pear / apricot / lemon / nothing, '
    .. 'helmet / centaur barding / pair of gloves' )
 
  -- Dwarven artificer. 3 items.
-dgn.delayed_decay(_G, 'E', 'dwarf skeleton, any wand, any wand, '
+dgn.delayed_decay_extra(_G, 'E', 'dwarf skeleton', 'any wand, any wand, '
    .. 'any wand / any misc / any rod' )
 
  -- Dead octopode. 3 rings, possibly up to 8, though with a very low chance.
-dgn.delayed_decay(_G, 'F', 'octopode corpse, any ring good_item, '
+dgn.delayed_decay_extra(_G, 'F', 'octopode corpse', 'any ring good_item, '
    .. 'any ring good_item / any ring, any ring, any ring w:1 / nothing w:10, '
    .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10, '
    .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10' )
 
  -- Merfolk skald. 3 items.
-dgn.delayed_decay(_G, 'H', 'merfolk skeleton, leather armour good_item w:30 / '
+dgn.delayed_decay_extra(_G, 'H', 'merfolk skeleton', 'leather armour good_item w:30 / '
    .. 'swamp dragon armour w:2 / fire dragon armour w:2 / '
    .. 'ice dragon armour w:2, trident / demon trident / glaive / bardiche, '
    .. 'randbook disc:charms / any book' )
 
  -- Human wanderer. 3-5 items.
-dgn.delayed_decay(_G, 'I', 'human skeleton, any armour, any weapon, '
+dgn.delayed_decay_extra(_G, 'I', 'human skeleton', 'any armour, any weapon, '
    .. 'any good_item / any book / any jewellery, '
    .. 'nothing / any scroll, nothing / any potion' )
 
  -- Orc fighter. 3 items.
-dgn.delayed_decay(_G, 'J', 'orc skeleton, shield / large shield w:2, '
+dgn.delayed_decay_extra(_G, 'J', 'orc skeleton', 'shield / large shield w:2, '
    .. 'long sword race:orcish / eveningstar race:orcish / '
    .. 'broad axe race:orcish / demon blade, '
    .. 'plate armour race:orcish / crystal plate armour w:2' )
 
  -- Dwarven heavy armour earth elementalist. 3-4 items.
-dgn.delayed_decay(_G, 'K', 'dwarf skeleton, plate armour race:dwarven, '
+dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour race:dwarven, '
    .. 'randbook disc:earth / any book, staff of earth / any magical staff, '
    .. 'ring of wizardry / any jewellery / nothing w:20' )
 
  -- Halfling warper. 4-5 items.
-dgn.delayed_decay(_G, 'L', 'halfling skeleton, dart ego:dispersal / dart, '
+dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'dart ego:dispersal / dart, '
    .. 'randbook disc:translocation / any book, scroll of blinking / '
    .. 'scroll of teleportation / ring of teleportation / '
    .. 'ring of teleport control w:5 / nothing w:30, robe / leather armour, '
    .. 'short sword good_item' )
 
  -- Ogre, maybe an ogre mage of some kind. 4-5 items.
-dgn.delayed_decay(_G, 'M', 'ogre skeleton, giant club good_item / '
+dgn.delayed_decay_extra(_G, 'M', 'ogre skeleton', 'giant club good_item / '
    .. 'giant spiked club good_item, robe, large rock, meat ration, '
    .. 'any book / nothing' )
 }}

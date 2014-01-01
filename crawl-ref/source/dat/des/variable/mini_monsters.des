@@ -3189,7 +3189,7 @@ MONS:    ooze, jelly, ooze
 MONS:    jelly, jelly, ooze
 : end
 {{
-dgn.delayed_decay(_G, 'A', 'human corpse, damaged shield / nothing, '
+dgn.delayed_decay_extra(_G, 'A', 'human corpse', 'damaged shield / nothing, '
                         .. 'damaged helmet / nothing, % / nothing, '
                         .. '% / nothing, % / nothing, any damaged armour, '
                         .. 'any damaged weapon good_item')

@@ -2031,7 +2031,8 @@ MONS:   elephant, fungus, plant
 MONS:   w:1 elephant / dire elephant, fungus, plant
 SUBST: W : w
 :end
-: dgn.delayed_decay(_G, '%', 'w:1 elephant corpse / w:5 elephant skeleton / nothing')
+SUBST: % = .:5 %:3
+: dgn.delayed_decay(_G, '%', 'w:1 elephant corpse / w:5 elephant skeleton')
 SUBST:  . = .:69 1:1
 SUBST:  P = 3
 SUBST:  a = .2
