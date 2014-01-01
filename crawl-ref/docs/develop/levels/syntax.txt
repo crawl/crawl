@@ -634,10 +634,10 @@ ITEM:     (list of items, separated by comma)
           Instead, you can set corpses to stay fresh until seen by the
           player with a delayed_decay marker. Instead of:
 
-             KITEM: e = griffon corpse
+             KITEM: e = griffon corpse / griffon skeleton
 
           you'd use:
-             : dgn.delayed_decay(_G, 'e', 'griffon corpse')
+             : dgn.delayed_decay(_G, 'e', 'griffon corpse / griffon skeleton')
 
           (Note the leading ":" - this is a Lua call).
 
@@ -645,7 +645,13 @@ ITEM:     (list of items, separated by comma)
           item property and creates a trigger that fires when the
           player enters LOS of the square in question. When triggered,
           it clears the "never_decay" property, allowing the item to
-          start decaying normally.
+          start decaying normally. Note that this does not work with
+          "/ nothing" alternatives (or other non-chunk, non-corpse items);
+          for those cases, use SUBST with a second glyph and KITEM.
+
+          If you need to put additional non-corpse, non-chunk items at
+          the same location, use delayed_decay_extra:
+             : dgn.delayed_decay_extra(_G, 'e', 'human corpse', 'mace, shield')
 
           Randart spell books
           -------------------
