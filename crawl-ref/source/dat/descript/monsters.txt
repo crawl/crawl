@@ -653,6 +653,12 @@ big kobold
 
 A kobold that is bigger and tougher than the ordinary kobold, and often armed.
 %%%%
+big kobold necromancer
+
+A kobold that is not only bigger and smarter than most, but also a good deal
+more evil. Fortunately, from the looks of this place, it's unlikely it could
+put its grubby hands onto a corpse of something dangerous.
+%%%%
 black bear
 
 A small black bear. Like all ursines, the black bear will become enraged if
