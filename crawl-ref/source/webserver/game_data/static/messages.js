@@ -69,18 +69,12 @@ function ($, comm, client, util, settings) {
             msg_elem.append(" ");
             msg_elem.append(repeats);
         }
-        if (settings.get("animations"))
-        {
-            $("#messages_container")
-                .stop(true, false)
-                .animate({
-                    scrollTop: $("#messages").height()
-                }, 100);
-        }
-        else
-        {
-            $("#messages_container").scrollTop($("#messages").height());
-        }
+        /*$("#messages_container")
+            .stop(true, false)
+            .animate({
+                scrollTop: $("#messages").height()
+            }, 1000);*/
+        $("#messages_container").scrollTop($("#messages").height());
     }
 
     function rollback(count)

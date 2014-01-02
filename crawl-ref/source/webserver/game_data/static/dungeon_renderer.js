@@ -287,13 +287,15 @@ function ($, cr, map_knowledge, settings, options, dngn) {
             clearTimeout(anim_interval);
             anim_interval = null;
         }
-        if (settings.get("animations"))
+        if (options.get("tile_realtime_anim"))
         {
             anim_interval = setInterval(function () {
                 renderer.animate();
             }, 1000 / 4);
         }
     }
+
+    options.add_listener(update_animation_interval);
 
     $(document).off("game_init.dungeon_renderer");
     $(document).on("game_init.dungeon_renderer", function () {
@@ -303,8 +305,6 @@ function ($, cr, map_knowledge, settings, options, dngn) {
         renderer.view_center = { x: 0, y: 0 };
 
         renderer.init($("#dungeon")[0]);
-
-        update_animation_interval();
     });
 
     $(document).off("game_cleanup.dungeon_renderer")
@@ -313,15 +313,6 @@ function ($, cr, map_knowledge, settings, options, dngn) {
             {
                 clearTimeout(anim_interval);
                 anim_interval = null;
-            }
-        });
-
-    settings.set_defaults({ animations: false });
-    $(document).off("settings_changed.dungeon_renderer")
-        .on("settings_changed.dungeon_renderer", function (ev, map) {
-            if ("animations" in map)
-            {
-                update_animation_interval();
             }
         });
 

@@ -454,6 +454,7 @@ public:
     vector<string> tile_layout_priority;
 #endif
 #ifdef USE_TILE_WEB
+    bool        tile_realtime_anim;
     string      tile_display_mode;
 #endif
 
