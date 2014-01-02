@@ -1,5 +1,6 @@
-define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer"],
-function ($, map_knowledge, cr, dungeon_renderer) {
+define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer",
+        "./options"],
+function ($, map_knowledge, cr, dungeon_renderer, options) {
     "use strict";
 
     var monsters, $list, monster_groups, max_rows;
@@ -219,6 +220,17 @@ function ($, map_knowledge, cr, dungeon_renderer) {
         monster_groups = [];
         monsters = {};
     }
+
+    options.add_listener(function ()
+    {
+        if (options.get("tile_font_lbl_size") === 0)
+            $("#monster_list").css("font-size", "");
+        else
+        {
+            $("#monster_list").css("font-size",
+                options.get("tile_font_lbl_size") + "px");
+        }
+    });
 
     return {
         update_loc: update_loc,

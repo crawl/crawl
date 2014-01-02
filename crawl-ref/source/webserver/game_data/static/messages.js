@@ -1,5 +1,5 @@
-define(["jquery", "comm", "client", "./util"],
-function ($, comm, client, util) {
+define(["jquery", "comm", "client", "./util", "./options"],
+function ($, comm, client, util, options) {
     "use strict";
 
     var HISTORY_SIZE = 10;
@@ -244,6 +244,17 @@ function ($, comm, client, util) {
             $("#text_cursor").remove();
         }
     }
+
+    options.add_listener(function ()
+    {
+        if (options.get("tile_font_msg_size") === 0)
+            $("#message_pane").css("font-size", "");
+        else
+        {
+            $("#message_pane").css("font-size",
+                options.get("tile_font_msg_size") + "px");
+        }
+    });
 
     comm.register_handlers({
         "msgs": handle_messages,
