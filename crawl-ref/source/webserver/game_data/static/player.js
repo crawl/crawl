@@ -389,9 +389,18 @@ function ($, comm, enums, map_knowledge, messages, options) {
         }
     }
 
-    options.add_listener(function () {
+    options.add_listener(function ()
+    {
         if (player.name !== "")
             update_stats_pane();
+
+        if (options.get("tile_font_stat_size") === 0)
+            $("#stats").css("font-size", "");
+        else
+        {
+            $("#stats").css("font-size",
+                options.get("tile_font_stat_size") + "px");
+        }
     });
 
     comm.register_handlers({

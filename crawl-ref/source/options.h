@@ -416,15 +416,19 @@ public:
 #ifdef USE_TILE_LOCAL
     // font settings
     string      tile_font_crt_file;
-    int         tile_font_crt_size;
     string      tile_font_msg_file;
-    int         tile_font_msg_size;
     string      tile_font_stat_file;
-    int         tile_font_stat_size;
     string      tile_font_lbl_file;
-    int         tile_font_lbl_size;
     string      tile_font_tip_file;
+#endif
+#ifdef USE_TILE
+    int         tile_font_crt_size;
+    int         tile_font_msg_size;
+    int         tile_font_stat_size;
+    int         tile_font_lbl_size;
     int         tile_font_tip_size;
+#endif
+#ifdef USE_TILE_LOCAL
 #ifdef USE_FT
     bool        tile_font_ft_light;
 #endif
