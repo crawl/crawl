@@ -368,6 +368,10 @@
 # tile_show_minihealthbar = false
 # tile_show_minimagicbar  = false
 
+### WebTiles only
+
+# tile_realtime_anim = true
+# tile_display_mode = glyph
 
 ##### 4-  Dump File #################################################
 #
