@@ -1,5 +1,5 @@
-define(["jquery", "comm", "client", "./util", "./settings"],
-function ($, comm, client, util, settings) {
+define(["jquery", "comm", "client", "./util"],
+function ($, comm, client, util) {
     "use strict";
 
     var HISTORY_SIZE = 10;
