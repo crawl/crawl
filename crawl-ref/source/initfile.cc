@@ -1009,8 +1009,6 @@ void game_options::reset_options()
     tile_full_screen      = SCREENMODE_AUTO;
     tile_window_width     = -90;
     tile_window_height    = -90;
-    tile_cell_pixels      = 32;
-    tile_filter_scaling   = false;
 # ifdef TOUCH_UI
     tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
                                              "inventory, command2, spell, "
@@ -1024,6 +1022,8 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE
+    tile_cell_pixels      = 32;
+    tile_filter_scaling   = false;
     tile_map_pixels       = 0;
     tile_force_overlay    = false;
     // delays
@@ -3455,8 +3455,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
     else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
-    else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
-    else BOOL_OPTION(tile_filter_scaling);
 #endif // USE_TILE_LOCAL
 #ifdef TOUCH_UI
 //    else BOOL_OPTION(tile_use_small_layout);
@@ -3471,6 +3469,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
 #endif
 #ifdef USE_TILE
+    else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
+    else BOOL_OPTION(tile_filter_scaling);
     else INT_OPTION(tile_map_pixels, 0, INT_MAX);
     else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
@@ -4126,6 +4126,9 @@ void game_options::write_webtiles_options(const string& name)
                           Options.tile_show_demon_tier);
 
     tiles.json_write_int("tile_map_pixels", Options.tile_map_pixels);
+
+    tiles.json_write_int("tile_cell_pixels", Options.tile_cell_pixels);
+    tiles.json_write_bool("tile_filter_scaling", Options.tile_filter_scaling);
 
     tiles.json_write_bool("show_game_turns", Options.show_game_turns);
 

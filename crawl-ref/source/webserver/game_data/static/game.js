@@ -187,14 +187,13 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
     var renderer_settings = {
         display_mode: "tiles",
         glyph_mode_font_size: 24,
-        glyph_mode_font: "monospace",
-        smooth_scaling: false
+        glyph_mode_font: "monospace"
     };
 
     settings.set_defaults(renderer_settings);
     $.extend(dungeon_renderer, renderer_settings);
 
-    settings.set_defaults({ tile_scaling: 1 });
+    settings.set_defaults({});
 
     $(document).off("settings_changed.game");
     $(document).on("settings_changed.game", function (ev, map) {
@@ -205,22 +204,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
             {
                 dungeon_renderer[key] = settings.get(key);
                 relayout = true;
-            }
-        }
-        if ("tile_scaling" in map)
-        {
-            var scaling = Number(settings.get("tile_scaling"));
-            if (isFinite(scaling) && scaling > 0)
-            {
-                if (scaling != dungeon_renderer.x_scale)
-                {
-                    dungeon_renderer.tile_scaling = scaling;
-                    relayout = true;
-                }
-            }
-            else
-            {
-                settings.set("tile_scaling", dungeon_renderer.tile_scaling);
             }
         }
         if (relayout && layout_parameters)
