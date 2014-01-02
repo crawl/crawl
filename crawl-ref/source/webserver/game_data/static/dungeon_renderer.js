@@ -1,8 +1,7 @@
-define(["jquery", "./cell_renderer", "./map_knowledge", "./settings", "./tileinfo-dngn"],
-function ($, cr, map_knowledge, settings, dngn) {
+define(["jquery", "./cell_renderer", "./map_knowledge", "./settings", "./options", "./tileinfo-dngn"],
+function ($, cr, map_knowledge, settings, options, dngn) {
     "use strict";
 
-    var default_size = { w: 32, h: 32 };
     var global_anim_counter = 0;
 
     function is_torch(basetile)
@@ -49,8 +48,6 @@ function ($, cr, map_knowledge, settings, dngn) {
 
         this.view = { x: 0, y: 0 };
         this.view_center = { x: 0, y: 0 };
-
-        this.tile_scaling = 1.0;
     }
 
     DungeonViewRenderer.prototype = new cr.DungeonCellRenderer();
@@ -174,8 +171,8 @@ function ($, cr, map_knowledge, settings, dngn) {
         fit_to: function(width, height, min_diameter)
         {
             var cell_size = {
-                w: default_size.w * this.tile_scaling,
-                h: default_size.h * this.tile_scaling
+                w: options.get("tile_cell_pixels"),
+                h: options.get("tile_cell_pixels")
             };
 
             if (this.display_mode == "glyphs")

@@ -11,7 +11,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         this.display_mode = "tiles";
         this.glyph_mode_font_size = 24;
         this.glyph_mode_font = "monospace";
-        this.smooth_scaling = false;
     }
 
     var fg_term_colours, bg_term_colours;
@@ -931,9 +930,11 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
             var w = info.ex - info.sx;
             var h = info.ey - info.sy;
-            this.ctx.imageSmoothingEnabled = this.smooth_scaling;
-            this.ctx.webkitImageSmoothingEnabled = this.smooth_scaling;
-            this.ctx.mozImageSmoothingEnabled = this.smooth_scaling;
+            this.ctx.imageSmoothingEnabled = options.get("tile_filter_scaling");
+            this.ctx.webkitImageSmoothingEnabled =
+                options.get("tile_filter_scaling");
+            this.ctx.mozImageSmoothingEnabled =
+                options.get("tile_filter_scaling");
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
