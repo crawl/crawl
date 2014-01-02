@@ -3454,11 +3454,11 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_font_lbl_file = field;
 #endif
 #ifdef USE_TILE
-    else INT_OPTION(tile_font_crt_size, 1, INT_MAX);
-    else INT_OPTION(tile_font_msg_size, 1, INT_MAX);
-    else INT_OPTION(tile_font_stat_size, 1, INT_MAX);
-    else INT_OPTION(tile_font_tip_size, 1, INT_MAX);
-    else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
+    else INT_OPTION(tile_font_crt_size, 0, INT_MAX);
+    else INT_OPTION(tile_font_msg_size, 0, INT_MAX);
+    else INT_OPTION(tile_font_stat_size, 0, INT_MAX);
+    else INT_OPTION(tile_font_tip_size, 0, INT_MAX);
+    else INT_OPTION(tile_font_lbl_size, 0, INT_MAX);
 #endif
 #ifdef USE_TILE_LOCAL
 #ifdef USE_FT
