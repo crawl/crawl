@@ -1041,6 +1041,10 @@ void game_options::reset_options()
     tile_water_anim          = true;
 #endif
 
+#ifdef USE_TILE_WEB
+    tile_display_mode = "tiles";
+#endif
+
     // map each colour to itself as default
     for (int i = 0; i < (int)ARRAYSZ(colour); ++i)
         colour[i] = i;
@@ -3484,6 +3488,13 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #endif
+#ifdef USE_TILE_WEB
+    else if (key == "tile_display_mode")
+    {
+        if (field == "tiles" || field == "glyphs" || field == "hybrid")
+            tile_display_mode = field;
+    }
+#endif
 
     else if (key == "bindkey")
         _bindkey(field);
@@ -4127,6 +4138,7 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_int("tile_map_pixels", Options.tile_map_pixels);
 
+    tiles.json_write_string("tile_display_mode", Options.tile_display_mode);
     tiles.json_write_int("tile_cell_pixels", Options.tile_cell_pixels);
     tiles.json_write_bool("tile_filter_scaling", Options.tile_filter_scaling);
 

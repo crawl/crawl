@@ -106,7 +106,7 @@ The contents of this text are:
                 tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier,
                 tile_water_anim, tile_layout_priority,
-                tile_force_regenerate_levels
+                tile_display_mode
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -1905,6 +1905,12 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         expand to its maximum size (6 lines). The minimap is always placed
         between the stat area and the tabs. The memorisation and skill tabs can
         be added to the list too, but are not by default.
+
+tile_display_mode = (tiles | glyphs | hybrid)
+        Controls how the dungeon is rendered. You can use normal tiles (default)
+        or make it look like the console version by using glyphs. Hybrid
+        overlays icons on top of the glyph view.
+        This option is only available on WebTiles.
 
 
 4-  Character Dump.

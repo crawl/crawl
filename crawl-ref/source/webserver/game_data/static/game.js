@@ -185,7 +185,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
     }
 
     var renderer_settings = {
-        display_mode: "tiles",
         glyph_mode_font_size: 24,
         glyph_mode_font: "monospace"
     };

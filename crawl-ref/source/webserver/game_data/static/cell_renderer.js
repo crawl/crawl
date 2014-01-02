@@ -8,7 +8,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
     function DungeonCellRenderer()
     {
         this.set_cell_size(32, 32);
-        this.display_mode = "tiles";
         this.glyph_mode_font_size = 24;
         this.glyph_mode_font = "monospace";
     }
@@ -134,7 +133,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
             if (!cell)
             {
-                if (this.display_mode != "glyphs")
+                if (options.get("tile_display_mode") != "glyphs")
                     this.render_flash(x, y);
 
                 this.render_cursors(cx, cy, x, y);
@@ -152,7 +151,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             map_cell.g = map_cell.g || ' ';
             if (map_cell.col == undefined) map_cell.col = 7;
 
-            if (this.display_mode == "glyphs")
+            if (options.get("tile_display_mode") == "glyphs")
             {
                 this.render_glyph(x, y, map_cell);
 
@@ -161,7 +160,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
 
             // cell is basically a packed_cell + doll + mcache entries
-            if (this.display_mode == "tiles")
+            if (options.get("tile_display_mode") == "tiles")
                 this.draw_background(x, y, cell);
 
             var fg_idx = cell.fg.value;
@@ -242,7 +241,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 }
             }
 
-            if (is_in_water && this.display_mode == "tiles")
+            if (is_in_water && options.get("tile_display_mode") == "tiles")
             {
                 this.ctx.save();
                 try
@@ -271,7 +270,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     this.ctx.restore();
                 }
             }
-            else if (this.display_mode == "tiles")
+            else if (options.get("tile_display_mode") == "tiles")
             {
                 this.ctx.save();
                 try
@@ -654,7 +653,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             var fg_idx = cell.fg.value;
             var is_in_water = in_water(cell);
 
-            if (fg_idx && fg_idx <= main.MAIN_MAX && this.display_mode == "tiles")
+            if (fg_idx && fg_idx <= main.MAIN_MAX && options.get("tile_display_mode") == "tiles")
             {
                 var base_idx = cell.base;
                 if (is_in_water)
@@ -700,7 +699,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     this.draw_main(fg_idx, x, y);
                 }
             }
-            else if (this.display_mode == "hybrid")
+            else if (options.get("tile_display_mode") == "hybrid")
             {
                 this.render_glyph(x, y, map_cell, true);
             }

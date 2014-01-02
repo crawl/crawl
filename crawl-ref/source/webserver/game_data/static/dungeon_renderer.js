@@ -175,7 +175,7 @@ function ($, cr, map_knowledge, settings, options, dngn) {
                 h: options.get("tile_cell_pixels")
             };
 
-            if (this.display_mode == "glyphs")
+            if (options.get("tile_display_mode") == "glyphs")
             {
                 this.ctx.font = this.glyph_mode_font_name();
                 var metrics = this.ctx.measureText("@");
