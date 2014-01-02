@@ -41,6 +41,15 @@ function ($, comm) {
         listeners.add(callback);
     }
 
+    // for testing purposes only
+    window.set_option = function(name, value)
+    {
+        var old = get_option(name);
+        console.log(name + ": '" + old + "' => '" + value + "'");
+        options[name] = value;
+        listeners.fire();
+    };
+
     comm.register_handlers({
         "options": handle_options_message,
     });
