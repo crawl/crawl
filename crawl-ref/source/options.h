@@ -453,6 +453,9 @@ public:
     bool        tile_water_anim;
     vector<string> tile_layout_priority;
 #endif
+#ifdef USE_TILE_WEB
+    string      tile_display_mode;
+#endif
 
     typedef map<string, string> opt_map;
     opt_map     named_options;          // All options not caught above are

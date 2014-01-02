@@ -38,7 +38,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util) {
         }
 
         if (item.tiles && item.tiles.length > 0
-            && dungeon_renderer.display_mode == "tiles")
+            && options.get("tile_display_mode") == "tiles")
         {
             var renderer = new cr.DungeonCellRenderer();
             var canvas = $("<canvas>");
