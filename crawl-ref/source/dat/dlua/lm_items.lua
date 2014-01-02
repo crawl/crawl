@@ -13,7 +13,7 @@ function dgn.delayed_decay_extra(e, key, itemdesc, more_items)
   if more_items then
     def = def .. ", " .. more_items
   end
-  e.kitem(key .. " = " .. def) 
+  e.kitem(key .. " = " .. def)
   -- [ds] Use an anonymous function so that we create a new
   -- triggerable for each square instead of reusing one across all
   -- squares.

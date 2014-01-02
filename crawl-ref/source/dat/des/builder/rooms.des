@@ -107,6 +107,7 @@ function sroom_morgue(e)
     if e.is_validating() then return end
 
     local bodies
+    local bodies_chance
     local weap = ""
     if you.branch() == "Geh" then
         weap = " ego:flaming ident:type"
@@ -132,7 +133,8 @@ function sroom_morgue(e)
                  .. "fire dragon zombie w:2 / fire dragon skeleton w:2"
         mons[6] = "flaming corpse w:5 / flayed ghost w:5"
         bodies = "fire giant corpse / fire giant skeleton / "
-                 .. "fire dragon corpse / fire dragon skeleton / nothing w:60"
+                 .. "fire dragon corpse / fire dragon skeleton"
+        bodies_chance = 40
     elseif you.branch() == "Coc" then
         mons[5] = "hydra zombie w:3 / hydra simulacrum w:3 / "
                  .. "alligator snapping turtle zombie w:2 / "
@@ -142,22 +144,26 @@ function sroom_morgue(e)
                  .. "ice dragon corpse / ice dragon skeleton / "
                  .. "alligator snapping turtle corpse / "
                  .. "alligator snapping turtle skeleton / "
-                 .. "hydra corpse / hydra skeleton / nothing w:120"
+                 .. "hydra corpse / hydra skeleton"
+        bodies_chance = 40
     elseif you.branch() == "Dis" then
         mons[5] = "iron troll zombie w:2 / iron troll skeleton w:2 / "
                  .. "iron dragon zombie w:3 / iron dragon skeleton w:3"
         mons[6] = "ancient champion w:7 / phantasmal warrior w:3"
         bodies = "iron dragon corpse / iron dragon skeleton / "
-                 .. "iron troll corpse / iron troll skeleton / nothing w:60"
+                 .. "iron troll corpse / iron troll skeleton"
+        bodies_chance = 40
     elseif you.branch() == "Tar" or you.branch() == "Crypt" then
         mons[5] = "eidolon w:6 / jiangshi w:6 / plague shambler w:2"
         mons[6] = "mummy priest w:2 / deep dwarf death knight w:2 / revenant w:2"
         bodies = "shadow dragon corpse / base draconian corpse / "
-                 .. "dire elephant corpse / nothing w:60"
+                 .. "dire elephant corpse"
+        bodies_chance = 33
     else
         mons[5] = "necromancer / deep elf death mage w:5"
         mons[6] = "shadow dragon w:5"
-        bodies = "any corpse / any skeleton / nothing w:40"
+        bodies = "any corpse / any skeleton"
+        bodies_chance = 33
     end
 
     if you.absdepth() > 27 then
@@ -171,7 +177,6 @@ function sroom_morgue(e)
     end
 
     fill_special_room(e, mons, lord_mon, true)
-    dgn.delayed_decay(e, '1>.', bodies)
     if you.branch() == "Depths" or you.branch() == "Crypt" then
          e.kitem('2 = randbook disc:necromancy')
     else
@@ -180,6 +185,13 @@ function sroom_morgue(e)
          .. 'stone_stairs_down_iii / escape_hatch_down / floor')
          e.nsubst('1 = 1:> / *:1')
     end
+
+    e.subst(". = .:" .. (100 - bodies_chance) .. " _:" .. bodies_chance)
+    e.subst("1 = 1:" .. (100 - bodies_chance) .. " !:" .. bodies_chance)
+    e.kmons("! = " .. mons[1])
+    e.kfeat("_ = .")
+
+    dgn.delayed_decay(e, '!_', bodies)
 end
 
 function sroom_jelly_pit(e)
