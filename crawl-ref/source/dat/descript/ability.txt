@@ -69,8 +69,7 @@ weight of your possessions or some disability would normally drag you down.
 Bottle Blood ability
 
 At experience level 6 and higher, Vampires can bottle the blood from non-rotten
-and blood-containing corpses they are standing on. Doing so requires the
-capability of wielding your knife, as is the case for butchering.
+and blood-containing corpses they are standing on.
 %%%%
 Spit Acid ability
 
