@@ -1874,7 +1874,8 @@ tile_font_stat_size = 16
 tile_font_msg_size  = 14
 tile_font_tip_size  = 15
 tile_font_lbl_size  = 14
-        Font size for the screen regions listed above.
+        Font size for the screen regions listed above. If set to zero (default),
+        size will be based on screen size.
 
 tile_font_ft_light = false
         Selects 'light' font hinting.
