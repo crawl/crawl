@@ -1599,7 +1599,7 @@ game_options::game_options()
     set_lang(getenv("LC_ALL"))
     || set_lang(getenv("LC_MESSAGES"))
     || set_lang(getenv("LANG"));
-#else
+#elif defined USE_TILE_LOCAL
     char ln[30];
     if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
         set_lang(ln);
