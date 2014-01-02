@@ -1,8 +1,8 @@
-define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
-        "./settings", "./enums", "./messages", "./options",
-        "./text", "./menu", "./player"],
-function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
-          messages, options) {
+define(["jquery", "comm", "client", "./dungeon_renderer", "./display",
+        "./minimap", "./enums", "./messages", "./options", "./text", "./menu",
+        "./player"],
+function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
+          options) {
     "use strict";
 
     var layout_parameters = null, ui_state, input_mode;
@@ -189,25 +189,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums,
         glyph_mode_font: "monospace"
     };
 
-    settings.set_defaults(renderer_settings);
     $.extend(dungeon_renderer, renderer_settings);
-
-    settings.set_defaults({});
-
-    $(document).off("settings_changed.game");
-    $(document).on("settings_changed.game", function (ev, map) {
-        var relayout = false;
-        for (var key in renderer_settings)
-        {
-            if (key in map)
-            {
-                dungeon_renderer[key] = settings.get(key);
-                relayout = true;
-            }
-        }
-        if (relayout && layout_parameters)
-            layout(layout_parameters, true);
-    });
 
     $(document).ready(function () {
         $(window)

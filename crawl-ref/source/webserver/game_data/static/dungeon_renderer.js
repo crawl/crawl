@@ -1,5 +1,5 @@
-define(["jquery", "./cell_renderer", "./map_knowledge", "./settings", "./options", "./tileinfo-dngn"],
-function ($, cr, map_knowledge, settings, options, dngn) {
+define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn"],
+function ($, cr, map_knowledge, options, dngn) {
     "use strict";
 
     var global_anim_counter = 0;

@@ -228,18 +228,6 @@ body {
     position: absolute;
 }
 
-#settings {
-    min-width: 20em;
-    min-height: 5em;
-}
-
-#close_settings {
-    font-size: small;
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-}
-
 
 /* monster list */
 #monster_list {
